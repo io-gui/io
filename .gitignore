@@ -1,0 +1,8 @@
+*
+!bower.json
+!.bowerrc
+!.gitignore
+!.gitmodules
+
+!io-*
+!three-*
