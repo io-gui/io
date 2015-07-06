@@ -1,0 +1,27 @@
+[submodule "io-value"]
+	path = io-value
+	url = https://github.com/arodic/io-value.git
+[submodule "io-tooltip"]
+	path = io-tooltip
+	url = https://github.com/arodic/io-tooltip.git
+[submodule "io-inspector"]
+	path = io-inspector
+	url = https://github.com/arodic/io-inspector.git
+[submodule "io-menu"]
+	path = io-menu
+	url = https://github.com/arodic/io-menu.git
+[submodule "io-options"]
+	path = io-options
+	url = https://github.com/arodic/io-options.git
+[submodule "io-help"]
+	path = io-help
+	url = https://github.com/arodic/io-help.git
+[submodule "three-viewport"]
+	path = three-viewport
+	url = https://github.com/arodic/three-viewport.git
+[submodule "three-renderer"]
+	path = three-renderer
+	url = https://github.com/arodic/three-renderer.git
+[submodule "three-js"]
+	path = three-js
+	url = https://github.com/arodic/three-js.git
