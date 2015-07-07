@@ -25,3 +25,6 @@
 [submodule "three-js"]
 	path = three-js
 	url = https://github.com/arodic/three-js.git
+[submodule "three-quad-viewport"]
+	path = three-quad-viewport
+	url = https://github.com/arodic/three-quad-viewport.git
