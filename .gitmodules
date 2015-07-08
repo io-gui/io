@@ -1,30 +1,30 @@
 [submodule "io-value"]
-	path = io-value
+	path = src/io-value
 	url = https://github.com/arodic/io-value.git
 [submodule "io-tooltip"]
-	path = io-tooltip
+	path = src/io-tooltip
 	url = https://github.com/arodic/io-tooltip.git
 [submodule "io-inspector"]
-	path = io-inspector
+	path = src/io-inspector
 	url = https://github.com/arodic/io-inspector.git
 [submodule "io-menu"]
-	path = io-menu
+	path = src/io-menu
 	url = https://github.com/arodic/io-menu.git
 [submodule "io-options"]
-	path = io-options
+	path = src/io-options
 	url = https://github.com/arodic/io-options.git
 [submodule "io-help"]
-	path = io-help
+	path = src/io-help
 	url = https://github.com/arodic/io-help.git
 [submodule "three-viewport"]
-	path = three-viewport
+	path = src/three-viewport
 	url = https://github.com/arodic/three-viewport.git
 [submodule "three-renderer"]
-	path = three-renderer
+	path = src/three-renderer
 	url = https://github.com/arodic/three-renderer.git
 [submodule "three-js"]
-	path = three-js
+	path = src/three-js
 	url = https://github.com/arodic/three-js.git
 [submodule "three-quad-viewport"]
-	path = three-quad-viewport
+	path = src/three-quad-viewport
 	url = https://github.com/arodic/three-quad-viewport.git

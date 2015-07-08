@@ -1,8 +1,5 @@
-*
-!bower.json
-!.bowerrc
-!.gitignore
-!.gitmodules
-
-!io-*
-!three-*
+node_modules
+bower_components/*
+!bower_components/io-*
+!bower_components/three-*
+.tmp
