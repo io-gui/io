@@ -1,5 +1,3 @@
 node_modules
-bower_components/*
-!bower_components/io-*
-!bower_components/three-*
+bower_components
 .tmp

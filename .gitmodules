@@ -28,3 +28,12 @@
 [submodule "three-quad-viewport"]
 	path = src/three-quad-viewport
 	url = https://github.com/arodic/three-quad-viewport.git
+[submodule "src/io-boolean"]
+	path = src/io-boolean
+	url = https://github.com/arodic/io-boolean.git
+[submodule "src/io-input"]
+	path = src/io-input
+	url = https://github.com/arodic/io-input.git
+[submodule "src/io-object"]
+	path = src/io-object
+	url = https://github.com/arodic/io-object.git
