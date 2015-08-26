@@ -43,3 +43,6 @@
 [submodule "src/io-styles"]
 	path = src/io-styles
 	url = https://github.com/arodic/io-styles.git
+[submodule "src/io-vectors"]
+	path = src/io-vectors
+	url = https://github.com/arodic/io-vectors.git
