@@ -10,6 +10,7 @@ var historyApiFallback = require('connect-history-api-fallback');
 gulp.task('serve', function () {
   browserSync({
     notify: false,
+    open: false,
     logPrefix: 'PSK',
     snippetOptions: {
       rule: {

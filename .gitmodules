@@ -37,3 +37,9 @@
 [submodule "src/io-object"]
 	path = src/io-object
 	url = https://github.com/arodic/io-object.git
+[submodule "src/io-object-to-array"]
+	path = src/io-object-to-array
+	url = https://github.com/arodic/io-object-to-array.git
+[submodule "src/io-styles"]
+	path = src/io-styles
+	url = https://github.com/arodic/io-styles.git
