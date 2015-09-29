@@ -46,3 +46,6 @@
 [submodule "src/io-vectors"]
 	path = src/io-vectors
 	url = https://github.com/arodic/io-vectors.git
+[submodule "src/io-slider"]
+	path = src/io-slider
+	url = https://github.com/arodic/io-slider.git
