@@ -25,9 +25,6 @@
 [submodule "three-js"]
 	path = src/three-js
 	url = https://github.com/arodic/three-js.git
-[submodule "three-quad-viewport"]
-	path = src/three-quad-viewport
-	url = https://github.com/arodic/three-quad-viewport.git
 [submodule "src/io-boolean"]
 	path = src/io-boolean
 	url = https://github.com/arodic/io-boolean.git
@@ -49,3 +46,9 @@
 [submodule "src/io-slider"]
 	path = src/io-slider
 	url = https://github.com/arodic/io-slider.git
+[submodule "src/three-renderer"]
+	path = src/three-renderer
+	url = https://github.com/arodic/three-renderer.git
+[submodule "src/three-editor"]
+	path = src/three-editor
+	url = https://github.com/arodic/three-editor.git

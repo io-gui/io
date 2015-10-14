@@ -2,6 +2,13 @@
   "name": "components",
   "private": true,
   "dependencies": {
+    "polymer": "Polymer/polymer#^1.1.0",
+    "iron-elements": "PolymerElements/iron-elements#^1.0.0",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.1",
+    "platinum-elements": "PolymerElements/platinum-elements#^1.1.0",
+    "neon-elements": "PolymerElements/neon-elements#^1.0.0",
+    "page": "visionmedia/page.js#~1.6.3",
+
     "io-boolean": "arodic/io-boolean#master",
     "io-help": "arodic/io-help#master",
     "io-input": "arodic/io-input#master",
@@ -13,7 +20,10 @@
     "io-slider": "arodic/io-slider#master",
     "io-styles": "arodic/io-styles#master",
     "io-tooltip": "arodic/io-tooltip#master",
-    "io-value": "arodic/io-value#master"
+    "io-value": "arodic/io-value#master",
+    "io-vector": "arodic/io-vector#master",
+    "three-renderer": "arodic/three-renderer#master",
+    "three-viewport": "arodic/three-viewport#master"
   },
   "devDependencies": {
     "web-component-tester": "*",
@@ -31,6 +41,11 @@
     "io-slider": "master",
     "io-styles": "master",
     "io-tooltip": "master",
-    "io-value": "master"
+    "io-value": "master",
+    "io-vector": "master",
+    "three-renderer": "master",
+    "three-viewport": "master",
+    "polymer": "~1.1.2",
+    "lodash": "^3.7.0"
   }
 }
