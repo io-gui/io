@@ -42,7 +42,7 @@ gulp.task('copy_vulcanized', function (cb) {
 
 gulp.task('copy_to_akirodic', function (cb) {
   gulp.src(['dist/three-editor.vulcanized.html'])
-  .pipe(gulp.dest('../akirodic/app/elements'))
+  .pipe(gulp.dest('../akirodic/app/main-app'))
   .on('end', cb);
 });
 
@@ -52,8 +52,8 @@ gulp.task('vulcanize', function () {
   return gulp.src('dist/elements/three-editor/three-editor.vulcanized.html')
     .pipe($.vulcanize({
       stripComments: true,
-      inlineCss: false,
-      inlineScripts: false
+      inlineCss: true,
+      inlineScripts: true
     }))
     .pipe(gulp.dest(DEST_DIR))
     .pipe($.size({title: 'vulcanize'}));
