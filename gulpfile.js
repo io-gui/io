@@ -59,6 +59,26 @@ gulp.task('vulcanize', function () {
     .pipe($.size({title: 'vulcanize'}));
 });
 
+// var jshintTask = function (src) {
+//   return gulp.src(src)
+//     .pipe($.jshint.extract()) // Extract JS from .html files
+//     .pipe($.jshint())
+//     .pipe($.jshint.reporter('jshint-stylish'))
+//     .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+// };
+
+gulp.task('jshint', function () {
+  gulp.src([
+      'src/**/*.html',
+      'src/**/*.js',
+      'gulpfile.js'
+    ])
+    .pipe($.jshint.extract()) // Extract JS from .html files
+    .pipe($.jshint())
+    .pipe($.jshint.reporter('jshint-stylish'))
+    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+});
+
 // Watch Files For Changes & Reload
 gulp.task('serve', function () {
   browserSync({
@@ -83,15 +103,21 @@ gulp.task('serve', function () {
     }
   });
 
+  // gulp.watch(['src/**/*.html'], reload);
+  // gulp.watch(['src/**/*.css'], reload);
+  // gulp.watch(['src/**/*.js'], reload);
   gulp.watch(['src/**/*.html'], reload_and_vulanize);
   gulp.watch(['src/**/*.css'], reload_and_vulanize);
   gulp.watch(['src/**/*.js'], reload_and_vulanize);
+
+  runSequence(['default']);
 });
 
 var reload_and_vulanize = function () {
   reload();
   runSequence(
     ['copy_src', 'copy_vulcanized'],
+    // 'jshint'
     'vulcanize',
     'copy_to_akirodic'
   );
@@ -101,6 +127,7 @@ var reload_and_vulanize = function () {
 gulp.task('default', ['clean'], function (cb) {
   runSequence(
     ['copy_bower', 'copy_src', 'copy_vulcanized'],
+    // 'jshint',
     'vulcanize',
     cb
   );
