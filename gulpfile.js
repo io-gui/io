@@ -43,6 +43,7 @@ gulp.task('copy_vulcanized', function (cb) {
 gulp.task('copy_to_akirodic', function (cb) {
   gulp.src(['dist/three-editor.vulcanized.html'])
   .pipe(gulp.dest('../akirodic/app/main-app'))
+  .pipe(gulp.dest('../saph-cloud/app/components'))
   .on('end', cb);
 });
 
@@ -55,23 +56,17 @@ gulp.task('vulcanize', function () {
       inlineCss: true,
       inlineScripts: true
     }))
+    .on('error', function(e) {
+      console.log(e)
+    })
     .pipe(gulp.dest(DEST_DIR))
     .pipe($.size({title: 'vulcanize'}));
 });
 
-// var jshintTask = function (src) {
-//   return gulp.src(src)
-//     .pipe($.jshint.extract()) // Extract JS from .html files
-//     .pipe($.jshint())
-//     .pipe($.jshint.reporter('jshint-stylish'))
-//     .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
-// };
-
 gulp.task('jshint', function () {
   gulp.src([
       'src/**/*.html',
-      'src/**/*.js',
-      'gulpfile.js'
+      'src/**/*.js'
     ])
     .pipe($.jshint.extract()) // Extract JS from .html files
     .pipe($.jshint())
@@ -116,20 +111,23 @@ gulp.task('serve', function () {
 var reload_and_vulanize = function () {
   reload();
   runSequence(
-    ['copy_src', 'copy_vulcanized'],
-    // 'jshint'
+    'copy_src',
+    'copy_vulcanized',
+    // 'jshint',
     'vulcanize',
     'copy_to_akirodic'
   );
-}
+};
 
 // Build production files, the default task
 gulp.task('default', ['clean'], function (cb) {
   runSequence(
-    ['copy_bower', 'copy_src', 'copy_vulcanized'],
+    'copy_bower',
+    'copy_src',
+    'copy_vulcanized',
     // 'jshint',
     'vulcanize',
-    cb
+    'copy_to_akirodic'
   );
 });
 
