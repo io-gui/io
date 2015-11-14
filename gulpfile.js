@@ -63,15 +63,32 @@ gulp.task('vulcanize', function () {
     .pipe($.size({title: 'vulcanize'}));
 });
 
-gulp.task('jshint', function () {
-  gulp.src([
+
+// Lint JavaScript
+gulp.task('lint', function() {
+  return gulp.src([
+      'src/**/*.js',
+      'src/**/*.js',
       'src/**/*.html',
-      'src/**/*.js'
+      'gulpfile.js',
+      '!src/three-js/js/build/*.js',
+      '!src/three-js/js/examples/js/curves/*.js',
+      '!src/three-js/js/examples/js/libs/*.js',
+      '!src/three-js/js/examples/js/renderers/*.js',
+      '!src/three-js/js/examples/js/loaders/*.js'
     ])
-    .pipe($.jshint.extract()) // Extract JS from .html files
-    .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+    .pipe(reload({
+      stream: true,
+      once: true
+    }))
+
+  // JSCS has not yet a extract option
+  .pipe($.if('*.html', $.htmlExtract()))
+  .pipe($.jshint())
+  .pipe($.jscs())
+  .pipe($.jscsStylish.combineWithHintResults())
+  .pipe($.jshint.reporter('jshint-stylish'))
+  .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
 });
 
 // Watch Files For Changes & Reload
@@ -113,7 +130,6 @@ var reload_and_vulanize = function () {
   runSequence(
     'copy_src',
     'copy_vulcanized',
-    // 'jshint',
     'vulcanize',
     'copy_to_akirodic'
   );
@@ -125,7 +141,6 @@ gulp.task('default', ['clean'], function (cb) {
     'copy_bower',
     'copy_src',
     'copy_vulcanized',
-    // 'jshint',
     'vulcanize',
     'copy_to_akirodic'
   );
