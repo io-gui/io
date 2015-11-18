@@ -1,5 +1,5 @@
 {
   "preset": "google",
   "disallowSpacesInAnonymousFunctionExpression": null,
-  "excludeFiles": ["node_modules/**", "src/three-js/js/**"]
+  "excludeFiles": ["node_modules/**"]
 }

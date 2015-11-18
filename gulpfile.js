@@ -40,12 +40,12 @@ gulp.task('copy_vulcanized', function (cb) {
   .on('end', cb);
 });
 
-gulp.task('copy_to_akirodic', function (cb) {
-  gulp.src(['dist/three-editor.vulcanized.html'])
-  .pipe(gulp.dest('../akirodic/app/main-app'))
-  .pipe(gulp.dest('../saph-cloud/app/components'))
-  .on('end', cb);
-});
+// gulp.task('copy_to_akirodic', function (cb) {
+//   gulp.src(['dist/three-editor.vulcanized.html'])
+//   .pipe(gulp.dest('../akirodic/app/main-app'))
+//   .pipe(gulp.dest('../saph-cloud/app/components'))
+//   .on('end', cb);
+// });
 
 // Vulcanize granular configuration
 gulp.task('vulcanize', function () {
@@ -67,15 +67,16 @@ gulp.task('vulcanize', function () {
 // Lint JavaScript
 gulp.task('lint', function() {
   return gulp.src([
-      'src/**/*.js',
-      'src/**/*.js',
-      'src/**/*.html',
-      'gulpfile.js',
-      '!src/three-js/js/build/*.js',
-      '!src/three-js/js/examples/js/curves/*.js',
-      '!src/three-js/js/examples/js/libs/*.js',
-      '!src/three-js/js/examples/js/renderers/*.js',
-      '!src/three-js/js/examples/js/loaders/*.js'
+    'src/three-js/js/**/*.js',
+      // 'src/**/*.js',
+      // 'src/**/*.js',
+      // 'src/**/*.html',
+      // 'gulpfile.js',
+      // '!src/three-js/js/build/*.js',
+      // '!src/three-js/js/examples/js/curves/*.js',
+      // '!src/three-js/js/examples/js/libs/*.js',
+      // '!src/three-js/js/examples/js/renderers/*.js',
+      // '!src/three-js/js/examples/js/loaders/*.js'
     ])
     .pipe(reload({
       stream: true,
@@ -106,32 +107,24 @@ gulp.task('serve', function () {
         }
       }
     },
-    // Run as an https by uncommenting 'https: true'
-    // Note: this uses an unsigned certificate which on first access
-    //       will present a certificate warning in the browser.
-    // https: true,
     server: {
       baseDir: ['src', 'bower_components']
     }
   });
 
-  // gulp.watch(['src/**/*.html'], reload);
-  // gulp.watch(['src/**/*.css'], reload);
-  // gulp.watch(['src/**/*.js'], reload);
-  gulp.watch(['src/**/*.html'], reload_and_vulanize);
-  gulp.watch(['src/**/*.css'], reload_and_vulanize);
-  gulp.watch(['src/**/*.js'], reload_and_vulanize);
+  gulp.watch(['src/**/*.html'], reload_and_vulcanize);
+  gulp.watch(['src/**/*.css'], reload_and_vulcanize);
+  gulp.watch(['src/**/*.js'], reload_and_vulcanize);
 
   runSequence(['default']);
 });
 
-var reload_and_vulanize = function () {
+var reload_and_vulcanize = function () {
   reload();
   runSequence(
     'copy_src',
     'copy_vulcanized',
-    'vulcanize',
-    'copy_to_akirodic'
+    'vulcanize'
   );
 };
 
@@ -141,8 +134,7 @@ gulp.task('default', ['clean'], function (cb) {
     'copy_bower',
     'copy_src',
     'copy_vulcanized',
-    'vulcanize',
-    'copy_to_akirodic'
+    'vulcanize'
   );
 });
 
