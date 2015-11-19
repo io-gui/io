@@ -112,9 +112,9 @@ gulp.task('serve', function () {
     }
   });
 
-  gulp.watch(['src/**/*.html'], reload_and_vulcanize);
-  gulp.watch(['src/**/*.css'], reload_and_vulcanize);
-  gulp.watch(['src/**/*.js'], reload_and_vulcanize);
+  gulp.watch(['src/**/*.html'], reload);
+  gulp.watch(['src/**/*.css'], reload);
+  gulp.watch(['src/**/*.js'], reload);
 
   runSequence(['default']);
 });

@@ -49,3 +49,6 @@
 [submodule "src/io-vector"]
 	path = src/io-vector
 	url = https://github.com/arodic/io-vector.git
+[submodule "src/ree.js"]
+	path = src/ree.js
+	url = https://github.com/arodic/ree.js.git
