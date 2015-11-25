@@ -1,6 +1,3 @@
-[submodule "src/three-editor"]
-	path = src/three-editor
-	url = https://github.com/arodic/three-editor.git
 [submodule "src/three-viewport"]
 	path = src/three-viewport
 	url = https://github.com/arodic/three-viewport.git
@@ -49,9 +46,6 @@
 [submodule "src/io-vector"]
 	path = src/io-vector
 	url = https://github.com/arodic/io-vector.git
-[submodule "src/ree.js"]
-	path = src/ree.js
-	url = https://github.com/arodic/ree.js.git
 [submodule "src/three.js"]
 	path = src/three.js
 	url = https://github.com/mrdoob/three.js.git
