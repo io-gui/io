@@ -17,7 +17,8 @@
     "io-vector": "arodic/io-vector#~1.2.1",
     "three-js": "arodic/three-js#~1.2.1",
     "three-renderer": "arodic/three-renderer#~1.2.1",
-    "three-viewport": "arodic/three-viewport#~1.2.1"
+    "three-viewport": "arodic/three-viewport#~1.2.1",
+    "iron-selector": "PolymerElements/iron-selector#~1.0.8"
   },
   "devDependencies": {
     "web-component-tester": "*",
