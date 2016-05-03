@@ -21,7 +21,7 @@ gulp.task('serve', function () {
       }
     },
     server: {
-      baseDir: ['src', 'bower_components']
+      baseDir: ['src', 'components', 'bower_components']
     }
   });
 
