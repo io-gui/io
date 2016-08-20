@@ -21,13 +21,13 @@ gulp.task('serve', function () {
       }
     },
     server: {
-      baseDir: ['src', 'components', 'bower_components']
+      baseDir: ['components', 'bower_components']
     }
   });
 
-  gulp.watch(['src/**/*.html'], reload);
-  gulp.watch(['src/**/*.css'], reload);
-  gulp.watch(['src/**/*.js'], reload);
+  gulp.watch(['components/**/*.html'], reload);
+  gulp.watch(['components/**/*.css'], reload);
+  gulp.watch(['components/**/*.js'], reload);
 });
 
 gulp.task('default', ['serve']);
