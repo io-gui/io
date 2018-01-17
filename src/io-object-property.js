@@ -7,7 +7,9 @@ class IoObjectProperty extends HTMLElement {
     return html`
       <style>
         :host {
-          display: inline;
+          display: flex;
+          flex-direction: row;
+          background: rgba(0,0,255,0.1);
         }
         ::slotted(io-value[type="number"]) {
           color: rgb(28, 0, 207);
@@ -18,16 +20,24 @@ class IoObjectProperty extends HTMLElement {
         ::slotted(io-value[type="boolean"]) {
           color: rgb(170, 13, 145);
         }
-        ::slotted(.io-label):before {
-          /* white-space: pre; */
+        ::slotted(.io-label) {
+          background: rgba(0,0,0,0.1);
         }
         ::slotted(.io-label):after {
-          content: ":";
+          content: ":\\00a0";
         }
-        /* :host::after {
-          display: inline-block;
-          background-color: green;
-          content: "\\A\\00a0\\00a0\\00a0\\00a0";
+        ::slotted(.io-label) {
+          position: relative;
+        }
+        ::slotted(.io-label.hidden) {
+          display: none;
+        }
+        /* TODO: fingure out offset */
+        /* ::slotted(io-object) {
+          margin-left: -50px;
+        }
+        ::slotted(io-object > io-object-constructor) {
+          margin-left: 50px;
         } */
       </style><slot></slot>
     `;
@@ -37,18 +47,19 @@ class IoObjectProperty extends HTMLElement {
     super();
     this._key = key;
     this._value = value;
+    this._labeled = labeled;
     this._valueSetListener = this._valueSetHandler.bind(this);
     this._objectMutatedListener = this._objectMutatedHandler.bind(this);
 
+    if (this._labeled) {
+      this._label = document.createElement('span');
+      this._label.className = 'io-label';
+      this._label.innerText = this._key;
+      this.appendChild(this._label);
+    }
+
     this._shadowRoot = this.attachShadow({mode: 'open'});
     this._shadowRoot.innerHTML = this.__proto__.constructor.template;
-
-    if (labeled) {
-      let label = document.createElement('span');
-      label.className = 'io-label';
-      label.innerText = key;
-      this.appendChild(label);
-    }
 
     this._update();
   }
@@ -117,6 +128,12 @@ class IoObjectProperty extends HTMLElement {
       this._editor = document.createElement(config.tag);
       this._editor.addEventListener('io-value-set', this._valueSetListener);
       this.appendChild(this._editor);
+    }
+
+    // Hide label if object
+    if (this._labeled) {
+      this._label.classList.toggle('hidden', this._editor.localName == 'io-object');
+      this._editor.label = this._key;
     }
 
     for (var c in params) {

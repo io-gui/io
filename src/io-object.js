@@ -7,10 +7,27 @@ class IoObject extends IoBase {
   static get template() {
     return html`
       <style>
-        io-object {
+        :host {
           display: inline-block;
+          background: rgba(255,0,0,0.1);
+          position: relative;
         }
-      </style><slot></slot>
+        ::slotted(io-object-property):before {
+          content: "\\00a0\\00a0─\\00a0";
+        }
+        :host #tree-line {
+          display: none;
+        }
+        :host([expanded]) > #tree-line {
+          display: inline-block;
+          position: absolute;
+          pointer-events: none;
+          width: 0.5em;
+          border-right: 1px solid black;
+          top: 1.5em;
+          bottom: 0.5em;
+        }
+      </style><div id="tree-line"></div><slot></slot>
     `;
   }
   static get properties() {
@@ -33,6 +50,11 @@ class IoObject extends IoBase {
         type: Boolean,
         observer: '_updateJob',
         reflectToAttribute: true
+      },
+      label: {
+        value: '',
+        type: String,
+        observer: '_updateJob'
       }
     }
   }
@@ -40,7 +62,7 @@ class IoObject extends IoBase {
     this.innerHTML = '';
     if (typeof this.value == 'object' && this.value !== null) {
       let _keys = this.expanded ? Object.keys(this.value) : [];
-      this.appendChild(new IoObjectConstructor(this.value, this.expanded));
+      this.appendChild(new IoObjectConstructor(this.value, this.expanded, this.label));
       for (let i = 0; i < _keys.length; i++) {
         this.appendChild(new IoObjectProperty(_keys[i], this.value, this.labeled));
       }

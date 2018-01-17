@@ -85,7 +85,13 @@ window.Io = {
         this['_' + propKey] = value;
         // reflect to attribute
         if (propConfig.reflectToAttribute) {
-          this.setAttribute(propKey, value === true ? '' : value);
+          if (value === true) {
+            this.setAttribute(propKey, '');
+          } else if (value === false) {
+            this.removeAttribute(propKey);
+          } else {
+            this.setAttribute(propKey, value);
+          }
         };
         if (propConfig.observer) {
           this[propConfig.observer](value);

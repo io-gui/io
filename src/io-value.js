@@ -12,7 +12,7 @@ class IoValue extends IoBase {
       <style>
         :host {
           cursor: text;
-          display: inline;
+          display: inline-block;
         }
         :host([type="boolean"]) {
           cursor: pointer;

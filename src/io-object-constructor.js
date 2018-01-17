@@ -6,14 +6,20 @@ class IoObjectConstructor extends IoBase {
     return html`
       <style>
       :host {
-        display: inline;
+        display: inline-block;
         cursor: pointer;
+        background: rgba(0,255,0,0.1);
       }
-      /* :host([expanded])::after {
-        display: inline;
-        background-color: red;
-        content: "\\A\\00a0\\00a0\\00a0\\00a0";
-      } */
+      :host:before {
+        content: "\\00a0▷\\00a0";
+        font-size: 0.8em;
+        line-height: 1em;
+      }
+      :host([expanded]):before {
+        content: "\\00a0▽\\00a0";
+        font-size: 0.8em;
+        line-height: 1em;
+      }
       </style><slot></slot>
     `;
   }
@@ -27,10 +33,11 @@ class IoObjectConstructor extends IoBase {
       }
     }
   }
-  constructor(object, expanded) {
+  constructor(object, expanded, label) {
     super();
     this.expanded = expanded;
     this._object = object;
+    this._label = label;
     this._toggleListener = this._toggleHandler.bind(this);
     this._update();
   }
@@ -53,13 +60,15 @@ class IoObjectConstructor extends IoBase {
     }
   }
   _update() {
-    this.innerHTML = '';
     let constructor = '';
     this.setAttribute('tabindex', 0);
+    if (this._label) {
+      constructor += this._label + ': ';
+    }
     if (this.expanded) {
-      constructor = '▾' + this._object.constructor.name || 'Object';
+      constructor += this._object.constructor.name || 'Object';
     } else {
-      constructor = '▸' + this._object.constructor.name || 'Object';
+      constructor += this._object.constructor.name || 'Object';
       constructor += '(' + Object.keys(this._object).length + ')'
     }
     this.innerHTML = constructor;
