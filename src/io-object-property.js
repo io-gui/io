@@ -18,11 +18,22 @@ class IoObjectProperty extends HTMLElement {
         ::slotted(io-value[type="boolean"]) {
           color: rgb(170, 13, 145);
         }
+        ::slotted(.io-label):before {
+          /* white-space: pre; */
+        }
+        ::slotted(.io-label):after {
+          content: ":";
+        }
+        /* :host::after {
+          display: inline-block;
+          background-color: green;
+          content: "\\A\\00a0\\00a0\\00a0\\00a0";
+        } */
       </style><slot></slot>
     `;
   }
 
-  constructor(key, value) {
+  constructor(key, value, labeled) {
     super();
     this._key = key;
     this._value = value;
@@ -31,6 +42,13 @@ class IoObjectProperty extends HTMLElement {
 
     this._shadowRoot = this.attachShadow({mode: 'open'});
     this._shadowRoot.innerHTML = this.__proto__.constructor.template;
+
+    if (labeled) {
+      let label = document.createElement('span');
+      label.className = 'io-label';
+      label.innerText = key;
+      this.appendChild(label);
+    }
 
     this._update();
   }
@@ -97,7 +115,7 @@ class IoObjectProperty extends HTMLElement {
 
     if (!this._editor || this._editor.localName != config.tag) {
       this._editor = document.createElement(config.tag);
-      this._editor.addEventListener('value-changed', this._valueSetListener);
+      this._editor.addEventListener('io-value-set', this._valueSetListener);
       this.appendChild(this._editor);
     }
 
@@ -117,8 +135,8 @@ window.customElements.define(IoObjectProperty.is, IoObjectProperty);
 // First matching object/property config will be used.
 IoObjectProperty.config = {
   'constructor:Object' : {
-    'value:null': {tag: 'io-value', params: {disabled: true}},
-    'value:undefined': {tag: 'io-value', params: {disabled: true}},
+    'value:null': {tag: 'io-value', params: {}},
+    'value:undefined': {tag: 'io-value', params: {}},
     'constructor:Array': {tag: 'io-object', params: {labeled: false, expanded: true}},
     'type:string': {tag: 'io-value', params: {type: 'string'}},
     'type:number': {tag: 'io-value', params: {type: 'number', step: 0.1}},

@@ -30,24 +30,28 @@ class IoValue extends IoBase {
         }
         :host(.edit) {
           position: relative;
-          color: rgba(0,0,0,0);
+          color: rgba(0,0,0,0) !important;
         }
-        input {
+        :host input {
           position: absolute;
-          display: inline-block;
+          display: block;
           width: 100%;
           height: 100%;
           top: 0;
           left: 0;
           background: transparent;
+          background: rgba(125,0,0,0.1);
           padding: 0;
-          border: 0;
+          border: 0px solid;
           font-size: inherit;
           font-style: inherit;
           font-family: inherit;
         }
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
+        :host input:focus{
+          /* outline: none; */
+        }
+        :host input[type=number]::-webkit-inner-spin-button,
+        :host input[type=number]::-webkit-outer-spin-button {
           -webkit-appearance: none;
           margin: 0;
         }
@@ -111,6 +115,8 @@ class IoValue extends IoBase {
     super.connectedCallback();
     this.setAttribute('tabindex', 0);
     this.addEventListener('focus', this._focusListener);
+    this._updateJob();
+    this._disabledChanged();
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -150,8 +156,9 @@ class IoValue extends IoBase {
     }
   }
   _addEditor() {
+    this.classList.add('edit');
     editor.type = this.type || 'string';
-    editor.value = String(this.value);
+    editor.value =  String(this.value);
     if (this.type === 'number') {
       if (typeof this.value !== 'number' || this.value === null || isNaN(this.value)) {
         editor.value = 0;
@@ -165,17 +172,16 @@ class IoValue extends IoBase {
       editor.focus();
       editor.select();
     })
-    this.classList.add('edit');
     editor._host = this;
     this._edit = true;
   }
   _removeEditor() {
+    this.classList.remove('edit');
     if (editor.parentNode && this._edit) {
       editor.type = '';
       editor.value = '';
       editor.parentNode.removeChild(editor);
     }
-    this.classList.remove('edit');
     editor._host = undefined;
     this._edit = false;
   }

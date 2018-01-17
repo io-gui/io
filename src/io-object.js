@@ -10,16 +10,6 @@ class IoObject extends IoBase {
         io-object {
           display: inline-block;
         }
-        io-object[expanded]::slotted(io-object-constructor):after {
-          /* display: inline-block; */
-          content: "\\A\\00a0\\00a0\\00a0\\00a0";
-        }
-        /* ::slotted(.io-label):before {
-          white-space: pre;
-        }
-        ::slotted(.io-label):after {
-          content: ":";
-        } */
       </style><slot></slot>
     `;
   }
@@ -52,13 +42,7 @@ class IoObject extends IoBase {
       let _keys = this.expanded ? Object.keys(this.value) : [];
       this.appendChild(new IoObjectConstructor(this.value, this.expanded));
       for (let i = 0; i < _keys.length; i++) {
-        if (this.labeled) {
-          let label = document.createElement('span');
-          label.className = 'io-label';
-          label.innerText = _keys[i];
-          this.appendChild(label);
-        }
-        this.appendChild(new IoObjectProperty(_keys[i], this.value));
+        this.appendChild(new IoObjectProperty(_keys[i], this.value, this.labeled));
       }
     }
   }

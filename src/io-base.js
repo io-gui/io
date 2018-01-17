@@ -30,12 +30,12 @@ class IoBase extends HTMLElement {
     /**
       * Fired when value is set by user interaction (editor).
       *
-      * @event value-changed
+      * @event io-value-set
       * @param {Object} detail value change data
       * @param {Object} detail.value new value
       * @param {Object} detail.oldValue old value
       */
-    this.dispatchEvent(new CustomEvent('value-changed', {
+    this.dispatchEvent(new CustomEvent('io-value-set', {
       detail: {value: value, oldValue: oldValue},
       bubbles: false,
       composed: true

@@ -90,6 +90,24 @@ export class MyApp extends HTMLElement {
             <io-value type="number" [value]=${this.values.boolean}></io-value>
             <io-value type="boolean" [value]=${this.values.boolean}></io-value>
           </div>
+          <div class="row">
+            <span class="rowlabel">NaN:</span>
+            <io-value type="string" [value]=${this.values.NaN}></io-value>
+            <io-value type="number" [value]=${this.values.NaN}></io-value>
+            <io-value type="boolean" [value]=${this.values.NaN}></io-value>
+          </div>
+          <div class="row">
+            <span class="rowlabel">null:</span>
+            <io-value type="string" [value]=${this.values.null}></io-value>
+            <io-value type="number" [value]=${this.values.null}></io-value>
+            <io-value type="boolean" [value]=${this.values.null}></io-value>
+          </div>
+          <div class="row">
+            <span class="rowlabel">undefined:</span>
+            <io-value type="string" [value]=${this.values.undefined}></io-value>
+            <io-value type="number" [value]=${this.values.undefined}></io-value>
+            <io-value type="boolean" [value]=${this.values.undefined}></io-value>
+          </div>
         </div>
         <div class="demo">
           <h3>io-object with various property types.</h3>

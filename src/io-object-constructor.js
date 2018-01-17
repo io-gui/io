@@ -9,6 +9,11 @@ class IoObjectConstructor extends IoBase {
         display: inline;
         cursor: pointer;
       }
+      /* :host([expanded])::after {
+        display: inline;
+        background-color: red;
+        content: "\\A\\00a0\\00a0\\00a0\\00a0";
+      } */
       </style><slot></slot>
     `;
   }
