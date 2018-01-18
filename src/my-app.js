@@ -49,6 +49,9 @@ export class MyApp extends HTMLElement {
         .narrow {
           width: 22em;
         }
+        .io-label {
+          /* background: rgba(0,0,0,0.2); */
+        }
         /* io-value[type=string] {
           color: green;
         } */

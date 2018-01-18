@@ -1,7 +1,7 @@
 import {IoBase, html} from "./io-base.js"
 import {IoValue} from "./io-value.js"
 
-class IoObjectProperty extends HTMLElement {
+class IoObjectProperty extends IoBase {
   static get is() { return 'io-object-property'; }
   static get template() {
     return html`
@@ -9,7 +9,7 @@ class IoObjectProperty extends HTMLElement {
         :host {
           display: flex;
           flex-direction: row;
-          background: rgba(0,0,255,0.1);
+          /* background: rgba(0,0,255,0.1); */
         }
         ::slotted(io-value[type="number"]) {
           color: rgb(28, 0, 207);
@@ -21,7 +21,7 @@ class IoObjectProperty extends HTMLElement {
           color: rgb(170, 13, 145);
         }
         ::slotted(.io-label) {
-          background: rgba(0,0,0,0.1);
+          /* background: rgba(0,0,0,0.1); */
         }
         ::slotted(.io-label):after {
           content: ":\\00a0";
@@ -32,54 +32,45 @@ class IoObjectProperty extends HTMLElement {
         ::slotted(.io-label.hidden) {
           display: none;
         }
-        /* TODO: fingure out offset */
-        /* ::slotted(io-object) {
-          margin-left: -50px;
-        }
-        ::slotted(io-object > io-object-constructor) {
-          margin-left: 50px;
-        } */
       </style><slot></slot>
     `;
   }
-
-  constructor(key, value, labeled) {
-    super();
-    this._key = key;
-    this._value = value;
-    this._labeled = labeled;
+  static get properties() {
+    return {
+      value: {
+        type: Object
+      },
+      key: {
+        value: '',
+        type: String
+      }
+    }
+  }
+  constructor(props) {
+    super(props);
     this._valueSetListener = this._valueSetHandler.bind(this);
     this._objectMutatedListener = this._objectMutatedHandler.bind(this);
-
-    if (this._labeled) {
-      this._label = document.createElement('span');
-      this._label.className = 'io-label';
-      this._label.innerText = this._key;
-      this.appendChild(this._label);
-    }
-
-    this._shadowRoot = this.attachShadow({mode: 'open'});
-    this._shadowRoot.innerHTML = this.__proto__.constructor.template;
-
+    this.$label = this.appendHTML(html`<span class='io-label'>${this.key}</span>`);
     this._update();
   }
   connectedCallback() {
     window.addEventListener('io-object-mutated', this._objectMutatedListener);
+    this._update();
   }
   disconnectedCallback() {
     window.removeEventListener('io-object-mutated', this._objectMutatedListener);
   }
   _valueSetHandler(event) {
-    this._value[this._key] = event.detail.value;
+    this.value[this.key] = event.detail.value;
     window.dispatchEvent(new CustomEvent('io-object-mutated', {
-      detail: {object: this._value, key: this._key},
+      detail: {object: this.value, key: this.key},
       bubbles: false,
       composed: true
     }));
   }
   _objectMutatedHandler(event) {
-    if (event.detail.object === this._value) {
-      if (event.detail.key === this._key || event.detail.key === '*') {
+    if (event.detail.object === this.value) {
+      if (event.detail.key === this.key || event.detail.key === '*') {
         this._update();
       }
     }
@@ -87,14 +78,14 @@ class IoObjectProperty extends HTMLElement {
   /* Finds first matching configuration for object property */
   _getConfig() {
     let object = this._value;
-    let key = this._key;
-    let value = this._value[this._key];
+    let key = this.key;
+    let value = this._value[this.key];
     let type = typeof value;
     let cstr = (value && value.constructor) ? value.constructor.name : 'null';
 
     // Follow object prototype chain to find first configuration block that matches.
-    let proto = object.__proto__;
     let config;
+    let proto = object.__proto__;
 
     while (proto) {
       config = IoObjectProperty.config['constructor:' + proto.constructor.name];
@@ -116,31 +107,34 @@ class IoObjectProperty extends HTMLElement {
     }
   }
   _update() {
-    let config = this._getConfig() || {};
-    let params = config.params || {};
+    let config = this._getConfig();
+    let props = config.props || {};
 
-    if (this._editor) {
+    if (this._editor && this._editor.localName != config.tag) {
       this.removeChild(this._editor);
       delete this._editor;
     }
 
-    if (!this._editor || this._editor.localName != config.tag) {
-      this._editor = document.createElement(config.tag);
+    if (!this._editor) {
+      if (customElements.get(config.tag)) {
+        let ConstructorClass = customElements.get(config.tag);
+        this._editor = new ConstructorClass(config.props);
+      } else {
+        this._editor = document.createElement(config.tag);
+        for (var c in props) {
+          this._editor[c] = config.props[c];
+        }
+      }
+
       this._editor.addEventListener('io-value-set', this._valueSetListener);
       this.appendChild(this._editor);
     }
 
-    // Hide label if object
-    if (this._labeled) {
-      this._label.classList.toggle('hidden', this._editor.localName == 'io-object');
-      this._editor.label = this._key;
-    }
+    this._editor.label = this.key;
+    this._editor.value = this._value[this.key];
 
-    for (var c in params) {
-      this._editor[c] = config.params[c];
-    }
-
-    this._editor.value = this._value[this._key];
+    // Hide key label if io-object
+    this.$label.classList.toggle('hidden', this._editor.localName == 'io-object');
   }
 }
 
@@ -152,16 +146,16 @@ window.customElements.define(IoObjectProperty.is, IoObjectProperty);
 // First matching object/property config will be used.
 IoObjectProperty.config = {
   'constructor:Object' : {
-    'value:null': {tag: 'io-value', params: {}},
-    'value:undefined': {tag: 'io-value', params: {}},
-    'constructor:Array': {tag: 'io-object', params: {labeled: false, expanded: true}},
-    'type:string': {tag: 'io-value', params: {type: 'string'}},
-    'type:number': {tag: 'io-value', params: {type: 'number', step: 0.1}},
-    'type:boolean': {tag: 'io-value', params: {type: 'boolean'}},
-    'type:object': {tag: 'io-object', params: {labeled: true}}
+    'value:null': {tag: 'io-value', props: {}},
+    'value:undefined': {tag: 'io-value', props: {}},
+    'constructor:Array': {tag: 'io-object', props: {expanded: true}},
+    'type:string': {tag: 'io-value', props: {type: 'string'}},
+    'type:number': {tag: 'io-value', props: {type: 'number', step: 0.1}},
+    'type:boolean': {tag: 'io-value', props: {type: 'boolean'}},
+    'type:object': {tag: 'io-object', props: {}}
   },
   'constructor:Array': {
-    'type:number': {tag: 'io-value', params: {type: 'number', step: 1 }}
+    'type:number': {tag: 'io-value', props: {type: 'number', step: 1 }}
   }
 }
 

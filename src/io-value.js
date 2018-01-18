@@ -104,19 +104,20 @@ class IoValue extends IoBase {
       }
     }
   }
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this._focusListener = this._focusHandler.bind(this);
     this._blurListener = this._blurHandler.bind(this);
     this._toggleListener = this._toggleHandler.bind(this);
     this._preventDefault = this.preventDefault.bind(this);
+    this._typeChanged();
+    this._disabledChanged();
+    this._updateJob();
   }
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('tabindex', 0);
     this.addEventListener('focus', this._focusListener);
-    this._updateJob();
-    this._disabledChanged();
   }
   disconnectedCallback() {
     super.disconnectedCallback();

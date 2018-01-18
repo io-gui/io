@@ -8,46 +8,53 @@ class IoObjectConstructor extends IoBase {
       :host {
         display: inline-block;
         cursor: pointer;
-        background: rgba(0,255,0,0.1);
-      }
-      :host:before {
-        content: "\\00a0▷\\00a0";
-        font-size: 0.8em;
         line-height: 1em;
       }
-      :host([expanded]):before {
-        content: "\\00a0▽\\00a0";
-        font-size: 0.8em;
-        line-height: 1em;
+      ::slotted(.hidden) {
+        display: none;
+      }
+      ::slotted(.io-label):after {
+        content: ":";
       }
       </style><slot></slot>
     `;
   }
   static get properties() {
     return {
+      object: {
+        type: Object,
+        observer: '_updateJob',
+      },
+      label: {
+        value: '',
+        type: String,
+        observer: '_updateJob'
+      },
       expanded: {
-        value: false,
         type: Boolean,
         observer: '_updateJob',
         reflectToAttribute: true
       }
     }
   }
-  constructor(object, expanded, label) {
-    super();
-    this.expanded = expanded;
-    this._object = object;
-    this._label = label;
+  constructor(props) {
+    super(props);
+    this.setAttribute('tabindex', 0);
     this._toggleListener = this._toggleHandler.bind(this);
-    this._update();
+    this._preventDefault = this.preventDefault.bind(this);
+    this.$label = this.appendHTML(html`<span class='io-label'></span>`);
+    this.$constructor = this.appendHTML(html`<span class='io-constructor'></span>`);
   }
   connectedCallback() {
     this.addEventListener('click', this._toggleListener);
     this.addEventListener('keydown', this._toggleListener);
+    this.addEventListener('mousedown', this._preventDefault);
+    this._updateJob();
   }
   disconnectedCallback() {
     this.removeEventListener('click', this._toggleListener);
     this.removeEventListener('keydown', this._toggleListener);
+    this.removeEventListener('mousedown', this._preventDefault);
   }
   _toggleHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'click') {
@@ -60,18 +67,14 @@ class IoObjectConstructor extends IoBase {
     }
   }
   _update() {
-    let constructor = '';
-    this.setAttribute('tabindex', 0);
-    if (this._label) {
-      constructor += this._label + ': ';
-    }
+    this.$label.innerText = this.label;
+    this.$label.classList.toggle('hidden', !this.label);
+    let _name = this._object.constructor.name || 'Object';
     if (this.expanded) {
-      constructor += this._object.constructor.name || 'Object';
+      this.$constructor.innerHTML = '▾' + _name;
     } else {
-      constructor += this._object.constructor.name || 'Object';
-      constructor += '(' + Object.keys(this._object).length + ')'
+      this.$constructor.innerHTML = '▸' + _name + '(' + Object.keys(this._object).length + ')';
     }
-    this.innerHTML = constructor;
   }
 }
 

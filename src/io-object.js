@@ -9,7 +9,7 @@ class IoObject extends IoBase {
       <style>
         :host {
           display: inline-block;
-          background: rgba(255,0,0,0.1);
+          /* background: rgba(255,0,0,0.1); */
           position: relative;
         }
         ::slotted(io-object-property):before {
@@ -32,41 +32,55 @@ class IoObject extends IoBase {
   }
   static get properties() {
     return {
-      /* Value to be displayed/edited. */
       value: {
         type: Object,
         observer: '_updateJob'
       },
-      /* This attribute expands property editors. */
       expanded: {
         value: false,
         type: Boolean,
-        observer: '_updateJob',
-        reflectToAttribute: true
-      },
-      /* This attribute reveals property labels. */
-      labeled: {
-        value: false,
-        type: Boolean,
-        observer: '_updateJob',
+        observer: '_expandedChanged',
         reflectToAttribute: true
       },
       label: {
         value: '',
-        type: String,
-        observer: '_updateJob'
+        type: String
       }
     }
   }
+  constructor(props) {
+    super(props);
+    this.$constructor = new IoObjectConstructor({object: this.value || {}, expanded: this.expanded, label: this.label});
+    this.$property = {};
+    this.appendChild(this.$constructor);
+    this._updateJob();
+  }
+  _expandedChanged() {
+    this.$constructor.expanded = this.expanded;
+    this._updateJob();
+  }
   _update() {
-    this.innerHTML = '';
-    if (typeof this.value == 'object' && this.value !== null) {
-      let _keys = this.expanded ? Object.keys(this.value) : [];
-      this.appendChild(new IoObjectConstructor(this.value, this.expanded, this.label));
+    this.$constructor.object = this.value;
+    this.$constructor.expanded = this.expanded;
+    this.$constructor.label = this.label;
+
+    let _keys = Object.keys(this.value);
+    let _$keys = Object.keys(this.$property);
+
+    if (this.expanded) {
       for (let i = 0; i < _keys.length; i++) {
-        this.appendChild(new IoObjectProperty(_keys[i], this.value, this.labeled));
+        if (!this.$property[_keys[i]]) {
+          this.$property[_keys[i]] = new IoObjectProperty({value: this.value, key: _keys[i]});
+        }
+        this.appendChild(this.$property[_keys[i]]);
       }
+    } else {
+      for (let i = 0; i < _$keys.length; i++) {
+        this.$property[_$keys[i]] = this.$property[_$keys[i]].parentElement.removeChild(this.$property[_$keys[i]]);
+      }
+      // TODO: remove unused and take care of garbage.
     }
+
   }
 }
 
