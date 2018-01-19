@@ -26,7 +26,6 @@ class IoObjectConstructor extends IoBase {
         observer: '_updateJob',
       },
       label: {
-        value: '',
         type: String,
         observer: '_updateJob'
       },

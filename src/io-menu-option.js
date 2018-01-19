@@ -3,11 +3,11 @@ import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuGroup} from "./io-menu-group.js"
 
 // var x = 0, y = 0, v = 0;
-var previousOption;
-var previousParent;
-var timeoutOpen;
-var timeoutReset;
-var WAIT_TIME = 1000;
+// var previousOption;
+// var previousParent;
+// var timeoutOpen;
+// var timeoutReset;
+// var WAIT_TIME = 1000;
 
 class IoMenuOption extends IoBase {
   static get is() { return 'io-menu-option'; }
@@ -18,78 +18,64 @@ class IoMenuOption extends IoBase {
         display: inline-block;
         cursor: pointer;
       }
-      :host([invalid]),
-      :host([disabled]) {
-        opacity: 0.5;
-      }
-
       </style><slot></slot>
     `;
   }
   static get properties() {
     return {
       option: {
-        type: Object,
-        observer: '_optionChanged'
+        type: Object
+      },
+      $parent: {
+        type: HTMLElement
       }
     }
   }
   constructor(props) {
     super(props);
-    this.$group = new IoMenuGroup({options: this.option.options});
-    this.$group._parent = this;
-    IoMenuLayer.singleton.appendChild(this.$group);
+    this.setAttribute('tabindex', 1);
+    if (this.option.options) {
+      this.$group = new IoMenuGroup({options: this.option.options, $parent: this, position: 'right'});
+      IoMenuLayer.singleton.appendChild(this.$group);
+    }
 
-    this.$icon = this.appendHTML(html`<span class='io-icon'>*</span>`);
     this.$label = this.appendHTML(html`<span class='io-label'>${this.option.label}</span>`);
-    this.$expandicon = this.appendHTML(html`<span class='io-icon'>)</span>`);
-    this.$info = this.appendHTML(html`<span class='io-info'>..</span>`);
-    // button: {
-    //   type: HTMLElement
-    // },
-    // _menuGroup: {
-    //   type: HTMLElement
-    // }
-    // this.__onFocus = this._onFocus.bind(this);
-    // this.__onBlur = this._onBlur.bind(this);
-    // this.__onMousemove = this._onMousemove.bind(this);
-    // this.__onClick = this._onClick.bind(this);
+
+    this._focusListener = this._focusHandler.bind(this);
+    this._blurListener = this._blurHandler.bind(this);
+    // this._mousemoveListener = this._mousemoveHandler.bind(this);
+    this._clickListener = this._clickHandler.bind(this);
   }
   connectedCallback() {
     super.connectedCallback();
-    this.$parentGroup = this.parentElement;
-    // Attach menu subgroup to io-menu-layer.
-    // Set "parent" reference to `this`.
-    // this._menuGroup = this.shadowRoot.querySelector('io-menu-group');
-    // this._menuGroup._parent = this;
-    //
-    // //
-    // this.addEventListener('focus', this.__onFocus);
-    // this.addEventListener('blur', this.__onBlur);
-    // this.addEventListener('mousemove', this.__onMousemove);
-    // this.addEventListener('touchmove', this.__onMousemove);
-    // this.addEventListener('click', this.__onClick);
+    this.addEventListener('focus', this._focusListener);
+    this.addEventListener('blur', this._blurListener);
+    // TODO: performance!!!
+    // this.addEventListener('mousemove', this._mousemoveListener);
+    // this.addEventListener('touchmove', this._mousemoveListener);
+    this.addEventListener('click', this._clickListener);
+    this._update();
   }
   disconnectedCallback() {
-    // super.disconnectedCallback();
-    // this.removeEventListener('focus', this.__onFocus);
-    // this.removeEventListener('blur', this.__onBlur);
-    // this.removeEventListener('mousemove', this.__onMousemove);
-    // this.removeEventListener('touchmove', this.__onMousemove);
-    // this.removeEventListener('click', this.__onClick);
+    super.disconnectedCallback();
+    this.removeEventListener('focus', this._focusListener);
+    this.removeEventListener('blur', this._blurListener);
+    // this.removeEventListener('mousemove', this._mousemoveListener);
+    // this.removeEventListener('touchmove', this._mousemoveListener);
+    this.removeEventListener('click', this._clickListener);
   }
-  // _onFocus() {
-  //   let siblings = this.parentNode.querySelectorAll('io-menu-option');
-  //   for (var i = 0; i < siblings.length; i++) {
-  //     if (siblings[i] !== this) {
-  //       siblings[i]._menuGroup.expanded = false;
-  //     }
-  //   }
-  //   this._menuGroup.expanded = true;
-  // }
-  // _onBlur(event) {
-  // }
-  // _onMousemove(event) {
+  _focusHandler() {
+    for (var i = 0; i < this.$parent.$options.length; i++) {
+      if (this.$parent.$options[i] !== this) {
+        if (this.$parent.$options[i].$group)
+            this.$parent.$options[i].$group.expanded = false;
+      }
+    }
+    if (this.$group) this.$group.expanded = true;
+  }
+  _blurHandler(event) {
+  }
+  _mousemoveHandler(event) {
   //   if (event.changedTouches) event = event.changedTouches[0];
   //   let v = Math.abs(event.movementY / 2) - Math.abs(event.movementX);
   //   if (this !== previousOption) {
@@ -110,13 +96,23 @@ class IoMenuOption extends IoBase {
   //       previousParent = null;
   //     }.bind(this), WAIT_TIME + 1);
   //   }
-  // }
-  _optionChanged() {
-    if (this.option.disabled) {
-      this.removeAttribute('tabindex');
-    } else {
-      this.setAttribute('tabindex', 1);
+  }
+  _clickHandler(event) {
+    if (this.option.disabled) return;
+    let parent = this.$parent;
+    while (parent && parent.localName != 'io-menu') {
+      parent = parent.$parent;
     }
+    this.dispatchEvent(new CustomEvent('io-menu-option-clicked', {
+      detail: {option: this.option},
+      bubbles: true,
+      composed: true
+    }));
+    parent.dispatchEvent(new CustomEvent('io-menu-option-clicked', {
+      detail: {option: this.option},
+      bubbles: false,
+      composed: true
+    }));
   }
   // _onKeydown: function(event) {
   //   var siblings = Array.prototype.slice.call(this.parentNode.querySelectorAll(
@@ -127,7 +123,7 @@ class IoMenuOption extends IoBase {
   //   if (event.which == 13) {
   //     if (this.disabled) return;
   //     event.preventDefault();
-  //     this._onClick(event); // TODO: test
+  //     this._clickHandler(event); // TODO: test
   //
   //   } else if (event.which == 37) { // LEFT
   //     event.preventDefault();
@@ -147,7 +143,7 @@ class IoMenuOption extends IoBase {
   //   } else if (event.which == 39) { // RIGHT
   //     event.preventDefault();
   //     if (this.options && this.options.length) {
-  //       this._menuGroup.querySelector('io-menu-option')._openGroup();
+  //       this.$group.querySelector('io-menu-option')._openGroup();
   //       // TODO: if #1 is invalid/disabled, find first available option.
   //     }
   //
@@ -163,7 +159,7 @@ class IoMenuOption extends IoBase {
   //   } else if (event.which == 9) { // TAB
   //     event.preventDefault();
   //     if (this.options && this.options.length) {
-  //       this._menuGroup.querySelector('io-menu-option')._openGroup();
+  //       this.$group.querySelector('io-menu-option')._openGroup();
   //     } else if (index < siblings.length - 1) {
   //       siblings[(index + 1)]._openGroup();
   //     } else if (this.parentNode._parent) {
@@ -173,31 +169,6 @@ class IoMenuOption extends IoBase {
   //   } else if (event.which == 27) { // ESC
   //     event.preventDefault();
   //     this.fire('io-menu-option-clicked', this);
-  //   }
-  // },
-  // _onClick(event) {
-  //   let option = this.option;
-  //   if (option.disabled) return;
-  //   if (typeof option.action === 'function' || option.value !== undefined || option.button) {
-  //     if (option.button) {
-  //       // TODO: test
-  //       option.button.click();
-  //     }
-  //     if (typeof option.action === 'function') {
-  //       option.action.apply(null, [option.value]);
-  //     }
-  //     /**
-  //     * Fired when menu option is clicked.
-  //     *
-  //     * @event io-menu-option-clicked
-  //     * @param {Object} detail.option option clicked
-  //     */
-  //     this.dispatchEvent(new CustomEvent('io-menu-option-clicked', {
-  //       detail: {option: option},
-  //       bubbles: true,
-  //       composed: true
-  //     }));
-  //     IoMenuLayer.singleton.collapseAll();
   //   }
   // }
 }

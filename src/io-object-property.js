@@ -41,7 +41,6 @@ class IoObjectProperty extends IoBase {
         type: Object
       },
       key: {
-        value: '',
         type: String
       }
     }
@@ -55,7 +54,6 @@ class IoObjectProperty extends IoBase {
   }
   connectedCallback() {
     window.addEventListener('io-object-mutated', this._objectMutatedListener);
-    this._update();
   }
   disconnectedCallback() {
     window.removeEventListener('io-object-mutated', this._objectMutatedListener);
@@ -134,6 +132,7 @@ class IoObjectProperty extends IoBase {
     this._editor.value = this._value[this.key];
 
     // Hide key label if io-object
+    // TODO: make configurable
     this.$label.classList.toggle('hidden', this._editor.localName == 'io-object');
   }
 }

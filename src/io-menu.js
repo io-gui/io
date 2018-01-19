@@ -4,15 +4,6 @@ import {IoMenuGroup} from "./io-menu-group.js"
 
 class IoMenu extends IoBase {
   static get is() { return 'io-menu'; }
-  static get template() {
-    return html`
-      <style>
-      :host {
-        display: none;
-      }
-      </style><slot></slot>
-    `;
-  }
   static get properties() {
     return {
       options: {
@@ -20,8 +11,7 @@ class IoMenu extends IoBase {
         observer: '_updateJob'
       },
       expanded: {
-        type: Boolean,
-        observer: '_updateJob'
+        type: Boolean
       },
       position: {
         value: 'top',
@@ -40,26 +30,20 @@ class IoMenu extends IoBase {
   constructor(props) {
     super(props);
     this._expandListener = this._expandHandler.bind(this);
-    this.$group = new IoMenuGroup();
+    this.$group = new IoMenuGroup({$parent: this});
   }
   connectedCallback() {
     super.connectedCallback();
-    this.$group._parent = this.parentNode.host || this.parentNode;
-    this.$group._parent.addEventListener(this.listener, this._expandListener);
+    this.$parent = this.parentElement || this.parentNode.host;
+    this.$parent.addEventListener(this.listener, this._expandListener);
     IoMenuLayer.singleton.appendChild(this.$group);
-    // this.$group.addEventListener('io-menu-option-clicked', function (event) {
-    //   event.stopPropagation();
-    //   this.dispatchEvent(new CustomEvent('io-menu-option-clicked', {
-    //     detail: event.detail,
-    //     bubbles: true,
-    //     composed: true
-    //   }));
-    // }.bind(this))
+    this._binding = this.bind('expanded', this.$group, 'expanded');
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.$group._parent.removeEventListener(this.listener, this._expandListener);
+    this.$parent.removeEventListener(this.listener, this._expandListener);
     IoMenuLayer.singleton.removeChild(this.$group);
+    this.unbind(this._binding);
   }
   _expandHandler(event) {
     if (this.disabled) return;
@@ -70,7 +54,6 @@ class IoMenu extends IoBase {
   }
   _update() {
     this.$group.options = this.options;
-    this.$group.expanded = this.expanded;
     this.$group.position = this.position;
   }
 }

@@ -37,13 +37,11 @@ class IoObject extends IoBase {
         observer: '_updateJob'
       },
       expanded: {
-        value: false,
         type: Boolean,
-        observer: '_expandedChanged',
+        observer: '_updateJob',
         reflectToAttribute: true
       },
       label: {
-        value: '',
         type: String
       }
     }
@@ -51,20 +49,14 @@ class IoObject extends IoBase {
   constructor(props) {
     super(props);
     this.$constructor = new IoObjectConstructor({object: this.value, expanded: this.expanded, label: this.label});
+    this.bind('expanded', this.$constructor, 'expanded');
+    this.bind('label', this.$constructor, 'label', true);
+    this.bind('value', this.$constructor, 'object', true);
     this.appendChild(this.$constructor);
     this.$property = {};
-    this._updateJob();
-  }
-  _expandedChanged() {
-    this.$constructor.expanded = this.expanded;
-    this._updateJob();
   }
   _update() {
     if (this.value instanceof Object === false) return;
-
-    this.$constructor.object = this.value;
-    this.$constructor.expanded = this.expanded;
-    this.$constructor.label = this.label;
 
     let _keys = Object.keys(this.value);
     let _$keys = Object.keys(this.$property);

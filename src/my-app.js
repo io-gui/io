@@ -3,9 +3,7 @@ import {IoObject} from "./io-object.js"
 import {IoMenu} from "./io-menu.js"
 import {html, render, svg, bind} from '../node_modules/lit-html-brackets/lit-html-brackets.js';
 
-// Added "export" to export the MyApp symbol from the module
 export class MyApp extends HTMLElement {
-
   constructor() {
     super();
     this.values = {
@@ -17,28 +15,32 @@ export class MyApp extends HTMLElement {
       "undef": undefined,
       "array": [1,2,3,4,"apple"]
     }
-    const suboptions1 = [
-      {label: 'sub_sub_one', value: 1},
-      {label: 'sub_sub_two', value: 2},
-      {label: 'sub_sub_three', value: 3},
-      {label: 'sub_sub_four', value: 4},
-      {label: 'sub_sub_five', value: 5}
+    var suboptions1 = [
+      {label: 'sub_sub_one', value: 1, action: console.log},
+      {label: 'sub_sub_two', value: 2, action: console.log},
+      {label: 'sub_sub_three', value: 3, action: console.log},
+      {label: 'sub_sub_four', value: 4, action: console.log},
+      {label: 'sub_sub_five', value: 5, action: console.log}
     ]
-
-    const suboptions0 = [
+    var suboptions0 = [
       {label: 'sub_one', options: suboptions1},
       {label: 'sub_two', options: suboptions1},
       {label: 'sub_three', options: suboptions1},
       {label: 'sub_four', options: suboptions1},
       {label: 'sub_five', options: suboptions1}
     ]
-
+    var longOptions = [];
+    for (var i = 0; i < 1000; i++) {
+      let r = Math.random();
+      longOptions[i] = {label: 'option ' + r, value: r, action: console.log};
+    }
     this.options = [
       {label: 'one', options: suboptions0},
       {label: 'two', options: suboptions0},
       {label: 'three', options: suboptions0},
       {label: 'four', options: suboptions0},
-      {label: 'five', options: suboptions0}
+      {label: 'five', options: suboptions0},
+      {label: 'long', options: longOptions}
     ]
     this.values.object = this.values;
     this.attachShadow({mode: 'open'});
@@ -148,19 +150,19 @@ export class MyApp extends HTMLElement {
           </div>
         </div>
         <div class="demo">
+        <h3>io-menu.</h3>
+        <io-menu expanded position="pointer"></io-menu>
+        </div>
+        <div class="demo">
           <h3>io-object with various property types.</h3>
+          <io-object labeled expanded></io-object>
+          <io-object labeled expanded></io-object>
           <io-object labeled expanded></io-object>
           <io-object labeled expanded></io-object>
         </div>
       </div>
-      <div class="demo">
-        <h3>io-menu.</h3>
-        <io-menu expanded></io-menu>
-      </div>
     `;
-
   }
-
 }
 
 customElements.define('my-app', MyApp);

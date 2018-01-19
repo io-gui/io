@@ -65,8 +65,8 @@ class IoValue extends IoBase {
     return {
       /* Value to be edited with this element. */
       value: {
-        notify: true,
-        observer: '_update'
+        notify: true, //TODO: remove?
+        observer: '_updateJob'
       },
       /* Restricts value input to specified type such as string, number or boolean. */
       type: {
@@ -77,14 +77,12 @@ class IoValue extends IoBase {
       /* Disables interactions with the element. Removes tabindex attribute. */
       disabled: {
         type: Boolean,
-        value: false,
         observer: '_disabledChanged',
         reflectToAttribute: true
       },
       /* Automatically set to true if assigned value mismatches type. Reflects to attribute. */
       invalid: {
         type: Boolean,
-        value: false,
         reflectToAttribute: true
       },
       /* Increment step for number type. */
@@ -110,14 +108,14 @@ class IoValue extends IoBase {
     this._blurListener = this._blurHandler.bind(this);
     this._toggleListener = this._toggleHandler.bind(this);
     this._preventDefault = this.preventDefault.bind(this);
-    this._typeChanged();
-    this._disabledChanged();
-    this._updateJob();
   }
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('tabindex', 0);
     this.addEventListener('focus', this._focusListener);
+    this._typeChanged();
+    this._disabledChanged();
+    this._updateJob();
   }
   disconnectedCallback() {
     super.disconnectedCallback();

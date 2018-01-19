@@ -1,7 +1,7 @@
 
 class IoBase extends HTMLElement {
   static get is() { return 'io-base'; }
-  static get template() { return ``; }
+  static get template() { return html`<slot></slot>`; }
   static get observedAttributes() {
     // TODO: follow prototype chain
     if (this.properties) {
@@ -12,6 +12,7 @@ class IoBase extends HTMLElement {
   constructor(props = {}) {
     super();
     // TODO: follow prototype chain
+    this._notify = {};
     this._properties = this.__proto__.constructor.properties || {};
     for (let propKey in this._properties) {
       Io.defineProperty(this, propKey, this._properties[propKey]);
@@ -40,29 +41,18 @@ class IoBase extends HTMLElement {
     }
   }
   appendHTML(string) {
-    _element.innerHTML = string;
-    return this.appendChild(_element.querySelector('*'));
+    _stagingEelement.innerHTML = string;
+    return this.appendChild(_stagingEelement.querySelector('*'));
   }
-  /* Used to set value from the input (editor). */
   _setValue(value) {
-    if (this.disabled || value === this.value) {
-      return;
-    }
+    if (this.disabled || value === this.value) return;
     let oldValue = this.value;
     this.value = value;
-    /**
-      * Fired when value is set by user interaction (editor).
-      * @event io-value-set
-      * @param {Object} detail value change data
-      * @param {Object} detail.value new value
-      * @param {Object} detail.oldValue old value
-      */
     this.dispatchEvent(new CustomEvent('io-value-set', {
       detail: {value: value, oldValue: oldValue},
       bubbles: false,
       composed: true
     }));
-
   }
   connectedCallback() {
   }
@@ -72,21 +62,38 @@ class IoBase extends HTMLElement {
     event.preventDefault();
   }
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name == 'value') {
-      console.warn('io-base: Avoid setting attributes. Set propetries instead.')
-      this.value = newValue;
+    if (this._properties[name].type == Boolean) {
+      this[name] = newValue == '' ? true : false;
+    } else if (this._properties[name].type == Number) {
+      this[name] = parseFloat(newValue);
     } else {
-      if (this._properties[name].type == Boolean) {
-        this[name] = newValue == '' ? true : false;
-      } else if (this._properties[name].type == Number) {
-        this[name] = parseFloat(newValue);
-      } else {
-        this[name] = newValue;
-      }
+      this[name] = newValue;
     }
+  }
+  bind(sourceProp, target, targetProp, oneWay) {
+    this._notify[sourceProp] = true;
+    if (!oneWay) target._notify[targetProp] = true;
+    var binding = {
+      source: this,
+      target: target,
+      sourceProp: sourceProp,
+      targetProp: targetProp,
+      setTarget: function (event) { target[targetProp] = event.detail.value; }.bind(target),
+      setSource: function (event) { this[sourceProp] = event.detail.value; }.bind(this)
+    };
+    binding.source.addEventListener(sourceProp + '-changed', binding.setTarget);
+    if (!oneWay) binding.target.addEventListener(targetProp + '-changed', binding.setSource);
+    binding.target[targetProp] = binding.source[sourceProp];
+    return binding;
+  }
+  unbind(binding) {
+    binding.source.removeEventListener(binding.sourceProp + '-changed', binding.setTarget);
+    binding.target.removeEventListener(binding.targetProp + '-changed', binding.setSource);
+    for (var prop in binding) { delete binding[prop]; }
   }
   _update() {}
   _updateJob() {
+    // TODO: consider alternative for performance
     clearTimeout(this._updateID);
     this._updateID = setTimeout(() => {
       delete this._updateID;
@@ -104,12 +111,19 @@ window.Io = {
       },
       set: function(value) {
         if (this['_' + propKey] === value) return;
+        let oldValue = value;
         this['_' + propKey] = value;
         this.reflectAttribute(propKey);
         if (propConfig.observer) {
           this[propConfig.observer](value);
         }
-        // TODO: notify
+        if (propConfig.notify || this._notify[propKey]) {
+          this.dispatchEvent(new CustomEvent(propKey + '-changed', {
+            detail: {value: value, oldValue: oldValue},
+            bubbles: propConfig.notify,
+            composed: true
+          }));
+        }
         // TODO: type check
       },
       enumerable: true,
@@ -148,4 +162,4 @@ export function html(pieces) {
     }
     return result;
 }
-var _element = document.createElement('div');
+var _stagingEelement = document.createElement('div');

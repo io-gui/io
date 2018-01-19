@@ -31,7 +31,6 @@ class IoMenuLayer extends IoBase {
     return {
       expanded: {
         type: Boolean,
-        value: false,
         reflectToAttribute: true,
         observer: '_expandedChanged'
       }
@@ -45,6 +44,20 @@ class IoMenuLayer extends IoBase {
     this.addEventListener('expanded-changed', this._onMenuGroupExpanded);
     this.addEventListener('mousemove', this._onMousemove);
     this._pointer = {x: 0, y: 0}
+
+    this.addEventListener('io-menu-option-clicked', function (event) {
+      event.stopPropagation();
+      let option = event.detail.option;
+      if (typeof option.action === 'function') {
+        option.action.apply(null, [option.value]);
+        IoMenuLayer.singleton.collapseAll();
+      } else if (option.button) {
+        option.button.click(); // TODO: test
+        IoMenuLayer.singleton.collapseAll();
+      } else if (option.value !== undefined) {
+        IoMenuLayer.singleton.collapseAll();
+      }
+    });
   }
   collapseAll() {
     let groups = this.querySelectorAll('io-menu-group');
@@ -54,7 +67,6 @@ class IoMenuLayer extends IoBase {
   }
   _eventHandler(event) {
     event.stopPropagation();
-    event.preventDefault();
     if (event.target === this || event.key === 'Escape' || event.keyCode === 27) {
       this.collapseAll();
     }
