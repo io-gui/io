@@ -67,13 +67,14 @@ class IoObjectConstructor extends IoBase {
     }
   }
   _update() {
+    if (this.object instanceof Object === false) return;
     this.$label.innerText = this.label;
     this.$label.classList.toggle('hidden', !this.label);
-    let _name = this._object.constructor.name || 'Object';
+    let _name = this.object.constructor.name || 'Object';
     if (this.expanded) {
       this.$constructor.innerHTML = '▾' + _name;
     } else {
-      this.$constructor.innerHTML = '▸' + _name + '(' + Object.keys(this._object).length + ')';
+      this.$constructor.innerHTML = '▸' + _name + '(' + Object.keys(this.object).length + ')';
     }
   }
 }

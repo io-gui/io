@@ -50,9 +50,9 @@ class IoObject extends IoBase {
   }
   constructor(props) {
     super(props);
-    this.$constructor = new IoObjectConstructor({object: this.value || {}, expanded: this.expanded, label: this.label});
-    this.$property = {};
+    this.$constructor = new IoObjectConstructor({object: this.value, expanded: this.expanded, label: this.label});
     this.appendChild(this.$constructor);
+    this.$property = {};
     this._updateJob();
   }
   _expandedChanged() {
@@ -60,6 +60,8 @@ class IoObject extends IoBase {
     this._updateJob();
   }
   _update() {
+    if (this.value instanceof Object === false) return;
+
     this.$constructor.object = this.value;
     this.$constructor.expanded = this.expanded;
     this.$constructor.label = this.label;

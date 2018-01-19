@@ -1,5 +1,6 @@
 import {IoValue} from "./io-value.js"
 import {IoObject} from "./io-object.js"
+import {IoMenu} from "./io-menu.js"
 import {html, render, svg, bind} from '../node_modules/lit-html-brackets/lit-html-brackets.js';
 
 // Added "export" to export the MyApp symbol from the module
@@ -16,10 +17,44 @@ export class MyApp extends HTMLElement {
       "undef": undefined,
       "array": [1,2,3,4,"apple"]
     }
+    const suboptions1 = [
+      {label: 'sub_sub_one', value: 1},
+      {label: 'sub_sub_two', value: 2},
+      {label: 'sub_sub_three', value: 3},
+      {label: 'sub_sub_four', value: 4},
+      {label: 'sub_sub_five', value: 5}
+    ]
+
+    const suboptions0 = [
+      {label: 'sub_one', options: suboptions1},
+      {label: 'sub_two', options: suboptions1},
+      {label: 'sub_three', options: suboptions1},
+      {label: 'sub_four', options: suboptions1},
+      {label: 'sub_five', options: suboptions1}
+    ]
+
+    this.options = [
+      {label: 'one', options: suboptions0},
+      {label: 'two', options: suboptions0},
+      {label: 'three', options: suboptions0},
+      {label: 'four', options: suboptions0},
+      {label: 'five', options: suboptions0}
+    ]
     this.values.object = this.values;
     this.attachShadow({mode: 'open'});
     render(this.render(), this.shadowRoot);
     window.values = this.values;
+  }
+  connectedCallback() {
+    // TODO: find data-binding solution taht works
+    let ioObjectIstances = this.shadowRoot.querySelectorAll('io-object');
+    for (var i = 0; i < ioObjectIstances.length; i++) {
+      ioObjectIstances[i].value = this.values.object;
+    }
+    let ioMenuIstances = this.shadowRoot.querySelectorAll('io-menu');
+    for (var i = 0; i < ioMenuIstances.length; i++) {
+      ioMenuIstances[i].options = this.options;
+    }
   }
 
   render() {
@@ -114,8 +149,13 @@ export class MyApp extends HTMLElement {
         </div>
         <div class="demo">
           <h3>io-object with various property types.</h3>
-          <io-object [value]="${this.values}" labeled expanded></io-object>
+          <io-object labeled expanded></io-object>
+          <io-object labeled expanded></io-object>
         </div>
+      </div>
+      <div class="demo">
+        <h3>io-menu.</h3>
+        <io-menu expanded></io-menu>
       </div>
     `;
 
