@@ -1,6 +1,6 @@
 import {IoBase, html} from "./io-base.js"
 
-class IoMenuLayer extends IoBase {
+export class IoMenuLayer extends IoBase {
   static get is() { return 'io-menu-layer'; }
   static get template() {
     return html`
@@ -14,7 +14,7 @@ class IoMenuLayer extends IoBase {
         bottom: 0;
         right: 0;
         z-index: 100000;
-        background: rgba(0, 0, 0, 0.5);
+        /* background: rgba(0, 0, 0, 0); */
         -moz-user-select: none;
         -ms-user-select: none;
         -webkit-user-select: none;
@@ -99,7 +99,5 @@ class IoMenuLayer extends IoBase {
 window.customElements.define(IoMenuLayer.is, IoMenuLayer);
 
 IoMenuLayer.singleton = document.createElement('io-menu-layer');
-
-export { IoMenuLayer };
 
 document.body.appendChild(IoMenuLayer.singleton);

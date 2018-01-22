@@ -1,5 +1,5 @@
 
-class IoBase extends HTMLElement {
+export class IoBase extends HTMLElement {
   static get is() { return 'io-base'; }
   static get template() { return html`<slot></slot>`; }
   static get observedAttributes() {
@@ -134,8 +134,6 @@ window.Io = {
 }
 
 window.customElements.define(IoBase.is, IoBase);
-
-export { IoBase };
 
 // HTML Escape helper utility thanks to Andrea Giammarchi https://developers.google.com/web/updates/2015/01/ES6-Template-Strings
 var util = (function () {

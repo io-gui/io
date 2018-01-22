@@ -2,7 +2,7 @@ import {IoBase, html} from "./io-base.js"
 import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuGroup} from "./io-menu-group.js"
 
-class IoMenu extends IoBase {
+export class IoMenu extends IoBase {
   static get is() { return 'io-menu'; }
   static get properties() {
     return {
@@ -59,5 +59,3 @@ class IoMenu extends IoBase {
 }
 
 window.customElements.define(IoMenu.is, IoMenu);
-
-export { IoMenu }

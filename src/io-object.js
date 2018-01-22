@@ -2,7 +2,7 @@ import {IoBase, html} from "./io-base.js"
 import {IoObjectConstructor} from "./io-object-constructor.js"
 import {IoObjectProperty} from "./io-object-property.js"
 
-class IoObject extends IoBase {
+export class IoObject extends IoBase {
   static get is() { return 'io-object'; }
   static get template() {
     return html`
@@ -79,5 +79,3 @@ class IoObject extends IoBase {
 }
 
 window.customElements.define(IoObject.is, IoObject);
-
-export { IoObject }

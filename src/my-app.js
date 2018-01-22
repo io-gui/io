@@ -1,7 +1,8 @@
 import {IoValue} from "./io-value.js"
 import {IoObject} from "./io-object.js"
 import {IoMenu} from "./io-menu.js"
-import {html, render, svg, bind} from '../node_modules/lit-html-brackets/lit-html-brackets.js';
+
+import {html, render, bind} from '../node_modules/lit-html-brackets/lit-html-brackets.js';
 
 export class MyApp extends HTMLElement {
   constructor() {
@@ -36,9 +37,9 @@ export class MyApp extends HTMLElement {
     }
     this.options = [
       {label: 'one', options: suboptions0},
-      {label: 'two', options: suboptions0},
-      {label: 'three', options: suboptions0},
-      {label: 'four', options: suboptions0},
+      {label: 'two', value: 2, action: console.log},
+      {label: 'three', value: 3, action: console.log},
+      {label: 'four', value: 4, action: console.log},
       {label: 'five', options: suboptions0},
       {label: 'long', options: longOptions}
     ]
@@ -97,7 +98,7 @@ export class MyApp extends HTMLElement {
         <div class="demo">
           <h3>io-value with three attribute types.</h3>
           <io-value type="string" [value]="${this.values.string}"></io-value>
-          <io-value type="number" [(value)]=${bind(this.values, 'number')} step=0.1></io-value>
+          <io-value type="number" [value]=${this.values.number} step=0.1></io-value>
           <io-value type="boolean" [value]="${this.values.boolean}"></io-value>
         </div>
         <div class="demo">
@@ -121,7 +122,7 @@ export class MyApp extends HTMLElement {
           <div class="row narrow">
             <span class="rowlabel">number:</span>
             <io-value type="string" [value]=${this.values.number}></io-value>
-            <io-value type="number" [(value)]=${bind(this.values, 'number')}></io-value>
+            <io-value type="number" [value]=${this.values.number}></io-value>
             <io-value type="boolean" [value]=${this.values.number}></io-value>
           </div>
           <div class="row narrow">

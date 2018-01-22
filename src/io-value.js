@@ -5,7 +5,7 @@ editor.addEventListener('mousedown', function (event) { event.stopPropagation() 
 editor.addEventListener('touchstart', function (event) { event.stopPropagation() });
 editor.addEventListener('focus', function (event) { event.stopPropagation() });
 
-class IoValue extends IoBase {
+export class IoValue extends IoBase {
   static get is() { return 'io-value'; }
   static get template() {
     return html`
@@ -215,5 +215,3 @@ class IoValue extends IoBase {
 }
 
 window.customElements.define(IoValue.is, IoValue);
-
-export { IoValue };

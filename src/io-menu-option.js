@@ -9,16 +9,27 @@ import {IoMenuGroup} from "./io-menu-group.js"
 // var timeoutReset;
 // var WAIT_TIME = 1000;
 
-class IoMenuOption extends IoBase {
+export class IoMenuOption extends IoBase {
   static get is() { return 'io-menu-option'; }
   static get template() {
     return html`
       <style>
       :host {
-        display: inline-block;
+        /* display: inline-block; */
+        display: flex;
+        flex-direction: row;
         cursor: pointer;
+        padding: 0.125em 0.5em 0.125em 1.0em;
+        line-height: 1em;
       }
-      </style><slot></slot>
+      ::slotted(.io-label) {
+        flex: 1
+      }
+      .hint {
+        opacity: 0.5;
+        padding: 0 0.5em;
+      }
+      </style><slot></slot><span class="hint">hint</span><span>🢒</span>
     `;
   }
   static get properties() {
@@ -174,5 +185,3 @@ class IoMenuOption extends IoBase {
 }
 
 window.customElements.define(IoMenuOption.is, IoMenuOption);
-
-export { IoMenuOption };

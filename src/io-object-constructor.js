@@ -1,6 +1,6 @@
 import {IoBase, html} from "./io-base.js"
 
-class IoObjectConstructor extends IoBase {
+export class IoObjectConstructor extends IoBase {
   static get is() { return 'io-object-constructor'; }
   static get template() {
     return html`
@@ -79,5 +79,3 @@ class IoObjectConstructor extends IoBase {
 }
 
 window.customElements.define(IoObjectConstructor.is, IoObjectConstructor);
-
-export { IoObjectConstructor }

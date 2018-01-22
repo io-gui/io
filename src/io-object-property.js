@@ -1,7 +1,7 @@
 import {IoBase, html} from "./io-base.js"
 import {IoValue} from "./io-value.js"
 
-class IoObjectProperty extends IoBase {
+export class IoObjectProperty extends IoBase {
   static get is() { return 'io-object-property'; }
   static get template() {
     return html`
@@ -157,5 +157,3 @@ IoObjectProperty.config = {
     'type:number': {tag: 'io-value', props: {type: 'number', step: 1 }}
   }
 }
-
-export { IoObjectProperty }

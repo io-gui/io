@@ -1,7 +1,0 @@
-{
-  "name": "editor",
-  "short_name": "editor",
-  "description": "editor",
-  "start_url": "/",
-  "display": "standalone"
-}

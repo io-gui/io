@@ -2,7 +2,7 @@ import {IoBase, html} from "./io-base.js"
 import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuOption} from "./io-menu-option.js"
 
-class IoMenuGroup extends IoBase {
+export class IoMenuGroup extends IoBase {
   static get is() { return 'io-menu-group'; }
   static get template() {
     return html`
@@ -16,6 +16,10 @@ class IoMenuGroup extends IoBase {
           left: 0;
           background: white;
           white-space: nowrap;
+          padding: 0.125em 0.25em;
+          border: 1px solid #666;
+          box-shadow: 1px 1px 2px rgba(0,0,0,0.33);
+          min-width: 6em;
         }
         :host([expanded]) {
           visibility: visible;
@@ -145,5 +149,3 @@ class IoMenuGroup extends IoBase {
 }
 
 window.customElements.define(IoMenuGroup.is, IoMenuGroup);
-
-export { IoMenuGroup };
