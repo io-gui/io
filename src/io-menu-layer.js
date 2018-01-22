@@ -26,6 +26,7 @@ export class IoMenuLayer extends IoBase {
         -webkit-user-select: none;
         user-select: none;
         overflow: hidden;
+        font-family: "Lucida Grande", sans-serif;
       }
       :host([expanded]) {
         visibility: visible;

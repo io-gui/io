@@ -20,6 +20,9 @@ export class IoObjectProperty extends IoBase {
         ::slotted(io-value[type="boolean"]) {
           color: rgb(170, 13, 145);
         }
+        ::slotted(io-option) {
+          background: rgba(64,64,128,0.1);
+        }
         ::slotted(.io-label) {
           /* background: rgba(0,0,0,0.1); */
         }
@@ -42,6 +45,9 @@ export class IoObjectProperty extends IoBase {
       },
       key: {
         type: String
+      },
+      configs: {
+        type: Array
       }
     }
   }
@@ -81,27 +87,22 @@ export class IoObjectProperty extends IoBase {
     let type = typeof value;
     let cstr = (value && value.constructor) ? value.constructor.name : 'null';
 
-    // Follow object prototype chain to find first configuration block that matches.
     let config;
-    let proto = object.__proto__;
 
-    while (proto) {
-      config = IoObjectProperty.config['constructor:' + proto.constructor.name];
-      if (config) {
-        if ('key:' + key in config) {
-          return config['key:' + key];
-        }
-        if ('value:' + String(value) in config) {
-          return config['value:' + String(value)];
-        }
-        if ('constructor:' + cstr in config) {
-          return config['constructor:' + cstr];
-        }
-        if ('type:' + type in config) {
-          return config['type:' + type];
-        }
+    for (var i = 0; i < this.configs.length; i++) {
+      config = this.configs[i];
+      if ('key:' + key in config) {
+        return config['key:' + key];
       }
-      proto = proto.__proto__;
+      if ('value:' + String(value) in config) {
+        return config['value:' + String(value)];
+      }
+      if ('constructor:' + cstr in config) {
+        return config['constructor:' + cstr];
+      }
+      if ('type:' + type in config) {
+        return config['type:' + type];
+      }
     }
   }
   _update() {
@@ -138,27 +139,3 @@ export class IoObjectProperty extends IoBase {
 }
 
 window.customElements.define(IoObjectProperty.is, IoObjectProperty);
-
-// Default object property configurations.
-// Object configurations are looked up in order of prototype inheritance.
-// Property selectors are looked up in order: key, value, constructor, type.
-// First matching object/property config will be used.
-IoObjectProperty.config = {
-  'constructor:Object' : {
-    'value:null': {tag: 'io-value', props: {}},
-    'value:undefined': {tag: 'io-value', props: {}},
-    'constructor:Array': {tag: 'io-object', props: {expanded: true}},
-    'type:string': {tag: 'io-value', props: {type: 'string'}},
-    'type:number': {tag: 'io-value', props: {type: 'number', step: 0.1}},
-    'type:boolean': {tag: 'io-value', props: {type: 'boolean'}},
-    'type:object': {tag: 'io-object', props: {}}
-  },
-  'constructor:Array': {
-    'type:number': {tag: 'io-option', props: {options: [
-      { value: 1, label: 'one' },
-      { value: 2, label: 'two' },
-      { value: 3, label: 'three' }
-    ] }}
-    // 'type:number': {tag: 'io-value', props: {type: 'number', step: 1 }}
-  }
-}

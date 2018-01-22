@@ -28,7 +28,7 @@ export class IoMenuOption extends IoBase {
       }
       ::slotted(.io-more) {
         opacity: 0.5;
-        margin-right: -0.25em;
+        margin: 0 -0.25em 0 0.25em;
       }
       </style><slot></slot>
     `;
@@ -36,7 +36,8 @@ export class IoMenuOption extends IoBase {
   static get properties() {
     return {
       option: {
-        type: Object
+        type: Object,
+        // observer: '_optionChanged';
       },
       $parent: {
         type: HTMLElement

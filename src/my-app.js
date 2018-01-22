@@ -3,6 +3,63 @@ import {IoObject} from "./io-object.js"
 import {IoOption} from "./io-option.js"
 import {IoMenu} from "./io-menu.js"
 
+import * as THREE from "../lib/three.module.js"
+
+for (var c in THREE) IoObject.CLASSES['THREE.' + c] = THREE[c];
+
+IoObject.CONFIG['instanceof:THREE.Material'] = {
+  'key:blending': { tag: 'io-option', props: {options: [
+    {value: 0, label: 'NoBlending'},
+    {value: 1, label: 'NormalBlending'},
+    {value: 2, label: 'AdditiveBlending'},
+    {value: 3, label: 'SubtractiveBlending'},
+    {value: 4, label: 'MultiplyBlending'},
+    {value: 5, label: 'CustomBlending'}
+  ] }},
+  'key:side': { tag: 'io-option', props: {options: [
+    {value: 0, label: 'FrontSide'},
+    {value: 1, label: 'BackSide'},
+    {value: 2, label: 'DoubleSide'}
+  ] }},
+  'key:shading': { tag: 'io-option', props: {options: [
+    {value: 1, label: 'FlatShading'},
+    {value: 2, label: 'SmoothShading'}
+  ] }},
+  'key:blendEquation': { tag: 'io-option', props: {options: [
+    {value: 100, label: 'AddEquation'},
+    {value: 101, label: 'SubtractEquation'},
+    {value: 102, label: 'ReverseSubtractEquation'},
+    {value: 103, label: 'MinEquation'},
+    {value: 104, label: 'MaxEquation'}
+  ] }},
+  'key:blendSrc': { tag: 'io-option', props: {options: [
+    {value: 200, label: 'ZeroFactor'},
+    {value: 201, label: 'OneFactor'},
+    {value: 202, label: 'SrcColorFactor'},
+    {value: 203, label: 'OneMinusSrcColorFactor'},
+    {value: 204, label: 'SrcAlphaFactor'},
+    {value: 205, label: 'OneMinusSrcAlphaFactor'},
+    {value: 206, label: 'DstAlphaFactor'},
+    {value: 207, label: 'OneMinusDstAlphaFactor'},
+    {value: 208, label: 'DstColorFactor'},
+    {value: 209, label: 'OneMinusDstColorFactor'},
+    {value: 210, label: 'SrcAlphaSaturateFactor'}
+  ] }},
+  'key:blendDst': { tag: 'io-option', props: {options: [
+    {value: 200, label: 'ZeroFactor'},
+    {value: 201, label: 'OneFactor'},
+    {value: 202, label: 'SrcColorFactor'},
+    {value: 203, label: 'OneMinusSrcColorFactor'},
+    {value: 204, label: 'SrcAlphaFactor'},
+    {value: 205, label: 'OneMinusSrcAlphaFactor'},
+    {value: 206, label: 'DstAlphaFactor'},
+    {value: 207, label: 'OneMinusDstAlphaFactor'},
+    {value: 208, label: 'DstColorFactor'},
+    {value: 209, label: 'OneMinusDstColorFactor'},
+    {value: 210, label: 'SrcAlphaSaturateFactor'}
+  ] }}
+};
+
 import {html, render, bind} from '../node_modules/lit-html-brackets/lit-html-brackets.js';
 
 export class MyApp extends HTMLElement {
@@ -57,9 +114,11 @@ export class MyApp extends HTMLElement {
   }
   connectedCallback() {
     // TODO: find data-binding solution taht works
+    // console.log(THREE);
+    let object = new THREE.Mesh();
     let ioObjectIstances = this.shadowRoot.querySelectorAll('io-object');
     for (var i = 0; i < ioObjectIstances.length; i++) {
-      ioObjectIstances[i].value = this.values.object;
+      ioObjectIstances[i].value = object;//this.values.object;
     }
     let ioMenuIstances = this.shadowRoot.querySelectorAll('io-menu');
     for (var i = 0; i < ioMenuIstances.length; i++) {
@@ -96,8 +155,7 @@ export class MyApp extends HTMLElement {
           border: 1px solid #eee;
         }
         div.area {
-          width: 20em;
-          height: 10em;
+          height: 2em;
           background: rgba(128,128,128,0.2);
         }
         .narrow {
@@ -180,10 +238,7 @@ export class MyApp extends HTMLElement {
         </div>
         <div class="demo">
           <h3>io-object with various property types.</h3>
-          <io-object labeled expanded></io-object>
-          <io-object labeled expanded></io-object>
-          <io-object labeled expanded></io-object>
-          <io-object labeled expanded></io-object>
+          <io-object expanded labeled></io-object>
         </div>
       </div>
     `;

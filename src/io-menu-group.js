@@ -59,8 +59,16 @@ export class IoMenuGroup extends IoBase {
   }
   _update() {
     if (this.options) {
+      for (var i = 0; i < this.$options.length; i++) {
+        if (this.$options[i].parentElement) this.removeChild(this.$options[i]);
+      }
       for (var i = 0; i < this.options.length; i++) {
-        this.$options[i] = new IoMenuOption({option: this.options[i], $parent: this});
+        if (this.$options[i]) {
+          // TODO: reuse list of elements
+          this.$options[i] = new IoMenuOption({option: this.options[i], $parent: this});
+        } else {
+          this.$options[i] = new IoMenuOption({option: this.options[i], $parent: this});
+        }
         this.appendChild(this.$options[i]);
       }
     }

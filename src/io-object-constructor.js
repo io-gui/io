@@ -13,6 +13,9 @@ export class IoObjectConstructor extends IoBase {
       ::slotted(.hidden) {
         display: none;
       }
+      ::slotted(.io-constructor) {
+        color: rgb(23, 128, 41);
+      }
       ::slotted(.io-label):after {
         content: ":";
       }

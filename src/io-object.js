@@ -58,13 +58,36 @@ export class IoObject extends IoBase {
   _update() {
     if (this.value instanceof Object === false) return;
 
+    let config, configs = [];
+    for (var i in IoObject.CONFIG) {
+      if (i.substring(0,11) == 'instanceof:') {
+        let classRef = i.slice(11);
+        if (IoObject.CLASSES[classRef] && this.value instanceof IoObject.CLASSES[classRef]) {
+          config = IoObject.CONFIG[i];
+          config._debug = i;
+          configs.push(config);
+        }
+      }
+    }
+
+    // Follow object prototype chain to find first configuration block that matches.
+    let proto = this.value.__proto__;
+    while (proto) {
+      config = IoObject.CONFIG['constructor:' + proto.constructor.name];
+      if (config) {
+        config._debug = 'constructor:' + proto.constructor.name;
+        configs.push(config);
+      }
+      proto = proto.__proto__;
+    }
+
     let _keys = Object.keys(this.value);
     let _$keys = Object.keys(this.$property);
 
     if (this.expanded) {
       for (let i = 0; i < _keys.length; i++) {
         if (!this.$property[_keys[i]]) {
-          this.$property[_keys[i]] = new IoObjectProperty({value: this.value, key: _keys[i]});
+          this.$property[_keys[i]] = new IoObjectProperty({value: this.value, key: _keys[i], configs: configs});
         }
         this.appendChild(this.$property[_keys[i]]);
       }
@@ -77,5 +100,25 @@ export class IoObject extends IoBase {
 
   }
 }
+
+// Default object property configurations.
+// Object configurations are looked up in order of prototype inheritance.
+// Property selectors are looked up in order: key, value, constructor, type.
+// First matching object/property config will be used.
+IoObject.CLASSES = {};
+IoObject.CONFIG = {
+  'constructor:Object' : {
+    'value:null': {tag: 'io-value', props: {}},
+    'value:undefined': {tag: 'io-value', props: {}},
+    'constructor:Array': {tag: 'io-object', props: {expanded: true}},
+    'type:string': {tag: 'io-value', props: {type: 'string'}},
+    'type:number': {tag: 'io-value', props: {type: 'number', step: 0.1}},
+    'type:boolean': {tag: 'io-value', props: {type: 'boolean'}},
+    'type:object': {tag: 'io-object', props: {}}
+  },
+  'constructor:Array': {
+    'type:number': {tag: 'io-value', props: {type: 'number', step: 1}}
+  }
+};
 
 window.customElements.define(IoObject.is, IoObject);
