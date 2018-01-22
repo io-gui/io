@@ -30,7 +30,7 @@ export class IoMenu extends IoBase {
   constructor(props) {
     super(props);
     this._expandListener = this._expandHandler.bind(this);
-    this.$group = new IoMenuGroup({$parent: this});
+    this.$group = new IoMenuGroup({$parent: this, position: this.position, options: this.options});
   }
   connectedCallback() {
     super.connectedCallback();
@@ -45,11 +45,14 @@ export class IoMenu extends IoBase {
     IoMenuLayer.singleton.removeChild(this.$group);
     this.unbind(this._binding);
   }
+  getBoundingClientRect() {
+    return this.$parent.getBoundingClientRect();
+  }
   _expandHandler(event) {
     if (this.disabled) return;
     IoMenuLayer.singleton.collapseAll();
-    this.$group._x = event.clientX;
-    this.$group._y = event.clientY;
+    IoMenuLayer.singleton.pointer.x = event.clientX;
+    IoMenuLayer.singleton.pointer.y = event.clientY;
     this.expanded = true;
   }
   _update() {

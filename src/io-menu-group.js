@@ -16,7 +16,7 @@ export class IoMenuGroup extends IoBase {
           left: 0;
           background: white;
           white-space: nowrap;
-          padding: 0.125em 0.25em;
+          padding: 0.125em 0 0.25em 0;
           border: 1px solid #666;
           box-shadow: 1px 1px 2px rgba(0,0,0,0.33);
           min-width: 6em;
@@ -31,7 +31,7 @@ export class IoMenuGroup extends IoBase {
     return {
       options: {
         type: Array,
-        observer: '_updateJob'
+        observer: '_update'
       },
       expanded: {
         type: Boolean,
@@ -42,7 +42,7 @@ export class IoMenuGroup extends IoBase {
       position: {
         type: String,
         value: 'pointer',
-        observer: '_updateJob'
+        observer: '_setPosition'
       },
       $parent: {
         type: HTMLElement
@@ -52,17 +52,12 @@ export class IoMenuGroup extends IoBase {
   constructor(props) {
     super(props);
     this.__animate = this._animate.bind(this);
-    this._updateJob();
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    this._rect = this.getBoundingClientRect();
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
+    this.$options = [];
+    this._x = 0;
+    this._y = 0;
+    this._update();
   }
   _update() {
-    this.$options = [];
     if (this.options) {
       for (var i = 0; i < this.options.length; i++) {
         this.$options[i] = new IoMenuOption({option: this.options[i], $parent: this});
@@ -102,24 +97,24 @@ export class IoMenuGroup extends IoBase {
     this._pRect = this.$parent.getBoundingClientRect();
     switch (this.position) {
       case 'pointer':
-        this._x = this._x - 2 || this._pRect.left;
-        this._y = this._y - 2 || this._pRect.top;
+        this._x = IoMenuLayer.singleton.pointer.x - 2 || this._pRect.x;
+        this._y = IoMenuLayer.singleton.pointer.y - 2 || this._pRect.y;
         break;
       case 'bottom':
-        this._x = this._pRect.left;
+        this._x = this._pRect.x;
         this._y = this._pRect.bottom;
         break;
       case 'right':
         this._x = this._pRect.right;
-        this._y = this._pRect.top;
+        this._y = this._pRect.y;
         if (this._x + this._rect.width > window.innerWidth) {
-          this._x = this._pRect.left - this._rect.width;
+          this._x = this._pRect.x - this._rect.width;
         }
         break;
       case 'top':
       default:
-        this._x = this._pRect.left;
-        this._y = this._pRect.top;
+        this._x = this._pRect.x;
+        this._y = this._pRect.y;
         break;
     }
     this._x = Math.min(this._x, window.innerWidth - this._rect.width);
@@ -130,8 +125,8 @@ export class IoMenuGroup extends IoBase {
   _scroll() {
     this._rect = this.getBoundingClientRect();
     let scrollSpeed, overflow;
-    let x = IoMenuLayer.singleton._pointer.x;
-    let y = IoMenuLayer.singleton._pointer.y;
+    let x = IoMenuLayer.singleton.pointer.x;
+    let y = IoMenuLayer.singleton.pointer.y;
     if (this._rect.height > window.innerHeight) {
       if (y < 100 && this._rect.top < 0) {
         scrollSpeed = (100 - y) / 5000;

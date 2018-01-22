@@ -154,6 +154,11 @@ IoObjectProperty.config = {
     'type:object': {tag: 'io-object', props: {}}
   },
   'constructor:Array': {
-    'type:number': {tag: 'io-value', props: {type: 'number', step: 1 }}
+    'type:number': {tag: 'io-option', props: {options: [
+      { value: 1, label: 'one' },
+      { value: 2, label: 'two' },
+      { value: 3, label: 'three' }
+    ] }}
+    // 'type:number': {tag: 'io-value', props: {type: 'number', step: 1 }}
   }
 }

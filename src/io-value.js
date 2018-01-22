@@ -63,39 +63,31 @@ export class IoValue extends IoBase {
   }
   static get properties() {
     return {
-      /* Value to be edited with this element. */
       value: {
-        notify: true, //TODO: remove?
         observer: '_updateJob'
       },
-      /* Restricts value input to specified type such as string, number or boolean. */
       type: {
         type: String,
         observer: '_typeChanged',
         reflectToAttribute: true
       },
-      /* Disables interactions with the element. Removes tabindex attribute. */
       disabled: {
         type: Boolean,
         observer: '_disabledChanged',
         reflectToAttribute: true
       },
-      /* Automatically set to true if assigned value mismatches type. Reflects to attribute. */
       invalid: {
         type: Boolean,
         reflectToAttribute: true
       },
-      /* Increment step for number type. */
       step: {
         type: Number,
         value: 0.001
       },
-      /* Min value for number type. */
       min: {
         type: Number,
         value: -Infinity
       },
-      /* Max value for number type. */
       max: {
         type: Number,
         value: Infinity
@@ -171,7 +163,6 @@ export class IoValue extends IoBase {
       editor.focus();
       editor.select();
     })
-    editor._host = this;
     this._edit = true;
   }
   _removeEditor() {
@@ -181,7 +172,6 @@ export class IoValue extends IoBase {
       editor.value = '';
       editor.parentNode.removeChild(editor);
     }
-    editor._host = undefined;
     this._edit = false;
   }
   _typeChanged() {
@@ -207,9 +197,6 @@ export class IoValue extends IoBase {
       value = Math.round(value / this.step) * this.step;
       value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
     }
-    this._updateText(value);
-  }
-  _updateText(value) {
     this.innerText = String(value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
 }

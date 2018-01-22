@@ -1,5 +1,6 @@
 import {IoValue} from "./io-value.js"
 import {IoObject} from "./io-object.js"
+import {IoOption} from "./io-option.js"
 import {IoMenu} from "./io-menu.js"
 
 import {html, render, bind} from '../node_modules/lit-html-brackets/lit-html-brackets.js';
@@ -33,15 +34,21 @@ export class MyApp extends HTMLElement {
     var longOptions = [];
     for (var i = 0; i < 1000; i++) {
       let r = Math.random();
-      longOptions[i] = {label: 'option ' + r, value: r, action: console.log};
+      longOptions[i] = {label: r, value: r, action: console.log, icon: 'ξ', hint: 'log'};
     }
-    this.options = [
+    this.menuoptions = [
       {label: 'one', options: suboptions0},
       {label: 'two', value: 2, action: console.log},
       {label: 'three', value: 3, action: console.log},
       {label: 'four', value: 4, action: console.log},
       {label: 'five', options: suboptions0},
-      {label: 'long', options: longOptions}
+      {label: 'long', options: longOptions, hint: 'list', icon: '⚠'}
+    ]
+    this.options = [
+      {label: 'one', value: 1},
+      {label: 'two', value: 2},
+      {label: 'three', value: 3},
+      {label: 'four', value: 4}
     ]
     this.values.object = this.values;
     this.attachShadow({mode: 'open'});
@@ -56,7 +63,11 @@ export class MyApp extends HTMLElement {
     }
     let ioMenuIstances = this.shadowRoot.querySelectorAll('io-menu');
     for (var i = 0; i < ioMenuIstances.length; i++) {
-      ioMenuIstances[i].options = this.options;
+      ioMenuIstances[i].options = this.menuoptions;
+    }
+    let ioOptionIstances = this.shadowRoot.querySelectorAll('io-option');
+    for (var i = 0; i < ioOptionIstances.length; i++) {
+      ioOptionIstances[i].options = this.options;
     }
   }
 
@@ -83,6 +94,11 @@ export class MyApp extends HTMLElement {
         }
         div.demo > io-value {
           border: 1px solid #eee;
+        }
+        div.area {
+          width: 20em;
+          height: 10em;
+          background: rgba(128,128,128,0.2);
         }
         .narrow {
           width: 22em;
@@ -151,8 +167,16 @@ export class MyApp extends HTMLElement {
           </div>
         </div>
         <div class="demo">
-        <h3>io-menu.</h3>
-        <io-menu expanded position="pointer"></io-menu>
+          <h3>io-option</h3>
+          <io-option value="1"></io-option>
+          <io-option value="2"></io-option>
+          <io-option value="3"></io-option>
+          <io-option value="4"></io-option>
+          <io-option value="5"></io-option>
+        </div>
+        <div class="demo area">
+          <h3>io-menu (click to expand)</h3>
+          <io-menu position="pointer"></io-menu>
         </div>
         <div class="demo">
           <h3>io-object with various property types.</h3>
