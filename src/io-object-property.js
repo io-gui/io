@@ -60,7 +60,6 @@ export class IoObjectProperty extends IoBase {
   }
   connectedCallback() {
     window.addEventListener('io-object-mutated', this._objectMutatedListener);
-    console.log(this.value[this.key], this.key);
   }
   disconnectedCallback() {
     window.removeEventListener('io-object-mutated', this._objectMutatedListener);

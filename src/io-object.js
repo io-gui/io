@@ -36,11 +36,11 @@ export class IoObject extends IoBase {
     return {
       value: {
         type: Object,
-        observer: '_updateJob'
+        observer: '_update'
       },
       expanded: {
         type: Boolean,
-        observer: '_updateJob',
+        observer: '_update',
         reflectToAttribute: true
       },
       label: {

@@ -1,13 +1,22 @@
 
 export class IoBase extends HTMLElement {
   static get is() { return 'io-base'; }
-  static get template() { return html`<slot></slot>`; }
+  static get template() { return `<slot></slot>`; }
   static get observedAttributes() {
     // TODO: follow prototype chain
     if (this.properties) {
       return Object.keys(this.properties);
     }
     return [];
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (this._properties[name].type == Boolean) {
+      this[name] = newValue == '' ? true : false;
+    } else if (this._properties[name].type == Number) {
+      this[name] = parseFloat(newValue);
+    } else {
+      this[name] = newValue;
+    }
   }
   constructor(props = {}) {
     super();
@@ -21,20 +30,11 @@ export class IoBase extends HTMLElement {
     });
     for (let propKey in this._properties) {
       Io.defineProperty(this, propKey, this._properties[propKey]);
-    }
-
-    for (let propKey in props) {
-      this['_' + propKey] = props[propKey];
-    }
-
-    for (let propKey in this._properties) {
+      if (props.hasOwnProperty(propKey)) this['_' + propKey] = props[propKey];
       this.reflectAttribute(propKey);
     }
 
-    Object.defineProperty(this, '_shadowRoot', {
-      value: this.attachShadow({mode: 'open'})
-    });
-    this._shadowRoot.innerHTML = this.__proto__.constructor.template;
+    this.attachShadow({mode: 'open'}).innerHTML = this.__proto__.constructor.template;
   }
   reflectAttribute(propKey) {
     // this._properties = this.__proto__.constructor.properties || {};
@@ -69,15 +69,6 @@ export class IoBase extends HTMLElement {
   preventDefault(event) {
     event.preventDefault();
   }
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (this._properties[name].type == Boolean) {
-      this[name] = newValue == '' ? true : false;
-    } else if (this._properties[name].type == Number) {
-      this[name] = parseFloat(newValue);
-    } else {
-      this[name] = newValue;
-    }
-  }
   bind(sourceProp, target, targetProp, oneWay) {
     this._notify[sourceProp] = true;
     if (!oneWay) target._notify[targetProp] = true;
@@ -98,15 +89,6 @@ export class IoBase extends HTMLElement {
     binding.source.removeEventListener(binding.sourceProp + '-changed', binding.setTarget);
     binding.target.removeEventListener(binding.targetProp + '-changed', binding.setSource);
     for (var prop in binding) { delete binding[prop]; }
-  }
-  _update() {}
-  _updateJob() {
-    // TODO: consider alternative for performance
-    clearTimeout(this._updateID);
-    this._updateID = setTimeout(() => {
-      delete this._updateID;
-      this._update();
-    });
   }
 }
 
@@ -141,7 +123,7 @@ window.Io = {
         this['_' + propKey] = value;
         this.reflectAttribute(propKey);
         if (propConfig.observer) {
-          this[propConfig.observer](value);
+          this[propConfig.observer](value, propKey);
         }
         if (propConfig.notify || this._notify[propKey]) {
           this.dispatchEvent(new CustomEvent(propKey + '-changed', {

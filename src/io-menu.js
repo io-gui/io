@@ -8,7 +8,7 @@ export class IoMenu extends IoBase {
     return {
       options: {
         type: Array,
-        observer: '_updateJob'
+        observer: '_update'
       },
       expanded: {
         type: Boolean
@@ -16,7 +16,7 @@ export class IoMenu extends IoBase {
       position: {
         value: 'top',
         type: String,
-        observer: '_updateJob'
+        observer: '_update'
       },
       disabled: {
         type: Boolean
@@ -46,7 +46,8 @@ export class IoMenu extends IoBase {
     this.unbind(this._binding);
   }
   getBoundingClientRect() {
-    return this.$parent.getBoundingClientRect();
+    if (this.$parent) return this.$parent.getBoundingClientRect();
+    else return document.body.getBoundingClientRect();
   }
   _expandHandler(event) {
     if (this.disabled) return;

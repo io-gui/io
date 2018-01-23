@@ -16,7 +16,7 @@ export class IoFunction extends IoBase {
   static get properties() {
     return {
       value: {
-        observer: '_updateJob'
+        observer: '_update'
       }
     }
   }

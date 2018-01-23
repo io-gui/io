@@ -26,15 +26,15 @@ export class IoObjectConstructor extends IoBase {
     return {
       object: {
         type: Object,
-        observer: '_updateJob',
+        observer: '_update',
       },
       label: {
         type: String,
-        observer: '_updateJob'
+        observer: '_update'
       },
       expanded: {
         type: Boolean,
-        observer: '_updateJob',
+        observer: '_update',
         reflectToAttribute: true
       }
     }
@@ -51,7 +51,7 @@ export class IoObjectConstructor extends IoBase {
     this.addEventListener('click', this._toggleListener);
     this.addEventListener('keydown', this._toggleListener);
     this.addEventListener('mousedown', this._preventDefault);
-    this._updateJob();
+    this._update();
   }
   disconnectedCallback() {
     this.removeEventListener('click', this._toggleListener);
@@ -63,6 +63,13 @@ export class IoObjectConstructor extends IoBase {
       event.preventDefault();
       let ioObject = this.parentElement;
       ioObject.expanded = !ioObject.expanded;
+// TODO: remove this is a test only
+// TODO: figure out how to wire UI properties
+window.dispatchEvent(new CustomEvent('io-object-mutated', {
+  detail: {object: ioObject, key: 'expanded'},
+  bubbles: false,
+  composed: true
+}));
       setTimeout(() => {
         ioObject.querySelector('io-object-constructor').focus();
       });

@@ -29,15 +29,15 @@ export class IoOption extends IoBase {
   static get properties() {
     return {
       value: {
-        observer: '_updateJob'
+        observer: '_update'
       },
       options: {
         type: Array,
-        observer: '_updateJob'
+        observer: '_update'
       },
       type: {
         type: String,
-        observer: '_updateJob',
+        observer: '_update',
         reflectToAttribute: true
       },
       disabled: {
@@ -89,6 +89,7 @@ export class IoOption extends IoBase {
       this.appendChild(menu);
       menu.options = this.options;
       menu.expanded = true;
+      // TODO: remove on cancel/collapse
       menu.addEventListener('io-menu-option-clicked', this._menuListener);
     }
   }

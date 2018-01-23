@@ -77,7 +77,6 @@ export class IoMenuOption extends IoBase {
     this.addEventListener('focus', this._focusListener);
     this.addEventListener('click', this._clickListener);
     this.addEventListener('keydown', this._keydownListener);
-    this._update();
   }
   disconnectedCallback() {
     super.disconnectedCallback();

@@ -64,7 +64,7 @@ export class IoValue extends IoBase {
   static get properties() {
     return {
       value: {
-        observer: '_updateJob'
+        observer: '_update'
       },
       type: {
         type: String,
@@ -107,7 +107,7 @@ export class IoValue extends IoBase {
     this.addEventListener('focus', this._focusListener);
     this._typeChanged();
     this._disabledChanged();
-    this._updateJob();
+    this._update();
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -158,7 +158,7 @@ export class IoValue extends IoBase {
     editor.step = this.step;
     editor.min = Math.min(this.min, this.value);
     editor.max = Math.max(this.max, this.value);
-    this._shadowRoot.appendChild(editor);
+    this.shadowRoot.appendChild(editor);
     setTimeout(function () {
       editor.focus();
       editor.select();
