@@ -55,6 +55,8 @@ export class IoMenuLayer extends IoBase {
     this.addEventListener('expanded-changed', this._onMenuGroupExpanded);
     this.addEventListener('mousemove', this._onMousemove);
 
+    window.addEventListener('scroll', this.collapseAll.bind(this));
+
     this.addEventListener('io-menu-option-clicked', function (event) {
       event.stopPropagation();
       let option = event.detail.option;

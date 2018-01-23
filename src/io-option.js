@@ -9,7 +9,7 @@ export class IoOption extends IoBase {
     return html`
       <style>
         :host {
-          cursor: text;
+          cursor: pointer;
           display: inline-block;
         }
         :host([invalid]) {

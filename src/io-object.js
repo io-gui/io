@@ -1,4 +1,6 @@
 import {IoBase, html} from "./io-base.js"
+import {IoValue} from "./io-value.js"
+import {IoFunction} from "./io-function.js"
 import {IoObjectConstructor} from "./io-object-constructor.js"
 import {IoObjectProperty} from "./io-object-property.js"
 
@@ -114,7 +116,8 @@ IoObject.CONFIG = {
     'type:string': {tag: 'io-value', props: {type: 'string'}},
     'type:number': {tag: 'io-value', props: {type: 'number', step: 0.1}},
     'type:boolean': {tag: 'io-value', props: {type: 'boolean'}},
-    'type:object': {tag: 'io-object', props: {}}
+    'type:object': {tag: 'io-object', props: {}},
+    'type:function': {tag: 'io-function', props: {}}
   },
   'constructor:Array': {
     'type:number': {tag: 'io-value', props: {type: 'number', step: 1}}

@@ -11,23 +11,33 @@ export class IoBase extends HTMLElement {
   }
   constructor(props = {}) {
     super();
+    Object.defineProperty(this, '_notify', {
+      value: {}
+    });
+
     // TODO: follow prototype chain
-    this._notify = {};
-    this._properties = this.__proto__.constructor.properties || {};
+    Object.defineProperty(this, '_properties', {
+      value: this.__proto__.constructor.properties || {}
+    });
     for (let propKey in this._properties) {
       Io.defineProperty(this, propKey, this._properties[propKey]);
     }
+
     for (let propKey in props) {
       this['_' + propKey] = props[propKey];
     }
+
     for (let propKey in this._properties) {
       this.reflectAttribute(propKey);
     }
-    this._shadowRoot = this.attachShadow({mode: 'open'});
+
+    Object.defineProperty(this, '_shadowRoot', {
+      value: this.attachShadow({mode: 'open'})
+    });
     this._shadowRoot.innerHTML = this.__proto__.constructor.template;
   }
   reflectAttribute(propKey) {
-    this._properties = this.__proto__.constructor.properties || {};
+    // this._properties = this.__proto__.constructor.properties || {};
     let propConfig = this._properties[propKey];
     let value = this['_' + propKey];
     if (propConfig && propConfig.reflectToAttribute) {
@@ -54,10 +64,8 @@ export class IoBase extends HTMLElement {
       composed: true
     }));
   }
-  connectedCallback() {
-  }
-  disconnectedCallback() {
-  }
+  connectedCallback() {}
+  disconnectedCallback() {}
   preventDefault(event) {
     event.preventDefault();
   }
@@ -104,6 +112,24 @@ export class IoBase extends HTMLElement {
 
 window.Io = {
   defineProperty: function(instanceRef, propKey, propConfig) {
+    if (propConfig.value === undefined) {
+      switch (propConfig.type) {
+        case Boolean:
+          propConfig.value = false;
+          break;
+        case Number:
+          propConfig.value = 0;
+          break;
+        case String:
+          propConfig.value = '';
+          break;
+      }
+    }
+    Object.defineProperty(instanceRef, '_' + propKey, {
+      enumerable: false,
+      writable: true,
+      value: propConfig.value
+    });
     Object.defineProperty(instanceRef, propKey, {
       // TODO: optimize
       get: function() {
@@ -129,7 +155,6 @@ window.Io = {
       enumerable: true,
       configurable: true
     });
-    instanceRef['_' + propKey] = propConfig.value;
   }
 }
 

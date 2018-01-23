@@ -60,6 +60,7 @@ export class IoObjectProperty extends IoBase {
   }
   connectedCallback() {
     window.addEventListener('io-object-mutated', this._objectMutatedListener);
+    console.log(this.value[this.key], this.key);
   }
   disconnectedCallback() {
     window.removeEventListener('io-object-mutated', this._objectMutatedListener);
@@ -81,9 +82,9 @@ export class IoObjectProperty extends IoBase {
   }
   /* Finds first matching configuration for object property */
   _getConfig() {
-    let object = this._value;
+    let object = this.value;
     let key = this.key;
-    let value = this._value[this.key];
+    let value = this.value[this.key];
     let type = typeof value;
     let cstr = (value && value.constructor) ? value.constructor.name : 'null';
 
@@ -130,7 +131,7 @@ export class IoObjectProperty extends IoBase {
     }
 
     this._editor.label = this.key;
-    this._editor.value = this._value[this.key];
+    this._editor.value = this.value[this.key];
 
     // Hide key label if io-object
     // TODO: make configurable
