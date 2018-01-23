@@ -61,8 +61,12 @@ export class IoOption extends Io {
       this.appendChild(menu);
       menu.options = this.options;
       menu.expanded = true;
-      // TODO: remove on cancel/collapse
+      if (menu._listener) {
+        menu.removeEventListener('io-menu-option-clicked', menu._listener);
+        delete menu._listener;
+      }
       menu.addEventListener('io-menu-option-clicked', this._menuListener);
+      menu._listener = this._menuListener;
     }
   }
   _menuHandler(event) {
