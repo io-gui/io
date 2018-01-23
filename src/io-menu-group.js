@@ -1,9 +1,9 @@
 import {html} from "./ioutil.js"
-import {IoBase} from "./io-base.js"
+import {Io} from "./io.js"
 import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuOption} from "./io-menu-option.js"
 
-export class IoMenuGroup extends IoBase {
+export class IoMenuGroup extends Io {
   static get is() { return 'io-menu-group'; }
   static get template() {
     return html`
@@ -37,6 +37,7 @@ export class IoMenuGroup extends IoBase {
       expanded: {
         type: Boolean,
         notify: true,
+        bubbles: true,
         observer: '_expandedChanged',
         reflectToAttribute: true
       },

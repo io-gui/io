@@ -1,6 +1,5 @@
 
-export class IoBase extends HTMLElement {
-  static get is() { return 'io-base'; }
+export class Io extends HTMLElement {
   static get template() { return `<slot></slot>`; }
   static get observedAttributes() {
     let observed = [];
@@ -81,7 +80,7 @@ export class IoBase extends HTMLElement {
         if (propConfig.notify) {
           this.dispatchEvent(new CustomEvent(key + '-changed', {
             detail: {value: value, oldValue: oldValue},
-            bubbles: false,
+            bubbles: propConfig.bubbles,
             composed: true
           }));
         }
@@ -142,5 +141,3 @@ export class IoBase extends HTMLElement {
 }
 
 var _stagingEelement = document.createElement('div');
-
-window.customElements.define(IoBase.is, IoBase);

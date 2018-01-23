@@ -1,11 +1,11 @@
 import {html} from "./ioutil.js"
-import {IoBase} from "./io-base.js"
+import {Io} from "./io.js"
 import {IoValue} from "./io-value.js"
 import {IoFunction} from "./io-function.js"
 import {IoObjectConstructor} from "./io-object-constructor.js"
 import {IoObjectProperty} from "./io-object-property.js"
 
-export class IoObject extends IoBase {
+export class IoObject extends Io {
   static get is() { return 'io-object'; }
   static get template() {
     return html`
@@ -104,10 +104,6 @@ export class IoObject extends IoBase {
   }
 }
 
-// Default object property configurations.
-// Object configurations are looked up in order of prototype inheritance.
-// Property selectors are looked up in order: key, value, constructor, type.
-// First matching object/property config will be used.
 IoObject.CLASSES = {};
 IoObject.CONFIG = {
   'constructor:Object' : {

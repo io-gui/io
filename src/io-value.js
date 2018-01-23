@@ -1,12 +1,12 @@
 import {html} from "./ioutil.js"
-import {IoBase} from "./io-base.js"
+import {Io} from "./io.js"
 
 const editor = document.createElement('input');
 editor.addEventListener('mousedown', function (event) { event.stopPropagation() });
 editor.addEventListener('touchstart', function (event) { event.stopPropagation() });
 editor.addEventListener('focus', function (event) { event.stopPropagation() });
 
-export class IoValue extends IoBase {
+export class IoValue extends Io {
   static get is() { return 'io-value'; }
   static get template() {
     return html`

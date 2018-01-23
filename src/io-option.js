@@ -1,10 +1,10 @@
 import {html} from "./ioutil.js"
-import {IoBase} from "./io-base.js"
+import {Io} from "./io.js"
 import {IoMenu} from "./io-menu.js"
 
 const menu = new IoMenu({position: 'bottom'});
 
-export class IoOption extends IoBase {
+export class IoOption extends Io {
   static get is() { return 'io-option'; }
   static get template() {
     return html`

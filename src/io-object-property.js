@@ -1,8 +1,8 @@
 import {html} from "./ioutil.js"
-import {IoBase} from "./io-base.js"
+import {Io} from "./io.js"
 import {IoValue} from "./io-value.js"
 
-export class IoObjectProperty extends IoBase {
+export class IoObjectProperty extends Io {
   static get is() { return 'io-object-property'; }
   static get template() {
     return html`

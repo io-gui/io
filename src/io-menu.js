@@ -1,9 +1,9 @@
 import {html} from "./ioutil.js"
-import {IoBase} from "./io-base.js"
+import {Io} from "./io.js"
 import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuGroup} from "./io-menu-group.js"
 
-export class IoMenu extends IoBase {
+export class IoMenu extends Io {
   static get is() { return 'io-menu'; }
   static get properties() {
     return {

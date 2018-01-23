@@ -1,7 +1,7 @@
 import {html} from "./ioutil.js"
-import {IoBase} from "./io-base.js"
+import {Io} from "./io.js"
 
-export class IoObjectConstructor extends IoBase {
+export class IoObjectConstructor extends Io {
   static get is() { return 'io-object-constructor'; }
   static get template() {
     return html`
