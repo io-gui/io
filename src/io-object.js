@@ -62,26 +62,27 @@ export class IoObject extends Io {
     if (this.value instanceof Object === false) return;
 
     let config, configs = [];
+    let _c = {};
+
+    let proto = this.value.__proto__;
+    while (proto) {
+      config = IoObject.CONFIG['constructor:' + proto.constructor.name];
+      if (config) {
+        configs.push(config); //TODO:remove
+        _c = Object.assign(_c, config);
+      }
+      proto = proto.__proto__;
+    }
+
     for (var i in IoObject.CONFIG) {
       if (i.substring(0,11) == 'instanceof:') {
         let classRef = i.slice(11);
         if (IoObject.CLASSES[classRef] && this.value instanceof IoObject.CLASSES[classRef]) {
           config = IoObject.CONFIG[i];
-          config._debug = i;
-          configs.push(config);
+          configs.push(config);//TODO:remove
+          _c = Object.assign(_c, config);
         }
       }
-    }
-
-    // Follow object prototype chain to find first configuration block that matches.
-    let proto = this.value.__proto__;
-    while (proto) {
-      config = IoObject.CONFIG['constructor:' + proto.constructor.name];
-      if (config) {
-        config._debug = 'constructor:' + proto.constructor.name;
-        configs.push(config);
-      }
-      proto = proto.__proto__;
     }
 
     let _keys = Object.keys(this.value);
@@ -89,10 +90,30 @@ export class IoObject extends Io {
 
     if (this.expanded) {
       for (let i = 0; i < _keys.length; i++) {
-        if (!this.$property[_keys[i]]) {
-          this.$property[_keys[i]] = new IoObjectProperty({value: this.value, key: _keys[i], configs: configs});
+        let key = _keys[i];
+        let value = this.value[key];
+        let type = typeof this.value[key];
+
+        let cstr = (value && value.constructor) ? value.constructor.name : 'null';
+        // console.log(key, value, 'type:' + type, 'type:' + type in _c);
+        let _cfg = {};
+        if ('type:' + type in _c) {
+          _cfg = _c['type:' + type];
         }
-        this.appendChild(this.$property[_keys[i]]);
+        if ('constructor:' + cstr in _c) {
+          _cfg = _c['constructor:' + cstr];
+        }
+        if ('key:' + key in _c) {
+          _cfg = _c['key:' + key];
+        }
+        if ('value:' + String(value) in _c) {
+          _cfg = _c['value:' + String(value)];
+        }
+
+        if (!this.$property[key]) {
+          this.$property[key] = new IoObjectProperty({value: this.value, key: key, config: _cfg});
+        }
+        this.appendChild(this.$property[key]);
       }
     } else {
       for (let i = 0; i < _$keys.length; i++) {
@@ -100,25 +121,31 @@ export class IoObject extends Io {
       }
       // TODO: remove unused and take care of garbage.
     }
-
   }
 }
 
-IoObject.CLASSES = {};
+IoObject.CLASSES = {
+  'Number': Number,
+  'String': String,
+  'Boolean': Boolean,
+  'Object': Object,
+  'Array': Array
+}
 IoObject.CONFIG = {
   'constructor:Object' : {
-    'value:null': {tag: 'io-value', props: {}},
-    'value:undefined': {tag: 'io-value', props: {}},
-    'constructor:Array': {tag: 'io-object', props: {expanded: true}},
     'type:string': {tag: 'io-value', props: {type: 'string'}},
     'type:number': {tag: 'io-value', props: {type: 'number', step: 0.1}},
     'type:boolean': {tag: 'io-value', props: {type: 'boolean'}},
     'type:object': {tag: 'io-object', props: {}},
-    'type:function': {tag: 'io-function', props: {}}
-  },
-  'constructor:Array': {
-    'type:number': {tag: 'io-value', props: {type: 'number', step: 1}}
-  }
+    'type:function': {tag: 'io-function', props: {}},
+    'value:null': {tag: 'io-value', props: {}},
+    'value:undefined': {tag: 'io-value', props: {}},
+    // TODO
+    'instanceof:Array': {tag: 'io-object', props: {expanded: true}},
+  } ,
+  // 'instanceof:Object' : {
+  //   'key:name': {tag: 'input', props: { type: 'string' }}
+  // }
 };
 
 window.customElements.define(IoObject.is, IoObject);

@@ -47,7 +47,7 @@ export class IoObjectProperty extends Io {
       key: {
         type: String
       },
-      configs: {
+      config: {
         type: Array
       }
     }
@@ -80,34 +80,8 @@ export class IoObjectProperty extends Io {
       }
     }
   }
-  /* Finds first matching configuration for object property */
-  _getConfig() {
-    let object = this.value;
-    let key = this.key;
-    let value = this.value[this.key];
-    let type = typeof value;
-    let cstr = (value && value.constructor) ? value.constructor.name : 'null';
-
-    let config;
-
-    for (var i = 0; i < this.configs.length; i++) {
-      config = this.configs[i];
-      if ('key:' + key in config) {
-        return config['key:' + key];
-      }
-      if ('value:' + String(value) in config) {
-        return config['value:' + String(value)];
-      }
-      if ('constructor:' + cstr in config) {
-        return config['constructor:' + cstr];
-      }
-      if ('type:' + type in config) {
-        return config['type:' + type];
-      }
-    }
-  }
   _update() {
-    let config = this._getConfig();
+    let config = this.config || {};
     let props = config.props || {};
 
     if (this._editor && this._editor.localName != config.tag) {

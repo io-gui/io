@@ -80,8 +80,6 @@ customElements.define('three-app', ThreeApp);
 
 {
 
-  for (var c in THREE) IoObject.CLASSES['THREE.' + c] = THREE[c];
-
   // TODO: check THREE. Only used in functions
   // export var CullFaceNone = 0;
   // export var CullFaceBack = 1;
@@ -100,7 +98,7 @@ customElements.define('three-app', ThreeApp);
   // export var ZeroSlopeEnding = 2401;
   // export var WrapAroundEnding = 2402;
 
-  IoObject.CONFIG['instanceof:THREE.WebGLRenderer'] = {
+  IoObject.CONFIG['constructor:WebGLRenderer'] = {
     'key:toneMapping': { tag: 'io-option', props: {options: [
       {value: THREE.NoToneMapping, label: 'NoToneMapping'},
       {value: THREE.LinearToneMapping, label: 'LinearToneMapping'},
@@ -110,7 +108,7 @@ customElements.define('three-app', ThreeApp);
     ] }}
   };
 
-  IoObject.CONFIG['instanceof:THREE.WebGLShadowMap'] = {
+  IoObject.CONFIG['constructor:WebGLShadowMap'] = {
     'key:type': { tag: 'io-option', props: {options: [
       {value: THREE.BasicShadowMap, label: 'BasicShadowMap'},
       {value: THREE.PCFShadowMap, label: 'PCFShadowMap'},
@@ -118,14 +116,14 @@ customElements.define('three-app', ThreeApp);
     ] }}
   };
 
-  IoObject.CONFIG['instanceof:THREE.MeshDepthMaterial'] = {
+  IoObject.CONFIG['constructor:MeshDepthMaterial'] = {
     'key:depthPacking': { tag: 'io-option', props: {options: [
       {value: THREE.BasicDepthPacking, label: 'BasicDepthPacking'},
       {value: THREE.RGBADepthPacking, label: 'RGBADepthPacking'}
     ] }}
   };
 
-  IoObject.CONFIG['instanceof:THREE.Texture'] = {
+  IoObject.CONFIG['constructor:Texture'] = {
     'key:mapping': { tag: 'io-option', props: {options: [
       {value: THREE.UVMapping, label: 'UVMapping'},
       {value: THREE.CubeReflectionMapping, label: 'CubeReflectionMapping'},
@@ -227,7 +225,7 @@ customElements.define('three-app', ThreeApp);
     ] }},
   };
 
-  IoObject.CONFIG['instanceof:THREE.Object3D'] = {
+  IoObject.CONFIG['constructor:Object3D'] = {
     'key:drawMode': { tag: 'io-option', props: {options: [
       {value: THREE.TrianglesDrawMode, label: 'TrianglesDrawMode'},
       {value: THREE.TriangleStripDrawMode, label: 'TriangleStripDrawMode'},
@@ -257,7 +255,7 @@ customElements.define('three-app', ThreeApp);
     {value: THREE.MaxEquation, label: 'MaxEquation'}
   ] }};
 
-  IoObject.CONFIG['instanceof:THREE.Material'] = {
+  IoObject.CONFIG['constructor:Material'] = {
     'key:blending': { tag: 'io-option', props: {options: [
       {value: THREE.NoBlending, label: 'NoBlending'},
       {value: THREE.NormalBlending, label: 'NormalBlending'},
@@ -308,7 +306,7 @@ customElements.define('three-app', ThreeApp);
     'key:blendDstAlpha': _blendFactors
   };
 
-  IoObject.CONFIG['instanceof:THREE.Euler'] = {
+  IoObject.CONFIG['constructor:Euler'] = {
     'key:_order': { tag: 'io-option', props: {options: [
       {value: 'XYZ', label: 'XYZ'},
       {value: 'XZY', label: 'XZY'},
