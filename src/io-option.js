@@ -13,17 +13,6 @@ export class IoOption extends Io {
           cursor: pointer;
           display: inline-block;
         }
-        :host([invalid]) {
-          text-decoration: underline;
-          text-decoration-style: dashed;
-          text-decoration-color: red;
-          opacity: 0.25;
-        }
-        :host([disabled]) {
-          color: black;
-          opacity: 0.25;
-          cursor: not-allowed;
-        }
       </style><slot>undefined</slot>
     `;
   }
@@ -35,20 +24,6 @@ export class IoOption extends Io {
       options: {
         type: Array,
         observer: '_update'
-      },
-      type: {
-        type: String,
-        observer: '_update',
-        reflectToAttribute: true
-      },
-      disabled: {
-        type: Boolean,
-        observer: '_disabledChanged',
-        reflectToAttribute: true
-      },
-      invalid: {
-        type: Boolean,
-        reflectToAttribute: true
       }
     }
   }
@@ -64,7 +39,6 @@ export class IoOption extends Io {
     this.setAttribute('tabindex', 0);
     this.addEventListener('focus', this._focusListener);
     this.addEventListener('mousedown', this._expandListener);
-    this._disabledChanged();
     this._update();
   }
   disconnectedCallback() {
@@ -82,7 +56,6 @@ export class IoOption extends Io {
     this.removeEventListener('blur', this._blurListener);
   }
   _expandHandler(event) {
-    if (this.disabled) return;
     if (event.which == 13 || event.which == 32 || event.type == 'mousedown') {
       event.preventDefault();
       this.appendChild(menu);
@@ -99,15 +72,7 @@ export class IoOption extends Io {
     menu.expanded = false;
     menu.removeEventListener('io-menu-option-clicked', this._menuListener);
   }
-  _disabledChanged() {
-    if (this.disabled) {
-      this.removeAttribute('tabindex');
-    } else {
-      this.setAttribute('tabindex', 0);
-    }
-  }
   _update() {
-    this.invalid = (typeof this.value !== this.type && this.type) ? true : false;
     if (this.options) {
       for (var i = 0; i < this.options.length; i++) {
         if (this.options[i].value == this.value) {

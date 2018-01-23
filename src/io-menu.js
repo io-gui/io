@@ -19,9 +19,6 @@ export class IoMenu extends Io {
         type: String,
         observer: '_update'
       },
-      disabled: {
-        type: Boolean
-      },
       listener: {
         type: String,
         value: 'click'
@@ -49,7 +46,6 @@ export class IoMenu extends Io {
     else return document.body.getBoundingClientRect();
   }
   _expandHandler(event) {
-    if (this.disabled) return;
     IoMenuLayer.singleton.collapseAll();
     IoMenuLayer.singleton.pointer.x = event.clientX;
     IoMenuLayer.singleton.pointer.y = event.clientY;

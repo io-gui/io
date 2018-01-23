@@ -93,7 +93,6 @@ export class IoMenuOption extends Io {
     if (this.$group) this.$group.expanded = true;
   }
   _clickHandler(event) {
-    if (this.option.disabled) return;
     let parent = this.$parent;
     while (parent && parent.localName != 'io-menu') {
       parent = parent.$parent;
@@ -115,12 +114,10 @@ export class IoMenuOption extends Io {
     var index = siblings.indexOf(this);
 
     // TODO: handle search.
-    // TODO: handle disabled.
     // TODO: handle previous focus.
     // TODO: handle tabbed focus marching.
 
     if (event.which == 13) {
-      if (this.disabled) return;
       event.preventDefault();
       this._clickHandler(event); // TODO: test
     } else if (event.which == 37) { // LEFT

@@ -105,7 +105,6 @@ export class Io extends HTMLElement {
     return this.appendChild(_stagingEelement.querySelector('*'));
   }
   _setValue(value) {
-    if (this.disabled || value === this.value) return;
     let oldValue = this.value;
     this.value = value;
     this.dispatchEvent(new CustomEvent('io-value-set', {

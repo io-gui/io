@@ -117,10 +117,6 @@ export class IoApp extends HTMLElement {
           <io-value type="boolean" [value]="${this.values.boolean}"></io-value>
         </div>
         <div class="demo">
-          <h3>io-value with disabled attribute.</h3>
-          <io-value [value]="${this.values.string}" type="string" disabled></io-value>
-        </div>
-        <div class="demo">
           <h3>io-value matrix with various data types and type attributes.</h3>
           <div class="row narrow header">
             <span class="rowlabel"></span>

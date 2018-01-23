@@ -24,11 +24,6 @@ export class IoValue extends Io {
           text-decoration-color: red;
           opacity: 0.25;
         }
-        :host([disabled]) {
-          color: black;
-          opacity: 0.25;
-          cursor: not-allowed;
-        }
         :host(.edit) {
           position: relative;
           color: rgba(0,0,0,0) !important;
@@ -72,11 +67,6 @@ export class IoValue extends Io {
         observer: '_typeChanged',
         reflectToAttribute: true
       },
-      disabled: {
-        type: Boolean,
-        observer: '_disabledChanged',
-        reflectToAttribute: true
-      },
       invalid: {
         type: Boolean,
         reflectToAttribute: true
@@ -106,7 +96,6 @@ export class IoValue extends Io {
     this.setAttribute('tabindex', 0);
     this.addEventListener('focus', this._focusListener);
     this._typeChanged();
-    this._disabledChanged();
     this._update();
   }
   disconnectedCallback() {
@@ -180,13 +169,6 @@ export class IoValue extends Io {
     } else {
       this.removeEventListener('click', this._toggleListener);
       this.removeEventListener('mousedown', this._preventDefault);
-    }
-  }
-  _disabledChanged() {
-    if (this.disabled) {
-      this.removeAttribute('tabindex');
-    } else {
-      this.setAttribute('tabindex', 0);
     }
   }
   _update() {
