@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 
 export class IoFunction extends IoBase {
   static get is() { return 'io-function'; }
@@ -10,7 +11,7 @@ export class IoFunction extends IoBase {
           display: inline-block;
           font-style: italic;
         }
-      </style><slot>undefined</slot>
+      </style><slot></slot>
     `;
   }
   static get properties() {

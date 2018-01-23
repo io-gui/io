@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 import {IoValue} from "./io-value.js"
 
 export class IoObjectProperty extends IoBase {

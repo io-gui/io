@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 
 export class IoInspector extends IoBase {
   static get is() { return 'io-inspector'; }

@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 
 export class IoObjectConstructor extends IoBase {
   static get is() { return 'io-object-constructor'; }
@@ -63,13 +64,6 @@ export class IoObjectConstructor extends IoBase {
       event.preventDefault();
       let ioObject = this.parentElement;
       ioObject.expanded = !ioObject.expanded;
-// TODO: remove this is a test only
-// TODO: figure out how to wire UI properties
-window.dispatchEvent(new CustomEvent('io-object-mutated', {
-  detail: {object: ioObject, key: 'expanded'},
-  bubbles: false,
-  composed: true
-}));
       setTimeout(() => {
         ioObject.querySelector('io-object-constructor').focus();
       });

@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuGroup} from "./io-menu-group.js"
 
@@ -33,14 +34,12 @@ export class IoMenu extends IoBase {
     this.$group = new IoMenuGroup({$parent: this, position: this.position, options: this.options});
   }
   connectedCallback() {
-    super.connectedCallback();
     this.$parent = this.parentElement || this.parentNode.host;
     this.$parent.addEventListener(this.listener, this._expandListener);
     IoMenuLayer.singleton.appendChild(this.$group);
     this._binding = this.bind('expanded', this.$group, 'expanded');
   }
   disconnectedCallback() {
-    super.disconnectedCallback();
     this.$parent.removeEventListener(this.listener, this._expandListener);
     IoMenuLayer.singleton.removeChild(this.$group);
     this.unbind(this._binding);

@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuOption} from "./io-menu-option.js"
 

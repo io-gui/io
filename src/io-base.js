@@ -3,50 +3,101 @@ export class IoBase extends HTMLElement {
   static get is() { return 'io-base'; }
   static get template() { return `<slot></slot>`; }
   static get observedAttributes() {
-    // TODO: follow prototype chain
-    if (this.properties) {
-      return Object.keys(this.properties);
+    let observed = [];
+    let proto = this;
+    while (proto) {
+      if (proto.properties) {
+        let keys = Object.keys(proto.properties);
+        for (var i = 0; i < keys.length; i++) {
+          if (observed.indexOf(keys[i]) === -1) observed.push(keys[i]);
+        }
+      }
+      proto = proto.__proto__;
     }
-    return [];
+    return observed;
   }
   attributeChangedCallback(name, oldValue, newValue) {
-    if (this._properties[name].type == Boolean) {
-      this[name] = newValue == '' ? true : false;
-    } else if (this._properties[name].type == Number) {
+    if (this.__properties[name].type === Boolean) {
+      this[name] = newValue === '' ? true : false;
+    } else if (this.__properties[name].type === Number) {
       this[name] = parseFloat(newValue);
     } else {
       this[name] = newValue;
     }
   }
+  getPrototypeProperties() {
+    let props = {};
+    let proto = this.__proto__;
+    while (proto) {
+      let prop = proto.constructor.properties;
+      for (var key in prop) {
+        props[key] = Object.assign(prop[key], props[key] || {});
+      }
+      proto = proto.__proto__;
+    }
+    for (var key in props) {
+      if (props[key].value === undefined) {
+        switch (props[key].type) {
+          case Boolean:
+            props[key].value = false;
+            break;
+          case Number:
+            props[key].value = 0;
+            break;
+          case String:
+            props[key].value = '';
+            break;
+        }
+      }
+    }
+    return props;
+  }
   constructor(props = {}) {
     super();
-    Object.defineProperty(this, '_notify', {
-      value: {}
+    Object.defineProperty(this, '__properties', {
+      value: this.getPrototypeProperties()
     });
-
-    // TODO: follow prototype chain
-    Object.defineProperty(this, '_properties', {
-      value: this.__proto__.constructor.properties || {}
-    });
-    for (let propKey in this._properties) {
-      Io.defineProperty(this, propKey, this._properties[propKey]);
-      if (props.hasOwnProperty(propKey)) this['_' + propKey] = props[propKey];
-      this.reflectAttribute(propKey);
+    for (let key in this.__properties) {
+      if (props[key] !== undefined) this.__properties[key].value = props[key];
+      this.defineProperty(key, this.__properties[key]);
+      this.reflectAttribute(key, this.__properties[key]);
     }
-
     this.attachShadow({mode: 'open'}).innerHTML = this.__proto__.constructor.template;
   }
-  reflectAttribute(propKey) {
-    // this._properties = this.__proto__.constructor.properties || {};
-    let propConfig = this._properties[propKey];
-    let value = this['_' + propKey];
-    if (propConfig && propConfig.reflectToAttribute) {
-      if (value === true) {
-        this.setAttribute(propKey, '');
-      } else if (value === false || value === '') {
-        this.removeAttribute(propKey);
-      } else if (typeof value == 'string' || typeof value == 'number') {
-        this.setAttribute(propKey, value);
+  defineProperty(key, propConfig) {
+    Object.defineProperty(this, key, {
+      get: function() {
+        return propConfig.value;
+      },
+      set: function(value) {
+        if (propConfig.value === value) return;
+        // TODO: type check?
+        let oldValue = value;
+        propConfig.value = value;
+        this.reflectAttribute(key, propConfig);
+        if (propConfig.observer) {
+          this[propConfig.observer](value, key);
+        }
+        if (propConfig.notify) {
+          this.dispatchEvent(new CustomEvent(key + '-changed', {
+            detail: {value: value, oldValue: oldValue},
+            bubbles: false,
+            composed: true
+          }));
+        }
+      },
+      enumerable: true,
+      configurable: true
+    });
+  }
+  reflectAttribute(key, propConfig) {
+    if (propConfig.reflectToAttribute) {
+      if (propConfig.value === true) {
+        this.setAttribute(key, '');
+      } else if (propConfig.value === false || propConfig.value === '') {
+        this.removeAttribute(key);
+      } else if (typeof propConfig.value == 'string' || typeof propConfig.value == 'number') {
+        this.setAttribute(key, propConfig.value);
       }
     }
   }
@@ -64,14 +115,12 @@ export class IoBase extends HTMLElement {
       composed: true
     }));
   }
-  connectedCallback() {}
-  disconnectedCallback() {}
   preventDefault(event) {
     event.preventDefault();
   }
   bind(sourceProp, target, targetProp, oneWay) {
-    this._notify[sourceProp] = true;
-    if (!oneWay) target._notify[targetProp] = true;
+    this.__properties[sourceProp].notify = true;
+    if (!oneWay) target.__properties[targetProp].notify = true;
     var binding = {
       source: this,
       target: target,
@@ -92,79 +141,6 @@ export class IoBase extends HTMLElement {
   }
 }
 
-window.Io = {
-  defineProperty: function(instanceRef, propKey, propConfig) {
-    if (propConfig.value === undefined) {
-      switch (propConfig.type) {
-        case Boolean:
-          propConfig.value = false;
-          break;
-        case Number:
-          propConfig.value = 0;
-          break;
-        case String:
-          propConfig.value = '';
-          break;
-      }
-    }
-    Object.defineProperty(instanceRef, '_' + propKey, {
-      enumerable: false,
-      writable: true,
-      value: propConfig.value
-    });
-    Object.defineProperty(instanceRef, propKey, {
-      // TODO: optimize
-      get: function() {
-        return this['_' + propKey];
-      },
-      set: function(value) {
-        if (this['_' + propKey] === value) return;
-        let oldValue = value;
-        this['_' + propKey] = value;
-        this.reflectAttribute(propKey);
-        if (propConfig.observer) {
-          this[propConfig.observer](value, propKey);
-        }
-        if (propConfig.notify || this._notify[propKey]) {
-          this.dispatchEvent(new CustomEvent(propKey + '-changed', {
-            detail: {value: value, oldValue: oldValue},
-            bubbles: propConfig.notify,
-            composed: true
-          }));
-        }
-        // TODO: type check
-      },
-      enumerable: true,
-      configurable: true
-    });
-  }
-}
+var _stagingEelement = document.createElement('div');
 
 window.customElements.define(IoBase.is, IoBase);
-
-// HTML Escape helper utility thanks to Andrea Giammarchi https://developers.google.com/web/updates/2015/01/ES6-Template-Strings
-var util = (function () {
-  var
-    reEscape = /[&<>'"]/g,
-    reUnescape = /&(?:amp|#38|lt|#60|gt|#62|apos|#39|quot|#34);/g,
-    oEscape = { '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'},
-    oUnescape = {'&amp;':'&','&#38;':'&','&lt;':'<','&#60;':'<','&gt;':'>','&#62;':'>','&apos;':"'",'&#39;':"'",'&quot;':'"','&#34;':'"'},
-    fnEscape = function (m) { return oEscape[m]; },
-    fnUnescape = function (m) { return oUnescape[m]; },
-    replace = String.prototype.replace
-  ;
-  return (Object.freeze || Object)({
-    escape: function escape(s) { return replace.call(s, reEscape, fnEscape); },
-    unescape: function unescape(s) { return replace.call(s, reUnescape, fnUnescape); }
-  });
-}());
-
-export function html(pieces) {
-    var result = pieces[0];
-    var substitutions = [].slice.call(arguments, 1);
-    for (let i = 0; i < substitutions.length; ++i) {
-        result += util.escape(substitutions[i]) + pieces[i + 1];
-    }
-    return result;
-}
-var _stagingEelement = document.createElement('div');

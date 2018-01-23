@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuGroup} from "./io-menu-group.js"
 
@@ -73,13 +74,11 @@ export class IoMenuOption extends IoBase {
     this._keydownListener = this._keydownHandler.bind(this);
   }
   connectedCallback() {
-    super.connectedCallback();
     this.addEventListener('focus', this._focusListener);
     this.addEventListener('click', this._clickListener);
     this.addEventListener('keydown', this._keydownListener);
   }
   disconnectedCallback() {
-    super.disconnectedCallback();
     this.removeEventListener('focus', this._focusListener);
     this.removeEventListener('click', this._clickListener);
     this.removeEventListener('keydown', this._keydownListener);

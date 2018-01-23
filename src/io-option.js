@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 import {IoMenu} from "./io-menu.js"
 
 const menu = new IoMenu({position: 'bottom'});
@@ -60,7 +61,6 @@ export class IoOption extends IoBase {
     this._preventDefault = this.preventDefault.bind(this);
   }
   connectedCallback() {
-    super.connectedCallback();
     this.setAttribute('tabindex', 0);
     this.addEventListener('focus', this._focusListener);
     this.addEventListener('mousedown', this._expandListener);
@@ -68,7 +68,6 @@ export class IoOption extends IoBase {
     this._update();
   }
   disconnectedCallback() {
-    super.disconnectedCallback();
     this.removeEventListener('focus', this._focusListener);
     this.removeEventListener('blur', this._blurListener);
     this.removeEventListener('keydown', this._expandListener);

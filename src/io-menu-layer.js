@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 
 var previousOption;
 var previousParent;
@@ -48,7 +49,6 @@ export class IoMenuLayer extends IoBase {
     }
   }
   connectedCallback() {
-    super.connectedCallback();
     this.addEventListener('mousedown', this._eventHandler);
     this.addEventListener('touchstart', this._eventHandler);
     this.addEventListener('keyup', this._eventHandler);

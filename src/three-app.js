@@ -40,8 +40,10 @@ export class ThreeApp extends HTMLElement {
           margin: 1px;
           flex: 1;
         }
-        div.demo > io-value {
+        div.demo > io-value,
+        div.demo > io-object {
           border: 1px solid #eee;
+          vertical-align: top;
         }
         div.area {
           height: 2em;

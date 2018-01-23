@@ -90,8 +90,10 @@ export class IoApp extends HTMLElement {
           margin: 1px;
           flex: 1;
         }
-        div.demo > io-value {
+        div.demo > io-value,
+        div.demo > io-object {
           border: 1px solid #eee;
+          vertical-align: top;
         }
         div.area {
           height: 2em;
@@ -177,6 +179,10 @@ export class IoApp extends HTMLElement {
         </div>
         <div class="demo">
           <h3>io-object with various property types.</h3>
+          <io-object expanded labeled></io-object>
+          <io-object expanded labeled></io-object>
+          <io-object expanded labeled></io-object>
+          <io-object expanded labeled></io-object>
           <io-object expanded labeled></io-object>
         </div>
       </div>

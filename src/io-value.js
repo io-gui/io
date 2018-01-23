@@ -1,4 +1,5 @@
-import {IoBase, html} from "./io-base.js"
+import {html} from "./ioutil.js"
+import {IoBase} from "./io-base.js"
 
 const editor = document.createElement('input');
 editor.addEventListener('mousedown', function (event) { event.stopPropagation() });
@@ -102,7 +103,6 @@ export class IoValue extends IoBase {
     this._preventDefault = this.preventDefault.bind(this);
   }
   connectedCallback() {
-    super.connectedCallback();
     this.setAttribute('tabindex', 0);
     this.addEventListener('focus', this._focusListener);
     this._typeChanged();
@@ -110,7 +110,6 @@ export class IoValue extends IoBase {
     this._update();
   }
   disconnectedCallback() {
-    super.disconnectedCallback();
     this.removeEventListener('focus', this._focusListener);
     this.removeEventListener('blur', this._blurListener);
     this.removeEventListener('click', this._toggleListener);
