@@ -1,6 +1,6 @@
-import {html} from "./ioutil.js"
-import {Io} from "./io.js"
-import {IoValue} from "./io-value.js"
+import {html} from "../ioutil.js"
+import {Io} from "../io.js"
+import {IoValue} from "../io-value/io-value.js"
 
 export class IoObjectProperty extends Io {
   static get is() { return 'io-object-property'; }

@@ -1,4 +1,4 @@
-import {h} from "../lib/ijk.js"
+import {h} from "./ioutil.js"
 
 export class Io extends HTMLElement {
   static get template() { return `<style></style>`; }
@@ -126,7 +126,7 @@ export class Io extends HTMLElement {
     });
 
     // TODO: documentation. Make more explicit?
-    // TODO: consider folowing prototype chain. 
+    // TODO: consider folowing prototype chain.
     const proto = Object.getPrototypeOf(this);
     const names = Object.getOwnPropertyNames(proto);
     for (var i = 0; i < names.length; i++) {

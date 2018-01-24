@@ -1,8 +1,8 @@
-import {Io} from "./io.js"
-import {html} from "./ioutil.js"
-import {IoObject} from "./io-object.js"
-import {IoInspector} from "./io-inspector.js"
-import {IoOption} from "./io-option.js"
+import {Io} from "./io/io.js"
+import {html} from "./io/ioutil.js"
+import {IoObject} from "./io/io-object/io-object.js"
+import {IoInspector} from "./io/io-inspector/io-inspector.js"
+import {IoOption} from "./io/io-option/io-option.js"
 
 import * as THREE from "../lib/three.module.js"
 

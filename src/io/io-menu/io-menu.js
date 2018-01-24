@@ -1,5 +1,5 @@
-import {html} from "./ioutil.js"
-import {Io} from "./io.js"
+import {html} from "../ioutil.js"
+import {Io} from "../io.js"
 import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuGroup} from "./io-menu-group.js"
 

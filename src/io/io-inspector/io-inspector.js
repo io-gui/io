@@ -1,5 +1,5 @@
-import {html} from "./ioutil.js"
-import {Io} from "./io.js"
+import {html} from "../ioutil.js"
+import {Io} from "../io.js"
 
 export class IoInspector extends Io {
   static get is() { return 'io-inspector'; }
@@ -26,9 +26,6 @@ export class IoInspector extends Io {
         reflectToAttribute: true
       }
     }
-  }
-  constructor(props) {
-    super(props);
   }
   _update() {
     if (this.value instanceof Object === false) return;

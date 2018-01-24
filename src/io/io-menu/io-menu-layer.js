@@ -1,5 +1,5 @@
-import {html} from "./ioutil.js"
-import {Io} from "./io.js"
+import {html} from "../ioutil.js"
+import {Io} from "../io.js"
 
 var previousOption;
 var previousParent;

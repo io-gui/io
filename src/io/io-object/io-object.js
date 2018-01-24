@@ -1,7 +1,7 @@
-import {html} from "./ioutil.js"
-import {Io} from "./io.js"
-import {IoValue} from "./io-value.js"
-import {IoFunction} from "./io-function.js"
+import {html} from "../ioutil.js"
+import {Io} from "../io.js"
+import {IoValue} from "../io-value/io-value.js"
+import {IoFunction} from "../io-function/io-function.js"
 import {IoObjectConstructor} from "./io-object-constructor.js"
 import {IoObjectProperty} from "./io-object-property.js"
 

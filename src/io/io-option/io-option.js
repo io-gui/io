@@ -1,6 +1,6 @@
-import {html} from "./ioutil.js"
-import {Io} from "./io.js"
-import {IoMenu} from "./io-menu.js"
+import {html} from "../ioutil.js"
+import {Io} from "../io.js"
+import {IoMenu} from "../io-menu/io-menu.js"
 
 const menu = new IoMenu({position: 'bottom'});
 
