@@ -17,6 +17,7 @@ export class IoApp extends Io {
       div.demo > io-object {
         border: 1px solid #eee;
         vertical-align: top;
+        margin: 0.25em;
       }
       div.row {
         display: flex;
@@ -29,17 +30,14 @@ export class IoApp extends Io {
         text-align: right;
         padding-right: 0.2em;;
       }
-      div.row * {
-        margin: 1px;
+      div.row > *  {
         flex: 1;
+        margin: 2px;
       }
-      div.demo > io-value,
-      div.demo > io-object {
+      div.row > io-value  {
         border: 1px solid #eee;
-        vertical-align: top;
       }
       div.area {
-        height: 2em;
         background: rgba(128,128,128,0.2);
       }
       .narrow {

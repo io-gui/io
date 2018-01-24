@@ -18,6 +18,7 @@ export class ThreeApp extends Io {
       div.demo > io-object {
         border: 1px solid #eee;
         vertical-align: top;
+        margin: 0.25em;
       }
       </style>
     `;
@@ -44,9 +45,8 @@ customElements.define(ThreeApp.is, ThreeApp);
 
 function setOptionGroups(namespace, className, key, options) {
   let o = []
-  IoObject.CLASSES[className] = namespace[className];
-  IoObject.CONFIG['instanceof:' + className] = IoObject.CONFIG['instanceof:' + className] || {}
-  IoObject.CONFIG['instanceof:' + className]['key:' + key] = { tag: 'io-option', props: { options: o } };
+  IoObject.CONFIG['constructor:' + className] = IoObject.CONFIG['constructor:' + className] || {}
+  IoObject.CONFIG['constructor:' + className]['key:' + key] = { tag: 'io-option', props: { options: o } };
   for (var i = 0; i < options.length; i++) {
     if (typeof options[i] === 'string') {
       o.push({ value: namespace[options[i]], label: options[i]});

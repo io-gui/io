@@ -61,16 +61,6 @@ export class IoObject extends Io {
       proto = proto.__proto__;
     }
 
-    for (var i in IoObject.CONFIG) {
-      if (i.substring(0,11) == 'instanceof:') {
-        let classRef = i.slice(11);
-        if (IoObject.CLASSES[classRef] && this.value instanceof IoObject.CLASSES[classRef]) {
-          let c = IoObject.CONFIG[i];
-          _configs = Object.assign(_configs, c);
-        }
-      }
-    }
-
     let _keys = Object.keys(this.value);
     let _propConfig = [];
 
@@ -88,14 +78,6 @@ export class IoObject extends Io {
         }
         if (_configs.hasOwnProperty('constructor:' + cstr)) {
           _propConfig[key] = _configs['constructor:' + cstr];
-        }
-        for (var cfgKey in _configs) {
-          if (cfgKey.substring(0,11) == 'instanceof:') {
-            let classRef = cfgKey.slice(11);
-            if (IoObject.CLASSES[classRef] && value instanceof IoObject.CLASSES[classRef]) {
-              _propConfig[key] = _configs[cfgKey];
-            }
-          }
         }
         if (_configs.hasOwnProperty('key:' + key)) {
           _propConfig[key] = _configs['key:' + key];
@@ -115,13 +97,6 @@ export class IoObject extends Io {
   }
 }
 
-IoObject.CLASSES = {
-  'Number': Number,
-  'String': String,
-  'Boolean': Boolean,
-  'Object': Object,
-  'Array': Array
-}
 IoObject.CONFIG = {
   'constructor:Object' : {
     'type:string': {tag: 'io-value', props: {type: 'string'}},
@@ -130,9 +105,7 @@ IoObject.CONFIG = {
     'type:object': {tag: 'io-object', props: {}},
     'type:function': {tag: 'io-function', props: {}},
     'value:null': {tag: 'io-value', props: {}},
-    'value:undefined': {tag: 'io-value', props: {}},
-    // TODO
-    'instanceof:Array': {tag: 'io-object', props: {expanded: true}},
+    'value:undefined': {tag: 'io-value', props: {}}
   }
 };
 
