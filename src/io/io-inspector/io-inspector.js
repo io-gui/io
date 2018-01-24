@@ -1,5 +1,6 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {IoInspectorGroup} from "./io-inspector-group.js"
 
 export class IoInspector extends Io {
   static get is() { return 'io-inspector'; }
@@ -7,7 +8,7 @@ export class IoInspector extends Io {
     return html`
       <style>
         :host {
-          display: inline-block;
+          display: block;
           min-width: 10em;
           position: relative;
         }
@@ -27,22 +28,48 @@ export class IoInspector extends Io {
       }
     }
   }
+  connectedCallback() {
+    this._update();
+  }
   _update() {
-    if (this.value instanceof Object === false) return;
+    let groups = {};
+    let proto = this.value.__proto__;
+    while (proto) {
+      let config = IoInspector.GROUPS[proto.constructor.name] || {};
+      for (let group in config) {
+        groups[group] = groups[group] || [];
+        for (let i = 0; i < config[group].length; i++) {
+          if (groups[group].indexOf(config[group][i]) === -1) {
+            groups[group].push(config[group][i]);
+          }
+        }
+      }
+      proto = proto.__proto__;
+    }
+
+    // TODO: better itterate
+    let groupElements = [];
+
+    for (let group in groups) {
+      groupElements.push(['io-inspector-group', {value: this.value, props: groups[group]}]);
+    }
+
+    this.render(groupElements);
+
   }
 }
 
 IoInspector.GROUPS = {
-  'constructor:Object' : {
-    'type:string': {tag: 'io-value', props: {type: 'string'}},
-    'type:number': {tag: 'io-value', props: {type: 'number', step: 0.1}},
-    'type:boolean': {tag: 'io-value', props: {type: 'boolean'}},
-    'type:object': {tag: 'io-object', props: {}},
-    'type:function': {tag: 'io-function', props: {}},
-    'value:null': {tag: 'io-value', props: {}},
-    'value:undefined': {tag: 'io-value', props: {}},
-    // TODO
-    'instanceof:Array': {tag: 'io-object', props: {expanded: true}},
+  'Object' : {
+    'main': ['name', 'uuid'],
+  },
+  'Light' : {
+    'main': ['userData', 'layers'],
+    'rendering': ['color', 'intensity']
+  },
+  'Object3D' : {
+    'main': ['parent', 'type'],
+    'rendering': ['visible', 'frustrumCulled']
   }
 };
 

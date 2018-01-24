@@ -82,11 +82,14 @@ export class IoValue extends Io {
       }
     }
   }
-  connectedCallback() {
+  constructor(props) {
+    super(props);
     this.setAttribute('tabindex', 0);
-    this.addEventListener('focus', this._focusHandler);
     this._typeChanged();
     this._update();
+  }
+  connectedCallback() {
+    this.addEventListener('focus', this._focusHandler);
   }
   disconnectedCallback() {
     this.removeEventListener('focus', this._focusHandler);

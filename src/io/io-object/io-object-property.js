@@ -51,9 +51,12 @@ export class IoObjectProperty extends Io {
       }
     }
   }
+  constructor(props) {
+    super(props);
+    this._update();
+  }
   connectedCallback() {
     window.addEventListener('io-object-mutated', this._objectMutatedHandler);
-    this._update();
   }
   disconnectedCallback() {
     window.removeEventListener('io-object-mutated', this._objectMutatedHandler);

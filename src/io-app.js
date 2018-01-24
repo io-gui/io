@@ -46,7 +46,8 @@ export class IoApp extends Io {
       </style>
     `;
   }
-  connectedCallback() {
+  constructor() {
+    super();
     this.values = {
       "number": 1337,
       "string": 'hello',

@@ -48,7 +48,6 @@ export class IoMenuOption extends Io {
   constructor(props) {
     super(props);
     this.setAttribute('tabindex', 1);
-
     this.render([
       this.option.options ? ['io-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
       this.option.icon ? ['span', {className: 'io-icon'}, this.option.icon] : null,
@@ -56,7 +55,6 @@ export class IoMenuOption extends Io {
       this.option.hint ? ['span', {className: 'io-hint'}, this.option.hint] : null,
       this.option.options ? ['span', {className: 'io-more'}, '▸'] : null,
     ]);
-
     this.$group = this.querySelector('io-menu-group');
     if (this.$group) {
       IoMenuLayer.singleton.appendChild(this.$group);

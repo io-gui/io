@@ -27,8 +27,12 @@ export class IoOption extends Io {
       }
     }
   }
-  connectedCallback() {
+  constructor(props) {
+    super(props);
     this.setAttribute('tabindex', 0);
+    this._update();
+  }
+  connectedCallback() {
     this.addEventListener('focus', this._focusHandler);
     this.addEventListener('mousedown', this._expandHandler);
     this._update();

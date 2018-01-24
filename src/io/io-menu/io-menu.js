@@ -25,6 +25,9 @@ export class IoMenu extends Io {
       }
     }
   }
+  constructor(props) {
+    super(props);
+  }
   connectedCallback() {
     // TODO: render
     this.$group = new IoMenuGroup({$parent: this, position: this.position, options: this.options});

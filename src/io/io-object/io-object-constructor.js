@@ -46,7 +46,6 @@ export class IoObjectConstructor extends Io {
     this.addEventListener('click', this._toggleHandler);
     this.addEventListener('keydown', this._toggleHandler);
     this.addEventListener('mousedown', this._preventHandler);
-    this._update();
   }
   disconnectedCallback() {
     this.removeEventListener('click', this._toggleHandler);

@@ -45,45 +45,42 @@ export class IoObject extends Io {
       }
     }
   }
-  connectedCallback() {
+  constructor(props) {
+    super(props);
     this._update();
   }
   _update() {
-    if (this.value instanceof Object === false) return;
-
-    let _config;
-    let _configs = {};
-
+    let configs = {};
     let proto = this.value.__proto__;
     while (proto) {
-      let c = IoObject.CONFIG['constructor:' + proto.constructor.name];
-      if (c) _configs = Object.assign(_configs, c);
+      let c = IoObject.CONFIG[proto.constructor.name];
+      if (c) configs = Object.assign(configs, c);
       proto = proto.__proto__;
     }
 
-    let _keys = Object.keys(this.value);
-    let _propConfig = [];
+    let keys = Object.keys(this.value);
+    let propConfig = [];
 
     if (this.expanded) {
-      for (let i = 0; i < _keys.length; i++) {
-        let key = _keys[i];
+      for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
         let value = this.value[key];
         let type = typeof this.value[key];
         let cstr = (value && value.constructor) ? value.constructor.name : 'null';
 
-        _propConfig[key] = {};
+        propConfig[key] = {};
 
-        if (_configs.hasOwnProperty('type:' + type)) {
-          _propConfig[key] = _configs['type:' + type];
+        if (configs.hasOwnProperty('type:' + type)) {
+          propConfig[key] = configs['type:' + type];
         }
-        if (_configs.hasOwnProperty('constructor:' + cstr)) {
-          _propConfig[key] = _configs['constructor:' + cstr];
+        if (configs.hasOwnProperty(cstr)) {
+          propConfig[key] = configs[cstr];
         }
-        if (_configs.hasOwnProperty('key:' + key)) {
-          _propConfig[key] = _configs['key:' + key];
+        if (configs.hasOwnProperty('key:' + key)) {
+          propConfig[key] = configs['key:' + key];
         }
-        if (_configs.hasOwnProperty('value:' + String(value))) {
-          _propConfig[key] = _configs['value:' + String(value)];
+        if (configs.hasOwnProperty('value:' + String(value))) {
+          propConfig[key] = configs['value:' + String(value)];
         }
       }
     }
@@ -91,14 +88,14 @@ export class IoObject extends Io {
     this.render([
       ['div', {className: 'io-tree-line'}], // TODO: optionsl
       ['io-object-constructor', {object: this.value, expanded: this.expanded, label: this.label}],
-      this.expanded ? _keys.map(key => ['io-object-property', { key: key, value: this.value, config: _propConfig[key] } ]) : null
+      this.expanded ? keys.map(key => ['io-object-property', { key: key, value: this.value, config: propConfig[key] } ]) : null
     ])
 
   }
 }
 
 IoObject.CONFIG = {
-  'constructor:Object' : {
+  'Object' : {
     'type:string': {tag: 'io-value', props: {type: 'string'}},
     'type:number': {tag: 'io-value', props: {type: 'number', step: 0.1}},
     'type:boolean': {tag: 'io-value', props: {type: 'boolean'}},

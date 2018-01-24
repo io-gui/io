@@ -21,6 +21,10 @@ export class IoFunction extends Io {
       }
     }
   }
+  constructor(props) {
+    super(props);
+    this._update();
+  }
   _update() {
     // https://stackoverflow.com/questions/1007981/how-to-get-function-parameter-names-values-dynamically
     var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
