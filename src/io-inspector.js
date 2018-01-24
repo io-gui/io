@@ -11,7 +11,7 @@ export class IoInspector extends Io {
           min-width: 10em;
           position: relative;
         }
-      </style><slot></slot>
+      </style>
     `;
   }
   static get properties() {

@@ -51,7 +51,7 @@ export class IoValue extends Io {
         input[type=number] {
             -moz-appearance: textfield;
         }
-      </style><slot>undefined</slot>
+      </style>
     `;
   }
   static get properties() {
@@ -82,38 +82,31 @@ export class IoValue extends Io {
       }
     }
   }
-  constructor(props) {
-    super(props);
-    this._focusListener = this._focusHandler.bind(this);
-    this._blurListener = this._blurHandler.bind(this);
-    this._toggleListener = this._toggleHandler.bind(this);
-    this._preventDefault = this.preventDefault.bind(this);
-  }
   connectedCallback() {
     this.setAttribute('tabindex', 0);
-    this.addEventListener('focus', this._focusListener);
+    this.addEventListener('focus', this._focusHandler);
     this._typeChanged();
     this._update();
   }
   disconnectedCallback() {
-    this.removeEventListener('focus', this._focusListener);
-    this.removeEventListener('blur', this._blurListener);
-    this.removeEventListener('click', this._toggleListener);
-    this.removeEventListener('keydown', this._toggleListener);
-    this.removeEventListener('mousedown', this._preventDefault);
+    this.removeEventListener('focus', this._focusHandler);
+    this.removeEventListener('blur', this._blurHandler);
+    this.removeEventListener('click', this._toggleHandler);
+    this.removeEventListener('keydown', this._toggleHandler);
+    this.removeEventListener('mousedown', this._preventHandler);
   }
   _focusHandler(event) {
-    this.addEventListener('blur', this._blurListener);
+    this.addEventListener('blur', this._blurHandler);
     this._removeEditor();
     if (this.type === 'boolean') {
-      this.addEventListener('keydown', this._toggleListener);
+      this.addEventListener('keydown', this._toggleHandler);
     } else {
       this._addEditor();
     }
   }
   _blurHandler(event) {
-    this.removeEventListener('keydown', this._toggleListener);
-    this.removeEventListener('blur', this._blurListener);
+    this.removeEventListener('keydown', this._toggleHandler);
+    this.removeEventListener('blur', this._blurHandler);
     if (this.type === 'number') {
       if (editor.value !== '') {
         this._setValue(Math.round(Number(editor.value) / this.step) * this.step);
@@ -130,6 +123,9 @@ export class IoValue extends Io {
     } else if (event.type == 'click') {
       this._setValue(!this.value);
     }
+  }
+  _preventHandler(event) {
+    event.preventDefault();
   }
   _addEditor() {
     this.classList.add('edit');
@@ -161,11 +157,11 @@ export class IoValue extends Io {
   }
   _typeChanged() {
     if (this.type === 'boolean') {
-      this.addEventListener('click', this._toggleListener);
-      this.addEventListener('mousedown', this._preventDefault);
+      this.addEventListener('click', this._toggleHandler);
+      this.addEventListener('mousedown', this._preventHandler);
     } else {
-      this.removeEventListener('click', this._toggleListener);
-      this.removeEventListener('mousedown', this._preventDefault);
+      this.removeEventListener('click', this._toggleHandler);
+      this.removeEventListener('mousedown', this._preventHandler);
     }
   }
   _update() {

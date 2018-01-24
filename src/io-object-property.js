@@ -32,7 +32,7 @@ export class IoObjectProperty extends Io {
         ::slotted(.io-label.hidden) {
           display: none;
         }
-      </style><slot></slot>
+      </style>
     `;
   }
   static get properties() {
@@ -51,17 +51,12 @@ export class IoObjectProperty extends Io {
       }
     }
   }
-  constructor(props) {
-    super(props);
-    this._valueSetListener = this._valueSetHandler.bind(this);
-    this._objectMutatedListener = this._objectMutatedHandler.bind(this);
+  connectedCallback() {
+    window.addEventListener('io-object-mutated', this._objectMutatedHandler);
     this._update();
   }
-  connectedCallback() {
-    window.addEventListener('io-object-mutated', this._objectMutatedListener);
-  }
   disconnectedCallback() {
-    window.removeEventListener('io-object-mutated', this._objectMutatedListener);
+    window.removeEventListener('io-object-mutated', this._objectMutatedHandler);
   }
   _valueSetHandler(event) {
     this.value[this.key] = event.detail.value;

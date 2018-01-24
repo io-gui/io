@@ -13,7 +13,7 @@ export class IoOption extends Io {
           cursor: pointer;
           display: inline-block;
         }
-      </style><slot>undefined</slot>
+      </style>
     `;
   }
   static get properties() {
@@ -27,33 +27,25 @@ export class IoOption extends Io {
       }
     }
   }
-  constructor(props) {
-    super(props);
-    this._focusListener = this._focusHandler.bind(this);
-    this._blurListener = this._blurHandler.bind(this);
-    this._expandListener = this._expandHandler.bind(this);
-    this._menuListener = this._menuHandler.bind(this);
-    this._preventDefault = this.preventDefault.bind(this);
-  }
   connectedCallback() {
     this.setAttribute('tabindex', 0);
-    this.addEventListener('focus', this._focusListener);
-    this.addEventListener('mousedown', this._expandListener);
+    this.addEventListener('focus', this._focusHandler);
+    this.addEventListener('mousedown', this._expandHandler);
     this._update();
   }
   disconnectedCallback() {
-    this.removeEventListener('focus', this._focusListener);
-    this.removeEventListener('blur', this._blurListener);
-    this.removeEventListener('keydown', this._expandListener);
+    this.removeEventListener('focus', this._focusHandler);
+    this.removeEventListener('blur', this._blurHandler);
+    this.removeEventListener('keydown', this._expandHandler);
     this.removeEventListener('mousedown', this._preventDefault);
   }
   _focusHandler(event) {
-    this.addEventListener('blur', this._blurListener);
-    this.addEventListener('keydown', this._expandListener);
+    this.addEventListener('blur', this._blurHandler);
+    this.addEventListener('keydown', this._expandHandler);
   }
   _blurHandler(event) {
-    this.removeEventListener('keydown', this._expandListener);
-    this.removeEventListener('blur', this._blurListener);
+    this.removeEventListener('keydown', this._expandHandler);
+    this.removeEventListener('blur', this._blurHandler);
   }
   _expandHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mousedown') {
@@ -61,20 +53,23 @@ export class IoOption extends Io {
       this.appendChild(menu);
       menu.options = this.options;
       menu.expanded = true;
-      if (menu._listener) {
-        menu.removeEventListener('io-menu-option-clicked', menu._listener);
+      if (menu._listerer) {
+        menu.removeEventListener('io-menu-option-clicked', menu._listerer);
         delete menu._listener;
       }
-      menu.addEventListener('io-menu-option-clicked', this._menuListener);
-      menu._listener = this._menuListener;
+      menu.addEventListener('io-menu-option-clicked', this._menuHandler);
+      menu._listener = this._menuHandler;
     }
+  }
+  _preventDefault(event) {
+    event.preventDefault();
   }
   _menuHandler(event) {
     if (event.detail.option.value !== undefined) {
       this._setValue(event.detail.option.value);
     }
     menu.expanded = false;
-    menu.removeEventListener('io-menu-option-clicked', this._menuListener);
+    menu.removeEventListener('io-menu-option-clicked', this._menuHandler);
   }
   _update() {
     if (this.options) {

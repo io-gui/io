@@ -17,7 +17,7 @@ export class IoObjectConstructor extends Io {
       ::slotted(.io-label):after {
         content: ":";
       }
-      </style><slot></slot>
+      </style>
     `;
   }
   static get properties() {
@@ -40,20 +40,21 @@ export class IoObjectConstructor extends Io {
   constructor(props) {
     super(props);
     this.setAttribute('tabindex', 0);
-    this._toggleListener = this._toggleHandler.bind(this);
-    this._preventDefault = this.preventDefault.bind(this);
     this._update();
   }
   connectedCallback() {
-    this.addEventListener('click', this._toggleListener);
-    this.addEventListener('keydown', this._toggleListener);
-    this.addEventListener('mousedown', this._preventDefault);
+    this.addEventListener('click', this._toggleHandler);
+    this.addEventListener('keydown', this._toggleHandler);
+    this.addEventListener('mousedown', this._preventHandler);
     this._update();
   }
   disconnectedCallback() {
-    this.removeEventListener('click', this._toggleListener);
-    this.removeEventListener('keydown', this._toggleListener);
-    this.removeEventListener('mousedown', this._preventDefault);
+    this.removeEventListener('click', this._toggleHandler);
+    this.removeEventListener('keydown', this._toggleHandler);
+    this.removeEventListener('mousedown', this._preventHandler);
+  }
+  _preventHandler(event) {
+    event.preventDefault();
   }
   _toggleHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'click') {

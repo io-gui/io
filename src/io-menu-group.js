@@ -25,7 +25,7 @@ export class IoMenuGroup extends Io {
         :host([expanded]) {
           visibility: visible;
         }
-      </style><slot></slot>
+      </style>
     `;
   }
   static get properties() {
@@ -53,7 +53,7 @@ export class IoMenuGroup extends Io {
   }
   constructor(props) {
     super(props);
-    this.__animate = this._animate.bind(this);
+    this._animate = this._animate.bind(this);
     this.$options = [];
     this._x = 0;
     this._y = 0;
@@ -100,7 +100,7 @@ export class IoMenuGroup extends Io {
   }
   _animate() {
     if (!this._playing) return;
-    requestAnimationFrame(this.__animate);
+    requestAnimationFrame(this._animate);
     this._scroll();
   }
   _setPosition() {

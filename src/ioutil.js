@@ -16,10 +16,10 @@ var util = (function () {
 }());
 
 export function html(pieces) {
-    var result = pieces[0];
-    var substitutions = [].slice.call(arguments, 1);
-    for (let i = 0; i < substitutions.length; ++i) {
-        result += util.escape(substitutions[i]) + pieces[i + 1];
-    }
-    return result;
+  var result = pieces[0];
+  var substitutions = [].slice.call(arguments, 1);
+  for (let i = 0; i < substitutions.length; ++i) {
+      result += util.escape(substitutions[i]) + pieces[i + 1];
+  }
+  return result;
 }

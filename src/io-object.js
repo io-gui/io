@@ -26,7 +26,7 @@ export class IoObject extends Io {
           top: 1.5em;
           bottom: 0.5em;
         }
-      </style><slot></slot>
+      </style>
     `;
   }
   static get properties() {
@@ -107,8 +107,7 @@ export class IoObject extends Io {
     }
 
     this.render([
-      // this.expanded ? ['div', {className: 'io-tree-line'}] : null,
-      ['div', {className: 'io-tree-line'}],
+      ['div', {className: 'io-tree-line'}], // TODO: optionsl
       ['io-object-constructor', {object: this.value, expanded: this.expanded, label: this.label}],
       this.expanded ? _keys.map(key => ['io-object-property', { key: key, value: this.value, config: _propConfig[key] } ]) : null
     ])

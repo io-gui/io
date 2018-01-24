@@ -1,7 +1,7 @@
 import {h} from "../lib/ijk.js"
 
 export class Io extends HTMLElement {
-  static get template() { return `<slot></slot>`; }
+  static get template() { return `<style></style>`; }
   static get observedAttributes() {
     let observed = [];
     let proto = this;
@@ -52,12 +52,18 @@ export class Io extends HTMLElement {
     }
     return props;
   }
-  render(children) { // TODO:prototype for testing only
+  render(children, host) {
+    host = host || this;
     let vDOM = h('name', 'props', 'children')(['root', children]).children;
-    this.traverse(vDOM, this.children)
-    return vDOM;
+    this.traverse(vDOM, host);
   }
-  traverse(vChildren, children) {
+  traverse(vChildren, host) {
+    let children = host.children;
+    let traverseStart = 0;
+    if (host instanceof ShadowRoot) {
+      vChildren.unshift(['style'], ['slot']);
+    }
+
     for (var i = 0; i < vChildren.length; i++) {
 
       if (children[i] && children[i].localName === vChildren[i].name) {
@@ -82,7 +88,7 @@ export class Io extends HTMLElement {
         if (ConstructorClass) {
 
           el = new ConstructorClass(vChildren[i].props);
-          this.appendChild(el);
+          host.appendChild(el);
 
         } else {
 
@@ -90,12 +96,17 @@ export class Io extends HTMLElement {
           for (var prop in vChildren[i].props) {
             el[prop] = vChildren[i].props[prop];
           }
-          this.appendChild(el);
-          // TODO: handle chldren better
-          if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-            el.innerText = vChildren[i].children;
-          }
+          host.appendChild(el);
 
+        }
+
+        // TODO: handle chldren better
+        if (vChildren[i].children && typeof vChildren[i].children === 'string') {
+          el.innerHTML = vChildren[i].children;
+        } else if (vChildren[i].children &&  typeof vChildren[i].children === 'object') {
+          // TODO: test extensively
+          // console.log(vChildren[i].children, el);
+          this.traverse(vChildren[i].children, el);
         }
 
       }
@@ -104,7 +115,7 @@ export class Io extends HTMLElement {
      // TODO: consider caching elements for reuse
      if (children.length > vChildren.length) {
        for (var i = children.length - 1; children.length > vChildren.length; i--) {
-         this.removeChild(children[i]);
+         host.removeChild(children[i]);
        }
      }
    }
@@ -113,12 +124,25 @@ export class Io extends HTMLElement {
     Object.defineProperty(this, '__properties', {
       value: this.getPrototypeProperties()
     });
+
+    // TODO: documentation. Make more explicit?
+    // TODO: consider folowing prototype chain. 
+    const proto = Object.getPrototypeOf(this);
+    const names = Object.getOwnPropertyNames(proto);
+    for (var i = 0; i < names.length; i++) {
+      if (names[i].substring(names[i].length-7,names[i].length) === 'Handler') {
+        this[names[i]] = this[names[i]].bind(this);
+      }
+    }
+
     for (let key in this.__properties) {
       if (props[key] !== undefined) this.__properties[key].value = props[key];
       this.defineProperty(key, this.__properties[key]);
       this.reflectAttribute(key, this.__properties[key]);
     }
-    this.attachShadow({mode: 'open'}).innerHTML = this.__proto__.constructor.template;
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.innerHTML = this.__proto__.constructor.template;
+    this.shadowRoot.appendChild(document.createElement('slot'));
   }
   defineProperty(key, propConfig) {
     Object.defineProperty(this, key, {
@@ -157,10 +181,6 @@ export class Io extends HTMLElement {
       }
     }
   }
-  appendHTML(string) {
-    _stagingEelement.innerHTML = string;
-    return this.appendChild(_stagingEelement.querySelector('*'));
-  }
   _setValue(value) {
     let oldValue = this.value;
     this.value = value;
@@ -169,9 +189,6 @@ export class Io extends HTMLElement {
       bubbles: false,
       composed: true
     }));
-  }
-  preventDefault(event) {
-    event.preventDefault();
   }
   bind(sourceProp, target, targetProp, oneWay) {
     this.__properties[sourceProp].notify = true;

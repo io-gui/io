@@ -11,7 +11,7 @@ export class IoFunction extends Io {
           display: inline-block;
           font-style: italic;
         }
-      </style><slot></slot>
+      </style>
     `;
   }
   static get properties() {

@@ -32,7 +32,7 @@ export class IoMenuLayer extends Io {
       :host([expanded]) {
         visibility: visible;
       }
-      </style><slot></slot>
+      </style>
     `;
   }
   static get properties() {
@@ -52,8 +52,8 @@ export class IoMenuLayer extends Io {
     this.addEventListener('mousedown', this._eventHandler);
     this.addEventListener('touchstart', this._eventHandler);
     this.addEventListener('keyup', this._eventHandler);
-    this.addEventListener('expanded-changed', this._onMenuGroupExpanded);
-    this.addEventListener('mousemove', this._onMousemove);
+    this.addEventListener('expanded-changed', this._expandedHandler);
+    this.addEventListener('mousemove', this._mousemoveHandler);
 
     window.addEventListener('scroll', this.collapseAll.bind(this));
 
@@ -83,7 +83,7 @@ export class IoMenuLayer extends Io {
       this.collapseAll();
     }
   }
-  _onMousemove(event) {
+  _mousemoveHandler(event) {
     this.pointer.x = event.clientX;
     this.pointer.y = event.clientY;
     this.pointer.v = Math.abs(event.movementY / 2) - Math.abs(event.movementX);
@@ -129,7 +129,7 @@ export class IoMenuLayer extends Io {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  _onMenuGroupExpanded() {
+  _expandedHandler() {
     let groups = this.querySelectorAll('io-menu-group');
     let expanded = false;
     for (var i = 0; i < groups.length; i++) {

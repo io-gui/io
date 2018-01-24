@@ -31,7 +31,7 @@ export class IoMenuOption extends Io {
         opacity: 0.5;
         margin: 0 -0.25em 0 0.25em;
       }
-      </style><slot></slot>
+      </style>
     `;
   }
   static get properties() {
@@ -48,40 +48,29 @@ export class IoMenuOption extends Io {
   constructor(props) {
     super(props);
     this.setAttribute('tabindex', 1);
-    if (this.option.options) {
-      this.$group = new IoMenuGroup({options: this.option.options, $parent: this, position: 'right'});
+
+    this.render([
+      this.option.options ? ['io-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
+      this.option.icon ? ['span', {className: 'io-icon'}, this.option.icon] : null,
+      this.option.label ? ['span', {className: 'io-label'}, this.option.label] : null,
+      this.option.hint ? ['span', {className: 'io-hint'}, this.option.hint] : null,
+      this.option.options ? ['span', {className: 'io-more'}, '▸'] : null,
+    ]);
+
+    this.$group = this.querySelector('io-menu-group');
+    if (this.$group) {
       IoMenuLayer.singleton.appendChild(this.$group);
     }
-
-    if (this.option.icon) {
-      this.$icon = this.appendHTML(html`<span class='io-icon'>${this.option.icon}</span>`);
-    }
-
-    if (this.option.label) {
-      this.$label = this.appendHTML(html`<span class='io-label'>${this.option.label}</span>`);
-    }
-
-    if (this.option.hint) {
-      this.option.hint = this.appendHTML(html`<span class='io-hint'>${this.option.hint}</span>`);
-    }
-
-    if (this.option.options) {
-      this.$icon = this.appendHTML(html`<span class='io-more'>▸</span>`);
-    }
-
-    this._focusListener = this._focusHandler.bind(this);
-    this._clickListener = this._clickHandler.bind(this);
-    this._keydownListener = this._keydownHandler.bind(this);
   }
   connectedCallback() {
-    this.addEventListener('focus', this._focusListener);
-    this.addEventListener('click', this._clickListener);
-    this.addEventListener('keydown', this._keydownListener);
+    this.addEventListener('focus', this._focusHandler);
+    this.addEventListener('click', this._clickHandler);
+    this.addEventListener('keydown', this._keydownHandler);
   }
   disconnectedCallback() {
-    this.removeEventListener('focus', this._focusListener);
-    this.removeEventListener('click', this._clickListener);
-    this.removeEventListener('keydown', this._keydownListener);
+    this.removeEventListener('focus', this._focusHandler);
+    this.removeEventListener('click', this._clickHandler);
+    this.removeEventListener('keydown', this._keydownHandler);
   }
   _focusHandler() {
     for (var i = 0; i < this.$parent.$options.length; i++) {
