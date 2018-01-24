@@ -12,16 +12,12 @@ export class IoObject extends Io {
       <style>
         :host {
           display: inline-block;
-          /* background: rgba(255,0,0,0.1); */
           position: relative;
         }
         ::slotted(io-object-property):before {
           content: "\\00a0\\00a0─\\00a0";
         }
-        :host #tree-line {
-          display: none;
-        }
-        :host([expanded]) > #tree-line {
+        ::slotted(.io-tree-line) {
           display: inline-block;
           position: absolute;
           pointer-events: none;
@@ -30,7 +26,7 @@ export class IoObject extends Io {
           top: 1.5em;
           bottom: 0.5em;
         }
-      </style><div id="tree-line"></div><slot></slot>
+      </style><slot></slot>
     `;
   }
   static get properties() {
@@ -49,28 +45,19 @@ export class IoObject extends Io {
       }
     }
   }
-  constructor(props) {
-    super(props);
-    this.$constructor = new IoObjectConstructor({object: this.value, expanded: this.expanded, label: this.label});
-    this.bind('expanded', this.$constructor, 'expanded');
-    this.bind('label', this.$constructor, 'label', true);
-    this.bind('value', this.$constructor, 'object', true);
-    this.appendChild(this.$constructor);
-    this.$property = {};
+  connectedCallback() {
+    this._update();
   }
   _update() {
     if (this.value instanceof Object === false) return;
 
-    let config, configs = [];
-    let _c = {};
+    let _config;
+    let _configs = {};
 
     let proto = this.value.__proto__;
     while (proto) {
-      config = IoObject.CONFIG['constructor:' + proto.constructor.name];
-      if (config) {
-        configs.push(config); //TODO:remove
-        _c = Object.assign(_c, config);
-      }
+      let c = IoObject.CONFIG['constructor:' + proto.constructor.name];
+      if (c) _configs = Object.assign(_configs, c);
       proto = proto.__proto__;
     }
 
@@ -78,49 +65,54 @@ export class IoObject extends Io {
       if (i.substring(0,11) == 'instanceof:') {
         let classRef = i.slice(11);
         if (IoObject.CLASSES[classRef] && this.value instanceof IoObject.CLASSES[classRef]) {
-          config = IoObject.CONFIG[i];
-          configs.push(config);//TODO:remove
-          _c = Object.assign(_c, config);
+          let c = IoObject.CONFIG[i];
+          _configs = Object.assign(_configs, c);
         }
       }
     }
 
     let _keys = Object.keys(this.value);
-    let _$keys = Object.keys(this.$property);
+    let _propConfig = [];
 
     if (this.expanded) {
       for (let i = 0; i < _keys.length; i++) {
         let key = _keys[i];
         let value = this.value[key];
         let type = typeof this.value[key];
-
         let cstr = (value && value.constructor) ? value.constructor.name : 'null';
-        // console.log(key, value, 'type:' + type, 'type:' + type in _c);
-        let _cfg = {};
-        if ('type:' + type in _c) {
-          _cfg = _c['type:' + type];
-        }
-        if ('constructor:' + cstr in _c) {
-          _cfg = _c['constructor:' + cstr];
-        }
-        if ('key:' + key in _c) {
-          _cfg = _c['key:' + key];
-        }
-        if ('value:' + String(value) in _c) {
-          _cfg = _c['value:' + String(value)];
-        }
 
-        if (!this.$property[key]) {
-          this.$property[key] = new IoObjectProperty({value: this.value, key: key, config: _cfg});
+        _propConfig[key] = {};
+
+        if (_configs.hasOwnProperty('type:' + type)) {
+          _propConfig[key] = _configs['type:' + type];
         }
-        this.appendChild(this.$property[key]);
+        if (_configs.hasOwnProperty('constructor:' + cstr)) {
+          _propConfig[key] = _configs['constructor:' + cstr];
+        }
+        for (var cfgKey in _configs) {
+          if (cfgKey.substring(0,11) == 'instanceof:') {
+            let classRef = cfgKey.slice(11);
+            if (IoObject.CLASSES[classRef] && value instanceof IoObject.CLASSES[classRef]) {
+              _propConfig[key] = _configs[cfgKey];
+            }
+          }
+        }
+        if (_configs.hasOwnProperty('key:' + key)) {
+          _propConfig[key] = _configs['key:' + key];
+        }
+        if (_configs.hasOwnProperty('value:' + String(value))) {
+          _propConfig[key] = _configs['value:' + String(value)];
+        }
       }
-    } else {
-      for (let i = 0; i < _$keys.length; i++) {
-        this.$property[_$keys[i]] = this.$property[_$keys[i]].parentElement.removeChild(this.$property[_$keys[i]]);
-      }
-      // TODO: remove unused and take care of garbage.
     }
+
+    this.render([
+      // this.expanded ? ['div', {className: 'io-tree-line'}] : null,
+      ['div', {className: 'io-tree-line'}],
+      ['io-object-constructor', {object: this.value, expanded: this.expanded, label: this.label}],
+      this.expanded ? _keys.map(key => ['io-object-property', { key: key, value: this.value, config: _propConfig[key] } ]) : null
+    ])
+
   }
 }
 
@@ -142,10 +134,7 @@ IoObject.CONFIG = {
     'value:undefined': {tag: 'io-value', props: {}},
     // TODO
     'instanceof:Array': {tag: 'io-object', props: {expanded: true}},
-  } ,
-  // 'instanceof:Object' : {
-  //   'key:name': {tag: 'input', props: { type: 'string' }}
-  // }
+  }
 };
 
 window.customElements.define(IoObject.is, IoObject);

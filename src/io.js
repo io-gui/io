@@ -1,3 +1,4 @@
+import {h} from "../lib/ijk.js"
 
 export class Io extends HTMLElement {
   static get template() { return `<slot></slot>`; }
@@ -51,6 +52,62 @@ export class Io extends HTMLElement {
     }
     return props;
   }
+  render(children) { // TODO:prototype for testing only
+    let vDOM = h('name', 'props', 'children')(['root', children]).children;
+    this.traverse(vDOM, this.children)
+    return vDOM;
+  }
+  traverse(vChildren, children) {
+    for (var i = 0; i < vChildren.length; i++) {
+
+      if (children[i] && children[i].localName === vChildren[i].name) {
+
+        if (vChildren[i].props) {
+          for (var prop in vChildren[i].props) {
+            if (vChildren[i].props[prop] !== children[i][prop]) {
+              children[i][prop] = vChildren[i].props[prop];
+            }
+          }
+        }
+
+      } else if (children[i] && children[i].localName !== vChildren[i].name) {
+
+        //TODO: remove and swap element if tag changed
+
+      } else {
+
+        let el;
+        let ConstructorClass = customElements.get(vChildren[i].name);
+
+        if (ConstructorClass) {
+
+          el = new ConstructorClass(vChildren[i].props);
+          this.appendChild(el);
+
+        } else {
+
+          el = document.createElement(vChildren[i].name);
+          for (var prop in vChildren[i].props) {
+            el[prop] = vChildren[i].props[prop];
+          }
+          this.appendChild(el);
+          // TODO: handle chldren better
+          if (vChildren[i].children && typeof vChildren[i].children === 'string') {
+            el.innerText = vChildren[i].children;
+          }
+
+        }
+
+      }
+    }
+
+     // TODO: consider caching elements for reuse
+     if (children.length > vChildren.length) {
+       for (var i = children.length - 1; children.length > vChildren.length; i--) {
+         this.removeChild(children[i]);
+       }
+     }
+   }
   constructor(props = {}) {
     super();
     Object.defineProperty(this, '__properties', {
@@ -107,7 +164,7 @@ export class Io extends HTMLElement {
   _setValue(value) {
     let oldValue = this.value;
     this.value = value;
-    this.dispatchEvent(new CustomEvent('io-value-set', {
+    this.dispatchEvent(new CustomEvent('value-set', {
       detail: {value: value, oldValue: oldValue},
       bubbles: false,
       composed: true

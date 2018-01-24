@@ -43,9 +43,6 @@ export class IoValue extends Io {
           font-style: inherit;
           font-family: inherit;
         }
-        :host input:focus{
-          /* outline: none; */
-        }
         :host input[type=number]::-webkit-inner-spin-button,
         :host input[type=number]::-webkit-outer-spin-button {
           -webkit-appearance: none;

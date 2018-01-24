@@ -10,7 +10,6 @@ export class IoObjectProperty extends Io {
         :host {
           display: flex;
           flex-direction: row;
-          /* background: rgba(0,0,255,0.1); */
         }
         ::slotted(io-value[type="number"]) {
           color: rgb(28, 0, 207);
@@ -23,9 +22,6 @@ export class IoObjectProperty extends Io {
         }
         ::slotted(io-option) {
           background: rgba(64,64,128,0.1);
-        }
-        ::slotted(.io-label) {
-          /* background: rgba(0,0,0,0.1); */
         }
         ::slotted(.io-label):after {
           content: ":\\00a0";
@@ -42,13 +38,16 @@ export class IoObjectProperty extends Io {
   static get properties() {
     return {
       value: {
-        type: Object
+        type: Object,
+        observer: '_update'
       },
       key: {
-        type: String
+        type: String,
+        observer: '_update'
       },
       config: {
-        type: Array
+        type: Array,
+        observer: '_update'
       }
     }
   }
@@ -56,7 +55,6 @@ export class IoObjectProperty extends Io {
     super(props);
     this._valueSetListener = this._valueSetHandler.bind(this);
     this._objectMutatedListener = this._objectMutatedHandler.bind(this);
-    this.$label = this.appendHTML(html`<span class='io-label'>${this.key}</span>`);
     this._update();
   }
   connectedCallback() {
@@ -81,35 +79,15 @@ export class IoObjectProperty extends Io {
     }
   }
   _update() {
-    let config = this.config || {};
-    let props = config.props || {};
+    if (!this.key) return;
+    if (!this.value) return;
+    if (!this.config) return;
+    if (!this.config.props) return;
+    this.render([
+      this.config.tag == 'io-object' ? null : ['span', {className: 'io-label'}, this.key],
+      [this.config.tag, Object.assign({value: this.value[this.key], label: this.key}, this.config.props) ]
+    ])
 
-    if (this._editor && this._editor.localName != config.tag) {
-      this.removeChild(this._editor);
-      delete this._editor;
-    }
-
-    if (!this._editor) {
-      if (customElements.get(config.tag)) {
-        let ConstructorClass = customElements.get(config.tag);
-        this._editor = new ConstructorClass(config.props);
-      } else {
-        this._editor = document.createElement(config.tag);
-        for (var c in props) {
-          this._editor[c] = config.props[c];
-        }
-      }
-
-      this._editor.addEventListener('io-value-set', this._valueSetListener);
-      this.appendChild(this._editor);
-    }
-
-    this._editor.label = this.key;
-    this._editor.value = this.value[this.key];
-
-    // Hide key label if io-object
-    // TODO: make configurable
-    this.$label.classList.toggle('hidden', this._editor.localName == 'io-object');
   }
 }
 

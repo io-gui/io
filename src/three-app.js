@@ -13,9 +13,9 @@ export class ThreeApp extends HTMLElement {
   }
   connectedCallback() {
     let ioObjectIstances = this.shadowRoot.querySelectorAll('io-object');
-    ioObjectIstances[0].value = new THREE.WebGLRenderer();
+    ioObjectIstances[0].value = new THREE.SphereBufferGeometry();
     ioObjectIstances[1].value = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshDepthMaterial());
-    ioObjectIstances[2].value = new THREE.Texture();
+    ioObjectIstances[2].value = new THREE.WebGLRenderer();
     ioObjectIstances[3].value = ioObjectIstances[0];
   }
 
@@ -52,17 +52,11 @@ export class ThreeApp extends HTMLElement {
         .narrow {
           width: 22em;
         }
-        .io-label {
-          /* background: rgba(0,0,0,0.2); */
-        }
-        /* io-value[type=string] {
-          color: green;
-        } */
       </style>
       <div class="vertical-section-container centered">
         <div class="demo">
           <h3>io-inspector</h3>
-          <io-inspector></io-inspector>
+          <!--<io-inspector></io-inspector>-->
         </div>
         <div class="demo">
           <h3>io-object</h3>

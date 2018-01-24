@@ -11,9 +11,6 @@ export class IoObjectConstructor extends Io {
         cursor: pointer;
         line-height: 1em;
       }
-      ::slotted(.hidden) {
-        display: none;
-      }
       ::slotted(.io-constructor) {
         color: rgb(23, 128, 41);
       }
@@ -45,8 +42,7 @@ export class IoObjectConstructor extends Io {
     this.setAttribute('tabindex', 0);
     this._toggleListener = this._toggleHandler.bind(this);
     this._preventDefault = this.preventDefault.bind(this);
-    this.$label = this.appendHTML(html`<span class='io-label'></span>`);
-    this.$constructor = this.appendHTML(html`<span class='io-constructor'></span>`);
+    this._update();
   }
   connectedCallback() {
     this.addEventListener('click', this._toggleListener);
@@ -71,14 +67,11 @@ export class IoObjectConstructor extends Io {
   }
   _update() {
     if (this.object instanceof Object === false) return;
-    this.$label.innerText = this.label;
-    this.$label.classList.toggle('hidden', !this.label);
     let _name = this.object.constructor.name || 'Object';
-    if (this.expanded) {
-      this.$constructor.innerHTML = '▾' + _name;
-    } else {
-      this.$constructor.innerHTML = '▸' + _name + '(' + Object.keys(this.object).length + ')';
-    }
+    this.render([
+      this.label ? ['span', {className: 'io-label'} , this.label] : null,
+      ['span', {className: 'io-constructor'}, this.expanded ? '▾' + _name : '▸' + _name + '(' + Object.keys(this.object).length + ')' ]
+    ]);
   }
 }
 
