@@ -25,11 +25,9 @@ export class IoMenu extends Io {
       }
     }
   }
-  constructor(props) {
-    super(props);
-  }
   connectedCallback() {
     // TODO: render
+    // TODO: super?
     this.$group = new IoMenuGroup({$parent: this, position: this.position, options: this.options});
     this.$parent = this.parentElement || this.parentNode.host;
     this.$parent.addEventListener(this.listener, this._expandHandler);
@@ -37,6 +35,7 @@ export class IoMenu extends Io {
     this._binding = this.bind('expanded', this.$group, 'expanded');
   }
   disconnectedCallback() {
+    // TODO: super?
     this.$parent.removeEventListener(this.listener, this._expandHandler);
     IoMenuLayer.singleton.removeChild(this.$group);
     this.unbind(this._binding);

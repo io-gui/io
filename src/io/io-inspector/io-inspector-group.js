@@ -33,10 +33,6 @@ export class IoInspectorGroup extends IoObject {
       }
     }
   }
-  constructor(props) {
-    super(props);
-    this._update();
-  }
   _update() {
     let propConfigs = this.getPropConfigs(this.props);
     const Prop = entry => ['io-inspector-prop', {key: entry[0], value: this.value, config: entry[1]}];

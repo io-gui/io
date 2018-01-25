@@ -27,20 +27,15 @@ export class IoOption extends Io {
       }
     }
   }
+  static get listeners() {
+    return {
+      'focus': '_focusHandler',
+      'mousedown': '_expandHandler'
+    }
+  }
   constructor(props) {
     super(props);
     this.setAttribute('tabindex', 0);
-    this._update();
-  }
-  connectedCallback() {
-    this.addEventListener('focus', this._focusHandler);
-    this.addEventListener('mousedown', this._expandHandler);
-    this._update();
-  }
-  disconnectedCallback() {
-    this.removeEventListener('focus', this._focusHandler);
-    this.removeEventListener('blur', this._blurHandler);
-    this.removeEventListener('keydown', this._expandHandler);
   }
   _focusHandler(event) {
     this.addEventListener('blur', this._blurHandler);

@@ -27,10 +27,6 @@ export class IoInspector extends Io {
       }
     }
   }
-  constructor(props) {
-    super(props);
-    this._update();
-  }
   _update() {
     let groups = {};
     let proto = this.value.__proto__;

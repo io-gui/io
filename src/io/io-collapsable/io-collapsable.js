@@ -33,17 +33,11 @@ export class IoCollapsable extends Io {
       }
     }
   }
-  constructor(props) {
-    super(props);
-    this._update();
-  }
-  connectedCallback() {
-    this.addEventListener('click', this._toggleHandler);
-    this.addEventListener('keydown', this._toggleHandler);
-  }
-  disconnectedCallback() {
-    this.removeEventListener('click', this._toggleHandler);
-    this.removeEventListener('keydown', this._toggleHandler);
+  static get listeners() {
+    return {
+      'click': '_toggleHandler',
+      'keydown': '_toggleHandler'
+    }
   }
   _toggleHandler(event) {
     if (event.path[0].className !== 'io-collapsable') return;

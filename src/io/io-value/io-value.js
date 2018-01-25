@@ -61,7 +61,6 @@ export class IoValue extends Io {
       },
       type: {
         type: String,
-        observer: '_typeChanged',
         reflectToAttribute: true
       },
       invalid: {
@@ -82,17 +81,15 @@ export class IoValue extends Io {
       }
     }
   }
+  static get listeners() {
+    return {
+      'focus': '_focusHandler',
+      'click': '_toggleHandler'
+    }
+  }
   constructor(props) {
     super(props);
     this.setAttribute('tabindex', 0);
-    this._typeChanged();
-    this._update();
-  }
-  connectedCallback() {
-    this.addEventListener('focus', this._focusHandler);
-  }
-  disconnectedCallback() {
-    this.removeEventListener('focus', this._focusHandler);
   }
   _focusHandler(event) {
     this.addEventListener('blur', this._blurHandler);
@@ -116,6 +113,7 @@ export class IoValue extends Io {
     this._removeEditor();
   }
   _toggleHandler(event) {
+    if (this.type !== 'boolean') return;
     if (event.which == 13 || event.which == 32) {
       event.preventDefault();
       this._setValue(!this.value);
@@ -150,13 +148,6 @@ export class IoValue extends Io {
       editor.parentNode.removeChild(editor);
     }
     this._edit = false;
-  }
-  _typeChanged() {
-    if (this.type === 'boolean') {
-      this.addEventListener('click', this._toggleHandler);
-    } else {
-      this.removeEventListener('click', this._toggleHandler);
-    }
   }
   _update() {
     this.invalid = (typeof this.value !== this.type && this.type) ? true : false;

@@ -16,7 +16,47 @@ export class Io extends HTMLElement {
     }
     return observed;
   }
+  constructor(props = {}) {
+    super();
+    Object.defineProperty(this, '__properties', { value: this.getPrototypeProperties() });
+    Object.defineProperty(this, '__listeners', { value: {} });
 
+    // TODO: documentation. Make handler function binding more explicit?
+    // TODO: consider folowing prototype chain.
+    const proto = Object.getPrototypeOf(this);
+    const names = Object.getOwnPropertyNames(proto);
+    for (var i = 0; i < names.length; i++) {
+      if (names[i].substring(names[i].length-7,names[i].length) === 'Handler') {
+        this[names[i]] = this[names[i]].bind(this);
+      }
+    }
+
+    for (let key in this.__properties) {
+      if (props[key] !== undefined) this.__properties[key].value = props[key];
+      this.defineProperty(key, this.__properties[key]);
+      this.reflectAttribute(key, this.__properties[key]);
+    }
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.innerHTML = this.__proto__.constructor.template;
+    this.render([['slot']], this.shadowRoot);
+  }
+  connectedCallback() {
+    let listeners = this.__proto__.constructor.listeners;
+    if (listeners) {
+      for (var e in listeners) {
+        // TODO: multiple functions and class inheritance
+        this.__listeners[e] = this[listeners[e]];
+        this.addEventListener(e, this.__listeners[e]);
+      }
+    }
+    if (typeof this._update == 'function') this._update();
+  }
+  disconnectedCallback() {
+    for (var e in this.__listeners) {
+      this.removeEventListener(e, this.__listeners[e]);
+      delete this.__listeners[e];
+    }
+  }
   createElement(vDOMNode) {
     let ConstructorClass = customElements.get(vDOMNode.name);
     let element;
@@ -30,7 +70,6 @@ export class Io extends HTMLElement {
     }
     return element;
   }
-
   attributeChangedCallback(name, oldValue, newValue) {
     if (this.__properties[name].type === Boolean) {
       this[name] = newValue === '' ? true : false;
@@ -137,34 +176,6 @@ export class Io extends HTMLElement {
        }
      }
    }
-  constructor(props = {}) {
-    super();
-    Object.defineProperty(this, '__properties', {
-      value: this.getPrototypeProperties()
-    });
-
-    // TODO: documentation. Make more explicit?
-    // TODO: consider folowing prototype chain.
-    const proto = Object.getPrototypeOf(this);
-    const names = Object.getOwnPropertyNames(proto);
-    for (var i = 0; i < names.length; i++) {
-      if (names[i].substring(names[i].length-7,names[i].length) === 'Handler') {
-        this[names[i]] = this[names[i]].bind(this);
-      }
-    }
-
-    for (let key in this.__properties) {
-      if (props[key] !== undefined) this.__properties[key].value = props[key];
-      this.defineProperty(key, this.__properties[key]);
-      this.reflectAttribute(key, this.__properties[key]);
-    }
-    this.attachShadow({mode: 'open'});
-    this.shadowRoot.innerHTML = this.__proto__.constructor.template;
-    this.shadowRoot.appendChild(document.createElement('slot'));
-    // this.render([
-    //   ['slot']
-    // ], this.shadowRoot);
-  }
   defineProperty(key, propConfig) {
     Object.defineProperty(this, key, {
       get: function() {

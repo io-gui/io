@@ -37,18 +37,15 @@ export class IoObjectConstructor extends Io {
       }
     }
   }
+  static get listeners() {
+    return {
+      'keydown': '_toggleHandler',
+      'click': '_toggleHandler'
+    }
+  }
   constructor(props) {
     super(props);
     this.setAttribute('tabindex', 0);
-    this._update();
-  }
-  connectedCallback() {
-    this.addEventListener('click', this._toggleHandler);
-    this.addEventListener('keydown', this._toggleHandler);
-  }
-  disconnectedCallback() {
-    this.removeEventListener('click', this._toggleHandler);
-    this.removeEventListener('keydown', this._toggleHandler);
   }
   _toggleHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'click') {

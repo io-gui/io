@@ -45,6 +45,13 @@ export class IoMenuOption extends Io {
       }
     }
   }
+  static get listeners() {
+    return {
+      'focus': '_focusHandler',
+      'click': '_clickHandler',
+      'keydown': '_keydownHandler'
+    }
+  }
   constructor(props) {
     super(props);
     this.setAttribute('tabindex', 1);
@@ -59,16 +66,6 @@ export class IoMenuOption extends Io {
     if (this.$group) {
       IoMenuLayer.singleton.appendChild(this.$group);
     }
-  }
-  connectedCallback() {
-    this.addEventListener('focus', this._focusHandler);
-    this.addEventListener('click', this._clickHandler);
-    this.addEventListener('keydown', this._keydownHandler);
-  }
-  disconnectedCallback() {
-    this.removeEventListener('focus', this._focusHandler);
-    this.removeEventListener('click', this._clickHandler);
-    this.removeEventListener('keydown', this._keydownHandler);
   }
   _focusHandler() {
     for (var i = 0; i < this.$parent.$options.length; i++) {

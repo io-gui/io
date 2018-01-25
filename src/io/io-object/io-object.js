@@ -45,10 +45,6 @@ export class IoObject extends Io {
       }
     }
   }
-  constructor(props) {
-    super(props);
-    this._update();
-  }
   getPropConfigs(keys) {
     let configs = {};
     let proto = this.value.__proto__;
