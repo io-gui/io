@@ -77,15 +77,10 @@ export class IoObjectProperty extends Io {
     }
   }
   _update() {
-    if (!this.key) return;
-    if (!this.value) return;
-    if (!this.config) return;
-    if (!this.config.props) return;
     this.render([
       this.config.tag == 'io-object' ? null : ['span', {className: 'io-label'}, this.key],
       [this.config.tag, Object.assign({value: this.value[this.key], label: this.key}, this.config.props) ]
     ])
-
   }
 }
 

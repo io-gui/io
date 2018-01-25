@@ -1,22 +1,18 @@
 import {html, iftrue} from "../ioutil.js"
 import {Io} from "../io.js"
 
-export class IoObjectConstructor extends Io {
-  static get is() { return 'io-object-constructor'; }
+export class IoCollapsable extends Io {
+  static get is() { return 'io-collapsable'; }
   static get template() {
     return html`
       <style>
-      :host {
-        display: inline-block;
-        cursor: pointer;
-        line-height: 1em;
-      }
-      ::slotted(.io-constructor) {
-        color: rgb(23, 128, 41);
-      }
-      ::slotted(.io-label):after {
-        content: ":";
-      }
+        :host {
+          display: flex;
+          flex-direction: column;
+        }
+        .io-collapsable {
+          cursor: pointer;
+        }
       </style>
     `;
   }
@@ -39,7 +35,6 @@ export class IoObjectConstructor extends Io {
   }
   constructor(props) {
     super(props);
-    this.setAttribute('tabindex', 0);
     this._update();
   }
   connectedCallback() {
@@ -56,22 +51,27 @@ export class IoObjectConstructor extends Io {
     event.preventDefault();
   }
   _toggleHandler(event) {
+    if (event.path[0].className !== 'io-collapsable') return;
     if (event.which == 13 || event.which == 32 || event.type == 'click') {
       event.preventDefault();
-      let ioObject = this.parentElement;
-      ioObject.expanded = !ioObject.expanded;
+      this.expanded = !this.expanded;
       setTimeout(() => {
-        ioObject.querySelector('io-object-constructor').focus();
+        let focusable = this.querySelector('[tabindex="0"]');
+        if (focusable) {
+          focusable.focus();
+        } else {
+          this.shadowRoot.querySelector('.io-collapsable').focus();
+        }
       });
     }
   }
   _update() {
-    let _name = this.value.constructor.name || 'Object';
     this.render([
-      iftrue(this.label, ['span', {className: 'io-label'} , this.label]),
-      ['span', {className: 'io-constructor'}, this.expanded ? '▾' + _name : '▸' + _name + '(' + Object.keys(this.value).length + ')' ]
-    ]);
+      ['span', {className: 'io-collapsable', tabindex: '0'}, (this.expanded ? '▾' : '▸') + this.label ],
+      iftrue(this.expanded, ['slot'])
+    ], this.shadowRoot);
   }
 }
 
-window.customElements.define(IoObjectConstructor.is, IoObjectConstructor);
+
+window.customElements.define(IoCollapsable.is, IoCollapsable);

@@ -1,15 +1,18 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
+import {IoObject} from "../io-object/io-object.js"
+import {IoInspectorProp} from "./io-inspector-prop.js"
 
-export class IoInspectorGroup extends Io {
+export class IoInspectorGroup extends IoObject {
   static get is() { return 'io-inspector-group'; }
   static get template() {
     return html`
       <style>
         :host {
-          display: block;
-          min-width: 10em;
-          position: relative;
+          display: flex;
+          flex-direction: column;
+          background: rgba(0,128,64,0.2);
         }
       </style>
     `;
@@ -23,16 +26,24 @@ export class IoInspectorGroup extends Io {
       props: {
         type: Array,
         observer: '_update',
+      },
+      label: {
+        type: String,
+        observer: '_update'
       }
     }
   }
-  connectedCallback() {
+  constructor(props) {
+    super(props);
     this._update();
   }
   _update() {
-    console.log(this.props);
+    let propConfigs = this.getPropConfigs(this.props);
+    const Prop = entry => ['io-inspector-prop', {key: entry[0], value: this.value, config: entry[1]}];
     this.render([
-      ['span', this.props[0]]
+      ['io-collapsable', {value: this.value, label: this.label, expanded: true}, [
+        Object.entries(propConfigs).map(Prop)
+      ]]
     ])
   }
 }

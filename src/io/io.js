@@ -16,6 +16,21 @@ export class Io extends HTMLElement {
     }
     return observed;
   }
+
+  createElement(vDOMNode) {
+    let ConstructorClass = customElements.get(vDOMNode.name);
+    let element;
+    if (ConstructorClass) {
+      element = new ConstructorClass(vDOMNode.props);
+    } else {
+      element = document.createElement(vDOMNode.name);
+      for (var prop in vDOMNode.props) {
+        element[prop] = vDOMNode.props[prop];
+      }
+    }
+    return element;
+  }
+
   attributeChangedCallback(name, oldValue, newValue) {
     if (this.__properties[name].type === Boolean) {
       this[name] = newValue === '' ? true : false;
@@ -59,57 +74,60 @@ export class Io extends HTMLElement {
   }
   traverse(vChildren, host) {
     let children = host.children;
-    let traverseStart = 0;
     if (host instanceof ShadowRoot) {
-      vChildren.unshift(['style'], ['slot']);
+      vChildren.unshift({name: 'style'});
     }
 
     for (var i = 0; i < vChildren.length; i++) {
 
+      let element;
+      let oldElement;
+
       if (children[i] && children[i].localName === vChildren[i].name) {
 
-        if (vChildren[i].props) {
-          for (var prop in vChildren[i].props) {
-            if (vChildren[i].props[prop] !== children[i][prop]) {
-              children[i][prop] = vChildren[i].props[prop];
-            }
+        element = children[i];
+
+        for (var prop in vChildren[i].props) {
+          if (vChildren[i].props[prop] !== element[prop]) {
+            element[prop] = vChildren[i].props[prop];
           }
         }
 
       } else if (children[i] && children[i].localName !== vChildren[i].name) {
 
-        //TODO: remove and swap element if tag changed
+        oldElement = children[i];
+        element = this.createElement(vChildren[i]);
+
+        host.insertBefore(element, oldElement);
+        host.removeChild(oldElement);
 
       } else {
 
-        let el;
-        let ConstructorClass = customElements.get(vChildren[i].name);
-
-        if (ConstructorClass) {
-
-          el = new ConstructorClass(vChildren[i].props);
-          host.appendChild(el);
-
-        } else {
-
-          el = document.createElement(vChildren[i].name);
-          for (var prop in vChildren[i].props) {
-            el[prop] = vChildren[i].props[prop];
-          }
-          host.appendChild(el);
-
-        }
+        element = this.createElement(vChildren[i]);
+        host.appendChild(element);
 
         // TODO: handle chldren better
         if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-          el.innerHTML = vChildren[i].children;
+          element.innerHTML = vChildren[i].children;
         } else if (vChildren[i].children &&  typeof vChildren[i].children === 'object') {
           // TODO: test extensively
-          // console.log(vChildren[i].children, el);
-          this.traverse(vChildren[i].children, el);
+          this.traverse(vChildren[i].children, element);
         }
 
       }
+
+      if (vChildren[i].children && typeof vChildren[i].children === 'string') {
+        element.innerHTML = vChildren[i].children;
+      } else if (vChildren[i].children &&  typeof vChildren[i].children === 'object') {
+        // TODO: test extensively
+        this.traverse(vChildren[i].children, element);
+      }
+
+      // TODO: handle attributes better
+      if (vChildren[i].props && vChildren[i].props.tabindex !== undefined) {
+        element.setAttribute('tabindex', vChildren[i].props.tabindex);
+      }
+
     }
 
      // TODO: consider caching elements for reuse
@@ -143,6 +161,9 @@ export class Io extends HTMLElement {
     this.attachShadow({mode: 'open'});
     this.shadowRoot.innerHTML = this.__proto__.constructor.template;
     this.shadowRoot.appendChild(document.createElement('slot'));
+    // this.render([
+    //   ['slot']
+    // ], this.shadowRoot);
   }
   defineProperty(key, propConfig) {
     Object.defineProperty(this, key, {

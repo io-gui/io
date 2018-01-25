@@ -1,4 +1,4 @@
-import {html} from "../ioutil.js"
+import {html, iftrue} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoValue} from "../io-value/io-value.js"
 import {IoFunction} from "../io-function/io-function.js"
@@ -49,46 +49,49 @@ export class IoObject extends Io {
     super(props);
     this._update();
   }
-  _update() {
+  getPropConfigs(keys) {
     let configs = {};
     let proto = this.value.__proto__;
+
     while (proto) {
       let c = IoObject.CONFIG[proto.constructor.name];
       if (c) configs = Object.assign(configs, c);
       proto = proto.__proto__;
     }
 
-    let keys = Object.keys(this.value);
-    let propConfig = [];
+    let propConfigs = {};
 
-    if (this.expanded) {
-      for (let i = 0; i < keys.length; i++) {
-        let key = keys[i];
-        let value = this.value[key];
-        let type = typeof this.value[key];
-        let cstr = (value && value.constructor) ? value.constructor.name : 'null';
+    for (let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      let value = this.value[key];
+      let type = typeof this.value[key];
+      let cstr = (value && value.constructor) ? value.constructor.name : 'null';
 
-        propConfig[key] = {};
+      propConfigs[key] = {};
 
-        if (configs.hasOwnProperty('type:' + type)) {
-          propConfig[key] = configs['type:' + type];
-        }
-        if (configs.hasOwnProperty(cstr)) {
-          propConfig[key] = configs[cstr];
-        }
-        if (configs.hasOwnProperty('key:' + key)) {
-          propConfig[key] = configs['key:' + key];
-        }
-        if (configs.hasOwnProperty('value:' + String(value))) {
-          propConfig[key] = configs['value:' + String(value)];
-        }
+      if (configs.hasOwnProperty('type:' + type)) {
+        propConfigs[key] = configs['type:' + type];
+      }
+      if (configs.hasOwnProperty(cstr)) {
+        propConfigs[key] = configs[cstr];
+      }
+      if (configs.hasOwnProperty('key:' + key)) {
+        propConfigs[key] = configs['key:' + key];
+      }
+      if (configs.hasOwnProperty('value:' + String(value))) {
+        propConfigs[key] = configs['value:' + String(value)];
       }
     }
 
+    return propConfigs;
+  }
+  _update() {
+    let propConfigs = this.getPropConfigs(Object.keys(this.value));
+    const Prop = entry => ['io-object-property', {key: entry[0], value: this.value, config: entry[1] }];
     this.render([
-      ['div', {className: 'io-tree-line'}], // TODO: optionsl
-      ['io-object-constructor', {object: this.value, expanded: this.expanded, label: this.label}],
-      this.expanded ? keys.map(key => ['io-object-property', { key: key, value: this.value, config: propConfig[key] } ]) : null
+      ['div', {className: 'io-tree-line'}],
+      ['io-object-constructor', {value: this.value, expanded: this.expanded, label: this.label}],
+      iftrue(this.expanded, Object.entries(propConfigs).map(Prop))
     ])
 
   }

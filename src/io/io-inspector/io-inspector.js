@@ -10,7 +10,6 @@ export class IoInspector extends Io {
         :host {
           display: block;
           min-width: 10em;
-          position: relative;
         }
       </style>
     `;
@@ -28,7 +27,8 @@ export class IoInspector extends Io {
       }
     }
   }
-  connectedCallback() {
+  constructor(props) {
+    super(props);
     this._update();
   }
   _update() {
@@ -46,15 +46,10 @@ export class IoInspector extends Io {
       }
       proto = proto.__proto__;
     }
-
-    // TODO: better itterate
-    let groupElements = [];
-
-    for (let group in groups) {
-      groupElements.push(['io-inspector-group', {value: this.value, props: groups[group]}]);
-    }
-
-    this.render(groupElements);
+    const GroupItem = entry => ['io-inspector-group', {value: this.value, props: entry[1], label: entry[0]}];
+    this.render([
+      Object.entries(groups).map(GroupItem),
+    ]);
 
   }
 }

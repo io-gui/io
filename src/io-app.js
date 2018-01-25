@@ -163,7 +163,7 @@ export class IoApp extends Io {
         ['io-object', {value: this.values, expanded: true, labeled: true}],
         ['io-object', {value: this.values, expanded: true, labeled: true}],
         ['io-object', {value: this.values, expanded: true, labeled: true}],
-      ]],
+      ]]
     ], this.shadowRoot);
   }
 }
