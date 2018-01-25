@@ -1,4 +1,4 @@
-import {html, iftrue} from "../ioutil.js"
+import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoValue} from "../io-value/io-value.js"
 import {IoFunction} from "../io-function/io-function.js"
@@ -59,7 +59,7 @@ export class IoObject extends Io {
     for (let i = 0; i < keys.length; i++) {
       let key = keys[i];
       let value = this.value[key];
-      let type = typeof this.value[key];
+      let type = typeof value;
       let cstr = (value && value.constructor) ? value.constructor.name : 'null';
 
       propConfigs[key] = {};
@@ -77,7 +77,6 @@ export class IoObject extends Io {
         propConfigs[key] = configs['value:' + String(value)];
       }
     }
-
     return propConfigs;
   }
   _update() {
@@ -86,7 +85,7 @@ export class IoObject extends Io {
     this.render([
       ['div', {className: 'io-tree-line'}],
       ['io-object-constructor', {value: this.value, expanded: this.expanded, label: this.label}],
-      iftrue(this.expanded, Object.entries(propConfigs).map(Prop))
+      this.expanded ? Object.entries(propConfigs).map(Prop) : null
     ])
 
   }

@@ -1,4 +1,4 @@
-import {html, iftrue} from "../ioutil.js"
+import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoCollapsable extends Io {
@@ -27,8 +27,7 @@ export class IoCollapsable extends Io {
       },
       expanded: {
         type: Boolean,
-        observer: '_update',
-        reflectToAttribute: true
+        observer: '_update'
       },
       listeners: {
         'click': '_toggleHandler',
@@ -54,7 +53,7 @@ export class IoCollapsable extends Io {
   _update() {
     this.render([
       ['span', {className: 'io-collapsable', tabindex: '0'}, (this.expanded ? '▾' : '▸') + this.label ],
-      iftrue(this.expanded, ['slot'])
+      this.expanded ? ['slot'] : null
     ], this.shadowRoot);
   }
 }

@@ -24,10 +24,6 @@ export function html(pieces) {
   return result;
 }
 
-export function iftrue(bool, value) {
-  return bool ? value : null;
-}
-
 // https://github.com/lukejacksonn/ijk
 const clense = (a, b) =>
   !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b]

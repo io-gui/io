@@ -1,4 +1,4 @@
-import {html, iftrue} from "../ioutil.js"
+import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoObjectConstructor extends Io {
@@ -56,7 +56,7 @@ export class IoObjectConstructor extends Io {
   _update() {
     let _name = this.value.constructor.name || 'Object';
     this.render([
-      iftrue(this.label, ['span', {className: 'io-label'} , this.label]),
+      this.label ? ['span', {className: 'io-label'} , this.label] : null,
       ['span', {className: 'io-constructor'}, this.expanded ? '▾' + _name : '▸' + _name + '(' + Object.keys(this.value).length + ')' ]
     ]);
   }

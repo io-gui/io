@@ -1,4 +1,4 @@
-import {html, iftrue} from "../ioutil.js"
+import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 import {IoObjectProperty} from "../io-object/io-object-prop.js"
@@ -32,7 +32,7 @@ export class IoInspectorProp extends IoObjectProperty {
     let isObject = typeof this.value[this.key] === 'object' && this.value[this.key] !== null;
     this.render([
       ['span', {className: isObject ? 'io-link' : 'io-label'}, this.key],
-      iftrue(this.config.tag !== 'io-object', [this.config.tag, Object.assign({value: this.value[this.key], label: this.key}, this.config.props) ])
+      this.config.tag !== 'io-object' ? [this.config.tag, Object.assign({value: this.value[this.key], label: this.key}, this.config.props) ] : null
     ]);
   }
 }
