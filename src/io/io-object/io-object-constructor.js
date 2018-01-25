@@ -38,12 +38,11 @@ export class IoObjectConstructor extends Io {
       listeners: {
         'keydown': '_toggleHandler',
         'click': '_toggleHandler'
+      },
+      attributes: {
+        'tabindex': 0
       }
     }
-  }
-  constructor(props) {
-    super(props);
-    this.setAttribute('tabindex', 0);
   }
   _toggleHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'click') {

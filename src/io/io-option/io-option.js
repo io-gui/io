@@ -28,12 +28,11 @@ export class IoOption extends Io {
       listeners: {
         'focus': '_focusHandler',
         'mousedown': '_expandHandler'
+      },
+      attributes: {
+        'tabindex': 0
       }
     }
-  }
-  constructor(props) {
-    super(props);
-    this.setAttribute('tabindex', 0);
   }
   _focusHandler(event) {
     this.addEventListener('blur', this._blurHandler);

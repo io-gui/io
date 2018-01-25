@@ -82,12 +82,11 @@ export class IoValue extends Io {
       listeners: {
         'focus': '_focusHandler',
         'click': '_toggleHandler'
+      },
+      attributes: {
+        'tabindex': 0
       }
     }
-  }
-  constructor(props) {
-    super(props);
-    this.setAttribute('tabindex', 0);
   }
   _focusHandler(event) {
     this.addEventListener('blur', this._blurHandler);

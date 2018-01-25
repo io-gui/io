@@ -33,9 +33,15 @@ export class Io extends HTMLElement {
 
     for (let key in this.__properties) {
       if (key === 'listeners') continue; //TODO ugh
-      if (props[key] !== undefined) this.__properties[key].value = props[key];
-      this.defineProperty(key, this.__properties[key]);
-      this.reflectAttribute(key, this.__properties[key]);
+      if (key === 'attributes') {
+        for (var att in this.__properties[key]) {
+          this.setAttribute(att, this.__properties[key][att]);
+        }
+      } else {
+        if (props[key] !== undefined) this.__properties[key].value = props[key];
+        this.defineProperty(key, this.__properties[key]);
+        this.reflectAttribute(key, this.__properties[key]);
+      }
     }
     this.attachShadow({mode: 'open'});
     this.shadowRoot.innerHTML = this.__proto__.constructor.template;
@@ -67,6 +73,43 @@ export class Io extends HTMLElement {
       }
     }
     return props;
+  }
+  defineProperty(key, propConfig) {
+    Object.defineProperty(this, key, {
+      get: function() {
+        return propConfig.value;
+      },
+      set: function(value) {
+        if (propConfig.value === value) return;
+        // TODO: type check?
+        let oldValue = value;
+        propConfig.value = value;
+        this.reflectAttribute(key, propConfig);
+        if (propConfig.observer) {
+          this[propConfig.observer](value, key);
+        }
+        if (propConfig.notify) {
+          this.dispatchEvent(new CustomEvent(key + '-changed', {
+            detail: {value: value, oldValue: oldValue},
+            bubbles: propConfig.bubbles,
+            composed: true
+          }));
+        }
+      },
+      enumerable: true,
+      configurable: true
+    });
+  }
+  reflectAttribute(key, propConfig) {
+    if (propConfig.reflectToAttribute) {
+      if (propConfig.value === true) {
+        this.setAttribute(key, '');
+      } else if (propConfig.value === false || propConfig.value === '') {
+        this.removeAttribute(key);
+      } else if (typeof propConfig.value == 'string' || typeof propConfig.value == 'number') {
+        this.setAttribute(key, propConfig.value);
+      }
+    }
   }
   connectedCallback() {
     let listeners = this.__properties.listeners;
@@ -177,43 +220,6 @@ export class Io extends HTMLElement {
        }
      }
    }
-  defineProperty(key, propConfig) {
-    Object.defineProperty(this, key, {
-      get: function() {
-        return propConfig.value;
-      },
-      set: function(value) {
-        if (propConfig.value === value) return;
-        // TODO: type check?
-        let oldValue = value;
-        propConfig.value = value;
-        this.reflectAttribute(key, propConfig);
-        if (propConfig.observer) {
-          this[propConfig.observer](value, key);
-        }
-        if (propConfig.notify) {
-          this.dispatchEvent(new CustomEvent(key + '-changed', {
-            detail: {value: value, oldValue: oldValue},
-            bubbles: propConfig.bubbles,
-            composed: true
-          }));
-        }
-      },
-      enumerable: true,
-      configurable: true
-    });
-  }
-  reflectAttribute(key, propConfig) {
-    if (propConfig.reflectToAttribute) {
-      if (propConfig.value === true) {
-        this.setAttribute(key, '');
-      } else if (propConfig.value === false || propConfig.value === '') {
-        this.removeAttribute(key);
-      } else if (typeof propConfig.value == 'string' || typeof propConfig.value == 'number') {
-        this.setAttribute(key, propConfig.value);
-      }
-    }
-  }
   _setValue(value) {
     let oldValue = this.value;
     this.value = value;
