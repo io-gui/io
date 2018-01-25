@@ -4,7 +4,6 @@ import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuOption} from "./io-menu-option.js"
 
 export class IoMenuGroup extends Io {
-  static get is() { return 'io-menu-group'; }
   static get template() {
     return html`
       <style>
@@ -154,4 +153,4 @@ export class IoMenuGroup extends Io {
   }
 }
 
-window.customElements.define(IoMenuGroup.is, IoMenuGroup);
+window.customElements.define('io-menu-group', IoMenuGroup);

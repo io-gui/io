@@ -4,7 +4,6 @@ import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 import {IoObjectProperty} from "../io-object/io-object-prop.js"
 
 export class IoInspectorProp extends IoObjectProperty {
-  static get is() { return 'io-inspector-prop'; }
   static get template() {
     return html`
       <style>
@@ -39,4 +38,4 @@ export class IoInspectorProp extends IoObjectProperty {
 }
 
 
-window.customElements.define(IoInspectorProp.is, IoInspectorProp);
+window.customElements.define('io-inspector-prop', IoInspectorProp);

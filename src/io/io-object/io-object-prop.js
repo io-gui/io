@@ -3,7 +3,6 @@ import {Io} from "../io.js"
 import {IoValue} from "../io-value/io-value.js"
 
 export class IoObjectProperty extends Io {
-  static get is() { return 'io-object-prop'; }
   static get template() {
     return html`
       <style>
@@ -82,4 +81,4 @@ export class IoObjectProperty extends Io {
   }
 }
 
-window.customElements.define(IoObjectProperty.is, IoObjectProperty);
+window.customElements.define('io-object-prop', IoObjectProperty);

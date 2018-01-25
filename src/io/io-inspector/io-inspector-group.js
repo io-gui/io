@@ -5,7 +5,6 @@ import {IoObject} from "../io-object/io-object.js"
 import {IoInspectorProp} from "./io-inspector-prop.js"
 
 export class IoInspectorGroup extends IoObject {
-  static get is() { return 'io-inspector-group'; }
   static get template() {
     return html`
       <style>
@@ -45,4 +44,4 @@ export class IoInspectorGroup extends IoObject {
 }
 
 
-window.customElements.define(IoInspectorGroup.is, IoInspectorGroup);
+window.customElements.define('io-inspector-group', IoInspectorGroup);

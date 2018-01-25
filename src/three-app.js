@@ -7,7 +7,6 @@ import {IoOption} from "./io/io-option/io-option.js"
 import * as THREE from "../lib/three.module.js"
 
 export class ThreeApp extends Io {
-  static get is() { return 'three-app'; }
   static get template() {
     return html`
       <style>
@@ -41,7 +40,7 @@ export class ThreeApp extends Io {
   }
 }
 
-customElements.define(ThreeApp.is, ThreeApp);
+customElements.define('three-app', ThreeApp);
 
 function setOptionGroups(namespace, className, key, options) {
   let o = []

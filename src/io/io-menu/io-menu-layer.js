@@ -8,7 +8,6 @@ var timeoutReset;
 var WAIT_TIME = 1000;
 
 export class IoMenuLayer extends Io {
-  static get is() { return 'io-menu-layer'; }
   static get template() {
     return html`
       <style>
@@ -150,7 +149,7 @@ export class IoMenuLayer extends Io {
   }
 }
 
-window.customElements.define(IoMenuLayer.is, IoMenuLayer);
+window.customElements.define('io-menu-layer', IoMenuLayer);
 
 IoMenuLayer.singleton = new IoMenuLayer();
 

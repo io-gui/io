@@ -4,7 +4,6 @@ import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuGroup} from "./io-menu-group.js"
 
 export class IoMenuOption extends Io {
-  static get is() { return 'io-menu-option'; }
   static get template() {
     return html`
       <style>
@@ -133,9 +132,9 @@ export class IoMenuOption extends Io {
 
     } else if (event.which == 27) { // ESC
       event.preventDefault();
-      this.fire('io-menu-option-clicked', this);
+      this.fire('io-menu-option', this);
     }
   }
 }
 
-window.customElements.define(IoMenuOption.is, IoMenuOption);
+window.customElements.define('io-menu-option', IoMenuOption);

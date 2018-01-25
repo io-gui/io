@@ -6,7 +6,6 @@ import {IoObjectConstructor} from "./io-object-constructor.js"
 import {IoObjectProperty} from "./io-object-prop.js"
 
 export class IoObject extends Io {
-  static get is() { return 'io-object'; }
   static get template() {
     return html`
       <style>
@@ -105,4 +104,4 @@ IoObject.CONFIG = {
   }
 };
 
-window.customElements.define(IoObject.is, IoObject);
+window.customElements.define('io-object', IoObject);

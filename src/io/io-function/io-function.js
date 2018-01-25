@@ -2,7 +2,6 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoFunction extends Io {
-  static get is() { return 'io-function'; }
   static get template() {
     return html`
       <style>
@@ -31,4 +30,4 @@ export class IoFunction extends Io {
   }
 }
 
-window.customElements.define(IoFunction.is, IoFunction);
+window.customElements.define('io-function', IoFunction);

@@ -3,7 +3,6 @@ import {Io} from "../io.js"
 import {IoInspectorGroup} from "./io-inspector-group.js"
 
 export class IoInspector extends Io {
-  static get is() { return 'io-inspector'; }
   static get template() {
     return html`
       <style>
@@ -64,4 +63,4 @@ IoInspector.GROUPS = {
   }
 };
 
-window.customElements.define(IoInspector.is, IoInspector);
+window.customElements.define('io-inspector', IoInspector);

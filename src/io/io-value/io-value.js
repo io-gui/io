@@ -7,7 +7,6 @@ editor.addEventListener('touchstart', function (event) { event.stopPropagation()
 editor.addEventListener('focus', function (event) { event.stopPropagation() });
 
 export class IoValue extends Io {
-  static get is() { return 'io-value'; }
   static get template() {
     return html`
       <style>
@@ -157,4 +156,4 @@ export class IoValue extends Io {
   }
 }
 
-window.customElements.define(IoValue.is, IoValue);
+window.customElements.define('io-value', IoValue);

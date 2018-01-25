@@ -2,7 +2,6 @@ import {html, iftrue} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoCollapsable extends Io {
-  static get is() { return 'io-collapsable'; }
   static get template() {
     return html`
       <style>
@@ -61,4 +60,4 @@ export class IoCollapsable extends Io {
 }
 
 
-window.customElements.define(IoCollapsable.is, IoCollapsable);
+window.customElements.define('io-collapsable', IoCollapsable);

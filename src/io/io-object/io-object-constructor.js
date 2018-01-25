@@ -2,7 +2,6 @@ import {html, iftrue} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoObjectConstructor extends Io {
-  static get is() { return 'io-object-constructor'; }
   static get template() {
     return html`
       <style>
@@ -63,4 +62,4 @@ export class IoObjectConstructor extends Io {
   }
 }
 
-window.customElements.define(IoObjectConstructor.is, IoObjectConstructor);
+window.customElements.define('io-object-constructor', IoObjectConstructor);

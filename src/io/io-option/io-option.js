@@ -5,7 +5,6 @@ import {IoMenu} from "../io-menu/io-menu.js"
 const menu = new IoMenu({position: 'bottom'});
 
 export class IoOption extends Io {
-  static get is() { return 'io-option'; }
   static get template() {
     return html`
       <style>
@@ -76,4 +75,4 @@ export class IoOption extends Io {
   }
 }
 
-window.customElements.define(IoOption.is, IoOption);
+window.customElements.define('io-option', IoOption);
