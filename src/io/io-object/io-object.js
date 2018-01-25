@@ -3,7 +3,7 @@ import {Io} from "../io.js"
 import {IoValue} from "../io-value/io-value.js"
 import {IoFunction} from "../io-function/io-function.js"
 import {IoObjectConstructor} from "./io-object-constructor.js"
-import {IoObjectProperty} from "./io-object-property.js"
+import {IoObjectProperty} from "./io-object-prop.js"
 
 export class IoObject extends Io {
   static get is() { return 'io-object'; }
@@ -14,7 +14,7 @@ export class IoObject extends Io {
           display: inline-block;
           position: relative;
         }
-        ::slotted(io-object-property):before {
+        ::slotted(io-object-prop):before {
           content: "\\00a0\\00a0─\\00a0";
         }
         ::slotted(.io-tree-line) {
@@ -87,7 +87,7 @@ export class IoObject extends Io {
   }
   _update() {
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
-    const Prop = entry => ['io-object-property', {key: entry[0], value: this.value, config: entry[1] }];
+    const Prop = entry => ['io-object-prop', {key: entry[0], value: this.value, config: entry[1] }];
     this.render([
       ['div', {className: 'io-tree-line'}],
       ['io-object-constructor', {value: this.value, expanded: this.expanded, label: this.label}],

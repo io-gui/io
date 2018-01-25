@@ -93,10 +93,6 @@ export class IoValue extends Io {
   }
   disconnectedCallback() {
     this.removeEventListener('focus', this._focusHandler);
-    this.removeEventListener('blur', this._blurHandler);
-    this.removeEventListener('click', this._toggleHandler);
-    this.removeEventListener('keydown', this._toggleHandler);
-    this.removeEventListener('mousedown', this._preventHandler);
   }
   _focusHandler(event) {
     this.addEventListener('blur', this._blurHandler);
@@ -126,9 +122,6 @@ export class IoValue extends Io {
     } else if (event.type == 'click') {
       this._setValue(!this.value);
     }
-  }
-  _preventHandler(event) {
-    event.preventDefault();
   }
   _addEditor() {
     this.classList.add('edit');
@@ -161,10 +154,8 @@ export class IoValue extends Io {
   _typeChanged() {
     if (this.type === 'boolean') {
       this.addEventListener('click', this._toggleHandler);
-      this.addEventListener('mousedown', this._preventHandler);
     } else {
       this.removeEventListener('click', this._toggleHandler);
-      this.removeEventListener('mousedown', this._preventHandler);
     }
   }
   _update() {

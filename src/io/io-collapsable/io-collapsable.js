@@ -40,15 +40,10 @@ export class IoCollapsable extends Io {
   connectedCallback() {
     this.addEventListener('click', this._toggleHandler);
     this.addEventListener('keydown', this._toggleHandler);
-    this.addEventListener('mousedown', this._preventHandler);
   }
   disconnectedCallback() {
     this.removeEventListener('click', this._toggleHandler);
     this.removeEventListener('keydown', this._toggleHandler);
-    this.removeEventListener('mousedown', this._preventHandler);
-  }
-  _preventHandler(event) {
-    event.preventDefault();
   }
   _toggleHandler(event) {
     if (event.path[0].className !== 'io-collapsable') return;

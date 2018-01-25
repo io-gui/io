@@ -45,15 +45,10 @@ export class IoObjectConstructor extends Io {
   connectedCallback() {
     this.addEventListener('click', this._toggleHandler);
     this.addEventListener('keydown', this._toggleHandler);
-    this.addEventListener('mousedown', this._preventHandler);
   }
   disconnectedCallback() {
     this.removeEventListener('click', this._toggleHandler);
     this.removeEventListener('keydown', this._toggleHandler);
-    this.removeEventListener('mousedown', this._preventHandler);
-  }
-  _preventHandler(event) {
-    event.preventDefault();
   }
   _toggleHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'click') {

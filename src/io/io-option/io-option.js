@@ -41,7 +41,6 @@ export class IoOption extends Io {
     this.removeEventListener('focus', this._focusHandler);
     this.removeEventListener('blur', this._blurHandler);
     this.removeEventListener('keydown', this._expandHandler);
-    this.removeEventListener('mousedown', this._preventDefault);
   }
   _focusHandler(event) {
     this.addEventListener('blur', this._blurHandler);
@@ -64,9 +63,6 @@ export class IoOption extends Io {
       menu.addEventListener('io-menu-option-clicked', this._menuHandler);
       menu._listener = this._menuHandler;
     }
-  }
-  _preventDefault(event) {
-    event.preventDefault();
   }
   _menuHandler(event) {
     if (event.detail.option.value !== undefined) {

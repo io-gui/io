@@ -1,7 +1,7 @@
 import {html, iftrue} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
-import {IoObjectProperty} from "../io-object/io-object-property.js"
+import {IoObjectProperty} from "../io-object/io-object-prop.js"
 
 export class IoInspectorProp extends IoObjectProperty {
   static get is() { return 'io-inspector-prop'; }
