@@ -34,13 +34,11 @@ export class IoObjectConstructor extends Io {
         type: Boolean,
         observer: '_update',
         reflectToAttribute: true
+      },
+      listeners: {
+        'keydown': '_toggleHandler',
+        'click': '_toggleHandler'
       }
-    }
-  }
-  static get listeners() {
-    return {
-      'keydown': '_toggleHandler',
-      'click': '_toggleHandler'
     }
   }
   constructor(props) {

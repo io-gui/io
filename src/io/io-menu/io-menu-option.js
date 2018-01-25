@@ -42,14 +42,12 @@ export class IoMenuOption extends Io {
       },
       $parent: {
         type: HTMLElement
+      },
+      listeners: {
+        'focus': '_focusHandler',
+        'click': '_clickHandler',
+        'keydown': '_keydownHandler'
       }
-    }
-  }
-  static get listeners() {
-    return {
-      'focus': '_focusHandler',
-      'click': '_clickHandler',
-      'keydown': '_keydownHandler'
     }
   }
   constructor(props) {

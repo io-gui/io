@@ -30,13 +30,11 @@ export class IoCollapsable extends Io {
         type: Boolean,
         observer: '_update',
         reflectToAttribute: true
+      },
+      listeners: {
+        'click': '_toggleHandler',
+        'keydown': '_toggleHandler'
       }
-    }
-  }
-  static get listeners() {
-    return {
-      'click': '_toggleHandler',
-      'keydown': '_toggleHandler'
     }
   }
   _toggleHandler(event) {

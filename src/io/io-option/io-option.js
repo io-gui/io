@@ -24,13 +24,11 @@ export class IoOption extends Io {
       options: {
         type: Array,
         observer: '_update'
+      },
+      listeners: {
+        'focus': '_focusHandler',
+        'mousedown': '_expandHandler'
       }
-    }
-  }
-  static get listeners() {
-    return {
-      'focus': '_focusHandler',
-      'mousedown': '_expandHandler'
     }
   }
   constructor(props) {

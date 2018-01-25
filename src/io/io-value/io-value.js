@@ -78,13 +78,11 @@ export class IoValue extends Io {
       max: {
         type: Number,
         value: Infinity
+      },
+      listeners: {
+        'focus': '_focusHandler',
+        'click': '_toggleHandler'
       }
-    }
-  }
-  static get listeners() {
-    return {
-      'focus': '_focusHandler',
-      'click': '_toggleHandler'
     }
   }
   constructor(props) {

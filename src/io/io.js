@@ -32,6 +32,7 @@ export class Io extends HTMLElement {
     }
 
     for (let key in this.__properties) {
+      if (key === 'listeners') continue; //TODO ugh
       if (props[key] !== undefined) this.__properties[key].value = props[key];
       this.defineProperty(key, this.__properties[key]);
       this.reflectAttribute(key, this.__properties[key]);
@@ -40,8 +41,35 @@ export class Io extends HTMLElement {
     this.shadowRoot.innerHTML = this.__proto__.constructor.template;
     this.render([['slot']], this.shadowRoot);
   }
+  getPrototypeProperties() {
+    let props = {};
+    let proto = this.__proto__;
+    while (proto) {
+      let prop = proto.constructor.properties;
+      for (var key in prop) {
+        props[key] = Object.assign(prop[key], props[key] || {});
+      }
+      proto = proto.__proto__;
+    }
+    for (var key in props) {
+      if (props[key].value === undefined) {
+        switch (props[key].type) {
+          case Boolean:
+            props[key].value = false;
+            break;
+          case Number:
+            props[key].value = 0;
+            break;
+          case String:
+            props[key].value = '';
+            break;
+        }
+      }
+    }
+    return props;
+  }
   connectedCallback() {
-    let listeners = this.__proto__.constructor.listeners;
+    let listeners = this.__properties.listeners;
     if (listeners) {
       for (var e in listeners) {
         // TODO: multiple functions and class inheritance
@@ -78,33 +106,6 @@ export class Io extends HTMLElement {
     } else {
       this[name] = newValue;
     }
-  }
-  getPrototypeProperties() {
-    let props = {};
-    let proto = this.__proto__;
-    while (proto) {
-      let prop = proto.constructor.properties;
-      for (var key in prop) {
-        props[key] = Object.assign(prop[key], props[key] || {});
-      }
-      proto = proto.__proto__;
-    }
-    for (var key in props) {
-      if (props[key].value === undefined) {
-        switch (props[key].type) {
-          case Boolean:
-            props[key].value = false;
-            break;
-          case Number:
-            props[key].value = 0;
-            break;
-          case String:
-            props[key].value = '';
-            break;
-        }
-      }
-    }
-    return props;
   }
   render(children, host) {
     host = host || this;
