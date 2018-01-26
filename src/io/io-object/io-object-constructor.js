@@ -36,7 +36,7 @@ export class IoObjectConstructor extends Io {
       },
       listeners: {
         'keydown': '_toggleHandler',
-        'click': '_toggleHandler'
+        'mousedown': '_toggleHandler'
       },
       attributes: {
         'tabindex': 0
@@ -44,13 +44,10 @@ export class IoObjectConstructor extends Io {
     }
   }
   _toggleHandler(event) {
-    if (event.which == 13 || event.which == 32 || event.type == 'click') {
+    if (event.which == 13 || event.which == 32 || event.type == 'mousedown') {
       event.preventDefault();
       let ioObject = this.parentElement;
       ioObject.expanded = !ioObject.expanded;
-      setTimeout(() => {
-        ioObject.querySelector('io-object-constructor').focus();
-      });
     }
   }
   _update() {
