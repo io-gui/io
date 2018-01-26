@@ -31,9 +31,6 @@ export class IoBoolean extends Io {
         value: 'false',
         type: String
       },
-      value: {
-        observer: '_update'
-      },
       listeners: {
         'click': '_toggleHandler',
         'keydown': '_toggleHandler'

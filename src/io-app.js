@@ -95,7 +95,7 @@ export class IoApp extends Io {
 
     this.render([
       ['div', {className: 'demo'}, [
-        ['h3', 'io-string io-numbe and io-boolean.'],
+        ['h3', 'io-string io-number and io-boolean.'],
         ['io-string', {value: this.values.string}],
         ['io-number', {value: this.values.number, step: 0.1}],
         ['io-boolean', {value: this.values.boolean}],

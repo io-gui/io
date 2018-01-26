@@ -22,10 +22,11 @@ export class IoObjectProperty extends Io {
           background: rgba(64,64,128,0.1);
         }
         ::slotted(.io-label):after {
-          content: ":\\00a0";
+          content: ":";
         }
         ::slotted(.io-label) {
           position: relative;
+          padding-right: 0.25em;
         }
         ::slotted(.io-label.hidden) {
           display: none;

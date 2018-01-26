@@ -15,18 +15,6 @@ export class IoObject extends Io {
           display: inline-block;
           position: relative;
         }
-        ::slotted(io-object-prop):before {
-          content: "\\00a0\\00a0─\\00a0";
-        }
-        ::slotted(.io-tree-line) {
-          display: inline-block;
-          position: absolute;
-          pointer-events: none;
-          width: 0.5em;
-          border-right: 1px solid black;
-          top: 1.5em;
-          bottom: 0.5em;
-        }
       </style>
     `;
   }
@@ -51,7 +39,7 @@ export class IoObject extends Io {
     let proto = this.value.__proto__;
 
     while (proto) {
-      let c = IoObject.CONFIG[proto.constructor.name];
+      let c = IoObject.CONFIG[proto.constructor.name]
       if (c) configs = Object.assign(configs, c);
       proto = proto.__proto__;
     }
@@ -69,8 +57,8 @@ export class IoObject extends Io {
       if (configs.hasOwnProperty('type:' + type)) {
         propConfigs[key] = configs['type:' + type];
       }
-      if (configs.hasOwnProperty(cstr)) {
-        propConfigs[key] = configs[cstr];
+      if (configs.hasOwnProperty('constructor:'+cstr)) {
+        propConfigs[key] = configs['constructor:'+cstr];
       }
       if (configs.hasOwnProperty('key:' + key)) {
         propConfigs[key] = configs['key:' + key];
@@ -85,7 +73,6 @@ export class IoObject extends Io {
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
     const Prop = entry => ['io-object-prop', {key: entry[0], value: this.value, config: entry[1] }];
     this.render([
-      ['div', {className: 'io-tree-line'}],
       ['io-object-constructor', {value: this.value, expanded: this.expanded, label: this.label}],
       this.expanded ? Object.entries(propConfigs).map(Prop) : null
     ])

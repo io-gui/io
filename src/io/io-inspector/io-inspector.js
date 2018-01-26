@@ -1,6 +1,7 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoInspectorGroup} from "./io-inspector-group.js"
+import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 
 export class IoInspector extends Io {
   static get template() {
@@ -8,7 +9,13 @@ export class IoInspector extends Io {
       <style>
         :host {
           display: block;
-          min-width: 10em;
+          background: #282828;
+          color: #ccc;
+          border-radius: 0.2em;
+          padding: 2px;
+        }
+        h4 {
+          margin: 0.2em;
         }
       </style>
     `;
@@ -43,23 +50,26 @@ export class IoInspector extends Io {
     }
     const GroupItem = entry => ['io-inspector-group', {value: this.value, props: entry[1], label: entry[0]}];
     this.render([
-      Object.entries(groups).map(GroupItem),
+      ['h4', this.value.__proto__.constructor.name],
+      ['slot']
+    ], this.shadowRoot);
+    this.render([
+      Object.entries(groups).map(GroupItem)
     ]);
 
   }
 }
 
 IoInspector.GROUPS = {
-  'Object' : {
-    'main': ['name', 'uuid'],
+  'Object3D' : {
+    'main': ['name', 'parent', 'children'],
+    'transform': ['position', 'rotation', 'scale'],
+    'rendering': ['layers', 'visible', 'castShadow', 'receiveShadow', 'frustumCulled', 'renderOrder'],
+    'advanced': ['uuid', 'userData', 'up', 'quaternion', 'matrix', 'matrixWorld', 'matrixAutoUpdate', 'matrixWorldNeedsUpdate'],
+    'hidden': ['type']
   },
   'Light' : {
-    'main': ['userData', 'layers'],
-    'rendering': ['color', 'intensity']
-  },
-  'Object3D' : {
-    'main': ['parent', 'type'],
-    'rendering': ['visible', 'frustrumCulled']
+    'main': ['intensity', 'color']
   }
 };
 

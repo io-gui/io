@@ -10,20 +10,29 @@ export class IoInspectorProp extends IoObjectProperty {
         :host {
           display: flex;
           flex-direction: row;
-          background: rgba(128,0,32,0.2);
+          padding: 1px 0;
+          font-weight: lighter;
+        }
+        ::slotted(:nth-child(2)) {
+          margin: 0 2px 0 0;
+          flex: 1;
         }
         ::slotted(.io-link),
         ::slotted(.io-label) {
           display: inline-block;
           width: 8em;
           text-align: right;
-          background: rgba(128,0,32,0.2);
+          margin: 0 2px 0 2px;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         ::slotted(.io-link) {
           color: blue;
-          text-decoration: underline;
+          cursor: pointer;
+        }
+        ::slotted(.io-link):after,
+        ::slotted(.io-label):after {
+          content: ":";
         }
       </style>
     `;

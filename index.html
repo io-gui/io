@@ -9,6 +9,34 @@
 
     <script type="module" src="src/io-app.js"></script>
     <script type="module" src="src/three-app.js"></script>
+
+    <style>
+      io-inspector-group .io-wrapper {
+        margin: 2px;
+        border-radius: 0.2em;
+        background: #444;
+        color: #ccc;
+      }
+      io-inspector-prop > .io-link {
+        color: #fc8;
+      }
+      io-inspector-prop > io-boolean {
+        color: #9c8;
+      }
+      io-inspector-prop > io-string,
+      io-inspector-prop > io-number {
+        background: #555;
+      }
+      io-inspector-prop io-vector > io-number,
+      io-inspector-prop io-color > io-number {
+        background: #555;
+        margin-right: 2px;
+      }
+      io-inspector-prop io-color > io-number:last-of-type,
+      io-inspector-prop io-vector > io-number:last-of-type {
+        margin-right: 0;
+      }
+    </style>
   </head>
   <body>
     <three-app></three-app>

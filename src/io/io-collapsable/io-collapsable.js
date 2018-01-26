@@ -9,18 +9,16 @@ export class IoCollapsable extends Io {
           display: flex;
           flex-direction: column;
         }
-        .io-collapsable {
+        .io-label {
           cursor: pointer;
+          line-height: 1em;
+          padding: 2px;
         }
       </style>
     `;
   }
   static get properties() {
     return {
-      value: {
-        type: Object,
-        observer: '_update',
-      },
       label: {
         type: String,
         observer: '_update'
@@ -36,23 +34,15 @@ export class IoCollapsable extends Io {
     }
   }
   _toggleHandler(event) {
-    if (event.path[0].className !== 'io-collapsable') return;
+    if (event.path[0] !== this.shadowRoot.querySelector('.io-label')) return;
     if (event.which == 13 || event.which == 32 || event.type == 'click') {
       event.preventDefault();
       this.expanded = !this.expanded;
-      setTimeout(() => {
-        let focusable = this.querySelector('[tabindex="0"]');
-        if (focusable) {
-          focusable.focus();
-        } else {
-          this.shadowRoot.querySelector('.io-collapsable').focus();
-        }
-      });
     }
   }
   _update() {
     this.render([
-      ['span', {className: 'io-collapsable', tabindex: '0'}, (this.expanded ? '▾' : '▸') + this.label ],
+      ['span', {className: 'io-label', tabindex: '0'}, (this.expanded ? '▾' : '▸') + this.label],
       this.expanded ? ['slot'] : null
     ], this.shadowRoot);
   }
