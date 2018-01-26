@@ -2,7 +2,7 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoObjectProperty extends Io {
-  static get template() {
+  static get rootStyle() {
     return html`
       <style>
         :host {

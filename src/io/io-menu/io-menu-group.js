@@ -4,7 +4,7 @@ import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuOption} from "./io-menu-option.js"
 
 export class IoMenuGroup extends Io {
-  static get template() {
+  static get rootStyle() {
     return html`
       <style>
         :host {

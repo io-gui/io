@@ -8,7 +8,7 @@ import {IoOption} from "./io/io-option/io-option.js"
 
 export class IoApp extends Io {
   static get is() { return 'io-app'; }
-  static get template() {
+  static get rootStyle() {
     return html`
       <style>
       :host {

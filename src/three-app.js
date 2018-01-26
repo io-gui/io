@@ -8,7 +8,7 @@ import "./three-config.js"
 import * as THREE from "../lib/three.module.js"
 
 export class ThreeApp extends Io {
-  static get template() {
+  static get rootStyle() {
     return html`
       <style>
       :host {
@@ -28,7 +28,7 @@ export class ThreeApp extends Io {
       ]],
       ['div', {className: 'demo'}, [
         ['h3', 'io-object'],
-        ['io-object', {value: new THREE.Light()}],
+        ['io-object', {value: light}],
         ['io-object', {value: new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshDepthMaterial()) }],
         ['io-object', {value: new THREE.WebGLRenderer()}],
         ['io-object', {value: new THREE.Texture()}]

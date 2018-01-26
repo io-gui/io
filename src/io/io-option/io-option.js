@@ -5,7 +5,7 @@ import {IoMenu} from "../io-menu/io-menu.js"
 const menu = new IoMenu({position: 'bottom'});
 
 export class IoOption extends Io {
-  static get template() {
+  static get rootStyle() {
     return html`
       <style>
         :host {

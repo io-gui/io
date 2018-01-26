@@ -4,7 +4,32 @@ import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 import {IoObjectProperty} from "../io-object/io-object-prop.js"
 
 export class IoInspectorProp extends IoObjectProperty {
-  static get template() {
+  static get style() {
+    return html`
+      <style>
+        :host > .io-link {
+          color: #fc8;
+        }
+        :host > io-boolean {
+          color: #9c8;
+        }
+        :host > io-string,
+        :host > io-number {
+          background: #555;
+        }
+        :host io-vector > io-number,
+        :host io-color > io-number {
+          background: #555;
+          margin-right: 2px;
+        }
+        :host io-color > io-number:last-of-type,
+        :host io-vector > io-number:last-of-type {
+          margin-right: 0;
+        }
+      </style>
+    `;
+  }
+  static get rootStyle() {
     return html`
       <style>
         :host {

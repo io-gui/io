@@ -8,7 +8,7 @@ var timeoutReset;
 var WAIT_TIME = 1000;
 
 export class IoMenuLayer extends Io {
-  static get template() {
+  static get rootStyle() {
     return html`
       <style>
       :host {

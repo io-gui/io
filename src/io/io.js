@@ -1,7 +1,8 @@
 import {h} from "./ioutil.js"
 
 export class Io extends HTMLElement {
-  static get template() { return `<style></style>`; }
+  static get rootStyle() { return ``; }
+  static get style() { return ``; }
   static get observedAttributes() {
     let observed = [];
     let proto = this;
@@ -20,6 +21,13 @@ export class Io extends HTMLElement {
     super();
     Object.defineProperty(this, '__properties', { value: this.getPrototypeProperties() });
     Object.defineProperty(this, '__listeners', { value: {} });
+
+    // TODO: yuck! find a proper way to initStyle on first instance.
+    this.__proto__.constructor.__styled = this.__proto__.constructor.__styled || {};
+    if (!this.__proto__.constructor.__styled[this.localName]) {
+      this.initStyle();
+      this.__proto__.constructor.__styled[this.localName] = true;
+    }
 
     // TODO: documentation. Make handler function binding more explicit?
     // TODO: consider folowing prototype chain.
@@ -44,8 +52,13 @@ export class Io extends HTMLElement {
       }
     }
     this.attachShadow({mode: 'open'});
-    this.shadowRoot.innerHTML = this.__proto__.constructor.template;
+    this.shadowRoot.innerHTML = this.__proto__.constructor.rootStyle;
     this.render([['slot']], this.shadowRoot);
+  }
+  initStyle() {
+    if (!this.__proto__.constructor.style) return;
+    _stagingEelement.innerHTML = this.__proto__.constructor.style.replace(new RegExp(':host', 'g'), this.localName);
+    document.head.appendChild(_stagingEelement.querySelector('style'));
   }
   getPrototypeProperties() {
     let props = {};

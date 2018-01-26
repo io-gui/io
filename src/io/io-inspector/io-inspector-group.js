@@ -5,7 +5,18 @@ import {IoObject} from "../io-object/io-object.js"
 import {IoInspectorProp} from "./io-inspector-prop.js"
 
 export class IoInspectorGroup extends IoObject {
-  static get template() {
+  static get style() {
+    return html`
+      <style>
+        :host .io-wrapper {
+          margin: 2px;
+          border-radius: 0.2em;
+          background: #444;
+        }
+      </style>
+    `;
+  }
+  static get rootStyle() {
     return html`
       <style>
         :host {
