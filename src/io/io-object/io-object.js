@@ -1,6 +1,8 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
-import {IoValue} from "../io-value/io-value.js"
+import {IoBoolean} from "../io-value/io-boolean.js"
+import {IoNumber} from "../io-value/io-number.js"
+import {IoString} from "../io-value/io-string.js"
 import {IoFunction} from "../io-function/io-function.js"
 import {IoObjectConstructor} from "./io-object-constructor.js"
 import {IoObjectProperty} from "./io-object-prop.js"
@@ -93,13 +95,13 @@ export class IoObject extends Io {
 
 IoObject.CONFIG = {
   'Object' : {
-    'type:string': {tag: 'io-value', props: {type: 'string'}},
-    'type:number': {tag: 'io-value', props: {type: 'number', step: 0.1}},
-    'type:boolean': {tag: 'io-value', props: {type: 'boolean'}},
+    'type:string': {tag: 'io-string', props: {}},
+    'type:number': {tag: 'io-number', props: {step: 0.1}},
+    'type:boolean': {tag: 'io-boolean', props: {}},
     'type:object': {tag: 'io-object', props: {}},
     'type:function': {tag: 'io-function', props: {}},
-    'value:null': {tag: 'io-value', props: {}},
-    'value:undefined': {tag: 'io-value', props: {}}
+    'value:null': {tag: 'io-string', props: {}},
+    'value:undefined': {tag: 'io-string', props: {}}
   }
 };
 

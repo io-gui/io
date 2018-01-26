@@ -1,6 +1,5 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
-import {IoValue} from "../io-value/io-value.js"
 
 export class IoObjectProperty extends Io {
   static get template() {
@@ -10,13 +9,13 @@ export class IoObjectProperty extends Io {
           display: flex;
           flex-direction: row;
         }
-        ::slotted(io-value[type="number"]) {
+        ::slotted(io-number) {
           color: rgb(28, 0, 207);
         }
-        ::slotted(io-value[type="string"]) {
+        ::slotted(io-string) {
           color: rgb(196, 26, 22);
         }
-        ::slotted(io-value[type="boolean"]) {
+        ::slotted(io-boolean) {
           color: rgb(170, 13, 145);
         }
         ::slotted(io-option) {

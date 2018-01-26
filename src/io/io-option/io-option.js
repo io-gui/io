@@ -26,20 +26,13 @@ export class IoOption extends Io {
       },
       listeners: {
         'focus': '_focusHandler',
-        'mousedown': '_expandHandler'
+        'mousedown': '_expandHandler',
+        'keydown': '_expandHandler'
       },
       attributes: {
         'tabindex': 0
       }
     }
-  }
-  _focusHandler(event) {
-    this.addEventListener('blur', this._blurHandler);
-    this.addEventListener('keydown', this._expandHandler);
-  }
-  _blurHandler(event) {
-    this.removeEventListener('keydown', this._expandHandler);
-    this.removeEventListener('blur', this._blurHandler);
   }
   _expandHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mousedown') {

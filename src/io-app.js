@@ -1,6 +1,7 @@
 import {Io} from "./io/io.js"
 import {html} from "./io/ioutil.js"
-import {IoValue} from "./io/io-value/io-value.js"
+import {IoBoolean} from "./io/io-value/io-boolean.js"
+import {IoNumber} from "./io/io-value/io-number.js"
 import {IoObject} from "./io/io-object/io-object.js"
 import {IoInspector} from "./io/io-inspector/io-inspector.js"
 import {IoOption} from "./io/io-option/io-option.js"
@@ -13,8 +14,11 @@ export class IoApp extends Io {
       :host {
         font-family: "Lucida Grande", sans-serif;
       }
-      div.demo > io-value,
-      div.demo > io-object {
+      div > io-string,
+      div > io-option,
+      div > io-boolean,
+      div > io-number,
+      div > io-object {
         border: 1px solid #eee;
         vertical-align: top;
         margin: 0.25em;
@@ -33,9 +37,6 @@ export class IoApp extends Io {
       div.row > *  {
         flex: 1;
         margin: 2px;
-      }
-      div.row > io-value  {
-        border: 1px solid #eee;
       }
       div.area {
         background: rgba(128,128,128,0.2);
@@ -94,13 +95,13 @@ export class IoApp extends Io {
 
     this.render([
       ['div', {className: 'demo'}, [
-        ['h3', 'io-value with three attribute types.'],
-        ['io-value', {type: 'string', value: this.values.string}],
-        ['io-value', {type: 'number', value: this.values.number, step: 0.1}],
-        ['io-value', {type: 'boolean', value: this.values.boolean}],
+        ['h3', 'io-string io-numbe and io-boolean.'],
+        ['io-string', {value: this.values.string}],
+        ['io-number', {value: this.values.number, step: 0.1}],
+        ['io-boolean', {value: this.values.boolean}],
       ]],
       ['div', {className: 'demo'}, [
-        ['h3', 'io-value matrix with various data types and type attributes.'],
+        ['h3', 'matrix with various data types and type elements.'],
         ['div', {className: 'row narrow header'}, [
           ['span', {className: 'rowlabel'}],
           ['span', 'string'],
@@ -109,39 +110,39 @@ export class IoApp extends Io {
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'string'],
-          ['io-value', {type: 'string', value: this.values.string}],
-          ['io-value', {type: 'number', value: this.values.string}],
-          ['io-value', {type: 'boolean', value: this.values.string}],
+          ['io-string', {value: this.values.string}],
+          ['io-number', {value: this.values.string}],
+          ['io-boolean', {type: 'boolean', value: this.values.string}],
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'number'],
-          ['io-value', {type: 'string', value: this.values.number}],
-          ['io-value', {type: 'number', value: this.values.number}],
-          ['io-value', {type: 'boolean', value: this.values.number}],
+          ['io-string', {value: this.values.number}],
+          ['io-number', {value: this.values.number}],
+          ['io-boolean', {type: 'boolean', value: this.values.number}],
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'boolean'],
-          ['io-value', {type: 'string', value: this.values.boolean}],
-          ['io-value', {type: 'number', value: this.values.boolean}],
-          ['io-value', {type: 'boolean', value: this.values.boolean}],
+          ['io-string', {value: this.values.boolean}],
+          ['io-number', {value: this.values.boolean}],
+          ['io-boolean', {type: 'boolean', value: this.values.boolean}],
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'NaN'],
-          ['io-value', {type: 'string', value: this.values.NaN}],
-          ['io-value', {type: 'number', value: this.values.NaN}],
-          ['io-value', {type: 'boolean', value: this.values.NaN}],
+          ['io-string', {value: this.values.NaN}],
+          ['io-number', {value: this.values.NaN}],
+          ['io-boolean', {type: 'boolean', value: this.values.NaN}],
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'null'],
-          ['io-value', {type: 'string', value: this.values.null}],
-          ['io-value', {type: 'number', value: this.values.null}],
-          ['io-value', {type: 'boolean', value: this.values.null}],
+          ['io-string', {value: this.values.null}],
+          ['io-number', {value: this.values.null}],
+          ['io-boolean', {type: 'boolean', value: this.values.null}],
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'undefined'],
-          ['io-value', {type: 'string', value: this.values.undef}],
-          ['io-value', {type: 'number', value: this.values.undef}],
-          ['io-value', {type: 'boolean', value: this.values.undef}],
+          ['io-string', {value: this.values.undef}],
+          ['io-number', {value: this.values.undef}],
+          ['io-boolean', {type: 'boolean', value: this.values.undef}],
         ]],
       ]],
       ['div', {className: 'demo'}, [
