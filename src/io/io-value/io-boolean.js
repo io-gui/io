@@ -2,7 +2,7 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoBoolean extends Io {
-  static get rootStyle() {
+  static get shadowStyle() {
     return html`
       <style>
         :host {

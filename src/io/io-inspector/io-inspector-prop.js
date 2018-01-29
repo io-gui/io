@@ -1,9 +1,10 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
-import {IoObjectProperty} from "../io-object/io-object-prop.js"
+// import {IoObjectProperty} from "../io-object/io-object-prop.js"
 
-export class IoInspectorProp extends IoObjectProperty {
+// TODO: extend IoObjectProperty and make sure Handlers are bound correctly
+export class IoInspectorProp extends Io {
   static get style() {
     return html`
       <style>
@@ -29,7 +30,7 @@ export class IoInspectorProp extends IoObjectProperty {
       </style>
     `;
   }
-  static get rootStyle() {
+  static get shadowStyle() {
     return html`
       <style>
         :host {
@@ -62,11 +63,50 @@ export class IoInspectorProp extends IoObjectProperty {
       </style>
     `;
   }
+  static get properties() {
+    return {
+      value: {
+        type: Object,
+        observer: '_update'
+      },
+      key: {
+        type: String,
+        observer: '_update'
+      },
+      config: {
+        type: Array,
+        observer: '_update'
+      }
+    }
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('io-object-mutated', this._objectMutatedHandler);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('io-object-mutated', this._objectMutatedHandler);
+  }
+  _valueSetHandler(event) {
+    this.value[this.key] = event.detail.value;
+    window.dispatchEvent(new CustomEvent('io-object-mutated', {
+      detail: {object: this.value, key: this.key},
+      bubbles: false,
+      composed: true
+    }));
+  }
+  _objectMutatedHandler(event) {
+    if (event.detail.object === this.value) {
+      if (event.detail.key === this.key || event.detail.key === '*') {
+        this._update();
+      }
+    }
+  }
   _update() {
     let isObject = typeof this.value[this.key] === 'object' && this.value[this.key] !== null;
     this.render([
       ['span', {className: isObject ? 'io-link' : 'io-label'}, this.key],
-      this.config.tag !== 'io-object' ? [this.config.tag, Object.assign({value: this.value[this.key], label: this.key}, this.config.props) ] : null
+      this.config.tag !== 'io-object' ? [this.config.tag, Object.assign({value: this.value[this.key], label: this.key, listeners: {'value-set': this._valueSetHandler}}, this.config.props) ] : null
     ]);
   }
 }

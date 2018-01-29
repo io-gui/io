@@ -2,7 +2,7 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoObjectProperty extends Io {
-  static get rootStyle() {
+  static get shadowStyle() {
     return html`
       <style>
         :host {
@@ -76,7 +76,7 @@ export class IoObjectProperty extends Io {
   _update() {
     this.render([
       this.config.tag == 'io-object' ? null : ['span', {className: 'io-label'}, this.key],
-      [this.config.tag, Object.assign({value: this.value[this.key], label: this.key}, this.config.props) ]
+      [this.config.tag, Object.assign({value: this.value[this.key], label: this.key, listeners: {'value-set': this._valueSetHandler}}, this.config.props) ]
     ])
   }
 }

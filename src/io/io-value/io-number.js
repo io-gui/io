@@ -8,7 +8,7 @@ editor.addEventListener('touchstart', function (event) { event.stopPropagation()
 editor.addEventListener('focus', function (event) { event.stopPropagation() });
 
 export class IoNumber extends Io {
-  static get rootStyle() {
+  static get shadowStyle() {
     return html`
       <style>
         :host {

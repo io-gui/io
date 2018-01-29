@@ -1,7 +1,7 @@
 import {h} from "./ioutil.js"
 
 export class Io extends HTMLElement {
-  static get rootStyle() { return ``; }
+  static get shadowStyle() { return ``; }
   static get style() { return ``; }
   static get observedAttributes() {
     let observed = [];
@@ -52,7 +52,7 @@ export class Io extends HTMLElement {
       }
     }
     this.attachShadow({mode: 'open'});
-    this.shadowRoot.innerHTML = this.__proto__.constructor.rootStyle;
+    this.shadowRoot.innerHTML = this.__proto__.constructor.shadowStyle;
     this.render([['slot']], this.shadowRoot);
   }
   initStyle() {
@@ -202,14 +202,20 @@ export class Io extends HTMLElement {
         element = this.createElement(vChildren[i]);
         host.appendChild(element);
 
-        // TODO: handle chldren better
-        if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-          element.innerHTML = vChildren[i].children;
-        } else if (vChildren[i].children &&  typeof vChildren[i].children === 'object') {
-          // TODO: test extensively
-          this.traverse(vChildren[i].children, element);
-        }
+      }
 
+      for (var prop in vChildren[i].props) {
+        if (prop == 'listeners') {
+          for (var l in vChildren[i].props[prop]) {
+            if (typeof vChildren[i].props[prop][l] === 'function') {
+              // TODO: multiple functions and class inheritance
+              // TODO: test for garbage / lingering listeners
+              // TODO: check for conflicts / existing listeners
+              element.__listeners[l] = vChildren[i].props[prop][l];
+              element.addEventListener(l, element.__listeners[l]);
+            }
+          }
+        }
       }
 
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {

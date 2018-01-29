@@ -16,7 +16,7 @@ export class IoInspectorGroup extends IoObject {
       </style>
     `;
   }
-  static get rootStyle() {
+  static get shadowStyle() {
     return html`
       <style>
         :host {

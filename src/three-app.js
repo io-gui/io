@@ -8,7 +8,7 @@ import "./three-config.js"
 import * as THREE from "../lib/three.module.js"
 
 export class ThreeApp extends Io {
-  static get rootStyle() {
+  static get shadowStyle() {
     return html`
       <style>
       :host {

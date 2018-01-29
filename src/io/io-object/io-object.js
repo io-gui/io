@@ -8,7 +8,7 @@ import {IoObjectConstructor} from "./io-object-constructor.js"
 import {IoObjectProperty} from "./io-object-prop.js"
 
 export class IoObject extends Io {
-  static get rootStyle() {
+  static get shadowStyle() {
     return html`
       <style>
         :host {

@@ -7,8 +7,7 @@ import {IoInspector} from "./io/io-inspector/io-inspector.js"
 import {IoOption} from "./io/io-option/io-option.js"
 
 export class IoApp extends Io {
-  static get is() { return 'io-app'; }
-  static get rootStyle() {
+  static get shadowStyle() {
     return html`
       <style>
       :host {

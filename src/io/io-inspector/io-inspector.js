@@ -4,7 +4,7 @@ import {IoInspectorGroup} from "./io-inspector-group.js"
 import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 
 export class IoInspector extends Io {
-  static get rootStyle() {
+  static get shadowStyle() {
     return html`
       <style>
         :host {
