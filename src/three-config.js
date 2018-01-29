@@ -2,12 +2,16 @@ import * as THREE from "../lib/three.module.js"
 import {IoObject} from "./io/io-object/io-object.js"
 import {IoOption} from "./io/io-option/io-option.js"
 import {IoVector} from "./io/io-vector/io-vector.js"
+import {IoMatrix} from "./io/io-vector/io-matrix.js"
 import {IoColor} from "./io/io-vector/io-color.js"
 
 IoObject.CONFIG['Object3D'] = {
   'constructor:Vector2': {tag: 'io-vector'},
   'constructor:Vector3': {tag: 'io-vector'},
   'constructor:Vector4': {tag: 'io-vector'},
+  'constructor:Matrix2': {tag: 'io-matrix'},
+  'constructor:Matrix3': {tag: 'io-matrix'},
+  'constructor:Matrix4': {tag: 'io-matrix'},
   'constructor:Euler': {tag: 'io-vector'},
   'constructor:Color': {tag: 'io-color'}
 };

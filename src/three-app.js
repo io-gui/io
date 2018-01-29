@@ -8,11 +8,18 @@ import "./three-config.js"
 import * as THREE from "../lib/three.module.js"
 
 export class ThreeApp extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
       :host {
         font-family: "Lucida Grande", sans-serif;
+      }
+      :host .row {
+        display: flex;
+        flex-direction: row;
+      }
+      :host .row > * {
+        margin-right: 1em;
       }
       </style>
     `;
@@ -24,11 +31,13 @@ export class ThreeApp extends Io {
     this.render([
       ['div', {className: 'demo'}, [
         ['h3', 'io-inspector'],
-        ['io-inspector', {value: light}]
+        ['div', {className: 'row'}, [
+          ['io-inspector', {value: light}],
+          ['io-object', {value: light, expanded: true}]
+        ]]
       ]],
       ['div', {className: 'demo'}, [
         ['h3', 'io-object'],
-        ['io-object', {value: light}],
         ['io-object', {value: new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshDepthMaterial()) }],
         ['io-object', {value: new THREE.WebGLRenderer()}],
         ['io-object', {value: new THREE.Texture()}]

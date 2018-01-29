@@ -59,6 +59,9 @@ export class IoMenuOption extends Io {
       this.option.hint ? ['span', {className: 'io-hint'}, this.option.hint] : null,
       this.option.options ? ['span', {className: 'io-more'}, '▸'] : null,
     ]);
+  }
+  connectedCallback() {
+    super.connectedCallback();
     this.$group = this.querySelector('io-menu-group');
     if (this.$group) {
       IoMenuLayer.singleton.appendChild(this.$group);

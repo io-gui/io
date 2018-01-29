@@ -9,8 +9,8 @@ export class IoOption extends Io {
     return html`
       <style>
         :host {
-          cursor: pointer;
           display: inline-block;
+          cursor: pointer;
         }
       </style>
     `;

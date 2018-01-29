@@ -2,13 +2,13 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoObjectProperty} from "../io-object/io-object-prop.js"
 
-export class IoVector extends Io {
+export class IoMatrix extends Io {
   static get style() {
     return html`
       <style>
         :host {
           display: grid;
-          grid-template-columns: 33.3% 33.3% 33.3%;
+          grid-template-columns: 25% 25% 25% 25%;
         }
         :host > io-object-prop > io-number {
           width: 100%;
@@ -24,12 +24,10 @@ export class IoVector extends Io {
     }
   }
   _update() {
-    this.render([
-      ['io-object-prop', {key: 'x', value: this.value, config: {tag: 'io-number'} }],
-      ['io-object-prop', {key: 'y', value: this.value, config: {tag: 'io-number'} }],
-      ['io-object-prop', {key: 'z', value: this.value, config: {tag: 'io-number'} }]
-    ]);
+    let elements = (this.value instanceof Array) ? this.value : this.value.elements;
+    const Prop = (elem, i) => ['io-object-prop', {key: i, value: elements, config: {tag: 'io-number'}}];
+    this.render([elements.map(Prop)]);
   }
 }
 
-window.customElements.define('io-vector', IoVector);
+window.customElements.define('io-matrix', IoMatrix);

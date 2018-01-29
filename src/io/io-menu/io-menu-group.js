@@ -66,7 +66,7 @@ export class IoMenuGroup extends Io {
       for (var i = 0; i < this.options.length; i++) {
         if (this.$options[i]) {
           // TODO: reuse list of elements
-          // Sonsider using rencer()
+          // Sonsider using render()
           this.$options[i] = new IoMenuOption({option: this.options[i], $parent: this});
         } else {
           this.$options[i] = new IoMenuOption({option: this.options[i], $parent: this});

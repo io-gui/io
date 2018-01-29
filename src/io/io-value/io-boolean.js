@@ -6,8 +6,8 @@ export class IoBoolean extends Io {
     return html`
       <style>
         :host {
-          cursor: pointer;
           display: inline-block;
+          cursor: pointer;
         }
         :host(.invalid) {
           text-decoration: underline;

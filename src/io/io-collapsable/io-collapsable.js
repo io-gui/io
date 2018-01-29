@@ -12,7 +12,6 @@ export class IoCollapsable extends Io {
         .io-label {
           cursor: pointer;
           line-height: 1em;
-          padding: 2px;
         }
       </style>
     `;

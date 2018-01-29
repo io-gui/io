@@ -12,8 +12,8 @@ export class IoString extends Io {
     return html`
       <style>
         :host {
-          cursor: text;
           display: inline-block;
+          cursor: text;
         }
         :host(.invalid) {
           text-decoration: underline;

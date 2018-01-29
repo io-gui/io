@@ -1,30 +1,33 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
-// import {IoObjectProperty} from "../io-object/io-object-prop.js"
+import {IoObjectProperty} from "../io-object/io-object-prop.js"
 
-// TODO: extend IoObjectProperty and make sure Handlers are bound correctly
-export class IoInspectorProp extends Io {
+export class IoInspectorProp extends IoObjectProperty {
   static get style() {
     return html`
       <style>
         :host > .io-link {
           color: #fc8;
         }
-        :host > io-boolean {
+        :host io-boolean {
           color: #9c8;
         }
-        :host > io-string,
-        :host > io-number {
+        :host io-string {
           background: #555;
+          color: #f9e;
         }
-        :host io-vector > io-number,
-        :host io-color > io-number {
+        :host io-number {
+          background: #555;
+          color: #bef;
+        }
+        :host io-vector > io-object-prop > io-number,
+        :host io-color > io-object-prop > io-number {
           background: #555;
           margin-right: 2px;
         }
-        :host io-color > io-number:last-of-type,
-        :host io-vector > io-number:last-of-type {
+        :host io-color > io-object-prop > io-number:last-of-type,
+        :host io-vector > io-object-prop > io-number:last-of-type {
           margin-right: 0;
         }
       </style>
@@ -62,45 +65,6 @@ export class IoInspectorProp extends Io {
         }
       </style>
     `;
-  }
-  static get properties() {
-    return {
-      value: {
-        type: Object,
-        observer: '_update'
-      },
-      key: {
-        type: String,
-        observer: '_update'
-      },
-      config: {
-        type: Array,
-        observer: '_update'
-      }
-    }
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener('io-object-mutated', this._objectMutatedHandler);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('io-object-mutated', this._objectMutatedHandler);
-  }
-  _valueSetHandler(event) {
-    this.value[this.key] = event.detail.value;
-    window.dispatchEvent(new CustomEvent('io-object-mutated', {
-      detail: {object: this.value, key: this.key},
-      bubbles: false,
-      composed: true
-    }));
-  }
-  _objectMutatedHandler(event) {
-    if (event.detail.object === this.value) {
-      if (event.detail.key === this.key || event.detail.key === '*') {
-        this._update();
-      }
-    }
   }
   _update() {
     let isObject = typeof this.value[this.key] === 'object' && this.value[this.key] !== null;

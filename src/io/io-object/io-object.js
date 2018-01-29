@@ -71,12 +71,11 @@ export class IoObject extends Io {
   }
   _update() {
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
-    const Prop = entry => ['io-object-prop', {key: entry[0], value: this.value, config: entry[1] }];
+    const Prop = entry => ['io-object-prop', {key: entry[0], value: this.value, labeled: entry[1].tag !== 'io-object', config: entry[1] }];
     this.render([
       ['io-object-constructor', {value: this.value, expanded: this.expanded, label: this.label}],
       this.expanded ? Object.entries(propConfigs).map(Prop) : null
-    ])
-
+    ]);
   }
 }
 

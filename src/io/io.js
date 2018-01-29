@@ -30,14 +30,18 @@ export class Io extends HTMLElement {
     }
 
     // TODO: documentation. Make handler function binding more explicit?
-    // TODO: consider folowing prototype chain.
-    const proto = Object.getPrototypeOf(this);
-    const names = Object.getOwnPropertyNames(proto);
-    for (var i = 0; i < names.length; i++) {
-      if (names[i].substring(names[i].length-7,names[i].length) === 'Handler') {
-        this[names[i]] = this[names[i]].bind(this);
+    // TODO: generalize prototype marching
+    let proto = Object.getPrototypeOf(this);
+    while (proto) {
+      let names = Object.getOwnPropertyNames(proto);
+      for (var i = 0; i < names.length; i++) {
+        if (names[i].substring(names[i].length-7,names[i].length) === 'Handler') {
+          this[names[i]] = this[names[i]].bind(this);
+        }
       }
+      proto = proto.__proto__;
     }
+
 
     for (let key in this.__properties) {
       if (key === 'listeners') continue; //TODO ugh

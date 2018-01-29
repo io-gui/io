@@ -23,13 +23,7 @@ export class IoObjectProperty extends Io {
         }
         ::slotted(.io-label):after {
           content: ":";
-        }
-        ::slotted(.io-label) {
-          position: relative;
           padding-right: 0.25em;
-        }
-        ::slotted(.io-label.hidden) {
-          display: none;
         }
       </style>
     `;
@@ -43,6 +37,9 @@ export class IoObjectProperty extends Io {
       key: {
         type: String,
         observer: '_update'
+      },
+      labeled: {
+        type: Boolean
       },
       config: {
         type: Array,
@@ -75,9 +72,9 @@ export class IoObjectProperty extends Io {
   }
   _update() {
     this.render([
-      this.config.tag == 'io-object' ? null : ['span', {className: 'io-label'}, this.key],
+      this.labeled ? ['span', {className: 'io-label'}, this.key] : null,
       [this.config.tag, Object.assign({value: this.value[this.key], label: this.key, listeners: {'value-set': this._valueSetHandler}}, this.config.props) ]
-    ])
+    ]);
   }
 }
 
