@@ -70,7 +70,8 @@ export class IoInspectorProp extends IoObjectProperty {
     let isObject = typeof this.value[this.key] === 'object' && this.value[this.key] !== null;
     this.render([
       ['span', {className: isObject ? 'io-link' : 'io-label'}, this.key],
-      this.config.tag !== 'io-object' ? [this.config.tag, Object.assign({value: this.value[this.key], label: this.key, listeners: {'value-set': this._valueSetHandler}}, this.config.props) ] : null
+      [this.config.tag, Object.assign({value: this.value[this.key], label: this.config.tag !== 'io-object' ? this.key : null, listeners: {'value-set': this._valueSetHandler}}, this.config.props) ]
+      // this.config.tag !== 'io-object' ? [this.config.tag, Object.assign({value: this.value[this.key], label: this.key, listeners: {'value-set': this._valueSetHandler}}, this.config.props) ] : null
     ]);
   }
 }

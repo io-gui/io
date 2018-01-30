@@ -1,31 +1,7 @@
-import {html} from "../ioutil.js"
-import {Io} from "../io.js"
+import {IoVector} from "./io-vector.js"
 import {IoObjectProperty} from "../io-object/io-object-prop.js"
 
-export class IoColor extends Io {
-  static get style() {
-    return html`
-      <style>
-        :host {
-          display: grid;
-          grid-template-columns: 25% 25% 25% 25%;
-        }
-        :host > div {
-          display: flex;
-        }
-        :host > io-object-prop > io-number {
-          width: 100%;
-        }
-      </style>
-    `;
-  }
-  static get properties() {
-    return {
-      value: {
-        observer: '_update'
-      }
-    }
-  }
+export class IoColor extends IoVector {
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('io-object-mutated', this._objectMutatedHandler);
@@ -40,11 +16,16 @@ export class IoColor extends Io {
     }
   }
   _update() {
+    let elements = [];
+    if (this.value.r !== undefined) elements.push('r');
+    if (this.value.g !== undefined) elements.push('g');
+    if (this.value.b !== undefined) elements.push('b');
+    if (this.value.a !== undefined) elements.push('a');
+    this.columns = elements.length + 1;
+    const Prop = i => ['io-object-prop', {key: i, value: this.value, config: {tag: 'io-number'}}];
     this.render([
       ['div', {style: 'background: rgb(' + parseInt(this.value.r * 255) + ',' + parseInt(this.value.g * 255) + ',' + parseInt(this.value.b * 255) + ');'}],
-      ['io-object-prop', {key: 'r', value: this.value, config: {tag: 'io-number'} }],
-      ['io-object-prop', {key: 'g', value: this.value, config: {tag: 'io-number'} }],
-      ['io-object-prop', {key: 'b', value: this.value, config: {tag: 'io-number'} }]
+      elements.map(Prop)
     ]);
   }
 }

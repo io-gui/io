@@ -46,7 +46,7 @@ export class IoNumber extends Io {
           margin: 0;
         }
         input {
-            -moz-appearance: textfield;
+          -moz-appearance: textfield;
         }
       </style>
     `;
@@ -105,9 +105,10 @@ export class IoNumber extends Io {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value = Math.round(value / this.step) * this.step;
+      //TODO: remove trailing decimals
       value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
     }
-    this.innerText = String(value);
+    this.innerText = value;
   }
 }
 

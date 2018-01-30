@@ -62,7 +62,9 @@ export class Io extends HTMLElement {
   initStyle() {
     if (!this.__proto__.constructor.style) return;
     _stagingEelement.innerHTML = this.__proto__.constructor.style.replace(new RegExp(':host', 'g'), this.localName);
-    document.head.appendChild(_stagingEelement.querySelector('style'));
+    let style = _stagingEelement.querySelector('style');
+    style.setAttribute('id', 'io-style-' + this.localName);
+    document.head.appendChild(style);
   }
   getPrototypeProperties() {
     let props = {};
@@ -70,24 +72,14 @@ export class Io extends HTMLElement {
     while (proto) {
       let prop = proto.constructor.properties;
       for (var key in prop) {
+        if (prop[key].value === undefined) {
+          if (prop[key].type === Boolean) prop[key].value = false;
+          if (prop[key].type === Number) prop[key].value = 0;
+          if (prop[key].type === String) prop[key].value = '';
+        }
         props[key] = Object.assign(prop[key], props[key] || {});
       }
       proto = proto.__proto__;
-    }
-    for (var key in props) {
-      if (props[key].value === undefined) {
-        switch (props[key].type) {
-          case Boolean:
-            props[key].value = false;
-            break;
-          case Number:
-            props[key].value = 0;
-            break;
-          case String:
-            props[key].value = '';
-            break;
-        }
-      }
     }
     return props;
   }
@@ -98,7 +90,6 @@ export class Io extends HTMLElement {
       },
       set: function(value) {
         if (propConfig.value === value) return;
-        // TODO: type check?
         let oldValue = value;
         propConfig.value = value;
         this.reflectAttribute(key, propConfig);

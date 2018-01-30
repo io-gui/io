@@ -9,6 +9,7 @@ IoObject.CONFIG['Object3D'] = {
   'constructor:Vector2': {tag: 'io-vector'},
   'constructor:Vector3': {tag: 'io-vector'},
   'constructor:Vector4': {tag: 'io-vector'},
+  'constructor:Quaternion': {tag: 'io-vector'},
   'constructor:Matrix2': {tag: 'io-matrix'},
   'constructor:Matrix3': {tag: 'io-matrix'},
   'constructor:Matrix4': {tag: 'io-matrix'},
