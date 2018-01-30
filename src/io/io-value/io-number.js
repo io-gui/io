@@ -105,10 +105,9 @@ export class IoNumber extends Io {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value = Math.round(value / this.step) * this.step;
-      //TODO: remove trailing decimals
       value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
     }
-    this.innerText = value;
+    this.innerText = String(parseFloat(value));
   }
 }
 
