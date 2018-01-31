@@ -1,7 +1,4 @@
-import {h, renderElement} from "./ioutil.js"
-
-const _styledElements = {};
-const _stagingElement = document.createElement('div');
+import {h, renderElement, initStyle} from "./ioutil.js"
 
 export class Io extends HTMLElement {
   static get style() { return ``; }
@@ -83,36 +80,30 @@ export class Io extends HTMLElement {
       this[this.__handlers[i]] = this[this.__handlers[i]].bind(this);
     }
 
-    if (this.__proto__.constructor.style && !_styledElements[this.localName]) {
-      _styledElements[this.localName] = true;
-      _stagingElement.innerHTML = this.__proto__.constructor.style.replace(new RegExp(':host', 'g'), this.localName);
-      let style = _stagingElement.querySelector('style');
-      style.setAttribute('id', 'io-style-' + this.localName);
-      document.head.appendChild(style);
-    }
+    initStyle(this.localName, this.__proto__.constructor.style);
 
     this.attachShadow({mode: 'open'});
     this.shadowRoot.innerHTML = this.__proto__.constructor.shadowStyle;
     this.shadowRoot.appendChild(document.createElement('slot'));
   }
 
-  defineProperty(key, propConfig) {
+  defineProperty(key, config) {
     Object.defineProperty(this, key, {
       get: function() {
-        return propConfig.value;
+        return config.value;
       },
       set: function(value) {
-        if (propConfig.value === value) return;
+        if (config.value === value) return;
         let oldValue = value;
-        propConfig.value = value;
-        this.reflectAttribute(key, propConfig);
-        if (propConfig.observer) {
-          this[propConfig.observer](value, key);
+        config.value = value;
+        this.reflectAttribute(key, config);
+        if (config.observer) {
+          this[config.observer](value, key);
         }
-        if (propConfig.notify) {
+        if (config.notify) {
           this.dispatchEvent(new CustomEvent(key + '-changed', {
             detail: {value: value, oldValue: oldValue},
-            bubbles: propConfig.bubbles,
+            bubbles: config.bubbles,
             composed: true
           }));
         }
@@ -121,14 +112,14 @@ export class Io extends HTMLElement {
       configurable: true
     });
   }
-  reflectAttribute(key, propConfig) {
-    if (propConfig.reflectToAttribute) {
-      if (propConfig.value === true) {
+  reflectAttribute(key, config) {
+    if (config.reflectToAttribute) {
+      if (config.value === true) {
         this.setAttribute(key, '');
-      } else if (propConfig.value === false || propConfig.value === '') {
+      } else if (config.value === false || config.value === '') {
         this.removeAttribute(key);
-      } else if (typeof propConfig.value == 'string' || typeof propConfig.value == 'number') {
-        this.setAttribute(key, propConfig.value);
+      } else if (typeof config.value == 'string' || typeof config.value == 'number') {
+        this.setAttribute(key, config.value);
       }
     }
   }

@@ -1,3 +1,13 @@
+# io: custom elements library for data-centric web applications
+
+* configurable
+* styleable
+* lightweight
+* native
+* data-driven
+* application dataflow top-down
+* user input dataflow bottom-up/transversal
+
 ### Defining properties, listeners and default attributes
 
 ```javascript
