@@ -26,7 +26,7 @@ export class IoColor extends IoVector {
     this.render([
       ['div', {style: 'background: rgb(' + parseInt(this.value.r * 255) + ',' + parseInt(this.value.g * 255) + ',' + parseInt(this.value.b * 255) + ');'}],
       elements.map(Prop)
-    ]);
+    ]);``
   }
 }
 

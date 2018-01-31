@@ -57,15 +57,31 @@ static get style() {
 ### Rendering DOM and ShadowDOM
 
 ```javascript
-
 let elements = ['apple', 'banana', 'avocado'];
 
 const Fruit = (elem, i) => ['span', {className: 'fruit'}, elem];
 this.render([
+  ['h4', 'List of Fruits:'],
   ['div', [
     elements.map(Fruit)
   ]]
 ]);
-}
+
+```
+
+```html
+<h4>List of Fruits:</h4>
+<div>
+  <span class="fruit">apple</span>
+  <span class="fruit">banana</span>
+  <span class="fruit">avocado</span>
+</div>
+```
+
+```javascript
+this.render([
+  ['style'],
+  ['slot']
+], this.shadowRoot);
 
 ```
