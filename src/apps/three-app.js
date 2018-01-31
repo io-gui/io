@@ -1,11 +1,11 @@
- import {Io} from "./io/io.js"
-import {html} from "./io/ioutil.js"
-import {IoObject} from "./io/io-object/io-object.js"
-import {IoInspector} from "./io/io-inspector/io-inspector.js"
+import {Io} from "../io/io.js"
+import {html} from "../io/ioutil.js"
+import {IoObject} from "../io/io-object/io-object.js"
+import {IoInspector} from "../io/io-inspector/io-inspector.js"
 
 import "./three-config.js"
 
-import * as THREE from "../lib/three.module.js"
+import * as THREE from "../../lib/three.module.js"
 
 export class ThreeApp extends Io {
   static get style() {

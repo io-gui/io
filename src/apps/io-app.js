@@ -1,10 +1,10 @@
-import {Io} from "./io/io.js"
-import {html} from "./io/ioutil.js"
-import {IoBoolean} from "./io/io-value/io-boolean.js"
-import {IoNumber} from "./io/io-value/io-number.js"
-import {IoObject} from "./io/io-object/io-object.js"
-import {IoInspector} from "./io/io-inspector/io-inspector.js"
-import {IoOption} from "./io/io-option/io-option.js"
+import {Io} from "../io/io.js"
+import {html} from "../io/ioutil.js"
+import {IoBoolean} from "../io/io-value/io-boolean.js"
+import {IoNumber} from "../io/io-value/io-number.js"
+import {IoObject} from "../io/io-object/io-object.js"
+import {IoInspector} from "../io/io-inspector/io-inspector.js"
+import {IoOption} from "../io/io-option/io-option.js"
 
 export class IoApp extends Io {
   static get shadowStyle() {
