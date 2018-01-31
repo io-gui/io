@@ -1,88 +1,101 @@
-import {h} from "./ioutil.js"
+import {h, renderElement} from "./ioutil.js"
+
+const _styledElements = {};
+const _stagingElement = document.createElement('div');
 
 export class Io extends HTMLElement {
-  static get shadowStyle() { return ``; }
   static get style() { return ``; }
+  static get shadowStyle() { return ``; }
   static get observedAttributes() {
-    let observed = [];
+    let attributes = [];
     let proto = this;
     while (proto) {
       if (proto.properties) {
         let keys = Object.keys(proto.properties);
-        for (var i = 0; i < keys.length; i++) {
-          if (observed.indexOf(keys[i]) === -1) observed.push(keys[i]);
+        for (let i = 0; i < keys.length; i++) {
+          if (attributes.indexOf(keys[i]) === -1) attributes.push(keys[i]);
         }
       }
       proto = proto.__proto__;
     }
-    return observed;
+    return attributes;
+  }
+  static get definedProperties() {
+    let config = {
+      properties: {},
+      attributes: {},
+      listeners: {},
+    }
+    let proto = this;
+    while (proto) {
+      let prop = proto.properties;
+      for (let key in prop) {
+        if (key === 'listeners') {
+          for (let listener in prop[key]) config.listeners[listener] = prop[key][listener];
+        } else if (key === 'attributes') {
+          for (let att in prop[key]) config.attributes[att] = prop[key][att];
+        } else {
+          if (prop[key].value === undefined) {
+            if (prop[key].type === Boolean) prop[key].value = false;
+            if (prop[key].type === Number) prop[key].value = 0;
+            if (prop[key].type === String) prop[key].value = '';
+          }
+          config.properties[key] = Object.assign(prop[key], config.properties[key] || {});
+        }
+      }
+      proto = proto.__proto__;
+    }
+    return config;
+  }
+  static get definedHandlers() {
+    let handlers = [];
+    let proto = this.prototype;
+    while (proto) {
+      let names = Object.getOwnPropertyNames(proto);
+      for (let i = 0; i < names.length; i++) {
+        if (names[i].substring(names[i].length-7, names[i].length) === 'Handler') {
+          handlers.push(names[i]);
+        }
+      }
+      proto = proto.__proto__;
+    }
+    return handlers;
   }
   constructor(props = {}) {
     super();
-    Object.defineProperty(this, '__properties', { value: this.getPrototypeProperties() });
-    Object.defineProperty(this, '__listeners', { value: {} });
-
-    // TODO: yuck! find a proper way to initStyle on first instance.
-    this.__proto__.constructor.__styled = this.__proto__.constructor.__styled || {};
-    if (!this.__proto__.constructor.__styled[this.localName]) {
-      this.initStyle();
-      this.__proto__.constructor.__styled[this.localName] = true;
-    }
-
-    // TODO: documentation. Make handler function binding more explicit?
-    // TODO: generalize prototype marching
-    let proto = Object.getPrototypeOf(this);
-    while (proto) {
-      let names = Object.getOwnPropertyNames(proto);
-      for (var i = 0; i < names.length; i++) {
-        if (names[i].substring(names[i].length-7,names[i].length) === 'Handler') {
-          this[names[i]] = this[names[i]].bind(this);
-        }
-      }
-      proto = proto.__proto__;
-    }
-
+    let definedProperties = this.__proto__.constructor.definedProperties;
+    Object.defineProperty(this, '__properties', { value: definedProperties.properties });
+    Object.defineProperty(this, '__attributes', { value: definedProperties.attributes });
+    Object.defineProperty(this, '__listeners', { value: definedProperties.listeners });
+    Object.defineProperty(this, '__handlers', { value: this.__proto__.constructor.definedHandlers });
 
     for (let key in this.__properties) {
-      if (key === 'listeners') continue; //TODO ugh
-      if (key === 'attributes') {
-        for (var att in this.__properties[key]) {
-          this.setAttribute(att, this.__properties[key][att]);
-        }
-      } else {
-        if (props[key] !== undefined) this.__properties[key].value = props[key];
-        this.defineProperty(key, this.__properties[key]);
-        this.reflectAttribute(key, this.__properties[key]);
-      }
+      if (props[key] !== undefined) this.__properties[key].value = props[key];
+      this.defineProperty(key, this.__properties[key]);
+      this.reflectAttribute(key, this.__properties[key]);
     }
+
+    for (let att in this.__attributes) {
+      this.setAttribute(att, this.__attributes[att]);
+    }
+
+    for (let i = 0; i < this.__handlers.length; i++) {
+      this[this.__handlers[i]] = this[this.__handlers[i]].bind(this);
+    }
+
+    if (this.__proto__.constructor.style && !_styledElements[this.localName]) {
+      _styledElements[this.localName] = true;
+      _stagingElement.innerHTML = this.__proto__.constructor.style.replace(new RegExp(':host', 'g'), this.localName);
+      let style = _stagingElement.querySelector('style');
+      style.setAttribute('id', 'io-style-' + this.localName);
+      document.head.appendChild(style);
+    }
+
     this.attachShadow({mode: 'open'});
     this.shadowRoot.innerHTML = this.__proto__.constructor.shadowStyle;
-    this.render([['slot']], this.shadowRoot);
+    this.shadowRoot.appendChild(document.createElement('slot'));
   }
-  initStyle() {
-    if (!this.__proto__.constructor.style) return;
-    _stagingEelement.innerHTML = this.__proto__.constructor.style.replace(new RegExp(':host', 'g'), this.localName);
-    let style = _stagingEelement.querySelector('style');
-    style.setAttribute('id', 'io-style-' + this.localName);
-    document.head.appendChild(style);
-  }
-  getPrototypeProperties() {
-    let props = {};
-    let proto = this.__proto__;
-    while (proto) {
-      let prop = proto.constructor.properties;
-      for (var key in prop) {
-        if (prop[key].value === undefined) {
-          if (prop[key].type === Boolean) prop[key].value = false;
-          if (prop[key].type === Number) prop[key].value = 0;
-          if (prop[key].type === String) prop[key].value = '';
-        }
-        props[key] = Object.assign(prop[key], props[key] || {});
-      }
-      proto = proto.__proto__;
-    }
-    return props;
-  }
+
   defineProperty(key, propConfig) {
     Object.defineProperty(this, key, {
       get: function() {
@@ -120,34 +133,16 @@ export class Io extends HTMLElement {
     }
   }
   connectedCallback() {
-    let listeners = this.__properties.listeners;
-    if (listeners) {
-      for (var e in listeners) {
-        // TODO: multiple functions and class inheritance
-        this.__listeners[e] = this[listeners[e]];
-        this.addEventListener(e, this.__listeners[e]);
-      }
+    for (let e in this.__listeners) {
+      this.__listeners[e] = this[this.__listeners[e]];
+      this.addEventListener(e, this.__listeners[e]);
     }
     if (typeof this._update == 'function') this._update();
   }
   disconnectedCallback() {
-    for (var e in this.__listeners) {
+    for (let e in this.__listeners) {
       this.removeEventListener(e, this.__listeners[e]);
-      delete this.__listeners[e];
     }
-  }
-  createElement(vDOMNode) {
-    let ConstructorClass = customElements.get(vDOMNode.name);
-    let element;
-    if (ConstructorClass) {
-      element = new ConstructorClass(vDOMNode.props);
-    } else {
-      element = document.createElement(vDOMNode.name);
-      for (var prop in vDOMNode.props) {
-        element[prop] = vDOMNode.props[prop];
-      }
-    }
-    return element;
   }
   attributeChangedCallback(name, oldValue, newValue) {
     if (this.__properties[name].type === Boolean) {
@@ -169,7 +164,7 @@ export class Io extends HTMLElement {
       vChildren.unshift({name: 'style'});
     }
 
-    for (var i = 0; i < vChildren.length; i++) {
+    for (let i = 0; i < vChildren.length; i++) {
 
       let element;
       let oldElement;
@@ -178,7 +173,7 @@ export class Io extends HTMLElement {
 
         element = children[i];
 
-        for (var prop in vChildren[i].props) {
+        for (let prop in vChildren[i].props) {
           if (vChildren[i].props[prop] !== element[prop]) {
             element[prop] = vChildren[i].props[prop];
           }
@@ -187,23 +182,22 @@ export class Io extends HTMLElement {
       } else if (children[i] && children[i].localName !== vChildren[i].name) {
 
         oldElement = children[i];
-        element = this.createElement(vChildren[i]);
+        element = renderElement(vChildren[i]);
 
         host.insertBefore(element, oldElement);
         host.removeChild(oldElement);
 
       } else {
 
-        element = this.createElement(vChildren[i]);
+        element = renderElement(vChildren[i]);
         host.appendChild(element);
 
       }
 
-      for (var prop in vChildren[i].props) {
+      for (let prop in vChildren[i].props) {
         if (prop == 'listeners') {
-          for (var l in vChildren[i].props[prop]) {
+          for (let l in vChildren[i].props[prop]) {
             if (typeof vChildren[i].props[prop][l] === 'function') {
-              // TODO: multiple functions and class inheritance
               // TODO: test for garbage / lingering listeners
               // TODO: check for conflicts / existing listeners
               element.__listeners[l] = vChildren[i].props[prop][l];
@@ -229,7 +223,7 @@ export class Io extends HTMLElement {
 
      // TODO: consider caching elements for reuse
      if (children.length > vChildren.length) {
-       for (var i = children.length - 1; children.length > vChildren.length; i--) {
+       for (let i = children.length - 1; children.length > vChildren.length; i--) {
          host.removeChild(children[i]);
        }
      }
@@ -262,8 +256,6 @@ export class Io extends HTMLElement {
   unbind(binding) {
     binding.source.removeEventListener(binding.sourceProp + '-changed', binding.setTarget);
     binding.target.removeEventListener(binding.targetProp + '-changed', binding.setSource);
-    for (var prop in binding) { delete binding[prop]; }
+    for (let prop in binding) { delete binding[prop]; }
   }
 }
-
-var _stagingEelement = document.createElement('div');

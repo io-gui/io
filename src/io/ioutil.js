@@ -24,6 +24,20 @@ export function html(pieces) {
   return result;
 }
 
+export function renderElement(vDOMNode) {
+  let ConstructorClass = customElements.get(vDOMNode.name);
+  let element;
+  if (ConstructorClass) {
+    element = new ConstructorClass(vDOMNode.props);
+  } else {
+    element = document.createElement(vDOMNode.name);
+    for (let prop in vDOMNode.props) {
+      element[prop] = vDOMNode.props[prop];
+    }
+  }
+  return element;
+}
+
 // https://github.com/lukejacksonn/ijk
 const clense = (a, b) =>
   !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b]
