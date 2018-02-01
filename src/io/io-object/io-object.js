@@ -15,6 +15,9 @@ export class IoObject extends Io {
           display: inline-block;
           position: relative;
         }
+        ::slotted(io-object-prop) {
+          margin-left: 1em;
+        }
       </style>
     `;
   }

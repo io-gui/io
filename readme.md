@@ -1,9 +1,4 @@
-io: custom elements for data-centric web applications
-=====================================================
-
-[![License][license-badge]][license-badge-url]
-[![Dependencies][dependencies-badge]][dependencies-badge-url]
-[![Dev Dependencies][devDependencies-badge]][devDependencies-badge-url]
+# io: custom elements for data-centric web applications #
 
 **DISCLAIMER**: io elements are NOT production ready! This project uses modern web technologies such as [Custom Elements](https://caniuse.com/#feat=custom-elementsv1), [Shadow DOM](https://caniuse.com/#search=shadow%20dom%20v1) and [ES6 modules](https://caniuse.com/#feat=es6-module) and may or may not work in your browser.
 

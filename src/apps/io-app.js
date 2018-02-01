@@ -160,10 +160,7 @@ export class IoApp extends Io {
       ['div', {className: 'demo'}, [
         ['h3', 'io-object with various property types.'],
         ['io-object', {value: this.values, expanded: true, labeled: true}],
-        ['io-object', {value: this.values, expanded: true, labeled: true}],
-        ['io-object', {value: this.values, expanded: true, labeled: true}],
-        ['io-object', {value: this.values, expanded: true, labeled: true}],
-        ['io-object', {value: this.values, expanded: true, labeled: true}],
+        ['io-object', {value: this.values, expanded: true, labeled: true}]
       ]]
     ], this.shadowRoot);
   }

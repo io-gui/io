@@ -159,15 +159,30 @@ export class Io extends HTMLElement {
 
       let element;
       let oldElement;
+      let observers = [];
 
       if (children[i] && children[i].localName === vChildren[i].name) {
 
         element = children[i];
+        observers.length = 0;
 
         for (let prop in vChildren[i].props) {
           if (vChildren[i].props[prop] !== element[prop]) {
-            element[prop] = vChildren[i].props[prop];
+            // avoid triggering observers prematurely when re-rendering elements with different props.
+            if (element.__properties && element.__properties.hasOwnProperty(prop)) {
+              element.__properties[prop].value = vChildren[i].props[prop];
+              // TODO: make less ugly
+              if (element.__properties[prop].observer && observers.indexOf(element.__properties[prop].observer) === -1) {
+                observers.push(element.__properties[prop].observer);
+              }
+            } else {
+              element[prop] = vChildren[i].props[prop];
+            }
           }
+        }
+        // triggering observers
+        for (var j = 0; j < observers.length; j++) {
+          element[observers[j]]();
         }
 
       } else if (children[i] && children[i].localName !== vChildren[i].name) {
@@ -250,3 +265,5 @@ export class Io extends HTMLElement {
     for (let prop in binding) { delete binding[prop]; }
   }
 }
+
+window.customElements.define('io-div', Io);

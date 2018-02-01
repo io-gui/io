@@ -3,6 +3,7 @@ import {Io} from "../io.js"
 import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 import {IoObject} from "../io-object/io-object.js"
 import {IoInspectorProp} from "./io-inspector-prop.js"
+import {IoInspectorLabel} from "./io-inspector-label.js"
 
 export class IoInspectorGroup extends IoObject {
   static get style() {
@@ -10,8 +11,16 @@ export class IoInspectorGroup extends IoObject {
       <style>
         :host .io-wrapper {
           margin: 2px;
-          border-radius: 0.2em;
+          border-radius: 2px;
           background: #444;
+        }
+        :host .io-row {
+          display: flex;
+          flex-direction: row;
+        }
+        :host io-inspector-prop {
+          flex: 1;
+          display: block;
         }
       </style>
     `;
@@ -22,7 +31,7 @@ export class IoInspectorGroup extends IoObject {
         :host {
           display: flex;
           flex-direction: column;
-          border-radius: 0.2em;
+          border-radius: 2px;
           background: #333;
           margin: 2px;
         }
@@ -45,12 +54,18 @@ export class IoInspectorGroup extends IoObject {
       }
     }
   }
+  _mousedownHandler(event) {
+    console.log(event, this);
+  }
   _update() {
     let propConfigs = this.getPropConfigs(this.props);
-    const Prop = entry => ['io-inspector-prop', {key: entry[0], value: this.value, config: entry[1]}];
+    const Prop = entry => ['div', {className: 'io-row'}, [
+      ['io-inspector-label', {key: entry[0], value: this.value}],
+      ['io-inspector-prop', {key: entry[0], value: this.value, config: entry[1]}]
+    ]];
     this.render([
       this.label === 'main' ? Object.entries(propConfigs).map(Prop) :
-      ['io-collapsable', {label: this.label, expanded: true}, [
+      ['io-collapsable', {label: this.label, expanded: false}, [
         ['div', {className: 'io-wrapper'}, [
           Object.entries(propConfigs).map(Prop)
         ]]

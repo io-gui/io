@@ -21,24 +21,29 @@ export class ThreeApp extends Io {
       :host .row > * {
         margin-right: 1em;
       }
+      :host io-inspector {
+        width: 300px;
+      }
       </style>
     `;
   }
   constructor() {
     super();
+    let mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshDepthMaterial());
     let light = new THREE.Light();
+    mesh.add(light);
     light.color = new THREE.Color(1,0.5,0.2);
     this.render([
       ['div', {className: 'demo'}, [
         ['h3', 'io-inspector'],
         ['div', {className: 'row'}, [
-          ['io-inspector', {value: light}],
+          ['io-inspector', {value: mesh}],
           ['io-object', {value: light, expanded: true}]
         ]]
       ]],
       ['div', {className: 'demo'}, [
         ['h3', 'io-object'],
-        ['io-object', {value: new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshDepthMaterial()) }],
+        ['io-object', {value: mesh }],
         ['io-object', {value: new THREE.WebGLRenderer()}],
         ['io-object', {value: new THREE.Texture()}]
       ]]

@@ -10,12 +10,13 @@ IoObject.CONFIG['Object3D'] = {
   'constructor:Vector3': {tag: 'io-vector'},
   'constructor:Vector4': {tag: 'io-vector'},
   'constructor:Quaternion': {tag: 'io-vector'},
-  'constructor:Matrix2': {tag: 'io-matrix'},
-  'constructor:Matrix3': {tag: 'io-matrix'},
-  'constructor:Matrix4': {tag: 'io-matrix'},
   'constructor:Euler': {tag: 'io-vector'},
   'constructor:Color': {tag: 'io-color'}
 };
+
+IoObject.CONFIG['Matrix2'] = { 'key:elements': {tag: 'io-matrix'} };
+IoObject.CONFIG['Matrix3'] = { 'key:elements': {tag: 'io-matrix'} };
+IoObject.CONFIG['Matrix4'] = { 'key:elements': {tag: 'io-matrix'} };
 
 function setOptionGroups(namespace, className, key, options) {
   let o = []
