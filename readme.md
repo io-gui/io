@@ -4,7 +4,7 @@
 
 io custom elements are designed to help you build complex user interfaces with minimal effort. All elements extend the core `Io` class which enables a simple declarative syntax inspired by [polymer](https://github.com/Polymer/polymer), as well as a powerful and efficient virtual DOM instancer inspired by [dreemgl](https://github.com/dreemproject/dreemgl).
 
-This collection includes some more complex elements such as `io-object` and `io-menu` which demonstrate how to automatically generate complex UI systems from data. With its configurable design, `io-object` can easily be customized to handle any sort of data.
+This collection includes basic editors such as `io-boolean`, `io-string` and `io-number` as well as more complex elements such as `io-object` and `io-menu` which demonstrate io's ability to automatically generate complex UI systems from data. With its configurable design, `io-object` can easily be customized to handle any sort of data.
 
 ### Core Principles ###
 
@@ -22,7 +22,7 @@ Simply clone this repository and run a server which supports ES6 modules. For ex
 
 ### Defining Properties, Listeners and Default Attributes ###
 
-You can configure properties on your element inside the `properties()` getter. Note that `value` is a property configuration while `listeners` and `attributes` are special keywords so don't use them as a property names.
+You can define and configure properties on your element inside the `properties()` getter. Note in the example below that `fruits` is a property while `listeners` and `attributes` are two special keywords reserved for defining default attributes and listeners.
 
 ```javascript
 static get properties() {
@@ -47,7 +47,7 @@ static get properties() {
 
 ### Styling Elements ###
 
-Styling io elements is easy. Simply add CSS in HTML format inside `style()` getter for light DOM and `shadowStyle()` getter for Shadow DOM. Note that the selectors of `style()` have to be prefixed with `:host` in order to prevent style leakage to your entire document.
+Styling io elements is easy. Simply add CSS in HTML format inside `style()` getter for light DOM and `shadowStyle()` getter for Shadow DOM. Note that the selectors of `style()` have to be prefixed with `:host` in order to prevent style leakage.
 
 ```javascript
 static get shadowStyle() {
@@ -72,7 +72,7 @@ static get style() {
 
 ### Rendering DOM and Shadow DOM ###
 
-Use `Io.render()` method like described below to render virtual DOM which will automatically get translated to real DOM elements by `Io.traverse()`:
+Use `Io.render()` method like described below to render virtual DOM which will automatically get translated into real DOM:
 
 ```javascript
 let elements = ['apple', 'banana', 'avocado'];
@@ -98,7 +98,7 @@ The output from code above after it's converted to HTML DOM:
 </div>
 ```
 
-Note that the second argument of `Io.render()` function is render target. You can use it to render into a specific element or into Shadow DOM like in the example below:
+Note that the second argument of `Io.render()` is render target. You can use it to render into a specific element or into Shadow DOM:
 
 ```javascript
 this.render([
