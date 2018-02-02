@@ -3,44 +3,43 @@ import {html} from "../io/ioutil.js"
 import {IoBoolean} from "../io/io-value/io-boolean.js"
 import {IoNumber} from "../io/io-value/io-number.js"
 import {IoObject} from "../io/io-object/io-object.js"
-import {IoInspector} from "../io/io-inspector/io-inspector.js"
 import {IoOption} from "../io/io-option/io-option.js"
 
 export class IoApp extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
       :host {
         font-family: "Lucida Grande", sans-serif;
       }
-      div > io-string,
-      div > io-option,
-      div > io-boolean,
-      div > io-number,
-      div > io-object {
+      :host div > io-string,
+      :host div > io-option,
+      :host div > io-boolean,
+      :host div > io-number,
+      :host div > io-object {
         border: 1px solid #eee;
         vertical-align: top;
         margin: 0.25em;
       }
-      div.row {
+      :host div.row {
         display: flex;
         flex-direction: row;
       }
-      div.header, span.rowlabel {
+      :host div.header, span.rowlabel {
         color: rgba(128, 122, 255, 0.75);
       }
-      span.rowlabel {
+      :host span.rowlabel {
         text-align: right;
         padding-right: 0.2em;;
       }
-      div.row > *  {
+      :host div.row > *  {
         flex: 1;
         margin: 2px;
       }
-      div.area {
+      :host div.area {
         background: rgba(128,128,128,0.2);
       }
-      .narrow {
+      :host .narrow {
         width: 22em;
       }
       </style>
@@ -162,7 +161,7 @@ export class IoApp extends Io {
         ['io-object', {value: this.values, expanded: true, labeled: true}],
         ['io-object', {value: this.values, expanded: true, labeled: true}]
       ]]
-    ], this.shadowRoot);
+    ]);
   }
 }
 

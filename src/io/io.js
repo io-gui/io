@@ -210,6 +210,9 @@ export class Io extends HTMLElement {
               element.addEventListener(l, element.__listeners[l]);
             }
           }
+        } else if (prop == 'className') {
+          // TODO: ugh
+          element.className = vChildren[i].props[prop];
         }
       }
 
@@ -242,6 +245,11 @@ export class Io extends HTMLElement {
       bubbles: false,
       composed: true
     }));
+  }
+  _preventHandler(event) {
+    if (event.path[0] === this) {
+      event.preventDefault();
+    }
   }
   bind(sourceProp, target, targetProp, oneWay) {
     this.__properties[sourceProp].notify = true;

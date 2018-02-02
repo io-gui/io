@@ -4,7 +4,6 @@ import {IoObject} from "../io/io-object/io-object.js"
 import {IoInspector} from "../io/io-inspector/io-inspector.js"
 
 import "./three-config.js"
-
 import * as THREE from "../../lib/three.module.js"
 
 export class ThreeApp extends Io {
@@ -29,7 +28,7 @@ export class ThreeApp extends Io {
   }
   constructor() {
     super();
-    let mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshDepthMaterial());
+    let mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshBasicMaterial({color: 0xffffff}));
     let light = new THREE.Light();
     mesh.add(light);
     light.color = new THREE.Color(1,0.5,0.2);

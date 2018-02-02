@@ -2,8 +2,8 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 import {IoObject} from "../io-object/io-object.js"
-import {IoInspectorProp} from "./io-inspector-prop.js"
-import {IoInspectorLabel} from "./io-inspector-label.js"
+import {IoObjectProp} from "../io-object/io-object-prop.js"
+import {IoObjectLabel} from "../io-object/io-object-label.js"
 
 export class IoInspectorGroup extends IoObject {
   static get style() {
@@ -18,9 +18,31 @@ export class IoInspectorGroup extends IoObject {
           display: flex;
           flex-direction: row;
         }
-        :host io-inspector-prop {
+        :host .io-wrapper >.io-row > io-object-label.io-link {
+          cursor: pointer;
+          color: #fc8;
+        }
+        :host .io-wrapper > .io-row > io-object-label {
+          width: 8em;
+          min-width: 8em;
+          text-align: right;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        :host .io-wrapper >.io-row > io-object-prop {
           flex: 1;
           display: block;
+        }
+        :host io-boolean {
+          color: #9c8;
+        }
+        :host io-string,
+        :host io-number {
+          display: block;
+          color: #bef;
+          background: #555;
+          border-radius: 2px;
+          margin: 1px;
         }
       </style>
     `;
@@ -55,16 +77,25 @@ export class IoInspectorGroup extends IoObject {
     }
   }
   _mousedownHandler(event) {
-    console.log(event, this);
+    this.dispatchEvent(new CustomEvent('io-link-clicked', {
+      detail: {key: event.path[0].key},
+      bubbles: true,
+      composed: true
+    }));
   }
   _update() {
     let propConfigs = this.getPropConfigs(this.props);
     const Prop = entry => ['div', {className: 'io-row'}, [
-      ['io-inspector-label', {key: entry[0], value: this.value}],
-      ['io-inspector-prop', {key: entry[0], value: this.value, config: entry[1]}]
+      ['io-object-label', {key: entry[0],
+          className: typeof this.value[entry[0]] === 'object' ? 'io-link' : '',
+          listeners: {'mousedown': this._mousedownHandler}
+      }],
+      entry[1].tag !== 'io-object' ? ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}] : null
     ]];
     this.render([
-      this.label === 'main' ? Object.entries(propConfigs).map(Prop) :
+      this.label === 'main' ? ['div', {className: 'io-wrapper'}, [
+        Object.entries(propConfigs).map(Prop)
+      ]] :
       ['io-collapsable', {label: this.label, expanded: false}, [
         ['div', {className: 'io-wrapper'}, [
           Object.entries(propConfigs).map(Prop)

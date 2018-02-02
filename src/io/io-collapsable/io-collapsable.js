@@ -27,15 +27,15 @@ export class IoCollapsable extends Io {
         observer: '_update'
       },
       listeners: {
-        'mousedown': '_toggleHandler',
+        'mousedown': '_preventHandler',
+        'click': '_toggleHandler',
         'keydown': '_toggleHandler'
       }
     }
   }
   _toggleHandler(event) {
     if (event.path[0] !== this.shadowRoot.querySelector('.io-label')) return;
-    if (event.which == 13 || event.which == 32 || event.type == 'mousedown') {
-      event.preventDefault();
+    if (event.which == 13 || event.which == 32 || event.type == 'click') {
       this.expanded = !this.expanded;
     }
   }

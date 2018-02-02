@@ -1,11 +1,14 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+
 import {IoBoolean} from "../io-value/io-boolean.js"
 import {IoNumber} from "../io-value/io-number.js"
 import {IoString} from "../io-value/io-string.js"
 import {IoFunction} from "../io-function/io-function.js"
-import {IoObjectConstructor} from "./io-object-constructor.js"
-import {IoObjectProperty} from "./io-object-prop.js"
+
+import {IoObjectLabel} from "./io-object-label.js"
+import {IoObjectProp} from "./io-object-prop.js"
+import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 
 export class IoObject extends Io {
   static get shadowStyle() {
@@ -13,10 +16,21 @@ export class IoObject extends Io {
       <style>
         :host {
           display: inline-block;
-          position: relative;
         }
-        ::slotted(io-object-prop) {
-          margin-left: 1em;
+      </style>
+    `;
+  }
+  static get style() {
+    return html`
+      <style>
+        :host .io-wrapper {
+          margin: 2px;
+          border-radius: 2px;
+          background: #444;
+        }
+        :host .io-row {
+          display: flex;
+          flex-direction: row;
         }
       </style>
     `;
@@ -31,9 +45,6 @@ export class IoObject extends Io {
         type: Boolean,
         observer: '_update',
         reflectToAttribute: true
-      },
-      label: {
-        type: String
       }
     }
   }
@@ -74,11 +85,18 @@ export class IoObject extends Io {
   }
   _update() {
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
-    const Prop = entry => ['io-object-prop', {key: entry[0], value: this.value, labeled: entry[1].tag !== 'io-object', config: entry[1] }];
+    const Prop = entry => ['div', {className: 'io-row'}, [
+      ['io-object-label', {key: entry[0]}],
+      ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
+    ]];
+    let label = this.value.constructor.name || 'Object';
     this.render([
-      ['io-object-constructor', {value: this.value, expanded: this.expanded, label: this.label}],
-      this.expanded ? Object.entries(propConfigs).map(Prop) : null
+      ['io-collapsable', {label: label, expanded: this.expanded}, [
+        this.expanded ? Object.entries(propConfigs).map(Prop) : null
+      ]]
     ]);
+    // TODO: declarative binding
+    this.bind('expanded', this.querySelector('io-collapsable'), 'expanded');
   }
 }
 

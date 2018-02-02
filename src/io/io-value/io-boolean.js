@@ -32,7 +32,8 @@ export class IoBoolean extends Io {
         type: String
       },
       listeners: {
-        'mousedown': '_toggleHandler',
+        'mousedown': '_preventHandler',
+        'click': '_toggleHandler',
         'keydown': '_toggleHandler'
       },
       attributes: {
@@ -41,7 +42,7 @@ export class IoBoolean extends Io {
     }
   }
   _toggleHandler(event) {
-    if (event.which == 13 || event.which == 32 || event.type == 'mousedown') {
+    if (event.which == 13 || event.which == 32 || event.type == 'click') {
       event.preventDefault();
       this._setValue(!this.value);
     }

@@ -1,13 +1,12 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
-export class IoObjectProperty extends Io {
+export class IoObjectProp extends Io {
   static get shadowStyle() {
     return html`
       <style>
         :host {
-          display: flex;
-          flex-direction: row;
+          display: inline-block;
         }
         ::slotted(io-number) {
           color: rgb(28, 0, 207);
@@ -19,11 +18,7 @@ export class IoObjectProperty extends Io {
           color: rgb(170, 13, 145);
         }
         ::slotted(io-option) {
-          background: rgba(64,64,128,0.1);
-        }
-        ::slotted(.io-label):after {
-          content: ":";
-          padding-right: 0.25em;
+          color: rgb(12,125,5);
         }
       </style>
     `;
@@ -37,9 +32,6 @@ export class IoObjectProperty extends Io {
       key: {
         type: String,
         observer: '_update'
-      },
-      labeled: {
-        type: Boolean
       },
       config: {
         type: Array,
@@ -72,10 +64,13 @@ export class IoObjectProperty extends Io {
   }
   _update() {
     this.render([
-      this.labeled ? ['span', {className: 'io-label'}, this.key] : null,
-      [this.config.tag, Object.assign({value: this.value[this.key], label: this.key, listeners: {'value-set': this._valueSetHandler}}, this.config.props) ]
+      [this.config.tag, Object.assign({
+          value: this.value[this.key],
+          label: this.key,
+          listeners: {'value-set': this._valueSetHandler}},
+          this.config.props)]
     ]);
   }
 }
 
-window.customElements.define('io-object-prop', IoObjectProperty);
+window.customElements.define('io-object-prop', IoObjectProp);

@@ -6,13 +6,18 @@ import {IoMatrix} from "../io/io-vector/io-matrix.js"
 import {IoColor} from "../io/io-vector/io-color.js"
 
 IoObject.CONFIG['Object3D'] = {
+};
+
+IoObject.CONFIG['Object'] = Object.assign({
   'constructor:Vector2': {tag: 'io-vector'},
   'constructor:Vector3': {tag: 'io-vector'},
   'constructor:Vector4': {tag: 'io-vector'},
   'constructor:Quaternion': {tag: 'io-vector'},
   'constructor:Euler': {tag: 'io-vector'},
   'constructor:Color': {tag: 'io-color'}
-};
+}, IoObject.CONFIG['Object']);
+
+console.log(IoObject.CONFIG['Object'])
 
 IoObject.CONFIG['Matrix2'] = { 'key:elements': {tag: 'io-matrix'} };
 IoObject.CONFIG['Matrix3'] = { 'key:elements': {tag: 'io-matrix'} };

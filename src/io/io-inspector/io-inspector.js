@@ -13,7 +13,6 @@ export class IoInspector extends Io {
           color: #ccc;
           border-radius: 4px;
           padding: 2px;
-          font-size: 0.75rem;
           font-weight: lighter;
         }
         ::slotted(h4) {

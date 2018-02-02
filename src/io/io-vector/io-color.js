@@ -1,5 +1,5 @@
 import {IoVector} from "./io-vector.js"
-import {IoObjectProperty} from "../io-object/io-object-prop.js"
+import {IoObjectProp} from "../io-object/io-object-prop.js"
 
 export class IoColor extends IoVector {
   connectedCallback() {
