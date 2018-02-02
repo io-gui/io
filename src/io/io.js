@@ -65,9 +65,18 @@ export class Io extends HTMLElement {
     Object.defineProperty(this, '__attributes', { value: definedProperties.attributes });
     Object.defineProperty(this, '__listeners', { value: definedProperties.listeners });
     Object.defineProperty(this, '__handlers', { value: this.__proto__.constructor.definedHandlers });
+    Object.defineProperty(this, '__bindings', { value: {} });
 
     for (let key in this.__properties) {
-      if (props[key] !== undefined) this.__properties[key].value = props[key];
+      if (props[key] instanceof Binding) {
+        let binding = props[key];
+        this.__properties[key].value = binding.source[binding.sourceProp];
+        binding.target = this;
+        // TODO: test and unbind
+        binding.bind();
+      } else if (props[key] !== undefined) {
+        this.__properties[key].value = props[key];
+      }
       this.defineProperty(key, this.__properties[key]);
       this.reflectAttribute(key, this.__properties[key]);
     }
@@ -168,6 +177,14 @@ export class Io extends HTMLElement {
 
         for (let prop in vChildren[i].props) {
           if (vChildren[i].props[prop] !== element[prop]) {
+
+            if (vChildren[i].props[prop] instanceof Binding) {
+              let binding = vChildren[i].props[prop];
+              vChildren[i].props[prop] = binding.source[binding.sourceProp];
+              binding.target = element;
+              binding.bind();
+            }
+
             // avoid triggering observers prematurely when re-rendering elements with different props.
             if (element.__properties && element.__properties.hasOwnProperty(prop)) {
               element.__properties[prop].value = vChildren[i].props[prop];
@@ -180,6 +197,7 @@ export class Io extends HTMLElement {
             }
           }
         }
+
         // triggering observers
         for (var j = 0; j < observers.length; j++) {
           element[observers[j]]();
@@ -247,31 +265,57 @@ export class Io extends HTMLElement {
     }));
   }
   _preventHandler(event) {
-    if (event.path[0] === this) {
-      event.preventDefault();
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  bind(sourceProp, target, targetProp) {
+    sourceProp = arguments[0];
+    target = arguments[1] instanceof Io ? arguments[1] : undefined;
+    targetProp = arguments[1] instanceof String ? arguments[1] : arguments[2] instanceof String ? arguments[2] : arguments[0];
+    this.unbind(sourceProp);
+    this.__bindings[sourceProp] = new Binding(this, target, sourceProp, targetProp);
+    return this.__bindings[sourceProp];
+  }
+  unbind(sourceProp) {
+    if (this.__bindings[sourceProp]) this.__bindings[sourceProp].unbind();
+    delete this.__bindings[sourceProp];
+  }
+  unbindAll() {
+    for (var prop in this.__bindings) {
+      this.__bindings[prop].unbind();
+      delete this.__bindings[prop]
     }
-  }
-  bind(sourceProp, target, targetProp, oneWay) {
-    this.__properties[sourceProp].notify = true;
-    if (!oneWay) target.__properties[targetProp].notify = true;
-    var binding = {
-      source: this,
-      target: target,
-      sourceProp: sourceProp,
-      targetProp: targetProp,
-      setTarget: function (event) { target[targetProp] = event.detail.value; }.bind(target),
-      setSource: function (event) { this[sourceProp] = event.detail.value; }.bind(this)
-    };
-    binding.source.addEventListener(sourceProp + '-changed', binding.setTarget);
-    if (!oneWay) binding.target.addEventListener(targetProp + '-changed', binding.setSource);
-    binding.target[targetProp] = binding.source[sourceProp];
-    return binding;
-  }
-  unbind(binding) {
-    binding.source.removeEventListener(binding.sourceProp + '-changed', binding.setTarget);
-    binding.target.removeEventListener(binding.targetProp + '-changed', binding.setSource);
-    for (let prop in binding) { delete binding[prop]; }
   }
 }
 
-window.customElements.define('io-div', Io);
+class Binding {
+  constructor(source, target, sourceProp, targetProp) {
+    this.source = source;
+    this.target = target;
+    this.sourceProp = sourceProp;
+    this.targetProp = targetProp;
+    this.setTarget = this.setTarget.bind(this);
+    this.setSource = this.setSource.bind(this);
+    this.bind();
+  }
+  setTarget(event) {
+    this.target[this.targetProp] = event.detail.value;
+  }
+  setSource(event) {
+    this.source[this.sourceProp] = event.detail.value;
+  }
+  bind() {
+    if (this.source && this.target) {
+      this.source.__properties[this.sourceProp].notify = true;
+      this.target.__properties[this.targetProp].notify = true;
+      this.source.addEventListener(this.sourceProp + '-changed', this.setTarget);
+      this.target.addEventListener(this.targetProp + '-changed', this.setSource);
+      this.target[this.targetProp] = this.source[this.sourceProp];
+    }
+    return this;
+  }
+  unbind() {
+    this.source.removeEventListener(this.sourceProp + '-changed', this.setTarget);
+    this.target.removeEventListener(this.targetProp + '-changed', this.setSource);
+  }
+}

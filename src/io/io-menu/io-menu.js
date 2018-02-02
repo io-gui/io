@@ -7,16 +7,14 @@ export class IoMenu extends Io {
   static get properties() {
     return {
       options: {
-        type: Array,
-        observer: '_update'
+        type: Array
       },
       expanded: {
         type: Boolean
       },
       position: {
         value: 'top',
-        type: String,
-        observer: '_update'
+        type: String
       },
       listener: {
         type: String,
@@ -24,20 +22,25 @@ export class IoMenu extends Io {
       }
     }
   }
+  constructor(props) {
+    super(props);
+    this.$group = new IoMenuGroup({
+      $parent: this,
+      position: this.bind('position'),
+      options: this.bind('options'),
+      expanded: this.bind('expanded')
+    });
+  }
   connectedCallback() {
-    // TODO: render
-    // TODO: super?
-    this.$group = new IoMenuGroup({$parent: this, position: this.position, options: this.options});
+    super.connectedCallback();
     this.$parent = this.parentElement || this.parentNode.host;
     this.$parent.addEventListener(this.listener, this._expandHandler);
     IoMenuLayer.singleton.appendChild(this.$group);
-    this._binding = this.bind('expanded', this.$group, 'expanded');
   }
   disconnectedCallback() {
-    // TODO: super?
+    super.disconnectedCallback();
     this.$parent.removeEventListener(this.listener, this._expandHandler);
     IoMenuLayer.singleton.removeChild(this.$group);
-    this.unbind(this._binding);
   }
   getBoundingClientRect() {
     if (this.$parent) return this.$parent.getBoundingClientRect();
@@ -48,10 +51,6 @@ export class IoMenu extends Io {
     IoMenuLayer.singleton.pointer.x = event.clientX;
     IoMenuLayer.singleton.pointer.y = event.clientY;
     this.expanded = true;
-  }
-  _update() {
-    this.$group.options = this.options;
-    this.$group.position = this.position;
   }
 }
 

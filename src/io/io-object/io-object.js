@@ -85,18 +85,16 @@ export class IoObject extends Io {
   }
   _update() {
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
+    let label = this.value.constructor.name;
     const Prop = entry => ['div', {className: 'io-row'}, [
       ['io-object-label', {key: entry[0]}],
       ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
     ]];
-    let label = this.value.constructor.name || 'Object';
     this.render([
-      ['io-collapsable', {label: label, expanded: this.expanded}, [
+      ['io-collapsable', {label: label, expanded: this.bind('expanded')}, [
         this.expanded ? Object.entries(propConfigs).map(Prop) : null
       ]]
     ]);
-    // TODO: declarative binding
-    this.bind('expanded', this.querySelector('io-collapsable'), 'expanded');
   }
 }
 

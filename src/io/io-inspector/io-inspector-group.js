@@ -87,10 +87,12 @@ export class IoInspectorGroup extends IoObject {
     let propConfigs = this.getPropConfigs(this.props);
     const Prop = entry => ['div', {className: 'io-row'}, [
       ['io-object-label', {key: entry[0],
-          className: typeof this.value[entry[0]] === 'object' ? 'io-link' : '',
+          className: this.value[entry[0]] instanceof Object ? 'io-link' : '',
           listeners: {'mousedown': this._mousedownHandler}
       }],
-      entry[1].tag !== 'io-object' ? ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}] : null
+      entry[1].tag !== 'io-object' ?
+          ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}] :
+          ['span', this.value[entry[0]].constructor.name]
     ]];
     this.render([
       this.label === 'main' ? ['div', {className: 'io-wrapper'}, [

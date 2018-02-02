@@ -1,5 +1,6 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {IoInspectorBreadcrumbs} from "./io-inspector-breadcrumbs.js"
 import {IoInspectorGroup} from "./io-inspector-group.js"
 import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 
@@ -39,8 +40,9 @@ export class IoInspector extends Io {
   }
   _linkClickedHandler(event) {
     event.stopPropagation();
-    // TODO: implement default object and selecting.
-    this.value = this.value[event.detail.key];
+    if (this.value[event.detail.key] instanceof Object) {
+      this.value = this.value[event.detail.key];
+    }
   }
   _update() {
     let groups = {};
@@ -48,7 +50,7 @@ export class IoInspector extends Io {
     let proto = this.value.__proto__;
     let keys = Object.keys(this.value);
     while (proto) {
-      let config = IoInspector.GROUPS[proto.constructor.name] || {};
+      let config = IoInspector.CONFIG[proto.constructor.name] || {};
       for (let group in config) {
         groups[group] = groups[group] || [];
         for (let i = 0; i < config[group].length; i++) {
@@ -65,6 +67,7 @@ export class IoInspector extends Io {
     for (let group in groups) {
       if (groups[group].length === 0) delete groups[group];
     }
+    delete groups.hidden;
 
     if (assigned.length === 0) {
       groups.main = keys;
@@ -78,33 +81,13 @@ export class IoInspector extends Io {
     }
     const GroupItem = entry => ['io-inspector-group', {value: this.value, props: entry[1], label: entry[0]}];
     this.render([
-      ['h4', this.value.__proto__.constructor.name],
+      ['io-inspector-breadcrumbs', {value: this.value}],
       Object.entries(groups).map(GroupItem)
     ]);
 
   }
 }
 
-IoInspector.GROUPS = {
-  'Object': {
-    'advanced': ['uuid'],
-    'hidden': ['type']
-  },
-  'Array' : {},
-  'Object3D' : {
-    'main': ['name', 'geometry', 'material', 'parent', 'children'],
-    'transform': ['position', 'rotation', 'scale'],
-    'rendering': ['drawMode', 'layers', 'visible', 'castShadow', 'receiveShadow', 'frustumCulled', 'renderOrder'],
-    'advanced': ['userData', 'up', 'quaternion', 'matrix', 'matrixWorld', 'matrixAutoUpdate', 'matrixWorldNeedsUpdate']
-  },
-  'Material' : {
-    'main': ['opacity', 'side', 'transparent', 'depthTest', 'depthWrite', 'depthFunc', 'wireframe'],
-    'rendering': ['dithering', 'flatShading'],
-    'advanced': ['skinning']
-  },
-  'Light' : {
-    'main': ['intensity', 'color']
-  }
-};
+IoInspector.CONFIG = {};
 
 window.customElements.define('io-inspector', IoInspector);

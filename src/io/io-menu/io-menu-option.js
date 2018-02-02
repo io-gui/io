@@ -55,7 +55,7 @@ export class IoMenuOption extends Io {
     this.render([
       this.option.options ? ['io-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
       this.option.icon ? ['span', {className: 'io-icon'}, this.option.icon] : null,
-      this.option.label ? ['span', {className: 'io-label'}, this.option.label] : null,
+      this.option.label ? ['span', {className: 'io-label'}, this.option.label] : ['span', {className: 'io-label'}],
       this.option.hint ? ['span', {className: 'io-hint'}, this.option.hint] : null,
       this.option.options ? ['span', {className: 'io-more'}, '▸'] : null,
     ]);

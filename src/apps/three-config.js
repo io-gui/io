@@ -4,9 +4,28 @@ import {IoOption} from "../io/io-option/io-option.js"
 import {IoVector} from "../io/io-vector/io-vector.js"
 import {IoMatrix} from "../io/io-vector/io-matrix.js"
 import {IoColor} from "../io/io-vector/io-color.js"
+import {IoInspector} from "../io/io-inspector/io-inspector.js"
 
-IoObject.CONFIG['Object3D'] = {
-};
+IoInspector.CONFIG = Object.assign({
+  'Object': {
+    'advanced': ['uuid'],
+    'hidden': ['type']
+  },
+  'Object3D' : {
+    'main': ['name', 'geometry', 'material', 'parent', 'children'],
+    'transform': ['position', 'rotation', 'scale'],
+    'rendering': ['drawMode', 'layers', 'visible', 'castShadow', 'receiveShadow', 'frustumCulled', 'renderOrder'],
+    'advanced': ['userData', 'up', 'quaternion', 'matrix', 'matrixWorld', 'matrixAutoUpdate', 'matrixWorldNeedsUpdate']
+  },
+  'Material' : {
+    'main': ['opacity', 'side', 'transparent', 'depthTest', 'depthWrite', 'depthFunc', 'wireframe'],
+    'rendering': ['dithering', 'flatShading'],
+    'advanced': ['skinning']
+  },
+  'Light' : {
+    'main': ['intensity', 'color']
+  }
+}, IoInspector.CONFIG);
 
 IoObject.CONFIG['Object'] = Object.assign({
   'constructor:Vector2': {tag: 'io-vector'},
@@ -16,8 +35,6 @@ IoObject.CONFIG['Object'] = Object.assign({
   'constructor:Euler': {tag: 'io-vector'},
   'constructor:Color': {tag: 'io-color'}
 }, IoObject.CONFIG['Object']);
-
-console.log(IoObject.CONFIG['Object'])
 
 IoObject.CONFIG['Matrix2'] = { 'key:elements': {tag: 'io-matrix'} };
 IoObject.CONFIG['Matrix3'] = { 'key:elements': {tag: 'io-matrix'} };

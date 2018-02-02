@@ -56,15 +56,17 @@ export class IoOption extends Io {
     menu.removeEventListener('io-menu-option-clicked', this._menuHandler);
   }
   _update() {
+    let label = this.value;
+    if (label instanceof Object) label = label.__proto__.constructor.name
     if (this.options) {
       for (var i = 0; i < this.options.length; i++) {
         if (this.options[i].value == this.value) {
-          this.innerText = this.options[i].label || this.options[i].value;
-          return;
+          label = this.options[i].label || label;
+          break;
         }
       }
     }
-    this.innerText = this.value;
+    this.innerText = label;
   }
 }
 

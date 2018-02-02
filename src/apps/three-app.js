@@ -6,6 +6,13 @@ import {IoInspector} from "../io/io-inspector/io-inspector.js"
 import "./three-config.js"
 import * as THREE from "../../lib/three.module.js"
 
+let mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshBasicMaterial({color: 0xffffff}));
+let color = new THREE.Color(1,0.5,0.2);
+let light = new THREE.Light({color: color});
+let renderer = new THREE.WebGLRenderer();
+let texture = new THREE.Texture();
+mesh.add(light);
+
 export class ThreeApp extends Io {
   static get style() {
     return html`
@@ -26,25 +33,34 @@ export class ThreeApp extends Io {
       </style>
     `;
   }
-  constructor() {
-    super();
-    let mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshBasicMaterial({color: 0xffffff}));
-    let light = new THREE.Light();
-    mesh.add(light);
-    light.color = new THREE.Color(1,0.5,0.2);
+  static get properties() {
+    return {
+      value: {
+        value: mesh,
+        observer: '_update'
+      }
+    }
+  }
+  _valueChangedHandler(event) {
+    this.value = event.detail.value;
+  }
+  _update() {
     this.render([
       ['div', {className: 'demo'}, [
-        ['h3', 'io-inspector'],
+        ['div', [
+          ['span', 'io-inspector: '],
+          ['io-option', {value: this.bind('value'), options: [
+            {value: light, label: 'Light'},
+            {value: mesh, label: 'Mesh'},
+            {value: color, label: 'Color'},
+            {value: renderer, label: 'Renderer'},
+            {value: texture, label: 'Texture'}
+          ]}]
+        ]],
         ['div', {className: 'row'}, [
-          ['io-inspector', {value: mesh}],
-          ['io-object', {value: light, expanded: true}]
+          ['io-inspector', {value: this.value}],
+          ['io-object', {value: this.value, expanded: true}]
         ]]
-      ]],
-      ['div', {className: 'demo'}, [
-        ['h3', 'io-object'],
-        ['io-object', {value: mesh }],
-        ['io-object', {value: new THREE.WebGLRenderer()}],
-        ['io-object', {value: new THREE.Texture()}]
       ]]
     ]);
   }
