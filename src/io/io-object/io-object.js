@@ -6,7 +6,6 @@ import {IoNumber} from "../io-value/io-number.js"
 import {IoString} from "../io-value/io-string.js"
 import {IoFunction} from "../io-function/io-function.js"
 
-import {IoObjectLabel} from "./io-object-label.js"
 import {IoObjectProp} from "./io-object-prop.js"
 import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
 
@@ -87,7 +86,7 @@ export class IoObject extends Io {
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
     let label = this.value.constructor.name;
     const Prop = entry => ['div', {className: 'io-row'}, [
-      ['io-object-label', {key: entry[0]}],
+      ['span', entry[0] + ':'],
       ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
     ]];
     this.render([

@@ -25,8 +25,7 @@ export class IoOption extends Io {
         observer: '_update'
       },
       listeners: {
-        'focus': '_focusHandler',
-        'mousedown': '_expandHandler',
+        'click': '_expandHandler',
         'keydown': '_expandHandler'
       },
       attributes: {
@@ -35,11 +34,12 @@ export class IoOption extends Io {
     }
   }
   _expandHandler(event) {
-    if (event.which == 13 || event.which == 32 || event.type == 'mousedown') {
+    if (event.which == 13 || event.which == 32 || event.type == 'click') {
       event.preventDefault();
       this.appendChild(menu);
       menu.options = this.options;
       menu.expanded = true;
+      if (menu.$group.$options[0]) menu.$group.$options[0].focus();
       if (menu._listerer) {
         menu.removeEventListener('io-menu-option-clicked', menu._listerer);
         delete menu._listener;
@@ -66,7 +66,7 @@ export class IoOption extends Io {
         }
       }
     }
-    this.innerText = label;
+    this.innerText = label + ' ⊻';
   }
 }
 

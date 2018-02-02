@@ -32,9 +32,9 @@ export class IoBoolean extends Io {
         type: String
       },
       listeners: {
-        'mousedown': '_preventHandler',
-        'click': '_toggleHandler',
-        'keydown': '_toggleHandler'
+        'mouseup': '_toggleHandler',
+        'keyup': '_toggleHandler',
+        'mousedown': '_preventHandler'
       },
       attributes: {
         'tabindex': 0
@@ -42,10 +42,13 @@ export class IoBoolean extends Io {
     }
   }
   _toggleHandler(event) {
-    if (event.which == 13 || event.which == 32 || event.type == 'click') {
+    if (event.which == 13 || event.which == 32 || event.type == 'mouseup') {
       event.preventDefault();
       this._setValue(!this.value);
     }
+  }
+  _preventHandler(event) {
+    event.preventDefault();
   }
   _update() {
     this.classList.toggle('invalid', typeof this.value !== 'boolean');

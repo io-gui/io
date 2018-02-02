@@ -36,8 +36,7 @@ export class IoMenuOption extends Io {
   static get properties() {
     return {
       option: {
-        type: Object,
-        // observer: '_optionChanged';
+        type: Object
       },
       $parent: {
         type: HTMLElement
@@ -45,7 +44,7 @@ export class IoMenuOption extends Io {
       listeners: {
         'focus': '_focusHandler',
         'click': '_clickHandler',
-        'keydown': '_keydownHandler'
+        'keydown': '_keyupHandler'
       }
     }
   }
@@ -92,15 +91,13 @@ export class IoMenuOption extends Io {
       composed: true
     }));
   }
-  _keydownHandler(event) {
+  _keyupHandler(event) {
     var siblings = this.$parent.$options;
-
     var index = siblings.indexOf(this);
 
     // TODO: handle search.
     // TODO: handle previous focus.
     // TODO: handle tabbed focus marching.
-
     if (event.which == 13) {
       event.preventDefault();
       this._clickHandler(event); // TODO: test
@@ -135,7 +132,7 @@ export class IoMenuOption extends Io {
 
     } else if (event.which == 27) { // ESC
       event.preventDefault();
-      this.fire('io-menu-option', this);
+      IoMenuLayer.singleton.collapseAll();
     }
   }
 }

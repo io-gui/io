@@ -18,7 +18,7 @@ export class IoObjectProp extends Io {
           color: rgb(170, 13, 145);
         }
         ::slotted(io-option) {
-          color: rgb(12,125,5);
+          color: rgb(32,135,0);
         }
       </style>
     `;
@@ -32,6 +32,10 @@ export class IoObjectProp extends Io {
       key: {
         type: String,
         observer: '_update'
+      },
+      tag: {
+        type: String,
+        reflectToAttribute: true
       },
       config: {
         type: Array,
@@ -63,6 +67,7 @@ export class IoObjectProp extends Io {
     }
   }
   _update() {
+    this.tag = this.config.tag;
     this.render([
       [this.config.tag, Object.assign({
           value: this.value[this.key],

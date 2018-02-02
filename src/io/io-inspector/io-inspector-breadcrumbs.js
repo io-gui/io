@@ -10,8 +10,47 @@ export class IoInspectorBreadcrumbs extends Io {
   static get shadowStyle() {
     return html`
       <style>
-        ::slotted(span):after {
-          content: ' / '
+        :host {
+          display: flex;
+          flex-direction: row;
+          font-weight: bold;
+          font-size: 1.1em;
+          margin: 0.2em;
+          border-radius: 0.1em;
+        }
+      </style>
+    `;
+  }
+  static get style() {
+    return html`
+      <style>
+        :host .io-back-button {
+          background: #333;
+          border-radius: 0.2em;
+          padding: 0.2em 0.4em;
+          margin-left: 0.2em;
+          cursor: pointer;
+          white-space: nowrap;
+        }
+        :host .io-flex {
+          flex: 1;
+          display: flex;
+          overflow: hidden;
+        }
+        :host .io-breadcrumb {
+          padding: 0.2em 0;
+          margin: 0 0.2em;
+          cursor: pointer;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        :host .io-breadcrumb:last-of-type {
+          overflow: visible;
+          text-overflow: clip;
+        }
+        :host .io-breadcrumb:before {
+          content: '/';
+          margin-right: 0.2em;
         }
       </style>
     `;
@@ -36,10 +75,13 @@ export class IoInspectorBreadcrumbs extends Io {
     } else if (this.path.indexOf(this.value) === -1) {
       this.path = [this.value];
     }
-    const Prop = (elem, i) => ['span', this.path[i].__proto__.constructor.name];
+    const Prop = (elem, i) => ['div', {className: 'io-breadcrumb'}, this.path[i].__proto__.constructor.name];
     this.render([
-      this.path.map(Prop),
-      ['span', '<']
+      ['div', {className: 'io-flex'}, [
+        this.path.map(Prop),
+      ]],
+      // this.path.length > 1 ? ['div', {className: 'io-back-button'}, '< Back'] : null
+      ['div', {className: 'io-back-button'}, '< Back']
     ]);
   }
 }

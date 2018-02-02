@@ -10,14 +10,10 @@ export class IoInspector extends Io {
       <style>
         :host {
           display: block;
-          background: #282828;
+          background: #444;
           color: #ccc;
-          border-radius: 4px;
-          padding: 2px;
-          font-weight: lighter;
-        }
-        ::slotted(h4) {
-          margin: 2px;
+          padding: 0.1em;
+          border-radius: 0.2em;
         }
       </style>
     `;

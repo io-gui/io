@@ -27,14 +27,15 @@ IoInspector.CONFIG = Object.assign({
   }
 }, IoInspector.CONFIG);
 
-IoObject.CONFIG['Object'] = Object.assign({
+IoObject.CONFIG['Object'] = Object.assign(IoObject.CONFIG['Object'], {
+  'type:boolean': {tag: 'io-boolean', props: {true: '☑', false: '☐'}},
   'constructor:Vector2': {tag: 'io-vector'},
   'constructor:Vector3': {tag: 'io-vector'},
   'constructor:Vector4': {tag: 'io-vector'},
   'constructor:Quaternion': {tag: 'io-vector'},
   'constructor:Euler': {tag: 'io-vector'},
   'constructor:Color': {tag: 'io-color'}
-}, IoObject.CONFIG['Object']);
+});
 
 IoObject.CONFIG['Matrix2'] = { 'key:elements': {tag: 'io-matrix'} };
 IoObject.CONFIG['Matrix3'] = { 'key:elements': {tag: 'io-matrix'} };

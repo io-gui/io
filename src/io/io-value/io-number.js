@@ -39,14 +39,12 @@ export class IoNumber extends Io {
           font-size: inherit;
           font-style: inherit;
           font-family: inherit;
+          -moz-appearance: textfield;
         }
         input::-webkit-inner-spin-button,
         input::-webkit-outer-spin-button {
           -webkit-appearance: none;
           margin: 0;
-        }
-        input {
-          -moz-appearance: textfield;
         }
       </style>
     `;

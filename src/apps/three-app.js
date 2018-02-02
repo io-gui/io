@@ -17,9 +17,6 @@ export class ThreeApp extends Io {
   static get style() {
     return html`
       <style>
-      :host {
-        font-family: "Lucida Grande", sans-serif;
-      }
       :host .row {
         display: flex;
         flex-direction: row;
@@ -28,7 +25,7 @@ export class ThreeApp extends Io {
         margin-right: 1em;
       }
       :host io-inspector {
-        width: 300px;
+        width: 400px;
       }
       </style>
     `;

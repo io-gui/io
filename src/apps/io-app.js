@@ -9,9 +9,6 @@ export class IoApp extends Io {
   static get style() {
     return html`
       <style>
-      :host {
-        font-family: "Lucida Grande", sans-serif;
-      }
       :host div > io-string,
       :host div > io-option,
       :host div > io-boolean,

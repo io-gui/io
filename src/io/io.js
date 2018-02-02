@@ -264,10 +264,6 @@ export class Io extends HTMLElement {
       composed: true
     }));
   }
-  _preventHandler(event) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
   bind(sourceProp, target, targetProp) {
     sourceProp = arguments[0];
     target = arguments[1] instanceof Io ? arguments[1] : undefined;

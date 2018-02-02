@@ -48,7 +48,7 @@ export class IoMenuLayer extends Io {
     }
   }
   connectedCallback() {
-    this.addEventListener('mousedown', this._eventHandler);
+    this.addEventListener('mouseup', this._eventHandler);
     this.addEventListener('touchstart', this._eventHandler);
     this.addEventListener('keyup', this._eventHandler);
     this.addEventListener('expanded-changed', this._expandedHandler);
