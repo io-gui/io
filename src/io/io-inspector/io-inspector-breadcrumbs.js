@@ -1,5 +1,6 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {UiButton} from "../../ui/ui-button/ui-button.js"
 
 function isPropertyOf(prop, object) {
   for (var p in object) if (object[p] === prop) return true;
@@ -17,6 +18,7 @@ export class IoInspectorBreadcrumbs extends Io {
           font-size: 1.1em;
           margin: 0.2em;
           border-radius: 0.1em;
+          white-space: nowrap;
         }
       </style>
     `;
@@ -67,6 +69,12 @@ export class IoInspectorBreadcrumbs extends Io {
       }
     }
   }
+  _backHandler() {
+    this.value = this.path[Math.max(0, this.path.length - 2)];
+  }
+  _gotoHandler(i) {
+    this.value = this.path[i];
+  }
   _update() {
     if (this.path.indexOf(this.value) !== -1) {
       this.path.length = this.path.indexOf(this.value) + 1;
@@ -75,13 +83,13 @@ export class IoInspectorBreadcrumbs extends Io {
     } else if (this.path.indexOf(this.value) === -1) {
       this.path = [this.value];
     }
-    const Prop = (elem, i) => ['div', {className: 'io-breadcrumb'}, this.path[i].__proto__.constructor.name];
+    const Prop = (elem, i) => ['ui-button',
+        {className: 'io-breadcrumb', action: this._gotoHandler, value: i}, this.path[i].__proto__.constructor.name];
     this.render([
       ['div', {className: 'io-flex'}, [
         this.path.map(Prop),
       ]],
-      // this.path.length > 1 ? ['div', {className: 'io-back-button'}, '< Back'] : null
-      ['div', {className: 'io-back-button'}, '< Back']
+      this.path.length > 1 ? ['ui-button', {className: 'io-back-button', action: this._backHandler}, '< Back'] : null
     ]);
   }
 }

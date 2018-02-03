@@ -1,6 +1,6 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
-import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
+import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
 import {IoObject} from "../io-object/io-object.js"
 import {IoObjectProp} from "../io-object/io-object-prop.js"
 

@@ -1,6 +1,7 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoMenu} from "../io-menu/io-menu.js"
+import {UiButton} from "../../ui/ui-button/ui-button.js"
 
 const menu = new IoMenu({position: 'bottom'});
 
@@ -23,13 +24,6 @@ export class IoOption extends Io {
       options: {
         type: Array,
         observer: '_update'
-      },
-      listeners: {
-        'click': '_expandHandler',
-        'keydown': '_expandHandler'
-      },
-      attributes: {
-        'tabindex': 0
       }
     }
   }
@@ -66,7 +60,9 @@ export class IoOption extends Io {
         }
       }
     }
-    this.innerText = label + ' ⊻';
+    this.render([
+      ['ui-button', {action: this._expandHandler}, label + ' ⊻']
+    ]);
   }
 }
 

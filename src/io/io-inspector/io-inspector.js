@@ -2,7 +2,7 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {IoInspectorBreadcrumbs} from "./io-inspector-breadcrumbs.js"
 import {IoInspectorGroup} from "./io-inspector-group.js"
-import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
+import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
 
 export class IoInspector extends Io {
   static get shadowStyle() {
@@ -77,7 +77,7 @@ export class IoInspector extends Io {
     }
     const GroupItem = entry => ['io-inspector-group', {value: this.value, props: entry[1], label: entry[0]}];
     this.render([
-      ['io-inspector-breadcrumbs', {value: this.value}],
+      ['io-inspector-breadcrumbs', {value: this.bind('value')}],
       Object.entries(groups).map(GroupItem)
     ]);
 

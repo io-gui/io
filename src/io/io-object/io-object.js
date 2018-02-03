@@ -7,7 +7,7 @@ import {IoString} from "../io-value/io-string.js"
 import {IoFunction} from "../io-function/io-function.js"
 
 import {IoObjectProp} from "./io-object-prop.js"
-import {IoCollapsable} from "../io-collapsable/io-collapsable.js"
+import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
 
 export class IoObject extends Io {
   static get shadowStyle() {

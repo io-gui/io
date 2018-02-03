@@ -3,6 +3,7 @@ import {Io} from "../io.js"
 import {IoMenuLayer} from "./io-menu-layer.js"
 import {IoMenuGroup} from "./io-menu-group.js"
 
+// TODO: extend button?
 export class IoMenuOption extends Io {
   static get shadowStyle() {
     return html`
@@ -44,7 +45,7 @@ export class IoMenuOption extends Io {
       listeners: {
         'focus': '_focusHandler',
         'click': '_clickHandler',
-        'keydown': '_keyupHandler'
+        'keyup': '_keyupHandler'
       }
     }
   }
