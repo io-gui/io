@@ -1,11 +1,11 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
-var previousOption;
-var previousParent;
-var timeoutOpen;
-var timeoutReset;
-var WAIT_TIME = 1000;
+let previousOption;
+let previousParent;
+let timeoutOpen;
+let timeoutReset;
+let WAIT_TIME = 1000;
 
 export class IoMenuLayer extends Io {
   static get shadowStyle() {

@@ -1,7 +1,8 @@
 import {html} from "../ioutil.js"
+import {IoPointer} from "../iopointer.js"
 import {Io} from "../io.js"
 
-export class IoSlider extends Io {
+export class IoSlider extends IoPointer {
   static get shadowStyle() {
     return html`
       <style>
@@ -49,16 +50,32 @@ export class IoSlider extends Io {
         value: 1,
         observer: '_update'
       },
-      listeners: {
-        'mousedown': '_preventHandler'
-      },
       attributes: {
         'tabindex': 0
+      },
+      listeners: {
+        'io-pointer-hover': '_hoverHandler',
+        'io-pointer-start': '_pointerStartHandler',
+        'io-pointer-move': '_pointerMoveHandler',
+        'io-pointer-end': '_pointerEndHandler'
       }
     }
   }
-  _preventHandler(event) {
-    event.preventDefault();
+  _pointerStartHandler(event) {
+    console.log('start')
+  }
+  _pointerMoveHandler(event) {
+    // console.log('move')
+    // console.log(event.detail.pointers[0].position);
+    console.log(event.detail.pointers[0].movement);
+  }
+  _pointerEndHandler(event) {
+    console.log('end')
+    // console.log(event.detail.pointers[0].position);
+  }
+  _hoverHandler(event) {
+    console.log('hover')
+    // console.log(event.detail);
   }
   _update() {
     this.render([
