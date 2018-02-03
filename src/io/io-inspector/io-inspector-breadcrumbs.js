@@ -16,7 +16,7 @@ export class IoInspectorBreadcrumbs extends Io {
           flex-direction: row;
           font-weight: bold;
           font-size: 1.1em;
-          margin: 0.2em;
+          padding: 0.2em;
           border-radius: 0.1em;
           white-space: nowrap;
         }

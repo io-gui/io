@@ -62,6 +62,11 @@ export class IoInspectorGroup extends IoObject {
           vertical-align: middle;
           padding: 0.3em 0.4em;
         }
+        :host io-object-prop[tag=io-slider] {
+          border-radius: 0.2em;
+          background: #444;
+          margin-right: 0.2em;
+        }
         :host io-object-prop[tag=io-string],
         :host io-object-prop[tag=io-number],
         :host io-object-prop io-object-prop[tag=io-number] {
@@ -78,9 +83,13 @@ export class IoInspectorGroup extends IoObject {
         :host io-object-prop[tag=io-matrix] io-object-prop {
           margin-bottom: 0.3em;
         }
+        :host io-object-prop[tag=io-boolean] {
+          display: flex;
+        }
         :host io-boolean,
         :host io-string,
         :host io-number {
+          display: flex;
           padding: 0.3em 0;
           color: #bef;
           flex: 1;

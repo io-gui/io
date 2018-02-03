@@ -28,8 +28,10 @@ export class UiButton extends Io {
     }
   }
   _actionHandler(event) {
-    if (typeof this.action === 'function') {
-      this.action(this.value !== undefined ? this.value : event);
+    if (event.which == 13 || event.which == 32 || event.type == 'click') {
+      if (typeof this.action === 'function') {
+        this.action(this.value !== undefined ? this.value : event);
+      }
     }
   }
   _preventHandler(event) {

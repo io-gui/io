@@ -26,6 +26,7 @@ export class ThreeApp extends Io {
       }
       :host io-inspector {
         width: 400px;
+        max-height: 900px;
       }
       </style>
     `;
@@ -33,7 +34,7 @@ export class ThreeApp extends Io {
   static get properties() {
     return {
       value: {
-        value: mesh,
+        value: light,
         observer: '_update'
       }
     }

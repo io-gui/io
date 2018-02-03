@@ -4,9 +4,10 @@ import {IoOption} from "../io/io-option/io-option.js"
 import {IoVector} from "../io/io-vector/io-vector.js"
 import {IoMatrix} from "../io/io-vector/io-matrix.js"
 import {IoColor} from "../io/io-vector/io-color.js"
+import {IoSlider} from "../io/io-value/io-slider.js"
 import {IoInspector} from "../io/io-inspector/io-inspector.js"
 
-IoInspector.CONFIG = Object.assign({
+IoInspector.CONFIG = Object.assign(IoInspector.CONFIG, {
   'Object': {
     'advanced': ['uuid'],
     'hidden': ['type']
@@ -25,16 +26,17 @@ IoInspector.CONFIG = Object.assign({
   'Light' : {
     'main': ['intensity', 'color']
   }
-}, IoInspector.CONFIG);
+});
 
 IoObject.CONFIG['Object'] = Object.assign(IoObject.CONFIG['Object'], {
-  'type:boolean': {tag: 'io-boolean', props: {true: '☑', false: '☐'}},
+  'type:boolean': {tag: 'io-boolean', props: {true: '☑ true', false: '☐ false'}},
   'constructor:Vector2': {tag: 'io-vector'},
   'constructor:Vector3': {tag: 'io-vector'},
   'constructor:Vector4': {tag: 'io-vector'},
   'constructor:Quaternion': {tag: 'io-vector'},
   'constructor:Euler': {tag: 'io-vector'},
-  'constructor:Color': {tag: 'io-color'}
+  'constructor:Color': {tag: 'io-color'},
+  'key:intensity': {tag: 'io-slider'}
 });
 
 IoObject.CONFIG['Matrix2'] = { 'key:elements': {tag: 'io-matrix'} };

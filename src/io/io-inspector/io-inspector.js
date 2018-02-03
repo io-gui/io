@@ -9,11 +9,17 @@ export class IoInspector extends Io {
     return html`
       <style>
         :host {
-          display: block;
+          display: flex;
+          flex-direction: column;
           background: #444;
           color: #ccc;
           padding: 0.1em;
           border-radius: 0.2em;
+        }
+        ::slotted(.io-wrapper) {
+          flex: 1;
+          overflow-x: hidden;
+          overflow-y: auto;
         }
       </style>
     `;
@@ -78,7 +84,9 @@ export class IoInspector extends Io {
     const GroupItem = entry => ['io-inspector-group', {value: this.value, props: entry[1], label: entry[0]}];
     this.render([
       ['io-inspector-breadcrumbs', {value: this.bind('value')}],
-      Object.entries(groups).map(GroupItem)
+      ['div', {className: 'io-wrapper'}, [
+        Object.entries(groups).map(GroupItem)
+      ]]
     ]);
 
   }
