@@ -1,10 +1,10 @@
-import {html} from "../ioutil.js"
-import {Io} from "../io.js"
-import {IoMenuLayer} from "./io-menu-layer.js"
-import {IoMenuGroup} from "./io-menu-group.js"
+import {html} from "../../io/ioutil.js"
+import {Io} from "../../io/io.js"
+import {UiMenuLayer} from "./ui-menu-layer.js"
+import {UiMenuGroup} from "./ui-menu-group.js"
 
 // TODO: extend button?
-export class IoMenuOption extends Io {
+export class UiMenuOption extends Io {
   static get shadowStyle() {
     return html`
       <style>
@@ -53,7 +53,7 @@ export class IoMenuOption extends Io {
     super(props);
     this.setAttribute('tabindex', 1);
     this.render([
-      this.option.options ? ['io-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
+      this.option.options ? ['ui-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
       this.option.icon ? ['span', {className: 'io-icon'}, this.option.icon] : null,
       this.option.label ? ['span', {className: 'io-label'}, this.option.label] : ['span', {className: 'io-label'}],
       this.option.hint ? ['span', {className: 'io-hint'}, this.option.hint] : null,
@@ -62,9 +62,9 @@ export class IoMenuOption extends Io {
   }
   connectedCallback() {
     super.connectedCallback();
-    this.$group = this.querySelector('io-menu-group');
+    this.$group = this.querySelector('ui-menu-group');
     if (this.$group) {
-      IoMenuLayer.singleton.appendChild(this.$group);
+      UiMenuLayer.singleton.appendChild(this.$group);
     }
   }
   _focusHandler() {
@@ -78,15 +78,15 @@ export class IoMenuOption extends Io {
   }
   _clickHandler(event) {
     let parent = this.$parent;
-    while (parent && parent.localName != 'io-menu') {
+    while (parent && parent.localName != 'ui-menu') {
       parent = parent.$parent;
     }
-    this.dispatchEvent(new CustomEvent('io-menu-option-clicked', {
+    this.dispatchEvent(new CustomEvent('ui-menu-option-clicked', {
       detail: {option: this.option},
       bubbles: true,
       composed: true
     }));
-    parent.dispatchEvent(new CustomEvent('io-menu-option-clicked', {
+    parent.dispatchEvent(new CustomEvent('ui-menu-option-clicked', {
       detail: {option: this.option},
       bubbles: false,
       composed: true
@@ -133,9 +133,9 @@ export class IoMenuOption extends Io {
 
     } else if (event.which == 27) { // ESC
       event.preventDefault();
-      IoMenuLayer.singleton.collapseAll();
+      UiMenuLayer.singleton.collapseAll();
     }
   }
 }
 
-window.customElements.define('io-menu-option', IoMenuOption);
+window.customElements.define('ui-menu-option', UiMenuOption);

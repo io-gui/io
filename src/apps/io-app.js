@@ -4,6 +4,7 @@ import {IoBoolean} from "../io/io-value/io-boolean.js"
 import {IoNumber} from "../io/io-value/io-number.js"
 import {IoObject} from "../io/io-object/io-object.js"
 import {IoOption} from "../io/io-option/io-option.js"
+import {UiMenu} from "../ui/ui-menu/ui-menu.js"
 
 export class IoApp extends Io {
   static get style() {
@@ -150,8 +151,8 @@ export class IoApp extends Io {
         ['io-option', {options: this.options, value: 5}],
       ]],
       ['div', {className: 'demo area'}, [
-        ['h3', 'io-menu (click to expand)'],
-        ['io-menu', {options: this.menuoptions, position: 'pointer'}]
+        ['h3', 'ui-menu (click to expand)'],
+        ['ui-menu', {options: this.menuoptions, position: 'pointer'}]
       ]],
       ['div', {className: 'demo'}, [
         ['h3', 'io-object with various property types.'],

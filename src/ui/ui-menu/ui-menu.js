@@ -1,9 +1,9 @@
-import {html} from "../ioutil.js"
-import {Io} from "../io.js"
-import {IoMenuLayer} from "./io-menu-layer.js"
-import {IoMenuGroup} from "./io-menu-group.js"
+import {html} from "../../io/ioutil.js"
+import {Io} from "../../io/io.js"
+import {UiMenuLayer} from "./ui-menu-layer.js"
+import {UiMenuGroup} from "./ui-menu-group.js"
 
-export class IoMenu extends Io {
+export class UiMenu extends Io {
   static get properties() {
     return {
       options: {
@@ -24,7 +24,7 @@ export class IoMenu extends Io {
   }
   constructor(props) {
     super(props);
-    this.$group = new IoMenuGroup({
+    this.$group = new UiMenuGroup({
       $parent: this,
       position: this.bind('position'),
       options: this.bind('options'),
@@ -35,23 +35,23 @@ export class IoMenu extends Io {
     super.connectedCallback();
     this.$parent = this.parentElement || this.parentNode.host;
     this.$parent.addEventListener(this.listener, this._expandHandler);
-    IoMenuLayer.singleton.appendChild(this.$group);
+    UiMenuLayer.singleton.appendChild(this.$group);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     this.$parent.removeEventListener(this.listener, this._expandHandler);
-    IoMenuLayer.singleton.removeChild(this.$group);
+    UiMenuLayer.singleton.removeChild(this.$group);
   }
   getBoundingClientRect() {
     if (this.$parent) return this.$parent.getBoundingClientRect();
     else return document.body.getBoundingClientRect();
   }
   _expandHandler(event) {
-    IoMenuLayer.singleton.collapseAll();
-    IoMenuLayer.singleton.pointer.x = event.clientX;
-    IoMenuLayer.singleton.pointer.y = event.clientY;
+    UiMenuLayer.singleton.collapseAll();
+    UiMenuLayer.singleton.pointer.x = event.clientX;
+    UiMenuLayer.singleton.pointer.y = event.clientY;
     this.expanded = true;
   }
 }
 
-window.customElements.define('io-menu', IoMenu);
+window.customElements.define('ui-menu', UiMenu);

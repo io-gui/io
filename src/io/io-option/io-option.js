@@ -1,9 +1,9 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
-import {IoMenu} from "../io-menu/io-menu.js"
+import {UiMenu} from "../../ui/ui-menu/ui-menu.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 
-const menu = new IoMenu({position: 'bottom'});
+const menu = new UiMenu({position: 'bottom'});
 
 export class IoOption extends Io {
   static get shadowStyle() {
@@ -35,10 +35,10 @@ export class IoOption extends Io {
       menu.expanded = true;
       if (menu.$group.$options[0]) menu.$group.$options[0].focus();
       if (menu._listerer) {
-        menu.removeEventListener('io-menu-option-clicked', menu._listerer);
+        menu.removeEventListener('ui-menu-option-clicked', menu._listerer);
         delete menu._listener;
       }
-      menu.addEventListener('io-menu-option-clicked', this._menuHandler);
+      menu.addEventListener('ui-menu-option-clicked', this._menuHandler);
       menu._listener = this._menuHandler;
     }
   }
@@ -47,7 +47,7 @@ export class IoOption extends Io {
       this._setValue(event.detail.option.value);
     }
     menu.expanded = false;
-    menu.removeEventListener('io-menu-option-clicked', this._menuHandler);
+    menu.removeEventListener('ui-menu-option-clicked', this._menuHandler);
   }
   _update() {
     let label = this.value;
