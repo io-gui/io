@@ -16,12 +16,12 @@ export class IoSlider extends IoPointer {
           position: absolute;
           width: 100%;
           height: 0.2em;
-          background: #111;
           top: calc(50% - 0.1em);
         }
         ::slotted(.io-slider-knob) {
           position: absolute;
           width: 0.4em;
+          margin-left: -0.2em;
           height: 100%;
           background: #999;
           left: calc(50%);
@@ -47,42 +47,29 @@ export class IoSlider extends IoPointer {
       },
       max: {
         type: Number,
-        value: 1,
+        value: 100,
         observer: '_update'
       },
       attributes: {
         'tabindex': 0
       },
       listeners: {
-        'io-pointer-hover': '_hoverHandler',
-        'io-pointer-start': '_pointerStartHandler',
-        'io-pointer-move': '_pointerMoveHandler',
-        'io-pointer-end': '_pointerEndHandler'
+        'io-pointer-move': '_pointerMoveHandler'
       }
     }
   }
-  _pointerStartHandler(event) {
-    console.log('start')
-  }
   _pointerMoveHandler(event) {
-    // console.log('move')
-    // console.log(event.detail.pointers[0].position);
-    console.log(event.detail.pointers[0].movement);
-  }
-  _pointerEndHandler(event) {
-    console.log('end')
-    // console.log(event.detail.pointers[0].position);
-  }
-  _hoverHandler(event) {
-    console.log('hover')
-    // console.log(event.detail);
+    let pos = Math.max(0,Math.min(1, event.detail.pointers[0].position.x / 2 + 0.5));
+    // TODO: implement step
+    this._setValue(this.min + (this.max - this.min) * pos);
   }
   _update() {
+    let pos = 100 * (this.value - this.min) / (this.max - this.min);
     this.render([
-      ['div', {className: 'io-slider-slit'}],
-      ['div', {className: 'io-slider-knob'}],
+      ['div', {className: 'io-slider-slit', style: {background: 'linear-gradient(to right, #2c9 ' + pos + '%, #333 ' + pos + 1 + '%)'}}],
+      ['div', {className: 'io-slider-knob', style: {left: pos + '%'}}],
       ['span', '\u00A0']
-    ])
+    ]);
   }
 }
 

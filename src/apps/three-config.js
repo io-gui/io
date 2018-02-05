@@ -36,7 +36,8 @@ IoObject.CONFIG['Object'] = Object.assign(IoObject.CONFIG['Object'], {
   'constructor:Quaternion': {tag: 'io-vector'},
   'constructor:Euler': {tag: 'io-vector'},
   'constructor:Color': {tag: 'io-color'},
-  'key:intensity': {tag: 'io-slider'}
+  'key:intensity': {tag: 'io-slider', props: {min: 0, max: 1}},
+  'key:opacity': {tag: 'io-slider', props: {min: 0, max: 1}}
 });
 
 IoObject.CONFIG['Matrix2'] = { 'key:elements': {tag: 'io-matrix'} };

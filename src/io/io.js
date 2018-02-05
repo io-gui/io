@@ -228,6 +228,10 @@ export class Io extends HTMLElement {
               element.addEventListener(l, element.__listeners[l]);
             }
           }
+        } else if (prop == 'style') {
+          for (let s in vChildren[i].props[prop]) {
+            element.style[s] = vChildren[i].props[prop][s];
+          }
         } else if (prop == 'className') {
           // TODO: ugh
           element.className = vChildren[i].props[prop];
