@@ -21,6 +21,7 @@ export class IoBoolean extends Io {
   static get properties() {
     return {
       value: {
+        type: Boolean,
         observer: '_update'
       },
       true: {
