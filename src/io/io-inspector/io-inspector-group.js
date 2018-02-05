@@ -111,6 +111,10 @@ export class IoInspectorGroup extends IoObject {
         type: String,
         observer: '_update'
       },
+      expanded: {
+        type: Boolean,
+        observer: '_update'
+      },
       listeners: {
         'click': '_clickHandler'
       }
@@ -137,7 +141,7 @@ export class IoInspectorGroup extends IoObject {
       this.label === 'main' ? ['div', {className: 'io-wrapper'}, [
         Object.entries(propConfigs).map(Prop)
       ]] :
-      ['io-collapsable', {label: this.label, expanded: true}, [
+      ['io-collapsable', {label: this.label, expanded: this.bind('expanded')}, [
         ['div', {className: 'io-wrapper'}, [
           Object.entries(propConfigs).map(Prop)
         ]]

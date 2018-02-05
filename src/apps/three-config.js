@@ -4,7 +4,7 @@ import {IoOption} from "../io/io-option/io-option.js"
 import {IoVector} from "../io/io-vector/io-vector.js"
 import {IoMatrix} from "../io/io-vector/io-matrix.js"
 import {IoColor} from "../io/io-vector/io-color.js"
-import {IoSlider} from "../io/io-value/io-slider.js"
+import {IoSlider} from "../io/io-slider/io-slider.js"
 import {IoInspector} from "../io/io-inspector/io-inspector.js"
 
 IoInspector.CONFIG = Object.assign(IoInspector.CONFIG, {

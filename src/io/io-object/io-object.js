@@ -1,9 +1,9 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
-import {IoBoolean} from "../io-value/io-boolean.js"
-import {IoNumber} from "../io-value/io-number.js"
-import {IoString} from "../io-value/io-string.js"
+import {IoBoolean} from "../io-boolean/io-boolean.js"
+import {IoNumber} from "../io-number/io-number.js"
+import {IoString} from "../io-string/io-string.js"
 import {IoFunction} from "../io-function/io-function.js"
 
 import {IoObjectProp} from "./io-object-prop.js"
