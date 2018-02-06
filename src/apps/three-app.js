@@ -6,9 +6,10 @@ import {IoInspector} from "../io/io-inspector/io-inspector.js"
 import "./three-config.js"
 import * as THREE from "../../lib/three.module.js"
 
-let mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshBasicMaterial({color: 0xffffff}));
 let color = new THREE.Color(1,0.5,0.2);
-let light = new THREE.Light({color: color});
+let mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshBasicMaterial({color: color}));
+let light = new THREE.Light();
+light.color = color;
 let renderer = new THREE.WebGLRenderer();
 let texture = new THREE.Texture();
 mesh.add(light);

@@ -1,7 +1,21 @@
+import {html} from "../ioutil.js"
 import {IoVector} from "../io-vector/io-vector.js"
 import {IoObjectProp} from "../io-object/io-object-prop.js"
 
 export class IoColor extends IoVector {
+  static get style() {
+    return html`
+      <style>
+        :host {
+          display: flex;
+          flex-direction: row;
+        }
+        :host > span {
+          min-width: 1.22em;
+        }
+      </style>
+    `;
+  }
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('io-object-mutated', this._objectMutatedHandler);
@@ -27,9 +41,9 @@ export class IoColor extends IoVector {
     let g = parseInt(this.value.g * 255);
     let b = parseInt(this.value.b * 255);
     this.render([
-      ['div', {style: {background: 'rgb(' + r + ',' + g + ',' + b + ')'}}],
-      elements.map(Prop)
-    ]);``
+      elements.map(Prop),
+      ['span', {style: {background: 'rgb(' + r + ',' + g + ',' + b + ')'}}, '&nbsp;'],
+    ]);
   }
 }
 
