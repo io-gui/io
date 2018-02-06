@@ -28,19 +28,16 @@ export class IoOption extends Io {
     }
   }
   _expandHandler(event) {
-    if (event.which == 13 || event.which == 32 || event.type == 'click') {
-      event.preventDefault();
-      this.appendChild(menu);
-      menu.options = this.options;
-      menu.expanded = true;
-      if (menu.$group.$options[0]) menu.$group.$options[0].focus();
-      if (menu._listerer) {
-        menu.removeEventListener('ui-menu-option-clicked', menu._listerer);
-        delete menu._listener;
-      }
-      menu.addEventListener('ui-menu-option-clicked', this._menuHandler);
-      menu._listener = this._menuHandler;
+    this.appendChild(menu);
+    menu.options = this.options;
+    menu.expanded = true;
+    if (menu.$group.$options[0]) menu.$group.$options[0].focus();
+    if (menu._listerer) {
+      menu.removeEventListener('ui-menu-option-clicked', menu._listerer);
+      delete menu._listener;
     }
+    menu.addEventListener('ui-menu-option-clicked', this._menuHandler);
+    menu._listener = this._menuHandler;
   }
   _menuHandler(event) {
     if (event.detail.option.value !== undefined) {

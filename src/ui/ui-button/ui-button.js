@@ -18,6 +18,7 @@ export class UiButton extends Io {
       },
       value: {},
       listeners: {
+        'keyup': '_actionHandler',
         'mouseup': '_actionHandler',
         'touchend': '_actionHandler',
         'keydown': '_preventHandler',
