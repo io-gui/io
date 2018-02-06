@@ -1,6 +1,5 @@
 import {html} from "../../io/ioutil.js"
 import {Io} from "../../io/io.js"
-import {UiButton} from "../ui-button/ui-button.js"
 
 export class UiCollapsable extends Io {
   static get style() {
@@ -19,9 +18,6 @@ export class UiCollapsable extends Io {
         reflectToAttribute: true
       }
     }
-  }
-  _toggleHandler(event) {
-    this.expanded = !this.expanded;
   }
 }
 
