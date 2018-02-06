@@ -15,6 +15,9 @@ export class IoBoolean extends Io {
           text-decoration-color: red;
           opacity: 0.25;
         }
+        :host > ui-button {
+          flex: 1;
+        }
       </style>
     `;
   }

@@ -35,7 +35,7 @@ export class ThreeApp extends Io {
   static get properties() {
     return {
       value: {
-        value: light,
+        value: mesh,
         observer: '_update'
       }
     }

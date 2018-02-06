@@ -18,8 +18,9 @@ export class UiButton extends Io {
       },
       value: {},
       listeners: {
-        'click': '_actionHandler',
-        'keyup': '_actionHandler',
+        'mouseup': '_actionHandler',
+        'touchend': '_actionHandler',
+        'keydown': '_preventHandler',
         'mousedown': '_preventHandler'
       },
       attributes: {
@@ -28,15 +29,18 @@ export class UiButton extends Io {
     }
   }
   _actionHandler(event) {
-    if (event.which == 13 || event.which == 32 || event.type == 'click') {
+    if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
+      event.preventDefault();
+      this.focus();
       if (typeof this.action === 'function') {
         this.action(this.value !== undefined ? this.value : event);
       }
     }
   }
   _preventHandler(event) {
-    event.preventDefault();
-    this.focus();
+    if (event.which !== 9) {
+      event.preventDefault();
+    }
   }
 }
 
