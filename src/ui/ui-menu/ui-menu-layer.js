@@ -8,7 +8,7 @@ let timeoutReset;
 let WAIT_TIME = 1000;
 
 export class UiMenuLayer extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
       :host {
@@ -28,7 +28,7 @@ export class UiMenuLayer extends Io {
         overflow: hidden;
         font-family: "Lucida Grande", sans-serif;
       }
-      :host([expanded]) {
+      :host[expanded] {
         visibility: visible;
       }
       </style>

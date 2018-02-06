@@ -3,7 +3,7 @@ import {IoPointer} from "../iopointer.js"
 import {Io} from "../io.js"
 
 export class IoSlider extends IoPointer {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
@@ -12,13 +12,13 @@ export class IoSlider extends IoPointer {
           min-width: 100px;
           position: relative;
         }
-        ::slotted(.io-slider-slit) {
+        :host > .io-slider-slit {
           position: absolute;
           width: 100%;
           height: 0.2em;
           top: calc(50% - 0.1em);
         }
-        ::slotted(.io-slider-knob) {
+        :host > .io-slider-knob {
           position: absolute;
           width: 0.4em;
           margin-left: -0.2em;

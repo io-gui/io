@@ -3,13 +3,13 @@ import {Io} from "../io.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 
 export class IoBoolean extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
           display: inline-block;
         }
-        :host(.invalid) {
+        :host.invalid {
           text-decoration: underline;
           text-decoration-style: dashed;
           text-decoration-color: red;

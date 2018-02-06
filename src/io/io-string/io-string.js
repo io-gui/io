@@ -2,14 +2,14 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoString extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
           display: inline-block;
           cursor: text;
         }
-        :host(.invalid) {
+        :host.invalid {
           text-decoration: underline;
           text-decoration-style: dashed;
           text-decoration-color: red;

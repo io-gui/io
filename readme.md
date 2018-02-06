@@ -1,6 +1,6 @@
 # io: custom elements for data-centric web applications #
 
-**DISCLAIMER**: io elements are NOT production ready! This project uses modern web technologies such as [Custom Elements](https://caniuse.com/#feat=custom-elementsv1), [Shadow DOM](https://caniuse.com/#search=shadow%20dom%20v1) and [ES6 modules](https://caniuse.com/#feat=es6-module) and may or may not work in your browser.
+**DISCLAIMER**: io elements are NOT production ready! This project uses modern web technologies such as [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and [ES6 modules](https://caniuse.com/#feat=es6-module) and may or may not work in your browser.
 
 io custom elements are designed to help you build complex user interfaces with minimal effort. All elements extend the core `Io` class which enables a simple declarative syntax inspired by [polymer](https://github.com/Polymer/polymer), as well as a powerful and efficient virtual DOM instancer inspired by [dreemgl](https://github.com/dreemproject/dreemgl).
 
@@ -47,18 +47,9 @@ static get properties() {
 
 ### Styling Elements ###
 
-Styling io elements is easy. Simply add CSS in HTML format inside `style()` getter for light DOM and `shadowStyle()` getter for Shadow DOM. Note that the selectors of `style()` have to be prefixed with `:host` in order to prevent style leakage.
+Styling io elements is easy. Simply add CSS in HTML format inside `style()` getter. Note that the selectors of `style()` have to be prefixed with `:host` in order to prevent style leakage.
 
 ```javascript
-static get shadowStyle() {
-  return html`
-    <style>
-      :host {
-        display: inline-block;
-      }
-    </style>
-  `;
-}
 static get style() {
   return html`
     <style>
@@ -104,7 +95,7 @@ Note that the second argument of `Io.render()` is render target. You can use it 
 this.render([
   ['style'],
   ['slot']
-], this.shadowRoot);
+], myDOMElement);
 
 ```
 

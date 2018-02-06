@@ -23,8 +23,11 @@ export class IoColor extends IoVector {
     if (this.value.a !== undefined) elements.push('a');
     this.columns = elements.length + 1;
     const Prop = i => ['io-object-prop', {key: i, value: this.value, config: {tag: 'io-number'}}];
+    let r = parseInt(this.value.r * 255);
+    let g = parseInt(this.value.g * 255);
+    let b = parseInt(this.value.b * 255);
     this.render([
-      ['div', {style: 'background: rgb(' + parseInt(this.value.r * 255) + ',' + parseInt(this.value.g * 255) + ',' + parseInt(this.value.b * 255) + ');'}],
+      ['div', {style: {background: 'rgb(' + r + ',' + g + ',' + b + ')'}}],
       elements.map(Prop)
     ]);``
   }

@@ -2,22 +2,22 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoObjectProp extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
           display: inline-block;
         }
-        ::slotted(io-number) {
+        :host > io-number {
           color: rgb(28, 0, 207);
         }
-        ::slotted(io-string) {
+        :host > io-string {
           color: rgb(196, 26, 22);
         }
-        ::slotted(io-boolean) {
+        :host > io-boolean {
           color: rgb(170, 13, 145);
         }
-        ::slotted(io-option) {
+        :host > io-option {
           color: rgb(32,135,0);
         }
       </style>

@@ -8,24 +8,23 @@ editor.addEventListener('touchstart', function (event) { event.stopPropagation()
 editor.addEventListener('focus', function (event) { event.stopPropagation() });
 
 export class IoNumber extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
           display: inline-block;
           cursor: text;
         }
-        :host(.invalid) {
+        :host.invalid {
           text-decoration: underline;
           text-decoration-style: dashed;
           text-decoration-color: red;
           opacity: 0.25;
         }
-        :host(.edit) {
+        :host.edit {
           position: relative;
-          color: rgba(0,0,0,0) !important;
         }
-        input {
+        :host > input {
           position: absolute;
           display: block;
           width: 100%;
@@ -40,9 +39,10 @@ export class IoNumber extends Io {
           font-style: inherit;
           font-family: inherit;
           -moz-appearance: textfield;
+          color: inherit;
         }
-        input::-webkit-inner-spin-button,
-        input::-webkit-outer-spin-button {
+        :host > input::-webkit-inner-spin-button,
+        :host > input::-webkit-outer-spin-button {
           -webkit-appearance: none;
           margin: 0;
         }
@@ -67,8 +67,7 @@ export class IoNumber extends Io {
         value: Infinity
       },
       listeners: {
-        'focus': '_focusHandler',
-        'blur': '_blurHandler'
+        'focus': '_focusHandler'
       },
       attributes: {
         'tabindex': 0
@@ -81,13 +80,15 @@ export class IoNumber extends Io {
   _blurHandler(event) {
     this._setValue(Math.round(Number(editor.value) / this.step) * this.step);
     this._removeEditor();
+    editor.removeEventListener('blur', this._blurHandler);
   }
   _addEditor() {
     editor.value = (typeof this.value !== 'number' || isNaN(this.value)) ? 0 : String(this.value);
     editor.step = this.step;
     editor.min = Math.min(this.min, this.value);
     editor.max = Math.max(this.max, this.value);
-    this.shadowRoot.appendChild(editor);
+    editor.addEventListener('blur', this._blurHandler);
+    this.appendChild(editor);
     setTimeout(function () {
       editor.focus();
       editor.select();

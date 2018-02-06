@@ -2,7 +2,7 @@ import {html} from "../../io/ioutil.js"
 import {Io} from "../../io/io.js"
 
 export class UiButton extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {

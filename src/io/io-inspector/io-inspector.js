@@ -5,7 +5,7 @@ import {IoInspectorGroup} from "./io-inspector-group.js"
 import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
 
 export class IoInspector extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
@@ -16,7 +16,7 @@ export class IoInspector extends Io {
           padding: 0.1em;
           border-radius: 0.2em;
         }
-        ::slotted(.io-wrapper) {
+        :host .io-wrapper {
           flex: 1;
           overflow-x: hidden;
           overflow-y: auto;

@@ -10,24 +10,18 @@ import {IoObjectProp} from "./io-object-prop.js"
 import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
 
 export class IoObject extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
           display: inline-block;
         }
-      </style>
-    `;
-  }
-  static get style() {
-    return html`
-      <style>
-        :host .io-wrapper {
+        :host > .io-wrapper {
           margin: 2px;
           border-radius: 2px;
           background: #444;
         }
-        :host .io-row {
+        :host > .io-row {
           display: flex;
           flex-direction: row;
         }

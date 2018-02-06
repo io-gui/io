@@ -6,7 +6,7 @@ import {UiButton} from "../../ui/ui-button/ui-button.js"
 const menu = new UiMenu({position: 'bottom'});
 
 export class IoOption extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {

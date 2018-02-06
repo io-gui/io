@@ -8,7 +8,7 @@ function isPropertyOf(prop, object) {
 }
 
 export class IoInspectorBreadcrumbs extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
@@ -20,12 +20,6 @@ export class IoInspectorBreadcrumbs extends Io {
           border-radius: 0.1em;
           white-space: nowrap;
         }
-      </style>
-    `;
-  }
-  static get style() {
-    return html`
-      <style>
         :host .io-back-button {
           background: #333;
           border-radius: 0.2em;

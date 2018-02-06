@@ -5,7 +5,7 @@ import {IoObject} from "../io-object/io-object.js"
 import {IoObjectProp} from "../io-object/io-object-prop.js"
 
 export class IoInspectorGroup extends IoObject {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
@@ -16,12 +16,6 @@ export class IoInspectorGroup extends IoObject {
           background: #333;
           line-height: 1em;
         }
-      </style>
-    `;
-  }
-  static get style() {
-    return html`
-      <style>
         :host .io-wrapper {
           border-radius: 0.1em;
         }
@@ -91,7 +85,7 @@ export class IoInspectorGroup extends IoObject {
         :host io-number {
           display: flex;
           padding: 0.3em 0;
-          color: #bef;
+          color: #bef !important;
           flex: 1;
         }
       </style>
@@ -113,6 +107,7 @@ export class IoInspectorGroup extends IoObject {
       },
       expanded: {
         type: Boolean,
+        value: true,
         observer: '_update'
       },
       listeners: {
@@ -121,9 +116,9 @@ export class IoInspectorGroup extends IoObject {
     }
   }
   _clickHandler(event) {
-    if (event.path[0].className === 'io-link') {
+    if (event.target.className === 'io-link') {
       this.dispatchEvent(new CustomEvent('io-link-clicked', {
-        detail: {key: event.path[0].previousSibling.innerText}, // TODO: yuck
+        detail: {key: event.target.previousSibling.innerText}, // TODO: yuck
         bubbles: true,
         composed: true
       }));
@@ -142,8 +137,9 @@ export class IoInspectorGroup extends IoObject {
         Object.entries(propConfigs).map(Prop)
       ]] :
       ['io-collapsable', {label: this.label, expanded: this.bind('expanded')}, [
+        ['io-boolean', {true: '▾' + this.label, false: '▸' + this.label, value: this.bind('expanded')}],
         ['div', {className: 'io-wrapper'}, [
-          Object.entries(propConfigs).map(Prop)
+          this.expanded ? Object.entries(propConfigs).map(Prop) : null
         ]]
       ]]
     ]);

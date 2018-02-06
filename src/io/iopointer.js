@@ -79,7 +79,7 @@ export class IoPointer extends Io {
     let touches = event.touches ? event.touches : [event];
     let foundPointers = [];
     for (var i = 0; i < touches.length; i++) {
-      if (touches[i].target === event.path[0] || event.touches === undefined) {
+      if (touches[i].target === event.target || event.touches === undefined) {
         let rect = this.getBoundingClientRect();
         let position = new Vector2({
           x: (touches[i].clientX - rect.left) / rect.width * 2 - 1,

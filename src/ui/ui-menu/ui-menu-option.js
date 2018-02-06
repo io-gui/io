@@ -5,7 +5,7 @@ import {UiMenuGroup} from "./ui-menu-group.js"
 
 // TODO: extend button?
 export class UiMenuOption extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
       :host {
@@ -15,19 +15,19 @@ export class UiMenuOption extends Io {
         padding: 0.125em 0.5em 0.125em 1.7em;
         line-height: 1em;
       }
-      ::slotted(.io-icon) {
+      :host > .io-icon {
         width: 1.25em;
         margin-left: -1.25em;
         line-height: 1em;
       }
-      ::slotted(.io-label) {
+      :host > .io-label {
         flex: 1
       }
-      ::slotted(.io-hint) {
+      :host > .io-hint {
         opacity: 0.5;
         padding: 0 0.5em;
       }
-      ::slotted(.io-more) {
+      :host > .io-more {
         opacity: 0.5;
         margin: 0 -0.25em 0 0.25em;
       }

@@ -4,7 +4,7 @@ import {UiMenuLayer} from "./ui-menu-layer.js"
 import {UiMenuOption} from "./ui-menu-option.js"
 
 export class UiMenuGroup extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
@@ -21,7 +21,7 @@ export class UiMenuGroup extends Io {
           box-shadow: 1px 1px 2px rgba(0,0,0,0.33);
           min-width: 6em;
         }
-        :host([expanded]) {
+        :host[expanded] {
           visibility: visible;
         }
       </style>

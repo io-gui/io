@@ -2,7 +2,6 @@ import {h, renderElement, initStyle} from "./ioutil.js"
 
 export class Io extends HTMLElement {
   static get style() { return ``; }
-  static get shadowStyle() { return ``; }
   static get observedAttributes() {
     let attributes = [];
     let proto = this;
@@ -72,6 +71,7 @@ export class Io extends HTMLElement {
         let binding = props[key];
         this.__properties[key].value = binding.source[binding.sourceProp];
         binding.target = this;
+        binding.targetProp = key;
         // TODO: test and unbind
         binding.bind();
       } else if (props[key] !== undefined) {
@@ -90,10 +90,6 @@ export class Io extends HTMLElement {
     }
 
     initStyle(this.localName, this.__proto__.constructor.style);
-
-    this.attachShadow({mode: 'open'});
-    this.shadowRoot.innerHTML = this.__proto__.constructor.shadowStyle;
-    this.shadowRoot.appendChild(document.createElement('slot'));
   }
 
   defineProperty(key, config) {
@@ -160,9 +156,6 @@ export class Io extends HTMLElement {
   }
   traverse(vChildren, host) {
     let children = host.children;
-    if (host instanceof ShadowRoot) {
-      vChildren.unshift({name: 'style'});
-    }
 
     for (let i = 0; i < vChildren.length; i++) {
 
@@ -182,6 +175,7 @@ export class Io extends HTMLElement {
               let binding = vChildren[i].props[prop];
               vChildren[i].props[prop] = binding.source[binding.sourceProp];
               binding.target = element;
+              binding.targetProp = prop;
               binding.bind();
             }
 
@@ -270,19 +264,25 @@ export class Io extends HTMLElement {
   }
   bind(sourceProp, target, targetProp) {
     sourceProp = arguments[0];
-    target = arguments[1] instanceof Io ? arguments[1] : undefined;
-    targetProp = arguments[1] instanceof String ? arguments[1] : arguments[2] instanceof String ? arguments[2] : arguments[0];
-    this.unbind(sourceProp);
-    this.__bindings[sourceProp] = new Binding(this, target, sourceProp, targetProp);
-    return this.__bindings[sourceProp];
+    target = arguments[1] ? arguments[1] : undefined;
+    targetProp = arguments[2] ? arguments[2] : undefined;
+    let binding = new Binding(this, target, sourceProp, targetProp);
+    this.__bindings[sourceProp] = this.__bindings[sourceProp] || [];
+    this.__bindings[sourceProp].push(binding);
+    return binding;
   }
   unbind(sourceProp) {
-    if (this.__bindings[sourceProp]) this.__bindings[sourceProp].unbind();
-    delete this.__bindings[sourceProp];
+    if (this.__bindings[sourceProp]) {
+      for (var i = 0; i < this.__bindings[sourceProp].length; i++) {
+        this.__bindings[sourceProp][i].unbind();
+      }
+    }
   }
   unbindAll() {
     for (var prop in this.__bindings) {
-      this.__bindings[prop].unbind();
+      for (var i = 0; i < this.__bindings[prop].length; i++) {
+        this.__bindings[prop][i].unbind();
+      }
       delete this.__bindings[prop]
     }
   }
@@ -305,7 +305,7 @@ class Binding {
     this.source[this.sourceProp] = event.detail.value;
   }
   bind() {
-    if (this.source && this.target) {
+    if (this.source && this.target && this.targetProp) {
       this.source.__properties[this.sourceProp].notify = true;
       this.target.__properties[this.targetProp].notify = true;
       this.source.addEventListener(this.sourceProp + '-changed', this.setTarget);

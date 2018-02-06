@@ -2,7 +2,7 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoFunction extends Io {
-  static get shadowStyle() {
+  static get style() {
     return html`
       <style>
         :host {
