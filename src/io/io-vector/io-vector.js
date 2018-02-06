@@ -7,22 +7,8 @@ export class IoVector extends Io {
     return html`
       <style>
         :host {
-          display: grid;
-        }
-        :host[columns="2"] {
-          grid-template-columns: 50% 50%;
-        }
-        :host[columns="3"] {
-          grid-template-columns: 33.3% 33.3% 33.3%;
-        }
-        :host[columns="4"] {
-          grid-template-columns: 25% 25% 25% 25%;
-        }
-        :host[columns="5"] {
-          grid-template-columns: 20% 20% 20% 20% 20%;
-        }
-        :host > io-object-prop > io-number {
-          width: 100%;
+          display: flex;
+          flex-direction: row;
         }
       </style>
     `;

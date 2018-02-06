@@ -1,6 +1,7 @@
 import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
+import {UiButton} from "../../ui/ui-button/ui-button.js"
 import {IoObject} from "../io-object/io-object.js"
 import {IoObjectProp} from "../io-object/io-object-prop.js"
 
@@ -27,11 +28,6 @@ export class IoInspectorGroup extends IoObject {
         :host .io-wrapper > .io-row:last-of-type {
           margin-bottom: 0.3em;
         }
-        :host .io-wrapper > .io-row > .io-link {
-          cursor: pointer;
-          padding: 0.3em 0;
-          color: #fc8;
-        }
         :host .io-wrapper > .io-row > .io-label {
           width: 8em;
           min-width: 8em;
@@ -41,6 +37,13 @@ export class IoInspectorGroup extends IoObject {
           padding: 0.3em 0;
           padding-right: 0.5em;
         }
+        :host .io-wrapper > .io-row > ui-button {
+          padding: 0.3em 0;
+          color: #fd9;
+          flex: 1;
+          font-weight: bold;
+          border-radius: 0.3em;
+        }
         :host io-object-prop {
           flex: 1;
           display: flex;
@@ -48,45 +51,39 @@ export class IoInspectorGroup extends IoObject {
         :host io-object-prop > * {
           flex: 1;
         }
-        :host io-option {
-          flex: none;
-          background: #444;
-          color: #ddd;
+        :host io-option > ui-button {
+          display: inline-block;
           border-radius: 0.1em;
-          vertical-align: middle;
-          padding: 0.3em 0.4em;
+          color: #ddd;
+          background: #444;
+          color: #ddd !important;
         }
-        :host io-object-prop[tag=io-slider] {
+        :host io-slider {
           border-radius: 0.2em;
           background: #444;
-          margin-right: 0.2em;
         }
-        :host io-object-prop[tag=io-string],
-        :host io-object-prop[tag=io-number],
-        :host io-object-prop io-object-prop[tag=io-number] {
-          border-radius: 0.2em;
-          background: #222;
-          padding: 0 0.3em;
-          margin-right: 0.2em;
-        }
-        :host io-object-prop[tag=io-matrix] io-object-prop,
-        :host io-object-prop[tag=io-color] io-object-prop,
-        :host io-object-prop[tag=io-vector] io-object-prop {
+        :host io-object-prop > io-vector > io-object-prop:not(:last-of-type) > io-number {
           margin-right: 0.3em;
         }
-        :host io-object-prop[tag=io-matrix] io-object-prop {
-          margin-bottom: 0.3em;
+        :host io-string,
+        :host io-number {
+          border-radius: 0.3em;
+          background: #222;
+          padding: 0.3em;
         }
-        :host io-object-prop[tag=io-boolean] {
-          display: flex;
+        :host ui-button {
+          padding: 0.3em !important;
         }
         :host io-boolean,
         :host io-string,
         :host io-number {
           display: flex;
-          padding: 0.3em 0;
           color: #bef !important;
           flex: 1;
+        }
+        :host :focus {
+          outline: 0;
+          box-shadow: 0 0 0.5em #2ff;
         }
       </style>
     `;
@@ -109,20 +106,16 @@ export class IoInspectorGroup extends IoObject {
         type: Boolean,
         value: true,
         observer: '_update'
-      },
-      listeners: {
-        'click': '_clickHandler'
       }
     }
   }
-  _clickHandler(event) {
-    if (event.target.className === 'io-link') {
-      this.dispatchEvent(new CustomEvent('io-link-clicked', {
-        detail: {key: event.target.previousSibling.innerText}, // TODO: yuck
-        bubbles: true,
-        composed: true
-      }));
-    }
+  _clickHandler(value) {
+    // TODO: consider bubbling event from button
+    this.dispatchEvent(new CustomEvent('io-link-clicked', {
+      detail: {value: value},
+      bubbles: true,
+      composed: true
+    }));
   }
   _update() {
     let propConfigs = this.getPropConfigs(this.props);
@@ -130,7 +123,7 @@ export class IoInspectorGroup extends IoObject {
       ['span', {className: 'io-label'}, entry[0]],
       entry[1].tag !== 'io-object' ?
           ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}] :
-          ['span', {className: 'io-link'}, this.value[entry[0]].constructor.name]
+          ['ui-button', {action: this._clickHandler, value: this.value[entry[0]]}, this.value[entry[0]].constructor.name]
     ]];
     this.render([
       this.label === 'main' ? ['div', {className: 'io-wrapper'}, [

@@ -42,8 +42,8 @@ export class IoInspector extends Io {
   }
   _linkClickedHandler(event) {
     event.stopPropagation();
-    if (this.value[event.detail.key] instanceof Object) {
-      this.value = this.value[event.detail.key];
+    if (event.detail.value instanceof Object) {
+      this.value = event.detail.value;
     }
   }
   _update() {
