@@ -42,18 +42,14 @@ export class IoInspectorGroup extends IoObject {
           color: #fd9;
           flex: 1;
           font-weight: bold;
-          border-radius: 0.3em;
+
         }
         :host io-object-prop {
           flex: 1;
           display: flex;
         }
-        :host io-object-prop > * {
-          flex: 1;
-        }
         :host io-option > ui-button {
           display: inline-block;
-          border-radius: 0.1em;
           color: #ddd;
           background: #444;
           color: #ddd !important;
@@ -62,6 +58,10 @@ export class IoInspectorGroup extends IoObject {
           border-radius: 0.2em;
           background: #444;
         }
+        :host io-object-prop > io-matrix > io-object-prop > io-number {
+          margin: 0 0.3em 0.3em 0;
+        }
+        :host io-object-prop > io-color > io-object-prop > io-number,
         :host io-object-prop > io-vector > io-object-prop:not(:last-of-type) > io-number {
           margin-right: 0.3em;
         }
@@ -73,9 +73,16 @@ export class IoInspectorGroup extends IoObject {
         }
         :host ui-button {
           padding: 0.3em !important;
+          border-radius: 0.3em !important;
+        }
+        :host io-color,
+        :host io-slider,
+        :host io-matrix {
+          flex: 1;
         }
         :host io-boolean,
         :host io-string,
+        :host io-vector,
         :host io-number {
           display: flex;
           color: #bef !important;

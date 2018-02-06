@@ -85,6 +85,7 @@ export class IoObject extends Io {
     ]];
     this.render([
       ['io-collapsable', {label: label, expanded: this.bind('expanded')}, [
+        ['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}],
         this.expanded ? Object.entries(propConfigs).map(Prop) : null
       ]]
     ]);
