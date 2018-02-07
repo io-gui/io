@@ -40,7 +40,7 @@ export class IoInspectorGroup extends IoObject {
         :host .io-wrapper > .io-row > ui-button {
           padding: 0.3em 0;
           color: #fd9;
-          flex: 1;
+          flex: none;
           font-weight: bold;
 
         }
@@ -74,6 +74,9 @@ export class IoInspectorGroup extends IoObject {
         :host ui-button {
           padding: 0.3em !important;
           border-radius: 0.3em !important;
+        }
+        :host io-object-prop > io-boolean {
+          flex: none;
         }
         :host io-color,
         :host io-slider,
@@ -126,19 +129,19 @@ export class IoInspectorGroup extends IoObject {
   }
   _update() {
     let propConfigs = this.getPropConfigs(this.props);
-    const Prop = entry => ['div', {className: 'io-row'}, [
-      ['span', {className: 'io-label'}, entry[0]],
+    const Prop = entry => ['div', {class: 'io-row'}, [
+      ['span', {class: 'io-label'}, entry[0]],
       entry[1].tag !== 'io-object' ?
           ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}] :
           ['ui-button', {action: this._clickHandler, value: this.value[entry[0]]}, this.value[entry[0]].constructor.name]
     ]];
     this.render([
-      this.label === 'main' ? ['div', {className: 'io-wrapper'}, [
+      this.label === 'main' ? ['div', {class: 'io-wrapper'}, [
         Object.entries(propConfigs).map(Prop)
       ]] :
       ['io-collapsable', {label: this.label, expanded: this.bind('expanded')}, [
         ['io-boolean', {true: '▾' + this.label, false: '▸' + this.label, value: this.bind('expanded')}],
-        ['div', {className: 'io-wrapper'}, [
+        ['div', {class: 'io-wrapper'}, [
           this.expanded ? Object.entries(propConfigs).map(Prop) : null
         ]]
       ]]

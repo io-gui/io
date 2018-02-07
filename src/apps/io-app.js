@@ -91,58 +91,58 @@ export class IoApp extends Io {
     this.values.object = this.values;
 
     this.render([
-      ['div', {className: 'demo'}, [
+      ['div', {class: 'demo'}, [
         ['h3', 'io-string io-number and io-boolean.'],
         ['io-string', {value: this.values.string}],
         ['io-number', {value: this.values.number, step: 0.1}],
         ['io-boolean', {value: this.values.boolean}],
       ]],
-      ['div', {className: 'demo'}, [
+      ['div', {class: 'demo'}, [
         ['h3', 'matrix with various data types and type elements.'],
-        ['div', {className: 'row narrow header'}, [
-          ['span', {className: 'rowlabel'}],
+        ['div', {class: 'row narrow header'}, [
+          ['span', {class: 'rowlabel'}],
           ['span', 'string'],
           ['span', 'number'],
           ['span', 'boolean'],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'string'],
+        ['div', {class: 'row narrow'}, [
+          ['span', {class: 'rowlabel'}, 'string'],
           ['io-string', {value: this.values.string}],
           ['io-number', {value: this.values.string}],
           ['io-boolean', {type: 'boolean', value: this.values.string}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'number'],
+        ['div', {class: 'row narrow'}, [
+          ['span', {class: 'rowlabel'}, 'number'],
           ['io-string', {value: this.values.number}],
           ['io-number', {value: this.values.number}],
           ['io-boolean', {type: 'boolean', value: this.values.number}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'boolean'],
+        ['div', {class: 'row narrow'}, [
+          ['span', {class: 'rowlabel'}, 'boolean'],
           ['io-string', {value: this.values.boolean}],
           ['io-number', {value: this.values.boolean}],
           ['io-boolean', {type: 'boolean', value: this.values.boolean}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'NaN'],
+        ['div', {class: 'row narrow'}, [
+          ['span', {class: 'rowlabel'}, 'NaN'],
           ['io-string', {value: this.values.NaN}],
           ['io-number', {value: this.values.NaN}],
           ['io-boolean', {type: 'boolean', value: this.values.NaN}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'null'],
+        ['div', {class: 'row narrow'}, [
+          ['span', {class: 'rowlabel'}, 'null'],
           ['io-string', {value: this.values.null}],
           ['io-number', {value: this.values.null}],
           ['io-boolean', {type: 'boolean', value: this.values.null}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'undefined'],
+        ['div', {class: 'row narrow'}, [
+          ['span', {class: 'rowlabel'}, 'undefined'],
           ['io-string', {value: this.values.undef}],
           ['io-number', {value: this.values.undef}],
           ['io-boolean', {type: 'boolean', value: this.values.undef}],
         ]],
       ]],
-      ['div', {className: 'demo'}, [
+      ['div', {class: 'demo'}, [
         ['h3', 'io-option'],
         ['io-option', {options: this.options, value: 1}],
         ['io-option', {options: this.options, value: 2}],
@@ -150,11 +150,11 @@ export class IoApp extends Io {
         ['io-option', {options: this.options, value: 4}],
         ['io-option', {options: this.options, value: 5}],
       ]],
-      ['div', {className: 'demo area'}, [
+      ['div', {class: 'demo area'}, [
         ['h3', 'ui-menu (click to expand)'],
         ['ui-menu', {options: this.menuoptions, position: 'pointer'}]
       ]],
-      ['div', {className: 'demo'}, [
+      ['div', {class: 'demo'}, [
         ['h3', 'io-object with various property types.'],
         ['io-object', {value: this.values, expanded: true, labeled: true}],
         ['io-object', {value: this.values, expanded: true, labeled: true}]

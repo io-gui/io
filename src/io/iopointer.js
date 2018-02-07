@@ -147,9 +147,9 @@ export class IoPointer extends Io {
     this._dispatchEvent('io-pointer-end', event, this.pointers);
 
   }
-  _dispatchEvent(eventName, event, pointers) {
+  _dispatchEvent(eventName, event, pointer) {
     this.dispatchEvent(new CustomEvent(eventName, {
-      detail: {event: event, pointers: pointers},
+      detail: {event: event, pointer: pointer},
       bubbles: false,
       composed: true
     }));

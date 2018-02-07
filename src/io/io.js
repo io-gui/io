@@ -226,7 +226,7 @@ export class Io extends HTMLElement {
           for (let s in vChildren[i].props[prop]) {
             element.style[s] = vChildren[i].props[prop][s];
           }
-        } else if (prop == 'className') {
+        } else if (prop == 'class') {
           // TODO: ugh
           element.className = vChildren[i].props[prop];
         }

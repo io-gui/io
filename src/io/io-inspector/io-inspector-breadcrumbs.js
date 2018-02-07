@@ -78,12 +78,12 @@ export class IoInspectorBreadcrumbs extends Io {
       this.path = [this.value];
     }
     const Prop = (elem, i) => ['ui-button',
-        {className: 'io-breadcrumb', action: this._gotoHandler, value: i}, this.path[i].__proto__.constructor.name];
+        {class: 'io-breadcrumb', action: this._gotoHandler, value: i}, this.path[i].__proto__.constructor.name];
     this.render([
-      ['div', {className: 'io-flex'}, [
+      ['div', {class: 'io-flex'}, [
         this.path.map(Prop),
       ]],
-      this.path.length > 1 ? ['ui-button', {className: 'io-back-button', action: this._backHandler}, '< Back'] : null
+      this.path.length > 1 ? ['ui-button', {class: 'io-back-button', action: this._backHandler}, '< Back'] : null
     ]);
   }
 }
