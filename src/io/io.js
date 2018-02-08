@@ -68,6 +68,7 @@ export class Io extends HTMLElement {
 
     for (let key in this.__properties) {
       if (props[key] instanceof Binding) {
+        // props[key] = props[key].clone();
         let binding = props[key];
         this.__properties[key].value = binding.source[binding.sourceProp];
         binding.target = this;
@@ -162,6 +163,7 @@ export class Io extends HTMLElement {
       let element;
       let oldElement;
       let observers = [];
+      let reflections = [];
 
       if (children[i] && children[i].localName === vChildren[i].name) {
 
@@ -169,11 +171,14 @@ export class Io extends HTMLElement {
         observers.length = 0;
 
         for (let prop in vChildren[i].props) {
+
           if (vChildren[i].props[prop] !== element[prop]) {
 
-            if (vChildren[i].props[prop] instanceof Binding) {
-              let binding = vChildren[i].props[prop];
-              vChildren[i].props[prop] = binding.source[binding.sourceProp];
+            let value = vChildren[i].props[prop];
+
+            if (value instanceof Binding) {
+              let binding = value.clone(); // TODO: try making without clone
+              value = binding.source[binding.sourceProp];
               binding.target = element;
               binding.targetProp = prop;
               binding.bind();
@@ -181,13 +186,16 @@ export class Io extends HTMLElement {
 
             // avoid triggering observers prematurely when re-rendering elements with different props.
             if (element.__properties && element.__properties.hasOwnProperty(prop)) {
-              element.__properties[prop].value = vChildren[i].props[prop];
+              element.__properties[prop].value = value;
               // TODO: make less ugly
+              if (element.__properties[prop].reflectToAttribute && reflections.indexOf(prop) === -1) {
+                reflections.push(prop);
+              }
               if (element.__properties[prop].observer && observers.indexOf(element.__properties[prop].observer) === -1) {
                 observers.push(element.__properties[prop].observer);
               }
             } else {
-              element[prop] = vChildren[i].props[prop];
+              element[prop] = value;
             }
           }
         }
@@ -195,6 +203,10 @@ export class Io extends HTMLElement {
         // triggering observers
         for (var j = 0; j < observers.length; j++) {
           element[observers[j]]();
+        }
+        // triggering reflections
+        for (var j = 0; j < reflections.length; j++) {
+          element.reflectAttribute(reflections[j], element.__properties[reflections[j]]);
         }
 
       } else if (children[i] && children[i].localName !== vChildren[i].name) {
@@ -226,7 +238,7 @@ export class Io extends HTMLElement {
           for (let s in vChildren[i].props[prop]) {
             element.style[s] = vChildren[i].props[prop][s];
           }
-        } else if (prop == 'className') {
+        } else if (prop == 'class') {
           // TODO: ugh
           element.className = vChildren[i].props[prop];
         }
@@ -288,7 +300,7 @@ export class Io extends HTMLElement {
   }
 }
 
-class Binding {
+export class Binding {
   constructor(source, target, sourceProp, targetProp) {
     this.source = source;
     this.target = target;
@@ -296,7 +308,10 @@ class Binding {
     this.targetProp = targetProp;
     this.setTarget = this.setTarget.bind(this);
     this.setSource = this.setSource.bind(this);
-    this.bind();
+    // this.bind(); // TODO: check if anything broke
+  }
+  clone() {
+    return new Binding(this.source, this.target, this.sourceProp, this.targetProp);
   }
   setTarget(event) {
     this.target[this.targetProp] = event.detail.value;

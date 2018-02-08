@@ -1,11 +1,11 @@
 import * as THREE from "../../lib/three.module.js"
 import {IoObject} from "../io/io-object/io-object.js"
-import {IoOption} from "../io/io-option/io-option.js"
-import {IoVector} from "../io/io-vector/io-vector.js"
-import {IoMatrix} from "../io/io-matrix/io-matrix.js"
-import {IoColor} from "../io/io-color/io-color.js"
-import {IoSlider} from "../io/io-slider/io-slider.js"
 import {IoInspector} from "../io/io-inspector/io-inspector.js"
+import "../io/io-option/io-option.js"
+import "../io/io-vector/io-vector.js"
+import "../io/io-matrix/io-matrix.js"
+import "../io/io-color/io-color.js"
+import "../io/io-slider/io-slider.js"
 
 IoInspector.CONFIG = Object.assign(IoInspector.CONFIG, {
   'Object': {

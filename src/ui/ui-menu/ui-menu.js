@@ -4,6 +4,16 @@ import {UiMenuLayer} from "./ui-menu-layer.js"
 import {UiMenuGroup} from "./ui-menu-group.js"
 
 export class UiMenu extends Io {
+  static get style() {
+    return html`
+      <style>
+        :host {
+          display: inline-block;
+          background: black;
+        }
+      </style>
+    `;
+  }
   static get properties() {
     return {
       options: {

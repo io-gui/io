@@ -1,8 +1,7 @@
 import {Io} from "./io.js"
 
 const clickmask = document.createElement('div');
-clickmask.className = 'three-control';
-clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647; cursor: move;"
+clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;"
 
 export class Vector2 extends Object {
   constructor(vector = {}) {
@@ -147,9 +146,9 @@ export class IoPointer extends Io {
     this._dispatchEvent('io-pointer-end', event, this.pointers);
 
   }
-  _dispatchEvent(eventName, event, pointers) {
+  _dispatchEvent(eventName, event, pointer) {
     this.dispatchEvent(new CustomEvent(eventName, {
-      detail: {event: event, pointers: pointers},
+      detail: {event: event, pointer: pointer},
       bubbles: false,
       composed: true
     }));

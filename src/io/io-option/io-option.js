@@ -12,6 +12,8 @@ export class IoOption extends Io {
         :host {
           display: inline-block;
           cursor: pointer;
+          position: relative;
+          white-space: nowrap;
         }
       </style>
     `;

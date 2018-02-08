@@ -1,66 +1,47 @@
 import {Io} from "../io/io.js"
 import {html} from "../io/ioutil.js"
-import {IoObject} from "../io/io-object/io-object.js"
-import {IoInspector} from "../io/io-inspector/io-inspector.js"
+import "../ui/ui-layout/ui-layout.js"
+import "../io/io-object/io-object.js"
+import "../io/io-inspector/io-inspector.js"
 
-import "./three-config.js"
-import * as THREE from "../../lib/three.module.js"
+import {ThreeAppScene} from "./three-app-scene.js"
 
-let color = new THREE.Color(1,0.5,0.2);
-let mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshBasicMaterial({color: color}));
-let light = new THREE.Light();
-light.color = color;
-let renderer = new THREE.WebGLRenderer();
-let texture = new THREE.Texture();
-mesh.add(light);
+let scene = new ThreeAppScene();
 
 export class ThreeApp extends Io {
   static get style() {
     return html`
       <style>
-      :host .row {
-        display: flex;
-        flex-direction: row;
-      }
-      :host .row > * {
-        margin-right: 1em;
-      }
-      :host io-inspector {
-        width: 400px;
-        max-height: 900px;
-      }
+        :host {
+          position: fixed;
+          display: flex;
+          width: 100%;
+          height: 100%;
+          background: #222;
+          flex-direction: column;
+        }
+        :host > .header {
+          height: 1em;
+        }
+        :host > .footer {
+          height: 1em;
+        }
       </style>
     `;
   }
   static get properties() {
     return {
-      value: {
-        value: mesh,
-        observer: '_update'
-      }
     }
-  }
-  _valueChangedHandler(event) {
-    this.value = event.detail.value;
   }
   _update() {
     this.render([
-      ['div', {className: 'demo'}, [
-        ['div', [
-          ['span', 'io-inspector: '],
-          ['io-option', {value: this.bind('value'), options: [
-            {value: light, label: 'Light'},
-            {value: mesh, label: 'Mesh'},
-            {value: color, label: 'Color'},
-            {value: renderer, label: 'Renderer'},
-            {value: texture, label: 'Texture'}
-          ]}]
-        ]],
-        ['div', {className: 'row'}, [
-          ['io-inspector', {value: this.value}],
-          ['io-object', {value: this.value, expanded: true}]
-        ]]
-      ]]
+      ['div', {class: 'header'}],
+      ['ui-layout', {elements: {
+        inspector: ['io-inspector', {value: scene.bind('value')}],
+        object: ['io-object', {value: scene.bind('value'), expanded: false}],
+        option: ['io-option', {value: scene.bind('value'), options: scene.options}]
+      }}],
+      ['div', {class: 'footer'}]
     ]);
   }
 }

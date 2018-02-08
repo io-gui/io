@@ -79,7 +79,7 @@ export class IoObject extends Io {
   _update() {
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
     let label = this.value.constructor.name;
-    const Prop = entry => ['div', {className: 'io-row'}, [
+    const Prop = entry => ['div', {class: 'io-row'}, [
       ['span', entry[0] + ':'],
       ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
     ]];

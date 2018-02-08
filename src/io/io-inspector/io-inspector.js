@@ -84,7 +84,7 @@ export class IoInspector extends Io {
     const GroupItem = entry => ['io-inspector-group', {value: this.value, props: entry[1], label: entry[0]}];
     this.render([
       ['io-inspector-breadcrumbs', {value: this.bind('value')}],
-      ['div', {className: 'io-wrapper'}, [
+      ['div', {class: 'io-wrapper'}, [
         Object.entries(groups).map(GroupItem)
       ]]
     ]);
