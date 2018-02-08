@@ -1,7 +1,7 @@
 import {html} from "../../io/ioutil.js"
 import {IoPointer} from "../../io/iopointer.js"
 
-export class LayoutDivider extends IoPointer {
+export class UiLayoutDivider extends IoPointer {
   static get style() {
     return html`
       <style>
@@ -44,4 +44,4 @@ export class LayoutDivider extends IoPointer {
 }
 
 
-window.customElements.define('layout-divider', LayoutDivider);
+window.customElements.define('ui-layout-divider', UiLayoutDivider);

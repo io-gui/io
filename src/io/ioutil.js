@@ -1,3 +1,5 @@
+import {Binding} from "./io.js"
+
 // HTML Escape helper utility thanks to Andrea Giammarchi https://developers.google.com/web/updates/2015/01/ES6-Template-Strings
 var util = (function () {
   var
