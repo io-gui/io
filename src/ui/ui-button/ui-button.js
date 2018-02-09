@@ -32,14 +32,13 @@ export class UiButton extends Io {
   _actionHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
       event.preventDefault();
-      this.focus();
       if (typeof this.action === 'function') {
         this.action(this.value !== undefined ? this.value : event);
       }
     }
   }
   _preventHandler(event) {
-    if (event.which !== 9) {
+    if (event.type === 'keydown' && event.which !== 9) {
       event.preventDefault();
     }
   }
