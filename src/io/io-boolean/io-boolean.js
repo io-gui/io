@@ -29,11 +29,13 @@ export class IoBoolean extends Io {
       },
       true: {
         value: 'true',
-        type: String
+        type: String,
+        observer: '_update'
       },
       false: {
         value: 'false',
-        type: String
+        type: String,
+        observer: '_update'
       }
     }
   }

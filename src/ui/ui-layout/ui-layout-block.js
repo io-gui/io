@@ -11,6 +11,7 @@ export class UiLayoutBlock extends Io {
           display: flex;
           flex-direction: column;
           position: relative;
+          overflow: hidden;
         }
         :host[width],
         :host[height] {

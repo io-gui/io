@@ -51,8 +51,8 @@ export class UiLayoutDivider extends IoPointer {
   }
   _pointerMoveHandler(event) {
     let movement = this.orientation === 'horizontal' ?
-        event.detail.event.movementX :
-        event.detail.event.movementY;
+        event.detail.pointer[0].movement.x :
+        event.detail.pointer[0].movement.y;
     let prev = this.previousElementSibling;
     let next = this.nextElementSibling;
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
@@ -60,7 +60,6 @@ export class UiLayoutDivider extends IoPointer {
       var c = [].slice.call(this.parentElement.children);
       let f = (c.length / 2 - c.indexOf(prev) > c.length / 2 - c.indexOf(next)) ? next : prev;
       f[d] = f.getBoundingClientRect()[d];
-      // console.log(f, d)
     }
     if (next[d]) next[d] = Math.max(0, parseInt(next[d]) - movement);
     if (prev[d]) prev[d] = Math.max(0, parseInt(prev[d]) + movement);
