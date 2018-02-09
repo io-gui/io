@@ -68,7 +68,8 @@ export class Io extends HTMLElement {
 
     for (let key in this.__properties) {
       if (props[key] instanceof Binding) {
-        // props[key] = props[key].clone();
+        // TODO: make bindings work without cloning
+        props[key] = props[key].clone();
         let binding = props[key];
         this.__properties[key].value = binding.source[binding.sourceProp];
         binding.target = this;
@@ -134,6 +135,7 @@ export class Io extends HTMLElement {
       this.__listeners[e] = this[this.__listeners[e]];
       this.addEventListener(e, this.__listeners[e]);
     }
+    // TODO: occasional redundant update?
     if (typeof this._update == 'function') this._update();
   }
   disconnectedCallback() {
@@ -186,13 +188,16 @@ export class Io extends HTMLElement {
 
             // avoid triggering observers prematurely when re-rendering elements with different props.
             if (element.__properties && element.__properties.hasOwnProperty(prop)) {
+              let oldValue = element.__properties[prop].value;
               element.__properties[prop].value = value;
               // TODO: make less ugly
               if (element.__properties[prop].reflectToAttribute && reflections.indexOf(prop) === -1) {
                 reflections.push(prop);
               }
               if (element.__properties[prop].observer && observers.indexOf(element.__properties[prop].observer) === -1) {
-                observers.push(element.__properties[prop].observer);
+                if (value !== oldValue) {
+                  observers.push(element.__properties[prop].observer);
+                }
               }
             } else {
               element[prop] = value;

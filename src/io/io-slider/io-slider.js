@@ -61,7 +61,9 @@ export class IoSlider extends IoPointer {
     }
   }
   _pointerMoveHandler(event) {
-    let pos = Math.max(0,Math.min(1, event.detail.pointer[0].position.x / 2 + 0.5));
+    let rect = this.getBoundingClientRect();
+    let x = (event.detail.pointer[0].position.x - rect.left) / rect.width;
+    let pos = Math.max(0,Math.min(1, x));
     // TODO: implement step
     this._setValue(this.min + (this.max - this.min) * pos);
   }

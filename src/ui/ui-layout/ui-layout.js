@@ -3,7 +3,7 @@ import {Io} from "../../io/io.js"
 import {UiLayoutBlock} from "./ui-layout-block.js"
 import {UiLayoutSplit} from "./ui-layout-split.js"
 
-var layout = JSON.parse(localStorage.getItem('io-layout-state'));
+var layout = null;//JSON.parse(localStorage.getItem('io-layout-state'));
 
 export class UiLayout extends Io {
   static get style() {
@@ -17,9 +17,6 @@ export class UiLayout extends Io {
       </style>
     `;
   }
-
-
-
   static get properties() {
     return {
       elements: {
@@ -29,16 +26,16 @@ export class UiLayout extends Io {
         type: Object,
         value: layout || {'horizontal': [
           {'width': 300, 'vertical': [
-            {'height': 100, 'tabs': ['object']},
+            {'height': 100, 'tabs': ['option']},
             {'horizontal': [
               {'width': 50, 'tabs': ['option']},
-              {'tabs': ['option']},
-              {'tabs': ['option']},
+              {'tabs': ['inspector']},
+              {'tabs': ['inspector']},
               {'width': 50, 'tabs': ['option']}
             ]},
-            {'tabs': ['option']},
+            {'tabs': ['object']},
           ]},
-          {'tabs': ['option', 'object', 'inspector'], 'selected': 'inspector'},
+          {'tabs': ['option', 'inspector', 'object'], 'selected': 'inspector'},
           {'width': 400, 'tabs': ['inspector']}
         ]}
       },

@@ -7,6 +7,7 @@ import "../io/io-inspector/io-inspector.js"
 import {ThreeAppScene} from "./three-app-scene.js"
 
 let scene = new ThreeAppScene();
+window.scene = scene;
 
 export class ThreeApp extends Io {
   static get style() {
@@ -38,7 +39,7 @@ export class ThreeApp extends Io {
       ['div', {class: 'header'}],
       ['ui-layout', {elements: {
         inspector: ['io-inspector', {value: scene.bind('value')}],
-        object: ['io-object', {value: scene.bind('value'), expanded: false}],
+        object: ['io-object', {value: scene.bind('value'), expanded: true}],
         option: ['io-option', {value: scene.bind('value'), options: scene.options}]
       }}],
       ['div', {class: 'footer'}]
