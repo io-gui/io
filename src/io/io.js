@@ -100,11 +100,11 @@ export class Io extends HTMLElement {
       },
       set: function(value) {
         if (config.value === value) return;
-        let oldValue = value;
+        let oldValue = config.value;
         config.value = value;
         this.reflectAttribute(key, config);
         if (config.observer) {
-          this[config.observer](value, key);
+          this[config.observer](value, oldValue, key);
         }
         if (config.notify) {
           this.dispatchEvent(new CustomEvent(key + '-changed', {

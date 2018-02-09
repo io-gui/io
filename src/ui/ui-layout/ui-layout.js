@@ -1,7 +1,9 @@
 import {html} from "../../io/ioutil.js"
 import {Io} from "../../io/io.js"
 import {UiLayoutBlock} from "./ui-layout-block.js"
-import {UiLayoutDivider} from "./ui-layout-divider.js"
+import {UiLayoutSplit} from "./ui-layout-split.js"
+
+var layout = JSON.parse(localStorage.getItem('io-layout-state'));
 
 export class UiLayout extends Io {
   static get style() {
@@ -9,53 +11,59 @@ export class UiLayout extends Io {
       <style>
         :host  {
           display: flex;
-          flex: 1;
           background: #999;
-        }
-        :host .left,
-        :host .right {
-          flex: none;
+          flex: 1;
         }
       </style>
     `;
   }
+
+
+
   static get properties() {
     return {
       elements: {
         type: Object
       },
-      leftWidth: {
-        value: 300,
-        type: Number
+      value: {
+        type: Object,
+        value: layout || {'horizontal': [
+          {'width': 300, 'vertical': [
+            {'height': 100, 'tabs': ['object']},
+            {'horizontal': [
+              {'width': 50, 'tabs': ['option']},
+              {'tabs': ['option']},
+              {'tabs': ['option']},
+              {'width': 50, 'tabs': ['option']}
+            ]},
+            {'tabs': ['option']},
+          ]},
+          {'tabs': ['option', 'object', 'inspector'], 'selected': 'inspector'},
+          {'width': 400, 'tabs': ['inspector']}
+        ]}
       },
-      rightWidth: {
-        value: 500,
-        type: Number
+      listeners: {
+        'layout-changed': '_layoutChangedHandler'
       }
     }
   }
+  _layoutChangedHandler(event) {
+    localStorage.setItem('io-layout-state', JSON.stringify(this.value));
+  }
   _update() {
-    this.render([
-      ['ui-layout-block', {class: 'left', width: this.bind('leftWidth'), elements: {
-        object1: this.elements.object,
-        object2: this.elements.object
-      }}],
-      ['ui-layout-divider'],
-      ['ui-layout-block', {class: 'center', elements: {
-        option: this.elements.option,
-        object: this.elements.object,
-        inspector: this.elements.inspector
-      }}],
-      ['ui-layout-divider'],
-      ['ui-layout-block', {class: 'right', width: this.bind('rightWidth'), elements: {
-        inspector: this.elements.inspector
-      }}],
-    ])
+    if (this.value.tabs) {
+      this.render([
+        ['ui-layout-block', {elements: this.elements, tabs: this.value.tabs}]
+      ]);
+    } else {
+      this.render([
+        ['ui-layout-split', {
+            elements: this.elements,
+            orientation: this.value.horizontal ? 'horizontal' : 'vertical',
+            blocks: this.value.horizontal || this.value.vertical}]
+      ]);
+    }
   }
 }
-
-// document.addEventListener("drag", function(event) {
-//   console.log(event)
-// }, false);
 
 window.customElements.define('ui-layout', UiLayout);

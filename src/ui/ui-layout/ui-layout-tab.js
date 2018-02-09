@@ -17,25 +17,68 @@ export class UiLayoutTab extends UiButton {
   }
   static get properties() {
     return {
+      value: {
+        type: String,
+        observer: '_update'
+      },
       selected: {
         type: Boolean,
         reflectToAttribute: true
       },
       listeners: {
-        'drag': '_dragHandler',
-        'dragover': '_dragoverHandler'
+        'dragstart': '_dragstartHandler',
+        'dragend': '_dragendHandler'
+      },
+      droptarget: {
+        type: HTMLElement,
+        observer: '_dropTargetChanged'
       },
       attributes: {
         draggable: true
       }
     }
   }
-  _dragHandler(event) {
-    // console.log(event);
+  _dragstartHandler() {
+    UiLayoutTab.dragged = this;
   }
-  _dragoverHandler(event) {
-    // console.log(event.srcElement)
+  _dropTargetChanged(value, oldValue) {
+    if (oldValue) oldValue.dropzone = '';
   }
+  _dragendHandler(event) {
+    if (this.droptarget && this.droptarget.dropzone === 'center') {
+      this.droptarget.tabs.push(this.value);
+      //TODO: ugh
+      this.parentElement.parentElement.tabs.splice(this.parentElement.parentElement.tabs.indexOf(this.value), 1);
+      this.droptarget._update();
+      this.parentElement.parentElement._update();
+    }
+    if (this.droptarget) this.droptarget.dropzone = '';
+  }
+  _update() {
+    this.innerText = this.value;
+  }
+  // _dragHandler(event) {
+  //   let blocks = [];
+  //   for (let i = 0; i < event.path.length; i++) {
+  //     if (event.path[i].localName === 'ui-layout-block') {
+  //       blocks.push(event.path[i]);
+  //     }
+  //   }
+  //   console.log(event)
+  //   for (let i = 0; i < blocks.length; i++) {
+  //     console.log(blocks[i])
+  //   }
+  //
+  //   if (this.targetBlock !== blocks[0]) {
+  //     // if (this.targetBlock) this.targetBlock.droptarget = '';
+  //     this.targetBlock = blocks[0];
+  //   }
+  //
+  //
+  // }
+  // _dragoverHandler(event) {
+  //   // console.log(event.srcElement)
+  // }
 }
 
 var dragged;
