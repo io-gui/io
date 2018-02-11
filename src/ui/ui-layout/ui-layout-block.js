@@ -12,8 +12,6 @@ export class UiLayoutBlock extends Io {
           flex-direction: column;
           position: relative;
           overflow: hidden;
-          /* TODO: margin from divider */
-          /* margin: 0 4px; */
           background: #ffc;
         }
         :host > .ui-layout-tabs {
@@ -106,15 +104,15 @@ export class UiLayoutBlock extends Io {
   //   else if (x > +Math.abs(y)) this.dropzone = 'right';
   //   else this.dropzone = 'center';
   // }
-  // _selectHandler(elem) {
-  //   this.selected = elem;
-  //   this.data.selected = elem;
-  //   this.dispatchEvent(new CustomEvent('layout-changed', {
-  //     detail: this.data,
-  //     bubbles: true,
-  //     composed: true
-  //   }));
-  // }
+  _selectHandler(elem) {
+    this.selected = elem;
+    this.data.selected = elem;
+    this.dispatchEvent(new CustomEvent('layout-changed', {
+      detail: this.data,
+      bubbles: true,
+      composed: true
+    }));
+  }
   _update() {
     const Elem = (entry, i) => ['ui-layout-tab', {
         value: entry,

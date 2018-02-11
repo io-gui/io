@@ -51,48 +51,51 @@ export class UiLayoutSplit extends Io {
   }
   _dividerMoveHandler(event) {
     event.stopPropagation();
-    let i = event.detail.index;
-    let d = this.orientation === 'horizontal' ? 'width' : 'height';
-    var blocks = [].slice.call(this.children).filter(element => element.className === 'ui-layout-block');
     let movement = event.detail.movement;
 
-    let rect = this.getBoundingClientRect();
+    let i = event.detail.index;
+    let d = this.orientation === 'horizontal' ? 'width' : 'height';
 
+    var blocks = [].slice.call(this.children).filter(element => element.className === 'ui-layout-block');
     let prev = this.blocks[i];
     let next = this.blocks[i+1];
-    // if (!next[d] && !prev[d]) {
-    //   var c = [].slice.call(this.parentElement.children);
-    //   let f = (c.length / 2 - c.indexOf(prev) > c.length / 2 - c.indexOf(next)) ? next : prev;
-    //   f[d] = f.getBoundingClientRect()[d];
-    // }
-    prev[d] = prev[d] || blocks[i].getBoundingClientRect()[d];
-    next[d] = next[d] || blocks[i+1].getBoundingClientRect()[d];
+
+    if (!next[d] && !prev[d]) {
+      next[d] = blocks[i+1].getBoundingClientRect()[d];
+    }
+
+    prev = this.blocks[i];
+    next = this.blocks[i+1];
+
     if (prev[d]) prev[d] = Math.max(6, Math.min(Infinity, prev[d] + movement));
     if (next[d]) next[d] = Math.max(6, Math.min(Infinity, next[d] - movement));
-
-    //   this.dispatchEvent(new CustomEvent('layout-changed', {
-    //     detail: this.data,
-    //     bubbles: true,
-    //     composed: true
-    //   }));
+    this.dispatchEvent(new CustomEvent('layout-changed', {
+      detail: this.data,
+      bubbles: true,
+      composed: true
+    }));
     this._update();
   }
   _update() {
-    // this._resize();
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let elements = [];
     for (var i = 0; i < this.blocks.length; i++) {
       let size = this.blocks[i][d];
-      let style = {}
-      if (size) {
-        style[d] = size + 'px';
-        style['flex'] = 'none';
-      }
+      let style = {
+        'flex-basis': 'auto',
+        'flex-shrink': '10000',
+        'flex-grow': '1'
+      };
+      if (size) style = {
+        'flex-basis': size + 'px',
+        'flex-shrink': '1',
+        'flex-grow': '0'
+      };
       if (this.blocks[i].tabs) {
         elements.push(['ui-layout-block', {
             class: 'ui-layout-block',
             style: style,
-            // data: this.blocks[i], // TODO
+            data: this.blocks[i], // TODO
             selected: this.blocks[i].selected,
             elements: this.elements,
             tabs: this.blocks[i].tabs
@@ -101,7 +104,7 @@ export class UiLayoutSplit extends Io {
         elements.push(['ui-layout-split', {
             class: 'ui-layout-block',
             style: style,
-            // data: this.blocks[i], // TODO
+            data: this.blocks[i], // TODO
             elements: this.elements,
             blocks: this.blocks[i].horizontal || this.blocks[i].vertical,
             orientation: this.blocks[i].horizontal ? 'horizontal' : 'vertical'
