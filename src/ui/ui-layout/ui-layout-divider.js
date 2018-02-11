@@ -5,34 +5,24 @@ export class UiLayoutDivider extends IoPointer {
   static get style() {
     return html`
       <style>
-        :host {
-          z-index: 2;
+      :host {
           background: #333;
-          position: relative;
           color: #ccc;
-        }
-        :host > div {
+          z-index: 1;
           display: flex;
-          align-items: center;
-          justify-content: center;
+          flex: none;
         }
-        :host[orientation=horizontal]  {
-          width: 8px;
-        }
-        :host[orientation=vertical]  {
-          height: 8px;
-        }
-        :host[orientation=horizontal] > div {
-          height: 100%;
-          width: 28px;
-          margin-left: -10px;
+        :host[orientation=horizontal] {
           cursor: ew-resize;
         }
-        :host[orientation=vertical] > div {
-          width: 100%;
-          height: 28px;
-          margin-top: -10px;
+        :host[orientation=vertical] {
           cursor: ns-resize;
+        }
+        :host > .io-divider-icon {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          justify-content: center;
         }
       </style>
     `;
@@ -44,28 +34,32 @@ export class UiLayoutDivider extends IoPointer {
         type: String,
         reflectToAttribute: true
       },
+      index: {
+        type: Number
+      },
       listeners: {
         'io-pointer-move': '_pointerMoveHandler'
       }
     }
   }
   _pointerMoveHandler(event) {
-    let movement = this.orientation === 'horizontal' ?
-        event.detail.pointer[0].movement.x :
-        event.detail.pointer[0].movement.y;
-    let prev = this.previousElementSibling;
-    let next = this.nextElementSibling;
-    let d = this.orientation === 'horizontal' ? 'width' : 'height';
-    if (!next[d] && !prev[d]) {
-      var c = [].slice.call(this.parentElement.children);
-      let f = (c.length / 2 - c.indexOf(prev) > c.length / 2 - c.indexOf(next)) ? next : prev;
-      f[d] = f.getBoundingClientRect()[d];
+    let rect = this.getBoundingClientRect();
+    let movement
+    if (this.orientation === 'horizontal') {
+      movement = event.detail.pointer[0].position.x - (rect.x + rect.width / 2);
+    } else {
+      movement = event.detail.pointer[0].position.y - (rect.y + rect.height / 2);
     }
-    if (next[d]) next[d] = Math.max(0, parseInt(next[d]) - movement);
-    if (prev[d]) prev[d] = Math.max(0, parseInt(prev[d]) + movement);
+    this.dispatchEvent(new CustomEvent('ui-layout-divider-move', {
+      detail: {movement: movement, index: this.index},
+      bubbles: true,
+      composed: true
+    }));
   }
   _update() {
-    this.render([['div', this.orientation === 'horizontal' ? '⋮' : '⋯']]);
+    this.render([
+      ['div', {class: 'io-divider-icon'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
+    ]);
   }
 }
 

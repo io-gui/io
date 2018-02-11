@@ -176,6 +176,8 @@ export class Io extends HTMLElement {
 
           if (vChildren[i].props[prop] !== element[prop]) {
 
+            if (prop === 'style' || prop === 'listeners' || prop === 'class') continue;
+
             let value = vChildren[i].props[prop];
 
             if (value instanceof Binding) {

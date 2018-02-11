@@ -30,7 +30,6 @@ export class IoInspectorGroup extends IoObject {
         }
         :host .io-wrapper > .io-row > .io-label {
           width: 8em;
-          min-width: 8em;
           text-align: right;
           overflow: hidden;
           text-overflow: ellipsis;

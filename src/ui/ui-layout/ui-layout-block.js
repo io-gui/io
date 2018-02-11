@@ -12,15 +12,13 @@ export class UiLayoutBlock extends Io {
           flex-direction: column;
           position: relative;
           overflow: hidden;
-        }
-        :host[width],
-        :host[height] {
-          flex: none;
+          /* TODO: margin from divider */
+          /* margin: 0 4px; */
+          background: #ffc;
         }
         :host > .ui-layout-tabs {
           border-bottom: 1px solid black;
           margin-top: 0.2em;
-          overflow: visible;
         }
         :host > .ui-layout-tabs > ui-layout-tab {
           margin-left: 0.2em;
@@ -34,6 +32,10 @@ export class UiLayoutBlock extends Io {
         }
         :host > .ui-layout-content {
           background: #ddd;
+          display: flex;
+          flex: 1;
+        }
+        :host > .ui-layout-content > * {
           flex: 1;
         }
         :host > .ui-layout-drop-highlight {
@@ -70,6 +72,7 @@ export class UiLayoutBlock extends Io {
         type: Object
       },
       tabs: {
+        value: [],
         type: Array
       },
       selected: {
@@ -80,66 +83,39 @@ export class UiLayoutBlock extends Io {
         type: String,
         reflectToAttribute: true
       },
-      width: {
-        type: String,
-        observer: '_resize',
-        reflectToAttribute: true
-      },
-      height: {
-        type: String,
-        observer: '_resize',
-        reflectToAttribute: true
-      },
-      listeners: {
-        'dragover': '_dragoverHandler'
-      }
+      // listeners: {
+      //   'dragover': '_dragoverHandler'
+      // }
     }
   }
-  constructor(props) {
-    super(props);
-    if (this.selected === '')
-        this.selected = this.tabs[0];
-  }
-  _dragoverHandler(event) {
-    if (UiLayoutTab.dragged) UiLayoutTab.dragged.droptarget = this;
-    let rect = this.getBoundingClientRect();
-    let x = 2 * (((event.clientX - rect.x) / rect.width) - 0.5);
-    let y = 2 * (((event.clientY - rect.y) / rect.height) - 0.5);
-    if (event.clientY - rect.y < 20) this.dropzone = 'tabs';
-    else if (Math.abs(y) < 0.5 && Math.abs(x) < 0.5) this.dropzone = 'center';
-    else if (y < -Math.abs(x)) this.dropzone = 'top';
-    else if (y > +Math.abs(x)) this.dropzone = 'bottom';
-    else if (x < -Math.abs(y)) this.dropzone = 'left';
-    else if (x > +Math.abs(y)) this.dropzone = 'right';
-    else this.dropzone = 'center';
-  }
-  _selectHandler(elem) {
-    this.selected = elem;
-    this.data.selected = elem;
-    this.dispatchEvent(new CustomEvent('layout-changed', {
-      detail: this.data,
-      bubbles: true,
-      composed: true
-    }));
-  }
-  _resize() {
-    // TODO: implement sizing in flex
-    this.style.width = this.width ? this.width + 'px' : '';
-    this.style.height = this.height ? this.height + 'px' : '';
-    // TODO:
-    if (!this.data) return;
-    this.data.width = this.width;
-    this.data.height = this.height;
-    if (!this.data.width) delete this.data.width;
-    if (!this.data.height) delete this.data.height;
-    this.dispatchEvent(new CustomEvent('layout-changed', {
-      detail: this.data,
-      bubbles: true,
-      composed: true
-    }));
-  }
+  // constructor(props) {
+  //   super(props);
+  //   if (this.selected === '')
+  //       this.selected = this.tabs[0];
+  // }
+  // _dragoverHandler(event) {
+  //   if (UiLayoutTab.dragged) UiLayoutTab.dragged.droptarget = this;
+  //   let rect = this.getBoundingClientRect();
+  //   let x = 2 * (((event.clientX - rect.x) / rect.width) - 0.5);
+  //   let y = 2 * (((event.clientY - rect.y) / rect.height) - 0.5);
+  //   if (event.clientY - rect.y < 20) this.dropzone = 'tabs';
+  //   else if (Math.abs(y) < 0.5 && Math.abs(x) < 0.5) this.dropzone = 'center';
+  //   else if (y < -Math.abs(x)) this.dropzone = 'top';
+  //   else if (y > +Math.abs(x)) this.dropzone = 'bottom';
+  //   else if (x < -Math.abs(y)) this.dropzone = 'left';
+  //   else if (x > +Math.abs(y)) this.dropzone = 'right';
+  //   else this.dropzone = 'center';
+  // }
+  // _selectHandler(elem) {
+  //   this.selected = elem;
+  //   this.data.selected = elem;
+  //   this.dispatchEvent(new CustomEvent('layout-changed', {
+  //     detail: this.data,
+  //     bubbles: true,
+  //     composed: true
+  //   }));
+  // }
   _update() {
-    this._resize();
     const Elem = (entry, i) => ['ui-layout-tab', {
         value: entry,
         action: this._selectHandler,

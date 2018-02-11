@@ -35,7 +35,9 @@ export class UiLayout extends Io {
             ]},
             {'tabs': ['object']},
           ]},
-          {'tabs': ['option', 'inspector', 'object'], 'selected': 'inspector'},
+          {'width': 50, 'tabs': ['option']},
+          {'width': 50, 'tabs': ['object']},
+          {'tabs': ['option', 'inspector'], 'selected': 'inspector'},
           {'width': 400, 'tabs': ['inspector']}
         ]}
       },
@@ -48,18 +50,13 @@ export class UiLayout extends Io {
     localStorage.setItem('io-layout-state', JSON.stringify(this.value));
   }
   _update() {
-    if (this.value.tabs) {
-      this.render([
-        ['ui-layout-block', {elements: this.elements, tabs: this.value.tabs}]
-      ]);
-    } else {
-      this.render([
-        ['ui-layout-split', {
-            elements: this.elements,
-            orientation: this.value.horizontal ? 'horizontal' : 'vertical',
-            blocks: this.value.horizontal || this.value.vertical}]
-      ]);
-    }
+    this.render([
+      ['ui-layout-split', {
+          elements: this.elements,
+          orientation: this.value.horizontal ? 'horizontal' : 'vertical',
+          blocks: this.value.horizontal || this.value.vertical
+      }]
+    ]);
   }
 }
 
