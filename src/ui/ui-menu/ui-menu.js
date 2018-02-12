@@ -40,6 +40,9 @@ export class UiMenu extends Io {
       options: this.bind('options'),
       expanded: this.bind('expanded')
     });
+    // this.bind('position', this.$group, 'position');
+    // this.bind('options', this.$group, 'options');
+    // this.bind('expanded', this.$group, 'expanded');
   }
   connectedCallback() {
     super.connectedCallback();

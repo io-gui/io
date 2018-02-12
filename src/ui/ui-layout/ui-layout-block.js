@@ -17,16 +17,18 @@ export class UiLayoutBlock extends Io {
         :host > .ui-layout-tabs {
           border-bottom: 1px solid black;
           margin-top: 0.2em;
+          white-space: nowrap;
         }
+        :host > .ui-layout-tabs > io-option > ui-button,
         :host > .ui-layout-tabs > ui-layout-tab {
           margin-left: 0.2em;
           padding: 0 0.5em 0 0.5em;
           border: 1px solid black;
+          border-bottom: 0;
           background: #ddd;
         }
         :host > .ui-layout-tabs > ui-layout-tab[selected] {
           padding-bottom: 1px;
-          border-bottom: 0;
         }
         :host > .ui-layout-content {
           background: #ddd;
@@ -77,6 +79,10 @@ export class UiLayoutBlock extends Io {
         type: String,
         observer: '_update'
       },
+      newTab: {
+        type: String,
+        observer: '_newTabHandler'
+      },
       dropzone: {
         type: String,
         reflectToAttribute: true
@@ -104,6 +110,15 @@ export class UiLayoutBlock extends Io {
   //   else if (x > +Math.abs(y)) this.dropzone = 'right';
   //   else this.dropzone = 'center';
   // }
+  _newTabHandler() {
+    if (this.newTab !== '') {
+      setTimeout(function () {
+        this.tabs.push(this.newTab);
+        this._update();
+        this.newTab = '';
+      }.bind(this), 0)
+    }
+  }
   _selectHandler(elem) {
     this.selected = elem;
     this.data.selected = elem;
@@ -119,9 +134,11 @@ export class UiLayoutBlock extends Io {
         action: this._selectHandler,
         selected: entry === this.selected
       }, entry];
+    const Option = (entry) => ({value: entry[0], label: entry[0]});
     this.render([
       ['div', {class: 'ui-layout-tabs'}, [
         this.tabs.map(Elem),
+        ['io-option', {value: this.bind('newTab'), icon: '+', options: Object.entries(this.elements).map(Option)}]
       ]],
       ['div', {class: 'ui-layout-content'}, [
         this.tabs.indexOf(this.selected) !== -1 ? this.elements[this.selected] : null
@@ -130,6 +147,5 @@ export class UiLayoutBlock extends Io {
     ]);
   }
 }
-
 
 window.customElements.define('ui-layout-block', UiLayoutBlock);

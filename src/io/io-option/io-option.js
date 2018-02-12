@@ -23,6 +23,10 @@ export class IoOption extends Io {
       value: {
         observer: '_update'
       },
+      icon: {
+        value: '⊻',
+        type: String
+      },
       options: {
         type: Array,
         observer: '_update'
@@ -60,7 +64,7 @@ export class IoOption extends Io {
       }
     }
     this.render([
-      ['ui-button', {action: this._expandHandler}, label + ' ⊻']
+      ['ui-button', {action: this._expandHandler}, label + this.icon]
     ]);
   }
 }
