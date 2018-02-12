@@ -12,28 +12,30 @@ export class UiLayoutBlock extends Io {
           flex-direction: column;
           position: relative;
           overflow: hidden;
-        }
-        :host[width],
-        :host[height] {
-          flex: none;
+          background: #ffc;
         }
         :host > .ui-layout-tabs {
           border-bottom: 1px solid black;
           margin-top: 0.2em;
-          overflow: visible;
+          white-space: nowrap;
         }
+        :host > .ui-layout-tabs > io-option,
         :host > .ui-layout-tabs > ui-layout-tab {
           margin-left: 0.2em;
           padding: 0 0.5em 0 0.5em;
           border: 1px solid black;
+          border-bottom: 0;
           background: #ddd;
         }
         :host > .ui-layout-tabs > ui-layout-tab[selected] {
           padding-bottom: 1px;
-          border-bottom: 0;
         }
         :host > .ui-layout-content {
           background: #ddd;
+          display: flex;
+          flex: 1;
+        }
+        :host > .ui-layout-content > * {
           flex: 1;
         }
         :host > .ui-layout-drop-highlight {
@@ -70,6 +72,7 @@ export class UiLayoutBlock extends Io {
         type: Object
       },
       tabs: {
+        value: [],
         type: Array
       },
       selected: {
@@ -80,38 +83,33 @@ export class UiLayoutBlock extends Io {
         type: String,
         reflectToAttribute: true
       },
-      width: {
-        type: String,
-        observer: '_resize',
-        reflectToAttribute: true
-      },
-      height: {
-        type: String,
-        observer: '_resize',
-        reflectToAttribute: true
-      },
-      listeners: {
-        'dragover': '_dragoverHandler'
-      }
+      // listeners: {
+      //   'dragover': '_dragoverHandler'
+      // }
     }
   }
-  constructor(props) {
-    super(props);
-    if (this.selected === '')
-        this.selected = this.tabs[0];
-  }
-  _dragoverHandler(event) {
-    if (UiLayoutTab.dragged) UiLayoutTab.dragged.droptarget = this;
-    let rect = this.getBoundingClientRect();
-    let x = 2 * (((event.clientX - rect.x) / rect.width) - 0.5);
-    let y = 2 * (((event.clientY - rect.y) / rect.height) - 0.5);
-    if (event.clientY - rect.y < 20) this.dropzone = 'tabs';
-    else if (Math.abs(y) < 0.5 && Math.abs(x) < 0.5) this.dropzone = 'center';
-    else if (y < -Math.abs(x)) this.dropzone = 'top';
-    else if (y > +Math.abs(x)) this.dropzone = 'bottom';
-    else if (x < -Math.abs(y)) this.dropzone = 'left';
-    else if (x > +Math.abs(y)) this.dropzone = 'right';
-    else this.dropzone = 'center';
+  // constructor(props) {
+  //   super(props);
+  //   if (this.selected === '')
+  //       this.selected = this.tabs[0];
+  // }
+  // _dragoverHandler(event) {
+  //   if (UiLayoutTab.dragged) UiLayoutTab.dragged.droptarget = this;
+  //   let rect = this.getBoundingClientRect();
+  //   let x = 2 * (((event.clientX - rect.x) / rect.width) - 0.5);
+  //   let y = 2 * (((event.clientY - rect.y) / rect.height) - 0.5);
+  //   if (event.clientY - rect.y < 20) this.dropzone = 'tabs';
+  //   else if (Math.abs(y) < 0.5 && Math.abs(x) < 0.5) this.dropzone = 'center';
+  //   else if (y < -Math.abs(x)) this.dropzone = 'top';
+  //   else if (y > +Math.abs(x)) this.dropzone = 'bottom';
+  //   else if (x < -Math.abs(y)) this.dropzone = 'left';
+  //   else if (x > +Math.abs(y)) this.dropzone = 'right';
+  //   else this.dropzone = 'center';
+  // }
+  _optionSelectHandler(tab) {
+    if (this.tabs.indexOf(tab) === -1) this.tabs.push(tab);
+    if (this.selected === tab) this._update();
+    this._selectHandler(tab);
   }
   _selectHandler(elem) {
     this.selected = elem;
@@ -122,25 +120,8 @@ export class UiLayoutBlock extends Io {
       composed: true
     }));
   }
-  _resize() {
-    // TODO: implement sizing in flex
-    this.style.width = this.width ? this.width + 'px' : '';
-    this.style.height = this.height ? this.height + 'px' : '';
-    // TODO:
-    if (!this.data) return;
-    this.data.width = this.width;
-    this.data.height = this.height;
-    if (!this.data.width) delete this.data.width;
-    if (!this.data.height) delete this.data.height;
-    this.dispatchEvent(new CustomEvent('layout-changed', {
-      detail: this.data,
-      bubbles: true,
-      composed: true
-    }));
-  }
   _update() {
-    this._resize();
-    const Elem = (entry, i) => ['ui-layout-tab', {
+    const Elem = (entry) => ['ui-layout-tab', {
         value: entry,
         action: this._selectHandler,
         selected: entry === this.selected
@@ -148,6 +129,11 @@ export class UiLayoutBlock extends Io {
     this.render([
       ['div', {class: 'ui-layout-tabs'}, [
         this.tabs.map(Elem),
+        ['io-option', {
+          value: '+',
+          options: Object.entries(this.elements).map((entry) => ({value: entry[0]})),
+          action: this._optionSelectHandler
+        }]
       ]],
       ['div', {class: 'ui-layout-content'}, [
         this.tabs.indexOf(this.selected) !== -1 ? this.elements[this.selected] : null
@@ -156,6 +142,5 @@ export class UiLayoutBlock extends Io {
     ]);
   }
 }
-
 
 window.customElements.define('ui-layout-block', UiLayoutBlock);

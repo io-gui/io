@@ -44,12 +44,12 @@ export class UiMenu extends Io {
   connectedCallback() {
     super.connectedCallback();
     this.$parent = this.parentElement || this.parentNode.host;
-    this.$parent.addEventListener(this.listener, this._expandHandler);
+    if (this.listener) this.$parent.addEventListener(this.listener, this._expandHandler);
     UiMenuLayer.singleton.appendChild(this.$group);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.$parent.removeEventListener(this.listener, this._expandHandler);
+    if (this.listener) this.$parent.removeEventListener(this.listener, this._expandHandler);
     UiMenuLayer.singleton.removeChild(this.$group);
   }
   getBoundingClientRect() {

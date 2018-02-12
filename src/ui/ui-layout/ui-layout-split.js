@@ -11,16 +11,19 @@ export class UiLayoutSplit extends Io {
           display: flex;
           flex-direction: column;
           position: relative;
-        }
-        :host[width],
-        :host[height] {
-          flex: none;
+          overflow: hidden;
         }
         :host[orientation=horizontal] {
           flex-direction: row;
         }
         :host[orientation=vertical] {
           flex-direction: column;
+        }
+        :host[orientation=horizontal] > ui-layout-divider {
+          width: 10px;
+        }
+        :host[orientation=vertical] > ui-layout-divider {
+          height: 10px;
         }
       </style>
     `;
@@ -41,57 +44,74 @@ export class UiLayoutSplit extends Io {
         type: String,
         reflectToAttribute: true
       },
-      width: {
-        typr: String,
-        observer: '_resize',
-        reflectToAttribute: true
-      },
-      height: {
-        typr: String,
-        observer: '_resize',
-        reflectToAttribute: true
+      listeners: {
+        'ui-layout-divider-move': '_dividerMoveHandler'
       }
     }
   }
-  _resize() {
-    // TODO: implement sizing in flex
-    this.style.width = this.width ? this.width + 'px' : '';
-    this.style.height = this.height ? this.height + 'px' : '';
-    // TODO:
-    if (!this.data) return;
-    this.data.width = this.width;
-    this.data.height = this.height;
-    if (!this.data.width) delete this.data.width;
-    if (!this.data.height) delete this.data.height;
+  _dividerMoveHandler(event) {
+    event.stopPropagation();
+    let movement = event.detail.movement;
+
+    let i = event.detail.index;
+    let d = this.orientation === 'horizontal' ? 'width' : 'height';
+
+    var blocks = [].slice.call(this.children).filter(element => element.className === 'ui-layout-block');
+    let prev = this.blocks[i];
+    let next = this.blocks[i+1];
+
+    if (!next[d] && !prev[d]) {
+      next[d] = blocks[i+1].getBoundingClientRect()[d];
+    }
+
+    prev = this.blocks[i];
+    next = this.blocks[i+1];
+
+    if (prev[d]) prev[d] = Math.max(0, Math.min(Infinity, prev[d] + movement));
+    if (next[d]) next[d] = Math.max(0, Math.min(Infinity, next[d] - movement));
     this.dispatchEvent(new CustomEvent('layout-changed', {
       detail: this.data,
       bubbles: true,
       composed: true
     }));
+    this._update();
   }
   _update() {
-    this._resize();
+    let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let elements = [];
     for (var i = 0; i < this.blocks.length; i++) {
+      let size = this.blocks[i][d];
+      let style = {
+        'flex-basis': 'auto',
+        'flex-shrink': '10000',
+        'flex-grow': '1'
+      };
+      if (size) style = {
+        'flex-basis': size + 'px',
+        'flex-shrink': '1',
+        'flex-grow': '0'
+      };
       if (this.blocks[i].tabs) {
         elements.push(['ui-layout-block', {
+            class: 'ui-layout-block',
+            style: style,
             data: this.blocks[i], // TODO
-            height: this.blocks[i].height,
-            width: this.blocks[i].width,
             selected: this.blocks[i].selected,
             elements: this.elements,
-            tabs: this.blocks[i].tabs}]);
+            tabs: this.blocks[i].tabs
+          }]);
       } else {
         elements.push(['ui-layout-split', {
+            class: 'ui-layout-block',
+            style: style,
             data: this.blocks[i], // TODO
-            height: this.blocks[i].height,
-            width: this.blocks[i].width,
             elements: this.elements,
             blocks: this.blocks[i].horizontal || this.blocks[i].vertical,
-            orientation: this.blocks[i].horizontal ? 'horizontal' : 'vertical'}]);
+            orientation: this.blocks[i].horizontal ? 'horizontal' : 'vertical'
+          }]);
       }
       if (i < this.blocks.length - 1) {
-        elements.push(['ui-layout-divider', {orientation: this.orientation}]);
+        elements.push(['ui-layout-divider', {orientation: this.orientation, index: i}]);
       }
     }
     this.render(elements);

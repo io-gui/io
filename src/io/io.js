@@ -2,20 +2,6 @@ import {h, renderElement, initStyle} from "./ioutil.js"
 
 export class Io extends HTMLElement {
   static get style() { return ``; }
-  static get observedAttributes() {
-    let attributes = [];
-    let proto = this;
-    while (proto) {
-      if (proto.properties) {
-        let keys = Object.keys(proto.properties);
-        for (let i = 0; i < keys.length; i++) {
-          if (attributes.indexOf(keys[i]) === -1) attributes.push(keys[i]);
-        }
-      }
-      proto = proto.__proto__;
-    }
-    return attributes;
-  }
   static get definedProperties() {
     let config = {
       properties: {},
@@ -69,8 +55,7 @@ export class Io extends HTMLElement {
     for (let key in this.__properties) {
       if (props[key] instanceof Binding) {
         // TODO: make bindings work without cloning
-        props[key] = props[key].clone();
-        let binding = props[key];
+        let binding = props[key].clone();
         this.__properties[key].value = binding.source[binding.sourceProp];
         binding.target = this;
         binding.targetProp = key;
@@ -93,7 +78,6 @@ export class Io extends HTMLElement {
 
     initStyle(this.localName, this.__proto__.constructor.style);
   }
-
   defineProperty(key, config) {
     Object.defineProperty(this, key, {
       get: function() {
@@ -143,15 +127,6 @@ export class Io extends HTMLElement {
       this.removeEventListener(e, this.__listeners[e]);
     }
   }
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (this.__properties[name].type === Boolean) {
-      this[name] = newValue === '' ? true : false;
-    } else if (this.__properties[name].type === Number) {
-      this[name] = parseFloat(newValue);
-    } else {
-      this[name] = newValue;
-    }
-  }
   render(children, host) {
     host = host || this;
     let vDOM = h('name', 'props', 'children')(['root', children]).children;
@@ -175,6 +150,8 @@ export class Io extends HTMLElement {
         for (let prop in vChildren[i].props) {
 
           if (vChildren[i].props[prop] !== element[prop]) {
+
+            if (prop === 'style' || prop === 'listeners' || prop === 'class') continue;
 
             let value = vChildren[i].props[prop];
 
@@ -215,18 +192,21 @@ export class Io extends HTMLElement {
         }
 
       } else if (children[i] && children[i].localName !== vChildren[i].name) {
-
         oldElement = children[i];
         element = renderElement(vChildren[i]);
-
         host.insertBefore(element, oldElement);
         host.removeChild(oldElement);
-
       } else {
-
         element = renderElement(vChildren[i]);
         host.appendChild(element);
+      }
 
+      for (let prop in vChildren[i].props) {
+        let value = vChildren[i].props[prop];
+        if (value instanceof Binding) {
+          // TODO: fix bindings
+          value.unbind();
+        }
       }
 
       for (let prop in vChildren[i].props) {
@@ -251,7 +231,7 @@ export class Io extends HTMLElement {
 
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
         element.innerHTML = vChildren[i].children;
-      } else if (vChildren[i].children &&  typeof vChildren[i].children === 'object') {
+      } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
         // TODO: test extensively
         this.traverse(vChildren[i].children, element);
       }
@@ -313,16 +293,18 @@ export class Binding {
     this.targetProp = targetProp;
     this.setTarget = this.setTarget.bind(this);
     this.setSource = this.setSource.bind(this);
-    // this.bind(); // TODO: check if anything broke
+    this.bind(); // TODO: check if anything broke
   }
   clone() {
     return new Binding(this.source, this.target, this.sourceProp, this.targetProp);
   }
   setTarget(event) {
-    this.target[this.targetProp] = event.detail.value;
+    if (this.target[this.targetProp] !== event.detail.value)
+        this.target[this.targetProp] = event.detail.value;
   }
   setSource(event) {
-    this.source[this.sourceProp] = event.detail.value;
+    if (this.source[this.sourceProp] !== event.detail.value)
+        this.source[this.sourceProp] = event.detail.value;
   }
   bind() {
     if (this.source && this.target && this.targetProp) {
@@ -335,7 +317,7 @@ export class Binding {
     return this;
   }
   unbind() {
-    this.source.removeEventListener(this.sourceProp + '-changed', this.setTarget);
-    this.target.removeEventListener(this.targetProp + '-changed', this.setSource);
+    if (this.source) this.source.removeEventListener(this.sourceProp + '-changed', this.setTarget);
+    if (this.target) this.target.removeEventListener(this.targetProp + '-changed', this.setSource);
   }
 }

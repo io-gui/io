@@ -40,6 +40,8 @@ export class UiButton extends Io {
   _preventHandler(event) {
     if (event.type === 'keydown' && event.which !== 9) {
       event.preventDefault();
+    } else if (event.type == 'mousedown') {
+      event.preventDefault();
     }
   }
 }
