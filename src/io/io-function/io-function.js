@@ -7,7 +7,6 @@ export class IoFunction extends Io {
       <style>
         :host {
           display: inline-block;
-          cursor: pointer;
           font-style: italic;
         }
       </style>

@@ -9,6 +9,9 @@ export class IoOption extends UiButton {
       value: {
         observer: '_update'
       },
+      action: {
+        type: Function
+      },
       options: {
         type: Array,
         observer: '_update'

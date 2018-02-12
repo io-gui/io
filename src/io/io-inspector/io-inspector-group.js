@@ -72,9 +72,9 @@ export class IoInspectorGroup extends IoObject {
           background: #222;
           padding: 0.3em;
         }
-        :host ui-button {
-          padding: 0.3em !important;
-          border-radius: 0.3em !important;
+        :host io-boolean {
+          padding: 0.3em;
+          border-radius: 0.3em;
         }
         :host io-object-prop > io-boolean {
           flex: none;

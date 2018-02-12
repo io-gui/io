@@ -15,13 +15,13 @@ export class UiButton extends Io {
   }
   static get properties() {
     return {
-      action: {
-        type: Function
-      },
       value: {
       },
       label: {
         type: String
+      },
+      action: {
+        type: Function
       },
       listeners: {
         'keyup': '_actionHandler',
