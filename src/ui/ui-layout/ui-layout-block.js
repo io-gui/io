@@ -19,7 +19,7 @@ export class UiLayoutBlock extends Io {
           margin-top: 0.2em;
           white-space: nowrap;
         }
-        :host > .ui-layout-tabs > io-option > ui-button,
+        :host > .ui-layout-tabs > io-option,
         :host > .ui-layout-tabs > ui-layout-tab {
           margin-left: 0.2em;
           padding: 0 0.5em 0 0.5em;
@@ -79,10 +79,6 @@ export class UiLayoutBlock extends Io {
         type: String,
         observer: '_update'
       },
-      newTab: {
-        type: String,
-        observer: '_newTabHandler'
-      },
       dropzone: {
         type: String,
         reflectToAttribute: true
@@ -110,14 +106,10 @@ export class UiLayoutBlock extends Io {
   //   else if (x > +Math.abs(y)) this.dropzone = 'right';
   //   else this.dropzone = 'center';
   // }
-  _newTabHandler() {
-    if (this.newTab !== '') {
-      setTimeout(function () {
-        this.tabs.push(this.newTab);
-        this._update();
-        this.newTab = '';
-      }.bind(this), 0)
-    }
+  _optionSelectHandler(tab) {
+    if (this.tabs.indexOf(tab) === -1) this.tabs.push(tab);
+    if (this.selected === tab) this._update();
+    this._selectHandler(tab);
   }
   _selectHandler(elem) {
     this.selected = elem;
@@ -129,16 +121,19 @@ export class UiLayoutBlock extends Io {
     }));
   }
   _update() {
-    const Elem = (entry, i) => ['ui-layout-tab', {
+    const Elem = (entry) => ['ui-layout-tab', {
         value: entry,
         action: this._selectHandler,
         selected: entry === this.selected
       }, entry];
-    const Option = (entry) => ({value: entry[0], label: entry[0]});
     this.render([
       ['div', {class: 'ui-layout-tabs'}, [
         this.tabs.map(Elem),
-        ['io-option', {value: this.bind('newTab'), icon: '+', options: Object.entries(this.elements).map(Option)}]
+        ['io-option', {
+          value: '+',
+          options: Object.entries(this.elements).map((entry) => ({value: entry[0]})),
+          action: this._optionSelectHandler
+        }]
       ]],
       ['div', {class: 'ui-layout-content'}, [
         this.tabs.indexOf(this.selected) !== -1 ? this.elements[this.selected] : null

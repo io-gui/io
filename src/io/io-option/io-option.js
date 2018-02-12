@@ -3,9 +3,7 @@ import {Io} from "../io.js"
 import {UiMenu} from "../../ui/ui-menu/ui-menu.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 
-const menu = new UiMenu({position: 'bottom'});
-
-export class IoOption extends Io {
+export class IoOption extends UiButton {
   static get style() {
     return html`
       <style>
@@ -23,34 +21,29 @@ export class IoOption extends Io {
       value: {
         observer: '_update'
       },
-      icon: {
-        value: '⊻',
-        type: String
-      },
       options: {
         type: Array,
         observer: '_update'
-      }
+      },
+      action: {
+        type: Function
+      },
     }
   }
-  _expandHandler(event) {
-    this.appendChild(menu);
-    menu.options = this.options;
-    menu.expanded = true;
-    if (menu.$group.$options[0]) menu.$group.$options[0].focus();
-    if (menu._listerer) {
-      menu.removeEventListener('ui-menu-option-clicked', menu._listerer);
-      delete menu._listener;
+  _actionHandler(event) {
+    if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
+      event.preventDefault();
+      this.querySelector('ui-menu').expanded = true;
+      this.querySelector('ui-menu').$group.$options[0].focus();
     }
-    menu.addEventListener('ui-menu-option-clicked', this._menuHandler);
-    menu._listener = this._menuHandler;
   }
   _menuHandler(event) {
     if (event.detail.option.value !== undefined) {
       this._setValue(event.detail.option.value);
+      if (typeof this.action === 'function') {
+        this.action(this.value !== undefined ? this.value : event);
+      }
     }
-    menu.expanded = false;
-    menu.removeEventListener('ui-menu-option-clicked', this._menuHandler);
   }
   _update() {
     let label = this.value;
@@ -64,7 +57,11 @@ export class IoOption extends Io {
       }
     }
     this.render([
-      ['ui-button', {action: this._expandHandler}, label + this.icon]
+      ['span', label],
+      ['ui-menu', {
+        options: this.options,
+        position: 'bottom',
+        listeners: {'ui-menu-option-clicked': this._menuHandler}}]
     ]);
   }
 }

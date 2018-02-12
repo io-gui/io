@@ -26,12 +26,12 @@ export class UiLayout extends Io {
         type: Object,
         value: layout || {'horizontal': [
           {'width': 300, 'vertical': [
-            {'height': 100, 'tabs': ['option']},
+            {'height': 10, 'tabs': ['option']},
             {'horizontal': [
-              {'width': 50, 'tabs': ['option']},
+              {'width': 10, 'tabs': ['option']},
               {'tabs': ['inspector']},
               {'tabs': ['inspector']},
-              {'width': 50, 'tabs': ['option']}
+              {'width': 20, 'tabs': ['option']}
             ]},
             {'tabs': ['object']},
           ]},

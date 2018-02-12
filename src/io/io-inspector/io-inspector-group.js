@@ -47,11 +47,13 @@ export class IoInspectorGroup extends IoObject {
           flex: 1;
           display: flex;
         }
-        :host io-option > ui-button {
+        :host io-option {
           display: inline-block;
           color: #ddd;
           background: #444;
           color: #ddd !important;
+          border-radius: 0.2em;
+          padding: 0.3em;
         }
         :host io-slider {
           border-radius: 0.2em;

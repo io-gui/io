@@ -67,8 +67,8 @@ export class UiLayoutSplit extends Io {
     prev = this.blocks[i];
     next = this.blocks[i+1];
 
-    if (prev[d]) prev[d] = Math.max(6, Math.min(Infinity, prev[d] + movement));
-    if (next[d]) next[d] = Math.max(6, Math.min(Infinity, next[d] - movement));
+    if (prev[d]) prev[d] = Math.max(0, Math.min(Infinity, prev[d] + movement));
+    if (next[d]) next[d] = Math.max(0, Math.min(Infinity, next[d] - movement));
     this.dispatchEvent(new CustomEvent('layout-changed', {
       detail: this.data,
       bubbles: true,

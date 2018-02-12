@@ -25,35 +25,35 @@ export class UiLayoutTab extends UiButton {
         type: Boolean,
         reflectToAttribute: true
       },
-      listeners: {
-        'dragstart': '_dragstartHandler',
-        'dragend': '_dragendHandler'
-      },
-      droptarget: {
-        type: HTMLElement,
-        observer: '_dropTargetChanged'
-      },
-      attributes: {
-        draggable: true
-      }
+      // listeners: {
+      //   'dragstart': '_dragstartHandler',
+      //   'dragend': '_dragendHandler'
+      // },
+      // droptarget: {
+      //   type: HTMLElement,
+      //   observer: '_dropTargetChanged'
+      // },
+      // attributes: {
+      //   draggable: true
+      // }
     }
   }
-  _dragstartHandler() {
-    UiLayoutTab.dragged = this;
-  }
-  _dropTargetChanged(value, oldValue) {
-    if (oldValue) oldValue.dropzone = '';
-  }
-  _dragendHandler(event) {
-    if (this.droptarget && this.droptarget.dropzone === 'center') {
-      this.droptarget.tabs.push(this.value);
-      //TODO: ugh
-      this.parentElement.parentElement.tabs.splice(this.parentElement.parentElement.tabs.indexOf(this.value), 1);
-      this.droptarget._update();
-      this.parentElement.parentElement._update();
-    }
-    if (this.droptarget) this.droptarget.dropzone = '';
-  }
+  // _dragstartHandler() {
+  //   UiLayoutTab.dragged = this;
+  // }
+  // _dropTargetChanged(value, oldValue) {
+  //   if (oldValue) oldValue.dropzone = '';
+  // }
+  // _dragendHandler(event) {
+  //   if (this.droptarget && this.droptarget.dropzone === 'center') {
+  //     this.droptarget.tabs.push(this.value);
+  //     //TODO: ugh
+  //     this.parentElement.parentElement.tabs.splice(this.parentElement.parentElement.tabs.indexOf(this.value), 1);
+  //     this.droptarget._update();
+  //     this.parentElement.parentElement._update();
+  //   }
+  //   if (this.droptarget) this.droptarget.dropzone = '';
+  // }
   _update() {
     this.innerText = this.value;
   }
@@ -81,7 +81,6 @@ export class UiLayoutTab extends UiButton {
   // }
 }
 
-var dragged;
 // /* events fired on the draggable target */
 // document.addEventListener("drag", function( event ) {
 // }, false);
