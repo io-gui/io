@@ -2,22 +2,6 @@ import {html} from "../ioutil.js"
 import {Io} from "../io.js"
 
 export class IoString extends Io {
-  static get style() {
-    return html`
-      <style>
-        :host {
-          display: inline-block;
-          cursor: text;
-        }
-        :host.invalid {
-          text-decoration: underline;
-          text-decoration-style: dashed;
-          text-decoration-color: red;
-          opacity: 0.25;
-        }
-      </style>
-    `;
-  }
   static get properties() {
     return {
       value: {
