@@ -21,7 +21,7 @@ export class IoString extends Io {
   static get properties() {
     return {
       value: {
-        observer: '_update'
+        observer: 'update'
       },
       type: {
         type: String,
@@ -39,7 +39,7 @@ export class IoString extends Io {
   _blurHandler(event) {
     this._setValue(this.innerText);
   }
-  _update() {
+  update() {
     this.classList.toggle('invalid', typeof this.value !== 'string');
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }

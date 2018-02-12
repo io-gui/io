@@ -7,17 +7,17 @@ export class IoBoolean extends UiButton {
     return {
       value: {
         type: Boolean,
-        observer: '_update'
+        observer: 'update'
       },
       true: {
         value: 'true',
         type: String,
-        observer: '_update'
+        observer: 'update'
       },
       false: {
         value: 'false',
         type: String,
-        observer: '_update'
+        observer: 'update'
       }
     }
   }
@@ -28,7 +28,7 @@ export class IoBoolean extends UiButton {
   toggle() {
     this._setValue(!this.value);
   }
-  _update() {
+  update() {
     this.render([['span', this.value ? this.true : this.false]]);
   }
 }

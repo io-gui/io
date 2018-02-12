@@ -21,7 +21,7 @@ export class UiLayoutTab extends UiButton {
     return {
       value: {
         type: String,
-        observer: '_update'
+        observer: 'update'
       },
       selected: {
         type: Boolean,
@@ -51,12 +51,12 @@ export class UiLayoutTab extends UiButton {
   //     this.droptarget.tabs.push(this.value);
   //     //TODO: ugh
   //     this.parentElement.parentElement.tabs.splice(this.parentElement.parentElement.tabs.indexOf(this.value), 1);
-  //     this.droptarget._update();
-  //     this.parentElement.parentElement._update();
+  //     this.droptarget.update();
+  //     this.parentElement.parentElement.update();
   //   }
   //   if (this.droptarget) this.droptarget.dropzone = '';
   // }
-  _update() {
+  update() {
     this.render([['span', this.label]]);
   }
   // _dragHandler(event) {

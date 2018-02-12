@@ -10,15 +10,15 @@ export class UiCollapsable extends Io {
       expanded: {
         type: Boolean,
         reflectToAttribute: true,
-        observer: '_update'
+        observer: 'update'
       },
       elements: {
         type: Array,
-        observer: '_update'
+        observer: 'update'
       }
     }
   }
-  _update() {
+  update() {
     this.render([
         ['io-boolean', {true: '▾' + this.label, false: '▸' + this.label, value: this.bind('expanded')}],
         this.expanded ? this.elements : null

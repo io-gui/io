@@ -36,7 +36,7 @@ export class ThreeApp extends Io {
     return {
     }
   }
-  _update() {
+  update() {
     this.render([
       ['div', {class: 'header'}],
       ['ui-layout', {

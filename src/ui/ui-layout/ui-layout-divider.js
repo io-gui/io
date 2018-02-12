@@ -56,7 +56,7 @@ export class UiLayoutDivider extends IoPointer {
       composed: true
     }));
   }
-  _update() {
+  update() {
     this.render([
       ['div', {class: 'io-divider-icon'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
     ]);

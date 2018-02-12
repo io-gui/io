@@ -16,7 +16,7 @@ export class IoVector extends Io {
   static get properties() {
     return {
       value: {
-        observer: '_update'
+        observer: 'update'
       },
       columns: {
         type: Number,
@@ -24,7 +24,7 @@ export class IoVector extends Io {
       }
     }
   }
-  _update() {
+  update() {
     let elements = [];
     if (this.value.x !== undefined) elements.push('x');
     if (this.value.y !== undefined) elements.push('y');

@@ -34,7 +34,7 @@ export class UiLayout extends Io {
   _layoutChangedHandler(event) {
     localStorage.setItem('io-layout-state', JSON.stringify(this.value));
   }
-  _update() {
+  update() {
     this.render([
       ['ui-layout-split', {
           elements: this.elements,

@@ -78,7 +78,7 @@ export class UiLayoutBlock extends Io {
       },
       selected: {
         type: String,
-        observer: '_update'
+        observer: 'update'
       },
       dropzone: {
         type: String,
@@ -109,7 +109,7 @@ export class UiLayoutBlock extends Io {
   // }
   _optionSelectHandler(tab) {
     if (this.tabs.indexOf(tab) === -1) this.tabs.push(tab);
-    if (this.selected === tab) this._update();
+    if (this.selected === tab) this.update();
     this._selectHandler(tab);
   }
   _selectHandler(elem) {
@@ -121,7 +121,7 @@ export class UiLayoutBlock extends Io {
       composed: true
     }));
   }
-  _update() {
+  update() {
     if (!this.selected) {
       this.selected = this.tabs[this.tabs.length - 1];
     }

@@ -28,11 +28,11 @@ export class IoInspector extends Io {
     return {
       value: {
         type: Object,
-        observer: '_update'
+        observer: 'update'
       },
       expanded: {
         type: Boolean,
-        observer: '_update',
+        observer: 'update',
         reflectToAttribute: true
       },
       listeners: {
@@ -46,7 +46,7 @@ export class IoInspector extends Io {
       this.value = event.detail.value;
     }
   }
-  _update() {
+  update() {
     let groups = {};
     let assigned = [];
     let proto = this.value.__proto__;

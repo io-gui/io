@@ -7,14 +7,14 @@ export class IoOption extends UiButton {
   static get properties() {
     return {
       value: {
-        observer: '_update'
+        observer: 'update'
       },
       action: {
         type: Function
       },
       options: {
         type: Array,
-        observer: '_update'
+        observer: 'update'
       }
     }
   }
@@ -33,7 +33,7 @@ export class IoOption extends UiButton {
       }
     }
   }
-  _update() {
+  update() {
     this.label = this.value;
     if (this.label instanceof Object) this.label = this.label.__proto__.constructor.name
     if (this.options) {

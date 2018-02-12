@@ -47,7 +47,7 @@ export class UiButton extends Io {
       event.preventDefault();
     }
   }
-  _update() {
+  update() {
     this.render([['span', this.label]]);
   }
 }

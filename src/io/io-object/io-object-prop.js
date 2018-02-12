@@ -27,11 +27,11 @@ export class IoObjectProp extends Io {
     return {
       value: {
         type: Object,
-        observer: '_update'
+        observer: 'update'
       },
       key: {
         type: String,
-        observer: '_update'
+        observer: 'update'
       },
       tag: {
         type: String,
@@ -39,7 +39,7 @@ export class IoObjectProp extends Io {
       },
       config: {
         type: Array,
-        observer: '_update'
+        observer: 'update'
       }
     }
   }
@@ -62,11 +62,11 @@ export class IoObjectProp extends Io {
   _objectMutatedHandler(event) {
     if (event.detail.object === this.value) {
       if (event.detail.key === this.key || event.detail.key === '*') {
-        this._update();
+        this.update();
       }
     }
   }
-  _update() {
+  update() {
     this.tag = this.config.tag;
     this.render([
       [this.config.tag, Object.assign({

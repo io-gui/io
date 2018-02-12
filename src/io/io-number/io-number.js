@@ -52,7 +52,7 @@ export class IoNumber extends Io {
   static get properties() {
     return {
       value: {
-        observer: '_update'
+        observer: 'update'
       },
       step: {
         type: Number,
@@ -99,7 +99,7 @@ export class IoNumber extends Io {
     if (editor.parentNode) editor.parentNode.removeChild(editor);
     this.classList.remove('edit');
   }
-  _update() {
+  update() {
     this.classList.toggle('invalid', typeof this.value !== 'number');
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {

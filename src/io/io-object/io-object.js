@@ -32,11 +32,11 @@ export class IoObject extends Io {
     return {
       value: {
         type: Object,
-        observer: '_update'
+        observer: 'update'
       },
       expanded: {
         type: Boolean,
-        observer: '_update',
+        observer: 'update',
         reflectToAttribute: true
       }
     }
@@ -76,7 +76,7 @@ export class IoObject extends Io {
     }
     return propConfigs;
   }
-  _update() {
+  update() {
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
     const Prop = entry => ['div', {class: 'io-row'}, [
       ['span', entry[0] + ':'],

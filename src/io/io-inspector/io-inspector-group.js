@@ -103,20 +103,20 @@ export class IoInspectorGroup extends IoObject {
     return {
       value: {
         type: Object,
-        observer: '_update'
+        observer: 'update'
       },
       props: {
         type: Array,
-        observer: '_update',
+        observer: 'update',
       },
       label: {
         type: String,
-        observer: '_update'
+        observer: 'update'
       },
       expanded: {
         type: Boolean,
         value: true,
-        observer: '_update'
+        observer: 'update'
       }
     }
   }
@@ -128,7 +128,7 @@ export class IoInspectorGroup extends IoObject {
       composed: true
     }));
   }
-  _update() {
+  update() {
     let propConfigs = this.getPropConfigs(this.props);
     const Prop = entry => ['div', {class: 'io-row'}, [
       ['span', {class: 'io-label'}, entry[0]],

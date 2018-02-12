@@ -74,9 +74,9 @@ export class UiLayoutSplit extends Io {
       bubbles: true,
       composed: true
     }));
-    this._update();
+    this.update();
   }
-  _update() {
+  update() {
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let elements = [];
     // TODO: make sure at least one is flex (no size).

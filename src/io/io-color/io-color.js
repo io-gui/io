@@ -26,10 +26,10 @@ export class IoColor extends IoVector {
   }
   _objectMutatedHandler(event) {
     if (event.detail.object === this.value) {
-      this._update();
+      this.update();
     }
   }
-  _update() {
+  update() {
     let elements = [];
     if (this.value.r !== undefined) elements.push('r');
     if (this.value.g !== undefined) elements.push('g');

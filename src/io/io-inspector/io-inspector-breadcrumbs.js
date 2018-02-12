@@ -55,7 +55,7 @@ export class IoInspectorBreadcrumbs extends Io {
     return {
       value: {
         type: Object,
-        observer: '_update'
+        observer: 'update'
       },
       path: {
         type: Array,
@@ -69,7 +69,7 @@ export class IoInspectorBreadcrumbs extends Io {
   _gotoHandler(i) {
     this.value = this.path[i];
   }
-  _update() {
+  update() {
     if (this.path.indexOf(this.value) !== -1) {
       this.path.length = this.path.indexOf(this.value) + 1;
     } else if (this.path.length && isPropertyOf(this.value, this.path[this.path.length - 1])) {

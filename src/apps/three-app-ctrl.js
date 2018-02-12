@@ -7,7 +7,7 @@ export class ThreeAppCtrl extends Io {
       scene: {}
     }
   }
-  _update() {
+  update() {
     this.render([
       ['span', 'select: '],
       ['io-option', {value: this.bind('value'), options: this.scene.options}]

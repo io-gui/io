@@ -120,7 +120,7 @@ export class Io extends HTMLElement {
       this.addEventListener(e, this.__listeners[e]);
     }
     // TODO: occasional redundant update?
-    if (typeof this._update == 'function') this._update();
+    if (typeof this.update == 'function') this.update();
   }
   disconnectedCallback() {
     for (let e in this.__listeners) {
