@@ -1,5 +1,5 @@
-import {html} from "../../io/ioutil.js"
 import {Io} from "../../io/io.js"
+import {html} from "../../io/ioutil.js"
 import "./ui-layout-divider.js"
 
 export class UiLayoutSplit extends Io {

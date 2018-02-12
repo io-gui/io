@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 
 export class IoBoolean extends UiButton {
@@ -23,7 +23,7 @@ export class IoBoolean extends UiButton {
   }
   constructor(props) {
     super(props);
-    this.action = this.toggle;
+    this.__properties.action.value = this.toggle;
   }
   toggle() {
     this._setValue(!this.value);

@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 
 import {IoBoolean} from "../io-boolean/io-boolean.js"
 import {IoNumber} from "../io-number/io-number.js"

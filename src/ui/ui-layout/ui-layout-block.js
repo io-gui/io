@@ -1,5 +1,5 @@
-import {html} from "../../io/ioutil.js"
 import {Io} from "../../io/io.js"
+import {html} from "../../io/ioutil.js"
 import {UiLayoutTab} from "./ui-layout-tab.js"
 
 export class UiLayoutBlock extends Io {

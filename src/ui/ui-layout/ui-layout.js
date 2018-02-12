@@ -1,5 +1,5 @@
-import {html} from "../../io/ioutil.js"
 import {Io} from "../../io/io.js"
+import {html} from "../../io/ioutil.js"
 import {UiLayoutBlock} from "./ui-layout-block.js"
 import {UiLayoutSplit} from "./ui-layout-split.js"
 

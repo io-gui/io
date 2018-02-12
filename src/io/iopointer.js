@@ -1,5 +1,3 @@
-import {Io} from "./io.js"
-
 const clickmask = document.createElement('div');
 clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;"
 
@@ -60,7 +58,7 @@ export class Pointer extends Object {
   }
 }
 
-export class IoPointer extends Io {
+export const IoPointerMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
       pointers: {

@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 
 function isPropertyOf(prop, object) {

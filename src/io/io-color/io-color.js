@@ -1,6 +1,7 @@
 import {html} from "../ioutil.js"
 import {IoVector} from "../io-vector/io-vector.js"
 import {IoObjectProp} from "../io-object/io-object-prop.js"
+import {IoColorPicker} from "./io-color-picker.js"
 
 export class IoColor extends IoVector {
   static get style() {
@@ -16,19 +17,6 @@ export class IoColor extends IoVector {
       </style>
     `;
   }
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener('io-object-mutated', this._objectMutatedHandler);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('io-object-mutated', this._objectMutatedHandler);
-  }
-  _objectMutatedHandler(event) {
-    if (event.detail.object === this.value) {
-      this.update();
-    }
-  }
   update() {
     let elements = [];
     if (this.value.r !== undefined) elements.push('r');
@@ -37,12 +25,9 @@ export class IoColor extends IoVector {
     if (this.value.a !== undefined) elements.push('a');
     this.columns = elements.length + 1;
     const Prop = i => ['io-object-prop', {key: i, value: this.value, config: {tag: 'io-number'}}];
-    let r = parseInt(this.value.r * 255);
-    let g = parseInt(this.value.g * 255);
-    let b = parseInt(this.value.b * 255);
     this.render([
       elements.map(Prop),
-      ['span', {style: {background: 'rgb(' + r + ',' + g + ',' + b + ')'}}, '&nbsp;'],
+      ['io-color-picker', {value: this.bind('value')}],
     ]);
   }
 }

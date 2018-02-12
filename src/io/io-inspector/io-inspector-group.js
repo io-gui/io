@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 import {IoObject} from "../io-object/io-object.js"
@@ -72,6 +72,7 @@ export class IoInspectorGroup extends IoObject {
           background: #222;
           padding: 0.3em;
         }
+        :host io-color-picker,
         :host io-boolean {
           padding: 0.3em;
           border-radius: 0.3em;

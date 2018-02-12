@@ -1,8 +1,8 @@
-import {html} from "../ioutil.js"
-import {IoPointer} from "../iopointer.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
+import {IoPointerMixin} from "../iopointer.js"
 
-export class IoSlider extends IoPointer {
+export class IoSlider extends IoPointerMixin(Io) {
   static get style() {
     return html`
       <style>
