@@ -7,12 +7,9 @@ export class IoString extends Io {
       value: {
         observer: 'update'
       },
-      type: {
-        type: String,
-        reflectToAttribute: true
-      },
       listeners: {
-        'blur': '_blurHandler'
+        'blur': '_blurHandler',
+        'keydown': '_keydownhandler'
       },
       attributes: {
         'tabindex': 0,
@@ -23,8 +20,13 @@ export class IoString extends Io {
   _blurHandler(event) {
     this._setValue(this.innerText);
   }
+  _keydownhandler(event) {
+    if (event.which == 13) {
+      event.preventDefault();
+      this._setValue(this.innerText);
+    }
+  }
   update() {
-    this.classList.toggle('invalid', typeof this.value !== 'string');
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
 }

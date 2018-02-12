@@ -11,16 +11,6 @@ export class IoNumber extends Io {
   static get style() {
     return html`
       <style>
-        :host {
-          display: inline-block;
-          cursor: text;
-        }
-        :host.invalid {
-          text-decoration: underline;
-          text-decoration-style: dashed;
-          text-decoration-color: red;
-          opacity: 0.25;
-        }
         :host.edit {
           position: relative;
         }
@@ -100,7 +90,6 @@ export class IoNumber extends Io {
     this.classList.remove('edit');
   }
   update() {
-    this.classList.toggle('invalid', typeof this.value !== 'number');
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value = Math.round(value / this.step) * this.step;
