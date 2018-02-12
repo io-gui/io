@@ -140,12 +140,11 @@ export class IoInspectorGroup extends IoObject {
       this.label === 'main' ? ['div', {class: 'io-wrapper'}, [
         Object.entries(propConfigs).map(Prop)
       ]] :
-      ['io-collapsable', {label: this.label, expanded: this.bind('expanded')}, [
-        ['io-boolean', {true: '▾' + this.label, false: '▸' + this.label, value: this.bind('expanded')}],
+      ['io-collapsable', {label: this.label, expanded: this.bind('expanded'), elements:
         ['div', {class: 'io-wrapper'}, [
-          this.expanded ? Object.entries(propConfigs).map(Prop) : null
+          Object.entries(propConfigs).map(Prop)
         ]]
-      ]]
+      }]
     ]);
   }
 }
