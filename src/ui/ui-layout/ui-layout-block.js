@@ -29,6 +29,7 @@ export class UiLayoutBlock extends Io {
         }
         :host > .ui-layout-tabs > ui-layout-tab[selected] {
           padding-bottom: 1px;
+          margin-bottom: -1px;
         }
         :host > .ui-layout-content {
           background: #ddd;
@@ -121,6 +122,9 @@ export class UiLayoutBlock extends Io {
     }));
   }
   _update() {
+    if (!this.selected) {
+      this.selected = this.tabs[this.tabs.length - 1];
+    }
     const Elem = (entry) => ['ui-layout-tab', {
         value: entry,
         action: this._selectHandler,

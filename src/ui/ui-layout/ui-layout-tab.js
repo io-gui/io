@@ -6,7 +6,9 @@ export class UiLayoutTab extends UiButton {
     return html`
       <style>
         :host {
+          display: inline-block;
           cursor: pointer;
+          white-space: nowrap;
           padding: 0 0.2em;
         }
         :host[selected] {
@@ -55,7 +57,7 @@ export class UiLayoutTab extends UiButton {
   //   if (this.droptarget) this.droptarget.dropzone = '';
   // }
   _update() {
-    this.innerText = this.value;
+    this.render([['span', this.label]]);
   }
   // _dragHandler(event) {
   //   let blocks = [];

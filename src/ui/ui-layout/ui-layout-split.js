@@ -79,6 +79,7 @@ export class UiLayoutSplit extends Io {
   _update() {
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let elements = [];
+    // TODO: make sure at least one is flex (no size).
     for (var i = 0; i < this.blocks.length; i++) {
       let size = this.blocks[i][d];
       let style = {

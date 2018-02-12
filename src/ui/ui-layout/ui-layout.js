@@ -3,7 +3,7 @@ import {Io} from "../../io/io.js"
 import {UiLayoutBlock} from "./ui-layout-block.js"
 import {UiLayoutSplit} from "./ui-layout-split.js"
 
-var layout = null;//JSON.parse(localStorage.getItem('io-layout-state'));
+var layout = JSON.parse(localStorage.getItem('io-layout-state'));
 
 export class UiLayout extends Io {
   static get style() {
@@ -24,22 +24,7 @@ export class UiLayout extends Io {
       },
       value: {
         type: Object,
-        value: layout || {'horizontal': [
-          {'width': 300, 'vertical': [
-            {'height': 10, 'tabs': ['option']},
-            {'horizontal': [
-              {'width': 10, 'tabs': ['option']},
-              {'tabs': ['inspector']},
-              {'tabs': ['inspector']},
-              {'width': 20, 'tabs': ['option']}
-            ]},
-            {'tabs': ['object']},
-          ]},
-          {'width': 50, 'tabs': ['option']},
-          {'width': 50, 'tabs': ['object']},
-          {'tabs': ['option', 'inspector'], 'selected': 'inspector'},
-          {'width': 400, 'tabs': ['inspector']}
-        ]}
+        value: layout || {}
       },
       listeners: {
         'layout-changed': '_layoutChangedHandler'

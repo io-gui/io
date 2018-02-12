@@ -83,7 +83,7 @@ export class IoInspectorBreadcrumbs extends Io {
       ['div', {class: 'io-flex'}, [
         this.path.map(Prop),
       ]],
-      this.path.length > 1 ? ['ui-button', {class: 'io-back-button', action: this._backHandler}, '< Back'] : null
+      this.path.length > 1 ? ['ui-button', {class: 'io-back-button', action: this._backHandlerm, label: '< Back'}] : null
     ]);
   }
 }
