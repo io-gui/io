@@ -1,7 +1,7 @@
 import {html} from "../../io/ioutil.js"
 import {UiButton} from "../ui-button/ui-button.js"
 
-export class UiLayoutTab extends UiButton {
+export class UiTabSelector extends UiButton {
   static get style() {
     return html`
       <style>
@@ -26,20 +26,38 @@ export class UiLayoutTab extends UiButton {
       selected: {
         type: Boolean,
         reflectToAttribute: true
-      },
-      // listeners: {
-      //   'dragstart': '_dragstartHandler',
-      //   'dragend': '_dragendHandler'
-      // },
-      // droptarget: {
-      //   type: HTMLElement,
-      //   observer: '_dropTargetChanged'
-      // },
-      // attributes: {
-      //   draggable: true
-      // }
+      }
     }
   }
+}
+
+window.customElements.define('ui-tab-selector', UiTabSelector);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // listeners: {
+  //   'dragstart': '_dragstartHandler',
+  //   'dragend': '_dragendHandler'
+  // },
+  // droptarget: {
+  //   type: HTMLElement,
+  //   observer: '_dropTargetChanged'
+  // },
+  // attributes: {
+  //   draggable: true
+  // }
   // _dragstartHandler() {
   //   UiLayoutTab.dragged = this;
   // }
@@ -56,9 +74,6 @@ export class UiLayoutTab extends UiButton {
   //   }
   //   if (this.droptarget) this.droptarget.dropzone = '';
   // }
-  update() {
-    this.render([['span', this.label]]);
-  }
   // _dragHandler(event) {
   //   let blocks = [];
   //   for (let i = 0; i < event.path.length; i++) {
@@ -81,7 +96,6 @@ export class UiLayoutTab extends UiButton {
   // _dragoverHandler(event) {
   //   // console.log(event.srcElement)
   // }
-}
 
 // /* events fired on the draggable target */
 // document.addEventListener("drag", function( event ) {
@@ -123,5 +137,3 @@ export class UiLayoutTab extends UiButton {
 //         event.target.appendChild( dragged );
 //     }
 // }, false);
-
-window.customElements.define('ui-layout-tab', UiLayoutTab);
