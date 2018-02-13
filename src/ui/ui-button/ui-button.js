@@ -1,5 +1,5 @@
-import {html} from "../../io/ioutil.js"
 import {Io} from "../../io/io.js"
+import {html} from "../../io/ioutil.js"
 
 export class UiButton extends Io {
   static get style() {
@@ -7,20 +7,25 @@ export class UiButton extends Io {
       <style>
         :host {
           cursor: pointer;
+          display: inline-block;
+          white-space: nowrap;
         }
       </style>
     `;
   }
   static get properties() {
     return {
+      value: {
+      },
+      label: {
+        type: String
+      },
       action: {
         type: Function
       },
-      value: {},
       listeners: {
         'keyup': '_actionHandler',
-        'mouseup': '_actionHandler',
-        'touchend': '_actionHandler',
+        'click': '_actionHandler',
         'keydown': '_preventHandler',
         'mousedown': '_preventHandler'
       },
@@ -30,11 +35,9 @@ export class UiButton extends Io {
     }
   }
   _actionHandler(event) {
-    if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
+    if (event.which == 13 || event.which == 32 || event.type == 'click') {
       event.preventDefault();
-      if (typeof this.action === 'function') {
-        this.action(this.value !== undefined ? this.value : event);
-      }
+      if (typeof this.action === 'function') this.action(this.value);
     }
   }
   _preventHandler(event) {
@@ -43,6 +46,9 @@ export class UiButton extends Io {
     } else if (event.type == 'mousedown') {
       event.preventDefault();
     }
+  }
+  update() {
+    this.render([['span', this.label]]);
   }
 }
 

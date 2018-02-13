@@ -1,7 +1,8 @@
+import {Io} from "../../io/io.js"
 import {html} from "../../io/ioutil.js"
-import {IoPointer} from "../../io/iopointer.js"
+import {IoPointerMixin} from "../../io/iopointer.js"
 
-export class UiLayoutDivider extends IoPointer {
+export class UiLayoutDivider extends IoPointerMixin(Io) {
   static get style() {
     return html`
       <style>
@@ -56,7 +57,7 @@ export class UiLayoutDivider extends IoPointer {
       composed: true
     }));
   }
-  _update() {
+  update() {
     this.render([
       ['div', {class: 'io-divider-icon'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
     ]);

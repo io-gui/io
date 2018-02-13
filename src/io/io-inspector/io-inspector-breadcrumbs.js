@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 
 function isPropertyOf(prop, object) {
@@ -55,7 +55,7 @@ export class IoInspectorBreadcrumbs extends Io {
     return {
       value: {
         type: Object,
-        observer: '_update'
+        observer: 'update'
       },
       path: {
         type: Array,
@@ -69,7 +69,7 @@ export class IoInspectorBreadcrumbs extends Io {
   _gotoHandler(i) {
     this.value = this.path[i];
   }
-  _update() {
+  update() {
     if (this.path.indexOf(this.value) !== -1) {
       this.path.length = this.path.indexOf(this.value) + 1;
     } else if (this.path.length && isPropertyOf(this.value, this.path[this.path.length - 1])) {
@@ -83,7 +83,7 @@ export class IoInspectorBreadcrumbs extends Io {
       ['div', {class: 'io-flex'}, [
         this.path.map(Prop),
       ]],
-      this.path.length > 1 ? ['ui-button', {class: 'io-back-button', action: this._backHandler}, '< Back'] : null
+      this.path.length > 1 ? ['ui-button', {class: 'io-back-button', action: this._backHandlerm, label: '< Back'}] : null
     ]);
   }
 }

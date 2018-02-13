@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 
 export class IoFunction extends Io {
   static get style() {
@@ -7,7 +7,6 @@ export class IoFunction extends Io {
       <style>
         :host {
           display: inline-block;
-          cursor: pointer;
           font-style: italic;
         }
       </style>
@@ -16,11 +15,11 @@ export class IoFunction extends Io {
   static get properties() {
     return {
       value: {
-        observer: '_update'
+        observer: 'update'
       }
     }
   }
-  _update() {
+  update() {
     // https://stackoverflow.com/questions/1007981/how-to-get-function-parameter-names-values-dynamically
     var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
     var ARGUMENT_NAMES = /([^\s,]+)/g;

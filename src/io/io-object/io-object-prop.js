@@ -1,7 +1,8 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
+import {IoPropertyMixin} from "../ioproperty.js"
 
-export class IoObjectProp extends Io {
+export class IoObjectProp extends IoPropertyMixin(Io) {
   static get style() {
     return html`
       <style>
@@ -25,54 +26,23 @@ export class IoObjectProp extends Io {
   }
   static get properties() {
     return {
-      value: {
-        type: Object,
-        observer: '_update'
-      },
-      key: {
-        type: String,
-        observer: '_update'
-      },
       tag: {
         type: String,
         reflectToAttribute: true
       },
       config: {
         type: Array,
-        observer: '_update'
+        observer: 'update'
       }
     }
   }
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener('io-object-mutated', this._objectMutatedHandler);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('io-object-mutated', this._objectMutatedHandler);
-  }
-  _valueSetHandler(event) {
-    this.value[this.key] = event.detail.value;
-    window.dispatchEvent(new CustomEvent('io-object-mutated', {
-      detail: {object: this.value, key: this.key},
-      bubbles: false,
-      composed: true
-    }));
-  }
-  _objectMutatedHandler(event) {
-    if (event.detail.object === this.value) {
-      if (event.detail.key === this.key || event.detail.key === '*') {
-        this._update();
-      }
-    }
-  }
-  _update() {
+  update() {
     this.tag = this.config.tag;
     this.render([
       [this.config.tag, Object.assign({
           value: this.value[this.key],
           label: this.key,
-          listeners: {'value-set': this._valueSetHandler}},
+          listeners: {'value-set': this.setProperty}},
           this.config.props)]
     ]);
   }

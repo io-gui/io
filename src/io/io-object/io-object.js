@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 
 import {IoBoolean} from "../io-boolean/io-boolean.js"
 import {IoNumber} from "../io-number/io-number.js"
@@ -32,11 +32,11 @@ export class IoObject extends Io {
     return {
       value: {
         type: Object,
-        observer: '_update'
+        observer: 'update'
       },
       expanded: {
         type: Boolean,
-        observer: '_update',
+        observer: 'update',
         reflectToAttribute: true
       }
     }
@@ -76,18 +76,16 @@ export class IoObject extends Io {
     }
     return propConfigs;
   }
-  _update() {
+  update() {
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
-    let label = this.value.constructor.name;
     const Prop = entry => ['div', {class: 'io-row'}, [
       ['span', entry[0] + ':'],
       ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
     ]];
     this.render([
-      ['io-collapsable', {label: label, expanded: this.bind('expanded')}, [
-        ['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}],
-        this.expanded ? Object.entries(propConfigs).map(Prop) : null
-      ]]
+      ['io-collapsable', {label: this.value.constructor.name, expanded: this.bind('expanded'), elements:
+        Object.entries(propConfigs).map(Prop)
+      }]
     ]);
   }
 }

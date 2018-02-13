@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 import {IoObjectProp} from "../io-object/io-object-prop.js"
 
 export class IoVector extends Io {
@@ -16,7 +16,7 @@ export class IoVector extends Io {
   static get properties() {
     return {
       value: {
-        observer: '_update'
+        observer: 'update'
       },
       columns: {
         type: Number,
@@ -24,7 +24,7 @@ export class IoVector extends Io {
       }
     }
   }
-  _update() {
+  update() {
     let elements = [];
     if (this.value.x !== undefined) elements.push('x');
     if (this.value.y !== undefined) elements.push('y');

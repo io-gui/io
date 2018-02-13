@@ -1,5 +1,5 @@
-import {html} from "../../io/ioutil.js"
 import {Io} from "../../io/io.js"
+import {html} from "../../io/ioutil.js"
 import {UiMenuLayer} from "./ui-menu-layer.js"
 import {UiMenuOption} from "./ui-menu-option.js"
 
@@ -31,7 +31,7 @@ export class UiMenuGroup extends Io {
     return {
       options: {
         type: Array,
-        observer: '_update'
+        observer: 'update'
       },
       expanded: {
         type: Boolean,
@@ -56,9 +56,9 @@ export class UiMenuGroup extends Io {
     this.$options = [];
     this._x = 0;
     this._y = 0;
-    this._update();
+    this.update();
   }
-  _update() {
+  update() {
     if (this.options) {
       for (var i = 0; i < this.$options.length; i++) {
         if (this.$options[i].parentElement) this.removeChild(this.$options[i]);

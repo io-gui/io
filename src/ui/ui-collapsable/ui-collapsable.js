@@ -1,25 +1,29 @@
-import {html} from "../../io/ioutil.js"
 import {Io} from "../../io/io.js"
+import {html} from "../../io/ioutil.js"
 
 export class UiCollapsable extends Io {
-  static get style() {
-    return html`
-      <style>
-        :host:not([expanded]) > *:not(:first-child) {
-          display: none;
-        }
-      </style>
-    `;
-  }
   static get properties() {
     return {
+      label: {
+        type: String
+      },
       expanded: {
         type: Boolean,
-        reflectToAttribute: true
+        reflectToAttribute: true,
+        observer: 'update'
+      },
+      elements: {
+        type: Array,
+        observer: 'update'
       }
     }
   }
+  update() {
+    this.render([
+        ['io-boolean', {true: '▾' + this.label, false: '▸' + this.label, value: this.bind('expanded')}],
+        this.expanded ? this.elements : null
+    ]);
+  }
 }
-
 
 window.customElements.define('io-collapsable', UiCollapsable);

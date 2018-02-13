@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 
 const editor = document.createElement('input');
 editor.type = 'number';
@@ -11,16 +11,6 @@ export class IoNumber extends Io {
   static get style() {
     return html`
       <style>
-        :host {
-          display: inline-block;
-          cursor: text;
-        }
-        :host.invalid {
-          text-decoration: underline;
-          text-decoration-style: dashed;
-          text-decoration-color: red;
-          opacity: 0.25;
-        }
         :host.edit {
           position: relative;
         }
@@ -52,7 +42,7 @@ export class IoNumber extends Io {
   static get properties() {
     return {
       value: {
-        observer: '_update'
+        observer: 'update'
       },
       step: {
         type: Number,
@@ -99,8 +89,7 @@ export class IoNumber extends Io {
     if (editor.parentNode) editor.parentNode.removeChild(editor);
     this.classList.remove('edit');
   }
-  _update() {
-    this.classList.toggle('invalid', typeof this.value !== 'number');
+  update() {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value = Math.round(value / this.step) * this.step;

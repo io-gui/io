@@ -1,33 +1,21 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 import {UiMenu} from "../../ui/ui-menu/ui-menu.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 
 export class IoOption extends UiButton {
-  static get style() {
-    return html`
-      <style>
-        :host {
-          display: inline-block;
-          cursor: pointer;
-          position: relative;
-          white-space: nowrap;
-        }
-      </style>
-    `;
-  }
   static get properties() {
     return {
       value: {
-        observer: '_update'
-      },
-      options: {
-        type: Array,
-        observer: '_update'
+        observer: 'update'
       },
       action: {
         type: Function
       },
+      options: {
+        type: Array,
+        observer: 'update'
+      }
     }
   }
   _actionHandler(event) {
@@ -45,19 +33,19 @@ export class IoOption extends UiButton {
       }
     }
   }
-  _update() {
-    let label = this.value;
-    if (label instanceof Object) label = label.__proto__.constructor.name
+  update() {
+    this.label = this.value;
+    if (this.label instanceof Object) this.label = this.label.__proto__.constructor.name
     if (this.options) {
       for (var i = 0; i < this.options.length; i++) {
         if (this.options[i].value == this.value) {
-          label = this.options[i].label || label;
+          this.label = this.options[i].label || this.label;
           break;
         }
       }
     }
     this.render([
-      ['span', label],
+      ['span', this.label],
       ['ui-menu', {
         options: this.options,
         position: 'bottom',

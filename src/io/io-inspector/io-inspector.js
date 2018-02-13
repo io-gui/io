@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 import {IoInspectorBreadcrumbs} from "./io-inspector-breadcrumbs.js"
 import {IoInspectorGroup} from "./io-inspector-group.js"
 import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
@@ -28,11 +28,11 @@ export class IoInspector extends Io {
     return {
       value: {
         type: Object,
-        observer: '_update'
+        observer: 'update'
       },
       expanded: {
         type: Boolean,
-        observer: '_update',
+        observer: 'update',
         reflectToAttribute: true
       },
       listeners: {
@@ -46,7 +46,7 @@ export class IoInspector extends Io {
       this.value = event.detail.value;
     }
   }
-  _update() {
+  update() {
     let groups = {};
     let assigned = [];
     let proto = this.value.__proto__;

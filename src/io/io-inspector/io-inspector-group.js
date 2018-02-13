@@ -1,5 +1,5 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 import {IoObject} from "../io-object/io-object.js"
@@ -72,9 +72,10 @@ export class IoInspectorGroup extends IoObject {
           background: #222;
           padding: 0.3em;
         }
-        :host ui-button {
-          padding: 0.3em !important;
-          border-radius: 0.3em !important;
+        :host io-color-picker,
+        :host io-boolean {
+          padding: 0.3em;
+          border-radius: 0.3em;
         }
         :host io-object-prop > io-boolean {
           flex: none;
@@ -103,20 +104,20 @@ export class IoInspectorGroup extends IoObject {
     return {
       value: {
         type: Object,
-        observer: '_update'
+        observer: 'update'
       },
       props: {
         type: Array,
-        observer: '_update',
+        observer: 'update',
       },
       label: {
         type: String,
-        observer: '_update'
+        observer: 'update'
       },
       expanded: {
         type: Boolean,
         value: true,
-        observer: '_update'
+        observer: 'update'
       }
     }
   }
@@ -128,7 +129,7 @@ export class IoInspectorGroup extends IoObject {
       composed: true
     }));
   }
-  _update() {
+  update() {
     let propConfigs = this.getPropConfigs(this.props);
     const Prop = entry => ['div', {class: 'io-row'}, [
       ['span', {class: 'io-label'}, entry[0]],
@@ -140,12 +141,11 @@ export class IoInspectorGroup extends IoObject {
       this.label === 'main' ? ['div', {class: 'io-wrapper'}, [
         Object.entries(propConfigs).map(Prop)
       ]] :
-      ['io-collapsable', {label: this.label, expanded: this.bind('expanded')}, [
-        ['io-boolean', {true: '▾' + this.label, false: '▸' + this.label, value: this.bind('expanded')}],
+      ['io-collapsable', {label: this.label, expanded: this.bind('expanded'), elements:
         ['div', {class: 'io-wrapper'}, [
-          this.expanded ? Object.entries(propConfigs).map(Prop) : null
+          Object.entries(propConfigs).map(Prop)
         ]]
-      ]]
+      }]
     ]);
   }
 }

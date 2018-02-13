@@ -1,34 +1,15 @@
-import {html} from "../ioutil.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
 
 export class IoString extends Io {
-  static get style() {
-    return html`
-      <style>
-        :host {
-          display: inline-block;
-          cursor: text;
-        }
-        :host.invalid {
-          text-decoration: underline;
-          text-decoration-style: dashed;
-          text-decoration-color: red;
-          opacity: 0.25;
-        }
-      </style>
-    `;
-  }
   static get properties() {
     return {
       value: {
-        observer: '_update'
-      },
-      type: {
-        type: String,
-        reflectToAttribute: true
+        observer: 'update'
       },
       listeners: {
-        'blur': '_blurHandler'
+        'blur': '_blurHandler',
+        'keydown': '_keydownhandler'
       },
       attributes: {
         'tabindex': 0,
@@ -39,8 +20,13 @@ export class IoString extends Io {
   _blurHandler(event) {
     this._setValue(this.innerText);
   }
-  _update() {
-    this.classList.toggle('invalid', typeof this.value !== 'string');
+  _keydownhandler(event) {
+    if (event.which == 13) {
+      event.preventDefault();
+      this._setValue(this.innerText);
+    }
+  }
+  update() {
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
 }

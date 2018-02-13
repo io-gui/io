@@ -1,8 +1,8 @@
-import {html} from "../ioutil.js"
-import {IoPointer} from "../iopointer.js"
 import {Io} from "../io.js"
+import {html} from "../ioutil.js"
+import {IoPointerMixin} from "../iopointer.js"
 
-export class IoSlider extends IoPointer {
+export class IoSlider extends IoPointerMixin(Io) {
   static get style() {
     return html`
       <style>
@@ -35,22 +35,22 @@ export class IoSlider extends IoPointer {
     return {
       value: {
         type: Number,
-        observer: '_update'
+        observer: 'update'
       },
       step: {
         type: Number,
         value: 0.01,
-        observer: '_update'
+        observer: 'update'
       },
       min: {
         type: Number,
         value: 0,
-        observer: '_update'
+        observer: 'update'
       },
       max: {
         type: Number,
         value: 100,
-        observer: '_update'
+        observer: 'update'
       },
       attributes: {
         'tabindex': 0
@@ -67,7 +67,7 @@ export class IoSlider extends IoPointer {
     // TODO: implement step
     this._setValue(this.min + (this.max - this.min) * pos);
   }
-  _update() {
+  update() {
     let pos = 100 * (this.value - this.min) / (this.max - this.min);
     this.render([
       ['div', {class: 'io-slider-slit', style: {
