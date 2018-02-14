@@ -28,8 +28,8 @@ export class UiTabSelector extends IoPointerMixin(Io) {
         type: String,
         observer: 'update'
       },
-      tabs: {
-        type: Object
+      host: {
+        type: HTMLElement
       },
       selected: {
         type: Boolean,
@@ -52,7 +52,7 @@ export class UiTabSelector extends IoPointerMixin(Io) {
       _dragIcon.parentNode.removeChild(_dragIcon);
     }
     if (this._dragging) {
-      this.fire('ui-tab-drag-end', {tab: this.value, tabs: this.tabs});
+      this.fire('ui-tab-drag-end', {tab: this.value, host: this.host});
       this._dragging = false;
     }
   }
@@ -63,13 +63,13 @@ export class UiTabSelector extends IoPointerMixin(Io) {
         this._dragging = true;
         this._clickmask.appendChild(_dragIcon);
 
-        this.fire('ui-tab-drag-start', {tab: this.value, tabs: this.tabs});
+        this.fire('ui-tab-drag-start', {tab: this.value, host: this.host});
 
       } else {
         let x = this._rect.left + event.detail.pointer[0].position.x;
         let y = this._rect.top + event.detail.pointer[0].position.y;
 
-        this.fire('ui-tab-drag', {x: x, y: y, tab: this.value, tabs: this.tabs});
+        this.fire('ui-tab-drag', {x: x, y: y, tab: this.value, host: this.host});
 
         _dragIcon.style.left = x - 8 + 'px';
         _dragIcon.style.top = y - 8 + 'px';

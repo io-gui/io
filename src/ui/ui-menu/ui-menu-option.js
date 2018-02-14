@@ -81,16 +81,8 @@ export class UiMenuOption extends Io {
     while (parent && parent.localName != 'ui-menu') {
       parent = parent.$parent;
     }
-    this.dispatchEvent(new CustomEvent('ui-menu-option-clicked', {
-      detail: {option: this.option},
-      bubbles: true,
-      composed: true
-    }));
-    parent.dispatchEvent(new CustomEvent('ui-menu-option-clicked', {
-      detail: {option: this.option},
-      bubbles: false,
-      composed: true
-    }));
+    this.fire('ui-menu-option-clicked', {option: this.option});
+    parent.fire('ui-menu-option-clicked', {option: this.option}, false);
   }
   _keyupHandler(event) {
     var siblings = this.$parent.$options;

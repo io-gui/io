@@ -100,8 +100,6 @@ export class UiTabs extends Io {
     let x = 2 * (((dx - this._rect.x) / this._rect.width) - 0.5);
     let y = 2 * (((dy - this._rect.y) / this._rect.height) - 0.5);
     if (Math.abs(y) < 1 && Math.abs(x) < 1) {
-          //   if (UiLayoutTab.dragged) UiLayoutTab.dragged.droptarget = this;
-      // if (dy - this._rect.y < 20) this.dropzone = 'tabs';//TODO
       if (Math.abs(y) < 0.5 && Math.abs(x) < 0.5) this.dropzone = 'center';
       else if (y < -Math.abs(x)) this.dropzone = 'top';
       else if (y > +Math.abs(x)) this.dropzone = 'bottom';
@@ -111,26 +109,36 @@ export class UiTabs extends Io {
     } else {
       this.dropzone = ''
     }
-
-
   }
   _tabDragEndHandler(event) {
     window.removeEventListener('ui-tab-drag', this._tabDragHandler);
     window.removeEventListener('ui-tab-drag-end', this._tabDragEndHandler);
-    this.dropzone = ''
+    if (this.dropzone) {
+      if (this.dropzone === 'center') {
+        this.addTab(event.detail.tab);
+        event.detail.host.removeTab(event.detail.tab);
+      }
+      this.dropzone = ''
+    }
   }
-  _optionSelectHandler(tab) {
+  addTab(tab) {
     let tabs = this.tabs.tabs;
     if (tabs.indexOf(tab) === -1) tabs.push(tab);
     this._selectHandler(tab);
   }
+  removeTab(tab) {
+    let tabs = this.tabs.tabs;
+    if (tabs.indexOf(tab) !== -1) tabs.splice(tabs.indexOf(tab));
+    let selected = this.tabs.selected || tabs[tabs.length - 1];
+    if (selected === tab) selected = tabs[tabs.length - 1];
+    this._selectHandler(selected);
+  }
+  _optionSelectHandler(tab) {
+    this.addTab(tab);
+  }
   _selectHandler(elem) {
     this.tabs.selected = elem;
-    this.dispatchEvent(new CustomEvent('ui-tab-selected', {
-      detail: this.tabs,
-      bubbles: false,
-      composed: true
-    }));
+    this.fire('ui-tab-selected', this.tabs, false);
     this.update();
   }
   update() {
@@ -138,7 +146,7 @@ export class UiTabs extends Io {
     let selected = this.tabs.selected || tabs[tabs.length - 1];
     const Elem = (entry) => ['ui-tab-selector', {
         value: entry,
-        tabs: this.tabs,
+        host: this,
         action: this._selectHandler,
         selected: entry === selected
       }, entry];

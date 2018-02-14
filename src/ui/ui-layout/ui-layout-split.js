@@ -70,19 +70,12 @@ export class UiLayoutSplit extends Io {
     if (prev[d]) prev[d] = Math.max(0, Math.min(Infinity, prev[d] + movement));
     if (next[d]) next[d] = Math.max(0, Math.min(Infinity, next[d] - movement));
 
-    this.dispatchEvent(new CustomEvent('layout-changed', {
-      detail: this.splits,
-      bubbles: true,
-      composed: true
-    }));
+    this.fire('layout-changed', this.splits);
     this.update();
   }
   _tabSelectedHandler(event) {
-    this.dispatchEvent(new CustomEvent('layout-changed', {
-      detail: this.splits,
-      bubbles: true,
-      composed: true
-    }));
+    event.stopPropagation();
+    this.fire('layout-changed', this.splits);
   }
   update() {
     this.orientation = this.splits.orientation;

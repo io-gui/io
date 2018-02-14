@@ -123,11 +123,7 @@ export class IoInspectorGroup extends IoObject {
   }
   _clickHandler(value) {
     // TODO: consider bubbling event from button
-    this.dispatchEvent(new CustomEvent('io-link-clicked', {
-      detail: {value: value},
-      bubbles: true,
-      composed: true
-    }));
+    this.fire('io-link-clicked', {value: value});
   }
   update() {
     let propConfigs = this.getPropConfigs(this.props);

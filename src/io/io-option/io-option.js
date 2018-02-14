@@ -44,7 +44,7 @@ export class IoOption extends UiButton {
     }
     this.__properties.label.value = label;
     this.render([
-      ['span', this.label],
+      ['span', String(label)],
       ['ui-menu', {
         options: this.options,
         position: 'bottom',

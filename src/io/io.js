@@ -95,11 +95,7 @@ export class Io extends HTMLElement {
           this[config.observer](value, oldValue, key);
         }
         if (config.notify) {
-          this.dispatchEvent(new CustomEvent(key + '-changed', {
-            detail: {value: value, oldValue: oldValue},
-            bubbles: config.bubbles,
-            composed: true
-          }));
+          this.fire(key + '-changed', {value: value, oldValue: oldValue}, config.bubbles);
         }
       },
       enumerable: true,
@@ -262,11 +258,7 @@ export class Io extends HTMLElement {
   _setValue(value) {
     let oldValue = this.value;
     this.value = value;
-    this.dispatchEvent(new CustomEvent('value-set', {
-      detail: {value: value, oldValue: oldValue},
-      bubbles: false,
-      composed: true
-    }));
+    this.fire('value-set', {value: value, oldValue: oldValue}, false);
   }
   bind(sourceProp, target, targetProp) {
     sourceProp = arguments[0];
