@@ -114,16 +114,18 @@ export class UiTabs extends Io {
     window.removeEventListener('ui-tab-drag', this._tabDragHandler);
     window.removeEventListener('ui-tab-drag-end', this._tabDragEndHandler);
     if (this.dropzone) {
-      if (this.dropzone === 'center') {
+      if (this.dropzone === 'center' && event.detail.host !== this) {
         this.addTab(event.detail.tab);
         event.detail.host.removeTab(event.detail.tab);
       }
       this.dropzone = ''
     }
   }
-  addTab(tab) {
+  addTab(tab, index) {
+    // TODO: implement indexed insertion on tab hover.
     let tabs = this.tabs.tabs;
     if (tabs.indexOf(tab) === -1) tabs.push(tab);
+    this.fire('ui-tab-added', this.tabs);
     this._selectHandler(tab);
   }
   removeTab(tab) {
@@ -131,6 +133,7 @@ export class UiTabs extends Io {
     if (tabs.indexOf(tab) !== -1) tabs.splice(tabs.indexOf(tab));
     let selected = this.tabs.selected || tabs[tabs.length - 1];
     if (selected === tab) selected = tabs[tabs.length - 1];
+    this.fire('ui-tab-removed', this.tabs);
     this._selectHandler(selected);
   }
   _optionSelectHandler(tab) {
@@ -138,7 +141,7 @@ export class UiTabs extends Io {
   }
   _selectHandler(elem) {
     this.tabs.selected = elem;
-    this.fire('ui-tab-selected', this.tabs, false);
+    this.fire('ui-tab-selected', this.tabs);
     this.update();
   }
   update() {

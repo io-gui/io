@@ -44,7 +44,10 @@ export class UiLayoutSplit extends Io {
         reflectToAttribute: true
       },
       listeners: {
-        'ui-layout-divider-move': '_dividerMoveHandler'
+        'ui-layout-divider-move': '_dividerMoveHandler',
+        'ui-tab-added': '_tabChangedHandler',
+        'ui-tab-removed': '_tabRemovedHandler',
+        'ui-tab-selected': '_tabChangedHandler'
       }
     }
   }
@@ -73,9 +76,27 @@ export class UiLayoutSplit extends Io {
     this.fire('layout-changed', this.splits);
     this.update();
   }
-  _tabSelectedHandler(event) {
+  _tabRemovedHandler(event) {
+    event.stopPropagation();
+    if (event.detail.tabs.length === 0) {
+      this.removeSplit(event.detail);
+    }
+  }
+  _tabChangedHandler(event) {
     event.stopPropagation();
     this.fire('layout-changed', this.splits);
+  }
+  addSplit(split, index, orientation) {
+    // insert if orientation match
+    // Add new split if orientation different.
+  }
+  removeSplit(split) {
+    // TODO: Normalize tabs and splits
+    // let splits = this.splits.splits;
+    // let index = splits.indexOf(split);
+    // console.log(index)
+    // splits.splice(index);
+    // this.update();
   }
   update() {
     this.orientation = this.splits.orientation;
@@ -83,6 +104,7 @@ export class UiLayoutSplit extends Io {
     let splits = this.splits.splits;
     let elements = [];
     // TODO: make sure at least one is flex (no size).
+    // TODO: make sure it runs on split add/remove
     for (var i = 0; i < splits.length; i++) {
       let size = splits[i][d];
       let style = {
@@ -100,8 +122,7 @@ export class UiLayoutSplit extends Io {
             class: 'ui-tabs',
             style: style,
             elements: this.elements,
-            tabs: splits[i].tabs,
-            listeners: {'ui-tab-selected': this._tabSelectedHandler}
+            tabs: splits[i].tabs //TODO: normalize with split
           }]);
       } else {
         elements.push(['ui-layout-split', {
