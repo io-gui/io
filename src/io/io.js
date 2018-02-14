@@ -13,7 +13,10 @@ export class Io extends HTMLElement {
       let prop = proto.properties;
       for (let key in prop) {
         if (key === 'listeners') {
-          for (let listener in prop[key]) config.listeners[listener] = prop[key][listener];
+          for (let listener in prop[key]) {
+            config.listeners[listener] = config.listeners[listener] || [];
+            config.listeners[listener].push(prop[key][listener]);
+          }
         } else if (key === 'attributes') {
           for (let att in prop[key]) config.attributes[att] = prop[key][att];
         } else {
@@ -116,15 +119,20 @@ export class Io extends HTMLElement {
   }
   connectedCallback() {
     for (let e in this.__listeners) {
-      this.__listeners[e] = this[this.__listeners[e]];
-      this.addEventListener(e, this.__listeners[e]);
+      for (let l = 0; l < this.__listeners[e].length; l++) {
+        if (typeof this.__listeners[e][l] === 'string')
+        this.__listeners[e][l] = this[this.__listeners[e][l]];
+        this.addEventListener(e, this.__listeners[e][l]);
+      }
     }
     // TODO: occasional redundant update?
     if (typeof this.update == 'function') this.update();
   }
   disconnectedCallback() {
     for (let e in this.__listeners) {
-      this.removeEventListener(e, this.__listeners[e]);
+      for (let l = 0; l < this.__listeners[e].length; l++) {
+        this.removeEventListener(e, this.__listeners[e][l]);
+      }
     }
   }
   render(children, host) {
@@ -215,8 +223,9 @@ export class Io extends HTMLElement {
             if (typeof vChildren[i].props[prop][l] === 'function') {
               // TODO: test for garbage / lingering listeners
               // TODO: check for conflicts / existing listeners
-              element.__listeners[l] = vChildren[i].props[prop][l];
-              element.addEventListener(l, element.__listeners[l]);
+              element.__listeners[l] = element.__listeners[l] || [];
+              element.__listeners[l].push(vChildren[i].props[prop][l]);
+              element.addEventListener(l, vChildren[i].props[prop][l]);
             }
           }
         } else if (prop == 'style') {
@@ -282,6 +291,13 @@ export class Io extends HTMLElement {
       }
       delete this.__bindings[prop]
     }
+  }
+  fire(eventName, detail, bubbles = true) {
+    this.dispatchEvent(new CustomEvent(eventName, {
+      detail: detail,
+      bubbles: bubbles,
+      composed: true
+    }));
   }
 }
 

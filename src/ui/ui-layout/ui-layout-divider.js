@@ -47,9 +47,9 @@ export class UiLayoutDivider extends IoPointerMixin(Io) {
     let rect = this.getBoundingClientRect();
     let movement
     if (this.orientation === 'horizontal') {
-      movement = event.detail.pointer[0].position.x - (rect.x + rect.width / 2);
+      movement = event.detail.pointer[0].position.x - rect.width / 2;
     } else {
-      movement = event.detail.pointer[0].position.y - (rect.y + rect.height / 2);
+      movement = event.detail.pointer[0].position.y - rect.height / 2;
     }
     this.dispatchEvent(new CustomEvent('ui-layout-divider-move', {
       detail: {movement: movement, index: this.index},

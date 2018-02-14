@@ -1,6 +1,7 @@
 import {Io} from "../../io/io.js"
 import {html} from "../../io/ioutil.js"
 import {UiTabSelector} from "./ui-tab-selector.js"
+import {IoOption} from "../../io/io-option/io-option.js"
 
 export class UiTabs extends Io {
   static get style() {
@@ -31,13 +32,35 @@ export class UiTabs extends Io {
           padding-bottom: 1px;
           margin-bottom: -1px;
         }
-        :host > .ui-layout-content {
+        :host > .ui-tab-content {
           background: #ddd;
           display: flex;
           flex: 1;
         }
-        :host > .ui-layout-content > * {
+        :host > .ui-tab-content > * {
           flex: 1;
+        }
+        :host > .ui-layout-drop-highlight {
+          position: absolute;
+          background: rgba(0, 0, 0, 0.25);
+          width: 100%;
+          height: 100%;
+        }
+        :host:not([dropzone]) > .ui-layout-drop-highlight {
+          pointer-events: none;
+          opacity: 0;
+        }
+        :host[dropzone=top] > .ui-layout-drop-highlight {
+          background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
+        }
+        :host[dropzone=bottom] > .ui-layout-drop-highlight {
+          background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
+        }
+        :host[dropzone=left] > .ui-layout-drop-highlight {
+          background: linear-gradient(to right, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
+        }
+        :host[dropzone=right] > .ui-layout-drop-highlight {
+          background: linear-gradient(to left, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
         }
       </style>
     `;
@@ -45,51 +68,91 @@ export class UiTabs extends Io {
   static get properties() {
     return {
       elements: {
-        type: Object
+        type: Object,
+        observer: 'update'
       },
       tabs: {
-        value: [],
-        type: Array
-      },
-      selected: {
-        type: String,
+        type: Object,
         observer: 'update'
+      },
+      dropzone: {
+        type: String,
+        reflectToAttribute: true
       }
     }
   }
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('ui-tab-drag-start', this._tabDragStartHandler);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('ui-tab-drag-start', this._tabDragStartHandler);
+  }
+  _tabDragStartHandler(event) {
+    this._rect = this.getBoundingClientRect();
+    window.addEventListener('ui-tab-drag', this._tabDragHandler);
+    window.addEventListener('ui-tab-drag-end', this._tabDragEndHandler);
+  }
+  _tabDragHandler(event) {
+    let dx = event.detail.x;
+    let dy = event.detail.y;
+    let x = 2 * (((dx - this._rect.x) / this._rect.width) - 0.5);
+    let y = 2 * (((dy - this._rect.y) / this._rect.height) - 0.5);
+    if (Math.abs(y) < 1 && Math.abs(x) < 1) {
+          //   if (UiLayoutTab.dragged) UiLayoutTab.dragged.droptarget = this;
+      // if (dy - this._rect.y < 20) this.dropzone = 'tabs';//TODO
+      if (Math.abs(y) < 0.5 && Math.abs(x) < 0.5) this.dropzone = 'center';
+      else if (y < -Math.abs(x)) this.dropzone = 'top';
+      else if (y > +Math.abs(x)) this.dropzone = 'bottom';
+      else if (x < -Math.abs(y)) this.dropzone = 'left';
+      else if (x > +Math.abs(y)) this.dropzone = 'right';
+      else this.dropzone = 'center';
+    } else {
+      this.dropzone = ''
+    }
+
+
+  }
+  _tabDragEndHandler(event) {
+    window.removeEventListener('ui-tab-drag', this._tabDragHandler);
+    window.removeEventListener('ui-tab-drag-end', this._tabDragEndHandler);
+    this.dropzone = ''
+  }
   _optionSelectHandler(tab) {
-    if (this.tabs.indexOf(tab) === -1) this.tabs.push(tab);
-    if (this.selected === tab) this.update();
+    let tabs = this.tabs.tabs;
+    if (tabs.indexOf(tab) === -1) tabs.push(tab);
     this._selectHandler(tab);
   }
   _selectHandler(elem) {
-    this.selected = elem;
+    this.tabs.selected = elem;
     this.dispatchEvent(new CustomEvent('ui-tab-selected', {
-      detail: {tabs: this.tabs, selected: this.selected},
+      detail: this.tabs,
       bubbles: false,
       composed: true
     }));
+    this.update();
   }
   update() {
-    if (!this.selected) {
-      this.selected = this.tabs[this.tabs.length - 1];
-    }
+    let tabs = this.tabs.tabs;
+    let selected = this.tabs.selected || tabs[tabs.length - 1];
     const Elem = (entry) => ['ui-tab-selector', {
         value: entry,
+        tabs: this.tabs,
         action: this._selectHandler,
-        selected: entry === this.selected
+        selected: entry === selected
       }, entry];
     this.render([
       ['div', {class: 'ui-tabs-wrapper'}, [
-        this.tabs.map(Elem),
+        tabs.map(Elem),
         ['io-option', {
           value: '+',
           options: Object.entries(this.elements).map((entry) => ({value: entry[0]})),
           action: this._optionSelectHandler
         }]
       ]],
-      ['div', {class: 'ui-layout-content'}, [
-        this.tabs.indexOf(this.selected) !== -1 ? this.elements[this.selected] : null
+      ['div', {class: 'ui-tab-content'}, [
+        tabs.indexOf(selected) !== -1 ? this.elements[selected] : null
       ]],
       ['div', {class: 'ui-layout-drop-highlight'}]
     ]);
@@ -97,60 +160,3 @@ export class UiTabs extends Io {
 }
 
 window.customElements.define('ui-tabs', UiTabs);
-
-
-
-
-
-
-
-
-// dropzone: {
-//   type: String,
-//   reflectToAttribute: true
-// },
-// listeners: {
-//   'dragover': '_dragoverHandler'
-// }
-
-// constructor(props) {
-//   super(props);
-//   if (this.selected === '')
-//       this.selected = this.tabs[0];
-// }
-// _dragoverHandler(event) {
-//   if (UiLayoutTab.dragged) UiLayoutTab.dragged.droptarget = this;
-//   let rect = this.getBoundingClientRect();
-//   let x = 2 * (((event.clientX - rect.x) / rect.width) - 0.5);
-//   let y = 2 * (((event.clientY - rect.y) / rect.height) - 0.5);
-//   if (event.clientY - rect.y < 20) this.dropzone = 'tabs';
-//   else if (Math.abs(y) < 0.5 && Math.abs(x) < 0.5) this.dropzone = 'center';
-//   else if (y < -Math.abs(x)) this.dropzone = 'top';
-//   else if (y > +Math.abs(x)) this.dropzone = 'bottom';
-//   else if (x < -Math.abs(y)) this.dropzone = 'left';
-//   else if (x > +Math.abs(y)) this.dropzone = 'right';
-//   else this.dropzone = 'center';
-// }
-
-/* :host > .ui-layout-drop-highlight {
-  position: absolute;
-  background: rgba(0, 0, 0, 0.25);
-  width: 100%;
-  height: 100%;
-}
-:host:not([dropzone]) > .ui-layout-drop-highlight {
-  pointer-events: none;
-  opacity: 0;
-}
-:host[dropzone=top] > .ui-layout-drop-highlight {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
-}
-:host[dropzone=bottom] > .ui-layout-drop-highlight {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
-}
-:host[dropzone=left] > .ui-layout-drop-highlight {
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
-}
-:host[dropzone=right] > .ui-layout-drop-highlight {
-  background: linear-gradient(to left, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
-} */

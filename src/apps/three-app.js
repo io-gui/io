@@ -37,18 +37,18 @@ export class ThreeApp extends Io {
   static get properties() {
     return {
       layout: {
-        value: layout || {'horizontal': [
-          {'width': 300, 'vertical': [
-            {'height': 10, 'tabs': ['app-ctrl']},
-            {'horizontal': [
-              {'width': 10, 'tabs': ['app-ctrl']},
-              {'tabs': ['inspector']},
-              {'width': 20, 'tabs': ['app-ctrl']}
+        value: layout || {'orientation': 'horizontal', 'splits': [
+          {'width': 300, 'orientation': 'vertical', 'splits': [
+            {'height': 10, 'tabs': {'tabs': ['app-ctrl']}},
+            {'orientation': 'horizontal', 'splits': [
+              {'width': 10, 'tabs': {'tabs': ['app-ctrl']}},
+              {'tabs': {'tabs': ['inspector']}},
+              {'width': 20, 'tabs': {'tabs': ['app-ctrl']}}
             ]},
-            {'tabs': ['object']},
+            {'tabs': {'tabs': ['object']}},
           ]},
-          {'tabs': ['app-ctrl', 'inspector']},
-          {'width': 400, 'tabs': ['io-app']}
+          {'tabs': {'tabs': ['app-ctrl', 'inspector']}},
+          {'width': 400, 'tabs': {'tabs': ['io-app']}}
         ]}
       },
       listeners: {
@@ -69,7 +69,7 @@ export class ThreeApp extends Io {
           'object': ['io-object', {value: scene.bind('value'), expanded: true}],
           'app-ctrl': ['three-app-ctrl', {value: scene.bind('value'), scene: scene}]
         },
-        value: this.layout
+        splits: this.layout
       }],
       ['div', {class: 'footer'}]
     ]);

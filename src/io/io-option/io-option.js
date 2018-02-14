@@ -1,7 +1,5 @@
-import {Io} from "../io.js"
-import {html} from "../ioutil.js"
-import {UiMenu} from "../../ui/ui-menu/ui-menu.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
+import {UiMenu} from "../../ui/ui-menu/ui-menu.js"
 
 export class IoOption extends UiButton {
   static get properties() {
@@ -34,16 +32,17 @@ export class IoOption extends UiButton {
     }
   }
   update() {
-    this.label = this.value;
-    if (this.label instanceof Object) this.label = this.label.__proto__.constructor.name
+    let label = this.value;
+    if (label instanceof Object) label = label.__proto__.constructor.name
     if (this.options) {
       for (var i = 0; i < this.options.length; i++) {
         if (this.options[i].value == this.value) {
-          this.label = this.options[i].label || this.label;
+          label = this.options[i].label || label;
           break;
         }
       }
     }
+    this.__properties.label.value = label;
     this.render([
       ['span', this.label],
       ['ui-menu', {
