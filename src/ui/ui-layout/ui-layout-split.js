@@ -107,7 +107,7 @@ export class UiLayoutSplit extends Io {
             class: 'ui-tabs',
             style: style,
             elements: this.elements,
-            tabs: splits[i],
+            tabs: splits[i].tabs,
             listeners: {'ui-tab-selected': this._tabSelectedHandler}
           }]);
       } else {
