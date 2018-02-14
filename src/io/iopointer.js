@@ -107,7 +107,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     event.preventDefault();
     this.focus();
     this.getPointers(event, true);
-    this._dispatchEvent('io-pointer-start', event, this.pointers);
+    this._fire('io-pointer-start', event, this.pointers);
     window.addEventListener('mousemove', this._mousemoveHandler);
     window.addEventListener('mouseup', this._mouseupHandler);
     if (_clickmask.parentNode !== document.body) {
@@ -116,11 +116,11 @@ export const IoPointerMixin = (superclass) => class extends superclass {
   }
   _mousemoveHandler(event) {
     this.getPointers(event);
-    this._dispatchEvent('io-pointer-move', event, this.pointers);
+    this._fire('io-pointer-move', event, this.pointers);
   }
   _mouseupHandler(event) {
     this.getPointers(event);
-    this._dispatchEvent('io-pointer-end', event, this.pointers);
+    this._fire('io-pointer-end', event, this.pointers);
     window.removeEventListener('mousemove', this._mousemoveHandler);
     window.removeEventListener('mouseup', this._mouseupHandler);
     if (_clickmask.parentNode === document.body) {
@@ -129,30 +129,30 @@ export const IoPointerMixin = (superclass) => class extends superclass {
   }
   _mousehoverHandler(event) {
     this.getPointers(event);
-    this._dispatchEvent('io-pointer-hover', event, this.pointers);
+    this._fire('io-pointer-hover', event, this.pointers);
   }
   _touchstartHandler(event) {
     event.preventDefault();
     this.focus();
     this.getPointers(event, true);
-    this._dispatchEvent('io-pointer-hover', event, this.pointers);
-    this._dispatchEvent('io-pointer-start', event, this.pointers);
+    this._fire('io-pointer-hover', event, this.pointers);
+    this._fire('io-pointer-start', event, this.pointers);
     this.addEventListener('touchmove', this._touchmoveHandler);
     this.addEventListener('touchend', this._touchendHandler);
   }
   _touchmoveHandler(event) {
     event.preventDefault();
     this.getPointers(event);
-    this._dispatchEvent('io-pointer-move', event, this.pointers);
+    this._fire('io-pointer-move', event, this.pointers);
   }
   _touchendHandler(event) {
     event.preventDefault();
     this.removeEventListener('touchmove', this._touchmoveHandler);
     this.removeEventListener('touchend', this._touchendHandler);
-    this._dispatchEvent('io-pointer-end', event, this.pointers);
+    this._fire('io-pointer-end', event, this.pointers);
 
   }
-  _dispatchEvent(eventName, event, pointer) {
+  _fire(eventName, event, pointer) {
     this.fire(eventName, {event: event, pointer: pointer}, false);
   }
 }

@@ -51,11 +51,7 @@ export class UiLayoutDivider extends IoPointerMixin(Io) {
     } else {
       movement = event.detail.pointer[0].position.y - rect.height / 2;
     }
-    this.dispatchEvent(new CustomEvent('ui-layout-divider-move', {
-      detail: {movement: movement, index: this.index},
-      bubbles: true,
-      composed: true
-    }));
+    this.fire('ui-layout-divider-move', {movement: movement, index: this.index});
   }
   update() {
     this.render([
