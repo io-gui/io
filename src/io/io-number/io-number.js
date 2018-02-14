@@ -1,52 +1,15 @@
-import {Io} from "../io.js"
-import {html} from "../ioutil.js"
+import {IoString} from "../io-string/io-string.js"
 
-const editor = document.createElement('input');
-editor.type = 'number';
-editor.addEventListener('mousedown', function (event) { event.stopPropagation() });
-editor.addEventListener('touchstart', function (event) { event.stopPropagation() });
-editor.addEventListener('focus', function (event) { event.stopPropagation() });
-
-export class IoNumber extends Io {
-  static get style() {
-    return html`
-      <style>
-        :host.edit {
-          position: relative;
-        }
-        :host > input {
-          position: absolute;
-          display: block;
-          width: 100%;
-          height: 100%;
-          top: 0;
-          left: 0;
-          background: transparent;
-          background: rgba(125,0,0,0.1);
-          padding: 0;
-          border: 0px solid;
-          font-size: inherit;
-          font-style: inherit;
-          font-family: inherit;
-          -moz-appearance: textfield;
-          color: inherit;
-        }
-        :host > input::-webkit-inner-spin-button,
-        :host > input::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-      </style>
-    `;
-  }
+export class IoNumber extends IoString {
   static get properties() {
     return {
       value: {
+        type: Number,
         observer: 'update'
       },
       step: {
         type: Number,
-        value: 0.1
+        value: 0.0001
       },
       min: {
         type: Number,
@@ -55,39 +18,21 @@ export class IoNumber extends Io {
       max: {
         type: Number,
         value: Infinity
-      },
-      listeners: {
-        'focus': '_focusHandler'
-      },
-      attributes: {
-        'tabindex': 0
       }
     }
   }
-  _focusHandler(event) {
-    this._addEditor();
-  }
   _blurHandler(event) {
-    this._setValue(Math.round(Number(editor.value) / this.step) * this.step);
-    this._removeEditor();
-    editor.removeEventListener('blur', this._blurHandler);
+    let value = Math.round(Number(this.innerText) / this.step) * this.step;
+    if (!isNaN(value)) this._setValue(value);
+    this.update();
   }
-  _addEditor() {
-    editor.value = (typeof this.value !== 'number' || isNaN(this.value)) ? 0 : String(this.value);
-    editor.step = this.step;
-    editor.min = Math.min(this.min, this.value);
-    editor.max = Math.max(this.max, this.value);
-    editor.addEventListener('blur', this._blurHandler);
-    this.appendChild(editor);
-    setTimeout(function () {
-      editor.focus();
-      editor.select();
-    });
-    this.classList.add('edit');
-  }
-  _removeEditor() {
-    if (editor.parentNode) editor.parentNode.removeChild(editor);
-    this.classList.remove('edit');
+  _keydownhandler(event) {
+    if (event.which == 13) {
+      event.preventDefault();
+      let value = Math.round(Number(this.innerText) / this.step) * this.step;
+      if (!isNaN(value)) this._setValue(value);
+      this.update();
+    }
   }
   update() {
     let value = this.value;

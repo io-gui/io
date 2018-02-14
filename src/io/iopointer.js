@@ -1,5 +1,5 @@
-const clickmask = document.createElement('div');
-clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;"
+const _clickmask = document.createElement('div');
+_clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;"
 
 export class Vector2 extends Object {
   constructor(vector = {}) {
@@ -10,12 +10,15 @@ export class Vector2 extends Object {
   set(vector) {
     this.x = vector.x;
     this.y = vector.y;
-    return this ;
+    return this;
   }
   sub(vector) {
     this.x -= vector.x;
     this.y -= vector.y;
-    return this ;
+    return this;
+  }
+  length() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
   }
   distanceTo(vector) {
     var dx = this.x - vector.x, dy = this.y - vector.y;
@@ -72,18 +75,24 @@ export const IoPointerMixin = (superclass) => class extends superclass {
       }
     }
   }
+  constructor(params) {
+    super(params);
+    this._clickmask = _clickmask;
+  }
   getPointers(event, reset) {
     let touches = event.touches ? event.touches : [event];
     let foundPointers = [];
+    let rect = this.getBoundingClientRect();
     for (var i = 0; i < touches.length; i++) {
       if (touches[i].target === event.target || event.touches === undefined) {
         let position = new Vector2({
-          x: touches[i].clientX,
-          y: touches[i].clientY
+          x: touches[i].clientX - rect.left,
+          y: touches[i].clientY - rect.top
         });
         if (this.pointers[i] === undefined) this.pointers[i] = new Pointer({start: position});
         let newPointer = new Pointer({position: position});
         let pointer = newPointer.getClosest(this.pointers);
+        if (reset) pointer.start.set(position);
         pointer.update(newPointer);
         foundPointers.push(pointer);
       }
@@ -101,8 +110,8 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     this._dispatchEvent('io-pointer-start', event, this.pointers);
     window.addEventListener('mousemove', this._mousemoveHandler);
     window.addEventListener('mouseup', this._mouseupHandler);
-    if (clickmask.parentNode !== document.body) {
-      document.body.appendChild(clickmask);
+    if (_clickmask.parentNode !== document.body) {
+      document.body.appendChild(_clickmask);
     }
   }
   _mousemoveHandler(event) {
@@ -114,8 +123,8 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     this._dispatchEvent('io-pointer-end', event, this.pointers);
     window.removeEventListener('mousemove', this._mousemoveHandler);
     window.removeEventListener('mouseup', this._mouseupHandler);
-    if (clickmask.parentNode === document.body) {
-      document.body.removeChild(clickmask);
+    if (_clickmask.parentNode === document.body) {
+      document.body.removeChild(_clickmask);
     }
   }
   _mousehoverHandler(event) {
@@ -144,10 +153,6 @@ export const IoPointerMixin = (superclass) => class extends superclass {
 
   }
   _dispatchEvent(eventName, event, pointer) {
-    this.dispatchEvent(new CustomEvent(eventName, {
-      detail: {event: event, pointer: pointer},
-      bubbles: false,
-      composed: true
-    }));
+    this.fire(eventName, {event: event, pointer: pointer}, false);
   }
 }

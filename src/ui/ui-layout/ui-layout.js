@@ -19,7 +19,7 @@ export class UiLayout extends Io {
       elements: {
         type: Object
       },
-      value: {
+      splits: {
         type: Object
       }
     }
@@ -29,8 +29,7 @@ export class UiLayout extends Io {
     this.render([
       ['ui-layout-split', {
           elements: this.elements,
-          orientation: this.value.horizontal ? 'horizontal' : 'vertical',
-          splits: this.value.horizontal || this.value.vertical
+          splits: this.splits
       }]
     ]);
   }

@@ -32,7 +32,8 @@ export class UiLayoutSplit extends Io {
   static get properties() {
     return {
       splits: {
-        type: Array
+        type: Object,
+        observer: 'update'
       },
       elements: {
         type: Object
@@ -53,20 +54,22 @@ export class UiLayoutSplit extends Io {
 
     let i = event.detail.index;
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
+    let splits = this.splits.splits;
 
     var $blocks = [].slice.call(this.children).filter(element => element.className === 'ui-tabs');
-    let prev = this.splits[i];
-    let next = this.splits[i+1];
+    let prev = splits[i];
+    let next = splits[i+1];
 
     if (!next[d] && !prev[d]) {
       next[d] = $blocks[i+1].getBoundingClientRect()[d];
     }
 
-    prev = this.splits[i];
-    next = this.splits[i+1];
+    prev = splits[i];
+    next = splits[i+1];
 
     if (prev[d]) prev[d] = Math.max(0, Math.min(Infinity, prev[d] + movement));
     if (next[d]) next[d] = Math.max(0, Math.min(Infinity, next[d] - movement));
+
     this.dispatchEvent(new CustomEvent('layout-changed', {
       detail: this.splits,
       bubbles: true,
@@ -75,13 +78,6 @@ export class UiLayoutSplit extends Io {
     this.update();
   }
   _tabSelectedHandler(event) {
-    // TODO: ugh....
-    var $blocks = [].slice.call(this.children).filter(element => element.className === 'ui-tabs');
-    for (var i = 0; i < $blocks.length; i++) {
-      if ($blocks[i].tabs === event.detail.tabs) {
-        this.splits[i].selected = $blocks[i].selected;
-      }
-    }
     this.dispatchEvent(new CustomEvent('layout-changed', {
       detail: this.splits,
       bubbles: true,
@@ -89,11 +85,13 @@ export class UiLayoutSplit extends Io {
     }));
   }
   update() {
-    let d = this.orientation === 'horizontal' ? 'width' : 'height';
+    this.orientation = this.splits.orientation;
+    let d = this.splits.orientation === 'horizontal' ? 'width' : 'height';
+    let splits = this.splits.splits;
     let elements = [];
     // TODO: make sure at least one is flex (no size).
-    for (var i = 0; i < this.splits.length; i++) {
-      let size = this.splits[i][d];
+    for (var i = 0; i < splits.length; i++) {
+      let size = splits[i][d];
       let style = {
         'flex-basis': 'auto',
         'flex-shrink': '10000',
@@ -104,13 +102,12 @@ export class UiLayoutSplit extends Io {
         'flex-shrink': '1',
         'flex-grow': '0'
       };
-      if (this.splits[i].tabs) {
+      if (splits[i].tabs) {
         elements.push(['ui-tabs', {
             class: 'ui-tabs',
             style: style,
             elements: this.elements,
-            selected: this.splits[i].selected,
-            tabs: this.splits[i].tabs,
+            tabs: splits[i],
             listeners: {'ui-tab-selected': this._tabSelectedHandler}
           }]);
       } else {
@@ -118,11 +115,10 @@ export class UiLayoutSplit extends Io {
             class: 'ui-tabs',
             style: style,
             elements: this.elements,
-            splits: this.splits[i].horizontal || this.splits[i].vertical,
-            orientation: this.splits[i].horizontal ? 'horizontal' : 'vertical'
+            splits: splits[i]
           }]);
       }
-      if (i < this.splits.length - 1) {
+      if (i < splits.length - 1) {
         elements.push(['ui-layout-divider', {orientation: this.orientation, index: i}]);
       }
     }

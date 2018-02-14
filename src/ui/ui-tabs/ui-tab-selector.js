@@ -1,7 +1,12 @@
 import {html} from "../../io/ioutil.js"
-import {UiButton} from "../ui-button/ui-button.js"
+// import {UiButton} from "../ui-button/ui-button.js"
+import {IoPointerMixin} from "../../io/iopointer.js"
+import {Io} from "../../io/io.js"
 
-export class UiTabSelector extends UiButton {
+const _dragIcon = document.createElement('div');
+_dragIcon.style = "position: absolute; width: 40px; height: 40px; background: rgba(0,0,0,0.5);"
+
+export class UiTabSelector extends IoPointerMixin(Io) {
   static get style() {
     return html`
       <style>
@@ -23,9 +28,51 @@ export class UiTabSelector extends UiButton {
         type: String,
         observer: 'update'
       },
+      tabs: {
+        type: Object
+      },
       selected: {
         type: Boolean,
         reflectToAttribute: true
+      },
+      action: {
+        type: Function
+      },
+      listeners: {
+        'io-pointer-end': '_pointerEndHandler',
+        'io-pointer-move': '_pointerMoveHandler'
+      }
+    }
+  }
+  _pointerEndHandler(event) {
+    if (event.detail.pointer[0].distance.length() < 4 && !this._dragging) {
+      if (typeof this.action === 'function') this.action(this.value);
+    }
+    if (_dragIcon.parentNode) {
+      _dragIcon.parentNode.removeChild(_dragIcon);
+    }
+    if (this._dragging) {
+      this.fire('ui-tab-drag-end', {tab: this.value, tabs: this.tabs});
+      this._dragging = false;
+    }
+  }
+  _pointerMoveHandler(event) {
+    if (event.detail.pointer[0].distance.length() > 32 || this._dragging) {
+      if (!this._dragging) {
+        this._rect = this.getBoundingClientRect();
+        this._dragging = true;
+        this._clickmask.appendChild(_dragIcon);
+
+        this.fire('ui-tab-drag-start', {tab: this.value, tabs: this.tabs});
+
+      } else {
+        let x = this._rect.left + event.detail.pointer[0].position.x;
+        let y = this._rect.top + event.detail.pointer[0].position.y;
+
+        this.fire('ui-tab-drag', {x: x, y: y, tab: this.value, tabs: this.tabs});
+
+        _dragIcon.style.left = x - 8 + 'px';
+        _dragIcon.style.top = y - 8 + 'px';
       }
     }
   }
