@@ -78,7 +78,7 @@ export class UiLayoutSplit extends Io {
   }
   _tabRemovedHandler(event) {
     event.stopPropagation();
-    if (event.detail.tabs.length === 0) {
+    if (event.detail.tabs.tabs.length === 0) {
       this.removeSplit(event.detail);
     }
   }
@@ -91,20 +91,25 @@ export class UiLayoutSplit extends Io {
     // Add new split if orientation different.
   }
   removeSplit(split) {
-    // TODO: Normalize tabs and splits
-    // let splits = this.splits.splits;
-    // let index = splits.indexOf(split);
-    // console.log(index)
-    // splits.splice(index);
-    // this.update();
+    let splits = this.splits.splits;
+    let index = splits.indexOf(split);
+    splits.splice(index, 1);
+    this.update();
   }
   update() {
     this.orientation = this.splits.orientation;
     let d = this.splits.orientation === 'horizontal' ? 'width' : 'height';
     let splits = this.splits.splits;
     let elements = [];
-    // TODO: make sure at least one is flex (no size).
-    // TODO: make sure it runs on split add/remove
+
+    // Make sure at least one is flex (no size).
+    let hasFlex = false;
+    for (var i = 0; i < splits.length; i++) {
+      let size = splits[i][d];
+      if (size === undefined) hasFlex = true;
+    }
+    if (!hasFlex) delete splits[parseInt(splits.length / 2)][d];
+
     for (var i = 0; i < splits.length; i++) {
       let size = splits[i][d];
       let style = {
@@ -112,7 +117,7 @@ export class UiLayoutSplit extends Io {
         'flex-shrink': '10000',
         'flex-grow': '1'
       };
-      if (size) style = {
+      if (size !== undefined) style = {
         'flex-basis': size + 'px',
         'flex-shrink': '1',
         'flex-grow': '0'
@@ -122,7 +127,7 @@ export class UiLayoutSplit extends Io {
             class: 'ui-tabs',
             style: style,
             elements: this.elements,
-            tabs: splits[i].tabs //TODO: normalize with split
+            tabs: splits[i]
           }]);
       } else {
         elements.push(['ui-layout-split', {
