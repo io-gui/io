@@ -1,4 +1,4 @@
-import {Io} from "../../io/io.js"
+import {Io, html} from "../../io/io.js"
 
 export class UiButton extends Io {
   static get style() {

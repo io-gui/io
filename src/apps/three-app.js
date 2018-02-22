@@ -1,4 +1,4 @@
-import {Io} from "../io/io.js"
+import {Io, html} from "../io/io.js"
 import "../ui/ui-layout/ui-layout.js"
 import "../io/io-object/io-object.js"
 import "../io/io-inspector/io-inspector.js"

@@ -1,5 +1,6 @@
 import {h, renderElement, initStyle} from "./ioutil.js"
-import {html} from "./html.js"
+
+export function html() { return arguments[0][0]; }
 
 export class Io extends HTMLElement {
   static get style() { return ``; }
@@ -133,9 +134,8 @@ export class Io extends HTMLElement {
     }
   }
   render(children, host) {
-    host = host || this;
-    let vDOM = h('name', 'props', 'children')(['root', children]).children;
-    this.traverse(vDOM, host);
+    let vDOM = h()(['root', children]).children;
+    this.traverse(vDOM, host || this);
   }
   traverse(vChildren, host) {
     let children = host.children;

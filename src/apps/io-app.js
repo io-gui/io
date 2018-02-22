@@ -1,4 +1,4 @@
-import {Io} from "../io/io.js"
+import {Io, html} from "../io/io.js"
 import {IoBoolean} from "../io/io-boolean/io-boolean.js"
 import {IoNumber} from "../io/io-number/io-number.js"
 import {IoObject} from "../io/io-object/io-object.js"
