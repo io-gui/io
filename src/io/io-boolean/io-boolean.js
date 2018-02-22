@@ -25,7 +25,7 @@ export class IoBoolean extends UiButton {
     this.__properties.action.value = this.toggle;
   }
   toggle() {
-    this._setValue(!this.value);
+    this.set('value', !this.value);
   }
   update() {
     this.render([['span', this.value ? this.true : this.false]]);

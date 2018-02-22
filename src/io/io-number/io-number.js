@@ -23,14 +23,14 @@ export class IoNumber extends IoString {
   }
   _blurHandler(event) {
     let value = Math.round(Number(this.innerText) / this.step) * this.step;
-    if (!isNaN(value)) this._setValue(value);
+    if (!isNaN(value)) this.set('value', value);
     this.update();
   }
   _keydownhandler(event) {
     if (event.which == 13) {
       event.preventDefault();
       let value = Math.round(Number(this.innerText) / this.step) * this.step;
-      if (!isNaN(value)) this._setValue(value);
+      if (!isNaN(value)) this.set('value', value);
       this.update();
     }
   }

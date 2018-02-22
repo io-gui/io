@@ -25,7 +25,7 @@ export class IoOption extends UiButton {
   }
   _menuHandler(event) {
     if (event.detail.option.value !== undefined) {
-      this._setValue(event.detail.option.value);
+      this.set('value', event.detail.option.value);
       if (typeof this.action === 'function') {
         this.action(this.value !== undefined ? this.value : event);
       }

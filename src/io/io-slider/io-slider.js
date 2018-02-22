@@ -64,7 +64,7 @@ export class IoSlider extends IoPointerMixin(Io) {
     let x = event.detail.pointer[0].position.x / rect.width;
     let pos = Math.max(0,Math.min(1, x));
     // TODO: implement step
-    this._setValue(this.min + (this.max - this.min) * pos);
+    this.set('value', this.min + (this.max - this.min) * pos);
   }
   update() {
     let pos = 100 * (this.value - this.min) / (this.max - this.min);

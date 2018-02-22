@@ -3,7 +3,7 @@ import {Binding, IoBindingMixin} from "./iobinding.js"
 export function html() { return arguments[0][0]; }
 
 export class Io extends IoBindingMixin(HTMLElement) {
-  static get style() { return ``; }
+  static get style() { return html``; }
   static get definedProperties() {
     let config = {
       properties: {},
@@ -83,6 +83,24 @@ export class Io extends IoBindingMixin(HTMLElement) {
 
     initStyle(this.localName, this.__proto__.constructor.style);
   }
+  connectedCallback() {
+    for (let e in this.__listeners) {
+      for (let l = 0; l < this.__listeners[e].length; l++) {
+        if (typeof this.__listeners[e][l] === 'string')
+        this.__listeners[e][l] = this[this.__listeners[e][l]];
+        this.addEventListener(e, this.__listeners[e][l]);
+      }
+    }
+    // TODO: handle redundant updates
+    this.update();
+  }
+  disconnectedCallback() {
+    for (let e in this.__listeners) {
+      for (let l = 0; l < this.__listeners[e].length; l++) {
+        this.removeEventListener(e, this.__listeners[e][l]);
+      }
+    }
+  }
   defineProperty(key, config) {
     Object.defineProperty(this, key, {
       get: function() {
@@ -115,27 +133,8 @@ export class Io extends IoBindingMixin(HTMLElement) {
       }
     }
   }
-  connectedCallback() {
-    for (let e in this.__listeners) {
-      for (let l = 0; l < this.__listeners[e].length; l++) {
-        if (typeof this.__listeners[e][l] === 'string')
-        this.__listeners[e][l] = this[this.__listeners[e][l]];
-        this.addEventListener(e, this.__listeners[e][l]);
-      }
-    }
-    // TODO: occasional redundant update?
-    if (typeof this.update == 'function') this.update();
-  }
-  disconnectedCallback() {
-    for (let e in this.__listeners) {
-      for (let l = 0; l < this.__listeners[e].length; l++) {
-        this.removeEventListener(e, this.__listeners[e][l]);
-      }
-    }
-  }
   render(children, host) {
-    let vDOM = buildVDOM()(['root', children]).children;
-    this.traverse(vDOM, host || this);
+    this.traverse(buildVDOM()(['root', children]).children, host || this);
   }
   traverse(vChildren, host) {
     let children = host.children;
@@ -249,17 +248,18 @@ export class Io extends IoBindingMixin(HTMLElement) {
 
     }
 
-     // TODO: consider caching elements for reuse
-     if (children.length > vChildren.length) {
-       for (let i = children.length - 1; children.length > vChildren.length; i--) {
-         host.removeChild(children[i]);
-       }
-     }
-   }
-  _setValue(value) {
-    let oldValue = this.value;
-    this.value = value;
-    this.fire('value-set', {value: value, oldValue: oldValue}, false);
+    // TODO: consider caching elements for reuse
+    if (children.length > vChildren.length) {
+      for (let i = children.length - 1; children.length > vChildren.length; i--) {
+        host.removeChild(children[i]);
+      }
+    }
+  }
+  update() {}
+  set(prop, value) {
+    let oldValue = this[prop];
+    this[prop] = value;
+    this.fire(prop + '-set', {value: value, oldValue: oldValue}, false);
   }
   fire(eventName, detail, bubbles = true) {
     this.dispatchEvent(new CustomEvent(eventName, {
