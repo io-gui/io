@@ -1,8 +1,8 @@
-import {h, renderElement, initStyle} from "./ioutil.js"
+import {Binding, IoBindingMixin} from "./iobinding.js"
 
 export function html() { return arguments[0][0]; }
 
-export class Io extends HTMLElement {
+export class Io extends IoBindingMixin(HTMLElement) {
   static get style() { return ``; }
   static get definedProperties() {
     let config = {
@@ -134,7 +134,7 @@ export class Io extends HTMLElement {
     }
   }
   render(children, host) {
-    let vDOM = h()(['root', children]).children;
+    let vDOM = buildVDOM()(['root', children]).children;
     this.traverse(vDOM, host || this);
   }
   traverse(vChildren, host) {
@@ -261,30 +261,6 @@ export class Io extends HTMLElement {
     this.value = value;
     this.fire('value-set', {value: value, oldValue: oldValue}, false);
   }
-  bind(sourceProp, target, targetProp) {
-    sourceProp = arguments[0];
-    target = arguments[1] ? arguments[1] : undefined;
-    targetProp = arguments[2] ? arguments[2] : undefined;
-    let binding = new Binding(this, target, sourceProp, targetProp);
-    this.__bindings[sourceProp] = this.__bindings[sourceProp] || [];
-    this.__bindings[sourceProp].push(binding);
-    return binding;
-  }
-  unbind(sourceProp) {
-    if (this.__bindings[sourceProp]) {
-      for (var i = 0; i < this.__bindings[sourceProp].length; i++) {
-        this.__bindings[sourceProp][i].unbind();
-      }
-    }
-  }
-  unbindAll() {
-    for (var prop in this.__bindings) {
-      for (var i = 0; i < this.__bindings[prop].length; i++) {
-        this.__bindings[prop][i].unbind();
-      }
-      delete this.__bindings[prop]
-    }
-  }
   fire(eventName, detail, bubbles = true) {
     this.dispatchEvent(new CustomEvent(eventName, {
       detail: detail,
@@ -294,39 +270,38 @@ export class Io extends HTMLElement {
   }
 }
 
-export class Binding {
-  constructor(source, target, sourceProp, targetProp) {
-    this.source = source;
-    this.target = target;
-    this.sourceProp = sourceProp;
-    this.targetProp = targetProp;
-    this.setTarget = this.setTarget.bind(this);
-    this.setSource = this.setSource.bind(this);
-    this.bind(); // TODO: check if anything broke
-  }
-  clone() {
-    return new Binding(this.source, this.target, this.sourceProp, this.targetProp);
-  }
-  setTarget(event) {
-    if (this.target[this.targetProp] !== event.detail.value)
-        this.target[this.targetProp] = event.detail.value;
-  }
-  setSource(event) {
-    if (this.source[this.sourceProp] !== event.detail.value)
-        this.source[this.sourceProp] = event.detail.value;
-  }
-  bind() {
-    if (this.source && this.target && this.targetProp) {
-      this.source.__properties[this.sourceProp].notify = true;
-      this.target.__properties[this.targetProp].notify = true;
-      this.source.addEventListener(this.sourceProp + '-changed', this.setTarget);
-      this.target.addEventListener(this.targetProp + '-changed', this.setSource);
-      this.target[this.targetProp] = this.source[this.sourceProp];
+const renderElement = function(vDOMNode) {
+  let ConstructorClass = customElements.get(vDOMNode.name);
+  let element;
+  if (ConstructorClass) {
+    element = new ConstructorClass(vDOMNode.props);
+  } else {
+    element = document.createElement(vDOMNode.name);
+    for (let prop in vDOMNode.props) {
+      element[prop] = vDOMNode.props[prop];
     }
-    return this;
   }
-  unbind() {
-    if (this.source) this.source.removeEventListener(this.sourceProp + '-changed', this.setTarget);
-    if (this.target) this.target.removeEventListener(this.targetProp + '-changed', this.setSource);
+  return element;
+}
+
+const _styledElements = {};
+const _stagingElement = document.createElement('div');
+const initStyle = function(localName, style) {
+  if (style && !_styledElements[localName]) {
+    _styledElements[localName] = true;
+    _stagingElement.innerHTML = style.replace(new RegExp(':host', 'g'), localName);
+    let element = _stagingElement.querySelector('style');
+    element.setAttribute('id', 'io-style-' + localName);
+    document.head.appendChild(element);
   }
 }
+
+// https://github.com/lukejacksonn/ijk
+const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b]
+const buildVDOM = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1])
+    ? {
+        ['name']: node[0],
+        ['props']: node[1],
+        ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildVDOM()) : node[2] || ''
+      }
+    : buildVDOM()([node[0], {}, node[1] || ''])
