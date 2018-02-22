@@ -1,4 +1,5 @@
 import {h, renderElement, initStyle} from "./ioutil.js"
+import {html} from "./html.js"
 
 export class Io extends HTMLElement {
   static get style() { return ``; }

@@ -1,5 +1,4 @@
 import {Io} from "../io.js"
-import {html} from "../ioutil.js"
 import {IoVector} from "../io-vector/io-vector.js"
 import {IoPropertyMixin} from "../ioproperty.js"
 

@@ -1,5 +1,4 @@
 import {Io} from "../io.js"
-import {html} from "../ioutil.js"
 import {IoPropertyMixin} from "../ioproperty.js"
 
 export class IoObjectProp extends IoPropertyMixin(Io) {

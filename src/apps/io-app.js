@@ -1,5 +1,4 @@
 import {Io} from "../io/io.js"
-import {html} from "../io/ioutil.js"
 import {IoBoolean} from "../io/io-boolean/io-boolean.js"
 import {IoNumber} from "../io/io-number/io-number.js"
 import {IoObject} from "../io/io-object/io-object.js"

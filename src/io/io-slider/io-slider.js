@@ -1,5 +1,4 @@
 import {Io} from "../io.js"
-import {html} from "../ioutil.js"
 import {IoPointerMixin} from "../iopointer.js"
 
 export class IoSlider extends IoPointerMixin(Io) {

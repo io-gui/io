@@ -1,4 +1,3 @@
-import {html} from "../ioutil.js"
 import {IoVector} from "../io-vector/io-vector.js"
 import {IoObjectProp} from "../io-object/io-object-prop.js"
 

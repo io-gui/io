@@ -1,5 +1,3 @@
-import {html} from "../../io/ioutil.js"
-// import {UiButton} from "../ui-button/ui-button.js"
 import {IoPointerMixin} from "../../io/iopointer.js"
 import {Io} from "../../io/io.js"
 

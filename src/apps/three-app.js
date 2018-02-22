@@ -1,5 +1,4 @@
 import {Io} from "../io/io.js"
-import {html} from "../io/ioutil.js"
 import "../ui/ui-layout/ui-layout.js"
 import "../io/io-object/io-object.js"
 import "../io/io-inspector/io-inspector.js"
