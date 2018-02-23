@@ -18,12 +18,12 @@ export class IoString extends Io {
     }
   }
   _blurHandler(event) {
-    this._setValue(this.innerText);
+    this.set('value', this.innerText);
   }
   _keydownhandler(event) {
     if (event.which == 13) {
       event.preventDefault();
-      this._setValue(this.innerText);
+      this.set('value', this.innerText);
     }
   }
   update() {

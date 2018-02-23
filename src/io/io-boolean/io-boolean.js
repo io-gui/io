@@ -1,5 +1,4 @@
 import {Io} from "../io.js"
-import {html} from "../ioutil.js"
 import {UiButton} from "../../ui/ui-button/ui-button.js"
 
 export class IoBoolean extends UiButton {
@@ -26,7 +25,7 @@ export class IoBoolean extends UiButton {
     this.__properties.action.value = this.toggle;
   }
   toggle() {
-    this._setValue(!this.value);
+    this.set('value', !this.value);
   }
   update() {
     this.render([['span', this.value ? this.true : this.false]]);

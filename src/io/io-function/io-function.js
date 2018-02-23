@@ -1,5 +1,4 @@
-import {Io} from "../io.js"
-import {html} from "../ioutil.js"
+import {Io, html} from "../io.js"
 
 export class IoFunction extends Io {
   static get style() {

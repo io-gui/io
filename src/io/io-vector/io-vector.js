@@ -1,5 +1,4 @@
-import {Io} from "../io.js"
-import {html} from "../ioutil.js"
+import {Io, html} from "../io.js"
 import {IoObjectProp} from "../io-object/io-object-prop.js"
 
 export class IoVector extends Io {

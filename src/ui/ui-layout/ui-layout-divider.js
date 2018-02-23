@@ -1,5 +1,4 @@
-import {Io} from "../../io/io.js"
-import {html} from "../../io/ioutil.js"
+import {Io, html} from "../../io/io.js"
 import {IoPointerMixin} from "../../io/iopointer.js"
 
 export class UiLayoutDivider extends IoPointerMixin(Io) {

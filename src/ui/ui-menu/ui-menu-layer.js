@@ -1,5 +1,4 @@
-import {Io} from "../../io/io.js"
-import {html} from "../../io/ioutil.js"
+import {Io, html} from "../../io/io.js"
 
 let previousOption;
 let previousParent;
