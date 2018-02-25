@@ -16,4 +16,4 @@ export class ThreeAppCtrl extends Io {
 }
 
 // TODO: enable non-HTML classes
-// customElements.define('three-app-ctrl', ThreeAppCtrl);
+customElements.define('three-app-ctrl', ThreeAppCtrl);
