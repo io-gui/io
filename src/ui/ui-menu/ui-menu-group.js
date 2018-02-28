@@ -67,8 +67,7 @@ export class UiMenuGroup extends Io {
         var frag = document.createDocumentFragment();
         for (var i = 0; i < this.options.length; i++) {
           if (this.$options[i]) {
-            // TODO: reuse list of elements
-            // Sonsider using render()
+            // Consider using render and reuse UiMenuOption elements
             this.$options[i] = new UiMenuOption({option: this.options[i], $parent: this});
           } else {
             this.$options[i] = new UiMenuOption({option: this.options[i], $parent: this});

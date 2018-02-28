@@ -27,6 +27,8 @@ export class Io extends IoBindingMixin(HTMLElement) {
             if (prop[key].type === Number) prop[key].value = 0;
             if (prop[key].type === String) prop[key].value = '';
           }
+          prop[key].notify = prop[key].notify || false;
+          prop[key].bubbles = prop[key].bubbles || false;
           config.properties[key] = Object.assign(prop[key], config.properties[key] || {});
         }
       }

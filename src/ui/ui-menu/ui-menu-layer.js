@@ -43,36 +43,38 @@ export class UiMenuLayer extends Io {
       pointer: {
         value: {x: 0, y: 0, v: 0},
         type: Object
+      },
+      listeners: {
+        'mouseup': '_eventHandler',
+        'touchstart': '_eventHandler',
+        'keyup': '_eventHandler',
+        'expanded-changed': '_expandedHandler',
+        'mousemove': '_mousemoveHandler',
+        'ui-menu-option-clicked': '_menuClickedHandler'
       }
     }
   }
   connectedCallback() {
-    this.addEventListener('mouseup', this._eventHandler);
-    this.addEventListener('touchstart', this._eventHandler);
-    this.addEventListener('keyup', this._eventHandler);
-    this.addEventListener('expanded-changed', this._expandedHandler);
-    this.addEventListener('mousemove', this._mousemoveHandler);
-
+    super.connectedCallback();
     window.addEventListener('scroll', this.collapseAll.bind(this));
-
-    this.addEventListener('ui-menu-option-clicked', function (event) {
-      event.stopPropagation();
-      let option = event.detail.option;
-      if (typeof option.action === 'function') {
-        option.action.apply(null, [option.value]);
-        UiMenuLayer.singleton.collapseAll();
-      } else if (option.button) {
-        option.button.click(); // TODO: test
-        UiMenuLayer.singleton.collapseAll();
-      } else if (option.value !== undefined) {
-        UiMenuLayer.singleton.collapseAll();
-      }
-    });
   }
   collapseAll() {
     let groups = this.querySelectorAll('ui-menu-group');
     for (var i = 0; i < groups.length; i++) {
       groups[i].expanded = false;
+    }
+  }
+  _menuClickedHandler(event) {
+    event.stopPropagation();
+    let option = event.detail.option;
+    if (typeof option.action === 'function') {
+      option.action.apply(null, [option.value]);
+      UiMenuLayer.singleton.collapseAll();
+    } else if (option.button) {
+      option.button.click(); // TODO: test
+      UiMenuLayer.singleton.collapseAll();
+    } else if (option.value !== undefined) {
+      UiMenuLayer.singleton.collapseAll();
     }
   }
   _eventHandler(event) {

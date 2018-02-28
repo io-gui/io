@@ -45,6 +45,7 @@ export class UiButton extends Io {
     }
   }
   _actionHandler(event) {
+    event.stopPropagation();
     if (event.which === 13 || event.which === 32 || event.type !== 'keyup') {
       event.preventDefault();
       if (this.active && typeof this.action === 'function') this.action(this.value);
@@ -52,6 +53,7 @@ export class UiButton extends Io {
     }
   }
   _downHandler(event) {
+    event.stopPropagation();
     if (event.which !== 9) event.preventDefault();
     if (event.which === 13 || event.which === 32 || event.type !== 'keydown') {
       this.active = true;
@@ -64,6 +66,7 @@ export class UiButton extends Io {
     }
   }
   _upHandler(event) {
+    event.stopPropagation();
     this.active = false;
     document.removeEventListener('mouseup', this._upHandler);
     document.removeEventListener('touchend', this._upHandler);

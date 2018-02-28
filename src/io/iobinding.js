@@ -13,10 +13,12 @@ export class Binding extends Object {
     return new Binding(this.source, this.target, this.sourceProp, this.targetProp);
   }
   setTarget(event) {
+    if (event.srcElement != this.source) return;
     if (this.target[this.targetProp] !== event.detail.value)
         this.target[this.targetProp] = event.detail.value;
   }
   setSource(event) {
+    if (event.srcElement != this.target) return;
     if (this.source[this.sourceProp] !== event.detail.value)
         this.source[this.sourceProp] = event.detail.value;
   }
