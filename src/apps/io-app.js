@@ -68,8 +68,7 @@ export class IoApp extends Io {
       {label: 'sub_five', options: suboptions1}
     ]
     var longOptions = [];
-    // TODO: investigate performance issue
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 1000; i++) {
       let r = Math.random();
       longOptions[i] = {label: String(r), value: r, action: console.log, icon: 'ξ', hint: 'log'};
     }

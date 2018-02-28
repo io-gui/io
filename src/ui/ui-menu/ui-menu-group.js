@@ -11,6 +11,7 @@ export class UiMenuGroup extends Io {
           visibility: hidden;
           flex-direction: column;
           position: absolute;
+          transform: translateZ(0);
           top: 0;
           left: 0;
           background: white;
@@ -58,21 +59,25 @@ export class UiMenuGroup extends Io {
     this.update();
   }
   update() {
-    if (this.options) {
-      for (var i = 0; i < this.$options.length; i++) {
-        if (this.$options[i].parentElement) this.removeChild(this.$options[i]);
-      }
-      for (var i = 0; i < this.options.length; i++) {
-        if (this.$options[i]) {
-          // TODO: reuse list of elements
-          // Sonsider using render()
-          this.$options[i] = new UiMenuOption({option: this.options[i], $parent: this});
-        } else {
-          this.$options[i] = new UiMenuOption({option: this.options[i], $parent: this});
+    setTimeout(() => {
+      if (this.options) {
+        for (var i = 0; i < this.$options.length; i++) {
+          if (this.$options[i].parentElement) this.removeChild(this.$options[i]);
         }
-        this.appendChild(this.$options[i]);
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < this.options.length; i++) {
+          if (this.$options[i]) {
+            // TODO: reuse list of elements
+            // Sonsider using render()
+            this.$options[i] = new UiMenuOption({option: this.options[i], $parent: this});
+          } else {
+            this.$options[i] = new UiMenuOption({option: this.options[i], $parent: this});
+          }
+          this.appendChild(this.$options[i]);
+        }
+        this.appendChild(frag);
       }
-    }
+    });
   }
   _expandedChanged(value, oldValue) {
     if (this.expanded) {

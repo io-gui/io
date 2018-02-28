@@ -187,7 +187,6 @@ setOptionGroups(THREE, 'Euler', '_order', [
   ['XYZ', 'XYZ'], ['XZY', 'XZY'], ['YXZ', 'YXZ'], ['YZX', 'YZX'], ['ZXY', 'ZXY'], ['ZYX', 'ZYX']
 ]);
 
-// TODO: check THREE. Only used in functions
 // export var CullFaceNone = 0;
 // export var CullFaceBack = 1;
 // export var CullFaceFront = 2;

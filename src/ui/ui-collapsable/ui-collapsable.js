@@ -25,4 +25,4 @@ export class UiCollapsable extends Io {
   }
 }
 
-window.customElements.define('io-collapsable', UiCollapsable);
+window.customElements.define('ui-collapsable', UiCollapsable);

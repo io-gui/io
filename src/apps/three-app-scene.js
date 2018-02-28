@@ -1,5 +1,4 @@
 import {Io} from "../io/io.js"
-import "./three-io-config.js"
 import * as THREE from "../../lib/three.module.js"
 
 let color = new THREE.Color(1,0.5,0.2);
@@ -29,5 +28,4 @@ export class ThreeAppScene extends Io {
   }
 }
 
-// TODO: enable non-HTML classes
 customElements.define('three-app-scene', ThreeAppScene);

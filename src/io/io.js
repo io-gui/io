@@ -50,6 +50,7 @@ export class Io extends IoBindingMixin(HTMLElement) {
   }
   constructor(props = {}) {
     super();
+    initStyle(this.localName, this.__proto__.constructor.style);
     let definedProperties = this.__proto__.constructor.definedProperties;
     Object.defineProperty(this, '__properties', { value: definedProperties.properties });
     Object.defineProperty(this, '__attributes', { value: definedProperties.attributes });
@@ -80,8 +81,6 @@ export class Io extends IoBindingMixin(HTMLElement) {
     for (let i = 0; i < this.__handlers.length; i++) {
       this[this.__handlers[i]] = this[this.__handlers[i]].bind(this);
     }
-
-    initStyle(this.localName, this.__proto__.constructor.style);
   }
   connectedCallback() {
     for (let e in this.__listeners) {
@@ -197,11 +196,13 @@ export class Io extends IoBindingMixin(HTMLElement) {
 
       } else if (children[i] && children[i].localName !== vChildren[i].name) {
         oldElement = children[i];
-        element = renderElement(vChildren[i]);
+        element = _renderElement(vChildren[i]);
+        // TODO: use fragments for optimization.
         host.insertBefore(element, oldElement);
         host.removeChild(oldElement);
       } else {
-        element = renderElement(vChildren[i]);
+        element = _renderElement(vChildren[i]);
+        // TODO: use fragments for optimization.
         host.appendChild(element);
       }
 
@@ -270,7 +271,7 @@ export class Io extends IoBindingMixin(HTMLElement) {
   }
 }
 
-const renderElement = function(vDOMNode) {
+const _renderElement = function(vDOMNode) {
   let ConstructorClass = customElements.get(vDOMNode.name);
   let element;
   if (ConstructorClass) {

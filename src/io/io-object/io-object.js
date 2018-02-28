@@ -81,7 +81,7 @@ export class IoObject extends Io {
       ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
     ]];
     this.render([
-      ['io-collapsable', {label: this.value.constructor.name, expanded: this.bind('expanded'), elements:
+      ['ui-collapsable', {label: this.value.constructor.name, expanded: this.bind('expanded'), elements:
         Object.entries(propConfigs).map(Prop)
       }]
     ]);
