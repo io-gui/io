@@ -69,8 +69,8 @@ export class UiLayoutSplit extends Io {
     prev = splits[i];
     next = splits[i+1];
 
-    if (prev[d]) prev[d] = Math.max(0, Math.min(Infinity, prev[d] + movement));
-    if (next[d]) next[d] = Math.max(0, Math.min(Infinity, next[d] - movement));
+    if (prev[d]) prev[d] = Math.max(0, prev[d] + movement);
+    if (next[d]) next[d] = Math.max(0, next[d] - movement);
 
     this.fire('layout-changed', this.splits);
     this.update();
@@ -122,12 +122,15 @@ export class UiLayoutSplit extends Io {
         'flex-grow': '0'
       };
       if (splits[i].tabs) {
-        elements.push(['ui-tabs', {
+        // TODO: dont render 0 size panels
+        // if (size > 0 || size === undefined) {
+          elements.push(['ui-tabs', {
             class: 'ui-tabs',
             style: style,
             elements: this.elements,
             tabs: splits[i]
           }]);
+        // }
       } else {
         elements.push(['ui-layout-split', {
             class: 'ui-tabs',

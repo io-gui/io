@@ -40,7 +40,7 @@ export class UiButton extends Io {
         'mouseenter': '_enterHandler',
       },
       attributes: {
-        tabindex: 0
+        'tabindex': 0
       }
     }
   }

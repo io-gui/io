@@ -11,7 +11,7 @@ import "./three-io-config.js"
 let scene = new ThreeAppScene();
 window.scene = scene;
 
-var layout = undefined;//JSON.parse(localStorage.getItem('io-layout-state'));
+var layout = JSON.parse(localStorage.getItem('io-layout-state'));
 
 export class ThreeApp extends Io {
   static get style() {

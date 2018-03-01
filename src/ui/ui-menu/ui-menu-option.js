@@ -45,12 +45,14 @@ export class UiMenuOption extends Io {
         'focus': '_focusHandler',
         'click': '_clickHandler',
         'keyup': '_keyupHandler'
+      },
+      attributes: {
+        'tabindex': 1
       }
     }
   }
   constructor(props) {
     super(props);
-    this.setAttribute('tabindex', 1);
     this.render([
       this.option.options ? ['ui-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
       this.option.icon ? ['span', {class: 'io-icon'}, this.option.icon] : null,

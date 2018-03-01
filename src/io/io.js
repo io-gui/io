@@ -60,20 +60,17 @@ export class Io extends IoBindingMixin(HTMLElement) {
     Object.defineProperty(this, '__handlers', { value: this.__proto__.constructor.definedHandlers });
     Object.defineProperty(this, '__bindings', { value: {} });
 
-    for (let key in this.__properties) {
-      if (props[key] instanceof Binding) {
-        // TODO: make bindings work without cloning
-        let binding = props[key].clone();
-        this.__properties[key].value = binding.source[binding.sourceProp];
-        binding.target = this;
-        binding.targetProp = key;
-        // TODO: test and unbind
+    for (let prop in this.__properties) {
+      if (props[prop] instanceof Binding) {
+        let binding = props[prop];
+        this.__properties[prop].value = binding.source[binding.sourceProp];
+        binding.setTarget(this, prop);
         binding.bind();
-      } else if (props[key] !== undefined) {
-        this.__properties[key].value = props[key];
+      } else if (props[prop] !== undefined) {
+        this.__properties[prop].value = props[prop];
       }
-      this.defineProperty(key, this.__properties[key]);
-      this.reflectAttribute(key, this.__properties[key]);
+      this.defineProperty(prop, this.__properties[prop]);
+      this.reflectAttribute(prop, this.__properties[prop]);
     }
 
     for (let att in this.__attributes) {
@@ -140,17 +137,27 @@ export class Io extends IoBindingMixin(HTMLElement) {
   traverse(vChildren, host) {
     let children = host.children;
 
-    for (let i = 0; i < vChildren.length; i++) {
+    // remove trailing elements
+    while (children.length > vChildren.length) host.removeChild(children[children.length - 1]);
+
+    // create new elements
+    let frag = document.createDocumentFragment();
+    for (let i = children.length; i < vChildren.length; i++) {
+      frag.appendChild(_renderElement(vChildren[i]));
+    }
+    host.appendChild(frag);
+
+    // update existing elements
+    for (let i = 0; i < children.length; i++) {
 
       let element;
       let oldElement;
       let observers = [];
       let reflections = [];
 
-      if (children[i] && children[i].localName === vChildren[i].name) {
+      if (children[i].localName === vChildren[i].name) {
 
         element = children[i];
-        observers.length = 0;
 
         for (let prop in vChildren[i].props) {
 
@@ -160,11 +167,11 @@ export class Io extends IoBindingMixin(HTMLElement) {
 
             let value = vChildren[i].props[prop];
 
+            // TODO: remove  garbage / lingering bindings
             if (value instanceof Binding) {
-              let binding = value.clone(); // TODO: try making without clone
+              let binding = value;
               value = binding.source[binding.sourceProp];
-              binding.target = element;
-              binding.targetProp = prop;
+              binding.setTarget(element, prop);
               binding.bind();
             }
 
@@ -196,31 +203,25 @@ export class Io extends IoBindingMixin(HTMLElement) {
           element.reflectAttribute(reflections[j], element.__properties[reflections[j]]);
         }
 
-      } else if (children[i] && children[i].localName !== vChildren[i].name) {
-        oldElement = children[i];
-        element = _renderElement(vChildren[i]);
-        // TODO: use fragments for optimization.
-        host.insertBefore(element, oldElement);
-        host.removeChild(oldElement);
       } else {
-        element = _renderElement(vChildren[i]);
-        // TODO: use fragments for optimization.
-        host.appendChild(element);
+
+        oldElement = children[i];
+        host.insertBefore(_renderElement(vChildren[i]), oldElement);
+        host.removeChild(oldElement);
+
       }
 
-      for (let prop in vChildren[i].props) {
-        let value = vChildren[i].props[prop];
-        if (value instanceof Binding) {
-          // TODO: fix bindings
-          value.unbind();
-        }
-      }
+    }
+
+    for (let i = 0; i < children.length; i++) {
+
+      let element = children[i];
 
       for (let prop in vChildren[i].props) {
         if (prop == 'listeners') {
           for (let l in vChildren[i].props[prop]) {
             if (typeof vChildren[i].props[prop][l] === 'function') {
-              // TODO: test for garbage / lingering listeners
+              // TODO: remove  garbage / lingering listeners
               // TODO: check for conflicts / existing listeners
               element.__listeners[l] = element.__listeners[l] || [];
               element.__listeners[l].push(vChildren[i].props[prop][l]);
@@ -242,19 +243,6 @@ export class Io extends IoBindingMixin(HTMLElement) {
       } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
         // TODO: test extensively
         this.traverse(vChildren[i].children, element);
-      }
-
-      // TODO: handle attributes better
-      if (vChildren[i].props && vChildren[i].props.tabindex !== undefined) {
-        element.setAttribute('tabindex', vChildren[i].props.tabindex);
-      }
-
-    }
-
-    // TODO: consider caching elements for reuse
-    if (children.length > vChildren.length) {
-      for (let i = children.length - 1; children.length > vChildren.length; i--) {
-        host.removeChild(children[i]);
       }
     }
   }
@@ -301,10 +289,8 @@ const initStyle = function(localName, style) {
 
 // https://github.com/lukejacksonn/ijk
 const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b]
-const buildVDOM = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1])
-    ? {
-        ['name']: node[0],
-        ['props']: node[1],
-        ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildVDOM()) : node[2] || ''
-      }
-    : buildVDOM()([node[0], {}, node[1] || ''])
+const buildVDOM = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1]) ? {
+    ['name']: node[0],
+    ['props']: node[1],
+    ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildVDOM()) : node[2] || ''
+  } : buildVDOM()([node[0], {}, node[1] || ''])

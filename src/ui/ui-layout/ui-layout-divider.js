@@ -42,6 +42,7 @@ export class UiLayoutDivider extends IoPointerMixin(Io) {
       }
     }
   }
+  // TODO: reproduce and fix sticky movement
   _pointerMoveHandler(event) {
     let rect = this.getBoundingClientRect();
     let movement
