@@ -74,6 +74,10 @@ export class UiTabs extends Io {
         type: Object,
         observer: 'update'
       },
+      selected: {
+        type: String,
+        observer: 'update'
+      },
       dropzone: {
         type: String,
         reflectToAttribute: true
@@ -122,15 +126,15 @@ export class UiTabs extends Io {
   }
   addTab(tab, index) {
     // TODO: implement indexed insertion on tab hover.
-    let tabs = this.tabs.tabs.tabs;
+    let tabs = this.tabs;
     if (tabs.indexOf(tab) === -1) tabs.push(tab);
     this.fire('ui-tab-added', this.tabs);
     this._selectHandler(tab);
   }
   removeTab(tab) {
-    let tabs = this.tabs.tabs.tabs;
+    let tabs = this.tabs;
     if (tabs.indexOf(tab) !== -1) tabs.splice(tabs.indexOf(tab), 1);
-    let selected = this.tabs.tabs.selected || tabs[tabs.length - 1];
+    let selected = this.selected || tabs[tabs.length - 1];
     if (selected === tab) selected = tabs[tabs.length - 1];
     this.fire('ui-tab-removed', this.tabs);
     this._selectHandler(selected);
@@ -139,13 +143,13 @@ export class UiTabs extends Io {
     this.addTab(tab);
   }
   _selectHandler(elem) {
-    this.tabs.tabs.selected = elem;
+    this.selected = elem;
     this.fire('ui-tab-selected', this.tabs);
     this.update();
   }
   update() {
-    let tabs = this.tabs.tabs.tabs;
-    let selected = this.tabs.tabs.selected || tabs[tabs.length - 1];
+    let tabs = this.tabs;
+    let selected = this.selected || tabs[tabs.length - 1];
     const Elem = (entry) => ['ui-tab-selector', {
         value: entry,
         host: this,

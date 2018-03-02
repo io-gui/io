@@ -7,8 +7,6 @@ export class UiLayout extends Io {
       <style>
         :host  {
           display: flex;
-          background: #999;
-          flex: 1;
         }
       </style>
     `;
@@ -18,19 +16,15 @@ export class UiLayout extends Io {
       elements: {
         type: Object
       },
-      splits: {
-        type: Object
+      layout: {
+        type: Array
       }
     }
   }
-
   update() {
-    this.render([
-      ['ui-layout-split', {
-          elements: this.elements,
-          splits: this.splits
-      }]
-    ]);
+    // TODO: fix layout split
+    const Prop = entry => [entry[0], Object.assign({elements: this.elements}, entry[1])];
+    this.render([this.layout.map(Prop)]);
   }
 }
 

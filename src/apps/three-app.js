@@ -37,19 +37,18 @@ export class ThreeApp extends Io {
   static get properties() {
     return {
       layout: {
-        value: layout || {'orientation': 'horizontal', 'splits': [
-          {'width': 300, 'orientation': 'vertical', 'splits': [
-            {'height': 10, 'tabs': {'tabs': ['app-ctrl']}},
-            {'orientation': 'horizontal', 'splits': [
-              {'width': 10, 'tabs': {'tabs': ['app-ctrl']}},
-              {'tabs': {'tabs': ['inspector']}},
-              {'width': 20, 'tabs': {'tabs': ['app-ctrl']}}
-            ]},
-            {'tabs': {'tabs': ['object']}},
-          ]},
-          {'tabs': {'tabs': ['app-ctrl', 'inspector']}},
-          {'width': 400, 'tabs': {'tabs': ['io-app']}}
-        ]}
+        value: layout || [
+          ['ui-layout-split', {'orientation': 'horizontal', 'splits': [
+            ['ui-layout-split', {'orientation': 'vertical', 'width': 300, 'splits': [
+              ['ui-tabs', {'height': 30, 'tabs': ['app-ctrl']}],
+              ['ui-layout-split', {'orientation': 'horizontal', 'splits': [
+                ['ui-tabs', {'width': 30, 'tabs': ['app-ctrl']}],
+                ['ui-tabs', {'tabs': ['inspector']}],
+                ['ui-tabs', {'width': 50, 'tabs': ['app-ctrl']}]]}],
+              ['ui-tabs', {'height': 30, 'tabs': ['object']}]]}],
+            ['ui-tabs', {'tabs': ['app-ctrl', 'inspector'], 'selected': 'app-ctrl'}],
+            ['ui-tabs', {'width': 400, 'tabs': ['io-app']}]]}]
+        ]
       },
       listeners: {
         'layout-changed': '_layoutChangedHandler'
@@ -69,7 +68,7 @@ export class ThreeApp extends Io {
           'object': ['io-object', {value: scene.bind('value'), expanded: true}],
           'app-ctrl': ['three-app-ctrl', {value: scene.bind('value'), scene: scene}]
         },
-        splits: this.layout
+        layout: this.layout
       }],
       ['div', {class: 'footer'}]
     ]);

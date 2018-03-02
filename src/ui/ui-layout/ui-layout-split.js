@@ -25,13 +25,16 @@ export class UiLayoutSplit extends Io {
         :host[orientation=vertical] > ui-layout-divider {
           height: 10px;
         }
+        :host > ui-layout-divider:last-of-type {
+          display: none;
+        }
       </style>
     `;
   }
   static get properties() {
     return {
       splits: {
-        type: Object,
+        type: Array,
         observer: 'update'
       },
       elements: {
@@ -56,28 +59,28 @@ export class UiLayoutSplit extends Io {
 
     let i = event.detail.index;
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
-    let splits = this.splits.splits;
+    let splits = this.splits;
 
-    var $blocks = [].slice.call(this.children).filter(element => element.className === 'ui-tabs');
+    var $blocks = [].slice.call(this.children).filter(element => element.localName !== 'ui-layout-divider');
     let prev = splits[i];
     let next = splits[i+1];
 
-    if (!next[d] && !prev[d]) {
-      next[d] = $blocks[i+1].getBoundingClientRect()[d];
+    if (next[1][d] !== undefined && prev[1][d] !== undefined) {
+      next[1][d] = $blocks[i+1].getBoundingClientRect()[1][d];
     }
 
     prev = splits[i];
     next = splits[i+1];
 
-    if (prev[d]) prev[d] = Math.max(0, prev[d] + movement);
-    if (next[d]) next[d] = Math.max(0, next[d] - movement);
+    if (prev[1][d] !== undefined) prev[1][d] = Math.max(0, prev[1][d] + movement);
+    if (next[1][d] !== undefined) next[1][d] = Math.max(0, next[1][d] - movement);
 
     this.fire('layout-changed', this.splits);
     this.update();
   }
   _tabRemovedHandler(event) {
     event.stopPropagation();
-    if (event.detail.tabs.tabs.length === 0) {
+    if (event.detail.length === 0) {
       this.removeSplit(event.detail);
     }
   }
@@ -90,60 +93,42 @@ export class UiLayoutSplit extends Io {
     // Add new split if orientation different.
   }
   removeSplit(split) {
-    let splits = this.splits.splits;
-    let index = splits.indexOf(split);
-    splits.splice(index, 1);
+    this.splits.splice(this.splits.indexOf(split), 1);
     this.update();
   }
   update() {
-    this.orientation = this.splits.orientation;
-    let d = this.splits.orientation === 'horizontal' ? 'width' : 'height';
-    let splits = this.splits.splits;
+    let d = this.orientation === 'horizontal' ? 'width' : 'height';
+    let splits = this.splits;
     let elements = [];
+    let styles = [];
 
     // Make sure at least one is flex (no size).
     let hasFlex = false;
     for (var i = 0; i < splits.length; i++) {
-      let size = splits[i][d];
+      let size = splits[i][1][d];
       if (size === undefined) hasFlex = true;
     }
-    if (!hasFlex) delete splits[parseInt(splits.length / 2)][d];
+    if (!hasFlex) delete splits[parseInt(splits.length / 2)][1][d];
 
     for (var i = 0; i < splits.length; i++) {
-      let size = splits[i][d];
-      let style = {
+      let size = splits[i][1][d];
+      styles[i] = {
         'flex-basis': 'auto',
         'flex-shrink': '10000',
         'flex-grow': '1'
       };
-      if (size !== undefined) style = {
+      if (size !== undefined) styles[i] = {
         'flex-basis': size + 'px',
         'flex-shrink': '1',
         'flex-grow': '0'
       };
-      if (splits[i].tabs) {
-        // TODO: dont render 0 size panels
-        // if (size > 0 || size === undefined) {
-          elements.push(['ui-tabs', {
-            class: 'ui-tabs',
-            style: style,
-            elements: this.elements,
-            tabs: splits[i]
-          }]);
-        // }
-      } else {
-        elements.push(['ui-layout-split', {
-            class: 'ui-tabs',
-            style: style,
-            elements: this.elements,
-            splits: splits[i]
-          }]);
-      }
-      if (i < splits.length - 1) {
-        elements.push(['ui-layout-divider', {orientation: this.orientation, index: i}]);
-      }
     }
-    this.render(elements);
+    this.render([
+      [].concat(...this.splits.map((entry, i) => [
+        [entry[0], Object.assign({elements: this.elements, style: styles[i]}, entry[1])],
+        ['ui-layout-divider', {orientation: this.orientation, index: i}]
+      ]))
+    ]);
   }
 }
 
