@@ -1,5 +1,5 @@
 import {UiButton} from "../../ui/ui-button/ui-button.js";
-import {UiMenu} from "../../ui/ui-menu/ui-menu.js";
+import "../../ui/ui-menu/ui-menu.js";
 
 export class IoOption extends UiButton {
   static get properties() {

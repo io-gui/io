@@ -1,7 +1,7 @@
 import {html} from "../io.js";
 import {IoVector} from "../io-vector/io-vector.js";
-import {IoObjectProp} from "../io-object/io-object-prop.js";
-import {IoColorPicker} from "./io-color-picker.js";
+import "../io-object/io-object-prop.js";
+import "./io-color-picker.js";
 
 export class IoColor extends IoVector {
   static get style() {

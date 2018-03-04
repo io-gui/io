@@ -61,11 +61,11 @@ export class UiMenuGroup extends Io {
   update() {
     setTimeout(() => {
       if (this.options) {
-        for (var i = 0; i < this.$options.length; i++) {
+        for (let i = 0; i < this.$options.length; i++) {
           if (this.$options[i].parentElement) this.removeChild(this.$options[i]);
         }
         let frag = document.createDocumentFragment();
-        for (var i = 0; i < this.options.length; i++) {
+        for (let i = 0; i < this.options.length; i++) {
           if (this.$options[i]) {
             // Consider using render and reuse UiMenuOption elements
             this.$options[i] = new UiMenuOption({option: this.options[i], $parent: this});
@@ -78,7 +78,7 @@ export class UiMenuGroup extends Io {
       }
     });
   }
-  _expandedChanged(value, oldValue) {
+  _expandedChanged() {
     if (this.expanded) {
       this._startAnimation();
       this._setPosition();
@@ -138,7 +138,6 @@ export class UiMenuGroup extends Io {
   _scroll() {
     this._rect = this.getBoundingClientRect();
     let scrollSpeed, overflow;
-    let x = UiMenuLayer.singleton.pointer.x;
     let y = UiMenuLayer.singleton.pointer.y;
     if (this._rect.height > window.innerHeight) {
       if (y < 100 && this._rect.top < 0) {

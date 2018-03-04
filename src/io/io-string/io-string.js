@@ -17,7 +17,7 @@ export class IoString extends Io {
       }
     };
   }
-  _blurHandler(event) {
+  _blurHandler() {
     this.set('value', this.innerText);
   }
   _keydownhandler(event) {

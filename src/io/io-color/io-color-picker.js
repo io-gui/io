@@ -1,5 +1,4 @@
 import {Io, html} from "../io.js";
-import {IoVector} from "../io-vector/io-vector.js";
 import {IoPropertyMixin} from "../ioproperty.js";
 
 export class IoColorPicker extends IoPropertyMixin(Io) {

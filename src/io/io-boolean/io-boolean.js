@@ -1,4 +1,3 @@
-import {Io} from "../io.js";
 import {UiButton} from "../../ui/ui-button/ui-button.js";
 
 export class IoBoolean extends UiButton {

@@ -176,11 +176,11 @@ setOptionGroups(THREE, 'Material', 'blendDstAlpha', [
 ]);
 
 setOptionGroups(THREE, 'Material', 'shadowSide', [
-  [0, ,'BackSide'], [1, ,'FrontSide'], [2, ,'DoubleSide'] //reverse from side
+  [0, 'BackSide'], [1, 'FrontSide'], [2, 'DoubleSide'] //reverse from side
 ]);
 
 setOptionGroups(THREE, 'Material', 'shading', [
-  [1, ,'FlatShading'], [2, ,'SmoothShading']
+  [1, 'FlatShading'], [2, 'SmoothShading']
 ]);
 
 setOptionGroups(THREE, 'Euler', '_order', [

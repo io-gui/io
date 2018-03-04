@@ -199,11 +199,11 @@ export class Io extends IoBindingMixin(HTMLElement) {
         }
 
         // triggering observers
-        for (var j = 0; j < observers.length; j++) {
+        for (let j = 0; j < observers.length; j++) {
           element[observers[j]]();
         }
         // triggering reflections
-        for (var j = 0; j < reflections.length; j++) {
+        for (let j = 0; j < reflections.length; j++) {
           element.reflectAttribute(reflections[j], element.__properties[reflections[j]]);
         }
 

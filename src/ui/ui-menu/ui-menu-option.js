@@ -1,6 +1,6 @@
 import {Io, html} from "../../io/io.js";
 import {UiMenuLayer} from "./ui-menu-layer.js";
-import {UiMenuGroup} from "./ui-menu-group.js";
+import "./ui-menu-group.js";
 
 // TODO: extend button?
 export class UiMenuOption extends Io {
@@ -77,7 +77,7 @@ export class UiMenuOption extends Io {
     }
     if (this.$group) this.$group.expanded = true;
   }
-  _clickHandler(event) {
+  _clickHandler() {
     let parent = this.$parent;
     while (parent && parent.localName != 'ui-menu') {
       parent = parent.$parent;

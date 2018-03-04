@@ -1,6 +1,6 @@
 import {Io, html} from "../../io/io.js";
-import {UiTabSelector} from "./ui-tab-selector.js";
-import {IoOption} from "../../io/io-option/io-option.js";
+import "./ui-tab-selector.js";
+import "../../io/io-option/io-option.js";
 
 export class UiTabs extends Io {
   static get style() {
@@ -92,7 +92,7 @@ export class UiTabs extends Io {
     super.disconnectedCallback();
     window.removeEventListener('ui-tab-drag-start', this._tabDragStartHandler);
   }
-  _tabDragStartHandler(event) {
+  _tabDragStartHandler() {
     this._rect = this.getBoundingClientRect();
     window.addEventListener('ui-tab-drag', this._tabDragHandler);
     window.addEventListener('ui-tab-drag-end', this._tabDragEndHandler);
@@ -127,6 +127,7 @@ export class UiTabs extends Io {
   addTab(tab, index) {
     // TODO: implement indexed insertion on tab hover.
     let tabs = this.tabs;
+    console.log(index);
     if (tabs.indexOf(tab) === -1) tabs.push(tab);
     this.fire('ui-tab-added', this.tabs);
     this._selectHandler(tab);

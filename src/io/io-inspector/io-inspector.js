@@ -1,7 +1,7 @@
 import {Io, html} from "../io.js";
-import {IoInspectorBreadcrumbs} from "./io-inspector-breadcrumbs.js";
-import {IoInspectorGroup} from "./io-inspector-group.js";
-import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js";
+import "./io-inspector-breadcrumbs.js";
+import "./io-inspector-group.js";
+import "../../ui/ui-collapsable/ui-collapsable.js";
 
 export class IoInspector extends Io {
   static get style() {

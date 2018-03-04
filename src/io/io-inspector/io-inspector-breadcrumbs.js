@@ -1,5 +1,5 @@
 import {Io, html} from "../io.js";
-import {UiButton} from "../../ui/ui-button/ui-button.js";
+import "../../ui/ui-button/ui-button.js";
 
 function isPropertyOf(prop, object) {
   for (let p in object) if (object[p] === prop) return true;

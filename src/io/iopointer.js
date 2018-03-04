@@ -83,7 +83,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     let touches = event.touches ? event.touches : [event];
     let foundPointers = [];
     let rect = this.getBoundingClientRect();
-    for (var i = 0; i < touches.length; i++) {
+    for (let i = 0; i < touches.length; i++) {
       if (touches[i].target === event.target || event.touches === undefined) {
         let position = new Vector2({
           x: touches[i].clientX - rect.left,
@@ -97,7 +97,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
         foundPointers.push(pointer);
       }
     }
-    for (i = this.pointers.length; i--;) {
+    for (let i = this.pointers.length; i--;) {
       if(foundPointers.indexOf(this.pointers[i]) === -1) {
         this.pointers.splice(i, 1);
       }

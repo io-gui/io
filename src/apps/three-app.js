@@ -4,8 +4,8 @@ import "../io/io-object/io-object.js";
 import "../io/io-inspector/io-inspector.js";
 
 import {ThreeAppScene} from "./three-app-scene.js";
-import {ThreeAppCtrl} from "./three-app-ctrl.js";
-import {IoApp} from "./io-app.js";
+import "./three-app-ctrl.js";
+import "./io-app.js";
 import "./three-io-config.js";
 
 let scene = new ThreeAppScene();
@@ -55,7 +55,7 @@ export class ThreeApp extends Io {
       }
     };
   }
-  _layoutChangedHandler(event) {
+  _layoutChangedHandler() {
     localStorage.setItem('io-layout-state', JSON.stringify(this.layout));
   }
   update() {

@@ -1,11 +1,11 @@
 import {Io, html} from "../io.js";
-import {IoBoolean} from "../io-boolean/io-boolean.js";
-import {IoNumber} from "../io-number/io-number.js";
-import {IoString} from "../io-string/io-string.js";
-import {IoFunction} from "../io-function/io-function.js";
+import "../io-boolean/io-boolean.js";
+import "../io-number/io-number.js";
+import "../io-string/io-string.js";
+import "../io-function/io-function.js";
 
-import {IoObjectProp} from "./io-object-prop.js";
-import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js";
+import "./io-object-prop.js";
+import "../../ui/ui-collapsable/ui-collapsable.js";
 
 export class IoObject extends Io {
   static get style() {

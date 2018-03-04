@@ -1,5 +1,5 @@
 import {Io, html} from "../../io/io.js";
-import {UiTabs} from "../ui-tabs/ui-tabs.js";
+import "../ui-tabs/ui-tabs.js";
 import "./ui-layout-divider.js";
 
 export class UiLayoutSplit extends Io {
@@ -89,6 +89,7 @@ export class UiLayoutSplit extends Io {
     this.fire('layout-changed', this.splits);
   }
   addSplit(split, index, orientation) {
+    console.log(split, index, orientation);
     // insert if orientation match
     // Add new split if orientation different.
   }
@@ -99,18 +100,18 @@ export class UiLayoutSplit extends Io {
   update() {
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let splits = this.splits;
-    let elements = [];
+    // let elements = [];
     let styles = [];
 
     // Make sure at least one is flex (no size).
     let hasFlex = false;
-    for (var i = 0; i < splits.length; i++) {
+    for (let i = 0; i < splits.length; i++) {
       let size = splits[i][1][d];
       if (size === undefined) hasFlex = true;
     }
     if (!hasFlex) delete splits[parseInt(splits.length / 2)][1][d];
 
-    for (var i = 0; i < splits.length; i++) {
+    for (let i = 0; i < splits.length; i++) {
       let size = splits[i][1][d];
       styles[i] = {
         'flex-basis': 'auto',

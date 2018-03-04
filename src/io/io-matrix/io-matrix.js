@@ -1,6 +1,6 @@
 import {html} from "../io.js";
 import {IoVector} from "../io-vector/io-vector.js";
-import {IoObjectProp} from "../io-object/io-object-prop.js";
+import "../io-object/io-object-prop.js";
 
 export class IoMatrix extends IoVector {
   static get style() {

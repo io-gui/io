@@ -21,7 +21,7 @@ export class IoNumber extends IoString {
       }
     };
   }
-  _blurHandler(event) {
+  _blurHandler() {
     let value = Math.round(Number(this.innerText) / this.step) * this.step;
     if (!isNaN(value)) this.set('value', value);
     this.update();

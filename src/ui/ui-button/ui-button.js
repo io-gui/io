@@ -75,7 +75,7 @@ export class UiButton extends Io {
     this.removeEventListener('touchend', this._actionHandler);
     this.removeEventListener('mouseleave', this._leaveHandler);
   }
-  _leaveHandler(event) {
+  _leaveHandler() {
     this.active = false;
   }
   update() {

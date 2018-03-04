@@ -1,9 +1,9 @@
 import {Io, html} from "../io/io.js";
-import {IoBoolean} from "../io/io-boolean/io-boolean.js";
-import {IoNumber} from "../io/io-number/io-number.js";
-import {IoObject} from "../io/io-object/io-object.js";
-import {IoOption} from "../io/io-option/io-option.js";
-import {UiMenu} from "../ui/ui-menu/ui-menu.js";
+import "../io/io-boolean/io-boolean.js";
+import "../io/io-number/io-number.js";
+import "../io/io-object/io-object.js";
+import "../io/io-option/io-option.js";
+import "../ui/ui-menu/ui-menu.js";
 
 export class IoApp extends Io {
   static get style() {

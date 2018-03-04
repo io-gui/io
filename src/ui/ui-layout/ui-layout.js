@@ -1,5 +1,5 @@
 import {Io, html} from "../../io/io.js";
-import {UiLayoutSplit} from "./ui-layout-split.js";
+import "./ui-layout-split.js";
 
 export class UiLayout extends Io {
   static get style() {
