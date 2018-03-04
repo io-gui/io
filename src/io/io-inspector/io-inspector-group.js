@@ -1,8 +1,8 @@
-import {Io, html} from "../io.js"
-import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
-import {UiButton} from "../../ui/ui-button/ui-button.js"
-import {IoObject} from "../io-object/io-object.js"
-import {IoObjectProp} from "../io-object/io-object-prop.js"
+import {Io, html} from "../io.js";
+import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js";
+import {UiButton} from "../../ui/ui-button/ui-button.js";
+import {IoObject} from "../io-object/io-object.js";
+import {IoObjectProp} from "../io-object/io-object-prop.js";
 
 export class IoInspectorGroup extends IoObject {
   static get style() {
@@ -118,7 +118,7 @@ export class IoInspectorGroup extends IoObject {
         value: true,
         observer: 'update'
       }
-    }
+    };
   }
   _clickHandler(value) {
     // TODO: consider bubbling event from button

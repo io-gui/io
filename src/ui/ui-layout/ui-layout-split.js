@@ -1,6 +1,6 @@
-import {Io, html} from "../../io/io.js"
-import {UiTabs} from "../ui-tabs/ui-tabs.js"
-import "./ui-layout-divider.js"
+import {Io, html} from "../../io/io.js";
+import {UiTabs} from "../ui-tabs/ui-tabs.js";
+import "./ui-layout-divider.js";
 
 export class UiLayoutSplit extends Io {
   static get style() {
@@ -51,7 +51,7 @@ export class UiLayoutSplit extends Io {
         'ui-tab-removed': '_tabRemovedHandler',
         'ui-tab-selected': '_tabChangedHandler'
       }
-    }
+    };
   }
   _dividerMoveHandler(event) {
     event.stopPropagation();
@@ -61,7 +61,7 @@ export class UiLayoutSplit extends Io {
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let splits = this.splits;
 
-    var $blocks = [].slice.call(this.children).filter(element => element.localName !== 'ui-layout-divider');
+    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'ui-layout-divider');
     let prev = splits[i];
     let next = splits[i+1];
 

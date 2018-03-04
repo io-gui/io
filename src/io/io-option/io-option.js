@@ -1,5 +1,5 @@
-import {UiButton} from "../../ui/ui-button/ui-button.js"
-import {UiMenu} from "../../ui/ui-menu/ui-menu.js"
+import {UiButton} from "../../ui/ui-button/ui-button.js";
+import {UiMenu} from "../../ui/ui-menu/ui-menu.js";
 
 export class IoOption extends UiButton {
   static get properties() {
@@ -14,7 +14,7 @@ export class IoOption extends UiButton {
         type: Array,
         observer: 'update'
       }
-    }
+    };
   }
   _actionHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
@@ -34,9 +34,9 @@ export class IoOption extends UiButton {
   }
   update() {
     let label = this.value;
-    if (label instanceof Object) label = label.__proto__.constructor.name
+    if (label instanceof Object) label = label.__proto__.constructor.name;
     if (this.options) {
-      for (var i = 0; i < this.options.length; i++) {
+      for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].value == this.value) {
           label = this.options[i].label || label;
           break;

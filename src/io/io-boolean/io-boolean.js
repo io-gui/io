@@ -1,5 +1,5 @@
-import {Io} from "../io.js"
-import {UiButton} from "../../ui/ui-button/ui-button.js"
+import {Io} from "../io.js";
+import {UiButton} from "../../ui/ui-button/ui-button.js";
 
 export class IoBoolean extends UiButton {
   static get properties() {
@@ -18,7 +18,7 @@ export class IoBoolean extends UiButton {
         type: String,
         observer: 'update'
       }
-    }
+    };
   }
   constructor(props) {
     super(props);

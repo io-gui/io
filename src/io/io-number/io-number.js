@@ -1,4 +1,4 @@
-import {IoString} from "../io-string/io-string.js"
+import {IoString} from "../io-string/io-string.js";
 
 export class IoNumber extends IoString {
   static get properties() {
@@ -19,7 +19,7 @@ export class IoNumber extends IoString {
         type: Number,
         value: Infinity
       }
-    }
+    };
   }
   _blurHandler(event) {
     let value = Math.round(Number(this.innerText) / this.step) * this.step;

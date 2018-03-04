@@ -1,8 +1,8 @@
-import {IoPointerMixin} from "../../io/iopointer.js"
-import {Io, html} from "../../io/io.js"
+import {IoPointerMixin} from "../../io/iopointer.js";
+import {Io, html} from "../../io/io.js";
 
 const _dragIcon = document.createElement('div');
-_dragIcon.style = "position: absolute; width: 40px; height: 40px; background: rgba(0,0,0,0.5);"
+_dragIcon.style = "position: absolute; width: 40px; height: 40px; background: rgba(0,0,0,0.5);";
 
 export class UiTabSelector extends IoPointerMixin(Io) {
   static get style() {
@@ -40,7 +40,7 @@ export class UiTabSelector extends IoPointerMixin(Io) {
         'io-pointer-end': '_pointerEndHandler',
         'io-pointer-move': '_pointerMoveHandler'
       }
-    }
+    };
   }
   _pointerEndHandler(event) {
     if (event.detail.pointer[0].distance.length() < 4 && !this._dragging) {

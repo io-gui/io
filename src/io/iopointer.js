@@ -1,5 +1,5 @@
 const _clickmask = document.createElement('div');
-_clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;"
+_clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;";
 
 export class Vector2 extends Object {
   constructor(vector = {}) {
@@ -21,12 +21,12 @@ export class Vector2 extends Object {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
   distanceTo(vector) {
-    var dx = this.x - vector.x, dy = this.y - vector.y;
+    let dx = this.x - vector.x, dy = this.y - vector.y;
     return Math.sqrt(dx * dx + dy * dy);
   }
   getClosest(array) {
     let closest = array[0];
-    for (var i = 1; i < array.length; i++) {
+    for (let i = 1; i < array.length; i++) {
       if (this.distanceTo(array[i]) < this.distanceTo(closest)) {
         closest = array[i];
       }
@@ -46,7 +46,7 @@ export class Pointer extends Object {
   }
   getClosest(array) {
     let closest = array[0];
-    for (var i = 1; i < array.length; i++) {
+    for (let i = 1; i < array.length; i++) {
       if (this.position.distanceTo(array[i].position) < this.position.distanceTo(closest.position)) {
         closest = array[i];
       }
@@ -73,7 +73,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
         'touchstart': '_touchstartHandler',
         'mousemove': '_mousehoverHandler'
       }
-    }
+    };
   }
   constructor(params) {
     super(params);
@@ -155,4 +155,4 @@ export const IoPointerMixin = (superclass) => class extends superclass {
   _fire(eventName, event, pointer) {
     this.fire(eventName, {event: event, pointer: pointer}, false);
   }
-}
+};

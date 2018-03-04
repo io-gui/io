@@ -1,5 +1,5 @@
-import {Io, html} from "../../io/io.js"
-import {UiLayoutSplit} from "./ui-layout-split.js"
+import {Io, html} from "../../io/io.js";
+import {UiLayoutSplit} from "./ui-layout-split.js";
 
 export class UiLayout extends Io {
   static get style() {
@@ -19,7 +19,7 @@ export class UiLayout extends Io {
       layout: {
         type: Array
       }
-    }
+    };
   }
   update() {
     // TODO: fix layout split

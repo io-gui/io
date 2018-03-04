@@ -1,11 +1,11 @@
-import * as THREE from "../../lib/three.module.js"
-import {IoObject} from "../io/io-object/io-object.js"
-import {IoInspector} from "../io/io-inspector/io-inspector.js"
-import "../io/io-option/io-option.js"
-import "../io/io-vector/io-vector.js"
-import "../io/io-matrix/io-matrix.js"
-import "../io/io-color/io-color.js"
-import "../io/io-slider/io-slider.js"
+import * as THREE from "../../lib/three.module.js";
+import {IoObject} from "../io/io-object/io-object.js";
+import {IoInspector} from "../io/io-inspector/io-inspector.js";
+import "../io/io-option/io-option.js";
+import "../io/io-vector/io-vector.js";
+import "../io/io-matrix/io-matrix.js";
+import "../io/io-color/io-color.js";
+import "../io/io-slider/io-slider.js";
 
 IoInspector.CONFIG = Object.assign(IoInspector.CONFIG, {
   'Object': {
@@ -45,10 +45,10 @@ IoObject.CONFIG['Matrix3'] = { 'key:elements': {tag: 'io-matrix'} };
 IoObject.CONFIG['Matrix4'] = { 'key:elements': {tag: 'io-matrix'} };
 
 function setOptionGroups(namespace, className, key, options) {
-  let o = []
-  IoObject.CONFIG[className] = IoObject.CONFIG[className] || {}
+  let o = [];
+  IoObject.CONFIG[className] = IoObject.CONFIG[className] || {};
   IoObject.CONFIG[className]['key:' + key] = { tag: 'io-option', props: { options: o } };
-  for (var i = 0; i < options.length; i++) {
+  for (let i = 0; i < options.length; i++) {
     if (typeof options[i] === 'string') {
       o.push({ value: namespace[options[i]], label: options[i]});
     } else if (options[i] instanceof Array) {

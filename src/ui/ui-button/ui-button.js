@@ -1,4 +1,4 @@
-import {Io, html} from "../../io/io.js"
+import {Io, html} from "../../io/io.js";
 
 export class UiButton extends Io {
   static get style() {
@@ -42,7 +42,7 @@ export class UiButton extends Io {
       attributes: {
         'tabindex': 0
       }
-    }
+    };
   }
   _actionHandler(event) {
     event.stopPropagation();

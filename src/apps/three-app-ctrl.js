@@ -1,13 +1,13 @@
-import {Io} from "../io/io.js"
-import {IoOption} from "../io/io-option/io-option.js"
-import {UiButton} from "../ui/ui-button/ui-button.js"
+import {Io} from "../io/io.js";
+import {IoOption} from "../io/io-option/io-option.js";
+import {UiButton} from "../ui/ui-button/ui-button.js";
 
 export class ThreeAppCtrl extends Io {
   static get properties() {
     return {
       value: {},
       scene: {}
-    }
+    };
   }
   clearLocalStorage() {
     localStorage.clear();

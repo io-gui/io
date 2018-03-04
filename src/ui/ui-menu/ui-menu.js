@@ -1,6 +1,6 @@
-import {Io, html} from "../../io/io.js"
-import {UiMenuLayer} from "./ui-menu-layer.js"
-import {UiMenuGroup} from "./ui-menu-group.js"
+import {Io, html} from "../../io/io.js";
+import {UiMenuLayer} from "./ui-menu-layer.js";
+import {UiMenuGroup} from "./ui-menu-group.js";
 
 export class UiMenu extends Io {
   static get style() {
@@ -29,7 +29,7 @@ export class UiMenu extends Io {
         type: String,
         value: 'click'
       }
-    }
+    };
   }
   constructor(props) {
     super(props);

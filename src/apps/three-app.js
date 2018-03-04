@@ -1,17 +1,17 @@
-import {Io, html} from "../io/io.js"
-import "../ui/ui-layout/ui-layout.js"
-import "../io/io-object/io-object.js"
-import "../io/io-inspector/io-inspector.js"
+import {Io, html} from "../io/io.js";
+import "../ui/ui-layout/ui-layout.js";
+import "../io/io-object/io-object.js";
+import "../io/io-inspector/io-inspector.js";
 
-import {ThreeAppScene} from "./three-app-scene.js"
-import {ThreeAppCtrl} from "./three-app-ctrl.js"
-import {IoApp} from "./io-app.js"
-import "./three-io-config.js"
+import {ThreeAppScene} from "./three-app-scene.js";
+import {ThreeAppCtrl} from "./three-app-ctrl.js";
+import {IoApp} from "./io-app.js";
+import "./three-io-config.js";
 
 let scene = new ThreeAppScene();
 window.scene = scene;
 
-var layout = JSON.parse(localStorage.getItem('io-layout-state'));
+let layout = JSON.parse(localStorage.getItem('io-layout-state'));
 
 export class ThreeApp extends Io {
   static get style() {
@@ -53,7 +53,7 @@ export class ThreeApp extends Io {
       listeners: {
         'layout-changed': '_layoutChangedHandler'
       }
-    }
+    };
   }
   _layoutChangedHandler(event) {
     localStorage.setItem('io-layout-state', JSON.stringify(this.layout));

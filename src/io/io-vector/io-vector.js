@@ -1,5 +1,5 @@
-import {Io, html} from "../io.js"
-import {IoObjectProp} from "../io-object/io-object-prop.js"
+import {Io, html} from "../io.js";
+import {IoObjectProp} from "../io-object/io-object-prop.js";
 
 export class IoVector extends Io {
   static get style() {
@@ -21,7 +21,7 @@ export class IoVector extends Io {
         type: Number,
         reflectToAttribute: true
       }
-    }
+    };
   }
   update() {
     let elements = [];

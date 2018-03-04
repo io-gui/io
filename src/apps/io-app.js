@@ -1,9 +1,9 @@
-import {Io, html} from "../io/io.js"
-import {IoBoolean} from "../io/io-boolean/io-boolean.js"
-import {IoNumber} from "../io/io-number/io-number.js"
-import {IoObject} from "../io/io-object/io-object.js"
-import {IoOption} from "../io/io-option/io-option.js"
-import {UiMenu} from "../ui/ui-menu/ui-menu.js"
+import {Io, html} from "../io/io.js";
+import {IoBoolean} from "../io/io-boolean/io-boolean.js";
+import {IoNumber} from "../io/io-number/io-number.js";
+import {IoObject} from "../io/io-object/io-object.js";
+import {IoOption} from "../io/io-option/io-option.js";
+import {UiMenu} from "../ui/ui-menu/ui-menu.js";
 
 export class IoApp extends Io {
   static get style() {
@@ -52,23 +52,23 @@ export class IoApp extends Io {
       "NaN": NaN,
       "undef": undefined,
       "array": [1,2,3,4,"apple"]
-    }
-    var suboptions1 = [
+    };
+    let suboptions1 = [
       {label: 'sub_sub_one', value: 1, action: console.log},
       {label: 'sub_sub_two', value: 2, action: console.log},
       {label: 'sub_sub_three', value: 3, action: console.log},
       {label: 'sub_sub_four', value: 4, action: console.log},
       {label: 'sub_sub_five', value: 5, action: console.log}
-    ]
-    var suboptions0 = [
+    ];
+    let suboptions0 = [
       {label: 'sub_one', options: suboptions1},
       {label: 'sub_two', options: suboptions1},
       {label: 'sub_three', options: suboptions1},
       {label: 'sub_four', options: suboptions1},
       {label: 'sub_five', options: suboptions1}
-    ]
-    var longOptions = [];
-    for (var i = 0; i < 1000; i++) {
+    ];
+    let longOptions = [];
+    for (let i = 0; i < 1000; i++) {
       let r = Math.random();
       longOptions[i] = {label: String(r), value: r, action: console.log, icon: 'ξ', hint: 'log'};
     }
@@ -79,13 +79,13 @@ export class IoApp extends Io {
       {label: 'four', value: 4, action: console.log},
       {label: 'five', options: suboptions0},
       {label: 'long', options: longOptions, hint: 'list', icon: '⚠'}
-    ]
+    ];
     this.options = [
       {label: 'one', value: 1},
       {label: 'two', value: 2},
       {label: 'three', value: 3},
       {label: 'four', value: 4}
-    ]
+    ];
     this.values.object = this.values;
 
     this.render([

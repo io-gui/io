@@ -1,4 +1,4 @@
-import {Io, html} from "../io.js"
+import {Io, html} from "../io.js";
 
 export class IoFunction extends Io {
   static get style() {
@@ -16,14 +16,14 @@ export class IoFunction extends Io {
       value: {
         observer: 'update'
       }
-    }
+    };
   }
   update() {
     // https://stackoverflow.com/questions/1007981/how-to-get-function-parameter-names-values-dynamically
-    var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
-    var ARGUMENT_NAMES = /([^\s,]+)/g;
-    var fnStr = this.value.toString().replace(STRIP_COMMENTS, '');
-    var result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES) || [];
+    let STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+    let ARGUMENT_NAMES = /([^\s,]+)/g;
+    let fnStr = this.value.toString().replace(STRIP_COMMENTS, '');
+    let result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES) || [];
     this.innerText = 'ƒ(' + result + ')';
   }
 }

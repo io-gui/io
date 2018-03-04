@@ -1,4 +1,4 @@
-import {Io, html} from "../../io/io.js"
+import {Io, html} from "../../io/io.js";
 
 let previousOption;
 let previousParent;
@@ -52,7 +52,7 @@ export class UiMenuLayer extends Io {
         'mousemove': '_mousemoveHandler',
         'ui-menu-option-clicked': '_menuClickedHandler'
       }
-    }
+    };
   }
   connectedCallback() {
     super.connectedCallback();
@@ -60,7 +60,7 @@ export class UiMenuLayer extends Io {
   }
   collapseAll() {
     let groups = this.querySelectorAll('ui-menu-group');
-    for (var i = 0; i < groups.length; i++) {
+    for (let i = 0; i < groups.length; i++) {
       groups[i].expanded = false;
     }
   }
@@ -88,7 +88,7 @@ export class UiMenuLayer extends Io {
     this.pointer.y = event.clientY;
     this.pointer.v = Math.abs(event.movementY / 2) - Math.abs(event.movementX);
     let groups = this.querySelectorAll('ui-menu-group');
-    for (var i = groups.length; i--;) {
+    for (let i = groups.length; i--;) {
       if (groups[i].expanded) {
         if (groups[i]._rect.top < this.pointer.y && groups[i]._rect.bottom > this.pointer.y &&
           groups[i]._rect.left < this.pointer.x && groups[i]._rect.right > this.pointer.x) {
@@ -100,7 +100,7 @@ export class UiMenuLayer extends Io {
   }
   _hover(group) {
     let options = group.querySelectorAll('ui-menu-option');
-    for (var i = options.length; i--;) {
+    for (let i = options.length; i--;) {
       options[i]._rect = options[i].getBoundingClientRect();
       if (options[i]._rect.top < this.pointer.y && options[i]._rect.bottom > this.pointer.y &&
         options[i]._rect.left < this.pointer.x && options[i]._rect.right > this.pointer.x) {
@@ -132,7 +132,7 @@ export class UiMenuLayer extends Io {
   _expandedHandler() {
     let groups = this.querySelectorAll('ui-menu-group');
     let expanded = false;
-    for (var i = 0; i < groups.length; i++) {
+    for (let i = 0; i < groups.length; i++) {
       if (groups[i].expanded) expanded = true;
     }
     this.expanded = expanded;

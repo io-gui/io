@@ -1,6 +1,6 @@
-import {Io, html} from "../../io/io.js"
-import {UiTabSelector} from "./ui-tab-selector.js"
-import {IoOption} from "../../io/io-option/io-option.js"
+import {Io, html} from "../../io/io.js";
+import {UiTabSelector} from "./ui-tab-selector.js";
+import {IoOption} from "../../io/io-option/io-option.js";
 
 export class UiTabs extends Io {
   static get style() {
@@ -82,7 +82,7 @@ export class UiTabs extends Io {
         type: String,
         reflectToAttribute: true
       }
-    }
+    };
   }
   connectedCallback() {
     super.connectedCallback();
@@ -110,7 +110,7 @@ export class UiTabs extends Io {
       else if (x > +Math.abs(y)) this.dropzone = 'right';
       else this.dropzone = 'center';
     } else {
-      this.dropzone = ''
+      this.dropzone = '';
     }
   }
   _tabDragEndHandler(event) {
@@ -121,7 +121,7 @@ export class UiTabs extends Io {
         this.addTab(event.detail.tab);
         event.detail.host.removeTab(event.detail.tab);
       }
-      this.dropzone = ''
+      this.dropzone = '';
     }
   }
   addTab(tab, index) {

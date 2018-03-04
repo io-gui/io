@@ -75,6 +75,6 @@ export const IoBindingMixin = (superclass) => class extends superclass {
     delete this.__bindings[sourceProp];
   }
   unbindAll() {
-    for (var sourceProp in this.__bindings) this.unbind(sourceProp);
+    for (let sourceProp in this.__bindings) this.unbind(sourceProp);
   }
-}
+};

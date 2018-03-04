@@ -1,4 +1,4 @@
-import {Io} from "../../io/io.js"
+import {Io} from "../../io/io.js";
 
 export class UiCollapsable extends Io {
   static get properties() {
@@ -15,7 +15,7 @@ export class UiCollapsable extends Io {
         type: Array,
         observer: 'update'
       }
-    }
+    };
   }
   update() {
     this.render([

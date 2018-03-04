@@ -1,4 +1,8 @@
-import {Binding, IoBindingMixin} from "./iobinding.js"
+import {Binding, IoBindingMixin} from "./iobinding.js";
+import {IoPropertyMixin} from "./ioproperty.js";
+import {IoPointerMixin} from "./iopointer.js";
+
+export {IoPropertyMixin, IoPointerMixin};
 
 export function html() { return arguments[0][0]; }
 
@@ -9,7 +13,7 @@ export class Io extends IoBindingMixin(HTMLElement) {
       properties: {},
       attributes: {},
       listeners: {},
-    }
+    };
     let proto = this;
     while (proto) {
       let prop = proto.properties;
@@ -273,7 +277,7 @@ const _renderElement = function(vDOMNode) {
     }
   }
   return element;
-}
+};
 
 const _styledElements = {};
 const _stagingElement = document.createElement('div');
@@ -285,12 +289,12 @@ const initStyle = function(localName, style) {
     element.setAttribute('id', 'io-style-' + localName);
     document.head.appendChild(element);
   }
-}
+};
 
 // https://github.com/lukejacksonn/ijk
-const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b]
+const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b];
 const buildVDOM = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1]) ? {
     ['name']: node[0],
     ['props']: node[1],
     ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildVDOM()) : node[2] || ''
-  } : buildVDOM()([node[0], {}, node[1] || ''])
+  } : buildVDOM()([node[0], {}, node[1] || '']);

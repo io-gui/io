@@ -1,5 +1,5 @@
-import {Io, html} from "../../io/io.js"
-import {IoPointerMixin} from "../../io/iopointer.js"
+import {Io, html} from "../../io/io.js";
+import {IoPointerMixin} from "../../io/iopointer.js";
 
 export class UiLayoutDivider extends IoPointerMixin(Io) {
   static get style() {
@@ -40,12 +40,12 @@ export class UiLayoutDivider extends IoPointerMixin(Io) {
       listeners: {
         'io-pointer-move': '_pointerMoveHandler'
       }
-    }
+    };
   }
   // TODO: reproduce and fix sticky movement
   _pointerMoveHandler(event) {
     let rect = this.getBoundingClientRect();
-    let movement
+    let movement;
     if (this.orientation === 'horizontal') {
       movement = event.detail.pointer[0].position.x - rect.width / 2;
     } else {

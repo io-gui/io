@@ -9,7 +9,7 @@ export const IoPropertyMixin = (superclass) => class extends superclass {
         type: String,
         observer: 'update'
       }
-    }
+    };
   }
   constructor(props) {
     super(props);

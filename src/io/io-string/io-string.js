@@ -1,4 +1,4 @@
-import {Io} from "../io.js"
+import {Io} from "../io.js";
 
 export class IoString extends Io {
   static get properties() {
@@ -15,7 +15,7 @@ export class IoString extends Io {
         'tabindex': 0,
         'contenteditable': true
       }
-    }
+    };
   }
   _blurHandler(event) {
     this.set('value', this.innerText);

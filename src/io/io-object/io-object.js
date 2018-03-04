@@ -1,11 +1,11 @@
-import {Io, html} from "../io.js"
-import {IoBoolean} from "../io-boolean/io-boolean.js"
-import {IoNumber} from "../io-number/io-number.js"
-import {IoString} from "../io-string/io-string.js"
-import {IoFunction} from "../io-function/io-function.js"
+import {Io, html} from "../io.js";
+import {IoBoolean} from "../io-boolean/io-boolean.js";
+import {IoNumber} from "../io-number/io-number.js";
+import {IoString} from "../io-string/io-string.js";
+import {IoFunction} from "../io-function/io-function.js";
 
-import {IoObjectProp} from "./io-object-prop.js"
-import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js"
+import {IoObjectProp} from "./io-object-prop.js";
+import {UiCollapsable} from "../../ui/ui-collapsable/ui-collapsable.js";
 
 export class IoObject extends Io {
   static get style() {
@@ -37,14 +37,14 @@ export class IoObject extends Io {
         observer: 'update',
         reflectToAttribute: true
       }
-    }
+    };
   }
   getPropConfigs(keys) {
     let configs = {};
     let proto = this.value.__proto__;
 
     while (proto) {
-      let c = IoObject.CONFIG[proto.constructor.name]
+      let c = IoObject.CONFIG[proto.constructor.name];
       if (c) configs = Object.assign(configs, c);
       proto = proto.__proto__;
     }

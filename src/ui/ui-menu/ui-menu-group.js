@@ -1,6 +1,6 @@
-import {Io, html} from "../../io/io.js"
-import {UiMenuLayer} from "./ui-menu-layer.js"
-import {UiMenuOption} from "./ui-menu-option.js"
+import {Io, html} from "../../io/io.js";
+import {UiMenuLayer} from "./ui-menu-layer.js";
+import {UiMenuOption} from "./ui-menu-option.js";
 
 export class UiMenuGroup extends Io {
   static get style() {
@@ -48,7 +48,7 @@ export class UiMenuGroup extends Io {
       $parent: {
         type: HTMLElement
       }
-    }
+    };
   }
   constructor(props) {
     super(props);
@@ -64,7 +64,7 @@ export class UiMenuGroup extends Io {
         for (var i = 0; i < this.$options.length; i++) {
           if (this.$options[i].parentElement) this.removeChild(this.$options[i]);
         }
-        var frag = document.createDocumentFragment();
+        let frag = document.createDocumentFragment();
         for (var i = 0; i < this.options.length; i++) {
           if (this.$options[i]) {
             // Consider using render and reuse UiMenuOption elements
@@ -84,7 +84,7 @@ export class UiMenuGroup extends Io {
       this._setPosition();
     } else {
       this._stopAnimation();
-      for (var i = 0; i < this.$options.length; i++) {
+      for (let i = 0; i < this.$options.length; i++) {
         // TODO: redundant???
         if (this.$options[i].$group)
             this.$options[i].$group.expanded = false;

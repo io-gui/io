@@ -1,6 +1,6 @@
-import {html} from "../io.js"
-import {IoVector} from "../io-vector/io-vector.js"
-import {IoObjectProp} from "../io-object/io-object-prop.js"
+import {html} from "../io.js";
+import {IoVector} from "../io-vector/io-vector.js";
+import {IoObjectProp} from "../io-object/io-object-prop.js";
 
 export class IoMatrix extends IoVector {
   static get style() {
@@ -29,7 +29,7 @@ export class IoMatrix extends IoVector {
     `;
   }
   update() {
-    let elements = this.value
+    let elements = this.value;
     this.columns = Math.sqrt(elements.length);
     const Prop = (elem, i) => ['io-object-prop', {key: i, value: elements, config: {tag: 'io-number'}}];
     this.render([elements.map(Prop)]);

@@ -1,5 +1,5 @@
-import {Io, html} from "../io.js"
-import {IoPointerMixin} from "../iopointer.js"
+import {Io, html} from "../io.js";
+import {IoPointerMixin} from "../iopointer.js";
 
 export class IoSlider extends IoPointerMixin(Io) {
   static get style() {
@@ -57,7 +57,7 @@ export class IoSlider extends IoPointerMixin(Io) {
       listeners: {
         'io-pointer-move': '_pointerMoveHandler'
       }
-    }
+    };
   }
   _pointerMoveHandler(event) {
     let rect = this.getBoundingClientRect();

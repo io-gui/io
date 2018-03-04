@@ -1,6 +1,6 @@
-import {Io, html} from "../../io/io.js"
-import {UiMenuLayer} from "./ui-menu-layer.js"
-import {UiMenuGroup} from "./ui-menu-group.js"
+import {Io, html} from "../../io/io.js";
+import {UiMenuLayer} from "./ui-menu-layer.js";
+import {UiMenuGroup} from "./ui-menu-group.js";
 
 // TODO: extend button?
 export class UiMenuOption extends Io {
@@ -49,7 +49,7 @@ export class UiMenuOption extends Io {
       attributes: {
         'tabindex': 1
       }
-    }
+    };
   }
   constructor(props) {
     super(props);
@@ -69,7 +69,7 @@ export class UiMenuOption extends Io {
     }
   }
   _focusHandler() {
-    for (var i = 0; i < this.$parent.$options.length; i++) {
+    for (let i = 0; i < this.$parent.$options.length; i++) {
       if (this.$parent.$options[i] !== this) {
         if (this.$parent.$options[i].$group)
             this.$parent.$options[i].$group.expanded = false;
@@ -86,8 +86,8 @@ export class UiMenuOption extends Io {
     parent.fire('ui-menu-option-clicked', {option: this.option}, false);
   }
   _keyupHandler(event) {
-    var siblings = this.$parent.$options;
-    var index = siblings.indexOf(this);
+    let siblings = this.$parent.$options;
+    let index = siblings.indexOf(this);
 
     // TODO: handle search.
     // TODO: handle previous focus.
@@ -118,9 +118,9 @@ export class UiMenuOption extends Io {
         siblings[(index + 1)].focus();
       } else if (this.$parent && this.$parent.$parent) {
         // TODO: fix and implement better tabbed focus marching.
-        var target = this.$parent.$parent;
-        var tSiblings = target.$parent.$options
-        var tIndex = tSiblings.indexOf(target);
+        let target = this.$parent.$parent;
+        let tSiblings = target.$parent.$options;
+        let tIndex = tSiblings.indexOf(target);
         tSiblings[(tIndex + 1) % (tSiblings.length)].focus();
       }
 

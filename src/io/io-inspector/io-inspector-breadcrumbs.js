@@ -1,8 +1,8 @@
-import {Io, html} from "../io.js"
-import {UiButton} from "../../ui/ui-button/ui-button.js"
+import {Io, html} from "../io.js";
+import {UiButton} from "../../ui/ui-button/ui-button.js";
 
 function isPropertyOf(prop, object) {
-  for (var p in object) if (object[p] === prop) return true;
+  for (let p in object) if (object[p] === prop) return true;
   return false;
 }
 
@@ -60,7 +60,7 @@ export class IoInspectorBreadcrumbs extends Io {
         type: Array,
         value: []
       }
-    }
+    };
   }
   _backHandler() {
     this.value = this.path[Math.max(0, this.path.length - 2)];
