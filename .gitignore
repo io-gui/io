@@ -1,2 +1,9 @@
+# compiled output
+dist
+
+# IDEs
+.idea
+.vscode
+
+# misc
 .DS_Store
-.*/

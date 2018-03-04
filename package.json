@@ -1,0 +1,24 @@
+{
+  "name": "@io/io",
+  "flat": true,
+  "version": "2.0.0-rc1",
+  "description": "Custom HTML element base class with simple declarative syntax, dynamic templates and data binding.",
+  "main": "io.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arodic/io.git"
+  },
+  "author": "Aleksandar Aki Rodic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arodic/io/issues"
+  },
+  "homepage": "https://github.com/arodic/io",
+  "publishConfig": {
+    "access": "public"
+  }
+}
