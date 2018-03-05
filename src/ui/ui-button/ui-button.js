@@ -1,4 +1,4 @@
-import {Io, html} from "../../io.js";
+import {Io, html} from "../../iocore.js";
 
 export class UiButton extends Io {
   static get style() {

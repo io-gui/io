@@ -1,4 +1,4 @@
-import {Io, html} from "../../io.js";
+import {Io, html} from "../../iocore.js";
 import "./ui-layout-split.js";
 
 export class UiLayout extends Io {

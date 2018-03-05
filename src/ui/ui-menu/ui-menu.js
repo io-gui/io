@@ -1,4 +1,4 @@
-import {Io, html} from "../../io.js";
+import {Io, html} from "../../iocore.js";
 import {UiMenuLayer} from "./ui-menu-layer.js";
 import {UiMenuGroup} from "./ui-menu-group.js";
 

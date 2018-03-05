@@ -1,5 +1,5 @@
-import {Io, html} from "../../io.js";
-import {IoPropertyMixin} from "../../ioproperty.js";
+import {Io, html} from "../../iocore.js";
+import {IoPropertyMixin} from "../../mixins/ioproperty.js";
 
 export class IoColorPicker extends IoPropertyMixin(Io) {
   static get style() {

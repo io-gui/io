@@ -1,6 +1,5 @@
-import {Io, html} from "../../io.js";
+import {Io, html} from "../../iocore.js";
 import {UiMenuLayer} from "./ui-menu-layer.js";
-import "./ui-menu-group.js";
 
 // TODO: extend button?
 export class UiMenuOption extends Io {

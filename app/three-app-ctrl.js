@@ -1,6 +1,4 @@
-import {Io} from "../io.js";
-import "../io/io-option/io-option.js";
-import "../ui/ui-button/ui-button.js";
+import {Io} from "../build/io.js";
 
 export class ThreeAppCtrl extends Io {
   static get properties() {

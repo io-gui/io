@@ -1,5 +1,5 @@
-import {Io} from "../io.js";
-import * as THREE from "../../lib/three.module.js";
+import {Io} from "../build/io.js";
+import * as THREE from "../lib/three.module.js";
 
 let color = new THREE.Color(1,0.5,0.2);
 let mesh = new THREE.Mesh(new THREE.SphereBufferGeometry(), new THREE.MeshBasicMaterial({color: color}));

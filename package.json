@@ -39,7 +39,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "eslint src && rollup -c && uglifyjs build/io.js -cm > build/io.min.js"
+    "build": "eslint src && rollup -c && uglifyjs build/io.js > build/io.min.js"
   },
   "devDependencies": {
     "eslint": "^4.1.1",

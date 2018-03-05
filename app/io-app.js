@@ -1,9 +1,4 @@
-import {Io, html} from "../io.js";
-import "../io/io-boolean/io-boolean.js";
-import "../io/io-number/io-number.js";
-import "../io/io-object/io-object.js";
-import "../io/io-option/io-option.js";
-import "../ui/ui-menu/ui-menu.js";
+import {Io, html} from "../build/io.js";
 
 export class IoApp extends Io {
   static get style() {

@@ -1,7 +1,4 @@
-import {Io, html} from "../io.js";
-import "../ui/ui-layout/ui-layout.js";
-import "../io/io-object/io-object.js";
-import "../io/io-inspector/io-inspector.js";
+import {Io, html} from "../build/io.js";
 
 import {ThreeAppScene} from "./three-app-scene.js";
 import "./three-app-ctrl.js";

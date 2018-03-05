@@ -1,5 +1,5 @@
-import {Io, html} from "../../io.js";
-import {IoPointerMixin} from "../../iopointer.js";
+import {Io, html} from "../../iocore.js";
+import {IoPointerMixin} from "../../mixins/iopointer.js";
 
 export class IoSlider extends IoPointerMixin(Io) {
   static get style() {
