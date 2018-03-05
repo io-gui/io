@@ -1,4 +1,4 @@
-import {Io, html} from "../io/io.js";
+import {Io, html} from "../io.js";
 import "../io/io-boolean/io-boolean.js";
 import "../io/io-number/io-number.js";
 import "../io/io-object/io-object.js";

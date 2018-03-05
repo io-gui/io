@@ -1,4 +1,4 @@
-import {Io, html} from "../../io/io.js";
+import {Io, html} from "../../io.js";
 import "../ui-tabs/ui-tabs.js";
 import "./ui-layout-divider.js";
 

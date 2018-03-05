@@ -1,4 +1,4 @@
-import {Io} from "../io.js";
+import {Io} from "../../io.js";
 
 export class IoString extends Io {
   static get properties() {

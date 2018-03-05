@@ -1,5 +1,5 @@
-import {IoPointerMixin} from "../../io/iopointer.js";
-import {Io, html} from "../../io/io.js";
+import {IoPointerMixin} from "../../iopointer.js";
+import {Io, html} from "../../io.js";
 
 const _dragIcon = document.createElement('div');
 _dragIcon.style = "position: absolute; width: 40px; height: 40px; background: rgba(0,0,0,0.5);";

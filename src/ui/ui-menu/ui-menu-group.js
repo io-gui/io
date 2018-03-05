@@ -1,4 +1,4 @@
-import {Io, html} from "../../io/io.js";
+import {Io, html} from "../../io.js";
 import {UiMenuLayer} from "./ui-menu-layer.js";
 import {UiMenuOption} from "./ui-menu-option.js";
 

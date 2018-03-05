@@ -1,4 +1,4 @@
-import {Io} from "../io/io.js";
+import {Io} from "../io.js";
 import * as THREE from "../../lib/three.module.js";
 
 let color = new THREE.Color(1,0.5,0.2);

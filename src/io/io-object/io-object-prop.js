@@ -1,5 +1,5 @@
-import {Io, html} from "../io.js";
-import {IoPropertyMixin} from "../ioproperty.js";
+import {Io, html} from "../../io.js";
+import {IoPropertyMixin} from "../../ioproperty.js";
 
 export class IoObjectProp extends IoPropertyMixin(Io) {
   static get style() {

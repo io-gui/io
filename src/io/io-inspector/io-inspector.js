@@ -1,4 +1,4 @@
-import {Io, html} from "../io.js";
+import {Io, html} from "../../io.js";
 import "./io-inspector-breadcrumbs.js";
 import "./io-inspector-group.js";
 import "../../ui/ui-collapsable/ui-collapsable.js";

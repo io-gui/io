@@ -1,4 +1,4 @@
-import {Io} from "../io/io.js";
+import {Io} from "../io.js";
 import "../io/io-option/io-option.js";
 import "../ui/ui-button/ui-button.js";
 
