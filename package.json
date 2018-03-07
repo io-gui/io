@@ -1,0 +1,49 @@
+{
+  "name": "@arodic/io",
+  "version": "2.0.0-rc1",
+  "description": "Custom HTML element base class with simple declarative syntax, dynamic templates and data binding.",
+  "main": "build/io.js",
+  "files": [
+    "package.json",
+    "bower.json",
+    "LICENSE",
+    "README.md",
+    "index.html",
+    "io.js",
+    "build/io.js",
+    "build/io.min.js",
+    "build/io.module.js"
+  ],
+  "directories": {
+    "src": "source",
+    "build": "build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arodic/io.git"
+  },
+  "author": "Aleksandar Aki Rodic",
+  "license": "MIT",
+  "keywords": [
+    "io",
+    "ui",
+    "ioui",
+    "custom elements",
+    "web components"
+  ],
+  "bugs": {
+    "url": "https://github.com/arodic/io/issues"
+  },
+  "homepage": "https://github.com/arodic/io",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "eslint src && rollup -c && uglifyjs build/io.js > build/io.min.js"
+  },
+  "devDependencies": {
+    "eslint": "^4.1.1",
+    "rollup": "^0.55.1",
+    "uglify-js-es6": "^2.8.9"
+  }
+}
