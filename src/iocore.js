@@ -1,7 +1,8 @@
 import {Attributes} from "./core/attributes.js";
 import {Binding} from "./core/binding.js";
 import {Listeners} from "./core/listeners.js";
-import {Protochain} from "./core/protochain.js";
+import {getProtochain} from "./core/protochain.js";
+import {getHandlers} from "./core/handlers.js";
 import {Properties} from "./core/properties.js";
 import {initStyle} from "./core/style.js";
 import {renderNode, buildTree} from "./core/vdom.js";
@@ -12,28 +13,18 @@ export class Io extends HTMLElement {
   static get style() {
     return html`<style></style>`;
   }
+  static get protochain() {
+    return getProtochain(this);
+  }
   static get handlers() {
-    if (this.__handlers) return this.__handlers;
-    this.__handlers = [];
-    let proto = this.prototype;
-    while (proto) {
-      let names = Object.getOwnPropertyNames(proto);
-      for (let i = 0; i < names.length; i++) {
-        if (names[i].substring(names[i].length-7, names[i].length) === 'Handler') {
-          this.__handlers.push(names[i]);
-        }
-      }
-      proto = proto.__proto__;
-    }
-    return this.__handlers;
+    return getHandlers(this);
   }
   constructor(props = {}) {
     super();
 
     initStyle(this.localName, this.__proto__.constructor.style);
 
-    const protochain = new Protochain(this);
-
+    const protochain = this.__proto__.constructor.protochain;
     Object.defineProperty(this, '__properties', { value: new Properties(protochain) });
     Object.defineProperty(this, '__listeners', { value: new Listeners(protochain) });
     Object.defineProperty(this, '__attributes', { value: new Attributes(protochain) });
@@ -55,9 +46,11 @@ export class Io extends HTMLElement {
       this.setAttribute(att, this.__attributes[att]);
     }
 
-    for (let i = 0; i < this.handlers.length; i++) {
+    const handlers = this.__proto__.constructor.handlers;
+    for (let i = 0; i < handlers.length; i++) {
       this[handlers[i]] = this[handlers[i]].bind(this);
     }
+
   }
   connectedCallback() {
     for (let e in this.__listeners) {
@@ -114,13 +107,13 @@ export class Io extends HTMLElement {
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
   traverse(vChildren, host) {
-    let children = host.children;
+    const children = host.children;
 
     // remove trailing elements
     while (children.length > vChildren.length) host.removeChild(children[children.length - 1]);
 
     // create new elements
-    let frag = document.createDocumentFragment();
+    const frag = document.createDocumentFragment();
     for (let i = children.length; i < vChildren.length; i++) {
       frag.appendChild(renderNode(vChildren[i]));
     }
@@ -129,14 +122,11 @@ export class Io extends HTMLElement {
     // update existing elements
     for (let i = 0; i < children.length; i++) {
 
-      let element;
-      let oldElement;
-      let observers = [];
-      let reflections = [];
-
       if (children[i].localName === vChildren[i].name) {
 
-        element = children[i];
+        let element = children[i];
+        let observers = [];
+        let reflections = [];
 
         for (let prop in vChildren[i].props) {
 
@@ -184,7 +174,7 @@ export class Io extends HTMLElement {
 
       } else {
 
-        oldElement = children[i];
+        const oldElement = children[i];
         host.insertBefore(renderNode(vChildren[i]), oldElement);
         host.removeChild(oldElement);
 

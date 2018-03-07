@@ -63,7 +63,7 @@ export class IoApp extends Io {
       {label: 'sub_five', options: suboptions1}
     ];
     let longOptions = [];
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 10; i++) {
       let r = Math.random();
       longOptions[i] = {label: String(r), value: r, action: console.log, icon: 'ξ', hint: 'log'};
     }

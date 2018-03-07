@@ -1,7 +1,7 @@
 export class Properties {
   constructor(protochain) {
     for (let i = 0; i < protochain.length; i++) {
-      let prop = protochain[i].properties;
+      let prop = protochain[i].constructor.properties;
       for (let key in prop) {
         if (key !== 'listeners' && key !== 'attributes') {
           if (prop[key].value === undefined) {

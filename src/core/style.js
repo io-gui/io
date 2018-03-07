@@ -1,5 +1,7 @@
 const _styledElements = {};
+
 const _stagingElement = document.createElement('div');
+
 export const initStyle = function(localName, style) {
   if (style && !_styledElements[localName]) {
     _styledElements[localName] = true;
