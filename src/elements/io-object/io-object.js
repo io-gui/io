@@ -5,7 +5,7 @@ import "../io-string/io-string.js";
 import "../io-function/io-function.js";
 
 import "./io-object-prop.js";
-import "../../ui/ui-collapsable/ui-collapsable.js";
+import "../../elements/ui-collapsable/ui-collapsable.js";
 
 export class IoObject extends Io {
   static get style() {

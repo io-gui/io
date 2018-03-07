@@ -1,6 +1,6 @@
 import {html} from "../../iocore.js";
-import "../../ui/ui-collapsable/ui-collapsable.js";
-import "../../ui/ui-button/ui-button.js";
+import "../../elements/ui-collapsable/ui-collapsable.js";
+import "../../elements/ui-button/ui-button.js";
 import {IoObject} from "../io-object/io-object.js";
 import "../io-object/io-object-prop.js";
 

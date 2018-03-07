@@ -1,4 +1,4 @@
-import {UiButton} from "../../ui/ui-button/ui-button.js";
+import {UiButton} from "../../elements/ui-button/ui-button.js";
 
 export class IoBoolean extends UiButton {
   static get properties() {

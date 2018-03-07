@@ -1,6 +1,5 @@
-export class Binding extends Object {
+export class Binding {
   constructor(source, sourceProp) {
-    super();
     this.source = source;
     this.sourceProp = sourceProp;
     this.targets = [];
@@ -64,17 +63,3 @@ export class Binding extends Object {
     return this;
   }
 }
-
-export const IoBindingMixin = (superclass) => class extends superclass {
-  bind(sourceProp) {
-    this.__bindings[sourceProp] = this.__bindings[sourceProp] || new Binding(this, sourceProp);
-    return this.__bindings[sourceProp];
-  }
-  unbind(sourceProp) {
-    if (this.__bindings[sourceProp]) this.__bindings[sourceProp].unbind();
-    delete this.__bindings[sourceProp];
-  }
-  unbindAll() {
-    for (let sourceProp in this.__bindings) this.unbind(sourceProp);
-  }
-};

@@ -1,64 +1,42 @@
-import {Binding, IoBindingMixin} from "./mixins/iobinding.js";
+import {Attributes} from "./core/attributes.js";
+import {Binding} from "./core/binding.js";
+import {Listeners} from "./core/listeners.js";
+import {Protochain} from "./core/protochain.js";
+import {Properties} from "./core/properties.js";
+import {initStyle} from "./core/style.js";
+import {renderNode, buildTree} from "./core/vdom.js";
 
 export function html() { return arguments[0][0]; }
 
-export class Io extends IoBindingMixin(HTMLElement) {
-  static get style() { return html``; }
-  static get definedProperties() {
-    let config = {
-      properties: {},
-      attributes: {},
-      listeners: {},
-    };
-    let proto = this;
-    while (proto) {
-      let prop = proto.properties;
-      for (let key in prop) {
-        if (key === 'listeners') {
-          for (let listener in prop[key]) {
-            config.listeners[listener] = config.listeners[listener] || [];
-            config.listeners[listener].push(prop[key][listener]);
-          }
-        } else if (key === 'attributes') {
-          for (let att in prop[key]) config.attributes[att] = prop[key][att];
-        } else {
-          if (prop[key].value === undefined) {
-            if (prop[key].type === Boolean) prop[key].value = false;
-            if (prop[key].type === Number) prop[key].value = 0;
-            if (prop[key].type === String) prop[key].value = '';
-          }
-          prop[key].notify = prop[key].notify || false;
-          prop[key].bubbles = prop[key].bubbles || false;
-          config.properties[key] = Object.assign(prop[key], config.properties[key] || {});
-        }
-      }
-      proto = proto.__proto__;
-    }
-    return config;
+export class Io extends HTMLElement {
+  static get style() {
+    return html`<style></style>`;
   }
-  static get definedHandlers() {
-    let handlers = [];
+  static get handlers() {
+    if (this.__handlers) return this.__handlers;
+    this.__handlers = [];
     let proto = this.prototype;
     while (proto) {
       let names = Object.getOwnPropertyNames(proto);
       for (let i = 0; i < names.length; i++) {
         if (names[i].substring(names[i].length-7, names[i].length) === 'Handler') {
-          handlers.push(names[i]);
+          this.__handlers.push(names[i]);
         }
       }
       proto = proto.__proto__;
     }
-    return handlers;
+    return this.__handlers;
   }
   constructor(props = {}) {
     super();
+
     initStyle(this.localName, this.__proto__.constructor.style);
-    let definedProperties = this.__proto__.constructor.definedProperties;
-    Object.defineProperty(this, '__properties', { value: definedProperties.properties });
-    Object.defineProperty(this, '__attributes', { value: definedProperties.attributes });
-    Object.defineProperty(this, '__listeners', { value: definedProperties.listeners });
-    Object.defineProperty(this, '__handlers', { value: this.__proto__.constructor.definedHandlers });
-    Object.defineProperty(this, '__bindings', { value: {} });
+
+    const protochain = new Protochain(this);
+
+    Object.defineProperty(this, '__properties', { value: new Properties(protochain) });
+    Object.defineProperty(this, '__listeners', { value: new Listeners(protochain) });
+    Object.defineProperty(this, '__attributes', { value: new Attributes(protochain) });
 
     for (let prop in this.__properties) {
       if (props[prop] instanceof Binding) {
@@ -69,7 +47,7 @@ export class Io extends IoBindingMixin(HTMLElement) {
       } else if (props[prop] !== undefined) {
         this.__properties[prop].value = props[prop];
       }
-      this.defineProperty(prop, this.__properties[prop]);
+      this.defineProperty(prop);
       this.reflectAttribute(prop, this.__properties[prop]);
     }
 
@@ -77,8 +55,8 @@ export class Io extends IoBindingMixin(HTMLElement) {
       this.setAttribute(att, this.__attributes[att]);
     }
 
-    for (let i = 0; i < this.__handlers.length; i++) {
-      this[this.__handlers[i]] = this[this.__handlers[i]].bind(this);
+    for (let i = 0; i < this.handlers.length; i++) {
+      this[handlers[i]] = this[handlers[i]].bind(this);
     }
   }
   connectedCallback() {
@@ -99,40 +77,41 @@ export class Io extends IoBindingMixin(HTMLElement) {
       }
     }
   }
-  defineProperty(key, config) {
-    Object.defineProperty(this, key, {
+  defineProperty(key) {
+    if (this.__proto__.hasOwnProperty(key)) return;
+    Object.defineProperty(this.__proto__, key, {
       get: function() {
-        return config.value;
+        return this.__properties[key].value;
       },
       set: function(value) {
-        if (config.value === value) return;
-        let oldValue = config.value;
-        config.value = value;
-        this.reflectAttribute(key, config);
-        if (config.observer) {
-          this[config.observer](value, oldValue, key);
+        if (this.__properties[key].value === value) return;
+        let oldValue = this.__properties[key].value;
+        this.__properties[key].value = value;
+        this.reflectAttribute(key, this.__properties[key]);
+        if (this.__properties[key].observer) {
+          this[this.__properties[key].observer](value, oldValue, key);
         }
-        if (config.notify) {
-          this.fire(key + '-changed', {value: value, oldValue: oldValue}, config.bubbles);
+        if (this.__properties[key].notify) {
+          this.fire(key + '-changed', {value: value, oldValue: oldValue}, this.__properties[key].bubbles);
         }
       },
       enumerable: true,
       configurable: true
     });
   }
-  reflectAttribute(key, config) {
-    if (config.reflectToAttribute) {
-      if (config.value === true) {
+  reflectAttribute(key, prop) {
+    if (prop.reflectToAttribute) {
+      if (prop.value === true) {
         this.setAttribute(key, '');
-      } else if (config.value === false || config.value === '') {
+      } else if (prop.value === false || prop.value === '') {
         this.removeAttribute(key);
-      } else if (typeof config.value == 'string' || typeof config.value == 'number') {
-        this.setAttribute(key, config.value);
+      } else if (typeof prop.value == 'string' || typeof prop.value == 'number') {
+        this.setAttribute(key, prop.value);
       }
     }
   }
   render(children, host) {
-    this.traverse(buildVDOM()(['root', children]).children, host || this);
+    this.traverse(buildTree()(['root', children]).children, host || this);
   }
   traverse(vChildren, host) {
     let children = host.children;
@@ -143,7 +122,7 @@ export class Io extends IoBindingMixin(HTMLElement) {
     // create new elements
     let frag = document.createDocumentFragment();
     for (let i = children.length; i < vChildren.length; i++) {
-      frag.appendChild(_renderElement(vChildren[i]));
+      frag.appendChild(renderNode(vChildren[i]));
     }
     host.appendChild(frag);
 
@@ -206,7 +185,7 @@ export class Io extends IoBindingMixin(HTMLElement) {
       } else {
 
         oldElement = children[i];
-        host.insertBefore(_renderElement(vChildren[i]), oldElement);
+        host.insertBefore(renderNode(vChildren[i]), oldElement);
         host.removeChild(oldElement);
 
       }
@@ -259,38 +238,16 @@ export class Io extends IoBindingMixin(HTMLElement) {
       composed: true
     }));
   }
+  bind(sourceProp) {
+    this.__bindings = this.__bindings || {};
+    this.__bindings[sourceProp] = this.__bindings[sourceProp] || new Binding(this, sourceProp);
+    return this.__bindings[sourceProp];
+  }
+  unbind(sourceProp) {
+    if (this.__bindings[sourceProp]) this.__bindings[sourceProp].unbind();
+    delete this.__bindings[sourceProp];
+  }
+  unbindAll() {
+    for (let sourceProp in this.__bindings) this.unbind(sourceProp);
+  }
 }
-
-const _renderElement = function(vDOMNode) {
-  let ConstructorClass = customElements.get(vDOMNode.name);
-  let element;
-  if (ConstructorClass) {
-    element = new ConstructorClass(vDOMNode.props);
-  } else {
-    element = document.createElement(vDOMNode.name);
-    for (let prop in vDOMNode.props) {
-      element[prop] = vDOMNode.props[prop];
-    }
-  }
-  return element;
-};
-
-const _styledElements = {};
-const _stagingElement = document.createElement('div');
-const initStyle = function(localName, style) {
-  if (style && !_styledElements[localName]) {
-    _styledElements[localName] = true;
-    _stagingElement.innerHTML = style.replace(new RegExp(':host', 'g'), localName);
-    let element = _stagingElement.querySelector('style');
-    element.setAttribute('id', 'io-style-' + localName);
-    document.head.appendChild(element);
-  }
-};
-
-// https://github.com/lukejacksonn/ijk
-const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b];
-const buildVDOM = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1]) ? {
-    ['name']: node[0],
-    ['props']: node[1],
-    ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildVDOM()) : node[2] || ''
-  } : buildVDOM()([node[0], {}, node[1] || '']);

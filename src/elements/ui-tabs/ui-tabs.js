@@ -1,6 +1,6 @@
 import {Io, html} from "../../iocore.js";
 import "./ui-tab-selector.js";
-import "../../io/io-option/io-option.js";
+import "../../elements/io-option/io-option.js";
 
 export class UiTabs extends Io {
   static get style() {
@@ -116,13 +116,15 @@ export class UiTabs extends Io {
   _tabDragEndHandler(event) {
     window.removeEventListener('ui-tab-drag', this._tabDragHandler);
     window.removeEventListener('ui-tab-drag-end', this._tabDragEndHandler);
-    if (this.dropzone) {
-      if (this.dropzone === 'center' && event.detail.host !== this) {
+    if (this.dropzone === 'center') {
+      if (event.detail.host !== this) {
         this.addTab(event.detail.tab);
         event.detail.host.removeTab(event.detail.tab);
       }
-      this.dropzone = '';
+    } else {
+      // this.addSplit(event.detail.tab, this.dropzone);
     }
+    this.dropzone = '';
   }
   addTab(tab, index) {
     // TODO: implement indexed insertion on tab hover.
@@ -140,6 +142,9 @@ export class UiTabs extends Io {
     this.fire('ui-tab-removed', this.tabs);
     this._selectHandler(selected);
   }
+  // addSplit(tab, split) {
+  //   console.log(tab, split);
+  // }
   _optionSelectHandler(tab) {
     this.addTab(tab);
   }

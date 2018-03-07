@@ -1,7 +1,7 @@
 import {Io, html} from "../../iocore.js";
 import "./io-inspector-breadcrumbs.js";
 import "./io-inspector-group.js";
-import "../../ui/ui-collapsable/ui-collapsable.js";
+import "../../elements/ui-collapsable/ui-collapsable.js";
 
 export class IoInspector extends Io {
   static get style() {
