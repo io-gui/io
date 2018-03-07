@@ -9,7 +9,6 @@ export * from "./io-option/io-option.js";
 export * from "./io-slider/io-slider.js";
 export * from "./io-string/io-string.js";
 export * from "./io-vector/io-vector.js";
-
 export * from "./ui-button/ui-button.js";
 export * from "./ui-collapsable/ui-collapsable.js";
 export * from "./ui-layout/ui-layout.js";

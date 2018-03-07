@@ -10,9 +10,7 @@ import {renderNode, buildTree} from "./core/vdom.js";
 export function html() { return arguments[0][0]; }
 
 export class Io extends HTMLElement {
-  static get style() {
-    return html`<style></style>`;
-  }
+  static get style() { return html``;}
   static get protochain() {
     return getProtochain(this);
   }
@@ -70,36 +68,36 @@ export class Io extends HTMLElement {
       }
     }
   }
-  defineProperty(key) {
-    if (this.__proto__.hasOwnProperty(key)) return;
-    Object.defineProperty(this.__proto__, key, {
+  defineProperty(prop) {
+    if (this.__proto__.hasOwnProperty(prop)) return;
+    Object.defineProperty(this.__proto__, prop, {
       get: function() {
-        return this.__properties[key].value;
+        return this.__properties[prop].value;
       },
       set: function(value) {
-        if (this.__properties[key].value === value) return;
-        let oldValue = this.__properties[key].value;
-        this.__properties[key].value = value;
-        this.reflectAttribute(key, this.__properties[key]);
-        if (this.__properties[key].observer) {
-          this[this.__properties[key].observer](value, oldValue, key);
+        if (this.__properties[prop].value === value) return;
+        let oldValue = this.__properties[prop].value;
+        this.__properties[prop].value = value;
+        this.reflectAttribute(prop, this.__properties[prop]);
+        if (this.__properties[prop].observer) {
+          this[this.__properties[prop].observer](value, oldValue, prop);
         }
-        if (this.__properties[key].notify) {
-          this.fire(key + '-changed', {value: value, oldValue: oldValue}, this.__properties[key].bubbles);
+        if (this.__properties[prop].notify) {
+          this.fire(prop + '-changed', {value: value, oldValue: oldValue}, this.__properties[prop].bubbles);
         }
       },
       enumerable: true,
       configurable: true
     });
   }
-  reflectAttribute(key, prop) {
-    if (prop.reflectToAttribute) {
-      if (prop.value === true) {
-        this.setAttribute(key, '');
-      } else if (prop.value === false || prop.value === '') {
-        this.removeAttribute(key);
-      } else if (typeof prop.value == 'string' || typeof prop.value == 'number') {
-        this.setAttribute(key, prop.value);
+  reflectAttribute(prop, config) {
+    if (config.reflectToAttribute) {
+      if (config.value === true) {
+        this.setAttribute(prop, '');
+      } else if (config.value === false || config.value === '') {
+        this.removeAttribute(prop);
+      } else if (typeof config.value == 'string' || typeof config.value == 'number') {
+        this.setAttribute(prop, config.value);
       }
     }
   }
