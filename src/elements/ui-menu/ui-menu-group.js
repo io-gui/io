@@ -7,8 +7,7 @@ export class UiMenuGroup extends Io {
     return html`
       <style>
         :host {
-          display: flex;
-          visibility: hidden;
+          display: none;
           flex-direction: column;
           position: absolute;
           transform: translateZ(0);
@@ -22,7 +21,7 @@ export class UiMenuGroup extends Io {
           min-width: 6em;
         }
         :host[expanded] {
-          visibility: visible;
+          display: flex;
         }
       </style>
     `;

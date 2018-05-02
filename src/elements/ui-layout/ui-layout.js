@@ -7,6 +7,7 @@ export class UiLayout extends Io {
       <style>
         :host  {
           display: flex;
+          flex: 1;
         }
       </style>
     `;
