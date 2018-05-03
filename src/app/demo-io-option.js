@@ -1,4 +1,4 @@
-import {Io, html} from "../build/io.js";
+import {Io, html} from "../io.js";
 
 export class DemoIoOption extends Io {
   static get style() {

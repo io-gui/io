@@ -1,11 +1,11 @@
-import {Io, html} from "../build/io.js";
+import {Io, html} from "../io.js";
 
-import "./demo-app-values.js";
 import "./demo-app-ctrl.js";
 import "./demo-io.js";
 import "./demo-io-menu.js";
 import "./demo-io-option.js";
 import "./demo-io-object.js";
+import "./three-io-config.js";
 
 export class DemoApp extends Io {
   static get style() {
@@ -24,6 +24,9 @@ export class DemoApp extends Io {
   }
   static get properties() {
     return {
+      selected: {
+        value: window
+      },
       layout: {
         value: [
         // value: JSON.parse(localStorage.getItem('io-layout-state')) || [
@@ -52,9 +55,9 @@ export class DemoApp extends Io {
           'menu': ['demo-io-menu'],
           'option': ['demo-io-option'],
           'object': ['demo-io-object'],
-          'inspector': ['io-inspector', {value: window}],
-          // 'object': ['io-object', {value: scene.bind('value'), expanded: true}],
-          'app-ctrl': ['demo-app-ctrl', {value: this.layout, scene: this}]
+          'inspector': ['io-inspector', {value: this.bind('selected')}],
+          'object': ['io-object', {value: this.bind('selected'), expanded: true}],
+          'app-ctrl': ['demo-app-ctrl', {value: this.bind('selected')}]
         },
         layout: this.layout
       }]

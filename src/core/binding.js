@@ -47,7 +47,8 @@ export class Binding {
       for (let j = targetProps.length; j--;) {
         this.targets[i].__properties[targetProps[j]].notify = true;
         this.targets[i].addEventListener(targetProps[j] + '-changed', this.updateSource);
-        this.targets[i][targetProps[j]] = this.source[this.sourceProp];
+        // this.targets[i][targetProps[j]] = this.source[this.sourceProp]; // TODO: dont set before defineProperty()
+        this.targets[i].__properties[targetProps[j]].value = this.source[this.sourceProp];
       }
     }
     return this;

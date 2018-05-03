@@ -28,6 +28,7 @@ export class Io extends HTMLElement {
     Object.defineProperty(this, '__attributes', { value: new Attributes(protochain) });
 
     for (let prop in this.__properties) {
+      this.defineProperty(prop);
       if (props[prop] instanceof Binding) {
         let binding = props[prop];
         this.__properties[prop].value = binding.source[binding.sourceProp];
@@ -36,7 +37,6 @@ export class Io extends HTMLElement {
       } else if (props[prop] !== undefined) {
         this.__properties[prop].value = props[prop];
       }
-      this.defineProperty(prop);
       this.reflectAttribute(prop, this.__properties[prop]);
     }
 
