@@ -1,8 +1,8 @@
 import {Io, html} from "../../iocore.js";
-import {UiMenuLayer} from "./ui-menu-layer.js";
+import {IoMenuLayer} from "./io-menu-layer.js";
 
 // TODO: extend button?
-export class UiMenuOption extends Io {
+export class IoMenuOption extends Io {
   static get style() {
     return html`
       <style>
@@ -53,7 +53,7 @@ export class UiMenuOption extends Io {
   constructor(props) {
     super(props);
     this.render([
-      this.option.options ? ['ui-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
+      this.option.options ? ['io-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
       this.option.icon ? ['span', {class: 'io-icon'}, this.option.icon] : null,
       this.option.label ? ['span', {class: 'io-label'}, this.option.label] : ['span', {class: 'io-label'}, this.option.value],
       this.option.hint ? ['span', {class: 'io-hint'}, this.option.hint] : null,
@@ -62,9 +62,9 @@ export class UiMenuOption extends Io {
   }
   connectedCallback() {
     super.connectedCallback();
-    this.$group = this.querySelector('ui-menu-group');
+    this.$group = this.querySelector('io-menu-group');
     if (this.$group) {
-      UiMenuLayer.singleton.appendChild(this.$group);
+      IoMenuLayer.singleton.appendChild(this.$group);
     }
   }
   _focusHandler() {
@@ -78,11 +78,11 @@ export class UiMenuOption extends Io {
   }
   _clickHandler() {
     let parent = this.$parent;
-    while (parent && parent.localName != 'ui-menu') {
+    while (parent && parent.localName != 'io-menu') {
       parent = parent.$parent;
     }
-    this.fire('ui-menu-option-clicked', {option: this.option});
-    parent.fire('ui-menu-option-clicked', {option: this.option}, false);
+    this.fire('io-menu-option-clicked', {option: this.option});
+    parent.fire('io-menu-option-clicked', {option: this.option}, false);
   }
   _keyupHandler(event) {
     let siblings = this.$parent.$options;
@@ -125,9 +125,9 @@ export class UiMenuOption extends Io {
 
     } else if (event.which == 27) { // ESC
       event.preventDefault();
-      UiMenuLayer.singleton.collapseAll();
+      IoMenuLayer.singleton.collapseAll();
     }
   }
 }
 
-window.customElements.define('ui-menu-option', UiMenuOption);
+window.customElements.define('io-menu-option', IoMenuOption);

@@ -1,7 +1,7 @@
 import {html} from "../../iocore.js";
-import {UiButton} from "../../elements/ui-button/ui-button.js";
+import {IoButton} from "../../elements/io-button/io-button.js";
 
-export class IoBoolean extends UiButton {
+export class IoBoolean extends IoButton {
   static get properties() {
     return {
       value: {

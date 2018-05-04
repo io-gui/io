@@ -687,9 +687,9 @@ class UiButton extends Io {
 }
 
 
-window.customElements.define('ui-button', UiButton);
+window.customElements.define('io-button', IoButton);
 
-class IoBoolean extends UiButton {
+class IoBoolean extends IoButton {
   static get properties() {
     return {
       value: {
@@ -886,13 +886,13 @@ class IoInspectorBreadcrumbs extends Io {
     } else if (this.path.indexOf(this.value) === -1) {
       this.path = [this.value];
     }
-    const Prop = (elem, i) => ['ui-button',
+    const Prop = (elem, i) => ['io-button',
         {class: 'io-breadcrumb', action: this._gotoHandler, value: i}, this.path[i].__proto__.constructor.name];
     this.render([
       ['div', {class: 'io-flex'}, [
         this.path.map(Prop),
       ]],
-      this.path.length > 1 ? ['ui-button', {class: 'io-back-button', action: this._backHandlerm, label: '< Back'}] : null
+      this.path.length > 1 ? ['io-button', {class: 'io-back-button', action: this._backHandlerm, label: '< Back'}] : null
     ]);
   }
 }
@@ -925,7 +925,7 @@ class UiCollapsable extends Io {
   }
 }
 
-window.customElements.define('ui-collapsable', UiCollapsable);
+window.customElements.define('io-collapsable', IoCollapsable);
 
 class IoString extends Io {
   static get properties() {
@@ -1065,7 +1065,7 @@ class IoObject extends Io {
       ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
     ]];
     this.render([
-      ['ui-collapsable', {label: this.value.constructor.name, expanded: this.bind('expanded'), elements:
+      ['io-collapsable', {label: this.value.constructor.name, expanded: this.bind('expanded'), elements:
         Object.entries(propConfigs).map(Prop)
       }]
     ]);
@@ -1088,7 +1088,7 @@ window.customElements.define('io-object', IoObject);
 
 class IoInspectorGroup extends IoObject {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;margin: 0.2em;border-radius: 0.1em;background: #333;line-height: 1em;}:host .io-wrapper {border-radius: 0.1em;}:host .io-wrapper > .io-row {display: flex;flex-direction: row;margin: 0.3em 0.3em 0 0.3em;}:host .io-wrapper > .io-row:last-of-type {margin-bottom: 0.3em;}:host .io-wrapper > .io-row > .io-label {width: 8em;text-align: right;overflow: hidden;text-overflow: ellipsis;padding: 0.3em 0;padding-right: 0.5em;}:host .io-wrapper > .io-row > ui-button {padding: 0.3em 0;color: #fd9;flex: none;font-weight: bold;}:host io-object-prop {flex: 1;display: flex;}:host io-option {display: inline-block;color: #ddd;background: #444;color: #ddd !important;border-radius: 0.2em;padding: 0.3em;}:host io-slider {border-radius: 0.2em;background: #444;}:host io-object-prop > io-matrix > io-object-prop > io-number {margin: 0 0.3em 0.3em 0;}:host io-object-prop > io-color > io-object-prop > io-number,:host io-object-prop > io-vector > io-object-prop:not(:last-of-type) > io-number {margin-right: 0.3em;}:host io-string,:host io-number {border-radius: 0.3em;background: #222;padding: 0.3em;}:host io-color-picker,:host io-boolean {padding: 0.3em;border-radius: 0.3em;}:host io-object-prop > io-boolean {flex: none;}:host io-color,:host io-slider,:host io-matrix {flex: 1;}:host io-boolean,:host io-string,:host io-vector,:host io-number {display: flex;color: #bef !important;flex: 1;}:host :focus {outline: 0;box-shadow: 0 0 0.5em #2ff;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;margin: 0.2em;border-radius: 0.1em;background: #333;line-height: 1em;}:host .io-wrapper {border-radius: 0.1em;}:host .io-wrapper > .io-row {display: flex;flex-direction: row;margin: 0.3em 0.3em 0 0.3em;}:host .io-wrapper > .io-row:last-of-type {margin-bottom: 0.3em;}:host .io-wrapper > .io-row > .io-label {width: 8em;text-align: right;overflow: hidden;text-overflow: ellipsis;padding: 0.3em 0;padding-right: 0.5em;}:host .io-wrapper > .io-row > io-button {padding: 0.3em 0;color: #fd9;flex: none;font-weight: bold;}:host io-object-prop {flex: 1;display: flex;}:host io-option {display: inline-block;color: #ddd;background: #444;color: #ddd !important;border-radius: 0.2em;padding: 0.3em;}:host io-slider {border-radius: 0.2em;background: #444;}:host io-object-prop > io-matrix > io-object-prop > io-number {margin: 0 0.3em 0.3em 0;}:host io-object-prop > io-color > io-object-prop > io-number,:host io-object-prop > io-vector > io-object-prop:not(:last-of-type) > io-number {margin-right: 0.3em;}:host io-string,:host io-number {border-radius: 0.3em;background: #222;padding: 0.3em;}:host io-color-picker,:host io-boolean {padding: 0.3em;border-radius: 0.3em;}:host io-object-prop > io-boolean {flex: none;}:host io-color,:host io-slider,:host io-matrix {flex: 1;}:host io-boolean,:host io-string,:host io-vector,:host io-number {display: flex;color: #bef !important;flex: 1;}:host :focus {outline: 0;box-shadow: 0 0 0.5em #2ff;}</style>`;
   }
   static get properties() {
     return {
@@ -1121,13 +1121,13 @@ class IoInspectorGroup extends IoObject {
       ['span', {class: 'io-label'}, entry[0]],
       entry[1].tag !== 'io-object' ?
           ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}] :
-          ['ui-button', {action: this._clickHandler, value: this.value[entry[0]]}, this.value[entry[0]].constructor.name]
+          ['io-button', {action: this._clickHandler, value: this.value[entry[0]]}, this.value[entry[0]].constructor.name]
     ]];
     this.render([
       this.label === 'main' ? ['div', {class: 'io-wrapper'}, [
         Object.entries(propConfigs).map(Prop)
       ]] :
-      ['ui-collapsable', {label: this.label, expanded: this.bind('expanded'), elements:
+      ['io-collapsable', {label: this.label, expanded: this.bind('expanded'), elements:
         ['div', {class: 'io-wrapper'}, [
           Object.entries(propConfigs).map(Prop)
         ]]
@@ -1256,7 +1256,7 @@ class UiMenuLayer extends Io {
         'keyup': '_eventHandler',
         'expanded-changed': '_expandedHandler',
         'mousemove': '_mousemoveHandler',
-        'ui-menu-option-clicked': '_menuClickedHandler'
+        'io-menu-option-clicked': '_menuClickedHandler'
       }
     };
   }
@@ -1265,7 +1265,7 @@ class UiMenuLayer extends Io {
     window.addEventListener('scroll', this.collapseAll.bind(this));
   }
   collapseAll() {
-    let groups = this.querySelectorAll('ui-menu-group');
+    let groups = this.querySelectorAll('io-menu-group');
     for (let i = 0; i < groups.length; i++) {
       groups[i].expanded = false;
     }
@@ -1293,7 +1293,7 @@ class UiMenuLayer extends Io {
     this.pointer.x = event.clientX;
     this.pointer.y = event.clientY;
     this.pointer.v = Math.abs(event.movementY / 2) - Math.abs(event.movementX);
-    let groups = this.querySelectorAll('ui-menu-group');
+    let groups = this.querySelectorAll('io-menu-group');
     for (let i = groups.length; i--;) {
       if (groups[i].expanded) {
         if (groups[i]._rect.top < this.pointer.y && groups[i]._rect.bottom > this.pointer.y &&
@@ -1305,7 +1305,7 @@ class UiMenuLayer extends Io {
     }
   }
   _hover(group) {
-    let options = group.querySelectorAll('ui-menu-option');
+    let options = group.querySelectorAll('io-menu-option');
     for (let i = options.length; i--;) {
       options[i]._rect = options[i].getBoundingClientRect();
       if (options[i]._rect.top < this.pointer.y && options[i]._rect.bottom > this.pointer.y &&
@@ -1336,7 +1336,7 @@ class UiMenuLayer extends Io {
     }
   }
   _expandedHandler() {
-    let groups = this.querySelectorAll('ui-menu-group');
+    let groups = this.querySelectorAll('io-menu-group');
     let expanded = false;
     for (let i = 0; i < groups.length; i++) {
       if (groups[i].expanded) expanded = true;
@@ -1356,7 +1356,7 @@ class UiMenuLayer extends Io {
   }
 }
 
-window.customElements.define('ui-menu-layer', UiMenuLayer);
+window.customElements.define('io-menu-layer', IoMenuLayer);
 
 UiMenuLayer.singleton = new UiMenuLayer();
 
@@ -1388,7 +1388,7 @@ class UiMenuOption extends Io {
   constructor(props) {
     super(props);
     this.render([
-      this.option.options ? ['ui-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
+      this.option.options ? ['io-menu-group', {options: this.option.options, $parent: this, position: 'right'}] : null,
       this.option.icon ? ['span', {class: 'io-icon'}, this.option.icon] : null,
       this.option.label ? ['span', {class: 'io-label'}, this.option.label] : ['span', {class: 'io-label'}, this.option.value],
       this.option.hint ? ['span', {class: 'io-hint'}, this.option.hint] : null,
@@ -1397,7 +1397,7 @@ class UiMenuOption extends Io {
   }
   connectedCallback() {
     super.connectedCallback();
-    this.$group = this.querySelector('ui-menu-group');
+    this.$group = this.querySelector('io-menu-group');
     if (this.$group) {
       UiMenuLayer.singleton.appendChild(this.$group);
     }
@@ -1413,11 +1413,11 @@ class UiMenuOption extends Io {
   }
   _clickHandler() {
     let parent = this.$parent;
-    while (parent && parent.localName != 'ui-menu') {
+    while (parent && parent.localName != 'io-menu') {
       parent = parent.$parent;
     }
-    this.fire('ui-menu-option-clicked', {option: this.option});
-    parent.fire('ui-menu-option-clicked', {option: this.option}, false);
+    this.fire('io-menu-option-clicked', {option: this.option});
+    parent.fire('io-menu-option-clicked', {option: this.option}, false);
   }
   _keyupHandler(event) {
     let siblings = this.$parent.$options;
@@ -1465,7 +1465,7 @@ class UiMenuOption extends Io {
   }
 }
 
-window.customElements.define('ui-menu-option', UiMenuOption);
+window.customElements.define('io-menu-option', IoMenuOption);
 
 class UiMenuGroup extends Io {
   static get style() {
@@ -1599,7 +1599,7 @@ class UiMenuGroup extends Io {
   }
 }
 
-window.customElements.define('ui-menu-group', UiMenuGroup);
+window.customElements.define('io-menu-group', IoMenuGroup);
 
 class UiMenu extends Io {
   static get style() {
@@ -1655,9 +1655,9 @@ class UiMenu extends Io {
   }
 }
 
-window.customElements.define('ui-menu', UiMenu);
+window.customElements.define('io-menu', IoMenu);
 
-class IoOption extends UiButton {
+class IoOption extends IoButton {
   static get properties() {
     return {
       value: {
@@ -1675,8 +1675,8 @@ class IoOption extends UiButton {
   _actionHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
       event.preventDefault();
-      this.querySelector('ui-menu').expanded = true;
-      this.querySelector('ui-menu').$group.$options[0].focus();
+      this.querySelector('io-menu').expanded = true;
+      this.querySelector('io-menu').$group.$options[0].focus();
     }
   }
   _menuHandler(event) {
@@ -1702,10 +1702,10 @@ class IoOption extends UiButton {
     this.__properties.label.value = label;
     this.render([
       ['span', String(label)],
-      ['ui-menu', {
+      ['io-menu', {
         options: this.options,
         position: 'bottom',
-        listeners: {'ui-menu-option-clicked': this._menuHandler}}]
+        listeners: {'io-menu-option-clicked': this._menuHandler}}]
     ]);
   }
 }
@@ -1801,7 +1801,7 @@ class UiTabSelector extends IoPointerMixin(Io) {
       _dragIcon.parentNode.removeChild(_dragIcon);
     }
     if (this._dragging) {
-      this.fire('ui-tab-drag-end', {tab: this.value, host: this.host});
+      this.fire('io-tab-drag-end', {tab: this.value, host: this.host});
       this._dragging = false;
     }
   }
@@ -1812,13 +1812,13 @@ class UiTabSelector extends IoPointerMixin(Io) {
         this._dragging = true;
         this._clickmask.appendChild(_dragIcon);
 
-        this.fire('ui-tab-drag-start', {tab: this.value, host: this.host});
+        this.fire('io-tab-drag-start', {tab: this.value, host: this.host});
 
       } else {
         let x = this._rect.left + event.detail.pointer[0].position.x;
         let y = this._rect.top + event.detail.pointer[0].position.y;
 
-        this.fire('ui-tab-drag', {x: x, y: y, tab: this.value, host: this.host});
+        this.fire('io-tab-drag', {x: x, y: y, tab: this.value, host: this.host});
 
         _dragIcon.style.left = x - 8 + 'px';
         _dragIcon.style.top = y - 8 + 'px';
@@ -1827,7 +1827,7 @@ class UiTabSelector extends IoPointerMixin(Io) {
   }
 }
 
-window.customElements.define('ui-tab-selector', UiTabSelector);
+window.customElements.define('io-tab-selector', IoTabSelector);
 
 
 
@@ -1873,7 +1873,7 @@ window.customElements.define('ui-tab-selector', UiTabSelector);
   // _dragHandler(event) {
   //   let blocks = [];
   //   for (let i = 0; i < event.path.length; i++) {
-  //     if (event.path[i].localName === 'ui-layout-block') {
+  //     if (event.path[i].localName === 'io-layout-block') {
   //       blocks.push(event.path[i]);
   //     }
   //   }
@@ -1936,7 +1936,7 @@ window.customElements.define('ui-tab-selector', UiTabSelector);
 
 class UiTabs extends Io {
   static get style() {
-    return html`<style>:host{flex: 1;display: flex;flex-direction: column;position: relative;overflow: hidden;background: #ffc;}:host > .ui-tabs-wrapper {border-bottom: 1px solid black;margin-top: 0.2em;white-space: nowrap;}:host > .ui-tabs-wrapper > io-option,:host > .ui-tabs-wrapper > ui-tab-selector {margin-left: 0.2em;padding: 0 0.5em 0 0.5em;border: 1px solid black;border-bottom: 0;background: #ddd;}:host > .ui-tabs-wrapper > ui-tab-selector[selected] {padding-bottom: 1px;margin-bottom: -1px;}:host > .ui-tab-content {background: #ddd;display: flex;flex: 1;}:host > .ui-tab-content > * {flex: 1;}:host > .ui-layout-drop-highlight {position: absolute;background: rgba(0, 0, 0, 0.25);width: 100%;height: 100%;}:host:not([dropzone]) > .ui-layout-drop-highlight {pointer-events: none;opacity: 0;}:host[dropzone=top] > .ui-layout-drop-highlight {background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);}:host[dropzone=bottom] > .ui-layout-drop-highlight {background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);}:host[dropzone=left] > .ui-layout-drop-highlight {background: linear-gradient(to right, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);}:host[dropzone=right] > .ui-layout-drop-highlight {background: linear-gradient(to left, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);}</style>`;
+    return html`<style>:host{flex: 1;display: flex;flex-direction: column;position: relative;overflow: hidden;background: #ffc;}:host > .io-tabs-wrapper {border-bottom: 1px solid black;margin-top: 0.2em;white-space: nowrap;}:host > .io-tabs-wrapper > io-option,:host > .io-tabs-wrapper > io-tab-selector {margin-left: 0.2em;padding: 0 0.5em 0 0.5em;border: 1px solid black;border-bottom: 0;background: #ddd;}:host > .io-tabs-wrapper > io-tab-selector[selected] {padding-bottom: 1px;margin-bottom: -1px;}:host > .io-tab-content {background: #ddd;display: flex;flex: 1;}:host > .io-tab-content > * {flex: 1;}:host > .io-layout-drop-highlight {position: absolute;background: rgba(0, 0, 0, 0.25);width: 100%;height: 100%;}:host:not([dropzone]) > .io-layout-drop-highlight {pointer-events: none;opacity: 0;}:host[dropzone=top] > .io-layout-drop-highlight {background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);}:host[dropzone=bottom] > .io-layout-drop-highlight {background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);}:host[dropzone=left] > .io-layout-drop-highlight {background: linear-gradient(to right, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);}:host[dropzone=right] > .io-layout-drop-highlight {background: linear-gradient(to left, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);}</style>`;
   }
   static get properties() {
     return {
@@ -1960,16 +1960,16 @@ class UiTabs extends Io {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('ui-tab-drag-start', this._tabDragStartHandler);
+    window.addEventListener('io-tab-drag-start', this._tabDragStartHandler);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('ui-tab-drag-start', this._tabDragStartHandler);
+    window.removeEventListener('io-tab-drag-start', this._tabDragStartHandler);
   }
   _tabDragStartHandler() {
     this._rect = this.getBoundingClientRect();
-    window.addEventListener('ui-tab-drag', this._tabDragHandler);
-    window.addEventListener('ui-tab-drag-end', this._tabDragEndHandler);
+    window.addEventListener('io-tab-drag', this._tabDragHandler);
+    window.addEventListener('io-tab-drag-end', this._tabDragEndHandler);
   }
   _tabDragHandler(event) {
     let dx = event.detail.x;
@@ -1988,8 +1988,8 @@ class UiTabs extends Io {
     }
   }
   _tabDragEndHandler(event) {
-    window.removeEventListener('ui-tab-drag', this._tabDragHandler);
-    window.removeEventListener('ui-tab-drag-end', this._tabDragEndHandler);
+    window.removeEventListener('io-tab-drag', this._tabDragHandler);
+    window.removeEventListener('io-tab-drag-end', this._tabDragEndHandler);
     if (this.dropzone === 'center') {
       if (event.detail.host !== this) {
         this.addTab(event.detail.tab);
@@ -2005,7 +2005,7 @@ class UiTabs extends Io {
     let tabs = this.tabs;
     console.log(index);
     if (tabs.indexOf(tab) === -1) tabs.push(tab);
-    this.fire('ui-tab-added', this.tabs);
+    this.fire('io-tab-added', this.tabs);
     this._selectHandler(tab);
   }
   removeTab(tab) {
@@ -2013,7 +2013,7 @@ class UiTabs extends Io {
     if (tabs.indexOf(tab) !== -1) tabs.splice(tabs.indexOf(tab), 1);
     let selected = this.selected || tabs[tabs.length - 1];
     if (selected === tab) selected = tabs[tabs.length - 1];
-    this.fire('ui-tab-removed', this.tabs);
+    this.fire('io-tab-removed', this.tabs);
     this._selectHandler(selected);
   }
   // addSplit(tab, split) {
@@ -2024,20 +2024,20 @@ class UiTabs extends Io {
   }
   _selectHandler(elem) {
     this.selected = elem;
-    this.fire('ui-tab-selected', this.tabs);
+    this.fire('io-tab-selected', this.tabs);
     this.update();
   }
   update() {
     let tabs = this.tabs;
     let selected = this.selected || tabs[tabs.length - 1];
-    const Elem = (entry) => ['ui-tab-selector', {
+    const Elem = (entry) => ['io-tab-selector', {
         value: entry,
         host: this,
         action: this._selectHandler,
         selected: entry === selected
       }, entry];
     this.render([
-      ['div', {class: 'ui-tabs-wrapper'}, [
+      ['div', {class: 'io-tabs-wrapper'}, [
         tabs.map(Elem),
         ['io-option', {
           value: '+',
@@ -2045,15 +2045,15 @@ class UiTabs extends Io {
           action: this._optionSelectHandler
         }]
       ]],
-      ['div', {class: 'ui-tab-content'}, [
+      ['div', {class: 'io-tab-content'}, [
         tabs.indexOf(selected) !== -1 ? this.elements[selected] : null
       ]],
-      ['div', {class: 'ui-layout-drop-highlight'}]
+      ['div', {class: 'io-layout-drop-highlight'}]
     ]);
   }
 }
 
-window.customElements.define('ui-tabs', UiTabs);
+window.customElements.define('io-tabs', IoTabs);
 
 class UiLayoutDivider extends IoPointerMixin(Io) {
   static get style() {
@@ -2083,7 +2083,7 @@ class UiLayoutDivider extends IoPointerMixin(Io) {
     } else {
       movement = event.detail.pointer[0].position.y - rect.height / 2;
     }
-    this.fire('ui-layout-divider-move', {movement: movement, index: this.index});
+    this.fire('io-layout-divider-move', {movement: movement, index: this.index});
   }
   update() {
     this.render([
@@ -2093,11 +2093,11 @@ class UiLayoutDivider extends IoPointerMixin(Io) {
 }
 
 
-window.customElements.define('ui-layout-divider', UiLayoutDivider);
+window.customElements.define('io-layout-divider', IoLayoutDivider);
 
 class UiLayoutSplit extends Io {
   static get style() {
-    return html`<style>:host{flex: 1;display: flex;flex-direction: column;position: relative;overflow: hidden;}:host[orientation=horizontal] {flex-direction: row;}:host[orientation=vertical] {flex-direction: column;}:host[orientation=horizontal] > ui-layout-divider {width: 10px;}:host[orientation=vertical] > ui-layout-divider {height: 10px;}:host > ui-layout-divider:last-of-type {display: none;}</style>`;
+    return html`<style>:host{flex: 1;display: flex;flex-direction: column;position: relative;overflow: hidden;}:host[orientation=horizontal] {flex-direction: row;}:host[orientation=vertical] {flex-direction: column;}:host[orientation=horizontal] > io-layout-divider {width: 10px;}:host[orientation=vertical] > io-layout-divider {height: 10px;}:host > io-layout-divider:last-of-type {display: none;}</style>`;
   }
   static get properties() {
     return {
@@ -2114,10 +2114,10 @@ class UiLayoutSplit extends Io {
         reflectToAttribute: true
       },
       listeners: {
-        'ui-layout-divider-move': '_dividerMoveHandler',
-        'ui-tab-added': '_tabChangedHandler',
-        'ui-tab-removed': '_tabRemovedHandler',
-        'ui-tab-selected': '_tabChangedHandler'
+        'io-layout-divider-move': '_dividerMoveHandler',
+        'io-tab-added': '_tabChangedHandler',
+        'io-tab-removed': '_tabRemovedHandler',
+        'io-tab-selected': '_tabChangedHandler'
       }
     };
   }
@@ -2129,7 +2129,7 @@ class UiLayoutSplit extends Io {
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let splits = this.splits;
 
-    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'ui-layout-divider');
+    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
     let prev = splits[i];
     let next = splits[i+1];
 
@@ -2195,14 +2195,14 @@ class UiLayoutSplit extends Io {
     this.render([
       [].concat(...this.splits.map((entry, i) => [
         [entry[0], Object.assign({elements: this.elements, style: styles[i]}, entry[1])],
-        ['ui-layout-divider', {orientation: this.orientation, index: i}]
+        ['io-layout-divider', {orientation: this.orientation, index: i}]
       ]))
     ]);
   }
 }
 
 
-window.customElements.define('ui-layout-split', UiLayoutSplit);
+window.customElements.define('io-layout-split', IoLayoutSplit);
 
 class UiLayout extends Io {
   static get style() {
@@ -2225,6 +2225,6 @@ class UiLayout extends Io {
   }
 }
 
-window.customElements.define('ui-layout', UiLayout);
+window.customElements.define('io-layout', IoLayout);
 
 export { html, Io, IoPropertyMixin, IoPointerMixin, IoBoolean, IoColor, IoFunction, IoInspector, IoMatrix, IoNumber, IoObject, IoOption, IoSlider, IoString, IoVector, UiButton, UiCollapsable, UiLayout, UiMenu, UiTabs };

@@ -1,6 +1,6 @@
 import {Io} from "../../iocore.js";
 
-export class UiCollapsable extends Io {
+export class IoCollapsable extends Io {
   static get properties() {
     return {
       label: {
@@ -25,4 +25,4 @@ export class UiCollapsable extends Io {
   }
 }
 
-window.customElements.define('ui-collapsable', UiCollapsable);
+window.customElements.define('io-collapsable', IoCollapsable);

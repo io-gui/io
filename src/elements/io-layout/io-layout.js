@@ -1,7 +1,7 @@
 import {Io, html} from "../../iocore.js";
-import "./ui-layout-split.js";
+import "./io-layout-split.js";
 
-export class UiLayout extends Io {
+export class IoLayout extends Io {
   static get style() {
     return html`
       <style>
@@ -29,4 +29,4 @@ export class UiLayout extends Io {
   }
 }
 
-window.customElements.define('ui-layout', UiLayout);
+window.customElements.define('io-layout', IoLayout);

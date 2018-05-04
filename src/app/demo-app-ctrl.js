@@ -33,7 +33,7 @@ export class DemoAppCtrl extends Io {
       ['span', 'select: '],
       ['io-option', {value: this.bind('value'), options: this.bind('options')}],
       ['br'],
-      ['ui-button', {label: 'Reset layout', action: this.clearLocalStorage.bind(this)}]
+      ['io-button', {label: 'Reset layout', action: this.clearLocalStorage.bind(this)}]
     ]);
   }
 }

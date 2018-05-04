@@ -1,8 +1,8 @@
 import {Io, html} from "../../iocore.js";
-import {UiMenuLayer} from "./ui-menu-layer.js";
-import {UiMenuOption} from "./ui-menu-option.js";
+import {IoMenuLayer} from "./io-menu-layer.js";
+import {IoMenuOption} from "./io-menu-option.js";
 
-export class UiMenuGroup extends Io {
+export class IoMenuGroup extends Io {
   static get style() {
     return html`
       <style>
@@ -66,10 +66,10 @@ export class UiMenuGroup extends Io {
         let frag = document.createDocumentFragment();
         for (let i = 0; i < this.options.length; i++) {
           if (this.$options[i]) {
-            // Consider using render and reuse UiMenuOption elements
-            this.$options[i] = new UiMenuOption({option: this.options[i], $parent: this});
+            // Consider using render and reuse IoMenuOption elements
+            this.$options[i] = new IoMenuOption({option: this.options[i], $parent: this});
           } else {
-            this.$options[i] = new UiMenuOption({option: this.options[i], $parent: this});
+            this.$options[i] = new IoMenuOption({option: this.options[i], $parent: this});
           }
           this.appendChild(this.$options[i]);
         }
@@ -109,8 +109,8 @@ export class UiMenuGroup extends Io {
     this._pRect = this.$parent.getBoundingClientRect();
     switch (this.position) {
       case 'pointer':
-        this._x = UiMenuLayer.singleton.pointer.x - 2 || this._pRect.x;
-        this._y = UiMenuLayer.singleton.pointer.y - 2 || this._pRect.y;
+        this._x = IoMenuLayer.singleton.pointer.x - 2 || this._pRect.x;
+        this._y = IoMenuLayer.singleton.pointer.y - 2 || this._pRect.y;
         break;
       case 'bottom':
         this._x = this._pRect.x;
@@ -137,7 +137,7 @@ export class UiMenuGroup extends Io {
   _scroll() {
     this._rect = this.getBoundingClientRect();
     let scrollSpeed, overflow;
-    let y = UiMenuLayer.singleton.pointer.y;
+    let y = IoMenuLayer.singleton.pointer.y;
     if (this._rect.height > window.innerHeight) {
       if (y < 100 && this._rect.top < 0) {
         scrollSpeed = (100 - y) / 5000;
@@ -154,4 +154,4 @@ export class UiMenuGroup extends Io {
   }
 }
 
-window.customElements.define('ui-menu-group', UiMenuGroup);
+window.customElements.define('io-menu-group', IoMenuGroup);

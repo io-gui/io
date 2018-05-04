@@ -5,7 +5,7 @@ import "../io-string/io-string.js";
 import "../io-function/io-function.js";
 
 import "./io-object-prop.js";
-import "../../elements/ui-collapsable/ui-collapsable.js";
+import "../../elements/io-collapsable/io-collapsable.js";
 
 export class IoObject extends Io {
   static get style() {
@@ -81,7 +81,7 @@ export class IoObject extends Io {
       ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
     ]];
     this.render([
-      ['ui-collapsable', {label: this.value.constructor.name, expanded: this.bind('expanded'), elements:
+      ['io-collapsable', {label: this.value.constructor.name, expanded: this.bind('expanded'), elements:
         Object.entries(propConfigs).map(Prop)
       }]
     ]);

@@ -1,8 +1,8 @@
 import {Io, html} from "../../iocore.js";
-import "../ui-tabs/ui-tabs.js";
-import "./ui-layout-divider.js";
+import "../io-tabs/io-tabs.js";
+import "./io-layout-divider.js";
 
-export class UiLayoutSplit extends Io {
+export class IoLayoutSplit extends Io {
   static get style() {
     return html`
       <style>
@@ -19,13 +19,13 @@ export class UiLayoutSplit extends Io {
         :host[orientation=vertical] {
           flex-direction: column;
         }
-        :host[orientation=horizontal] > ui-layout-divider {
+        :host[orientation=horizontal] > io-layout-divider {
           width: 10px;
         }
-        :host[orientation=vertical] > ui-layout-divider {
+        :host[orientation=vertical] > io-layout-divider {
           height: 10px;
         }
-        :host > ui-layout-divider:last-of-type {
+        :host > io-layout-divider:last-of-type {
           display: none;
         }
       </style>
@@ -46,10 +46,10 @@ export class UiLayoutSplit extends Io {
         reflect: true
       },
       listeners: {
-        'ui-layout-divider-move': '_dividerMoveHandler',
-        'ui-tab-added': '_tabChangedHandler',
-        'ui-tab-removed': '_tabRemovedHandler',
-        'ui-tab-selected': '_tabChangedHandler'
+        'io-layout-divider-move': '_dividerMoveHandler',
+        'io-tab-added': '_tabChangedHandler',
+        'io-tab-removed': '_tabRemovedHandler',
+        'io-tab-selected': '_tabChangedHandler'
       }
     };
   }
@@ -61,7 +61,7 @@ export class UiLayoutSplit extends Io {
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let splits = this.splits;
 
-    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'ui-layout-divider');
+    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
     let prev = splits[i];
     let next = splits[i+1];
 
@@ -127,11 +127,11 @@ export class UiLayoutSplit extends Io {
     this.render([
       [].concat(...this.splits.map((entry, i) => [
         [entry[0], Object.assign({elements: this.elements, style: styles[i]}, entry[1])],
-        ['ui-layout-divider', {orientation: this.orientation, index: i}]
+        ['io-layout-divider', {orientation: this.orientation, index: i}]
       ]))
     ]);
   }
 }
 
 
-window.customElements.define('ui-layout-split', UiLayoutSplit);
+window.customElements.define('io-layout-split', IoLayoutSplit);

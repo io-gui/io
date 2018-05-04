@@ -30,11 +30,11 @@ export class DemoApp extends Io {
       layout: {
         value: [
         // value: JSON.parse(localStorage.getItem('io-layout-state')) || [
-          ['ui-layout-split', {'orientation': 'horizontal', 'splits': [
-            ['ui-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
-            ['ui-layout-split', {'orientation': 'vertical', 'width': 400, 'splits': [
-              ['ui-tabs', {'tabs': ['inspector']}],
-              ['ui-tabs', {'height': 400, 'tabs': ['demo', 'menu', 'option', 'object'], 'selected': 'demo'}],
+          ['io-layout-split', {'orientation': 'horizontal', 'splits': [
+            ['io-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
+            ['io-layout-split', {'orientation': 'vertical', 'width': 400, 'splits': [
+              ['io-tabs', {'tabs': ['inspector']}],
+              ['io-tabs', {'height': 400, 'tabs': ['demo', 'menu', 'option', 'object'], 'selected': 'demo'}],
             ]}],
           ]}],
         ]
@@ -49,7 +49,7 @@ export class DemoApp extends Io {
   }
   update() {
     this.render([
-      ['ui-layout', {
+      ['io-layout', {
         elements: {
           'demo': ['demo-io'],
           'menu': ['demo-io-menu'],

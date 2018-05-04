@@ -41,8 +41,8 @@ export class DemoIoMenu extends Io {
     ];
     this.render([
       ['div', {class: 'demo area'}, [
-        ['h3', 'ui-menu (click to expand)'],
-        ['ui-menu', {options: this.menuoptions, position: 'pointer'}]
+        ['h3', 'io-menu (click to expand)'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer'}]
       ]]
     ]);
   }

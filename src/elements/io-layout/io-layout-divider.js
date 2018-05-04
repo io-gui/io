@@ -1,7 +1,7 @@
 import {Io, html} from "../../iocore.js";
 import {IoPointerMixin} from "../../mixins/iopointer.js";
 
-export class UiLayoutDivider extends IoPointerMixin(Io) {
+export class IoLayoutDivider extends IoPointerMixin(Io) {
   static get style() {
     return html`
       <style>
@@ -51,7 +51,7 @@ export class UiLayoutDivider extends IoPointerMixin(Io) {
     } else {
       movement = event.detail.pointer[0].position.y - rect.height / 2;
     }
-    this.fire('ui-layout-divider-move', {movement: movement, index: this.index});
+    this.fire('io-layout-divider-move', {movement: movement, index: this.index});
   }
   update() {
     this.render([
@@ -61,4 +61,4 @@ export class UiLayoutDivider extends IoPointerMixin(Io) {
 }
 
 
-window.customElements.define('ui-layout-divider', UiLayoutDivider);
+window.customElements.define('io-layout-divider', IoLayoutDivider);

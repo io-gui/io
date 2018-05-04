@@ -6,7 +6,7 @@ let timeoutOpen;
 let timeoutReset;
 let WAIT_TIME = 1000;
 
-export class UiMenuLayer extends Io {
+export class IoMenuLayer extends Io {
   static get style() {
     return html`
       <style>
@@ -50,7 +50,7 @@ export class UiMenuLayer extends Io {
         'keyup': '_eventHandler',
         'expanded-changed': '_expandedHandler',
         'mousemove': '_mousemoveHandler',
-        'ui-menu-option-clicked': '_menuClickedHandler'
+        'io-menu-option-clicked': '_menuClickedHandler'
       }
     };
   }
@@ -59,7 +59,7 @@ export class UiMenuLayer extends Io {
     window.addEventListener('scroll', this.collapseAll.bind(this));
   }
   collapseAll() {
-    let groups = this.querySelectorAll('ui-menu-group');
+    let groups = this.querySelectorAll('io-menu-group');
     for (let i = 0; i < groups.length; i++) {
       groups[i].expanded = false;
     }
@@ -69,12 +69,12 @@ export class UiMenuLayer extends Io {
     let option = event.detail.option;
     if (typeof option.action === 'function') {
       option.action.apply(null, [option.value]);
-      UiMenuLayer.singleton.collapseAll();
+      IoMenuLayer.singleton.collapseAll();
     } else if (option.button) {
       option.button.click(); // TODO: test
-      UiMenuLayer.singleton.collapseAll();
+      IoMenuLayer.singleton.collapseAll();
     } else if (option.value !== undefined) {
-      UiMenuLayer.singleton.collapseAll();
+      IoMenuLayer.singleton.collapseAll();
     }
   }
   _eventHandler(event) {
@@ -87,7 +87,7 @@ export class UiMenuLayer extends Io {
     this.pointer.x = event.clientX;
     this.pointer.y = event.clientY;
     this.pointer.v = Math.abs(event.movementY / 2) - Math.abs(event.movementX);
-    let groups = this.querySelectorAll('ui-menu-group');
+    let groups = this.querySelectorAll('io-menu-group');
     for (let i = groups.length; i--;) {
       if (groups[i].expanded) {
         if (groups[i]._rect.top < this.pointer.y && groups[i]._rect.bottom > this.pointer.y &&
@@ -99,7 +99,7 @@ export class UiMenuLayer extends Io {
     }
   }
   _hover(group) {
-    let options = group.querySelectorAll('ui-menu-option');
+    let options = group.querySelectorAll('io-menu-option');
     for (let i = options.length; i--;) {
       options[i]._rect = options[i].getBoundingClientRect();
       if (options[i]._rect.top < this.pointer.y && options[i]._rect.bottom > this.pointer.y &&
@@ -130,7 +130,7 @@ export class UiMenuLayer extends Io {
     }
   }
   _expandedHandler() {
-    let groups = this.querySelectorAll('ui-menu-group');
+    let groups = this.querySelectorAll('io-menu-group');
     let expanded = false;
     for (let i = 0; i < groups.length; i++) {
       if (groups[i].expanded) expanded = true;
@@ -150,8 +150,8 @@ export class UiMenuLayer extends Io {
   }
 }
 
-window.customElements.define('ui-menu-layer', UiMenuLayer);
+window.customElements.define('io-menu-layer', IoMenuLayer);
 
-UiMenuLayer.singleton = new UiMenuLayer();
+IoMenuLayer.singleton = new IoMenuLayer();
 
-document.body.appendChild(UiMenuLayer.singleton);
+document.body.appendChild(IoMenuLayer.singleton);

@@ -1,7 +1,7 @@
-import {UiButton} from "../../elements/ui-button/ui-button.js";
-import "../../elements/ui-menu/ui-menu.js";
+import {IoButton} from "../../elements/io-button/io-button.js";
+import "../../elements/io-menu/io-menu.js";
 
-export class IoOption extends UiButton {
+export class IoOption extends IoButton {
   static get properties() {
     return {
       value: {
@@ -19,8 +19,8 @@ export class IoOption extends UiButton {
   _actionHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
       event.preventDefault();
-      this.querySelector('ui-menu').expanded = true;
-      this.querySelector('ui-menu').$group.$options[0].focus();
+      this.querySelector('io-menu').expanded = true;
+      this.querySelector('io-menu').$group.$options[0].focus();
     }
   }
   _menuHandler(event) {
@@ -46,10 +46,10 @@ export class IoOption extends UiButton {
     this.__properties.label.value = label;
     this.render([
       ['span', String(label)],
-      ['ui-menu', {
+      ['io-menu', {
         options: this.options,
         position: 'bottom',
-        listeners: {'ui-menu-option-clicked': this._menuHandler}}]
+        listeners: {'io-menu-option-clicked': this._menuHandler}}]
     ]);
   }
 }

@@ -4,7 +4,7 @@ import {IoPointerMixin} from "../../mixins/iopointer.js";
 const _dragIcon = document.createElement('div');
 _dragIcon.style = "position: absolute; width: 40px; height: 40px; background: rgba(0,0,0,0.5);";
 
-export class UiTabSelector extends IoPointerMixin(Io) {
+export class IoTabSelector extends IoPointerMixin(Io) {
   static get style() {
     return html`
       <style>
@@ -50,7 +50,7 @@ export class UiTabSelector extends IoPointerMixin(Io) {
       _dragIcon.parentNode.removeChild(_dragIcon);
     }
     if (this._dragging) {
-      this.fire('ui-tab-drag-end', {tab: this.value, host: this.host});
+      this.fire('io-tab-drag-end', {tab: this.value, host: this.host});
       this._dragging = false;
     }
   }
@@ -61,13 +61,13 @@ export class UiTabSelector extends IoPointerMixin(Io) {
         this._dragging = true;
         this._clickmask.appendChild(_dragIcon);
 
-        this.fire('ui-tab-drag-start', {tab: this.value, host: this.host});
+        this.fire('io-tab-drag-start', {tab: this.value, host: this.host});
 
       } else {
         let x = this._rect.left + event.detail.pointer[0].position.x;
         let y = this._rect.top + event.detail.pointer[0].position.y;
 
-        this.fire('ui-tab-drag', {x: x, y: y, tab: this.value, host: this.host});
+        this.fire('io-tab-drag', {x: x, y: y, tab: this.value, host: this.host});
 
         _dragIcon.style.left = x - 8 + 'px';
         _dragIcon.style.top = y - 8 + 'px';
@@ -76,7 +76,7 @@ export class UiTabSelector extends IoPointerMixin(Io) {
   }
 }
 
-window.customElements.define('ui-tab-selector', UiTabSelector);
+window.customElements.define('io-tab-selector', IoTabSelector);
 
 
 
@@ -122,7 +122,7 @@ window.customElements.define('ui-tab-selector', UiTabSelector);
   // _dragHandler(event) {
   //   let blocks = [];
   //   for (let i = 0; i < event.path.length; i++) {
-  //     if (event.path[i].localName === 'ui-layout-block') {
+  //     if (event.path[i].localName === 'io-layout-block') {
   //       blocks.push(event.path[i]);
   //     }
   //   }

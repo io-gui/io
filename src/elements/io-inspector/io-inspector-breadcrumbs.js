@@ -1,5 +1,5 @@
 import {Io, html} from "../../iocore.js";
-import "../../elements/ui-button/ui-button.js";
+import "../../elements/io-button/io-button.js";
 
 function isPropertyOf(prop, object) {
   for (let p in object) if (object[p] === prop) return true;
@@ -76,13 +76,13 @@ export class IoInspectorBreadcrumbs extends Io {
     } else if (this.path.indexOf(this.value) === -1) {
       this.path = [this.value];
     }
-    const Prop = (elem, i) => ['ui-button',
+    const Prop = (elem, i) => ['io-button',
         {class: 'io-breadcrumb', action: this._gotoHandler, value: i}, this.path[i].__proto__.constructor.name];
     this.render([
       ['div', {class: 'io-flex'}, [
         this.path.map(Prop),
       ]],
-      this.path.length > 1 ? ['ui-button', {class: 'io-back-button', action: this._backHandlerm, label: '< Back'}] : null
+      this.path.length > 1 ? ['io-button', {class: 'io-back-button', action: this._backHandlerm, label: '< Back'}] : null
     ]);
   }
 }

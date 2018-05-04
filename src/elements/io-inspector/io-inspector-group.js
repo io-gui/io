@@ -1,6 +1,6 @@
 import {html} from "../../iocore.js";
-import "../../elements/ui-collapsable/ui-collapsable.js";
-import "../../elements/ui-button/ui-button.js";
+import "../../elements/io-collapsable/io-collapsable.js";
+import "../../elements/io-button/io-button.js";
 import {IoObject} from "../io-object/io-object.js";
 import "../io-object/io-object-prop.js";
 
@@ -35,7 +35,7 @@ export class IoInspectorGroup extends IoObject {
           padding: 0.3em 0;
           padding-right: 0.5em;
         }
-        :host .io-wrapper > .io-row > ui-button {
+        :host .io-wrapper > .io-row > io-button {
           padding: 0.3em 0;
           color: #fd9;
           flex: none;
@@ -130,13 +130,13 @@ export class IoInspectorGroup extends IoObject {
       ['span', {class: 'io-label'}, entry[0]],
       entry[1].tag !== 'io-object' ?
           ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}] :
-          ['ui-button', {action: this._clickHandler, value: this.value[entry[0]]}, this.value[entry[0]].constructor.name]
+          ['io-button', {action: this._clickHandler, value: this.value[entry[0]]}, this.value[entry[0]].constructor.name]
     ]];
     this.render([
       this.label === 'main' ? ['div', {class: 'io-wrapper'}, [
         Object.entries(propConfigs).map(Prop)
       ]] :
-      ['ui-collapsable', {label: this.label, expanded: this.bind('expanded'), elements:
+      ['io-collapsable', {label: this.label, expanded: this.bind('expanded'), elements:
         ['div', {class: 'io-wrapper'}, [
           Object.entries(propConfigs).map(Prop)
         ]]

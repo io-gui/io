@@ -1,6 +1,6 @@
 import {Io, html} from "../../iocore.js";
 
-export class UiButton extends Io {
+export class IoButton extends Io {
   static get style() {
     return html`
       <style>
@@ -84,4 +84,4 @@ export class UiButton extends Io {
 }
 
 
-window.customElements.define('ui-button', UiButton);
+window.customElements.define('io-button', IoButton);
