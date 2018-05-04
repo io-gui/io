@@ -27,7 +27,7 @@ export class IoObjectProp extends IoPropertyMixin(Io) {
     return {
       tag: {
         type: String,
-        reflectToAttribute: true
+        reflect: true
       },
       config: {
         type: Array,

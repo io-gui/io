@@ -35,7 +35,7 @@ export class IoObject extends Io {
       expanded: {
         type: Boolean,
         observer: 'update',
-        reflectToAttribute: true
+        reflect: true
       }
     };
   }

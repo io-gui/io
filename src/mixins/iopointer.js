@@ -1,8 +1,63 @@
 const _clickmask = document.createElement('div');
 _clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;";
 
-import {Pointer} from "../core/pointer.js";
-import {Vector2} from "../core/vector2.js";
+export class Pointer {
+  constructor(pointer = {}) {
+    this.position = new Vector2(pointer.position);
+    this.previous = new Vector2(pointer.previous);
+    this.movement = new Vector2(pointer.movement);
+    this.distance = new Vector2(pointer.distance);
+    this.start = new Vector2(pointer.start);
+  }
+  getClosest(array) {
+    let closest = array[0];
+    for (let i = 1; i < array.length; i++) {
+      if (this.position.distanceTo(array[i].position) < this.position.distanceTo(closest.position)) {
+        closest = array[i];
+      }
+    }
+    return closest;
+  }
+  update(pointer) {
+    this.previous.set(this.position);
+    this.movement.set(pointer.position).sub(this.position);
+    this.distance.set(pointer.position).sub(this.start);
+    this.position.set(pointer.position);
+  }
+}
+
+export class Vector2 {
+  constructor(vector = {}) {
+    this.x = vector.x || 0;
+    this.y = vector.y || 0;
+  }
+  set(vector) {
+    this.x = vector.x;
+    this.y = vector.y;
+    return this;
+  }
+  sub(vector) {
+    this.x -= vector.x;
+    this.y -= vector.y;
+    return this;
+  }
+  length() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+  distanceTo(vector) {
+    let dx = this.x - vector.x, dy = this.y - vector.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  getClosest(array) {
+    let closest = array[0];
+    for (let i = 1; i < array.length; i++) {
+      if (this.distanceTo(array[i]) < this.distanceTo(closest)) {
+        closest = array[i];
+      }
+    }
+    return closest;
+  }
+}
 
 export const IoPointerMixin = (superclass) => class extends superclass {
   static get properties() {

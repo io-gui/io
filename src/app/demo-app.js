@@ -25,7 +25,7 @@ export class DemoApp extends Io {
   static get properties() {
     return {
       selected: {
-        value: window
+        value: document.location
       },
       layout: {
         value: [
@@ -34,7 +34,7 @@ export class DemoApp extends Io {
             ['ui-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
             ['ui-layout-split', {'orientation': 'vertical', 'width': 400, 'splits': [
               ['ui-tabs', {'tabs': ['inspector']}],
-              ['ui-tabs', {'height': 400, 'tabs': ['demo', 'menu', 'option', 'object'], 'selected': 'option'}],
+              ['ui-tabs', {'height': 400, 'tabs': ['demo', 'menu', 'option', 'object'], 'selected': 'demo'}],
             ]}],
           ]}],
         ]

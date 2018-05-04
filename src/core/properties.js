@@ -1,19 +1,45 @@
+const propertyDefs = {};
+
+export class Property {
+  constructor(key, propDef) {
+    this.key = key;
+    this.value = propDef.value;
+    this.type = propDef.type;
+    this.observer = propDef.observer;
+    this.notify = propDef.notify;
+    this.bubbles = propDef.bubbles;
+    this.reflect = propDef.reflect;
+    this.binding = propDef.binding;
+  }
+}
+
 export class Properties {
   constructor(protochain) {
-    for (let i = 0; i < protochain.length; i++) {
-      let prop = protochain[i].constructor.properties;
-      for (let key in prop) {
-        if (key !== 'listeners' && key !== 'attributes') {
-          if (prop[key].value === undefined) {
-            if (prop[key].type === Boolean) prop[key].value = false;
-            if (prop[key].type === Number) prop[key].value = 0;
-            if (prop[key].type === String) prop[key].value = '';
+    let s = Symbol.for(protochain[0].constructor);
+    if (!propertyDefs[s]) {
+      propertyDefs[s] = {};
+      for (let i = 0; i < protochain.length; i++) {
+        let prop = protochain[i].constructor.properties;
+        for (let key in prop) {
+          if (key !== 'listeners' && key !== 'attributes') {
+            let propDef = prop[key];
+            if (propDef === null) propDef = {};
+            if (propDef === undefined) propDef = {};
+            if (propDef.constructor !== Object) propDef = { value: propDef };
+            if (propDef.value === undefined) {
+              if (propDef.type === Boolean) propDef.value = false;
+              if (propDef.type === Number) propDef.value = 0;
+              if (propDef.type === String) propDef.value = '';
+            }
+            propDef.notify = propDef.notify || false;
+            propDef.bubbles = propDef.bubbles || false;
+            propertyDefs[s][key] = Object.assign(propDef, propertyDefs[s][key] || {});
           }
-          prop[key].notify = prop[key].notify || false;
-          prop[key].bubbles = prop[key].bubbles || false;
-          this[key] = Object.assign(prop[key], this[key] || {});
         }
       }
+    }
+    for (let key in propertyDefs[s]) {
+      this[key] = new Property(key, propertyDefs[s][key]);
     }
   }
 }

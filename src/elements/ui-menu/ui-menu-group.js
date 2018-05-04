@@ -37,7 +37,7 @@ export class UiMenuGroup extends Io {
         notify: true,
         bubbles: true,
         observer: '_expandedChanged',
-        reflectToAttribute: true
+        reflect: true
       },
       position: {
         type: String,

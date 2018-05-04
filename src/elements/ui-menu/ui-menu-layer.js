@@ -37,7 +37,7 @@ export class UiMenuLayer extends Io {
     return {
       expanded: {
         type: Boolean,
-        reflectToAttribute: true,
+        reflect: true,
         observer: '_expandedChanged'
       },
       pointer: {

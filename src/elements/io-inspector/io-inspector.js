@@ -32,7 +32,7 @@ export class IoInspector extends Io {
       expanded: {
         type: Boolean,
         observer: 'update',
-        reflectToAttribute: true
+        reflect: true
       },
       listeners: {
         'io-link-clicked': "_linkClickedHandler"

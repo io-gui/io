@@ -31,7 +31,7 @@ export class UiTabSelector extends IoPointerMixin(Io) {
       },
       selected: {
         type: Boolean,
-        reflectToAttribute: true
+        reflect: true
       },
       action: {
         type: Function

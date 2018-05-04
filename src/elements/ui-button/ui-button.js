@@ -28,7 +28,7 @@ export class UiButton extends Io {
       },
       active: {
         type: Boolean,
-        reflectToAttribute: true
+        reflect: true
       },
       action: {
         type: Function

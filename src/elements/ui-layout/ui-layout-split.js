@@ -43,7 +43,7 @@ export class UiLayoutSplit extends Io {
       orientation: {
         value: 'horizontal',
         type: String,
-        reflectToAttribute: true
+        reflect: true
       },
       listeners: {
         'ui-layout-divider-move': '_dividerMoveHandler',

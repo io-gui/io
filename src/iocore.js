@@ -1,72 +1,41 @@
-import {Attributes} from "./core/attributes.js";
-import {Binding} from "./core/binding.js";
-import {Listeners} from "./core/listeners.js";
-import {getProtochain} from "./core/protochain.js";
-import {getHandlers} from "./core/handlers.js";
+import {Protochain} from "./core/protochain.js";
 import {Properties} from "./core/properties.js";
-import {initStyle} from "./core/style.js";
+import {Listeners} from "./core/listeners.js";
+import {Attributes} from "./core/attributes.js";
+import {Handlers} from "./core/handlers.js";
+import {Styles} from "./core/style.js";
+import {Binding} from "./core/binding.js";
 import {renderNode, buildTree} from "./core/vdom.js";
 
 export function html() { return arguments[0][0]; }
 
 export class Io extends HTMLElement {
   static get style() { return html``;}
-  static get protochain() {
-    return getProtochain(this);
-  }
-  static get handlers() {
-    return getHandlers(this);
-  }
   constructor(props = {}) {
     super();
 
-    initStyle(this.localName, this.__proto__.constructor.style);
+    const protochain = new Protochain(this.__proto__.constructor);
 
-    const protochain = this.__proto__.constructor.protochain;
     Object.defineProperty(this, '__properties', { value: new Properties(protochain) });
-    Object.defineProperty(this, '__listeners', { value: new Listeners(protochain) });
-    Object.defineProperty(this, '__attributes', { value: new Attributes(protochain) });
+    Object.defineProperty(this, '__listeners', { value: {} });
+    Object.defineProperty(this, '__protoListeners', { value: new Listeners(protochain) });
+    Object.defineProperty(this, '__attributes', { value: new Attributes(protochain, this) });
+    Object.defineProperty(this, '__handlers', { value: new Handlers(protochain, this) });
+    Object.defineProperty(this, '__styles', { value: new Styles(protochain) });
 
     for (let prop in this.__properties) {
       this.defineProperty(prop);
-      if (props[prop] instanceof Binding) {
-        let binding = props[prop];
-        this.__properties[prop].value = binding.source[binding.sourceProp];
-        binding.setTarget(this, prop);
-        binding.bind();
-      } else if (props[prop] !== undefined) {
-        this.__properties[prop].value = props[prop];
-      }
+      this.setPropertyConstruct(prop, props[prop]);
       this.reflectAttribute(prop, this.__properties[prop]);
     }
-
-    for (let att in this.__attributes) {
-      this.setAttribute(att, this.__attributes[att]);
-    }
-
-    const handlers = this.__proto__.constructor.handlers;
-    for (let i = 0; i < handlers.length; i++) {
-      this[handlers[i]] = this[handlers[i]].bind(this);
-    }
-
   }
   connectedCallback() {
-    for (let e in this.__listeners) {
-      for (let l = 0; l < this.__listeners[e].length; l++) {
-        if (typeof this.__listeners[e][l] === 'string')
-        this.__listeners[e][l] = this[this.__listeners[e][l]];
-        this.addEventListener(e, this.__listeners[e][l]);
-      }
-    }
+    this.__protoListeners.connect(this);
     // TODO: handle redundant updates
     this.update();
   }
   disconnectedCallback() {
-    for (let e in this.__listeners) {
-      for (let l = 0; l < this.__listeners[e].length; l++) {
-        this.removeEventListener(e, this.__listeners[e][l]);
-      }
-    }
+    this.__protoListeners.disconnect(this);
   }
   defineProperty(prop) {
     if (this.__proto__.hasOwnProperty(prop)) return;
@@ -90,8 +59,18 @@ export class Io extends HTMLElement {
       configurable: true
     });
   }
+  setPropertyConstruct(prop, constructProp) {
+    if (constructProp instanceof Binding) {
+      let binding = constructProp;
+      this.__properties[prop].value = binding.source[binding.sourceProp];
+      binding.setTarget(this, prop);
+      binding.bind();
+    } else if (constructProp !== undefined) {
+      this.__properties[prop].value = constructProp;
+    }
+  }
   reflectAttribute(prop, config) {
-    if (config.reflectToAttribute) {
+    if (config.reflect) {
       if (config.value === true) {
         this.setAttribute(prop, '');
       } else if (config.value === false || config.value === '') {
@@ -147,7 +126,7 @@ export class Io extends HTMLElement {
               let oldValue = element.__properties[prop].value;
               element.__properties[prop].value = value;
               // TODO: make less ugly
-              if (element.__properties[prop].reflectToAttribute && reflections.indexOf(prop) === -1) {
+              if (element.__properties[prop].reflect && reflections.indexOf(prop) === -1) {
                 reflections.push(prop);
               }
               if (element.__properties[prop].observer && observers.indexOf(element.__properties[prop].observer) === -1) {

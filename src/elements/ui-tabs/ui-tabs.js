@@ -80,7 +80,7 @@ export class UiTabs extends Io {
       },
       dropzone: {
         type: String,
-        reflectToAttribute: true
+        reflect: true
       }
     };
   }

@@ -32,18 +32,19 @@ export class DemoIo extends Io {
       </style>
     `;
   }
+  static get properties() {
+    return {
+      number: 1337,
+      string: "hello",
+      boolean: true,
+      null: null,
+      NaN: NaN,
+      undefined: undefined,
+      array: [1,2]
+    }
+  }
   constructor() {
     super();
-    this.values = {
-      "number": 1337,
-      "string": 'hello',
-      "boolean": true,
-      "null": null,
-      "NaN": NaN,
-      "undef": undefined,
-      "array": [1,2,3,4,"apple"]
-    };
-
     this.render([
       ['div', {class: 'demo'}, [
         ['div', {class: 'row narrow header'}, [
@@ -54,39 +55,39 @@ export class DemoIo extends Io {
         ]],
         ['div', {class: 'row narrow'}, [
           ['span', {class: 'rowlabel'}, 'string'],
-          ['io-string', {value: this.values.string}],
-          ['io-number', {value: this.values.string}],
-          ['io-boolean', {type: 'boolean', value: this.values.string}],
+          ['io-string', {value: this.bind('string')}],
+          ['io-number', {value: this.bind('string')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('string')}],
         ]],
         ['div', {class: 'row narrow'}, [
           ['span', {class: 'rowlabel'}, 'number'],
-          ['io-string', {value: this.values.number}],
-          ['io-number', {value: this.values.number}],
-          ['io-boolean', {type: 'boolean', value: this.values.number}],
+          ['io-string', {value: this.bind('number')}],
+          ['io-number', {value: this.bind('number')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('number')}],
         ]],
         ['div', {class: 'row narrow'}, [
           ['span', {class: 'rowlabel'}, 'boolean'],
-          ['io-string', {value: this.values.boolean}],
-          ['io-number', {value: this.values.boolean}],
-          ['io-boolean', {type: 'boolean', value: this.values.boolean}],
+          ['io-string', {value: this.bind('boolean')}],
+          ['io-number', {value: this.bind('boolean')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('boolean')}],
         ]],
         ['div', {class: 'row narrow'}, [
           ['span', {class: 'rowlabel'}, 'NaN'],
-          ['io-string', {value: this.values.NaN}],
-          ['io-number', {value: this.values.NaN}],
-          ['io-boolean', {type: 'boolean', value: this.values.NaN}],
+          ['io-string', {value: this.bind('NaN')}],
+          ['io-number', {value: this.bind('NaN')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('NaN')}],
         ]],
         ['div', {class: 'row narrow'}, [
           ['span', {class: 'rowlabel'}, 'null'],
-          ['io-string', {value: this.values.null}],
-          ['io-number', {value: this.values.null}],
-          ['io-boolean', {type: 'boolean', value: this.values.null}],
+          ['io-string', {value: this.bind('null')}],
+          ['io-number', {value: this.bind('null')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('null')}],
         ]],
         ['div', {class: 'row narrow'}, [
           ['span', {class: 'rowlabel'}, 'undefined'],
-          ['io-string', {value: this.values.undef}],
-          ['io-number', {value: this.values.undef}],
-          ['io-boolean', {type: 'boolean', value: this.values.undef}],
+          ['io-string', {value: this.bind('undefined')}],
+          ['io-number', {value: this.bind('undefined')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
         ]],
       ]],
     ]);

@@ -32,7 +32,7 @@ export class UiLayoutDivider extends IoPointerMixin(Io) {
       orientation: {
         value: 'horizontal',
         type: String,
-        reflectToAttribute: true
+        reflect: true
       },
       index: {
         type: Number

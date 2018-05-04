@@ -19,7 +19,7 @@ export class IoVector extends Io {
       },
       columns: {
         type: Number,
-        reflectToAttribute: true
+        reflect: true
       }
     };
   }

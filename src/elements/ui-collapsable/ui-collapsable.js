@@ -8,7 +8,7 @@ export class UiCollapsable extends Io {
       },
       expanded: {
         type: Boolean,
-        reflectToAttribute: true,
+        reflect: true,
         observer: 'update'
       },
       elements: {

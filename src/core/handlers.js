@@ -1,21 +1,28 @@
-const handlers = {};
+const handlerDefs = {};
 
-export const getHandlers = function(__class) {
-  const name = __class.prototype.constructor.name;
-  return handlers[name] ? handlers[name] : handlers[name] = new Handlers(__class);
-};
-
-class Handlers extends Array {
-  constructor(__class) {
+export class Handlers extends Array {
+  constructor(protochain, instance) {
     super();
-    let protochain = __class.protochain;
-    for (let i = 0; i < protochain.length; i++) {
-      let names = Object.getOwnPropertyNames(protochain[i]);
-      for (let i = 0; i < names.length; i++) {
-        if (names[i].substring(names[i].length-7, names[i].length) === 'Handler') {
-          this.push(names[i]);
+    let s = Symbol.for(protochain[0].constructor);
+    if (!handlerDefs[s]) {
+      handlerDefs[s] = [];
+      for (let i = 0; i < protochain.length; i++) {
+        let names = Object.getOwnPropertyNames(protochain[i]);
+        for (let j = 0; j < names.length; j++) {
+          if (names[j].substring(names[j].length-7, names[j].length) === 'Handler') {
+            handlerDefs[s].push(names[j]);
+          }
         }
       }
+    }
+    for (let key in handlerDefs[s]) {
+      this[key] = handlerDefs[s][key];
+    }
+    this.bindInstance(instance);
+  }
+  bindInstance(instance) {
+    for (let i = 0; i < this.length; i++) {
+      instance[this[i]] = instance[this[i]].bind(instance);
     }
   }
 }
