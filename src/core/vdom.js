@@ -5,9 +5,14 @@ export const renderNode = function(vDOMNode) {
     element = new ConstructorClass(vDOMNode.props);
   } else {
     element = document.createElement(vDOMNode.name);
-    for (let prop in vDOMNode.props) {
-      element[prop] = vDOMNode.props[prop];
-    }
+    updateNode(element, vDOMNode);
+  }
+  return element;
+};
+
+export const updateNode = function(element, vDOMNode) {
+  for (let prop in vDOMNode.props) {
+    element[prop] = vDOMNode.props[prop];
   }
   return element;
 };

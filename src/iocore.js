@@ -4,8 +4,10 @@ import {Listeners} from "./core/listeners.js";
 import {Attributes} from "./core/attributes.js";
 import {Handlers} from "./core/handlers.js";
 import {Styles} from "./core/style.js";
-import {Binding} from "./core/binding.js";
-import {renderNode, buildTree} from "./core/vdom.js";
+import {InstanceListeners} from "./core/instance-listeners.js";
+import {InstanceProperties} from "./core/instance-properties.js";
+import {InstanceBindings} from "./core/instance-bindings.js";
+import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 
 export function html() { return arguments[0][0]; }
 
@@ -16,26 +18,29 @@ export class Io extends HTMLElement {
 
     const protochain = new Protochain(this.__proto__.constructor);
 
-    Object.defineProperty(this, '__properties', { value: new Properties(protochain) });
-    Object.defineProperty(this, '__listeners', { value: {} });
-    Object.defineProperty(this, '__protoListeners', { value: new Listeners(protochain) });
-    Object.defineProperty(this, '__attributes', { value: new Attributes(protochain, this) });
-    Object.defineProperty(this, '__handlers', { value: new Handlers(protochain, this) });
-    Object.defineProperty(this, '__styles', { value: new Styles(protochain) });
+    Object.defineProperty(this, '__styles', { value: new Styles(protochain)} );
+    Object.defineProperty(this, '__properties', { value: new Properties(protochain)} );
+    Object.defineProperty(this, '__listeners', { value: new Listeners(protochain, this)} );
+    Object.defineProperty(this, '__attributes', { value: new Attributes(protochain, this)} );
+    Object.defineProperty(this, '__handlers', { value: new Handlers(protochain, this)} );
+
+    Object.defineProperty(this, '__instanceBindings', { value: new InstanceBindings(props, this) } );
+    Object.defineProperty(this, '__instanceListeners', { value: new InstanceListeners(props.listeners, this)} );
+    Object.defineProperty(this, '__instanceProperties', { value: new InstanceProperties(props, this)} );
 
     for (let prop in this.__properties) {
       this.defineProperty(prop);
-      this.setPropertyConstruct(prop, props[prop]);
-      this.reflectAttribute(prop, this.__properties[prop]);
+      this.reflectAttribute(prop);
     }
   }
   connectedCallback() {
-    this.__protoListeners.connect(this);
-    // TODO: handle redundant updates
+    this.__listeners.connect();
+    // TODO: connect instance listeneres and bindings here
     this.update();
   }
   disconnectedCallback() {
-    this.__protoListeners.disconnect(this);
+    this.__listeners.disconnect();
+    // TODO: disconnect instance listeneres and bindings here
   }
   defineProperty(prop) {
     if (this.__proto__.hasOwnProperty(prop)) return;
@@ -47,7 +52,7 @@ export class Io extends HTMLElement {
         if (this.__properties[prop].value === value) return;
         let oldValue = this.__properties[prop].value;
         this.__properties[prop].value = value;
-        this.reflectAttribute(prop, this.__properties[prop]);
+        this.reflectAttribute(prop);
         if (this.__properties[prop].observer) {
           this[this.__properties[prop].observer](value, oldValue, prop);
         }
@@ -59,17 +64,8 @@ export class Io extends HTMLElement {
       configurable: true
     });
   }
-  setPropertyConstruct(prop, constructProp) {
-    if (constructProp instanceof Binding) {
-      let binding = constructProp;
-      this.__properties[prop].value = binding.source[binding.sourceProp];
-      binding.setTarget(this, prop);
-      binding.bind();
-    } else if (constructProp !== undefined) {
-      this.__properties[prop].value = constructProp;
-    }
-  }
-  reflectAttribute(prop, config) {
+  reflectAttribute(prop) {
+    const config = this.__properties[prop];
     if (config.reflect) {
       if (config.value === true) {
         this.setAttribute(prop, '');
@@ -89,106 +85,52 @@ export class Io extends HTMLElement {
     // remove trailing elements
     while (children.length > vChildren.length) host.removeChild(children[children.length - 1]);
 
-    // create new elements
+    // create new elements after existing
     const frag = document.createDocumentFragment();
     for (let i = children.length; i < vChildren.length; i++) {
       frag.appendChild(renderNode(vChildren[i]));
     }
     host.appendChild(frag);
 
-    // update existing elements
     for (let i = 0; i < children.length; i++) {
 
-      if (children[i].localName === vChildren[i].name) {
-
-        let element = children[i];
-        let observers = [];
-        let reflections = [];
-
-        for (let prop in vChildren[i].props) {
-
-          if (vChildren[i].props[prop] !== element[prop]) {
-
-            if (prop === 'style' || prop === 'listeners' || prop === 'class') continue;
-
-            let value = vChildren[i].props[prop];
-
-            // TODO: remove  garbage / lingering bindings
-            if (value instanceof Binding) {
-              let binding = value;
-              value = binding.source[binding.sourceProp];
-              binding.setTarget(element, prop);
-              binding.bind();
-            }
-
-            // avoid triggering observers prematurely when re-rendering elements with different props.
-            if (element.__properties && element.__properties.hasOwnProperty(prop)) {
-              let oldValue = element.__properties[prop].value;
-              element.__properties[prop].value = value;
-              // TODO: make less ugly
-              if (element.__properties[prop].reflect && reflections.indexOf(prop) === -1) {
-                reflections.push(prop);
-              }
-              if (element.__properties[prop].observer && observers.indexOf(element.__properties[prop].observer) === -1) {
-                if (value !== oldValue) {
-                  observers.push(element.__properties[prop].observer);
-                }
-              }
-            } else {
-              element[prop] = value;
-            }
-          }
-        }
-
-        // triggering observers
-        for (let j = 0; j < observers.length; j++) {
-          element[observers[j]]();
-        }
-        // triggering reflections
-        for (let j = 0; j < reflections.length; j++) {
-          element.reflectAttribute(reflections[j], element.__properties[reflections[j]]);
-        }
-
-      } else {
-
+      // replace existing elements
+      if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];
         host.insertBefore(renderNode(vChildren[i]), oldElement);
         host.removeChild(oldElement);
 
-      }
-
-    }
-
-    for (let i = 0; i < children.length; i++) {
-
-      let element = children[i];
-
-      for (let prop in vChildren[i].props) {
-        if (prop == 'listeners') {
-          for (let l in vChildren[i].props[prop]) {
-            if (typeof vChildren[i].props[prop][l] === 'function') {
-              // TODO: remove  garbage / lingering listeners
-              // TODO: check for conflicts / existing listeners
-              element.__listeners[l] = element.__listeners[l] || [];
-              element.__listeners[l].push(vChildren[i].props[prop][l]);
-              element.addEventListener(l, vChildren[i].props[prop][l]);
-            }
-          }
-        } else if (prop == 'style') {
-          for (let s in vChildren[i].props[prop]) {
-            element.style[s] = vChildren[i].props[prop][s];
-          }
-        } else if (prop == 'class') {
-          // TODO: ugh
-          element.className = vChildren[i].props[prop];
+      // update existing elements
+      } else {
+        // Io Elements
+        if (children[i].hasOwnProperty('__instanceProperties')) {
+          children[i].__instanceBindings.update(vChildren[i].props);
+          children[i].__instanceProperties.update(vChildren[i].props);
+          children[i].__instanceListeners.update(vChildren[i].props['listeners']);
+        // Native HTML Elements
+        } else {
+          updateNode(children[i], vChildren[i]);
         }
       }
 
+      for (let prop in vChildren[i].props) {
+        // TODO: use attributeStyleMap when implemented in browser
+        // https://developers.google.com/web/updates/2018/03/cssom
+        if (prop == 'style') {
+          for (let s in vChildren[i].props[prop]) {
+            children[i].style[s] = vChildren[i].props[prop][s];
+          }
+        } else if (prop == 'class') {
+          children[i].className = vChildren[i].props[prop];
+        }
+      }
+    }
+
+    for (let i = 0; i < children.length; i++) {
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-        element.innerHTML = vChildren[i].children;
+        children[i].innerHTML = vChildren[i].children;
       } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
-        // TODO: test extensively
-        this.traverse(vChildren[i].children, element);
+        this.traverse(vChildren[i].children, children[i]);
       }
     }
   }
@@ -206,15 +148,12 @@ export class Io extends HTMLElement {
     }));
   }
   bind(sourceProp) {
-    this.__bindings = this.__bindings || {};
-    this.__bindings[sourceProp] = this.__bindings[sourceProp] || new Binding(this, sourceProp);
-    return this.__bindings[sourceProp];
+    return this.__instanceBindings.bind(sourceProp);
   }
   unbind(sourceProp) {
-    if (this.__bindings[sourceProp]) this.__bindings[sourceProp].unbind();
-    delete this.__bindings[sourceProp];
+    this.__instanceBindings.unbind(sourceProp);
   }
   unbindAll() {
-    for (let sourceProp in this.__bindings) this.unbind(sourceProp);
+    this.__instanceBindings.unbindall();
   }
 }

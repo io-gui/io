@@ -18,7 +18,7 @@ export class Properties {
     let s = Symbol.for(protochain[0].constructor);
     if (!propertyDefs[s]) {
       propertyDefs[s] = {};
-      for (let i = 0; i < protochain.length; i++) {
+      for (let i = protochain.length; i--;) {
         let prop = protochain[i].constructor.properties;
         for (let key in prop) {
           if (key !== 'listeners' && key !== 'attributes') {

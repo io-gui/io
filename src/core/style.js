@@ -22,9 +22,6 @@ export class Styles extends Array {
         }
       }
     }
-    // for (let key in styleDefs[s]) {
-    //   this[key] = styleDefs[s][key];
-    // }
     return styleDefs[s];
   }
 }

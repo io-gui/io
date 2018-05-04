@@ -1,11 +1,12 @@
 const listenerDefs = {};
 
 export class Listeners {
-  constructor(protochain) {
+  constructor(protochain, element) {
+    Object.defineProperty(this, 'element', { value: element });
     let s = Symbol.for(protochain[0].constructor);
     if (!listenerDefs[s]) {
       listenerDefs[s] = {};
-      for (let i = 0; i < protochain.length; i++) {
+      for (let i = protochain.length; i--;) {
         let prop = protochain[i].constructor.properties;
         if (prop && prop['listeners']) {
           for (let key in prop['listeners']) {
@@ -15,19 +16,17 @@ export class Listeners {
       }
     }
     for (let key in listenerDefs[s]) {
-      this[key] = listenerDefs[s][key];
+      this[key] = element[listenerDefs[s][key]];
     }
   }
-  connect(element) {
+  connect() {
     for (let e in this) {
-      if (typeof this[e] === 'string');
-      this[e] = element[this[e]];
-      element.addEventListener(e, this[e]);
+      this.element.addEventListener(e, this[e]);
     }
   }
-  disconnect(element) {
+  disconnect() {
     for (let e in this) {
-      element.removeEventListener(e, this[e]);
+      this.element.removeEventListener(e, this[e]);
     }
   }
 }

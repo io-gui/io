@@ -1,3 +1,35 @@
+export class InstanceBindings {
+  constructor(props, element) {
+    Object.defineProperty(this, 'element', { value: element });
+    this.set(props);
+  }
+  update(props) {
+    //TODO: clean up!
+    this.set(props);
+  }
+  set(properties) {
+    for (let p in properties) {
+      if (properties[p] instanceof Binding) {
+        let binding = properties[p];
+        this.element.__properties[p].value = binding.source[binding.sourceProp];
+        binding.setTarget(this.element, p);
+        binding.bind();
+      }
+    }
+  }
+  bind(sourceProp) {
+    this[sourceProp] = this[sourceProp] || new Binding(this.element, sourceProp);
+    return this[sourceProp];
+  }
+  unbind(sourceProp) {
+    if (this[sourceProp]) this[sourceProp].unbind();
+    delete this[sourceProp];
+  }
+  unbindAll() {
+    for (let sourceProp in this) this.unbind(sourceProp);
+  }
+}
+
 export class Binding {
   constructor(source, sourceProp) {
     this.source = source;

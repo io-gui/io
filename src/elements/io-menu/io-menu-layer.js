@@ -99,6 +99,7 @@ export class IoMenuLayer extends Io {
     }
   }
   _hover(group) {
+
     let options = group.querySelectorAll('io-menu-option');
     for (let i = options.length; i--;) {
       options[i]._rect = options[i].getBoundingClientRect();
