@@ -10,6 +10,7 @@ export class InstanceProperties {
       if (this.element.__properties[p] == undefined) continue;
       if (props[p] instanceof Binding) {
         // TODO: decouple bindings from props
+        this.element.__properties[p].value = props[p].source[props[p].sourceProp];
       } else {
         this.element.__properties[p].value = props[p];
       }
@@ -26,17 +27,18 @@ export class InstanceProperties {
 
         if (prop === 'style' || prop === 'listeners' || prop === 'class') continue;
 
-        let value = props[prop];
 
         // avoid triggering observers prematurely when re-rendering elements with different props.
         if (element.__properties && element.__properties.hasOwnProperty(prop)) {
 
+          let oldValue = element.__properties[prop].value;
+
+          let value = props[prop];
           // TODO: remove  garbage / lingering bindings
           if (value instanceof Binding) {
             value = value.source[value.sourceProp];
           }
 
-          let oldValue = element.__properties[prop].value;
           element.__properties[prop].value = value;
 
           // TODO: make less ugly

@@ -28,8 +28,8 @@ export class DemoApp extends Io {
         value: document.location
       },
       layout: {
-        value: [
-        // value: JSON.parse(localStorage.getItem('io-layout-state')) || [
+        // value: [
+        value: JSON.parse(localStorage.getItem('io-layout-state')) || [
           ['io-layout-split', {'orientation': 'horizontal', 'splits': [
             ['io-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
             ['io-layout-split', {'orientation': 'vertical', 'width': 400, 'splits': [

@@ -6,7 +6,7 @@ import {Handlers} from "./core/handlers.js";
 import {Styles} from "./core/style.js";
 import {InstanceListeners} from "./core/instance-listeners.js";
 import {InstanceProperties} from "./core/instance-properties.js";
-import {InstanceBindings} from "./core/instance-bindings.js";
+import {InstanceBindings, Binding} from "./core/instance-bindings.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 
 export function html() { return arguments[0][0]; }
@@ -104,8 +104,8 @@ export class Io extends HTMLElement {
       } else {
         // Io Elements
         if (children[i].hasOwnProperty('__instanceProperties')) {
-          children[i].__instanceBindings.update(vChildren[i].props);
-          children[i].__instanceProperties.update(vChildren[i].props);
+          children[i].__instanceProperties.update(vChildren[i].props); // TODO: test
+          children[i].__instanceBindings.update(vChildren[i].props); // TODO: test
           children[i].__instanceListeners.update(vChildren[i].props['listeners']);
         // Native HTML Elements
         } else {

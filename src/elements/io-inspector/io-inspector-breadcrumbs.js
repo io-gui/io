@@ -31,6 +31,8 @@ export class IoInspectorBreadcrumbs extends Io {
           flex: 1;
           display: flex;
           overflow: hidden;
+          width: 1px;
+          /* TODO: fix layout */
         }
         :host .io-breadcrumb {
           padding: 0.2em 0;
