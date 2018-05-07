@@ -94,4 +94,4 @@ export class DemoIo extends Io {
   }
 }
 
-customElements.define('demo-io', DemoIo);
+DemoIo.Register();

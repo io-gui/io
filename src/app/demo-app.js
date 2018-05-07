@@ -2,7 +2,7 @@ import {Io, html} from "../io.js";
 
 import "./demo-app-ctrl.js";
 import "./demo-io.js";
-import "./demo-io-menu.js";
+import "./demo-menu.js";
 import "./demo-io-option.js";
 import "./demo-io-object.js";
 import "./three-io-config.js";
@@ -28,13 +28,13 @@ export class DemoApp extends Io {
         value: document.location
       },
       layout: {
-        // value: [
-        value: JSON.parse(localStorage.getItem('io-layout-state')) || [
-          ['io-layout-split', {'orientation': 'horizontal', 'splits': [
-            ['io-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
-            ['io-layout-split', {'orientation': 'vertical', 'width': 400, 'splits': [
-              ['io-tabs', {'tabs': ['inspector']}],
-              ['io-tabs', {'height': 400, 'tabs': ['demo', 'menu', 'option', 'object'], 'selected': 'demo'}],
+        value: [
+        // value: JSON.parse(localStorage.getItem('layout-split-state')) || [
+          ['layout-split', {'orientation': 'horizontal', 'splits': [
+            ['layout-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
+            ['layout-split', {'orientation': 'vertical', 'width': 400, 'splits': [
+              ['layout-tabs', {'tabs': ['inspector']}],
+              ['layout-tabs', {'height': 400, 'tabs': ['demo', 'menu', 'option', 'object'], 'selected': 'demo'}],
             ]}],
           ]}],
         ]
@@ -45,24 +45,24 @@ export class DemoApp extends Io {
     };
   }
   _layoutChangedHandler() {
-    localStorage.setItem('io-layout-state', JSON.stringify(this.layout));
+    localStorage.setItem('layout-split-state', JSON.stringify(this.layout));
   }
   update() {
     this.render([
-      ['io-layout', {
+      ['layout-split', {
         elements: {
           'demo': ['demo-io'],
-          'menu': ['demo-io-menu'],
+          'menu': ['demo-menu'],
           'option': ['demo-io-option'],
           'object': ['demo-io-object'],
           'inspector': ['io-inspector', {value: this.bind('selected')}],
           'object': ['io-object', {value: this.bind('selected'), expanded: true}],
           'app-ctrl': ['demo-app-ctrl', {value: this.bind('selected')}]
         },
-        layout: this.layout
+        splits: this.layout
       }]
     ]);
   }
 }
 
-customElements.define('demo-app', DemoApp);
+DemoApp.Register();

@@ -31,4 +31,4 @@ export class DemoIoOption extends Io {
   }
 }
 
-customElements.define('demo-io-option', DemoIoOption);
+DemoIoOption.Register();

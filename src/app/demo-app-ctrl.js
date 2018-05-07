@@ -38,4 +38,4 @@ export class DemoAppCtrl extends Io {
   }
 }
 
-customElements.define('demo-app-ctrl', DemoAppCtrl);
+DemoAppCtrl.Register();

@@ -32,4 +32,4 @@ export class DemoIoObject extends Io {
   }
 }
 
-customElements.define('demo-io-object', DemoIoObject);
+DemoIoObject.Register();

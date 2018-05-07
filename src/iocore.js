@@ -1,79 +1,73 @@
 import {Protochain} from "./core/protochain.js";
-import {Properties} from "./core/properties.js";
-import {Listeners} from "./core/listeners.js";
-import {Attributes} from "./core/attributes.js";
-import {Handlers} from "./core/handlers.js";
-import {Styles} from "./core/style.js";
-import {InstanceListeners} from "./core/instance-listeners.js";
-import {InstanceProperties} from "./core/instance-properties.js";
-import {InstanceBindings, Binding} from "./core/instance-bindings.js";
+import {Node} from "./core/node.js";
+import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 
 export function html() { return arguments[0][0]; }
 
 export class Io extends HTMLElement {
-  static get style() { return html``;}
-  constructor(props = {}) {
+  constructor() {
     super();
 
-    const protochain = new Protochain(this.__proto__.constructor);
+    Object.defineProperty(this, '__protochain', { value: this.__proto__.constructor.protochain } );
+    Object.defineProperty(this, '__state', { value: this.__protochain.cloneProperties() } );
+    Object.defineProperty(this, '__node', { value: new Node(arguments[0], this) } );
 
-    Object.defineProperty(this, '__styles', { value: new Styles(protochain)} );
-    Object.defineProperty(this, '__properties', { value: new Properties(protochain)} );
-    Object.defineProperty(this, '__listeners', { value: new Listeners(protochain, this)} );
-    Object.defineProperty(this, '__attributes', { value: new Attributes(protochain, this)} );
-    Object.defineProperty(this, '__handlers', { value: new Handlers(protochain, this)} );
+    this.__protochain.bindHandlers(this);
 
-    Object.defineProperty(this, '__instanceBindings', { value: new InstanceBindings(props, this) } );
-    Object.defineProperty(this, '__instanceListeners', { value: new InstanceListeners(props.listeners, this)} );
-    Object.defineProperty(this, '__instanceProperties', { value: new InstanceProperties(props, this)} );
+    for (let a in this.__protochain.attributes) {
+      this.initAttribute(a, this.__protochain.attributes[a]);
+    }
 
-    for (let prop in this.__properties) {
+    for (let prop in this.__state) {
       this.defineProperty(prop);
       this.reflectAttribute(prop);
     }
   }
   connectedCallback() {
-    this.__listeners.connect();
-    // TODO: connect instance listeneres and bindings here
+    this.__protochain.connect(this);
+    this.__node.connect();
     this.update();
   }
   disconnectedCallback() {
-    this.__listeners.disconnect();
-    // TODO: disconnect instance listeneres and bindings here
+    this.__protochain.disconnect(this);
+    this.__node.disconnect();
   }
   defineProperty(prop) {
     if (this.__proto__.hasOwnProperty(prop)) return;
     Object.defineProperty(this.__proto__, prop, {
       get: function() {
-        return this.__properties[prop].value;
+        return this.__state[prop].value;
       },
       set: function(value) {
-        if (this.__properties[prop].value === value) return;
-        let oldValue = this.__properties[prop].value;
-        this.__properties[prop].value = value;
+        if (this.__state[prop].value === value) return;
+        let oldValue = this.__state[prop].value;
+        this.__state[prop].value = value;
         this.reflectAttribute(prop);
-        if (this.__properties[prop].observer) {
-          this[this.__properties[prop].observer](value, oldValue, prop);
+        if (this.__state[prop].observer) {
+          this[this.__state[prop].observer](value, oldValue, prop);
         }
-        if (this.__properties[prop].notify) {
-          this.fire(prop + '-changed', {value: value, oldValue: oldValue}, this.__properties[prop].bubbles);
+        if (this.__state[prop].notify) {
+          this.fire(prop + '-changed', {value: value, oldValue: oldValue}, this.__state[prop].bubbles);
         }
       },
       enumerable: true,
       configurable: true
     });
   }
+  initAttribute(attr, value) {
+    if (value === true) {
+      this.setAttribute(attr, '');
+    } else if (value === false || value === '') {
+      this.removeAttribute(attr);
+    } else if (typeof value == 'string' || typeof value == 'number') {
+      this.setAttribute(attr, value);
+    }
+  }
   reflectAttribute(prop) {
-    const config = this.__properties[prop];
+    const config = this.__state[prop];
     if (config.reflect) {
-      if (config.value === true) {
-        this.setAttribute(prop, '');
-      } else if (config.value === false || config.value === '') {
-        this.removeAttribute(prop);
-      } else if (typeof config.value == 'string' || typeof config.value == 'number') {
-        this.setAttribute(prop, config.value);
-      }
+      this.initAttribute(prop, config.value);
     }
   }
   render(children, host) {
@@ -103,16 +97,15 @@ export class Io extends HTMLElement {
       // update existing elements
       } else {
         // Io Elements
-        if (children[i].hasOwnProperty('__instanceProperties')) {
-          children[i].__instanceProperties.update(vChildren[i].props); // TODO: test
-          children[i].__instanceBindings.update(vChildren[i].props); // TODO: test
-          children[i].__instanceListeners.update(vChildren[i].props['listeners']);
+        if (children[i].hasOwnProperty('__node')) {
+          children[i].__node.update(vChildren[i].props); // TODO: test
         // Native HTML Elements
         } else {
           updateNode(children[i], vChildren[i]);
         }
       }
 
+      // TODO: handle better
       for (let prop in vChildren[i].props) {
         // TODO: use attributeStyleMap when implemented in browser
         // https://developers.google.com/web/updates/2018/03/cssom
@@ -148,12 +141,17 @@ export class Io extends HTMLElement {
     }));
   }
   bind(sourceProp) {
-    return this.__instanceBindings.bind(sourceProp);
+    return this.__node.bind(sourceProp);
   }
   unbind(sourceProp) {
-    this.__instanceBindings.unbind(sourceProp);
+    this.__node.unbind(sourceProp);
   }
   unbindAll() {
-    this.__instanceBindings.unbindall();
+    this.__node.unbindall();
   }
+}
+
+Io.Register = function() {
+  this.protochain = new Protochain(this);
+  customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 }
