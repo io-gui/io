@@ -11,6 +11,8 @@ export class Property {
       if (this.type === Boolean) this.value = false;
       if (this.type === Number) this.value = 0;
       if (this.type === String) this.value = '';
+      if (this.type === Array) this.value = new Array();
+      if (this.type === Object) this.value = new Object();
     }
 
   }

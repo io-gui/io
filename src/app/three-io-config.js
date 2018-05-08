@@ -1,13 +1,13 @@
 import * as THREE from "../../lib/three.module.js";
 import {IoObject} from "../elements/io/io-object/io-object.js";
-import {IoInspector} from "../elements/io/io-inspector/io-inspector.js";
+import {ThreeInspector} from "../elements/three/three-inspector/three-inspector.js";
 import "../elements/io/io-option/io-option.js";
-import "../elements/io/io-vector/io-vector.js";
-import "../elements/io/io-matrix/io-matrix.js";
-import "../elements/io/io-color/io-color.js";
+import "../elements/three/three-vector/three-vector.js";
+import "../elements/three/three-matrix/three-matrix.js";
+import "../elements/three/three-color/three-color.js";
 import "../elements/io/io-slider/io-slider.js";
 
-IoInspector.CONFIG = Object.assign(IoInspector.CONFIG, {
+ThreeInspector.CONFIG = Object.assign(ThreeInspector.CONFIG, {
   'Object': {
     'advanced': ['uuid'],
     'hidden': ['type']
@@ -30,19 +30,19 @@ IoInspector.CONFIG = Object.assign(IoInspector.CONFIG, {
 
 IoObject.CONFIG['Object'] = Object.assign(IoObject.CONFIG['Object'], {
   'type:boolean': {tag: 'io-boolean', props: {true: '☑ true', false: '☐ false'}},
-  'constructor:Vector2': {tag: 'io-vector'},
-  'constructor:Vector3': {tag: 'io-vector'},
-  'constructor:Vector4': {tag: 'io-vector'},
-  'constructor:Quaternion': {tag: 'io-vector'},
-  'constructor:Euler': {tag: 'io-vector'},
-  'constructor:Color': {tag: 'io-color'},
+  'constructor:Vector2': {tag: 'three-vector'},
+  'constructor:Vector3': {tag: 'three-vector'},
+  'constructor:Vector4': {tag: 'three-vector'},
+  'constructor:Quaternion': {tag: 'three-vector'},
+  'constructor:Euler': {tag: 'three-vector'},
+  'constructor:Color': {tag: 'three-color'},
   'key:intensity': {tag: 'io-slider', props: {min: 0, max: 1}},
   'key:opacity': {tag: 'io-slider', props: {min: 0, max: 1}}
 });
 
-IoObject.CONFIG['Matrix2'] = { 'key:elements': {tag: 'io-matrix'} };
-IoObject.CONFIG['Matrix3'] = { 'key:elements': {tag: 'io-matrix'} };
-IoObject.CONFIG['Matrix4'] = { 'key:elements': {tag: 'io-matrix'} };
+IoObject.CONFIG['Matrix2'] = { 'key:elements': {tag: 'three-matrix'} };
+IoObject.CONFIG['Matrix3'] = { 'key:elements': {tag: 'three-matrix'} };
+IoObject.CONFIG['Matrix4'] = { 'key:elements': {tag: 'three-matrix'} };
 
 function setOptionGroups(namespace, className, key, options) {
   let o = [];

@@ -4,8 +4,7 @@ export class IoString extends Io {
   static get properties() {
     return {
       value: {
-        type: String,
-        observer: 'update'
+        type: String
       },
       listeners: {
         'blur': '_blurHandler',

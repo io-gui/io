@@ -1,7 +1,7 @@
 import {Io, html} from "../../../iocore.js";
 import {IoPointerMixin} from "../../../mixins/iopointer.js";
 
-export class LayoutSplitDivider extends IoPointerMixin(Io) {
+export class AppSplitDivider extends IoPointerMixin(Io) {
   static get style() {
     return html`
       <style>
@@ -18,7 +18,7 @@ export class LayoutSplitDivider extends IoPointerMixin(Io) {
         :host[orientation=vertical] {
           cursor: ns-resize;
         }
-        :host > .layout-divider-icon {
+        :host > .app-divider-icon {
           display: flex;
           flex: 1;
           align-items: center;
@@ -51,13 +51,13 @@ export class LayoutSplitDivider extends IoPointerMixin(Io) {
     } else {
       movement = event.detail.pointer[0].position.y - rect.height / 2;
     }
-    this.fire('layout-split-divider-move', {movement: movement, index: this.index});
+    this.fire('app-split-divider-move', {movement: movement, index: this.index});
   }
   update() {
     this.render([
-      ['div', {class: 'layout-divider-icon'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
+      ['div', {class: 'app-divider-icon'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
     ]);
   }
 }
 
-LayoutSplitDivider.Register();
+AppSplitDivider.Register();

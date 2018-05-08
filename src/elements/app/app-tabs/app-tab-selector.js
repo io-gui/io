@@ -4,7 +4,7 @@ import {IoPointerMixin} from "../../../mixins/iopointer.js";
 const _dragIcon = document.createElement('div');
 _dragIcon.style = "position: absolute; padding: 0.1em 0.4em; background: rgba(0,0,0,0.5);";
 
-export class LayoutTabSelector extends IoPointerMixin(Io) {
+export class AppTabSelector extends IoPointerMixin(Io) {
   static get style() {
     return html`
       <style>
@@ -23,8 +23,7 @@ export class LayoutTabSelector extends IoPointerMixin(Io) {
   static get properties() {
     return {
       value: {
-        type: String,
-        observer: 'update'
+        type: String
       },
       host: {
         type: HTMLElement
@@ -50,7 +49,7 @@ export class LayoutTabSelector extends IoPointerMixin(Io) {
       _dragIcon.parentNode.removeChild(_dragIcon);
     }
     if (this._dragging) {
-      this.fire('layout-tab-drag-end', {tab: this.value, host: this.host});
+      this.fire('app-tab-drag-end', {tab: this.value, host: this.host});
       this._dragging = false;
     }
   }
@@ -61,13 +60,13 @@ export class LayoutTabSelector extends IoPointerMixin(Io) {
         this._dragging = true;
         this._clickmask.appendChild(_dragIcon);
 
-        this.fire('layout-tab-drag-start', {tab: this.value, host: this.host});
+        this.fire('app-tab-drag-start', {tab: this.value, host: this.host});
 
       } else {
         let x = this._rect.left + event.detail.pointer[0].position.x;
         let y = this._rect.top + event.detail.pointer[0].position.y;
 
-        this.fire('layout-tab-drag', {x: x, y: y, tab: this.value, host: this.host});
+        this.fire('app-tab-drag', {x: x, y: y, tab: this.value, host: this.host});
 
         _dragIcon.innerHTML = this.value;
         _dragIcon.style.left = x - 12 + 'px';
@@ -77,7 +76,7 @@ export class LayoutTabSelector extends IoPointerMixin(Io) {
   }
 }
 
-LayoutTabSelector.Register();
+AppTabSelector.Register();
 
 
 
@@ -105,7 +104,7 @@ LayoutTabSelector.Register();
   //   draggable: true
   // }
   // _dragstartHandler() {
-  //   UiLayoutTab.dragged = this;
+  //   UiAppTab.dragged = this;
   // }
   // _dropTargetChanged(value, oldValue) {
   //   if (oldValue) oldValue.dropzone = '';
@@ -123,7 +122,7 @@ LayoutTabSelector.Register();
   // _dragHandler(event) {
   //   let blocks = [];
   //   for (let i = 0; i < event.path.length; i++) {
-  //     if (event.path[i].localName === 'layout-split-block') {
+  //     if (event.path[i].localName === 'app-split-block') {
   //       blocks.push(event.path[i]);
   //     }
   //   }

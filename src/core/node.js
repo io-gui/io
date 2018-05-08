@@ -14,6 +14,7 @@ export class Node {
     Object.defineProperty(this, '_setAttributes', { value: {} });
     Object.defineProperty(this, '_boundProperties', { value: {} });
     Object.defineProperty(this, '_srcBindings', { value: {} });
+    Object.defineProperty(this, '_triggeredObservers', { value: [] });
 
     this.update(props);
   }
@@ -44,6 +45,7 @@ export class Node {
 
     if (this._connected)  {
       this.connectListeners();
+      this.triggerObservers();
       this.connectBindings();
       this.setAttributes();
     }
@@ -51,6 +53,7 @@ export class Node {
   connect() {
     this.connectListeners();
     this.connectBindings();
+    this.triggerObservers();
     this._connected = true;
   }
   disconnect() {
@@ -100,7 +103,8 @@ export class Node {
     }
   }
   setProperties() {
-    let observers = [];
+    this._triggeredObservers.length = 0;
+    this._triggeredObservers.push('update');
 
     for (let p in this.properties) {
 
@@ -114,19 +118,19 @@ export class Node {
           this.element.reflectAttribute(p);
         }
         if (this.element.__state[p].observer) {
-          if (observers.indexOf(this.element.__state[p].observer) === -1) {
-            observers.push(this.element.__state[p].observer);
+          if (this._triggeredObservers.indexOf(this.element.__state[p].observer) === -1) {
+            this._triggeredObservers.push(this.element.__state[p].observer);
           }
         }
       }
     }
-
-    if (this._connected) {
-      // triggering observers
-      for (let j = 0; j < observers.length; j++) {
-        this.element[observers[j]]();
-      }
+  }
+  triggerObservers() {
+    // TODO: test
+    for (let j = 0; j < this._triggeredObservers.length; j++) {
+      this.element[this._triggeredObservers[j]]();
     }
+    this._triggeredObservers.length = 0;
   }
   connectBindings() {
     for (let b in this.bindings) {

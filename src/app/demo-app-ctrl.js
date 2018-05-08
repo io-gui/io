@@ -1,4 +1,4 @@
-import {Io} from "../io.js";
+import {Io, html} from "../io.js";
 
 import * as THREE from "../../lib/three.module.js";
 
@@ -11,29 +11,43 @@ let texture = new THREE.Texture();
 mesh.add(light);
 
 export class DemoAppCtrl extends Io {
+  static get style() {
+    return html`
+    <style>
+      :host {
+        padding: 0 1em 1em 1em;
+      }
+      :host > io-button {
+        /* display: block; */
+        background: white;
+        padding: 0.1em 0.3em;
+        margin: 0.1em;
+        border-radius: 0.2em;
+      }
+    </style>
+    `
+  }
   static get properties() {
     return {
-      value: {},
-      options: {
-        value: [
-          {value: light, label: 'Light'},
-          {value: mesh, label: 'Mesh'},
-          {value: color, label: 'Color'},
-          {value: renderer, label: 'Renderer'},
-          {value: texture, label: 'Texture'}
-        ]
-      }
+      value: {}
     };
   }
-  clearLocalStorage() {
+  selectDemo(demo) {
+    this.value = demo;
+  }
+  reset() {
     localStorage.clear();
+    window.location.reload();
   }
   update() {
     this.render([
-      ['span', 'select: '],
-      ['io-option', {value: this.bind('value'), options: this.bind('options')}],
-      ['br'],
-      ['io-button', {label: 'Reset layout', action: this.clearLocalStorage.bind(this)}]
+      ['h4', 'Select Demo:'],
+      ['io-button', {label: 'Mesh', action: this.selectDemo.bind(this), value: mesh}],
+      ['io-button', {label: 'Light', action: this.selectDemo.bind(this), value: light}],
+      ['io-button', {label: 'Color', action: this.selectDemo.bind(this), value: color}],
+      ['io-button', {label: 'Renderer', action: this.selectDemo.bind(this), value: renderer}],
+      ['io-button', {label: 'Texture', action: this.selectDemo.bind(this), value: texture}],
+      ['io-button', {label: 'Reset', action: this.reset.bind(this)}],
     ]);
   }
 }

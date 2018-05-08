@@ -2,10 +2,7 @@ import {Io, html} from "../../../iocore.js";
 import "../io-boolean/io-boolean.js";
 import "../io-number/io-number.js";
 import "../io-string/io-string.js";
-import "../io-function/io-function.js";
-
 import "./io-object-prop.js";
-import "../../../elements/layout/layout-collapsable/layout-collapsable.js";
 
 export class IoObject extends Io {
   static get style() {
@@ -19,6 +16,9 @@ export class IoObject extends Io {
           border-radius: 2px;
           background: #444;
         }
+        :host io-boolean {
+          line-height: 1em;
+        }
         :host > .io-row {
           display: flex;
           flex-direction: row;
@@ -29,12 +29,10 @@ export class IoObject extends Io {
   static get properties() {
     return {
       value: {
-        type: Object,
-        observer: 'update'
+        type: Object
       },
       expanded: {
         type: Boolean,
-        observer: 'update',
         reflect: true
       }
     };
@@ -57,6 +55,8 @@ export class IoObject extends Io {
       let type = typeof value;
       let cstr = (value && value.constructor) ? value.constructor.name : 'null';
 
+      if (type == 'function') continue;
+
       propConfigs[key] = {};
 
       if (configs.hasOwnProperty('type:' + type)) {
@@ -75,15 +75,16 @@ export class IoObject extends Io {
     return propConfigs;
   }
   update() {
+    if (!this.value) return; //TODO: refactor
+    let label = this.value.constructor.name;
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
     const Prop = entry => ['div', {class: 'io-row'}, [
       ['span', entry[0] + ':'],
       ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
     ]];
     this.render([
-      ['layout-collapsable', {label: this.value.constructor.name, expanded: this.bind('expanded'), elements:
-        Object.entries(propConfigs).map(Prop)
-      }]
+      ['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}],
+      this.expanded ? Object.entries(propConfigs).map(Prop) : null
     ]);
   }
 }
@@ -94,7 +95,6 @@ IoObject.CONFIG = {
     'type:number': {tag: 'io-number', props: {step: 0.1}},
     'type:boolean': {tag: 'io-boolean', props: {}},
     'type:object': {tag: 'io-object', props: {}},
-    'type:function': {tag: 'io-function', props: {}},
     'value:null': {tag: 'io-string', props: {}},
     'value:undefined': {tag: 'io-string', props: {}}
   }

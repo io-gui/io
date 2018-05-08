@@ -33,23 +33,19 @@ export class IoSlider extends IoPointerMixin(Io) {
   static get properties() {
     return {
       value: {
-        type: Number,
-        observer: 'update'
+        type: Number
       },
       step: {
         type: Number,
-        value: 0.01,
-        observer: 'update'
+        value: 0.01
       },
       min: {
         type: Number,
-        value: 0,
-        observer: 'update'
+        value: 0
       },
       max: {
         type: Number,
-        value: 100,
-        observer: 'update'
+        value: 100
       },
       attributes: {
         'tabindex': 0

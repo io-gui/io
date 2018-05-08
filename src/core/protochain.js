@@ -42,6 +42,7 @@ export class Protochain {
     for (let key in propertyDefs) {
       this.properties[key] = new Property(propertyDefs[key]);
     }
+
     for (let i = prototypes.length; i--;) {
       let names = Object.getOwnPropertyNames(prototypes[i]);
       for (let j = 0; j < names.length; j++) {

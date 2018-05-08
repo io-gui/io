@@ -1,9 +1,9 @@
 import {html} from "../../../iocore.js";
-import {IoVector} from "../io-vector/io-vector.js";
-import "../io-object/io-object-prop.js";
-import "./io-color-picker.js";
+import {ThreeVector} from "../three-vector/three-vector.js";
+import "../../io/io-object/io-object-prop.js";
+import "./three-color-picker.js";
 
-export class IoColor extends IoVector {
+export class ThreeColor extends ThreeVector {
   static get style() {
     return html`
       <style>
@@ -27,9 +27,9 @@ export class IoColor extends IoVector {
     const Prop = i => ['io-object-prop', {key: i, value: this.value, config: {tag: 'io-number'}}];
     this.render([
       elements.map(Prop),
-      ['io-color-picker', {value: this.bind('value')}],
+      ['three-color-picker', {value: this.bind('value')}],
     ]);
   }
 }
 
-IoColor.Register();
+ThreeColor.Register();

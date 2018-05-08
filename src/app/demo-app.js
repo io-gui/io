@@ -29,33 +29,33 @@ export class DemoApp extends Io {
       },
       layout: {
         value: [
-        // value: JSON.parse(localStorage.getItem('layout-split-state')) || [
-          ['layout-split', {'orientation': 'horizontal', 'splits': [
-            ['layout-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
-            ['layout-split', {'orientation': 'vertical', 'width': 400, 'splits': [
-              ['layout-tabs', {'tabs': ['inspector']}],
-              ['layout-tabs', {'height': 400, 'tabs': ['demo', 'menu', 'option', 'object'], 'selected': 'demo'}],
+        // value: JSON.parse(localStorage.getItem('app-split-state')) || [
+          ['app-split', {'orientation': 'horizontal', 'splits': [
+            ['app-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
+            ['app-split', {'orientation': 'vertical', 'width': 400, 'splits': [
+              ['app-tabs', {'tabs': ['inspector']}],
+              ['app-tabs', {'height': 400, 'tabs': ['demo', 'menu', 'option', 'object'], 'selected': 'object'}],
             ]}],
           ]}],
         ]
       },
       listeners: {
-        'layout-changed': '_layoutChangedHandler'
+        'app-changed': '_layoutChangedHandler'
       }
     };
   }
   _layoutChangedHandler() {
-    localStorage.setItem('layout-split-state', JSON.stringify(this.layout));
+    localStorage.setItem('app-split-state', JSON.stringify(this.layout));
   }
   update() {
     this.render([
-      ['layout-split', {
+      ['app-split', {
         elements: {
           'demo': ['demo-io'],
           'menu': ['demo-menu'],
           'option': ['demo-io-option'],
           'object': ['demo-io-object'],
-          'inspector': ['io-inspector', {value: this.bind('selected')}],
+          'inspector': ['three-inspector', {value: this.bind('selected')}],
           'object': ['io-object', {value: this.bind('selected'), expanded: true}],
           'app-ctrl': ['demo-app-ctrl', {value: this.bind('selected')}]
         },

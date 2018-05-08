@@ -1,8 +1,8 @@
 import {html} from "../../../iocore.js";
-import {IoVector} from "../io-vector/io-vector.js";
-import "../io-object/io-object-prop.js";
+import {ThreeVector} from "../three-vector/three-vector.js";
+import "../../io/io-object/io-object-prop.js";
 
-export class IoMatrix extends IoVector {
+export class ThreeMatrix extends ThreeVector {
   static get style() {
     return html`
       <style>
@@ -36,4 +36,4 @@ export class IoMatrix extends IoVector {
   }
 }
 
-IoMatrix.Register();
+ThreeMatrix.Register();

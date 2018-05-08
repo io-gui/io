@@ -1,6 +1,6 @@
 import {Io} from "../../../iocore.js";
 
-export class LayoutCollapsable extends Io {
+export class AppCollapsable extends Io {
   static get properties() {
     return {
       label: {
@@ -8,12 +8,10 @@ export class LayoutCollapsable extends Io {
       },
       expanded: {
         type: Boolean,
-        reflect: true,
-        observer: 'update'
+        reflect: true
       },
       elements: {
-        type: Array,
-        observer: 'update'
+        type: Array
       }
     };
   }
@@ -25,4 +23,4 @@ export class LayoutCollapsable extends Io {
   }
 }
 
-LayoutCollapsable.Register();
+AppCollapsable.Register();

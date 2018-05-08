@@ -1,8 +1,8 @@
 import {Io, html} from "../../../iocore.js";
-import "../layout-tabs/layout-tabs.js";
-import "./layout-split-divider.js";
+import "../app-tabs/app-tabs.js";
+import "./app-split-divider.js";
 
-export class LayoutSplit extends Io {
+export class AppSplit extends Io {
   static get style() {
     return html`
       <style>
@@ -19,13 +19,13 @@ export class LayoutSplit extends Io {
         :host[orientation=vertical] {
           flex-direction: column;
         }
-        :host[orientation=horizontal] > layout-split-divider {
+        :host[orientation=horizontal] > app-split-divider {
           width: 10px;
         }
-        :host[orientation=vertical] > layout-split-divider {
+        :host[orientation=vertical] > app-split-divider {
           height: 10px;
         }
-        :host > layout-split-divider:last-of-type {
+        :host > app-split-divider:last-of-type {
           display: none;
         }
       </style>
@@ -34,8 +34,7 @@ export class LayoutSplit extends Io {
   static get properties() {
     return {
       splits: {
-        type: Array,
-        observer: 'update'
+        type: Array
       },
       elements: {
         type: Object
@@ -46,10 +45,10 @@ export class LayoutSplit extends Io {
         reflect: true
       },
       listeners: {
-        'layout-split-divider-move': '_dividerMoveHandler',
-        'layout-tab-added': '_tabChangedHandler',
-        'layout-tab-removed': '_tabRemovedHandler',
-        'layout-tab-selected': '_tabChangedHandler'
+        'app-split-divider-move': '_dividerMoveHandler',
+        'app-tab-added': '_tabChangedHandler',
+        'app-tab-removed': '_tabRemovedHandler',
+        'app-tab-selected': '_tabChangedHandler'
       }
     };
   }
@@ -61,7 +60,7 @@ export class LayoutSplit extends Io {
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let splits = this.splits;
 
-    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'layout-split-divider');
+    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'app-split-divider');
     let prev = splits[i];
     let next = splits[i+1];
 
@@ -75,7 +74,7 @@ export class LayoutSplit extends Io {
     if (prev[1][d] !== undefined) prev[1][d] = Math.max(0, prev[1][d] + movement);
     if (next[1][d] !== undefined) next[1][d] = Math.max(0, next[1][d] - movement);
 
-    this.fire('layout-changed', this.splits);
+    this.fire('app-changed', this.splits);
     this.update();
   }
   _tabRemovedHandler(event) {
@@ -86,7 +85,7 @@ export class LayoutSplit extends Io {
   }
   _tabChangedHandler(event) {
     event.stopPropagation();
-    this.fire('layout-changed', this.splits);
+    this.fire('app-changed', this.splits);
   }
   addSplit(split, index, orientation) {
     console.log(split, index, orientation);
@@ -127,10 +126,10 @@ export class LayoutSplit extends Io {
     this.render([
       [].concat(...this.splits.map((entry, i) => [
         [entry[0], Object.assign({elements: this.elements, style: styles[i]}, entry[1])],
-        ['layout-split-divider', {orientation: this.orientation, index: i}]
+        ['app-split-divider', {orientation: this.orientation, index: i}]
       ]))
     ]);
   }
 }
 
-LayoutSplit.Register();
+AppSplit.Register();

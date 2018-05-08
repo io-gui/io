@@ -30,8 +30,7 @@ export class IoObjectProp extends IoPropertyMixin(Io) {
         reflect: true
       },
       config: {
-        type: Array,
-        observer: 'update'
+        type: Array
       }
     };
   }

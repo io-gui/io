@@ -1,22 +1,19 @@
 import {html} from "../../../iocore.js";
-import {IoButton} from "../../../elements/io/io-button/io-button.js";
+import {IoButton} from "../../io/io-button/io-button.js";
 
 export class IoBoolean extends IoButton {
   static get properties() {
     return {
       value: {
-        type: Boolean,
-        observer: 'update'
+        type: Boolean
       },
       true: {
         value: 'true',
-        type: String,
-        observer: 'update'
+        type: String
       },
       false: {
         value: 'false',
-        type: String,
-        observer: 'update'
+        type: String
       }
     };
   }

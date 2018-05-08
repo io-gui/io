@@ -6,12 +6,12 @@ import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 export function html() { return arguments[0][0]; }
 
 export class Io extends HTMLElement {
-  constructor() {
+  constructor(initProps) {
     super();
 
     Object.defineProperty(this, '__protochain', { value: this.__proto__.constructor.protochain } );
     Object.defineProperty(this, '__state', { value: this.__protochain.cloneProperties() } );
-    Object.defineProperty(this, '__node', { value: new Node(arguments[0], this) } );
+    Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
 
     this.__protochain.bindHandlers(this);
 
@@ -27,7 +27,6 @@ export class Io extends HTMLElement {
   connectedCallback() {
     this.__protochain.connect(this);
     this.__node.connect();
-    this.update();
   }
   disconnectedCallback() {
     this.__protochain.disconnect(this);
@@ -47,6 +46,7 @@ export class Io extends HTMLElement {
         if (this.__state[prop].observer) {
           this[this.__state[prop].observer](value, oldValue, prop);
         }
+        this.update();
         if (this.__state[prop].notify) {
           this.fire(prop + '-changed', {value: value, oldValue: oldValue}, this.__state[prop].bubbles);
         }
@@ -142,12 +142,6 @@ export class Io extends HTMLElement {
   }
   bind(sourceProp) {
     return this.__node.bind(sourceProp);
-  }
-  unbind(sourceProp) {
-    this.__node.unbind(sourceProp);
-  }
-  unbindAll() {
-    this.__node.unbindall();
   }
 }
 

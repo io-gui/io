@@ -29,8 +29,7 @@ export class MenuGroup extends Io {
   static get properties() {
     return {
       options: {
-        type: Array,
-        observer: 'update'
+        type: Array
       },
       expanded: {
         type: Boolean,

@@ -1,7 +1,7 @@
 import {Io, html} from "../../../iocore.js";
-import "../io-object/io-object-prop.js";
+import "../../io/io-object/io-object-prop.js";
 
-export class IoVector extends Io {
+export class ThreeVector extends Io {
   static get style() {
     return html`
       <style>
@@ -14,9 +14,7 @@ export class IoVector extends Io {
   }
   static get properties() {
     return {
-      value: {
-        observer: 'update'
-      },
+      value: {},
       columns: {
         type: Number,
         reflect: true
@@ -35,4 +33,4 @@ export class IoVector extends Io {
   }
 }
 
-IoVector.Register();
+ThreeVector.Register();

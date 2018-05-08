@@ -4,8 +4,7 @@ export class IoNumber extends IoString {
   static get properties() {
     return {
       value: {
-        type: Number,
-        observer: 'update'
+        type: Number
       },
       step: {
         type: Number,

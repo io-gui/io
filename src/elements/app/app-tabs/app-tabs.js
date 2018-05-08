@@ -1,8 +1,8 @@
 import {Io, html} from "../../../iocore.js";
-import "./layout-tab-selector.js";
-import "../../../elements/io/io-option/io-option.js";
+import "./app-tab-selector.js";
+import "../../io/io-option/io-option.js";
 
-export class LayoutTabs extends Io {
+export class AppTabs extends Io {
   static get style() {
     return html`
       <style>
@@ -14,51 +14,51 @@ export class LayoutTabs extends Io {
           overflow: hidden;
           background: #ffc;
         }
-        :host > .layout-tabs-wrapper {
+        :host > .app-tabs-wrapper {
           border-bottom: 1px solid black;
           margin-top: 0.2em;
           white-space: nowrap;
         }
-        :host > .layout-tabs-wrapper > io-option,
-        :host > .layout-tabs-wrapper > layout-tab-selector {
+        :host > .app-tabs-wrapper > io-option,
+        :host > .app-tabs-wrapper > app-tab-selector {
           margin-left: 0.2em;
           padding: 0 0.5em 0 0.5em;
           border: 1px solid black;
           border-bottom: 0;
           background: #ddd;
         }
-        :host > .layout-tabs-wrapper > layout-tab-selector[selected] {
+        :host > .app-tabs-wrapper > app-tab-selector[selected] {
           padding-bottom: 1px;
           margin-bottom: -1px;
         }
-        :host > .layout-tab-content {
+        :host > .app-tab-content {
           background: #ddd;
           display: flex;
           flex: 1;
         }
-        :host > .layout-tab-content > * {
+        :host > .app-tab-content > * {
           flex: 1;
         }
-        :host > .layout-split-drop-highlight {
+        :host > .app-split-drop-highlight {
           position: absolute;
           background: rgba(0, 0, 0, 0.25);
           width: 100%;
           height: 100%;
         }
-        :host:not([dropzone]) > .layout-split-drop-highlight {
+        :host:not([dropzone]) > .app-split-drop-highlight {
           pointer-events: none;
           opacity: 0;
         }
-        :host[dropzone=top] > .layout-split-drop-highlight {
+        :host[dropzone=top] > .app-split-drop-highlight {
           background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
         }
-        :host[dropzone=bottom] > .layout-split-drop-highlight {
+        :host[dropzone=bottom] > .app-split-drop-highlight {
           background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
         }
-        :host[dropzone=left] > .layout-split-drop-highlight {
+        :host[dropzone=left] > .app-split-drop-highlight {
           background: linear-gradient(to right, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
         }
-        :host[dropzone=right] > .layout-split-drop-highlight {
+        :host[dropzone=right] > .app-split-drop-highlight {
           background: linear-gradient(to left, rgba(0, 0, 0, 0.5) 99.9px, transparent 100px);
         }
       </style>
@@ -67,16 +67,13 @@ export class LayoutTabs extends Io {
   static get properties() {
     return {
       elements: {
-        type: Object,
-        observer: 'update'
+        type: Object
       },
       tabs: {
-        type: Object,
-        observer: 'update'
+        type: Object
       },
       selected: {
-        type: String,
-        observer: 'update'
+        type: String
       },
       dropzone: {
         type: String,
@@ -86,16 +83,16 @@ export class LayoutTabs extends Io {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('layout-tab-drag-start', this._tabDragStartHandler);
+    window.addEventListener('app-tab-drag-start', this._tabDragStartHandler);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('layout-tab-drag-start', this._tabDragStartHandler);
+    window.removeEventListener('app-tab-drag-start', this._tabDragStartHandler);
   }
   _tabDragStartHandler() {
     this._rect = this.getBoundingClientRect();
-    window.addEventListener('layout-tab-drag', this._tabDragHandler);
-    window.addEventListener('layout-tab-drag-end', this._tabDragEndHandler);
+    window.addEventListener('app-tab-drag', this._tabDragHandler);
+    window.addEventListener('app-tab-drag-end', this._tabDragEndHandler);
   }
   _tabDragHandler(event) {
     let dx = event.detail.x;
@@ -114,8 +111,8 @@ export class LayoutTabs extends Io {
     }
   }
   _tabDragEndHandler(event) {
-    window.removeEventListener('layout-tab-drag', this._tabDragHandler);
-    window.removeEventListener('layout-tab-drag-end', this._tabDragEndHandler);
+    window.removeEventListener('app-tab-drag', this._tabDragHandler);
+    window.removeEventListener('app-tab-drag-end', this._tabDragEndHandler);
     if (this.dropzone === 'center') {
       if (event.detail.host !== this) {
         this.addTab(event.detail.tab);
@@ -131,7 +128,7 @@ export class LayoutTabs extends Io {
     let tabs = this.tabs;
     console.log(index);
     if (tabs.indexOf(tab) === -1) tabs.push(tab);
-    this.fire('layout-tab-added', this.tabs);
+    this.fire('app-tab-added', this.tabs);
     this._selectHandler(tab);
   }
   removeTab(tab) {
@@ -139,7 +136,7 @@ export class LayoutTabs extends Io {
     if (tabs.indexOf(tab) !== -1) tabs.splice(tabs.indexOf(tab), 1);
     let selected = this.selected || tabs[tabs.length - 1];
     if (selected === tab) selected = tabs[tabs.length - 1];
-    this.fire('layout-tab-removed', this.tabs);
+    this.fire('app-tab-removed', this.tabs);
     this._selectHandler(selected);
   }
   // addSplit(tab, split) {
@@ -150,20 +147,20 @@ export class LayoutTabs extends Io {
   }
   _selectHandler(elem) {
     this.selected = elem;
-    this.fire('layout-tab-selected', this.tabs);
+    this.fire('app-tab-selected', this.tabs);
     this.update();
   }
   update() {
     let tabs = this.tabs;
     let selected = this.selected || tabs[tabs.length - 1];
-    const Elem = (entry) => ['layout-tab-selector', {
+    const Elem = (entry) => ['app-tab-selector', {
         value: entry,
         host: this,
         action: this._selectHandler,
         selected: entry === selected
       }, entry];
     this.render([
-      ['div', {class: 'layout-tabs-wrapper'}, [
+      ['div', {class: 'app-tabs-wrapper'}, [
         tabs.map(Elem),
         ['io-option', {
           value: '+',
@@ -171,12 +168,12 @@ export class LayoutTabs extends Io {
           action: this._optionSelectHandler
         }]
       ]],
-      ['div', {class: 'layout-tab-content'}, [
+      ['div', {class: 'app-tab-content'}, [
         tabs.indexOf(selected) !== -1 ? this.elements[selected] : null
       ]],
-      ['div', {class: 'layout-split-drop-highlight'}]
+      ['div', {class: 'app-split-drop-highlight'}]
     ]);
   }
 }
 
-LayoutTabs.Register();
+AppTabs.Register();

@@ -1,7 +1,7 @@
 import {Io, html} from "../../../iocore.js";
 import {IoPropertyMixin} from "../../../mixins/ioproperty.js";
 
-export class IoColorPicker extends IoPropertyMixin(Io) {
+export class ThreeColorPicker extends IoPropertyMixin(Io) {
   static get style() {
     return html`
       <style>
@@ -16,8 +16,7 @@ export class IoColorPicker extends IoPropertyMixin(Io) {
   static get properties() {
     return {
       value: {
-        type: Object,
-        observer: 'update'
+        type: Object
       },
       key: {
         value:'*'
@@ -33,4 +32,4 @@ export class IoColorPicker extends IoPropertyMixin(Io) {
   }
 }
 
-IoColorPicker.Register();
+ThreeColorPicker.Register();

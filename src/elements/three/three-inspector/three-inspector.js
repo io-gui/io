@@ -1,8 +1,13 @@
 import {Io, html} from "../../../iocore.js";
-import "./io-inspector-breadcrumbs.js";
-import "./io-inspector-group.js";
+import "../../app/app-breadcrumbs/app-breadcrumbs.js";
+import "./three-inspector-group.js";
 
-export class IoInspector extends Io {
+function isPropertyOf(prop, object) {
+  for (let p in object) if (object[p] === prop) return true;
+  return false;
+}
+
+export class ThreeInspector extends Io {
   static get style() {
     return html`
       <style>
@@ -25,12 +30,13 @@ export class IoInspector extends Io {
   static get properties() {
     return {
       value: {
-        type: Object,
-        observer: 'update'
+        type: Object
+      },
+      crumbs: {
+        type: Array
       },
       expanded: {
         type: Boolean,
-        observer: 'update',
         reflect: true
       },
       listeners: {
@@ -50,7 +56,7 @@ export class IoInspector extends Io {
     let proto = this.value.__proto__;
     let keys = Object.keys(this.value);
     while (proto) {
-      let config = IoInspector.CONFIG[proto.constructor.name] || {};
+      let config = ThreeInspector.CONFIG[proto.constructor.name] || {};
       for (let group in config) {
         groups[group] = groups[group] || [];
         for (let i = 0; i < config[group].length; i++) {
@@ -79,9 +85,24 @@ export class IoInspector extends Io {
         }
       }
     }
-    const GroupItem = entry => ['io-inspector-group', {value: this.value, props: entry[1], label: entry[0]}];
+
+    let crumb = this.crumbs.find((crumb) => { return crumb.value === this.value; });
+    let lastrumb = this.crumbs[this.crumbs.length - 1];
+    if (crumb) {
+      this.crumbs.length = this.crumbs.indexOf(crumb) + 1;
+    } else {
+      if (!lastrumb || !isPropertyOf(this.value, lastrumb.value)) {
+        this.crumbs.length = 0;
+      }
+      this.crumbs.push({
+        label: this.value.constructor.name,
+        value: this.value
+      });
+    }
+
+    const GroupItem = entry => ['three-inspector-group', {value: this.value, props: entry[1], label: entry[0]}];
     this.render([
-      ['io-inspector-breadcrumbs', {value: this.bind('value')}],
+      ['app-breadcrumbs', {value: this.bind('value'), crumbs: this.bind('crumbs')}],
       ['div', {class: 'io-wrapper'}, [
         Object.entries(groups).map(GroupItem)
       ]]
@@ -90,6 +111,6 @@ export class IoInspector extends Io {
   }
 }
 
-IoInspector.CONFIG = {};
+ThreeInspector.CONFIG = {};
 
-IoInspector.Register();
+ThreeInspector.Register();

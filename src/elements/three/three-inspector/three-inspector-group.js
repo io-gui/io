@@ -1,10 +1,10 @@
 import {html} from "../../../iocore.js";
-import "../../../elements/layout/layout-collapsable/layout-collapsable.js";
-import "../../../elements/io/io-button/io-button.js";
-import {IoObject} from "../io-object/io-object.js";
-import "../io-object/io-object-prop.js";
+import {IoObject} from "../../io/io-object/io-object.js";
+import "../../app/app-collapsable/app-collapsable.js";
+import "../../io/io-button/io-button.js";
+import "../../io/io-object/io-object-prop.js";
 
-export class IoInspectorGroup extends IoObject {
+export class ThreeInspectorGroup extends IoObject {
   static get style() {
     return html`
       <style>
@@ -19,15 +19,15 @@ export class IoInspectorGroup extends IoObject {
         :host .io-wrapper {
           border-radius: 0.1em;
         }
-        :host .io-wrapper > .io-row {
+        :host .io-row {
           display: flex;
           flex-direction: row;
           margin: 0.3em 0.3em 0 0.3em;
         }
-        :host .io-wrapper > .io-row:last-of-type {
+        :host .io-row:last-of-type {
           margin-bottom: 0.3em;
         }
-        :host .io-wrapper > .io-row > .io-label {
+        :host .io-row > .io-label {
           width: 8em;
           text-align: right;
           overflow: hidden;
@@ -35,7 +35,7 @@ export class IoInspectorGroup extends IoObject {
           padding: 0.3em 0;
           padding-right: 0.5em;
         }
-        :host .io-wrapper > .io-row > io-button {
+        :host .io-row > io-button {
           padding: 0.3em 0;
           color: #fd9;
           flex: none;
@@ -58,11 +58,11 @@ export class IoInspectorGroup extends IoObject {
           border-radius: 0.2em;
           background: #444;
         }
-        :host io-object-prop > io-matrix > io-object-prop > io-number {
+        :host io-object-prop > three-matrix > io-object-prop > io-number {
           margin: 0 0.3em 0.3em 0;
         }
-        :host io-object-prop > io-color > io-object-prop > io-number,
-        :host io-object-prop > io-vector > io-object-prop:not(:last-of-type) > io-number {
+        :host io-object-prop > three-color > io-object-prop > io-number,
+        :host io-object-prop > three-vector > io-object-prop:not(:last-of-type) > io-number {
           margin-right: 0.3em;
         }
         :host io-string,
@@ -71,7 +71,7 @@ export class IoInspectorGroup extends IoObject {
           background: #222;
           padding: 0.3em;
         }
-        :host io-color-picker,
+        :host three-color-picker,
         :host io-boolean {
           padding: 0.3em;
           border-radius: 0.3em;
@@ -79,14 +79,14 @@ export class IoInspectorGroup extends IoObject {
         :host io-object-prop > io-boolean {
           flex: none;
         }
-        :host io-color,
+        :host three-color,
         :host io-slider,
-        :host io-matrix {
+        :host three-matrix {
           flex: 1;
         }
         :host io-boolean,
         :host io-string,
-        :host io-vector,
+        :host three-vector,
         :host io-number {
           display: flex;
           color: #bef !important;
@@ -102,21 +102,17 @@ export class IoInspectorGroup extends IoObject {
   static get properties() {
     return {
       value: {
-        type: Object,
-        observer: 'update'
+        type: Object
       },
       props: {
-        type: Array,
-        observer: 'update',
+        type: Array
       },
       label: {
-        type: String,
-        observer: 'update'
+        type: String
       },
       expanded: {
         type: Boolean,
-        value: true,
-        observer: 'update'
+        value: true
       }
     };
   }
@@ -133,16 +129,18 @@ export class IoInspectorGroup extends IoObject {
           ['io-button', {action: this._clickHandler, value: this.value[entry[0]]}, this.value[entry[0]].constructor.name]
     ]];
     this.render([
-      this.label === 'main' ? ['div', {class: 'io-wrapper'}, [
-        Object.entries(propConfigs).map(Prop)
-      ]] :
-      ['layout-collapsable', {label: this.label, expanded: this.bind('expanded'), elements:
-        ['div', {class: 'io-wrapper'}, [
+      // ['io-boolean', {true: '▾' + this.label, false: '▸' + this.label, value: this.bind('expanded')}],
+      // ['div', {class: 'io-wrapper'}, [
+      //   this.expanded ? Object.entries(propConfigs).map(Prop) : null
+      // ]]
+
+      ['app-collapsable', {label: this.label, expanded: this.bind('expanded'), elements:
+        // ['div', {class: 'io-wrapper'}, [
           Object.entries(propConfigs).map(Prop)
-        ]]
+        // ]]
       }]
     ]);
   }
 }
 
-IoInspectorGroup.Register();
+ThreeInspectorGroup.Register();

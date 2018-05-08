@@ -1,18 +1,15 @@
-import {IoButton} from "../../../elements/io/io-button/io-button.js";
-import "../../../elements/menu/menu-tree/menu-tree.js";
+import {IoButton} from "../../io/io-button/io-button.js";
+import "../../menu/menu-tree/menu-tree.js";
 
 export class IoOption extends IoButton {
   static get properties() {
     return {
-      value: {
-        observer: 'update'
-      },
+      value: {},
       action: {
         type: Function
       },
       options: {
-        type: Array,
-        observer: 'update'
+        type: Array
       }
     };
   }

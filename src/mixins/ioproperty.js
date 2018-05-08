@@ -2,12 +2,10 @@ export const IoPropertyMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
       value: {
-        type: Object,
-        observer: 'update'
+        type: Object
       },
       key: {
-        type: String,
-        observer: 'update'
+        type: String
       }
     };
   }
