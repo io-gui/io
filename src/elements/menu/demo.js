@@ -41,9 +41,10 @@ export class MenuDemo extends Io {
       {label: 'long', options: longOptions, hint: 'list', icon: '⚠'}
     ];
     this.render([
+      ['menu-bar', {options: this.menuoptions}],
       ['div', {class: 'demo area'}, [
-        ['h3', 'menu-tree (click to expand)'],
-        ['menu-tree', {options: this.menuoptions, position: 'pointer'}]
+        ['h3', 'menu-root (click to expand)'],
+        ['menu-root', {options: this.menuoptions, position: 'pointer'}]
       ]]
     ]);
   }

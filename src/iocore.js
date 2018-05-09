@@ -48,7 +48,7 @@ export class Io extends HTMLElement {
         }
         this.update();
         if (this.__state[prop].notify) {
-          this.fire(prop + '-changed', {value: value, oldValue: oldValue}, this.__state[prop].bubbles);
+          this.fire(prop + '-changed', {value: value, oldValue: oldValue}, false);
         }
       },
       enumerable: true,

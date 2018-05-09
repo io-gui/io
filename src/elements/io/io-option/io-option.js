@@ -1,5 +1,5 @@
 import {IoButton} from "../../io/io-button/io-button.js";
-import "../../menu/menu-tree/menu-tree.js";
+import "../../menu/menu-root/menu-root.js";
 
 export class IoOption extends IoButton {
   static get properties() {
@@ -16,8 +16,8 @@ export class IoOption extends IoButton {
   _actionHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
       event.preventDefault();
-      this.querySelector('menu-tree').expanded = true;
-      this.querySelector('menu-tree').$group.$options[0].focus();
+      this.querySelector('menu-root').expanded = true;
+      this.querySelector('menu-root').$group.$options[0].focus();
     }
   }
   _menuHandler(event) {
@@ -43,10 +43,10 @@ export class IoOption extends IoButton {
     this.__state.label.value = label;
     this.render([
       ['span', String(label)],
-      ['menu-tree', {
+      ['menu-root', {
         options: this.options,
         position: 'bottom',
-        listeners: {'menu-option-clicked': this._menuHandler}}]
+        listeners: {'menu-item-clicked': this._menuHandler}}]
     ]);
   }
 }

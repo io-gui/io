@@ -31,7 +31,7 @@ export class DemoApp extends Io {
             ['app-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
             ['app-split', {'orientation': 'vertical', 'width': 400, 'splits': [
               ['app-tabs', {'tabs': ['inspector']}],
-              ['app-tabs', {'height': 400, 'tabs': ['io-demo', 'menu-demo'], 'selected': 'io-demo'}],
+              ['app-tabs', {'height': 400, 'tabs': ['io-demo', 'menu-demo'], 'selected': 'menu-demo'}],
             ]}],
           ]}],
         ]

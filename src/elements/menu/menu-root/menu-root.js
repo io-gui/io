@@ -2,17 +2,7 @@ import {Io, html} from "../../../iocore.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
 import {MenuGroup} from "../menu-group/menu-group.js";
 
-export class MenuTree extends Io {
-  static get style() {
-    return html`
-      <style>
-        :host {
-          display: inline-block;
-          background: black;
-        }
-      </style>
-    `;
-  }
+export class MenuRoot extends Io {
   static get properties() {
     return {
       options: {
@@ -22,7 +12,7 @@ export class MenuTree extends Io {
         type: Boolean
       },
       position: {
-        value: 'top',
+        value: 'pointer',
         type: String
       },
       listener: {
@@ -42,25 +32,27 @@ export class MenuTree extends Io {
   }
   connectedCallback() {
     super.connectedCallback();
-    this.$parent = this.parentElement || this.parentNode.host;
-    if (this.listener) this.$parent.addEventListener(this.listener, this._expandHandler);
+    this._parent = this.parentElement;
+    this._parent.addEventListener(this.listener, this._expandHandler);
+    MenuLayer.singleton.registerGroup(this.$group);
     MenuLayer.singleton.appendChild(this.$group);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.listener) this.$parent.removeEventListener(this.listener, this._expandHandler);
+    this._parent.removeEventListener(this.listener, this._expandHandler);
     MenuLayer.singleton.removeChild(this.$group);
+    MenuLayer.singleton.unregisterGroup(this.$group);
   }
   getBoundingClientRect() {
-    if (this.$parent) return this.$parent.getBoundingClientRect();
-    else return document.body.getBoundingClientRect();
+    return this._parent.getBoundingClientRect();
   }
   _expandHandler(event) {
-    MenuLayer.singleton.collapseAll();
+    event.preventDefault();
+    MenuLayer.singleton.collapseGroups();
     MenuLayer.singleton.pointer.x = event.clientX;
     MenuLayer.singleton.pointer.y = event.clientY;
     this.expanded = true;
   }
 }
 
-MenuTree.Register();
+MenuRoot.Register();

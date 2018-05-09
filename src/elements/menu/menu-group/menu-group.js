@@ -1,6 +1,6 @@
 import {Io, html} from "../../../iocore.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
-import {MenuOption} from "../menu-option/menu-option.js";
+import {MenuItem} from "../menu-item/menu-item.js";
 
 export class MenuGroup extends Io {
   static get style() {
@@ -34,47 +34,32 @@ export class MenuGroup extends Io {
       expanded: {
         type: Boolean,
         notify: true,
-        bubbles: true,
         observer: '_expandedChanged',
         reflect: true
       },
       position: {
         type: String,
-        value: 'pointer',
+        value: 'right',
         observer: '_setPosition'
       },
       $parent: {
         type: HTMLElement
+      },
+      $options: {
+        type: Array
       }
     };
   }
   constructor(props) {
     super(props);
-    this._animate = this._animate.bind(this);
-    this.$options = [];
     this._x = 0;
     this._y = 0;
-    this.update();
-  }
-  update() {
-    setTimeout(() => {
-      if (this.options) {
-        for (let i = 0; i < this.$options.length; i++) {
-          if (this.$options[i].parentElement) this.removeChild(this.$options[i]);
-        }
-        let frag = document.createDocumentFragment();
-        for (let i = 0; i < this.options.length; i++) {
-          if (this.$options[i]) {
-            // Consider using render and reuse MenuOption elements
-            this.$options[i] = new MenuOption({option: this.options[i], $parent: this});
-          } else {
-            this.$options[i] = new MenuOption({option: this.options[i], $parent: this});
-          }
-          this.appendChild(this.$options[i]);
-        }
-        this.appendChild(frag);
-      }
-    });
+    let frag = document.createDocumentFragment();
+    for (let i = 0; i < this.options.length; i++) {
+      this.$options[i] = new MenuItem({option: this.options[i], $parent: this});
+      frag.appendChild(this.$options[i]);
+    }
+    this.appendChild(frag);
   }
   _expandedChanged() {
     if (this.expanded) {
@@ -82,25 +67,20 @@ export class MenuGroup extends Io {
       this._setPosition();
     } else {
       this._stopAnimation();
-      for (let i = 0; i < this.$options.length; i++) {
-        // TODO: redundant???
-        if (this.$options[i].$group)
-            this.$options[i].$group.expanded = false;
-      }
     }
   }
   _startAnimation() {
     if (!this._playing) {
       this._playing = true;
-      this._animate();
+      this._animateHandler();
     }
   }
   _stopAnimation() {
     this._playing = false;
   }
-  _animate() {
+  _animateHandler() {
     if (!this._playing) return;
-    requestAnimationFrame(this._animate);
+    requestAnimationFrame(this._animateHandler);
     this._scroll();
   }
   _setPosition() {
