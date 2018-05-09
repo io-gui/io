@@ -2,6 +2,7 @@ import {Io, html} from "../../../iocore.js";
 import "../io-boolean/io-boolean.js";
 import "../io-number/io-number.js";
 import "../io-string/io-string.js";
+import "../../app/app-collapsable/app-collapsable.js";
 import "./io-object-prop.js";
 
 export class IoObject extends Io {
@@ -10,18 +11,7 @@ export class IoObject extends Io {
       <style>
         :host {
           display: inline-block;
-        }
-        :host > .io-wrapper {
-          margin: 2px;
-          border-radius: 2px;
-          background: #444;
-        }
-        :host io-boolean {
           line-height: 1em;
-        }
-        :host > .io-row {
-          display: flex;
-          flex-direction: row;
         }
       </style>
     `;
@@ -34,16 +24,24 @@ export class IoObject extends Io {
       expanded: {
         type: Boolean,
         reflect: true
+      },
+      label: {
+        type: String
       }
     };
   }
+
   getPropConfigs(keys) {
     let configs = {};
+
     let proto = this.value.__proto__;
+    let configchain = this.__proto__.constructor.configchain;
 
     while (proto) {
-      let c = IoObject.CONFIG[proto.constructor.name];
-      if (c) configs = Object.assign(configs, c);
+      for (let i = configchain.length; i--;) {
+        let c = configchain[i][proto.constructor.name];
+        if (c) configs = Object.assign(configs, c);
+      }
       proto = proto.__proto__;
     }
 
@@ -75,16 +73,13 @@ export class IoObject extends Io {
     return propConfigs;
   }
   update() {
-    if (!this.value) return; //TODO: refactor
-    let label = this.value.constructor.name;
+    let label = this.label || this.value.constructor.name;
     let propConfigs = this.getPropConfigs(Object.keys(this.value));
-    const Prop = entry => ['div', {class: 'io-row'}, [
-      ['span', entry[0] + ':'],
-      ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}]
-    ]];
+    const Prop = entry => ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}];
     this.render([
-      ['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}],
-      this.expanded ? Object.entries(propConfigs).map(Prop) : null
+      ['app-collapsable', {label: label, expanded: this.bind('expanded'), elements:
+        Object.entries(propConfigs).map(Prop)
+      }]
     ]);
   }
 }
@@ -100,4 +95,26 @@ IoObject.CONFIG = {
   }
 };
 
+IoObject.Register = function() {
+    Io.Register.apply(this, arguments);
+    this.configchain = [];
+    let proto = this.prototype;
+    while (proto && proto.constructor !== Element) {
+      if (proto.constructor.CONFIG) {
+        let cfg = proto.constructor.CONFIG;
+        this.configchain.push(cfg);
+      }
+      proto = proto.__proto__;
+    }
+};
+
 IoObject.Register();
+
+// let c =[]
+// let proto = this.constructor;
+// while (proto && proto.constructor !== Io) {
+//   c.push(proto.CONFIG);
+//   // console.log(proto.CONFIG);
+//   proto = proto.__proto__;
+// }
+// console.log(c);

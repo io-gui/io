@@ -25,6 +25,9 @@ export class ThreeMatrix extends ThreeVector {
         :host > io-object-prop > io-number {
           width: 100%;
         }
+        :host > io-object-prop > span {
+          display: none;
+        }
       </style>
     `;
   }

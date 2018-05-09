@@ -1,11 +1,8 @@
 import {Io, html} from "../io.js";
 
 import "./demo-app-ctrl.js";
-import "./demo-io.js";
-import "./demo-menu.js";
-import "./demo-io-option.js";
-import "./demo-io-object.js";
-import "./three-io-config.js";
+import "../elements/io/demo.js";
+import "../elements/menu/demo.js";
 
 export class DemoApp extends Io {
   static get style() {
@@ -28,13 +25,13 @@ export class DemoApp extends Io {
         value: document.location
       },
       layout: {
-        value: [
-        // value: JSON.parse(localStorage.getItem('app-split-state')) || [
+        // value: [
+        value: JSON.parse(localStorage.getItem('app-split-state')) || [
           ['app-split', {'orientation': 'horizontal', 'splits': [
             ['app-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
             ['app-split', {'orientation': 'vertical', 'width': 400, 'splits': [
               ['app-tabs', {'tabs': ['inspector']}],
-              ['app-tabs', {'height': 400, 'tabs': ['demo', 'menu', 'option', 'object'], 'selected': 'object'}],
+              ['app-tabs', {'height': 400, 'tabs': ['io-demo', 'menu-demo'], 'selected': 'io-demo'}],
             ]}],
           ]}],
         ]
@@ -51,12 +48,9 @@ export class DemoApp extends Io {
     this.render([
       ['app-split', {
         elements: {
-          'demo': ['demo-io'],
-          'menu': ['demo-menu'],
-          'option': ['demo-io-option'],
-          'object': ['demo-io-object'],
+          'io-demo': ['io-demo'],
+          'menu-demo': ['menu-demo'],
           'inspector': ['three-inspector', {value: this.bind('selected')}],
-          'object': ['io-object', {value: this.bind('selected'), expanded: true}],
           'app-ctrl': ['demo-app-ctrl', {value: this.bind('selected')}]
         },
         splits: this.layout

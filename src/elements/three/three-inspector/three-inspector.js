@@ -18,6 +18,7 @@ export class ThreeInspector extends Io {
           color: #ccc;
           padding: 0.1em;
           border-radius: 0.2em;
+          line-height: 1em;
         }
         :host .io-wrapper {
           flex: 1;
@@ -35,12 +36,8 @@ export class ThreeInspector extends Io {
       crumbs: {
         type: Array
       },
-      expanded: {
-        type: Boolean,
-        reflect: true
-      },
       listeners: {
-        'io-link-clicked': "_linkClickedHandler"
+        'three-inspector-item-clicked': "_linkClickedHandler"
       }
     };
   }
@@ -100,7 +97,8 @@ export class ThreeInspector extends Io {
       });
     }
 
-    const GroupItem = entry => ['three-inspector-group', {value: this.value, props: entry[1], label: entry[0]}];
+    const GroupItem = entry => ['three-inspector-group', {
+      value: this.value, props: entry[1], label: entry[0], expanded: true}];
     this.render([
       ['app-breadcrumbs', {value: this.bind('value'), crumbs: this.bind('crumbs')}],
       ['div', {class: 'io-wrapper'}, [
@@ -111,6 +109,25 @@ export class ThreeInspector extends Io {
   }
 }
 
-ThreeInspector.CONFIG = {};
+ThreeInspector.CONFIG = {
+  'Object': {
+    'advanced': ['uuid'],
+    'hidden': ['type']
+  },
+  'Object3D' : {
+    'main': ['name', 'geometry', 'material', 'parent', 'children'],
+    'transform': ['position', 'rotation', 'scale'],
+    'rendering': ['drawMode', 'layers', 'visible', 'castShadow', 'receiveShadow', 'frustumCulled', 'renderOrder'],
+    'advanced': ['userData', 'up', 'quaternion', 'matrix', 'matrixWorld', 'matrixAutoUpdate', 'matrixWorldNeedsUpdate']
+  },
+  'Material' : {
+    'main': ['opacity', 'side', 'transparent', 'depthTest', 'depthWrite', 'depthFunc', 'wireframe'],
+    'rendering': ['dithering', 'flatShading'],
+    'advanced': ['skinning']
+  },
+  'Light' : {
+    'main': ['intensity', 'color']
+  }
+};
 
 ThreeInspector.Register();

@@ -108,6 +108,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     this._fire('io-pointer-start', event, this.pointers);
     window.addEventListener('mousemove', this._mousemoveHandler);
     window.addEventListener('mouseup', this._mouseupHandler);
+    window.addEventListener('blur', this._mouseupHandler); //TODO: check pointer data
     if (_clickmask.parentNode !== document.body) {
       document.body.appendChild(_clickmask);
     }
@@ -121,6 +122,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     this._fire('io-pointer-end', event, this.pointers);
     window.removeEventListener('mousemove', this._mousemoveHandler);
     window.removeEventListener('mouseup', this._mouseupHandler);
+    window.removeEventListener('blur', this._mouseupHandler);
     if (_clickmask.parentNode === document.body) {
       document.body.removeChild(_clickmask);
     }

@@ -18,7 +18,6 @@ export class DemoAppCtrl extends Io {
         padding: 0 1em 1em 1em;
       }
       :host > io-button {
-        /* display: block; */
         background: white;
         padding: 0.1em 0.3em;
         margin: 0.1em;

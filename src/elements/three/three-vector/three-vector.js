@@ -9,6 +9,9 @@ export class ThreeVector extends Io {
           display: flex;
           flex-direction: row;
         }
+        :host > io-object-prop > span {
+          display: none;
+        }
       </style>
     `;
   }

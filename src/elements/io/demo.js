@@ -1,6 +1,6 @@
-import {Io, html} from "../io.js";
+import {Io, html} from "../../io.js";
 
-export class DemoIo extends Io {
+export class IoDemo extends Io {
   static get style() {
     return html`
       <style>
@@ -8,12 +8,17 @@ export class DemoIo extends Io {
       :host div > io-boolean,
       :host div > io-number {
         border: 1px solid #eee;
+        margin: 0.25em;
+      }
+      :host div > io-option,
+      :host div > io-object {
+        display: inline-block;
+        border: 1px solid #eee;
         vertical-align: top;
         margin: 0.25em;
       }
-      :host div.row {
-        display: flex;
-        flex-direction: row;
+      :host div.demo {
+        margin: 1em;
       }
       :host div.header, span.rowlabel {
         color: rgba(128, 122, 255, 0.75);
@@ -27,6 +32,7 @@ export class DemoIo extends Io {
         margin: 2px;
       }
       :host .narrow {
+        display: flex;
         width: 22em;
       }
       </style>
@@ -90,8 +96,29 @@ export class DemoIo extends Io {
           ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
         ]],
       ]],
+      ['div', {class: 'demo'}, [
+        ['span', {class: 'rowlabel'}, 'io-option'],
+        ['io-option', {options: [
+          {label: 'one', value: 1},
+          {label: 'two', value: 2},
+          {label: 'three', value: 3},
+          {label: 'four', value: 4}
+        ], value: 1}],
+      ]],
+      ['div', {class: 'demo'}, [
+        ['span', {class: 'rowlabel'}, 'io-object'],
+        ['io-object', {label: 'Obj', value: {
+          "number": 1337,
+          "string": 'hello',
+          "boolean": true,
+          "null": null,
+          "NaN": NaN,
+          "undef": undefined,
+          "array": [1,2,3,4,"apple"]
+        }, expanded: true, labeled: true}]
+      ]]
     ]);
   }
 }
 
-DemoIo.Register();
+IoDemo.Register();

@@ -6,7 +6,9 @@ export class IoObjectProp extends IoPropertyMixin(Io) {
     return html`
       <style>
         :host {
-          display: inline-block;
+          display: flex;
+          flex-direction: row;
+          padding-left: 1em;
         }
         :host > io-number {
           color: rgb(28, 0, 207);
@@ -25,18 +27,14 @@ export class IoObjectProp extends IoPropertyMixin(Io) {
   }
   static get properties() {
     return {
-      tag: {
-        type: String,
-        reflect: true
-      },
       config: {
         type: Array
       }
     };
   }
   update() {
-    this.tag = this.config.tag;
     this.render([
+      ['span', this.key + ':'],
       [this.config.tag, Object.assign({
           value: this.value[this.key],
           label: this.key,

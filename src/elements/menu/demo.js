@@ -1,6 +1,6 @@
-import {Io, html} from "../io.js";
+import {Io, html} from "../../io.js";
 
-export class DemoMenu extends Io {
+export class MenuDemo extends Io {
   static get style() {
     return html`
       <style>
@@ -49,4 +49,4 @@ export class DemoMenu extends Io {
   }
 }
 
-DemoMenu.Register();
+MenuDemo.Register();
