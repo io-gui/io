@@ -6,6 +6,9 @@ let timeoutOpen;
 let timeoutReset;
 let WAIT_TIME = 120;
 let lastFocus;
+let prevTouch;
+
+// TODO: make long (scrolling) menus work with touch
 
 export class MenuLayer extends Io {
   static get style() {
@@ -45,6 +48,20 @@ export class MenuLayer extends Io {
         'mousemove': '_mousemoveHandler',
       }
     };
+  }
+  _touchmoveHandler(event) {
+    prevTouch = prevTouch || event.touches[0]
+    event.touches[0].movementX = event.touches[0].clientX - prevTouch.clientX;
+    event.touches[0].movementY = event.touches[0].clientY - prevTouch.clientY;
+    this._mousemoveHandler(event.touches[0]);
+    prevTouch = event.touches[0];
+    prevTouch.path = event.path;
+    // TODO: make touch menu work with multi-menu multi-touch (insane?)
+  }
+  _touchendHandler(event) {
+    // TODO: unhack
+    prevTouch.path = this._hoveredItem ? [this._hoveredItem] : prevTouch.path;
+    this._mouseupHandler(prevTouch);
   }
   constructor(props) {
     super(props);
@@ -107,6 +124,24 @@ export class MenuLayer extends Io {
       }
     }
   }
+  _mousemoveHandler(event) {
+    this._x = event.clientX;
+    this._y = event.clientY;
+    this._v = Math.abs(event.movementY) - Math.abs(event.movementX);
+    let groups = this.$groups;
+    for (let i = groups.length; i--;) {
+      if (groups[i].expanded) {
+        let rect = groups[i].getBoundingClientRect();
+        if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+          this._hover(groups[i]);
+          this._hoveredGroup = groups[i];
+          return groups[i];
+        }
+      }
+    }
+    this._hoveredItem = null;
+    this._hoveredGroup = null;
+  }
   _mouseupHandler(event) {
     let elem = event.path[0];
     if (elem.localName == 'menu-item') {
@@ -162,24 +197,6 @@ export class MenuLayer extends Io {
     //   event.preventDefault();
     //   this.collapseAll();
     // }
-  }
-  _mousemoveHandler(event) {
-    this._x = event.clientX;
-    this._y = event.clientY;
-    this._v = Math.abs(event.movementY) - Math.abs(event.movementX);
-    let groups = this.$groups;
-    for (let i = groups.length; i--;) {
-      if (groups[i].expanded) {
-        let rect = groups[i].getBoundingClientRect();
-        if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-          this._hover(groups[i]);
-          this._hoveredGroup = groups[i];
-          return groups[i];
-        }
-      }
-    }
-    this._hoveredItem = null;
-    this._hoveredGroup = null;
   }
   _hover(group) {
     let items = group.querySelectorAll('menu-item');

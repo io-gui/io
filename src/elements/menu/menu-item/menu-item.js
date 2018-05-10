@@ -47,12 +47,27 @@ export class MenuItem extends Io {
         type: HTMLElement
       },
       listeners: {
-        'focus': '_focusHandler'
+        'focus': '_focusHandler',
+        'touchstart': '_touchstartHandler'
       },
       attributes: {
         'tabindex': 0
       }
     };
+  }
+  _touchstartHandler(event) {
+    event.preventDefault();
+    this.addEventListener('touchmove', this._touchmoveHandler);
+    this.addEventListener('touchend', this._touchendHandler);
+    this.focus();
+  }
+  _touchmoveHandler(event) {
+    MenuLayer.singleton._touchmoveHandler(event);
+  }
+  _touchendHandler(event) {
+    this.removeEventListener('touchmove', this._touchmoveHandler);
+    this.removeEventListener('touchend', this._touchendHandler);
+    MenuLayer.singleton._touchendHandler(event);
   }
   update() {
     if (this.option.options) {

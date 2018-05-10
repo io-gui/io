@@ -2,6 +2,9 @@ import {Io, html} from "../../../iocore.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
 import {MenuGroup} from "../menu-group/menu-group.js";
 
+// TODO: implement working mousestart/touchstart UX
+// TODO: implement keyboard modifiers maybe. Touch alternative? 
+
 export class MenuRoot extends Io {
   static get properties() {
     return {
@@ -46,9 +49,10 @@ export class MenuRoot extends Io {
   }
   _expandHandler(event) {
     event.preventDefault();
+    let evt = event.touches ? event.touches[0] : event;
     MenuLayer.singleton.collapseAllGroups();
-    MenuLayer.singleton._x = event.clientX;
-    MenuLayer.singleton._y = event.clientY;
+    MenuLayer.singleton._x = evt.clientX;
+    MenuLayer.singleton._y = evt.clientY;
     this.expanded = true;
   }
 }
