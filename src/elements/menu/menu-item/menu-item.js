@@ -13,6 +13,9 @@ export class MenuItem extends Io {
         padding: 0.125em 0.5em 0.125em 1.7em;
         line-height: 1em;
       }
+      :host > * {
+        pointer-events: none;
+      }
       :host > .menu-icon {
         width: 1.25em;
         margin-left: -1.25em;
@@ -37,10 +40,10 @@ export class MenuItem extends Io {
       option: {
         type: Object
       },
-      $parent: {
-        type: HTMLElement
+      position: {
+        type: String
       },
-      $group: {
+      $parent: {
         type: HTMLElement
       },
       listeners: {
@@ -51,16 +54,20 @@ export class MenuItem extends Io {
       }
     };
   }
-  constructor(props) {
-    super(props);
-    const option = this.option;
-    const suboptions = this.option.options;
-    if (suboptions) this.$group = new MenuGroup({options: suboptions, $parent: this});
+  update() {
+    if (this.option.options) {
+      let grpProps = {options: this.option.options, $parent: this, position: this.position};
+      if (!this.$group) {
+        this.$group = new MenuGroup(grpProps);
+      } else {
+        this.$group.__node.update(grpProps); // TODO: test
+      }
+    }
     this.render([
-      ['span', {class: 'menu-icon'}, option.icon],
-      ['span', {class: 'menu-label'}, option.label || option.value],
-      ['span', {class: 'menu-hint'}, option.hint],
-      ['span', {class: 'menu-more'}, suboptions ? '▸' : null],
+      this.option.icon ? ['span', {class: 'menu-icon'}] : null,
+      ['span', {class: 'menu-label'}, this.option.label || this.option.value],
+      this.option.hint ? ['span', {class: 'menu-hint'}] : null,
+      this.option.options ? ['span', {class: 'menu-more'}, '▸'] : null,
     ]);
   }
   disconnectedCallback() {
@@ -68,37 +75,16 @@ export class MenuItem extends Io {
     if (this.$group) {
       if (this.$group.parentNode) {
         MenuLayer.singleton.removeChild(this.$group);
-        MenuLayer.singleton.unregisterGroup(this.$group);
       }
     }
   }
   _focusHandler(event) {
-    event.stopPropagation();
-    this.addEventListener('blur', this._blurHandler);
-    this.addEventListener('mouseup', this._mouseupHandler);
-    this.addEventListener('keyup', this._keyupHandler);
     if (this.$group) {
       if (!this.$group.parentNode) {
         MenuLayer.singleton.appendChild(this.$group);
-        MenuLayer.singleton.registerGroup(this.$group);
       }
       this.$group.expanded = true;
     }
-    this.fire('menu-item-focused', this);
-  }
-  _blurHandler(event) {
-    event.stopPropagation();
-    this.removeEventListener('blur', this._blurHandler);
-    this.removeEventListener('mouseup', this._mouseupHandler);
-    this.removeEventListener('keyup', this._keyupHandler);
-  }
-  _mouseupHandler(event) {
-    event.stopPropagation();
-    this.fire('menu-item-mouseup', this);
-  }
-  _keyupHandler(event) {
-    event.stopPropagation();
-    this.fire('menu-item-keyup', this);
   }
 }
 

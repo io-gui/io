@@ -5,6 +5,7 @@ let previousParent;
 let timeoutOpen;
 let timeoutReset;
 let WAIT_TIME = 120;
+let lastFocus;
 
 export class MenuLayer extends Io {
   static get style() {
@@ -34,42 +35,42 @@ export class MenuLayer extends Io {
       expanded: {
         type: Boolean,
         reflect: true,
-        observer: '_expandedChanged'
-      },
-      pointer: {
-        value: {x: 0, y: 0, v: 0},
-        type: Object
+        observer: '_scrollAnimateGroupHandler'
       },
       $groups: {
         type: Array
       },
       listeners: {
         'mouseup': '_mouseupHandler',
-        'touchstart': '_eventStopHandler',
-        'keyup': '_eventStopHandler',
         'mousemove': '_mousemoveHandler',
       }
     };
   }
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener('scroll', this.collapseGroups.bind(this));
+  constructor(props) {
+    super(props);
+    this._hoveredItem = null;
+    this._hoveredGroup = null;
+    this._x = 0;
+    this._y = 0;
+    this._v = 0;
+    window.addEventListener('scroll', this._scrollHandler);
+    window.addEventListener('focusin', this._windowFocusHandler);
   }
   registerGroup(group) {
     this.$groups.push(group);
-    group.addEventListener('menu-item-focused', this._menuItemFocusedHandler);
-    group.addEventListener('menu-item-mouseup', this._menuMouseupHandler);
-    group.addEventListener('menu-item-keyup', this._menuKeyupHandler);
+    group.addEventListener('focusin', this._menuItemFocusedHandler);
+    group.addEventListener('mouseup', this._mouseupHandler);
+    group.addEventListener('keyup', this._keyupHandler);
     group.addEventListener('expanded-changed', this._expandedChangedHandler);
   }
   unregisterGroup(group) {
     this.$groups.splice(this.$groups.indexOf(group), 1);
-    group.removeEventListener('menu-item-focused', this._menuItemFocusedHandler);
-    group.removeEventListener('menu-item-mouseup', this._menuMouseupHandler);
-    group.removeEventListener('menu-item-keyup', this._menuKeyupHandler);
+    group.removeEventListener('focusin', this._menuItemFocusedHandler);
+    group.removeEventListener('mouseup', this._mouseupHandler);
+    group.removeEventListener('keyup', this._keyupHandler);
     group.removeEventListener('expanded-changed', this._expandedChangedHandler);
   }
-  collapseGroups() {
+  collapseAllGroups() {
     for (let i = this.$groups.length; i--;) {
       this.$groups[i].expanded = false;
     }
@@ -77,38 +78,25 @@ export class MenuLayer extends Io {
   runAction(option) {
     if (typeof option.action === 'function') {
       option.action.apply(null, [option.value]);
-      this.collapseGroups();
+      this.collapseAllGroups();
+      if (lastFocus) lastFocus.focus();
     } else if (option.button) {
       option.button.click(); // TODO: test
-      this.collapseGroups();
-    } else if (option.value !== undefined) {
-      this.collapseGroups();
+      this.collapseAllGroups();
+      if (lastFocus) lastFocus.focus();
     }
   }
-  _expandedChanged() {
-    if (this.expanded) {
-      this._startAnimation();
-    } else {
-      this._stopAnimation();
-    }
+  _scrollHandler() {
+    this.collapseAllGroups();
+    if (lastFocus) lastFocus.focus();
   }
-  _startAnimation() {
-    if (!this._playing) {
-      this._playing = true;
-      this._animateHandler();
-    }
-  }
-  _stopAnimation() {
-    this._playing = false;
-  }
-  _animateHandler() {
-    if (!this._playing) return;
-    requestAnimationFrame(this._animateHandler);
-    if (this._hovered) this._scroll(this._hovered);
+  _windowFocusHandler(event) {
+    if (event.target.localName !== 'menu-item') lastFocus = event.target;
   }
   _menuItemFocusedHandler(event) {
-    let expanded = [event.detail.$group];
-    let parent = event.detail.$parent;
+    let item = event.path[0];
+    let expanded = [item.$group];
+    let parent = item.$parent;
     while (parent) {
       expanded.push(parent);
       parent = parent.$parent;
@@ -120,17 +108,18 @@ export class MenuLayer extends Io {
     }
   }
   _mouseupHandler(event) {
-    event.stopPropagation();
-    // console.log(this._focused);
-    if (this._focused) {
-      this.runAction(this._focused.option);
-    } else if (event.target === this) {
-      this.collapseGroups();
+    let elem = event.path[0];
+    if (elem.localName == 'menu-item') {
+      this.runAction(elem.option);
+    } else if (elem === this) {
+      if (this._hoveredItem) {
+        this.runAction(this._hoveredItem.option);
+      } else if (!this._hoveredGroup) {
+        this.collapseAllGroups();
+        if (lastFocus) lastFocus.focus();
+      }
     }
-  }
-  _menuMouseupHandler(event) {
-    event.stopPropagation();
-    this.runAction(event.detail.option);
+
   }
   _menuKeyupHandler(event) {
     // let siblings = this.$parent.$options;
@@ -171,115 +160,63 @@ export class MenuLayer extends Io {
     //   }
     // } else if (event.which == 27) { // ESC
     //   event.preventDefault();
-    //   MenuLayer.singleton.collapseAll();
+    //   this.collapseAll();
     // }
   }
   _mousemoveHandler(event) {
-    this.pointer.x = event.clientX;
-    this.pointer.y = event.clientY;
-    this.pointer.v = Math.abs(event.movementY) - Math.abs(event.movementX);
+    this._x = event.clientX;
+    this._y = event.clientY;
+    this._v = Math.abs(event.movementY) - Math.abs(event.movementX);
     let groups = this.$groups;
     for (let i = groups.length; i--;) {
       if (groups[i].expanded) {
-        if (groups[i]._rect.top < this.pointer.y && groups[i]._rect.bottom > this.pointer.y &&
-          groups[i]._rect.left < this.pointer.x && groups[i]._rect.right > this.pointer.x) {
-            this._hover(groups[i]);
-            this._hovered = groups[i];
-            return groups[i];
+        let rect = groups[i].getBoundingClientRect();
+        if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+          this._hover(groups[i]);
+          this._hoveredGroup = groups[i];
+          return groups[i];
         }
       }
     }
-    delete this._hovered;
+    this._hoveredItem = null;
+    this._hoveredGroup = null;
   }
   _hover(group) {
-    let options = group.querySelectorAll('menu-item');
-    let force = group.localName == 'menu-bar'; // TODO: unhack
-    for (let i = options.length; i--;) {
-      options[i]._rect = options[i].getBoundingClientRect();
-      if (options[i]._rect.top < this.pointer.y && options[i]._rect.bottom > this.pointer.y &&
-        options[i]._rect.left < this.pointer.x && options[i]._rect.right > this.pointer.x) {
-          this._focus(options[i], force);
-          return options[i];
+    let items = group.querySelectorAll('menu-item');
+    for (let i = items.length; i--;) {
+      let rect = items[i].getBoundingClientRect();
+      if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+        let force = group.horizontal;
+        this._focus(items[i], force);
+        this._hoveredItem = items[i];
+        return items[i];
       }
     }
-    delete this._focused;
+    this._hoveredItem = null;
+    this._hoveredItem = null;
   }
-  _focus(option, force) {
-    if (option !== previousOption) {
+  _focus(item, force) {
+    if (item !== previousOption) {
       clearTimeout(timeoutOpen);
       clearTimeout(timeoutReset);
-      if (this.pointer.v > 0 || option.parentNode !== previousParent || force || !option.option.options) {
-        previousOption = option;
-        option.focus();
-        this._focused = option;
+      if (this._v > 0 || item.parentNode !== previousParent || force || !item.option.options) {
+        previousOption = item;
+        item.focus();
       } else {
         timeoutOpen = setTimeout(function() {
-          previousOption = option;
-          option.focus();
-          this._focused = option;
+          previousOption = item;
+          item.focus();
         }.bind(this), WAIT_TIME);
       }
-      previousParent = option.parentNode;
+      previousParent = item.parentNode;
       timeoutReset = setTimeout(function() {
         previousOption = null;
         previousParent = null;
-        // delete this._focused;
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  _scroll(group) {
-    group._rect = group.getBoundingClientRect();
-    let scrollSpeed, overflow;
-    let y = MenuLayer.singleton.pointer.y;
-    if (group._rect.height > window.innerHeight) {
-      if (y < 100 && group._rect.top < 0) {
-        scrollSpeed = (100 - y) / 5000;
-        overflow = group._rect.top;
-        group._y = group._y - Math.ceil(overflow * scrollSpeed) + 1;
-      } else if (y > window.innerHeight - 100 && group._rect.bottom > window.innerHeight) {
-        scrollSpeed = (100 - (window.innerHeight - y)) / 5000;
-        overflow = (group._rect.bottom - window.innerHeight);
-        group._y = group._y - Math.ceil(overflow * scrollSpeed) - 1;
-      }
-      group.style.left = group._x + 'px';
-      group.style.top = group._y + 'px';
-    }
-    group._rect = group.getBoundingClientRect();
-  }
-  _setPosition(group) {
-    if (!group.$parent) return;
-    group._rect = group.getBoundingClientRect();
-    group._pRect = group.$parent.getBoundingClientRect();
-    switch (group.position) {
-      case 'pointer':
-        group._x = MenuLayer.singleton.pointer.x - 2 || group._pRect.x;
-        group._y = MenuLayer.singleton.pointer.y - 2 || group._pRect.y;
-        break;
-      case 'bottom':
-        group._x = group._pRect.x;
-        group._y = group._pRect.bottom;
-        break;
-      case 'right':
-        group._x = group._pRect.right;
-        group._y = group._pRect.y;
-        if (group._x + group._rect.width > window.innerWidth) {
-          group._x = group._pRect.x - group._rect.width;
-        }
-        break;
-      case 'top':
-      default:
-        group._x = group._pRect.x;
-        group._y = group._pRect.y;
-        break;
-    }
-    group._x = Math.min(group._x, window.innerWidth - group._rect.width);
-    group._y = Math.min(group._y, window.innerHeight - group._rect.height);
-    group.style.left = group._x + 'px';
-    group.style.top = group._y + 'px';
-    group._rect = group.getBoundingClientRect();
-  }
   _expandedChangedHandler(event) {
-    if (event.path[0].expanded) this._setPosition(event.path[0]);
+    if (event.path[0].expanded) this._setGroupPosition(event.path[0]);
     for (let i = this.$groups.length; i--;) {
       if (this.$groups[i].expanded) {
         return this.expanded = true;
@@ -287,15 +224,59 @@ export class MenuLayer extends Io {
     }
     return this.expanded = false;
   }
-  _eventStopHandler(event) {
-    event.stopPropagation();
-    if (event.target === this || event.key === 'Escape') {
-      this.collapseGroups();
+  _setGroupPosition(group) {
+    if (!group.$parent) return;
+    let rect = group.getBoundingClientRect();
+    let pRect = group.$parent.getBoundingClientRect();
+    switch (group.position) {
+      case 'pointer':
+        group._x = this._x - 2 || pRect.x;
+        group._y = this._y - 2 || pRect.y;
+        break;
+      case 'bottom':
+        group._x = pRect.x;
+        group._y = pRect.bottom;
+        break;
+      case 'right':
+        group._x = pRect.right;
+        group._y = pRect.y;
+        if (group._x + rect.width > window.innerWidth) {
+          group._x = pRect.x - rect.width;
+        }
+        break;
+      case 'top':
+      default:
+        group._x = pRect.x;
+        group._y = pRect.y;
+        break;
     }
+    group._x = Math.min(group._x, window.innerWidth - rect.width);
+    group._y = Math.min(group._y, window.innerHeight - rect.height);
+    group.style.left = group._x + 'px';
+    group.style.top = group._y + 'px';
+  }
+  _scrollAnimateGroupHandler() {
+    if (!this.expanded) return;
+    let group = this._hoveredGroup;
+    if (group) {
+      let rect = group.getBoundingClientRect();
+      if (rect.height > window.innerHeight) {
+        if (this._y < 100 && rect.top < 0) {
+          let scrollSpeed = (100 - this._y) / 5000;
+          let overflow = rect.top;
+          group._y = group._y - Math.ceil(overflow * scrollSpeed) + 1;
+        } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
+          let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
+          let overflow = (rect.bottom - window.innerHeight);
+          group._y = group._y - Math.ceil(overflow * scrollSpeed) - 1;
+        }
+        group.style.left = group._x + 'px';
+        group.style.top = group._y + 'px';
+      }
+    }
+    requestAnimationFrame(this._scrollAnimateGroupHandler);
   }
 }
-
-// TODO: menu feature - restore focus
 
 MenuLayer.Register();
 

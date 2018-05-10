@@ -34,23 +34,21 @@ export class MenuRoot extends Io {
     super.connectedCallback();
     this._parent = this.parentElement;
     this._parent.addEventListener(this.listener, this._expandHandler);
-    MenuLayer.singleton.registerGroup(this.$group);
     MenuLayer.singleton.appendChild(this.$group);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     this._parent.removeEventListener(this.listener, this._expandHandler);
     MenuLayer.singleton.removeChild(this.$group);
-    MenuLayer.singleton.unregisterGroup(this.$group);
   }
   getBoundingClientRect() {
     return this._parent.getBoundingClientRect();
   }
   _expandHandler(event) {
     event.preventDefault();
-    MenuLayer.singleton.collapseGroups();
-    MenuLayer.singleton.pointer.x = event.clientX;
-    MenuLayer.singleton.pointer.y = event.clientY;
+    MenuLayer.singleton.collapseAllGroups();
+    MenuLayer.singleton._x = event.clientX;
+    MenuLayer.singleton._y = event.clientY;
     this.expanded = true;
   }
 }

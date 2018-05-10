@@ -40,7 +40,7 @@ export class MenuDemo extends Io {
       {label: 'long', options: longOptions, hint: 'list', icon: '⚠'}
     ];
     this.render([
-      ['menu-bar', {options: this.menuoptions}],
+      ['menu-group', {options: this.menuoptions, horizontal: true}],
       ['div', {class: 'demo area'}, [
         ['h3', 'menu-root (click to expand)'],
         ['menu-root', {options: this.menuoptions, position: 'pointer'}]
