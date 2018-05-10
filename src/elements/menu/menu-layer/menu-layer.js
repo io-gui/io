@@ -254,6 +254,9 @@ export class MenuLayer extends Io {
     if (!group.$parent) return;
     let rect = group.getBoundingClientRect();
     let pRect = group.$parent.getBoundingClientRect();
+     // TODO: unhack horizontal long submenu bug.
+    if (group.position === 'bottom' && rect.height > (window.innerHeight - this._y)) group.position = 'right';
+    //
     switch (group.position) {
       case 'pointer':
         group._x = this._x - 2 || pRect.x;
@@ -264,16 +267,12 @@ export class MenuLayer extends Io {
         group._y = pRect.bottom;
         break;
       case 'right':
+      default:
         group._x = pRect.right;
         group._y = pRect.y;
         if (group._x + rect.width > window.innerWidth) {
           group._x = pRect.x - rect.width;
         }
-        break;
-      case 'top':
-      default:
-        group._x = pRect.x;
-        group._y = pRect.y;
         break;
     }
     group._x = Math.min(group._x, window.innerWidth - rect.width);
