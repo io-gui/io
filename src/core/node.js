@@ -41,6 +41,18 @@ export class Node {
       this.attributes[a] = props['attributes'][a];
     }
 
+    if (props['className']) {
+      this.element.className = props['className'];
+    }
+
+    // TODO: use attributeStyleMap when implemented in browser
+    // https://developers.google.com/web/updates/2018/03/cssom
+    if (props['style']) {
+      for (let s in props['style']) {
+        this.element.style[s] = props['style'][s];
+      }
+    }
+
     this.setProperties();
 
     if (this._connected)  {

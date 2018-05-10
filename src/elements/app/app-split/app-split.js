@@ -1,6 +1,6 @@
 import {Io, html} from "../../../iocore.js";
-import "../app-tabs/app-tabs.js";
 import "./app-split-divider.js";
+// import "../app-tabs/app-tabs.js";
 
 export class AppSplit extends Io {
   static get style() {
@@ -44,58 +44,58 @@ export class AppSplit extends Io {
         type: String,
         reflect: true
       },
-      listeners: {
-        'app-split-divider-move': '_dividerMoveHandler',
-        'app-tab-added': '_tabChangedHandler',
-        'app-tab-removed': '_tabRemovedHandler',
-        'app-tab-selected': '_tabChangedHandler'
-      }
+      // listeners: {
+      //   'app-split-divider-move': '_dividerMoveHandler',
+      //   'app-tab-added': '_tabChangedHandler',
+      //   'app-tab-removed': '_tabRemovedHandler',
+      //   'app-tab-selected': '_tabChangedHandler'
+      // }
     };
   }
-  _dividerMoveHandler(event) {
-    event.stopPropagation();
-    let movement = event.detail.movement;
-
-    let i = event.detail.index;
-    let d = this.orientation === 'horizontal' ? 'width' : 'height';
-    let splits = this.splits;
-
-    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'app-split-divider');
-    let prev = splits[i];
-    let next = splits[i+1];
-
-    if (next[1][d] !== undefined && prev[1][d] !== undefined) {
-      next[1][d] = $blocks[i+1].getBoundingClientRect()[1][d];
-    }
-
-    prev = splits[i];
-    next = splits[i+1];
-
-    if (prev[1][d] !== undefined) prev[1][d] = Math.max(0, prev[1][d] + movement);
-    if (next[1][d] !== undefined) next[1][d] = Math.max(0, next[1][d] - movement);
-
-    this.fire('app-changed', this.splits);
-    this.update();
-  }
-  _tabRemovedHandler(event) {
-    event.stopPropagation();
-    if (event.detail.length === 0) {
-      this.removeSplit(event.detail);
-    }
-  }
-  _tabChangedHandler(event) {
-    event.stopPropagation();
-    this.fire('app-changed', this.splits);
-  }
-  addSplit(split, index, orientation) {
-    console.log(split, index, orientation);
-    // insert if orientation match
-    // Add new split if orientation different.
-  }
-  removeSplit(split) {
-    this.splits.splice(this.splits.indexOf(split), 1);
-    this.update();
-  }
+  // _dividerMoveHandler(event) {
+  //   event.stopPropagation();
+  //   let movement = event.detail.movement;
+  //
+  //   let i = event.detail.index;
+  //   let d = this.orientation === 'horizontal' ? 'width' : 'height';
+  //   let splits = this.splits;
+  //
+  //   let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'app-split-divider');
+  //   let prev = splits[i];
+  //   let next = splits[i+1];
+  //
+  //   if (next[1][d] !== undefined && prev[1][d] !== undefined) {
+  //     next[1][d] = $blocks[i+1].getBoundingClientRect()[1][d];
+  //   }
+  //
+  //   prev = splits[i];
+  //   next = splits[i+1];
+  //
+  //   if (prev[1][d] !== undefined) prev[1][d] = Math.max(0, prev[1][d] + movement);
+  //   if (next[1][d] !== undefined) next[1][d] = Math.max(0, next[1][d] - movement);
+  //
+  //   this.fire('app-changed', this.splits);
+  //   this.update();
+  // }
+  // _tabRemovedHandler(event) {
+  //   event.stopPropagation();
+  //   if (event.detail.length === 0) {
+  //     this.removeSplit(event.detail);
+  //   }
+  // }
+  // _tabChangedHandler(event) {
+  //   event.stopPropagation();
+  //   this.fire('app-changed', this.splits);
+  // }
+  // addSplit(split, index, orientation) {
+  //   console.log(split, index, orientation);
+  //   // insert if orientation match
+  //   // Add new split if orientation different.
+  // }
+  // removeSplit(split) {
+  //   this.splits.splice(this.splits.indexOf(split), 1);
+  //   this.update();
+  // }
   update() {
     let d = this.orientation === 'horizontal' ? 'width' : 'height';
     let splits = this.splits;

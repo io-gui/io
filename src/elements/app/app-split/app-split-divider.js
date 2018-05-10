@@ -13,10 +13,10 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
           flex: none;
         }
         :host[orientation=horizontal] {
-          cursor: ew-resize;
+          /* cursor: ew-resize; */
         }
         :host[orientation=vertical] {
-          cursor: ns-resize;
+          /* cursor: ns-resize; */
         }
         :host > .app-divider-icon {
           display: flex;
@@ -38,7 +38,7 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
         type: Number
       },
       listeners: {
-        'io-pointer-move': '_pointerMoveHandler'
+        // 'io-pointer-move': '_pointerMoveHandler'
       }
     };
   }

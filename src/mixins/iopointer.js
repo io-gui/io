@@ -1,6 +1,8 @@
 const _clickmask = document.createElement('div');
 _clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;";
 
+let mousedownPath = null;
+
 export class Pointer {
   constructor(pointer = {}) {
     this.position = new Vector2(pointer.position);
@@ -104,22 +106,25 @@ export const IoPointerMixin = (superclass) => class extends superclass {
   _mousedownHandler(event) {
     event.preventDefault();
     this.focus();
+    // TODO: fix
+    mousedownPath = event.path;
     this.getPointers(event, true);
     this._fire('io-pointer-start', event, this.pointers);
     window.addEventListener('mousemove', this._mousemoveHandler);
     window.addEventListener('mouseup', this._mouseupHandler);
     window.addEventListener('blur', this._mouseupHandler); //TODO: check pointer data
+    // TODO: clickmask breaks scrolling
     if (_clickmask.parentNode !== document.body) {
       document.body.appendChild(_clickmask);
     }
   }
   _mousemoveHandler(event) {
     this.getPointers(event);
-    this._fire('io-pointer-move', event, this.pointers);
+    this._fire('io-pointer-move', event, this.pointers, mousedownPath);
   }
   _mouseupHandler(event) {
     this.getPointers(event);
-    this._fire('io-pointer-end', event, this.pointers);
+    this._fire('io-pointer-end', event, this.pointers, mousedownPath);
     window.removeEventListener('mousemove', this._mousemoveHandler);
     window.removeEventListener('mouseup', this._mouseupHandler);
     window.removeEventListener('blur', this._mouseupHandler);
@@ -152,7 +157,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     this._fire('io-pointer-end', event, this.pointers);
 
   }
-  _fire(eventName, event, pointer) {
-    this.fire(eventName, {event: event, pointer: pointer}, false);
+  _fire(eventName, event, pointer, path) {
+    this.fire(eventName, {event: event, pointer: pointer, path: path || event.path}, false);
   }
 };

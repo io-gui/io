@@ -9,6 +9,7 @@ export class Io extends HTMLElement {
   constructor(initProps) {
     super();
 
+    Object.defineProperty(this, '__$', { value: {} } ); // TODO: consider clearing on update
     Object.defineProperty(this, '__protochain', { value: this.__proto__.constructor.protochain } );
     Object.defineProperty(this, '__state', { value: this.__protochain.cloneProperties() } );
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
@@ -75,7 +76,6 @@ export class Io extends HTMLElement {
   }
   traverse(vChildren, host) {
     const children = host.children;
-
     // remove trailing elements
     while (children.length > vChildren.length) host.removeChild(children[children.length - 1]);
 
@@ -104,28 +104,23 @@ export class Io extends HTMLElement {
           updateNode(children[i], vChildren[i]);
         }
       }
-
-      // TODO: handle better
-      for (let prop in vChildren[i].props) {
-        // TODO: use attributeStyleMap when implemented in browser
-        // https://developers.google.com/web/updates/2018/03/cssom
-        if (prop == 'style') {
-          for (let s in vChildren[i].props[prop]) {
-            children[i].style[s] = vChildren[i].props[prop][s];
-          }
-        } else if (prop == 'class') {
-          children[i].className = vChildren[i].props[prop];
-        }
-      }
     }
 
-    for (let i = 0; i < children.length; i++) {
+    for (let i = 0; i < vChildren.length; i++) {
+
+      if (vChildren[i].props._id) {
+        this.__$[vChildren[i].props._id] = children[i];
+      }
+
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
         children[i].innerHTML = vChildren[i].children;
       } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
         this.traverse(vChildren[i].children, children[i]);
       }
     }
+  }
+  $(id) {
+    return this.__$[id];
   }
   update() {}
   set(prop, value) {

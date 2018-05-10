@@ -55,20 +55,6 @@ export class MenuItem extends Io {
       }
     };
   }
-  _touchstartHandler(event) {
-    event.preventDefault();
-    this.addEventListener('touchmove', this._touchmoveHandler);
-    this.addEventListener('touchend', this._touchendHandler);
-    this.focus();
-  }
-  _touchmoveHandler(event) {
-    MenuLayer.singleton._touchmoveHandler(event);
-  }
-  _touchendHandler(event) {
-    this.removeEventListener('touchmove', this._touchmoveHandler);
-    this.removeEventListener('touchend', this._touchendHandler);
-    MenuLayer.singleton._touchendHandler(event);
-  }
   update() {
     if (this.option.options) {
       let grpProps = {options: this.option.options, $parent: this, position: this.position};
@@ -92,6 +78,20 @@ export class MenuItem extends Io {
         MenuLayer.singleton.removeChild(this.$group);
       }
     }
+  }
+  _touchstartHandler(event) {
+    event.preventDefault();
+    this.addEventListener('touchmove', this._touchmoveHandler);
+    this.addEventListener('touchend', this._touchendHandler);
+    this.focus();
+  }
+  _touchmoveHandler(event) {
+    MenuLayer.singleton._touchmoveHandler(event);
+  }
+  _touchendHandler(event) {
+    this.removeEventListener('touchmove', this._touchmoveHandler);
+    this.removeEventListener('touchend', this._touchendHandler);
+    MenuLayer.singleton._touchendHandler(event);
   }
   _focusHandler(event) {
     if (this.$group) {

@@ -13,7 +13,6 @@ export class DemoApp extends Io {
           display: flex;
           width: 100%;
           height: 100%;
-          background: #222;
           flex-direction: column;
         }
       </style>
@@ -25,13 +24,13 @@ export class DemoApp extends Io {
         value: document.location
       },
       layout: {
-        // value: [
-        value: JSON.parse(localStorage.getItem('app-split-state')) || [
+        value: [
+        // value: JSON.parse(localStorage.getItem('app-split-state')) || [
           ['app-split', {'orientation': 'horizontal', 'splits': [
-            ['app-tabs', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
+            ['app-block', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
             ['app-split', {'orientation': 'vertical', 'width': 400, 'splits': [
-              ['app-tabs', {'tabs': ['inspector']}],
-              ['app-tabs', {'height': 400, 'tabs': ['io-demo', 'menu-demo'], 'selected': 'menu-demo'}],
+              ['app-block', {'tabs': ['inspector'], 'selected': 'inspector'}],
+              ['app-block', {'height': 400, 'tabs': ['io-demo', 'menu-demo'], 'selected': 'menu-demo'}],
             ]}],
           ]}],
         ]
