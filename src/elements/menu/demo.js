@@ -27,7 +27,6 @@ export class MenuDemo extends Io {
       {label: 'sub_five', options: suboptions1}
     ];
     let longOptions = [];
-    // TODO: optimize for more items
     for (let i = 0; i < 1000; i++) {
       let r = Math.random();
       longOptions[i] = {label: String(r), value: r, action: console.log, icon: 'ξ', hint: 'log'};

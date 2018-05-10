@@ -26,7 +26,9 @@ export class MenuBar extends Io {
       options: {
         type: Array
       },
+      // eliminate expanded property
       expanded: {
+        value: true,
         type: Boolean,
         notify: true
       },
@@ -34,13 +36,12 @@ export class MenuBar extends Io {
         type: Array
       },
       listeners: {
-        'mousedown': '_mousedownHandler'
+        'menu-item-focused': '_itemFocusedHandler'
       }
     };
   }
   constructor(props) {
     super(props);
-    this.expanded = true; // TODO: temp hack
     let frag = document.createDocumentFragment();
     for (let i = 0; i < this.options.length; i++) {
       this.$options[i] = new MenuItem({option: this.options[i], $parent: this});
@@ -49,9 +50,9 @@ export class MenuBar extends Io {
     }
     this.appendChild(frag);
   }
-  _mousedownHandler() {
+  _itemFocusedHandler(event) {
     this._rect = this.getBoundingClientRect();
-    this.expanded = true;
+    if (event.detail.option.options) this.expanded = true;
   }
   _mousemoveHandler(event) {
     MenuLayer.singleton._mousemoveHandler(event);
