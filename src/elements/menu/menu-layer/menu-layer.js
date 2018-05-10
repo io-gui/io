@@ -9,6 +9,7 @@ let lastFocus;
 let prevTouch;
 
 // TODO: make long (scrolling) menus work with touch
+// TODO: implement search
 
 export class MenuLayer extends Io {
   static get style() {
@@ -77,14 +78,14 @@ export class MenuLayer extends Io {
     this.$groups.push(group);
     group.addEventListener('focusin', this._menuItemFocusedHandler);
     group.addEventListener('mouseup', this._mouseupHandler);
-    group.addEventListener('keyup', this._keyupHandler);
+    group.addEventListener('keydown', this._keydownHandler);
     group.addEventListener('expanded-changed', this._expandedChangedHandler);
   }
   unregisterGroup(group) {
     this.$groups.splice(this.$groups.indexOf(group), 1);
     group.removeEventListener('focusin', this._menuItemFocusedHandler);
     group.removeEventListener('mouseup', this._mouseupHandler);
-    group.removeEventListener('keyup', this._keyupHandler);
+    group.removeEventListener('keydown', this._keydownHandler);
     group.removeEventListener('expanded-changed', this._expandedChangedHandler);
   }
   collapseAllGroups() {
@@ -144,7 +145,7 @@ export class MenuLayer extends Io {
   }
   _mouseupHandler(event) {
     let elem = event.path[0];
-    if (elem.localName == 'menu-item') {
+    if (elem.localName === 'menu-item') {
       this.runAction(elem.option);
     } else if (elem === this) {
       if (this._hoveredItem) {
@@ -156,47 +157,55 @@ export class MenuLayer extends Io {
     }
 
   }
-  _menuKeyupHandler(event) {
-    // let siblings = this.$parent.$options;
-    // let index = siblings.indexOf(this);
-    // // TODO: handle search.
-    // // TODO: handle previous focus.
-    // // TODO: handle tabbed focus marching.
-    // if (event.which == 13) {
-    //   event.preventDefault();
-    //   this._mouseupHandler(event); // TODO: test
-    // } else if (event.which == 37) { // LEFT
-    //   event.preventDefault();
-    //   if (this.$parent && this.$parent.$parent) this.$parent.$parent.focus();
-    // } else if (event.which == 38) { // UP
-    //   event.preventDefault();
-    //   siblings[(index + siblings.length - 1) % (siblings.length)].focus();
-    // } else if (event.which == 39) { // RIGHT
-    //   event.preventDefault();
-    //   if (this.option.options && this.option.options.length) {
-    //     this.$group.$options[0].focus();
-    //   }
-    // } else if (event.which == 40) { // DOWN
-    //   event.preventDefault();
-    //   // TODO: search
-    //   siblings[(index + 1) % (siblings.length)].focus();
-    // } else if (event.which == 9) { // TAB
-    //   event.preventDefault();
-    //   if (this.option.options && this.option.options.length) {
-    //     this.$group.$options[0].focus();
-    //   } else if (index < siblings.length - 1) {
-    //     siblings[(index + 1)].focus();
-    //   } else if (this.$parent && this.$parent.$parent) {
-    //     // TODO: fix and implement better tabbed focus marching.
-    //     let target = this.$parent.$parent;
-    //     let tSiblings = target.$parent.$options;
-    //     let tIndex = tSiblings.indexOf(target);
-    //     tSiblings[(tIndex + 1) % (tSiblings.length)].focus();
-    //   }
-    // } else if (event.which == 27) { // ESC
-    //   event.preventDefault();
-    //   this.collapseAll();
-    // }
+  _keydownHandler(event) {
+    event.preventDefault();
+    if (event.path[0].localName !== 'menu-item') return;
+
+    let elem = event.path[0];
+    let group = elem.$parent;
+    let siblings = [...group.querySelectorAll('menu-item')] || [];
+    let children = elem.$group ? [...elem.$group.querySelectorAll('menu-item')]  : [];
+    let index = siblings.indexOf(elem);
+
+    let command = '';
+
+    if (!group.horizontal) {
+      if (event.key == 'ArrowUp') command = 'prev';
+      if (event.key == 'ArrowRight') command = 'in';
+      if (event.key == 'ArrowDown') command = 'next';
+      if (event.key == 'ArrowLeft') command = 'out';
+    } else {
+      if (event.key == 'ArrowUp') command = 'out';
+      if (event.key == 'ArrowRight') command = 'next';
+      if (event.key == 'ArrowDown') command = 'in';
+      if (event.key == 'ArrowLeft') command = 'prev';
+    }
+    if (event.key == 'Tab') command = 'next';
+    if (event.key == 'Escape') command = 'exit';
+    if (event.key == 'Enter' || event.which == 32) command = 'action';
+
+    switch (command) {
+      case 'action':
+        this._mouseupHandler(event); // TODO: test
+        break;
+      case 'prev':
+        siblings[(index + siblings.length - 1) % (siblings.length)].focus();
+        break;
+      case 'next':
+        siblings[(index + 1) % (siblings.length)].focus();
+        break;
+      case 'in':
+        if (children.length) children[0].focus();
+        break;
+      case 'out':
+        if (group && group.$parent) group.$parent.focus();
+        break;
+      case 'exit':
+        this.collapseAllGroups();
+        break;
+      default:
+        break;
+    }
   }
   _hover(group) {
     let items = group.querySelectorAll('menu-item');

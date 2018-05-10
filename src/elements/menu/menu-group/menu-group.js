@@ -64,9 +64,6 @@ export class MenuGroup extends Io {
       $parent: {
         type: HTMLElement
       },
-      $options: {
-        type: Array
-      },
       listeners: {
         'focusin': '_focusHandler'
       }

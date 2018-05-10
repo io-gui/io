@@ -16,8 +16,10 @@ export class IoOption extends IoButton {
   _actionHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
       event.preventDefault();
-      this.querySelector('menu-root').expanded = true;
-      this.querySelector('menu-root').$group.$options[0].focus();
+      let menu = this.querySelector('menu-root');
+      let firstItem = menu.$group.querySelector('menu-item');
+      menu.expanded = true;
+      if (firstItem) firstItem.focus();
     }
   }
   _menuHandler(event) {
