@@ -115,8 +115,9 @@ export class AppBlock extends Io {
   _tabDragEndHandler(event) {
     if (this._droptarget !== -1) {
       let parent = event.detail.tab.parentElement;
-      parent.removeTab(event.detail.tab.tabID);
-      this.$.tabs.addTab(event.detail.tab.tabID, this._droptarget);
+      let tabID = event.detail.tab.tabID;
+      parent.removeTab(tabID);
+      this.$.tabs.addTab(tabID, this._droptarget);
     }
     this.setDropTarget(-1, null);
   }
