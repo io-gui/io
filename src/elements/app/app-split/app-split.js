@@ -50,9 +50,32 @@ export class AppSplit extends Io {
       }
     };
   }
-  update() {
-    this.orientation === 'horizontal' ? 'width' : 'height';
+  addSplit(elementID, droppedSplit, target) {
+    let hor = this.orientation === 'horizontal';
+    let ver = this.orientation === 'vertical';
 
+    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'app-split-divider');
+    let index = $blocks.indexOf(droppedSplit);
+    let divide = -1;
+
+    if ((hor && target == 'left') || (ver && target == 'top')) index += 0;
+    else if ((hor && target == 'right') || (ver && target == 'bottom')) index += 1;
+    else if ((hor && target == 'top') || (ver && target == 'left')) divide = 0;
+    else if ((hor && target == 'bottom') || (ver && target == 'right')) divide = 1;
+
+    let newBlock = ['app-block', {'tabs': [elementID], 'selected': 0}];
+    if (divide !== -1) {
+      let split = this.splits[index];
+      this.splits.splice(index, 1, ['app-split', {'orientation': hor ? 'vertical' : 'horizontal', 'splits': [
+        divide ? split : newBlock,
+        divide ? newBlock : split
+      ]}]);
+    } else {
+      this.splits.splice(index, 0, newBlock);
+    }
+    this.update();
+  }
+  update() {
     let hasFlex = false;
     for (let i = 0; i < this.splits.length; i++) {
       if (this.splits[i][2] === undefined) hasFlex = true;
@@ -103,14 +126,3 @@ export class AppSplit extends Io {
 }
 
 AppSplit.Register();
-
-
-// if (Math.abs(y) < 1 && Math.abs(x) < 1) {
-// //   else if (y < -Math.abs(x)) this.dropzone = 'top';
-// //   else if (y > +Math.abs(x)) this.dropzone = 'bottom';
-// //   else if (x < -Math.abs(y)) this.dropzone = 'left';
-// //   else if (x > +Math.abs(y)) this.dropzone = 'right';
-// //   else this.dropzone = 'center';
-// } else {
-// this.dropzone = '';
-// }

@@ -23,42 +23,43 @@ export class DemoApp extends Io {
       selected: {
         value: document.location
       },
-      layout: {
-        value: JSON.parse(localStorage.getItem('app-split-state')) || [
-          ['app-split', {'orientation': 'horizontal', 'splits': [
-            ['app-block', {'tabs': ['app-ctrl']}],
-            ['app-split', {'orientation': 'vertical', 'splits': [
-              ['app-block', {'tabs': ['inspector']}],
-              ['app-block', {'tabs': ['io-demo', 'menu-demo'], 'selected': 1}, 200],
-            ]}, 400],
-          ]}],
-        ]
-      },
+      layout: null,
+      elements: Object,
       listeners: {
         'app-split-changed': '_layoutChangedHandler',
         'app-block-changed': '_layoutChangedHandler'
       }
     };
   }
+  constructor() {
+    super();
+    this.elements = {
+      'io-demo': ['io-demo'],
+      'menu-demo': ['menu-demo'],
+      'inspector': ['three-inspector', {value: this.bind('selected')}],
+      'app-ctrl': ['demo-app-ctrl', {value: this.bind('selected')}]
+    };
+    this.layout = JSON.parse(localStorage.getItem('app-split-state')) || [
+      ['app-split', {'orientation': 'horizontal', 'splits': [
+        ['app-block', {'tabs': ['app-ctrl']}],
+        ['app-split', {'orientation': 'vertical', 'splits': [
+          ['app-block', {'tabs': ['inspector']}],
+          ['app-block', {'tabs': ['io-demo', 'menu-demo'], 'selected': 1}, 200],
+        ]}, 400],
+      ]}],
+    ];
+    this.render([
+      ['app-split', {
+        elements: this.elements,
+        splits: this.layout
+      }]
+    ]);
+  }
   _layoutChangedHandler() {
     this.debounce(this.saveLayoutHandler, 1000);
   }
   saveLayoutHandler() {
-    // console.log(JSON.stringify(this.layout));
     localStorage.setItem('app-split-state', JSON.stringify(this.layout));
-  }
-  update() {
-    this.render([
-      ['app-split', {
-        elements: {
-          'io-demo': ['io-demo'],
-          'menu-demo': ['menu-demo'],
-          'inspector': ['three-inspector', {value: this.bind('selected')}],
-          'app-ctrl': ['demo-app-ctrl', {value: this.bind('selected')}]
-        },
-        splits: this.layout
-      }]
-    ]);
   }
 }
 
