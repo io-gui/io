@@ -45,16 +45,14 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
       }
     };
   }
-  // TODO: reproduce and fix sticky movement
   _pointerMoveHandler(event) {
     let rect = this.getBoundingClientRect();
-    let movement;
+    let pos = event.detail.pointer[0].position;
     if (this.orientation === 'horizontal') {
-      movement = event.detail.pointer[0].position.x - rect.width / 2;
+      this.fire('app-split-divider-move', {movement: pos.x - rect.width / 2, index: this.index});
     } else {
-      movement = event.detail.pointer[0].position.y - rect.height / 2;
+      this.fire('app-split-divider-move', {movement: pos.y - rect.height / 2, index: this.index});
     }
-    this.fire('app-split-divider-move', {movement: movement, index: this.index});
   }
   update() {
     this.render([

@@ -118,6 +118,7 @@ export class AppBlock extends Io {
       let tabID = event.detail.tab.tabID;
       parent.removeTab(tabID);
       this.$.tabs.addTab(tabID, this._droptarget);
+      this.fire('app-block-changed');
     }
     this.setDropTarget(-1, null);
   }

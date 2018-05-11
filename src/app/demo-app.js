@@ -24,23 +24,27 @@ export class DemoApp extends Io {
         value: document.location
       },
       layout: {
-        value: [
-        // value: JSON.parse(localStorage.getItem('app-split-state')) || [
+        value: JSON.parse(localStorage.getItem('app-split-state')) || [
           ['app-split', {'orientation': 'horizontal', 'splits': [
             ['app-block', {'tabs': ['app-ctrl']}],
-            ['app-split', {'orientation': 'vertical', 'width': 400, 'splits': [
+            ['app-split', {'orientation': 'vertical', 'splits': [
               ['app-block', {'tabs': ['inspector']}],
-              ['app-block', {'height': 400, 'tabs': ['io-demo', 'menu-demo'], 'selected': 1}],
-            ]}],
+              ['app-block', {'tabs': ['io-demo', 'menu-demo'], 'selected': 1}, 200],
+            ]}, 400],
           ]}],
         ]
       },
       listeners: {
-        'app-changed': '_layoutChangedHandler'
+        'app-split-changed': '_layoutChangedHandler',
+        'app-block-changed': '_layoutChangedHandler'
       }
     };
   }
   _layoutChangedHandler() {
+    this.debounce(this.saveLayoutHandler, 1000);
+  }
+  saveLayoutHandler() {
+    // console.log(JSON.stringify(this.layout));
     localStorage.setItem('app-split-state', JSON.stringify(this.layout));
   }
   update() {

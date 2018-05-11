@@ -85,7 +85,6 @@ export class AppBlockTabs extends Io {
     let index = this.tabs.indexOf(tab);
     this.tabs.splice(index, 1);
     this.selected = Math.min(this.selected, this.tabs.length - 1);
-    this.fire('app-block-updated', this);
     this.update();
   }
   addTab(tab, index) {
@@ -95,17 +94,18 @@ export class AppBlockTabs extends Io {
     this.tabs.splice(index, 0, tab);
     this.selected = this.tabs.indexOf(tab);
     this.update();
-    this.fire('app-block-updated', this);
   }
   _deleteButtonHandler(index) {
     this.removeTab(this.tabs[index]);
+    this.fire('app-block-changed');
   }
   _tabSelectHandler(event) {
     this.selected = this.tabs.indexOf(event.detail.tab);
-    this.fire('app-block-updated', this.tabs);
+    this.fire('app-block-changed');
   }
   _newTabSelectHandler(tab) {
     this.addTab(tab, this.tabs.length);
+    this.fire('app-block-changed');
   }
 }
 

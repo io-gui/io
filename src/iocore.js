@@ -13,6 +13,7 @@ export class Io extends HTMLElement {
     Object.defineProperty(this, '__protochain', { value: this.__proto__.constructor.protochain } );
     Object.defineProperty(this, '__state', { value: this.__protochain.cloneProperties() } );
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
+    Object.defineProperty(this, '__timeout', { value: new WeakMap() } );
 
     this.__protochain.bindHandlers(this);
 
@@ -134,6 +135,10 @@ export class Io extends HTMLElement {
   }
   bind(sourceProp) {
     return this.__node.bind(sourceProp);
+  }
+  debounce(func, wait) {
+    clearTimeout(this.__timeout.get(func));
+    this.__timeout.set(func, setTimeout(func, wait));
   }
 }
 

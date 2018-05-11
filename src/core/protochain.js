@@ -32,10 +32,13 @@ export class Protochain {
             this.attributes[a] = prop[key][a];
           }
         } else {
-          let propDef = prop[key];
-          if (propDef === null || propDef === undefined) propDef = {};
-          if (propDef.constructor !== Object) propDef = { value: propDef };
-          propertyDefs[key] = Object.assign(propDef, propertyDefs[key] || {});
+          let propDef = new Property(prop[key], true);
+          if (propertyDefs[key]) propertyDefs[key].assign(propDef);
+          else propertyDefs[key] = propDef;
+          // let propDef = prop[key];
+          // if (propDef === null || propDef === undefined) propDef = {};
+          // if (propDef.constructor !== Object) propDef = { value: propDef };
+          // propertyDefs[key] = Object.assign(propDef, propertyDefs[key] || {});
         }
       }
     }
