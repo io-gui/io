@@ -9,7 +9,7 @@ export class Io extends HTMLElement {
   constructor(initProps) {
     super();
 
-    Object.defineProperty(this, '__$', { value: {} } ); // TODO: consider clearing on update
+    Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update
     Object.defineProperty(this, '__protochain', { value: this.__proto__.constructor.protochain } );
     Object.defineProperty(this, '__state', { value: this.__protochain.cloneProperties() } );
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
@@ -109,7 +109,7 @@ export class Io extends HTMLElement {
     for (let i = 0; i < vChildren.length; i++) {
 
       if (vChildren[i].props._id) {
-        this.__$[vChildren[i].props._id] = children[i];
+        this.$[vChildren[i].props._id] = children[i];
       }
 
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
@@ -118,9 +118,6 @@ export class Io extends HTMLElement {
         this.traverse(vChildren[i].children, children[i]);
       }
     }
-  }
-  $(id) {
-    return this.__$[id];
   }
   update() {}
   set(prop, value) {

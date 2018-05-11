@@ -1,6 +1,5 @@
 import {Io, html} from "../../../iocore.js";
 import "./app-split-divider.js";
-// import "../app-tabs/app-tabs.js";
 
 export class AppSplit extends Io {
   static get style() {
@@ -133,3 +132,14 @@ export class AppSplit extends Io {
 }
 
 AppSplit.Register();
+
+
+// if (Math.abs(y) < 1 && Math.abs(x) < 1) {
+// //   else if (y < -Math.abs(x)) this.dropzone = 'top';
+// //   else if (y > +Math.abs(x)) this.dropzone = 'bottom';
+// //   else if (x < -Math.abs(y)) this.dropzone = 'left';
+// //   else if (x > +Math.abs(y)) this.dropzone = 'right';
+// //   else this.dropzone = 'center';
+// } else {
+// this.dropzone = '';
+// }

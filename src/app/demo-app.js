@@ -27,10 +27,10 @@ export class DemoApp extends Io {
         value: [
         // value: JSON.parse(localStorage.getItem('app-split-state')) || [
           ['app-split', {'orientation': 'horizontal', 'splits': [
-            ['app-block', {'tabs': ['app-ctrl'], 'selected': 'app-ctrl'}],
+            ['app-block', {'tabs': ['app-ctrl']}],
             ['app-split', {'orientation': 'vertical', 'width': 400, 'splits': [
-              ['app-block', {'tabs': ['inspector'], 'selected': 'inspector'}],
-              ['app-block', {'height': 400, 'tabs': ['io-demo', 'menu-demo'], 'selected': 'menu-demo'}],
+              ['app-block', {'tabs': ['inspector']}],
+              ['app-block', {'height': 400, 'tabs': ['io-demo', 'menu-demo'], 'selected': 1}],
             ]}],
           ]}],
         ]

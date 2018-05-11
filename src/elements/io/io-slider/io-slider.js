@@ -47,6 +47,9 @@ export class IoSlider extends IoPointerMixin(Io) {
         type: Number,
         value: 100
       },
+      pointermode: {
+        value: 'relative'
+      },
       attributes: {
         'tabindex': 0
       },

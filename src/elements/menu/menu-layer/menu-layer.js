@@ -117,6 +117,7 @@ export class MenuLayer extends Io {
     let parent = item.$parent;
     while (parent) {
       expanded.push(parent);
+      item.__menuroot = parent; // TODO: unhack
       parent = parent.$parent;
     }
     for (let i = this.$groups.length; i--;) {
@@ -147,15 +148,16 @@ export class MenuLayer extends Io {
     let elem = event.path[0];
     if (elem.localName === 'menu-item') {
       this.runAction(elem.option);
+      elem.__menuroot.fire('menu-item-clicked', elem.option);
     } else if (elem === this) {
       if (this._hoveredItem) {
         this.runAction(this._hoveredItem.option);
+        this._hoveredItem.__menuroot.fire('menu-item-clicked', this._hoveredItem.option);
       } else if (!this._hoveredGroup) {
         this.collapseAllGroups();
         if (lastFocus) lastFocus.focus();
       }
     }
-
   }
   _keydownHandler(event) {
     event.preventDefault();

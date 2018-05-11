@@ -5,7 +5,7 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
   static get style() {
     return html`
       <style>
-      :host {
+        :host {
           background: #333;
           color: #ccc;
           z-index: 1;
@@ -13,10 +13,10 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
           flex: none;
         }
         :host[orientation=horizontal] {
-          /* cursor: ew-resize; */
+          cursor: col-resize;
         }
         :host[orientation=vertical] {
-          /* cursor: ns-resize; */
+          cursor: row-resize;
         }
         :host > .app-divider-icon {
           display: flex;
@@ -37,8 +37,11 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
       index: {
         type: Number
       },
+      pointermode: {
+        value: 'relative'
+      },
       listeners: {
-        // 'io-pointer-move': '_pointerMoveHandler'
+        'io-pointer-move': '_pointerMoveHandler'
       }
     };
   }

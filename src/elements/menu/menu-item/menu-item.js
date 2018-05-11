@@ -55,6 +55,9 @@ export class MenuItem extends Io {
       }
     };
   }
+  static get menuroot() {
+    return this;
+  }
   update() {
     if (this.option.options) {
       let grpProps = {options: this.option.options, $parent: this, position: this.position};

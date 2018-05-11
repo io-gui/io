@@ -16,19 +16,16 @@ export class IoOption extends IoButton {
   _actionHandler(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
       event.preventDefault();
-      let menu = this.querySelector('menu-root');
-      let firstItem = menu.$group.querySelector('menu-item');
-      menu.expanded = true;
+      this.$['menu'].expanded = true;
+      let firstItem = this.$['menu'].$['group'].querySelector('menu-item');
       if (firstItem) firstItem.focus();
     }
   }
   _menuHandler(event) {
-    event.stopPropagation();
-    if (event.detail.option.value !== undefined) {
-      this.set('value', event.detail.option.value);
-      if (typeof this.action === 'function') {
-        this.action(this.value !== undefined ? this.value : event);
-      }
+    this.$['menu'].expanded = false;
+    this.set('value', event.detail.value);
+    if (typeof this.action === 'function') {
+      this.action(this.value);
     }
   }
   update() {
@@ -46,6 +43,7 @@ export class IoOption extends IoButton {
     this.render([
       ['span', String(label)],
       ['menu-root', {
+        id: 'menu',
         options: this.options,
         position: 'bottom',
         listeners: {'menu-item-clicked': this._menuHandler}}]

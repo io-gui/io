@@ -65,8 +65,10 @@ export const IoPointerMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
       pointers: {
-        value: [],
         type: Array
+      },
+      pointermode: {
+        type: String
       },
       listeners: {
         'mousedown': '_mousedownHandler',
@@ -86,9 +88,13 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     for (let i = 0; i < touches.length; i++) {
       if (touches[i].target === event.target || event.touches === undefined) {
         let position = new Vector2({
-          x: touches[i].clientX - rect.left,
-          y: touches[i].clientY - rect.top
+          x: touches[i].clientX,
+          y: touches[i].clientY
         });
+        if (this.pointermode === 'relative') {
+          position.x -= rect.left
+          position.y -= rect.top
+        }
         if (this.pointers[i] === undefined) this.pointers[i] = new Pointer({start: position});
         let newPointer = new Pointer({position: position});
         let pointer = newPointer.getClosest(this.pointers);

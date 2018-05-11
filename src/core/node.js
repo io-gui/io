@@ -7,11 +7,9 @@ export class Node {
     this.properties = {};
     this.bindings = {};
     this.listeners = {};
-    this.attributes = {};
 
     Object.defineProperty(this, '_connected', { value: false, writable: true });
     Object.defineProperty(this, '_connectedListeners', { value: {} });
-    Object.defineProperty(this, '_setAttributes', { value: {} });
     Object.defineProperty(this, '_boundProperties', { value: {} });
     Object.defineProperty(this, '_srcBindings', { value: {} });
     Object.defineProperty(this, '_triggeredObservers', { value: [] });
@@ -23,7 +21,6 @@ export class Node {
     this.properties = {};
     this.bindings = {};
     this.listeners = {};
-    this.attributes = {};
 
     for (let p in props) {
       if (this.element.__state[p] === undefined) continue;
@@ -36,9 +33,6 @@ export class Node {
     }
     for (let l in props['listeners']) {
       this.listeners[l] = props['listeners'][l];
-    }
-    for (let a in props['attributes']) {
-      this.attributes[a] = props['attributes'][a];
     }
 
     if (props['className']) {
@@ -59,7 +53,6 @@ export class Node {
       this.connectListeners();
       this.triggerObservers();
       this.connectBindings();
-      this.setAttributes();
     }
   }
   connect() {
@@ -96,22 +89,6 @@ export class Node {
     for (let l in this.listeners) {
       this.element.removeEventListener(l, this.element[this.listeners[l]]);
       delete this._connectedListeners[l];
-    }
-  }
-  setAttributes() {
-    // TODO: test
-    for (let a in this.attributes) {
-      let attrib = this.attributes[a];
-      if (this._setAttributes[a] !== attrib) {
-        this.element.initAttribute(a, attrib);
-        this._setAttributes[a] = attrib;
-      }
-    }
-    for (let a in this._setAttributes) {
-      if (this.attributes[a] === undefined) {
-        this.element.initAttribute(a, this.element.__protochain.attributes);
-        delete this._setAttributes[a];
-      }
     }
   }
   setProperties() {
