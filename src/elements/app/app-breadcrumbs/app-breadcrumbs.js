@@ -32,12 +32,8 @@ export class AppBreadcrumbs extends Io {
   }
   static get properties() {
     return {
-      value: {
-        type: Object
-      },
-      crumbs: {
-        type: Array
-      }
+      value: Object,
+      crumbs: Array
     };
   }
   _selectHandler(crumb) {

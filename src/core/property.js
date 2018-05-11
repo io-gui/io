@@ -1,12 +1,20 @@
 export class Property {
   constructor(propDef) {
     if (propDef === null || propDef === undefined) propDef = {};
-    if (propDef === Boolean) propDef = {type: Boolean};
-    if (propDef === Number) propDef = {type: Number};
-    if (propDef === String) propDef = {type: String};
-    if (propDef === Array) propDef = {type: Array};
-    if (propDef === Object) propDef = {type: Object};
-    if (typeof propDef !== 'object') propDef = { value: propDef };
+    else if (propDef === Boolean) propDef = {type: Boolean};
+    else if (propDef === Number) propDef = {type: Number};
+    else if (propDef === String) propDef = {type: String};
+    else if (propDef === Array) propDef = {type: Array};
+    else if (propDef === Object) propDef = {type: Object};
+    else if (propDef === HTMLElement) propDef = {type: HTMLElement};
+    else if (typeof propDef !== 'object') {
+      propDef = { value: propDef };
+      if (typeof propDef.value === 'boolean') propDef.type = Boolean;
+      else if (typeof propDef.value === 'number') propDef.type = Number;
+      else if (typeof propDef.value === 'string') propDef.type = String;
+      else if (propDef.value instanceof Array) propDef.type = Array;
+      else if (typeof propDef.value === 'object') propDef.type = Object;
+    }
     this.value = propDef.value;
     this.type = propDef.type;
     this.observer = propDef.observer;

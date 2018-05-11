@@ -34,12 +34,8 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
         type: String,
         reflect: true
       },
-      index: {
-        type: Number
-      },
-      pointermode: {
-        value: 'relative'
-      },
+      index: Number,
+      pointermode: 'relative',
       listeners: {
         'io-pointer-move': '_pointerMoveHandler'
       }

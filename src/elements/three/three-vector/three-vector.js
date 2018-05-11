@@ -17,7 +17,7 @@ export class ThreeVector extends Io {
   }
   static get properties() {
     return {
-      value: {},
+      value: null,
       columns: {
         type: Number,
         reflect: true

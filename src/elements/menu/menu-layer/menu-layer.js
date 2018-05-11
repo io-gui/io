@@ -41,9 +41,7 @@ export class MenuLayer extends Io {
         reflect: true,
         observer: '_scrollAnimateGroupHandler'
       },
-      $groups: {
-        type: Array
-      },
+      $groups: Array,
       listeners: {
         'mouseup': '_mouseupHandler',
         'mousemove': '_mousemoveHandler',

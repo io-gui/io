@@ -3,21 +3,10 @@ import {IoString} from "../io-string/io-string.js";
 export class IoNumber extends IoString {
   static get properties() {
     return {
-      value: {
-        type: Number
-      },
-      step: {
-        type: Number,
-        value: 0.0001
-      },
-      min: {
-        type: Number,
-        value: -Infinity
-      },
-      max: {
-        type: Number,
-        value: Infinity
-      }
+      value: Number,
+      step: 0.0001,
+      min: -Infinity,
+      max: Infinity
     };
   }
   _blurHandler() {

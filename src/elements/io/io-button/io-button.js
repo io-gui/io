@@ -20,18 +20,13 @@ export class IoButton extends Io {
   }
   static get properties() {
     return {
-      value: {
-      },
-      label: {
-        type: String
-      },
+      value: null,
+      label: String,
       pressed: {
         type: Boolean,
         reflect: true
       },
-      action: {
-        type: Function
-      },
+      action: Function,
       listeners: {
         'keydown': '_downHandler',
         'mousedown': '_downHandler',

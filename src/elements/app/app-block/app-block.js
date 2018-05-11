@@ -26,9 +26,7 @@ export class AppBlock extends Io {
   }
   static get properties() {
     return {
-      elements: {
-        type: Object
-      },
+      elements: Object,
       tabs: {
         type: Array,
         observer: '_update'

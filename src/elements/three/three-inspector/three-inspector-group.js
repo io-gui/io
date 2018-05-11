@@ -32,9 +32,7 @@ export class ThreeInspectorGroup extends IoObject {
   }
   static get properties() {
     return {
-      props: {
-        type: Array
-      }
+      props: Array
     };
   }
   update() {

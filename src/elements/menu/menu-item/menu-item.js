@@ -37,15 +37,9 @@ export class MenuItem extends Io {
   }
   static get properties() {
     return {
-      option: {
-        type: Object
-      },
-      position: {
-        type: String
-      },
-      $parent: {
-        type: HTMLElement
-      },
+      option: Object,
+      position: String,
+      $parent: HTMLElement,
       listeners: {
         'focus': '_focusHandler',
         'touchstart': '_touchstartHandler'

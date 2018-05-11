@@ -18,16 +18,12 @@ export class IoObject extends Io {
   }
   static get properties() {
     return {
-      value: {
-        type: Object
-      },
+      value: Object,
       expanded: {
         type: Boolean,
         reflect: true
       },
-      label: {
-        type: String
-      }
+      label: String
     };
   }
 

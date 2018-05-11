@@ -4,13 +4,9 @@ import "../../menu/menu-root/menu-root.js";
 export class IoOption extends IoButton {
   static get properties() {
     return {
-      value: {},
-      action: {
-        type: Function
-      },
-      options: {
-        type: Array
-      }
+      value: null,
+      action: Function,
+      options: Array
     };
   }
   _actionHandler(event) {

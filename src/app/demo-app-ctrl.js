@@ -28,7 +28,7 @@ export class DemoAppCtrl extends Io {
   }
   static get properties() {
     return {
-      value: {}
+      value: null
     };
   }
   selectDemo(demo) {

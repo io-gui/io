@@ -8,12 +8,8 @@ let _pointer;
 export class AppBlockTab extends IoPointerMixin(Io) {
   static get properties() {
     return {
-      element: {
-        type: Object
-      },
-      tabID: {
-        type: String
-      },
+      element: Object,
+      tabID: String,
       selected: {
         type: Boolean,
         reflect: true
@@ -33,7 +29,7 @@ export class AppBlockTab extends IoPointerMixin(Io) {
   _pointerMoveHandler(event) {
     _pointer = event.detail.pointer[0];
     let dist = _pointer.distance.length();
-    if (!this._dragging && dist > 16 && event.detail.path[0] === this) {
+    if (!this._dragging && dist > 64 && event.detail.path[0] === this) {
       this._dragging = true;
       this.appendChild(_dragIcon);
       this.fire('app-block-tab-drag-start', {pointer: _pointer, tab: this});
@@ -53,6 +49,7 @@ export class AppBlockTab extends IoPointerMixin(Io) {
       this.fire('app-block-tab-drag-end', {pointer: _pointer, tab: this});
     } else {
       this.fire('app-block-tab-select', {tab: this.tabID});
+      this.fire('app-block-changed');
     }
   }
 }

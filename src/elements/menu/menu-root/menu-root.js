@@ -8,20 +8,10 @@ import {MenuGroup} from "../menu-group/menu-group.js";
 export class MenuRoot extends Io {
   static get properties() {
     return {
-      options: {
-        type: Array
-      },
-      expanded: {
-        type: Boolean
-      },
-      position: {
-        value: 'pointer',
-        type: String
-      },
-      listener: {
-        type: String,
-        value: 'click'
-      }
+      options: Array,
+      expanded: Boolean,
+      position: 'pointer',
+      listener: 'click'
     };
   }
   constructor(props) {

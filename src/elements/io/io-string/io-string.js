@@ -3,9 +3,7 @@ import {Io} from "../../../iocore.js";
 export class IoString extends Io {
   static get properties() {
     return {
-      value: {
-        type: String
-      },
+      value: String,
       listeners: {
         'blur': '_blurHandler',
         'keydown': '_keydownhandler'

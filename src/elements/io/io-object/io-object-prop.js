@@ -27,9 +27,7 @@ export class IoObjectProp extends IoPropertyMixin(Io) {
   }
   static get properties() {
     return {
-      config: {
-        type: Array
-      }
+      config: Array
     };
   }
   update() {

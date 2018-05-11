@@ -15,12 +15,8 @@ export class ThreeColorPicker extends IoPropertyMixin(Io) {
   }
   static get properties() {
     return {
-      value: {
-        type: Object
-      },
-      key: {
-        value:'*'
-      }
+      value: Object,
+      key: '*'
     };
   }
   update() {

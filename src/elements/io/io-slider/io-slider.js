@@ -32,24 +32,11 @@ export class IoSlider extends IoPointerMixin(Io) {
   }
   static get properties() {
     return {
-      value: {
-        type: Number
-      },
-      step: {
-        type: Number,
-        value: 0.01
-      },
-      min: {
-        type: Number,
-        value: 0
-      },
-      max: {
-        type: Number,
-        value: 100
-      },
-      pointermode: {
-        value: 'relative'
-      },
+      value: Number,
+      step: 0.01,
+      min: 0,
+      max: 100,
+      pointermode: 'relative',
       attributes: {
         'tabindex': 0
       },

@@ -41,18 +41,13 @@ export class MenuGroup extends Io {
   }
   static get properties() {
     return {
-      options: {
-        type: Array
-      },
+      options: Array,
       expanded: {
         type: Boolean,
         notify: true,
         reflect: true
       },
-      position: {
-        type: String,
-        value: 'right'
-      },
+      position: 'right',
       horizontal: {
         type: Boolean,
         reflect: true
@@ -61,9 +56,7 @@ export class MenuGroup extends Io {
         type: Boolean,
         reflect: true
       },
-      $parent: {
-        type: HTMLElement
-      },
+      $parent: HTMLElement,
       listeners: {
         'focusin': '_focusHandler'
       }

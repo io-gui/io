@@ -48,15 +48,9 @@ export class AppBlockTabs extends Io {
   }
   static get properties() {
     return {
-      elements: {
-        type: Object
-      },
-      tabs: {
-        type: Array
-      },
-      selected: {
-        type: Number
-      }
+      elements: Object,
+      tabs: Array,
+      selected: Number
     };
   }
   update() {

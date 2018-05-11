@@ -3,16 +3,12 @@ import {Io} from "../../../iocore.js";
 export class AppCollapsable extends Io {
   static get properties() {
     return {
-      label: {
-        type: String
-      },
+      label: String,
       expanded: {
         type: Boolean,
         reflect: true
       },
-      elements: {
-        type: Array
-      }
+      elements: Array
     };
   }
   update() {

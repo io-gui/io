@@ -30,12 +30,8 @@ export class ThreeInspector extends Io {
   }
   static get properties() {
     return {
-      value: {
-        type: Object
-      },
-      crumbs: {
-        type: Array
-      },
+      value: Object,
+      crumbs: Array,
       listeners: {
         'three-inspector-item-clicked': "_linkClickedHandler"
       }

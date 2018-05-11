@@ -38,12 +38,8 @@ export class AppSplit extends Io {
   }
   static get properties() {
     return {
-      splits: {
-        type: Array
-      },
-      elements: {
-        type: Object
-      },
+      splits: Array,
+      elements: Object,
       orientation: {
         value: 'horizontal',
         type: String,
