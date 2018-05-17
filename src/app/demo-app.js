@@ -44,8 +44,8 @@ export class DemoApp extends Io {
         ['app-block', {'tabs': ['app-ctrl']}],
         ['app-split', {'orientation': 'vertical', 'splits': [
           ['app-block', {'tabs': ['inspector']}],
-          ['app-block', {'tabs': ['io-demo', 'menu-demo'], 'selected': 1}, 200],
-        ]}, 400],
+          ['app-block', {'tabs': ['io-demo', 'menu-demo'], 'selected': 1}, 300],
+        ]}, 350],
       ]}],
     ];
     this.render([

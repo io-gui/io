@@ -11,12 +11,15 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
           z-index: 1;
           display: flex;
           flex: none;
+          border: 1px outset #666;
         }
         :host[orientation=horizontal] {
           cursor: col-resize;
+          width: 8px;
         }
         :host[orientation=vertical] {
           cursor: row-resize;
+          height: 8px;
         }
         :host > .app-divider-icon {
           display: flex;
@@ -31,7 +34,6 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
     return {
       orientation: {
         value: 'horizontal',
-        type: String,
         reflect: true
       },
       index: Number,
@@ -44,11 +46,8 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
   _pointerMoveHandler(event) {
     let rect = this.getBoundingClientRect();
     let pos = event.detail.pointer[0].position;
-    if (this.orientation === 'horizontal') {
-      this.fire('app-split-divider-move', {movement: pos.x - rect.width / 2, index: this.index});
-    } else {
-      this.fire('app-split-divider-move', {movement: pos.y - rect.height / 2, index: this.index});
-    }
+    let d = this.orientation === 'horizontal' ? 'width' : 'height';
+    this.fire('app-split-divider-move', {movement: pos.x - rect[d] / 2, index: this.index});
   }
   update() {
     this.render([

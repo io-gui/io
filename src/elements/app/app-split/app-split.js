@@ -8,30 +8,12 @@ export class AppSplit extends Io {
         :host  {
           flex: 1;
           display: flex;
-          flex-direction: column;
-          position: relative;
-          overflow: hidden;
-        }
-        :host > .app-split-flex {
-          flex-basis: auto;
-          flex-shrink: 10000;
-          flex-grow: 1;
-        }
-        :host > .app-split-fixed {
-          flex-shrink: 1;
-          flex-grow: 0;
         }
         :host[orientation=horizontal] {
           flex-direction: row;
         }
         :host[orientation=vertical] {
           flex-direction: column;
-        }
-        :host[orientation=horizontal] > app-split-divider {
-          width: 6px;
-        }
-        :host[orientation=vertical] > app-split-divider {
-          height: 6px;
         }
       </style>
     `;
@@ -46,11 +28,20 @@ export class AppSplit extends Io {
         reflect: true
       },
       listeners: {
-        'app-split-divider-move': '_dividerMoveHandler'
+        'app-split-divider-move': '_dividerMoveHandler',
+        'app-block-changed': '_appBlockChangedHandler'
       }
     };
   }
+  _appBlockChangedHandler(event) {
+    for (var i = 0; i < this.splits.length; i++) {
+      if (this.splits[i][1].tabs == event.detail.tabs) {
+        this.splits[i][1].selected = event.detail.selected;
+      }
+    }
+  }
   addSplit(elementID, droppedSplit, target) {
+
     let hor = this.orientation === 'horizontal';
     let ver = this.orientation === 'vertical';
 
@@ -73,56 +64,87 @@ export class AppSplit extends Io {
     } else {
       this.splits.splice(index, 0, newBlock);
     }
+
     this.update();
   }
   update() {
-    let hasFlex = false;
-    for (let i = 0; i < this.splits.length; i++) {
-      if (this.splits[i][2] === undefined) hasFlex = true;
-    }
-    // Make sure at least one is flex.
-    if (!hasFlex) this.splits[parseInt(this.splits.length / 2)].length = 2;
+    let d = this.orientation === 'horizontal' ? 'width' : 'height';
+    let SPLIT_SIZE = 10;
+    let rectSize = this.getBoundingClientRect()[d];
+    let maxFlex = rectSize - (this.splits.length - 1) * SPLIT_SIZE;
 
-    let splits = [];
+    let flexBasis = new Array(this.splits.length);
+
+    let flexCount = 0;
     for (let i = 0; i < this.splits.length; i++) {
-      let isFlex = this.splits[i][2] !== undefined;
-      splits.push([this.splits[i][0], Object.assign({
-        elements: this.elements,
-        style: isFlex ? {'flex-basis': this.splits[i][2] + 'px'} : null,
-        class: isFlex ? 'app-split-fixed' : 'app-split-flex'},
-        this.splits[i][1])]);
-      if (i < this.splits.length - 1) splits.push(['app-split-divider', {orientation: this.orientation, index: i}]);
+      if (this.splits[i][2] !== undefined) {
+        maxFlex -= this.splits[i][2];
+        flexBasis[i] = this.splits[i][2] + 'px';
+      } else {
+        flexCount++;
+      }
     }
-    this.render([splits]);
+
+    let flex = (maxFlex / rectSize * 100) / flexCount;
+
+    let children = [];
+    for (let i = 0; i < this.splits.length; i++) {
+      children.push([this.splits[i][0], Object.assign({
+        elements: this.elements,
+        style: {
+          'flex-basis': flexBasis[i] ? flexBasis[i] : 'auto',
+          'flex-grow': flexBasis[i] ? 0 : 1,
+          'flex-shrink': flexBasis[i] ? 0 : 1
+        }},
+        this.splits[i][1])]);
+      if (i < this.splits.length - 1) children.push(['app-split-divider', {orientation: this.orientation, index: i}]);
+    }
+    this.render([children]);
   }
   _dividerMoveHandler(event) {
     event.stopPropagation();
 
-    let i = event.detail.index;
+    let pi = event.detail.index;
+    let ni = event.detail.index + 1;
 
-    let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'app-split-divider');
-    let prev = this.splits[i];
-    let next = this.splits[i+1];
+    let prev = this.splits[pi];
+    let next = this.splits[ni];
 
-    if (next[2] !== undefined && prev[2] !== undefined) {
-      next[2] = $blocks[i+1].getBoundingClientRect()[2];
+    // TODO: better clipping and snapping
+    let dp = prev[2] === undefined ? undefined : (prev[2] + event.detail.movement);
+    let dn = next[2] === undefined ? undefined : (next[2] - event.detail.movement);
+
+    console.log(dp, dn);
+    if ((dp !== undefined && dp >= 0) && (dn === undefined || dn >= 0)) {
+      this.splits[pi][2] = Math.max(0, dp);
+    }
+    if ((dn !== undefined && dn >= 0) && (dp === undefined || dp >= 0)) {
+      this.splits[ni][2] = Math.max(0, dn);
     }
 
-    if (prev[2] !== undefined) prev[2] = Math.max(0, prev[2] + event.detail.movement);
-    if (next[2] !== undefined) next[2] = Math.max(0, next[2] - event.detail.movement);
+    if (prev[2] === undefined && next[2] === undefined) {
+      let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'app-split-divider');
+      let d = this.orientation === 'horizontal' ? 'width' : 'height';
+      let ci = Math.floor(this.splits.length / 2);
+      if (Math.abs(ci - pi) <= Math.abs(ci - ni)) {
+        for (var j = ni; j < this.splits.length; j++) {
+          this.splits[j][2] = parseInt($blocks[j].getBoundingClientRect()[d]);
+        }
+      } else {
+        for (var j = pi; j >= 0; j--) {
+          this.splits[j][2] = parseInt($blocks[j].getBoundingClientRect()[d]);
+        }
+      }
+    }
+    let sizes = [];
+    for (var j = 0; j < this.splits.length; j++) {
+      sizes.push(this.splits[j][2]);
+    }
+    console.log(sizes);
 
     this.fire('app-split-changed', this.splits);
     this.update();
   }
-  // addSplit(split, index, orientation) {
-  //   console.log(split, index, orientation);
-  //   // insert if orientation match
-  //   // Add new split if orientation different.
-  // }
-  // removeSplit(split) {
-  //   this.splits.splice(this.splits.indexOf(split), 1);
-  //   this.update();
-  // }
 }
 
 AppSplit.Register();

@@ -13,13 +13,17 @@ export class AppBlockTabs extends Io {
           flex-direction: row;
           background: #bbb;
           line-height: 1em;
-          white-space: nowrap;
+          overflow: hidden;
         }
         :host > app-block-tab {
+          flex-grow: 0;
+          flex-shrink: 1;
           cursor: pointer;
           padding: 0.2em 1.6em;
           border-right: 1px solid #999;
-          background: #bbb;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         :host > app-block-tab[selected] {
           background: #ccc;
@@ -59,47 +63,26 @@ export class AppBlockTabs extends Io {
       tabs.push(['app-block-tab', {
         element: this.elements[this.selected],
         tabID: this.tabs[i],
-        listeners: {'app-block-tab-select': this._tabSelectHandler},
         selected: this.selected === i}]);
       tabs.push(['io-button', {
         label: '⨯',
-        action: this._deleteButtonHandler,
+        action: this._removeHandler,
         value: i}]);
     }
     tabs.push(
       ['io-option', {
         value: '+',
         options: Object.entries(this.elements).map((entry) => ({value: entry[0]})),
-        action: this._newTabSelectHandler
+        action: this._addTabHandler
       }]
     );
     this.render([tabs]);
   }
-  removeTab(tab) {
-    let index = this.tabs.indexOf(tab);
-    this.tabs.splice(index, 1);
-    this.selected = Math.min(this.selected, this.tabs.length - 1);
-    this.update();
+  _removeHandler(index) {
+    this.fire('app-block-tabs-remove', {tabID: this.tabs[index]});
   }
-  addTab(tab, index) {
-    if (this.tabs.indexOf(tab) !== -1) {
-      this.tabs.splice(this.tabs.indexOf(tab), 1);
-    }
-    this.tabs.splice(index, 0, tab);
-    this.selected = this.tabs.indexOf(tab);
-    this.update();
-  }
-  _deleteButtonHandler(index) {
-    this.removeTab(this.tabs[index]);
-    this.fire('app-block-changed');
-  }
-  _tabSelectHandler(event) {
-    this.selected = this.tabs.indexOf(event.detail.tab);
-    this.fire('app-block-changed');
-  }
-  _newTabSelectHandler(tab) {
-    this.addTab(tab, this.tabs.length);
-    this.fire('app-block-changed');
+  _addTabHandler(tabID) {
+    this.fire('app-block-tabs-add', {tabID: tabID, index: this.tabs.length});
   }
 }
 

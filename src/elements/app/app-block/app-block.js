@@ -8,34 +8,33 @@ export class AppBlock extends Io {
       <style>
         :host {
           display: flex;
+          overflow: hidden;
           flex-direction: column;
-          background: #ddd;
         }
         :host[droptarget="top"] {
-          border-top: 2px dashed #4f6;
+          border-top: 4px dashed #4f6;
         }
         :host[droptarget="left"] {
-          border-left: 2px dashed #4f6;
+          border-left: 4px dashed #4f6;
         }
         :host[droptarget="right"] {
-          border-right: 2px dashed #4f6;
+          border-right: 4px dashed #4f6;
         }
         :host[droptarget="bottom"] {
-          border-bottom: 2px dashed #4f6;
+          border-bottom: 4px dashed #4f6;
         }
         :host[droptarget="this"] > :nth-child(2) {
           opacity: 0.25
         }
         :host[droptarget="this"] > app-block-tabs {
-          border-bottom: 2px dashed #4f6;
-          margin-bottom: -2px;
+          border-bottom: 4px dashed #4f6;
+          margin-bottom: -4px;
         }
         :host app-block-tab[highlightdrop = "before"] {
-          margin-left: -1px;
-          border-left: 2px dashed #4f6;
+          border-left: 4px dashed #4f6;
         }
         :host app-block-tab[highlightdrop = "after"] {
-          border-right: 2px dashed #4f6;
+          border-right: 4px dashed #4f6;
         }
       </style>
     `;
@@ -43,21 +42,42 @@ export class AppBlock extends Io {
   static get properties() {
     return {
       elements: Object,
-      tabs: {
-        type: Array,
-        observer: '_update'
-      },
-      selected: {
-        type: Number,
-        observer: '_update'
+      tabs: Array,
+      selected: Number,
+      listeners: {
+        'app-block-tabs-add': '_addTabHandler',
+        'app-block-tabs-remove': '_removeTabHandler',
+        'app-block-tab-select': '_tabSelectHandler'
       }
     };
   }
-  _update() {
+  update() {
     this.render([
       ['app-block-tabs', {id: 'tabs', elements: this.elements, tabs: this.tabs, selected: this.bind('selected')}],
       this.elements[this.tabs[this.selected]]
     ]);
+  }
+
+  _addTabHandler(event) {
+    if (this.tabs.indexOf(event.detail.tabID) !== -1) {
+      this.tabs.splice(this.tabs.indexOf(event.detail.tabID), 1);
+    }
+    this.tabs.splice(event.detail.index, 0, event.detail.tabID);
+    this.selected = this.tabs.indexOf(event.detail.tabID);
+    this.fire('app-block-changed', {tabs: this.tabs, selected: this.selected});
+    this.update();
+  }
+  _removeTabHandler(event) {
+    let index = this.tabs.indexOf(event.detail.tabID);
+    this.tabs.splice(index, 1);
+    this.selected = Math.min(this.selected, this.tabs.length - 1);
+    this.fire('app-block-changed', {tabs: this.tabs, selected: this.selected});
+    this.update();
+  }
+  _tabSelectHandler(event) {
+    this.selected = this.tabs.indexOf(event.detail.tabID);
+    this.fire('app-block-changed', {tabs: this.tabs, selected: this.selected});
+    this.update();
   }
   connectedCallback() {
     super.connectedCallback();
@@ -91,8 +111,8 @@ export class AppBlock extends Io {
     if (ay < 1 && ax < 1 && (ay > 0.9 || ax > 0.9)) {
       if (y < -ax) {
         // TODO: improve UX with tabs
-        this.setDropTarget('top', tabID);
-        return;
+        // this.setDropTarget('top', tabID);
+        // return;
       } else if (y > +ax) {
         this.setDropTarget('bottom', tabID);
         return;
@@ -105,7 +125,7 @@ export class AppBlock extends Io {
       }
     }
 
-    if (ay < 0.75 && ax < 0.75) {
+    if (ay < 0.85 && ax < 0.85) {
       this.setDropTarget(this.tabs.length, tabID);
       return;
     };
@@ -130,25 +150,19 @@ export class AppBlock extends Io {
   _tabDragEndHandler(event) {
     window.removeEventListener('app-block-tab-drag', this._tabDragHandler);
     window.removeEventListener('app-block-tab-drag-end', this._tabDragEndHandler);
-    let srcTabs = event.detail.tab.parentElement;
+    let srcTab = event.detail.tab;
     let tabID = event.detail.tab.tabID;
     if (typeof this._droptarget === 'string') {
-      let srcSplit = this;
-      while (srcSplit.localName !== 'app-split' && srcSplit !== document) {
-        srcSplit = srcSplit.parentElement;
-      }
-      srcTabs.removeTab(tabID);
-      srcSplit.addSplit(tabID, this, this._droptarget);
-      this.fire('app-block-changed');
+      srcTab.fire('app-block-tabs-remove', {tabID: tabID});
+      this.parentElement.addSplit(tabID, this, this._droptarget);
     } else if (this._droptarget !== -1) {
-      srcTabs.removeTab(tabID);
-      this.$.tabs.addTab(tabID, this._droptarget);
-      this.fire('app-block-changed');
+      srcTab.fire('app-block-tabs-remove', {tabID: tabID});
+      this.fire('app-block-tabs-add', {tabID: tabID, index: this._droptarget});
     }
     this.setDropTarget(-1, null);
   }
   setDropTarget(target) {
-    if (typeof target === 'string') {
+    if (typeof target === 'string' && this.parentElement.localName === 'app-split') {
       this.setAttribute('droptarget', target);
       this._droptarget = target;
     } else if (target !== -1) {
