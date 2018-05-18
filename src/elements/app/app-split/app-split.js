@@ -1,9 +1,9 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 import "./app-split-divider.js";
 
 export class AppSplit extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host  {
           flex: 1;

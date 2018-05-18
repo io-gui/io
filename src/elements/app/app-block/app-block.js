@@ -1,10 +1,10 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 import "./app-block-tab.js";
 import "./app-block-tabs.js";
 
 export class AppBlock extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: flex;

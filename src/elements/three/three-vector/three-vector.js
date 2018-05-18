@@ -1,9 +1,9 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 import "../../io/io-object/io-object-prop.js";
 
 export class ThreeVector extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: flex;

@@ -3,8 +3,6 @@ import {Node} from "./core/node.js";
 import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 
-export function html() { return arguments[0][0]; }
-
 export class Io extends HTMLElement {
   constructor(initProps) {
     super();
@@ -139,9 +137,6 @@ export class Io extends HTMLElement {
   debounce(func, wait) {
     clearTimeout(this.__timeout.get(func));
     this.__timeout.set(func, setTimeout(func, wait));
-  }
-  path(path, importurl) {
-    return new URL(path, importurl).pathname;
   }
 }
 

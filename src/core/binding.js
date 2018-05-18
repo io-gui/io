@@ -40,6 +40,7 @@ export class Binding {
       if (index !== -1) {
         targetProps.splice(index, 1);
       }
+      // TODO: remove from WeakMap?
       target.removeEventListener(targetProp + '-changed', this.updateSource);
     }
   }

@@ -1,4 +1,4 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 
 let previousOption;
 let previousParent;
@@ -13,7 +13,7 @@ let prevTouch;
 
 export class MenuLayer extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: block;

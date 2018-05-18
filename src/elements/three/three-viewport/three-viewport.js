@@ -1,10 +1,9 @@
-import {Io, html} from "../../../iocore.js";
-import {IoPointerMixin} from "../../../mixins/iopointer.js";
+import {Io} from "../../../iocore.js";
 import * as THREE from "../../../../lib/three.module.js";
 
-export class ThreeViewport extends IoPointerMixin(Io) {
+export class ThreeViewport extends Io {
   static get style() {
-    return html`
+    return `
       <style>
       :host {
         position: relative;
@@ -20,22 +19,23 @@ export class ThreeViewport extends IoPointerMixin(Io) {
   }
   static get properties() {
     return {
-      pointermode: 'viewport',
       renderer: null,
       camera: null,
       scene: null,
       attributes: {
-        'tabindex' : 0
+        'tabindex': 1
       }
     }
   }
   constructor(props) {
     super(props);
-    this.__state.camera.value = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, .1, 20000 );
-    this.__state.scene.value = new THREE.Scene();
-    this.__state.renderer.value = new THREE.WebGLRenderer( { antialias: false } );
+    if (!this.__state.camera.value)
+        this.__state.camera.value = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
+    if (!this.__state.scene.value)
+        this.__state.scene.value = new THREE.Scene();
+    if (!this.__state.renderer.value)
+        this.__state.renderer.value = new THREE.WebGLRenderer( { antialias: false } );
     this.appendChild(this.renderer.domElement);
-    this.init();
   }
   connectedCallback() {
     super.connectedCallback();
@@ -46,10 +46,8 @@ export class ThreeViewport extends IoPointerMixin(Io) {
     super.disconnectedCallback();
     this._connected = false;
   }
-  _onAnimate() {
-    if (!this._connected) return;
+  _updateRendererSize() {
     let rect = this.getBoundingClientRect();
-
     if (rect.width !== this._width || rect.height !== this._height) {
       let _ctx = this.renderer.context;
       var _ratio = _ctx.webkitBackingStorePixelRatio ||
@@ -57,37 +55,50 @@ export class ThreeViewport extends IoPointerMixin(Io) {
                   _ctx.msBackingStorePixelRatio ||
                   _ctx.oBackingStorePixelRatio ||
                   _ctx.backingStorePixelRatio || 1;
-
       this._width = rect.width;
       this._height = rect.height;
       this.renderer.setPixelRatio((window.devicePixelRatio || 1) * _ratio);
       this.renderer.setSize(Math.floor(rect.width), Math.floor(rect.height));
-
-      if (this.camera instanceof THREE.PerspectiveCamera) {
-        this.camera.aspect = rect.width / rect.height;
-      }
-      if (this.camera instanceof THREE.OrthographicCamera) {
-        var a = rect.width / rect.height;
-        var h = this.camera.top - this.camera.bottom;
-        this.camera.top = h / 2;
-        this.camera.bottom = - h / 2;
-        this.camera.right = h / 2 * a;
-        this.camera.left = - h / 2 * a;
-      }
-
-      this.camera.updateProjectionMatrix();
     }
-
-    this.animate();
+  }
+  _updateCameraAspect(camera) {
+    let rect = this.getBoundingClientRect();
+    let aspect = rect.width / rect.height;
+    if (camera instanceof THREE.PerspectiveCamera) {
+      if (camera.aspect !== aspect) {
+        camera.aspect = aspect;
+        camera.updateProjectionMatrix();
+      }
+    }
+    if (camera instanceof THREE.OrthographicCamera) {
+      let hh = camera.top - camera.bottom / 2;
+      let hw = hh * aspect;
+      if (camera.top !== hh || camera.right !== hw) {
+        camera.top = hh;
+        camera.bottom = - hh;
+        camera.right = hw;
+        camera.left = - hw;
+        camera.updateProjectionMatrix();
+      }
+    }
+  }
+  _onAnimate() {
+    if (!this._connected) return;
+    this._updateRendererSize();
+    this.update();
+    if (!this.rendered) {
+      this.preRender();
+      this.render();
+      this.postRender();
+      this.rendered = true;
+    }
     requestAnimationFrame(this._onAnimate);
   }
-  init() {}
   update() {}
-  animate() {
-    this.update();
-    this.render();
-  }
+  preRender() {}
+  postRender() {}
   render() {
+    this._updateCameraAspect(this.camera);
     this.renderer.render(this.scene, this.camera);
   }
 }

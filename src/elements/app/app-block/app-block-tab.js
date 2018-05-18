@@ -1,4 +1,4 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 import {IoPointerMixin} from "../../../mixins/iopointer.js";
 
 const _dragIcon = document.createElement('div');

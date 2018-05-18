@@ -1,4 +1,3 @@
-import {html} from "../../../iocore.js";
 import {IoButton} from "../../io/io-button/io-button.js";
 
 export class IoBoolean extends IoButton {

@@ -1,8 +1,8 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 
 export class IoButton extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           cursor: pointer;

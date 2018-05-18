@@ -1,9 +1,9 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 import {IoPointerMixin} from "../../../mixins/iopointer.js";
 
 export class IoSlider extends IoPointerMixin(Io) {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: inline-block;

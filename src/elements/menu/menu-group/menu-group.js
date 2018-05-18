@@ -1,10 +1,10 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 import {MenuItem} from "../menu-item/menu-item.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
 
 export class MenuGroup extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: none;

@@ -1,4 +1,4 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 import "../../app/app-breadcrumbs/app-breadcrumbs.js";
 import "./three-inspector-group.js";
 
@@ -9,7 +9,7 @@ function isPropertyOf(prop, object) {
 
 export class ThreeInspector extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: flex;
@@ -31,11 +31,17 @@ export class ThreeInspector extends Io {
   static get properties() {
     return {
       value: Object,
+      configs: Object,
       crumbs: Array,
       listeners: {
-        'three-inspector-item-clicked': "_onLinkClicked"
+        'three-inspector-item-clicked': '_onLinkClicked',
+        'mousedown': '_stopEvent',
+        'touchstart': '_stopEvent'
       }
     };
+  }
+  _stopEvent(event) {
+    event.stopPropagation();
   }
   _onLinkClicked(event) {
     event.stopPropagation();
@@ -94,7 +100,7 @@ export class ThreeInspector extends Io {
     }
 
     const GroupItem = entry => ['three-inspector-group', {
-      value: this.value, props: entry[1], label: entry[0], expanded: true}];
+      value: this.value, props: entry[1], label: entry[0], expanded: true, configs: this.configs}];
     this.render([
       ['app-breadcrumbs', {value: this.bind('value'), crumbs: this.bind('crumbs')}],
       ['div', {class: 'io-wrapper'}, [

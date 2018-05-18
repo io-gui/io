@@ -1,11 +1,11 @@
-import * as THREE from "../../../../lib/three.module.js";
-import {WebglExample} from "./webgl-example.js";
+import * as THREE from "../../../../../lib/three.module.js";
+import ThreeShot from "../three-shot.js";
 
-export class WebglGeometryColors extends WebglExample {
+export default class extends ThreeShot {
   init() {
 
-    let camera = this.camera;
-    let scene = this.scene;
+    let camera = this.camera = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
+    let scene = this.scene = new THREE.Scene();
 
     camera.position.z = 1500;
 
@@ -118,18 +118,4 @@ export class WebglGeometryColors extends WebglExample {
     mesh.add( wireframe );
     scene.add( mesh );
   }
-  update() {
-    let camera = this.camera;
-    let scene = this.scene;
-
-    let mouseX = this.pointers[0] ? this.pointers[0].position.x * 500 : 0;
-    let mouseY = this.pointers[0] ? this.pointers[0].position.y * 500 : 0;
-
-    camera.position.x += ( mouseX - camera.position.x );
-    camera.position.y += ( - mouseY - camera.position.y );
-
-    camera.lookAt( scene.position );
-  }
 }
-
-WebglGeometryColors.Register();

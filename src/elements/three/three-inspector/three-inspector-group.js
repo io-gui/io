@@ -1,6 +1,5 @@
 import * as THREE from "../../../../lib/three.module.js";
 
-import {html} from "../../../iocore.js";
 import {IoObject} from "../../io/io-object/io-object.js";
 import "../../app/app-collapsable/app-collapsable.js";
 import "./three-inspector-item.js";
@@ -14,7 +13,7 @@ import "../three-color/three-color.js";
 
 export class ThreeInspectorGroup extends IoObject {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: flex;
@@ -32,7 +31,8 @@ export class ThreeInspectorGroup extends IoObject {
   }
   static get properties() {
     return {
-      props: Array
+      props: Array,
+      configs: Object
     };
   }
   update() {

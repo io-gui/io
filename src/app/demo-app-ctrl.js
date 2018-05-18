@@ -1,4 +1,4 @@
-import {Io, html} from "../io.js";
+import {Io} from "../io.js";
 
 import * as THREE from "../../lib/three.module.js";
 
@@ -12,7 +12,7 @@ mesh.add(light);
 
 export class DemoAppCtrl extends Io {
   static get style() {
-    return html`
+    return `
     <style>
       :host {
         padding: 0 1em 1em 1em;

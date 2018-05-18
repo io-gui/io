@@ -1,9 +1,8 @@
-import {html} from "../../../iocore.js";
 import {IoButton} from "../../io/io-button/io-button.js";
 
 export class ThreeInspectorLink extends IoButton {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           padding: 0.3em 0;

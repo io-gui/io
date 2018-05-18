@@ -1,8 +1,8 @@
-import {Io, html} from "../../io.js";
+import {Io} from "../../io.js";
 
 export class MenuDemo extends Io {
   static get style() {
-    return html`
+    return `
       <style>
       :host div.area {
         background: rgba(128,128,128,0.2);

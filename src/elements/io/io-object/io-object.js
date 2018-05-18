@@ -1,4 +1,4 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 import "../io-boolean/io-boolean.js";
 import "../io-number/io-number.js";
 import "../io-string/io-string.js";
@@ -8,7 +8,7 @@ import "./io-object-prop.js";
 
 export class IoObject extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: inline-block;
@@ -20,6 +20,7 @@ export class IoObject extends Io {
   static get properties() {
     return {
       value: Object,
+      configs: Object,
       expanded: {
         type: Boolean,
         reflect: true
@@ -41,6 +42,8 @@ export class IoObject extends Io {
       }
       proto = proto.__proto__;
     }
+
+    configs = Object.assign(configs, this.configs);
 
     let propConfigs = {};
 

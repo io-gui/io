@@ -1,16 +1,14 @@
-import {Io, html} from "../io.js";
+import {Io} from "../io.js";
 
 import "./demo-app-ctrl.js";
 import "../elements/io/demo.js";
 import "../elements/menu/demo.js";
 
-import "../elements/three/examples/webgl-geometries.js";
-import "../elements/three/examples/webgl-geometry-colors.js";
-import "../elements/three/examples/webgl-geometry-hierarchy2.js";
+import "../elements/three/three-example/three-example.js";
 
 export class DemoApp extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           position: fixed;
@@ -38,9 +36,10 @@ export class DemoApp extends Io {
   constructor() {
     super();
     this.elements = {
-      'webgl-geometry-hierarchy2': ['webgl-geometry-hierarchy2'],
-      'webgl-geometry-colors': ['webgl-geometry-colors'],
-      'webgl-geometries': ['webgl-geometries'],
+      'example-geometry-hierarchy2': ['three-example', {example: 'geometry-hierarchy2', control: 'OrbitControls'}],
+      'example-geometry-colors': ['three-example', {example: 'geometry-colors', control: 'OrbitControls'}],
+      'example-geometry-teapot': ['three-example', {example: 'geometry-teapot', control: 'OrbitControls'}],
+      'example-geometries': ['three-example', {example: 'geometries', control: 'OrbitControls'}],
       'three-viewport': ['three-viewport'],
       'three-renderer': ['three-renderer'],
       'io-demo': ['io-demo'],

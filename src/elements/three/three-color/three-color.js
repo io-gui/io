@@ -1,11 +1,10 @@
-import {html} from "../../../iocore.js";
 import {ThreeVector} from "../three-vector/three-vector.js";
 import "../../io/io-object/io-object-prop.js";
 import "./three-color-picker.js";
 
 export class ThreeColor extends ThreeVector {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: flex;

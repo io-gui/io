@@ -1,9 +1,9 @@
-import {Io, html} from "../../../iocore.js";
+import {Io} from "../../../iocore.js";
 import {IoButton} from "../../io/io-button/io-button.js";
 
 export class AppBreadcrumbs extends Io {
   static get style() {
-    return html`
+    return `
       <style>
         :host {
           display: flex;

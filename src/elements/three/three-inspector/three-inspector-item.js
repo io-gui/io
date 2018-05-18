@@ -1,9 +1,8 @@
-import {html} from "../../../iocore.js";
 import {IoObjectProp} from "../../io/io-object/io-object-prop.js";
 
 export class ThreeInspectorItem extends IoObjectProp {
   static get style() {
-    return html`
+    return `
       <style>
       :host {
         display: flex;

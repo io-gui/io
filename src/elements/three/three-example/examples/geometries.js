@@ -1,13 +1,16 @@
-import * as THREE from "../../../../lib/three.module.js";
-import {WebglExample} from "./webgl-example.js";
+import * as THREE from "../../../../../lib/three.module.js";
+import ThreeShot from "../three-shot.js";
 
-export class WebglGeometries extends WebglExample {
+export default class extends ThreeShot {
   init() {
 
-    let camera = this.camera;
-    let scene = this.scene;
+    let camera = this.camera = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
+    let scene = this.scene = new THREE.Scene();
+    let group = this.group = new THREE.Group();
 
-    camera.position.y = 400;
+    camera.position.set( -400, 250, 1000 );
+
+    scene.add( group );
 
     var light, object;
 
@@ -28,43 +31,43 @@ export class WebglGeometries extends WebglExample {
 
     object = new THREE.Mesh( new THREE.SphereGeometry( 75, 20, 10 ), material );
     object.position.set( - 300, 0, 200 );
-    scene.add( object );
+    group.add( object );
 
     object = new THREE.Mesh( new THREE.IcosahedronGeometry( 75, 1 ), material );
     object.position.set( - 100, 0, 200 );
-    scene.add( object );
+    group.add( object );
 
     object = new THREE.Mesh( new THREE.OctahedronGeometry( 75, 2 ), material );
     object.position.set( 100, 0, 200 );
-    scene.add( object );
+    group.add( object );
 
     object = new THREE.Mesh( new THREE.TetrahedronGeometry( 75, 0 ), material );
     object.position.set( 300, 0, 200 );
-    scene.add( object );
+    group.add( object );
 
     //
 
     object = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100, 4, 4 ), material );
     object.position.set( - 300, 0, 0 );
-    scene.add( object );
+    group.add( object );
 
     object = new THREE.Mesh( new THREE.BoxGeometry( 100, 100, 100, 4, 4, 4 ), material );
     object.position.set( - 100, 0, 0 );
-    scene.add( object );
+    group.add( object );
 
     object = new THREE.Mesh( new THREE.CircleGeometry( 50, 20, 0, Math.PI * 2 ), material );
     object.position.set( 100, 0, 0 );
-    scene.add( object );
+    group.add( object );
 
     object = new THREE.Mesh( new THREE.RingGeometry( 10, 50, 20, 5, 0, Math.PI * 2 ), material );
     object.position.set( 300, 0, 0 );
-    scene.add( object );
+    group.add( object );
 
     //
 
     object = new THREE.Mesh( new THREE.CylinderGeometry( 25, 75, 100, 40, 5 ), material );
     object.position.set( - 300, 0, - 200 );
-    scene.add( object );
+    group.add( object );
 
     var points = [];
 
@@ -76,15 +79,15 @@ export class WebglGeometries extends WebglExample {
 
     object = new THREE.Mesh( new THREE.LatheGeometry( points, 20 ), material );
     object.position.set( - 100, 0, - 200 );
-    scene.add( object );
+    group.add( object );
 
     object = new THREE.Mesh( new THREE.TorusGeometry( 50, 20, 20, 20 ), material );
     object.position.set( 100, 0, - 200 );
-    scene.add( object );
+    group.add( object );
 
     object = new THREE.Mesh( new THREE.TorusKnotGeometry( 50, 10, 50, 20 ), material );
     object.position.set( 300, 0, - 200 );
-    scene.add( object );
+    group.add( object );
 
   }
   update() {
@@ -92,8 +95,7 @@ export class WebglGeometries extends WebglExample {
     let camera = this.camera;
     let scene = this.scene;
 
-    camera.position.x = Math.cos( timer ) * 800;
-    camera.position.z = Math.sin( timer ) * 800;
+    this.group.rotation.y = timer;
 
     camera.lookAt( scene.position );
 
@@ -107,7 +109,7 @@ export class WebglGeometries extends WebglExample {
       }
 
     } );
+
+    this.rendered = false;
   }
 }
-
-WebglGeometries.Register();
