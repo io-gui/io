@@ -14,7 +14,7 @@ export class ThreeInspectorLink extends IoButton {
       </style>
     `;
   }
-  _actionHandler() {
+  _onAction() {
     this.fire('three-inspector-item-clicked', {value: this.value});
   }
   update() {

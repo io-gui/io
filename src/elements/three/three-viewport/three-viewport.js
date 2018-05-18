@@ -40,13 +40,13 @@ export class ThreeViewport extends IoPointerMixin(Io) {
   connectedCallback() {
     super.connectedCallback();
     this._connected = true;
-    this._animateHandler();
+    this._onAnimate();
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     this._connected = false;
   }
-  _animateHandler() {
+  _onAnimate() {
     if (!this._connected) return;
     let rect = this.getBoundingClientRect();
 
@@ -79,16 +79,13 @@ export class ThreeViewport extends IoPointerMixin(Io) {
     }
 
     this.animate();
-    requestAnimationFrame(this._animateHandler);
+    requestAnimationFrame(this._onAnimate);
   }
   init() {}
   update() {}
   animate() {
     this.update();
-    this.debounce(this._renderHandler, 1);
-  }
-  _renderHandler() {
-    this.render();
+    this.debounce(this.render, 1);
   }
   render() {
     this.renderer.render(this.scene, this.camera);

@@ -48,9 +48,9 @@ export class AppBlock extends Io {
       tabs: Array,
       selected: Number,
       listeners: {
-        'app-block-tabs-add': '_addTabHandler',
-        'app-block-tabs-remove': '_removeTabHandler',
-        'app-block-tab-select': '_tabSelectHandler'
+        'app-block-tabs-add': '_onAddTab',
+        'app-block-tabs-remove': '_onRemoveTab',
+        'app-block-tab-select': '_onTabSelect'
       }
     };
   }
@@ -61,7 +61,7 @@ export class AppBlock extends Io {
     ]);
   }
 
-  _addTabHandler(event) {
+  _onAddTab(event) {
     if (this.tabs.indexOf(event.detail.tabID) !== -1) {
       this.tabs.splice(this.tabs.indexOf(event.detail.tabID), 1);
     }
@@ -70,31 +70,31 @@ export class AppBlock extends Io {
     this.fire('app-block-changed', {tabs: this.tabs, selected: this.selected});
     this.update();
   }
-  _removeTabHandler(event) {
+  _onRemoveTab(event) {
     let index = this.tabs.indexOf(event.detail.tabID);
     this.tabs.splice(index, 1);
     this.selected = Math.min(this.selected, this.tabs.length - 1);
     this.fire('app-block-changed', {tabs: this.tabs, selected: this.selected});
     this.update();
   }
-  _tabSelectHandler(event) {
+  _onTabSelect(event) {
     this.selected = this.tabs.indexOf(event.detail.tabID);
     this.fire('app-block-changed', {tabs: this.tabs, selected: this.selected});
     this.update();
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('app-block-tab-drag-start', this._tabDragStartHandler);
+    window.addEventListener('app-block-tab-drag-start', this._onTabDragStart);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('app-block-tab-drag-start', this._tabDragStartHandler);
-    window.removeEventListener('app-block-tab-drag', this._tabDragHandler);
-    window.removeEventListener('app-block-tab-drag-end', this._tabDragEndHandler);
+    window.removeEventListener('app-block-tab-drag-start', this._onTabDragStart);
+    window.removeEventListener('app-block-tab-drag', this._onTabDrag);
+    window.removeEventListener('app-block-tab-drag-end', this._onTabDragEnd);
   }
-  _tabDragStartHandler() {
-    window.addEventListener('app-block-tab-drag', this._tabDragHandler);
-    window.addEventListener('app-block-tab-drag-end', this._tabDragEndHandler);
+  _onTabDragStart() {
+    window.addEventListener('app-block-tab-drag', this._onTabDrag);
+    window.addEventListener('app-block-tab-drag-end', this._onTabDragEnd);
     this._rect = this.getBoundingClientRect();
     let tabs = this.querySelectorAll('app-block-tab');
     this._tabRects = [];
@@ -102,7 +102,7 @@ export class AppBlock extends Io {
       this._tabRects.push(tabs[i].getBoundingClientRect());
     }
   }
-  _tabDragHandler(event) {
+  _onTabDrag(event) {
     let dx = event.detail.pointer.position.x;
     let dy = event.detail.pointer.position.y;
     let tabID = event.detail.tab.tabID;
@@ -150,9 +150,9 @@ export class AppBlock extends Io {
     }
     this.setDropTarget(-1,  null);
   }
-  _tabDragEndHandler(event) {
-    window.removeEventListener('app-block-tab-drag', this._tabDragHandler);
-    window.removeEventListener('app-block-tab-drag-end', this._tabDragEndHandler);
+  _onTabDragEnd(event) {
+    window.removeEventListener('app-block-tab-drag', this._onTabDrag);
+    window.removeEventListener('app-block-tab-drag-end', this._onTabDragEnd);
     let srcTab = event.detail.tab;
     let tabID = event.detail.tab.tabID;
     if (typeof this._droptarget === 'string') {

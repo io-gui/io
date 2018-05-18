@@ -58,7 +58,7 @@ export class MenuGroup extends Io {
       },
       $parent: HTMLElement,
       listeners: {
-        'focusin': '_focusHandler'
+        'focusin': '_onFocus'
       }
     };
   }
@@ -79,7 +79,7 @@ export class MenuGroup extends Io {
     super.disconnectedCallback();
     MenuLayer.singleton.unregisterGroup(this);
   }
-  _focusHandler(event) {
+  _onFocus(event) {
     let item = event.path[0];
     MenuLayer.singleton._hoveredGroup = this;
     if (item.localName === 'menu-item') {

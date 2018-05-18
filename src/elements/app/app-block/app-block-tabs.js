@@ -66,22 +66,22 @@ export class AppBlockTabs extends Io {
         selected: this.selected === i}]);
       tabs.push(['io-button', {
         label: '⨯',
-        action: this._removeHandler,
+        action: this._onRemove,
         value: i}]);
     }
     tabs.push(
       ['io-option', {
         value: '+',
         options: Object.entries(this.elements).map((entry) => ({value: entry[0]})),
-        action: this._addTabHandler
+        action: this._onAddTab
       }]
     );
     this.render([tabs]);
   }
-  _removeHandler(index) {
+  _onRemove(index) {
     this.fire('app-block-tabs-remove', {tabID: this.tabs[index]});
   }
-  _addTabHandler(tabID) {
+  _onAddTab(tabID) {
     this.fire('app-block-tabs-add', {tabID: tabID, index: this.tabs.length});
   }
 }

@@ -9,7 +9,7 @@ export class IoOption extends IoButton {
       options: Array
     };
   }
-  _actionHandler(event) {
+  _onAction(event) {
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
       event.preventDefault();
       this.$['menu'].expanded = true;
@@ -17,7 +17,7 @@ export class IoOption extends IoButton {
       if (firstItem) firstItem.focus();
     }
   }
-  _menuHandler(event) {
+  _onMenu(event) {
     this.$['menu'].expanded = false;
     this.set('value', event.detail.value);
     if (typeof this.action === 'function') {
@@ -42,7 +42,7 @@ export class IoOption extends IoButton {
         id: 'menu',
         options: this.options,
         position: 'bottom',
-        listeners: {'menu-item-clicked': this._menuHandler}}]
+        listeners: {'menu-item-clicked': this._onMenu}}]
     ]);
   }
 }

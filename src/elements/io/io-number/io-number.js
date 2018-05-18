@@ -9,12 +9,12 @@ export class IoNumber extends IoString {
       max: Infinity
     };
   }
-  _blurHandler() {
+  _onBlur() {
     let value = Math.round(Number(this.innerText) / this.step) * this.step;
     if (!isNaN(value)) this.set('value', value);
     this.update();
   }
-  _keydownhandler(event) {
+  _onKeydown(event) {
     if (event.which == 13) {
       event.preventDefault();
       let value = Math.round(Number(this.innerText) / this.step) * this.step;

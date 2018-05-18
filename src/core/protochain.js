@@ -10,11 +10,11 @@ export class Protochain {
     this.properties = {};
     this.listeners = {};
     this.attributes = {};
-    this.handlers = [];
+    this.methods = [];
     this.style = [];
 
     let proto = _constructor.prototype;
-    while (proto && proto.constructor !== Element) {
+    while (proto && proto.constructor !== HTMLElement) {
       prototypes.push(proto);
       proto = proto.__proto__;
     }
@@ -35,10 +35,6 @@ export class Protochain {
           let propDef = new Property(prop[key], true);
           if (propertyDefs[key]) propertyDefs[key].assign(propDef);
           else propertyDefs[key] = propDef;
-          // let propDef = prop[key];
-          // if (propDef === null || propDef === undefined) propDef = {};
-          // if (propDef.constructor !== Object) propDef = { value: propDef };
-          // propertyDefs[key] = Object.assign(propDef, propertyDefs[key] || {});
         }
       }
     }
@@ -46,17 +42,12 @@ export class Protochain {
       this.properties[key] = new Property(propertyDefs[key]);
     }
 
+    let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     for (let i = prototypes.length; i--;) {
       let names = Object.getOwnPropertyNames(prototypes[i]);
       for (let j = 0; j < names.length; j++) {
-        if (names[j].substring(names[j].length-7, names[j].length) === 'Handler') {
-          this.handlers.push(names[j]);
-        }
+        this.methods.push(names[j]);
       }
-    }
-
-    let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-    for (let i = prototypes.length; i--;) {
       let style = prototypes[i].constructor.style;
       if (style) {
         if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
@@ -69,9 +60,9 @@ export class Protochain {
       }
     }
   }
-  bindHandlers(element) {
-    for (let i = 0; i < this.handlers.length; i++) {
-      element[this.handlers[i]] = element[this.handlers[i]].bind(element);
+  bindMethods(element) {
+    for (let i = 0; i < this.methods.length; i++) {
+      element[this.methods[i]] = element[this.methods[i]].bind(element);
     }
   }
   connect(element) {

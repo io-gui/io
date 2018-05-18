@@ -33,11 +33,11 @@ export class ThreeInspector extends Io {
       value: Object,
       crumbs: Array,
       listeners: {
-        'three-inspector-item-clicked': "_linkClickedHandler"
+        'three-inspector-item-clicked': "_onLinkClicked"
       }
     };
   }
-  _linkClickedHandler(event) {
+  _onLinkClicked(event) {
     event.stopPropagation();
     if (event.detail.value instanceof Object) {
       this.value = event.detail.value;

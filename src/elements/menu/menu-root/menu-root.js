@@ -29,18 +29,18 @@ export class MenuRoot extends Io {
   connectedCallback() {
     super.connectedCallback();
     this._parent = this.parentElement;
-    this._parent.addEventListener(this.listener, this._expandHandler);
+    this._parent.addEventListener(this.listener, this._onExpand);
     MenuLayer.singleton.appendChild(this.$['group']);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._parent.removeEventListener(this.listener, this._expandHandler);
+    this._parent.removeEventListener(this.listener, this._onExpand);
     MenuLayer.singleton.removeChild(this.$['group']);
   }
   getBoundingClientRect() {
     return this._parent.getBoundingClientRect();
   }
-  _expandHandler(event) {
+  _onExpand(event) {
     event.preventDefault();
     let evt = event.touches ? event.touches[0] : event;
     MenuLayer.singleton.collapseAllGroups();

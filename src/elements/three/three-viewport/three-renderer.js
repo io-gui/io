@@ -80,7 +80,7 @@ export class ThreeRenderer extends Io {
         reflect: true
       },
       listeners: {
-        'click': '_setHostHandler'
+        'click': '_onSetHost'
       }
     };
   }
@@ -122,23 +122,23 @@ export class ThreeRenderer extends Io {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('resize', this._resizeHandler);
-    // window.addEventListener('app-split-changed', this._resizeHandler);
-    this._resizeHandler();
+    window.addEventListener('resize', this._onResize);
+    // window.addEventListener('app-split-changed', this._onResize);
+    this._onResize();
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('resize', this._resizeHandler);
-    // window.removeEventListener('app-split-changed', this._resizeHandler);
+    window.removeEventListener('resize', this._onResize);
+    // window.removeEventListener('app-split-changed', this._onResize);
   }
-  _setHostHandler() {
+  _onSetHost() {
     this._setHost();
   }
   _setHost() {
     if (!this.ishost) {
       _performanceCheck();
       if (host) {
-        // host._resizeHandler();
+        // host._onResize();
         host._context2d.drawImage(renderer.domElement, 0, 0, host._canvas2d.width, host._canvas2d.height);
         gl.flush();
         host.ishost = false;
@@ -146,7 +146,7 @@ export class ThreeRenderer extends Io {
       host = this;
       this.ishost = true;
       this.appendChild(renderer.domElement);
-      this._resizeHandler();
+      this._onResize();
     }
     for (let key in this.props) {
       renderer[key] = this._props[key];
@@ -172,7 +172,7 @@ export class ThreeRenderer extends Io {
       renderer.setPixelRatio( window.devicePixelRatio );
     }
   }
-  _resizeHandler() {
+  _onResize() {
     this._setSize();
   }
 }

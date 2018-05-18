@@ -67,9 +67,9 @@ export const IoPointerMixin = (superclass) => class extends superclass {
       pointers: Array,
       pointermode: 'relative',
       listeners: {
-        'mousedown': '_mousedownHandler',
-        'touchstart': '_touchstartHandler',
-        'mousemove': '_mousehoverHandler'
+        'mousedown': '_onMousedown',
+        'touchstart': '_onTouchstart',
+        'mousemove': '_onMousehover'
       }
     };
   }
@@ -108,57 +108,57 @@ export const IoPointerMixin = (superclass) => class extends superclass {
       }
     }
   }
-  _mousedownHandler(event) {
+  _onMousedown(event) {
     event.preventDefault();
     this.focus();
     // TODO: fix
     mousedownPath = event.path;
     this.getPointers(event, true);
     this._fire('io-pointer-start', event, this.pointers);
-    window.addEventListener('mousemove', this._mousemoveHandler);
-    window.addEventListener('mouseup', this._mouseupHandler);
-    window.addEventListener('blur', this._mouseupHandler); //TODO: check pointer data
+    window.addEventListener('mousemove', this._onMousemove);
+    window.addEventListener('mouseup', this._onMouseup);
+    window.addEventListener('blur', this._onMouseup); //TODO: check pointer data
     // TODO: clickmask breaks scrolling
     if (_clickmask.parentNode !== document.body) {
       document.body.appendChild(_clickmask);
     }
   }
-  _mousemoveHandler(event) {
+  _onMousemove(event) {
     this.getPointers(event);
     this._fire('io-pointer-move', event, this.pointers, mousedownPath);
   }
-  _mouseupHandler(event) {
+  _onMouseup(event) {
     this.getPointers(event);
     this._fire('io-pointer-end', event, this.pointers, mousedownPath);
-    window.removeEventListener('mousemove', this._mousemoveHandler);
-    window.removeEventListener('mouseup', this._mouseupHandler);
-    window.removeEventListener('blur', this._mouseupHandler);
+    window.removeEventListener('mousemove', this._onMousemove);
+    window.removeEventListener('mouseup', this._onMouseup);
+    window.removeEventListener('blur', this._onMouseup);
     if (_clickmask.parentNode === document.body) {
       document.body.removeChild(_clickmask);
     }
   }
-  _mousehoverHandler(event) {
+  _onMousehover(event) {
     this.getPointers(event);
     this._fire('io-pointer-hover', event, this.pointers);
   }
-  _touchstartHandler(event) {
+  _onTouchstart(event) {
     event.preventDefault();
     this.focus();
     this.getPointers(event, true);
     this._fire('io-pointer-hover', event, this.pointers);
     this._fire('io-pointer-start', event, this.pointers);
-    this.addEventListener('touchmove', this._touchmoveHandler);
-    this.addEventListener('touchend', this._touchendHandler);
+    this.addEventListener('touchmove', this._onTouchmove);
+    this.addEventListener('touchend', this._onTouchend);
   }
-  _touchmoveHandler(event) {
+  _onTouchmove(event) {
     event.preventDefault();
     this.getPointers(event);
     this._fire('io-pointer-move', event, this.pointers);
   }
-  _touchendHandler(event) {
+  _onTouchend(event) {
     event.preventDefault();
-    this.removeEventListener('touchmove', this._touchmoveHandler);
-    this.removeEventListener('touchend', this._touchendHandler);
+    this.removeEventListener('touchmove', this._onTouchmove);
+    this.removeEventListener('touchend', this._onTouchend);
     this._fire('io-pointer-end', event, this.pointers);
 
   }

@@ -28,12 +28,12 @@ export class AppSplit extends Io {
         reflect: true
       },
       listeners: {
-        'app-split-divider-move': '_dividerMoveHandler',
-        'app-block-changed': '_appBlockChangedHandler'
+        'app-split-divider-move': '_onDividerMove',
+        'app-block-changed': '_onAppBlockChanged'
       }
     };
   }
-  _appBlockChangedHandler(event) {
+  _onAppBlockChanged(event) {
     for (var i = 0; i < this.splits.length; i++) {
       if (this.splits[i][1].tabs == event.detail.tabs) {
         this.splits[i][1].selected = event.detail.selected;
@@ -101,7 +101,7 @@ export class AppSplit extends Io {
     }
     this.render([children]);
   }
-  _dividerMoveHandler(event) {
+  _onDividerMove(event) {
     event.stopPropagation();
 
     let pi = event.detail.index;

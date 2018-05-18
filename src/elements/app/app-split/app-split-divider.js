@@ -39,11 +39,11 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
       index: Number,
       pointermode: 'relative',
       listeners: {
-        'io-pointer-move': '_pointerMoveHandler'
+        'io-pointer-move': '_onPointerMove'
       }
     };
   }
-  _pointerMoveHandler(event) {
+  _onPointerMove(event) {
     let rect = this.getBoundingClientRect();
     let pos = event.detail.pointer[0].position;
     let d = this.orientation === 'horizontal' ? 'width' : 'height';

@@ -5,8 +5,8 @@ export class IoString extends Io {
     return {
       value: String,
       listeners: {
-        'blur': '_blurHandler',
-        'keydown': '_keydownhandler'
+        'blur': '_onBlur',
+        'keydown': '_onKeydown'
       },
       attributes: {
         'tabindex': 0,
@@ -14,10 +14,10 @@ export class IoString extends Io {
       }
     };
   }
-  _blurHandler() {
+  _onBlur() {
     this.set('value', this.innerText);
   }
-  _keydownhandler(event) {
+  _onKeydown(event) {
     if (event.which == 13) {
       event.preventDefault();
       this.set('value', this.innerText);

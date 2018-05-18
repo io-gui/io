@@ -15,15 +15,15 @@ export class AppBlockTab extends IoPointerMixin(Io) {
       },
       pointermode: 'absolute',
       listeners: {
-        'io-pointer-end': '_pointerEndHandler',
-        'io-pointer-move': '_pointerMoveHandler'
+        'io-pointer-end': '_onPointerEnd',
+        'io-pointer-move': '_onPointerMove'
       }
     };
   }
   update() {
     this.innerHTML = this.tabID;
   }
-  _pointerMoveHandler(event) {
+  _onPointerMove(event) {
     let pointer = event.detail.pointer[0];
     let dist = pointer.distance.length();
     if (!this._dragging && dist > 16 && event.detail.path[0] === this) {
@@ -39,7 +39,7 @@ export class AppBlockTab extends IoPointerMixin(Io) {
       this.fire('app-block-tab-drag', {pointer: pointer, tab: this});
     }
   }
-  _pointerEndHandler(event) {
+  _onPointerEnd(event) {
     if (this._dragging) {
       this.removeChild(_dragIcon);
       this._dragging = false;

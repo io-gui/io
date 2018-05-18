@@ -36,14 +36,14 @@ export class AppBreadcrumbs extends Io {
       crumbs: Array
     };
   }
-  _selectHandler(crumb) {
+  _onSelect(crumb) {
     this.value = crumb.value;
   }
   update() {
     const Prop = (elem, i) => ['io-button', {
       value: elem,
       label: elem.label,
-      action: this._selectHandler}];
+      action: this._onSelect}];
     this.render([this.crumbs.map(Prop)]);
   }
 }

@@ -15,13 +15,13 @@ export const IoPropertyMixin = (superclass) => class extends superclass {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('io-object-mutated', this._objectMutatedHandler);
+    window.addEventListener('io-object-mutated', this._onObjectMutated);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('io-object-mutated', this._objectMutatedHandler);
+    window.removeEventListener('io-object-mutated', this._onObjectMutated);
   }
-  _objectMutatedHandler(event) {
+  _onObjectMutated(event) {
     if (event.detail.object === this.value) {
       if (event.detail.key === this.key || event.detail.key === '*' || this.key === '*') {
         this.update();

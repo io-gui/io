@@ -39,29 +39,29 @@ export class MenuLayer extends Io {
       expanded: {
         type: Boolean,
         reflect: true,
-        observer: '_scrollAnimateGroupHandler'
+        observer: '_onScrollAnimateGroup'
       },
       $groups: Array,
       listeners: {
-        'mouseup': '_mouseupHandler',
-        'mousemove': '_mousemoveHandler',
+        'mouseup': '_onMouseup',
+        'mousemove': '_onMousemove',
       }
     };
   }
-  _touchmoveHandler(event) {
-    prevTouch = prevTouch || event.touches[0]
-    event.touches[0].movementX = event.touches[0].clientX - prevTouch.clientX;
-    event.touches[0].movementY = event.touches[0].clientY - prevTouch.clientY;
-    this._mousemoveHandler(event.touches[0]);
-    prevTouch = event.touches[0];
-    prevTouch.path = event.path;
-    // TODO: make touch menu work with multi-menu multi-touch (insane?)
-  }
-  _touchendHandler(event) {
-    // TODO: unhack
-    prevTouch.path = this._hoveredItem ? [this._hoveredItem] : prevTouch.path;
-    this._mouseupHandler(prevTouch);
-  }
+  // _onTouchmove(event) {
+  //   prevTouch = prevTouch || event.touches[0]
+  //   event.touches[0].movementX = event.touches[0].clientX - prevTouch.clientX;
+  //   event.touches[0].movementY = event.touches[0].clientY - prevTouch.clientY;
+  //   this._onMousemove(event.touches[0]);
+  //   prevTouch = event.touches[0];
+  //   prevTouch.path = event.path;
+  //   // TODO: make touch menu work with multi-menu multi-touch (insane?)
+  // }
+  // _onTouchend(event) {
+  //   // TODO: unhack
+  //   prevTouch.path = this._hoveredItem ? [this._hoveredItem] : prevTouch.path;
+  //   this._onMouseup(prevTouch);
+  // }
   constructor(props) {
     super(props);
     this._hoveredItem = null;
@@ -69,22 +69,22 @@ export class MenuLayer extends Io {
     this._x = 0;
     this._y = 0;
     this._v = 0;
-    window.addEventListener('scroll', this._scrollHandler);
-    window.addEventListener('focusin', this._windowFocusHandler);
+    window.addEventListener('scroll', this._onScroll);
+    window.addEventListener('focusin', this._onWindowFocus);
   }
   registerGroup(group) {
     this.$groups.push(group);
-    group.addEventListener('focusin', this._menuItemFocusedHandler);
-    group.addEventListener('mouseup', this._mouseupHandler);
-    group.addEventListener('keydown', this._keydownHandler);
-    group.addEventListener('expanded-changed', this._expandedChangedHandler);
+    group.addEventListener('focusin', this._onMenuItemFocused);
+    group.addEventListener('mouseup', this._onMouseup);
+    group.addEventListener('keydown', this._onKeydown);
+    group.addEventListener('expanded-changed', this._onExpandedChanged);
   }
   unregisterGroup(group) {
     this.$groups.splice(this.$groups.indexOf(group), 1);
-    group.removeEventListener('focusin', this._menuItemFocusedHandler);
-    group.removeEventListener('mouseup', this._mouseupHandler);
-    group.removeEventListener('keydown', this._keydownHandler);
-    group.removeEventListener('expanded-changed', this._expandedChangedHandler);
+    group.removeEventListener('focusin', this._onMenuItemFocused);
+    group.removeEventListener('mouseup', this._onMouseup);
+    group.removeEventListener('keydown', this._onKeydown);
+    group.removeEventListener('expanded-changed', this._onExpandedChanged);
   }
   collapseAllGroups() {
     for (let i = this.$groups.length; i--;) {
@@ -102,14 +102,14 @@ export class MenuLayer extends Io {
       if (lastFocus) lastFocus.focus();
     }
   }
-  _scrollHandler() {
+  _onScroll() {
     this.collapseAllGroups();
     if (lastFocus) lastFocus.focus();
   }
-  _windowFocusHandler(event) {
+  _onWindowFocus(event) {
     if (event.target.localName !== 'menu-item') lastFocus = event.target;
   }
-  _menuItemFocusedHandler(event) {
+  _onMenuItemFocused(event) {
     let item = event.path[0];
     let expanded = [item.$group];
     let parent = item.$parent;
@@ -124,7 +124,7 @@ export class MenuLayer extends Io {
       }
     }
   }
-  _mousemoveHandler(event) {
+  _onMousemove(event) {
     this._x = event.clientX;
     this._y = event.clientY;
     this._v = Math.abs(event.movementY) - Math.abs(event.movementX);
@@ -142,7 +142,7 @@ export class MenuLayer extends Io {
     this._hoveredItem = null;
     this._hoveredGroup = null;
   }
-  _mouseupHandler(event) {
+  _onMouseup(event) {
     let elem = event.path[0];
     if (elem.localName === 'menu-item') {
       this.runAction(elem.option);
@@ -157,7 +157,7 @@ export class MenuLayer extends Io {
       }
     }
   }
-  _keydownHandler(event) {
+  _onKeydown(event) {
     event.preventDefault();
     if (event.path[0].localName !== 'menu-item') return;
 
@@ -186,7 +186,7 @@ export class MenuLayer extends Io {
 
     switch (command) {
       case 'action':
-        this._mouseupHandler(event); // TODO: test
+        this._onMouseup(event); // TODO: test
         break;
       case 'prev':
         siblings[(index + siblings.length - 1) % (siblings.length)].focus();
@@ -241,7 +241,7 @@ export class MenuLayer extends Io {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  _expandedChangedHandler(event) {
+  _onExpandedChanged(event) {
     if (event.path[0].expanded) this._setGroupPosition(event.path[0]);
     for (let i = this.$groups.length; i--;) {
       if (this.$groups[i].expanded) {
@@ -280,7 +280,7 @@ export class MenuLayer extends Io {
     group.style.left = group._x + 'px';
     group.style.top = group._y + 'px';
   }
-  _scrollAnimateGroupHandler() {
+  _onScrollAnimateGroup() {
     if (!this.expanded) return;
     let group = this._hoveredGroup;
     if (group) {
@@ -299,7 +299,7 @@ export class MenuLayer extends Io {
         group.style.top = group._y + 'px';
       }
     }
-    requestAnimationFrame(this._scrollAnimateGroupHandler);
+    requestAnimationFrame(this._onScrollAnimateGroup);
   }
 }
 

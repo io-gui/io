@@ -30,8 +30,8 @@ export class DemoApp extends Io {
       layout: null,
       elements: Object,
       listeners: {
-        'app-split-changed': '_layoutChangedHandler',
-        'app-block-changed': '_layoutChangedHandler'
+        'app-split-changed': '_onLayoutChanged',
+        'app-block-changed': '_onLayoutChanged'
       }
     };
   }
@@ -64,10 +64,10 @@ export class DemoApp extends Io {
       }]
     ]);
   }
-  _layoutChangedHandler() {
-    this.debounce(this.saveLayoutHandler, 1000);
+  _onLayoutChanged() {
+    this.debounce(this._onSaveLayout, 1000);
   }
-  saveLayoutHandler() {
+  _onSaveLayout() {
     localStorage.setItem('app-split-state', JSON.stringify(this.layout));
   }
 }

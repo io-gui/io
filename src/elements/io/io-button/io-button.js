@@ -28,17 +28,16 @@ export class IoButton extends Io {
       },
       action: Function,
       listeners: {
-        'keydown': '_downHandler',
-        'mousedown': '_downHandler',
-        'touchstart': '_downHandler',
-        'mouseenter': '_enterHandler',
+        'keydown': '_onDown',
+        'mousedown': '_onDown',
+        'touchstart': '_onDown'
       },
       attributes: {
         'tabindex': 0
       }
     };
   }
-  _actionHandler(event) {
+  _onAction(event) {
     event.stopPropagation();
     if (event.which === 13 || event.which === 32 || event.type !== 'keyup') {
       event.preventDefault();
@@ -46,30 +45,30 @@ export class IoButton extends Io {
       this.pressed = false;
     }
   }
-  _downHandler(event) {
+  _onDown(event) {
     event.stopPropagation();
     if (event.which !== 9) event.preventDefault();
     if (event.which === 13 || event.which === 32 || event.type !== 'keydown') {
       this.pressed = true;
-      document.addEventListener('mouseup', this._upHandler);
-      document.addEventListener('touchend', this._upHandler);
-      this.addEventListener('keyup', this._actionHandler);
-      this.addEventListener('mouseup', this._actionHandler);
-      this.addEventListener('touchend', this._actionHandler);
-      this.addEventListener('mouseleave', this._leaveHandler);
+      document.addEventListener('mouseup', this._onUp);
+      document.addEventListener('touchend', this._onUp);
+      this.addEventListener('keyup', this._onAction);
+      this.addEventListener('mouseup', this._onAction);
+      this.addEventListener('touchend', this._onAction);
+      this.addEventListener('mouseleave', this._onLeave);
     }
   }
-  _upHandler(event) {
+  _onUp(event) {
     event.stopPropagation();
     this.pressed = false;
-    document.removeEventListener('mouseup', this._upHandler);
-    document.removeEventListener('touchend', this._upHandler);
-    this.removeEventListener('keyup', this._actionHandler);
-    this.removeEventListener('mouseup', this._actionHandler);
-    this.removeEventListener('touchend', this._actionHandler);
-    this.removeEventListener('mouseleave', this._leaveHandler);
+    document.removeEventListener('mouseup', this._onUp);
+    document.removeEventListener('touchend', this._onUp);
+    this.removeEventListener('keyup', this._onAction);
+    this.removeEventListener('mouseup', this._onAction);
+    this.removeEventListener('touchend', this._onAction);
+    this.removeEventListener('mouseleave', this._onLeave);
   }
-  _leaveHandler() {
+  _onLeave() {
     this.pressed = false;
   }
   update() {

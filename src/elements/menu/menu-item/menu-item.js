@@ -41,8 +41,8 @@ export class MenuItem extends Io {
       position: String,
       $parent: HTMLElement,
       listeners: {
-        'focus': '_focusHandler',
-        'touchstart': '_touchstartHandler'
+        'focus': '_onFocus',
+        'touchstart': '_onTouchstart'
       },
       attributes: {
         'tabindex': 0
@@ -76,21 +76,21 @@ export class MenuItem extends Io {
       }
     }
   }
-  _touchstartHandler(event) {
+  _onTouchstart(event) {
     event.preventDefault();
-    this.addEventListener('touchmove', this._touchmoveHandler);
-    this.addEventListener('touchend', this._touchendHandler);
+    this.addEventListener('touchmove', this._onTouchmove);
+    this.addEventListener('touchend', this._onTouchend);
     this.focus();
   }
-  _touchmoveHandler(event) {
-    MenuLayer.singleton._touchmoveHandler(event);
+  _onTouchmove(event) {
+    MenuLayer.singleton._onTouchmove(event);
   }
-  _touchendHandler(event) {
-    this.removeEventListener('touchmove', this._touchmoveHandler);
-    this.removeEventListener('touchend', this._touchendHandler);
-    MenuLayer.singleton._touchendHandler(event);
+  _onTouchend(event) {
+    this.removeEventListener('touchmove', this._onTouchmove);
+    this.removeEventListener('touchend', this._onTouchend);
+    MenuLayer.singleton._onTouchend(event);
   }
-  _focusHandler(event) {
+  _onFocus(event) {
     if (this.$group) {
       if (!this.$group.parentNode) {
         MenuLayer.singleton.appendChild(this.$group);

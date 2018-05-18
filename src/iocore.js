@@ -15,7 +15,7 @@ export class Io extends HTMLElement {
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
     Object.defineProperty(this, '__timeout', { value: new WeakMap() } );
 
-    this.__protochain.bindHandlers(this);
+    this.__protochain.bindMethods(this);
 
     for (let a in this.__protochain.attributes) {
       this.initAttribute(a, this.__protochain.attributes[a]);

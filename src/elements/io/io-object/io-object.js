@@ -105,12 +105,3 @@ IoObject.Register = function() {
 };
 
 IoObject.Register();
-
-// let c =[]
-// let proto = this.constructor;
-// while (proto && proto.constructor !== Io) {
-//   c.push(proto.CONFIG);
-//   // console.log(proto.CONFIG);
-//   proto = proto.__proto__;
-// }
-// console.log(c);

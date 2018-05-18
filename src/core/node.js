@@ -69,14 +69,13 @@ export class Node {
   connectListeners() {
     // TODO: test
     for (let l in this.listeners) {
-      let handler = this.listeners[l];
       if (!this._connectedListeners[l]) {
-        this.element.addEventListener(l, handler);
-      } else if (this._connectedListeners[l] !== handler) {
+        this.element.addEventListener(l, this.listeners[l]);
+      } else if (this._connectedListeners[l] !== this.listeners[l]) {
         this.element.removeEventListener(l, this._connectedListeners[l]);
-        this.element.addEventListener(l, handler);
+        this.element.addEventListener(l, this.listeners[l]);
       }
-      this._connectedListeners[l] = handler;
+      this._connectedListeners[l] = this.listeners[l];
     }
     for (let l in this._connectedListeners) {
       if (this.listeners[l] === undefined) {

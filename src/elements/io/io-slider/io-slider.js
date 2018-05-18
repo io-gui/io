@@ -41,11 +41,11 @@ export class IoSlider extends IoPointerMixin(Io) {
         'tabindex': 0
       },
       listeners: {
-        'io-pointer-move': '_pointerMoveHandler'
+        'io-pointer-move': '_onPointerMove'
       }
     };
   }
-  _pointerMoveHandler(event) {
+  _onPointerMove(event) {
     let rect = this.getBoundingClientRect();
     let x = event.detail.pointer[0].position.x / rect.width;
     let pos = Math.max(0,Math.min(1, x));
