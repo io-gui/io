@@ -85,7 +85,7 @@ export class ThreeViewport extends IoPointerMixin(Io) {
   update() {}
   animate() {
     this.update();
-    this.debounce(this.render, 1);
+    this.render();
   }
   render() {
     this.renderer.render(this.scene, this.camera);

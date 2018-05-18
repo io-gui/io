@@ -49,16 +49,16 @@ export class DemoApp extends Io {
       'app-ctrl': ['demo-app-ctrl', {value: this.bind('selected')}]
     };
     this.layout = JSON.parse(localStorage.getItem('app-split-state')) || [
-      ['app-split', {'orientation': 'horizontal', 'splits': [
-        ['app-block', {'tabs': ['app-ctrl']}],
-        ['app-split', {'orientation': 'vertical', 'splits': [
-          ['app-block', {'tabs': ['inspector']}],
-          ['app-block', {'tabs': ['io-demo', 'menu-demo'], 'selected': 1}, 300],
-        ]}, 350],
-      ]}],
+      ['app-block', {'tabs': ['app-ctrl']}],
+      ['app-split', {'orientation': 'vertical', 'splits': [
+        ['app-block', {'tabs': ['inspector']}],
+        ['app-block', {'tabs': ['io-demo', 'menu-demo'], 'selected': 1}, 300],
+      ]}, 350]
     ];
     this.render([
       ['app-split', {
+        orientation: 'horizontal',
+        splits: [],
         elements: this.elements,
         splits: this.layout
       }]

@@ -2,6 +2,7 @@ import {Io, html} from "../../../iocore.js";
 import "../io-boolean/io-boolean.js";
 import "../io-number/io-number.js";
 import "../io-string/io-string.js";
+// TODO: remove dependancy
 import "../../app/app-collapsable/app-collapsable.js";
 import "./io-object-prop.js";
 
