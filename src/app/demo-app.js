@@ -4,6 +4,10 @@ import "./demo-app-ctrl.js";
 import "../elements/io/demo.js";
 import "../elements/menu/demo.js";
 
+import "../elements/three/examples/webgl-geometries.js";
+import "../elements/three/examples/webgl-geometry-colors.js";
+import "../elements/three/examples/webgl-geometry-hierarchy2.js";
+
 export class DemoApp extends Io {
   static get style() {
     return html`
@@ -34,6 +38,11 @@ export class DemoApp extends Io {
   constructor() {
     super();
     this.elements = {
+      'webgl-geometry-hierarchy2': ['webgl-geometry-hierarchy2'],
+      'webgl-geometry-colors': ['webgl-geometry-colors'],
+      'webgl-geometries': ['webgl-geometries'],
+      'three-viewport': ['three-viewport'],
+      'three-renderer': ['three-renderer'],
       'io-demo': ['io-demo'],
       'menu-demo': ['menu-demo'],
       'inspector': ['three-inspector', {value: this.bind('selected')}],

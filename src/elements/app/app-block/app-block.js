@@ -23,8 +23,11 @@ export class AppBlock extends Io {
         :host[droptarget="bottom"] {
           border-bottom: 4px dashed #4f6;
         }
+        :host > :nth-child(2) {
+          flex: 1;
+        }
         :host[droptarget="this"] > :nth-child(2) {
-          opacity: 0.25
+          opacity: 0.25;
         }
         :host[droptarget="this"] > app-block-tabs {
           border-bottom: 4px dashed #4f6;

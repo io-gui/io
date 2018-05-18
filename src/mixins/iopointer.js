@@ -64,12 +64,8 @@ export class Vector2 {
 export const IoPointerMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
-      pointers: {
-        type: Array
-      },
-      pointermode: {
-        type: String
-      },
+      pointers: Array,
+      pointermode: 'relative',
       listeners: {
         'mousedown': '_mousedownHandler',
         'touchstart': '_touchstartHandler',
@@ -94,6 +90,9 @@ export const IoPointerMixin = (superclass) => class extends superclass {
         if (this.pointermode === 'relative') {
           position.x -= rect.left
           position.y -= rect.top
+        } else if (this.pointermode === 'viewport') {
+          position.x = (position.x - rect.left) / rect.width * 2.0 - 1.0;
+          position.y = (position.y - rect.top) / rect.height * 2.0 - 1.0;
         }
         if (this.pointers[i] === undefined) this.pointers[i] = new Pointer({start: position});
         let newPointer = new Pointer({position: position});

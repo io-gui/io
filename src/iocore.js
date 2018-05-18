@@ -140,6 +140,9 @@ export class Io extends HTMLElement {
     clearTimeout(this.__timeout.get(func));
     this.__timeout.set(func, setTimeout(func, wait));
   }
+  path(path, importurl) {
+    return new URL(path, importurl).pathname;
+  }
 }
 
 Io.Register = function() {
