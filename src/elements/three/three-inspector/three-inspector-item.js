@@ -3,7 +3,6 @@ import {IoObjectProp} from "../../io/io-object/io-object-prop.js";
 export class ThreeInspectorItem extends IoObjectProp {
   static get style() {
     return `
-      <style>
       :host {
         display: flex;
         flex: 1;
@@ -67,7 +66,6 @@ export class ThreeInspectorItem extends IoObjectProp {
         color: #bef !important;
         flex: 1;
       }
-      </style>
     `;
   }
   update() {

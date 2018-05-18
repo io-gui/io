@@ -6,48 +6,46 @@ import "../../io/io-button/io-button.js";
 export class AppBlockTabs extends Io {
   static get style() {
     return `
-      <style>
-        :host {
-          flex: none;
-          display: flex;
-          flex-direction: row;
-          background: #bbb;
-          line-height: 1em;
-          overflow: hidden;
-        }
-        :host > app-block-tab {
-          flex-grow: 0;
-          flex-shrink: 1;
-          cursor: pointer;
-          padding: 0.2em 1.6em;
-          border-right: 1px solid #999;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        :host > app-block-tab[selected] {
-          background: #ccc;
-        }
-        :host > io-button {
-          line-height: 1em;
-          display: inline-block;
-          padding: 0.2em 0.4em;
-          margin-left: -1.5em;
-        }
-        :host > io-option {
-          display: inline-block;
-          padding: 0.2em 0.6em;
-        }
+      :host {
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        background: #bbb;
+        line-height: 1em;
+        overflow: hidden;
+      }
+      :host > app-block-tab {
+        flex-grow: 0;
+        flex-shrink: 1;
+        cursor: pointer;
+        padding: 0.2em 1.6em;
+        border-right: 1px solid #999;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      :host > app-block-tab[selected] {
+        background: #ccc;
+      }
+      :host > io-button {
+        line-height: 1em;
+        display: inline-block;
+        padding: 0.2em 0.4em;
+        margin-left: -1.5em;
+      }
+      :host > io-option {
+        display: inline-block;
+        padding: 0.2em 0.6em;
+      }
 
-        :host > io-option,
-        :host > io-button {
-          color: transparent;
-        }
-        :host > io-option:hover,
-        :host > io-button:hover {
-          color: inherit;
-        }
-      </style>
+      :host > io-option,
+      :host > io-button {
+        color: transparent;
+      }
+      :host > io-option:hover,
+      :host > io-button:hover {
+        color: inherit;
+      }
     `;
   }
   static get properties() {

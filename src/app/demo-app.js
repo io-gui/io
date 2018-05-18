@@ -9,7 +9,7 @@ import "../elements/three/three-example/three-example.js";
 export class DemoApp extends Io {
   static get style() {
     return `
-      <style>
+
         :host {
           position: fixed;
           display: flex;
@@ -17,7 +17,7 @@ export class DemoApp extends Io {
           height: 100%;
           flex-direction: column;
         }
-      </style>
+
     `;
   }
   static get properties() {

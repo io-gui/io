@@ -46,7 +46,6 @@ var _performanceCheck = function() {
 export class ThreeRenderer extends Io {
   static get style() {
     return `
-      <style>
       :host {
         position: relative;
       }
@@ -70,7 +69,6 @@ export class ThreeRenderer extends Io {
       :host[ishost] canvas.canvas2d {
         display: none;
       }
-      </style>
     `;
   }
   static get properties() {

@@ -4,30 +4,28 @@ import {IoButton} from "../../io/io-button/io-button.js";
 export class AppBreadcrumbs extends Io {
   static get style() {
     return `
-      <style>
-        :host {
-          display: flex;
-          flex-direction: row;
-          font-size: 1.1em;
-          padding: 0.2em;
-          border-radius: 0.1em;
-          white-space: nowrap;
-        }
-        :host > io-button {
-          padding: 0.2em 0;
-          margin: 0 0.2em;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        :host > io-button:last-of-type {
-          overflow: visible;
-          text-overflow: clip;
-        }
-        :host > io-button:before {
-          content: '/';
-          margin-right: 0.4em;
-        }
-      </style>
+      :host {
+        display: flex;
+        flex-direction: row;
+        font-size: 1.1em;
+        padding: 0.2em;
+        border-radius: 0.1em;
+        white-space: nowrap;
+      }
+      :host > io-button {
+        padding: 0.2em 0;
+        margin: 0 0.2em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      :host > io-button:last-of-type {
+        overflow: visible;
+        text-overflow: clip;
+      }
+      :host > io-button:before {
+        content: '/';
+        margin-right: 0.4em;
+      }
     `;
   }
   static get properties() {

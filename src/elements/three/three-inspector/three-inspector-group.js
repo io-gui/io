@@ -14,19 +14,17 @@ import "../three-color/three-color.js";
 export class ThreeInspectorGroup extends IoObject {
   static get style() {
     return `
-      <style>
-        :host {
-          display: flex;
-          flex-direction: column;
-          margin: 0.2em;
-          border-radius: 0.1em;
-          background: #333;
-        }
-        :host > app-collapsable > io-boolean {
-          display: block;
-          padding: 0.2em;
-        }
-      </style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        margin: 0.2em;
+        border-radius: 0.1em;
+        background: #333;
+      }
+      :host > app-collapsable > io-boolean {
+        display: block;
+        padding: 0.2em;
+      }
     `;
   }
   static get properties() {

@@ -4,15 +4,13 @@ import "../../io/io-object/io-object-prop.js";
 export class ThreeVector extends Io {
   static get style() {
     return `
-      <style>
-        :host {
-          display: flex;
-          flex-direction: row;
-        }
-        :host > io-object-prop > span {
-          display: none;
-        }
-      </style>
+      :host {
+        display: flex;
+        flex-direction: row;
+      }
+      :host > io-object-prop > span {
+        display: none;
+      }
     `;
   }
   static get properties() {

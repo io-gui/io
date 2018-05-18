@@ -10,22 +10,20 @@ function isPropertyOf(prop, object) {
 export class ThreeInspector extends Io {
   static get style() {
     return `
-      <style>
-        :host {
-          display: flex;
-          flex-direction: column;
-          background: #444;
-          color: #ccc;
-          padding: 0.1em;
-          border-radius: 0.2em;
-          line-height: 1em;
-        }
-        :host .io-wrapper {
-          flex: 1;
-          overflow-x: hidden;
-          overflow-y: auto;
-        }
-      </style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        background: #444;
+        color: #ccc;
+        padding: 0.1em;
+        border-radius: 0.2em;
+        line-height: 1em;
+      }
+      :host .io-wrapper {
+        flex: 1;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
     `;
   }
   static get properties() {

@@ -5,41 +5,39 @@ import "./app-block-tabs.js";
 export class AppBlock extends Io {
   static get style() {
     return `
-      <style>
-        :host {
-          display: flex;
-          overflow: hidden;
-          flex-direction: column;
-        }
-        :host[droptarget="top"] {
-          border-top: 4px dashed #4f6;
-        }
-        :host[droptarget="left"] {
-          border-left: 4px dashed #4f6;
-        }
-        :host[droptarget="right"] {
-          border-right: 4px dashed #4f6;
-        }
-        :host[droptarget="bottom"] {
-          border-bottom: 4px dashed #4f6;
-        }
-        :host > :nth-child(2) {
-          flex: 1;
-        }
-        :host[droptarget="this"] > :nth-child(2) {
-          opacity: 0.25;
-        }
-        :host[droptarget="this"] > app-block-tabs {
-          border-bottom: 4px dashed #4f6;
-          margin-bottom: -4px;
-        }
-        :host app-block-tab[highlightdrop = "before"] {
-          border-left: 4px dashed #4f6;
-        }
-        :host app-block-tab[highlightdrop = "after"] {
-          border-right: 4px dashed #4f6;
-        }
-      </style>
+      :host {
+        display: flex;
+        overflow: hidden;
+        flex-direction: column;
+      }
+      :host[droptarget="top"] {
+        border-top: 4px dashed #4f6;
+      }
+      :host[droptarget="left"] {
+        border-left: 4px dashed #4f6;
+      }
+      :host[droptarget="right"] {
+        border-right: 4px dashed #4f6;
+      }
+      :host[droptarget="bottom"] {
+        border-bottom: 4px dashed #4f6;
+      }
+      :host > :nth-child(2) {
+        flex: 1;
+      }
+      :host[droptarget="this"] > :nth-child(2) {
+        opacity: 0.25;
+      }
+      :host[droptarget="this"] > app-block-tabs {
+        border-bottom: 4px dashed #4f6;
+        margin-bottom: -4px;
+      }
+      :host app-block-tab[highlightdrop = "before"] {
+        border-left: 4px dashed #4f6;
+      }
+      :host app-block-tab[highlightdrop = "after"] {
+        border-right: 4px dashed #4f6;
+      }
     `;
   }
   static get properties() {

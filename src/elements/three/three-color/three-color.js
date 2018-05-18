@@ -5,15 +5,13 @@ import "./three-color-picker.js";
 export class ThreeColor extends ThreeVector {
   static get style() {
     return `
-      <style>
-        :host {
-          display: flex;
-          flex-direction: row;
-        }
-        :host > span {
-          min-width: 1.22em;
-        }
-      </style>
+      :host {
+        display: flex;
+        flex-direction: row;
+      }
+      :host > span {
+        min-width: 1.22em;
+      }
     `;
   }
   update() {

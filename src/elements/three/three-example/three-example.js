@@ -5,12 +5,10 @@ import {ThreeInspector} from "../three-inspector/three-inspector.js";
 export class ThreeExample extends ThreeViewport {
   static get style() {
     return `
-      <style>
       :host > three-inspector {
         position: absolute;
         right: 0;
       }
-      </style>
     `;
   }
   static get properties() {

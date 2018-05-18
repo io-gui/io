@@ -1,5 +1,3 @@
-const _stagingElement = document.createElement('div');
-
 import {Property} from "./property.js";
 
 export class Protochain {
@@ -53,8 +51,8 @@ export class Protochain {
         if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
         style = style.replace(new RegExp(':host', 'g'), localName);
         this.style.push(style);
-        _stagingElement.innerHTML = style;
-        let element = _stagingElement.querySelector('style');
+        let element = document.createElement('style');
+        element.innerHTML = style;
         element.setAttribute('id', 'io-style-' + localName + '-' + i);
         document.head.appendChild(element);
       }

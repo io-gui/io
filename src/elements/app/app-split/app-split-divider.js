@@ -4,31 +4,29 @@ import {IoPointerMixin} from "../../../mixins/iopointer.js";
 export class AppSplitDivider extends IoPointerMixin(Io) {
   static get style() {
     return `
-      <style>
-        :host {
-          background: #333;
-          color: #ccc;
-          z-index: 1;
-          display: flex;
-          flex: none;
-          border: 1px outset #666;
-        }
-        :host[orientation=horizontal] {
-          cursor: col-resize;
-          width: 4px;
-        }
-        :host[orientation=vertical] {
-          cursor: row-resize;
-          height: 4px;
-        }
-        :host > .app-divider {
-          flex: 1;
-          margin: -0.4em;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      </style>
+      :host {
+        background: #333;
+        color: #ccc;
+        z-index: 1;
+        display: flex;
+        flex: none;
+        border: 1px outset #666;
+      }
+      :host[orientation=horizontal] {
+        cursor: col-resize;
+        width: 4px;
+      }
+      :host[orientation=vertical] {
+        cursor: row-resize;
+        height: 4px;
+      }
+      :host > .app-divider {
+        flex: 1;
+        margin: -0.4em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     `;
   }
   static get properties() {

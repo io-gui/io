@@ -4,7 +4,6 @@ import * as THREE from "../../../../lib/three.module.js";
 export class ThreeViewport extends Io {
   static get style() {
     return `
-      <style>
       :host {
         position: relative;
         overflow: hidden;
@@ -14,7 +13,6 @@ export class ThreeViewport extends Io {
         top: 0 !important;
         left: 0 !important;
       }
-      </style>
     `;
   }
   static get properties() {
@@ -59,6 +57,7 @@ export class ThreeViewport extends Io {
       this._height = rect.height;
       this.renderer.setPixelRatio((window.devicePixelRatio || 1) * _ratio);
       this.renderer.setSize(Math.floor(rect.width), Math.floor(rect.height));
+      this.rendered = false;
     }
   }
   _updateCameraAspect(camera) {

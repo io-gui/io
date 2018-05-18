@@ -13,7 +13,6 @@ mesh.add(light);
 export class DemoAppCtrl extends Io {
   static get style() {
     return `
-    <style>
       :host {
         padding: 0 1em 1em 1em;
       }
@@ -23,7 +22,6 @@ export class DemoAppCtrl extends Io {
         margin: 0.1em;
         border-radius: 0.2em;
       }
-    </style>
     `
   }
   static get properties() {

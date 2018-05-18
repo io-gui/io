@@ -4,19 +4,17 @@ import "./app-split-divider.js";
 export class AppSplit extends Io {
   static get style() {
     return `
-      <style>
-        :host  {
-          flex: 1;
-          display: flex;
-          overflow: hidden;
-        }
-        :host[orientation=horizontal] {
-          flex-direction: row;
-        }
-        :host[orientation=vertical] {
-          flex-direction: column;
-        }
-      </style>
+      :host  {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+      }
+      :host[orientation=horizontal] {
+        flex-direction: row;
+      }
+      :host[orientation=vertical] {
+        flex-direction: column;
+      }
     `;
   }
   static get properties() {

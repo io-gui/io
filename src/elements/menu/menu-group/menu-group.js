@@ -5,38 +5,36 @@ import {MenuLayer} from "../menu-layer/menu-layer.js";
 export class MenuGroup extends Io {
   static get style() {
     return `
-      <style>
-        :host {
-          display: none;
-          flex-direction: column;
-          white-space: nowrap;
-          user-select: none;
-        }
-        :host[horizontal] {
-          flex-direction: row;
-        }
-        :host:not([indocument]) {
-          background: white;
-          padding: 0.125em 0 0.25em 0;
-          border: 1px solid #666;
-          box-shadow: 1px 1px 2px rgba(0,0,0,0.33);
-          position: absolute;
-          transform: translateZ(0);
-          top: 0;
-          left: 0;
-          min-width: 6em;
-        }
-        :host[expanded],
-        :host[indocument] {
-          display: flex;
-        }
-        :host[indocument] > menu-item {
-          padding: 0.25em 0.5em;
-        }
-        :host[indocument] > menu-item > :not(.menu-label) {
-          display: none;
-        }
-      </style>
+      :host {
+        display: none;
+        flex-direction: column;
+        white-space: nowrap;
+        user-select: none;
+      }
+      :host[horizontal] {
+        flex-direction: row;
+      }
+      :host:not([indocument]) {
+        background: white;
+        padding: 0.125em 0 0.25em 0;
+        border: 1px solid #666;
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.33);
+        position: absolute;
+        transform: translateZ(0);
+        top: 0;
+        left: 0;
+        min-width: 6em;
+      }
+      :host[expanded],
+      :host[indocument] {
+        display: flex;
+      }
+      :host[indocument] > menu-item {
+        padding: 0.25em 0.5em;
+      }
+      :host[indocument] > menu-item > :not(.menu-label) {
+        display: none;
+      }
     `;
   }
   static get properties() {

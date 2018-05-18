@@ -4,30 +4,28 @@ import {IoPointerMixin} from "../../../mixins/iopointer.js";
 export class IoSlider extends IoPointerMixin(Io) {
   static get style() {
     return `
-      <style>
-        :host {
-          display: inline-block;
-          cursor: ew-resize;
-          min-width: 6em;
-          min-height: 1.22em;
-          position: relative;
-          vertical-align: bottom;
-        }
-        :host > .io-slider-slit {
-          position: absolute;
-          width: 100%;
-          height: 0.2em;
-          top: calc(50% - 0.1em);
-        }
-        :host > .io-slider-knob {
-          position: absolute;
-          width: 0.4em;
-          margin-left: -0.2em;
-          height: 100%;
-          background: #999;
-          left: calc(50%);
-        }
-      </style>
+      :host {
+        display: inline-block;
+        cursor: ew-resize;
+        min-width: 6em;
+        min-height: 1.22em;
+        position: relative;
+        vertical-align: bottom;
+      }
+      :host > .io-slider-slit {
+        position: absolute;
+        width: 100%;
+        height: 0.2em;
+        top: calc(50% - 0.1em);
+      }
+      :host > .io-slider-knob {
+        position: absolute;
+        width: 0.4em;
+        margin-left: -0.2em;
+        height: 100%;
+        background: #999;
+        left: calc(50%);
+      }
     `;
   }
   static get properties() {
