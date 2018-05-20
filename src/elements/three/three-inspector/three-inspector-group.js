@@ -1,31 +1,27 @@
 import * as THREE from "../../../../lib/three.module.js";
 
 import {IoObject} from "../../io/io-object/io-object.js";
-import "../../app/app-collapsable/app-collapsable.js";
 import "./three-inspector-item.js";
 import "./three-inspector-link.js";
 
-import "../../io/io-option/io-option.js";
-import "../../io/io-slider/io-slider.js";
-import "../three-vector/three-vector.js";
-import "../three-matrix/three-matrix.js";
-import "../three-color/three-color.js";
-
 export class ThreeInspectorGroup extends IoObject {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: flex;
+        flex: 0 0 auto;
         flex-direction: column;
-        margin: 0.2em;
-        border-radius: 0.1em;
-        background: #333;
+        margin: 2px;
+        border-radius: 6px;
+        background: linear-gradient(45deg, #333, #555);
       }
-      :host > app-collapsable > io-boolean {
+      :host > io-boolean {
+        background: linear-gradient(90deg, #333, #444);
+        border-radius: 6px 6px 0 0;
         display: block;
-        padding: 0.2em;
+        padding: 4px;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {
@@ -37,9 +33,8 @@ export class ThreeInspectorGroup extends IoObject {
     let propConfigs = this.getPropConfigs(this.props);
     const Prop = entry => ['three-inspector-item', {key: entry[0], value: this.value, config: entry[1]}];
     this.render([
-      ['app-collapsable', {label: this.label, expanded: this.bind('expanded'), elements:
-        Object.entries(propConfigs).map(Prop)
-      }]
+      ['io-boolean', {true: '▾' + this.label, false: '▸' + this.label, value: this.bind('expanded')}],
+      this.expanded ? Object.entries(propConfigs).map(Prop) : null
     ]);
   }
 }

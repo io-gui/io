@@ -12,22 +12,20 @@ mesh.add(light);
 
 export class DemoAppCtrl extends Io {
   static get style() {
-    return `
-      :host {
-        padding: 0 1em 1em 1em;
-      }
-      :host > io-button {
-        background: white;
-        padding: 0.1em 0.3em;
-        margin: 0.1em;
-        border-radius: 0.2em;
-      }
-    `
+    return html`
+    <style>
+
+    <style>
+    `;
   }
   static get properties() {
     return {
       value: null
     };
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    this.value = mesh;
   }
   selectDemo(demo) {
     this.value = demo;

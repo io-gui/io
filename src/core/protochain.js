@@ -1,5 +1,9 @@
 import {Property} from "./property.js";
 
+const _stagingElement = document.createElement('div');
+
+export function html() { return arguments[0][0]; }
+
 export class Protochain {
   constructor(_constructor) {
 
@@ -51,8 +55,8 @@ export class Protochain {
         if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
         style = style.replace(new RegExp(':host', 'g'), localName);
         this.style.push(style);
-        let element = document.createElement('style');
-        element.innerHTML = style;
+        _stagingElement.innerHTML = style;
+        let element = _stagingElement.querySelector('style');
         element.setAttribute('id', 'io-style-' + localName + '-' + i);
         document.head.appendChild(element);
       }

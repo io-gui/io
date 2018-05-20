@@ -4,7 +4,7 @@ import {MenuLayer} from "../menu-layer/menu-layer.js";
 
 export class MenuGroup extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: none;
         flex-direction: column;
@@ -35,7 +35,7 @@ export class MenuGroup extends Io {
       :host[indocument] > menu-item > :not(.menu-label) {
         display: none;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

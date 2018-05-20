@@ -3,6 +3,8 @@ import {Node} from "./core/node.js";
 import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 
+window.html = window.html || function() { return arguments[0][0]; }
+
 export class Io extends HTMLElement {
   constructor(initProps) {
     super();
@@ -106,11 +108,9 @@ export class Io extends HTMLElement {
     }
 
     for (let i = 0; i < vChildren.length; i++) {
-
       if (vChildren[i].props._id) {
         this.$[vChildren[i].props._id] = children[i];
       }
-
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
         children[i].innerHTML = vChildren[i].children;
       } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {

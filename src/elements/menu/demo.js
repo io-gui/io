@@ -2,11 +2,11 @@ import {Io} from "../../io.js";
 
 export class MenuDemo extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host div.area {
         background: rgba(128,128,128,0.2);
       }
-    `;
+    </style>`;
   }
   constructor() {
     super();

@@ -4,7 +4,7 @@ import {MenuGroup} from "../menu-group/menu-group.js";
 
 export class MenuItem extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: flex;
         flex-direction: row;
@@ -31,7 +31,7 @@ export class MenuItem extends Io {
         opacity: 0.5;
         margin: 0 -0.25em 0 0.25em;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

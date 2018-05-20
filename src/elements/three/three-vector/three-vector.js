@@ -3,15 +3,30 @@ import "../../io/io-object/io-object-prop.js";
 
 export class ThreeVector extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: flex;
         flex-direction: row;
       }
+      :host > io-object-prop {
+        flex: 1 1;
+        display: flex;
+        padding: 0;
+      }
       :host > io-object-prop > span {
         display: none;
       }
-    `;
+      :host > io-object-prop > io-number {
+        flex: 1 1;
+      }
+      :host > io-object-prop:nth-child(even) > io-number {
+        padding-left: 0.25em;
+        background: rgba(255,255,255, 0.05);
+      }
+      :host > io-object-prop:nth-child(odd) > io-number {
+        padding-left: 0.25em;
+      }
+    </style>`;
   }
   static get properties() {
     return {

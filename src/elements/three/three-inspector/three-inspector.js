@@ -1,5 +1,5 @@
 import {Io} from "../../../iocore.js";
-import "../../app/app-breadcrumbs/app-breadcrumbs.js";
+import "./three-inspector-breadcrumbs.js";
 import "./three-inspector-group.js";
 
 function isPropertyOf(prop, object) {
@@ -7,24 +7,20 @@ function isPropertyOf(prop, object) {
   return false;
 }
 
+//TODO: fix scroll on overflow
+
 export class ThreeInspector extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: flex;
         flex-direction: column;
-        background: #444;
+        white-space: nowrap;
+        background: linear-gradient(90deg, #666, #484848);
         color: #ccc;
-        padding: 0.1em;
-        border-radius: 0.2em;
-        line-height: 1em;
+        overflow: auto;
       }
-      :host .io-wrapper {
-        flex: 1;
-        overflow-x: hidden;
-        overflow-y: auto;
-      }
-    `;
+    </style>`;
   }
   static get properties() {
     return {
@@ -34,7 +30,8 @@ export class ThreeInspector extends Io {
       listeners: {
         'three-inspector-item-clicked': '_onLinkClicked',
         'mousedown': '_stopEvent',
-        'touchstart': '_stopEvent'
+        'touchstart': '_stopEvent',
+        'wheel': '_stopEvent'
       }
     };
   }
@@ -99,11 +96,17 @@ export class ThreeInspector extends Io {
 
     const GroupItem = entry => ['three-inspector-group', {
       value: this.value, props: entry[1], label: entry[0], expanded: true, configs: this.configs}];
+
+    let elements = [];
+    for (var key in groups) {
+      elements.push(['three-inspector-group', {
+        value: this.value, props: groups[key], label: key, expanded: true, configs: this.configs}
+      ]);
+    }
+
     this.render([
-      ['app-breadcrumbs', {value: this.bind('value'), crumbs: this.bind('crumbs')}],
-      ['div', {class: 'io-wrapper'}, [
-        Object.entries(groups).map(GroupItem)
-      ]]
+      ['three-inspector-breadcrumbs', {value: this.bind('value'), crumbs: this.bind('crumbs')}],
+      elements
     ]);
 
   }

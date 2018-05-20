@@ -3,7 +3,10 @@ import {IoButton} from "../../io/io-button/io-button.js";
 export class IoBoolean extends IoButton {
   static get properties() {
     return {
-      value: Boolean,
+      value: {
+        value: Boolean,
+        reflect: true
+      },
       true: 'true',
       false: 'false'
     };

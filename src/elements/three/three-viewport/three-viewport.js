@@ -3,7 +3,7 @@ import * as THREE from "../../../../lib/three.module.js";
 
 export class ThreeViewport extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         position: relative;
         overflow: hidden;
@@ -13,7 +13,7 @@ export class ThreeViewport extends Io {
         top: 0 !important;
         left: 0 !important;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

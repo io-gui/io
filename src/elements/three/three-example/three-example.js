@@ -4,12 +4,13 @@ import {ThreeInspector} from "../three-inspector/three-inspector.js";
 
 export class ThreeExample extends ThreeViewport {
   static get style() {
-    return `
+    return html`<style>
       :host > three-inspector {
         position: absolute;
+        max-height: 100%;
         right: 0;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {
@@ -17,8 +18,15 @@ export class ThreeExample extends ThreeViewport {
         type: String,
         observer: 'loadExample'
       },
-      control: String
+      control: String,
+      listeners: {
+        'scroll': '_stopEvent'
+      }
     }
+  }
+  _stopEvent(event) {
+    console.log(event);
+    event.stopPropagation();
   }
   constructor(props) {
     super(props);

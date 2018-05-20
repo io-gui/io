@@ -2,19 +2,19 @@ import {Io} from "../../../iocore.js";
 
 export class IoButton extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         cursor: pointer;
         white-space: nowrap;
         -webkit-tap-highlight-color: transparent;
       }
       :host:hover {
-        background: rgba(255,255,255,0.05);
+        background: rgba(255,255,255,0.1);
       }
       :host[pressed] {
-        background: rgba(0,0,0,0.05);
+        background: rgba(0,0,0,0.1);
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

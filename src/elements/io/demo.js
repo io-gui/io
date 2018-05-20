@@ -2,7 +2,7 @@ import {Io} from "../../io.js";
 
 export class IoDemo extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host div > io-string,
       :host div > io-boolean,
       :host div > io-number {
@@ -34,7 +34,7 @@ export class IoDemo extends Io {
         display: flex;
         width: 22em;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

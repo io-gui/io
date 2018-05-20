@@ -3,7 +3,7 @@ import {IoPointerMixin} from "../../../mixins/iopointer.js";
 
 export class AppSplitDivider extends IoPointerMixin(Io) {
   static get style() {
-    return `
+    return html`<style>
       :host {
         background: #333;
         color: #ccc;
@@ -27,7 +27,7 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
         align-items: center;
         justify-content: center;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

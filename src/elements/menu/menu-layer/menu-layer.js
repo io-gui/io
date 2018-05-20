@@ -13,7 +13,7 @@ let prevTouch;
 
 export class MenuLayer extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: block;
         visibility: hidden;
@@ -30,7 +30,7 @@ export class MenuLayer extends Io {
       :host[expanded] {
         visibility: visible;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

@@ -3,7 +3,7 @@ import {IoPropertyMixin} from "../../../mixins/ioproperty.js";
 
 export class IoObjectProp extends IoPropertyMixin(Io) {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: flex;
         flex-direction: row;
@@ -21,7 +21,7 @@ export class IoObjectProp extends IoPropertyMixin(Io) {
       :host > io-option {
         color: rgb(32,135,0);
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

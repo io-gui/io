@@ -25,7 +25,7 @@ export class IoNumber extends IoString {
   update() {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
-      value = Math.round(value / this.step) * this.step;
+      value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
       value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
     }
     this.innerText = String(parseFloat(value));

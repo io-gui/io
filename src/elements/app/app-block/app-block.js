@@ -4,7 +4,7 @@ import "./app-block-tabs.js";
 
 export class AppBlock extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: flex;
         overflow: hidden;
@@ -38,7 +38,7 @@ export class AppBlock extends Io {
       :host app-block-tab[highlightdrop = "after"] {
         border-right: 4px dashed #4f6;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

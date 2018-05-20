@@ -3,7 +3,7 @@ import "./app-split-divider.js";
 
 export class AppSplit extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host  {
         flex: 1;
         display: flex;
@@ -15,7 +15,7 @@ export class AppSplit extends Io {
       :host[orientation=vertical] {
         flex-direction: column;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

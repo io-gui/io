@@ -7,27 +7,28 @@ var teapotSize = 400;
 export default class extends ThreeShot {
   static get properties() {
     return {
-      shininess: 40.0,
-      ka: 0.17,
-      kd: 0.51,
-      ks: 0.2,
+      shininess: {value: 40.0, config: {tag: 'io-slider', min: 0, max: 400 }},
+      ka: {value: 0.17, config: {tag: 'io-slider', min: 0, max: 1, label: 'ambient' }},
+      kd: {value: 0.51, config: {tag: 'io-slider', min: 0, max: 1, label: 'diffuse strength' }},
+      ks: {value: 0.2, config: {tag: 'io-slider', min: 0, max: 1, label: 'specular strength' }},
       metallic: true,
-      hue:		0.121,
-      saturation: 0.73,
-      lightness:  0.66,
-      lhue:		 0.04,
-      lsaturation: 0.01,	// non-zero so that fractions will be shown
-      llightness:  1.0,
+      hue: { value: 0.121, config: {tag: 'io-slider', min: 0, max: 1 }},
+      saturation: { value: 0.73, config: {tag: 'io-slider', min: 0, max: 1 }},
+      lightness: { value: 0.66, config: {tag: 'io-slider', min: 0, max: 1 }},
+      lhue: { value: 0.04, config: {tag: 'io-slider', min: 0, max: 1, label: 'hue' }},
+      lsaturation: { value: 0, config: {tag: 'io-slider', min: 0, max: 1, label: 'saturation' }},
+      llightness: { value: 1, config: {tag: 'io-slider', min: 0, max: 1, label: 'lightness' }},
+      // ldirection: { value: new THREE.Vector3() },
       lx: 0.32,
       ly: 0.39,
       lz: 0.7,
-      tess: 15,
+      // tess: { value: 15, config: {min: 2, max: 50, step: 1, label: 'tesselation' }},
       bottom: true,
       lid: true,
       body: true,
       fitLid: false,
       nonblinn: false,
-      shading: "textured"
+      shading: { value: 'textured', config: { tag: 'io-option', options: [ 'wireframe', 'flat', 'smooth', 'glossy', 'textured', 'reflective' ] } }
     }
   }
   init() {

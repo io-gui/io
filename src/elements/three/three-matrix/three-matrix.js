@@ -3,7 +3,7 @@ import "../../io/io-object/io-object-prop.js";
 
 export class ThreeMatrix extends ThreeVector {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: grid;
         line-height: 1em;
@@ -20,13 +20,27 @@ export class ThreeMatrix extends ThreeVector {
       :host[columns="5"] {
         grid-template-columns: 20% 20% 20% 20% 20%;
       }
+      :host > io-object-prop {
+        padding: 0;
+      }
       :host > io-object-prop > io-number {
-        width: 100%;
+        // width: 100%;
+        flex: 1 1;
+        color: #6ef;
       }
       :host > io-object-prop > span {
         display: none;
       }
-    `;
+      :host > io-object-prop > io-number {
+      }
+      :host > io-object-prop:nth-child(even) > io-number {
+        padding-left: 0.25em;
+        background: rgba(255,255,255, 0.05);
+      }
+      :host > io-object-prop:nth-child(odd) > io-number {
+        padding-left: 0.25em;
+      }
+    </style>`;
   }
   update() {
     let elements = this.value;

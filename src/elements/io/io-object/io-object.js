@@ -8,12 +8,12 @@ import "./io-object-prop.js";
 
 export class IoObject extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: inline-block;
         line-height: 1em;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

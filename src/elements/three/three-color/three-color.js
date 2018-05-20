@@ -4,7 +4,7 @@ import "./three-color-picker.js";
 
 export class ThreeColor extends ThreeVector {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: flex;
         flex-direction: row;
@@ -12,7 +12,7 @@ export class ThreeColor extends ThreeVector {
       :host > span {
         min-width: 1.22em;
       }
-    `;
+    </style>`;
   }
   update() {
     let elements = [];

@@ -1,32 +1,35 @@
 import {Io} from "../../../iocore.js";
 import {IoButton} from "../../io/io-button/io-button.js";
 
-export class AppBreadcrumbs extends Io {
+export class ThreeInspectorBreadcrumbs extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: flex;
+        flex: 0 0 auto;
         flex-direction: row;
-        font-size: 1.1em;
-        padding: 0.2em;
-        border-radius: 0.1em;
-        white-space: nowrap;
+        font-size: 0.95em;
+        margin: 2px 2px 0 2px;
+        padding: 2px;
+        border-radius: 6px;
+        background: linear-gradient(90deg, #333, #444);
       }
       :host > io-button {
-        padding: 0.2em 0;
-        margin: 0 0.2em;
+        padding: 2px 4px;
+        border-radius: 5px;
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      :host > io-button:first-of-type,
       :host > io-button:last-of-type {
         overflow: visible;
         text-overflow: clip;
       }
-      :host > io-button:before {
+      :host > io-button:not(:first-of-type):before {
         content: '/';
-        margin-right: 0.4em;
+        margin-right: 4px;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {
@@ -46,4 +49,4 @@ export class AppBreadcrumbs extends Io {
   }
 }
 
-AppBreadcrumbs.Register();
+ThreeInspectorBreadcrumbs.Register();

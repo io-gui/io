@@ -3,13 +3,13 @@ import {IoPropertyMixin} from "../../../mixins/ioproperty.js";
 
 export class ThreeColorPicker extends IoPropertyMixin(Io) {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: flex;
         flex-direction: row;
         min-width: 1.22em;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

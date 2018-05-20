@@ -3,7 +3,7 @@ import {IoPointerMixin} from "../../../mixins/iopointer.js";
 
 export class IoSlider extends IoPointerMixin(Io) {
   static get style() {
-    return `
+    return html`<style>
       :host {
         display: inline-block;
         cursor: ew-resize;
@@ -26,7 +26,7 @@ export class IoSlider extends IoPointerMixin(Io) {
         background: #999;
         left: calc(50%);
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {

@@ -5,7 +5,7 @@ import "../../io/io-button/io-button.js";
 
 export class AppBlockTabs extends Io {
   static get style() {
-    return `
+    return html`<style>
       :host {
         flex: none;
         display: flex;
@@ -46,7 +46,7 @@ export class AppBlockTabs extends Io {
       :host > io-button:hover {
         color: inherit;
       }
-    `;
+    </style>`;
   }
   static get properties() {
     return {
