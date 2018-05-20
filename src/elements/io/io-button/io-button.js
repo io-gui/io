@@ -41,6 +41,7 @@ export class IoButton extends Io {
       event.preventDefault();
       if (this.pressed && typeof this.action === 'function') this.action(this.value);
       this.pressed = false;
+      this.fire('io-button-clicked', {value: this.value, action: this.action});
     }
   }
   _onDown(event) {

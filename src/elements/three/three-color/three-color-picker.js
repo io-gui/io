@@ -1,7 +1,6 @@
 import {Io} from "../../../iocore.js";
-import {IoPropertyMixin} from "../../../mixins/ioproperty.js";
 
-export class ThreeColorPicker extends IoPropertyMixin(Io) {
+export class ThreeColorPicker extends Io {
   static get style() {
     return html`<style>
       :host {

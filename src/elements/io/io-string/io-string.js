@@ -1,6 +1,18 @@
 import {Io} from "../../../iocore.js";
 
 export class IoString extends Io {
+  static get style() {
+    return html`<style>
+      :host {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      :host:focus {
+        overflow: hidden;
+        text-overflow: clip;
+      }
+    </style>`;
+  }
   static get properties() {
     return {
       value: String,
@@ -16,6 +28,8 @@ export class IoString extends Io {
   }
   _onBlur() {
     this.set('value', this.innerText);
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
   }
   _onKeydown(event) {
     if (event.which == 13) {

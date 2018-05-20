@@ -1,5 +1,7 @@
 import * as THREE from "../../../../lib/three.module.js";
 
+class Properties {}
+
 export default class ThreeShot {
   static get properties() {
     return {
@@ -21,7 +23,7 @@ export default class ThreeShot {
     }
   }
   constructor() {
-    Object.defineProperty(this, 'properties', { value: {} } );
+    Object.defineProperty(this, 'properties', { value: new Properties() } );
     Object.defineProperty(this, 'configs', { value: {} } );
     let properties = this.__proto__.constructor.properties;
     for (let key in properties) {

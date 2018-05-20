@@ -1,5 +1,4 @@
 import {ThreeVector} from "../three-vector/three-vector.js";
-import "../../io/io-object/io-object-prop.js";
 import "./three-color-picker.js";
 
 export class ThreeColor extends ThreeVector {
@@ -8,6 +7,8 @@ export class ThreeColor extends ThreeVector {
       :host {
         display: flex;
         flex-direction: row;
+        background: #222;
+        border: 0.5px inset #888;
       }
       :host > span {
         min-width: 1.22em;
@@ -21,7 +22,7 @@ export class ThreeColor extends ThreeVector {
     if (this.value.b !== undefined) elements.push('b');
     if (this.value.a !== undefined) elements.push('a');
     this.columns = elements.length + 1;
-    const Prop = i => ['io-object-prop', {key: i, value: this.value, config: {tag: 'io-number'}}];
+    const Prop = i => ['io-object-prop', {key: i, object: this.value, config: {tag: 'io-number'}}];
     this.render([
       elements.map(Prop),
       ['three-color-picker', {value: this.bind('value')}],

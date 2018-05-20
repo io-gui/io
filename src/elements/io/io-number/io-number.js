@@ -13,6 +13,8 @@ export class IoNumber extends IoString {
     let value = Math.round(Number(this.innerText) / this.step) * this.step;
     if (!isNaN(value)) this.set('value', value);
     this.update();
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
   }
   _onKeydown(event) {
     if (event.which == 13) {

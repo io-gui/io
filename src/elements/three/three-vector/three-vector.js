@@ -1,5 +1,4 @@
 import {Io} from "../../../iocore.js";
-import "../../io/io-object/io-object-prop.js";
 
 export class ThreeVector extends Io {
   static get style() {
@@ -8,22 +7,17 @@ export class ThreeVector extends Io {
         display: flex;
         flex-direction: row;
       }
-      :host > io-object-prop {
+      :host > io-number {
         flex: 1 1;
-        display: flex;
-        padding: 0;
+        padding: 0.25em 0.5em;
       }
-      :host > io-object-prop > span {
-        display: none;
+      :host > io-number:not(:first-child) {
+        border-left: 0.5px solid #666;
       }
-      :host > io-object-prop > io-number {
-        flex: 1 1;
-      }
-      :host > io-object-prop:nth-child(even) > io-number {
+      :host > io-number:nth-child(even) {
         padding-left: 0.25em;
-        background: rgba(255,255,255, 0.05);
       }
-      :host > io-object-prop:nth-child(odd) > io-number {
+      :host > io-number:nth-child(odd) {
         padding-left: 0.25em;
       }
     </style>`;
@@ -39,13 +33,36 @@ export class ThreeVector extends Io {
   }
   update() {
     let elements = [];
-    if (this.value.x !== undefined) elements.push('x');
-    if (this.value.y !== undefined) elements.push('y');
-    if (this.value.z !== undefined) elements.push('z');
-    if (this.value.w !== undefined) elements.push('w');
-    this.columns = elements.length;
-    const Prop = i => ['io-object-prop', {key: i, value: this.value, config: {tag: 'io-number'}}];
-    this.render([elements.map(Prop)]);
+    if (this.value.x !== undefined) {
+      elements.push(['io-number', {
+        value: this.value['x'],
+        key: 'x'
+        // listeners: {'value-set': this.setProperty}
+      }]);
+    }
+    if (this.value.y !== undefined) {
+      elements.push(['io-number', {
+        value: this.value['y'],
+        key: 'y'
+        // listeners: {'value-set': this.setProperty}
+      }]);
+    }
+    if (this.value.z !== undefined) {
+      elements.push(['io-number', {
+        value: this.value['z'],
+        key: 'z'
+        // listeners: {'value-set': this.setProperty}
+      }]);
+    }
+    if (this.value.w !== undefined) {
+      elements.push(['io-number', {
+        value: this.value['w'],
+        key: 'w'
+        // listeners: {'value-set': this.setProperty}
+      }]);
+    }
+
+    this.render([elements]);
   }
 }
 

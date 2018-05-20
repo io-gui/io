@@ -1,13 +1,11 @@
 import {Io} from "../../../iocore.js";
 import "./three-inspector-breadcrumbs.js";
-import "./three-inspector-group.js";
+import {threeInspectorConfig} from "./three-inspector-config.js"; // TODO: depricate
 
 function isPropertyOf(prop, object) {
   for (let p in object) if (object[p] === prop) return true;
   return false;
 }
-
-//TODO: fix scroll on overflow
 
 export class ThreeInspector extends Io {
   static get style() {
@@ -19,6 +17,84 @@ export class ThreeInspector extends Io {
         background: linear-gradient(90deg, #666, #484848);
         color: #ccc;
         overflow: auto;
+        min-width: 250px;
+      }
+      :host > io-object {
+        flex: 0 0 auto;
+        overflow: hidden;
+        margin: 2px;
+        border-radius: 6px;
+        background: linear-gradient(45deg, #333, #555);
+      }
+      :host > io-object > io-boolean {
+        background: linear-gradient(90deg, #333, #444);
+        border-radius: 6px 6px 0 0;
+        padding: 4px;
+      }
+      :host > io-object > io-boolean:not([value]) {
+        border-radius: 6px;
+      }
+      :host > io-object > div {
+        border-top: 0.5px solid #252525;
+        font-size: 0.85em;
+        padding: 0.25em;
+      }
+      :host > io-object > div > span {
+        text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-basis: 6em;
+        padding: 0.25em 0.5em;
+      }
+      :host > io-object > div > :nth-child(2) {
+        flex: 1 1;
+        padding: 0.25em 0.5em;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      :host > io-object > div > io-button {
+        border-radius: 6px;
+        color: #6af;
+        font-weight: bold;
+        flex: 0 0 auto !important;
+      }
+      :host > io-object > div > io-option {
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.25em 0.25em 0.25em 0.5em !important;
+        border: 0.5px outset #666;
+        color: #ff4;
+        flex: 0 0 auto !important;
+      }
+      :host > io-object > div > io-option:after {
+        content: '▾';
+        background: rgba(0, 0, 0, 0.125);
+        padding: 0.05em 0.2em;
+        border-radius: 4px;
+        margin-left: 0.3em;
+      }
+      :host > io-object > div > io-string,
+      :host > io-object > div > io-number,
+      :host > io-object > div > three-vector,
+      :host > io-object > div > three-matrix {
+        background: rgba(0, 0, 0, 0.15);
+        border: 0.5px inset #888;
+        color: #6ef;
+      }
+      :host > io-object > div > three-vector,
+      :host > io-object > div > three-matrix {
+        padding: 0 !important;
+      }
+      :host io-boolean {
+        color: #9f9;
+      }
+      :host io-boolean:not([value]) {
+        color: #696;
+      }
+      :host > io-object > div > io-slider {
+        background: rgba(255, 255, 255, 0.05);
+        border: 0.5px inset #888;
+        padding: 0 !important;
       }
     </style>`;
   }
@@ -28,9 +104,10 @@ export class ThreeInspector extends Io {
       configs: Object,
       crumbs: Array,
       listeners: {
-        'three-inspector-item-clicked': '_onLinkClicked',
+        'io-button-clicked': '_onLinkClicked',
         'mousedown': '_stopEvent',
         'touchstart': '_stopEvent',
+        'keydown': '_stopEvent',
         'wheel': '_stopEvent'
       }
     };
@@ -39,8 +116,10 @@ export class ThreeInspector extends Io {
     event.stopPropagation();
   }
   _onLinkClicked(event) {
+    // TODO gracefully ignore io-option
+    console.log(event.path[0].className);
     event.stopPropagation();
-    if (event.detail.value instanceof Object) {
+    if (isPropertyOf(event.detail.value, this.value) && event.path[0].className === 'three-object-link') {
       this.value = event.detail.value;
     }
   }
@@ -50,7 +129,7 @@ export class ThreeInspector extends Io {
     let proto = this.value.__proto__;
     let keys = Object.keys(this.value);
     while (proto) {
-      let config = ThreeInspector.CONFIG[proto.constructor.name] || {};
+      let config = threeInspectorConfig.groups[proto.constructor.name] || {};
       for (let group in config) {
         groups[group] = groups[group] || [];
         for (let i = 0; i < config[group].length; i++) {
@@ -94,13 +173,12 @@ export class ThreeInspector extends Io {
       });
     }
 
-    const GroupItem = entry => ['three-inspector-group', {
-      value: this.value, props: entry[1], label: entry[0], expanded: true, configs: this.configs}];
+    threeInspectorConfig['Object'] = Object.assign(threeInspectorConfig['Object'], this.configs);
 
     let elements = [];
     for (var key in groups) {
-      elements.push(['three-inspector-group', {
-        value: this.value, props: groups[key], label: key, expanded: true, configs: this.configs}
+      elements.push(['io-object', {
+        value: this.value, props: groups[key], label: key, expanded: true, configs: threeInspectorConfig}
       ]);
     }
 
@@ -111,26 +189,5 @@ export class ThreeInspector extends Io {
 
   }
 }
-
-ThreeInspector.CONFIG = {
-  'Object': {
-    'advanced': ['uuid'],
-    'hidden': ['type']
-  },
-  'Object3D' : {
-    'main': ['name', 'geometry', 'material', 'parent', 'children'],
-    'transform': ['position', 'rotation', 'scale'],
-    'rendering': ['drawMode', 'layers', 'visible', 'castShadow', 'receiveShadow', 'frustumCulled', 'renderOrder'],
-    'advanced': ['userData', 'up', 'quaternion', 'matrix', 'matrixWorld', 'matrixAutoUpdate', 'matrixWorldNeedsUpdate']
-  },
-  'Material' : {
-    'main': ['opacity', 'side', 'transparent', 'depthTest', 'depthWrite', 'depthFunc', 'wireframe'],
-    'rendering': ['dithering', 'flatShading'],
-    'advanced': ['skinning']
-  },
-  'Light' : {
-    'main': ['intensity', 'color']
-  }
-};
 
 ThreeInspector.Register();

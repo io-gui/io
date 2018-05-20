@@ -1,47 +1,8 @@
 import * as THREE from "../../../../lib/three.module.js";
 
-import {IoObject} from "../../io/io-object/io-object.js";
-import "./three-inspector-item.js";
-import "./three-inspector-link.js";
-
-export class ThreeInspectorGroup extends IoObject {
-  static get style() {
-    return html`<style>
-      :host {
-        display: flex;
-        flex: 0 0 auto;
-        flex-direction: column;
-        margin: 2px;
-        border-radius: 6px;
-        background: linear-gradient(45deg, #333, #555);
-      }
-      :host > io-boolean {
-        background: linear-gradient(90deg, #333, #444);
-        border-radius: 6px 6px 0 0;
-        display: block;
-        padding: 4px;
-      }
-    </style>`;
-  }
-  static get properties() {
-    return {
-      props: Array,
-      configs: Object
-    };
-  }
-  update() {
-    let propConfigs = this.getPropConfigs(this.props);
-    const Prop = entry => ['three-inspector-item', {key: entry[0], value: this.value, config: entry[1]}];
-    this.render([
-      ['io-boolean', {true: '▾' + this.label, false: '▸' + this.label, value: this.bind('expanded')}],
-      this.expanded ? Object.entries(propConfigs).map(Prop) : null
-    ]);
-  }
-}
-
-ThreeInspectorGroup.CONFIG = {
+export const threeInspectorConfig = {
   'Object': {
-    'type:object': {tag: 'three-inspector-link'},
+    'type:object': {tag: 'io-button', props: {class: 'three-object-link'}},
     'type:boolean': {tag: 'io-boolean', props: {true: '☑ true', false: '☐ false'}},
     'constructor:Vector2': {tag: 'three-vector'},
     'constructor:Vector3': {tag: 'three-vector'},
@@ -55,12 +16,32 @@ ThreeInspectorGroup.CONFIG = {
   'Matrix2':{ 'key:elements': {tag: 'three-matrix'} },
   'Matrix3':{ 'key:elements': {tag: 'three-matrix'} },
   'Matrix4':{ 'key:elements': {tag: 'three-matrix'} },
+  groups: {
+    'Object': {
+      'advanced': ['uuid'],
+      'hidden': ['type']
+    },
+    'Object3D' : {
+      'main': ['name', 'geometry', 'material', 'parent', 'children'],
+      'transform': ['position', 'rotation', 'scale'],
+      'rendering': ['drawMode', 'layers', 'visible', 'castShadow', 'receiveShadow', 'frustumCulled', 'renderOrder'],
+      'advanced': ['userData', 'up', 'quaternion', 'matrix', 'matrixWorld', 'matrixAutoUpdate', 'matrixWorldNeedsUpdate']
+    },
+    'Material' : {
+      'main': ['opacity', 'side', 'transparent', 'depthTest', 'depthWrite', 'depthFunc', 'wireframe'],
+      'rendering': ['dithering', 'flatShading'],
+      'advanced': ['skinning']
+    },
+    'Light' : {
+      'main': ['intensity', 'color']
+    }
+  }
 };
 
 function setOptionGroups(namespace, className, key, options) {
   let o = [];
-  ThreeInspectorGroup.CONFIG[className] = ThreeInspectorGroup.CONFIG[className] || {};
-  ThreeInspectorGroup.CONFIG[className]['key:' + key] = { tag: 'io-option', props: { options: o } };
+  threeInspectorConfig[className] = threeInspectorConfig[className] || {};
+  threeInspectorConfig[className]['key:' + key] = { tag: 'io-option', props: { options: o } };
   for (let i = 0; i < options.length; i++) {
     if (typeof options[i] === 'string') {
       o.push({ value: namespace[options[i]], label: options[i]});
@@ -216,5 +197,3 @@ setOptionGroups(THREE, 'Euler', '_order', [
 // export var ZeroCurvatureEnding = 2400;
 // export var ZeroSlopeEnding = 2401;
 // export var WrapAroundEnding = 2402;
-
-ThreeInspectorGroup.Register();

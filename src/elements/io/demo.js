@@ -3,18 +3,16 @@ import {Io} from "../../io.js";
 export class IoDemo extends Io {
   static get style() {
     return html`<style>
-      :host div > io-string,
-      :host div > io-boolean,
-      :host div > io-number {
+      :host div.row > io-string,
+      :host div.row > io-boolean,
+      :host div.row > io-number {
         border: 1px solid #eee;
-        margin: 0.25em;
       }
-      :host div > io-option,
-      :host div > io-object {
+      :host div.demo > io-option,
+      :host div.demo > io-object {
         display: inline-block;
         border: 1px solid #eee;
         vertical-align: top;
-        margin: 0.25em;
       }
       :host div.demo {
         margin: 1em;

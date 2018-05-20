@@ -1,47 +1,92 @@
 import {Io} from "../../../iocore.js";
-import "../io-boolean/io-boolean.js";
-import "../io-number/io-number.js";
-import "../io-string/io-string.js";
-// TODO: remove dependancy
-import "../../app/app-collapsable/app-collapsable.js";
-import "./io-object-prop.js";
 
 export class IoObject extends Io {
   static get style() {
     return html`<style>
       :host {
-        display: inline-block;
+        display: flex;
+        flex-direction: column;
+        flex: 0 0;
         line-height: 1em;
+      }
+      :host > div {
+        display: flex;
+        flex-direction: row;
+      }
+      :host > div > span {
+        padding: 0 0.2em 0 0.5em;
+        flex: 0 0 auto;
+      }
+      :host > io-number {
+        color: rgb(28, 0, 207);
+      }
+      :host > io-string {
+        color: rgb(196, 26, 22);
+      }
+      :host > io-boolean {
+        color: rgb(170, 13, 145);
+      }
+      :host > io-option {
+        color: rgb(32,135,0);
       }
     </style>`;
   }
   static get properties() {
     return {
+      object: Object,
       value: Object,
+      props: Array,
       configs: Object,
       expanded: {
         type: Boolean,
         reflect: true
       },
-      label: String
+      label: String,
+      listeners: {
+        'value-set': '_onValueSet'
+      }
     };
   }
-
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('io-object-mutated', this._onIoObjectMutated);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('io-object-mutated', this._onIoObjectMutated);
+  }
+  _onIoObjectMutated(event) {
+    if (event.detail.object === this.value) {
+      // if (event.detail.key === this.key || event.detail.key === '*' || this.key === '*') {
+        // TODO: unhack
+        for (var i = 0; i < this.children.length; i++) {
+          if (typeof this.children[i].update == 'function') {
+            this.children[i].__state.value.value = this.value[this.children[i].key];
+            this.children[i].update();
+          }
+        }
+      // }
+    }
+  }
+  _onValueSet(event) {
+    this.value[event.detail.key] = event.detail.value;
+    window.dispatchEvent(new CustomEvent('io-object-mutated', {
+      detail: {object: this.value, key: event.detail.key},
+      bubbles: false,
+      composed: true
+    }));
+  }
   getPropConfigs(keys) {
     let configs = {};
 
     let proto = this.value.__proto__;
-    let configchain = this.__proto__.constructor.configchain;
-
     while (proto) {
-      for (let i = configchain.length; i--;) {
-        let c = configchain[i][proto.constructor.name];
-        if (c) configs = Object.assign(configs, c);
-      }
+      let c = IoObjectConfig[proto.constructor.name];
+      if (c) configs = Object.assign(configs, c);
+      c = this.configs[proto.constructor.name];
+      if (c) configs = Object.assign(configs, c);
       proto = proto.__proto__;
     }
-
-    configs = Object.assign(configs, this.configs);
 
     let propConfigs = {};
 
@@ -72,17 +117,38 @@ export class IoObject extends Io {
   }
   update() {
     let label = this.label || this.value.constructor.name;
-    let propConfigs = this.getPropConfigs(Object.keys(this.value));
-    const Prop = entry => ['io-object-prop', {key: entry[0], value: this.value, config: entry[1]}];
-    this.render([
-      ['app-collapsable', {label: label, expanded: this.bind('expanded'), elements:
-        Object.entries(propConfigs).map(Prop)
-      }]
-    ]);
+
+    let elements = [];
+
+    if (this.expanded) {
+      let proplist = this.props.length ? this.props : Object.keys(this.value);
+      let configs = this.getPropConfigs(proplist);
+      for (var key in configs) {
+        let label = configs[key].label || key;
+        elements.push(
+        ['div', [
+          ['span', label + ':'],
+          [configs[key].tag, Object.assign({
+            key: key,
+            value: this.value[key],
+            label: key},
+            configs[key].props)]
+        ]]);
+      }
+        // elements.push(['span', label + ':']);
+        // elements.push([configs[key].tag, Object.assign({
+        //   key: key,
+        //   value: this.value[key],
+        //   label: key},
+        //   configs[key].props)]);
+        // }
+    }
+
+    this.render([['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}], elements]);
   }
 }
 
-IoObject.CONFIG = {
+const IoObjectConfig = {
   'Object' : {
     'type:string': {tag: 'io-string', props: {}},
     'type:number': {tag: 'io-number', props: {step: 0.1}},
@@ -91,19 +157,6 @@ IoObject.CONFIG = {
     'value:null': {tag: 'io-string', props: {}},
     'value:undefined': {tag: 'io-string', props: {}}
   }
-};
-
-IoObject.Register = function() {
-    Io.Register.apply(this, arguments);
-    this.configchain = [];
-    let proto = this.prototype;
-    while (proto && proto.constructor !== Element) {
-      if (proto.constructor.CONFIG) {
-        let cfg = proto.constructor.CONFIG;
-        this.configchain.push(cfg);
-      }
-      proto = proto.__proto__;
-    }
 };
 
 IoObject.Register();

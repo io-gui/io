@@ -25,7 +25,6 @@ export class ThreeExample extends ThreeViewport {
     }
   }
   _stopEvent(event) {
-    console.log(event);
     event.stopPropagation();
   }
   constructor(props) {

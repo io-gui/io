@@ -6,6 +6,14 @@ import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 window.html = window.html || function() { return arguments[0][0]; }
 
 export class Io extends HTMLElement {
+  static get properties() {
+    return {
+      // TODO: move to config?
+      key: {
+        type: String
+      }
+    };
+  }
   constructor(initProps) {
     super();
 
@@ -122,7 +130,8 @@ export class Io extends HTMLElement {
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
-    this.fire(prop + '-set', {value: value, oldValue: oldValue}, false);
+    // TODO: unhack
+    this.fire(prop + '-set', {value: value, oldValue: oldValue, key: this.key}, this.key ? true : false);
   }
   fire(eventName, detail, bubbles = true) {
     this.dispatchEvent(new CustomEvent(eventName, {
