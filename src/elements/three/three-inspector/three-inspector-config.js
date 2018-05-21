@@ -2,7 +2,7 @@ import * as THREE from "../../../../lib/three.module.js";
 
 export const threeInspectorConfig = {
   'Object': {
-    'type:object': {tag: 'io-button', props: {class: 'three-object-link'}},
+    'type:object': {tag: 'three-inspector-link'},
     'type:boolean': {tag: 'io-boolean', props: {true: '☑ true', false: '☐ false'}},
     'constructor:Vector2': {tag: 'three-vector'},
     'constructor:Vector3': {tag: 'three-vector'},

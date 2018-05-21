@@ -21,7 +21,7 @@ export class AppBlockTab extends IoPointerMixin(Io) {
     };
   }
   update() {
-    this.innerHTML = this.tabID;
+    this.innerText = this.tabID;
   }
   _onPointerMove(event) {
     let pointer = event.detail.pointer[0];
@@ -32,7 +32,7 @@ export class AppBlockTab extends IoPointerMixin(Io) {
       this.fire('app-block-tab-drag-start', {pointer: pointer, tab: this});
     }
     let rect = this.getBoundingClientRect();
-    _dragIcon.innerHTML = this.tabID;
+    _dragIcon.innerText = this.tabID;
     _dragIcon.style.left = pointer.position.x - 12 + 'px';
     _dragIcon.style.top = pointer.position.y - 12 + 'px';
     if (this._dragging) {

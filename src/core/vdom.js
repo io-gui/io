@@ -27,20 +27,9 @@ export const updateNode = function(element, vDOMNode) {
 
 // https://github.com/lukejacksonn/ijk
 const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b];
-const rename = (props) => {
-  if (props.class) {
-    props.className = props.class;
-    delete props.class;
-  }
-  if (props.id) {
-    props._id = props.id;
-    delete props.id;
-  }
-  return props
-};
 // TODO: understand!
 export const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1]) ? {
     ['name']: node[0],
-    ['props']: rename(node[1]),
+    ['props']: node[1],
     ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2] || ''
   } : buildTree()([node[0], {}, node[1] || '']);

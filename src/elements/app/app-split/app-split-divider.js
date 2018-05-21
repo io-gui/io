@@ -51,7 +51,7 @@ export class AppSplitDivider extends IoPointerMixin(Io) {
   }
   update() {
     this.render([
-      ['div', {class: 'app-divider'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
+      ['div', {className: 'app-divider'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
     ]);
   }
 }

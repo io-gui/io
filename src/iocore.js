@@ -8,10 +8,7 @@ window.html = window.html || function() { return arguments[0][0]; }
 export class Io extends HTMLElement {
   static get properties() {
     return {
-      // TODO: move to config?
-      key: {
-        type: String
-      }
+      id: String
     };
   }
   constructor(initProps) {
@@ -116,11 +113,11 @@ export class Io extends HTMLElement {
     }
 
     for (let i = 0; i < vChildren.length; i++) {
-      if (vChildren[i].props._id) {
-        this.$[vChildren[i].props._id] = children[i];
+      if (vChildren[i].props.id) {
+        this.$[vChildren[i].props.id] = children[i];
       }
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-        children[i].innerHTML = vChildren[i].children;
+        children[i].innerText = vChildren[i].children;
       } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
         this.traverse(vChildren[i].children, children[i]);
       }
@@ -130,8 +127,7 @@ export class Io extends HTMLElement {
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
-    // TODO: unhack
-    this.fire(prop + '-set', {value: value, oldValue: oldValue, key: this.key}, this.key ? true : false);
+    this.fire(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
   fire(eventName, detail, bubbles = true) {
     this.dispatchEvent(new CustomEvent(eventName, {

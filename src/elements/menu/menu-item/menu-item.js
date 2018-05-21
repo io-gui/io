@@ -60,10 +60,10 @@ export class MenuItem extends Io {
       }
     }
     this.render([
-      this.option.icon ? ['span', {class: 'menu-icon'}] : null,
-      ['span', {class: 'menu-label'}, this.option.label || this.option.value],
-      this.option.hint ? ['span', {class: 'menu-hint'}] : null,
-      this.option.options ? ['span', {class: 'menu-more'}, '▸'] : null,
+      this.option.icon ? ['span', {className: 'menu-icon'}] : null,
+      ['span', {className: 'menu-label'}, this.option.label || this.option.value],
+      this.option.hint ? ['span', {className: 'menu-hint'}] : null,
+      this.option.options ? ['span', {className: 'menu-more'}, '▸'] : null,
     ]);
   }
   disconnectedCallback() {

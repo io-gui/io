@@ -4,29 +4,19 @@ import "./three-color-picker.js";
 export class ThreeColor extends ThreeVector {
   static get style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex-direction: row;
-        background: #222;
-        border: 0.5px inset #888;
-      }
-      :host > span {
-        min-width: 1.22em;
-      }
+
     </style>`;
   }
   update() {
     let elements = [];
-    if (this.value.r !== undefined) elements.push('r');
-    if (this.value.g !== undefined) elements.push('g');
-    if (this.value.b !== undefined) elements.push('b');
-    if (this.value.a !== undefined) elements.push('a');
-    this.columns = elements.length + 1;
-    const Prop = i => ['io-object-prop', {key: i, object: this.value, config: {tag: 'io-number'}}];
-    this.render([
-      elements.map(Prop),
-      ['three-color-picker', {value: this.bind('value')}],
-    ]);
+    let configs = this.getPropConfigs(['r', 'g', 'b', 'a']);
+    for (var key in configs) {
+      if (this.value[key] !== undefined) {
+        elements.push(['io-number', Object.assign({value: this.value[key], id: key}, configs[key].props)]);
+      }
+    }
+    elements.push(['three-color-picker', {value: this.bind('value')}]),
+    this.render([elements]);
   }
 }
 

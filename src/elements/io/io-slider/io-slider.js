@@ -53,9 +53,9 @@ export class IoSlider extends IoPointerMixin(Io) {
   update() {
     let pos = 100 * (this.value - this.min) / (this.max - this.min);
     this.render([
-      ['div', {class: 'io-slider-slit', style: {
+      ['div', {className: 'io-slider-slit', style: {
           background: 'linear-gradient(to right, #2cf, #2f6 ' + pos + '%, #333 ' + (pos + 1) + '%)'}}],
-      ['div', {class: 'io-slider-knob', style: {left: pos + '%'}}]
+      ['div', {className: 'io-slider-knob', style: {left: pos + '%'}}]
     ]);
   }
 }

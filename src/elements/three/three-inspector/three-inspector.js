@@ -1,10 +1,11 @@
 import {Io} from "../../../iocore.js";
 import "./three-inspector-breadcrumbs.js";
-import {threeInspectorConfig} from "./three-inspector-config.js"; // TODO: depricate
+import "./three-inspector-link.js";
+import {threeInspectorConfig} from "./three-inspector-config.js";
 
 function isPropertyOf(prop, object) {
-  for (let p in object) if (object[p] === prop) return true;
-  return false;
+  for (let key in object) if (object[key] === prop) return key;
+  return null;
 }
 
 export class ThreeInspector extends Io {
@@ -52,7 +53,7 @@ export class ThreeInspector extends Io {
         white-space: nowrap;
         overflow: hidden;
       }
-      :host > io-object > div > io-button {
+      :host > io-object > div > three-inspector-link {
         border-radius: 6px;
         color: #6af;
         font-weight: bold;
@@ -76,14 +77,20 @@ export class ThreeInspector extends Io {
       :host > io-object > div > io-string,
       :host > io-object > div > io-number,
       :host > io-object > div > three-vector,
+      :host > io-object > div > three-color,
       :host > io-object > div > three-matrix {
         background: rgba(0, 0, 0, 0.15);
         border: 0.5px inset #888;
-        color: #6ef;
       }
       :host > io-object > div > three-vector,
+      :host > io-object > div > three-color,
       :host > io-object > div > three-matrix {
         padding: 0 !important;
+      }
+      :host io-string,
+      :host io-number {
+        color: #6ef !important;
+        padding-left: 0.25em !important;
       }
       :host io-boolean {
         color: #9f9;
@@ -116,10 +123,8 @@ export class ThreeInspector extends Io {
     event.stopPropagation();
   }
   _onLinkClicked(event) {
-    // TODO gracefully ignore io-option
-    console.log(event.path[0].className);
     event.stopPropagation();
-    if (isPropertyOf(event.detail.value, this.value) && event.path[0].className === 'three-object-link') {
+    if (isPropertyOf(event.detail.value, this.value) && event.path[0].localName === 'three-inspector-link') {
       this.value = event.detail.value;
     }
   }

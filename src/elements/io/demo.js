@@ -48,52 +48,52 @@ export class IoDemo extends Io {
   constructor() {
     super();
     this.render([
-      ['div', {class: 'demo'}, [
-        ['div', {class: 'row narrow header'}, [
-          ['span', {class: 'rowlabel'}],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'row narrow header'}, [
+          ['span', {className: 'rowlabel'}],
           ['span', 'string'],
           ['span', 'number'],
           ['span', 'boolean'],
         ]],
-        ['div', {class: 'row narrow'}, [
-          ['span', {class: 'rowlabel'}, 'string'],
+        ['div', {className: 'row narrow'}, [
+          ['span', {className: 'rowlabel'}, 'string'],
           ['io-string', {value: this.bind('string')}],
           ['io-number', {value: this.bind('string')}],
           ['io-boolean', {type: 'boolean', value: this.bind('string')}],
         ]],
-        ['div', {class: 'row narrow'}, [
-          ['span', {class: 'rowlabel'}, 'number'],
+        ['div', {className: 'row narrow'}, [
+          ['span', {className: 'rowlabel'}, 'number'],
           ['io-string', {value: this.bind('number')}],
           ['io-number', {value: this.bind('number')}],
           ['io-boolean', {type: 'boolean', value: this.bind('number')}],
         ]],
-        ['div', {class: 'row narrow'}, [
-          ['span', {class: 'rowlabel'}, 'boolean'],
+        ['div', {className: 'row narrow'}, [
+          ['span', {className: 'rowlabel'}, 'boolean'],
           ['io-string', {value: this.bind('boolean')}],
           ['io-number', {value: this.bind('boolean')}],
           ['io-boolean', {type: 'boolean', value: this.bind('boolean')}],
         ]],
-        ['div', {class: 'row narrow'}, [
-          ['span', {class: 'rowlabel'}, 'NaN'],
+        ['div', {className: 'row narrow'}, [
+          ['span', {className: 'rowlabel'}, 'NaN'],
           ['io-string', {value: this.bind('NaN')}],
           ['io-number', {value: this.bind('NaN')}],
           ['io-boolean', {type: 'boolean', value: this.bind('NaN')}],
         ]],
-        ['div', {class: 'row narrow'}, [
-          ['span', {class: 'rowlabel'}, 'null'],
+        ['div', {className: 'row narrow'}, [
+          ['span', {className: 'rowlabel'}, 'null'],
           ['io-string', {value: this.bind('null')}],
           ['io-number', {value: this.bind('null')}],
           ['io-boolean', {type: 'boolean', value: this.bind('null')}],
         ]],
-        ['div', {class: 'row narrow'}, [
-          ['span', {class: 'rowlabel'}, 'undefined'],
+        ['div', {className: 'row narrow'}, [
+          ['span', {className: 'rowlabel'}, 'undefined'],
           ['io-string', {value: this.bind('undefined')}],
           ['io-number', {value: this.bind('undefined')}],
           ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
         ]],
       ]],
-      ['div', {class: 'demo'}, [
-        ['span', {class: 'rowlabel'}, 'io-option'],
+      ['div', {className: 'demo'}, [
+        ['span', {className: 'rowlabel'}, 'io-option'],
         ['io-option', {options: [
           {label: 'one', value: 1},
           {label: 'two', value: 2},
@@ -101,8 +101,8 @@ export class IoDemo extends Io {
           {label: 'four', value: 4}
         ], value: 1}],
       ]],
-      ['div', {class: 'demo'}, [
-        ['span', {class: 'rowlabel'}, 'io-object'],
+      ['div', {className: 'demo'}, [
+        ['span', {className: 'rowlabel'}, 'io-object'],
         ['io-object', {label: 'Obj', value: {
           "number": 1337,
           "string": 'hello',

@@ -1,6 +1,6 @@
-import {Io} from "../../../iocore.js";
+import {IoObject} from "../../io/io-object/io-object.js";
 
-export class ThreeVector extends Io {
+export class ThreeVector extends IoObject {
   static get style() {
     return html`<style>
       :host {
@@ -14,54 +14,16 @@ export class ThreeVector extends Io {
       :host > io-number:not(:first-child) {
         border-left: 0.5px solid #666;
       }
-      :host > io-number:nth-child(even) {
-        padding-left: 0.25em;
-      }
-      :host > io-number:nth-child(odd) {
-        padding-left: 0.25em;
-      }
     </style>`;
-  }
-  static get properties() {
-    return {
-      value: null,
-      columns: {
-        type: Number,
-        reflect: true
-      }
-    };
   }
   update() {
     let elements = [];
-    if (this.value.x !== undefined) {
-      elements.push(['io-number', {
-        value: this.value['x'],
-        key: 'x'
-        // listeners: {'value-set': this.setProperty}
-      }]);
+    let configs = this.getPropConfigs(['x', 'y', 'z', 'w']);
+    for (var key in configs) {
+      if (this.value[key] !== undefined) {
+        elements.push(['io-number', Object.assign({value: this.value[key], id: key}, configs[key].props)]);
+      }
     }
-    if (this.value.y !== undefined) {
-      elements.push(['io-number', {
-        value: this.value['y'],
-        key: 'y'
-        // listeners: {'value-set': this.setProperty}
-      }]);
-    }
-    if (this.value.z !== undefined) {
-      elements.push(['io-number', {
-        value: this.value['z'],
-        key: 'z'
-        // listeners: {'value-set': this.setProperty}
-      }]);
-    }
-    if (this.value.w !== undefined) {
-      elements.push(['io-number', {
-        value: this.value['w'],
-        key: 'w'
-        // listeners: {'value-set': this.setProperty}
-      }]);
-    }
-
     this.render([elements]);
   }
 }

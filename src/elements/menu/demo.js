@@ -39,7 +39,7 @@ export class MenuDemo extends Io {
     ];
     this.render([
       ['menu-group', {options: this.menuoptions, horizontal: true}],
-      ['div', {class: 'demo area'}, [
+      ['div', {className: 'demo area'}, [
         ['h3', 'menu-root (click to expand)'],
         ['menu-root', {options: this.menuoptions, position: 'pointer'}]
       ]]

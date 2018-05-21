@@ -11,13 +11,6 @@ let texture = new THREE.Texture();
 mesh.add(light);
 
 export class DemoAppCtrl extends Io {
-  static get style() {
-    return html`
-    <style>
-
-    <style>
-    `;
-  }
   static get properties() {
     return {
       value: null
@@ -25,7 +18,7 @@ export class DemoAppCtrl extends Io {
   }
   connectedCallback() {
     super.connectedCallback();
-    this.value = mesh;
+    this.value = light;
   }
   selectDemo(demo) {
     this.value = demo;

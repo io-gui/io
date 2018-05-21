@@ -33,7 +33,6 @@ export class IoObject extends Io {
   }
   static get properties() {
     return {
-      object: Object,
       value: Object,
       props: Array,
       configs: Object,
@@ -56,25 +55,23 @@ export class IoObject extends Io {
     window.removeEventListener('io-object-mutated', this._onIoObjectMutated);
   }
   _onIoObjectMutated(event) {
-    if (event.detail.object === this.value) {
-      // if (event.detail.key === this.key || event.detail.key === '*' || this.key === '*') {
-        // TODO: unhack
-        for (var i = 0; i < this.children.length; i++) {
-          if (typeof this.children[i].update == 'function') {
-            this.children[i].__state.value.value = this.value[this.children[i].key];
-            this.children[i].update();
-          }
-        }
-      // }
+    let key = event.detail.key;
+    if (event.detail.object === this.value && this.$[key]) {
+      this.$[key].__state.value.value = this.value[key];
+      this.$[key].update();
     }
   }
   _onValueSet(event) {
-    this.value[event.detail.key] = event.detail.value;
-    window.dispatchEvent(new CustomEvent('io-object-mutated', {
-      detail: {object: this.value, key: event.detail.key},
-      bubbles: false,
-      composed: true
-    }));
+    event.stopPropagation();
+    let key = event.path[0].id;
+    if (key !== undefined) {
+      this.value[key] = event.detail.value;
+      window.dispatchEvent(new CustomEvent('io-object-mutated', {
+        detail: {object: this.value, key: key},
+        bubbles: false,
+        composed: true
+      }));
+    }
   }
   getPropConfigs(keys) {
     let configs = {};
@@ -117,33 +114,16 @@ export class IoObject extends Io {
   }
   update() {
     let label = this.label || this.value.constructor.name;
-
     let elements = [];
-
     if (this.expanded) {
       let proplist = this.props.length ? this.props : Object.keys(this.value);
       let configs = this.getPropConfigs(proplist);
       for (var key in configs) {
-        let label = configs[key].label || key;
+        let editor = [configs[key].tag, Object.assign({value: this.value[key], id: key}, configs[key].props)];
         elements.push(
-        ['div', [
-          ['span', label + ':'],
-          [configs[key].tag, Object.assign({
-            key: key,
-            value: this.value[key],
-            label: key},
-            configs[key].props)]
-        ]]);
+        ['div', [['span', configs[key].label || key + ':'], editor]]);
       }
-        // elements.push(['span', label + ':']);
-        // elements.push([configs[key].tag, Object.assign({
-        //   key: key,
-        //   value: this.value[key],
-        //   label: key},
-        //   configs[key].props)]);
-        // }
     }
-
     this.render([['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}], elements]);
   }
 }
