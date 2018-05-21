@@ -42,9 +42,7 @@ export class MenuItem extends Io {
         'focus': '_onFocus',
         'touchstart': '_onTouchstart'
       },
-      attributes: {
-        'tabindex': 0
-      }
+      tabindex: 0
     };
   }
   static get menuroot() {

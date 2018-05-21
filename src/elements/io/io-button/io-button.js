@@ -30,9 +30,7 @@ export class IoButton extends Io {
         'mousedown': '_onDown',
         'touchstart': '_onDown'
       },
-      attributes: {
-        'tabindex': 0
-      }
+      tabindex: 0
     };
   }
   _onAction(event) {

@@ -3,12 +3,22 @@ import {Node} from "./core/node.js";
 import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 
+// import {IoCoreMixin} from "./mixins/iocore.js";
+
 window.html = window.html || function() { return arguments[0][0]; }
 
 export class Io extends HTMLElement {
   static get properties() {
     return {
-      id: String
+      id: String,
+      tabindex: {
+        type: String,
+        reflect: true
+      },
+      contenteditable: {
+        type: Boolean,
+        reflect: true
+      }
     };
   }
   constructor(initProps) {
@@ -21,10 +31,6 @@ export class Io extends HTMLElement {
     Object.defineProperty(this, '__timeout', { value: new WeakMap() } );
 
     this.__protochain.bindMethods(this);
-
-    for (let a in this.__protochain.attributes) {
-      this.initAttribute(a, this.__protochain.attributes[a]);
-    }
 
     for (let prop in this.__state) {
       this.defineProperty(prop);

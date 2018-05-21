@@ -11,7 +11,6 @@ export class Protochain {
 
     this.properties = {};
     this.listeners = {};
-    this.attributes = {};
     this.methods = [];
     this.style = [];
 
@@ -28,10 +27,6 @@ export class Protochain {
         if (key === 'listeners') {
           for (let l in prop[key]) {
             this.listeners[l] = prop[key][l];
-          }
-        } else if (key === 'attributes') {
-          for (let a in prop[key]) {
-            this.attributes[a] = prop[key][a];
           }
         } else {
           let propDef = new Property(prop[key], true);

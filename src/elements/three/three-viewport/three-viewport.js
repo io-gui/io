@@ -20,9 +20,7 @@ export class ThreeViewport extends Io {
       renderer: null,
       camera: null,
       scene: null,
-      attributes: {
-        'tabindex': 1
-      }
+      tabindex: 1
     }
   }
   constructor(props) {

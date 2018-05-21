@@ -35,9 +35,7 @@ export class IoSlider extends IoPointerMixin(Io) {
       min: 0,
       max: 100,
       pointermode: 'relative',
-      attributes: {
-        'tabindex': 0
-      },
+      tabindex: 0,
       listeners: {
         'io-pointer-move': '_onPointerMove'
       }

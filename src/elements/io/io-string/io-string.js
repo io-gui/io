@@ -20,10 +20,8 @@ export class IoString extends Io {
         'blur': '_onBlur',
         'keydown': '_onKeydown'
       },
-      attributes: {
-        'tabindex': 0,
-        'contenteditable': true
-      }
+      tabindex: 0,
+      contenteditable: true
     };
   }
   _onBlur() {
