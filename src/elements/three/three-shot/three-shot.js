@@ -6,6 +6,10 @@ export class ThreeShot extends IoNode {
     return {
       camera: null,
       scene: null,
+      time: {
+        value: 0,
+        config: {step: 0.01}
+      },
     }
   }
   constructor() {
@@ -18,6 +22,9 @@ export class ThreeShot extends IoNode {
   }
   dispose() {
     // TODO
+  }
+  onPropertyChange() {
+    
   }
   play() {
 

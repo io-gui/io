@@ -1,7 +1,14 @@
 import * as THREE from "../../../../../lib/three.module.js";
-import {ThreeShot} from "../three-shot.js";
+import {ThreeShot} from "../../three-shot/three-shot.js";
 
 export class Example extends ThreeShot {
+  static get properties() {
+    return {
+      time: {
+        observer: 'update'
+      }
+    }
+  }
   init() {
     let camera = this.camera = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
     let scene = this.scene = new THREE.Scene();
@@ -89,11 +96,9 @@ export class Example extends ThreeShot {
 
   }
   update() {
-    var time = Date.now() * 0.001;
-
-    var rx = Math.sin( time * 0.7 ) * 0.2;
-    var ry = Math.sin( time * 0.3 ) * 0.1;
-    var rz = Math.sin( time * 0.2 ) * 0.1;
+    var rx = Math.sin( this.time * 0.07 ) * 0.2;
+    var ry = Math.sin( this.time * 0.03 ) * 0.1;
+    var rz = Math.sin( this.time * 0.02 ) * 0.1;
 
     this.scene.traverse( function ( object ) {
 

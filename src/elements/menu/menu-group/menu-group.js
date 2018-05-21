@@ -65,7 +65,7 @@ export class MenuGroup extends IoElement {
   update() {
     const Item = (elem, i) => ['menu-item', {
       $parent: this,
-      option: this.options[i],
+      option: typeof this.options[i] === 'object' ? this.options[i] : {value: this.options[i], label: this.options[i]},
       position: this.horizontal ? 'bottom' : 'right'
     }];
     this.render([this.options.map(Item)]);

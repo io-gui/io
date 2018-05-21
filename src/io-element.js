@@ -132,8 +132,8 @@ export class IoElement extends HTMLElement {
     this[prop] = value;
     this.fire(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
-  fire(eventName, detail, bubbles = true) {
-    this.dispatchEvent(new CustomEvent(eventName, {
+  fire(eventName, detail, bubbles = true, src = this) {
+    src.dispatchEvent(new CustomEvent(eventName, {
       detail: detail,
       bubbles: bubbles,
       composed: true

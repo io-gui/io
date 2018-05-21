@@ -45,6 +45,7 @@ export class Property {
     this.notify = propDef.notify || false;
     this.reflect = propDef.reflect;
     this.binding = propDef.binding;
+    this.config = propDef.config;
     if (this.value === undefined) {
       if (this.type === Boolean) this.value = false;
       if (this.type === Number) this.value = 0;
@@ -60,6 +61,7 @@ export class Property {
     if (propDef.notify !== undefined) this.notify = propDef.notify;
     if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
     if (propDef.binding !== undefined) this.binding = propDef.binding;
+    if (propDef.config !== undefined) this.config = propDef.config;
   }
   clone() {
     // TODO: rewise

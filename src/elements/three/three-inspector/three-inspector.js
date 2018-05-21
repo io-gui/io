@@ -44,20 +44,23 @@ export class ThreeInspector extends IoElement {
         text-align: right;
         overflow: hidden;
         text-overflow: ellipsis;
-        flex-basis: 6em;
-        padding: 0.25em 0.5em;
+        flex-basis: 9em;
+        padding: 0.25em 0.25em;
       }
       :host > io-object > div > :nth-child(2) {
         flex: 1 1;
         padding: 0.25em 0.5em;
         white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
       }
       :host > io-object > div > three-inspector-link {
         border-radius: 6px;
         color: #6af;
         font-weight: bold;
-        flex: 0 0 auto !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 0 1 auto !important;
       }
       :host > io-object > div > io-option {
         border-radius: 6px;
@@ -65,7 +68,7 @@ export class ThreeInspector extends IoElement {
         padding: 0.25em 0.25em 0.25em 0.5em !important;
         border: 0.5px outset #666;
         color: #ff4;
-        flex: 0 0 auto !important;
+        flex: 0 1 auto !important;
       }
       :host > io-object > div > io-option:after {
         content: '▾';
@@ -108,7 +111,6 @@ export class ThreeInspector extends IoElement {
   static get properties() {
     return {
       value: Object,
-      configs: Object,
       crumbs: Array
     };
   }
@@ -174,8 +176,6 @@ export class ThreeInspector extends IoElement {
       if (!lastrumb || !isPropertyOf(this.value, lastrumb.value)) {
         this.crumbs.length = 0;
       }
-      console.log(this.value.constructor.name);
-      console.dir(this.value.constructor.__proto__.name);
       this.crumbs.push({
         label: this.value.constructor.name,
         value: this.value

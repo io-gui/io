@@ -64,15 +64,18 @@ export class IoObject extends IoElement {
     }
   }
   _onValueSet(event) {
+    if (event.path[0] === this) return;
+    if (event.detail.object) return; // TODO: fix
     event.stopPropagation();
     let key = event.path[0].id;
     if (key !== undefined) {
-      this.value[key] = event.detail.value;
-      window.dispatchEvent(new CustomEvent('io-object-mutated', {
-        detail: {object: this.value, key: key},
-        bubbles: false,
-        composed: true
-      }));
+      if (this.value[key] !== event.detail.value) {
+        this.value[key] = event.detail.value;
+      }
+      // console.log(event.detail);
+      let detail = Object.assign({object: this.value, key: key}, event.detail);
+      this.fire('io-object-mutated', detail, false, window);
+      this.fire('value-set', detail, true); // TODO
     }
   }
   getPropConfigs(keys) {
@@ -118,12 +121,17 @@ export class IoObject extends IoElement {
     let label = this.label || this.value.constructor.name;
     let elements = [];
     if (this.expanded) {
-      let proplist = this.props.length ? this.props : Object.keys(this.value.__proto__);
+      let keys = [...Object.keys(this.value), ...Object.keys(this.value.__proto__)];
+      let proplist = this.props.length ? this.props : keys;
       let configs = this.getPropConfigs(proplist);
       for (var key in configs) {
-        let editor = [configs[key].tag, Object.assign({value: this.value[key], id: key}, configs[key].props)];
-        elements.push(
-        ['div', [['span', configs[key].label || key + ':'], editor]]);
+        // TODO: remove props keyword
+        let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
+        if (this.value.__props && this.value.__props[key].config) {
+          // TODO: test
+          config = Object.assign(config, this.value.__props[key].config);
+        }
+        elements.push(['div', [['span', config.label || key + ':'], [config.tag, config]]]);
       }
     }
     this.render([['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}], elements]);

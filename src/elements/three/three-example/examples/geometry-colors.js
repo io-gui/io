@@ -1,5 +1,5 @@
 import * as THREE from "../../../../../lib/three.module.js";
-import {ThreeShot} from "../three-shot.js";
+import {ThreeShot} from "../../three-shot/three-shot.js";
 
 export class Example extends ThreeShot {
   init() {

@@ -18,16 +18,23 @@ export class ThreeExample extends ThreeViewport {
         type: String,
         observer: 'loadExample'
       },
+      time: 0,
       control: String
     }
   }
   static get listeners() {
     return {
-      'scroll': '_stopEvent'
+      'scroll': '_stopEvent',
+      'value-set': '_onValueSet'
     }
   }
   _stopEvent(event) {
     event.stopPropagation();
+  }
+  _onValueSet(event) {
+    if (this._example) {
+      this._example.onPropertyChange(event.detail);
+    }
   }
   constructor(props) {
     super(props);
@@ -57,6 +64,8 @@ export class ThreeExample extends ThreeViewport {
         this._example = new module.Example();
         this._example.play();
         this._inspector.value = this._example;
+        this._example.time = 0;
+        this._lastTime = Date.now() / 1000;
         this.setControl();
       });
     }
@@ -78,12 +87,14 @@ export class ThreeExample extends ThreeViewport {
   }
   update() {
     if (this._example) {
-      this._example.update();
+      this._example.time += Date.now() / 1000 - this._lastTime;
       if (!this._example.rendered) {
         this._example.rendered = true;
         this.rendered = false;
       }
+      this.fire('io-object-mutated', {object: this._example, key: 'time'}, false, window);
     }
+    this._lastTime = Date.now() / 1000;
   }
   preRender() {
     if (this._example) this._example.preRender();

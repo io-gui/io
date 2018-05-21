@@ -1,7 +1,14 @@
 import * as THREE from "../../../../../lib/three.module.js";
-import {ThreeShot} from "../three-shot.js";
+import {ThreeShot} from "../../three-shot/three-shot.js";
 
 export class Example extends ThreeShot {
+  static get properties() {
+    return {
+      time: {
+        observer: 'update'
+      }
+    }
+  }
   init() {
 
     let camera = this.camera = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
@@ -91,20 +98,19 @@ export class Example extends ThreeShot {
 
   }
   update() {
-    var timer = Date.now() * 0.0001;
     let camera = this.camera;
     let scene = this.scene;
 
-    this.group.rotation.y = timer;
+    this.group.rotation.y = this.time * 0.2;
 
     camera.lookAt( scene.position );
 
-    scene.traverse( function( object ) {
+    scene.traverse( ( object ) => {
 
       if ( object.isMesh === true ) {
 
-        object.rotation.x = timer * 5;
-        object.rotation.y = timer * 2.5;
+        object.rotation.x = this.time * 0.5;
+        object.rotation.y = this.time * 0.25;
 
       }
 
