@@ -1,4 +1,4 @@
-export class Listeners {
+export class ProtoListeners {
   constructor(prototypes) {
     const propertyDefs = {};
     for (let i = prototypes.length; i--;) {

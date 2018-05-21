@@ -9,18 +9,18 @@ export class Binding {
     this.setSource(this.source);
   }
   setSource() {
-    this.source.__state[this.sourceProp].notify = true;
+    this.source.__props[this.sourceProp].notify = true;
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
     for (let i = this.targets.length; i--;) {
       let targetProps = this.targetsMap.get(this.targets[i]);
       for (let j = targetProps.length; j--;) {
-        this.targets[i].__state[targetProps[j]].value = this.source[this.sourceProp];
+        this.targets[i].__props[targetProps[j]].value = this.source[this.sourceProp];
         // TODO: test observers on binding hot-swap!
       }
     }
   }
   setTarget(target, targetProp) {
-    target.__state[targetProp].notify = true;
+    target.__props[targetProp].notify = true;
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
     if (this.targetsMap.has(target)) {
       let targetProps = this.targetsMap.get(target);

@@ -23,7 +23,7 @@ export class Node {
     this.listeners = {};
 
     for (let p in props) {
-      if (this.element.__state[p] === undefined) continue;
+      if (this.element.__props[p] === undefined) continue;
       if (props[p] instanceof Binding) {
         this.bindings[p] = props[p];
         this.properties[p] = props[p].source[props[p].sourceProp];
@@ -97,17 +97,17 @@ export class Node {
     for (let p in this.properties) {
 
       let value = this.properties[p];
-      let oldValue = this.element.__state[p].value;
+      let oldValue = this.element.__props[p].value;
 
-      this.element.__state[p].value = value;
+      this.element.__props[p].value = value;
 
       if (value !== oldValue) {
-        if (this.element.__state[p].reflect) {
+        if (this.element.__props[p].reflect) {
           this.element.reflectAttribute(p);
         }
-        if (this.element.__state[p].observer) {
-          if (this._triggeredObservers.indexOf(this.element.__state[p].observer) === -1) {
-            this._triggeredObservers.push(this.element.__state[p].observer);
+        if (this.element.__props[p].observer) {
+          if (this._triggeredObservers.indexOf(this.element.__props[p].observer) === -1) {
+            this._triggeredObservers.push(this.element.__props[p].observer);
           }
         }
       }

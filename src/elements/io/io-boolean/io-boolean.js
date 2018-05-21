@@ -13,7 +13,7 @@ export class IoBoolean extends IoButton {
   }
   constructor(props) {
     super(props);
-    this.__state.action.value = this.toggle;
+    this.__props.action.value = this.toggle;
   }
   toggle() {
     this.set('value', !this.value);

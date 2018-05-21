@@ -1,14 +1,11 @@
 import {Prototypes} from "./core/prototypes.js";
-import {Protochain} from "./core/protochain.js";
-import {Listeners} from "./core/listeners.js";
-import {Style} from "./core/style.js";
+import {ProtoProperties} from "./core/protoProperties.js";
+import {ProtoListeners} from "./core/protoListeners.js";
+import {ProtoFunctions} from "./core/protoFunctions.js";
+import {initStyle} from "./core/initStyle.js";
 import {Node} from "./core/node.js";
 import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
-
-// import {IoCoreMixin} from "./mixins/iocore.js";
-
-window.html = window.html || function() { return arguments[0][0]; }
 
 export class Io extends HTMLElement {
   static get properties() {
@@ -27,50 +24,46 @@ export class Io extends HTMLElement {
   constructor(initProps) {
     super();
 
-    Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update
-    Object.defineProperty(this, '__protochain', { value: this.__proto__.constructor._protochain } );
-    Object.defineProperty(this, '__listeners', { value: this.__proto__.constructor._listeners } );
-    Object.defineProperty(this, '__state', { value: this.__protochain.cloneProperties() } );
+    Object.defineProperty(this, '__props', { value: this.__proto__._properties.cloneProperties() } );
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
-    Object.defineProperty(this, '__timeout', { value: new WeakMap() } );
 
-    this.__protochain.bindMethods(this);
+    Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update
 
-    for (let prop in this.__state) {
-      this.defineProperty(prop);
-      this.reflectAttribute(prop);
-    }
+    this.__proto__._functions.bind(this);
+
+    for (let prop in this.__props) this.defineProperty(prop);
   }
   connectedCallback() {
-    this.__listeners.connect(this);
+    this.__proto__._listeners.connect(this);
     this.__node.connect();
   }
   disconnectedCallback() {
-    this.__listeners.disconnect(this);
+    this.__proto__._listeners.disconnect(this);
     this.__node.disconnect();
   }
   defineProperty(prop) {
     if (this.__proto__.hasOwnProperty(prop)) return;
     Object.defineProperty(this.__proto__, prop, {
       get: function() {
-        return this.__state[prop].value;
+        return this.__props[prop].value;
       },
       set: function(value) {
-        if (this.__state[prop].value === value) return;
-        let oldValue = this.__state[prop].value;
-        this.__state[prop].value = value;
+        if (this.__props[prop].value === value) return;
+        let oldValue = this.__props[prop].value;
+        this.__props[prop].value = value;
         this.reflectAttribute(prop);
-        if (this.__state[prop].observer) {
-          this[this.__state[prop].observer](value, oldValue, prop);
+        if (this.__props[prop].observer) {
+          this[this.__props[prop].observer](value, oldValue, prop);
         }
         this.update();
-        if (this.__state[prop].notify) {
+        if (this.__props[prop].notify) {
           this.fire(prop + '-changed', {value: value, oldValue: oldValue}, false);
         }
       },
       enumerable: true,
       configurable: true
     });
+    this.reflectAttribute(prop);
   }
   initAttribute(attr, value) {
     if (value === true) {
@@ -82,7 +75,7 @@ export class Io extends HTMLElement {
     }
   }
   reflectAttribute(prop) {
-    const config = this.__state[prop];
+    const config = this.__props[prop];
     if (config.reflect) {
       this.initAttribute(prop, config.value);
     }
@@ -149,16 +142,16 @@ export class Io extends HTMLElement {
   bind(sourceProp) {
     return this.__node.bind(sourceProp);
   }
-  debounce(func, wait) {
-    clearTimeout(this.__timeout.get(func));
-    this.__timeout.set(func, setTimeout(func, wait));
-  }
 }
 
 Io.Register = function() {
   const prototypes = new Prototypes(this);
-  this._protochain = new Protochain(prototypes);
-  this._listeners = new Listeners(prototypes);
-  this._style = new Style(prototypes);
+
+  initStyle(prototypes);
+
+  this.prototype._properties = new ProtoProperties(prototypes);
+  this.prototype._listeners = new ProtoListeners(prototypes);
+  this.prototype._functions = new ProtoFunctions(prototypes);
+
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 }

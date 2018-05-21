@@ -59,7 +59,7 @@ export class IoObject extends Io {
   _onIoObjectMutated(event) {
     let key = event.detail.key;
     if (event.detail.object === this.value && this.$[key]) {
-      this.$[key].__state.value.value = this.value[key];
+      this.$[key].__props.value.value = this.value[key];
       this.$[key].update();
     }
   }

@@ -1,4 +1,5 @@
 import {Io} from "../io.js";
+import {debounce} from "../core/utils.js";
 
 import "./demo-app-ctrl.js";
 import "../elements/io/demo.js";
@@ -64,7 +65,7 @@ export class DemoApp extends Io {
     ]);
   }
   _onLayoutChanged() {
-    this.debounce(this._onSaveLayout, 1000);
+    debounce(this._onSaveLayout, 1000);
   }
   _onSaveLayout() {
     localStorage.setItem('app-split-state', JSON.stringify(this.layout));

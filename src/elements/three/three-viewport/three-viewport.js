@@ -25,12 +25,12 @@ export class ThreeViewport extends Io {
   }
   constructor(props) {
     super(props);
-    if (!this.__state.camera.value)
-        this.__state.camera.value = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
-    if (!this.__state.scene.value)
-        this.__state.scene.value = new THREE.Scene();
-    if (!this.__state.renderer.value)
-        this.__state.renderer.value = new THREE.WebGLRenderer( { antialias: false } );
+    if (!this.__props.camera.value)
+        this.__props.camera.value = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
+    if (!this.__props.scene.value)
+        this.__props.scene.value = new THREE.Scene();
+    if (!this.__props.renderer.value)
+        this.__props.renderer.value = new THREE.WebGLRenderer( { antialias: false } );
     this.appendChild(this.renderer.domElement);
   }
   connectedCallback() {

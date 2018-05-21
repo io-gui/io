@@ -35,7 +35,7 @@ export class IoOption extends IoButton {
         }
       }
     }
-    this.__state.label.value = label;
+    this.__props.label.value = label;
     this.render([
       ['span', String(label)],
       ['menu-root', {
