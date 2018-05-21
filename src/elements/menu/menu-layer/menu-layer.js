@@ -1,4 +1,4 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 
 let previousOption;
 let previousParent;
@@ -11,7 +11,7 @@ let prevTouch;
 // TODO: make long (scrolling) menus work with touch
 // TODO: implement search
 
-export class MenuLayer extends Io {
+export class MenuLayer extends IoElement{
   static get style() {
     return html`<style>
       :host {

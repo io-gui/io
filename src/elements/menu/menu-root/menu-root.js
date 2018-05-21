@@ -1,11 +1,11 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
 import {MenuGroup} from "../menu-group/menu-group.js";
 
 // TODO: implement working mousestart/touchstart UX
 // TODO: implement keyboard modifiers maybe. Touch alternative?
 
-export class MenuRoot extends Io {
+export class MenuRoot extends IoElement{
   static get properties() {
     return {
       options: Array,

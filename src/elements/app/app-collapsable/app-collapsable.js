@@ -1,6 +1,6 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 
-export class AppCollapsable extends Io {
+export class AppCollapsable extends IoElement{
   static get properties() {
     return {
       label: String,

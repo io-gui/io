@@ -1,4 +1,4 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 import {ThreeViewport} from "../three-viewport/three-viewport.js";
 import {ThreeInspector} from "../three-inspector/three-inspector.js";
 

@@ -1,4 +1,4 @@
-import {Io} from "../io.js";
+import {IoElement}from "../io.js";
 import {debounce} from "../core/utils.js";
 
 import "./demo-app-ctrl.js";
@@ -7,7 +7,7 @@ import "../elements/menu/demo.js";
 
 import "../elements/three/three-example/three-example.js";
 
-export class DemoApp extends Io {
+export class DemoApp extends IoElement{
   static get style() {
     return html`<style>
       :host {

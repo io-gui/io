@@ -1,7 +1,7 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 import {IoButton} from "../../io/io-button/io-button.js";
 
-export class ThreeInspectorBreadcrumbs extends Io {
+export class ThreeInspectorBreadcrumbs extends IoElement{
   static get style() {
     return html`<style>
       :host {

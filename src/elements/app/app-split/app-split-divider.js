@@ -1,7 +1,7 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 import {IoPointerMixin} from "../../../mixins/iopointer.js";
 
-export class AppSplitDivider extends IoPointerMixin(Io) {
+export class AppSplitDivider extends IoPointerMixin(IoElement) {
   static get style() {
     return html`<style>
       :host {

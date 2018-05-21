@@ -1,4 +1,4 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 import "./three-inspector-breadcrumbs.js";
 import "./three-inspector-link.js";
 import {threeInspectorConfig} from "./three-inspector-config.js";
@@ -8,7 +8,7 @@ function isPropertyOf(prop, object) {
   return null;
 }
 
-export class ThreeInspector extends Io {
+export class ThreeInspector extends IoElement{
   static get style() {
     return html`<style>
       :host {

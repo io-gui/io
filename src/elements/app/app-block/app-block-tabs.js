@@ -1,9 +1,9 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 import "./app-block-tab.js";
 import "../../io/io-option/io-option.js";
 import "../../io/io-button/io-button.js";
 
-export class AppBlockTabs extends Io {
+export class AppBlockTabs extends IoElement{
   static get style() {
     return html`<style>
       :host {

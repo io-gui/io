@@ -1,4 +1,4 @@
-import {Io} from "../io.js";
+import {IoElement}from "../io.js";
 
 import * as THREE from "../../lib/three.module.js";
 
@@ -10,7 +10,7 @@ let renderer = new THREE.WebGLRenderer();
 let texture = new THREE.Texture();
 mesh.add(light);
 
-export class DemoAppCtrl extends Io {
+export class DemoAppCtrl extends IoElement{
   static get properties() {
     return {
       value: null

@@ -1,8 +1,8 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
 import {MenuGroup} from "../menu-group/menu-group.js";
 
-export class MenuItem extends Io {
+export class MenuItem extends IoElement{
   static get style() {
     return html`<style>
       :host {

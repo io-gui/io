@@ -1,10 +1,10 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 import {IoPointerMixin} from "../../../mixins/iopointer.js";
 
 const _dragIcon = document.createElement('div');
 _dragIcon.style = `pointer-events: none; position: fixed; padding: 0.2em 1.6em; background: rgba(0,0,0,0.5); z-index:2147483647`;
 
-export class AppBlockTab extends IoPointerMixin(Io) {
+export class AppBlockTab extends IoPointerMixin(IoElement) {
   static get properties() {
     return {
       element: Object,

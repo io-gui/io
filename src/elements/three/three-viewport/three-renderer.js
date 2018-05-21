@@ -14,7 +14,7 @@ continuously. In other words, you cannot render with mutliple instances of
 ThreeRenderer in realtime without severe performance penalties.
 */
 
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 import * as THREE from "../../../../lib/three.module.js";
 
 const renderer = new THREE.WebGLRenderer();
@@ -43,7 +43,7 @@ var _performanceCheck = function() {
   }
 };
 
-export class ThreeRenderer extends Io {
+export class ThreeRenderer extends IoElement{
   static get style() {
     return html`<style>
       :host {

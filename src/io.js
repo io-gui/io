@@ -1,4 +1,4 @@
-export * from "./iocore.js";
+export * from "./io-element.js";
 export * from "./mixins/iopointer.js";
 // TODO: remove?
 export * from "./elements/app/index.js";

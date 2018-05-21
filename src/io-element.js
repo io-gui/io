@@ -4,10 +4,9 @@ import {ProtoListeners} from "./core/protoListeners.js";
 import {ProtoFunctions} from "./core/protoFunctions.js";
 import {initStyle} from "./core/initStyle.js";
 import {Node} from "./core/node.js";
-import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 
-export class Io extends HTMLElement {
+export class IoElement extends HTMLElement {
   static get properties() {
     return {
       id: String,
@@ -144,7 +143,7 @@ export class Io extends HTMLElement {
   }
 }
 
-Io.Register = function() {
+IoElement.Register = function() {
   const prototypes = new Prototypes(this);
 
   initStyle(prototypes);

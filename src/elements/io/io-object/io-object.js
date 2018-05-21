@@ -1,6 +1,6 @@
-import {Io} from "../../../iocore.js";
+import {IoElement}from "../../../io-element.js";
 
-export class IoObject extends Io {
+export class IoObject extends IoElement{
   static get style() {
     return html`<style>
       :host {
