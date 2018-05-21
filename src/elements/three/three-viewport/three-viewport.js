@@ -1,7 +1,7 @@
 import {IoElement}from "../../../io-element.js";
 import * as THREE from "../../../../lib/three.module.js";
 
-export class ThreeViewport extends IoElement{
+export class ThreeViewport extends IoElement {
   static get style() {
     return html`<style>
       :host {

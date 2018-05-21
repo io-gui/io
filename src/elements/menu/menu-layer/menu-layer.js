@@ -11,7 +11,7 @@ let prevTouch;
 // TODO: make long (scrolling) menus work with touch
 // TODO: implement search
 
-export class MenuLayer extends IoElement{
+export class MenuLayer extends IoElement {
   static get style() {
     return html`<style>
       :host {

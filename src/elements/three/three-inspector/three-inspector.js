@@ -8,7 +8,7 @@ function isPropertyOf(prop, object) {
   return null;
 }
 
-export class ThreeInspector extends IoElement{
+export class ThreeInspector extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -134,7 +134,7 @@ export class ThreeInspector extends IoElement{
     let groups = {};
     let assigned = [];
     let proto = this.value.__proto__;
-    let keys = Object.keys(this.value);
+    let keys = Object.keys(proto);
     while (proto) {
       let config = threeInspectorConfig.groups[proto.constructor.name] || {};
       for (let group in config) {
@@ -174,6 +174,8 @@ export class ThreeInspector extends IoElement{
       if (!lastrumb || !isPropertyOf(this.value, lastrumb.value)) {
         this.crumbs.length = 0;
       }
+      console.log(this.value.constructor.name);
+      console.dir(this.value.constructor.__proto__.name);
       this.crumbs.push({
         label: this.value.constructor.name,
         value: this.value

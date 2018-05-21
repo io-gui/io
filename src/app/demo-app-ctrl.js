@@ -10,7 +10,7 @@ let renderer = new THREE.WebGLRenderer();
 let texture = new THREE.Texture();
 mesh.add(light);
 
-export class DemoAppCtrl extends IoElement{
+export class DemoAppCtrl extends IoElement {
   static get properties() {
     return {
       value: null

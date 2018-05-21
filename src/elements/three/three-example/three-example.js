@@ -54,10 +54,9 @@ export class ThreeExample extends ThreeViewport {
     }
     if (this.example) {
       import('./examples/' + this.example + '.js').then(module => {
-        this._example = new module.default();
+        this._example = new module.Example();
         this._example.play();
-        this._inspector.value = this._example.properties;
-        this._inspector.configs = this._example.configs;
+        this._inspector.value = this._example;
         this.setControl();
       });
     }

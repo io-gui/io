@@ -1,6 +1,6 @@
 import {IoElement}from "../../../io-element.js";
 
-export class IoButton extends IoElement{
+export class IoButton extends IoElement {
   static get style() {
     return html`<style>
       :host {

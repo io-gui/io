@@ -7,7 +7,7 @@ import "../elements/menu/demo.js";
 
 import "../elements/three/three-example/three-example.js";
 
-export class DemoApp extends IoElement{
+export class DemoApp extends IoElement {
   static get style() {
     return html`<style>
       :host {

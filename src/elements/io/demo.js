@@ -1,6 +1,6 @@
 import {IoElement}from "../../io.js";
 
-export class IoDemo extends IoElement{
+export class IoDemo extends IoElement {
   static get style() {
     return html`<style>
       :host div.row > io-string,

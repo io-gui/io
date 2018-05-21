@@ -5,7 +5,7 @@ import {MenuGroup} from "../menu-group/menu-group.js";
 // TODO: implement working mousestart/touchstart UX
 // TODO: implement keyboard modifiers maybe. Touch alternative?
 
-export class MenuRoot extends IoElement{
+export class MenuRoot extends IoElement {
   static get properties() {
     return {
       options: Array,

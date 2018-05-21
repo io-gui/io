@@ -1,40 +1,15 @@
+import {IoNode} from "../../../io-node.js";
 import * as THREE from "../../../../lib/three.module.js";
 
-class Properties {}
-
-export default class ThreeShot {
+export class ThreeShot extends IoNode {
   static get properties() {
     return {
-      float: 0.0,
-      floatSlider: {
-        value: 0.17,
-        config: {tag: 'io-slider', min: 0, max: 1}
-      },
-      integer: {
-        value: 0,
-        config: {tag: 'io-number', step: 1}
-      },
-      string: "hello",
-      bool: true,
-      option: {
-        value: 'first',
-        config: {tag: 'io-option', options: [{value: 1, label: 'first'}, {value: 2, label: 'second'}]}
-      }
+      camera: null,
+      scene: null,
     }
   }
   constructor() {
-    Object.defineProperty(this, 'properties', { value: new Properties() } );
-    Object.defineProperty(this, 'configs', { value: {} } );
-    let properties = this.__proto__.constructor.properties;
-    for (let key in properties) {
-      if (properties[key] instanceof Object) {
-        this.properties[key] = properties[key].value;
-        this.configs['key:' + key] = {tag: properties[key].config.tag, props: properties[key].config};
-      } else {
-        this.properties[key] = properties[key];
-      }
-
-    }
+    super();
     this.init();
   }
   init() {

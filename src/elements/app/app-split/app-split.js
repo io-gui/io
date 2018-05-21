@@ -1,7 +1,7 @@
 import {IoElement}from "../../../io-element.js";
 import "./app-split-divider.js";
 
-export class AppSplit extends IoElement{
+export class AppSplit extends IoElement {
   static get style() {
     return html`<style>
       :host  {

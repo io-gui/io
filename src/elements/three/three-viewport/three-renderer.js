@@ -43,7 +43,7 @@ var _performanceCheck = function() {
   }
 };
 
-export class ThreeRenderer extends IoElement{
+export class ThreeRenderer extends IoElement {
   static get style() {
     return html`<style>
       :host {

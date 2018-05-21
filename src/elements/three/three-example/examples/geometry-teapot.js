@@ -1,10 +1,10 @@
 import * as THREE from "../../../../../lib/three.module.js";
 import {TeapotBufferGeometry} from "./js/geometries/TeapotBufferGeometry.js";
-import ThreeShot from "../three-shot.js";
+import {ThreeShot} from "../three-shot.js";
 
 var teapotSize = 400;
 
-export default class extends ThreeShot {
+export class Example extends ThreeShot {
   static get properties() {
     return {
       shininess: {value: 40.0, config: {tag: 'io-slider', min: 0, max: 400 }},
@@ -32,11 +32,8 @@ export default class extends ThreeShot {
     }
   }
   init() {
-
     let camera = this.camera = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
     let scene = this.scene = new THREE.Scene();
-
-    var props = this.properties;
 
     var ambientLight, light;
     var skybox;
@@ -106,15 +103,12 @@ export default class extends ThreeShot {
 
   }
   update() {
-    // let props = this.properties;
     // let scene = this.scene;
     // let camera = this.camera;
     //TODO: onChange
     // createNewTeapot();
   }
   createNewTeapot() {
-
-    let props = this.properties;
 
     if ( this.teapot !== undefined ) {
 
@@ -124,14 +118,14 @@ export default class extends ThreeShot {
     }
 
     var teapotGeometry = new TeapotBufferGeometry( teapotSize,
-      props.tess,
-      props.bottom,
-      props.lid,
-      props.body,
-      props.fitLid,
-      !props.nonblinn );
+      this.tess,
+      this.bottom,
+      this.lid,
+      this.body,
+      this.fitLid,
+      !this.nonblinn );
 
-    this.teapot = new THREE.Mesh( teapotGeometry, this.materials[props.shading] );
+    this.teapot = new THREE.Mesh( teapotGeometry, this.materials[this.shading] );
 
     this.scene.add( this.teapot );
 

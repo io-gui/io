@@ -1,7 +1,7 @@
 import * as THREE from "../../../../../lib/three.module.js";
-import ThreeShot from "../three-shot.js";
+import {ThreeShot} from "../three-shot.js";
 
-export default class extends ThreeShot {
+export class Example extends ThreeShot {
   init() {
 
     let camera = this.camera = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );

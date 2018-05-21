@@ -1,6 +1,6 @@
 import {IoElement}from "../../../io-element.js";
 
-export class IoObject extends IoElement{
+export class IoObject extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -118,7 +118,7 @@ export class IoObject extends IoElement{
     let label = this.label || this.value.constructor.name;
     let elements = [];
     if (this.expanded) {
-      let proplist = this.props.length ? this.props : Object.keys(this.value);
+      let proplist = this.props.length ? this.props : Object.keys(this.value.__proto__);
       let configs = this.getPropConfigs(proplist);
       for (var key in configs) {
         let editor = [configs[key].tag, Object.assign({value: this.value[key], id: key}, configs[key].props)];

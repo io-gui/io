@@ -2,7 +2,7 @@ import {IoElement}from "../../../io-element.js";
 import {MenuItem} from "../menu-item/menu-item.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
 
-export class MenuGroup extends IoElement{
+export class MenuGroup extends IoElement {
   static get style() {
     return html`<style>
       :host {

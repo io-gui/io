@@ -25,12 +25,14 @@ export class IoElement extends HTMLElement {
 
     Object.defineProperty(this, '__props', { value: this.__proto__._properties.cloneProperties() } );
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
-
     Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update
 
     this.__proto__._functions.bind(this);
 
-    for (let prop in this.__props) this.defineProperty(prop);
+    for (let prop in this.__props) {
+      this.defineProperty(prop);
+      this.reflectAttribute(prop);
+    }
   }
   connectedCallback() {
     this.__proto__._listeners.connect(this);
@@ -62,7 +64,6 @@ export class IoElement extends HTMLElement {
       enumerable: true,
       configurable: true
     });
-    this.reflectAttribute(prop);
   }
   initAttribute(attr, value) {
     if (value === true) {
@@ -145,12 +146,9 @@ export class IoElement extends HTMLElement {
 
 IoElement.Register = function() {
   const prototypes = new Prototypes(this);
-
   initStyle(prototypes);
-
-  this.prototype._properties = new ProtoProperties(prototypes);
-  this.prototype._listeners = new ProtoListeners(prototypes);
-  this.prototype._functions = new ProtoFunctions(prototypes);
-
+  Object.defineProperty(this.prototype, '_properties', { value: new ProtoProperties(prototypes) });
+  Object.defineProperty(this.prototype, '_listeners', { value: new ProtoListeners(prototypes) });
+  Object.defineProperty(this.prototype, '_functions', { value: new ProtoFunctions(prototypes) });
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 }

@@ -2,7 +2,7 @@ import {IoElement}from "../../../io-element.js";
 import "./app-block-tab.js";
 import "./app-block-tabs.js";
 
-export class AppBlock extends IoElement{
+export class AppBlock extends IoElement {
   static get style() {
     return html`<style>
       :host {
