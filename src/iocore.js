@@ -1,5 +1,7 @@
+import {Prototypes} from "./core/prototypes.js";
 import {Protochain} from "./core/protochain.js";
 import {Listeners} from "./core/listeners.js";
+import {Style} from "./core/style.js";
 import {Node} from "./core/node.js";
 import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
@@ -27,7 +29,7 @@ export class Io extends HTMLElement {
 
     Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update
     Object.defineProperty(this, '__protochain', { value: this.__proto__.constructor._protochain } );
-Object.defineProperty(this, '__listeners', { value: this.__proto__.constructor._listeners } );
+    Object.defineProperty(this, '__listeners', { value: this.__proto__.constructor._listeners } );
     Object.defineProperty(this, '__state', { value: this.__protochain.cloneProperties() } );
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
     Object.defineProperty(this, '__timeout', { value: new WeakMap() } );
@@ -154,7 +156,9 @@ Object.defineProperty(this, '__listeners', { value: this.__proto__.constructor._
 }
 
 Io.Register = function() {
-  this._protochain = new Protochain(this);
-  this._listeners = new Listeners(this);
+  const prototypes = new Prototypes(this);
+  this._protochain = new Protochain(prototypes);
+  this._listeners = new Listeners(prototypes);
+  this._style = new Style(prototypes);
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 }
