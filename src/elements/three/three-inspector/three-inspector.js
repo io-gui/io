@@ -109,15 +109,17 @@ export class ThreeInspector extends Io {
     return {
       value: Object,
       configs: Object,
-      crumbs: Array,
-      listeners: {
-        'io-button-clicked': '_onLinkClicked',
-        'mousedown': '_stopEvent',
-        'touchstart': '_stopEvent',
-        'keydown': '_stopEvent',
-        'wheel': '_stopEvent'
-      }
+      crumbs: Array
     };
+  }
+  static get listeners() {
+    return {
+      'io-button-clicked': '_onLinkClicked',
+      'mousedown': '_stopEvent',
+      'touchstart': '_stopEvent',
+      'keydown': '_stopEvent',
+      'wheel': '_stopEvent'
+    }
   }
   _stopEvent(event) {
     event.stopPropagation();

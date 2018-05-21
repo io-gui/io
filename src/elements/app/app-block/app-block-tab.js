@@ -13,12 +13,14 @@ export class AppBlockTab extends IoPointerMixin(Io) {
         type: Boolean,
         reflect: true
       },
-      pointermode: 'absolute',
-      listeners: {
-        'io-pointer-end': '_onPointerEnd',
-        'io-pointer-move': '_onPointerMove'
-      }
+      pointermode: 'absolute'
     };
+  }
+  static get listeners() {
+    return {
+      'io-pointer-end': '_onPointerEnd',
+      'io-pointer-move': '_onPointerMove'
+    }
   }
   update() {
     this.innerText = this.tabID;

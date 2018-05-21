@@ -39,12 +39,14 @@ export class MenuLayer extends Io {
         reflect: true,
         observer: '_onScrollAnimateGroup'
       },
-      $groups: Array,
-      listeners: {
-        'mouseup': '_onMouseup',
-        'mousemove': '_onMousemove',
-      }
+      $groups: Array
     };
+  }
+  static get listeners() {
+    return {
+      'mouseup': '_onMouseup',
+      'mousemove': '_onMousemove',
+    }
   }
   // _onTouchmove(event) {
   //   prevTouch = prevTouch || event.touches[0]

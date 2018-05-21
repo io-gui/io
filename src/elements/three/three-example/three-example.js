@@ -18,10 +18,12 @@ export class ThreeExample extends ThreeViewport {
         type: String,
         observer: 'loadExample'
       },
-      control: String,
-      listeners: {
-        'scroll': '_stopEvent'
-      }
+      control: String
+    }
+  }
+  static get listeners() {
+    return {
+      'scroll': '_stopEvent'
     }
   }
   _stopEvent(event) {

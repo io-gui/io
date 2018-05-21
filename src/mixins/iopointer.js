@@ -65,13 +65,15 @@ export const IoPointerMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
       pointers: Array,
-      pointermode: 'relative',
-      listeners: {
-        'mousedown': '_onMousedown',
-        'touchstart': '_onTouchstart',
-        'mousemove': '_onMousehover'
-      }
+      pointermode: 'relative'
     };
+  }
+  static get listeners() {
+    return {
+      'mousedown': '_onMousedown',
+      'touchstart': '_onTouchstart',
+      'mousemove': '_onMousehover'
+    }
   }
   constructor(params) {
     super(params);

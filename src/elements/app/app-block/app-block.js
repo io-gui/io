@@ -44,13 +44,15 @@ export class AppBlock extends Io {
     return {
       elements: Object,
       tabs: Array,
-      selected: Number,
-      listeners: {
-        'app-block-tabs-add': '_onAddTab',
-        'app-block-tabs-remove': '_onRemoveTab',
-        'app-block-tab-select': '_onTabSelect'
-      }
+      selected: Number
     };
+  }
+  static get listeners() {
+    return {
+      'app-block-tabs-add': '_onAddTab',
+      'app-block-tabs-remove': '_onRemoveTab',
+      'app-block-tab-select': '_onTabSelect'
+    }
   }
   update() {
     this.render([

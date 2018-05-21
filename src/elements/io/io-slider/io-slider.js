@@ -35,11 +35,13 @@ export class IoSlider extends IoPointerMixin(Io) {
       min: 0,
       max: 100,
       pointermode: 'relative',
-      tabindex: 0,
-      listeners: {
-        'io-pointer-move': '_onPointerMove'
-      }
+      tabindex: 0
     };
+  }
+  static get listeners() {
+    return {
+      'io-pointer-move': '_onPointerMove'
+    }
   }
   _onPointerMove(event) {
     let rect = this.getBoundingClientRect();

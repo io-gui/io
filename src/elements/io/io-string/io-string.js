@@ -16,13 +16,15 @@ export class IoString extends Io {
   static get properties() {
     return {
       value: String,
-      listeners: {
-        'blur': '_onBlur',
-        'keydown': '_onKeydown'
-      },
       tabindex: 0,
       contenteditable: true
     };
+  }
+  static get listeners() {
+    return {
+      'blur': '_onBlur',
+      'keydown': '_onKeydown'
+    }
   }
   _onBlur() {
     this.set('value', this.innerText);

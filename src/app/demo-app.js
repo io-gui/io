@@ -24,12 +24,14 @@ export class DemoApp extends Io {
         value: document.location
       },
       layout: null,
-      elements: Object,
-      listeners: {
-        'app-split-changed': '_onLayoutChanged',
-        'app-block-changed': '_onLayoutChanged'
-      }
+      elements: Object
     };
+  }
+  static get listeners() {
+    return {
+      'app-split-changed': '_onLayoutChanged',
+      'app-block-changed': '_onLayoutChanged'
+    }
   }
   constructor() {
     super();

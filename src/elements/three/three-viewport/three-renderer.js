@@ -76,11 +76,13 @@ export class ThreeRenderer extends Io {
       ishost: {
         value: false,
         reflect: true
-      },
-      listeners: {
-        'click': '_onSetHost'
       }
     };
+  }
+  static get listeners() {
+    return {
+      'click': '_onSetHost'
+    }
   }
   constructor() {
     super();

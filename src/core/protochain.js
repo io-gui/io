@@ -10,7 +10,7 @@ export class Protochain {
     const prototypes = [];
 
     this.properties = {};
-    this.listeners = {};
+    // this.listeners = {};
     this.methods = [];
     this.style = [];
 
@@ -24,15 +24,15 @@ export class Protochain {
     for (let i = prototypes.length; i--;) {
       let prop = prototypes[i].constructor.properties;
       for (let key in prop) {
-        if (key === 'listeners') {
-          for (let l in prop[key]) {
-            this.listeners[l] = prop[key][l];
-          }
-        } else {
+        // if (key === 'listeners') {
+        //   for (let l in prop[key]) {
+        //     this.listeners[l] = prop[key][l];
+        //   }
+        // } else {
           let propDef = new Property(prop[key], true);
           if (propertyDefs[key]) propertyDefs[key].assign(propDef);
           else propertyDefs[key] = propDef;
-        }
+        // }
       }
     }
     for (let key in propertyDefs) {
@@ -62,16 +62,16 @@ export class Protochain {
       element[this.methods[i]] = element[this.methods[i]].bind(element);
     }
   }
-  connect(element) {
-    for (let i in this.listeners) {
-      element.addEventListener(i, element[this.listeners[i]]);
-    }
-  }
-  disconnect(element) {
-    for (let i in this.listeners) {
-      element.removeEventListener(i, element[this.listeners[i]]);
-    }
-  }
+  // connect(element) {
+  //   for (let i in this.listeners) {
+  //     element.addEventListener(i, element[this.listeners[i]]);
+  //   }
+  // }
+  // disconnect(element) {
+  //   for (let i in this.listeners) {
+  //     element.removeEventListener(i, element[this.listeners[i]]);
+  //   }
+  // }
   cloneProperties() {
     let properties = {};
     for (let prop in this.properties) {

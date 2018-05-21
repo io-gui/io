@@ -25,13 +25,15 @@ export class IoButton extends Io {
         reflect: true
       },
       action: Function,
-      listeners: {
-        'keydown': '_onDown',
-        'mousedown': '_onDown',
-        'touchstart': '_onDown'
-      },
       tabindex: 0
     };
+  }
+  static get listeners() {
+    return {
+      'keydown': '_onDown',
+      'mousedown': '_onDown',
+      'touchstart': '_onDown'
+    }
   }
   _onAction(event) {
     event.stopPropagation();

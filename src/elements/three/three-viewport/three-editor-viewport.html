@@ -116,11 +116,13 @@ To see all propertries refer to three-viewport.
         type: Boolean,
         observer: '_fullscreenChanged'
       }
-    },
-    listeners: {
-      'keyup': '_keyupAction',
-      'mousemove': '_mousemoveAction'
-    },
+    }
+    static get listeners() {
+      return {
+        'keyup': '_keyupAction',
+        'mousemove': '_mousemoveAction'
+      }
+    }
     ready: function () {
       this._renderAction = this.renderAction.bind(this);
       // this.controls.addEventListener('*render', this._renderAction);

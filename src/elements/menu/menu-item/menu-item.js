@@ -38,12 +38,14 @@ export class MenuItem extends Io {
       option: Object,
       position: String,
       $parent: HTMLElement,
-      listeners: {
-        'focus': '_onFocus',
-        'touchstart': '_onTouchstart'
-      },
       tabindex: 0
     };
+  }
+  static get listeners() {
+    return {
+      'focus': '_onFocus',
+      'touchstart': '_onTouchstart'
+    }
   }
   static get menuroot() {
     return this;

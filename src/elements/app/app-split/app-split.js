@@ -24,12 +24,14 @@ export class AppSplit extends Io {
       orientation: {
         value: 'horizontal',
         reflect: true
-      },
-      listeners: {
-        'app-split-divider-move': '_onDividerMove',
-        'app-block-changed': '_onAppBlockChanged'
       }
     };
+  }
+  static get listeners() {
+    return {
+      'app-split-divider-move': '_onDividerMove',
+      'app-block-changed': '_onAppBlockChanged'
+    }
   }
   _onAppBlockChanged(event) {
     for (var i = this.splits.length; i--;) {

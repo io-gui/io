@@ -54,11 +54,13 @@ export class MenuGroup extends Io {
         type: Boolean,
         reflect: true
       },
-      $parent: HTMLElement,
-      listeners: {
-        'focusin': '_onFocus'
-      }
+      $parent: HTMLElement
     };
+  }
+  static get listeners() {
+    return {
+      'focusin': '_onFocus'
+    }
   }
   update() {
     const Item = (elem, i) => ['menu-item', {

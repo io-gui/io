@@ -40,11 +40,13 @@ export class IoObject extends Io {
         type: Boolean,
         reflect: true
       },
-      label: String,
-      listeners: {
-        'value-set': '_onValueSet'
-      }
+      label: String
     };
+  }
+  static get listeners() {
+    return {
+      'value-set': '_onValueSet'
+    }
   }
   connectedCallback() {
     super.connectedCallback();

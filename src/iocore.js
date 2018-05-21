@@ -1,4 +1,5 @@
 import {Protochain} from "./core/protochain.js";
+import {Listeners} from "./core/listeners.js";
 import {Node} from "./core/node.js";
 import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
@@ -25,7 +26,8 @@ export class Io extends HTMLElement {
     super();
 
     Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update
-    Object.defineProperty(this, '__protochain', { value: this.__proto__.constructor.protochain } );
+    Object.defineProperty(this, '__protochain', { value: this.__proto__.constructor._protochain } );
+Object.defineProperty(this, '__listeners', { value: this.__proto__.constructor._listeners } );
     Object.defineProperty(this, '__state', { value: this.__protochain.cloneProperties() } );
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
     Object.defineProperty(this, '__timeout', { value: new WeakMap() } );
@@ -38,11 +40,11 @@ export class Io extends HTMLElement {
     }
   }
   connectedCallback() {
-    this.__protochain.connect(this);
+    this.__listeners.connect(this);
     this.__node.connect();
   }
   disconnectedCallback() {
-    this.__protochain.disconnect(this);
+    this.__listeners.disconnect(this);
     this.__node.disconnect();
   }
   defineProperty(prop) {
@@ -152,6 +154,7 @@ export class Io extends HTMLElement {
 }
 
 Io.Register = function() {
-  this.protochain = new Protochain(this);
+  this._protochain = new Protochain(this);
+  this._listeners = new Listeners(this);
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 }
