@@ -23,7 +23,7 @@ export class IoElement extends HTMLElement {
   constructor(initProps) {
     super();
 
-    Object.defineProperty(this, '__props', { value: this.__proto__._properties.cloneProperties() } );
+    Object.defineProperty(this, '__props', { value: this.__proto__._properties.clone() } );
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
     Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update
 

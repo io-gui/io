@@ -133,11 +133,14 @@ export class ThreeInspector extends IoElement {
     }
   }
   update() {
+    window.value = this.value;
     let groups = {};
     let assigned = [];
-    let proto = this.value.__proto__;
-    let keys = Object.keys(proto);
+    let proto = this.value;
+    let keys = [];
+    // TODO: optimize?
     while (proto) {
+      keys = [...keys, ...Object.keys(proto)];
       let config = threeInspectorConfig.groups[proto.constructor.name] || {};
       for (let group in config) {
         groups[group] = groups[group] || [];

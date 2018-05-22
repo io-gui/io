@@ -127,7 +127,7 @@ export class IoObject extends IoElement {
       for (var key in configs) {
         // TODO: remove props keyword
         let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
-        if (this.value.__props && this.value.__props[key].config) {
+        if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
           // TODO: test
           config = Object.assign(config, this.value.__props[key].config);
         }
@@ -141,7 +141,7 @@ export class IoObject extends IoElement {
 const IoObjectConfig = {
   'Object' : {
     'type:string': {tag: 'io-string', props: {}},
-    'type:number': {tag: 'io-number', props: {step: 0.1}},
+    'type:number': {tag: 'io-number', props: {step: 0.0001}},
     'type:boolean': {tag: 'io-boolean', props: {}},
     'type:object': {tag: 'io-object', props: {}},
     'value:null': {tag: 'io-string', props: {}},

@@ -48,7 +48,7 @@ export class Node {
     }
 
     this.setProperties();
-
+    // TODO: untangle this mess
     if (this._connected)  {
       this.connectListeners();
       this.triggerObservers();
@@ -56,14 +56,18 @@ export class Node {
     }
   }
   connect() {
-    this.connectListeners();
-    this.connectBindings();
-    this.triggerObservers();
+    if (!this._connected) {
+      this.connectListeners();
+      this.connectBindings();
+      this.triggerObservers();
+    }
     this._connected = true;
   }
   disconnect() {
-    this.disconnectListeners();
-    this.disconnectBindings();
+    if (this._connected) {
+      this.disconnectListeners();
+      this.disconnectBindings();
+    }
     this._connected = false;
   }
   connectListeners() {

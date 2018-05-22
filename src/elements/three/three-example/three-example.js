@@ -63,7 +63,12 @@ export class ThreeExample extends ThreeViewport {
       import('./examples/' + this.example + '.js').then(module => {
         this._example = new module.Example();
         this._example.play();
-        this._inspector.value = this._example;
+        // this._inspector.value = this._example;
+        // TODO: temp debug
+        // this._inspector.value = this._example.scene.children[2].material;
+        // setTimeout(()=>{
+        //   this._inspector.value = this._example.scene.children[2].material.map;
+        // },100);
         this._example.time = 0;
         this._lastTime = Date.now() / 1000;
         this.setControl();
@@ -92,7 +97,7 @@ export class ThreeExample extends ThreeViewport {
         this._example.rendered = true;
         this.rendered = false;
       }
-      this.fire('io-object-mutated', {object: this._example, key: 'time'}, false, window);
+      // this.fire('io-object-mutated', {object: this._example, key: 'time'}, false, window);
     }
     this._lastTime = Date.now() / 1000;
   }

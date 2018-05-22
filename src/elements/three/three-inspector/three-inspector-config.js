@@ -18,19 +18,79 @@ export const threeInspectorConfig = {
   'Matrix4':{ 'key:elements': {tag: 'three-matrix'} },
   groups: {
     'Object': {
-      'advanced': ['uuid'],
+      'main': ['name', 'visible', 'userData'],
       'hidden': ['type']
     },
     'Object3D' : {
-      'main': ['name', 'geometry', 'material', 'parent', 'children'],
-      'transform': ['position', 'rotation', 'scale'],
-      'rendering': ['drawMode', 'layers', 'visible', 'castShadow', 'receiveShadow', 'frustumCulled', 'renderOrder'],
-      'advanced': ['userData', 'up', 'quaternion', 'matrix', 'matrixWorld', 'matrixAutoUpdate', 'matrixWorldNeedsUpdate']
+      'main': ['geometry', 'material', 'parent', 'children'],
+      'transform': ['position', 'rotation', 'scale', 'up', 'quaternion', 'matrix', 'matrixWorld', 'matrixAutoUpdate', 'matrixWorldNeedsUpdate'],
+      'rendering': ['drawMode', 'layers', 'visible', 'castShadow', 'receiveShadow', 'frustumCulled', 'renderOrder']
+    },
+    'Texture' : {
+      'main': [
+        'offset',
+        'repeat',
+        'center',
+        'rotation',
+      ]
     },
     'Material' : {
-      'main': ['opacity', 'side', 'transparent', 'depthTest', 'depthWrite', 'depthFunc', 'wireframe'],
-      'rendering': ['dithering', 'flatShading'],
-      'advanced': ['skinning']
+      'main': [
+        'color',
+        'specular',
+        'shininess',
+        'opacity',
+        'wireframe',
+        'map',
+        'specularMap',
+        'alphaMap',
+        'envMap',
+        'lightMap',
+        'lightMapIntensity',
+        'aoMap',
+        'aoMapIntensity',
+        'emissive',
+        'emissiveMap',
+        'emissiveIntensity',
+        'bumpMap',
+        'bumpScale',
+        'normalMap',
+        'normalScale',
+        'displacementMap',
+        'displacementScale',
+        'displacementBias',
+        'reflectivity',
+        'refractionRatio',
+      ],
+      'shading': [
+        'transparent',
+        'dithering',
+        'flatShading',
+        'lights',
+        'vertexColors',
+        // 'fog',
+        // 'needsUpdate',
+        // 'wireframeLinewidth',
+      ],
+      'blending': [
+        'side',
+        'shadowSide',
+        'depthTest',
+        'depthWrite',
+        'depthFunc',
+        'blending',
+        'blendSrc',
+        'blendSrcAlpha',
+        'blendDst',
+        'blendDstAlpha',
+        'blendEquation',
+        'blendEquationAlpha',
+        'colorWrite',
+        'alphaTest',
+        'overdraw',
+        'combine',
+        'premultipliedAlpha',
+      ],
     },
     'Light' : {
       'main': ['intensity', 'color']

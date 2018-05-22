@@ -13,7 +13,7 @@ export class ProtoProperties {
       this[key] = new Property(propertyDefs[key]);
     }
   }
-  cloneProperties() {
+  clone() {
     let properties = {};
     for (let prop in this) {
       properties[prop] = this[prop].clone();

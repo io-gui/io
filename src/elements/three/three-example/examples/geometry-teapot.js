@@ -41,8 +41,6 @@ export class Example extends ThreeShot {
     var textureMap = new THREE.TextureLoader().load( this.path( 'textures/UV_Grid_Sm.jpg', import.meta.url ), () => {
       this.rendered = false;
     } );
-    textureMap.wrapS = textureMap.wrapT = THREE.RepeatWrapping;
-    textureMap.anisotropy = 16;
 
     // REFLECTION MAP
     var path = this.path( "textures/cube/skybox/", import.meta.url );
@@ -57,14 +55,11 @@ export class Example extends ThreeShot {
     } );
 
     // MATERIALS
-    var materialColor = new THREE.Color();
-    materialColor.setRGB( 1.0, 1.0, 1.0 );
-
     this.materials = {
-      'wireframe' : new THREE.MeshBasicMaterial( { wireframe: true } ),
+      'wireframe' : new THREE.MeshBasicMaterial( { wireframe: true, side: THREE.DoubleSide } ),
       'flat' : new THREE.MeshPhongMaterial( { flatShading: true, side: THREE.DoubleSide } ),
       'smooth' : new THREE.MeshLambertMaterial( { side: THREE.DoubleSide } ),
-      'glossy' : new THREE.MeshPhongMaterial( { side: THREE.DoubleSide } ),
+      'glossy' : new THREE.MeshPhongMaterial( { side: THREE.DoubleSide, shininess: 40 } ),
       'textured' : new THREE.MeshPhongMaterial( { map: textureMap, side: THREE.DoubleSide } ),
       'reflective' : new THREE.MeshPhongMaterial( { envMap: textureCube, side: THREE.DoubleSide } )
     }

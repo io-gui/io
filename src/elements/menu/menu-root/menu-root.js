@@ -4,8 +4,14 @@ import {MenuGroup} from "../menu-group/menu-group.js";
 
 // TODO: implement working mousestart/touchstart UX
 // TODO: implement keyboard modifiers maybe. Touch alternative?
-
 export class MenuRoot extends IoElement {
+  static get style() {
+    return html`<style>
+      :host > menu-group:not([expanded]) {
+        display: none !important;
+      }
+    </style>`;
+  }
   static get properties() {
     return {
       options: Array,
@@ -16,12 +22,13 @@ export class MenuRoot extends IoElement {
   }
   constructor(props) {
     super(props);
+    // BUG: bindings dont work in io-option sor some reason
     this.render([
       ['menu-group', {
         id: 'group',
         $parent: this,
-        position: this.bind('position'),
         options: this.bind('options'),
+        position: this.bind('position'),
         expanded: this.bind('expanded')
       }]
     ]);
@@ -30,12 +37,12 @@ export class MenuRoot extends IoElement {
     super.connectedCallback();
     this._parent = this.parentElement;
     this._parent.addEventListener(this.listener, this._onExpand);
-    MenuLayer.singleton.appendChild(this.$['group']);
+    // MenuLayer.singleton.appendChild(this.$['group']);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     this._parent.removeEventListener(this.listener, this._onExpand);
-    MenuLayer.singleton.removeChild(this.$['group']);
+    // MenuLayer.singleton.removeChild(this.$['group']);
   }
   getBoundingClientRect() {
     return this._parent.getBoundingClientRect();

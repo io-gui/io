@@ -1,4 +1,4 @@
-export const renderNode = function(vDOMNode) {
+ export const renderNode = function(vDOMNode) {
   let ConstructorClass = customElements.get(vDOMNode.name);
   let element;
   if (ConstructorClass) {

@@ -5,7 +5,7 @@ import {ProtoFunctions} from "./core/protoFunctions.js";
 export class IoNode {
   constructor() {
     this.__proto__.constructor.Register();
-    Object.defineProperty(this, '__props', { value: this.__proto__._properties.cloneProperties() } );
+    Object.defineProperty(this, '__props', { value: this.__proto__._properties.clone() } );
     for (let prop in this.__props) {
       this.defineProperty(prop);
       this[prop] = this[prop];
