@@ -14,7 +14,7 @@ export class MenuGroup extends IoElement {
       :host[horizontal] {
         flex-direction: row;
       }
-      :host:not([indocument]) {
+      :host:not([nested]) {
         background: white;
         padding: 0.125em 0 0.25em 0;
         border: 1px solid #666;
@@ -26,13 +26,13 @@ export class MenuGroup extends IoElement {
         min-width: 6em;
       }
       :host[expanded],
-      :host[indocument] {
+      :host[nested] {
         display: flex;
       }
-      :host[indocument] > menu-item {
+      :host[nested] > menu-item {
         padding: 0.25em 0.5em;
       }
-      :host[indocument] > menu-item > :not(.menu-label) {
+      :host[nested] > menu-item > :not(.menu-label) {
         display: none;
       }
     </style>`;
@@ -50,7 +50,7 @@ export class MenuGroup extends IoElement {
         type: Boolean,
         reflect: true
       },
-      indocument: {
+      nested: {
         type: Boolean,
         reflect: true
       },
@@ -72,7 +72,7 @@ export class MenuGroup extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    this.indocument = this.parentNode !== MenuLayer.singleton;
+    this.nested = this.parentNode !== MenuLayer.singleton;
     MenuLayer.singleton.registerGroup(this);
   }
   disconnectedCallback() {
