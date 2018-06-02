@@ -2,16 +2,11 @@ import {IoElement}from "../../../io-element.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
 import {MenuGroup} from "../menu-group/menu-group.js";
 
+const _stagingElement = document.createElement('div');
+
 // TODO: implement working mousestart/touchstart UX
 // TODO: implement keyboard modifiers maybe. Touch alternative?
 export class MenuRoot extends IoElement {
-  static get style() {
-    return html`<style>
-      :host > menu-group:not([expanded]) {
-        display: none !important;
-      }
-    </style>`;
-  }
   static get properties() {
     return {
       options: Array,
@@ -31,18 +26,18 @@ export class MenuRoot extends IoElement {
         position: this.bind('position'),
         expanded: this.bind('expanded')
       }]
-    ]);
+    ], _stagingElement);
   }
   connectedCallback() {
     super.connectedCallback();
     this._parent = this.parentElement;
     this._parent.addEventListener(this.listener, this._onExpand);
-    // MenuLayer.singleton.appendChild(this.$['group']);
+    MenuLayer.singleton.appendChild(this.$['group']);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     this._parent.removeEventListener(this.listener, this._onExpand);
-    // MenuLayer.singleton.removeChild(this.$['group']);
+    MenuLayer.singleton.removeChild(this.$['group']);
   }
   getBoundingClientRect() {
     return this._parent.getBoundingClientRect();
