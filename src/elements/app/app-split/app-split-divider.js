@@ -49,7 +49,7 @@ export class AppSplitDivider extends IoPointerMixin(IoElement) {
     let pos = event.detail.pointer[0].position;
     let mov = this.orientation === 'horizontal' ? pos.x : pos.y;
     let dim = this.orientation === 'horizontal' ? 'width' : 'height';
-    this.fire('app-split-divider-move', {movement: mov - rect[dim] / 2, index: this.index});
+    this.dispatchEvent('app-split-divider-move', {movement: mov - rect[dim] / 2, index: this.index});
   }
   update() {
     this.render([

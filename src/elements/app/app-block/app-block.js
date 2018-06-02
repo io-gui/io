@@ -67,19 +67,19 @@ export class AppBlock extends IoElement {
     }
     this.tabs.splice(event.detail.index, 0, event.detail.tabID);
     this.selected = this.tabs.indexOf(event.detail.tabID);
-    this.fire('app-block-changed', {tabs: this.tabs, selected: this.selected});
+    this.dispatchEvent('app-block-changed', {tabs: this.tabs, selected: this.selected});
     this.update();
   }
   _onRemoveTab(event) {
     let index = this.tabs.indexOf(event.detail.tabID);
     this.tabs.splice(index, 1);
     this.selected = Math.min(this.selected, this.tabs.length - 1);
-    this.fire('app-block-changed', {tabs: this.tabs, selected: this.selected});
+    this.dispatchEvent('app-block-changed', {tabs: this.tabs, selected: this.selected});
     this.update();
   }
   _onTabSelect(event) {
     this.selected = this.tabs.indexOf(event.detail.tabID);
-    this.fire('app-block-changed', {tabs: this.tabs, selected: this.selected});
+    this.dispatchEvent('app-block-changed', {tabs: this.tabs, selected: this.selected});
     this.update();
   }
   connectedCallback() {
@@ -156,11 +156,11 @@ export class AppBlock extends IoElement {
     let srcTab = event.detail.tab;
     let tabID = event.detail.tab.tabID;
     if (typeof this._droptarget === 'string') {
-      srcTab.fire('app-block-tabs-remove', {tabID: tabID});
+      srcTab.dispatchEvent('app-block-tabs-remove', {tabID: tabID});
       this.parentElement.addSplit(tabID, this, this._droptarget);
     } else if (this._droptarget !== -1) {
-      srcTab.fire('app-block-tabs-remove', {tabID: tabID});
-      this.fire('app-block-tabs-add', {tabID: tabID, index: this._droptarget});
+      srcTab.dispatchEvent('app-block-tabs-remove', {tabID: tabID});
+      this.dispatchEvent('app-block-tabs-add', {tabID: tabID, index: this._droptarget});
     }
     this.setDropTarget(-1, null);
   }

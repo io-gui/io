@@ -31,23 +31,23 @@ export class AppBlockTab extends IoPointerMixin(IoElement) {
     if (!this._dragging && dist > 16 && event.detail.path[0] === this) {
       this._dragging = true;
       this.appendChild(_dragIcon);
-      this.fire('app-block-tab-drag-start', {pointer: pointer, tab: this});
+      this.dispatchEvent('app-block-tab-drag-start', {pointer: pointer, tab: this});
     }
     let rect = this.getBoundingClientRect();
     _dragIcon.innerText = this.tabID;
     _dragIcon.style.left = pointer.position.x - 12 + 'px';
     _dragIcon.style.top = pointer.position.y - 12 + 'px';
     if (this._dragging) {
-      this.fire('app-block-tab-drag', {pointer: pointer, tab: this});
+      this.dispatchEvent('app-block-tab-drag', {pointer: pointer, tab: this});
     }
   }
   _onPointerEnd(event) {
     if (this._dragging) {
       this.removeChild(_dragIcon);
       this._dragging = false;
-      this.fire('app-block-tab-drag-end', {tab: this});
+      this.dispatchEvent('app-block-tab-drag-end', {tab: this});
     } else {
-      this.fire('app-block-tab-select', {tabID: this.tabID});
+      this.dispatchEvent('app-block-tab-select', {tabID: this.tabID});
     }
   }
 }

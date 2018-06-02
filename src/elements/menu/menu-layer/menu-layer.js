@@ -146,11 +146,11 @@ export class MenuLayer extends IoElement {
     let elem = event.path[0];
     if (elem.localName === 'menu-item') {
       this.runAction(elem.option);
-      elem.__menuroot.fire('menu-item-clicked', elem.option);
+      elem.__menuroot.dispatchEvent('menu-item-clicked', elem.option);
     } else if (elem === this) {
       if (this._hoveredItem) {
         this.runAction(this._hoveredItem.option);
-        this._hoveredItem.__menuroot.fire('menu-item-clicked', this._hoveredItem.option);
+        this._hoveredItem.__menuroot.dispatchEvent('menu-item-clicked', this._hoveredItem.option);
       } else if (!this._hoveredGroup) {
         this.collapseAllGroups();
         if (lastFocus) lastFocus.focus();

@@ -74,8 +74,8 @@ export class IoObject extends IoElement {
       }
       // console.log(event.detail);
       let detail = Object.assign({object: this.value, key: key}, event.detail);
-      this.fire('io-object-mutated', detail, false, window);
-      this.fire('value-set', detail, true); // TODO
+      this.dispatchEvent('io-object-mutated', detail, false, window);
+      this.dispatchEvent('value-set', detail, true); // TODO
     }
   }
   getPropConfigs(keys) {

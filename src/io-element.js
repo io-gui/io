@@ -58,7 +58,7 @@ export class IoElement extends HTMLElement {
         }
         this.update();
         if (this.__props[prop].notify) {
-          this.fire(prop + '-changed', {value: value, oldValue: oldValue}, false);
+          this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue}, false);
         }
       },
       enumerable: true,
@@ -130,10 +130,10 @@ export class IoElement extends HTMLElement {
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
-    this.fire(prop + '-set', {value: value, oldValue: oldValue}, true);
+    this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
-  fire(eventName, detail, bubbles = true, src = this) {
-    src.dispatchEvent(new CustomEvent(eventName, {
+  dispatchEvent(eventName, detail, bubbles = true) {
+    HTMLElement.prototype.dispatchEvent.call(this, new CustomEvent(eventName, {
       detail: detail,
       bubbles: bubbles,
       composed: true

@@ -165,6 +165,6 @@ export const IoPointerMixin = (superclass) => class extends superclass {
 
   }
   _fire(eventName, event, pointer, path) {
-    this.fire(eventName, {event: event, pointer: pointer, path: path || event.path}, false);
+    this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path || event.path}, false);
   }
 };

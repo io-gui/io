@@ -147,7 +147,7 @@ export class AppSplit extends IoElement {
     }
 
 
-    this.fire('app-split-changed', this.splits);
+    this.dispatchEvent('app-split-changed', this.splits);
     this.update();
   }
 }

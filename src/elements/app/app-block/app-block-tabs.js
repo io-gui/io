@@ -78,10 +78,10 @@ export class AppBlockTabs extends IoElement {
     this.render([tabs]);
   }
   _onRemove(index) {
-    this.fire('app-block-tabs-remove', {tabID: this.tabs[index]});
+    this.dispatchEvent('app-block-tabs-remove', {tabID: this.tabs[index]});
   }
   _onAddTab(tabID) {
-    this.fire('app-block-tabs-add', {tabID: tabID, index: this.tabs.length});
+    this.dispatchEvent('app-block-tabs-add', {tabID: tabID, index: this.tabs.length});
   }
 }
 

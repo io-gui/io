@@ -52,7 +52,8 @@ export class IoNode {
 			}
 		}
 	}
-	dispatchEvent( type, detail ) {
+  // TODO: implement bubbling
+	dispatchEvent( type, detail, bubbles = true ) {
     var event = { detail: detail };
 		if ( this.__listeners[ type ] !== undefined ) {
 			var array = this.__listeners[ type ].slice( 0 );
