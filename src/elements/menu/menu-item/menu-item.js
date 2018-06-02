@@ -38,7 +38,7 @@ export class MenuItem extends IoElement {
       option: Object,
       position: String,
       $parent: HTMLElement,
-      tabindex: 0
+      tabindex: 1
     };
   }
   static get listeners() {
