@@ -70,6 +70,7 @@ export class AppBlockTabs extends IoElement {
     tabs.push(
       ['io-option', {
         value: '+',
+        // TODO: optimize - this runs on resize etc.
         options: Object.entries(this.elements).map((entry) => ({value: entry[0]})),
         action: this._onAddTab
       }]
