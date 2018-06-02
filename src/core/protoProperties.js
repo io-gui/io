@@ -22,23 +22,23 @@ export class ProtoProperties {
   }
 }
 
+const TYPES = {
+  'boolean': Boolean,
+  'number': Number,
+  'string': String,
+  'object': Object,
+}
+
 export class Property {
   constructor(propDef) {
-    if (propDef === null || propDef === undefined) propDef = {};
-    else if (propDef === Boolean) propDef = {type: Boolean};
-    else if (propDef === Number) propDef = {type: Number};
-    else if (propDef === String) propDef = {type: String};
-    else if (propDef === Array) propDef = {type: Array};
-    else if (propDef === Object) propDef = {type: Object};
-    else if (propDef === HTMLElement) propDef = {type: HTMLElement};
-    else if (typeof propDef !== 'object') {
-      propDef = { value: propDef };
-      if (typeof propDef.value === 'boolean') propDef.type = Boolean;
-      else if (typeof propDef.value === 'number') propDef.type = Number;
-      else if (typeof propDef.value === 'string') propDef.type = String;
-      else if (propDef.value instanceof Array) propDef.type = Array;
-      else if (typeof propDef.value === 'object') propDef.type = Object;
+    if (propDef === null || propDef === undefined) {
+      propDef = {};
+    } else if (typeof propDef === 'function') {
+      propDef = {type: propDef};
+    } else if (typeof propDef !== 'object') {
+      propDef = {value: propDef, type: propDef.constructor};
     }
+    if (!propDef.value && propDef.type && propDef.type !== HTMLElement) propDef.value = new propDef.type();
     this.value = propDef.value;
     this.type = propDef.type;
     this.observer = propDef.observer;
@@ -46,13 +46,6 @@ export class Property {
     this.reflect = propDef.reflect;
     this.binding = propDef.binding;
     this.config = propDef.config;
-    if (this.value === undefined) {
-      if (this.type === Boolean) this.value = false;
-      if (this.type === Number) this.value = 0;
-      if (this.type === String) this.value = '';
-      if (this.type === Array) this.value = [];
-      if (this.type === Object) this.value = {};
-    }
   }
   assign(propDef) {
     if (propDef.value !== undefined) this.value = propDef.value;
@@ -64,9 +57,10 @@ export class Property {
     if (propDef.config !== undefined) this.config = propDef.config;
   }
   clone() {
-    // TODO: rewise
     let prop = new Property(this);
-    if (prop.value instanceof Array) {
+    if (prop.value && typeof prop.value.clone === 'function') {
+      prop.value = prop.value.clone();
+    } else if (prop.value instanceof Array) {
       prop.value = [ ...prop.value ];
     } else if (prop.value instanceof Object) {
       prop.value = { ...prop.value };
