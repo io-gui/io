@@ -37,10 +37,10 @@ export class DemoApp extends IoElement {
   constructor() {
     super();
     this.elements = {
-      'example-geometry-hierarchy2': ['three-example', {example: 'geometry-hierarchy2', control: 'OrbitControls'}],
-      'example-geometry-colors': ['three-example', {example: 'geometry-colors', control: 'OrbitControls'}],
-      'example-geometry-teapot': ['three-example', {example: 'geometry-teapot', control: 'OrbitControls'}],
-      'example-geometries': ['three-example', {example: 'geometries', control: 'OrbitControls'}],
+      'example-geometry-hierarchy2': ['three-example', {example: 'geometry-hierarchy2'}],
+      'example-geometry-colors': ['three-example', {example: 'geometry-colors'}],
+      'example-geometry-teapot': ['three-example', {example: 'geometry-teapot'}],
+      'example-geometries': ['three-example', {example: 'geometries'}],
       'three-viewport': ['three-viewport'],
       'three-renderer': ['three-renderer'],
       'io-demo': ['io-demo'],
