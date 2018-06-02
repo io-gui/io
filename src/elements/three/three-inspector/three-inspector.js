@@ -67,7 +67,7 @@ export class ThreeInspector extends IoElement {
         background: rgba(255, 255, 255, 0.05);
         padding: 0.25em 0.25em 0.25em 0.5em !important;
         border: 0.5px outset #666;
-        color: #ff4;
+        color: #ffc;
         flex: 0 1 auto !important;
       }
       :host > io-object > div > io-option:after {
