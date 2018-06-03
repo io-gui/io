@@ -1,15 +1,23 @@
 import {Prototypes} from "./core/prototypes.js";
 import {ProtoProperties} from "./core/protoProperties.js";
+import {ProtoListeners} from "./core/protoListeners.js";
 import {ProtoFunctions} from "./core/protoFunctions.js";
 
 export class IoNode {
   constructor() {
     this.__proto__.constructor.Register();
+    this.__proto__.__protoFunctions.bind(this);
 
     Object.defineProperty(this, '__props', {value: this.__props.clone()});
     Object.defineProperty(this, '__listeners', {value: {}});
-
-    this.__proto__.__functions.bind(this);
+  }
+  connectedCallback() {
+    // TODO: implement connected
+    this.__proto__.__protoListeners.connect(this);
+  }
+  disconnectedCallback() {
+    // TODO: implement disconnected
+    this.__proto__.__protoListeners.disconnect(this);
   }
   dispose() {
     // TODO test
@@ -18,7 +26,13 @@ export class IoNode {
     for (var l in this.__listeners) this.__listeners[l].lenght = 0;
     for (var p in this.__props) delete this.__props[p];
   }
-  update() {
+
+  update() {}
+
+  triggerObserver(prop, value, oldValue) {
+    if (this.__props[prop].observer) {
+      this[this.__props[prop].observer](value, oldValue);
+    }
   }
   addEventListener(type, listener) {
     this.__listeners[type] = this.__listeners[type] || [];
@@ -32,7 +46,9 @@ export class IoNode {
   removeEventListener(type, listener) {
     if (this.__listeners[type] !== undefined) {
       let i = this.__listeners[type].indexOf(listener);
-      if (i !== - 1) this.__listeners[type].splice(i, 1);
+      if (i !== - 1) {
+        this.__listeners[type].splice(i, 1);
+      }
     }
   }
   dispatchEvent(type, detail, bubbles, path) {
@@ -70,16 +86,15 @@ IoNode.Register = function() {
           if (this.__props[prop].value === value) return;
           let oldValue = this.__props[prop].value;
           this.__props[prop].value = value;
-          if (this.__props[prop].observer) {
-            this[this.__props[prop].observer](value, oldValue, prop);
-          }
+          this.triggerObserver(prop, value, oldValue);
         },
         enumerable: true,
         configurable: true
       });
     }
 
-    Object.defineProperty(this.prototype, '__functions', {value: new ProtoFunctions(prototypes)});
+    Object.defineProperty(this.prototype, '__protoListeners', { value: new ProtoListeners(prototypes) });
+    Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(prototypes)});
 
     // TODO: implement children io-nodes via properties
     // Object.defineProperty(this, 'parent', {value: null});

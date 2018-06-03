@@ -24,47 +24,39 @@ export class IoElement extends HTMLElement {
   }
   constructor(initProps) {
     super();
+    this.__proto__.__protoFunctions.bind(this);
 
     Object.defineProperty(this, '__props', { value: this.__props.clone() } );
+    Object.defineProperty(this, '__listeners', {value: {}});
+    Object.defineProperty(this, '__observers', {value: []});
+    Object.defineProperty(this, '__notifiers', {value: []});
+    // Object.defineProperty(this, '__connected', {value: false, writable: true});
+
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
     Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update. possible memory leak!
-
-    this.__proto__.__functions.bind(this);
 
     for (let prop in this.__props) {
       this.reflectAttribute(prop);
     }
   }
   connectedCallback() {
-    this.__proto__.__listeners.connect(this);
+    // this.__connected = true;
+    this.__proto__.__protoListeners.connect(this);
     this.__node.connect();
   }
   disconnectedCallback() {
-    this.__proto__.__listeners.disconnect(this);
+    // this.__connected = false;
+    this.__proto__.__protoListeners.disconnect(this);
     this.__node.disconnect();
-    // BUG: this screws with manually transplated elements such as menu-group in menu-root
-    // this.dispose();
   }
   dispose() {
     // for (let id in this.$) {
     //   delete this.$[id];
     // }
   }
-  initAttribute(attr, value) {
-    if (value === true) {
-      this.setAttribute(attr, '');
-    } else if (value === false || value === '') {
-      this.removeAttribute(attr);
-    } else if (typeof value == 'string' || typeof value == 'number') {
-      this.setAttribute(attr, value);
-    }
-  }
-  reflectAttribute(prop) {
-    const config = this.__props[prop];
-    if (config.reflect) {
-      this.initAttribute(prop, config.value);
-    }
-  }
+
+  update() {}
+
   render(children, host) {
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
@@ -111,11 +103,71 @@ export class IoElement extends HTMLElement {
       }
     }
   }
-  update() {}
+  bind(sourceProp) {
+    return this.__node.bind(sourceProp);
+  }
+
+  triggerObservers() {
+    // TODO: test
+    // if (!this.__connected) return;
+    for (let j = 0; j < this.__observers.length; j++) {
+      this[this.__observers[j]]();
+    }
+    this.__observers.length = 0;
+  }
+  triggerNotifiers() {
+    // if (!this.__connected) return;
+    // TODO: test
+    for (let j = 0; j < this.__notifiers.length; j++) {
+      this.dispatchEvent(this.__notifiers[j][0], this.__notifiers[j][1]);
+    }
+    this.__notifiers.length = 0;
+  }
+
+  triggerObserver(prop, value, oldValue) {
+    if (this.__props[prop].observer) {
+      this[this.__props[prop].observer](value, oldValue);
+    }
+  }
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
     this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
+  }
+  setAttribute(attr, value) {
+    if (value === true) {
+      HTMLElement.prototype.setAttribute.call(this,
+        attr, '');
+    } else if (value === false || value === '') {
+      this.removeAttribute(attr);
+    } else if (typeof value == 'string' || typeof value == 'number') {
+      HTMLElement.prototype.setAttribute.call(this,
+        attr, value);
+    }
+  }
+  reflectAttribute(prop) {
+    if (this.__props[prop].reflect) {
+      this.setAttribute(prop, this.__props[prop].value);
+    }
+  }
+  addEventListener(type, listener) {
+    this.__listeners[type] = this.__listeners[type] || [];
+    if (this.__listeners[type].indexOf(listener) === - 1) {
+      this.__listeners[type].push(listener);
+      HTMLElement.prototype.addEventListener.call(this, type, listener);
+    }
+  }
+  hasEventListener(type, listener) {
+    return this.__listeners[type] !== undefined && this.__listeners[type].indexOf(listener) !== - 1;
+  }
+  removeEventListener(type, listener) {
+    if (this.__listeners[type] !== undefined) {
+      let i = this.__listeners[type].indexOf(listener);
+      if (i !== - 1) {
+        this.__listeners[type].splice(i, 1);
+        HTMLElement.prototype.removeEventListener.call(this, type, listener);
+      }
+    }
   }
   dispatchEvent(eventName, detail, bubbles = true, src = this) {
     HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(eventName, {
@@ -123,9 +175,6 @@ export class IoElement extends HTMLElement {
       bubbles: bubbles,
       composed: true
     }));
-  }
-  bind(sourceProp) {
-    return this.__node.bind(sourceProp);
   }
 }
 
@@ -144,15 +193,9 @@ IoElement.Register = function() {
         if (this.__props[prop].value === value) return;
         let oldValue = this.__props[prop].value;
         this.__props[prop].value = value;
-        if (this.__props[prop].observer) {
-          this[this.__props[prop].observer](value, oldValue, prop);
-        }
-        if (this.__props[prop].reflect) {
-          this.reflectAttribute(prop);
-        }
-        if (this.__props[prop].notify) {
-          this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
-        }
+        this.triggerObserver(prop);
+        this.reflectAttribute(prop);
+        this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
         this.update();
       },
       enumerable: true,
@@ -160,8 +203,8 @@ IoElement.Register = function() {
     });
   }
 
-  Object.defineProperty(this.prototype, '__listeners', { value: new ProtoListeners(prototypes) });
-  Object.defineProperty(this.prototype, '__functions', { value: new ProtoFunctions(prototypes) });
+  Object.defineProperty(this.prototype, '__protoListeners', { value: new ProtoListeners(prototypes) });
+  Object.defineProperty(this.prototype, '__protoFunctions', { value: new ProtoFunctions(prototypes) });
 
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 };

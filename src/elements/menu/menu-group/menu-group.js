@@ -42,7 +42,6 @@ export class MenuGroup extends IoElement {
       options: Array,
       expanded: {
         type: Boolean,
-        notify: true,
         reflect: true
       },
       position: 'right',

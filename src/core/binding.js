@@ -9,7 +9,6 @@ export class Binding {
     this.setSource(this.source);
   }
   setSource() {
-    this.source.__props[this.sourceProp].notify = true;
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
     for (let i = this.targets.length; i--;) {
       let targetProps = this.targetsMap.get(this.targets[i]);
@@ -20,7 +19,6 @@ export class Binding {
     }
   }
   setTarget(target, targetProp) {
-    target.__props[targetProp].notify = true;
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
     if (this.targetsMap.has(target)) {
       let targetProps = this.targetsMap.get(target);

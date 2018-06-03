@@ -42,7 +42,6 @@ export class Property {
     this.value = propDef.value;
     this.type = propDef.type;
     this.observer = propDef.observer;
-    this.notify = propDef.notify || false;
     this.reflect = propDef.reflect;
     this.binding = propDef.binding;
     this.config = propDef.config;
@@ -51,7 +50,6 @@ export class Property {
     if (propDef.value !== undefined) this.value = propDef.value;
     if (propDef.type !== undefined) this.type = propDef.type;
     if (propDef.observer !== undefined) this.observer = propDef.observer;
-    if (propDef.notify !== undefined) this.notify = propDef.notify;
     if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
     if (propDef.binding !== undefined) this.binding = propDef.binding;
     if (propDef.config !== undefined) this.config = propDef.config;

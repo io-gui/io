@@ -12,8 +12,6 @@ export class Node {
     Object.defineProperty(this, '_connectedListeners', { value: {} });
     Object.defineProperty(this, '_boundProperties', { value: {} });
     Object.defineProperty(this, '_srcBindings', { value: {} });
-    Object.defineProperty(this, '_triggeredObservers', { value: [] });
-    Object.defineProperty(this, '_triggeredNotifiers', { value: [] });
 
     this.update(props);
   }
@@ -52,17 +50,20 @@ export class Node {
     // TODO: untangle this mess
     if (this._connected)  {
       this.connectListeners();
-      this.triggerObservers();
-      this.triggerNotifiers();
       this.connectBindings();
+      this.element.triggerObservers();
+      this.element.triggerNotifiers();
     }
+    // if (this.element.__notifiers.length) {
+    //   console.log(this.element, this.element.__notifiers);
+    // }
   }
   connect() {
     if (!this._connected) {
       this.connectListeners();
       this.connectBindings();
-      this.triggerObservers();
-      this.triggerNotifiers();
+      this.element.triggerObservers();
+      this.element.triggerNotifiers();
     }
     this._connected = true;
   }
@@ -98,20 +99,15 @@ export class Node {
     }
   }
   setProperties() {
-    this._triggeredObservers.length = 0;
-    this._triggeredObservers.push('update');
+    this.element.__observers.length = 0;
+    this.element.__observers.push('update');
 
-    this._triggeredNotifiers.length = 0;
+    this.element.__notifiers.length = 0;
 
     for (let p in this.properties) {
 
       let value = this.properties[p];
       let oldValue = this.element.__props[p].value;
-
-      // if (this.bindings[p]) {
-      //   let binding = this.bindings[p];
-      //   value = binding.source[binding.sourceProp];
-      // }
 
       this.element.__props[p].value = value;
 
@@ -120,29 +116,13 @@ export class Node {
           this.element.reflectAttribute(p);
         }
         if (this.element.__props[p].observer) {
-          if (this._triggeredObservers.indexOf(this.element.__props[p].observer) === -1) {
-            this._triggeredObservers.push(this.element.__props[p].observer);
+          if (this.element.__observers.indexOf(this.element.__props[p].observer) === -1) {
+            this.element.__observers.push(this.element.__props[p].observer);
           }
         }
-        if (this.element.__props[p].notify) {
-          this._triggeredNotifiers.push(p + '-changed', {value: value, oldValue: oldValue});
-        }
+        this.element.__notifiers.push(p + '-changed', {value: value, oldValue: oldValue});
       }
     }
-  }
-  triggerObservers() {
-    // TODO: test
-    for (let j = 0; j < this._triggeredObservers.length; j++) {
-      this.element[this._triggeredObservers[j]]();
-    }
-    this._triggeredObservers.length = 0;
-  }
-  triggerNotifiers() {
-    // TODO: test
-    for (let j = 0; j < this._triggeredNotifiers.length; j++) {
-      this.element.dispatchEvent(this._triggeredNotifiers[j][0], this._triggeredNotifiers[j][1]);
-    }
-    this._triggeredNotifiers.length = 0;
   }
   connectBindings() {
     for (let b in this.bindings) {
