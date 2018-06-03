@@ -9,22 +9,22 @@ export class ThreeShot extends IoNode {
       time: {
         value: 0,
         config: {step: 0.01}
-      },
-    }
+      }
+    };
   }
   constructor() {
     super();
     this.init();
   }
   init() {
-    let camera = this.camera = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
-    let scene = this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
+    this.scene = new THREE.Scene();
   }
   dispose() {
     // TODO
   }
   onPropertyChange() {
-    
+
   }
   play() {
 
@@ -35,7 +35,7 @@ export class ThreeShot extends IoNode {
   stop() {
 
   }
-  update(dtime, time, progress) {
+  update() {
 
   }
   preRender() {

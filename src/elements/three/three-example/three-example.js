@@ -1,6 +1,8 @@
-import {IoElement}from "../../../io-element.js";
+import {html} from "../../../io-element.js";
 import {ThreeViewport} from "../three-viewport/three-viewport.js";
 import {ThreeInspector} from "../three-inspector/three-inspector.js";
+
+import {TransformControls} from "./examples/js/controls/TransformControls.js";
 
 export class ThreeExample extends ThreeViewport {
   static get style() {
@@ -20,13 +22,13 @@ export class ThreeExample extends ThreeViewport {
       },
       time: 0,
       control: 'EditorControls'
-    }
+    };
   }
   static get listeners() {
     return {
       'scroll': '_stopEvent',
       'value-set': '_onValueSet'
-    }
+    };
   }
   _stopEvent(event) {
     event.stopPropagation();
@@ -40,6 +42,22 @@ export class ThreeExample extends ThreeViewport {
     super(props);
     this._inspector = new ThreeInspector({});
     this.appendChild(this._inspector);
+
+    this._transformControl = new TransformControls(this.camera, this);
+    this._transformControl.addEventListener('change', () => {
+      if (this._transformControl.object) {
+        this.dispatchEvent('io-object-mutated', {object: this._transformControl.object, key: '*'}, false, window);
+        this.dispatchEvent('io-object-mutated', {object: this._transformControl.object.matrix, key: '*'}, false, window);
+        this.dispatchEvent('io-object-mutated', {object: this._transformControl.object.matrixWorld, key: '*'}, false, window);
+      }
+      if (this._example) {
+        this._example.rendered = false;
+      }
+      if (this._control) {
+        this._control.enabled = !this._transformControl.dragging;
+      }
+    });
+
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -63,17 +81,19 @@ export class ThreeExample extends ThreeViewport {
       import('./examples/' + this.example + '.js').then(module => {
         this._example = new module.Example();
         this._example.play();
-        this._inspector.value = this._example;
 
-        // TODO: debug
-        this._inspector.value = this._example.teapot.material;
-        setTimeout(() => {
-          this._inspector.value = this._example.teapot.material.map;
-        });
+        this.camera = this._example.camera;
+        this.scene = this._example.scene;
+        this._inspector.value = this._example;
 
         this._example.time = 0;
         this._lastTime = Date.now() / 1000;
         this.setControl();
+
+        this._transformControl.camera = this._example.camera;
+        this._transformControl.attach(this._example.scene.children[3]);
+        this._example.scene.add(this._transformControl);
+        this._example.rendered = false;
       });
     }
   }
@@ -86,6 +106,9 @@ export class ThreeExample extends ThreeViewport {
       import('./examples/js/controls/' + this.control + '.js').then(module => {
         this._control = new module.default( this._example.camera, this );
         this._control.addEventListener('change', () => {
+          this.dispatchEvent('io-object-mutated', {object: this._example.camera, key: '*'}, false, window);
+          this.dispatchEvent('io-object-mutated', {object: this._example.camera.matrix, key: '*'}, false, window);
+          this.dispatchEvent('io-object-mutated', {object: this._example.camera.matrixWorld, key: '*'}, false, window);
           this._example.rendered = false;
         });
         this._example.rendered = false;
@@ -110,8 +133,8 @@ export class ThreeExample extends ThreeViewport {
   }
   render() {
     if (this._example) {
-      this._updateCameraAspect(this._example.camera);
-      this.renderer.render(this._example.scene, this._example.camera);
+      this._updateCameraAspect(this.camera);
+      this.renderer.render(this.scene, this.camera);
     }
   }
 }

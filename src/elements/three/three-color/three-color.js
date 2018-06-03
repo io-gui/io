@@ -1,3 +1,4 @@
+import {html} from "../../../io-element.js";
 import {ThreeVector} from "../three-vector/three-vector.js";
 import "./three-color-picker.js";
 
@@ -10,7 +11,7 @@ export class ThreeColor extends ThreeVector {
   update() {
     let elements = [];
     let configs = this.getPropConfigs(['r', 'g', 'b', 'a']);
-    for (var key in configs) {
+    for (let key in configs) {
       if (this.value[key] !== undefined) {
         elements.push(['io-number', Object.assign({value: this.value[key], id: key}, configs[key].props)]);
       }

@@ -1,3 +1,4 @@
+import {html} from "../../../io-element.js";
 import {IoObject} from "../../io/io-object/io-object.js";
 
 export class ThreeColorPicker extends IoObject {

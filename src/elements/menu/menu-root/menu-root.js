@@ -1,8 +1,6 @@
-import {IoElement}from "../../../io-element.js";
+import {IoElement} from "../../../io-element.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
-import {MenuGroup} from "../menu-group/menu-group.js";
-
-const _stagingElement = document.createElement('div');
+import "../menu-group/menu-group.js";
 
 // TODO: implement working mousestart/touchstart UX
 // TODO: implement keyboard modifiers maybe. Touch alternative?
@@ -26,7 +24,12 @@ export class MenuRoot extends IoElement {
         position: this.bind('position'),
         expanded: this.bind('expanded')
       }]
-    ], _stagingElement);
+    ]);
+    this.$.group.__parent = this;
+  }
+  update() {
+    // BUG: bindings dont work in io-option sor some reason
+    this.$.group.options = this.options;
   }
   connectedCallback() {
     super.connectedCallback();

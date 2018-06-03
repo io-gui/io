@@ -1,3 +1,4 @@
+import {html} from "../../../io-element.js";
 import {ThreeVector} from "../three-vector/three-vector.js";
 
 export class ThreeMatrix extends ThreeVector {
@@ -5,7 +6,7 @@ export class ThreeMatrix extends ThreeVector {
     return html`<style>
       :host {
         display: grid;
-        background: #222;
+        background: red;
         border: 0.5px inset #888;
       }
       :host > io-number:nth-child(n+5) {
@@ -25,6 +26,13 @@ export class ThreeMatrix extends ThreeVector {
       }
 
     </style>`;
+  }
+  static get properties() {
+    return {
+      columns: {
+        reflect: true
+      }
+    };
   }
   update() {
     let elements = this.value;

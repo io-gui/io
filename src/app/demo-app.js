@@ -1,4 +1,4 @@
-import {IoElement}from "../io.js";
+import {html, IoElement} from "../io.js";
 import {debounce} from "../core/utils.js";
 
 import "./demo-app-ctrl.js";
@@ -32,7 +32,7 @@ export class DemoApp extends IoElement {
     return {
       'app-split-changed': '_onLayoutChanged',
       'app-block-changed': '_onLayoutChanged'
-    }
+    };
   }
   constructor() {
     super();
@@ -58,7 +58,6 @@ export class DemoApp extends IoElement {
     this.render([
       ['app-split', {
         orientation: 'horizontal',
-        splits: [],
         elements: this.elements,
         splits: this.layout
       }]

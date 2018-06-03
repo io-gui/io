@@ -1,5 +1,5 @@
 export class ProtoProperties {
-  constructor(prototypes) {
+  constructor(prototypes = []) {
     const propertyDefs = {};
     for (let i = prototypes.length; i--;) {
       let prop = prototypes[i].constructor.properties;
@@ -14,19 +14,12 @@ export class ProtoProperties {
     }
   }
   clone() {
-    let properties = {};
+    let properties = new ProtoProperties();
     for (let prop in this) {
       properties[prop] = this[prop].clone();
     }
     return properties;
   }
-}
-
-const TYPES = {
-  'boolean': Boolean,
-  'number': Number,
-  'string': String,
-  'object': Object,
 }
 
 export class Property {
@@ -38,7 +31,14 @@ export class Property {
     } else if (typeof propDef !== 'object') {
       propDef = {value: propDef, type: propDef.constructor};
     }
-    if (!propDef.value && propDef.type && propDef.type !== HTMLElement) propDef.value = new propDef.type();
+    if (!propDef.value && propDef.type) {
+      if (propDef.type === Boolean) propDef.value = false;
+      else if (propDef.type === String) propDef.value = '';
+      else if (propDef.type === Number) propDef.value = 0;
+      else if (propDef.type === Array) propDef.value = [];
+      else if (propDef.type === Object) propDef.value = {};
+      else if (propDef.type !== HTMLElement) propDef.value = new propDef.type();
+    }
     this.value = propDef.value;
     this.type = propDef.type;
     this.observer = propDef.observer;
@@ -63,7 +63,11 @@ export class Property {
     } else if (prop.value instanceof Array) {
       prop.value = [ ...prop.value ];
     } else if (prop.value instanceof Object) {
-      prop.value = { ...prop.value };
+      let value = prop.value;
+      prop.value = {};
+      for (let p in value) {
+        prop.value[p] = value[p];
+      }
     }
     return prop;
   }

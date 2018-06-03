@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 import "./app-block-tab.js";
 import "../../io/io-option/io-option.js";
 import "../../io/io-button/io-button.js";

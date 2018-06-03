@@ -1,4 +1,4 @@
-import {IoElement}from "../../io.js";
+import {html, IoElement} from "../../io.js";
 
 export class IoDemo extends IoElement {
   static get style() {
@@ -43,7 +43,7 @@ export class IoDemo extends IoElement {
       NaN: NaN,
       undefined: undefined,
       array: [1,2]
-    }
+    };
   }
   constructor() {
     super();

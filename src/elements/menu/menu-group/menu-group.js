@@ -1,5 +1,5 @@
-import {IoElement}from "../../../io-element.js";
-import {MenuItem} from "../menu-item/menu-item.js";
+import {html, IoElement} from "../../../io-element.js";
+import "../menu-item/menu-item.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
 
 export class MenuGroup extends IoElement {
@@ -60,7 +60,7 @@ export class MenuGroup extends IoElement {
   static get listeners() {
     return {
       'focusin': '_onFocus'
-    }
+    };
   }
   update() {
     const Item = (elem, i) => ['menu-item', {

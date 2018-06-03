@@ -1,8 +1,5 @@
 const _stagingElement = document.createElement('div');
 
-// TODO: gross! allows use of html`` sting literal anywhere
-window.html = window.html || function() { return arguments[0][0]; }
-
 export function initStyle(prototypes) {
   let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   for (let i = prototypes.length; i--;) {

@@ -7,7 +7,7 @@ export class Example extends ThreeShot {
       time: {
         observer: 'update'
       }
-    }
+    };
   }
   init() {
 
@@ -19,20 +19,20 @@ export class Example extends ThreeShot {
 
     scene.add( group );
 
-    var light, object;
+    let object;
 
-    var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+    let ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
     scene.add( ambientLight );
 
-    var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+    let pointLight = new THREE.PointLight( 0xffffff, 0.8 );
     camera.add( pointLight );
     scene.add( camera );
 
-    var map = new THREE.TextureLoader().load( this.path('./textures/UV_Grid_Sm.jpg', import.meta.url ) );
+    let map = new THREE.TextureLoader().load( this.path('./textures/UV_Grid_Sm.jpg', import.meta.url ) );
     map.wrapS = map.wrapT = THREE.RepeatWrapping;
     map.anisotropy = 16;
 
-    var material = new THREE.MeshPhongMaterial( { map: map, side: THREE.DoubleSide } );
+    let material = new THREE.MeshPhongMaterial( { map: map, side: THREE.DoubleSide } );
 
     //
 
@@ -76,9 +76,9 @@ export class Example extends ThreeShot {
     object.position.set( - 300, 0, - 200 );
     group.add( object );
 
-    var points = [];
+    let points = [];
 
-    for ( var i = 0; i < 50; i ++ ) {
+    for ( let i = 0; i < 50; i ++ ) {
 
       points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * Math.sin( i * 0.1 ) * 15 + 50, ( i - 5 ) * 2 ) );
 

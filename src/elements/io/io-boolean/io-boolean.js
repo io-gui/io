@@ -4,7 +4,7 @@ export class IoBoolean extends IoButton {
   static get properties() {
     return {
       value: {
-        value: Boolean,
+        type: Boolean,
         reflect: true
       },
       true: 'true',

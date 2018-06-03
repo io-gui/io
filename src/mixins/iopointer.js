@@ -73,7 +73,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
       'mousedown': '_onMousedown',
       'touchstart': '_onTouchstart',
       'mousemove': '_onMousehover'
-    }
+    };
   }
   constructor(params) {
     super(params);
@@ -90,8 +90,8 @@ export const IoPointerMixin = (superclass) => class extends superclass {
           y: touches[i].clientY
         });
         if (this.pointermode === 'relative') {
-          position.x -= rect.left
-          position.y -= rect.top
+          position.x -= rect.left;
+          position.y -= rect.top;
         } else if (this.pointermode === 'viewport') {
           position.x = (position.x - rect.left) / rect.width * 2.0 - 1.0;
           position.y = (position.y - rect.top) / rect.height * 2.0 - 1.0;

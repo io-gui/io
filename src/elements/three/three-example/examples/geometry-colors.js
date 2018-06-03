@@ -11,31 +11,31 @@ export class Example extends ThreeShot {
 
     scene.background = new THREE.Color( 0xffffff );
 
-    var light = new THREE.DirectionalLight( 0xffffff );
+    let light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 0, 0, 1 );
     scene.add( light );
 
     // shadow
 
-    var canvas = document.createElement( 'canvas' );
+    let canvas = document.createElement( 'canvas' );
     canvas.width = 128;
     canvas.height = 128;
 
-    var context = canvas.getContext( '2d' );
-    var gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
+    let context = canvas.getContext( '2d' );
+    let gradient = context.createRadialGradient( canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.width / 2 );
     gradient.addColorStop( 0.1, 'rgba(210,210,210,1)' );
     gradient.addColorStop( 1, 'rgba(255,255,255,1)' );
 
     context.fillStyle = gradient;
     context.fillRect( 0, 0, canvas.width, canvas.height );
 
-    var shadowTexture = new THREE.Texture( canvas );
+    let shadowTexture = new THREE.Texture( canvas );
     shadowTexture.needsUpdate = true;
 
-    var shadowMaterial = new THREE.MeshBasicMaterial( { map: shadowTexture } );
-    var shadowGeo = new THREE.PlaneBufferGeometry( 300, 300, 1, 1 );
+    let shadowMaterial = new THREE.MeshBasicMaterial( { map: shadowTexture } );
+    let shadowGeo = new THREE.PlaneBufferGeometry( 300, 300, 1, 1 );
 
-    var shadowMesh;
+    let shadowMesh;
 
     shadowMesh = new THREE.Mesh( shadowGeo, shadowMaterial );
     shadowMesh.position.y = - 250;
@@ -54,9 +54,9 @@ export class Example extends ThreeShot {
     shadowMesh.rotation.x = - Math.PI / 2;
     scene.add( shadowMesh );
 
-    var faceIndices = [ 'a', 'b', 'c' ];
+    let faceIndices = [ 'a', 'b', 'c' ];
 
-    var color, f, f2, f3, p, vertexIndex,
+    let color, f, f2, f3, p, vertexIndex,
 
       radius = 200,
 
@@ -64,13 +64,13 @@ export class Example extends ThreeShot {
       geometry2 = new THREE.IcosahedronGeometry( radius, 1 ),
       geometry3 = new THREE.IcosahedronGeometry( radius, 1 );
 
-    for ( var i = 0; i < geometry.faces.length; i ++ ) {
+    for ( let i = 0; i < geometry.faces.length; i ++ ) {
 
       f  = geometry.faces[ i ];
       f2 = geometry2.faces[ i ];
       f3 = geometry3.faces[ i ];
 
-      for ( var j = 0; j < 3; j ++ ) {
+      for ( let j = 0; j < 3; j ++ ) {
 
         vertexIndex = f[ faceIndices[ j ] ];
 
@@ -95,10 +95,10 @@ export class Example extends ThreeShot {
 
     }
 
-    var mesh, wireframe;
+    let mesh, wireframe;
 
-    var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true, vertexColors: THREE.VertexColors, shininess: 0 } );
-    var wireframeMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } );
+    let material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true, vertexColors: THREE.VertexColors, shininess: 0 } );
+    let wireframeMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, transparent: true } );
 
     mesh = new THREE.Mesh( geometry, material );
     wireframe = new THREE.Mesh( geometry, wireframeMaterial );

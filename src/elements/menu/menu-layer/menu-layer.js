@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 
 let previousOption;
 let previousParent;
@@ -6,7 +6,6 @@ let timeoutOpen;
 let timeoutReset;
 let WAIT_TIME = 120;
 let lastFocus;
-let prevTouch;
 
 // TODO: make long (scrolling) menus work with touch
 // TODO: implement search
@@ -46,22 +45,8 @@ export class MenuLayer extends IoElement {
     return {
       'mouseup': '_onMouseup',
       'mousemove': '_onMousemove',
-    }
+    };
   }
-  // _onTouchmove(event) {
-  //   prevTouch = prevTouch || event.touches[0]
-  //   event.touches[0].movementX = event.touches[0].clientX - prevTouch.clientX;
-  //   event.touches[0].movementY = event.touches[0].clientY - prevTouch.clientY;
-  //   this._onMousemove(event.touches[0]);
-  //   prevTouch = event.touches[0];
-  //   prevTouch.path = event.path;
-  //   // TODO: make touch menu work with multi-menu multi-touch (insane?)
-  // }
-  // _onTouchend(event) {
-  //   // TODO: unhack
-  //   prevTouch.path = this._hoveredItem ? [this._hoveredItem] : prevTouch.path;
-  //   this._onMouseup(prevTouch);
-  // }
   constructor(props) {
     super(props);
     this._hoveredItem = null;

@@ -1,3 +1,4 @@
+import {html} from "../../../io-element.js";
 import {IoObject} from "../../io/io-object/io-object.js";
 
 export class ThreeVector extends IoObject {
@@ -19,7 +20,7 @@ export class ThreeVector extends IoObject {
   update() {
     let elements = [];
     let configs = this.getPropConfigs(['x', 'y', 'z', 'w']);
-    for (var key in configs) {
+    for (let key in configs) {
       if (this.value[key] !== undefined) {
         elements.push(['io-number', Object.assign({value: this.value[key], id: key}, configs[key].props)]);
       }

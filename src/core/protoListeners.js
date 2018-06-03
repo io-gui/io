@@ -1,6 +1,5 @@
 export class ProtoListeners {
   constructor(prototypes) {
-    const propertyDefs = {};
     for (let i = prototypes.length; i--;) {
       let prop = prototypes[i].constructor.listeners;
       for (let key in prop) this[key] = prop[key];

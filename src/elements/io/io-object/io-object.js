@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 
 export class IoObject extends IoElement {
   static get style() {
@@ -46,7 +46,7 @@ export class IoObject extends IoElement {
   static get listeners() {
     return {
       'value-set': '_onValueSet'
-    }
+    };
   }
   connectedCallback() {
     super.connectedCallback();
@@ -58,9 +58,15 @@ export class IoObject extends IoElement {
   }
   _onIoObjectMutated(event) {
     let key = event.detail.key;
-    if (event.detail.object === this.value && this.$[key]) {
-      this.$[key].__props.value.value = this.value[key];
-      this.$[key].update();
+    if (event.detail.object === this.value) {
+      if (this.$[key]) {
+        this.$[key].__props.value.value = this.value[key];
+        this.$[key].update();
+      } else if (!key || key === '*') {
+        for (var k in this.$) {
+          this.$[k].update();
+        }
+      }
     }
   }
   _onValueSet(event) {
@@ -124,7 +130,7 @@ export class IoObject extends IoElement {
       let keys = [...Object.keys(this.value), ...Object.keys(this.value.__proto__)];
       let proplist = this.props.length ? this.props : keys;
       let configs = this.getPropConfigs(proplist);
-      for (var key in configs) {
+      for (let key in configs) {
         // TODO: remove props keyword
         let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
         if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {

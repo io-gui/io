@@ -11,22 +11,22 @@ import * as THREE from "../../../../../../../lib/three.module.js";
 
 // internals
 
-var vector = new THREE.Vector3();
+let vector = new THREE.Vector3();
 
-var STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2 };
-var state = STATE.NONE;
+let STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2 };
+let state = STATE.NONE;
 
-var normalMatrix = new THREE.Matrix3();
-var pointer = new THREE.Vector2();
-var pointerOld = new THREE.Vector2();
-var spherical = new THREE.Spherical();
+let normalMatrix = new THREE.Matrix3();
+let pointer = new THREE.Vector2();
+let pointerOld = new THREE.Vector2();
+let spherical = new THREE.Spherical();
 
 // touch
 
-var touches = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
-var prevTouches = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+let touches = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
+let prevTouches = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
 
-var prevDistance = null;
+let prevDistance = null;
 
 export default class EditorControls extends IoNode {
 	static get properties() {
@@ -38,7 +38,7 @@ export default class EditorControls extends IoNode {
 			panSpeed: 0.002,
 			zoomSpeed: 0.005,
 			rotationSpeed: 0.005,
-		}
+		};
 	}
   constructor(object, domElement) {
 		// TODO
@@ -47,31 +47,31 @@ export default class EditorControls extends IoNode {
 		this.domElement = domElement;
 		this.object.lookAt(this.target); //TODO
 		this.init();
-  }
+	}
 	init() {
 		this.domElement.addEventListener('contextmenu', this.contextmenu, false);
-	 	this.domElement.addEventListener('mousedown', this.onMouseDown, false);
-	 	this.domElement.addEventListener('wheel', this.onMouseWheel, false);
+		this.domElement.addEventListener('mousedown', this.onMouseDown, false);
+		this.domElement.addEventListener('wheel', this.onMouseWheel, false);
 
-	 	this.domElement.addEventListener('touchstart', this.touchStart, false);
-	 	this.domElement.addEventListener('touchmove', this.touchMove, false);
+		this.domElement.addEventListener('touchstart', this.touchStart, false);
+		this.domElement.addEventListener('touchmove', this.touchMove, false);
 	}
 	dispose() {
 		this.domElement.removeEventListener('contextmenu', this.contextmenu, false);
- 		this.domElement.removeEventListener('mousedown', this.onMouseDown, false);
- 		this.domElement.removeEventListener('wheel', this.onMouseWheel, false);
+		this.domElement.removeEventListener('mousedown', this.onMouseDown, false);
+		this.domElement.removeEventListener('wheel', this.onMouseWheel, false);
 
- 		this.domElement.removeEventListener('mousemove', this.onMouseMove, false);
- 		this.domElement.removeEventListener('mouseup', this.onMouseUp, false);
- 		this.domElement.removeEventListener('mouseout', this.onMouseUp, false);
- 		this.domElement.removeEventListener('dblclick', this.onMouseUp, false);
+		this.domElement.removeEventListener('mousemove', this.onMouseMove, false);
+		this.domElement.removeEventListener('mouseup', this.onMouseUp, false);
+		this.domElement.removeEventListener('mouseout', this.onMouseUp, false);
+		this.domElement.removeEventListener('dblclick', this.onMouseUp, false);
 
- 		this.domElement.removeEventListener('touchstart', this.touchStart, false);
- 		this.domElement.removeEventListener('touchmove', this.touchMove, false);
+		this.domElement.removeEventListener('touchstart', this.touchStart, false);
+		this.domElement.removeEventListener('touchmove', this.touchMove, false);
 	}
 	focus(target) {
-		var box = new THREE.Box3().setFromObject(target);
-		var distance;
+		let box = new THREE.Box3().setFromObject(target);
+		let distance;
 		if (box.isEmpty() === false) {
 			this.target.copy(box.getCenter());
 			distance = box.getBoundingSphere().radius;
@@ -80,14 +80,14 @@ export default class EditorControls extends IoNode {
 			this.target.setFromMatrixPosition(target.matrixWorld);
 			distance = 0.1;
 		}
-		var delta = new THREE.Vector3(0, 0, 1);
+		let delta = new THREE.Vector3(0, 0, 1);
 		delta.applyQuaternion(this.object.quaternion);
 		delta.multiplyScalar(distance * 4);
 		this.object.position.copy(target).add(delta);
 		this.dispatchEvent('change');
 	}
- 	pan(delta) {
-		var distance = this.object.position.distanceTo(this.target);
+	pan(delta) {
+		let distance = this.object.position.distanceTo(this.target);
 		delta.multiplyScalar(distance * this.panSpeed);
 		delta.applyMatrix3(normalMatrix.getNormalMatrix(this.object.matrix));
 		this.object.position.add(delta);
@@ -95,7 +95,7 @@ export default class EditorControls extends IoNode {
 		this.dispatchEvent('change');
 	}
 	zoom(delta) {
-		var distance = this.object.position.distanceTo(this.target);
+		let distance = this.object.position.distanceTo(this.target);
 		delta.multiplyScalar(distance * this.zoomSpeed);
 		if (delta.length() > distance) return;
 		delta.applyMatrix3(normalMatrix.getNormalMatrix(this.object.matrix));
@@ -131,8 +131,8 @@ export default class EditorControls extends IoNode {
 	onMouseMove(event) {
 		if (this.enabled === false) return;
 		pointer.set(event.clientX, event.clientY);
-		var movementX = pointer.x - pointerOld.x;
-		var movementY = pointer.y - pointerOld.y;
+		let movementX = pointer.x - pointerOld.x;
+		let movementY = pointer.y - pointerOld.y;
 		if (state === STATE.ROTATE) {
 			this.rotate(new THREE.Vector3(- movementX * this.rotationSpeed, - movementY * this.rotationSpeed, 0));
 		} else if (state === STATE.ZOOM) {
@@ -142,7 +142,7 @@ export default class EditorControls extends IoNode {
 		}
 		pointerOld.set(event.clientX, event.clientY);
 	}
-	onMouseUp(event) {
+	onMouseUp() {
 		this.domElement.removeEventListener('mousemove', this.onMouseMove, false);
 		this.domElement.removeEventListener('mouseup', this.onMouseUp, false);
 		this.domElement.removeEventListener('mouseout', this.onMouseUp, false);
@@ -175,8 +175,8 @@ export default class EditorControls extends IoNode {
 		event.preventDefault();
 		event.stopPropagation();
 		function getClosest(touch, touches) {
-			var closest = touches[0];
-			for (var i in touches) {
+			let closest = touches[0];
+			for (let i in touches) {
 				if (closest.distanceTo(touch) > touches[i].distanceTo(touch)) closest = touches[i];
 			}
 			return closest;
@@ -187,23 +187,24 @@ export default class EditorControls extends IoNode {
 				touches[1].set(event.touches[0].pageX, event.touches[0].pageY, 0);
 				this.rotate(touches[0].sub(getClosest(touches[0], prevTouches)).multiplyScalar(- this.rotationSpeed));
 				break;
-			case 2:
+			case 2: {
 				touches[0].set(event.touches[0].pageX, event.touches[0].pageY, 0);
 				touches[1].set(event.touches[1].pageX, event.touches[1].pageY, 0);
-				var distance = touches[0].distanceTo(touches[1]);
+				let distance = touches[0].distanceTo(touches[1]);
 				this.zoom(new THREE.Vector3(0, 0, prevDistance - distance));
 				prevDistance = distance;
-				var offset0 = touches[0].clone().sub(getClosest(touches[0], prevTouches));
-				var offset1 = touches[1].clone().sub(getClosest(touches[1], prevTouches));
+				let offset0 = touches[0].clone().sub(getClosest(touches[0], prevTouches));
+				let offset1 = touches[1].clone().sub(getClosest(touches[1], prevTouches));
 				offset0.x = - offset0.x;
 				offset1.x = - offset1.x;
 				this.pan(offset0.add(offset1).multiplyScalar(0.5));
 				break;
+			}
 		}
 		prevTouches[0].copy(touches[0]);
 		prevTouches[1].copy(touches[1]);
 	}
 	contextmenu(event) {
- 		event.preventDefault();
- 	}
+		event.preventDefault();
+	}
 }

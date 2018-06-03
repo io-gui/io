@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {IoElement} from "../../../io-element.js";
 import {IoPointerMixin} from "../../../mixins/iopointer.js";
 
 const _dragIcon = document.createElement('div');
@@ -20,7 +20,7 @@ export class AppBlockTab extends IoPointerMixin(IoElement) {
     return {
       'io-pointer-end': '_onPointerEnd',
       'io-pointer-move': '_onPointerMove'
-    }
+    };
   }
   update() {
     this.innerText = this.tabID;
@@ -33,7 +33,6 @@ export class AppBlockTab extends IoPointerMixin(IoElement) {
       this.appendChild(_dragIcon);
       this.dispatchEvent('app-block-tab-drag-start', {pointer: pointer, tab: this});
     }
-    let rect = this.getBoundingClientRect();
     _dragIcon.innerText = this.tabID;
     _dragIcon.style.left = pointer.position.x - 12 + 'px';
     _dragIcon.style.top = pointer.position.y - 12 + 'px';
@@ -41,7 +40,7 @@ export class AppBlockTab extends IoPointerMixin(IoElement) {
       this.dispatchEvent('app-block-tab-drag', {pointer: pointer, tab: this});
     }
   }
-  _onPointerEnd(event) {
+  _onPointerEnd() {
     if (this._dragging) {
       this.removeChild(_dragIcon);
       this._dragging = false;

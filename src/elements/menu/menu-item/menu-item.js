@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 import {MenuLayer} from "../menu-layer/menu-layer.js";
 import {MenuGroup} from "../menu-group/menu-group.js";
 
@@ -45,7 +45,7 @@ export class MenuItem extends IoElement {
     return {
       'focus': '_onFocus',
       'touchstart': '_onTouchstart'
-    }
+    };
   }
   static get menuroot() {
     return this;
@@ -81,14 +81,16 @@ export class MenuItem extends IoElement {
     this.focus();
   }
   _onTouchmove(event) {
+    event.preventDefault();
     MenuLayer.singleton._onTouchmove(event);
   }
   _onTouchend(event) {
+    event.preventDefault();
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
     MenuLayer.singleton._onTouchend(event);
   }
-  _onFocus(event) {
+  _onFocus() {
     if (this.$group) {
       if (!this.$group.parentNode) {
         MenuLayer.singleton.appendChild(this.$group);

@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 import * as THREE from "../../../../lib/three.module.js";
 
 export class ThreeViewport extends IoElement {
@@ -21,7 +21,7 @@ export class ThreeViewport extends IoElement {
       camera: null,
       scene: null,
       tabindex: 1
-    }
+    };
   }
   constructor(props) {
     super(props);
@@ -46,7 +46,7 @@ export class ThreeViewport extends IoElement {
     let rect = this.getBoundingClientRect();
     if (rect.width !== this._width || rect.height !== this._height) {
       let _ctx = this.renderer.context;
-      var _ratio = _ctx.webkitBackingStorePixelRatio ||
+      let _ratio = _ctx.webkitBackingStorePixelRatio ||
                   _ctx.mozBackingStorePixelRatio ||
                   _ctx.msBackingStorePixelRatio ||
                   _ctx.oBackingStorePixelRatio ||

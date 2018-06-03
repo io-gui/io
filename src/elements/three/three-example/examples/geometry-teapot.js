@@ -2,7 +2,7 @@ import * as THREE from "../../../../../lib/three.module.js";
 import {TeapotBufferGeometry} from "./js/geometries/TeapotBufferGeometry.js";
 import {ThreeShot} from "../../three-shot/three-shot.js";
 
-var TEAPOT_SIZE = 400;
+let TEAPOT_SIZE = 400;
 
 export class Example extends ThreeShot {
   static get properties() {
@@ -15,7 +15,7 @@ export class Example extends ThreeShot {
       fitLid: false,
       nonblinn: { value: false, config: {label: 'original scale'} },
       shading: { value: 'textured', config: { tag: 'io-option', options: [ 'wireframe', 'flat', 'smooth', 'glossy', 'textured', 'reflective' ] } }
-    }
+    };
   }
   onPropertyChange(event) {
     if (event.object === this) {
@@ -29,28 +29,29 @@ export class Example extends ThreeShot {
 
     // CAMERA
     camera.position.set( -600, 550, 1300 );
+    scene.add( camera );
 
     // LIGHTS
-    var ambientLight = new THREE.AmbientLight( 0x333333 );	// 0.2
+    let ambientLight = new THREE.AmbientLight( 0x333333 );	// 0.2
     scene.add( ambientLight );
 
-    var light = new THREE.DirectionalLight( 0xFFFFFF, 1.0 );
+    let light = new THREE.DirectionalLight( 0xFFFFFF, 1.0 );
     scene.add( light );
 
     // TEXTURE MAP
-    var textureMap = new THREE.TextureLoader().load( this.path( 'textures/UV_Grid_Sm.jpg', import.meta.url ), () => {
+    let textureMap = new THREE.TextureLoader().load( this.path( 'textures/UV_Grid_Sm.jpg', import.meta.url ), () => {
       this.rendered = false;
     } );
 
     // REFLECTION MAP
-    var path = this.path( "textures/cube/skybox/", import.meta.url );
-    var urls = [
+    let path = this.path( "textures/cube/skybox/", import.meta.url );
+    let urls = [
       path + "px.jpg", path + "nx.jpg",
       path + "py.jpg", path + "ny.jpg",
       path + "pz.jpg", path + "nz.jpg"
     ];
 
-    var textureCube = new THREE.CubeTextureLoader().load( urls, () => {
+    let textureCube = new THREE.CubeTextureLoader().load( urls, () => {
       this.rendered = false;
     } );
 
@@ -62,7 +63,7 @@ export class Example extends ThreeShot {
       'glossy' : new THREE.MeshPhongMaterial( { side: THREE.DoubleSide, shininess: 40 } ),
       'textured' : new THREE.MeshPhongMaterial( { map: textureMap, side: THREE.DoubleSide } ),
       'reflective' : new THREE.MeshPhongMaterial( { envMap: textureCube, side: THREE.DoubleSide } )
-    }
+    };
 
     // scene itself
     scene.background = textureCube;
@@ -78,7 +79,7 @@ export class Example extends ThreeShot {
 
     }
 
-    var teapotGeometry = new TeapotBufferGeometry( TEAPOT_SIZE,
+    let teapotGeometry = new TeapotBufferGeometry( TEAPOT_SIZE,
       this.tess,
       this.bottom,
       this.lid,

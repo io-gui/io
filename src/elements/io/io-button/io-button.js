@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 
 export class IoButton extends IoElement {
   static get style() {
@@ -12,7 +12,7 @@ export class IoButton extends IoElement {
         background: rgba(255,255,255,0.1);
       }
       :host[pressed] {
-        background: rgba(0,0,0,0.1);
+        background: rgba(0,0,0,0.2);
       }
     </style>`;
   }
@@ -25,7 +25,7 @@ export class IoButton extends IoElement {
         reflect: true
       },
       action: Function,
-      tabindex: 0
+      tabindex: 1
     };
   }
   static get listeners() {
@@ -33,7 +33,7 @@ export class IoButton extends IoElement {
       'keydown': '_onDown',
       'mousedown': '_onDown',
       'touchstart': '_onDown'
-    }
+    };
   }
   _onAction(event) {
     event.stopPropagation();

@@ -4,7 +4,7 @@ export class IoNumber extends IoString {
   static get properties() {
     return {
       value: Number,
-      step: 0.0001,
+      step: 0.001,
       min: -Infinity,
       max: Infinity
     };

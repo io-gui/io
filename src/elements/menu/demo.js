@@ -1,4 +1,4 @@
-import {IoElement}from "../../io.js";
+import {html, IoElement} from "../../io.js";
 
 export class MenuDemo extends IoElement {
   static get style() {

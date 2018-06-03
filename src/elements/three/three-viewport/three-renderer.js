@@ -14,7 +14,7 @@ continuously. In other words, you cannot render with mutliple instances of
 ThreeRenderer in realtime without severe performance penalties.
 */
 
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 import * as THREE from "../../../../lib/three.module.js";
 
 const renderer = new THREE.WebGLRenderer();
@@ -23,16 +23,16 @@ renderer.domElement.className = 'canvas3d';
 
 let host;
 
-var perfNow = 0;
-var perfDelta = 1000;
-var perfAverage = 1000;
-var perfWarned;
+let perfNow = 0;
+let perfDelta = 1000;
+let perfAverage = 1000;
+let perfWarned;
 
 /**
  * This function runs every time renderer migrates to another three-renderer host
  * It is designed to detect if migration feature is overrused by the user.
  */
-var _performanceCheck = function() {
+const _performanceCheck = function() {
   if (perfWarned) return;
   perfDelta = performance.now() - perfNow;
   perfAverage = Math.min((perfAverage * 10 + perfDelta) / 11, 1000);
@@ -82,7 +82,7 @@ export class ThreeRenderer extends IoElement {
   static get listeners() {
     return {
       'click': '_onSetHost'
-    }
+    };
   }
   constructor() {
     super();
@@ -156,7 +156,7 @@ export class ThreeRenderer extends IoElement {
   }
   _setSize() {
     let rect = this.getBoundingClientRect();
-    var ratio = this._context2d.webkitBackingStorePixelRatio ||
+    let ratio = this._context2d.webkitBackingStorePixelRatio ||
                 this._context2d.mozBackingStorePixelRatio ||
                 this._context2d.msBackingStorePixelRatio ||
                 this._context2d.oBackingStorePixelRatio ||

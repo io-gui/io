@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 import "./three-inspector-breadcrumbs.js";
 import "./three-inspector-link.js";
 import {threeInspectorConfig} from "./three-inspector-config.js";
@@ -121,7 +121,7 @@ export class ThreeInspector extends IoElement {
       'touchstart': '_stopEvent',
       'keydown': '_stopEvent',
       'wheel': '_stopEvent'
-    }
+    };
   }
   _stopEvent(event) {
     event.stopPropagation();
@@ -188,7 +188,7 @@ export class ThreeInspector extends IoElement {
     threeInspectorConfig['Object'] = Object.assign(threeInspectorConfig['Object'], this.configs);
 
     let elements = [];
-    for (var key in groups) {
+    for (let key in groups) {
       elements.push(['io-object', {
         value: this.value, props: groups[key], label: key, expanded: true, configs: threeInspectorConfig}
       ]);

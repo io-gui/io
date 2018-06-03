@@ -1,5 +1,4 @@
-import {IoElement}from "../../../io-element.js";
-import {IoButton} from "../../io/io-button/io-button.js";
+import {html, IoElement} from "../../../io-element.js";
 
 export class ThreeInspectorBreadcrumbs extends IoElement {
   static get style() {
@@ -41,7 +40,7 @@ export class ThreeInspectorBreadcrumbs extends IoElement {
     this.value = crumb.value;
   }
   update() {
-    const Prop = (elem, i) => ['io-button', {
+    const Prop = (elem) => ['io-button', {
       value: elem,
       label: elem.label,
       action: this._onSelect}];

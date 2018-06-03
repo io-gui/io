@@ -6,6 +6,8 @@ import {initStyle} from "./core/initStyle.js";
 import {Node} from "./core/node.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 
+export function html() { return arguments[0][0]; }
+
 export class IoElement extends HTMLElement {
   static get properties() {
     return {
@@ -23,47 +25,30 @@ export class IoElement extends HTMLElement {
   constructor(initProps) {
     super();
 
-    Object.defineProperty(this, '__props', { value: this.__proto__._properties.clone() } );
+    Object.defineProperty(this, '__props', { value: this.__props.clone() } );
     Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
-    Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update
+    Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update. possible memory leak!
 
-    this.__proto__._functions.bind(this);
+    this.__proto__.__functions.bind(this);
 
     for (let prop in this.__props) {
-      this.defineProperty(prop);
       this.reflectAttribute(prop);
     }
   }
   connectedCallback() {
-    this.__proto__._listeners.connect(this);
+    this.__proto__.__listeners.connect(this);
     this.__node.connect();
   }
   disconnectedCallback() {
-    this.__proto__._listeners.disconnect(this);
+    this.__proto__.__listeners.disconnect(this);
     this.__node.disconnect();
+    // BUG: this screws with manually transplated elements such as menu-group in menu-root
+    // this.dispose();
   }
-  defineProperty(prop) {
-    if (this.__proto__.hasOwnProperty(prop)) return;
-    Object.defineProperty(this.__proto__, prop, {
-      get: function() {
-        return this.__props[prop].value;
-      },
-      set: function(value) {
-        if (this.__props[prop].value === value) return;
-        let oldValue = this.__props[prop].value;
-        this.__props[prop].value = value;
-        this.reflectAttribute(prop);
-        if (this.__props[prop].observer) {
-          this[this.__props[prop].observer](value, oldValue, prop);
-        }
-        this.update();
-        if (this.__props[prop].notify) {
-          this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue}, false);
-        }
-      },
-      enumerable: true,
-      configurable: true
-    });
+  dispose() {
+    // for (let id in this.$) {
+    //   delete this.$[id];
+    // }
   }
   initAttribute(attr, value) {
     if (value === true) {
@@ -132,8 +117,8 @@ export class IoElement extends HTMLElement {
     this[prop] = value;
     this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
-  dispatchEvent(eventName, detail, bubbles = true) {
-    HTMLElement.prototype.dispatchEvent.call(this, new CustomEvent(eventName, {
+  dispatchEvent(eventName, detail, bubbles = true, src = this) {
+    HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(eventName, {
       detail: detail,
       bubbles: bubbles,
       composed: true
@@ -147,8 +132,36 @@ export class IoElement extends HTMLElement {
 IoElement.Register = function() {
   const prototypes = new Prototypes(this);
   initStyle(prototypes);
-  Object.defineProperty(this.prototype, '_properties', { value: new ProtoProperties(prototypes) });
-  Object.defineProperty(this.prototype, '_listeners', { value: new ProtoListeners(prototypes) });
-  Object.defineProperty(this.prototype, '_functions', { value: new ProtoFunctions(prototypes) });
+
+  Object.defineProperty(this.prototype, '__props', { value: new ProtoProperties(prototypes) } );
+
+  for (let prop in this.prototype.__props) {
+    Object.defineProperty(this.prototype, prop, {
+      get: function() {
+        return this.__props[prop].value;
+      },
+      set: function(value) {
+        if (this.__props[prop].value === value) return;
+        let oldValue = this.__props[prop].value;
+        this.__props[prop].value = value;
+        if (this.__props[prop].observer) {
+          this[this.__props[prop].observer](value, oldValue, prop);
+        }
+        if (this.__props[prop].reflect) {
+          this.reflectAttribute(prop);
+        }
+        if (this.__props[prop].notify) {
+          this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
+        }
+        this.update();
+      },
+      enumerable: true,
+      configurable: true
+    });
+  }
+
+  Object.defineProperty(this.prototype, '__listeners', { value: new ProtoListeners(prototypes) });
+  Object.defineProperty(this.prototype, '__functions', { value: new ProtoFunctions(prototypes) });
+
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
-}
+};

@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 import "./app-block-tab.js";
 import "./app-block-tabs.js";
 
@@ -52,7 +52,7 @@ export class AppBlock extends IoElement {
       'app-block-tabs-add': '_onAddTab',
       'app-block-tabs-remove': '_onRemoveTab',
       'app-block-tab-select': '_onTabSelect'
-    }
+    };
   }
   update() {
     this.render([
@@ -131,14 +131,14 @@ export class AppBlock extends IoElement {
     if (ay < 0.85 && ax < 0.85) {
       this.setDropTarget(this.tabs.length, tabID);
       return;
-    };
+    }
     for (let i = 0; i < this._tabRects.length; i++) {
       x = 2 * (((dx - this._tabRects[i].x) / this._tabRects[i].width) - 0.5);
       y = 2 * (((dy - this._tabRects[i].y) / this._tabRects[i].height) - 0.5);
       if (Math.abs(y) < 1 && Math.abs(x) < 1) {
         this.setDropTarget(i, tabID);
         return;
-      };
+      }
     }
     {
       x = 2 * (((dx - this._rect.x) / this._rect.width) - 0.5);
@@ -146,7 +146,7 @@ export class AppBlock extends IoElement {
       if (Math.abs(y) < 1 && Math.abs(x) < 1) {
         this.setDropTarget(this._tabRects.length, tabID);
         return;
-      };
+      }
     }
     this.setDropTarget(-1,  null);
   }

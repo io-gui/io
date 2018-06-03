@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {IoElement} from "../../../io-element.js";
 
 export class AppCollapsable extends IoElement {
   static get properties() {

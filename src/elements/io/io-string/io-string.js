@@ -1,4 +1,4 @@
-import {IoElement}from "../../../io-element.js";
+import {html, IoElement} from "../../../io-element.js";
 
 export class IoString extends IoElement {
   static get style() {
@@ -24,7 +24,7 @@ export class IoString extends IoElement {
     return {
       'blur': '_onBlur',
       'keydown': '_onKeydown'
-    }
+    };
   }
   _onBlur() {
     this.set('value', this.innerText);
