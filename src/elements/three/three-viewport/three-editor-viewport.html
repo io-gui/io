@@ -1,0 +1,262 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/av-icons.html">
+<link rel="import" href="../three-js/three-js.html">
+<link rel="import" href="../three-viewport/three-viewport.html">
+
+<link rel="import" href="three-editor-button.html">
+
+<!--
+Three.js viewport element with basic camera controls and control API.
+Supports rendering to 4 different camera views.
+
+To see all propertries refer to three-viewport.
+
+@demo demo/index.html Basic Demo
+-->
+<dom-module id="three-editor-viewport">
+  <link rel="import" type="css" href="three-editor-viewport.css">
+  <template>
+    <three-viewport id="viewport0" class="viewport"
+        scene="{{scene}}"
+        control="{{control}}"
+        camera="{{camera0}}"
+        clear-color="{{clearColor}}"
+        show-helpers="{{showHelpers}}">
+      <three-editor-button true="fullscreen-exit" false="fullscreen" value="{{fullscreen}}"></three-editor-button>
+      <io-options value="{{camera0}}" options="{{cameraOptions}}" class="viewport0"></io-options>
+    </three-viewport>
+    <three-viewport id="viewport1" class="viewport"
+        scene="{{scene}}"
+        control="{{control}}"
+        camera="{{camera1}}"
+        clear-color="{{clearColor}}"
+        show-helpers="{{showHelpers}}">
+      <three-editor-button true="fullscreen-exit" false="fullscreen" value="{{fullscreen}}"></three-editor-button>
+      <io-options value="{{camera1}}" options="{{cameraOptions}}" class="viewport1"></io-options>
+    </three-viewport>
+    <three-viewport id="viewport2" class="viewport"
+        scene="{{scene}}"
+        control="{{control}}"
+        camera="{{camera2}}"
+        clear-color="{{clearColor}}"
+        show-helpers="{{showHelpers}}">
+      <three-editor-button true="fullscreen-exit" false="fullscreen" value="{{fullscreen}}"></three-editor-button>
+      <io-options value="{{camera2}}" options="{{cameraOptions}}" class="viewport2"></io-options>
+    </three-viewport>
+    <three-viewport id="viewport3" class="viewport"
+        scene="{{scene}}"
+        control="{{control}}"
+        camera="{{camera3}}"
+        clear-color="{{clearColor}}"
+        show-helpers="{{showHelpers}}">
+      <three-editor-button true="fullscreen-exit" false="fullscreen" value="{{fullscreen}}"></three-editor-button>
+      <io-options value="{{camera3}}" options="{{cameraOptions}}" class="viewport3"></io-options>
+    </three-viewport>
+    <three-renderer
+        id="player"
+        tabindex="0"
+        show-helpers
+        clear-color="black"
+        scene="{{scene}}"
+        camera="{{camera0}}">
+      <three-editor-button true="av:stop" false="av:play-arrow" value="{{playing}}"></three-editor-button>
+    </three-renderer>
+  </template>
+</dom-module>
+<script>
+(function () {
+
+  var rect, width, height, halfWidth, halfHeight;
+
+  Polymer({
+    is: 'three-editor-viewport',
+    properties: {
+      controls: {
+        type: REE.ControlsState
+      },
+      cameras: {
+        type: REE.CamerasState
+      },
+      scene: {
+        type: REE.SceneState
+      },
+      camera0: {
+        type: THREE.Camera,
+        observer: '_camera0Changed'
+      },
+      camera1: {
+        type: THREE.Camera,
+        observer: '_camera1Changed'
+      },
+      camera2: {
+        type: THREE.Camera,
+        observer: '_camera2Changed'
+      },
+      camera3: {
+        type: THREE.Camera,
+        observer: '_camera3Changed'
+      },
+      clearColor: {
+        type: THREE.Color
+      },
+      showHelpers: {
+        type: Boolean
+      },
+      cameraOptions: {
+        type: Array
+      },
+      playing: {
+        type: Boolean,
+        reflectToAttribute: true
+      },
+      fullscreen: {
+        value: false,
+        type: Boolean,
+        observer: '_fullscreenChanged'
+      }
+    }
+    static get listeners() {
+      return {
+        'keyup': '_keyupAction',
+        'mousemove': '_mousemoveAction'
+      }
+    }
+    ready: function () {
+      this._renderAction = this.renderAction.bind(this);
+      // this.controls.addEventListener('*render', this._renderAction);
+
+      this.controls.addEventListener('control-changed', function () {
+        // TODO: init properly with external camera states
+        this.controls.control.registerViewport(this.$.viewport0, this.camera0);
+        this.controls.control.registerViewport(this.$.viewport1, this.camera1);
+        this.controls.control.registerViewport(this.$.viewport2, this.camera2);
+        this.controls.control.registerViewport(this.$.viewport3, this.camera3);
+        this.render();
+      }.bind(this));
+
+      this.camera0 = this.cameras.persp;
+      this.camera1 = this.cameras.top;
+      this.camera2 = this.cameras.front;
+      this.camera3 = this.cameras.left;
+      this.cameraOptions = this.cameras.options;
+    },
+    _camera0Changed: function () {
+      this.controls.selectionControl.registerViewport(this.$.viewport0, this.camera0);
+      this.controls.viewportControl.registerViewport(this.$.viewport0, this.camera0);
+      if (this.controls.control) {
+        this.controls.control.registerViewport(this.$.viewport0, this.camera0);
+      }
+    },
+    _camera1Changed: function () {
+      this.controls.selectionControl.registerViewport(this.$.viewport1, this.camera1);
+      this.controls.viewportControl.registerViewport(this.$.viewport1, this.camera1);
+      if (this.controls.control) {
+        this.controls.control.registerViewport(this.$.viewport1, this.camera1);
+      }
+    },
+    _camera2Changed: function () {
+      this.controls.selectionControl.registerViewport(this.$.viewport2, this.camera2);
+      this.controls.viewportControl.registerViewport(this.$.viewport2, this.camera2);
+      if (this.controls.control) {
+        this.controls.control.registerViewport(this.$.viewport2, this.camera2);
+      }
+    },
+    _camera3Changed: function () {
+      this.controls.selectionControl.registerViewport(this.$.viewport3, this.camera3);
+      this.controls.viewportControl.registerViewport(this.$.viewport3, this.camera3);
+      if (this.controls.control) {
+        this.controls.control.registerViewport(this.$.viewport3, this.camera3);
+      }
+    },
+    attached:function () {
+      this._resize();
+      this._animationLoop = function() {
+        requestAnimationFrame(this._animationLoop);
+        this._resizeJob();
+        if (this.playing) {
+          this.$.player.renderJob();
+        }
+      }.bind(this);
+      this._animationLoop();
+    },
+    detached: function () {
+      this._animationLoop = function () {};
+    },
+    _resizeJob: function () {
+      this.debounce('three-editor-viewport-resize', this._resize);
+    },
+    _resize: function() {
+      if (this.playing) {
+        this.$.player.width = window.innerWidth;
+        this.$.player.height = window.innerHeight;
+      } else {
+        rect = this.getBoundingClientRect();
+        width = rect.width;
+        height = rect.height;
+
+        // Private half width & height.
+        halfWidth = width / 2;
+        halfHeight = height / 2;
+
+        this.$.viewport0.width = halfWidth;
+        this.$.viewport0.height = halfHeight;
+        this.$.viewport1.width = halfWidth;
+        this.$.viewport1.height = halfHeight;
+        this.$.viewport2.width = halfWidth;
+        this.$.viewport2.height = halfHeight;
+        this.$.viewport3.width = halfWidth;
+        this.$.viewport3.height = halfHeight;
+        if (this.fullQuadViewport) {
+          this.fullQuadViewport.width = width;
+          this.fullQuadViewport.height = height;
+        }
+      }
+    },
+    render: function() {
+      if (this.fullQuadViewport) {
+        this.fullQuadViewport.renderJob();
+      } else {
+        this.$.viewport0.renderJob();
+        this.$.viewport1.renderJob();
+        this.$.viewport2.renderJob();
+        this.$.viewport3.renderJob();
+      }
+    },
+    renderAction: function (event) {
+      if (event.renderAll) {
+        this.render();
+      } else {
+        event.target.domElement.renderJob();
+      }
+    },
+    _keyupAction: function(event) {
+      if (event.which === 32) {
+        this.fullscreen = !this.fullscreen;
+      }
+    },
+    _fullscreenChanged: function () {
+      this.classList.toggle('fullquad', this.fullscreen);
+      if (this.fullscreen) {
+        this.fullQuadViewport = this._hoveredViewport;
+        this.fullQuadViewport.classList.toggle('fullquad', true);
+        setTimeout(function() {
+          this.fullQuadViewport.focus();
+        }.bind(this), 1);
+      } else {
+        if (this.fullQuadViewport) {
+          this.fullQuadViewport.classList.toggle('fullquad', false);
+          delete this.fullQuadViewport;
+        }
+      }
+    },
+    _mousemoveAction: function(event) {
+      if (event.path[0].localName === 'three-viewport') {
+        this._hoveredViewport = event.path[0];
+      }
+    }
+
+  });
+
+}());
+</script>

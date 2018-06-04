@@ -42,8 +42,9 @@
     "build": "eslint src && rollup -c && uglifyjs build/io.js > build/io.min.js"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.3",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "eslint": "^4.1.1",
-    "rollup": "^0.55.1",
-    "uglify-js-es6": "^2.8.9"
+    "rollup": "^0.59.4"
   }
 }
