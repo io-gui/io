@@ -2,11 +2,12 @@ import {Prototypes} from "./core/prototypes.js";
 import {ProtoProperties} from "./core/protoProperties.js";
 import {ProtoListeners} from "./core/protoListeners.js";
 import {ProtoFunctions} from "./core/protoFunctions.js";
+import {InstanceListeners} from "./core/instanceListeners.js";
 import {initStyle} from "./core/initStyle.js";
-import {Node} from "./core/node.js";
+import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
 
-export function html() { return arguments[0][0]; }
+export function html() {return arguments[0][0];}
 
 export class IoElement extends HTMLElement {
   static get properties() {
@@ -22,20 +23,23 @@ export class IoElement extends HTMLElement {
       }
     };
   }
-  constructor(initProps) {
+  constructor(initProps = {}) {
     super();
-    this.__proto__.__protoFunctions.bind(this);
+    this.__protoFunctions.bind(this);
 
-    Object.defineProperty(this, '__props', { value: this.__props.clone() } );
+    Object.defineProperty(this, '__props', {value: this.__props.clone()});
     Object.defineProperty(this, '__listeners', {value: {}});
     Object.defineProperty(this, '__observers', {value: []});
     Object.defineProperty(this, '__notifiers', {value: []});
-    Object.defineProperty(this, '__connected', {value: false, writable: true});
 
-    Object.defineProperty(this, '__node', { value: new Node(this) } );
-    this.__node.update(initProps);
+    this.setProperties(initProps);
 
-    Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update. possible memory leak!
+    Object.defineProperty(this, '__instaListeners', {value: new InstanceListeners()});
+    this.__instaListeners.setListeners(initProps);
+
+    Object.defineProperty(this, '_bindings', {value: {}});
+
+    Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
 
     for (let prop in this.__props) {
       if (this.__props[prop].reflect) {
@@ -44,16 +48,28 @@ export class IoElement extends HTMLElement {
     }
   }
   connectedCallback() {
-    this.__proto__.__protoListeners.connect(this);
-    this.__node.connect();
+    this.__protoListeners.connect(this);
+    this.__instaListeners.connect(this);
+
     this.triggerObservers();
     this.triggerNotifiers();
-    this.__connected = true;
+
+    for (let p in this.__props) {
+      if (this.__props[p].binding) {
+        this.__props[p].binding.setTarget(this, p); //TODO: test
+      }
+    }
   }
   disconnectedCallback() {
-    this.__proto__.__protoListeners.disconnect(this);
-    this.__node.disconnect();
-    this.__connected = false;
+    this.__protoListeners.disconnect(this);
+    this.__instaListeners.disconnect(this);
+
+    for (let p in this.__props) {
+      if (this.__props[p].binding) {
+        this.__props[p].binding.removeTarget(this, p);
+        delete this.__props[p].binding;
+      }
+    }
   }
   dispose() {
     // for (let id in this.$) {
@@ -89,9 +105,11 @@ export class IoElement extends HTMLElement {
       // update existing elements
       } else {
         // Io Elements
-        if (children[i].hasOwnProperty('__node')) {
-          children[i].__node.update(vChildren[i].props); // TODO: test
+        if (children[i].hasOwnProperty('__props')) {
+          children[i].setProperties(vChildren[i].props); // TODO: test
           children[i].triggerObservers();
+          children[i].__instaListeners.setListeners(vChildren[i].props);
+          children[i].__instaListeners.connect(children[i]);
           children[i].triggerNotifiers();
         // Native HTML Elements
         } else {
@@ -111,8 +129,9 @@ export class IoElement extends HTMLElement {
       }
     }
   }
-  bind(sourceProp) {
-    return this.__node.bind(sourceProp);
+  bind(prop) {
+    this._bindings[prop] = this._bindings[prop] || new Binding(this, prop);
+    return this._bindings[prop];
   }
 
   triggerObservers() {
@@ -137,38 +156,99 @@ export class IoElement extends HTMLElement {
     this[prop] = value;
     this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
+
+  setProperties(props) {
+
+    this.__observers.length = 0;
+    this.__notifiers.length = 0;
+
+    this.__observers.push('update');
+
+    for (let p in props) {
+
+      if (this.__props[p] === undefined) continue;
+
+      var oldBinding = this.__props[p].binding;
+      let oldValue = this.__props[p].value;
+
+      var binding;
+      var value;
+
+      if (props[p] instanceof Binding) {
+        binding = props[p];
+        value = props[p].source[props[p].sourceProp];
+      } else {
+        value = props[p];
+      }
+
+      this.__props[p].binding = binding;
+      this.__props[p].value = value;
+
+      if (value !== oldValue) {
+        if (this.__props[p].reflect) {
+          this.setAttribute(p, value);
+        }
+        if (this.__props[p].observer) {
+          if (this.__observers.indexOf(this.__props[p].observer) === -1) {
+            this.__observers.push(this.__props[p].observer);
+          }
+        }
+        this.__notifiers.push(p + '-changed', {value: value, oldValue: oldValue});
+      }
+
+      if (binding !== oldBinding) {
+        binding.setTarget(this, p);
+        // TODO: test extensivly
+        if (oldBinding) console.warn('Disconnect!', binding, oldBinding);
+      }
+
+    }
+
+    if (props['className']) {
+      this.className = props['className'];
+    }
+
+    // TODO: use attributeStyleMap when implemented in browser
+    // https://developers.google.com/web/updates/2018/03/cssom
+    if (props['style']) {
+      for (let s in props['style']) {
+        this.style[s] = props['style'][s];
+      }
+    }
+  }
+
+  // fixup for shitty setAttribute spec
   setAttribute(attr, value) {
     if (value === true) {
-      HTMLElement.prototype.setAttribute.call(this,
-        attr, '');
+      HTMLElement.prototype.setAttribute.call(this, attr, '');
     } else if (value === false || value === '') {
       this.removeAttribute(attr);
     } else if (typeof value == 'string' || typeof value == 'number') {
-      HTMLElement.prototype.setAttribute.call(this,
-        attr, value);
+      HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
   addEventListener(type, listener) {
     this.__listeners[type] = this.__listeners[type] || [];
-    if (this.__listeners[type].indexOf(listener) === - 1) {
+    let i = this.__listeners[type].indexOf(listener);
+    if (i === -1) {
       this.__listeners[type].push(listener);
       HTMLElement.prototype.addEventListener.call(this, type, listener);
     }
   }
   hasEventListener(type, listener) {
-    return this.__listeners[type] !== undefined && this.__listeners[type].indexOf(listener) !== - 1;
+    return this.__listeners[type] !== undefined && this.__listeners[type].indexOf(listener) !== -1;
   }
   removeEventListener(type, listener) {
     if (this.__listeners[type] !== undefined) {
       let i = this.__listeners[type].indexOf(listener);
-      if (i !== - 1) {
+      if (i !== -1) {
         this.__listeners[type].splice(i, 1);
         HTMLElement.prototype.removeEventListener.call(this, type, listener);
       }
     }
   }
-  dispatchEvent(eventName, detail, bubbles = true, src = this) {
-    HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(eventName, {
+  dispatchEvent(type, detail, bubbles = true, src = this) {
+    HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {
       detail: detail,
       bubbles: bubbles,
       composed: true
@@ -180,7 +260,9 @@ IoElement.Register = function() {
   const prototypes = new Prototypes(this);
   initStyle(prototypes);
 
-  Object.defineProperty(this.prototype, '__props', { value: new ProtoProperties(prototypes) } );
+  Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(prototypes)});
+  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(prototypes)});
+  Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(prototypes)});
 
   for (let prop in this.prototype.__props) {
     Object.defineProperty(this.prototype, prop, {
@@ -205,8 +287,6 @@ IoElement.Register = function() {
     });
   }
 
-  Object.defineProperty(this.prototype, '__protoListeners', { value: new ProtoListeners(prototypes) });
-  Object.defineProperty(this.prototype, '__protoFunctions', { value: new ProtoFunctions(prototypes) });
 
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 };

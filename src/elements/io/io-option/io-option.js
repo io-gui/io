@@ -10,13 +10,16 @@ export class IoOption extends IoButton {
     };
   }
   _onAction(event) {
+    console.log('a');
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
       event.preventDefault();
-      this.$['menu'].expanded = true;
-      let firstItem = this.$['menu'].$['group'].querySelector('menu-item');
-      if (firstItem) firstItem.focus();
     }
   }
+  // _onUp(event) {
+  //   super._onUp(event);
+  //   // let firstItem = this.$['menu'].$['group'].querySelector('menu-item');
+  //   // if (firstItem) firstItem.focus();
+  // }
   _onMenu(event) {
     this.$['menu'].expanded = false;
     this.set('value', event.detail.value);
@@ -42,6 +45,7 @@ export class IoOption extends IoButton {
         id: 'menu',
         options: this.options,
         position: 'bottom',
+        listener: 'mouseup',
         listeners: {'menu-item-clicked': this._onMenu}}]
     ]);
   }

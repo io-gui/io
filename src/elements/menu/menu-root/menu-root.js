@@ -30,6 +30,8 @@ export class MenuRoot extends IoElement {
   update() {
     // BUG: bindings dont work in io-option sor some reason
     this.$.group.options = this.options;
+    this.$.group.position = this.position;
+    this.$.group.expanded = this.expanded;
   }
   connectedCallback() {
     super.connectedCallback();

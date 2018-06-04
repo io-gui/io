@@ -56,7 +56,7 @@ export class MenuItem extends IoElement {
       if (!this.$group) {
         this.$group = new MenuGroup(grpProps);
       } else {
-        this.$group.__node.update(grpProps); // TODO: test
+        this.$group.setProperties(grpProps); // TODO: test
       }
     }
     this.render([
