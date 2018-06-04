@@ -10,7 +10,6 @@ export class IoOption extends IoButton {
     };
   }
   _onAction(event) {
-    console.log('a');
     if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
       event.preventDefault();
     }

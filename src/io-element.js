@@ -1,15 +1,16 @@
 import {Prototypes} from "./core/prototypes.js";
-import {ProtoProperties} from "./core/protoProperties.js";
+import {ProtoProperties, defineProperties} from "./core/protoProperties.js";
 import {ProtoListeners} from "./core/protoListeners.js";
 import {ProtoFunctions} from "./core/protoFunctions.js";
 import {InstanceListeners} from "./core/instanceListeners.js";
 import {initStyle} from "./core/initStyle.js";
-import {Binding} from "./core/binding.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
+import {Binding, BindingMixin} from "./core/mixinBinding.js";
+import {ElementListenersMixin} from "./core/mixinListeners.js";
 
 export function html() {return arguments[0][0];}
 
-export class IoElement extends HTMLElement {
+export class IoElement extends BindingMixin(ElementListenersMixin(HTMLElement)) {
   static get properties() {
     return {
       id: String,
@@ -28,7 +29,7 @@ export class IoElement extends HTMLElement {
     this.__protoFunctions.bind(this);
 
     Object.defineProperty(this, '__props', {value: this.__props.clone()});
-    Object.defineProperty(this, '__listeners', {value: {}});
+
     Object.defineProperty(this, '__observers', {value: []});
     Object.defineProperty(this, '__notifiers', {value: []});
 
@@ -36,8 +37,6 @@ export class IoElement extends HTMLElement {
 
     Object.defineProperty(this, '__instaListeners', {value: new InstanceListeners()});
     this.__instaListeners.setListeners(initProps);
-
-    Object.defineProperty(this, '_bindings', {value: {}});
 
     Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
 
@@ -129,11 +128,6 @@ export class IoElement extends HTMLElement {
       }
     }
   }
-  bind(prop) {
-    this._bindings[prop] = this._bindings[prop] || new Binding(this, prop);
-    return this._bindings[prop];
-  }
-
   triggerObservers() {
     // TODO: test
     // if (!this.__connected) return;
@@ -227,33 +221,6 @@ export class IoElement extends HTMLElement {
       HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
-  addEventListener(type, listener) {
-    this.__listeners[type] = this.__listeners[type] || [];
-    let i = this.__listeners[type].indexOf(listener);
-    if (i === -1) {
-      this.__listeners[type].push(listener);
-      HTMLElement.prototype.addEventListener.call(this, type, listener);
-    }
-  }
-  hasEventListener(type, listener) {
-    return this.__listeners[type] !== undefined && this.__listeners[type].indexOf(listener) !== -1;
-  }
-  removeEventListener(type, listener) {
-    if (this.__listeners[type] !== undefined) {
-      let i = this.__listeners[type].indexOf(listener);
-      if (i !== -1) {
-        this.__listeners[type].splice(i, 1);
-        HTMLElement.prototype.removeEventListener.call(this, type, listener);
-      }
-    }
-  }
-  dispatchEvent(type, detail, bubbles = true, src = this) {
-    HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {
-      detail: detail,
-      bubbles: bubbles,
-      composed: true
-    }));
-  }
 }
 
 IoElement.Register = function() {
@@ -261,32 +228,10 @@ IoElement.Register = function() {
   initStyle(prototypes);
 
   Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(prototypes)});
-  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(prototypes)});
   Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(prototypes)});
+  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(prototypes)});
 
-  for (let prop in this.prototype.__props) {
-    Object.defineProperty(this.prototype, prop, {
-      get: function() {
-        return this.__props[prop].value;
-      },
-      set: function(value) {
-        if (this.__props[prop].value === value) return;
-        let oldValue = this.__props[prop].value;
-        this.__props[prop].value = value;
-        if (this.__props[prop].reflect) {
-          this.setAttribute(prop, this.__props[prop].value);
-        }
-        if (this.__props[prop].observer) {
-          this[this.__props[prop].observer](value, oldValue);
-        }
-        this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
-        this.update();
-      },
-      enumerable: true,
-      configurable: true
-    });
-  }
-
+  defineProperties(this.prototype);
 
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 };

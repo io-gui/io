@@ -30,6 +30,31 @@ export class ProtoProperties {
   }
 }
 
+export function defineProperties(prototype) {
+  for (let prop in prototype.__props) {
+    Object.defineProperty(prototype, prop, {
+      get: function() {
+        return this.__props[prop].value;
+      },
+      set: function(value) {
+        if (this.__props[prop].value === value) return;
+        let oldValue = this.__props[prop].value;
+        this.__props[prop].value = value;
+        if (this.__props[prop].reflect) {
+          this.setAttribute(prop, this.__props[prop].value);
+        }
+        if (this.__props[prop].observer) {
+          this[this.__props[prop].observer](value, oldValue);
+        }
+        this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
+        this.update();
+      },
+      enumerable: true,
+      configurable: true
+    });
+  }
+}
+
 /*
 Creates a property object from properties defined in the prototype chain.
 {

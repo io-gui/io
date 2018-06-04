@@ -1,3 +1,14 @@
+export const BindingMixin = (superclass) => class extends superclass {
+  constructor() {
+    super();
+    Object.defineProperty(this, '__bindings', {value: {}});
+  }
+  bind(prop) {
+    this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
+    return this.__bindings[prop];
+  }
+};
+
 export class Binding {
   constructor(source, sourceProp) {
     this.source = source;

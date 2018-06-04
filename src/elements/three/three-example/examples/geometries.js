@@ -6,7 +6,8 @@ export class Example extends ThreeShot {
     return {
       time: {
         observer: 'update'
-      }
+      },
+      group: THREE.Group
     };
   }
   init() {
