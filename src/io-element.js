@@ -30,24 +30,30 @@ export class IoElement extends HTMLElement {
     Object.defineProperty(this, '__listeners', {value: {}});
     Object.defineProperty(this, '__observers', {value: []});
     Object.defineProperty(this, '__notifiers', {value: []});
-    // Object.defineProperty(this, '__connected', {value: false, writable: true});
+    Object.defineProperty(this, '__connected', {value: false, writable: true});
 
-    Object.defineProperty(this, '__node', { value: new Node(initProps, this) } );
+    Object.defineProperty(this, '__node', { value: new Node(this) } );
+    this.__node.update(initProps);
+
     Object.defineProperty(this, '$', { value: {} } ); // TODO: consider clearing on update. possible memory leak!
 
     for (let prop in this.__props) {
-      this.reflectAttribute(prop);
+      if (this.__props[prop].reflect) {
+        this.setAttribute(prop, this.__props[prop].value);
+      }
     }
   }
   connectedCallback() {
-    // this.__connected = true;
     this.__proto__.__protoListeners.connect(this);
     this.__node.connect();
+    this.triggerObservers();
+    this.triggerNotifiers();
+    this.__connected = true;
   }
   disconnectedCallback() {
-    // this.__connected = false;
     this.__proto__.__protoListeners.disconnect(this);
     this.__node.disconnect();
+    this.__connected = false;
   }
   dispose() {
     // for (let id in this.$) {
@@ -85,6 +91,8 @@ export class IoElement extends HTMLElement {
         // Io Elements
         if (children[i].hasOwnProperty('__node')) {
           children[i].__node.update(vChildren[i].props); // TODO: test
+          children[i].triggerObservers();
+          children[i].triggerNotifiers();
         // Native HTML Elements
         } else {
           updateNode(children[i], vChildren[i]);
@@ -124,11 +132,6 @@ export class IoElement extends HTMLElement {
     this.__notifiers.length = 0;
   }
 
-  triggerObserver(prop, value, oldValue) {
-    if (this.__props[prop].observer) {
-      this[this.__props[prop].observer](value, oldValue);
-    }
-  }
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
@@ -143,11 +146,6 @@ export class IoElement extends HTMLElement {
     } else if (typeof value == 'string' || typeof value == 'number') {
       HTMLElement.prototype.setAttribute.call(this,
         attr, value);
-    }
-  }
-  reflectAttribute(prop) {
-    if (this.__props[prop].reflect) {
-      this.setAttribute(prop, this.__props[prop].value);
     }
   }
   addEventListener(type, listener) {
@@ -193,8 +191,12 @@ IoElement.Register = function() {
         if (this.__props[prop].value === value) return;
         let oldValue = this.__props[prop].value;
         this.__props[prop].value = value;
-        this.triggerObserver(prop);
-        this.reflectAttribute(prop);
+        if (this.__props[prop].reflect) {
+          this.setAttribute(prop, this.__props[prop].value);
+        }
+        if (this.__props[prop].observer) {
+          this[this.__props[prop].observer](value, oldValue);
+        }
         this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
         this.update();
       },

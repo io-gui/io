@@ -1,21 +1,18 @@
 import {Binding} from "./binding.js";
 
 export class Node {
-  constructor(props = {}, element) {
+  constructor(element) {
     Object.defineProperty(this, 'element', { value: element });
 
     this.properties = {};
     this.bindings = {};
     this.listeners = {};
 
-    Object.defineProperty(this, '_connected', { value: false, writable: true });
     Object.defineProperty(this, '_connectedListeners', { value: {} });
     Object.defineProperty(this, '_boundProperties', { value: {} });
     Object.defineProperty(this, '_srcBindings', { value: {} });
-
-    this.update(props);
   }
-  update(props) {
+  update(props = {}) {
 
     this.properties = {};
     this.bindings = {};
@@ -47,32 +44,14 @@ export class Node {
     }
 
     this.setProperties();
-    // TODO: untangle this mess
-    if (this._connected)  {
-      this.connectListeners();
-      this.connectBindings();
-      this.element.triggerObservers();
-      this.element.triggerNotifiers();
-    }
-    // if (this.element.__notifiers.length) {
-    //   console.log(this.element, this.element.__notifiers);
-    // }
   }
   connect() {
-    if (!this._connected) {
-      this.connectListeners();
-      this.connectBindings();
-      this.element.triggerObservers();
-      this.element.triggerNotifiers();
-    }
-    this._connected = true;
+    this.connectListeners();
+    this.connectBindings();
   }
   disconnect() {
-    if (this._connected) {
-      this.disconnectListeners();
-      this.disconnectBindings();
-    }
-    this._connected = false;
+    this.disconnectListeners();
+    this.disconnectBindings();
   }
   connectListeners() {
     // TODO: test
@@ -113,7 +92,7 @@ export class Node {
 
       if (value !== oldValue) {
         if (this.element.__props[p].reflect) {
-          this.element.reflectAttribute(p);
+          this.element.setAttribute(p, value);
         }
         if (this.element.__props[p].observer) {
           if (this.element.__observers.indexOf(this.element.__props[p].observer) === -1) {

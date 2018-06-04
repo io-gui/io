@@ -29,11 +29,6 @@ export class IoNode {
 
   update() {}
 
-  triggerObserver(prop, value, oldValue) {
-    if (this.__props[prop].observer) {
-      this[this.__props[prop].observer](value, oldValue);
-    }
-  }
   addEventListener(type, listener) {
     this.__listeners[type] = this.__listeners[type] || [];
     if (this.__listeners[type].indexOf(listener) === - 1) {
@@ -86,7 +81,11 @@ IoNode.Register = function() {
           if (this.__props[prop].value === value) return;
           let oldValue = this.__props[prop].value;
           this.__props[prop].value = value;
-          this.triggerObserver(prop, value, oldValue);
+          if (this.__props[prop].observer) {
+            this[this.__props[prop].observer](value, oldValue);
+          }
+          this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
+          // this.update();
         },
         enumerable: true,
         configurable: true
