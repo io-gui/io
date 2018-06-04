@@ -4,8 +4,8 @@ import * as THREE from "../../../../lib/three.module.js";
 export class ThreeShot extends IoNode {
   static get properties() {
     return {
-      camera: null,
-      scene: null,
+      camera: THREE.PerspectiveCamera,
+      scene: THREE.Scene,
       time: {
         value: 0,
         config: {step: 0.01}
@@ -17,8 +17,6 @@ export class ThreeShot extends IoNode {
     this.init();
   }
   init() {
-    this.camera = new THREE.PerspectiveCamera( 45, 1, .1, 20000 );
-    this.scene = new THREE.Scene();
   }
   dispose() {
     // TODO

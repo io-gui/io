@@ -57,7 +57,6 @@ export class ThreeExample extends ThreeViewport {
         this._control.enabled = !this._transformControl.dragging;
       }
     });
-
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -90,9 +89,9 @@ export class ThreeExample extends ThreeViewport {
         this._lastTime = Date.now() / 1000;
         this.setControl();
 
-        this._transformControl.camera = this._example.camera;
-        this._transformControl.attach(this._example.scene.children[3]);
-        this._example.scene.add(this._transformControl);
+        // this._transformControl.camera = this._example.camera;
+        // this._transformControl.attach(this._example.scene);
+        // this._example.scene.add(this._transformControl);
         this._example.rendered = false;
       });
     }
