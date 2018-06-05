@@ -14,11 +14,12 @@ export class IoOption extends IoButton {
       event.preventDefault();
     }
   }
-  // _onUp(event) {
-  //   super._onUp(event);
-  //   // let firstItem = this.$['menu'].$['group'].querySelector('menu-item');
-  //   // if (firstItem) firstItem.focus();
-  // }
+  _onUp(event) {
+    super._onUp(event);
+    this.$['menu'].expanded = true;
+    let firstItem = this.$['menu'].$['group'].querySelector('menu-item');
+    if (firstItem) firstItem.focus();
+  }
   _onMenu(event) {
     this.$['menu'].expanded = false;
     this.set('value', event.detail.value);
@@ -44,7 +45,7 @@ export class IoOption extends IoButton {
         id: 'menu',
         options: this.options,
         position: 'bottom',
-        listener: 'mouseup',
+        listener: 'click',
         listeners: {'menu-item-clicked': this._onMenu}}]
     ]);
   }

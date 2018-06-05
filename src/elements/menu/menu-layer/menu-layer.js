@@ -109,6 +109,12 @@ export class MenuLayer extends IoElement {
       }
     }
   }
+  _onTouchmove(event) {
+    this._onMousemove(event);
+  }
+  _onTouchend(event) {
+    this._onMouseup(event);
+  }
   _onMousemove(event) {
     this._x = event.clientX;
     this._y = event.clientY;
