@@ -1,8 +1,8 @@
 import {html, IoElement} from "../../../io-element.js";
-import "../menu-item/menu-item.js";
-import {MenuLayer} from "../menu-layer/menu-layer.js";
+import "./io-menu-item.js";
+import {IoMenuLayer} from "./io-menu-layer.js";
 
-export class MenuGroup extends IoElement {
+export class IoMenuGroup extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -29,10 +29,10 @@ export class MenuGroup extends IoElement {
       :host[nested] {
         display: flex;
       }
-      :host[nested] > menu-item {
+      :host[nested] > io-menu-item {
         padding: 0.25em 0.5em;
       }
-      :host[nested] > menu-item > :not(.menu-label) {
+      :host[nested] > io-menu-item > :not(.menu-label) {
         display: none;
       }
     </style>`;
@@ -62,7 +62,7 @@ export class MenuGroup extends IoElement {
     };
   }
   update() {
-    const Item = (elem, i) => ['menu-item', {
+    const Item = (elem, i) => ['io-menu-item', {
       $parent: this,
       option: typeof this.options[i] === 'object' ? this.options[i] : {value: this.options[i], label: this.options[i]},
       position: this.horizontal ? 'bottom' : 'right'
@@ -71,21 +71,21 @@ export class MenuGroup extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    this.nested = this.parentNode !== MenuLayer.singleton;
-    MenuLayer.singleton.registerGroup(this);
+    this.nested = this.parentNode !== IoMenuLayer.singleton;
+    IoMenuLayer.singleton.registerGroup(this);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    MenuLayer.singleton.unregisterGroup(this);
+    IoMenuLayer.singleton.unregisterGroup(this);
   }
   _onFocus(event) {
     let item = event.path[0];
-    MenuLayer.singleton._hoveredGroup = this;
-    if (item.localName === 'menu-item') {
-      MenuLayer.singleton._hoveredItem = item;
+    IoMenuLayer.singleton._hoveredGroup = this;
+    if (item.localName === 'io-menu-item') {
+      IoMenuLayer.singleton._hoveredItem = item;
       if (item.option.options) this.expanded = true;
     }
   }
 }
 
-MenuGroup.Register();
+IoMenuGroup.Register();

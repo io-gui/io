@@ -1,8 +1,8 @@
 import {html, IoElement} from "../../../io-element.js";
-import {MenuLayer} from "../menu-layer/menu-layer.js";
-import {MenuGroup} from "../menu-group/menu-group.js";
+import {IoMenuLayer} from "./io-menu-layer.js";
+import {IoMenuGroup} from "./io-menu-group.js";
 
-export class MenuItem extends IoElement {
+export class IoMenuItem extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -54,7 +54,7 @@ export class MenuItem extends IoElement {
     if (this.option.options) {
       let grpProps = {options: this.option.options, $parent: this, position: this.position};
       if (!this.$group) {
-        this.$group = new MenuGroup(grpProps);
+        this.$group = new IoMenuGroup(grpProps);
       } else {
         this.$group.setProperties(grpProps); // TODO: test
       }
@@ -70,7 +70,7 @@ export class MenuItem extends IoElement {
     super.disconnectedCallback();
     if (this.$group) {
       if (this.$group.parentNode) {
-        MenuLayer.singleton.removeChild(this.$group);
+        IoMenuLayer.singleton.removeChild(this.$group);
       }
     }
   }
@@ -82,22 +82,22 @@ export class MenuItem extends IoElement {
   }
   _onTouchmove(event) {
     event.preventDefault();
-    MenuLayer.singleton._onTouchmove(event);
+    IoMenuLayer.singleton._onTouchmove(event);
   }
   _onTouchend(event) {
     event.preventDefault();
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
-    MenuLayer.singleton._onTouchend(event);
+    IoMenuLayer.singleton._onTouchend(event);
   }
   _onFocus() {
     if (this.$group) {
       if (!this.$group.parentNode) {
-        MenuLayer.singleton.appendChild(this.$group);
+        IoMenuLayer.singleton.appendChild(this.$group);
       }
       this.$group.expanded = true;
     }
   }
 }
 
-MenuItem.Register();
+IoMenuItem.Register();

@@ -1,9 +1,7 @@
 import {html, IoElement} from "../io.js";
 import {debounce} from "../core/utils.js";
 
-import "./demo-app-ctrl.js";
 import "../elements/io/demo.js";
-import "../elements/menu/demo.js";
 
 import "../elements/three/three-example/three-example.js";
 
@@ -45,11 +43,10 @@ export class DemoApp extends IoElement {
       'three-renderer': ['three-renderer'],
       'io-demo': ['io-demo'],
       'menu-demo': ['menu-demo'],
-      'inspector': ['three-inspector', {value: this.bind('selected')}],
-      'app-ctrl': ['demo-app-ctrl', {value: this.bind('selected')}]
+      'inspector': ['three-inspector', {value: this.bind('selected')}]
     };
     this.layout = JSON.parse(localStorage.getItem('app-split-state')) || [
-      ['app-block', {'tabs': ['app-ctrl']}],
+      ['app-block', {'tabs': ['io-demo']}],
       ['app-split', {'orientation': 'vertical', 'splits': [
         ['app-block', {'tabs': ['inspector']}],
         ['app-block', {'tabs': ['io-demo', 'menu-demo'], 'selected': 1}, 300],

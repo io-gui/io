@@ -10,7 +10,7 @@ let lastFocus;
 // TODO: make long (scrolling) menus work with touch
 // TODO: implement search
 
-export class MenuLayer extends IoElement {
+export class IoMenuLayer extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -92,7 +92,7 @@ export class MenuLayer extends IoElement {
     if (lastFocus) lastFocus.focus();
   }
   _onWindowFocus(event) {
-    if (event.target.localName !== 'menu-item') lastFocus = event.target;
+    if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
   }
   _onMenuItemFocused(event) {
     let item = event.path[0];
@@ -135,13 +135,13 @@ export class MenuLayer extends IoElement {
   }
   _onMouseup(event) {
     let elem = event.path[0];
-    if (elem.localName === 'menu-item') {
+    if (elem.localName === 'io-menu-item') {
       this.runAction(elem.option);
-      elem.__menuroot.dispatchEvent('menu-item-clicked', elem.option);
+      elem.__menuroot.dispatchEvent('io-menu-item-clicked', elem.option);
     } else if (elem === this) {
       if (this._hoveredItem) {
         this.runAction(this._hoveredItem.option);
-        this._hoveredItem.__menuroot.dispatchEvent('menu-item-clicked', this._hoveredItem.option);
+        this._hoveredItem.__menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
       } else if (!this._hoveredGroup) {
         this.collapseAllGroups();
         if (lastFocus) lastFocus.focus();
@@ -150,12 +150,12 @@ export class MenuLayer extends IoElement {
   }
   _onKeydown(event) {
     event.preventDefault();
-    if (event.path[0].localName !== 'menu-item') return;
+    if (event.path[0].localName !== 'io-menu-item') return;
 
     let elem = event.path[0];
     let group = elem.$parent;
-    let siblings = [...group.querySelectorAll('menu-item')] || [];
-    let children = elem.$group ? [...elem.$group.querySelectorAll('menu-item')]  : [];
+    let siblings = [...group.querySelectorAll('io-menu-item')] || [];
+    let children = elem.$group ? [...elem.$group.querySelectorAll('io-menu-item')]  : [];
     let index = siblings.indexOf(elem);
 
     let command = '';
@@ -199,7 +199,7 @@ export class MenuLayer extends IoElement {
     }
   }
   _hover(group) {
-    let items = group.querySelectorAll('menu-item');
+    let items = group.querySelectorAll('io-menu-item');
     for (let i = items.length; i--;) {
       let rect = items[i].getBoundingClientRect();
       if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
@@ -294,8 +294,8 @@ export class MenuLayer extends IoElement {
   }
 }
 
-MenuLayer.Register();
+IoMenuLayer.Register();
 
-MenuLayer.singleton = new MenuLayer();
+IoMenuLayer.singleton = new IoMenuLayer();
 
-document.body.appendChild(MenuLayer.singleton);
+document.body.appendChild(IoMenuLayer.singleton);

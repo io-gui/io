@@ -1,5 +1,5 @@
 import {IoButton} from "../../io/io-button/io-button.js";
-import "../../menu/menu-root/menu-root.js";
+import "../io-menu/io-menu.js";
 
 export class IoOption extends IoButton {
   static get properties() {
@@ -17,11 +17,12 @@ export class IoOption extends IoButton {
   _onUp(event) {
     super._onUp(event);
     this.$['menu'].expanded = true;
-    let firstItem = this.$['menu'].$['group'].querySelector('menu-item');
+    let firstItem = this.$['menu'].$['group'].querySelector('io-menu-item');
     if (firstItem) firstItem.focus();
   }
   _onMenu(event) {
-    this.$['menu'].expanded = false;
+    // TODO: menu layer should close automatically
+    // this.$['menu'].expanded = false;
     this.set('value', event.detail.value);
     if (typeof this.action === 'function') {
       this.action(this.value);
@@ -41,12 +42,12 @@ export class IoOption extends IoButton {
     this.__props.label.value = label;
     this.render([
       ['span', String(label)],
-      ['menu-root', {
+      ['io-menu', {
         id: 'menu',
         options: this.options,
         position: 'bottom',
         listener: 'click',
-        listeners: {'menu-item-clicked': this._onMenu}}]
+        listeners: {'io-menu-item-clicked': this._onMenu}}]
     ]);
   }
 }

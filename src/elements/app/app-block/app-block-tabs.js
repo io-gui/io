@@ -30,7 +30,7 @@ export class AppBlockTabs extends IoElement {
       :host > io-button {
         line-height: 1em;
         display: inline-block;
-        padding: 0.2em 0.4em;
+        padding: 0.05em 0.4em;
         margin-left: -1.5em;
       }
       :host > io-option {
@@ -40,11 +40,11 @@ export class AppBlockTabs extends IoElement {
 
       :host > io-option,
       :host > io-button {
-        color: transparent;
+        opacity: 0.2;
       }
       :host > io-option:hover,
       :host > io-button:hover {
-        color: inherit;
+        opacity: 1;
       }
     </style>`;
   }
