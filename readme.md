@@ -60,7 +60,23 @@ static get style() {
 
 ### Rendering DOM ###
 
-Use `IoElement.render()` method to render DOM tree inside your element:
+Use `IoElement.render()` method to render DOM tree inside your element.
+Internal DOM tree is expressed as an array of arrays.
+For example an instance of `<my-color>` element can be expressed like this:
+
+```javascript
+  ['my-color', {color: "tomato"}, "this is my color"]
+```
+
+Note that the first array item is **always** element name.
+The next is **optional** properties followed by innerText or array of children.
+The HTML equivalent of the array above would would be:
+
+```HTML
+  <my-color color="tomato">this is my color</my-color>
+```
+
+Here is a slightly more complex expression with dynamically generated DOM tree:
 
 ```javascript
 let elements = ['apple', 'banana', 'avocado'];
@@ -72,7 +88,6 @@ this.render([
     elements.map(Fruit)
   ]]
 ]);
-
 ```
 
 The output from the code above is automatically converted to following HTML DOM:
@@ -93,6 +108,16 @@ this.render([
   ['style'],
   ['slot']
 ], myDOMElement);
+
+```
+
+You can data bind properties to children using `this.bind()` function.
+Keep in mind that this only works with IoElement-based children.
+
+```javascript
+this.render([
+  ['my-child-element', { value: this.bind('value') }]
+]);
 
 ```
 
