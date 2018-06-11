@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../io-element.js";
+import {html, IoElement} from "../../io.js";
 import "./io-menu-item.js";
 import {IoMenuLayer} from "./io-menu-layer.js";
 

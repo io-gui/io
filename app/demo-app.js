@@ -1,6 +1,6 @@
 import {html, IoElement, debounce} from "../src/io.js";
 
-import "../src/elements/demo.js";
+import "../src/io-demo.js";
 
 import "./elements/app/index.js";
 import "./elements/three/index.js";

@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../io-element.js";
+import {html, IoElement} from "../../io.js";
 
 let previousOption;
 let previousParent;
