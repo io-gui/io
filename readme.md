@@ -1,53 +1,50 @@
-# io: custom elements for data-centric web applications #
+# io: custom elements base class for data-centric web applications #
 
-**DISCLAIMER**: io elements are NOT production ready! This project uses modern web technologies such as [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and [ES6 modules](https://caniuse.com/#feat=es6-module) and may or may not work in your browser.
+**DISCLAIMER**: io class is NOT production ready! This project uses modern web technologies such as [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and [ES6 modules](https://caniuse.com/#feat=es6-module) and may or may not work in some browsers.
 
-io custom elements are designed to help you build complex user interfaces with minimal effort. All elements extend the core `Io` class which enables a simple declarative syntax inspired by [polymer](https://github.com/Polymer/polymer), as well as a powerful and efficient virtual DOM instancer inspired by [dreemgl](https://github.com/dreemproject/dreemgl).
+`IoElement` class is an extension of `HTMLElement` class and it is designed to help you build complex user interfaces with minimal effort.
 
-This collection includes basic editors such as `io-boolean`, `io-string` and `io-number` as well as more complex elements such as `io-object` and `io-menu` which demonstrate io's ability to automatically generate complex UI systems from data. With its configurable design, `io-object` can easily be customized to handle any sort of data.
+`IoNode` class is similar to `IoElement` except it extends `Object` class instead and therefore excludes DOM APIs.
 
 ### Core Principles ###
 
-* io elements use **native** web technologies and are expected to run in all major browsers eventually.
-* the core `Io` class is a **lightweight** extension of `HTMLElement`.
+* io elements rely on **native** web technologies.
+* io elements are **javascript-centric**.
 * io elements are fully **styleable**.
-* Auto-generated ui systems are **configurable** to handle more specific use cases.
-* io elements are **data-driven** but also allow users to modify the data.
-* io applications implement **bi-directional/transversal** dataflow.
-* io elements can reflect properties to attributes but not vice-versa.
+* io elements are **data-driven**.
+* io elements use **bi-directional** data binding.
 
-### Getting Started ###
+### Defining Elements ###
 
-Simply clone this repository and run a server which supports ES6 modules. For example, install [polymer-cli](https://github.com/Polymer/polymer-cli) and run `polymer serve`. [More info and examples coming soon]
+Define your element by extending the core `IoElement` class and calling `Register()` function on your class.
 
-### Defining Properties, Listeners and Default Attributes ###
-
-You can define and configure properties on your element inside the `properties()` getter. Note in the example below that `fruits` is a property while `listeners` and `attributes` are two special keywords reserved for defining default attributes and listeners.
+Define properties inside the `properties()` getter:
 
 ```javascript
 static get properties() {
   return {
-    fruits: { // name of the property will be this.fruits
-      type: Array, // type of this.fruits
+    fruits: { // name of the property
+      type: Array, // type (constructor) of the property
       value: ['apple', 'banana', 'avocado'], // initial value
-      observer: '_update', // when value changes, call this._update()
-      reflectToAttribute: true, // reflect this.fruits to attribute
-      notify: true, // emit fruits-changed event when this.fruits changed
-      bubbles: true // fruits-changed bubbles
-    },
-    listeners: { // not a property
-      'keyup': '_keyupHandler' // on keyup event call this._keyupHandler
-    },
-    attributes: { // not a property
-      'tabindex': 0  // initialize with tabindex="0" attribute
+      observer: 'fruitsChanged', // when value changes, this.fruitsChanged() will be called.
+      reflect: true, // reflect this.fruits to attribute
     }
   }
 }
 ```
 
-### Styling Elements ###
+Define default listeners inside `listeners()` getter:
 
-Styling io elements is easy. Simply add CSS in HTML format inside `style()` getter. Note that the selectors of `style()` have to be prefixed with `:host` in order to prevent style leakage.
+```javascript
+static get listeners() {
+  return {
+    'keyup': '_keyupHandler' // on keyup event call this._keyupHandler
+  }
+}
+```
+
+Define default style inside `style()` getter.
+Note that the selectors of `style()` have to be prefixed with `:host` in order to prevent style leakage.
 
 ```javascript
 static get style() {
@@ -61,9 +58,9 @@ static get style() {
 }
 ```
 
-### Rendering DOM and Shadow DOM ###
+### Rendering DOM ###
 
-Use `Io.render()` method like described below to render virtual DOM which will automatically get translated into real DOM:
+Use `IoElement.render()` method to render DOM tree inside your element:
 
 ```javascript
 let elements = ['apple', 'banana', 'avocado'];
@@ -78,7 +75,7 @@ this.render([
 
 ```
 
-The output from code above after it's converted to HTML DOM:
+The output from the code above is automatically converted to following HTML DOM:
 
 ```html
 <h4>List of Fruits:</h4>
@@ -89,7 +86,7 @@ The output from code above after it's converted to HTML DOM:
 </div>
 ```
 
-Note that the second argument of `Io.render()` is render target. You can use it to render into a specific element or into Shadow DOM:
+Note that the second argument of `IoElement.render()` is render target.
 
 ```javascript
 this.render([
@@ -99,4 +96,65 @@ this.render([
 
 ```
 
-[TODO: Handler funcitons]
+### Example ###
+
+Here is a basic example for a button element:
+
+```javascript
+import {html, IoElement} from "../../io.js";
+
+export class MyButton extends IoElement {
+  static get style() {
+    return html`<style>
+    :host {
+      cursor: pointer;
+    }
+    :host[pressed] {
+      background: rgba(0,0,0,0.5);
+    }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      label: String,
+      pressed: {
+        type: Boolean,
+        reflect: true
+      },
+      action: Function,
+      tabindex: 1
+    };
+  }
+  static get listeners() {
+    return {
+      'mousedown': '_onDown',
+      'touchstart': '_onDown'
+    };
+  }
+  _onAction(event) {
+    if (this.pressed && typeof this.action === 'function') this.action();
+    this.pressed = false;
+  }
+  _onDown(event) {
+    this.pressed = true;
+    this.addEventListener('mouseup', this._onAction);
+    this.addEventListener('touchend', this._onAction);
+    this.addEventListener('mouseleave', this._onLeave);
+  }
+  _onUp(event) {
+    this.pressed = false;
+    this.removeEventListener('mouseup', this._onAction);
+    this.removeEventListener('touchend', this._onAction);
+    this.removeEventListener('mouseleave', this._onLeave);
+  }
+  _onLeave() {
+    this.pressed = false;
+  }
+  update() {
+    this.render([['span', this.label]]);
+  }
+}
+
+MyButton.Register();
+
+```
