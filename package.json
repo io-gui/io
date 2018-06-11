@@ -45,6 +45,7 @@
     "babel-eslint": "^8.2.3",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "eslint": "^4.1.1",
-    "rollup": "^0.59.4"
+    "rollup": "^0.59.4",
+    "uglify-es": "^3.3.9"
   }
 }
