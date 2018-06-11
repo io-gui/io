@@ -1,6 +1,6 @@
-# io: custom elements base class for data-centric web applications #
+# io: custom element class for data-driven web applications #
 
-**DISCLAIMER**: io class is NOT production ready! This project uses modern web technologies such as [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and [ES6 modules](https://caniuse.com/#feat=es6-module) and may or may not work in some browsers.
+**DISCLAIMER**: io is NOT production ready! This project uses modern web technologies such as [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and [ES6 modules](https://caniuse.com/#feat=es6-module) and may or may not work in some browsers.
 
 `IoElement` class is an extension of `HTMLElement` class and it is designed to help you build complex user interfaces with minimal effort.
 
@@ -16,7 +16,7 @@
 
 ### Defining Elements ###
 
-Define your element by extending the core `IoElement` class and calling `Register()` function on your class.
+Simply extend the core `IoElement` class and call `Register()` function on your class.
 
 Define properties inside the `properties()` getter:
 
@@ -44,7 +44,7 @@ static get listeners() {
 ```
 
 Define default style inside `style()` getter.
-Note that the selectors of `style()` have to be prefixed with `:host` in order to prevent style leakage.
+Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage.
 
 ```javascript
 static get style() {
@@ -60,7 +60,7 @@ static get style() {
 
 ### Rendering DOM ###
 
-Use `IoElement.render()` method to render DOM tree inside your element.
+Use `render()` method to render DOM tree inside your element.
 Internal DOM tree is expressed as an array of arrays.
 For example an instance of `<my-color>` element can be expressed like this:
 
@@ -69,7 +69,7 @@ For example an instance of `<my-color>` element can be expressed like this:
 ```
 
 Note that the first array item is **always** element name.
-The next is **optional** properties followed by innerText or array of children.
+The next is **optional** properties followed by innerText or an array of children.
 The HTML equivalent of the array above would would be:
 
 ```HTML
@@ -90,7 +90,7 @@ this.render([
 ]);
 ```
 
-The output from the code above is automatically converted to following HTML DOM:
+The output from the code above is converted to following HTML DOM:
 
 ```html
 <h4>List of Fruits:</h4>
@@ -101,17 +101,7 @@ The output from the code above is automatically converted to following HTML DOM:
 </div>
 ```
 
-Note that the second argument of `IoElement.render()` is render target.
-
-```javascript
-this.render([
-  ['style'],
-  ['slot']
-], myDOMElement);
-
-```
-
-You can data bind properties to children using `this.bind()` function.
+You can data bind properties to children using `bind()` function.
 Keep in mind that this only works with IoElement-based children.
 
 ```javascript
