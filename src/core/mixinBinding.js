@@ -1,4 +1,4 @@
-export const BindingMixin = (superclass) => class extends superclass {
+export const IoBindingMixin = (superclass) => class extends superclass {
   constructor() {
     super();
     Object.defineProperty(this, '__bindings', {value: {}});

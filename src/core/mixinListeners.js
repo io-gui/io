@@ -1,4 +1,4 @@
-export const ElementListenersMixin = (superclass) => class extends superclass {
+export const IoElementListenersMixin = (superclass) => class extends superclass {
   constructor() {
     super();
     Object.defineProperty(this, '__listeners', {value: {}});
@@ -32,7 +32,7 @@ export const ElementListenersMixin = (superclass) => class extends superclass {
   }
 };
 
-export const NodeListenersMixin = (superclass) => class extends superclass {
+export const IoNodeListenersMixin = (superclass) => class extends superclass {
   constructor() {
     super();
     Object.defineProperty(this, '__listeners', {value: {}});

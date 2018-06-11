@@ -5,12 +5,12 @@ import {ProtoFunctions} from "./core/protoFunctions.js";
 import {InstanceListeners} from "./core/instanceListeners.js";
 import {initStyle} from "./core/initStyle.js";
 import {renderNode, updateNode, buildTree} from "./core/vdom.js";
-import {Binding, BindingMixin} from "./core/mixinBinding.js";
-import {ElementListenersMixin} from "./core/mixinListeners.js";
+import {Binding, IoBindingMixin} from "./core/mixinBinding.js";
+import {IoElementListenersMixin} from "./core/mixinListeners.js";
 
 export function html() {return arguments[0][0];}
 
-export class IoElement extends BindingMixin(ElementListenersMixin(HTMLElement)) {
+export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
   static get properties() {
     return {
       id: String,
@@ -162,11 +162,11 @@ export class IoElement extends BindingMixin(ElementListenersMixin(HTMLElement)) 
 
       if (this.__props[p] === undefined) continue;
 
-      var oldBinding = this.__props[p].binding;
+      let oldBinding = this.__props[p].binding;
       let oldValue = this.__props[p].value;
 
-      var binding;
-      var value;
+      let binding;
+      let value;
 
       if (props[p] instanceof Binding) {
         binding = props[p];

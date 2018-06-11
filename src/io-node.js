@@ -2,10 +2,10 @@ import {Prototypes} from "./core/prototypes.js";
 import {ProtoProperties, defineProperties} from "./core/protoProperties.js";
 import {ProtoListeners} from "./core/protoListeners.js";
 import {ProtoFunctions} from "./core/protoFunctions.js";
-import {Binding, BindingMixin} from "./core/mixinBinding.js";
-import {NodeListenersMixin} from "./core/mixinListeners.js";
+import {IoBindingMixin} from "./core/mixinBinding.js";
+import {IoNodeListenersMixin} from "./core/mixinListeners.js";
 
-export class IoNode extends BindingMixin(NodeListenersMixin(Object)) {
+export class IoNode extends IoBindingMixin(IoNodeListenersMixin(Object)) {
   constructor() {
     super();
     this.__proto__.constructor.Register();
@@ -24,8 +24,8 @@ export class IoNode extends BindingMixin(NodeListenersMixin(Object)) {
     // TODO test
     delete this.parent;
     this.children.lenght = 0;
-    for (var l in this.__listeners) this.__listeners[l].lenght = 0;
-    for (var p in this.__props) delete this.__props[p];
+    for (let l in this.__listeners) this.__listeners[l].lenght = 0;
+    for (let p in this.__props) delete this.__props[p];
   }
   setAttribute() {
     console.warn('io-node: setAttribute not suppoerted!');
