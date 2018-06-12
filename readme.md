@@ -116,7 +116,7 @@ this.render([
 Here is a basic example for a button element:
 
 ```javascript
-import {html, IoElement} from "../../io.js";
+import {html, IoElement} from "../../core.js";
 
 export class MyButton extends IoElement {
   static get style() {

@@ -1,12 +1,12 @@
-import {Prototypes} from "./core/prototypes.js";
-import {ProtoProperties, defineProperties} from "./core/protoProperties.js";
-import {ProtoListeners} from "./core/protoListeners.js";
-import {ProtoFunctions} from "./core/protoFunctions.js";
-import {InstanceListeners} from "./core/instanceListeners.js";
-import {initStyle} from "./core/initStyle.js";
-import {renderNode, updateNode, buildTree} from "./core/vdom.js";
-import {Binding, IoBindingMixin} from "./core/mixinBinding.js";
-import {IoElementListenersMixin} from "./core/mixinListeners.js";
+import {Prototypes} from "./prototypes.js";
+import {ProtoProperties, defineProperties} from "./protoProperties.js";
+import {ProtoListeners} from "./protoListeners.js";
+import {ProtoFunctions} from "./protoFunctions.js";
+import {InstanceListeners} from "./instanceListeners.js";
+import {initStyle} from "./initStyle.js";
+import {renderNode, updateNode, buildTree} from "./vdom.js";
+import {Binding, IoBindingMixin} from "./mixinBinding.js";
+import {IoElementListenersMixin} from "./mixinListeners.js";
 
 export function html() {return arguments[0][0];}
 

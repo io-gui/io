@@ -1,9 +1,9 @@
-import {Prototypes} from "./core/prototypes.js";
-import {ProtoProperties, defineProperties} from "./core/protoProperties.js";
-import {ProtoListeners} from "./core/protoListeners.js";
-import {ProtoFunctions} from "./core/protoFunctions.js";
-import {IoBindingMixin} from "./core/mixinBinding.js";
-import {IoNodeListenersMixin} from "./core/mixinListeners.js";
+import {Prototypes} from "./prototypes.js";
+import {ProtoProperties, defineProperties} from "./protoProperties.js";
+import {ProtoListeners} from "./protoListeners.js";
+import {ProtoFunctions} from "./protoFunctions.js";
+import {IoBindingMixin} from "./mixinBinding.js";
+import {IoNodeListenersMixin} from "./mixinListeners.js";
 
 export class IoNode extends IoBindingMixin(IoNodeListenersMixin(Object)) {
   constructor() {

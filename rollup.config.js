@@ -1,3 +1,5 @@
+import path from 'path';
+
 function html() {
   return {
     transform( code, id ) {
@@ -17,16 +19,44 @@ function html() {
 
 export default [
   {
-    input: 'src/io.js',
+    input: 'src/core.js',
     plugins: [
       html()
     ],
     output: [
       {
         format: 'es',
-        file: 'build/io.js',
+        file: 'build/core.js',
         indent: '  '
       }
     ]
+  },
+  {
+    input: 'src/elements.js',
+    plugins: [
+      html()
+    ],
+    output: [
+      {
+        format: 'es',
+        file: 'build/elements.js',
+        indent: '  '
+      }
+    ],
+    external: [ path.resolve('src/core.js'), path.resolve('src/mixins.js') ]
+  },
+  {
+    input: 'src/mixins.js',
+    plugins: [
+      html()
+    ],
+    output: [
+      {
+        format: 'es',
+        file: 'build/mixins.js',
+        indent: '  '
+      }
+    ],
+    external: [ path.resolve('src/core.js'), path.resolve('src/elements.js') ]
   }
 ];

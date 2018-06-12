@@ -39,7 +39,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "eslint src && rollup -c && uglifyjs build/io.js > build/io.min.js"
+    "build": "eslint src && rollup -c && uglifyjs build/core.js > build/core.min.js && uglifyjs build/elements.js > build/elements.min.js && uglifyjs build/mixins.js > build/mixins.min.js"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
