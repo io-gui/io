@@ -64,7 +64,8 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
     for (let p in this.__props) {
       if (this.__props[p].binding) {
         this.__props[p].binding.removeTarget(this, p);
-        delete this.__props[p].binding;
+        // TODO: this breaks binding for transplanted elements.
+        // delete this.__props[p].binding;
       }
     }
   }
@@ -156,7 +157,6 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
 
     this.__observers.push('update');
 
-
     for (let p in props) {
 
       if (this.__props[p] === undefined) continue;
@@ -174,8 +174,13 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
         value = props[p];
       }
 
+
       this.__props[p].binding = binding;
       this.__props[p].value = value;
+
+      if (this.localName == 'io-menu-group' && this.id === 'group' && p == 'expanded') {
+        console.log(this.__props[p].binding);
+      }
 
       if (value !== oldValue) {
         if (this.__props[p].reflect) {
@@ -191,7 +196,7 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
 
       if (binding !== oldBinding) {
         binding.setTarget(this, p);
-        // TODO: test extensivly
+        // TODO: test extensively
         if (oldBinding) console.warn('Disconnect!', binding, oldBinding);
       }
 

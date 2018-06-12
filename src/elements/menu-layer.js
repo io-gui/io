@@ -4,7 +4,7 @@ let previousOption;
 let previousParent;
 let timeoutOpen;
 let timeoutReset;
-let WAIT_TIME = 120;
+let WAIT_TIME = 1200;
 let lastFocus;
 
 // TODO: make long (scrolling) menus work with touch
@@ -118,7 +118,7 @@ export class IoMenuLayer extends IoElement {
   _onMousemove(event) {
     this._x = event.clientX;
     this._y = event.clientY;
-    this._v = Math.abs(event.movementY) - Math.abs(event.movementX);
+    this._v = (2 * this._v + Math.abs(event.movementY) - Math.abs(event.movementX)) / 3;
     let groups = this.$groups;
     for (let i = groups.length; i--;) {
       if (groups[i].expanded) {
@@ -216,7 +216,7 @@ export class IoMenuLayer extends IoElement {
     if (item !== previousOption) {
       clearTimeout(timeoutOpen);
       clearTimeout(timeoutReset);
-      if (this._v > 0 || item.parentNode !== previousParent || force || !item.option.options) {
+      if (this._v > 1 || item.parentNode !== previousParent || force) {
         previousOption = item;
         item.focus();
       } else {

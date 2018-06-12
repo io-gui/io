@@ -14,7 +14,6 @@ export class IoMenu extends IoElement {
   }
   constructor(props) {
     super(props);
-    // BUG: bindings dont work in io-option sor some reason
     this.render([
       ['io-menu-group', {
         id: 'group',
@@ -25,12 +24,6 @@ export class IoMenu extends IoElement {
       }]
     ]);
     this.$.group.__parent = this;
-  }
-  update() {
-    // BUG: bindings dont work in io-option sor some reason
-    this.$.group.options = this.options;
-    this.$.group.position = this.position;
-    this.$.group.expanded = this.expanded;
   }
   connectedCallback() {
     super.connectedCallback();
