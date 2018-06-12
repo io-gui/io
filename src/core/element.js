@@ -8,8 +8,6 @@ import {renderNode, updateNode, buildTree} from "./vdom.js";
 import {Binding, IoBindingMixin} from "./mixinBinding.js";
 import {IoElementListenersMixin} from "./mixinListeners.js";
 
-export function html() {return arguments[0][0];}
-
 export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
   static get properties() {
     return {
@@ -157,6 +155,7 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
     this.__notifiers.length = 0;
 
     this.__observers.push('update');
+
 
     for (let p in props) {
 

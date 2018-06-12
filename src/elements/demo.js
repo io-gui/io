@@ -47,6 +47,7 @@ export class IoDemo extends IoElement {
   }
   constructor() {
     super();
+    console.log(this.null);
     let suboptions1 = [
       {label: 'sub_sub_one', value: 1, action: console.log},
       {label: 'sub_sub_two', value: 2, action: console.log},

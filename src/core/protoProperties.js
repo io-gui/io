@@ -69,7 +69,7 @@ Creates a property object from properties defined in the prototype chain.
 export class Property {
   constructor(propDef) {
     if (propDef === null || propDef === undefined) {
-      propDef = {};
+      propDef = { value: propDef };
     } else if (typeof propDef === 'function') {
       // Shorthand property definition by constructor.
       propDef = {type: propDef};

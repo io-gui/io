@@ -1,6 +1,6 @@
 import {html, IoElement} from "../core.js";
-import {IoMenuLayer} from "./io-menu-layer.js";
-import {IoMenuGroup} from "./io-menu-group.js";
+import {IoMenuLayer} from "./menu-layer.js";
+import {IoMenuGroup} from "./menu-group.js";
 
 export class IoMenuItem extends IoElement {
   static get style() {

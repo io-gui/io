@@ -1,4 +1,4 @@
-import {IoString} from "./io-string.js";
+import {IoString} from "./string.js";
 
 export class IoNumber extends IoString {
   static get properties() {

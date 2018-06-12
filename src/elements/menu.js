@@ -1,5 +1,5 @@
 import {IoElement} from "../core.js";
-import {IoMenuLayer} from "./io-menu-layer.js";
+import {IoMenuLayer} from "./menu-layer.js";
 
 // TODO: implement working mousestart/touchstart UX
 // TODO: implement keyboard modifiers maybe. Touch alternative?

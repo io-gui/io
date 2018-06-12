@@ -1,4 +1,4 @@
-import {IoButton} from "./io-button.js";
+import {IoButton} from "./button.js";
 
 export class IoBoolean extends IoButton {
   static get properties() {
@@ -7,8 +7,8 @@ export class IoBoolean extends IoButton {
         type: Boolean,
         reflect: true
       },
-      true: 'yes',
-      false: 'no'
+      true: 'true',
+      false: 'false'
     };
   }
   constructor(props) {

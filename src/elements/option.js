@@ -1,4 +1,4 @@
-import {IoButton} from "./io-button.js";
+import {IoButton} from "./button.js";
 
 export class IoOption extends IoButton {
   static get properties() {
