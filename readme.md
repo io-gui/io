@@ -13,6 +13,15 @@
 * io elements are fully **styleable**.
 * io elements are **data-driven**.
 * io elements use **bi-directional** data binding.
+* io elements are **lightweight**
+
+### File Sizes ###
+
+|             | Size | Minified | Gzipped |
+| ----------- |:----:| --------:|--------:|
+| core.js     | 22KB |     15KB |     4KB |
+| elements.js | 32KB |     24KB |     6KB |
+| mixins.js   | 5KB  |      4KB |     1KB |
 
 ### Defining Elements ###
 
@@ -45,6 +54,7 @@ static get listeners() {
 
 Define default style inside `style()` getter.
 Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage.
+Template handler `html` is optional and it is here only to help with syntax highlighting.
 
 ```javascript
 static get style() {
