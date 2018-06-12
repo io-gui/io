@@ -17,6 +17,13 @@ export class IoDemo extends IoElement {
       :host div.demo {
         margin: 1em;
       }
+      :host .menubar {
+        background: #fec;
+      }
+      :host div.menuarea {
+        padding: 1em;
+        background: #fec;
+      }
       :host div.header, span.rowlabel {
         color: rgba(128, 122, 255, 0.75);
       }
@@ -47,7 +54,6 @@ export class IoDemo extends IoElement {
   }
   constructor() {
     super();
-    console.log(this.null);
     let suboptions1 = [
       {label: 'sub_sub_one', value: 1, action: console.log},
       {label: 'sub_sub_two', value: 2, action: console.log},
@@ -141,10 +147,14 @@ export class IoDemo extends IoElement {
           "array": [1,2,3,4,"apple"]
         }, expanded: true, labeled: true}]
       ]],
-      ['io-menu-group', {options: this.menuoptions, horizontal: true}],
-      ['div', {className: 'demo area'}, [
-        ['h3', 'io-menu (click to expand)'],
+      ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
+      ['div', {className: 'demo menuarea'}, [
+        ['h3', 'io-menu (click)'],
         ['io-menu', {options: this.menuoptions, position: 'pointer'}]
+      ]],
+      ['div', {className: 'demo menuarea'}, [
+        ['h3', 'io-menu (contextmenu)'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer', listener: 'contextmenu'}]
       ]]
     ]);
   }

@@ -65,6 +65,7 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
       if (this.__props[p].binding) {
         this.__props[p].binding.removeTarget(this, p);
         // TODO: this breaks binding for transplanted elements.
+        // TODO: possible memory leak!
         // delete this.__props[p].binding;
       }
     }
@@ -174,13 +175,8 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
         value = props[p];
       }
 
-
       this.__props[p].binding = binding;
       this.__props[p].value = value;
-
-      if (this.localName == 'io-menu-group' && this.id === 'group' && p == 'expanded') {
-        console.log(this.__props[p].binding);
-      }
 
       if (value !== oldValue) {
         if (this.__props[p].reflect) {

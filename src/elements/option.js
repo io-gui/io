@@ -20,8 +20,7 @@ export class IoOption extends IoButton {
     if (firstItem) firstItem.focus();
   }
   _onMenu(event) {
-    // TODO: menu layer should close automatically
-    // this.$['menu'].expanded = false;
+    this.$['menu'].expanded = false;
     this.set('value', event.detail.value);
     if (typeof this.action === 'function') {
       this.action(this.value);

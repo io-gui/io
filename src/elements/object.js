@@ -59,7 +59,7 @@ export class IoObject extends IoElement {
   _onIoObjectMutated(event) {
     let key = event.detail.key;
     if (event.detail.object === this.value) {
-      if (this.$[key]) {
+      if (key && this.$[key]) {
         this.$[key].__props.value.value = this.value[key];
         this.$[key].update();
       } else if (!key || key === '*') {
@@ -74,11 +74,10 @@ export class IoObject extends IoElement {
     if (event.detail.object) return; // TODO: fix
     event.stopPropagation();
     let key = event.path[0].id;
-    if (key !== undefined) {
+    if (key && typeof key === 'string') {
       if (this.value[key] !== event.detail.value) {
         this.value[key] = event.detail.value;
       }
-      // console.log(event.detail);
       let detail = Object.assign({object: this.value, key: key}, event.detail);
       this.dispatchEvent('io-object-mutated', detail, false, window);
       this.dispatchEvent('value-set', detail, true); // TODO
