@@ -30,7 +30,7 @@ export class IoString extends IoElement {
       'keydown': '_onKeydown'
     };
   }
-  _onFocus(event) {
+  _onFocus() {
     debounce(this._select);
   }
   _select() {

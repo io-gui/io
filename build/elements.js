@@ -1,4 +1,4 @@
-import { html, IoElement } from './core.js';
+import { html, IoElement, debounce } from './core.js';
 import { IoPointerMixin } from './mixins.js';
 
 class IoButton extends IoElement {
@@ -73,8 +73,8 @@ class IoBoolean extends IoButton {
         type: Boolean,
         reflect: true
       },
-      true: 'yes',
-      false: 'no'
+      true: 'true',
+      false: 'false'
     };
   }
   constructor(props) {
@@ -95,7 +95,7 @@ let previousOption;
 let previousParent;
 let timeoutOpen;
 let timeoutReset;
-let WAIT_TIME = 120;
+let WAIT_TIME = 1200;
 let lastFocus;
 
 // TODO: make long (scrolling) menus work with touch
@@ -192,7 +192,7 @@ class IoMenuLayer extends IoElement {
   _onMousemove(event) {
     this._x = event.clientX;
     this._y = event.clientY;
-    this._v = Math.abs(event.movementY) - Math.abs(event.movementX);
+    this._v = (2 * this._v + Math.abs(event.movementY) - Math.abs(event.movementX)) / 3;
     let groups = this.$groups;
     for (let i = groups.length; i--;) {
       if (groups[i].expanded) {
@@ -290,7 +290,7 @@ class IoMenuLayer extends IoElement {
     if (item !== previousOption) {
       clearTimeout(timeoutOpen);
       clearTimeout(timeoutReset);
-      if (this._v > 0 || item.parentNode !== previousParent || force || !item.option.options) {
+      if (this._v > 1 || item.parentNode !== previousParent || force) {
         previousOption = item;
         item.focus();
       } else {
@@ -387,7 +387,6 @@ class IoMenu extends IoElement {
   }
   constructor(props) {
     super(props);
-    // BUG: bindings dont work in io-option sor some reason
     this.render([
       ['io-menu-group', {
         id: 'group',
@@ -398,12 +397,6 @@ class IoMenu extends IoElement {
       }]
     ]);
     this.$.group.__parent = this;
-  }
-  update() {
-    // BUG: bindings dont work in io-option sor some reason
-    this.$.group.options = this.options;
-    this.$.group.position = this.position;
-    this.$.group.expanded = this.expanded;
   }
   connectedCallback() {
     super.connectedCallback();
@@ -561,6 +554,9 @@ class IoMenuItem extends IoElement {
 
 IoMenuItem.Register();
 
+const selection = window.getSelection();
+const range = document.createRange();
+
 class IoString extends IoElement {
   static get style() {
     return html`<style>:host {overflow: hidden;text-overflow: ellipsis;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
@@ -574,9 +570,18 @@ class IoString extends IoElement {
   }
   static get listeners() {
     return {
+      'focus': '_onFocus',
       'blur': '_onBlur',
       'keydown': '_onKeydown'
     };
+  }
+  _onFocus() {
+    debounce(this._select);
+  }
+  _select() {
+    range.selectNodeContents(this);
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
   _onBlur() {
     this.set('value', this.innerText);
@@ -664,7 +669,7 @@ class IoObject extends IoElement {
   _onIoObjectMutated(event) {
     let key = event.detail.key;
     if (event.detail.object === this.value) {
-      if (this.$[key]) {
+      if (key && this.$[key]) {
         this.$[key].__props.value.value = this.value[key];
         this.$[key].update();
       } else if (!key || key === '*') {
@@ -679,11 +684,10 @@ class IoObject extends IoElement {
     if (event.detail.object) return; // TODO: fix
     event.stopPropagation();
     let key = event.path[0].id;
-    if (key !== undefined) {
+    if (key && typeof key === 'string') {
       if (this.value[key] !== event.detail.value) {
         this.value[key] = event.detail.value;
       }
-      // console.log(event.detail);
       let detail = Object.assign({object: this.value, key: key}, event.detail);
       this.dispatchEvent('io-object-mutated', detail, false, window);
       this.dispatchEvent('value-set', detail, true); // TODO
@@ -782,8 +786,7 @@ class IoOption extends IoButton {
     if (firstItem) firstItem.focus();
   }
   _onMenu(event) {
-    // TODO: menu layer should close automatically
-    // this.$['menu'].expanded = false;
+    this.$['menu'].expanded = false;
     this.set('value', event.detail.value);
     if (typeof this.action === 'function') {
       this.action(this.value);
@@ -855,7 +858,7 @@ IoSlider.Register();
 
 class IoDemo extends IoElement {
   static get style() {
-    return html`<style>:host div.row > io-string,:host div.row > io-boolean,:host div.row > io-number {border: 1px solid #eee;}:host div.demo > io-option,:host div.demo > io-object {display: inline-block;border: 1px solid #eee;vertical-align: top;}:host div.demo {margin: 1em;}:host div.header, span.rowlabel {color: rgba(128, 122, 255, 0.75);}:host span.rowlabel {text-align: right;padding-right: 0.2em;;}:host div.row > *{flex: 1;margin: 2px;}:host .narrow {display: flex;width: 22em;}</style>`;
+    return html`<style>:host div.row > io-string,:host div.row > io-boolean,:host div.row > io-number {border: 1px solid #eee;}:host div.demo > io-option,:host div.demo > io-object {display: inline-block;border: 1px solid #eee;vertical-align: top;}:host div.demo {margin: 1em;}:host .menubar {background: #fec;}:host div.menuarea {padding: 1em;background: #fec;}:host div.header, span.rowlabel {color: rgba(128, 122, 255, 0.75);}:host span.rowlabel {text-align: right;padding-right: 0.2em;;}:host div.row > *{flex: 1;margin: 2px;}:host .narrow {display: flex;width: 22em;}</style>`;
   }
   static get properties() {
     return {
@@ -963,10 +966,14 @@ class IoDemo extends IoElement {
           "array": [1,2,3,4,"apple"]
         }, expanded: true, labeled: true}]
       ]],
-      ['io-menu-group', {options: this.menuoptions, horizontal: true}],
-      ['div', {className: 'demo area'}, [
-        ['h3', 'io-menu (click to expand)'],
+      ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
+      ['div', {className: 'demo menuarea'}, [
+        ['h3', 'io-menu (click)'],
         ['io-menu', {options: this.menuoptions, position: 'pointer'}]
+      ]],
+      ['div', {className: 'demo menuarea'}, [
+        ['h3', 'io-menu (contextmenu)'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer', listener: 'contextmenu'}]
       ]]
     ]);
   }

@@ -82,7 +82,7 @@ Creates a property object from properties defined in the prototype chain.
 class Property {
   constructor(propDef) {
     if (propDef === null || propDef === undefined) {
-      propDef = {};
+      propDef = { value: propDef };
     } else if (typeof propDef === 'function') {
       // Shorthand property definition by constructor.
       propDef = {type: propDef};
@@ -403,8 +403,6 @@ const IoNodeListenersMixin = (superclass) => class extends superclass {
   }
 };
 
-function html() {return arguments[0][0];}
-
 class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
   static get properties() {
     return {
@@ -461,7 +459,9 @@ class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
     for (let p in this.__props) {
       if (this.__props[p].binding) {
         this.__props[p].binding.removeTarget(this, p);
-        delete this.__props[p].binding;
+        // TODO: this breaks binding for transplanted elements.
+        // TODO: possible memory leak!
+        // delete this.__props[p].binding;
       }
     }
   }
@@ -587,7 +587,7 @@ class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
 
       if (binding !== oldBinding) {
         binding.setTarget(this, p);
-        // TODO: test extensivly
+        // TODO: test extensively
         if (oldBinding) console.warn('Disconnect!', binding, oldBinding);
       }
 
@@ -679,6 +679,8 @@ IoNode.Register = function() {
 
 const __debounceTimeout = new WeakMap();
 
+function html() {return arguments[0][0];}
+
 function debounce(func, wait) {
   clearTimeout(__debounceTimeout.get(func));
   __debounceTimeout.set(func, setTimeout(func, wait));
@@ -688,4 +690,4 @@ function path(path, importurl) {
   return new URL(path, importurl).pathname;
 }
 
-export { html, IoElement, IoNode, debounce, path };
+export { IoElement, IoNode, html, debounce, path };
