@@ -8,12 +8,12 @@ export class ProtoListeners {
   }
   connect(element) {
     for (let i in this) {
-      HTMLElement.prototype.addEventListener.call(element, i, element[this[i]]);
+      element.addEventListener(i, element[this[i]]);
     }
   }
   disconnect(element) {
     for (let i in this) {
-      HTMLElement.prototype.removeEventListener.call(element, i, element[this[i]]);
+      element.removeEventListener(i, element[this[i]]);
     }
   }
 }

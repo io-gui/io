@@ -1,4 +1,5 @@
-import {html, IoElement} from "../core.js";
+import {html, IoElement} from "./core.js";
+import "./elements.js";
 
 export class IoDemo extends IoElement {
   static get style() {
@@ -91,21 +92,21 @@ export class IoDemo extends IoElement {
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'string'],
-          ['io-string', {value: this.bind('string')}],
+          ['io-string', {id: 'string', value: this.bind('string')}],
           ['io-number', {value: this.bind('string')}],
           ['io-boolean', {type: 'boolean', value: this.bind('string')}],
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'number'],
           ['io-string', {value: this.bind('number')}],
-          ['io-number', {value: this.bind('number')}],
+          ['io-number', {id: 'number', value: this.bind('number')}],
           ['io-boolean', {type: 'boolean', value: this.bind('number')}],
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'boolean'],
           ['io-string', {value: this.bind('boolean')}],
           ['io-number', {value: this.bind('boolean')}],
-          ['io-boolean', {type: 'boolean', value: this.bind('boolean')}],
+          ['io-boolean', {id: 'boolean', type: 'boolean', value: this.bind('boolean')}],
         ]],
         ['div', {className: 'row narrow'}, [
           ['span', {className: 'rowlabel'}, 'NaN'],

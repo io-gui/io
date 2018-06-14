@@ -17,9 +17,21 @@
         margin: 0;
       }
     </style>
-    <script type="module" src="src/elements.js"></script>
+
+    <script src="node_modules/chai/chai.js"></script>
+    <script src="node_modules/mocha/mocha.js"></script>
+    <link href="node_modules/mocha/mocha.css" rel="stylesheet" />
+
+    <script type="module" src="src/demo.js"></script>
+    <script type="module" src="src/test.js"></script>
+
   </head>
   <body>
+
     <io-demo></io-demo>
+    <io-test></io-test>
+
+    <div id="mocha"></div>
+
   </body>
 </html>

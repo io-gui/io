@@ -34,12 +34,6 @@ export class IoElement extends IoQueueMixin(IoBindingsMixin(IoElementListenersMi
     this.__propListeners.setListeners(initProps);
 
     Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
-
-    for (let prop in this.__props) {
-      if (this.__props[prop].reflect) {
-        this.setAttribute(prop, this.__props[prop].value);
-      }
-    }
   }
   connectedCallback() {
     this.__protoListeners.connect(this);
@@ -50,6 +44,12 @@ export class IoElement extends IoQueueMixin(IoBindingsMixin(IoElementListenersMi
     for (let p in this.__props) {
       if (this.__props[p].binding) {
         this.__props[p].binding.setTarget(this, p); //TODO: test
+      }
+    }
+
+    for (let prop in this.__props) {
+      if (this.__props[prop].reflect) {
+        this.setAttribute(prop, this.__props[prop].value);
       }
     }
   }
@@ -200,3 +200,5 @@ IoElement.Register = function() {
 
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 };
+
+IoElement.Register();

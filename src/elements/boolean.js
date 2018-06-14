@@ -19,7 +19,7 @@ export class IoBoolean extends IoButton {
     this.set('value', !this.value);
   }
   update() {
-    this.render([['span', this.value ? this.true : this.false]]);
+    this.innerText = this.value ? this.true : this.false;
   }
 }
 

@@ -44,7 +44,9 @@
   "devDependencies": {
     "babel-eslint": "^8.2.3",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "chai": "^4.1.2",
     "eslint": "^4.1.1",
+    "mocha": "^5.2.0",
     "rollup": "^0.59.4",
     "uglify-es": "^3.3.9"
   }
