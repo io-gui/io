@@ -2,10 +2,10 @@ import {Prototypes} from "./prototypes.js";
 import {ProtoProperties, defineProperties} from "./protoProperties.js";
 import {ProtoListeners} from "./protoListeners.js";
 import {ProtoFunctions} from "./protoFunctions.js";
-import {IoBindingMixin} from "./mixinBinding.js";
-import {IoNodeListenersMixin} from "./mixinListeners.js";
+import {IoBindingsMixin, Binding} from "./bindingsMixin.js";
+import {IoNodeListenersMixin} from "./listenersMixin.js";
 
-export class IoNode extends IoBindingMixin(IoNodeListenersMixin(Object)) {
+export class IoNode extends IoBindingsMixin(IoNodeListenersMixin(Object)) {
   constructor() {
     super();
     this.__proto__.constructor.Register();
@@ -43,9 +43,7 @@ IoNode.Register = function() {
 
     defineProperties(this.prototype);
 
-    // TODO: implement children io-nodes via properties
-    // Object.defineProperty(this, 'parent', {value: null});
-    // Object.defineProperty(this, 'children', {value: null});
+    // TODO: implement IoNode hierarchies
 
   }
   this.registered = true;

@@ -2,13 +2,14 @@ import {Prototypes} from "./prototypes.js";
 import {ProtoProperties, defineProperties} from "./protoProperties.js";
 import {ProtoListeners} from "./protoListeners.js";
 import {ProtoFunctions} from "./protoFunctions.js";
-import {InstanceListeners} from "./instanceListeners.js";
-import {initStyle} from "./initStyle.js";
+import {InstanceListeners} from "./propListeners.js";
+import {initStyle} from "./utils.js";
 import {renderNode, updateNode, buildTree} from "./vdom.js";
-import {Binding, IoBindingMixin} from "./mixinBinding.js";
-import {IoElementListenersMixin} from "./mixinListeners.js";
+import {IoBindingsMixin, Binding} from "./bindingsMixin.js";
+import {IoElementListenersMixin} from "./listenersMixin.js";
+import {IoQueueMixin} from "./queueMixin.js";
 
-export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
+export class IoElement extends IoQueueMixin(IoBindingsMixin(IoElementListenersMixin(HTMLElement))) {
   static get properties() {
     return {
       id: String,
@@ -25,16 +26,12 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
   constructor(initProps = {}) {
     super();
     this.__protoFunctions.bind(this);
-
     Object.defineProperty(this, '__props', {value: this.__props.clone()});
-
-    Object.defineProperty(this, '__observers', {value: []});
-    Object.defineProperty(this, '__notifiers', {value: []});
 
     this.setProperties(initProps);
 
-    Object.defineProperty(this, '__instaListeners', {value: new InstanceListeners()});
-    this.__instaListeners.setListeners(initProps);
+    Object.defineProperty(this, '__propListeners', {value: new InstanceListeners()});
+    this.__propListeners.setListeners(initProps);
 
     Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
 
@@ -46,10 +43,9 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
   }
   connectedCallback() {
     this.__protoListeners.connect(this);
-    this.__instaListeners.connect(this);
+    this.__propListeners.connect(this);
 
-    this.triggerObservers();
-    this.triggerNotifiers();
+    this.queueDispatch();
 
     for (let p in this.__props) {
       if (this.__props[p].binding) {
@@ -59,7 +55,7 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
   }
   disconnectedCallback() {
     this.__protoListeners.disconnect(this);
-    this.__instaListeners.disconnect(this);
+    this.__propListeners.disconnect(this);
 
     for (let p in this.__props) {
       if (this.__props[p].binding) {
@@ -106,10 +102,9 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
         // Io Elements
         if (children[i].hasOwnProperty('__props')) {
           children[i].setProperties(vChildren[i].props); // TODO: test
-          children[i].triggerObservers();
-          children[i].__instaListeners.setListeners(vChildren[i].props);
-          children[i].__instaListeners.connect(children[i]);
-          children[i].triggerNotifiers();
+          children[i].queueDispatch();
+          children[i].__propListeners.setListeners(vChildren[i].props);
+          children[i].__propListeners.connect(children[i]);
         // Native HTML Elements
         } else {
           updateNode(children[i], vChildren[i]);
@@ -128,35 +123,12 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
       }
     }
   }
-  triggerObservers() {
-    // TODO: test
-    // if (!this.__connected) return;
-    for (let j = 0; j < this.__observers.length; j++) {
-      this[this.__observers[j]]();
-    }
-    this.__observers.length = 0;
-  }
-  triggerNotifiers() {
-    // if (!this.__connected) return;
-    // TODO: test
-    for (let j = 0; j < this.__notifiers.length; j++) {
-      this.dispatchEvent(this.__notifiers[j][0], this.__notifiers[j][1]);
-    }
-    this.__notifiers.length = 0;
-  }
-
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
     this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
-
   setProperties(props) {
-
-    this.__observers.length = 0;
-    this.__notifiers.length = 0;
-
-    this.__observers.push('update');
 
     for (let p in props) {
 
@@ -179,15 +151,8 @@ export class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElemen
       this.__props[p].value = value;
 
       if (value !== oldValue) {
-        if (this.__props[p].reflect) {
-          this.setAttribute(p, value);
-        }
-        if (this.__props[p].observer) {
-          if (this.__observers.indexOf(this.__props[p].observer) === -1) {
-            this.__observers.push(this.__props[p].observer);
-          }
-        }
-        this.__notifiers.push(p + '-changed', {value: value, oldValue: oldValue});
+        if (this.__props[p].reflect) this.setAttribute(p, value);
+        this.queue(this.__props[p].observer, p, value, oldValue);
       }
 
       if (binding !== oldBinding) {

@@ -1,3 +1,7 @@
+// Event listener functions that behave consistently for IoNode and IoElement.
+
+// TODO: consider bubbling IoNode events into IoElement DOM tree.
+
 export const IoElementListenersMixin = (superclass) => class extends superclass {
   constructor() {
     super();
