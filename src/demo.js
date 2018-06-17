@@ -138,7 +138,7 @@ export class IoDemo extends IoElement {
       ]],
       ['div', {className: 'demo'}, [
         ['span', {className: 'rowlabel'}, 'io-object'],
-        ['io-object', {label: 'Obj', value: {
+        ['io-object', {value: {
           "number": 1337,
           "string": 'hello',
           "boolean": true,

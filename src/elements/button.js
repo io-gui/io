@@ -19,13 +19,13 @@ export class IoButton extends IoElement {
   static get properties() {
     return {
       value: null,
-      label: String,
+      label: "label",
       pressed: {
         type: Boolean,
         reflect: true
       },
       action: Function,
-      tabindex: 1
+      tabindex: 0
     };
   }
   static get listeners() {
@@ -71,7 +71,7 @@ export class IoButton extends IoElement {
     this.pressed = false;
   }
   update() {
-    this.render([['span', this.label]]);
+    this.innerText = this.label;
   }
 }
 

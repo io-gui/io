@@ -9,6 +9,7 @@ export class IoString extends IoElement {
       :host {
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
       :host:focus {
         overflow: hidden;
@@ -25,12 +26,12 @@ export class IoString extends IoElement {
   }
   static get listeners() {
     return {
-      'focus': '_onFocus',
-      'blur': '_onBlur',
-      'keydown': '_onKeydown'
+      'focus': '_onFocus'
     };
   }
   _onFocus() {
+    this.addEventListener('blur', this._onBlur);
+    this.addEventListener('keydown', this._onKeydown);
     debounce(this._select);
   }
   _select() {
@@ -42,6 +43,8 @@ export class IoString extends IoElement {
     this.set('value', this.innerText);
     this.scrollTop = 0;
     this.scrollLeft = 0;
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
   }
   _onKeydown(event) {
     if (event.which == 13) {

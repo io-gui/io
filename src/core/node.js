@@ -1,17 +1,6 @@
-import {Prototypes} from "./prototypes.js";
-import {ProtoProperties, defineProperties} from "./protoProperties.js";
-import {ProtoListeners} from "./protoListeners.js";
-import {ProtoFunctions} from "./protoFunctions.js";
-import {IoBindingsMixin, Binding} from "./bindingsMixin.js";
-import {IoNodeListenersMixin} from "./listenersMixin.js";
+import {IoCoreMixin} from "./coreMixin.js";
 
-export class IoNode extends IoBindingsMixin(IoNodeListenersMixin(Object)) {
-  constructor() {
-    super();
-    this.__proto__.constructor.Register();
-    this.__proto__.__protoFunctions.bind(this);
-    Object.defineProperty(this, '__props', {value: this.__props.clone()});
-  }
+export class IoNode extends IoCoreMixin(Object) {
   connectedCallback() {
     // TODO: implement connected
     this.__proto__.__protoListeners.connect(this);
@@ -30,21 +19,6 @@ export class IoNode extends IoBindingsMixin(IoNodeListenersMixin(Object)) {
   setAttribute() {
     console.warn('io-node: setAttribute not suppoerted!');
   }
-  update() {}
 }
 
-IoNode.Register = function() {
-  if (!this.registered) {
-    const prototypes = new Prototypes(this);
-
-    Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(prototypes) });
-    Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(prototypes)});
-    Object.defineProperty(this.prototype, '__protoListeners', { value: new ProtoListeners(prototypes) });
-
-    defineProperties(this.prototype);
-
-    // TODO: implement IoNode hierarchies
-
-  }
-  this.registered = true;
-};
+IoNode.Register = IoCoreMixin.Register;

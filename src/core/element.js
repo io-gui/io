@@ -1,18 +1,11 @@
-import {Prototypes} from "./prototypes.js";
-import {ProtoProperties, defineProperties} from "./protoProperties.js";
-import {ProtoListeners} from "./protoListeners.js";
-import {ProtoFunctions} from "./protoFunctions.js";
-import {InstanceListeners} from "./propListeners.js";
 import {initStyle} from "./utils.js";
 import {renderNode, updateNode, buildTree} from "./vdom.js";
-import {IoBindingsMixin, Binding} from "./bindingsMixin.js";
-import {IoElementListenersMixin} from "./listenersMixin.js";
-import {IoQueueMixin} from "./queueMixin.js";
+import {IoCoreMixin} from "./coreMixin.js";
+import {Binding} from "./binding.js"
 
-export class IoElement extends IoQueueMixin(IoBindingsMixin(IoElementListenersMixin(HTMLElement))) {
+export class IoElement extends IoCoreMixin(HTMLElement) {
   static get properties() {
     return {
-      id: String,
       tabindex: {
         type: String,
         reflect: true
@@ -24,56 +17,23 @@ export class IoElement extends IoQueueMixin(IoBindingsMixin(IoElementListenersMi
     };
   }
   constructor(initProps = {}) {
-    super();
-    this.__protoFunctions.bind(this);
-    Object.defineProperty(this, '__props', {value: this.__props.clone()});
-
-    this.setProperties(initProps);
-
-    Object.defineProperty(this, '__propListeners', {value: new InstanceListeners()});
-    this.__propListeners.setListeners(initProps);
-
+    super(initProps);
     Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
   }
   connectedCallback() {
-    this.__protoListeners.connect(this);
-    this.__propListeners.connect(this);
-
-    this.queueDispatch();
-
-    for (let p in this.__props) {
-      if (this.__props[p].binding) {
-        this.__props[p].binding.setTarget(this, p); //TODO: test
-      }
-    }
-
+    super.connectedCallback();
     for (let prop in this.__props) {
       if (this.__props[prop].reflect) {
         this.setAttribute(prop, this.__props[prop].value);
       }
     }
-  }
-  disconnectedCallback() {
-    this.__protoListeners.disconnect(this);
-    this.__propListeners.disconnect(this);
-
-    for (let p in this.__props) {
-      if (this.__props[p].binding) {
-        this.__props[p].binding.removeTarget(this, p);
-        // TODO: this breaks binding for transplanted elements.
-        // TODO: possible memory leak!
-        // delete this.__props[p].binding;
-      }
-    }
+    // this.update();
   }
   dispose() {
     // for (let id in this.$) {
     //   delete this.$[id];
     // }
   }
-
-  update() {}
-
   render(children, host) {
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
@@ -123,59 +83,6 @@ export class IoElement extends IoQueueMixin(IoBindingsMixin(IoElementListenersMi
       }
     }
   }
-  set(prop, value) {
-    let oldValue = this[prop];
-    this[prop] = value;
-    this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
-  }
-  setProperties(props) {
-
-    for (let p in props) {
-
-      if (this.__props[p] === undefined) continue;
-
-      let oldBinding = this.__props[p].binding;
-      let oldValue = this.__props[p].value;
-
-      let binding;
-      let value;
-
-      if (props[p] instanceof Binding) {
-        binding = props[p];
-        value = props[p].source[props[p].sourceProp];
-      } else {
-        value = props[p];
-      }
-
-      this.__props[p].binding = binding;
-      this.__props[p].value = value;
-
-      if (value !== oldValue) {
-        if (this.__props[p].reflect) this.setAttribute(p, value);
-        this.queue(this.__props[p].observer, p, value, oldValue);
-      }
-
-      if (binding !== oldBinding) {
-        binding.setTarget(this, p);
-        // TODO: test extensively
-        if (oldBinding) console.warn('Disconnect!', binding, oldBinding);
-      }
-
-    }
-
-    if (props['className']) {
-      this.className = props['className'];
-    }
-
-    // TODO: use attributeStyleMap when implemented in browser
-    // https://developers.google.com/web/updates/2018/03/cssom
-    if (props['style']) {
-      for (let s in props['style']) {
-        this.style[s] = props['style'][s];
-      }
-    }
-  }
-
   // fixup for shitty setAttribute spec
   setAttribute(attr, value) {
     if (value === true) {
@@ -189,16 +96,12 @@ export class IoElement extends IoQueueMixin(IoBindingsMixin(IoElementListenersMi
 }
 
 IoElement.Register = function() {
-  const prototypes = new Prototypes(this);
-  initStyle(prototypes);
 
-  Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(prototypes)});
-  Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(prototypes)});
-  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(prototypes)});
+  IoCoreMixin.Register.call( this );
 
-  defineProperties(this.prototype);
-
+  initStyle(this.prototype.__prototypes);
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
+
 };
 
 IoElement.Register();

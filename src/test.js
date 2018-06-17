@@ -1,6 +1,23 @@
 import {html, IoElement} from "./core.js";
 import "./elements.js";
 
+import "../node_modules/chai/chai.js";
+import "../node_modules/mocha/mocha.js";
+
+import "./elements/boolean.test.js";
+import "./elements/button.test.js";
+// import "./elements/menu.test.js";
+// import "./elements/menu-item.test.js";
+// import "./elements/menu-group.test.js";
+// import "./elements/menu-layer.test.js";
+import "./elements/number.test.js";
+// import "./elements/object.test.js";
+import "./elements/option.test.js";
+// import "./elements/slider.test.js";
+import "./elements/string.test.js";
+
+mocha.setup('bdd');
+
 export class IoTest extends IoElement {
   static get style() {
     return html`<style>
@@ -23,6 +40,11 @@ export class IoTest extends IoElement {
   constructor() {
     super();
     this.render([
+      ['io-boolean-test'],
+      ['io-button-test'],
+      ['io-number-test'],
+      ['io-option-test'],
+      ['io-string-test'],
       ['io-element', {id: 'element', listeners: {'on-something': this.update, 'on-something-else': 'update'}}],
       ['io-string', {id: 'string', value: this.string}],
       ['io-number', {id: 'number', value: this.number}],
@@ -34,12 +56,11 @@ export class IoTest extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    mocha.setup('bdd');
-    this.runTests();
+    this.run();
     mocha.checkLeaks();
     mocha.run();
   }
-  runTests() {
+  run() {
 
     describe('Check default listeners', () => {
       it('io-boolean listens', () => {
@@ -59,15 +80,18 @@ export class IoTest extends IoElement {
       it('value-bound io-string listens for value changed', () => {
         chai.expect(this.$.string_bound.__listeners['value-changed'][0]).to.equal(this.__bindings['string'].updateSource);
         chai.expect(this.$.string_bound.__listeners['value-changed'][0]).to.equal(this.$.string_bound.__props.value.binding.updateSource);
+        chai.expect(this.__bindings['string'].targets.indexOf(this.$.string_bound)).to.equal(0);
       });
       it('value-bound io-string stops listening when disconnected', () => {
         this.removeChild(this.$.string_bound);
         chai.expect(this.$.string_bound.__listeners['value-changed'][0]).to.equal(undefined);
+        chai.expect(this.__bindings['string'].targets.indexOf(this.$.string_bound)).to.equal(-1);
       });
       it('value-bound io-string starts listening when reconnected', () => {
         this.appendChild(this.$.string_bound);
         chai.expect(this.$.string_bound.__listeners['value-changed'][0]).to.equal(this.__bindings['string'].updateSource);
         chai.expect(this.$.string_bound.__listeners['value-changed'][0]).to.equal(this.$.string_bound.__props.value.binding.updateSource);
+        chai.expect(this.__bindings['string'].targets.indexOf(this.$.string_bound)).to.equal(0);
       });
     });
 
