@@ -1,8 +1,12 @@
 // Creates a list of listeners passed to element instance as arguments.
+// TODO: apply top native HTMLElement
+// TODO: prune from properties
 export class InstanceListeners {
   setListeners(props) {
-    for (let l in props['listeners']) {
-      this[l] = props['listeners'][l];
+    for (let l in props) {
+      if (l.startsWith('on-')) {
+        this[l.slice(3, l.length)] = props[l];
+      }
     }
   }
   connect(element) {

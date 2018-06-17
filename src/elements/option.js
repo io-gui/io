@@ -45,7 +45,7 @@ export class IoOption extends IoButton {
         options: this.options,
         position: 'bottom',
         listener: 'click',
-        listeners: {'io-menu-item-clicked': this._onMenu}}]
+        'on-io-menu-item-clicked': this._onMenu}]
     ]);
   }
 }

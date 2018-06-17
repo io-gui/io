@@ -22,6 +22,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     Object.defineProperty(this, '__props', {value: this.__props.clone()});
     Object.defineProperty(this, '__propListeners', {value: new InstanceListeners()});
 
+    Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
+
     this.__protoFunctions.bind(this);
     this.__propListeners.setListeners(initProps);
 
@@ -32,6 +34,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.update();
   }
   update() {}
+  dispose() {} // TODO: implement
   bind(prop) {
     this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
     return this.__bindings[prop];
@@ -80,8 +83,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       this.className = props['className'];
     }
 
-    // TODO: use attributeStyleMap when implemented in browser
-    // https://developers.google.com/web/updates/2018/03/cssom
     if (props['style']) {
       for (let s in props['style']) {
         this.style[s] = props['style'][s];

@@ -45,7 +45,7 @@ export class IoTest extends IoElement {
       ['io-number-test'],
       ['io-option-test'],
       ['io-string-test'],
-      ['io-element', {id: 'element', listeners: {'on-something': this.update, 'on-something-else': 'update'}}],
+      ['io-element', {id: 'element', 'on-something': this.update, 'on-something-else': 'update'}],
       ['io-string', {id: 'string', value: this.string}],
       ['io-number', {id: 'number', value: this.number}],
       ['io-boolean', {id: 'boolean', value: this.boolean}],
@@ -97,20 +97,20 @@ export class IoTest extends IoElement {
 
     describe('Check prop listeners', () => {
       it('io-element listens (function handler)', () => {
-        chai.expect(this.$.element.__listeners['on-something'][0]).to.equal(this.update);
+        chai.expect(this.$.element.__listeners['something'][0]).to.equal(this.update);
       });
       it('io-element listens (string handler)', () => {
-        chai.expect(this.$.element.__listeners['on-something-else'][0]).to.equal(this.$.element.update);
+        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(this.$.element.update);
       });
       it('io-element stops listening when disconnected', () => {
         this.removeChild(this.$.element);
-        chai.expect(this.$.element.__listeners['on-something'][0]).to.equal(undefined);
-        chai.expect(this.$.element.__listeners['on-something-else'][0]).to.equal(undefined);
+        chai.expect(this.$.element.__listeners['something'][0]).to.equal(undefined);
+        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(undefined);
       });
       it('io-element starts listening when reconnected', () => {
         this.appendChild(this.$.element);
-        chai.expect(this.$.element.__listeners['on-something'][0]).to.equal(this.update);
-        chai.expect(this.$.element.__listeners['on-something-else'][0]).to.equal(this.$.element.update);
+        chai.expect(this.$.element.__listeners['something'][0]).to.equal(this.update);
+        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(this.$.element.update);
       });
     });
 
@@ -143,6 +143,9 @@ export class IoTest extends IoElement {
         chai.expect(this.$.boolean_bound.innerHTML).to.equal('false');
       });
     });
+
+    // TODO: test style in property
+    //
   }
 
 }

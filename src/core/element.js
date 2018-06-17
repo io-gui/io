@@ -1,5 +1,4 @@
 import {initStyle} from "./utils.js";
-import {renderNode, updateNode, buildTree} from "./vdom.js";
 import {IoCoreMixin} from "./coreMixin.js";
 import {Binding} from "./binding.js"
 
@@ -16,10 +15,6 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
       }
     };
   }
-  constructor(initProps = {}) {
-    super(initProps);
-    Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
-  }
   connectedCallback() {
     super.connectedCallback();
     for (let prop in this.__props) {
@@ -27,12 +22,6 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
         this.setAttribute(prop, this.__props[prop].value);
       }
     }
-    // this.update();
-  }
-  dispose() {
-    // for (let id in this.$) {
-    //   delete this.$[id];
-    // }
   }
   render(children, host) {
     this.traverse(buildTree()(['root', children]).children, host || this);
@@ -45,7 +34,7 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
     // create new elements after existing
     const frag = document.createDocumentFragment();
     for (let i = children.length; i < vChildren.length; i++) {
-      frag.appendChild(renderNode(vChildren[i]));
+      frag.appendChild(constructElement(vChildren[i]));
     }
     host.appendChild(frag);
 
@@ -54,7 +43,7 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
       // replace existing elements
       if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];
-        host.insertBefore(renderNode(vChildren[i]), oldElement);
+        host.insertBefore(constructElement(vChildren[i]), oldElement);
         host.removeChild(oldElement);
 
       // update existing elements
@@ -67,7 +56,15 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
           children[i].__propListeners.connect(children[i]);
         // Native HTML Elements
         } else {
-          updateNode(children[i], vChildren[i]);
+          for (let prop in vChildren[i].props) {
+            if (prop === 'style') {
+              for (let s in vChildren[i].props['style']) {
+                children[i].style[s] = vChildren[i].props['style'][s];
+              }
+            }
+            else children[i][prop] = vChildren[i].props[prop];
+          }
+
         }
       }
     }
@@ -105,3 +102,26 @@ IoElement.Register = function() {
 };
 
 IoElement.Register();
+
+const constructElement = function(vDOMNode) {
+ let ConstructorClass = customElements.get(vDOMNode.name);
+ if (ConstructorClass) return new ConstructorClass(vDOMNode.props);
+
+ let element = document.createElement(vDOMNode.name);
+ for (let prop in vDOMNode.props) {
+   if (prop === 'style') {
+     for (let s in vDOMNode.props[prop]) {
+       element.style[s] = vDOMNode.props[prop][s];
+     }
+   } else element[prop] = vDOMNode.props[prop];
+ }
+ return element;
+};
+
+// https://github.com/lukejacksonn/ijk
+const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b];
+const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1]) ? {
+   ['name']: node[0],
+   ['props']: node[1],
+   ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2] || ''
+ } : buildTree()([node[0], {}, node[1] || '']);
