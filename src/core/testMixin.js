@@ -18,4 +18,4 @@ export const IoTestMixin = (ElementClass) => class extends IoElement {
     this.run();
   }
   run() {}
-}
+};

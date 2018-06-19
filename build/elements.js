@@ -8,13 +8,13 @@ class IoButton extends IoElement {
   static get properties() {
     return {
       value: null,
-      label: String,
+      label: "label",
       pressed: {
         type: Boolean,
         reflect: true
       },
       action: Function,
-      tabindex: 1
+      tabindex: 0
     };
   }
   static get listeners() {
@@ -60,7 +60,7 @@ class IoButton extends IoElement {
     this.pressed = false;
   }
   update() {
-    this.render([['span', this.label]]);
+    this.innerText = this.label;
   }
 }
 
@@ -85,7 +85,7 @@ class IoBoolean extends IoButton {
     this.set('value', !this.value);
   }
   update() {
-    this.render([['span', this.value ? this.true : this.false]]);
+    this.innerText = this.value ? this.true : this.false;
   }
 }
 
@@ -559,7 +559,7 @@ const range = document.createRange();
 
 class IoString extends IoElement {
   static get style() {
-    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
+    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
   }
   static get properties() {
     return {
@@ -570,12 +570,12 @@ class IoString extends IoElement {
   }
   static get listeners() {
     return {
-      'focus': '_onFocus',
-      'blur': '_onBlur',
-      'keydown': '_onKeydown'
+      'focus': '_onFocus'
     };
   }
   _onFocus() {
+    this.addEventListener('blur', this._onBlur);
+    this.addEventListener('keydown', this._onKeydown);
     debounce(this._select);
   }
   _select() {
@@ -587,6 +587,8 @@ class IoString extends IoElement {
     this.set('value', this.innerText);
     this.scrollTop = 0;
     this.scrollLeft = 0;
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
   }
   _onKeydown(event) {
     if (event.which == 13) {
@@ -611,24 +613,24 @@ class IoNumber extends IoString {
     };
   }
   _onBlur() {
-    let value = Math.round(Number(this.innerText) / this.step) * this.step;
-    if (!isNaN(value)) this.set('value', value);
-    this.update();
+    this.setFromText(this.innerText);
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
   _onKeydown(event) {
     if (event.which == 13) {
       event.preventDefault();
-      let value = Math.round(Number(this.innerText) / this.step) * this.step;
-      if (!isNaN(value)) this.set('value', value);
-      this.update();
+      this.setFromText(this.innerText);
     }
+  }
+  setFromText(text) {
+    let value = Math.round(Number(text) / this.step) * this.step;
+    value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
+    if (!isNaN(value)) this.set('value', value);
   }
   update() {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
-      value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
       value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
     }
     this.innerText = String(parseFloat(value));
@@ -811,7 +813,7 @@ class IoOption extends IoButton {
         options: this.options,
         position: 'bottom',
         listener: 'click',
-        listeners: {'io-menu-item-clicked': this._onMenu}}]
+        'on-io-menu-item-clicked': this._onMenu}]
     ]);
   }
 }
@@ -856,129 +858,4 @@ class IoSlider extends IoPointerMixin(IoElement) {
 
 IoSlider.Register();
 
-class IoDemo extends IoElement {
-  static get style() {
-    return html`<style>:host div.row > io-string,:host div.row > io-boolean,:host div.row > io-number {border: 1px solid #eee;}:host div.demo > io-option,:host div.demo > io-object {display: inline-block;border: 1px solid #eee;vertical-align: top;}:host div.demo {margin: 1em;}:host .menubar {background: #fec;}:host div.menuarea {padding: 1em;background: #fec;}:host div.header, span.rowlabel {color: rgba(128, 122, 255, 0.75);}:host span.rowlabel {text-align: right;padding-right: 0.2em;;}:host div.row > *{flex: 1;margin: 2px;}:host .narrow {display: flex;width: 22em;}</style>`;
-  }
-  static get properties() {
-    return {
-      number: 1337,
-      string: "hello",
-      boolean: true,
-      null: null,
-      NaN: NaN,
-      undefined: undefined,
-      array: [1,2]
-    };
-  }
-  constructor() {
-    super();
-    let suboptions1 = [
-      {label: 'sub_sub_one', value: 1, action: console.log},
-      {label: 'sub_sub_two', value: 2, action: console.log},
-      {label: 'sub_sub_three', value: 3, action: console.log},
-      {label: 'sub_sub_four', value: 4, action: console.log},
-      {label: 'sub_sub_five', value: 5, action: console.log}
-    ];
-    let suboptions0 = [
-      {label: 'sub_one', options: suboptions1},
-      {label: 'sub_two', options: suboptions1},
-      {label: 'sub_three', options: suboptions1},
-      {label: 'sub_four', options: suboptions1},
-      {label: 'sub_five', options: suboptions1}
-    ];
-    let longOptions = [];
-    for (let i = 0; i < 1000; i++) {
-      let r = Math.random();
-      longOptions[i] = {label: String(r), value: r, action: console.log, icon: 'ξ', hint: 'log'};
-    }
-    this.menuoptions = [
-      {label: 'one', options: suboptions0},
-      {label: 'two', value: 2, action: console.log},
-      {label: 'three', value: 3, action: console.log},
-      {label: 'four', value: 4, action: console.log},
-      {label: 'five', options: suboptions0},
-      {label: 'long', options: longOptions, hint: 'list', icon: '⚠'}
-    ];
-    this.render([
-      ['div', {className: 'demo'}, [
-        ['div', {className: 'row narrow header'}, [
-          ['span', {className: 'rowlabel'}],
-          ['span', 'string'],
-          ['span', 'number'],
-          ['span', 'boolean'],
-        ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'string'],
-          ['io-string', {value: this.bind('string')}],
-          ['io-number', {value: this.bind('string')}],
-          ['io-boolean', {type: 'boolean', value: this.bind('string')}],
-        ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'number'],
-          ['io-string', {value: this.bind('number')}],
-          ['io-number', {value: this.bind('number')}],
-          ['io-boolean', {type: 'boolean', value: this.bind('number')}],
-        ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'boolean'],
-          ['io-string', {value: this.bind('boolean')}],
-          ['io-number', {value: this.bind('boolean')}],
-          ['io-boolean', {type: 'boolean', value: this.bind('boolean')}],
-        ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'NaN'],
-          ['io-string', {value: this.bind('NaN')}],
-          ['io-number', {value: this.bind('NaN')}],
-          ['io-boolean', {type: 'boolean', value: this.bind('NaN')}],
-        ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'null'],
-          ['io-string', {value: this.bind('null')}],
-          ['io-number', {value: this.bind('null')}],
-          ['io-boolean', {type: 'boolean', value: this.bind('null')}],
-        ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'undefined'],
-          ['io-string', {value: this.bind('undefined')}],
-          ['io-number', {value: this.bind('undefined')}],
-          ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
-        ]],
-      ]],
-      ['div', {className: 'demo'}, [
-        ['span', {className: 'rowlabel'}, 'io-option'],
-        ['io-option', {options: [
-          {label: 'one', value: 1},
-          {label: 'two', value: 2},
-          {label: 'three', value: 3},
-          {label: 'four', value: 4}
-        ], value: 1}],
-      ]],
-      ['div', {className: 'demo'}, [
-        ['span', {className: 'rowlabel'}, 'io-object'],
-        ['io-object', {label: 'Obj', value: {
-          "number": 1337,
-          "string": 'hello',
-          "boolean": true,
-          "null": null,
-          "NaN": NaN,
-          "undef": undefined,
-          "array": [1,2,3,4,"apple"]
-        }, expanded: true, labeled: true}]
-      ]],
-      ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
-      ['div', {className: 'demo menuarea'}, [
-        ['h3', 'io-menu (click)'],
-        ['io-menu', {options: this.menuoptions, position: 'pointer'}]
-      ]],
-      ['div', {className: 'demo menuarea'}, [
-        ['h3', 'io-menu (contextmenu)'],
-        ['io-menu', {options: this.menuoptions, position: 'pointer', listener: 'contextmenu'}]
-      ]]
-    ]);
-  }
-}
-
-IoDemo.Register();
-
-export { IoBoolean, IoButton, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoNumber, IoObject, IoOption, IoSlider, IoString, IoDemo };
+export { IoBoolean, IoButton, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoNumber, IoObject, IoOption, IoSlider, IoString };

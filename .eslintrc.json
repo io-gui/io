@@ -32,6 +32,10 @@
     "es6": true
   },
   "globals": {
-    "customElements": true
+    "customElements": true,
+    "chai": true,
+    "it": true,
+    "describe": true,
+    "mocha": true
   }
 }

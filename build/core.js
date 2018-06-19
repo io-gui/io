@@ -1,9 +1,39 @@
-// Get a list of io prototypes by walking down the inheritance chain. 
+const __debounceTimeout = new WeakMap();
+
+function html() {return arguments[0][0];}
+
+function debounce(func, wait) {
+  clearTimeout(__debounceTimeout.get(func));
+  __debounceTimeout.set(func, setTimeout(func, wait));
+}
+
+function path(path, importurl) {
+  return new URL(path, importurl).pathname;
+}
+
+const _stagingElement = document.createElement('div');
+
+function initStyle(prototypes) {
+  let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  for (let i = prototypes.length; i--;) {
+    let style = prototypes[i].constructor.style;
+    if (style) {
+      if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
+      style = style.replace(new RegExp(':host', 'g'), localName);
+      _stagingElement.innerHTML = style;
+      let element = _stagingElement.querySelector('style');
+      element.setAttribute('id', 'io-style-' + localName + '-' + i);
+      document.head.appendChild(element);
+    }
+  }
+}
+
+// Get a list of io prototypes by walking down the prototype chain.
 class Prototypes extends Array {
   constructor(_constructor) {
     super();
     let proto = _constructor.prototype;
-    // Stop at HTMLElement for io-element and Object for io-node.
+    // Stop at HTMLElement for IoElement and Object for IoNode.
     while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
       this.push(proto);
       proto = proto.__proto__;
@@ -143,12 +173,12 @@ class ProtoListeners {
   }
   connect(element) {
     for (let i in this) {
-      HTMLElement.prototype.addEventListener.call(element, i, element[this[i]]);
+      element.addEventListener(i, element[this[i]]);
     }
   }
   disconnect(element) {
     for (let i in this) {
-      HTMLElement.prototype.removeEventListener.call(element, i, element[this[i]]);
+      element.removeEventListener(i, element[this[i]]);
     }
   }
 }
@@ -177,91 +207,6 @@ class ProtoFunctions extends Array {
     }
   }
 }
-
-// Creates a list of listeners passed to element instance as arguments.
-class InstanceListeners {
-  setListeners(props) {
-    for (let l in props['listeners']) {
-      this[l] = props['listeners'][l];
-    }
-  }
-  connect(element) {
-    for (let i in this) {
-      let listener = typeof this[i] === 'function' ? this[i] : element[this[i]];
-      element.addEventListener(i, listener);
-    }
-  }
-  disconnect(element) {
-    for (let i in this) {
-      let listener = typeof this[i] === 'function' ? this[i] : element[this[i]];
-      element.removeEventListener(i, listener);
-    }
-  }
-}
-
-const _stagingElement = document.createElement('div');
-
-function initStyle(prototypes) {
-  let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-  for (let i = prototypes.length; i--;) {
-    let style = prototypes[i].constructor.style;
-    if (style) {
-      if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
-      style = style.replace(new RegExp(':host', 'g'), localName);
-      _stagingElement.innerHTML = style;
-      let element = _stagingElement.querySelector('style');
-      element.setAttribute('id', 'io-style-' + localName + '-' + i);
-      document.head.appendChild(element);
-    }
-  }
-}
-
-const renderNode = function(vDOMNode) {
-  let ConstructorClass = customElements.get(vDOMNode.name);
-  let element;
-  if (ConstructorClass) {
-    element = new ConstructorClass(vDOMNode.props);
-  } else {
-    element = document.createElement(vDOMNode.name);
-    updateNode(element, vDOMNode);
-  }
-  return element;
-};
-
-const updateNode = function(element, vDOMNode) {
-  for (let prop in vDOMNode.props) {
-    element[prop] = vDOMNode.props[prop];
-  }
-  // TODO: handle special cases cleaner
-  // TODO: use attributeStyleMap when implemented in browser
-  // https://developers.google.com/web/updates/2018/03/cssom
-  if (vDOMNode.props['style']) {
-    for (let s in vDOMNode.props['style']) {
-      element['style'][s] = vDOMNode.props['style'][s];
-    }
-  }
-  return element;
-};
-
-// https://github.com/lukejacksonn/ijk
-const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b];
-// TODO: understand!
-const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1]) ? {
-    ['name']: node[0],
-    ['props']: node[1],
-    ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2] || ''
-  } : buildTree()([node[0], {}, node[1] || '']);
-
-const IoBindingMixin = (superclass) => class extends superclass {
-  constructor() {
-    super();
-    Object.defineProperty(this, '__bindings', {value: {}});
-  }
-  bind(prop) {
-    this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
-    return this.__bindings[prop];
-  }
-};
 
 class Binding {
   constructor(source, sourceProp) {
@@ -303,6 +248,7 @@ class Binding {
       if (index !== -1) {
         targetProps.splice(index, 1);
       }
+      if (targetProps.length === 0) this.targets.splice(this.targets.indexOf(target), 1);
       // TODO: remove from WeakMap?
       target.removeEventListener(targetProp + '-changed', this.updateSource);
     }
@@ -326,232 +272,71 @@ class Binding {
   }
 }
 
-const IoElementListenersMixin = (superclass) => class extends superclass {
-  constructor() {
-    super();
-    Object.defineProperty(this, '__listeners', {value: {}});
-  }
-  addEventListener(type, listener) {
-    this.__listeners[type] = this.__listeners[type] || [];
-    let i = this.__listeners[type].indexOf(listener);
-    if (i === -1) {
-      this.__listeners[type].push(listener);
-      HTMLElement.prototype.addEventListener.call(this, type, listener);
-    }
-  }
-  hasEventListener(type, listener) {
-    return this.__listeners[type] !== undefined && this.__listeners[type].indexOf(listener) !== -1;
-  }
-  removeEventListener(type, listener) {
-    if (this.__listeners[type] !== undefined) {
-      let i = this.__listeners[type].indexOf(listener);
-      if (i !== -1) {
-        this.__listeners[type].splice(i, 1);
-        HTMLElement.prototype.removeEventListener.call(this, type, listener);
+// Creates a list of listeners passed to element instance as arguments.
+// TODO: apply top native HTMLElement
+// TODO: prune from properties
+class InstanceListeners {
+  setListeners(props) {
+    for (let l in props) {
+      if (l.startsWith('on-')) {
+        this[l.slice(3, l.length)] = props[l];
       }
     }
   }
-  dispatchEvent(type, detail, bubbles = true, src = this) {
-    HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {
-      detail: detail,
-      bubbles: bubbles,
-      composed: true
-    }));
+  connect(element) {
+    for (let i in this) {
+      let listener = typeof this[i] === 'function' ? this[i] : element[this[i]];
+      element.addEventListener(i, listener);
+    }
   }
-};
+  disconnect(element) {
+    for (let i in this) {
+      let listener = typeof this[i] === 'function' ? this[i] : element[this[i]];
+      element.removeEventListener(i, listener);
+    }
+  }
+}
 
-const IoNodeListenersMixin = (superclass) => class extends superclass {
-  constructor() {
-    super();
-    Object.defineProperty(this, '__listeners', {value: {}});
-  }
-  addEventListener(type, listener) {
-    this.__listeners[type] = this.__listeners[type] || [];
-    let i = this.__listeners[type].indexOf(listener);
-    if (i === - 1) {
-      this.__listeners[type].push(listener);
-    }
-  }
-  hasEventListener(type, listener) {
-    return this.__listeners[type] !== undefined && this.__listeners[type].indexOf(listener) !== - 1;
-  }
-  removeEventListener(type, listener) {
-    if (this.__listeners[type] !== undefined) {
-      let i = this.__listeners[type].indexOf(listener);
-      if (i !== - 1) {
-        this.__listeners[type].splice(i, 1);
-      }
-    }
-  }
-  dispatchEvent(type, detail, bubbles, path) {
-    if (this.__listeners[type] !== undefined) {
-      let array = this.__listeners[type].slice(0);
-      for (let i = 0, l = array.length; i < l; i ++) {
-        path = path || [this];
-        array[i].call(this, {detail: detail, target: this, bubbles: bubbles, path: path});
-        // TODO: test bubbling
-        if (bubbles) {
-          let parent = this.parent;
-          while (parent) {
-            path.push(parent);
-            parent.dispatchEvent(type, detail, true, path);
-            parent = parent.parent;
-          }
-        }
-      }
-    }
-  }
-};
-
-class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
+const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
-      id: String,
-      tabindex: {
-        type: String,
-        reflect: true
-      },
-      contenteditable: {
-        type: Boolean,
-        reflect: true
-      }
+      // TODO: is this needed?
+      id: String
     };
   }
   constructor(initProps = {}) {
     super();
-    this.__protoFunctions.bind(this);
+    Object.defineProperty(this, '__bindings', {value: {}});
+    Object.defineProperty(this, '__listeners', {value: {}});
+    Object.defineProperty(this, '__observeQueue', {value: []});
+    Object.defineProperty(this, '__notifyQueue', {value: []});
 
     Object.defineProperty(this, '__props', {value: this.__props.clone()});
-
-    Object.defineProperty(this, '__observers', {value: []});
-    Object.defineProperty(this, '__notifiers', {value: []});
-
-    this.setProperties(initProps);
-
-    Object.defineProperty(this, '__instaListeners', {value: new InstanceListeners()});
-    this.__instaListeners.setListeners(initProps);
+    Object.defineProperty(this, '__propListeners', {value: new InstanceListeners()});
 
     Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
 
-    for (let prop in this.__props) {
-      if (this.__props[prop].reflect) {
-        this.setAttribute(prop, this.__props[prop].value);
-      }
-    }
-  }
-  connectedCallback() {
-    this.__protoListeners.connect(this);
-    this.__instaListeners.connect(this);
+    this.__protoFunctions.bind(this);
+    this.__propListeners.setListeners(initProps);
 
-    this.triggerObservers();
-    this.triggerNotifiers();
-
-    for (let p in this.__props) {
-      if (this.__props[p].binding) {
-        this.__props[p].binding.setTarget(this, p); //TODO: test
-      }
-    }
+    // TODO: is this necessary?
+    // TODO: test!
+    this.setProperties(initProps);
+    //TODO: update should only run once
+    this.update();
   }
-  disconnectedCallback() {
-    this.__protoListeners.disconnect(this);
-    this.__instaListeners.disconnect(this);
-
-    for (let p in this.__props) {
-      if (this.__props[p].binding) {
-        this.__props[p].binding.removeTarget(this, p);
-        // TODO: this breaks binding for transplanted elements.
-        // TODO: possible memory leak!
-        // delete this.__props[p].binding;
-      }
-    }
-  }
-  dispose() {
-    // for (let id in this.$) {
-    //   delete this.$[id];
-    // }
-  }
-
   update() {}
-
-  render(children, host) {
-    this.traverse(buildTree()(['root', children]).children, host || this);
+  dispose() {} // TODO: implement
+  bind(prop) {
+    this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
+    return this.__bindings[prop];
   }
-  traverse(vChildren, host) {
-    const children = host.children;
-    // remove trailing elements
-    while (children.length > vChildren.length) host.removeChild(children[children.length - 1]);
-
-    // create new elements after existing
-    const frag = document.createDocumentFragment();
-    for (let i = children.length; i < vChildren.length; i++) {
-      frag.appendChild(renderNode(vChildren[i]));
-    }
-    host.appendChild(frag);
-
-    for (let i = 0; i < children.length; i++) {
-
-      // replace existing elements
-      if (children[i].localName !== vChildren[i].name) {
-        const oldElement = children[i];
-        host.insertBefore(renderNode(vChildren[i]), oldElement);
-        host.removeChild(oldElement);
-
-      // update existing elements
-      } else {
-        // Io Elements
-        if (children[i].hasOwnProperty('__props')) {
-          children[i].setProperties(vChildren[i].props); // TODO: test
-          children[i].triggerObservers();
-          children[i].__instaListeners.setListeners(vChildren[i].props);
-          children[i].__instaListeners.connect(children[i]);
-          children[i].triggerNotifiers();
-        // Native HTML Elements
-        } else {
-          updateNode(children[i], vChildren[i]);
-        }
-      }
-    }
-
-    for (let i = 0; i < vChildren.length; i++) {
-      if (vChildren[i].props.id) {
-        this.$[vChildren[i].props.id] = children[i];
-      }
-      if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-        children[i].innerText = vChildren[i].children;
-      } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
-        this.traverse(vChildren[i].children, children[i]);
-      }
-    }
-  }
-  triggerObservers() {
-    // TODO: test
-    // if (!this.__connected) return;
-    for (let j = 0; j < this.__observers.length; j++) {
-      this[this.__observers[j]]();
-    }
-    this.__observers.length = 0;
-  }
-  triggerNotifiers() {
-    // if (!this.__connected) return;
-    // TODO: test
-    for (let j = 0; j < this.__notifiers.length; j++) {
-      this.dispatchEvent(this.__notifiers[j][0], this.__notifiers[j][1]);
-    }
-    this.__notifiers.length = 0;
-  }
-
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
     this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
-
   setProperties(props) {
-
-    this.__observers.length = 0;
-    this.__notifiers.length = 0;
-
-    this.__observers.push('update');
 
     for (let p in props) {
 
@@ -574,15 +359,8 @@ class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
       this.__props[p].value = value;
 
       if (value !== oldValue) {
-        if (this.__props[p].reflect) {
-          this.setAttribute(p, value);
-        }
-        if (this.__props[p].observer) {
-          if (this.__observers.indexOf(this.__props[p].observer) === -1) {
-            this.__observers.push(this.__props[p].observer);
-          }
-        }
-        this.__notifiers.push(p + '-changed', {value: value, oldValue: oldValue});
+        if (this.__props[p].reflect) this.setAttribute(p, value);
+        this.queue(this.__props[p].observer, p, value, oldValue);
       }
 
       if (binding !== oldBinding) {
@@ -597,15 +375,193 @@ class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
       this.className = props['className'];
     }
 
-    // TODO: use attributeStyleMap when implemented in browser
-    // https://developers.google.com/web/updates/2018/03/cssom
     if (props['style']) {
       for (let s in props['style']) {
         this.style[s] = props['style'][s];
       }
     }
   }
+  connectedCallback() {
+    this.__protoListeners.connect(this);
+    this.__propListeners.connect(this);
+    this.queueDispatch();
+    for (let p in this.__props) {
+      if (this.__props[p].binding) {
+        this.__props[p].binding.setTarget(this, p); //TODO: test
+      }
+    }
+  }
+  disconnectedCallback() {
+    this.__protoListeners.disconnect(this);
+    this.__propListeners.disconnect(this);
+    for (let p in this.__props) {
+      if (this.__props[p].binding) {
+        this.__props[p].binding.removeTarget(this, p);
+        // TODO: this breaks binding for transplanted elements.
+        // delete this.__props[p].binding;
+        // TODO: possible memory leak!
+      }
+    }
+  }
+  addEventListener(type, listener) {
+    this.__listeners[type] = this.__listeners[type] || [];
+    let i = this.__listeners[type].indexOf(listener);
+    if (i === - 1) {
+      this.__listeners[type].push(listener);
+      if (superclass === HTMLElement) HTMLElement.prototype.addEventListener.call(this, type, listener);
+    }
+  }
+  hasEventListener(type, listener) {
+    return this.__listeners[type] !== undefined && this.__listeners[type].indexOf(listener) !== - 1;
+  }
+  removeEventListener(type, listener) {
+    if (this.__listeners[type] !== undefined) {
+      let i = this.__listeners[type].indexOf(listener);
+      if (i !== - 1) {
+        this.__listeners[type].splice(i, 1);
+        if (superclass === HTMLElement) HTMLElement.prototype.removeEventListener.call(this, type, listener);
+      }
+    }
+  }
+  dispatchEvent(type, detail, bubbles = true, src = this) {
+    if (superclass === HTMLElement) {
+      HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {
+        detail: detail,
+        bubbles: bubbles,
+        composed: true
+      }));
+    } else {
+      // TODO: fix path/src argument
+      let path = src;
+      // console.log(path);
+      if (this.__listeners[type] !== undefined) {
+        let array = this.__listeners[type].slice(0);
+        for (let i = 0, l = array.length; i < l; i ++) {
+          path = path || [this];
+          array[i].call(this, {detail: detail, target: this, bubbles: bubbles, path: path});
+          // TODO: test bubbling
+          if (bubbles) {
+            let parent = this.parent;
+            while (parent) {
+              path.push(parent);
+              parent.dispatchEvent(type, detail, true, path);
+              parent = parent.parent;
+            }
+          }
+        }
+      }
+    }
+  }
+  queue(observer, prop, value, oldValue) {
+    if (this.__observeQueue.indexOf('update') === -1) {
+      this.__observeQueue.push('update');
+    }
+    if (observer) {
+      if (this.__observeQueue.indexOf(observer) === -1) {
+        this.__observeQueue.push(observer);
+      }
+    }
+    this.__notifyQueue.push(prop + '-changed', {value: value, oldValue: oldValue});
+  }
+  queueDispatch() {
+    for (let j = 0; j < this.__observeQueue.length; j++) {
+      this[this.__observeQueue[j]]();
+    }
+    for (let j = 0; j < this.__notifyQueue.length; j++) {
+      this.dispatchEvent(this.__notifyQueue[j][0], this.__notifyQueue[j][1]);
+    }
+    this.__observeQueue.length = 0;
+    this.__notifyQueue.length = 0;
+  }
+};
 
+IoCoreMixin.Register = function () {
+  Object.defineProperty(this.prototype, '__prototypes', {value: new Prototypes(this)});
+  Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(this.prototype.__prototypes)});
+  Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__prototypes)});
+  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
+
+  defineProperties(this.prototype);
+};
+
+class IoElement extends IoCoreMixin(HTMLElement) {
+  static get properties() {
+    return {
+      tabindex: {
+        type: String,
+        reflect: true
+      },
+      contenteditable: {
+        type: Boolean,
+        reflect: true
+      }
+    };
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    for (let prop in this.__props) {
+      if (this.__props[prop].reflect) {
+        this.setAttribute(prop, this.__props[prop].value);
+      }
+    }
+  }
+  render(children, host) {
+    this.traverse(buildTree()(['root', children]).children, host || this);
+  }
+  traverse(vChildren, host) {
+    const children = host.children;
+    // remove trailing elements
+    while (children.length > vChildren.length) host.removeChild(children[children.length - 1]);
+
+    // create new elements after existing
+    const frag = document.createDocumentFragment();
+    for (let i = children.length; i < vChildren.length; i++) {
+      frag.appendChild(constructElement(vChildren[i]));
+    }
+    host.appendChild(frag);
+
+    for (let i = 0; i < children.length; i++) {
+
+      // replace existing elements
+      if (children[i].localName !== vChildren[i].name) {
+        const oldElement = children[i];
+        host.insertBefore(constructElement(vChildren[i]), oldElement);
+        host.removeChild(oldElement);
+
+      // update existing elements
+      } else {
+        // Io Elements
+        if (children[i].hasOwnProperty('__props')) {
+          children[i].setProperties(vChildren[i].props); // TODO: test
+          children[i].queueDispatch();
+          children[i].__propListeners.setListeners(vChildren[i].props);
+          children[i].__propListeners.connect(children[i]);
+        // Native HTML Elements
+        } else {
+          for (let prop in vChildren[i].props) {
+            if (prop === 'style') {
+              for (let s in vChildren[i].props['style']) {
+                children[i].style[s] = vChildren[i].props['style'][s];
+              }
+            }
+            else children[i][prop] = vChildren[i].props[prop];
+          }
+
+        }
+      }
+    }
+
+    for (let i = 0; i < vChildren.length; i++) {
+      if (vChildren[i].props.id) {
+        this.$[vChildren[i].props.id] = children[i];
+      }
+      if (vChildren[i].children && typeof vChildren[i].children === 'string') {
+        children[i].innerText = vChildren[i].children;
+      } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
+        this.traverse(vChildren[i].children, children[i]);
+      }
+    }
+  }
   // fixup for shitty setAttribute spec
   setAttribute(attr, value) {
     if (value === true) {
@@ -619,25 +575,40 @@ class IoElement extends IoBindingMixin(IoElementListenersMixin(HTMLElement)) {
 }
 
 IoElement.Register = function() {
-  const prototypes = new Prototypes(this);
-  initStyle(prototypes);
 
-  Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(prototypes)});
-  Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(prototypes)});
-  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(prototypes)});
+  IoCoreMixin.Register.call( this );
 
-  defineProperties(this.prototype);
-
+  initStyle(this.prototype.__prototypes);
   customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
+
 };
 
-class IoNode extends IoBindingMixin(IoNodeListenersMixin(Object)) {
-  constructor() {
-    super();
-    this.__proto__.constructor.Register();
-    this.__proto__.__protoFunctions.bind(this);
-    Object.defineProperty(this, '__props', {value: this.__props.clone()});
-  }
+IoElement.Register();
+
+const constructElement = function(vDOMNode) {
+ let ConstructorClass = customElements.get(vDOMNode.name);
+ if (ConstructorClass) return new ConstructorClass(vDOMNode.props);
+
+ let element = document.createElement(vDOMNode.name);
+ for (let prop in vDOMNode.props) {
+   if (prop === 'style') {
+     for (let s in vDOMNode.props[prop]) {
+       element.style[s] = vDOMNode.props[prop][s];
+     }
+   } else element[prop] = vDOMNode.props[prop];
+ }
+ return element;
+};
+
+// https://github.com/lukejacksonn/ijk
+const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b];
+const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1]) ? {
+   ['name']: node[0],
+   ['props']: node[1],
+   ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2] || ''
+ } : buildTree()([node[0], {}, node[1] || '']);
+
+class IoNode extends IoCoreMixin(Object) {
   connectedCallback() {
     // TODO: implement connected
     this.__proto__.__protoListeners.connect(this);
@@ -656,38 +627,8 @@ class IoNode extends IoBindingMixin(IoNodeListenersMixin(Object)) {
   setAttribute() {
     console.warn('io-node: setAttribute not suppoerted!');
   }
-  update() {}
 }
 
-IoNode.Register = function() {
-  if (!this.registered) {
-    const prototypes = new Prototypes(this);
+IoNode.Register = IoCoreMixin.Register;
 
-    Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(prototypes) });
-    Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(prototypes)});
-    Object.defineProperty(this.prototype, '__protoListeners', { value: new ProtoListeners(prototypes) });
-
-    defineProperties(this.prototype);
-
-    // TODO: implement children io-nodes via properties
-    // Object.defineProperty(this, 'parent', {value: null});
-    // Object.defineProperty(this, 'children', {value: null});
-
-  }
-  this.registered = true;
-};
-
-const __debounceTimeout = new WeakMap();
-
-function html() {return arguments[0][0];}
-
-function debounce(func, wait) {
-  clearTimeout(__debounceTimeout.get(func));
-  __debounceTimeout.set(func, setTimeout(func, wait));
-}
-
-function path(path, importurl) {
-  return new URL(path, importurl).pathname;
-}
-
-export { IoElement, IoNode, html, debounce, path };
+export { IoElement, IoNode, html, debounce, path, initStyle };

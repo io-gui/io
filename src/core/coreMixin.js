@@ -2,8 +2,8 @@ import {Prototypes} from "./prototypes.js";
 import {ProtoProperties, defineProperties} from "./protoProperties.js";
 import {ProtoListeners} from "./protoListeners.js";
 import {ProtoFunctions} from "./protoFunctions.js";
-import {Binding} from "./binding.js"
-import {InstanceListeners} from "./propListeners.js"
+import {Binding} from "./binding.js";
+import {InstanceListeners} from "./propListeners.js";
 
 export const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
@@ -181,7 +181,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.__observeQueue.length = 0;
     this.__notifyQueue.length = 0;
   }
-}
+};
 
 IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__prototypes', {value: new Prototypes(this)});
@@ -190,4 +190,4 @@ IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
 
   defineProperties(this.prototype);
-}
+};

@@ -1,6 +1,5 @@
 import {initStyle} from "./utils.js";
 import {IoCoreMixin} from "./coreMixin.js";
-import {Binding} from "./binding.js"
 
 export class IoElement extends IoCoreMixin(HTMLElement) {
   static get properties() {

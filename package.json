@@ -39,7 +39,10 @@
     "access": "public"
   },
   "scripts": {
-    "build": "eslint src && rollup -c && uglifyjs build/core.js > build/core.min.js && uglifyjs build/elements.js > build/elements.min.js && uglifyjs build/mixins.js > build/mixins.min.js"
+    "lint": "eslint src",
+    "uglify": "uglifyjs build/core.js > build/core.min.js && uglifyjs build/elements.js > build/elements.min.js && uglifyjs build/mixins.js > build/mixins.min.js",
+    "build": "eslint src && rollup -c && npm run uglify",
+    "travis": "npm run build && npm test"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
