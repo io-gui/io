@@ -5,6 +5,8 @@ import {ProtoFunctions} from "./protoFunctions.js";
 import {Binding} from "./binding.js";
 import {InstanceListeners} from "./propListeners.js";
 
+const __debounceTimeout = new WeakMap();
+
 export const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
@@ -29,9 +31,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
 
     // TODO: is this necessary?
     // TODO: test!
-    this.setProperties(initProps);
+    this.setProperties(initProps, true);
     //TODO: update should only run once
-    this.update();
   }
   update() {}
   dispose() {} // TODO: implement
@@ -44,7 +45,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this[prop] = value;
     this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
-  setProperties(props) {
+  setProperties(props, update) {
 
     for (let p in props) {
 
@@ -88,6 +89,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         this.style[s] = props['style'][s];
       }
     }
+
+    if (update) this.update();
   }
   connectedCallback() {
     this.__protoListeners.connect(this);
@@ -180,6 +183,10 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
     this.__observeQueue.length = 0;
     this.__notifyQueue.length = 0;
+  }
+  debounce(func, wait) {
+    clearTimeout(__debounceTimeout.get(func));
+    __debounceTimeout.set(func, setTimeout(func, wait));
   }
 };
 

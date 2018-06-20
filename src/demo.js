@@ -4,9 +4,9 @@ import "./elements.js";
 export class IoDemo extends IoElement {
   static get style() {
     return html`<style>
-      :host div.row > io-string,
-      :host div.row > io-boolean,
-      :host div.row > io-number {
+      :host io-string,
+      :host io-boolean,
+      :host io-number {
         border: 1px solid #eee;
       }
       :host div.demo > io-option,
@@ -40,6 +40,13 @@ export class IoDemo extends IoElement {
         display: flex;
         width: 22em;
       }
+      :host .sliders > io-slider {
+        margin: 1em;
+      }
+      :host .sliders > io-number-slider {
+        display: flex;
+        margin: 1em;
+      }
     </style>`;
   }
   static get properties() {
@@ -50,11 +57,20 @@ export class IoDemo extends IoElement {
       null: null,
       NaN: NaN,
       undefined: undefined,
-      array: [1,2]
+      array: Array
     };
+  }
+  static get listeners() {
+    return {
+      'value-set': '_onValueSet'
+    }
+  }
+  _onValueSet(event) {
+    this.dispatchEvent('io-object-mutated', {object: this, key: '*'}, false, window);
   }
   constructor() {
     super();
+    this.array = [1, 2, 3, false, 'apple', this];
     let suboptions1 = [
       {label: 'sub_sub_one', value: 1, action: console.log},
       {label: 'sub_sub_two', value: 2, action: console.log},
@@ -82,6 +98,22 @@ export class IoDemo extends IoElement {
       {label: 'five', options: suboptions0},
       {label: 'long', options: longOptions, hint: 'list', icon: '⚠'}
     ];
+    this.options = [
+      {label: 'negative one', value: -1},
+      {label: 'zero', value: 0},
+      {label: 'one', value: 1},
+      {label: 'two', value: 2},
+      {label: 'three', value: 3},
+      {label: 'four', value: 4},
+      {label: 'leet', value: 1337},
+    ];
+    let _configs = {
+      'IoDemo': {
+        'key:id': null,
+        'key:contenteditable': null,
+        'key:tabindex': null
+      }
+    }
     this.render([
       ['div', {className: 'demo'}, [
         ['div', {className: 'row narrow header'}, [
@@ -129,24 +161,17 @@ export class IoDemo extends IoElement {
       ]],
       ['div', {className: 'demo'}, [
         ['span', {className: 'rowlabel'}, 'io-option'],
-        ['io-option', {options: [
-          {label: 'one', value: 1},
-          {label: 'two', value: 2},
-          {label: 'three', value: 3},
-          {label: 'four', value: 4}
-        ], value: 1}],
+        ['io-option', {options: this.options, value: this.bind('number')}],
+      ]],
+      ['div', {className: 'demo sliders'}, [
+        ['span', {className: 'rowlabel'}, 'io-slider'],
+        ['io-slider', {value: this.bind('number')}],
+        ['io-slider', {value: this.bind('number'), step: 0.5, min: -2, max: 3}],
+        ['io-slider', {value: this.bind('number'), min: 0, max: 8}]
       ]],
       ['div', {className: 'demo'}, [
         ['span', {className: 'rowlabel'}, 'io-object'],
-        ['io-object', {value: {
-          "number": 1337,
-          "string": 'hello',
-          "boolean": true,
-          "null": null,
-          "NaN": NaN,
-          "undef": undefined,
-          "array": [1,2,3,4,"apple"]
-        }, expanded: true, labeled: true}]
+        ['io-object', {value: this, configs: _configs, expanded: true, labeled: true}]
       ]],
       ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
       ['div', {className: 'demo menuarea'}, [

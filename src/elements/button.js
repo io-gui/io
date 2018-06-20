@@ -43,6 +43,7 @@ export class IoButton extends IoElement {
       this.pressed = false;
       this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
     }
+    this._onUp(event);
   }
   _onDown(event) {
     event.stopPropagation();

@@ -1,4 +1,4 @@
-import {html, IoElement, debounce} from "../core.js";
+import {html, IoElement} from "../core.js";
 
 const selection = window.getSelection();
 const range = document.createRange();
@@ -32,7 +32,7 @@ export class IoString extends IoElement {
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
-    debounce(this._select);
+    this.debounce(this._select);
   }
   _select() {
     range.selectNodeContents(this);

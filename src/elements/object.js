@@ -64,6 +64,7 @@ export class IoObject extends IoElement {
         this.$[key].update();
       } else if (!key || key === '*') {
         for (let k in this.$) {
+          this.$[k].__props.value.value = this.value[k];
           this.$[k].update();
         }
       }
@@ -131,12 +132,14 @@ export class IoObject extends IoElement {
       let configs = this.getPropConfigs(proplist);
       for (let key in configs) {
         // TODO: remove props keyword
-        let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
-        if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
-          // TODO: test
-          config = Object.assign(config, this.value.__props[key].config);
+        if (configs[key]) {
+          let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
+          if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
+            // TODO: test
+            config = Object.assign(config, this.value.__props[key].config);
+          }
+          elements.push(['div', [['span', config.label || key + ':'], [config.tag, config]]]);
         }
-        elements.push(['div', [['span', config.label || key + ':'], [config.tag, config]]]);
       }
     }
     this.render([['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}], elements]);

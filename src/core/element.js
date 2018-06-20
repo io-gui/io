@@ -1,4 +1,3 @@
-import {initStyle} from "./utils.js";
 import {IoCoreMixin} from "./coreMixin.js";
 
 export class IoElement extends IoCoreMixin(HTMLElement) {
@@ -102,6 +101,8 @@ IoElement.Register = function() {
 
 IoElement.Register();
 
+export function html() {return arguments[0][0];}
+
 const constructElement = function(vDOMNode) {
  let ConstructorClass = customElements.get(vDOMNode.name);
  if (ConstructorClass) return new ConstructorClass(vDOMNode.props);
@@ -124,3 +125,20 @@ const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.
    ['props']: node[1],
    ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2] || ''
  } : buildTree()([node[0], {}, node[1] || '']);
+
+const _stagingElement = document.createElement('div');
+
+export function initStyle(prototypes) {
+  let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  for (let i = prototypes.length; i--;) {
+    let style = prototypes[i].constructor.style;
+    if (style) {
+      if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
+      style = style.replace(new RegExp(':host', 'g'), localName);
+      _stagingElement.innerHTML = style;
+      let element = _stagingElement.querySelector('style');
+      element.setAttribute('id', 'io-style-' + localName + '-' + i);
+      document.head.appendChild(element);
+    }
+  }
+}

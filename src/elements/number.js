@@ -29,8 +29,10 @@ export class IoNumber extends IoString {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
+      this.innerText = String(value);
+    } else {
+      this.innerText = 'NaN';
     }
-    this.innerText = String(parseFloat(value));
   }
 }
 

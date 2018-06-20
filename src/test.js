@@ -4,17 +4,17 @@ import "./elements.js";
 import "../node_modules/chai/chai.js";
 import "../node_modules/mocha/mocha.js";
 
-import "./elements/boolean.test.js";
-import "./elements/button.test.js";
-// import "./elements/menu.test.js";
-// import "./elements/menu-item.test.js";
-// import "./elements/menu-group.test.js";
-// import "./elements/menu-layer.test.js";
-import "./elements/number.test.js";
-// import "./elements/object.test.js";
-import "./elements/option.test.js";
-// import "./elements/slider.test.js";
-import "./elements/string.test.js";
+import "./tests/boolean.test.js";
+import "./tests/button.test.js";
+// import "./tests/menu.test.js";
+// import "./tests/menu-item.test.js";
+// import "./tests/menu-group.test.js";
+// import "./tests/menu-layer.test.js";
+import "./tests/number.test.js";
+// import "./tests/object.test.js";
+import "./tests/option.test.js";
+import "./tests/slider.test.js";
+import "./tests/string.test.js";
 
 mocha.setup('bdd');
 
@@ -44,6 +44,7 @@ export class IoTest extends IoElement {
       ['io-button-test'],
       ['io-number-test'],
       ['io-option-test'],
+      ['io-slider-test'],
       ['io-string-test'],
       ['io-element', {id: 'element', 'on-something': this.update, 'on-something-else': 'update'}],
       ['io-string', {id: 'string', value: this.string}],
@@ -120,8 +121,8 @@ export class IoTest extends IoElement {
         chai.expect(this.$.string_bound.innerHTML).to.equal('hello');
       });
       it('io-number innerHTML', () => {
-        chai.expect(this.$.number.innerHTML).to.equal('1337');
-        chai.expect(this.$.number_bound.innerHTML).to.equal('1337');
+        chai.expect(this.$.number.innerHTML).to.equal('1337.000');
+        chai.expect(this.$.number_bound.innerHTML).to.equal('1337.000');
       });
       it('io-boolean innerHTML', () => {
         chai.expect(this.$.boolean.innerHTML).to.equal('true');
@@ -136,7 +137,7 @@ export class IoTest extends IoElement {
       });
       it('io-number innerHTML', () => {
         this.number = 0;
-        chai.expect(this.$.number_bound.innerHTML).to.equal('0');
+        chai.expect(this.$.number_bound.innerHTML).to.equal('0.000');
       });
       it('io-boolean innerHTML', () => {
         this.boolean = false;
