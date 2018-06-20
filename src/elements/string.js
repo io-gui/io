@@ -53,7 +53,9 @@ export class IoString extends IoElement {
     }
   }
   update() {
-    this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
+    let value = this.value;
+    if (typeof value === 'number') value = value.toFixed(-Math.round(Math.log(0.001) / Math.LN10));
+    this.innerText = String(value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
 }
 
