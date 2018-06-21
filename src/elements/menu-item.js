@@ -1,6 +1,7 @@
 import {html, IoElement} from "../core.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuGroup} from "./menu-group.js";
+import "./label.js";
 
 export class IoMenuItem extends IoElement {
   static get style() {
@@ -60,7 +61,7 @@ export class IoMenuItem extends IoElement {
       }
     }
     this.render([
-      this.option.icon ? ['span', {className: 'menu-icon'}] : null,
+      this.option.icon ? ['span', {className: 'menu-icon'}, this.option.icon] : null,
       ['span', {className: 'menu-label'}, this.option.label || this.option.value],
       this.option.hint ? ['span', {className: 'menu-hint'}] : null,
       this.option.options ? ['span', {className: 'menu-more'}, '▸'] : null,

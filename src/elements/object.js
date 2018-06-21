@@ -149,7 +149,7 @@ export class IoObject extends IoElement {
 const IoObjectConfig = {
   'Object' : {
     'type:string': {tag: 'io-string', props: {}},
-    'type:number': {tag: 'io-number', props: {step: 0.0001}},
+    'type:number': {tag: 'io-number', props: {step: 0.01}},
     'type:boolean': {tag: 'io-boolean', props: {}},
     'type:object': {tag: 'io-object', props: {}},
     'value:null': {tag: 'io-string', props: {}},
