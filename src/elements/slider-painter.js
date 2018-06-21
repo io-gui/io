@@ -6,7 +6,7 @@ class SliderPainter {
     const step = parseFloat(properties.get('--slider-step'));
     const value = parseFloat(properties.get('--slider-value'));
 
-    if (typeof value !== 'number' || isNaN(value)) return;
+    if (isNaN(value)) return;
 
     let pos, snap = Math.floor(min / step) * step;
     let w = geom.width, h = geom.height;

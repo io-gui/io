@@ -45,7 +45,7 @@ export class IoSliderSlider extends IoPointerMixin(IoElement) {
     this.style.setProperty('--slider-min', this.min);
     this.style.setProperty('--slider-max', this.max);
     this.style.setProperty('--slider-step', this.step);
-    this.style.setProperty('--slider-value', this.value);
+    this.style.setProperty('--slider-value', typeof this.value === 'number' ? this.value : NaN);
   }
 }
 

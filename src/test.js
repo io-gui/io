@@ -6,12 +6,10 @@ import "../node_modules/mocha/mocha.js";
 
 import "./tests/boolean.test.js";
 import "./tests/button.test.js";
-// import "./tests/menu.test.js";
-// import "./tests/menu-item.test.js";
-// import "./tests/menu-group.test.js";
-// import "./tests/menu-layer.test.js";
+import "./tests/label.test.js";
+import "./tests/menu.test.js";
 import "./tests/number.test.js";
-// import "./tests/object.test.js";
+import "./tests/object.test.js";
 import "./tests/option.test.js";
 import "./tests/slider.test.js";
 import "./tests/string.test.js";
@@ -42,7 +40,10 @@ export class IoTest extends IoElement {
     this.render([
       ['io-boolean-test'],
       ['io-button-test'],
+      ['io-label-test'],
+      ['io-menu-test'],
       ['io-number-test'],
+      ['io-object-test'],
       ['io-option-test'],
       ['io-slider-test'],
       ['io-string-test'],
