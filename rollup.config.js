@@ -33,6 +33,7 @@ export default [
   },
   {
     input: 'src/elements.js',
+    experimentalDynamicImport: true,
     plugins: [
       html()
     ],

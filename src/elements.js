@@ -1,5 +1,6 @@
 export * from "./elements/boolean.js";
 export * from "./elements/button.js";
+export * from "./elements/label.js";
 export * from "./elements/menu.js";
 export * from "./elements/menu-item.js";
 export * from "./elements/menu-group.js";

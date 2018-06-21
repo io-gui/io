@@ -1,33 +1,3 @@
-const __debounceTimeout = new WeakMap();
-
-function html() {return arguments[0][0];}
-
-function debounce(func, wait) {
-  clearTimeout(__debounceTimeout.get(func));
-  __debounceTimeout.set(func, setTimeout(func, wait));
-}
-
-function path(path, importurl) {
-  return new URL(path, importurl).pathname;
-}
-
-const _stagingElement = document.createElement('div');
-
-function initStyle(prototypes) {
-  let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-  for (let i = prototypes.length; i--;) {
-    let style = prototypes[i].constructor.style;
-    if (style) {
-      if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
-      style = style.replace(new RegExp(':host', 'g'), localName);
-      _stagingElement.innerHTML = style;
-      let element = _stagingElement.querySelector('style');
-      element.setAttribute('id', 'io-style-' + localName + '-' + i);
-      document.head.appendChild(element);
-    }
-  }
-}
-
 // Get a list of io prototypes by walking down the prototype chain.
 class Prototypes extends Array {
   constructor(_constructor) {
@@ -92,7 +62,7 @@ function defineProperties(prototype) {
         this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
         this.update();
       },
-      enumerable: true,
+      enumerable: prototype.__props[prop].enumerable,
       configurable: true
     });
   }
@@ -135,6 +105,7 @@ class Property {
     this.reflect = propDef.reflect;
     this.binding = propDef.binding;
     this.config = propDef.config;
+    this.enumerable = propDef.enumerable !== undefined ? propDef.enumerable : true;
   }
   // Helper function to assign new values as we walk up the inheritance chain.
   assign(propDef) {
@@ -144,6 +115,7 @@ class Property {
     if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
     if (propDef.binding !== undefined) this.binding = propDef.binding;
     if (propDef.config !== undefined) this.config = propDef.config;
+    if (propDef.enumerable !== undefined) this.enumerable = propDef.enumerable;
   }
   // Clones the property. If property value is objects it does one level deep object clone.
   clone() {
@@ -297,11 +269,16 @@ class InstanceListeners {
   }
 }
 
+const __debounceTimeout = new WeakMap();
+
 const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
-      // TODO: is this needed?
-      id: String
+      // TODO: is this necessary?
+      id: {
+        type: String,
+        enumerable: false
+      }
     };
   }
   constructor(initProps = {}) {
@@ -321,9 +298,8 @@ const IoCoreMixin = (superclass) => class extends superclass {
 
     // TODO: is this necessary?
     // TODO: test!
-    this.setProperties(initProps);
+    this.setProperties(initProps, true);
     //TODO: update should only run once
-    this.update();
   }
   update() {}
   dispose() {} // TODO: implement
@@ -336,7 +312,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
     this[prop] = value;
     this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
-  setProperties(props) {
+  setProperties(props, update) {
 
     for (let p in props) {
 
@@ -380,6 +356,8 @@ const IoCoreMixin = (superclass) => class extends superclass {
         this.style[s] = props['style'][s];
       }
     }
+
+    if (update) this.update();
   }
   connectedCallback() {
     this.__protoListeners.connect(this);
@@ -473,6 +451,10 @@ const IoCoreMixin = (superclass) => class extends superclass {
     this.__observeQueue.length = 0;
     this.__notifyQueue.length = 0;
   }
+  debounce(func, wait) {
+    clearTimeout(__debounceTimeout.get(func));
+    __debounceTimeout.set(func, setTimeout(func, wait));
+  }
 };
 
 IoCoreMixin.Register = function () {
@@ -489,11 +471,13 @@ class IoElement extends IoCoreMixin(HTMLElement) {
     return {
       tabindex: {
         type: String,
-        reflect: true
+        reflect: true,
+        enumerable: false
       },
       contenteditable: {
         type: Boolean,
-        reflect: true
+        reflect: true,
+        enumerable: false
       }
     };
   }
@@ -585,6 +569,8 @@ IoElement.Register = function() {
 
 IoElement.Register();
 
+function html() {return arguments[0][0];}
+
 const constructElement = function(vDOMNode) {
  let ConstructorClass = customElements.get(vDOMNode.name);
  if (ConstructorClass) return new ConstructorClass(vDOMNode.props);
@@ -607,6 +593,23 @@ const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.
    ['props']: node[1],
    ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2] || ''
  } : buildTree()([node[0], {}, node[1] || '']);
+
+const _stagingElement = document.createElement('div');
+
+function initStyle(prototypes) {
+  let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  for (let i = prototypes.length; i--;) {
+    let style = prototypes[i].constructor.style;
+    if (style) {
+      if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
+      style = style.replace(new RegExp(':host', 'g'), localName);
+      _stagingElement.innerHTML = style;
+      let element = _stagingElement.querySelector('style');
+      element.setAttribute('id', 'io-style-' + localName + '-' + i);
+      document.head.appendChild(element);
+    }
+  }
+}
 
 class IoNode extends IoCoreMixin(Object) {
   connectedCallback() {
@@ -631,4 +634,4 @@ class IoNode extends IoCoreMixin(Object) {
 
 IoNode.Register = IoCoreMixin.Register;
 
-export { IoElement, IoNode, html, debounce, path, initStyle };
+export { IoElement, html, initStyle, IoNode };

@@ -49,7 +49,7 @@ export function defineProperties(prototype) {
         this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
         this.update();
       },
-      enumerable: true,
+      enumerable: prototype.__props[prop].enumerable,
       configurable: true
     });
   }
@@ -92,6 +92,7 @@ export class Property {
     this.reflect = propDef.reflect;
     this.binding = propDef.binding;
     this.config = propDef.config;
+    this.enumerable = propDef.enumerable !== undefined ? propDef.enumerable : true;
   }
   // Helper function to assign new values as we walk up the inheritance chain.
   assign(propDef) {
@@ -101,6 +102,7 @@ export class Property {
     if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
     if (propDef.binding !== undefined) this.binding = propDef.binding;
     if (propDef.config !== undefined) this.config = propDef.config;
+    if (propDef.enumerable !== undefined) this.enumerable = propDef.enumerable;
   }
   // Clones the property. If property value is objects it does one level deep object clone.
   clone() {

@@ -1,14 +1,26 @@
-import { html, IoElement, debounce } from './core.js';
+import { IoElement, html } from './core.js';
 import { IoPointerMixin } from './mixins.js';
 
-class IoButton extends IoElement {
+class IoLabel extends IoElement {
+  static get properties() {
+    return {
+      label: String
+    };
+  }
+  update() {
+    this.innerText = String(this.label);
+  }
+}
+
+IoLabel.Register();
+
+class IoButton extends IoLabel {
   static get style() {
     return html`<style>:host {cursor: pointer;white-space: nowrap;-webkit-tap-highlight-color: transparent;}:host:hover {background: rgba(255,255,255,0.1);}:host[pressed] {background: rgba(0,0,0,0.2);}</style>`;
   }
   static get properties() {
     return {
       value: null,
-      label: "label",
       pressed: {
         type: Boolean,
         reflect: true
@@ -32,6 +44,7 @@ class IoButton extends IoElement {
       this.pressed = false;
       this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
     }
+    this._onUp(event);
   }
   _onDown(event) {
     event.stopPropagation();
@@ -58,9 +71,6 @@ class IoButton extends IoElement {
   }
   _onLeave() {
     this.pressed = false;
-  }
-  update() {
-    this.innerText = this.label;
   }
 }
 
@@ -576,7 +586,7 @@ class IoString extends IoElement {
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
-    debounce(this._select);
+    this.debounce(this._select);
   }
   _select() {
     range.selectNodeContents(this);
@@ -597,7 +607,9 @@ class IoString extends IoElement {
     }
   }
   update() {
-    this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
+    let value = this.value;
+    // if (typeof value === 'number') value = value.toFixed(-Math.round(Math.log(0.001) / Math.LN10));
+    this.innerText = String(value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
 }
 
@@ -632,8 +644,10 @@ class IoNumber extends IoString {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
+      this.innerText = String(value);
+    } else {
+      this.innerText = 'NaN';
     }
-    this.innerText = String(parseFloat(value));
   }
 }
 
@@ -676,6 +690,7 @@ class IoObject extends IoElement {
         this.$[key].update();
       } else if (!key || key === '*') {
         for (let k in this.$) {
+          this.$[k].__props.value.value = this.value[k];
           this.$[k].update();
         }
       }
@@ -743,12 +758,14 @@ class IoObject extends IoElement {
       let configs = this.getPropConfigs(proplist);
       for (let key in configs) {
         // TODO: remove props keyword
-        let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
-        if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
-          // TODO: test
-          config = Object.assign(config, this.value.__props[key].config);
+        if (configs[key]) {
+          let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
+          if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
+            // TODO: test
+            config = Object.assign(config, this.value.__props[key].config);
+          }
+          elements.push(['div', [['span', config.label || key + ':'], [config.tag, config]]]);
         }
-        elements.push(['div', [['span', config.label || key + ':'], [config.tag, config]]]);
       }
     }
     this.render([['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}], elements]);
@@ -807,7 +824,7 @@ class IoOption extends IoButton {
     }
     this.__props.label.value = label;
     this.render([
-      ['span', String(label)],
+      ['io-label', {label: label}],
       ['io-menu', {
         id: 'menu',
         options: this.options,
@@ -820,18 +837,20 @@ class IoOption extends IoButton {
 
 IoOption.Register();
 
-class IoSlider extends IoPointerMixin(IoElement) {
+CSS.paintWorklet.addModule(new URL('./slider-painter.js', import.meta.url).pathname);
+
+class IoSliderSlider extends IoPointerMixin(IoElement) {
   static get style() {
-    return html`<style>:host {display: inline-block;cursor: ew-resize;min-width: 6em;min-height: 1.22em;position: relative;vertical-align: bottom;}:host > .io-slider-slit {position: absolute;width: 100%;height: 0.2em;top: calc(50% - 0.1em);}:host > .io-slider-knob {position: absolute;width: 0.4em;margin-left: -0.2em;height: 100%;background: #999;left: calc(50%);}</style>`;
+    return html`<style>:host {cursor: ew-resize;background-image: paint(slider);--slider-min: 0;--slider-max: 10;--slider-step: 0.5;--slider-value: 1;}</style>`;
   }
   static get properties() {
     return {
-      value: Number,
-      step: 0.01,
+      value: 0,
+      step: 0.001,
       min: 0,
-      max: 100,
-      pointermode: 'relative',
-      tabindex: 0
+      max: 1000,
+      pointermode: 'absolute',
+      cursor: 'ew-resize'
     };
   }
   static get listeners() {
@@ -841,21 +860,46 @@ class IoSlider extends IoPointerMixin(IoElement) {
   }
   _onPointerMove(event) {
     let rect = this.getBoundingClientRect();
-    let x = event.detail.pointer[0].position.x / rect.width;
+    let x = (event.detail.pointer[0].position.x - rect.x) / rect.width;
     let pos = Math.max(0,Math.min(1, x));
-    // TODO: implement step
-    this.set('value', this.min + (this.max - this.min) * pos);
+    let value = this.min + (this.max - this.min) * pos;
+    value = Math.round(value / this.step) * this.step;
+    value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
+    this.set('value', value);
   }
   update() {
-    let pos = 100 * (this.value - this.min) / (this.max - this.min);
+    this.style.setProperty('--slider-min', this.min);
+    this.style.setProperty('--slider-min', this.min);
+    this.style.setProperty('--slider-max', this.max);
+    this.style.setProperty('--slider-step', this.step);
+    this.style.setProperty('--slider-value', this.value);
+  }
+}
+
+IoSliderSlider.Register();
+
+class IoSlider extends IoElement {
+  static get style() {
+    return html`<style>:host {display: flex;}:host > io-number {flex: 0 0 auto;margin-right: 0.5em;}:host > .slider {flex: 1 1 auto;}</style>`;
+  }
+  static get properties() {
+    return {
+      value: 0,
+      step: 0.001,
+      min: 0,
+      max: 1000
+    };
+  }
+  update() {
+    const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
     this.render([
-      ['div', {className: 'io-slider-slit', style: {
-          background: 'linear-gradient(to right, #2cf, #2f6 ' + pos + '%, #333 ' + (pos + 1) + '%)'}}],
-      ['div', {className: 'io-slider-knob', style: {left: pos + '%'}}]
+      ['io-number', {value: this.bind('value'), step: this.step, id: 'number'}],
+      ['io-slider-slider', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, className: 'slider', id: 'slider'}]
     ]);
+    this.$.number.style.setProperty('min-width', charLength + 'em');
   }
 }
 
 IoSlider.Register();
 
-export { IoBoolean, IoButton, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoNumber, IoObject, IoOption, IoSlider, IoString };
+export { IoBoolean, IoButton, IoLabel, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoNumber, IoObject, IoOption, IoSlider, IoString };

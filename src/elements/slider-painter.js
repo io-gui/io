@@ -28,7 +28,7 @@ class SliderPainter {
     ctx.fillRect(0, h / 2 - 2, w, 4);
 
     pos = w * (value - min) / (max - min);
-    var gradient = ctx.createLinearGradient(0, 0, pos, 0);
+    const gradient = ctx.createLinearGradient(0, 0, pos, 0);
     gradient.addColorStop(0, '#2cf');
     gradient.addColorStop(1, '#2f6');
     ctx.fillStyle = gradient;

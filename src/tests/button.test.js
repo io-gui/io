@@ -5,7 +5,7 @@ export class IoButtonTest extends IoTestMixin(IoButton) {
   run() {
     describe('io-button', () => {
       it('label', () => {
-        chai.expect(this.element.innerHTML).to.equal('label');
+        chai.expect(this.element.innerHTML).to.equal('');
         this.element.label = 'button';
         chai.expect(this.element.innerHTML).to.equal('button');
       });

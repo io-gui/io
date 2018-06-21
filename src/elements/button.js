@@ -1,6 +1,7 @@
-import {html, IoElement} from "../core.js";
+import {html} from "../core.js";
+import {IoLabel} from "./label.js";
 
-export class IoButton extends IoElement {
+export class IoButton extends IoLabel {
   static get style() {
     return html`<style>
       :host {
@@ -19,7 +20,6 @@ export class IoButton extends IoElement {
   static get properties() {
     return {
       value: null,
-      label: "label",
       pressed: {
         type: Boolean,
         reflect: true
@@ -70,9 +70,6 @@ export class IoButton extends IoElement {
   }
   _onLeave() {
     this.pressed = false;
-  }
-  update() {
-    this.innerText = this.label;
   }
 }
 

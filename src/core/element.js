@@ -5,11 +5,13 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
     return {
       tabindex: {
         type: String,
-        reflect: true
+        reflect: true,
+        enumerable: false
       },
       contenteditable: {
         type: Boolean,
-        reflect: true
+        reflect: true,
+        enumerable: false
       }
     };
   }

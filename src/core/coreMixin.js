@@ -10,8 +10,11 @@ const __debounceTimeout = new WeakMap();
 export const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
-      // TODO: is this needed?
-      id: String
+      // TODO: is this necessary?
+      id: {
+        type: String,
+        enumerable: false
+      }
     };
   }
   constructor(initProps = {}) {

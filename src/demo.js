@@ -51,7 +51,7 @@ export class IoDemo extends IoElement {
   }
   static get properties() {
     return {
-      number: 1337,
+      number: 0,
       string: "hello",
       boolean: true,
       null: null,
@@ -63,9 +63,9 @@ export class IoDemo extends IoElement {
   static get listeners() {
     return {
       'value-set': '_onValueSet'
-    }
+    };
   }
-  _onValueSet(event) {
+  _onValueSet() {
     this.dispatchEvent('io-object-mutated', {object: this, key: '*'}, false, window);
   }
   constructor() {
@@ -107,13 +107,6 @@ export class IoDemo extends IoElement {
       {label: 'four', value: 4},
       {label: 'leet', value: 1337},
     ];
-    let _configs = {
-      'IoDemo': {
-        'key:id': null,
-        'key:contenteditable': null,
-        'key:tabindex': null
-      }
-    }
     this.render([
       ['div', {className: 'demo'}, [
         ['div', {className: 'row narrow header'}, [
@@ -171,7 +164,7 @@ export class IoDemo extends IoElement {
       ]],
       ['div', {className: 'demo'}, [
         ['span', {className: 'rowlabel'}, 'io-object'],
-        ['io-object', {value: this, configs: _configs, expanded: true, labeled: true}]
+        ['io-object', {value: this, expanded: true, labeled: true}]
       ]],
       ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
       ['div', {className: 'demo menuarea'}, [

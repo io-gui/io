@@ -1,7 +1,31 @@
 const _clickmask = document.createElement('div');
 _clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;";
 
-let mousedownPath = null;
+let _mousedownPath = null;
+
+class Vector2 {
+  constructor(vector = {}) {
+    this.x = vector.x || 0;
+    this.y = vector.y || 0;
+  }
+  set(vector) {
+    this.x = vector.x;
+    this.y = vector.y;
+    return this;
+  }
+  sub(vector) {
+    this.x -= vector.x;
+    this.y -= vector.y;
+    return this;
+  }
+  length() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+  distanceTo(vector) {
+    let dx = this.x - vector.x, dy = this.y - vector.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+}
 
 class Pointer {
   constructor(pointer = {}) {
@@ -28,44 +52,12 @@ class Pointer {
   }
 }
 
-class Vector2 {
-  constructor(vector = {}) {
-    this.x = vector.x || 0;
-    this.y = vector.y || 0;
-  }
-  set(vector) {
-    this.x = vector.x;
-    this.y = vector.y;
-    return this;
-  }
-  sub(vector) {
-    this.x -= vector.x;
-    this.y -= vector.y;
-    return this;
-  }
-  length() {
-    return Math.sqrt(this.x * this.x + this.y * this.y);
-  }
-  distanceTo(vector) {
-    let dx = this.x - vector.x, dy = this.y - vector.y;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-  getClosest(array) {
-    let closest = array[0];
-    for (let i = 1; i < array.length; i++) {
-      if (this.distanceTo(array[i]) < this.distanceTo(closest)) {
-        closest = array[i];
-      }
-    }
-    return closest;
-  }
-}
-
 const IoPointerMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
       pointers: Array,
-      pointermode: 'relative'
+      pointermode: 'relative',
+      cursor: 'all-scroll'
     };
   }
   static get listeners() {
@@ -114,7 +106,7 @@ const IoPointerMixin = (superclass) => class extends superclass {
     event.preventDefault();
     this.focus();
     // TODO: fix
-    mousedownPath = event.path;
+    _mousedownPath = event.path;
     this.getPointers(event, true);
     this._fire('io-pointer-start', event, this.pointers);
     window.addEventListener('mousemove', this._onMousemove);
@@ -123,20 +115,22 @@ const IoPointerMixin = (superclass) => class extends superclass {
     // TODO: clickmask breaks scrolling
     if (_clickmask.parentNode !== document.body) {
       document.body.appendChild(_clickmask);
+      _clickmask.style.setProperty('cursor', this.cursor);
     }
   }
   _onMousemove(event) {
     this.getPointers(event);
-    this._fire('io-pointer-move', event, this.pointers, mousedownPath);
+    this._fire('io-pointer-move', event, this.pointers, _mousedownPath);
   }
   _onMouseup(event) {
     this.getPointers(event);
-    this._fire('io-pointer-end', event, this.pointers, mousedownPath);
+    this._fire('io-pointer-end', event, this.pointers, _mousedownPath);
     window.removeEventListener('mousemove', this._onMousemove);
     window.removeEventListener('mouseup', this._onMouseup);
     window.removeEventListener('blur', this._onMouseup);
     if (_clickmask.parentNode === document.body) {
       document.body.removeChild(_clickmask);
+      _clickmask.style.setProperty('cursor', null);
     }
   }
   _onMousehover(event) {

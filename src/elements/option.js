@@ -37,10 +37,9 @@ export class IoOption extends IoButton {
         }
       }
     }
-    if (typeof label === 'number') label = label.toFixed(-Math.round(Math.log(0.001) / Math.LN10));
     this.__props.label.value = label;
     this.render([
-      ['span', String(label)],
+      ['io-label', {label: label}],
       ['io-menu', {
         id: 'menu',
         options: this.options,
