@@ -94,10 +94,14 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
 
 IoElement.Register = function() {
 
-  IoCoreMixin.Register.call( this );
+  IoCoreMixin.Register.call(this);
+
+  Object.defineProperty(this, 'localName', {value: this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()});
+  Object.defineProperty(this.prototype, 'localName', {value: this.localName});
+
+  customElements.define(this.localName, this);
 
   initStyle(this.prototype.__prototypes);
-  customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 
 };
 

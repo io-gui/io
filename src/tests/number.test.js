@@ -1,10 +1,11 @@
-import {IoNumber} from '../elements/number.js';
-import {IoTestMixin} from '../core/testMixin.js';
+import {IoNumber} from "../elements/number.js";
+import {IoTestMixin} from "../mixins/test.js";
 
 export class IoNumberTest extends IoTestMixin(IoNumber) {
   run() {
     describe('io-number', () => {
       it('value', () => {
+        this.element.value = 0;
         this.element.step = 1;
         chai.expect(this.element.innerHTML).to.equal('0');
         this.element.value = 'hello';
@@ -22,7 +23,7 @@ export class IoNumberTest extends IoTestMixin(IoNumber) {
       });
       it('step', () => {
         this.element.step = 0.000000001;
-        this.element.setFromText(0.012345678);
+        this.element.value = 0.012345678;
         chai.expect(this.element.innerHTML).to.equal('0.012345678');
         this.element.step = 0.000001;
         chai.expect(this.element.innerHTML).to.equal('0.012346');

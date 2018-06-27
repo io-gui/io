@@ -1,11 +1,10 @@
-import {IoString} from '../elements/string.js';
-import {IoTestMixin} from '../core/testMixin.js';
+import {IoString} from "../elements/string.js";
+import {IoTestMixin} from "../mixins/test.js";
 
 export class IoStringTest extends IoTestMixin(IoString) {
   run() {
     describe('io-string', () => {
       it('value', () => {
-        chai.expect(this.element.innerHTML).to.equal('');
         this.element.value = 'hello';
         chai.expect(this.element.innerHTML).to.equal('hello');
         this.element.value = false;

@@ -1,17 +1,17 @@
-import {IoBoolean} from '../elements/boolean.js';
-import {IoTestMixin} from '../core/testMixin.js';
+import {IoBoolean} from "../elements/boolean.js";
+import {IoTestMixin} from "../mixins/test.js";
 
 export class IoBooleanTest extends IoTestMixin(IoBoolean) {
   run() {
     describe('io-boolean', () => {
       it('true/false string', () => {
-        chai.expect(this.element.innerHTML).to.equal('false');
+        this.element.value = false;
+        chai.expect(this.element.innerHTML).to.equal(this.element.false);
         this.element.toggle();
-        chai.expect(this.element.innerHTML).to.equal('true');
+        chai.expect(this.element.innerHTML).to.equal(this.element.true);
       });
       it('toggle', () => {
         this.element.value = true;
-        chai.expect(this.element.value).to.equal(true);
         this.element.toggle();
         chai.expect(this.element.value).to.equal(false);
       });

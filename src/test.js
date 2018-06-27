@@ -38,27 +38,27 @@ export class IoTest extends IoElement {
   constructor() {
     super();
     this.render([
-      ['io-boolean-test'],
-      ['io-button-test'],
-      ['io-label-test'],
-      ['io-menu-test'],
-      ['io-number-test'],
-      ['io-object-test'],
+      // ['io-boolean-test'],
+      // ['io-button-test'],
+      // ['io-label-test'],
+      // ['io-menu-test'],
+      // ['io-number-test'],
+      // ['io-object-test'],
       ['io-option-test'],
-      ['io-slider-test'],
-      ['io-string-test'],
-      ['io-element', {id: 'element', 'on-something': this.update, 'on-something-else': 'update'}],
-      ['io-string', {id: 'string', value: this.string}],
-      ['io-number', {id: 'number', value: this.number}],
-      ['io-boolean', {id: 'boolean', value: this.boolean}],
-      ['io-string', {id: 'string_bound', value: this.bind('string')}],
-      ['io-number', {id: 'number_bound', value: this.bind('number')}],
-      ['io-boolean', {id: 'boolean_bound', value: this.bind('boolean')}],
+      // ['io-slider-test'],
+      // ['io-string-test'],
+      // ['io-element', {id: 'element', 'on-something': this.update, 'on-something-else': 'update'}],
+      // ['io-string', {id: 'string', value: this.string}],
+      // ['io-number', {id: 'number', value: this.number}],
+      // ['io-boolean', {id: 'boolean', value: this.boolean}],
+      // ['io-string', {id: 'string_bound', value: this.bind('string')}],
+      // ['io-number', {id: 'number_bound', value: this.bind('number')}],
+      // ['io-boolean', {id: 'boolean_bound', value: this.bind('boolean')}],
     ]);
   }
   connectedCallback() {
     super.connectedCallback();
-    this.run();
+    // this.run();
     mocha.checkLeaks();
     mocha.run();
   }

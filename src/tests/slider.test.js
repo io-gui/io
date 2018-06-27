@@ -1,10 +1,11 @@
-import {IoSlider} from '../elements/slider.js';
-import {IoTestMixin} from '../core/testMixin.js';
+import {IoSlider} from "../elements/slider.js";
+import {IoTestMixin} from "../mixins/test.js";
 
 export class IoSliderTest extends IoTestMixin(IoSlider) {
   run() {
     describe('io-slider', () => {
       it('value', () => {
+        this.element.value = 0;
         chai.expect(this.element.$.number.innerHTML).to.equal('0.000');
         this.element.value = 1;
         chai.expect(this.element.$.number.innerHTML).to.equal('1.000');

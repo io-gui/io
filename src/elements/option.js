@@ -31,7 +31,7 @@ export class IoOption extends IoButton {
     if (label instanceof Object) label = label.__proto__.constructor.name;
     if (this.options) {
       for (let i = 0; i < this.options.length; i++) {
-        if (this.options[i].value == this.value) {
+        if (this.options[i].value === this.value) {
           label = this.options[i].label || label;
           break;
         }
