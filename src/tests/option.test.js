@@ -18,17 +18,10 @@ export class IoOptionTest extends IoTestMixin(IoOption) {
         chai.expect(label.innerHTML).to.equal('1');
       });
       it('menu', () => {
-        this.element.debug = true;
         this.element.options = [{value: 1, label: 'one'}];
-        this.element.update();
-        // this.element.setProperties({
-        //   options: [{value: 1, label: 'one'}],
-        //   value: 1
-        // }, true);
         chai.expect(this.element.$.menu.$.group.options).to.equal(this.element.options);
         this.element.options = [{value: 2, label: 'two'}];
-        // this.element.update();
-        // chai.expect(this.element.$.menu.$.group.options).to.equal(this.element.options);
+        chai.expect(this.element.$.menu.$.group.options).to.equal(this.element.options);
       });
       it('attributes', () => {
         chai.expect(this.element.getAttribute('tabindex')).to.equal('0');

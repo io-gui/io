@@ -45,17 +45,22 @@ export class Binding {
   }
   updateSource(event) {
     if (this.targets.indexOf(event.srcElement) === -1) return;
-    if (this.source[this.sourceProp] !== event.detail.value) {
-      this.source[this.sourceProp] = event.detail.value;
+    let value = event.detail.value;
+    if (this.source[this.sourceProp] !== value) {
+      this.source[this.sourceProp] = value;
     }
   }
   updateTargets(event) {
     if (event.srcElement != this.source) return;
+    let value = event.detail.value;
     for (let i = this.targets.length; i--;) {
       let targetProps = this.targetsMap.get(this.targets[i]);
       for (let j = targetProps.length; j--;) {
-        if (this.targets[i][targetProps[j]] !== event.detail.value) {
-          this.targets[i][targetProps[j]] = event.detail.value;
+        let oldValue = this.targets[i][targetProps[j]];
+        if (oldValue !== value) {
+          // JavaScript is weird NaN != NaN
+          if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) continue;
+          this.targets[i][targetProps[j]] = value;
         }
       }
     }

@@ -468,7 +468,8 @@ class IoMenuGroup extends IoElement {
       option: typeof this.options[i] === 'object' ? this.options[i] : {value: this.options[i], label: this.options[i]},
       position: this.horizontal ? 'bottom' : 'right'
     }];
-    this.render([this.options.map(Item)]);
+    let options = this.options || [];
+    this.render([options.map(Item)]);
   }
   connectedCallback() {
     super.connectedCallback();
@@ -522,7 +523,7 @@ class IoMenuItem extends IoElement {
       }
     }
     this.render([
-      this.option.icon ? ['span', {className: 'menu-icon'}] : null,
+      this.option.icon ? ['span', {className: 'menu-icon'}, this.option.icon] : null,
       ['span', {className: 'menu-label'}, this.option.label || this.option.value],
       this.option.hint ? ['span', {className: 'menu-hint'}] : null,
       this.option.options ? ['span', {className: 'menu-more'}, '▸'] : null,
@@ -775,7 +776,7 @@ class IoObject extends IoElement {
 const IoObjectConfig = {
   'Object' : {
     'type:string': {tag: 'io-string', props: {}},
-    'type:number': {tag: 'io-number', props: {step: 0.0001}},
+    'type:number': {tag: 'io-number', props: {step: 0.01}},
     'type:boolean': {tag: 'io-boolean', props: {}},
     'type:object': {tag: 'io-object', props: {}},
     'value:null': {tag: 'io-string', props: {}},
@@ -816,7 +817,7 @@ class IoOption extends IoButton {
     if (label instanceof Object) label = label.__proto__.constructor.name;
     if (this.options) {
       for (let i = 0; i < this.options.length; i++) {
-        if (this.options[i].value == this.value) {
+        if (this.options[i].value === this.value) {
           label = this.options[i].label || label;
           break;
         }
@@ -872,7 +873,7 @@ class IoSliderSlider extends IoPointerMixin(IoElement) {
     this.style.setProperty('--slider-min', this.min);
     this.style.setProperty('--slider-max', this.max);
     this.style.setProperty('--slider-step', this.step);
-    this.style.setProperty('--slider-value', this.value);
+    this.style.setProperty('--slider-value', typeof this.value === 'number' ? this.value : NaN);
   }
 }
 

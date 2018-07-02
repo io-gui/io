@@ -66,7 +66,8 @@ export class IoMenuGroup extends IoElement {
       option: typeof this.options[i] === 'object' ? this.options[i] : {value: this.options[i], label: this.options[i]},
       position: this.horizontal ? 'bottom' : 'right'
     }];
-    this.render([this.options.map(Item)]);
+    let options = this.options || [];
+    this.render([options.map(Item)]);
   }
   connectedCallback() {
     super.connectedCallback();

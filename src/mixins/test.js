@@ -8,12 +8,7 @@ export const IoTestMixin = (ElementClass) => class extends IoElement {
   }
   constructor() {
     super();
-    this.render([[ElementClass.localName, {id: 'element'}]]);
-    this.element = this.$.element;
-    // this.element = new ElementClass();
-    // this.appendChild(this.element);
-    // TODO: consider triggering update automatically.
-    // this.element.update();
+    this.appendChild(this.element = new ElementClass());
   }
   connectedCallback() {
     super.connectedCallback();

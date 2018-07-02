@@ -1,3 +1,5 @@
+import { IoElement } from './core.js';
+
 const _clickmask = document.createElement('div');
 _clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;";
 
@@ -163,4 +165,21 @@ const IoPointerMixin = (superclass) => class extends superclass {
   }
 };
 
-export { Vector2, IoPointerMixin };
+const IoTestMixin = (ElementClass) => class extends IoElement {
+  static get properties() {
+    return {
+      element: HTMLElement
+    };
+  }
+  constructor() {
+    super();
+    this.appendChild(this.element = new ElementClass());
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    this.run();
+  }
+  run() {}
+};
+
+export { Vector2, IoPointerMixin, IoTestMixin };

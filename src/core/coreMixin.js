@@ -167,6 +167,10 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
   }
   queue(observer, prop, value, oldValue) {
+    // JavaScript is weird NaN != NaN
+    if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) {
+      return;
+    }
     if (this.__observeQueue.indexOf('update') === -1) {
       this.__observeQueue.push('update');
     }
@@ -175,7 +179,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         this.__observeQueue.push(observer);
       }
     }
-    this.__notifyQueue.push(prop + '-changed', {value: value, oldValue: oldValue});
+    this.__notifyQueue.push([prop + '-changed', {value: value, oldValue: oldValue}]);
   }
   queueDispatch() {
     for (let j = 0; j < this.__observeQueue.length; j++) {

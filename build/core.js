@@ -227,17 +227,22 @@ class Binding {
   }
   updateSource(event) {
     if (this.targets.indexOf(event.srcElement) === -1) return;
-    if (this.source[this.sourceProp] !== event.detail.value) {
-      this.source[this.sourceProp] = event.detail.value;
+    let value = event.detail.value;
+    if (this.source[this.sourceProp] !== value) {
+      this.source[this.sourceProp] = value;
     }
   }
   updateTargets(event) {
     if (event.srcElement != this.source) return;
+    let value = event.detail.value;
     for (let i = this.targets.length; i--;) {
       let targetProps = this.targetsMap.get(this.targets[i]);
       for (let j = targetProps.length; j--;) {
-        if (this.targets[i][targetProps[j]] !== event.detail.value) {
-          this.targets[i][targetProps[j]] = event.detail.value;
+        let oldValue = this.targets[i][targetProps[j]];
+        if (oldValue !== value) {
+          // JavaScript is weird NaN != NaN
+          if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) continue;
+          this.targets[i][targetProps[j]] = value;
         }
       }
     }
@@ -431,6 +436,10 @@ const IoCoreMixin = (superclass) => class extends superclass {
     }
   }
   queue(observer, prop, value, oldValue) {
+    // JavaScript is weird NaN != NaN
+    if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) {
+      return;
+    }
     if (this.__observeQueue.indexOf('update') === -1) {
       this.__observeQueue.push('update');
     }
@@ -439,7 +448,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
         this.__observeQueue.push(observer);
       }
     }
-    this.__notifyQueue.push(prop + '-changed', {value: value, oldValue: oldValue});
+    this.__notifyQueue.push([prop + '-changed', {value: value, oldValue: oldValue}]);
   }
   queueDispatch() {
     for (let j = 0; j < this.__observeQueue.length; j++) {
@@ -560,10 +569,14 @@ class IoElement extends IoCoreMixin(HTMLElement) {
 
 IoElement.Register = function() {
 
-  IoCoreMixin.Register.call( this );
+  IoCoreMixin.Register.call(this);
+
+  Object.defineProperty(this, 'localName', {value: this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()});
+  Object.defineProperty(this.prototype, 'localName', {value: this.localName});
+
+  customElements.define(this.localName, this);
 
   initStyle(this.prototype.__prototypes);
-  customElements.define(this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(), this);
 
 };
 

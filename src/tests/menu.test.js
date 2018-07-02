@@ -17,10 +17,10 @@ export class IoMenuTest extends IoTestMixin(IoMenu) {
       });
       it('menu expanded', () => {
         let layer = document.querySelector('io-menu-layer');
-        this.element.expanded = true
+        this.element.expanded = true;
         chai.expect(layer.expanded).to.equal(true);
         chai.expect(this.element.$.group.expanded).to.equal(true);
-        this.element.expanded = false
+        this.element.expanded = false;
         chai.expect(this.element.$.group.expanded).to.equal(false);
         chai.expect(layer.expanded).to.equal(false);
       });

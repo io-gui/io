@@ -12,11 +12,6 @@ export class IoMenu extends IoElement {
       listener: 'click'
     };
   }
-  static get listeners() {
-    return {
-      'options-changed': 'onOptionsChanged'
-    };
-  }
   constructor(props) {
     super(props);
     this.render([
@@ -29,12 +24,6 @@ export class IoMenu extends IoElement {
       }]
     ]);
     this.$.group.__parent = this;
-  }
-  onOptionsChanged() {
-    console.log(this, this.options === this.$.group.options, this.options);
-    // if (this.debug) console.log(this.$.group.__props.options.binding);
-    // if (this.debug) console.log(this.$.group.__props.options.binding.source === this);
-    // if (this.debug) console.log(this.$.group.__props.options.binding.targets[0] === this.$.group);
   }
   connectedCallback() {
     super.connectedCallback();
