@@ -1,7 +1,7 @@
 import {IoButton} from "../elements/button.js";
-import {IoTestMixin} from "../mixins/test.js";
+import {IoTest} from "./test.js";
 
-export class IoButtonTest extends IoTestMixin(IoButton) {
+export class IoButtonTest extends IoTest(IoButton) {
   run() {
     describe('io-button', () => {
       it('label', () => {

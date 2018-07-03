@@ -1,4 +1,4 @@
-import {IoElement} from "../core.js";
+import {IoElement} from "../core/element.js";
 
 export class IoLabel extends IoElement {
   static get properties() {

@@ -1,3 +1,8 @@
+export * from "./core/element.js";
+export * from "./core/node.js";
+
+export * from "./mixins/pointer.js";
+
 export * from "./elements/boolean.js";
 export * from "./elements/button.js";
 export * from "./elements/label.js";

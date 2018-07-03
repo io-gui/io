@@ -1,6 +1,6 @@
-import {IoElement} from "../core.js";
+import {IoElement} from "../core/element.js";
 
-export const IoTestMixin = (ElementClass) => class extends IoElement {
+export const IoTest = (Constructor) => class extends IoElement {
   static get properties() {
     return {
       element: HTMLElement
@@ -8,7 +8,7 @@ export const IoTestMixin = (ElementClass) => class extends IoElement {
   }
   constructor() {
     super();
-    this.appendChild(this.element = new ElementClass());
+    this.appendChild(this.element = new Constructor());
   }
   connectedCallback() {
     super.connectedCallback();

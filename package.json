@@ -40,7 +40,7 @@
   },
   "scripts": {
     "lint": "eslint src",
-    "uglify": "uglifyjs build/core.js > build/core.min.js && uglifyjs build/elements.js > build/elements.min.js && uglifyjs build/mixins.js > build/mixins.min.js",
+    "uglify": "uglifyjs build/io.js > build/io.min.js && uglifyjs build/io-painters.js > build/io-painters.min.js",
     "build": "eslint src && rollup -c && npm run uglify",
     "travis": "npm run build && npm test"
   },

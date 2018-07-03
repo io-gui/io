@@ -1,22 +1,21 @@
-import {html, IoElement} from "./core.js";
-import "./elements.js";
+import {html, IoElement} from "../io.js";
 
-import "../node_modules/chai/chai.js";
-import "../node_modules/mocha/mocha.js";
+import "../../node_modules/chai/chai.js";
+import "../../node_modules/mocha/mocha.js";
 
-import "./tests/boolean.test.js";
-import "./tests/button.test.js";
-import "./tests/label.test.js";
-import "./tests/menu.test.js";
-import "./tests/number.test.js";
-import "./tests/object.test.js";
-import "./tests/option.test.js";
-import "./tests/slider.test.js";
-import "./tests/string.test.js";
+import "./boolean.test.js";
+import "./button.test.js";
+import "./label.test.js";
+import "./menu.test.js";
+import "./number.test.js";
+import "./object.test.js";
+import "./option.test.js";
+import "./slider.test.js";
+import "./string.test.js";
 
 mocha.setup('bdd');
 
-export class IoTest extends IoElement {
+export class IoTests extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -152,4 +151,4 @@ export class IoTest extends IoElement {
 
 }
 
-IoTest.Register();
+IoTests.Register();

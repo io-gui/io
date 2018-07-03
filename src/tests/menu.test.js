@@ -1,7 +1,7 @@
 import {IoMenu} from "../elements/menu.js";
-import {IoTestMixin} from "../mixins/test.js";
+import {IoTest} from "./test.js";
 
-export class IoMenuTest extends IoTestMixin(IoMenu) {
+export class IoMenuTest extends IoTest(IoMenu) {
   run() {
     describe('io-menu', () => {
       it('menu layer', () => {

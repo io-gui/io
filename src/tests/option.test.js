@@ -1,7 +1,7 @@
 import {IoOption} from "../elements/option.js";
-import {IoTestMixin} from "../mixins/test.js";
+import {IoTest} from "./test.js";
 
-export class IoOptionTest extends IoTestMixin(IoOption) {
+export class IoOptionTest extends IoTest(IoOption) {
   run() {
     describe('io-option', () => {
       it('value', () => {

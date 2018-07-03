@@ -1,7 +1,7 @@
 import {IoLabel} from "../elements/label.js";
-import {IoTestMixin} from "../mixins/test.js";
+import {IoTest} from "./test.js";
 
-export class IoLabelTest extends IoTestMixin(IoLabel) {
+export class IoLabelTest extends IoTest(IoLabel) {
   run() {
     describe('io-label', () => {
       it('label', () => {

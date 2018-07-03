@@ -1,7 +1,7 @@
-import {html, IoElement} from "../core.js";
-import {IoPointerMixin} from "../mixins.js";
+import {html, IoElement} from "../core/element.js";
+import {IoPointerMixin} from "../mixins/pointer.js";
 
-CSS.paintWorklet.addModule(new URL('./slider-painter.js', import.meta.url).pathname);
+CSS.paintWorklet.addModule(new URL('../io-painters.js', import.meta.url).pathname);
 
 export class IoSliderSlider extends IoPointerMixin(IoElement) {
   static get style() {

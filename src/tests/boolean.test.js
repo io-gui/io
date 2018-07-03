@@ -1,7 +1,7 @@
 import {IoBoolean} from "../elements/boolean.js";
-import {IoTestMixin} from "../mixins/test.js";
+import {IoTest} from "./test.js";
 
-export class IoBooleanTest extends IoTestMixin(IoBoolean) {
+export class IoBooleanTest extends IoTest(IoBoolean) {
   run() {
     describe('io-boolean', () => {
       it('true/false string', () => {

@@ -1,4 +1,4 @@
-import {html, IoElement} from "../core.js";
+import {html, IoElement} from "../core/element.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
 export class IoMenuGroup extends IoElement {

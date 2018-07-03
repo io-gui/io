@@ -19,20 +19,7 @@ function html() {
 
 export default [
   {
-    input: 'src/core.js',
-    plugins: [
-      html()
-    ],
-    output: [
-      {
-        format: 'es',
-        file: 'build/core.js',
-        indent: '  '
-      }
-    ]
-  },
-  {
-    input: 'src/elements.js',
+    input: 'src/io.js',
     experimentalDynamicImport: true,
     plugins: [
       html()
@@ -40,24 +27,23 @@ export default [
     output: [
       {
         format: 'es',
-        file: 'build/elements.js',
+        file: 'build/io.js',
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/core.js'), path.resolve('src/mixins.js') ]
+    external: [ path.resolve('src/io-painters.js') ]
   },
   {
-    input: 'src/mixins.js',
+    input: 'src/io-painters.js',
     plugins: [
       html()
     ],
     output: [
       {
         format: 'es',
-        file: 'build/mixins.js',
+        file: 'build/io-painters.js',
         indent: '  '
       }
-    ],
-    external: [ path.resolve('src/core.js'), path.resolve('src/elements.js') ]
+    ]
   }
 ];

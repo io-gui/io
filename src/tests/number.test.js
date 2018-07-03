@@ -1,7 +1,7 @@
 import {IoNumber} from "../elements/number.js";
-import {IoTestMixin} from "../mixins/test.js";
+import {IoTest} from "./test.js";
 
-export class IoNumberTest extends IoTestMixin(IoNumber) {
+export class IoNumberTest extends IoTest(IoNumber) {
   run() {
     describe('io-number', () => {
       it('value', () => {

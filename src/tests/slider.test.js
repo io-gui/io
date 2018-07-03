@@ -1,7 +1,7 @@
 import {IoSlider} from "../elements/slider.js";
-import {IoTestMixin} from "../mixins/test.js";
+import {IoTest} from "./test.js";
 
-export class IoSliderTest extends IoTestMixin(IoSlider) {
+export class IoSliderTest extends IoTest(IoSlider) {
   run() {
     describe('io-slider', () => {
       it('value', () => {

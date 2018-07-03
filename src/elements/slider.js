@@ -1,4 +1,4 @@
-import {html, IoElement} from "../core.js";
+import {html, IoElement} from "../core/element.js";
 import "./slider-slider.js";
 
 export class IoSlider extends IoElement {
