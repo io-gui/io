@@ -59,7 +59,8 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
           for (let prop in vChildren[i].props) {
             if (prop === 'style') {
               for (let s in vChildren[i].props['style']) {
-                children[i].style[s] = vChildren[i].props['style'][s];
+                // children[i].style[s] = vChildren[i].props[prop][s];
+                children[i].style.setProperty(s, vChildren[i].props[prop][s]);
               }
             }
             else children[i][prop] = vChildren[i].props[prop];
@@ -117,7 +118,8 @@ const constructElement = function(vDOMNode) {
  for (let prop in vDOMNode.props) {
    if (prop === 'style') {
      for (let s in vDOMNode.props[prop]) {
-       element.style[s] = vDOMNode.props[prop][s];
+       // element.style[s] = vDOMNode.props[prop][s];
+       element.style.setProperty(s, DOMNode.props[prop][s]);
      }
    } else element[prop] = vDOMNode.props[prop];
  }

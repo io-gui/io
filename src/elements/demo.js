@@ -1,50 +1,45 @@
-import {html, IoElement} from "./io.js";
+import {html, IoElement} from "../core/element.js";
 
 export class IoDemo extends IoElement {
   static get style() {
     return html`<style>
-      :host io-string,
-      :host io-boolean,
-      :host io-number {
-        border: 1px solid #eee;
-      }
-      :host div.demo > io-option,
-      :host div.demo > io-object {
-        display: inline-block;
-        border: 1px solid #eee;
-        vertical-align: top;
-      }
-      :host div.demo {
+      :host .demo {
         margin: 1em;
+        padding: 0.5em;
+        background: #eee;
       }
-      :host .menubar {
-        background: #fec;
+      :host .demoLabel {
+        padding: 0.25em;
+        margin: -0.5em -0.5em 0.5em -0.5em;
+        background: #ccc;
       }
-      :host div.menuarea {
-        padding: 1em;
-        background: #fec;
-      }
-      :host div.header, span.rowlabel {
-        color: rgba(128, 122, 255, 0.75);
-      }
-      :host span.rowlabel {
-        text-align: right;
-        padding-right: 0.2em;;
-      }
-      :host div.row > *  {
+      :host .row > *  {
         flex: 1;
-        margin: 2px;
       }
-      :host .narrow {
+      :host .row {
         display: flex;
         width: 22em;
       }
-      :host .sliders > io-slider {
-        margin: 1em;
+      :host .label {
+        color: rgba(128, 122, 255, 0.75);
       }
-      :host .sliders > io-number-slider {
-        display: flex;
-        margin: 1em;
+      :host .padded {
+        padding: 1em;
+      }
+      :host io-menu-group {
+        background: #fff;
+      }
+
+      :host io-string,
+      :host io-boolean,
+      :host io-number,
+      :host io-option,
+      :host io-slider-slider {
+        background-color: #ddd;
+        margin: 1px;
+      }
+      :host io-object {
+        border: 1px solid #bbb;
       }
     </style>`;
   }
@@ -56,7 +51,12 @@ export class IoDemo extends IoElement {
       null: null,
       NaN: NaN,
       undefined: undefined,
-      array: Array
+      array: Array,
+      vec2: Object,
+      vec3: Object,
+      vec4: Object,
+      colorRGBA: Object,
+      colorHEX: Object,
     };
   }
   static get listeners() {
@@ -69,7 +69,12 @@ export class IoDemo extends IoElement {
   }
   constructor() {
     super();
-    this.array = [1, 2, 3, false, 'apple', this];
+    this.array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+    this.vec2 = {x:0, y:1};
+    this.vec3 = {x:0, y:0, z:1};
+    this.vec4 = {x:0, y:0, z:0, w:1};
+    this.colorRGBA = {r:0, g:1, b:0, a:1};
+    this.colorHEX = 0xff0000;
     let suboptions1 = [
       {label: 'sub_sub_one', value: 1, action: console.log},
       {label: 'sub_sub_two', value: 2, action: console.log},
@@ -108,70 +113,86 @@ export class IoDemo extends IoElement {
     ];
     this.render([
       ['div', {className: 'demo'}, [
-        ['div', {className: 'row narrow header'}, [
-          ['span', {className: 'rowlabel'}],
-          ['span', 'string'],
-          ['span', 'number'],
-          ['span', 'boolean'],
+        ['div', {className: 'demoLabel'}, 'io-string / io-number / io-boolean'],
+        ['div', {className: 'row label'}, [
+          ['span'],
+          ['span', 'io-string'],
+          ['span', 'io-number'],
+          ['span', 'io-boolean'],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'string'],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'string'],
           ['io-string', {id: 'string', value: this.bind('string')}],
           ['io-number', {value: this.bind('string')}],
           ['io-boolean', {type: 'boolean', value: this.bind('string')}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'number'],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'number'],
           ['io-string', {value: this.bind('number')}],
           ['io-number', {id: 'number', value: this.bind('number')}],
           ['io-boolean', {type: 'boolean', value: this.bind('number')}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'boolean'],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'boolean'],
           ['io-string', {value: this.bind('boolean')}],
           ['io-number', {value: this.bind('boolean')}],
           ['io-boolean', {id: 'boolean', type: 'boolean', value: this.bind('boolean')}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'NaN'],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'NaN'],
           ['io-string', {value: this.bind('NaN')}],
           ['io-number', {value: this.bind('NaN')}],
           ['io-boolean', {type: 'boolean', value: this.bind('NaN')}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'null'],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'null'],
           ['io-string', {value: this.bind('null')}],
           ['io-number', {value: this.bind('null')}],
           ['io-boolean', {type: 'boolean', value: this.bind('null')}],
         ]],
-        ['div', {className: 'row narrow'}, [
-          ['span', {className: 'rowlabel'}, 'undefined'],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'undefined'],
           ['io-string', {value: this.bind('undefined')}],
           ['io-number', {value: this.bind('undefined')}],
           ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
         ]],
       ]],
       ['div', {className: 'demo'}, [
-        ['span', {className: 'rowlabel'}, 'io-option'],
+        ['div', {className: 'demoLabel'}, 'io-color'],
+        ['io-color', {value: this.bind('colorRGBA')}],
+        ['io-color', {value: this.bind('colorHEX')}]
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-option'],
         ['io-option', {options: this.options, value: this.bind('number')}],
       ]],
       ['div', {className: 'demo sliders'}, [
-        ['span', {className: 'rowlabel'}, 'io-slider'],
+        ['div', {className: 'demoLabel'}, 'io-slider'],
         ['io-slider', {value: this.bind('number')}],
         ['io-slider', {value: this.bind('number'), step: 0.5, min: -2, max: 3}],
         ['io-slider', {value: this.bind('number'), min: 0, max: 8}]
       ]],
       ['div', {className: 'demo'}, [
-        ['span', {className: 'rowlabel'}, 'io-object'],
+        ['div', {className: 'demoLabel'}, 'io-vector'],
+        ['io-vector', {value: this.vec2}],
+        ['io-vector', {value: this.vec2}],
+        ['io-vector', {value: this.vec3}],
+        ['io-vector', {value: this.vec4}]
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-array'],
+        ['io-array', {value: this.array, columns: 4}],
+        ['io-array', {value: this.array, columns: 2}]
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-object'],
         ['io-object', {value: this, expanded: true, labeled: true}]
       ]],
-      ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
-      ['div', {className: 'demo menuarea'}, [
-        ['h3', 'io-menu (click)'],
-        ['io-menu', {options: this.menuoptions, position: 'pointer'}]
-      ]],
-      ['div', {className: 'demo menuarea'}, [
-        ['h3', 'io-menu (contextmenu)'],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-menu / io-menu-group'],
+        ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
+        ['div', {className: 'label padded'}, 'io-menu (click / contextmenu)'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer'}],
         ['io-menu', {options: this.menuoptions, position: 'pointer', listener: 'contextmenu'}]
       ]]
     ]);

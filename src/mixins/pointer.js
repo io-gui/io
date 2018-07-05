@@ -106,7 +106,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     event.preventDefault();
     this.focus();
     // TODO: fix
-    _mousedownPath = event.path;
+    _mousedownPath = event.composedPath();
     this.getPointers(event, true);
     this._fire('io-pointer-start', event, this.pointers);
     window.addEventListener('mousemove', this._onMousemove);
@@ -159,6 +159,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
 
   }
   _fire(eventName, event, pointer, path) {
-    this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path || event.path}, false);
+    path = path || event.composedPath();
+    this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path}, false);
   }
 };

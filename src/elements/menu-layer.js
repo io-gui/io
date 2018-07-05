@@ -95,8 +95,9 @@ export class IoMenuLayer extends IoElement {
     if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
   }
   _onMenuItemFocused(event) {
-    let item = event.path[0];
-    let expanded = [item.$group];
+    const path = event.composedPath();
+    const item = event.path[0];
+    const expanded = [item.$group];
     let parent = item.$parent;
     while (parent) {
       expanded.push(parent);
@@ -233,7 +234,8 @@ export class IoMenuLayer extends IoElement {
     }
   }
   _onExpandedChanged(event) {
-    if (event.path[0].expanded) this._setGroupPosition(event.path[0]);
+    const path = event.composedPath();
+    if (path[0].expanded) this._setGroupPosition(path[0]);
     for (let i = this.$groups.length; i--;) {
       if (this.$groups[i].expanded) {
         return this.expanded = true;

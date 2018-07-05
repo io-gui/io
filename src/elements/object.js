@@ -71,10 +71,11 @@ export class IoObject extends IoElement {
     }
   }
   _onValueSet(event) {
-    if (event.path[0] === this) return;
+    const path = event.composedPath();
+    if (path[0] === this) return;
     if (event.detail.object) return; // TODO: fix
     event.stopPropagation();
-    let key = event.path[0].id;
+    let key = path[0].id;
     if (key && typeof key === 'string') {
       if (this.value[key] !== event.detail.value) {
         this.value[key] = event.detail.value;

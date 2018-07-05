@@ -79,7 +79,8 @@ export class IoMenuGroup extends IoElement {
     IoMenuLayer.singleton.unregisterGroup(this);
   }
   _onFocus(event) {
-    let item = event.path[0];
+    const path = event.composedPath();
+    const item = path[0];
     IoMenuLayer.singleton._hoveredGroup = this;
     if (item.localName === 'io-menu-item') {
       IoMenuLayer.singleton._hoveredItem = item;

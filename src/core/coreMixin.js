@@ -90,6 +90,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     if (props['style']) {
       for (let s in props['style']) {
         this.style[s] = props['style'][s];
+        this.style.setProperty(s, props['style'][s]);
       }
     }
 
