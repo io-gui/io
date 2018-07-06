@@ -32,7 +32,7 @@ export class IoString extends IoElement {
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
-    this.debounce(this._select);
+    this._select();
   }
   _select() {
     range.selectNodeContents(this);

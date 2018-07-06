@@ -5,8 +5,6 @@ import {ProtoFunctions} from "./protoFunctions.js";
 import {Binding} from "./binding.js";
 import {InstanceListeners} from "./propListeners.js";
 
-const __debounceTimeout = new WeakMap();
-
 export const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
@@ -191,10 +189,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
     this.__observeQueue.length = 0;
     this.__notifyQueue.length = 0;
-  }
-  debounce(func, wait) {
-    clearTimeout(__debounceTimeout.get(func));
-    __debounceTimeout.set(func, setTimeout(func, wait));
   }
 };
 

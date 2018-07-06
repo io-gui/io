@@ -44,9 +44,9 @@ export class IoNumberTest extends IoTest(IoNumber) {
         chai.expect(this.element.getAttribute('tabindex')).to.equal('0');
         chai.expect(this.element.getAttribute('contenteditable')).to.equal('');
       });
-      it('listeners', () => {
-        chai.expect(this.element.__listeners['focus'][0]).to.equal(this.element._onFocus);
-      });
+      // it('listeners', () => {
+      //   chai.expect(this.element.__listeners['focus'][0]).to.equal(this.element._onFocus);
+      // });
     });
   }
 }

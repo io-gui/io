@@ -25,9 +25,11 @@ export class IoMenuLayer extends IoElement {
         background: rgba(0, 0, 0, 0.2);
         user-select: none;
         overflow: hidden;
+        pointer-events: none;
       }
       :host[expanded] {
         visibility: visible;
+        pointer-events: all;
       }
     </style>`;
   }
@@ -80,16 +82,22 @@ export class IoMenuLayer extends IoElement {
     if (typeof option.action === 'function') {
       option.action.apply(null, [option.value]);
       this.collapseAllGroups();
-      if (lastFocus) lastFocus.focus();
+      if (lastFocus) {
+        lastFocus.focus();
+      }
     } else if (option.button) {
       option.button.click(); // TODO: test
       this.collapseAllGroups();
-      if (lastFocus) lastFocus.focus();
+      if (lastFocus) {
+        lastFocus.focus();
+      }
     }
   }
   _onScroll() {
     this.collapseAllGroups();
-    if (lastFocus) lastFocus.focus();
+    if (lastFocus) {
+      lastFocus.focus();
+    }
   }
   _onWindowFocus(event) {
     if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
@@ -145,7 +153,9 @@ export class IoMenuLayer extends IoElement {
         this._hoveredItem.__menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
       } else if (!this._hoveredGroup) {
         this.collapseAllGroups();
-        if (lastFocus) lastFocus.focus();
+        if (lastFocus) {
+          lastFocus.focus();
+        }
       }
     }
   }

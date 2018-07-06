@@ -175,7 +175,6 @@ export class IoDemo extends IoElement {
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-vector'],
         ['io-vector', {value: this.vec2}],
-        ['io-vector', {value: this.vec2}],
         ['io-vector', {value: this.vec3}],
         ['io-vector', {value: this.vec4}]
       ]],
