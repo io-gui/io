@@ -51,11 +51,14 @@ export class IoNumber extends IoPointerMixin(IoElement) {
   }
   _onPointerMove(event) {
     // TODO: implement floating slider
-    if (this.underslider && event.detail.pointer[0].distance.length() > 2) {
-      const rect = this.getBoundingClientRect();
-      if (this.min !== -Infinity && this.max !== Infinity && this.max > this.min) {
-        const val = Math.min(1, Math.max(0, event.detail.pointer[0].position.x / rect.width));
-        this.set('value', this.min + (this.max - this.min) * val);
+    if (this.underslider) {
+      event.detail.event.preventDefault();
+      if (event.detail.pointer[0].distance.length() > 2) {
+        const rect = this.getBoundingClientRect();
+        if (this.min !== -Infinity && this.max !== Infinity && this.max > this.min) {
+          const val = Math.min(1, Math.max(0, event.detail.pointer[0].position.x / rect.width));
+          this.set('value', this.min + (this.max - this.min) * val);
+        }
       }
     }
   }

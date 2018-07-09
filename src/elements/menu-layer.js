@@ -5,7 +5,7 @@ let previousParent;
 let timeoutOpen;
 let timeoutReset;
 let WAIT_TIME = 1200;
-let lastFocus;
+// let lastFocus;
 
 // TODO: make long (scrolling) menus work with touch
 // TODO: implement search
@@ -57,7 +57,7 @@ export class IoMenuLayer extends IoElement {
     this._y = 0;
     this._v = 0;
     window.addEventListener('scroll', this._onScroll);
-    window.addEventListener('focusin', this._onWindowFocus);
+    // window.addEventListener('focusin', this._onWindowFocus);
   }
   registerGroup(group) {
     this.$groups.push(group);
@@ -82,28 +82,28 @@ export class IoMenuLayer extends IoElement {
     if (typeof option.action === 'function') {
       option.action.apply(null, [option.value]);
       this.collapseAllGroups();
-      if (lastFocus) {
-        lastFocus.focus();
-      }
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
     } else if (option.button) {
       option.button.click(); // TODO: test
       this.collapseAllGroups();
-      if (lastFocus) {
-        lastFocus.focus();
-      }
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
     }
   }
   _onScroll() {
     if (this.expanded) {
       this.collapseAllGroups();
-      if (lastFocus) {
-        lastFocus.focus();
-      }
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
     }
   }
-  _onWindowFocus(event) {
-    if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
-  }
+  // _onWindowFocus(event) {
+  //   if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
+  // }
   _onMenuItemFocused(event) {
     const path = event.composedPath();
     const item = event.path[0];
@@ -155,9 +155,9 @@ export class IoMenuLayer extends IoElement {
         this._hoveredItem.__menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
       } else if (!this._hoveredGroup) {
         this.collapseAllGroups();
-        if (lastFocus) {
-          lastFocus.focus();
-        }
+        // if (lastFocus) {
+        //   lastFocus.focus();
+        // }
       }
     }
   }
