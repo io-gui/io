@@ -180,7 +180,7 @@ export class IoDemo extends IoElement {
         ['div', {className: 'demoLabel'}, 'io-vector'],
         ['io-vector', {value: this.vec2}],
         ['io-vector', {value: this.vec3, conversion: 180/Math.PI}],
-        ['io-vector', {value: this.vec3, min: 0, max: Math.PI * 2}],
+        ['io-vector', {value: this.vec3, min: 0, max: Math.PI * 2, underslider: true}],
         ['io-vector', {value: this.vec3, canlink: true}],
         ['io-vector', {value: this.vec4}]
       ]],

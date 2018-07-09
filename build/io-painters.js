@@ -84,7 +84,7 @@ class UndersliderPainter {
 
     const w = geom.width, h = geom.height;
     const lineHeight = 1;
-    const triangleSize = 5;
+    const triangleSize = 3;
 
     ctx.lineWidth = lineHeight;
     ctx.strokeStyle = color;
@@ -93,13 +93,14 @@ class UndersliderPainter {
     ctx.lineTo(value * w, h - lineHeight / 2);
     ctx.stroke();
 
-    ctx.fillStyle = color;
-
-    ctx.beginPath();
-    ctx.moveTo(value * w - triangleSize, h);
-    ctx.lineTo(value * w, h - triangleSize);
-    ctx.lineTo(value * w + triangleSize, h);
-    ctx.fill();
+    if (value > 0) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(value * w - triangleSize, h);
+      ctx.lineTo(value * w, h - triangleSize);
+      ctx.lineTo(value * w + triangleSize, h);
+      ctx.fill();
+    }
   }
 }
 

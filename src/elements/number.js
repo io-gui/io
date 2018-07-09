@@ -11,7 +11,7 @@ export class IoNumber extends IoPointerMixin(IoElement) {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        --slider-color: #666;
+        --slider-color: #999;
       }
       :host[underslider] {
         background-image: paint(underslider);

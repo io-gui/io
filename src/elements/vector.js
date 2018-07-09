@@ -36,7 +36,7 @@ export class IoVector extends IoObject {
       min: -Infinity,
       max: Infinity,
       strict: false,
-      underslider: true,
+      underslider: false,
       canlink: false,
       linked: false,
     };
@@ -89,7 +89,7 @@ export class IoVector extends IoObject {
       }
     }
     if (this.canlink) {
-      elements.push(['io-boolean', {value: this.bind('linked'), true: '☑', false: '☐'}])
+      elements.push(['io-boolean', {value: this.bind('linked'), true: '☑', false: '☐'}]);
     }
     this.render(elements);
   }

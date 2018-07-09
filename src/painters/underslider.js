@@ -8,7 +8,7 @@ class UndersliderPainter {
 
     const w = geom.width, h = geom.height;
     const lineHeight = 1;
-    const triangleSize = 5;
+    const triangleSize = 3;
 
     ctx.lineWidth = lineHeight;
     ctx.strokeStyle = color;

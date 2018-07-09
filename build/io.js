@@ -748,9 +748,7 @@ const IoPointerMixin = (superclass) => class extends superclass {
     }
   }
   _onMousedown(event) {
-    // event.preventDefault();
-    // this.focus();
-    // TODO: fix
+    // TODO: unhack
     _mousedownPath = event.composedPath();
     this.getPointers(event, true);
     this._fire('io-pointer-start', event, this.pointers);
@@ -783,8 +781,6 @@ const IoPointerMixin = (superclass) => class extends superclass {
     this._fire('io-pointer-hover', event, this.pointers);
   }
   _onTouchstart(event) {
-    // event.preventDefault();
-    // this.focus();
     this.getPointers(event, true);
     this._fire('io-pointer-hover', event, this.pointers);
     this._fire('io-pointer-start', event, this.pointers);
@@ -792,12 +788,10 @@ const IoPointerMixin = (superclass) => class extends superclass {
     this.addEventListener('touchend', this._onTouchend);
   }
   _onTouchmove(event) {
-    // event.preventDefault();
     this.getPointers(event);
     this._fire('io-pointer-move', event, this.pointers);
   }
   _onTouchend(event) {
-    // event.preventDefault();
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
     this._fire('io-pointer-end', event, this.pointers);
@@ -855,7 +849,7 @@ class IoObject extends IoElement {
   _onValueSet(event) {
     const path = event.composedPath();
     if (path[0] === this) return;
-    if (event.detail.object) return; // TODO: fix
+    if (event.detail.object) return; // TODO: unhack
     event.stopPropagation();
     let key = path[0].id;
     if (key && typeof key === 'string') {
@@ -1616,11 +1610,12 @@ const range = document.createRange();
 
 class IoNumber extends IoPointerMixin(IoElement) {
   static get style() {
-    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host[underslider] {background-image: paint(underslider);cursor: col-resize;--slider-color: #666;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
+    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;--slider-color: #999;}:host[underslider] {background-image: paint(underslider);cursor: col-resize;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
   }
   static get properties() {
     return {
       value: Number,
+      conversion: 1,
       step: 0.001,
       min: -Infinity,
       max: Infinity,
@@ -1643,6 +1638,7 @@ class IoNumber extends IoPointerMixin(IoElement) {
   }
   _onPointerStart() {
     // TODO: implement floating slider
+    event.detail.event.preventDefault();
   }
   _onPointerMove(event) {
     // TODO: implement floating slider
@@ -1686,17 +1682,17 @@ class IoNumber extends IoPointerMixin(IoElement) {
     selection.addRange(range);
   }
   setFromText(text) {
-    let value = Math.round(Number(text) / this.step) * this.step;
+    // TODO: test conversion
+    let value = Math.round(Number(text) / this.step) * this.step / this.conversion;
     if (this.strict) {
-      value = Math.min(this.max, Math.max(this.min, Math.round(value / this.step) * this.step));
-    } else {
-      value = Math.round(value / this.step) * this.step;
+      value = Math.min(this.max, Math.max(this.min, value));
     }
     if (!isNaN(value)) this.set('value', value);
   }
   update() {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
+      value *= this.conversion;
       value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
       this.innerText = String(value);
     } else {
@@ -1878,17 +1874,79 @@ IoString.Register();
 
 //TODO: test
 
+const components = {
+  x: {},
+  y: {},
+  z: {},
+  w: {}
+};
+
 class IoVector extends IoObject {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 1 1;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 1 1;}:host > io-boolean {color: inherit;}:host > io-boolean:not([value]) {opacity: 0.25;}</style>`;
+  }
+  static get properties() {
+    return {
+      value: Object,
+      conversion: 1,
+      step: 0.01,
+      min: -Infinity,
+      max: Infinity,
+      strict: false,
+      underslider: false,
+      canlink: false,
+      linked: false,
+    };
+  }
+  _onValueSet(event) {
+    const path = event.composedPath();
+    if (path[0] === this) return;
+    if (event.detail.object) return; // TODO: unhack
+    event.stopPropagation();
+    let key = path[0].id;
+    if (key && typeof key === 'string') {
+      if (this.value[key] !== event.detail.value) {
+        this.value[key] = event.detail.value;
+      }
+
+      if (this.linked) {
+        const change = event.detail.value / event.detail.oldValue;
+        for (let key2 in components) {
+          if (event.detail.oldValue === 0) {
+            if (this.value[key2] !== undefined) {
+              this.value[key2] = event.detail.value;
+            }
+          } else {
+            if (this.value[key2] !== undefined && key2 !== key) {
+              this.value[key2] *= change;
+            }
+          }
+        }
+      }
+
+      let detail = Object.assign({object: this.value, key: this.linked ? '*' : key}, event.detail);
+      this.dispatchEvent('io-object-mutated', detail, false, window);
+      this.dispatchEvent('value-set', detail, true); // TODO
+    }
   }
   update() {
-    let elements = [];
-    let configs = this.getPropConfigs(['x', 'y', 'z', 'w']);
-    for (let key in configs) {
+    const elements = [];
+    for (let key in components) {
       if (this.value[key] !== undefined) {
-        elements.push(['io-number', Object.assign({value: this.value[key], id: key}, configs[key].props)]);
+        elements.push(['io-number', {
+          id: key,
+          value: this.value[key],
+          conversion: this.conversion,
+          step: this.step,
+          min: this.min,
+          max: this.max,
+          strict: this.strict,
+          underslider: this.underslider
+        }]);
       }
+    }
+    if (this.canlink) {
+      elements.push(['io-boolean', {value: this.bind('linked'), true: '☑', false: '☐'}]);
     }
     this.render(elements);
   }
@@ -1928,9 +1986,9 @@ class IoDemo extends IoElement {
   constructor() {
     super();
     this.array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-    this.vec2 = {x:0, y:1};
-    this.vec3 = {x:0, y:0, z:1};
-    this.vec4 = {x:0, y:0, z:0, w:1};
+    this.vec2 = {x:0.2, y:0.8};
+    this.vec3 = {x:0.2, y:0.6, z:8};
+    this.vec4 = {x:0.2, y:0.5, z:0.8, w:1};
     this.colorRGB = {r:0, g:1, b:0.5};
     this.colorRGBA = {r:0, g:1, b:0.5, a:0.5};
     this.colorHEX = 0xff0000;
@@ -2035,7 +2093,9 @@ class IoDemo extends IoElement {
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-vector'],
         ['io-vector', {value: this.vec2}],
-        ['io-vector', {value: this.vec3}],
+        ['io-vector', {value: this.vec3, conversion: 180/Math.PI}],
+        ['io-vector', {value: this.vec3, min: 0, max: Math.PI * 2, underslider: true}],
+        ['io-vector', {value: this.vec3, canlink: true}],
         ['io-vector', {value: this.vec4}]
       ]],
       ['div', {className: 'demo'}, [
