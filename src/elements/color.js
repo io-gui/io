@@ -10,11 +10,13 @@ export class IoColor extends IoObject {
     :host {
       display: flex;
       flex-direction: row;
-
     }
     :host > io-number {
       flex: 1 1;
       background-image: paint(color);
+    }
+    :host > span {
+      flex: 1 1;
     }
     </style>`;
   }
@@ -38,8 +40,11 @@ export class IoColor extends IoObject {
         }, configs[key].props)]);
       }
     }
-    elements.push(['io-color-picker', {value: this.bind('value')}]),
-    this.render([elements]);
+    let r = parseInt(this.value.r * 255);
+    let g = parseInt(this.value.g * 255);
+    let b = parseInt(this.value.b * 255);
+
+    this.render([...elements, ['span', {style: {backgroundColor: 'rgb(' + r + ',' + g + ',' + b + ')'}}]]);
   }
 }
 

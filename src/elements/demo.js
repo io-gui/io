@@ -34,6 +34,7 @@ export class IoDemo extends IoElement {
       :host io-boolean,
       :host io-number,
       :host io-option,
+      :host io-color-picker,
       :host io-slider-slider {
         background-color: #ddd;
         margin: 1px;

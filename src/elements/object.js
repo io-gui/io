@@ -126,7 +126,7 @@ export class IoObject extends IoElement {
   }
   update() {
     let label = this.label || this.value.constructor.name;
-    let elements = [];
+    let elements = [['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}]];
     if (this.expanded) {
       let keys = [...Object.keys(this.value), ...Object.keys(this.value.__proto__)];
       let proplist = this.props.length ? this.props : keys;
@@ -143,7 +143,7 @@ export class IoObject extends IoElement {
         }
       }
     }
-    this.render([['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}], elements]);
+    this.render(elements);
   }
 }
 

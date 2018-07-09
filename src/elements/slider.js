@@ -1,5 +1,5 @@
 import {html, IoElement} from "../core/element.js";
-import "./slider-slider.js";
+import "./slider-knob.js";
 
 export class IoSlider extends IoElement {
   static get style() {
@@ -28,7 +28,7 @@ export class IoSlider extends IoElement {
     const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
     this.render([
       ['io-number', {value: this.bind('value'), step: this.step, id: 'number'}],
-      ['io-slider-slider', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, className: 'slider', id: 'slider'}]
+      ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, className: 'slider', id: 'slider'}]
     ]);
     this.$.number.style.setProperty('min-width', charLength + 'em');
   }

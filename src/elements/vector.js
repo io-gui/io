@@ -23,7 +23,7 @@ export class IoVector extends IoObject {
         elements.push(['io-number', Object.assign({value: this.value[key], id: key}, configs[key].props)]);
       }
     }
-    this.render([elements]);
+    this.render(elements);
   }
 }
 

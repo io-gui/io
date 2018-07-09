@@ -1,7 +1,7 @@
 import {html, IoElement} from "../core/element.js";
 import {IoPointerMixin} from "../mixins/pointer.js";
 
-export class IoSliderSlider extends IoPointerMixin(IoElement) {
+export class IoSliderKnob extends IoPointerMixin(IoElement) {
   static get style() {
     return html`<style>
       :host {
@@ -47,4 +47,4 @@ export class IoSliderSlider extends IoPointerMixin(IoElement) {
   }
 }
 
-IoSliderSlider.Register();
+IoSliderKnob.Register();

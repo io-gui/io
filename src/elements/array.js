@@ -21,7 +21,6 @@ export class IoArray extends IoObject {
       :host[columns="5"] {
         grid-template-columns: 20% 20% 20% 20% 20%;
       }
-
     </style>`;
   }
   static get properties() {
@@ -32,10 +31,12 @@ export class IoArray extends IoObject {
     };
   }
   update() {
-    const elements = this.value;
-    this.setAttribute('columns', this.columns || Math.sqrt(elements.length) || 1);
-    const Prop = (elem, i) => ['io-number', {key: i, value: elements[i], config: {tag: 'io-number'}}];
-    this.render([elements.map(Prop)]);
+    const elements = [];
+    this.setAttribute('columns', this.columns || Math.sqrt(this.value.length) || 1);
+    for (var i = 0; i < this.value.length; i++) {
+      elements.push(['io-number', {id: String(i), value: this.value[i], config: {tag: 'io-number'}}]);
+    }
+    this.render(elements);
   }
 }
 

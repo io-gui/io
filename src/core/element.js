@@ -118,8 +118,7 @@ const constructElement = function(vDOMNode) {
  for (let prop in vDOMNode.props) {
    if (prop === 'style') {
      for (let s in vDOMNode.props[prop]) {
-       // element.style[s] = vDOMNode.props[prop][s];
-       element.style.setProperty(s, DOMNode.props[prop][s]);
+       element.style[s] = vDOMNode.props[prop][s];
      }
    } else element[prop] = vDOMNode.props[prop];
  }
