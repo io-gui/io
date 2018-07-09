@@ -11,11 +11,11 @@ export class IoNumber extends IoPointerMixin(IoElement) {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        --slider-color: #666;
       }
       :host[underslider] {
         background-image: paint(underslider);
         cursor: col-resize;
-        --slider-color: #666;
       }
       :host:focus {
         overflow: hidden;
@@ -26,6 +26,7 @@ export class IoNumber extends IoPointerMixin(IoElement) {
   static get properties() {
     return {
       value: Number,
+      conversion: 1,
       step: 0.001,
       min: -Infinity,
       max: Infinity,
@@ -48,6 +49,7 @@ export class IoNumber extends IoPointerMixin(IoElement) {
   }
   _onPointerStart() {
     // TODO: implement floating slider
+    event.detail.event.preventDefault();
   }
   _onPointerMove(event) {
     // TODO: implement floating slider
@@ -91,17 +93,17 @@ export class IoNumber extends IoPointerMixin(IoElement) {
     selection.addRange(range);
   }
   setFromText(text) {
-    let value = Math.round(Number(text) / this.step) * this.step;
+    // TODO: test conversion
+    let value = Math.round(Number(text) / this.step) * this.step / this.conversion;
     if (this.strict) {
-      value = Math.min(this.max, Math.max(this.min, Math.round(value / this.step) * this.step));
-    } else {
-      value = Math.round(value / this.step) * this.step;
+      value = Math.min(this.max, Math.max(this.min, value));
     }
     if (!isNaN(value)) this.set('value', value);
   }
   update() {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
+      value *= this.conversion;
       value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
       this.innerText = String(value);
     } else {

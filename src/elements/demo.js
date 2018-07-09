@@ -72,9 +72,9 @@ export class IoDemo extends IoElement {
   constructor() {
     super();
     this.array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
-    this.vec2 = {x:0, y:1};
-    this.vec3 = {x:0, y:0, z:1};
-    this.vec4 = {x:0, y:0, z:0, w:1};
+    this.vec2 = {x:0.2, y:0.8};
+    this.vec3 = {x:0.2, y:0.6, z:8};
+    this.vec4 = {x:0.2, y:0.5, z:0.8, w:1};
     this.colorRGB = {r:0, g:1, b:0.5};
     this.colorRGBA = {r:0, g:1, b:0.5, a:0.5};
     this.colorHEX = 0xff0000;
@@ -179,7 +179,9 @@ export class IoDemo extends IoElement {
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-vector'],
         ['io-vector', {value: this.vec2}],
-        ['io-vector', {value: this.vec3}],
+        ['io-vector', {value: this.vec3, conversion: 180/Math.PI}],
+        ['io-vector', {value: this.vec3, min: 0, max: Math.PI * 2}],
+        ['io-vector', {value: this.vec3, canlink: true}],
         ['io-vector', {value: this.vec4}]
       ]],
       ['div', {className: 'demo'}, [
