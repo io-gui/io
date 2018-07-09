@@ -11,7 +11,7 @@ export class IoSlider extends IoElement {
         flex: 0 0 auto;
         margin-right: 0.5em;
       }
-      :host > .slider {
+      :host > io-slider-knob {
         flex: 1 1 auto;
       }
     </style>`;
@@ -21,14 +21,15 @@ export class IoSlider extends IoElement {
       value: 0,
       step: 0.001,
       min: 0,
-      max: 1000
+      max: 1000,
+      strict: true,
     };
   }
   update() {
     const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
     this.render([
-      ['io-number', {value: this.bind('value'), step: this.step, id: 'number'}],
-      ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, className: 'slider', id: 'slider'}]
+      ['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number'}],
+      ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider'}]
     ]);
     this.$.number.style.setProperty('min-width', charLength + 'em');
   }

@@ -1,8 +1,14 @@
 import {html} from "../core/element.js";
 import {IoObject} from "./object.js";
-
+import {IoColorSwatch} from "./color-swatch.js";
+// import {IoColorPicker} from "./color-picker.js";
 //TODO: test
-const colors = ["#ff9977", "#55ff44", "#4499ff", "white"];
+const colors = {
+ 'r': '#ff9977',
+ 'g': '#55ff44',
+ 'b': '#4499ff',
+ 'a': 'white'
+}
 
 export class IoColor extends IoObject {
   static get style() {
@@ -13,9 +19,8 @@ export class IoColor extends IoObject {
     }
     :host > io-number {
       flex: 1 1;
-      background-image: paint(color);
     }
-    :host > span {
+    :host > io-color-swatch {
       flex: 1 1;
     }
     </style>`;
@@ -23,28 +28,26 @@ export class IoColor extends IoObject {
   _onIoObjectMutated(event) {
     super._onIoObjectMutated(event);
     this.update();
+    this.$.swatch.update();
   }
   update() {
-    let elements = [];
-    let configs = this.getPropConfigs(['r', 'g', 'b', 'a']);
-    let i = 0;
-    for (let key in configs) {
+    const elements = [];
+    for (let key in colors) {
       if (this.value[key] !== undefined) {
-        elements.push(['io-number', Object.assign({
+        elements.push(['io-number', {
           value: this.value[key],
           id: key,
-          style: {
-            '--color-color': colors[i++],
-            '--color-value': this.value[key]
-          }
-        }, configs[key].props)]);
+          step: 0.01,
+          min: 0,
+          max: 1,
+          strict: false,
+          underslider: true,
+          style: {'--slider-color': colors[key]}
+        }]);
       }
     }
-    let r = parseInt(this.value.r * 255);
-    let g = parseInt(this.value.g * 255);
-    let b = parseInt(this.value.b * 255);
-
-    this.render([...elements, ['span', {style: {backgroundColor: 'rgb(' + r + ',' + g + ',' + b + ')'}}]]);
+    elements.push(['io-color-swatch', {value: this.value, id: 'swatch'}]);
+    this.render(elements);
   }
 }
 

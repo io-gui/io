@@ -34,7 +34,7 @@ export class IoDemo extends IoElement {
       :host io-boolean,
       :host io-number,
       :host io-option,
-      :host io-color-picker,
+      :host io-color-swatch,
       :host io-slider-slider {
         background-color: #ddd;
         margin: 1px;
@@ -56,6 +56,7 @@ export class IoDemo extends IoElement {
       vec2: Object,
       vec3: Object,
       vec4: Object,
+      colorRGB: Object,
       colorRGBA: Object,
       colorHEX: Object,
     };
@@ -74,7 +75,8 @@ export class IoDemo extends IoElement {
     this.vec2 = {x:0, y:1};
     this.vec3 = {x:0, y:0, z:1};
     this.vec4 = {x:0, y:0, z:0, w:1};
-    this.colorRGBA = {r:0, g:1, b:0, a:1};
+    this.colorRGB = {r:0, g:1, b:0.5};
+    this.colorRGBA = {r:0, g:1, b:0.5, a:0.5};
     this.colorHEX = 0xff0000;
     let suboptions1 = [
       {label: 'sub_sub_one', value: 1, action: console.log},
@@ -160,6 +162,7 @@ export class IoDemo extends IoElement {
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-color'],
+        ['io-color', {value: this.bind('colorRGB')}],
         ['io-color', {value: this.bind('colorRGBA')}],
         ['io-color', {value: this.bind('colorHEX')}]
       ]],

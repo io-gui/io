@@ -34,11 +34,6 @@ export class IoString extends IoElement {
     this.addEventListener('keydown', this._onKeydown);
     this._select();
   }
-  _select() {
-    range.selectNodeContents(this);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
   _onBlur() {
     this.set('value', this.innerText);
     this.scrollTop = 0;
@@ -52,10 +47,13 @@ export class IoString extends IoElement {
       this.set('value', this.innerText);
     }
   }
+  _select() {
+    range.selectNodeContents(this);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
   update() {
-    let value = this.value;
-    // if (typeof value === 'number') value = value.toFixed(-Math.round(Math.log(0.001) / Math.LN10));
-    this.innerText = String(value).replace(new RegExp(' ', 'g'), '\u00A0');
+    this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
 }
 

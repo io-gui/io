@@ -30,6 +30,7 @@ export class IoSliderKnob extends IoPointerMixin(IoElement) {
     };
   }
   _onPointerMove(event) {
+    event.detail.event.preventDefault();
     let rect = this.getBoundingClientRect();
     let x = (event.detail.pointer[0].position.x - rect.x) / rect.width;
     let pos = Math.max(0,Math.min(1, x));

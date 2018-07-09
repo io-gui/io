@@ -6,7 +6,6 @@ export * from "./mixins/pointer.js";
 export * from "./elements/array.js";
 export * from "./elements/boolean.js";
 export * from "./elements/button.js";
-export * from "./elements/color-picker.js";
 export * from "./elements/color.js";
 export * from "./elements/label.js";
 export * from "./elements/menu.js";

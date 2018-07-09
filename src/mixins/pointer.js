@@ -103,8 +103,8 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     }
   }
   _onMousedown(event) {
-    event.preventDefault();
-    this.focus();
+    // event.preventDefault();
+    // this.focus();
     // TODO: fix
     _mousedownPath = event.composedPath();
     this.getPointers(event, true);
@@ -138,8 +138,8 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     this._fire('io-pointer-hover', event, this.pointers);
   }
   _onTouchstart(event) {
-    event.preventDefault();
-    this.focus();
+    // event.preventDefault();
+    // this.focus();
     this.getPointers(event, true);
     this._fire('io-pointer-hover', event, this.pointers);
     this._fire('io-pointer-start', event, this.pointers);
@@ -147,12 +147,12 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     this.addEventListener('touchend', this._onTouchend);
   }
   _onTouchmove(event) {
-    event.preventDefault();
+    // event.preventDefault();
     this.getPointers(event);
     this._fire('io-pointer-move', event, this.pointers);
   }
   _onTouchend(event) {
-    event.preventDefault();
+    // event.preventDefault();
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
     this._fire('io-pointer-end', event, this.pointers);

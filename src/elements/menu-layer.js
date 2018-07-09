@@ -94,9 +94,11 @@ export class IoMenuLayer extends IoElement {
     }
   }
   _onScroll() {
-    this.collapseAllGroups();
-    if (lastFocus) {
-      lastFocus.focus();
+    if (this.expanded) {
+      this.collapseAllGroups();
+      if (lastFocus) {
+        lastFocus.focus();
+      }
     }
   }
   _onWindowFocus(event) {
