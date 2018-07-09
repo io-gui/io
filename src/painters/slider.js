@@ -9,7 +9,7 @@ class SliderPainter {
     if (isNaN(value)) return;
 
     const w = geom.width, h = geom.height;
-    const handleWidth = 4
+    const handleWidth = 4;
 
     let snap = Math.floor(min / step) * step;
     let pos;

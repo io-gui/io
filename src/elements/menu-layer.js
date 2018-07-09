@@ -106,7 +106,7 @@ export class IoMenuLayer extends IoElement {
   // }
   _onMenuItemFocused(event) {
     const path = event.composedPath();
-    const item = event.path[0];
+    const item = path[0];
     const expanded = [item.$group];
     let parent = item.$parent;
     while (parent) {
@@ -145,7 +145,8 @@ export class IoMenuLayer extends IoElement {
     this._hoveredGroup = null;
   }
   _onMouseup(event) {
-    let elem = event.path[0];
+    const path = event.composedPath();
+    let elem = path[0];
     if (elem.localName === 'io-menu-item') {
       this.runAction(elem.option);
       elem.__menuroot.dispatchEvent('io-menu-item-clicked', elem.option);
@@ -163,9 +164,10 @@ export class IoMenuLayer extends IoElement {
   }
   _onKeydown(event) {
     event.preventDefault();
-    if (event.path[0].localName !== 'io-menu-item') return;
+    const path = event.composedPath();
+    if (path[0].localName !== 'io-menu-item') return;
 
-    let elem = event.path[0];
+    let elem = path[0];
     let group = elem.$parent;
     let siblings = [...group.querySelectorAll('io-menu-item')] || [];
     let children = elem.$group ? [...elem.$group.querySelectorAll('io-menu-item')]  : [];

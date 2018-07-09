@@ -11,7 +11,7 @@ export class IoColorSwatch extends IoElement {
   static get properties() {
     return {
       value: Object
-    }
+    };
   }
   update() {
     const r = parseInt(this.value.r * 255);

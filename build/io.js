@@ -59,8 +59,8 @@ function defineProperties(prototype) {
         if (this.__props[prop].observer) {
           this[this.__props[prop].observer](value, oldValue);
         }
-        this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
         this.update();
+        this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
       },
       enumerable: prototype.__props[prop].enumerable,
       configurable: true
@@ -226,14 +226,14 @@ class Binding {
     }
   }
   updateSource(event) {
-    if (this.targets.indexOf(event.srcElement) === -1) return;
+    if (this.targets.indexOf(event.target) === -1) return;
     let value = event.detail.value;
     if (this.source[this.sourceProp] !== value) {
       this.source[this.sourceProp] = value;
     }
   }
   updateTargets(event) {
-    if (event.srcElement != this.source) return;
+    if (event.target != this.source) return;
     let value = event.detail.value;
     for (let i = this.targets.length; i--;) {
       let targetProps = this.targetsMap.get(this.targets[i]);
@@ -273,8 +273,6 @@ class InstanceListeners {
     }
   }
 }
-
-const __debounceTimeout = new WeakMap();
 
 const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
@@ -359,6 +357,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
     if (props['style']) {
       for (let s in props['style']) {
         this.style[s] = props['style'][s];
+        this.style.setProperty(s, props['style'][s]);
       }
     }
 
@@ -460,10 +459,6 @@ const IoCoreMixin = (superclass) => class extends superclass {
     this.__observeQueue.length = 0;
     this.__notifyQueue.length = 0;
   }
-  debounce(func, wait) {
-    clearTimeout(__debounceTimeout.get(func));
-    __debounceTimeout.set(func, setTimeout(func, wait));
-  }
 };
 
 IoCoreMixin.Register = function () {
@@ -534,7 +529,8 @@ class IoElement extends IoCoreMixin(HTMLElement) {
           for (let prop in vChildren[i].props) {
             if (prop === 'style') {
               for (let s in vChildren[i].props['style']) {
-                children[i].style[s] = vChildren[i].props['style'][s];
+                // children[i].style[s] = vChildren[i].props[prop][s];
+                children[i].style.setProperty(s, vChildren[i].props[prop][s]);
               }
             }
             else children[i][prop] = vChildren[i].props[prop];
@@ -752,10 +748,10 @@ const IoPointerMixin = (superclass) => class extends superclass {
     }
   }
   _onMousedown(event) {
-    event.preventDefault();
-    this.focus();
+    // event.preventDefault();
+    // this.focus();
     // TODO: fix
-    _mousedownPath = event.path;
+    _mousedownPath = event.composedPath();
     this.getPointers(event, true);
     this._fire('io-pointer-start', event, this.pointers);
     window.addEventListener('mousemove', this._onMousemove);
@@ -787,8 +783,8 @@ const IoPointerMixin = (superclass) => class extends superclass {
     this._fire('io-pointer-hover', event, this.pointers);
   }
   _onTouchstart(event) {
-    event.preventDefault();
-    this.focus();
+    // event.preventDefault();
+    // this.focus();
     this.getPointers(event, true);
     this._fire('io-pointer-hover', event, this.pointers);
     this._fire('io-pointer-start', event, this.pointers);
@@ -796,21 +792,180 @@ const IoPointerMixin = (superclass) => class extends superclass {
     this.addEventListener('touchend', this._onTouchend);
   }
   _onTouchmove(event) {
-    event.preventDefault();
+    // event.preventDefault();
     this.getPointers(event);
     this._fire('io-pointer-move', event, this.pointers);
   }
   _onTouchend(event) {
-    event.preventDefault();
+    // event.preventDefault();
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
     this._fire('io-pointer-end', event, this.pointers);
 
   }
   _fire(eventName, event, pointer, path) {
-    this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path || event.path}, false);
+    path = path || event.composedPath();
+    this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path}, false);
   }
 };
+
+class IoObject extends IoElement {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div {display: flex;flex-direction: row;}:host > div > span {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > io-number {color: rgb(28, 0, 207);}:host > io-string {color: rgb(196, 26, 22);}:host > io-boolean {color: rgb(170, 13, 145);}:host > io-option {color: rgb(32,135,0);}</style>`;
+  }
+  static get properties() {
+    return {
+      value: Object,
+      props: Array,
+      configs: Object,
+      expanded: {
+        type: Boolean,
+        reflect: true
+      },
+      label: String
+    };
+  }
+  static get listeners() {
+    return {
+      'value-set': '_onValueSet'
+    };
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('io-object-mutated', this._onIoObjectMutated);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('io-object-mutated', this._onIoObjectMutated);
+  }
+  _onIoObjectMutated(event) {
+    let key = event.detail.key;
+    if (event.detail.object === this.value) {
+      if (key && this.$[key]) {
+        this.$[key].__props.value.value = this.value[key];
+        this.$[key].update();
+      } else if (!key || key === '*') {
+        for (let k in this.$) {
+          this.$[k].__props.value.value = this.value[k];
+          this.$[k].update();
+        }
+      }
+    }
+  }
+  _onValueSet(event) {
+    const path = event.composedPath();
+    if (path[0] === this) return;
+    if (event.detail.object) return; // TODO: fix
+    event.stopPropagation();
+    let key = path[0].id;
+    if (key && typeof key === 'string') {
+      if (this.value[key] !== event.detail.value) {
+        this.value[key] = event.detail.value;
+      }
+      let detail = Object.assign({object: this.value, key: key}, event.detail);
+      this.dispatchEvent('io-object-mutated', detail, false, window);
+      this.dispatchEvent('value-set', detail, true); // TODO
+    }
+  }
+  getPropConfigs(keys) {
+    let configs = {};
+
+    let proto = this.value.__proto__;
+    while (proto) {
+      let c = IoObjectConfig[proto.constructor.name];
+      if (c) configs = Object.assign(configs, c);
+      c = this.configs[proto.constructor.name];
+      if (c) configs = Object.assign(configs, c);
+      proto = proto.__proto__;
+    }
+
+    let propConfigs = {};
+
+    for (let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      let value = this.value[key];
+      let type = typeof value;
+      let cstr = (value && value.constructor) ? value.constructor.name : 'null';
+
+      if (type == 'function') continue;
+
+      propConfigs[key] = {};
+
+      if (configs.hasOwnProperty('type:' + type)) {
+        propConfigs[key] = configs['type:' + type];
+      }
+      if (configs.hasOwnProperty('constructor:'+cstr)) {
+        propConfigs[key] = configs['constructor:'+cstr];
+      }
+      if (configs.hasOwnProperty('key:' + key)) {
+        propConfigs[key] = configs['key:' + key];
+      }
+      if (configs.hasOwnProperty('value:' + String(value))) {
+        propConfigs[key] = configs['value:' + String(value)];
+      }
+    }
+    return propConfigs;
+  }
+  update() {
+    let label = this.label || this.value.constructor.name;
+    let elements = [['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}]];
+    if (this.expanded) {
+      let keys = [...Object.keys(this.value), ...Object.keys(this.value.__proto__)];
+      let proplist = this.props.length ? this.props : keys;
+      let configs = this.getPropConfigs(proplist);
+      for (let key in configs) {
+        // TODO: remove props keyword
+        if (configs[key]) {
+          let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
+          if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
+            // TODO: test
+            config = Object.assign(config, this.value.__props[key].config);
+          }
+          elements.push(['div', [['span', config.label || key + ':'], [config.tag, config]]]);
+        }
+      }
+    }
+    this.render(elements);
+  }
+}
+
+const IoObjectConfig = {
+  'Object' : {
+    'type:string': {tag: 'io-string', props: {}},
+    'type:number': {tag: 'io-number', props: {step: 0.01}},
+    'type:boolean': {tag: 'io-boolean', props: {}},
+    'type:object': {tag: 'io-object', props: {}},
+    'value:null': {tag: 'io-string', props: {}},
+    'value:undefined': {tag: 'io-string', props: {}}
+  }
+};
+
+IoObject.Register();
+
+//TODO: test
+
+class IoArray extends IoObject {
+  static get style() {
+    return html`<style>:host {display: grid;}:host[columns="2"] {grid-template-columns: 50% 50%;}:host[columns="3"] {grid-template-columns: 33.3% 33.3% 33.3%;}:host[columns="4"] {grid-template-columns: 25% 25% 25% 25%;}:host[columns="5"] {grid-template-columns: 20% 20% 20% 20% 20%;}</style>`;
+  }
+  static get properties() {
+    return {
+      columns: {
+        value: 0
+      }
+    };
+  }
+  update() {
+    const elements = [];
+    this.setAttribute('columns', this.columns || Math.sqrt(this.value.length) || 1);
+    for (let i = 0; i < this.value.length; i++) {
+      elements.push(['io-number', {id: String(i), value: this.value[i], config: {tag: 'io-number'}}]);
+    }
+    this.render(elements);
+  }
+}
+
+IoArray.Register();
 
 class IoLabel extends IoElement {
   static get properties() {
@@ -912,19 +1067,84 @@ class IoBoolean extends IoButton {
 
 IoBoolean.Register();
 
+class IoColorSwatch extends IoElement {
+  static get style() {
+    return html`<style>:host {background-image: paint(swatch);}</style>`;
+  }
+  static get properties() {
+    return {
+      value: Object
+    };
+  }
+  update() {
+    const r = parseInt(this.value.r * 255);
+    const g = parseInt(this.value.g * 255);
+    const b = parseInt(this.value.b * 255);
+    const a = parseFloat(this.value.a);
+    if (isNaN(a)) {
+      this.style.setProperty('--swatch-color', 'rgb(' + r + ',' + g + ',' + b + ')');
+    } else {
+      this.style.setProperty('--swatch-color', 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')');
+    }
+  }
+}
+
+IoColorSwatch.Register();
+
+// import {IoColorPicker} from "./color-picker.js";
+//TODO: test
+const colors = {
+ 'r': '#ff9977',
+ 'g': '#55ff44',
+ 'b': '#4499ff',
+ 'a': 'white'
+};
+
+class IoColor extends IoObject {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 1 1;}:host > io-color-swatch {flex: 1 1;}</style>`;
+  }
+  _onIoObjectMutated(event) {
+    super._onIoObjectMutated(event);
+    this.update();
+    this.$.swatch.update();
+  }
+  update() {
+    const elements = [];
+    for (let key in colors) {
+      if (this.value[key] !== undefined) {
+        elements.push(['io-number', {
+          value: this.value[key],
+          id: key,
+          step: 0.01,
+          min: 0,
+          max: 1,
+          strict: false,
+          underslider: true,
+          style: {'--slider-color': colors[key]}
+        }]);
+      }
+    }
+    elements.push(['io-color-swatch', {value: this.value, id: 'swatch'}]);
+    this.render(elements);
+  }
+}
+
+IoColor.Register();
+
 let previousOption;
 let previousParent;
 let timeoutOpen;
 let timeoutReset;
 let WAIT_TIME = 1200;
-let lastFocus;
+// let lastFocus;
 
 // TODO: make long (scrolling) menus work with touch
 // TODO: implement search
 
 class IoMenuLayer extends IoElement {
   static get style() {
-    return html`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;}:host[expanded] {visibility: visible;}</style>`;
+    return html`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;pointer-events: none;}:host[expanded] {visibility: visible;pointer-events: all;}</style>`;
   }
   static get properties() {
     return {
@@ -950,7 +1170,7 @@ class IoMenuLayer extends IoElement {
     this._y = 0;
     this._v = 0;
     window.addEventListener('scroll', this._onScroll);
-    window.addEventListener('focusin', this._onWindowFocus);
+    // window.addEventListener('focusin', this._onWindowFocus);
   }
   registerGroup(group) {
     this.$groups.push(group);
@@ -975,23 +1195,32 @@ class IoMenuLayer extends IoElement {
     if (typeof option.action === 'function') {
       option.action.apply(null, [option.value]);
       this.collapseAllGroups();
-      if (lastFocus) lastFocus.focus();
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
     } else if (option.button) {
       option.button.click(); // TODO: test
       this.collapseAllGroups();
-      if (lastFocus) lastFocus.focus();
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
     }
   }
   _onScroll() {
-    this.collapseAllGroups();
-    if (lastFocus) lastFocus.focus();
+    if (this.expanded) {
+      this.collapseAllGroups();
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
+    }
   }
-  _onWindowFocus(event) {
-    if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
-  }
+  // _onWindowFocus(event) {
+  //   if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
+  // }
   _onMenuItemFocused(event) {
-    let item = event.path[0];
-    let expanded = [item.$group];
+    const path = event.composedPath();
+    const item = path[0];
+    const expanded = [item.$group];
     let parent = item.$parent;
     while (parent) {
       expanded.push(parent);
@@ -1029,7 +1258,8 @@ class IoMenuLayer extends IoElement {
     this._hoveredGroup = null;
   }
   _onMouseup(event) {
-    let elem = event.path[0];
+    const path = event.composedPath();
+    let elem = path[0];
     if (elem.localName === 'io-menu-item') {
       this.runAction(elem.option);
       elem.__menuroot.dispatchEvent('io-menu-item-clicked', elem.option);
@@ -1039,15 +1269,18 @@ class IoMenuLayer extends IoElement {
         this._hoveredItem.__menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
       } else if (!this._hoveredGroup) {
         this.collapseAllGroups();
-        if (lastFocus) lastFocus.focus();
+        // if (lastFocus) {
+        //   lastFocus.focus();
+        // }
       }
     }
   }
   _onKeydown(event) {
     event.preventDefault();
-    if (event.path[0].localName !== 'io-menu-item') return;
+    const path = event.composedPath();
+    if (path[0].localName !== 'io-menu-item') return;
 
-    let elem = event.path[0];
+    let elem = path[0];
     let group = elem.$parent;
     let siblings = [...group.querySelectorAll('io-menu-item')] || [];
     let children = elem.$group ? [...elem.$group.querySelectorAll('io-menu-item')]  : [];
@@ -1128,7 +1361,8 @@ class IoMenuLayer extends IoElement {
     }
   }
   _onExpandedChanged(event) {
-    if (event.path[0].expanded) this._setGroupPosition(event.path[0]);
+    const path = event.composedPath();
+    if (path[0].expanded) this._setGroupPosition(path[0]);
     for (let i = this.$groups.length; i--;) {
       if (this.$groups[i].expanded) {
         return this.expanded = true;
@@ -1292,7 +1526,8 @@ class IoMenuGroup extends IoElement {
     IoMenuLayer.singleton.unregisterGroup(this);
   }
   _onFocus(event) {
-    let item = event.path[0];
+    const path = event.composedPath();
+    const item = path[0];
     IoMenuLayer.singleton._hoveredGroup = this;
     if (item.localName === 'io-menu-item') {
       IoMenuLayer.singleton._hoveredItem = item;
@@ -1379,62 +1614,60 @@ IoMenuItem.Register();
 const selection = window.getSelection();
 const range = document.createRange();
 
-class IoString extends IoElement {
+class IoNumber extends IoPointerMixin(IoElement) {
   static get style() {
-    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
+    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host[underslider] {background-image: paint(underslider);cursor: col-resize;--slider-color: #666;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
   }
   static get properties() {
     return {
-      value: String,
+      value: Number,
+      step: 0.001,
+      min: -Infinity,
+      max: Infinity,
+      strict: true,
+      underslider: {
+        value: false,
+        reflect: true
+      },
       tabindex: 0,
       contenteditable: true
     };
   }
   static get listeners() {
     return {
-      'focus': '_onFocus'
+      'focus': '_onFocus',
+      'io-pointer-start': '_onPointerStart',
+      'io-pointer-move': '_onPointerMove',
+      'io-pointer-end': '_onPointerEnd'
     };
   }
+  _onPointerStart() {
+    // TODO: implement floating slider
+  }
+  _onPointerMove(event) {
+    // TODO: implement floating slider
+    if (this.underslider) {
+      event.detail.event.preventDefault();
+      if (event.detail.pointer[0].distance.length() > 2) {
+        const rect = this.getBoundingClientRect();
+        if (this.min !== -Infinity && this.max !== Infinity && this.max > this.min) {
+          const val = Math.min(1, Math.max(0, event.detail.pointer[0].position.x / rect.width));
+          this.set('value', this.min + (this.max - this.min) * val);
+        }
+      }
+    }
+  }
+  _onPointerEnd(event) {
+    if (event.detail.pointer[0].distance.length() <= 2 && this !== document.activeElement) {
+      event.detail.event.preventDefault();
+      this.focus();
+    }
+  }
+
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
-    this.debounce(this._select);
-  }
-  _select() {
-    range.selectNodeContents(this);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
-  _onBlur() {
-    this.set('value', this.innerText);
-    this.scrollTop = 0;
-    this.scrollLeft = 0;
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
-  }
-  _onKeydown(event) {
-    if (event.which == 13) {
-      event.preventDefault();
-      this.set('value', this.innerText);
-    }
-  }
-  update() {
-    let value = this.value;
-    // if (typeof value === 'number') value = value.toFixed(-Math.round(Math.log(0.001) / Math.LN10));
-    this.innerText = String(value).replace(new RegExp(' ', 'g'), '\u00A0');
-  }
-}
-
-IoString.Register();
-
-class IoNumber extends IoString {
-  static get properties() {
-    return {
-      value: Number,
-      step: 0.001,
-      min: -Infinity,
-      max: Infinity
-    };
+    this._select();
   }
   _onBlur() {
     this.setFromText(this.innerText);
@@ -1447,9 +1680,18 @@ class IoNumber extends IoString {
       this.setFromText(this.innerText);
     }
   }
+  _select() {
+    range.selectNodeContents(this);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
   setFromText(text) {
     let value = Math.round(Number(text) / this.step) * this.step;
-    value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
+    if (this.strict) {
+      value = Math.min(this.max, Math.max(this.min, Math.round(value / this.step) * this.step));
+    } else {
+      value = Math.round(value / this.step) * this.step;
+    }
     if (!isNaN(value)) this.set('value', value);
   }
   update() {
@@ -1460,142 +1702,13 @@ class IoNumber extends IoString {
     } else {
       this.innerText = 'NaN';
     }
+    if (this.underslider) {
+      this.style.setProperty('--slider-value', (this.value - this.min) / (this.max - this.min));
+    }
   }
 }
 
 IoNumber.Register();
-
-class IoObject extends IoElement {
-  static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div {display: flex;flex-direction: row;}:host > div > span {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > io-number {color: rgb(28, 0, 207);}:host > io-string {color: rgb(196, 26, 22);}:host > io-boolean {color: rgb(170, 13, 145);}:host > io-option {color: rgb(32,135,0);}</style>`;
-  }
-  static get properties() {
-    return {
-      value: Object,
-      props: Array,
-      configs: Object,
-      expanded: {
-        type: Boolean,
-        reflect: true
-      },
-      label: String
-    };
-  }
-  static get listeners() {
-    return {
-      'value-set': '_onValueSet'
-    };
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener('io-object-mutated', this._onIoObjectMutated);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('io-object-mutated', this._onIoObjectMutated);
-  }
-  _onIoObjectMutated(event) {
-    let key = event.detail.key;
-    if (event.detail.object === this.value) {
-      if (key && this.$[key]) {
-        this.$[key].__props.value.value = this.value[key];
-        this.$[key].update();
-      } else if (!key || key === '*') {
-        for (let k in this.$) {
-          this.$[k].__props.value.value = this.value[k];
-          this.$[k].update();
-        }
-      }
-    }
-  }
-  _onValueSet(event) {
-    if (event.path[0] === this) return;
-    if (event.detail.object) return; // TODO: fix
-    event.stopPropagation();
-    let key = event.path[0].id;
-    if (key && typeof key === 'string') {
-      if (this.value[key] !== event.detail.value) {
-        this.value[key] = event.detail.value;
-      }
-      let detail = Object.assign({object: this.value, key: key}, event.detail);
-      this.dispatchEvent('io-object-mutated', detail, false, window);
-      this.dispatchEvent('value-set', detail, true); // TODO
-    }
-  }
-  getPropConfigs(keys) {
-    let configs = {};
-
-    let proto = this.value.__proto__;
-    while (proto) {
-      let c = IoObjectConfig[proto.constructor.name];
-      if (c) configs = Object.assign(configs, c);
-      c = this.configs[proto.constructor.name];
-      if (c) configs = Object.assign(configs, c);
-      proto = proto.__proto__;
-    }
-
-    let propConfigs = {};
-
-    for (let i = 0; i < keys.length; i++) {
-      let key = keys[i];
-      let value = this.value[key];
-      let type = typeof value;
-      let cstr = (value && value.constructor) ? value.constructor.name : 'null';
-
-      if (type == 'function') continue;
-
-      propConfigs[key] = {};
-
-      if (configs.hasOwnProperty('type:' + type)) {
-        propConfigs[key] = configs['type:' + type];
-      }
-      if (configs.hasOwnProperty('constructor:'+cstr)) {
-        propConfigs[key] = configs['constructor:'+cstr];
-      }
-      if (configs.hasOwnProperty('key:' + key)) {
-        propConfigs[key] = configs['key:' + key];
-      }
-      if (configs.hasOwnProperty('value:' + String(value))) {
-        propConfigs[key] = configs['value:' + String(value)];
-      }
-    }
-    return propConfigs;
-  }
-  update() {
-    let label = this.label || this.value.constructor.name;
-    let elements = [];
-    if (this.expanded) {
-      let keys = [...Object.keys(this.value), ...Object.keys(this.value.__proto__)];
-      let proplist = this.props.length ? this.props : keys;
-      let configs = this.getPropConfigs(proplist);
-      for (let key in configs) {
-        // TODO: remove props keyword
-        if (configs[key]) {
-          let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
-          if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
-            // TODO: test
-            config = Object.assign(config, this.value.__props[key].config);
-          }
-          elements.push(['div', [['span', config.label || key + ':'], [config.tag, config]]]);
-        }
-      }
-    }
-    this.render([['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}], elements]);
-  }
-}
-
-const IoObjectConfig = {
-  'Object' : {
-    'type:string': {tag: 'io-string', props: {}},
-    'type:number': {tag: 'io-number', props: {step: 0.01}},
-    'type:boolean': {tag: 'io-boolean', props: {}},
-    'type:object': {tag: 'io-object', props: {}},
-    'value:null': {tag: 'io-string', props: {}},
-    'value:undefined': {tag: 'io-string', props: {}}
-  }
-};
-
-IoObject.Register();
 
 class IoOption extends IoButton {
   static get properties() {
@@ -1649,9 +1762,7 @@ class IoOption extends IoButton {
 
 IoOption.Register();
 
-CSS.paintWorklet.addModule(new URL('./io-painters.js', import.meta.url).pathname);
-
-class IoSliderSlider extends IoPointerMixin(IoElement) {
+class IoSliderKnob extends IoPointerMixin(IoElement) {
   static get style() {
     return html`<style>:host {cursor: ew-resize;background-image: paint(slider);--slider-min: 0;--slider-max: 10;--slider-step: 0.5;--slider-value: 1;}</style>`;
   }
@@ -1671,6 +1782,7 @@ class IoSliderSlider extends IoPointerMixin(IoElement) {
     };
   }
   _onPointerMove(event) {
+    event.detail.event.preventDefault();
     let rect = this.getBoundingClientRect();
     let x = (event.detail.pointer[0].position.x - rect.x) / rect.width;
     let pos = Math.max(0,Math.min(1, x));
@@ -1688,25 +1800,26 @@ class IoSliderSlider extends IoPointerMixin(IoElement) {
   }
 }
 
-IoSliderSlider.Register();
+IoSliderKnob.Register();
 
 class IoSlider extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;}:host > io-number {flex: 0 0 auto;margin-right: 0.5em;}:host > .slider {flex: 1 1 auto;}</style>`;
+    return html`<style>:host {display: flex;}:host > io-number {flex: 0 0 auto;margin-right: 0.5em;}:host > io-slider-knob {flex: 1 1 auto;}</style>`;
   }
   static get properties() {
     return {
       value: 0,
       step: 0.001,
       min: 0,
-      max: 1000
+      max: 1000,
+      strict: true,
     };
   }
   update() {
     const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
     this.render([
-      ['io-number', {value: this.bind('value'), step: this.step, id: 'number'}],
-      ['io-slider-slider', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, className: 'slider', id: 'slider'}]
+      ['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number'}],
+      ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider'}]
     ]);
     this.$.number.style.setProperty('min-width', charLength + 'em');
   }
@@ -1714,4 +1827,239 @@ class IoSlider extends IoElement {
 
 IoSlider.Register();
 
-export { IoElement, html, initStyle, IoNode, Vector2, IoPointerMixin, IoBoolean, IoButton, IoLabel, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoNumber, IoObject, IoOption, IoSlider, IoString };
+const selection$1 = window.getSelection();
+const range$1 = document.createRange();
+
+class IoString extends IoElement {
+  static get style() {
+    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
+  }
+  static get properties() {
+    return {
+      value: String,
+      tabindex: 0,
+      contenteditable: true
+    };
+  }
+  static get listeners() {
+    return {
+      'focus': '_onFocus'
+    };
+  }
+  _onFocus() {
+    this.addEventListener('blur', this._onBlur);
+    this.addEventListener('keydown', this._onKeydown);
+    this._select();
+  }
+  _onBlur() {
+    this.set('value', this.innerText);
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+  }
+  _onKeydown(event) {
+    if (event.which == 13) {
+      event.preventDefault();
+      this.set('value', this.innerText);
+    }
+  }
+  _select() {
+    range$1.selectNodeContents(this);
+    selection$1.removeAllRanges();
+    selection$1.addRange(range$1);
+  }
+  update() {
+    this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
+  }
+}
+
+IoString.Register();
+
+//TODO: test
+
+class IoVector extends IoObject {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 1 1;}</style>`;
+  }
+  update() {
+    let elements = [];
+    let configs = this.getPropConfigs(['x', 'y', 'z', 'w']);
+    for (let key in configs) {
+      if (this.value[key] !== undefined) {
+        elements.push(['io-number', Object.assign({value: this.value[key], id: key}, configs[key].props)]);
+      }
+    }
+    this.render(elements);
+  }
+}
+
+IoVector.Register();
+
+class IoDemo extends IoElement {
+  static get style() {
+    return html`<style>:host .demo {margin: 1em;padding: 0.5em;background: #eee;}:host .demoLabel {padding: 0.25em;margin: -0.5em -0.5em 0.5em -0.5em;background: #ccc;}:host .row > *{flex: 1;}:host .row {display: flex;width: 22em;}:host .label {color: rgba(128, 122, 255, 0.75);}:host .padded {padding: 1em;}:host io-menu-group {background: #fff;}:host io-string,:host io-boolean,:host io-number,:host io-option,:host io-color-swatch,:host io-slider-slider {background-color: #ddd;margin: 1px;}:host io-object {border: 1px solid #bbb;}</style>`;
+  }
+  static get properties() {
+    return {
+      number: 0,
+      string: "hello",
+      boolean: true,
+      null: null,
+      NaN: NaN,
+      undefined: undefined,
+      array: Array,
+      vec2: Object,
+      vec3: Object,
+      vec4: Object,
+      colorRGB: Object,
+      colorRGBA: Object,
+      colorHEX: Object,
+    };
+  }
+  static get listeners() {
+    return {
+      'value-set': '_onValueSet'
+    };
+  }
+  _onValueSet() {
+    this.dispatchEvent('io-object-mutated', {object: this, key: '*'}, false, window);
+  }
+  constructor() {
+    super();
+    this.array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+    this.vec2 = {x:0, y:1};
+    this.vec3 = {x:0, y:0, z:1};
+    this.vec4 = {x:0, y:0, z:0, w:1};
+    this.colorRGB = {r:0, g:1, b:0.5};
+    this.colorRGBA = {r:0, g:1, b:0.5, a:0.5};
+    this.colorHEX = 0xff0000;
+    let suboptions1 = [
+      {label: 'sub_sub_one', value: 1, action: console.log},
+      {label: 'sub_sub_two', value: 2, action: console.log},
+      {label: 'sub_sub_three', value: 3, action: console.log},
+      {label: 'sub_sub_four', value: 4, action: console.log},
+      {label: 'sub_sub_five', value: 5, action: console.log}
+    ];
+    let suboptions0 = [
+      {label: 'sub_one', options: suboptions1},
+      {label: 'sub_two', options: suboptions1},
+      {label: 'sub_three', options: suboptions1},
+      {label: 'sub_four', options: suboptions1},
+      {label: 'sub_five', options: suboptions1}
+    ];
+    let longOptions = [];
+    for (let i = 0; i < 1000; i++) {
+      let r = Math.random();
+      longOptions[i] = {label: String(r), value: r, action: console.log, icon: 'ξ', hint: 'log'};
+    }
+    this.menuoptions = [
+      {label: 'one', options: suboptions0},
+      {label: 'two', value: 2, action: console.log},
+      {label: 'three', value: 3, action: console.log},
+      {label: 'four', value: 4, action: console.log},
+      {label: 'five', options: suboptions0},
+      {label: 'long', options: longOptions, hint: 'list', icon: '⚠'}
+    ];
+    this.options = [
+      {label: 'negative one', value: -1},
+      {label: 'zero', value: 0},
+      {label: 'one', value: 1},
+      {label: 'two', value: 2},
+      {label: 'three', value: 3},
+      {label: 'four', value: 4},
+      {label: 'leet', value: 1337},
+    ];
+    this.render([
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-string / io-number / io-boolean'],
+        ['div', {className: 'row label'}, [
+          ['span'],
+          ['span', 'io-string'],
+          ['span', 'io-number'],
+          ['span', 'io-boolean'],
+        ]],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'string'],
+          ['io-string', {id: 'string', value: this.bind('string')}],
+          ['io-number', {value: this.bind('string')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('string')}],
+        ]],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'number'],
+          ['io-string', {value: this.bind('number')}],
+          ['io-number', {id: 'number', value: this.bind('number')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('number')}],
+        ]],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'boolean'],
+          ['io-string', {value: this.bind('boolean')}],
+          ['io-number', {value: this.bind('boolean')}],
+          ['io-boolean', {id: 'boolean', type: 'boolean', value: this.bind('boolean')}],
+        ]],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'NaN'],
+          ['io-string', {value: this.bind('NaN')}],
+          ['io-number', {value: this.bind('NaN')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('NaN')}],
+        ]],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'null'],
+          ['io-string', {value: this.bind('null')}],
+          ['io-number', {value: this.bind('null')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('null')}],
+        ]],
+        ['div', {className: 'row'}, [
+          ['div', {className: 'label'}, 'undefined'],
+          ['io-string', {value: this.bind('undefined')}],
+          ['io-number', {value: this.bind('undefined')}],
+          ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
+        ]],
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-color'],
+        ['io-color', {value: this.bind('colorRGB')}],
+        ['io-color', {value: this.bind('colorRGBA')}],
+        ['io-color', {value: this.bind('colorHEX')}]
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-option'],
+        ['io-option', {options: this.options, value: this.bind('number')}],
+      ]],
+      ['div', {className: 'demo sliders'}, [
+        ['div', {className: 'demoLabel'}, 'io-slider'],
+        ['io-slider', {value: this.bind('number')}],
+        ['io-slider', {value: this.bind('number'), step: 0.5, min: -2, max: 3}],
+        ['io-slider', {value: this.bind('number'), min: 0, max: 8}]
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-vector'],
+        ['io-vector', {value: this.vec2}],
+        ['io-vector', {value: this.vec3}],
+        ['io-vector', {value: this.vec4}]
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-array'],
+        ['io-array', {value: this.array, columns: 4}],
+        ['io-array', {value: this.array, columns: 2}]
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-object'],
+        ['io-object', {value: this, expanded: true, labeled: true}]
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-menu / io-menu-group'],
+        ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
+        ['div', {className: 'label padded'}, 'io-menu (click / contextmenu)'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer'}],
+        ['io-menu', {options: this.menuoptions, position: 'pointer', listener: 'contextmenu'}]
+      ]]
+    ]);
+  }
+}
+
+IoDemo.Register();
+
+CSS.paintWorklet.addModule(new URL('./io-painters.js', import.meta.url).pathname);
+
+export { IoElement, html, initStyle, IoNode, Vector2, IoPointerMixin, IoArray, IoBoolean, IoButton, IoColor, IoLabel, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoNumber, IoObject, IoOption, IoSlider, IoString, IoVector, IoDemo };

@@ -46,7 +46,7 @@ export class IoNumber extends IoPointerMixin(IoElement) {
       'io-pointer-end': '_onPointerEnd'
     };
   }
-  _onPointerStart(event) {
+  _onPointerStart() {
     // TODO: implement floating slider
   }
   _onPointerMove(event) {

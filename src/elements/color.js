@@ -1,6 +1,6 @@
 import {html} from "../core/element.js";
 import {IoObject} from "./object.js";
-import {IoColorSwatch} from "./color-swatch.js";
+import "./color-swatch.js";
 // import {IoColorPicker} from "./color-picker.js";
 //TODO: test
 const colors = {
@@ -8,7 +8,7 @@ const colors = {
  'g': '#55ff44',
  'b': '#4499ff',
  'a': 'white'
-}
+};
 
 export class IoColor extends IoObject {
   static get style() {
