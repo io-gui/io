@@ -46,7 +46,7 @@ export function defineProperties(prototype) {
         if (this.__props[prop].observer) {
           this[this.__props[prop].observer](value, oldValue);
         }
-        this.update();
+        this.changed();
         this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
       },
       enumerable: prototype.__props[prop].enumerable,

@@ -6,7 +6,7 @@ export class IoLabel extends IoElement {
       label: String
     };
   }
-  update() {
+  changed() {
     this.innerText = String(this.label);
   }
 }

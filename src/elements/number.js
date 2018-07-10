@@ -100,7 +100,7 @@ export class IoNumber extends IoPointerMixin(IoElement) {
     }
     if (!isNaN(value)) this.set('value', value);
   }
-  update() {
+  changed() {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value *= this.conversion;

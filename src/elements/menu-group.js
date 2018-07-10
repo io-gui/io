@@ -60,14 +60,14 @@ export class IoMenuGroup extends IoElement {
       'focusin': '_onFocus'
     };
   }
-  update() {
+  changed() {
     const Item = (elem, i) => ['io-menu-item', {
       $parent: this,
       option: typeof this.options[i] === 'object' ? this.options[i] : {value: this.options[i], label: this.options[i]},
       position: this.horizontal ? 'bottom' : 'right'
     }];
     let options = this.options || [];
-    this.render([options.map(Item)]);
+    this.template([options.map(Item)]);
   }
   connectedCallback() {
     super.connectedCallback();

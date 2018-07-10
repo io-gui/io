@@ -14,7 +14,7 @@ export class IoMenu extends IoElement {
   }
   constructor(props) {
     super(props);
-    this.render([
+    this.template([
       ['io-menu-group', {
         id: 'group',
         $parent: this,

@@ -23,7 +23,7 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
       }
     }
   }
-  render(children, host) {
+  template(children, host) {
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
   traverse(vChildren, host) {

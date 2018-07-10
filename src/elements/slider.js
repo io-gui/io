@@ -25,9 +25,9 @@ export class IoSlider extends IoElement {
       strict: true,
     };
   }
-  update() {
+  changed() {
     const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
-    this.render([
+    this.template([
       ['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number'}],
       ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider'}]
     ]);

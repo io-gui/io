@@ -32,10 +32,11 @@ export const IoCoreMixin = (superclass) => class extends superclass {
 
     // TODO: is this necessary?
     // TODO: test!
-    this.setProperties(initProps, true);
-    //TODO: update should only run once
+    this.setProperties(initProps);
+    this.changed();
+    //TODO: changed should only run once
   }
-  update() {}
+  changed() {}
   dispose() {} // TODO: implement
   bind(prop) {
     this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
@@ -46,7 +47,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this[prop] = value;
     this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
-  setProperties(props, update) {
+  setProperties(props) {
 
     for (let p in props) {
 
@@ -91,8 +92,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         this.style.setProperty(s, props['style'][s]);
       }
     }
-
-    if (update) this.update();
   }
   connectedCallback() {
     this.__protoListeners.connect(this);
@@ -170,8 +169,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) {
       return;
     }
-    if (this.__observeQueue.indexOf('update') === -1) {
-      this.__observeQueue.push('update');
+    if (this.__observeQueue.indexOf('changed') === -1) {
+      this.__observeQueue.push('changed');
     }
     if (observer) {
       if (this.__observeQueue.indexOf(observer) === -1) {

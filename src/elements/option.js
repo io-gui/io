@@ -26,7 +26,7 @@ export class IoOption extends IoButton {
       this.action(this.value);
     }
   }
-  update() {
+  changed() {
     let label = this.value;
     if (label instanceof Object) label = label.__proto__.constructor.name;
     if (this.options) {
@@ -38,7 +38,7 @@ export class IoOption extends IoButton {
       }
     }
     this.__props.label.value = label;
-    this.render([
+    this.template([
       ['io-label', {label: label}],
       ['io-menu', {
         id: 'menu',

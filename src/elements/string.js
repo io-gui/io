@@ -52,7 +52,7 @@ export class IoString extends IoElement {
     selection.removeAllRanges();
     selection.addRange(range);
   }
-  update() {
+  changed() {
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
 }

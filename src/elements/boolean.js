@@ -18,7 +18,7 @@ export class IoBoolean extends IoButton {
   toggle() {
     this.set('value', !this.value);
   }
-  update() {
+  changed() {
     this.innerText = this.value ? this.true : this.false;
   }
 }

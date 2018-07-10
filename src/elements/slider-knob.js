@@ -39,7 +39,7 @@ export class IoSliderKnob extends IoPointerMixin(IoElement) {
     value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
     this.set('value', value);
   }
-  update() {
+  changed() {
     this.style.setProperty('--slider-min', this.min);
     this.style.setProperty('--slider-min', this.min);
     this.style.setProperty('--slider-max', this.max);

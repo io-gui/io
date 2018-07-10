@@ -114,7 +114,7 @@ export class IoDemo extends IoElement {
       {label: 'four', value: 4},
       {label: 'leet', value: 1337},
     ];
-    this.render([
+    this.template([
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-string / io-number / io-boolean'],
         ['div', {className: 'row label'}, [

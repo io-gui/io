@@ -51,7 +51,7 @@ export class IoMenuItem extends IoElement {
   static get menuroot() {
     return this;
   }
-  update() {
+  changed() {
     if (this.option.options) {
       let grpProps = {options: this.option.options, $parent: this, position: this.position};
       if (!this.$group) {
@@ -60,7 +60,7 @@ export class IoMenuItem extends IoElement {
         this.$group.setProperties(grpProps); // TODO: test
       }
     }
-    this.render([
+    this.template([
       this.option.icon ? ['span', {className: 'menu-icon'}, this.option.icon] : null,
       ['span', {className: 'menu-label'}, this.option.label || this.option.value],
       this.option.hint ? ['span', {className: 'menu-hint'}] : null,

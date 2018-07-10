@@ -59,7 +59,7 @@ function defineProperties(prototype) {
         if (this.__props[prop].observer) {
           this[this.__props[prop].observer](value, oldValue);
         }
-        this.update();
+        this.changed();
         this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
       },
       enumerable: prototype.__props[prop].enumerable,
@@ -301,10 +301,11 @@ const IoCoreMixin = (superclass) => class extends superclass {
 
     // TODO: is this necessary?
     // TODO: test!
-    this.setProperties(initProps, true);
-    //TODO: update should only run once
+    this.setProperties(initProps);
+    this.changed();
+    //TODO: changed should only run once
   }
-  update() {}
+  changed() {}
   dispose() {} // TODO: implement
   bind(prop) {
     this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
@@ -315,7 +316,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
     this[prop] = value;
     this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
-  setProperties(props, update) {
+  setProperties(props) {
 
     for (let p in props) {
 
@@ -360,8 +361,6 @@ const IoCoreMixin = (superclass) => class extends superclass {
         this.style.setProperty(s, props['style'][s]);
       }
     }
-
-    if (update) this.update();
   }
   connectedCallback() {
     this.__protoListeners.connect(this);
@@ -439,8 +438,8 @@ const IoCoreMixin = (superclass) => class extends superclass {
     if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) {
       return;
     }
-    if (this.__observeQueue.indexOf('update') === -1) {
-      this.__observeQueue.push('update');
+    if (this.__observeQueue.indexOf('changed') === -1) {
+      this.__observeQueue.push('changed');
     }
     if (observer) {
       if (this.__observeQueue.indexOf(observer) === -1) {
@@ -493,7 +492,7 @@ class IoElement extends IoCoreMixin(HTMLElement) {
       }
     }
   }
-  render(children, host) {
+  template(children, host) {
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
   traverse(vChildren, host) {
@@ -689,7 +688,7 @@ class Pointer {
     }
     return closest;
   }
-  update(pointer) {
+  changed(pointer) {
     this.previous.set(this.position);
     this.movement.set(pointer.position).sub(this.position);
     this.distance.set(pointer.position).sub(this.start);
@@ -737,7 +736,7 @@ const IoPointerMixin = (superclass) => class extends superclass {
         let newPointer = new Pointer({position: position});
         let pointer = newPointer.getClosest(this.pointers);
         if (reset) pointer.start.set(position);
-        pointer.update(newPointer);
+        pointer.changed(newPointer);
         foundPointers.push(pointer);
       }
     }
@@ -837,11 +836,11 @@ class IoObject extends IoElement {
     if (event.detail.object === this.value) {
       if (key && this.$[key]) {
         this.$[key].__props.value.value = this.value[key];
-        this.$[key].update();
+        this.$[key].changed();
       } else if (!key || key === '*') {
         for (let k in this.$) {
           this.$[k].__props.value.value = this.value[k];
-          this.$[k].update();
+          this.$[k].changed();
         }
       }
     }
@@ -900,7 +899,7 @@ class IoObject extends IoElement {
     }
     return propConfigs;
   }
-  update() {
+  changed() {
     let label = this.label || this.value.constructor.name;
     let elements = [['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}]];
     if (this.expanded) {
@@ -919,7 +918,7 @@ class IoObject extends IoElement {
         }
       }
     }
-    this.render(elements);
+    this.template(elements);
   }
 }
 
@@ -949,13 +948,13 @@ class IoArray extends IoObject {
       }
     };
   }
-  update() {
+  changed() {
     const elements = [];
     this.setAttribute('columns', this.columns || Math.sqrt(this.value.length) || 1);
     for (let i = 0; i < this.value.length; i++) {
       elements.push(['io-number', {id: String(i), value: this.value[i], config: {tag: 'io-number'}}]);
     }
-    this.render(elements);
+    this.template(elements);
   }
 }
 
@@ -967,7 +966,7 @@ class IoLabel extends IoElement {
       label: String
     };
   }
-  update() {
+  changed() {
     this.innerText = String(this.label);
   }
 }
@@ -1054,7 +1053,7 @@ class IoBoolean extends IoButton {
   toggle() {
     this.set('value', !this.value);
   }
-  update() {
+  changed() {
     this.innerText = this.value ? this.true : this.false;
   }
 }
@@ -1070,7 +1069,7 @@ class IoColorSwatch extends IoElement {
       value: Object
     };
   }
-  update() {
+  changed() {
     const r = parseInt(this.value.r * 255);
     const g = parseInt(this.value.g * 255);
     const b = parseInt(this.value.b * 255);
@@ -1100,10 +1099,10 @@ class IoColor extends IoObject {
   }
   _onIoObjectMutated(event) {
     super._onIoObjectMutated(event);
-    this.update();
-    this.$.swatch.update();
+    this.changed();
+    this.$.swatch.changed();
   }
-  update() {
+  changed() {
     const elements = [];
     for (let key in colors) {
       if (this.value[key] !== undefined) {
@@ -1120,7 +1119,7 @@ class IoColor extends IoObject {
       }
     }
     elements.push(['io-color-swatch', {value: this.value, id: 'swatch'}]);
-    this.render(elements);
+    this.template(elements);
   }
 }
 
@@ -1436,7 +1435,7 @@ class IoMenu extends IoElement {
   }
   constructor(props) {
     super(props);
-    this.render([
+    this.template([
       ['io-menu-group', {
         id: 'group',
         $parent: this,
@@ -1501,14 +1500,14 @@ class IoMenuGroup extends IoElement {
       'focusin': '_onFocus'
     };
   }
-  update() {
+  changed() {
     const Item = (elem, i) => ['io-menu-item', {
       $parent: this,
       option: typeof this.options[i] === 'object' ? this.options[i] : {value: this.options[i], label: this.options[i]},
       position: this.horizontal ? 'bottom' : 'right'
     }];
     let options = this.options || [];
-    this.render([options.map(Item)]);
+    this.template([options.map(Item)]);
   }
   connectedCallback() {
     super.connectedCallback();
@@ -1553,7 +1552,7 @@ class IoMenuItem extends IoElement {
   static get menuroot() {
     return this;
   }
-  update() {
+  changed() {
     if (this.option.options) {
       let grpProps = {options: this.option.options, $parent: this, position: this.position};
       if (!this.$group) {
@@ -1562,7 +1561,7 @@ class IoMenuItem extends IoElement {
         this.$group.setProperties(grpProps); // TODO: test
       }
     }
-    this.render([
+    this.template([
       this.option.icon ? ['span', {className: 'menu-icon'}, this.option.icon] : null,
       ['span', {className: 'menu-label'}, this.option.label || this.option.value],
       this.option.hint ? ['span', {className: 'menu-hint'}] : null,
@@ -1689,7 +1688,7 @@ class IoNumber extends IoPointerMixin(IoElement) {
     }
     if (!isNaN(value)) this.set('value', value);
   }
-  update() {
+  changed() {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value *= this.conversion;
@@ -1732,7 +1731,7 @@ class IoOption extends IoButton {
       this.action(this.value);
     }
   }
-  update() {
+  changed() {
     let label = this.value;
     if (label instanceof Object) label = label.__proto__.constructor.name;
     if (this.options) {
@@ -1744,7 +1743,7 @@ class IoOption extends IoButton {
       }
     }
     this.__props.label.value = label;
-    this.render([
+    this.template([
       ['io-label', {label: label}],
       ['io-menu', {
         id: 'menu',
@@ -1787,7 +1786,7 @@ class IoSliderKnob extends IoPointerMixin(IoElement) {
     value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
     this.set('value', value);
   }
-  update() {
+  changed() {
     this.style.setProperty('--slider-min', this.min);
     this.style.setProperty('--slider-min', this.min);
     this.style.setProperty('--slider-max', this.max);
@@ -1811,9 +1810,9 @@ class IoSlider extends IoElement {
       strict: true,
     };
   }
-  update() {
+  changed() {
     const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
-    this.render([
+    this.template([
       ['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number'}],
       ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider'}]
     ]);
@@ -1865,7 +1864,7 @@ class IoString extends IoElement {
     selection$1.removeAllRanges();
     selection$1.addRange(range$1);
   }
-  update() {
+  changed() {
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
 }
@@ -1929,7 +1928,7 @@ class IoVector extends IoObject {
       this.dispatchEvent('value-set', detail, true); // TODO
     }
   }
-  update() {
+  changed() {
     const elements = [];
     for (let key in components) {
       if (this.value[key] !== undefined) {
@@ -1948,7 +1947,7 @@ class IoVector extends IoObject {
     if (this.canlink) {
       elements.push(['io-boolean', {value: this.bind('linked'), true: '☑', false: '☐'}]);
     }
-    this.render(elements);
+    this.template(elements);
   }
 }
 
@@ -2028,7 +2027,7 @@ class IoDemo extends IoElement {
       {label: 'four', value: 4},
       {label: 'leet', value: 1337},
     ];
-    this.render([
+    this.template([
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-string / io-number / io-boolean'],
         ['div', {className: 'row label'}, [

@@ -11,10 +11,10 @@ export class IoColorPicker extends IoObject {
   }
   _onIoObjectMutated(event) {
     if (event.detail.object === this.value) {
-      this.update();
+      this.changed();
     }
   }
-  update() {
+  changed() {
     let r = parseInt(this.value.r * 255);
     let g = parseInt(this.value.g * 255);
     let b = parseInt(this.value.b * 255);

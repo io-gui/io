@@ -72,7 +72,7 @@ export class IoVector extends IoObject {
       this.dispatchEvent('value-set', detail, true); // TODO
     }
   }
-  update() {
+  changed() {
     const elements = [];
     for (let key in components) {
       if (this.value[key] !== undefined) {
@@ -91,7 +91,7 @@ export class IoVector extends IoObject {
     if (this.canlink) {
       elements.push(['io-boolean', {value: this.bind('linked'), true: '☑', false: '☐'}]);
     }
-    this.render(elements);
+    this.template(elements);
   }
 }
 

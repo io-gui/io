@@ -44,7 +44,7 @@ class Pointer {
     }
     return closest;
   }
-  update(pointer) {
+  changed(pointer) {
     this.previous.set(this.position);
     this.movement.set(pointer.position).sub(this.position);
     this.distance.set(pointer.position).sub(this.start);
@@ -92,7 +92,7 @@ export const IoPointerMixin = (superclass) => class extends superclass {
         let newPointer = new Pointer({position: position});
         let pointer = newPointer.getClosest(this.pointers);
         if (reset) pointer.start.set(position);
-        pointer.update(newPointer);
+        pointer.changed(newPointer);
         foundPointers.push(pointer);
       }
     }

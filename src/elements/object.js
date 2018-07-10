@@ -61,11 +61,11 @@ export class IoObject extends IoElement {
     if (event.detail.object === this.value) {
       if (key && this.$[key]) {
         this.$[key].__props.value.value = this.value[key];
-        this.$[key].update();
+        this.$[key].changed();
       } else if (!key || key === '*') {
         for (let k in this.$) {
           this.$[k].__props.value.value = this.value[k];
-          this.$[k].update();
+          this.$[k].changed();
         }
       }
     }
@@ -124,7 +124,7 @@ export class IoObject extends IoElement {
     }
     return propConfigs;
   }
-  update() {
+  changed() {
     let label = this.label || this.value.constructor.name;
     let elements = [['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}]];
     if (this.expanded) {
@@ -143,7 +143,7 @@ export class IoObject extends IoElement {
         }
       }
     }
-    this.render(elements);
+    this.template(elements);
   }
 }
 

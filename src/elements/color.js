@@ -27,10 +27,10 @@ export class IoColor extends IoObject {
   }
   _onIoObjectMutated(event) {
     super._onIoObjectMutated(event);
-    this.update();
-    this.$.swatch.update();
+    this.changed();
+    this.$.swatch.changed();
   }
-  update() {
+  changed() {
     const elements = [];
     for (let key in colors) {
       if (this.value[key] !== undefined) {
@@ -47,7 +47,7 @@ export class IoColor extends IoObject {
       }
     }
     elements.push(['io-color-swatch', {value: this.value, id: 'swatch'}]);
-    this.render(elements);
+    this.template(elements);
   }
 }
 

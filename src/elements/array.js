@@ -30,13 +30,13 @@ export class IoArray extends IoObject {
       }
     };
   }
-  update() {
+  changed() {
     const elements = [];
     this.setAttribute('columns', this.columns || Math.sqrt(this.value.length) || 1);
     for (let i = 0; i < this.value.length; i++) {
       elements.push(['io-number', {id: String(i), value: this.value[i], config: {tag: 'io-number'}}]);
     }
-    this.render(elements);
+    this.template(elements);
   }
 }
 

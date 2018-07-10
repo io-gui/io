@@ -36,7 +36,7 @@ export class IoTests extends IoElement {
   }
   constructor() {
     super();
-    this.render([
+    this.template([
       ['io-boolean-test'],
       ['io-button-test'],
       ['io-label-test'],
