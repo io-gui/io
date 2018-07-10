@@ -46,7 +46,7 @@ export class IoTests extends IoElement {
       ['io-option-test'],
       ['io-slider-test'],
       ['io-string-test'],
-      ['io-element', {id: 'element', 'on-something': this.update, 'on-something-else': 'update'}],
+      ['io-element', {id: 'element', 'on-something': this.changed, 'on-something-else': 'changed'}],
       ['io-string', {id: 'string', value: this.string}],
       ['io-number', {id: 'number', value: this.number}],
       ['io-boolean', {id: 'boolean', value: this.boolean}],
@@ -98,10 +98,10 @@ export class IoTests extends IoElement {
 
     describe('Check prop listeners', () => {
       it('io-element listens (function handler)', () => {
-        chai.expect(this.$.element.__listeners['something'][0]).to.equal(this.update);
+        chai.expect(this.$.element.__listeners['something'][0]).to.equal(this.changed);
       });
       it('io-element listens (string handler)', () => {
-        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(this.$.element.update);
+        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(this.$.element.changed);
       });
       it('io-element stops listening when disconnected', () => {
         this.removeChild(this.$.element);
@@ -110,8 +110,8 @@ export class IoTests extends IoElement {
       });
       it('io-element starts listening when reconnected', () => {
         this.appendChild(this.$.element);
-        chai.expect(this.$.element.__listeners['something'][0]).to.equal(this.update);
-        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(this.$.element.update);
+        chai.expect(this.$.element.__listeners['something'][0]).to.equal(this.changed);
+        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(this.$.element.changed);
       });
     });
 

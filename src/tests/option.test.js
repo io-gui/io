@@ -12,7 +12,8 @@ export class IoOptionTest extends IoTest(IoOption) {
         this.element.setProperties({
           options: [{value: 1, label: 'one'}],
           value: 1
-        }, true);
+        });
+        this.element.changed();
         chai.expect(label.innerHTML).to.equal('one');
         this.element.options = undefined;
         chai.expect(label.innerHTML).to.equal('1');
