@@ -302,7 +302,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
     // TODO: is this necessary?
     // TODO: test!
     this.setProperties(initProps);
-    this.changed();
+    this.__observeQueue.push('changed');
     //TODO: changed should only run once
   }
   changed() {}
