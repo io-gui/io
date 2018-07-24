@@ -77,6 +77,8 @@ export class IoNumber extends IoPointerMixin(IoElement) {
     this._select();
   }
   _onBlur() {
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
     this.setFromText(this.innerText);
     this.scrollTop = 0;
     this.scrollLeft = 0;
