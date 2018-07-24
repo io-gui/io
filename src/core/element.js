@@ -29,8 +29,15 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
   traverse(vChildren, host) {
     const children = host.children;
     // remove trailing elements
-    while (children.length > vChildren.length) host.removeChild(children[children.length - 1]);
-
+    while (children.length > vChildren.length) {
+      let child = children[children.length - 1];
+      // TODO: is this necessary (disconnected callback redundancy)
+      let nodes = Array.from(child.querySelectorAll('*'));
+      for (var i = nodes.length; i--;) {
+        if (nodes[i].dispose) nodes[i].dispose();
+      }
+      host.removeChild(child);
+    }
     // create new elements after existing
     const frag = document.createDocumentFragment();
     for (let i = children.length; i < vChildren.length; i++) {

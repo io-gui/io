@@ -37,7 +37,11 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     //TODO: changed should only run once
   }
   changed() {}
-  dispose() {} // TODO: implement
+  dispose() {
+    this.__protoListeners.disconnect(this);
+    this.__propListeners.disconnect(this);
+    this.removeListeners();
+  }
   bind(prop) {
     this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
     return this.__bindings[prop];
@@ -45,7 +49,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
-    this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
+    if (oldValue !== value ) this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
   }
   setProperties(props) {
 
@@ -119,8 +123,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.__listeners[type] = this.__listeners[type] || [];
     let i = this.__listeners[type].indexOf(listener);
     if (i === - 1) {
-      this.__listeners[type].push(listener);
       if (superclass === HTMLElement) HTMLElement.prototype.addEventListener.call(this, type, listener);
+      this.__listeners[type].push(listener);
     }
   }
   hasEventListener(type, listener) {
@@ -130,8 +134,17 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     if (this.__listeners[type] !== undefined) {
       let i = this.__listeners[type].indexOf(listener);
       if (i !== - 1) {
-        this.__listeners[type].splice(i, 1);
         if (superclass === HTMLElement) HTMLElement.prototype.removeEventListener.call(this, type, listener);
+        this.__listeners[type].splice(i, 1);
+      }
+    }
+  }
+  removeListeners() {
+    // TODO: test
+    for (let i in this.__listeners) {
+      for (let j = this.__listeners[i].length; j--;) {
+        if (superclass === HTMLElement) HTMLElement.prototype.removeEventListener.call(this, i, this.__listeners[i][j]);
+        this.__listeners[i].splice(j, 1);
       }
     }
   }
@@ -196,6 +209,5 @@ IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
-
   defineProperties(this.prototype);
 };
