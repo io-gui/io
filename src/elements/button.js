@@ -47,7 +47,10 @@ export class IoButton extends IoLabel {
   }
   _onDown(event) {
     event.stopPropagation();
-    if (event.which !== 9) event.preventDefault();
+    if (event.which !== 9) {
+      event.preventDefault();
+      document.activeElement.blur();
+    }
     if (event.which === 13 || event.which === 32 || event.type !== 'keydown') {
       this.pressed = true;
       document.addEventListener('mouseup', this._onUp);
