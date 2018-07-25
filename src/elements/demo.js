@@ -31,6 +31,7 @@ export class IoDemo extends IoElement {
       }
 
       :host io-string,
+      :host io-label,
       :host io-boolean,
       :host io-number,
       :host io-option,
@@ -76,8 +77,7 @@ export class IoDemo extends IoElement {
     this.vec3 = {x:0.2, y:0.6, z:8};
     this.vec4 = {x:0.2, y:0.5, z:0.8, w:1};
     this.colorRGB = {r:0, g:1, b:0.5};
-    this.colorRGBA = {r:0, g:1, b:0.5, a:0.5};
-    this.colorHEX = 0xff0000;
+    this.colorRGBA = {r:0.7, g:1, b:0.5, a:0.8};
     let suboptions1 = [
       {label: 'sub_sub_one', value: 1, action: console.log},
       {label: 'sub_sub_two', value: 2, action: console.log},
@@ -162,9 +162,8 @@ export class IoDemo extends IoElement {
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-color'],
-        ['io-color', {value: this.bind('colorRGB')}],
-        ['io-color', {value: this.bind('colorRGBA')}],
-        ['io-color', {value: this.bind('colorHEX')}]
+        ['io-color', {value: this.bind('colorRGB'), expanded: true}],
+        ['io-color', {value: this.bind('colorRGBA'), expanded: true}]
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-option'],

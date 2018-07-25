@@ -8,7 +8,7 @@ export class IoFlexColumn extends IoElement {
       flex-direction: column;
     }
     :host > * {
-      flex: 1 1 auto;
+      flex: 1 1 none;
     }
     </style>`;
   }

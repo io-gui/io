@@ -8,7 +8,7 @@ export class IoFlexRow extends IoElement {
       flex-direction: row;
     }
     :host > * {
-      flex: 1 1 auto;
+      flex: 1 1;
     }
     </style>`;
   }
