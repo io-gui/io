@@ -70,7 +70,6 @@ export class IoNumber extends IoPointerMixin(IoElement) {
       this.focus();
     }
   }
-
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
