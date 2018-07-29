@@ -33,7 +33,7 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
       let child = children[children.length - 1];
       // TODO: is this necessary (disconnected callback redundancy)
       let nodes = Array.from(child.querySelectorAll('*'));
-      for (var i = nodes.length; i--;) {
+      for (let i = nodes.length; i--;) {
         if (nodes[i].dispose) nodes[i].dispose();
       }
       host.removeChild(child);

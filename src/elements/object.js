@@ -43,11 +43,6 @@ export class IoObject extends IoElement {
       label: String
     };
   }
-  static get listeners() {
-    return {
-      'value-set': '_onValueSet'
-    };
-  }
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('io-object-mutated', this._onIoObjectMutated);
@@ -82,7 +77,7 @@ export class IoObject extends IoElement {
       }
       let detail = Object.assign({object: this.value, key: key}, event.detail);
       this.dispatchEvent('io-object-mutated', detail, false, window);
-      this.dispatchEvent('value-set', detail, true); // TODO
+      this.dispatchEvent('value-set', detail, false); // TODO
     }
   }
   getPropConfigs(keys) {
@@ -134,7 +129,12 @@ export class IoObject extends IoElement {
       for (let key in configs) {
         // TODO: remove props keyword
         if (configs[key]) {
-          let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
+          let config = Object.assign({
+            tag: configs[key].tag,
+            value: this.value[key],
+            id: key,
+            'on-value-set': this._onValueSet
+          }, configs[key].props);
           if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
             // TODO: test
             config = Object.assign(config, this.value.__props[key].config);

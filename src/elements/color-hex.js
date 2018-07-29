@@ -66,7 +66,7 @@ export class IoColorHex extends IoElement {
     selection.addRange(range);
   }
   setFromText(text) {
-    let value = Math.round(Number(text));
+    const value = Math.floor(parseInt(text, 16));
     if (!isNaN(value)) this.set('value', value);
   }
   changed() {

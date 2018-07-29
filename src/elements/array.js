@@ -34,7 +34,12 @@ export class IoArray extends IoObject {
     const elements = [];
     this.setAttribute('columns', this.columns || Math.sqrt(this.value.length) || 1);
     for (let i = 0; i < this.value.length; i++) {
-      elements.push(['io-number', {id: String(i), value: this.value[i], config: {tag: 'io-number'}}]);
+      elements.push(['io-number', {
+        id: String(i),
+        value: this.value[i],
+        config: {tag: 'io-number'},
+        'on-value-set': this._onValueSet
+      }]);
     }
     this.template(elements);
   }

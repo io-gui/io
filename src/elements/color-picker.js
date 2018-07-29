@@ -1,4 +1,5 @@
 import {html, IoElement} from "../core/element.js";
+import {hsvToRgb, rgbToHsv} from "./color.js";
 
 export class IoColorPicker extends IoElement {
   static get style() {
@@ -14,15 +15,9 @@ export class IoColorPicker extends IoElement {
     };
   }
   changed() {
-    const r = parseInt(this.value.r * 255);
-    const g = parseInt(this.value.g * 255);
-    const b = parseInt(this.value.b * 255);
-    const a = parseFloat(this.value.a);
-    if (isNaN(a)) {
-      this.style.setProperty('--swatch-color', 'rgb(' + r + ',' + g + ',' + b + ')');
-    } else {
-      this.style.setProperty('--swatch-color', 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')');
-    }
+    const hsv = rgbToHsv(this.value);
+    const c = hsvToRgb({h: hsv.h, s: 1, v:1});
+    this.style.setProperty('--swatch-color', 'rgb(' + c.r * 255 + ',' + c.g * 255 + ',' + c.b * 255 + ')');
   }
 }
 

@@ -9,11 +9,9 @@ export * from "./elements/button.js";
 
 export * from "./elements/color.js";
 export * from "./elements/color-picker.js";
-export * from "./elements/color-cmyk.js";
 export * from "./elements/color-hex.js";
 export * from "./elements/color-hsv.js";
 export * from "./elements/color-rgb.js";
-export * from "./elements/color-rgba.js";
 
 export * from "./elements/flex-column.js";
 export * from "./elements/flex-row.js";

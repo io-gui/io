@@ -306,7 +306,11 @@ const IoCoreMixin = (superclass) => class extends superclass {
     //TODO: changed should only run once
   }
   changed() {}
-  dispose() {} // TODO: implement
+  dispose() {
+    this.__protoListeners.disconnect(this);
+    this.__propListeners.disconnect(this);
+    this.removeListeners();
+  }
   bind(prop) {
     this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
     return this.__bindings[prop];
@@ -314,7 +318,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
-    this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, true);
+    if (oldValue !== value ) this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, false);
   }
   setProperties(props) {
 
@@ -388,8 +392,8 @@ const IoCoreMixin = (superclass) => class extends superclass {
     this.__listeners[type] = this.__listeners[type] || [];
     let i = this.__listeners[type].indexOf(listener);
     if (i === - 1) {
-      this.__listeners[type].push(listener);
       if (superclass === HTMLElement) HTMLElement.prototype.addEventListener.call(this, type, listener);
+      this.__listeners[type].push(listener);
     }
   }
   hasEventListener(type, listener) {
@@ -399,8 +403,17 @@ const IoCoreMixin = (superclass) => class extends superclass {
     if (this.__listeners[type] !== undefined) {
       let i = this.__listeners[type].indexOf(listener);
       if (i !== - 1) {
-        this.__listeners[type].splice(i, 1);
         if (superclass === HTMLElement) HTMLElement.prototype.removeEventListener.call(this, type, listener);
+        this.__listeners[type].splice(i, 1);
+      }
+    }
+  }
+  removeListeners() {
+    // TODO: test
+    for (let i in this.__listeners) {
+      for (let j = this.__listeners[i].length; j--;) {
+        if (superclass === HTMLElement) HTMLElement.prototype.removeEventListener.call(this, i, this.__listeners[i][j]);
+        this.__listeners[i].splice(j, 1);
       }
     }
   }
@@ -465,7 +478,6 @@ IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
-
   defineProperties(this.prototype);
 };
 
@@ -498,8 +510,15 @@ class IoElement extends IoCoreMixin(HTMLElement) {
   traverse(vChildren, host) {
     const children = host.children;
     // remove trailing elements
-    while (children.length > vChildren.length) host.removeChild(children[children.length - 1]);
-
+    while (children.length > vChildren.length) {
+      let child = children[children.length - 1];
+      // TODO: is this necessary (disconnected callback redundancy)
+      let nodes = Array.from(child.querySelectorAll('*'));
+      for (let i = nodes.length; i--;) {
+        if (nodes[i].dispose) nodes[i].dispose();
+      }
+      host.removeChild(child);
+    }
     // create new elements after existing
     const frag = document.createDocumentFragment();
     for (let i = children.length; i < vChildren.length; i++) {
@@ -818,11 +837,6 @@ class IoObject extends IoElement {
       label: String
     };
   }
-  static get listeners() {
-    return {
-      'value-set': '_onValueSet'
-    };
-  }
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('io-object-mutated', this._onIoObjectMutated);
@@ -857,7 +871,7 @@ class IoObject extends IoElement {
       }
       let detail = Object.assign({object: this.value, key: key}, event.detail);
       this.dispatchEvent('io-object-mutated', detail, false, window);
-      this.dispatchEvent('value-set', detail, true); // TODO
+      this.dispatchEvent('value-set', detail, false); // TODO
     }
   }
   getPropConfigs(keys) {
@@ -909,7 +923,12 @@ class IoObject extends IoElement {
       for (let key in configs) {
         // TODO: remove props keyword
         if (configs[key]) {
-          let config = Object.assign({tag: configs[key].tag, value: this.value[key], id: key}, configs[key].props);
+          let config = Object.assign({
+            tag: configs[key].tag,
+            value: this.value[key],
+            id: key,
+            'on-value-set': this._onValueSet
+          }, configs[key].props);
           if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
             // TODO: test
             config = Object.assign(config, this.value.__props[key].config);
@@ -952,7 +971,12 @@ class IoArray extends IoObject {
     const elements = [];
     this.setAttribute('columns', this.columns || Math.sqrt(this.value.length) || 1);
     for (let i = 0; i < this.value.length; i++) {
-      elements.push(['io-number', {id: String(i), value: this.value[i], config: {tag: 'io-number'}}]);
+      elements.push(['io-number', {
+        id: String(i),
+        value: this.value[i],
+        config: {tag: 'io-number'},
+        'on-value-set': this._onValueSet
+      }]);
     }
     this.template(elements);
   }
@@ -1007,7 +1031,10 @@ class IoButton extends IoLabel {
   }
   _onDown(event) {
     event.stopPropagation();
-    if (event.which !== 9) event.preventDefault();
+    if (event.which !== 9) {
+      event.preventDefault();
+      document.activeElement.blur();
+    }
     if (event.which === 13 || event.which === 32 || event.type !== 'keydown') {
       this.pressed = true;
       document.addEventListener('mouseup', this._onUp);
@@ -1060,9 +1087,116 @@ class IoBoolean extends IoButton {
 
 IoBoolean.Register();
 
-class IoColorSwatch extends IoElement {
+//TODO: test
+
+function rgbToHsv(rgb) {
+  const max = Math.max(rgb.r, rgb.g, rgb.b), min = Math.min(rgb.r, rgb.g, rgb.b);
+  const d = max - min;
+  let h, s, v = max;
+  s = max == 0 ? 0 : d / max;
+  if (max == min) {
+    h = 0;
+  } else {
+    switch (max) {
+      case rgb.r: h = (rgb.g - rgb.b) / d + (rgb.g < rgb.b ? 6 : 0); break;
+      case rgb.g: h = (rgb.b - rgb.r) / d + 2; break;
+      case rgb.b: h = (rgb.r - rgb.g) / d + 4; break;
+    }
+    h /= 6;
+  }
+  return {h: h, s: s, v: v};
+}
+
+function hsvToRgb(hsv) {
+  let r, g, b;
+  const h = hsv.h;
+  const s = hsv.s;
+  const v = hsv.v;
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+  switch (i % 6) {
+    case 0: r = v, g = t, b = p; break;
+    case 1: r = q, g = v, b = p; break;
+    case 2: r = p, g = v, b = t; break;
+    case 3: r = p, g = q, b = v; break;
+    case 4: r = t, g = p, b = v; break;
+    case 5: r = v, g = p, b = q; break;
+  }
+  return {r: r, g: g, b: b};
+}
+
+class IoColor extends IoObject {
   static get style() {
-    return html`<style>:host {background-image: paint(swatch);}</style>`;
+    return html`<style>:host io-boolean,:host io-boolean:hover {padding-left: 0.25em;background-image: paint(swatch);flex: 1 1;}:host io-color-picker {flex: 0 0 auto;width: 5em;}:host io-label {flex: 0 0 auto;width: 3em;text-align: right;}:host io-color-rgb,:host io-color-hsv {flex: 0 0 auto;width: 9em;}:host io-color-rgba,:host io-color-cmyk {flex: 0 0 auto;width: 12em;}:host io-color-hex {flex: 0 0 auto;}</style>`;
+  }
+  _onIoObjectMutated(event) {
+    if (event.detail.object === this.value) {
+      this.changed();
+      if (this.$.picker) this.$.picker.changed();
+    }
+  }
+  changed() {
+    const r = parseInt(this.value.r * 255);
+    const g = parseInt(this.value.g * 255);
+    const b = parseInt(this.value.b * 255);
+    if (this.expanded) {
+      this.template([
+        ['io-flex-column', [
+        ['io-boolean', {true: '▾', false: '▸', value: this.bind('expanded'), id: 'swatch'}],
+        ['io-flex-row', [
+          ['io-color-picker', {value: this.value, id: 'picker'}],
+          ['io-flex-column', [
+            ['io-flex-row', [
+              ['io-label', {label: 'rgb:'}],
+              ['io-color-rgb', {value: this.bind('value')}]
+            ]],
+            ['io-flex-row', [
+              ['io-label', {label: 'hsv:'}],
+              ['io-color-hsv', {value: rgbToHsv(this.value), 'on-value-set': this.hsvChanged}]
+            ]],
+            ['io-flex-row', [
+              ['io-label', {label: 'hex:'}],
+              ['io-color-hex', {value: (r << 16 ^ g << 8 ^ b << 0), 'on-value-set': this.hexChanged}]
+            ]]
+          ]]
+        ]]
+      ]]
+    ]);
+    } else {
+      this.template([
+        ['io-flex-row', [
+          ['io-boolean', {true: '▾', false: '▸', value: this.bind('expanded'), id: 'swatch'}],
+          ['io-color-rgb', {value: this.bind('value')}]
+        ]]
+      ]);
+    }
+    this.$.swatch.style.setProperty('--swatch-color', 'rgb(' + r + ',' + g + ',' + b + ')');
+  }
+  hexChanged(event) {
+    event.stopPropagation();
+    this.value.r = (event.detail.value >> 16 & 255) / 255;
+    this.value.g = (event.detail.value >> 8 & 255) / 255;
+    this.value.b = (event.detail.value & 255) / 255;
+    this.dispatchEvent('io-object-mutated', {object: this.value, key: '*'}, false, window);
+  }
+  hsvChanged(event) {
+    event.stopPropagation();
+    const rgb = hsvToRgb(arguments[0].detail.object);
+    this.value.r = rgb.r;
+    this.value.g = rgb.g;
+    this.value.b = rgb.b;
+    this.dispatchEvent('io-object-mutated', {object: this.value, key: '*'}, false, window);
+  }
+}
+
+IoColor.Register();
+
+class IoColorPicker extends IoElement {
+  static get style() {
+    return html`<style>:host {background-image: paint(colorpicker);}</style>`;
   }
   static get properties() {
     return {
@@ -1070,60 +1204,125 @@ class IoColorSwatch extends IoElement {
     };
   }
   changed() {
-    const r = parseInt(this.value.r * 255);
-    const g = parseInt(this.value.g * 255);
-    const b = parseInt(this.value.b * 255);
-    const a = parseFloat(this.value.a);
-    if (isNaN(a)) {
-      this.style.setProperty('--swatch-color', 'rgb(' + r + ',' + g + ',' + b + ')');
-    } else {
-      this.style.setProperty('--swatch-color', 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')');
-    }
+    const hsv = rgbToHsv(this.value);
+    const c = hsvToRgb({h: hsv.h, s: 1, v:1});
+    this.style.setProperty('--swatch-color', 'rgb(' + c.r * 255 + ',' + c.g * 255 + ',' + c.b * 255 + ')');
   }
 }
 
-IoColorSwatch.Register();
+IoColorPicker.Register();
 
-// import {IoColorPicker} from "./color-picker.js";
-//TODO: test
-const colors = {
- 'r': '#ff9977',
- 'g': '#55ff44',
- 'b': '#4499ff',
- 'a': 'white'
-};
+const selection = window.getSelection();
+const range = document.createRange();
 
-class IoColor extends IoObject {
+class IoColorHex extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 1 1;}:host > io-color-swatch {flex: 1 1;}</style>`;
+    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host::before {opacity: 0.25;content: '0x';}:host > .red {color: red;}:host > .green {color: green;}:host > .blue {color: blue;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
   }
-  _onIoObjectMutated(event) {
-    super._onIoObjectMutated(event);
-    this.changed();
-    this.$.swatch.changed();
+  static get properties() {
+    return {
+      value: Number,
+      tabindex: 0,
+      contenteditable: true
+    };
+  }
+  static get listeners() {
+    return {
+      'focus': '_onFocus'
+    };
+  }
+  _onFocus() {
+    this.addEventListener('blur', this._onBlur);
+    this.addEventListener('keydown', this._onKeydown);
+    this._select();
+  }
+  _onBlur() {
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+    this.setFromText(this.innerText);
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
+  }
+  _onKeydown(event) {
+    if (event.which == 13) {
+      event.preventDefault();
+      this.setFromText(this.innerText);
+    }
+  }
+  _select() {
+    range.selectNodeContents(this);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+  setFromText(text) {
+    const value = Math.floor(parseInt(text, 16));
+    if (!isNaN(value)) this.set('value', value);
   }
   changed() {
-    const elements = [];
-    for (let key in colors) {
-      if (this.value[key] !== undefined) {
-        elements.push(['io-number', {
-          value: this.value[key],
-          id: key,
-          step: 0.01,
-          min: 0,
-          max: 1,
-          strict: false,
-          underslider: true,
-          style: {'--slider-color': colors[key]}
-        }]);
-      }
+    let value = this.value;
+    if (typeof value == 'number' && !isNaN(value)) {
+      value = value.toFixed(-Math.round(Math.log(1) / Math.LN10));
+      this.innerText = ( '000000' + this.value.toString( 16 ) ).slice( - 6 );
+    } else {
+      this.innerText = 'NaN';
     }
-    elements.push(['io-color-swatch', {value: this.value, id: 'swatch'}]);
-    this.template(elements);
   }
 }
 
-IoColor.Register();
+IoColorHex.Register();
+
+//TODO: test
+
+class IoColorHsv extends IoObject {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 1 1;}</style>`;
+  }
+  changed() {
+
+    this.template([
+      ['io-number', {value: this.value.h, 'on-value-set': this._onValueSet, id: 'h', step: 0.01, min: 0, max: 1, strict: false, underslider: true}],
+      ['io-number', {value: this.value.s, 'on-value-set': this._onValueSet, id: 's', step: 0.01, min: 0, max: 1, strict: false, underslider: true}],
+      ['io-number', {value: this.value.v, 'on-value-set': this._onValueSet, id: 'v', step: 0.01, min: 0, max: 1, strict: false, underslider: true}]
+    ]);
+
+  }
+}
+
+IoColorHsv.Register();
+
+//TODO: test
+
+class IoColorRgb extends IoObject {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 1 1;}</style>`;
+  }
+  changed() {
+    this.template([
+      ['io-number', {value: this.value.r, 'on-value-set': this._onValueSet, id: 'r', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ff9977'}}],
+      ['io-number', {value: this.value.g, 'on-value-set': this._onValueSet, id: 'g', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#55ff44'}}],
+      ['io-number', {value: this.value.b, 'on-value-set': this._onValueSet, id: 'b', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#4499ff'}}]
+    ]);
+
+  }
+}
+
+IoColorRgb.Register();
+
+class IoFlexColumn extends IoElement {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: column;}:host > * {flex: 1 1 none;}</style>`;
+  }
+}
+
+IoFlexColumn.Register();
+
+class IoFlexRow extends IoElement {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: row;}:host > * {flex: 1 1;}</style>`;
+  }
+}
+
+IoFlexRow.Register();
 
 let previousOption;
 let previousParent;
@@ -1604,8 +1803,8 @@ class IoMenuItem extends IoElement {
 
 IoMenuItem.Register();
 
-const selection = window.getSelection();
-const range = document.createRange();
+const selection$1 = window.getSelection();
+const range$1 = document.createRange();
 
 class IoNumber extends IoPointerMixin(IoElement) {
   static get style() {
@@ -1658,13 +1857,14 @@ class IoNumber extends IoPointerMixin(IoElement) {
       this.focus();
     }
   }
-
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
     this._select();
   }
   _onBlur() {
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
     this.setFromText(this.innerText);
     this.scrollTop = 0;
     this.scrollLeft = 0;
@@ -1676,9 +1876,9 @@ class IoNumber extends IoPointerMixin(IoElement) {
     }
   }
   _select() {
-    range.selectNodeContents(this);
-    selection.removeAllRanges();
-    selection.addRange(range);
+    range$1.selectNodeContents(this);
+    selection$1.removeAllRanges();
+    selection$1.addRange(range$1);
   }
   setFromText(text) {
     // TODO: test conversion
@@ -1822,8 +2022,8 @@ class IoSlider extends IoElement {
 
 IoSlider.Register();
 
-const selection$1 = window.getSelection();
-const range$1 = document.createRange();
+const selection$2 = window.getSelection();
+const range$2 = document.createRange();
 
 class IoString extends IoElement {
   static get style() {
@@ -1860,9 +2060,9 @@ class IoString extends IoElement {
     }
   }
   _select() {
-    range$1.selectNodeContents(this);
-    selection$1.removeAllRanges();
-    selection$1.addRange(range$1);
+    range$2.selectNodeContents(this);
+    selection$2.removeAllRanges();
+    selection$2.addRange(range$2);
   }
   changed() {
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
@@ -1940,7 +2140,8 @@ class IoVector extends IoObject {
           min: this.min,
           max: this.max,
           strict: this.strict,
-          underslider: this.underslider
+          underslider: this.underslider,
+          'on-value-set': this._onValueSet
         }]);
       }
     }
@@ -1955,7 +2156,7 @@ IoVector.Register();
 
 class IoDemo extends IoElement {
   static get style() {
-    return html`<style>:host .demo {margin: 1em;padding: 0.5em;background: #eee;}:host .demoLabel {padding: 0.25em;margin: -0.5em -0.5em 0.5em -0.5em;background: #ccc;}:host .row > *{flex: 1;}:host .row {display: flex;width: 22em;}:host .label {color: rgba(128, 122, 255, 0.75);}:host .padded {padding: 1em;}:host io-menu-group {background: #fff;}:host io-string,:host io-boolean,:host io-number,:host io-option,:host io-color-swatch,:host io-slider-slider {background-color: #ddd;margin: 1px;}:host io-object {border: 1px solid #bbb;}</style>`;
+    return html`<style>:host .demo {margin: 1em;padding: 0.5em;background: #eee;}:host .demoLabel {padding: 0.25em;margin: -0.5em -0.5em 0.5em -0.5em;background: #ccc;}:host .row > *{flex: 1;}:host .row {display: flex;width: 22em;}:host .label {color: rgba(128, 122, 255, 0.75);}:host .padded {padding: 1em;}:host io-menu-group {background: #fff;}:host io-string,:host io-label,:host io-boolean,:host io-number,:host io-option,:host io-color-hex,:host io-color-swatch,:host io-slider-slider {background-color: #ddd;margin: 1px;}:host io-object {border: 1px solid #bbb;}</style>`;
   }
   static get properties() {
     return {
@@ -1989,8 +2190,6 @@ class IoDemo extends IoElement {
     this.vec3 = {x:0.2, y:0.6, z:8};
     this.vec4 = {x:0.2, y:0.5, z:0.8, w:1};
     this.colorRGB = {r:0, g:1, b:0.5};
-    this.colorRGBA = {r:0, g:1, b:0.5, a:0.5};
-    this.colorHEX = 0xff0000;
     let suboptions1 = [
       {label: 'sub_sub_one', value: 1, action: console.log},
       {label: 'sub_sub_two', value: 2, action: console.log},
@@ -2075,9 +2274,7 @@ class IoDemo extends IoElement {
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-color'],
-        ['io-color', {value: this.bind('colorRGB')}],
-        ['io-color', {value: this.bind('colorRGBA')}],
-        ['io-color', {value: this.bind('colorHEX')}]
+        ['io-color', {value: this.bind('colorRGB'), expanded: true}],
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-option'],
@@ -2121,4 +2318,4 @@ IoDemo.Register();
 
 CSS.paintWorklet.addModule(new URL('./io-painters.js', import.meta.url).pathname);
 
-export { IoElement, html, initStyle, IoNode, Vector2, IoPointerMixin, IoArray, IoBoolean, IoButton, IoColor, IoLabel, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoNumber, IoObject, IoOption, IoSlider, IoString, IoVector, IoDemo };
+export { IoElement, html, initStyle, IoNode, Vector2, IoPointerMixin, IoArray, IoBoolean, IoButton, rgbToHsv, hsvToRgb, IoColor, IoColorPicker, IoColorHex, IoColorHsv, IoColorRgb, IoFlexColumn, IoFlexRow, IoLabel, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoNumber, IoObject, IoOption, IoSlider, IoString, IoVector, IoDemo };

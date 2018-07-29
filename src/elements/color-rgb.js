@@ -16,16 +16,10 @@ export class IoColorRgb extends IoObject {
     </style>`;
   }
   changed() {
-
-    const r = parseInt(this.value.r * 255);
-    const g = parseInt(this.value.g * 255);
-    const b = parseInt(this.value.b * 255);
-    const rgb = 'rgb(' + r + ',' + g + ',' + b + ')';
-
     this.template([
-      ['io-number', {value: this.value.r, id: 'r', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ff9977'}}],
-      ['io-number', {value: this.value.g, id: 'g', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#55ff44'}}],
-      ['io-number', {value: this.value.b, id: 'b', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#4499ff'}}]
+      ['io-number', {value: this.value.r, 'on-value-set': this._onValueSet, id: 'r', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ff9977'}}],
+      ['io-number', {value: this.value.g, 'on-value-set': this._onValueSet, id: 'g', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#55ff44'}}],
+      ['io-number', {value: this.value.b, 'on-value-set': this._onValueSet, id: 'b', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#4499ff'}}]
     ]);
 
   }

@@ -39,9 +39,6 @@ export class IoObjectTest extends IoTest(IoObject) {
         chai.expect(sliders[0]).to.not.equal(undefined);
         chai.expect(sliders[1]).to.not.equal(undefined);
       });
-      it('listeners', () => {
-        chai.expect(this.element.__listeners['value-set'][0]).to.equal(this.element._onValueSet);
-      });
     });
   }
 }

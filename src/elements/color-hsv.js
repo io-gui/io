@@ -17,15 +17,10 @@ export class IoColorHsv extends IoObject {
   }
   changed() {
 
-    const r = parseInt(this.value.r * 255);
-    const g = parseInt(this.value.g * 255);
-    const b = parseInt(this.value.b * 255);
-    const rgb = 'rgba(' + r + ',' + g + ',' + b + ')';
-
     this.template([
-      ['io-number', {value: this.value.r, id: 'h', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ff9977'}}],
-      ['io-number', {value: this.value.g, id: 's', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#55ff44'}}],
-      ['io-number', {value: this.value.b, id: 'v', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#4499ff'}}]
+      ['io-number', {value: this.value.h, 'on-value-set': this._onValueSet, id: 'h', step: 0.01, min: 0, max: 1, strict: false, underslider: true}],
+      ['io-number', {value: this.value.s, 'on-value-set': this._onValueSet, id: 's', step: 0.01, min: 0, max: 1, strict: false, underslider: true}],
+      ['io-number', {value: this.value.v, 'on-value-set': this._onValueSet, id: 'v', step: 0.01, min: 0, max: 1, strict: false, underslider: true}]
     ]);
 
   }

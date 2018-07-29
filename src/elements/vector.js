@@ -84,7 +84,8 @@ export class IoVector extends IoObject {
           min: this.min,
           max: this.max,
           strict: this.strict,
-          underslider: this.underslider
+          underslider: this.underslider,
+          'on-value-set': this._onValueSet
         }]);
       }
     }
