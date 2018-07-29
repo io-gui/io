@@ -11,6 +11,19 @@ export class IoColorHex extends IoElement {
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+      :host::before {
+        opacity: 0.25;
+        content: '0x';
+      }
+      :host > .red {
+        color: red;
+      }
+      :host > .green {
+        color: green;
+      }
+      :host > .blue {
+        color: blue;
+      }
       :host:focus {
         overflow: hidden;
         text-overflow: clip;
@@ -60,7 +73,7 @@ export class IoColorHex extends IoElement {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value = value.toFixed(-Math.round(Math.log(1) / Math.LN10));
-      this.innerText = '0x' + ( '000000' + this.value.toString( 16 ) ).slice( - 6 );
+      this.innerText = ( '000000' + this.value.toString( 16 ) ).slice( - 6 );
     } else {
       this.innerText = 'NaN';
     }

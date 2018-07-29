@@ -31,9 +31,8 @@ export class IoColor extends IoObject {
       flex: 0 0 auto;
       width: 12em;
     }
-    :host .hex {
+    :host io-color-hex {
       flex: 0 0 auto;
-      width: 6em;
     }
     </style>`;
   }
@@ -50,6 +49,8 @@ export class IoColor extends IoObject {
     const a = parseFloat(this.value.a);
     const rgb = 'rgb(' + r + ',' + g + ',' + b + ')';
     const rgba = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+
+    const hex = (( r ) << 32 ^ ( g ) << 16 ^ ( b ) << 8 ^ ( a ) << 0)
 
     if (this.expanded) {
 
@@ -76,8 +77,12 @@ export class IoColor extends IoObject {
               ['io-color-hsv', {value: this.bind('value')}]
             ]],
             ['io-flex-row', [
+              ['io-label', {label: 'Lab:'}],
+              ['io-color-hsv', {value: this.bind('value')}]
+            ]],
+            ['io-flex-row', [
               ['io-label', {label: 'hex:'}],
-              ['io-color-hex', {value: (( this.value.r * 255 ) << 16 ^ ( this.value.g * 255 ) << 8 ^ ( this.value.b * 255 ) << 0), hex: true, step: 1, className: 'hex'}]
+              ['io-color-hex', {value: hex}]
             ]]
           ]]
         ]]

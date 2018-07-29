@@ -27,7 +27,7 @@ export class IoColorRgba extends IoObject {
       ['io-number', {value: this.value.r, id: 'r', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ff9977'}}],
       ['io-number', {value: this.value.g, id: 'g', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#55ff44'}}],
       ['io-number', {value: this.value.b, id: 'b', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#4499ff'}}],
-      ['io-number', {value: this.value.a, id: 'a', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ffffff'}}]
+      ['io-number', {value: this.value.a, id: 'a', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#000000'}}]
     ]);
 
   }

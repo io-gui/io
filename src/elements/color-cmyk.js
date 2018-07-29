@@ -24,10 +24,10 @@ export class IoColorCmyk extends IoObject {
     const rgba = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 
     this.template([
-      ['io-number', {value: this.value.r, id: 'r', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ff9977'}}],
-      ['io-number', {value: this.value.g, id: 'g', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#55ff44'}}],
-      ['io-number', {value: this.value.b, id: 'b', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#4499ff'}}],
-      ['io-number', {value: this.value.a, id: 'a', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ffffff'}}]
+      ['io-number', {value: this.value.r, id: 'c', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#00ffff'}}],
+      ['io-number', {value: this.value.g, id: 'm', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ff00ff'}}],
+      ['io-number', {value: this.value.b, id: 'y', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#ffff00'}}],
+      ['io-number', {value: this.value.a, id: 'k', step: 0.01, min: 0, max: 1, strict: false, underslider: true, style: {'--slider-color': '#000000'}}]
     ]);
 
   }
