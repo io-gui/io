@@ -1,6 +1,6 @@
 {
   "name": "@arodic/io",
-  "version": "2.0.0-rc1",
+  "version": "2.1.0",
   "description": "Custom HTML element base class with dynamic templates and data binding.",
   "main": "build/io.js",
   "files": [
@@ -27,9 +27,12 @@
   "keywords": [
     "io",
     "ui",
-    "ioui",
+    "gui",
     "custom elements",
-    "web components"
+    "web components",
+    "customelements",
+    "data binding",
+    "vdom"
   ],
   "bugs": {
     "url": "https://github.com/arodic/io/issues"
@@ -40,9 +43,8 @@
   },
   "scripts": {
     "lint": "eslint src",
-    "uglify": "uglifyjs build/io.js > build/io.min.js && uglifyjs build/io-painters.js > build/io-painters.min.js",
-    "build": "eslint src && rollup -c && npm run uglify",
-    "travis": "npm run build && npm test"
+    "uglify": "uglifyjs build/io.js > build/io.min.js",
+    "build": "eslint src && rollup -c && npm run uglify"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",

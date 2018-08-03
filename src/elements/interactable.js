@@ -1,3 +1,5 @@
+import {IoElement} from "./element.js";
+
 const _clickmask = document.createElement('div');
 _clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;";
 
@@ -52,7 +54,7 @@ class Pointer {
   }
 }
 
-export const IoPointerMixin = (superclass) => class extends superclass {
+export class IoInteractable extends IoElement {
   static get properties() {
     return {
       pointers: Array,
@@ -156,4 +158,6 @@ export const IoPointerMixin = (superclass) => class extends superclass {
     path = path || event.composedPath();
     this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path}, false);
   }
-};
+}
+
+IoInteractable.Register();

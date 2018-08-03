@@ -41,6 +41,14 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.__protoListeners.disconnect(this);
     this.__propListeners.disconnect(this);
     this.removeListeners();
+    for (let p in this.__props) {
+      if (this.__props[p].binding) {
+        this.__props[p].binding.removeTarget(this, p);
+        // TODO: this breaks binding for transplanted elements.
+        // delete this.__props[p].binding;
+        // TODO: possible memory leak!
+      }
+    }
   }
   bind(prop) {
     this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);

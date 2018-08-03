@@ -1,4 +1,4 @@
-import {IoCoreMixin} from "./coreMixin.js";
+import {IoCoreMixin} from "../core/coreMixin.js";
 
 export class IoElement extends IoCoreMixin(HTMLElement) {
   static get properties() {

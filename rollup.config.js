@@ -30,20 +30,6 @@ export default [
         file: 'build/io.js',
         indent: '  '
       }
-    ],
-    external: [ path.resolve('src/io-painters.js') ]
-  },
-  {
-    input: 'src/io-painters.js',
-    plugins: [
-      html()
-    ],
-    output: [
-      {
-        format: 'es',
-        file: 'build/io-painters.js',
-        indent: '  '
-      }
     ]
   }
 ];
