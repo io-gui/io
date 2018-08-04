@@ -57,7 +57,7 @@ class Pointer {
 export class IoInteractable extends IoElement {
   static get properties() {
     return {
-      pointers: Array,
+      pointers: Array, // TODO: remove from properties
       pointermode: 'relative',
       cursor: 'all-scroll'
     };

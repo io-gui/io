@@ -84,6 +84,7 @@ export class Property {
       else if (propDef.type === Number) propDef.value = 0;
       else if (propDef.type === Array) propDef.value = [];
       else if (propDef.type === Object) propDef.value = {};
+      // TODO: consider not constructing values for proto
       else if (propDef.type !== HTMLElement && propDef.type !== Function) propDef.value = new propDef.type();
     }
     this.value = propDef.value;

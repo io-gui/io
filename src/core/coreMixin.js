@@ -105,6 +105,13 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
   }
+  objectMutated(event) {
+    for (var i = this.__objectProps.length; i--;) {
+      if (this.__props[this.__objectProps[i]].value === event.detail.object) {
+        this.changed();
+      }
+    }
+  }
   connectedCallback() {
     this.__protoListeners.connect(this);
     this.__propListeners.connect(this);
@@ -113,6 +120,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       if (this.__props[p].binding) {
         this.__props[p].binding.setTarget(this, p); //TODO: test
       }
+    }
+    if (this.__objectProps.length) {
+      window.addEventListener('io-object-mutated', this.objectMutated);
     }
   }
   disconnectedCallback() {
@@ -125,6 +135,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         // delete this.__props[p].binding;
         // TODO: possible memory leak!
       }
+    }
+    if (this.__objectProps.length) {
+      window.removeEventListener('io-object-mutated', this.objectMutated);
     }
   }
   addEventListener(type, listener) {
@@ -157,7 +170,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
   }
   dispatchEvent(type, detail, bubbles = true, src = this) {
-    if (superclass === HTMLElement) {
+    if (src instanceof HTMLElement || src === window) {
       HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {
         detail: detail,
         bubbles: bubbles,
@@ -166,7 +179,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     } else {
       // TODO: fix path/src argument
       let path = src;
-      // console.log(path);
       if (this.__listeners[type] !== undefined) {
         let array = this.__listeners[type].slice(0);
         for (let i = 0, l = array.length; i < l; i ++) {
@@ -217,5 +229,13 @@ IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
+
+  Object.defineProperty(this.prototype, '__objectProps', {value: []});
+  for (var prop in this.prototype.__props) {
+    if (typeof this.prototype.__props[prop].value === 'object') {
+      this.prototype.__objectProps.push(prop);
+    }
+  }
+
   defineProperties(this.prototype);
 };

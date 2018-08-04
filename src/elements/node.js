@@ -22,3 +22,5 @@ export class IoNode extends IoCoreMixin(Object) {
 }
 
 IoNode.Register = IoCoreMixin.Register;
+
+IoNode.Register();
