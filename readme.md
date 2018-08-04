@@ -1,11 +1,11 @@
-# Io.js: element classes for data-driven web applications #
+# Io.js: UI library for data-driven web applications #
 
 > ⚠️ Io.js is NOT production ready!
 > This project uses modern web technologies such as
 > [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and
 > [ES6 modules](https://caniuse.com/#feat=es6-module) and may or may not work in some browsers.
 
-Io.js is a collection of lightweight classes that let you build encapsulated and reusable custom elements.
+Io.js consists of few lightweight classes that let you build encapsulated and reusable custom elements.
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and
 [DreemGL](https://github.com/dreemproject/dreemgl). You can view the online demo [here](http://arodic.github.io/io/).
 For a quick start, continue reading this document.
@@ -15,9 +15,10 @@ Also check out the todo mvc app [here](http://arodic.github.io/io/demo/todoapp/)
 
 `IoElement` class is an extension of `HTMLElement`.
 It is designed to help you build complex user interfaces with minimal effort.
-It includes dynamic templates, data binding and shorthands for element definitions and initialization.
+It includes dynamic templates, encapsulated* styling, data binding and shorthands for element definitions and initialization.
 
-`IoInteractable` is extends `IoElement` with handy pointer API for mouse+touch interactions.
+`IoInteractable` is extends `IoElement` with handy pointer API for elements
+that require mouse and touch interactions.
 
 `IoNode` class is same as `IoElement` except it extends `Object` class instead.
 It excludes DOM APIs but includes event dispatch and listeners.
@@ -30,6 +31,7 @@ You can use this class as glue between `IoElement` and your core application log
 * io elements are **styleable**.
 * io elements are **data-driven**.
 * io elements use **bi-directional** data binding.
+* io elements use **properties**, not attributes.
 
 ### File Sizes ###
 
@@ -42,16 +44,16 @@ You can use this class as glue between `IoElement` and your core application log
 
 Simply extend the core `IoElement` class and call `Register()` function on your class.
 
-Define properties inside the `properties()` getter:
+Define properties inside the `properties()` getter.
 
 ```javascript
 static get properties() {
   return {
-    fruits: { // name of the property
-      type: Array, // type (constructor) of the property
-      value: ['apple', 'banana', 'avocado'], // initial value
-      observer: 'fruitsChanged', // when value changes, this.fruitsChanged() will be called.
-      reflect: true, // reflect this.fruits to attribute
+    fruits: {
+      value: function() { return ['apple', 'banana', 'avocado']; },
+      type: Array,
+      observer: 'fruitsChanged',
+      reflect: true,
     },
     salad: {
       value: false
@@ -60,13 +62,25 @@ static get properties() {
 }
 ```
 
+Each property can have following configuration options:
+
+- **value** default value.
+If not specified it will be initialized from specified type constructor.
+If default value is an object, make sure it is wrapped into an anonymous function.
+- **type** constructor of the property.
+If not specified, it will be inferred from the value.
+- **observer** name of the method to be called when value changes.
+- **reflect** if true, value will be reflected to attribute.
+This feature is intended for styling selectors only.
+- **enumerable** Specifies if property should be enumerable. Defaults to true.
+
 Alternatively, you can define properties by value or type only:
 
 ```javascript
 static get properties() {
   return {
     fruits: Array, // Constructors are interpreted as type.
-    salad: false // Type (Boolean) will be inferred from this value
+    salad: false // This represents value. Type (Boolean) will be inferred.
   }
 }
 ```
