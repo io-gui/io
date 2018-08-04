@@ -7,7 +7,9 @@
 
 Io.js is a collection of lightweight classes that let you build encapsulated and reusable custom elements.
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and
-[DreemGL](https://github.com/dreemproject/dreemgl).
+[DreemGL](https://github.com/dreemproject/dreemgl). You can view the online demo [here](http://arodic.github.io/io/).
+For a quick start, continue reading this document.
+Also check out the todo mvc app [here](http://arodic.github.io/io/demo/todoapp/) ([source](https://github.com/arodic/io/tree/master/demo/todoapp)).
 
 ### Classes ###
 
@@ -21,10 +23,10 @@ It includes dynamic templates, data binding and shorthands for element definitio
 It excludes DOM APIs but includes event dispatch and listeners.
 You can use this class as glue between `IoElement` and your core application logic.
 
-### Core Principles ###
+### Core Principles ##
 
 * io elements use **native web technologies**.
-* io elements are **javascript-centric**.
+* io elements are **javascript-centric** (no HTML).
 * io elements are **styleable**.
 * io elements are **data-driven**.
 * io elements use **bi-directional** data binding.
@@ -81,7 +83,7 @@ static get listeners() {
 
 Define default style inside `style()` getter.
 Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage.
-Template handler `html` is optional and it is here only to help with syntax highlighting.
+Template handler `html` is optional and it is here only to help with syntax highlighting in code editors.
 
 ```javascript
 static get style() {
@@ -106,7 +108,7 @@ For example an instance of `<my-color>` element can be expressed like this:
 ```
 
 Note that the first array item is **always** element name.
-The next is **optional** properties followed by innerText or an array of children.
+The next is properties (optional) followed by innerText or an array of children.
 The HTML equivalent of the array above would would be:
 
 ```HTML
@@ -138,6 +140,7 @@ The output from the code above is converted to following HTML DOM:
 
 You can data bind properties to children using `bind()` function.
 Keep in mind that this only works with IoElement-based children.
+In other words, binding to `div`, `span` etc. will not work.
 
 ```javascript
 this.template([
@@ -166,6 +169,10 @@ this.template([
 
   `setProperties(props)` This method is used internally to set multiple properties in a batch.
   It does not trigger `change()` method until `queueDispatch()` is called.
+
+  `objectMutated` This method is automatically called if element properties include
+  an object value and 'object-mutated' event has been broadcasted on window. Internally, this method checks if mutated object is its property
+  and calls `changed()` method if appropriate.
 
   `queueDispatch()` This method is used internally to dispatch events and
   observers triggered y property changes.
