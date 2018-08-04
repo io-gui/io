@@ -25,15 +25,15 @@ export class IoDemo extends IoElement {
     this.template([
       ['div', {className: 'demo'}, [
         ['div', {className: 'label'}, 'io-element'],
-        ['io-element'],
+        ['io-element', 'io-element'],
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'label'}, 'io-interactable'],
-        ['io-interactable'],
+        ['io-interactable', 'io-interactable'],
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'label'}, 'io-node'],
-        ['io-node'],
+        ['io-node', 'io-node'],
       ]]
     ]);
   }

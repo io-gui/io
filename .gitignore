@@ -7,5 +7,4 @@ node_modules/
 .vs/
 .project
 *.swp
-
 .jshintrc
