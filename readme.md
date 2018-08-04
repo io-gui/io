@@ -117,7 +117,7 @@ Here is a slightly more complex expression with dynamically generated DOM tree:
 
 ```javascript
 const Fruit = (elem, i) => ['span', {className: 'fruit'}, elem];
-this.render([
+this.template([
   ['h4', this.salad ? 'Salad ingredients:' : 'List of Fruits:'],
   ['div', [
     elements.map(this.fruits)
@@ -140,7 +140,7 @@ You can data bind properties to children using `bind()` function.
 Keep in mind that this only works with IoElement-based children.
 
 ```javascript
-this.render([
+this.template([
   ['my-child-element', { value: this.bind('value') }]
 ]);
 
@@ -225,7 +225,7 @@ export class MyButton extends IoElement {
     this.pressed = false;
   }
   changed() {
-    this.render([['span', this.label]]);
+    this.template([['span', this.label]]);
   }
 }
 
