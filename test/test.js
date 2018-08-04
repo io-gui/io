@@ -1,34 +1,42 @@
-import {html, IoElement} from "../build/io.js";
+import {html, IoElement, IoNode} from "../build/io.js";
 
 import "../node_modules/chai/chai.js";
 import "../node_modules/mocha/mocha.js";
 
 mocha.setup('bdd');
 
-export class IoTest extends IoElement {
-  static get style() {
-    return html`<style>
-      :host {
-        display: none;
-      }
-    </style>`;
-  }
+export class TestElement extends IoElement {
   static get properties() {
     return {
-      number: 1337,
-      string: "hello",
-      boolean: true,
-      null: null,
-      NaN: NaN,
-      undefined: undefined,
-      array: [1,2]
+      _changeCount: 0
     };
   }
+  changed() {
+    this._changeCount++;
+  }
+}
+TestElement.Register();
+
+export class TestNode extends IoNode {
+  static get properties() {
+    return {
+      _changeCount: 0
+    };
+  }
+  changed() {
+    this._changeCount++;
+  }
+}
+TestNode.Register();
+
+export class IoTest extends TestElement {
   constructor() {
     super();
-    this.template([
-      ['io-element', {id: 'element', 'on-something': this.changed, 'on-something-else': 'changed'}],
-    ]);
+    this.template([['test-element', {id: 'element', 'on-function': this.changed, 'on-string': 'changed'}]]);
+    this.appendChild(this.element = new TestElement({'on-function': this.changed, 'on-string': 'changed'}));
+
+    this.node = new TestNode({'on-function': this.changed, 'on-string': 'changed'});
+    this.node.connect();
   }
   connectedCallback() {
     super.connectedCallback();
@@ -37,29 +45,102 @@ export class IoTest extends IoElement {
     mocha.run();
   }
   run() {
-    describe('Check prop listeners', () => {
-      it('io-element listens (function handler)', () => {
-        chai.expect(this.$.element.__listeners['something'][0]).to.equal(this.changed);
+
+    describe('IoElement: Check listeners from constructor', () => {
+      it('listens function handler', () => {
+        chai.expect(this.element.__listeners['function'][0]).to.equal(this.changed);
       });
-      it('io-element listens (string handler)', () => {
-        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(this.$.element.changed);
+      it('listens string handler', () => {
+        chai.expect(this.element.__listeners['string'][0]).to.equal(this.element.changed);
       });
-      it('io-element stops listening when disconnected', () => {
+      it('calls handler when event fires', () => {
+        this._changeCount = 1;
+        this.element._changeCount = 1;
+        this.$.element._changeCount = 1;
+        this.element.dispatchEvent('string');
+        chai.expect(this.element._changeCount).to.equal(2);
+        this.element.dispatchEvent('function');
+        chai.expect(this._changeCount).to.equal(2);
+        this.$.element.dispatchEvent('string');
+        chai.expect(this.$.element._changeCount).to.equal(2);
+        this.$.element.dispatchEvent('function');
+        chai.expect(this._changeCount).to.equal(3);
+      });
+      it('stops listening when disconnected', () => {
+        this.removeChild(this.element);
+        chai.expect(this.element.__listeners['function'][0]).to.equal(undefined);
+        chai.expect(this.element.__listeners['string'][0]).to.equal(undefined);
+        // TODO: redundant?
+        this._changeCount = 1;
+        this.element._changeCount = 1;
+        this.element.dispatchEvent('string');
+        chai.expect(this.element._changeCount).to.equal(1);
+        this.element.dispatchEvent('function');
+        chai.expect(this._changeCount).to.equal(1);
+
+      });
+      it('starts listening when reconnected', () => {
+        this.appendChild(this.element);
+        chai.expect(this.element.__listeners['function'][0]).to.equal(this.changed);
+        chai.expect(this.element.__listeners['string'][0]).to.equal(this.element.changed);
+        // TODO: redundant?
+        this._changeCount = 1;
+        this.element._changeCount = 1;
+        this.element.dispatchEvent('string');
+        chai.expect(this.element._changeCount).to.equal(2);
+        this.element.dispatchEvent('function');
+        chai.expect(this._changeCount).to.equal(2);
+      });
+    });
+
+    describe('IoElement: Check listeners from template', () => {
+      it('listens function handler', () => {
+        chai.expect(this.$.element.__listeners['function'][0]).to.equal(this.changed);
+      });
+      it('listens string handler', () => {
+        chai.expect(this.$.element.__listeners['string'][0]).to.equal(this.$.element.changed);
+      });
+      it('stops listening when disconnected', () => {
         this.removeChild(this.$.element);
-        chai.expect(this.$.element.__listeners['something'][0]).to.equal(undefined);
-        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(undefined);
+        chai.expect(this.$.element.__listeners['function'][0]).to.equal(undefined);
+        chai.expect(this.$.element.__listeners['string'][0]).to.equal(undefined);
       });
-      it('io-element starts listening when reconnected', () => {
+      it('starts listening when reconnected', () => {
         this.appendChild(this.$.element);
-        chai.expect(this.$.element.__listeners['something'][0]).to.equal(this.changed);
-        chai.expect(this.$.element.__listeners['something-else'][0]).to.equal(this.$.element.changed);
+        chai.expect(this.$.element.__listeners['function'][0]).to.equal(this.changed);
+        chai.expect(this.$.element.__listeners['string'][0]).to.equal(this.$.element.changed);
+      });
+      it('calls handler when event fires', () => {
+        this._changeCount = 1;
+        this.$.element._changeCount = 1;
+        this.$.element.dispatchEvent('string');
+        chai.expect(this.$.element._changeCount).to.equal(2);
+        this.$.element.dispatchEvent('function');
+        chai.expect(this._changeCount).to.equal(2);
+      });
+    });
+
+    describe('IoNode: Check listeners', () => {
+      it('listens function handler', () => {
+        chai.expect(this.node.__listeners['function'][0]).to.equal(this.changed);
+      });
+      it('listens string handler', () => {
+        chai.expect(this.node.__listeners['string'][0]).to.equal(this.node.changed);
+      });
+      it('stops listening when disconnected', () => {
+        this.node.disconnect();
+        chai.expect(this.node.__listeners['function'][0]).to.equal(undefined);
+        chai.expect(this.node.__listeners['string'][0]).to.equal(undefined);
+      });
+      it('starts listening when reconnected', () => {
+        this.node.connect();
+        chai.expect(this.node.__listeners['function'][0]).to.equal(this.changed);
+        chai.expect(this.node.__listeners['string'][0]).to.equal(this.node.changed);
       });
     });
 
     // TODO: test style in property
-    //
   }
-
 }
 
 IoTest.Register();

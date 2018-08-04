@@ -1,4 +1,6 @@
 import {IoCoreMixin} from "../core/coreMixin.js";
+import {PropListeners} from "../core/propListeners.js"; // TODO: refactor for native elements
+
 
 export class IoElement extends IoCoreMixin(HTMLElement) {
   static get properties() {
@@ -35,6 +37,7 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
       let nodes = Array.from(child.querySelectorAll('*'));
       for (let i = nodes.length; i--;) {
         if (nodes[i].dispose) nodes[i].dispose();
+        // TODO: dispose propListeners from native elements
       }
       host.removeChild(child);
     }
@@ -72,7 +75,10 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
             }
             else children[i][prop] = vChildren[i].props[prop];
           }
-
+          // TODO: refactor for native elements
+          children[i].__propListeners.setListeners(vChildren[i].props);
+          children[i].__propListeners.connect(children[i]);
+          ///
         }
       }
     }
@@ -129,6 +135,11 @@ const constructElement = function(vDOMNode) {
      }
    } else element[prop] = vDOMNode.props[prop];
  }
+ /// TODO: refactor for native elements
+ Object.defineProperty(element, '__propListeners', {value: new PropListeners()});
+ element.__propListeners.setListeners(vDOMNode.props);
+ element.__propListeners.connect(element);
+ ///
  return element;
 };
 

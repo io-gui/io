@@ -4,35 +4,32 @@ export class TodoModel extends IoNode {
   static get properties() {
     return {
       items: Array,
-      filter: String
+      filters: function () {
+        return {
+          '': function () {
+            return true;
+          },
+          active: function(item) {
+            return !item.completed;
+          },
+          completed: function(item) {
+            return item.completed;
+          }
+        }
+      }
     };
   }
   constructor() {
     super();
-    this.items = [
-      {title: 'one', completed: false},
-      {title: 'two', completed: false},
-      {title: 'three', completed: true},
-      {title: 'four', completed: false},
-    ];
-    this.filters = {
-      active: function(item) {
-        return !item.completed;
-      },
-      completed: function(item) {
-        return item.completed;
-      }
-    };
-  }
-  initialize() {
-    this.items = [];
-    this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+    const items = JSON.parse(localStorage.getItem('todoapp'));
+    if (items) this.items = items;
   }
   newItem(title) {
     title = String(title).trim();
     if (title) {
       this.items.push({title: title, completed: false});
       this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+      this.save();
     }
   }
   getCompletedCount() {
@@ -41,35 +38,41 @@ export class TodoModel extends IoNode {
   getActiveCount() {
     return this.items ? (this.items.length - this.getCompletedCount(this.items)) : 0;
   }
-  matchesFilter(item, filter) {
-    var fn = this.filters[filter];
-    return fn ? fn(item) : true;
-  }
   destroyItem(item) {
     var i = this.items.indexOf(item);
-    if (i > -1) {
-      this.items.splice(i, 1)
-    }
+    this.items.splice(i, 1)
     this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+    this.save();
+  }
+  updateItemTitle(item, title) {
+    title = String(title).trim();
+    if (title) {
+      var i = this.items.indexOf(item);
+      this.items[i].title = title;
+      this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+      this.save();
+    }
   }
   toggleItem(item) {
     item.completed = !item.completed;
-    this.dispatchEvent('io-object-mutated', {object: item}, false, window);
     this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+    this.save();
   }
   clearCompletedItems() {
     this.items = this.items.filter(this.filters.active);
     this.dispatchEvent('io-object-mutated', {object: this}, false, window);
-  }
-  areAllCompleted() {
-    return this.items.length === this.getCompletedCount(this.items);
+    this.save();
   }
   toggleItemsCompleted() {
-    let completed = !this.areAllCompleted();
-    for (var i = 0; i < this.items.length; ++i) {
+    let completed = !(this.items.length === this.getCompletedCount());
+    for (var i = this.items.length; i--;) {
       this.items[i].completed = completed;
-      this.dispatchEvent('io-object-mutated', {object: this.items[i]}, false, window);
     }
+    this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+    this.save();
+  }
+  save() {
+    localStorage.setItem('todoapp', JSON.stringify(this.items));
   }
 }
 

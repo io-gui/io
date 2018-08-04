@@ -59,8 +59,11 @@ function defineProperties(prototype) {
         if (this.__props[prop].observer) {
           this[this.__props[prop].observer](value, oldValue);
         }
-        this.changed();
-        this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
+        if (prop.charAt(0) !== '_') {
+          // TODO: consider notify
+          this.changed();
+          this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
+        }
       },
       enumerable: prototype.__props[prop].enumerable,
       configurable: true
@@ -82,22 +85,11 @@ Creates a property object from properties defined in the prototype chain.
 class Property {
   constructor(propDef) {
     if (propDef === null || propDef === undefined) {
-      propDef = { value: propDef };
+      propDef = {value: propDef}; // null/undefined
     } else if (typeof propDef === 'function') {
-      // Shorthand property definition by constructor.
-      propDef = {type: propDef};
+      propDef = {type: propDef}; // defined by constructor.
     } else if (typeof propDef !== 'object') {
-      // Shorthand property definition by value
-      propDef = {value: propDef, type: propDef.constructor};
-    }
-    // Set default value if type is defined but value is not.
-    if (propDef.value === undefined && propDef.type) {
-      if (propDef.type === Boolean) propDef.value = false;
-      else if (propDef.type === String) propDef.value = '';
-      else if (propDef.type === Number) propDef.value = 0;
-      else if (propDef.type === Array) propDef.value = [];
-      else if (propDef.type === Object) propDef.value = {};
-      else if (propDef.type !== HTMLElement && propDef.type !== Function) propDef.value = new propDef.type();
+      propDef = {value: propDef, type: propDef.constructor}; // defined by value
     }
     this.value = propDef.value;
     this.type = propDef.type;
@@ -105,7 +97,7 @@ class Property {
     this.reflect = propDef.reflect;
     this.binding = propDef.binding;
     this.config = propDef.config;
-    this.enumerable = propDef.enumerable !== undefined ? propDef.enumerable : true;
+    this.enumerable = propDef.enumerable;// !== undefined ? propDef.enumerable : true;
   }
   // Helper function to assign new values as we walk up the inheritance chain.
   assign(propDef) {
@@ -119,18 +111,21 @@ class Property {
   }
   // Clones the property. If property value is objects it does one level deep object clone.
   clone() {
+    // console.log(typeof this.value === 'function');
     let prop = new Property(this);
-    if (prop.value instanceof Array) {
-      prop.value = [ ...prop.value ];
-    } else if (prop.value instanceof Object) {
-      let value = prop.value;
-      if (typeof value.clone === 'function') {
-        prop.value = value.clone();
-      } else {
-        prop.value = prop.type ? new prop.type() : {};
-        for (let p in value) prop.value[p] = value[p];
+
+    // Set default value if type is defined but value is not.
+    if (prop.value === undefined && prop.type) {
+      if (prop.type === Boolean) prop.value = false;
+      else if (prop.type === String) prop.value = '';
+      else if (prop.type === Number) prop.value = 0;
+      else if (prop.type === Array) prop.value = [];
+      else if (prop.type === Object) prop.value = {};
+      else if (prop.type !== HTMLElement && prop.type !== Function) {
+        prop.value = new prop.type();
       }
     }
+
     return prop;
   }
 }
@@ -252,8 +247,9 @@ class Binding {
 // Creates a list of listeners passed to element instance as arguments.
 // TODO: apply top native HTMLElement
 // TODO: prune from properties
-class InstanceListeners {
+class PropListeners {
   setListeners(props) {
+    // TODO remove old listeners
     for (let l in props) {
       if (l.startsWith('on-')) {
         this[l.slice(3, l.length)] = props[l];
@@ -292,11 +288,12 @@ const IoCoreMixin = (superclass) => class extends superclass {
     Object.defineProperty(this, '__notifyQueue', {value: []});
 
     Object.defineProperty(this, '__props', {value: this.__props.clone()});
-    Object.defineProperty(this, '__propListeners', {value: new InstanceListeners()});
 
-    Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
+    Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing in template. possible memory leak!
 
     this.__protoFunctions.bind(this);
+
+    Object.defineProperty(this, '__propListeners', {value: new PropListeners()});
     this.__propListeners.setListeners(initProps);
 
     // TODO: is this necessary?
@@ -374,6 +371,13 @@ const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
   }
+  objectMutated(event) {
+    for (let i = this.__objectProps.length; i--;) {
+      if (this.__props[this.__objectProps[i]].value === event.detail.object) {
+        this.changed();
+      }
+    }
+  }
   connectedCallback() {
     this.__protoListeners.connect(this);
     this.__propListeners.connect(this);
@@ -382,6 +386,9 @@ const IoCoreMixin = (superclass) => class extends superclass {
       if (this.__props[p].binding) {
         this.__props[p].binding.setTarget(this, p); //TODO: test
       }
+    }
+    if (this.__objectProps.length) {
+      window.addEventListener('io-object-mutated', this.objectMutated);
     }
   }
   disconnectedCallback() {
@@ -394,6 +401,9 @@ const IoCoreMixin = (superclass) => class extends superclass {
         // delete this.__props[p].binding;
         // TODO: possible memory leak!
       }
+    }
+    if (this.__objectProps.length) {
+      window.removeEventListener('io-object-mutated', this.objectMutated);
     }
   }
   addEventListener(type, listener) {
@@ -426,7 +436,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
     }
   }
   dispatchEvent(type, detail, bubbles = true, src = this) {
-    if (superclass === HTMLElement) {
+    if (src instanceof HTMLElement || src === window) {
       HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {
         detail: detail,
         bubbles: bubbles,
@@ -435,7 +445,6 @@ const IoCoreMixin = (superclass) => class extends superclass {
     } else {
       // TODO: fix path/src argument
       let path = src;
-      // console.log(path);
       if (this.__listeners[type] !== undefined) {
         let array = this.__listeners[type].slice(0);
         for (let i = 0, l = array.length; i < l; i ++) {
@@ -486,6 +495,16 @@ IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
+
+  Object.defineProperty(this.prototype, '__objectProps', {value: []});
+  const ignore = [Boolean, String, Number, HTMLElement, Function];
+  for (let prop in this.prototype.__props) {
+    let type = this.prototype.__props[prop].type;
+    if (ignore.indexOf(type) == -1) {
+      this.prototype.__objectProps.push(prop);
+    }
+  }
+
   defineProperties(this.prototype);
 };
 
@@ -524,6 +543,7 @@ class IoElement extends IoCoreMixin(HTMLElement) {
       let nodes = Array.from(child.querySelectorAll('*'));
       for (let i = nodes.length; i--;) {
         if (nodes[i].dispose) nodes[i].dispose();
+        // TODO: dispose propListeners from native elements
       }
       host.removeChild(child);
     }
@@ -561,7 +581,10 @@ class IoElement extends IoCoreMixin(HTMLElement) {
             }
             else children[i][prop] = vChildren[i].props[prop];
           }
-
+          // TODO: refactor for native elements
+          children[i].__propListeners.setListeners(vChildren[i].props);
+          children[i].__propListeners.connect(children[i]);
+          ///
         }
       }
     }
@@ -618,6 +641,11 @@ const constructElement = function(vDOMNode) {
      }
    } else element[prop] = vDOMNode.props[prop];
  }
+ /// TODO: refactor for native elements
+ Object.defineProperty(element, '__propListeners', {value: new PropListeners()});
+ element.__propListeners.setListeners(vDOMNode.props);
+ element.__propListeners.connect(element);
+ ///
  return element;
 };
 
@@ -703,7 +731,7 @@ class Pointer {
 class IoInteractable extends IoElement {
   static get properties() {
     return {
-      pointers: Array,
+      pointers: Array, // TODO: remove from properties
       pointermode: 'relative',
       cursor: 'all-scroll'
     };
@@ -809,13 +837,11 @@ class IoInteractable extends IoElement {
 IoInteractable.Register();
 
 class IoNode extends IoCoreMixin(Object) {
-  connectedCallback() {
-    // TODO: implement connected
-    this.__proto__.__protoListeners.connect(this);
+  connect() {
+    this.connectedCallback();
   }
-  disconnectedCallback() {
-    // TODO: implement disconnected
-    this.__proto__.__protoListeners.disconnect(this);
+  disconnect() {
+    this.disconnectedCallback();
   }
   dispose() {
     // TODO test
@@ -830,5 +856,7 @@ class IoNode extends IoCoreMixin(Object) {
 }
 
 IoNode.Register = IoCoreMixin.Register;
+
+IoNode.Register();
 
 export { IoElement, html, initStyle, Vector2, IoInteractable, IoNode };

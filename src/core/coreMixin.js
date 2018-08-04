@@ -3,7 +3,7 @@ import {ProtoProperties, defineProperties} from "./protoProperties.js";
 import {ProtoListeners} from "./protoListeners.js";
 import {ProtoFunctions} from "./protoFunctions.js";
 import {Binding} from "./binding.js";
-import {InstanceListeners} from "./propListeners.js";
+import {PropListeners} from "./propListeners.js";
 
 export const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
@@ -23,11 +23,12 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     Object.defineProperty(this, '__notifyQueue', {value: []});
 
     Object.defineProperty(this, '__props', {value: this.__props.clone()});
-    Object.defineProperty(this, '__propListeners', {value: new InstanceListeners()});
 
-    Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing on update. possible memory leak!
+    Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing in template. possible memory leak!
 
     this.__protoFunctions.bind(this);
+
+    Object.defineProperty(this, '__propListeners', {value: new PropListeners()});
     this.__propListeners.setListeners(initProps);
 
     // TODO: is this necessary?
@@ -106,7 +107,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
   }
   objectMutated(event) {
-    for (var i = this.__objectProps.length; i--;) {
+    for (let i = this.__objectProps.length; i--;) {
       if (this.__props[this.__objectProps[i]].value === event.detail.object) {
         this.changed();
       }
@@ -231,8 +232,10 @@ IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
 
   Object.defineProperty(this.prototype, '__objectProps', {value: []});
-  for (var prop in this.prototype.__props) {
-    if (typeof this.prototype.__props[prop].value === 'object') {
+  const ignore = [Boolean, String, Number, HTMLElement, Function];
+  for (let prop in this.prototype.__props) {
+    let type = this.prototype.__props[prop].type;
+    if (ignore.indexOf(type) == -1) {
       this.prototype.__objectProps.push(prop);
     }
   }

@@ -1,13 +1,11 @@
 import {IoCoreMixin} from "../core/coreMixin.js";
 
 export class IoNode extends IoCoreMixin(Object) {
-  connectedCallback() {
-    // TODO: implement connected
-    this.__proto__.__protoListeners.connect(this);
+  connect() {
+    this.connectedCallback();
   }
-  disconnectedCallback() {
-    // TODO: implement disconnected
-    this.__proto__.__protoListeners.disconnect(this);
+  disconnect() {
+    this.disconnectedCallback();
   }
   dispose() {
     // TODO test

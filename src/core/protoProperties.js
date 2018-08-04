@@ -46,8 +46,11 @@ export function defineProperties(prototype) {
         if (this.__props[prop].observer) {
           this[this.__props[prop].observer](value, oldValue);
         }
-        this.changed();
-        this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
+        if (prop.charAt(0) !== '_') {
+          // TODO: consider notify
+          this.changed();
+          this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
+        }
       },
       enumerable: prototype.__props[prop].enumerable,
       configurable: true
@@ -69,23 +72,11 @@ Creates a property object from properties defined in the prototype chain.
 export class Property {
   constructor(propDef) {
     if (propDef === null || propDef === undefined) {
-      propDef = { value: propDef };
+      propDef = {value: propDef}; // null/undefined
     } else if (typeof propDef === 'function') {
-      // Shorthand property definition by constructor.
-      propDef = {type: propDef};
+      propDef = {type: propDef}; // defined by constructor.
     } else if (typeof propDef !== 'object') {
-      // Shorthand property definition by value
-      propDef = {value: propDef, type: propDef.constructor};
-    }
-    // Set default value if type is defined but value is not.
-    if (propDef.value === undefined && propDef.type) {
-      if (propDef.type === Boolean) propDef.value = false;
-      else if (propDef.type === String) propDef.value = '';
-      else if (propDef.type === Number) propDef.value = 0;
-      else if (propDef.type === Array) propDef.value = [];
-      else if (propDef.type === Object) propDef.value = {};
-      // TODO: consider not constructing values for proto
-      else if (propDef.type !== HTMLElement && propDef.type !== Function) propDef.value = new propDef.type();
+      propDef = {value: propDef, type: propDef.constructor}; // defined by value
     }
     this.value = propDef.value;
     this.type = propDef.type;
@@ -93,7 +84,7 @@ export class Property {
     this.reflect = propDef.reflect;
     this.binding = propDef.binding;
     this.config = propDef.config;
-    this.enumerable = propDef.enumerable !== undefined ? propDef.enumerable : true;
+    this.enumerable = propDef.enumerable;// !== undefined ? propDef.enumerable : true;
   }
   // Helper function to assign new values as we walk up the inheritance chain.
   assign(propDef) {
@@ -107,18 +98,21 @@ export class Property {
   }
   // Clones the property. If property value is objects it does one level deep object clone.
   clone() {
+    // console.log(typeof this.value === 'function');
     let prop = new Property(this);
-    if (prop.value instanceof Array) {
-      prop.value = [ ...prop.value ];
-    } else if (prop.value instanceof Object) {
-      let value = prop.value;
-      if (typeof value.clone === 'function') {
-        prop.value = value.clone();
-      } else {
-        prop.value = prop.type ? new prop.type() : {};
-        for (let p in value) prop.value[p] = value[p];
+
+    // Set default value if type is defined but value is not.
+    if (prop.value === undefined && prop.type) {
+      if (prop.type === Boolean) prop.value = false;
+      else if (prop.type === String) prop.value = '';
+      else if (prop.type === Number) prop.value = 0;
+      else if (prop.type === Array) prop.value = [];
+      else if (prop.type === Object) prop.value = {};
+      else if (prop.type !== HTMLElement && prop.type !== Function) {
+        prop.value = new prop.type();
       }
     }
+
     return prop;
   }
 }
