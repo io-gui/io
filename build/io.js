@@ -97,7 +97,7 @@ class Property {
     this.reflect = propDef.reflect;
     this.binding = propDef.binding;
     this.config = propDef.config;
-    this.enumerable = propDef.enumerable;// !== undefined ? propDef.enumerable : true;
+    this.enumerable = propDef.enumerable !== undefined ? propDef.enumerable : true;
   }
   // Helper function to assign new values as we walk up the inheritance chain.
   assign(propDef) {
