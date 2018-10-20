@@ -3,7 +3,7 @@
  *
  * Minimal implementation of io mixin: https://github.com/arodic/io
  * Includes event listener/dispatcher and defineProperties() method.
- * Changed properties trigger "change" and "[prop]-changed" events, and execution of PropChanged() and [prop]Changed() callbacks.
+ * Changed properties trigger "[prop]-changed" event, and execution of changed() and [prop]Changed() functions.
  */
 
 const IoLiteMixin = (superclass) => class extends superclass {
@@ -85,7 +85,7 @@ const defineProperty = function(scope, propName, propDef) {
 						if (typeof scope[defaultObserver] === 'function') scope[defaultObserver](value, oldValue);
 						if (typeof scope[customObserver] === 'function') scope[customObserver](value, oldValue);
 						scope.dispatchEvent(propName + '-changed', {value: value, oldValue: oldValue, bubbles: true});
-						scope.dispatchEvent('change', {property: propName, value: value, oldValue: oldValue});
+						scope.dispatchEvent('change', {property: propName, value: value, oldValue: oldValue}); // TODO: remove
 					}
 				}
 			},

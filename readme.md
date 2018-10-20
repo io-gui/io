@@ -1,10 +1,11 @@
 # Io.js: UI library for data-driven web applications #
 
-Io.js consists of few lightweight classes designed for reusable custom elements in javascript.
+Io.js consists of few lightweight classes designed for creation of reusable custom elements in javascript.
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and
 [DreemGL](https://github.com/dreemproject/dreemgl).
 You can view [todo MVC demo app here](http://arodic.github.io/io/demo/todoapp).
-Check out [source code on GitHub](https://github.com/arodic/io).
+Check out [source code on GitHub](https://github.com/arodic/io) and [most current tests](https://arodic.github.io/io/test).
+
 For a quick start, continue reading this document.
 
 > ⚠️ Io.js is NOT production ready!
@@ -29,13 +30,6 @@ You can use this class as glue between `IoElement` and your core application log
 * io is **data-driven**.
 * io uses **bi-directional** data binding.
 * io uses **properties**, while **attributes** can be used for styling.
-
-### File Sizes ###
-
-|             | Size | Gzipped |
-| ----------- |:----:|:-------:|
-| io.js       | 29KB |     7KB |
-| io.min.js   | 20KB |     5KB |
 
 ### Defining Elements ###
 
@@ -142,7 +136,7 @@ Note that the first array item is **mandatory** element name.
 Following are **optional** properties object, followed by innerText or an array of children.
 The HTML output from the array above is:
 
-```HTML
+```html
   <my-color color="tomato">this is my color</my-color>
 ```
 
