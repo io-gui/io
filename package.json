@@ -4,18 +4,10 @@
   "description": "Custom HTML element base class with dynamic templates and data binding.",
   "main": "build/io.js",
   "files": [
-    "package.json",
-    "bower.json",
-    "LICENSE",
-    "README.md",
-    "index.html",
-    "io.js",
     "build/io.js",
-    "build/io.min.js",
-    "build/io.module.js"
+    "build/io.min.js"
   ],
   "directories": {
-    "src": "source",
     "build": "build"
   },
   "repository": {
@@ -54,5 +46,8 @@
     "mocha": "^5.2.0",
     "rollup": "^0.59.4",
     "uglify-es": "^3.3.9"
+  },
+  "dependencies": {
+    "npm": "^6.4.1"
   }
 }
