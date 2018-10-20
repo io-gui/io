@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Io • Test</title>
+    <meta name="description" content="io" />
+    <style>
+      html {
+        font-family: Arial, Helvetica, sans-serif;
+        letter-spacing: 0.05em;
+        font-weight: 300;
+      }
+      .passes {
+        color: #0a0;
+        font-weight: bold;
+      }
+      .failures {
+        color: #f00;
+        font-weight: bold;
+      }
+    </style>
+    <link href="../node_modules/mocha/mocha.css" rel="stylesheet" />
+    <script type="module" src="./test.js"></script>
+  </head>
+  <body>
+    <io-test></io-test>
+    <div id="mocha"></div>
+  </body>
+</html>

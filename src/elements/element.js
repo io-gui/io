@@ -1,7 +1,6 @@
 import {IoCoreMixin} from "../core/coreMixin.js";
 import {PropListeners} from "../core/propListeners.js"; // TODO: refactor for native elements
 
-
 export class IoElement extends IoCoreMixin(HTMLElement) {
   static get properties() {
     return {

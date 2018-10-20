@@ -8,5 +8,15 @@ export default [
         indent: '  '
       }
     ]
+  },
+  {
+    input: 'src/ioLite.js',
+    output: [
+      {
+        format: 'es',
+        file: 'build/ioLite.js',
+        indent: '  '
+      }
+    ]
   }
 ];

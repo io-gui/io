@@ -54,7 +54,7 @@ class Pointer {
   }
 }
 
-export class IoInteractable extends IoElement {
+export class IoInteractive extends IoElement {
   static get properties() {
     return {
       pointers: Array, // TODO: remove from properties
@@ -160,4 +160,4 @@ export class IoInteractable extends IoElement {
   }
 }
 
-IoInteractable.Register();
+IoInteractive.Register();

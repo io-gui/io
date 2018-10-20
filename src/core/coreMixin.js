@@ -39,6 +39,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   }
   changed() {}
   dispose() {
+    // TODO: test dispose!
     this.__protoListeners.disconnect(this);
     this.__propListeners.disconnect(this);
     this.removeListeners();
@@ -179,12 +180,13 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }));
     } else {
       // TODO: fix path/src argument
-      let path = src;
+      let path = [src];
       if (this.__listeners[type] !== undefined) {
         let array = this.__listeners[type].slice(0);
         for (let i = 0, l = array.length; i < l; i ++) {
           path = path || [this];
-          array[i].call(this, {detail: detail, target: this, bubbles: bubbles, path: path});
+          const payload = {detail: detail, target: this, bubbles: bubbles, path: path};
+          array[i].call(this, payload);
           // TODO: test bubbling
           if (bubbles) {
             let parent = this.parent;

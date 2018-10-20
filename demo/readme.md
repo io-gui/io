@@ -1,14 +1,16 @@
 # Io.js: UI library for data-driven web applications #
 
-Io.js consists of few lightweight classes designed for reusable custom elements in javascript.
+Io.js consists of few lightweight classes that let you build encapsulated and reusable custom elements in javascript.
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and
 [DreemGL](https://github.com/dreemproject/dreemgl).
 You can view [todo MVC demo app here](http://arodic.github.io/io/demo/todoapp).
-Check out [source code on GitHub](https://github.com/arodic/io).
 For a quick start, continue reading this document.
 
 > ⚠️ Io.js is NOT production ready!
-> Io uses [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and [ES6 modules](https://caniuse.com/#feat=es6-module).
+
+> This project uses modern web technologies such as
+> [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and
+> [ES6 modules](https://caniuse.com/#feat=es6-module).
 
 ### Classes ###
 
@@ -23,12 +25,12 @@ You can use this class as glue between `IoElement` and your core application log
 
 ### Core Principles ##
 
-* io uses **native web technologies**.
-* io is **javascript-centric**.
-* io is **styleable**.
-* io is **data-driven**.
-* io uses **bi-directional** data binding.
-* io uses **properties**, while **attributes** can be used for styling.
+* io elements use **native web technologies**.
+* io elements are **javascript-centric**.
+* io elements are **styleable**.
+* io elements are **data-driven**.
+* io elements use **bi-directional** data binding.
+* io elements use **properties**, while **attributes** can be used for styling.
 
 ### File Sizes ###
 
@@ -130,7 +132,7 @@ static get style() {
 }
 ```
 
-### Dynamic DOM Templates ###
+### Dynamic DOM templates ###
 
 This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` method to render DOM tree inside your element. Instead of HTML, the templating system uses array of arrays. For example an instance of `<my-color>` element can be expressed like this:
 
@@ -149,11 +151,11 @@ The HTML output from the array above is:
 Here is a slightly more complex expression with dynamically generated DOM tree:
 
 ```javascript
-const ingredient = (elem, i) => ['span', {className: 'ingredient'}, elem];
+const Fruit = (elem, i) => ['span', {className: 'fruit'}, elem];
 this.template([
-  ['h4', 'Salad ingredients:'],
+  ['h4', this.isMixed ? 'Salad ingredients:' : 'List of Fruits:'],
   ['div', [
-    ingredients.map(ingredient)
+    elements.map(this.fruits)
   ]]
 ]);
 ```
@@ -161,19 +163,17 @@ this.template([
 The output from the code above is converted to following HTML DOM:
 
 ```html
-<h4>Salad ingredients:</h4>
+<h4>List of Fruits:</h4>
 <div>
-  <span class="ingredient">rocket</span>
-  <span class="ingredient">tomatoes</span>
-  <span class="ingredient">avocado</span>
+  <span class="fruit">apple</span>
+  <span class="fruit">banana</span>
+  <span class="fruit">avocado</span>
 </div>
 ```
 
-### Data Biding ###
-
-This is a simple and powerfull feature designed to be used inside templates. You can data bind properties to children using `this.bind([propName])` function.
-Keep in mind that this only works with IoElement-based children and properties defined in properties getter.
-In other words, binding to native HTML elements will not work.
+You can data bind properties to children using `bind()` function.
+Keep in mind that this only works with IoElement-based children.
+In other words, binding to `div`, `span` etc. will not work.
 
 ```javascript
 this.template([
@@ -181,17 +181,6 @@ this.template([
 ]);
 
 ```
-
-You can also use `this.bind()` outside template or bind to `IoNode` object. However, make sure to unbind after you are done with the element's you are binding to.
-
-```javascript
-this.somethingChanged() {
-  let object = new SomeElementOrNode({value: this.bind('something')}); // WARNING: memory garbage
-}
-
-```
-
-Notice in the example above, we created a new element/node inside an observer function which is data-bound via constructor. This works but creates a reference between the two elements which is a potential problem for garbage collection.
 
 ### Methods ###
 
@@ -202,10 +191,6 @@ Notice in the example above, we created a new element/node inside an observer fu
   If multiple properties are changed simultaneously in a template,
   the method is called only once after template is generated.
 
-  `[propertyName]Changed(value, oldValue)` This method is automatically called every time The
-  corresponding property changes.
-
-
   `dispose()` This method is called automatically when element is no longer needed.
   It removes all event listeners and data bindings.
 
@@ -214,6 +199,16 @@ Notice in the example above, we created a new element/node inside an observer fu
 
   `set(prop, value)` Use this method when property value is set by **user action**.
   It will trigger non-bubbling `[prop]-set` event.
+
+  `setProperties(props)` This method is used internally to set multiple properties in a batch.
+  It does not trigger `change()` method until `queueDispatch()` is called.
+
+  `objectMutated` This method is automatically called if element properties include
+  an object value and 'object-mutated' event has been broadcasted on window. Internally, this method checks if mutated object is its property
+  and calls `changed()` method if appropriate.
+
+  `queueDispatch()` This method is used internally to dispatch events and
+  observers triggered y property changes.
 
   `dispatchEvent(type, detail, bubbles = true, src = this)` Shorthand for custom event dispatch.
 
@@ -235,7 +230,7 @@ export class MyButton extends IoElement {
   }
   static get properties() {
     return {
-      label: "Button",
+      label: String,
       pressed: {
         type: Boolean,
         reflect: true
@@ -273,5 +268,7 @@ export class MyButton extends IoElement {
     this.template([['span', this.label]]);
   }
 }
+
 MyButton.Register();
+
 ```

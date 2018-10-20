@@ -44,10 +44,11 @@ export function defineProperties(prototype) {
           this.setAttribute(prop, this.__props[prop].value);
         }
         if (this.__props[prop].observer) {
-          this[this.__props[prop].observer](value, oldValue);
+          this[this.__props[prop].observer]();
         }
         if (prop.charAt(0) !== '_') {
           // TODO: consider notify
+          if (typeof this[prop + 'Changed'] === 'function') this[prop + 'Changed'](value, oldValue);
           this.changed();
           this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
         }

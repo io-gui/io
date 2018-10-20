@@ -8,7 +8,7 @@ export class IoNode extends IoCoreMixin(Object) {
     this.disconnectedCallback();
   }
   dispose() {
-    // TODO test
+    // TODO implement properly and test
     delete this.parent;
     this.children.lenght = 0;
     for (let l in this.__listeners) this.__listeners[l].lenght = 0;
@@ -16,6 +16,10 @@ export class IoNode extends IoCoreMixin(Object) {
   }
 }
 
-IoNode.Register = IoCoreMixin.Register;
+IoNode.Register = function() {
+
+  IoCoreMixin.Register.call(this);
+
+};
 
 IoNode.Register();

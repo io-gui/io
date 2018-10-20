@@ -28,8 +28,8 @@ export class IoDemo extends IoElement {
         ['io-element', 'io-element'],
       ]],
       ['div', {className: 'demo'}, [
-        ['div', {className: 'label'}, 'io-interactable'],
-        ['io-interactable', 'io-interactable'],
+        ['div', {className: 'label'}, 'io-interative'],
+        ['io-interative', 'io-interative'],
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'label'}, 'io-node'],
