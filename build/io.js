@@ -57,10 +57,11 @@ function defineProperties(prototype) {
           this.setAttribute(prop, this.__props[prop].value);
         }
         if (this.__props[prop].observer) {
-          this[this.__props[prop].observer](value, oldValue);
+          this[this.__props[prop].observer]();
         }
         if (prop.charAt(0) !== '_') {
           // TODO: consider notify
+          if (typeof this[prop + 'Changed'] === 'function') this[prop + 'Changed'](value, oldValue);
           this.changed();
           this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
         }
@@ -224,7 +225,7 @@ class Binding {
     if (this.targets.indexOf(event.target) === -1) return;
     let value = event.detail.value;
     if (this.source[this.sourceProp] !== value) {
-      this.source[this.sourceProp] = value;
+      this.source.__props[this.sourceProp].value = value;
     }
   }
   updateTargets(event) {
@@ -237,7 +238,7 @@ class Binding {
         if (oldValue !== value) {
           // JavaScript is weird NaN != NaN
           if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) continue;
-          this.targets[i][targetProps[j]] = value;
+          this.targets[i].__props[targetProps[j]].value = value;
         }
       }
     }
@@ -304,6 +305,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
   }
   changed() {}
   dispose() {
+    // TODO: test dispose!
     this.__protoListeners.disconnect(this);
     this.__propListeners.disconnect(this);
     this.removeListeners();
@@ -444,12 +446,13 @@ const IoCoreMixin = (superclass) => class extends superclass {
       }));
     } else {
       // TODO: fix path/src argument
-      let path = src;
+      let path = [src];
       if (this.__listeners[type] !== undefined) {
         let array = this.__listeners[type].slice(0);
         for (let i = 0, l = array.length; i < l; i ++) {
           path = path || [this];
-          array[i].call(this, {detail: detail, target: this, bubbles: bubbles, path: path});
+          const payload = {detail: detail, target: this, bubbles: bubbles, path: path};
+          array[i].call(this, payload);
           // TODO: test bubbling
           if (bubbles) {
             let parent = this.parent;
@@ -728,7 +731,7 @@ class Pointer {
   }
 }
 
-class IoInteractable extends IoElement {
+class IoInteractive extends IoElement {
   static get properties() {
     return {
       pointers: Array, // TODO: remove from properties
@@ -834,7 +837,7 @@ class IoInteractable extends IoElement {
   }
 }
 
-IoInteractable.Register();
+IoInteractive.Register();
 
 class IoNode extends IoCoreMixin(Object) {
   connect() {
@@ -844,19 +847,20 @@ class IoNode extends IoCoreMixin(Object) {
     this.disconnectedCallback();
   }
   dispose() {
-    // TODO test
+    // TODO implement properly and test
     delete this.parent;
     this.children.lenght = 0;
     for (let l in this.__listeners) this.__listeners[l].lenght = 0;
     for (let p in this.__props) delete this.__props[p];
   }
-  setAttribute() {
-    console.warn('io-node: setAttribute not suppoerted!');
-  }
 }
 
-IoNode.Register = IoCoreMixin.Register;
+IoNode.Register = function() {
+
+  IoCoreMixin.Register.call(this);
+
+};
 
 IoNode.Register();
 
-export { IoElement, html, initStyle, Vector2, IoInteractable, IoNode };
+export { IoCoreMixin, IoElement, html, initStyle, Vector2, IoInteractive, IoNode };
