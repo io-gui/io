@@ -14,9 +14,6 @@ export class IoNode extends IoCoreMixin(Object) {
     for (let l in this.__listeners) this.__listeners[l].lenght = 0;
     for (let p in this.__props) delete this.__props[p];
   }
-  setAttribute() {
-    console.warn('io-node: setAttribute not suppoerted!');
-  }
 }
 
 IoNode.Register = IoCoreMixin.Register;
