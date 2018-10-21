@@ -34,8 +34,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     // TODO: is this necessary?
     // TODO: test!
     this.setProperties(initProps);
-    this.__observeQueue.push('changed');
-    //TODO: changed should only run once
+    if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed');
   }
   changed() {}
   dispose() {
@@ -86,6 +85,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       if (value !== oldValue) {
         if (this.__props[p].reflect) this.setAttribute(p, value);
         this.queue(this.__props[p].observer, p, value, oldValue);
+        if (this.__props[p].observer) this.queue(this.__props[p].observer, p, value, oldValue);
+        if (this[p + 'Changed']) this.queue(p + 'Changed', p, value, oldValue);
       }
 
       if (binding !== oldBinding) {

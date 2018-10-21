@@ -86,9 +86,7 @@ export default class {
       it('executes external function handler', () => {
         this.element.number = 0;
         this._changedFired = 0;
-        console.log('asd', this._changedFired)
         this.element.number = 1;
-        console.log('asd', this._changedFired)
         chai.expect(this._changedFired).to.equal(1);
       });
       it('disconnected doesen\'t execute string handler', () => {

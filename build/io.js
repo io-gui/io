@@ -223,11 +223,11 @@ class Binding {
     if (this.targets.indexOf(event.target) === -1) return;
     let value = event.detail.value;
     if (this.source[this.sourceProp] !== value) {
-      this.source[this.sourceProp] = value; // TODO: consider optimizing
+      this.source[this.sourceProp] = value;
     }
   }
   updateTargets(event) {
-    if (event.target !== this.source) return;
+    if (event.target != this.source) return;
     let value = event.detail.value;
     for (let i = this.targets.length; i--;) {
       let targetProps = this.targetsMap.get(this.targets[i]);
@@ -236,7 +236,7 @@ class Binding {
         if (oldValue !== value) {
           // JavaScript is weird NaN != NaN
           if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) continue;
-          this.targets[i][targetProps[j]] = value; // TODO: consider optimizing
+          this.targets[i][targetProps[j]] = value;
         }
       }
     }
@@ -298,8 +298,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
     // TODO: is this necessary?
     // TODO: test!
     this.setProperties(initProps);
-    this.__observeQueue.push('changed');
-    //TODO: changed should only run once
+    if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed');
   }
   changed() {}
   dispose() {
@@ -350,6 +349,8 @@ const IoCoreMixin = (superclass) => class extends superclass {
       if (value !== oldValue) {
         if (this.__props[p].reflect) this.setAttribute(p, value);
         this.queue(this.__props[p].observer, p, value, oldValue);
+        if (this.__props[p].observer) this.queue(this.__props[p].observer, p, value, oldValue);
+        if (this[p + 'Changed']) this.queue(p + 'Changed', p, value, oldValue);
       }
 
       if (binding !== oldBinding) {
