@@ -31,21 +31,23 @@
         padding: 1em;
         display: block;
       }
+      blockquote {
+        border: 1px solid rgba(0,0,0,0.25);
+        margin: 0.5em 1em;
+        padding: 0.5em 1em;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
   <body>
     <script>
     function reqListener () {
-      readmeHtml = marked(this.responseText);
-      document.body.querySelector('div#readme').innerHTML = readmeHtml;
+      document.body.querySelector('div#readme').innerHTML = marked(this.responseText);
     }
-
     const req = new XMLHttpRequest();
     req.addEventListener("load", reqListener);
     req.open("GET", "./readme.md");
     req.send();
-
     </script>
     <div id="readme"></div>
   </body>

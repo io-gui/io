@@ -1,8 +1,8 @@
 # A lightweight UI framework for data-driven web applications #
 
 Io consists of few simple classes that let you build complex web applications in JavaScript.
-It is inspired by [Polymer](https://github.com/Polymer/polymer) and
-[DreemGL](https://github.com/dreemproject/dreemgl). It combines the power of custom elements with expressive dynamic templates and bi-directional data binding.
+It is inspired by [Polymer](https://github.com/Polymer/polymer) and [DreemGL](https://github.com/dreemproject/dreemgl).
+It combines the power of custom elements with expressive dynamic templates and bi-directional data binding.
 
 For a quick start, continue reading this document. You can view [todo MVC demo app](http://arodic.github.io/io/demo/todoapp) ([source](https://github.com/arodic/io/tree/master/demo/todoapp)).
 Check out [source code](https://github.com/arodic/io) and [unit tests](https://arodic.github.io/io/test).
