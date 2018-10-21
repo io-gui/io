@@ -4,7 +4,7 @@ import ElementTest from "./tests/element.js"
 import NodeTest from "./tests/node.js"
 import LiteTest from "./tests/lite.js"
 
-import "../node_modules/mocha/mocha.js";
+import "https://cdn.jsdelivr.net/npm/mocha@5.2.0/mocha.js";
 
 mocha.setup('bdd');
 

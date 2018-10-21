@@ -1,6 +1,6 @@
 import {IoLite} from "../../build/io-lite.js";
 
-import "../../node_modules/chai/chai.js";
+import "https://cdn.jsdelivr.net/npm/chai@4.2.0/chai.js";
 
 export class TestLite extends IoLite {
   constructor(initProps) {

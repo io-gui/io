@@ -4,6 +4,8 @@
   "description": "A lightweight UI framework for data-driven web applications.",
   "main": "build/io.js",
   "files": [
+    "LICENSE",
+    "README.md",
     "build/io-lite.js",
     "build/io.js",
     "build/io.min.js"
