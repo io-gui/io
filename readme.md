@@ -1,35 +1,29 @@
-# Io.js: UI library for data-driven web applications #
+# A lightweight UI framework for data-driven web applications #
 
-Io.js consists of few lightweight classes designed for creation of reusable custom elements in javascript.
+Io consists of few simple classes that let you build complex web applications in JavaScript.
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and
-[DreemGL](https://github.com/dreemproject/dreemgl).
-You can view [todo MVC demo app here](http://arodic.github.io/io/demo/todoapp).
-Check out [source code on GitHub](https://github.com/arodic/io) and [most current tests](https://arodic.github.io/io/test).
+[DreemGL](https://github.com/dreemproject/dreemgl). It combines the power of custom elements with expressive dynamic templates and bi-directional data binding.
 
-For a quick start, continue reading this document.
+For a quick start, continue reading this document. You can view [todo MVC demo app](http://arodic.github.io/io/demo/todoapp) ([source](https://github.com/arodic/io/tree/master/demo/todoapp)).
+Check out [source code](https://github.com/arodic/io) and [unit tests](https://arodic.github.io/io/test).
 
-> ⚠️ Io.js is NOT production ready!
-> Io uses [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and [ES6 modules](https://caniuse.com/#feat=es6-module).
+> ⚠️ Io is a work in progress and it is NOT production ready!
+> Io uses [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and [ES6 modules](https://caniuse.com/#feat=es6-module) and [classes](https://caniuse.com/#feat=es6-class).
 
 ### Classes ###
 
-`IoElement` class extends `HTMLElement`.
-It is designed to help you build complex user interfaces with minimal effort.
-It includes dynamic templates, encapsulated styling, data binding and shorthands for element definitions and initialization.
+`IoElement` extends `HTMLElement` with `IoElementMixin`. It is designed to build data-driven user interfaces. It includes dynamic templates, encapsulated styling, data binding and shorthands for element definitions and initialization.
 
-`IoInteractable` extends `IoElement` with handy pointer callbacks for mouse and touch interactions.
+`IoInteractive` extends `IoElement` with [pointer events](https://caniuse.com/#feat=pointer) callbacks for pointer interactions.
 
-`IoNode` class extends `Object` class and provides same API as IoElement.
-You can use this class as glue between `IoElement` and your core application logic.
+`IoNode` extends `Object` with `IoElementMixin`.
 
 ### Core Principles ##
 
 * io uses **native web technologies**.
 * io is **javascript-centric**.
-* io is **styleable**.
 * io is **data-driven**.
 * io uses **bi-directional** data binding.
-* io uses **properties**, while **attributes** can be used for styling.
 
 ### Defining Elements ###
 
@@ -39,7 +33,7 @@ Simply extend the core `IoElement` class and call `Register()` function on your 
 class MySalad extends IoElement {}
 MySalad.Register();
 ```
-That is it! You now have ability to use `<my-element>` in your document.
+That is it! You now have ability to use `<my-salad>` in your document.
 
 Alternatively, you can use `IoElementMixin` wo wrap an existing element class instead.
 ```javascript
@@ -67,14 +61,15 @@ static get properties() {
 }
 ```
 
-Notice that you can define a property by simply setting a value, or with a configuration object.
-Properties can have following configuration options:
+Notice that you can define a property by simply setting a value, or with a configuration object with following options:
 
 - **value** default value. If not specified it will be initialized from specified type.
 - **type** constructor of the property. If not specified, it will be inferred from value.
 - **observer** name of the method to be called when value changes.
 - **reflect** if true, value will be reflected to attribute.
 - **enumerable** Specifies if property should be enumerable. Defaults to true.
+
+property names prefixed with underscore `_` will be
 
 If you want to initialize default value with an object, it has to be wrapped in a function.
 
@@ -88,9 +83,9 @@ static get properties() {
 
 ### Observers ###
 
-Observers are functions that get called when some observed property changes. All Io elements have two observers by default.
+Observers are functions which get called when observed property changes. All Io elements have two observers by default.
 
-First `.changed()` function gets called every time a property changes. It multiple properties get changed inside a template, the function will be called only once. Second, if you define `[propName]Changed()` function, it will be called when corresponding property changes.
+First `.changed()` function gets called every time a property changes. If multiple properties get changed inside a template, the function will be called only once. Second, if you define `[propName]Changed()` function, it will be called when corresponding property changes.
 
 Also, you can define custom observers inside property configuration object (see example above).
 
@@ -110,7 +105,7 @@ static get listeners() {
 
 Define default style inside `style()` getter.
 Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage.
-Template handler `html` is optional and it is here only to help with syntax highlighting in code editors.
+Template handler `html` is optional and it is here only to trigger correct syntax highlighting in code editors.
 
 ```javascript
 static get style() {

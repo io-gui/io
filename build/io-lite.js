@@ -49,50 +49,45 @@ const IoLiteMixin = (superclass) => class extends superclass {
 			});
 		}
 		for (let prop in props) {
-			defineProperty(this, prop, props[prop]);
+			let propDef = props[prop];
+			if (propDef === null || propDef === undefined) {
+				propDef = {value: propDef};
+			} else if (typeof propDef !== 'object') {
+				propDef = {value: propDef};
+			}
+			defineProperty(this, prop, propDef);
 		}
 	}
 	// TODO: dispose
 };
 
-const defineProperty = function(scope, propName, propDef) {
-	const isPublic = propName.charAt(0) !== '_';
-	let defaultObserver = propName + 'Changed';
-	let customObserver;
-	let initValue = propDef;
-	if (propDef && typeof propDef === 'object' && propDef.value !== undefined) {
-		initValue = propDef.value;
-		if (typeof propDef.observer === 'string') {
-			customObserver = propDef.observer;
-		}
-	}
-
-	scope._properties[propName] = initValue;
-	if (initValue === undefined) {
-		console.warn('IoLiteMixin: ' + propName + ' is mandatory!');
-	}
-	if (!scope.hasOwnProperty(propName)) { // TODO: test
-		Object.defineProperty(scope, propName, {
+const defineProperty = function(scope, prop, def) {
+	const observer = prop + 'Changed';
+	const changeEvent = prop + '-changed';
+	const isPublic = prop.charAt(0) !== '_';
+	const isEnumerable = !(def.enumerable === false);
+	scope._properties[prop] = def.value;
+	if (!scope.hasOwnProperty(prop)) { // TODO: test
+		Object.defineProperty(scope, prop, {
 			get: function() {
-				return scope._properties[propName] !== undefined ? scope._properties[propName] : initValue;
+				return scope._properties[prop];
 			},
 			set: function(value) {
-				if (scope._properties[propName] !== value) {
-					const oldValue = scope._properties[propName];
-					scope._properties[propName] = value;
-					if (isPublic) {
-						if (typeof scope.changed === 'function') scope.changed.call(scope, value, oldValue);
-						if (typeof scope[defaultObserver] === 'function') scope[defaultObserver](value, oldValue);
-						if (typeof scope[customObserver] === 'function') scope[customObserver](value, oldValue);
-						scope.dispatchEvent(propName + '-changed', {value: value, oldValue: oldValue, bubbles: true});
-						scope.dispatchEvent('change', {property: propName, value: value, oldValue: oldValue}); // TODO: remove
-					}
+				if (scope._properties[prop] === value) return;
+				const oldValue = scope._properties[prop];
+				scope._properties[prop] = value;
+				if (isPublic) {
+					if (def.observer) scope[def.observer](value, oldValue);
+					if (typeof scope[observer] === 'function') scope[observer](value, oldValue);
+					scope.changed.call(scope);
+					scope.dispatchEvent(changeEvent, {value: value, oldValue: oldValue, bubbles: true});
 				}
 			},
-			enumerable: isPublic
+			enumerable: isEnumerable && isPublic,
+			configurable: true,
 		});
 	}
-	scope[propName] = initValue;
+	scope[prop] = def.value;
 };
 
 class IoLite extends IoLiteMixin(Object) {}

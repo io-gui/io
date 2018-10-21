@@ -32,29 +32,28 @@ export class ProtoProperties {
 
 export function defineProperties(prototype) {
   for (let prop in prototype.__props) {
+    const observer = prop + 'Changed';
+    const changeEvent = prop + '-changed';
+    const isPublic = prop.charAt(0) !== '_';
+    const isEnumerable = !(prototype.__props[prop].enumerable === false);
     Object.defineProperty(prototype, prop, {
       get: function() {
         return this.__props[prop].value;
       },
       set: function(value) {
         if (this.__props[prop].value === value) return;
-        let oldValue = this.__props[prop].value;
+        const oldValue = this.__props[prop].value;
         this.__props[prop].value = value;
-        if (this.__props[prop].reflect) {
-          this.setAttribute(prop, this.__props[prop].value);
-        }
-        if (this.__props[prop].observer) {
-          this[this.__props[prop].observer]();
-        }
-        if (prop.charAt(0) !== '_') {
-          // TODO: consider notify
-          if (typeof this[prop + 'Changed'] === 'function') this[prop + 'Changed'](value, oldValue);
+        if (this.__props[prop].reflect) this.setAttribute(prop, this.__props[prop].value);
+        if (isPublic) {
+          if (this.__props[prop].observer) this[this.__props[prop].observer](value, oldValue);
+          if (typeof this[observer] === 'function') this[observer](value, oldValue);
           this.changed();
-          this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
+          this.dispatchEvent(changeEvent, {value: value, oldValue: oldValue});
         }
       },
-      enumerable: prototype.__props[prop].enumerable,
-      configurable: true
+      enumerable: isEnumerable && isPublic,
+      configurable: true,
     });
   }
 }
@@ -62,22 +61,21 @@ export function defineProperties(prototype) {
 /*
 Creates a property object from properties defined in the prototype chain.
 {
-  value: <property value>
-  type: <constructor of the value>
-  observer: <neme of the vunction to be called when value changes>
-  reflect: <reflection to HTML element attribute>
-  binding: <binding object if bound>
-  config: <optional configutation for GUI>
+  value: property value
+  type: constructor of the value
+  observer: neme of the function to be called when value changes
+  reflect: reflection to HTML element attribute
+  binding: binding object if bound
 }
  */
 export class Property {
   constructor(propDef) {
     if (propDef === null || propDef === undefined) {
-      propDef = {value: propDef}; // null/undefined
+      propDef = {value: propDef};
     } else if (typeof propDef === 'function') {
-      propDef = {type: propDef}; // defined by constructor.
+      propDef = {type: propDef};
     } else if (typeof propDef !== 'object') {
-      propDef = {value: propDef, type: propDef.constructor}; // defined by value
+      propDef = {value: propDef, type: propDef.constructor};
     }
     this.value = propDef.value;
     this.type = propDef.type;

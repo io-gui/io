@@ -1,4 +1,4 @@
-import {IoLite} from "../../src/ioLite.js";
+import {IoLite} from "../../build/io-lite.js";
 
 import "../../node_modules/chai/chai.js";
 

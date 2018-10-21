@@ -10,11 +10,11 @@ export default [
     ]
   },
   {
-    input: 'src/ioLite.js',
+    input: 'src/classes/lite.js',
     output: [
       {
         format: 'es',
-        file: 'build/ioLite.js',
+        file: 'build/io-lite.js',
         indent: '  '
       }
     ]

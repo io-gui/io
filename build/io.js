@@ -45,29 +45,28 @@ class ProtoProperties {
 
 function defineProperties(prototype) {
   for (let prop in prototype.__props) {
+    const observer = prop + 'Changed';
+    const changeEvent = prop + '-changed';
+    const isPublic = prop.charAt(0) !== '_';
+    const isEnumerable = !(prototype.__props[prop].enumerable === false);
     Object.defineProperty(prototype, prop, {
       get: function() {
         return this.__props[prop].value;
       },
       set: function(value) {
         if (this.__props[prop].value === value) return;
-        let oldValue = this.__props[prop].value;
+        const oldValue = this.__props[prop].value;
         this.__props[prop].value = value;
-        if (this.__props[prop].reflect) {
-          this.setAttribute(prop, this.__props[prop].value);
-        }
-        if (this.__props[prop].observer) {
-          this[this.__props[prop].observer]();
-        }
-        if (prop.charAt(0) !== '_') {
-          // TODO: consider notify
-          if (typeof this[prop + 'Changed'] === 'function') this[prop + 'Changed'](value, oldValue);
+        if (this.__props[prop].reflect) this.setAttribute(prop, this.__props[prop].value);
+        if (isPublic) {
+          if (this.__props[prop].observer) this[this.__props[prop].observer](value, oldValue);
+          if (typeof this[observer] === 'function') this[observer](value, oldValue);
           this.changed();
-          this.dispatchEvent(prop + '-changed', {value: value, oldValue: oldValue});
+          this.dispatchEvent(changeEvent, {value: value, oldValue: oldValue});
         }
       },
-      enumerable: prototype.__props[prop].enumerable,
-      configurable: true
+      enumerable: isEnumerable && isPublic,
+      configurable: true,
     });
   }
 }
@@ -75,22 +74,21 @@ function defineProperties(prototype) {
 /*
 Creates a property object from properties defined in the prototype chain.
 {
-  value: <property value>
-  type: <constructor of the value>
-  observer: <neme of the vunction to be called when value changes>
-  reflect: <reflection to HTML element attribute>
-  binding: <binding object if bound>
-  config: <optional configutation for GUI>
+  value: property value
+  type: constructor of the value
+  observer: neme of the function to be called when value changes
+  reflect: reflection to HTML element attribute
+  binding: binding object if bound
 }
  */
 class Property {
   constructor(propDef) {
     if (propDef === null || propDef === undefined) {
-      propDef = {value: propDef}; // null/undefined
+      propDef = {value: propDef};
     } else if (typeof propDef === 'function') {
-      propDef = {type: propDef}; // defined by constructor.
+      propDef = {type: propDef};
     } else if (typeof propDef !== 'object') {
-      propDef = {value: propDef, type: propDef.constructor}; // defined by value
+      propDef = {value: propDef, type: propDef.constructor};
     }
     this.value = propDef.value;
     this.type = propDef.type;
@@ -839,6 +837,100 @@ class IoInteractive extends IoElement {
 
 IoInteractive.Register();
 
+/**
+ * @author arodic / https://github.com/arodic
+ *
+ * Minimal implementation of io mixin: https://github.com/arodic/io
+ * Includes event listener/dispatcher and defineProperties() method.
+ * Changed properties trigger "[prop]-changed" event, and execution of changed() and [prop]Changed() functions.
+ */
+
+const IoLiteMixin = (superclass) => class extends superclass {
+	constructor(initProps) {
+		super(initProps);
+	}
+	addEventListener(type, listener) {
+		this._listeners = this._listeners || {};
+		this._listeners[type] = this._listeners[type] || [];
+		if (this._listeners[type].indexOf(listener) === -1) {
+			this._listeners[type].push(listener);
+		}
+	}
+	hasEventListener(type, listener) {
+		if (this._listeners === undefined) return false;
+		return this._listeners[type] !== undefined && this._listeners[type].indexOf(listener) !== -1;
+	}
+	removeEventListener(type, listener) {
+		if (this._listeners === undefined) return;
+		if (this._listeners[type] !== undefined) {
+			const index = this._listeners[type].indexOf(listener);
+			if (index !== -1) this._listeners[type].splice(index, 1);
+		}
+	}
+	dispatchEvent(type, detail) {
+		const event = {
+			path: [this],
+			target: this,
+			detail: detail,
+		};
+		if (this._listeners && this._listeners[type] !== undefined) {
+			const array = this._listeners[type].slice(0);
+			for (let i = 0, l = array.length; i < l; i ++) {
+				array[i].call(this, event);
+			}
+		} else if (this.parent && event.bubbles) ;
+	}
+	defineProperties(props) {
+		if (!this.hasOwnProperty('_properties')) {
+			Object.defineProperty(this, '_properties', {
+				value: {},
+				enumerable: false
+			});
+		}
+		for (let prop in props) {
+			let propDef = props[prop];
+			if (propDef === null || propDef === undefined) {
+				propDef = {value: propDef};
+			} else if (typeof propDef !== 'object') {
+				propDef = {value: propDef};
+			}
+			defineProperty(this, prop, propDef);
+		}
+	}
+	// TODO: dispose
+};
+
+const defineProperty = function(scope, prop, def) {
+	const observer = prop + 'Changed';
+	const changeEvent = prop + '-changed';
+	const isPublic = prop.charAt(0) !== '_';
+	const isEnumerable = !(def.enumerable === false);
+	scope._properties[prop] = def.value;
+	if (!scope.hasOwnProperty(prop)) { // TODO: test
+		Object.defineProperty(scope, prop, {
+			get: function() {
+				return scope._properties[prop];
+			},
+			set: function(value) {
+				if (scope._properties[prop] === value) return;
+				const oldValue = scope._properties[prop];
+				scope._properties[prop] = value;
+				if (isPublic) {
+					if (def.observer) scope[def.observer](value, oldValue);
+					if (typeof scope[observer] === 'function') scope[observer](value, oldValue);
+					scope.changed.call(scope);
+					scope.dispatchEvent(changeEvent, {value: value, oldValue: oldValue, bubbles: true});
+				}
+			},
+			enumerable: isEnumerable && isPublic,
+			configurable: true,
+		});
+	}
+	scope[prop] = def.value;
+};
+
+class IoLite extends IoLiteMixin(Object) {}
+
 class IoNode extends IoCoreMixin(Object) {
   connect() {
     this.connectedCallback();
@@ -863,4 +955,4 @@ IoNode.Register = function() {
 
 IoNode.Register();
 
-export { IoCoreMixin, IoElement, html, initStyle, Vector2, IoInteractive, IoNode };
+export { IoCoreMixin, IoElement, html, initStyle, Vector2, IoInteractive, IoLiteMixin, IoLite, IoNode };
