@@ -223,7 +223,8 @@ class Binding {
     if (this.targets.indexOf(event.target) === -1) return;
     let value = event.detail.value;
     if (this.source[this.sourceProp] !== value) {
-      this.source.__props[this.sourceProp].value = value;
+      // this.source.__props[this.sourceProp].value = value;
+      this.source[this.sourceProp] = value; // TODO: consider optimizing
     }
   }
   updateTargets(event) {
@@ -236,7 +237,8 @@ class Binding {
         if (oldValue !== value) {
           // JavaScript is weird NaN != NaN
           if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) continue;
-          this.targets[i].__props[targetProps[j]].value = value;
+          // this.targets[i].__props[targetProps[j]].value = value;
+          this.targets[i][targetProps[j]] = value; // TODO: consider optimizing
         }
       }
     }
