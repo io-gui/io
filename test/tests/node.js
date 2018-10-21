@@ -65,8 +65,10 @@ export default class {
     this.node = new TestNode({'on-number-changed': this.changed, 'on-string-changed': 'customHandler'});
     this.node.connect(); // TODO: is this necessary or not?
   }
-  changed() {
-    this._changedFired++;
+  changed(event) {
+    if (event.target == this.node) {
+      this._changedFired++;
+    }
   }
   run() {
     describe('IoNode: Default values', () => {
