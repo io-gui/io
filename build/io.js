@@ -613,8 +613,9 @@ class IoElement extends IoCoreMixin(HTMLElement) {
     }
   }
   static get observedAttributes() { return this.prototype.__observedAttributes; }
+  // TODO: implement without infinite loop
   // attributeChangedCallback(name, oldValue, newValue) {
-    // this.__props[name].value = this.__props[name].type(newValue);
+  //   this.__props[name].value = this.__props[name].type(newValue);
   // }
 
 }
@@ -823,7 +824,7 @@ class IoButton extends IoElement {
   static get properties() {
     return {
       value: undefined,
-      label: 'button',
+      label: 'Button',
       pressed: {
         type: Boolean,
         reflect: true
@@ -868,7 +869,7 @@ class IoButton extends IoElement {
       event.preventDefault();
       if (this.pressed && this.action) this.action(this.value);
       this.pressed = false;
-      this.dispatchEvent('button-clicked', {value: this.value, action: this.action});
+      this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
     }
     this._onUp(event);
   }
@@ -895,9 +896,9 @@ class IoBoolean extends IoButton {
   }
   constructor(props) {
     super(props);
-    this.action = this._toggle;
+    this.action = this.toggle;
   }
-  _toggle() {
+  toggle() {
     this.set('value', !this.value);
   }
   changed() {
