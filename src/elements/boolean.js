@@ -13,9 +13,9 @@ export class IoBoolean extends IoButton {
   }
   constructor(props) {
     super(props);
-    this.action = this.toggle;
+    this.action = this._toggle;
   }
-  toggle() {
+  _toggle() {
     this.set('value', !this.value);
   }
   changed() {

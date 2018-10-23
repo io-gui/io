@@ -27,35 +27,35 @@ The core of Io applied to `HTMLElement` class. It gives you the ability to quick
 
 ### `IoNode` ###
 
-The core of Io applied to `Object` class. It excludes DOM features such as templates and styles but otherwise provides same functions as `IoElement`.
+The core of Io applied to `Object` class. It excludes DOM features such as templates and styles but otherwise provides same functionality as `IoElement`.
 
 ## Elements ##
 
-Io comes with several [basic element classes](https://github.com/arodic/io/tree/master/src/classes) to get you started and familiarized with the framework. All basic classes are very simple and come with minimal default styling. Input elements use `value` property by convention and emit `value-set` event when value is changed by user action.
+Io comes with several [basic element classes](https://github.com/arodic/io/tree/master/src/classes) to get you started and familiarized with the framework. All basic classes are very simple and come with minimal default styling. Input elements use `value` property by convention and emit `value-set` event when value is changed by user action. See more detailed element [docs](http://arodic.github.io/io/doc),
 
-### `IoButton` ###
+### `IoButton` `<io-button>` ###
 
 Simple button element. When clicked, it calls the `action` function with optional `value` argument.
 
-### `IoBoolean` ###
+### `IoBoolean` `<io-boolean>` ###
 
 Input element for `Boolean` data type. It can be configured to display custom `true` or `false` text depending on its `value`.
 
-### `IoString` ###
+### `IoString` `<io-string>` ###
 
 Input element for `String` data type.
 
-### `IoNumber` ###
+### `IoNumber` `<io-number>` ###
 
 Input element for `Number` data type. It can be configured to clamp its `value` to `min` and `max` values and display value using `conversion` factor.
 
-### `IoObject` ###
+### `IoObject` `<io-object>` ###
 
-Input element for `Object` data type. It can be used as an object inspector or configured for custom data-centric interfaces.
+Input element for `Object` data type. It can be used as an object inspector or configured for custom data-centric user interfaces.
 
 ### Defining Custom Elements ###
 
-Simply extend the core `IoElement` class and call `Register()` function on your class.
+Simply extend the core `IoElement` class and call `Register()` method.
 
 ```javascript
 class MySalad extends IoElement {}
@@ -182,7 +182,7 @@ The output from the code above is converted to following HTML DOM:
 
 ### Data Biding ###
 
-This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
+This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` method.
 Keep in mind that this only works with IoElement-based children their properties. In other words, binding to native HTML elements will not work.
 
 ```javascript

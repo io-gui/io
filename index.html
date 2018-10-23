@@ -2,53 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Io • About</title>
-    <meta name="description" content="io" />
-    <style>
-      html {
-        font-family: Arial, Helvetica, sans-serif;
-        letter-spacing: 0.05em;
-        font-weight: 300;
-      }
-      #readme {
-        margin: 1.5em;
-        padding: 1.5em;
-        max-width: 50em;
-        background: rgba(0,0,0,0.04);
-      }
-      a {
-        font-weight: bold;
-        text-decoration: none;
-        color: #49f;
-      }
-      code {
-        font-weight: bold;
-        background: rgba(0,0,0,0.1);
-      }
-      code.language-html,
-      code.language-javascript {
-        background: white;
-        padding: 1em;
-        display: block;
-      }
-      blockquote {
-        border: 1px solid rgba(0,0,0,0.25);
-        margin: 0.5em 1em;
-        padding: 0.5em 1em;
-      }
-    </style>
-    <script src="./doc/lib/marked.min.js"></script>
+    <title>Io-menus • About</title>
+    <meta name="description" content="A lightweight UI framework for data-driven web applications" />
+    <script type="module" src="./doc/lib/io-md-view.js"></script>
   </head>
   <body>
-    <script>
-    function reqListener () {
-      document.body.querySelector('div#readme').innerHTML = marked(this.responseText);
-    }
-    const req = new XMLHttpRequest();
-    req.addEventListener("load", reqListener);
-    req.open("GET", "./readme.md");
-    req.send();
-    </script>
-    <div id="readme"></div>
+    <io-md-view path="./readme.md"></io-md-view>
   </body>
 </html>

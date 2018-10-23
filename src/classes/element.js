@@ -100,9 +100,15 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
     } else if (value === false || value === '') {
       this.removeAttribute(attr);
     } else if (typeof value == 'string' || typeof value == 'number') {
-      HTMLElement.prototype.setAttribute.call(this, attr, value);
+      if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
+  static get observedAttributes() { return this.prototype.__observedAttributes; }
+  // TODO: implement without infinite loop
+  // attributeChangedCallback(name, oldValue, newValue) {
+  //   this.__props[name].value = this.__props[name].type(newValue);
+  // }
+
 }
 
 IoElement.Register = function() {
@@ -111,6 +117,11 @@ IoElement.Register = function() {
 
   Object.defineProperty(this, 'localName', {value: this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()});
   Object.defineProperty(this.prototype, 'localName', {value: this.localName});
+
+  Object.defineProperty(this.prototype, '__observedAttributes', {value: []});
+  for (let i in this.prototype.__props) {
+    if (this.prototype.__props[i].reflect) this.prototype.__observedAttributes.push(i);
+  }
 
   customElements.define(this.localName, this);
 

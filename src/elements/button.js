@@ -19,7 +19,7 @@ export class IoButton extends IoElement {
   static get properties() {
     return {
       value: undefined,
-      label: 'button',
+      label: 'Button',
       pressed: {
         type: Boolean,
         reflect: true
