@@ -1,4 +1,4 @@
-import {html, IoElement} from "../io.js";
+import {html, IoElement} from "../classes/element.js";
 
 const selection = window.getSelection();
 const range = document.createRange();
