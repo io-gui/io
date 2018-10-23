@@ -1,5 +1,10 @@
 export {IoCoreMixin} from "./core/coreMixin.js";
-export * from "./classes/element.js";
-export * from "./classes/interactive.js";
-export * from "./classes/lite.js";
-export * from "./classes/node.js";
+export {IoElement, html} from "./classes/element.js";
+export {IoLite, IoLiteMixin} from "./classes/lite.js";
+export {IoNode} from "./classes/node.js";
+
+export {IoBoolean} from "./elements/boolean.js";
+export {IoButton} from "./elements/button.js";
+export {IoNumber} from "./elements/number.js";
+export {IoObject} from "./elements/object.js";
+export {IoString} from "./elements/string.js";

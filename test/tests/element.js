@@ -1,7 +1,7 @@
-import {IoElement} from "../../build/io.js";
-import {IoNode} from "../../build/io.js";
+import {IoElement} from "../../src/io.js";
+import {IoNode} from "../../src/io.js";
 
-import "https://cdn.jsdelivr.net/npm/chai@4.2.0/chai.js";
+import "../lib/chai.js";
 
 import {TestSubnode} from "./node.js";
 

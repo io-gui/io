@@ -4,28 +4,56 @@ Io consists of few simple classes that let you build complex web applications in
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and [DreemGL](https://github.com/dreemproject/dreemgl).
 It combines the power of custom elements with expressive dynamic templates and bi-directional data binding.
 
-For a quick start, continue reading this document. You can view [todo MVC demo app](http://arodic.github.io/io/demo/todoapp) ([source](https://github.com/arodic/io/tree/master/demo/todoapp)).
-Check out [source code](https://github.com/arodic/io) and [unit tests](https://arodic.github.io/io/test).
+For a quick start, continue reading this document.
 
-> ⚠️ Io is a work in progress and it is NOT production ready!
-> Io uses [Custom Elements](https://caniuse.com/#feat=custom-elementsv1) and [ES6 modules](https://caniuse.com/#feat=es6-module) and [classes](https://caniuse.com/#feat=es6-class).
+Also check out [demo page](http://arodic.github.io/io/demo), [todo app](http://arodic.github.io/io/demo/todoapp) and [unit tests](https://arodic.github.io/io/test).
 
-### Classes ###
-
-`IoElement` extends `HTMLElement` with `IoElementMixin`. It is designed to build data-driven user interfaces. It includes dynamic templates, encapsulated styling, data binding and shorthands for element definitions and initialization.
-
-`IoInteractive` extends `IoElement` with [pointer events](https://caniuse.com/#feat=pointer) callbacks for pointer interactions.
-
-`IoNode` extends `Object` with `IoElementMixin`.
-
-### Core Principles ##
+## Principles ##
 
 * io uses **native web technologies**.
 * io is **javascript-centric**.
 * io is **data-driven**.
 * io uses **bi-directional** data binding.
 
-### Defining Elements ###
+## Classes ##
+
+### `IoCoreMixin` ###
+
+This is the core of Io. It is designed as a mixin so it can be included at any level of the inheritance chain.
+
+### `IoElement` ###
+
+The core of Io applied to `HTMLElement` class. It gives you the ability to quickly design and initialize a custom element. It includes features such as dynamic templates, encapsulated styling and data binding.
+
+### `IoNode` ###
+
+The core of Io applied to `Object` class. It excludes DOM features such as templates and styles but otherwise provides same functions as `IoElement`.
+
+## Elements ##
+
+Io comes with several [basic element classes](https://github.com/arodic/io/tree/master/src/classes) to get you started and familiarized with the framework. All basic classes are very simple and come with minimal default styling. Input elements use `value` property by convention and emit `value-set` event when value is changed by user action.
+
+### `IoButton` ###
+
+Simple button element. When clicked, it calls the `action` function with optional `value` argument.
+
+### `IoBoolean` ###
+
+Input element for `Boolean` data type. It can be configured to display custom `true` or `false` text depending on its `value`.
+
+### `IoString` ###
+
+Input element for `String` data type.
+
+### `IoNumber` ###
+
+Input element for `Number` data type. It can be configured to clamp its `value` to `min` and `max` values and display value using `conversion` factor.
+
+### `IoObject` ###
+
+Input element for `Object` data type. It can be used as an object inspector or configured for custom data-centric interfaces.
+
+### Defining Custom Elements ###
 
 Simply extend the core `IoElement` class and call `Register()` function on your class.
 
@@ -35,7 +63,7 @@ MySalad.Register();
 ```
 That is it! You now have ability to use `<my-salad>` in your document.
 
-Alternatively, you can use `IoElementMixin` wo wrap an existing element class instead.
+Alternatively, apply `IoElementMixin` onto existing element class.
 ```javascript
 class MySalad extends IoElementMixin(HTMLElement) {}
 MySalad.Register();
@@ -43,7 +71,7 @@ MySalad.Register();
 
 ### Properties ###
 
-Next, define your element's properties inside the `properties()` getter.
+Next, define properties inside the `properties()` getter.
 
 ```javascript
 static get properties() {
@@ -61,7 +89,7 @@ static get properties() {
 }
 ```
 
-Notice that you can define a property by simply setting a value, or with a configuration object with following options:
+You can define a property with a default value, or with following configuration options:
 
 - **value** default value. If not specified it will be initialized from specified type.
 - **type** constructor of the property. If not specified, it will be inferred from value.
@@ -69,9 +97,9 @@ Notice that you can define a property by simply setting a value, or with a confi
 - **reflect** if true, value will be reflected to attribute.
 - **enumerable** Specifies if property should be enumerable. Defaults to true.
 
-property names prefixed with underscore `_` will be
+property names prefixed with underscore `_` will not be enumerable regardless of `enumerable` property, nor will they trigger any events, observers or bindings.
 
-If you want to initialize default value with an object, it has to be wrapped in a function.
+If you want to initialize default value with a custom object, wrap it in an anonymous function.
 
 ```javascript
 static get properties() {
@@ -83,15 +111,11 @@ static get properties() {
 
 ### Observers ###
 
-Observers are functions which get called when observed property changes. All Io elements have two observers by default.
-
-First `.changed()` function gets called every time a property changes. If multiple properties get changed inside a template, the function will be called only once. Second, if you define `[propName]Changed()` function, it will be called when corresponding property changes.
-
-Also, you can define custom observers inside property configuration object (see example above).
+Observers are functions which get called upon observed property change. All Io elements implement `.changed()` function as a default observer for all properties. If `[propName]Changed()` function is defined, it will be called when corresponding property changes. Furthermore, you can define custom observers inside property configuration object.
 
 ### Listeners ###
 
-You can define default listeners inside `listeners()` getter:
+Define default listeners inside `listeners()` getter:
 
 ```javascript
 static get listeners() {
@@ -105,7 +129,7 @@ static get listeners() {
 
 Define default style inside `style()` getter.
 Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage.
-Template handler `html` is optional and it is here only to trigger correct syntax highlighting in code editors.
+Template literal handler `html` is optional and it is there only to trigger correct syntax highlighting.
 
 ```javascript
 static get style() {
@@ -121,14 +145,13 @@ static get style() {
 
 ### Dynamic DOM Templates ###
 
-This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` method to render DOM tree inside your element. Instead of HTML, the templating system uses array of arrays. For example an instance of `<my-color>` element can be expressed like this:
+This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` method to render DOM tree inside of your element. Instead of HTML, the templating system uses programmable yet declarative-looking syntax of nested arrays. For example an instance of `<my-color>` element can be expressed like this:
 
 ```javascript
   ['my-color', {color: "tomato"}, "this is my color"]
 ```
 
-Note that the first array item is **mandatory** element name.
-Following are **optional** properties object, followed by innerText or an array of children.
+Note that the first array item is **mandatory** element name, followed by **optional** properties and innerText or an array of children.
 The HTML output from the array above is:
 
 ```html
@@ -138,11 +161,10 @@ The HTML output from the array above is:
 Here is a slightly more complex expression with dynamically generated DOM tree:
 
 ```javascript
-const ingredient = (elem, i) => ['span', {className: 'ingredient'}, elem];
 this.template([
   ['h4', 'Salad ingredients:'],
   ['div', [
-    ingredients.map(ingredient)
+    this.ingredients.map(i => ['span', {className: 'ingredient'}, i])
   ]]
 ]);
 ```
@@ -160,9 +182,8 @@ The output from the code above is converted to following HTML DOM:
 
 ### Data Biding ###
 
-This is a simple and powerfull feature designed to be used inside templates. You can data bind properties to children using `this.bind([propName])` function.
-Keep in mind that this only works with IoElement-based children and properties defined in properties getter.
-In other words, binding to native HTML elements will not work.
+This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
+Keep in mind that this only works with IoElement-based children their properties. In other words, binding to native HTML elements will not work.
 
 ```javascript
 this.template([
@@ -171,11 +192,11 @@ this.template([
 
 ```
 
-You can also use `this.bind()` outside template or bind to `IoNode` object. However, make sure to unbind after you are done with the element's you are binding to.
+You can also use `this.bind()` outside template or bind to `IoNode` objects. However, make sure to unbind after you are done with it to prevent memory garbage.
 
 ```javascript
 this.somethingChanged() {
-  let object = new SomeElementOrNode({value: this.bind('something')}); // WARNING: memory garbage
+  let object = new MyNode({value: this.bind('otherValue')}); // WARNING: memory garbage
 }
 
 ```
@@ -205,62 +226,3 @@ Notice in the example above, we created a new element/node inside an observer fu
   It will trigger non-bubbling `[prop]-set` event.
 
   `dispatchEvent(type, detail, bubbles = true, src = this)` Shorthand for custom event dispatch.
-
-### Example ###
-
-Here is a basic example for a button element:
-
-```javascript
-export class MyButton extends IoElement {
-  static get style() {
-    return html`<style>
-    :host {
-      cursor: pointer;
-    }
-    :host[pressed] {
-      background: rgba(0,0,0,0.5);
-    }
-    </style>`;
-  }
-  static get properties() {
-    return {
-      label: "Button",
-      pressed: {
-        type: Boolean,
-        reflect: true
-      },
-      action: Function,
-      tabindex: 1
-    };
-  }
-  static get listeners() {
-    return {
-      'mousedown': '_onDown',
-      'touchstart': '_onDown'
-    };
-  }
-  _onAction(event) {
-    if (this.pressed && typeof this.action === 'function') this.action();
-    this.pressed = false;
-  }
-  _onDown(event) {
-    this.pressed = true;
-    this.addEventListener('mouseup', this._onAction);
-    this.addEventListener('touchend', this._onAction);
-    this.addEventListener('mouseleave', this._onLeave);
-  }
-  _onUp(event) {
-    this.pressed = false;
-    this.removeEventListener('mouseup', this._onAction);
-    this.removeEventListener('touchend', this._onAction);
-    this.removeEventListener('mouseleave', this._onLeave);
-  }
-  _onLeave() {
-    this.pressed = false;
-  }
-  changed() {
-    this.template([['span', this.label]]);
-  }
-}
-MyButton.Register();
-```

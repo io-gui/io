@@ -956,4 +956,406 @@ IoNode.Register = function() {
 
 IoNode.Register();
 
-export { IoCoreMixin, IoElement, html, initStyle, Vector2, IoInteractive, IoLiteMixin, IoLite, IoNode };
+class IoButton$$1 extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        cursor: pointer;
+        white-space: nowrap;
+        -webkit-tap-highlight-color: transparent;
+      }
+      :host:hover {
+        background: rgba(0,0,0,0.2);
+      }
+      :host[pressed] {
+        background: rgba(255,255,255,0.5);
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      value: undefined,
+      label: 'button',
+      pressed: {
+        type: Boolean,
+        reflect: true
+      },
+      action: Function,
+      tabindex: 0
+    };
+  }
+  static get listeners() {
+    return {
+      'keydown': '_onDown',
+      'mousedown': '_onDown',
+      'touchstart': '_onDown'
+    };
+  }
+  _onDown(event) {
+    event.stopPropagation();
+    if (event.which === 13 || event.which === 32 || event.type !== 'keydown') {
+      event.preventDefault();
+      this.pressed = true;
+      document.addEventListener('mouseup', this._onUp);
+      document.addEventListener('touchend', this._onUp);
+      this.addEventListener('keyup', this._onAction);
+      this.addEventListener('mouseup', this._onAction);
+      this.addEventListener('touchend', this._onAction);
+      this.addEventListener('mouseleave', this._onLeave);
+    }
+  }
+  _onUp(event) {
+    event.stopPropagation();
+    this.pressed = false;
+    document.removeEventListener('mouseup', this._onUp);
+    document.removeEventListener('touchend', this._onUp);
+    this.removeEventListener('keyup', this._onAction);
+    this.removeEventListener('mouseup', this._onAction);
+    this.removeEventListener('touchend', this._onAction);
+    this.removeEventListener('mouseleave', this._onLeave);
+  }
+  _onAction(event) {
+    event.stopPropagation();
+    if (event.which === 13 || event.which === 32 || event.type !== 'keyup') {
+      event.preventDefault();
+      if (this.pressed && this.action) this.action(this.value);
+      this.pressed = false;
+      this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
+    }
+    this._onUp(event);
+  }
+  _onLeave() {
+    this.pressed = false;
+  }
+  changed() {
+    this.innerText = this.label;
+  }
+}
+
+IoButton$$1.Register();
+
+class IoBoolean extends IoButton$$1 {
+  static get properties() {
+    return {
+      value: {
+        type: Boolean,
+        reflect: true
+      },
+      true: 'true',
+      false: 'false'
+    };
+  }
+  constructor(props) {
+    super(props);
+    this.action = this.toggle;
+  }
+  toggle() {
+    this.set('value', !this.value);
+  }
+  changed() {
+    this.innerText = this.value ? this.true : this.false;
+  }
+}
+
+IoBoolean.Register();
+
+const selection = window.getSelection();
+const range = document.createRange();
+
+class IoNumber$$1 extends IoInteractive {
+  static get style() {
+    return html`<style>
+      :host {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        --slider-color: #999;
+      }
+      :host:focus {
+        overflow: hidden;
+        text-overflow: clip;
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      value: Number,
+      conversion: 1,
+      step: 0.001,
+      min: -Infinity,
+      max: Infinity,
+      strict: true,
+      tabindex: 0,
+      contenteditable: true
+    };
+  }
+  static get listeners() {
+    return {
+      'focus': '_onFocus'
+    };
+  }
+  _onFocus() {
+    this.addEventListener('blur', this._onBlur);
+    this.addEventListener('keydown', this._onKeydown);
+    this._select();
+  }
+  _onBlur() {
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+    this.setFromText(this.innerText);
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
+  }
+  _onKeydown(event) {
+    if (event.which == 13) {
+      event.preventDefault();
+      this.setFromText(this.innerText);
+    }
+  }
+  _select() {
+    range.selectNodeContents(this);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+  setFromText(text) {
+    // TODO: test conversion
+    let value = Math.round(Number(text) / this.step) * this.step / this.conversion;
+    if (this.strict) {
+      value = Math.min(this.max, Math.max(this.min, value));
+    }
+    if (!isNaN(value)) this.set('value', value);
+  }
+  changed() {
+    let value = this.value;
+    if (typeof value == 'number' && !isNaN(value)) {
+      value *= this.conversion;
+      value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
+      this.innerText = String(value);
+    } else {
+      this.innerText = 'NaN';
+    }
+  }
+}
+
+IoNumber$$1.Register();
+
+class IoObject$$1 extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        flex: 0 0;
+        line-height: 1em;
+      }
+      :host > div {
+        display: flex;
+        flex-direction: row;
+      }
+      :host > div > span {
+        padding: 0 0.2em 0 0.5em;
+        flex: 0 0 auto;
+      }
+      :host > io-number {
+        color: rgb(28, 0, 207);
+      }
+      :host > io-string {
+        color: rgb(196, 26, 22);
+      }
+      :host > io-boolean {
+        color: rgb(170, 13, 145);
+      }
+      :host > io-option {
+        color: rgb(32,135,0);
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      value: Object,
+      props: Array,
+      configs: Object,
+      expanded: {
+        type: Boolean,
+        reflect: true
+      },
+      label: String
+    };
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('io-object-mutated', this._onIoObjectMutated);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('io-object-mutated', this._onIoObjectMutated);
+  }
+  _onIoObjectMutated(event) {
+    let key = event.detail.key;
+    if (event.detail.object === this.value) {
+      if (key && this.$[key]) {
+        this.$[key].__props.value.value = this.value[key];
+        this.$[key].changed();
+      } else if (!key || key === '*') {
+        for (let k in this.$) {
+          this.$[k].__props.value.value = this.value[k];
+          this.$[k].changed();
+        }
+      }
+    }
+  }
+  _onValueSet(event) {
+    const path = event.composedPath();
+    if (path[0] === this) return;
+    if (event.detail.object) return; // TODO: unhack
+    event.stopPropagation();
+    let key = path[0].id;
+    if (key && typeof key === 'string') {
+      if (this.value[key] !== event.detail.value) {
+        this.value[key] = event.detail.value;
+      }
+      let detail = Object.assign({object: this.value, key: key}, event.detail);
+      this.dispatchEvent('io-object-mutated', detail, false, window);
+      this.dispatchEvent('value-set', detail, false); // TODO
+    }
+  }
+  getPropConfigs(keys) {
+    let configs = {};
+
+    let proto = this.value.__proto__;
+    while (proto) {
+      let c = IoObjectConfig[proto.constructor.name];
+      if (c) configs = Object.assign(configs, c);
+      c = this.configs[proto.constructor.name];
+      if (c) configs = Object.assign(configs, c);
+      proto = proto.__proto__;
+    }
+
+    let propConfigs = {};
+
+    for (let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      let value = this.value[key];
+      let type = typeof value;
+      let cstr = (value && value.constructor) ? value.constructor.name : 'null';
+
+      if (type == 'function') continue;
+
+      propConfigs[key] = {};
+
+      if (configs.hasOwnProperty('type:' + type)) {
+        propConfigs[key] = configs['type:' + type];
+      }
+      if (configs.hasOwnProperty('constructor:'+cstr)) {
+        propConfigs[key] = configs['constructor:'+cstr];
+      }
+      if (configs.hasOwnProperty('key:' + key)) {
+        propConfigs[key] = configs['key:' + key];
+      }
+      if (configs.hasOwnProperty('value:' + String(value))) {
+        propConfigs[key] = configs['value:' + String(value)];
+      }
+    }
+    return propConfigs;
+  }
+  changed() {
+    let label = this.label || this.value.constructor.name;
+    let elements = [['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}]];
+    if (this.expanded) {
+      let keys = [...Object.keys(this.value), ...Object.keys(this.value.__proto__)];
+      let proplist = this.props.length ? this.props : keys;
+      let configs = this.getPropConfigs(proplist);
+      for (let key in configs) {
+        // TODO: remove props keyword
+        if (configs[key]) {
+          let config = Object.assign({
+            tag: configs[key].tag,
+            value: this.value[key],
+            id: key,
+            'on-value-set': this._onValueSet
+          }, configs[key].props);
+          if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
+            // TODO: test
+            config = Object.assign(config, this.value.__props[key].config);
+          }
+          elements.push(['div', [['span', config.label || key + ':'], [config.tag, config]]]);
+        }
+      }
+    }
+    this.template(elements);
+  }
+}
+
+const IoObjectConfig = {
+  'Object' : {
+    'type:string': {tag: 'io-string', props: {}},
+    'type:number': {tag: 'io-number', props: {step: 0.01}},
+    'type:boolean': {tag: 'io-boolean', props: {}},
+    'type:object': {tag: 'io-object', props: {}},
+    'value:null': {tag: 'io-string', props: {}},
+    'value:undefined': {tag: 'io-string', props: {}}
+  }
+};
+
+IoObject$$1.Register();
+
+const selection$1 = window.getSelection();
+const range$1 = document.createRange();
+
+class IoString$$1 extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      :host:focus {
+        overflow: hidden;
+        text-overflow: clip;
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      value: String,
+      tabindex: 0,
+      contenteditable: true
+    };
+  }
+  static get listeners() {
+    return {
+      'focus': '_onFocus'
+    };
+  }
+  _onFocus() {
+    this.addEventListener('blur', this._onBlur);
+    this.addEventListener('keydown', this._onKeydown);
+    this._select();
+  }
+  _onBlur() {
+    this.set('value', this.innerText);
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+  }
+  _onKeydown(event) {
+    if (event.which == 13) {
+      event.preventDefault();
+      this.set('value', this.innerText);
+    }
+  }
+  _select() {
+    range$1.selectNodeContents(this);
+    selection$1.removeAllRanges();
+    selection$1.addRange(range$1);
+  }
+  valueChanged() {
+    this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
+  }
+}
+
+IoString$$1.Register();
+
+export { IoCoreMixin, IoElement, html, IoInteractive, IoLite, IoLiteMixin, IoNode, IoBoolean, IoButton$$1 as IoButton, IoNumber$$1 as IoNumber, IoObject$$1 as IoObject, IoString$$1 as IoString };
