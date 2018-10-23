@@ -1,4 +1,4 @@
-import {IoElement} from "../../build/io.js";
+import {IoElement} from "../../src/io.js";
 import {TodoModel} from "./todo-model.js";
 import "./todo-item.js";
 
