@@ -1,4 +1,4 @@
-# A lightweight UI framework for data-driven web applications #
+# A lightweight UI library for data-driven web applications #
 
 Io consists of few simple classes that let you build complex web applications in JavaScript.
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and [DreemGL](https://github.com/dreemproject/dreemgl).
@@ -14,6 +14,7 @@ Also check out [demo page](http://arodic.github.io/io/demo), [todo app](http://a
 * io is **javascript-centric**.
 * io is **data-driven**.
 * io uses **bi-directional** data binding.
+* io runtime has **no dependencies**.
 
 ## Classes ##
 
@@ -23,15 +24,15 @@ This is the core of Io. It is designed as a mixin so it can be included at any l
 
 ### `IoElement` ###
 
-The core of Io applied to `HTMLElement` class. It gives you the ability to quickly design and initialize a custom element. It includes features such as dynamic templates, encapsulated styling and data binding.
+The Io core applied to `HTMLElement` class. It gives you the ability to quickly design and initialize a custom element. It includes features such as dynamic templates, encapsulated styling and data binding.
 
 ### `IoNode` ###
 
-The core of Io applied to `Object` class. It excludes DOM features such as templates and styles but otherwise provides same functionality as `IoElement`.
+The Io core applied to `Object` class. It excludes DOM features such as templates and styles but otherwise provides same functionality as `IoElement`.
 
 ## Elements ##
 
-Io comes with several [basic element classes](https://github.com/arodic/io/tree/master/src/classes) to get you started and familiarized with the framework. All basic classes are very simple and come with minimal default styling. Input elements use `value` property by convention and emit `value-set` event when value is changed by user action. See more detailed element [docs](http://arodic.github.io/io/doc),
+Io comes with several [basic element classes](https://github.com/arodic/io/tree/master/src/classes) to get you started and familiarized with the library. All basic classes are simple and come with minimal default styling. Input elements use `value` property by convention and emit `value-set` event when value is changed by user action. See [element docs](http://arodic.github.io/io/doc) for details.
 
 ### `IoButton` `<io-button>` ###
 
@@ -55,7 +56,7 @@ Input element for `Object` data type. It can be used as an object inspector or c
 
 ### Defining Custom Elements ###
 
-Simply extend the core `IoElement` class and call `Register()` method.
+Simply extend the core `IoElement` class and call `Register()`.
 
 ```javascript
 class MySalad extends IoElement {}
@@ -89,10 +90,10 @@ static get properties() {
 }
 ```
 
-You can define a property with a default value, or with following configuration options:
+You can define a property by its default value, or by providing following configuration options:
 
 - **value** default value. If not specified it will be initialized from specified type.
-- **type** constructor of the property. If not specified, it will be inferred from value.
+- **type** constructor of the property value. If not specified, it will be inferred from value.
 - **observer** name of the method to be called when value changes.
 - **reflect** if true, value will be reflected to attribute.
 - **enumerable** Specifies if property should be enumerable. Defaults to true.
@@ -111,7 +112,7 @@ static get properties() {
 
 ### Observers ###
 
-Observers are functions which get called upon observed property change. All Io elements implement `.changed()` function as a default observer for all properties. If `[propName]Changed()` function is defined, it will be called when corresponding property changes. Furthermore, you can define custom observers inside property configuration object.
+Observers are methods which get called on observed property change. All Io elements implement `.changed()` method as a default observer for all properties. If `[propName]Changed()` method is defined, it will be called when corresponding property changes. You can also define custom observers inside property configuration object.
 
 ### Listeners ###
 
@@ -129,7 +130,7 @@ static get listeners() {
 
 Define default style inside `style()` getter.
 Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage.
-Template literal handler `html` is optional and it is there only to trigger correct syntax highlighting.
+Template literal handler `html` is optional but recommended for correct syntax highlighting.
 
 ```javascript
 static get style() {
@@ -151,12 +152,13 @@ This is the most powerful feature of `IoElement`. It allows you to create dynami
   ['my-color', {color: "tomato"}, "this is my color"]
 ```
 
-Note that the first array item is **mandatory** element name, followed by **optional** properties and innerText or an array of children.
-The HTML output from the array above is:
+HTML output:
 
 ```html
-  <my-color color="tomato">this is my color</my-color>
+<my-color color="tomato">this is my color</my-color>
 ```
+
+Note that the first array item is **mandatory** element name, followed by **optional** properties and innerText or an array of children. Combining innerText and children elements is not supported at the moment.
 
 Here is a slightly more complex expression with dynamically generated DOM tree:
 
@@ -169,7 +171,7 @@ this.template([
 ]);
 ```
 
-The output from the code above is converted to following HTML DOM:
+HTML output:
 
 ```html
 <h4>Salad ingredients:</h4>
@@ -183,7 +185,7 @@ The output from the code above is converted to following HTML DOM:
 ### Data Biding ###
 
 This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` method.
-Keep in mind that this only works with IoElement-based children their properties. In other words, binding to native HTML elements will not work.
+Keep in mind that this only works with IoElement properties. In other words, binding to native HTML elements will not work.
 
 ```javascript
 this.template([
@@ -201,12 +203,12 @@ this.somethingChanged() {
 
 ```
 
-Notice in the example above, we created a new element/node inside an observer function which is data-bound via constructor. This works but creates a reference between the two elements which is a potential problem for garbage collection.
+Notice in the example above, we created a new node inside an observer function which is data-bound via constructor. This works but creates a reference between the two elements which is a potential problem for garbage collection.
 
 ### Methods ###
 
   `setAttribute(attr, value)` Override for native setAttribute method.
-  It removes the attribute if value is false, empty string, undefined etc.
+  It removes the attribute if the value is falsey.
 
   `changed()` This method is automatically called every time a property is changed.
   If multiple properties are changed simultaneously in a template,

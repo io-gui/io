@@ -58,10 +58,6 @@ export class IoMdView extends IoElement {
       }
     };
   }
-  // TODO: unhack when attribute setting works
-  attributeChangedCallback(name, oldValue, newValue) {
-    this[name] = this.__props[name].type(newValue);
-  }
   pathChanged() {
     const req = new XMLHttpRequest();
     const scope = this;

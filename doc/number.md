@@ -1,6 +1,6 @@
 ### `IoNumber` `<io-number>` ###
 
-Input element for `Number` data type. It can be configured to clamp its `value` to `min` and `max` values and display value using `conversion` factor.
+Input element for `Number` data type. It can be configured to clamp its `value` to `min`/`max` values and display value using `conversion` factor.
 
 #### Properties ####
 

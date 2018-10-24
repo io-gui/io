@@ -602,7 +602,7 @@ class IoElement extends IoCoreMixin(HTMLElement) {
       }
     }
   }
-  // fixup for shitty setAttribute spec
+  // fixup for setAttribute
   setAttribute(attr, value) {
     if (value === true) {
       HTMLElement.prototype.setAttribute.call(this, attr, '');
@@ -613,11 +613,14 @@ class IoElement extends IoCoreMixin(HTMLElement) {
     }
   }
   static get observedAttributes() { return this.prototype.__observedAttributes; }
-  // TODO: implement without infinite loop
-  // attributeChangedCallback(name, oldValue, newValue) {
-  //   this.__props[name].value = this.__props[name].type(newValue);
-  // }
-
+  attributeChangedCallback(name, oldValue, newValue) {
+    const type = this.__props[name].type;
+    if (type === Boolean && (newValue === null || newValue === '')) {
+      this[name] = newValue === '' ? true : false;
+    } else {
+      this[name] = type(newValue);
+    }
+  }
 }
 
 IoElement.Register = function() {
