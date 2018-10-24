@@ -108,7 +108,7 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
     const type = this.__props[name].type;
     if (type === Boolean && (newValue === null || newValue === '')) {
       this[name] = newValue === '' ? true : false;
-    } else {
+    } else if (type) {
       this[name] = type(newValue);
     }
   }

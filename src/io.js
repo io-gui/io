@@ -1,6 +1,9 @@
 export {IoCoreMixin} from "./core/coreMixin.js";
 export {IoElement, html} from "./classes/element.js";
 export {IoLite, IoLiteMixin} from "./classes/lite.js";
+
+export {IoInteractiveMixin} from "./classes/interactive.js"; // TODO: doc
+
 export {IoNode} from "./classes/node.js";
 
 export {IoButton} from "./elements/button.js";
