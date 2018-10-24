@@ -921,7 +921,6 @@ class IoNumber extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        --slider-color: #999;
       }
       :host:focus {
         overflow: hidden;
@@ -945,6 +944,10 @@ class IoNumber extends IoElement {
     return {
       'focus': '_onFocus'
     };
+  }
+  constructor(props) {
+    super(props);
+    this.setAttribute('spellcheck', 'false');
   }
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
