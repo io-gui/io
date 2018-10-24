@@ -71,10 +71,8 @@ export class IoObject extends IoElement {
     if (event.detail.object) return; // TODO: unhack
     event.stopPropagation();
     let key = path[0].id;
-    if (key && typeof key === 'string') {
-      if (this.value[key] !== event.detail.value) {
-        this.value[key] = event.detail.value;
-      }
+    if (key !== null) {
+      this.value[key] = event.detail.value;
       let detail = Object.assign({object: this.value, key: key}, event.detail);
       this.dispatchEvent('io-object-mutated', detail, false, window);
       this.dispatchEvent('value-set', detail, false); // TODO
