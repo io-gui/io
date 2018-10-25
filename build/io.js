@@ -1195,7 +1195,7 @@ class IoObject extends IoElement {
     return {
       value: Object,
       props: Array,
-      configs: Object,
+      config: Object,
       expanded: {
         type: Boolean,
         reflect: true
@@ -1245,7 +1245,7 @@ class IoObject extends IoElement {
     while (proto) {
       let c = IoObjectConfig[proto.constructor.name];
       if (c) configs = Object.assign(configs, c);
-      c = this.configs[proto.constructor.name];
+      c = this.config[proto.constructor.name];
       if (c) configs = Object.assign(configs, c);
       proto = proto.__proto__;
     }

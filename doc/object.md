@@ -10,7 +10,7 @@ Input element for `Object` data type. It can be used as an object inspector or c
 | **`expanded`** | Boolean | Show/hide properties. | `true` |
 | **`label`** | String | Text to replace constructor name. | `''` |
 | **`props`** | Array | List of properties to show. | `[]` |
-| **`configs`** | Object | _Experimental_. | `{}` |
+| **`config`** | Object | _Experimental_. | `{}` |
 
 #### Events ####
 

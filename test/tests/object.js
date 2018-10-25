@@ -12,7 +12,7 @@ export default class {
       it('value', () => {
         // this.element.value = {a: 1, b: '2'};
         // this.element.expanded = true;
-        // this.element.configs = {};
+        // this.element.config = {};
         // let span = this.element.querySelector('span');
         // chai.expect(span.innerHTML).to.equal('a:');
         // let number = this.element.querySelector('io-number');
@@ -36,10 +36,10 @@ export default class {
         // span = this.element.querySelector('span');
         // chai.expect(span).to.not.equal(null);
       });
-      it('configs', () => {
+      it('config', () => {
         // this.element.value = {a: 1, b: '2'};
         // this.element.expanded = true;
-        // this.element.configs = {'Object': {'key:a': {tag: 'io-slider'}, 'type:string': {tag: 'io-slider'}}};
+        // this.element.config = {'Object': {'key:a': {tag: 'io-slider'}, 'type:string': {tag: 'io-slider'}}};
         // let sliders = this.element.querySelectorAll('io-slider');
         // chai.expect(sliders[0]).to.not.equal(undefined);
         // chai.expect(sliders[1]).to.not.equal(undefined);
