@@ -322,7 +322,7 @@ const IoCoreMixin = (superclass) => class extends superclass {
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
-    if (oldValue !== value ) this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, false);
+    if (oldValue !== value) this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, false);
   }
   setProperties(props) {
 
@@ -615,8 +615,10 @@ class IoElement extends IoCoreMixin(HTMLElement) {
   static get observedAttributes() { return this.prototype.__observedAttributes; }
   attributeChangedCallback(name, oldValue, newValue) {
     const type = this.__props[name].type;
-    if (type === Boolean && (newValue === null || newValue === '')) {
-      this[name] = newValue === '' ? true : false;
+    if (type === Boolean) {
+      if (newValue === null || newValue === '') {
+        this[name] = newValue === '' ? true : false;
+      }
     } else if (type) {
       this[name] = type(newValue);
     }
@@ -1175,16 +1177,16 @@ class IoObject extends IoElement {
         padding: 0 0.2em 0 0.5em;
         flex: 0 0 auto;
       }
-      :host > io-number {
+      :host > div > io-number {
         color: rgb(28, 0, 207);
       }
-      :host > io-string {
+      :host > div > io-string {
         color: rgb(196, 26, 22);
       }
-      :host > io-boolean {
+      :host > div > io-boolean {
         color: rgb(170, 13, 145);
       }
-      :host > io-option {
+      :host > div > io-option {
         color: rgb(32,135,0);
       }
     </style>`;

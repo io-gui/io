@@ -106,8 +106,10 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
   static get observedAttributes() { return this.prototype.__observedAttributes; }
   attributeChangedCallback(name, oldValue, newValue) {
     const type = this.__props[name].type;
-    if (type === Boolean && (newValue === null || newValue === '')) {
-      this[name] = newValue === '' ? true : false;
+    if (type === Boolean) {
+      if (newValue === null || newValue === '') {
+        this[name] = newValue === '' ? true : false;
+      }
     } else if (type) {
       this[name] = type(newValue);
     }

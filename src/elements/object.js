@@ -17,16 +17,16 @@ export class IoObject extends IoElement {
         padding: 0 0.2em 0 0.5em;
         flex: 0 0 auto;
       }
-      :host > io-number {
+      :host > div > io-number {
         color: rgb(28, 0, 207);
       }
-      :host > io-string {
+      :host > div > io-string {
         color: rgb(196, 26, 22);
       }
-      :host > io-boolean {
+      :host > div > io-boolean {
         color: rgb(170, 13, 145);
       }
-      :host > io-option {
+      :host > div > io-option {
         color: rgb(32,135,0);
       }
     </style>`;
