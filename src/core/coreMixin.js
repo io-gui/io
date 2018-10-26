@@ -234,6 +234,7 @@ IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
 
+  // TODO: rewise
   Object.defineProperty(this.prototype, '__objectProps', {value: []});
   const ignore = [Boolean, String, Number, HTMLElement, Function];
   for (let prop in this.prototype.__props) {

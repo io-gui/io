@@ -498,6 +498,7 @@ IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
 
+  // TODO: rewise
   Object.defineProperty(this.prototype, '__objectProps', {value: []});
   const ignore = [Boolean, String, Number, HTMLElement, Function];
   for (let prop in this.prototype.__props) {
@@ -1160,6 +1161,79 @@ class IoNumber extends IoElement {
 
 IoNumber.Register();
 
+function merge() {
+	let extended = {};
+	let apply = function (obj) {
+		for (let prop in obj) {
+			if (obj.hasOwnProperty(prop)) {
+				if (typeof obj[prop] === 'object') {
+					extended[prop] = merge(extended[prop], obj[prop]);
+				} else {
+					extended[prop] = obj[prop];
+				}
+			}
+		}
+	};
+	for (let i = arguments.length; i--;) apply(arguments[i]);
+	return extended;
+}
+
+
+class ProtoConfig {
+  constructor(prototypes) {
+    let protoConfig = {};
+    for (let i = prototypes.length; i--;) {
+      let config = prototypes[i].constructor.config;
+      protoConfig = merge(config, protoConfig);
+    }
+    for (let key in protoConfig) {
+      this[key] = protoConfig[key];
+    }
+  }
+  getConfig(object, instanceConfig) {
+
+    const keys = Object.keys(object);
+    let configs = {};
+
+    let proto = object.__proto__;
+    while (proto) {
+      keys.push(...Object.keys(proto));
+      configs = merge(configs, this[proto.constructor.name]);
+      configs = merge(configs, instanceConfig[proto.constructor.name]);
+      proto = proto.__proto__;
+    }
+
+    let propConfigs = {};
+
+    for (let i = 0; i < keys.length; i++) {
+      let key = keys[i];
+      let value = object[key];
+      let type = typeof value;
+      let cstr = (value && value.constructor) ? value.constructor.name : 'null';
+
+      if (type == 'function') continue;
+
+      propConfigs[key] = {};
+
+      if (configs.hasOwnProperty('type:' + type)) {
+        propConfigs[key] = configs['type:' + type];
+      }
+      if (configs.hasOwnProperty('constructor:'+cstr)) {
+        propConfigs[key] = configs['constructor:'+cstr];
+      }
+      if (configs.hasOwnProperty('key:' + key)) {
+        propConfigs[key] = configs['key:' + key];
+      }
+      if (configs.hasOwnProperty('value:' + String(value))) {
+        propConfigs[key] = configs['value:' + String(value)];
+      }
+    }
+    return propConfigs;
+
+
+  }
+}
+
 class IoObject extends IoElement {
   static get style() {
     return html`<style>
@@ -1238,82 +1312,42 @@ class IoObject extends IoElement {
       this.dispatchEvent('value-set', detail, false); // TODO
     }
   }
-  getPropConfigs(keys) {
-    let configs = {};
-
-    let proto = this.value.__proto__;
-    while (proto) {
-      let c = IoObjectConfig[proto.constructor.name];
-      if (c) configs = Object.assign(configs, c);
-      c = this.config[proto.constructor.name];
-      if (c) configs = Object.assign(configs, c);
-      proto = proto.__proto__;
-    }
-
-    let propConfigs = {};
-
-    for (let i = 0; i < keys.length; i++) {
-      let key = keys[i];
-      let value = this.value[key];
-      let type = typeof value;
-      let cstr = (value && value.constructor) ? value.constructor.name : 'null';
-
-      if (type == 'function') continue;
-
-      propConfigs[key] = {};
-
-      if (configs.hasOwnProperty('type:' + type)) {
-        propConfigs[key] = configs['type:' + type];
-      }
-      if (configs.hasOwnProperty('constructor:'+cstr)) {
-        propConfigs[key] = configs['constructor:'+cstr];
-      }
-      if (configs.hasOwnProperty('key:' + key)) {
-        propConfigs[key] = configs['key:' + key];
-      }
-      if (configs.hasOwnProperty('value:' + String(value))) {
-        propConfigs[key] = configs['value:' + String(value)];
-      }
-    }
-    return propConfigs;
-  }
   changed() {
     let label = this.label || this.value.constructor.name;
     let elements = [['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}]];
     if (this.expanded) {
-      let keys = [...Object.keys(this.value), ...Object.keys(this.value.__proto__)];
-      let proplist = this.props.length ? this.props : keys;
-      let configs = this.getPropConfigs(proplist);
-      for (let key in configs) {
-        // TODO: remove props keyword
-        if (configs[key]) {
-          let config = Object.assign({
-            tag: configs[key].tag,
-            value: this.value[key],
-            id: key,
-            'on-value-set': this._onValueSet
-          }, configs[key].props);
-          if (this.value.__props && this.value.__props[key] && this.value.__props[key].config) {
-            // TODO: test
-            config = Object.assign(config, this.value.__props[key].config);
-          }
-          elements.push(['div', [['span', config.label || key + ':'], [config.tag, config]]]);
+
+      let protoConfigs = this.__proto__.__config.getConfig(this.value, this.config);
+
+      for (let key in protoConfigs) {
+        if (!this.props.length || this.props.indexOf(key) !== -1) {
+          const tag = protoConfigs[key].tag;
+          const protoConfig = protoConfigs[key].config;
+          const itemConfig = {id: key, value: this.value[key], 'on-value-set': this._onValueSet};
+          const config = Object.assign(itemConfig, protoConfig);
+          elements.push(['div', [['span', config.label || key + ':'], [tag, config]]]);
         }
       }
     }
     this.template(elements);
   }
+  static get config() {
+    return {
+      'Object': {
+        'type:string': {tag: 'io-string', config: {}},
+        'type:number': {tag: 'io-number', config: {step: 0.01}},
+        'type:boolean': {tag: 'io-boolean', config: {}},
+        'type:object': {tag: 'io-object', config: {}},
+        'value:null': {tag: 'io-string', config: {}},
+        'value:undefined': {tag: 'io-string', config: {}}
+      }
+    };
+  }
 }
 
-const IoObjectConfig = {
-  'Object' : {
-    'type:string': {tag: 'io-string', props: {}},
-    'type:number': {tag: 'io-number', props: {step: 0.01}},
-    'type:boolean': {tag: 'io-boolean', props: {}},
-    'type:object': {tag: 'io-object', props: {}},
-    'value:null': {tag: 'io-string', props: {}},
-    'value:undefined': {tag: 'io-string', props: {}}
-  }
+IoObject.Register = function() {
+  IoElement.Register.call(this);
+  Object.defineProperty(this.prototype, '__config', {value: new ProtoConfig(this.prototype.__prototypes)});
 };
 
 IoObject.Register();
