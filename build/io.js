@@ -436,9 +436,10 @@ const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
   }
-  dispatchEvent(type, detail, bubbles = true, src = this) {
+  dispatchEvent(type, detail = {}, bubbles = true, src = this) {
     if (src instanceof HTMLElement || src === window) {
       HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {
+        type: type,
         detail: detail,
         bubbles: bubbles,
         composed: true
@@ -702,9 +703,6 @@ function initStyle(prototypes) {
  */
 
 const IoLiteMixin = (superclass) => class extends superclass {
-	constructor(initProps) {
-		super(initProps);
-	}
 	addEventListener(type, listener) {
 		this._listeners = this._listeners || {};
 		this._listeners[type] = this._listeners[type] || [];
@@ -719,11 +717,11 @@ const IoLiteMixin = (superclass) => class extends superclass {
 	removeEventListener(type, listener) {
 		if (this._listeners === undefined) return;
 		if (this._listeners[type] !== undefined) {
-			const index = this._listeners[type].indexOf(listener);
+			let index = this._listeners[type].indexOf(listener);
 			if (index !== -1) this._listeners[type].splice(index, 1);
 		}
 	}
-	dispatchEvent(type, detail) {
+	dispatchEvent(type, detail = {}) {
 		const event = {
 			path: [this],
 			target: this,
@@ -734,7 +732,9 @@ const IoLiteMixin = (superclass) => class extends superclass {
 			for (let i = 0, l = array.length; i < l; i ++) {
 				array[i].call(this, event);
 			}
-		} else if (this.parent && event.bubbles) ;
+		}
+		// TODO: bubbling
+		// else if (this.parent && event.bubbles) {}
 	}
 	defineProperties(props) {
 		if (!this.hasOwnProperty('_properties')) {
@@ -748,6 +748,10 @@ const IoLiteMixin = (superclass) => class extends superclass {
 			if (propDef === null || propDef === undefined) {
 				propDef = {value: propDef};
 			} else if (typeof propDef !== 'object') {
+				propDef = {value: propDef};
+			} else if (typeof propDef === 'object' && propDef.constructor.name !== 'Object') {
+				propDef = {value: propDef};
+			}else if (typeof propDef === 'object' && propDef.value === undefined) {
 				propDef = {value: propDef};
 			}
 			defineProperty(this, prop, propDef);
@@ -765,7 +769,7 @@ const defineProperty = function(scope, prop, def) {
 	if (!scope.hasOwnProperty(prop)) { // TODO: test
 		Object.defineProperty(scope, prop, {
 			get: function() {
-				return scope._properties[prop];
+				return scope._properties[prop];// !== undefined ? scope._properties[prop] : initValue;
 			},
 			set: function(value) {
 				if (scope._properties[prop] === value) return;
@@ -774,7 +778,7 @@ const defineProperty = function(scope, prop, def) {
 				if (isPublic) {
 					if (def.observer) scope[def.observer](value, oldValue);
 					if (typeof scope[observer] === 'function') scope[observer](value, oldValue);
-					scope.changed.call(scope);
+					if (typeof scope.changed === 'function') scope.changed.call(scope);
 					scope.dispatchEvent(changeEvent, {value: value, oldValue: oldValue, bubbles: true});
 				}
 			},
@@ -841,7 +845,7 @@ class Pointer {
   }
 }
 
-const IoInteractiveMixin$$1 = (superclass) => class extends superclass {
+const IoInteractiveMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
       pointers: Array, // TODO: remove from properties
@@ -946,10 +950,6 @@ const IoInteractiveMixin$$1 = (superclass) => class extends superclass {
     this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path}, false);
   }
 };
-
-class IoInteractive extends IoInteractiveMixin$$1(IoElement) {}
-
-IoInteractive.Register();
 
 class IoNode extends IoCoreMixin(Object) {
   connect() {
@@ -1191,7 +1191,6 @@ class ProtoConfig {
     }
   }
   getConfig(object, instanceConfig) {
-
     const keys = Object.keys(object);
     let configs = {};
 
@@ -1411,4 +1410,7 @@ class IoString extends IoElement {
 
 IoString.Register();
 
-export { IoCoreMixin, IoElement, html, IoLite, IoLiteMixin, IoInteractiveMixin$$1 as IoInteractiveMixin, IoNode, IoButton, IoBoolean, IoNumber, IoObject, IoString };
+class IoInteractive extends IoInteractiveMixin(IoElement) {}
+IoInteractive.Register();
+
+export { IoInteractive, IoCoreMixin, IoElement, html, IoLite, IoLiteMixin, IoInteractiveMixin, IoNode, IoButton, IoBoolean, IoNumber, IoObject, IoString };

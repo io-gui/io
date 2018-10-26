@@ -1,5 +1,3 @@
-import {IoElement} from "../io.js";
-
 const _clickmask = document.createElement('div');
 _clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;";
 
@@ -159,7 +157,3 @@ export const IoInteractiveMixin = (superclass) => class extends superclass {
     this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path}, false);
   }
 };
-
-export class IoInteractive extends IoInteractiveMixin(IoElement) {}
-
-IoInteractive.Register();

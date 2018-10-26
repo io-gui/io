@@ -28,7 +28,6 @@ export class ProtoConfig {
     }
   }
   getConfig(object, instanceConfig) {
-
     const keys = Object.keys(object);
     let configs = {};
 

@@ -172,9 +172,10 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
   }
-  dispatchEvent(type, detail, bubbles = true, src = this) {
+  dispatchEvent(type, detail = {}, bubbles = true, src = this) {
     if (src instanceof HTMLElement || src === window) {
       HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {
+        type: type,
         detail: detail,
         bubbles: bubbles,
         composed: true
