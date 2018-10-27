@@ -14,6 +14,7 @@ export class TestElement extends IoElement {
       _stringChangedFired: 0,
       _customHandlerFired: 0,
       _customObserverFired: 0,
+      _customObserverFired: 0,
       _defaultHandlerEvent: null,
     };
   }
@@ -111,6 +112,12 @@ export default class {
       });
     });
     describe('IoElement: Observers', () => {
+      // it('executes default observers on init values', () => {
+      //   let element = new TestElement({string: this.element.bind('string')});
+      //   document.body.appendChild(element);
+      //   chai.expect(element._changedFired).to.equal(1);
+      //   chai.expect(element._stringChangedFired).to.equal(1);
+      // });
       it('executes default observers', () => {
         this.element.string = '';
         this.element._changedFired = 0;
