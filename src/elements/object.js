@@ -1,8 +1,6 @@
 import {html, IoElement} from "../classes/element.js";
 import {ProtoConfig} from "../core/protoConfig.js";
 
-var configMap = new WeakMap();
-
 export class IoObject extends IoElement {
   static get style() {
     return html`<style>
@@ -46,6 +44,11 @@ export class IoObject extends IoElement {
       label: String
     };
   }
+  constructor(props) {
+    super(props);
+    this.__configMap = new WeakMap();
+    this._config = {};
+  }
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('io-object-mutated', this._onIoObjectMutated);
@@ -82,26 +85,23 @@ export class IoObject extends IoElement {
     }
   }
   valueChanged() {
+    if (this.__configMap.has(this.value)) {
+      this._config = this.__configMap.get(this.value);
+    } else {
+      this._config = this.__proto__.__config.getConfig(this.value, this.config);
+      this.__configMap.set(this.value, this._config);
+    }
   }
   changed() {
     let label = this.label || this.value.constructor.name;
     let elements = [['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}]];
     if (this.expanded) {
-
-      let config;
-      if (configMap.has(this.value)) {
-        config = configMap.get(this.value);
-      } else {
-        config = this.__proto__.__config.getConfig(this.value, this.config);
-        configMap.set(this.value, config);
-      }
-
-      for (let key in config) {
+      for (let key in this._config) {
         if (!this.props.length || this.props.indexOf(key) !== -1) {
-          const tag = config[key].tag;
-          const protoConfig = config[key].config;
+          const tag = this._config[key][0];
+          const protoConfig = this._config[key][1];
           const itemConfig = {id: key, value: this.value[key], 'on-value-set': this._onValueSet};
-          elements.push(['div', [['span', config.label || key + ':'], [tag, Object.assign(itemConfig, protoConfig)]]]);
+          elements.push(['div', [['span', this._config.label || key + ':'], [tag, Object.assign(itemConfig, protoConfig)]]]);
         }
       }
     }
@@ -110,20 +110,13 @@ export class IoObject extends IoElement {
   static get config() {
     return {
       'Object': {
-        'type:string': {tag: 'io-string', config: {}},
-        'type:number': {tag: 'io-number', config: {step: 0.01}},
-        'type:boolean': {tag: 'io-boolean', config: {}},
-        'type:object': {tag: 'io-object', config: {}},
-        'value:null': {tag: 'io-string', config: {}},
-        'value:undefined': {tag: 'io-string', config: {}},
-
-        '_type:string': ['io-string', {}],
-        '_type:number': ['io-number', {step: 0.01}],
-        '_type:boolean': ['io-boolean', {}],
-        '_type:object': ['io-object', {}],
-        '_value:null': ['io-string', {}],
-        '_value:undefined': ['io-string', {}],
-      }
+        'type:string': ['io-string', {}],
+        'type:number': ['io-number', {step: 0.01}],
+        'type:boolean': ['io-boolean', {}],
+        'type:object': ['io-object', {}],
+        'value:null': ['io-string', {}],
+        'value:undefined': ['io-string', {}],
+      },
     };
   }
 }

@@ -86,7 +86,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         if (this.__props[p].reflect) this.setAttribute(p, value);
         this.queue(this.__props[p].observer, p, value, oldValue);
         if (this.__props[p].observer) this.queue(this.__props[p].observer, p, value, oldValue);
-        if (this[p + 'Changed']) this.queue(p + 'Changed', p, value, oldValue);
+        // TODO: decouple observer and notify queue // if (this[p + 'Changed'])
+        this.queue(p + 'Changed', p, value, oldValue);
       }
 
       if (binding !== oldBinding) {
@@ -207,10 +208,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) {
       return;
     }
-    if (this.__observeQueue.indexOf('changed') === -1) {
-      this.__observeQueue.push('changed');
-    }
-    if (observer) {
+    if (observer && this[observer]) {
       if (this.__observeQueue.indexOf(observer) === -1) {
         this.__observeQueue.push(observer);
       }
@@ -218,6 +216,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.__notifyQueue.push([prop + '-changed', {value: value, oldValue: oldValue}]);
   }
   queueDispatch() {
+    if (this.__observeQueue.length || this.__notifyQueue.length) {
+      this.__observeQueue.push('changed');
+    }
     for (let j = 0; j < this.__observeQueue.length; j++) {
       this[this.__observeQueue[j]]();
     }

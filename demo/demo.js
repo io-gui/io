@@ -107,7 +107,7 @@ export class IoDemo extends IoElement {
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-object'],
-        ['io-object', {value: this, expanded: true, labeled: true}]
+        ['io-object', {value: this.__props, expanded: true, labeled: true}]
       ]]
     ]);
   }

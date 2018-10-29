@@ -46,8 +46,8 @@ export function defineProperties(prototype) {
         this.__props[prop].value = value;
         if (this.__props[prop].reflect) this.setAttribute(prop, this.__props[prop].value);
         if (isPublic) {
-          if (this.__props[prop].observer) this[this.__props[prop].observer](value, oldValue);
           if (this[observer]) this[observer](value, oldValue);
+          if (this.__props[prop].observer) this[this.__props[prop].observer](value, oldValue);
           this.changed();
           this.dispatchEvent(changeEvent, {value: value, oldValue: oldValue});
         }
