@@ -50,7 +50,15 @@ export class IoDemo extends IoElement {
   }
   constructor() {
     super();
-    this.serfRef = this;
+    this.object = {
+      number: this.number,
+      string: this.string,
+      boolean: this.boolean,
+      null: this.null,
+      NaN: this.NaN,
+      undefined: this.undefined,
+      serfRef: this,
+    }
     this.template([
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-string / io-number / io-boolean'],
@@ -107,7 +115,7 @@ export class IoDemo extends IoElement {
       ]],
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-object'],
-        ['io-object', {value: this.__props, expanded: true, labeled: true}]
+        ['io-object', {value: this.object, expanded: true, labeled: true}]
       ]]
     ]);
   }
