@@ -9,7 +9,7 @@ function extendTypes(types, typesExtend) {
 function extendGroups(groups, groupsExtend) {
   for (let group in groupsExtend) {
     groups[group] = groups[group] || [];
-    for (var i = 0; i < groupsExtend[group].length; i++) {
+    for (let i = 0; i < groupsExtend[group].length; i++) {
       if (groups[group].indexOf(groupsExtend[group][i]) === -1) {
         groups[group].push(groupsExtend[group][i]);
       }
