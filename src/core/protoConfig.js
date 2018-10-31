@@ -64,17 +64,17 @@ export class ProtoConfig {
 
       const typeStr = 'type:' + type;
       const cstrStr = 'constructor:' + cstr;
-      const keyStr = 'k:' + k;
+      const keyStr = k;
       const valueStr = 'value:' + String(value); // TODO: consider optimizing against large strings.
 
       if (type == 'function') continue;
 
       configs.types[k] = {};
 
-      if (types.hasOwnProperty(typeStr)) configs.types[k] = types[typeStr];
-      if (types.hasOwnProperty(cstrStr)) configs.types[k] = types[cstrStr];
-      if (types.hasOwnProperty(keyStr)) configs.types[k] = types[keyStr];
-      if (types.hasOwnProperty(valueStr)) configs.types[k] = types[valueStr];
+      if (types[typeStr]) configs.types[k] = types[typeStr];
+      if (types[cstrStr]) configs.types[k] = types[cstrStr];
+      if (types[keyStr]) configs.types[k] = types[keyStr];
+      if (types[valueStr]) configs.types[k] = types[valueStr];
 
       for (let g in groups) {
         let group = groups[g];
