@@ -144,7 +144,7 @@ export class Config {
   extend(configs, configsEx) {
     for (let c in configsEx) {
       configs[c] = configs[c] || [];
-      configs[c] = [configsEx[c][0], Object.assign(configs[c][1] || {}, configsEx[c][1] || {})];
+      configs[c] = [configs[c][0] || configsEx[c][0], Object.assign(configs[c][1] || {}, configsEx[c][1] || {})];
     }
   }
   getConfig(object, instanceConfig = {}) {
