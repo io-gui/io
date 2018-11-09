@@ -49,7 +49,7 @@ export function defineProperties(prototype) {
           if (this[observer]) this[observer](value, oldValue);
           if (this.__props[prop].observer) this[this.__props[prop].observer](value, oldValue);
           this.changed();
-          this.dispatchEvent(changeEvent, {value: value, oldValue: oldValue});
+          this.dispatchEvent(changeEvent, {property: prop, value: value, oldValue: oldValue});
         }
       },
       enumerable: isEnumerable && isPublic,

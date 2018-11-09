@@ -83,7 +83,7 @@ const defineProperty = function(scope, prop, def) {
 					if (def.observer) scope[def.observer](value, oldValue);
 					if (typeof scope[observer] === 'function') scope[observer](value, oldValue);
 					if (typeof scope.changed === 'function') scope.changed.call(scope);
-					scope.dispatchEvent(changeEvent, {value: value, oldValue: oldValue, bubbles: true});
+					scope.dispatchEvent(changeEvent, {property: prop, value: value, oldValue: oldValue, bubbles: true});
 				}
 			},
 			enumerable: isEnumerable && isPublic,
