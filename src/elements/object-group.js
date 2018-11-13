@@ -44,9 +44,6 @@ export class IoObjectGroup extends IoElement {
       _config: Object,
     };
   }
-  constructor(props) {
-    super(props);
-  }
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('io-object-mutated', this._onIoObjectMutated);
