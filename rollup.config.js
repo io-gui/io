@@ -29,7 +29,6 @@ export default [
   },
   {
     input: 'src/classes/lite.js',
-    plugins: [html()],
     output: [
       {
         format: 'es',
