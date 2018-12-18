@@ -1,4 +1,4 @@
-import {html, IoElement} from "../classes/element.js";
+import {IoElement} from "../classes/element.js";
 import "./object-group.js";
 
 const __configsMap = new WeakMap();
@@ -81,7 +81,7 @@ export class Config {
     }
 
     const protoConfigs = {};
-    for (var i = prototypes.length; i--;) {
+    for (let i = prototypes.length; i--;) {
       this.extend(protoConfigs, this[prototypes[i]]);
     }
     this.extend(protoConfigs, instanceConfig);

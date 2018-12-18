@@ -157,3 +157,7 @@ export const IoInteractiveMixin = (superclass) => class extends superclass {
     this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path}, false);
   }
 };
+
+import {IoElement} from "./element.js";
+export class IoInteractive extends IoInteractiveMixin(IoElement) {}
+IoInteractive.Register();
