@@ -4,7 +4,6 @@
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
-    "allowImportExportEverywhere": true
   },
   "rules": {
     "no-console": "off",
