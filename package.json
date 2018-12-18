@@ -5,14 +5,11 @@
   "author": "Aleksandar Aki Rodic",
   "license": "MIT",
   "scripts": {
-    "uglify": "uglifyjs build/io.js -cmo build/io.min.js --source-map",
-    "uglify-lite": "uglifyjs build/io-lite.js -cmo build/io-lite.min.js --source-map",
-    "build": "eslint src && rollup -c && npm run uglify && npm run uglify-lite"
+    "build": "eslint src && rollup -c"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
     "eslint": "^4.19.1",
-    "rollup": "^0.59.4",
-    "uglify-es": "^3.3.9"
+    "rollup": "^0.59.4"
   }
 }
