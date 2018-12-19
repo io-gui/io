@@ -980,7 +980,19 @@ IoNode.Register();
 
 class IoButton extends IoElement {
   static get style() {
-    return html`<style>:host {cursor: pointer;white-space: nowrap;-webkit-tap-highlight-color: transparent;}:host:hover {background: rgba(0,0,0,0.2);}:host[pressed] {background: rgba(255,255,255,0.5);}</style>`;
+    return html`<style>
+      :host {
+        cursor: pointer;
+        white-space: nowrap;
+        -webkit-tap-highlight-color: transparent;
+      }
+      :host:hover {
+        background: rgba(0,0,0,0.2);
+      }
+      :host[pressed] {
+        background: rgba(255,255,255,0.5);
+      }
+    </style>`;
   }
   static get properties() {
     return {
@@ -1074,7 +1086,17 @@ const range = document.createRange();
 
 class IoNumber extends IoElement {
   static get style() {
-    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
+    return html`<style>
+      :host {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      :host:focus {
+        overflow: hidden;
+        text-overflow: clip;
+      }
+    </style>`;
   }
   static get properties() {
     return {
@@ -1144,7 +1166,37 @@ IoNumber.Register();
 
 class IoObjectGroup extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-object-group {font-weight: bold;}:host > div.io-object-prop {display: flex !important;flex-direction: row;}:host > div > span {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(32,135,0);}</style>`;
+    return html`<style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        flex: 0 0;
+        line-height: 1em;
+      }
+      :host > div.io-object-group {
+        font-weight: bold;
+      }
+      :host > div.io-object-prop {
+        display: flex !important;
+        flex-direction: row;
+      }
+      :host > div > span {
+        padding: 0 0.2em 0 0.5em;
+        flex: 0 0 auto;
+      }
+      :host > div > io-number {
+        color: rgb(28, 0, 207);
+      }
+      :host > div > io-string {
+        color: rgb(196, 26, 22);
+      }
+      :host > div > io-boolean {
+        color: rgb(170, 13, 145);
+      }
+      :host > div > io-option {
+        color: rgb(32,135,0);
+      }
+    </style>`;
   }
   static get properties() {
     return {
@@ -1337,7 +1389,17 @@ const range$1 = document.createRange();
 
 class IoString extends IoElement {
   static get style() {
-    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
+    return html`<style>
+      :host {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      :host:focus {
+        overflow: hidden;
+        text-overflow: clip;
+      }
+    </style>`;
   }
   static get properties() {
     return {
