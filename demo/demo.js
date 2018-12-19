@@ -123,6 +123,7 @@ export class IoDemo extends IoElement {
         ['io-object', {value: this.object, expanded: true, labeled: true}],
         ['io-object', {value: this.object, props: ['number'], config: {'number': ['io-number', {step: 0.0001}]}, expanded: true, labeled: true}],
       ]],
+      // TODO: array
       // TODO: object-group
     ]);
   }

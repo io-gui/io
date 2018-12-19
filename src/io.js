@@ -6,6 +6,7 @@ export {IoInteractiveMixin, IoInteractive} from "./classes/interactive.js"; // T
 export {IoNode} from "./classes/node.js";
 
 // elements
+export {IoArray} from "./elements/array.js";
 export {IoButton} from "./elements/button.js";
 export {IoBoolean} from "./elements/boolean.js";
 export {IoNumber} from "./elements/number.js";

@@ -978,192 +978,6 @@ IoNode.Register = function() {
 
 IoNode.Register();
 
-class IoButton extends IoElement {
-  static get style() {
-    return html`<style>
-      :host {
-        cursor: pointer;
-        white-space: nowrap;
-        -webkit-tap-highlight-color: transparent;
-      }
-      :host:hover {
-        background: rgba(0,0,0,0.2);
-      }
-      :host[pressed] {
-        background: rgba(255,255,255,0.5);
-      }
-    </style>`;
-  }
-  static get properties() {
-    return {
-      value: undefined,
-      label: 'Button',
-      pressed: {
-        type: Boolean,
-        reflect: true
-      },
-      action: Function,
-      tabindex: 0
-    };
-  }
-  static get listeners() {
-    return {
-      'keydown': '_onDown',
-      'mousedown': '_onDown',
-      'touchstart': '_onDown'
-    };
-  }
-  _onDown(event) {
-    event.stopPropagation();
-    if (event.which === 13 || event.which === 32 || event.type !== 'keydown') {
-      event.preventDefault();
-      this.pressed = true;
-      document.addEventListener('mouseup', this._onUp);
-      document.addEventListener('touchend', this._onUp);
-      this.addEventListener('keyup', this._onAction);
-      this.addEventListener('mouseup', this._onAction);
-      this.addEventListener('touchend', this._onAction);
-      this.addEventListener('mouseleave', this._onLeave);
-    }
-  }
-  _onUp(event) {
-    event.stopPropagation();
-    this.pressed = false;
-    document.removeEventListener('mouseup', this._onUp);
-    document.removeEventListener('touchend', this._onUp);
-    this.removeEventListener('keyup', this._onAction);
-    this.removeEventListener('mouseup', this._onAction);
-    this.removeEventListener('touchend', this._onAction);
-    this.removeEventListener('mouseleave', this._onLeave);
-  }
-  _onAction(event) {
-    event.stopPropagation();
-    if (event.which === 13 || event.which === 32 || event.type !== 'keyup') {
-      event.preventDefault();
-      if (this.pressed && this.action) this.action(this.value);
-      this.pressed = false;
-      this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
-    }
-    this._onUp(event);
-  }
-  _onLeave() {
-    this.pressed = false;
-  }
-  changed() {
-    this.innerText = this.label;
-  }
-}
-
-IoButton.Register();
-
-class IoBoolean extends IoButton {
-  static get properties() {
-    return {
-      value: {
-        type: Boolean,
-        reflect: true
-      },
-      true: 'true',
-      false: 'false'
-    };
-  }
-  constructor(props) {
-    super(props);
-    this.action = this.toggle;
-  }
-  toggle() {
-    this.set('value', !this.value);
-  }
-  changed() {
-    this.innerText = this.value ? this.true : this.false;
-  }
-}
-
-IoBoolean.Register();
-
-const selection = window.getSelection();
-const range = document.createRange();
-
-class IoNumber extends IoElement {
-  static get style() {
-    return html`<style>
-      :host {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      :host:focus {
-        overflow: hidden;
-        text-overflow: clip;
-      }
-    </style>`;
-  }
-  static get properties() {
-    return {
-      value: Number,
-      conversion: 1,
-      step: 0.001,
-      min: -Infinity,
-      max: Infinity,
-      strict: true,
-      tabindex: 0,
-      contenteditable: true
-    };
-  }
-  static get listeners() {
-    return {
-      'focus': '_onFocus'
-    };
-  }
-  constructor(props) {
-    super(props);
-    this.setAttribute('spellcheck', 'false');
-  }
-  _onFocus() {
-    this.addEventListener('blur', this._onBlur);
-    this.addEventListener('keydown', this._onKeydown);
-    this._select();
-  }
-  _onBlur() {
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
-    this.setFromText(this.innerText);
-    this.scrollTop = 0;
-    this.scrollLeft = 0;
-  }
-  _onKeydown(event) {
-    if (event.which == 13) {
-      event.preventDefault();
-      this.setFromText(this.innerText);
-    }
-  }
-  _select() {
-    range.selectNodeContents(this);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
-  setFromText(text) {
-    // TODO: test conversion
-    let value = Math.round(Number(text) / this.step) * this.step / this.conversion;
-    if (this.strict) {
-      value = Math.min(this.max, Math.max(this.min, value));
-    }
-    if (!isNaN(value)) this.set('value', value);
-  }
-  changed() {
-    let value = this.value;
-    if (typeof value == 'number' && !isNaN(value)) {
-      value *= this.conversion;
-      value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
-      this.innerText = String(value);
-    } else {
-      this.innerText = 'NaN';
-    }
-  }
-}
-
-IoNumber.Register();
-
 class IoObjectGroup extends IoElement {
   static get style() {
     return html`<style>
@@ -1384,6 +1198,380 @@ IoObject.Register = function() {
 
 IoObject.Register();
 
+//TODO: test
+
+class IoArray extends IoObject {
+  static get style() {
+    return html`<style>
+      :host {
+        display: grid;
+      }
+      :host > io-number {
+        /* margin: 1px;
+        padding: 0.1em 0.2em; */
+      }
+      :host[columns="2"] {
+        grid-template-columns: 50% 50%;
+      }
+      :host[columns="3"] {
+        grid-template-columns: 33.3% 33.3% 33.3%;
+      }
+      :host[columns="4"] {
+        grid-template-columns: 25% 25% 25% 25%;
+      }
+      :host[columns="5"] {
+        grid-template-columns: 20% 20% 20% 20% 20%;
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      columns: {
+        value: 0
+      }
+      // TODO: labeled?
+    };
+  }
+  changed() {
+    const elements = [];
+    this.setAttribute('columns', this.columns || Math.sqrt(this.value.length) || 1);
+    for (let i = 0; i < this.value.length; i++) {
+      elements.push(['io-number', {id: i, value: this.value[i], 'on-value-set': this._onValueSet}]);
+    }
+    this.template(elements);
+  }
+}
+
+IoArray.Register();
+
+class IoButton extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        cursor: pointer;
+        white-space: nowrap;
+        -webkit-tap-highlight-color: transparent;
+      }
+      :host:hover {
+        background: rgba(0,0,0,0.2);
+      }
+      :host[pressed] {
+        background: rgba(255,255,255,0.5);
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      value: undefined,
+      label: 'Button',
+      pressed: {
+        type: Boolean,
+        reflect: true
+      },
+      action: Function,
+      tabindex: 0
+    };
+  }
+  static get listeners() {
+    return {
+      'keydown': '_onDown',
+      'mousedown': '_onDown',
+      'touchstart': '_onDown'
+    };
+  }
+  _onDown(event) {
+    event.stopPropagation();
+    if (event.which === 13 || event.which === 32 || event.type !== 'keydown') {
+      event.preventDefault();
+      this.pressed = true;
+      document.addEventListener('mouseup', this._onUp);
+      document.addEventListener('touchend', this._onUp);
+      this.addEventListener('keyup', this._onAction);
+      this.addEventListener('mouseup', this._onAction);
+      this.addEventListener('touchend', this._onAction);
+      this.addEventListener('mouseleave', this._onLeave);
+    }
+  }
+  _onUp(event) {
+    event.stopPropagation();
+    this.pressed = false;
+    document.removeEventListener('mouseup', this._onUp);
+    document.removeEventListener('touchend', this._onUp);
+    this.removeEventListener('keyup', this._onAction);
+    this.removeEventListener('mouseup', this._onAction);
+    this.removeEventListener('touchend', this._onAction);
+    this.removeEventListener('mouseleave', this._onLeave);
+  }
+  _onAction(event) {
+    event.stopPropagation();
+    if (event.which === 13 || event.which === 32 || event.type !== 'keyup') {
+      event.preventDefault();
+      if (this.pressed && this.action) this.action(this.value);
+      this.pressed = false;
+      this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
+    }
+    this._onUp(event);
+  }
+  _onLeave() {
+    this.pressed = false;
+  }
+  changed() {
+    this.innerText = this.label;
+  }
+}
+
+IoButton.Register();
+
+class IoBoolean extends IoButton {
+  static get properties() {
+    return {
+      value: {
+        type: Boolean,
+        reflect: true
+      },
+      true: 'true',
+      false: 'false'
+    };
+  }
+  constructor(props) {
+    super(props);
+    this.action = this.toggle;
+  }
+  toggle() {
+    this.set('value', !this.value);
+  }
+  changed() {
+    this.innerText = this.value ? this.true : this.false;
+  }
+}
+
+IoBoolean.Register();
+
+const selection = window.getSelection();
+const range = document.createRange();
+
+class IoNumber extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      :host:focus {
+        overflow: hidden;
+        text-overflow: clip;
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      value: Number,
+      conversion: 1,
+      step: 0.001,
+      min: -Infinity,
+      max: Infinity,
+      strict: true,
+      tabindex: 0,
+      contenteditable: true
+    };
+  }
+  static get listeners() {
+    return {
+      'focus': '_onFocus'
+    };
+  }
+  constructor(props) {
+    super(props);
+    this.setAttribute('spellcheck', 'false');
+  }
+  _onFocus() {
+    this.addEventListener('blur', this._onBlur);
+    this.addEventListener('keydown', this._onKeydown);
+    this._select();
+  }
+  _onBlur() {
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+    this.setFromText(this.innerText);
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
+  }
+  _onKeydown(event) {
+    if (event.which == 13) {
+      event.preventDefault();
+      this.setFromText(this.innerText);
+    }
+  }
+  _select() {
+    range.selectNodeContents(this);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+  setFromText(text) {
+    // TODO: test conversion
+    let value = Math.round(Number(text) / this.step) * this.step / this.conversion;
+    if (this.strict) {
+      value = Math.min(this.max, Math.max(this.min, value));
+    }
+    if (!isNaN(value)) this.set('value', value);
+  }
+  changed() {
+    let value = this.value;
+    if (typeof value == 'number' && !isNaN(value)) {
+      value *= this.conversion;
+      value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
+      this.innerText = String(value);
+    } else {
+      this.innerText = 'NaN';
+    }
+  }
+}
+
+IoNumber.Register();
+
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+class IoSlider$$1 extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        display: flex;
+      }
+      :host > io-number {
+        flex: 0 0 auto;
+        /* margin: 1px; */
+        /* padding: 0.1em 0.2em; */
+      }
+      :host > io-slider-knob {
+        /* margin: 1px; */
+        flex: 1 1 auto;
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      value: 0,
+      step: 0.001,
+      min: 0,
+      max: 1,
+      strict: true,
+    };
+  }
+  changed() {
+    const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
+    this.template([
+      ['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number'}],
+      ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider'}]
+    ]);
+    this.$.number.style.setProperty('min-width', charLength + 'em');
+  }
+}
+
+IoSlider$$1.Register();
+
+class IoSliderKnob extends IoInteractiveMixin(IoElement) {
+  static get style() {
+    return html`<style>
+      :host {
+        display: flex;
+        cursor: ew-resize;
+        overflow: hidden;
+      }
+      :host img {
+        width: 100% !important;
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      value: 0,
+      step: 0.01,
+      min: 0,
+      max: 1000,
+      strics: true, // TODO: implement
+      pointermode: 'absolute',
+      cursor: 'ew-resize'
+    };
+  }
+  static get listeners() {
+    return {
+      'io-pointer-move': '_onPointerMove'
+    };
+  }
+  _onPointerMove(event) {
+    event.detail.event.preventDefault();
+    let rect = this.getBoundingClientRect();
+    let x = (event.detail.pointer[0].position.x - rect.x) / rect.width;
+    let pos = Math.max(0,Math.min(1, x));
+    let value = this.min + (this.max - this.min) * pos;
+    value = Math.round(value / this.step) * this.step;
+    value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
+    this.set('value', value);
+  }
+  changed() {
+    this.template([['img', {id: 'img'}],]);
+    this.$.img.src = this.paint(this.$.img.getBoundingClientRect());
+  }
+
+  paint(rect) {
+    // TODO: implement in webgl shader
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    const bgColor = '#888';
+    const colorStart = '#2cf';
+    const colorEnd = '#2f6';
+    const min = this.min;
+    const max = this.max;
+    const step = this.step;
+    const value = this.value;
+
+    if (isNaN(value)) return;
+
+    const w = rect.width, h = rect.height;
+    const handleWidth = 4;
+
+    let snap = Math.floor(min / step) * step;
+    let pos;
+
+    if (((max - min) / step) < w / 3 ) {
+      while (snap < (max - step)) {
+        snap += step;
+        pos = Math.floor(w * (snap - min) / (max - min));
+        ctx.lineWidth = .5;
+        ctx.strokeStyle = bgColor;
+        ctx.beginPath();
+        ctx.moveTo(pos, 0);
+        ctx.lineTo(pos, h);
+        ctx.stroke();
+      }
+    }
+
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, h / 2 - 2, w, 4);
+
+    pos = handleWidth / 2 + (w - handleWidth) * (value - min) / (max - min);
+    const gradient = ctx.createLinearGradient(0, 0, pos, 0);
+    gradient.addColorStop(0, colorStart);
+    gradient.addColorStop(1, colorEnd);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, h / 2 - 2, pos, 4);
+
+    ctx.lineWidth = handleWidth;
+    ctx.strokeStyle = colorEnd;
+    ctx.beginPath();
+    ctx.moveTo(pos, 0);
+    ctx.lineTo(pos, h);
+    ctx.stroke();
+
+    return canvas.toDataURL();
+  }
+}
+
+IoSliderKnob.Register();
+
 const selection$1 = window.getSelection();
 const range$1 = document.createRange();
 
@@ -1445,4 +1633,4 @@ IoString.Register();
 
 // core classes
 
-export { IoCoreMixin, IoElement, html, IoLite, IoLiteMixin, IoInteractiveMixin, IoInteractive, IoNode, IoButton, IoBoolean, IoNumber, IoObject, IoObjectGroup, IoString };
+export { IoCoreMixin, IoElement, html, IoLite, IoLiteMixin, IoInteractiveMixin, IoInteractive, IoNode, IoArray, IoButton, IoBoolean, IoNumber, IoObject, IoObjectGroup, IoSlider$$1 as IoSlider, IoString };
