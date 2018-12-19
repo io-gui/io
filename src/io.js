@@ -11,4 +11,5 @@ export {IoBoolean} from "./elements/boolean.js";
 export {IoNumber} from "./elements/number.js";
 export {IoObject} from "./elements/object.js";
 export {IoObjectGroup} from "./elements/object-group.js";
+export {IoSlider} from "./elements/slider.js";
 export {IoString} from "./elements/string.js";

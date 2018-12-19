@@ -19,8 +19,54 @@
         font-weight: bold;
       }
     </style>
-    <link href="./lib/mocha.css" rel="stylesheet" />
-    <script type="module" src="./test.js"></script>
+    <link href="../lib/mocha.css" rel="stylesheet" />
+    <script type="module">
+    import {html, IoElement, IoNode} from "../src/io.js";
+
+    import ElementTest from "./element.js"
+    import NodeTest from "./node.js"
+    import LiteTest from "./lite.js"
+    import BooleanTest from "./boolean.js"
+    import ButtonTest from "./button.js"
+    import NumberTest from "./number.js"
+    import ObjectTest from "./object.js"
+    import SliderTest from "./slider.js"
+    import StingTest from "./string.js"
+
+    import "../lib/mocha.js";
+
+    mocha.setup('bdd');
+
+    export class IoTest extends IoElement {
+      constructor() {
+        super();
+        this.elementTest = new ElementTest();
+        this.nodeTest = new NodeTest();
+        this.liteTest = new LiteTest();
+        this.booleanTest = new BooleanTest();
+        this.buttonTest = new ButtonTest();
+        this.numberTest = new NumberTest();
+        this.objectTest = new ObjectTest();
+        this.sliderTest = new SliderTest();
+        this.stringTest = new StingTest();
+      }
+      connectedCallback() {
+        this.elementTest.run();
+        this.nodeTest.run();
+        this.liteTest.run();
+        this.booleanTest.run();
+        this.buttonTest.run();
+        this.numberTest.run();
+        this.objectTest.run();
+        this.sliderTest.run();
+        this.stringTest.run();
+        mocha.checkLeaks();
+        mocha.run();
+      }
+    }
+
+    IoTest.Register();
+    </script>
   </head>
   <body>
     <io-test></io-test>

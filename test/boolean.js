@@ -1,4 +1,4 @@
-import {IoBoolean} from "../../src/io.js";
+import {IoBoolean} from "../src/io.js";
 
 import "../lib/chai.js";
 

@@ -1,4 +1,4 @@
-import {IoString} from "../../src/io.js";
+import {IoString} from "../src/io.js";
 
 import "../lib/chai.js";
 

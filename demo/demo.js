@@ -105,6 +105,10 @@ export class IoDemo extends IoElement {
           ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
         ]]
       ]],
+      ['div', {className: 'demo slider'}, [
+        ['div', {className: 'demoLabel'}, 'io-slider'],
+        ['io-slider'],
+      ]],
       ['div', {className: 'demo button'}, [
         ['div', {className: 'demoLabel'}, 'io-button'],
         ['io-button'],
@@ -118,7 +122,8 @@ export class IoDemo extends IoElement {
         ['io-object', {value: [0,1,2,3], expanded: true, labeled: true}],
         ['io-object', {value: this.object, expanded: true, labeled: true}],
         ['io-object', {value: this.object, props: ['number'], config: {'number': ['io-number', {step: 0.0001}]}, expanded: true, labeled: true}],
-      ]]
+      ]],
+      // TODO: object-group
     ]);
   }
 }

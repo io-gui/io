@@ -1,5 +1,5 @@
-import {IoElement} from "../../src/io.js";
-import {IoNode} from "../../src/io.js";
+import {IoElement} from "../src/io.js";
+import {IoNode} from "../src/io.js";
 
 import "../lib/chai.js";
 
