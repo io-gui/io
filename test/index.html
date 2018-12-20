@@ -30,6 +30,7 @@
     import ButtonTest from "./button.js"
     import NumberTest from "./number.js"
     import ObjectTest from "./object.js"
+    import InspectorTest from "./inspector.js"
     import SliderTest from "./slider.js"
     import StingTest from "./string.js"
 
@@ -47,6 +48,7 @@
         this.buttonTest = new ButtonTest();
         this.numberTest = new NumberTest();
         this.objectTest = new ObjectTest();
+        this.inspectorTest = new InspectorTest();
         this.sliderTest = new SliderTest();
         this.stringTest = new StingTest();
       }
@@ -58,6 +60,7 @@
         this.buttonTest.run();
         this.numberTest.run();
         this.objectTest.run();
+        this.inspectorTest.run();
         this.sliderTest.run();
         this.stringTest.run();
         mocha.checkLeaks();

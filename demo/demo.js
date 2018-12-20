@@ -26,10 +26,21 @@ export class IoDemo extends IoElement {
       :host .padded {
         padding: 1em;
       }
+      :host .sidebar {
+        display: inline-block;
+      }
       :host io-string,
       :host io-boolean,
       :host io-button,
       :host io-number {
+        background-color: #ddd;
+        margin: 1px;
+      }
+
+      :host io-menu-group {
+        background: #fff;
+      }
+      :host io-menu-option {
         background-color: #ddd;
         margin: 1px;
       }
@@ -56,9 +67,50 @@ export class IoDemo extends IoElement {
       boolean: this.boolean,
       null: this.null,
       NaN: this.NaN,
-      undefined: this.undefined,
-      serfRef: this,
+      undefined: this.undefined
     }
+
+    let suboptions2 = [
+      {label: 'log one', value: 1, action: console.log},
+      {label: 'log two', value: 2, action: console.log},
+      {label: 'log three', value: 3, action: console.log},
+      {label: 'log four', value: 4, action: console.log},
+      {label: 'log five', value: 5, action: console.log}
+    ];
+    let suboptions1 = [
+      {label: 'one more', options: suboptions2},
+      {label: 'two more', options: suboptions2},
+      {label: 'three more', options: suboptions2},
+      {label: 'four more', options: suboptions2},
+      {label: 'five more', options: suboptions2}
+    ];
+    let suboptions0 = [
+      {label: 'one', options: suboptions1},
+      {label: 'two', options: suboptions1},
+      {label: 'three', options: suboptions1},
+      {label: 'four', options: suboptions1},
+      {label: 'five', options: suboptions1}
+    ];
+    let longOptions = [];
+    for (let i = 0; i < 100; i++) {
+      let r = Math.random();
+      longOptions[i] = {label: String(r), value: r, action: console.log, icon: 'ξ', hint: 'log'};
+    }
+    this.menuoptions = [
+      {label: 'file', options: suboptions0},
+      {label: 'view', options: suboptions0},
+      {label: 'long menu', options: longOptions, hint: 'list', icon: '⚠'}
+    ];
+    this.options = [
+      {label: 'negative one', value: -1},
+      {label: 'zero', value: 0},
+      {label: 'one', value: 1},
+      {label: 'two', value: 2},
+      {label: 'three', value: 3},
+      {label: 'four', value: 4},
+      {label: 'leet', value: 1337},
+    ];
+
     this.template([
       ['div', {className: 'demo'}, [
         ['div', {className: 'demoLabel'}, 'io-string / io-number / io-boolean'],
@@ -123,8 +175,30 @@ export class IoDemo extends IoElement {
         ['io-object', {value: this.object, expanded: true, labeled: true}],
         ['io-object', {value: this.object, props: ['number'], config: {'number': ['io-number', {step: 0.0001}]}, expanded: true, labeled: true}],
       ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-inspector'],
+        ['io-inspector', {value: this.object, groups: {'number': ['number']}, expanded: ['properties']}],
+      ]],
       // TODO: array
       // TODO: object-group
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-menu'],
+        ['div', {className: 'label padded'}, 'right-click (contextmenu)'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer', listener: 'contextmenu'}]
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-menu-group'],
+        ['io-menu-group', {className: 'sidebar', options: this.menuoptions}],
+        ['div', {className: 'label'}, 'horizontal'],
+        ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
+      ]],
+      ['div', {className: 'demo'}, [
+        ['div', {className: 'demoLabel'}, 'io-menu-option'],
+        ['div', {className: 'label'}, 'menu'],
+        ['io-menu-option', {options: this.options, value: this.bind('number')}],
+        ['div', {className: 'label'}, 'value'],
+        ['io-number', {value: this.bind('number')}],
+      ]],
     ]);
   }
 }
