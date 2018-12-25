@@ -1,3 +1,5 @@
+import { html, IoElement, IoInteractiveMixin } from './io.js';
+
 // Get a list of io prototypes by walking down the prototype chain.
 class Prototypes extends Array {
   constructor(_constructor) {
@@ -513,31 +515,7 @@ IoCore.Register = function () {
   defineProperties(this.prototype);
 };
 
-class IoNode extends IoCore(Object) {
-  connect() {
-    this.connectedCallback();
-  }
-  disconnect() {
-    this.disconnectedCallback();
-  }
-  dispose() {
-    // TODO implement properly and test
-    delete this.parent;
-    this.children.lenght = 0;
-    for (let l in this.__listeners) this.__listeners[l].lenght = 0;
-    for (let p in this.__props) delete this.__props[p];
-  }
-}
-
-IoNode.Register = function() {
-
-  IoCore.Register.call(this);
-
-};
-
-IoNode.Register();
-
-class IoElement extends IoCore(HTMLElement) {
+class IoElement$1 extends IoCore(HTMLElement) {
   static get properties() {
     return {
       tabindex: {
@@ -652,7 +630,7 @@ class IoElement extends IoCore(HTMLElement) {
   }
 }
 
-IoElement.Register = function() {
+IoElement$1.Register = function() {
 
   IoCore.Register.call(this);
 
@@ -670,9 +648,9 @@ IoElement.Register = function() {
 
 };
 
-IoElement.Register();
+IoElement$1.Register();
 
-function html() {return arguments[0][0];}
+function html$1() {return arguments[0][0];}
 
 const constructElement = function(vDOMNode) {
  let ConstructorClass = customElements.get(vDOMNode.name);
@@ -719,270 +697,9 @@ function initStyle(prototypes) {
   }
 }
 
-const _clickmask = document.createElement('div');
-_clickmask.style = "position: fixed; top:0; left:0; bottom:0; right:0; z-index:2147483647;";
-
-let _mousedownPath = null;
-
-class Vector2 {
-  constructor(vector = {}) {
-    this.x = vector.x || 0;
-    this.y = vector.y || 0;
-  }
-  set(vector) {
-    this.x = vector.x;
-    this.y = vector.y;
-    return this;
-  }
-  sub(vector) {
-    this.x -= vector.x;
-    this.y -= vector.y;
-    return this;
-  }
-  length() {
-    return Math.sqrt(this.x * this.x + this.y * this.y);
-  }
-  distanceTo(vector) {
-    let dx = this.x - vector.x, dy = this.y - vector.y;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-}
-
-class Pointer {
-  constructor(pointer = {}) {
-    this.position = new Vector2(pointer.position);
-    this.previous = new Vector2(pointer.previous);
-    this.movement = new Vector2(pointer.movement);
-    this.distance = new Vector2(pointer.distance);
-    this.start = new Vector2(pointer.start);
-  }
-  getClosest(array) {
-    let closest = array[0];
-    for (let i = 1; i < array.length; i++) {
-      if (this.position.distanceTo(array[i].position) < this.position.distanceTo(closest.position)) {
-        closest = array[i];
-      }
-    }
-    return closest;
-  }
-  changed(pointer) {
-    this.previous.set(this.position);
-    this.movement.set(pointer.position).sub(this.position);
-    this.distance.set(pointer.position).sub(this.start);
-    this.position.set(pointer.position);
-  }
-}
-
-const IoInteractiveMixin = (superclass) => class extends superclass {
-  static get properties() {
-    return {
-      pointers: Array, // TODO: remove from properties
-      pointermode: 'relative',
-      cursor: 'all-scroll'
-    };
-  }
-  static get listeners() {
-    return {
-      'mousedown': '_onMousedown',
-      'touchstart': '_onTouchstart',
-      'mousemove': '_onMousehover'
-    };
-  }
-  constructor(params) {
-    super(params);
-    this._clickmask = _clickmask;
-  }
-  getPointers(event, reset) {
-    let touches = event.touches ? event.touches : [event];
-    let foundPointers = [];
-    let rect = this.getBoundingClientRect();
-    for (let i = 0; i < touches.length; i++) {
-      if (touches[i].target === event.target || event.touches === undefined) {
-        let position = new Vector2({
-          x: touches[i].clientX,
-          y: touches[i].clientY
-        });
-        if (this.pointermode === 'relative') {
-          position.x -= rect.left;
-          position.y -= rect.top;
-        } else if (this.pointermode === 'viewport') {
-          position.x = (position.x - rect.left) / rect.width * 2.0 - 1.0;
-          position.y = (position.y - rect.top) / rect.height * 2.0 - 1.0;
-        }
-        if (this.pointers[i] === undefined) this.pointers[i] = new Pointer({start: position});
-        let newPointer = new Pointer({position: position});
-        let pointer = newPointer.getClosest(this.pointers);
-        if (reset) pointer.start.set(position);
-        pointer.changed(newPointer);
-        foundPointers.push(pointer);
-      }
-    }
-    for (let i = this.pointers.length; i--;) {
-      if(foundPointers.indexOf(this.pointers[i]) === -1) {
-        this.pointers.splice(i, 1);
-      }
-    }
-  }
-  _onMousedown(event) {
-    // TODO: unhack
-    _mousedownPath = event.composedPath();
-    this.getPointers(event, true);
-    this._fire('io-pointer-start', event, this.pointers);
-    window.addEventListener('mousemove', this._onMousemove);
-    window.addEventListener('mouseup', this._onMouseup);
-    window.addEventListener('blur', this._onMouseup); //TODO: check pointer data
-    // TODO: clickmask breaks scrolling
-    if (_clickmask.parentNode !== document.body) {
-      document.body.appendChild(_clickmask);
-      _clickmask.style.setProperty('cursor', this.cursor);
-    }
-  }
-  _onMousemove(event) {
-    this.getPointers(event);
-    this._fire('io-pointer-move', event, this.pointers, _mousedownPath);
-  }
-  _onMouseup(event) {
-    this.getPointers(event);
-    this._fire('io-pointer-end', event, this.pointers, _mousedownPath);
-    window.removeEventListener('mousemove', this._onMousemove);
-    window.removeEventListener('mouseup', this._onMouseup);
-    window.removeEventListener('blur', this._onMouseup);
-    if (_clickmask.parentNode === document.body) {
-      document.body.removeChild(_clickmask);
-      _clickmask.style.setProperty('cursor', null);
-    }
-  }
-  _onMousehover(event) {
-    this.getPointers(event);
-    this._fire('io-pointer-hover', event, this.pointers);
-  }
-  _onTouchstart(event) {
-    this.getPointers(event, true);
-    this._fire('io-pointer-hover', event, this.pointers);
-    this._fire('io-pointer-start', event, this.pointers);
-    this.addEventListener('touchmove', this._onTouchmove);
-    this.addEventListener('touchend', this._onTouchend);
-  }
-  _onTouchmove(event) {
-    this.getPointers(event);
-    this._fire('io-pointer-move', event, this.pointers);
-  }
-  _onTouchend(event) {
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-    this._fire('io-pointer-end', event, this.pointers);
-
-  }
-  _fire(eventName, event, pointer, path) {
-    path = path || event.composedPath();
-    this.dispatchEvent(eventName, {event: event, pointer: pointer, path: path}, false);
-  }
-};
-class IoInteractive extends IoInteractiveMixin(IoElement) {}
-IoInteractive.Register();
-
-// core classes
-
-/**
- * @author arodic / https://github.com/arodic
- *
- * Minimal implementation of io mixin: https://github.com/arodic/io
- * Includes event listener/dispatcher and defineProperties() method.
- * Changed properties trigger "[prop]-changed" event, and execution of changed() and [prop]Changed() functions.
- */
-
-const IoLiteMixin = (superclass) => class extends superclass {
-	addEventListener(type, listener) {
-		this._listeners = this._listeners || {};
-		this._listeners[type] = this._listeners[type] || [];
-		if (this._listeners[type].indexOf(listener) === -1) {
-			this._listeners[type].push(listener);
-		}
-	}
-	hasEventListener(type, listener) {
-		if (this._listeners === undefined) return false;
-		return this._listeners[type] !== undefined && this._listeners[type].indexOf(listener) !== -1;
-	}
-	removeEventListener(type, listener) {
-		if (this._listeners === undefined) return;
-		if (this._listeners[type] !== undefined) {
-			let index = this._listeners[type].indexOf(listener);
-			if (index !== -1) this._listeners[type].splice(index, 1);
-		}
-	}
-	dispatchEvent(type, detail = {}) {
-		const event = {
-			path: [this],
-			target: this,
-			detail: detail,
-		};
-		if (this._listeners && this._listeners[type] !== undefined) {
-			const array = this._listeners[type].slice(0);
-			for (let i = 0, l = array.length; i < l; i ++) {
-				array[i].call(this, event);
-			}
-		}
-		// TODO: bubbling
-		// else if (this.parent && event.bubbles) {}
-	}
-	defineProperties(props) {
-		if (!this.hasOwnProperty('_properties')) {
-			Object.defineProperty(this, '_properties', {
-				value: {},
-				enumerable: false
-			});
-		}
-		for (let prop in props) {
-			let propDef = props[prop];
-			if (propDef === null || propDef === undefined) {
-				propDef = {value: propDef};
-			} else if (typeof propDef !== 'object') {
-				propDef = {value: propDef};
-			} else if (typeof propDef === 'object' && propDef.constructor.name !== 'Object') {
-				propDef = {value: propDef};
-			}else if (typeof propDef === 'object' && propDef.value === undefined) {
-				propDef = {value: propDef};
-			}
-			defineProperty(this, prop, propDef);
-		}
-	}
-	// TODO: dispose
-};
-
-const defineProperty = function(scope, prop, def) {
-	const observer = prop + 'Changed';
-	const changeEvent = prop + '-changed';
-	const isPublic = prop.charAt(0) !== '_';
-	const isEnumerable = !(def.enumerable === false);
-	scope._properties[prop] = def.value;
-	if (!scope.hasOwnProperty(prop)) { // TODO: test
-		Object.defineProperty(scope, prop, {
-			get: function() {
-				return scope._properties[prop];// !== undefined ? scope._properties[prop] : initValue;
-			},
-			set: function(value) {
-				if (scope._properties[prop] === value) return;
-				const oldValue = scope._properties[prop];
-				scope._properties[prop] = value;
-				if (isPublic) {
-					if (def.observer) scope[def.observer](value, oldValue);
-					if (typeof scope[observer] === 'function') scope[observer](value, oldValue);
-					if (typeof scope.changed === 'function') scope.changed.call(scope);
-					scope.dispatchEvent(changeEvent, {property: prop, value: value, oldValue: oldValue, bubbles: true});
-				}
-			},
-			enumerable: isEnumerable && isPublic,
-			configurable: true,
-		});
-	}
-	scope[prop] = def.value;
-};
-
-class IoLite extends IoLiteMixin(Object) {}
-
-class IoObjectGroup extends IoElement {
+class IoObjectGroup extends IoElement$1 {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-object-group {font-weight: bold;}:host > div.io-object-prop {display: flex !important;flex-direction: row;}:host > div > span {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(32,135,0);}</style>`;
+    return html$1`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-object-group {font-weight: bold;}:host > div.io-object-prop {display: flex !important;flex-direction: row;}:host > div > span {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(32,135,0);}</style>`;
   }
   static get properties() {
     return {
@@ -1053,7 +770,7 @@ IoObjectGroup.Register();
 
 const __configsMap = new WeakMap();
 
-class IoObject extends IoElement {
+class IoObject extends IoElement$1 {
   static get properties() {
     return {
       value: Object,
@@ -1164,7 +881,7 @@ class Config {
 }
 
 IoObject.Register = function() {
-  IoElement.Register.call(this);
+  IoElement$1.Register.call(this);
   Object.defineProperty(this.prototype, '__configs', {value: new Config(this.prototype.__prototypes)});
 };
 
@@ -1174,7 +891,7 @@ IoObject.Register();
 
 class IoArray extends IoObject {
   static get style() {
-    return html`<style>:host {display: grid;}:host > io-number {/* margin: 1px;padding: 0.1em 0.2em; */}:host[columns="2"] {grid-template-columns: 50% 50%;}:host[columns="3"] {grid-template-columns: 33.3% 33.3% 33.3%;}:host[columns="4"] {grid-template-columns: 25% 25% 25% 25%;}:host[columns="5"] {grid-template-columns: 20% 20% 20% 20% 20%;}</style>`;
+    return html$1`<style>:host {display: grid;}:host > io-number {/* margin: 1px;padding: 0.1em 0.2em; */}:host[columns="2"] {grid-template-columns: 50% 50%;}:host[columns="3"] {grid-template-columns: 33.3% 33.3% 33.3%;}:host[columns="4"] {grid-template-columns: 25% 25% 25% 25%;}:host[columns="5"] {grid-template-columns: 20% 20% 20% 20% 20%;}</style>`;
   }
   static get properties() {
     return {
@@ -1196,9 +913,9 @@ class IoArray extends IoObject {
 
 IoArray.Register();
 
-class IoButton extends IoElement {
+class IoButton extends IoElement$1 {
   static get style() {
-    return html`<style>:host {cursor: pointer;white-space: nowrap;-webkit-tap-highlight-color: transparent;}:host:hover {background: rgba(0,0,0,0.2);}:host[pressed] {background: rgba(255,255,255,0.5);}</style>`;
+    return html$1`<style>:host {cursor: pointer;white-space: nowrap;-webkit-tap-highlight-color: transparent;}:host:hover {background: rgba(0,0,0,0.2);}:host[pressed] {background: rgba(255,255,255,0.5);}</style>`;
   }
   static get properties() {
     return {
@@ -1290,9 +1007,9 @@ IoBoolean.Register();
 const selection = window.getSelection();
 const range = document.createRange();
 
-class IoNumber extends IoElement {
+class IoNumber extends IoElement$1 {
   static get style() {
-    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
+    return html$1`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
   }
   static get properties() {
     return {
@@ -1363,9 +1080,9 @@ IoNumber.Register();
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 
-class IoSlider$$1 extends IoElement {
+class IoSlider extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;}:host > io-number {flex: 0 0 auto;/* margin: 1px; *//* padding: 0.1em 0.2em; */}:host > io-slider-knob {/* margin: 1px; */flex: 1 1 auto;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number'}],['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider'}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider$$1.Register();class IoSliderKnob extends IoInteractiveMixin(IoElement) {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;overflow: hidden;}:host img {width: 100% !important;}</style>`;
+    return html`<style>:host {display: flex;}:host > io-number {flex: 0 0 auto;/* margin: 1px; *//* padding: 0.1em 0.2em; */}:host > io-slider-knob {/* margin: 1px; */flex: 1 1 auto;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number'}],['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider'}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoInteractiveMixin(IoElement) {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;overflow: hidden;}:host img {width: 100% !important;}</style>`;
   }
   static get properties() {
     return {
@@ -1458,9 +1175,9 @@ IoSliderKnob.Register();
 const selection$1 = window.getSelection();
 const range$1 = document.createRange();
 
-class IoString extends IoElement {
+class IoString extends IoElement$1 {
   static get style() {
-    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
+    return html$1`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}:host:focus {overflow: hidden;text-overflow: clip;}</style>`;
   }
   static get properties() {
     return {
@@ -1504,9 +1221,9 @@ class IoString extends IoElement {
 
 IoString.Register();
 
-class IoInspectorBreadcrumbs extends IoElement {
+class IoInspectorBreadcrumbs extends IoElement$1 {
   static get style() {
-    return html`<style>:host {display: flex;flex: 1 0;flex-direction: row;/* padding: 0.2em;background-color: rgba(0, 0, 0, 0.5); */}:host > io-inspector-link {overflow: hidden;text-overflow: ellipsis;}:host > io-inspector-link:first-of-type,:host > io-inspector-link:last-of-type {overflow: visible;text-overflow: clip;}:host > io-inspector-link:not(:first-of-type):before {content: '/';margin: 0 0.2em;}</style>`;
+    return html$1`<style>:host {display: flex;flex: 1 0;flex-direction: row;/* padding: 0.2em;background-color: rgba(0, 0, 0, 0.5); */}:host > io-inspector-link {overflow: hidden;text-overflow: ellipsis;}:host > io-inspector-link:first-of-type,:host > io-inspector-link:last-of-type {overflow: visible;text-overflow: clip;}:host > io-inspector-link:not(:first-of-type):before {content: '/';margin: 0 0.2em;}</style>`;
   }
   static get properties() {
     return {
@@ -1546,7 +1263,7 @@ const __groupsMap = new WeakMap();
 
 class IoInspector extends IoObject {
   static get style() {
-    return html`<style>:host {}:host > io-object-group > io-boolean {padding: 0.2em;font-size: 1.1em;border: 1px outset rgba(255, 255, 255, 1);background: rgba(0, 0, 0, 0.33);}:host > io-object-group > div {padding: 0.2em 0;border: 1px outset rgba(255, 255, 255, 0.5);background: rgba(128, 128, 128, 0.4);overflow: hidden;}:host > io-object-group > div > :nth-child(1) {text-align: right;overflow: hidden;text-overflow: ellipsis;flex: 0 1 9em;padding-left: 0.5em;min-width: 3em;}:host > io-object-group > div > :nth-child(2) {flex: 1 0;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 3em;}:host > io-object-group > div > io-inspector-link {flex: 0 0 auto !important;min-width: 0 !important;text-decoration: underline;color: #2233cc;}:host > io-object-group > div *:focus {outline: none;border-color: #acf;}:host > io-object-group > div io-boolean {}:host > io-object-group > div io-boolean:not([value]) {opacity: 0.5;}:host > io-object-group > div io-string {color: #cfa;}:host > io-object-group > div io-number {color: #ccf;}:host > io-object-group > div io-string,:host > io-object-group > div io-number,:host > io-object-group > div io-color-hex {font-size: 0.9em;background: rgba(0, 0, 0, 0.1);border: 1px solid rgba(0, 0, 0, 0.5);padding: 0 0.2em;margin: 0 0.1em;}:host > io-object-group > div io-boolean {flex: 0 1 auto !important;}:host > io-object-group > div io-menu-option::after {content: '▼';margin-left: 0.15em;opacity: 0.25;}:host > io-object-group > div io-menu-option {padding: 0 0.5em;font-size: 0.5em;border: 1px outset rgba(150, 150, 150, 0.5);border-radius: 0.5em;background: rgba(255, 255, 255, 0.4) !important;flex: 0 1 auto !important;}</style>`;
+    return html$1`<style>:host {}:host > io-object-group > io-boolean {padding: 0.2em;font-size: 1.1em;border: 1px outset rgba(255, 255, 255, 1);background: rgba(0, 0, 0, 0.33);}:host > io-object-group > div {padding: 0.2em 0;border: 1px outset rgba(255, 255, 255, 0.5);background: rgba(128, 128, 128, 0.4);overflow: hidden;}:host > io-object-group > div > :nth-child(1) {text-align: right;overflow: hidden;text-overflow: ellipsis;flex: 0 1 9em;padding-left: 0.5em;min-width: 3em;}:host > io-object-group > div > :nth-child(2) {flex: 1 0;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 3em;}:host > io-object-group > div > io-inspector-link {flex: 0 0 auto !important;min-width: 0 !important;text-decoration: underline;color: #2233cc;}:host > io-object-group > div *:focus {outline: none;border-color: #acf;}:host > io-object-group > div io-boolean {}:host > io-object-group > div io-boolean:not([value]) {opacity: 0.5;}:host > io-object-group > div io-string {color: #cfa;}:host > io-object-group > div io-number {color: #ccf;}:host > io-object-group > div io-string,:host > io-object-group > div io-number,:host > io-object-group > div io-color-hex {font-size: 0.9em;background: rgba(0, 0, 0, 0.1);border: 1px solid rgba(0, 0, 0, 0.5);padding: 0 0.2em;margin: 0 0.1em;}:host > io-object-group > div io-boolean {flex: 0 1 auto !important;}:host > io-object-group > div io-menu-option::after {content: '▼';margin-left: 0.15em;opacity: 0.25;}:host > io-object-group > div io-menu-option {padding: 0 0.5em;font-size: 0.5em;border: 1px outset rgba(150, 150, 150, 0.5);border-radius: 0.5em;background: rgba(255, 255, 255, 0.4) !important;flex: 0 1 auto !important;}</style>`;
   }
   static get properties() {
     return {
@@ -1734,9 +1451,9 @@ let WAIT_TIME = 1200;
 // TODO: make long (scrolling) menus work with touch
 // TODO: implement search
 
-class IoMenuLayer extends IoElement {
+class IoMenuLayer extends IoElement$1 {
   static get style() {
-    return html`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;pointer-events: none;}:host[expanded] {visibility: visible;pointer-events: all;}:host io-menu-group:not([expanded]) {display: none;}:host io-menu-group {padding: 0.125em 0 0.25em 0;border: 1px solid #666;box-shadow: 1px 1px 2px rgba(0,0,0,0.33);position: absolute;transform: translateZ(0);top: 0;left: 0;min-width: 6em;}</style>`;
+    return html$1`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;pointer-events: none;}:host[expanded] {visibility: visible;pointer-events: all;}:host io-menu-group:not([expanded]) {display: none;}:host io-menu-group {padding: 0.125em 0 0.25em 0;border: 1px solid #666;box-shadow: 1px 1px 2px rgba(0,0,0,0.33);position: absolute;transform: translateZ(0);top: 0;left: 0;min-width: 6em;}</style>`;
   }
   static get properties() {
     return {
@@ -2023,7 +1740,7 @@ document.body.appendChild(IoMenuLayer.singleton);
 
 // TODO: implement working mousestart/touchstart UX
 // TODO: implement keyboard modifiers maybe. Touch alternative?
-class IoMenu extends IoElement {
+class IoMenu extends IoElement$1 {
   static get properties() {
     return {
       options: Array,
@@ -2071,9 +1788,9 @@ class IoMenu extends IoElement {
 
 IoMenu.Register();
 
-class IoMenuGroup extends IoElement {
+class IoMenuGroup extends IoElement$1 {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;white-space: nowrap;user-select: none;background: white;color: black;}:host[horizontal] {flex-direction: row;}:host[horizontal] > io-menu-item {padding: 0.25em 0.5em;}:host[horizontal] > io-menu-item > :not(.menu-label) {display: none;}</style>`;
+    return html$1`<style>:host {display: flex;flex-direction: column;white-space: nowrap;user-select: none;background: white;color: black;}:host[horizontal] {flex-direction: row;}:host[horizontal] > io-menu-item {padding: 0.25em 0.5em;}:host[horizontal] > io-menu-item > :not(.menu-label) {display: none;}</style>`;
   }
   static get properties() {
     return {
@@ -2126,9 +1843,9 @@ class IoMenuGroup extends IoElement {
 
 IoMenuGroup.Register();
 
-class IoMenuItem extends IoElement {
+class IoMenuItem extends IoElement$1 {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;cursor: pointer;padding: 0.125em 0.5em 0.125em 1.7em;line-height: 1em;}:host > * {pointer-events: none;}:host > .menu-icon {width: 1.25em;margin-left: -1.25em;line-height: 1em;}:host > .menu-label {flex: 1}:host > .menu-hint {opacity: 0.5;padding: 0 0.5em;}:host > .menu-more {opacity: 0.5;margin: 0 -0.25em 0 0.25em;}</style>`;
+    return html$1`<style>:host {display: flex;flex-direction: row;cursor: pointer;padding: 0.125em 0.5em 0.125em 1.7em;line-height: 1em;}:host > * {pointer-events: none;}:host > .menu-icon {width: 1.25em;margin-left: -1.25em;line-height: 1em;}:host > .menu-label {flex: 1}:host > .menu-hint {opacity: 0.5;padding: 0 0.5em;}:host > .menu-more {opacity: 0.5;margin: 0 -0.25em 0 0.25em;}</style>`;
   }
   static get properties() {
     return {
@@ -2250,4 +1967,4 @@ IoOption.Register();
 
 // elements
 
-export { IoCore, IoNode, IoElement, html, IoInteractive, IoInteractiveMixin, IoLite, IoLiteMixin, IoArray, IoButton, IoBoolean, IoNumber, IoObject, IoObjectGroup, IoSlider$$1 as IoSlider, IoString, IoInspector, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoOption };
+export { IoArray, IoButton, IoBoolean, IoNumber, IoObject, IoObjectGroup, IoSlider, IoString, IoInspector, IoMenu, IoMenuItem, IoMenuGroup, IoMenuLayer, IoOption };

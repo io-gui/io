@@ -95,4 +95,4 @@ const defineProperty = function(scope, prop, def) {
 
 class IoLite extends IoLiteMixin(Object) {}
 
-export { IoLiteMixin, IoLite };
+export { IoLite, IoLiteMixin };

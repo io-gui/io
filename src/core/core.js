@@ -1,11 +1,11 @@
-import {Prototypes} from "./prototypes.js";
-import {ProtoProperties, defineProperties} from "./protoProperties.js";
-import {ProtoListeners} from "./protoListeners.js";
-import {ProtoFunctions} from "./protoFunctions.js";
-import {Binding} from "./binding.js";
-import {PropListeners} from "./propListeners.js";
+import {Prototypes} from "./util/prototypes.js";
+import {ProtoProperties, defineProperties} from "./util/protoProperties.js";
+import {ProtoListeners} from "./util/protoListeners.js";
+import {ProtoFunctions} from "./util/protoFunctions.js";
+import {Binding} from "./util/binding.js";
+import {PropListeners} from "./util/propListeners.js";
 
-export const IoCoreMixin = (superclass) => class extends superclass {
+export const IoCore = (superclass) => class extends superclass {
   static get properties() {
     return {
       // TODO: is this necessary?
@@ -230,7 +230,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   }
 };
 
-IoCoreMixin.Register = function () {
+IoCore.Register = function () {
   Object.defineProperty(this.prototype, '__prototypes', {value: new Prototypes(this)});
   Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(this.prototype.__prototypes)});
   Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__prototypes)});

@@ -1,6 +1,6 @@
-import {IoCoreMixin} from "../core/coreMixin.js";
+import {IoCore} from "../core/core.js";
 
-export class IoNode extends IoCoreMixin(Object) {
+export class IoNode extends IoCore(Object) {
   connect() {
     this.connectedCallback();
   }
@@ -18,7 +18,7 @@ export class IoNode extends IoCoreMixin(Object) {
 
 IoNode.Register = function() {
 
-  IoCoreMixin.Register.call(this);
+  IoCore.Register.call(this);
 
 };
 

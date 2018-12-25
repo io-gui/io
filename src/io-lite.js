@@ -1,1 +1,1 @@
-export * from "./classes/lite.js";
+export {IoLite, IoLiteMixin} from "./lite/lite.js";

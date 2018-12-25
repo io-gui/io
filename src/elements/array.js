@@ -1,4 +1,4 @@
-import {html} from "../classes/element.js";
+import {html} from "../core/element.js";
 import {IoObject} from "./object.js";
 
 //TODO: test

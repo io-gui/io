@@ -1,4 +1,4 @@
-import {IoElement} from "../classes/element.js";
+import {IoElement} from "../core/element.js";
 import "./object-group.js";
 
 const __configsMap = new WeakMap();

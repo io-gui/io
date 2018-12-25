@@ -1,7 +1,7 @@
-import {IoCoreMixin} from "../core/coreMixin.js";
-import {PropListeners} from "../core/propListeners.js"; // TODO: refactor for native elements
+import {IoCore} from "../core/core.js";
+import {PropListeners} from "../core/util/propListeners.js"; // TODO: refactor for native elements
 
-export class IoElement extends IoCoreMixin(HTMLElement) {
+export class IoElement extends IoCore(HTMLElement) {
   static get properties() {
     return {
       tabindex: {
@@ -118,7 +118,7 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
 
 IoElement.Register = function() {
 
-  IoCoreMixin.Register.call(this);
+  IoCore.Register.call(this);
 
   Object.defineProperty(this, 'localName', {value: this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()});
   Object.defineProperty(this.prototype, 'localName', {value: this.localName});
