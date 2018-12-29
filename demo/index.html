@@ -17,15 +17,15 @@
     export class IoDemo extends IoElement {
       static get style() {
         return html`<style>
-          :host .demo {
-            margin: 1em;
-            padding: 0.5em;
-            background: #eee;
-          }
-          :host .demoLabel {
-            padding: 0.25em;
-            margin: -0.5em -0.5em 0.5em -0.5em;
+          :host io-collapsable {
+            border: 1px solid gray;
+            margin: 0.5em;
             background: #ccc;
+          }
+          :host io-collapsable > div {
+            margin: 0 0.25em 0.25em 0.25em;
+            padding: 0.25em;
+            background: #eee;
           }
           :host .row > *  {
             flex: 1;
@@ -47,8 +47,8 @@
           :host io-boolean,
           :host io-button,
           :host io-number {
-            background-color: #ddd;
-            margin: 1px;
+            /* background-color: #ddd; */
+            /* margin: 1px; */
           }
 
           :host io-menu-group {
@@ -126,8 +126,8 @@
         ];
 
         this.template([
-          ['div', {className: 'demo'}, [
-            ['div', {className: 'demoLabel'}, 'io-string / io-number / io-boolean'],
+          // TODO: toggle collapse breaks binding
+          ['io-collapsable', {label: 'io-string / io-number / io-boolean', elements: [
             ['div', {className: 'row label'}, [
               ['span'],
               ['span', 'io-string'],
@@ -170,48 +170,40 @@
               ['io-number', {value: this.bind('undefined')}],
               ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
             ]]
-          ]],
-          ['div', {className: 'demo slider'}, [
-            ['div', {className: 'demoLabel'}, 'io-slider'],
+          ]}],
+          ['io-collapsable', {label: 'io-slider', elements: [
             ['io-slider', {value: this.bind('number')}],
             ['io-slider', {value: this.bind('number'), step: 0.1}],
-            ['io-slider', {value: this.bind('number'), min: -1, max: 1, step: 0.1}],
-          ]],
-          ['div', {className: 'demo'}, [
-            ['div', {className: 'demoLabel'}, 'io-option'],
+            ['io-slider', {value: this.bind('number'), min: -1, max: 1, step: 0.1}]
+          ]}],
+          ['io-collapsable', {label: 'io-option', elements: [
             ['io-option', {options: this.options, value: this.bind('number')}],
-          ]],
-          ['div', {className: 'demo button'}, [
-            ['div', {className: 'demoLabel'}, 'io-button'],
-            ['io-button'],
+          ]}],
+          ['io-collapsable', {label: 'io-button', elements: [
             ['io-button', {label: 'set 0', action: this.setNumber, value: 0}],
             ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
             ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
             ['io-button', {label: 'set 3', action: this.setNumber, value: 3}],
-          ]],
-          ['div', {className: 'demo'}, [
-            ['div', {className: 'demoLabel'}, 'io-object'],
-            ['io-object', {value: [0,1,2,3], expanded: true, labeled: true}],
-            ['io-object', {value: this.object, expanded: true, labeled: true}],
-            ['io-object', {value: this.object, props: ['number'], config: {'number': ['io-number', {step: 0.0001}]}, expanded: true, labeled: true}],
-          ]],
-          ['div', {className: 'demo'}, [
-            ['div', {className: 'demoLabel'}, 'io-inspector'],
+          ]}],
+          ['io-collapsable', {label: 'io-object', elements: [
+            ['io-object', {value: [0,1,2,3], labeled: true}],
+            ['io-object', {value: this.object, labeled: true}],
+            ['io-object', {value: this.object, props: ['number'], config: {'number': ['io-number', {step: 0.0001}]}, labeled: true}],
+          ]}],
+          ['io-collapsable', {label: 'io-inspector', elements: [
             ['io-inspector', {value: this.object, groups: {'number': ['number']}, expanded: ['properties']}],
-          ]],
+          ]}],
           // TODO: array
           // TODO: object-group
-          ['div', {className: 'demo'}, [
-            ['div', {className: 'demoLabel'}, 'io-menu'],
+          ['io-collapsable', {label: 'io-menu', elements: [
             ['div', {className: 'label padded'}, 'right-click (contextmenu)'],
             ['io-menu', {options: this.menuoptions, position: 'pointer', listener: 'contextmenu'}]
-          ]],
-          ['div', {className: 'demo'}, [
-            ['div', {className: 'demoLabel'}, 'io-menu-group'],
+          ]}],
+          ['io-collapsable', {label: 'io-menu-group', elements: [
             ['io-menu-group', {className: 'sidebar', options: this.menuoptions}],
             ['div', {className: 'label'}, 'horizontal'],
             ['io-menu-group', {className: 'menubar', options: this.menuoptions, horizontal: true}],
-          ]],
+          ]}],
           ['a', {href: './todoapp/'}, 'Todo App Example'],
         ]);
       }

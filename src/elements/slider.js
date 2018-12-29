@@ -1,4 +1,5 @@
-import {html, IoElement, IoInteractiveMixin} from "../../../io/src/io.js";
+import {IoInteractiveMixin} from "../core/interactive.js";
+import {html, IoElement} from "../core/element.js";
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');

@@ -8,6 +8,8 @@ export {IoObjectGroup} from "./elements/object-group.js";
 export {IoSlider} from "./elements/slider.js";
 export {IoString} from "./elements/string.js";
 
+export {IoCollapsable} from "./elements/collapsable.js";
+
 export {IoInspector} from "./elements/inspector.js";
 
 export {IoMenu} from "./elements/menu.js";
