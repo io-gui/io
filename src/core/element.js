@@ -38,6 +38,7 @@ export class IoElement extends IoCore(HTMLElement) {
         if (nodes[i].dispose) nodes[i].dispose();
         // TODO: dispose propListeners from native elements
       }
+      // console.log('removing', child);
       host.removeChild(child);
     }
     // create new elements after existing
@@ -120,15 +121,17 @@ IoElement.Register = function() {
 
   IoCore.Register.call(this);
 
-  Object.defineProperty(this, 'localName', {value: this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()});
-  Object.defineProperty(this.prototype, 'localName', {value: this.localName});
+  const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
+  Object.defineProperty(this, 'localName', {value: localName});
+  Object.defineProperty(this.prototype, 'localName', {value: localName});
 
   Object.defineProperty(this.prototype, '__observedAttributes', {value: []});
   for (let i in this.prototype.__props) {
     if (this.prototype.__props[i].reflect) this.prototype.__observedAttributes.push(i);
   }
 
-  customElements.define(this.localName, this);
+  customElements.define(localName, this);
 
   initStyle(this.prototype.__prototypes);
 

@@ -46,7 +46,7 @@ export const IoCore = (superclass) => class extends superclass {
       if (this.__props[p].binding) {
         this.__props[p].binding.removeTarget(this, p);
         // TODO: this breaks binding for transplanted elements.
-        // delete this.__props[p].binding;
+        delete this.__props[p].binding;
         // TODO: possible memory leak!
       }
     }
