@@ -6,8 +6,14 @@ export class IoCollapsable extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+        border: 1px solid #999;
+        border-radius: 3px;
+        background: #ccc;
       }
       :host > io-boolean {
+        border: none;
+        border-radius: 0;
+        background: none;
       }
       :host > io-boolean::before {
         content: '▸';
@@ -17,6 +23,13 @@ export class IoCollapsable extends IoElement {
       }
       :host[expanded] > io-boolean::before{
         content: '▾';
+      }
+      :host > div {
+        border: 1px solid #999;
+        border-radius: 3px;
+        margin: 0 1px 1px 1px;
+        padding: 2px;
+        background: #eee;
       }
     </style>`;
   }
@@ -28,13 +41,17 @@ export class IoCollapsable extends IoElement {
         value: true,
         reflect: true
       },
-      elements: Array
+      elements: Array,
     };
+  }
+  processChildren(template) {
+    console.log(template);
+    return [['span', 'asd']];
   }
   changed() {
     this.template([
-        ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
-        this.expanded ? ['div', this.elements] : null
+      ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
+      this.expanded ? ['div', this.elements] : null
     ]);
   }
 }

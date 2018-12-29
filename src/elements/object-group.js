@@ -39,8 +39,6 @@ export class IoObjectGroup extends IoElement {
       value: Object,
       config: Object,
       props: Array,
-      expanded: Boolean,
-      label: String,
       _config: Object,
     };
   }
@@ -81,17 +79,14 @@ export class IoObjectGroup extends IoElement {
   }
   changed() {
     const config = this.config;
-    const label = this.label || this.value.constructor.name;
-    const elements = [['io-boolean', {true: '▾' + label, false: '▸' + label, value: this.bind('expanded')}]];
-    if (this.expanded) {
-      for (let c in config) {
-        if (!this.props.length || this.props.indexOf(c) !== -1) {
-          if (config[c]) {
-            const tag = config[c][0];
-            const protoConfig = config[c][1];
-            const itemConfig = {id: c, value: this.value[c], 'on-value-set': this._onValueSet};
-            elements.push(['div', {className: 'io-object-prop'}, [['span', config.label || c + ':'], [tag, Object.assign(itemConfig, protoConfig)]]]);
-          }
+    const elements = [];
+    for (let c in config) {
+      if (!this.props.length || this.props.indexOf(c) !== -1) {
+        if (config[c]) {
+          const tag = config[c][0];
+          const protoConfig = config[c][1];
+          const itemConfig = {id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+          elements.push(['div', {className: 'io-object-prop'}, [['span', config[c].label || c + ':'], [tag, Object.assign(itemConfig, protoConfig)]]]);
         }
       }
     }

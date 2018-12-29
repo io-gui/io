@@ -1,6 +1,14 @@
+import {html} from "../core/element.js";
 import {IoButton} from "./button.js";
 
 export class IoBoolean extends IoButton {
+  static get style() {
+    return html`<style>
+      :host {
+        background: white;
+      }
+    </style>`;
+  }
   static get properties() {
     return {
       value: {

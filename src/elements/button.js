@@ -4,12 +4,22 @@ export class IoButton extends IoElement {
   static get style() {
     return html`<style>
       :host {
+        display: inline-block;
         cursor: pointer;
         white-space: nowrap;
         -webkit-tap-highlight-color: transparent;
+        border: 1px solid #444;
+        border-radius: 2px;
+        padding: 0 0.25em;
+        background: #ccc;
+      }
+      :host:focus {
+        outline: none;
+        border-color: #09d;
+        background: #def;
       }
       :host:hover {
-        background: rgba(0,0,0,0.2);
+        background: #aaa;
       }
       :host[pressed] {
         background: rgba(255,255,255,0.5);

@@ -9,6 +9,7 @@ export class IoSlider extends IoElement {
     return html`<style>
       :host {
         display: flex;
+        flex-direction: row;
       }
       :host > io-number {
         flex: 0 0 auto;
@@ -18,6 +19,12 @@ export class IoSlider extends IoElement {
       :host > io-slider-knob {
         /* margin: 1px; */
         flex: 1 1 auto;
+        margin-left: 0.05em;
+
+        border: 1px solid #000;
+        border-radius: 2px;
+        padding: 0 1px;
+        background: #999;
       }
     </style>`;
   }
@@ -91,7 +98,7 @@ export class IoSliderKnob extends IoInteractiveMixin(IoElement) {
     canvas.width = rect.width;
     canvas.height = rect.height;
 
-    const bgColor = '#888';
+    const bgColor = '#444';
     const colorStart = '#2cf';
     const colorEnd = '#2f6';
     const min = this.min;
@@ -111,7 +118,7 @@ export class IoSliderKnob extends IoInteractiveMixin(IoElement) {
       while (snap < (max - step)) {
         snap += step;
         pos = Math.floor(w * (snap - min) / (max - min));
-        ctx.lineWidth = .5;
+        ctx.lineWidth = 1;
         ctx.strokeStyle = bgColor;
         ctx.beginPath();
         ctx.moveTo(pos, 0);

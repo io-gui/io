@@ -1,6 +1,16 @@
+import {html} from "../core/element.js";
 import {IoButton} from "./button.js";
 
 export class IoOption extends IoButton {
+  static get style() {
+    return html`<style>
+      :host::after {
+        width: 0.65em;
+        margin-left: 0.25em;
+        content: '▾';
+      }
+    </style>`;
+  }
   static get properties() {
     return {
       options: Array,

@@ -58,7 +58,9 @@ export const IoCore = (superclass) => class extends superclass {
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
-    if (oldValue !== value) this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, false);
+    if (oldValue !== value) {
+      this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, false);
+    }
   }
   setProperties(props) {
 

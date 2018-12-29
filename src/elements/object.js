@@ -1,9 +1,17 @@
-import {IoElement} from "../core/element.js";
+import {IoElement, html} from "../core/element.js";
 import "./object-group.js";
+import "./collapsable.js";
 
 const __configsMap = new WeakMap();
 
 export class IoObject extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        display: block;
+      }
+    </style>`;
+  }
   static get properties() {
     return {
       value: Object,
@@ -27,12 +35,17 @@ export class IoObject extends IoElement {
   }
   changed() {
     this.template([
-      ['io-object-group', {
-        value: this.value,
+      ['io-collapsable', {
         label: this.label || this.value.constructor.name,
         expanded: this.bind('expanded'),
-        props: this.props.length ? this.props : Object.keys(this._config),
-        config: this._config,
+        elements: [
+          ['io-object-group', {
+            value: this.value,
+            label: this.label || this.value.constructor.name,
+            props: this.props.length ? this.props : Object.keys(this._config),
+            config: this._config,
+          }]
+        ]
       }],
     ]);
   }
