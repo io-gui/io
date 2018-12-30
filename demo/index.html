@@ -14,7 +14,7 @@
     <script type="module">
     import {html, IoElement} from "../src/io.js";
     import {data} from "./data.js";
-    import {storage as $} from "./storage.js";
+    import {storage as $} from "../src/elements/storage.js";
 
     export class IoDemo extends IoElement {
       static get style() {
@@ -113,7 +113,7 @@
             ['io-object', {value: this.object, expanded: $('io-object2'), labeled: true}],
           ]}],
           ['io-collapsable', {label: 'io-inspector', expanded: $('io-inspector'), elements: [
-            ['io-inspector', {value: this.object, groups: {'number': ['number']}, expanded: ['properties']}],
+            ['io-inspector', {value: this.menuoptions, groups: {'number': ['number']}, expanded: ['properties']}],
           ]}],
           // TODO: array
           // TODO: object-group

@@ -93,9 +93,12 @@ export const IoCore = (superclass) => class extends superclass {
       }
 
       if (binding !== oldBinding) {
-        binding.setTarget(this, p);
-        // TODO: test extensively
-        if (oldBinding) console.warn('Disconnect!', binding, oldBinding);
+        if (binding) binding.setTarget(this, p);
+        if (oldBinding) {
+          oldBinding.removeTarget(this, p);
+          // TODO: test extensively
+          // console.warn('Disconnect!', oldBinding);
+        }
       }
 
     }

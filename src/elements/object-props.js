@@ -1,6 +1,6 @@
 import {html, IoElement} from "../core/element.js";
 
-export class IoObjectGroup extends IoElement {
+export class IoObjectProps extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -19,6 +19,14 @@ export class IoObjectGroup extends IoElement {
       :host > div > span {
         padding: 0 0.2em 0 0.5em;
         flex: 0 0 auto;
+      }
+      :host > div > io-number,
+      :host > div > io-string,
+      :host > div > io-boolean {
+        border: none;
+        background: none;
+        margin: 0;
+        padding: 0;
       }
       :host > div > io-number {
         color: rgb(28, 0, 207);
@@ -94,4 +102,4 @@ export class IoObjectGroup extends IoElement {
   }
 }
 
-IoObjectGroup.Register();
+IoObjectProps.Register();

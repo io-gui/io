@@ -7,12 +7,17 @@ export class IoInspectorBreadcrumbs extends IoElement {
         display: flex;
         flex: 1 0;
         flex-direction: row;
-        /* padding: 0.2em;
-        background-color: rgba(0, 0, 0, 0.5); */
+        padding: 0 0.25em;
+        background: #fff;
+        border: 1px solid #999;
+        border-radius: 2px;
       }
       :host > io-inspector-link {
+        border: none;
         overflow: hidden;
         text-overflow: ellipsis;
+        background: none;
+        padding: 0;
       }
       :host > io-inspector-link:first-of-type,
       :host > io-inspector-link:last-of-type {
@@ -21,7 +26,8 @@ export class IoInspectorBreadcrumbs extends IoElement {
       }
       :host > io-inspector-link:not(:first-of-type):before {
         content: '/';
-        margin: 0 0.2em;
+        margin: 0 0.1em;
+        opacity: 0.25;
       }
     </style>`;
   }

@@ -1,6 +1,6 @@
 import {html} from "../core/element.js";
 import {IoObject} from "./object.js";
-
+import {storage as $} from "./storage.js";
 
 import "./inspector-breadcrumbs.js";
 import "./inspector-link.js";
@@ -10,91 +10,60 @@ function isValueOfPropertyOf(prop, object) {
   return null;
 }
 
-const __groupsMap = new WeakMap();
-
 export class IoInspector extends IoObject {
   static get style() {
     return html`<style>
     :host {
+      padding: 2px;
+      background-color: #eee;
     }
-    :host > io-object-group > io-boolean {
-      padding: 0.2em;
-      font-size: 1.1em;
-      border: 1px outset rgba(255, 255, 255, 1);
-      background: rgba(0, 0, 0, 0.33);
+    :host > io-inspector-breadcrumbs {
+      margin-bottom: 2px;
     }
-    :host > io-object-group > div {
-      padding: 0.2em 0;
-      border: 1px outset rgba(255, 255, 255, 0.5);
-      background: rgba(128, 128, 128, 0.4);
-      overflow: hidden;
+    :host > io-object {
+      padding: 0 !important;
+      font-size: 0.9em;
+      background-color: #ccc !important;
     }
-    :host > io-object-group > div > :nth-child(1) {
-      text-align: right;
+    :host > io-object > io-boolean {
+      display: block;
+    }
+    :host > io-object > io-object-props {
+      padding: 0 !important;
+      margin: 2px;
+    }
+    :host > io-object > io-object-props > div {
+      padding: 2px 0;
+    }
+    :host > io-object > io-object-props > div:not(:last-of-type) {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    }
+    :host > io-object > io-object-props > div > :nth-child(1) {
       overflow: hidden;
       text-overflow: ellipsis;
-      flex: 0 1 9em;
+      text-align: right;
+      flex: 0 1 6em;
       padding-left: 0.5em;
       min-width: 3em;
     }
-    :host > io-object-group > div > :nth-child(2) {
+    :host > io-object > io-object-props > div > :nth-child(2) {
       flex: 1 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       min-width: 3em;
     }
-    :host > io-object-group > div > io-inspector-link {
+    :host > io-object > io-object-props > div > io-inspector-link {
       flex: 0 0 auto !important;
       min-width: 0 !important;
       text-decoration: underline;
       color: #2233cc;
     }
-    :host > io-object-group > div *:focus {
-      outline: none;
-      border-color: #acf;
-    }
-    :host > io-object-group > div io-boolean {
-    }
-    :host > io-object-group > div io-boolean:not([value]) {
-      opacity: 0.5;
-    }
-    :host > io-object-group > div io-string {
-      color: #cfa;
-    }
-    :host > io-object-group > div io-number {
-      color: #ccf;
-    }
-    :host > io-object-group > div io-string,
-    :host > io-object-group > div io-number,
-    :host > io-object-group > div io-color-hex {
-      font-size: 0.9em;
-      background: rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(0, 0, 0, 0.5);
-      padding: 0 0.2em;
-      margin: 0 0.1em;
-    }
-    :host > io-object-group > div io-boolean {
-      flex: 0 1 auto !important;
-    }
-    :host > io-object-group > div io-menu-option::after {
-      content: '▼';
-      margin-left: 0.15em;
-      opacity: 0.25;
-    }
-    :host > io-object-group > div io-menu-option {
-      padding: 0 0.5em;
-      font-size: 0.5em;
-      border: 1px outset rgba(150, 150, 150, 0.5);
-      border-radius: 0.5em;
-      background: rgba(255, 255, 255, 0.4) !important;
-      flex: 0 1 auto !important;
-    }
     </style>`;
   }
   static get properties() {
     return {
-      persist: false,
+      // persist: false,
       crumbs: Array,
       groups: Object,
       _groups: Object,
@@ -102,12 +71,14 @@ export class IoInspector extends IoObject {
   }
   static get listeners() {
     return {
-      'io-inspector-link-clicked': '_onLinkClicked',
+      'io-button-clicked': '_onLinkClicked',
     };
   }
   _onLinkClicked(event) {
     event.stopPropagation();
-    this.value = event.detail.value;
+    if (event.path[0].localName === 'io-inspector-link') {
+      this.value = event.detail.value;
+    }
   }
   // valueChanged() {
   //   super.valueChanged();
@@ -127,14 +98,7 @@ export class IoInspector extends IoObject {
   // }
   valueChanged() {
     super.valueChanged();
-
-    if (__groupsMap.has(this.value)) {
-      this._groups = __groupsMap.get(this.value);
-    } else {
-      this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);
-      __groupsMap.set(this.value, this._groups);
-    }
-
+    this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);
     let crumb = this.crumbs.find((crumb) => { return crumb === this.value; });
     let lastrumb = this.crumbs[this.crumbs.length - 1];
     if (crumb) {
@@ -152,12 +116,16 @@ export class IoInspector extends IoObject {
     const elements = [
       ['io-inspector-breadcrumbs', {crumbs: this.crumbs}]
     ];
+    // TODO: rewise and document use of storage
+    const id = this.value.guid || this.value.uuid || this.value.id;
+    const cname = this.value.constructor.name;
     for (let group in this._groups) {
+      let expanded = id ? $('io-inspector-group-' + cname + '-' + id + '-' + group, false) : true;
       elements.push(
-        ['io-object-group', {
+        ['io-object', {
           value: this.value,
           label: group,
-          expanded: true,
+          expanded: expanded,
           props: this._groups[group],
           config: this._config,
         }],

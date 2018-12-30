@@ -24,10 +24,10 @@ export class IoCollapsable extends IoElement {
       :host[expanded] > io-boolean::before{
         content: '▾';
       }
-      :host > div {
+      :host > :nth-child(2) {
+        display: block;
         border: 1px solid #999;
         border-radius: 3px;
-        margin: 0 1px 1px 1px;
         padding: 2px;
         background: #eee;
       }
@@ -38,15 +38,10 @@ export class IoCollapsable extends IoElement {
       label: String,
       expanded: {
         type: Boolean,
-        value: true,
         reflect: true
       },
       elements: Array,
     };
-  }
-  processChildren(template) {
-    console.log(template);
-    return [['span', 'asd']];
   }
   changed() {
     this.template([

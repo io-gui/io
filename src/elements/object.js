@@ -1,52 +1,33 @@
-import {IoElement, html} from "../core/element.js";
-import "./object-group.js";
-import "./collapsable.js";
+import {IoElement} from "../core/element.js";
+import "./object-props.js";
+import {IoCollapsable} from "./collapsable.js";
 
-const __configsMap = new WeakMap();
-
-export class IoObject extends IoElement {
-  static get style() {
-    return html`<style>
-      :host {
-        display: block;
-      }
-    </style>`;
-  }
+export class IoObject extends IoCollapsable {
   static get properties() {
     return {
       value: Object,
-      label: String,
-      expanded: Boolean,
       props: Array,
       config: Object,
       _config: Object,
     };
   }
   valueChanged() {
-    if (__configsMap.has(this.value)) {
-      this._config = __configsMap.get(this.value);
-    } else {
-      this._config = this.__proto__.__configs.getConfig(this.value, this.config);
-      __configsMap.set(this.value, this._config);
-    }
+    this._config = this.__proto__.__configs.getConfig(this.value, this.config);
   }
   configChanged() {
     this._config = this.__proto__.__configs.getConfig(this.value, this.config);
   }
   changed() {
+    const label = this.label || this.value.constructor.name;
     this.template([
-      ['io-collapsable', {
-        label: this.label || this.value.constructor.name,
-        expanded: this.bind('expanded'),
-        elements: [
-          ['io-object-group', {
-            value: this.value,
-            label: this.label || this.value.constructor.name,
-            props: this.props.length ? this.props : Object.keys(this._config),
-            config: this._config,
-          }]
-        ]
-      }],
+      ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
+      this.expanded ? [
+        ['io-object-props', {
+          value: this.value,
+          props: this.props.length ? this.props : Object.keys(this._config),
+          config: this._config,
+        }]
+      ] : null
     ]);
   }
   static get config() {
