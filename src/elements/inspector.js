@@ -34,7 +34,8 @@ export class IoInspector extends IoObject {
       padding: 0 !important;
     }
     :host > io-object > io-object-props > div {
-      padding: 2px 0;
+      overflow: hidden;
+      padding: 2px;
     }
     :host > io-object > io-object-props > div:not(:last-of-type) {
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
@@ -52,13 +53,15 @@ export class IoInspector extends IoObject {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      min-width: 3em;
+      min-width: 2em;
+    }
+    :host > io-object > io-object-props > div > io-option {
+      flex: 0 1 auto !important;
     }
     </style>`;
   }
   static get properties() {
     return {
-      // persist: false,
       crumbs: Array,
       groups: Object,
       _groups: Object,
@@ -75,22 +78,6 @@ export class IoInspector extends IoObject {
       this.value = event.detail.value;
     }
   }
-  // valueChanged() {
-  //   super.valueChanged();
-  //   if (this.persist) {
-  //     const groupKey = this.label + '-' + (this.value.uuid || this.value.guid || this.value.constructor.name);
-  //     const expanded = localStorage.getItem('io-inspector-group-expanded-' + groupKey);
-  //     this.expanded = expanded === null ? this.label === 'properties' ? true : false : expanded === 'true' ? true : false;
-  //   } else {
-  //     this.expanded = this.label === 'properties';
-  //   }
-  // }
-  // expandedChanged() {
-  //   if (this.persist) {
-  //     const groupKey = this.label + '-' + (this.value.uuid || this.value.guid || this.value.constructor.name);
-  //     localStorage.setItem('io-inspector-group-expanded-' + groupKey, this.expanded);
-  //   }
-  // }
   valueChanged() {
     super.valueChanged();
     this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);

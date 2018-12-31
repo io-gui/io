@@ -38,7 +38,7 @@ export class IoObjectProps extends IoElement {
         color: rgb(170, 13, 145);
       }
       :host > div > io-option {
-        color: rgb(32,135,0);
+        color: rgb(0, 32, 135);
       }
     </style>`;
   }

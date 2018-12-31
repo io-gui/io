@@ -13,14 +13,10 @@ export class IoSlider extends IoElement {
       }
       :host > io-number {
         flex: 0 0 auto;
-        /* margin: 1px; */
-        /* padding: 0.1em 0.2em; */
       }
       :host > io-slider-knob {
-        /* margin: 1px; */
         flex: 1 1 auto;
-        margin-left: 0.05em;
-
+        margin-left: 2px;
         border: 1px solid #000;
         border-radius: 2px;
         padding: 0 1px;
@@ -37,11 +33,14 @@ export class IoSlider extends IoElement {
       strict: true,
     };
   }
+  _onValueSet(event) {
+    this.dispatchEvent('value-set', event.detail, false);
+  }
   changed() {
     const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
     this.template([
-      ['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number'}],
-      ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider'}]
+      ['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],
+      ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]
     ]);
     this.$.number.style.setProperty('min-width', charLength + 'em');
   }
