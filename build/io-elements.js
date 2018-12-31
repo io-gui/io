@@ -530,6 +530,11 @@ class IoElement extends IoCore(HTMLElement) {
         type: Boolean,
         reflect: true,
         enumerable: false
+      },
+      title: {
+        type: String,
+        reflect: true,
+        enumerable: false
       }
     };
   }
@@ -705,7 +710,7 @@ function initStyle(prototypes) {
 
 class IoObjectProps extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-object-group {font-weight: bold;}:host > div.io-object-prop {display: flex !important;flex-direction: row;}:host > div > span {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > io-number,:host > div > io-string,:host > div > io-boolean {border: none;background: none;margin: 0;padding: 0;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(32,135,0);}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-object-group {font-weight: bold;}:host > div.io-object-prop {display: flex !important;flex-direction: row;}:host > div > span {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > io-number,:host > div > io-string,:host > div > io-boolean {border: none;background: none;margin: 0;padding: 0;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(0, 32, 135);}</style>`;
   }
   static get properties() {
     return {
@@ -758,8 +763,13 @@ class IoObjectProps extends IoElement {
         if (config[c]) {
           const tag = config[c][0];
           const protoConfig = config[c][1];
-          const itemConfig = {id: c, value: this.value[c], 'on-value-set': this._onValueSet};
-          elements.push(['div', {className: 'io-object-prop'}, [['span', config[c].label || c + ':'], [tag, Object.assign(itemConfig, protoConfig)]]]);
+          const label = config[c].label || c;
+          const itemConfig = {title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+          elements.push(
+            ['div', {className: 'io-object-prop'}, [
+              ['span', {title: label}, label + ':'],
+              [tag, Object.assign(itemConfig, protoConfig)]
+            ]]);
         }
       }
     }
@@ -771,7 +781,7 @@ IoObjectProps.Register();
 
 class IoCollapsable extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #999;border-radius: 3px;background: #ccc;}:host > io-boolean {border: none;border-radius: 0;background: none;}:host > io-boolean::before {content: '▸';display: inline-block;width: 0.65em;margin: 0 0.25em;}:host[expanded] > io-boolean::before{content: '▾';}:host > :nth-child(2) {display: block;border: 1px solid #999;border-radius: 3px;padding: 2px;background: #eee;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #999;border-radius: 3px;padding: 1px;background: #ccc;}:host > io-boolean {border: none;border-radius: 0;background: none;}:host > io-boolean::before {content: '▸';display: inline-block;width: 0.65em;margin: 0 0.25em;}:host[expanded] > io-boolean::before{content: '▾';}:host > :nth-child(2) {display: block;border: 1px solid #999;border-radius: 2px;padding: 2px;background: #eee;}</style>`;
   }
   static get properties() {
     return {
@@ -1123,11 +1133,10 @@ function isValueOfPropertyOf(prop, object) {
 
 class IoInspector extends IoObject {
   static get style() {
-    return html`<style>:host {padding: 2px;background-color: #eee;}:host > io-inspector-breadcrumbs {margin-bottom: 2px;}:host > io-object {padding: 0 !important;font-size: 0.9em;background-color: #ccc !important;}:host > io-object > io-boolean {display: block;}:host > io-object > io-object-props {padding: 0 !important;margin: 2px;}:host > io-object > io-object-props > div {padding: 2px 0;}:host > io-object > io-object-props > div:not(:last-of-type) {border-bottom: 1px solid rgba(0, 0, 0, 0.5);}:host > io-object > io-object-props > div > :nth-child(1) {overflow: hidden;text-overflow: ellipsis;text-align: right;flex: 0 1 6em;padding-left: 0.5em;min-width: 3em;}:host > io-object > io-object-props > div > :nth-child(2) {flex: 1 0;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 3em;}:host > io-object > io-object-props > div > io-inspector-link {flex: 0 0 auto !important;min-width: 0 !important;text-decoration: underline;color: #2233cc;}</style>`;
+    return html`<style>:host {padding: 2px;background-color: #666;border-color: #444;}:host > io-inspector-breadcrumbs {margin-bottom: 2px;}:host > io-object {padding: 1px !important;font-size: 0.9em;background-color: #ccc !important;}:host > io-object > io-boolean {display: block;padding-bottom: 0.15em;}:host > io-object > io-object-props {padding: 0 !important;}:host > io-object > io-object-props > div {overflow: hidden;padding: 2px;}:host > io-object > io-object-props > div:not(:last-of-type) {border-bottom: 1px solid rgba(0, 0, 0, 0.125);}:host > io-object > io-object-props > div > :nth-child(1) {overflow: hidden;text-overflow: ellipsis;text-align: right;flex: 0 1 8em;padding-left: 0.5em;min-width: 3em;}:host > io-object > io-object-props > div > :nth-child(2) {flex: 1 0 8em;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 2em;}:host > io-object > io-object-props > div > io-option {flex: 0 1 auto !important;}</style>`;
   }
   static get properties() {
     return {
-      // persist: false,
       crumbs: Array,
       groups: Object,
       _groups: Object,
@@ -1144,22 +1153,6 @@ class IoInspector extends IoObject {
       this.value = event.detail.value;
     }
   }
-  // valueChanged() {
-  //   super.valueChanged();
-  //   if (this.persist) {
-  //     const groupKey = this.label + '-' + (this.value.uuid || this.value.guid || this.value.constructor.name);
-  //     const expanded = localStorage.getItem('io-inspector-group-expanded-' + groupKey);
-  //     this.expanded = expanded === null ? this.label === 'properties' ? true : false : expanded === 'true' ? true : false;
-  //   } else {
-  //     this.expanded = this.label === 'properties';
-  //   }
-  // }
-  // expandedChanged() {
-  //   if (this.persist) {
-  //     const groupKey = this.label + '-' + (this.value.uuid || this.value.guid || this.value.constructor.name);
-  //     localStorage.setItem('io-inspector-group-expanded-' + groupKey, this.expanded);
-  //   }
-  // }
   valueChanged() {
     super.valueChanged();
     this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);
@@ -1177,14 +1170,11 @@ class IoInspector extends IoObject {
     this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);
   }
   changed() {
-    const elements = [
-      ['io-inspector-breadcrumbs', {crumbs: this.crumbs}]
-    ];
+    const elements = [['io-inspector-breadcrumbs', {crumbs: this.crumbs}]];
     // TODO: rewise and document use of storage
-    const id = this.value.guid || this.value.uuid || this.value.id;
-    const cname = this.value.constructor.name;
+    // const id = this.value.guid || this.value.uuid || this.value.id;
     for (let group in this._groups) {
-      let expanded = id ? storage('io-inspector-group-' + cname + '-' + id + '-' + group, false) : true;
+      let expanded = storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false);
       elements.push(
         ['io-object', {
           value: this.value,
@@ -2075,7 +2065,7 @@ const ctx = canvas.getContext('2d');
 
 class IoSlider extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 0 0 auto;/* margin: 1px; *//* padding: 0.1em 0.2em; */}:host > io-slider-knob {/* margin: 1px; */flex: 1 1 auto;margin-left: 0.05em;border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number'}],['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider'}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoInteractiveMixin(IoElement) {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;overflow: hidden;}:host img {width: 100% !important;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 0 0 auto;}:host > io-slider-knob {flex: 1 1 auto;margin-left: 2px;border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}_onValueSet(event) {this.dispatchEvent('value-set', event.detail, false);}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoInteractiveMixin(IoElement) {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;overflow: hidden;}:host img {width: 100% !important;}</style>`;
   }
   static get properties() {
     return {
@@ -2216,4 +2206,4 @@ IoString.Register();
 
 // elements
 
-export { IoArray, IoBoolean, IoButton, IoCollapsable, IoInspector, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoSlider, IoString };
+export { IoArray, IoBoolean, IoButton, IoCollapsable, IoInspector, IoMenuOptions, IoMenu, IoNumber, IoObject, IoObjectProps, IoOption, IoSlider, IoString };
