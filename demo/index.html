@@ -62,8 +62,8 @@
       setNumber(value) {
         this.number = value;
       }
-      constructor() {
-        super();
+      constructor(props) {
+        super(props);
         this.template([
           ['io-collapsable', {label: 'io-string / io-number / io-boolean', className: 'table', expanded: $('table'), elements: [
             ['span'],

@@ -8,6 +8,9 @@ export class Binding {
     this.updateTargets = this.updateTargets.bind(this);
     this.setSource(this.source);
   }
+  get value() {
+    return this.source[this.sourceProp];
+  }
   setSource() {
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
     for (let i = this.targets.length; i--;) {
