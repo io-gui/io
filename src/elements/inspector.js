@@ -1,6 +1,6 @@
 import {html} from "../core/element.js";
+import {storage as $} from "../core/storage.js";
 import {IoObject} from "./object.js";
-import {storage as $} from "./storage.js";
 
 import "./inspector-breadcrumbs.js";
 import "./inspector-link.js";
