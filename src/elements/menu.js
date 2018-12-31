@@ -15,7 +15,7 @@ export class IoMenu extends IoElement {
   constructor(props) {
     super(props);
     this.template([
-      ['io-menu-group', {
+      ['io-menu-options', {
         id: 'group',
         $parent: this,
         options: this.bind('options'),

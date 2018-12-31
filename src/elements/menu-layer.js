@@ -31,10 +31,10 @@ export class IoMenuLayer extends IoElement {
         visibility: visible;
         pointer-events: all;
       }
-      :host io-menu-group:not([expanded]) {
+      :host io-menu-options:not([expanded]) {
         display: none;
       }
-      :host io-menu-group {
+      :host io-menu-options {
         padding: 0.125em 0 0.25em 0;
         border: 1px solid #666;
         box-shadow: 1px 1px 2px rgba(0,0,0,0.33);
@@ -53,7 +53,7 @@ export class IoMenuLayer extends IoElement {
         reflect: true,
         observer: '_onScrollAnimateGroup'
       },
-      $groups: Array
+      $options: Array
     };
   }
   static get listeners() {
@@ -73,22 +73,22 @@ export class IoMenuLayer extends IoElement {
     // window.addEventListener('focusin', this._onWindowFocus);
   }
   registerGroup(group) {
-    this.$groups.push(group);
+    this.$options.push(group);
     group.addEventListener('focusin', this._onMenuItemFocused);
     group.addEventListener('mouseup', this._onMouseup);
     group.addEventListener('keydown', this._onKeydown);
     group.addEventListener('expanded-changed', this._onExpandedChanged);
   }
   unregisterGroup(group) {
-    this.$groups.splice(this.$groups.indexOf(group), 1);
+    this.$options.splice(this.$options.indexOf(group), 1);
     group.removeEventListener('focusin', this._onMenuItemFocused);
     group.removeEventListener('mouseup', this._onMouseup);
     group.removeEventListener('keydown', this._onKeydown);
     group.removeEventListener('expanded-changed', this._onExpandedChanged);
   }
   collapseAllGroups() {
-    for (let i = this.$groups.length; i--;) {
-      this.$groups[i].expanded = false;
+    for (let i = this.$options.length; i--;) {
+      this.$options[i].expanded = false;
     }
   }
   runAction(option) {
@@ -120,16 +120,10 @@ export class IoMenuLayer extends IoElement {
   _onMenuItemFocused(event) {
     const path = event.composedPath();
     const item = path[0];
-    const expanded = [item.$group];
-    let parent = item.$parent;
-    while (parent) {
-      expanded.push(parent);
-      item.__menuroot = parent; // TODO: unhack
-      parent = parent.$parent;
-    }
-    for (let i = this.$groups.length; i--;) {
-      if (expanded.indexOf(this.$groups[i]) === -1) {
-        this.$groups[i].expanded = false;
+    const optionschain = item.optionschain;
+    for (let i = this.$options.length; i--;) {
+      if (optionschain.indexOf(this.$options[i]) === -1) {
+        this.$options[i].expanded = false;
       }
     }
   }
@@ -143,7 +137,7 @@ export class IoMenuLayer extends IoElement {
     this._x = event.clientX;
     this._y = event.clientY;
     this._v = (2 * this._v + Math.abs(event.movementY) - Math.abs(event.movementX)) / 3;
-    let groups = this.$groups;
+    let groups = this.$options;
     for (let i = groups.length; i--;) {
       if (groups[i].expanded) {
         let rect = groups[i].getBoundingClientRect();
@@ -162,11 +156,11 @@ export class IoMenuLayer extends IoElement {
     let elem = path[0];
     if (elem.localName === 'io-menu-item') {
       this.runAction(elem.option);
-      elem.__menuroot.dispatchEvent('io-menu-item-clicked', elem.option);
+      elem.menuroot.dispatchEvent('io-menu-item-clicked', elem.option);
     } else if (elem === this) {
       if (this._hoveredItem) {
         this.runAction(this._hoveredItem.option);
-        this._hoveredItem.__menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
+        this._hoveredItem.menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
       } else if (!this._hoveredGroup) {
         this.collapseAllGroups();
         // if (lastFocus) {
@@ -183,7 +177,7 @@ export class IoMenuLayer extends IoElement {
     let elem = path[0];
     let group = elem.$parent;
     let siblings = [...group.querySelectorAll('io-menu-item')] || [];
-    let children = elem.$group ? [...elem.$group.querySelectorAll('io-menu-item')]  : [];
+    let children = elem.$options ? [...elem.$options.querySelectorAll('io-menu-item')]  : [];
     let index = siblings.indexOf(elem);
 
     let command = '';
@@ -263,8 +257,8 @@ export class IoMenuLayer extends IoElement {
   _onExpandedChanged(event) {
     const path = event.composedPath();
     if (path[0].expanded) this._setGroupPosition(path[0]);
-    for (let i = this.$groups.length; i--;) {
-      if (this.$groups[i].expanded) {
+    for (let i = this.$options.length; i--;) {
+      if (this.$options[i].expanded) {
         return this.expanded = true;
       }
     }

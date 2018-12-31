@@ -1,6 +1,6 @@
 import {html, IoElement} from "../core/element.js";
 import {IoMenuLayer} from "./menu-layer.js";
-import {IoMenuGroup} from "./menu-group.js";
+import {IoMenuOptions} from "./menu-options.js";
 
 export class IoMenuItem extends IoElement {
   static get style() {
@@ -47,16 +47,30 @@ export class IoMenuItem extends IoElement {
       'touchstart': '_onTouchstart'
     };
   }
-  static get menuroot() {
-    return this;
+  get menuroot() {
+    let parent = this;
+    while (parent && parent.$parent) {
+      parent = parent.$parent;
+    }
+    return parent;
+  }
+  get optionschain() {
+    const chain = [];
+    if (this.$options) chain.push(this.$options);
+    let parent = this.$parent;
+    while (parent) {
+      if (parent.localName == 'io-menu-options') chain.push(parent);
+      parent = parent.$parent;
+    }
+    return chain;
   }
   changed() {
     if (this.option.options) {
       let grpProps = {options: this.option.options, $parent: this, position: this.position};
-      if (!this.$group) {
-        this.$group = new IoMenuGroup(grpProps);
+      if (!this.$options) {
+        this.$options = new IoMenuOptions(grpProps);
       } else {
-        this.$group.setProperties(grpProps); // TODO: test
+        this.$options.setProperties(grpProps); // TODO: test
       }
     }
     this.template([
@@ -68,9 +82,9 @@ export class IoMenuItem extends IoElement {
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.$group) {
-      if (this.$group.parentNode) {
-        IoMenuLayer.singleton.removeChild(this.$group);
+    if (this.$options) {
+      if (this.$options.parentNode) {
+        IoMenuLayer.singleton.removeChild(this.$options);
       }
     }
   }
@@ -91,11 +105,11 @@ export class IoMenuItem extends IoElement {
     IoMenuLayer.singleton._onTouchend(event);
   }
   _onFocus() {
-    if (this.$group) {
-      if (!this.$group.parentNode) {
-        IoMenuLayer.singleton.appendChild(this.$group);
+    if (this.$options) {
+      if (!this.$options.parentNode) {
+        IoMenuLayer.singleton.appendChild(this.$options);
       }
-      this.$group.expanded = true;
+      this.$options.expanded = true;
     }
   }
 }

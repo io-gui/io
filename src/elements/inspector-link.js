@@ -27,7 +27,10 @@ export class IoInspectorLink extends IoButton {
     </style>`;
   }
   changed() {
-    this.template([['span', this.value.constructor.name]]);
+    let name = this.value.constructor.name;
+    if (this.value.name) name += ' (' + this.value.name + ')';
+    else if (this.value.label) name += ' (' + this.value.label + ')';
+    this.template([['span', name]]);
   }
 }
 

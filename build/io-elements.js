@@ -1453,7 +1453,7 @@ let WAIT_TIME = 1200;
 
 class IoMenuLayer extends IoElement$1 {
   static get style() {
-    return html$1`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;pointer-events: none;}:host[expanded] {visibility: visible;pointer-events: all;}:host io-menu-group:not([expanded]) {display: none;}:host io-menu-group {padding: 0.125em 0 0.25em 0;border: 1px solid #666;box-shadow: 1px 1px 2px rgba(0,0,0,0.33);position: absolute;transform: translateZ(0);top: 0;left: 0;min-width: 6em;}</style>`;
+    return html$1`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;pointer-events: none;}:host[expanded] {visibility: visible;pointer-events: all;}:host io-menu-options:not([expanded]) {display: none;}:host io-menu-options {padding: 0.125em 0 0.25em 0;border: 1px solid #666;box-shadow: 1px 1px 2px rgba(0,0,0,0.33);position: absolute;transform: translateZ(0);top: 0;left: 0;min-width: 6em;}</style>`;
   }
   static get properties() {
     return {
@@ -1752,7 +1752,7 @@ class IoMenu extends IoElement$1 {
   constructor(props) {
     super(props);
     this.template([
-      ['io-menu-group', {
+      ['io-menu-options', {
         id: 'group',
         $parent: this,
         options: this.bind('options'),
