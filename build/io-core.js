@@ -310,7 +310,7 @@ const IoCore = (superclass) => class extends superclass {
       if (this.__props[p].binding) {
         this.__props[p].binding.removeTarget(this, p);
         // TODO: this breaks binding for transplanted elements.
-        // delete this.__props[p].binding;
+        delete this.__props[p].binding;
         // TODO: possible memory leak!
       }
     }
@@ -322,7 +322,9 @@ const IoCore = (superclass) => class extends superclass {
   set(prop, value) {
     let oldValue = this[prop];
     this[prop] = value;
-    if (oldValue !== value) this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, false);
+    if (oldValue !== value) {
+      this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, false);
+    }
   }
   setProperties(props) {
 
@@ -355,9 +357,12 @@ const IoCore = (superclass) => class extends superclass {
       }
 
       if (binding !== oldBinding) {
-        binding.setTarget(this, p);
-        // TODO: test extensively
-        if (oldBinding) console.warn('Disconnect!', binding, oldBinding);
+        if (binding) binding.setTarget(this, p);
+        if (oldBinding) {
+          oldBinding.removeTarget(this, p);
+          // TODO: test extensively
+          // console.warn('Disconnect!', oldBinding);
+        }
       }
 
     }
@@ -574,6 +579,7 @@ class IoElement extends IoCore(HTMLElement) {
         if (nodes[i].dispose) nodes[i].dispose();
         // TODO: dispose propListeners from native elements
       }
+      // console.log('removing', child);
       host.removeChild(child);
     }
     // create new elements after existing
@@ -656,15 +662,17 @@ IoElement.Register = function() {
 
   IoCore.Register.call(this);
 
-  Object.defineProperty(this, 'localName', {value: this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()});
-  Object.defineProperty(this.prototype, 'localName', {value: this.localName});
+  const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
+  Object.defineProperty(this, 'localName', {value: localName});
+  Object.defineProperty(this.prototype, 'localName', {value: localName});
 
   Object.defineProperty(this.prototype, '__observedAttributes', {value: []});
   for (let i in this.prototype.__props) {
     if (this.prototype.__props[i].reflect) this.prototype.__observedAttributes.push(i);
   }
 
-  customElements.define(this.localName, this);
+  customElements.define(localName, this);
 
   initStyle(this.prototype.__prototypes);
 
@@ -717,6 +725,43 @@ function initStyle(prototypes) {
       document.head.appendChild(element);
     }
   }
+}
+
+const nodes = {};
+
+class StoreNode extends IoNode {
+  static get properties() {
+    return {
+      key: String,
+      value: undefined,
+    };
+  }
+  constructor(props) {
+    super(props);
+    const value = localStorage.getItem(this.key);
+    if (value !== null) {
+      this.value = JSON.parse(value);
+    }
+  }
+  valueChanged() {
+    localStorage.setItem(this.key, this.value);
+  }
+}
+
+StoreNode.Register();
+
+function storage(key, value) {
+  let store = nodes[key];
+  if (!store) {
+    store = new StoreNode({key: key});
+    nodes[key] = store;
+    store.connect();
+    store.binding = store.bind('value');
+  }
+  if (store.value === undefined && value !== undefined) {
+    store.value = value;
+  }
+  return store.binding;
 }
 
 const _clickmask = document.createElement('div');
@@ -883,4 +928,4 @@ IoInteractive.Register();
 
 // core classes
 
-export { IoCore, IoNode, IoElement, html, IoInteractive, IoInteractiveMixin };
+export { IoCore, IoNode, IoElement, html, storage, IoInteractive, IoInteractiveMixin };

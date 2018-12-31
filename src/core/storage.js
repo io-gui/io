@@ -1,5 +1,4 @@
 import {IoNode} from "./node.js";
-import {Binding} from "./util/binding.js";
 
 const nodes = {};
 
