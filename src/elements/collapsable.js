@@ -8,6 +8,7 @@ export class IoCollapsable extends IoElement {
         flex-direction: column;
         border: 1px solid #999;
         border-radius: 3px;
+        padding: 1px;
         background: #ccc;
       }
       :host > io-boolean {
@@ -27,7 +28,7 @@ export class IoCollapsable extends IoElement {
       :host > :nth-child(2) {
         display: block;
         border: 1px solid #999;
-        border-radius: 3px;
+        border-radius: 2px;
         padding: 2px;
         background: #eee;
       }

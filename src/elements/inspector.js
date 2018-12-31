@@ -15,22 +15,23 @@ export class IoInspector extends IoObject {
     return html`<style>
     :host {
       padding: 2px;
-      background-color: #eee;
+      background-color: #666;
+      border-color: #444;
     }
     :host > io-inspector-breadcrumbs {
       margin-bottom: 2px;
     }
     :host > io-object {
-      padding: 0 !important;
+      padding: 1px !important;
       font-size: 0.9em;
       background-color: #ccc !important;
     }
     :host > io-object > io-boolean {
       display: block;
+      padding-bottom: 0.15em;
     }
     :host > io-object > io-object-props {
       padding: 0 !important;
-      margin: 2px;
     }
     :host > io-object > io-object-props > div {
       padding: 2px 0;
