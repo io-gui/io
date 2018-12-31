@@ -26,21 +26,6 @@ for (let i = 0; i < 100; i++) {
 }
 
 export const data = {
-  object: {
-    label: 0,
-    array: [
-      {
-        obj: {
-          d: 8
-        }
-      }
-    ],
-    object: {
-      obj: {
-        d: 8
-      }
-    }
-  },
   menuoptions: [
     {label: 'file', options: suboptions0},
     {label: 'view', options: suboptions0},

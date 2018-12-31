@@ -52,7 +52,6 @@
           null: null,
           NaN: NaN,
           undefined: undefined,
-          object: function() { return data.object },
           menuoptions: function() { return data.menuoptions },
           options: function() { return data.options },
         };
@@ -113,7 +112,6 @@
           ['io-collapsable', {label: 'io-object', expanded: $('io-object'), elements: [
             ['io-object', {value: this, expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options'], labeled: true}], //TODO: labeled?
             ['io-object', {value: this, expanded: $('io-object3'), props: ['number'], config: {'number': ['io-number', {step: 0.0001}]}, labeled: true}],
-            ['io-object', {value: this.object, expanded: $('io-object2'), labeled: true}],
           ]}],
           ['io-collapsable', {label: 'io-inspector', expanded: $('io-inspector'), elements: [
             ['io-inspector', {value: this.menuoptions, groups: {'number': ['number']}, expanded: ['properties']}],
