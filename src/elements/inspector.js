@@ -37,28 +37,22 @@ export class IoInspector extends IoObject {
       padding: 2px 0;
     }
     :host > io-object > io-object-props > div:not(:last-of-type) {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
     :host > io-object > io-object-props > div > :nth-child(1) {
       overflow: hidden;
       text-overflow: ellipsis;
       text-align: right;
-      flex: 0 1 6em;
+      flex: 0 1 8em;
       padding-left: 0.5em;
       min-width: 3em;
     }
     :host > io-object > io-object-props > div > :nth-child(2) {
-      flex: 1 0;
+      flex: 1 0 8em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       min-width: 3em;
-    }
-    :host > io-object > io-object-props > div > io-inspector-link {
-      flex: 0 0 auto !important;
-      min-width: 0 !important;
-      text-decoration: underline;
-      color: #2233cc;
     }
     </style>`;
   }
@@ -114,14 +108,11 @@ export class IoInspector extends IoObject {
     this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);
   }
   changed() {
-    const elements = [
-      ['io-inspector-breadcrumbs', {crumbs: this.crumbs}]
-    ];
+    const elements = [['io-inspector-breadcrumbs', {crumbs: this.crumbs}]];
     // TODO: rewise and document use of storage
-    const id = this.value.guid || this.value.uuid || this.value.id;
-    const cname = this.value.constructor.name;
+    // const id = this.value.guid || this.value.uuid || this.value.id;
     for (let group in this._groups) {
-      let expanded = id ? $('io-inspector-group-' + cname + '-' + id + '-' + group, false) : true;
+      let expanded = $('io-inspector-group-' + this.value.constructor.name + '-' + group, false);
       elements.push(
         ['io-object', {
           value: this.value,

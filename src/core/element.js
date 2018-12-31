@@ -13,6 +13,11 @@ export class IoElement extends IoCore(HTMLElement) {
         type: Boolean,
         reflect: true,
         enumerable: false
+      },
+      title: {
+        type: String,
+        reflect: true,
+        enumerable: false
       }
     };
   }

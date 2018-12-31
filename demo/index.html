@@ -22,6 +22,9 @@
           :host > io-collapsable {
             margin: 0.25em;
           }
+          :host > io-collapsable:not([expanded]) {
+            opacity: 0.5;
+          }
           :host .table > div {
             display: grid;
             grid-template-columns: 100px 6em 6em 6em;

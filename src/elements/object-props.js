@@ -93,8 +93,13 @@ export class IoObjectProps extends IoElement {
         if (config[c]) {
           const tag = config[c][0];
           const protoConfig = config[c][1];
-          const itemConfig = {id: c, value: this.value[c], 'on-value-set': this._onValueSet};
-          elements.push(['div', {className: 'io-object-prop'}, [['span', config[c].label || c + ':'], [tag, Object.assign(itemConfig, protoConfig)]]]);
+          const label = config[c].label || c;
+          const itemConfig = {title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+          elements.push(
+            ['div', {className: 'io-object-prop'}, [
+              ['span', {title: label}, label + ':'],
+              [tag, Object.assign(itemConfig, protoConfig)]
+            ]]);
         }
       }
     }
