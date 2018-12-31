@@ -8,6 +8,7 @@ export {IoMenuOptions} from "./elements/menu-options.js";
 export {IoMenu} from "./elements/menu.js";
 export {IoNumber} from "./elements/number.js";
 export {IoObject} from "./elements/object.js";
+export {IoObjectProps} from "./elements/object-props.js";
 export {IoOption} from "./elements/option.js";
 export {IoSlider} from "./elements/slider.js";
 export {IoString} from "./elements/string.js";
