@@ -47,16 +47,23 @@ export class IoObjectProps extends IoElement {
       value: Object,
       config: Object,
       props: Array,
+      labeled: true,
       _config: Object,
     };
   }
+  valueChanged() {
+    this._config = this.__proto__.__configs.getConfig(this.value, this.config);
+  }
+  configChanged() {
+    this._config = this.__proto__.__configs.getConfig(this.value, this.config);
+  }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('io-object-mutated', this._onIoObjectMutated);
+    window.addEventListener('object-mutated', this._onIoObjectMutated);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('io-object-mutated', this._onIoObjectMutated);
+    window.removeEventListener('object-mutated', this._onIoObjectMutated);
   }
   _onIoObjectMutated(event) {
     let key = event.detail.key;
@@ -81,12 +88,12 @@ export class IoObjectProps extends IoElement {
     if (key !== null) {
       this.value[key] = event.detail.value;
       let detail = Object.assign({object: this.value, key: key}, event.detail);
-      this.dispatchEvent('io-object-mutated', detail, false, window);
+      this.dispatchEvent('object-mutated', detail, false, window);
       this.dispatchEvent('value-set', detail, false); // TODO
     }
   }
   changed() {
-    const config = this.config;
+    const config = this._config;
     const elements = [];
     for (let c in config) {
       if (!this.props.length || this.props.indexOf(c) !== -1) {
@@ -97,7 +104,7 @@ export class IoObjectProps extends IoElement {
           const itemConfig = {title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
           elements.push(
             ['div', {className: 'io-object-prop'}, [
-              ['span', {title: label}, label + ':'],
+              this.labeled ? ['span', {title: label}, label + ':'] : null,
               [tag, Object.assign(itemConfig, protoConfig)]
             ]]);
         }
@@ -105,6 +112,91 @@ export class IoObjectProps extends IoElement {
     }
     this.template(elements);
   }
+  static get config() {
+    return {
+      'Object': {
+        'type:string': ['io-string', {}],
+        'type:number': ['io-number', {step: 0.01}],
+        'type:boolean': ['io-boolean', {}],
+        'type:object': ['io-object', {}],
+        'value:null': ['io-string', {}],
+        'value:undefined': ['io-string', {}],
+      },
+      'Array': {
+        'type:number': ['io-number', {step: 0.1}],
+      },
+    };
+  }
 }
+
+class Config {
+  constructor(prototypes) {
+    for (let i = 0; i < prototypes.length; i++) {
+      const config = prototypes[i].constructor.config || {};
+      for (let cstr in config) {
+        this[cstr] = this[cstr] || {};
+        this.extend(this[cstr], config[cstr]);
+      }
+    }
+  }
+  extend(configs, configsEx) {
+    for (let c in configsEx) {
+      configs[c] = configs[c] || [];
+      configs[c] = [configs[c][0] || configsEx[c][0], Object.assign(configs[c][1] || {}, configsEx[c][1] || {})];
+    }
+  }
+  getConfig(object, instanceConfig = {}) {
+    const keys = Object.keys(object);
+    const prototypes = [];
+
+    let proto = object.__proto__;
+    while (proto) {
+      keys.push(...Object.keys(proto));
+      prototypes.push(proto.constructor.name);
+      proto = proto.__proto__;
+    }
+
+    const protoConfigs = {};
+    for (let i = prototypes.length; i--;) {
+      // if (instanceConfig instanceof Array) {
+      //   this.extend(protoConfigs, instanceConfig[0][prototypes[i]]);
+      //   this.extend(protoConfigs, instanceConfig[1][prototypes[i]]);
+      // } else {
+        this.extend(protoConfigs, instanceConfig[prototypes[i]]);
+      // }
+      this.extend(protoConfigs, this[prototypes[i]]);
+    }
+
+    const config = {};
+
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i];
+      const value = object[k];
+      const type = typeof value;
+      const cstr = (value && value.constructor) ? value.constructor.name : 'null';
+
+      const typeStr = 'type:' + type;
+      const cstrStr = 'constructor:' + cstr;
+      const keyStr = k;
+      const valueStr = 'value:' + String(value); // TODO: consider optimizing against large strings.
+
+      if (type == 'function') continue;
+
+      config[k] = {};
+
+      if (protoConfigs[typeStr]) config[k] = protoConfigs[typeStr];
+      if (protoConfigs[cstrStr]) config[k] = protoConfigs[cstrStr];
+      if (protoConfigs[keyStr]) config[k] = protoConfigs[keyStr];
+      if (protoConfigs[valueStr]) config[k] = protoConfigs[valueStr];
+    }
+
+    return config;
+  }
+}
+
+IoObjectProps.Register = function() {
+  IoElement.Register.call(this);
+  Object.defineProperty(this.prototype, '__configs', {value: new Config(this.prototype.__prototypes)});
+};
 
 IoObjectProps.Register();

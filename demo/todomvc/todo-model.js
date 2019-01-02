@@ -28,7 +28,7 @@ export class TodoModel extends IoNode {
     title = String(title).trim();
     if (title) {
       this.items.push({title: title, completed: false});
-      this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+      this.dispatchEvent('object-mutated', {object: this}, false, window);
       this.save();
     }
   }
@@ -41,7 +41,7 @@ export class TodoModel extends IoNode {
   destroyItem(item) {
     var i = this.items.indexOf(item);
     this.items.splice(i, 1)
-    this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+    this.dispatchEvent('object-mutated', {object: this}, false, window);
     this.save();
   }
   updateItemTitle(item, title) {
@@ -49,18 +49,18 @@ export class TodoModel extends IoNode {
     if (title) {
       var i = this.items.indexOf(item);
       this.items[i].title = title;
-      this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+      this.dispatchEvent('object-mutated', {object: this}, false, window);
       this.save();
     }
   }
   toggleItem(item) {
     item.completed = !item.completed;
-    this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+    this.dispatchEvent('object-mutated', {object: this}, false, window);
     this.save();
   }
   clearCompletedItems() {
     this.items = this.items.filter(this.filters.active);
-    this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+    this.dispatchEvent('object-mutated', {object: this}, false, window);
     this.save();
   }
   toggleItemsCompleted() {
@@ -68,7 +68,7 @@ export class TodoModel extends IoNode {
     for (var i = this.items.length; i--;) {
       this.items[i].completed = completed;
     }
-    this.dispatchEvent('io-object-mutated', {object: this}, false, window);
+    this.dispatchEvent('object-mutated', {object: this}, false, window);
     this.save();
   }
   save() {

@@ -7,15 +7,9 @@ export class IoObject extends IoCollapsable {
     return {
       value: Object,
       props: Array,
-      config: Object,
-      _config: Object,
+      config: null,
+      labeled: true,
     };
-  }
-  valueChanged() {
-    this._config = this.__proto__.__configs.getConfig(this.value, this.config);
-  }
-  configChanged() {
-    this._config = this.__proto__.__configs.getConfig(this.value, this.config);
   }
   changed() {
     const label = this.label || this.value.constructor.name;
@@ -24,92 +18,14 @@ export class IoObject extends IoCollapsable {
       this.expanded ? [
         ['io-object-props', {
           value: this.value,
-          props: this.props.length ? this.props : Object.keys(this._config),
-          config: this._config,
+          props: this.props.length ? this.props : Object.keys(this.value),
+          config: this.config,
+          // config: [this.config, this.constructor.config],
+          labeled: this.labeled,
         }]
       ] : null
     ]);
   }
-  static get config() {
-    return {
-      'Object': {
-        'type:string': ['io-string', {}],
-        'type:number': ['io-number', {step: 0.01}],
-        'type:boolean': ['io-boolean', {}],
-        'type:object': ['io-object', {}],
-        'value:null': ['io-string', {}],
-        'value:undefined': ['io-string', {}],
-      },
-      'Array': {
-        'type:number': ['io-number', {step: 0.1}],
-      },
-    };
-  }
 }
-
-export class Config {
-  constructor(prototypes) {
-    for (let i = 0; i < prototypes.length; i++) {
-      const config = prototypes[i].constructor.config || {};
-      for (let cstr in config) {
-        this[cstr] = this[cstr] || {};
-        this.extend(this[cstr], config[cstr]);
-      }
-    }
-  }
-  extend(configs, configsEx) {
-    for (let c in configsEx) {
-      configs[c] = configs[c] || [];
-      configs[c] = [configs[c][0] || configsEx[c][0], Object.assign(configs[c][1] || {}, configsEx[c][1] || {})];
-    }
-  }
-  getConfig(object, instanceConfig = {}) {
-    const keys = Object.keys(object);
-    const prototypes = [];
-
-    let proto = object.__proto__;
-    while (proto) {
-      keys.push(...Object.keys(proto));
-      prototypes.push(proto.constructor.name);
-      proto = proto.__proto__;
-    }
-
-    const protoConfigs = {};
-    for (let i = prototypes.length; i--;) {
-      this.extend(protoConfigs, this[prototypes[i]]);
-    }
-    this.extend(protoConfigs, instanceConfig);
-
-    const config = {};
-
-    for (let i = 0; i < keys.length; i++) {
-      const k = keys[i];
-      const value = object[k];
-      const type = typeof value;
-      const cstr = (value && value.constructor) ? value.constructor.name : 'null';
-
-      const typeStr = 'type:' + type;
-      const cstrStr = 'constructor:' + cstr;
-      const keyStr = k;
-      const valueStr = 'value:' + String(value); // TODO: consider optimizing against large strings.
-
-      if (type == 'function') continue;
-
-      config[k] = {};
-
-      if (protoConfigs[typeStr]) config[k] = protoConfigs[typeStr];
-      if (protoConfigs[cstrStr]) config[k] = protoConfigs[cstrStr];
-      if (protoConfigs[keyStr]) config[k] = protoConfigs[keyStr];
-      if (protoConfigs[valueStr]) config[k] = protoConfigs[valueStr];
-    }
-
-    return config;
-  }
-}
-
-IoObject.Register = function() {
-  IoElement.Register.call(this);
-  Object.defineProperty(this.prototype, '__configs', {value: new Config(this.prototype.__prototypes)});
-};
 
 IoObject.Register();

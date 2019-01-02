@@ -79,7 +79,7 @@ export class IoInspector extends IoObject {
     }
   }
   valueChanged() {
-    super.valueChanged();
+    // super.valueChanged();
     this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);
     let crumb = this.crumbs.find((crumb) => { return crumb === this.value; });
     let lastrumb = this.crumbs[this.crumbs.length - 1];
@@ -106,7 +106,8 @@ export class IoInspector extends IoObject {
           label: group,
           expanded: expanded,
           props: this._groups[group],
-          config: this._config,
+          config: this.constructor.config,
+          // config: [this.config, this.constructor.config],
         }],
       );
     }

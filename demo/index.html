@@ -57,7 +57,7 @@
         };
       }
       numberChanged(event) {
-        this.dispatchEvent('io-object-mutated', {object: this, key: 'number'}, false, window);
+        this.dispatchEvent('object-mutated', {object: this, key: 'number'}, false, window);
       }
       setNumber(value) {
         this.number = value;
@@ -110,8 +110,8 @@
             ['io-button', {label: 'set 3', action: this.setNumber, value: 3}],
           ]}],
           ['io-collapsable', {label: 'io-object', expanded: $('io-object'), elements: [
-            ['io-object', {value: this, expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options'], labeled: true}], //TODO: labeled?
-            ['io-object', {value: this, expanded: $('io-object3'), props: ['number'], config: {'number': ['io-number', {step: 0.0001}]}, labeled: true}],
+            ['io-object', {value: this, expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options']}], //TODO: labeled?
+            ['io-object', {value: this, labeled: false, expanded: $('io-object3'), props: ['number'], config: {'number': ['io-number', {step: 0.0001}]}}],
           ]}],
           ['io-collapsable', {label: 'io-inspector', expanded: $('io-inspector'), elements: [
             ['io-inspector', {value: this.menuoptions, groups: {'number': ['number']}, expanded: ['properties']}],

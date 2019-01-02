@@ -131,7 +131,7 @@ export const IoCore = (superclass) => class extends superclass {
       }
     }
     if (this.__objectProps.length) {
-      window.addEventListener('io-object-mutated', this.objectMutated);
+      window.addEventListener('object-mutated', this.objectMutated);
     }
   }
   disconnectedCallback() {
@@ -146,7 +146,7 @@ export const IoCore = (superclass) => class extends superclass {
       }
     }
     if (this.__objectProps.length) {
-      window.removeEventListener('io-object-mutated', this.objectMutated);
+      window.removeEventListener('object-mutated', this.objectMutated);
     }
   }
   addEventListener(type, listener) {
