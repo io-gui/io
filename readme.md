@@ -2,11 +2,11 @@
 
 Io consists of few simple classes that let you build complex web applications in JavaScript.
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and [DreemGL](https://github.com/dreemproject/dreemgl).
-It combines the power of custom elements with expressive dynamic templates and bi-directional data binding.
+It combines the power of custom elements with expressive dynamic templates and bi-directional data binding. In addition, io is bootstrapped with a bundle of basic UI elements.
 
 For a quick start, continue reading this document.
 
-Also check out /demo, /demo/todoapp and /test.
+Also check out `/src/elements`, `/demo` and `/demo/todoapp`.
 
 ## Principles ##
 
@@ -14,7 +14,7 @@ Also check out /demo, /demo/todoapp and /test.
 * io is **javascript-centric** (jsnext).
 * io is **data-driven**.
 * io uses **bi-directional** data binding.
-* io runtime has **no dependencies**.
+* io has **no dependencies**.
 
 ## Classes ##
 
@@ -48,7 +48,7 @@ MyElement.Register();
 
 ### Properties ###
 
-Next, define properties inside the `properties()` getter.
+Define properties inside the `properties()` getter.
 
 ```javascript
 static get properties() {
@@ -68,9 +68,9 @@ You can define a property by its default value, or by providing following config
 - **type** constructor of the property value. If not specified, it will be inferred from value.
 - **observer** name of the method to be called when value changes.
 - **reflect** if true, value will be reflected to attribute.
-- **enumerable** Specifies if property should be enumerable. Defaults to true.
+- **enumerable** Specifies if property should be enumerable. Defaults to `true`.
 
-properties with names prefixed with underscore `_` will not be enumerable regardless of `enumerable` property, nor will they trigger any events, observers or bindings.
+properties with names prefixed with underscore `_` will not be enumerable, nor will they trigger events, observers and bindings.
 
 If you want to initialize default value with a custom object, wrap it in an anonymous function.
 
@@ -130,7 +130,7 @@ HTML output:
 <my-color color="tomato">this is my color</my-color>
 ```
 
-Note that the first array item is **mandatory** element name, followed by **optional** properties and innerText or an array of children. Combining innerText and children elements is not supported at the moment.
+Note that the first array item is **mandatory** element name, followed by **optional** properties and innerText or an array of children. Combining innerText and children elements is not supported at this time.
 
 Here is a slightly more complex expression with dynamically generated DOM tree:
 
@@ -166,28 +166,26 @@ this.template([
 
 ```
 
-You can also use `this.bind()` outside template or bind to `IoNode` objects. However, make sure to unbind after you are done with it to prevent memory garbage.
+You can also use `this.bind()` outside template or bind to `IoNode` objects.
 
 ```javascript
-let newNode = new MyNode({value: this.bind('otherValue')});
+let myNode = new MyNode({value: this.bind('value')});
+// when node is no longer needed:
+myNode.dispose();
 ```
 
 Notice in the example above, we created a new node which is data-bound via constructor. In this case, make sure you call `dispose` when the node is no longer needed.
 
-```javascript
-newNode.dispose();
-```
-
 ### Methods ###
 
-  `changed()` This method is automatically called every time a property is changed. If multiple properties are changed simultaneously in a template, the method is called only once after template is generated.
+  `changed()` is automatically called every time a property is changed. If multiple properties are changed simultaneously in a template, the method is called only once.
 
-  `[propertyName]Changed(value, oldValue)` If defined, this method is automatically called every time the corresponding property changes.
+  `[propertyName]Changed(value, oldValue)` If defined, it is automatically called every time the corresponding property changes.
 
-  `dispose()` This method is called automatically when element is no longer needed. It removes all event listeners and data bindings.
+  `dispose()` is called automatically when element is no longer needed. It removes all event listeners and data bindings.
 
   `bind(prop)` If used in templates or element constructors, this method creates bi-directional data-binding.
 
-  `set(prop, value)` Use this method when property value is set by **user action**. It will trigger non-bubbling `[prop]-set` event.
+  `set(prop, value)` should be used when property value is set by **user action**. It will trigger non-bubbling `[prop]-set` event.
 
   `dispatchEvent(type, detail, bubbles = true, src = this)` Shorthand for custom event dispatch.
