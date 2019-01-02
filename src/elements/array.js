@@ -1,39 +1,24 @@
 import {html} from "../core/element.js";
-import {IoObject} from "./object.js";
+import {IoObjectProps} from "./object-props.js";
 
-//TODO: test
-
-export class IoArray extends IoObject {
+export class IoArray extends IoObjectProps {
   static get style() {
     return html`<style>
       :host {
         display: grid;
-      }
-      :host > io-number {
-        /* margin: 1px;
-        padding: 0.1em 0.2em; */
+        grid-row-gap: 2px;
+        grid-column-gap: 2px;
       }
       :host[columns="2"] {
-        grid-template-columns: 50% 50%;
+        grid-template-columns: auto auto;
       }
       :host[columns="3"] {
-        grid-template-columns: 33.3% 33.3% 33.3%;
+        grid-template-columns: auto auto auto;
       }
       :host[columns="4"] {
-        grid-template-columns: 25% 25% 25% 25%;
-      }
-      :host[columns="5"] {
-        grid-template-columns: 20% 20% 20% 20% 20%;
+        grid-template-columns: auto auto auto auto;
       }
     </style>`;
-  }
-  static get properties() {
-    return {
-      columns: {
-        value: 0
-      }
-      // TODO: labeled?
-    };
   }
   changed() {
     const elements = [];
