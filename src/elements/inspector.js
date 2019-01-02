@@ -169,27 +169,22 @@ export class Groups {
     const groups = {};
     const assigned = [];
 
-    for (let i = 0; i < keys.length; i++) {
-      const k = keys[i];
-      const value = object[k];
-      const type = typeof value;
-      const cstr = (value && value.constructor) ? value.constructor.name : 'null';
+    for (let g in protoGroups) {
 
-      const typeStr = 'type:' + type;
-      const cstrStr = 'constructor:' + cstr;
-      const keyStr = k;
-      const valueStr = 'value:' + String(value); // TODO: consider optimizing against large strings.
+      groups[g] = groups[g] || [];
 
-      if (type == 'function') continue;
+      for (let gg in protoGroups[g]) {
 
-      for (let g in protoGroups) {
-        groups[g] = groups[g] || [];
-        if (protoGroups[g].indexOf(typeStr) !== -1) { groups[g].push(k); assigned.push(k); }
-        if (protoGroups[g].indexOf(cstrStr) !== -1) { groups[g].push(k); assigned.push(k); }
-        if (protoGroups[g].indexOf(keyStr) !== -1) { groups[g].push(k); assigned.push(k); }
-        if (protoGroups[g].indexOf(valueStr) !== -1) { groups[g].push(k); assigned.push(k); }
+        const reg = new RegExp(protoGroups[g][gg]);
+
+        for (let i = 0; i < keys.length; i++) {
+
+          if (typeof value == 'function') continue;
+          const k = keys[i];
+          if (reg.exec(k)) { groups[g].push(k); assigned.push(k); }
+
+        }
       }
-
     }
 
     if (assigned.length === 0) {
