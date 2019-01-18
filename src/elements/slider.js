@@ -1,7 +1,5 @@
 import {html, IoElement} from "../io-core.js";
-
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
+import {IoCanvas} from "./canvas.js";
 
 export class IoSlider extends IoElement {
   static get style() {
@@ -47,18 +45,12 @@ export class IoSlider extends IoElement {
 
 IoSlider.Register();
 
-export class IoSliderKnob extends IoElement {
+export class IoSliderKnob extends IoCanvas {
   static get style() {
     return html`<style>
       :host {
         display: flex;
         cursor: ew-resize;
-        overflow: hidden;
-      }
-      :host img {
-        width: 100% !important;
-        touch-action: none;
-        user-select: none;
       }
     </style>`;
   }
@@ -68,19 +60,19 @@ export class IoSliderKnob extends IoElement {
       step: 0.01,
       min: 0,
       max: 1000,
-      strics: true, // TODO: implement
-      pointermode: 'absolute',
-      cursor: 'ew-resize'
     };
   }
   static get listeners() {
     return {
       'pointermove': 'onPointermove',
+      'dragstart': 'onDragstart',
     };
+  }
+  onDragstart(event) {
+    event.preventDefault();
   }
   onPointermove(event) {
     if (event.buttons !== 0) {
-      this.setPointerCapture(event.pointerId);
       event.preventDefault();
       const rect = this.getBoundingClientRect();
       const x = (event.clientX - rect.x) / rect.width;
@@ -91,15 +83,7 @@ export class IoSliderKnob extends IoElement {
       this.set('value', value);
     }
   }
-  changed() {
-    this.template([['img', {id: 'img'}],]);
-    this.$.img.src = this.paint(this.$.img.getBoundingClientRect());
-  }
-
-  paint(rect) {
-    // TODO: implement in webgl shader
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+  paint(ctx, rect) {
 
     const bgColor = '#444';
     const colorStart = '#2cf';
@@ -146,8 +130,6 @@ export class IoSliderKnob extends IoElement {
     ctx.moveTo(pos, 0);
     ctx.lineTo(pos, h);
     ctx.stroke();
-
-    return canvas.toDataURL();
   }
 }
 
