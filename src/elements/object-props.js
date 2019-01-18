@@ -53,28 +53,6 @@ export class IoObjectProps extends IoElement {
   get _config() {
     return this.__proto__.__config.getConfig(this.value, this.config);
   }
-  // connectedCallback() {
-  //   super.connectedCallback();
-  //   window.addEventListener('object-mutated', this._onIoObjectMutated);
-  // }
-  // disconnectedCallback() {
-  //   super.disconnectedCallback();
-  //   window.removeEventListener('object-mutated', this._onIoObjectMutated);
-  // }
-  // _onIoObjectMutated(event) {
-  //   let key = event.detail.key;
-  //   if (event.detail.object === this.value) {
-  //     if (key && this.$[key]) {
-  //       this.$[key].__properties.value.value = this.value[key];
-  //       this.$[key].changed();
-  //     } else if (!key || key === '*') {
-  //       for (let k in this.$) {
-  //         this.$[k].__properties.value.value = this.value[k];
-  //         this.$[k].changed();
-  //       }
-  //     }
-  //   }
-  // }
   _onValueSet(event) {
     const path = event.composedPath();
     if (path[0] === this) return;
