@@ -18,7 +18,7 @@ Also check out `/src/elements`, `/demo` and `/demo/todoapp`.
 
 ## Classes ##
 
-### `IoCoreMixin` ###
+### `IoCore` ###
 
 This is the core of io. It is designed as a mixin so it can be included at any level of the inheritance chain.
 
@@ -40,12 +40,6 @@ MyElement.Register();
 ```
 That is it! You now have ability to use `<my-element>` in your app.
 
-Alternatively, apply `IoElementMixin` onto existing element class.
-```javascript
-class MyElement extends IoElementMixin(HTMLElement) {}
-MyElement.Register();
-```
-
 ### Properties ###
 
 Define properties inside the `properties()` getter.
@@ -57,7 +51,7 @@ static get properties() {
       type: Array,
       observer: 'update',
     },
-    sort: false
+    enabled: true
   }
 }
 ```
@@ -152,6 +146,13 @@ HTML output:
   <span class="item">2</span>
   <span class="item">3</span>
 </div>
+```
+
+If a template property name is prefixed with `on-` it will be treated as a listener. Corresponding property value can be a string (element's method name) or a function from the current scope.
+
+```javascript
+  ['my-element', {'on-click': 'doSomething'}],
+  ['my-element', {'on-click': doSomethingFunction}],
 ```
 
 ### Data Biding ###
