@@ -1,4 +1,4 @@
-import {html, IoElement, IoCore} from "../io-core.js";
+import {html, IoElement} from "../io-core.js";
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
