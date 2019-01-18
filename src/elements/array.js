@@ -1,7 +1,7 @@
 import {html} from "../io-core.js";
-import {IoObjectProps} from "./object-props.js";
+import {IoProperties} from "./properties.js";
 
-export class IoArray extends IoObjectProps {
+export class IoArray extends IoProperties {
   static get style() {
     return html`<style>
       :host {

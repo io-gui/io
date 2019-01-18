@@ -29,17 +29,17 @@ export class IoInspector extends IoObject {
       display: block;
       padding-bottom: 0.15em;
     }
-    :host > io-object > io-object-props {
+    :host > io-object > io-properties {
       padding: 0 !important;
     }
-    :host > io-object > io-object-props > div {
+    :host > io-object > io-properties > div {
       overflow: hidden;
       padding: 2px;
     }
-    :host > io-object > io-object-props > div:not(:last-of-type) {
+    :host > io-object > io-properties > div:not(:last-of-type) {
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
-    :host > io-object > io-object-props > div > :nth-child(1) {
+    :host > io-object > io-properties > div > :nth-child(1) {
       overflow: hidden;
       text-overflow: ellipsis;
       text-align: right;
@@ -47,14 +47,14 @@ export class IoInspector extends IoObject {
       padding-left: 0.5em;
       min-width: 3em;
     }
-    :host > io-object > io-object-props > div > :nth-child(2) {
+    :host > io-object > io-properties > div > :nth-child(2) {
       flex: 1 0 8em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       min-width: 2em;
     }
-    :host > io-object > io-object-props > div > io-option {
+    :host > io-object > io-properties > div > io-option {
       flex: 0 1 auto !important;
     }
     </style>`;
@@ -98,7 +98,7 @@ export class IoInspector extends IoObject {
     // TODO: rewise and document use of storage
     // const id = this.value.guid || this.value.uuid || this.value.id;
     for (let group in this._groups) {
-      let expanded = storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false);
+      const expanded = storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false);
       elements.push(
         ['io-object', {
           value: this.value,
@@ -106,7 +106,6 @@ export class IoInspector extends IoObject {
           expanded: expanded,
           props: this._groups[group],
           config: this.constructor.config,
-          // config: [this.config, this.constructor.config],
         }],
       );
     }
@@ -114,17 +113,14 @@ export class IoInspector extends IoObject {
   }
   static get config() {
     return {
-      'Object': {
-        'type:object': ['io-inspector-link'],
-        'type:boolean': ['io-boolean', {true: '⦿ true', false: '⦾ false'}],
-      },
+      'type:object': ['io-inspector-link'],
+      'type:boolean': ['io-boolean', {true: '⦿ true', false: '⦾ false'}],
     };
   }
   static get groups() {
     return {
-      'Object': {
-        'hidden': ['constructor'],
-      },
+      'Object|hidden': [/^_/],
+      'HTMLElement|hidden': [/^_/, 'innerText', 'outerText', 'innerHTML', 'outerHTML', 'textContent'],
     };
   }
 }
@@ -133,23 +129,12 @@ export class Groups {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {
       const groups = prototypes[i].constructor.groups || {};
-      for (let cstr in groups) {
-        this[cstr] = this[cstr] || {};
-        this.extend(this[cstr], groups[cstr]);
+      for (let g in groups) {
+        this[g] = [...(this[g] || []), ...groups[g]];
       }
     }
   }
-  extend(groups, groupsEx) {
-    for (let g in groupsEx) {
-      groups[g] = groups[g] || [];
-      for (let i = 0; i < groupsEx[g].length; i++) {
-        if (groups[g].indexOf(groupsEx[g][i]) === -1) {
-          groups[g].push(groupsEx[g][i]);
-        }
-      }
-    }
-  }
-  getGroups(object, instanceGroups = {}) {
+  getGroups(object, customGroups) {
     const keys = Object.keys(object);
     const prototypes = [];
 
@@ -161,28 +146,40 @@ export class Groups {
     }
 
     const protoGroups = {};
-    for (let i = prototypes.length; i--;) {
-      this.extend(protoGroups, this[prototypes[i]]);
+
+    for (let i in this) {
+      const grp = i.split('|');
+      if (grp.length === 1) grp.splice(0, 0, 'Object');
+      if (prototypes.indexOf(grp[0]) !== -1) protoGroups[grp[1]] = this[i]
     }
-    this.extend(protoGroups, instanceGroups);
+
+    for (let i in customGroups) {
+      const grp = i.split('|');
+      if (grp.length === 1) grp.splice(0, 0, 'Object');
+      if (prototypes.indexOf(grp[0]) !== -1) protoGroups[grp[1]] = customGroups[i];
+    }
 
     const groups = {};
     const assigned = [];
 
     for (let g in protoGroups) {
-
       groups[g] = groups[g] || [];
-
       for (let gg in protoGroups[g]) {
-
-        const reg = new RegExp(protoGroups[g][gg]);
-
+        const gKey = protoGroups[g][gg];
+        const reg = new RegExp(gKey);
         for (let i = 0; i < keys.length; i++) {
-
-          if (typeof value == 'function') continue;
           const k = keys[i];
-          if (reg.exec(k)) { groups[g].push(k); assigned.push(k); }
-
+          if (typeof gKey === 'string') {
+            if (k == gKey) {
+              groups[g].push(k);
+              assigned.push(k);
+            }
+          } else if (typeof gKey === 'object') {
+            if (reg.exec(k)) {
+              groups[g].push(k);
+              assigned.push(k);
+            }
+          }
         }
       }
     }

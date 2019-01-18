@@ -7,6 +7,7 @@ export class IoSlider extends IoElement {
       :host {
         display: flex;
         flex-direction: row;
+        min-width: 12em;
       }
       :host > io-number {
         flex: 0 0 auto;
@@ -36,8 +37,8 @@ export class IoSlider extends IoElement {
   changed() {
     const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
     this.template([
-      ['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],
-      ['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]
+      ['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],
+      ['io-slider-knob', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]
     ]);
     this.$.number.style.setProperty('min-width', charLength + 'em');
   }
@@ -73,6 +74,7 @@ export class IoSliderKnob extends IoCanvas {
   }
   onPointermove(event) {
     if (event.buttons !== 0) {
+      this.setPointerCapture(event.pointerId);
       event.preventDefault();
       const rect = this.getBoundingClientRect();
       const x = (event.clientX - rect.x) / rect.width;
@@ -102,7 +104,7 @@ export class IoSliderKnob extends IoCanvas {
     let pos;
 
     if (((max - min) / step) < w / 3 ) {
-      while (snap < (max - step * 2)) {
+      while (snap < (max - step)) {
         snap += step;
         pos = Math.floor(w * (snap - min) / (max - min));
         ctx.lineWidth = 1;

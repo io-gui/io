@@ -1,4 +1,4 @@
-import "./object-props.js";
+import "./properties.js";
 import {IoCollapsable} from "./collapsable.js";
 
 export class IoObject extends IoCollapsable {
@@ -15,7 +15,7 @@ export class IoObject extends IoCollapsable {
     this.template([
       ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
       this.expanded ? [
-        ['io-object-props', {
+        ['io-properties', {
           value: this.value,
           props: this.props.length ? this.props : Object.keys(this.value),
           config: this.config,
