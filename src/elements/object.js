@@ -19,7 +19,6 @@ export class IoObject extends IoCollapsable {
           value: this.value,
           props: this.props.length ? this.props : Object.keys(this.value),
           config: this.config,
-          // config: [this.config, this.constructor.config],
           labeled: this.labeled,
         }]
       ] : null

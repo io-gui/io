@@ -45,7 +45,7 @@ export class IoObjectProps extends IoElement {
   static get properties() {
     return {
       value: Object,
-      // config: Object,
+      config: Object,
       props: Array,
       labeled: true,
     };

@@ -119,6 +119,7 @@ export const IoCore = (superclass) => class extends superclass {
       if (this.__props[this.__objectProps[i]].value === event.detail.object) {
         // Triggers change on all elements with mutated object as property
         this.changed();
+        // console.log(this)
       }
     }
   }
