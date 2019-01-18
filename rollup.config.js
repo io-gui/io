@@ -58,7 +58,7 @@ export default [
         indent: '  '
       }
     ],
-    plugins: [html()],
-    external: [ path.resolve('./src/io.js') ]
+    external: [ path.resolve('./src/io-core.js') ],
+    plugins: [html()]
   }
 ];

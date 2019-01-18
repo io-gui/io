@@ -1,5 +1,4 @@
-import {html} from "../core/element.js";
-import {storage as $} from "../core/storage.js";
+import {html, storage} from "../io-core.js";
 import {IoObject} from "./object.js";
 
 import "./inspector-breadcrumbs.js";
@@ -99,7 +98,7 @@ export class IoInspector extends IoObject {
     // TODO: rewise and document use of storage
     // const id = this.value.guid || this.value.uuid || this.value.id;
     for (let group in this._groups) {
-      let expanded = $('io-inspector-group-' + this.value.constructor.name + '-' + group, false);
+      let expanded = storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false);
       elements.push(
         ['io-object', {
           value: this.value,

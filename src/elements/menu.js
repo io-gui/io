@@ -1,4 +1,4 @@
-import {IoElement} from "../core/element.js";
+import {IoElement} from "../io-core.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
 // TODO: implement working mousestart/touchstart UX

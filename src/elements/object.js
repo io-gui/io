@@ -1,4 +1,3 @@
-import {IoElement} from "../core/element.js";
 import "./object-props.js";
 import {IoCollapsable} from "./collapsable.js";
 

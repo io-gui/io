@@ -149,7 +149,8 @@ class ProtoListeners {
   }
 }
 
-// Creates a list of functions defined in prototype chain.
+// Creates a list of functions defined in prototype chain (for the purpose of binding to instance).
+// TODO: consider improving
 class ProtoFunctions extends Array {
   constructor(prototypes) {
     super();
@@ -157,10 +158,10 @@ class ProtoFunctions extends Array {
       let names = Object.getOwnPropertyNames(prototypes[i]);
       for (let j = 0; j < names.length; j++) {
         if (names[j] === 'constructor') continue;
+        const p = Object.getOwnPropertyDescriptor(prototypes[i], names[j]);
+        if (p.get || p.set) continue;
         if (typeof prototypes[i][names[j]] !== 'function') continue;
-        if (prototypes[i][names[j]].name === 'anonymous') {
-          continue;
-        }
+        if (prototypes[i][names[j]].name === 'anonymous') continue;
         if (this.indexOf(names[j]) === -1) this.push(names[j]);
         if (names[j] === 'value') console.log(prototypes[i][names[j]]);
       }
@@ -183,6 +184,9 @@ class Binding {
     this.updateSource = this.updateSource.bind(this);
     this.updateTargets = this.updateTargets.bind(this);
     this.setSource(this.source);
+  }
+  get value() {
+    return this.source[this.sourceProp];
   }
   setSource() {
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
@@ -381,6 +385,7 @@ const IoCore = (superclass) => class extends superclass {
   objectMutated(event) {
     for (let i = this.__objectProps.length; i--;) {
       if (this.__props[this.__objectProps[i]].value === event.detail.object) {
+        // Triggers change on all elements with mutated object as property
         this.changed();
       }
     }
@@ -395,7 +400,7 @@ const IoCore = (superclass) => class extends superclass {
       }
     }
     if (this.__objectProps.length) {
-      window.addEventListener('io-object-mutated', this.objectMutated);
+      window.addEventListener('object-mutated', this.objectMutated);
     }
   }
   disconnectedCallback() {
@@ -410,7 +415,7 @@ const IoCore = (superclass) => class extends superclass {
       }
     }
     if (this.__objectProps.length) {
-      window.removeEventListener('io-object-mutated', this.objectMutated);
+      window.removeEventListener('object-mutated', this.objectMutated);
     }
   }
   addEventListener(type, listener) {
@@ -741,32 +746,29 @@ class StoreNode extends IoNode {
       value: undefined,
     };
   }
-  constructor(props) {
+  constructor(props, defValue) {
     super(props);
     const value = localStorage.getItem(this.key);
     if (value !== null) {
       this.value = JSON.parse(value);
+    } else {
+      this.value = defValue;
     }
   }
   valueChanged() {
-    localStorage.setItem(this.key, this.value);
+    localStorage.setItem(this.key, JSON.stringify(this.value));
   }
 }
 
 StoreNode.Register();
 
-function storage(key, value) {
-  let store = nodes[key];
-  if (!store) {
-    store = new StoreNode({key: key});
-    nodes[key] = store;
-    store.connect();
-    store.binding = store.bind('value');
+function storage(key, defValue) {
+  if (!nodes[key]) {
+    nodes[key] = new StoreNode({key: key}, defValue);
+    nodes[key].connect();
+    nodes[key].binding = nodes[key].bind('value');
   }
-  if (store.value === undefined && value !== undefined) {
-    store.value = value;
-  }
-  return store.binding;
+  return nodes[key].binding;
 }
 
 const _clickmask = document.createElement('div');
@@ -931,14 +933,10 @@ const IoInteractiveMixin = (superclass) => class extends superclass {
 class IoInteractive extends IoInteractiveMixin(IoElement) {}
 IoInteractive.Register();
 
-// core classes
-
 /**
  * @author arodic / https://github.com/arodic
  *
- * Minimal implementation of io mixin: https://github.com/arodic/io
- * Includes event listener/dispatcher and defineProperties() method.
- * Changed properties trigger "[prop]-changed" event, and execution of changed() and [prop]Changed() functions.
+ * Core classes of io library: https://github.com/arodic/io
  */
 
 const IoLiteMixin = (superclass) => class extends superclass {
@@ -1030,6 +1028,14 @@ const defineProperty = function(scope, prop, def) {
 
 class IoLite extends IoLiteMixin(Object) {}
 
+/**
+ * @author arodic / https://github.com/arodic
+ *
+ * Minimal implementation of io mixin: https://github.com/arodic/io
+ * Includes event listener/dispatcher and defineProperties() method.
+ * Changed properties trigger "[prop]-changed" event, and execution of changed() and [prop]Changed() functions.
+ */
+
 class IoObjectProps extends IoElement {
   static get style() {
     return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-object-group {font-weight: bold;}:host > div.io-object-prop {display: flex !important;flex-direction: row;}:host > div > span {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > io-number,:host > div > io-string,:host > div > io-boolean {border: none;background: none;margin: 0;padding: 0;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(0, 32, 135);}</style>`;
@@ -1037,18 +1043,21 @@ class IoObjectProps extends IoElement {
   static get properties() {
     return {
       value: Object,
-      config: Object,
+      // config: Object,
       props: Array,
-      _config: Object,
+      labeled: true,
     };
+  }
+  get _config() {
+    return this.__proto__.__config.getConfig(this.value, this.config);
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('io-object-mutated', this._onIoObjectMutated);
+    window.addEventListener('object-mutated', this._onIoObjectMutated);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('io-object-mutated', this._onIoObjectMutated);
+    window.removeEventListener('object-mutated', this._onIoObjectMutated);
   }
   _onIoObjectMutated(event) {
     let key = event.detail.key;
@@ -1073,12 +1082,13 @@ class IoObjectProps extends IoElement {
     if (key !== null) {
       this.value[key] = event.detail.value;
       let detail = Object.assign({object: this.value, key: key}, event.detail);
-      this.dispatchEvent('io-object-mutated', detail, false, window);
+      this.dispatchEvent('object-mutated', detail, false, window);
       this.dispatchEvent('value-set', detail, false); // TODO
     }
   }
   changed() {
-    const config = this.config;
+    // this.__protoConfig.merge(this.config);
+    const config = this._config;
     const elements = [];
     for (let c in config) {
       if (!this.props.length || this.props.indexOf(c) !== -1) {
@@ -1089,69 +1099,13 @@ class IoObjectProps extends IoElement {
           const itemConfig = {title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
           elements.push(
             ['div', {className: 'io-object-prop'}, [
-              ['span', {title: label}, label + ':'],
+              this.labeled ? ['span', {title: label}, label + ':'] : null,
               [tag, Object.assign(itemConfig, protoConfig)]
             ]]);
         }
       }
     }
     this.template(elements);
-  }
-}
-
-IoObjectProps.Register();
-
-class IoCollapsable extends IoElement {
-  static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #999;border-radius: 3px;padding: 1px;background: #ccc;}:host > io-boolean {border: none;border-radius: 0;background: none;}:host > io-boolean::before {content: '▸';display: inline-block;width: 0.65em;margin: 0 0.25em;}:host[expanded] > io-boolean::before{content: '▾';}:host > :nth-child(2) {display: block;border: 1px solid #999;border-radius: 2px;padding: 2px;background: #eee;}</style>`;
-  }
-  static get properties() {
-    return {
-      label: String,
-      expanded: {
-        type: Boolean,
-        reflect: true
-      },
-      elements: Array,
-    };
-  }
-  changed() {
-    this.template([
-      ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
-      this.expanded ? ['div', this.elements] : null
-    ]);
-  }
-}
-
-IoCollapsable.Register();
-
-class IoObject extends IoCollapsable {
-  static get properties() {
-    return {
-      value: Object,
-      props: Array,
-      config: Object,
-      _config: Object,
-    };
-  }
-  valueChanged() {
-    this._config = this.__proto__.__configs.getConfig(this.value, this.config);
-  }
-  configChanged() {
-    this._config = this.__proto__.__configs.getConfig(this.value, this.config);
-  }
-  changed() {
-    const label = this.label || this.value.constructor.name;
-    this.template([
-      ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
-      this.expanded ? [
-        ['io-object-props', {
-          value: this.value,
-          props: this.props.length ? this.props : Object.keys(this._config),
-          config: this._config,
-        }]
-      ] : null
-    ]);
   }
   static get config() {
     return {
@@ -1186,7 +1140,7 @@ class Config {
       configs[c] = [configs[c][0] || configsEx[c][0], Object.assign(configs[c][1] || {}, configsEx[c][1] || {})];
     }
   }
-  getConfig(object, instanceConfig = {}) {
+  getConfig(object) {
     const keys = Object.keys(object);
     const prototypes = [];
 
@@ -1199,9 +1153,12 @@ class Config {
 
     const protoConfigs = {};
     for (let i = prototypes.length; i--;) {
-      this.extend(protoConfigs, this[prototypes[i]]);
+      // if (instanceConfig) {
+      //   this.extend(protoConfigs, instanceConfig[prototypes[i]]);
+      //   console.log(instanceConfig);
+      // }
+      if (this[prototypes[i]]) this.extend(protoConfigs, this[prototypes[i]]);
     }
-    this.extend(protoConfigs, instanceConfig);
 
     const config = {};
 
@@ -1230,26 +1187,43 @@ class Config {
   }
 }
 
-IoObject.Register = function() {
+class ProtoConfig {
+  constructor(prototypes) {
+    for (let i = 0; i < prototypes.length; i++) {
+      this.extend(this, prototypes[i].constructor.config || {});
+    }
+  }
+  extend(a, b) {
+    for (let i in b) {
+      a[i] = a[i] || {};
+      for (let j in b[i]) {
+        a[i][j] = a[i][j] || [];
+        a[i][j] = [b[i][j][0] || a[i][j][0], Object.assign(a[i][j][1] || {}, b[i][j][1] || {})];
+      }
+    }
+  }
+  getKeys() {
+
+  }
+  merge(config) {
+    let _config = {};
+    this.extend(_config, config);
+    this.extend(_config, this);
+    return _config;
+  }
+}
+
+IoObjectProps.Register = function() {
   IoElement.Register.call(this);
-  Object.defineProperty(this.prototype, '__configs', {value: new Config(this.prototype.__prototypes)});
+  Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__prototypes)});
+  Object.defineProperty(this.prototype, '__protoConfig', {value: new ProtoConfig(this.prototype.__prototypes)});
 };
 
-IoObject.Register();
+IoObjectProps.Register();
 
-//TODO: test
-
-class IoArray extends IoObject {
+class IoArray extends IoObjectProps {
   static get style() {
-    return html`<style>:host {display: grid;}:host > io-number {/* margin: 1px;padding: 0.1em 0.2em; */}:host[columns="2"] {grid-template-columns: 50% 50%;}:host[columns="3"] {grid-template-columns: 33.3% 33.3% 33.3%;}:host[columns="4"] {grid-template-columns: 25% 25% 25% 25%;}:host[columns="5"] {grid-template-columns: 20% 20% 20% 20% 20%;}</style>`;
-  }
-  static get properties() {
-    return {
-      columns: {
-        value: 0
-      }
-      // TODO: labeled?
-    };
+    return html`<style>:host {display: grid;grid-row-gap: 2px;grid-column-gap: 2px;}:host[columns="2"] {grid-template-columns: auto auto;}:host[columns="3"] {grid-template-columns: auto auto auto;}:host[columns="4"] {grid-template-columns: auto auto auto auto;}</style>`;
   }
   changed() {
     const elements = [];
@@ -1357,6 +1331,58 @@ class IoBoolean extends IoButton {
 
 IoBoolean.Register();
 
+class IoCollapsable extends IoElement {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #999;border-radius: 3px;padding: 1px;background: #ccc;}:host > io-boolean {border: none;border-radius: 0;background: none;}:host > io-boolean::before {content: '▸';display: inline-block;width: 0.65em;margin: 0 0.25em;}:host[expanded] > io-boolean::before{content: '▾';}:host > :nth-child(2) {display: block;border: 1px solid #999;border-radius: 2px;padding: 2px;background: #eee;}</style>`;
+  }
+  static get properties() {
+    return {
+      label: String,
+      expanded: {
+        type: Boolean,
+        reflect: true
+      },
+      elements: Array,
+    };
+  }
+  changed() {
+    this.template([
+      ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
+      this.expanded ? ['div', this.elements] : null
+    ]);
+  }
+}
+
+IoCollapsable.Register();
+
+class IoObject extends IoCollapsable {
+  static get properties() {
+    return {
+      value: Object,
+      props: Array,
+      config: null,
+      labeled: true,
+    };
+  }
+  changed() {
+    const label = this.label || this.value.constructor.name;
+    this.template([
+      ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
+      this.expanded ? [
+        ['io-object-props', {
+          value: this.value,
+          props: this.props.length ? this.props : Object.keys(this.value),
+          config: this.config,
+          // config: [this.config, this.constructor.config],
+          labeled: this.labeled,
+        }]
+      ] : null
+    ]);
+  }
+}
+
+IoObject.Register();
+
 class IoInspectorBreadcrumbs extends IoElement {
   static get style() {
     return html`<style>:host {display: flex;flex: 1 0;flex-direction: row;padding: 0 0.25em;background: #fff;border: 1px solid #999;border-radius: 2px;}:host > io-inspector-link {border: none;overflow: hidden;text-overflow: ellipsis;background: none;padding: 0;}:host > io-inspector-link:first-of-type,:host > io-inspector-link:last-of-type {overflow: visible;text-overflow: clip;}:host > io-inspector-link:not(:first-of-type):before {content: '/';margin: 0 0.1em;opacity: 0.25;}</style>`;
@@ -1415,7 +1441,7 @@ class IoInspector extends IoObject {
     }
   }
   valueChanged() {
-    super.valueChanged();
+    // super.valueChanged();
     this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);
     let crumb = this.crumbs.find((crumb) => { return crumb === this.value; });
     let lastrumb = this.crumbs[this.crumbs.length - 1];
@@ -1442,7 +1468,8 @@ class IoInspector extends IoObject {
           label: group,
           expanded: expanded,
           props: this._groups[group],
-          config: this._config,
+          config: this.constructor.config,
+          // config: [this.config, this.constructor.config],
         }],
       );
     }
@@ -1505,27 +1532,22 @@ class Groups {
     const groups = {};
     const assigned = [];
 
-    for (let i = 0; i < keys.length; i++) {
-      const k = keys[i];
-      const value = object[k];
-      const type = typeof value;
-      const cstr = (value && value.constructor) ? value.constructor.name : 'null';
+    for (let g in protoGroups) {
 
-      const typeStr = 'type:' + type;
-      const cstrStr = 'constructor:' + cstr;
-      const keyStr = k;
-      const valueStr = 'value:' + String(value); // TODO: consider optimizing against large strings.
+      groups[g] = groups[g] || [];
 
-      if (type == 'function') continue;
+      for (let gg in protoGroups[g]) {
 
-      for (let g in protoGroups) {
-        groups[g] = groups[g] || [];
-        if (protoGroups[g].indexOf(typeStr) !== -1) { groups[g].push(k); assigned.push(k); }
-        if (protoGroups[g].indexOf(cstrStr) !== -1) { groups[g].push(k); assigned.push(k); }
-        if (protoGroups[g].indexOf(keyStr) !== -1) { groups[g].push(k); assigned.push(k); }
-        if (protoGroups[g].indexOf(valueStr) !== -1) { groups[g].push(k); assigned.push(k); }
+        const reg = new RegExp(protoGroups[g][gg]);
+
+        for (let i = 0; i < keys.length; i++) {
+
+          if (typeof value == 'function') continue;
+          const k = keys[i];
+          if (reg.exec(k)) { groups[g].push(k); assigned.push(k); }
+
+        }
       }
-
     }
 
     if (assigned.length === 0) {
@@ -1842,7 +1864,62 @@ IoMenuLayer.singleton = new IoMenuLayer();
 
 document.body.appendChild(IoMenuLayer.singleton);
 
-class IoMenuItem$$1 extends IoElement {
+class IoMenuOptions extends IoElement {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: column;white-space: nowrap;user-select: none;background: white;color: black;}:host[horizontal] {flex-direction: row;}:host[horizontal] > io-menu-item {padding: 0.25em 0.5em;}:host[horizontal] > io-menu-item > :not(.menu-label) {display: none;}</style>`;
+  }
+  static get properties() {
+    return {
+      options: Array,
+      expanded: {
+        type: Boolean,
+        reflect: true
+      },
+      position: 'right',
+      horizontal: {
+        type: Boolean,
+        reflect: true
+      },
+      $parent: HTMLElement
+    };
+  }
+  static get listeners() {
+    return {
+      'focusin': '_onFocus',
+    };
+  }
+  optionsChanged() {
+    const itemPosition = this.horizontal ? 'bottom' : 'right';
+    this.template([this.options.map((elem, i) =>
+      ['io-menu-item', {
+        $parent: this,
+        option: typeof this.options[i] === 'object' ? this.options[i] : {value: this.options[i], label: this.options[i]},
+        position: itemPosition
+      }]
+    )]);
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    IoMenuLayer.singleton.registerGroup(this);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    IoMenuLayer.singleton.unregisterGroup(this);
+  }
+  _onFocus(event) {
+    const path = event.composedPath();
+    const item = path[0];
+    IoMenuLayer.singleton._hoveredGroup = this;
+    if (item.localName === 'io-menu-item') {
+      IoMenuLayer.singleton._hoveredItem = item;
+      if (item.option.options) this.expanded = true;
+    }
+  }
+}
+
+IoMenuOptions.Register();
+
+class IoMenuItem extends IoElement {
   static get style() {
     return html`<style>:host {display: flex;flex-direction: row;cursor: pointer;padding: 0.125em 0.5em 0.125em 1.7em;line-height: 1em;}:host > * {pointer-events: none;}:host > .menu-icon {width: 1.25em;margin-left: -1.25em;line-height: 1em;}:host > .menu-label {flex: 1}:host > .menu-hint {opacity: 0.5;padding: 0 0.5em;}:host > .menu-more {opacity: 0.5;margin: 0 -0.25em 0 0.25em;}</style>`;
   }
@@ -1927,62 +2004,7 @@ class IoMenuItem$$1 extends IoElement {
   }
 }
 
-IoMenuItem$$1.Register();
-
-class IoMenuOptions extends IoElement {
-  static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;white-space: nowrap;user-select: none;background: white;color: black;}:host[horizontal] {flex-direction: row;}:host[horizontal] > io-menu-item {padding: 0.25em 0.5em;}:host[horizontal] > io-menu-item > :not(.menu-label) {display: none;}</style>`;
-  }
-  static get properties() {
-    return {
-      options: Array,
-      expanded: {
-        type: Boolean,
-        reflect: true
-      },
-      position: 'right',
-      horizontal: {
-        type: Boolean,
-        reflect: true
-      },
-      $parent: HTMLElement
-    };
-  }
-  static get listeners() {
-    return {
-      'focusin': '_onFocus',
-    };
-  }
-  optionsChanged() {
-    const itemPosition = this.horizontal ? 'bottom' : 'right';
-    this.template([this.options.map((elem, i) =>
-      ['io-menu-item', {
-        $parent: this,
-        option: typeof this.options[i] === 'object' ? this.options[i] : {value: this.options[i], label: this.options[i]},
-        position: itemPosition
-      }]
-    )]);
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    IoMenuLayer.singleton.registerGroup(this);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    IoMenuLayer.singleton.unregisterGroup(this);
-  }
-  _onFocus(event) {
-    const path = event.composedPath();
-    const item = path[0];
-    IoMenuLayer.singleton._hoveredGroup = this;
-    if (item.localName === 'io-menu-item') {
-      IoMenuLayer.singleton._hoveredItem = item;
-      if (item.option.options) this.expanded = true;
-    }
-  }
-}
-
-IoMenuOptions.Register();
+IoMenuItem.Register();
 
 // TODO: implement working mousestart/touchstart UX
 // TODO: implement keyboard modifiers maybe. Touch alternative?
@@ -2303,6 +2325,10 @@ class IoString extends IoElement {
 
 IoString.Register();
 
-// elements
+/**
+ * @author arodic / https://github.com/arodic
+ *
+ * Basic elements made with io library: https://github.com/arodic/io
+ */
 
-export { IoCore, IoNode, IoElement, html, storage, IoInteractive, IoInteractiveMixin, IoLite, IoLiteMixin, IoArray, IoBoolean, IoButton, IoCollapsable, IoInspector, IoMenuOptions, IoMenu, IoNumber, IoObject, IoObjectProps, IoOption, IoSlider, IoString };
+export { IoCore, IoNode, IoElement, html, storage, IoInteractive, IoInteractiveMixin, IoLite, IoLiteMixin, IoArray, IoBoolean, IoButton, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObjectProps, IoObject, IoOption, IoSlider, IoString };

@@ -1,4 +1,4 @@
-import {html} from "../core/element.js";
+import {html} from "../io-core.js";
 import {IoObjectProps} from "./object-props.js";
 
 export class IoArray extends IoObjectProps {

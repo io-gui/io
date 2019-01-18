@@ -149,7 +149,8 @@ class ProtoListeners {
   }
 }
 
-// Creates a list of functions defined in prototype chain.
+// Creates a list of functions defined in prototype chain (for the purpose of binding to instance).
+// TODO: consider improving
 class ProtoFunctions extends Array {
   constructor(prototypes) {
     super();
@@ -157,10 +158,10 @@ class ProtoFunctions extends Array {
       let names = Object.getOwnPropertyNames(prototypes[i]);
       for (let j = 0; j < names.length; j++) {
         if (names[j] === 'constructor') continue;
+        const p = Object.getOwnPropertyDescriptor(prototypes[i], names[j]);
+        if (p.get || p.set) continue;
         if (typeof prototypes[i][names[j]] !== 'function') continue;
-        if (prototypes[i][names[j]].name === 'anonymous') {
-          continue;
-        }
+        if (prototypes[i][names[j]].name === 'anonymous') continue;
         if (this.indexOf(names[j]) === -1) this.push(names[j]);
         if (names[j] === 'value') console.log(prototypes[i][names[j]]);
       }
@@ -183,6 +184,9 @@ class Binding {
     this.updateSource = this.updateSource.bind(this);
     this.updateTargets = this.updateTargets.bind(this);
     this.setSource(this.source);
+  }
+  get value() {
+    return this.source[this.sourceProp];
   }
   setSource() {
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
@@ -381,6 +385,7 @@ const IoCore = (superclass) => class extends superclass {
   objectMutated(event) {
     for (let i = this.__objectProps.length; i--;) {
       if (this.__props[this.__objectProps[i]].value === event.detail.object) {
+        // Triggers change on all elements with mutated object as property
         this.changed();
       }
     }
@@ -395,7 +400,7 @@ const IoCore = (superclass) => class extends superclass {
       }
     }
     if (this.__objectProps.length) {
-      window.addEventListener('io-object-mutated', this.objectMutated);
+      window.addEventListener('object-mutated', this.objectMutated);
     }
   }
   disconnectedCallback() {
@@ -410,7 +415,7 @@ const IoCore = (superclass) => class extends superclass {
       }
     }
     if (this.__objectProps.length) {
-      window.removeEventListener('io-object-mutated', this.objectMutated);
+      window.removeEventListener('object-mutated', this.objectMutated);
     }
   }
   addEventListener(type, listener) {
@@ -741,32 +746,29 @@ class StoreNode extends IoNode {
       value: undefined,
     };
   }
-  constructor(props) {
+  constructor(props, defValue) {
     super(props);
     const value = localStorage.getItem(this.key);
     if (value !== null) {
       this.value = JSON.parse(value);
+    } else {
+      this.value = defValue;
     }
   }
   valueChanged() {
-    localStorage.setItem(this.key, this.value);
+    localStorage.setItem(this.key, JSON.stringify(this.value));
   }
 }
 
 StoreNode.Register();
 
-function storage(key, value) {
-  let store = nodes[key];
-  if (!store) {
-    store = new StoreNode({key: key});
-    nodes[key] = store;
-    store.connect();
-    store.binding = store.bind('value');
+function storage(key, defValue) {
+  if (!nodes[key]) {
+    nodes[key] = new StoreNode({key: key}, defValue);
+    nodes[key].connect();
+    nodes[key].binding = nodes[key].bind('value');
   }
-  if (store.value === undefined && value !== undefined) {
-    store.value = value;
-  }
-  return store.binding;
+  return nodes[key].binding;
 }
 
 const _clickmask = document.createElement('div');
@@ -931,6 +933,10 @@ const IoInteractiveMixin = (superclass) => class extends superclass {
 class IoInteractive extends IoInteractiveMixin(IoElement) {}
 IoInteractive.Register();
 
-// core classes
+/**
+ * @author arodic / https://github.com/arodic
+ *
+ * Core classes of io library: https://github.com/arodic/io
+ */
 
 export { IoCore, IoNode, IoElement, html, storage, IoInteractive, IoInteractiveMixin };

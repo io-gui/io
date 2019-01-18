@@ -12,9 +12,9 @@
       }
     </style>
     <script type="module">
-    import {html, IoElement} from "../src/io.js";
+    import {html, IoElement, storage as $} from "../src/io.js";
+    // import {html, IoElement, storage as $} from "../build/io.js";
     import {data} from "./data.js";
-    import {storage as $} from "../src/core/storage.js";
 
     export class IoDemo extends IoElement {
       static get style() {
