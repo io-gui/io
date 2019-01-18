@@ -45,17 +45,13 @@ export class IoObjectProps extends IoElement {
   static get properties() {
     return {
       value: Object,
-      config: Object,
+      // config: Object,
       props: Array,
       labeled: true,
-      _config: Object,
     };
   }
-  valueChanged() {
-    this._config = this.__proto__.__configs.getConfig(this.value, this.config);
-  }
-  configChanged() {
-    this._config = this.__proto__.__configs.getConfig(this.value, this.config);
+  get _config() {
+    return this.__proto__.__config.getConfig(this.value, this.config);
   }
   connectedCallback() {
     super.connectedCallback();
@@ -93,6 +89,7 @@ export class IoObjectProps extends IoElement {
     }
   }
   changed() {
+    // this.__protoConfig.merge(this.config);
     const config = this._config;
     const elements = [];
     for (let c in config) {
@@ -129,7 +126,7 @@ export class IoObjectProps extends IoElement {
   }
 }
 
-class Config {
+export class Config {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {
       const config = prototypes[i].constructor.config || {};
@@ -145,7 +142,7 @@ class Config {
       configs[c] = [configs[c][0] || configsEx[c][0], Object.assign(configs[c][1] || {}, configsEx[c][1] || {})];
     }
   }
-  getConfig(object, instanceConfig = {}) {
+  getConfig(object) {
     const keys = Object.keys(object);
     const prototypes = [];
 
@@ -158,13 +155,11 @@ class Config {
 
     const protoConfigs = {};
     for (let i = prototypes.length; i--;) {
-      // if (instanceConfig instanceof Array) {
-      //   this.extend(protoConfigs, instanceConfig[0][prototypes[i]]);
-      //   this.extend(protoConfigs, instanceConfig[1][prototypes[i]]);
-      // } else {
-        this.extend(protoConfigs, instanceConfig[prototypes[i]]);
+      // if (instanceConfig) {
+      //   this.extend(protoConfigs, instanceConfig[prototypes[i]]);
+      //   console.log(instanceConfig);
       // }
-      this.extend(protoConfigs, this[prototypes[i]]);
+      if (this[prototypes[i]]) this.extend(protoConfigs, this[prototypes[i]]);
     }
 
     const config = {};
@@ -194,9 +189,36 @@ class Config {
   }
 }
 
+export class ProtoConfig {
+  constructor(prototypes) {
+    for (let i = 0; i < prototypes.length; i++) {
+      this.extend(this, prototypes[i].constructor.config || {});
+    }
+  }
+  extend(a, b) {
+    for (let i in b) {
+      a[i] = a[i] || {};
+      for (let j in b[i]) {
+        a[i][j] = a[i][j] || [];
+        a[i][j] = [b[i][j][0] || a[i][j][0], Object.assign(a[i][j][1] || {}, b[i][j][1] || {})];
+      }
+    }
+  }
+  getKeys() {
+
+  }
+  merge(config) {
+    let _config = {};
+    this.extend(_config, config);
+    this.extend(_config, this);
+    return _config;
+  }
+}
+
 IoObjectProps.Register = function() {
   IoElement.Register.call(this);
-  Object.defineProperty(this.prototype, '__configs', {value: new Config(this.prototype.__prototypes)});
+  Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__prototypes)});
+  Object.defineProperty(this.prototype, '__protoConfig', {value: new ProtoConfig(this.prototype.__prototypes)});
 };
 
 IoObjectProps.Register();
