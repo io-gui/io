@@ -97,12 +97,15 @@
             ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
           ]}],
           ['io-collapsable', {label: 'io-slider', expanded: $('io-slider'), elements: [
+            ['div', {className: 'label'}, 'number'],
             ['io-slider', {value: this.bind('number')}],
             ['io-slider', {value: this.bind('number'), step: 0.1}],
+            ['io-slider', {value: this.bind('number'), min: -1, max: 1, step: 0.1}],
+            ['div', {className: 'label'}, 'NaN'],
             ['io-slider', {value: this.bind('NaN'), step: 0.1}],
-            ['io-slider', {value: this.bind('number'), min: -1, max: 1, step: 0.1}]
           ]}],
           ['io-collapsable', {label: 'io-option', expanded: $('io-option'), elements: [
+            ['div', {className: 'label'}, 'number'],
             ['io-option', {options: this.options, value: this.bind('number')}],
           ]}],
           ['io-collapsable', {label: 'io-button', expanded: $('io-button'), className: 'table', elements: [
@@ -129,7 +132,9 @@
             ['div', {className: 'label'}, 'horizontal'],
             ['io-menu-options', {className: 'menubar', options: this.menuoptions, horizontal: true}],
           ]}],
-          // ['a', {href: './todoapp/'}, 'Todo App Example'],
+          ['io-collapsable', {label: 'apps', expanded: $('io-apps'), elements: [
+            ['io-button', {action: () => { window.location.href = './todomvc'; }, label: 'Todo App Example'}],
+          ]}],
         ]);
       }
     }
