@@ -45,7 +45,9 @@ export class IoCanvas extends IoElement {
 
     this.$.img.src = canvas.toDataURL();
   }
-  paint(ctx, rect) {}
+  paint(ctx, rect) {
+    (ctx, rect);
+  }
 }
 
 IoCanvas.Register();

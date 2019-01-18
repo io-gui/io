@@ -150,7 +150,7 @@ export class Groups {
     for (let i in this) {
       const grp = i.split('|');
       if (grp.length === 1) grp.splice(0, 0, 'Object');
-      if (prototypes.indexOf(grp[0]) !== -1) protoGroups[grp[1]] = this[i]
+      if (prototypes.indexOf(grp[0]) !== -1) protoGroups[grp[1]] = this[i];
     }
 
     for (let i in customGroups) {

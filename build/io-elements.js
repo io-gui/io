@@ -1,8 +1,8 @@
 import { html, IoElement, storage } from './io-core.js';
 
-class IoObjectProps extends IoElement {
+class IoProperties extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-object-group {font-weight: bold;}:host > div.io-object-prop {display: flex !important;flex-direction: row;}:host > div > span {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > io-number,:host > div > io-string,:host > div > io-boolean {border: none;background: none;margin: 0;padding: 0;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(0, 32, 135);}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-property {display: flex !important;flex-direction: row;}:host > div > .io-property-label {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > .io-property-editor {margin: 0;padding: 0;}:host > div > io-number,:host > div > io-string,:host > div > io-boolean {border: none;background: none;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(0, 32, 135);}</style>`;
   }
   static get properties() {
     return {
@@ -20,12 +20,12 @@ class IoObjectProps extends IoElement {
     if (path[0] === this) return;
     if (event.detail.object) return; // TODO: unhack
     event.stopPropagation();
-    let key = path[0].id;
+    const key = path[0].id;
     if (key !== null) {
       this.value[key] = event.detail.value;
-      let detail = Object.assign({object: this.value, key: key}, event.detail);
+      const detail = Object.assign({object: this.value, key: key}, event.detail);
       this.dispatchEvent('object-mutated', detail, false, window);
-      this.dispatchEvent('value-set', detail, false); // TODO
+      this.dispatchEvent('value-set', detail, false);
     }
   }
   changed() {
@@ -38,10 +38,10 @@ class IoObjectProps extends IoElement {
           const tag = config[c][0];
           const protoConfig = config[c][1];
           const label = config[c].label || c;
-          const itemConfig = {title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+          const itemConfig = {className: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
           elements.push(
-            ['div', {className: 'io-object-prop'}, [
-              this.labeled ? ['span', {title: label}, label + ':'] : null,
+            ['div', {className: 'io-property'}, [
+              this.labeled ? ['span', {className: 'io-property-label', title: label}, label + ':'] : null,
               [tag, Object.assign(itemConfig, protoConfig)]
             ]]);
         }
@@ -51,17 +51,13 @@ class IoObjectProps extends IoElement {
   }
   static get config() {
     return {
-      'Object': {
-        'type:string': ['io-string', {}],
-        'type:number': ['io-number', {step: 0.01}],
-        'type:boolean': ['io-boolean', {}],
-        'type:object': ['io-object', {}],
-        'value:null': ['io-string', {}],
-        'value:undefined': ['io-string', {}],
-      },
-      'Array': {
-        'type:number': ['io-number', {step: 0.1}],
-      },
+      'type:string': ['io-string', {}],
+      'type:number': ['io-number', {step: 0.01}],
+      'type:boolean': ['io-boolean', {}],
+      'type:object': ['io-object', {}],
+      'type:null': ['io-string', {}],
+      'type:undefined': ['io-string', {}],
+      'Array|type:number': ['io-slider', {step: 0.05, min:0, max:10}],
     };
   }
 }
@@ -70,19 +66,13 @@ class Config {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {
       const config = prototypes[i].constructor.config || {};
-      for (let cstr in config) {
-        this[cstr] = this[cstr] || {};
-        this.extend(this[cstr], config[cstr]);
+      for (let c in config) {
+        this[c] = this[c] || [];
+        this[c] = [config[c][0] || this[c][0], Object.assign(this[c][1] || {}, config[c][1] || {})];
       }
     }
   }
-  extend(configs, configsEx) {
-    for (let c in configsEx) {
-      configs[c] = configs[c] || [];
-      configs[c] = [configs[c][0] || configsEx[c][0], Object.assign(configs[c][1] || {}, configsEx[c][1] || {})];
-    }
-  }
-  getConfig(object) {
+  getConfig(object, customConfig) {
     const keys = Object.keys(object);
     const prototypes = [];
 
@@ -94,12 +84,17 @@ class Config {
     }
 
     const protoConfigs = {};
-    for (let i = prototypes.length; i--;) {
-      // if (instanceConfig) {
-      //   this.extend(protoConfigs, instanceConfig[prototypes[i]]);
-      //   console.log(instanceConfig);
-      // }
-      if (this[prototypes[i]]) this.extend(protoConfigs, this[prototypes[i]]);
+
+    for (let i in this) {
+      const cfg = i.split('|');
+      if (cfg.length === 1) cfg.splice(0, 0, 'Object');
+      if (prototypes.indexOf(cfg[0]) !== -1) protoConfigs[cfg[1]] = this[i];
+    }
+
+    for (let i in customConfig) {
+      const cfg = i.split('|');
+      if (cfg.length === 1) cfg.splice(0, 0, 'Object');
+      if (prototypes.indexOf(cfg[0]) !== -1) protoConfigs[cfg[1]] = customConfig[i];
     }
 
     const config = {};
@@ -107,63 +102,34 @@ class Config {
     for (let i = 0; i < keys.length; i++) {
       const k = keys[i];
       const value = object[k];
-      const type = typeof value;
-      const cstr = (value && value.constructor) ? value.constructor.name : 'null';
+      const type = value === null ? 'null' : typeof value;
+      const cstr = (value != undefined && value.constructor) ? value.constructor.name : 'null';
+
+      if (type == 'function') continue;
 
       const typeStr = 'type:' + type;
       const cstrStr = 'constructor:' + cstr;
-      const keyStr = k;
-      const valueStr = 'value:' + String(value); // TODO: consider optimizing against large strings.
-
-      if (type == 'function') continue;
+      const keyStr = 'key:' + k;
 
       config[k] = {};
 
       if (protoConfigs[typeStr]) config[k] = protoConfigs[typeStr];
       if (protoConfigs[cstrStr]) config[k] = protoConfigs[cstrStr];
       if (protoConfigs[keyStr]) config[k] = protoConfigs[keyStr];
-      if (protoConfigs[valueStr]) config[k] = protoConfigs[valueStr];
     }
 
     return config;
   }
 }
 
-class ProtoConfig {
-  constructor(prototypes) {
-    for (let i = 0; i < prototypes.length; i++) {
-      this.extend(this, prototypes[i].constructor.config || {});
-    }
-  }
-  extend(a, b) {
-    for (let i in b) {
-      a[i] = a[i] || {};
-      for (let j in b[i]) {
-        a[i][j] = a[i][j] || [];
-        a[i][j] = [b[i][j][0] || a[i][j][0], Object.assign(a[i][j][1] || {}, b[i][j][1] || {})];
-      }
-    }
-  }
-  getKeys() {
-
-  }
-  merge(config) {
-    let _config = {};
-    this.extend(_config, config);
-    this.extend(_config, this);
-    return _config;
-  }
-}
-
-IoObjectProps.Register = function() {
+IoProperties.Register = function() {
   IoElement.Register.call(this);
   Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__protochain)});
-  Object.defineProperty(this.prototype, '__protoConfig', {value: new ProtoConfig(this.prototype.__protochain)});
 };
 
-IoObjectProps.Register();
+IoProperties.Register();
 
-class IoArray extends IoObjectProps {
+class IoArray extends IoProperties {
   static get style() {
     return html`<style>:host {display: grid;grid-row-gap: 2px;grid-column-gap: 2px;}:host[columns="2"] {grid-template-columns: auto auto;}:host[columns="3"] {grid-template-columns: auto auto auto;}:host[columns="4"] {grid-template-columns: auto auto auto auto;}</style>`;
   }
@@ -273,6 +239,48 @@ class IoBoolean extends IoButton {
 
 IoBoolean.Register();
 
+// TODO: document, demo, test
+
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+let ro;
+if (window.ResizeObserver !== undefined) {
+  ro = new ResizeObserver(entries => {
+    for (let entry of entries) entry.target.changed();
+  });
+}
+
+class IoCanvas extends IoElement {
+  static get style() {
+    return html`<style>:host {overflow: hidden;}:host img {width: 100% !important;touch-action: none;user-select: none;}</style>`;
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    if (ro) ro.observe(this);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (ro) ro.unobserve(this);
+  }
+  changed() {
+    this.template([['img', {id: 'img'}]]);
+
+    const rect = this.$.img.getBoundingClientRect();
+    // TODO: implement in webgl shader
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    this.paint(ctx, rect);
+
+    this.$.img.src = canvas.toDataURL();
+  }
+  paint(ctx, rect) {
+  }
+}
+
+IoCanvas.Register();
+
 class IoCollapsable extends IoElement {
   static get style() {
     return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #999;border-radius: 3px;padding: 1px;background: #ccc;}:host > io-boolean {border: none;border-radius: 0;background: none;}:host > io-boolean::before {content: '▸';display: inline-block;width: 0.65em;margin: 0 0.25em;}:host[expanded] > io-boolean::before{content: '▾';}:host > :nth-child(2) {display: block;border: 1px solid #999;border-radius: 2px;padding: 2px;background: #eee;}</style>`;
@@ -311,7 +319,7 @@ class IoObject extends IoCollapsable {
     this.template([
       ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
       this.expanded ? [
-        ['io-object-props', {
+        ['io-properties', {
           value: this.value,
           props: this.props.length ? this.props : Object.keys(this.value),
           config: this.config,
@@ -361,7 +369,7 @@ function isValueOfPropertyOf(prop, object) {
 
 class IoInspector extends IoObject {
   static get style() {
-    return html`<style>:host {padding: 2px;background-color: #666;border-color: #444;}:host > io-inspector-breadcrumbs {margin-bottom: 2px;}:host > io-object {padding: 1px !important;font-size: 0.9em;background-color: #ccc !important;}:host > io-object > io-boolean {display: block;padding-bottom: 0.15em;}:host > io-object > io-object-props {padding: 0 !important;}:host > io-object > io-object-props > div {overflow: hidden;padding: 2px;}:host > io-object > io-object-props > div:not(:last-of-type) {border-bottom: 1px solid rgba(0, 0, 0, 0.125);}:host > io-object > io-object-props > div > :nth-child(1) {overflow: hidden;text-overflow: ellipsis;text-align: right;flex: 0 1 8em;padding-left: 0.5em;min-width: 3em;}:host > io-object > io-object-props > div > :nth-child(2) {flex: 1 0 8em;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 2em;}:host > io-object > io-object-props > div > io-option {flex: 0 1 auto !important;}</style>`;
+    return html`<style>:host {padding: 2px;background-color: #666;border-color: #444;}:host > io-inspector-breadcrumbs {margin-bottom: 2px;}:host > io-object {padding: 1px !important;font-size: 0.9em;background-color: #ccc !important;}:host > io-object > io-boolean {display: block;padding-bottom: 0.15em;}:host > io-object > io-properties {padding: 0 !important;}:host > io-object > io-properties > div {overflow: hidden;padding: 2px;}:host > io-object > io-properties > div:not(:last-of-type) {border-bottom: 1px solid rgba(0, 0, 0, 0.125);}:host > io-object > io-properties > div > :nth-child(1) {overflow: hidden;text-overflow: ellipsis;text-align: right;flex: 0 1 8em;padding-left: 0.5em;min-width: 3em;}:host > io-object > io-properties > div > :nth-child(2) {flex: 1 0 8em;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 2em;}:host > io-object > io-properties > div > io-option {flex: 0 1 auto !important;}</style>`;
   }
   static get properties() {
     return {
@@ -402,7 +410,7 @@ class IoInspector extends IoObject {
     // TODO: rewise and document use of storage
     // const id = this.value.guid || this.value.uuid || this.value.id;
     for (let group in this._groups) {
-      let expanded = storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false);
+      const expanded = storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false);
       elements.push(
         ['io-object', {
           value: this.value,
@@ -410,7 +418,6 @@ class IoInspector extends IoObject {
           expanded: expanded,
           props: this._groups[group],
           config: this.constructor.config,
-          // config: [this.config, this.constructor.config],
         }],
       );
     }
@@ -418,17 +425,14 @@ class IoInspector extends IoObject {
   }
   static get config() {
     return {
-      'Object': {
-        'type:object': ['io-inspector-link'],
-        'type:boolean': ['io-boolean', {true: '⦿ true', false: '⦾ false'}],
-      },
+      'type:object': ['io-inspector-link'],
+      'type:boolean': ['io-boolean', {true: '⦿ true', false: '⦾ false'}],
     };
   }
   static get groups() {
     return {
-      'Object': {
-        'hidden': ['constructor'],
-      },
+      'Object|hidden': [/^_/],
+      'HTMLElement|hidden': [/^_/, 'innerText', 'outerText', 'innerHTML', 'outerHTML', 'textContent'],
     };
   }
 }
@@ -437,23 +441,12 @@ class Groups {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {
       const groups = prototypes[i].constructor.groups || {};
-      for (let cstr in groups) {
-        this[cstr] = this[cstr] || {};
-        this.extend(this[cstr], groups[cstr]);
+      for (let g in groups) {
+        this[g] = [...(this[g] || []), ...groups[g]];
       }
     }
   }
-  extend(groups, groupsEx) {
-    for (let g in groupsEx) {
-      groups[g] = groups[g] || [];
-      for (let i = 0; i < groupsEx[g].length; i++) {
-        if (groups[g].indexOf(groupsEx[g][i]) === -1) {
-          groups[g].push(groupsEx[g][i]);
-        }
-      }
-    }
-  }
-  getGroups(object, instanceGroups = {}) {
+  getGroups(object, customGroups) {
     const keys = Object.keys(object);
     const prototypes = [];
 
@@ -465,28 +458,40 @@ class Groups {
     }
 
     const protoGroups = {};
-    for (let i = prototypes.length; i--;) {
-      this.extend(protoGroups, this[prototypes[i]]);
+
+    for (let i in this) {
+      const grp = i.split('|');
+      if (grp.length === 1) grp.splice(0, 0, 'Object');
+      if (prototypes.indexOf(grp[0]) !== -1) protoGroups[grp[1]] = this[i];
     }
-    this.extend(protoGroups, instanceGroups);
+
+    for (let i in customGroups) {
+      const grp = i.split('|');
+      if (grp.length === 1) grp.splice(0, 0, 'Object');
+      if (prototypes.indexOf(grp[0]) !== -1) protoGroups[grp[1]] = customGroups[i];
+    }
 
     const groups = {};
     const assigned = [];
 
     for (let g in protoGroups) {
-
       groups[g] = groups[g] || [];
-
       for (let gg in protoGroups[g]) {
-
-        const reg = new RegExp(protoGroups[g][gg]);
-
+        const gKey = protoGroups[g][gg];
+        const reg = new RegExp(gKey);
         for (let i = 0; i < keys.length; i++) {
-
-          if (typeof value == 'function') continue;
           const k = keys[i];
-          if (reg.exec(k)) { groups[g].push(k); assigned.push(k); }
-
+          if (typeof gKey === 'string') {
+            if (k == gKey) {
+              groups[g].push(k);
+              assigned.push(k);
+            }
+          } else if (typeof gKey === 'object') {
+            if (reg.exec(k)) {
+              groups[g].push(k);
+              assigned.push(k);
+            }
+          }
         }
       }
     }
@@ -1122,12 +1127,9 @@ class IoOption extends IoButton {
 
 IoOption.Register();
 
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
-
 class IoSlider extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;}:host > io-number {flex: 0 0 auto;}:host > io-slider-knob {flex: 1 1 auto;margin-left: 2px;border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}_onValueSet(event) {this.dispatchEvent('value-set', event.detail, false);}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],['io-slider-knob', {value: this.bind('value'), step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoElement {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;overflow: hidden;}:host img {width: 100% !important;touch-action: none;user-select: none;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: row;min-width: 12em;}:host > io-number {flex: 0 0 auto;}:host > io-slider-knob {flex: 1 1 auto;margin-left: 2px;border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}_onValueSet(event) {this.dispatchEvent('value-set', event.detail, false);}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],['io-slider-knob', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoCanvas {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;}</style>`;
   }
   static get properties() {
     return {
@@ -1135,15 +1137,16 @@ class IoSlider extends IoElement {
       step: 0.01,
       min: 0,
       max: 1000,
-      strics: true, // TODO: implement
-      pointermode: 'absolute',
-      cursor: 'ew-resize'
     };
   }
   static get listeners() {
     return {
       'pointermove': 'onPointermove',
+      'dragstart': 'onDragstart',
     };
+  }
+  onDragstart(event) {
+    event.preventDefault();
   }
   onPointermove(event) {
     if (event.buttons !== 0) {
@@ -1158,15 +1161,7 @@ class IoSlider extends IoElement {
       this.set('value', value);
     }
   }
-  changed() {
-    this.template([['img', {id: 'img'}],]);
-    this.$.img.src = this.paint(this.$.img.getBoundingClientRect());
-  }
-
-  paint(rect) {
-    // TODO: implement in webgl shader
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+  paint(ctx, rect) {
 
     const bgColor = '#444';
     const colorStart = '#2cf';
@@ -1185,7 +1180,7 @@ class IoSlider extends IoElement {
     let pos;
 
     if (((max - min) / step) < w / 3 ) {
-      while (snap < (max - step * 2)) {
+      while (snap < (max - step)) {
         snap += step;
         pos = Math.floor(w * (snap - min) / (max - min));
         ctx.lineWidth = 1;
@@ -1213,8 +1208,6 @@ class IoSlider extends IoElement {
     ctx.moveTo(pos, 0);
     ctx.lineTo(pos, h);
     ctx.stroke();
-
-    return canvas.toDataURL();
   }
 }
 
@@ -1275,4 +1268,4 @@ IoString.Register();
  * Basic elements made with io library: https://github.com/arodic/io
  */
 
-export { IoArray, IoBoolean, IoButton, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObjectProps, IoObject, IoOption, IoSlider, IoString };
+export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSlider, IoString };

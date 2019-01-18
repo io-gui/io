@@ -125,7 +125,7 @@ export class Config {
     for (let i in this) {
       const cfg = i.split('|');
       if (cfg.length === 1) cfg.splice(0, 0, 'Object');
-      if (prototypes.indexOf(cfg[0]) !== -1) protoConfigs[cfg[1]] = this[i]
+      if (prototypes.indexOf(cfg[0]) !== -1) protoConfigs[cfg[1]] = this[i];
     }
 
     for (let i in customConfig) {

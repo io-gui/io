@@ -551,6 +551,9 @@ class IoElement extends IoCore(HTMLElement) {
       }
     }
   }
+  // disconnectedCallback() {
+  //   super.disconnectedCallback();
+  // }
   template(children, host) {
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
@@ -559,13 +562,10 @@ class IoElement extends IoCore(HTMLElement) {
     // remove trailing elements
     while (children.length > vChildren.length) {
       let child = children[children.length - 1];
-      // TODO: is this necessary (disconnected callback redundancy)
       let nodes = Array.from(child.querySelectorAll('*'));
       for (let i = nodes.length; i--;) {
         if (nodes[i].dispose) nodes[i].dispose();
-        // TODO: dispose propListeners from native elements
       }
-      // console.log('removing', child);
       host.removeChild(child);
     }
     // create new elements after existing
@@ -581,6 +581,7 @@ class IoElement extends IoCore(HTMLElement) {
       if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];
         host.insertBefore(constructElement(vChildren[i]), oldElement);
+        oldElement.dispose();
         host.removeChild(oldElement);
 
       // update existing elements
@@ -753,4 +754,4 @@ function storage(key, defValue) {
  * Core classes of io library: https://github.com/arodic/io
  */
 
-export { IoCore, IoNode, IoElement, html, storage };
+export { IoCore, IoNode, IoElement, html, initStyle, storage };
