@@ -33,6 +33,7 @@ export class IoSlider extends IoElement {
   }
   _onValueSet(event) {
     this.dispatchEvent('value-set', event.detail, false);
+    this.value = event.detail.value;
   }
   changed() {
     const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
