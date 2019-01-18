@@ -1,5 +1,5 @@
 import {IoCore} from "../core/core.js";
-import {PropListeners} from "../core/util/listeners.js"; // TODO: refactor for native elements
+import {Listeners} from "../core/classes/listeners.js"; // TODO: refactor for native elements
 
 export class IoElement extends IoCore(HTMLElement) {
   static get properties() {
@@ -23,9 +23,9 @@ export class IoElement extends IoCore(HTMLElement) {
   }
   connectedCallback() {
     super.connectedCallback();
-    for (let prop in this.__props) {
-      if (this.__props[prop].reflect) {
-        this.setAttribute(prop, this.__props[prop].value);
+    for (let prop in this.__properties) {
+      if (this.__properties[prop].reflect) {
+        this.setAttribute(prop, this.__properties[prop].value);
       }
     }
   }
@@ -64,7 +64,7 @@ export class IoElement extends IoCore(HTMLElement) {
       // update existing elements
       } else {
         // Io Elements
-        if (children[i].hasOwnProperty('__props')) {
+        if (children[i].hasOwnProperty('__properties')) {
           children[i].setProperties(vChildren[i].props); // TODO: test
           children[i].queueDispatch();
           children[i].__propListeners.setListeners(vChildren[i].props);
@@ -111,7 +111,7 @@ export class IoElement extends IoCore(HTMLElement) {
   }
   static get observedAttributes() { return this.prototype.__observedAttributes; }
   attributeChangedCallback(name, oldValue, newValue) {
-    const type = this.__props[name].type;
+    const type = this.__properties[name].type;
     if (type === Boolean) {
       if (newValue === null || newValue === '') {
         this[name] = newValue === '' ? true : false;
@@ -132,8 +132,8 @@ IoElement.Register = function() {
   Object.defineProperty(this.prototype, 'localName', {value: localName});
 
   Object.defineProperty(this.prototype, '__observedAttributes', {value: []});
-  for (let i in this.prototype.__props) {
-    if (this.prototype.__props[i].reflect) this.prototype.__observedAttributes.push(i);
+  for (let i in this.prototype.__properties) {
+    if (this.prototype.__properties[i].reflect) this.prototype.__observedAttributes.push(i);
   }
 
   customElements.define(localName, this);
@@ -159,7 +159,7 @@ const constructElement = function(vDOMNode) {
    } else element[prop] = vDOMNode.props[prop];
  }
  /// TODO: refactor for native elements
- Object.defineProperty(element, '__propListeners', {value: new PropListeners()});
+ Object.defineProperty(element, '__propListeners', {value: new Listeners()});
  element.__propListeners.setListeners(vDOMNode.props);
  element.__propListeners.connect(element);
  ///

@@ -16,7 +16,7 @@ export class Binding {
     for (let i = this.targets.length; i--;) {
       const targetProps = this.targetsMap.get(this.targets[i]);
       for (let j = targetProps.length; j--;) {
-        this.targets[i].__props[targetProps[j]].value = this.source[this.sourceProp];
+        this.targets[i].__properties[targetProps[j]].value = this.source[this.sourceProp];
         // TODO: test observers on binding hot-swap!
       }
     }

@@ -65,11 +65,11 @@ export class IoObjectProps extends IoElement {
   //   let key = event.detail.key;
   //   if (event.detail.object === this.value) {
   //     if (key && this.$[key]) {
-  //       this.$[key].__props.value.value = this.value[key];
+  //       this.$[key].__properties.value.value = this.value[key];
   //       this.$[key].changed();
   //     } else if (!key || key === '*') {
   //       for (let k in this.$) {
-  //         this.$[k].__props.value.value = this.value[k];
+  //         this.$[k].__properties.value.value = this.value[k];
   //         this.$[k].changed();
   //       }
   //     }

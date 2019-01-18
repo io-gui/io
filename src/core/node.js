@@ -12,7 +12,7 @@ export class IoNode extends IoCore(Object) {
     delete this.parent;
     this.children.lenght = 0;
     for (let l in this.__listeners) this.__listeners[l].lenght = 0;
-    for (let p in this.__props) delete this.__props[p];
+    for (let p in this.__properties) delete this.__properties[p];
   }
 }
 

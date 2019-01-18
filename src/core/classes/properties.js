@@ -1,16 +1,11 @@
-// Creates a properties object with configurations inherited from prototype chain.
-
-const illegalPropNames = ['style', 'className', 'listeners'];
+// Creates a properties object with configurations inherited from protochain.
 
 export class Properties {
-  constructor(prototypes) {
+  constructor(protochain) {
     const propertyDefs = {};
-    for (let i = prototypes.length; i--;) {
-      const prop = prototypes[i].constructor.properties;
+    for (let i = protochain.length; i--;) {
+      const prop = protochain[i].constructor.properties;
       for (let key in prop) {
-        if (illegalPropNames.indexOf(key) !== -1) {
-          console.warn('Illegal property name:', key);
-        }
         const propDef = new Property(prop[key], true);
         if (propertyDefs[key]) propertyDefs[key].assign(propDef);
         else propertyDefs[key] = propDef;
@@ -20,7 +15,6 @@ export class Properties {
       this[key] = new Property(propertyDefs[key]);
     }
   }
-  // Instances should use this function to create unique clone of properties.
   clone() {
     const properties = new Properties([]);
     for (let prop in this) {
@@ -30,43 +24,15 @@ export class Properties {
   }
 }
 
-export function defineProperties(prototype) {
-  for (let prop in prototype.__props) {
-    const observer = prop + 'Changed';
-    const changeEvent = prop + '-changed';
-    const isPublic = prop.charAt(0) !== '_';
-    const isEnumerable = !(prototype.__props[prop].enumerable === false);
-    Object.defineProperty(prototype, prop, {
-      get: function() {
-        return this.__props[prop].value;
-      },
-      set: function(value) {
-        if (this.__props[prop].value === value) return;
-        const oldValue = this.__props[prop].value;
-        this.__props[prop].value = value;
-        if (this.__props[prop].reflect) this.setAttribute(prop, this.__props[prop].value);
-        if (isPublic) {
-          if (this[observer]) this[observer](value, oldValue);
-          if (this.__props[prop].observer) this[this.__props[prop].observer](value, oldValue);
-          this.changed();
-          this.dispatchEvent(changeEvent, {property: prop, value: value, oldValue: oldValue});
-        }
-      },
-      enumerable: isEnumerable && isPublic,
-      configurable: true,
-    });
-  }
-}
-
 /*
-Creates a property object from properties defined in the prototype chain.
-{
-  value: property value
-  type: constructor of the value
-  observer: neme of the function to be called when value changes
-  reflect: reflection to HTML element attribute
-  binding: binding object if bound
-}
+ Creates a property configuration object with following properties:
+ {
+   value: property value
+   type: constructor of the value
+   observer: neme of the function to be called when value changes
+   reflect: reflect to HTML element attribute
+   binding: binding object if bound (internal)
+ }
  */
 export class Property {
   constructor(propDef) {
@@ -98,8 +64,7 @@ export class Property {
   // Clones the property. If property value is objects it does one level deep object clone.
   clone() {
     const prop = new Property(this);
-
-    // Set default value if type is defined but value is not.
+    // Set default values.
     if (prop.value === undefined && prop.type) {
       if (prop.type === Boolean) prop.value = false;
       else if (prop.type === String) prop.value = '';
