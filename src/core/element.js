@@ -1,5 +1,5 @@
 import {IoCore} from "../core/core.js";
-import {PropListeners} from "../core/util/propListeners.js"; // TODO: refactor for native elements
+import {PropListeners} from "../core/util/listeners.js"; // TODO: refactor for native elements
 
 export class IoElement extends IoCore(HTMLElement) {
   static get properties() {
@@ -138,7 +138,7 @@ IoElement.Register = function() {
 
   customElements.define(localName, this);
 
-  initStyle(this.prototype.__prototypes);
+  initStyle(this.prototype.__protochain);
 
 };
 

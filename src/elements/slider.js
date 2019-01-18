@@ -1,5 +1,4 @@
-import {IoInteractiveMixin} from "../core/interactive.js";
-import {html, IoElement} from "../io-core.js";
+import {html, IoElement, IoCore} from "../io-core.js";
 
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
@@ -48,7 +47,7 @@ export class IoSlider extends IoElement {
 
 IoSlider.Register();
 
-export class IoSliderKnob extends IoInteractiveMixin(IoElement) {
+export class IoSliderKnob extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -58,6 +57,8 @@ export class IoSliderKnob extends IoInteractiveMixin(IoElement) {
       }
       :host img {
         width: 100% !important;
+        touch-action: none;
+        user-select: none;
       }
     </style>`;
   }
@@ -74,18 +75,21 @@ export class IoSliderKnob extends IoInteractiveMixin(IoElement) {
   }
   static get listeners() {
     return {
-      'io-pointer-move': '_onPointerMove'
+      'pointermove': 'onPointermove',
     };
   }
-  _onPointerMove(event) {
-    event.detail.event.preventDefault();
-    let rect = this.getBoundingClientRect();
-    let x = (event.detail.pointer[0].position.x - rect.x) / rect.width;
-    let pos = Math.max(0,Math.min(1, x));
-    let value = this.min + (this.max - this.min) * pos;
-    value = Math.round(value / this.step) * this.step;
-    value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
-    this.set('value', value);
+  onPointermove(event) {
+    if (event.buttons !== 0) {
+      this.setPointerCapture(event.pointerId);
+      event.preventDefault();
+      const rect = this.getBoundingClientRect();
+      const x = (event.clientX - rect.x) / rect.width;
+      const pos = Math.max(0,Math.min(1, x));
+      let value = this.min + (this.max - this.min) * pos;
+      value = Math.round(value / this.step) * this.step;
+      value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
+      this.set('value', value);
+    }
   }
   changed() {
     this.template([['img', {id: 'img'}],]);
@@ -114,7 +118,7 @@ export class IoSliderKnob extends IoInteractiveMixin(IoElement) {
     let pos;
 
     if (((max - min) / step) < w / 3 ) {
-      while (snap < (max - step)) {
+      while (snap < (max - step * 2)) {
         snap += step;
         pos = Math.floor(w * (snap - min) / (max - min));
         ctx.lineWidth = 1;

@@ -205,7 +205,7 @@ export class Groups {
 
 IoInspector.Register = function() {
   IoObject.Register.call(this);
-  Object.defineProperty(this.prototype, '__groups', {value: new Groups(this.prototype.__prototypes)});
+  Object.defineProperty(this.prototype, '__groups', {value: new Groups(this.prototype.__protochain)});
 };
 
 IoInspector.Register();

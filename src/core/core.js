@@ -1,9 +1,8 @@
-import {Prototypes} from "./util/prototypes.js";
-import {ProtoProperties, defineProperties} from "./util/protoProperties.js";
-import {ProtoListeners} from "./util/protoListeners.js";
+import {Protochain} from "./util/protochain.js";
+import {Properties, defineProperties} from "./util/properties.js";
+import {PropListeners, ProtoListeners} from "./util/listeners.js";
 import {ProtoFunctions} from "./util/protoFunctions.js";
 import {Binding} from "./util/binding.js";
-import {PropListeners} from "./util/propListeners.js";
 
 export const IoCore = (superclass) => class extends superclass {
   static get properties() {
@@ -31,9 +30,8 @@ export const IoCore = (superclass) => class extends superclass {
     Object.defineProperty(this, '__propListeners', {value: new PropListeners()});
     this.__propListeners.setListeners(initProps);
 
-    // TODO: is this necessary?
-    // TODO: test!
     this.setProperties(initProps);
+
     if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed');
   }
   changed() {}
@@ -238,10 +236,10 @@ export const IoCore = (superclass) => class extends superclass {
 };
 
 IoCore.Register = function () {
-  Object.defineProperty(this.prototype, '__prototypes', {value: new Prototypes(this)});
-  Object.defineProperty(this.prototype, '__props', {value: new ProtoProperties(this.prototype.__prototypes)});
-  Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__prototypes)});
-  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__prototypes)});
+  Object.defineProperty(this.prototype, '__protochain', {value: new Protochain(this.prototype)});
+  Object.defineProperty(this.prototype, '__props', {value: new Properties(this.prototype.__protochain)});
+  Object.defineProperty(this.prototype, '__protoFunctions', {value: new ProtoFunctions(this.prototype.__protochain)});
+  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__protochain)});
 
   // TODO: rewise
   Object.defineProperty(this.prototype, '__objectProps', {value: []});

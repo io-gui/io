@@ -53,28 +53,28 @@ export class IoObjectProps extends IoElement {
   get _config() {
     return this.__proto__.__config.getConfig(this.value, this.config);
   }
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener('object-mutated', this._onIoObjectMutated);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('object-mutated', this._onIoObjectMutated);
-  }
-  _onIoObjectMutated(event) {
-    let key = event.detail.key;
-    if (event.detail.object === this.value) {
-      if (key && this.$[key]) {
-        this.$[key].__props.value.value = this.value[key];
-        this.$[key].changed();
-      } else if (!key || key === '*') {
-        for (let k in this.$) {
-          this.$[k].__props.value.value = this.value[k];
-          this.$[k].changed();
-        }
-      }
-    }
-  }
+  // connectedCallback() {
+  //   super.connectedCallback();
+  //   window.addEventListener('object-mutated', this._onIoObjectMutated);
+  // }
+  // disconnectedCallback() {
+  //   super.disconnectedCallback();
+  //   window.removeEventListener('object-mutated', this._onIoObjectMutated);
+  // }
+  // _onIoObjectMutated(event) {
+  //   let key = event.detail.key;
+  //   if (event.detail.object === this.value) {
+  //     if (key && this.$[key]) {
+  //       this.$[key].__props.value.value = this.value[key];
+  //       this.$[key].changed();
+  //     } else if (!key || key === '*') {
+  //       for (let k in this.$) {
+  //         this.$[k].__props.value.value = this.value[k];
+  //         this.$[k].changed();
+  //       }
+  //     }
+  //   }
+  // }
   _onValueSet(event) {
     const path = event.composedPath();
     if (path[0] === this) return;
@@ -217,8 +217,8 @@ export class ProtoConfig {
 
 IoObjectProps.Register = function() {
   IoElement.Register.call(this);
-  Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__prototypes)});
-  Object.defineProperty(this.prototype, '__protoConfig', {value: new ProtoConfig(this.prototype.__prototypes)});
+  Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__protochain)});
+  Object.defineProperty(this.prototype, '__protoConfig', {value: new ProtoConfig(this.prototype.__protochain)});
 };
 
 IoObjectProps.Register();

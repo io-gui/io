@@ -14,7 +14,7 @@ export class Binding {
   setSource() {
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
     for (let i = this.targets.length; i--;) {
-      let targetProps = this.targetsMap.get(this.targets[i]);
+      const targetProps = this.targetsMap.get(this.targets[i]);
       for (let j = targetProps.length; j--;) {
         this.targets[i].__props[targetProps[j]].value = this.source[this.sourceProp];
         // TODO: test observers on binding hot-swap!
@@ -24,7 +24,7 @@ export class Binding {
   setTarget(target, targetProp) {
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
     if (this.targetsMap.has(target)) {
-      let targetProps = this.targetsMap.get(target);
+      const targetProps = this.targetsMap.get(target);
       if (targetProps.indexOf(targetProp) === -1) { // safe check needed?
         targetProps.push(targetProp);
         target.addEventListener(targetProp + '-changed', this.updateSource);
@@ -36,8 +36,8 @@ export class Binding {
   }
   removeTarget(target, targetProp) {
     if (this.targetsMap.has(target)) {
-      let targetProps = this.targetsMap.get(target);
-      let index = targetProps.indexOf(targetProp);
+      const targetProps = this.targetsMap.get(target);
+      const index = targetProps.indexOf(targetProp);
       if (index !== -1) {
         targetProps.splice(index, 1);
       }
@@ -48,16 +48,16 @@ export class Binding {
   }
   updateSource(event) {
     if (this.targets.indexOf(event.target) === -1) return;
-    let value = event.detail.value;
+    const value = event.detail.value;
     if (this.source[this.sourceProp] !== value) {
       this.source[this.sourceProp] = value;
     }
   }
   updateTargets(event) {
     if (event.target != this.source) return;
-    let value = event.detail.value;
+    const value = event.detail.value;
     for (let i = this.targets.length; i--;) {
-      let targetProps = this.targetsMap.get(this.targets[i]);
+      const targetProps = this.targetsMap.get(this.targets[i]);
       for (let j = targetProps.length; j--;) {
         let oldValue = this.targets[i][targetProps[j]];
         if (oldValue !== value) {

@@ -2,16 +2,16 @@
 
 const illegalPropNames = ['style', 'className', 'listeners'];
 
-export class ProtoProperties {
+export class Properties {
   constructor(prototypes) {
     const propertyDefs = {};
     for (let i = prototypes.length; i--;) {
-      let prop = prototypes[i].constructor.properties;
+      const prop = prototypes[i].constructor.properties;
       for (let key in prop) {
         if (illegalPropNames.indexOf(key) !== -1) {
           console.warn('Illegal property name:', key);
         }
-        let propDef = new Property(prop[key], true);
+        const propDef = new Property(prop[key], true);
         if (propertyDefs[key]) propertyDefs[key].assign(propDef);
         else propertyDefs[key] = propDef;
       }
@@ -22,7 +22,7 @@ export class ProtoProperties {
   }
   // Instances should use this function to create unique clone of properties.
   clone() {
-    let properties = new ProtoProperties([]);
+    const properties = new Properties([]);
     for (let prop in this) {
       properties[prop] = this[prop].clone();
     }
@@ -97,8 +97,7 @@ export class Property {
   }
   // Clones the property. If property value is objects it does one level deep object clone.
   clone() {
-    // console.log(typeof this.value === 'function');
-    let prop = new Property(this);
+    const prop = new Property(this);
 
     // Set default value if type is defined but value is not.
     if (prop.value === undefined && prop.type) {

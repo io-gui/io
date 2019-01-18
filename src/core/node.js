@@ -17,9 +17,7 @@ export class IoNode extends IoCore(Object) {
 }
 
 IoNode.Register = function() {
-
   IoCore.Register.call(this);
-
 };
 
 IoNode.Register();
