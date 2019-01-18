@@ -58,7 +58,7 @@ export class IoMenuLayer extends IoElement {
   }
   static get listeners() {
     return {
-      'mousedown': '_onMouseup',
+      'mouseup': '_onMouseup',
       'mousemove': '_onMousemove',
     };
   }
