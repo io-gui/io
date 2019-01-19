@@ -2,7 +2,7 @@ import {IoNode} from "./node.js";
 
 const nodes = {};
 
-class StoreNode extends IoNode {
+class IoStorageNode extends IoNode {
   static get properties() {
     return {
       key: String,
@@ -23,11 +23,11 @@ class StoreNode extends IoNode {
   }
 }
 
-StoreNode.Register();
+IoStorageNode.Register();
 
-export function storage(key, defValue) {
+export function IoStorage(key, defValue) {
   if (!nodes[key]) {
-    nodes[key] = new StoreNode({key: key}, defValue);
+    nodes[key] = new IoStorageNode({key: key}, defValue);
     nodes[key].connect();
     nodes[key].binding = nodes[key].bind('value');
   }

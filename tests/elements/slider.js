@@ -1,6 +1,4 @@
-import {IoSlider} from "../src/elements/slider.js";
-
-import "../lib/chai.js";
+import {IoSlider} from "../../src/elements/slider.js";
 
 export default class {
   constructor() {

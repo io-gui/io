@@ -1,4 +1,4 @@
-import {IoElement, html, storage} from "../io-core.js";
+import {IoElement, html, IoStorage} from "../io-core.js";
 
 import "./inspector-breadcrumbs.js";
 import "./inspector-link.js";
@@ -108,7 +108,7 @@ export class IoInspector extends IoElement {
       elements.push(
         ['io-collapsable', {
           label: group,
-          expanded: storage('io-inspector-group-' + uuid + '-' + group, false),
+          expanded: IoStorage('io-inspector-group-' + uuid + '-' + group, false),
           elements: [
             ['io-properties', {
               value: this.value,
@@ -122,7 +122,6 @@ export class IoInspector extends IoElement {
     }
     this.template(elements);
   }
-
   static get config() {
     return {
       'Object|hidden': [/^_/],

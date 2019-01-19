@@ -1,6 +1,4 @@
-import {IoBoolean} from "../src/io.js";
-
-import "../lib/chai.js";
+import {IoBoolean} from "../../src/io.js";
 
 export default class {
   constructor() {

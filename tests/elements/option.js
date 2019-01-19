@@ -1,6 +1,4 @@
-import {IoOption} from "../../src/elements/option.js";
-
-import "../lib/chai.js";
+import {IoOption} from "../../../src/elements/option.js";
 
 export default class {
   constructor() {

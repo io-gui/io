@@ -1,6 +1,6 @@
-import {IoMenu} from "../../src/io-menu.js";
+import {IoMenu} from "../../../src/io-menu.js";
 
-import "../lib/chai.js";
+
 
 export default class {
   constructor() {

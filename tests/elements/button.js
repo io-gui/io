@@ -1,6 +1,4 @@
-import {IoButton} from "../src/io.js";
-
-import "../lib/chai.js";
+import {IoButton} from "../../src/io.js";
 
 export default class {
   constructor() {

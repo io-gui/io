@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Io • Test</title>
+    <meta name="description" content="A lightweight UI library for data-driven web applications | Test" />
+    <style>
+      html {
+        font-family: Arial, Helvetica, sans-serif;
+        letter-spacing: 0.05em;
+        font-weight: 300;
+      }
+      body > :not(#mocha) {
+        display: none;
+      }
+      .passes {
+        color: #0a0;
+        font-weight: bold;
+      }
+      .failures {
+        color: #f00;
+        font-weight: bold;
+      }
+    </style>
+    <link href="../lib/mocha.css" rel="stylesheet" />
+    <script type="module">
+
+      import "../lib/mocha.js";
+      import "../lib/chai.js";
+
+      import Core from "./core/core.js"
+      import Element from "./core/element.js"
+      import Node from "./core/node.js"
+      import Storage from "./core/storage.js"
+
+      import Array from "./elements/array.js"
+      import Boolean from "./elements/boolean.js"
+      import Button from "./elements/button.js"
+      import Canvas from "./elements/canvas.js"
+      import Collapsable from "./elements/collapsable.js"
+      import Number from "./elements/number.js"
+      import Object from "./elements/object.js"
+      import Inspector from "./elements/inspector.js"
+      import Slider from "./elements/slider.js"
+      import Properties from "./elements/properties.js"
+      import Sting from "./elements/string.js"
+
+      import Lite from "./lite/lite.js"
+
+      mocha.setup('bdd');
+
+      new Core().run();
+      new Element().run();
+      new Node().run();
+      new Storage().run();
+
+      new Array().run();
+      new Boolean().run();
+      new Button().run();
+      new Canvas().run();
+      new Collapsable().run();
+      new Number().run();
+      new Object().run();
+      new Inspector().run();
+      new Slider().run();
+      new Properties().run();
+      new Sting().run();
+
+      new Lite().run();
+
+      mocha.checkLeaks();
+      mocha.run();
+
+    </script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>
