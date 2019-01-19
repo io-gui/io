@@ -94,7 +94,6 @@ export class IoProperties extends IoElement {
       'type:object': ['io-object', {}],
       'type:null': ['io-string', {}],
       'type:undefined': ['io-string', {}],
-      'Array|type:number': ['io-slider', {step: 0.05, min:0, max:10}],
     };
   }
 }

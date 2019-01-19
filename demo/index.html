@@ -46,15 +46,15 @@
       }
       static get properties() {
         return {
+          title: 'demo',
           number: 0,
-          string: "hello",
+          string: 'hello',
           boolean: true,
           null: null,
           NaN: NaN,
           undefined: undefined,
           menuoptions: function() { return data.menuoptions },
           options: function() { return data.options },
-          numbers: function() { return data.numbers },
         };
       }
       numberChanged(event) {
@@ -120,7 +120,7 @@
             ['io-object', {value: this.menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
           ]}],
           ['io-collapsable', {label: 'io-inspector', expanded: $('io-inspector'), elements: [
-            ['io-inspector', {value: this, groups: {'variables': ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}, expanded: ['properties']}],
+            ['io-inspector', {value: this, groups: {'IoDemo|variables': ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}, expanded: ['properties']}],
           ]}],
           // TODO: array
           // TODO: object-group

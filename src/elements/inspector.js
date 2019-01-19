@@ -1,5 +1,4 @@
-import {html, storage} from "../io-core.js";
-import {IoObject} from "./object.js";
+import {IoElement, html, storage} from "../io-core.js";
 
 import "./inspector-breadcrumbs.js";
 import "./inspector-link.js";
@@ -9,19 +8,23 @@ function isValueOfPropertyOf(prop, object) {
   return null;
 }
 
-export class IoInspector extends IoObject {
+export class IoInspector extends IoElement {
   static get style() {
     return html`<style>
     :host {
-      padding: 2px;
-      background-color: #666;
-      border-color: #444;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #444;
+      border-radius: 3px;
+      padding: 1px;
+      background-color: #fff;
     }
-    :host > io-inspector-breadcrumbs {
-      margin-bottom: 2px;
+    :host > .io-inspector-header {
+
     }
     :host > io-collapsable {
-      padding: 1px !important;
+      padding: 2px !important;
+      margin: 2px;
       font-size: 0.9em;
       background-color: #ccc !important;
     }
@@ -61,6 +64,10 @@ export class IoInspector extends IoObject {
   }
   static get properties() {
     return {
+      value: Object,
+      props: Array,
+      config: null,
+      labeled: true,
       crumbs: Array,
       groups: Object,
       _groups: Object,
@@ -94,7 +101,10 @@ export class IoInspector extends IoObject {
     this._groups = this.__proto__.__config.getConfig(this.value, this.groups);
   }
   changed() {
-    const elements = [['io-inspector-breadcrumbs', {crumbs: this.crumbs}]];
+    const elements = [
+      ['io-inspector-breadcrumbs', {crumbs: this.crumbs}],
+      // TODO: add search
+    ];
     // TODO: rewise and document use of storage
     // const id = this.value.guid || this.value.uuid || this.value.id;
     for (let group in this._groups) {
@@ -203,7 +213,7 @@ export class Config {
 }
 
 IoInspector.Register = function() {
-  IoObject.Register.call(this);
+  IoElement.Register.call(this);
   Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__protochain)});
 };
 

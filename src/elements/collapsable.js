@@ -25,11 +25,11 @@ export class IoCollapsable extends IoElement {
       :host[expanded] > io-boolean::before{
         content: '▾';
       }
-      :host > :nth-child(2) {
+      :host > .io-collapsable-content {
         display: block;
         border: 1px solid #999;
         border-radius: 2px;
-        padding: 2px;
+        padding: 0.2em;
         background: #eee;
       }
     </style>`;
@@ -47,7 +47,7 @@ export class IoCollapsable extends IoElement {
   changed() {
     this.template([
       ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
-      this.expanded ? ['div', this.elements] : null
+      this.expanded ? ['div', {className: 'io-collapsable-content'}, this.elements] : null
     ]);
   }
 }

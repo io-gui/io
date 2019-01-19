@@ -16,6 +16,7 @@ export class IoObject extends IoCollapsable {
       ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
       this.expanded ? [
         ['io-properties', {
+          className: 'io-collapsable-content',
           value: this.value,
           props: this.props.length ? this.props : Object.keys(this.value),
           config: this.config,

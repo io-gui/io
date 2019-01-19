@@ -40,5 +40,4 @@ export const data = {
     {label: 'four', value: 4},
     {label: 'leet', value: 1337},
   ],
-  numbers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 }
