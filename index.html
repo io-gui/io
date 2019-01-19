@@ -4,19 +4,42 @@
     <meta charset="utf-8" />
     <title>Io • About</title>
     <meta name="description" content="A lightweight UI framework for data-driven web applications" />
-    <script type="module" src="./lib/io-md-view.js"></script>
   </head>
   <body>
-    <io-md-view path="./readme.md"></io-md-view>
-    <io-md-view path="./docs/elements/button.md"></io-md-view>
-    <io-md-view path="./docs/elements/boolean.md"></io-md-view>
-    <io-md-view path="./docs/elements/string.md"></io-md-view>
-    <io-md-view path="./docs/elements/slider.md"></io-md-view>
-    <io-md-view path="./docs/elements/number.md"></io-md-view>
-    <io-md-view path="./docs/elements/object.md"></io-md-view>
-    <io-md-view path="./docs/elements/array.md"></io-md-view>
-    <io-md-view path="./docs/elements/option.md"></io-md-view>
-    <io-md-view path="./docs/elements/inspector.md"></io-md-view>
-    <io-md-view path="./docs/elements/menu.md"></io-md-view>
+    <script type="module" src="./lib/io-md-view.js"></script>
+    <script type="module">
+
+      import {IoElement} from "./src/io.js";
+
+      class IoDocs extends IoElement {
+        changed() {
+          this.template([
+            ['io-md-view', {path :'./readme.md'}],
+            ['io-md-view', {path :'./docs/core/core.md'}],
+            ['io-md-view', {path :'./docs/core/element.md'}],
+            ['io-md-view', {path :'./docs/core/node.md'}],
+            ['io-md-view', {path :'./docs/core/storage.md'}],
+            ['io-md-view', {path :'./docs/elements/array.md'}],
+            ['io-md-view', {path :'./docs/elements/boolean.md'}],
+            ['io-md-view', {path :'./docs/elements/button.md'}],
+            ['io-md-view', {path :'./docs/elements/canvas.md'}],
+            ['io-md-view', {path :'./docs/elements/collapsable.md'}],
+            ['io-md-view', {path :'./docs/elements/inspector.md'}],
+            ['io-md-view', {path :'./docs/elements/menu.md'}],
+            ['io-md-view', {path :'./docs/elements/number.md'}],
+            ['io-md-view', {path :'./docs/elements/object.md'}],
+            ['io-md-view', {path :'./docs/elements/option.md'}],
+            ['io-md-view', {path :'./docs/elements/properties.md'}],
+            ['io-md-view', {path :'./docs/elements/slider.md'}],
+            ['io-md-view', {path :'./docs/elements/string.md'}],
+            ['io-md-view', {path :'./docs/lite/lite.md'}],
+          ]);
+        }
+      }
+
+      IoDocs.Register();
+
+    </script>
+    <io-docs></io-docs>
   </body>
 </html>

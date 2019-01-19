@@ -130,6 +130,8 @@ IoElement.Register = function() {
 
   IoCore.Register.call(this);
 
+  // window[this.name] = this; // TODO: consider
+
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
   Object.defineProperty(this, 'localName', {value: localName});
