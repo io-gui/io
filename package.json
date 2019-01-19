@@ -1,6 +1,6 @@
 {
   "name": "io",
-  "version": "2.2.0",
+  "version": "2.2.1rc",
   "description": "A lightweight UI framework for data-driven web applications.",
   "author": "Aleksandar Aki Rodic",
   "license": "MIT",
