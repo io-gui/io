@@ -12,9 +12,13 @@
       }
     </style>
     <script type="module">
-    import {html, IoElement, storage as $} from "../src/io.js";
-    // import {html, IoElement, storage as $} from "../build/io.js";
+    import {html, IoElement, storage as $, IoProperties, IoInspector} from "../src/io.js";
+    // import {html, IoElement, storage as $, IoProperties, IoInspector} from "../build/io.js";
     import {data} from "./data.js";
+
+    IoInspector.RegisterConfig({
+
+    });
 
     export class IoDemo extends IoElement {
       static get style() {
@@ -120,7 +124,7 @@
             ['io-object', {value: this.menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
           ]}],
           ['io-collapsable', {label: 'io-inspector', expanded: $('io-inspector'), elements: [
-            ['io-inspector', {value: this, groups: {'IoDemo|variables': ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}, expanded: ['properties']}],
+            ['io-inspector', {value: this, config: {'IoDemo|variables': ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}, expanded: ['properties']}],
           ]}],
           // TODO: array
           // TODO: object-group

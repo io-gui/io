@@ -66,27 +66,26 @@ export class IoInspector extends IoElement {
     return {
       value: Object,
       props: Array,
-      config: null,
+      config: Object,
       labeled: true,
       crumbs: Array,
-      groups: Object,
-      _groups: Object,
     };
   }
   static get listeners() {
     return {
-      'io-button-clicked': '_onLinkClicked',
+      'io-button-clicked': 'onLinkClicked',
     };
   }
-  _onLinkClicked(event) {
+  onLinkClicked(event) {
     event.stopPropagation();
     if (event.path[0].localName === 'io-inspector-link') {
       this.value = event.detail.value;
     }
   }
+  get groups() {
+    return this.__proto__.__config.getConfig(this.value, this.config);
+  }
   valueChanged() {
-    // super.valueChanged();
-    this._groups = this.__proto__.__config.getConfig(this.value, this.groups);
     let crumb = this.crumbs.find((crumb) => { return crumb === this.value; });
     let lastrumb = this.crumbs[this.crumbs.length - 1];
     if (crumb) {
@@ -97,25 +96,23 @@ export class IoInspector extends IoElement {
     }
     this.crumbs = [...this.crumbs];
   }
-  groupsChanged() {
-    this._groups = this.__proto__.__config.getConfig(this.value, this.groups);
-  }
   changed() {
     const elements = [
       ['io-inspector-breadcrumbs', {crumbs: this.crumbs}],
       // TODO: add search
     ];
     // TODO: rewise and document use of storage
-    // const id = this.value.guid || this.value.uuid || this.value.id;
-    for (let group in this._groups) {
+    let uuid = this.value.constructor.name;
+    uuid += this.value.guid || this.value.uuid || this.value.id || '';
+    for (let group in this.groups) {
       elements.push(
         ['io-collapsable', {
           label: group,
-          expanded: storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false),
+          expanded: storage('io-inspector-group-' + uuid + '-' + group, false),
           elements: [
             ['io-properties', {
               value: this.value,
-              props: this._groups[group],
+              props: this.groups[group],
               config: {'type:object': ['io-inspector-link']},
               labeled: true,
             }]
