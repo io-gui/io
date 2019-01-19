@@ -57,7 +57,6 @@ class IoProperties extends IoElement {
       'type:object': ['io-object', {}],
       'type:null': ['io-string', {}],
       'type:undefined': ['io-string', {}],
-      'Array|type:number': ['io-slider', {step: 0.05, min:0, max:10}],
     };
   }
 }
@@ -65,11 +64,13 @@ class IoProperties extends IoElement {
 class Config {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {
-      const config = prototypes[i].constructor.config || {};
-      for (let c in config) {
-        this[c] = this[c] || [];
-        this[c] = [config[c][0] || this[c][0], Object.assign(this[c][1] || {}, config[c][1] || {})];
-      }
+      this.registerConfig(prototypes[i].constructor.config || {});
+    }
+  }
+  registerConfig(config) {
+    for (let c in config) {
+      this[c] = this[c] || [];
+      this[c] = [config[c][0] || this[c][0], Object.assign(this[c][1] || {}, config[c][1] || {})];
     }
   }
   getConfig(object, customConfig) {
@@ -128,6 +129,9 @@ IoProperties.Register = function() {
 };
 
 IoProperties.Register();
+IoProperties.RegisterConfig = function(config) {
+  this.prototype.__config.registerConfig(config);
+};
 
 class IoArray extends IoProperties {
   static get style() {
@@ -283,7 +287,7 @@ IoCanvas.Register();
 
 class IoCollapsable extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #999;border-radius: 3px;padding: 1px;background: #ccc;}:host > io-boolean {border: none;border-radius: 0;background: none;}:host > io-boolean::before {content: '▸';display: inline-block;width: 0.65em;margin: 0 0.25em;}:host[expanded] > io-boolean::before{content: '▾';}:host > :nth-child(2) {display: block;border: 1px solid #999;border-radius: 2px;padding: 2px;background: #eee;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #999;border-radius: 3px;padding: 1px;background: #ccc;}:host > io-boolean {border: none;border-radius: 0;background: none;}:host > io-boolean::before {content: '▸';display: inline-block;width: 0.65em;margin: 0 0.25em;}:host[expanded] > io-boolean::before{content: '▾';}:host > .io-collapsable-content {display: block;border: 1px solid #999;border-radius: 2px;padding: 0.2em;background: #eee;}</style>`;
   }
   static get properties() {
     return {
@@ -298,43 +302,16 @@ class IoCollapsable extends IoElement {
   changed() {
     this.template([
       ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
-      this.expanded ? ['div', this.elements] : null
+      this.expanded ? ['div', {className: 'io-collapsable-content'}, this.elements] : null
     ]);
   }
 }
 
 IoCollapsable.Register();
 
-class IoObject extends IoCollapsable {
-  static get properties() {
-    return {
-      value: Object,
-      props: Array,
-      config: null,
-      labeled: true,
-    };
-  }
-  changed() {
-    const label = this.label || this.value.constructor.name;
-    this.template([
-      ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
-      this.expanded ? [
-        ['io-properties', {
-          value: this.value,
-          props: this.props.length ? this.props : Object.keys(this.value),
-          config: this.config,
-          labeled: this.labeled,
-        }]
-      ] : null
-    ]);
-  }
-}
-
-IoObject.Register();
-
 class IoInspectorBreadcrumbs extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex: 1 0;flex-direction: row;padding: 0 0.25em;background: #fff;border: 1px solid #999;border-radius: 2px;}:host > io-inspector-link {border: none;overflow: hidden;text-overflow: ellipsis;background: none;padding: 0;}:host > io-inspector-link:first-of-type,:host > io-inspector-link:last-of-type {overflow: visible;text-overflow: clip;}:host > io-inspector-link:not(:first-of-type):before {content: '/';margin: 0 0.1em;opacity: 0.25;}</style>`;
+    return html`<style>:host {display: flex;flex: 1 0;flex-direction: row;padding: 0.5em 0.75em;margin: 2px;background: #fff;border: 1px solid #999;border-radius: 2px;font-size: 0.75em;}:host > io-inspector-link {border: none;overflow: hidden;text-overflow: ellipsis;background: none;padding: 0;}:host > io-inspector-link:first-of-type {color: #000;}:host > io-inspector-link:first-of-type,:host > io-inspector-link:last-of-type {overflow: visible;text-overflow: clip;}:host > io-inspector-link:not(:first-of-type):before {content: '>';margin: 0 0.5em;opacity: 0.25;}</style>`;
   }
   static get properties() {
     return {
@@ -356,6 +333,8 @@ class IoInspectorLink extends IoButton {
     let name = this.value.constructor.name;
     if (this.value.name) name += ' (' + this.value.name + ')';
     else if (this.value.label) name += ' (' + this.value.label + ')';
+    else if (this.value.title) name += ' (' + this.value.title + ')';
+    else if (this.value.id) name += ' (' + this.value.id + ')';
     this.template([['span', name]]);
   }
 }
@@ -367,12 +346,16 @@ function isValueOfPropertyOf(prop, object) {
   return null;
 }
 
-class IoInspector extends IoObject {
+class IoInspector extends IoElement {
   static get style() {
-    return html`<style>:host {padding: 2px;background-color: #666;border-color: #444;}:host > io-inspector-breadcrumbs {margin-bottom: 2px;}:host > io-object {padding: 1px !important;font-size: 0.9em;background-color: #ccc !important;}:host > io-object > io-boolean {display: block;padding-bottom: 0.15em;}:host > io-object > io-properties {padding: 0 !important;}:host > io-object > io-properties > div {overflow: hidden;padding: 2px;}:host > io-object > io-properties > div:not(:last-of-type) {border-bottom: 1px solid rgba(0, 0, 0, 0.125);}:host > io-object > io-properties > div > :nth-child(1) {overflow: hidden;text-overflow: ellipsis;text-align: right;flex: 0 1 8em;padding-left: 0.5em;min-width: 3em;}:host > io-object > io-properties > div > :nth-child(2) {flex: 1 0 8em;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 2em;}:host > io-object > io-properties > div > io-option {flex: 0 1 auto !important;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #444;border-radius: 3px;padding: 1px;background-color: #fff;}:host > .io-inspector-header {}:host > io-collapsable {padding: 2px !important;margin: 2px;font-size: 0.9em;background-color: #ccc !important;}:host > io-collapsable > div > io-boolean {display: block;padding-bottom: 0.15em;}:host > io-collapsable > div > io-properties {padding: 0 !important;}:host > io-collapsable > div > io-properties > div {overflow: hidden;padding: 2px;}:host > io-collapsable > div > io-properties > div:not(:last-of-type) {border-bottom: 1px solid rgba(0, 0, 0, 0.125);}:host > io-collapsable > div > io-properties > div > :nth-child(1) {overflow: hidden;text-overflow: ellipsis;text-align: right;flex: 0 1 8em;padding-left: 0.5em;min-width: 3em;}:host > io-collapsable > div > io-properties > div > :nth-child(2) {flex: 1 0 8em;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 2em;}:host > io-collapsable > div > io-properties > div > io-option {flex: 0 1 auto !important;}</style>`;
   }
   static get properties() {
     return {
+      value: Object,
+      props: Array,
+      config: null,
+      labeled: true,
       crumbs: Array,
       groups: Object,
       _groups: Object,
@@ -391,7 +374,7 @@ class IoInspector extends IoObject {
   }
   valueChanged() {
     // super.valueChanged();
-    this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);
+    this._groups = this.__proto__.__config.getConfig(this.value, this.groups);
     let crumb = this.crumbs.find((crumb) => { return crumb === this.value; });
     let lastrumb = this.crumbs[this.crumbs.length - 1];
     if (crumb) {
@@ -403,33 +386,35 @@ class IoInspector extends IoObject {
     this.crumbs = [...this.crumbs];
   }
   groupsChanged() {
-    this._groups = this.__proto__.__groups.getGroups(this.value, this.groups);
+    this._groups = this.__proto__.__config.getConfig(this.value, this.groups);
   }
   changed() {
-    const elements = [['io-inspector-breadcrumbs', {crumbs: this.crumbs}]];
+    const elements = [
+      ['io-inspector-breadcrumbs', {crumbs: this.crumbs}],
+      // TODO: add search
+    ];
     // TODO: rewise and document use of storage
     // const id = this.value.guid || this.value.uuid || this.value.id;
     for (let group in this._groups) {
-      const expanded = storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false);
       elements.push(
-        ['io-object', {
-          value: this.value,
+        ['io-collapsable', {
           label: group,
-          expanded: expanded,
-          props: this._groups[group],
-          config: this.constructor.config,
+          expanded: storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false),
+          elements: [
+            ['io-properties', {
+              value: this.value,
+              props: this._groups[group],
+              config: {'type:object': ['io-inspector-link']},
+              labeled: true,
+            }]
+          ]
         }],
       );
     }
     this.template(elements);
   }
+
   static get config() {
-    return {
-      'type:object': ['io-inspector-link'],
-      'type:boolean': ['io-boolean', {true: '⦿ true', false: '⦾ false'}],
-    };
-  }
-  static get groups() {
     return {
       'Object|hidden': [/^_/],
       'HTMLElement|hidden': [/^_/, 'innerText', 'outerText', 'innerHTML', 'outerHTML', 'textContent'],
@@ -437,16 +422,19 @@ class IoInspector extends IoObject {
   }
 }
 
-class Groups {
+class Config$1 {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {
-      const groups = prototypes[i].constructor.groups || {};
-      for (let g in groups) {
-        this[g] = [...(this[g] || []), ...groups[g]];
-      }
+      this.registerConfig(prototypes[i].constructor.config || {});
     }
   }
-  getGroups(object, customGroups) {
+  registerConfig(config) {
+    for (let g in config) {
+      this[g] = this[g] || [];
+      this[g] = [...this[g], ...config[g]];
+    }
+  }
+  getConfig(object, customGroups) {
     const keys = Object.keys(object);
     const prototypes = [];
 
@@ -513,11 +501,14 @@ class Groups {
 }
 
 IoInspector.Register = function() {
-  IoObject.Register.call(this);
-  Object.defineProperty(this.prototype, '__groups', {value: new Groups(this.prototype.__protochain)});
+  IoElement.Register.call(this);
+  Object.defineProperty(this.prototype, '__config', {value: new Config$1(this.prototype.__protochain)});
 };
 
 IoInspector.Register();
+IoInspector.RegisterConfig = function(config) {
+  this.prototype.__config.registerConfig(config);
+};
 
 let previousOption;
 let previousParent;
@@ -526,27 +517,28 @@ let timeoutReset;
 let WAIT_TIME = 1200;
 // let lastFocus;
 
-// TODO: make long (scrolling) menus work with touch
 // TODO: implement search
 
 class IoMenuLayer extends IoElement {
   static get style() {
-    return html`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;pointer-events: none;}:host[expanded] {visibility: visible;pointer-events: all;}:host io-menu-options:not([expanded]) {display: none;}:host io-menu-options {padding: 0.125em 0 0.25em 0;border: 1px solid #666;box-shadow: 1px 1px 2px rgba(0,0,0,0.33);position: absolute;transform: translateZ(0);top: 0;left: 0;min-width: 6em;}</style>`;
+    return html`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;pointer-events: none;touch-action: none;}:host[expanded] {visibility: visible;pointer-events: all;}:host io-menu-options:not([expanded]) {display: none;}:host io-menu-options {padding: 0.125em 0 0.25em 0;border: 1px solid #666;box-shadow: 1px 1px 2px rgba(0,0,0,0.33);position: absolute;transform: translateZ(0);top: 0;left: 0;min-width: 6em;}</style>`;
   }
   static get properties() {
     return {
       expanded: {
         type: Boolean,
         reflect: true,
-        observer: '_onScrollAnimateGroup'
+        observer: 'onScrollAnimateGroup'
       },
       $options: Array
     };
   }
   static get listeners() {
     return {
-      'mousedown': '_onMouseup',
-      'mousemove': '_onMousemove',
+      'pointerup': 'onPointerup',
+      'pointermove': 'onPointermove',
+      'dragstart': 'preventDefault',
+      'contextmenu': 'preventDefault',
     };
   }
   constructor(props) {
@@ -556,22 +548,20 @@ class IoMenuLayer extends IoElement {
     this._x = 0;
     this._y = 0;
     this._v = 0;
-    window.addEventListener('scroll', this._onScroll);
-    // window.addEventListener('focusin', this._onWindowFocus);
+    window.addEventListener('scroll', this.onScroll);
+    // window.addEventListener('focusin', this.onWindowFocus);
   }
   registerGroup(group) {
     this.$options.push(group);
-    group.addEventListener('focusin', this._onMenuItemFocused);
-    group.addEventListener('mouseup', this._onMouseup);
-    group.addEventListener('keydown', this._onKeydown);
-    group.addEventListener('expanded-changed', this._onExpandedChanged);
+    group.addEventListener('focusin', this.onMenuItemFocused);
+    group.addEventListener('keydown', this.onKeydown);
+    group.addEventListener('expanded-changed', this.onExpandedChanged);
   }
   unregisterGroup(group) {
     this.$options.splice(this.$options.indexOf(group), 1);
-    group.removeEventListener('focusin', this._onMenuItemFocused);
-    group.removeEventListener('mouseup', this._onMouseup);
-    group.removeEventListener('keydown', this._onKeydown);
-    group.removeEventListener('expanded-changed', this._onExpandedChanged);
+    group.removeEventListener('focusin', this.onMenuItemFocused);
+    group.removeEventListener('keydown', this.onKeydown);
+    group.removeEventListener('expanded-changed', this.onExpandedChanged);
   }
   collapseAllGroups() {
     for (let i = this.$options.length; i--;) {
@@ -593,7 +583,7 @@ class IoMenuLayer extends IoElement {
       // }
     }
   }
-  _onScroll() {
+  onScroll() {
     if (this.expanded) {
       this.collapseAllGroups();
       // if (lastFocus) {
@@ -601,10 +591,10 @@ class IoMenuLayer extends IoElement {
       // }
     }
   }
-  // _onWindowFocus(event) {
+  // onWindowFocus(event) {
   //   if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
   // }
-  _onMenuItemFocused(event) {
+  onMenuItemFocused(event) {
     const path = event.composedPath();
     const item = path[0];
     const optionschain = item.optionschain;
@@ -614,13 +604,8 @@ class IoMenuLayer extends IoElement {
       }
     }
   }
-  _onTouchmove(event) {
-    this._onMousemove(event);
-  }
-  _onTouchend(event) {
-    this._onMouseup(event);
-  }
-  _onMousemove(event) {
+  onPointermove(event) {
+    event.preventDefault();
     this._x = event.clientX;
     this._y = event.clientY;
     this._v = (2 * this._v + Math.abs(event.movementY) - Math.abs(event.movementX)) / 3;
@@ -638,7 +623,9 @@ class IoMenuLayer extends IoElement {
     this._hoveredItem = null;
     this._hoveredGroup = null;
   }
-  _onMouseup(event) {
+  onPointerup(event) {
+    event.stopPropagation();
+    event.preventDefault();
     const path = event.composedPath();
     let elem = path[0];
     if (elem.localName === 'io-menu-item') {
@@ -656,7 +643,7 @@ class IoMenuLayer extends IoElement {
       }
     }
   }
-  _onKeydown(event) {
+  onKeydown(event) {
     event.preventDefault();
     const path = event.composedPath();
     if (path[0].localName !== 'io-menu-item') return;
@@ -686,7 +673,7 @@ class IoMenuLayer extends IoElement {
 
     switch (command) {
       case 'action':
-        this._onMouseup(event); // TODO: test
+        this.onPointerup(event); // TODO: test
         break;
       case 'prev':
         siblings[(index + siblings.length - 1) % (siblings.length)].focus();
@@ -741,15 +728,16 @@ class IoMenuLayer extends IoElement {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  _onExpandedChanged(event) {
+  onExpandedChanged(event) {
     const path = event.composedPath();
     if (path[0].expanded) this._setGroupPosition(path[0]);
     for (let i = this.$options.length; i--;) {
       if (this.$options[i].expanded) {
-        return this.expanded = true;
+        this.expanded = true;
+        return;
       }
     }
-    return this.expanded = false;
+    setTimeout(() => { this.expanded = false; });
   }
   _setGroupPosition(group) {
     if (!group.$parent) return;
@@ -781,7 +769,7 @@ class IoMenuLayer extends IoElement {
     group.style.left = group._x + 'px';
     group.style.top = group._y + 'px';
   }
-  _onScrollAnimateGroup() {
+  onScrollAnimateGroup() {
     if (!this.expanded) return;
     let group = this._hoveredGroup;
     if (group) {
@@ -800,7 +788,7 @@ class IoMenuLayer extends IoElement {
         group.style.top = group._y + 'px';
       }
     }
-    requestAnimationFrame(this._onScrollAnimateGroup);
+    requestAnimationFrame(this.onScrollAnimateGroup);
   }
 }
 
@@ -812,7 +800,7 @@ document.body.appendChild(IoMenuLayer.singleton);
 
 class IoMenuOptions extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;white-space: nowrap;user-select: none;background: white;color: black;}:host[horizontal] {flex-direction: row;}:host[horizontal] > io-menu-item {padding: 0.25em 0.5em;}:host[horizontal] > io-menu-item > :not(.menu-label) {display: none;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;white-space: nowrap;user-select: none;touch-action: none;background: white;color: black;}:host[horizontal] {flex-direction: row;}:host[horizontal] > io-menu-item {padding: 0.25em 0.5em;}:host[horizontal] > io-menu-item > :not(.menu-label) {display: none;}</style>`;
   }
   static get properties() {
     return {
@@ -867,7 +855,7 @@ IoMenuOptions.Register();
 
 class IoMenuItem extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;cursor: pointer;padding: 0.125em 0.5em 0.125em 1.7em;line-height: 1em;}:host > * {pointer-events: none;}:host > .menu-icon {width: 1.25em;margin-left: -1.25em;line-height: 1em;}:host > .menu-label {flex: 1}:host > .menu-hint {opacity: 0.5;padding: 0 0.5em;}:host > .menu-more {opacity: 0.5;margin: 0 -0.25em 0 0.25em;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: row;cursor: pointer;padding: 0.125em 0.5em 0.125em 1.7em;line-height: 1em;touch-action: none;}:host > * {pointer-events: none;}:host > .menu-icon {width: 1.25em;margin-left: -1.25em;line-height: 1em;}:host > .menu-label {flex: 1}:host > .menu-hint {opacity: 0.5;padding: 0 0.5em;}:host > .menu-more {opacity: 0.5;margin: 0 -0.25em 0 0.25em;}</style>`;
   }
   static get properties() {
     return {
@@ -879,8 +867,8 @@ class IoMenuItem extends IoElement {
   }
   static get listeners() {
     return {
-      'focus': '_onFocus',
-      'touchstart': '_onTouchstart'
+      'focus': 'onFocus',
+      'pointerdown': 'onPointerdown',
     };
   }
   get menuroot() {
@@ -924,23 +912,11 @@ class IoMenuItem extends IoElement {
       }
     }
   }
-  _onTouchstart(event) {
-    event.preventDefault();
-    this.addEventListener('touchmove', this._onTouchmove);
-    this.addEventListener('touchend', this._onTouchend);
+  onPointerdown(event) {
+    IoMenuLayer.singleton.setPointerCapture(event.pointerId);
     this.focus();
   }
-  _onTouchmove(event) {
-    event.preventDefault();
-    IoMenuLayer.singleton._onTouchmove(event);
-  }
-  _onTouchend(event) {
-    event.preventDefault();
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-    IoMenuLayer.singleton._onTouchend(event);
-  }
-  _onFocus() {
+  onFocus() {
     if (this.$options) {
       if (!this.$options.parentNode) {
         IoMenuLayer.singleton.appendChild(this.$options);
@@ -960,7 +936,8 @@ class IoMenu extends IoElement {
       options: Array,
       expanded: Boolean,
       position: 'pointer',
-      listener: 'click'
+      ondown: true,
+      button: 0,
     };
   }
   constructor(props) {
@@ -979,23 +956,44 @@ class IoMenu extends IoElement {
   connectedCallback() {
     super.connectedCallback();
     this._parent = this.parentElement;
-    this._parent.addEventListener(this.listener, this._onExpand);
+    this._parent.addEventListener('pointerdown', this.onPointerdown);
+    this._parent.addEventListener('contextmenu', this.onContextmenu);
+    this._parent.style['touch-action'] = 'none';
     IoMenuLayer.singleton.appendChild(this.$['group']);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._parent.removeEventListener(this.listener, this._onExpand);
+    this._parent.removeEventListener('pointerdown', this.onPointerdown);
+    this._parent.removeEventListener('contextmenu', this.onContextmenu);
     IoMenuLayer.singleton.removeChild(this.$['group']);
   }
   getBoundingClientRect() {
     return this._parent.getBoundingClientRect();
   }
-  _onExpand(event) {
-    event.preventDefault();
-    let evt = event.touches ? event.touches[0] : event;
+  onContextmenu(event) {
+    if (this.button === 2) {
+      event.preventDefault();
+      this.open(event);
+    }
+  }
+  onPointerdown(event) {
+    this._parent.setPointerCapture(event.pointerId);
+    this._parent.addEventListener('pointerup', this.onPointerup);
+    if (this.ondown && event.button === this.button) {
+      this.open(event);
+    }
+  }
+  onPointerup(event) {
+    this._parent.removeEventListener('pointerup', this.onPointerup);
+    if (!this.ondown && event.button === this.button) {
+      this.open(event);
+    }
+  }
+  open(event) {
     IoMenuLayer.singleton.collapseAllGroups();
-    IoMenuLayer.singleton._x = evt.clientX;
-    IoMenuLayer.singleton._y = evt.clientY;
+    if (event.pointerId) IoMenuLayer.singleton.setPointerCapture(event.pointerId);
+    IoMenuLayer.singleton._x = event.clientX;
+    IoMenuLayer.singleton._y = event.clientY;
     this.expanded = true;
   }
 }
@@ -1075,6 +1073,34 @@ class IoNumber extends IoElement {
 
 IoNumber.Register();
 
+class IoObject extends IoCollapsable {
+  static get properties() {
+    return {
+      value: Object,
+      props: Array,
+      config: null,
+      labeled: true,
+    };
+  }
+  changed() {
+    const label = this.label || this.value.constructor.name;
+    this.template([
+      ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
+      this.expanded ? [
+        ['io-properties', {
+          className: 'io-collapsable-content',
+          value: this.value,
+          props: this.props.length ? this.props : Object.keys(this.value),
+          config: this.config,
+          labeled: this.labeled,
+        }]
+      ] : null
+    ]);
+  }
+}
+
+IoObject.Register();
+
 class IoOption extends IoButton {
   static get style() {
     return html`<style>:host::after {width: 0.65em;margin-left: 0.25em;content: '▾';}</style>`;
@@ -1119,7 +1145,8 @@ class IoOption extends IoButton {
         id: 'menu',
         options: this.options,
         position: 'bottom',
-        listener: 'click',
+        button: 0,
+        ondown: false, // TODO: make open ondown and stay open with position:bottom
         'on-io-menu-item-clicked': this._onMenu}]
     ]);
   }
@@ -1129,7 +1156,7 @@ IoOption.Register();
 
 class IoSlider extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;min-width: 12em;}:host > io-number {flex: 0 0 auto;}:host > io-slider-knob {flex: 1 1 auto;margin-left: 2px;border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}_onValueSet(event) {this.dispatchEvent('value-set', event.detail, false);}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],['io-slider-knob', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoCanvas {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: row;min-width: 12em;}:host > io-number {flex: 0 0 auto;}:host > io-slider-knob {flex: 1 1 auto;margin-left: 2px;border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}_onValueSet(event) {this.dispatchEvent('value-set', event.detail, false);this.value = event.detail.value;}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],['io-slider-knob', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoCanvas {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;}</style>`;
   }
   static get properties() {
     return {
