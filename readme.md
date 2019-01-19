@@ -6,7 +6,7 @@ It combines the power of custom elements with expressive dynamic templates and b
 
 For a quick start, continue reading this document.
 
-Also check out `/src/elements`, `/demo` and `/demo/todoapp`.
+Also check out `/docs`, `/src/elements`, `/demo` and `/demo/todomvc`.
 
 ## Principles ##
 
