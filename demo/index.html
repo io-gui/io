@@ -17,7 +17,7 @@
     import {data} from "./data.js";
 
     IoInspector.RegisterConfig({
-
+      'IoDemo|variables': ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers'],
     });
 
     export class IoDemo extends IoElement {
@@ -124,7 +124,7 @@
             ['io-object', {value: this.menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
           ]}],
           ['io-collapsable', {label: 'io-inspector', expanded: $('io-inspector'), elements: [
-            ['io-inspector', {value: this, config: {'IoDemo|variables': ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}, expanded: ['properties']}],
+            ['io-inspector', {value: this, expanded: ['properties']}],
           ]}],
           // TODO: array
           // TODO: object-group
