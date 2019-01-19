@@ -51,7 +51,8 @@ export class IoOption extends IoButton {
         id: 'menu',
         options: this.options,
         position: 'bottom',
-        listener: 'click',
+        button: 0,
+        ondown: false, // TODO: make open ondown and stay open with position:bottom
         'on-io-menu-item-clicked': this._onMenu}]
     ]);
   }
