@@ -9,6 +9,7 @@ export class IoMenuOptions extends IoElement {
         flex-direction: column;
         white-space: nowrap;
         user-select: none;
+        touch-action: none;
         background: white;
         color: black;
       }

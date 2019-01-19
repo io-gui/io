@@ -59,7 +59,7 @@ export class IoElement extends IoCore(HTMLElement) {
       if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];
         host.insertBefore(constructElement(vChildren[i]), oldElement);
-        oldElement.dispose();
+        if (oldElement.dispose) oldElement.dispose();
         host.removeChild(oldElement);
 
       // update existing elements
@@ -109,6 +109,9 @@ export class IoElement extends IoCore(HTMLElement) {
     } else if (typeof value == 'string' || typeof value == 'number') {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
+  }
+  preventDefault(event) {
+    event.preventDefault();
   }
   static get observedAttributes() { return this.prototype.__observedAttributes; }
   attributeChangedCallback(name, oldValue, newValue) {

@@ -11,6 +11,7 @@ export class IoMenuItem extends IoElement {
         cursor: pointer;
         padding: 0.125em 0.5em 0.125em 1.7em;
         line-height: 1em;
+        touch-action: none;
       }
       :host > * {
         pointer-events: none;
@@ -43,8 +44,8 @@ export class IoMenuItem extends IoElement {
   }
   static get listeners() {
     return {
-      'focus': '_onFocus',
-      'touchstart': '_onTouchstart'
+      'focus': 'onFocus',
+      'pointerdown': 'onPointerdown',
     };
   }
   get menuroot() {
@@ -88,23 +89,11 @@ export class IoMenuItem extends IoElement {
       }
     }
   }
-  _onTouchstart(event) {
-    event.preventDefault();
-    this.addEventListener('touchmove', this._onTouchmove);
-    this.addEventListener('touchend', this._onTouchend);
+  onPointerdown(event) {
+    IoMenuLayer.singleton.setPointerCapture(event.pointerId);
     this.focus();
   }
-  _onTouchmove(event) {
-    event.preventDefault();
-    IoMenuLayer.singleton._onTouchmove(event);
-  }
-  _onTouchend(event) {
-    event.preventDefault();
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-    IoMenuLayer.singleton._onTouchend(event);
-  }
-  _onFocus() {
+  onFocus() {
     if (this.$options) {
       if (!this.$options.parentNode) {
         IoMenuLayer.singleton.appendChild(this.$options);

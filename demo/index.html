@@ -115,8 +115,9 @@
             ['io-button', {label: 'set 3', action: this.setNumber, value: 3}],
           ]}],
           ['io-collapsable', {label: 'io-object', expanded: $('io-object'), elements: [
-            ['io-object', {value: this, expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}], //TODO: labeled?
-            ['io-object', {value: this, labeled: false, expanded: $('io-object3'), props: ['number'], config: {'key:number': ['io-slider', {step: 0.1}]}}],
+            ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}], //TODO: labeled?
+            ['io-object', {value: this, label: 'IoDemo (single configured property)', labeled: false, expanded: $('io-object2'), props: ['number'], config: {'key:number': ['io-slider', {step: 0.1}]}}],
+            ['io-object', {value: this.menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
           ]}],
           ['io-collapsable', {label: 'io-inspector', expanded: $('io-inspector'), elements: [
             ['io-inspector', {value: this, groups: {'variables': ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}, expanded: ['properties']}],
@@ -125,7 +126,7 @@
           // TODO: object-group
           ['io-collapsable', {label: 'io-menu', expanded: $('io-menu'), elements: [
             ['div', {className: 'label'}, 'right-click (contextmenu)'],
-            ['io-menu', {options: this.menuoptions, position: 'pointer', listener: 'contextmenu'}]
+            ['io-menu', {options: this.menuoptions, position: 'pointer', button: 2, ondown: false}]
           ]}],
           ['io-collapsable', {label: 'io-menu-options', expanded: $('io-menu'), elements: [
             ['io-menu-options', {className: 'sidebar', options: this.menuoptions}],
