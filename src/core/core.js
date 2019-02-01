@@ -35,6 +35,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   changed() {}
   dispose() {
     // TODO: test dispose!
+    // TODO: dispose bindings correctly
     this.__protoListeners.disconnect(this);
     this.__propListeners.disconnect(this);
     this.removeListeners();
@@ -254,6 +255,12 @@ export function defineProperties(prototype) {
       set: function(value) {
         if (this.__properties[prop].value === value) return;
         const oldValue = this.__properties[prop].value;
+        if (value instanceof Binding) {
+          const binding = value;
+          value = value.source[value.sourceProp];
+          binding.setTarget(this, prop);
+          this.__properties[prop].binding = binding;
+        }
         this.__properties[prop].value = value;
         if (this.__properties[prop].reflect) this.setAttribute(prop, this.__properties[prop].value);
         if (isPublic && this.__connected) {
@@ -301,9 +308,8 @@ export class IoCore extends IoCoreMixin(Object) {
     this.disconnectedCallback();
   }
   dispose() {
+    super.dispose();
     // TODO implement properly and test
-    delete this.parent;
-    this.children.lenght = 0;
     for (let l in this.__listeners) this.__listeners[l].lenght = 0;
     for (let p in this.__properties) delete this.__properties[p];
   }

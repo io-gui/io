@@ -42,7 +42,6 @@ export class Binding {
         targetProps.splice(index, 1);
       }
       if (targetProps.length === 0) this.targets.splice(this.targets.indexOf(target), 1);
-      // TODO: remove from WeakMap?
       target.removeEventListener(targetProp + '-changed', this.updateSource);
     }
   }
@@ -68,4 +67,5 @@ export class Binding {
       }
     }
   }
+  // TODO: dispose bindings correctly
 }

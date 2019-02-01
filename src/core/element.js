@@ -40,6 +40,11 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
       }
     }
   }
+  dispose() {
+    super.dispose();
+    delete this.parent;
+    this.children.lenght = 0;
+  }
   template(children, host) {
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
