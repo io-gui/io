@@ -4,7 +4,7 @@ import {Listeners} from "./classes/listeners.js";
 import {Properties} from "./classes/properties.js";
 import {Protochain} from "./classes/protochain.js";
 
-export const IoCore = (superclass) => class extends superclass {
+export const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
       // TODO: is this necessary?
@@ -23,8 +23,6 @@ export const IoCore = (superclass) => class extends superclass {
 
     Object.defineProperty(this, '__properties', {value: this.__properties.clone()});
 
-    Object.defineProperty(this, '$', {value: {}}); // TODO: consider clearing in template. possible memory leak!
-
     this.__functions.bind(this);
 
     Object.defineProperty(this, '__propListeners', {value: new Listeners()});
@@ -32,7 +30,7 @@ export const IoCore = (superclass) => class extends superclass {
 
     this.setProperties(initProps);
 
-    if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed');
+    if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed', {detail: {}});
   }
   changed() {}
   dispose() {
@@ -44,8 +42,8 @@ export const IoCore = (superclass) => class extends superclass {
       if (this.__properties[p].binding) {
         this.__properties[p].binding.removeTarget(this, p);
         // TODO: this breaks binding for transplanted elements.
-        delete this.__properties[p].binding;
         // TODO: possible memory leak!
+        delete this.__properties[p].binding;
       }
     }
   }
@@ -57,7 +55,7 @@ export const IoCore = (superclass) => class extends superclass {
     let oldValue = this[prop];
     this[prop] = value;
     if (oldValue !== value) {
-      this.dispatchEvent(prop + '-set', {value: value, oldValue: oldValue}, false);
+      this.dispatchEvent(prop + '-set', {property: prop, value: value, oldValue: oldValue}, false);
     }
   }
   setProperties(props) {
@@ -111,6 +109,13 @@ export const IoCore = (superclass) => class extends superclass {
         this.style.setProperty(s, props['style'][s]);
       }
     }
+
+    // if (this.__observeQueue.length) {
+      if (this.__observeQueue.indexOf('changed') === -1) {
+        this.__observeQueue.push('changed', {});
+      }
+    // }
+    this.queueDispatch();
   }
   objectMutated(event) {
     for (let i = this.__objectProps.length; i--;) {
@@ -123,6 +128,7 @@ export const IoCore = (superclass) => class extends superclass {
   connectedCallback() {
     this.__protoListeners.connect(this);
     this.__propListeners.connect(this);
+    this.__connected = true;
     this.queueDispatch();
     for (let p in this.__properties) {
       if (this.__properties[p].binding) {
@@ -136,6 +142,7 @@ export const IoCore = (superclass) => class extends superclass {
   disconnectedCallback() {
     this.__protoListeners.disconnect(this);
     this.__propListeners.disconnect(this);
+    this.__connected = false;
     for (let p in this.__properties) {
       if (this.__properties[p].binding) {
         this.__properties[p].binding.removeTarget(this, p);
@@ -214,20 +221,20 @@ export const IoCore = (superclass) => class extends superclass {
     }
     if (observer && this[observer]) {
       if (this.__observeQueue.indexOf(observer) === -1) {
-        this.__observeQueue.push(observer);
+        this.__observeQueue.push(observer, {detail: {property: prop, value: value, oldValue: oldValue}});
       }
     }
-    this.__notifyQueue.push([prop + '-changed', {value: value, oldValue: oldValue}]);
+    if (this.__notifyQueue.indexOf(prop + '-changed') === -1) {
+      this.__notifyQueue.push(prop + '-changed', {property: prop, value: value, oldValue: oldValue});
+    }
   }
   queueDispatch() {
-    if (this.__observeQueue.length || this.__notifyQueue.length) {
-      this.__observeQueue.push('changed');
+    // TODO: consider unifying observe and notify queue
+    for (let j = 0; j < this.__observeQueue.length; j+=2) {
+      this[this.__observeQueue[j]](this.__observeQueue[j+1]);
     }
-    for (let j = 0; j < this.__observeQueue.length; j++) {
-      this[this.__observeQueue[j]]();
-    }
-    for (let j = 0; j < this.__notifyQueue.length; j++) {
-      this.dispatchEvent(this.__notifyQueue[j][0], this.__notifyQueue[j][1]);
+    for (let j = 0; j < this.__notifyQueue.length; j+=2) {
+      this.dispatchEvent(this.__notifyQueue[j], this.__notifyQueue[j+1]);
     }
     this.__observeQueue.length = 0;
     this.__notifyQueue.length = 0;
@@ -249,11 +256,12 @@ export function defineProperties(prototype) {
         const oldValue = this.__properties[prop].value;
         this.__properties[prop].value = value;
         if (this.__properties[prop].reflect) this.setAttribute(prop, this.__properties[prop].value);
-        if (isPublic) {
-          if (this[observer]) this[observer](value, oldValue);
-          if (this.__properties[prop].observer) this[this.__properties[prop].observer](value, oldValue);
+        if (isPublic && this.__connected) {
+          const payload = {detail: {property: prop, value: value, oldValue: oldValue}};
+          if (this[observer]) this[observer](payload);
+          if (this.__properties[prop].observer) this[this.__properties[prop].observer](payload);
           this.changed();
-          this.dispatchEvent(changeEvent, {property: prop, value: value, oldValue: oldValue});
+          this.dispatchEvent(changeEvent, payload.detail);
         }
       },
       enumerable: isEnumerable && isPublic,
@@ -262,7 +270,7 @@ export function defineProperties(prototype) {
   }
 }
 
-IoCore.Register = function () {
+IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__protochain', {value: new Protochain(this.prototype)});
   Object.defineProperty(this.prototype, '__properties', {value: new Properties(this.prototype.__protochain)});
   Object.defineProperty(this.prototype, '__functions', {value: new Functions(this.prototype.__protochain)});
@@ -280,3 +288,29 @@ IoCore.Register = function () {
 
   defineProperties(this.prototype);
 };
+
+export class IoCore extends IoCoreMixin(Object) {
+  constructor(props) {
+    super(props);
+    this.connect();
+  }
+  connect() {
+    this.connectedCallback();
+  }
+  disconnect() {
+    this.disconnectedCallback();
+  }
+  dispose() {
+    // TODO implement properly and test
+    delete this.parent;
+    this.children.lenght = 0;
+    for (let l in this.__listeners) this.__listeners[l].lenght = 0;
+    for (let p in this.__properties) delete this.__properties[p];
+  }
+}
+
+IoCore.Register = function() {
+  IoCoreMixin.Register.call(this);
+};
+
+IoCore.Register();

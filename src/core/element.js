@@ -1,9 +1,14 @@
-import {IoCore} from "../core/core.js";
+import {IoCoreMixin} from "../core/core.js";
 import {Listeners} from "../core/classes/listeners.js"; // TODO: refactor for native elements
 
-export class IoElement extends IoCore(HTMLElement) {
+export class IoElement extends IoCoreMixin(HTMLElement) {
   static get properties() {
     return {
+      // TODO: is this necessary?
+      id: {
+        type: String,
+        enumerable: false
+      },
       tabindex: {
         type: String,
         reflect: true,
@@ -18,8 +23,14 @@ export class IoElement extends IoCore(HTMLElement) {
         type: String,
         reflect: true,
         enumerable: false
-      }
+      },
+      $: {
+        type: Object, // TODO: consider clearing in template. possible memory leak!
+      },
     };
+  }
+  constructor(initProps = {}) {
+    super(initProps);
   }
   connectedCallback() {
     super.connectedCallback();
@@ -29,9 +40,6 @@ export class IoElement extends IoCore(HTMLElement) {
       }
     }
   }
-  // disconnectedCallback() {
-  //   super.disconnectedCallback();
-  // }
   template(children, host) {
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
@@ -128,7 +136,7 @@ export class IoElement extends IoCore(HTMLElement) {
 
 IoElement.Register = function() {
 
-  IoCore.Register.call(this);
+  IoCoreMixin.Register.call(this);
 
   // window[this.name] = this; // TODO: consider
 

@@ -54,6 +54,9 @@ export class IoSliderKnob extends IoCanvas {
         display: flex;
         cursor: ew-resize;
       }
+      :host > img {
+        pointer-events: none;
+      }
     </style>`;
   }
   static get properties() {

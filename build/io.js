@@ -224,7 +224,7 @@ class Protochain extends Array {
   }
 }
 
-const IoCore = (superclass) => class extends superclass {
+const IoCoreMixin = (superclass) => class extends superclass {
   static get properties() {
     return {
       // TODO: is this necessary?
@@ -482,7 +482,7 @@ function defineProperties(prototype) {
   }
 }
 
-IoCore.Register = function () {
+IoCoreMixin.Register = function () {
   Object.defineProperty(this.prototype, '__protochain', {value: new Protochain(this.prototype)});
   Object.defineProperty(this.prototype, '__properties', {value: new Properties(this.prototype.__protochain)});
   Object.defineProperty(this.prototype, '__functions', {value: new Functions(this.prototype.__protochain)});
@@ -501,7 +501,7 @@ IoCore.Register = function () {
   defineProperties(this.prototype);
 };
 
-class IoNode extends IoCore(Object) {
+class IoNode extends IoCoreMixin(Object) {
   connect() {
     this.connectedCallback();
   }
@@ -518,12 +518,12 @@ class IoNode extends IoCore(Object) {
 }
 
 IoNode.Register = function() {
-  IoCore.Register.call(this);
+  IoCoreMixin.Register.call(this);
 };
 
 IoNode.Register();
 
-class IoElement extends IoCore(HTMLElement) {
+class IoElement extends IoCoreMixin(HTMLElement) {
   static get properties() {
     return {
       tabindex: {
@@ -650,7 +650,7 @@ class IoElement extends IoCore(HTMLElement) {
 
 IoElement.Register = function() {
 
-  IoCore.Register.call(this);
+  IoCoreMixin.Register.call(this);
 
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
@@ -2149,4 +2149,4 @@ IoString.Register();
  * Basic elements made with io library: https://github.com/arodic/io
  */
 
-export { IoCore, IoNode, IoElement, html, initStyle, storage, IoLite, IoLiteMixin, IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSlider, IoString };
+export { IoCoreMixin, IoNode, IoElement, html, initStyle, storage, IoLite, IoLiteMixin, IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSlider, IoString };

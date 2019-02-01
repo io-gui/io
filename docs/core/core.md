@@ -1,1 +1,1 @@
-### `IoCore` `<io-core>` ###
+### `IoCoreMixin` `<io-core>` ###

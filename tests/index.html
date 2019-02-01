@@ -30,7 +30,6 @@
 
       import Core from "./core/core.js"
       import Element from "./core/element.js"
-      import Node from "./core/node.js"
       import Storage from "./core/storage.js"
 
       import Array from "./elements/array.js"
@@ -50,23 +49,23 @@
       mocha.setup('bdd');
 
       new Core().run();
-      new Element().run();
-      new Node().run();
-      new Storage().run();
 
-      new Array().run();
-      new Boolean().run();
-      new Button().run();
-      new Canvas().run();
-      new Collapsable().run();
-      new Number().run();
-      new Object().run();
-      new Inspector().run();
-      new Slider().run();
-      new Properties().run();
-      new Sting().run();
-
-      new Lite().run();
+      // new Element().run();
+      // new Storage().run();
+      //
+      // new Array().run();
+      // new Boolean().run();
+      // new Button().run();
+      // new Canvas().run();
+      // new Collapsable().run();
+      // new Number().run();
+      // new Object().run();
+      // new Inspector().run();
+      // new Slider().run();
+      // new Properties().run();
+      // new Sting().run();
+      //
+      // new Lite().run();
 
       mocha.checkLeaks();
       mocha.run();

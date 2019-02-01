@@ -18,7 +18,7 @@ Also check out `/docs`, `/src/elements`, `/demo` and `/demo/todomvc`.
 
 ## Classes ##
 
-### `IoCore` ###
+### `IoCoreMixin` ###
 
 This is the core of io. It is designed as a mixin so it can be included at any level of the inheritance chain.
 
@@ -26,9 +26,9 @@ This is the core of io. It is designed as a mixin so it can be included at any l
 
 The io core applied to `HTMLElement` class. It gives you the ability to quickly design and initialize a custom element. It includes features such as dynamic templates, encapsulated styling and data binding.
 
-### `IoNode` ###
+### `IoCore` ###
 
-The io core applied to `Object` class. It excludes DOM features such as templates and styles but otherwise provides same functionality as `IoElement`.
+The io core mixin applied to `Object` class. It excludes DOM features such as templates and styles but otherwise provides same functionality as `IoElement`.
 
 ### Defining Custom Elements ###
 
@@ -167,7 +167,7 @@ this.template([
 
 ```
 
-You can also use `this.bind()` outside template or bind to `IoNode` objects.
+You can also use `this.bind()` outside template or bind to `IoCore` objects.
 
 ```javascript
 let myNode = new MyNode({value: this.bind('value')});

@@ -5,7 +5,6 @@
  */
 
 // core classes
-export {IoCore} from "./core/core.js";
-export {IoNode} from "./core/node.js";
+export {IoCoreMixin, IoCore} from "./core/core.js";
 export {IoElement, html, initStyle} from "./core/element.js";
 export {IoStorage} from "./core/storage.js";

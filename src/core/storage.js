@@ -1,8 +1,8 @@
-import {IoNode} from "./node.js";
+import {IoCore} from "./core.js";
 
 const nodes = {};
 
-class IoStorageNode extends IoNode {
+class IoStorageNode extends IoCore {
   static get properties() {
     return {
       key: String,
@@ -28,7 +28,6 @@ IoStorageNode.Register();
 export function IoStorage(key, defValue) {
   if (!nodes[key]) {
     nodes[key] = new IoStorageNode({key: key}, defValue);
-    nodes[key].connect();
     nodes[key].binding = nodes[key].bind('value');
   }
   return nodes[key].binding;

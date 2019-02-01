@@ -1,6 +1,6 @@
-import {IoNode} from "../../src/io.js";
+import {IoCore} from "../../src/io.js";
 
-export class TodoModel extends IoNode {
+export class TodoModel extends IoCore {
   static get properties() {
     return {
       items: Array,

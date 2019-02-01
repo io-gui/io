@@ -1,7 +1,6 @@
-import {IoElement} from "../../src/io.js";
-import {IoNode} from "../../src/io.js";
+import {IoElement, IoCore} from "../../src/io.js";
 
-import {TestSubnode} from "./node.js";
+// import {TestSubnode} from "./node.js";
 
 export class TestElement extends IoElement {
   static get properties() {
@@ -149,7 +148,7 @@ export default class {
         chai.expect(this.element.number).to.equal(2);
       });
     });
-    describe('IoElement: Binding to IoNode', () => {
+    describe('IoElement: Binding to IoCore', () => {
       it('element and node have bound values', () => {
         this.element.number = Infinity;
         chai.expect(this.element.subnode.number).to.equal(Infinity);
