@@ -1,47 +1,71 @@
 import {IoElement, IoCore} from "../../src/io.js";
 
-// import {TestSubnode} from "./node.js";
+import {TestNode} from "./core.js";
 
 export class TestElement extends IoElement {
   static get properties() {
     return {
-      number: 1337,
-      string: {value: 'default', observer: 'customObserver'},
-      _changedFired: 0,
-      _stringChangedFired: 0,
-      _customHandlerFired: 0,
-      _customObserverFired: 0,
-      _customObserverFired: 0,
-      _defaultHandlerEvent: null,
+      prop0: -1,
+      prop1: {
+        value: 'default',
+        observer: 'handler1'
+      },
+      // Internal counters
+      _changedCounter: 0,
+      _prop1ChangedCounter: 0,
+      _handler0Counter: 0,
+      _handler1Counter: 0,
+      _handler2Payload: null,
     };
   }
   static get listeners() {
     return {
-      'number-changed': 'defaultHandler',
-      'custom-event': 'defaultHandler',
+      'prop0-changed': 'handler2',
+      'custom-event': 'customHandler',
     };
+  }
+  reset() {
+    this.prop0 = -1;
+    this.prop1 = 'default';
+    this._changedCounter = 0;
+    this._prop1ChangedCounter = 0;
+    this._handler0Counter = 0;
+    this._handler1Counter = 0;
+    this._handler2Counter = 0;
+    this._customHandlerCounter = 0;
+    this._handler0Payload = null;
+    this._handler1Payload = null;
+    this._handler2Payload = null;
+    this._customHandlerPayload = null;
   }
   constructor(initProps) {
     super(initProps);
-    this.template([['test-subelement', {id: 'subelement', number: this.bind('number')}]]);
-    this.subnode = new TestSubnode({number: this.bind('number')});
-    // this.subnode.connect(); // TODO: is this not necessary?
+    this.template([['test-subelement', {id: 'subelement', prop0: this.bind('prop0')}]]);
+    this.subnode = new TestNode({prop2: this.bind('prop0')});
   }
   // TODO: test arguments
   changed() {
-    this._changedFired++;
+    this._changedCounter++;
   }
-  stringChanged() {
-    this._stringChangedFired++;
+  prop1Changed(event) {
+    this._prop1ChangedCounter++;
+    this._prop1ChangedPayload = event;
   }
-  customHandler() {
-    this._customHandlerFired++;
+  handler0(event) {
+    this._handler0Counter++;
+    this._handler0Payload = event;
   }
-  customObserver() {
-    this._customObserverFired++;
+  handler1(event) {
+    this._handler1Counter++;
+    this._handler1Payload = event;
   }
-  defaultHandler(event) {
-    this._defaultHandlerEvent = event;
+  handler2(event) {
+    this._handler2Counter++;
+    this._handler2Payload = event;
+  }
+  customHandler(event) {
+    this._customHandlerCounter++;
+    this._customHandlerPayload = event;
   }
 }
 TestElement.Register();
@@ -49,7 +73,7 @@ TestElement.Register();
 export class TestSubelement extends IoElement {
   static get properties() {
     return {
-      number: 0,
+      prop0: 0,
     };
   }
 }
@@ -57,128 +81,126 @@ TestSubelement.Register();
 
 export default class {
   constructor() {
-    this._changedFired = 0;
+    this._changedCounter = 0;
     this.changed = this.changed.bind(this);
-    this.element = new TestElement({'on-number-changed': this.changed, 'on-string-changed': 'customHandler'});
+    this.element = new TestElement({'on-prop0-changed': this.changed, 'on-prop1-changed': 'handler0'});
     document.body.appendChild(this.element);
   }
   changed(event) {
     if (event.target == this.element) {
-      this._changedFired++;
+      this._changedCounter++;
     }
   }
+  reset() {
+    this.element.reset();
+    this._changedCounter = 0;
+  }
   run() {
-    describe('IoElement: Default values', () => {
-      it('has default values', () => {
-        chai.expect(this.element.number).to.equal(1337);
-        chai.expect(this.element.string).to.equal('default');
+    describe('IoElement', () => {
+      describe('Initialized element', () => {
+        it('should have correct property defaults', () => {
+          chai.expect(this.element.prop0).to.equal(-1);
+          chai.expect(this.element.prop1).to.equal('default');
+        });
+        it('should have core API functions defined', () => {});
       });
-    });
-    describe('IoElement: Listeners', () => {
-      it('executes string handler', () => {
-        this.element.string = '';
-        this.element._customHandlerFired = 0;
-        this.element.string = 'test';
-        chai.expect(this.element._customHandlerFired).to.equal(1);
+
+      describe('Observed properties', () => {
+        it('should corectly fire handler functions on change', () => {
+          this.reset();
+          this.element.prop1 = 'test';
+          chai.expect(this.element._handler0Counter).to.equal(1);
+          //
+          this.reset();
+          this.element.prop0 = 1;
+          chai.expect(this._changedCounter).to.equal(1);
+        });
+        it('should not fire handler functions when disconnected', () => {
+          this.reset();
+          document.body.removeChild(this.element);
+          this.element.prop1 = 'test';
+          chai.expect(this.element._handler0Counter).to.equal(0);
+          document.body.appendChild(this.element);
+          this.element.prop1 = 'test2';
+          chai.expect(this.element._handler0Counter).to.equal(1);
+          //
+          this.reset();
+          document.body.removeChild(this.element);
+          this.element.prop0 = 1;
+          chai.expect(this._changedCounter).to.equal(0);
+          document.body.appendChild(this.element);
+          this.element.prop0 = 2;
+          chai.expect(this._changedCounter).to.equal(1);
+        });
+        // it('executes default observers on init values', () => {
+        //   let element = new TestElement({prop1: this.element.bind('prop1')});
+        //   document.body.appendChild(element);
+        //   chai.expect(element._changedCounter).to.equal(1);
+        //   chai.expect(element._prop1ChangedCounter).to.equal(1);
+        // });
+        it('executes default observers', () => {
+          this.reset();
+          this.element.prop1 = 'test';
+          chai.expect(this.element._changedCounter).to.equal(1);
+          chai.expect(this.element._prop1ChangedCounter).to.equal(1);
+        });
+        it('executes custom observer', () => {
+          this.reset();
+          this.element.prop1 = 'test';
+          chai.expect(this.element._handler1Counter).to.equal(1);
+        });
+
+        it('should dispatch correct event payloads to handlers', () => {
+          this.reset();
+          this.element.prop0 = 1;
+          this.element.prop0 = 0;
+          chai.expect(this.element._handler2Payload.path[0]).to.equal(this.element);
+          chai.expect(this.element._handler2Payload.detail.value).to.equal(0);
+          this.element.$.subelement.prop0 = 2;
+          chai.expect(this.element._handler2Payload.path[0]).to.equal(this.element.$.subelement);
+          chai.expect(this.element._handler2Payload.detail.oldValue).to.equal(0);
+          chai.expect(this.element._handler2Payload.detail.value).to.equal(2);
+          this.element.dispatchEvent('custom-event', {data: 'io'});
+          chai.expect(this.element._customHandlerPayload.detail.data).to.equal('io');
+        });
+
       });
-      it('executes external function handler', () => {
-        this.element.number = 0;
-        this._changedFired = 0;
-        this.element.number = 1;
-        chai.expect(this._changedFired).to.equal(1);
+      // TODO: Cleanup and improve
+      describe('Binding', () => {
+        it('should update bound values correctly', () => {
+          this.element.prop0 = Infinity;
+          chai.expect(this.element.$.subelement.prop0).to.equal(Infinity);
+          this.element.$.subelement.prop0 = 0;
+          chai.expect(this.element.prop0).to.equal(0);
+        });
+        it('should disconnect binding when element is disconnected', () => {
+          this.element.prop0 = Infinity;
+          chai.expect(this.element.$.subelement.prop0).to.equal(Infinity);
+          this.element.removeChild(this.element.$.subelement);
+          this.element.$.subelement.prop0 = 0;
+          chai.expect(this.element.prop0).to.equal(Infinity);
+          this.element.appendChild(this.element.$.subelement);
+          this.element.$.subelement.prop0 = 2;
+          chai.expect(this.element.prop0).to.equal(2);
+        });
+        it('should bind to IoCore node', () => {
+          this.element.prop0 = Infinity;
+          chai.expect(this.element.subnode.prop2).to.equal(Infinity);
+          this.element.subnode.prop2 = 0;
+          chai.expect(this.element.prop0).to.equal(0);
+        });
+        it('should disconnect binding when IoCore node is disconnected', () => {
+          this.element.prop0 = Infinity;
+          chai.expect(this.element.subnode.prop2).to.equal(Infinity);
+          this.element.subnode.disconnect();
+          this.element.prop0 = 0;
+          chai.expect(this.element.subnode.prop2).to.equal(Infinity);
+          this.element.subnode.connect();
+          this.element.subnode.prop2 = 2;
+          chai.expect(this.element.prop0).to.equal(2);
+        });
       });
-      it('disconnected doesen\'t execute string handler', () => {
-        this.element.string = '';
-        this.element._customHandlerFired = 0;
-        document.body.removeChild(this.element);
-        this.element.string = 'test';
-        chai.expect(this.element._customHandlerFired).to.equal(0);
-        document.body.appendChild(this.element);
-        this.element.string = 'test2';
-        chai.expect(this.element._customHandlerFired).to.equal(1);
-      });
-      it('disconnected doesen\'t execute function handler', () => {
-        this.element.number = 0;
-        this._changedFired = 0;
-        document.body.removeChild(this.element);
-        this.element.number = 1;
-        chai.expect(this._changedFired).to.equal(0);
-        document.body.appendChild(this.element);
-        this.element.number = 2;
-        chai.expect(this._changedFired).to.equal(1);
-      });
-    });
-    describe('IoElement: Observers', () => {
-      // it('executes default observers on init values', () => {
-      //   let element = new TestElement({string: this.element.bind('string')});
-      //   document.body.appendChild(element);
-      //   chai.expect(element._changedFired).to.equal(1);
-      //   chai.expect(element._stringChangedFired).to.equal(1);
-      // });
-      it('executes default observers', () => {
-        this.element.string = '';
-        this.element._changedFired = 0;
-        this.element._stringChangedFired = 0;
-        this.element.string = 'test';
-        chai.expect(this.element._changedFired).to.equal(1);
-        chai.expect(this.element._stringChangedFired).to.equal(1);
-      });
-      it('executes custom observer', () => {
-        this.element.string = '';
-        this.element._customObserverFired = 0;
-        this.element.string = 'test';
-        chai.expect(this.element._customObserverFired).to.equal(1);
-      });
-    });
-    describe('IoElement: Binding', () => {
-      it('element and child have bound values', () => {
-        this.element.number = Infinity;
-        chai.expect(this.element.$.subelement.number).to.equal(Infinity);
-        this.element.$.subelement.number = 0;
-        chai.expect(this.element.number).to.equal(0);
-      });
-      it('disconnecting child disconnects bindngs', () => {
-        this.element.number = Infinity;
-        chai.expect(this.element.$.subelement.number).to.equal(Infinity);
-        this.element.removeChild(this.element.$.subelement);
-        this.element.$.subelement.number = 0;
-        chai.expect(this.element.number).to.equal(Infinity);
-        this.element.appendChild(this.element.$.subelement);
-        this.element.$.subelement.number = 2;
-        chai.expect(this.element.number).to.equal(2);
-      });
-    });
-    describe('IoElement: Binding to IoCore', () => {
-      it('element and node have bound values', () => {
-        this.element.number = Infinity;
-        chai.expect(this.element.subnode.number).to.equal(Infinity);
-        this.element.subnode.number = 0;
-        chai.expect(this.element.number).to.equal(0);
-      });
-      it('disconnecting node disconnects bindngs', () => {
-        this.element.number = Infinity;
-        chai.expect(this.element.subnode.number).to.equal(Infinity);
-        this.element.subnode.disconnect();
-        this.element.number = 0;
-        chai.expect(this.element.subnode.number).to.equal(Infinity);
-        this.element.subnode.connect();
-        this.element.subnode.number = 2;
-        chai.expect(this.element.number).to.equal(2);
-      });
-    });
-    describe('IoElement: Default listeners', () => {
-      it('catches correct event payloads', () => {
-        this.element.number = 1;
-        this.element.number = 0;
-        chai.expect(this.element._defaultHandlerEvent.path[0]).to.equal(this.element);
-        chai.expect(this.element._defaultHandlerEvent.detail.value).to.equal(0);
-        this.element.$.subelement.number = 2;
-        chai.expect(this.element._defaultHandlerEvent.path[0]).to.equal(this.element.$.subelement);
-        chai.expect(this.element._defaultHandlerEvent.detail.oldValue).to.equal(0);
-        chai.expect(this.element._defaultHandlerEvent.detail.value).to.equal(2);
-        this.element.dispatchEvent('custom-event', {data: 'io'});
-        chai.expect(this.element._defaultHandlerEvent.detail.data).to.equal('io');
-      });
+      // TODO: test IoElement-specific API
     });
   }
 }
