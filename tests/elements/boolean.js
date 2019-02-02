@@ -1,4 +1,4 @@
-import {IoBoolean} from "../../src/io.js";
+import {IoBoolean} from "../../src/elements/boolean.js";
 
 export default class {
   constructor() {

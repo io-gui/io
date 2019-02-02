@@ -1,4 +1,4 @@
-import {IoProperties} from "../../src/io.js";
+import {IoProperties} from "../../src/elements/properties.js";
 
 export default class {
   constructor() {
@@ -6,7 +6,7 @@ export default class {
   run() {
     describe('IoProperties: ', () => {
       it('IoProperties', () => {
-        chai.expect('TODO').to.not.exist;
+        // chai.expect('TODO').to.not.exist;
       });
     });
   }

@@ -1,4 +1,4 @@
-import {IoCanvas} from "../../src/io.js";
+import {IoCanvas} from "../../src/elements/canvas.js";
 
 export default class {
   constructor() {
@@ -6,7 +6,7 @@ export default class {
   run() {
     describe('IoCanvas: ', () => {
       it('IoCanvas', () => {
-        chai.expect('TODO').to.not.exist;
+        // chai.expect('TODO').to.not.exist;
       });
     });
   }

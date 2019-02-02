@@ -37,9 +37,11 @@
       import Button from "./elements/button.js"
       import Canvas from "./elements/canvas.js"
       import Collapsable from "./elements/collapsable.js"
+      import Inspector from "./elements/inspector.js"
+      import Menu from "./elements/menu.js"
       import Number from "./elements/number.js"
       import Object from "./elements/object.js"
-      import Inspector from "./elements/inspector.js"
+      import Option from "./elements/option.js"
       import Properties from "./elements/properties.js"
       import Slider from "./elements/slider.js"
       import Storage from "./elements/storage.js"
@@ -51,20 +53,21 @@
       new Core().run();
       new Element().run();
       new Lite().run();
-      //
-      // new Array().run();
-      // new Boolean().run();
-      // new Button().run();
-      // new Canvas().run();
-      // new Collapsable().run();
-      // new Number().run();
-      // new Object().run();
-      // new Inspector().run();
-      // new Slider().run();
-      // new Properties().run();
-      // new Storage().run();
-      // new Sting().run();
-      //
+
+      new Array().run();
+      new Boolean().run();
+      new Button().run();
+      new Canvas().run();
+      new Collapsable().run();
+      new Inspector().run();
+      new Menu().run();
+      new Number().run();
+      new Object().run();
+      new Option().run();
+      new Properties().run();
+      new Slider().run();
+      new Storage().run();
+      new Sting().run();
 
       mocha.checkLeaks();
       mocha.run();

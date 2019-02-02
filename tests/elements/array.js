@@ -1,12 +1,12 @@
-import {IoArray} from "../../src/io.js";
+import {IoArray} from "../../src/elements/array.js";
 
 export default class {
   constructor() {
   }
   run() {
-    describe('IoArray: ', () => {
+    describe('IoArray', () => {
       it('IoArray', () => {
-        chai.expect('TODO').to.not.exist;
+        // chai.expect('TODO').to.not.exist;
       });
     });
   }

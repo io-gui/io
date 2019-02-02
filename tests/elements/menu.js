@@ -1,4 +1,4 @@
-import {IoMenu} from "../../../src/io-menu.js";
+import {IoMenu} from "../../src/elements/menu.js";
 
 
 

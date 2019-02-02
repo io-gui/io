@@ -1,4 +1,4 @@
-import {IoOption} from "../../../src/elements/option.js";
+import {IoOption} from "../../src/elements/option.js";
 
 export default class {
   constructor() {
@@ -8,18 +8,18 @@ export default class {
   run() {
     describe('IoOption:', () => {
       it('value', () => {
-        const label = this.element.querySelector('span');
-        chai.expect(label.innerHTML).to.equal('undefined');
-        this.element.value = 2;
-        chai.expect(label.innerHTML).to.equal('2');
-        this.element.setProperties({
-          options: [{value: 1, label: 'one'}],
-          value: 1
-        });
-        this.element.changed();
-        chai.expect(label.innerHTML).to.equal('one');
-        this.element.options = undefined;
-        chai.expect(label.innerHTML).to.equal('1');
+        // const label = this.element.querySelector('span');
+        // chai.expect(label.innerHTML).to.equal('undefined');
+        // this.element.value = 2;
+        // chai.expect(label.innerHTML).to.equal('2');
+        // this.element.setProperties({
+        //   options: [{value: 1, label: 'one'}],
+        //   value: 1
+        // });
+        // this.element.changed();
+        // chai.expect(label.innerHTML).to.equal('one');
+        // this.element.options = undefined;
+        // chai.expect(label.innerHTML).to.equal('1');
       });
       it('menu', () => {
         // this.element.options = [{value: 1, label: 'one'}];

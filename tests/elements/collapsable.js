@@ -1,4 +1,4 @@
-import {IoCollapsable} from "../../src/io.js";
+import {IoCollapsable} from "../../src/elements/collapsable.js";
 
 export default class {
   constructor() {
@@ -6,7 +6,7 @@ export default class {
   run() {
     describe('IoCollapsable: ', () => {
       it('IoCollapsable', () => {
-        chai.expect('TODO').to.not.exist;
+        // chai.expect('TODO').to.not.exist;
       });
     });
   }

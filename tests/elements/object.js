@@ -1,4 +1,4 @@
-import {IoObject} from "../../src/io.js";
+import {IoObject} from "../../src/elements/object.js";
 
 export default class {
   constructor() {

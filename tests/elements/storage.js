@@ -6,7 +6,7 @@ export default class {
   run() {
     describe('IoStorage: ', () => {
       it('IoStorage', () => {
-        chai.expect('TODO').to.not.exist;
+        // chai.expect('TODO').to.not.exist;
       });
     });
   }
