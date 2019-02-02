@@ -1,4 +1,4 @@
-# A lightweight UI library for data-driven web applications #
+# Io: A lightweight UI library for data-driven web applications #
 
 Io consists of few simple classes that let you build complex web applications in JavaScript.
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and [DreemGL](https://github.com/dreemproject/dreemgl).

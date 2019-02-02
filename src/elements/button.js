@@ -83,6 +83,7 @@ export class IoButton extends IoElement {
   }
   changed() {
     this.innerText = this.label;
+    this.title = this.label;
   }
 }
 

@@ -11,10 +11,16 @@
         font-weight: 300;
       }
       body {
+        padding: 0.5em;
         background: #f5f5f5;
         color: #4d4d4d;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+      }
+      io-main-page {
+        display: block;
+        margin: auto;
+        max-width: 650px;
       }
     </style>
     <link href="./lib/mocha.css" rel="stylesheet" />
@@ -33,27 +39,34 @@
         super(props);
         this.template([
           ['io-selectable', {selected: $('io-selected', 0), elements: [
-            ['div', {label: 'Docs'}, [
-              ['io-md-view', {path :'./readme.md'}],
-              ['io-md-view', {path :'./docs/core/core.md'}],
-              ['io-md-view', {path :'./docs/core/element.md'}],
-              ['io-md-view', {path :'./docs/core/lite.md'}],
-              ['io-md-view', {path :'./docs/elements/array.md'}],
-              ['io-md-view', {path :'./docs/elements/boolean.md'}],
-              ['io-md-view', {path :'./docs/elements/button.md'}],
-              ['io-md-view', {path :'./docs/elements/canvas.md'}],
-              ['io-md-view', {path :'./docs/elements/collapsable.md'}],
-              ['io-md-view', {path :'./docs/elements/inspector.md'}],
-              ['io-md-view', {path :'./docs/elements/menu.md'}],
-              ['io-md-view', {path :'./docs/elements/number.md'}],
-              ['io-md-view', {path :'./docs/elements/object.md'}],
-              ['io-md-view', {path :'./docs/elements/option.md'}],
-              ['io-md-view', {path :'./docs/elements/properties.md'}],
-              ['io-md-view', {path :'./docs/elements/slider.md'}],
-              ['io-md-view', {path :'./docs/elements/storage.md'}],
-              ['io-md-view', {path :'./docs/elements/string.md'}],
+            ['div', {label: 'About'}, [
+              ['io-md-view', {label: 'readme', path :'./readme.md'}],
             ]],
-            ['io-demo', {label: 'Demo'}],
+            ['div', {label: 'Docs'}, [
+              ['io-selectable', {orientation: 'vertical', selected: $('io-selected-doc', 0), elements: [
+                ['io-md-view', {label: 'core', path :'./docs/core/core.md'}],
+                ['io-md-view', {label: 'element', path :'./docs/core/element.md'}],
+                ['io-md-view', {label: 'lite', path :'./docs/core/lite.md'}],
+                ['io-md-view', {label: 'array', path :'./docs/elements/array.md'}],
+                ['io-md-view', {label: 'boolean', path :'./docs/elements/boolean.md'}],
+                ['io-md-view', {label: 'button', path :'./docs/elements/button.md'}],
+                ['io-md-view', {label: 'canvas', path :'./docs/elements/canvas.md'}],
+                ['io-md-view', {label: 'collapsable', path :'./docs/elements/collapsable.md'}],
+                ['io-md-view', {label: 'inspector', path :'./docs/elements/inspector.md'}],
+                ['io-md-view', {label: 'menu', path :'./docs/elements/menu.md'}],
+                ['io-md-view', {label: 'number', path :'./docs/elements/number.md'}],
+                ['io-md-view', {label: 'object', path :'./docs/elements/object.md'}],
+                ['io-md-view', {label: 'option', path :'./docs/elements/option.md'}],
+                ['io-md-view', {label: 'properties', path :'./docs/elements/properties.md'}],
+                ['io-md-view', {label: 'slider', path :'./docs/elements/slider.md'}],
+                ['io-md-view', {label: 'storage', path :'./docs/elements/storage.md'}],
+                ['io-md-view', {label: 'string', path :'./docs/elements/string.md'}],
+              ]}]
+            ]],
+            ['div', {label: 'Demo'}, [
+              ['io-md-view', {label: 'lite', path :'./docs/core/lite.md'}],
+              ['io-demo'],
+            ]],
             ['io-test', {label: 'Test'}],
             ['todo-app', {label: 'Todo App'}],
           ]}],
