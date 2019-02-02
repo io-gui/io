@@ -5,15 +5,6 @@ import {Properties} from "./classes/properties.js";
 import {Protochain} from "./classes/protochain.js";
 
 export const IoCoreMixin = (superclass) => class extends superclass {
-  static get properties() {
-    return {
-      // TODO: is this necessary?
-      id: {
-        type: String,
-        enumerable: false
-      }
-    };
-  }
   constructor(initProps = {}) {
     super();
     Object.defineProperty(this, '__bindings', {value: {}});
@@ -97,7 +88,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
           // console.warn('Disconnect!', oldBinding);
         }
       }
-
     }
 
     if (props['className']) {

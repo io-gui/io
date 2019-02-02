@@ -92,12 +92,12 @@ export default class {
     describe('IoCore', () => {
       describe('Initialized object', () => {
         it('should have correct property defaults', () => {
-          chai.expect(this.node.prop0).to.be.a('string');
-          chai.expect(this.node.prop1).to.be.a('boolean');
+          chai.expect(this.node.prop0).to.be.equal('');
+          chai.expect(this.node.prop1).to.be.equal(false);
           chai.expect(this.node.prop2).to.be.equal(-1);
           chai.expect(this.node.prop3).to.be.equal(0);
         });
-        it('should have core API functions defined', () => {
+        it('should have core API defined', () => {
           // Data-binding function
           chai.expect(this.node.bind).to.be.a('function');
           // Built-in property change handlers
@@ -120,6 +120,7 @@ export default class {
           // Property setters
           chai.expect(this.node.set).to.be.a('function');
           chai.expect(this.node.setProperties).to.be.a('function');
+          // TODO: fully test core API
         });
       });
       describe('Observed properties', () => {

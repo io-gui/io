@@ -4,7 +4,6 @@ import {Listeners} from "../core/classes/listeners.js"; // TODO: refactor for na
 export class IoElement extends IoCoreMixin(HTMLElement) {
   static get properties() {
     return {
-      // TODO: is this necessary?
       id: {
         type: String,
         enumerable: false
@@ -122,9 +121,6 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
     } else if (typeof value == 'string' || typeof value == 'number') {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
-  }
-  preventDefault(event) {
-    event.preventDefault();
   }
   static get observedAttributes() { return this.prototype.__observedAttributes; }
   attributeChangedCallback(name, oldValue, newValue) {

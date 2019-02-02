@@ -5,5 +5,5 @@
  * Includes event listener/dispatcher and defineProperties() method.
  * Changed properties trigger "[prop]-changed" event, and execution of changed() and [prop]Changed() functions.
  */
- 
-export {IoLite, IoLiteMixin} from "./lite/lite.js";
+
+export {IoLite, IoLiteMixin} from "./core/lite.js";

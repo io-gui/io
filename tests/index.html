@@ -30,7 +30,7 @@
 
       import Core from "./core/core.js"
       import Element from "./core/element.js"
-      import Storage from "./core/storage.js"
+      import Lite from "./core/lite.js"
 
       import Array from "./elements/array.js"
       import Boolean from "./elements/boolean.js"
@@ -40,17 +40,17 @@
       import Number from "./elements/number.js"
       import Object from "./elements/object.js"
       import Inspector from "./elements/inspector.js"
-      import Slider from "./elements/slider.js"
       import Properties from "./elements/properties.js"
+      import Slider from "./elements/slider.js"
+      import Storage from "./elements/storage.js"
       import Sting from "./elements/string.js"
 
-      import Lite from "./lite/lite.js"
 
       mocha.setup('bdd');
 
       new Core().run();
       new Element().run();
-      // new Storage().run();
+      new Lite().run();
       //
       // new Array().run();
       // new Boolean().run();
@@ -62,9 +62,9 @@
       // new Inspector().run();
       // new Slider().run();
       // new Properties().run();
+      // new Storage().run();
       // new Sting().run();
       //
-      // new Lite().run();
 
       mocha.checkLeaks();
       mocha.run();

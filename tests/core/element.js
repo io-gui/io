@@ -102,54 +102,40 @@ export default class {
           chai.expect(this.element.prop0).to.equal(-1);
           chai.expect(this.element.prop1).to.equal('default');
         });
-        it('should have core API functions defined', () => {});
+        it('should have core API functions defined', () => {
+          // Default properties
+          chai.expect(this.element.id).to.be.equal('');
+          chai.expect(this.element.tabindex).to.be.equal('');
+          chai.expect(this.element.contenteditable).to.be.equal(false);
+          chai.expect(this.element.title).to.be.equal('');
+          chai.expect(this.element.$).to.be.a('object');
+          // Template functions
+          chai.expect(this.element.template).to.be.a('function');
+          chai.expect(this.element.traverse).to.be.a('function');
+          // TODO: fully test core API
+        });
       });
-
       describe('Observed properties', () => {
         it('should corectly fire handler functions on change', () => {
           this.reset();
+          this.element.prop0 = 1;
           this.element.prop1 = 'test';
           chai.expect(this.element._handler0Counter).to.equal(1);
-          //
-          this.reset();
-          this.element.prop0 = 1;
+          chai.expect(this.element._handler1Counter).to.equal(1);
+          chai.expect(this.element._changedCounter).to.equal(2);
           chai.expect(this._changedCounter).to.equal(1);
         });
         it('should not fire handler functions when disconnected', () => {
           this.reset();
           document.body.removeChild(this.element);
-          this.element.prop1 = 'test';
-          chai.expect(this.element._handler0Counter).to.equal(0);
-          document.body.appendChild(this.element);
+          this.element.prop0 = 2;
           this.element.prop1 = 'test2';
-          chai.expect(this.element._handler0Counter).to.equal(1);
-          //
-          this.reset();
-          document.body.removeChild(this.element);
-          this.element.prop0 = 1;
+          chai.expect(this.element._handler0Counter).to.equal(0);
+          chai.expect(this.element._handler1Counter).to.equal(0);
+          chai.expect(this.element._changedCounter).to.equal(0);
           chai.expect(this._changedCounter).to.equal(0);
           document.body.appendChild(this.element);
-          this.element.prop0 = 2;
-          chai.expect(this._changedCounter).to.equal(1);
         });
-        // it('executes default observers on init values', () => {
-        //   let element = new TestElement({prop1: this.element.bind('prop1')});
-        //   document.body.appendChild(element);
-        //   chai.expect(element._changedCounter).to.equal(1);
-        //   chai.expect(element._prop1ChangedCounter).to.equal(1);
-        // });
-        it('executes default observers', () => {
-          this.reset();
-          this.element.prop1 = 'test';
-          chai.expect(this.element._changedCounter).to.equal(1);
-          chai.expect(this.element._prop1ChangedCounter).to.equal(1);
-        });
-        it('executes custom observer', () => {
-          this.reset();
-          this.element.prop1 = 'test';
-          chai.expect(this.element._handler1Counter).to.equal(1);
-        });
-
         it('should dispatch correct event payloads to handlers', () => {
           this.reset();
           this.element.prop0 = 1;
@@ -163,7 +149,6 @@ export default class {
           this.element.dispatchEvent('custom-event', {data: 'io'});
           chai.expect(this.element._customHandlerPayload.detail.data).to.equal('io');
         });
-
       });
       // TODO: Cleanup and improve
       describe('Binding', () => {

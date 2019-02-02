@@ -1,4 +1,4 @@
-import {IoCore} from "./core.js";
+import {IoCore} from "../io-core.js";
 
 const nodes = {};
 
