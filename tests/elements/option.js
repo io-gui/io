@@ -3,6 +3,7 @@ import {IoOption} from "../../src/elements/option.js";
 export default class {
   constructor() {
     this.element = new IoOption();
+    this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {

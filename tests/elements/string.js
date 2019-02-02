@@ -3,6 +3,7 @@ import {IoString} from "../../src/elements/string.js";
 export default class {
   constructor() {
     this.element = new IoString();
+    this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {

@@ -3,6 +3,7 @@ import {IoBoolean} from "../../src/elements/boolean.js";
 export default class {
   constructor() {
     this.element = new IoBoolean();
+    this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {

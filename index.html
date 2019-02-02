@@ -2,43 +2,69 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Io • About</title>
-    <meta name="description" content="A lightweight UI framework for data-driven web applications" />
-  </head>
-  <body>
-    <script type="module" src="./lib/io-md-view.js"></script>
+    <title>Io</title>
+    <meta name="description" content="Todo app MVC made with io custom elements library." />
+    <style>
+      html {
+        font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        letter-spacing: 0.05em;
+        font-weight: 300;
+      }
+      body {
+        background: #f5f5f5;
+        color: #4d4d4d;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+    <link href="./lib/mocha.css" rel="stylesheet" />
     <script type="module">
 
-      import {IoElement} from "./src/io.js";
+    import "./lib/io-md-view.js";
 
-      class IoDocs extends IoElement {
-        changed() {
-          this.template([
-            ['io-md-view', {path :'./readme.md'}],
-            ['io-md-view', {path :'./docs/core/core.md'}],
-            ['io-md-view', {path :'./docs/core/element.md'}],
-            ['io-md-view', {path :'./docs/core/lite.md'}],
-            ['io-md-view', {path :'./docs/elements/array.md'}],
-            ['io-md-view', {path :'./docs/elements/boolean.md'}],
-            ['io-md-view', {path :'./docs/elements/button.md'}],
-            ['io-md-view', {path :'./docs/elements/canvas.md'}],
-            ['io-md-view', {path :'./docs/elements/collapsable.md'}],
-            ['io-md-view', {path :'./docs/elements/inspector.md'}],
-            ['io-md-view', {path :'./docs/elements/menu.md'}],
-            ['io-md-view', {path :'./docs/elements/number.md'}],
-            ['io-md-view', {path :'./docs/elements/object.md'}],
-            ['io-md-view', {path :'./docs/elements/option.md'}],
-            ['io-md-view', {path :'./docs/elements/properties.md'}],
-            ['io-md-view', {path :'./docs/elements/slider.md'}],
-            ['io-md-view', {path :'./docs/elements/storage.md'}],
-            ['io-md-view', {path :'./docs/elements/string.md'}],
-          ]);
-        }
+    import {html, IoElement, IoStorage as $} from "./src/io.js";
+
+    import "./demo/demo.js";
+    import "./demo/todomvc/todo-app.js";
+    import "./tests/test.js";
+
+    export class IoMainPage extends IoElement {
+      constructor(props) {
+        super(props);
+        this.template([
+          ['io-selectable', {selected: $('io-selected', 0), elements: [
+            ['div', {label: 'Docs'}, [
+              ['io-md-view', {path :'./readme.md'}],
+              ['io-md-view', {path :'./docs/core/core.md'}],
+              ['io-md-view', {path :'./docs/core/element.md'}],
+              ['io-md-view', {path :'./docs/core/lite.md'}],
+              ['io-md-view', {path :'./docs/elements/array.md'}],
+              ['io-md-view', {path :'./docs/elements/boolean.md'}],
+              ['io-md-view', {path :'./docs/elements/button.md'}],
+              ['io-md-view', {path :'./docs/elements/canvas.md'}],
+              ['io-md-view', {path :'./docs/elements/collapsable.md'}],
+              ['io-md-view', {path :'./docs/elements/inspector.md'}],
+              ['io-md-view', {path :'./docs/elements/menu.md'}],
+              ['io-md-view', {path :'./docs/elements/number.md'}],
+              ['io-md-view', {path :'./docs/elements/object.md'}],
+              ['io-md-view', {path :'./docs/elements/option.md'}],
+              ['io-md-view', {path :'./docs/elements/properties.md'}],
+              ['io-md-view', {path :'./docs/elements/slider.md'}],
+              ['io-md-view', {path :'./docs/elements/storage.md'}],
+              ['io-md-view', {path :'./docs/elements/string.md'}],
+            ]],
+            ['io-demo', {label: 'Demo'}],
+            ['io-test', {label: 'Test'}],
+            ['todo-app', {label: 'Todo App'}],
+          ]}],
+        ]);
       }
+    }
 
-      IoDocs.Register();
-
+    IoMainPage.Register();
     </script>
-    <io-docs></io-docs>
+  </head>
+  <body>
+    <io-main-page></io-main-page>
   </body>
 </html>

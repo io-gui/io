@@ -4,15 +4,15 @@ import {IoMenu} from "../../src/elements/menu.js";
 
 export default class {
   constructor() {
-    this.element = new IoMenu();
-    document.body.appendChild(this.element);
+    // this.element = new IoMenu();
+    // document.body.appendChild(this.element);
   }
   run() {
     describe('IoMenu:', () => {
       it('menu layer', () => {
-        let layers = document.querySelectorAll('io-menu-layer');
-        chai.expect(layers.length).to.equal(1);
-        chai.expect([...layers[0].children].indexOf(this.element.$.group)).to.not.equal(-1);
+        // let layers = document.querySelectorAll('io-menu-layer');
+        // chai.expect(layers.length).to.equal(1);
+        // chai.expect([...layers[0].children].indexOf(this.element.$.group)).to.not.equal(-1);
       });
       it('menu options', () => {
         // this.element.options = [{label: 'a', value: 1}];

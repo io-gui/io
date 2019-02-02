@@ -90,9 +90,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
 
-    if (props['className']) {
-      this.className = props['className'];
-    }
+    this.className = props['className'] || '';
 
     if (props['style']) {
       for (let s in props['style']) {
@@ -275,13 +273,14 @@ IoCoreMixin.Register = function () {
 
   // TODO: rewise
   Object.defineProperty(this.prototype, '__objectProps', {value: []});
-  const ignore = [Boolean, String, Number, HTMLElement, Function];
+  const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
   for (let prop in this.prototype.__properties) {
     let type = this.prototype.__properties[prop].type;
     if (ignore.indexOf(type) == -1) {
       this.prototype.__objectProps.push(prop);
     }
   }
+
 
   defineProperties(this.prototype);
 };

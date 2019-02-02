@@ -3,6 +3,7 @@ import {IoObject} from "../../src/elements/object.js";
 export default class {
   constructor() {
     this.element = new IoObject();
+    this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {

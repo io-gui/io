@@ -20,6 +20,7 @@ export {IoNumber} from "./elements/number.js";
 export {IoObject} from "./elements/object.js";
 export {IoOption} from "./elements/option.js";
 export {IoProperties} from "./elements/properties.js";
+export {IoSelectable} from "./elements/selectable.js";
 export {IoSlider} from "./elements/slider.js";
 export {IoStorage} from "./elements/storage.js";
 export {IoString} from "./elements/string.js";

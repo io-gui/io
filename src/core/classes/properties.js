@@ -1,4 +1,5 @@
 // Creates a properties object with configurations inherited from protochain.
+// TODO: make test
 
 export class Properties {
   constructor(protochain) {
@@ -64,6 +65,12 @@ export class Property {
   // Clones the property. If property value is objects it does one level deep object clone.
   clone() {
     const prop = new Property(this);
+
+    // TODO: test
+    if (prop.type === undefined && prop.value !== undefined && prop.value !== null) {
+      prop.type = prop.value.constructor;
+    }
+
     // Set default values.
     if (prop.value === undefined && prop.type) {
       if (prop.type === Boolean) prop.value = false;

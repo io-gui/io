@@ -3,6 +3,7 @@ import {IoSlider} from "../../src/elements/slider.js";
 export default class {
   constructor() {
     this.element = new IoSlider();
+    this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {

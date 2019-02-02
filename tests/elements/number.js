@@ -3,6 +3,7 @@ import {IoNumber} from "../../src/elements/number.js";
 export default class {
   constructor() {
     this.element = new IoNumber();
+    this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {

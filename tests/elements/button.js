@@ -3,6 +3,7 @@ import {IoButton} from "../../src/elements/button.js";
 export default class {
   constructor() {
     this.element = new IoButton();
+    this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {
