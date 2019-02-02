@@ -8,7 +8,7 @@ export class IoSelectable extends IoElement {
         flex-direction: column;
         padding: 0.1em;
       }
-      :host[orientation=vertical] {
+      :host[vertical] {
         flex-direction: row;
       }
       :host > .io-selectable-buttons {
@@ -27,21 +27,17 @@ export class IoSelectable extends IoElement {
         flex: 1 1 auto;
         overflow: auto;
       }
-      /* :host > .io-selectable-content > * {
-        flex: 0 1 auto;
-        width: auto !important;
-      } */
-      :host[orientation=horizontal] > .io-selectable-buttons {
+      :host > .io-selectable-buttons {
         flex-direction: row;
         margin-bottom: -1px;
         padding: 0 0.2em;
       }
-      :host[orientation=vertical] > .io-selectable-buttons {
+      :host[vertical] > .io-selectable-buttons {
         flex-direction: column;
         margin-right: -1px;
         padding: 0.2em 0;
       }
-      :host[orientation=vertical] > .io-selectable-buttons > io-button {
+      :host[vertical] > .io-selectable-buttons > io-button {
         flex: 0 1 auto;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -52,24 +48,39 @@ export class IoSelectable extends IoElement {
         text-overflow: clip;
       }
       :host > .io-selectable-buttons > io-button {
+        padding: 0.2em 0.75em;
+        letter-spacing: 0.145em;
         background: #bbb;
         border-color: #999;
       }
-      :host[orientation=horizontal] > .io-selectable-buttons > io-button {
+      :host:not([vertical]) > .io-selectable-buttons > io-button {
         margin-left: 2px;
         border-radius: 3px 3px 0 0;
       }
-      :host[orientation=vertical] > .io-selectable-buttons > io-button {
+      :host[vertical] > .io-selectable-buttons > io-button {
         margin-top: 1px;
         border-radius: 3px 0 0 3px;
       }
       :host > .io-selectable-buttons > io-button.io-selected {
         background: #eee;
+        font-weight: 500;
+        letter-spacing: 0.09em;
       }
-      :host[orientation=horizontal] > .io-selectable-buttons > io-button.io-selected {
+      :host > .io-selectable-buttons > io-button:not(.io-selected) {
+        background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
+        -webkit-transition: background-color 0.4s;
+      }
+      :host[vertical] > .io-selectable-buttons > io-button:not(.io-selected) {
+        background-image: linear-gradient(270deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
+        -webkit-transition: background-color 0.4s;
+      }
+      :host > .io-selectable-buttons > io-button:not(.io-selected):hover {
+        background-color: rgba(255, 255, 255, 0.5) !important;
+      }
+      :host:not([vertical]) > .io-selectable-buttons > io-button.io-selected {
         border-bottom-color: #eee;
       }
-      :host[orientation=vertical] > .io-selectable-buttons > io-button.io-selected {
+      :host[vertical] > .io-selectable-buttons > io-button.io-selected {
         border-right-color: #eee;
       }
     </style>`;
@@ -78,8 +89,8 @@ export class IoSelectable extends IoElement {
     return {
       selected: Number,
       elements: Array,
-      orientation: {
-        value: 'horizontal',
+      vertical: {
+        value: false,
         reflect: true,
       },
     };

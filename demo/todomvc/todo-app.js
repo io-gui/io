@@ -10,6 +10,8 @@ export class TodoApp extends IoElement {
     return html`
     <style>
     :host {
+      display: block;
+      padding: 1em;
       font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
       line-height: 1.4em;
       background: #f5f5f5;
