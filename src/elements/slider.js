@@ -85,7 +85,7 @@ export class IoSliderKnob extends IoCanvas {
       const pos = Math.max(0,Math.min(1, x));
       let value = this.min + (this.max - this.min) * pos;
       value = Math.round(value / this.step) * this.step;
-      value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
+      value = Math.min(this.max, Math.max(this.min, (value)));
       this.set('value', value);
     }
   }
