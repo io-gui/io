@@ -1,4 +1,4 @@
-# Io: A lightweight UI library for data-driven web applications #
+# Io: UI library for data-driven web apps #
 
 Io consists of few simple classes that let you build complex web applications in JavaScript.
 It is inspired by [Polymer](https://github.com/Polymer/polymer) and [DreemGL](https://github.com/dreemproject/dreemgl).
@@ -115,7 +115,7 @@ static get style() {
 This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` method to render DOM tree inside of your element. Instead of HTML, the templating system uses programmable yet declarative-looking syntax of nested arrays. For example an instance of `<my-color>` element can be expressed like this:
 
 ```javascript
-  ['my-color', {color: "tomato"}, "this is my color"]
+['my-color', {color: "tomato"}, "this is my color"]
 ```
 
 HTML output:
@@ -151,8 +151,8 @@ HTML output:
 If a template property name is prefixed with `on-` it will be treated as a listener. Corresponding property value can be a string (element's method name) or a function from the current scope.
 
 ```javascript
-  ['my-element', {'on-click': 'doSomething'}],
-  ['my-element', {'on-click': doSomethingFunction}],
+['my-element', {'on-click': 'doSomething'}],
+['my-element', {'on-click': doSomethingFunction}],
 ```
 
 ### Data Biding ###
@@ -164,7 +164,6 @@ Keep in mind that this only works with IoElement properties. In other words, bin
 this.template([
   ['child-element', { value: this.bind('value') }]
 ]);
-
 ```
 
 You can also use `this.bind()` outside template or bind to `IoCore` objects.

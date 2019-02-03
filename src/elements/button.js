@@ -12,6 +12,8 @@ export class IoButton extends IoElement {
         border-radius: 2px;
         padding: 0 0.25em;
         background: #ccc;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       :host:focus {
         outline: none;
@@ -82,8 +84,8 @@ export class IoButton extends IoElement {
     this.pressed = false;
   }
   changed() {
-    this.innerText = this.label;
     this.title = this.label;
+    this.innerText = this.label;
   }
 }
 
