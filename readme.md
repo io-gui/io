@@ -29,52 +29,40 @@ static get properties() {
   return {
     items: {
       type: Array,
-      observer: 'update',
+      update: 'update',
     },
     enabled: true
   }
 }
 ```
 
-You can define a property by value, type, or configuration object:
+You can define a property by value, type or configuration parameters:
 
 - **value** default value.
 - **type** constructor of value.
-- **observer** function to call on value change.
+- **change** function to call on value change.
 - **reflect** reflects to HTML attribute.
 - **enumerable** makes property enumerable.
 
-properties with names prefixed with underscore `_` will not be enumerable, nor will they trigger events, observers and bindings.
+### Change Handlers ###
 
-If you want to initialize default value with a custom object, wrap it in an anonymous function.
-
-```javascript
-static get properties() {
-  return {
-    items: function() { return [1, 2, 3]; }
-  }
-}
-```
-
-### Observers ###
-
-Observers are functions which get called on observed property change. All io elements implement `.changed()` function as a default observer for all properties. Moreover, if `[propName]Changed()` function is defined, it will be called when corresponding property changes. You can also define custom observers inside property configuration object.
+Certain handler functions will get called when properties change. All io objects call `.changed()` function by default. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. You can also specify custom handler functions with a property configuration parameter.
 
 ### Listeners ###
 
-Define default listeners inside `listeners()` getter:
+Very often elements need to setup default listeners at initialization. Io will set up listeners automatically if you specify them inside static `listeners()` getter.
 
 ```javascript
 static get listeners() {
   return {
-    'keyup': '_keyupHandler' // on keyup event call this._keyupHandler
+    'keyup': 'keyupHandler'
   }
 }
 ```
 
 ### Styling ###
 
-Define default style inside `style()` getter.
+You can define default element style inside `style()` getter.
 Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage.
 Template literal handler `html` is optional but recommended for correct syntax highlighting.
 
@@ -92,7 +80,7 @@ static get style() {
 
 ### Programmable Templates ###
 
-This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` function to render DOM tree inside of your element. Instead of HTML, the templating system uses programmable yet declarative-looking syntax of nested arrays. For example an instance of `<my-color>` element can be expressed like this:
+This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` function to render DOM tree inside of your element. Instead of HTML, the template system uses programmable yet declarative-looking syntax of nested arrays. For example an instance of `<my-color>` element can be expressed like this:
 
 ```javascript
 ['my-color', {color: "tomato"}, "this is my color"]
@@ -104,7 +92,7 @@ HTML output:
 <my-color color="tomato">this is my color</my-color>
 ```
 
-Note that the first array item is **mandatory** element name, followed by **optional** properties and innerText or an array of children. Combining innerText and children elements is not supported at this time.
+**Note:** The first array item is **mandatory** element name, followed by **optional** properties and innerText or an array of children. Combining innerText and children elements is not supported at this time.
 
 Here is a slightly more complex expression with dynamically generated DOM tree:
 
@@ -138,7 +126,7 @@ If a template property name is prefixed with `on-` it will be treated as a liste
 ### Data Biding ###
 
 This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
-Keep in mind that this only works with IoElement properties. In other words, binding to native HTML elements will not work.
+Keep in mind that this only works with io properties. In other words, binding to native HTML elements will not work.
 
 ```javascript
 this.template([
@@ -150,10 +138,33 @@ You can also use `this.bind()` outside template or bind to `IoCore` objects.
 
 ```javascript
 let myNode = new MyNode({value: this.bind('value')});
-// when node is no longer needed:
 myNode.dispose();
 ```
 
-Notice in the example above, we created a new node which is data-bound via constructor. In this case, make sure you call `dispose` when the node is no longer needed.
+**Note:** When object is no longer needed, call `dispose()` to prevent memory leakage. Elements will do this automatically when removed from the DOM.
 
-### Automatic Data-Flow ###
+### Automatic* Data-Flow ###
+
+On a fundamental level, data-flow in io is top down and GUI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement a different design where leaf elements have the ability to modify the application state directly via data binding. State changes are then communicated to the rest of the application automatically following few simple rules.
+
+* By convention state tree is passed down the GUI tree as `value` property. This is not mandatory but it makes it easier to understand and debug the data-flow.
+
+* An element's value can be an `object` (object element) or a primitive data type such as `string`, `number` or `boolean` (leaf element).
+
+* User-editable leaf elements should have their values data-bound to their corresponding properties of the hosting object element and their `id` property should match the name of the property.
+
+* When a leaf element's value is changed by user action, it should be done with a built-in function `this.set('value', value)`. This will make sure that a non-bubbling `value-set` event is emitted.
+
+* Object elements hosting editable leaf elements should listen to their `value-set` events and broadcast `object-mutated` event on the window.
+
+That's it! Object elements will automatically listen to `object-mutated` event and update if needed.
+
+### Events
+
+| Events | Description | Properties |
+|:------:|:-----------:|:----------:|
+| **`[prop]-changed`** | Bound property changed | `property`, `value`, `oldValue` |
+| **`[prop]-set`** | Property set by user | `property`, `value`, `oldValue` |
+| **`object-mutated`** | Object mutated | `object`, `property`, `value`, `oldValue` |
+
+**Note:** If the application state changed externally (e.g. server push), `object-mutated` event is required for GUI update. Core application should also listen to `object-mutated` event from GUI and react accordingly. `object-mutated` event payload should specify which object and property mutated. Otherwise brute-force GUI update is performed.

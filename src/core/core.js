@@ -74,9 +74,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
 
       if (value !== oldValue) {
         if (this.__properties[p].reflect) this.setAttribute(p, value);
-        this.queue(this.__properties[p].observer, p, value, oldValue);
-        if (this.__properties[p].observer) this.queue(this.__properties[p].observer, p, value, oldValue);
-        // TODO: decouple observer and notify queue // if (this[p + 'Changed'])
+        this.queue(this.__properties[p].change, p, value, oldValue);
+        if (this.__properties[p].change) this.queue(this.__properties[p].change, p, value, oldValue);
+        // TODO: decouple change and notify queue // if (this[p + 'Changed'])
         this.queue(p + 'Changed', p, value, oldValue);
       }
 
@@ -203,14 +203,14 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
   }
-  queue(observer, prop, value, oldValue) {
+  queue(change, prop, value, oldValue) {
     // JavaScript is weird NaN != NaN
     if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) {
       return;
     }
-    if (observer && this[observer]) {
-      if (this.__observeQueue.indexOf(observer) === -1) {
-        this.__observeQueue.push(observer, {detail: {property: prop, value: value, oldValue: oldValue}});
+    if (change && this[change]) {
+      if (this.__observeQueue.indexOf(change) === -1) {
+        this.__observeQueue.push(change, {detail: {property: prop, value: value, oldValue: oldValue}});
       }
     }
     if (this.__notifyQueue.indexOf(prop + '-changed') === -1) {
@@ -232,7 +232,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
 
 export function defineProperties(prototype) {
   for (let prop in prototype.__properties) {
-    const observer = prop + 'Changed';
+    const change = prop + 'Changed';
     const changeEvent = prop + '-changed';
     const isPublic = prop.charAt(0) !== '_';
     const isEnumerable = !(prototype.__properties[prop].enumerable === false);
@@ -253,10 +253,12 @@ export function defineProperties(prototype) {
         if (this.__properties[prop].reflect) this.setAttribute(prop, this.__properties[prop].value);
         if (isPublic && this.__connected) {
           const payload = {detail: {property: prop, value: value, oldValue: oldValue}};
-          if (this[observer]) this[observer](payload);
-          if (this.__properties[prop].observer) this[this.__properties[prop].observer](payload);
+          if (this[change]) this[change](payload);
+          if (this.__properties[prop].change) this[this.__properties[prop].change](payload);
           this.changed();
-          this.dispatchEvent(changeEvent, payload.detail);
+          // TODO: consider not dispatching always (only for binding)
+          // TODO: test
+          this.dispatchEvent(changeEvent, payload.detail, false);
         }
       },
       enumerable: isEnumerable && isPublic,

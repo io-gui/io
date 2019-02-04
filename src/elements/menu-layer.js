@@ -51,7 +51,7 @@ export class IoMenuLayer extends IoElement {
       expanded: {
         type: Boolean,
         reflect: true,
-        observer: 'onScrollAnimateGroup'
+        change: 'onScrollAnimateGroup'
       },
       $options: Array
     };

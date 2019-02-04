@@ -6,7 +6,7 @@ export class TestNode extends IoCore {
     return {
       prop0: {
         type: String,
-        observer: 'handler0'
+        change: 'handler0'
       },
       prop1: {
         value: false

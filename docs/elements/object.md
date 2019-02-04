@@ -17,4 +17,4 @@ Input element for `Object` data type. It can be used as an object inspector or c
 | Event | Description | Detail |
 |:--------:|:----:|:----------:|
 | **`'value-set'`** | Value set by user action | `value`, `oldValue` |
-| **`'object-mutated'`** (window) | Value set by user action | `object`, `key`, `value`, `oldValue` |
+| **`'object-mutated'`** (window) | Value set by user action | `object`, `property`, `value`, `oldValue` |

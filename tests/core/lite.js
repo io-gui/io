@@ -7,7 +7,7 @@ export class TestLite extends IoLite {
       number: -1,
       string: {
         value: 'default',
-        observer: 'customObserver'
+        change: 'customObserver'
       },
       _changedFired: 0,
       _stringChangedFired: 0,

@@ -74,7 +74,7 @@ export const IoLiteMixin = (superclass) => class extends superclass {
 };
 
 const defineProperty = function(scope, prop, def) {
-	const observer = prop + 'Changed';
+	const change = prop + 'Changed';
 	const changeEvent = prop + '-changed';
 	const isPublic = prop.charAt(0) !== '_';
 	const isEnumerable = !(def.enumerable === false);
@@ -89,8 +89,8 @@ const defineProperty = function(scope, prop, def) {
 				const oldValue = scope._properties[prop];
 				scope._properties[prop] = value;
 				if (isPublic) {
-					if (def.observer) scope[def.observer](value, oldValue);
-					if (typeof scope[observer] === 'function') scope[observer](value, oldValue);
+					if (def.change) scope[def.change](value, oldValue);
+					if (typeof scope[change] === 'function') scope[change](value, oldValue);
 					scope.changed.call(scope);
 					scope.dispatchEvent(changeEvent, {property: prop, value: value, oldValue: oldValue, bubbles: true});
 				}
