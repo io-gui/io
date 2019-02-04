@@ -38,12 +38,12 @@
       constructor(props) {
         super(props);
         this.template([
-          ['io-selectable', {className: 'selectable-main', selected: $('io-selected', 0), elements: [
+          ['io-selectable', {className: 'selectable-main', selected: $('page', 0, true), elements: [
             ['div', {label: 'About'}, [
               ['io-md-view', {label: 'readme', path :'./readme.md'}],
             ]],
             ['div', {label: 'Docs'}, [
-              ['io-selectable', {className: 'selectable-docs', vertical: true, selected: $('io-selected-doc', 0), elements: [
+              ['io-selectable', {className: 'selectable-docs', vertical: true, selected: $('doc', 0, true), elements: [
                 ['io-md-view', {label: 'core', path :'./docs/core/core.md'}],
                 ['io-md-view', {label: 'element', path :'./docs/core/element.md'}],
                 ['io-md-view', {label: 'lite', path :'./docs/core/lite.md'}],

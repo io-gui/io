@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../src/io.js";
+import {html, IoElement, IoStorage} from "../../src/io.js";
 import {TodoModel} from "./todo-model.js";
 import "./todo-item.js";
 
@@ -189,11 +189,11 @@ export class TodoApp extends IoElement {
     }
 
     :host .todo-list li .toggle:after {
-      content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#ededed" stroke-width="3"/></svg>');
+      content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="%23ededed" stroke-width="3"/></svg>');
     }
 
     :host .todo-list li .toggle:checked:after {
-      content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="#bddad5" stroke-width="3"/><path fill="#5dc2af" d="M72 25L42 71 27 56l-4 4 20 20 34-52z"/></svg>');
+      content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="-10 -18 100 135"><circle cx="50" cy="50" r="50" fill="none" stroke="%23bddad5" stroke-width="3"/><path fill="%235dc2af" d="M72 25L42 71 27 56l-4 4 20 20 34-52z"/></svg>');
     }
 
     :host .todo-list li label {
@@ -377,20 +377,12 @@ export class TodoApp extends IoElement {
   static get properties() {
     return {
       model: TodoModel,
-      route: String
+      route: 'all',
     };
   }
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener('hashchange', this.hashChange);
-    this.hashChange();
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('hashchange', this.hashChange);
-  }
-  hashChange() {
-    this.route = window.location.hash.replace('#/', '');
+  constructor(props) {
+    super(props);
+    this.route = IoStorage('route', 'all', true);
   }
   changed() {
     const itemCount = this.model.items.length;
@@ -415,9 +407,9 @@ export class TodoApp extends IoElement {
         itemCount ? ['footer', {className: 'footer'}, [
           ['span', {className: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'],
           ['div', {className: 'filters'}, [
-            ['a', {'href': '#/', className: !this.route ? 'selected' : ''}, 'All'],
-            ['a', {'href': '#/active', className: this.route === 'active' ? 'selected' : ''}, 'Active'],
-            ['a', {'href': '#/completed', className: this.route === 'completed' ? 'selected' : ''}, 'Completed']
+            ['a', {'href': '#route=all', className: this.route === 'all' ? 'selected' : ''}, 'All'],
+            ['a', {'href': '#route=active', className: this.route === 'active' ? 'selected' : ''}, 'Active'],
+            ['a', {'href': '#route=completed', className: this.route === 'completed' ? 'selected' : ''}, 'Completed']
           ]],
           completedCount? ['button', {className: 'clear-completed', 'on-click': this.model.clearCompletedItems}, 'Clear completed'] : null
         ]] : null

@@ -10,15 +10,13 @@ For a quick start, read this document and check out included elements and exampl
 To define a new class, extend `IoCore` or `IoElement` and call `Register()`.
 
 ```javascript
-// object
 class MyObject extends IoCore {}
 MyObject.Register();
 
-// element
 class MyElement extends IoElement {}
 MyElement.Register();
 ```
-**Note:** Element name is converted to kebab-case `<my-element>`.
+**Note:** Element name is registered as kebab-case `<my-element>`.
 
 ### Properties ###
 
@@ -36,7 +34,7 @@ static get properties() {
 }
 ```
 
-You can define a property by value, type or configuration parameters:
+You can define properties by value, type or configuration parameters:
 
 - **value** default value.
 - **type** constructor of value.
@@ -161,7 +159,7 @@ That's it! Object elements will automatically listen to `object-mutated` event a
 
 ### Events
 
-| Events | Description | Properties |
+| Event | Description | Detail |
 |:------:|:-----------:|:----------:|
 | **`[prop]-changed`** | Bound property changed | `property`, `value`, `oldValue` |
 | **`[prop]-set`** | Property set by user | `property`, `value`, `oldValue` |

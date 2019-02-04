@@ -6,7 +6,7 @@ export class TodoModel extends IoCore {
       items: Array,
       filters: function () {
         return {
-          '': function () {
+          all: function () {
             return true;
           },
           active: function(item) {
