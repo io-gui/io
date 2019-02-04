@@ -1,4 +1,4 @@
-import { html, IoElement, storage } from './io-core.js';
+import { html, IoElement, IoCore } from './io-core.js';
 
 class IoProperties extends IoElement {
   static get style() {
@@ -151,7 +151,7 @@ IoArray.Register();
 
 class IoButton extends IoElement {
   static get style() {
-    return html`<style>:host {display: inline-block;cursor: pointer;white-space: nowrap;-webkit-tap-highlight-color: transparent;border: 1px solid #444;border-radius: 2px;padding: 0 0.25em;background: #ccc;}:host:focus {outline: none;border-color: #09d;background: #def;}:host:hover {background: #aaa;}:host[pressed] {background: rgba(255,255,255,0.5);}</style>`;
+    return html`<style>:host {display: inline-block;cursor: pointer;white-space: nowrap;-webkit-tap-highlight-color: transparent;border: 1px solid #444;border-radius: 2px;padding: 0 0.25em;background: #ccc;overflow: hidden;text-overflow: ellipsis;}:host:focus {outline: none;border-color: #09d;background: #def;}:host:hover {background: #aaa;}:host[pressed] {background: rgba(255,255,255,0.5);}</style>`;
   }
   static get properties() {
     return {
@@ -209,6 +209,7 @@ class IoButton extends IoElement {
     this.pressed = false;
   }
   changed() {
+    this.title = this.label;
     this.innerText = this.label;
   }
 }
@@ -217,7 +218,7 @@ IoButton.Register();
 
 class IoBoolean extends IoButton {
   static get style() {
-    return html`<style>:host {background: white;}</style>`;
+    return html`<style>:host {display: inline;background: white;}</style>`;
   }
   static get properties() {
     return {
@@ -309,6 +310,39 @@ class IoCollapsable extends IoElement {
 
 IoCollapsable.Register();
 
+const nodes = {};
+
+class IoStorageNode extends IoCore {
+  static get properties() {
+    return {
+      key: String,
+      value: undefined,
+    };
+  }
+  constructor(props, defValue) {
+    super(props);
+    const value = localStorage.getItem(this.key);
+    if (value !== null) {
+      this.value = JSON.parse(value);
+    } else {
+      this.value = defValue;
+    }
+  }
+  valueChanged() {
+    localStorage.setItem(this.key, JSON.stringify(this.value));
+  }
+}
+
+IoStorageNode.Register();
+
+function IoStorage(key, defValue) {
+  if (!nodes[key]) {
+    nodes[key] = new IoStorageNode({key: key}, defValue);
+    nodes[key].binding = nodes[key].bind('value');
+  }
+  return nodes[key].binding;
+}
+
 class IoInspectorBreadcrumbs extends IoElement {
   static get style() {
     return html`<style>:host {display: flex;flex: 1 0;flex-direction: row;padding: 0.5em 0.75em;margin: 2px;background: #fff;border: 1px solid #999;border-radius: 2px;font-size: 0.75em;}:host > io-inspector-link {border: none;overflow: hidden;text-overflow: ellipsis;background: none;padding: 0;}:host > io-inspector-link:first-of-type {color: #000;}:host > io-inspector-link:first-of-type,:host > io-inspector-link:last-of-type {overflow: visible;text-overflow: clip;}:host > io-inspector-link:not(:first-of-type):before {content: '>';margin: 0 0.5em;opacity: 0.25;}</style>`;
@@ -335,7 +369,8 @@ class IoInspectorLink extends IoButton {
     else if (this.value.label) name += ' (' + this.value.label + ')';
     else if (this.value.title) name += ' (' + this.value.title + ')';
     else if (this.value.id) name += ' (' + this.value.id + ')';
-    this.template([['span', name]]);
+    this.title = name;
+    this.innerText = name;
   }
 }
 
@@ -354,27 +389,26 @@ class IoInspector extends IoElement {
     return {
       value: Object,
       props: Array,
-      config: null,
+      config: Object,
       labeled: true,
       crumbs: Array,
-      groups: Object,
-      _groups: Object,
     };
   }
   static get listeners() {
     return {
-      'io-button-clicked': '_onLinkClicked',
+      'io-button-clicked': 'onLinkClicked',
     };
   }
-  _onLinkClicked(event) {
+  onLinkClicked(event) {
     event.stopPropagation();
     if (event.path[0].localName === 'io-inspector-link') {
       this.value = event.detail.value;
     }
   }
+  get groups() {
+    return this.__proto__.__config.getConfig(this.value, this.config);
+  }
   valueChanged() {
-    // super.valueChanged();
-    this._groups = this.__proto__.__config.getConfig(this.value, this.groups);
     let crumb = this.crumbs.find((crumb) => { return crumb === this.value; });
     let lastrumb = this.crumbs[this.crumbs.length - 1];
     if (crumb) {
@@ -385,25 +419,23 @@ class IoInspector extends IoElement {
     }
     this.crumbs = [...this.crumbs];
   }
-  groupsChanged() {
-    this._groups = this.__proto__.__config.getConfig(this.value, this.groups);
-  }
   changed() {
     const elements = [
       ['io-inspector-breadcrumbs', {crumbs: this.crumbs}],
       // TODO: add search
     ];
     // TODO: rewise and document use of storage
-    // const id = this.value.guid || this.value.uuid || this.value.id;
-    for (let group in this._groups) {
+    let uuid = this.value.constructor.name;
+    uuid += this.value.guid || this.value.uuid || this.value.id || '';
+    for (let group in this.groups) {
       elements.push(
         ['io-collapsable', {
           label: group,
-          expanded: storage('io-inspector-group-' + this.value.constructor.name + '-' + group, false),
+          expanded: IoStorage('io-inspector-group-' + uuid + '-' + group, false),
           elements: [
             ['io-properties', {
               value: this.value,
-              props: this._groups[group],
+              props: this.groups[group],
               config: {'type:object': ['io-inspector-link']},
               labeled: true,
             }]
@@ -413,7 +445,6 @@ class IoInspector extends IoElement {
     }
     this.template(elements);
   }
-
   static get config() {
     return {
       'Object|hidden': [/^_/],
@@ -450,13 +481,19 @@ class Config$1 {
     for (let i in this) {
       const grp = i.split('|');
       if (grp.length === 1) grp.splice(0, 0, 'Object');
-      if (prototypes.indexOf(grp[0]) !== -1) protoGroups[grp[1]] = this[i];
+      if (prototypes.indexOf(grp[0]) !== -1) {
+        protoGroups[grp[1]] = protoGroups[grp[1]] || [];
+        protoGroups[grp[1]].push(...this[i]);
+      }
     }
 
     for (let i in customGroups) {
       const grp = i.split('|');
       if (grp.length === 1) grp.splice(0, 0, 'Object');
-      if (prototypes.indexOf(grp[0]) !== -1) protoGroups[grp[1]] = customGroups[i];
+      if (prototypes.indexOf(grp[0]) !== -1) {
+        protoGroups[grp[1]] = protoGroups[grp[1]] || [];
+        protoGroups[grp[1]].push(customGroups[i]);
+      }
     }
 
     const groups = {};
@@ -528,7 +565,7 @@ class IoMenuLayer extends IoElement {
       expanded: {
         type: Boolean,
         reflect: true,
-        observer: 'onScrollAnimateGroup'
+        change: 'onScrollAnimateGroup'
       },
       $options: Array
     };
@@ -1154,9 +1191,47 @@ class IoOption extends IoButton {
 
 IoOption.Register();
 
+class IoSelectable extends IoElement {
+  static get style() {
+    return html`<style>:host {display: flex;flex-direction: column;}:host[vertical] {flex-direction: row;}:host > .io-buttons {position: relative;display: flex;flex: 0 1 auto;flex-direction: row;margin: 0 0 -1px 0;padding: 0 0.25em 0 0.15em;}:host[vertical] > .io-buttons {flex-direction: column;margin: 0 -1px 0 0;padding: 0.15em 0 0.25em 0;}:host > .io-content {background: #eee;padding: 0.2em;border-radius: 0.2em;border: 1px solid #999;flex: 1 1 auto;}:host > .io-buttons > io-button {padding: 0.2em 0.5em;letter-spacing: 0.145em;background: #bbb;border-color: #999;margin: 0 0 0 0.1em;border-radius: 3px 3px 0 0;}:host[vertical] > .io-buttons > io-button {margin: 0.1em 0 0 0;border-radius: 3px 0 0 3px;transition: background-color 0.4s;}:host > .io-buttons > io-button.io-selected {background: #eee;font-weight: 500;letter-spacing: 0.09em;}:host > .io-buttons > io-button:not(.io-selected) {background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);}:host[vertical] > .io-buttons > io-button:not(.io-selected) {background-image: linear-gradient(270deg, rgba(0, 0, 0, 0.125), transparent 0.75em);}:host > .io-buttons > io-button:not(.io-selected):hover {background-color: rgba(255, 255, 255, 0.5) !important;}:host:not([vertical]) > .io-buttons > io-button.io-selected {border-bottom-color: #eee;}:host[vertical] > .io-buttons > io-button.io-selected {border-right-color: #eee;}</style>`;
+  }
+  static get properties() {
+    return {
+      elements: Array,
+      selected: Number,
+      vertical: {
+        type: Boolean,
+        reflect: true,
+      },
+    };
+  }
+  select(id) {
+    this.selected = id;
+  }
+  changed() {
+    const buttons = [];
+    for (let i = 0; i < this.elements.length; i++) {
+      const props = this.elements[i][1] || {};
+      const label = props.label || props.title || props.name || this.elements[i][0] + '[' + i + ']';
+      buttons.push(['io-button', {
+        label: label,
+        value: i,
+        action: this.select,
+        className: this.selected === i ? 'io-selected' : ''
+      }]);
+    }
+    this.template([
+      ['div', {className: 'io-buttons'}, buttons],
+      ['div', {className: 'io-content'}, [this.elements[this.selected]]],
+    ]);
+  }
+}
+
+IoSelectable.Register();
+
 class IoSlider extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;min-width: 12em;}:host > io-number {flex: 0 0 auto;}:host > io-slider-knob {flex: 1 1 auto;margin-left: 2px;border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}_onValueSet(event) {this.dispatchEvent('value-set', event.detail, false);this.value = event.detail.value;}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],['io-slider-knob', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoCanvas {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: row;min-width: 12em;}:host > io-number {flex: 0 0 auto;}:host > io-slider-knob {flex: 1 1 auto;margin-left: 2px;border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}_onValueSet(event) {this.dispatchEvent('value-set', event.detail, false);this.value = event.detail.value;}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],['io-slider-knob', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoCanvas {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;}:host > img {pointer-events: none;}</style>`;
   }
   static get properties() {
     return {
@@ -1184,7 +1259,7 @@ class IoSlider extends IoElement {
       const pos = Math.max(0,Math.min(1, x));
       let value = this.min + (this.max - this.min) * pos;
       value = Math.round(value / this.step) * this.step;
-      value = Math.min(this.max, Math.max(this.min, (Math.round(value / this.step) * this.step)));
+      value = Math.min(this.max, Math.max(this.min, (value)));
       this.set('value', value);
     }
   }
@@ -1295,4 +1370,4 @@ IoString.Register();
  * Basic elements made with io library: https://github.com/arodic/io
  */
 
-export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSlider, IoString };
+export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSelectable, IoSlider, IoStorage, IoString };

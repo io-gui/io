@@ -80,7 +80,7 @@ export class IoSelectable extends IoElement {
   }
   changed() {
     const buttons = [];
-    for (var i = 0; i < this.elements.length; i++) {
+    for (let i = 0; i < this.elements.length; i++) {
       const props = this.elements[i][1] || {};
       const label = props.label || props.title || props.name || this.elements[i][0] + '[' + i + ']';
       buttons.push(['io-button', {

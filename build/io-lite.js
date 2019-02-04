@@ -1,4 +1,11 @@
 const IoLiteMixin = (superclass) => class extends superclass {
+	set(prop, value) {
+    let oldValue = this[prop];
+    this[prop] = value;
+    if (oldValue !== value) {
+      this.dispatchEvent(prop + '-set', {property: prop, value: value, oldValue: oldValue}, false);
+    }
+  }
 	addEventListener(type, listener) {
 		this._listeners = this._listeners || {};
 		this._listeners[type] = this._listeners[type] || [];
@@ -17,6 +24,15 @@ const IoLiteMixin = (superclass) => class extends superclass {
 			if (index !== -1) this._listeners[type].splice(index, 1);
 		}
 	}
+	removeListeners() {
+    // TODO: test
+    for (let i in this._listeners) {
+      for (let j = this._listeners[i].length; j--;) {
+        if (superclass === HTMLElement) HTMLElement.prototype.removeEventListener.call(this, i, this._listeners[i][j]);
+        this._listeners[i].splice(j, 1);
+      }
+    }
+  }
 	dispatchEvent(type, detail = {}) {
 		const event = {
 			path: [this],
@@ -32,6 +48,7 @@ const IoLiteMixin = (superclass) => class extends superclass {
 		// TODO: bubbling
 		// else if (this.parent && event.bubbles) {}
 	}
+	changed() {}
 	defineProperties(props) {
 		if (!this.hasOwnProperty('_properties')) {
 			Object.defineProperty(this, '_properties', {
@@ -57,7 +74,7 @@ const IoLiteMixin = (superclass) => class extends superclass {
 };
 
 const defineProperty = function(scope, prop, def) {
-	const observer = prop + 'Changed';
+	const change = prop + 'Changed';
 	const changeEvent = prop + '-changed';
 	const isPublic = prop.charAt(0) !== '_';
 	const isEnumerable = !(def.enumerable === false);
@@ -72,9 +89,9 @@ const defineProperty = function(scope, prop, def) {
 				const oldValue = scope._properties[prop];
 				scope._properties[prop] = value;
 				if (isPublic) {
-					if (def.observer) scope[def.observer](value, oldValue);
-					if (typeof scope[observer] === 'function') scope[observer](value, oldValue);
-					if (typeof scope.changed === 'function') scope.changed.call(scope);
+					if (def.change) scope[def.change](value, oldValue);
+					if (typeof scope[change] === 'function') scope[change](value, oldValue);
+					scope.changed.call(scope);
 					scope.dispatchEvent(changeEvent, {property: prop, value: value, oldValue: oldValue, bubbles: true});
 				}
 			},
