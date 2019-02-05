@@ -53,9 +53,11 @@ export class IoSliderKnob extends IoCanvas {
       :host {
         display: flex;
         cursor: ew-resize;
+        touch-action: none;
       }
       :host > img {
         pointer-events: none;
+        touch-action: none;
       }
     </style>`;
   }
@@ -69,6 +71,7 @@ export class IoSliderKnob extends IoCanvas {
   }
   static get listeners() {
     return {
+      'pointerdown': 'onPointerdown',
       'pointermove': 'onPointermove',
       'dragstart': 'onDragstart',
     };
@@ -76,9 +79,12 @@ export class IoSliderKnob extends IoCanvas {
   onDragstart(event) {
     event.preventDefault();
   }
+  onPointerdown(event) {
+    this.setPointerCapture(event.pointerId);
+  }
   onPointermove(event) {
+    this.setPointerCapture(event.pointerId);
     if (event.buttons !== 0) {
-      this.setPointerCapture(event.pointerId);
       event.preventDefault();
       const rect = this.getBoundingClientRect();
       const x = (event.clientX - rect.x) / rect.width;
