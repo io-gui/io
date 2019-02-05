@@ -566,9 +566,6 @@ class IoElement extends IoCoreMixin(HTMLElement) {
       },
     };
   }
-  constructor(initProps = {}) {
-    super(initProps);
-  }
   connectedCallback() {
     super.connectedCallback();
     for (let prop in this.__properties) {
@@ -697,7 +694,25 @@ IoElement.Register = function() {
 
 IoElement.Register();
 
-function html() {return arguments[0][0];}
+function html(parts) {
+  let result = {
+    string: '',
+    vars: {},
+  };
+  for (let i = 0; i < parts.length; i++) {
+    result.string += parts[i] + (arguments[i + 1] || '');
+  }
+  let vars = result.string.match(/-{2}?([a-z][a-z0-9]*)\b[^;]*;?/gi);
+  if (vars) {
+    for (let i = 0; i < vars.length; i++) {
+      let v = vars[i].split(':');
+      if (v.length === 2) {
+        result.vars[v[0].trim()] = v[1].trim();
+      }
+    }
+  }
+  return result;
+}
 
 const constructElement = function(vDOMNode) {
  let ConstructorClass = customElements.get(vDOMNode.name);
@@ -734,13 +749,16 @@ function initStyle(prototypes) {
   for (let i = prototypes.length; i--;) {
     let style = prototypes[i].constructor.style;
     if (style) {
-      if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
-      style = style.replace(new RegExp(':host', 'g'), localName);
-      _stagingElement.innerHTML = style;
+      style.string = style.string.replace(new RegExp(':host', 'g'), localName);
+      for (let v in style.vars) {
+        style.string = style.string.replace(new RegExp(v, 'g'), v.replace('--', '--' + localName + '-'));
+      }
+      _stagingElement.innerHTML = style.string;
       let element = _stagingElement.querySelector('style');
       element.setAttribute('id', 'io-style-' + localName + '-' + i);
       document.head.appendChild(element);
     }
+
   }
 }
 
@@ -866,7 +884,7 @@ class IoLite extends IoLiteMixin(Object) {}
 
 class IoProperties extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-property {display: flex !important;flex-direction: row;}:host > div > .io-property-label {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > .io-property-editor {margin: 0;padding: 0;}:host > div > io-number,:host > div > io-string,:host > div > io-boolean {border: none;background: none;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(0, 32, 135);}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;flex: 0 0;line-height: 1em;}:host > div.io-property {display: flex !important;flex-direction: row;}:host > div > .io-property-label {padding: 0 0.2em 0 0.5em;flex: 0 0 auto;}:host > div > .io-property-editor {margin: 0;padding: 0;}:host > div > io-object,:host > div > io-object > io-boolean,:host > div > io-object > io-properties {padding: 0 !important;border: none !important;background: none !important;}:host > div > io-number,:host > div > io-string,:host > div > io-boolean {border: none;background: none;}:host > div > io-number {color: rgb(28, 0, 207);}:host > div > io-string {color: rgb(196, 26, 22);}:host > div > io-boolean {color: rgb(170, 13, 145);}:host > div > io-option {color: rgb(0, 32, 135);}</style>`;
   }
   static get properties() {
     return {
@@ -999,7 +1017,7 @@ IoProperties.RegisterConfig = function(config) {
 
 class IoArray extends IoProperties {
   static get style() {
-    return html`<style>:host {display: grid;grid-row-gap: 2px;grid-column-gap: 2px;}:host[columns="2"] {grid-template-columns: auto auto;}:host[columns="3"] {grid-template-columns: auto auto auto;}:host[columns="4"] {grid-template-columns: auto auto auto auto;}</style>`;
+    return html`<style>:host {display: grid;grid-row-gap: var(--io-theme-spacing);grid-column-gap: var(--io-theme-spacing);}:host[columns="2"] {grid-template-columns: auto auto;}:host[columns="3"] {grid-template-columns: auto auto auto;}:host[columns="4"] {grid-template-columns: auto auto auto auto;}</style>`;
   }
   changed() {
     const elements = [];
@@ -1015,7 +1033,7 @@ IoArray.Register();
 
 class IoButton extends IoElement {
   static get style() {
-    return html`<style>:host {display: inline-block;cursor: pointer;white-space: nowrap;-webkit-tap-highlight-color: transparent;border: 1px solid #444;border-radius: 2px;padding: 0 0.25em;background: #ccc;overflow: hidden;text-overflow: ellipsis;}:host:focus {outline: none;border-color: #09d;background: #def;}:host:hover {background: #aaa;}:host[pressed] {background: rgba(255,255,255,0.5);}</style>`;
+    return html`<style>:host {display: inline-block;cursor: pointer;white-space: nowrap;-webkit-tap-highlight-color: transparent;overflow: hidden;text-overflow: ellipsis;border: var(--io-theme-button-border);border-radius: var(--io-theme-border-radius);padding: var(--io-theme-padding);padding-left: calc(3 * var(--io-theme-padding));padding-right: calc(3 * var(--io-theme-padding));background: var(--io-theme-button-bg);transition: background-color 0.4s;}:host:focus {outline: none;border: var(--io-theme-focus-border);background: var(--io-theme-focus-bg);}:host:hover {background: var(--io-theme-hover-bg);}:host[pressed] {background: var(--io-theme-active-bg);}</style>`;
   }
   static get properties() {
     return {
@@ -1082,7 +1100,7 @@ IoButton.Register();
 
 class IoBoolean extends IoButton {
   static get style() {
-    return html`<style>:host {display: inline;background: white;}</style>`;
+    return html`<style>:host {display: inline;background: none;}</style>`;
   }
   static get properties() {
     return {
@@ -1152,7 +1170,7 @@ IoCanvas.Register();
 
 class IoCollapsable extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #999;border-radius: 3px;padding: 1px;background: #ccc;}:host > io-boolean {border: none;border-radius: 0;background: none;}:host > io-boolean::before {content: '▸';display: inline-block;width: 0.65em;margin: 0 0.25em;}:host[expanded] > io-boolean::before{content: '▾';}:host > .io-collapsable-content {display: block;border: 1px solid #999;border-radius: 2px;padding: 0.2em;background: #eee;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;border: var(--io-theme-frame-border);border-radius: var(--io-theme-border-radius);padding: var(--io-theme-padding);background: var(--io-theme-frame-bg);}:host > io-boolean {border: none;border-radius: 0;background: none;}:host > io-boolean::before {content: '▸';display: inline-block;width: 0.65em;margin: 0 0.25em;}:host[expanded] > io-boolean::before{content: '▾';}:host > .io-collapsable-content {display: block;border: var(--io-theme-content-border);border-radius: var(--io-theme-border-radius);padding: var(--io-theme-spacing);background: var(--io-theme-content-bg);}</style>`;
   }
   static get properties() {
     return {
@@ -1175,41 +1193,94 @@ class IoCollapsable extends IoElement {
 IoCollapsable.Register();
 
 const nodes = {};
+let hashes = {};
+
+const parseHashes = function() {
+  return window.location.hash.substr(1).split('&').reduce(function (result, item) {
+    const parts = item.split('=');
+    result[parts[0]] = parts[1];
+    return result;
+  }, {});
+};
+
+const getHashes = function() {
+  hashes = parseHashes();
+  for (let hash in hashes) {
+    if (nodes[hash] && nodes[hash].hash) {
+      if (nodes[hash] !== '') {
+        if (!isNaN(hashes[hash])) {
+          nodes[hash].value = JSON.parse(hashes[hash]);
+        } else if (hashes[hash] === 'true' || hashes[hash] === 'false') {
+          nodes[hash].value = JSON.parse(hashes[hash]);
+        } else {
+          nodes[hash].value = hashes[hash];
+        }
+      }
+    }
+  }
+};
+
+const setHashes = function() {
+  let hashString = '';
+  for (let node in nodes) {
+    if (nodes[node].hash && nodes[node].value !== undefined && nodes[node].value !== '') {
+      if (typeof nodes[node].value === 'string') {
+        hashString += node + '=' + nodes[node].value + '&';
+      } else {
+        hashString += node + '=' + JSON.stringify(nodes[node].value) + '&';
+      }
+    }
+  }
+  window.location.hash = hashString.slice(0, -1);
+};
+
+window.addEventListener("hashchange", getHashes, false);
+getHashes();
 
 class IoStorageNode extends IoCore {
   static get properties() {
     return {
       key: String,
       value: undefined,
+      hash: Boolean,
     };
   }
   constructor(props, defValue) {
     super(props);
-    const value = localStorage.getItem(this.key);
-    if (value !== null) {
-      this.value = JSON.parse(value);
+    const localValue = localStorage.getItem(this.key);
+    const hashValue = hashes[this.key];
+    if (this.hash && hashValue !== undefined) {
+      this.value = hashValue;
+    } else if (localValue !== null && localValue !== undefined) {
+      this.value = JSON.parse(localValue);
     } else {
       this.value = defValue;
     }
   }
   valueChanged() {
-    localStorage.setItem(this.key, JSON.stringify(this.value));
+    if (this.value === null || this.value === undefined) {
+      localStorage.removeItem(this.key);
+    } else {
+      localStorage.setItem(this.key, JSON.stringify(this.value));
+    }
+    setHashes();
   }
 }
 
 IoStorageNode.Register();
 
-function IoStorage(key, defValue) {
+function IoStorage(key, defValue, hash) {
   if (!nodes[key]) {
-    nodes[key] = new IoStorageNode({key: key}, defValue);
+    nodes[key] = new IoStorageNode({key: key, hash: hash}, defValue);
     nodes[key].binding = nodes[key].bind('value');
   }
+  setHashes();
   return nodes[key].binding;
 }
 
 class IoInspectorBreadcrumbs extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex: 1 0;flex-direction: row;padding: 0.5em 0.75em;margin: 2px;background: #fff;border: 1px solid #999;border-radius: 2px;font-size: 0.75em;}:host > io-inspector-link {border: none;overflow: hidden;text-overflow: ellipsis;background: none;padding: 0;}:host > io-inspector-link:first-of-type {color: #000;}:host > io-inspector-link:first-of-type,:host > io-inspector-link:last-of-type {overflow: visible;text-overflow: clip;}:host > io-inspector-link:not(:first-of-type):before {content: '>';margin: 0 0.5em;opacity: 0.25;}</style>`;
+    return html`<style>:host {display: flex;flex: 1 0;flex-direction: row;border: var(--io-theme-field-border);border-radius: var(--io-theme-border-radius);padding: var(--io-theme-padding);background: var(--io-theme-field-bg);}:host > io-inspector-link {border: none;overflow: hidden;text-overflow: ellipsis;background: none;padding: 0;padding: var(--io-theme-padding);}:host > io-inspector-link:first-of-type {color: #000;overflow: visible;text-overflow: clip;margin-left: 0.5em;}:host > io-inspector-link:last-of-type {overflow: visible;text-overflow: clip;margin-right: 0.5em;}:host > io-inspector-link:not(:first-of-type):before {content: '>';margin: 0 0.5em;opacity: 0.25;}</style>`;
   }
   static get properties() {
     return {
@@ -1225,7 +1296,7 @@ IoInspectorBreadcrumbs.Register();
 
 class IoInspectorLink extends IoButton {
   static get style() {
-    return html`<style>:host {border: none;overflow: hidden;text-overflow: ellipsis;background: none;padding: 0;color: #15e;}:host:focus {outline: none;background: none;text-decoration: underline;}:host:hover {background: none;text-decoration: underline;}:host[pressed] {background: none;}</style>`;
+    return html`<style>:host {border: none;overflow: hidden;text-overflow: ellipsis;background: none;padding: 0;color: #09c;}:host:focus {outline: none;background: none;text-decoration: underline;}:host:hover {background: none;text-decoration: underline;}:host[pressed] {background: none;}</style>`;
   }
   changed() {
     let name = this.value.constructor.name;
@@ -1247,7 +1318,7 @@ function isValueOfPropertyOf(prop, object) {
 
 class IoInspector extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;border: 1px solid #444;border-radius: 3px;padding: 1px;background-color: #fff;}:host > .io-inspector-header {}:host > io-collapsable {padding: 2px !important;margin: 2px;font-size: 0.9em;background-color: #ccc !important;}:host > io-collapsable > div > io-boolean {display: block;padding-bottom: 0.15em;}:host > io-collapsable > div > io-properties {padding: 0 !important;}:host > io-collapsable > div > io-properties > div {overflow: hidden;padding: 2px;}:host > io-collapsable > div > io-properties > div:not(:last-of-type) {border-bottom: 1px solid rgba(0, 0, 0, 0.125);}:host > io-collapsable > div > io-properties > div > :nth-child(1) {overflow: hidden;text-overflow: ellipsis;text-align: right;flex: 0 1 8em;padding-left: 0.5em;min-width: 3em;}:host > io-collapsable > div > io-properties > div > :nth-child(2) {flex: 1 0 8em;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 2em;}:host > io-collapsable > div > io-properties > div > io-option {flex: 0 1 auto !important;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;border: var(--io-theme-content-border);border-radius: var(--io-theme-border-radius);padding: var(--io-theme-padding);background: var(--io-theme-content-bg);}:host > io-inspector-breadcrumbs {margin: var(--io-theme-spacing);}:host > io-collapsable {margin: var(--io-theme-spacing);}:host > io-collapsable > div > io-properties > div {overflow: hidden;padding: var(--io-theme-padding);}:host > io-collapsable > div > io-properties > div:not(:last-of-type) {border-bottom: 1px solid rgba(0, 0, 0, 0.125);}:host > io-collapsable > div > io-properties > div > :nth-child(1) {overflow: hidden;text-overflow: ellipsis;text-align: right;flex: 0 1 8em;padding-left: 0.5em;min-width: 3em;}:host > io-collapsable > div > io-properties > div > :nth-child(2) {flex: 1 0 8em;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width: 2em;}:host > io-collapsable > div > io-properties > div > io-option {flex: 0 1 auto !important;}</style>`;
   }
   static get properties() {
     return {
@@ -1422,7 +1493,7 @@ let WAIT_TIME = 1200;
 
 class IoMenuLayer extends IoElement {
   static get style() {
-    return html`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;pointer-events: none;touch-action: none;}:host[expanded] {visibility: visible;pointer-events: all;}:host io-menu-options:not([expanded]) {display: none;}:host io-menu-options {padding: 0.125em 0 0.25em 0;border: 1px solid #666;box-shadow: 1px 1px 2px rgba(0,0,0,0.33);position: absolute;transform: translateZ(0);top: 0;left: 0;min-width: 6em;}</style>`;
+    return html`<style>:host {display: block;visibility: hidden;position: fixed;top: 0;left: 0;bottom: 0;right: 0;z-index: 100000;background: rgba(0, 0, 0, 0.2);user-select: none;overflow: hidden;pointer-events: none;touch-action: none;}:host[expanded] {visibility: visible;pointer-events: all;}:host io-menu-options:not([expanded]) {display: none;}:host io-menu-options {position: absolute;transform: translateZ(0);top: 0;left: 0;min-width: 6em;}</style>`;
   }
   static get properties() {
     return {
@@ -1701,7 +1772,7 @@ document.body.appendChild(IoMenuLayer.singleton);
 
 class IoMenuOptions extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;white-space: nowrap;user-select: none;touch-action: none;background: white;color: black;}:host[horizontal] {flex-direction: row;}:host[horizontal] > io-menu-item {padding: 0.25em 0.5em;}:host[horizontal] > io-menu-item > :not(.menu-label) {display: none;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;white-space: nowrap;user-select: none;touch-action: none;background: white;color: black;padding: var(--io-theme-padding);border: var(--io-theme-menu-border);border-radius: var(--io-theme-border-radius);box-shadow: var(--io-theme-menu-shadow);}:host[horizontal] {flex-direction: row;}:host[horizontal] > io-menu-item {margin-left: 0.5em;margin-right: 0.5em;}:host[horizontal] > io-menu-item > :not(.menu-label) {display: none;}</style>`;
   }
   static get properties() {
     return {
@@ -1756,7 +1827,7 @@ IoMenuOptions.Register();
 
 class IoMenuItem extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;cursor: pointer;padding: 0.125em 0.5em 0.125em 1.7em;line-height: 1em;touch-action: none;}:host > * {pointer-events: none;}:host > .menu-icon {width: 1.25em;margin-left: -1.25em;line-height: 1em;}:host > .menu-label {flex: 1}:host > .menu-hint {opacity: 0.5;padding: 0 0.5em;}:host > .menu-more {opacity: 0.5;margin: 0 -0.25em 0 0.25em;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: row;cursor: pointer;padding: var(--io-theme-padding);line-height: 1em;touch-action: none;}:host > * {pointer-events: none;}:host > .menu-icon {width: 1.25em;line-height: 1em;padding: var(--io-theme-spacing);}:host > .menu-label {flex: 1;padding: var(--io-theme-spacing);}:host > .menu-hint {padding: var(--io-theme-spacing);opacity: 0.5;padding: 0 0.5em;}:host > .menu-more {padding: var(--io-theme-spacing);opacity: 0.25;}</style>`;
   }
   static get properties() {
     return {
@@ -1906,7 +1977,7 @@ const range = document.createRange();
 
 class IoNumber extends IoElement {
   static get style() {
-    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;border: 1px solid #444;border-radius: 2px;padding: 0 0.25em;background: white;}:host:focus {overflow: hidden;text-overflow: clip;outline: none;border-color: #09d;background: #def;}</style>`;
+    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;border: var(--io-theme-field-border);border-radius: var(--io-theme-border-radius);padding: var(--io-theme-padding);background: var(--io-theme-field-bg);}:host:focus {overflow: hidden;text-overflow: clip;outline: none;border: var(--io-theme-focus-border);background: var(--io-theme-focus-bg);}</style>`;
   }
   static get properties() {
     return {
@@ -2057,7 +2128,7 @@ IoOption.Register();
 
 class IoSelectable extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: column;}:host[vertical] {flex-direction: row;}:host > .io-buttons {position: relative;display: flex;flex: 0 1 auto;flex-direction: row;margin: 0 0 -1px 0;padding: 0 0.25em 0 0.15em;}:host[vertical] > .io-buttons {flex-direction: column;margin: 0 -1px 0 0;padding: 0.15em 0 0.25em 0;}:host > .io-content {background: #eee;padding: 0.2em;border-radius: 0.2em;border: 1px solid #999;flex: 1 1 auto;}:host > .io-buttons > io-button {padding: 0.2em 0.5em;letter-spacing: 0.145em;background: #bbb;border-color: #999;margin: 0 0 0 0.1em;border-radius: 3px 3px 0 0;}:host[vertical] > .io-buttons > io-button {margin: 0.1em 0 0 0;border-radius: 3px 0 0 3px;transition: background-color 0.4s;}:host > .io-buttons > io-button.io-selected {background: #eee;font-weight: 500;letter-spacing: 0.09em;}:host > .io-buttons > io-button:not(.io-selected) {background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);}:host[vertical] > .io-buttons > io-button:not(.io-selected) {background-image: linear-gradient(270deg, rgba(0, 0, 0, 0.125), transparent 0.75em);}:host > .io-buttons > io-button:not(.io-selected):hover {background-color: rgba(255, 255, 255, 0.5) !important;}:host:not([vertical]) > .io-buttons > io-button.io-selected {border-bottom-color: #eee;}:host[vertical] > .io-buttons > io-button.io-selected {border-right-color: #eee;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: column;}:host[vertical] {flex-direction: row;}:host > .io-buttons {position: relative;display: flex;flex: 0 1 auto;flex-direction: row;margin: 0 0 -1px 0;padding: 0 0.25em 0 0.15em;}:host[vertical] > .io-buttons {flex-direction: column;margin: 0 -1px 0 0;padding: 0.15em 0 0.25em 0;}:host > .io-content {flex: 1 1 auto;border: var(--io-theme-content-border);border-radius: var(--io-theme-border-radius);padding: var(--io-theme-padding);background: var(--io-theme-content-bg);}:host > .io-buttons > io-button {margin-left: var(--io-theme-spacing);margin-top: var(--io-theme-spacing);letter-spacing: 0.145em;border-radius: 3px 3px 0 0;}:host[vertical] > .io-buttons > io-button {border-radius: 3px 0 0 3px;}:host > .io-buttons > io-button.io-selected {background: #eee;font-weight: 500;letter-spacing: 0.09em;}:host > .io-buttons > io-button:not(.io-selected) {background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);}:host[vertical] > .io-buttons > io-button:not(.io-selected) {background-image: linear-gradient(270deg, rgba(0, 0, 0, 0.125), transparent 0.75em);}:host > .io-buttons > io-button:not(.io-selected):hover {background-color: rgba(255, 255, 255, 0.5) !important;}:host:not([vertical]) > .io-buttons > io-button.io-selected {border-bottom-color: #eee;}:host[vertical] > .io-buttons > io-button.io-selected {border-right-color: #eee;}</style>`;
   }
   static get properties() {
     return {
@@ -2095,7 +2166,7 @@ IoSelectable.Register();
 
 class IoSlider extends IoElement {
   static get style() {
-    return html`<style>:host {display: flex;flex-direction: row;min-width: 12em;}:host > io-number {flex: 0 0 auto;}:host > io-slider-knob {flex: 1 1 auto;margin-left: 2px;border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}_onValueSet(event) {this.dispatchEvent('value-set', event.detail, false);this.value = event.detail.value;}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],['io-slider-knob', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoCanvas {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;}:host > img {pointer-events: none;}</style>`;
+    return html`<style>:host {display: flex;flex-direction: row;min-width: 12em;}:host > io-number {flex: 0 0 auto;}:host > io-slider-knob {flex: 1 1 auto;margin-left: var(--io-theme-spacing);border: 1px solid #000;border-radius: 2px;padding: 0 1px;background: #999;}</style>`;}static get properties() {return {value: 0,step: 0.001,min: 0,max: 1,strict: true,};}_onValueSet(event) {this.dispatchEvent('value-set', event.detail, false);this.value = event.detail.value;}changed() {const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));this.template([['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],['io-slider-knob', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]]);this.$.number.style.setProperty('min-width', charLength + 'em');}}IoSlider.Register();class IoSliderKnob extends IoCanvas {static get style() {return html`<style>:host {display: flex;cursor: ew-resize;}:host > img {pointer-events: none;}</style>`;
   }
   static get properties() {
     return {
@@ -2131,7 +2202,7 @@ class IoSlider extends IoElement {
 
     const bgColor = '#444';
     const colorStart = '#2cf';
-    const colorEnd = '#2f6';
+    const colorEnd = '#ef8';
     const min = this.min;
     const max = this.max;
     const step = this.step;
@@ -2184,7 +2255,7 @@ const range$1 = document.createRange();
 
 class IoString extends IoElement {
   static get style() {
-    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;border: 1px solid #444;border-radius: 2px;padding: 0 0.25em;background: white;}:host:focus {overflow: hidden;text-overflow: clip;outline: none;border-color: #09d;background: #def;}</style>`;
+    return html`<style>:host {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;border: var(--io-theme-field-border);border-radius: var(--io-theme-border-radius);padding: var(--io-theme-padding);background: var(--io-theme-field-bg);}:host:focus {overflow: hidden;text-overflow: clip;outline: none;border: var(--io-theme-focus-border);background: var(--io-theme-focus-bg);}</style>`;
   }
   static get properties() {
     return {
@@ -2228,10 +2299,18 @@ class IoString extends IoElement {
 
 IoString.Register();
 
+class IoTheme extends IoElement {
+  static get style() {
+    return html`<style>body {--bg: #eee;--radius: 5px 5px 5px 5px;--spacing: 3px;--padding: 3px;--border-radius: 2px;--focus-border: 1px solid #09d;--focus-bg: #def;--active-bg: #ef8;--hover-bg: #fff;--frame-border: 1px solid #999;--frame-bg: #ccc;--content-border: 1px solid #999;--content-bg: #eee;--button-border: 1px solid #999;--button-bg: #bbb;--field-border: 1px solid #444;--field-bg: white;--menu-border: 1px solid #999;--menu-bg: #bbb;--menu-shadow: 2px 3px 5px rgba(0,0,0,0.2);}</style>`;
+  }
+}
+
+IoTheme.Register();
+
 /**
  * @author arodic / https://github.com/arodic
  *
  * Basic elements made with io library: https://github.com/arodic/io
  */
 
-export { IoCoreMixin, IoCore, IoElement, html, initStyle, IoLite, IoLiteMixin, IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSelectable, IoSlider, IoStorage, IoString };
+export { IoCoreMixin, IoCore, IoElement, html, initStyle, IoLite, IoLiteMixin, IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSelectable, IoSlider, IoStorage, IoString, IoTheme };

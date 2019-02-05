@@ -159,17 +159,17 @@ IoElement.Register();
 export function html(parts) {
   let result = {
     string: '',
-    vars: {}
-  }
+    vars: {},
+  };
   for (let i = 0; i < parts.length; i++) {
     result.string += parts[i] + (arguments[i + 1] || '');
   }
-  var vars = result.string.match(/-{2}?([a-z][a-z0-9]*)\b[^;]*;?/gi);
+  let vars = result.string.match(/-{2}?([a-z][a-z0-9]*)\b[^;]*;?/gi);
   if (vars) {
     for (let i = 0; i < vars.length; i++) {
       let v = vars[i].split(':');
       if (v.length === 2) {
-        result.vars[v[0].trim()] = v[1].trim()
+        result.vars[v[0].trim()] = v[1].trim();
       }
     }
   }
@@ -212,7 +212,7 @@ export function initStyle(prototypes) {
     let style = prototypes[i].constructor.style;
     if (style) {
       style.string = style.string.replace(new RegExp(':host', 'g'), localName);
-      for (var v in style.vars) {
+      for (let v in style.vars) {
         style.string = style.string.replace(new RegExp(v, 'g'), v.replace('--', '--' + localName + '-'));
       }
       _stagingElement.innerHTML = style.string;

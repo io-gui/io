@@ -8,8 +8,8 @@ const parseHashes = function() {
     const parts = item.split('=');
     result[parts[0]] = parts[1];
     return result;
-  }, {})
-}
+  }, {});
+};
 
 const getHashes = function() {
   hashes = parseHashes();
@@ -26,7 +26,7 @@ const getHashes = function() {
       }
     }
   }
-}
+};
 
 const setHashes = function() {
   let hashString = '';
@@ -40,7 +40,7 @@ const setHashes = function() {
     }
   }
   window.location.hash = hashString.slice(0, -1);
-}
+};
 
 window.addEventListener("hashchange", getHashes, false);
 getHashes();
