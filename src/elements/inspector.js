@@ -60,6 +60,9 @@ export class IoInspector extends IoElement {
     }
     :host > io-collapsable > div > io-properties > .io-property > io-option {
       flex: 0 1 auto !important;
+      padding: var(--io-theme-padding) !important;
+      /* border: var(--io-theme-field-border); */
+      /* background: var(--io-theme-field-bg); */
     }
     :host > io-collapsable > div > io-properties > .io-property > io-number,
     :host > io-collapsable > div > io-properties > .io-property > io-string {

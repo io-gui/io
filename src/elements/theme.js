@@ -10,6 +10,10 @@ export class IoTheme extends IoElement {
         --padding: 3px;
         --border-radius: 2px;
 
+        --number-color: rgb(28, 0, 207);
+        --string-color: rgb(196, 26, 22);
+        --boolean-color: rgb(170, 13, 145);
+
         --link-color: #09d;
         --focus-border: 1px solid #09d;
         --focus-bg: #def;

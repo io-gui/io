@@ -35,16 +35,13 @@ export class IoProperties extends IoElement {
         background: none;
       }
       :host > .io-property > io-number {
-        color: rgb(28, 0, 207);
+        color: var(--io-theme-number-color);
       }
       :host > .io-property > io-string {
-        color: rgb(196, 26, 22);
+        color: var(--io-theme-string-color);
       }
       :host > .io-property > io-boolean {
-        color: rgb(170, 13, 145);
-      }
-      :host > .io-property > io-option {
-        color: rgb(0, 32, 135);
+        color: var(--io-theme-boolean-color);
       }
     </style>`;
   }
@@ -72,8 +69,7 @@ export class IoProperties extends IoElement {
       this.dispatchEvent('value-set', detail, false);
     }
   }
-  changed() {
-    // this.__protoConfig.merge(this.config);
+  valueChanged() {
     const config = this._config;
     const elements = [];
     for (let c in config) {
@@ -154,7 +150,7 @@ export class Config {
 
       const typeStr = 'type:' + type;
       const cstrStr = 'constructor:' + cstr;
-      const keyStr = 'key:' + k;
+      const keyStr = k;
 
       config[k] = {};
 
