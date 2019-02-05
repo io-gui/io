@@ -35,13 +35,14 @@ export class IoSelectable extends IoElement {
         margin-top: var(--io-theme-spacing);
         letter-spacing: 0.145em;
         border-radius: 3px 3px 0 0;
+        font-weight: 500;
       }
       :host[vertical] > .io-buttons > io-button {
         border-radius: 3px 0 0 3px;
       }
       :host > .io-buttons > io-button.io-selected {
         background: #eee;
-        font-weight: 500;
+        font-weight: bold;
         letter-spacing: 0.09em;
       }
       :host > .io-buttons > io-button:not(.io-selected) {

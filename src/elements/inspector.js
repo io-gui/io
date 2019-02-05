@@ -26,30 +26,45 @@ export class IoInspector extends IoElement {
     :host > io-collapsable {
       margin: var(--io-theme-spacing);
     }
-    :host > io-collapsable > div > io-properties > div {
+    :host > io-collapsable > div > io-properties > .io-property {
       overflow: hidden;
       padding: var(--io-theme-padding);
     }
-    :host > io-collapsable > div > io-properties > div:not(:last-of-type) {
+    :host > io-collapsable > div > io-properties > .io-property:not(:last-of-type) {
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
-    :host > io-collapsable > div > io-properties > div > :nth-child(1) {
+    :host > io-collapsable > div > io-properties > .io-property > :nth-child(1) {
       overflow: hidden;
       text-overflow: ellipsis;
       text-align: right;
       flex: 0 1 8em;
-      padding-left: 0.5em;
       min-width: 3em;
+      padding: var(--io-theme-padding);
+      margin: calc(0.25 * var(--io-theme-spacing));
     }
-    :host > io-collapsable > div > io-properties > div > :nth-child(2) {
+    :host > io-collapsable > div > io-properties > .io-property > :nth-child(2) {
       flex: 1 0 8em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       min-width: 2em;
     }
-    :host > io-collapsable > div > io-properties > div > io-option {
+    :host > io-collapsable > div > io-properties > .io-property > io-number,
+    :host > io-collapsable > div > io-properties > .io-property > io-string,
+    :host > io-collapsable > div > io-properties > .io-property > io-boolean {
+      border: 1px solid transparent;
+      padding: var(--io-theme-padding) !important;
+    }
+    :host > io-collapsable > div > io-properties > .io-property > io-boolean:not([value]) {
+      opacity: 0.5;
+    }
+    :host > io-collapsable > div > io-properties > .io-property > io-option {
       flex: 0 1 auto !important;
+    }
+    :host > io-collapsable > div > io-properties > .io-property > io-number,
+    :host > io-collapsable > div > io-properties > .io-property > io-string {
+      border: var(--io-theme-field-border);
+      background: var(--io-theme-field-bg);
     }
     </style>`;
   }
@@ -104,7 +119,9 @@ export class IoInspector extends IoElement {
             ['io-properties', {
               value: this.value,
               props: this.groups[group],
-              config: {'type:object': ['io-inspector-link']},
+              config: {
+                'type:object': ['io-inspector-link']
+              },
               labeled: true,
             }]
           ]

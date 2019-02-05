@@ -10,21 +10,22 @@ export class IoTheme extends IoElement {
         --padding: 3px;
         --border-radius: 2px;
 
+        --link-color: #09d;
         --focus-border: 1px solid #09d;
         --focus-bg: #def;
         --active-bg: #ef8;
         --hover-bg: #fff;
 
-        --frame-border: 1px solid #999;
+        --frame-border: 1px solid #aaa;
         --frame-bg: #ccc;
 
-        --content-border: 1px solid #999;
+        --content-border: 1px solid #aaa;
         --content-bg: #eee;
 
         --button-border: 1px solid #999;
         --button-bg: #bbb;
 
-        --field-border: 1px solid #444;
+        --field-border: 1px solid #ccc;
         --field-bg: white;
 
         --menu-border: 1px solid #999;

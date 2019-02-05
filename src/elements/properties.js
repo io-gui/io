@@ -9,41 +9,41 @@ export class IoProperties extends IoElement {
         flex: 0 0;
         line-height: 1em;
       }
-      :host > div.io-property {
+      :host > .io-property {
         display: flex !important;
         flex-direction: row;
       }
-      :host > div > .io-property-label {
+      :host > .io-property > .io-property-label {
         padding: 0 0.2em 0 0.5em;
         flex: 0 0 auto;
       }
-      :host > div > .io-property-editor {
+      :host > .io-property > .io-property-editor {
         margin: 0;
         padding: 0;
       }
-      :host > div > io-object,
-      :host > div > io-object > io-boolean,
-      :host > div > io-object > io-properties {
+      :host > .io-property > io-object,
+      :host > .io-property > io-object > io-boolean,
+      :host > .io-property > io-object > io-properties {
         padding: 0 !important;
         border: none !important;
         background: none !important;
       }
-      :host > div > io-number,
-      :host > div > io-string,
-      :host > div > io-boolean {
+      :host > .io-property > io-number,
+      :host > .io-property > io-string,
+      :host > .io-property > io-boolean {
         border: none;
         background: none;
       }
-      :host > div > io-number {
+      :host > .io-property > io-number {
         color: rgb(28, 0, 207);
       }
-      :host > div > io-string {
+      :host > .io-property > io-string {
         color: rgb(196, 26, 22);
       }
-      :host > div > io-boolean {
+      :host > .io-property > io-boolean {
         color: rgb(170, 13, 145);
       }
-      :host > div > io-option {
+      :host > .io-property > io-option {
         color: rgb(0, 32, 135);
       }
     </style>`;
@@ -97,7 +97,7 @@ export class IoProperties extends IoElement {
     return {
       'type:string': ['io-string', {}],
       'type:number': ['io-number', {step: 0.01}],
-      'type:boolean': ['io-boolean', {}],
+      'type:boolean': ['io-boolean', {true: '☑ true', false: '☐ false'}],
       'type:object': ['io-object', {}],
       'type:null': ['io-string', {}],
       'type:undefined': ['io-string', {}],

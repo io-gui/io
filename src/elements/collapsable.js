@@ -22,6 +22,9 @@ export class IoCollapsable extends IoElement {
         width: 0.65em;
         margin: 0 0.25em;
       }
+      :host[expanded] > io-boolean{
+        margin-bottom: var(--io-theme-padding);
+      }
       :host[expanded] > io-boolean::before{
         content: '▾';
       }
@@ -29,7 +32,7 @@ export class IoCollapsable extends IoElement {
         display: block;
         border: var(--io-theme-content-border);
         border-radius: var(--io-theme-border-radius);
-        padding: var(--io-theme-spacing);
+        padding: var(--io-theme-padding);
         background: var(--io-theme-content-bg);
       }
     </style>`;

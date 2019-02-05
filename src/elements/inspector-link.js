@@ -10,7 +10,9 @@ export class IoInspectorLink extends IoButton {
         text-overflow: ellipsis;
         background: none;
         padding: 0;
-        color: #09c;
+        border: 1px solid transparent;
+        color: var(--io-theme-link-color);
+        padding: var(--io-theme-padding) !important;
       }
       :host:focus {
         outline: none;

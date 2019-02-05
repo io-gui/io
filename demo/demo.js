@@ -61,12 +61,9 @@ export class IoDemo extends IoElement {
         display: grid;
         grid-template-columns: 100px 6em 6em 6em;
       }
-      :host .table > div > * {
-        margin-right: var(--io-theme-spacing);
-        margin-bottom: var(--io-theme-spacing);
-      }
       :host .label {
         color: rgba(128, 122, 255, 0.75);
+        padding: var(--io-theme-padding);
       }
       :host .sidebar {
         display: inline-block;
