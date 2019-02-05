@@ -6,7 +6,7 @@ export class IoBoolean extends IoButton {
     return html`<style>
       :host {
         display: inline;
-        background: white;
+        background: none;
       }
     </style>`;
   }

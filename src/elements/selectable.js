@@ -24,24 +24,20 @@ export class IoSelectable extends IoElement {
         padding: 0.15em 0 0.25em 0;
       }
       :host > .io-content {
-        background: #eee;
-        padding: 0.2em;
-        border-radius: 0.2em;
-        border: 1px solid #999;
         flex: 1 1 auto;
+        border: var(--io-theme-content-border);
+        border-radius: var(--io-theme-border-radius);
+        padding: var(--io-theme-padding);
+        background: var(--io-theme-content-bg);
       }
       :host > .io-buttons > io-button {
-        padding: 0.2em 0.5em;
+        margin-left: var(--io-theme-spacing);
+        margin-top: var(--io-theme-spacing);
         letter-spacing: 0.145em;
-        background: #bbb;
-        border-color: #999;
-        margin: 0 0 0 0.1em;
         border-radius: 3px 3px 0 0;
       }
       :host[vertical] > .io-buttons > io-button {
-        margin: 0.1em 0 0 0;
         border-radius: 3px 0 0 3px;
-        transition: background-color 0.4s;
       }
       :host > .io-buttons > io-button.io-selected {
         background: #eee;

@@ -12,12 +12,17 @@ export class IoMenuOptions extends IoElement {
         touch-action: none;
         background: white;
         color: black;
+        padding: var(--io-theme-padding);
+        border: var(--io-theme-menu-border);
+        border-radius: var(--io-theme-border-radius);
+        box-shadow: var(--io-theme-menu-shadow);
       }
       :host[horizontal] {
         flex-direction: row;
       }
       :host[horizontal] > io-menu-item {
-        padding: 0.25em 0.5em;
+        margin-left: 0.5em;
+        margin-right: 0.5em;
       }
       :host[horizontal] > io-menu-item > :not(.menu-label) {
         display: none;

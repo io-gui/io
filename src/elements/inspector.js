@@ -15,30 +15,20 @@ export class IoInspector extends IoElement {
     :host {
       display: flex;
       flex-direction: column;
-      border: 1px solid #444;
-      border-radius: 3px;
-      padding: 1px;
-      background-color: #fff;
+      border: var(--io-theme-content-border);
+      border-radius: var(--io-theme-border-radius);
+      padding: var(--io-theme-padding);
+      background: var(--io-theme-content-bg);
     }
-    :host > .io-inspector-header {
-
+    :host > io-inspector-breadcrumbs {
+      margin: var(--io-theme-spacing);
     }
     :host > io-collapsable {
-      padding: 2px !important;
-      margin: 2px;
-      font-size: 0.9em;
-      background-color: #ccc !important;
-    }
-    :host > io-collapsable > div > io-boolean {
-      display: block;
-      padding-bottom: 0.15em;
-    }
-    :host > io-collapsable > div > io-properties {
-      padding: 0 !important;
+      margin: var(--io-theme-spacing);
     }
     :host > io-collapsable > div > io-properties > div {
       overflow: hidden;
-      padding: 2px;
+      padding: var(--io-theme-padding);
     }
     :host > io-collapsable > div > io-properties > div:not(:last-of-type) {
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);

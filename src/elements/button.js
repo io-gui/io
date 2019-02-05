@@ -8,23 +8,26 @@ export class IoButton extends IoElement {
         cursor: pointer;
         white-space: nowrap;
         -webkit-tap-highlight-color: transparent;
-        border: 1px solid #444;
-        border-radius: 2px;
-        padding: 0 0.25em;
-        background: #ccc;
         overflow: hidden;
         text-overflow: ellipsis;
+        border: var(--io-theme-button-border);
+        border-radius: var(--io-theme-border-radius);
+        padding: var(--io-theme-padding);
+        padding-left: calc(3 * var(--io-theme-padding));
+        padding-right: calc(3 * var(--io-theme-padding));
+        background: var(--io-theme-button-bg);
+        transition: background-color 0.4s;
       }
       :host:focus {
         outline: none;
-        border-color: #09d;
-        background: #def;
+        border: var(--io-theme-focus-border);
+        background: var(--io-theme-focus-bg);
       }
       :host:hover {
-        background: #aaa;
+        background: var(--io-theme-hover-bg);
       }
       :host[pressed] {
-        background: rgba(255,255,255,0.5);
+        background: var(--io-theme-active-bg);
       }
     </style>`;
   }

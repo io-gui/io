@@ -28,9 +28,6 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
       },
     };
   }
-  constructor(initProps = {}) {
-    super(initProps);
-  }
   connectedCallback() {
     super.connectedCallback();
     for (let prop in this.__properties) {
@@ -159,7 +156,25 @@ IoElement.Register = function() {
 
 IoElement.Register();
 
-export function html() {return arguments[0][0];}
+export function html(parts) {
+  let result = {
+    string: '',
+    vars: {}
+  }
+  for (let i = 0; i < parts.length; i++) {
+    result.string += parts[i] + (arguments[i + 1] || '');
+  }
+  var vars = result.string.match(/-{2}?([a-z][a-z0-9]*)\b[^;]*;?/gi);
+  if (vars) {
+    for (let i = 0; i < vars.length; i++) {
+      let v = vars[i].split(':');
+      if (v.length === 2) {
+        result.vars[v[0].trim()] = v[1].trim()
+      }
+    }
+  }
+  return result;
+}
 
 const constructElement = function(vDOMNode) {
  let ConstructorClass = customElements.get(vDOMNode.name);
@@ -196,12 +211,15 @@ export function initStyle(prototypes) {
   for (let i = prototypes.length; i--;) {
     let style = prototypes[i].constructor.style;
     if (style) {
-      if (i < prototypes.length - 1 && style == prototypes[i + 1].constructor.style) continue;
-      style = style.replace(new RegExp(':host', 'g'), localName);
-      _stagingElement.innerHTML = style;
+      style.string = style.string.replace(new RegExp(':host', 'g'), localName);
+      for (var v in style.vars) {
+        style.string = style.string.replace(new RegExp(v, 'g'), v.replace('--', '--' + localName + '-'));
+      }
+      _stagingElement.innerHTML = style.string;
       let element = _stagingElement.querySelector('style');
       element.setAttribute('id', 'io-style-' + localName + '-' + i);
       document.head.appendChild(element);
     }
+
   }
 }

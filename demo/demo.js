@@ -52,7 +52,7 @@ export class IoDemo extends IoElement {
   static get style() {
     return html`<style>
       :host > io-collapsable {
-        margin: 0.25em;
+        margin: var(--io-theme-spacing);
       }
       :host > io-collapsable:not([expanded]) {
         opacity: 0.5;
@@ -62,7 +62,8 @@ export class IoDemo extends IoElement {
         grid-template-columns: 100px 6em 6em 6em;
       }
       :host .table > div > * {
-        margin: 1px;
+        margin-right: var(--io-theme-spacing);
+        margin-bottom: var(--io-theme-spacing);
       }
       :host .label {
         color: rgba(128, 122, 255, 0.75);
@@ -72,7 +73,7 @@ export class IoDemo extends IoElement {
       }
       :host io-object:not(:last-of-type),
       :host io-slider:not(:last-of-type) {
-        margin-bottom: 2px;
+        margin-bottom: var(--io-theme-spacing);
       }
     </style>`;
   }

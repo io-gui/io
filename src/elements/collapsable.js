@@ -6,10 +6,10 @@ export class IoCollapsable extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
-        border: 1px solid #999;
-        border-radius: 3px;
-        padding: 1px;
-        background: #ccc;
+        border: var(--io-theme-frame-border);
+        border-radius: var(--io-theme-border-radius);
+        padding: var(--io-theme-padding);
+        background: var(--io-theme-frame-bg);
       }
       :host > io-boolean {
         border: none;
@@ -27,10 +27,10 @@ export class IoCollapsable extends IoElement {
       }
       :host > .io-collapsable-content {
         display: block;
-        border: 1px solid #999;
-        border-radius: 2px;
-        padding: 0.2em;
-        background: #eee;
+        border: var(--io-theme-content-border);
+        border-radius: var(--io-theme-border-radius);
+        padding: var(--io-theme-spacing);
+        background: var(--io-theme-content-bg);
       }
     </style>`;
   }

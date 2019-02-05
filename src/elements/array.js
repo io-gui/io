@@ -6,8 +6,8 @@ export class IoArray extends IoProperties {
     return html`<style>
       :host {
         display: grid;
-        grid-row-gap: 2px;
-        grid-column-gap: 2px;
+        grid-row-gap: var(--io-theme-spacing);
+        grid-column-gap: var(--io-theme-spacing);
       }
       :host[columns="2"] {
         grid-template-columns: auto auto;

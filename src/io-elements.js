@@ -24,3 +24,4 @@ export {IoSelectable} from "./elements/selectable.js";
 export {IoSlider} from "./elements/slider.js";
 export {IoStorage} from "./elements/storage.js";
 export {IoString} from "./elements/string.js";
+import {IoTheme} from "./elements/theme.js";

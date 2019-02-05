@@ -14,7 +14,7 @@ export class IoSlider extends IoElement {
       }
       :host > io-slider-knob {
         flex: 1 1 auto;
-        margin-left: 2px;
+        margin-left: var(--io-theme-spacing);
         border: 1px solid #000;
         border-radius: 2px;
         padding: 0 1px;
@@ -93,7 +93,7 @@ export class IoSliderKnob extends IoCanvas {
 
     const bgColor = '#444';
     const colorStart = '#2cf';
-    const colorEnd = '#2f6';
+    const colorEnd = '#ef8';
     const min = this.min;
     const max = this.max;
     const step = this.step;

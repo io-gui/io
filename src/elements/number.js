@@ -10,17 +10,17 @@ export class IoNumber extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        border: 1px solid #444;
-        border-radius: 2px;
-        padding: 0 0.25em;
-        background: white;
+        border: var(--io-theme-field-border);
+        border-radius: var(--io-theme-border-radius);
+        padding: var(--io-theme-padding);
+        background: var(--io-theme-field-bg);
       }
       :host:focus {
         overflow: hidden;
         text-overflow: clip;
         outline: none;
-        border-color: #09d;
-        background: #def;
+        border: var(--io-theme-focus-border);
+        background: var(--io-theme-focus-bg);
       }
     </style>`;
   }

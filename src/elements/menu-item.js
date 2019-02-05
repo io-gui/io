@@ -9,7 +9,7 @@ export class IoMenuItem extends IoElement {
         display: flex;
         flex-direction: row;
         cursor: pointer;
-        padding: 0.125em 0.5em 0.125em 1.7em;
+        padding: var(--io-theme-padding);
         line-height: 1em;
         touch-action: none;
       }
@@ -18,19 +18,21 @@ export class IoMenuItem extends IoElement {
       }
       :host > .menu-icon {
         width: 1.25em;
-        margin-left: -1.25em;
         line-height: 1em;
+        padding: var(--io-theme-spacing);
       }
       :host > .menu-label {
-        flex: 1
+        flex: 1;
+        padding: var(--io-theme-spacing);
       }
       :host > .menu-hint {
+        padding: var(--io-theme-spacing);
         opacity: 0.5;
         padding: 0 0.5em;
       }
       :host > .menu-more {
-        opacity: 0.5;
-        margin: 0 -0.25em 0 0.25em;
+        padding: var(--io-theme-spacing);
+        opacity: 0.25;
       }
     </style>`;
   }
