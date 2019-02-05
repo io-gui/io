@@ -17,9 +17,14 @@ export class IoCanvas extends IoElement {
     return html`<style>
       :host {
         overflow: hidden;
+        position: relative;
+        border: 1px solid black;
       }
       :host img {
-        width: 100% !important;
+        position: absolute;
+        /* Hack for border offset */
+        top: -1px;
+        left: -1px;
         touch-action: none;
         user-select: none;
       }
@@ -36,8 +41,9 @@ export class IoCanvas extends IoElement {
   changed() {
     this.template([['img', {id: 'img'}]]);
 
-    const rect = this.$.img.getBoundingClientRect();
+    const rect = this.getBoundingClientRect();
     // TODO: implement in webgl shader
+    // TODO: unhack border offset.
     canvas.width = rect.width;
     canvas.height = rect.height;
 

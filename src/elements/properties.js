@@ -66,7 +66,8 @@ export class IoProperties extends IoElement {
     if (key !== null) {
       this.value[key] = event.detail.value;
       const detail = Object.assign({object: this.value, key: key}, event.detail);
-      this.dispatchEvent('object-mutated', detail, false, window);
+      this.dispatchEvent('object-mutated', detail, true); // TODO: test
+      // this.dispatchEvent('object-mutated', detail, false, window);
       this.dispatchEvent('value-set', detail, false);
     }
   }
@@ -75,17 +76,17 @@ export class IoProperties extends IoElement {
     const elements = [];
     for (let c in config) {
       if (!this.props.length || this.props.indexOf(c) !== -1) {
-        if (config[c]) {
-          const tag = config[c][0];
-          const protoConfig = config[c][1];
-          const label = config[c].label || c;
-          const itemConfig = {className: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
-          elements.push(
-            ['div', {className: 'io-property'}, [
-              this.labeled ? ['span', {className: 'io-property-label', title: label}, label + ':'] : null,
-              [tag, Object.assign(itemConfig, protoConfig)]
-            ]]);
-        }
+        // if (config[c]) {
+        const tag = config[c][0];
+        const protoConfig = config[c][1];
+        const label = config[c].label || c;
+        const itemConfig = {className: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+        elements.push(
+          ['div', {className: 'io-property'}, [
+            this.labeled ? ['span', {className: 'io-property-label', title: label}, label + ':'] : null,
+            [tag, Object.assign(itemConfig, protoConfig)]
+          ]]);
+        // }
       }
     }
     this.template(elements);

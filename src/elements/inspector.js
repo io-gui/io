@@ -26,14 +26,14 @@ export class IoInspector extends IoElement {
     :host > io-collapsable {
       margin: var(--io-theme-spacing);
     }
-    :host > io-collapsable > div > io-properties > .io-property {
+    :host > io-collapsable > div io-properties > .io-property {
       overflow: hidden;
       padding: var(--io-theme-padding);
     }
-    :host > io-collapsable > div > io-properties > .io-property:not(:last-of-type) {
+    :host > io-collapsable > div io-properties > .io-property:not(:last-of-type) {
       border-bottom: var(--io-theme-border);
     }
-    :host > io-collapsable > div > io-properties > .io-property > :nth-child(1) {
+    :host > io-collapsable > div io-properties > .io-property > :nth-child(1) {
       overflow: hidden;
       text-overflow: ellipsis;
       text-align: right;
@@ -42,31 +42,46 @@ export class IoInspector extends IoElement {
       padding: var(--io-theme-padding);
       margin: calc(0.25 * var(--io-theme-spacing));
     }
-    :host > io-collapsable > div > io-properties > .io-property > :nth-child(2) {
+    :host > io-collapsable > div io-properties > .io-property > :nth-child(2) {
       flex: 1 0 8em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       min-width: 2em;
     }
-    :host > io-collapsable > div > io-properties > .io-property > io-number,
-    :host > io-collapsable > div > io-properties > .io-property > io-string,
-    :host > io-collapsable > div > io-properties > .io-property > io-boolean {
+
+    /* :host > .io-property > io-object,
+    :host > .io-property > io-object > io-boolean,
+    :host > .io-property > io-object > io-properties {
+      padding: 0 !important;
+      border: none !important;
+      background: none !important;
+    } */
+
+    :host div io-properties > .io-property > io-object,
+    :host div io-properties > .io-property > io-number,
+    :host div io-properties > .io-property > io-string,
+    :host div io-properties > .io-property > io-boolean {
       border: 1px solid transparent;
       padding: var(--io-theme-padding) !important;
     }
-    :host > io-collapsable > div > io-properties > .io-property > io-boolean:not([value]) {
+    :host div io-properties > .io-property > io-boolean:not([value]) {
       opacity: 0.5;
     }
-    :host > io-collapsable > div > io-properties > .io-property > io-option {
+    :host div io-properties > .io-property > io-option {
       flex: 0 1 auto !important;
       padding: var(--io-theme-padding) !important;
     }
-    :host > io-collapsable > div > io-properties > .io-property > io-number,
-    :host > io-collapsable > div > io-properties > .io-property > io-string {
+    :host div io-properties > .io-property > io-number,
+    :host div io-properties > .io-property > io-string {
       border: var(--io-theme-field-border);
       color: var(--io-theme-field-color);
       background: var(--io-theme-field-bg);
+    }
+
+    :host io-properties > .io-property > io-properties {
+      border: var(--io-theme-field-border);
+      background: rgba(127, 127, 127, 0.125);
     }
     </style>`;
   }
