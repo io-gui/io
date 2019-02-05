@@ -108,9 +108,10 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   }
   objectMutated(event) {
     for (let i = this.__objectProps.length; i--;) {
-      if (this.__properties[this.__objectProps[i]].value === event.detail.object) {
-        // Triggers change on all elements with mutated object as property
+      const prop = this.__objectProps[i];
+      if (this.__properties[prop].value === event.detail.object) {
         this.changed();
+        if (this[prop + 'Changed']) this[prop + 'Changed'](event.detail);
       }
     }
   }
