@@ -10,6 +10,7 @@ export class IoInspectorBreadcrumbs extends IoElement {
         border: var(--io-theme-field-border);
         border-radius: var(--io-theme-border-radius);
         padding: var(--io-theme-padding);
+        color: var(--io-theme-field-color);
         background: var(--io-theme-field-bg);
       }
       :host > io-inspector-link {
@@ -21,7 +22,7 @@ export class IoInspectorBreadcrumbs extends IoElement {
         padding: var(--io-theme-padding);
       }
       :host > io-inspector-link:first-of-type {
-        color: #000;
+        color: var(--io-theme-color);
         overflow: visible;
         text-overflow: clip;
         margin-left: 0.5em;

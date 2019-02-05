@@ -17,6 +17,7 @@ export class IoButton extends IoElement {
         padding-right: calc(3 * var(--io-theme-padding));
         background: var(--io-theme-button-bg);
         transition: background-color 0.4s;
+        color: var(--io-theme-color);
       }
       :host:focus {
         outline: none;

@@ -16,6 +16,7 @@ export class IoProperties extends IoElement {
       :host > .io-property > .io-property-label {
         padding: 0 0.2em 0 0.5em;
         flex: 0 0 auto;
+        color: var(--io-theme-color);
       }
       :host > .io-property > .io-property-editor {
         margin: 0;

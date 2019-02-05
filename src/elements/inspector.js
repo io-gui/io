@@ -31,7 +31,7 @@ export class IoInspector extends IoElement {
       padding: var(--io-theme-padding);
     }
     :host > io-collapsable > div > io-properties > .io-property:not(:last-of-type) {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+      border-bottom: var(--io-theme-border);
     }
     :host > io-collapsable > div > io-properties > .io-property > :nth-child(1) {
       overflow: hidden;
@@ -61,12 +61,11 @@ export class IoInspector extends IoElement {
     :host > io-collapsable > div > io-properties > .io-property > io-option {
       flex: 0 1 auto !important;
       padding: var(--io-theme-padding) !important;
-      /* border: var(--io-theme-field-border); */
-      /* background: var(--io-theme-field-bg); */
     }
     :host > io-collapsable > div > io-properties > .io-property > io-number,
     :host > io-collapsable > div > io-properties > .io-property > io-string {
       border: var(--io-theme-field-border);
+      color: var(--io-theme-field-color);
       background: var(--io-theme-field-bg);
     }
     </style>`;

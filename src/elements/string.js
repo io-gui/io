@@ -13,6 +13,7 @@ export class IoString extends IoElement {
         border: var(--io-theme-field-border);
         border-radius: var(--io-theme-border-radius);
         padding: var(--io-theme-padding);
+        color: var(--io-theme-field-color);
         background: var(--io-theme-field-bg);
       }
       :host:focus {

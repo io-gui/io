@@ -9,6 +9,8 @@ export class IoTheme extends IoElement {
         --spacing: 3px;
         --padding: 3px;
         --border-radius: 2px;
+        --border: 1px solid rgba(128, 128, 128, 0.25);
+        --color: #000;
 
         --number-color: rgb(28, 0, 207);
         --string-color: rgb(196, 26, 22);
@@ -30,6 +32,7 @@ export class IoTheme extends IoElement {
         --button-bg: #bbb;
 
         --field-border: 1px solid #ccc;
+        --field-color: #333;
         --field-bg: white;
 
         --menu-border: 1px solid #999;
