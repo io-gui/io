@@ -26,8 +26,7 @@ Define properties inside the static `properties()` getter.
 static get properties() {
   return {
     items: {
-      type: Array,
-      update: 'update',
+      type: Array
     },
     enabled: true
   }
