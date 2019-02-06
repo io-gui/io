@@ -55,23 +55,28 @@ class IoStorageNode extends IoCore {
   }
   constructor(props, defValue) {
     super(props);
-    const localValue = localStorage.getItem(this.key);
     const hashValue = hashes[this.key];
     if (this.hash && hashValue !== undefined) {
       this.value = hashValue;
-    } else if (localValue !== null && localValue !== undefined) {
-      this.value = JSON.parse(localValue);
     } else {
-      this.value = defValue;
+      const localValue = localStorage.getItem(this.key);
+      if (localValue !== null && localValue !== undefined) {
+        this.value = JSON.parse(localValue);
+      } else {
+        this.value = defValue;
+      }
     }
   }
   valueChanged() {
-    if (this.value === null || this.value === undefined) {
-      localStorage.removeItem(this.key);
+    if (this.hash) {
+      setHashes();
     } else {
-      localStorage.setItem(this.key, JSON.stringify(this.value));
+      if (this.value === null || this.value === undefined) {
+        localStorage.removeItem(this.key);
+      } else {
+        localStorage.setItem(this.key, JSON.stringify(this.value));
+      }
     }
-    setHashes();
   }
 }
 
