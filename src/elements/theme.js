@@ -39,6 +39,14 @@ export class IoTheme extends IoElement {
         --menu-bg: #bbb;
         --menu-shadow: 2px 3px 5px rgba(0,0,0,0.2);
       }
+      @media (-webkit-min-device-pixel-ratio: 2) {
+        body {
+          --radius: 10px 10px 10px 10px;
+          --spacing: 5px;
+          --padding: 5px;
+          --border-radius: 6px;
+        }
+      }
     </style>`;
   }
 }

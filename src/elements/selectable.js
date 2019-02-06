@@ -6,6 +6,8 @@ export class IoSelectable extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+        align-items: flex-start;
+        position: relative;
       }
       :host[vertical] {
         flex-direction: row;
@@ -22,9 +24,50 @@ export class IoSelectable extends IoElement {
         flex-direction: column;
         margin: 0 -1px 0 0;
         padding: 0.15em 0 0.25em 0;
+        max-width: 12em;
+      }
+      :host > .io-hamburger {
+        display: none;
+        flex: 0 0 auto;
+        margin: var(--io-theme-spacing);
+      }
+      :host > .io-overflow-buttons {
+        display: none;
+      }
+      :host[overflow] > .io-buttons {
+        height: 0px;
+        visibility: hidden;
+      }
+      :host[overflow] > .io-overflow-buttons {
+        height: auto;
+        visibility: visible;
+        display: flex;
+        align-items: flex-start;
+      }
+      :host[overflow] > .io-overflow-buttons > .io-hamburger {
+        margin: var(--io-theme-spacing);
+        margin-bottom: -1px;
+        padding-bottom: 1px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      @media only screen and (max-width: 36em) {
+        :host[vertical] {
+          align-items: flex-start;
+        }
+        :host[vertical] > .io-buttons {
+          display: none;
+        }
+        :host[vertical] > .io-content {
+          margin: var(--io-theme-spacing);
+        }
+        :host[vertical] > .io-hamburger {
+          display: block;
+        }
       }
       :host > .io-content {
         flex: 1 1 auto;
+        align-self: stretch;
         border: var(--io-theme-content-border);
         border-radius: var(--io-theme-border-radius);
         padding: var(--io-theme-padding);
@@ -35,10 +78,18 @@ export class IoSelectable extends IoElement {
         margin-top: var(--io-theme-spacing);
         letter-spacing: 0.145em;
         border-radius: 3px 3px 0 0;
-        font-weight: 500;
+        font-weight: 500
+      }
+      :host:not([vertical]) > .io-buttons > io-button {
+        overflow: hidden;
+        text-overflow: clip;
       }
       :host[vertical] > .io-buttons > io-button {
         border-radius: 3px 0 0 3px;
+      }
+      :host:not([vertical]) > .io-buttons > io-button.io-selected {
+        overflow: visible;
+        text-overflow: clip;
       }
       :host > .io-buttons > io-button.io-selected {
         background: #eee;
@@ -70,13 +121,23 @@ export class IoSelectable extends IoElement {
         type: Boolean,
         reflect: true,
       },
+      overflow: {
+        type: Boolean,
+        reflect: true,
+      },
     };
   }
   select(id) {
     this.selected = id;
   }
+  resized() {
+    const rect = this.getBoundingClientRect();
+    const rectButtons = this.$.buttons.getBoundingClientRect();
+    this.overflow = !this.vertical && rect.width <= rectButtons.width;
+  }
   changed() {
     const buttons = [];
+    const options = [];
     for (let i = 0; i < this.elements.length; i++) {
       const props = this.elements[i][1] || {};
       const label = props.label || props.title || props.name || this.elements[i][0] + '[' + i + ']';
@@ -86,9 +147,17 @@ export class IoSelectable extends IoElement {
         action: this.select,
         className: this.selected === i ? 'io-selected' : ''
       }]);
+      options.push({
+        value: i,
+        label: label,
+      });
     }
+    const hamburger = ['io-option', {className: 'io-hamburger', hamburger: true, value: this.bind('selected'), options: options}];
+
     this.template([
-      ['div', {className: 'io-buttons'}, buttons],
+      this.vertical ? hamburger : null,
+      this.overflow ? ['div', {id: 'buttons', className: 'io-buttons io-overflow-buttons'}, [hamburger, buttons[this.selected]]] : null,
+      ['div', {id: 'buttons', className: 'io-buttons'}, buttons],
       ['div', {className: 'io-content'}, [this.elements[this.selected]]],
     ]);
   }

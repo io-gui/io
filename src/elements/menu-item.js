@@ -15,25 +15,27 @@ export class IoMenuItem extends IoElement {
       }
       :host > * {
         pointer-events: none;
+        padding: var(--io-theme-spacing);
       }
       :host > .menu-icon {
         width: 1.25em;
         line-height: 1em;
-        padding: var(--io-theme-spacing);
       }
       :host > .menu-label {
         flex: 1;
-        padding: var(--io-theme-spacing);
       }
       :host > .menu-hint {
-        padding: var(--io-theme-spacing);
         opacity: 0.5;
         padding: 0 0.5em;
       }
       :host > .menu-more {
-        padding: var(--io-theme-spacing);
         opacity: 0.25;
       }
+      /* @media (-webkit-min-device-pixel-ratio: 2) {
+        :host > * {
+          padding: calc(2 * var(--io-theme-spacing));
+        }
+      } */
     </style>`;
   }
   static get properties() {

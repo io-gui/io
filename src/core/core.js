@@ -128,6 +128,10 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     if (this.__objectProps.length) {
       window.addEventListener('object-mutated', this.objectMutated);
     }
+    if (ro && typeof this.resized == 'function') {
+      this.resized();
+      ro.observe(this);
+    }
   }
   disconnectedCallback() {
     this.__protoListeners.disconnect(this);
@@ -143,6 +147,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
     if (this.__objectProps.length) {
       window.removeEventListener('object-mutated', this.objectMutated);
+    }
+    if (ro && typeof this.resized == 'function') {
+      ro.unobserve(this);
     }
   }
   addEventListener(type, listener) {
@@ -231,6 +238,13 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   }
 };
 
+let ro;
+if (window.ResizeObserver !== undefined) {
+  ro = new ResizeObserver(entries => {
+    for (let entry of entries) entry.target.resized();
+  });
+}
+
 export function defineProperties(prototype) {
   for (let prop in prototype.__properties) {
     const change = prop + 'Changed';
@@ -283,7 +297,6 @@ IoCoreMixin.Register = function () {
       this.prototype.__objectProps.push(prop);
     }
   }
-
 
   defineProperties(this.prototype);
 };

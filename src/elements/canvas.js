@@ -5,13 +5,6 @@ import {html, IoElement} from "../io-core.js";
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 
-let ro;
-if (window.ResizeObserver !== undefined) {
-  ro = new ResizeObserver(entries => {
-    for (let entry of entries) entry.target.changed();
-  });
-}
-
 export class IoCanvas extends IoElement {
   static get style() {
     return html`<style>
@@ -30,13 +23,8 @@ export class IoCanvas extends IoElement {
       }
     </style>`;
   }
-  connectedCallback() {
-    super.connectedCallback();
-    if (ro) ro.observe(this);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (ro) ro.unobserve(this);
+  resized() {
+    this.changed();
   }
   changed() {
     this.template([['img', {id: 'img'}]]);
