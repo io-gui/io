@@ -41,10 +41,10 @@ export class IoTheme extends IoElement {
       }
       @media (-webkit-min-device-pixel-ratio: 2) {
         body {
-          --radius: 10px 10px 10px 10px;
-          --spacing: 5px;
-          --padding: 5px;
-          --border-radius: 6px;
+          --radius: 7px 7px 7px 7px;
+          --spacing: 4px;
+          --padding: 4px;
+          --border-radius: 4px;
         }
       }
     </style>`;

@@ -46,8 +46,8 @@ export class IoSelectable extends IoElement {
       }
       :host[overflow] > .io-overflow-buttons > .io-hamburger {
         margin: var(--io-theme-spacing);
-        margin-bottom: -1px;
-        padding-bottom: 1px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
       }
