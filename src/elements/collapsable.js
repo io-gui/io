@@ -16,6 +16,9 @@ export class IoCollapsable extends IoElement {
         border-radius: 0;
         background: none;
       }
+      :host > io-boolean:focus {
+        border: none;
+      }
       :host > io-boolean::before {
         content: '▸';
         display: inline-block;
