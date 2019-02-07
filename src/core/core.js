@@ -22,6 +22,15 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.setProperties(initProps);
 
     if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed', {detail: {}});
+
+    // TODO: test with differect element and object classes
+    if (superclass !== HTMLElement) this.connect();
+  }
+  connect() {
+    this.connectedCallback();
+  }
+  disconnect() {
+    this.disconnectedCallback();
   }
   changed() {}
   dispose() {
@@ -38,6 +47,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         delete this.__properties[p].binding;
       }
     }
+    // TODO implement properly and test on both elements and objects
+    // for (let l in this.__listeners) this.__listeners[l].lenght = 0;
+    // for (let p in this.__properties) delete this.__properties[p];
   }
   bind(prop) {
     this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
@@ -128,10 +140,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     if (this.__objectProps.length) {
       window.addEventListener('object-mutated', this.objectMutated);
     }
-    if (ro && typeof this.resized == 'function') {
-      this.resized();
-      ro.observe(this);
-    }
   }
   disconnectedCallback() {
     this.__protoListeners.disconnect(this);
@@ -147,9 +155,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
     if (this.__objectProps.length) {
       window.removeEventListener('object-mutated', this.objectMutated);
-    }
-    if (ro && typeof this.resized == 'function') {
-      ro.unobserve(this);
     }
   }
   addEventListener(type, listener) {
@@ -238,13 +243,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   }
 };
 
-let ro;
-if (window.ResizeObserver !== undefined) {
-  ro = new ResizeObserver(entries => {
-    for (let entry of entries) entry.target.resized();
-  });
-}
-
 export function defineProperties(prototype) {
   for (let prop in prototype.__properties) {
     const change = prop + 'Changed';
@@ -301,27 +299,7 @@ IoCoreMixin.Register = function () {
   defineProperties(this.prototype);
 };
 
-export class IoCore extends IoCoreMixin(Object) {
-  constructor(props) {
-    super(props);
-    this.connect();
-  }
-  connect() {
-    this.connectedCallback();
-  }
-  disconnect() {
-    this.disconnectedCallback();
-  }
-  dispose() {
-    super.dispose();
-    // TODO implement properly and test
-    for (let l in this.__listeners) this.__listeners[l].lenght = 0;
-    for (let p in this.__properties) delete this.__properties[p];
-  }
-}
+export class IoCore extends IoCoreMixin(Object) {}
 
-IoCore.Register = function() {
-  IoCoreMixin.Register.call(this);
-};
-
+IoCore.Register = IoCoreMixin.Register;
 IoCore.Register();

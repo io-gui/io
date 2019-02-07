@@ -35,6 +35,24 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
         this.setAttribute(prop, this.__properties[prop].value);
       }
     }
+    if (typeof this.resized == 'function') {
+      this.resized();
+      if (ro) {
+        ro.observe(this);
+      } else {
+        window.addEventListener('resize', this.resized);
+      }
+    }
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (typeof this.resized == 'function') {
+      if (ro) {
+        ro.unobserve(this);
+      } else {
+        window.removeEventListener('resize', this.resized);
+      }
+    }
   }
   dispose() {
     super.dispose();
@@ -119,17 +137,6 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
-  static get observedAttributes() { return this.prototype.__observedAttributes; }
-  attributeChangedCallback(name, oldValue, newValue) {
-    const type = this.__properties[name].type;
-    if (type === Boolean) {
-      if (newValue === null || newValue === '') {
-        this[name] = newValue === '' ? true : false;
-      }
-    } else if (type) {
-      this[name] = type(newValue);
-    }
-  }
 }
 
 IoElement.Register = function() {
@@ -143,11 +150,6 @@ IoElement.Register = function() {
   Object.defineProperty(this, 'localName', {value: localName});
   Object.defineProperty(this.prototype, 'localName', {value: localName});
 
-  Object.defineProperty(this.prototype, '__observedAttributes', {value: []});
-  for (let i in this.prototype.__properties) {
-    if (this.prototype.__properties[i].reflect) this.prototype.__observedAttributes.push(i);
-  }
-
   customElements.define(localName, this);
 
   initStyle(this.prototype.__protochain);
@@ -155,6 +157,13 @@ IoElement.Register = function() {
 };
 
 IoElement.Register();
+
+let ro;
+if (window.ResizeObserver !== undefined) {
+  ro = new ResizeObserver(entries => {
+    for (let entry of entries) entry.target.resized();
+  });
+}
 
 export function html(parts) {
   let result = {

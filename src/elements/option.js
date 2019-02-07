@@ -20,23 +20,20 @@ export class IoOption extends IoButton {
       },
     };
   }
-  _onUp(event) {
-    super._onUp(event);
+  static get listeners() {
+    return {
+      'io-button-clicked': 'onClicked'
+    }
+  }
+  onClicked(event) {
     this.$['menu'].expanded = true;
     let firstItem = this.$['menu'].$['group'].querySelector('io-menu-item');
     if (firstItem) firstItem.focus();
   }
-  _onAction(event) {
-    if (event.which == 13 || event.which == 32 || event.type == 'mouseup' || event.type == 'touchend') {
-      event.preventDefault();
-    }
-  }
-  _onMenu(event) {
+  onMenu(event) {
     this.$['menu'].expanded = false;
     this.set('value', event.detail.value);
-    if (typeof this.action === 'function') {
-      this.action(this.value);
-    }
+    if (this.action) this.action(this.value);
   }
   changed() {
     let label = this.value;
@@ -57,7 +54,7 @@ export class IoOption extends IoButton {
         position: 'bottom',
         button: 0,
         ondown: false, // TODO: make open ondown and stay open with position:bottom
-        'on-io-menu-item-clicked': this._onMenu}]
+        'on-io-menu-item-clicked': this.onMenu}]
     ]);
   }
 }

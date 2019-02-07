@@ -10,6 +10,7 @@ export class IoButton extends IoElement {
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         text-overflow: ellipsis;
+        line-height: 1em;
         border: var(--io-theme-button-border);
         border-radius: var(--io-theme-border-radius);
         padding: var(--io-theme-padding);
@@ -21,7 +22,6 @@ export class IoButton extends IoElement {
       }
       :host:focus {
         outline: none;
-        border: var(--io-theme-focus-border);
         background: var(--io-theme-focus-bg);
       }
       :host:hover {
@@ -46,46 +46,27 @@ export class IoButton extends IoElement {
   }
   static get listeners() {
     return {
-      'keydown': '_onDown',
-      'mousedown': '_onDown',
-      'touchstart': '_onDown'
+      'keydown': 'onKeydown',
+      'click': 'onClick',
     };
   }
-  _onDown(event) {
-    event.stopPropagation();
-    if (event.which === 13 || event.which === 32 || event.type !== 'keydown') {
-      event.preventDefault();
+  onKeydown(event) {
+    if (!this.pressed && (event.which === 13 || event.which === 32)) {
+      event.stopPropagation();
       this.pressed = true;
-      document.addEventListener('mouseup', this._onUp);
-      document.addEventListener('touchend', this._onUp);
-      this.addEventListener('keyup', this._onAction);
-      this.addEventListener('mouseup', this._onAction);
-      this.addEventListener('touchend', this._onAction);
-      this.addEventListener('mouseleave', this._onLeave);
+      this.addEventListener('keyup', this.onKeyup);
     }
   }
-  _onUp(event) {
-    event.stopPropagation();
+  onKeyup(event) {
+    this.removeEventListener('keyup', this.onKeyup);
     this.pressed = false;
-    document.removeEventListener('mouseup', this._onUp);
-    document.removeEventListener('touchend', this._onUp);
-    this.removeEventListener('keyup', this._onAction);
-    this.removeEventListener('mouseup', this._onAction);
-    this.removeEventListener('touchend', this._onAction);
-    this.removeEventListener('mouseleave', this._onLeave);
+    if (this.action) this.action(this.value);
+    this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
   }
-  _onAction(event) {
-    event.stopPropagation();
-    if (event.which === 13 || event.which === 32 || event.type !== 'keyup') {
-      event.preventDefault();
-      if (this.pressed && this.action) this.action(this.value);
-      this.pressed = false;
-      this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
-    }
-    this._onUp(event);
-  }
-  _onLeave() {
+  onClick(event) {
     this.pressed = false;
+    if (this.action) this.action(this.value);
+    this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
   }
   changed() {
     this.title = this.label;

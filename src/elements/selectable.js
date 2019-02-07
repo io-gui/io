@@ -45,11 +45,12 @@ export class IoSelectable extends IoElement {
         align-items: flex-start;
       }
       :host[overflow] > .io-overflow-buttons > .io-hamburger {
-        margin: var(--io-theme-spacing);
-        margin-bottom: 0px;
-        padding-bottom: 0px;
+        margin-left: var(--io-theme-spacing);
+        margin-top: var(--io-theme-spacing);
+        letter-spacing: 0.145em;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+        border-bottom: 0;
       }
       @media only screen and (max-width: 36em) {
         :host[vertical] {
