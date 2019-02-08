@@ -20,8 +20,9 @@ import Option from "../tests/elements/option.js"
 import Properties from "../tests/elements/properties.js"
 import Selectable from "../tests/elements/selectable.js"
 import Slider from "../tests/elements/slider.js"
-import Storage from "../tests/elements/storage.js"
 import Sting from "../tests/elements/string.js"
+
+import Storage from "../tests/objects/storage.js"
 
 mocha.setup('bdd');
 

@@ -1,5 +1,5 @@
 import {IoElement, html} from "../io-core.js";
-import {IoStorage} from "./storage.js";
+import {IoStorage} from "../objects/storage.js";
 
 import "./inspector-breadcrumbs.js";
 import "./inspector-link.js";

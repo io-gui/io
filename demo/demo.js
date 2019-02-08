@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorage as $, IoProperties, IoInspector} from "../src/io.js";
+import {html, IoElement, IoStorage as $, IoInspector} from "../src/io.js";
 
 let suboptions2 = [
   {label: 'log one', value: 1, action: console.log},

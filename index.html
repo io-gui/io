@@ -27,10 +27,8 @@
     <link href="./lib/mocha.css" rel="stylesheet" />
     <script type="module">
 
-    import "./lib/io-md-view.js";
-
     import {html, IoElement, IoStorage as $} from "./src/io.js";
-
+    import "./lib/io-md-view.js";
     import "./demo/demo.js";
     import "./demo/todomvc/todo-app.js";
     import "./tests/test.js";
@@ -40,35 +38,28 @@
         super(props);
         this.template([
           ['io-selectable', {className: 'selectable-main', selected: $('page', 0, true), elements: [
-            ['div', {label: 'About'}, [
-              ['io-md-view', {label: 'readme', path :'./readme.md'}],
-            ]],
-            ['div', {label: 'Docs'}, [
-              ['io-selectable', {className: 'selectable-docs', vertical: true, selected: $('doc', 0, true), elements: [
-                ['io-md-view', {label: 'core', path :'./docs/core/core.md'}],
-                ['io-md-view', {label: 'element', path :'./docs/core/element.md'}],
-                ['io-md-view', {label: 'lite', path :'./docs/core/lite.md'}],
-                ['io-md-view', {label: 'array', path :'./docs/elements/array.md'}],
-                ['io-md-view', {label: 'boolean', path :'./docs/elements/boolean.md'}],
-                ['io-md-view', {label: 'button', path :'./docs/elements/button.md'}],
-                ['io-md-view', {label: 'canvas', path :'./docs/elements/canvas.md'}],
-                ['io-md-view', {label: 'collapsable', path :'./docs/elements/collapsable.md'}],
-                ['io-md-view', {label: 'inspector', path :'./docs/elements/inspector.md'}],
-                ['io-md-view', {label: 'menu', path :'./docs/elements/menu.md'}],
-                ['io-md-view', {label: 'number', path :'./docs/elements/number.md'}],
-                ['io-md-view', {label: 'object', path :'./docs/elements/object.md'}],
-                ['io-md-view', {label: 'option', path :'./docs/elements/option.md'}],
-                ['io-md-view', {label: 'properties', path :'./docs/elements/properties.md'}],
-                ['io-md-view', {label: 'selectable', path :'./docs/elements/selectable.md'}],
-                ['io-md-view', {label: 'slider', path :'./docs/elements/slider.md'}],
-                ['io-md-view', {label: 'storage', path :'./docs/elements/storage.md'}],
-                ['io-md-view', {label: 'string', path :'./docs/elements/string.md'}],
-              ]}]
-            ]],
-            ['div', {label: 'Demo'}, [
-              ['io-md-view', {label: 'lite', path :'./demo/demo.md'}],
-              ['io-demo'],
-            ]],
+            ['io-md-view', {label: 'About', path :'./readme.md'}],
+            ['io-selectable', {label: 'Docs', className: 'selectable-docs', vertical: true, selected: $('doc', 0, true), elements: [
+              ['io-md-view', {label: 'core', path :'./docs/core/core.md'}],
+              ['io-md-view', {label: 'element', path :'./docs/core/element.md'}],
+              ['io-md-view', {label: 'lite', path :'./docs/core/lite.md'}],
+              ['io-md-view', {label: 'array', path :'./docs/elements/array.md'}],
+              ['io-md-view', {label: 'boolean', path :'./docs/elements/boolean.md'}],
+              ['io-md-view', {label: 'button', path :'./docs/elements/button.md'}],
+              ['io-md-view', {label: 'canvas', path :'./docs/elements/canvas.md'}],
+              ['io-md-view', {label: 'collapsable', path :'./docs/elements/collapsable.md'}],
+              ['io-md-view', {label: 'inspector', path :'./docs/elements/inspector.md'}],
+              ['io-md-view', {label: 'menu', path :'./docs/elements/menu.md'}],
+              ['io-md-view', {label: 'number', path :'./docs/elements/number.md'}],
+              ['io-md-view', {label: 'object', path :'./docs/elements/object.md'}],
+              ['io-md-view', {label: 'option', path :'./docs/elements/option.md'}],
+              ['io-md-view', {label: 'properties', path :'./docs/elements/properties.md'}],
+              ['io-md-view', {label: 'selectable', path :'./docs/elements/selectable.md'}],
+              ['io-md-view', {label: 'slider', path :'./docs/elements/slider.md'}],
+              ['io-md-view', {label: 'string', path :'./docs/elements/string.md'}],
+              ['io-md-view', {label: 'storage', path :'./docs/ob/sjectstorage.md'}],
+            ]}],
+            ['io-demo', {label: 'Demo'}],
             ['io-test', {label: 'Test'}],
             ['todo-app', {label: 'Todo App'}],
           ]}],
