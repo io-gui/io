@@ -150,9 +150,9 @@ On a fundamental level, data-flow in io is top down and GUI designs with unidire
 
 * User-editable leaf elements should have their values data-bound to their corresponding properties of the hosting object element and their `id` property should match the name of the property.
 
-* When a leaf element's value is changed by user action, it should be done with a built-in function `this.set('value', value)`. This will make sure that a non-bubbling `value-set` event is emitted.
+* When a leaf element's value is changed by user action, it should be done with the following function: `this.set('value', value)`.
 
-* Object elements hosting editable leaf elements should listen to their `value-set` events and broadcast `object-mutated` event on the window.
+* Object elements which are hosting editable leaf elements should listen to `value-set` event and broadcast `object-mutated` event on the window.
 
 That's it! Object elements will automatically listen to `object-mutated` event and update if needed.
 
