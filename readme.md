@@ -1,7 +1,7 @@
 # Io GUI library for web applications #
 
 Io library is designed to help you build data-driven web applications using native web technologies.
-It implements custom elements, virtual DOM, programmable templates, data binding and automatic data-flow management.
+It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design.
 
 For a quick start, read this document and check out included elements and examples.
 
@@ -140,7 +140,7 @@ myNode.dispose();
 
 **Note:** When object is no longer needed, call `dispose()` to prevent memory leakage. Elements will do this automatically when removed from the DOM.
 
-### Automatic* Data-Flow ###
+### Simple Data-Flow ###
 
 On a fundamental level, data-flow in io is top down and GUI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement a different design where leaf elements have the ability to modify the application state directly via data binding. State changes are then communicated to the rest of the application automatically following few simple rules.
 
