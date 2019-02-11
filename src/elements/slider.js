@@ -15,10 +15,7 @@ export class IoSlider extends IoElement {
       :host > io-slider-knob {
         flex: 1 1 auto;
         margin-left: var(--io-theme-spacing);
-        border: 1px solid #000;
         border-radius: 2px;
-        padding: 0 1px;
-        background: #999;
       }
     </style>`;
   }
@@ -39,7 +36,7 @@ export class IoSlider extends IoElement {
     const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
     this.template([
       ['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],
-      ['io-slider-knob', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'slider', 'on-value-set': this._onValueSet}]
+      ['io-slider-knob', {value: this.value, step: this.step, minValue: this.min, maxValue: this.max, id: 'slider', 'on-value-set': this._onValueSet}]
     ]);
     this.$.number.style.setProperty('min-width', charLength + 'em');
   }
@@ -65,8 +62,15 @@ export class IoSliderKnob extends IoCanvas {
     return {
       value: 0,
       step: 0.01,
-      min: 0,
-      max: 1000,
+      minValue: 0,
+      maxValue: 1000,
+      startColor: [0.3, 0.9, 1, 1],
+      endColor: [0.9, 1, 0.5, 1],
+      lineColor: [0.3, 0.3, 0.3, 1],
+      bg: [0.5, 0.5, 0.5, 1],
+      snapWidth: 2,
+      slotWidth: 2,
+      handleWidth: 4,
     };
   }
   static get listeners() {
@@ -89,59 +93,53 @@ export class IoSliderKnob extends IoCanvas {
       const rect = this.getBoundingClientRect();
       const x = (event.clientX - rect.x) / rect.width;
       const pos = Math.max(0,Math.min(1, x));
-      let value = this.min + (this.max - this.min) * pos;
+      let value = this.minValue + (this.maxValue - this.minValue) * pos;
       value = Math.round(value / this.step) * this.step;
-      value = Math.min(this.max, Math.max(this.min, (value)));
+      value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
       this.set('value', value);
     }
   }
-  paint(ctx, rect) {
+  static get frag() {
+    return `
+    varying vec2 vUv;
+    void main(void) {
 
-    const bgColor = '#444';
-    const colorStart = '#2cf';
-    const colorEnd = '#ef8';
-    const min = this.min;
-    const max = this.max;
-    const step = this.step;
-    const value = this.value;
+      vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
 
-    if (isNaN(value)) return;
+      float _range = maxValue - minValue;
+      float _progress = (value - minValue) / _range;
+      float _value = mix(minValue, maxValue, vUv.x);
+      float _stepRange = size.x / (_range / step);
 
-    const w = rect.width, h = rect.height;
-    const handleWidth = 4;
-
-    let snap = Math.floor(min / step) * step;
-    let pos;
-
-    if (((max - min) / step) < w / 3 ) {
-      while (snap < (max - step)) {
-        snap += step;
-        pos = Math.floor(w * (snap - min) / (max - min));
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = bgColor;
-        ctx.beginPath();
-        ctx.moveTo(pos, 0);
-        ctx.lineTo(pos, h);
-        ctx.stroke();
+      if (_stepRange > snapWidth * 4.0) {
+        float pxValue = _value * size.x / _range;
+        float pxStep = step * size.x / _range;
+        float snap0 = mod(pxValue, pxStep);
+        float snap1 = pxStep - mod(pxValue, pxStep);
+        float snap = min(snap0, snap1) * 2.0;
+        snap -= snapWidth;
+        snap = 1.0 - clamp(snap, 0.0, 1.0);
+        finalColor = mix(finalColor, lineColor, snap);
       }
-    }
 
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, h / 2 - 2, w, 4);
+      float slot = (abs(0.5 - vUv.y) * 2.0) * size.y;
+      slot = (1.0 - slot) + slotWidth;
+      slot = clamp(slot, 0.0, 1.0);
+      vec4 slotColor = mix(startColor, endColor, vUv.x);
 
-    pos = handleWidth / 2 + (w - handleWidth) * (value - min) / (max - min);
-    const gradient = ctx.createLinearGradient(0, 0, pos, 0);
-    gradient.addColorStop(0, colorStart);
-    gradient.addColorStop(1, colorEnd);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, h / 2 - 2, pos, 4);
+      float progress = (vUv.x - _progress) * size.x;
+      progress = clamp(progress, 0.0, 1.0);
+      slotColor = mix(slotColor, lineColor, progress);
 
-    ctx.lineWidth = handleWidth;
-    ctx.strokeStyle = colorEnd;
-    ctx.beginPath();
-    ctx.moveTo(pos, 0);
-    ctx.lineTo(pos, h);
-    ctx.stroke();
+      float handle = abs(vUv.x - _progress) * size.x;
+      handle = (1.0 - handle) + handleWidth;
+      handle = clamp(handle, 0.0, 1.0);
+
+      finalColor = mix(finalColor, slotColor, slot);
+      finalColor = mix(finalColor, mix(startColor, endColor, _progress), handle);
+
+      gl_FragColor = finalColor;
+    }`;
   }
 }
 

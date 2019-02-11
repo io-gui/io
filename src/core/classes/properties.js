@@ -41,6 +41,8 @@ export class Property {
       propDef = {value: propDef};
     } else if (typeof propDef === 'function') {
       propDef = {type: propDef};
+    } else if (propDef instanceof Array) {
+      propDef = {value: [...propDef]};
     } else if (typeof propDef !== 'object') {
       propDef = {value: propDef, type: propDef.constructor};
     }
