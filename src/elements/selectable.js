@@ -29,7 +29,13 @@ export class IoSelectable extends IoElement {
       :host > .io-hamburger {
         display: none;
         flex: 0 0 auto;
-        margin: var(--io-theme-spacing);
+
+        padding: calc(var(--io-theme-padding) * 8) calc(var(--io-theme-padding) * 2);
+        margin: calc(var(--io-theme-spacing) * 2) calc(var(--io-theme-spacing) * -1) 0 var(--io-theme-spacing) !important;
+        border-top-right-radius: 0;
+        border-top-bottom-radius: 0;
+        border-right-width: 0;
+        background-image: linear-gradient(270deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
       }
       :host > .io-overflow-buttons {
         display: none;
@@ -71,15 +77,18 @@ export class IoSelectable extends IoElement {
         align-self: stretch;
         border: var(--io-theme-content-border);
         border-radius: var(--io-theme-border-radius);
-        padding: var(--io-theme-padding);
         background: var(--io-theme-content-bg);
+        overflow: auto;
+      }
+      :host > .io-content > *{
+        margin: var(--io-theme-spacing);
       }
       :host > .io-buttons > io-button {
         margin-left: var(--io-theme-spacing);
         margin-top: var(--io-theme-spacing);
         letter-spacing: 0.145em;
         border-radius: 3px 3px 0 0;
-        font-weight: 500
+        font-weight: 500;
       }
       :host:not([vertical]) > .io-buttons > io-button {
         overflow: hidden;
@@ -93,10 +102,11 @@ export class IoSelectable extends IoElement {
         text-overflow: clip;
       }
       :host > .io-buttons > io-button.io-selected {
-        background: #eee;
-        font-weight: bold;
-        letter-spacing: 0.13em;
+        background: var(--io-theme-content-bg);
+        font-weight: 600;
+        letter-spacing: 0.11em;
       }
+      :host > .io-overflow-buttons > io-option.io-hamburger,
       :host > .io-buttons > io-button:not(.io-selected) {
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
       }

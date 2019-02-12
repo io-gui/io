@@ -19,6 +19,7 @@ export class IoButton extends IoElement {
         background: var(--io-theme-button-bg);
         transition: background-color 0.4s;
         color: var(--io-theme-color);
+        user-select: none;
       }
       :host:focus {
         outline: none;
