@@ -24,7 +24,7 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
         enumerable: false
       },
       $: {
-        type: Object, // TODO: consider clearing in template. possible memory leak!
+        type: Object,
       },
     };
   }
@@ -58,19 +58,22 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
     super.dispose();
     delete this.parent;
     this.children.lenght = 0;
+    // this.__properties.$.value = {};
   }
   template(children, host) {
+    // this.__properties.$.value = {};
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
   traverse(vChildren, host) {
     const children = host.children;
     // remove trailing elements
     while (children.length > vChildren.length) {
-      let child = children[children.length - 1];
+      const child = children[children.length - 1];
       let nodes = Array.from(child.querySelectorAll('*'));
       for (let i = nodes.length; i--;) {
         if (nodes[i].dispose) nodes[i].dispose();
       }
+      if (child.dispose) child.dispose();
       host.removeChild(child);
     }
     // create new elements after existing
@@ -86,6 +89,10 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
       if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];
         host.insertBefore(constructElement(vChildren[i]), oldElement);
+        let nodes = Array.from(oldElement.querySelectorAll('*'));
+        for (let i = nodes.length; i--;) {
+          if (nodes[i].dispose) nodes[i].dispose();
+        }
         if (oldElement.dispose) oldElement.dispose();
         host.removeChild(oldElement);
 

@@ -77,7 +77,7 @@ export class IoDemo extends IoElement {
   static get properties() {
     return {
       title: 'demo',
-      number: 0,
+      number: 0.5,
       string: 'hello',
       boolean: true,
       null: null,

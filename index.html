@@ -36,6 +36,7 @@
     export class IoMainPage extends IoElement {
       constructor(props) {
         super(props);
+
         this.template([
           ['io-selectable', {className: 'selectable-main', selected: $('page', 0, true), elements: [
             ['io-md-view', {label: 'About', path :'./readme.md'}],

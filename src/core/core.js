@@ -32,6 +32,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   disconnect() {
     this.disconnectedCallback();
   }
+  preventDefault(event) {
+    event.preventDefault();
+  }
   changed() {}
   dispose() {
     // TODO: test dispose!

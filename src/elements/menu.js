@@ -38,7 +38,8 @@ export class IoMenu extends IoElement {
     super.disconnectedCallback();
     this._parent.removeEventListener('pointerdown', this.onPointerdown);
     this._parent.removeEventListener('contextmenu', this.onContextmenu);
-    IoMenuLayer.singleton.removeChild(this.$['group']);
+    // TODO: unhack
+    if (this.$['group']) IoMenuLayer.singleton.removeChild(this.$['group']);
   }
   getBoundingClientRect() {
     return this._parent.getBoundingClientRect();

@@ -156,9 +156,9 @@ export class IoSelectable extends IoElement {
     const hamburger = ['io-option', {className: 'io-hamburger', hamburger: true, value: this.bind('selected'), options: options}];
 
     this.template([
-      this.vertical ? hamburger : null,
-      this.overflow ? ['div', {id: 'buttons', className: 'io-buttons io-overflow-buttons'}, [hamburger, buttons[this.selected]]] : null,
+      hamburger,
       ['div', {id: 'buttons', className: 'io-buttons'}, buttons],
+      ['div', {id: 'overflow-buttons', className: 'io-buttons io-overflow-buttons'}, [hamburger, buttons[this.selected]]],
       ['div', {className: 'io-content'}, [this.elements[this.selected]]],
     ]);
   }

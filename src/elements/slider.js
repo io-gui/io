@@ -77,11 +77,8 @@ export class IoSliderKnob extends IoCanvas {
     return {
       'pointerdown': 'onPointerdown',
       'pointermove': 'onPointermove',
-      'dragstart': 'onDragstart',
+      'dragstart': 'preventDefault',
     };
-  }
-  onDragstart(event) {
-    event.preventDefault();
   }
   onPointerdown(event) {
     this.setPointerCapture(event.pointerId);

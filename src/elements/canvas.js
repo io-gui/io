@@ -47,7 +47,7 @@ export class IoCanvas extends IoElement {
         position: relative;
         border: 1px solid black;
       }
-      :host img {
+      :host canvas {
         position: absolute;
         top: 0px;
         left: 0px;
@@ -109,7 +109,8 @@ export class IoCanvas extends IoElement {
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(uv);
 
-    this.template([['img', {id: 'img'}]]);
+    this.template([['canvas', {id: 'canvas'}]]);
+    this._context2d = this.$.canvas.getContext('2d');
 
     this.render();
   }
@@ -160,7 +161,12 @@ export class IoCanvas extends IoElement {
     }
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-    if (this.$.img) this.$.img.src = canvas.toDataURL();
+
+    if (this._context2d && canvas.width && canvas.height) {
+      this.$.canvas.width = canvas.width;
+      this.$.canvas.height = canvas.height;
+      this._context2d.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+    }
   }
 }
 
