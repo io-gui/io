@@ -95,7 +95,7 @@ export class IoSelectable extends IoElement {
       :host > .io-buttons > io-button.io-selected {
         background: #eee;
         font-weight: bold;
-        letter-spacing: 0.09em;
+        letter-spacing: 0.13em;
       }
       :host > .io-buttons > io-button:not(.io-selected) {
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
