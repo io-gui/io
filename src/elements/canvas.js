@@ -61,7 +61,7 @@ export class IoCanvas extends IoElement {
       bg: [0, 0, 0, 1],
       color: [1, 1, 1, 1],
       size: [1, 1],
-    }
+    };
   }
   static get frag() {
     return `
@@ -123,7 +123,7 @@ export class IoCanvas extends IoElement {
   render() {
     if (!this._shader) return;
 
-    const style = getComputedStyle(this,null);
+    const style = getComputedStyle(this, null);
     this.size[0] = style.width.substring(0, style.width.length - 2);
     this.size[1] = style.height.substring(0, style.height.length - 2);
 

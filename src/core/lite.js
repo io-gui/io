@@ -64,7 +64,7 @@ export const IoLiteMixin = (superclass) => class extends superclass {
         propDef = {value: propDef};
       } else if (typeof propDef === 'object' && propDef.constructor.name !== 'Object') {
         propDef = {value: propDef};
-      }else if (typeof propDef === 'object' && propDef.value === undefined) {
+      } else if (typeof propDef === 'object' && propDef.value === undefined) {
         propDef = {value: propDef};
       }
       defineProperty(this, prop, propDef);

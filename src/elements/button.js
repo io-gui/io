@@ -57,13 +57,13 @@ export class IoButton extends IoElement {
       this.addEventListener('keyup', this.onKeyup);
     }
   }
-  onKeyup(event) {
+  onKeyup() {
     this.removeEventListener('keyup', this.onKeyup);
     this.pressed = false;
     if (this.action) this.action(this.value);
     this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
   }
-  onClick(event) {
+  onClick() {
     this.pressed = false;
     if (this.action) this.action(this.value);
     this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
