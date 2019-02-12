@@ -1,17 +1,36 @@
-### `IoCoreMixin` `<io-core>` ###
+### `IoCoreMixin`, `IoCore` ###
 
-### Methods ###
+Core classes for all io objects and elements.
 
-  `changed()` is automatically called every time a property is changed. If multiple properties are changed simultaneously in a template, the method is called only once.
+### Static Getters ###
 
-  `resized()` TODO: document and test.
+**`static get properties()`** Should return property definitions. See readme.md for more info.
 
-  `[propertyName]Changed(value, oldValue)` If defined, it is automatically called every time the corresponding property changes.
+**`static get listeners()`** Should return a map of default listeners and handler function names.
 
-  `dispose()` is called automatically when element is no longer needed. It removes all event listeners and data bindings.
+### Functions ###
 
-  `bind(prop)` If used in templates or element constructors, this method creates bi-directional data-binding.
+**`changed()`** Change handler function. Called when any property changes.
 
-  `set(prop, value)` should be used when property value is set by **user action**. It will trigger non-bubbling `[prop]-set` event.
+**`[propertyName]Changed()`** Change handler function. Called when specific property changes.
 
-  `dispatchEvent(type, detail, bubbles = true, src = this)` Shorthand for custom event dispatch.
+**`objectMutated()`** Change handler for object property mutation. Triggered by `object-mutated` event on window if specified object is a property value.
+
+**`connect()`** Triggers connectedCallback() for io objects (non-elements).
+
+**`disconnect()`** Triggers disconnectedCallback() for io objects (non-elements).
+
+**`dispose()`** Removes all event listeners and data bindings. It is called automatically for elements, manually for objects.
+
+**`bind(prop)`** Creates bi-directional data-binding. If can be assigned to properties in templates or constructors.
+
+**`set(prop, value)`** Used when property value is set by **user action**. It will trigger non-bubbling `[prop]-set` event.
+
+**`dispatchEvent(type, detail, bubbles = true, src = this)`** Shorthand for custom event dispatch.
+
+#### Events ####
+
+| Event | Description | Detail |
+|:--------:|:----:|:----------:|
+| **`[prop]-set`** | Property set by user action | `property`, `value`, `oldValue` |
+| **`[prop]-changed`** | Value changed | `property`, `value`, `oldValue` |

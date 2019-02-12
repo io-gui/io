@@ -6,10 +6,4 @@ Input element for `String` data type.
 
 | Property | Type | Description | Default |
 |:--------:|:----:|:----------:|:-------:|
-| **`value`** | String | Value. | `''` |
-
-#### Events ####
-
-| Event | Description | Detail |
-|:--------:|:----:|:----------:|
-| **`'value-set'`** | Value set by user action | `value`, `oldValue` |
+| **`value`** | String | Value | `''` |

@@ -7,8 +7,8 @@ It can be configured to use specific elements for individual properties (see con
 
 | Property | Type | Description | Default |
 |:--------:|:----:|:----------:|:-------:|
-| **`value`** | Object | Value. | `undefined` |
-| **`props`** | Array | List of properties to show. | `[]` |
+| **`value`** | Object | Value | `undefined` |
+| **`props`** | Array | List of properties to show | `[]` |
 | **`config`** | Object | TODO | `{}` |
 | **`labeled`** | Boolean | Labels property names | `true` |
 
@@ -16,8 +16,7 @@ It can be configured to use specific elements for individual properties (see con
 
 | Event | Description | Detail |
 |:--------:|:----:|:----------:|
-| **`'value-set'`** | Value set by user action | `object`, `key`, `value`, `oldValue` |
-| **`'object-mutated'`** (window) | Value set by user action | `object`, `key`, `value`, `oldValue` |
+| **`object-mutated`** (window) | Value set by user action | `object`, `property`, `value`, `oldValue` |
 
 #### Configuration ####
 

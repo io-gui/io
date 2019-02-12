@@ -6,13 +6,13 @@ Simple button element. When clicked, it calls the `action` function with optiona
 
 | Property | Type | Description | Default |
 |:--------:|:----:|:----------:|:-------:|
-| **`action`** | Function | Function to call when clicked. | `undefined` |
-| **`value`** | _any_ | Argument for function. | `undefined` |
-| **`label`** | String | Button text. | `'Button'` |
-| **`pressed`** | Boolean | True when pressed (internal). | `false` |
+| **`action`** | Function | Function to call when clicked | `undefined` |
+| **`value`** | _any_ | Argument for function | `undefined` |
+| **`label`** | String | Button text | `'Button'` |
+| **`pressed`** | Boolean | True when pressed (internal) | `false` |
 
 #### Events ####
 
 | Event | Description | Detail |
 |:--------:|:----:|:----------:|
-| **`'button-clicked'`** | Clicked |  `value`, `action` |
+| **`button-clicked`** | Clicked |  `value`, `action` |
