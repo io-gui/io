@@ -39,6 +39,8 @@ gl.compileShader(vertShader);
 
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 
+const shadersCache = new WeakMap();
+
 export class IoCanvas extends IoElement {
   static get style() {
     return html`<style>
@@ -93,10 +95,15 @@ export class IoCanvas extends IoElement {
     gl.shaderSource(fragShader, frag + this.constructor.frag);
     gl.compileShader(fragShader);
 
-    this._shader = gl.createProgram();
+    if (shadersCache.has(this.constructor)) {
+      this._shader = shadersCache.get(this.constructor);
+    } else {
+      this._shader = gl.createProgram();
+      gl.attachShader(this._shader, vertShader);
+      gl.attachShader(this._shader, fragShader);
+      shadersCache.set(this.constructor, this._shader);
+    }
 
-    gl.attachShader(this._shader, vertShader);
-    gl.attachShader(this._shader, fragShader);
     gl.linkProgram(this._shader);
 
     const position = gl.getAttribLocation(this._shader, "position");
