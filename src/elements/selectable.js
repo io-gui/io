@@ -15,7 +15,7 @@ export class IoSelectable extends IoElement {
       :host > .io-buttons {
         position: relative;
         display: flex;
-        flex: 0 1 auto;
+        flex: 0 0 auto;
         flex-direction: row;
         margin: 0 0 -1px 0;
         padding: 0 0.25em 0 0.15em;

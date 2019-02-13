@@ -98,9 +98,12 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
 
       // update existing elements
       } else {
+        children[i].className = '';
         // Io Elements
         if (children[i].hasOwnProperty('__properties')) {
-          children[i].setProperties(vChildren[i].props); // TODO: test
+          // WARNING TODO: better property and listeners reset.
+          // WARNING TODO: test property and listeners reset
+          children[i].setProperties(vChildren[i].props);
           children[i].queueDispatch();
           children[i].__propListeners.setListeners(vChildren[i].props);
           children[i].__propListeners.connect(children[i]);
