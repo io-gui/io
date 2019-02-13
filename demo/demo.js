@@ -51,6 +51,9 @@ IoInspector.RegisterConfig({
 export class IoDemo extends IoElement {
   static get style() {
     return html`<style>
+      :host {
+        display: block;
+      }
       :host > io-collapsable {
         margin: var(--io-theme-spacing);
       }
