@@ -126,6 +126,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       const prop = this.__objectProps[i];
       if (this.__properties[prop].value === event.detail.object) {
         this.changed();
+        // TODO: test
+        if (this.__properties[prop].change) this[this.__properties[prop].change](event.detail);
         if (this[prop + 'Changed']) this[prop + 'Changed'](event.detail);
       }
     }
@@ -269,8 +271,8 @@ export function defineProperties(prototype) {
         if (this.__properties[prop].reflect) this.setAttribute(prop, this.__properties[prop].value);
         if (isPublic && this.__connected) {
           const payload = {detail: {property: prop, value: value, oldValue: oldValue}};
-          if (this[change]) this[change](payload);
           if (this.__properties[prop].change) this[this.__properties[prop].change](payload);
+          if (this[change]) this[change](payload);
           this.changed();
           // TODO: consider not dispatching always (only for binding)
           // TODO: test
