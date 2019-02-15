@@ -2628,7 +2628,7 @@ class IoOption extends IoButton {
 
 IoOption.Register();
 
-class IoSelectable extends IoElement {
+class IoSelector extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -2792,7 +2792,7 @@ class IoSelectable extends IoElement {
   }
 }
 
-IoSelectable.Register();
+IoSelector.Register();
 
 class IoSlider extends IoElement {
   static get style() {
@@ -3055,4 +3055,4 @@ class IoTheme extends IoElement {
 
 IoTheme.Register();
 
-export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSelectable, IoSlider, IoString, IoTheme, IoStorage, IoCoreMixin, IoCore, IoElement, html, initStyle, IoLite, IoLiteMixin };
+export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSelector, IoSlider, IoString, IoTheme, IoStorage, IoCoreMixin, IoCore, IoElement, html, initStyle, IoLite, IoLiteMixin };

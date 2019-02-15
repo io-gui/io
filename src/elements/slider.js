@@ -16,8 +16,6 @@ export class IoSlider extends IoElement {
         flex: 1 1 auto;
         margin-left: var(--io-theme-spacing);
         border-radius: 2px;
-        border: 0;
-        /* margin: 0.1em; */
       }
     </style>`;
   }

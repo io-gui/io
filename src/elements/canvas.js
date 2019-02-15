@@ -45,6 +45,7 @@ export class IoCanvas extends IoElement {
   static get style() {
     return html`<style>
       :host {
+        box-sizing: border-box;
         overflow: hidden;
         position: relative;
         border: 1px solid black;
@@ -122,6 +123,9 @@ export class IoCanvas extends IoElement {
     this.render();
   }
   resized() {
+    const rect = this.getBoundingClientRect();
+    this.size[0] = rect.width;
+    this.size[1] = rect.height;
     this.render();
   }
   changed() {
@@ -130,9 +134,6 @@ export class IoCanvas extends IoElement {
   render() {
     if (!this._shader) return;
 
-    const style = getComputedStyle(this, null);
-    this.size[0] = style.width.substring(0, style.width.length - 2);
-    this.size[1] = style.height.substring(0, style.height.length - 2);
 
     canvas.width = this.size[0];
     canvas.height = this.size[1];

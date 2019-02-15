@@ -18,7 +18,7 @@ import Number from "../tests/elements/number.js"
 import Object from "../tests/elements/object.js"
 import Option from "../tests/elements/option.js"
 import Properties from "../tests/elements/properties.js"
-import Selectable from "../tests/elements/selectable.js"
+import Selector from "../tests/elements/selector.js"
 import Slider from "../tests/elements/slider.js"
 import Sting from "../tests/elements/string.js"
 
@@ -64,7 +64,6 @@ export class IoTest extends IoElement {
     <style>
       :host {
         display: block;
-        margin: 0.5em;
         padding: 0.5em 1em;
         background: #fff;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3),

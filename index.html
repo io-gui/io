@@ -38,9 +38,9 @@
         super(props);
 
         this.template([
-          ['io-selectable', {className: 'selectable-main', selected: $('page', 0, true), elements: [
+          ['io-selector', {className: 'selector-main', selected: $('page', 0, true), elements: [
             ['io-md-view', {label: 'About', path :'./readme.md'}],
-            ['io-selectable', {label: 'Docs', className: 'selectable-docs', vertical: true, selected: $('doc', 0, true), elements: [
+            ['io-selector', {label: 'Docs', className: 'selector-docs', vertical: true, selected: $('doc', 0, true), elements: [
               ['io-md-view', {label: 'core', path :'./docs/core/core.md'}],
               ['io-md-view', {label: 'element', path :'./docs/core/element.md'}],
               ['io-md-view', {label: 'lite', path :'./docs/core/lite.md'}],
@@ -55,7 +55,7 @@
               ['io-md-view', {label: 'object', path :'./docs/elements/object.md'}],
               ['io-md-view', {label: 'option', path :'./docs/elements/option.md'}],
               ['io-md-view', {label: 'properties', path :'./docs/elements/properties.md'}],
-              ['io-md-view', {label: 'selectable', path :'./docs/elements/selectable.md'}],
+              ['io-md-view', {label: 'selector', path :'./docs/elements/selector.md'}],
               ['io-md-view', {label: 'slider', path :'./docs/elements/slider.md'}],
               ['io-md-view', {label: 'string', path :'./docs/elements/string.md'}],
               ['io-md-view', {label: 'storage', path :'./docs/objects/storage.md'}],

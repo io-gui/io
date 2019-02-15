@@ -1247,7 +1247,7 @@ class IoOption extends IoButton {
 
 IoOption.Register();
 
-class IoSelectable extends IoElement {
+class IoSelector extends IoElement {
   static get style() {
     return html`<style>:host {display: flex;flex-direction: column;}:host[vertical] {flex-direction: row;}:host > .io-buttons {position: relative;display: flex;flex: 0 1 auto;flex-direction: row;margin: 0 0 -1px 0;padding: 0 0.25em 0 0.15em;}:host[vertical] > .io-buttons {flex-direction: column;margin: 0 -1px 0 0;padding: 0.15em 0 0.25em 0;}:host > .io-content {flex: 1 1 auto;border: var(--io-theme-content-border);border-radius: var(--io-theme-border-radius);padding: var(--io-theme-padding);background: var(--io-theme-content-bg);}:host > .io-buttons > io-button {margin-left: var(--io-theme-spacing);margin-top: var(--io-theme-spacing);letter-spacing: 0.145em;border-radius: 3px 3px 0 0;font-weight: 500;}:host[vertical] > .io-buttons > io-button {border-radius: 3px 0 0 3px;}:host > .io-buttons > io-button.io-selected {background: #eee;font-weight: bold;letter-spacing: 0.09em;}:host > .io-buttons > io-button:not(.io-selected) {background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);}:host[vertical] > .io-buttons > io-button:not(.io-selected) {background-image: linear-gradient(270deg, rgba(0, 0, 0, 0.125), transparent 0.75em);}:host > .io-buttons > io-button:not(.io-selected):hover {background-color: rgba(255, 255, 255, 0.5) !important;}:host:not([vertical]) > .io-buttons > io-button.io-selected {border-bottom-color: #eee;}:host[vertical] > .io-buttons > io-button.io-selected {border-right-color: #eee;}</style>`;
   }
@@ -1283,7 +1283,7 @@ class IoSelectable extends IoElement {
   }
 }
 
-IoSelectable.Register();
+IoSelector.Register();
 
 class IoSlider extends IoElement {
   static get style() {
@@ -1434,4 +1434,4 @@ IoTheme.Register();
  * Basic elements made with io library: https://github.com/arodic/io
  */
 
-export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSelectable, IoSlider, IoStorage, IoString, IoTheme };
+export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSelector, IoSlider, IoStorage, IoString, IoTheme };
