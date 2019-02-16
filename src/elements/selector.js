@@ -26,7 +26,18 @@ export class IoSelector extends IoElement {
         margin: var(--io-theme-spacing) 0;
         margin-right: -1px;
       }
-      :host > :nth-child(2) {
+      :host[vertical] > io-tabs > io-button,
+      :host[vertical] > io-tabs > io-button.io-selected {
+        align-self: flex-end;
+        color: var(--io-theme-link-color);
+        border: none;
+        background: none;
+        background-image: none !important;
+      }
+      :host[vertical] > io-tabs > io-button:hover {
+        text-decoration: underline;
+      }
+      :host > io-element-cache {
         flex: 1 1 auto;
         padding: var(--io-theme-padding);
         border: var(--io-theme-content-border);
