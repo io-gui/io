@@ -30,6 +30,7 @@ export class IoElementCache extends IoElement {
     delete this._cache;
   }
   changed() {
+    if (!this.elements[this.selected]) return;
     if ((this.precache || this.cache) && this._cache[this.selected]) {
       this.innerHTML = '';
       this.appendChild(this._cache[this.selected]);

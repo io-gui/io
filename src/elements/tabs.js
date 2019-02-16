@@ -119,7 +119,7 @@ export class IoTabs extends IoElement {
         className: this.selected === this.options[i].value ? 'io-selected' : ''
       }]);
     }
-    this.template([hamburger, buttons[this.selected], ...buttons]);
+    this.template([hamburger, buttons[this.selected] || ['span'], ...buttons]);
   }
 }
 

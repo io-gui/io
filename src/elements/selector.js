@@ -10,6 +10,7 @@ export class IoSelector extends IoElement {
         flex-direction: column;
         align-items: stretch;
         position: relative;
+        overflow: auto;
       }
       :host[vertical] {
         flex-direction: row;
