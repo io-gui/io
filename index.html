@@ -38,9 +38,9 @@
         super(props);
 
         this.template([
-          ['io-selector', {className: 'selector-main', selected: $('page', 0, true), elements: [
+          ['io-selector', {selected: $('page', 0, true), elements: [
             ['io-md-view', {label: 'About', path :'./readme.md'}],
-            ['io-selector', {label: 'Docs', className: 'selector-docs', vertical: true, selected: $('doc', 0, true), elements: [
+            ['io-selector', {label: 'Docs', vertical: true, selected: $('doc', 0, true), elements: [
               ['io-md-view', {label: 'core', path :'./docs/core/core.md'}],
               ['io-md-view', {label: 'element', path :'./docs/core/element.md'}],
               ['io-md-view', {label: 'lite', path :'./docs/core/lite.md'}],
