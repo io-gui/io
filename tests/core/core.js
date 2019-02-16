@@ -1,5 +1,4 @@
-import {IoCore} from "../../src/io.js";
-import {Binding} from "../../src/core/classes/binding.js";
+import {IoCore, Binding} from "../../build/io.js";
 
 export class TestNode extends IoCore {
   static get properties() {

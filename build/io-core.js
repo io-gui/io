@@ -786,4 +786,4 @@ function initStyle(prototypes) {
  * Core classes of io library: https://github.com/arodic/io
  */
 
-export { IoCoreMixin, IoCore, IoElement, html, initStyle };
+export { IoCoreMixin, IoCore, IoElement, html, initStyle, Binding };

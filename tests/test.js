@@ -1,4 +1,4 @@
-import {html, IoElement} from "../src/io.js";
+import {html, IoElement} from "../build/io.js";
 
 import "../lib/mocha.js";
 import "../lib/chai.js";
@@ -26,63 +26,63 @@ import Storage from "../tests/objects/storage.js"
 
 mocha.setup('bdd');
 
-const mochaDiv = document.createElement('div');
-mochaDiv.setAttribute('id', 'mocha');
-document.body.appendChild(mochaDiv);
-mochaDiv.style.display = 'none';
-
-let testCompleted = false;
-
-function runTests() {
-  if (!testCompleted) {
-    new Core().run();
-    new Element().run();
-    new Lite().run();
-    new Array().run();
-    new Boolean().run();
-    new Button().run();
-    new Canvas().run();
-    new Collapsable().run();
-    new Inspector().run();
-    new Menu().run();
-    new Number().run();
-    new Object().run();
-    new Option().run();
-    new Properties().run();
-    new Slider().run();
-    new Storage().run();
-    new Sting().run();
-    mocha.checkLeaks();
-    mocha.run();
-    testCompleted = true;
-  }
-}
-
-export class IoTest extends IoElement {
-  static get style() {
-    return html`
-    <style>
-      :host {
-        display: block;
-        padding: 0.5em 1em;
-        background: #fff;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3),
-                    0 15px 30px 0 rgba(0, 0, 0, 0.15);
-      }
-    </style>
-    `;
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    runTests();
-    this.appendChild(mochaDiv);
-    mochaDiv.style.display = 'block';
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    document.body.appendChild(mochaDiv);
-    mochaDiv.style.display = 'none';
-  }
-}
-
-IoTest.Register();
+// const mochaDiv = document.createElement('div');
+// mochaDiv.setAttribute('id', 'mocha');
+// document.body.appendChild(mochaDiv);
+// mochaDiv.style.display = 'none';
+//
+// let testCompleted = false;
+//
+// function runTests() {
+//   if (!testCompleted) {
+//     new Core().run();
+//     new Element().run();
+//     new Lite().run();
+//     new Array().run();
+//     new Boolean().run();
+//     new Button().run();
+//     new Canvas().run();
+//     new Collapsable().run();
+//     new Inspector().run();
+//     new Menu().run();
+//     new Number().run();
+//     new Object().run();
+//     new Option().run();
+//     new Properties().run();
+//     new Slider().run();
+//     new Storage().run();
+//     new Sting().run();
+//     mocha.checkLeaks();
+//     mocha.run();
+//     testCompleted = true;
+//   }
+// }
+//
+// export class IoTest extends IoElement {
+//   static get style() {
+//     return html`
+//     <style>
+//       :host {
+//         display: block;
+//         padding: 0.5em 1em;
+//         background: #fff;
+//         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3),
+//                     0 15px 30px 0 rgba(0, 0, 0, 0.15);
+//       }
+//     </style>
+//     `;
+//   }
+//   connectedCallback() {
+//     super.connectedCallback();
+//     runTests();
+//     this.appendChild(mochaDiv);
+//     mochaDiv.style.display = 'block';
+//   }
+//   disconnectedCallback() {
+//     super.disconnectedCallback();
+//     document.body.appendChild(mochaDiv);
+//     mochaDiv.style.display = 'none';
+//   }
+// }
+//
+// IoTest.Register();

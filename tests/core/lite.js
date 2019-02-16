@@ -1,4 +1,4 @@
-import {IoLite} from "../../src/io-lite.js";
+import {IoLite} from "../../build/io-lite.js";
 
 export class TestLite extends IoLite {
   constructor(initProps) {
