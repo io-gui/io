@@ -355,6 +355,8 @@ const IoCoreMixin = (superclass) => class extends superclass {
       const prop = this.__objectProps[i];
       if (this.__properties[prop].value === event.detail.object) {
         this.changed();
+        // TODO: test
+        if (this.__properties[prop].change) this[this.__properties[prop].change](event.detail);
         if (this[prop + 'Changed']) this[prop + 'Changed'](event.detail);
       }
     }
@@ -498,8 +500,8 @@ function defineProperties(prototype) {
         if (this.__properties[prop].reflect) this.setAttribute(prop, this.__properties[prop].value);
         if (isPublic && this.__connected) {
           const payload = {detail: {property: prop, value: value, oldValue: oldValue}};
-          if (this[change]) this[change](payload);
           if (this.__properties[prop].change) this[this.__properties[prop].change](payload);
+          if (this[change]) this[change](payload);
           this.changed();
           // TODO: consider not dispatching always (only for binding)
           // TODO: test
@@ -633,9 +635,12 @@ class IoElement extends IoCoreMixin(HTMLElement) {
 
       // update existing elements
       } else {
+        children[i].className = '';
         // Io Elements
         if (children[i].hasOwnProperty('__properties')) {
-          children[i].setProperties(vChildren[i].props); // TODO: test
+          // WARNING TODO: better property and listeners reset.
+          // WARNING TODO: test property and listeners reset
+          children[i].setProperties(vChildren[i].props);
           children[i].queueDispatch();
           children[i].__propListeners.setListeners(vChildren[i].props);
           children[i].__propListeners.connect(children[i]);
@@ -1123,6 +1128,7 @@ class IoButton extends IoElement {
         background: var(--io-theme-button-bg);
         transition: background-color 0.4s;
         color: var(--io-theme-color);
+        user-select: none;
       }
       :host:focus {
         outline: none;
@@ -1252,10 +1258,13 @@ gl.compileShader(vertShader);
 
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 
+const shadersCache = new WeakMap();
+
 class IoCanvas extends IoElement {
   static get style() {
     return html`<style>
       :host {
+        box-sizing: border-box;
         overflow: hidden;
         position: relative;
         border: 1px solid black;
@@ -1306,10 +1315,15 @@ class IoCanvas extends IoElement {
     gl.shaderSource(fragShader, frag + this.constructor.frag);
     gl.compileShader(fragShader);
 
-    this._shader = gl.createProgram();
+    if (shadersCache.has(this.constructor)) {
+      this._shader = shadersCache.get(this.constructor);
+    } else {
+      this._shader = gl.createProgram();
+      gl.attachShader(this._shader, vertShader);
+      gl.attachShader(this._shader, fragShader);
+      shadersCache.set(this.constructor, this._shader);
+    }
 
-    gl.attachShader(this._shader, vertShader);
-    gl.attachShader(this._shader, fragShader);
     gl.linkProgram(this._shader);
 
     const position = gl.getAttribLocation(this._shader, "position");
@@ -1328,6 +1342,9 @@ class IoCanvas extends IoElement {
     this.render();
   }
   resized() {
+    const rect = this.getBoundingClientRect();
+    this.size[0] = rect.width;
+    this.size[1] = rect.height;
     this.render();
   }
   changed() {
@@ -1336,9 +1353,6 @@ class IoCanvas extends IoElement {
   render() {
     if (!this._shader) return;
 
-    const style = getComputedStyle(this, null);
-    this.size[0] = style.width.substring(0, style.width.length - 2);
-    this.size[1] = style.height.substring(0, style.height.length - 2);
 
     canvas.width = this.size[0];
     canvas.height = this.size[1];
@@ -2628,124 +2642,87 @@ class IoOption extends IoButton {
 
 IoOption.Register();
 
-class IoSelector extends IoElement {
+// TODO: document and test
+
+class IoTabs extends IoElement {
   static get style() {
     return html`<style>
       :host {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        position: relative;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow: hidden;
+      }
+      :host > * {
+        flex: 0 0 auto;
+      }
+      :host:not([vertical]) > * {
+        margin-right: var(--io-theme-spacing);
+      }
+      :host[vertical] > * {
+        margin-bottom: var(--io-theme-spacing);
+      }
+      :host[vertical] > io-option {
+        padding: calc(var(--io-theme-padding) * 9) var(--io-theme-padding);
       }
       :host[vertical] {
-        flex-direction: row;
-      }
-      :host > .io-buttons {
-        position: relative;
-        display: flex;
-        flex: 0 1 auto;
-        flex-direction: row;
-        margin: 0 0 -1px 0;
-        padding: 0 0.25em 0 0.15em;
-      }
-      :host[vertical] > .io-buttons {
         flex-direction: column;
-        margin: 0 -1px 0 0;
-        padding: 0.15em 0 0.25em 0;
-        max-width: 12em;
       }
-      :host > .io-hamburger {
-        display: none;
-        flex: 0 0 auto;
-        margin: var(--io-theme-spacing);
-      }
-      :host > .io-overflow-buttons {
+      :host > * {
         display: none;
       }
-      :host[overflow] > .io-buttons {
-        height: 0px;
+      :host[vertical][collapsed] > io-option {
+        display: inherit;
+      }
+      :host[vertical]:not([collapsed]) > :nth-child(n+3) {
+        display: inherit;
+      }
+      :host:not([vertical])[overflow] > :nth-child(-n+2) {
+        display: inherit;
+      }
+      :host:not([vertical]):not([overflow]) > :nth-child(n+3) {
+        display: inherit;
+      }
+      :host:not([vertical])[overflow] > :nth-child(n+3) {
+        display: inherit;
         visibility: hidden;
       }
-      :host[overflow] > .io-overflow-buttons {
-        height: auto;
-        visibility: visible;
-        display: flex;
-        align-items: flex-start;
-      }
-      :host[overflow] > .io-overflow-buttons > .io-hamburger {
-        margin-left: var(--io-theme-spacing);
-        margin-top: var(--io-theme-spacing);
-        letter-spacing: 0.145em;
+      :host:not([vertical]) > * {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
-        border-bottom: 0;
-      }
-      @media only screen and (max-width: 36em) {
-        :host[vertical] {
-          align-items: flex-start;
-        }
-        :host[vertical] > .io-buttons {
-          display: none;
-        }
-        :host[vertical] > .io-content {
-          margin: var(--io-theme-spacing);
-        }
-        :host[vertical] > .io-hamburger {
-          display: block;
-        }
-      }
-      :host > .io-content {
-        flex: 1 1 auto;
-        align-self: stretch;
-        border: var(--io-theme-content-border);
-        border-radius: var(--io-theme-border-radius);
-        padding: var(--io-theme-padding);
-        background: var(--io-theme-content-bg);
-      }
-      :host > .io-buttons > io-button {
-        margin-left: var(--io-theme-spacing);
-        margin-top: var(--io-theme-spacing);
-        letter-spacing: 0.145em;
-        border-radius: 3px 3px 0 0;
-        font-weight: 500
-      }
-      :host:not([vertical]) > .io-buttons > io-button {
-        overflow: hidden;
-        text-overflow: clip;
-      }
-      :host[vertical] > .io-buttons > io-button {
-        border-radius: 3px 0 0 3px;
-      }
-      :host:not([vertical]) > .io-buttons > io-button.io-selected {
-        overflow: visible;
-        text-overflow: clip;
-      }
-      :host > .io-buttons > io-button.io-selected {
-        background: #eee;
-        font-weight: bold;
-        letter-spacing: 0.13em;
-      }
-      :host > .io-buttons > io-button:not(.io-selected) {
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
       }
-      :host[vertical] > .io-buttons > io-button:not(.io-selected) {
+      :host:not([vertical]) > *.io-selected {
+        border-bottom-color: var(--io-theme-content-bg);
+        background-image: none;
+      }
+      :host[vertical] > * {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
         background-image: linear-gradient(270deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
       }
-      :host > .io-buttons > io-button:not(.io-selected):hover {
-        background-color: rgba(255, 255, 255, 0.5) !important;
+      :host[vertical] > *.io-selected {
+        border-right-color: var(--io-theme-content-bg);
+        background-image: none;
       }
-      :host:not([vertical]) > .io-buttons > io-button.io-selected {
-        border-bottom-color: #eee;
+      :host > io-button {
+        letter-spacing: 0.145em;
+        font-weight: 500;
       }
-      :host[vertical] > .io-buttons > io-button.io-selected {
-        border-right-color: #eee;
+      :host > io-button:not(.io-selected) {
+        color: rgba(0, 0, 0, 0.5);
+      }
+      :host > io-button.io-selected {
+        background: var(--io-theme-content-bg);
+        font-weight: 600;
+        letter-spacing: 0.11em;
       }
     </style>`;
   }
   static get properties() {
     return {
-      elements: Array,
-      selected: Number,
+      options: Array,
+      selected: null,
       vertical: {
         type: Boolean,
         reflect: true,
@@ -2754,6 +2731,10 @@ class IoSelector extends IoElement {
         type: Boolean,
         reflect: true,
       },
+      collapsed: {
+        type: Boolean,
+        reflect: true
+      },
     };
   }
   select(id) {
@@ -2761,33 +2742,171 @@ class IoSelector extends IoElement {
   }
   resized() {
     const rect = this.getBoundingClientRect();
-    const rectButtons = this.$.buttons.getBoundingClientRect();
-    this.overflow = !this.vertical && rect.width <= rectButtons.width;
+    const lastButton = this.children[this.children.length-1];
+    const rectButton = lastButton.getBoundingClientRect();
+    this.overflow = (!this.vertical && this.collapsed) || rect.right < rectButton.right;
   }
   changed() {
     const buttons = [];
+    const hamburger = ['io-option', {
+      hamburger: true,
+      value: this.bind('selected'),
+      options: this.options
+    }];
+    for (let i = 0; i < this.options.length; i++) {
+      buttons.push(['io-button', {
+        label: this.options[i].label,
+        value: this.options[i].value,
+        action: this.select,
+        className: this.selected === this.options[i].value ? 'io-selected' : ''
+      }]);
+    }
+    this.template([hamburger, buttons[this.selected] || ['span'], ...buttons]);
+  }
+}
+
+IoTabs.Register();
+
+// TODO: document and test
+
+const stagingElement = document.createElement('div');
+
+class IoElementCache extends IoElement {
+  static get properties() {
+    return {
+      selected: Number,
+      elements:  Array,
+      precache: Boolean,
+      cache: Boolean,
+      _cache: Object,
+    };
+  }
+  precacheChanged() {
+    if (this.precache) {
+      this.template(this.elements, stagingElement);
+      for (let i = 0; i < stagingElement.childNodes.length; i++) {
+        this._cache[i] = stagingElement.childNodes[i];
+      }
+      stagingElement.innerHTML = '';
+    }
+  }
+  dispose() {
+    super.dispose();
+    this.innerHTML = '';
+    stagingElement.innerHTML = '';
+    delete this._cache;
+  }
+  changed() {
+    if (!this.elements[this.selected]) return;
+    if ((this.precache || this.cache) && this._cache[this.selected]) {
+      this.innerHTML = '';
+      this.appendChild(this._cache[this.selected]);
+    } else {
+      if (this.cache) {
+        this.innerHTML = '';
+        this.template([this.elements[this.selected]], stagingElement);
+        this._cache[this.selected] = stagingElement.childNodes[0];
+        this.appendChild(this._cache[this.selected]);
+        stagingElement.innerHTML = '';
+      } else {
+        this.template([this.elements[this.selected]]);
+      }
+    }
+  }
+}
+
+IoElementCache.Register();
+
+class IoSelector extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: relative;
+        overflow: auto;
+      }
+      :host[vertical] {
+        flex-direction: row;
+      }
+      :host > io-tabs {
+        z-index: 2;
+      }
+      :host:not([vertical]) > io-tabs {
+        margin: 0 var(--io-theme-spacing);
+        margin-bottom: -1px;
+      }
+      :host[vertical] > io-tabs {
+        flex: 0 0 auto;
+        margin: var(--io-theme-spacing) 0;
+        margin-right: -1px;
+      }
+      :host[vertical] > io-tabs > io-button,
+      :host[vertical] > io-tabs > io-button.io-selected {
+        align-self: flex-end;
+        color: var(--io-theme-link-color);
+        border: none;
+        background: none;
+        background-image: none !important;
+      }
+      :host[vertical] > io-tabs > io-button:hover {
+        text-decoration: underline;
+      }
+      :host > io-element-cache {
+        flex: 1 1 auto;
+        padding: var(--io-theme-padding);
+        border: var(--io-theme-content-border);
+        border-radius: var(--io-theme-border-radius);
+        background: var(--io-theme-content-bg);
+        overflow: auto;
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      elements: Array,
+      selected: Number,
+      precache: Boolean,
+      cache: true,
+      collapseWidth: 500,
+      vertical: {
+        type: Boolean,
+        reflect: true
+      },
+      collapsed: {
+        type: Boolean,
+        reflect: true
+      },
+    };
+  }
+  resized() {
+    const rect = this.getBoundingClientRect();
+    this.collapsed = this.vertical && rect.width < this.collapseWidth;
+  }
+  changed() {
     const options = [];
     for (let i = 0; i < this.elements.length; i++) {
       const props = this.elements[i][1] || {};
       const label = props.label || props.title || props.name || this.elements[i][0] + '[' + i + ']';
-      buttons.push(['io-button', {
-        label: label,
-        value: i,
-        action: this.select,
-        className: this.selected === i ? 'io-selected' : ''
-      }]);
       options.push({
         value: i,
         label: label,
       });
     }
-    const hamburger = ['io-option', {className: 'io-hamburger', hamburger: true, value: this.bind('selected'), options: options}];
-
     this.template([
-      hamburger,
-      ['div', {id: 'buttons', className: 'io-buttons'}, buttons],
-      ['div', {id: 'overflow-buttons', className: 'io-buttons io-overflow-buttons'}, [hamburger, buttons[this.selected]]],
-      ['div', {className: 'io-content'}, [this.elements[this.selected]]],
+      ['io-tabs', {
+        selected: this.bind('selected'),
+        vertical: this.vertical,
+        collapsed: this.collapsed,
+        options: options,
+      }],
+      ['io-element-cache', {
+        elements: this.elements,
+        selected: this.selected,
+        cache: this.cache,
+        precache: this.precache,
+      }],
     ]);
   }
 }
@@ -2889,6 +3008,7 @@ class IoSliderKnob extends IoCanvas {
       this.set('value', value);
     }
   }
+  // TODO: implement proper sdf shapes.
   static get frag() {
     return `
     varying vec2 vUv;
@@ -3055,4 +3175,4 @@ class IoTheme extends IoElement {
 
 IoTheme.Register();
 
-export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoSelector, IoSlider, IoString, IoTheme, IoStorage, IoCoreMixin, IoCore, IoElement, html, initStyle, IoLite, IoLiteMixin };
+export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoTabs, IoSelector, IoElementCache, IoSlider, IoString, IoTheme, IoStorage, IoCoreMixin, IoCore, IoElement, html, initStyle, IoLite, IoLiteMixin };
