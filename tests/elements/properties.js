@@ -1,4 +1,4 @@
-import {IoProperties} from "../../build/io.js";
+import {IoProperties} from "../../src/io.js";
 
 export default class {
   constructor() {

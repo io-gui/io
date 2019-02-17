@@ -1,4 +1,4 @@
-import {IoSelector} from "../../build/io.js";
+import {IoSelector} from "../../src/io.js";
 
 export default class {
   constructor() {

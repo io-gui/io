@@ -1,4 +1,4 @@
-import {IoArray} from "../../build/io.js";
+import {IoArray} from "../../src/io.js";
 
 export default class {
   constructor() {

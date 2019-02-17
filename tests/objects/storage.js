@@ -1,4 +1,4 @@
-import {IoStorage} from "../../build/io.js";
+import {IoStorage} from "../../src/io.js";
 
 export default class {
   constructor() {
