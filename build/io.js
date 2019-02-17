@@ -780,12 +780,6 @@ function initStyle(prototypes) {
   }
 }
 
-/**
- * @author arodic / https://github.com/arodic
- *
- * Core classes of io library: https://github.com/arodic/io
- */
-
 const IoLiteMixin = (superclass) => class extends superclass {
   set(prop, value) {
     let oldValue = this[prop];
@@ -901,6 +895,12 @@ class IoLite extends IoLiteMixin(Object) {}
  * Minimal implementation of io mixin: https://github.com/arodic/io
  * Includes event listener/dispatcher and defineProperties() method.
  * Changed properties trigger "[prop]-changed" event, and execution of changed() and [prop]Changed() functions.
+ */
+
+/**
+ * @author arodic / https://github.com/arodic
+ *
+ * Core classes of io library: https://github.com/arodic/io
  */
 
 class IoProperties extends IoElement {
@@ -1458,6 +1458,56 @@ class IoCollapsable extends IoElement {
 }
 
 IoCollapsable.Register();
+
+// TODO: document and test
+
+const stagingElement = document.createElement('div');
+
+class IoElementCache extends IoElement {
+  static get properties() {
+    return {
+      selected: Number,
+      elements:  Array,
+      precache: Boolean,
+      cache: Boolean,
+      _cache: Object,
+    };
+  }
+  precacheChanged() {
+    if (this.precache) {
+      this.template(this.elements, stagingElement);
+      for (let i = 0; i < stagingElement.childNodes.length; i++) {
+        this._cache[i] = stagingElement.childNodes[i];
+      }
+      stagingElement.innerHTML = '';
+    }
+  }
+  dispose() {
+    super.dispose();
+    this.innerHTML = '';
+    stagingElement.innerHTML = '';
+    delete this._cache;
+  }
+  changed() {
+    if (!this.elements[this.selected]) return;
+    if ((this.precache || this.cache) && this._cache[this.selected]) {
+      this.innerHTML = '';
+      this.appendChild(this._cache[this.selected]);
+    } else {
+      if (this.cache) {
+        this.innerHTML = '';
+        this.template([this.elements[this.selected]], stagingElement);
+        this._cache[this.selected] = stagingElement.childNodes[0];
+        this.appendChild(this._cache[this.selected]);
+        stagingElement.innerHTML = '';
+      } else {
+        this.template([this.elements[this.selected]]);
+      }
+    }
+  }
+}
+
+IoElementCache.Register();
 
 const nodes = {};
 let hashes = {};
@@ -2767,56 +2817,6 @@ class IoTabs extends IoElement {
 
 IoTabs.Register();
 
-// TODO: document and test
-
-const stagingElement = document.createElement('div');
-
-class IoElementCache extends IoElement {
-  static get properties() {
-    return {
-      selected: Number,
-      elements:  Array,
-      precache: Boolean,
-      cache: Boolean,
-      _cache: Object,
-    };
-  }
-  precacheChanged() {
-    if (this.precache) {
-      this.template(this.elements, stagingElement);
-      for (let i = 0; i < stagingElement.childNodes.length; i++) {
-        this._cache[i] = stagingElement.childNodes[i];
-      }
-      stagingElement.innerHTML = '';
-    }
-  }
-  dispose() {
-    super.dispose();
-    this.innerHTML = '';
-    stagingElement.innerHTML = '';
-    delete this._cache;
-  }
-  changed() {
-    if (!this.elements[this.selected]) return;
-    if ((this.precache || this.cache) && this._cache[this.selected]) {
-      this.innerHTML = '';
-      this.appendChild(this._cache[this.selected]);
-    } else {
-      if (this.cache) {
-        this.innerHTML = '';
-        this.template([this.elements[this.selected]], stagingElement);
-        this._cache[this.selected] = stagingElement.childNodes[0];
-        this.appendChild(this._cache[this.selected]);
-        stagingElement.innerHTML = '';
-      } else {
-        this.template([this.elements[this.selected]]);
-      }
-    }
-  }
-}
-
-IoElementCache.Register();
-
 class IoSelector extends IoElement {
   static get style() {
     return html`<style>
@@ -3175,4 +3175,8 @@ class IoTheme extends IoElement {
 
 IoTheme.Register();
 
-export { IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoTabs, IoSelector, IoElementCache, IoSlider, IoString, IoTheme, IoStorage, IoCoreMixin, IoCore, IoElement, html, initStyle, Binding, IoLite, IoLiteMixin };
+/**
+ * @author arodic / https://github.com/arodic
+ */
+
+export { IoCoreMixin, IoCore, IoElement, html, initStyle, Binding, IoArray, IoBoolean, IoButton, IoCanvas, IoCollapsable, IoElementCache, IoInspector, IoInspectorBreadcrumbs, IoInspectorLink, IoMenuItem, IoMenuLayer, IoMenuOptions, IoMenu, IoNumber, IoObject, IoOption, IoProperties, IoTabs, IoSelector, IoSlider, IoString, IoTheme, IoStorage, IoLite, IoLiteMixin };

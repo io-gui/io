@@ -19,14 +19,4 @@ export default [
       }
     ]
   },
-  {
-    input: 'src/io-core.js',
-    output: [
-      {
-        format: 'es',
-        file: 'build/io-core.js',
-        indent: '  '
-      }
-    ]
-  },
 ];
