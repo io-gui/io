@@ -149,6 +149,14 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
   }
 }
 
+const warning = document.createElement('div');
+warning.innerHTML = `
+No support for custom elements detected! <br />
+Sorry, modern browser is required to view this page.<br />
+Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
+<a href="https://www.google.com/chrome/">Chrome</a> or
+<a href="https://www.apple.com/lae/safari/">Safari</a>`;
+
 IoElement.Register = function() {
 
   IoCoreMixin.Register.call(this);
@@ -160,7 +168,13 @@ IoElement.Register = function() {
   Object.defineProperty(this, 'localName', {value: localName});
   Object.defineProperty(this.prototype, 'localName', {value: localName});
 
-  customElements.define(localName, this);
+  if (window.customElements !== undefined) {
+    window.customElements.define(localName, this);
+  } else {
+
+    document.body.insertBefore(warning, document.body.children[0]);
+    return;
+  }
 
   initStyle(this.prototype.__protochain);
 
@@ -196,7 +210,7 @@ export function html(parts) {
 }
 
 const constructElement = function(vDOMNode) {
- let ConstructorClass = customElements.get(vDOMNode.name);
+ let ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
  if (ConstructorClass) return new ConstructorClass(vDOMNode.props);
 
  let element = document.createElement(vDOMNode.name);
