@@ -1,4 +1,4 @@
-import {IoCanvas} from "../../src/io.js";
+import {IoCanvas} from "../../build/io.js";
 
 export default class {
   constructor() {

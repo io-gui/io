@@ -1,4 +1,4 @@
-import {IoInspector} from "../../src/io.js";
+import {IoInspector} from "../../build/io.js";
 
 export default class {
   constructor() {

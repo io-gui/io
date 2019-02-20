@@ -1467,8 +1467,19 @@ class IoElementCache extends IoElement {
       _cache: Object,
     };
   }
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener('readystatechange', this.readystatechange);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('readystatechange', this.readystatechange);
+  }
+  readystatechange() {
+    this.precacheChanged();
+  }
   precacheChanged() {
-    if (this.precache) {
+    if (this.precache && document.readyState === 'complete') {
       this.template(this.elements, stagingElement);
       for (let i = 0; i < stagingElement.childNodes.length; i++) {
         this._cache[i] = stagingElement.childNodes[i];

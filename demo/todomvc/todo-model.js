@@ -1,4 +1,4 @@
-import {IoCore} from "../../src/io.js";
+import {IoCore} from "../../build/io.js";
 
 export class TodoModel extends IoCore {
   static get properties() {
