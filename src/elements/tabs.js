@@ -13,6 +13,7 @@ export class IoTabs extends IoElement {
       }
       :host > * {
         flex: 0 0 auto;
+        display: none;
       }
       :host:not([vertical]) > * {
         margin-right: var(--io-theme-spacing);
@@ -25,9 +26,6 @@ export class IoTabs extends IoElement {
       }
       :host[vertical] {
         flex-direction: column;
-      }
-      :host > * {
-        display: none;
       }
       :host[vertical][collapsed] > io-option {
         display: inherit;
