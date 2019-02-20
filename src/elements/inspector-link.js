@@ -1,4 +1,4 @@
-import {html} from "../io-core.js";
+import {html} from "../core/element.js";
 import {IoButton} from "./button.js";
 
 export class IoInspectorLink extends IoButton {

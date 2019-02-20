@@ -1,4 +1,4 @@
-import {IoCore} from "../io-core.js";
+import {IoCore} from "../core/core.js";
 
 const nodes = {};
 let hashes = {};
@@ -91,4 +91,4 @@ export function IoStorage(key, defValue, hash) {
   return nodes[key].binding;
 }
 
-// export function IoStorage(key, defValue, hash) {}
+export {nodes as storageNodes};

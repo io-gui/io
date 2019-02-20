@@ -1,4 +1,4 @@
-import {html, IoElement} from "../io-core.js";
+import {html, IoElement} from "../core/element.js";
 
 export class IoButton extends IoElement {
   static get style() {

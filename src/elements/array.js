@@ -1,4 +1,4 @@
-import {html} from "../io-core.js";
+import {html} from "../core/element.js";
 import {IoProperties} from "./properties.js";
 
 export class IoArray extends IoProperties {

@@ -1,4 +1,4 @@
-import {IoElement} from "../io-core.js";
+import {IoElement} from "../core/element.js";
 
 // TODO: document and test
 

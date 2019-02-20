@@ -1,4 +1,4 @@
-import {IoElement, html} from "../io-core.js";
+import {IoElement, html} from "../core/element.js";
 import {IoStorage} from "../objects/storage.js";
 
 import "./inspector-breadcrumbs.js";

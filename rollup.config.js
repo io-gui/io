@@ -4,7 +4,7 @@ export default [
     output: [
       {
         format: 'es',
-        file: 'src/io.js',
+        file: 'build/io.js',
         indent: '  '
       }
     ]
