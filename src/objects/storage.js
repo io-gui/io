@@ -14,7 +14,7 @@ const parseHashes = function() {
 const getHashes = function() {
   hashes = parseHashes();
   for (let hash in hashes) {
-    if (nodes[hash] && nodes[hash].hash) {
+    if (nodes[hash]) {
       if (nodes[hash] !== '') {
         if (!isNaN(hashes[hash])) {
           nodes[hash].value = JSON.parse(hashes[hash]);
@@ -28,10 +28,10 @@ const getHashes = function() {
   }
 };
 
-const setHashes = function() {
+const setHashes = function(force) {
   let hashString = '';
   for (let node in nodes) {
-    if (nodes[node].hash && nodes[node].value !== undefined && nodes[node].value !== '') {
+    if ((nodes[node].hash || force) && nodes[node].value !== undefined && nodes[node].value !== '' && nodes[node].value !== nodes[node].defValue) {
       if (typeof nodes[node].value === 'string') {
         hashString += node + '=' + nodes[node].value + '&';
       } else {
@@ -40,6 +40,7 @@ const setHashes = function() {
     }
   }
   window.location.hash = hashString.slice(0, -1);
+  if (!window.location.hash) history.replaceState({}, document.title, ".");
 };
 
 window.addEventListener("hashchange", getHashes, false);
@@ -50,16 +51,18 @@ class IoStorageNode extends IoCore {
     return {
       key: String,
       value: undefined,
+      defValue: undefined,
       hash: Boolean,
     };
   }
   constructor(props, defValue) {
     super(props);
+    this.defValue = defValue;
     const hashValue = hashes[this.key];
-    if (this.hash && hashValue !== undefined) {
-      this.value = hashValue;
+    const localValue = localStorage.getItem(this.key);
+    if (hashValue !== undefined) {
+      this.value = JSON.parse(hashValue);
     } else {
-      const localValue = localStorage.getItem(this.key);
       if (localValue !== null && localValue !== undefined) {
         this.value = JSON.parse(localValue);
       } else {
@@ -68,14 +71,11 @@ class IoStorageNode extends IoCore {
     }
   }
   valueChanged() {
-    if (this.hash) {
-      setHashes();
+    setHashes();
+    if (this.value === null || this.value === undefined) {
+      localStorage.removeItem(this.key);
     } else {
-      if (this.value === null || this.value === undefined) {
-        localStorage.removeItem(this.key);
-      } else {
-        localStorage.setItem(this.key, JSON.stringify(this.value));
-      }
+      localStorage.setItem(this.key, JSON.stringify(this.value));
     }
   }
 }
@@ -86,7 +86,9 @@ export function IoStorage(key, defValue, hash) {
   if (!nodes[key]) {
     nodes[key] = new IoStorageNode({key: key, hash: hash}, defValue);
     nodes[key].binding = nodes[key].bind('value');
+    nodes[key].valueChanged();
   }
-  setHashes();
   return nodes[key].binding;
 }
+
+// export function IoStorage(key, defValue, hash) {}
