@@ -2720,6 +2720,7 @@ class IoTabs extends IoElement {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
+        font-style: italic;
         overflow: hidden;
       }
       :host > * {
@@ -2849,6 +2850,7 @@ class IoSelector extends IoElement {
       }
       :host > io-tabs {
         z-index: 2;
+        flex: 0 0 auto;
       }
       :host:not([vertical]) > io-tabs {
         margin: 0 var(--io-theme-spacing);

@@ -9,6 +9,7 @@ export class IoTabs extends IoElement {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
+        font-style: italic;
         overflow: hidden;
       }
       :host > * {
