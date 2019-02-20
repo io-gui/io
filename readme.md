@@ -5,6 +5,8 @@ It implements custom elements, virtual DOM, programmable templates, data binding
 
 For a quick start, read this document and check out included elements and examples.
 
+[Source](https://github.com/arodic/io)
+
 ### Defining New Classes ###
 
 To define a new class, extend `IoCore` or `IoElement` and call `Register()`.
