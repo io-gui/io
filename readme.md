@@ -1,4 +1,7 @@
-# Io GUI library for web applications #
+
+<img alt="IO UI Logo" src="./images/logo/io.svg" width="150px" style="margin: 1em 0 0 1em;">
+
+# UI library for web applications #
 
 Io library is designed to help you build data-driven web applications using native web technologies.
 It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design.
@@ -144,9 +147,9 @@ myNode.dispose();
 
 ### Simple Data-Flow ###
 
-On a fundamental level, data-flow in io is top down and GUI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement a different design where leaf elements have the ability to modify the application state directly via data binding. State changes are then communicated to the rest of the application automatically following few simple rules.
+On a fundamental level, data-flow in io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement a different design where leaf elements have the ability to modify the application state directly via data binding. State changes are then communicated to the rest of the application automatically following few simple rules.
 
-* By convention state tree is passed down the GUI tree as `value` property. This is not mandatory but it makes it easier to understand and debug the data-flow.
+* By convention state tree is passed down the UI tree as `value` property. This is not mandatory but it makes it easier to understand and debug the data-flow.
 
 * An element's value can be an `object` (object element) or a primitive data type such as `string`, `number` or `boolean` (leaf element).
 
@@ -166,4 +169,4 @@ That's it! Object elements will automatically listen to `object-mutated` event a
 | **`[prop]-set`** | Property set by user | `property`, `value`, `oldValue` |
 | **`object-mutated`** | Object mutated | `object`, `property`, `value`, `oldValue` |
 
-**Note:** If the application state changed externally (e.g. server push), `object-mutated` event is required for GUI update. Core application should also listen to `object-mutated` event from GUI and react accordingly. `object-mutated` event payload should specify which object and property mutated. Otherwise brute-force GUI update is performed.
+**Note:** If the application state changed externally (e.g. server push), `object-mutated` event is required for UI update. Core application should also listen to `object-mutated` event from UI and react accordingly. `object-mutated` event payload should specify which object and property mutated. Otherwise brute-force UI update is performed.
