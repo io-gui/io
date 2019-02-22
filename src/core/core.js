@@ -7,6 +7,9 @@ import {Protochain} from "./classes/protochain.js";
 export const IoCoreMixin = (superclass) => class extends superclass {
   constructor(initProps = {}) {
     super();
+
+    if (!this.constructor.prototype.__registered) this.constructor.Register();
+
     Object.defineProperty(this, '__bindings', {value: {}});
     Object.defineProperty(this, '__activeListeners', {value: {}});
     Object.defineProperty(this, '__observeQueue', {value: []});
@@ -301,10 +304,11 @@ IoCoreMixin.Register = function () {
     }
   }
 
+  Object.defineProperty(this.prototype, '__registered', {value: true});
+
   defineProperties(this.prototype);
 };
 
 export class IoCore extends IoCoreMixin(Object) {}
 
 IoCore.Register = IoCoreMixin.Register;
-IoCore.Register();

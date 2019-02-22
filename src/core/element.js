@@ -180,8 +180,6 @@ IoElement.Register = function() {
 
 };
 
-IoElement.Register();
-
 let ro;
 if (window.ResizeObserver !== undefined) {
   ro = new ResizeObserver(entries => {

@@ -16,7 +16,6 @@ To define a new class, extend `IoCore` or `IoElement` and call `Register()`.
 
 ```javascript
 class MyObject extends IoCore {}
-MyObject.Register();
 
 class MyElement extends IoElement {}
 MyElement.Register();
