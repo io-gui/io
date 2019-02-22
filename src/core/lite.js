@@ -79,6 +79,7 @@ const defineProperty = function(scope, prop, def) {
   const isPublic = prop.charAt(0) !== '_';
   const isEnumerable = !(def.enumerable === false);
   scope._properties[prop] = def.value;
+  // if (typeof scope[change] === 'function') scope[change] = scope[change].bind(scope);
   if (!scope.hasOwnProperty(prop)) { // TODO: test
     Object.defineProperty(scope, prop, {
       get: function() {
