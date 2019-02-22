@@ -39,7 +39,8 @@ const setHashes = function(force) {
       }
     }
   }
-  window.location.hash = hashString.slice(0, -1);
+  hashString = hashString.slice(0, -1);
+  window.location.hash = hashString;
   if (!window.location.hash) history.replaceState({}, document.title, ".");
 };
 
@@ -59,7 +60,8 @@ class IoStorageNode extends IoCore {
     super(props);
     this.defValue = defValue;
     const hashValue = hashes[this.key];
-    const localValue = localStorage.getItem(this.key);
+    const key = window.location.pathname + this.key;
+    const localValue = localStorage.getItem(key);
     if (hashValue !== undefined) {
       this.value = JSON.parse(hashValue);
     } else {
@@ -72,10 +74,11 @@ class IoStorageNode extends IoCore {
   }
   valueChanged() {
     setHashes();
+    const key = window.location.pathname + this.key;
     if (this.value === null || this.value === undefined) {
-      localStorage.removeItem(this.key);
+      localStorage.removeItem(key);
     } else {
-      localStorage.setItem(this.key, JSON.stringify(this.value));
+      localStorage.setItem(key, JSON.stringify(this.value));
     }
   }
 }
