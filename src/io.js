@@ -8,8 +8,6 @@ export {IoCoreMixin, IoCore} from "./core/core.js";
 export {IoElement, html, initStyle} from "./core/element.js";
 export {Binding} from "./core/classes/binding.js";
 
-export * from "./io-lite.js";
-
 export {IoArray} from "./elements/array.js";
 export {IoBoolean} from "./elements/boolean.js";
 export {IoButton} from "./elements/button.js";

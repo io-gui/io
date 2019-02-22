@@ -5,7 +5,6 @@ import "../lib/chai.js";
 
 import Core from "../tests/core/core.js"
 import Element from "../tests/core/element.js"
-import Lite from "../tests/core/lite.js"
 
 import Array from "../tests/elements/array.js"
 import Boolean from "../tests/elements/boolean.js"
@@ -37,7 +36,6 @@ function runTests() {
   if (!testCompleted) {
     new Core().run();
     new Element().run();
-    new Lite().run();
     new Array().run();
     new Boolean().run();
     new Button().run();

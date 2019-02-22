@@ -62,6 +62,9 @@ export class IoTabs extends IoElement {
         border-right-color: var(--io-theme-content-bg);
         background-image: none;
       }
+      :host > io-option {
+        font-style: normal;
+      }
       :host > io-button {
         letter-spacing: 0.145em;
         font-weight: 500;
