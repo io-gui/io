@@ -22,7 +22,21 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     Object.defineProperty(this, '__propListeners', {value: new Listeners()});
     this.__propListeners.setListeners(initProps);
 
+    // TODO: test
+    // This triggers change events for object values initialized from type constructor.
+    for (var p in this.__properties) {
+      if (typeof this.__properties[p].value === 'object' && this.__properties[p].value) {
+        // TODO: optimize and fix issues inherited from setProperties
+        const oldValue = undefined;
+        const value = this.__properties[p].value;
+        this.queue(this.__properties[p].change, p, value, oldValue);
+        if (this.__properties[p].change) this.queue(this.__properties[p].change, p, value, oldValue);
+        this.queue(p + 'Changed', p, value, oldValue);
+      }
+    }
+
     this.setProperties(initProps);
+
 
     if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed', {detail: {}});
 
