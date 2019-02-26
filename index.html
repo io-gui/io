@@ -77,19 +77,9 @@
     import "./tests/test.js";
     import "./lib/md-view.js";
 
-    import {IoBranch, IoLeaf} from "./src/objects/test.js";
-
     export class IoMainPage extends IoElement {
       constructor(props) {
         super(props);
-
-        const test = new IoBranch();
-
-        // setTimeout(() => {
-        //   test.subTest = new IoLeaf();
-        //   console.log(test.subTest.value);
-        // }, 400)
-
         this.template([
           ['io-selector', {selected: $('page', 0, true), elements: [
             ['md-view', {label: 'About', path :'./readme.md'}],

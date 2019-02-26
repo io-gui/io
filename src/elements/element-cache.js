@@ -41,7 +41,6 @@ export class IoElementCache extends IoElement {
     delete this._cache;
   }
   changed() {
-    console.log('asd');
     if (!this.elements[this.selected]) return;
     if ((this.precache || this.cache) && this._cache[this.selected]) {
       this.innerHTML = '';

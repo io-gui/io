@@ -1,3 +1,5 @@
+// TODO: 
+
 import {IoCore} from "../io-core.js";
 
 export class IoLeaf extends IoCore {
@@ -30,5 +32,3 @@ export class IoBranch extends IoCore {
     console.log('a', this.subTest.value);
   }
 }
-
-IoBranch.Register();

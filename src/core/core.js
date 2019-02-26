@@ -25,7 +25,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.setProperties(initProps);
 
     // TODO: test
-    // TODO: move to setProeprties
+    // TODO: move to setProperties
     // This triggers change events for object values initialized from type constructor.
     for (var p in this.__properties) {
       if (typeof this.__properties[p].value === 'object' && this.__properties[p].value) {
@@ -134,17 +134,15 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
     this.queueDispatch();
   }
-  // TODO: WIP concept
+  // TODO: test extensively
   mapProperties(nodes) {
     for (var n in nodes) {
       const properties = nodes[n];
-      this.addEventListener(n+'-changed', (event) => {
+      this.addEventListener(n + '-changed', (event) => {
         const oldValue = event.detail.oldValue;
         const value = event.detail.value;
-        oldValue.dispose();
-        for (let p in properties) {
-          value[p] = properties[p];
-        }
+        if (oldValue) oldValue.dispose();
+        value.setProperties(properties);
       })
     }
   }
@@ -152,10 +150,10 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     for (let i = this.__objectProps.length; i--;) {
       const prop = this.__objectProps[i];
       if (this.__properties[prop].value === event.detail.object) {
-        this.changed();
         // TODO: test payload
         if (this.__properties[prop].change) this[this.__properties[prop].change](event);
         if (this[prop + 'Changed']) this[prop + 'Changed'](event);
+        this.changed();
       }
     }
   }
@@ -301,10 +299,10 @@ export function defineProperties(prototype) {
           // TODO: test payload
           if (this.__properties[prop].change) this[this.__properties[prop].change](payload);
           if (this[change]) this[change](payload);
-          this.changed();
           // TODO: consider not dispatching always (only for binding)
           // TODO: test payload
           this.dispatchEvent(changeEvent, payload.detail, false);
+          this.changed();
         }
       },
       enumerable: isEnumerable && isPublic,
