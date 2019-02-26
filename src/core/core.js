@@ -11,7 +11,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
 
     Object.defineProperty(this, '__bindings', {value: {}});
     Object.defineProperty(this, '__activeListeners', {value: {}});
-    Object.defineProperty(this, '__changeQueue', {value: []});
+    Object.defineProperty(this, '__queue', {value: []});
 
     Object.defineProperty(this, '__properties', {value: this.__properties.clone()});
 
@@ -21,10 +21,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.__propListeners.setListeners(initProps);
 
     // This triggers change events for object values initialized from type constructor.
-    for (let p in this.__properties) {
-      if (typeof this.__properties[p].value === 'object' && this.__properties[p].value) {
-        this.queue(p, this.__properties[p].value, undefined);
-      }
+    for (let i = 0; i < this.__objectProps.length; i++) {
+      const p = this.__objectProps[i];
+      if (this.__properties[p].value) this.queue(p, this.__properties[p].value, undefined);
     }
 
     this.setProperties(initProps);
@@ -230,36 +229,52 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
   }
   queue(prop, value, oldValue) {
-    const i = this.__changeQueue.indexOf(prop);
+    const i = this.__queue.indexOf(prop);
     if (i === -1) {
-      this.__changeQueue.push(prop, {property: prop, value: value, oldValue: oldValue});
+      this.__queue.push(prop, {property: prop, value: value, oldValue: oldValue});
     } else {
-      this.__changeQueue[i + 1].value = value;
+      this.__queue[i + 1].value = value;
     }
   }
   queueDispatch() {
-    if (this.__changeQueue.length) {
-      for (let j = 0; j < this.__changeQueue.length; j += 2) {
-        const prop = this.__changeQueue[j];
-        const detail = this.__changeQueue[j + 1];
-        const payload = {detail: detail};
-        const customChange = this.__properties[prop].change;
-        const defaultChange = prop + 'Changed';
-        if (this[defaultChange]) this[defaultChange](payload);
-        if (customChange && this[customChange]) this[customChange](payload);
-        this.dispatchEvent(prop + '-changed', detail);
+    if (this.__queue.length) {
+      for (let j = 0; j < this.__queue.length; j += 2) {
+        const prop = this.__queue[j];
+        const payload = {detail: this.__queue[j + 1]};
+        if (this[prop + 'Changed']) this[prop + 'Changed'](payload);
+        this.dispatchEvent(prop + '-changed', payload.detail);
       }
       if (this.changed) this.changed();
-      this.__changeQueue.length = 0;
+      this.__queue.length = 0;
     }
   }
 };
 
-export function defineProperties(prototype) {
-  for (let prop in prototype.__properties) {
+IoCoreMixin.Register = function () {
+  Object.defineProperty(this.prototype, '__registered', {value: true});
+  Object.defineProperty(this.prototype, '__protochain', {value: []});
+
+  let proto = this.prototype;
+  while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
+    this.prototype.__protochain.push(proto); proto = proto.__proto__;
+  }
+
+  Object.defineProperty(this.prototype, '__properties', {value: new Properties(this.prototype.__protochain)});
+  Object.defineProperty(this.prototype, '__functions', {value: new Functions(this.prototype.__protochain)});
+  Object.defineProperty(this.prototype, '__protoListeners', {value: new Listeners(this.prototype.__protochain)});
+
+  // TODO: rewise
+  Object.defineProperty(this.prototype, '__objectProps', {value: []});
+  const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
+  for (let prop in this.prototype.__properties) {
+    let type = this.prototype.__properties[prop].type;
+    if (ignore.indexOf(type) == -1) this.prototype.__objectProps.push(prop);
+  }
+
+  for (let prop in this.prototype.__properties) {
     const isPublic = prop.charAt(0) !== '_';
-    const isEnumerable = !(prototype.__properties[prop].enumerable === false);
-    Object.defineProperty(prototype, prop, {
+    const isEnumerable = !(this.prototype.__properties[prop].enumerable === false);
+    Object.defineProperty(this.prototype, prop, {
       get: function() {
         return this.__properties[prop].value;
       },
@@ -283,34 +298,6 @@ export function defineProperties(prototype) {
       configurable: true,
     });
   }
-}
-
-IoCoreMixin.Register = function () {
-  Object.defineProperty(this.prototype, '__protochain', {value: []});
-
-  let proto = this.prototype;
-  while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
-    this.prototype.__protochain.push(proto);
-    proto = proto.__proto__;
-  }
-
-  Object.defineProperty(this.prototype, '__properties', {value: new Properties(this.prototype.__protochain)});
-  Object.defineProperty(this.prototype, '__functions', {value: new Functions(this.prototype.__protochain)});
-  Object.defineProperty(this.prototype, '__protoListeners', {value: new Listeners(this.prototype.__protochain)});
-
-  // TODO: rewise
-  Object.defineProperty(this.prototype, '__objectProps', {value: []});
-  const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
-  for (let prop in this.prototype.__properties) {
-    let type = this.prototype.__properties[prop].type;
-    if (ignore.indexOf(type) == -1) {
-      this.prototype.__objectProps.push(prop);
-    }
-  }
-
-  Object.defineProperty(this.prototype, '__registered', {value: true});
-
-  defineProperties(this.prototype);
 };
 
 export class IoCore extends IoCoreMixin(Object) {}
