@@ -11,8 +11,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
 
     Object.defineProperty(this, '__bindings', {value: {}});
     Object.defineProperty(this, '__activeListeners', {value: {}});
-    Object.defineProperty(this, '__observeQueue', {value: []});
-    Object.defineProperty(this, '__notifyQueue', {value: []});
+    Object.defineProperty(this, '__changeQueue', {value: []});
 
     Object.defineProperty(this, '__properties', {value: this.__properties.clone()});
 
@@ -21,24 +20,17 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     Object.defineProperty(this, '__propListeners', {value: new Listeners()});
     this.__propListeners.setListeners(initProps);
 
-    this.setProperties(initProps);
-
     // TODO: test
-    // TODO: move to setProperties
     // This triggers change events for object values initialized from type constructor.
     for (let p in this.__properties) {
       if (typeof this.__properties[p].value === 'object' && this.__properties[p].value) {
-        // TODO: optimize and fix issues inherited from setProperties
-        const oldValue = undefined;
-        const value = this.__properties[p].value;
-        this.queue(this.__properties[p].change, p, value, oldValue);
-        if (this.__properties[p].change) this.queue(this.__properties[p].change, p, value, oldValue);
-        this.queue(p + 'Changed', p, value, oldValue);
+        this.queue(p, this.__properties[p].value, undefined);
       }
     }
 
-    // TODO: test with differect element and object classes
-    if (superclass !== HTMLElement) this.connect();
+    this.setProperties(initProps);
+
+    if (superclass !== HTMLElement) this.connect(); // TODO: test
   }
   connect() {
     this.connectedCallback();
@@ -73,16 +65,14 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     return this.__bindings[prop];
   }
   set(prop, value) {
-    let oldValue = this[prop];
-    this[prop] = value;
-    if (oldValue !== value) {
+    if (this[prop] !== value) {
+      const oldValue = this[prop];
+      this[prop] = value;
       this.dispatchEvent(prop + '-set', {property: prop, value: value, oldValue: oldValue}, false);
     }
   }
   setProperties(props) {
-
     for (let p in props) {
-
       if (this.__properties[p] === undefined) continue;
 
       let oldBinding = this.__properties[p].binding;
@@ -103,24 +93,17 @@ export const IoCoreMixin = (superclass) => class extends superclass {
 
       if (value !== oldValue) {
         if (this.__properties[p].reflect) this.setAttribute(p, value);
-        this.queue(this.__properties[p].change, p, value, oldValue);
-        if (this.__properties[p].change) this.queue(this.__properties[p].change, p, value, oldValue);
-        // TODO: decouple change and notify queue // if (this[p + 'Changed'])
-        this.queue(p + 'Changed', p, value, oldValue);
+        this.queue(p, value, oldValue);
       }
-
       if (binding !== oldBinding) {
         if (binding) binding.setTarget(this, p);
         if (oldBinding) {
-          oldBinding.removeTarget(this, p);
-          // TODO: test extensively
-          // console.warn('Disconnect!', oldBinding);
+          oldBinding.removeTarget(this, p); // TODO: test extensively
         }
       }
     }
 
     this.className = props['className'] || '';
-
     if (props['style']) {
       for (let s in props['style']) {
         this.style[s] = props['style'][s];
@@ -128,9 +111,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
 
-    if (this.__observeQueue.indexOf('changed') === -1) {
-      this.__observeQueue.push('changed', {});
-    }
     this.queueDispatch();
   }
   // TODO: test extensively
@@ -140,21 +120,23 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       this.addEventListener(n + '-changed', (event) => {
         const oldValue = event.detail.oldValue;
         const value = event.detail.value;
-        if (oldValue) oldValue.dispose();
+        if (oldValue) oldValue.dispose(); // TODO: test
         value.setProperties(properties);
       });
     }
   }
   objectMutated(event) {
+    let mutated = false;
     for (let i = this.__objectProps.length; i--;) {
       const prop = this.__objectProps[i];
-      if (this.__properties[prop].value === event.detail.object) {
-        // TODO: test payload
-        if (this.__properties[prop].change) this[this.__properties[prop].change](event);
-        if (this[prop + 'Changed']) this[prop + 'Changed'](event);
-        this.changed();
+      const value = this.__properties[prop].value;
+      if (value === event.detail.object) {
+        this.queue(prop, value, value);
+        mutated = true;
       }
     }
+    // if (mutated)
+    this.queueDispatch();
   }
   connectedCallback() {
     this.__protoListeners.connect(this);
@@ -245,37 +227,34 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
   }
-  queue(change, prop, value, oldValue) {
-    // JavaScript is weird NaN != NaN
-    if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) {
-      return;
-    }
-    if (change && this[change]) {
-      if (this.__observeQueue.indexOf(change) === -1) {
-        this.__observeQueue.push(change, {detail: {property: prop, value: value, oldValue: oldValue}});
-      }
-    }
-    if (this.__notifyQueue.indexOf(prop + '-changed') === -1) {
-      this.__notifyQueue.push(prop + '-changed', {property: prop, value: value, oldValue: oldValue});
+  queue(prop, value, oldValue) {
+    const i = this.__changeQueue.indexOf(prop);
+    if (i === -1) {
+      this.__changeQueue.push(prop, {property: prop, value: value, oldValue: oldValue});
+    } else {
+      this.__changeQueue[i + 1].value = value;
     }
   }
   queueDispatch() {
-    // TODO: consider unifying observe and notify queue
-    for (let j = 0; j < this.__observeQueue.length; j+=2) {
-      this[this.__observeQueue[j]](this.__observeQueue[j+1]);
+    if (this.__changeQueue.length) {
+      for (let j = 0; j < this.__changeQueue.length; j += 2) {
+        const prop = this.__changeQueue[j];
+        const detail = this.__changeQueue[j + 1];
+        const payload = {detail: detail};
+        const customChange = this.__properties[prop].change;
+        const defaultChange = prop + 'Changed';
+        if (this[defaultChange]) this[defaultChange](payload);
+        if (customChange && this[customChange]) this[customChange](payload);
+        this.dispatchEvent(prop + '-changed', detail, false);
+      }
+      if (this.changed) this.changed();
+      this.__changeQueue.length = 0;
     }
-    for (let j = 0; j < this.__notifyQueue.length; j+=2) {
-      this.dispatchEvent(this.__notifyQueue[j], this.__notifyQueue[j+1]);
-    }
-    this.__observeQueue.length = 0;
-    this.__notifyQueue.length = 0;
   }
 };
 
 export function defineProperties(prototype) {
   for (let prop in prototype.__properties) {
-    const change = prop + 'Changed';
-    const changeEvent = prop + '-changed';
     const isPublic = prop.charAt(0) !== '_';
     const isEnumerable = !(prototype.__properties[prop].enumerable === false);
     Object.defineProperty(prototype, prop, {
@@ -294,14 +273,8 @@ export function defineProperties(prototype) {
         this.__properties[prop].value = value;
         if (this.__properties[prop].reflect) this.setAttribute(prop, this.__properties[prop].value);
         if (isPublic && this.__connected) {
-          const payload = {detail: {property: prop, value: value, oldValue: oldValue}};
-          // TODO: test payload
-          if (this.__properties[prop].change) this[this.__properties[prop].change](payload);
-          if (this[change]) this[change](payload);
-          // TODO: consider not dispatching always (only for binding)
-          // TODO: test payload
-          this.dispatchEvent(changeEvent, payload.detail, false);
-          this.changed();
+          this.queue(prop, value, oldValue);
+          this.queueDispatch();
         }
       },
       enumerable: isEnumerable && isPublic,

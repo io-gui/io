@@ -28,7 +28,7 @@ export class IoInspectorLink extends IoButton {
       }
     </style>`;
   }
-  changed() {
+  valueChanged() {
     let name = this.value.constructor.name;
     if (this.value.name) name += ' (' + this.value.name + ')';
     else if (this.value.label) name += ' (' + this.value.label + ')';
