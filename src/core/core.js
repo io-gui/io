@@ -22,7 +22,10 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     Object.defineProperty(this, '__propListeners', {value: new Listeners()});
     this.__propListeners.setListeners(initProps);
 
+    this.setProperties(initProps);
+
     // TODO: test
+    // TODO: move to setProeprties
     // This triggers change events for object values initialized from type constructor.
     for (var p in this.__properties) {
       if (typeof this.__properties[p].value === 'object' && this.__properties[p].value) {
@@ -34,11 +37,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         this.queue(p + 'Changed', p, value, oldValue);
       }
     }
-
-    this.setProperties(initProps);
-
-
-    if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed', {detail: {}});
 
     // TODO: test with differect element and object classes
     if (superclass !== HTMLElement) this.connect();
@@ -131,11 +129,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
 
-    // if (this.__observeQueue.length) {
-      if (this.__observeQueue.indexOf('changed') === -1) {
-        this.__observeQueue.push('changed', {});
-      }
-    // }
+    if (this.__observeQueue.indexOf('changed') === -1) {
+      this.__observeQueue.push('changed', {});
+    }
     this.queueDispatch();
   }
   objectMutated(event) {

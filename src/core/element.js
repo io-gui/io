@@ -104,7 +104,7 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
           // WARNING TODO: better property and listeners reset.
           // WARNING TODO: test property and listeners reset
           children[i].setProperties(vChildren[i].props);
-          children[i].queueDispatch();
+          // children[i].queueDispatch(); // TODO: test and remove. Redundant with setProperties()
           children[i].__propListeners.setListeners(vChildren[i].props);
           children[i].__propListeners.connect(children[i]);
         // Native HTML Elements
