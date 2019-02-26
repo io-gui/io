@@ -35,12 +35,14 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
 
+
     this.setProperties(initProps);
 
+    // TODO: why is this no longer needed?
+    // SetProperties already dispatches change above
+    // if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed', {detail: {}});
 
-    if (this.__observeQueue.indexOf('changed') === -1) this.__observeQueue.push('changed', {detail: {}});
-
-    // TODO: test with differect element and object classes
+    // TODO: test with differect element and object classes.
     if (superclass !== HTMLElement) this.connect();
   }
   connect() {
@@ -137,6 +139,20 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     // }
     this.queueDispatch();
+  }
+  // TODO: WIP concept
+  mapProperties(nodes) {
+    for (var n in nodes) {
+      const properties = nodes[n];
+      this.addEventListener(n+'-changed', (event) => {
+        const oldValue = event.detail.oldValue;
+        const value = event.detail.value;
+        oldValue.dispose();
+        for (let p in properties) {
+          value[p] = properties[p];
+        }
+      })
+    }
   }
   objectMutated(event) {
     for (let i = this.__objectProps.length; i--;) {
