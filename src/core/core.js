@@ -26,7 +26,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     // TODO: test
     // TODO: move to setProperties
     // This triggers change events for object values initialized from type constructor.
-    for (var p in this.__properties) {
+    for (let p in this.__properties) {
       if (typeof this.__properties[p].value === 'object' && this.__properties[p].value) {
         // TODO: optimize and fix issues inherited from setProperties
         const oldValue = undefined;
@@ -135,14 +135,14 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   }
   // TODO: test extensively
   mapProperties(nodes) {
-    for (var n in nodes) {
+    for (let n in nodes) {
       const properties = nodes[n];
       this.addEventListener(n + '-changed', (event) => {
         const oldValue = event.detail.oldValue;
         const value = event.detail.value;
         if (oldValue) oldValue.dispose();
         value.setProperties(properties);
-      })
+      });
     }
   }
   objectMutated(event) {
