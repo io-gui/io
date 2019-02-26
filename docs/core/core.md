@@ -14,7 +14,7 @@ Core classes for all io objects and elements.
 
 **`[propertyName]Changed()`** Change handler function. Called when specific property changes.
 
-**`objectMutated()`** Change handler for object property mutation. Triggered by `object-mutated` event on window if specified object is a property value.
+**`[propertyName]Mutated()`** Change handler for object property mutation. Triggered by `object-mutated` event on window if specified object is a property value.
 
 **`connect()`** Triggers connectedCallback() for io objects (non-elements).
 

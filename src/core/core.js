@@ -40,24 +40,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     event.preventDefault();
   }
   changed() {}
-  dispose() {
-    // TODO: test dispose!
-    // TODO: dispose bindings correctly
-    this.__protoListeners.disconnect(this);
-    this.__propListeners.disconnect(this);
-    this.removeListeners();
-    for (let p in this.__properties) {
-      if (this.__properties[p].binding) {
-        this.__properties[p].binding.removeTarget(this, p);
-        // TODO: this breaks binding for transplanted elements.
-        // TODO: possible memory leak!
-        delete this.__properties[p].binding;
-      }
-    }
-    // TODO implement properly and test on both elements and objects
-    // for (let l in this.__listeners) this.__listeners[l].lenght = 0;
-    // for (let p in this.__properties) delete this.__properties[p];
-  }
   bind(prop) {
     this.__bindings[prop] = this.__bindings[prop] || new Binding(this, prop);
     return this.__bindings[prop];
@@ -127,18 +109,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       });
     }
   }
-  objectMutated(event) {
-    let mutated = false;
-    for (let i = this.__objectProps.length; i--;) {
-      const prop = this.__objectProps[i];
-      const value = this.__properties[prop].value;
-      if (value === event.detail.object) {
-        this.queue(prop, value, value);
-        mutated = true;
-      }
-    }
-    if (mutated) this.queueDispatch();
-  }
   connectedCallback() {
     this.__protoListeners.connect(this);
     this.__propListeners.connect(this);
@@ -150,7 +120,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
     if (this.__objectProps.length) {
-      window.addEventListener('object-mutated', this.objectMutated);
+      window.addEventListener('object-mutated', this._onObjectMutation);
     }
   }
   disconnectedCallback() {
@@ -166,30 +136,14 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
     if (this.__objectProps.length) {
-      window.removeEventListener('object-mutated', this.objectMutated);
+      window.removeEventListener('object-mutated', this._onObjectMutation);
     }
   }
-  addEventListener(type, listener) {
-    this.__activeListeners[type] = this.__activeListeners[type] || [];
-    let i = this.__activeListeners[type].indexOf(listener);
-    if (i === - 1) {
-      if (superclass === HTMLElement) HTMLElement.prototype.addEventListener.call(this, type, listener);
-      this.__activeListeners[type].push(listener);
-    }
-  }
-  hasEventListener(type, listener) {
-    return this.__activeListeners[type] !== undefined && this.__activeListeners[type].indexOf(listener) !== - 1;
-  }
-  removeEventListener(type, listener) {
-    if (this.__activeListeners[type] !== undefined) {
-      let i = this.__activeListeners[type].indexOf(listener);
-      if (i !== - 1) {
-        if (superclass === HTMLElement) HTMLElement.prototype.removeEventListener.call(this, type, listener);
-        this.__activeListeners[type].splice(i, 1);
-      }
-    }
-  }
-  removeListeners() {
+  dispose() {
+    // TODO: test dispose!
+    // TODO: dispose bindings correctly
+    this.__protoListeners.disconnect(this);
+    this.__propListeners.disconnect(this);
     // TODO: test
     for (let i in this.__activeListeners) {
       for (let j = this.__activeListeners[i].length; j--;) {
@@ -197,33 +151,43 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         this.__activeListeners[i].splice(j, 1);
       }
     }
+    for (let p in this.__properties) {
+      if (this.__properties[p].binding) {
+        this.__properties[p].binding.removeTarget(this, p);
+        // TODO: this breaks binding for transplanted elements.
+        // TODO: possible memory leak!
+        delete this.__properties[p].binding;
+      }
+    }
+    for (let l in this.__listeners) this.__listeners[l].lenght = 0; // TODO: test
+    for (let p in this.__properties) delete this.__properties[p]; // TODO: test
+  }
+  addEventListener(type, listener) {
+    this.__activeListeners[type] = this.__activeListeners[type] || [];
+    const i = this.__activeListeners[type].indexOf(listener);
+    if (i === - 1) {
+      if (superclass === HTMLElement) HTMLElement.prototype.addEventListener.call(this, type, listener);
+      this.__activeListeners[type].push(listener);
+    }
+  }
+  removeEventListener(type, listener) {
+    if (this.__activeListeners[type] !== undefined) {
+      const i = this.__activeListeners[type].indexOf(listener);
+      if (i !== - 1) {
+        if (superclass === HTMLElement) HTMLElement.prototype.removeEventListener.call(this, type, listener);
+        this.__activeListeners[type].splice(i, 1);
+      }
+    }
   }
   dispatchEvent(type, detail = {}, bubbles = true, src = this) {
     if (src instanceof HTMLElement || src === window) {
-      HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {
-        type: type,
-        detail: detail,
-        bubbles: bubbles,
-        composed: true
-      }));
+      HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {type: type, detail: detail, bubbles: bubbles, composed: true}));
     } else {
-      // TODO: fix path/src argument
-      let path = [src];
       if (this.__activeListeners[type] !== undefined) {
-        let array = this.__activeListeners[type].slice(0);
-        for (let i = 0, l = array.length; i < l; i ++) {
-          path = path || [this];
-          const payload = {detail: detail, target: this, bubbles: bubbles, path: path};
-          array[i].call(this, payload);
-          // TODO: test bubbling
-          if (bubbles) {
-            let parent = this.parent;
-            while (parent) {
-              path.push(parent);
-              parent.dispatchEvent(type, detail, true, path);
-              parent = parent.parent;
-            }
-          }
+        const array = this.__activeListeners[type].slice(0);
+        for (let i = 0; i < array.length; i ++) {
+          array[i].call(this, {detail: detail, target: this, path: [this]});
+          // TODO: consider bubbling
         }
       }
     }
@@ -246,6 +210,16 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
       if (this.changed) this.changed();
       this.__queue.length = 0;
+    }
+  }
+  _onObjectMutation(event) {
+    for (let i = this.__objectProps.length; i--;) {
+      const prop = this.__objectProps[i];
+      const value = this.__properties[prop].value;
+      if (value === event.detail.object) {
+        if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
+        return;
+      };
     }
   }
 };
