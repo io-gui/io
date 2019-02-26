@@ -5,7 +5,6 @@ export class TestNode extends IoCore {
     return {
       prop0: {
         type: String,
-        change: 'handler0'
       },
       prop1: {
         value: false
@@ -14,7 +13,6 @@ export class TestNode extends IoCore {
       prop3: Number,
       // Internal counters
       _changedCounter: 0,
-      _handler0Counter: 0,
       _handler1Counter: 0,
       _handler2Counter: 0,
       _customHandlerCounter: 0,
@@ -33,11 +31,9 @@ export class TestNode extends IoCore {
     this.prop3 = 0;
     this._changedCounter = 0;
     this._prop1ChangedCounter = 0;
-    this._handler0Counter = 0;
     this._handler1Counter = 0;
     this._handler2Counter = 0;
     this._customHandlerCounter = 0;
-    this._handler0Payload = null;
     this._handler1Payload = null;
     this._handler2Payload = null;
     this._customHandlerPayload = null;
@@ -48,10 +44,6 @@ export class TestNode extends IoCore {
   prop1Changed(event) {
     this._prop1ChangedCounter++;
     this._prop1ChangedPayload = event;
-  }
-  handler0(event) {
-    this._handler0Counter++;
-    this._handler0Payload = event;
   }
   handler1(event) {
     this._handler1Counter++;
@@ -128,7 +120,6 @@ export default class {
           this.node.prop0 = 'test';
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler0Counter).to.equal(1);
           chai.expect(this.node._handler1Counter).to.equal(0);
           chai.expect(this.node._handler2Counter).to.equal(0);
           chai.expect(this._handler3Counter).to.equal(0);
@@ -137,7 +128,6 @@ export default class {
           this.node.prop1 = true;
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(1);
-          chai.expect(this.node._handler0Counter).to.equal(0);
           chai.expect(this.node._handler1Counter).to.equal(1);
           chai.expect(this.node._handler2Counter).to.equal(0);
           chai.expect(this._handler3Counter).to.equal(0);
@@ -146,7 +136,6 @@ export default class {
           this.node.dispatchEvent('custom-event');
           chai.expect(this.node._changedCounter).to.equal(0);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler0Counter).to.equal(0);
           chai.expect(this.node._handler1Counter).to.equal(0);
           chai.expect(this.node._handler2Counter).to.equal(0);
           chai.expect(this._handler3Counter).to.equal(0);
@@ -155,7 +144,6 @@ export default class {
           this.node.prop2 = 1;
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler0Counter).to.equal(0);
           chai.expect(this.node._handler1Counter).to.equal(0);
           chai.expect(this.node._handler2Counter).to.equal(1);
           chai.expect(this._handler3Counter).to.equal(0);
@@ -164,7 +152,6 @@ export default class {
           this.node.prop3 = 1;
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler0Counter).to.equal(0);
           chai.expect(this.node._handler1Counter).to.equal(0);
           chai.expect(this.node._handler2Counter).to.equal(0);
           chai.expect(this._handler3Counter).to.equal(1);
@@ -180,7 +167,6 @@ export default class {
           });
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(1);
-          chai.expect(this.node._handler0Counter).to.equal(1);
           chai.expect(this.node._handler1Counter).to.equal(1);
           chai.expect(this.node._handler2Counter).to.equal(1);
           chai.expect(this._handler3Counter).to.equal(1);
@@ -196,7 +182,6 @@ export default class {
           this.node.dispatchEvent('custom-event');
           chai.expect(this.node._changedCounter).to.equal(0);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler0Counter).to.equal(0);
           chai.expect(this.node._handler1Counter).to.equal(0);
           chai.expect(this.node._handler2Counter).to.equal(0);
           chai.expect(this._handler3Counter).to.equal(0);
@@ -216,9 +201,6 @@ export default class {
           chai.expect(this.node._prop1ChangedPayload.detail.property).to.equal('prop1');
           chai.expect(this.node._prop1ChangedPayload.detail.oldValue).to.equal(false);
           chai.expect(this.node._prop1ChangedPayload.detail.value).to.equal(true);
-          chai.expect(this.node._handler0Payload.detail.property).to.equal('prop0');
-          chai.expect(this.node._handler0Payload.detail.oldValue).to.equal('');
-          chai.expect(this.node._handler0Payload.detail.value).to.equal('test');
           chai.expect(this.node._handler1Payload.detail.property).to.equal('prop1');
           chai.expect(this.node._handler1Payload.detail.oldValue).to.equal(false);
           chai.expect(this.node._handler1Payload.detail.value).to.equal(true);
@@ -234,9 +216,6 @@ export default class {
             'prop2': 2,
             'prop3': 2,
           });
-          chai.expect(this.node._handler0Payload.detail.property).to.equal('prop0');
-          chai.expect(this.node._handler0Payload.detail.oldValue).to.equal('');
-          chai.expect(this.node._handler0Payload.detail.value).to.equal('test');
           chai.expect(this.node._prop1ChangedPayload.detail.property).to.equal('prop1');
           chai.expect(this.node._prop1ChangedPayload.detail.oldValue).to.equal(false);
           chai.expect(this.node._prop1ChangedPayload.detail.value).to.equal(true);

@@ -49,7 +49,7 @@ export class IoMenuOptions extends IoElement {
       'focusin': '_onFocus',
     };
   }
-  optionsChanged(detail) {
+  optionsChanged() {
     const itemPosition = this.horizontal ? 'bottom' : 'right';
     this.template([this.options.map((elem, i) =>
       ['io-menu-item', {

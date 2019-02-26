@@ -20,7 +20,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     Object.defineProperty(this, '__propListeners', {value: new Listeners()});
     this.__propListeners.setListeners(initProps);
 
-    // TODO: test
     // This triggers change events for object values initialized from type constructor.
     for (let p in this.__properties) {
       if (typeof this.__properties[p].value === 'object' && this.__properties[p].value) {
@@ -72,7 +71,9 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
   }
   setProperties(props) {
+
     for (let p in props) {
+
       if (this.__properties[p] === undefined) continue;
 
       let oldBinding = this.__properties[p].binding;
@@ -95,6 +96,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         if (this.__properties[p].reflect) this.setAttribute(p, value);
         this.queue(p, value, oldValue);
       }
+
       if (binding !== oldBinding) {
         if (binding) binding.setTarget(this, p);
         if (oldBinding) {
@@ -104,6 +106,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
 
     this.className = props['className'] || '';
+
     if (props['style']) {
       for (let s in props['style']) {
         this.style[s] = props['style'][s];
@@ -135,8 +138,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         mutated = true;
       }
     }
-    // if (mutated)
-    this.queueDispatch();
+    if (mutated) this.queueDispatch();
   }
   connectedCallback() {
     this.__protoListeners.connect(this);
@@ -245,7 +247,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         const defaultChange = prop + 'Changed';
         if (this[defaultChange]) this[defaultChange](payload);
         if (customChange && this[customChange]) this[customChange](payload);
-        this.dispatchEvent(prop + '-changed', detail, false);
+        this.dispatchEvent(prop + '-changed', detail);
       }
       if (this.changed) this.changed();
       this.__changeQueue.length = 0;

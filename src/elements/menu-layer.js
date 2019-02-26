@@ -48,7 +48,6 @@ export class IoMenuLayer extends IoElement {
       expanded: {
         type: Boolean,
         reflect: true,
-        change: 'onScrollAnimateGroup'
       },
       $options: Array
     };
@@ -75,13 +74,13 @@ export class IoMenuLayer extends IoElement {
     this.$options.push(group);
     group.addEventListener('focusin', this.onMenuItemFocused);
     group.addEventListener('keydown', this.onKeydown);
-    group.addEventListener('expanded-changed', this.onExpandedChanged);
+    group.addEventListener('expanded-changed', this.onGroupExpandedChanged);
   }
   unregisterGroup(group) {
     this.$options.splice(this.$options.indexOf(group), 1);
     group.removeEventListener('focusin', this.onMenuItemFocused);
     group.removeEventListener('keydown', this.onKeydown);
-    group.removeEventListener('expanded-changed', this.onExpandedChanged);
+    group.removeEventListener('expanded-changed', this.onGroupExpandedChanged);
   }
   collapseAllGroups() {
     for (let i = this.$options.length; i--;) {
@@ -248,7 +247,7 @@ export class IoMenuLayer extends IoElement {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  onExpandedChanged(event) {
+  onGroupExpandedChanged(event) {
     const path = event.composedPath();
     if (path[0].expanded) this._setGroupPosition(path[0]);
     for (let i = this.$options.length; i--;) {
@@ -289,7 +288,7 @@ export class IoMenuLayer extends IoElement {
     group.style.left = group._x + 'px';
     group.style.top = group._y + 'px';
   }
-  onScrollAnimateGroup() {
+  expandedChanged() {
     if (!this.expanded) return;
     let group = this._hoveredGroup;
     if (group) {
@@ -308,7 +307,7 @@ export class IoMenuLayer extends IoElement {
         group.style.top = group._y + 'px';
       }
     }
-    requestAnimationFrame(this.onScrollAnimateGroup);
+    requestAnimationFrame(this.expandedChanged);
   }
 }
 

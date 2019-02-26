@@ -16,7 +16,6 @@ export class Functions extends Array {
       }
     }
   }
-  // Binds all functions to instance.
   bind(element) {
     for (let i = 0; i < this.length; i++) {
       element[this[i]] = element[this[i]].bind(element);

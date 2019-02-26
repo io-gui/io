@@ -30,7 +30,6 @@ export class Properties {
  {
    value: property value
    type: constructor of the value
-   change: neme of the function to be called when value changes
    reflect: reflect to HTML element attribute
    binding: binding object if bound (internal)
  }
@@ -48,7 +47,6 @@ export class Property {
     }
     this.value = propDef.value;
     this.type = propDef.type;
-    this.change = propDef.change;
     this.reflect = propDef.reflect;
     this.binding = propDef.binding;
     this.config = propDef.config;
@@ -58,7 +56,6 @@ export class Property {
   assign(propDef) {
     if (propDef.value !== undefined) this.value = propDef.value;
     if (propDef.type !== undefined) this.type = propDef.type;
-    if (propDef.change !== undefined) this.change = propDef.change;
     if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
     if (propDef.binding !== undefined) this.binding = propDef.binding;
     if (propDef.config !== undefined) this.config = propDef.config;

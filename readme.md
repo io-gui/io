@@ -41,13 +41,12 @@ You can define properties by value, type or configuration parameters:
 
 - **value** default value.
 - **type** constructor of value.
-- **change** function to call on value change.
 - **reflect** reflects to HTML attribute.
 - **enumerable** makes property enumerable.
 
 ### Change Handlers ###
 
-Certain handler functions will get called when properties change. All io objects call `.changed()` function by default. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. You can also specify custom handler functions with a property configuration parameter.
+Certain handler functions will get called when properties change. All io objects call `.changed()` function by default. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes.
 
 ### Listeners ###
 

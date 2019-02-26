@@ -8,19 +8,17 @@ export class TestElement extends IoElement {
       prop0: -1,
       prop1: {
         value: 'default',
-        change: 'handler1'
       },
       // Internal counters
       _changedCounter: 0,
       _prop1ChangedCounter: 0,
       _handler0Counter: 0,
-      _handler1Counter: 0,
-      _handler2Payload: null,
+      _handler1Payload: null,
     };
   }
   static get listeners() {
     return {
-      'prop0-changed': 'handler2',
+      'prop0-changed': 'handler1',
       'custom-event': 'customHandler',
     };
   }
@@ -31,11 +29,9 @@ export class TestElement extends IoElement {
     this._prop1ChangedCounter = 0;
     this._handler0Counter = 0;
     this._handler1Counter = 0;
-    this._handler2Counter = 0;
     this._customHandlerCounter = 0;
     this._handler0Payload = null;
     this._handler1Payload = null;
-    this._handler2Payload = null;
     this._customHandlerPayload = null;
   }
   constructor(initProps) {
@@ -58,10 +54,6 @@ export class TestElement extends IoElement {
   handler1(event) {
     this._handler1Counter++;
     this._handler1Payload = event;
-  }
-  handler2(event) {
-    this._handler2Counter++;
-    this._handler2Payload = event;
   }
   customHandler(event) {
     this._customHandlerCounter++;
@@ -121,7 +113,6 @@ export default class {
           this.element.prop0 = 1;
           this.element.prop1 = 'test';
           chai.expect(this.element._handler0Counter).to.equal(1);
-          chai.expect(this.element._handler1Counter).to.equal(1);
           chai.expect(this.element._changedCounter).to.equal(2);
           chai.expect(this._changedCounter).to.equal(1);
         });
@@ -131,7 +122,6 @@ export default class {
           this.element.prop0 = 2;
           this.element.prop1 = 'test2';
           chai.expect(this.element._handler0Counter).to.equal(0);
-          chai.expect(this.element._handler1Counter).to.equal(0);
           chai.expect(this.element._changedCounter).to.equal(0);
           chai.expect(this._changedCounter).to.equal(0);
           document.body.appendChild(this.element);
@@ -140,12 +130,12 @@ export default class {
           this.reset();
           this.element.prop0 = 1;
           this.element.prop0 = 0;
-          chai.expect(this.element._handler2Payload.path[0]).to.equal(this.element);
-          chai.expect(this.element._handler2Payload.detail.value).to.equal(0);
+          chai.expect(this.element._handler1Payload.path[0]).to.equal(this.element);
+          chai.expect(this.element._handler1Payload.detail.value).to.equal(0);
           this.element.$.subelement.prop0 = 2;
-          chai.expect(this.element._handler2Payload.path[0]).to.equal(this.element.$.subelement);
-          chai.expect(this.element._handler2Payload.detail.oldValue).to.equal(0);
-          chai.expect(this.element._handler2Payload.detail.value).to.equal(2);
+          chai.expect(this.element._handler1Payload.path[0]).to.equal(this.element.$.subelement);
+          chai.expect(this.element._handler1Payload.detail.oldValue).to.equal(0);
+          chai.expect(this.element._handler1Payload.detail.value).to.equal(2);
           this.element.dispatchEvent('custom-event', {data: 'io'});
           chai.expect(this.element._customHandlerPayload.detail.data).to.equal('io');
         });
