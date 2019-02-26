@@ -2,7 +2,6 @@ import {Binding} from "./classes/binding.js";
 import {Functions} from "./classes/functions.js";
 import {Listeners} from "./classes/listeners.js";
 import {Properties} from "./classes/properties.js";
-import {Protochain} from "./classes/protochain.js";
 
 export const IoCoreMixin = (superclass) => class extends superclass {
   constructor(initProps = {}) {
@@ -312,7 +311,14 @@ export function defineProperties(prototype) {
 }
 
 IoCoreMixin.Register = function () {
-  Object.defineProperty(this.prototype, '__protochain', {value: new Protochain(this.prototype)});
+  Object.defineProperty(this.prototype, '__protochain', {value: []});
+
+  let proto = this.prototype;
+  while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
+    this.prototype.__protochain.push(proto);
+    proto = proto.__proto__;
+  }
+
   Object.defineProperty(this.prototype, '__properties', {value: new Properties(this.prototype.__protochain)});
   Object.defineProperty(this.prototype, '__functions', {value: new Functions(this.prototype.__protochain)});
   Object.defineProperty(this.prototype, '__protoListeners', {value: new Listeners(this.prototype.__protochain)});
