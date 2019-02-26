@@ -93,7 +93,6 @@ export default class {
           chai.expect(this.node.bind).to.be.a('function');
           // Built-in property change handlers
           chai.expect(this.node.changed).to.be.a('function');
-          chai.expect(this.node.mutated).to.be.a('function');
           // Lifecycle functions
           chai.expect(this.node.connect).to.be.a('function');
           chai.expect(this.node.disconnect).to.be.a('function');
