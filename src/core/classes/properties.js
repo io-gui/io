@@ -41,7 +41,7 @@ export class Property {
     } else if (typeof propDef === 'function') {
       propDef = {type: propDef};
     } else if (propDef instanceof Array) {
-      propDef = {value: [...propDef]};
+      propDef = {type: Array, value: [...propDef]};
     } else if (typeof propDef !== 'object') {
       propDef = {value: propDef, type: propDef.constructor};
     }
@@ -64,6 +64,10 @@ export class Property {
   // Clones the property. If property value is objects it does one level deep object clone.
   clone() {
     const prop = new Property(this);
+
+    if (prop.type === Array && prop.value) {
+      prop.value = [...prop.value];
+    }
 
     // TODO: test
     if (prop.type === undefined && prop.value !== undefined && prop.value !== null) {

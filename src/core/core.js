@@ -4,6 +4,12 @@ import {Listeners} from "./classes/listeners.js";
 import {Properties} from "./classes/properties.js";
 
 export const IoCoreMixin = (superclass) => class extends superclass {
+  static get properties() {
+    return {};
+  }
+  get bindings() {
+    return;
+  }
   constructor(initProps = {}) {
     super();
 
@@ -13,17 +19,21 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     Object.defineProperty(this, '__activeListeners', {value: {}});
     Object.defineProperty(this, '__queue', {value: []});
 
-    Object.defineProperty(this, '__properties', {value: this.__properties.clone()});
-
     this.__functions.bind(this);
 
     Object.defineProperty(this, '__propListeners', {value: new Listeners()});
     this.__propListeners.setListeners(initProps);
 
+    Object.defineProperty(this, '__properties', {value: this.__properties.clone()});
+
     // This triggers change events for object values initialized from type constructor.
     for (let i = 0; i < this.__objectProps.length; i++) {
       const p = this.__objectProps[i];
       if (this.__properties[p].value) this.queue(p, this.__properties[p].value, undefined);
+    }
+
+    if (this.bindings) {
+      this._bindNodes(this.bindings);
     }
 
     this.setProperties(initProps);
@@ -98,14 +108,15 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.queueDispatch();
   }
   // TODO: test extensively
-  mapProperties(nodes) {
+  _bindNodes(nodes) {
     for (let n in nodes) {
       const properties = nodes[n];
+      this[n].setProperties(properties);
       this.addEventListener(n + '-changed', (event) => {
-        const oldValue = event.detail.oldValue;
-        const value = event.detail.value;
-        if (oldValue) oldValue.dispose(); // TODO: test
-        value.setProperties(properties);
+        if (event.detail.oldValue) {
+          event.detail.oldValue.dispose(); // TODO: test
+        }
+        event.detail.value.setProperties(properties);
       });
     }
   }
