@@ -219,7 +219,12 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         if (this[prop + 'Changed']) this[prop + 'Changed'](payload);
         this.dispatchEvent(prop + '-changed', payload.detail);
       }
-      if (this.changed) this.changed();
+      if (this.changed) {
+        this.changed();
+        if (superclass !== HTMLElement) {
+          this.dispatchEvent('object-mutated', {object: this}, null, window);
+        }
+      }
       this.__queue.length = 0;
     }
   }
