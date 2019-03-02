@@ -1460,7 +1460,7 @@ class IoStorageNode extends IoCore {
   }
   valueChanged() {
     setHashes();
-    const key = window.location.pathname + this.key;
+    const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
     if (this.value === null || this.value === undefined) {
       localStorage.removeItem(key);
     } else {
