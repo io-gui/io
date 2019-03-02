@@ -1,5 +1,6 @@
 // Creates a properties object with configurations inherited from protochain.
 // TODO: make test
+import {Binding} from "./binding.js";
 
 export class Properties {
   constructor(protochain) {
@@ -42,6 +43,8 @@ export class Property {
       propDef = {type: propDef};
     } else if (propDef instanceof Array) {
       propDef = {type: Array, value: [...propDef]};
+    } else if (propDef instanceof Binding) {
+      propDef = {binding: propDef, value: propDef.value};
     } else if (typeof propDef !== 'object') {
       propDef = {value: propDef, type: propDef.constructor};
     }

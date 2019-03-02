@@ -132,7 +132,6 @@ class Listeners {
 }
 
 // Creates a properties object with configurations inherited from protochain.
-// TODO: make test
 
 class Properties {
   constructor(protochain) {
@@ -175,6 +174,8 @@ class Property {
       propDef = {type: propDef};
     } else if (propDef instanceof Array) {
       propDef = {type: Array, value: [...propDef]};
+    } else if (propDef instanceof Binding) {
+      propDef = {binding: propDef, value: propDef.value};
     } else if (typeof propDef !== 'object') {
       propDef = {value: propDef, type: propDef.constructor};
     }

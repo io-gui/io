@@ -60,7 +60,7 @@ class IoStorageNode extends IoCore {
     super(props);
     this.defValue = defValue;
     const hashValue = hashes[this.key];
-    const key = window.location.pathname + this.key;
+    const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
     const localValue = localStorage.getItem(key);
     if (hashValue !== undefined) {
       this.value = JSON.parse(hashValue);
