@@ -11,6 +11,9 @@ export class Binding {
   get value() {
     return this.source[this.sourceProp];
   }
+  set value(value) {
+    this.source[this.sourceProp] = value;
+  }
   setSource() {
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
     for (let i = this.targets.length; i--;) {
