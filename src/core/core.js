@@ -231,7 +231,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
         this.changed();
         return;
-      };
+      }
     }
   }
 };
