@@ -1367,7 +1367,7 @@ class IoElementCache extends IoElement {
   }
   changed() {
     if (!this.elements[this.selected]) return;
-    if ((this.precache || this.cache) && !!this.elements[this.selected].cache && this._cache[this.selected]) {
+    if ((this.precache || this.cache) && (this.elements[this.selected].cache !== false) && this._cache[this.selected]) {
       this.innerHTML = '';
       this.appendChild(this._cache[this.selected]);
     } else {
