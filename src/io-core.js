@@ -5,4 +5,4 @@
 
  export {IoCoreMixin, IoCore} from "./core/core.js";
  export {IoElement, html, initStyle} from "./core/element.js";
- export {Binding} from "./core/classes/binding.js";
+ export {Binding} from "./core/binding.js";

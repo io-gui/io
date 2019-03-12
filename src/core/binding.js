@@ -1,3 +1,15 @@
+// TODO: Documentation and tests
+
+export class Bindings {
+  constructor(instance) {
+    Object.defineProperty(this, 'instance', {value: instance});
+  }
+  get(prop) {
+    this[prop] = this[prop] || new Binding(this.instance, prop);
+    return this[prop];
+  }
+}
+
 export class Binding {
   constructor(source, sourceProp) {
     this.source = source;

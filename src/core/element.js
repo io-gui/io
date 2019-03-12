@@ -1,5 +1,7 @@
 import {IoCoreMixin} from "../core/core.js";
-import {Listeners} from "../core/classes/listeners.js"; // TODO: refactor for native elements
+import {Listeners} from "./listeners.js";
+
+// TODO: Documentation and tests
 
 export class IoElement extends IoCoreMixin(HTMLElement) {
   static get properties() {
@@ -105,8 +107,8 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
           // WARNING TODO: test property and listeners reset
           children[i].setProperties(vChildren[i].props);
           // children[i].queueDispatch(); // TODO: test and remove. Redundant with setProperties()
-          children[i].__propListeners.setListeners(vChildren[i].props);
-          children[i].__propListeners.connect(children[i]);
+          children[i].__listeners.setPropListeners(vChildren[i].props, children[i]);
+          children[i].__listeners.connect();
         // Native HTML Elements
         } else {
           for (let prop in vChildren[i].props) {
@@ -119,8 +121,8 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
             else children[i][prop] = vChildren[i].props[prop];
           }
           // TODO: refactor for native elements
-          children[i].__propListeners.setListeners(vChildren[i].props);
-          children[i].__propListeners.connect(children[i]);
+          children[i].__listeners.setPropListeners(vChildren[i].props, children[i]);
+          children[i].__listeners.connect();
           ///
         }
       }
@@ -220,10 +222,10 @@ const constructElement = function(vDOMNode) {
    } else element[prop] = vDOMNode.props[prop];
  }
  /// TODO: refactor for native elements
- Object.defineProperty(element, '__propListeners', {value: new Listeners()});
- element.__propListeners.setListeners(vDOMNode.props);
- element.__propListeners.connect(element);
- ///
+ Object.defineProperty(element, '__listeners', {value: new Listeners({}, element)});
+ element.__listeners.setPropListeners(vDOMNode.props, element);
+ element.__listeners.connect();
+
  return element;
 };
 

@@ -1,10 +1,11 @@
 
 <img alt="IO UI Logo" src="./images/logo/io.svg" width="150px" style="margin: 1em 0 0 1em;">
 
-# UI library for web applications #
+# Experimental UI library for web applications #
 
 Io library is designed to help you build data-driven web applications using native web technologies.
 It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design.
+This library is an experiment with limited browser support and an API which is subject to change. Use at own risk!
 
 For a quick start, read this document and check out included elements and examples.
 
@@ -20,7 +21,7 @@ class MyObject extends IoCore {}
 class MyElement extends IoElement {}
 MyElement.Register();
 ```
-**Note:** Element name is registered as kebab-case `<my-element>`.
+**Note:** Custom elements are registered as kebab-case `<my-element>`.
 
 ### Properties ###
 
@@ -42,6 +43,7 @@ You can define properties by value, type or configuration parameters:
 - **value** default value.
 - **type** constructor of value.
 - **reflect** reflects to HTML attribute.
+- **binding** binding object.
 - **enumerable** makes property enumerable.
 
 ### Change Handlers ###
