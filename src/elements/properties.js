@@ -66,12 +66,12 @@ export class IoProperties extends IoElement {
     if (key !== null) {
       this.value[key] = event.detail.value;
       const detail = Object.assign({object: this.value, key: key}, event.detail);
-      this.dispatchEvent('object-mutated', detail, true); // TODO: test
-      // this.dispatchEvent('object-mutated', detail, false, window);
+      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
       this.dispatchEvent('value-set', detail, false);
     }
   }
-  valueChanged() {
+  // TODO: considet valueMutated() instead
+  changed() {
     const config = this._config;
     const elements = [];
     for (let c in config) {

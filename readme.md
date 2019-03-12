@@ -5,7 +5,7 @@
 
 Io library is designed to help you build data-driven web applications using native web technologies.
 It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design.
-This library is an experiment with limited browser support and an API which is subject to change. Use at own risk!
+This library is an experiment with limited browser support and an API which is subject to change. **Use at own risk!**
 
 For a quick start, read this document and check out included elements and examples.
 

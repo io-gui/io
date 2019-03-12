@@ -2,11 +2,18 @@
 
 export class Bindings {
   constructor(instance) {
-    Object.defineProperty(this, 'instance', {value: instance});
+    Object.defineProperty(this, 'instance', {value: instance, configurable: true});
   }
   get(prop) {
     this[prop] = this[prop] || new Binding(this.instance, prop);
     return this[prop];
+  }
+  dispose() {
+    for (let b in this) {
+      this[b].dispose();
+      delete this[b];
+    }
+    delete this.instance;
   }
 }
 
@@ -82,5 +89,9 @@ export class Binding {
       }
     }
   }
-  // TODO: dispose bindings correctly
+  dispose() {
+    for (let t in this.targets) {
+      console.log('TODO: Possible memory leak!', this.targets[t])
+    }
+  }
 }

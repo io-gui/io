@@ -3,7 +3,7 @@
 export class Queue extends Array {
   constructor(instance) {
     super();
-    Object.defineProperty(this, 'instance', {value: instance});
+    Object.defineProperty(this, 'instance', {value: instance, configurable: true});
   }
   queue(prop, value, oldValue) {
     const i = this.indexOf(prop);
@@ -22,13 +22,16 @@ export class Queue extends Array {
         if (instance[prop + 'Changed']) instance[prop + 'Changed'](payload);
         instance.dispatchEvent(prop + '-changed', payload.detail);
       }
-      if (instance.changed) {
-        instance.changed();
-        if (!(instance instanceof HTMLElement)) {
-          instance.dispatchEvent('object-mutated', {object: instance}, null, window);
-        }
+      instance.changed();
+      if (!(instance.isElement)) {
+        // Emit change ecent for non-elements (nodes)
+        instance.dispatchEvent('object-mutated', {object: instance}, null, window);
       }
       this.length = 0;
     }
+  }
+  dispose() {
+    this.length = 0;
+    delete this.instance;
   }
 }

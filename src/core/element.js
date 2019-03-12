@@ -72,11 +72,11 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
     while (children.length > vChildren.length) {
       const child = children[children.length - 1];
       let nodes = Array.from(child.querySelectorAll('*'));
+      host.removeChild(child);
       for (let i = nodes.length; i--;) {
         if (nodes[i].dispose) nodes[i].dispose();
       }
       if (child.dispose) child.dispose();
-      host.removeChild(child);
     }
     // create new elements after existing
     const frag = document.createDocumentFragment();
@@ -92,11 +92,11 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
         const oldElement = children[i];
         host.insertBefore(constructElement(vChildren[i]), oldElement);
         let nodes = Array.from(oldElement.querySelectorAll('*'));
+        host.removeChild(oldElement);
         for (let i = nodes.length; i--;) {
           if (nodes[i].dispose) nodes[i].dispose();
         }
         if (oldElement.dispose) oldElement.dispose();
-        host.removeChild(oldElement);
 
       // update existing elements
       } else {

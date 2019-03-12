@@ -16,10 +16,10 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     super();
     if (!this.constructor.prototype.__registered) this.constructor.Register();
 
+    Object.defineProperty(this, '__queue', {value: new Queue(this)});
+    Object.defineProperty(this, '__bindings', {value: new Bindings(this)});
     Object.defineProperty(this, '__properties', {value: this.__properties.clone(this)});
     Object.defineProperty(this, '__listeners', {value: this.__listeners.clone(this)});
-    Object.defineProperty(this, '__bindings', {value: new Bindings(this)});
-    Object.defineProperty(this, '__queue', {value: new Queue(this)});
 
     for (let i = 0; i < this.__functions.length; i++) {
       this[this.__functions[i]] = this[this.__functions[i]].bind(this);
@@ -27,15 +27,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
 
     this.__listeners.setPropListeners(initProps, this);
 
-    // This triggers change events for object values.
-    for (let i = 0; i < this.__objectProps.length; i++) {
-      const p = this.__objectProps[i];
-      this.queue(p, this.__properties[p].value, undefined);
-    }
-
-    if (this.bindings) {
-      this._bindNodes(this.bindings);
-    }
+    if (this.bindings) this.bindNodes(this.bindings);
 
     this.setProperties(initProps);
 
@@ -62,38 +54,16 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     }
   }
   setProperties(props) {
-
     for (let p in props) {
-
       if (this.__properties[p] === undefined) continue;
 
-      let oldBinding = this.__properties[p].binding;
-      let oldValue = this.__properties[p].value;
+      const oldBinding = this.__properties[p].binding;
+      const oldValue = this.__properties[p].value;
 
-      let binding;
-      let value;
+      this.__properties.set(p, props[p]);
 
-      if (props[p] instanceof Binding) {
-        binding = props[p];
-        value = props[p].source[props[p].sourceProp];
-      } else {
-        value = props[p];
-      }
-
-      this.__properties[p].binding = binding;
-      this.__properties[p].value = value;
-
-      if (value !== oldValue) {
-        if (this.__properties[p].reflect) this.setAttribute(p, value);
-        this.queue(p, value, oldValue);
-      }
-
-      if (binding !== oldBinding) {
-        if (binding) binding.setTarget(this, p);
-        if (oldBinding) {
-          oldBinding.removeTarget(this, p); // TODO: test extensively
-        }
-      }
+      const value = this.__properties[p].value;
+      if (value !== oldValue) this.queue(p, value, oldValue);
     }
 
     this.className = props['className'] || '';
@@ -108,7 +78,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.queueDispatch();
   }
   // TODO: test extensively
-  _bindNodes(nodes) {
+  bindNodes(nodes) {
     for (let n in nodes) {
       const properties = nodes[n];
       this[n].setProperties(properties);
@@ -118,12 +88,23 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       });
     }
   }
+  onObjectMutation(event) {
+    for (let i = this.__objectProps.length; i--;) {
+      const prop = this.__objectProps[i];
+      const value = this.__properties[prop].value;
+      if (value === event.detail.object) {
+        if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
+        this.changed();
+        return;
+      }
+    }
+  }
   connectedCallback() {
     this.__listeners.connect();
     this.__properties.connect();
     this.__connected = true;
     if (this.__objectProps.length) {
-      window.addEventListener('object-mutated', this._onObjectMutation);
+      window.addEventListener('object-mutated', this.onObjectMutation);
     }
     this.queueDispatch();
   }
@@ -131,12 +112,13 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     this.__listeners.disconnect();
     this.__properties.disconnect();
     this.__connected = false;
-
     if (this.__objectProps.length) {
-      window.removeEventListener('object-mutated', this._onObjectMutation);
+      window.removeEventListener('object-mutated', this.onObjectMutation);
     }
   }
   dispose() {
+    this.__queue.dispose();
+    this.__bindings.dispose();
     this.__listeners.dispose();
     this.__properties.dispose();
   }
@@ -155,17 +137,6 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   queueDispatch() {
     this.__queue.dispatch();
   }
-  _onObjectMutation(event) {
-    for (let i = this.__objectProps.length; i--;) {
-      const prop = this.__objectProps[i];
-      const value = this.__properties[prop].value;
-      if (value === event.detail.object) {
-        if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
-        this.changed();
-        return;
-      }
-    }
-  }
 };
 
 IoCoreMixin.Register = function () {
@@ -176,7 +147,9 @@ IoCoreMixin.Register = function () {
   while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
     protochain.push(proto); proto = proto.__proto__;
   }
+  Object.defineProperty(this.prototype, 'isElement', {value: proto.constructor === HTMLElement});
   Object.defineProperty(this.prototype, '__protochain', {value: protochain});
+
 
   Object.defineProperty(this.prototype, '__properties', {value: new Properties(this.prototype.__protochain)});
   Object.defineProperty(this.prototype, '__listeners', {value: new Listeners(this.prototype.__protochain)});
@@ -195,7 +168,6 @@ IoCoreMixin.Register = function () {
   }
   Object.defineProperty(this.prototype, '__functions', {value: functions});
 
-  // TODO: rewise
   Object.defineProperty(this.prototype, '__objectProps', {value: []});
   const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
   for (let prop in this.prototype.__properties) {

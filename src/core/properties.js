@@ -21,21 +21,37 @@ export class Properties {
   // Creates a clone of properties for an instance.
   clone(instance) {
     const properties = new Properties([], instance);
-    for (let prop in this) properties[prop] = this[prop].clone();
+    for (let prop in this) {
+      properties[prop] = this[prop].clone();
+      if (typeof properties[prop].value === 'object') {
+        instance.queue(prop, properties[prop].value, undefined);
+      }
+    }
     return properties;
   }
   get(prop) {
     return this[prop].value;
   }
   set(prop, value) {
-    if (value instanceof Binding) {
-      value.setTarget(this.instance, prop);
-      this[prop].binding = value;
+
+    let oldBinding = this[prop].binding;
+    let oldValue = this[prop].value;
+
+    let binding = (value instanceof Binding) ? value : null;
+
+    if (binding && oldBinding && binding !== oldBinding) {
+      oldBinding.removeTarget(this.instance, prop); // TODO: test extensively
+    }
+    if (binding) {
+      binding.setTarget(this.instance, prop);
+      this[prop].binding = binding;
       this[prop].value = value.source[value.sourceProp];
     } else {
       this[prop].value = value;
     }
-    if (this[prop].reflect) this.instance.setAttribute(prop, this[prop].value);
+
+    // if (value !== oldValue)
+    if (this[prop].reflect) this.instance.setAttribute(prop, value);
   }
   // TODO: test dispose and disconnect for memory leaks!!
   // TODO: dispose bindings properly
@@ -59,8 +75,8 @@ export class Properties {
         this[p].binding.removeTarget(this.instance, p);
         delete this[p].binding;
       }
+      delete this[p];
     }
-    for (let p in this) delete this[p];
   }
 }
 

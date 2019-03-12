@@ -91,7 +91,16 @@ export class IoDemo extends IoElement {
     };
   }
   numberChanged(event) {
+    // console.log(this.number)
     this.dispatchEvent('object-mutated', {object: this, key: 'number'}, false, window);
+  }
+  stringChanged(event) {
+    // console.log(this.string)
+    this.dispatchEvent('object-mutated', {object: this, key: 'string'}, false, window);
+  }
+  booleanChanged(event) {
+    // console.log(this.boolean)
+    this.dispatchEvent('object-mutated', {object: this, key: 'boolean'}, false, window);
   }
   setNumber(value) {
     this.number = value;
