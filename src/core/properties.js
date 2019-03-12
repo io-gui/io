@@ -1,4 +1,4 @@
-import {Binding} from "./binding.js";
+import {Binding} from "./bindings.js";
 
 // TODO: Documentation and tests
 
@@ -50,8 +50,7 @@ export class Properties {
       this[prop].value = value;
     }
 
-    // if (value !== oldValue)
-    if (this[prop].reflect) this.instance.setAttribute(prop, value);
+    if (value !== oldValue && this[prop].reflect) this.instance.setAttribute(prop, value);
   }
   // TODO: test dispose and disconnect for memory leaks!!
   // TODO: dispose bindings properly

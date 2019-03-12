@@ -6,7 +6,7 @@
 // core classes
 export {IoCoreMixin, IoCore} from "./core/core.js";
 export {IoElement, html, initStyle} from "./core/element.js";
-export {Binding} from "./core/binding.js";
+export {Bindings, Binding} from "./core/bindings.js";
 
 export {IoArray} from "./elements/array.js";
 export {IoBoolean} from "./elements/boolean.js";

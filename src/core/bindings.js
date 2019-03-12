@@ -91,7 +91,7 @@ export class Binding {
   }
   dispose() {
     for (let t in this.targets) {
-      console.log('TODO: Possible memory leak!', this.targets[t])
+      console.log('TODO: Possible memory leak!', this.targets[t]);
     }
   }
 }

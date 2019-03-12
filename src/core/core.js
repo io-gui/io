@@ -1,4 +1,4 @@
-import {Binding, Bindings} from "./binding.js";
+import {Bindings} from "./bindings.js";
 import {Listeners} from "./listeners.js";
 import {Properties} from "./properties.js";
 import {Queue} from "./queue.js";
@@ -56,12 +56,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
   setProperties(props) {
     for (let p in props) {
       if (this.__properties[p] === undefined) continue;
-
-      const oldBinding = this.__properties[p].binding;
       const oldValue = this.__properties[p].value;
-
       this.__properties.set(p, props[p]);
-
       const value = this.__properties[p].value;
       if (value !== oldValue) this.queue(p, value, oldValue);
     }
