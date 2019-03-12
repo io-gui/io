@@ -15,7 +15,7 @@ export class Listeners {
     for (let prop in this) listeners[prop] = this[prop];
     return listeners;
   }
-  setPropListeners(props, instance) {
+  setPropListeners(props) {
     for (let l in this.propListeners) delete this.propListeners[l];
     for (let l in props) {
       if (l.startsWith('on-')) {

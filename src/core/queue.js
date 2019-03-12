@@ -24,7 +24,7 @@ export class Queue extends Array {
       }
       if (instance.changed) {
         instance.changed();
-        if (!instance instanceof HTMLElement) {
+        if (!(instance instanceof HTMLElement)) {
           instance.dispatchEvent('object-mutated', {object: instance}, null, window);
         }
       }
