@@ -1,4 +1,4 @@
-import {IoCoreMixin} from "../core/core.js";
+import {IoCoreMixin} from "./core.js";
 import {Listeners} from "./listeners.js";
 
 // TODO: Documentation and tests

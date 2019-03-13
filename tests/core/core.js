@@ -73,6 +73,7 @@ export default class {
       this._handler3Payload = event;
     }
     this.node = new TestNode({'on-prop2-changed': 'handler2', 'on-prop3-changed': this.handler3});
+    this.node.connect(window);
   }
   reset() {
     this.node.reset();

@@ -30,14 +30,21 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     if (this.bindings) this.bindNodes(this.bindings);
 
     this.setProperties(initProps);
-
-    if (superclass !== HTMLElement) this.connect(); // TODO: test
   }
-  connect() {
-    this.connectedCallback();
+  connect(instance) {
+    this._instances = this._instances || [];
+    if (this._instances.indexOf(instance) === -1) {
+      this._instances.push(instance);
+      if (!this.__connected) this.connectedCallback();
+    }
   }
-  disconnect() {
-    this.disconnectedCallback();
+  disconnect(instance) {
+    if (this._instances.indexOf(instance) !== -1) {
+      this._instances.splice(this._instances.indexOf(instance), 1);
+    }
+    if (this._instances.length === 0 && this.__connected) {
+      this.disconnectedCallback();
+    }
   }
   preventDefault(event) {
     event.preventDefault();
@@ -143,7 +150,9 @@ IoCoreMixin.Register = function () {
   while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
     protochain.push(proto); proto = proto.__proto__;
   }
+  Object.defineProperty(this.prototype, 'isNode', {value: proto.constructor !== HTMLElement});
   Object.defineProperty(this.prototype, 'isElement', {value: proto.constructor === HTMLElement});
+
   Object.defineProperty(this.prototype, '__protochain', {value: protochain});
 
 

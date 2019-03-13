@@ -24,7 +24,11 @@ export class Properties {
     for (let prop in this) {
       properties[prop] = this[prop].clone();
       if (typeof properties[prop].value === 'object') {
-        instance.queue(prop, properties[prop].value, undefined);
+        const value = properties[prop].value;
+
+        if (value && value.isNode) value.connect(instance);
+
+        instance.queue(prop, value, undefined);
       }
     }
     return properties;
@@ -46,11 +50,20 @@ export class Properties {
       binding.setTarget(this.instance, prop);
       this[prop].binding = binding;
       this[prop].value = value.source[value.sourceProp];
+      value = value.source[value.sourceProp];
     } else {
       this[prop].value = value;
     }
 
-    if (value !== oldValue && this[prop].reflect) this.instance.setAttribute(prop, value);
+    if (value && value.isNode) {
+      value.connect(this.instance);
+    }
+
+    if (value !== oldValue && oldValue && oldValue.isNode) {
+      oldValue.disconnect(this.instance);
+    }
+
+    if (this[prop].reflect) this.instance.setAttribute(prop, value);
   }
   // TODO: test dispose and disconnect for memory leaks!!
   // TODO: dispose bindings properly
