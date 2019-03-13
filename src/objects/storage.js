@@ -89,6 +89,7 @@ export function IoStorage(key, defValue, hash) {
   if (!nodes[key]) {
     nodes[key] = new IoStorageNode({key: key, hash: hash}, defValue);
     nodes[key].binding = nodes[key].bind('value');
+    nodes[key].connect(window);
     nodes[key].valueChanged();
   }
   return nodes[key].binding;

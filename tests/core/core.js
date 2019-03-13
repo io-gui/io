@@ -172,7 +172,7 @@ export default class {
         });
         it('should not fire handler functions when disconnected', () => {
           this.reset();
-          this.node.disconnect();
+          this.node.disconnect(window);
           this.node.prop0 = 'test';
           this.node.prop1 = true;
           this.node.prop2 = 1;
@@ -184,7 +184,7 @@ export default class {
           chai.expect(this.node._handler2Counter).to.equal(0);
           chai.expect(this._handler3Counter).to.equal(0);
           chai.expect(this.node._customHandlerCounter).to.equal(0);
-          this.node.connect();
+          this.node.connect(window);
         });
         it('should dispatch correct event payloads to handlers', () => {
           this.reset();

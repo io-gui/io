@@ -168,10 +168,10 @@ export default class {
         it('should disconnect binding when IoCore node is disconnected', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.subnode.prop2).to.equal(Infinity);
-          this.element.subnode.disconnect();
+          this.element.subnode.disconnect(window);
           this.element.prop0 = 0;
           chai.expect(this.element.subnode.prop2).to.equal(Infinity);
-          this.element.subnode.connect();
+          this.element.subnode.connect(window);
           this.element.subnode.prop2 = 2;
           chai.expect(this.element.prop0).to.equal(2);
         });
