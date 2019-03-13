@@ -2,7 +2,6 @@
  * @author arodic / https://github.com/arodic
  */
 
-
 // core classes
 export {IoCoreMixin, IoCore} from "./core/core.js";
 export {IoElement, html, initStyle} from "./core/element.js";
