@@ -59,12 +59,19 @@ export class Binding {
   removeTarget(target, targetProp) {
     if (this.targetsMap.has(target)) {
       const targetProps = this.targetsMap.get(target);
-      const index = targetProps.indexOf(targetProp);
-      if (index !== -1) {
-        targetProps.splice(index, 1);
+      if (targetProp) {
+        const index = targetProps.indexOf(targetProp);
+        if (index !== -1) {
+          targetProps.splice(index, 1);
+        }
+        target.removeEventListener(targetProp + '-changed', this.updateSource);
+      } else {
+        for (let i = targetProps.length; i--;) {
+          target.removeEventListener(targetProps[i] + '-changed', this.updateSource);
+        }
+        targetProps.length = 0;
       }
       if (targetProps.length === 0) this.targets.splice(this.targets.indexOf(target), 1);
-      target.removeEventListener(targetProp + '-changed', this.updateSource);
     }
   }
   updateSource(event) {
@@ -91,7 +98,8 @@ export class Binding {
   }
   dispose() {
     for (let t in this.targets) {
-      console.log('TODO: Possible memory leak!', this.targets[t]);
+      this.removeTarget(this.targets[t]);
+      delete this.targets[t];
     }
   }
 }
