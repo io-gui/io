@@ -1,4 +1,4 @@
-import {IoCore} from "../core/core.js";
+import {IoNode} from "../core/node.js";
 
 const nodes = {};
 let hashes = {};
@@ -47,7 +47,7 @@ const setHashes = function(force) {
 window.addEventListener("hashchange", getHashes, false);
 getHashes();
 
-class IoStorageNode extends IoCore {
+class IoStorageNode extends IoNode {
   static get properties() {
     return {
       key: String,

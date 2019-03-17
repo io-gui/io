@@ -202,7 +202,3 @@ IoCoreMixin.Register = function () {
     });
   }
 };
-
-export class IoCore extends IoCoreMixin(Object) {}
-
-IoCore.Register = IoCoreMixin.Register;

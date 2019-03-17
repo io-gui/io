@@ -1,6 +1,6 @@
 ### `IoElement` `<io-element>` ###
 
-Core element classes for io elements. Extends `IoCoreMixin`.
+`IoCoreMixin` applied to an `HTMLElement` class and some extra DOM-related functions.
 
 ### Static Getters ###
 

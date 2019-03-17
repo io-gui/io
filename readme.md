@@ -5,18 +5,28 @@
 
 Io library is designed to help you build data-driven web applications using native web technologies.
 It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design.
-This library is an experiment with limited browser support and an API which is subject to change. **Use at own risk!**
+This library is an experiment with limited browser support, incomplete documentation, partial test coverage, and an API which is subject to change. **Use at own risk!**
 
 For a quick start, read this document and check out included elements and examples.
 
-[Source](https://github.com/arodic/io)
+[Source Code on GitHub](https://github.com/arodic/io)
+
+### Usage ###
+
+Io is only available in ES6 module form. You can import `io-core.js` for the most basic classes or `io.js` to include built-in element library.
+
+```html
+<script type="module">
+  import {IoNode, IoElement} from "[path_to_io]/build/io-core.js";
+</script>
+```
 
 ### Defining New Classes ###
 
-To define a new class, extend `IoCore` or `IoElement` and call `Register()`.
+To define a new class, extend `IoNode` or `IoElement` and call `Register()`.
 
 ```javascript
-class MyObject extends IoCore {}
+class MyObject extends IoNode {}
 
 class MyElement extends IoElement {}
 MyElement.Register();
@@ -38,21 +48,29 @@ static get properties() {
 }
 ```
 
-You can define properties by value, type or configuration parameters:
+You can define properties by value, type or configuration options such as: `type`, `value`, `reflect`, `binding` and `enumerable`. However, fully specified configuration options are optional since in most cases, default values are just fine. You can simply define a property by value or type. For example, following property configurations are effectively the same:
 
-- **value** default value.
-- **type** constructor of value.
-- **reflect** reflects to HTML attribute.
-- **binding** binding object.
-- **enumerable** makes property enumerable.
+```javascript
+  myProperty: {
+    type: Boolean,
+    value: false,
+    reflect: false,
+    binding: null,
+    enumerable: true
+  }
 
-### Change Handlers ###
+  myProperty: Boolean
 
-Certain handler functions will get called when properties change. All io objects call `.changed()` function by default. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes.
+  myProperty: false
+```
+
+### Change Handler Functions ###
+
+Certain handler functions will get called when properties change. All io objects call `.changed()` function by default. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. Furthermore, if property value is an object `[propName]Mutated()` function will be called immediately after object mutation (see [Simple Data-Flow](#simple-data-flow) about data-flow requirements).
 
 ### Listeners ###
 
-Very often elements need to setup default listeners at initialization. Io will set up listeners automatically if you specify them inside static `listeners()` getter.
+Very often elements need to setup and default listeners at initialization. Io will setup and dispose listeners automatically if you specify them inside static `listeners()` getter.
 
 ```javascript
 static get listeners() {
@@ -66,7 +84,7 @@ static get listeners() {
 
 You can define default element style inside `style()` getter.
 Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage.
-Template literal handler `html` is optional but recommended for correct syntax highlighting.
+Template literal handler `html` is optional but recommended for correct syntax highlighting in common editors.
 
 ```javascript
 static get style() {
@@ -82,7 +100,7 @@ static get style() {
 
 ### Programmable Templates ###
 
-This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` function to render DOM tree inside of your element. Instead of HTML, the template system uses programmable yet declarative-looking syntax of nested arrays. For example an instance of `<my-color>` element can be expressed like this:
+This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` function to render DOM tree. Instead of HTML, the template system uses programmable yet declarative-looking syntax of nested arrays. For example an instance of `<my-color>` element can be expressed like this:
 
 ```javascript
 ['my-color', {color: "tomato"}, "this is my color"]
@@ -136,7 +154,7 @@ this.template([
 ]);
 ```
 
-You can also use `this.bind()` outside template or bind to `IoCore` objects.
+You can also use `this.bind()` outside template or bind to `IoNode` objects.
 
 ```javascript
 let myNode = new MyNode({value: this.bind('value')});
@@ -145,21 +163,21 @@ myNode.dispose();
 
 **Note:** When object is no longer needed, call `dispose()` to prevent memory leakage. Elements will do this automatically when removed from the DOM.
 
+<a name="simple-data-flow"></a>
+
 ### Simple Data-Flow ###
 
-On a fundamental level, data-flow in io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement a different design where leaf elements have the ability to modify the application state directly via data binding. State changes are then communicated to the rest of the application automatically following few simple rules.
+On a fundamental level, data-flow in io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement a different design where certain elements have the ability to modify the application state. State changes are then communicated to the rest of the application automatically following few simple rules.
 
 * By convention state tree is passed down the UI tree as `value` property. This is not mandatory but it makes it easier to understand and debug the data-flow.
 
 * An element's value can be an `object` (object element) or a primitive data type such as `string`, `number` or `boolean` (leaf element).
 
-* User-editable leaf elements should have their values data-bound to their corresponding properties of the hosting object element and their `id` property should match the name of the property.
+* Leaf elements with user-editable values should communicate the value change to their parent object element. This can be achieved with a built-in function `this.set('value', value)` which emits a non-bubbling `value-set` event. See `IoBoolean` for example.
 
-* When a leaf element's value is changed by user action, it should be done with the following function: `this.set('value', value)`.
+* Object elements which are hosting editable leaf elements should listen to `value-set` event on editable leaf elements and dispatch `object-mutated` event on the window. See `IoProperties` for example.
 
-* Object elements which are hosting editable leaf elements should listen to `value-set` event and broadcast `object-mutated` event on the window.
-
-That's it! Object elements will automatically listen to `object-mutated` event and update if needed.
+That is all! Object elements will automatically listen to `object-mutated` event and update if needed.
 
 ### Events
 

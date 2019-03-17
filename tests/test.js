@@ -3,7 +3,7 @@ import {html, IoElement} from "../build/io.js";
 import "../lib/mocha.js";
 import "../lib/chai.js";
 
-import Core from "../tests/core/core.js"
+import Node from "../tests/core/node.js"
 import Element from "../tests/core/element.js"
 
 import Array from "../tests/elements/array.js"
@@ -34,7 +34,7 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    new Core().run();
+    new Node().run();
     new Element().run();
     new Array().run();
     new Boolean().run();

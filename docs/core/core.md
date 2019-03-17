@@ -1,4 +1,4 @@
-### `IoCoreMixin`, `IoCore` ###
+### `IoCoreMixin` ###
 
 Core classes for all io objects and elements.
 
