@@ -13,7 +13,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
     return;
   }
   constructor(initProps = {}) {
-    super();
+    super(initProps);
+
     if (!this.constructor.prototype.__registered) this.constructor.Register();
 
     Object.defineProperty(this, '__queue', {value: new Queue(this)});
@@ -78,6 +79,7 @@ export const IoCoreMixin = (superclass) => class extends superclass {
       }
     }
 
+    // if (this.__connected) this.queueDispatch();
     this.queueDispatch();
   }
   // TODO: test extensively
