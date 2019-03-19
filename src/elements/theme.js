@@ -9,6 +9,7 @@ export class IoTheme extends IoElement {
         --spacing: 3px;
         --padding: 3px;
         --border-radius: 2px;
+        --border-width: 1px;
         --border: 1px solid rgba(128, 128, 128, 0.25);
         --color: #000;
 

@@ -9,7 +9,7 @@ const db = window.firebase !== undefined ? window.firebase.firestore() : null;
 export class IoServiceLoader extends IoNode {
   static get properties() {
     return {
-      path: String,
+      path: 'service.js',
       serviceWorker: null,
       granted: window.Notification.permission === 'granted',
       subscription: IoStorage('io-notification-subscription'),
