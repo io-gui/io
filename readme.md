@@ -3,7 +3,7 @@
 
 # UI library for web applications #
 
-Io library is designed to help web developers build data-driven web applications using native web technologies.
+Io library is designed to help web developers build data-driven web applications using modern web technologies.
 It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design.
 This library is an experiment with limited browser support, incomplete documentation, partial test coverage, and design which is subject to change. **Use at own risk!**
 
@@ -11,30 +11,22 @@ For a quick start, read this document and check out included elements and exampl
 
 [Source Code on GitHub](https://github.com/arodic/io)
 
-### Usage ###
+## Usage ##
 
-Bundled io library can be imported as a module from `build/io-core.js` (core classes), `build/io-elements.js` (elements), or `build/io.js` to include all classes and elements. Alternatively, you can import specific elements and classes directly from `src/`.
+Bundled io library can be imported as a module from `build/io-core.js` (core classes), `build/io-elements.js` (elements), or `build/io.js` (all classes and elements). Alternatively, you can import specific elements and classes directly from `src/`.
 
-```html
-<script type="module">
-  import {IoNode, IoElement} from "[path_to_io]/build/io-core.js";
-</script>
+```javascript
+import {IoNode, IoElement} from "[path_to_io]/build/io-core.js";
 ```
 
 ### Creating a Simple Application ###
 
-First you, need to define your main application class in javascript.
+First, define your main application class in javascript and use `template()` function to add contents.
 
 ```javascript
 class MyApp extends IoElement {
-  static get properties() {
-    return {
-      title: ''
-    }
-  }
   changed() {
     this.template([
-      ['h1', this.title],
       ['p', 'Hello world!']
     ]);
   }
@@ -93,7 +85,7 @@ You can define properties by value, type or configuration options such as: `type
 
 ### Change Handler Functions ###
 
-Certain handler functions will get called when properties change. All io objects call `.changed()` function by default. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. Furthermore, if property value is an object `[propName]Mutated()` function will be called immediately after object mutation (see [Simple Data-Flow](#simple-data-flow) about data-flow requirements).
+Certain functions will get called when properties change. All io objects call `.changed()` function by default. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. Furthermore, if property value is an object `[propName]Mutated()` function will be called immediately after object mutation (see [data-flow](#simple-data-flow) requirements).
 
 ### Listeners ###
 
@@ -125,6 +117,7 @@ static get style() {
 }
 ```
 
+<a name="programmable-templates"></a>
 ### Programmable Templates ###
 
 This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` function to render DOM tree. Instead of HTML, the template system uses programmable yet declarative-looking syntax of nested arrays. For example an instance of `<my-color>` element can be expressed like this:
@@ -170,6 +163,7 @@ If a template property name is prefixed with `on-` it will be treated as a liste
 ['my-element', {'on-click': doSomethingFunction}],
 ```
 
+<a name="data-binding"></a>
 ### Data Biding ###
 
 This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
@@ -191,7 +185,6 @@ myNode.dispose();
 **Note:** When object is no longer needed, call `dispose()` to prevent memory leakage. Elements will do this automatically when removed from the DOM.
 
 <a name="simple-data-flow"></a>
-
 ### Simple Data-Flow ###
 
 On a fundamental level, data-flow in io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement a different design where certain elements have the ability to modify the application state. State changes are then communicated to the rest of the application automatically following few simple rules.
@@ -210,7 +203,7 @@ That is all! Object elements will automatically listen to `object-mutated` event
 
 | Event | Description | Detail |
 |:------:|:-----------:|:----------:|
-| **`[prop]-changed`** | Bound property changed | `property`, `value`, `oldValue` |
+| **`[prop]-changed`** | Property changed | `property`, `value`, `oldValue` |
 | **`[prop]-set`** | Property set by user | `property`, `value`, `oldValue` |
 | **`object-mutated`** | Object mutated | `object`, `property`, `value`, `oldValue` |
 

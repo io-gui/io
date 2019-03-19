@@ -80,18 +80,21 @@
       constructor(props) {
         super(props);
         this.template([
-          ['io-selector', {selected: $('page', 0, true), elements: [
+          ['io-selector', {precache: true, selected: $('page', 0, true), elements: [
             ['io-md-view', {label: 'About', path :'./readme.md'}],
-            ['io-selector', {label: 'Docs', vertical: true, selected: $('doc', 0), elements: [
+            ['io-selector', {label: 'Docs', precache: true, vertical: true, selected: $('doc', 0), elements: [
               ['io-md-view', {label: 'core', path :'./docs/core/core.md'}],
               ['io-md-view', {label: 'node', path :'./docs/core/node.md'}],
+              ['io-md-view', {label: 'storage', path :'./docs/core/storage.md'}],
               ['io-md-view', {label: 'element', path :'./docs/core/element.md'}],
               ['io-md-view', {label: 'array', path :'./docs/elements/array.md'}],
               ['io-md-view', {label: 'boolean', path :'./docs/elements/boolean.md'}],
               ['io-md-view', {label: 'button', path :'./docs/elements/button.md'}],
               ['io-md-view', {label: 'canvas', path :'./docs/elements/canvas.md'}],
               ['io-md-view', {label: 'collapsable', path :'./docs/elements/collapsable.md'}],
+              ['io-md-view', {label: 'element-cache', path :'./docs/elements/element-cache.md'}],
               ['io-md-view', {label: 'inspector', path :'./docs/elements/inspector.md'}],
+              ['io-md-view', {label: 'md-view', path :'./docs/elements/md-view.md'}],
               ['io-md-view', {label: 'menu', path :'./docs/elements/menu.md'}],
               ['io-md-view', {label: 'number', path :'./docs/elements/number.md'}],
               ['io-md-view', {label: 'object', path :'./docs/elements/object.md'}],
@@ -100,7 +103,7 @@
               ['io-md-view', {label: 'selector', path :'./docs/elements/selector.md'}],
               ['io-md-view', {label: 'slider', path :'./docs/elements/slider.md'}],
               ['io-md-view', {label: 'string', path :'./docs/elements/string.md'}],
-              ['io-md-view', {label: 'storage', path :'./docs/objects/storage.md'}],
+              ['io-md-view', {label: 'tabs', path :'./docs/elements/tabs.md'}],
             ]}],
             ['io-demo', {label: 'Demo'}],
             ['io-test', {label: 'Test'}],
