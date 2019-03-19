@@ -10,7 +10,7 @@ export class IoTheme extends IoElement {
         --padding: 3px;
         --border-radius: 2px;
         --border-width: 1px;
-        --border: 1px solid rgba(128, 128, 128, 0.25);
+        --border: var(--border-width) solid rgba(128, 128, 128, 0.25);
         --color: #000;
 
         --number-color: rgb(28, 0, 207);
