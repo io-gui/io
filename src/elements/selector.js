@@ -21,12 +21,12 @@ export class IoSelector extends IoElement {
       }
       :host:not([vertical]) > io-tabs {
         margin: 0 var(--io-theme-spacing);
-        margin-bottom: -2px;
+        margin-bottom: -1px;
       }
       :host[vertical] > io-tabs {
         flex: 0 0 auto;
         margin: var(--io-theme-spacing) 0;
-        margin-right: -2px;
+        margin-right: -1px;
       }
       :host[vertical] > io-tabs > io-button,
       :host[vertical] > io-tabs > io-button.io-selected {
