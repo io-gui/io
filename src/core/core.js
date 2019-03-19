@@ -28,7 +28,8 @@ export const IoCoreMixin = (superclass) => class extends superclass {
 
     this.__listeners.setPropListeners(initProps, this);
 
-    if (this.bindings) this.bindNodes(this.bindings);
+    // TODO: test and documentation
+    if (this.compose) this.applyCompose(this.compose);
 
     this.setProperties(initProps);
   }
@@ -78,12 +79,12 @@ export const IoCoreMixin = (superclass) => class extends superclass {
         this.style.setProperty(s, props['style'][s]);
       }
     }
-
+    // TODO: consider postpoining dispatch for unconnected elements.
     // if (this.__connected) this.queueDispatch();
     this.queueDispatch();
   }
   // TODO: test extensively
-  bindNodes(nodes) {
+  applyCompose(nodes) {
     for (let n in nodes) {
       const properties = nodes[n];
       this[n].setProperties(properties);

@@ -1,11 +1,11 @@
 
 <img alt="IO UI Logo" src="./images/logo/io.svg" width="150px" style="margin: 1em 0 0 1em;">
 
-# Experimental UI library for web applications #
+# UI library for web applications #
 
-Io library is designed to help you build data-driven web applications using native web technologies.
+Io library is designed to help web developers build data-driven web applications using native web technologies.
 It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design.
-This library is an experiment with limited browser support, incomplete documentation, partial test coverage, and an API which is subject to change. **Use at own risk!**
+This library is an experiment with limited browser support, incomplete documentation, partial test coverage, and design which is subject to change. **Use at own risk!**
 
 For a quick start, read this document and check out included elements and examples.
 
@@ -13,12 +13,39 @@ For a quick start, read this document and check out included elements and exampl
 
 ### Usage ###
 
-Io is only available in ES6 module form. You can import `io-core.js` for the most basic classes or `io.js` to include built-in element library.
+Bundled io library can be imported as a module from `build/io-core.js` (core classes), `build/io-elements.js` (elements), or `build/io.js` to include all classes and elements. Alternatively, you can import specific elements and classes directly from `src/`.
 
 ```html
 <script type="module">
   import {IoNode, IoElement} from "[path_to_io]/build/io-core.js";
 </script>
+```
+
+### Creating a Simple Application ###
+
+First you, need to define your main application class in javascript.
+
+```javascript
+class MyApp extends IoElement {
+  static get properties() {
+    return {
+      title: ''
+    }
+  }
+  changed() {
+    this.template([
+      ['h1', this.title],
+      ['p', 'Hello world!']
+    ]);
+  }
+}
+MyApp.Register();
+```
+
+Then, simply add the main-app element to you HTML page and you are done!
+
+```html
+<my-app></my-app>
 ```
 
 ### Defining New Classes ###

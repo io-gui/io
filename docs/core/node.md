@@ -1,3 +1,3 @@
-### `IoNode` ###
+# `IoNode` #
 
-`IoCoreMixin` applied to an `Object` class.
+`IoCoreMixin` applied to `Object` class.

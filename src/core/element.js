@@ -127,7 +127,6 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
         }
       }
     }
-
     for (let i = 0; i < vChildren.length; i++) {
       if (vChildren[i].props.id) {
         this.$[vChildren[i].props.id] = children[i];

@@ -1,10 +1,9 @@
-import {html, IoElement} from "../build/io.js";
-
-import "./marked.min.js";
+import {html, IoElement} from "../core/element.js";
+import "../../lib/marked.min.js";
 
 if (window.marked) window.marked.setOptions({sanitize: false});
 
-export class MdView extends IoElement {
+export class IoMdView extends IoElement {
   static get style() {
     return html`
       <style>
@@ -85,29 +84,15 @@ export class MdView extends IoElement {
     };
   }
   pathChanged() {
-    const req = new XMLHttpRequest();
     const scope = this;
-    function loaded() {
-      // TODO: WIP concept
-      // this.vars = {};
-      // let vars = this.responseText.match(/(?!\[comment\]: \<)([a-z]*)\> \(.*(?=\))/gi);
-      // if (vars) {
-      //   for (let i = 0; i < vars.length; i++) {
-      //     let v = vars[i].split('> (');
-      //     this.vars[v[0]] = v[1];
-      //   }
-      // }
-      // scope.template([
-      //   ['div', {id: 'content'}],
-      //   ['div', this.vars.date],
-      // ]);
-      // scope.$.content.innerHTML = marked(this.responseText);
-      if (window.marked) scope.innerHTML = window.marked(this.responseText);
-    }
-    req.addEventListener("load", loaded);
-    req.open("GET", this.path);
-    req.send();
+    fetch(this.path)
+    .then(function(response) {
+      return response.text();
+    })
+    .then(function(text) {
+      if (window.marked) scope.innerHTML = window.marked(text);
+    });
   }
 }
 
-MdView.Register();
+IoMdView.Register();

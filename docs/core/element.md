@@ -1,4 +1,4 @@
-### `IoElement` `<io-element>` ###
+# `IoElement` `<io-element>` #
 
 `IoCoreMixin` applied to an `HTMLElement` class and some extra DOM-related functions.
 
@@ -8,6 +8,6 @@
 
 ### Functions ###
 
-**`template()`** Generates virtual DOM from declarative-looking syntax of nested arrays. See readme.md for more info.
+**`template()`** Generates virtual DOM from nested arrays. See readme.md for more info.
 
-**`resized()`** Handler function called when element size changed.
+**`resized()`** Handler function called when element size changes.

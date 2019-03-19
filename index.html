@@ -3,14 +3,14 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>IO User Inteface Library</title>
+    <title>UI library for web applications</title>
 
-    <meta name="description" content="Io library is designed to help you build data-driven web applications using native web technologies." />
+    <meta name="description" content="Io library is designed to help web developers build data-driven web applications using native web technologies. It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design." />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <meta name="keywords" content="ui, io, ioui, user interface, library, javascript, web development" />
+    <meta name="keywords" content="ui, io, ioui, user interface, library, javascript, web development, webdev" />
 
-    <meta itemprop="name" content="IO User Inteface Library" />
-    <meta itemprop="description" content="IO User Inteface Library" />
+    <meta itemprop="name" content="UI library for web applications" />
+    <meta itemprop="description" content="UI library for web applications" />
     <meta itemprop="image" src="./images/logo/io-192.png" />
 
     <link rel="shortcut icon" href="./favicon.ico" />
@@ -29,34 +29,34 @@
     <meta name="msapplication-TileColor" content="#83a61e" />
 
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="application-name" content="IO User Inteface Library" />
+    <meta name="application-name" content="UI library for web applications" />
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="apple-mobile-web-app-title" content="IO User Inteface Library" />
+    <meta name="apple-mobile-web-app-title" content="UI library for web applications" />
     <link rel="apple-touch-icon" href="./images/logo/io-152x152.png" />
 
     <meta name="msapplication-TileImage" content="./images/logo/io-144-precomposed.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="arodic" />
-    <meta name="twitter:title" content="IO User Inteface Library" />
+    <meta name="twitter:title" content="UI library for web applications" />
     <meta name="twitter:creator" content="arodic" />
 
     <meta name="twitter:image:src" content="./images/logo/io-192x192.png" />
     <meta name="twitter:domain" content="akirodic.com" />
 
-    <meta property="og:title" content="IO User Inteface Library" />
+    <meta property="og:title" content="UI library for web applications" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="./images/logo/io-192x192.png" />
-    <meta property="og:site_name" content="IO User Inteface Library" />
-    <meta property="og:description" content="IO User Inteface Library" />
+    <meta property="og:site_name" content="UI library for web applications" />
+    <meta property="og:description" content="UI library for web applications" />
     <meta property="og:locale" content="en_US" />
 
     <style>
       body {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        padding: 0.5em;
+        padding: 0.5em 0.25em;
         color: #4d4d4d;
         background: #f5f5f5;
         -webkit-font-smoothing: antialiased;
@@ -75,33 +75,32 @@
     import "./demo/demo.js";
     import "./demo/todomvc/todo-app.js";
     import "./tests/test.js";
-    import "./lib/md-view.js";
 
     export class IoMainPage extends IoElement {
       constructor(props) {
         super(props);
         this.template([
           ['io-selector', {selected: $('page', 0, true), elements: [
-            ['md-view', {label: 'About', path :'./readme.md'}],
+            ['io-md-view', {label: 'About', path :'./readme.md'}],
             ['io-selector', {label: 'Docs', vertical: true, selected: $('doc', 0), elements: [
-              ['md-view', {label: 'core', path :'./docs/core/core.md'}],
-              ['md-view', {label: 'node', path :'./docs/core/node.md'}],
-              ['md-view', {label: 'element', path :'./docs/core/element.md'}],
-              ['md-view', {label: 'array', path :'./docs/elements/array.md'}],
-              ['md-view', {label: 'boolean', path :'./docs/elements/boolean.md'}],
-              ['md-view', {label: 'button', path :'./docs/elements/button.md'}],
-              ['md-view', {label: 'canvas', path :'./docs/elements/canvas.md'}],
-              ['md-view', {label: 'collapsable', path :'./docs/elements/collapsable.md'}],
-              ['md-view', {label: 'inspector', path :'./docs/elements/inspector.md'}],
-              ['md-view', {label: 'menu', path :'./docs/elements/menu.md'}],
-              ['md-view', {label: 'number', path :'./docs/elements/number.md'}],
-              ['md-view', {label: 'object', path :'./docs/elements/object.md'}],
-              ['md-view', {label: 'option', path :'./docs/elements/option.md'}],
-              ['md-view', {label: 'properties', path :'./docs/elements/properties.md'}],
-              ['md-view', {label: 'selector', path :'./docs/elements/selector.md'}],
-              ['md-view', {label: 'slider', path :'./docs/elements/slider.md'}],
-              ['md-view', {label: 'string', path :'./docs/elements/string.md'}],
-              ['md-view', {label: 'storage', path :'./docs/objects/storage.md'}],
+              ['io-md-view', {label: 'core', path :'./docs/core/core.md'}],
+              ['io-md-view', {label: 'node', path :'./docs/core/node.md'}],
+              ['io-md-view', {label: 'element', path :'./docs/core/element.md'}],
+              ['io-md-view', {label: 'array', path :'./docs/elements/array.md'}],
+              ['io-md-view', {label: 'boolean', path :'./docs/elements/boolean.md'}],
+              ['io-md-view', {label: 'button', path :'./docs/elements/button.md'}],
+              ['io-md-view', {label: 'canvas', path :'./docs/elements/canvas.md'}],
+              ['io-md-view', {label: 'collapsable', path :'./docs/elements/collapsable.md'}],
+              ['io-md-view', {label: 'inspector', path :'./docs/elements/inspector.md'}],
+              ['io-md-view', {label: 'menu', path :'./docs/elements/menu.md'}],
+              ['io-md-view', {label: 'number', path :'./docs/elements/number.md'}],
+              ['io-md-view', {label: 'object', path :'./docs/elements/object.md'}],
+              ['io-md-view', {label: 'option', path :'./docs/elements/option.md'}],
+              ['io-md-view', {label: 'properties', path :'./docs/elements/properties.md'}],
+              ['io-md-view', {label: 'selector', path :'./docs/elements/selector.md'}],
+              ['io-md-view', {label: 'slider', path :'./docs/elements/slider.md'}],
+              ['io-md-view', {label: 'string', path :'./docs/elements/string.md'}],
+              ['io-md-view', {label: 'storage', path :'./docs/objects/storage.md'}],
             ]}],
             ['io-demo', {label: 'Demo'}],
             ['io-test', {label: 'Test'}],

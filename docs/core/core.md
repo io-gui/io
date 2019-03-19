@@ -1,12 +1,14 @@
-### `IoCoreMixin` ###
+# `IoCoreMixin` #
 
 Core classes for all io objects and elements.
 
-### Static Getters ###
+### Getters ###
 
 **`static get properties()`** Should return property definitions. See readme.md for more info.
 
 **`static get listeners()`** Should return a map of default listeners and handler function names.
+
+**`get compose()`** Experimental
 
 ### Functions ###
 

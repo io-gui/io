@@ -1,14 +1,15 @@
-import {IoNode, IoStorage} from "../build/io.js";
+import {IoNode} from "./node.js";
+import {IoStorage} from "./storage.js";
 
 if (!("serviceWorker" in navigator)) { console.error("No Service Worker support!"); }
 if (!("PushManager" in window)) { console.error("No Push API Support!"); }
 
-const db = window.firebase !== undefined ? firebase.firestore() : null;
+const db = window.firebase !== undefined ? window.firebase.firestore() : null;
 
 export class IoServiceLoader extends IoNode {
   static get properties() {
     return {
-      path: './service.js',
+      path: String,
       serviceWorker: null,
       granted: window.Notification.permission === 'granted',
       subscription: IoStorage('io-notification-subscription'),
