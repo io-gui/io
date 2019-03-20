@@ -1,8 +1,10 @@
 # `IoCoreMixin` #
 
-Core classes for all io objects and elements.
+Core mixin for io classes. It can be applied as a mixin to any class such as `Object` or `HTMLElement`.
 
 ### Getters ###
+
+Static getters are evaluated once per class when the
 
 **`static get properties()`** Should return property definitions. See readme.md for more info.
 
@@ -33,6 +35,7 @@ Core classes for all io objects and elements.
 #### Events ####
 
 | Event | Description | Detail |
-|:--------:|:----:|:----------:|
-| **`[prop]-set`** | Property set by user action | `property`, `value`, `oldValue` |
-| **`[prop]-changed`** | Value changed | `property`, `value`, `oldValue` |
+|:------:|:-----------:|:----------:|
+| **`[prop]-changed`** | Property changed | `property`, `value`, `oldValue` |
+| **`[prop]-set`** | Property set by user | `property`, `value`, `oldValue` |
+| **`object-mutated`** | Object mutated | `object`, `property`, `value`, `oldValue` |

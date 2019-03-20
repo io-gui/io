@@ -83,8 +83,6 @@ class IoStorageNode extends IoNode {
   }
 }
 
-IoStorageNode.Register();
-
 export function IoStorage(key, defValue, hash) {
   if (!nodes[key]) {
     nodes[key] = new IoStorageNode({key: key, hash: hash}, defValue);

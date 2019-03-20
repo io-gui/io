@@ -195,7 +195,7 @@ On a fundamental level, data-flow in io is top down and UI designs with unidirec
 
 * Leaf elements with user-editable values should communicate the value change to their parent object element. This can be achieved with a built-in function `this.set('value', value)` which emits a non-bubbling `value-set` event. See `IoBoolean` for example.
 
-* Object elements which are hosting editable leaf elements should listen to `value-set` event on editable leaf elements and dispatch `object-mutated` event on the window. See `IoProperties` for example.
+* Object elements which are hosting editable leaf elements should listen to `value-set` event and dispatch `object-mutated` event on the window. See `IoProperties` for example.
 
 That is all! Object elements will automatically listen to `object-mutated` event and update if needed.
 
