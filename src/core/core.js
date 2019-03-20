@@ -144,10 +144,10 @@ export const IoCoreMixin = (superclass) => {
     queueDispatch() {
       this.__queue.dispatch();
     }
-  }
+  };
   classConstructor.Register = Register;
   return classConstructor;
-}
+};
 
 const Register = function () {
   Object.defineProperty(this.prototype, '__registered', {value: true});
