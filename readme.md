@@ -19,6 +19,17 @@ Bundled io library can be imported as a module from `build/io-core.js` (core cla
 import {IoNode, IoElement} from "[path_to_io]/build/io-core.js";
 ```
 
+If you only want to use the built-in elements, simply add them to your application and set the values.
+For example to create an object inspector:
+
+```javascript
+// create <io-obect>
+const objectInspector = document.createElement('io-object');
+
+// Assign value
+objectInspector.value = myObjectToInspect;
+```
+
 ### Creating a Simple Application ###
 
 First, define your main application class in javascript and use `template()` function to add contents.
@@ -117,7 +128,7 @@ static get style() {
 }
 ```
 
-<a name="programmable-templates"></a>
+<a name="virtual-dom"></a>
 
 ### Virtual DOM ###
 
