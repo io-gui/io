@@ -117,7 +117,7 @@ export class IoInspector extends IoElement {
       if (!lastrumb || !isValueOfPropertyOf(this.value, lastrumb)) this.crumbs.length = 0;
       this.crumbs.push(this.value);
     }
-    this.crumbs = [...this.crumbs];
+    this.dispatchEvent('object-mutated', {object: this.crumbs}, false, window);
   }
   changed() {
     const elements = [
