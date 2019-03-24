@@ -31,6 +31,9 @@ export class IoButton extends IoElement {
       :host[pressed] {
         background: var(--io-theme-active-bg);
       }
+      :host > span {
+        text-align: center;
+      }
     </style>`;
   }
   static get properties() {
@@ -71,7 +74,9 @@ export class IoButton extends IoElement {
   }
   changed() {
     this.title = this.label;
-    this.innerText = this.label;
+    this.template([
+      ['span', this.label]
+    ]);
   }
 }
 

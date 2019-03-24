@@ -4,7 +4,7 @@
 # UI library for web applications #
 
 Io library is designed to help web developers build data-driven web applications using modern web technologies.
-It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design.
+It implements custom elements, virtual DOM, data binding and a simple data-flow design.
 This library is an experiment with limited browser support, incomplete documentation, partial test coverage, and design which is subject to change. **Use at own risk!**
 
 For a quick start, read this document and check out included elements and examples.
@@ -27,7 +27,7 @@ First, define your main application class in javascript and use `template()` fun
 class MyApp extends IoElement {
   changed() {
     this.template([
-      ['p', 'Hello world!']
+      ['p', 'Hello world!'] // Look at me! I'm the DOM now!
     ]);
   }
 }
@@ -118,9 +118,14 @@ static get style() {
 ```
 
 <a name="programmable-templates"></a>
-### Programmable Templates ###
 
-This is the most powerful feature of `IoElement`. It allows you to create dynamic DOM trees in pure javascript. Use `template()` function to render DOM tree. Instead of HTML, the template system uses programmable yet declarative-looking syntax of nested arrays. For example an instance of `<my-color>` element can be expressed like this:
+### Virtual DOM ###
+
+This is the most powerful feature of `IoElement`.
+It allows you to create dynamic DOM trees in pure javascript.
+Use `template()` function to render DOM tree.
+Instead of HTML, the template system uses programmable yet declarative-looking syntax of nested arrays.
+For example an instance of `<my-color>` element can be expressed like this:
 
 ```javascript
 ['my-color', {color: "tomato"}, "this is my color"]
