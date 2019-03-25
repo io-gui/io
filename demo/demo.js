@@ -151,7 +151,7 @@ export class IoDemo extends IoElement {
       ]}],
       ['io-collapsable', {label: 'io-object', expanded: $('io-object'), elements: [
         ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}], //TODO: labeled?
-        ['io-object', {value: this, label: 'IoDemo (single configured property)', labeled: false, expanded: $('io-object2'), props: ['number'], config: {'key:number': ['io-slider', {step: 0.1}]}}],
+        ['io-object', {value: this, label: 'IoDemo (single configured property)', labeled: false, expanded: $('io-object2'), props: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
         ['io-object', {value: this.menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
       ]}],
       ['io-collapsable', {label: 'io-inspector', expanded: $('io-inspector'), elements: [
