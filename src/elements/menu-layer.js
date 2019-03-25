@@ -133,6 +133,7 @@ export class IoMenuLayer extends IoElement {
       if (groups[i].expanded) {
         let rect = groups[i].getBoundingClientRect();
         if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+          const isTouch = event.pointerType === 'touch';
           this._hover(groups[i]);
           this._hoveredGroup = groups[i];
           return groups[i];
@@ -283,7 +284,7 @@ export class IoMenuLayer extends IoElement {
         }
         break;
     }
-    group._x = Math.min(group._x, window.innerWidth - rect.width);
+    group._x = Math.max(0, Math.min(group._x, window.innerWidth - rect.width));
     group._y = Math.min(group._y, window.innerHeight - rect.height);
     group.style.left = group._x + 'px';
     group.style.top = group._y + 'px';
