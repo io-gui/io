@@ -133,7 +133,6 @@ export class IoMenuLayer extends IoElement {
       if (groups[i].expanded) {
         let rect = groups[i].getBoundingClientRect();
         if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-          const isTouch = event.pointerType === 'touch';
           this._hover(groups[i]);
           this._hoveredGroup = groups[i];
           return groups[i];
