@@ -1,4 +1,4 @@
-import {IoSlider} from "../../build/io.js";
+import {IoSlider} from "../../build/io.min.js";
 
 export default class {
   constructor() {

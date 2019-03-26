@@ -1,4 +1,4 @@
-import {IoMenu} from "../../build/io.js";
+import {IoMenu} from "../../build/io.min.js";
 
 
 
