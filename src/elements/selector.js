@@ -64,6 +64,10 @@ export class IoSelector extends IoElement {
         type: Boolean,
         reflect: true
       },
+      role: {
+        type: String,
+        reflect: false
+      }
     };
   }
   resized() {
@@ -93,6 +97,7 @@ export class IoSelector extends IoElement {
         selected: this.selected,
         cache: this.cache,
         precache: this.precache,
+        role: this.role,
       }],
     ]);
   }
