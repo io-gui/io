@@ -86,6 +86,7 @@ export class IoSelector extends IoElement {
         vertical: this.vertical,
         collapsed: this.collapsed,
         options: options,
+        role: 'navigation',
       }],
       ['io-element-cache', {
         elements: this.elements,

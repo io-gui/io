@@ -80,7 +80,8 @@ export class IoMdView extends IoElement {
         type: String,
         reflect: true
       },
-      vars: Object
+      vars: Object,
+      role: 'document',
     };
   }
   pathChanged() {

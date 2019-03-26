@@ -25,6 +25,11 @@ export class IoElement extends IoCoreMixin(HTMLElement) {
         reflect: true,
         enumerable: false
       },
+      role: {
+        type: String,
+        reflect: true,
+        enumerable: false
+      },
       $: {
         type: Object,
       },

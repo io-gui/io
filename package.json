@@ -1,15 +1,17 @@
 {
   "name": "io",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "UI library for web applications.",
   "author": "Aleksandar Aki Rodic",
   "license": "MIT",
   "scripts": {
-    "build": "eslint src && rollup -c"
+    "uglify": "uglifyjs build/io.js -cmo build/io.min.js --source-map && uglifyjs build/io-core.js -cmo build/io-core.min.js --source-map",
+    "build": "eslint src && rollup -c && npm run uglify"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
     "eslint": "^4.19.1",
-    "rollup": "^0.59.4"
+    "rollup": "^0.59.4",
+    "uglify-es": "^3.3.9"
   }
 }
