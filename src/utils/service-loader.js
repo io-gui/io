@@ -8,7 +8,7 @@ export class IoServiceLoader extends IoNode {
     return {
       path: 'service.js',
       serviceWorker: undefined,
-      granted: window.Notification.permission === 'granted',
+      granted: window.Notification && window.Notification.permission === 'granted',
       subscription: '',
     };
 
