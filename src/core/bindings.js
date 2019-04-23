@@ -45,7 +45,7 @@ export class Binding {
       target.addEventListener(targetProp + '-changed', this.updateSource);
     }
   }
-  // Removes target node/property and corresponding `[prop]-changed` listener.
+  // Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
   // If `targetProp` is not specified, it removes all target properties.
   removeTarget(targetNode, targetProp) {
     if (this.targetsMap.has(targetNode)) {
@@ -69,8 +69,8 @@ export class Binding {
   updateSource(event) {
     if (this.targets.indexOf(event.target) === -1) {
       console.warn(
-        `io error: updateSource() should not fire when target is removed from binding.
-        Plese file an issue at https://github.com/arodic/io/issues.`
+        `io error: updateSource() should never fire when target is removed from binding.
+        Please file an issue at https://github.com/arodic/io/issues.`
       );
       return;
     }
@@ -79,8 +79,15 @@ export class Binding {
       this.source[this.sourceProp] = value;
     }
   }
+  // Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
   updateTargets(event) {
-    if (event.target != this.source) return;
+    if (event.target != this.source) {
+      console.warn(
+        `io error: updateTargets() should always originate form source node.
+        Please file an issue at https://github.com/arodic/io/issues.`
+      );
+      return;
+    }
     const value = event.detail.value;
     for (let i = this.targets.length; i--;) {
       const targetProps = this.targetsMap.get(this.targets[i]);
@@ -94,7 +101,9 @@ export class Binding {
       }
     }
   }
+  // Dispose of the binding by removing all targets and listeners.
   dispose() {
+    this.source.removeEventListener(this.sourceProp + '-changed', this.updateTargets);
     for (let t in this.targets) {
       this.removeTarget(this.targets[t]);
       delete this.targets[t];
