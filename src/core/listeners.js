@@ -1,4 +1,4 @@
-// TODO: TEST
+// TODO: Improve tests.
 
 /** Creates a map of all listeners defined in the prototype chain. */
 export class ProtoListeners {
@@ -131,7 +131,7 @@ export class Listeners {
         const array = active[type].slice(0);
         for (let i = 0; i < array.length; i ++) {
           array[i].call(src, {detail: detail, target: src, path: [src]});
-          // TODO: consider bubbling
+          // TODO: consider bubbling.
         }
       }
     }

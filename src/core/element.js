@@ -1,7 +1,7 @@
 import {IoNodeMixin} from "./node.js";
 import {Listeners} from "./listeners.js";
 
-// TODO: Improve tests and documentation
+// TODO: Improve tests and documentation.
 
 export class IoElement extends IoNodeMixin(HTMLElement) {
   static get properties() {
@@ -109,10 +109,11 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         children[i].className = '';
         // Io Elements
         if (children[i].hasOwnProperty('__properties')) {
-          // WARNING TODO: better property and listeners reset.
-          // WARNING TODO: test property and listeners reset
+          // WARNING TODO: Better property and listeners reset.
+          // WARNING TODO: Test property and listeners reset.
           children[i].setProperties(vChildren[i].props);
-          // children[i].queueDispatch(); // TODO: test and remove. Redundant with setProperties()
+          // TODO: Test and remove. Redundant with setProperties().
+          // children[i].queueDispatch();
           children[i].__listeners.setPropListeners(vChildren[i].props, children[i]);
           children[i].__listeners.connect();
         // Native HTML Elements
@@ -126,7 +127,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
             }
             else children[i][prop] = vChildren[i].props[prop];
           }
-          // TODO: refactor for native elements
+          // TODO: Refactor for native elements.
           children[i].__listeners.setPropListeners(vChildren[i].props, children[i]);
           children[i].__listeners.connect();
           ///
@@ -167,8 +168,6 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
 IoElement.Register = function() {
 
   IoNodeMixin.Register.call(this);
-
-  // window[this.name] = this; // TODO: consider
 
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
@@ -226,7 +225,7 @@ const constructElement = function(vDOMNode) {
      }
    } else element[prop] = vDOMNode.props[prop];
  }
- /// TODO: refactor for native elements
+ // TODO: Refactor for native elements
  Object.defineProperty(element, '__listeners', {value: new Listeners(element)});
  element.__listeners.setPropListeners(vDOMNode.props, element);
  element.__listeners.connect();

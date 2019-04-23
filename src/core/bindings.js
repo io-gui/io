@@ -1,4 +1,4 @@
-// TODO: TEST
+// TODO: Improve tests.
 
 /** Manager for IoNode bindings. */
 export class NodeBindings {

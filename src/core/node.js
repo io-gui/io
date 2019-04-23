@@ -3,7 +3,7 @@ import {NodeQueue} from "./queue.js";
 import {ProtoListeners, Listeners} from "./listeners.js";
 import {Properties, ProtoProperties} from "./properties.js";
 
-// TODO: Improve tests and documentation
+// TODO: Improve tests and documentation.
 
 export const IoNodeMixin = (superclass) => {
   const classConstructor = class extends superclass {
@@ -30,7 +30,7 @@ export const IoNodeMixin = (superclass) => {
 
       this.__listeners.setPropListeners(initProps, this);
 
-      // TODO: test and documentation
+      // TODO: Test and documentation.
       if (this.compose) this.applyCompose(this.compose);
 
       this.setProperties(initProps);
@@ -81,17 +81,18 @@ export const IoNodeMixin = (superclass) => {
           this.style.setProperty(s, props['style'][s]);
         }
       }
-      // TODO: consider postpoining dispatch for unconnected elements.
+      // TODO: Consider postpoining dispatch for unconnected elements.
       // if (this.__connected) this.queueDispatch();
       this.queueDispatch();
     }
-    // TODO: test extensively
+    // TODO: Test extensively.
     applyCompose(nodes) {
       for (let n in nodes) {
         const properties = nodes[n];
         this[n].setProperties(properties);
         this.addEventListener(n + '-changed', (event) => {
-          if (event.detail.oldValue) event.detail.oldValue.dispose(); // TODO: test
+          // TODO: Test.
+          if (event.detail.oldValue) event.detail.oldValue.dispose();
           event.detail.value.setProperties(properties);
         });
       }

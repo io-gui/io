@@ -1,6 +1,6 @@
 import {Binding} from "./bindings.js";
 
-// TODO: TEST
+// TODO: Improve tests and documentation.
 
 /** Creates a map of all property configurations defined in the prototype chain. */
 export class ProtoProperties {
@@ -47,7 +47,6 @@ export class Properties {
   get(prop) {
     return this[prop].value;
   }
-  // TODO: more tests and documentation.
   /**
    * Sets specified property value.
    * @param {string} prop - Property name.
