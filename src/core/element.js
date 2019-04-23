@@ -84,14 +84,15 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (child.dispose) child.dispose();
     }
     // create new elements after existing
-    const frag = document.createDocumentFragment();
-    for (let i = children.length; i < vChildren.length; i++) {
-      frag.appendChild(constructElement(vChildren[i]));
+    if (children.length < vChildren.length) {
+      const frag = document.createDocumentFragment();
+      for (let i = children.length; i < vChildren.length; i++) {
+        frag.appendChild(constructElement(vChildren[i]));
+      }
+      host.appendChild(frag);
     }
-    host.appendChild(frag);
 
     for (let i = 0; i < children.length; i++) {
-
       // replace existing elements
       if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];

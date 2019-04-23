@@ -121,7 +121,12 @@ export class Config {
 
     let proto = object.__proto__;
     while (proto) {
-      keys.push(...Object.keys(proto));
+      if (proto.constructor !== HTMLElement
+          && proto.constructor !== Element
+          && proto.constructor !== Node
+          && proto.constructor !== EventTarget) {
+        keys.push(...Object.keys(proto));
+      }
       prototypes.push(proto.constructor.name);
       proto = proto.__proto__;
     }
