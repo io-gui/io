@@ -4,7 +4,7 @@ import {Binding} from "./bindings.js";
 
 // Creates composed properties from all properties found in protochain.
 export class Properties {
-  constructor(protochain = [], instance) {
+  constructor(protochain = [], node) {
     const propertyDefs = {};
     for (let i = protochain.length; i--;) {
       const props = protochain[i].constructor.properties;
@@ -16,19 +16,19 @@ export class Properties {
     for (let key in propertyDefs) {
       this[key] = new Property(propertyDefs[key]);
     }
-    Object.defineProperty(this, 'instance', {value: instance});
+    Object.defineProperty(this, 'node', {value: node});
   }
-  // Creates a clone of properties for an instance.
-  clone(instance) {
-    const properties = new Properties([], instance);
+  // Creates a clone of properties for an node.
+  clone(node) {
+    const properties = new Properties([], node);
     for (let prop in this) {
       properties[prop] = this[prop].clone();
       if (typeof properties[prop].value === 'object') {
         const value = properties[prop].value;
 
-        if (value && value.isNode) value.connect(instance);
+        if (value && value.isNode) value.connect(node);
 
-        instance.queue(prop, value, undefined);
+        node.queue(prop, value, undefined);
       }
     }
     return properties;
@@ -44,10 +44,10 @@ export class Properties {
     let binding = (value instanceof Binding) ? value : null;
 
     if (binding && oldBinding && binding !== oldBinding) {
-      oldBinding.removeTarget(this.instance, prop); // TODO: test extensively
+      oldBinding.removeTarget(this.node, prop); // TODO: test extensively
     }
     if (binding) {
-      binding.setTarget(this.instance, prop);
+      binding.setTarget(this.node, prop);
       this[prop].binding = binding;
       this[prop].value = value.source[value.sourceProp];
       value = value.source[value.sourceProp];
@@ -56,35 +56,35 @@ export class Properties {
     }
 
     if (value && value.isNode) {
-      value.connect(this.instance);
+      value.connect(this.node);
     }
 
     if (value !== oldValue && oldValue && oldValue.isNode) {
-      oldValue.disconnect(this.instance);
+      oldValue.disconnect(this.node);
     }
 
-    if (this[prop].reflect) this.instance.setAttribute(prop, value);
+    if (this[prop].reflect) this.node.setAttribute(prop, value);
   }
   // TODO: test dispose and disconnect for memory leaks!!
   // TODO: dispose bindings properly
   connect() {
     for (let p in this) {
       if (this[p].binding) {
-        this[p].binding.setTarget(this.instance, p); //TODO: test
+        this[p].binding.setTarget(this.node, p); //TODO: test
       }
     }
   }
   disconnect() {
     for (let p in this) {
       if (this[p].binding) {
-        this[p].binding.removeTarget(this.instance, p);
+        this[p].binding.removeTarget(this.node, p);
       }
     }
   }
   dispose() {
     for (let p in this) {
       if (this[p].binding) {
-        this[p].binding.removeTarget(this.instance, p);
+        this[p].binding.removeTarget(this.node, p);
         delete this[p].binding;
       }
       delete this[p];

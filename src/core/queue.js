@@ -1,9 +1,9 @@
 // TODO: Documentation and tests
 
 export class Queue extends Array {
-  constructor(instance) {
+  constructor(node) {
     super();
-    Object.defineProperty(this, 'instance', {value: instance, configurable: true});
+    Object.defineProperty(this, 'node', {value: node, configurable: true});
   }
   queue(prop, value, oldValue) {
     const i = this.indexOf(prop);
@@ -14,24 +14,24 @@ export class Queue extends Array {
     }
   }
   dispatch() {
-    const instance = this.instance;
+    const node = this.node;
     if (this.length) {
       for (let j = 0; j < this.length; j += 2) {
         const prop = this[j];
         const payload = {detail: this[j + 1]};
-        if (instance[prop + 'Changed']) instance[prop + 'Changed'](payload);
-        instance.dispatchEvent(prop + '-changed', payload.detail);
+        if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
+        node.dispatchEvent(prop + '-changed', payload.detail);
       }
-      instance.changed();
-      if (!(instance.isElement)) {
+      node.changed();
+      if (!(node.isElement)) {
         // Emit change event for non-elements (nodes)
-        instance.dispatchEvent('object-mutated', {object: instance}, null, window);
+        node.dispatchEvent('object-mutated', {object: node}, null, window);
       }
       this.length = 0;
     }
   }
   dispose() {
     this.length = 0;
-    delete this.instance;
+    delete this.node;
   }
 }

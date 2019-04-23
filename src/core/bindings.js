@@ -1,11 +1,11 @@
 // TODO: Documentation and tests
 
 export class Bindings {
-  constructor(instance) {
-    Object.defineProperty(this, 'instance', {value: instance, configurable: true});
+  constructor(node) {
+    Object.defineProperty(this, 'node', {value: node, configurable: true});
   }
   get(prop) {
-    this[prop] = this[prop] || new Binding(this.instance, prop);
+    this[prop] = this[prop] || new Binding(this.node, prop);
     return this[prop];
   }
   dispose() {
@@ -13,7 +13,7 @@ export class Bindings {
       this[b].dispose();
       delete this[b];
     }
-    delete this.instance;
+    delete this.node;
   }
 }
 
