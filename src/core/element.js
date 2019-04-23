@@ -1,9 +1,9 @@
-import {IoCoreMixin} from "./core.js";
+import {IoNodeMixin} from "./node.js";
 import {Listeners} from "./listeners.js";
 
 // TODO: Documentation and tests
 
-export class IoElement extends IoCoreMixin(HTMLElement) {
+export class IoElement extends IoNodeMixin(HTMLElement) {
   static get properties() {
     return {
       id: {
@@ -165,7 +165,7 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
 
 IoElement.Register = function() {
 
-  IoCoreMixin.Register.call(this);
+  IoNodeMixin.Register.call(this);
 
   // window[this.name] = this; // TODO: consider
 
