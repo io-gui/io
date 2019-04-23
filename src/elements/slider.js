@@ -10,7 +10,7 @@ export class IoSlider extends IoElement {
         min-width: 12em;
       }
       :host > io-number {
-        flex: 0 0 auto;
+        flex: 0 0 3.75em;
       }
       :host > io-slider-knob {
         flex: 1 1 auto;
@@ -33,12 +33,10 @@ export class IoSlider extends IoElement {
     this.value = event.detail.value;
   }
   changed() {
-    const charLength = (Math.max(Math.max(String(this.min).length, String(this.max).length), String(this.step).length));
     this.template([
       ['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],
       ['io-slider-knob', {value: this.value, step: this.step, minValue: this.min, maxValue: this.max, id: 'slider', 'on-value-set': this._onValueSet}]
     ]);
-    this.$.number.style.setProperty('min-width', charLength + 'em');
   }
 }
 
