@@ -1,7 +1,7 @@
-import {Bindings} from "./bindings.js";
-import {Listeners} from "./listeners.js";
+import {NodeBindings} from "./bindings.js";
+import {NodeQueue} from "./queue.js";
+import {ProtoListeners, Listeners} from "./listeners.js";
 import {Properties} from "./properties.js";
-import {Queue} from "./queue.js";
 
 // TODO: Improve documentation and tests
 
@@ -18,11 +18,11 @@ export const IoNodeMixin = (superclass) => {
 
       if (!this.constructor.prototype.__registered) this.constructor.Register();
 
-      Object.defineProperty(this, '__bindings', {value: new Bindings(this)});
-      Object.defineProperty(this, '__queue', {value: new Queue(this)});
+      Object.defineProperty(this, '__nodeBindings', {value: new NodeBindings(this)});
+      Object.defineProperty(this, '__nodeQueue', {value: new NodeQueue(this)});
 
       Object.defineProperty(this, '__properties', {value: this.__properties.clone(this)});
-      Object.defineProperty(this, '__listeners', {value: this.__listeners.clone(this)});
+      Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
 
       for (let i = 0; i < this.__functions.length; i++) {
         this[this.__functions[i]] = this[this.__functions[i]].bind(this);
@@ -55,7 +55,7 @@ export const IoNodeMixin = (superclass) => {
     }
     changed() {}
     bind(prop) {
-      return this.__bindings.get(prop);
+      return this.__nodeBindings.get(prop);
     }
     set(prop, value) {
       if (this[prop] !== value) {
@@ -125,8 +125,8 @@ export const IoNodeMixin = (superclass) => {
       }
     }
     dispose() {
-      this.__queue.dispose();
-      this.__bindings.dispose();
+      this.__nodeQueue.dispose();
+      this.__nodeBindings.dispose();
       this.__listeners.dispose();
       this.__properties.dispose();
     }
@@ -140,10 +140,10 @@ export const IoNodeMixin = (superclass) => {
       this.__listeners.dispatchEvent(type, detail, bubbles, src);
     }
     queue(prop, value, oldValue) {
-      this.__queue.queue(prop, value, oldValue);
+      this.__nodeQueue.queue(prop, value, oldValue);
     }
     queueDispatch() {
-      this.__queue.dispatch();
+      this.__nodeQueue.dispatch();
     }
   };
   classConstructor.Register = Register;
@@ -165,7 +165,7 @@ const Register = function () {
 
 
   Object.defineProperty(this.prototype, '__properties', {value: new Properties(this.prototype.__protochain)});
-  Object.defineProperty(this.prototype, '__listeners', {value: new Listeners(this.prototype.__protochain)});
+  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__protochain)});
 
   const functions = [];
   for (let i = this.prototype.__protochain.length; i--;) {

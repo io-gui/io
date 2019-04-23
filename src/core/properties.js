@@ -25,9 +25,7 @@ export class Properties {
       properties[prop] = this[prop].clone();
       if (typeof properties[prop].value === 'object') {
         const value = properties[prop].value;
-
         if (value && value.isNode) value.connect(node);
-
         node.queue(prop, value, undefined);
       }
     }

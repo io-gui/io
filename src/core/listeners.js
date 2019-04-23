@@ -1,20 +1,36 @@
-// TODO: Documentation and tests
+// TODO: tests
 
-export class Listeners {
-  constructor(protochain = {}, node) {
+/** Creates a map of all listeners defined in the prototype chain. */
+export class ProtoListeners {
+  /**
+   * @param protochain {Array} Array of protochain constructors.
+   */
+  constructor(protochain) {
     for (let i = protochain.length; i--;) {
       const prop = protochain[i].constructor.listeners;
       for (let j in prop) this[j] = prop[j];
     }
+  }
+}
+
+/** Manager for IoNode listeners. */
+export class Listeners {
+  /**
+   * Creates listener manager for IoNode.
+   * @param node {IoNode} Reference to the node/element itself.
+   * @param protoListeners {ProtoListeners} List of listeners defined in the protochain.
+   */
+  constructor(node, protoListeners) {
+    // Copy listeners from protolisteners.
     Object.defineProperty(this, 'node', {value: node});
     Object.defineProperty(this, 'propListeners', {value: {}});
     Object.defineProperty(this, 'activeListeners', {value: {}});
+    for (let prop in protoListeners) this[prop] = protoListeners[prop];
   }
-  clone(node) {
-    const listeners = new Listeners({}, node);
-    for (let prop in this) listeners[prop] = this[prop];
-    return listeners;
-  }
+  /**
+   * Sets listeners from properties (filtered form properties map by 'on-' prefix).
+   * @param props {object} Map of all properties.
+   */
   setPropListeners(props) {
     for (let l in this.propListeners) delete this.propListeners[l];
     for (let l in props) {
@@ -23,6 +39,9 @@ export class Listeners {
       }
     }
   }
+  /**
+   * Adds all event listeners.
+   */
   connect() {
     const node = this.node;
     const propListeners = this.propListeners;
@@ -35,6 +54,9 @@ export class Listeners {
       node.addEventListener(i, listener);
     }
   }
+  /**
+   * Removes all event listeners.
+   */
   disconnect() {
     const node = this.node;
     const propListeners = this.propListeners;
@@ -47,6 +69,10 @@ export class Listeners {
       node.removeEventListener(i, listener);
     }
   }
+  /**
+   * Removes all event listeners.
+   * Use this when node is no longer needed.
+   */
   dispose() {
     this.disconnect();
     const node = this.node;
@@ -58,6 +84,11 @@ export class Listeners {
       }
     }
   }
+  /**
+   * Adds an event listener.
+   * @param type {string} event name to listen to.
+   * @param listener {function} event handler function.
+   */
   addEventListener(type, listener) {
     const node = this.node;
     const active = this.activeListeners;
@@ -68,6 +99,11 @@ export class Listeners {
       active[type].push(listener);
     }
   }
+  /**
+   * Removes an event listener.
+   * @param type {string} event name to listen to.
+   * @param listener {function} event handler function.
+   */
   removeEventListener(type, listener) {
     const node = this.node;
     const active = this.activeListeners;
@@ -79,6 +115,13 @@ export class Listeners {
       }
     }
   }
+  /**
+   * Shorthand for event dispatch.
+   * @param type {string} event name to dispatch.
+   * @param detail {object} event detail.
+   * @param bubbles {boolean} event bubbles.
+   * @param src source node/element to dispatch event from.
+   */
   dispatchEvent(type, detail = {}, bubbles = true, src = this.node) {
     if (src instanceof HTMLElement || src === window) {
       HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {type: type, detail: detail, bubbles: bubbles, composed: true}));

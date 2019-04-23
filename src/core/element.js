@@ -227,7 +227,7 @@ const constructElement = function(vDOMNode) {
    } else element[prop] = vDOMNode.props[prop];
  }
  /// TODO: refactor for native elements
- Object.defineProperty(element, '__listeners', {value: new Listeners({}, element)});
+ Object.defineProperty(element, '__listeners', {value: new Listeners(element)});
  element.__listeners.setPropListeners(vDOMNode.props, element);
  element.__listeners.connect();
 

@@ -1,15 +1,24 @@
-// A simple map of all node bindings.
-export class Bindings {
-  // It should be initialized inside node constructor with a reference to the `node` itself.
+/** Manager for IoNode bindings. */
+export class NodeBindings {
+  /**
+   * Creates binding manager for IoNode.
+   * @param node {IoNode} Reference to the node/element itself.
+   */
   constructor(node) {
     Object.defineProperty(this, 'node', {value: node, configurable: true});
   }
-  // Returns a binding to the specified property `prop`.
+  /**
+   * Returns a binding to the specified property.
+   * @param prop {string} property name.
+   */
   get(prop) {
     this[prop] = this[prop] || new Binding(this.node, prop);
     return this[prop];
   }
-  // Disposes all bindings. Use this when node is no longer needed.
+  /**
+   * Disposes all bindings.
+   * Use this when node is no longer needed.
+   */
   dispose() {
     for (let b in this) {
       this[b].dispose();
@@ -19,9 +28,15 @@ export class Bindings {
   }
 }
 
-// Binding object. It manages data binding between source and targets using `[prop]-changed` events.
+/**
+ * Binding object. It manages data binding between source and targets using `[prop]-changed` events.
+ */
 export class Binding {
-  // Creates a binding object with specified `sourceNode` and `sourceProp`.
+  /**
+   * Creates a binding object with specified `sourceNode` and `sourceProp`.
+   * @param sourceNode {IoNode} Source node.
+   * @param sourceProp {string} Source property.
+   */
   constructor(sourceNode, sourceProp) {
     this.source = sourceNode;
     this.sourceProp = sourceProp;
@@ -31,7 +46,11 @@ export class Binding {
     this.updateTargets = this.updateTargets.bind(this);
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
   }
-  // Adds a target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
+  /**
+   * Adds a target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
+   * @param targetNode {IoNode} Target node.
+   * @param targetProp {string} Target property.
+   */
   addTarget(target, targetProp) {
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
     if (this.targetsMap.has(target)) {
@@ -45,8 +64,12 @@ export class Binding {
       target.addEventListener(targetProp + '-changed', this.updateSource);
     }
   }
-  // Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
-  // If `targetProp` is not specified, it removes all target properties.
+  /**
+   * Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
+   * If `targetProp` is not specified, it removes all target properties.
+   * @param targetNode {IoNode} Target node.
+   * @param targetProp {string} Target property.
+   */
   removeTarget(targetNode, targetProp) {
     if (this.targetsMap.has(targetNode)) {
       const targetProps = this.targetsMap.get(targetNode);
@@ -65,7 +88,9 @@ export class Binding {
       if (targetProps.length === 0) this.targets.splice(this.targets.indexOf(targetNode), 1);
     }
   }
-  // Event handler that updates source property when one of the targets emits `[prop]-changed` event.
+  /**
+   * Event handler that updates source property when one of the targets emits `[prop]-changed` event.
+   */
   updateSource(event) {
     if (this.targets.indexOf(event.target) === -1) {
       console.warn(
@@ -79,7 +104,9 @@ export class Binding {
       this.source[this.sourceProp] = value;
     }
   }
-  // Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
+  /**
+   * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
+   */
   updateTargets(event) {
     if (event.target != this.source) {
       console.warn(
@@ -101,7 +128,10 @@ export class Binding {
       }
     }
   }
-  // Dispose of the binding by removing all targets and listeners.
+  /**
+   * Dispose of the binding by removing all targets and listeners.
+   * Use this when node is no longer needed.
+   */
   dispose() {
     this.source.removeEventListener(this.sourceProp + '-changed', this.updateTargets);
     for (let t in this.targets) {
