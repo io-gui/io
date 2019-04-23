@@ -136,7 +136,7 @@ export const IoNodeMixin = (superclass) => {
     removeEventListener(type, listener) {
       this.__listeners.removeEventListener(type, listener);
     }
-    dispatchEvent(type, detail, bubbles, src) {
+    dispatchEvent(type, detail, bubbles = false, src) {
       this.__listeners.dispatchEvent(type, detail, bubbles, src);
     }
     queue(prop, value, oldValue) {

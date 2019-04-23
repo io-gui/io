@@ -25,7 +25,7 @@ export class Queue extends Array {
       node.changed();
       if (!(node.isElement)) {
         // Emit change event for non-elements (nodes)
-        node.dispatchEvent('object-mutated', {object: node}, null, window);
+        node.dispatchEvent('object-mutated', {object: node}, false, window);
       }
       this.length = 0;
     }

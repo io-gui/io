@@ -1,13 +1,15 @@
-// TODO: Documentation and tests
-
+// A simple map of all node bindings.
 export class Bindings {
+  // It should be initialized inside node constructor with a reference to the `node` itself.
   constructor(node) {
     Object.defineProperty(this, 'node', {value: node, configurable: true});
   }
+  // Returns a binding to the specified property `prop`.
   get(prop) {
     this[prop] = this[prop] || new Binding(this.node, prop);
     return this[prop];
   }
+  // Disposes all bindings. Use this when node is no longer needed.
   dispose() {
     for (let b in this) {
       this[b].dispose();
@@ -17,37 +19,24 @@ export class Bindings {
   }
 }
 
+// Binding object. It manages data binding between source and targets using `[prop]-changed` events.
 export class Binding {
-  constructor(source, sourceProp) {
-    this.source = source;
+  // Creates a binding object with specified `sourceNode` and `sourceProp`.
+  constructor(sourceNode, sourceProp) {
+    this.source = sourceNode;
     this.sourceProp = sourceProp;
     this.targets = [];
     this.targetsMap = new WeakMap();
     this.updateSource = this.updateSource.bind(this);
     this.updateTargets = this.updateTargets.bind(this);
-    this.setSource(this.source);
-  }
-  get value() {
-    return this.source[this.sourceProp];
-  }
-  set value(value) {
-    this.source[this.sourceProp] = value;
-  }
-  setSource() {
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
-    for (let i = this.targets.length; i--;) {
-      const targetProps = this.targetsMap.get(this.targets[i]);
-      for (let j = targetProps.length; j--;) {
-        this.targets[i].__properties[targetProps[j]].value = this.source[this.sourceProp];
-        // TODO: test observers on binding hot-swap!
-      }
-    }
   }
-  setTarget(target, targetProp) {
+  // Adds a target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
+  addTarget(target, targetProp) {
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
     if (this.targetsMap.has(target)) {
       const targetProps = this.targetsMap.get(target);
-      if (targetProps.indexOf(targetProp) === -1) { // safe check needed?
+      if (targetProps.indexOf(targetProp) === -1) {
         targetProps.push(targetProp);
         target.addEventListener(targetProp + '-changed', this.updateSource);
       }
@@ -56,26 +45,35 @@ export class Binding {
       target.addEventListener(targetProp + '-changed', this.updateSource);
     }
   }
-  removeTarget(target, targetProp) {
-    if (this.targetsMap.has(target)) {
-      const targetProps = this.targetsMap.get(target);
+  // Removes target node/property and corresponding `[prop]-changed` listener.
+  // If `targetProp` is not specified, it removes all target properties.
+  removeTarget(targetNode, targetProp) {
+    if (this.targetsMap.has(targetNode)) {
+      const targetProps = this.targetsMap.get(targetNode);
       if (targetProp) {
         const index = targetProps.indexOf(targetProp);
         if (index !== -1) {
           targetProps.splice(index, 1);
         }
-        target.removeEventListener(targetProp + '-changed', this.updateSource);
+        targetNode.removeEventListener(targetProp + '-changed', this.updateSource);
       } else {
         for (let i = targetProps.length; i--;) {
-          target.removeEventListener(targetProps[i] + '-changed', this.updateSource);
+          targetNode.removeEventListener(targetProps[i] + '-changed', this.updateSource);
         }
         targetProps.length = 0;
       }
-      if (targetProps.length === 0) this.targets.splice(this.targets.indexOf(target), 1);
+      if (targetProps.length === 0) this.targets.splice(this.targets.indexOf(targetNode), 1);
     }
   }
+  // Event handler that updates source property when one of the targets emits `[prop]-changed` event.
   updateSource(event) {
-    if (this.targets.indexOf(event.target) === -1) return;
+    if (this.targets.indexOf(event.target) === -1) {
+      console.warn(
+        `io error: updateSource() should not fire when target is removed from binding.
+        Plese file an issue at https://github.com/arodic/io/issues.`
+      );
+      return;
+    }
     const value = event.detail.value;
     if (this.source[this.sourceProp] !== value) {
       this.source[this.sourceProp] = value;

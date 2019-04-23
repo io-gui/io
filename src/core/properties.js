@@ -47,7 +47,7 @@ export class Properties {
       oldBinding.removeTarget(this.node, prop); // TODO: test extensively
     }
     if (binding) {
-      binding.setTarget(this.node, prop);
+      binding.addTarget(this.node, prop);
       this[prop].binding = binding;
       this[prop].value = value.source[value.sourceProp];
       value = value.source[value.sourceProp];
@@ -70,7 +70,7 @@ export class Properties {
   connect() {
     for (let p in this) {
       if (this[p].binding) {
-        this[p].binding.setTarget(this.node, p); //TODO: test
+        this[p].binding.addTarget(this.node, p); //TODO: test
       }
     }
   }
