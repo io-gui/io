@@ -1,8 +1,10 @@
+// TODO: TEST
+
 /** Manager for IoNode event queue and change handle functions. */
 export class NodeQueue extends Array {
   /**
    * Creates queue manager for IoNode.
-   * @param node {IoNode} Reference to the node/element itself.
+   * @param {IoNode} node - Reference to the node/element itself.
    */
   constructor(node) {
     super();
@@ -10,9 +12,9 @@ export class NodeQueue extends Array {
   }
   /**
    * Add property change to the queue.
-   * @param prop {string} Property name.
-   * @param value Property value.
-   * @param oldValue Old property value.
+   * @param {string} prop - Property name.
+   * @param {*} value Property value.
+   * @param {*} oldValue Old property value.
    */
   queue(prop, value, oldValue) {
     const i = this.indexOf(prop);

@@ -1,9 +1,9 @@
-// TODO: tests
+// TODO: TEST
 
 /** Creates a map of all listeners defined in the prototype chain. */
 export class ProtoListeners {
   /**
-   * @param protochain {Array} Array of protochain constructors.
+   * @param {Array} protochain - Array of protochain constructors.
    */
   constructor(protochain) {
     for (let i = protochain.length; i--;) {
@@ -17,8 +17,8 @@ export class ProtoListeners {
 export class Listeners {
   /**
    * Creates listener manager for IoNode.
-   * @param node {IoNode} Reference to the node/element itself.
-   * @param protoListeners {ProtoListeners} List of listeners defined in the protochain.
+   * @param {IoNode} node - Reference to the node/element itself.
+   * @param {ProtoListeners} protoListeners - List of listeners defined in the protochain.
    */
   constructor(node, protoListeners) {
     // Copy listeners from protolisteners.
@@ -29,7 +29,7 @@ export class Listeners {
   }
   /**
    * Sets listeners from properties (filtered form properties map by 'on-' prefix).
-   * @param props {object} Map of all properties.
+   * @param {Object} props - Map of all properties.
    */
   setPropListeners(props) {
     for (let l in this.propListeners) delete this.propListeners[l];
@@ -86,8 +86,8 @@ export class Listeners {
   }
   /**
    * Adds an event listener.
-   * @param type {string} event name to listen to.
-   * @param listener {function} event handler function.
+   * @param {string} type - event name to listen to.
+   * @param {function} listener - event handler function.
    */
   addEventListener(type, listener) {
     const node = this.node;
@@ -101,8 +101,8 @@ export class Listeners {
   }
   /**
    * Removes an event listener.
-   * @param type {string} event name to listen to.
-   * @param listener {function} event handler function.
+   * @param {string} type - event name to listen to.
+   * @param {function} listener - event handler function.
    */
   removeEventListener(type, listener) {
     const node = this.node;
@@ -117,10 +117,10 @@ export class Listeners {
   }
   /**
    * Shorthand for event dispatch.
-   * @param type {string} event name to dispatch.
-   * @param detail {object} event detail.
-   * @param bubbles {boolean} event bubbles.
-   * @param src source node/element to dispatch event from.
+   * @param {string} type - event name to dispatch.
+   * @param {Object} detail - event detail.
+   * @param {boolean} bubbles - event bubbles.
+   * @param {HTMLElement|IoNode} src source node/element to dispatch event from.
    */
   dispatchEvent(type, detail = {}, bubbles = true, src = this.node) {
     if (src instanceof HTMLElement || src === window) {

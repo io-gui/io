@@ -1,15 +1,17 @@
+// TODO: TEST
+
 /** Manager for IoNode bindings. */
 export class NodeBindings {
   /**
    * Creates binding manager for IoNode.
-   * @param node {IoNode} Reference to the node/element itself.
+   * @param {IoNode} node - Reference to the node/element itself.
    */
   constructor(node) {
     Object.defineProperty(this, 'node', {value: node, configurable: true});
   }
   /**
    * Returns a binding to the specified property.
-   * @param prop {string} property name.
+   * @param {string} prop - property name.
    */
   get(prop) {
     this[prop] = this[prop] || new Binding(this.node, prop);
@@ -34,8 +36,8 @@ export class NodeBindings {
 export class Binding {
   /**
    * Creates a binding object with specified `sourceNode` and `sourceProp`.
-   * @param sourceNode {IoNode} Source node.
-   * @param sourceProp {string} Source property.
+   * @param {IoNode} sourceNode - Source node.
+   * @param {string} sourceProp - Source property.
    */
   constructor(sourceNode, sourceProp) {
     this.source = sourceNode;
@@ -48,8 +50,8 @@ export class Binding {
   }
   /**
    * Adds a target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
-   * @param targetNode {IoNode} Target node.
-   * @param targetProp {string} Target property.
+   * @param {IoNode} targetNode - Target node.
+   * @param {string} targetProp - Target property.
    */
   addTarget(target, targetProp) {
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
@@ -67,8 +69,8 @@ export class Binding {
   /**
    * Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
    * If `targetProp` is not specified, it removes all target properties.
-   * @param targetNode {IoNode} Target node.
-   * @param targetProp {string} Target property.
+   * @param {IoNode} targetNode - Target node.
+   * @param {string} targetProp - Target property.
    */
   removeTarget(targetNode, targetProp) {
     if (this.targetsMap.has(targetNode)) {

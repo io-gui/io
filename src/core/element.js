@@ -1,7 +1,7 @@
 import {IoNodeMixin} from "./node.js";
 import {Listeners} from "./listeners.js";
 
-// TODO: Documentation and tests
+// TODO: Improve tests and documentation
 
 export class IoElement extends IoNodeMixin(HTMLElement) {
   static get properties() {

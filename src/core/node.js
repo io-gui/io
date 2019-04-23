@@ -1,9 +1,9 @@
 import {NodeBindings} from "./bindings.js";
 import {NodeQueue} from "./queue.js";
 import {ProtoListeners, Listeners} from "./listeners.js";
-import {Properties} from "./properties.js";
+import {Properties, ProtoProperties} from "./properties.js";
 
-// TODO: Improve documentation and tests
+// TODO: Improve tests and documentation
 
 export const IoNodeMixin = (superclass) => {
   const classConstructor = class extends superclass {
@@ -21,7 +21,7 @@ export const IoNodeMixin = (superclass) => {
       Object.defineProperty(this, '__nodeBindings', {value: new NodeBindings(this)});
       Object.defineProperty(this, '__nodeQueue', {value: new NodeQueue(this)});
 
-      Object.defineProperty(this, '__properties', {value: this.__properties.clone(this)});
+      Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
       Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
 
       for (let i = 0; i < this.__functions.length; i++) {
@@ -162,9 +162,7 @@ const Register = function () {
   Object.defineProperty(this.prototype, 'isElement', {value: proto.constructor === HTMLElement});
 
   Object.defineProperty(this.prototype, '__protochain', {value: protochain});
-
-
-  Object.defineProperty(this.prototype, '__properties', {value: new Properties(this.prototype.__protochain)});
+  Object.defineProperty(this.prototype, '__protoProperties', {value: new ProtoProperties(this.prototype.__protochain)});
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__protochain)});
 
   const functions = [];
@@ -183,14 +181,14 @@ const Register = function () {
 
   Object.defineProperty(this.prototype, '__objectProps', {value: []});
   const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
-  for (let prop in this.prototype.__properties) {
-    let type = this.prototype.__properties[prop].type;
+  for (let prop in this.prototype.__protoProperties) {
+    let type = this.prototype.__protoProperties[prop].type;
     if (ignore.indexOf(type) == -1) this.prototype.__objectProps.push(prop);
   }
 
-  for (let prop in this.prototype.__properties) {
+  for (let prop in this.prototype.__protoProperties) {
     const isPublic = prop.charAt(0) !== '_';
-    const isEnumerable = !(this.prototype.__properties[prop].enumerable === false);
+    const isEnumerable = !(this.prototype.__protoProperties[prop].enumerable === false);
     Object.defineProperty(this.prototype, prop, {
       get: function() {
         return this.__properties[prop].value;
