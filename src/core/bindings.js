@@ -1,10 +1,10 @@
 // TODO: Improve tests.
 
-/** Manager for IoNode bindings. */
+/** Manager for `IoNode` and `IoElement` bindings. */
 export class NodeBindings {
   /**
-   * Creates binding manager for IoNode.
-   * @param {IoNode} node - Reference to the node/element itself.
+   * Creates binding manager for `IoNode`.
+   * @param {IoNode|IoElement} node - Reference to the node/element itself.
    */
   constructor(node) {
     Object.defineProperty(this, 'node', {value: node, configurable: true});

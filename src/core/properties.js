@@ -1,6 +1,6 @@
 import {Binding} from "./bindings.js";
 
-// TODO: Improve tests and documentation.
+// TODO: Improve tests.
 
 /** Creates a map of all property configurations defined in the prototype chain. */
 export class ProtoProperties {
@@ -22,10 +22,10 @@ export class ProtoProperties {
   }
 }
 
-/** Store for IoNode properties and their configurations. */
+/** Store for `IoNode` properties and their configurations. */
 export class Properties {
   /**
-   * Creates properties object for IoNode.
+   * Creates properties object for `IoNode`.
    * @param {IoNode} node - Reference to the node/element itself.
    * @param {ProtoProperties} protoProperties - List of property configurations defined in the protochain.
    */
@@ -124,14 +124,14 @@ export class Properties {
  */
 class Property {
   /**
-  * Creates a property configuration object with following properties:
-  * @param {Object} config - Configuration object.
-  * @param {*} config.value - Default value.
-  * @param {function} config.type - Constructor of value.
-  * @param {boolean} config.reflect - Reflects to HTML attribute
-  * @param {Binding} config.binding - Binding object.
-  * @param {boolean} config.enumerable - Makes property enumerable.
-  */
+   * Creates a property configuration object with following properties:
+   * @param {Object} config - Configuration object.
+   * @param {*} config.value - Default value.
+   * @param {function} config.type - Constructor of value.
+   * @param {boolean} config.reflect - Reflects to HTML attribute
+   * @param {Binding} config.binding - Binding object.
+   * @param {boolean} config.enumerable - Makes property enumerable.
+   */
   constructor(config) {
     if (config === null || config === undefined) {
       config = {value: config};

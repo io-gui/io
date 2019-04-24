@@ -13,10 +13,10 @@ export class ProtoListeners {
   }
 }
 
-/** Manager for IoNode listeners. */
+/** Manager for `IoNode` listeners. */
 export class Listeners {
   /**
-   * Creates listener manager for IoNode.
+   * Creates listener manager for `IoNode`.
    * @param {IoNode} node - Reference to the node/element itself.
    * @param {ProtoListeners} protoListeners - List of listeners defined in the protochain.
    */
@@ -40,7 +40,7 @@ export class Listeners {
     }
   }
   /**
-   * Adds all event listeners.
+   * Adds event listeners.
    */
   connect() {
     const node = this.node;
@@ -55,7 +55,7 @@ export class Listeners {
     }
   }
   /**
-   * Removes all event listeners.
+   * Removes event listeners.
    */
   disconnect() {
     const node = this.node;

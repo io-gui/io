@@ -1,9 +1,9 @@
-// TODO: TEST
+// TODO: Improve tests.
 
-/** Manager for IoNode event queue and change handle functions. */
+/** Manager for `IoNode` event queue and change handle functions. */
 export class NodeQueue extends Array {
   /**
-   * Creates queue manager for IoNode.
+   * Creates queue manager for `IoNode`.
    * @param {IoNode} node - Reference to the node/element itself.
    */
   constructor(node) {

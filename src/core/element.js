@@ -243,7 +243,8 @@ const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.
 
 const _stagingElement = document.createElement('div');
 
-export function initStyle(prototypes) {
+
+function initStyle(prototypes) {
   let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   for (let i = prototypes.length; i--;) {
     let style = prototypes[i].constructor.style;
