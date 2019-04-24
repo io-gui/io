@@ -50,7 +50,7 @@ export class IoCanvas extends IoElement {
         position: relative;
         border: 1px solid black;
       }
-      :host canvas {
+      :host > canvas {
         position: absolute;
         top: 0px;
         left: 0px;

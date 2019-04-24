@@ -70,7 +70,7 @@ export class IoProperties extends IoElement {
       this.dispatchEvent('value-set', detail, false);
     }
   }
-  // TODO: considet valueMutated() instead
+  // TODO: Consider valueMutated() instead
   changed() {
     const config = this._config;
     const elements = [];
@@ -124,7 +124,8 @@ export class Config {
       if (proto.constructor !== HTMLElement
           && proto.constructor !== Element
           && proto.constructor !== Node
-          && proto.constructor !== EventTarget) {
+          && proto.constructor !== EventTarget
+          && proto.constructor !== Object) {
         keys.push(...Object.keys(proto));
       }
       prototypes.push(proto.constructor.name);

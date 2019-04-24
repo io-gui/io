@@ -50,7 +50,7 @@ export class IoSliderKnob extends IoCanvas {
         cursor: ew-resize;
         touch-action: none;
       }
-      :host > img {
+      :host > canvas {
         pointer-events: none;
         touch-action: none;
       }

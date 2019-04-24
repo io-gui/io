@@ -53,7 +53,7 @@ export class IoCollapsable extends IoElement {
   changed() {
     this.template([
       ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
-      this.expanded ? ['div', {className: 'io-collapsable-content'}, this.elements] : null
+      (this.expanded && this.elements.length) ? ['div', {className: 'io-collapsable-content'}, this.elements] : null
     ]);
   }
 }
