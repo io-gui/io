@@ -1,9 +1,16 @@
 import {IoNodeMixin} from "./node.js";
 import {Listeners} from "./listeners.js";
 
-// TODO: Improve tests and documentation.
-
+// TODO: Improve tests.
+/**
+  * Base class for custom elements.
+  * `IoNodeMixin` applied to `HTMLElement` and a few custom functions.
+  */
 export class IoElement extends IoNodeMixin(HTMLElement) {
+  /**
+   * See IoNode for more details.
+   * @return {Object} properties - Properties configuration objects.
+   */
   static get properties() {
     return {
       id: {
@@ -35,6 +42,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       },
     };
   }
+  /**
+    * Callback when `IoElement` is connected.
+    * Resize listener is added here if element class has `resized()` function defined.
+    */
   connectedCallback() {
     super.connectedCallback();
     for (let prop in this.__properties) {
@@ -51,6 +62,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
     }
   }
+  /**
+    * Callback when `IoElement` is connected.
+    */
   disconnectedCallback() {
     super.disconnectedCallback();
     if (typeof this.resized == 'function') {
@@ -61,16 +75,30 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
     }
   }
+  /**
+    * Disposes all internals.
+    * Use this when node is no longer needed.
+    */
   dispose() {
     super.dispose();
     delete this.parent;
     this.children.lenght = 0;
     // this.__properties.$.value = {};
   }
+  /**
+    * Renders DOM from virtual DOM arrays.
+    * @param {Array} children - Array of vDOM children.
+    * @param {HTMLElement} [host] - Optional template target.
+    */
   template(children, host) {
     // this.__properties.$.value = {};
     this.traverse(buildTree()(['root', children]).children, host || this);
   }
+  /**
+    * Recurively traverses vDOM.
+    * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
+    * @param {HTMLElement} [host] - Optional template target.
+    */
   traverse(vChildren, host) {
     const children = host.children;
     // remove trailing elements
@@ -145,7 +173,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
     }
   }
-  // fixup for setAttribute
+  // fixup for HTMLElement setAttribute
   setAttribute(attr, value) {
     if (value === true) {
       HTMLElement.prototype.setAttribute.call(this, attr, '');
@@ -165,6 +193,9 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
 <a href="https://www.google.com/chrome/">Chrome</a> or
 <a href="https://www.apple.com/lae/safari/">Safari</a>`;
 
+/**
+  * Register function for `IoElement`. Registers custom element.
+  */
 IoElement.Register = function() {
 
   IoNodeMixin.Register.call(this);
@@ -193,6 +224,12 @@ if (window.ResizeObserver !== undefined) {
   });
 }
 
+// TODO: refactor and make more powerful.
+/**
+  * Template literal handler for HTML strings.
+  * @param {Array} parts - Template literal array argument.
+  * @return {string} - Created HTML code.
+  */
 export function html(parts) {
   let result = {
     string: '',
@@ -213,6 +250,11 @@ export function html(parts) {
   return result;
 }
 
+/**
+  * Creates an element from virtual dom array.
+  * @param {Array} vDOMNode - Virtual dom array.
+  * @return {HTMLElement} - Created element.
+  */
 const constructElement = function(vDOMNode) {
  let ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
  if (ConstructorClass) return new ConstructorClass(vDOMNode.props);
@@ -243,7 +285,10 @@ const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.
 
 const _stagingElement = document.createElement('div');
 
-
+/**
+  * Initializes the element style.
+  * @param {Array} prototypes - An array of prototypes to ge the styles from.
+  */
 function initStyle(prototypes) {
   let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   for (let i = prototypes.length; i--;) {
