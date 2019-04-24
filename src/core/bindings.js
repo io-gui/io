@@ -12,6 +12,7 @@ export class NodeBindings {
   /**
    * Returns a binding to the specified property.
    * @param {string} prop - property name.
+   * @return {Binding} Property binding.
    */
   get(prop) {
     this[prop] = this[prop] || new Binding(this.node, prop);
@@ -53,17 +54,17 @@ export class Binding {
    * @param {IoNode} targetNode - Target node.
    * @param {string} targetProp - Target property.
    */
-  addTarget(target, targetProp) {
-    if (this.targets.indexOf(target) === -1) this.targets.push(target);
-    if (this.targetsMap.has(target)) {
-      const targetProps = this.targetsMap.get(target);
+  addTarget(targetNode, targetProp) {
+    if (this.targets.indexOf(targetNode) === -1) this.targets.push(targetNode);
+    if (this.targetsMap.has(targetNode)) {
+      const targetProps = this.targetsMap.get(targetNode);
       if (targetProps.indexOf(targetProp) === -1) {
         targetProps.push(targetProp);
-        target.addEventListener(targetProp + '-changed', this.updateSource);
+        targetNode.addEventListener(targetProp + '-changed', this.updateSource);
       }
     } else {
-      this.targetsMap.set(target, [targetProp]);
-      target.addEventListener(targetProp + '-changed', this.updateSource);
+      this.targetsMap.set(targetNode, [targetProp]);
+      targetNode.addEventListener(targetProp + '-changed', this.updateSource);
     }
   }
   /**
@@ -92,6 +93,10 @@ export class Binding {
   }
   /**
    * Event handler that updates source property when one of the targets emits `[prop]-changed` event.
+   * @param {Object} event - Event object.
+   * @param {IoNode|HTMLElement} event.target - Event target (source node that emitted the event).
+   * @param {Object} event.detail - Event detail.
+   * @param {*} event.detail.value - New value.
    */
   updateSource(event) {
     if (this.targets.indexOf(event.target) === -1) {
@@ -108,6 +113,10 @@ export class Binding {
   }
   /**
    * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
+   * @param {Object} event - Event object.
+   * @param {IoNode|HTMLElement} event.target - Event target (source node that emitted the event).
+   * @param {Object} event.detail - Event detail.
+   * @param {*} event.detail.value - New value.
    */
   updateTargets(event) {
     if (event.target != this.source) {

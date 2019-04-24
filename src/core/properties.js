@@ -5,7 +5,7 @@ import {Binding} from "./bindings.js";
 /** Creates a map of all property configurations defined in the prototype chain. */
 export class ProtoProperties {
   /**
-   * @param protochain {Array} Array of protochain constructors.
+   * @param {Array} protochain Array of protochain constructors.
    */
   constructor(protochain) {
     const propertyDefs = {};
@@ -43,6 +43,7 @@ export class Properties {
   /**
    * Gets specified property value.
    * @param {string} prop - Property name.
+   * @return {*} Property value.
    */
   get(prop) {
     return this[prop].value;
@@ -131,32 +132,34 @@ class Property {
   * @param {Binding} config.binding - Binding object.
   * @param {boolean} config.enumerable - Makes property enumerable.
   */
-  constructor(propDef) {
-    if (propDef === null || propDef === undefined) {
-      propDef = {value: propDef};
-    } else if (typeof propDef === 'function') {
-      propDef = {type: propDef};
-    } else if (propDef instanceof Array) {
-      propDef = {type: Array, value: [...propDef]};
-    } else if (propDef instanceof Binding) {
-      propDef = {binding: propDef, value: propDef.value};
-    } else if (typeof propDef !== 'object') {
-      propDef = {value: propDef, type: propDef.constructor};
+  constructor(config) {
+    if (config === null || config === undefined) {
+      config = {value: config};
+    } else if (typeof config === 'function') {
+      config = {type: config};
+    } else if (config instanceof Array) {
+      config = {type: Array, value: [...config]};
+    } else if (config instanceof Binding) {
+      config = {binding: config, value: config.value};
+    } else if (typeof config !== 'object') {
+      config = {value: config, type: config.constructor};
     }
-    this.assign(propDef);
+    this.assign(config);
   }
   /**
    * Helper function to assign new values as we walk up the inheritance chain.
+   * @param {Object} config - Configuration object.
    */
-  assign(propDef) {
-    if (propDef.value !== undefined) this.value = propDef.value;
-    if (propDef.type !== undefined) this.type = propDef.type;
-    if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
-    if (propDef.binding !== undefined) this.binding = propDef.binding;
-    this.enumerable = propDef.enumerable !== undefined ? propDef.enumerable : true;
+  assign(config) {
+    if (config.value !== undefined) this.value = config.value;
+    if (config.type !== undefined) this.type = config.type;
+    if (config.reflect !== undefined) this.reflect = config.reflect;
+    if (config.binding !== undefined) this.binding = config.binding;
+    this.enumerable = config.enumerable !== undefined ? config.enumerable : true;
   }
   /**
    * Clones the property. If property value is objects it does one level deep object clone.
+   * @return {Property} - Property configuration.
    */
   clone() {
     const prop = new Property(this);
