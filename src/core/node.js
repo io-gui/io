@@ -201,7 +201,7 @@ export const IoNodeMixin = (superclass) => {
     }
     /**
       * Wrapper for addEventListener.
-      * @param {string} type- listener name.
+      * @param {string} type - listener name.
       * @param {function} listener - listener handler.
       */
     addEventListener(type, listener) {
@@ -209,7 +209,7 @@ export const IoNodeMixin = (superclass) => {
     }
     /**
       * Wrapper for removeEventListener.
-      * @param {string} type- event name to listen to.
+      * @param {string} type - event name to listen to.
       * @param {function} listener - listener handler.
       */
     removeEventListener(type, listener) {
