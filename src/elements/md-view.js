@@ -5,8 +5,7 @@ if (window.marked) window.marked.setOptions({sanitize: false});
 
 export class IoMdView extends IoElement {
   static get style() {
-    return html`
-      <style>
+    return html`<style>
       :host {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         letter-spacing: 0.04em;
