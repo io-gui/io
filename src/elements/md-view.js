@@ -70,8 +70,7 @@ export class IoMdView extends IoElement {
         text-align: right;
         opacity: 0.5;
       }
-      </style>
-    `;
+    </style>`;
   }
   static get properties() {
     return {
