@@ -286,7 +286,9 @@ const Register = function () {
   const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
   for (let prop in this.prototype.__protoProperties) {
     let type = this.prototype.__protoProperties[prop].type;
-    if (ignore.indexOf(type) == -1) this.prototype.__objectProps.push(prop);
+    if (prop !== '$') { // TODO: unhack
+      if (ignore.indexOf(type) == -1) this.prototype.__objectProps.push(prop);
+    }
   }
 
   for (let prop in this.prototype.__protoProperties) {

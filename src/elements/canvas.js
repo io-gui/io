@@ -79,7 +79,7 @@ export class IoCanvas extends IoElement {
   constructor(props) {
     super(props);
 
-    let frag = 'precision mediump float;';
+    let frag = 'precision mediump float;\n';
 
     for (let prop in this.__properties) {
       let type = this.__properties[prop].type;
@@ -119,6 +119,7 @@ export class IoCanvas extends IoElement {
 
     this.template([['canvas', {id: 'canvas'}]]);
     this._context2d = this.$.canvas.getContext('2d');
+    this._context2d.imageSmoothingEnabled = false;
 
     this.render();
   }
@@ -129,7 +130,9 @@ export class IoCanvas extends IoElement {
     this.render();
   }
   changed() {
-    this.render();
+    requestAnimationFrame(() => {
+      this.render();
+    })
   }
   render() {
     if (!this._shader) return;
