@@ -137,6 +137,7 @@ export const IoNodeMixin = (superclass) => {
       // if (this.__connected) this.queueDispatch();
       this.queueDispatch();
     }
+    // TODO: Document.
     // TODO: Refactor.
     // TODO: Test extensively.
     applyCompose(nodes) {
@@ -160,8 +161,11 @@ export const IoNodeMixin = (superclass) => {
         const prop = this.__objectProps[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
-          if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
-          this.changed();
+          // TODO: consider optimizing
+          // setTimeout(()=> {
+            if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
+            this.changed();
+          // });
           return;
         }
       }

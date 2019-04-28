@@ -3,7 +3,8 @@
 import {html, IoElement} from "../core/element.js";
 
 const canvas = document.createElement('canvas');
-const gl = canvas.getContext('webgl', {antialias: true, premultipliedAlpha: false});
+const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false});
+gl.imageSmoothingEnabled = false;
 
 gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -56,6 +57,7 @@ export class IoCanvas extends IoElement {
         left: 0px;
         touch-action: none;
         user-select: none;
+        image-rendering: pixelated;
       }
     </style>`;
   }
@@ -127,7 +129,7 @@ export class IoCanvas extends IoElement {
     const rect = this.getBoundingClientRect();
     this.size[0] = rect.width;
     this.size[1] = rect.height;
-    this.render();
+    this.changed();
   }
   changed() {
     requestAnimationFrame(() => {
