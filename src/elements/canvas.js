@@ -134,7 +134,7 @@ export class IoCanvas extends IoElement {
   changed() {
     requestAnimationFrame(() => {
       this.render();
-    })
+    });
   }
   render() {
     if (!this._shader) return;
