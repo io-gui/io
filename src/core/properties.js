@@ -20,6 +20,12 @@ export class ProtoProperties {
       this[key] = new Property(propertyDefs[key]);
     }
   }
+  get(prop) {
+    console.warn('Property', prop, 'cannot be get before instance is constructed.');
+  }
+  set(prop) {
+    console.warn('Property', prop, 'cannot be set before instance is constructed.');
+  }
 }
 
 /** Store for `IoNode` properties and their configurations. */
