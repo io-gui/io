@@ -133,9 +133,7 @@ export const IoNodeMixin = (superclass) => {
           this.style.setProperty(s, props['style'][s]);
         }
       }
-      // TODO: Consider postpoining dispatch for unconnected elements.
-      // if (this.__connected) this.queueDispatch();
-      this.queueDispatch();
+      if (this.__connected) this.queueDispatch();
     }
     // TODO: Document.
     // TODO: Refactor.
@@ -307,9 +305,11 @@ const Register = function () {
         const oldValue = this.__properties.get(prop);
         this.__properties.set(prop, value);
         value = this.__properties.get(prop);
-        if (isPublic && this.__connected) {
+        if (isPublic) {
           this.queue(prop, value, oldValue);
-          this.queueDispatch();
+          if (this.__connected) {
+            this.queueDispatch();
+          }
         }
       },
       enumerable: isEnumerable && isPublic,
