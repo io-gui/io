@@ -7,6 +7,7 @@ export class IoNumber extends IoElement {
   static get style() {
     return html`<style>
       :host {
+        display: inline-block;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
