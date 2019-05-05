@@ -31,7 +31,6 @@ export class IoElementCache extends IoElement {
   }
   precacheChanged() {
     if (this.precache && document.readyState === 'complete') {
-      // console.log(this.elements)
       this.template(this.elements, this.stagingElement);
       for (let i = 0; i < this.stagingElement.childNodes.length; i++) {
         this._cache[i] = this.stagingElement.childNodes[i];
@@ -47,7 +46,7 @@ export class IoElementCache extends IoElement {
   }
   changed() {
     if (!this.elements[this.selected]) return;
-    if ((this.precache || this.cache) && (this.elements[this.selected].cache === true) && this._cache[this.selected]) {
+    if ((this.precache || this.cache) && (this.elements[this.selected].cache !== false) && this._cache[this.selected]) {
       this.innerHTML = '';
       this.appendChild(this._cache[this.selected]);
     } else {
