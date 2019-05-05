@@ -1,9 +1,7 @@
 import {IoElement} from "../core/element.js";
 
 // TODO: document and test
-
-const stagingElement = document.createElement('div');
-// document.head.appendChild(stagingElement);
+// TODO: consider renaming
 
 export class IoElementCache extends IoElement {
   static get properties() {
@@ -14,6 +12,11 @@ export class IoElementCache extends IoElement {
       cache: Boolean,
       _cache: Object,
     };
+  }
+  constructor(props) {
+    super(props);
+    this.stagingElement = document.createElement('io-element-cache-staging');
+    document.head.appendChild(this.stagingElement);
   }
   connectedCallback() {
     super.connectedCallback();
@@ -28,17 +31,18 @@ export class IoElementCache extends IoElement {
   }
   precacheChanged() {
     if (this.precache && document.readyState === 'complete') {
-      this.template(this.elements, stagingElement);
-      for (let i = 0; i < stagingElement.childNodes.length; i++) {
-        this._cache[i] = stagingElement.childNodes[i];
+      // console.log(this.elements)
+      this.template(this.elements, this.stagingElement);
+      for (let i = 0; i < this.stagingElement.childNodes.length; i++) {
+        this._cache[i] = this.stagingElement.childNodes[i];
       }
-      stagingElement.innerHTML = '';
     }
+    this.stagingElement.innerHTML = '';
   }
   dispose() {
     super.dispose();
     this.innerHTML = '';
-    stagingElement.innerHTML = '';
+    this.stagingElement.innerHTML = '';
     delete this._cache;
   }
   changed() {
@@ -49,10 +53,10 @@ export class IoElementCache extends IoElement {
     } else {
       if (this.cache) {
         this.innerHTML = '';
-        this.template([this.elements[this.selected]], stagingElement);
-        this._cache[this.selected] = stagingElement.childNodes[0];
+        this.template([this.elements[this.selected]], this.stagingElement);
+        this._cache[this.selected] = this.stagingElement.childNodes[0];
         this.appendChild(this._cache[this.selected]);
-        stagingElement.innerHTML = '';
+        this.stagingElement.innerHTML = '';
       } else {
         this.template([this.elements[this.selected]]);
       }
