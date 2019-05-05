@@ -3,6 +3,7 @@ import {IoElement} from "../core/element.js";
 // TODO: document and test
 
 const stagingElement = document.createElement('div');
+// document.head.appendChild(stagingElement);
 
 export class IoElementCache extends IoElement {
   static get properties() {
