@@ -75,6 +75,9 @@ export class IoDemo extends IoElement {
       :host io-slider:not(:last-of-type) {
         margin-bottom: var(--io-theme-spacing);
       }
+      :host io-layout {
+        height: 500px;
+      }
     </style>`;
   }
   static get properties() {
@@ -167,6 +170,26 @@ export class IoDemo extends IoElement {
         ['io-menu-options', {className: 'sidebar', options: this.menuoptions}],
         ['div', {className: 'label'}, 'horizontal'],
         ['io-menu-options', {className: 'menubar', options: this.menuoptions, horizontal: true}],
+      ]}],
+      ['io-collapsable', {label: 'io-layout', expanded: $('io-layout'), elements: [
+        ['io-layout', {
+          orientation: 'horizontal',
+          elements: {
+            'demo-layout-element1': ['io-string', {label: 'test 1', value: 'test 1'}],
+            'demo-layout-element2': ['p', {label: 'test 2'}, 'test 2'],
+            'demo-layout-element3': ['io-boolean', {label: 'test 3', value: true}],
+            'demo-layout-element4': ['io-object', {label: 'test 4', value: this}],
+          },
+          layout: {'splits': [
+            {'tabs': ['demo-layout-element1']},
+            {'orientation': 'vertical', 'size': 250, 'splits': [
+              {'size': 100, 'tabs': ['demo-layout-element2']},
+              {'selected': 0, 'tabs': ['demo-layout-element3', 'demo-layout-element4']},
+              {'size': 10, 'tabs': ['demo-layout-element1']},
+              {'size': 10},
+            ]},
+          ]},
+        }],
       ]}],
     ]);
   }
