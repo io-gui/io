@@ -13,5 +13,6 @@
     "eslint": "^4.19.1",
     "rollup": "^0.59.4",
     "uglify-es": "^3.3.9"
-  }
+  },
+  "dependencies": {}
 }

@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../../../io/src/io.js";
+import {html, IoElement} from "../core/element.js";
 import "./layout-divider.js";
 import "./layout-tabs.js";
 

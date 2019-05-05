@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../../../io/src/io.js";
+import {IoElement} from "../core/element.js";
 
 const _dragIcon = document.createElement('div');
 _dragIcon.style = `pointer-events: none; position: fixed; padding: 0.2em 1.6em; background: rgba(0,0,0,0.5); z-index:2147483647`;

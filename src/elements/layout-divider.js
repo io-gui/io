@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../../../io/src/io.js";
+import {html, IoElement} from "../core/element.js";
 
 export class IoLayoutDivider extends IoElement {
   static get style() {

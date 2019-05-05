@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../../../io/src/io.js";
+import {html, IoElement} from "../core/element.js";
 import "./layout-splits.js";
 
 export class IoLayout extends IoElement {
@@ -23,7 +23,7 @@ export class IoLayout extends IoElement {
         orientation: this.layout.orientation,
         splits: this.layout.splits,
       }],
-    ])
+    ]);
   }
 }
 
