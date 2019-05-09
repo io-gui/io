@@ -1,1 +1,1 @@
-### `IoSelector` `<io-selector>` ###
+### `IoTabbedElements` `<io-tabbed-elements>` ###

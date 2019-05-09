@@ -81,8 +81,8 @@ export class IoTabs extends IoElement {
   }
   static get properties() {
     return {
-      options: Array,
-      selected: null,
+      tabs: Array,
+      selected: String,
       vertical: {
         type: Boolean,
         reflect: true,
@@ -112,14 +112,14 @@ export class IoTabs extends IoElement {
       hamburger: true,
       title: 'select tab menu',
       value: this.bind('selected'),
-      options: this.options
+      options: this.tabs
     }];
-    for (let i = 0; i < this.options.length; i++) {
+    for (let i = 0; i < this.tabs.length; i++) {
       buttons.push(['io-button', {
-        label: this.options[i].label,
-        value: this.options[i].value,
+        label: this.tabs[i],
+        value: this.tabs[i],
         action: this.select,
-        className: this.selected === this.options[i].value ? 'io-selected' : ''
+        className: this.selected === this.tabs[i] ? 'io-selected' : ''
       }]);
     }
     this.template([hamburger, buttons[this.selected] || ['span'], ...buttons]);

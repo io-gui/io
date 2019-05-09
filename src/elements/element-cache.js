@@ -6,7 +6,7 @@ import {IoElement} from "../core/element.js";
 export class IoElementCache extends IoElement {
   static get properties() {
     return {
-      selected: Number,
+      selected: String,
       elements:  Array,
       precache: Boolean,
       cache: Boolean,
@@ -45,19 +45,26 @@ export class IoElementCache extends IoElement {
     delete this._cache;
   }
   changed() {
-    if (!this.elements[this.selected]) return;
-    if ((this.precache || this.cache) && (this.elements[this.selected].cache !== false) && this._cache[this.selected]) {
+    const element = this.elements.find(element => {
+      return element[1].label == this.selected;
+    });
+
+    if (!element) {
+      this.template()
+      return;
+    }
+    if ((this.precache || this.cache) && (element.cache !== false) && this._cache[this.selected]) {
       this.innerHTML = '';
       this.appendChild(this._cache[this.selected]);
     } else {
       if (this.cache) {
         this.innerHTML = '';
-        this.template([this.elements[this.selected]], this.stagingElement);
+        this.template([element], this.stagingElement);
         this._cache[this.selected] = this.stagingElement.childNodes[0];
         this.appendChild(this._cache[this.selected]);
         this.stagingElement.innerHTML = '';
       } else {
-        this.template([this.elements[this.selected]]);
+        this.template([element]);
       }
     }
   }

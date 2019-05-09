@@ -174,21 +174,21 @@ export class IoDemo extends IoElement {
       ['io-collapsable', {label: 'io-layout', expanded: $('io-layout'), elements: [
         ['io-layout', {
           orientation: 'horizontal',
-          elements: {
-            'demo-layout-element1': ['io-string', {label: 'test 1', value: 'test 1'}],
-            'demo-layout-element2': ['p', {label: 'test 2'}, 'test 2'],
-            'demo-layout-element3': ['io-boolean', {label: 'test 3', value: true}],
-            'demo-layout-element4': ['io-object', {label: 'test 4', value: this}],
-          },
-          layout: {'splits': [
-            {'tabs': ['demo-layout-element1']},
-            {'orientation': 'vertical', 'size': 250, 'splits': [
-              {'size': 100, 'tabs': ['demo-layout-element2']},
-              {'selected': 0, 'tabs': ['demo-layout-element3', 'demo-layout-element4']},
-              {'size': 10, 'tabs': ['demo-layout-element1']},
-              {'size': 10},
+          elements: [
+            ['io-string', {label: 'test s', value: this.bind('string')}],
+            ['p', {label: 'test p'}, 'paragraph'],
+            ['io-boolean', {label: 'test b', value: this.bind('boolean')}],
+            ['io-object', {label: 'test o', value: this}],
+          ],
+          splits: [
+            {selected: 'test s', tabs: ['test s']},
+            {orientation: 'vertical', size: 650, splits: [
+              {selected: 'test p', size: 100, tabs: ['test p']},
+              {selected: 'test b', tabs: ['test s', 'test b']},
+              {selected: 'test s', size: 10, tabs: ['test s']},
+              {size: 10},
             ]},
-          ]},
+          ],
         }],
       ]}],
     ]);

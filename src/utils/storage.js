@@ -63,7 +63,11 @@ class IoStorageNode extends IoNode {
     const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
     const localValue = localStorage.getItem(key);
     if (hashValue !== undefined) {
-      this.value = JSON.parse(hashValue);
+      try {
+        this.value = JSON.parse(hashValue);
+      } catch (e) {
+        this.value = hashValue;
+      }
     } else {
       if (localValue !== null && localValue !== undefined) {
         this.value = JSON.parse(localValue);

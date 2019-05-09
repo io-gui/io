@@ -1,6 +1,6 @@
 import {html, IoElement} from "../core/element.js";
-import "./layout-tab.js";
-import "./layout-tabs.js";
+// import "./_layout-tab.js";
+// import "./layout-tabs.js";
 
 export class IoLayoutBlock extends IoElement {
   static get style() {
@@ -44,7 +44,7 @@ export class IoLayoutBlock extends IoElement {
     return {
       elements: Object,
       tabs: Array,
-      selected: Number
+      selected: String
     };
   }
   static get listeners() {
@@ -61,22 +61,6 @@ export class IoLayoutBlock extends IoElement {
     ]);
   }
 
-  _onAddTab(event) {
-    if (this.tabs.indexOf(event.detail.tabID) !== -1) {
-      this.tabs.splice(this.tabs.indexOf(event.detail.tabID), 1);
-    }
-    this.tabs.splice(event.detail.index, 0, event.detail.tabID);
-    this.selected = this.tabs.indexOf(event.detail.tabID);
-    this.dispatchEvent('layout-changed', {tabs: this.tabs, selected: this.selected});
-    this.changed();
-  }
-  _onRemoveTab(event) {
-    let index = this.tabs.indexOf(event.detail.tabID);
-    this.tabs.splice(index, 1);
-    this.selected = Math.min(this.selected, this.tabs.length - 1);
-    this.dispatchEvent('layout-changed', {tabs: this.tabs, selected: this.selected});
-    this.changed();
-  }
   _onTabSelect(event) {
     this.selected = this.tabs.indexOf(event.detail.tabID);
     this.dispatchEvent('layout-changed', {tabs: this.tabs, selected: this.selected});
