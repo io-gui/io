@@ -50,6 +50,7 @@ export class IoLayout extends IoElement {
           editable: this.editable,
           style: style,
         }]);
+        // children.push(['div', {style: style}, ' ' + split.size]);
       } else if (split.splits) {
         children.push(['io-layout', {
           elements: this.elements,
@@ -59,6 +60,7 @@ export class IoLayout extends IoElement {
           style: style,
         }]);
       } else {
+        // TODO: Improve data validation.
         children.push(['p', 'Malformed layout data.']);
       }
       if (i < this.splits.length - 1) {
@@ -70,24 +72,24 @@ export class IoLayout extends IoElement {
     }
     this.template([children]);
   }
-  // static get listeners() {
-  //   return {
-  //     'layout-divider-move': '_onDividerMove',
-  //     'layout-changed': '_onAppBlockChanged'
-  //   };
-  // }
-  // _onAppBlockChanged(event) {
-  //   for (let i = this.splits.length; i--;) {
-  //     if (this.splits[i][1].tabs == event.detail.tabs) {
-  //       this.splits[i][1].selected = event.detail.selected;
-  //       // if (event.detail.tabs.length === 0) {
-  //       //   this.splits.splice(i, 1);
-  //       //   console.log(event.detail.tabs);
-  //       // }
-  //     }
-  //   }
-  //   this.changed();
-  // }
+  static get listeners() {
+    return {
+      'io-layout-divider-move': '_onDividerMove',
+      'layout-changed': '_onAppBlockChanged'
+    };
+  }
+  _onAppBlockChanged(event) {
+    // for (let i = this.splits.length; i--;) {
+    //   if (this.splits[i][1].tabs == event.detail.tabs) {
+    //     this.splits[i][1].selected = event.detail.selected;
+    //     // if (event.detail.tabs.length === 0) {
+    //     //   this.splits.splice(i, 1);
+    //     //   console.log(event.detail.tabs);
+    //     // }
+    //   }
+    // }
+    this.changed();
+  }
   // addSplit(elementID, srcBlock, target) {
   //   let hor = this.orientation === 'horizontal';
   //   let ver = this.orientation === 'vertical';
@@ -112,46 +114,46 @@ export class IoLayout extends IoElement {
   //   }
   //   this.changed();
   // }
-  // _onDividerMove(event) {
-  //   event.stopPropagation();
-  //
-  //   let pi = event.detail.index;
-  //   let ni = event.detail.index + 1;
-  //
-  //   let prev = this.splits[pi];
-  //   let next = this.splits[ni];
-  //
-  //   // TODO: better clipping and snapping
-  //   let dp = prev[2] === undefined ? undefined : (prev[2] + event.detail.movement);
-  //   let dn = next[2] === undefined ? undefined : (next[2] - event.detail.movement);
-  //
-  //   // console.log(dp, dn);
-  //   if ((dp !== undefined && dp >= 0) && (dn === undefined || dn >= 0)) {
-  //     this.splits[pi][2] = Math.max(0, dp);
-  //   }
-  //   if ((dn !== undefined && dn >= 0) && (dp === undefined || dp >= 0)) {
-  //     this.splits[ni][2] = Math.max(0, dn);
-  //   }
-  //
-  //   if (prev[2] === undefined && next[2] === undefined) {
-  //     let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'layout-divider');
-  //     let dim = this.orientation === 'horizontal' ? 'width' : 'height';
-  //     let ci = Math.floor(this.splits.length / 2);
-  //     if (Math.abs(ci - pi) <= Math.abs(ci - ni)) {
-  //       for (let j = ni; j < this.splits.length; j++) {
-  //         this.splits[j][2] = parseInt($blocks[j].getBoundingClientRect()[dim]);
-  //       }
-  //     } else {
-  //       for (let j = pi; j >= 0; j--) {
-  //         this.splits[j][2] = parseInt($blocks[j].getBoundingClientRect()[dim]);
-  //       }
-  //     }
-  //   }
-  //
-  //
-  //   this.dispatchEvent('layout-changed', this.splits);
-  //   this.changed();
-  // }
+  _onDividerMove(event) {
+    event.stopPropagation();
+    let pi = event.detail.index;
+    let ni = event.detail.index + 1;
+
+    let prev = this.splits[pi];
+    let next = this.splits[ni];
+
+    // TODO: better clipping and snapping
+    let dp = prev.size === undefined ? undefined : (prev.size + event.detail.movement);
+    let dn = next.size === undefined ? undefined : (next.size - event.detail.movement);
+
+    // console.log(dp, dn);
+    if ((dp !== undefined && dp >= 0) && (dn === undefined || dn >= 0)) {
+      this.splits[pi].size = Math.max(0, dp);
+    }
+    if ((dn !== undefined && dn >= 0) && (dp === undefined || dp >= 0)) {
+      this.splits[ni].size = Math.max(0, dn);
+    }
+
+    // TODO improve UX to work as expected in all edge cases.
+
+    if (prev.size === undefined && next.size === undefined) {
+      let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
+      let dim = this.orientation === 'horizontal' ? 'width' : 'height';
+      let ci = Math.floor(this.splits.length / 2);
+      if (Math.abs(ci - pi) <= Math.abs(ci - ni)) {
+        for (let j = ni; j < this.splits.length; j++) {
+          this.splits[j].size = parseInt($blocks[j].getBoundingClientRect()[dim]);
+        }
+      } else {
+        for (let j = pi; j >= 0; j--) {
+          this.splits[j].size = parseInt($blocks[j].getBoundingClientRect()[dim]);
+        }
+      }
+    }
+
+    this.dispatchEvent('layout-changed', this.splits);
+    this.changed();
+  }
 }
 
 IoLayout.Register();

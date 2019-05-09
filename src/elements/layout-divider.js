@@ -40,16 +40,18 @@ export class IoLayoutDivider extends IoElement {
   }
   static get listeners() {
     return {
-      'pointer-move': '_onPointerMove'
+      'pointermove': '_onPointerMove'
     };
   }
   _onPointerMove(event) {
-    console.log(event);
-    // let rect = this.getBoundingClientRect();
-    // let pos = event.detail.pointer[0].position;
-    // let mov = this.orientation === 'horizontal' ? pos.x : pos.y;
-    // let dim = this.orientation === 'horizontal' ? 'width' : 'height';
-    // this.dispatchEvent('layout-divider-move', {movement: mov - rect[dim] / 2, index: this.index});
+    if (event.buttons) {
+      event.preventDefault();
+      this.setPointerCapture(event.pointerId);
+      this.dispatchEvent('io-layout-divider-move', {
+        movement: this.orientation === 'horizontal' ? event.movementX : event.movementY,
+        index: this.index
+      }, true);
+    }
   }
   changed() {
     this.template([

@@ -47,7 +47,7 @@ export class IoDemo extends IoElement {
   constructor(props) {
     super(props);
 
-    const demoPrimitives = ['io-collapsable', {label: 'primitives', expanded: $('primitives'), elements: [
+    const demoPrimitives = ['io-collapsable', {label: 'primitives', elements: [
       ['div', {className: 'table'}, [
         ['span', 'io-string'],
         ['span', 'io-number'],
@@ -73,7 +73,7 @@ export class IoDemo extends IoElement {
       ]]
     ]}];
 
-    const demoSliders = ['io-collapsable', {label: 'sliders', expanded: $('sliders'), elements: [
+    const demoSliders = ['io-collapsable', {label: 'sliders', elements: [
       ['io-slider', {value: this.bind('number')}],
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
@@ -82,7 +82,7 @@ export class IoDemo extends IoElement {
       ['io-slider', {value: this.bind('NaN'), step: 0.1}],
     ]}];
 
-    const demoOptions = ['io-collapsable', {label: 'options', expanded: $('options'), elements: [
+    const demoOptions = ['io-collapsable', {label: 'options', elements: [
       ['io-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},
@@ -94,29 +94,29 @@ export class IoDemo extends IoElement {
       ], value: this.bind('number')}],
     ]}];
 
-    const demoButton = ['io-collapsable', {label: 'button', expanded: $('button'), elements: [
+    const demoButton = ['io-collapsable', {label: 'button', elements: [
       ['io-button', {label: 'set .5', action: this.setNumber, value: 0.5}],
       ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
       ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
       ['io-button', {label: 'set 3', action: this.setNumber, value: 3}],
     ]}];
 
-    const demoObject = ['io-collapsable', {label: 'object', expanded: $('object'), elements: [
+    const demoObject = ['io-collapsable', {label: 'object', elements: [
       ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}], //TODO: labeled?
       ['io-object', {value: this, label: 'IoDemo (single configured property)', labeled: false, expanded: $('io-object2'), props: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
       ['io-object', {value: menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
     ]}];
 
-    const demoInspector = ['io-collapsable', {label: 'inspector', expanded: $('inspector'), elements: [
+    const demoInspector = ['io-collapsable', {label: 'inspector', elements: [
       ['io-inspector', {value: this, expanded: ['properties']}],
     ]}];
 
-    const demoMenu = ['io-collapsable', {label: 'menu', expanded: $('menu'), elements: [
+    const demoMenu = ['io-collapsable', {label: 'menu', elements: [
       ['div', 'right-click (contextmenu)'],
       ['io-menu', {options: menuoptions, position: 'pointer', button: 2, ondown: false}]
     ]}];
 
-    const demoMenuoptions = ['io-collapsable', {label: 'menuoptions', expanded: $('menuoptions'), elements: [
+    const demoMenuoptions = ['io-collapsable', {label: 'menuoptions', elements: [
       ['io-menu-options', {className: 'sidebar', options: menuoptions}],
       ['io-menu-options', {className: 'menubar', options: menuoptions, horizontal: true}],
     ]}];
@@ -124,14 +124,23 @@ export class IoDemo extends IoElement {
     const demoLayout = ['io-collapsable', {label: 'layout', expanded: $('layout'), elements: [
       ['io-layout', {
         orientation: 'horizontal',
-        elements: [demoPrimitives, demoSliders, demoOptions, demoButton, demoObject, demoInspector, demoMenu, demoMenuoptions],
+        elements: [
+          demoPrimitives,
+          demoSliders,
+          demoOptions,
+          demoButton,
+          demoObject,
+          demoInspector,
+          demoMenu,
+          demoMenuoptions
+        ],
         splits: [
-          {selected: 'primitives', tabs: ['primitives']},
-          {orientation: 'vertical', size: 650, splits: [
+          {selected: 'primitives', tabs: ['primitives'], size: 150},
+          {orientation: 'vertical', splits: [
             {tabs: ['button'], selected: 'button', size: 100},
             {tabs: ['primitives', 'sliders'], selected: 'sliders'},
-            {tabs: ['primitives'], selected: 'primitives', size: 10},
-            {size: 10},
+            {tabs: ['primitives'], selected: 'primitives'},
+            {tabs: ['menu'], selected: 'menu', size: 10},
           ]},
         ],
       }],
