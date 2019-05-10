@@ -32,9 +32,15 @@ export class NodeQueue extends Array {
     if (this.length) {
       for (let j = 0; j < this.length; j += 2) {
         const prop = this[j];
-        const payload = {detail: this[j + 1]};
-        if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
-        node.dispatchEvent(prop + '-changed', payload.detail);
+        const detail = this[j + 1]
+        const payload = {detail: detail};
+        if (typeof detail.value === 'object' && detail.value === detail.oldValue) {
+          if (node[prop + 'Mutated']) node[prop + 'Mutated'](payload);
+          node.dispatchEvent(prop + '-mutated', payload.detail);
+        } else {
+          if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
+          node.dispatchEvent(prop + '-changed', payload.detail);
+        }
       }
       // TODO: Evaluate performance and consider refactoring.
       if (node.isNode && !node.isElement) {
