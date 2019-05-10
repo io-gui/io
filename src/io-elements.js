@@ -19,7 +19,6 @@ export {IoNumber} from "./elements/number.js";
 export {IoObject} from "./elements/object.js";
 export {IoOption} from "./elements/option.js";
 export {IoProperties} from "./elements/properties.js";
-export {IoTabs} from "./elements/tabs.js";
 export {IoSlider} from "./elements/slider.js";
 export {IoString} from "./elements/string.js";
 export {IoTabbedElements} from "./elements/tabbed-elements.js";
