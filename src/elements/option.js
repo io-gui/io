@@ -4,20 +4,16 @@ import {IoButton} from "./button.js";
 export class IoOption extends IoButton {
   static get style() {
     return html`<style>
-      :host:not([hamburger])::after {
-        width: 0.65em;
-        margin-left: 0.25em;
-        content: '▾';
+      :host {
+        padding-left: calc(1.5 * var(--io-theme-padding));
+        padding-right: calc(1.5 * var(--io-theme-padding));
       }
     </style>`;
   }
   static get properties() {
     return {
       options: Array,
-      hamburger: {
-        type: Boolean,
-        reflect: true,
-      },
+      label: '',
     };
   }
   static get listeners() {
@@ -47,7 +43,7 @@ export class IoOption extends IoButton {
       }
     }
     this.template([
-      ['span', this.hamburger ? '☰' : String(label)],
+      ['span', this.label || '▾' + String(label)],
       ['io-menu', {
         id: 'menu',
         options: this.options,

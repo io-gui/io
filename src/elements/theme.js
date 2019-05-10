@@ -8,7 +8,7 @@ export class IoTheme extends IoElement {
         --radius: 5px 5px 5px 5px;
         --spacing: 3px;
         --padding: 3px;
-        --border-radius: 2px;
+        --border-radius: 4px;
         --border-width: 1px;
         --border: var(--border-width) solid rgba(128, 128, 128, 0.25);
         --color: #000;

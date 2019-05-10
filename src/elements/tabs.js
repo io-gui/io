@@ -109,7 +109,7 @@ export class IoTabs extends IoElement {
   changed() {
     const buttons = [];
     const hamburger = ['io-option', {
-      hamburger: true,
+      label: '☰',
       title: 'select tab menu',
       value: this.bind('selected'),
       options: this.tabs
