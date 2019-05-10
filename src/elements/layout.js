@@ -15,6 +15,9 @@ export class IoLayout extends IoElement {
       :host[orientation=vertical] {
         flex-direction: column;
       }
+      :host > io-tabbed-elements {
+        margin-top: var(--io-theme-spacing);
+      }
     </style>`;
   }
   static get properties() {
@@ -27,6 +30,20 @@ export class IoLayout extends IoElement {
         reflect: true
       }
     };
+  }
+  static get listeners() {
+    return {
+      'io-layout-divider-move': '_onDividerMove',
+      // 'layout-changed': '_onAppBlockChanged'
+    };
+  }
+  splitsMutated() {
+    const $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
+    for (let i = 0; i < $blocks.length; i++) {
+      if ($blocks[i].selected) {
+        this.splits[i].selected = $blocks[i].selected;
+      }
+    }
   }
   changed() {
     // let dim = this.orientation === 'horizontal' ? 'width' : 'height';
@@ -49,6 +66,7 @@ export class IoLayout extends IoElement {
           selected: split.selected,
           editable: this.editable,
           style: style,
+          'on-selected-changed': this.splitsMutated
         }]);
         // children.push(['div', {style: style}, ' ' + split.size]);
       } else if (split.splits) {
@@ -72,29 +90,22 @@ export class IoLayout extends IoElement {
     }
     this.template([children]);
   }
-  static get listeners() {
-    return {
-      'io-layout-divider-move': '_onDividerMove',
-      'layout-changed': '_onAppBlockChanged'
-    };
-  }
-  _onAppBlockChanged(event) {
-    // for (let i = this.splits.length; i--;) {
-    //   if (this.splits[i][1].tabs == event.detail.tabs) {
-    //     this.splits[i][1].selected = event.detail.selected;
-    //     // if (event.detail.tabs.length === 0) {
-    //     //   this.splits.splice(i, 1);
-    //     //   console.log(event.detail.tabs);
-    //     // }
-    //   }
-    // }
-    this.changed();
-  }
+  // splitsChanged(event) {
+  //   // for (let i = this.splits.length; i--;) {
+  //   //   if (this.splits[i][1].tabs == event.detail.tabs) {
+  //   //     this.splits[i][1].selected = event.detail.selected;
+  //   //     // if (event.detail.tabs.length === 0) {
+  //   //     //   this.splits.splice(i, 1);
+  //   //     //   console.log(event.detail.tabs);
+  //   //     // }
+  //   //   }
+  //   // }
+  // }
   // addSplit(elementID, srcBlock, target) {
   //   let hor = this.orientation === 'horizontal';
   //   let ver = this.orientation === 'vertical';
   //
-  //   let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
+  //   const $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
   //   let spliceIndex = $blocks.indexOf(srcBlock);
   //   let divideIndex = -1;
   //
@@ -137,7 +148,7 @@ export class IoLayout extends IoElement {
     // TODO improve UX to work as expected in all edge cases.
 
     if (prev.size === undefined && next.size === undefined) {
-      let $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
+      const $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
       let dim = this.orientation === 'horizontal' ? 'width' : 'height';
       let ci = Math.floor(this.splits.length / 2);
       if (Math.abs(ci - pi) <= Math.abs(ci - ni)) {
@@ -151,8 +162,8 @@ export class IoLayout extends IoElement {
       }
     }
 
-    this.dispatchEvent('layout-changed', this.splits);
-    this.changed();
+    this.queue('splits', this.splits, this.splits);
+    this.queueDispatch();
   }
 }
 

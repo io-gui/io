@@ -96,16 +96,12 @@ export class IoTabbedElements extends IoElement {
     const _elements = this.elements.map(element => { return element[1].label; });
     const _filter = this.filter.length ? this.filter : _elements;
 
-    if (_filter.indexOf(this.selected) == -1) {
-      this.__properties.selected.value = _filter[0];
-    }
-
     // TODO: consider testing with large element collections and optimizing.
     const options = [];
     for (let i = 0; i < _elements.length; i++) {
       const added = this.filter.indexOf(_elements[i]) !== -1;
       options.push({
-        icon: added ? '⌦' : ' ',
+        icon: added ? '⌦' : '·',
         value: _elements[i],
         action: added ? this._onRemoveTab : this._onAddTab,
       });
@@ -134,22 +130,25 @@ export class IoTabbedElements extends IoElement {
       }],
     ]);
   }
-
   _onAddTab(tabID) {
     if (this.filter.indexOf(tabID) !== -1) {
       this.filter.splice(this.filter.indexOf(tabID), 1);
     }
     this.filter.push(tabID);
-    this.__properties.selected.value = tabID;
+    this.selected = tabID;
     this.$.tabs.resized();
-    this.filter = [...this.filter];
+    this.changed();
   }
   _onRemoveTab(tabID) {
     if (this.filter.indexOf(tabID) !== -1) {
       this.filter.splice(this.filter.indexOf(tabID), 1);
     }
+    if (this.filter.indexOf(this.selected) == -1) {
+      this.selected = this.filter[0];
+    }
     this.$.tabs.resized();
-    this.filter = [...this.filter];
+    this.$.tabs.changed();
+    this.changed();
   }
 }
 
@@ -164,6 +163,7 @@ export class IoTabs extends IoElement {
         flex-wrap: nowrap;
         font-style: italic;
         overflow: hidden;
+        flex: 0 1 auto;
       }
       :host > * {
         flex: 0 0 auto;
