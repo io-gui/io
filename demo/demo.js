@@ -47,42 +47,40 @@ export class IoDemo extends IoElement {
   constructor(props) {
     super(props);
 
-    const demoPrimitives = ['io-collapsable', {label: 'primitives', elements: [
-      ['div', {className: 'table'}, [
-        ['span', 'io-string'],
-        ['span', 'io-number'],
-        ['span', 'io-boolean'],
-        ['io-string', {id: 'string', value: this.bind('string')}],
-        ['io-number', {value: this.bind('string')}],
-        ['io-boolean', {type: 'boolean', value: this.bind('string')}],
-        ['io-string', {value: this.bind('number')}],
-        ['io-number', {id: 'number', value: this.bind('number')}],
-        ['io-boolean', {type: 'boolean', value: this.bind('number')}],
-        ['io-string', {value: this.bind('boolean')}],
-        ['io-number', {value: this.bind('boolean')}],
-        ['io-boolean', {id: 'boolean', type: 'boolean', value: this.bind('boolean')}],
-        ['io-string', {value: this.bind('NaN')}],
-        ['io-number', {value: this.bind('NaN')}],
-        ['io-boolean', {type: 'boolean', value: this.bind('NaN')}],
-        ['io-string', {value: this.bind('null')}],
-        ['io-number', {value: this.bind('null')}],
-        ['io-boolean', {type: 'boolean', value: this.bind('null')}],
-        ['io-string', {value: this.bind('undefined')}],
-        ['io-number', {value: this.bind('undefined')}],
-        ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
-      ]]
-    ]}];
+    const demoPrimitives = ['div', {label: 'primitives', className: 'table'}, [
+      ['span', 'io-string'],
+      ['span', 'io-number'],
+      ['span', 'io-boolean'],
+      ['io-string', {id: 'string', value: this.bind('string')}],
+      ['io-number', {value: this.bind('string')}],
+      ['io-boolean', {type: 'boolean', value: this.bind('string')}],
+      ['io-string', {value: this.bind('number')}],
+      ['io-number', {id: 'number', value: this.bind('number')}],
+      ['io-boolean', {type: 'boolean', value: this.bind('number')}],
+      ['io-string', {value: this.bind('boolean')}],
+      ['io-number', {value: this.bind('boolean')}],
+      ['io-boolean', {id: 'boolean', type: 'boolean', value: this.bind('boolean')}],
+      ['io-string', {value: this.bind('NaN')}],
+      ['io-number', {value: this.bind('NaN')}],
+      ['io-boolean', {type: 'boolean', value: this.bind('NaN')}],
+      ['io-string', {value: this.bind('null')}],
+      ['io-number', {value: this.bind('null')}],
+      ['io-boolean', {type: 'boolean', value: this.bind('null')}],
+      ['io-string', {value: this.bind('undefined')}],
+      ['io-number', {value: this.bind('undefined')}],
+      ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
+    ]];
 
-    const demoSliders = ['io-collapsable', {label: 'sliders', elements: [
+    const demoSliders = ['div', {label: 'sliders'}, [
       ['io-slider', {value: this.bind('number')}],
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
       ['io-slider', {value: this.bind('number'), min: -2, max: 3, step: 1}],
       ['io-slider', {value: this.bind('number'), min: -1, max: 1, step: 0.1}],
       ['io-slider', {value: this.bind('NaN'), step: 0.1}],
-    ]}];
+    ]];
 
-    const demoOptions = ['io-collapsable', {label: 'options', elements: [
+    const demoOptions = ['div', {label: 'options'}, [
       ['io-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},
@@ -92,36 +90,33 @@ export class IoDemo extends IoElement {
         {label: 'four', value: 4},
         {label: 'leet', value: 1337},
       ], value: this.bind('number')}],
-    ]}];
+    ]];
 
-    const demoButton = ['io-collapsable', {label: 'button', elements: [
+    const demoButton = ['div', {label: 'button'}, [
       ['io-button', {label: 'set .5', action: this.setNumber, value: 0.5}],
       ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
       ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
       ['io-button', {label: 'set 3', action: this.setNumber, value: 3}],
-    ]}];
+    ]];
 
-    const demoObject = ['io-collapsable', {label: 'object', elements: [
+    const demoObject = ['div', {label: 'object'}, [
       ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}], //TODO: labeled?
       ['io-object', {value: this, label: 'IoDemo (single configured property)', labeled: false, expanded: $('io-object2'), props: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
       ['io-object', {value: menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
-    ]}];
+    ]];
 
-    const demoInspector = ['io-collapsable', {label: 'inspector', elements: [
+    const demoInspector = ['div', {label: 'inspector'}, [
       ['io-inspector', {value: this, expanded: ['properties']}],
-    ]}];
+    ]];
 
-    const demoMenu = ['io-collapsable', {label: 'menu', elements: [
+    const demoMenu = ['div', {label: 'menu'}, [
       ['div', 'right-click (contextmenu)'],
-      ['io-menu', {options: menuoptions, position: 'pointer', button: 2, ondown: false}]
-    ]}];
-
-    const demoMenuoptions = ['io-collapsable', {label: 'menuoptions', elements: [
+      ['io-menu', {options: menuoptions, position: 'pointer', button: 2, ondown: false}],
       ['io-menu-options', {className: 'sidebar', options: menuoptions}],
       ['io-menu-options', {className: 'menubar', options: menuoptions, horizontal: true}],
-    ]}];
+    ]];
 
-    const demoLayout = ['io-collapsable', {label: 'layout', expanded: $('layout'), elements: [
+    const demoLayout = ['div', {label: 'layout', expanded: $('layout')}, [
       ['io-layout', {
         orientation: 'horizontal',
         elements: [
@@ -132,7 +127,6 @@ export class IoDemo extends IoElement {
           demoObject,
           demoInspector,
           demoMenu,
-          demoMenuoptions
         ],
         splits: [
           {selected: 'primitives', tabs: ['primitives'], size: 150},
@@ -144,20 +138,19 @@ export class IoDemo extends IoElement {
           ]},
         ],
       }],
-    ]}]
+    ]]
 
     // TODO: Add demos for all remaining elements
 
     this.template([
-      demoPrimitives,
-      demoSliders,
-      demoOptions,
-      demoButton,
-      demoObject,
-      demoInspector,
-      demoMenu,
-      demoMenuoptions,
-      demoLayout,
+      ['io-collapsable', {label: 'Primitives', expanded: $('Primitives'), elements: [demoPrimitives]}],
+      ['io-collapsable', {label: 'Sliders', expanded: $('Sliders'), elements: [demoSliders]}],
+      ['io-collapsable', {label: 'Options', expanded: $('Options'), elements: [demoOptions]}],
+      ['io-collapsable', {label: 'Button', expanded: $('Button'), elements: [demoButton]}],
+      ['io-collapsable', {label: 'Object', expanded: $('Object'), elements: [demoObject]}],
+      ['io-collapsable', {label: 'Inspector', expanded: $('Inspector'), elements: [demoInspector]}],
+      ['io-collapsable', {label: 'Menu', expanded: $('Menu'), elements: [demoMenu]}],
+      ['io-collapsable', {label: 'Layout', expanded: $('Layout'), elements: [demoLayout]}],
     ]);
   }
 }
