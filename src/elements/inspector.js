@@ -10,77 +10,7 @@ function isValueOfPropertyOf(prop, object) {
 export class IoInspector extends IoElement {
   static get style() {
     return html`<style>
-    :host {
-      display: flex;
-      flex-direction: column;
-      border: var(--io-theme-content-border);
-      border-radius: var(--io-theme-border-radius);
-      padding: var(--io-theme-padding);
-      background: var(--io-theme-content-bg);
-    }
-    :host > io-inspector-breadcrumbs {
-      margin: var(--io-theme-spacing);
-    }
-    :host > io-collapsable {
-      margin: var(--io-theme-spacing);
-    }
-    :host > io-collapsable > div io-properties > .io-property {
-      overflow: hidden;
-      padding: var(--io-theme-padding);
-    }
-    :host > io-collapsable > div io-properties > .io-property:not(:last-of-type) {
-      border-bottom: var(--io-theme-border);
-    }
-    :host > io-collapsable > div io-properties > .io-property > :nth-child(1) {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-align: right;
-      flex: 0 1 8em;
-      min-width: 3em;
-      padding: var(--io-theme-padding);
-      margin: calc(0.25 * var(--io-theme-spacing));
-    }
-    :host > io-collapsable > div io-properties > .io-property > :nth-child(2) {
-      flex: 1 0 8em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      min-width: 2em;
-    }
 
-    /* :host > .io-property > io-object,
-    :host > .io-property > io-object > io-boolean,
-    :host > .io-property > io-object > io-properties {
-      padding: 0 !important;
-      border: none !important;
-      background: none !important;
-    } */
-
-    :host div io-properties > .io-property > io-object,
-    :host div io-properties > .io-property > io-number,
-    :host div io-properties > .io-property > io-string,
-    :host div io-properties > .io-property > io-boolean {
-      border: 1px solid transparent;
-      padding: var(--io-theme-padding) !important;
-    }
-    :host div io-properties > .io-property > io-boolean:not([value]) {
-      opacity: 0.5;
-    }
-    :host div io-properties > .io-property > io-option {
-      flex: 0 1 auto !important;
-      padding: var(--io-theme-padding) !important;
-    }
-    :host div io-properties > .io-property > io-number,
-    :host div io-properties > .io-property > io-string {
-      border: var(--io-theme-field-border);
-      color: var(--io-theme-field-color);
-      background: var(--io-theme-field-bg);
-    }
-
-    :host io-properties > .io-property > io-properties {
-      border: var(--io-theme-field-border);
-      background: rgba(127, 127, 127, 0.125);
-    }
     </style>`;
   }
   static get properties() {

@@ -32,7 +32,7 @@ export class NodeQueue extends Array {
     if (this.length) {
       for (let j = 0; j < this.length; j += 2) {
         const prop = this[j];
-        const detail = this[j + 1]
+        const detail = this[j + 1];
         const payload = {detail: detail};
         if (typeof detail.value === 'object' && detail.value === detail.oldValue) {
           if (node[prop + 'Mutated']) node[prop + 'Mutated'](payload);

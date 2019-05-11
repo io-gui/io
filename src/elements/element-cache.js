@@ -50,7 +50,7 @@ export class IoElementCache extends IoElement {
     });
 
     if (!element) {
-      this.template()
+      this.template();
       return;
     }
     if ((this.precache || this.cache) && (element.cache !== false) && this._cache[this.selected]) {
