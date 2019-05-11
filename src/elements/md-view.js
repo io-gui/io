@@ -66,10 +66,6 @@ export class IoMdView extends IoElement {
           width: 100%;
           height: 100%;
       }
-      :host .publishdate {
-        text-align: right;
-        opacity: 0.5;
-      }
     </style>`;
   }
   static get properties() {
