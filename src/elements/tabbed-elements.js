@@ -7,80 +7,44 @@ export class IoTabbedElements extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
-        align-items: stretch;
-        position: relative;
         overflow: auto;
       }
       :host > io-tabs {
-        z-index: 2;
-        flex: 0 0 auto;
-        margin: 0 var(--io-theme-spacing);
-        margin-bottom: calc(-1.1 * var(--io-theme-border-width));
-      }
-      :host[editable] > .new-tab-selector {
-        position: absolute;
-        top: 0;
-        right: var(--io-theme-spacing);
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
         z-index: 1;
-        opacity: 0.4;
-      }
-      :host[editable] > io-tabs {
-        margin-right: calc(2.2em + var(--io-theme-spacing)) !important;
+        margin: 0 var(--io-theme-spacing);
+        margin-bottom: calc(-1 * var(--io-theme-border-width));
       }
       :host > io-element-cache {
         flex: 1 1 auto;
+        overflow: auto;
         padding: var(--io-theme-padding);
         border: var(--io-theme-content-border);
         border-radius: var(--io-theme-border-radius);
         background: var(--io-theme-content-bg);
-        overflow: auto;
+      }
+      :host > io-tabs {
+        flex-shrink: 0;
       }
     </style>`;
   }
   static get properties() {
     return {
       elements: Array,
-      filter: Array,
+      filter: null,
       selected: String,
       precache: false,
       cache: true,
-      editable: {
-        type: Boolean,
-        reflect: true
-      },
-      role: {
-        type: String,
-        reflect: false
-      }
+      editable: Boolean,
     };
   }
   changed() {
-    const _elements = this.elements.map(element => { return element[1].label; });
-    const _filter = this.filter.length ? this.filter : _elements;
-
-    // TODO: consider testing with large element collections and optimizing.
-    const options = [];
-    for (let i = 0; i < _elements.length; i++) {
-      const added = this.filter.indexOf(_elements[i]) !== -1;
-      options.push({
-        icon: added ? '⌦' : '·',
-        value: _elements[i],
-        action: added ? this._onRemoveTab : this._onAddTab,
-      });
-    }
-
     this.template([
-      this.editable ? ['io-option', {
-        className: 'new-tab-selector',
-        label: '🛠',
-        options: options,
-      }] : null,
       ['io-tabs', {
         id: 'tabs',
         selected: this.bind('selected'),
-        tabs: _filter,
+        elements: this.elements,
+        filter: this.filter,
+        editable: this.editable,
         role: 'navigation',
       }],
       ['io-element-cache', {
@@ -91,26 +55,6 @@ export class IoTabbedElements extends IoElement {
         role: this.role,
       }],
     ]);
-  }
-  _onAddTab(tabID) {
-    if (this.filter.indexOf(tabID) !== -1) {
-      this.filter.splice(this.filter.indexOf(tabID), 1);
-    }
-    this.filter.push(tabID);
-    this.selected = tabID;
-    this.$.tabs.resized();
-    this.changed();
-  }
-  _onRemoveTab(tabID) {
-    if (this.filter.indexOf(tabID) !== -1) {
-      this.filter.splice(this.filter.indexOf(tabID), 1);
-    }
-    if (this.filter.indexOf(this.selected) == -1) {
-      this.selected = this.filter[0];
-    }
-    this.$.tabs.resized();
-    this.$.tabs.changed();
-    this.changed();
   }
 }
 
@@ -123,9 +67,9 @@ export class IoTabs extends IoElement {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        font-style: italic;
         overflow: hidden;
         flex: 0 1 auto;
+        position: relative;
       }
       :host > * {
         flex: 0 0 auto;
@@ -138,15 +82,15 @@ export class IoTabs extends IoElement {
         border-bottom-color: var(--io-theme-content-bg);
         background-image: none;
       }
-      :host[overflow] > :nth-child(n+3) {
+      :host[overflow] > :nth-child(n+3):not(.edit-option) {
         visibility: hidden;
       }
-      :host > io-option {
-        font-style: normal;
-      }
       :host > io-button {
-        letter-spacing: 0.145em;
-        font-weight: 500;
+        font-style: italic;
+      }
+      :host > io-button:focus {
+        border: var(--io-theme-button-border);
+        border-bottom-color: var(--io-theme-content-bg);
       }
       :host > io-button:not(.io-selected) {
         color: rgba(0, 0, 0, 0.5);
@@ -154,14 +98,28 @@ export class IoTabs extends IoElement {
       :host > io-button.io-selected {
         background: var(--io-theme-content-bg);
         font-weight: 600;
-        letter-spacing: 0.11em;
+      }
+      :host > .edit-spacer {
+        flex: 0 0 3.5em;
+        background: none;
+      }
+      :host > .edit-option {
+        border: none;
+        background: none;
+        position: absolute;
+        right: 0;
+      }
+      :host > .edit-option:not(:hover) {
+        opacity: 0.3;
       }
     </style>`;
   }
   static get properties() {
     return {
-      tabs: Array,
+      elements: Array,
+      filter: null,
       selected: String,
+      editable: Boolean,
       overflow: {
         type: Boolean,
         reflect: true,
@@ -172,35 +130,89 @@ export class IoTabs extends IoElement {
     this.selected = id;
   }
   resized() {
-    const rect = this.getBoundingClientRect();
-    const lastButton = this.children[this.children.length-1];
-    const rectButton = lastButton.getBoundingClientRect();
-    this.overflow = rect.right < rectButton.right;
+    let right = this.getBoundingClientRect().right;
+    const lastButton = this.children[this.children.length - 2];
+    if (this.overflow) {
+      const hamburgerButton = this.children[0];
+      const firstButton = this.children[1];
+      right += hamburgerButton.getBoundingClientRect().width + firstButton.getBoundingClientRect().width;
+    }
+    this.overflow = lastButton && right < lastButton.getBoundingClientRect().right;
   }
+  _onAddTab(tabID) {
+    if (this.filter.indexOf(tabID) !== -1) {
+      this.filter.splice(this.filter.indexOf(tabID), 1);
+    }
+    this.filter.push(tabID);
+    this.selected = tabID;
+    this.resized();
+    this.changed();
+  }
+  _onRemoveTab(tabID) {
+    if (this.filter.indexOf(tabID) !== -1) {
+      this.filter.splice(this.filter.indexOf(tabID), 1);
+    }
+    if (this.filter.indexOf(this.selected) == -1) {
+      this.selected = this.filter[0];
+    }
+    this.resized();
+    this.changed();
+    this.changed();
+  }
+
   changed() {
+
+    const _elements = this.elements.map(element => { return element[1].label; });
+    const _filter = this.filter ? this.filter : _elements;
+
+    // TODO: consider testing with large element collections and optimizing.
+    const options = [];
+    for (let i = 0; i < _elements.length; i++) {
+      const added = this.filter && this.filter.indexOf(_elements[i]) !== -1;
+      options.push({
+        icon: added ? '⌦' : '·',
+        value: _elements[i],
+        action: added ? this._onRemoveTab : this._onAddTab, // TODO: make toggle on options
+      });
+    }
+
     const buttons = [];
     let selectedButton;
-    for (let i = 0; i < this.tabs.length; i++) {
-      const selected = this.selected === this.tabs[i];
+    for (let i = 0; i < _filter.length; i++) {
+      const selected = this.selected === _filter[i];
       const button = ['io-button', {
-        label: this.tabs[i],
-        value: this.tabs[i],
+        label: _filter[i],
+        value: _filter[i],
         action: this.select,
         className: selected ? 'io-selected' : ''
       }];
       if (selected) selectedButton = button;
       buttons.push(button);
     }
-    const elements = [
-      this.overflow ? [['io-option', {
-        label: '☰',
+    const elements = [];
+    if (this.overflow) {
+      elements.push(['io-option', {
+        label: '🍔',
         title: 'select tab menu',
         value: this.bind('selected'),
-        options: this.tabs
-      }],
-      selectedButton] : null,
-      ...buttons
-    ];
+        options: _filter
+      }]);
+      if (selectedButton) {
+        elements.push(selectedButton)
+      }
+    }
+    elements.push(...buttons);
+
+    if (this.editable) {
+      elements.push(['div', {
+        className: 'edit-spacer'
+      }], ['io-option', {
+        className: 'edit-option',
+        label: '⚙️',
+        options: options,
+      }]);
+    }
+
     this.template(elements);
   }
 }

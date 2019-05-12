@@ -312,9 +312,6 @@ export class IoInspectorLink extends IoButton {
         background: none;
         text-decoration: underline;
       }
-      :host[pressed] {
-        background: none;
-      }
     </style>`;
   }
   changed() {

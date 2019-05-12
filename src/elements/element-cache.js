@@ -20,14 +20,11 @@ export class IoElementCache extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    document.addEventListener('readystatechange', this.readystatechange);
+    document.addEventListener('readystatechange', this.precacheChanged);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    document.removeEventListener('readystatechange', this.readystatechange);
-  }
-  readystatechange() {
-    this.precacheChanged();
+    document.removeEventListener('readystatechange', this.precacheChanged);
   }
   precacheChanged() {
     if (this.precache && document.readyState === 'complete') {
@@ -35,8 +32,9 @@ export class IoElementCache extends IoElement {
       for (let i = 0; i < this.stagingElement.childNodes.length; i++) {
         this._cache[i] = this.stagingElement.childNodes[i];
       }
+      this.stagingElement.innerHTML = '';
+      this.changed();
     }
-    this.stagingElement.innerHTML = '';
   }
   dispose() {
     super.dispose();
@@ -57,12 +55,14 @@ export class IoElementCache extends IoElement {
       this.innerHTML = '';
       this.appendChild(this._cache[this.selected]);
     } else {
-      if (this.cache) {
+      if (this.precache || this.cache) {
         this.innerHTML = '';
-        this.template([element], this.stagingElement);
-        this._cache[this.selected] = this.stagingElement.childNodes[0];
+        if (!this._cache[this.selected]) {
+          this.template([element], this.stagingElement);
+          this._cache[this.selected] = this.stagingElement.childNodes[0];
+          this.stagingElement.innerHTML = '';
+        }
         this.appendChild(this._cache[this.selected]);
-        this.stagingElement.innerHTML = '';
       } else {
         this.template([element]);
       }

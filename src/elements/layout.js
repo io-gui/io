@@ -57,7 +57,7 @@ export class IoLayout extends IoElement {
       const style = {
         'flex-basis': flexBasis ? flexBasis : 'auto',
         'flex-grow': flexBasis ? 0 : 1,
-        'flex-shrink': 1 // flexBasis ? 1 : 0
+        'flex-shrink': flexBasis ? 0 : 1,
       };
       if (split.tabs) {
         children.push(['io-tabbed-elements', {
@@ -161,7 +161,6 @@ export class IoLayout extends IoElement {
         }
       }
     }
-
     this.queue('splits', this.splits, this.splits);
     this.queueDispatch();
   }

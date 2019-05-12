@@ -10,29 +10,26 @@ export class IoButton extends IoElement {
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         text-overflow: ellipsis;
-        line-height: 1em;
+        user-select: none;
         border: var(--io-theme-button-border);
         border-radius: var(--io-theme-border-radius);
         padding: var(--io-theme-padding);
         padding-left: calc(3 * var(--io-theme-padding));
         padding-right: calc(3 * var(--io-theme-padding));
         background: var(--io-theme-button-bg);
-        transition: background-color 0.4s;
         color: var(--io-theme-color);
-        user-select: none;
+        transition: background-color 0.4s;
       }
       :host:focus {
         outline: none;
         background: var(--io-theme-focus-bg);
+        border: var(--io-theme-focus-border);
       }
       :host:hover {
         background: var(--io-theme-hover-bg);
       }
       :host[pressed] {
         background: var(--io-theme-active-bg);
-      }
-      :host > span {
-        text-align: center;
       }
     </style>`;
   }
@@ -69,14 +66,13 @@ export class IoButton extends IoElement {
   }
   onClick() {
     this.pressed = false;
+    this.focus();
     if (this.action) this.action(this.value);
     this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action});
   }
   changed() {
     this.title = this.label;
-    this.template([
-      ['span', this.label]
-    ]);
+    this.innerText = this.label;
   }
 }
 

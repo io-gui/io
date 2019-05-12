@@ -10,6 +10,7 @@ export class IoLayoutDivider extends IoElement {
         display: flex;
         flex: none;
         border: 1px outset #666;
+        user-select: none;
       }
       :host[orientation=horizontal] {
         cursor: col-resize;

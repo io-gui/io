@@ -89,14 +89,14 @@ export class IoMenuLayer extends IoElement {
   }
   runAction(option) {
     if (typeof option.action === 'function') {
-      option.action.apply(null, [option.value]);
       this.collapseAllGroups();
+      option.action.apply(null, [option.value]);
       // if (lastFocus) {
       //   lastFocus.focus();
       // }
     } else if (option.button) {
-      option.button.click(); // TODO: test
       this.collapseAllGroups();
+      option.button.click(); // TODO: test
       // if (lastFocus) {
       //   lastFocus.focus();
       // }

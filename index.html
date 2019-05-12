@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
     <title>UI library for web applications</title>
 
     <meta name="description" content="Io library is designed to help web developers build data-driven web applications using native web technologies. It implements custom elements, virtual DOM, programmable templates, data binding and a simple data-flow design." />
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <meta name="keywords" content="ui, io, ioui, user interface, library, javascript, web development, webdev" />
 
     <meta itemprop="name" content="UI library for web applications" />
@@ -60,15 +60,11 @@
       body {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         padding: 0.5em 0.25em;
-        color: #4d4d4d;
-        background: #f5f5f5;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
       }
       io-main-page {
         display: block;
         margin: auto;
-        max-width: 650px;
+        max-width: 960px;
       }
     </style>
     <link href="./lib/mocha.css" rel="stylesheet" />
@@ -79,7 +75,7 @@
     import "./demo/todomvc/todo-app.js";
     import "./tests/test.js";
 
-    // const service = new IoServiceLoader({path: '../service.js'});
+    const service = new IoServiceLoader({path: '../service.js'});
 
     export class IoMainPage extends IoElement {
       constructor(props) {

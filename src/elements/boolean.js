@@ -5,8 +5,9 @@ export class IoBoolean extends IoButton {
   static get style() {
     return html`<style>
       :host {
-        display: inline-block;
-        background: none;
+        border: var(--io-theme-field-border);
+        color: var(--io-theme-field-color);
+        background: var(--io-theme-field-bg);
       }
     </style>`;
   }
@@ -22,7 +23,7 @@ export class IoBoolean extends IoButton {
   }
   constructor(props) {
     super(props);
-    this.action = this.toggle;
+    this.__properties.action.value = this.toggle;
   }
   toggle() {
     this.set('value', !this.value);

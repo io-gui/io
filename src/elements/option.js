@@ -5,8 +5,12 @@ export class IoOption extends IoButton {
   static get style() {
     return html`<style>
       :host {
-        padding-left: calc(1.5 * var(--io-theme-padding));
-        padding-right: calc(1.5 * var(--io-theme-padding));
+        padding: var(--io-theme-padding) calc(1.5 * var(--io-theme-padding));
+        line-height: 1em;
+      }
+      :host::before {
+        content: '▾';
+        padding-right: var(--io-theme-padding);
       }
     </style>`;
   }
@@ -29,7 +33,6 @@ export class IoOption extends IoButton {
   onMenu(event) {
     this.$['menu'].expanded = false;
     this.set('value', event.detail.value);
-    if (this.action) this.action(this.value);
   }
   changed() {
     let label = this.value;
@@ -43,7 +46,7 @@ export class IoOption extends IoButton {
       }
     }
     this.template([
-      ['span', this.label || '▾ ' + String(label)],
+      ['span', this.label || String(label)],
       ['io-menu', {
         id: 'menu',
         options: this.options,

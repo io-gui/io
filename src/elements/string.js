@@ -16,6 +16,7 @@ export class IoString extends IoElement {
         padding: var(--io-theme-padding);
         color: var(--io-theme-field-color);
         background: var(--io-theme-field-bg);
+        transition: background-color 0.4s;
       }
       :host:focus {
         overflow: hidden;

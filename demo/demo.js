@@ -12,7 +12,8 @@ export class IoDemo extends IoElement {
       }
       :host .table {
         display: grid;
-        grid-template-columns: 5.7em 5.7em 5.7em;
+        grid-template-columns: 5.5em 5.5em 5.5em;
+        grid-gap: var(--io-theme-spacing);
       }
       :host .sidebar {
         display: inline-block;
@@ -22,7 +23,7 @@ export class IoDemo extends IoElement {
         margin-bottom: var(--io-theme-spacing);
       }
       :host io-layout {
-        height: 500px;
+        height: 800px;
       }
       :host .warning {
         margin: 0.5em;
@@ -55,7 +56,7 @@ export class IoDemo extends IoElement {
 
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
     const pointerEventsWarning = [
-      "PointerEvent" in window ? null : ['div', {className: 'warning'}, [
+      "PointerEvent" in window ? [] : ['div', {className: 'warning'}, [
         ['p', 'This feature requires missing PointerEvents support!'],
         ['a', {href: "https://github.com/jquery/PEP#why-pointer-events"}, 'Learn more about the API!'],
       ]]
@@ -108,11 +109,13 @@ export class IoDemo extends IoElement {
       ], value: this.bind('number')}],
     ]];
 
-    const demoButton = ['div', {label: 'button'}, [
+    const demoButton = ['div', {label: 'button', className: 'table'}, [
       ['io-button', {label: 'set .5', action: this.setNumber, value: 0.5}],
       ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
       ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
-      ['io-button', {label: 'set 3', action: this.setNumber, value: 3}],
+      ['io-button', {label: 'null', action: this.setNumber, value: null}],
+      ['io-button', {label: 'NaN', action: this.setNumber, value: NaN}],
+      ['io-button', {label: 'undef', action: this.setNumber, value: undefined}],
     ]];
 
     const demoObject = ['div', {label: 'object'}, [
@@ -147,10 +150,10 @@ export class IoDemo extends IoElement {
           demoMenu,
         ],
         splits: [
-          {selected: 'primitives', tabs: ['primitives'], size: 150},
+          {selected: 'primitives', tabs: ['primitives'], size: 280},
           {orientation: 'vertical', splits: [
             {tabs: ['button'], selected: 'button', size: 100},
-            {tabs: ['primitives', 'sliders'], selected: 'sliders'},
+            {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'menu', 'inspector'], selected: 'sliders'},
             {tabs: ['primitives'], selected: 'primitives'},
             {tabs: ['menu'], selected: 'menu', size: 10},
           ]},
