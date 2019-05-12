@@ -12,7 +12,7 @@ export class IoDemo extends IoElement {
       }
       :host .table {
         display: grid;
-        grid-template-columns: 6em 6em 6em;
+        grid-template-columns: 5.7em 5.7em 5.7em;
       }
       :host .sidebar {
         display: inline-block;
@@ -23,6 +23,12 @@ export class IoDemo extends IoElement {
       }
       :host io-layout {
         height: 500px;
+      }
+      :host .warning {
+        margin: 0.5em;
+        padding: 0.5em;
+        border: 1px solid red;
+        border-radius: 0.5em;
       }
     </style>`;
   }
@@ -46,6 +52,14 @@ export class IoDemo extends IoElement {
   }
   constructor(props) {
     super(props);
+
+    if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
+    const pointerEventsWarning = [
+      "PointerEvent" in window ? null : ['div', {className: 'warning'}, [
+        ['p', 'This feature requires missing PointerEvents support!'],
+        ['a', {href: "https://github.com/jquery/PEP#why-pointer-events"}, 'Learn more about the API!'],
+      ]]
+    ]
 
     const demoPrimitives = ['div', {label: 'primitives', className: 'table'}, [
       ['span', 'io-string'],
@@ -72,6 +86,7 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoSliders = ['div', {label: 'sliders'}, [
+      pointerEventsWarning,
       ['io-slider', {value: this.bind('number')}],
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
@@ -81,6 +96,7 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoOptions = ['div', {label: 'options'}, [
+      pointerEventsWarning,
       ['io-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},
@@ -110,6 +126,7 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoMenu = ['div', {label: 'menu'}, [
+      pointerEventsWarning,
       ['div', 'right-click (contextmenu)'],
       ['io-menu', {options: menuoptions, position: 'pointer', button: 2, ondown: false}],
       ['io-menu-options', {className: 'sidebar', options: menuoptions}],
@@ -117,6 +134,7 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoLayout = ['div', {label: 'layout', expanded: $('layout')}, [
+      pointerEventsWarning,
       ['io-layout', {
         orientation: 'horizontal',
         elements: [

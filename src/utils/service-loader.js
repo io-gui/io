@@ -1,7 +1,7 @@
 import {IoNode} from "../core/node.js";
 
-if (!("serviceWorker" in navigator)) { console.error("No Service Worker support!"); }
-if (!("PushManager" in window)) { console.error("No Push API Support!"); }
+if (!("serviceWorker" in navigator)) { console.warn("No Service Worker support!"); }
+if (!("PushManager" in window)) { console.warn("No Push API Support!"); }
 
 export class IoServiceLoader extends IoNode {
   static get properties() {
@@ -15,7 +15,7 @@ export class IoServiceLoader extends IoNode {
   }
   constructor(props) {
     super(props);
-    this.init();
+    if ("serviceWorker" in navigator) this.init();
   }
   async init() {
     const serviceWorkerRegistration = await navigator.serviceWorker.register(this.path);

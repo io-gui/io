@@ -43,7 +43,7 @@ export class IoOption extends IoButton {
       }
     }
     this.template([
-      ['span', this.label || '▾' + String(label)],
+      ['span', this.label || '▾ ' + String(label)],
       ['io-menu', {
         id: 'menu',
         options: this.options,

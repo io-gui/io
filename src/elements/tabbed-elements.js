@@ -11,34 +11,12 @@ export class IoTabbedElements extends IoElement {
         position: relative;
         overflow: auto;
       }
-      :host[vertical] {
-        flex-direction: row;
-      }
       :host > io-tabs {
         z-index: 2;
         flex: 0 0 auto;
-      }
-      :host:not([vertical]) > io-tabs {
         margin: 0 var(--io-theme-spacing);
         margin-bottom: calc(-1.1 * var(--io-theme-border-width));
       }
-      :host[vertical] > io-tabs {
-        flex: 0 0 auto;
-        margin: var(--io-theme-spacing) 0;
-        margin-right: calc(-1.1 * var(--io-theme-border-width));
-      }
-      :host[vertical] > io-tabs > io-button,
-      :host[vertical] > io-tabs > io-button.io-selected {
-        align-self: flex-end;
-        color: var(--io-theme-link-color);
-        border: none;
-        background: none;
-        background-image: none !important;
-      }
-      :host[vertical] > io-tabs > io-button:hover {
-        text-decoration: underline;
-      }
-
       :host[editable] > .new-tab-selector {
         position: absolute;
         top: 0;
@@ -51,7 +29,6 @@ export class IoTabbedElements extends IoElement {
       :host[editable] > io-tabs {
         margin-right: calc(2.2em + var(--io-theme-spacing)) !important;
       }
-
       :host > io-element-cache {
         flex: 1 1 auto;
         padding: var(--io-theme-padding);
@@ -69,15 +46,6 @@ export class IoTabbedElements extends IoElement {
       selected: String,
       precache: false,
       cache: true,
-      collapseWidth: 500,
-      vertical: {
-        type: Boolean,
-        reflect: true
-      },
-      collapsed: {
-        type: Boolean,
-        reflect: true
-      },
       editable: {
         type: Boolean,
         reflect: true
@@ -87,10 +55,6 @@ export class IoTabbedElements extends IoElement {
         reflect: false
       }
     };
-  }
-  resized() {
-    const rect = this.getBoundingClientRect();
-    this.collapsed = this.vertical && rect.width < this.collapseWidth;
   }
   changed() {
     const _elements = this.elements.map(element => { return element[1].label; });
@@ -116,8 +80,6 @@ export class IoTabbedElements extends IoElement {
       ['io-tabs', {
         id: 'tabs',
         selected: this.bind('selected'),
-        vertical: this.vertical,
-        collapsed: this.collapsed,
         tabs: _filter,
         role: 'navigation',
       }],
@@ -167,53 +129,17 @@ export class IoTabs extends IoElement {
       }
       :host > * {
         flex: 0 0 auto;
-        display: none;
-      }
-      :host:not([vertical]) > * {
         margin-right: var(--io-theme-spacing);
-      }
-      :host[vertical] > * {
-        margin-bottom: var(--io-theme-spacing);
-      }
-      :host[vertical] > io-option {
-        padding: calc(var(--io-theme-padding) * 9) var(--io-theme-padding);
-      }
-      :host[vertical] {
-        flex-direction: column;
-      }
-      :host[vertical][collapsed] > io-option {
-        display: inherit;
-      }
-      :host[vertical]:not([collapsed]) > :nth-child(n+3) {
-        display: inherit;
-      }
-      :host:not([vertical])[overflow] > :nth-child(-n+2) {
-        display: inherit;
-      }
-      :host:not([vertical]):not([overflow]) > :nth-child(n+3) {
-        display: inherit;
-      }
-      :host:not([vertical])[overflow] > :nth-child(n+3) {
-        display: inherit;
-        visibility: hidden;
-      }
-      :host:not([vertical]) > * {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
       }
-      :host:not([vertical]) > *.io-selected {
+      :host > *.io-selected {
         border-bottom-color: var(--io-theme-content-bg);
         background-image: none;
       }
-      :host[vertical] > * {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        background-image: linear-gradient(270deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
-      }
-      :host[vertical] > *.io-selected {
-        border-right-color: var(--io-theme-content-bg);
-        background-image: none;
+      :host[overflow] > :nth-child(n+3) {
+        visibility: hidden;
       }
       :host > io-option {
         font-style: normal;
@@ -236,17 +162,9 @@ export class IoTabs extends IoElement {
     return {
       tabs: Array,
       selected: String,
-      vertical: {
-        type: Boolean,
-        reflect: true,
-      },
       overflow: {
         type: Boolean,
         reflect: true,
-      },
-      collapsed: {
-        type: Boolean,
-        reflect: true
       },
     };
   }
@@ -257,25 +175,33 @@ export class IoTabs extends IoElement {
     const rect = this.getBoundingClientRect();
     const lastButton = this.children[this.children.length-1];
     const rectButton = lastButton.getBoundingClientRect();
-    this.overflow = (!this.vertical && this.collapsed) || rect.right < rectButton.right;
+    this.overflow = rect.right < rectButton.right;
   }
   changed() {
     const buttons = [];
-    const hamburger = ['io-option', {
-      label: '☰',
-      title: 'select tab menu',
-      value: this.bind('selected'),
-      options: this.tabs
-    }];
+    let selectedButton;
     for (let i = 0; i < this.tabs.length; i++) {
-      buttons.push(['io-button', {
+      const selected = this.selected === this.tabs[i];
+      const button = ['io-button', {
         label: this.tabs[i],
         value: this.tabs[i],
         action: this.select,
-        className: this.selected === this.tabs[i] ? 'io-selected' : ''
-      }]);
+        className: selected ? 'io-selected' : ''
+      }];
+      if (selected) selectedButton = button;
+      buttons.push(button);
     }
-    this.template([hamburger, buttons[this.selected] || ['span'], ...buttons]);
+    const elements = [
+      this.overflow ? [['io-option', {
+        label: '☰',
+        title: 'select tab menu',
+        value: this.bind('selected'),
+        options: this.tabs
+      }],
+      selectedButton] : null,
+      ...buttons
+    ];
+    this.template(elements);
   }
 }
 
