@@ -198,7 +198,7 @@ export class IoTabs extends IoElement {
         options: _filter
       }]);
       if (selectedButton) {
-        elements.push(selectedButton)
+        elements.push(selectedButton);
       }
     }
     elements.push(...buttons);
