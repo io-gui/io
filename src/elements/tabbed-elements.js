@@ -1,6 +1,9 @@
 import {html, IoElement} from "../core/element.js";
 import "./element-cache.js";
 
+const _dragIcon = document.createElement('div');
+_dragIcon.style = `pointer-events: none; position: fixed; padding: 0.2em 1.6em; background: rgba(0,0,0,0.5); z-index:2147483647`;
+
 export class IoTabbedElements extends IoElement {
   static get style() {
     return html`<style>
@@ -159,7 +162,53 @@ export class IoTabs extends IoElement {
     this.changed();
     this.changed();
   }
+  _onPointerdown(event) {
+    // console.log(event);
+    event.target.setPointerCapture(event.pointerId);
+    event.target.addEventListener('pointermove', this._onPointermove);
+    event.target.addEventListener('pointerup', this._onPointerup);
+    event.preventDefault();
+    event.stopPropagation();
+    this._dragStartX = event.clientX;
+    this._dragStartY = event.clientY;
+  }
+  _onPointermove(event) {
+    event.target.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    event.stopPropagation();
+    // console.log(event);
 
+    let dist = Math.sqrt(
+      Math.pow(this._dragStartX - event.clientX, 2) +
+      Math.pow(this._dragStartY - event.clientY, 2)
+    );
+    if (dist > 8) {
+      document.body.appendChild(_dragIcon);
+      _dragIcon.innerText = event.target.label;
+      _dragIcon.style.left = event.clientX - 12 + 'px';
+      _dragIcon.style.top = event.clientY - 12 + 'px';
+      //   this.dispatchEvent('layout-tab-drag', {pointer: pointer, tab: this});
+    } else {
+      if (_dragIcon.parentNode === document.body) document.body.removeChild(_dragIcon);
+    }
+  }
+  _onPointerup(event) {
+    // console.log(event);
+    event.preventDefault();
+    event.stopPropagation();
+    event.target.releasePointerCapture(event.pointerId);
+    event.target.removeEventListener('pointermove', this._onPointermove);
+    event.target.removeEventListener('pointerup', this._onPointerup);
+    if (_dragIcon.parentNode === document.body) document.body.removeChild(_dragIcon);
+
+    let dist = Math.sqrt(
+      Math.pow(this._dragStartX - event.clientX, 2) +
+      Math.pow(this._dragStartY - event.clientY, 2)
+    );
+    if (dist > 8) {
+      // this.dispatchEvent('layout-tab-drag-end', {tab: this});
+    }
+  }
   changed() {
 
     const _elements = this.elements.map(element => { return element[1].label; });
@@ -184,7 +233,8 @@ export class IoTabs extends IoElement {
         label: _filter[i],
         value: _filter[i],
         action: this.select,
-        className: selected ? 'io-selected' : ''
+        className: selected ? 'io-selected' : '',
+        'on-pointerdown': this._onPointerdown,
       }];
       if (selected) selectedButton = button;
       buttons.push(button);
