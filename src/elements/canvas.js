@@ -138,6 +138,7 @@ export class IoCanvas extends IoElement {
   }
   render() {
     if (!this._shader) return;
+    if (!this.__properties.size) return;
 
     canvas.width = this.size[0];
     canvas.height = this.size[1];

@@ -105,11 +105,14 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     while (children.length > vChildren.length) {
       const child = children[children.length - 1];
       let nodes = Array.from(child.querySelectorAll('*'));
-      host.removeChild(child);
       for (let i = nodes.length; i--;) {
         if (nodes[i].dispose) nodes[i].dispose();
       }
       if (child.dispose) child.dispose();
+      // TODO: not sure why dispose needs to be called ahead of remove children
+      // Otherwise some bindings get disconnected.
+      // https://github.com/arodic/io/issues/1
+      host.removeChild(child);
     }
     // create new elements after existing
     if (children.length < vChildren.length) {

@@ -172,8 +172,23 @@ export class IoDemo extends IoElement {
       ['io-collapsable', {label: 'Inspector', expanded: $('Inspector'), elements: [demoInspector]}],
       ['io-collapsable', {label: 'Menu', expanded: $('Menu'), elements: [demoMenu]}],
       ['io-collapsable', {label: 'Layout', expanded: $('Layout'), elements: [demoLayout]}],
+      ['io-collapsable', {label: 'Stress Test', expanded: $('Stress Test'), elements: [
+        ['io-button', {label: 'Stress Test!', action: animate}],
+      ]}],
     ]);
   }
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  $('Primitives').source.value = Math.random() < 0.5;
+  $('Sliders').source.value = Math.random() < 0.5;
+  $('Options').source.value = Math.random() < 0.5;
+  $('Button').source.value = Math.random() < 0.5;
+  $('Object').source.value = Math.random() < 0.5;
+  $('Inspector').source.value = Math.random() < 0.5;
+  $('Menu').source.value = Math.random() < 0.5;
+  $('Layout').source.value = Math.random() < 0.5;
 }
 
 IoInspector.RegisterConfig({
