@@ -15,9 +15,6 @@ export class IoLayout extends IoElement {
       :host[orientation=vertical] {
         flex-direction: column;
       }
-      :host > io-tabbed-elements {
-        margin-top: var(--io-theme-spacing);
-      }
     </style>`;
   }
   static get properties() {
@@ -34,7 +31,7 @@ export class IoLayout extends IoElement {
   static get listeners() {
     return {
       'io-layout-divider-move': '_onDividerMove',
-      // 'layout-changed': '_onAppBlockChanged'
+      'io-layout-tab-insert': '_onLayoutTabInsert',
     };
   }
   splitsMutated() {
@@ -125,6 +122,41 @@ export class IoLayout extends IoElement {
   //   }
   //   this.changed();
   // }
+  _onLayoutTabInsert(event) {
+    event.stopPropagation();
+    const $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
+    const srcTabs = event.detail.source;
+    const destTabs = event.detail.destination;
+    const destIndex = $blocks.indexOf(destTabs);
+    const tab = event.detail.tab;
+    const v = this.orientation === 'vertical';
+    const dir = event.detail.direction;
+
+    for (let i = srcTabs.filter.length; i--;) {
+      if (srcTabs.filter[i] === tab) {
+        srcTabs.filter.splice(i, 1);
+        srcTabs.__properties.selected.value = srcTabs.filter[srcTabs.filter.length - 1];
+        srcTabs.changed();
+      }
+    }
+
+    if ((v && dir === 'down') || (!v && dir === 'right')) {
+      this.splits.splice(destIndex + 1, 0, {tabs: [tab], selected: tab});
+    } else if ((v && dir === 'up') || (!v && dir === 'left')) {
+      this.splits.splice(destIndex, 0, {tabs: [tab], selected: tab});
+    } else if ((v && dir === 'left') || (!v && dir === 'up')) {
+      this.splits[destIndex] = {splits: [
+        {tabs: [tab], selected: tab},
+        this.splits[destIndex],
+      ], orientation: v ? 'horizontal' : 'vertical'}
+    } else if ((v && dir === 'right') || (!v && dir === 'down')) {
+      this.splits[destIndex] = {splits: [
+        this.splits[destIndex],
+        {tabs: [tab], selected: tab},
+      ], orientation: v ? 'horizontal' : 'vertical'}
+    }
+    this.changed();
+  }
   _onDividerMove(event) {
     event.stopPropagation();
     let pi = event.detail.index;

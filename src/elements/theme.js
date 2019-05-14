@@ -18,6 +18,7 @@ export class IoTheme extends IoElement {
         --boolean-color: rgb(170, 13, 145);
 
         --link-color: #06a;
+        --focus-color: #09d;
         --focus-border: 1px solid #09d;
         --focus-bg: #def;
         --active-bg: #ef8;

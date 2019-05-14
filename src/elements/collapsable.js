@@ -35,6 +35,9 @@ export class IoCollapsable extends IoElement {
       :host[expanded] > io-boolean::before{
         content: '▾';
       }
+      :host[expanded] > io-boolean {
+        margin-bottom: var(--io-theme-spacing);
+      }
       :host > .io-collapsable-content {
         display: block;
         overflow: auto;
