@@ -179,7 +179,7 @@ export class IoTabbedElements extends IoElement {
       setTimeout(()=>{
         destTabs.selected = tab;
         destTabs.querySelector('.io-selected-tab').focus();
-      })
+      });
     } else if (index < -1) {
       this.dispatchEvent('io-layout-tab-insert', {
         source: srcTabs,

@@ -148,12 +148,12 @@ export class IoLayout extends IoElement {
       this.splits[destIndex] = {splits: [
         {tabs: [tab], selected: tab},
         this.splits[destIndex],
-      ], orientation: v ? 'horizontal' : 'vertical'}
+      ], orientation: v ? 'horizontal' : 'vertical'};
     } else if ((v && dir === 'right') || (!v && dir === 'down')) {
       this.splits[destIndex] = {splits: [
         this.splits[destIndex],
         {tabs: [tab], selected: tab},
-      ], orientation: v ? 'horizontal' : 'vertical'}
+      ], orientation: v ? 'horizontal' : 'vertical'};
     }
     this.changed();
   }
