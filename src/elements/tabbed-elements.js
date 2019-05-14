@@ -15,7 +15,7 @@ export class IoTabbedElements extends IoElement {
       :host > io-tabs {
         z-index: 1;
         margin: 0 var(--io-theme-spacing);
-        margin-bottom: calc(-1 * var(--io-theme-border-width));
+        margin-bottom: calc(-1.1 * var(--io-theme-border-width));
       }
       :host > io-element-cache {
         flex: 1 1 auto;

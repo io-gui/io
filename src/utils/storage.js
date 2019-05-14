@@ -97,4 +97,6 @@ export function IoStorage(key, defValue, hash) {
   return nodes[key].binding;
 }
 
+IoStorageNode.Register();
+
 export {nodes as storageNodes};

@@ -7,7 +7,7 @@ export class IoDemo extends IoElement {
       :host {
         display: block;
       }
-      :host > io-collapsable {
+      :host > * {
         margin: var(--io-theme-spacing);
       }
       :host .table {
@@ -172,9 +172,7 @@ export class IoDemo extends IoElement {
       ['io-collapsable', {label: 'Inspector', expanded: $('Inspector'), elements: [demoInspector]}],
       ['io-collapsable', {label: 'Menu', expanded: $('Menu'), elements: [demoMenu]}],
       ['io-collapsable', {label: 'Layout', expanded: $('Layout'), elements: [demoLayout]}],
-      ['io-collapsable', {label: 'Stress Test', expanded: $('Stress Test'), elements: [
-        ['io-button', {label: 'Stress Test!', action: animate}],
-      ]}],
+      ['io-button', {label: 'Stress Test!', action: animate}],
     ]);
   }
 }

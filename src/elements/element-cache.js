@@ -32,7 +32,7 @@ export class IoElementCache extends IoElement {
       for (let i = 0; i < this.stagingElement.childNodes.length; i++) {
         this._cache[i] = this.stagingElement.childNodes[i];
       }
-      this.stagingElement.innerHTML = '';
+      this.stagingElement.innerText = '';
       this.changed();
     }
   }
@@ -46,21 +46,21 @@ export class IoElementCache extends IoElement {
     const element = this.elements.find(element => {
       return element[1].label == this.selected;
     });
-
     if (!element) {
-      this.template();
+      // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
+      this.innerText = '';
       return;
     }
     if ((this.precache || this.cache) && (element.cache !== false) && this._cache[this.selected]) {
-      this.innerHTML = '';
+      this.innerText = '';
       this.appendChild(this._cache[this.selected]);
     } else {
       if (this.precache || this.cache) {
-        this.innerHTML = '';
+        this.innerText = '';
         if (!this._cache[this.selected]) {
           this.template([element], this.stagingElement);
           this._cache[this.selected] = this.stagingElement.childNodes[0];
-          this.stagingElement.innerHTML = '';
+          this.stagingElement.innerText = '';
         }
         this.appendChild(this._cache[this.selected]);
       } else {

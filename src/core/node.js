@@ -268,7 +268,7 @@ const Register = function () {
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__protochain)});
 
   // TODO: Unhack
-  Object.defineProperty(this.prototype, '__properties', {value: this.prototype.__protoProperties});
+  // Object.defineProperty(this.prototype, '__properties', {value: this.prototype.__protoProperties});
 
   const functions = [];
   for (let i = this.prototype.__protochain.length; i--;) {
