@@ -271,8 +271,8 @@ const Register = function () {
   Object.defineProperty(this.prototype, '__protoProperties', {value: new ProtoProperties(this.prototype.__protochain)});
   Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__protochain)});
 
-  // TODO: Unhack
-  // Object.defineProperty(this.prototype, '__properties', {value: this.prototype.__protoProperties});
+  // TODO: Unhack (hack for three.js-controls)
+  Object.defineProperty(this.prototype, '__properties', {value: this.prototype.__protoProperties});
 
   const functions = [];
   for (let i = this.prototype.__protochain.length; i--;) {
