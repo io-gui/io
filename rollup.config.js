@@ -6,7 +6,7 @@ function html() {
       if ( regex.test( code ) === true ) {
         let match = code.match(regex);
         for (var i = 0; i < match.length; i++) {
-          transformedCode = code.replace(match[i], match[i].replace((/  |\r\n|\n|\r/gm),""))
+          transformedCode = transformedCode.replace(match[i], match[i].replace((/  |\r\n|\n|\r/gm), ""));
         }
       };
       return {
