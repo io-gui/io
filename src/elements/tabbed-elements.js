@@ -58,7 +58,7 @@ export class IoTabbedElements extends IoElement {
   elementsChanged() {
     if (this.filter === null) {
       this.__properties.filter.value =
-          this.elements.map(element => { return element[1].label; });
+          this.elements.map(element => { return element[1].name; });
     }
   }
   editableChanged() {
@@ -296,14 +296,14 @@ export class IoTabs extends IoElement {
     this.selected = id;
   }
   resized() {
-    // let right = this.getBoundingClientRect().right;
-    // const lastButton = this.children[this.children.length - 2];
-    // if (this.overflow) {
-    //   const hamburgerButton = this.children[0];
-    //   const firstButton = this.children[1];
-    //   right += hamburgerButton.getBoundingClientRect().width + firstButton.getBoundingClientRect().width;
-    // }
-    // this.overflow = lastButton && right < lastButton.getBoundingClientRect().right;
+    let right = this.getBoundingClientRect().right;
+    const lastButton = this.children[this.children.length - 2];
+    if (this.overflow) {
+      // const hamburgerButton = this.children[0];
+      // const firstButton = this.children[1];
+      // right += hamburgerButton.getBoundingClientRect().width + firstButton.getBoundingClientRect().width;
+    }
+    this.overflow = lastButton && right < lastButton.getBoundingClientRect().right;
   }
   _onAddTab(tabID) {
     if (this.filter.indexOf(tabID) !== -1) {
@@ -398,7 +398,7 @@ export class IoTabs extends IoElement {
 
 
     const options = [];
-    const _elements = this.elements.map(element => { return element[1].label; });
+    const _elements = this.elements.map(element => { return element[1].name; });
     for (let i = 0; i < _elements.length; i++) {
       const added = this.filter && this.filter.indexOf(_elements[i]) !== -1;
       options.push({

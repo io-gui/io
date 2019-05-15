@@ -59,7 +59,7 @@ export class IoDemo extends IoElement {
       ]]
     ]
 
-    const demoPrimitives = ['div', {label: 'primitives', className: 'table'}, [
+    const demoPrimitives = ['div', {name: 'primitives', className: 'table'}, [
       ['span', 'io-string'],
       ['span', 'io-number'],
       ['span', 'io-boolean'],
@@ -83,7 +83,7 @@ export class IoDemo extends IoElement {
       ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
     ]];
 
-    const demoSliders = ['div', {label: 'sliders'}, [
+    const demoSliders = ['div', {name: 'sliders'}, [
       pointerEventsWarning,
       ['io-slider', {value: this.bind('number')}],
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
@@ -93,7 +93,7 @@ export class IoDemo extends IoElement {
       ['io-slider', {value: this.bind('NaN'), step: 0.1}],
     ]];
 
-    const demoOptions = ['div', {label: 'options'}, [
+    const demoOptions = ['div', {name: 'options'}, [
       pointerEventsWarning,
       ['io-option', {options: [
         {label: 'negative one', value: -1},
@@ -106,7 +106,7 @@ export class IoDemo extends IoElement {
       ], value: this.bind('number')}],
     ]];
 
-    const demoButton = ['div', {label: 'button', className: 'table'}, [
+    const demoButton = ['div', {name: 'button', className: 'table'}, [
       ['io-button', {label: 'set .5', action: this.setNumber, value: 0.5}],
       ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
       ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
@@ -115,17 +115,17 @@ export class IoDemo extends IoElement {
       ['io-button', {label: 'undef', action: this.setNumber, value: undefined}],
     ]];
 
-    const demoObject = ['div', {label: 'object'}, [
+    const demoObject = ['div', {name: 'object'}, [
       ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}], //TODO: labeled?
       ['io-object', {value: this, label: 'IoDemo (single configured property)', labeled: false, expanded: $('io-object2'), props: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
       ['io-object', {value: menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
     ]];
 
-    const demoInspector = ['div', {label: 'inspector'}, [
+    const demoInspector = ['div', {name: 'inspector'}, [
       ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
-    const demoMenu = ['div', {label: 'menu'}, [
+    const demoMenu = ['div', {name: 'menu'}, [
       pointerEventsWarning,
       ['div', 'right-click (contextmenu)'],
       ['io-menu', {options: menuoptions, position: 'pointer', button: 2, ondown: false}],
@@ -133,7 +133,7 @@ export class IoDemo extends IoElement {
       ['io-menu-options', {className: 'menubar', options: menuoptions, horizontal: true}],
     ]];
 
-    const demoLayout = ['div', {label: 'layout', expanded: $('layout')}, [
+    const demoLayout = ['div', {name: 'layout', expanded: $('layout')}, [
       pointerEventsWarning,
       ['io-layout', {
         orientation: 'horizontal',
@@ -162,7 +162,7 @@ export class IoDemo extends IoElement {
 
     this.template([
       ['io-tabbed-elements', {precache: true, selected: $('demo', 'Elements'), elements: [
-        ['div', {label: 'Elements'}, [
+        ['div', {name: 'Elements'}, [
           ['h4', 'Primitives'], demoPrimitives,
           ['h4', 'Sliders'], demoSliders,
           ['h4', 'Options'], demoOptions,
@@ -171,7 +171,7 @@ export class IoDemo extends IoElement {
           ['h4', 'Inspector'], demoInspector,
           ['h4', 'Menu'], demoMenu,
         ]],
-        ['div', {label: 'Layout'}, [demoLayout]],
+        ['div', {name: 'Layout'}, [demoLayout]],
       ]}]
     ]);
   }

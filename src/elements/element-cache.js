@@ -44,7 +44,7 @@ export class IoElementCache extends IoElement {
   }
   changed() {
     const element = this.elements.find(element => {
-      return element[1].label == this.selected;
+      return element[1].name == this.selected;
     });
     if (!element) {
       // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
