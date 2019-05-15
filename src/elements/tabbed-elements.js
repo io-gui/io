@@ -501,7 +501,7 @@ export class IoTabDropzone extends IoElement {
         border: 4px solid var(--io-theme-focus-color);
         border-radius: var(--io-theme-border-radius);
         transform: translateZ(0);
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         z-index:2147483647;
