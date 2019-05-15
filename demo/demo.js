@@ -7,9 +7,6 @@ export class IoDemo extends IoElement {
       :host {
         display: block;
       }
-      :host > * {
-        margin: var(--io-theme-spacing);
-      }
       :host .table {
         display: grid;
         grid-template-columns: 5.5em 5.5em 5.5em;
@@ -23,7 +20,7 @@ export class IoDemo extends IoElement {
         margin-bottom: var(--io-theme-spacing);
       }
       :host io-layout {
-        height: 800px;
+        height: 600px;
       }
       :host .warning {
         margin: 0.5em;
@@ -164,29 +161,20 @@ export class IoDemo extends IoElement {
     // TODO: Add demos for all remaining elements
 
     this.template([
-      ['io-collapsable', {label: 'Primitives', expanded: $('Primitives'), elements: [demoPrimitives]}],
-      ['io-collapsable', {label: 'Sliders', expanded: $('Sliders'), elements: [demoSliders]}],
-      ['io-collapsable', {label: 'Options', expanded: $('Options'), elements: [demoOptions]}],
-      ['io-collapsable', {label: 'Button', expanded: $('Button'), elements: [demoButton]}],
-      ['io-collapsable', {label: 'Object', expanded: $('Object'), elements: [demoObject]}],
-      ['io-collapsable', {label: 'Inspector', expanded: $('Inspector'), elements: [demoInspector]}],
-      ['io-collapsable', {label: 'Menu', expanded: $('Menu'), elements: [demoMenu]}],
-      ['io-collapsable', {label: 'Layout', expanded: $('Layout'), elements: [demoLayout]}],
-      ['io-button', {label: 'Stress Test!', action: animate}],
+      ['io-tabbed-elements', {precache: true, selected: $('demo', 'Elements'), elements: [
+        ['div', {label: 'Elements'}, [
+          ['h4', 'Primitives'], demoPrimitives,
+          ['h4', 'Sliders'], demoSliders,
+          ['h4', 'Options'], demoOptions,
+          ['h4', 'Button'], demoButton,
+          ['h4', 'Object'], demoObject,
+          ['h4', 'Inspector'], demoInspector,
+          ['h4', 'Menu'], demoMenu,
+        ]],
+        ['div', {label: 'Layout'}, [demoLayout]],
+      ]}]
     ]);
   }
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-  $('Primitives').source.value = Math.random() < 0.5;
-  $('Sliders').source.value = Math.random() < 0.5;
-  $('Options').source.value = Math.random() < 0.5;
-  $('Button').source.value = Math.random() < 0.5;
-  $('Object').source.value = Math.random() < 0.5;
-  $('Inspector').source.value = Math.random() < 0.5;
-  $('Menu').source.value = Math.random() < 0.5;
-  $('Layout').source.value = Math.random() < 0.5;
 }
 
 IoInspector.RegisterConfig({

@@ -53,6 +53,7 @@ export class IoButton extends IoElement {
   }
   onKeydown(event) {
     if (!this.pressed && (event.which === 13 || event.which === 32)) {
+      event.preventDefault();
       event.stopPropagation();
       this.pressed = true;
       this.addEventListener('keyup', this.onKeyup);

@@ -296,14 +296,14 @@ export class IoTabs extends IoElement {
     this.selected = id;
   }
   resized() {
-    let right = this.getBoundingClientRect().right;
-    const lastButton = this.children[this.children.length - 2];
-    if (this.overflow) {
-      const hamburgerButton = this.children[0];
-      const firstButton = this.children[1];
-      right += hamburgerButton.getBoundingClientRect().width + firstButton.getBoundingClientRect().width;
-    }
-    this.overflow = lastButton && right < lastButton.getBoundingClientRect().right;
+    // let right = this.getBoundingClientRect().right;
+    // const lastButton = this.children[this.children.length - 2];
+    // if (this.overflow) {
+    //   const hamburgerButton = this.children[0];
+    //   const firstButton = this.children[1];
+    //   right += hamburgerButton.getBoundingClientRect().width + firstButton.getBoundingClientRect().width;
+    // }
+    // this.overflow = lastButton && right < lastButton.getBoundingClientRect().right;
   }
   _onAddTab(tabID) {
     if (this.filter.indexOf(tabID) !== -1) {

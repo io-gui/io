@@ -29,8 +29,11 @@ export class IoCollapsable extends IoElement {
         border: none;
       }
       :host > io-boolean::before {
+        display: inline-block;
         content: '▸';
         line-height: 1em;
+        width: 0.5em;
+        padding: 0 0.25em;
       }
       :host[expanded] > io-boolean::before{
         content: '▾';
