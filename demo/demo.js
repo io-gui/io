@@ -5,7 +5,19 @@ export class IoDemo extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      :host > io-tabbed-elements {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      :host > io-tabbed-elements > io-element-cache {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
       }
       :host .table {
         display: grid;
@@ -19,14 +31,18 @@ export class IoDemo extends IoElement {
       :host io-slider:not(:last-of-type) {
         margin-bottom: var(--io-theme-spacing);
       }
-      :host io-layout {
+      :host > io-tabbed-elements > io-element-cache > io-layout {
         height: 600px;
+        flex: 1;
       }
       :host .warning {
         margin: 0.5em;
         padding: 0.5em;
         border: 1px solid red;
         border-radius: 0.5em;
+      }
+      :host div[name=Elements] {
+        padding: var(--io-theme-spacing);
       }
     </style>`;
   }
@@ -133,45 +149,42 @@ export class IoDemo extends IoElement {
       ['io-menu-options', {className: 'menubar', options: menuoptions, horizontal: true}],
     ]];
 
-    const demoLayout = ['div', {name: 'layout', expanded: $('layout')}, [
-      pointerEventsWarning,
-      ['io-layout', {
-        orientation: 'horizontal',
-        elements: [
-          demoPrimitives,
-          demoSliders,
-          demoOptions,
-          demoButton,
-          demoObject,
-          demoInspector,
-          demoMenu,
-        ],
-        splits: [
-          {selected: 'primitives', tabs: ['primitives'], size: 280},
-          {orientation: 'vertical', splits: [
-            {tabs: ['button'], selected: 'button', size: 100},
-            {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'menu', 'inspector'], selected: 'sliders'},
-            {tabs: ['primitives'], selected: 'primitives'},
-            {tabs: ['menu'], selected: 'menu', size: 10},
-          ]},
-        ],
-      }],
-    ]]
+    const demoLayout = ['io-layout', {
+      name: 'Layout',
+      orientation: 'horizontal',
+      elements: [
+        demoPrimitives,
+        demoSliders,
+        demoOptions,
+        demoButton,
+        demoObject,
+        demoInspector,
+        demoMenu,
+      ],
+      splits: [
+        {selected: 'primitives', tabs: ['primitives'], size: 280},
+        {orientation: 'vertical', splits: [
+          {tabs: ['button'], selected: 'button', size: 100},
+          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'menu', 'inspector'], selected: 'sliders'},
+          {tabs: ['primitives'], selected: 'primitives'},
+        ]},
+      ],
+    }];
 
     // TODO: Add demos for all remaining elements
 
     this.template([
       ['io-tabbed-elements', {precache: true, selected: $('demo', 'Elements'), elements: [
         ['div', {name: 'Elements'}, [
-          ['h4', 'Primitives'], demoPrimitives,
-          ['h4', 'Sliders'], demoSliders,
-          ['h4', 'Options'], demoOptions,
-          ['h4', 'Button'], demoButton,
-          ['h4', 'Object'], demoObject,
-          ['h4', 'Inspector'], demoInspector,
-          ['h4', 'Menu'], demoMenu,
+          ['h4', 'io-string io-number io-boolean'], demoPrimitives,
+          ['h4', 'io-slider'], demoSliders,
+          ['h4', 'io-options'], demoOptions,
+          ['h4', 'io-button'], demoButton,
+          ['h4', 'io-object'], demoObject,
+          ['h4', 'io-inspector'], demoInspector,
+          ['h4', 'io-ienu'], demoMenu,
         ]],
-        ['div', {name: 'Layout'}, [demoLayout]],
+        demoLayout,
       ]}]
     ]);
   }

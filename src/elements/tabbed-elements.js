@@ -237,6 +237,9 @@ export class IoTabs extends IoElement {
       :host > io-button {
         font-style: italic;
       }
+      :host[editable] > io-button {
+        touch-action: none;
+      }
       :host > io-button:focus {
         border: var(--io-theme-button-border);
         border-bottom-color: var(--io-theme-content-bg);
@@ -284,7 +287,10 @@ export class IoTabs extends IoElement {
       elements: Array,
       filter: null,
       selected: String,
-      editable: Boolean,
+      editable: {
+        type: Boolean,
+        reflect: true,
+      },
       overflow: {
         type: Boolean,
         reflect: true,
@@ -395,8 +401,6 @@ export class IoTabs extends IoElement {
   }
   changed() {
     // TODO: consider testing with large element collections and optimizing.
-
-
     const options = [];
     const _elements = this.elements.map(element => { return element[1].name; });
     for (let i = 0; i < _elements.length; i++) {

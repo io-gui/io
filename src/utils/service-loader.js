@@ -24,7 +24,9 @@ export class IoServiceLoader extends IoNode {
     if (serviceWorkerRegistration.active) {
       this.serviceWorker = serviceWorkerRegistration;
     } else {
-      serviceWorkerRegistration.addEventListener('activate', () => { this.serviceWorker = serviceWorkerRegistration; });
+      serviceWorkerRegistration.addEventListener('activate', () => {
+        this.serviceWorker = serviceWorkerRegistration;
+      });
     }
   }
   serviceWorkerChanged() {

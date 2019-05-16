@@ -28,7 +28,7 @@ export class IoElementCache extends IoElement {
   }
   precacheChanged() {
     if (this.precache && document.readyState === 'complete') {
-      this.template(this.elements, this.stagingElement);
+      this.template(this.elements.filter(element => element[1].cache !== false), this.stagingElement);
       for (let i = 0; i < this.stagingElement.childNodes.length; i++) {
         this._cache[i] = this.stagingElement.childNodes[i];
       }

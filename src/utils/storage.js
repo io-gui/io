@@ -16,14 +16,20 @@ const getHashes = function() {
   for (let hash in hashes) {
     if (nodes[hash]) {
       if (nodes[hash] !== '') {
-        if (!isNaN(hashes[hash])) {
-          nodes[hash].value = JSON.parse(hashes[hash]);
-        } else if (hashes[hash] === 'true' || hashes[hash] === 'false') {
-          nodes[hash].value = JSON.parse(hashes[hash]);
+        const hashValue = hashes[hash].replace(/%20/g, " ");
+        if (!isNaN(hashValue)) {
+          nodes[hash].value = JSON.parse(hashValue);
+        } else if (hashValue === 'true' || hashValue === 'false') {
+          nodes[hash].value = JSON.parse(hashValue);
         } else {
-          nodes[hash].value = hashes[hash];
+          nodes[hash].value = hashValue;
         }
       }
+    }
+  }
+  for (let node in nodes) {
+    if (nodes[node].hash && !hashes[node]) {
+      nodes[node].value = nodes[node].defValue;
     }
   }
 };
@@ -59,16 +65,20 @@ class IoStorageNode extends IoNode {
   constructor(props, defValue) {
     super(props);
     this.defValue = defValue;
-    const hashValue = hashes[this.key];
-    const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
-    const localValue = localStorage.getItem(key);
-    if (hashValue !== undefined) {
-      try {
-        this.value = JSON.parse(hashValue);
-      } catch (e) {
-        this.value = hashValue;
+    if (this.hash) {
+      if (hashes[this.key] !== undefined) {
+        const hashValue = hashes[this.key].replace(/%20/g, " ");
+        try {
+          this.value = JSON.parse(hashValue);
+        } catch (e) {
+          this.value = hashValue;
+        }
+      } else {
+        this.value = defValue;
       }
     } else {
+      const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
+      const localValue = localStorage.getItem(key);
       if (localValue !== null && localValue !== undefined) {
         this.value = JSON.parse(localValue);
       } else {
@@ -77,12 +87,15 @@ class IoStorageNode extends IoNode {
     }
   }
   valueChanged() {
-    setHashes();
-    const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
-    if (this.value === null || this.value === undefined) {
-      localStorage.removeItem(key);
+    if (this.hash) {
+      setHashes();
     } else {
-      localStorage.setItem(key, JSON.stringify(this.value));
+      const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
+      if (this.value === null || this.value === undefined) {
+        localStorage.removeItem(key);
+      } else {
+        localStorage.setItem(key, JSON.stringify(this.value));
+      }
     }
   }
 }

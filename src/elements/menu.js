@@ -31,7 +31,7 @@ export class IoMenu extends IoElement {
     this._parent = this.parentElement;
     this._parent.addEventListener('pointerdown', this.onPointerdown);
     this._parent.addEventListener('contextmenu', this.onContextmenu);
-    this._parent.style['touch-action'] = 'none';
+    // this._parent.style['touch-action'] = 'none'; // TODO: reconsider
     IoMenuLayer.singleton.appendChild(this.$['group']);
   }
   disconnectedCallback() {

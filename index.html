@@ -59,12 +59,24 @@
     <style>
       body {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        padding: 0.5em 0.25em;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
       }
       io-main-page {
-        display: block;
-        margin: auto;
-        max-width: 1280px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      io-main-page > io-tabbed-elements {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      io-main-page > io-tabbed-elements > io-element-cache {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
       }
     </style>
     <link href="./lib/mocha.css" rel="stylesheet" />
@@ -119,7 +131,7 @@
     </script>
   </head>
   <body>
-    <noscript>JavaScript is required to view this page!</noscript>
+    <!-- <noscript>JavaScript is required to view this page!</noscript> -->
     <io-main-page></io-main-page>
   </body>
 </html>

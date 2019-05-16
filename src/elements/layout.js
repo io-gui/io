@@ -135,7 +135,7 @@ export class IoLayout extends IoElement {
     for (let i = srcTabs.filter.length; i--;) {
       if (srcTabs.filter[i] === tab) {
         srcTabs.filter.splice(i, 1);
-        srcTabs.__properties.selected.value = srcTabs.filter[srcTabs.filter.length - 1];
+        srcTabs.selected = srcTabs.filter[srcTabs.filter.length - 1];
         srcTabs.changed();
       }
     }

@@ -106,9 +106,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       const child = children[children.length - 1];
       let nodes = Array.from(child.querySelectorAll('*'));
       for (let i = nodes.length; i--;) {
-        if (nodes[i].dispose) nodes[i].dispose();
+        // if (nodes[i].dispose) nodes[i].dispose(); // TODO: re-enable after fixing #2
       }
-      if (child.dispose) child.dispose();
+      // if (child.dispose) child.dispose(); // TODO: re-enable after fixing #2
       // TODO: not sure why dispose needs to be called ahead of remove children
       // Otherwise some bindings get disconnected.
       // https://github.com/arodic/io/issues/1
@@ -131,9 +131,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         let nodes = Array.from(oldElement.querySelectorAll('*'));
         host.removeChild(oldElement);
         for (let i = nodes.length; i--;) {
-          if (nodes[i].dispose) nodes[i].dispose();
+          // if (nodes[i].dispose) nodes[i].dispose(); // TODO: re-enable after fixing #2
         }
-        if (oldElement.dispose) oldElement.dispose();
+        // if (oldElement.dispose) oldElement.dispose(); // TODO: re-enable after fixing #2
 
       // update existing elements
       } else {
@@ -270,6 +270,7 @@ const constructElement = function(vDOMNode) {
        element.style[s] = vDOMNode.props[prop][s];
      }
    } else element[prop] = vDOMNode.props[prop];
+   if (prop === 'name') element.setAttribute('name', vDOMNode.props[prop]); // TODO: Reconsider
  }
  // TODO: Refactor for native elements
  Object.defineProperty(element, '__listeners', {value: new Listeners(element)});
