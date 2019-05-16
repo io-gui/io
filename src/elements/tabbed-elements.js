@@ -427,8 +427,8 @@ export class IoTabs extends IoElement {
         value: this.filter[i],
         action: this.select,
         className: className,
-        'on-pointerdown': this._onPointerdown,
       }];
+      if (this.editable) button[1]['on-pointerdown'] = this._onPointerdown;
       if (selected) selectedButton = button;
       buttons.push(button);
     }

@@ -8,6 +8,7 @@ export class IoLayout extends IoElement {
         flex: 1;
         display: flex;
         overflow: hidden;
+        touch-action: none;
       }
       :host[orientation=horizontal] {
         flex-direction: row;
