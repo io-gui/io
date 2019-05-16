@@ -49,6 +49,9 @@ export class Binding {
     this.updateTargets = this.updateTargets.bind(this);
     this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
   }
+  get value() {
+    return this.source[this.sourceProp];
+  }
   /**
    * Adds a target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
    * @param {IoNode} targetNode - Target node.

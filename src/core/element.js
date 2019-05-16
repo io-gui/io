@@ -52,6 +52,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.__properties[prop].reflect) {
         this.setAttribute(prop, this.__properties[prop].value);
       }
+      // TODO: test
+      if (this.__properties[prop].binding) {
+        this[prop] = this.__properties[prop].binding.value;
+      }
     }
     if (typeof this.resized == 'function') {
       this.resized();
@@ -299,6 +303,17 @@ function initStyle(prototypes) {
   for (let i = prototypes.length; i--;) {
     let style = prototypes[i].constructor.style;
     if (style) {
+      let match = style.string.match(new RegExp(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
+      match.map(selector => {
+        selector = selector.trim();
+        if (!selector.startsWith('@') &&
+            !selector.startsWith(':host') &&
+            !selector.startsWith('/*') &&
+            !selector.startsWith('body')) {
+          console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
+        }
+      });
+
       style.string = style.string.replace(new RegExp(':host', 'g'), localName);
       for (let v in style.vars) {
         style.string = style.string.replace(new RegExp(v, 'g'), v.replace('--', '--' + localName + '-'));

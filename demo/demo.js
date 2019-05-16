@@ -59,6 +59,8 @@ export class IoDemo extends IoElement {
     };
   }
   changed(event) {
+    // console.log(this.number);
+    // TODO: investigade excessive change events.
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
   setNumber(value) {
