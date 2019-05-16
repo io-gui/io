@@ -292,8 +292,6 @@ const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.
    ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2] || ''
  } : buildTree()([node[0], {}, node[1] || '']);
 
-const _stagingElement = document.createElement('div');
-
 /**
   * Initializes the element style.
   * @param {Array} prototypes - An array of prototypes to ge the styles from.
@@ -303,7 +301,9 @@ function initStyle(prototypes) {
   for (let i = prototypes.length; i--;) {
     let style = prototypes[i].constructor.style;
     if (style) {
-      let match = style.string.match(new RegExp(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
+      style.string = style.string.replace(new RegExp('<style>', 'g'), '');
+      style.string = style.string.replace(new RegExp('</style>', 'g'), '');
+      let match = style.string.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
       match.map(selector => {
         selector = selector.trim();
         if (!selector.startsWith('@') &&
@@ -318,8 +318,8 @@ function initStyle(prototypes) {
       for (let v in style.vars) {
         style.string = style.string.replace(new RegExp(v, 'g'), v.replace('--', '--' + localName + '-'));
       }
-      _stagingElement.innerHTML = style.string;
-      let element = _stagingElement.querySelector('style');
+      let element = document.createElement('style');
+      element.innerText = style.string;
       element.setAttribute('id', 'io-style-' + localName + '-' + i);
       document.head.appendChild(element);
     }
