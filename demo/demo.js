@@ -182,9 +182,9 @@ export class IoDemo extends IoElement {
           ['h4', 'io-slider'], demoSliders,
           ['h4', 'io-options'], demoOptions,
           ['h4', 'io-button'], demoButton,
+          ['h4', 'io-menu'], demoMenu,
           ['h4', 'io-object'], demoObject,
           ['h4', 'io-inspector'], demoInspector,
-          ['h4', 'io-ienu'], demoMenu,
         ]],
         demoLayout,
       ]}]
