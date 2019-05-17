@@ -7,17 +7,17 @@ export class IoDemo extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
-        flex: 1;
+        flex: 1 0 auto;
       }
       :host > io-tabbed-elements {
         display: flex;
         flex-direction: column;
-        flex: 1;
+        flex: 1 0 auto;
       }
       :host > io-tabbed-elements > io-element-cache {
         display: flex;
         flex-direction: column;
-        flex: 1;
+        flex: 1 0 auto;
       }
       :host .table {
         display: grid;
@@ -33,7 +33,7 @@ export class IoDemo extends IoElement {
       }
       :host > io-tabbed-elements > io-element-cache > io-layout {
         height: 600px;
-        flex: 1;
+        flex: 1 0 auto;
       }
       :host .warning {
         margin: 0.5em;
@@ -164,7 +164,7 @@ export class IoDemo extends IoElement {
         demoMenu,
       ],
       splits: [
-        {selected: 'primitives', tabs: ['primitives'], size: 280},
+        {selected: 'sliders', tabs: ['sliders'], size: 280},
         {orientation: 'vertical', splits: [
           {tabs: ['button'], selected: 'button', size: 100},
           {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'menu', 'inspector'], selected: 'sliders'},
