@@ -10,6 +10,13 @@ export class IoObject extends IoCollapsable {
         border: none !important;
         background: none !important;
       }
+      :host > .io-collapsable-content {
+        display: block;
+        overflow: auto;
+        padding: 0 0 0 var(--io-theme-padding);
+        border: none !important;
+        background: none !important;
+      }
     </style>`;
   }
   static get properties() {
