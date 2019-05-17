@@ -9,7 +9,7 @@ This library is an experiment with limited browser support, incomplete documenta
 
 For a quick start, read this document and check out included elements and examples.
 
-[Source Code](https://github.com/arodic/io) on GitHub. [Live Demo](https://akirodic.com/io/#page=2)
+[Source Code](https://github.com/arodic/io) on GitHub. [Live Demo](https://akirodic.com/io/#page=Demo)
 
 ## Usage ##
 
