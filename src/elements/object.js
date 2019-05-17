@@ -1,7 +1,17 @@
+import {html} from "../core/element.js";
 import "./properties.js";
 import {IoCollapsable} from "./collapsable.js";
 
 export class IoObject extends IoCollapsable {
+  static get style() {
+    return html`<style>
+      :host {
+        padding: 0 !important;
+        border: none !important;
+        background: none !important;
+      }
+    </style>`;
+  }
   static get properties() {
     return {
       value: Object,

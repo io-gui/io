@@ -192,8 +192,4 @@ export class IoDemo extends IoElement {
   }
 }
 
-IoInspector.RegisterConfig({
-  'IoDemo|variables': ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers'],
-});
-
 IoDemo.Register();
