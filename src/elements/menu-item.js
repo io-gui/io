@@ -9,13 +9,13 @@ export class IoMenuItem extends IoElement {
         display: flex;
         flex-direction: row;
         cursor: pointer;
-        padding: var(--io-theme-padding);
+        padding: var(--io-padding);
         line-height: 1em;
         touch-action: none;
       }
       :host > * {
         pointer-events: none;
-        padding: var(--io-theme-spacing);
+        padding: var(--io-spacing);
       }
       :host > .menu-icon {
         width: 1.25em;
@@ -33,7 +33,7 @@ export class IoMenuItem extends IoElement {
       }
       /* @media (-webkit-min-device-pixel-ratio: 2) {
         :host > * {
-          padding: calc(2 * var(--io-theme-spacing));
+          padding: calc(2 * var(--io-spacing));
         }
       } */
     </style>`;

@@ -5,9 +5,10 @@ export class IoBoolean extends IoButton {
   static get style() {
     return html`<style>
       :host {
-        border: var(--io-theme-field-border);
-        color: var(--io-theme-field-color);
-        background: var(--io-theme-field-bg);
+        border: var(--io-inset-border);
+        border-color: var(--io-inset-border-color);
+        color: var(--io-field-color);
+        background: var(--io-field-bg);
       }
     </style>`;
   }

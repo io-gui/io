@@ -315,9 +315,6 @@ function initStyle(prototypes) {
       });
 
       style.string = style.string.replace(new RegExp(':host', 'g'), localName);
-      for (let v in style.vars) {
-        style.string = style.string.replace(new RegExp(v, 'g'), v.replace('--', '--' + localName + '-'));
-      }
       let element = document.createElement('style');
       element.innerText = style.string;
       element.setAttribute('id', 'io-style-' + localName + '-' + i);

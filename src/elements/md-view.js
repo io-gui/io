@@ -12,11 +12,12 @@ export class IoMdView extends IoElement {
         font-weight: 300;
         display: block;
         padding: 0.5em 1em;
-        background: #fff;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3),
                     0 15px 20px 0 rgba(0, 0, 0, 0.1);
-        border-radius: var(--io-theme-border-radius);
+        border-radius: var(--io-border-radius);
         overflow: hidden;
+        background: var(--io-bg);
+        color: var(--io-color);
       }
       :host p {
         line-height: 1.5em;
@@ -24,10 +25,10 @@ export class IoMdView extends IoElement {
       :host a {
         font-weight: bold;
         text-decoration: none;
-        color: var(--io-theme-link-color);
+        color: var(--io-link-color);
       }
       :host code {
-        background: rgba(0,0,0,0.05);
+        background: rgba(0,0,0,0.25);
         overflow: auto;
         font-weight: bold;
       }

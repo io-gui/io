@@ -6,7 +6,7 @@ export class IoProperties extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
-        line-height: 1em;
+        /* line-height: 1em; */
       }
       :host > .io-property {
         display: flex !important;
@@ -15,7 +15,7 @@ export class IoProperties extends IoElement {
       :host > .io-property > .io-property-label {
         padding: 0 0.2em 0 0.5em;
         flex: 0 0 auto;
-        color: var(--io-theme-color);
+        color: var(--io-color);
       }
       :host > .io-property > .io-property-editor {
         margin: 0;
@@ -35,13 +35,13 @@ export class IoProperties extends IoElement {
         background: none;
       }
       :host > .io-property > io-number {
-        color: var(--io-theme-number-color);
+        color: var(--io-number-color);
       }
       :host > .io-property > io-string {
-        color: var(--io-theme-string-color);
+        color: var(--io-string-color);
       }
       :host > .io-property > io-boolean {
-        color: var(--io-theme-boolean-color);
+        color: var(--io-boolean-color);
       }
     </style>`;
   }

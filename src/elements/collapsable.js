@@ -6,15 +6,15 @@ export class IoCollapsable extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
-        border: var(--io-theme-frame-border);
-        border-radius: var(--io-theme-border-radius);
-        padding: var(--io-theme-padding);
-        background: var(--io-theme-frame-bg);
+        border: var(--io-outset-border);
+        border-radius: var(--io-border-radius);
+        border-color: var(--io-outset-border-color);
+        padding: var(--io-padding);
+        background: var(--io-frame-bg);
         transition: background-color 0.4s;
       }
       :host:focus-within {
         outline: none;
-        background: var(--io-theme-focus-bg);
       }
       :host > io-boolean {
         border: none;
@@ -39,15 +39,16 @@ export class IoCollapsable extends IoElement {
         content: '▾';
       }
       :host[expanded] > io-boolean {
-        margin-bottom: var(--io-theme-spacing);
+        margin-bottom: var(--io-spacing);
       }
       :host > .io-collapsable-content {
         display: block;
         overflow: auto;
-        border: var(--io-theme-content-border);
-        border-radius: var(--io-theme-border-radius);
-        padding: var(--io-theme-padding);
-        background: var(--io-theme-content-bg);
+        border-radius: var(--io-border-radius);
+        border: var(--io-inset-border);
+        border-color: var(--io-inset-border-color);
+        padding: var(--io-padding);
+        background: var(--io-bg);
       }
     </style>`;
   }

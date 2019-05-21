@@ -11,19 +11,19 @@ export class IoString extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        border: var(--io-theme-field-border);
-        border-radius: var(--io-theme-border-radius);
-        padding: var(--io-theme-padding);
-        color: var(--io-theme-field-color);
-        background: var(--io-theme-field-bg);
+        border: var(--io-inset-border);
+        border-radius: var(--io-border-radius);
+        border-color: var(--io-inset-border-color);
+        padding: var(--io-padding);
+        color: var(--io-field-color);
+        background: var(--io-field-bg);
         transition: background-color 0.4s;
       }
       :host:focus {
         overflow: hidden;
         text-overflow: clip;
         outline: none;
-        border: var(--io-theme-focus-border);
-        background: var(--io-theme-focus-bg);
+        border-color: var(--io-focus-color);
       }
     </style>`;
   }

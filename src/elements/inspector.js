@@ -13,23 +13,23 @@ export class IoInspector extends IoElement {
     :host {
       display: flex;
       flex-direction: column;
-      border: var(--io-theme-content-border);
-      border-radius: var(--io-theme-border-radius);
-      padding: var(--io-theme-padding);
-      background: var(--io-theme-content-bg);
+      border: var(--io-border);
+      border-radius: var(--io-border-radius);
+      padding: var(--io-padding);
+      background: var(--io-bg);
     }
     :host > io-inspector-breadcrumbs {
-      margin: var(--io-theme-spacing);
+      margin: var(--io-spacing);
     }
     :host > io-collapsable {
-      margin: var(--io-theme-spacing);
+      margin: var(--io-spacing);
     }
     :host > io-collapsable > div io-properties > .io-property {
       overflow: hidden;
-      padding: var(--io-theme-padding);
+      padding: var(--io-padding);
     }
     :host > io-collapsable > div io-properties > .io-property:not(:last-of-type) {
-      border-bottom: var(--io-theme-border);
+      border-bottom: var(--io-border);
     }
     :host > io-collapsable > div io-properties > .io-property > :nth-child(1) {
       overflow: hidden;
@@ -37,8 +37,8 @@ export class IoInspector extends IoElement {
       text-align: right;
       flex: 0 1 8em;
       min-width: 3em;
-      padding: var(--io-theme-padding);
-      margin: calc(0.25 * var(--io-theme-spacing));
+      padding: var(--io-padding);
+      margin: calc(0.25 * var(--io-spacing));
     }
     :host > io-collapsable > div io-properties > .io-property > :nth-child(2) {
       flex: 1 0 8em;
@@ -52,25 +52,24 @@ export class IoInspector extends IoElement {
     :host div io-properties > .io-property > io-number,
     :host div io-properties > .io-property > io-string,
     :host div io-properties > .io-property > io-boolean {
-      border: 1px solid transparent;
-      padding: var(--io-theme-padding) !important;
+      padding: var(--io-padding) !important;
     }
     :host div io-properties > .io-property > io-boolean:not([value]) {
       opacity: 0.5;
     }
     :host div io-properties > .io-property > io-option {
       flex: 0 1 auto !important;
-      padding: var(--io-theme-padding) !important;
+      padding: var(--io-padding) !important;
     }
     :host div io-properties > .io-property > io-number,
     :host div io-properties > .io-property > io-string {
-      border: var(--io-theme-field-border);
-      color: var(--io-theme-field-color);
-      background: var(--io-theme-field-bg);
+      border: var(--io-inset-border);
+      color: var(--io-field-color);
+      background: var(--io-field-bg);
     }
 
     :host io-properties > .io-property > io-properties {
-      border: var(--io-theme-field-border);
+      border: var(--io-inset-border);
       background: rgba(127, 127, 127, 0.125);
     }
     </style>`;
@@ -246,11 +245,12 @@ export class IoInspectorBreadcrumbs extends IoElement {
         display: flex;
         flex: 1 0;
         flex-direction: row;
-        border: var(--io-theme-field-border);
-        border-radius: var(--io-theme-border-radius);
-        padding: var(--io-theme-padding);
-        color: var(--io-theme-field-color);
-        background: var(--io-theme-field-bg);
+        border-radius: var(--io-border-radius);
+        border: var(--io-inset-border);
+        border-color: var(--io-inset-border-color);
+        padding: var(--io-padding);
+        color: var(--io-field-color);
+        background: rgba(0, 0, 0, 0.125);
       }
       :host > io-inspector-link {
         border: none;
@@ -258,10 +258,10 @@ export class IoInspectorBreadcrumbs extends IoElement {
         text-overflow: ellipsis;
         background: none;
         padding: 0;
-        padding: var(--io-theme-padding);
+        padding: var(--io-padding);
       }
       :host > io-inspector-link:first-of-type {
-        color: var(--io-theme-color);
+        color: var(--io-color);
         overflow: visible;
         text-overflow: clip;
         margin-left: 0.5em;
@@ -300,8 +300,8 @@ export class IoInspectorLink extends IoButton {
         background: none;
         padding: 0;
         border: 1px solid transparent;
-        color: var(--io-theme-link-color);
-        padding: var(--io-theme-padding) !important;
+        color: var(--io-link-color);
+        padding: var(--io-padding) !important;
       }
       :host:focus {
         outline: none;

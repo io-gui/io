@@ -13,7 +13,7 @@ export class IoObject extends IoCollapsable {
       :host > .io-collapsable-content {
         display: block;
         overflow: auto;
-        padding: 0 0 0 var(--io-theme-padding);
+        padding: 0 0 0 var(--io-padding);
         border: none !important;
         background: none !important;
       }

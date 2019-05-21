@@ -4,6 +4,12 @@ export class IoButton extends IoElement {
   static get style() {
     return html`<style>
       :host {
+        background: var(--io-button-bg);
+        background-image: var(--io-button-gradient);
+        color: var(--io-color);
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
+        border-radius: var(--io-border-radius);
         display: inline-block;
         cursor: pointer;
         white-space: nowrap;
@@ -11,25 +17,21 @@ export class IoButton extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
-        border: var(--io-theme-button-border);
-        border-radius: var(--io-theme-border-radius);
-        padding: var(--io-theme-padding);
-        padding-left: calc(3 * var(--io-theme-padding));
-        padding-right: calc(3 * var(--io-theme-padding));
-        background: var(--io-theme-button-bg);
-        color: var(--io-theme-color);
+
+        padding: var(--io-padding);
+        padding-left: calc(3 * var(--io-padding));
+        padding-right: calc(3 * var(--io-padding));
         transition: background-color 0.4s;
       }
       :host:focus {
         outline: none;
-        background: var(--io-theme-focus-bg);
-        border: var(--io-theme-focus-border);
+        border-color: var(--io-focus-color);
       }
       :host:hover {
-        background: var(--io-theme-hover-bg);
+        background: var(--io-hover-bg);
       }
       :host[pressed] {
-        background: var(--io-theme-active-bg);
+        background: var(--io-active-bg);
       }
     </style>`;
   }

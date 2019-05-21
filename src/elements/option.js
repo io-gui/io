@@ -5,12 +5,12 @@ export class IoOption extends IoButton {
   static get style() {
     return html`<style>
       :host {
-        padding: var(--io-theme-padding) calc(1.5 * var(--io-theme-padding));
+        padding: var(--io-padding) calc(1.5 * var(--io-padding));
         line-height: 1em;
       }
       :host::before {
         content: '▾';
-        padding-right: var(--io-theme-padding);
+        padding-right: var(--io-padding);
       }
     </style>`;
   }

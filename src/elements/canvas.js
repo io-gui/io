@@ -49,7 +49,6 @@ export class IoCanvas extends IoElement {
         box-sizing: border-box;
         overflow: hidden;
         position: relative;
-        border: 1px solid black;
       }
       :host > canvas {
         position: absolute;

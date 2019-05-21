@@ -11,11 +11,10 @@ export class IoSlider extends IoElement {
       }
       :host > io-number {
         flex: 0 0 3.75em;
+        margin-right: var(--io-spacing);
       }
       :host > io-slider-knob {
         flex: 1 1 auto;
-        margin-left: var(--io-theme-spacing);
-        border-radius: 2px;
       }
     </style>`;
   }
@@ -49,6 +48,9 @@ export class IoSliderKnob extends IoCanvas {
         display: flex;
         cursor: ew-resize;
         touch-action: none;
+        border: var(--io-inset-border);
+        border-radius: var(--io-border-radius);
+        border-color: var(--io-inset-border-color);
       }
       :host > canvas {
         pointer-events: none;
@@ -64,9 +66,9 @@ export class IoSliderKnob extends IoCanvas {
       maxValue: 1000,
       startColor: [0.3, 0.9, 1, 1],
       endColor: [0.9, 1, 0.5, 1],
-      lineColor: [0.3, 0.3, 0.3, 1],
-      bg: [0.5, 0.5, 0.5, 1],
-      snapWidth: 2,
+      lineColor: [0.4, 0.4, 0.4, 1],
+      bg: [0.2, 0.2, 0.2, 1],
+      snapWidth: 1,
       slotWidth: 2,
       handleWidth: 4,
     };

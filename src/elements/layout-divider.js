@@ -4,26 +4,32 @@ export class IoLayoutDivider extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        background: #333;
-        color: #ccc;
+        background: var(--io-bg);
+        color: var(--io-color);
         z-index: 1;
         display: flex;
         flex: none;
-        border: 1px outset #666;
+        border: var(--io-border-width) outset var(--io-border-color);
+        border-color: var(--io-outset-border-color);
         user-select: none;
+        transition: background-color 0.4s;
+      }
+      :host:hover {
+        background-color: var(--io-focus-color);
       }
       :host[orientation=horizontal] {
         cursor: col-resize;
-        width: 4px;
+        width: var(--io-padding);
       }
       :host[orientation=vertical] {
         cursor: row-resize;
-        height: 4px;
+        height: var(--io-padding);
       }
       :host > .app-divider {
         flex: 1;
-        margin: -0.4em;
         display: flex;
+        margin-left: -0.03em;
+        margin-top: -0.06em;
         align-items: center;
         justify-content: center;
       }

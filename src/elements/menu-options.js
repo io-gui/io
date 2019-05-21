@@ -10,12 +10,13 @@ export class IoMenuOptions extends IoElement {
         white-space: nowrap;
         user-select: none;
         touch-action: none;
-        background: white;
-        color: black;
-        padding: var(--io-theme-padding);
-        border: var(--io-theme-menu-border);
-        border-radius: var(--io-theme-border-radius);
-        box-shadow: var(--io-theme-menu-shadow);
+        background: var(--io-bg);
+        color: var(--io-color);
+        padding: var(--io-padding);
+        border-radius: var(--io-border-radius);
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
+        box-shadow: var(--io-shadow);
       }
       :host[horizontal] {
         flex-direction: row;

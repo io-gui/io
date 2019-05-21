@@ -29,16 +29,20 @@ export class IoTabbedElements extends IoElement {
       }
       :host > io-tabs {
         z-index: 1;
-        margin: 0 var(--io-theme-spacing);
-        margin-bottom: calc(-1.2 * var(--io-theme-border-width));
+        margin: var(--io-spacing);
+        margin-bottom: 0;
+        overflow: visible;
       }
       :host > io-element-cache {
+        color: var(--io-color);
+        background: var(--io-bg);
+        display: flex;
+        flex-direction: column;
         flex: 1 1 auto;
         overflow: auto;
-        padding: var(--io-theme-padding);
-        border: var(--io-theme-content-border);
-        border-radius: var(--io-theme-border-radius);
-        background: var(--io-theme-content-bg);
+        padding: var(--io-padding);
+        border: var(--io-border);
+        border-radius: var(--io-border-radius);
       }
       :host > io-tabs {
         flex-shrink: 0;
@@ -226,46 +230,42 @@ export class IoTabs extends IoElement {
       }
       :host > * {
         flex: 0 0 auto;
-        margin-right: var(--io-theme-spacing);
+        margin-right: var(--io-spacing);
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
-        background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em);
+        border-bottom: none;
       }
       :host[overflow] > :nth-child(n+3):not(.edit-option) {
         visibility: hidden;
-      }
-      :host > io-button {
-        font-style: italic;
       }
       :host[editable] > io-button {
         touch-action: none;
       }
       :host > io-button:focus {
-        border: var(--io-theme-button-border);
-        border-bottom-color: var(--io-theme-content-bg);
-      }
-      :host > io-button:not(.io-selected-tab) {
-        color: rgba(0, 0, 0, 0.5);
+        border-style: solid;
+        border-bottom: none;
       }
       :host > io-button.io-selected-tab {
-        border-bottom-color: var(--io-theme-content-bg);
+        border-bottom-color: var(--io-bg);
+        border-bottom-style: solid;
+        background: var(--io-bg);
+        /* color: var(--io-link-color); */
+        margin-bottom: -1px;
         background-image: none;
-        background: var(--io-theme-content-bg);
-        font-weight: 600;
       }
       :host > io-button.io-tab-insert-before {
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(90deg, var(--io-theme-focus-color) 0.3em, transparent 0.31em);
+                          linear-gradient(90deg, var(--io-focus-color) 0.3em, transparent 0.31em);
       }
       :host > io-button.io-tab-insert-after {
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(270deg, var(--io-theme-focus-color) 0.3em, transparent 0.31em);
+                          linear-gradient(270deg, var(--io-focus-color) 0.3em, transparent 0.31em);
       }
       :host > io-button.io-selected-tab.io-tab-insert-before {
-        background-image: linear-gradient(90deg, var(--io-theme-focus-color) 0.3em, transparent 0.31em);
+        background-image: linear-gradient(90deg, var(--io-focus-color) 0.3em, transparent 0.31em);
       }
       :host > io-button.io-selected-tab.io-tab-insert-after {
-        background-image: linear-gradient(270deg, var(--io-theme-focus-color) 0.3em, transparent 0.31em);
+        background-image: linear-gradient(270deg, var(--io-focus-color) 0.3em, transparent 0.31em);
       }
       :host > .edit-spacer {
         flex: 0 0 3.5em;
@@ -473,13 +473,13 @@ export class IoTabDragicon extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
-        border: var(--io-theme-button-border);
-        border-radius: var(--io-theme-border-radius);
-        padding: var(--io-theme-padding);
-        padding-left: calc(3 * var(--io-theme-padding));
-        padding-right: calc(3 * var(--io-theme-padding));
-        background: var(--io-theme-content-bg);
-        color: var(--io-theme-color);
+        border: var(--io-outset-border);
+        border-radius: var(--io-border-radius);
+        padding: var(--io-padding);
+        padding-left: calc(3 * var(--io-padding));
+        padding-right: calc(3 * var(--io-padding));
+        background: var(--io-bg);
+        color: var(--io-color);
         transform: translateZ(0);
         position: absolute;
         top: 0;
@@ -502,8 +502,8 @@ export class IoTabDropzone extends IoElement {
         pointer-events: none;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
-        border: 4px solid var(--io-theme-focus-color);
-        border-radius: var(--io-theme-border-radius);
+        border: 4px solid var(--io-focus-color);
+        border-radius: var(--io-border-radius);
         transform: translateZ(0);
         position: fixed;
         top: 0;

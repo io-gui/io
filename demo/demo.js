@@ -22,14 +22,14 @@ export class IoDemo extends IoElement {
       :host .table {
         display: grid;
         grid-template-columns: 5.5em 5.5em 5.5em;
-        grid-gap: var(--io-theme-spacing);
+        grid-gap: var(--io-spacing);
       }
       :host .sidebar {
         display: inline-block;
       }
       :host io-object:not(:last-of-type),
       :host io-slider:not(:last-of-type) {
-        margin-bottom: var(--io-theme-spacing);
+        margin-bottom: var(--io-spacing);
       }
       :host > io-tabbed-elements > io-element-cache > io-layout {
         height: 600px;
@@ -42,7 +42,7 @@ export class IoDemo extends IoElement {
         border-radius: 0.5em;
       }
       :host div[name=Elements] {
-        padding: var(--io-theme-spacing);
+        padding: var(--io-spacing);
       }
     </style>`;
   }
@@ -146,8 +146,8 @@ export class IoDemo extends IoElement {
     const demoMenu = ['div', {name: 'menu'}, [
       pointerEventsWarning,
       ['div', 'right-click (contextmenu)'],
-      ['io-menu', {options: menuoptions, position: 'pointer', button: 2, ondown: false}],
-      ['io-menu-options', {className: 'sidebar', options: menuoptions}],
+      ['io-menu', {options: menuoptions, position: 'pointer', button: 2, ondown: false}], ['br'],
+      ['io-menu-options', {className: 'sidebar', options: menuoptions}], ['br'], ['br'],
       ['io-menu-options', {className: 'menubar', options: menuoptions, horizontal: true}],
     ]];
 
@@ -167,7 +167,7 @@ export class IoDemo extends IoElement {
         {selected: 'sliders', tabs: ['sliders'], size: 280},
         {orientation: 'vertical', splits: [
           {tabs: ['button'], selected: 'button', size: 100},
-          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'menu', 'inspector'], selected: 'sliders'},
+          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'menu', 'inspector'], selected: 'inspector'},
           {tabs: ['primitives'], selected: 'primitives'},
         ]},
       ],

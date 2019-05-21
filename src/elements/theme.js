@@ -4,49 +4,45 @@ export class IoTheme extends IoElement {
   static get style() {
     return html`<style>
       body {
-        --bg: #eee;
-        --radius: 5px 5px 5px 5px;
-        --spacing: 3px;
-        --padding: 5px;
-        --border-radius: 4px;
-        --border-width: 1px;
-        --border: var(--border-width) solid rgba(128, 128, 128, 0.25);
-        --color: #000;
+        --io-bg: rgb(64, 64, 64);
+        --io-color: rgb(210, 210, 210);
+        --io-spacing: 2px;
+        --io-padding: 3px;
 
-        --number-color: rgb(28, 0, 207);
-        --string-color: rgb(196, 26, 22);
-        --boolean-color: rgb(170, 13, 145);
+        --io-border-radius: 3px;
+        --io-border-width: 0.5px;
+        --io-border-color: rgb(140, 140, 140);
+        --io-border: var(--io-border-width) solid var(--io-border-color);
 
-        --link-color: #06a;
-        --focus-color: #09d;
-        --focus-border: 1px solid #09d;
-        --focus-bg: #def;
-        --active-bg: #ef8;
-        --hover-bg: #fff;
+        --io-inset-border: var(--io-border-width) inset var(--io-border-color);
+        --io-inset-border-color: rgb(32, 32, 32) var(--io-border-color) var(--io-border-color) rgb(32, 32, 32);
 
-        --frame-border: 1px solid #aaa;
-        --frame-bg: #ccc;
+        --io-outset-border: var(--io-border-width) outset var(--io-border-color);
+        --io-outset-border-color: var(--io-border-color) rgb(32, 32, 32) rgb(32, 32, 32) var(--io-border-color);
 
-        --content-border: 1px solid #aaa;
-        --content-bg: #eee;
+        --io-field-bg: rgb(32, 32, 32);
+        --io-field-color: rgb(150, 150, 150);
 
-        --button-border: 1px solid #999;
-        --button-bg: #bbb;
+        --io-button-bg: rgb(55, 55, 55);
+        --io-button-gradient: linear-gradient(0deg, rgba(0, 0, 0, 0.25), transparent 50%),
+                         linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 50%);
 
-        --field-border: 1px solid #ccc;
-        --field-color: #333;
-        --field-bg: white;
+         --io-frame-bg: rgb(47, 47, 47);
 
-        --menu-border: 1px solid #999;
-        --menu-bg: #bbb;
-        --menu-shadow: 2px 3px 5px rgba(0,0,0,0.2);
+        --io-number-color: rgb(32, 164, 255);
+        --io-string-color: rgb(240, 64, 22);
+        --io-boolean-color: rgb(210, 90, 190);
+
+        --io-link-color: rgb(190, 230, 150);
+        --io-focus-color: #09d;
+        --io-active-bg: #ef8;
+        --io-hover-bg: rgba(255, 255, 255, 0.2);
+        --io-shadow: 2px 3px 5px rgba(0,0,0,0.2);
       }
       @media (-webkit-min-device-pixel-ratio: 2) {
         body {
-          --radius: 7px 7px 7px 7px;
-          --spacing: 4px;
-          --padding: 4px;
-          --border-radius: 4px;
+          --io-spacing: 4px;
+          --io-padding: 4px;
         }
       }
     </style>`;
