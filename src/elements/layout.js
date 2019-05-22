@@ -9,6 +9,8 @@ export class IoLayout extends IoElement {
         display: flex;
         overflow: hidden;
         touch-action: none;
+        /* border: var(--io-outset-border); */
+        /* border-color: var(--io-outset-border-color); */
       }
       :host[orientation=horizontal] {
         flex-direction: row;

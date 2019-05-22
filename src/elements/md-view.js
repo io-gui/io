@@ -7,9 +7,6 @@ export class IoMdView extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        letter-spacing: 0.04em;
-        font-weight: 300;
         display: block;
         padding: 0.5em 1em;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3),

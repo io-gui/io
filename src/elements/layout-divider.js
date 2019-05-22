@@ -9,7 +9,7 @@ export class IoLayoutDivider extends IoElement {
         z-index: 1;
         display: flex;
         flex: none;
-        border: var(--io-border-width) outset var(--io-border-color);
+        border: var(--io-outset-border);
         border-color: var(--io-outset-border-color);
         user-select: none;
         transition: background-color 0.4s;
@@ -20,10 +20,14 @@ export class IoLayoutDivider extends IoElement {
       :host[orientation=horizontal] {
         cursor: col-resize;
         width: var(--io-padding);
+        border-top: 0;
+        border-bottom: 0;
       }
       :host[orientation=vertical] {
         cursor: row-resize;
         height: var(--io-padding);
+        border-left: 0;
+        border-right: 0;
       }
       :host > .app-divider {
         flex: 1;

@@ -31,7 +31,6 @@ export class IoTabbedElements extends IoElement {
         z-index: 1;
         margin: var(--io-spacing);
         margin-bottom: 0;
-        overflow: visible;
       }
       :host > io-element-cache {
         color: var(--io-color);
@@ -68,6 +67,11 @@ export class IoTabbedElements extends IoElement {
   editableChanged() {
     if (this.editable && this.__connected) this.connectDragListeners();
     else this.disconnectDragListeners();
+  }
+  selectedChanged() {
+    if (this.filter.indexOf(this.selected) === -1) {
+      this.selected = this.filter[0];
+    }
   }
   connectedCallback() {
     super.connectedCallback();
@@ -224,7 +228,7 @@ export class IoTabs extends IoElement {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        overflow: hidden;
+        overflow: visible;
         flex: 0 1 auto;
         position: relative;
       }
@@ -249,7 +253,7 @@ export class IoTabs extends IoElement {
         border-bottom-color: var(--io-bg);
         border-bottom-style: solid;
         background: var(--io-bg);
-        /* color: var(--io-link-color); */
+        color: var(--io-link-color);
         margin-bottom: -1px;
         background-image: none;
       }
