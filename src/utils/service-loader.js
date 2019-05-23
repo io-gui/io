@@ -8,7 +8,7 @@ export class IoServiceLoader extends IoNode {
     return {
       path: 'service.js',
       serviceWorker: undefined,
-      granted: window.Notification && window.Notification.permission === 'granted',
+      permission: window.Notification ? window.Notification.permission : 'default',
       subscription: '',
     };
 
@@ -30,7 +30,7 @@ export class IoServiceLoader extends IoNode {
     }
   }
   serviceWorkerChanged() {
-    if (this.granted) this.subscribe();
+    if (this.permission === 'granted') this.subscribe();
   }
   subscribe() {
     if (navigator.serviceWorker.controller) {
@@ -38,8 +38,8 @@ export class IoServiceLoader extends IoNode {
     }
   }
   async requestNotification() {
-    this.granted = await window.Notification.requestPermission() === 'granted';
-    if (this.granted) this.subscribe();
+    this.permission = await window.Notification.requestPermission();
+    if (this.permission === 'granted') this.subscribe();
   }
   onServiceWorkerMessage(event) {
     const data = JSON.parse(event.data);

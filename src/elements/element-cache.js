@@ -51,7 +51,11 @@ export class IoElementCache extends IoElement {
       this.innerText = '';
       return;
     }
-    if ((this.precache || this.cache) && (element.cache !== false) && this._cache[this.selected]) {
+    if (element[1].cache === false) {
+      this.template([element]);
+      return;
+    }
+    if ((this.precache || this.cache) && this._cache[this.selected]) {
       this.innerText = '';
       this.appendChild(this._cache[this.selected]);
       // TODO: bound updates
