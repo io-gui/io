@@ -22,10 +22,10 @@ export class IoOption extends IoButton {
   }
   static get listeners() {
     return {
-      'io-button-clicked': 'onClicked'
+      'button-clicked': 'onClick'
     };
   }
-  onClicked() {
+  onClick() {
     this.$['menu'].expanded = true;
     let firstItem = this.$['menu'].$['group'].querySelector('io-menu-item');
     if (firstItem) firstItem.focus();

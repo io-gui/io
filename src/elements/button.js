@@ -4,7 +4,7 @@ export class IoButton extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        background: var(--io-button-bg);
+        background-color: var(--io-button-bg);
         background-image: var(--io-button-gradient);
         color: var(--io-color);
         border: var(--io-outset-border);
@@ -17,7 +17,6 @@ export class IoButton extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
-
         padding: var(--io-padding);
         padding-left: calc(3 * var(--io-padding));
         padding-right: calc(3 * var(--io-padding));
@@ -31,7 +30,7 @@ export class IoButton extends IoElement {
         background: var(--io-hover-bg);
       }
       :host[pressed] {
-        background: var(--io-active-bg);
+        background: var(--io-pressed-bg);
       }
     </style>`;
   }
@@ -39,12 +38,9 @@ export class IoButton extends IoElement {
     return {
       value: undefined,
       label: 'Button',
-      pressed: {
-        type: Boolean,
-        reflect: true
-      },
+      role: 'button',
       action: Function,
-      tabindex: 0
+      tabindex: 0,
     };
   }
   static get listeners() {
@@ -54,24 +50,67 @@ export class IoButton extends IoElement {
     };
   }
   onKeydown(event) {
-    if (!this.pressed && (event.which === 13 || event.which === 32)) {
+    if (event.which === 13 || event.which === 32) {
       event.preventDefault();
-      event.stopPropagation();
-      this.pressed = true;
-      this.addEventListener('keyup', this.onKeyup);
+      if (this.action) this.action(this.value);
+      this.dispatchEvent('button-clicked', {value: this.value, action: this.action}, true);
+    } else if (event.which == 37) {
+      event.preventDefault();
+      this.navigateTo('left');
+    } else if (event.which == 38) {
+      event.preventDefault();
+      this.navigateTo('up');
+    } else if (event.which == 39) {
+      event.preventDefault();
+      this.navigateTo('right');
+    } else if (event.which == 40) {
+      event.preventDefault();
+      this.navigateTo('down');
     }
   }
-  onKeyup() {
-    this.removeEventListener('keyup', this.onKeyup);
-    this.pressed = false;
-    if (this.action) this.action(this.value);
-    this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action}, true);
+  navigateTo(direction) {
+    const siblings = this.parentElement.querySelectorAll('[tabindex="0"]');
+    const rect = this.getBoundingClientRect();
+    let closest = this;
+    let closestDist = Infinity;
+
+    for (let i = siblings.length; i--;) {
+      const sRect = siblings[i].getBoundingClientRect();
+      const dX = sRect.x - rect.x;
+      const dY = sRect.y - rect.y;
+      const dist = Math.sqrt(dX * dX + dY * dY);
+      switch (direction) {
+        case 'right':
+          if (dX > Math.abs(dY) && dist < closestDist) {
+            closest = siblings[i];
+            closestDist = dist;
+          }
+          break;
+        case 'left':
+          if (dX < -Math.abs(dY) && dist < closestDist) {
+            closest = siblings[i];
+            closestDist = dist;
+          }
+          break;
+        case 'down':
+          if (dY > Math.abs(dX) && dist < closestDist) {
+            closest = siblings[i];
+            closestDist = dist;
+          }
+          break;
+        case 'up':
+          if (dY < -Math.abs(dX) && dist < closestDist) {
+            closest = siblings[i];
+            closestDist = dist;
+          }
+          break;
+      }
+    }
+    if (closest !== this) closest.focus();
   }
   onClick() {
-    this.pressed = false;
-    this.focus();
     if (this.action) this.action(this.value);
-    this.dispatchEvent('io-button-clicked', {value: this.value, action: this.action}, true);
+    this.dispatchEvent('button-clicked', {value: this.value, action: this.action}, true);
   }
   changed() {
     this.title = this.label;

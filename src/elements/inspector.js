@@ -85,7 +85,7 @@ export class IoInspector extends IoElement {
   }
   static get listeners() {
     return {
-      'io-button-clicked': 'onLinkClicked',
+      'button-clicked': 'onLinkClicked',
     };
   }
   onLinkClicked(event) {

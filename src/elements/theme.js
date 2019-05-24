@@ -37,6 +37,7 @@ export class IoTheme extends IoElement {
         --io-focus-color: #09d;
         --io-active-bg: #ef8;
         --io-hover-bg: rgba(255, 255, 255, 0.2);
+        --io-pressed-bg: rgb(32, 32, 32);
         --io-shadow: 2px 3px 5px rgba(0,0,0,0.2);
       }
       @media (-webkit-min-device-pixel-ratio: 2) {
