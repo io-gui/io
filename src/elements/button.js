@@ -4,7 +4,7 @@ export class IoButton extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        background-color: var(--io-button-bg);
+        background-color: var(--io-background-color-dark);
         background-image: var(--io-button-gradient);
         color: var(--io-color);
         border: var(--io-outset-border);
@@ -28,9 +28,6 @@ export class IoButton extends IoElement {
       }
       :host:hover {
         background-color: var(--io-hover-bg);
-      }
-      :host[pressed] {
-        background-color: var(--io-pressed-bg);
       }
     </style>`;
   }

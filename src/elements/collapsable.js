@@ -10,7 +10,7 @@ export class IoCollapsable extends IoElement {
         border-radius: var(--io-border-radius);
         border-color: var(--io-outset-border-color);
         padding: var(--io-padding);
-        background: var(--io-frame-bg);
+        background: var(--io-background-color-dark);
         transition: background-color 0.4s;
       }
       :host:focus-within {

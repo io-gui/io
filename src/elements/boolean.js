@@ -8,7 +8,7 @@ export class IoBoolean extends IoButton {
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
         color: var(--io-field-color);
-        background: var(--io-field-bg);
+        background: var(--io-field-background-color);
       }
     </style>`;
   }

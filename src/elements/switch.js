@@ -15,7 +15,7 @@ export class IoSwitch extends IoButton {
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
         color: var(--io-field-color);
-        background-color: var(--io-field-bg);
+        background-color: var(--io-field-background-color);
         margin: calc(var(--io-padding) + 0.25em);
         width: calc(var(--io-toggle-size) * 2);
         height: var(--io-toggle-size);

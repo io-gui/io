@@ -24,12 +24,12 @@ export class IoInspector extends IoElement {
     :host > io-collapsable {
       margin: var(--io-spacing);
     }
+    :host > io-collapsable > div io-properties > :nth-child(2n) {
+      background: var(--io-background-color-light);
+    }
     :host > io-collapsable > div io-properties > .io-property {
       overflow: hidden;
       padding: var(--io-padding);
-    }
-    :host > io-collapsable > div io-properties > .io-property:not(:last-of-type) {
-      border-bottom: var(--io-border);
     }
     :host > io-collapsable > div io-properties > .io-property > :nth-child(1) {
       overflow: hidden;
@@ -64,8 +64,9 @@ export class IoInspector extends IoElement {
     :host div io-properties > .io-property > io-number,
     :host div io-properties > .io-property > io-string {
       border: var(--io-inset-border);
+      border-color: var(--io-inset-border-color);
       color: var(--io-field-color);
-      background: var(--io-field-bg);
+      background: var(--io-field-background-color);
     }
 
     :host io-properties > .io-property > io-properties {

@@ -16,7 +16,7 @@ export class IoString extends IoElement {
         border-color: var(--io-inset-border-color);
         padding: var(--io-padding);
         color: var(--io-field-color);
-        background: var(--io-field-bg);
+        background: var(--io-field-background-color);
         transition: background-color 0.4s;
       }
       :host:focus {
