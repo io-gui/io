@@ -2,7 +2,6 @@
  * @author arodic / https://github.com/arodic
  */
 
-export {IoArray} from "./elements/array.js";
 export {IoBoolean} from "./elements/boolean.js";
 export {IoButton} from "./elements/button.js";
 export {IoCanvas} from "./elements/canvas.js";

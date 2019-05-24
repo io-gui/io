@@ -6,7 +6,6 @@ import "../lib/chai.js";
 import Node from "../tests/core/node.js"
 import Element from "../tests/core/element.js"
 
-import Array from "../tests/elements/array.js"
 import Boolean from "../tests/elements/boolean.js"
 import Button from "../tests/elements/button.js"
 import Canvas from "../tests/elements/canvas.js"
@@ -36,7 +35,6 @@ function runTests() {
   if (!testCompleted) {
     new Node().run();
     new Element().run();
-    new Array().run();
     new Boolean().run();
     new Button().run();
     new Canvas().run();
