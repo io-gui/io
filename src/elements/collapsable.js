@@ -48,7 +48,7 @@ export class IoCollapsable extends IoElement {
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
         padding: var(--io-padding);
-        background: var(--io-bg);
+        background: var(--io-background-color);
       }
     </style>`;
   }

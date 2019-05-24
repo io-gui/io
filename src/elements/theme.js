@@ -4,7 +4,10 @@ export class IoTheme extends IoElement {
   static get style() {
     return html`<style>
       body {
-        --io-bg: rgb(64, 64, 64);
+        --io-background-color: rgb(64, 64, 64);
+        --io-background-color-light: rgb(96, 96, 96);
+        --io-background-color-dark: rgb(32, 32, 32);
+
         --io-color: rgb(210, 210, 210);
         --io-spacing: 2px;
         --io-padding: 3px;

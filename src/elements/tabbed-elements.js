@@ -34,7 +34,7 @@ export class IoTabbedElements extends IoElement {
       }
       :host > io-element-cache {
         color: var(--io-color);
-        background: var(--io-bg);
+        background: var(--io-background-color);
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
@@ -250,9 +250,9 @@ export class IoTabs extends IoElement {
         border-bottom: none;
       }
       :host > io-button.io-selected-tab {
-        border-bottom-color: var(--io-bg);
+        border-bottom-color: var(--io-background-color);
         border-bottom-style: solid;
-        background: var(--io-bg);
+        background: var(--io-background-color);
         color: var(--io-link-color);
         margin-bottom: -1px;
         background-image: none;
@@ -480,7 +480,7 @@ export class IoTabDragicon extends IoElement {
         padding: var(--io-padding);
         padding-left: calc(3 * var(--io-padding));
         padding-right: calc(3 * var(--io-padding));
-        background: var(--io-bg);
+        background: var(--io-background-color);
         color: var(--io-color);
         transform: translateZ(0);
         position: absolute;

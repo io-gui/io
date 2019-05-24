@@ -4,7 +4,7 @@ export class IoLayoutDivider extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        background: var(--io-bg);
+        background: var(--io-background-color);
         color: var(--io-color);
         z-index: 1;
         display: flex;

@@ -16,7 +16,7 @@ export class IoInspector extends IoElement {
       border: var(--io-border);
       border-radius: var(--io-border-radius);
       padding: var(--io-padding);
-      background: var(--io-bg);
+      background: var(--io-background-color);
     }
     :host > io-inspector-breadcrumbs {
       margin: var(--io-spacing);

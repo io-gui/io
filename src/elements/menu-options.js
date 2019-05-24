@@ -10,7 +10,7 @@ export class IoMenuOptions extends IoElement {
         white-space: nowrap;
         user-select: none;
         touch-action: none;
-        background: var(--io-bg);
+        background: var(--io-background-color);
         color: var(--io-color);
         padding: var(--io-padding);
         border-radius: var(--io-border-radius);

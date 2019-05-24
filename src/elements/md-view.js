@@ -13,7 +13,7 @@ export class IoMdView extends IoElement {
                     0 15px 20px 0 rgba(0, 0, 0, 0.1);
         border-radius: var(--io-border-radius);
         overflow: hidden;
-        background: var(--io-bg);
+        background: var(--io-background-color);
         color: var(--io-color);
       }
       :host p {
