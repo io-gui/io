@@ -34,8 +34,8 @@ export class IoTheme extends IoElement {
         --io-boolean-color: rgb(210, 90, 190);
 
         --io-link-color: rgb(190, 230, 150);
-        --io-focus-color: #09d;
-        --io-active-bg: #ef8;
+        --io-focus-color: rgb(80, 210, 355);
+        --io-active-bg: rgb(210, 255, 128);
         --io-hover-bg: rgba(255, 255, 255, 0.2);
         --io-pressed-bg: rgb(32, 32, 32);
         --io-shadow: 2px 3px 5px rgba(0,0,0,0.2);

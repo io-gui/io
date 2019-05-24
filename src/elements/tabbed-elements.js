@@ -338,8 +338,6 @@ export class IoTabs extends IoElement {
     event.target.setPointerCapture(event.pointerId);
     event.target.addEventListener('pointermove', this._onPointermove);
     event.target.addEventListener('pointerup', this._onPointerup);
-    event.preventDefault();
-    event.stopPropagation();
     this._X = event.clientX;
     this._Y = event.clientY;
   }

@@ -27,10 +27,10 @@ export class IoButton extends IoElement {
         border-color: var(--io-focus-color);
       }
       :host:hover {
-        background: var(--io-hover-bg);
+        background-color: var(--io-hover-bg);
       }
       :host[pressed] {
-        background: var(--io-pressed-bg);
+        background-color: var(--io-pressed-bg);
       }
     </style>`;
   }
@@ -45,9 +45,14 @@ export class IoButton extends IoElement {
   }
   static get listeners() {
     return {
-      'keydown': 'onKeydown',
       'click': 'onClick',
+      'keydown': 'onKeydown',
     };
+  }
+
+  onClick() {
+    if (this.action) this.action(this.value);
+    this.dispatchEvent('button-clicked', {value: this.value, action: this.action}, true);
   }
   onKeydown(event) {
     if (event.which === 13 || event.which === 32) {
@@ -82,35 +87,27 @@ export class IoButton extends IoElement {
       switch (direction) {
         case 'right':
           if (dX > Math.abs(dY) && dist < closestDist) {
-            closest = siblings[i];
-            closestDist = dist;
+            closest = siblings[i], closestDist = dist;
           }
           break;
         case 'left':
           if (dX < -Math.abs(dY) && dist < closestDist) {
-            closest = siblings[i];
-            closestDist = dist;
+            closest = siblings[i], closestDist = dist;
           }
           break;
         case 'down':
           if (dY > Math.abs(dX) && dist < closestDist) {
-            closest = siblings[i];
-            closestDist = dist;
+            closest = siblings[i], closestDist = dist;
           }
           break;
         case 'up':
           if (dY < -Math.abs(dX) && dist < closestDist) {
-            closest = siblings[i];
-            closestDist = dist;
+            closest = siblings[i], closestDist = dist;
           }
           break;
       }
     }
     if (closest !== this) closest.focus();
-  }
-  onClick() {
-    if (this.action) this.action(this.value);
-    this.dispatchEvent('button-clicked', {value: this.value, action: this.action}, true);
   }
   changed() {
     this.title = this.label;

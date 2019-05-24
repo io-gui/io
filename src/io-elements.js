@@ -20,5 +20,6 @@ export {IoOption} from "./elements/option.js";
 export {IoProperties} from "./elements/properties.js";
 export {IoSlider} from "./elements/slider.js";
 export {IoString} from "./elements/string.js";
+export {IoSwitch} from "./elements/switch.js";
 export {IoTabbedElements} from "./elements/tabbed-elements.js";
 export {IoTheme} from "./elements/theme.js";
