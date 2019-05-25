@@ -58,53 +58,17 @@ export class IoButton extends IoElement {
       this.dispatchEvent('button-clicked', {value: this.value, action: this.action}, true);
     } else if (event.which == 37) {
       event.preventDefault();
-      this.navigateTo('left');
+      this.focusTo('left');
     } else if (event.which == 38) {
       event.preventDefault();
-      this.navigateTo('up');
+      this.focusTo('up');
     } else if (event.which == 39) {
       event.preventDefault();
-      this.navigateTo('right');
+      this.focusTo('right');
     } else if (event.which == 40) {
       event.preventDefault();
-      this.navigateTo('down');
+      this.focusTo('down');
     }
-  }
-  navigateTo(direction) {
-    const siblings = this.parentElement.querySelectorAll('[tabindex="0"]');
-    const rect = this.getBoundingClientRect();
-    let closest = this;
-    let closestDist = Infinity;
-
-    for (let i = siblings.length; i--;) {
-      const sRect = siblings[i].getBoundingClientRect();
-      const dX = sRect.x - rect.x;
-      const dY = sRect.y - rect.y;
-      const dist = Math.sqrt(dX * dX + dY * dY);
-      switch (direction) {
-        case 'right':
-          if (dX > Math.abs(dY) && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
-        case 'left':
-          if (dX < -Math.abs(dY) && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
-        case 'down':
-          if (dY > Math.abs(dX) && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
-        case 'up':
-          if (dY < -Math.abs(dX) && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
-      }
-    }
-    if (closest !== this) closest.focus();
   }
   changed() {
     this.title = this.label;

@@ -191,6 +191,42 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
+  focusTo(dir) {
+    const siblings = this.parentElement.querySelectorAll('[tabindex="0"]');
+    const rect = this.getBoundingClientRect();
+    let closest = this;
+    let closestDist = Infinity;
+
+    for (let i = siblings.length; i--;) {
+      const sRect = siblings[i].getBoundingClientRect();
+      const dX = sRect.x - rect.x;
+      const dY = sRect.y - rect.y;
+      const dist = Math.sqrt(dX * dX + dY * dY);
+      switch (dir) {
+        case 'right':
+          if (dX > Math.abs(dY) && dist < closestDist) {
+            closest = siblings[i], closestDist = dist;
+          }
+          break;
+        case 'left':
+          if (dX < -Math.abs(dY) && dist < closestDist) {
+            closest = siblings[i], closestDist = dist;
+          }
+          break;
+        case 'down':
+          if (dY > Math.abs(dX) && dist < closestDist) {
+            closest = siblings[i], closestDist = dist;
+          }
+          break;
+        case 'up':
+          if (dY < -Math.abs(dX) && dist < closestDist) {
+            closest = siblings[i], closestDist = dist;
+          }
+          break;
+      }
+    }
+    if (closest !== this) closest.focus();
+  }
 }
 
 const warning = document.createElement('div');

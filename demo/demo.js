@@ -129,7 +129,7 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoButton = ['div', {name: 'button', className: 'table'}, [
-      ['io-button', {label: 'set .5', action: this.setNumber, value: 0.5}],
+      ['io-button', {label: 'set 0.3', action: this.setNumber, value: 0.3}],
       ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
       ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
       ['io-button', {label: 'null', action: this.setNumber, value: null}],

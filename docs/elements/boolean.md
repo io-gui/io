@@ -11,3 +11,9 @@ Input element for `Boolean` data type displayed as text. It can be configured to
 | **`value`** | Boolean | Value                               | `false`   |
 | **`true`**  | String  | Text to display when value is True  | `'true'`  |
 | **`false`** | String  | Text to display when value is False | `'false'` |
+
+#### Events ####
+
+| Event | Description | Detail | Bubbles |
+|:------|:------------|:-------|:--------|
+| **`value-set`** | Value set by user action | `property`, `value`, 'oldValue' | false |
