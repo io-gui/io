@@ -1,6 +1,6 @@
 # `IoElement` `<io-element>` #
 
-`IoCoreMixin` applied to an `HTMLElement` class and some extra DOM-related functions.
+`IoNodeMixin` applied to an `HTMLElement` class and some extra DOM-related functions.
 
 ### Static Getters ###
 

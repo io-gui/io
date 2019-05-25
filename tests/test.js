@@ -21,7 +21,7 @@ import Switch from "../tests/elements/switch.js"
 // import Sting from "../tests/elements/string.js"
 // import TabbedElements from "../tests/elements/tabbed-elements.js"
 
-import Storage from "../tests/objects/storage.js"
+// import Storage from "../tests/objects/storage.js"
 
 mocha.setup('bdd');
 
