@@ -1,14 +1,14 @@
-### `<io-switch>` ###
+### `<io-string>` ###
 
-Extends `<io-button>`.
+Input element for `String` data type.
 
-Input element for `Boolean` data type displayed as switch toggle.
+When focused, the arrow keys navigate to the nearest focusable sibling element.
 
 #### Properties ####
 
 | Property | Type | Description | Default |
-|:---------|:-----|:------------|:--------|
-| **`value`** | Boolean | Value | `false` |
+|:---------|:-----|:-----------|:--------|
+| **`value`** | String | Value | `''` |
 
 #### Events ####
 

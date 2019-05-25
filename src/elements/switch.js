@@ -50,6 +50,9 @@ export class IoSwitch extends IoButton {
         background-color: rgba(80, 210, 355, 0.75);
         left: calc(100% - var(--io-toggle-size));
       }
+      :host[aria-invalid] > div:after {
+        background-color: var(--io-error-color);
+      }
     </style>`;
   }
   static get properties() {
@@ -71,6 +74,7 @@ export class IoSwitch extends IoButton {
   }
   changed() {
     this.setAttribute('aria-checked', String(this.value));
+    this.setAttribute('aria-invalid', typeof this.value !== 'boolean');
   }
 }
 

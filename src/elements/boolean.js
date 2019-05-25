@@ -10,6 +10,9 @@ export class IoBoolean extends IoButton {
         color: var(--io-field-color);
         background-color: var(--io-field-background-color);
       }
+      :host[aria-invalid] {
+        color: var(--io-error-color);
+      }
     </style>`;
   }
   static get properties() {
@@ -32,6 +35,7 @@ export class IoBoolean extends IoButton {
   }
   changed() {
     this.setAttribute('aria-checked', String(this.value));
+    this.setAttribute('aria-invalid', typeof this.value !== 'boolean');
     this.innerText = this.value ? this.true : this.false;
   }
 }

@@ -24,6 +24,9 @@ export class IoNumber extends IoElement {
         outline: none;
         border-color: var(--io-focus-color);
       }
+      :host[aria-invalid] {
+        color: var(--io-error-color);
+      }
     </style>`;
   }
   static get properties() {
@@ -34,8 +37,9 @@ export class IoNumber extends IoElement {
       min: -Infinity,
       max: Infinity,
       strict: true,
+      role: 'textbox',
       tabindex: 0,
-      contenteditable: true
+      contenteditable: true,
     };
   }
   static get listeners() {
@@ -116,6 +120,7 @@ export class IoNumber extends IoElement {
     } else {
       this.innerText = 'NaN';
     }
+    this.setAttribute('aria-invalid', typeof this.value !== 'number' || isNaN(value));
   }
 }
 

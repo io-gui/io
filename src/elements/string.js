@@ -24,6 +24,9 @@ export class IoString extends IoElement {
         outline: none;
         border-color: var(--io-focus-color);
       }
+      :host[aria-invalid] {
+        color: var(--io-error-color);
+      }
     </style>`;
   }
   static get properties() {
@@ -96,6 +99,7 @@ export class IoString extends IoElement {
   }
   valueChanged() {
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
+    this.setAttribute('aria-invalid', typeof this.value !== 'string');
   }
 }
 

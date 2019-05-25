@@ -16,4 +16,4 @@ Input element for `Boolean` data type displayed as text. It can be configured to
 
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
-| **`value-set`** | Value set by user action | `property`, `value`, 'oldValue' | false |
+| **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |
