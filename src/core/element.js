@@ -226,6 +226,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
     }
     if (closest !== this) closest.focus();
+    else {
+      this.dispatchEvent('focus-to', {direction: dir}, true);
+    }
   }
 }
 
