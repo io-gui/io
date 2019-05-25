@@ -127,7 +127,8 @@ export class IoInspector extends IoElement {
               value: this.value,
               props: this.groups[group],
               config: {
-                'type:object': ['io-inspector-link']
+                'type:object': ['io-inspector-link'],
+                'type:boolean': ['io-switch'],
               },
               labeled: true,
             }]

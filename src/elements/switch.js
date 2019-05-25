@@ -8,16 +8,19 @@ export class IoSwitch extends IoButton {
         background: none;
         border: none;
         padding: 0;
-        --io-toggle-size: calc(1.25em - calc(2 * var(--io-padding)));
+        --io-toggle-size: calc(1.29em - calc(2 * var(--io-padding)));
+        display: flex;
+        align-items: center;
       }
       :host > div {
         position: relative;
+        flex: 0 0 calc(var(--io-toggle-size) * 2.5);
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
         color: var(--io-field-color);
         background-color: var(--io-field-background-color);
-        margin: calc(var(--io-padding) + 0.25em);
-        width: calc(var(--io-toggle-size) * 2);
+        margin: var(--io-padding);
+        width: calc(var(--io-toggle-size) * 2.5);
         height: var(--io-toggle-size);
         border-radius: var(--io-toggle-size);
       }
@@ -39,6 +42,9 @@ export class IoSwitch extends IoButton {
         border: var(--io-outset-border);
         border-color: var(--io-outset-border-color);
         border-radius: var(--io-toggle-size);
+
+        transition-timing-function: ease-in-out;
+        transition: left 0.25s;
       }
       :host[value] > div:after {
         background-color: rgba(80, 210, 355, 0.75);
@@ -52,7 +58,7 @@ export class IoSwitch extends IoButton {
         type: Boolean,
         reflect: true
       },
-      role: 'switch'
+      role: 'switch',
     };
   }
   constructor(props) {

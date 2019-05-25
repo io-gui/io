@@ -19,7 +19,8 @@ export class IoBoolean extends IoButton {
         reflect: true
       },
       true: 'true',
-      false: 'false'
+      false: 'false',
+      role: 'switch',
     };
   }
   constructor(props) {
@@ -30,6 +31,7 @@ export class IoBoolean extends IoButton {
     this.set('value', !this.value);
   }
   changed() {
+    this.setAttribute('aria-checked', String(this.value));
     this.innerText = this.value ? this.true : this.false;
   }
 }

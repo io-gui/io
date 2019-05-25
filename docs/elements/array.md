@@ -1,1 +1,0 @@
-### `IoArray` `<io-array>` ###

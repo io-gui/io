@@ -75,7 +75,7 @@
     import "./demo/todomvc/todo-app.js";
     import "./tests/test.js";
 
-    const service = new IoServiceLoader({path: '../service.js'});
+    // const service = new IoServiceLoader({path: '../service.js'});
 
     export class IoMainPage extends IoElement {
       static get style() {
@@ -97,16 +97,16 @@
         this.template([
           ['io-tabbed-elements', {precache: true, selected: $('page', 'About', true), elements: [
             ['io-md-view', {name: 'About', path :'./readme.md'}],
-            // ['io-tabbed-elements', {name: 'Docs', precache: true, selected: $('doc', 'Core'), elements: [
+            ['io-tabbed-elements', {name: 'Docs', precache: true, selected: $('doc', 'Core'), elements: [
             //   ['io-tabbed-elements', {name: 'Core', precache: true, selected: 'core', elements: [
             //     ['io-md-view', {name: 'core', path :'./docs/core/core.md'}],
             //     ['io-md-view', {name: 'node', path :'./docs/core/node.md'}],
             //     ['io-md-view', {name: 'element', path :'./docs/core/element.md'}],
-            //   ]}],
-            //   ['io-tabbed-elements', {name: 'Elements', precache: true, selected: 'array', elements: [
-            //     ['io-md-view', {name: 'array', path :'./docs/elements/array.md'}],
-            //     ['io-md-view', {name: 'boolean', path :'./docs/elements/boolean.md'}],
-            //     ['io-md-view', {name: 'button', path :'./docs/elements/button.md'}],
+              // ]}],
+              ['io-tabbed-elements', {name: 'Elements', precache: true, selected: 'button', elements: [
+                ['io-md-view', {name: 'button', path :'./docs/elements/button.md'}],
+                ['io-md-view', {name: 'boolean', path :'./docs/elements/boolean.md'}],
+                ['io-md-view', {name: 'switch', path :'./docs/elements/switch.md'}],
             //     ['io-md-view', {name: 'canvas', path :'./docs/elements/canvas.md'}],
             //     ['io-md-view', {name: 'collapsable', path :'./docs/elements/collapsable.md'}],
             //     ['io-md-view', {name: 'element-cache', path :'./docs/elements/element-cache.md'}],
@@ -121,12 +121,12 @@
             //     ['io-md-view', {name: 'slider', path :'./docs/elements/slider.md'}],
             //     ['io-md-view', {name: 'string', path :'./docs/elements/string.md'}],
             //     ['io-md-view', {name: 'tabs', path :'./docs/elements/tabs.md'}],
-            //   ]}],
+              ]}],
             //   ['io-tabbed-elements', {name: 'Utils', precache: true, selected: 'storage', elements: [
             //     ['io-md-view', {name: 'storage', path :'./docs/utils/storage.md'}],
             //     ['io-md-view', {name: 'service-loader', path :'./docs/utils/service-loader.md'}],
             //   ]}],
-            // ]}],
+            ]}],
             ['io-demo', {name: 'Demo'}],
             ['io-test', {name: 'Test'}],
             ['todo-app', {name: 'Todo'}],
@@ -134,7 +134,6 @@
         ]);
       }
     }
-
     IoMainPage.Register();
     </script>
   </head>

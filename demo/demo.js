@@ -101,6 +101,10 @@ export class IoDemo extends IoElement {
       ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
     ]];
 
+    const demoSwitch = ['div', {name: 'switch'}, [
+      ['io-switch', {value: this.bind('boolean')}],
+    ]];
+
     const demoSliders = ['div', {name: 'sliders'}, [
       pointerEventsWarning,
       ['io-slider', {value: this.bind('number')}],
@@ -156,6 +160,7 @@ export class IoDemo extends IoElement {
       orientation: 'horizontal',
       elements: [
         demoPrimitives,
+        demoSwitch,
         demoSliders,
         demoOptions,
         demoButton,
@@ -179,6 +184,7 @@ export class IoDemo extends IoElement {
       ['io-tabbed-elements', {precache: true, selected: $('demo', 'Elements'), elements: [
         ['div', {name: 'Elements'}, [
           ['h4', 'io-string io-number io-boolean'], demoPrimitives,
+          ['h4', 'io-switch'], demoSwitch,
           ['h4', 'io-slider'], demoSliders,
           ['h4', 'io-options'], demoOptions,
           ['h4', 'io-button'], demoButton,

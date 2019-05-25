@@ -7,23 +7,24 @@ export default class {
     document.body.appendChild(this.element);
   }
   run() {
-    describe('IoButton: default values', () => {
-      it('has default values', () => {
-        this.element.innerHTML = 'button';
-        chai.expect(this.element.innerHTML).to.equal('button');
+    describe('IoButton', () => {
+      describe('default values', () => {
+        it('has default values', () => {
+          chai.expect(this.element.label).to.equal('Button');
+        });
       });
-    });
-    describe('IoButton: attribute', () => {
-      it('has tabindex attribute', () => {
-        chai.expect(this.element.getAttribute('tabindex')).to.equal('0');
-      });
-      it('has pressed attribute', () => {
-        this.element.pressed = false;
-        chai.expect(this.element.hasAttribute('pressed')).to.equal(false);
-        chai.expect(this.element.getAttribute('pressed')).to.equal(null);
-        this.element.pressed = true;
-        chai.expect(this.element.hasAttribute('pressed')).to.equal(true);
-        chai.expect(this.element.getAttribute('pressed')).to.equal('');
+      describe('attributes', () => {
+        it('has tabindex attribute', () => {
+          chai.expect(this.element.getAttribute('tabindex')).to.equal('0');
+        });
+        it('has a11y attributes', () => {
+          chai.expect(this.element.getAttribute('role')).to.equal('button');
+        });
+        it('has title attribute', () => {
+          this.element.label = 'click here';
+          chai.expect(this.element.getAttribute('title')).to.equal('click here');
+          this.element.label = 'Button';
+        });
       });
     });
   }

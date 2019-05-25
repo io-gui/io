@@ -33,10 +33,10 @@ export class IoButton extends IoElement {
   }
   static get properties() {
     return {
-      value: undefined,
       label: 'Button',
-      role: 'button',
       action: Function,
+      value: undefined,
+      role: 'button',
       tabindex: 0,
     };
   }

@@ -48,7 +48,6 @@ export class IoMdView extends IoElement {
       :host table tr,
       :host table th {
         border: 1px solid gray;
-        text-align: left;
         padding: 0.25em;
       }
       :host .videocontainer {

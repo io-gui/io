@@ -94,7 +94,7 @@ export class IoProperties extends IoElement {
     return {
       'type:string': ['io-string', {}],
       'type:number': ['io-number', {step: 0.01}],
-      'type:boolean': ['io-switch', {}],
+      'type:boolean': ['io-boolean', {}],
       'type:object': ['io-object', {}],
       'type:null': ['io-string', {}],
       'type:undefined': ['io-string', {}],

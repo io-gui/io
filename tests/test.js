@@ -8,17 +8,18 @@ import Element from "../tests/core/element.js"
 
 import Boolean from "../tests/elements/boolean.js"
 import Button from "../tests/elements/button.js"
-import Canvas from "../tests/elements/canvas.js"
-import Collapsable from "../tests/elements/collapsable.js"
-import Inspector from "../tests/elements/inspector.js"
-import Menu from "../tests/elements/menu.js"
-import Number from "../tests/elements/number.js"
-import Object from "../tests/elements/object.js"
-import Option from "../tests/elements/option.js"
-import Properties from "../tests/elements/properties.js"
-import Slider from "../tests/elements/slider.js"
-import Sting from "../tests/elements/string.js"
-import TabbedElements from "../tests/elements/tabbed-elements.js"
+import Switch from "../tests/elements/switch.js"
+// import Canvas from "../tests/elements/canvas.js"
+// import Collapsable from "../tests/elements/collapsable.js"
+// import Inspector from "../tests/elements/inspector.js"
+// import Menu from "../tests/elements/menu.js"
+// import Number from "../tests/elements/number.js"
+// import Object from "../tests/elements/object.js"
+// import Option from "../tests/elements/option.js"
+// import Properties from "../tests/elements/properties.js"
+// import Slider from "../tests/elements/slider.js"
+// import Sting from "../tests/elements/string.js"
+// import TabbedElements from "../tests/elements/tabbed-elements.js"
 
 import Storage from "../tests/objects/storage.js"
 
@@ -35,19 +36,21 @@ function runTests() {
   if (!testCompleted) {
     new Node().run();
     new Element().run();
-    new Boolean().run();
+
     new Button().run();
-    new Canvas().run();
-    new Collapsable().run();
-    new Inspector().run();
-    new Menu().run();
-    new Number().run();
-    new Object().run();
-    new Option().run();
-    new Properties().run();
-    new Slider().run();
-    new Storage().run();
-    new Sting().run();
+    new Boolean().run();
+    new Switch().run();
+    // new Canvas().run();
+    // new Collapsable().run();
+    // new Inspector().run();
+    // new Menu().run();
+    // new Number().run();
+    // new Object().run();
+    // new Option().run();
+    // new Properties().run();
+    // new Slider().run();
+    // new Storage().run();
+    // new Sting().run();
     mocha.checkLeaks();
     mocha.run();
     testCompleted = true;
