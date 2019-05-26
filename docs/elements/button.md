@@ -18,5 +18,5 @@ When focused, the arrow keys navigate to the nearest focusable sibling element.
 
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
-| **`button-clicked`** | Clicked | `value`, `action` | true |
+| **`button-clicked`** | Clicked | `value`, `action` | false |
 | **`focus-to`** | Attempted to change focus but no suitable sibling found | `direction` | true |

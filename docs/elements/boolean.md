@@ -16,6 +16,6 @@ Input element for `Boolean` data type displayed as text. It can be configured to
 
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
-| **`button-clicked`** | Clicked | `value`, `action` | true |
+| **`button-clicked`** | Clicked | `value`, `action` | false |
 | **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |
 | **`focus-to`** | Attempted to change focus but no suitable sibling found | `direction` | true |
