@@ -293,6 +293,7 @@ export class TodoApp extends IoElement {
       text-decoration: none;
       border: 1px solid transparent;
       border-radius: 3px;
+      cursor: pointer;
     }
 
     :host .filters a.selected,
@@ -406,9 +407,9 @@ export class TodoApp extends IoElement {
         itemCount ? ['footer', {className: 'footer'}, [
           ['span', {className: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'],
           ['div', {className: 'filters'}, [
-            ['a', {'href': '#route=all', className: this.route === 'all' ? 'selected' : ''}, 'All'],
-            ['a', {'href': '#route=active', className: this.route === 'active' ? 'selected' : ''}, 'Active'],
-            ['a', {'href': '#route=completed', className: this.route === 'completed' ? 'selected' : ''}, 'Completed']
+            ['a', {'on-click': this.setRoute, className: this.route === 'all' ? 'selected' : ''}, 'All'],
+            ['a', {'on-click': this.setRoute, className: this.route === 'active' ? 'selected' : ''}, 'Active'],
+            ['a', {'on-click': this.setRoute, className: this.route === 'completed' ? 'selected' : ''}, 'Completed']
           ]],
           completedCount? ['button', {className: 'clear-completed', 'on-click': this.model.clearCompletedItems}, 'Clear completed'] : null
         ]] : null
@@ -419,6 +420,9 @@ export class TodoApp extends IoElement {
         ['p', 'Part of TodoMVC'],
       ]]
     ]);
+  }
+  setRoute(event) {
+    this.route = event.target.innerText.toLowerCase();
   }
   onInputKey(event) {
     if (event.which === ENTER_KEY) {
