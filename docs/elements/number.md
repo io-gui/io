@@ -14,6 +14,8 @@ When focused, the arrow keys navigate to the nearest focusable sibling element.
 | **`min`** | Number | Minimum value | `-Infinity` |
 | **`max`** | Number | Maximum value | `Infinity` |
 
+#### Events ####
+
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
 | **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |

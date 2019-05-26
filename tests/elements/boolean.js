@@ -29,6 +29,9 @@ export default class {
           chai.expect(this.element.innerHTML).to.equal('yes');
           this.element.toggle();
           chai.expect(this.element.innerHTML).to.equal('no');
+          this.element.value = false;
+          this.element.true = 'true';
+          this.element.false = 'false';
         });
       });
       describe('attributes', () => {
@@ -37,8 +40,12 @@ export default class {
         });
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('switch');
+          this.element.value = 0;
+          chai.expect(this.element.getAttribute('aria-invalid')).to.equal('');
+          this.element.value = false;
+          chai.expect(this.element.getAttribute('aria-invalid')).to.equal(null);
         });
-        it('has attribute when value is true', () => {
+        it('has value attribute when value is true', () => {
           this.element.value = false;
           chai.expect(this.element.hasAttribute('value')).to.equal(false);
           chai.expect(this.element.getAttribute('value')).to.equal(null);

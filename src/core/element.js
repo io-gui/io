@@ -160,8 +160,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
                 // children[i].style[s] = vChildren[i].props[prop][s];
                 children[i].style.setProperty(s, vChildren[i].props[prop][s]);
               }
+            } else {
+              children[i][prop] = vChildren[i].props[prop];
             }
-            else children[i][prop] = vChildren[i].props[prop];
           }
           // TODO: Refactor for native elements.
           children[i].__listeners.setPropListeners(vChildren[i].props, children[i]);
