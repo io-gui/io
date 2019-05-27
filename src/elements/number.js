@@ -38,6 +38,10 @@ export class IoNumber extends IoElement {
       max: Infinity,
       strict: true,
       role: 'textbox',
+      type: {
+        value: 'number',
+        reflect: true
+      },
       tabindex: 0,
       contenteditable: true,
     };
@@ -69,6 +73,8 @@ export class IoNumber extends IoElement {
     const end = rng.endOffset;
     const length = this.childNodes[0].length;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
+
+    // TODO: implement home/end for min/max
 
     if (event.which == 13) {
       event.preventDefault();
