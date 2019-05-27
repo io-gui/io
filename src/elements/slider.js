@@ -41,6 +41,11 @@ export class IoSlider extends IoElement {
 
 IoSlider.Register();
 
+// TODO
+// aria-valuenow
+// aria-valuemin
+// aria-valuemax
+
 export class IoSliderKnob extends IoCanvas {
   static get style() {
     return html`<style>
@@ -80,6 +85,7 @@ export class IoSliderKnob extends IoCanvas {
       snapWidth: 1,
       slotWidth: 2,
       handleWidth: 4,
+      role: 'slider',
       tabindex: 0,
     };
   }

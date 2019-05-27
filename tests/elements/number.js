@@ -85,6 +85,11 @@ export default class {
           chai.expect(this.element.getAttribute('aria-invalid')).to.equal('');
           this.element.value = 0;
           chai.expect(this.element.getAttribute('aria-invalid')).to.equal(null);
+          this.element.min = 0;
+          chai.expect(this.element.getAttribute('aria-valuemin')).to.equal('0');
+          this.element.max = 0;
+          chai.expect(this.element.getAttribute('aria-valuemax')).to.equal('0');
+          this.reset();
         });
         it('has contenteditable attribute', () => {
           chai.expect(this.element.getAttribute('contenteditable')).to.equal('');

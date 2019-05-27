@@ -121,6 +121,8 @@ export class IoNumber extends IoElement {
       this.innerText = 'NaN';
     }
     this.setAttribute('aria-invalid', typeof this.value !== 'number' || isNaN(value));
+    this.setAttribute('aria-valuemin', this.min !== -Infinity ? this.min : undefined);
+    this.setAttribute('aria-valuemax', this.max !== Infinity ? this.max : undefined);
   }
 }
 
