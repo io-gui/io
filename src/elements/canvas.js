@@ -46,14 +46,10 @@ export class IoCanvas extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        box-sizing: border-box;
-        overflow: hidden;
-        position: relative;
+        display: flex;
       }
       :host > canvas {
-        position: absolute;
-        top: 0px;
-        left: 0px;
+        flex: 1 1 auto;
         touch-action: none;
         user-select: none;
         image-rendering: pixelated;
@@ -125,12 +121,13 @@ export class IoCanvas extends IoElement {
     this.render();
   }
   resized() {
-    const rect = this.getBoundingClientRect();
+    const rect = this.$.canvas.getBoundingClientRect();
     this.size[0] = rect.width;
     this.size[1] = rect.height;
     this.changed();
   }
   changed() {
+    // TODO: make global animation loop.
     requestAnimationFrame(() => {
       this.render();
     });

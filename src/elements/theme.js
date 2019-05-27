@@ -44,8 +44,8 @@ export class IoTheme extends IoElement {
         body {
           --io-spacing: 4px;
           --io-padding: 5px;
-          --io-border-radius: 5px;
-          --io-border-width: 0.5px;
+          --io-border-radius: 3px;
+          --io-border-width: 1px;
         }
       }
       @media (min-resolution: 120dpi) {

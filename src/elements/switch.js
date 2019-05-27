@@ -23,9 +23,16 @@ export class IoSwitch extends IoButton {
         width: calc(var(--io-toggle-size) * 2.5);
         height: var(--io-toggle-size);
         border-radius: var(--io-toggle-size);
+        transition: background-color 0.4s;
       }
       :host[value] > div {
         background-color: rgba(80, 210, 355, 0.2);
+      }
+      :host:hover {
+        background-color: inherit;
+      }
+      :host:hover > div {
+        background-color: var(--io-hover-bg);
       }
       :host:focus > div {
         border-color: var(--io-focus-color);

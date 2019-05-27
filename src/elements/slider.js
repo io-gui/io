@@ -56,6 +56,15 @@ export class IoSliderKnob extends IoCanvas {
         pointer-events: none;
         touch-action: none;
       }
+      :host:focus {
+        overflow: hidden;
+        text-overflow: clip;
+        outline: none;
+        border-color: var(--io-focus-color);
+      }
+      :host[aria-invalid] {
+        color: var(--io-error-color);
+      }
     </style>`;
   }
   static get properties() {
@@ -71,6 +80,7 @@ export class IoSliderKnob extends IoCanvas {
       snapWidth: 1,
       slotWidth: 2,
       handleWidth: 4,
+      tabindex: 0,
     };
   }
   static get listeners() {
