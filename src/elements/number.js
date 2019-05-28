@@ -69,6 +69,7 @@ export class IoNumber extends IoElement {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     if (this._innerTextOnFocus !== this.innerText) this.setFromText(this.innerText);
+    selection.removeAllRanges();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }

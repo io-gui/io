@@ -48,13 +48,14 @@ export class IoString extends IoElement {
     this._select();
   }
   _onBlur() {
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
     if (typeof this.value === 'string' || (this.innerText !== String(this.value))) {
       this.set('value', this.innerText);
     }
+    selection.removeAllRanges();
     this.scrollTop = 0;
     this.scrollLeft = 0;
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
   }
   _onKeydown(event) {
     const rng = window.getSelection().getRangeAt(0);

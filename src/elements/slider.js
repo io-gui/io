@@ -105,15 +105,20 @@ export class IoSliderKnob extends IoCanvas {
   _onMousedown(event) {
     event.preventDefault();
     this.focus();
-    this.addEventListener('mousemove', this._onMousemove);
-    this.addEventListener('mouseup', this._onMouseup);
+    window.addEventListener('mousemove', this._onMousemove);
+    window.addEventListener('mouseup', this._onMouseup);
   }
   _onMousemove(event) {
     this._moveSliderByPointer(event);
   }
   _onMouseup() {
-    this.removeEventListener('mousemove', this._onMousemove);
-    this.removeEventListener('mouseup', this._onMouseup);
+    window.removeEventListener('mousemove', this._onMousemove);
+    window.removeEventListener('mouseup', this._onMouseup);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('mousemove', this._onMousemove);
+    window.removeEventListener('mouseup', this._onMouseup);
   }
   _moveSliderByPointer(pointer) {
     const rect = this.getBoundingClientRect();
