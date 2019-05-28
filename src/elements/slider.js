@@ -98,7 +98,7 @@ export class IoSliderKnob extends IoCanvas {
     event.preventDefault();
     this._moveSliderByPointer(event.changedTouches[0]);
   }
-  _onTouchend(event) {
+  _onTouchend() {
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
   }
@@ -111,7 +111,7 @@ export class IoSliderKnob extends IoCanvas {
   _onMousemove(event) {
     this._moveSliderByPointer(event);
   }
-  _onMouseup(event) {
+  _onMouseup() {
     this.removeEventListener('mousemove', this._onMousemove);
     this.removeEventListener('mouseup', this._onMouseup);
   }
@@ -171,7 +171,7 @@ export class IoSliderKnob extends IoCanvas {
       case 'max':
         value = this.maxValue;
         break;
-    };
+    }
     value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
     value = Number(value.toFixed(-Math.round(Math.log(this.step) / Math.LN10)));
     this.set('value', value);
