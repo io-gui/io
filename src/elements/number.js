@@ -42,6 +42,10 @@ export class IoNumber extends IoElement {
         value: 'number',
         reflect: true
       },
+      pattern: {
+        value: 'pattern="[0-9]*"',
+        reflect: true,
+      },
       tabindex: 0,
       contenteditable: true,
     };
