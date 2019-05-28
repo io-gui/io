@@ -72,9 +72,9 @@ export class IoSliderKnob extends IoCanvas {
       maxValue: 1000,
       startColor: [0.3, 0.9, 1, 1],
       endColor: [0.9, 1, 0.5, 1],
-      lineColor: [0.4, 0.4, 0.4, 1],
+      lineColor: [0.5, 0.5, 0.5, 1],
       bg: [0.2, 0.2, 0.2, 1],
-      snapWidth: 1,
+      snapWidth: 2,
       slotWidth: 2,
       handleWidth: 4,
       role: 'slider',
@@ -192,32 +192,29 @@ export class IoSliderKnob extends IoCanvas {
   // TODO: implement proper sdf shapes.
   static get frag() {
     return `
+    #extension GL_OES_standard_derivatives : enable
+
     varying vec2 vUv;
+
     void main(void) {
 
-      vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
+      vec4 finalColor = bg;
 
       float _range = maxValue - minValue;
       float _progress = (value - minValue) / _range;
       float _value = mix(minValue, maxValue, vUv.x);
       float _stepRange = size.x / (_range / step);
 
-      if (_stepRange > snapWidth * 4.0) {
-        float pxValue = _value * size.x / _range;
-        float pxStep = step * size.x / _range;
-        float snap0 = mod(pxValue, pxStep);
-        float snap1 = pxStep - mod(pxValue, pxStep);
-        float snap = min(snap0, snap1) * 2.0;
-        snap -= snapWidth;
-        snap = 1.0 - clamp(snap, 0.0, 1.0);
-        finalColor = mix(finalColor, lineColor, snap);
+      if (_stepRange > snapWidth * 2.0) {
+        float res = _value / step;
+        float line = abs(fract(res - 0.5) - 0.5) / abs(dFdx(res)) / snapWidth;
+        finalColor = mix(finalColor, lineColor, 1.0 - min(line, 1.0));
       }
 
       float slot = (abs(0.5 - vUv.y) * 2.0) * size.y;
       slot = (1.0 - slot) + slotWidth;
       slot = clamp(slot, 0.0, 1.0);
       vec4 slotColor = mix(startColor, endColor, vUv.x);
-
       float progress = (vUv.x - _progress) * size.x;
       progress = clamp(progress, 0.0, 1.0);
       slotColor = mix(slotColor, lineColor, progress);
@@ -228,7 +225,6 @@ export class IoSliderKnob extends IoCanvas {
 
       finalColor = mix(finalColor, slotColor, slot);
       finalColor = mix(finalColor, mix(startColor, endColor, _progress), handle);
-
       gl_FragColor = finalColor;
     }`;
   }

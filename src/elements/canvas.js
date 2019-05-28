@@ -22,6 +22,8 @@ const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false});
 gl.imageSmoothingEnabled = false;
 
+gl.getExtension('OES_standard_derivatives');
+
 gl.enable(gl.BLEND);
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 gl.disable(gl.DEPTH_TEST);
@@ -167,7 +169,7 @@ export class IoCanvas extends IoElement {
       let value = this.__properties[prop].value;
       if (type === Number) {
         const uniform = gl.getUniformLocation(this._shader, prop);
-        gl.uniform1f(uniform, value);
+        gl.uniform1f(uniform, value || 0);
       } else if (type === Array) {
         const uniform = gl.getUniformLocation(this._shader, prop);
         switch (value.length) {
