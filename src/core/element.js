@@ -27,6 +27,11 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         reflect: true,
         enumerable: false
       },
+      label: {
+        type: String,
+        reflect: true,
+        enumerable: false
+      },
       title: {
         type: String,
         reflect: true,
@@ -41,6 +46,13 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         type: Object,
       },
     };
+  }
+  // TODO: performance check and optimize
+  titleChanged() {
+    this.setAttribute('aria-label', this.title || this.label);
+  }
+  labelChanged() {
+    this.setAttribute('aria-label', this.title || this.label);
   }
   /**
     * Callback when `IoElement` is connected.
@@ -192,9 +204,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
-  focusTo(dir) {
+  focusTo(dir, srcRect) {
     const siblings = this.parentElement.querySelectorAll('[tabindex="0"]');
-    const rect = this.getBoundingClientRect();
+    const rect = srcRect || this.getBoundingClientRect();
     let closest = this;
     let closestDist = Infinity;
 

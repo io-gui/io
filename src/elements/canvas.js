@@ -2,6 +2,22 @@
 
 import {html, IoElement} from "../core/element.js";
 
+const animationQueue = [];
+const animate = function() {
+  for (let i = animationQueue.length; i--;) {
+    animationQueue[i]();
+  }
+  animationQueue.lenght = 0;
+  requestAnimationFrame(animate);
+};
+requestAnimationFrame(animate);
+
+function queueAnimation(func) {
+  if (animationQueue.indexOf(func) === -1) {
+    animationQueue.push(func);
+  }
+}
+
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false});
 gl.imageSmoothingEnabled = false;
@@ -46,12 +62,15 @@ export class IoCanvas extends IoElement {
   static get style() {
     return html`<style>
       :host {
+        user-select: none;
         display: flex;
+        flex-direction: column;
       }
       :host > canvas {
         flex: 1 1 auto;
-        touch-action: none;
-        user-select: none;
+        width: 100% !important;
+        height: 100% !important;
+        pointer-events: none;
         image-rendering: pixelated;
       }
     </style>`;
@@ -127,10 +146,7 @@ export class IoCanvas extends IoElement {
     this.changed();
   }
   changed() {
-    // TODO: make global animation loop.
-    requestAnimationFrame(() => {
-      this.render();
-    });
+    queueAnimation(this.render);
   }
   render() {
     if (!this._shader) return;

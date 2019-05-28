@@ -60,6 +60,7 @@ export class IoNumber extends IoElement {
     this.setAttribute('spellcheck', 'false');
   }
   _onFocus() {
+    this._innerTextOnFocus = this.innerText;
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
     this._select();
@@ -67,7 +68,7 @@ export class IoNumber extends IoElement {
   _onBlur() {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
-    this.setFromText(this.innerText);
+    if (this._innerTextOnFocus !== this.innerText) this.setFromText(this.innerText);
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -130,7 +131,7 @@ export class IoNumber extends IoElement {
     } else {
       this.innerText = 'NaN';
     }
-    this.setAttribute('aria-invalid', typeof this.value !== 'number' || isNaN(value));
+    this.setAttribute('aria-invalid', typeof this.value !== 'number' || isNaN(this.value));
     this.setAttribute('aria-valuemin', this.min !== -Infinity ? this.min : undefined);
     this.setAttribute('aria-valuemax', this.max !== Infinity ? this.max : undefined);
   }

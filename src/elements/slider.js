@@ -6,7 +6,6 @@ export class IoSlider extends IoElement {
     return html`<style>
       :host {
         display: flex;
-        flex-direction: row;
         min-width: 12em;
       }
       :host > io-number {
@@ -31,44 +30,37 @@ export class IoSlider extends IoElement {
     this.dispatchEvent('value-set', event.detail, false);
     this.value = event.detail.value;
   }
+  _onFocusTo(event) {
+    const srcRect = event.target.getBoundingClientRect();
+    this.focusTo(event.detail.direction, srcRect);
+  }
   changed() {
     this.template([
-      ['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, id: 'number', 'on-value-set': this._onValueSet}],
-      ['io-slider-knob', {value: this.value, step: this.step, minValue: this.min, maxValue: this.max, id: 'slider', 'on-value-set': this._onValueSet}]
+      ['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, label: this.label, title: this.title,
+        id: 'number', 'on-value-set': this._onValueSet, 'on-focus-to': this._onFocusTo}],
+      ['io-slider-knob', {value: this.value, step: this.step, minValue: this.min, maxValue: this.max, label: this.label, title: this.title,
+        id: 'slider', 'on-value-set': this._onValueSet, 'on-focus-to': this._onFocusTo}]
     ]);
   }
 }
 
 IoSlider.Register();
 
-// TODO
-// aria-valuenow
-// aria-valuemin
-// aria-valuemax
-
 export class IoSliderKnob extends IoCanvas {
   static get style() {
     return html`<style>
       :host {
-        display: flex;
         cursor: ew-resize;
-        touch-action: none;
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
       }
-      :host > canvas {
-        pointer-events: none;
-        touch-action: none;
-      }
       :host:focus {
-        overflow: hidden;
-        text-overflow: clip;
         outline: none;
         border-color: var(--io-focus-color);
       }
       :host[aria-invalid] {
-        color: var(--io-error-color);
+        border-color: var(--io-error-color);
       }
     </style>`;
   }
@@ -91,27 +83,106 @@ export class IoSliderKnob extends IoCanvas {
   }
   static get listeners() {
     return {
-      'pointerdown': 'onPointerdown',
-      'pointermove': 'onPointermove',
-      'dragstart': 'preventDefault',
+      'touchstart': '_onTouchstart',
+      'mousedown': '_onMousedown',
+      'keydown': '_onKeydown',
     };
   }
-  onPointerdown(event) {
-    this.setPointerCapture(event.pointerId);
+  _onTouchstart(event) {
+    event.preventDefault();
+    this.focus();
+    this.addEventListener('touchmove', this._onTouchmove);
+    this.addEventListener('touchend', this._onTouchend);
   }
-  onPointermove(event) {
-    this.setPointerCapture(event.pointerId);
-    if (event.buttons !== 0) {
+  _onTouchmove(event) {
+    event.preventDefault();
+    this._moveSliderByPointer(event.changedTouches[0]);
+  }
+  _onTouchend(event) {
+    this.removeEventListener('touchmove', this._onTouchmove);
+    this.removeEventListener('touchend', this._onTouchend);
+  }
+  _onMousedown(event) {
+    event.preventDefault();
+    this.focus();
+    this.addEventListener('mousemove', this._onMousemove);
+    this.addEventListener('mouseup', this._onMouseup);
+  }
+  _onMousemove(event) {
+    this._moveSliderByPointer(event);
+  }
+  _onMouseup(event) {
+    this.removeEventListener('mousemove', this._onMousemove);
+    this.removeEventListener('mouseup', this._onMouseup);
+  }
+  _moveSliderByPointer(pointer) {
+    const rect = this.getBoundingClientRect();
+    const x = (pointer.clientX - rect.x) / rect.width;
+    const pos = Math.max(0,Math.min(1, x));
+    let value = this.minValue + (this.maxValue - this.minValue) * pos;
+    value = Math.round(value / this.step) * this.step;
+    value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
+    value = Number(value.toFixed(-Math.round(Math.log(this.step) / Math.LN10)));
+    this.set('value', value);
+  }
+  _onKeydown(event) {
+    if (event.which == 37) {
       event.preventDefault();
-      const rect = this.getBoundingClientRect();
-      const x = (event.clientX - rect.x) / rect.width;
-      const pos = Math.max(0,Math.min(1, x));
-      let value = this.minValue + (this.maxValue - this.minValue) * pos;
-      value = Math.round(value / this.step) * this.step;
-      value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
-      value = Number(value.toFixed(-Math.round(Math.log(this.step) / Math.LN10)));
-      this.set('value', value);
+      if (event.shiftKey) this.focusTo('left');
+      else this._moveSliderByKey('decrease');
+    } else if (event.which == 38) {
+      event.preventDefault();
+      if (event.shiftKey) this.focusTo('up');
+      else this._moveSliderByKey('decrease');
+    } else if (event.which == 39) {
+      event.preventDefault();
+      if (event.shiftKey) this.focusTo('right');
+      else this._moveSliderByKey('increase');
+    } else if (event.which == 40) {
+      event.preventDefault();
+      if (event.shiftKey) this.focusTo('down');
+      else this._moveSliderByKey('increase');
+    } else if (event.which == 33) {
+      event.preventDefault();
+      this._moveSliderByKey('increase');
+    } else if (event.which == 34) {
+      event.preventDefault();
+      this._moveSliderByKey('decrease');
+    } else if (event.which == 36) {
+      event.preventDefault();
+      this._moveSliderByKey('min');
+    } else if (event.which == 35) {
+      event.preventDefault();
+      this._moveSliderByKey('max');
     }
+  }
+  _moveSliderByKey(key) {
+    let value = Math.round(this.value / this.step) * this.step;
+    switch (key) {
+      case 'increase':
+        value += this.step;
+        break;
+      case 'decrease':
+        value -= this.step;
+        break;
+      case 'min':
+        value = this.minValue;
+        break;
+      case 'max':
+        value = this.maxValue;
+        break;
+    };
+    value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
+    value = Number(value.toFixed(-Math.round(Math.log(this.step) / Math.LN10)));
+    this.set('value', value);
+  }
+  changed() {
+    super.changed();
+    this.setAttribute('aria-invalid', typeof this.value !== 'number' || isNaN(this.value));
+    this.setAttribute('aria-valuenow', this.value);
+    this.setAttribute('aria-valuemin', this.minValue);
+    this.setAttribute('aria-valuemax', this.maxValue);
+    this.setAttribute('aria-valuestep', this.step);
   }
   // TODO: implement proper sdf shapes.
   static get frag() {

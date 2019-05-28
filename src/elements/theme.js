@@ -16,7 +16,7 @@ export class IoTheme extends IoElement {
         --io-background-color-dark: rgb(47, 47, 47);
 
         --io-color: rgb(210, 210, 210);
-        --io-error-color: rgb(255, 128, 64);
+        --io-error-color: rgb(255, 64, 64);
 
         --io-field-background-color: rgb(32, 32, 32);
         --io-field-color: rgb(150, 150, 150);
