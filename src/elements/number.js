@@ -46,6 +46,10 @@ export class IoNumber extends IoElement {
         value: 'pattern="[0-9]*"',
         reflect: true,
       },
+      inputmode: {
+        value: 'numeric',
+        reflect: true,
+      },
       tabindex: 0,
       contenteditable: true,
     };
