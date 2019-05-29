@@ -1,6 +1,8 @@
 import {IoElement} from "../core/element.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
+const selection = window.getSelection();
+
 // TODO: implement working mousestart/touchstart UX
 // TODO: implement keyboard modifiers maybe. Touch alternative?
 export class IoMenu extends IoElement {
@@ -9,7 +11,6 @@ export class IoMenu extends IoElement {
       options: Array,
       expanded: Boolean,
       position: 'pointer',
-      ondown: true,
       button: 0,
     };
   }
@@ -29,15 +30,18 @@ export class IoMenu extends IoElement {
   connectedCallback() {
     super.connectedCallback();
     this._parent = this.parentElement;
-    this._parent.addEventListener('pointerdown', this.onPointerdown);
-    this._parent.addEventListener('contextmenu', this.onContextmenu);
-    // this._parent.style['touch-action'] = 'none'; // TODO: reconsider
+    this._parent.addEventListener('mousedown', this._onMousedown);
+    this._parent.addEventListener('touchstart', this._onTouchstart);
+    this._parent.addEventListener('contextmenu', this._onContextmenu);
     IoMenuLayer.singleton.appendChild(this.$['group']);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._parent.removeEventListener('pointerdown', this.onPointerdown);
-    this._parent.removeEventListener('contextmenu', this.onContextmenu);
+    this._parent.removeEventListener('mousedown', this._onMousedown);
+    this._parent.removeEventListener('touchstart', this._onTouchstart);
+    this._parent.removeEventListener('touchmove', this._onTouchmove);
+    this._parent.removeEventListener('touchend', this._onTouchend);
+    this._parent.removeEventListener('contextmenu', this._onContextmenu);
     // TODO: unhack
     // if (this.$['group']) IoMenuLayer.singleton.removeChild(this.$['group']);
     // https://github.com/arodic/io/issues/1
@@ -51,28 +55,36 @@ export class IoMenu extends IoElement {
   getBoundingClientRect() {
     return this._parent.getBoundingClientRect();
   }
-  onContextmenu(event) {
+  _onContextmenu(event) {
     if (this.button === 2) {
       event.preventDefault();
       this.open(event);
     }
   }
-  onPointerdown(event) {
-    this._parent.setPointerCapture(event.pointerId);
-    this._parent.addEventListener('pointerup', this.onPointerup);
-    if (this.ondown && event.button === this.button) {
+  _onMousedown(event) {
+    if (event.button === this.button && this.button !== 2) {
       this.open(event);
+      IoMenuLayer.singleton._onMousemove(event);
     }
   }
-  onPointerup(event) {
-    this._parent.removeEventListener('pointerup', this.onPointerup);
-    if (!this.ondown && event.button === this.button) {
-      this.open(event);
-    }
+  _onTouchstart(event) {
+    event.preventDefault();
+    this._parent.addEventListener('touchmove', this._onTouchmove);
+    this._parent.addEventListener('touchend', this._onTouchend);
+    this.open(event.changedTouches[0]);
+    IoMenuLayer.singleton._onTouchmove(event);
+  }
+  _onTouchmove(event) {
+    IoMenuLayer.singleton._onTouchmove(event);
+  }
+  _onTouchend(event) {
+    this._parent.removeEventListener('touchmove', this._onTouchmove);
+    this._parent.removeEventListener('touchend', this._onTouchend);
+    IoMenuLayer.singleton._onTouchend(event);
   }
   open(event) {
+    selection.removeAllRanges();
     IoMenuLayer.singleton.collapseAllGroups();
-    if (event.pointerId) IoMenuLayer.singleton.setPointerCapture(event.pointerId);
     IoMenuLayer.singleton._x = event.clientX;
     IoMenuLayer.singleton._y = event.clientY;
     this.expanded = true;

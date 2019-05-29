@@ -54,10 +54,13 @@ export class IoMenuLayer extends IoElement {
   }
   static get listeners() {
     return {
-      'pointerup': 'onPointerup',
-      'pointermove': 'onPointermove',
-      'dragstart': 'preventDefault',
-      'contextmenu': 'preventDefault',
+      'mousedown': '_onMousedown',
+      'mousemove': '_onMousemove',
+      'mouseup': '_onMouseup',
+      'touchstart': '_onTouchStart',
+      'touchmove': '_onTouchmove',
+      'touchend': '_onTouchend',
+      'contextmenu': '_onContextmenu',
     };
   }
   constructor(props) {
@@ -67,20 +70,20 @@ export class IoMenuLayer extends IoElement {
     this._x = 0;
     this._y = 0;
     this._v = 0;
-    window.addEventListener('scroll', this.onScroll);
-    // window.addEventListener('focusin', this.onWindowFocus);
+    window.addEventListener('scroll', this._onScroll);
+    // window.addEventListener('focusin', this._onWindowFocus);
   }
   registerGroup(group) {
     this.$options.push(group);
-    group.addEventListener('focusin', this.onMenuItemFocused);
-    group.addEventListener('keydown', this.onKeydown);
-    group.addEventListener('expanded-changed', this.onGroupExpandedChanged);
+    group.addEventListener('focusin', this._onMenuItemFocused);
+    group.addEventListener('keydown', this._onKeydown);
+    group.addEventListener('expanded-changed', this._onGroupExpandedChanged);
   }
   unregisterGroup(group) {
     this.$options.splice(this.$options.indexOf(group), 1);
-    group.removeEventListener('focusin', this.onMenuItemFocused);
-    group.removeEventListener('keydown', this.onKeydown);
-    group.removeEventListener('expanded-changed', this.onGroupExpandedChanged);
+    group.removeEventListener('focusin', this._onMenuItemFocused);
+    group.removeEventListener('keydown', this._onKeydown);
+    group.removeEventListener('expanded-changed', this._onGroupExpandedChanged);
   }
   collapseAllGroups() {
     for (let i = this.$options.length; i--;) {
@@ -102,7 +105,7 @@ export class IoMenuLayer extends IoElement {
       // }
     }
   }
-  onScroll() {
+  _onScroll() {
     if (this.expanded) {
       this.collapseAllGroups();
       // if (lastFocus) {
@@ -110,10 +113,37 @@ export class IoMenuLayer extends IoElement {
       // }
     }
   }
-  // onWindowFocus(event) {
+  _onMousedown(event) {
+    this._onPointermove(event);
+  }
+  _onMousemove(event) {
+    this._onPointermove(event);
+  }
+  _onMouseup(event) {
+    this._onPointerup(event);
+  }
+  _onTouchStart(event) {
+    this._onPointermove(event.changedTouches[0]);
+  }
+  _onTouchmove(event) {
+    this._onPointermove(event.changedTouches[0]);
+  }
+  _onTouchend(event) {
+    this._onPointerup(event);
+  }
+  _onContextmenu(event) {
+    event.preventDefault();
+    if (this.expanded) {
+      this.collapseAllGroups();
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
+    }
+  }
+  // _onWindowFocus(event) {
   //   if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
   // }
-  onMenuItemFocused(event) {
+  _onMenuItemFocused(event) {
     const path = event.composedPath();
     const item = path[0];
     const optionschain = item.optionschain;
@@ -123,11 +153,12 @@ export class IoMenuLayer extends IoElement {
       }
     }
   }
-  onPointermove(event) {
-    event.preventDefault();
+  _onPointermove(event) {
+    const movementX = event.clientX - this._x;
+    const movementY = event.clientY - this._y;
+    this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
     this._x = event.clientX;
     this._y = event.clientY;
-    this._v = (2 * this._v + Math.abs(event.movementY) - Math.abs(event.movementX)) / 3;
     let groups = this.$options;
     for (let i = groups.length; i--;) {
       if (groups[i].expanded) {
@@ -142,27 +173,18 @@ export class IoMenuLayer extends IoElement {
     this._hoveredItem = null;
     this._hoveredGroup = null;
   }
-  onPointerup(event) {
-    event.stopPropagation();
-    event.preventDefault();
-    const path = event.composedPath();
-    let elem = path[0];
-    if (elem.localName === 'io-menu-item') {
-      this.runAction(elem.option);
-      elem.menuroot.dispatchEvent('io-menu-item-clicked', elem.option);
-    } else if (elem === this) {
-      if (this._hoveredItem) {
-        this.runAction(this._hoveredItem.option);
-        this._hoveredItem.menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
-      } else if (!this._hoveredGroup) {
-        this.collapseAllGroups();
-        // if (lastFocus) {
-        //   lastFocus.focus();
-        // }
-      }
+  _onPointerup() {
+    if (this._hoveredItem) {
+      this.runAction(this._hoveredItem.option);
+      this._hoveredItem.menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
+    } else if (!this._hoveredGroup) {
+      this.collapseAllGroups();
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
     }
   }
-  onKeydown(event) {
+  _onKeydown(event) {
     event.preventDefault();
     const path = event.composedPath();
     if (path[0].localName !== 'io-menu-item') return;
@@ -192,7 +214,7 @@ export class IoMenuLayer extends IoElement {
 
     switch (command) {
       case 'action':
-        this.onPointerup(event); // TODO: test
+        this._onPointerup(event); // TODO: test
         break;
       case 'prev':
         siblings[(index + siblings.length - 1) % (siblings.length)].focus();
@@ -247,7 +269,7 @@ export class IoMenuLayer extends IoElement {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  onGroupExpandedChanged(event) {
+  _onGroupExpandedChanged(event) {
     const path = event.composedPath();
     if (path[0].expanded) this._setGroupPosition(path[0]);
     for (let i = this.$options.length; i--;) {
@@ -267,8 +289,8 @@ export class IoMenuLayer extends IoElement {
     //
     switch (group.position) {
       case 'pointer':
-        group._x = this._x - 2 || pRect.x;
-        group._y = this._y - 2 || pRect.y;
+        group._x = this._x - 8 || pRect.x;
+        group._y = this._y - 8 || pRect.y;
         break;
       case 'bottom':
         group._x = pRect.x;

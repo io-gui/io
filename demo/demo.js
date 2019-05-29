@@ -105,7 +105,6 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoSliders = ['div', {name: 'sliders'}, [
-      pointerEventsWarning,
       ['io-slider', {value: this.bind('number')}],
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
@@ -115,7 +114,6 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoOptions = ['div', {name: 'options'}, [
-      pointerEventsWarning,
       ['io-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},
@@ -146,10 +144,13 @@ export class IoDemo extends IoElement {
       ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
+    const demoMenu1 = ['div', {name: 'menu'}, [
+      ['div', 'right-click'],
+      ['io-menu', {options: menuoptions, position: 'pointer', button: 0}], ['br'],
+    ]];
     const demoMenu = ['div', {name: 'menu'}, [
-      pointerEventsWarning,
       ['div', 'right-click (contextmenu)'],
-      ['io-menu', {options: menuoptions, position: 'pointer', button: 2, ondown: false}], ['br'],
+      ['io-menu', {options: menuoptions, position: 'pointer', button: 2}], ['br'],
       ['io-menu-options', {className: 'sidebar', options: menuoptions}], ['br'], ['br'],
       ['io-menu-options', {className: 'menubar', options: menuoptions, horizontal: true}],
     ]];
@@ -182,12 +183,12 @@ export class IoDemo extends IoElement {
     this.template([
       ['io-tabbed-elements', {precache: true, selected: $('demo', 'Elements'), elements: [
         ['div', {name: 'Elements'}, [
-          ['h4', 'io-string io-number io-boolean'], demoPrimitives,
-          ['h4', 'io-switch'], demoSwitch,
-          ['h4', 'io-slider'], demoSliders,
+          // ['h4', 'io-string io-number io-boolean'], demoPrimitives,
+          // ['h4', 'io-switch'], demoSwitch,
+          // ['h4', 'io-slider'], demoSliders,
           ['h4', 'io-options'], demoOptions,
           ['h4', 'io-button'], demoButton,
-          ['h4', 'io-menu'], demoMenu,
+          ['h4', 'io-menu'], demoMenu1, demoMenu,
           ['h4', 'io-object'], demoObject,
           ['h4', 'io-inspector'], demoInspector,
         ]],
