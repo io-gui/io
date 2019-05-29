@@ -40,29 +40,29 @@ export class IoTheme extends IoElement {
         --io-hover-bg: rgba(255, 255, 255, 0.2);
         --io-shadow: 2px 3px 5px rgba(0,0,0,0.2);
       }
-      @media (min-resolution: 192dpi) {
+      /* @media (min-resolution: 192dpi) {
         body {
           --io-spacing: 4px;
           --io-padding: 5px;
           --io-border-radius: 3px;
-          --io-border-width: 1px;
+          --io-border-width: 5px;
         }
       }
       @media (min-resolution: 120dpi) {
         body {
-          --io-border-width: calc(1px / 1.25);
+          --io-border-width: calc(5px / 1.25);
         }
       }
       @media (min-resolution: 124.8dpi) {
         body {
-          --io-border-width: calc(1px / 1.3);
+          --io-border-width: calc(5px / 1.3);
         }
       }
       @media (min-resolution: 144dpi) {
         body {
-          --io-border-width: calc(1px / 1.5);
+          --io-border-width: calc(5px / 1.5);
         }
-      }
+      } */
     </style>`;
   }
 }

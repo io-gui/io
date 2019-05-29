@@ -60,18 +60,20 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 
 const shadersCache = new WeakMap();
 
+// TODO: fix sizing logic
+
 export class IoCanvas extends IoElement {
   static get style() {
     return html`<style>
       :host {
         user-select: none;
         display: flex;
-        flex-direction: column;
+        /* flex-direction: column; */
+        /* position: relative; */
+        overflow: hidden;
       }
       :host > canvas {
         flex: 1 1 auto;
-        width: 100% !important;
-        height: 100% !important;
         pointer-events: none;
         image-rendering: pixelated;
       }
