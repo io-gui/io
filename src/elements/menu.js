@@ -37,16 +37,7 @@ export class IoMenu extends IoElement {
     this.parentElement.removeEventListener('touchmove', this._onTouchmove);
     this.parentElement.removeEventListener('touchend', this._onTouchend);
     this.parentElement.removeEventListener('contextmenu', this._onContextmenu);
-    // TODO: unhack
-    // if (this.$['group']) IoMenuLayer.singleton.removeChild(this.$['group']);
-    // https://github.com/arodic/io/issues/1
-    for (let i = 0; i < IoMenuLayer.singleton.children.length; i++) {
-      if (IoMenuLayer.singleton.children[i].$parent === this) {
-        // console.log(IoMenuLayer.singleton.children[i]);
-        IoMenuLayer.singleton.removeChild(IoMenuLayer.singleton.children[i]);
-        return;
-      }
-    }
+    if (this.$['group']) IoMenuLayer.singleton.removeChild(this.$['group']);
   }
   getBoundingClientRect() {
     return this.parentElement.getBoundingClientRect();
