@@ -1,5 +1,4 @@
 import {html, IoElement, IoStorage as $, IoInspector} from "../build/io.min.js";
-import {menuoptions} from "./demo_menuoptions.js";
 
 export class IoDemo extends IoElement {
   static get style() {
@@ -54,7 +53,7 @@ export class IoDemo extends IoElement {
       null: null,
       NaN: NaN,
       undefined: undefined,
-      menuoptions: function() { return menuoptions },
+      menuoptions: null,
     };
   }
   changed(event) {
@@ -65,6 +64,7 @@ export class IoDemo extends IoElement {
   setNumber(value) {
     this.number = value;
   }
+
   constructor(props) {
     super(props);
 
@@ -137,22 +137,40 @@ export class IoDemo extends IoElement {
     const demoObject = ['div', {name: 'object'}, [
       ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}], //TODO: labeled?
       ['io-object', {value: this, label: 'IoDemo (single configured property)', labeled: false, expanded: $('io-object2'), props: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
-      ['io-object', {value: menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
     ]];
 
     const demoInspector = ['div', {name: 'inspector'}, [
       ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
-    const demoMenu1 = ['div', {name: 'menu'}, [
-      ['div', 'right-click'],
-      ['io-menu', {options: menuoptions, position: 'pointer', button: 0}], ['br'],
-    ]];
+    const options = [
+      {label: 'set one', value: 1, action: this.setNumber},
+      {label: 'set two', value: 2, action: this.setNumber},
+      {label: 'set three', value: 3, action: this.setNumber},
+      {label: 'set four', value: 4, action: this.setNumber},
+      {label: 'set five', value: 5, action: this.setNumber}
+    ];
+    this.menuoptions = [
+      {label: 'file', options: options},
+      {label: 'view', options: [
+        {label: 'suboption one', options: options},
+        {label: 'suboption two', options: options},
+        {label: 'suboption three', options: options},
+      ]},
+      {label: 'long menu', options: new Array(100).fill({label: 'Set 0', value: 0, action: this.setNumber, icon: '>', hint: 'set'}), hint: 'list', icon: '⚠'}
+    ];
+
     const demoMenu = ['div', {name: 'menu'}, [
-      ['div', 'right-click (contextmenu)'],
-      ['io-menu', {options: menuoptions, position: 'pointer', button: 2}], ['br'],
-      ['io-menu-options', {className: 'sidebar', options: menuoptions}], ['br'], ['br'],
-      ['io-menu-options', {className: 'menubar', options: menuoptions, horizontal: true}],
+      ['div', [
+        ['span', 'right-click (contextmenu)'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer', button: 2}], ['br'],
+      ]], ['br'],
+      ['div', [
+        ['span', 'click'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer', button: 0}], ['br'],
+      ]], ['br'],
+      ['io-menu-options', {className: 'sidebar', options: this.menuoptions}], ['br'], ['br'],
+      ['io-menu-options', {className: 'menubar', options: this.menuoptions, horizontal: true}],
     ]];
 
     const demoLayout = ['io-layout', {
@@ -188,7 +206,7 @@ export class IoDemo extends IoElement {
           // ['h4', 'io-slider'], demoSliders,
           ['h4', 'io-options'], demoOptions,
           ['h4', 'io-button'], demoButton,
-          ['h4', 'io-menu'], demoMenu1, demoMenu,
+          ['h4', 'io-menu'], demoMenu,
           ['h4', 'io-object'], demoObject,
           ['h4', 'io-inspector'], demoInspector,
         ]],

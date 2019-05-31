@@ -71,6 +71,7 @@ export class IoMenuLayer extends IoElement {
     this._y = 0;
     this._v = 0;
     window.addEventListener('scroll', this._onScroll);
+    this._animate();
     // window.addEventListener('focusin', this._onWindowFocus);
   }
   registerGroup(group) {
@@ -176,13 +177,14 @@ export class IoMenuLayer extends IoElement {
   _onPointerup() {
     if (this._hoveredItem) {
       this.runAction(this._hoveredItem.option);
-      this._hoveredItem.menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
-    } else if (!this._hoveredGroup) {
+      this._hoveredItem.$root.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
+    } else if (!this._hoveredGroup && this.collapseOnPointerup) {
       this.collapseAllGroups();
       // if (lastFocus) {
       //   lastFocus.focus();
       // }
     }
+    this.collapseOnPointerup = true;
   }
   _onKeydown(event) {
     event.preventDefault();
@@ -289,8 +291,8 @@ export class IoMenuLayer extends IoElement {
     //
     switch (group.position) {
       case 'pointer':
-        group._x = this._x - 8 || pRect.x;
-        group._y = this._y - 8 || pRect.y;
+        group._x = this._x - 1 || pRect.x;
+        group._y = this._y - 1 || pRect.y;
         break;
       case 'bottom':
         group._x = pRect.x;
@@ -310,26 +312,31 @@ export class IoMenuLayer extends IoElement {
     group.style.left = group._x + 'px';
     group.style.top = group._y + 'px';
   }
-  expandedChanged() {
-    if (!this.expanded) return;
-    let group = this._hoveredGroup;
-    if (group) {
-      let rect = group.getBoundingClientRect();
-      if (rect.height > window.innerHeight) {
-        if (this._y < 100 && rect.top < 0) {
-          let scrollSpeed = (100 - this._y) / 5000;
-          let overflow = rect.top;
-          group._y = group._y - Math.ceil(overflow * scrollSpeed) + 1;
-        } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
-          let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
-          let overflow = (rect.bottom - window.innerHeight);
-          group._y = group._y - Math.ceil(overflow * scrollSpeed) - 1;
+  _animate() {
+    if (this.expanded) {
+      let group = this._hoveredGroup;
+      if (group) {
+        let rect = group.getBoundingClientRect();
+        if (rect.height > window.innerHeight) {
+          if (this._y < 100 && rect.top < 0) {
+            let scrollSpeed = (100 - this._y) / 5000;
+            let overflow = rect.top;
+            group._y = group._y - Math.ceil(overflow * scrollSpeed) + 1;
+          } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
+            let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
+            let overflow = (rect.bottom - window.innerHeight);
+            group._y = group._y - Math.ceil(overflow * scrollSpeed) - 1;
+          }
+          group.style.left = group._x + 'px';
+          group.style.top = group._y + 'px';
         }
-        group.style.left = group._x + 'px';
-        group.style.top = group._y + 'px';
       }
     }
-    requestAnimationFrame(this.expandedChanged);
+    requestAnimationFrame(this._animate);
+  }
+  expandedChanged() {
+    this._hoveredItem = null;
+    this._hoveredItem = null;
   }
 }
 

@@ -52,7 +52,7 @@ export class IoMenuItem extends IoElement {
       'pointerdown': 'onPointerdown',
     };
   }
-  get menuroot() {
+  get $root() {
     let parent = this;
     while (parent && parent.$parent) {
       parent = parent.$parent;
