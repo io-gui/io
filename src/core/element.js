@@ -205,39 +205,46 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     }
   }
   focusTo(dir, srcRect) {
-    const siblings = this.parentElement.querySelectorAll('[tabindex="0"]');
     const rect = srcRect || this.getBoundingClientRect();
     let closest = this;
     let closestDist = Infinity;
-
-    for (let i = siblings.length; i--;) {
-      const sRect = siblings[i].getBoundingClientRect();
-      const dX = sRect.x - rect.x;
-      const dY = sRect.y - rect.y;
-      const dist = Math.sqrt(dX * dX + dY * dY);
-      switch (dir) {
-        case 'right':
+    let parent = this.parentElement;
+    let depth = 0;
+    while (depth < 5 && closest === this) {
+      const siblings = parent.querySelectorAll('[tabindex="0"]');
+      for (let i = siblings.length; i--;) {
+        // TODO: consider looking up center or bbox instead tor-left corner
+        const sRect = siblings[i].getBoundingClientRect();
+        const dX = sRect.x - rect.x;
+        const dY = sRect.y - rect.y;
+        const dist = Math.sqrt(dX * dX + dY * dY);
+        switch (dir) {
+          case 'right':
           if (dX > Math.abs(dY) && dist < closestDist) {
             closest = siblings[i], closestDist = dist;
           }
           break;
-        case 'left':
+          case 'left':
           if (dX < -Math.abs(dY) && dist < closestDist) {
             closest = siblings[i], closestDist = dist;
           }
           break;
-        case 'down':
+          case 'down':
           if (dY > Math.abs(dX) && dist < closestDist) {
             closest = siblings[i], closestDist = dist;
           }
           break;
-        case 'up':
+          case 'up':
           if (dY < -Math.abs(dX) && dist < closestDist) {
             closest = siblings[i], closestDist = dist;
           }
           break;
+        }
       }
+      parent = parent.parentElement;
+      depth++;
     }
+
     if (closest !== this) closest.focus();
     else {
       this.dispatchEvent('focus-to', {direction: dir}, true);

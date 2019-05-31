@@ -55,12 +55,12 @@ export class IoSliderKnob extends IoCanvas {
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
       }
+      :host[aria-invalid] {
+        border-color: var(--io-error-color);
+      }
       :host:focus {
         outline: none;
         border-color: var(--io-focus-color);
-      }
-      :host[aria-invalid] {
-        border-color: var(--io-error-color);
       }
     </style>`;
   }
