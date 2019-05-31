@@ -29,7 +29,6 @@ export class IoMenu extends IoElement {
     this.parentElement.addEventListener('touchstart', this._onTouchstart);
     this.parentElement.addEventListener('contextmenu', this._onContextmenu);
     IoMenuLayer.singleton.appendChild(this.$['group']);
-    console.log(this, this.parentElement);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
