@@ -28,12 +28,14 @@ export class IoElementCache extends IoElement {
   }
   precacheChanged() {
     if (this.precache && document.readyState === 'complete') {
-      this.template(this.elements.filter(element => element[1].cache !== false), this.stagingElement);
-      for (let i = 0; i < this.stagingElement.childNodes.length; i++) {
-        this._cache[i] = this.stagingElement.childNodes[i];
+      for (let i = 0; i < this.elements.length; i++) {
+        const name = this.elements[i][1].name;
+        if (!this._cache[name]) {
+          this.template([this.elements[i]], this.stagingElement);
+          this._cache[name] = this.stagingElement.childNodes[0];
+          this.stagingElement.innerText = '';
+        }
       }
-      this.stagingElement.innerText = '';
-      this.changed();
     }
   }
   dispose() {
@@ -55,22 +57,16 @@ export class IoElementCache extends IoElement {
       this.template([element]);
       return;
     }
-    if ((this.precache || this.cache) && this._cache[this.selected]) {
+    if (this.precache || this.cache) {
       this.innerText = '';
-      this.appendChild(this._cache[this.selected]);
-      // TODO: bound updates
-    } else {
-      if (this.precache || this.cache) {
-        this.innerText = '';
-        if (!this._cache[this.selected]) {
-          this.template([element], this.stagingElement);
-          this._cache[this.selected] = this.stagingElement.childNodes[0];
-          this.stagingElement.innerText = '';
-        }
+      if (this._cache[this.selected]) {
         this.appendChild(this._cache[this.selected]);
       } else {
         this.template([element]);
+        this._cache[this.selected] = this.childNodes[0];
       }
+    } else {
+      this.template([element]);
     }
   }
 }
