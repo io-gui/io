@@ -349,13 +349,14 @@ const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.
   * @param {Array} prototypes - An array of prototypes to ge the styles from.
   */
 function initStyle(prototypes) {
-  let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  const localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   for (let i = prototypes.length; i--;) {
-    let style = prototypes[i].constructor.style;
+    const style = prototypes[i].constructor.style;
+    const classLocalName = prototypes[i].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     if (style) {
       style.string = style.string.replace(new RegExp('<style>', 'g'), '');
       style.string = style.string.replace(new RegExp('</style>', 'g'), '');
-      let match = style.string.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
+      const match = style.string.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
       match.map(selector => {
         selector = selector.trim();
         if (!selector.startsWith('@') &&
@@ -365,11 +366,10 @@ function initStyle(prototypes) {
           console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
         }
       });
-
       style.string = style.string.replace(new RegExp(':host', 'g'), localName);
-      let element = document.createElement('style');
-      element.innerText = style.string;
-      element.setAttribute('id', 'io-style-' + localName + '-' + i);
+      const element = document.createElement('style');
+      element.innerHTML = style.string;
+      element.setAttribute('id', 'io-style_' + localName + (classLocalName !== localName ? ('_' + classLocalName) : ''));
       document.head.appendChild(element);
     }
 
