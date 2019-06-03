@@ -13,20 +13,27 @@ For a quick start, read this document and check out included elements and exampl
 
 ## Usage ##
 
-Bundled io library can be imported as a module from `build/io-core.js` (core classes), `build/io-elements.js` (elements), or `build/io.js` (all classes and elements). Alternatively, you can import specific elements and classes directly from `src/`.
+Io library can be imported as a module from `build/io-core.js` (core classes), `build/io-elements.js` (elements), or `build/io.js` (all classes and elements). Alternatively, you can import specific elements and classes directly from `src/`.
 
 ```javascript
 import {IoNode, IoElement} from "[path_to_io]/build/io-core.js";
 ```
 
-If you only want to use the built-in elements, simply add them to your application and set the values.
-For example to create an object inspector:
+To use the built-in elements, such as `io-inspector`,
+simply create the element, add it to your application DOM
+and set the `value` property to object you want to inspect.
 
 ```javascript
-// create <io-obect>
+// Import the full library bundle.
+import "[path_to_io]/build/io.js";
+
+// Create <io-obect> element.
 const objectInspector = document.createElement('io-object');
 
-// Assign value
+// Add to DOM.
+document.body.appendChild(objectInspector);
+
+// Assign the value property.
 objectInspector.value = myObjectToInspect;
 ```
 
