@@ -3,43 +3,43 @@
 
 # UI library for web applications #
 
-Io library is designed to help web developers build data-driven web applications using modern web technologies.
-It implements custom elements, virtual DOM, data binding and a simple data-flow design.
-This library is an experiment with limited browser support, incomplete documentation, partial test coverage, and design which is subject to change. **Use at own risk!**
+Io library is designed to help web developers build data-driven web applications using modern web technologies. It implements custom elements, virtual DOM, data binding and a simple data-flow design. This library is an experiment. **Use at own risk!**
 
 For a quick start, read this document and check out included elements and examples.
 
-[Source Code](https://github.com/arodic/io) on GitHub. [Live Demo](https://akirodic.com/io/#page=Demo)
+[Source Code](https://github.com/arodic/io) on GitHub.
+[Live Demo](https://akirodic.com/io/#page=Demo)
 
 ## Usage ##
 
-Io library can be imported as a module from `build/io-core.js` (core classes), `build/io-elements.js` (elements), or `build/io.js` (all classes and elements). Alternatively, you can import specific elements and classes directly from `src/`.
+Io library can be imported as a module from `build/io.js`.
 
 ```javascript
-import {IoNode, IoElement} from "[path_to_io]/build/io-core.js";
+import {IoElement} from "[path_to_io]/build/io.js";
 ```
 
-To use the built-in elements, such as `io-inspector`,
-simply create the element, add it to your application DOM
-and set the `value` property to object you want to inspect.
+To use the built-in elements, such as `io-inspector`, simply create the element, add it to your application DOM and set the `value` property to object you want to inspect.
 
 ```javascript
-// Import the full library bundle.
-import "[path_to_io]/build/io.js";
-
-// Create <io-obect> element.
-const objectInspector = document.createElement('io-object');
-
-// Add to DOM.
-document.body.appendChild(objectInspector);
-
-// Assign the value property.
-objectInspector.value = myObjectToInspect;
+// Create <io-inspector> element, add it to DOM and assign value.
+const inspector = document.createElement('io-inspector');
+document.body.appendChild(inspector);
+inspector.value = myObject;
 ```
+
+To achieve the same inside an application built from `IoElement`,
+simply use the `template()` function (more on that later).
+
+```javascript
+this.template([
+  ['io-inspector', {value: myObject}]
+])
+```
+
 
 ### Creating a Simple Application ###
 
-First, define your main application class in javascript and use `template()` function to add contents.
+First, define your main application class extending `IoElement` and use the `template()` function to add contents.
 
 ```javascript
 class MyApp extends IoElement {
@@ -52,7 +52,7 @@ class MyApp extends IoElement {
 MyApp.Register();
 ```
 
-Then, simply add the main-app element to you HTML page and you are done!
+Then, simply add the main-app element to your document and you are done!
 
 ```html
 <my-app></my-app>
@@ -63,12 +63,15 @@ Then, simply add the main-app element to you HTML page and you are done!
 To define a new class, extend `IoNode` or `IoElement` and call `Register()`.
 
 ```javascript
+// Custom object node
 class MyObject extends IoNode {}
 
+// Custom element
 class MyElement extends IoElement {}
 MyElement.Register();
 ```
-**Note:** Custom elements are registered as kebab-case `<my-element>`.
+**Note:** Custom elements are registered as kebab-case.
+For example `MyElement` class will register as `<my-element>`.
 
 ### Properties ###
 
@@ -85,20 +88,21 @@ static get properties() {
 }
 ```
 
-You can define properties by value, type or configuration options such as: `type`, `value`, `reflect`, `binding` and `enumerable`. However, fully specified configuration options are optional since in most cases, default values are just fine. You can simply define a property by value or type. For example, following property configurations are effectively the same:
+You can define properties by value, type (constructor) or configuration options which may include: `type`, `value`, `reflect`, `binding` and `enumerable`. However, fully specified configuration options are optional since in most cases, default values are just fine. You can simply define a property by value or type. For example, following variants are effectively the same:
 
 ```javascript
-  myProperty: {
-    type: Boolean,
-    value: false,
-    reflect: false,
-    binding: null,
-    enumerable: true
-  }
-
-  myProperty: Boolean
-
-  myProperty: false
+// Variant 1 (full property configuration)
+myProperty: {
+  type: Boolean,
+  value: false,
+  reflect: false,
+  binding: null,
+  enumerable: true
+}
+// Variant 2 (type only)
+myProperty: Boolean
+// Variant 3 (value only)
+myProperty: false
 ```
 
 ### Change Handler Functions ###
@@ -119,9 +123,7 @@ static get listeners() {
 
 ### Styling ###
 
-You can define default element style inside `style()` getter.
-Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage.
-Template literal handler `html` is optional but recommended for correct syntax highlighting in common editors.
+You can define default element style inside `style()` getter. Note that the CSS selectors have to be prefixed with `:host` in order to prevent style leakage. Template literal handler `html` is optional but recommended for correct syntax highlighting in common editors.
 
 ```javascript
 static get style() {
