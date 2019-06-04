@@ -48,9 +48,9 @@ export class IoElementCache extends IoElement {
     const element = this.elements.find(element => {
       return element[1].name == this.selected;
     });
+    // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
+    this.innerText = '';
     if (!element) {
-      // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
-      this.innerText = '';
       return;
     }
     if (element[1].cache === false) {
@@ -58,7 +58,6 @@ export class IoElementCache extends IoElement {
       return;
     }
     if (this.precache || this.cache) {
-      this.innerText = '';
       if (this._cache[this.selected]) {
         this.appendChild(this._cache[this.selected]);
       } else {
