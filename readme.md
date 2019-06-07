@@ -6,13 +6,13 @@ For a quick start, read this document, then check out the [source code](https://
 
 ## Usage ##
 
-Io library can be imported as a module from `build/io.js`. You can extend its `IoElement` class to easily create custom elements and applications.
+Io library can be imported as a module from `build/io.js`. You can extend its `IoElement` class to create custom elements and applications.
 
 ```javascript
 import {IoElement} from "[path_to_io]/build/io.js";
 ```
 
-The library also includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as `io-inspector` for example, create the element, assign the value property, and add it to your application.
+The library includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as `<io-inspector>` for example, create the element, assign the value property, and add it to your DOM.
 
 ```javascript
 const inspector = document.createElement('io-inspector');
@@ -20,7 +20,7 @@ inspector.value = myObject;
 document.body.appendChild(inspector);
 ```
 
-Even better, you can create the element with its constructor and assign the value property in the argument.
+Alternatively, you can create the element with its constructor and assign properties in the configuration argument.
 
 ```javascript
 import {IoInspector} from "[path_to_io]/build/io.js";
@@ -28,7 +28,7 @@ const inspector = new IoInspector({value: myObject});
 document.body.appendChild(inspector);
 ```
 
-Creating elements inside `IoElement.template()` function with virtual DOM arrays is even simpler (more on that later).
+Even better, you can create elements with `IoElement.template()` function with virtual DOM arrays (see [virtual-dom-arrays](#virtual-dom-arrays)).
 
 ```javascript
 this.template([
@@ -143,11 +143,11 @@ static get listeners() {
 
 ### Change Handler Functions ###
 
-Certain handler functions will be called when properties change. `.changed()` function will be called any time a property changes. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. Lastly, if a property value is an object `[propName]Mutated()` function will be called immediately after object mutation (see [data-flow](#simple-data-flow) requirements).
+When you instantiate an element, and every time one of its property changes, `.changed()` function will be called. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. Lastly, if a property value is an object `[propName]Mutated()` function will be called immediately after object mutation (see [data-flow](#simple-data-flow) requirements).
 
 ### Simple App Recap ###
 
-Finally, lets create a simple `MyApp` element again and apply some of the concepts we learned. The element should be clickable and change message property and text color when clicked.
+Finally, lets create a simple `MyApp` element again and apply some of the concepts we learned. The element should be clickable and change message text and color when clicked.
 
 ```javascript
 class MyApp extends IoElement {
