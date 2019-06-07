@@ -1,7 +1,7 @@
 import {html, IoElement} from "../core/element.js";
 
-const selection = window.getSelection();
-const range = document.createRange();
+// const selection = window.getSelection();
+// const range = document.createRange();
 
 export class IoNumber extends IoElement {
   static get style() {
@@ -67,13 +67,13 @@ export class IoNumber extends IoElement {
     this._innerTextOnFocus = this.innerText;
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
-    this._select();
+    // this._select();
   }
   _onBlur() {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     if (this._innerTextOnFocus !== this.innerText) this.setFromText(this.innerText);
-    selection.removeAllRanges();
+    // selection.removeAllRanges();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -111,13 +111,13 @@ export class IoNumber extends IoElement {
       }
     }
   }
-  _select() {
-    range.selectNodeContents(this.childNodes[0]);
-    range.setStart(this.childNodes[0], 0);
-    range.setEnd(this.childNodes[0], this.childNodes[0].length);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
+  // _select() {
+  //   range.selectNodeContents(this.childNodes[0]);
+  //   range.setStart(this.childNodes[0], 0);
+  //   range.setEnd(this.childNodes[0], this.childNodes[0].length);
+  //   selection.removeAllRanges();
+  //   selection.addRange(range);
+  // }
   setFromText(text) {
     // TODO: test conversion
     let value = Math.round(Number(text) / this.step) * this.step / this.conversion;

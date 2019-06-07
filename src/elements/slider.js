@@ -23,7 +23,6 @@ export class IoSlider extends IoElement {
       step: 0.001,
       min: 0,
       max: 1,
-      strict: true,
     };
   }
   _onValueSet(event) {
@@ -36,10 +35,28 @@ export class IoSlider extends IoElement {
   }
   changed() {
     this.template([
-      ['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, label: this.label, title: this.title,
-        id: 'number', 'on-value-set': this._onValueSet, 'on-focus-to': this._onFocusTo}],
-      ['io-slider-knob', {value: this.value, step: this.step, minValue: this.min, maxValue: this.max, label: this.label, title: this.title,
-        id: 'slider', 'on-value-set': this._onValueSet, 'on-focus-to': this._onFocusTo}]
+      ['io-number', {
+        id: 'number',
+        value: this.value,
+        step: this.step,
+        min: this.min,
+        max: this.max,
+        label: this.label,
+        title: this.title,
+        'on-value-set': this._onValueSet,
+        'on-focus-to': this._onFocusTo,
+      }],
+      ['io-slider-knob', {
+        id: 'slider',
+        value: this.value,
+        step: this.step,
+        minValue: this.min,
+        maxValue: this.max,
+        label: this.label,
+        title: this.title,
+        'on-value-set': this._onValueSet,
+        'on-focus-to': this._onFocusTo,
+      }]
     ]);
   }
 }

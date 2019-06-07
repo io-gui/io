@@ -68,8 +68,8 @@ export class IoCanvas extends IoElement {
       :host {
         user-select: none;
         display: flex;
-        /* flex-direction: column; */
-        /* position: relative; */
+        flex-direction: column;
+        position: relative;
         overflow: hidden;
       }
       :host > canvas {

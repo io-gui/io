@@ -1,7 +1,7 @@
 import {html, IoElement} from "../core/element.js";
 
-const selection = window.getSelection();
-const range = document.createRange();
+// const selection = window.getSelection();
+// const range = document.createRange();
 
 export class IoString extends IoElement {
   static get style() {
@@ -45,7 +45,7 @@ export class IoString extends IoElement {
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
-    this._select();
+    // this._select();
   }
   _onBlur() {
     this.removeEventListener('blur', this._onBlur);
@@ -53,7 +53,7 @@ export class IoString extends IoElement {
     if (typeof this.value === 'string' || (this.innerText !== String(this.value))) {
       this.set('value', this.innerText);
     }
-    selection.removeAllRanges();
+    // selection.removeAllRanges();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -91,13 +91,13 @@ export class IoString extends IoElement {
       }
     }
   }
-  _select() {
-    range.selectNodeContents(this.childNodes[0]);
-    range.setStart(this.childNodes[0], 0);
-    range.setEnd(this.childNodes[0], this.childNodes[0].length);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
+  // _select() {
+  //   range.selectNodeContents(this.childNodes[0]);
+  //   range.setStart(this.childNodes[0], 0);
+  //   range.setEnd(this.childNodes[0], this.childNodes[0].length);
+  //   selection.removeAllRanges();
+  //   selection.addRange(range);
+  // }
   valueChanged() {
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
     this.setAttribute('aria-invalid', typeof this.value !== 'string');
