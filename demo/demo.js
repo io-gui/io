@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorage as $, IoInspector} from "../build/io.min.js";
+import {html, IoElement, IoStorage as $} from "../build/io.min.js";
 
 export class IoDemo extends IoElement {
   static get style() {
@@ -199,19 +199,11 @@ export class IoDemo extends IoElement {
     // TODO: Add demos for all remaining elements
 
     this.template([
-      // ['io-collapsable', {label: 'Primitives', expanded: $('Primitives'), elements: [demoPrimitives]}],
-      // ['io-collapsable', {label: 'Sliders', expanded: $('Sliders'), elements: [demoSliders]}],
-      // ['io-collapsable', {label: 'Options', expanded: $('Options'), elements: [demoOptions]}],
-      // ['io-collapsable', {label: 'Button', expanded: $('Button'), elements: [demoButton]}],
-      // ['io-collapsable', {label: 'Object', expanded: $('Object'), elements: [demoObject]}],
-      // ['io-collapsable', {label: 'Inspector', expanded: $('Inspector'), elements: [demoInspector]}],
-      // ['io-collapsable', {label: 'Menu', expanded: $('Menu'), elements: [demoMenu]}],
-      // ['io-collapsable', {label: 'Layout', expanded: $('Layout'), elements: [demoLayout]}],
       ['io-tabbed-elements', {precache: true, selected: $('demo', 'Elements'), elements: [
         ['div', {name: 'Elements'}, [
-          // ['h4', 'io-string io-number io-boolean'], demoPrimitives,
-          // ['h4', 'io-switch'], demoSwitch,
-          // ['h4', 'io-slider'], demoSliders,
+          ['h4', 'io-string io-number io-boolean'], demoPrimitives,
+          ['h4', 'io-switch'], demoSwitch,
+          ['h4', 'io-slider'], demoSliders,
           ['h4', 'io-options'], demoOptions,
           ['h4', 'io-button'], demoButton,
           ['h4', 'io-menu'], demoMenu,

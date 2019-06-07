@@ -1,31 +1,34 @@
-
-<img alt="IO UI Logo" src="./images/logo/io.svg" width="150px" style="margin: 1em 0 0 1em;">
-
 # UI library for web applications #
 
-Io library is designed to help web developers build data-driven web applications using modern web technologies. It implements custom elements, virtual DOM, data binding and a simple data-flow design. This library is an experiment. **Use at own risk!**
+Io is a JavaScript library designed to help web developers build custom elements and data-driven web applications using modern web technologies. It implements virtual DOM, data binding and a simple data-flow design. This library is an experiment. **Use at own risk!**
 
-For a quick start, read this document, then check out the [source code](https://github.com/arodic/io/tree/master/src) and [demos](https://akirodic.com/io/#page=Demo).
+For a quick start, read this document, then check out the [source code](https://github.com/arodic/io/tree/master/src) and [demo](https://akirodic.com/io/#page=Demo).
 
 ## Usage ##
 
-Io library can be imported as a module from `build/io.js` or `src/io.js`.
+Io library can be imported as a module from `build/io.js`. You can extend its `IoElement` class to easily create custom elements and applications.
 
 ```javascript
 import {IoElement} from "[path_to_io]/build/io.js";
 ```
 
-To use the built-in elements, such as `io-inspector`, simply create the element, add it to your application DOM and set the `value` property to object you want to inspect.
+The library also includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as `io-inspector` for example, create the element, assign the value property, and add it to your application.
 
 ```javascript
-// Create <io-inspector> element, add it to DOM and assign value.
 const inspector = document.createElement('io-inspector');
-document.body.appendChild(inspector);
 inspector.value = myObject;
+document.body.appendChild(inspector);
 ```
 
-To achieve the same in an application built with `IoElement`,
-simply use the `template()` function to add it as virtual DOM array (more on that later).
+Even better, you can create the element with its constructor and assign the value property in the argument.
+
+```javascript
+import {IoInspector} from "[path_to_io]/build/io.js";
+const inspector = new IoInspector({value: myObject});
+document.body.appendChild(inspector);
+```
+
+Creating elements inside `IoElement.template()` function with virtual DOM arrays is even simpler (more on that later).
 
 ```javascript
 this.template([
@@ -56,20 +59,20 @@ First, define your main application class by extending `IoElement` and use the `
 class MyApp extends IoElement {
   changed() {
     this.template([
-      ['p', 'Hello io!'] // Look at me! I'm the DOM now!
+      ['p', 'Hello io!']
     ]);
   }
 }
 MyApp.Register();
 ```
 
-Then, simply add the `<my-app>` element to your document and you are done!
+Then, add `<my-app>` element to your document and you are done!
 
 ```html
 <my-app></my-app>
 ```
 
-Once the element has been connected and `change()` function evoked, virtual DOM array will be applied to the inner DOM tree.
+Once the element has been connected and `change()` function evoked, virtual DOM array will be applied to your DOM.
 
 ```html
 <my-app>
@@ -77,9 +80,9 @@ Once the element has been connected and `change()` function evoked, virtual DOM 
 </my-app>
 ```
 
-### Styling ###
+### Style ###
 
-You can define default element style inside `style()` getter.
+You can define styles inside `static get style()` return string.
 
 ```javascript
 static get style() {
@@ -95,9 +98,9 @@ static get style() {
 
 **Note:** CSS selectors have to be prefixed with `:host` in order to prevent style leakage. Template literal handler `html` is optional but recommended for correct syntax highlighting in common editors.
 
-### Defining Properties ###
+### Properties ###
 
-Define properties inside the static `properties()` getter.
+Properties are defined in `static get properties()` return object.
 
 ```javascript
 static get properties() {
@@ -109,7 +112,7 @@ static get properties() {
 
 You can define properties by value, type or configuration object which may include: `type`, `value`, `reflect`, `binding` and `enumerable`.
 
-Specifying configuration options is optional since in most cases, default values are just fine. You can simply define a property by value or type. For example, following property definitions are effectively the same:
+Specifying configuration options is optional. In most cases, default values are just fine. You can simply define a property by value or type. For example, following variants are effectively the same:
 
 ```javascript
 // Variant 1 (full property configuration)
@@ -128,7 +131,7 @@ myProperty: false
 
 ### Listeners ###
 
-Very often elements need to setup and default listeners at initialization. Io will setup and dispose listeners automatically if you specify them inside static `listeners()` getter.
+Default listeners are defined in `static get listeners()` return object.
 
 ```javascript
 static get listeners() {
@@ -140,11 +143,11 @@ static get listeners() {
 
 ### Change Handler Functions ###
 
-Certain functions will get called when properties change. All io objects call `.changed()` function by default. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. Furthermore, if property value is an object `[propName]Mutated()` function will be called immediately after object mutation (see [data-flow](#simple-data-flow) requirements).
+Certain handler functions will be called when properties change. `.changed()` function will be called any time a property changes. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. Lastly, if a property value is an object `[propName]Mutated()` function will be called immediately after object mutation (see [data-flow](#simple-data-flow) requirements).
 
 ### Simple App Recap ###
 
-Finally, lets create the `MyApp` element again with some of the concepts above applied. The following element will change message property and text color when clicked.
+Finally, lets create a simple `MyApp` element again and apply some of the concepts we learned. The element should be clickable and change message property and text color when clicked.
 
 ```javascript
 class MyApp extends IoElement {
@@ -192,49 +195,44 @@ MyApp.Register();
 
 ### Virtual DOM Arrays ###
 
-This is the most powerful feature of `IoElement` that bridges the gap between code, data and DOM.
-It lets you to create and update DOM in javascript efficiently.
-
-Use `template()` function to render virtual DOM tree using programmable yet declarative-looking syntax of nested arrays.
-For example an instance of `<my-element>` element can be expressed like this:
+`IoElement.template()` uses virtual DOM structure similar to `React.createElement()` or `h()`, except the DOM tree is expressed as nested arrays to improve readability. For example, a virtual instance of `<my-element>` can be expressed like this:
 
 ```javascript
 ['my-element', {prop: "propvalue"}, "Hello io!"]
 ```
 
-HTML output:
+DOM output:
 
 ```html
 <my-element prop="propvalue">Hello io!</my-element>
 ```
 
-The first array item is **mandatory** element name, followed by **optional** properties and innerText or an array of children.
+The first array item is element name, followed by **optional** properties and innerText or an array of children.
 
-**Note:** Combining innerText and children elements is not supported yet. Also, setting element attributes is not supported (only properties).
-
-Here is a slightly more complex expression with dynamically generated DOM tree:
+Here is a slightly more complex tree with array iterator:
 
 ```javascript
 this.template([
-  ['h4', 'Array items:'],
+  ['h4', 'Array indices:'],
   ['div', [
     this.items.map(i => ['span', {className: 'item'}, i])
   ]]
 ]);
 ```
 
-HTML output:
+DOM output:
 
 ```html
-<h4>Array items:</h4>
+<h4>Array indices:</h4>
 <div>
   <span class="item">1</span>
   <span class="item">2</span>
   <span class="item">3</span>
+  <!-- ... -->
 </div>
 ```
 
-If a template property name is prefixed with `on-` it will be treated as a listener. Corresponding property value can be a string (element's function name) or a function from the current scope.
+If a property name is prefixed with `on-` it will be treated as a listener. Assigned value can be a string or a function.
 
 ```javascript
 ['my-element', {'on-click': 'doSomething'}],
@@ -248,7 +246,7 @@ Keep in mind that this only works with io properties. In other words, binding to
 
 ```javascript
 this.template([
-  ['child-element', { value: this.bind('value') }]
+  ['child-element', {value: this.bind('value')}]
 ]);
 ```
 
@@ -263,7 +261,7 @@ myNode.dispose();
 
 ### Simple Data-Flow ###
 
-On a fundamental level, data-flow in io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement a different design where certain elements have the ability to modify the application state. State changes are then communicated to the rest of the application automatically following few simple rules.
+On a fundamental level, data-flow in io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement designs where certain elements have the ability to modify and manage their own state. State changes are automatically communicated to the rest of the application following few simple rules.
 
 * By convention state tree is passed down the UI tree as `value` property. This is not mandatory but it makes it easier to understand and debug the data-flow.
 
