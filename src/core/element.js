@@ -47,6 +47,25 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       },
     };
   }
+  static get observedAttributes() {
+    const observed = [];
+    for (let prop in this.prototype.__properties) {
+      if ([Boolean, String, Number].indexOf(this.prototype.__properties[prop].type) !== -1) {
+        observed.push(prop);
+      }
+    }
+    return observed;
+  }
+  attributeChangedCallback(prop, oldValue, newValue) {
+    const type = this.__properties[prop].type;
+    const value = this.__properties[prop].value;
+    if (type === Boolean) {
+      if (newValue === null) this[prop] = false;
+      else if (newValue === '') this[prop] = true;
+    } else if (type(newValue) !== value) {
+      this[prop] = type(newValue);
+    }
+  }
   // TODO: performance check and optimize
   titleChanged() {
     this.setAttribute('aria-label', this.title || this.label);
@@ -244,11 +263,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       parent = parent.parentElement;
       depth++;
     }
-
     if (closest !== this) closest.focus();
-    else {
-      this.dispatchEvent('focus-to', {direction: dir}, true);
-    }
   }
 }
 
