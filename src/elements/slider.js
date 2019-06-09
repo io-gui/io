@@ -209,8 +209,6 @@ export class IoSliderKnob extends IoCanvas {
   // TODO: implement proper sdf shapes.
   static get frag() {
     return `
-    #extension GL_OES_standard_derivatives : enable
-
     varying vec2 vUv;
 
     void main(void) {

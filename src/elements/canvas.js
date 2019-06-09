@@ -99,7 +99,10 @@ export class IoCanvas extends IoElement {
   constructor(props) {
     super(props);
 
-    let frag = 'precision mediump float;\n';
+    let frag = `
+      #extension GL_OES_standard_derivatives : enable
+      precision mediump float;
+    `;
 
     for (let prop in this.__properties) {
       let type = this.__properties[prop].type;
