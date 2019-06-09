@@ -62,7 +62,7 @@ const shadersCache = new WeakMap();
 
 // TODO: fix sizing logic
 
-export class IoCanvas extends IoElement {
+export class IoQuad extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -202,4 +202,4 @@ export class IoCanvas extends IoElement {
   }
 }
 
-IoCanvas.Register();
+IoQuad.Register();
