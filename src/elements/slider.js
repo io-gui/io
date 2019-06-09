@@ -29,10 +29,6 @@ export class IoSlider extends IoElement {
     this.dispatchEvent('value-set', event.detail, false);
     this.value = event.detail.value;
   }
-  _onFocusTo(event) {
-    const srcRect = event.target.getBoundingClientRect();
-    this.focusTo(event.detail.direction, srcRect);
-  }
   changed() {
     this.template([
       ['io-number', {
@@ -44,7 +40,6 @@ export class IoSlider extends IoElement {
         label: this.label,
         title: this.title,
         'on-value-set': this._onValueSet,
-        'on-focus-to': this._onFocusTo,
       }],
       ['io-slider-knob', {
         id: 'slider',
@@ -55,7 +50,6 @@ export class IoSlider extends IoElement {
         label: this.label,
         title: this.title,
         'on-value-set': this._onValueSet,
-        'on-focus-to': this._onFocusTo,
       }]
     ]);
   }

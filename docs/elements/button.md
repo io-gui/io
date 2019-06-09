@@ -1,10 +1,12 @@
 ### `<io-button>` ###
 
+<io-button></io-button>
+
 A simple button element.
 
 When clicked or activated by space/enter key, it calls the `action` function with optional `value` argument. It also emits a bubbling `button-clicked` event.
 
-When focused, the arrow keys navigate to the nearest focusable sibling element.
+When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
 #### Properties ####
 
@@ -19,4 +21,3 @@ When focused, the arrow keys navigate to the nearest focusable sibling element.
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
 | **`button-clicked`** | Clicked | `value`, `action` | false |
-| **`focus-to`** | Attempted to change focus but no suitable sibling found | `direction` | true |

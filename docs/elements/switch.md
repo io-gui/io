@@ -1,5 +1,7 @@
 ### `<io-switch>` ###
 
+<io-switch></io-switch>
+
 Extends `<io-button>`.
 
 Input element for `Boolean` data type displayed as switch toggle.
@@ -16,4 +18,3 @@ Input element for `Boolean` data type displayed as switch toggle.
 |:------|:------------|:-------|:--------|
 | **`button-clicked`** | Clicked | `value`, `action` | false |
 | **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |
-| **`focus-to`** | Attempted to change focus but no suitable sibling found | `direction` | true |

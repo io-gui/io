@@ -1,8 +1,10 @@
 ### `<io-number>` ###
 
-Input element for `Number` data type. It can be configured to clamp its `value` to `min`/`max` values and display value using `conversion` factor.
+<io-number value="1337"></io-number>
 
-When focused, the arrow keys navigate to the nearest focusable sibling element.
+Input element for `Number` data type. It can be configured to clamp its `value` to `min`/`max` and round it to the nearest `step` increment. Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees.
+
+When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
 #### Properties ####
 
@@ -19,4 +21,3 @@ When focused, the arrow keys navigate to the nearest focusable sibling element.
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
 | **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |
-| **`focus-to`** | Attempted to change focus but no suitable sibling found | `direction` | true |
