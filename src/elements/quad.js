@@ -43,19 +43,6 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([3,2,1,3,1,0]), gl.STATIC_DRAW);
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
-const vertCode = `
-attribute vec3 position;
-attribute vec2 uv;
-varying vec2 vUv;
-void main(void) {
-  vUv = uv;
-  gl_Position = vec4(position, 1.0);
-}`;
-
-const vertShader = gl.createShader(gl.VERTEX_SHADER);
-gl.shaderSource(vertShader, vertCode);
-gl.compileShader(vertShader);
-
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 
 const shadersCache = new WeakMap();
@@ -86,20 +73,32 @@ export class IoQuad extends IoElement {
       size: [1, 1],
     };
   }
+  static get vert() {
+    return /* glsl */`
+      attribute vec3 position;
+      attribute vec2 uv;
+      varying vec2 vUv;
+      void main(void) {
+        vUv = uv;
+        gl_Position = vec4(position, 1.0);
+      }
+    `;
+  }
   static get frag() {
-    return `
-    varying vec2 vUv;
-    void main(void) {
-      vec2 px = size * vUv;
-      px = mod(px, 5.0);
-      if (px.x > 1.0 && px.y > 1.0) discard;
-      gl_FragColor = color;
-    }`;
+    return /* glsl */`
+      varying vec2 vUv;
+      void main(void) {
+        vec2 px = size * vUv;
+        px = mod(px, 5.0);
+        if (px.x > 1.0 && px.y > 1.0) discard;
+        gl_FragColor = color;
+      }
+    `;
   }
   constructor(props) {
     super(props);
 
-    let frag = `
+    let frag = /* glsl */`
       #extension GL_OES_standard_derivatives : enable
       precision mediump float;
     `;
@@ -114,6 +113,10 @@ export class IoQuad extends IoElement {
       }
       // TODO: implement bool and matrices.
     }
+
+    const vertShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vertShader, this.constructor.vert);
+    gl.compileShader(vertShader);
 
     const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(fragShader, frag + this.constructor.frag);

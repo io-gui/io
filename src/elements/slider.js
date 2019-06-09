@@ -202,7 +202,7 @@ export class IoSliderKnob extends IoQuad {
   }
   // TODO: implement proper sdf shapes.
   static get frag() {
-    return `
+    return /* glsl */`
     varying vec2 vUv;
 
     void main(void) {

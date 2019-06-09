@@ -201,6 +201,7 @@ export class IoDemo extends IoElement {
     this.template([
       ['io-tabbed-elements', {precache: true, selected: $('demo', 'Elements'), elements: [
         ['div', {name: 'Elements'}, [
+          ['h4', 'io-quad'], ['io-quad', {style: {height: '26px'}}],
           ['h4', 'io-string io-number io-boolean'], demoPrimitives,
           ['h4', 'io-switch'], demoSwitch,
           ['h4', 'io-slider'], demoSliders,
