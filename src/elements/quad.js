@@ -67,9 +67,9 @@ export class IoQuad extends IoElement {
   }
   static get properties() {
     return {
-      bg: [0, 0, 0, 1],
+      background: [0, 0, 0, 1],
       color: [1, 1, 1, 1],
-      size: [1, 1],
+      size: [0, 0],
     };
   }
   static get vert() {
@@ -88,9 +88,10 @@ export class IoQuad extends IoElement {
       varying vec2 vUv;
       void main(void) {
         vec2 px = size * vUv;
-        px = mod(px, 5.0);
-        if (px.x > 1.0 && px.y > 1.0) discard;
-        gl_FragColor = color;
+        px = mod(px, 8.0);
+        gl_FragColor = background;
+        if (px.x <= 1.0 || px.y <= 1.0) gl_FragColor = vec4(vUv, 0.0, 1.0);
+        if (px.x <= 1.0 && px.y <= 1.0) gl_FragColor = color;
       }
     `;
   }
@@ -161,11 +162,11 @@ export class IoQuad extends IoElement {
     if (!this._shader) return;
     if (!this.__properties.size) return;
 
-    canvas.width = this.size[0];
-    canvas.height = this.size[1];
+    canvas.width = this.size[0] || 1;
+    canvas.height = this.size[1] || 1;
 
-    gl.viewport(0, 0, this.size[0], this.size[1]);
-    gl.clearColor(this.bg[0], this.bg[1], this.bg[2], this.bg[3]);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
 

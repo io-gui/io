@@ -84,7 +84,7 @@ export class IoSliderKnob extends IoQuad {
       startColor: [0.3, 0.9, 1, 1],
       endColor: [0.9, 1, 0.5, 1],
       lineColor: [0.4, 0.4, 0.4, 1],
-      bg: [0.2, 0.2, 0.2, 1],
+      background: [0.2, 0.2, 0.2, 1],
       snapWidth: 2,
       slotWidth: 2,
       handleWidth: 4,
