@@ -13,7 +13,7 @@ export class IoDemo extends IoElement {
         flex-direction: column;
         flex: 1 0 auto;
       }
-      :host > io-tabbed-elements > io-element-cache {
+      :host > io-tabbed-elements > io-element-selector {
         display: flex;
         flex-direction: column;
         flex: 1 0 auto;
@@ -30,7 +30,7 @@ export class IoDemo extends IoElement {
       :host io-slider:not(:last-of-type) {
         margin-bottom: var(--io-spacing);
       }
-      :host > io-tabbed-elements > io-element-cache > io-layout {
+      :host > io-tabbed-elements > io-element-selector > io-layout {
         height: 600px;
         flex: 1 0 auto;
       }
@@ -201,7 +201,7 @@ export class IoDemo extends IoElement {
     this.template([
       ['io-tabbed-elements', {precache: true, selected: $('demo', 'Elements'), elements: [
         ['div', {name: 'Elements'}, [
-          ['h4', 'io-quad'], ['io-quad', {style: {height: '26px'}}],
+          ['h4', 'io-quad'], ['io-quad', {style: {height: '257px', width: '257px'}}],
           ['h4', 'io-string io-number io-boolean'], demoPrimitives,
           ['h4', 'io-switch'], demoSwitch,
           ['h4', 'io-slider'], demoSliders,

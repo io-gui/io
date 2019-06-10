@@ -1,22 +1,23 @@
 import {IoElement} from "../core/element.js";
 
+const stagingElement = document.createElement('io-element-selector-staging');
+document.head.appendChild(stagingElement);
+
 // TODO: document and test
 // TODO: consider renaming
 
-export class IoElementCache extends IoElement {
+export class IoElementSelector extends IoElement {
   static get properties() {
     return {
       selected: String,
       elements:  Array,
       precache: Boolean,
       cache: Boolean,
-      _cache: Object,
     };
   }
   constructor(props) {
     super(props);
-    this.stagingElement = document.createElement('io-element-cache-staging');
-    document.head.appendChild(this.stagingElement);
+    this._cache = {};
   }
   connectedCallback() {
     super.connectedCallback();
@@ -31,18 +32,12 @@ export class IoElementCache extends IoElement {
       for (let i = 0; i < this.elements.length; i++) {
         const name = this.elements[i][1].name;
         if (!this._cache[name]) {
-          this.template([this.elements[i]], this.stagingElement);
-          this._cache[name] = this.stagingElement.childNodes[0];
-          this.stagingElement.innerText = '';
+          this.template([this.elements[i]], stagingElement);
+          this._cache[name] = stagingElement.childNodes[0];
+          stagingElement.innerText = '';
         }
       }
     }
-  }
-  dispose() {
-    super.dispose();
-    this.innerHTML = '';
-    this.stagingElement.innerHTML = '';
-    delete this._cache;
   }
   changed() {
     const element = this.elements.find(element => {
@@ -70,4 +65,4 @@ export class IoElementCache extends IoElement {
   }
 }
 
-IoElementCache.Register();
+IoElementSelector.Register();

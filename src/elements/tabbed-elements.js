@@ -1,5 +1,5 @@
 import {html, IoElement} from "../core/element.js";
-import "./element-cache.js";
+import "./element-selector.js";
 
 const _dragicon = document.createElement('io-tab-dragicon');
 const _dropzone = document.createElement('io-tab-dropzone');
@@ -31,8 +31,9 @@ export class IoTabbedElements extends IoElement {
         z-index: 1;
         margin: var(--io-spacing);
         margin-bottom: 0;
+        flex-shrink: 0;
       }
-      :host > io-element-cache {
+      :host > io-element-selector {
         color: var(--io-color);
         background: var(--io-background-color);
         display: flex;
@@ -42,9 +43,6 @@ export class IoTabbedElements extends IoElement {
         padding: var(--io-padding);
         border: var(--io-border);
         border-radius: var(--io-border-radius);
-      }
-      :host > io-tabs {
-        flex-shrink: 0;
       }
     </style>`;
   }
@@ -56,12 +54,14 @@ export class IoTabbedElements extends IoElement {
       precache: false,
       cache: true,
       editable: Boolean,
+      role: {
+        reflect: false,
+      },
     };
   }
   elementsChanged() {
     if (this.filter === null) {
-      this.__properties.filter.value =
-          this.elements.map(element => { return element[1].name; });
+      this.__properties.filter.value = this.elements.map(element => { return element[1].name; });
     }
   }
   editableChanged() {
@@ -205,9 +205,8 @@ export class IoTabbedElements extends IoElement {
         filter: this.filter,
         selected: this.bind('selected'),
         editable: this.editable,
-        role: 'navigation',
       }],
-      ['io-element-cache', {
+      ['io-element-selector', {
         id: 'content',
         elements: this.elements,
         selected: this.selected,
@@ -240,8 +239,11 @@ export class IoTabs extends IoElement {
         border-bottom: none;
       }
       :host[overflow] > :nth-child(n+3):not(.edit-option) {
-        visibility: hidden;
+        /* visibility: hidden; */
+        /* left: 0; */
+        /* position: absolute; */
       }
+      /* :host[overflow] >  {} */
       :host[editable] > io-button {
         touch-action: none;
       }
@@ -306,6 +308,7 @@ export class IoTabs extends IoElement {
         reflect: true,
       },
       dropIndex: -1,
+      role: 'navigation',
     };
   }
   select(id) {
