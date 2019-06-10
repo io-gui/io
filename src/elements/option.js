@@ -8,7 +8,7 @@ export class IoOption extends IoButton {
         padding: var(--io-padding) calc(1.5 * var(--io-padding));
         line-height: 1em;
       }
-      :host::before {
+      :host:not([label])::before {
         content: '▾';
         padding-right: var(--io-padding);
       }

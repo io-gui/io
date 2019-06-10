@@ -271,6 +271,12 @@ export class IoTabs extends IoElement {
       :host > io-button.io-selected-tab.io-tab-insert-after {
         background-image: linear-gradient(270deg, var(--io-focus-color) 0.3em, transparent 0.31em);
       }
+      :host > io-option {
+        background: none !important;
+        border: none;
+        padding-left: calc(3 * var(--io-padding));
+        padding-right: calc(3 * var(--io-padding));
+      }
       :host > .edit-spacer {
         flex: 0 0 3.5em;
         background: none;
@@ -437,7 +443,7 @@ export class IoTabs extends IoElement {
     const elements = [];
     if (this.overflow) {
       elements.push(['io-option', {
-        label: '🍔',
+        label: '☰',
         title: 'select tab menu',
         value: this.bind('selected'),
         options: this.filter

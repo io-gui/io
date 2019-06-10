@@ -53,14 +53,13 @@ export class IoQuad extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        user-select: none;
         display: flex;
         flex-direction: column;
-        position: relative;
         overflow: hidden;
       }
       :host > canvas {
         flex: 1 1 auto;
+        user-select: none;
         pointer-events: none;
         image-rendering: pixelated;
       }
