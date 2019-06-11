@@ -15,32 +15,32 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     return {
       id: {
         type: String,
-        enumerable: false
+        enumerable: false,
       },
       tabindex: {
         type: String,
         reflect: true,
-        enumerable: false
+        enumerable: false,
       },
       contenteditable: {
         type: Boolean,
         reflect: true,
-        enumerable: false
+        enumerable: false,
       },
       label: {
         type: String,
         reflect: true,
-        enumerable: false
+        enumerable: false,
       },
       title: {
         type: String,
         reflect: true,
-        enumerable: false
+        enumerable: false,
       },
       role: {
         type: String,
         reflect: true,
-        enumerable: false
+        enumerable: false,
       },
       $: {
         type: Object,
@@ -50,10 +50,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   static get observedAttributes() {
     const observed = [];
     for (let prop in this.prototype.__properties) {
-      if ([Boolean, String, Number].indexOf(this.prototype.__properties[prop].type) !== -1) {
-        observed.push(prop);
-      }
+      if (this.prototype.__properties[prop].observe) observed.push(prop);
     }
+    if (observed.length) console.log(observed);
     return observed;
   }
   attributeChangedCallback(prop, oldValue, newValue) {
@@ -62,8 +61,12 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     if (type === Boolean) {
       if (newValue === null) this[prop] = false;
       else if (newValue === '') this[prop] = true;
-    } else if (type(newValue) !== value) {
+    } else if (type === Number || type === String) {
       this[prop] = type(newValue);
+    } else if (type === Object || type === Array) {
+      this[prop] = JSON.parse(newValue);
+    } else {
+      this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
     }
   }
   // TODO: performance check and optimize
