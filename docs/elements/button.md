@@ -1,6 +1,6 @@
 ### `<io-button>` ###
 
-<io-button></io-button>
+<io-button label="MyButton"></io-button>
 
 A simple button element.
 

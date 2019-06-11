@@ -19,7 +19,21 @@ export class IoOption extends IoButton {
       label: '',
     };
   }
-  onMenu(event) {
+  static get listeners() {
+    return {
+      'button-clicked': '_onButtonClicked'
+    };
+  }
+  constructor(props) {
+    super(props);
+    this.__properties.action.value = () => {
+      this.$['menu'].expanded = !this.$['menu'].expanded;
+    }
+  }
+  _onButtonClicked(event) {
+    event.stopPropagation();
+  }
+  _onMenu(event) {
     this.$['menu'].expanded = false; // TODO: close menu automatically
     this.set('value', event.detail.value);
   }
@@ -34,7 +48,7 @@ export class IoOption extends IoButton {
         id: 'menu',
         options: options,
         position: 'bottom',
-        'on-io-menu-item-clicked': this.onMenu}]
+        'on-menu-item-clicked': this._onMenu}]
     ]);
   }
 }
