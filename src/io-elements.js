@@ -5,6 +5,7 @@
 export {IoBoolean} from "./elements/boolean.js";
 export {IoButton} from "./elements/button.js";
 export {IoCollapsable} from "./elements/collapsable.js";
+export {IoElementDemo} from "./elements/element-demo.js";
 export {IoElementSelector} from "./elements/element-selector.js";
 export {IoInspector} from "./elements/inspector.js";
 export {IoLayout} from "./elements/layout.js";

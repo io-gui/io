@@ -1,10 +1,8 @@
-### `<io-switch>` ###
+Input element for `Boolean` data type displayed as switch toggle.
 
-<io-switch></io-switch>
+<io-element-demo element="io-switch" properties='{"value": true}'></io-element-demo>
 
 Extends `<io-button>`.
-
-Input element for `Boolean` data type displayed as switch toggle.
 
 #### Properties ####
 

@@ -1,8 +1,8 @@
-### `<io-number>` ###
+Input element for `Number` data type.
 
-<io-number value="1337"></io-number>
+<io-element-demo element="io-number" properties='{"value": 1337}'></io-element-demo>
 
-Input element for `Number` data type. It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees.
+It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees.
 
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 

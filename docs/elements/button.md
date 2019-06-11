@@ -1,8 +1,6 @@
-### `<io-button>` ###
-
-<io-button label="MyButton"></io-button>
-
 A simple button element.
+
+<io-element-demo element="io-button" properties='{"label": "myButton"}'></io-element-demo>
 
 When clicked or activated by space/enter key, it calls the `action` function with optional `value` argument. It also emits a bubbling `button-clicked` event.
 

@@ -17,6 +17,7 @@ export class IoOption extends IoButton {
     return {
       options: Array,
       label: '',
+      _option: Object,
     };
   }
   static get listeners() {
@@ -39,8 +40,8 @@ export class IoOption extends IoButton {
   }
   changed() {
     const options = this.options.map(option => {return option.value !== undefined ? option : {value: option}});
-    const option = options.find(option => {return option.value === this.value;});
-    let label = this.label || option ? (option.label || option.value) : this.value;
+    this._option = options.find(option => {return option.value === this.value;});
+    let label = this.label || this._option ? (this._option.label || this._option.value) : this.value;
     label = (label instanceof Object) ? label.__proto__.constructor.name : String(label);
     this.template([
       ['span', label],

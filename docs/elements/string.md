@@ -1,8 +1,6 @@
-### `<io-string>` ###
-
-<io-string value="Hello io!"></io-string>
-
 Input element for `String` data type.
+
+<io-element-demo element="io-string" properties='{"value": "Hello io!"}'></io-element-demo>
 
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 

@@ -52,7 +52,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     for (let prop in this.prototype.__properties) {
       if (this.prototype.__properties[prop].observe) observed.push(prop);
     }
-    if (observed.length) console.log(observed);
     return observed;
   }
   attributeChangedCallback(prop, oldValue, newValue) {
