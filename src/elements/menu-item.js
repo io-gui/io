@@ -80,7 +80,7 @@ export class IoMenuItem extends IoElement {
     }
     this.template([
       this.option.icon ? ['span', {className: 'menu-icon'}, this.option.icon] : null,
-      ['span', {className: 'menu-label'}, this.option.label || this.option.value],
+      ['span', {className: 'menu-label'}, this.option.label || String(this.option.value)],
       this.option.hint ? ['span', {className: 'menu-hint'}] : null,
       this.option.options ? ['span', {className: 'menu-more'}, '▸'] : null,
     ]);

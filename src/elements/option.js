@@ -6,7 +6,6 @@ export class IoOption extends IoButton {
     return html`<style>
       :host {
         padding: var(--io-padding) calc(1.5 * var(--io-padding));
-        line-height: 1em;
       }
       :host:not([label])::before {
         content: '▾';
@@ -20,39 +19,21 @@ export class IoOption extends IoButton {
       label: '',
     };
   }
-  static get listeners() {
-    return {
-      'button-clicked': 'onClick'
-    };
-  }
-  onClick() {
-    this.$['menu'].expanded = true;
-    let firstItem = this.$['menu'].$['group'].querySelector('io-menu-item');
-    if (firstItem) firstItem.focus();
-  }
   onMenu(event) {
-    this.$['menu'].expanded = false;
+    this.$['menu'].expanded = false; // TODO: close menu automatically
     this.set('value', event.detail.value);
   }
   changed() {
-    let label = this.value;
-    if (label instanceof Object) label = label.__proto__.constructor.name;
-    if (this.options) {
-      for (let i = 0; i < this.options.length; i++) {
-        if (this.options[i].value === this.value) {
-          label = this.options[i].label || label;
-          break;
-        }
-      }
-    }
+    const options = this.options.map(option => {return option.value !== undefined ? option : {value: option}});
+    const option = options.find(option => {return option.value === this.value;});
+    let label = this.label || option ? (option.label || option.value) : this.value;
+    label = (label instanceof Object) ? label.__proto__.constructor.name : String(label);
     this.template([
-      ['span', this.label || String(label)],
+      ['span', label],
       ['io-menu', {
         id: 'menu',
-        options: this.options,
+        options: options,
         position: 'bottom',
-        button: 0,
-        ondown: false, // TODO: make open ondown and stay open with position:bottom
         'on-io-menu-item-clicked': this.onMenu}]
     ]);
   }

@@ -123,6 +123,7 @@ export class IoDemo extends IoElement {
         {label: 'four', value: 4},
         {label: 'leet', value: 1337},
       ], value: this.bind('number')}],
+      ['io-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
     ]];
 
     const demoButton = ['div', {name: 'button', className: 'table'}, [
