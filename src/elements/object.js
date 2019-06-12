@@ -30,7 +30,7 @@ export class IoObject extends IoCollapsable {
   changed() {
     const label = this.label || this.value.constructor.name;
     this.template([
-      ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
+      ['io-boolean', {true: label, false: label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       this.expanded ? [
         ['io-properties', {
           className: 'io-collapsable-content',

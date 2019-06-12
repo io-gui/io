@@ -62,7 +62,7 @@ export class IoProperties extends IoElement {
     if (event.detail.object) return; // TODO: unhack
     event.stopPropagation();
     const prop = path[0].id;
-    if (prop !== null) {
+    if (prop !== null && event.detail.property === 'value') {
       this.value[prop] = event.detail.value;
       const detail = Object.assign({object: this.value, property: prop}, event.detail);
       this.dispatchEvent('object-mutated', detail, false, window); // TODO: test

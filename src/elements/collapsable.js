@@ -14,11 +14,10 @@ export class IoCollapsable extends IoElement {
         transition: background-color 0.4s;
       }
       :host:focus-within {
-        outline: none;
+        /* outline: none; */
       }
       :host > io-boolean {
-        border: none;
-        border-radius: 0;
+        border-color: transparent;
         background: none;
         padding: 0;
       }
@@ -26,7 +25,7 @@ export class IoCollapsable extends IoElement {
         background: inherit;
       }
       :host > io-boolean:focus {
-        border: none;
+        /* border: none; */
       }
       :host > io-boolean::before {
         display: inline-block;
