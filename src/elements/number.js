@@ -1,8 +1,5 @@
 import {html, IoElement} from "../core/element.js";
 
-// const selection = window.getSelection();
-// const range = document.createRange();
-
 export class IoNumber extends IoElement {
   static get style() {
     return html`<style>
@@ -67,13 +64,11 @@ export class IoNumber extends IoElement {
     this._innerTextOnFocus = this.innerText;
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
-    // this._select();
   }
   _onBlur() {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     if (this._innerTextOnFocus !== this.innerText) this.setFromText(this.innerText);
-    // selection.removeAllRanges();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -81,7 +76,7 @@ export class IoNumber extends IoElement {
     const rng = window.getSelection().getRangeAt(0);
     const start = rng.startOffset;
     const end = rng.endOffset;
-    const length = this.childNodes[0].length;
+    const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
     // TODO: implement home/end for min/max
@@ -111,13 +106,6 @@ export class IoNumber extends IoElement {
       }
     }
   }
-  // _select() {
-  //   range.selectNodeContents(this.childNodes[0]);
-  //   range.setStart(this.childNodes[0], 0);
-  //   range.setEnd(this.childNodes[0], this.childNodes[0].length);
-  //   selection.removeAllRanges();
-  //   selection.addRange(range);
-  // }
   setFromText(text) {
     // TODO: test conversion
     let value = Math.round(Number(text) / this.step) * this.step / this.conversion;

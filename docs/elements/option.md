@@ -1,8 +1,8 @@
 Option select element.
 
-<io-element-demo element="io-option" properties='{"value": 1, "options": [1,2,3]}'></io-element-demo>
+<io-element-demo element="io-option" properties='{"value": 1, "options": [1,2,3], "label": ""}'></io-element-demo>
 
-<io-element-demo element="io-option" properties='{"value": 1, "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}]}'></io-element-demo>
+<io-element-demo element="io-option" properties='{"value": 1, "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}], "label": ""}'></io-element-demo>
 
 Extends `<io-button>`.
 
