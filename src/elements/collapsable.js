@@ -52,6 +52,9 @@ export class IoCollapsable extends IoElement {
         padding: var(--io-padding);
         background: var(--io-background-color);
       }
+      :host:not([expanded]) > .io-collapsable-content {
+        display: none;
+      }
     </style>`;
   }
   static get properties() {
@@ -72,9 +75,9 @@ export class IoCollapsable extends IoElement {
   changed() {
     this.template([
       ['io-boolean', {true: this.label, false: this.label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
-      (this.expanded && this.elements.length) ? ['div', {className: 'io-collapsable-content'}, this.elements] : null
+      ['div', {className: 'io-collapsable-content'}, (this.expanded && this.elements.length) ? this.elements : [null]],
     ]);
-    this.setAttribute('aria-expanded', String(this.expanded));
+    this.children[0].setAttribute('aria-expanded', String(this.expanded));
   }
 }
 
