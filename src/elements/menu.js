@@ -78,7 +78,7 @@ export class IoMenu extends IoElement {
       //   if (this.$.group.firstChild) this.$.group.firstChild.focus();
       // }, 100);
     } else {
-      if (this._focused) this._focused.focus()
+      if (this._focused) this._focused.focus();
       delete this._focused;
     }
   }

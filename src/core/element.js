@@ -56,7 +56,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
   attributeChangedCallback(prop, oldValue, newValue) {
     const type = this.__properties[prop].type;
-    const value = this.__properties[prop].value;
     if (type === Boolean) {
       if (newValue === null) this[prop] = false;
       else if (newValue === '') this[prop] = true;

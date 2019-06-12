@@ -47,7 +47,7 @@ export class IoOption extends IoButton {
     IoMenuLayer.singleton.removeChild(this._menu);
   }
   _onClick() {}
-  _onMousedown(event) {
+  _onMousedown() {
     this.expanded = true;
   }
   _onKeydown(event) {
@@ -82,7 +82,7 @@ export class IoOption extends IoButton {
     this.set('value', event.detail.value);
   }
   changed() {
-    const options = this.options.map(option => {return option.value !== undefined ? option : {value: option}});
+    const options = this.options.map(option => {return option.value !== undefined ? option : {value: option};});
     this._option = options.find(option => {return option.value === this.value;});
     let label = this.label || (this._option ? (this._option.label || this._option.value) : this.value);
     label = (label instanceof Object) ? label.__proto__.constructor.name : String(label);

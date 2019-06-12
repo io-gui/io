@@ -1,6 +1,6 @@
 import {html, IoElement} from "../core/element.js";
 import "./element-selector.js";
-import {IoTabs} from "./tabs.js";
+import "./tabs.js";
 
 export class IoTabbedElements extends IoElement {
   static get style() {

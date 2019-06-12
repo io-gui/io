@@ -47,7 +47,7 @@ export class IoElementDemo extends IoElement {
         [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
       ]);
     } else {
-      this.template([null])
+      this.template([null]);
     }
   }
 }
