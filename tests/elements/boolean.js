@@ -16,7 +16,7 @@ export default class {
         });
       });
       describe('innerText', () => {
-        it('matches value', () => {
+        it('matches values', () => {
           this.element.value = false;
           chai.expect(this.element.innerText).to.equal(this.element.false);
           this.element.toggle();

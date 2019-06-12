@@ -14,7 +14,7 @@ export default class {
         });
       });
       describe('innerText', () => {
-        it('matches value', () => {
+        it('matches values', () => {
           this.element.value = 'hello';
           chai.expect(this.element.innerHTML).to.equal('hello');
           this.element.value = false;

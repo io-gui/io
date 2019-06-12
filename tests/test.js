@@ -12,12 +12,12 @@ import Switch from "../tests/elements/switch.js"
 import Number from "../tests/elements/number.js"
 import Sting from "../tests/elements/string.js"
 import Slider from "../tests/elements/slider.js"
+import Option from "../tests/elements/option.js"
 // import Canvas from "../tests/elements/canvas.js"
 // import Collapsable from "../tests/elements/collapsable.js"
 // import Inspector from "../tests/elements/inspector.js"
 // import Menu from "../tests/elements/menu.js"
 // import Object from "../tests/elements/object.js"
-// import Option from "../tests/elements/option.js"
 // import Properties from "../tests/elements/properties.js"
 // import TabbedElements from "../tests/elements/tabbed-elements.js"
 
@@ -43,12 +43,12 @@ function runTests() {
     new Number().run();
     new Sting().run();
     new Slider().run();
+    new Option().run();
     // new Canvas().run();
     // new Collapsable().run();
     // new Inspector().run();
     // new Menu().run();
     // new Object().run();
-    // new Option().run();
     // new Properties().run();
     // new Storage().run();
     mocha.checkLeaks();

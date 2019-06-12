@@ -116,6 +116,12 @@ export class IoMenuLayer extends IoElement {
   }
   _onMousedown(event) {
     this._onPointermove(event);
+    if (!this._hoveredGroup && this.collapseOnPointerup) {
+      this.collapseAllGroups();
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
+    }
   }
   _onMousemove(event) {
     this._onPointermove(event);
@@ -125,6 +131,12 @@ export class IoMenuLayer extends IoElement {
   }
   _onTouchStart(event) {
     this._onPointermove(event.changedTouches[0]);
+    if (!this._hoveredGroup && this.collapseOnPointerup) {
+      this.collapseAllGroups();
+      // if (lastFocus) {
+      //   lastFocus.focus();
+      // }
+    }
   }
   _onTouchmove(event) {
     this._onPointermove(event.changedTouches[0]);
@@ -179,7 +191,7 @@ export class IoMenuLayer extends IoElement {
       this.runAction(this._hoveredItem.option);
       this._hoveredItem.$root.dispatchEvent('menu-item-clicked', this._hoveredItem.option);
     } else if (!this._hoveredGroup && this.collapseOnPointerup) {
-      this.collapseAllGroups();
+      // this.collapseAllGroups();
       // if (lastFocus) {
       //   lastFocus.focus();
       // }

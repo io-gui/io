@@ -42,6 +42,7 @@ export class IoMenuOptions extends IoElement {
         type: Boolean,
         reflect: true
       },
+      role: 'listbox',
       $parent: HTMLElement
     };
   }

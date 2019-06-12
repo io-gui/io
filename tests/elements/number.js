@@ -25,7 +25,7 @@ export default class {
         });
       });
       describe('innerText', () => {
-        it('matches value', () => {
+        it('matches values', () => {
           this.element.value = 0;
           this.element.step = 1;
           chai.expect(this.element.innerHTML).to.equal('0');

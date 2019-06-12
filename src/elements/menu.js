@@ -70,6 +70,18 @@ export class IoMenu extends IoElement {
     this.parentElement.removeEventListener('touchend', this._onTouchend);
     IoMenuLayer.singleton._onTouchend(event);
   }
+  expandedChanged() {
+    if (this.expanded) {
+      this._focused = document.activeElement;
+      // console.log(this._focused);
+      // setTimeout(() => {
+      //   if (this.$.group.firstChild) this.$.group.firstChild.focus();
+      // }, 100);
+    } else {
+      if (this._focused) this._focused.focus()
+      delete this._focused;
+    }
+  }
   open(event) {
     IoMenuLayer.singleton.collapseAllGroups();
     IoMenuLayer.singleton._x = event.clientX;

@@ -42,16 +42,16 @@ export class IoButton extends IoElement {
   }
   static get listeners() {
     return {
-      'click': 'onClick',
-      'keydown': 'onKeydown',
+      'click': '_onClick',
+      'keydown': '_onKeydown',
     };
   }
 
-  onClick() {
+  _onClick() {
     if (this.action) this.action(this.value);
     this.dispatchEvent('button-clicked', {value: this.value, action: this.action});
   }
-  onKeydown(event) {
+  _onKeydown(event) {
     if (event.which === 13 || event.which === 32) {
       event.preventDefault();
       if (this.action) this.action(this.value);

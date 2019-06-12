@@ -48,8 +48,8 @@ export class IoMenuItem extends IoElement {
   }
   static get listeners() {
     return {
-      'focus': 'onFocus',
-      'pointerdown': 'onPointerdown',
+      'focus': '_onFocus',
+      'pointerdown': '_onPointerdown',
     };
   }
   get $root() {
@@ -93,11 +93,11 @@ export class IoMenuItem extends IoElement {
       }
     }
   }
-  onPointerdown(event) {
+  _onPointerdown(event) {
     IoMenuLayer.singleton.setPointerCapture(event.pointerId);
     this.focus();
   }
-  onFocus() {
+  _onFocus() {
     if (this.$options) {
       if (!this.$options.parentNode) {
         IoMenuLayer.singleton.appendChild(this.$options);
