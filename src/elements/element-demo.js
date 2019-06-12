@@ -5,6 +5,11 @@ export class IoElementDemo extends IoElement {
     return html`<style>
       :host {
         display: block;
+        position: relative;
+        padding: var(--io-padding);
+        border: var(--io-inset-border);
+        border-color: var(--io-inset-border-color);
+        background: rgba(127, 127, 127, 0.2);
       }
       :host > io-properties {
         margin: 0 0.5em;

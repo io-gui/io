@@ -2,13 +2,13 @@
 
 import {html, IoElement} from "../core/element.js";
 
-const animationQueue = [];
+const animationQueue = new Array();
 const animate = function() {
+  requestAnimationFrame(animate);
   for (let i = animationQueue.length; i--;) {
     animationQueue[i]();
   }
-  animationQueue.lenght = 0;
-  requestAnimationFrame(animate);
+  animationQueue.length = 0;
 };
 requestAnimationFrame(animate);
 
@@ -147,7 +147,7 @@ export class IoQuad extends IoElement {
     this._context2d = this.$.canvas.getContext('2d');
     this._context2d.imageSmoothingEnabled = false;
 
-    this.render();
+    this.render(); // TODO: hmm
   }
   resized() {
     const rect = this.$.canvas.getBoundingClientRect();

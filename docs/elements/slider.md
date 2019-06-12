@@ -12,8 +12,8 @@ When the number field is focused, arrow keys will change focus to the nearest fo
 |:---------|:-----|:-----------|:--------|
 | **`value`** | Number | Value | `0` |
 | **`step`** | Number | Value increment/decimals | `0.001` |
-| **`min`** | Number | Minimum value | `-Infinity` |
-| **`max`** | Number | Maximum value | `Infinity` |
+| **`min`** | Number | Minimum value | `0` |
+| **`max`** | Number | Maximum value | `1` |
 
 #### Events ####
 
