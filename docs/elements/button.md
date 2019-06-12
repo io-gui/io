@@ -2,7 +2,7 @@ A simple button element.
 
 <io-element-demo element="io-button" properties='{"label": "myButton"}'></io-element-demo>
 
-When clicked or activated by space/enter key, it calls the `action` function with optional `value` argument. It also emits a bubbling `button-clicked` event.
+When clicked or activated by space/enter key, it calls the `action` function with optional `value` argument.
 
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
