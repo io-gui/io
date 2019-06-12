@@ -26,20 +26,26 @@ export class IoElementDemo extends IoElement {
         type: Object,
         observe: true,
       },
+      _properties: Object,
     };
   }
-  _onValueSet(event) {
-    this.properties.value = event.detail.value;
-    this.dispatchEvent('object-mutated', {object: this.properties, key: 'value'}, false, window);
+  _onPropSet(event) {
+    this.properties[event.detail.property] = event.detail.value;
+    this.dispatchEvent('object-mutated', {
+      object: this.properties,
+      property: event.detail.property,
+      value: event.detail.value,
+      oldValue: event.detail.oldValue,
+    }, false, window);
   }
   changed() {
     if (this.element) {
       this.template([
-        [this.element, Object.assign({'on-value-set': this._onValueSet}, this.properties)],
         ['div', {className: 'demo-tag'}, '<' + this.element],
         ['io-properties', {value: this.properties}],
         ['div', {className: 'demo-tag'}, '></' + this.element + '>'],
-      ])
+        [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
+      ]);
     } else {
       this.template([null])
     }

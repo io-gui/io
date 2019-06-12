@@ -33,7 +33,7 @@ export class IoCollapsable extends IoElement {
         content: '▸';
         line-height: 1em;
         width: 0.5em;
-        padding: 0 0.25em;
+        padding: 0 0.5em;
       }
       :host[expanded] > io-boolean::before{
         content: '▾';
@@ -62,9 +62,13 @@ export class IoCollapsable extends IoElement {
       elements: Array,
     };
   }
+  _onButtonValueSet(event) {
+    this.expanded = event.detail.value;
+    this.dispatchEvent('value-set', {property: 'expanded', value: event.detail.value, oldValue: event.detail.oldValue}, false);
+  }
   changed() {
     this.template([
-      ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
+      ['io-boolean', {true: this.label, false: this.label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       (this.expanded && this.elements.length) ? ['div', {className: 'io-collapsable-content'}, this.elements] : null
     ]);
   }

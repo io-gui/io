@@ -1,1 +1,0 @@
-### `IoCollapsable` `<io-collapsable>` ###

@@ -61,10 +61,10 @@ export class IoProperties extends IoElement {
     if (path[0] === this) return;
     if (event.detail.object) return; // TODO: unhack
     event.stopPropagation();
-    const key = path[0].id;
-    if (key !== null) {
-      this.value[key] = event.detail.value;
-      const detail = Object.assign({object: this.value, key: key}, event.detail);
+    const prop = path[0].id;
+    if (prop !== null) {
+      this.value[prop] = event.detail.value;
+      const detail = Object.assign({object: this.value, property: prop}, event.detail);
       this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
       this.dispatchEvent('value-set', detail, false);
     }
