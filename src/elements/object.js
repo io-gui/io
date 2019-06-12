@@ -13,7 +13,7 @@ export class IoObject extends IoCollapsable {
       :host > .io-collapsable-content {
         display: block;
         overflow: auto;
-        padding: 0 0 0 var(--io-padding);
+        padding: 0;
         border: none !important;
         background: none !important;
       }
@@ -41,6 +41,7 @@ export class IoObject extends IoCollapsable {
         }]
       ] : null
     ]);
+    this.setAttribute('aria-expanded', String(this.expanded));
   }
 }
 

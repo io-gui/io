@@ -28,6 +28,7 @@ export class IoTheme extends IoElement {
         --io-outset-border: var(--io-border-width) outset var(--io-border-color);
 
         --io-button-gradient: linear-gradient(0deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 50%);
+        --io-collapsable-gradient: linear-gradient(100deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(280deg, rgba(255, 255, 255, 0.075), transparent 50%);
 
         --io-number-color: rgb(32, 164, 255);
         --io-string-color: rgb(240, 64, 22);

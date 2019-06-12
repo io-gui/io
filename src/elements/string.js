@@ -23,8 +23,8 @@ export class IoString extends IoElement {
       :host:focus {
         overflow: hidden;
         text-overflow: clip;
-        outline: none;
-        border-color: var(--io-focus-color);
+        outline: 1px solid var(--io-focus-color);
+        outline-offset: -1px;
       }
       :host[aria-invalid] {
         color: var(--io-error-color);
@@ -93,7 +93,7 @@ export class IoString extends IoElement {
   }
   changed() {
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
-    this.setAttribute('aria-invalid', typeof this.value !== 'string');
+    this.setAttribute('aria-invalid', (typeof this.value !== 'string') ? 'true' : false);
   }
 }
 

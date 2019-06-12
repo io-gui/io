@@ -24,9 +24,9 @@ export class IoProperties extends IoElement {
       :host > .io-property > io-object,
       :host > .io-property > io-object > io-boolean,
       :host > .io-property > io-object > io-properties {
-        padding: 0 !important;
-        border: none !important;
-        background: none !important;
+        padding: 0;
+        border-color: transparent;
+        background: none;
       }
       :host > .io-property > io-number,
       :host > .io-property > io-string,

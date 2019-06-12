@@ -12,6 +12,9 @@ export class IoSwitch extends IoButton {
         display: flex;
         align-items: center;
       }
+      :host:focus {
+        outline: none;
+      }
       :host > div {
         position: relative;
         flex: 0 0 calc(var(--io-toggle-size) * 2.5);
@@ -35,7 +38,8 @@ export class IoSwitch extends IoButton {
         background-color: var(--io-hover-bg);
       }
       :host:focus > div {
-        border-color: var(--io-focus-color);
+        outline: 1px solid var(--io-focus-color);
+        outline-offset: 2px;
       }
       :host > div:after {
         display: inline-block;
@@ -81,7 +85,7 @@ export class IoSwitch extends IoButton {
   }
   changed() {
     this.setAttribute('aria-checked', String(this.value));
-    this.setAttribute('aria-invalid', typeof this.value !== 'boolean');
+    this.setAttribute('aria-invalid', (typeof this.value !== 'boolean') ? 'true' : false);
   }
 }
 

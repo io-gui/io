@@ -11,6 +11,7 @@ export class IoCollapsable extends IoElement {
         border-color: var(--io-outset-border-color);
         padding: var(--io-padding);
         background: var(--io-background-color-dark);
+        background-image: var(--io-collapsable-gradient);
         transition: background-color 0.4s;
       }
       :host:focus-within {
@@ -20,9 +21,11 @@ export class IoCollapsable extends IoElement {
         border-color: transparent;
         background: none;
         padding: 0;
+        padding-right: 0.5em !important;;
       }
       :host > io-boolean:hover {
-        background: inherit;
+        background: none;
+        border-image: none;
       }
       :host > io-boolean:focus {
         /* border: none; */
@@ -59,6 +62,7 @@ export class IoCollapsable extends IoElement {
         reflect: true
       },
       elements: Array,
+      role: 'region',
     };
   }
   _onButtonValueSet(event) {
@@ -70,6 +74,7 @@ export class IoCollapsable extends IoElement {
       ['io-boolean', {true: this.label, false: this.label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       (this.expanded && this.elements.length) ? ['div', {className: 'io-collapsable-content'}, this.elements] : null
     ]);
+    this.setAttribute('aria-expanded', String(this.expanded));
   }
 }
 

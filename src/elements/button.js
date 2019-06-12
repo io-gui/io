@@ -23,8 +23,8 @@ export class IoButton extends IoElement {
         transition: background-color 0.4s;
       }
       :host:focus {
-        outline: none;
-        border-color: var(--io-focus-color);
+        outline: 1px solid var(--io-focus-color);
+        outline-offset: -1px;
       }
       :host:hover {
         background-color: var(--io-hover-bg);

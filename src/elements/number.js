@@ -18,8 +18,8 @@ export class IoNumber extends IoElement {
       :host:focus {
         overflow: hidden;
         text-overflow: clip;
-        outline: none;
-        border-color: var(--io-focus-color);
+        outline: 1px solid var(--io-focus-color);
+        outline-offset: -1px;
       }
       :host[aria-invalid] {
         color: var(--io-error-color);
@@ -124,9 +124,9 @@ export class IoNumber extends IoElement {
     } else {
       this.innerText = 'NaN';
     }
-    this.setAttribute('aria-invalid', typeof this.value !== 'number' || isNaN(this.value));
-    this.setAttribute('aria-valuemin', this.min !== -Infinity ? this.min : undefined);
-    this.setAttribute('aria-valuemax', this.max !== Infinity ? this.max : undefined);
+    this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
+    this.setAttribute('aria-valuemin', this.min !== -Infinity ? this.min : false);
+    this.setAttribute('aria-valuemax', this.max !== Infinity ? this.max : false);
   }
 }
 

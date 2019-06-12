@@ -85,7 +85,7 @@ export default class {
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('textbox');
           this.element.value = '';
-          chai.expect(this.element.getAttribute('aria-invalid')).to.equal('');
+          chai.expect(this.element.getAttribute('aria-invalid')).to.equal('true');
           this.element.value = 0;
           chai.expect(this.element.getAttribute('aria-invalid')).to.equal(null);
           this.element.min = 0;

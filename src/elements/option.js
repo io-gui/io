@@ -93,7 +93,7 @@ export class IoOption extends IoButton {
     this.innerText = label;
 
     this.setAttribute('aria-haspopup', 'listbox');
-    this.setAttribute('aria-expanded', this.expanded);
+    this.setAttribute('aria-expanded', String(this.expanded));
   }
 }
 

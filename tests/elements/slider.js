@@ -49,7 +49,7 @@ export default class {
         it('has a11y attributes', () => {
           chai.expect(this.element.$.slider.getAttribute('role')).to.equal('slider');
           this.element.value = '';
-          chai.expect(this.element.$.slider.getAttribute('aria-invalid')).to.equal('');
+          chai.expect(this.element.$.slider.getAttribute('aria-invalid')).to.equal('true');
           this.element.value = 0.1;
           chai.expect(this.element.$.slider.getAttribute('aria-invalid')).to.equal(null);
           chai.expect(this.element.$.slider.getAttribute('aria-valuenow')).to.equal('0.1');

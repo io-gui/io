@@ -47,9 +47,9 @@ export default class {
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('button');
           chai.expect(this.element.getAttribute('aria-haspopup')).to.equal('listbox');
-          chai.expect(this.element.getAttribute('aria-expanded')).to.equal(null);
+          chai.expect(this.element.getAttribute('aria-expanded')).to.equal('false');
           this.element.expanded = true;
-          chai.expect(this.element.getAttribute('aria-expanded')).to.equal('');
+          chai.expect(this.element.getAttribute('aria-expanded')).to.equal('true');
           this.reset();
         });
       });

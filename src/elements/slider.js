@@ -70,8 +70,8 @@ export class IoSliderKnob extends IoQuad {
         border-color: var(--io-error-color);
       }
       :host:focus {
-        outline: none;
-        border-color: var(--io-focus-color);
+        outline: 1px solid var(--io-focus-color);
+        outline-offset: -1px;
       }
     </style>`;
   }
@@ -194,7 +194,7 @@ export class IoSliderKnob extends IoQuad {
   }
   changed() {
     super.changed();
-    this.setAttribute('aria-invalid', typeof this.value !== 'number' || isNaN(this.value));
+    this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
     this.setAttribute('aria-valuenow', this.value);
     this.setAttribute('aria-valuemin', this.minValue);
     this.setAttribute('aria-valuemax', this.maxValue);
