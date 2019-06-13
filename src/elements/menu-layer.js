@@ -4,7 +4,7 @@ let previousOption;
 let previousParent;
 let timeoutOpen;
 let timeoutReset;
-let WAIT_TIME = 1200;
+let WAIT_TIME = 200;
 // let lastFocus;
 
 // TODO: implement search
@@ -91,6 +91,7 @@ export class IoMenuLayer extends IoElement {
       this.$options[i].expanded = false;
     }
     this.expanded = false;
+    this.collapseOnPointerup = false;
   }
   runAction(option) {
     if (typeof option.action === 'function') {
@@ -191,7 +192,7 @@ export class IoMenuLayer extends IoElement {
     if (this._hoveredItem) {
       this.runAction(this._hoveredItem.option);
       this._hoveredItem.$root.dispatchEvent('menu-item-clicked', this._hoveredItem.option);
-      // this.collapseAllGroups(); // TODO: ?
+      if (this.collapseOnPointerup) this.collapseAllGroups(); // TODO: ?
     } else if (!this._hoveredGroup && this.collapseOnPointerup) {
       this.collapseAllGroups();
       // if (lastFocus) {

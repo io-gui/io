@@ -13,9 +13,6 @@ export class IoSelectorSidebar extends IoSelector {
       }
       :host > io-sidebar {
         z-index: 1;
-        margin: var(--io-spacing);
-        margin-bottom: 0;
-        flex-shrink: 0;
       }
     </style>`;
   }

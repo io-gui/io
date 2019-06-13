@@ -4,7 +4,9 @@ export class IoElementDemo extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
         position: relative;
         padding: var(--io-padding);
         border: var(--io-inset-border);
@@ -12,7 +14,7 @@ export class IoElementDemo extends IoElement {
         background: rgba(127, 127, 127, 0.2);
       }
       :host > io-properties {
-        margin: 0 0.5em;
+        margin: 0.5em;
       }
     </style>`;
   }
@@ -41,9 +43,8 @@ export class IoElementDemo extends IoElement {
   changed() {
     if (this.element) {
       this.template([
-        ['div', {className: 'demo-tag'}, '<' + this.element],
+        ['div', {className: 'demo-tag'}, '<' + this.element + '>'],
         ['io-properties', {value: this.properties}],
-        ['div', {className: 'demo-tag'}, '></' + this.element + '>'],
         [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
       ]);
     } else {

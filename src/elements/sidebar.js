@@ -4,16 +4,17 @@ export class IoSidebar extends IoElement {
   static get style() {
     return html`<style>
       :host {
+        display: flex;
         flex-wrap: nowrap;
         overflow: visible;
         flex: 0 1 auto;
         line-height: 1.5em;
+        padding: var(--io-padding);
       }
       :host[overflow] {
-        line-height: 1em;
+        font-size: 1.2em;
       }
       :host:not([overflow]) {
-        display: flex;
         flex-direction: column;
         min-width: 8em;
       }

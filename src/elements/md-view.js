@@ -8,16 +8,11 @@ export class IoMdView extends IoElement {
     return html`<style>
       :host {
         display: block;
-        padding: 0.5em 1em;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3),
-                    0 15px 20px 0 rgba(0, 0, 0, 0.1);
-        border-radius: var(--io-border-radius);
-        overflow: hidden;
         background: var(--io-background-color);
         color: var(--io-color);
       }
       :host p {
-        line-height: 1.5em;
+        line-height: 1.4em;
       }
       :host a {
         font-weight: bold;

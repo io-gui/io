@@ -10,6 +10,9 @@ export class IoTabs extends IoElement {
         overflow: visible;
         flex: 0 1 auto;
       }
+      :host[overflow] {
+        font-size: 1.2em;
+      }
       :host > * {
         flex: 0 0 auto;
         margin-right: var(--io-spacing);
