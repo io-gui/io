@@ -36,9 +36,9 @@ Static getters are evaluated once per class when the
 
 | Event | Description | Detail |
 |:------:|:-----------:|:----------:|
-| **`[prop]-changed`** | Property changed | `property`, `value`, `oldValue` |
-| **`[prop]-set`** | Property set by user | `property`, `value`, `oldValue` |
-| **`object-mutated`** | Object mutated | `object`, `property`, `value`, `oldValue` |
+| **`[prop]-changed`** | Property changed     | `property`, `value`, `oldValue`           |
+| **`value-set`**      | Property set by user | `property`, `value`, `oldValue`           |
+| **`object-mutated`** | Object mutated       | `object`, `property`, `value`, `oldValue` |
 
 
 # `IoNode` #
