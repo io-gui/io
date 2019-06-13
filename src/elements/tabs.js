@@ -9,7 +9,6 @@ export class IoTabs extends IoElement {
         flex-wrap: nowrap;
         overflow: visible;
         flex: 0 1 auto;
-        position: relative;
       }
       :host > * {
         flex: 0 0 auto;
@@ -18,14 +17,11 @@ export class IoTabs extends IoElement {
         border-bottom-right-radius: 0;
         border-bottom: none;
       }
-      :host[overflow] > :nth-child(n+3):not(.edit-option) {
-        /* visibility: hidden; */
-        /* left: 0; */
-        /* position: absolute; */
+      :host[overflow] > :nth-child(n+2):not(.io-selected-tab) {
+        display: none;
       }
-      :host > io-button:focus {
-        border-style: solid;
-        border-bottom: none;
+      :host:not([overflow]) > :nth-child(1) {
+        display: none;
       }
       :host > io-button.io-selected-tab {
         border-bottom-color: var(--io-background-color);
@@ -35,112 +31,58 @@ export class IoTabs extends IoElement {
         margin-bottom: -1px;
         background-image: none;
       }
-      :host > io-button.io-tab-insert-before {
-        background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(90deg, var(--io-focus-color) 0.3em, transparent 0.31em);
-      }
-      :host > io-button.io-tab-insert-after {
-        background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(270deg, var(--io-focus-color) 0.3em, transparent 0.31em);
-      }
-      :host > io-button.io-selected-tab.io-tab-insert-before {
-        background-image: linear-gradient(90deg, var(--io-focus-color) 0.3em, transparent 0.31em);
-      }
-      :host > io-button.io-selected-tab.io-tab-insert-after {
-        background-image: linear-gradient(270deg, var(--io-focus-color) 0.3em, transparent 0.31em);
-      }
       :host > io-option {
         background: none !important;
         border: none;
         padding-left: calc(3 * var(--io-padding));
         padding-right: calc(3 * var(--io-padding));
       }
-      :host > .edit-spacer {
-        flex: 0 0 3.5em;
-        background: none;
-      }
-      :host > .edit-option {
-        border: none;
-        background: none;
-        position: absolute;
-        right: 0;
-      }
-      :host > .edit-option:not(:hover) {
-        opacity: 0.3;
-      }
     </style>`;
   }
   static get properties() {
     return {
       elements: Array,
-      filter: null,
       selected: String,
       overflow: {
         type: Boolean,
         reflect: true,
       },
-      dropIndex: -1,
       role: 'navigation',
+      _overflowWidth: 0,
     };
   }
-  select(id) {
-    this.selected = id;
+  _onSelect(id) {
+    this.set('selected', id);
+  }
+  _onValueSet(event) {
+    this.set('selected', event.detail.value);
   }
   resized() {
-    let right = this.getBoundingClientRect().right;
-    const lastButton = this.children[this.children.length - 2];
-    if (this.overflow) {
-      // const hamburgerButton = this.children[0];
-      // const firstButton = this.children[1];
-      // right += hamburgerButton.getBoundingClientRect().width + firstButton.getBoundingClientRect().width;
+    if (!this.overflow) {
+      this._overflowWidth = this.children[this.children.length - 1].getBoundingClientRect().right;
     }
-    this.overflow = lastButton && right < lastButton.getBoundingClientRect().right;
+    this.overflow = this.getBoundingClientRect().right < this._overflowWidth;
   }
   changed() {
-    // TODO: consider testing with large element collections and optimizing.
     const options = [];
-    const _elements = this.elements.map(element => { return element[1].name; });
-    for (let i = 0; i < _elements.length; i++) {
-      const added = this.filter && this.filter.indexOf(_elements[i]) !== -1;
-      options.push({
-        icon: added ? '⌦' : '·',
-        value: _elements[i],
-        action: added ? this._onRemoveTab : this._onAddTab, // TODO: make toggle on options
-      });
-    }
-    const buttons = [];
-    let selectedButton;
-    // const currentIndex = this.filter.indexOf(this.selected);
-    for (let i = 0; i < this.filter.length; i++) {
-      const selected = this.selected === this.filter[i];
-      let className = 'io-tab';
-      if (selected) className += ' io-selected-tab';
-      if (this.dropIndex !== -1) {// && this.dropIndex !== currentIndex && this.dropIndex !== currentIndex + 1) {
-        if (this.dropIndex === i) className += ' io-tab-insert-before';
-        if (this.dropIndex === i + 1) className += ' io-tab-insert-after';
-      }
+    const elements = [['io-option', {
+      label: '☰',
+      title: 'select tab',
+      value: this.selected,
+      options: options,
+      'on-value-set': this._onValueSet,
+    }]];
+    for (let i = 0; i < this.elements.length; i++) {
+      options.push(this.elements[i][1].name);
+      const selected = this.selected === this.elements[i][1].name;
       const button = ['io-button', {
-        label: this.filter[i],
-        value: this.filter[i],
-        action: this.select,
-        className: className,
+        label: this.elements[i][1].name,
+        value: this.elements[i][1].name,
+        action: this._onSelect,
+        className: selected ? 'io-tab io-selected-tab' : 'io-tab',
       }];
-      if (selected) selectedButton = button;
-      buttons.push(button);
+      elements.push(button);
     }
-    const elements = [];
-    if (this.overflow) {
-      elements.push(['io-option', {
-        label: '☰',
-        title: 'select tab menu',
-        value: this.bind('selected'),
-        options: this.filter
-      }]);
-      if (selectedButton) {
-        elements.push(selectedButton);
-      }
-    }
-    elements.push(...buttons);
     this.template(elements);
   }
 }

@@ -86,7 +86,7 @@
             flex: 1;
             background: black;
           }
-          :host > io-tabbed-elements {
+          :host > io-element-selector-tabs {
             flex: 1;
             padding: 0.25em;
           }
@@ -95,15 +95,15 @@
       constructor(props) {
         super(props);
         this.template([
-          ['io-tabbed-elements', {precache: true, selected: $('page', 'About', true), elements: [
+          ['io-element-selector-tabs', {precache: true, selected: $('page', 'About', true), elements: [
             ['io-md-view', {name: 'About', path :'./readme.md'}],
-            ['io-tabbed-elements', {name: 'Docs', precache: true, selected: $('doc', 'Core'), elements: [
-            //   ['io-tabbed-elements', {name: 'Core', precache: true, selected: 'core', elements: [
+            ['io-element-selector-tabs', {name: 'Docs', precache: true, selected: $('doc', 'Core'), elements: [
+            //   ['io-element-selector-tabs', {name: 'Core', precache: true, selected: 'core', elements: [
             //     ['io-md-view', {name: 'core', path :'./docs/core/core.md'}],
             //     ['io-md-view', {name: 'node', path :'./docs/core/node.md'}],
             //     ['io-md-view', {name: 'element', path :'./docs/core/element.md'}],
               // ]}],
-              ['io-tabbed-elements', {name: 'Elements', precache: true, selected: $('element_doc', 'button'), elements: [
+              ['io-element-selector-tabs', {name: 'Elements', precache: true, selected: $('element_doc', 'button'), elements: [
                 ['io-md-view', {name: 'button', path :'./docs/elements/button.md'}],
                 ['io-md-view', {name: 'boolean', path :'./docs/elements/boolean.md'}],
                 ['io-md-view', {name: 'switch', path :'./docs/elements/switch.md'}],
@@ -122,7 +122,7 @@
             //     ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
             //     ['io-md-view', {name: 'tabs', path :'./docs/elements/tabs.md'}],
               ]}],
-            //   ['io-tabbed-elements', {name: 'Utils', precache: true, selected: 'storage', elements: [
+            //   ['io-element-selector-tabs', {name: 'Utils', precache: true, selected: 'storage', elements: [
             //     ['io-md-view', {name: 'storage', path :'./docs/utils/storage.md'}],
             //     ['io-md-view', {name: 'service-loader', path :'./docs/utils/service-loader.md'}],
             //   ]}],

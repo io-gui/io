@@ -19,7 +19,7 @@ import Option from "../tests/elements/option.js"
 // import Menu from "../tests/elements/menu.js"
 // import Object from "../tests/elements/object.js"
 // import Properties from "../tests/elements/properties.js"
-// import TabbedElements from "../tests/elements/tabbed-elements.js"
+// import TabbedElements from "../tests/elements/element-selector-tabs.js"
 
 // import Storage from "../tests/objects/storage.js"
 

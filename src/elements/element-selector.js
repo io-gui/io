@@ -40,24 +40,13 @@ export class IoElementSelector extends IoElement {
     const element = this.elements.find(element => {return element[1].name === this.selected;});
     // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
     this.innerText = '';
-    if (!element) {
-      return;
-    }
     const explicitlyCache = (typeof element[1] === 'object' && element[1].cache === true);
     const explicitlyDontCache = (typeof element[1] === 'object' && element[1].cache === false);
-    if (explicitlyDontCache) {
-      this.template([element]);
-      return;
-    }
-    if (this.precache || this.cache || explicitlyCache) {
-      if (this._caches[this.selected]) {
-        this.appendChild(this._caches[this.selected]);
-      } else {
-        this.template([element]);
-        this._caches[this.selected] = this.childNodes[0];
-      }
+    if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[this.selected]) {
+      this.appendChild(this._caches[this.selected]);
     } else {
       this.template([element]);
+      this._caches[this.selected] = this.childNodes[0];
     }
   }
 }

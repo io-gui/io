@@ -16,9 +16,9 @@ const splitDirections = {
 };
 
 // TODO: Reconsider!
-// NOTE: Editable io-tabbed-elements cannot contain other editable io-tabbed-elements or io-layout
+// NOTE: Editable io-element-selector-tabs cannot contain other editable io-element-selector-tabs or io-layout
 
-export class IoTabbedElements extends IoElement {
+export class IoElementSelectorTabs extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -218,7 +218,7 @@ export class IoTabbedElements extends IoElement {
   }
 }
 
-IoTabbedElements.Register();
+IoElementSelectorTabs.Register();
 
 export class IoTabs extends IoElement {
   static get style() {

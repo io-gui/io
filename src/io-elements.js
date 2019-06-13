@@ -22,5 +22,5 @@ export {IoQuad} from "./elements/quad.js";
 export {IoSlider} from "./elements/slider.js";
 export {IoString} from "./elements/string.js";
 export {IoSwitch} from "./elements/switch.js";
-export {IoTabbedElements} from "./elements/tabbed-elements.js";
+export {IoElementSelectorTabs} from "./elements/element-selector-tabs.js";
 export {IoTheme} from "./elements/theme.js";
