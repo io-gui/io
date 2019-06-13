@@ -1,1 +1,0 @@
-### `IoTabs` `<io-tabs>` ###

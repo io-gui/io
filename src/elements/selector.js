@@ -59,10 +59,7 @@ export class IoSelector extends IoElement {
   }
   changed() {
     const element = this.elements.find(element => {return element[1].name === this.selected;});
-    if (!element) {
-      this.selected = this.elements.length ? this.elements[0].name : '';
-      return;
-    }
+    if (!element) element = ['div', {}];
     // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
     this.innerText = '';
     const explicitlyCache = (typeof element[1] === 'object' && element[1].cache === true);

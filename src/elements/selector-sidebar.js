@@ -1,11 +1,14 @@
 import {html} from "../core/element.js";
 import {IoSelector} from "./selector.js";
-import "./tabs.js";
+import "./sidebar.js";
 
-export class IoSelectorTabs extends IoSelector {
+export class IoSelectorSidebar extends IoSelector {
   static get style() {
     return html`<style>
-      :host > io-tabs {
+      :host {
+        flex-direction: row;
+      }
+      :host > io-sidebar {
         z-index: 1;
         margin: var(--io-spacing);
         margin-bottom: 0;
@@ -26,7 +29,7 @@ export class IoSelectorTabs extends IoSelector {
   changed() {
     let element = this.elements.find(element => {return element[1].name === this.selected;});
     if (!element) element = ['div', {}];
-    const tabs = ['io-tabs', {
+    const tabs = ['io-sidebar', {
       elements: this.elements,
       selected: this.selected,
       options: this.options,
@@ -46,4 +49,4 @@ export class IoSelectorTabs extends IoSelector {
   }
 }
 
-IoSelectorTabs.Register();
+IoSelectorSidebar.Register();

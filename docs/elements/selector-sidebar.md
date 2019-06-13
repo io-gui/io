@@ -1,6 +1,6 @@
-Element selector with selectable tabs interfce. Extends `<io-selector>`.
+Element selector with selectable sidebar interfce. Extends `<io-selector>`.
 
-<io-element-demo element="io-selector-tabs" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"]], "selected": "first", "cache": false, "precache": false, "options": ["first", "second"]}'></io-element-demo>
+<io-element-demo element="io-selector-sidebar" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"]], "selected": "first", "cache": false, "precache": false, "options": [{"label": "elements", "options": ["first", "second"]}]}'></io-element-demo>
 
 #### Properties ####
 
@@ -11,6 +11,8 @@ Element selector with selectable tabs interfce. Extends `<io-selector>`.
 | **`cache`**    | Boolean  | Cache elements for reuse    | `false` |
 | **`precache`** | Boolean  | Precache elements           | `false` |
 | **`options`**  | Array    | Filtered element options    | `[]`    |
+| **`side`**     | String   | Sidebar side                | `left`  |
+| **`minWidth`** | Number   | Sidebar collapse width      | `900` |
 
 #### Events ####
 

@@ -1,11 +1,11 @@
 import {html, IoElement} from "../core/element.js";
 
-export class IoTabs extends IoElement {
+export class IoSidebar extends IoElement {
   static get style() {
     return html`<style>
       :host {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         flex-wrap: nowrap;
         overflow: visible;
         flex: 0 1 auto;
@@ -49,7 +49,6 @@ export class IoTabs extends IoElement {
         reflect: true,
       },
       role: 'navigation',
-      _overflowWidth: 0,
     };
   }
   _onSelect(id) {
@@ -57,12 +56,6 @@ export class IoTabs extends IoElement {
   }
   _onValueSet(event) {
     this.set('selected', event.detail.value);
-  }
-  resized() {
-    if (!this.overflow) {
-      this._overflowWidth = this.children[this.children.length - 1].getBoundingClientRect().right;
-    }
-    this.overflow = this.getBoundingClientRect().right < this._overflowWidth;
   }
   changed() {
     const options = this.options.length ? this.options : this.elements.map(element => { return element[1].name; });
@@ -87,4 +80,4 @@ export class IoTabs extends IoElement {
   }
 }
 
-IoTabs.Register();
+IoSidebar.Register();

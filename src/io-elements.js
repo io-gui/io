@@ -23,4 +23,5 @@ export {IoSlider} from "./elements/slider.js";
 export {IoString} from "./elements/string.js";
 export {IoSwitch} from "./elements/switch.js";
 export {IoSelectorTabs} from "./elements/selector-tabs.js";
+export {IoSelectorSidebar} from "./elements/selector-sidebar.js";
 export {IoTheme} from "./elements/theme.js";

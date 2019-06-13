@@ -90,6 +90,7 @@ export class IoMenuLayer extends IoElement {
     for (let i = this.$options.length; i--;) {
       this.$options[i].expanded = false;
     }
+    this.expanded = false;
   }
   runAction(option) {
     if (typeof option.action === 'function') {
@@ -190,8 +191,9 @@ export class IoMenuLayer extends IoElement {
     if (this._hoveredItem) {
       this.runAction(this._hoveredItem.option);
       this._hoveredItem.$root.dispatchEvent('menu-item-clicked', this._hoveredItem.option);
+      this.collapseAllGroups(); // TODO: ?
     } else if (!this._hoveredGroup && this.collapseOnPointerup) {
-      // this.collapseAllGroups();
+      this.collapseAllGroups();
       // if (lastFocus) {
       //   lastFocus.focus();
       // }
