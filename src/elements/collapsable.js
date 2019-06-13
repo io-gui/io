@@ -14,9 +14,6 @@ export class IoCollapsable extends IoElement {
         background-image: var(--io-collapsable-gradient);
         transition: background-color 0.4s;
       }
-      :host:focus-within {
-        /* outline: none; */
-      }
       :host > io-boolean {
         border-color: transparent;
         background: none;
@@ -26,9 +23,6 @@ export class IoCollapsable extends IoElement {
       :host > io-boolean:hover {
         background: none;
         border-image: none;
-      }
-      :host > io-boolean:focus {
-        /* border: none; */
       }
       :host > io-boolean::before {
         display: inline-block;
@@ -40,11 +34,9 @@ export class IoCollapsable extends IoElement {
       :host[expanded] > io-boolean::before{
         content: '▾';
       }
-      :host[expanded] > io-boolean {
-        margin-bottom: var(--io-spacing);
-      }
       :host > .io-content {
-        display: block;
+        display: flex;
+        flex-direction: column;
         overflow: auto;
         border-radius: var(--io-border-radius);
         border: var(--io-inset-border);

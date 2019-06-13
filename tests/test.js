@@ -34,16 +34,16 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    // new Node().run();
-    // new Element().run();
-    //
-    // new Button().run();
-    // new Boolean().run();
-    // new Switch().run();
-    // new Number().run();
-    // new Sting().run();
-    // new Slider().run();
-    // new Option().run();
+    new Node().run();
+    new Element().run();
+
+    new Button().run();
+    new Boolean().run();
+    new Switch().run();
+    new Number().run();
+    new Sting().run();
+    new Slider().run();
+    new Option().run();
     new Collapsable().run();
     // new Canvas().run();
     // new Inspector().run();

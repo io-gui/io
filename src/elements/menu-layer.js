@@ -191,7 +191,7 @@ export class IoMenuLayer extends IoElement {
     if (this._hoveredItem) {
       this.runAction(this._hoveredItem.option);
       this._hoveredItem.$root.dispatchEvent('menu-item-clicked', this._hoveredItem.option);
-      this.collapseAllGroups(); // TODO: ?
+      // this.collapseAllGroups(); // TODO: ?
     } else if (!this._hoveredGroup && this.collapseOnPointerup) {
       this.collapseAllGroups();
       // if (lastFocus) {

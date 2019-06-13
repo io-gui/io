@@ -4,38 +4,59 @@ export class IoSidebar extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        display: flex;
-        flex-direction: column;
         flex-wrap: nowrap;
         overflow: visible;
         flex: 0 1 auto;
+        line-height: 1.5em;
       }
-      :host > * {
+      :host[overflow] {
+        line-height: 1em;
+      }
+      :host:not([overflow]) {
+        display: flex;
+        flex-direction: column;
+        min-width: 8em;
+      }
+      :host io-collapsable,
+      :host io-boolean,
+      :host .io-content,
+      :host io-button {
         flex: 0 0 auto;
-        margin-right: var(--io-spacing);
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        border-bottom: none;
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: none;
       }
-      :host[overflow] > :nth-child(n+2):not(.io-selected-tab) {
-        display: none;
+      :host io-button {
+        padding-left: 1em;
+        padding-right: 1em;
       }
-      :host:not([overflow]) > :nth-child(1) {
-        display: none;
+      :host .io-content {
+        display: flex;
+        flex-direction: column;
+        padding-left: 1em;
       }
-      :host > io-button.io-selected-tab {
-        border-bottom-color: var(--io-background-color);
-        border-bottom-style: solid;
-        background: var(--io-background-color);
+      :host io-button.io-selected-tab {
         color: var(--io-link-color);
-        margin-bottom: -1px;
-        background-image: none;
+        text-decoration: underline;
+      }
+      :host > span {
+        color: var(--io-color);
+        display: inline-block;
+        cursor: default;
+        white-space: nowrap;
+        -webkit-tap-highlight-color: transparent;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: var(--io-padding);
+        padding-left: calc(3 * var(--io-padding));
+        padding-right: calc(3 * var(--io-padding));
       }
       :host > io-option {
         background: none !important;
         border: none;
-        padding-left: calc(3 * var(--io-padding));
-        padding-right: calc(3 * var(--io-padding));
+        padding-left: var(--io-padding);
+        padding-right: var(--io-padding);
       }
     </style>`;
   }
@@ -57,26 +78,41 @@ export class IoSidebar extends IoElement {
   _onValueSet(event) {
     this.set('selected', event.detail.value);
   }
+  _addOptions(options) {
+    const elements = [];
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].options) {
+        elements.push(['io-collapsable', {
+          label: options[i].label,
+          expanded: true,
+          elements: [...this._addOptions(options[i].options)]
+        }]);
+      } else {
+        const option = options[i].label || options[i].value || options[i];
+        const selected = this.selected === option;
+        elements.push(['io-button', {
+          label: option,
+          value: option,
+          action: this._onSelect,
+          className: (selected ? 'io-selected-tab' : '') + ' io-tab',
+        }]);
+      }
+    }
+    return elements;
+  }
   changed() {
     const options = this.options.length ? this.options : this.elements.map(element => { return element[1].name; });
-    const elements = [['io-option', {
-      label: '☰',
-      title: 'select tab',
-      value: this.selected,
-      options: options,
-      'on-value-set': this._onValueSet,
-    }]];
-    for (let i = 0; i < options.length; i++) {
-      const selected = this.selected === options[i];
-      const button = ['io-button', {
-        label: options[i],
-        value: options[i],
-        action: this._onSelect,
-        className: selected ? 'io-tab io-selected-tab' : 'io-tab',
-      }];
-      elements.push(button);
+    if (this.overflow) {
+      this.template([['io-option', {
+        label: '☰',
+        title: 'select tab',
+        value: this.selected,
+        options: options,
+        'on-value-set': this._onValueSet,
+      }], ['span', this.selected]]);
+    } else {
+      this.template([...this._addOptions(options)]);
     }
-    this.template(elements);
   }
 }
 
