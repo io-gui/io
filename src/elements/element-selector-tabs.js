@@ -1,6 +1,6 @@
-import {html, IoElement} from "../core/element.js";
+import {html} from "../core/element.js";
 import {IoElementSelector} from "./element-selector.js";
-import {IoTabs} from "./tabs.js";
+import "./tabs.js";
 
 export class IoElementSelectorTabs extends IoElementSelector {
   static get style() {
