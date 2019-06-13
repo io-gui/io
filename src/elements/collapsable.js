@@ -43,7 +43,7 @@ export class IoCollapsable extends IoElement {
       :host[expanded] > io-boolean {
         margin-bottom: var(--io-spacing);
       }
-      :host > .io-collapsable-content {
+      :host > .io-content {
         display: block;
         overflow: auto;
         border-radius: var(--io-border-radius);
@@ -52,7 +52,7 @@ export class IoCollapsable extends IoElement {
         padding: var(--io-padding);
         background: var(--io-background-color);
       }
-      :host:not([expanded]) > .io-collapsable-content {
+      :host:not([expanded]) > .io-content {
         display: none;
       }
     </style>`;
@@ -75,7 +75,7 @@ export class IoCollapsable extends IoElement {
   changed() {
     this.template([
       ['io-boolean', {true: this.label, false: this.label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
-      ['div', {className: 'io-collapsable-content'}, (this.expanded && this.elements.length) ? this.elements : [null]],
+      ['div', {id: 'content', className: 'io-content'}, (this.expanded && this.elements.length) ? this.elements : [null]],
     ]);
     this.children[0].setAttribute('aria-expanded', String(this.expanded));
   }

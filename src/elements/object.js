@@ -10,7 +10,7 @@ export class IoObject extends IoCollapsable {
         border: none !important;
         background: none !important;
       }
-      :host > .io-collapsable-content {
+      :host > .io-content {
         display: block;
         overflow: auto;
         padding: 0;
@@ -33,7 +33,7 @@ export class IoObject extends IoCollapsable {
       ['io-boolean', {true: label, false: label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       this.expanded ? [
         ['io-properties', {
-          className: 'io-collapsable-content',
+          className: 'io-content',
           value: this.value,
           props: this.props.length ? this.props : Object.keys(this.value),
           config: this.config,

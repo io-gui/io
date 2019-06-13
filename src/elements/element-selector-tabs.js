@@ -49,7 +49,7 @@ export class IoElementSelectorTabs extends IoElementSelector {
       this.$.content.appendChild(this._caches[this.selected]);
     } else {
       this.template([tabs, ['div', {id: 'content', className: 'io-content'}, [element]]]);
-      this._caches[this.selected] = this.$.content.childNodes[1];
+      this._caches[this.selected] = this.$.content.childNodes[0];
     }
   }
 }

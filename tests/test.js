@@ -13,8 +13,8 @@ import Number from "../tests/elements/number.js"
 import Sting from "../tests/elements/string.js"
 import Slider from "../tests/elements/slider.js"
 import Option from "../tests/elements/option.js"
+import Collapsable from "../tests/elements/collapsable.js"
 // import Canvas from "../tests/elements/canvas.js"
-// import Collapsable from "../tests/elements/collapsable.js"
 // import Inspector from "../tests/elements/inspector.js"
 // import Menu from "../tests/elements/menu.js"
 // import Object from "../tests/elements/object.js"
@@ -34,18 +34,18 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    new Node().run();
-    new Element().run();
-
-    new Button().run();
-    new Boolean().run();
-    new Switch().run();
-    new Number().run();
-    new Sting().run();
-    new Slider().run();
-    new Option().run();
+    // new Node().run();
+    // new Element().run();
+    //
+    // new Button().run();
+    // new Boolean().run();
+    // new Switch().run();
+    // new Number().run();
+    // new Sting().run();
+    // new Slider().run();
+    // new Option().run();
+    new Collapsable().run();
     // new Canvas().run();
-    // new Collapsable().run();
     // new Inspector().run();
     // new Menu().run();
     // new Object().run();
