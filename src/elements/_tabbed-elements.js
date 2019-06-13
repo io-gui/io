@@ -1,5 +1,5 @@
 import {html, IoElement} from "../core/element.js";
-import "./element-selector.js";
+import "./selector.js";
 
 const _dragicon = document.createElement('io-tab-dragicon');
 const _dropzone = document.createElement('io-tab-dropzone');
@@ -16,9 +16,9 @@ const splitDirections = {
 };
 
 // TODO: Reconsider!
-// NOTE: Editable io-element-selector-tabs cannot contain other editable io-element-selector-tabs or io-layout
+// NOTE: Editable io-selector-tabs cannot contain other editable io-selector-tabs or io-layout
 
-export class IoElementSelectorTabs extends IoElement {
+export class IoSelectorTabs extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -33,7 +33,7 @@ export class IoElementSelectorTabs extends IoElement {
         margin-bottom: 0;
         flex-shrink: 0;
       }
-      :host > io-element-selector {
+      :host > io-selector {
         color: var(--io-color);
         background: var(--io-background-color);
         display: flex;
@@ -206,7 +206,7 @@ export class IoElementSelectorTabs extends IoElement {
         selected: this.bind('selected'),
         editable: this.editable,
       }],
-      ['io-element-selector', {
+      ['io-selector', {
         id: 'content',
         elements: this.elements,
         selected: this.selected,
@@ -218,7 +218,7 @@ export class IoElementSelectorTabs extends IoElement {
   }
 }
 
-IoElementSelectorTabs.Register();
+IoSelectorTabs.Register();
 
 export class IoTabs extends IoElement {
   static get style() {

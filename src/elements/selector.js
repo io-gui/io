@@ -1,6 +1,27 @@
-import {IoElement} from "../core/element.js";
+import {IoElement, html} from "../core/element.js";
 
-export class IoElementSelector extends IoElement {
+export class IoSelector extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        position: relative;
+      }
+      :host > .io-content {
+        color: var(--io-color);
+        background: var(--io-background-color);
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        overflow: auto;
+        padding: var(--io-padding);
+        border: var(--io-border);
+        border-radius: var(--io-border-radius);
+      }
+    </style>`;
+  }
   static get properties() {
     return {
       elements:  Array,
@@ -12,7 +33,7 @@ export class IoElementSelector extends IoElement {
   }
   constructor(props) {
     super(props);
-    this.stagingElement = document.createElement('io-element-selector-staging');
+    this.stagingElement = document.createElement('io-selector-staging');
   }
   connectedCallback() {
     super.connectedCallback();
@@ -38,17 +59,22 @@ export class IoElementSelector extends IoElement {
   }
   changed() {
     const element = this.elements.find(element => {return element[1].name === this.selected;});
+    if (!element) {
+      this.selected = this.elements.length ? this.elements[0].name : '';
+      return;
+    }
     // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
     this.innerText = '';
     const explicitlyCache = (typeof element[1] === 'object' && element[1].cache === true);
     const explicitlyDontCache = (typeof element[1] === 'object' && element[1].cache === false);
     if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[this.selected]) {
-      this.appendChild(this._caches[this.selected]);
+      this.template([['div', {id: 'content', className: 'io-content'}]]);
+      this.$.content.appendChild(this._caches[this.selected]);
     } else {
-      this.template([element]);
-      this._caches[this.selected] = this.childNodes[0];
+      this.template([['div', {id: 'content', className: 'io-content'}, [element]]]);
+      this._caches[this.selected] = this.$.content.childNodes[0];
     }
   }
 }
 
-IoElementSelector.Register();
+IoSelector.Register();

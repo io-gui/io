@@ -1,11 +1,11 @@
-import {IoElementSelectorTabs} from "../../build/io.min.js";
+import {IoSelectorTabs} from "../../build/io.min.js";
 
 export default class {
   constructor() {
   }
   run() {
-    describe('IoElementSelectorTabs: ', () => {
-      it('IoElementSelectorTabs', () => {
+    describe('IoSelectorTabs: ', () => {
+      it('IoSelectorTabs', () => {
         // chai.expect('TODO').to.not.exist;
       });
     });

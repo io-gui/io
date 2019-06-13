@@ -19,7 +19,7 @@ import Collapsable from "../tests/elements/collapsable.js"
 // import Menu from "../tests/elements/menu.js"
 // import Object from "../tests/elements/object.js"
 // import Properties from "../tests/elements/properties.js"
-// import TabbedElements from "../tests/elements/element-selector-tabs.js"
+// import TabbedElements from "../tests/elements/selector-tabs.js"
 
 // import Storage from "../tests/objects/storage.js"
 

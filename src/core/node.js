@@ -107,7 +107,7 @@ export const IoNodeMixin = (superclass) => {
       if (this[prop] !== value) {
         const oldValue = this[prop];
         this[prop] = value;
-        this.dispatchEvent(prop + '-set', {property: prop, value: value, oldValue: oldValue}, false);
+        this.dispatchEvent('value-set', {property: prop, value: value, oldValue: oldValue}, false);
       }
     }
     // TODO: consider renaming and simplifying `props` object structure.

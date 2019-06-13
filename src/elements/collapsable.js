@@ -69,8 +69,7 @@ export class IoCollapsable extends IoElement {
     };
   }
   _onButtonValueSet(event) {
-    this.expanded = event.detail.value;
-    this.dispatchEvent('value-set', {property: 'expanded', value: event.detail.value, oldValue: event.detail.oldValue}, false);
+    this.set('expanded', event.detail.value);
   }
   changed() {
     this.template([
