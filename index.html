@@ -74,11 +74,16 @@
         display: flex;
         flex-direction: column;
       }
-      .main {
+      io-main-page {
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
         background: #222;
+      }
+      .main {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
       }
       @media screen and (max-width: 550px) {
         io-tabs > * {
@@ -104,8 +109,12 @@
         border: none;
         background: none !important;
       }
+      .docs {
+        flex: 1;
+      }
       .docs > io-sidebar {
         --io-color: #fff;
+        background: rgba(0, 0, 0, 0.2);
         /* padding: var(--io-padding); */
       }
       .docs > io-sidebar:not([overflow]) {
