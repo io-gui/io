@@ -7,6 +7,7 @@ export class IoSelectorSidebar extends IoSelector {
     return html`<style>
       :host {
         flex-direction: row;
+        align-self: stretch;
       }
       :host[overflow] {
         flex-direction: column;

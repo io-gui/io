@@ -15,6 +15,7 @@ export class IoCollapsable extends IoElement {
         transition: background-color 0.4s;
       }
       :host > io-boolean {
+        color: var(--io-color);
         border-color: transparent;
         background: none;
         padding: 0;

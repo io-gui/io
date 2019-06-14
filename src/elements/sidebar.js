@@ -7,7 +7,7 @@ export class IoSidebar extends IoElement {
         display: flex;
         flex-wrap: nowrap;
         overflow: visible;
-        flex: 0 1 auto;
+        flex: 0 0 auto;
         line-height: 1.5em;
         padding: var(--io-padding);
       }
@@ -16,7 +16,7 @@ export class IoSidebar extends IoElement {
       }
       :host:not([overflow]) {
         flex-direction: column;
-        min-width: 8em;
+        flex: 0 0 8em;
       }
       :host io-collapsable,
       :host io-boolean,

@@ -192,6 +192,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
                 // children[i].style[s] = vChildren[i].props[prop][s];
                 children[i].style.setProperty(s, vChildren[i].props[prop][s]);
               }
+            } else if (prop === 'id') {
+              // Skipping. Id's are used for $ in io.
             } else {
               children[i][prop] = vChildren[i].props[prop];
             }
@@ -348,6 +350,8 @@ const constructElement = function(vDOMNode) {
      for (let s in vDOMNode.props[prop]) {
        element.style[s] = vDOMNode.props[prop][s];
      }
+   } else if (prop === 'id') {
+     // Skipping. Id's are used for $ in io.
    } else element[prop] = vDOMNode.props[prop];
    if (prop === 'name') element.setAttribute('name', vDOMNode.props[prop]); // TODO: Reconsider
  }

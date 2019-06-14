@@ -8,7 +8,7 @@ export class IoSwitch extends IoButton {
         background: none;
         border: none;
         padding: 0;
-        --io-toggle-size: calc(1.29em - calc(2 * var(--io-padding)));
+        --io-toggle-size: 1.29em;
         display: flex;
         align-items: center;
       }
@@ -22,7 +22,6 @@ export class IoSwitch extends IoButton {
         border-color: var(--io-inset-border-color);
         color: var(--io-field-color);
         background-color: var(--io-field-background-color);
-        margin: var(--io-padding);
         width: calc(var(--io-toggle-size) * 2.5);
         height: var(--io-toggle-size);
         border-radius: var(--io-toggle-size);
