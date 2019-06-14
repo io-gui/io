@@ -93,7 +93,7 @@ export class IoProperties extends IoElement {
   static get config() {
     return {
       'type:string': ['io-string', {}],
-      'type:number': ['io-number', {step: 0.001}],
+      'type:number': ['io-number', {step: 0.0000001}],
       'type:boolean': ['io-boolean', {}],
       'type:object': ['io-object', {}],
       'type:null': ['io-string', {}],

@@ -144,19 +144,19 @@ export class IoSliderKnob extends IoQuad {
   _onKeydown(event) {
     if (event.which == 37) {
       event.preventDefault();
-      if (event.shiftKey) this.focusTo('left');
+      if (!event.shiftKey) this.focusTo('left');
       else this._moveSliderByKey('decrease');
     } else if (event.which == 38) {
       event.preventDefault();
-      if (event.shiftKey) this.focusTo('up');
+      if (!event.shiftKey) this.focusTo('up');
       else this._moveSliderByKey('decrease');
     } else if (event.which == 39) {
       event.preventDefault();
-      if (event.shiftKey) this.focusTo('right');
+      if (!event.shiftKey) this.focusTo('right');
       else this._moveSliderByKey('increase');
     } else if (event.which == 40) {
       event.preventDefault();
-      if (event.shiftKey) this.focusTo('down');
+      if (!event.shiftKey) this.focusTo('down');
       else this._moveSliderByKey('increase');
     } else if (event.which == 33) {
       event.preventDefault();

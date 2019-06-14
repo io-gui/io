@@ -100,7 +100,7 @@ export class IoQuad extends IoElement {
 
     let frag = /* glsl */`
       #extension GL_OES_standard_derivatives : enable
-      precision mediump float;
+      precision highp float;
     `;
 
     for (let prop in this.__properties) {

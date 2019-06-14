@@ -4,7 +4,7 @@ Input element for `Number` data type displayed as interactive slider with a numb
 
 It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment.
 
-When the number field is focused, arrow keys will change focus to the nearest focusable element in the chosen direction. When the slider is focused, the arrow keys will change the value according to accessibility rules for the slider role. Users can still change the focus by holding down the shift key and pressing the arrow keys.
+When the element is focused, arrow keys will change focus to the nearest focusable element in the chosen direction. To change the value with arrow keys, users should hold down the shift key.
 
 #### Properties ####
 
