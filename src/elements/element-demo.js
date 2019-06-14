@@ -8,13 +8,24 @@ export class IoElementDemo extends IoElement {
         flex-direction: column;
         align-items: flex-start;
         position: relative;
-        padding: var(--io-padding);
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
         background: rgba(127, 127, 127, 0.2);
       }
+      :host > .demo-tag {
+        margin: calc(4 * var(--io-spacing));
+        margin-bottom: 0;
+      }
       :host > io-properties {
-        margin: 0.5em;
+        margin: calc(4 * var(--io-padding));
+        margin-top: var(--io-padding);
+      }
+      :host > .io-content {
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
+        padding: calc(2 * var(--io-padding));
+        background: rgba(255, 255, 255, 0.125);
       }
     </style>`;
   }
@@ -45,7 +56,9 @@ export class IoElementDemo extends IoElement {
       this.template([
         ['div', {className: 'demo-tag'}, '<' + this.element + '>'],
         ['io-properties', {value: this.properties}],
-        [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
+        ['div', {className: 'io-content'}, [
+          [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
+        ]],
       ]);
     } else {
       this.template([null]);

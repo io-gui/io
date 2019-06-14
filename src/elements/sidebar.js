@@ -16,7 +16,6 @@ export class IoSidebar extends IoElement {
       }
       :host:not([overflow]) {
         flex-direction: column;
-        flex: 0 0 8em;
       }
       :host io-collapsable,
       :host io-boolean,
@@ -63,7 +62,6 @@ export class IoSidebar extends IoElement {
   }
   static get properties() {
     return {
-      elements: Array,
       selected: String,
       options: Array,
       overflow: {
@@ -90,7 +88,7 @@ export class IoSidebar extends IoElement {
         }]);
       } else {
         const option = options[i].label || options[i].value || options[i];
-        const selected = this.selected === option;
+        const selected = this.selected === options[i] || this.selected === options[i].value;
         elements.push(['io-button', {
           label: option,
           value: option,
@@ -102,7 +100,7 @@ export class IoSidebar extends IoElement {
     return elements;
   }
   changed() {
-    const options = this.options.length ? this.options : this.elements.map(element => { return element[1].name; });
+    const options = this.options;
     if (this.overflow) {
       this.template([['io-option', {
         label: '☰',
@@ -110,7 +108,7 @@ export class IoSidebar extends IoElement {
         value: this.selected,
         options: options,
         'on-value-set': this._onValueSet,
-      }], ['span', this.selected]]);
+      }], ['span', String(this.selected)]]);
     } else {
       this.template([...this._addOptions(options)]);
     }

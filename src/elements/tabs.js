@@ -44,7 +44,6 @@ export class IoTabs extends IoElement {
   }
   static get properties() {
     return {
-      elements: Array,
       selected: String,
       options: Array,
       overflow: {
@@ -68,7 +67,7 @@ export class IoTabs extends IoElement {
     this.overflow = this.getBoundingClientRect().right < this._overflowWidth;
   }
   changed() {
-    const options = this.options.length ? this.options : this.elements.map(element => { return element[1].name; });
+    const options = this.options;
     const elements = [['io-option', {
       label: '☰',
       title: 'select tab',
@@ -77,10 +76,10 @@ export class IoTabs extends IoElement {
       'on-value-set': this._onValueSet,
     }]];
     for (let i = 0; i < options.length; i++) {
-      const selected = this.selected === options[i];
+      const selected = this.selected === options[i] || this.selected === options[i].value;
       const button = ['io-button', {
-        label: options[i],
-        value: options[i],
+        label: options[i].label || options[i],
+        value: options[i].value || options[i],
         action: this._onSelect,
         className: (selected ? 'io-selected-tab' : '') + ' io-tab',
       }];

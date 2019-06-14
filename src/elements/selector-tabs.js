@@ -5,6 +5,10 @@ import "./tabs.js";
 export class IoSelectorTabs extends IoSelector {
   static get style() {
     return html`<style>
+      :host {
+        flex-direction: column;
+        align-self: stretch;
+      }
       :host > io-tabs {
         z-index: 1;
         margin: var(--io-spacing);
@@ -29,7 +33,7 @@ export class IoSelectorTabs extends IoSelector {
     const tabs = ['io-tabs', {
       elements: this.elements,
       selected: this.selected,
-      options: this.options,
+      options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
       'on-value-set': this._onSelected,
     }];
     const explicitlyCache = (typeof element[1] === 'object' && element[1].cache === true);

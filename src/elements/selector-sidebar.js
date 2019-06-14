@@ -15,11 +15,14 @@ export class IoSelectorSidebar extends IoSelector {
       :host > io-sidebar {
         z-index: 1;
       }
+      :host:not([overflow]) > io-sidebar {
+        flex: 0 0 8em;
+      }
     </style>`;
   }
   static get properties() {
     return {
-      options:  Array,
+      options: Array,
       left: true,
       minWidth: 320,
       overflow: {
@@ -43,7 +46,7 @@ export class IoSelectorSidebar extends IoSelector {
     const tabs = ['io-sidebar', {
       elements: this.elements,
       selected: this.selected,
-      options: this.options,
+      options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
       overflow: this.overflow,
       'on-value-set': this._onSelected,
     }];
