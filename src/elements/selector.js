@@ -60,11 +60,11 @@ export class IoSelector extends IoElement {
   changed() {
     let element = this.elements.find(element => {return element[1].name === this.selected;});
     if (!element) element = ['div', {}];
-    // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
-    this.innerText = '';
     const explicitlyCache = (typeof element[1] === 'object' && element[1].cache === true);
     const explicitlyDontCache = (typeof element[1] === 'object' && element[1].cache === false);
     if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[this.selected]) {
+      // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
+      if (this.$.content) this.$.content.innerText = '';
       this.template([['div', {id: 'content', className: 'io-content'}]]);
       this.$.content.appendChild(this._caches[this.selected]);
     } else {

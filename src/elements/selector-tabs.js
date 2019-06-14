@@ -32,11 +32,11 @@ export class IoSelectorTabs extends IoSelector {
       options: this.options,
       'on-value-set': this._onSelected,
     }];
-    // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
-    this.innerText = '';
     const explicitlyCache = (typeof element[1] === 'object' && element[1].cache === true);
     const explicitlyDontCache = (typeof element[1] === 'object' && element[1].cache === false);
     if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[this.selected]) {
+      // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
+      if (this.$.content) this.$.content.innerText = '';
       this.template([tabs, ['div', {id: 'content', className: 'io-content'}]]);
       this.$.content.appendChild(this._caches[this.selected]);
     } else {
