@@ -106,13 +106,18 @@
       }
       .docs > io-sidebar {
         --io-color: #fff;
+        /* padding: var(--io-padding); */
+      }
+      .docs > io-sidebar:not([overflow]) {
         flex-basis: 11em !important;
-        padding: var(--io-padding);
       }
       .docs > .io-content {
         border-radius: 0;
         border-width: 0 0 0 var(--io-border-width);
         padding: 0 1em;
+      }
+      .docs[overflow] > .io-content {
+        border-width: var(--io-border-width) 0 0 0;
       }
     </style>
     <link href="./lib/mocha.css" rel="stylesheet" />
