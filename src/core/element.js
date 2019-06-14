@@ -232,7 +232,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     let closestDist = Infinity;
     let parent = this.parentElement;
     let depth = 0;
-    while (depth < 5 && closest === this) {
+    const DEPTH_LIMIT = 10;
+    while (depth < DEPTH_LIMIT && closest === this) {
       const siblings = parent.querySelectorAll('[tabindex="0"]');
       for (let i = siblings.length; i--;) {
         // TODO: consider looking up center or bbox instead tor-left corner
@@ -242,22 +243,22 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         const dist = Math.sqrt(dX * dX + dY * dY);
         switch (dir) {
           case 'right':
-          if (dX > Math.abs(dY) && dist < closestDist) {
+          if (dX > 0 && dist < closestDist) {
             closest = siblings[i], closestDist = dist;
           }
           break;
           case 'left':
-          if (dX < -Math.abs(dY) && dist < closestDist) {
+          if (dX < 0 && dist < closestDist) {
             closest = siblings[i], closestDist = dist;
           }
           break;
           case 'down':
-          if (dY > Math.abs(dX) && dist < closestDist) {
+          if (dY > 0 && dist < closestDist) {
             closest = siblings[i], closestDist = dist;
           }
           break;
           case 'up':
-          if (dY < -Math.abs(dX) && dist < closestDist) {
+          if (dY < 0 && dist < closestDist) {
             closest = siblings[i], closestDist = dist;
           }
           break;
