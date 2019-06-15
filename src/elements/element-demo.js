@@ -10,7 +10,7 @@ export class IoElementDemo extends IoElement {
         position: relative;
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
-        background: rgba(127, 127, 127, 0.2);
+        background: rgba(0, 0, 0, 0.125);
       }
       :host > .demo-tag {
         margin: calc(4 * var(--io-spacing));

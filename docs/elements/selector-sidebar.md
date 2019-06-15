@@ -1,6 +1,6 @@
 Element selector with selectable sidebar interfce. Extends `<io-selector>`.
 
-<io-element-demo element="io-selector-sidebar" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"]], "selected": "first", "cache": false, "precache": false, "options": [{"label": "elements", "options": ["first", "second"]}], "left": true, "minWidth": 320}'></io-element-demo>
+<io-element-demo element="io-selector-sidebar" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"]], "selected": "first", "cache": false, "precache": false, "options": [{"label": "elements", "options": ["first", "second"]}], "left": true, "minWidth": 460}'></io-element-demo>
 
 #### Properties ####
 
@@ -12,7 +12,7 @@ Element selector with selectable sidebar interfce. Extends `<io-selector>`.
 | **`precache`** | Boolean  | Precache elements           | `false` |
 | **`options`**  | Array    | Filtered element options    | `[]`    |
 | **`left`**     | Boolean  | Sidebar on the left side    | `true`  |
-| **`minWidth`** | Number   | Sidebar collapse width      | `320`   |
+| **`minWidth`** | Number   | Sidebar collapse width      | `460`   |
 
 #### Events ####
 

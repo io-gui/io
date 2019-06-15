@@ -24,7 +24,7 @@ export class IoSelectorSidebar extends IoSelector {
     return {
       options: Array,
       left: true,
-      minWidth: 320,
+      minWidth: 460,
       overflow: {
         type: Boolean,
         reflect: true,

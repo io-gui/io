@@ -295,7 +295,7 @@ export class IoMenuLayer extends IoElement {
         return;
       }
     }
-    setTimeout(() => { this.expanded = false; });
+    requestAnimationFrame(() => { this.expanded = false; });
   }
   _setGroupPosition(group) {
     if (!group.$parent) return;

@@ -28,6 +28,7 @@ export class IoOption extends IoButton {
     return {
       'menu-item-clicked': '_onMenu',
       'mousedown': '_onMousedown',
+      // 'touchend': '_onTouchend',
     };
   }
   constructor(props) {
@@ -46,7 +47,11 @@ export class IoOption extends IoButton {
     super.disconnectedCallback();
     IoMenuLayer.singleton.removeChild(this._menu);
   }
-  _onClick() {}
+  _onClick() {
+    // this.expanded = true;
+  }
+  // _onTouchend() {
+  // }
   _onMousedown() {
     this.expanded = true;
   }
