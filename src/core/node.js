@@ -158,7 +158,7 @@ export const IoNodeMixin = (superclass) => {
       * and changed object is a property of the node.
       * @param {Object} event - Property change event.
       */
-    onObjectMutation(event) {
+    _onObjectMutation(event) {
       for (let i = this.__objectProps.length; i--;) {
         const prop = this.__objectProps[i];
         const value = this.__properties[prop].value;
@@ -180,7 +180,7 @@ export const IoNodeMixin = (superclass) => {
       this.__properties.connect();
       this.__connected = true;
       if (this.__objectProps.length) {
-        window.addEventListener('object-mutated', this.onObjectMutation);
+        window.addEventListener('object-mutated', this._onObjectMutation);
       }
       this.queueDispatch();
     }
@@ -192,7 +192,7 @@ export const IoNodeMixin = (superclass) => {
       this.__properties.disconnect();
       this.__connected = false;
       if (this.__objectProps.length) {
-        window.removeEventListener('object-mutated', this.onObjectMutation);
+        window.removeEventListener('object-mutated', this._onObjectMutation);
       }
     }
     /**

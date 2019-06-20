@@ -30,7 +30,7 @@ export class IoCollapsable extends IoElement {
         content: '▸';
         line-height: 1em;
         width: 0.5em;
-        padding: 0 0.5em;
+        padding: 0 0.5em 0 0;
       }
       :host[expanded] > io-boolean::before{
         content: '▾';

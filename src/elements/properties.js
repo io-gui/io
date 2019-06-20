@@ -4,35 +4,29 @@ export class IoProperties extends IoElement {
   static get style() {
     return html`<style>
       :host {
+        padding: var(--io-padding);
         display: flex;
         flex-direction: column;
-        /* line-height: 1em; */
       }
       :host > .io-property {
+        --io-padding: 0;
         display: flex !important;
         flex-direction: row;
+        flex: 1 0 auto;
+        align-items: flex-start;
+        margin: var(--io-spacing) 0;
       }
-      :host > .io-property > .io-property-label {
-        padding: 0 0.2em 0 0.5em;
-        flex: 0 0 auto;
-        color: var(--io-color);
-      }
-      :host > .io-property > .io-property-editor {
-        margin: 0;
-        padding: 0;
-      }
-      :host > .io-property > io-object,
-      :host > .io-property > io-object > io-boolean,
-      :host > .io-property > io-object > io-properties {
-        padding: 0;
+      :host > .io-property > * {
         border-color: transparent;
         background: none;
       }
-      :host > .io-property > io-number,
-      :host > .io-property > io-string,
-      :host > .io-property > io-boolean {
-        border: none;
-        background: none;
+      :host > .io-property > .io-property-label {
+        margin: 0 var(--io-spacing) 0 0;
+        color: var(--io-color);
+        flex: 0 0 auto;
+      }
+      :host > .io-property > .io-property-editor {
+        flex: 1 1 auto;
       }
       :host > .io-property > io-number {
         color: var(--io-number-color);
@@ -47,10 +41,10 @@ export class IoProperties extends IoElement {
   }
   static get properties() {
     return {
+      labeled: true,
       value: Object,
       config: Object,
-      props: Array,
-      labeled: true,
+      properties: Array,
     };
   }
   get _config() {
@@ -66,7 +60,6 @@ export class IoProperties extends IoElement {
       this.value[prop] = event.detail.value;
       const detail = Object.assign({object: this.value, property: prop}, event.detail);
       this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
-      this.dispatchEvent('value-set', detail, false);
     }
   }
   // TODO: Consider valueMutated() instead
@@ -74,7 +67,7 @@ export class IoProperties extends IoElement {
     const config = this._config;
     const elements = [];
     for (let c in config) {
-      if (!this.props.length || this.props.indexOf(c) !== -1) {
+      if (!this.properties.length || this.properties.indexOf(c) !== -1) {
         // if (config[c]) {
         const tag = config[c][0];
         const protoConfig = config[c][1];
@@ -157,7 +150,7 @@ export class Config {
 
       const typeStr = 'type:' + type;
       const cstrStr = 'constructor:' + cstr;
-      const keyStr = k;
+      const keyStr = k.replace('type:', '').replace('constructor:', '');
 
       config[k] = {};
 

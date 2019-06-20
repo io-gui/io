@@ -8,7 +8,7 @@ export class IoSwitch extends IoButton {
         background: none;
         border: none;
         padding: 0;
-        --io-toggle-size: 1.29em;
+        --io-toggle-size: 1.39em;
         display: flex;
         align-items: center;
       }

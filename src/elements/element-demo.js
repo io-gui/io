@@ -13,18 +13,17 @@ export class IoElementDemo extends IoElement {
         background: rgba(0, 0, 0, 0.125);
       }
       :host > .demo-tag {
-        margin: calc(4 * var(--io-spacing));
+        margin: var(--io-spacing);
         margin-bottom: 0;
       }
       :host > io-properties {
-        margin: calc(4 * var(--io-padding));
-        margin-top: var(--io-padding);
+        margin-left: 0.6em;
       }
       :host > .io-content {
         display: flex;
         flex-direction: column;
         align-self: stretch;
-        padding: calc(2 * var(--io-padding));
+        padding: var(--io-padding);
         background: rgba(255, 255, 255, 0.125);
       }
     </style>`;
@@ -50,6 +49,27 @@ export class IoElementDemo extends IoElement {
       value: event.detail.value,
       oldValue: event.detail.oldValue,
     }, false, window);
+  }
+  _onObjectMutation(event) {
+    super._onObjectMutation(event);
+    for (let p in this.properties) {
+      if (typeof this.properties[p] === 'object') {
+        this._bubbleMutation(this.properties[p], this.properties, event.detail.object);
+      }
+    }
+  }
+  _bubbleMutation(object, parentObject, srcObject) {
+    if (object === srcObject) {
+      this.dispatchEvent('object-mutated', {
+        object: parentObject,
+      }, false, window);
+    } else {
+      for (let p in object) {
+        if (typeof object[p] === 'object') {
+          this._bubbleMutation(object[p], object, srcObject);
+        }
+      }
+    }
   }
   changed() {
     if (this.element) {
