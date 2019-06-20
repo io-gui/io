@@ -21,6 +21,7 @@ export default [
   {
     input: 'src/io.js',
     plugins: [html()],
+    experimentalDynamicImport: true,
     output: [
       {
         format: 'es',
@@ -32,6 +33,7 @@ export default [
   {
     input: 'src/io-core.js',
     plugins: [html()],
+    experimentalDynamicImport: true,
     output: [
       {
         format: 'es',
