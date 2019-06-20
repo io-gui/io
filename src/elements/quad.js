@@ -153,6 +153,7 @@ export class IoQuad extends IoElement {
     const rect = this.$.canvas.getBoundingClientRect();
     this.size[0] = rect.width;
     this.size[1] = rect.height;
+    this.dispatchEvent('object-mutated', {object: this.size}, false, window);
     this.changed();
   }
   changed() {
