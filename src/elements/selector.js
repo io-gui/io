@@ -66,6 +66,7 @@ export class IoSelector extends IoElement {
         const explicitlyDontCache = this.elements[i][1].cache === false || !!this.elements[i][1].import;
         if (!this._caches[name] && !explicitlyDontCache) {
           this.checkImport(this.elements[i][1].import, () => {
+            if (this.stagingElement.parentElement !== document.head) document.head.appendChild(this.stagingElement);
             this.template([this.elements[i]], this.stagingElement);
             this._caches[name] = this.stagingElement.childNodes[0];
             this.stagingElement.innerText = '';
