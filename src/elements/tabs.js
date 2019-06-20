@@ -74,7 +74,7 @@ export class IoTabs extends IoElement {
   resized() {
     this.__properties['overflow'].value = Math.min(this.children.length);
     this._rights.length = this.children.length;
-    for (var i = 0; i < this.children.length; i++) {
+    for (let i = 0; i < this.children.length; i++) {
       this._rights[i] = this.children[i].getBoundingClientRect().right || this._rights[i];
     }
     const right = this.getBoundingClientRect().right;
