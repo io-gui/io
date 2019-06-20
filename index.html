@@ -133,9 +133,6 @@
     <script type="module">
 
     import {html, IoElement, IoStorage as $, IoServiceLoader} from "./build/io.min.js";
-    // import "./tests/test.js";
-    import "./demo/demo.js";
-    // import "./demo/todomvc/todo-app.js";
 
     // const service = new IoServiceLoader({path: '../service.js'});
 
@@ -201,8 +198,8 @@
               ]
             }],
             ['io-test', {name: 'Test', import: "./tests/test.js"}],
-            ['io-demo', {name: 'Demo'}],
-            // ['todo-app', {name: 'Todo'}],
+            ['io-demo', {name: 'Demo', import: "./demo/demo.js"}],
+            ['todo-app', {name: 'TODO', import: "./demo/todomvc/todo-app.js"}],
           ]}],
         ]);
       }

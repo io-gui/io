@@ -63,7 +63,7 @@ export class IoSelector extends IoElement {
     if (this.__connected && this.precache && document.readyState === 'complete') {
       for (let i = 0; i < this.elements.length; i++) {
         const name = this.elements[i][1].name;
-        const explicitlyDontCache = this.elements[i][1].cache === false;
+        const explicitlyDontCache = this.elements[i][1].cache === false || !!this.elements[i][1].import;
         if (!this._caches[name] && !explicitlyDontCache) {
           this.checkImport(this.elements[i][1].import, () => {
             this.template([this.elements[i]], this.stagingElement);
