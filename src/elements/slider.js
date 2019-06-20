@@ -100,13 +100,13 @@ export class IoSliderKnob extends IoQuad {
     };
   }
   _onTouchstart(event) {
-    event.preventDefault();
+    if (event.cancelable) event.preventDefault(); else return;
     this.focus();
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
   }
   _onTouchmove(event) {
-    event.preventDefault();
+    if (event.cancelable) event.preventDefault(); else return;
     this._moveSliderByPointer(event.changedTouches[0]);
   }
   _onTouchend() {

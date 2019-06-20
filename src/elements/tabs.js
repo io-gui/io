@@ -31,15 +31,8 @@ export class IoTabs extends IoElement {
       :host[overflow="11"] > :nth-child(n+13) { display: none; }
       :host[overflow="12"] > :nth-child(n+14) { display: none; }
       :host > :nth-child(1) {
-        display: none;
       }
       :host > .io-selected-tab {
-        /* display: inline-block !important; */
-      }
-      :host:not([overflow="Infinity"]) > :nth-child(1) {
-        display: inline-block;
-      }
-      :host > io-button.io-selected-tab {
         border-bottom-color: var(--io-background-color);
         border-bottom-style: solid;
         background: var(--io-background-color);
@@ -48,10 +41,14 @@ export class IoTabs extends IoElement {
         background-image: none;
       }
       :host > io-option {
+        display: none;
+        line-height: 1.3em;
         background: none !important;
         border: none;
-        padding-left: calc(3 * var(--io-padding));
-        padding-right: calc(3 * var(--io-padding));
+        margin-right: 0;
+      }
+      :host:not([overflow="Infinity"]) > io-option {
+        display: inline-block;
       }
     </style>`;
   }
@@ -83,7 +80,7 @@ export class IoTabs extends IoElement {
     const right = this.getBoundingClientRect().right;
     let last = 0;
     let overflow = 0;
-    while (last <= (this._rights.length - 1) && this._rights[last] < right) {
+    while (last <= (this._rights.length - 1) && (this._rights[last] < right || this._rights[last] === undefined)) {
       overflow = last;
       last++;
     }
