@@ -11,6 +11,10 @@ export class IoSelector extends IoElement {
         overflow: auto;
         position: relative;
       }
+      :host[_loading] > .io-content {
+        background: repeating-linear-gradient(135deg, transparent, var(--io-background-color) 3px, var(--io-background-color) 7px, transparent 10px);
+        background-repeat: repeat;
+      }
       :host > .io-content {
         color: var(--io-color);
         background: var(--io-background-color);
@@ -30,6 +34,10 @@ export class IoSelector extends IoElement {
       selected: String,
       cache: Boolean,
       precache: Boolean,
+      _loading: {
+        type: Boolean,
+        reflect: true,
+      },
       _caches: Object,
     };
   }
@@ -48,15 +56,18 @@ export class IoSelector extends IoElement {
     document.removeEventListener('readystatechange', this.precacheChanged);
   }
   checkImport(path, callback) {
+    this.__callback = callback;
     const importPath = path ? new URL(path, window.location).href : undefined;
     if (importPath && !importedPaths[importPath]) {
       importedPaths[importPath] = true;
       import(importPath)
       .then(() => {
-        callback();
+        this.__callback();
+        delete this.__callback;
       });
     } else {
-      callback();
+      this.__callback();
+      delete this.__callback;
     }
   }
   precacheChanged() {
@@ -87,12 +98,15 @@ export class IoSelector extends IoElement {
     const explicitlyDontCache = element[1].cache === false;
 
     this.renderShadow();
+    if (this.$.content) this.$.content.innerText = '';
+
     if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[this.selected]) {
       // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
-      if (this.$.content) this.$.content.innerText = '';
       this.$.content.appendChild(this._caches[this.selected]);
     } else {
+      this._loading = true;
       this.checkImport(element[1].import, () => {
+        this._loading = false;
         this.template([element], this.$.content);
         this._caches[this.selected] = this.$.content.childNodes[0];
       });
