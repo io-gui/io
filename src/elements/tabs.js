@@ -10,9 +10,6 @@ export class IoTabs extends IoElement {
         overflow: visible;
         flex: 0 1 auto;
       }
-      :host[overflow] {
-        font-size: 1.2em;
-      }
       :host > * {
         flex: 0 0 auto;
         margin-right: var(--io-spacing);
@@ -20,11 +17,27 @@ export class IoTabs extends IoElement {
         border-bottom-right-radius: 0;
         border-bottom: none;
       }
-      :host[overflow] > :nth-child(n+2):not(.io-selected-tab) {
+      :host[overflow="0"] > :nth-child(n+2) { display: none; }
+      :host[overflow="1"] > :nth-child(n+3) { display: none; }
+      :host[overflow="2"] > :nth-child(n+4) { display: none; }
+      :host[overflow="3"] > :nth-child(n+5) { display: none; }
+      :host[overflow="4"] > :nth-child(n+6) { display: none; }
+      :host[overflow="5"] > :nth-child(n+7) { display: none; }
+      :host[overflow="6"] > :nth-child(n+8) { display: none; }
+      :host[overflow="7"] > :nth-child(n+9) { display: none; }
+      :host[overflow="8"] > :nth-child(n+10) { display: none; }
+      :host[overflow="9"] > :nth-child(n+11) { display: none; }
+      :host[overflow="10"] > :nth-child(n+12) { display: none; }
+      :host[overflow="11"] > :nth-child(n+13) { display: none; }
+      :host[overflow="12"] > :nth-child(n+14) { display: none; }
+      :host > :nth-child(1) {
         display: none;
       }
-      :host:not([overflow]) > :nth-child(1) {
-        display: none;
+      :host > .io-selected-tab {
+        /* display: inline-block !important; */
+      }
+      :host:not([overflow="Infinity"]) > :nth-child(1) {
+        display: inline-block;
       }
       :host > io-button.io-selected-tab {
         border-bottom-color: var(--io-background-color);
@@ -47,11 +60,12 @@ export class IoTabs extends IoElement {
       selected: String,
       options: Array,
       overflow: {
-        type: Boolean,
+        value: Infinity,
+        type: Number,
         reflect: true,
       },
       role: 'navigation',
-      _overflowWidth: 0,
+      _rights: Array,
     };
   }
   _onSelect(id) {
@@ -61,10 +75,19 @@ export class IoTabs extends IoElement {
     this.set('selected', event.detail.value);
   }
   resized() {
-    if (!this.overflow) {
-      this._overflowWidth = this.children[this.children.length - 1].getBoundingClientRect().right;
+    this.__properties['overflow'].value = Math.min(this.children.length);
+    this._rights.length = this.children.length;
+    for (var i = 0; i < this.children.length; i++) {
+      this._rights[i] = this.children[i].getBoundingClientRect().right || this._rights[i];
     }
-    this.overflow = this.getBoundingClientRect().right < this._overflowWidth;
+    const right = this.getBoundingClientRect().right;
+    let last = 0;
+    let overflow = 0;
+    while (last <= (this._rights.length - 1) && this._rights[last] < right) {
+      overflow = last;
+      last++;
+    }
+    this.overflow = overflow === (this._rights.length - 1) ? Infinity : overflow;
   }
   changed() {
     const options = this.options;
