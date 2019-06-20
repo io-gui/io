@@ -2,8 +2,6 @@ import {html} from "../core/element.js";
 import {IoSelector} from "./selector.js";
 import "./tabs.js";
 
-const importedPaths = {};
-
 export class IoSelectorTabs extends IoSelector {
   static get style() {
     return html`<style>

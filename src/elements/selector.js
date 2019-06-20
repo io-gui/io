@@ -52,7 +52,7 @@ export class IoSelector extends IoElement {
     if (importPath && !importedPaths[importPath]) {
       importedPaths[importPath] = true;
       import(importPath)
-      .then((module) => {
+      .then(() => {
         callback();
       });
     } else {
