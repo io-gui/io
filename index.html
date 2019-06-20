@@ -133,7 +133,7 @@
     <script type="module">
 
     import {html, IoElement, IoStorage as $, IoServiceLoader} from "./build/io.min.js";
-    import "./tests/test.js";
+    // import "./tests/test.js";
     import "./demo/demo.js";
     // import "./demo/todomvc/todo-app.js";
 
@@ -200,7 +200,7 @@
                 //     ['io-md-view', {name: 'service-loader', path :'./docs/utils/service-loader.md'}],
               ]
             }],
-            ['io-test', {name: 'Test'}],
+            ['io-test', {name: 'Test', import: "./tests/test.js"}],
             ['io-demo', {name: 'Demo'}],
             // ['todo-app', {name: 'Todo'}],
           ]}],

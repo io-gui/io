@@ -39,10 +39,7 @@ export class IoSelectorSidebar extends IoSelector {
   resized() {
     this.overflow = this.getBoundingClientRect().width < this.minWidth;
   }
-  changed() {
-    this.overflow = this.getBoundingClientRect().width < this.minWidth;
-    let element = this.elements.find(element => {return element[1].name === this.selected;});
-    if (!element) element = ['div', {}];
+  renderShadow() {
     const tabs = ['io-sidebar', {
       elements: this.elements,
       selected: this.selected,
@@ -50,24 +47,10 @@ export class IoSelectorSidebar extends IoSelector {
       overflow: this.overflow,
       'on-value-set': this._onSelected,
     }];
-    const explicitlyCache = (typeof element[1] === 'object' && element[1].cache === true);
-    const explicitlyDontCache = (typeof element[1] === 'object' && element[1].cache === false);
-    if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[this.selected]) {
-      // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
-      if (this.$.content) this.$.content.innerText = '';
-      if (this.left || this.overflow) {
-        this.template([tabs, ['div', {id: 'content', className: 'io-content'}]]);
-      } else {
-        this.template([['div', {id: 'content', className: 'io-content'}], tabs]);
-      }
-      this.$.content.appendChild(this._caches[this.selected]);
+    if (this.left || this.overflow) {
+      this.template([tabs, ['div', {id: 'content', className: 'io-content'}]]);
     } else {
-      if (this.left || this.overflow) {
-        this.template([tabs, ['div', {id: 'content', className: 'io-content'}, [element]]]);
-      } else {
-        this.template([['div', {id: 'content', className: 'io-content'}, [element]], tabs]);
-      }
-      this._caches[this.selected] = this.$.content.childNodes[0];
+      this.template([['div', {id: 'content', className: 'io-content'}], tabs]);
     }
   }
 }
