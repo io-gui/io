@@ -78,7 +78,7 @@ export class IoInspector extends IoElement {
   static get properties() {
     return {
       value: Object,
-      props: Array,
+      properties: Array,
       config: Object,
       labeled: true,
       crumbs: Array,
@@ -125,7 +125,7 @@ export class IoInspector extends IoElement {
           elements: [
             ['io-properties', {
               value: this.value,
-              props: this.groups[group],
+              properties: this.groups[group],
               config: {
                 'type:object': ['io-inspector-link'],
                 'type:boolean': ['io-switch'],

@@ -22,7 +22,7 @@ export class IoObject extends IoCollapsable {
   static get properties() {
     return {
       value: Object,
-      props: Array,
+      properties: Array,
       config: null,
       labeled: true,
     };
@@ -35,7 +35,7 @@ export class IoObject extends IoCollapsable {
         ['io-properties', {
           className: 'io-content',
           value: this.value,
-          props: this.props.length ? this.props : Object.keys(this.value),
+          properties: this.properties,
           config: this.config,
           labeled: this.labeled,
         }]

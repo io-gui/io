@@ -1,5 +1,7 @@
 An element with collapsable content.
 
+Implements `<io-boolean>`.
+
 <io-element-demo element="io-collapsable" properties='{"label": "Collapsable", "expanded": true, "elements": [["div", "Content"]]}'></io-element-demo>
 
 When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.

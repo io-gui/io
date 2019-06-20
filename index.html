@@ -144,21 +144,24 @@
             ['io-md-view', {name: 'About', path :'./readme.md'}],
             ['io-selector-sidebar', {name: 'Docs', precache: true, className: 'docs', selected: $('doc', 'button'),
               options: [
-                {label: "Elements", options: [
+                {label: "Basic Elements", options: [
                   "button",
                   "boolean",
                   "switch",
-                  "number",
                   "string",
+                  "number",
                   "slider",
                   "option",
+                ]},
+                {label: "Layout Elements", options: [
                   "collapsable",
-                  "quad",
                   "selector",
                   "selector-tabs",
                   "selector-sidebar",
                   "tabs",
                   "sidebar",
+                ]},
+                {label: "Object Elements", options: [
                   "properties",
                   "object",
                   "inspector",
@@ -166,6 +169,7 @@
                 {label: "Core", options: [
                   "node",
                   "element",
+                  "quad",
                 ]},
               ],
               elements: [
@@ -177,7 +181,6 @@
                 ['io-md-view', {name: 'slider', path :'./docs/elements/slider.md'}],
                 ['io-md-view', {name: 'option', path :'./docs/elements/option.md'}],
                 ['io-md-view', {name: 'collapsable', path :'./docs/elements/collapsable.md'}],
-                ['io-md-view', {name: 'quad', path :'./docs/elements/quad.md'}],
                 ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
                 ['io-md-view', {name: 'selector-tabs', path :'./docs/elements/selector-tabs.md'}],
                 ['io-md-view', {name: 'selector-sidebar', path :'./docs/elements/selector-sidebar.md'}],
@@ -190,6 +193,7 @@
                 //     ['io-md-view', {name: 'menu', path :'./docs/elements/menu.md'}],
                 //     ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
                 //
+                ['io-md-view', {name: 'quad', path :'./docs/core/quad.md'}],
                 ['io-md-view', {name: 'node', path :'./docs/core/node.md'}],
                 ['io-md-view', {name: 'element', path :'./docs/core/element.md'}],
                 //

@@ -2,7 +2,6 @@ Element selector. Displays one of the virtual elements assigned in the `elements
 
 <io-element-demo element="io-selector" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"]], "selected": "first", "cache": false, "precache": false}'></io-element-demo>
 
-
 If `cache` property is set to `true`, a reference to the element will be kept fo later use.
 
 If `precache` property is set to `true`, all elements will be created for immediate use.

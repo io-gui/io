@@ -17,6 +17,7 @@ export class IoProperties extends IoElement {
         margin: var(--io-spacing) 0;
       }
       :host > .io-property > * {
+        border: var(--io-border);
         border-color: transparent;
         background: none;
       }
@@ -43,8 +44,8 @@ export class IoProperties extends IoElement {
     return {
       labeled: true,
       value: Object,
-      config: Object,
       properties: Array,
+      config: Object,
     };
   }
   get _config() {

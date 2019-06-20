@@ -1,5 +1,7 @@
 Labeled tabs for selection.
 
+Implements `<io-option>` and `<io-button>`.
+
 <io-element-demo element="io-tabs" properties='{"selected": 1, "options": [1,2,3]}'></io-element-demo>
 
 <io-element-demo element="io-tabs" properties='{"selected": 1, "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}]}'></io-element-demo>

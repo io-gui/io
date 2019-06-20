@@ -1,10 +1,10 @@
 Option select element.
 
+Extends `<io-button>`. Implements `<io-menu-options>`.
+
 <io-element-demo element="io-option" properties='{"value": 1, "options": [1,2,3], "label": ""}'></io-element-demo>
 
 <io-element-demo element="io-option" properties='{"value": 1, "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}], "label": ""}'></io-element-demo>
-
-Extends `<io-button>`.
 
 When clicked or activated by space/enter key, it expands a menu with selectable options.
 

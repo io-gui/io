@@ -1,5 +1,7 @@
 Input element for `Number` data type displayed as interactive slider with a number field.
 
+Implements `<io-number>` and `<io-slider-knob>`.
+
 <io-element-demo element="io-slider" properties='{"value": 0.1, "step": 0.1, "min": 0, "max": 1}'></io-element-demo>
 
 It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment.

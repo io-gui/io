@@ -17,3 +17,9 @@ See `IoSliderKnob` for custom shader example.
 | **`background`** | Array    | Background color   | `[0, 0, 0, 1]` |
 | **`color`**      | Array    | Foreground color   | `[1, 1, 1, 1]` |
 | **`size`**       | Array    | Canvas size        | `[0, 0]`       |
+
+#### Events ####
+
+| Event | Description | Detail | Bubbles | Source |
+|:------|:------------|:-------|:--------|:-------|
+| **`object-mutated`** | Value set by user action | `object: this.size` | false | window |
