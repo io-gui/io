@@ -115,7 +115,9 @@
       .docs > io-sidebar {
         --io-color: #fff;
         background: rgba(0, 0, 0, 0.2);
-        /* padding: var(--io-padding); */
+      }
+      .docs > io-sidebar > io-collapsable > io-boolean {
+        opacity: 0.35;
       }
       .docs > io-sidebar:not([overflow]) {
         flex-basis: 11em !important;
@@ -153,7 +155,7 @@
                   "slider",
                   "option",
                 ]},
-                {label: "Layout Elements", options: [
+                {label: "Layout & Navigation", options: [
                   "collapsable",
                   "selector",
                   "selector-tabs",
@@ -161,7 +163,7 @@
                   "tabs",
                   "sidebar",
                 ]},
-                {label: "Object Elements", options: [
+                {label: "Object Editors", options: [
                   "properties",
                   "object",
                   "inspector",
