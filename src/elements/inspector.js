@@ -234,10 +234,10 @@ IoInspector.RegisterConfig = function(config) {
 export class IoInspectorLink extends IoButton {
   static get listeners() {
     return {
-      'button-clicked': '_onButtonClicked'
+      'button-action': '_onButtonAction'
     }
   }
-  _onButtonClicked(event) {
+  _onButtonAction(event) {
     this.dispatchEvent('set-inspector-value', {value: this.value}, true);
   }
 }

@@ -18,5 +18,5 @@ It can be configured to display custom `true` or `false` string depending on its
 
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
-| **`button-clicked`** | Clicked | `value`, `action` | false |
+| **`button-action`** | Clicked | `value`, `action` | false |
 | **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |

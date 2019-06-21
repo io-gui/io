@@ -18,4 +18,4 @@ When focused, arrow keys will change focus to the nearest focusable element in t
 
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
-| **`button-clicked`** | Clicked | `value`, `action` | false |
+| **`button-action`** | Clicked | `value`, `action` | false |

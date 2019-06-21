@@ -49,13 +49,13 @@ export class IoButton extends IoElement {
 
   _onClick() {
     if (this.action) this.action(this.value);
-    this.dispatchEvent('button-clicked', {value: this.value, action: this.action});
+    this.dispatchEvent('button-action', {value: this.value, action: this.action});
   }
   _onKeydown(event) {
     if (event.which === 13 || event.which === 32) {
       event.preventDefault();
       if (this.action) this.action(this.value);
-      this.dispatchEvent('button-clicked', {value: this.value, action: this.action});
+      this.dispatchEvent('button-action', {value: this.value, action: this.action});
     } else if (event.which == 37) {
       event.preventDefault();
       this.focusTo('left');

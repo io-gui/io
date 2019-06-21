@@ -14,5 +14,5 @@ Extends `<io-button>`.
 
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
-| **`button-clicked`** | Clicked | `value`, `action` | false |
+| **`button-action`** | Clicked | `value`, `action` | false |
 | **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |
