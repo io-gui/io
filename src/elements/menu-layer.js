@@ -108,10 +108,10 @@ export class IoMenuLayer extends IoElement {
   _onWindowScroll() {
     if (this.expanded) this.collapseAll();
   }
-  _onWindowFocus(event) {
+  _onWindowFocus() {
     // if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
   }
-  _onWindowBlur(event) {
+  _onWindowBlur() {
     // if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
     // console.log('blur', event)
     // lastFocus = null;
@@ -138,7 +138,7 @@ export class IoMenuLayer extends IoElement {
     event.preventDefault();
     if (this.expanded) this.collapseAll();
   }
-  _onFocus(event) {
+  _onFocus() {
     // const path = event.composedPath();
     // const item = path[0];
     // const optionschain = this._getOptionschain(item);
