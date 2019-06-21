@@ -67,6 +67,7 @@ export class IoSliderKnob extends IoQuad {
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
         min-height: 1.2em;
+        align-self: stretch;
       }
       :host[aria-invalid] {
         border-color: var(--io-error-color);
@@ -137,10 +138,12 @@ export class IoSliderKnob extends IoQuad {
     const rect = this.getBoundingClientRect();
     const x = (pointer.clientX - rect.x) / rect.width;
     const pos = Math.max(0,Math.min(1, x));
-    let value = this.minValue + (this.maxValue - this.minValue) * pos;
-    value = Math.round(value / this.step) * this.step;
+    let value = (this.maxValue - this.minValue) * pos;
+    value = this.minValue + Math.round(value / this.step) * this.step;
     value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
-    value = Number(value.toFixed(-Math.round(Math.log(this.step) / Math.LN10)));
+    let d = -Math.round(Math.log(this.step) / Math.LN10);
+    d = Math.max(0, Math.min(100, d));
+    value = Number(value.toFixed(d));
     this.set('value', value);
   }
   _onKeydown(event) {
@@ -175,7 +178,7 @@ export class IoSliderKnob extends IoQuad {
     }
   }
   _moveSliderByKey(key) {
-    let value = Math.round(this.value / this.step) * this.step;
+    let value = this.value;
     switch (key) {
       case 'increase':
         value += this.step;
@@ -191,7 +194,9 @@ export class IoSliderKnob extends IoQuad {
         break;
     }
     value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
-    value = Number(value.toFixed(-Math.round(Math.log(this.step) / Math.LN10)));
+    let d = -Math.round(Math.log(this.step) / Math.LN10);
+    d = Math.max(0, Math.min(100, d));
+    value = Number(value.toFixed(d));
     this.set('value', value);
   }
   changed() {

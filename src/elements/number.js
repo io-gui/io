@@ -119,7 +119,9 @@ export class IoNumber extends IoElement {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value *= this.conversion;
-      value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
+      let d = -Math.round(Math.log(this.step) / Math.LN10);
+      d = Math.max(0, Math.min(100, d));
+      value = value.toFixed(d);
       this.innerText = Number(String(value));
     } else {
       this.innerText = 'NaN';
