@@ -6,6 +6,7 @@ export class IoTabs extends IoElement {
       :host {
         display: flex;
         flex-direction: row;
+        align-self: stretch;
         flex-wrap: nowrap;
         overflow: visible;
         flex: 0 1 auto;

@@ -8,6 +8,7 @@ export class IoBreadcrumbs extends IoElement {
         display: flex;
         flex: 1 0 auto;
         flex-direction: row;
+        align-self: stretch;
         border-radius: var(--io-border-radius);
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);

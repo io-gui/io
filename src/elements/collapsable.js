@@ -6,6 +6,7 @@ export class IoCollapsable extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+        align-self: stretch;
         border: var(--io-outset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-outset-border-color);

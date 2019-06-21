@@ -8,6 +8,7 @@ export class IoSelector extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+        align-self: stretch;
         overflow: auto;
         position: relative;
       }

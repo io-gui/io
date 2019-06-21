@@ -39,7 +39,6 @@ export class IoMenuLayer extends IoElement {
         transform: translateZ(0);
         top: 0;
         left: 0;
-        min-width: 6em;
       }
     </style>`;
   }
@@ -190,8 +189,8 @@ export class IoMenuLayer extends IoElement {
   }
   _onPointerup() {
     if (this._hoveredItem) {
-      this.runAction(this._hoveredItem.option);
-      this._hoveredItem.$root.dispatchEvent('menu-item-clicked', this._hoveredItem.option);
+      this.runAction(this._hoveredItem);
+      this._hoveredItem.$root.dispatchEvent('menu-item-clicked', this._hoveredItem);
       setTimeout(()=>{
         if (this.collapseOnPointerup) this.collapseAllGroups(); // TODO: ?
       }, 100);
@@ -311,6 +310,14 @@ export class IoMenuLayer extends IoElement {
         group._x = this._x - 1 || pRect.x;
         group._y = this._y - 1 || pRect.y;
         break;
+      case 'top':
+        group._x = pRect.x;
+        group._y = pRect.top - rect.height;
+        break;
+      case 'left':
+        group._x = pRect.x - rect.width;
+        group._y = pRect.top;
+        break;
       case 'bottom':
         group._x = pRect.x;
         group._y = pRect.bottom;
@@ -358,7 +365,5 @@ export class IoMenuLayer extends IoElement {
 }
 
 IoMenuLayer.Register();
-
 IoMenuLayer.singleton = new IoMenuLayer();
-
 document.body.appendChild(IoMenuLayer.singleton);

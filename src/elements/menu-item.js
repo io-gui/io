@@ -9,47 +9,38 @@ export class IoMenuItem extends IoElement {
         display: flex;
         flex-direction: row;
         cursor: pointer;
-        padding: var(--io-spacing);
-        line-height: 1em;
-        touch-action: none;
+        background: var(--io-background-color);
+        padding: var(--io-spacing) 0;
       }
       :host > * {
-        pointer-events: none;
-        padding: var(--io-spacing);
+        padding: 0 var(--io-spacing);
+        min-width: 0.5em;
       }
-      :host > .menu-icon {
-        width: 1.25em;
-        line-height: 1em;
+      :host > .io-menu-icon {}
+      :host > .io-menu-label {
+        flex: 1 1 auto;
       }
-      :host > .menu-label {
-        flex: 1;
-      }
-      :host > .menu-hint {
-        opacity: 0.5;
-        padding: 0 0.5em;
-      }
-      :host > .menu-more {
+      :host > .io-menu-hint {
         opacity: 0.25;
       }
-      /* @media (-webkit-min-device-pixel-ratio: 2) {
-        :host > * {
-          padding: calc(2 * var(--io-spacing));
-        }
-      } */
     </style>`;
   }
   static get properties() {
     return {
-      option: Object,
+      value: null,
+      label: String,
+      icon: String,
+      hint: String,
+      options: Array,
       position: String,
       $parent: HTMLElement,
+      $options: IoMenuOptions,
       tabindex: 1
     };
   }
   static get listeners() {
     return {
       'focus': '_onFocus',
-      'pointerdown': '_onPointerdown',
     };
   }
   get $root() {
@@ -69,41 +60,32 @@ export class IoMenuItem extends IoElement {
     }
     return chain;
   }
-  changed() {
-    if (this.option.options) {
-      let grpProps = {options: this.option.options, $parent: this, position: this.position};
-      if (!this.$options) {
-        this.$options = new IoMenuOptions(grpProps);
-      } else {
-        this.$options.setProperties(grpProps); // TODO: test
-      }
+  connectedCallback() {
+    super.connectedCallback();
+    if (!this.$options.parentNode) {
+      IoMenuLayer.singleton.appendChild(this.$options);
     }
-    this.template([
-      this.option.icon ? ['span', {className: 'menu-icon'}, this.option.icon] : null,
-      ['span', {className: 'menu-label'}, this.option.label || String(this.option.value)],
-      this.option.hint ? ['span', {className: 'menu-hint'}] : null,
-      this.option.options ? ['span', {className: 'menu-more'}, '▸'] : null,
-    ]);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.$options) {
-      if (this.$options.parentNode) {
-        IoMenuLayer.singleton.removeChild(this.$options);
-      }
+    if (this.$options.parentNode) {
+      this.$options.parentNode.removeChild(this.$options);
     }
-  }
-  _onPointerdown(event) {
-    IoMenuLayer.singleton.setPointerCapture(event.pointerId);
-    this.focus();
   }
   _onFocus() {
-    if (this.$options) {
-      if (!this.$options.parentNode) {
-        IoMenuLayer.singleton.appendChild(this.$options);
-      }
-      this.$options.expanded = true;
-    }
+    if (this.options.length) this.$options.expanded = true;
+  }
+  changed() {
+    this.$options.setProperties({
+      $parent: this,
+      options: this.options,
+      position: this.position
+    });
+    this.template([
+      ['span', {className: 'io-menu-icon'}, this.icon],
+      ['span', {className: 'io-menu-label'}, this.label || String(this.value)],
+      ['span', {className: 'io-menu-hint'}, this.hint + this.options.length ? '▸' : ''],
+    ]);
   }
 }
 

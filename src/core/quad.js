@@ -56,6 +56,7 @@ export class IoQuad extends IoElement {
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        align-self: stretch;
       }
       :host > canvas {
         flex: 1 1 auto;
@@ -163,8 +164,8 @@ export class IoQuad extends IoElement {
     if (!this._shader) return;
     if (!this.__properties.size) return;
 
-    canvas.width = this.size[0] || 1;
-    canvas.height = this.size[1] || 1;
+    canvas.width = Math.ceil(this.size[0]) || 1;
+    canvas.height = Math.ceil(this.size[1]) || 1;
 
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);

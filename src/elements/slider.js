@@ -6,6 +6,7 @@ export class IoSlider extends IoElement {
     return html`<style>
       :host {
         display: flex;
+        align-self: stretch;
         min-width: 12em;
       }
       :host > io-number {
@@ -65,6 +66,7 @@ export class IoSliderKnob extends IoQuad {
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
+        min-height: 1.2em;
       }
       :host[aria-invalid] {
         border-color: var(--io-error-color);

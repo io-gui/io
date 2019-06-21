@@ -20,12 +20,13 @@ export class IoMenuOptions extends IoElement {
       }
       :host[horizontal] {
         flex-direction: row;
+        align-self: stretch;
       }
       :host[horizontal] > io-menu-item {
-        margin-left: 0.5em;
-        margin-right: 0.5em;
+        margin: 0 0.5em;
       }
-      :host[horizontal] > io-menu-item > :not(.menu-label) {
+      :host[horizontal] > io-menu-item > .io-menu-hint,
+      :host[horizontal] > io-menu-item > .io-menu-more {
         display: none;
       }
     </style>`;
@@ -51,16 +52,6 @@ export class IoMenuOptions extends IoElement {
       'focusin': '_onFocus',
     };
   }
-  optionsChanged() {
-    const itemPosition = this.horizontal ? 'bottom' : 'right';
-    this.template([this.options.map((elem, i) =>
-      ['io-menu-item', {
-        $parent: this,
-        option: typeof this.options[i] === 'object' ? this.options[i] : {value: this.options[i], label: this.options[i]},
-        position: itemPosition
-      }]
-    )]);
-  }
   connectedCallback() {
     super.connectedCallback();
     IoMenuLayer.singleton.registerGroup(this);
@@ -69,13 +60,28 @@ export class IoMenuOptions extends IoElement {
     super.disconnectedCallback();
     IoMenuLayer.singleton.unregisterGroup(this);
   }
+  optionsChanged() {
+    const itemPosition = this.horizontal ? 'bottom' : 'right';
+    const options = this.options.map(option => {return (option.label !== undefined || option.value !== undefined) ? option : {value: option};});
+    this.template([options.map((elem, i) =>
+      ['io-menu-item', {
+        $parent: this,
+        value: options[i].value,
+        label: options[i].label,
+        hint: options[i].hint,
+        icon: options[i].icon,
+        options: options[i].options || [],
+        position: itemPosition,
+      }]
+    )]);
+  }
   _onFocus(event) {
     const path = event.composedPath();
     const item = path[0];
     IoMenuLayer.singleton._hoveredGroup = this;
     if (item.localName === 'io-menu-item') {
       IoMenuLayer.singleton._hoveredItem = item;
-      if (item.option.options) this.expanded = true;
+      if (item.options) this.expanded = true;
     }
   }
 }
