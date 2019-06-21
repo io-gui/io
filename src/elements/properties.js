@@ -12,7 +12,7 @@ export class IoProperties extends IoElement {
         flex-direction: row;
         flex: 1 0 auto;
         align-items: flex-start;
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
       }
       :host > .io-property > * {
         background: none;
@@ -24,7 +24,7 @@ export class IoProperties extends IoElement {
         border-color: transparent;
         color: var(--io-color);
         flex: 0 0 auto;
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
       }
       :host > .io-property > .io-property-editor {
         flex: 1 1 auto;
@@ -34,7 +34,8 @@ export class IoProperties extends IoElement {
       :host io-boolean,
       :host io-switch,
       :host > .io-property > io-option {
-        padding: var(--io-padding) !important;
+        flex: 0 0 auto;
+        padding: var(--io-spacing) !important;
       }
       :host > .io-property > io-number {
         color: var(--io-number-color);
@@ -44,6 +45,10 @@ export class IoProperties extends IoElement {
       }
       :host > .io-property > io-boolean {
         color: var(--io-boolean-color);
+      }
+      :host > .io-property > io-switch:not([value]),
+      :host > .io-property > io-boolean:not([value]) {
+        opacity: 0.5;
       }
     </style>`;
   }

@@ -7,11 +7,11 @@ export class IoOption extends IoButton {
   static get style() {
     return html`<style>
       :host {
-        padding: var(--io-padding) calc(1.5 * var(--io-padding));
+        padding: var(--io-spacing) calc(1.5 * var(--io-spacing));
       }
       :host:not([label])::before {
         content: '▾';
-        padding-right: var(--io-padding);
+        padding-right: var(--io-spacing);
       }
     </style>`;
   }

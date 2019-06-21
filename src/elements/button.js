@@ -17,9 +17,9 @@ export class IoButton extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
-        padding: var(--io-padding);
-        padding-left: calc(3 * var(--io-padding));
-        padding-right: calc(3 * var(--io-padding));
+        padding: var(--io-spacing);
+        padding-left: calc(3 * var(--io-spacing));
+        padding-right: calc(3 * var(--io-spacing));
         transition: background-color 0.4s;
       }
       :host:focus {

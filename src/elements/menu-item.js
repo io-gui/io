@@ -9,7 +9,7 @@ export class IoMenuItem extends IoElement {
         display: flex;
         flex-direction: row;
         cursor: pointer;
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
         line-height: 1em;
         touch-action: none;
       }

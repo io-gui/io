@@ -9,7 +9,7 @@ export class IoCollapsable extends IoElement {
         border: var(--io-outset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-outset-border-color);
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
         background: var(--io-background-color-dark);
         background-image: var(--io-collapsable-gradient);
         transition: background-color 0.4s;
@@ -42,7 +42,7 @@ export class IoCollapsable extends IoElement {
         border-radius: var(--io-border-radius);
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
         background: var(--io-background-color);
       }
       :host:not([expanded]) > .io-content {

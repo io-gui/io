@@ -19,13 +19,13 @@ export class IoLayoutDivider extends IoElement {
       }
       :host[orientation=horizontal] {
         cursor: col-resize;
-        width: var(--io-padding);
+        width: var(--io-spacing);
         border-top: 0;
         border-bottom: 0;
       }
       :host[orientation=vertical] {
         cursor: row-resize;
-        height: var(--io-padding);
+        height: var(--io-spacing);
         border-left: 0;
         border-right: 0;
       }

@@ -16,7 +16,7 @@ export class IoInspector extends IoElement {
       flex-direction: column;
       border: var(--io-border);
       border-radius: var(--io-border-radius);
-      padding: var(--io-padding);
+      padding: var(--io-spacing);
       background: var(--io-background-color);
     }
     :host > io-breadcrumbs {
@@ -41,26 +41,17 @@ export class IoInspector extends IoElement {
       text-align: right;
       flex: 0 1 8em;
       min-width: 3em;
-      margin-right: var(--io-spacing);
     }
     :host io-properties > .io-property > :nth-child(2) {
       flex: 1 1 8em;
       min-width: 3em;
-      margin-left: var(--io-spacing);
-    }
-    :host io-properties > .io-property > io-switch:not([value]),
-    :host io-properties > .io-property > io-boolean:not([value]) {
-      opacity: 0.5;
-    }
-    :host io-properties > .io-property > io-option {
-      flex: 0 0 auto !important;
     }
     :host io-number,
     :host io-string {
       border-color: var(--io-inset-border-color) !important;
       color: var(--io-field-color) !important;
       background: var(--io-field-background-color) !important;
-      padding: 0 var(--io-padding) !important;
+      padding: 0 var(--io-spacing) !important;
     }
     :host io-properties > .io-property > io-properties {
       border: var(--io-inset-border);

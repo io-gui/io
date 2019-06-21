@@ -11,17 +11,17 @@ export class IoBreadcrumbs extends IoElement {
         border-radius: var(--io-border-radius);
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
         color: var(--io-field-color);
         background-color: var(--io-field-background-color);
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
       }
       :host > io-button {
         border: none;
         overflow: hidden;
         text-overflow: ellipsis;
         background: none;
-        padding: 0 var(--io-padding);
+        padding: 0 var(--io-spacing);
       }
       :host > io-button:first-of-type {
         color: var(--io-color);
@@ -37,7 +37,7 @@ export class IoBreadcrumbs extends IoElement {
       :host > io-button:not(:first-of-type):before {
         content: '>';
         margin: 0 var(--io-spacing);
-        padding: 0 var(--io-padding) 0 0;
+        padding: 0 var(--io-spacing) 0 0;
         opacity: 0.25;
       }
     </style>`;
