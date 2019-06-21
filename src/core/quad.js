@@ -56,7 +56,6 @@ export class IoQuad extends IoElement {
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        align-self: stretch;
       }
       :host > canvas {
         flex: 1 1 auto;

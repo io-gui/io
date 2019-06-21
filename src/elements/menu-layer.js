@@ -5,9 +5,7 @@ let previousParent;
 let timeoutOpen;
 let timeoutReset;
 let WAIT_TIME = 200;
-// let lastFocus;
-
-// TODO: implement search
+let lastFocus;
 
 export class IoMenuLayer extends IoElement {
   static get style() {
@@ -36,7 +34,7 @@ export class IoMenuLayer extends IoElement {
       }
       :host io-menu-options {
         position: absolute;
-        transform: translateZ(0);
+        transform: translate3d(0, 0, 0);
         top: 0;
         left: 0;
       }
@@ -65,53 +63,61 @@ export class IoMenuLayer extends IoElement {
   constructor(props) {
     super(props);
     this._hoveredItem = null;
-    this._hoveredGroup = null;
+    this._hoveredOptions = null;
     this._x = 0;
     this._y = 0;
     this._v = 0;
-    window.addEventListener('scroll', this._onScroll);
-    this._animate();
-    // window.addEventListener('focusin', this._onWindowFocus);
   }
-  registerGroup(group) {
-    this.$options.push(group);
-    group.addEventListener('expanded-changed', this._onGroupExpandedChanged);
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('scroll', this._onWindowScroll);
+    window.addEventListener('focusin', this._onWindowFocus);
+    window.addEventListener('focusout', this._onWindowBlur);
   }
-  unregisterGroup(group) {
-    this.$options.splice(this.$options.indexOf(group), 1);
-    group.removeEventListener('expanded-changed', this._onGroupExpandedChanged);
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('scroll', this._onWindowScroll);
+    window.removeEventListener('focusin', this._onWindowFocus);
+    window.removeEventListener('focusout', this._onWindowBlur);
+    this._stopAnimation();
   }
-  collapseAllGroups() {
+  registerOptions(options) {
+    this.$options.push(options);
+  }
+  unregisterOptions(options) {
+    this.$options.splice(this.$options.indexOf(options), 1);
+  }
+  collapseAll() {
     for (let i = this.$options.length; i--;) {
       this.$options[i].expanded = false;
     }
     this.expanded = false;
     this.collapseOnPointerup = false;
-    // if (lastFocus) {
-    //   lastFocus.focus();
-    //
   }
   runAction(option) {
     // if (option.options.length) option.$options.expanded = true;
 
     if (typeof option.action === 'function') {
-      this.collapseAllGroups();
+      this.collapseAll();
       option.action.apply(null, [option.value]);
     } else if (option.button) {
-      this.collapseAllGroups();
+      this.collapseAll();
       option.button.click(); // TODO: test
     }
   }
-  _onScroll() {
-    if (this.expanded) {
-      this.collapseAllGroups();
-    }
+  _onWindowScroll() {
+    if (this.expanded) this.collapseAll();
+  }
+  _onWindowFocus(event) {
+    // if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
+  }
+  _onWindowBlur(event) {
+    // if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
+    // console.log('blur', event)
+    // lastFocus = null;
   }
   _onMousedown(event) {
-    this._onPointermove(event);
-    if (!this._hoveredGroup && this.collapseOnPointerup) {
-      this.collapseAllGroups();
-    }
+    this._onPointerdown(event);
   }
   _onMousemove(event) {
     this._onPointermove(event);
@@ -120,10 +126,7 @@ export class IoMenuLayer extends IoElement {
     this._onPointerup(event);
   }
   _onTouchstart(event) {
-    this._onPointermove(event.changedTouches[0]);
-    if (!this._hoveredGroup && this.collapseOnPointerup) {
-      this.collapseAllGroups();
-    }
+    this._onPointerdown(event.changedTouches[0]);
   }
   _onTouchmove(event) {
     this._onPointermove(event.changedTouches[0]);
@@ -133,23 +136,24 @@ export class IoMenuLayer extends IoElement {
   }
   _onContextmenu(event) {
     event.preventDefault();
-    if (this.expanded) {
-      this.collapseAllGroups();
-    }
+    if (this.expanded) this.collapseAll();
   }
-  // _onWindowFocus(event) {
-  //   if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
-  // }
   _onFocus(event) {
-    const path = event.composedPath();
-    const item = path[0];
-    const optionschain = item.optionschain;
-    this._hoveredGroup = item;
-    for (let i = this.$options.length; i--;) {
-      if (optionschain.indexOf(this.$options[i]) === -1) {
-        this.$options[i].expanded = false;
-      }
-    }
+    // const path = event.composedPath();
+    // const item = path[0];
+    // const optionschain = this._getOptionschain(item);
+    // this._hoveredOptions = item;
+    // for (let i = this.$options.length; i--;) {
+    //   if (optionschain.indexOf(this.$options[i]) === -1) {
+    //     this.$options[i].expanded = false;
+    //   }
+    // }
+  }
+  _onPointerdown(event) {
+    this._onPointermove(event);
+    // if (!this._hoveredOptions && this.collapseOnPointerup) {
+    //   this.collapseAll();
+    // }
   }
   _onPointermove(event) {
     const movementX = event.clientX - this._x;
@@ -157,29 +161,30 @@ export class IoMenuLayer extends IoElement {
     this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
     this._x = event.clientX;
     this._y = event.clientY;
-    let groups = this.$options;
-    for (let i = groups.length; i--;) {
-      if (groups[i].expanded) {
-        let rect = groups[i].getBoundingClientRect();
+    let options = this.$options;
+    for (let i = options.length; i--;) {
+      if (options[i].expanded) {
+        let rect = options[i].getBoundingClientRect();
         if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-          this._hover(groups[i]);
-          this._hoveredGroup = groups[i];
-          return groups[i];
+          this._hover(options[i]);
+          this._hoveredOptions = options[i];
+          return options[i];
         }
       }
     }
     this._hoveredItem = null;
-    this._hoveredGroup = null;
+    this._hoveredOptions = null;
   }
   _onPointerup() {
     if (this._hoveredItem) {
       this.runAction(this._hoveredItem);
-      this._hoveredItem.$root.dispatchEvent('menu-item-clicked', this._hoveredItem);
+      const root = this._getRoot(this._hoveredItem);
+      root.dispatchEvent('menu-item-clicked', this._hoveredItem);
       setTimeout(()=>{
-        if (this.collapseOnPointerup) this.collapseAllGroups(); // TODO: ?
+        if (this.collapseOnPointerup) this.collapseAll(); // TODO: ?
       }, 100);
-    } else if (!this._hoveredGroup && this.collapseOnPointerup) {
-      this.collapseAllGroups();
+    } else if (!this._hoveredOptions && this.collapseOnPointerup) {
+      this.collapseAll();
     }
     this.collapseOnPointerup = true;
   }
@@ -189,14 +194,14 @@ export class IoMenuLayer extends IoElement {
     if (path[0].localName !== 'io-menu-item') return;
 
     let elem = path[0];
-    let group = elem.$parent;
-    let siblings = [...group.querySelectorAll('io-menu-item')] || [];
-    let children = elem.$options ? [...elem.$options.querySelectorAll('io-menu-item')]  : [];
+    let options = elem.$parent || elem.parentElement;
+    let siblings = [...options.querySelectorAll('io-menu-item')];
+    let children = [...elem.$options.querySelectorAll('io-menu-item')];
     let index = siblings.indexOf(elem);
 
     let command = '';
 
-    if (!group.horizontal) {
+    if (!options.horizontal) {
       if (event.key == 'ArrowUp') command = 'prev';
       if (event.key == 'ArrowRight') command = 'in';
       if (event.key == 'ArrowDown') command = 'next';
@@ -225,21 +230,21 @@ export class IoMenuLayer extends IoElement {
         if (children.length) children[0].focus();
         break;
       case 'out':
-        if (group && group.$parent) group.$parent.focus();
+        if (options && options.$parent) options.$parent.focus();
         break;
       case 'exit':
-        this.collapseAllGroups();
+        this.collapseAll();
         break;
       default:
         break;
     }
   }
-  _hover(group) {
-    let items = group.querySelectorAll('io-menu-item');
+  _hover(options) {
+    let items = options.querySelectorAll('io-menu-item');
     for (let i = items.length; i--;) {
       let rect = items[i].getBoundingClientRect();
       if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-        let force = group.horizontal;
+        let force = options.horizontal;
         this._focus(items[i], force);
         this._hoveredItem = items[i];
         return items[i];
@@ -268,80 +273,109 @@ export class IoMenuLayer extends IoElement {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  _onGroupExpandedChanged(event) {
-    const path = event.composedPath();
-    if (path[0].expanded) this._setGroupPosition(path[0]);
+  _onOptionsExpandedChanged(options) {
+    if (options.expanded) {
+      this._hoveredOptions = options;
+      this._setGroupPosition(options);
+    }
     for (let i = this.$options.length; i--;) {
       if (this.$options[i].expanded) {
         this.expanded = true;
         return;
       }
     }
-    requestAnimationFrame(() => { this.expanded = false; });
+    this.expanded = false;
   }
-  _setGroupPosition(group) {
-    if (!group.$parent) return;
-    let rect = group.getBoundingClientRect();
-    let pRect = group.$parent.getBoundingClientRect();
+  _setGroupPosition(options) {
+    if (!options.$parent) return;
+    let rect = options.getBoundingClientRect();
+    let pRect = options.$parent.getBoundingClientRect();
      // TODO: unhack horizontal long submenu bug.
-    if (group.position === 'bottom' && rect.height > (window.innerHeight - this._y)) group.position = 'right';
+    if (options.position === 'bottom' && rect.height > (window.innerHeight - this._y)) options.position = 'right';
     //
-    switch (group.position) {
+    switch (options.position) {
       case 'pointer':
-        group._x = this._x - 1 || pRect.x;
-        group._y = this._y - 1 || pRect.y;
+        options._x = this._x - 1 || pRect.x;
+        options._y = this._y - 1 || pRect.y;
         break;
       case 'top':
-        group._x = pRect.x;
-        group._y = pRect.top - rect.height;
+        options._x = pRect.x;
+        options._y = pRect.top - rect.height;
         break;
       case 'left':
-        group._x = pRect.x - rect.width;
-        group._y = pRect.top;
+        options._x = pRect.x - rect.width;
+        options._y = pRect.top;
         break;
       case 'bottom':
-        group._x = pRect.x;
-        group._y = pRect.bottom;
+        options._x = pRect.x;
+        options._y = pRect.bottom;
         break;
       case 'right':
       default:
-        group._x = pRect.right;
-        group._y = pRect.y;
-        if (group._x + rect.width > window.innerWidth) {
-          group._x = pRect.x - rect.width;
+        options._x = pRect.right;
+        options._y = pRect.y;
+        if (options._x + rect.width > window.innerWidth) {
+          options._x = pRect.x - rect.width;
         }
         break;
     }
-    group._x = Math.max(0, Math.min(group._x, window.innerWidth - rect.width));
-    group._y = Math.min(group._y, window.innerHeight - rect.height);
-    group.style.left = group._x + 'px';
-    group.style.top = group._y + 'px';
+    options._x = Math.max(0, Math.min(options._x, window.innerWidth - rect.width));
+    options._y = Math.min(options._y, window.innerHeight - rect.height);
+    options.style.left = options._x + 'px';
+    options.style.top = options._y + 'px';
   }
-  _animate() {
-    if (this.expanded) {
-      let group = this._hoveredGroup;
-      if (group) {
-        let rect = group.getBoundingClientRect();
-        if (rect.height > window.innerHeight) {
-          if (this._y < 100 && rect.top < 0) {
-            let scrollSpeed = (100 - this._y) / 5000;
-            let overflow = rect.top;
-            group._y = group._y - Math.ceil(overflow * scrollSpeed) + 1;
-          } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
-            let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
-            let overflow = (rect.bottom - window.innerHeight);
-            group._y = group._y - Math.ceil(overflow * scrollSpeed) - 1;
-          }
-          group.style.left = group._x + 'px';
-          group.style.top = group._y + 'px';
+  _getOptionschain(item) {
+    const chain = [];
+    if (item.$options) chain.push(item.$options);
+    let parent = item.$parent;
+    while (parent) {
+      if (parent.localName == 'io-menu-options') chain.push(parent);
+      parent = parent.$parent;
+    }
+    return chain;
+  }
+  _getRoot(item) {
+    let parent = item;
+    while (parent && parent.$parent) {
+      parent = parent.$parent;
+    }
+    return parent;
+  }
+  _moveHovered() {
+    let options = this._hoveredOptions;
+    if (options) {
+      let rect = options.getBoundingClientRect();
+      if (rect.height > window.innerHeight) {
+        if (this._y < 100 && rect.top < 0) {
+          let scrollSpeed = (100 - this._y) / 5000;
+          let overflow = rect.top;
+          options._y = options._y - Math.ceil(overflow * scrollSpeed) + 1;
+        } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
+          let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
+          let overflow = (rect.bottom - window.innerHeight);
+          options._y = options._y - Math.ceil(overflow * scrollSpeed) - 1;
         }
+        options.style.left = options._x + 'px';
+        options.style.top = options._y + 'px';
       }
     }
-    requestAnimationFrame(this._animate);
+  }
+  _startAnimation() {
+    this._moveHovered();
+    this._rAF_ID = requestAnimationFrame(this._startAnimation);
+  }
+  _stopAnimation() {
+    if (this._rAF_ID) cancelAnimationFrame(this._rAF_ID);
   }
   expandedChanged() {
-    this._hoveredItem = null;
-    this._hoveredItem = null;
+    if (this.expanded) {
+      this._startAnimation();
+    } else {
+      this._hoveredItem = null;
+      this._hoveredOptions = null;
+      this._stopAnimation();
+      if (lastFocus) lastFocus.focus();
+    }
   }
 }
 

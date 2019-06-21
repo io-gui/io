@@ -1,6 +1,6 @@
 WebGL canvas for rendering elements as shaders.
 
-<io-element-demo element="io-quad" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}'></io-element-demo>
+<io-element-demo element="io-quad" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"config": {"type:number": ["io-slider", {"min": 0, "max": 100, "step": 0.01}]}}]}'></io-element-demo>
 
 This is a base class for WebGL shader elemenents.
 
