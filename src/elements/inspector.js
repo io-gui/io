@@ -1,6 +1,6 @@
 import {html, IoElement} from "../core/element.js";
 // import {IoStorage} from "../utils/storage.js";
-import "./button.js";
+import {IoButton} from "./button.js";
 import "./breadcrumbs.js";
 
 function isValueOfPropertyOf(prop, object) {
@@ -68,18 +68,15 @@ export class IoInspector extends IoElement {
       _options: Array,
     };
   }
-  // static get listeners() {
-  //   return {
-  //     'button-clicked': 'onLinkClicked',
-  //   };
-  // }
-  // onLinkClicked(event) {
-  //   console.log(event)
-  //   event.stopPropagation();
-  //   if (event.path[0].localName === 'io-inspector-link') {
-  //     this.value = event.detail.value;
-  //   }
-  // }
+  static get listeners() {
+    return {
+      'set-inspector-value': '_onSetInspectorValue',
+    };
+  }
+  _onSetInspectorValue(event) {
+    event.stopPropagation();
+    this.set('value', event.detail.value);
+  }
   get groups() {
     return this.__proto__.__config.getConfig(this.value, this.config);
   }
@@ -122,12 +119,9 @@ export class IoInspector extends IoElement {
             ['io-properties', {
               value: this.value,
               properties: this.groups[group],
-              config: this.config,
-              // config: {
-              //   'type:object': ['io-inspector-link'],
-              //   'type:boolean': ['io-switch'],
-              // },
-              labeled: true,
+              config: Object.assign({
+                'type:object': ['io-inspector-link'],
+              }, this.config),
             }]
           ]
         }],
@@ -236,3 +230,16 @@ IoInspector.Register();
 IoInspector.RegisterConfig = function(config) {
   this.prototype.__config.registerConfig(config);
 };
+
+export class IoInspectorLink extends IoButton {
+  static get listeners() {
+    return {
+      'button-clicked': '_onButtonClicked'
+    }
+  }
+  _onButtonClicked(event) {
+    this.dispatchEvent('set-inspector-value', {value: this.value}, true);
+  }
+}
+
+IoInspectorLink.Register();
