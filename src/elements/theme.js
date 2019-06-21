@@ -5,9 +5,9 @@ export class IoTheme extends IoElement {
     return html`<style>
       body {
         --io-spacing: 2px;
-        --io-padding: 3px;
+        --io-padding: 2px;
 
-        --io-border-radius: 3px;
+        --io-border-radius: 4px;
         --io-border-width: 1px;
 
         --io-background-color: rgb(64, 64, 64);

@@ -23,7 +23,7 @@ export class IoObject extends IoCollapsable {
     return {
       value: Object,
       properties: Array,
-      config: null,
+      config: Object,
       labeled: true,
     };
   }

@@ -8,8 +8,6 @@ Extends `<io-button>`. Implements `<io-menu-options>`.
 
 When clicked or activated by space/enter key, it expands a menu with selectable options.
 
-When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
-
 <!-- TODO: document menu events  -->
 
 #### Properties ####

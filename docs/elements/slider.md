@@ -6,7 +6,7 @@ Implements `<io-number>` and `<io-slider-knob>`.
 
 It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment.
 
-When the element is focused, arrow keys will change focus to the nearest focusable element in the chosen direction. To change the value with arrow keys, users should hold down the shift key.
+To change the value with arrow keys on focused slider, users should hold down the shift key.
 
 #### Properties ####
 

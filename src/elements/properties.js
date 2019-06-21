@@ -4,30 +4,37 @@ export class IoProperties extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        padding: var(--io-padding);
         display: flex;
         flex-direction: column;
       }
       :host > .io-property {
-        --io-padding: 0;
         display: flex !important;
         flex-direction: row;
         flex: 1 0 auto;
         align-items: flex-start;
-        margin: var(--io-spacing) 0;
+        padding: var(--io-padding);
       }
       :host > .io-property > * {
-        border: var(--io-border);
-        border-color: transparent;
         background: none;
+        border-color: transparent;
       }
       :host > .io-property > .io-property-label {
         margin: 0 var(--io-spacing) 0 0;
+        border: var(--io-border);
+        border-color: transparent;
         color: var(--io-color);
         flex: 0 0 auto;
+        padding: var(--io-padding);
       }
       :host > .io-property > .io-property-editor {
         flex: 1 1 auto;
+      }
+      :host io-number,
+      :host io-string,
+      :host io-boolean,
+      :host io-switch,
+      :host > .io-property > io-option {
+        padding: var(--io-padding) !important;
       }
       :host > .io-property > io-number {
         color: var(--io-number-color);

@@ -3,6 +3,7 @@
  */
 
 export {IoBoolean} from "./elements/boolean.js";
+export {IoBreadcrumbs} from "./elements/breadcrumbs.js";
 export {IoButton} from "./elements/button.js";
 export {IoCollapsable} from "./elements/collapsable.js";
 export {IoElementDemo} from "./elements/element-demo.js";

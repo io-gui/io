@@ -6,8 +6,6 @@ Implements `<io-boolean>`.
 
 When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
 
-When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
-
 #### Properties ####
 
 | Property | Type | Description | Default |
