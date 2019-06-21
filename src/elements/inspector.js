@@ -1,12 +1,8 @@
 import {html, IoElement} from "../core/element.js";
-// import {IoStorage} from "../utils/storage.js";
 import {IoButton} from "./button.js";
 import "./breadcrumbs.js";
-
-function isValueOfPropertyOf(prop, object) {
-  for (let key in object) if (object[key] === prop) return key;
-  return null;
-}
+import {isValuePropertyOf, getObjectLabel} from "../utils/utility-functions.js";
+import {IoStorage} from "../utils/storage.js";
 
 export class IoInspector extends IoElement {
   static get style() {
@@ -64,7 +60,6 @@ export class IoInspector extends IoElement {
       value: Object,
       properties: Array,
       config: Object,
-      labeled: true,
       _options: Array,
     };
   }
@@ -73,38 +68,30 @@ export class IoInspector extends IoElement {
       'set-inspector-value': '_onSetInspectorValue',
     };
   }
+  get groups() {
+    return this.__proto__.__config.getConfig(this.value, this.config);
+  }
   _onSetInspectorValue(event) {
     event.stopPropagation();
     this.set('value', event.detail.value);
   }
-  get groups() {
-    return this.__proto__.__config.getConfig(this.value, this.config);
+  _onBreadcrumbsValue(event) {
+    this.set('value', event.detail.value);
   }
   valueChanged() {
-    let option = this._options.find((option) => {
+    const option = this._options.find((option) => {
       return option.value === this.value;
     });
-    let lastOption = this._options[this._options.length - 1];
-    if (option) {
-      this._options.length = this._options.indexOf(option) + 1;
-    } else {
-      if (!lastOption || !isValueOfPropertyOf(this.value, lastOption)) this._options.length = 0;
-      let label = this.value.constructor.name;
-      if (this.value.name) label += ' (' + this.value.name + ')';
-      else if (this.value.label) label += ' (' + this.value.label + ')';
-      else if (this.value.title) label += ' (' + this.value.title + ')';
-      else if (this.value.id) label += ' (' + this.value.id + ')';
-      this._options.push({value: this.value, label: label});
+    if (!option) {
+      const lastOption = this._options[this._options.length - 1];
+      if (!lastOption || !isValuePropertyOf(this.value, lastOption.value)) this._options.length = 0;
+      this._options.push({value: this.value, label: getObjectLabel(this.value)});
+      this.dispatchEvent('object-mutated', {object: this._options}, false, window);
     }
-    this.dispatchEvent('object-mutated', {object: this._options}, false, window);
-  }
-  _onBreadcrumbValueSet(event) {
-    this.set('value', event.detail.value);
   }
   changed() {
     const elements = [
-      ['io-breadcrumbs', {options: this._options, 'on-value-set': this._onBreadcrumbValueSet}],
-      // TODO: add search
+      ['io-breadcrumbs', {value: this.value, options: this._options, trim: true, 'on-value-set': this._onBreadcrumbsValue}],
     ];
     // TODO: rewise and document use of storage
     let uuid = this.value.constructor.name;
@@ -113,8 +100,7 @@ export class IoInspector extends IoElement {
       elements.push(
         ['io-collapsable', {
           label: group,
-          expanded: true,
-          // expanded: IoStorage('io-inspector-group-' + uuid + '-' + group, false),
+          expanded: IoStorage('io-inspector-group-' + uuid + '-' + group, true),
           elements: [
             ['io-properties', {
               value: this.value,
@@ -227,11 +213,21 @@ IoInspector.Register = function() {
 };
 
 IoInspector.Register();
-IoInspector.RegisterConfig = function(config) {
-  this.prototype.__config.registerConfig(config);
-};
+// IoInspector.RegisterConfig = function(config) {
+//   this.prototype.__config.registerConfig(config);
+// };
 
 export class IoInspectorLink extends IoButton {
+  static get style() {
+    return html`<style>
+    :host {
+      color: var(--io-link-color) !important;
+    }
+    :host:hover {
+      text-decoration: underline;
+    }
+    </style>`;
+  }
   static get listeners() {
     return {
       'button-action': '_onButtonAction'
@@ -239,6 +235,10 @@ export class IoInspectorLink extends IoButton {
   }
   _onButtonAction(event) {
     this.dispatchEvent('set-inspector-value', {value: this.value}, true);
+  }
+  changed() {
+    this.title = getObjectLabel(this.value);
+    this.innerText = getObjectLabel(this.value);
   }
 }
 

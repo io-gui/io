@@ -23,6 +23,9 @@ export class IoBreadcrumbs extends IoElement {
         background: none;
         padding: 0 var(--io-spacing);
       }
+      :host > io-button:hover {
+        text-decoration: underline;
+      }
       :host > io-button:first-of-type {
         color: var(--io-color);
         overflow: visible;
@@ -44,6 +47,7 @@ export class IoBreadcrumbs extends IoElement {
   }
   static get properties() {
     return {
+      value: null,
       options: Array,
       trim: Boolean,
     };
