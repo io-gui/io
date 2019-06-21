@@ -230,10 +230,10 @@ export class IoInspectorLink extends IoButton {
   }
   static get listeners() {
     return {
-      'button-action': '_onButtonAction'
-    }
+      'button-action': '_onButtonAction',
+    };
   }
-  _onButtonAction(event) {
+  _onButtonAction() {
     this.dispatchEvent('set-inspector-value', {value: this.value}, true);
   }
   changed() {
