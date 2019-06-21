@@ -23,6 +23,7 @@ export class IoElementDemo extends IoElement {
         flex-direction: column;
         align-items: flex-start;
         padding: var(--io-spacing);
+        min-height: 1.2em;
         background: rgba(255, 255, 255, 0.125);
       }
     </style>`;

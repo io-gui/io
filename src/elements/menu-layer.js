@@ -56,7 +56,7 @@ export class IoMenuLayer extends IoElement {
       'mousedown': '_onMousedown',
       'mousemove': '_onMousemove',
       'mouseup': '_onMouseup',
-      'touchstart': '_onTouchStart',
+      'touchstart': '_onTouchstart',
       'touchmove': '_onTouchmove',
       'touchend': '_onTouchend',
       'contextmenu': '_onContextmenu',
@@ -75,14 +75,10 @@ export class IoMenuLayer extends IoElement {
   }
   registerGroup(group) {
     this.$options.push(group);
-    group.addEventListener('focusin', this._onMenuItemFocused);
-    group.addEventListener('keydown', this._onKeydown);
     group.addEventListener('expanded-changed', this._onGroupExpandedChanged);
   }
   unregisterGroup(group) {
     this.$options.splice(this.$options.indexOf(group), 1);
-    group.removeEventListener('focusin', this._onMenuItemFocused);
-    group.removeEventListener('keydown', this._onKeydown);
     group.removeEventListener('expanded-changed', this._onGroupExpandedChanged);
   }
   collapseAllGroups() {
@@ -91,37 +87,30 @@ export class IoMenuLayer extends IoElement {
     }
     this.expanded = false;
     this.collapseOnPointerup = false;
+    // if (lastFocus) {
+    //   lastFocus.focus();
+    //
   }
   runAction(option) {
+    // if (option.options.length) option.$options.expanded = true;
+
     if (typeof option.action === 'function') {
       this.collapseAllGroups();
       option.action.apply(null, [option.value]);
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
     } else if (option.button) {
       this.collapseAllGroups();
       option.button.click(); // TODO: test
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
     }
   }
   _onScroll() {
     if (this.expanded) {
       this.collapseAllGroups();
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
     }
   }
   _onMousedown(event) {
     this._onPointermove(event);
     if (!this._hoveredGroup && this.collapseOnPointerup) {
       this.collapseAllGroups();
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
     }
   }
   _onMousemove(event) {
@@ -130,13 +119,10 @@ export class IoMenuLayer extends IoElement {
   _onMouseup(event) {
     this._onPointerup(event);
   }
-  _onTouchStart(event) {
+  _onTouchstart(event) {
     this._onPointermove(event.changedTouches[0]);
     if (!this._hoveredGroup && this.collapseOnPointerup) {
       this.collapseAllGroups();
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
     }
   }
   _onTouchmove(event) {
@@ -149,18 +135,16 @@ export class IoMenuLayer extends IoElement {
     event.preventDefault();
     if (this.expanded) {
       this.collapseAllGroups();
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
     }
   }
   // _onWindowFocus(event) {
   //   if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
   // }
-  _onMenuItemFocused(event) {
+  _onFocus(event) {
     const path = event.composedPath();
     const item = path[0];
     const optionschain = item.optionschain;
+    this._hoveredGroup = item;
     for (let i = this.$options.length; i--;) {
       if (optionschain.indexOf(this.$options[i]) === -1) {
         this.$options[i].expanded = false;
@@ -196,9 +180,6 @@ export class IoMenuLayer extends IoElement {
       }, 100);
     } else if (!this._hoveredGroup && this.collapseOnPointerup) {
       this.collapseAllGroups();
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
     }
     this.collapseOnPointerup = true;
   }
@@ -232,7 +213,7 @@ export class IoMenuLayer extends IoElement {
 
     switch (command) {
       case 'action':
-        this._onPointerup(event); // TODO: test
+        this.runAction(elem);
         break;
       case 'prev':
         siblings[(index + siblings.length - 1) % (siblings.length)].focus();

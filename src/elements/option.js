@@ -1,6 +1,6 @@
 import {html} from "../core/element.js";
 import {IoButton} from "./button.js";
-import {IoMenuOptions} from "./menu-options.js";
+import {IoMenuOptions} from "./menu.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
 export class IoOption extends IoButton {
