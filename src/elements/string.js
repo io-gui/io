@@ -11,7 +11,7 @@ export class IoString extends IoElement {
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
         color: var(--io-field-color);
         background-color: var(--io-field-background-color);
       }

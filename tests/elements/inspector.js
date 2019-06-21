@@ -16,21 +16,15 @@ export default class {
     document.body.appendChild(this.element);
   }
   reset() {
-    this.element.labeled = true;
     this.element.value = {};
     this.element.config = {};
-    this.element.properties = [];
-    this.element.crumbs = [];
   }
   run() {
     describe('IoInspector', () => {
       describe('default values', () => {
         it('has default values', () => {
-          chai.expect(this.element.labeled).to.equal(true);
           chai.expect(JSON.stringify(this.element.value)).to.equal(JSON.stringify({}));
-          chai.expect(JSON.stringify(this.element.properties)).to.equal(JSON.stringify([]));
           chai.expect(JSON.stringify(this.element.config)).to.equal(JSON.stringify({}));
-          chai.expect(JSON.stringify(this.element.crumbs)).to.equal(JSON.stringify([]));
         });
       });
       // describe('innerText', () => {

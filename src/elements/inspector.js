@@ -58,7 +58,6 @@ export class IoInspector extends IoElement {
   static get properties() {
     return {
       value: Object,
-      properties: Array,
       config: Object,
       _options: Array,
     };

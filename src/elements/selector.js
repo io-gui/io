@@ -22,7 +22,7 @@ export class IoSelector extends IoElement {
         flex-direction: column;
         flex: 1 1 auto;
         overflow: auto;
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
         border: var(--io-border);
         border-radius: var(--io-border-radius);
       }

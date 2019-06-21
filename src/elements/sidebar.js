@@ -9,7 +9,7 @@ export class IoSidebar extends IoElement {
         overflow: visible;
         flex: 0 0 auto;
         line-height: 1.5em;
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
       }
       :host[overflow] {
         font-size: 1.2em;
@@ -48,15 +48,15 @@ export class IoSidebar extends IoElement {
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         text-overflow: ellipsis;
-        padding: var(--io-padding);
-        padding-left: calc(3 * var(--io-padding));
-        padding-right: calc(3 * var(--io-padding));
+        padding: var(--io-spacing);
+        padding-left: calc(3 * var(--io-spacing));
+        padding-right: calc(3 * var(--io-spacing));
       }
       :host > io-option {
         background: none !important;
         border: none;
-        padding-left: var(--io-padding);
-        padding-right: var(--io-padding);
+        padding-left: calc(3 * var(--io-spacing));
+        padding-right: calc(3 * var(--io-spacing));
       }
     </style>`;
   }

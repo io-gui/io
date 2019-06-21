@@ -3,17 +3,17 @@ import {html, IoElement} from "../build/io.min.js";
 import "../lib/mocha.js";
 import "../lib/chai.js";
 
-// import Node from "../tests/core/node.js"
-// import Element from "../tests/core/element.js"
-//
-// import Boolean from "../tests/elements/boolean.js"
-// import Button from "../tests/elements/button.js"
-// import Switch from "../tests/elements/switch.js"
-// import Number from "../tests/elements/number.js"
-// import Sting from "../tests/elements/string.js"
-// import Slider from "../tests/elements/slider.js"
-// import Option from "../tests/elements/option.js"
-// import Collapsable from "../tests/elements/collapsable.js"
+import Node from "../tests/core/node.js"
+import Element from "../tests/core/element.js"
+
+import Boolean from "../tests/elements/boolean.js"
+import Button from "../tests/elements/button.js"
+import Switch from "../tests/elements/switch.js"
+import Number from "../tests/elements/number.js"
+import Sting from "../tests/elements/string.js"
+import Slider from "../tests/elements/slider.js"
+import Option from "../tests/elements/option.js"
+import Collapsable from "../tests/elements/collapsable.js"
 import Properties from "../tests/elements/properties.js"
 import Object from "../tests/elements/object.js"
 import Inspector from "../tests/elements/inspector.js"
@@ -38,17 +38,17 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    // new Node().run();
-    // new Element().run();
-    //
-    // new Button().run();
-    // new Boolean().run();
-    // new Switch().run();
-    // new Number().run();
-    // new Sting().run();
-    // new Slider().run();
-    // new Option().run();
-    // new Collapsable().run();
+    new Node().run();
+    new Element().run();
+
+    new Button().run();
+    new Boolean().run();
+    new Switch().run();
+    new Number().run();
+    new Sting().run();
+    new Slider().run();
+    new Option().run();
+    new Collapsable().run();
     new Properties().run();
     new Object().run();
     new Inspector().run();

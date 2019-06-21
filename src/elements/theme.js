@@ -42,7 +42,7 @@ export class IoTheme extends IoElement {
       /* @media (min-resolution: 192dpi) {
         body {
           --io-spacing: 4px;
-          --io-padding: 5px;
+          --io-spacing: 5px;
           --io-border-radius: 3px;
           --io-border-width: 5px;
         }

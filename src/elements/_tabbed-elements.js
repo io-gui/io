@@ -40,7 +40,7 @@ export class IoSelectorTabs extends IoElement {
         flex-direction: column;
         flex: 1 1 auto;
         overflow: auto;
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
         border: var(--io-border);
         border-radius: var(--io-border-radius);
       }
@@ -275,8 +275,8 @@ export class IoTabs extends IoElement {
       :host > io-option {
         background: none !important;
         border: none;
-        padding-left: calc(3 * var(--io-padding));
-        padding-right: calc(3 * var(--io-padding));
+        padding-left: calc(3 * var(--io-spacing));
+        padding-right: calc(3 * var(--io-spacing));
       }
       :host > .edit-spacer {
         flex: 0 0 3.5em;
@@ -485,9 +485,9 @@ export class IoTabDragicon extends IoElement {
         user-select: none;
         border: var(--io-outset-border);
         border-radius: var(--io-border-radius);
-        padding: var(--io-padding);
-        padding-left: calc(3 * var(--io-padding));
-        padding-right: calc(3 * var(--io-padding));
+        padding: var(--io-spacing);
+        padding-left: calc(3 * var(--io-spacing));
+        padding-right: calc(3 * var(--io-spacing));
         background: var(--io-background-color);
         color: var(--io-color);
         transform: translateZ(0);
