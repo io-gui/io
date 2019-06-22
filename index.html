@@ -75,16 +75,14 @@
         display: flex;
         flex-direction: column;
       }
-      io-main-page {
-        display: flex;
-        flex-direction: column;
-        flex: 0 0 100%;
-        max-height: 100%;
-      }
       io-md-view {
         padding: 0 1em;
       }
       .main {
+        display: flex;
+        flex-direction: column;
+        flex: 0 0 100%;
+        max-height: 100%;
         flex: 1 1 auto;
       }
       .main > .io-content {
@@ -132,87 +130,90 @@
     <link href="./lib/mocha.css" rel="stylesheet" />
     <script type="module">
 
-    import {html, IoElement, IoStorage as $, IoServiceLoader} from "./build/io.min.js";
+    import {html, IoSelectorTabs, IoStorage as $} from "./build/io.min.js";
 
-    // const service = new IoServiceLoader({path: '../service.js'});
-
-    export class IoMainPage extends IoElement {
+    export class IoMainPage extends IoSelectorTabs {
+      static get properties() {
+        return {
+          selected: $('page', 'About', true),
+          role: 'main',
+          class: 'main',
+        };
+      }
       constructor(props) {
         super(props);
-        this.template([
-          ['io-selector-tabs', {class: 'main', selected: $('page', 'About', true), elements: [
-            ['io-md-view', {name: 'About', path :'./docs/core/about.md'}],
-            ['io-selector-sidebar', {name: 'Docs', precache: true, class: 'docs', selected: $('doc', 'getting-started'),
-              options: [
-                {label: "Core", options: [
-                  "getting-started",
-                  "node",
-                  "element",
-                  "quad",
-                ]},
-                {label: "Basic Elements", options: [
-                  "button",
-                  "boolean",
-                  "switch",
-                  "string",
-                  "number",
-                  "slider",
-                  "option",
-                ]},
-                {label: "Layout & Navigation", options: [
-                  "collapsable",
-                  "selector",
-                  "selector-tabs",
-                  "selector-sidebar",
-                  "tabs",
-                  "sidebar",
-                  "breadcrumbs",
-                  "menu",
-                ]},
-                {label: "Object Editors", options: [
-                  "properties",
-                  "object",
-                  "inspector",
-                ]},
-              ],
-              elements: [
-                ['io-md-view', {name: 'button', path :'./docs/elements/button.md'}],
-                ['io-md-view', {name: 'boolean', path :'./docs/elements/boolean.md'}],
-                ['io-md-view', {name: 'switch', path :'./docs/elements/switch.md'}],
-                ['io-md-view', {name: 'number', path :'./docs/elements/number.md'}],
-                ['io-md-view', {name: 'string', path :'./docs/elements/string.md'}],
-                ['io-md-view', {name: 'slider', path :'./docs/elements/slider.md'}],
-                ['io-md-view', {name: 'option', path :'./docs/elements/option.md'}],
-                //
-                ['io-md-view', {name: 'collapsable', path :'./docs/elements/collapsable.md'}],
-                ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
-                ['io-md-view', {name: 'selector-tabs', path :'./docs/elements/selector-tabs.md'}],
-                ['io-md-view', {name: 'selector-sidebar', path :'./docs/elements/selector-sidebar.md'}],
-                ['io-md-view', {name: 'tabs', path :'./docs/elements/tabs.md'}],
-                ['io-md-view', {name: 'sidebar', path :'./docs/elements/sidebar.md'}],
-                ['io-md-view', {name: 'breadcrumbs', path :'./docs/elements/breadcrumbs.md'}],
-                ['io-md-view', {name: 'menu', path :'./docs/elements/menu.md'}],
-                //
-                ['io-md-view', {name: 'properties', path :'./docs/elements/properties.md'}],
-                ['io-md-view', {name: 'object', path :'./docs/elements/object.md'}],
-                ['io-md-view', {name: 'inspector', path :'./docs/elements/inspector.md'}],
-                //     ['io-md-view', {name: 'md-view', path :'./docs/elements/md-view.md'}],
-                //     ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
-                //
-                ['io-md-view', {name: 'getting-started', path :'./docs/core/getting-started.md'}],
-                ['io-md-view', {name: 'quad', path :'./docs/core/quad.md'}],
-                ['io-md-view', {name: 'node', path :'./docs/core/node.md'}],
-                ['io-md-view', {name: 'element', path :'./docs/core/element.md'}],
-                //
-                //     ['io-md-view', {name: 'storage', path :'./docs/utils/storage.md'}],
-                //     ['io-md-view', {name: 'service-loader', path :'./docs/utils/service-loader.md'}],
-              ]
-            }],
-            ['io-test', {name: 'Test', import: "./tests/test.js"}],
-            ['io-demo', {name: 'Demo', import: "./demo/demo.js"}],
-            ['todo-app', {name: 'TODO', import: "./demo/todomvc/todo-app.js"}],
-          ]}],
-        ]);
+        this.elements = [
+          ['io-md-view', {name: 'About', path :'./docs/core/about.md'}],
+          ['io-selector-sidebar', {name: 'Docs', precache: true, class: 'docs', selected: $('doc', 'getting-started'),
+            options: [
+              {label: "Core", options: [
+                "getting-started",
+                "node",
+                "element",
+                "quad",
+              ]},
+              {label: "Basic Elements", options: [
+                "button",
+                "boolean",
+                "switch",
+                "string",
+                "number",
+                "slider",
+                "option",
+              ]},
+              {label: "Layout & Navigation", options: [
+                "collapsable",
+                "selector",
+                "selector-tabs",
+                "selector-sidebar",
+                "tabs",
+                "sidebar",
+                "breadcrumbs",
+                "menu",
+              ]},
+              {label: "Object Editors", options: [
+                "properties",
+                "object",
+                "inspector",
+              ]},
+            ],
+            elements: [
+              ['io-md-view', {name: 'button', path :'./docs/elements/button.md'}],
+              ['io-md-view', {name: 'boolean', path :'./docs/elements/boolean.md'}],
+              ['io-md-view', {name: 'switch', path :'./docs/elements/switch.md'}],
+              ['io-md-view', {name: 'number', path :'./docs/elements/number.md'}],
+              ['io-md-view', {name: 'string', path :'./docs/elements/string.md'}],
+              ['io-md-view', {name: 'slider', path :'./docs/elements/slider.md'}],
+              ['io-md-view', {name: 'option', path :'./docs/elements/option.md'}],
+              //
+              ['io-md-view', {name: 'collapsable', path :'./docs/elements/collapsable.md'}],
+              ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
+              ['io-md-view', {name: 'selector-tabs', path :'./docs/elements/selector-tabs.md'}],
+              ['io-md-view', {name: 'selector-sidebar', path :'./docs/elements/selector-sidebar.md'}],
+              ['io-md-view', {name: 'tabs', path :'./docs/elements/tabs.md'}],
+              ['io-md-view', {name: 'sidebar', path :'./docs/elements/sidebar.md'}],
+              ['io-md-view', {name: 'breadcrumbs', path :'./docs/elements/breadcrumbs.md'}],
+              ['io-md-view', {name: 'menu', path :'./docs/elements/menu.md'}],
+              //
+              ['io-md-view', {name: 'properties', path :'./docs/elements/properties.md'}],
+              ['io-md-view', {name: 'object', path :'./docs/elements/object.md'}],
+              ['io-md-view', {name: 'inspector', path :'./docs/elements/inspector.md'}],
+              //     ['io-md-view', {name: 'md-view', path :'./docs/elements/md-view.md'}],
+              //     ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
+              //
+              ['io-md-view', {name: 'getting-started', path :'./docs/core/getting-started.md'}],
+              ['io-md-view', {name: 'quad', path :'./docs/core/quad.md'}],
+              ['io-md-view', {name: 'node', path :'./docs/core/node.md'}],
+              ['io-md-view', {name: 'element', path :'./docs/core/element.md'}],
+              //
+              //     ['io-md-view', {name: 'storage', path :'./docs/utils/storage.md'}],
+              //     ['io-md-view', {name: 'service-loader', path :'./docs/utils/service-loader.md'}],
+            ]
+          }],
+          ['io-test', {name: 'Test', import: "./tests/test.js"}],
+          ['io-demo', {name: 'Demo', import: "./demo/demo.js"}],
+          ['todo-app', {name: 'TODO', import: "./demo/todomvc/todo-app.js"}],
+        ];
       }
     }
     IoMainPage.Register();

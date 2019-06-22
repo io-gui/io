@@ -6,7 +6,7 @@ export class IoSidebar extends IoElement {
       :host {
         display: flex;
         flex-wrap: nowrap;
-        overflow: visible;
+        overflow: auto;
         flex: 0 0 auto;
         line-height: 1.5em;
         padding: 0 var(--io-spacing);
@@ -15,6 +15,7 @@ export class IoSidebar extends IoElement {
         font-size: 1.2em;
       }
       :host:not([overflow]) {
+        -webkit-overflow-scrolling: touch;
         flex-direction: column;
       }
       :host io-collapsable,
@@ -88,7 +89,7 @@ export class IoSidebar extends IoElement {
         }]);
       } else {
         const option = options[i].label || options[i].value || options[i];
-        const selected = this.selected === options[i] || this.selected === options[i].value;
+        const selected = this.selected && (this.selected === options[i] || this.selected === options[i].value);
         elements.push(['io-button', {
           label: option,
           value: option,

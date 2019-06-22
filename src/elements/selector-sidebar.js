@@ -14,8 +14,6 @@ export class IoSelectorSidebar extends IoSelector {
       }
       :host:not([overflow]) > io-sidebar {
         flex: 0 0 8em;
-        overflow: scroll;
-        -webkit-overflow-scrolling: touch;
       }
       :host > .io-content {
         overflow: auto;
