@@ -12,9 +12,6 @@ export class IoSelectorSidebar extends IoSelector {
       :host[overflow] {
         flex-direction: column;
       }
-      :host > io-sidebar {
-        z-index: 1;
-      }
       :host:not([overflow]) > io-sidebar {
         flex: 0 0 8em;
       }
