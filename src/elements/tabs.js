@@ -102,7 +102,7 @@ export class IoTabs extends IoElement {
         label: options[i].label || options[i],
         value: options[i].value || options[i],
         action: this._onSelect,
-        className: (selected ? 'io-selected-tab' : '') + ' io-tab',
+        class: (selected ? 'io-selected-tab' : '') + ' io-tab',
       }];
       elements.push(button);
     }

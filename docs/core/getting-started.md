@@ -209,7 +209,7 @@ Here is a slightly more complex tree with array iterator:
 this.template([
   ['h4', 'Array indices:'],
   ['div', [
-    this.items.map(i => ['span', {className: 'item'}, i])
+    this.items.map(i => ['span', {class: 'item'}, i])
   ]]
 ]);
 ```

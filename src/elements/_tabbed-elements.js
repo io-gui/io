@@ -426,17 +426,17 @@ export class IoTabs extends IoElement {
     // const currentIndex = this.filter.indexOf(this.selected);
     for (let i = 0; i < this.filter.length; i++) {
       const selected = this.selected === this.filter[i];
-      let className = 'io-tab';
-      if (selected) className += ' io-selected-tab';
+      let _class = 'io-tab';
+      if (selected) _class += ' io-selected-tab';
       if (this.dropIndex !== -1) {// && this.dropIndex !== currentIndex && this.dropIndex !== currentIndex + 1) {
-        if (this.dropIndex === i) className += ' io-tab-insert-before';
-        if (this.dropIndex === i + 1) className += ' io-tab-insert-after';
+        if (this.dropIndex === i) _class += ' io-tab-insert-before';
+        if (this.dropIndex === i + 1) _class += ' io-tab-insert-after';
       }
       const button = ['io-button', {
         label: this.filter[i],
         value: this.filter[i],
         action: this.select,
-        className: className,
+        class: _class,
       }];
       if (this.editable) button[1]['on-pointerdown'] = this._onPointerdown;
       if (selected) selectedButton = button;
@@ -458,9 +458,9 @@ export class IoTabs extends IoElement {
 
     if (this.editable) {
       elements.push(['div', {
-        className: 'edit-spacer'
+        class: 'edit-spacer'
       }], ['io-option', {
-        className: 'edit-option',
+        class: 'edit-option',
         label: '⚙️',
         options: options,
       }]);

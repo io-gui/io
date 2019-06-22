@@ -78,9 +78,9 @@ export class IoElementDemo extends IoElement {
   changed() {
     if (this.element) {
       this.template([
-        ['div', {className: 'demo-tag'}, '<' + this.element + '>'],
+        ['div', {class: 'demo-tag'}, '<' + this.element + '>'],
         ['io-properties', {value: this.properties, config: this.config}],
-        ['div', {className: 'io-content'}, [
+        ['div', {class: 'io-content'}, [
           [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
         ]],
       ]);

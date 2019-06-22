@@ -393,28 +393,28 @@ export class TodoApp extends IoElement {
     const items = this.model.items.filter(this.model.filters[this.route]);
 
     this.template([
-      ['section', {className: 'todoapp'}, [
-        ['header', {className: 'header'}, [
+      ['section', {class: 'todoapp'}, [
+        ['header', {class: 'header'}, [
           ['h1', 'todos'],
         ]],
-        ['input', {id: 'input', className: 'new-todo', placeholder: 'What needs to be done?', 'on-keyup': this.onInputKey, autofocus: true}],
-        ['section', {className: 'main'}, [
-          ['input', {type: 'checkbox', className: 'toggle-all', checked: allCompleted, 'on-click': this.model.toggleItemsCompleted}],
-          ['ul', {className: 'todo-list'}, [
+        ['input', {id: 'input', class: 'new-todo', placeholder: 'What needs to be done?', 'on-keyup': this.onInputKey, autofocus: true}],
+        ['section', {class: 'main'}, [
+          ['input', {type: 'checkbox', class: 'toggle-all', checked: allCompleted, 'on-click': this.model.toggleItemsCompleted}],
+          ['ul', {class: 'todo-list'}, [
             items.map((item, i) => ['todo-item', {item: item, model: this.model}])
           ]]
         ]],
-        itemCount ? ['footer', {className: 'footer'}, [
-          ['span', {className: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'],
-          ['div', {className: 'filters'}, [
-            ['a', {'on-click': this.setRoute, className: this.route === 'all' ? 'selected' : ''}, 'All'],
-            ['a', {'on-click': this.setRoute, className: this.route === 'active' ? 'selected' : ''}, 'Active'],
-            ['a', {'on-click': this.setRoute, className: this.route === 'completed' ? 'selected' : ''}, 'Completed']
+        itemCount ? ['footer', {class: 'footer'}, [
+          ['span', {class: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'],
+          ['div', {class: 'filters'}, [
+            ['a', {'on-click': this.setRoute, class: this.route === 'all' ? 'selected' : ''}, 'All'],
+            ['a', {'on-click': this.setRoute, class: this.route === 'active' ? 'selected' : ''}, 'Active'],
+            ['a', {'on-click': this.setRoute, class: this.route === 'completed' ? 'selected' : ''}, 'Completed']
           ]],
-          completedCount? ['button', {className: 'clear-completed', 'on-click': this.model.clearCompletedItems}, 'Clear completed'] : null
+          completedCount? ['button', {class: 'clear-completed', 'on-click': this.model.clearCompletedItems}, 'Clear completed'] : null
         ]] : null
       ]],
-      ['footer', {className: 'info'}, [
+      ['footer', {class: 'info'}, [
         ['p', 'Double-click to edit a todo'],
         ['p', 'Created by Aki Rodić'],
         ['p', 'Part of TodoMVC'],

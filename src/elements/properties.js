@@ -85,10 +85,10 @@ export class IoProperties extends IoElement {
         const tag = config[c][0];
         const protoConfig = config[c][1];
         const label = config[c].label || c;
-        const itemConfig = {className: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+        const itemConfig = {class: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
         elements.push(
-          ['div', {className: 'io-property'}, [
-            this.labeled ? ['span', {className: 'io-property-label', title: label}, label + ':'] : null,
+          ['div', {class: 'io-property'}, [
+            this.labeled ? ['span', {class: 'io-property-label', title: label}, label + ':'] : null,
             [tag, Object.assign(itemConfig, protoConfig)]
           ]]);
         // }

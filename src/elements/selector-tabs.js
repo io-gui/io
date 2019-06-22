@@ -37,7 +37,7 @@ export class IoSelectorTabs extends IoSelector {
       options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
       'on-value-set': this._onSelected,
     }];
-    this.template([tabs, ['div', {id: 'content', className: 'io-content'}]]);
+    this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);
   }
 }
 

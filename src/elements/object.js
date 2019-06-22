@@ -33,7 +33,7 @@ export class IoObject extends IoCollapsable {
       ['io-boolean', {true: label, false: label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       this.expanded ? [
         ['io-properties', {
-          className: 'io-content',
+          class: 'io-content',
           value: this.value,
           properties: this.properties,
           config: this.config,

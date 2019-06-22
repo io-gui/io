@@ -88,7 +88,7 @@ export class IoSelector extends IoElement {
     }
   }
   renderShadow() {
-    this.template([['div', {id: 'content', className: 'io-content'}]]);
+    this.template([['div', {id: 'content', class: 'io-content'}]]);
   }
   changed() {
     let element = this.elements.find(element => {return element[1].name === this.selected;});

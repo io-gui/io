@@ -66,7 +66,7 @@ export class IoLayoutDivider extends IoElement {
   }
   changed() {
     this.template([
-      ['div', {className: 'app-divider'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
+      ['div', {class: 'app-divider'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
     ]);
   }
 }

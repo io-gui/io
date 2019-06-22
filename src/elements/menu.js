@@ -236,9 +236,9 @@ export class IoMenuItem extends IoElement {
   changed() {
     this.$options.setProperties({$parent: this, options: this.options, position: this.position});
     this.template([
-      ['span', {className: 'io-menu-icon'}, this.icon],
-      ['span', {className: 'io-menu-label'}, this.label || String(this.value)],
-      ['span', {className: 'io-menu-hint'}, (this.hint || '') + (this.options.length ? '▸' : '')],
+      ['span', {class: 'io-menu-icon'}, this.icon],
+      ['span', {class: 'io-menu-label'}, this.label || String(this.value)],
+      ['span', {class: 'io-menu-hint'}, (this.hint || '') + (this.options.length ? '▸' : '')],
     ]);
   }
 }

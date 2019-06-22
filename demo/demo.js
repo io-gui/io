@@ -70,13 +70,13 @@ export class IoDemo extends IoElement {
 
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
     const pointerEventsWarning = [
-      "PointerEvent" in window ? [] : ['div', {className: 'warning'}, [
+      "PointerEvent" in window ? [] : ['div', {class: 'warning'}, [
         ['p', 'This feature requires missing PointerEvents support!'],
         ['a', {href: "https://github.com/jquery/PEP#why-pointer-events"}, 'Learn more about the API!'],
       ]]
     ]
 
-    const demoPrimitives = ['div', {name: 'primitives', className: 'table'}, [
+    const demoPrimitives = ['div', {name: 'primitives', class: 'table'}, [
       ['span', 'io-string'],
       ['span', 'io-number'],
       ['span', 'io-boolean'],
@@ -126,7 +126,7 @@ export class IoDemo extends IoElement {
       ['io-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
     ]];
 
-    const demoButton = ['div', {name: 'button', className: 'table'}, [
+    const demoButton = ['div', {name: 'button', class: 'table'}, [
       ['io-button', {label: 'set 0.3', action: this.setNumber, value: 0.3}],
       ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
       ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
@@ -170,8 +170,8 @@ export class IoDemo extends IoElement {
         ['span', 'click'],
         ['io-menu', {options: this.menuoptions, position: 'pointer', button: 0}], ['br'],
       ]], ['br'],
-      ['io-menu-options', {className: 'sidebar', options: this.menuoptions}], ['br'], ['br'],
-      ['io-menu-options', {className: 'menubar', options: this.menuoptions, horizontal: true}],
+      ['io-menu-options', {class: 'sidebar', options: this.menuoptions}], ['br'], ['br'],
+      ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
     ]];
 
     const demoLayout = ['io-layout', {

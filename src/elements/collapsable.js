@@ -68,7 +68,7 @@ export class IoCollapsable extends IoElement {
   changed() {
     this.template([
       ['io-boolean', {true: this.label, false: this.label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
-      ['div', {id: 'content', className: 'io-content'}, (this.expanded && this.elements.length) ? this.elements : [null]],
+      ['div', {id: 'content', class: 'io-content'}, (this.expanded && this.elements.length) ? this.elements : [null]],
     ]);
     this.children[0].setAttribute('aria-expanded', String(this.expanded));
   }

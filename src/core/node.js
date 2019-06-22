@@ -125,11 +125,11 @@ export const IoNodeMixin = (superclass) => {
         if (value !== oldValue) this.queue(p, value, oldValue);
       }
 
-      if (props['className']) {
-        this.className = props['className'];
-      } else if (this.removeAttribute) {
-        this.removeAttribute('className');
-      }
+      // if (props['className']) {
+      //   this.className = props['className'];
+      // } else if (this.removeAttribute) {
+      //   this.removeAttribute('className');
+      // }
 
       if (props['style']) {
         for (let s in props['style']) {

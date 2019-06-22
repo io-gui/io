@@ -42,6 +42,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         reflect: true,
         enumerable: false,
       },
+      class: {
+        type: String,
+        reflect: true,
+      },
       $: {
         type: Object,
       },
@@ -194,6 +198,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
               }
             } else if (prop === 'id') {
               // Skipping. Id's are used for $ in io.
+            } else if (prop === 'class') {
+              children[i]['className'] = vChildren[i].props[prop];
             } else {
               children[i][prop] = vChildren[i].props[prop];
             }
@@ -353,6 +359,8 @@ const constructElement = function(vDOMNode) {
      }
    } else if (prop === 'id') {
      // Skipping. Id's are used for $ in io.
+   } else if (prop === 'class') {
+     element['className'] = vDOMNode.props[prop];
    } else element[prop] = vDOMNode.props[prop];
    if (prop === 'name') element.setAttribute('name', vDOMNode.props[prop]); // TODO: Reconsider
  }

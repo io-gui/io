@@ -9,7 +9,7 @@ export class IoSidebar extends IoElement {
         overflow: visible;
         flex: 0 0 auto;
         line-height: 1.5em;
-        padding: var(--io-spacing) 0;
+        padding: 0 var(--io-spacing);
       }
       :host[overflow] {
         font-size: 1.2em;
@@ -93,7 +93,7 @@ export class IoSidebar extends IoElement {
           label: option,
           value: option,
           action: this._onSelect,
-          className: (selected ? 'io-selected-tab' : '') + ' io-tab',
+          class: (selected ? 'io-selected-tab' : '') + ' io-tab',
         }]);
       }
     }

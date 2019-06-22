@@ -54,9 +54,9 @@ export class IoSelectorSidebar extends IoSelector {
       'on-value-set': this._onSelected,
     }];
     if (this.left || this.overflow) {
-      this.template([tabs, ['div', {id: 'content', className: 'io-content'}]]);
+      this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);
     } else {
-      this.template([['div', {id: 'content', className: 'io-content'}], tabs]);
+      this.template([['div', {id: 'content', class: 'io-content'}], tabs]);
     }
   }
 }
