@@ -100,6 +100,7 @@ export class IoSliderKnob extends IoQuad {
       'touchstart': '_onTouchstart',
       'mousedown': '_onMousedown',
       'keydown': '_onKeydown',
+      'focus': 'resized'
     };
   }
   _onTouchstart(event) {

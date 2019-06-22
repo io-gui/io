@@ -10,6 +10,7 @@ export class IoInspector extends IoElement {
     :host {
       display: flex;
       flex-direction: column;
+      align-self: stretch;
       border: var(--io-border);
       border-radius: var(--io-border-radius);
       padding: var(--io-spacing);

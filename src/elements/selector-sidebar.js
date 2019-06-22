@@ -14,6 +14,12 @@ export class IoSelectorSidebar extends IoSelector {
       }
       :host:not([overflow]) > io-sidebar {
         flex: 0 0 8em;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+      }
+      :host > .io-content {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
       }
     </style>`;
   }
@@ -21,7 +27,7 @@ export class IoSelectorSidebar extends IoSelector {
     return {
       options: Array,
       left: true,
-      minWidth: 460,
+      minWidth: 410,
       overflow: {
         type: Boolean,
         reflect: true,

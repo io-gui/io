@@ -37,8 +37,7 @@ export class IoSwitch extends IoButton {
         background-color: var(--io-hover-bg);
       }
       :host:focus > div {
-        outline: 1px solid var(--io-focus-color);
-        outline-offset: 2px;
+        border-color: var(--io-focus-color);
       }
       :host > div:after {
         display: inline-block;

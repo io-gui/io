@@ -35,15 +35,18 @@ export class IoMdView extends IoElement {
         padding: 0.5em 1em;
       }
       :host table  {
-        width: 100%;
+        width: 100% !important;
         border: 1px solid black;
         border-collapse: collapse;
+        table-layout: fixed;
       }
       :host table td,
       :host table tr,
       :host table th {
         border: 1px solid gray;
         padding: 0.25em;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       :host .videocontainer {
           width: 100%;

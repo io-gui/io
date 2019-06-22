@@ -9,7 +9,7 @@ export class IoSidebar extends IoElement {
         overflow: visible;
         flex: 0 0 auto;
         line-height: 1.5em;
-        padding: var(--io-spacing);
+        padding: var(--io-spacing) 0;
       }
       :host[overflow] {
         font-size: 1.2em;
@@ -23,13 +23,13 @@ export class IoSidebar extends IoElement {
       :host io-button {
         flex: 0 0 auto;
         margin: 0;
-        padding: 0;
+        padding: var(--io-spacing);
         border: none;
         background: none;
       }
-      :host io-button {
-        padding-left: 1em;
-        padding-right: 1em;
+      :host:not([overflow]) io-collapsable > io-button {
+        padding-left: 0.5em;
+        padding-right: 0.5em;
       }
       :host .io-content {
         display: flex;

@@ -15,6 +15,9 @@ export class IoSelectorTabs extends IoSelector {
         margin-bottom: 0;
         flex-shrink: 0;
       }
+      :host > .io-content {
+        -webkit-overflow-scrolling: touch;
+      }
     </style>`;
   }
   static get properties() {
