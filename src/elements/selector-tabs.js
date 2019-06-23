@@ -1,6 +1,7 @@
 import {html} from "../core/element.js";
 import {IoSelector} from "./selector.js";
 import "./tabs.js";
+import {filterObject} from "../utils/utility-functions.js";
 
 export class IoSelectorTabs extends IoSelector {
   static get style() {
@@ -30,14 +31,24 @@ export class IoSelectorTabs extends IoSelector {
       this.set('selected', event.detail.value);
     }
   }
+  _onScroll() {
+    super._onScroll();
+    if (this.$.tabs.selected !== this.selected) {
+      let hasOption = !!filterObject(this.options, (property) => {
+        return property === this.selected || property.value === this.selected;
+      });
+      if (hasOption) this.$.tabs.selected = this.selected;
+    }
+  }
   renderShadow() {
     const tabs = ['io-tabs', {
+      id: 'tabs',
       elements: this.elements,
       selected: this.selected,
       options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
       'on-value-set': this._onSelected,
     }];
-    this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);
+    this.template([tabs, ['div', {id: 'content', class: 'io-content', 'on-scroll': this._onScroll}]]);
   }
 }
 

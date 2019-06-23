@@ -116,7 +116,7 @@
         opacity: 0.5;
       }
       .docs > io-sidebar:not([overflow]) {
-        flex-basis: 11em !important;
+        flex-basis: 14em !important;
       }
       .docs > .io-content {
         border-radius: 0;
@@ -138,6 +138,8 @@
           selected: $('page', 'About', true),
           role: 'main',
           class: 'main',
+          // precache: true, //TODO
+          // maxWidth: 1000,
         };
       }
       constructor(props) {
@@ -146,8 +148,18 @@
           ['io-md-view', {name: 'About', path :'./docs/core/about.md'}],
           ['io-selector-sidebar', {name: 'Docs', precache: true, class: 'docs', selected: $('doc', 'getting-started'),
             options: [
+              {label: "Getting Started", options: [
+                {label: "Importing Io", value: "getting-started#importing-io"},
+                {label: "Defining Classes", value: "getting-started#defining-new-classes"},
+                {label: "Simple App", value: "getting-started#creating-a-simple-application"},
+                {label: "Style", value: "getting-started#style"},
+                {label: "Properties", value: "getting-started#properties"},
+                {label: "Listeners", value: "getting-started#listeners"},
+                {label: "Change Handlers", value: "getting-started#change-handler-functions"},
+                {label: "Simple App Recap", value: "getting-started#simple-app-recap"},
+                {label: "Virtual DOM", value: "getting-started#virtual-dom-arrays"},
+              ]},
               {label: "Core", options: [
-                "getting-started",
                 "node",
                 "element",
                 "quad",

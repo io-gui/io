@@ -1,4 +1,5 @@
 import {html, IoElement} from "../core/element.js";
+import {filterObject} from "../utils/utility-functions.js";
 
 export class IoSidebar extends IoElement {
   static get style() {
@@ -64,6 +65,7 @@ export class IoSidebar extends IoElement {
   static get properties() {
     return {
       selected: String,
+      label: String,
       options: Array,
       overflow: {
         type: Boolean,
@@ -88,11 +90,10 @@ export class IoSidebar extends IoElement {
           elements: [...this._addOptions(options[i].options)]
         }]);
       } else {
-        const option = options[i].label || options[i].value || options[i];
         const selected = this.selected && (this.selected === options[i] || this.selected === options[i].value);
         elements.push(['io-button', {
-          label: option,
-          value: option,
+          label: options[i].label || options[i].value || options[i],
+          value: options[i].value || options[i],
           action: this._onSelect,
           class: (selected ? 'io-selected-tab' : '') + ' io-tab',
         }]);
@@ -101,17 +102,19 @@ export class IoSidebar extends IoElement {
     return elements;
   }
   changed() {
-    const options = this.options;
+    let option = filterObject(this.options, (option) => {
+      return option === this.selected || option.value === this.selected;
+    });
     if (this.overflow) {
       this.template([['io-option', {
         label: '☰',
         title: 'select tab',
         value: this.selected,
-        options: options,
+        options: this.options,
         'on-value-set': this._onValueSet,
-      }], ['span', String(this.selected)]]);
+      }], ['span', option ? option.label : String(this.selected)]]);
     } else {
-      this.template([...this._addOptions(options)]);
+      this.template([...this._addOptions(this.options)]);
     }
   }
 }
