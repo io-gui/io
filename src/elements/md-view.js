@@ -19,6 +19,22 @@ export class IoMdView extends IoElement {
         text-decoration: none;
         color: var(--io-link-color);
       }
+      :host h1 {
+        margin: 0;
+        padding: 1em 0;
+      }
+      :host h2 {
+        margin: 0;
+        padding: 0.75em 0;
+      }
+      :host h3 {
+        margin: 0;
+        padding: 0.5em 0;
+      }
+      :host h4 {
+        margin: 0;
+        padding: 0.25em 0;
+      }
       :host code {
         background: rgba(0,0,0,0.25);
         overflow: auto;
@@ -76,11 +92,12 @@ export class IoMdView extends IoElement {
   pathChanged() {
     const scope = this;
     fetch(this.path)
-    .then(function(response) {
+    .then(response => {
       return response.text();
     })
-    .then(function(text) {
+    .then(text => {
       if (window.marked) scope.innerHTML = window.marked(text);
+      this.dispatchEvent('content-ready', {}, true);
     });
   }
 }
