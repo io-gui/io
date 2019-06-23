@@ -103,7 +103,7 @@ export class IoTabs extends IoElement {
     }
     this.overflow = overflow;
   }
-  selectedChanged(event) {
+  selectedChanged() {
     this.setOverflow();
   }
   changed() {

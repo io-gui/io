@@ -114,7 +114,7 @@ export class IoSelector extends IoElement {
       }
     }
   }
-  _onScroll(event) {
+  _onScroll() {
     if (this.__autoScrolling) return;
     const scrollableElements = this.$.content.querySelectorAll('[id]');
     const scroll = this.$.content.scrollTop + 30;
@@ -133,7 +133,7 @@ export class IoSelector extends IoElement {
       }
     }
   }
-  scrollIDChanged(a) {
+  scrollIDChanged() {
     clearTimeout(this.__autoScrolling);
     this.__autoScrolling = setTimeout(()=>{
       this.__autoScrolling = false;
