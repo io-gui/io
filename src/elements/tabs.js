@@ -10,9 +10,9 @@ export class IoTabs extends IoElement {
         align-self: stretch;
         flex-wrap: nowrap;
         overflow: visible;
-        flex: 0 1 auto;
+        flex: 0 0 auto;
       }
-      :host > * {
+      :host > io-button {
         flex: 0 0 auto;
         margin-right: var(--io-spacing);
         border-bottom-left-radius: 0;
@@ -31,6 +31,7 @@ export class IoTabs extends IoElement {
         line-height: 1.3em;
         background: none !important;
         border: none;
+        margin-left: auto;
         margin-right: 0;
       }
       :host > .io-hidden {
@@ -130,6 +131,7 @@ export class IoTabs extends IoElement {
       'on-value-set': this._onValueSet,
     }]);
     this.template(elements);
+    this.setOverflow();
   }
 }
 

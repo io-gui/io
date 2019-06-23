@@ -112,7 +112,7 @@ export class IoSidebar extends IoElement {
         value: this.selected,
         options: this.options,
         'on-value-set': this._onValueSet,
-      }], ['span', option ? option.label : String(this.selected)]]);
+      }], ['span', option ? (option.label || option.value || option) : String(this.selected)]]);
     } else {
       this.template([...this._addOptions(this.options)]);
     }
