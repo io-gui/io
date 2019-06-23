@@ -8,10 +8,6 @@ Extends `<io-selector>`. Implements `<io-tabs>`.
 
 | Property | Type | Description | Default |
 |:---------|:-----|:------------|:--------|
-| **`elements`** | Array    | Array with virtual elements | `[]`    |
-| **`selected`** | String   | Selected element            | `''`    |
-| **`cache`**    | Boolean  | Cache elements for reuse    | `false` |
-| **`precache`** | Boolean  | Precache elements           | `false` |
 | **`options`**  | Array    | Filtered element options    | `[]`    |
 
 #### Events ####

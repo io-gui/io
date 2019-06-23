@@ -8,10 +8,6 @@ Extends `<io-selector>`. Implements `<io-sidebar>`.
 
 | Property | Type | Description | Default |
 |:---------|:-----|:------------|:--------|
-| **`elements`** | Array    | Array with virtual elements | `[]`    |
-| **`selected`** | String   | Selected element            | `''`    |
-| **`cache`**    | Boolean  | Cache elements for reuse    | `false` |
-| **`precache`** | Boolean  | Precache elements           | `false` |
 | **`options`**  | Array    | Filtered element options    | `[]`    |
 | **`left`**     | Boolean  | Sidebar on the left side    | `true`  |
 | **`minWidth`** | Number   | Sidebar collapse width      | `410`   |

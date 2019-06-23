@@ -12,7 +12,6 @@ When breadcrumb item is clicked or activated by space/enter key, it sets the val
 
 | Property | Type | Description | Default |
 |:---------|:-----|:------------|:--------|
-| **`value`**   | _any_    | Current value               | `undefined` |
 | **`options`** | Array    | Array with options          | `[]` |
 | **`trim`**    | Boolean  | Trim options to value index | `false` |
 

@@ -12,5 +12,6 @@ If `precache` property is set to `true`, all elements will be created for immedi
 |:---------|:-----|:------------|:--------|
 | **`elements`** | Array    | Array with virtual elements | `[]`    |
 | **`selected`** | String   | Selected element            | `''`    |
+| **`scrollid`** | String   | Scrolled element id         | `''`    |
 | **`cache`**    | Boolean  | Cache elements for reuse    | `false` |
 | **`precache`** | Boolean  | Precache elements           | `false` |

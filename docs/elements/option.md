@@ -14,8 +14,6 @@ When clicked or activated by space/enter key, it expands a menu with selectable 
 
 | Property | Type | Description | Default |
 |:---------|:-----|:------------|:--------|
-| **`label`**   | String   | Label text         | `''`  |
-| **`value`**   | _any_    | Current value      | `undefined` |
 | **`options`** | Array    | Array with options | `[]` |
 
 #### Events ####

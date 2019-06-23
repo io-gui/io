@@ -1,4 +1,4 @@
-## Getting Started ##
+## Importing Io ##
 
 Io library can be imported as a module from `build/io.js`. You can extend its `IoElement` class to create custom elements and applications.
 
