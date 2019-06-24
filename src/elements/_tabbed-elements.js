@@ -254,23 +254,23 @@ export class IoTabs extends IoElement {
         border-bottom-color: var(--io-background-color);
         border-bottom-style: solid;
         background: var(--io-background-color);
-        color: var(--io-link-color);
+        color: var(--io-color-link);
         margin-bottom: -1px;
         background-image: none;
       }
       :host > io-button.io-tab-insert-before {
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(90deg, var(--io-focus-color) 0.3em, transparent 0.31em);
+                          linear-gradient(90deg, var(--io-color-focus) 0.3em, transparent 0.31em);
       }
       :host > io-button.io-tab-insert-after {
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(270deg, var(--io-focus-color) 0.3em, transparent 0.31em);
+                          linear-gradient(270deg, var(--io-color-focus) 0.3em, transparent 0.31em);
       }
       :host > io-button.io-selected-tab.io-tab-insert-before {
-        background-image: linear-gradient(90deg, var(--io-focus-color) 0.3em, transparent 0.31em);
+        background-image: linear-gradient(90deg, var(--io-color-focus) 0.3em, transparent 0.31em);
       }
       :host > io-button.io-selected-tab.io-tab-insert-after {
-        background-image: linear-gradient(270deg, var(--io-focus-color) 0.3em, transparent 0.31em);
+        background-image: linear-gradient(270deg, var(--io-color-focus) 0.3em, transparent 0.31em);
       }
       :host > io-option {
         background: none !important;
@@ -512,7 +512,7 @@ export class IoTabDropzone extends IoElement {
         pointer-events: none;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
-        border: 4px solid var(--io-focus-color);
+        border: 4px solid var(--io-color-focus);
         border-radius: var(--io-border-radius);
         transform: translateZ(0);
         position: fixed;

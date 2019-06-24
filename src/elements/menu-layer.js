@@ -58,6 +58,7 @@ export class IoMenuLayer extends IoElement {
       'touchmove': '_onTouchmove',
       'touchend': '_onTouchend',
       'contextmenu': '_onContextmenu',
+      'io-menu-item-clicked': '_onMenuItemClicked',
     };
   }
   constructor(props) {
@@ -96,7 +97,6 @@ export class IoMenuLayer extends IoElement {
   }
   runAction(option) {
     // if (option.options.length) option.$options.expanded = true;
-
     if (typeof option.action === 'function') {
       this.collapseAll();
       option.action.apply(null, [option.value]);
@@ -156,128 +156,126 @@ export class IoMenuLayer extends IoElement {
     // }
   }
   _onPointermove(event) {
-    const movementX = event.clientX - this._x;
-    const movementY = event.clientY - this._y;
-    this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
-    this._x = event.clientX;
-    this._y = event.clientY;
-    let options = this.$options;
-    for (let i = options.length; i--;) {
-      if (options[i].expanded) {
-        let rect = options[i].getBoundingClientRect();
-        if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-          this._hover(options[i]);
-          this._hoveredOptions = options[i];
-          return options[i];
-        }
-      }
-    }
-    this._hoveredItem = null;
-    this._hoveredOptions = null;
+    // const movementX = event.clientX - this._x;
+    // const movementY = event.clientY - this._y;
+    // this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
+    // this._x = event.clientX;
+    // this._y = event.clientY;
+    // let options = this.$options;
+    // for (let i = options.length; i--;) {
+    //   if (options[i].expanded) {
+    //     let rect = options[i].getBoundingClientRect();
+    //     if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+    //       this._hover(options[i]);
+    //       this._hoveredOptions = options[i];
+    //       return options[i];
+    //     }
+    //   }
+    // }
+    // this._hoveredItem = null;
+    // this._hoveredOptions = null;
   }
   _onPointerup() {
-    if (this._hoveredItem) {
-      this.runAction(this._hoveredItem);
-      const root = this._getRoot(this._hoveredItem);
-      root.dispatchEvent('menu-item-clicked', this._hoveredItem);
-      setTimeout(()=>{
-        if (this.collapseOnPointerup) this.collapseAll(); // TODO: ?
-      }, 100);
-    } else if (!this._hoveredOptions && this.collapseOnPointerup) {
-      this.collapseAll();
-    }
-    this.collapseOnPointerup = true;
+    // if (this._hoveredItem) {
+    //   this.runAction(this._hoveredItem);
+    //   const root = this._getRoot(this._hoveredItem);
+    //   root.dispatchEvent('io-menu-item-clicked', this._hoveredItem);
+    //   setTimeout(()=>{
+    //     if (this.collapseOnPointerup) this.collapseAll(); // TODO: ?
+    //   }, 100);
+    // } else if (!this._hoveredOptions && this.collapseOnPointerup) {
+    //   this.collapseAll();
+    // }
+    // this.collapseOnPointerup = true;
   }
   _onKeydown(event) {
-    event.preventDefault();
-    const path = event.composedPath();
-    if (path[0].localName !== 'io-menu-item') return;
-
-    let elem = path[0];
-    let options = elem.$parent || elem.parentElement;
-    let siblings = [...options.querySelectorAll('io-menu-item')];
-    let children = [...elem.$options.querySelectorAll('io-menu-item')];
-    let index = siblings.indexOf(elem);
-
-    let command = '';
-
-    if (!options.horizontal) {
-      if (event.key == 'ArrowUp') command = 'prev';
-      if (event.key == 'ArrowRight') command = 'in';
-      if (event.key == 'ArrowDown') command = 'next';
-      if (event.key == 'ArrowLeft') command = 'out';
-    } else {
-      if (event.key == 'ArrowUp') command = 'out';
-      if (event.key == 'ArrowRight') command = 'next';
-      if (event.key == 'ArrowDown') command = 'in';
-      if (event.key == 'ArrowLeft') command = 'prev';
-    }
-    if (event.key == 'Tab') command = 'next';
-    if (event.key == 'Escape') command = 'exit';
-    if (event.key == 'Enter' || event.which == 32) command = 'action';
-
-    switch (command) {
-      case 'action':
-        this.runAction(elem);
-        break;
-      case 'prev':
-        siblings[(index + siblings.length - 1) % (siblings.length)].focus();
-        break;
-      case 'next':
-        siblings[(index + 1) % (siblings.length)].focus();
-        break;
-      case 'in':
-        if (children.length) children[0].focus();
-        break;
-      case 'out':
-        if (options && options.$parent) options.$parent.focus();
-        break;
-      case 'exit':
-        this.collapseAll();
-        break;
-      default:
-        break;
-    }
+    // event.preventDefault();
+    // const path = event.composedPath();
+    // if (path[0].localName !== 'io-menu-item') return;
+    //
+    // let elem = path[0];
+    // let options = elem.$parent || elem.parentElement;
+    // let siblings = [...options.querySelectorAll('io-menu-item')];
+    // let children = [...elem.$options.querySelectorAll('io-menu-item')];
+    // let index = siblings.indexOf(elem);
+    //
+    // let command = '';
+    //
+    // if (!options.horizontal) {
+    //   if (event.key == 'ArrowUp') command = 'prev';
+    //   if (event.key == 'ArrowRight') command = 'in';
+    //   if (event.key == 'ArrowDown') command = 'next';
+    //   if (event.key == 'ArrowLeft') command = 'out';
+    // } else {
+    //   if (event.key == 'ArrowUp') command = 'out';
+    //   if (event.key == 'ArrowRight') command = 'next';
+    //   if (event.key == 'ArrowDown') command = 'in';
+    //   if (event.key == 'ArrowLeft') command = 'prev';
+    // }
+    // if (event.key == 'Tab') command = 'next';
+    // if (event.key == 'Escape') command = 'exit';
+    // if (event.key == 'Enter' || event.which == 32) command = 'action';
+    //
+    // switch (command) {
+    //   case 'action':
+    //     this.runAction(elem);
+    //     break;
+    //   case 'prev':
+    //     siblings[(index + siblings.length - 1) % (siblings.length)].focus();
+    //     break;
+    //   case 'next':
+    //     siblings[(index + 1) % (siblings.length)].focus();
+    //     break;
+    //   case 'in':
+    //     if (children.length) children[0].focus();
+    //     break;
+    //   case 'out':
+    //     if (options && options.$parent) options.$parent.focus();
+    //     break;
+    //   case 'exit':
+    //     this.collapseAll();
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
   _hover(options) {
-    let items = options.querySelectorAll('io-menu-item');
-    for (let i = items.length; i--;) {
-      let rect = items[i].getBoundingClientRect();
-      if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-        let force = options.horizontal;
-        this._focus(items[i], force);
-        this._hoveredItem = items[i];
-        return items[i];
-      }
-    }
-    this._hoveredItem = null;
-    this._hoveredItem = null;
+    // let items = options.querySelectorAll('io-menu-item');
+    // for (let i = items.length; i--;) {
+    //   let rect = items[i].getBoundingClientRect();
+    //   if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+    //     let force = options.horizontal;
+    //     this._focus(items[i], force);
+    //     this._hoveredItem = items[i];
+    //     return items[i];
+    //   }
+    // }
+    // this._hoveredItem = null;
+    // this._hoveredItem = null;
   }
   _focus(item, force) {
-    if (item !== previousOption) {
-      clearTimeout(timeoutOpen);
-      clearTimeout(timeoutReset);
-      if (this._v > 1 || item.parentNode !== previousParent || force) {
-        previousOption = item;
-        item.focus();
-      } else {
-        timeoutOpen = setTimeout(function() {
-          previousOption = item;
-          item.focus();
-        }.bind(this), WAIT_TIME);
-      }
-      previousParent = item.parentNode;
-      timeoutReset = setTimeout(function() {
-        previousOption = null;
-        previousParent = null;
-      }.bind(this), WAIT_TIME + 1);
-    }
+    // if (item !== previousOption) {
+    //   clearTimeout(timeoutOpen);
+    //   clearTimeout(timeoutReset);
+    //   if (this._v > 1 || item.parentNode !== previousParent || force) {
+    //     previousOption = item;
+    //     item.focus();
+    //   } else {
+    //     timeoutOpen = setTimeout(function() {
+    //       previousOption = item;
+    //       item.focus();
+    //     }.bind(this), WAIT_TIME);
+    //   }
+    //   previousParent = item.parentNode;
+    //   timeoutReset = setTimeout(function() {
+    //     previousOption = null;
+    //     previousParent = null;
+    //   }.bind(this), WAIT_TIME + 1);
+    // }
   }
-  _onOptionsExpandedChanged(options) {
-    if (options.expanded) {
-      this._hoveredOptions = options;
-      this._setGroupPosition(options);
-    }
+  _onOptionsExpanded(options) {
+    this._hoveredOptions = options;
+    this._setOptionsPosition(options);
     for (let i = this.$options.length; i--;) {
       if (this.$options[i].expanded) {
         this.expanded = true;
@@ -286,7 +284,10 @@ export class IoMenuLayer extends IoElement {
     }
     this.expanded = false;
   }
-  _setGroupPosition(options) {
+  _onMenuItemClicked(event) {
+    console.log(event)
+  }
+  _setOptionsPosition(options) {
     if (!options.$parent) return;
     let rect = options.getBoundingClientRect();
     let pRect = options.$parent.getBoundingClientRect();

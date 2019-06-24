@@ -39,7 +39,7 @@ export class IoSidebar extends IoElement {
         padding-left: 1em;
       }
       :host io-button.io-selected-tab {
-        color: var(--io-link-color);
+        color: var(--io-color-link);
         text-decoration: underline;
       }
       :host > span {
@@ -106,13 +106,14 @@ export class IoSidebar extends IoElement {
       return option === this.selected || option.value === this.selected;
     });
     if (this.overflow) {
+      const label = option ? (option.label || option.value || option) : String(this.selected);
       this.template([['io-option', {
-        label: '☰',
+        label: '☰ ' + label,
         title: 'select tab',
         value: this.selected,
         options: this.options,
         'on-value-set': this._onValueSet,
-      }], ['span', option ? (option.label || option.value || option) : String(this.selected)]]);
+      }]]);
     } else {
       this.template([...this._addOptions(this.options)]);
     }

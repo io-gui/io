@@ -1,5 +1,7 @@
 import {html, IoElement} from "../core/element.js";
 import {filterObject} from "../utils/utility-functions.js";
+import {IoMenuLayer} from "./menu-layer.js";
+import "./menu-item.js";
 
 export class IoTabs extends IoElement {
   static get style() {
@@ -9,30 +11,26 @@ export class IoTabs extends IoElement {
         flex-direction: row;
         align-self: stretch;
         flex-wrap: nowrap;
-        overflow: visible;
         flex: 0 0 auto;
+        background-color: var(--io-background-color);
       }
-      :host > io-button {
+      :host > * {
+        font-size: 1.2em;
         flex: 0 0 auto;
-        margin-right: var(--io-spacing);
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        border-bottom: none;
+        border-bottom: var(--io-border-width) solid transparent;
+        padding: calc(2 * var(--io-spacing));
       }
       :host > .io-selected-tab {
-        border-bottom-color: var(--io-background-color);
-        border-bottom-style: solid;
-        background: var(--io-background-color);
-        color: var(--io-link-color);
-        margin-bottom: -1px;
-        background-image: none;
+        border-bottom-color: var(--io-color-link);
+        color: var(--io-color-link);
       }
       :host > io-option {
-        line-height: 1.3em;
-        background: none !important;
+        line-height: 1.1em;
         border: none;
+        border-radius: 0;
         margin-left: auto;
-        margin-right: 0;
+        background: none;
+        padding: calc(2 * var(--io-spacing)) calc(4 * var(--io-spacing));
       }
       :host > .io-hidden {
         display: none;
@@ -41,7 +39,7 @@ export class IoTabs extends IoElement {
   }
   static get properties() {
     return {
-      selected: String,
+      value: undefined,
       options: Array,
       overflow: {
         type: Boolean,
@@ -51,17 +49,24 @@ export class IoTabs extends IoElement {
       _rects: Array,
     };
   }
-  _onSelect(id) {
-    this.set('selected', id);
+  static get listeners() {
+    return {
+      'io-menu-item-clicked': '_onMenuItemClicked',
+    };
+  }
+  _onMenuItemClicked(event) {
+    event.stopPropagation();
+    this.set('value', event.detail.value);
+    IoMenuLayer.singleton.collapseAll();
   }
   _onValueSet(event) {
-    this.set('selected', event.detail.value);
+    this.set('value', event.detail.value);
   }
   resized() {
     this.setOverflow();
   }
   setOverflow() {
-    const buttons = this.querySelectorAll('io-button');
+    const buttons = this.querySelectorAll('io-menu-item');
     const hamburger = this.querySelector('io-option');
     this._rects.length = buttons.length;
 
@@ -69,7 +74,7 @@ export class IoTabs extends IoElement {
     if (!buttons.length) return;
 
     const selectedIndex = this.options.indexOf(filterObject(this.options, (option) => {
-      return option === this.selected || option.value === this.selected;
+      return option === this.value || option.value === this.value;
     }));
 
     let end = this.getBoundingClientRect().right;
@@ -85,7 +90,7 @@ export class IoTabs extends IoElement {
 
       if (hamburger.className && overflow) {
         hamburger.className = '';
-        end -= hamburger.getBoundingClientRect().width;
+        end -= 1.5 * hamburger.getBoundingClientRect().width;
       }
 
       if (i === selectedIndex) {
@@ -104,21 +109,20 @@ export class IoTabs extends IoElement {
     }
     this.overflow = overflow;
   }
-  selectedChanged() {
+  valueChanged() {
     this.setOverflow();
   }
   changed() {
     const options = this.options;
     let option = filterObject(options, (option) => {
-      return option === this.selected || option.value === this.selected;
+      return option === this.value || option.value === this.value;
     });
     const elements = [];
     for (let i = 0; i < options.length; i++) {
-      const selected = this.selected && option === options[i];
-      const button = ['io-button', {
+      const selected = this.value && option === options[i];
+      const button = ['io-menu-item', {
         label: options[i].label || options[i].value || options[i],
         value: options[i].value || options[i],
-        action: this._onSelect,
         class: (selected ? 'io-selected-tab' : ''),
       }];
       elements.push(button);
@@ -126,7 +130,7 @@ export class IoTabs extends IoElement {
     elements.push(['io-option', {
       label: '☰',
       title: 'select tab',
-      value: this.selected,
+      value: this.value,
       options: options,
       'on-value-set': this._onValueSet,
     }]);

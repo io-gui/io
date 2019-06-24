@@ -17,7 +17,7 @@ export class IoMdView extends IoElement {
       :host a {
         font-weight: bold;
         text-decoration: none;
-        color: var(--io-link-color);
+        color: var(--io-color-link);
       }
       :host h1 {
         margin: 0;

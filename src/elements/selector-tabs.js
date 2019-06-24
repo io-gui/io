@@ -10,12 +10,6 @@ export class IoSelectorTabs extends IoSelector {
         flex-direction: column;
         align-self: stretch;
       }
-      :host > io-tabs {
-        z-index: 1;
-        margin: var(--io-spacing);
-        margin-bottom: 0;
-        flex-shrink: 0;
-      }
       :host > .io-content {
         -webkit-overflow-scrolling: touch;
       }

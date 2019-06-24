@@ -1,97 +1,41 @@
 import {html} from "../core/element.js";
-import {IoButton} from "./button.js";
 import {IoMenuOptions} from "./menu.js";
 import {IoMenuLayer} from "./menu-layer.js";
+import {IoMenuItem} from "./menu-item.js";
 
-export class IoOption extends IoButton {
+export class IoOption extends IoMenuItem {
   static get style() {
     return html`<style>
       :host {
-        padding: var(--io-spacing) calc(1.5 * var(--io-spacing));
-      }
-      :host:not([label])::before {
-        content: '▾';
+        background-color: var(--io-background-color-dark);
+        background-image: var(--io-gradient-button);
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
+        border-radius: var(--io-border-radius);
+        padding: var(--io-spacing);
+        padding-left: calc(3 * var(--io-spacing));
         padding-right: var(--io-spacing);
+        transition: background-color 0.4s;
+      }
+      :host:not([label])::after {
+        content: '▾';
+        padding-left: var(--io-spacing);
       }
     </style>`;
   }
-  static get properties() {
-    return {
-      options: Array,
-      label: '',
-      expanded: Boolean,
-      _option: Object,
-      _menu: IoMenuOptions,
-    };
-  }
   static get listeners() {
     return {
-      'menu-item-clicked': '_onMenu',
-      'mousedown': '_onMousedown',
-      // 'touchend': '_onTouchend',
+      'io-menu-item-clicked': '_onMenuItemClicked',
     };
   }
-  constructor(props) {
-    super(props);
-    this._menu.setProperties({
-      $parent: this,
-      expanded: this.bind('expanded'),
-      position: 'bottom',
-    });
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    IoMenuLayer.singleton.appendChild(this._menu);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    IoMenuLayer.singleton.removeChild(this._menu);
-  }
-  _onClick() {
-    // this.expanded = true;
-  }
-  // _onTouchend() {
-  // }
-  _onMousedown() {
-    this.expanded = true;
-  }
-  _onKeydown(event) {
-    if (this.expanded && event.which === 27) {
-      event.preventDefault();
-      this.expanded = false;
-    } else if (this.expanded && [39, 40].indexOf(event.which) !== -1) {
-      event.preventDefault();
-      if (this._menu.firstChild) this._menu.firstChild.focus();
-    } else if (this.expanded && event.which === 38) {
-      event.preventDefault();
-      if (this._menu.lastChild) this._menu.lastChild.focus();
-    } else if (event.which === 13 || event.which === 32) {
-      event.preventDefault();
-      this.expanded = !this.expanded;
-    } else if (event.which == 37) {
-      event.preventDefault();
-      this.focusTo('left');
-    } else if (event.which == 38) {
-      event.preventDefault();
-      this.focusTo('up');
-    } else if (event.which == 39) {
-      event.preventDefault();
-      this.focusTo('right');
-    } else if (event.which == 40) {
-      event.preventDefault();
-      this.focusTo('down');
-    }
-  }
-  _onMenu(event) {
+  _onMenuItemClicked(event) {
     this.set('value', event.detail.value);
+    IoMenuLayer.singleton.collapseAll();
   }
   changed() {
-    const options = this.options.map(option => {return (option.label !== undefined || option.value !== undefined) ? option : {value: option};});
-    this._option = options.find(option => {return option.value === this.value;});
-    let label = this.label || (this._option ? (this._option.label || this._option.value) : this.value);
+    const option = this.options.find(option => {return (typeof option === 'object' && option.value === this.value) || option === this.value;});
+    let label = this.label || (typeof option === 'object' ? (option.label || option.value) : this.value);
     label = (label instanceof Object) ? label.__proto__.constructor.name : String(label);
-
-    this._menu.options = options;
 
     this.title = label;
     this.innerText = label;

@@ -1,33 +1,20 @@
 import {html, IoElement} from "../core/element.js";
+import {IoItem} from "./item.js";
 
-export class IoString extends IoElement {
+export class IoString extends IoItem {
   static get style() {
     return html`<style>
       :host {
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
-        padding: var(--io-spacing);
-        color: var(--io-field-color);
-        background-color: var(--io-field-background-color);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
+        user-select: text;
       }
-      :host:empty:before,
       :host:empty:after {
         display: inline-block;
         content: '"';
-      }
-      :host:focus {
-        overflow: hidden;
-        text-overflow: clip;
-        outline: 1px solid var(--io-focus-color);
-        outline-offset: -1px;
-      }
-      :host[aria-invalid] {
-        color: var(--io-error-color);
       }
     </style>`;
   }
@@ -35,20 +22,11 @@ export class IoString extends IoElement {
     return {
       value: String,
       role: 'textbox',
-      tabindex: 0,
       contenteditable: true,
     };
   }
-  static get listeners() {
-    return {
-      'focus': '_onFocus'
-    };
-  }
-  _onFocus() {
-    this.addEventListener('blur', this._onBlur);
-    this.addEventListener('keydown', this._onKeydown);
-  }
-  _onBlur() {
+  _onBlur(event) {
+    super._onBlur(event);
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     if (typeof this.value === 'string' || (this.innerText !== String(this.value))) {

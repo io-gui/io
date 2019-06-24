@@ -15,7 +15,7 @@ export class IoLayoutDivider extends IoElement {
         transition: background-color 0.4s;
       }
       :host:hover {
-        background-color: var(--io-focus-color);
+        background-color: var(--io-color-focus);
       }
       :host[orientation=horizontal] {
         cursor: col-resize;

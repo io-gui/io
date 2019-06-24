@@ -46,8 +46,8 @@ export class IoInspector extends IoElement {
     :host io-number,
     :host io-string {
       border-color: var(--io-inset-border-color) !important;
-      color: var(--io-field-color) !important;
-      background: var(--io-field-background-color) !important;
+      color: var(--io-color-field) !important;
+      background: var(--io-background-color-field) !important;
       padding: 0 var(--io-spacing) !important;
     }
     :host io-properties > .io-property > io-properties {
@@ -221,19 +221,14 @@ export class IoInspectorLink extends IoButton {
   static get style() {
     return html`<style>
     :host {
-      color: var(--io-link-color) !important;
+      color: var(--io-color-link) !important;
     }
     :host:hover {
       text-decoration: underline;
     }
     </style>`;
   }
-  static get listeners() {
-    return {
-      'button-action': '_onButtonAction',
-    };
-  }
-  _onButtonAction() {
+  _onClick() {
     this.dispatchEvent('set-inspector-value', {value: this.value}, true);
   }
   changed() {

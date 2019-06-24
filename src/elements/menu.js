@@ -1,5 +1,6 @@
 import {IoElement, html} from "../core/element.js";
 import {IoMenuLayer} from "./menu-layer.js";
+import {IoMenuItem} from "./menu-item.js";
 
 export class IoMenu extends IoElement {
   static get properties() {
@@ -8,12 +9,12 @@ export class IoMenu extends IoElement {
       expanded: Boolean,
       position: 'pointer',
       button: 0,
-      $group: IoMenuOptions,
+      $options: IoMenuOptions,
     };
   }
   constructor(props) {
     super(props);
-    this.$group.setProperties({
+    this.$options.setProperties({
       $parent: this,
       options: this.bind('options'),
       position: this.bind('position'),
@@ -25,7 +26,7 @@ export class IoMenu extends IoElement {
     this.parentElement.addEventListener('contextmenu', this._onContextmenu);
     this.parentElement.addEventListener('mousedown', this._onMousedown);
     this.parentElement.addEventListener('touchstart', this._onTouchstart);
-    IoMenuLayer.singleton.appendChild(this.$group);
+    IoMenuLayer.singleton.appendChild(this.$options);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -34,7 +35,7 @@ export class IoMenu extends IoElement {
     this.parentElement.removeEventListener('touchstart', this._onTouchstart);
     this.parentElement.removeEventListener('touchmove', this._onTouchmove);
     this.parentElement.removeEventListener('touchend', this._onTouchend);
-    if (this.$group) IoMenuLayer.singleton.removeChild(this.$group);
+    if (this.$options) IoMenuLayer.singleton.removeChild(this.$options);
   }
   getBoundingClientRect() {
     return this.parentElement.getBoundingClientRect();
@@ -123,16 +124,38 @@ export class IoMenuOptions extends IoElement {
       $parent: HTMLElement
     };
   }
+  static get listeners() {
+    return {
+      'io-menu-item-clicked': '_onMenuItemClicked',
+    };
+  }
   connectedCallback() {
     super.connectedCallback();
-    IoMenuLayer.singleton.registerOptions(this);
+    if (this.parentElement === IoMenuLayer.singleton) {
+      IoMenuLayer.singleton.registerOptions(this);
+    }
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    IoMenuLayer.singleton.unregisterOptions(this);
+    if (this.parentElement === IoMenuLayer.singleton) {
+      IoMenuLayer.singleton.unregisterOptions(this);
+    }
+  }
+  _onMenuItemClicked(event) {
+    const path = event.composedPath();
+    if (path[0] !== this) {
+      event.stopPropagation();
+      if (this.$parent instanceof IoMenuItem) {
+        this.$parent.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      } else {
+        this.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      }
+    }
   }
   expandedChanged() {
-    IoMenuLayer.singleton._onOptionsExpandedChanged(this);
+    if (this.parentElement === IoMenuLayer.singleton) {
+      IoMenuLayer.singleton._onOptionsExpanded(this);
+    }
   }
   optionsChanged() {
     const itemPosition = this.horizontal ? 'bottom' : 'right';
@@ -151,98 +174,5 @@ export class IoMenuOptions extends IoElement {
   }
 }
 
-export class IoMenuItem extends IoElement {
-  static get style() {
-    return html`<style>
-      :host {
-        display: flex;
-        flex-direction: row;
-        cursor: pointer;
-        background: var(--io-background-color);
-        padding: var(--io-spacing) 0;
-      }
-      :host > * {
-        padding: 0 var(--io-spacing);
-        min-width: 0.5em;
-      }
-      :host > .io-menu-icon {}
-      :host > .io-menu-label {
-        flex: 1 1 auto;
-      }
-      :host > .io-menu-hint {
-        opacity: 0.25;
-      }
-    </style>`;
-  }
-  static get properties() {
-    return {
-      value: null,
-      label: String,
-      icon: String,
-      hint: String,
-      options: Array,
-      position: String,
-      $parent: HTMLElement,
-      $options: IoMenuOptions,
-      tabindex: 0
-    };
-  }
-  static get listeners() {
-    return {
-      'touchstart': '_onTouchstart',
-      'mousedown': '_onMousedown',
-      'keydown': '_onKeydown',
-      'focus': '_onFocus',
-    };
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    if (!this.$options.parentNode) {
-      IoMenuLayer.singleton.appendChild(this.$options);
-    }
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this.$options.parentNode) {
-      this.$options.parentNode.removeChild(this.$options);
-    }
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-  }
-  _onMousedown() {
-    if (this.options.length) this.$options.expanded = true;
-    IoMenuLayer.singleton._onMousedown(event);
-  }
-  _onTouchstart() {
-    if (this.options.length) this.$options.expanded = true;
-    this.addEventListener('touchmove', this._onTouchmove);
-    this.addEventListener('touchend', this._onTouchend);
-    IoMenuLayer.singleton._onTouchstart(event);
-  }
-  _onTouchmove(event) {
-    IoMenuLayer.singleton._onTouchmove(event);
-  }
-  _onTouchend(event) {
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-    IoMenuLayer.singleton._onTouchend(event);
-  }
-  _onKeydown(event) {
-    IoMenuLayer.singleton._onKeydown(event);
-  }
-  _onFocus() {
-    IoMenuLayer.singleton._onFocus(event);
-  }
-  changed() {
-    this.$options.setProperties({$parent: this, options: this.options, position: this.position});
-    this.template([
-      ['span', {class: 'io-menu-icon'}, this.icon],
-      ['span', {class: 'io-menu-label'}, this.label || String(this.value)],
-      ['span', {class: 'io-menu-hint'}, (this.hint || '') + (this.options.length ? '▸' : '')],
-    ]);
-  }
-}
-
 IoMenu.Register();
 IoMenuOptions.Register();
-IoMenuItem.Register();

@@ -7,11 +7,11 @@ export class IoBoolean extends IoButton {
       :host {
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
-        color: var(--io-field-color);
-        background-color: var(--io-field-background-color);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
       }
       :host[aria-invalid] {
-        color: var(--io-error-color);
+        color: var(--io-color-error);
       }
     </style>`;
   }

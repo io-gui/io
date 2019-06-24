@@ -12,7 +12,7 @@ export class IoCollapsable extends IoElement {
         border-color: var(--io-outset-border-color);
         padding: var(--io-spacing);
         background: var(--io-background-color-dark);
-        background-image: var(--io-collapsable-gradient);
+        background-image: var(--io-gradient-collapsable);
         transition: background-color 0.4s;
       }
       :host > io-boolean {

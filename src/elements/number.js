@@ -1,28 +1,17 @@
 import {html, IoElement} from "../core/element.js";
+import {IoItem} from "./item.js";
 
-export class IoNumber extends IoElement {
+export class IoNumber extends IoItem {
   static get style() {
     return html`<style>
       :host {
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
-        padding: var(--io-spacing);
-        color: var(--io-field-color);
-        background-color: var(--io-field-background-color);
-      }
-      :host:focus {
-        overflow: hidden;
-        text-overflow: clip;
-        outline: 1px solid var(--io-focus-color);
-        outline-offset: -1px;
-      }
-      :host[aria-invalid] {
-        color: var(--io-error-color);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
+        user-select: text;
       }
     </style>`;
   }
@@ -47,27 +36,19 @@ export class IoNumber extends IoElement {
         value: 'numeric',
         reflect: true,
       },
-      tabindex: 0,
       contenteditable: true,
-    };
-  }
-  static get listeners() {
-    return {
-      'focus': '_onFocus'
     };
   }
   constructor(props) {
     super(props);
     this.setAttribute('spellcheck', 'false');
   }
-  _onFocus() {
+  _onFocus(event) {
+    super._onFocus(event);
     this._innerTextOnFocus = this.innerText;
-    this.addEventListener('blur', this._onBlur);
-    this.addEventListener('keydown', this._onKeydown);
   }
-  _onBlur() {
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
+  _onBlur(event) {
+    super._onBlur(event);
     if (this._innerTextOnFocus !== this.innerText) this.setFromText(this.innerText);
     this.scrollTop = 0;
     this.scrollLeft = 0;

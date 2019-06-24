@@ -70,10 +70,10 @@ export class IoSliderKnob extends IoQuad {
         align-self: stretch;
       }
       :host[aria-invalid] {
-        border-color: var(--io-error-color);
+        border-color: var(--io-color-error);
       }
       :host:focus {
-        outline: 1px solid var(--io-focus-color);
+        outline: 1px solid var(--io-color-focus);
         outline-offset: -1px;
       }
     </style>`;

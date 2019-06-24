@@ -13,8 +13,8 @@ export class IoBreadcrumbs extends IoElement {
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
         padding: var(--io-spacing);
-        color: var(--io-field-color);
-        background-color: var(--io-field-background-color);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
         padding: var(--io-spacing);
       }
       :host > io-button {
