@@ -1,4 +1,5 @@
 import {html, IoElement} from "../core/element.js";
+import {IoMenuItem} from "./menu-item.js";
 
 let previousItem;
 let previousParent;
@@ -131,7 +132,14 @@ export class IoMenuLayer extends IoElement {
     this._onPointerup(event);
   }
   _onTouchstart(event) {
-    // if (!this._preventCollapse && !this.expanded) this._preventCollapse = true;
+    const path = event.composedPath();
+    if (path[0] instanceof IoMenuItem) {
+      path[0].focus();
+      if (!path[0].options.length) {
+        path[0]._onClick(event);
+        return;
+      }
+    }
     event.preventDefault();
     this._onPointerdown(event.changedTouches[0]);
   }
@@ -220,60 +228,10 @@ export class IoMenuLayer extends IoElement {
   }
   _onPointerup() {
     if (this._hoveredItem) {
-      this._hoveredItem._onBlur();
       this._hoveredItem._onClick();
+      // this._hoveredItem._onBlur(); // TODO: why?
+      // this._hoveredItem.blur();
     }
-  }
-  _onKeydown(event) {
-    event.preventDefault(); // TODO: dont
-    // const path = event.composedPath();
-    // if (path[0].localName !== 'io-menu-item') return;
-    //
-    // let elem = path[0];
-    // let options = elem.$parent || elem.parentElement;
-    // let siblings = [...options.querySelectorAll('io-menu-item')];
-    // let children = [...elem.$options.querySelectorAll('io-menu-item')];
-    // let index = siblings.indexOf(elem);
-    //
-    // let command = '';
-    //
-    // if (!options.horizontal) {
-    //   if (event.key == 'ArrowUp') command = 'prev';
-    //   if (event.key == 'ArrowRight') command = 'in';
-    //   if (event.key == 'ArrowDown') command = 'next';
-    //   if (event.key == 'ArrowLeft') command = 'out';
-    // } else {
-    //   if (event.key == 'ArrowUp') command = 'out';
-    //   if (event.key == 'ArrowRight') command = 'next';
-    //   if (event.key == 'ArrowDown') command = 'in';
-    //   if (event.key == 'ArrowLeft') command = 'prev';
-    // }
-    // if (event.key == 'Tab') command = 'next';
-    // if (event.key == 'Escape') command = 'exit';
-    // if (event.key == 'Enter' || event.which == 32) command = 'action';
-    //
-    // switch (command) {
-    //   case 'action':
-    //     this.runAction(elem);
-    //     break;
-    //   case 'prev':
-    //     siblings[(index + siblings.length - 1) % (siblings.length)].focus();
-    //     break;
-    //   case 'next':
-    //     siblings[(index + 1) % (siblings.length)].focus();
-    //     break;
-    //   case 'in':
-    //     if (children.length) children[0].focus();
-    //     break;
-    //   case 'out':
-    //     if (options && options.$parent) options.$parent.focus();
-    //     break;
-    //   case 'exit':
-    //     this.collapseAll();
-    //     break;
-    //   default:
-    //     break;
-    // }
   }
   _getOptionschain(item) {
     const chain = [];

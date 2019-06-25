@@ -239,41 +239,45 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     let parent = this.parentElement;
     let depth = 0;
     const DEPTH_LIMIT = 10;
-    while (depth < DEPTH_LIMIT && closest === this) {
+    while (parent && depth < DEPTH_LIMIT && closest === this) {
       const siblings = parent.querySelectorAll('[tabindex="0"]');
       for (let i = siblings.length; i--;) {
         // TODO: consider looking up center or bbox instead tor-left corner
+        if (!siblings[i].offsetParent) continue;
         const sRect = siblings[i].getBoundingClientRect();
         const dX = sRect.x - rect.x;
         const dY = sRect.y - rect.y;
         const dist = Math.sqrt(dX * dX + dY * dY);
         switch (dir) {
           case 'right':
-          if (dX > 0 && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
+            if (dX > 0 && dist < closestDist) {
+              closest = siblings[i], closestDist = dist;
+            }
+            break;
           case 'left':
-          if (dX < 0 && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
+            if (dX < 0 && dist < closestDist) {
+              closest = siblings[i], closestDist = dist;
+            }
+            break;
           case 'down':
-          if (dY > 0 && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
+            if (dY > 0 && dist < closestDist) {
+              closest = siblings[i], closestDist = dist;
+            }
+            break;
           case 'up':
-          if (dY < 0 && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
+            if (dY < 0 && dist < closestDist) {
+              closest = siblings[i], closestDist = dist;
+            }
+            break;
         }
       }
       parent = parent.parentElement;
       depth++;
+      if (closest !== this) {
+        closest.focus();
+        return;
+      }
     }
-    if (closest !== this) closest.focus();
   }
 }
 

@@ -13,6 +13,7 @@ export class IoMenuItem extends IoItem {
       }
       :host > * {
         padding: 0 var(--io-spacing);
+        pointer-events: none;
       }
       :host > .io-menu-icon {}
       :host > .io-menu-label {
@@ -79,18 +80,19 @@ export class IoMenuItem extends IoItem {
       this.$options.parentNode.removeChild(this.$options);
     }
   }
-  _expandOptions() {
-    if (this.options.length) this.expanded = true;
+  toggleExpand() {
+    if (this.options.length) this.expanded = !this.expanded;
+    else this.expanded = false;
   }
   _onMousedown() {
     IoMenuLayer.singleton._onMousedown(event);
-    this._expandOptions();
+    this.toggleExpand();
   }
   _onTouchstart() {
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
     IoMenuLayer.singleton._onTouchstart(event);
-    this._expandOptions();
+    this.toggleExpand();
   }
   _onTouchmove(event) {
     IoMenuLayer.singleton._onTouchmove(event);
@@ -101,27 +103,74 @@ export class IoMenuItem extends IoItem {
     IoMenuLayer.singleton._onTouchend(event);
   }
   _onKeydown(event) {
-    if (event.which == 13 || event.which == 32) {
-      this._expandOptions();
-      this.dispatchEvent('io-menu-item-clicked', {value: this.value, options: this.options}, true);
+    event.preventDefault();
+    if (event.which === 13 || event.which === 32) {
+      if (this.options.length) {
+        this.toggleExpand();
+        this.$options.children[0].focus();
+      } else {
+        this._onClick();
+      }
+    } else if (event.key == 'Escape') {
+      // TODO: restore focus
+      IoMenuLayer.singleton.collapseAll();
+    } else if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
+      let command = '';
+      if (!this.$parent.horizontal) {
+        if (event.key == 'ArrowUp') command = 'prev';
+        if (event.key == 'ArrowRight') command = 'in';
+        if (event.key == 'ArrowDown') command = 'next';
+        if (event.key == 'ArrowLeft') command = 'out';
+      } else {
+        if (event.key == 'ArrowUp') command = 'out';
+        if (event.key == 'ArrowRight') command = 'next';
+        if (event.key == 'ArrowDown') command = 'in';
+        if (event.key == 'ArrowLeft') command = 'prev';
+      }
+      if (event.key == 'Tab') command = 'next';
+
+      const options = this.$parent;
+      const siblings = [...options.children];
+      const index = siblings.indexOf(this);
+
+      switch (command) {
+        case 'prev':
+          siblings[(index + siblings.length - 1) % (siblings.length)].focus();
+          break;
+        case 'next':
+          siblings[(index + 1) % (siblings.length)].focus();
+          break;
+        case 'in':
+          if (this.$options.children.length) this.$options.children[0].focus();
+          break;
+        case 'out':
+          // TODO: generalize
+          if (this.$parent && this.$parent.$parent) this.$parent.$parent.focus();
+          break;
+        default:
+          break;
+      }
     } else {
-      IoMenuLayer.singleton._onKeydown(event);
+      super._onKeydown(event);
     }
   }
   _onFocus(event) {
     super._onFocus(event);
-    IoMenuLayer.singleton._onFocus(event);
+    if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
+      IoMenuLayer.singleton._onFocus(event);
+    } else {
+      IoMenuLayer.singleton.collapseAll();
+    }
   }
   _onClick() {
     if (typeof this.action === 'function') {
       this.action.apply(null, [this.value]);
     }
     if (this.button instanceof HTMLElement) {
-      // TODO: test
-      this.button.click();
+      this.button.click(); // TODO: test
     }
     if (this.value !== undefined) {
-      this.dispatchEvent('io-menu-item-clicked', {value: this.value, options: this.options}, true);
+      this.dispatchEvent('io-menu-item-clicked', {value: this.value}, true);
     }
   }
   changed() {

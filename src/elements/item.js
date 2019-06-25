@@ -38,16 +38,21 @@ export class IoItem extends IoElement {
   }
   static get listeners() {
     return {
-      'keydown': '_onKeydown',
-      'focus': '_onFocus'
+      'focus': '_onFocus',
     };
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+    this.removeEventListener('click', this._onClick);
   }
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
     this.addEventListener('click', this._onClick);
   }
-  _onBlur() {
+  _onBlur(event) {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('click', this._onClick);

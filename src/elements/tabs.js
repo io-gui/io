@@ -55,11 +55,15 @@ export class IoTabs extends IoElement {
   }
   _onMenuItemClicked(event) {
     event.stopPropagation();
-    this.set('selected', event.detail.value);
-    IoMenuLayer.singleton.collapseAll();
+    if (event.detail.value) {
+      this.set('selected', event.detail.value);
+      IoMenuLayer.singleton.collapseAll();
+    }
   }
   _onValueSet(event) {
-    this.set('selected', event.detail.value);
+    if (event.detail.value) {
+      this.set('selected', event.detail.value);
+    }
   }
   resized() {
     this.setOverflow();
