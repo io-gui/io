@@ -122,7 +122,7 @@
     export class IoMainPage extends IoSelectorTabs {
       static get properties() {
         return {
-          selected: $('page', 'About', true),
+          selected: $('page', 'Docs', true),
           role: 'main',
           class: 'main',
           cache: true,
@@ -131,11 +131,11 @@
       constructor(props) {
         super(props);
         this.elements = [
-          ['io-md-view', {name: 'About', path :'./docs/core/about.md'}],
-          ['io-selector-sidebar', {name: 'Docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started', true),
+          ['io-selector-sidebar', {name: 'Docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started#about-io', true),
             options: [
               {label: "Getting Started", options: [
-                {label: "Importing Io", value: "getting-started#importing-io"},
+                {label: "About", value: "getting-started#about-io"},
+                {label: "Usage", value: "getting-started#usage"},
                 {label: "Defining Classes", value: "getting-started#defining-new-classes"},
                 {label: "Simple App", value: "getting-started#creating-a-simple-application"},
                 {label: "Style", value: "getting-started#style"},

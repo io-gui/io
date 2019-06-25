@@ -46,7 +46,7 @@ const setHashes = function(force) {
     }
   }
   for (let hash in hashes) {
-    if (!nodes[hash]) {
+    if (hash && !nodes[hash]) {
       hashString += hash + '=' + hashes[hash] + '&';
     }
   }
