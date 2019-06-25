@@ -52,7 +52,7 @@ export class IoItem extends IoElement {
     this.addEventListener('keydown', this._onKeydown);
     this.addEventListener('click', this._onClick);
   }
-  _onBlur(event) {
+  _onBlur() {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('click', this._onClick);

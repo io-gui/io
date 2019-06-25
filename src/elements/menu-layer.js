@@ -1,5 +1,5 @@
 import {html, IoElement} from "../core/element.js";
-import {IoMenuItem} from "./menu-item.js";
+// import {IoMenuItem} from "./menu-item.js";
 
 const WAIT_TIME = 100;
 
