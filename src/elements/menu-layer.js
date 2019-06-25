@@ -64,7 +64,6 @@ export class IoMenuLayer extends IoElement {
       'touchmove': '_onTouchmove',
       'touchend': '_onTouchend',
       'contextmenu': '_onContextmenu',
-      'io-menu-item-clicked': '_onMenuItemClicked', // TODO: remove
     };
   }
   constructor(props) {
@@ -92,9 +91,9 @@ export class IoMenuLayer extends IoElement {
   }
   registerOptions(options) {
     this.$options.push(options);
-    clearTimeout(this._T);
-    this._T = setTimeout(()=> {
-      this.$options.sort((a, b) => {return a.depth < b.depth ? -1 : 1});
+    clearTimeout(this.__timeout);
+    this.__timeout = setTimeout(()=> {
+      this.$options.sort((a, b) => { return a.depth < b.depth ? -1 : 1; });
     });
   }
   unregisterOptions(options) {
@@ -107,7 +106,7 @@ export class IoMenuLayer extends IoElement {
     this.expanded = false;
     this.collapseOnPointerup = false;
   }
-  _onOptionsExpanded(options) {
+  _onOptionsExpanded() {
     // TODO: optimize and simplify. Avoid redundant loop on collapseAll()
     this.expanded = !!this.$options.find(option => { return option.expanded; });
   }
@@ -226,7 +225,7 @@ export class IoMenuLayer extends IoElement {
     }
   }
   _onKeydown(event) {
-    // event.preventDefault();
+    event.preventDefault(); // TODO: dont
     // const path = event.composedPath();
     // if (path[0].localName !== 'io-menu-item') return;
     //
@@ -275,9 +274,6 @@ export class IoMenuLayer extends IoElement {
     //   default:
     //     break;
     // }
-  }
-  _onMenuItemClicked(event) {
-    console.warn('This event should be forwarded to root of the menu');
   }
   _getOptionschain(item) {
     const chain = [];

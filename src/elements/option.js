@@ -1,5 +1,4 @@
 import {html} from "../core/element.js";
-import {IoMenuOptions} from "./menu.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuItem} from "./menu-item.js";
 

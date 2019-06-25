@@ -1,4 +1,4 @@
-import {IoElement, html} from "../core/element.js";
+import {html} from "../core/element.js";
 import {IoItem} from "./item.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuOptions} from "./menu.js";
@@ -35,7 +35,6 @@ export class IoMenuItem extends IoItem {
       position: 'bottom',
       action: Function,
       button: HTMLElement,
-      position: 'bottom',
       $parent: HTMLElement,
       $options: IoMenuOptions,
       depth: 0,
@@ -56,7 +55,7 @@ export class IoMenuItem extends IoItem {
         position: this.position,
         depth: this.depth,
       }
-    }
+    };
   }
   connectedCallback() {
     super.connectedCallback();

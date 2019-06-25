@@ -21,7 +21,7 @@ export class IoMenu extends IoElement {
         options: this.options,
         position: this.position,
       }
-    }
+    };
   }
   connectedCallback() {
     super.connectedCallback();

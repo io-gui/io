@@ -32,7 +32,3 @@ export function validateOptionObject(option) {
     option.button !== undefined
   )) ? option : {value: option};
 }
-
-export function isOptionObject(option) {
-  // return (typeof option === 'object' && (option.label !== undefined || option.value !== undefined)) ? option : {value: option};
-}
