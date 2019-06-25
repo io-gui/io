@@ -6,6 +6,7 @@ export class IoOption extends IoMenuItem {
   static get style() {
     return html`<style>
       :host {
+        white-space: pre;
         display: inline-block;
         background-color: var(--io-background-color-dark);
         background-image: var(--io-gradient-button);

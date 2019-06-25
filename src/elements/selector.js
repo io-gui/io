@@ -134,7 +134,7 @@ export class IoSelector extends IoElement {
     clearTimeout(this.__autoScrolling);
     this.__autoScrolling = setTimeout(()=>{
       this.__autoScrolling = false;
-    }, 4000);
+    }, 2000);
     // TODO: detect auto scroll end instead waiting 2 seconds!
     setTimeout(()=> {
       this.scrollTo(this._scrollID);

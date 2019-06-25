@@ -6,16 +6,16 @@ export class IoObject extends IoCollapsable {
   static get style() {
     return html`<style>
       :host {
-        padding: 0 !important;
-        border: none !important;
-        background: none !important;
+        padding: 0;
+        border: none;
+        background: none;
       }
       :host > .io-content {
         display: block;
         overflow: auto;
         padding: 0;
-        border: none !important;
-        background: none !important;
+        border: none;
+        background: none;
       }
     </style>`;
   }

@@ -80,19 +80,35 @@ export class IoMenuItem extends IoItem {
       this.$options.parentNode.removeChild(this.$options);
     }
   }
-  toggleExpand() {
-    if (this.options.length) this.expanded = !this.expanded;
+  toggleExpand(force) {
+    if (this.options.length) this.expanded = !!force || !this.expanded;
     else this.expanded = false;
   }
   _onMousedown() {
-    IoMenuLayer.singleton._onMousedown(event);
-    this.toggleExpand();
+    if (this.options.length) {
+      IoMenuLayer.singleton.setLastFocus(this);
+      this.toggleExpand(true);
+      this.$options.children[0].focus();
+      IoMenuLayer.singleton._focusSrc = this;
+    } else {
+      IoMenuLayer.singleton.setLastFocus(document.activeElement);
+      this.focus();
+      this._onClick();
+    }
   }
   _onTouchstart() {
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
-    IoMenuLayer.singleton._onTouchstart(event);
-    this.toggleExpand();
+    if (this.options.length) {
+      IoMenuLayer.singleton.setLastFocus(this);
+      this.toggleExpand(true);
+      this.$options.children[0].focus();
+      IoMenuLayer.singleton._focusSrc = this;
+    } else {
+      IoMenuLayer.singleton.setLastFocus(document.activeElement);
+      this.focus();
+      this._onClick();
+    }
   }
   _onTouchmove(event) {
     IoMenuLayer.singleton._onTouchmove(event);
@@ -106,13 +122,16 @@ export class IoMenuItem extends IoItem {
     event.preventDefault();
     if (event.which === 13 || event.which === 32) {
       if (this.options.length) {
-        this.toggleExpand();
+        IoMenuLayer.singleton.setLastFocus(this);
+        this.toggleExpand(true);
         this.$options.children[0].focus();
+        // IoMenuLayer.singleton._hoveredItem = null; // TODO: ?
       } else {
+        IoMenuLayer.singleton.setLastFocus(document.activeElement);
+        // this.focus(); // TODO: ?
         this._onClick();
       }
     } else if (event.key == 'Escape') {
-      // TODO: restore focus
       IoMenuLayer.singleton.collapseAll();
     } else if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
       let command = '';
@@ -145,7 +164,12 @@ export class IoMenuItem extends IoItem {
           break;
         case 'out':
           // TODO: generalize
-          if (this.$parent && this.$parent.$parent) this.$parent.$parent.focus();
+          if (this.$parent && this.$parent.$parent) {
+            this.expanded = false;
+            this.$parent.expanded = false;
+            this.$parent.$parent.expanded = false;
+            this.$parent.$parent.focus();
+          }
           break;
         default:
           break;
@@ -156,11 +180,7 @@ export class IoMenuItem extends IoItem {
   }
   _onFocus(event) {
     super._onFocus(event);
-    if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
-      IoMenuLayer.singleton._onFocus(event);
-    } else {
-      IoMenuLayer.singleton.collapseAll();
-    }
+    IoMenuLayer.singleton._onFocus(event);
   }
   _onClick() {
     if (typeof this.action === 'function') {

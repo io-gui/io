@@ -71,10 +71,11 @@ export class IoMenu extends IoElement {
     IoMenuLayer.singleton._onTouchend(event);
   }
   open(event) {
+    IoMenuLayer.singleton.setLastFocus(document.activeElement);
+    window.getSelection().removeAllRanges();
     IoMenuLayer.singleton.collapseAll();
     this.$options._x = event.clientX;
     this.$options._y = event.clientY;
-    window.getSelection().removeAllRanges();
     this.expanded = true;
   }
 }
@@ -133,15 +134,11 @@ export class IoMenuOptions extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    if (this.parentElement === IoMenuLayer.singleton) {
-      IoMenuLayer.singleton.registerOptions(this);
-    }
+    IoMenuLayer.singleton.registerOptions(this);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.parentElement === IoMenuLayer.singleton) {
-      IoMenuLayer.singleton.unregisterOptions(this);
-    }
+    IoMenuLayer.singleton.unregisterOptions(this);
   }
   _onMenuItemClicked(event) {
     const path = event.composedPath();
@@ -197,6 +194,9 @@ export class IoMenuOptions extends IoElement {
         this.style.top = this._y + 'px';
       }
     }
+  }
+  horizontalChanged() {
+    this.optionsChanged();
   }
   optionsChanged() {
     const itemPosition = this.horizontal ? 'bottom' : 'right';
