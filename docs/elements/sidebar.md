@@ -12,7 +12,7 @@ When tabs are clicked, `selected` value is set.
 
 | Property | Type | Description | Default |
 |:---------|:-----|:------------|:--------|
-| **`selected`** | _any_    | Current value      | `undefined` |
+| **`selected`** | String   | Current value      | `` |
 | **`options`**  | Array    | Array with options | `[]` |
 
 #### Events ####

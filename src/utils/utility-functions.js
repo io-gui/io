@@ -23,3 +23,16 @@ export function filterObject(object, predicate) {
     }
   }
 }
+
+export function validateOptionObject(option) {
+  return (typeof option === 'object' && (
+    option.label !== undefined ||
+    option.value !== undefined ||
+    option.action !== undefined ||
+    option.button !== undefined
+  )) ? option : {value: option};
+}
+
+export function isOptionObject(option) {
+  // return (typeof option === 'object' && (option.label !== undefined || option.value !== undefined)) ? option : {value: option};
+}

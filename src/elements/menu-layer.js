@@ -1,10 +1,10 @@
 import {html, IoElement} from "../core/element.js";
 
-let previousOption;
+let previousItem;
 let previousParent;
 let timeoutOpen;
 let timeoutReset;
-let WAIT_TIME = 200;
+let WAIT_TIME = 100;
 let lastFocus;
 
 export class IoMenuLayer extends IoElement {
@@ -29,14 +29,20 @@ export class IoMenuLayer extends IoElement {
         visibility: visible;
         pointer-events: all;
       }
-      :host io-menu-options:not([expanded]) {
+      :host > io-menu-options:not([expanded]) {
         display: none;
       }
-      :host io-menu-options {
+      :host > io-menu-options {
         position: absolute;
         transform: translate3d(0, 0, 0);
         top: 0;
         left: 0;
+      }
+      :host io-menu-item:hover {
+        background-color: inherit;
+      }
+      :host io-menu-item:focus {
+        background-color: var(--io-background-color-light);
       }
     </style>`;
   }
@@ -58,7 +64,7 @@ export class IoMenuLayer extends IoElement {
       'touchmove': '_onTouchmove',
       'touchend': '_onTouchend',
       'contextmenu': '_onContextmenu',
-      'io-menu-item-clicked': '_onMenuItemClicked',
+      'io-menu-item-clicked': '_onMenuItemClicked', // TODO: remove
     };
   }
   constructor(props) {
@@ -72,12 +78,14 @@ export class IoMenuLayer extends IoElement {
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('scroll', this._onWindowScroll);
+    window.addEventListener('wheel', this._onWindowScroll);
     window.addEventListener('focusin', this._onWindowFocus);
     window.addEventListener('focusout', this._onWindowBlur);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('scroll', this._onWindowScroll);
+    window.removeEventListener('wheel', this._onWindowScroll);
     window.removeEventListener('focusin', this._onWindowFocus);
     window.removeEventListener('focusout', this._onWindowBlur);
     this._stopAnimation();
@@ -95,15 +103,9 @@ export class IoMenuLayer extends IoElement {
     this.expanded = false;
     this.collapseOnPointerup = false;
   }
-  runAction(option) {
-    // if (option.options.length) option.$options.expanded = true;
-    if (typeof option.action === 'function') {
-      this.collapseAll();
-      option.action.apply(null, [option.value]);
-    } else if (option.button) {
-      this.collapseAll();
-      option.button.click(); // TODO: test
-    }
+  _onOptionsExpanded(options) {
+    // TODO: optimize and simplify. Avoid redundant loop on collapseAll()
+    this.expanded = !!this.$options.find(option => { return option.expanded; });
   }
   _onWindowScroll() {
     if (this.expanded) this.collapseAll();
@@ -126,12 +128,16 @@ export class IoMenuLayer extends IoElement {
     this._onPointerup(event);
   }
   _onTouchstart(event) {
+    // if (!this._preventCollapse && !this.expanded) this._preventCollapse = true;
+    event.preventDefault();
     this._onPointerdown(event.changedTouches[0]);
   }
   _onTouchmove(event) {
+    event.preventDefault();
     this._onPointermove(event.changedTouches[0]);
   }
   _onTouchend(event) {
+    event.preventDefault();
     this._onPointerup(event);
   }
   _onContextmenu(event) {
@@ -139,54 +145,81 @@ export class IoMenuLayer extends IoElement {
     if (this.expanded) this.collapseAll();
   }
   _onFocus() {
-    // const path = event.composedPath();
-    // const item = path[0];
-    // const optionschain = this._getOptionschain(item);
-    // this._hoveredOptions = item;
-    // for (let i = this.$options.length; i--;) {
-    //   if (optionschain.indexOf(this.$options[i]) === -1) {
-    //     this.$options[i].expanded = false;
-    //   }
-    // }
+    const path = event.composedPath();
+    const item = path[0];
+    item.expanded = !!item.options.length;
+    const optionschain = this._getOptionschain(item);
+    this._hoveredItem = item;
+    for (let i = this.$options.length; i--;) {
+      if (optionschain.indexOf(this.$options[i]) === -1) {
+        this.$options[i].expanded = false;
+      }
+    }
   }
   _onPointerdown(event) {
     this._onPointermove(event);
-    // if (!this._hoveredOptions && this.collapseOnPointerup) {
-    //   this.collapseAll();
-    // }
+    if (!this._hoveredOptions) {
+      this.collapseAll();
+    }
   }
   _onPointermove(event) {
-    // const movementX = event.clientX - this._x;
-    // const movementY = event.clientY - this._y;
-    // this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
-    // this._x = event.clientX;
-    // this._y = event.clientY;
-    // let options = this.$options;
-    // for (let i = options.length; i--;) {
-    //   if (options[i].expanded) {
-    //     let rect = options[i].getBoundingClientRect();
-    //     if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-    //       this._hover(options[i]);
-    //       this._hoveredOptions = options[i];
-    //       return options[i];
-    //     }
-    //   }
-    // }
-    // this._hoveredItem = null;
-    // this._hoveredOptions = null;
+    const movementX = event.clientX - this._x;
+    const movementY = event.clientY - this._y;
+    this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
+    this._x = event.clientX;
+    this._y = event.clientY;
+    let options = this.$options;
+    for (let i = options.length; i--;) {
+      if (options[i].expanded) {
+        let rect = options[i].getBoundingClientRect();
+        if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+          this._hoverItems(options[i]);
+          this._hoveredOptions = options[i];
+          return options[i];
+        }
+      }
+    }
+    this._hoveredItem = null;
+    this._hoveredOptions = null;
+  }
+  _hoverItems(options) {
+    let items = options.querySelectorAll('io-menu-item');
+    for (let i = items.length; i--;) {
+      let rect = items[i].getBoundingClientRect();
+      if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+        let force = options.horizontal;
+        this._focusItem(items[i], force);
+        this._hoveredItem = items[i];
+        return;
+      }
+    }
+    this._hoveredItem = null;
+  }
+  _focusItem(item, force) {
+    if (item !== previousItem) {
+      clearTimeout(timeoutOpen);
+      clearTimeout(timeoutReset);
+      if (this._v > 1 || item.parentNode !== previousParent || force) {
+        previousItem = item;
+        item.focus();
+      } else {
+        timeoutOpen = setTimeout(function() {
+          previousItem = item;
+          item.focus();
+        }.bind(this), WAIT_TIME);
+      }
+      previousParent = item.parentNode;
+      timeoutReset = setTimeout(function() {
+        previousItem = null;
+        previousParent = null;
+      }.bind(this), WAIT_TIME + 1);
+    }
   }
   _onPointerup() {
-    // if (this._hoveredItem) {
-    //   this.runAction(this._hoveredItem);
-    //   const root = this._getRoot(this._hoveredItem);
-    //   root.dispatchEvent('io-menu-item-clicked', this._hoveredItem);
-    //   setTimeout(()=>{
-    //     if (this.collapseOnPointerup) this.collapseAll(); // TODO: ?
-    //   }, 100);
-    // } else if (!this._hoveredOptions && this.collapseOnPointerup) {
-    //   this.collapseAll();
-    // }
-    // this.collapseOnPointerup = true;
+    if (this._hoveredItem) {
+      this._hoveredItem._onBlur();
+      this._hoveredItem._onClick();
+    }
   }
   _onKeydown(event) {
     // event.preventDefault();
@@ -239,91 +272,8 @@ export class IoMenuLayer extends IoElement {
     //     break;
     // }
   }
-  _hover(options) {
-    // let items = options.querySelectorAll('io-menu-item');
-    // for (let i = items.length; i--;) {
-    //   let rect = items[i].getBoundingClientRect();
-    //   if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-    //     let force = options.horizontal;
-    //     this._focus(items[i], force);
-    //     this._hoveredItem = items[i];
-    //     return items[i];
-    //   }
-    // }
-    // this._hoveredItem = null;
-    // this._hoveredItem = null;
-  }
-  _focus(item, force) {
-    // if (item !== previousOption) {
-    //   clearTimeout(timeoutOpen);
-    //   clearTimeout(timeoutReset);
-    //   if (this._v > 1 || item.parentNode !== previousParent || force) {
-    //     previousOption = item;
-    //     item.focus();
-    //   } else {
-    //     timeoutOpen = setTimeout(function() {
-    //       previousOption = item;
-    //       item.focus();
-    //     }.bind(this), WAIT_TIME);
-    //   }
-    //   previousParent = item.parentNode;
-    //   timeoutReset = setTimeout(function() {
-    //     previousOption = null;
-    //     previousParent = null;
-    //   }.bind(this), WAIT_TIME + 1);
-    // }
-  }
-  _onOptionsExpanded(options) {
-    this._hoveredOptions = options;
-    this._setOptionsPosition(options);
-    for (let i = this.$options.length; i--;) {
-      if (this.$options[i].expanded) {
-        this.expanded = true;
-        return;
-      }
-    }
-    this.expanded = false;
-  }
   _onMenuItemClicked(event) {
-    console.log(event)
-  }
-  _setOptionsPosition(options) {
-    if (!options.$parent) return;
-    let rect = options.getBoundingClientRect();
-    let pRect = options.$parent.getBoundingClientRect();
-     // TODO: unhack horizontal long submenu bug.
-    if (options.position === 'bottom' && rect.height > (window.innerHeight - this._y)) options.position = 'right';
-    //
-    switch (options.position) {
-      case 'pointer':
-        options._x = this._x - 1 || pRect.x;
-        options._y = this._y - 1 || pRect.y;
-        break;
-      case 'top':
-        options._x = pRect.x;
-        options._y = pRect.top - rect.height;
-        break;
-      case 'left':
-        options._x = pRect.x - rect.width;
-        options._y = pRect.top;
-        break;
-      case 'bottom':
-        options._x = pRect.x;
-        options._y = pRect.bottom;
-        break;
-      case 'right':
-      default:
-        options._x = pRect.right;
-        options._y = pRect.y;
-        if (options._x + rect.width > window.innerWidth) {
-          options._x = pRect.x - rect.width;
-        }
-        break;
-    }
-    options._x = Math.max(0, Math.min(options._x, window.innerWidth - rect.width));
-    options._y = Math.min(options._y, window.innerHeight - rect.height);
-    options.style.left = options._x + 'px';
-    options.style.top = options._y + 'px';
+    console.warn('This event should be forwarded to root of the menu');
   }
   _getOptionschain(item) {
     const chain = [];
@@ -335,31 +285,24 @@ export class IoMenuLayer extends IoElement {
     }
     return chain;
   }
-  _getRoot(item) {
-    let parent = item;
-    while (parent && parent.$parent) {
-      parent = parent.$parent;
-    }
-    return parent;
-  }
   _moveHovered() {
-    let options = this._hoveredOptions;
-    if (options) {
-      let rect = options.getBoundingClientRect();
-      if (rect.height > window.innerHeight) {
-        if (this._y < 100 && rect.top < 0) {
-          let scrollSpeed = (100 - this._y) / 5000;
-          let overflow = rect.top;
-          options._y = options._y - Math.ceil(overflow * scrollSpeed) + 1;
-        } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
-          let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
-          let overflow = (rect.bottom - window.innerHeight);
-          options._y = options._y - Math.ceil(overflow * scrollSpeed) - 1;
-        }
-        options.style.left = options._x + 'px';
-        options.style.top = options._y + 'px';
-      }
-    }
+    // let options = this._hoveredOptions;
+    // if (options) {
+    //   let rect = options.getBoundingClientRect();
+    //   if (rect.height > window.innerHeight) {
+    //     if (this._y < 100 && rect.top < 0) {
+    //       let scrollSpeed = (100 - this._y) / 5000;
+    //       let overflow = rect.top;
+    //       options._y = options._y - Math.ceil(overflow * scrollSpeed) + 1;
+    //     } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
+    //       let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
+    //       let overflow = (rect.bottom - window.innerHeight);
+    //       options._y = options._y - Math.ceil(overflow * scrollSpeed) - 1;
+    //     }
+    //     options.style.left = options._x + 'px';
+    //     options.style.top = options._y + 'px';
+    //   }
+    // }
   }
   _startAnimation() {
     this._moveHovered();

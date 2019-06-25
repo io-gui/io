@@ -1,6 +1,6 @@
 A simple focusable element.
 
-<io-element-demo element="io-item" properties='{"label": "Item", "value": null}'></io-element-demo>
+<io-element-demo element="io-item" properties='{"label": "Item", "value": "undefined"}'></io-element-demo>
 
 When clicked or activated by space/enter key, it calls the `_onClick()` function with optional `value` argument. This element is used as a base class for other elements.
 

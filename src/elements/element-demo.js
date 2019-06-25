@@ -76,6 +76,11 @@ export class IoElementDemo extends IoElement {
     }
   }
   changed() {
+    for (let prop in this.properties) {
+      if (this.properties === 'undefined') {
+        this.properties = undefined;
+      }
+    }
     if (this.element) {
       this.template([
         ['div', {class: 'demo-tag'}, '<' + this.element + '>'],

@@ -7,7 +7,6 @@ export class IoSlider extends IoElement {
       :host {
         display: flex;
         align-self: stretch;
-        min-width: 12em;
       }
       :host > io-number {
         flex: 0 0 3.75em;
@@ -100,7 +99,6 @@ export class IoSliderKnob extends IoQuad {
       'touchstart': '_onTouchstart',
       'mousedown': '_onMousedown',
       'keydown': '_onKeydown',
-      'focus': 'resized'
     };
   }
   _onTouchstart(event) {

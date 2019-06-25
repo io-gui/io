@@ -9,6 +9,7 @@ export class IoMenuItem extends IoItem {
       :host {
         display: flex;
         flex-direction: row;
+        padding: calc(2 * var(--io-spacing));
       }
       :host > * {
         padding: 0 var(--io-spacing);
@@ -20,6 +21,9 @@ export class IoMenuItem extends IoItem {
       :host > .io-menu-hint {
         opacity: 0.25;
       }
+      :host[hasmore]:after {
+        content: '▸';
+      }
     </style>`;
   }
   static get properties() {
@@ -28,6 +32,9 @@ export class IoMenuItem extends IoItem {
       icon: String,
       hint: String,
       options: Array,
+      position: 'bottom',
+      action: Function,
+      button: HTMLElement,
       position: 'bottom',
       $parent: HTMLElement,
       $options: IoMenuOptions,
@@ -80,10 +87,10 @@ export class IoMenuItem extends IoItem {
     this._expandOptions();
   }
   _onTouchstart() {
-    this._expandOptions();
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
     IoMenuLayer.singleton._onTouchstart(event);
+    this._expandOptions();
   }
   _onTouchmove(event) {
     IoMenuLayer.singleton._onTouchmove(event);
@@ -106,14 +113,24 @@ export class IoMenuItem extends IoItem {
     IoMenuLayer.singleton._onFocus(event);
   }
   _onClick() {
-    this.dispatchEvent('io-menu-item-clicked', {value: this.value, options: this.options}, true);
+    if (typeof this.action === 'function') {
+      this.action.apply(null, [option.value]);
+    }
+    if (this.button instanceof HTMLElement) {
+      // TODO: test
+      this.button.click();
+    }
+    if (this.value !== undefined) {
+      this.dispatchEvent('io-menu-item-clicked', {value: this.value, options: this.options}, true);
+    }
   }
   changed() {
     this._connectOptions();
+    this.setAttribute('hasmore', !!this.options.length && this.position === 'right');
     this.template([
       ['span', {class: 'io-menu-icon'}, this.icon],
       ['span', {class: 'io-menu-label'}, this.label || String(this.value)],
-      ['span', {class: 'io-menu-hint'}, (this.hint || '') + (this.options.length ? '▸' : '')],
+      ['span', {class: 'io-menu-hint'}, this.hint],
     ]);
   }
 }

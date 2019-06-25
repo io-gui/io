@@ -1,5 +1,5 @@
 import {html, IoElement} from "../core/element.js";
-import {filterObject} from "../utils/utility-functions.js";
+import {filterObject, validateOptionObject} from "../utils/utility-functions.js";
 
 export class IoSidebar extends IoElement {
   static get style() {
@@ -102,11 +102,10 @@ export class IoSidebar extends IoElement {
     return elements;
   }
   changed() {
-    let option = filterObject(this.options, (option) => {
-      return option === this.selected || option.value === this.selected;
-    });
+    const options = this.options.map(validateOptionObject);
+    let selectedOption = filterObject(options, option => { return option.value === this.selected; });
     if (this.overflow) {
-      const label = option ? (option.label || option.value || option) : String(this.selected);
+      const label = selectedOption ? (selectedOption.label || String(selectedOption.value)) : String(this.selected).split('#')[0];
       this.template([['io-option', {
         label: '☰ ' + label,
         title: 'select tab',

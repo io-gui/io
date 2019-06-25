@@ -1,5 +1,5 @@
 import {html, IoElement} from "../core/element.js";
-import {filterObject} from "../utils/utility-functions.js";
+import {filterObject, validateOptionObject} from "../utils/utility-functions.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import "./menu-item.js";
 
@@ -18,7 +18,6 @@ export class IoTabs extends IoElement {
         font-size: 1.2em;
         flex: 0 0 auto;
         border-bottom: var(--io-border-width) solid transparent;
-        padding: calc(2 * var(--io-spacing));
       }
       :host > .io-selected-tab {
         border-bottom-color: var(--io-color-link);
@@ -39,7 +38,7 @@ export class IoTabs extends IoElement {
   }
   static get properties() {
     return {
-      value: undefined,
+      selected: String,
       options: Array,
       overflow: {
         type: Boolean,
@@ -56,11 +55,11 @@ export class IoTabs extends IoElement {
   }
   _onMenuItemClicked(event) {
     event.stopPropagation();
-    this.set('value', event.detail.value);
+    this.set('selected', event.detail.value);
     IoMenuLayer.singleton.collapseAll();
   }
   _onValueSet(event) {
-    this.set('value', event.detail.value);
+    this.set('selected', event.detail.value);
   }
   resized() {
     this.setOverflow();
@@ -73,8 +72,9 @@ export class IoTabs extends IoElement {
     if (!this._rects.length) return;
     if (!buttons.length) return;
 
+    // TODO: Detect selectedSubOption as selectedIndex!
     const selectedIndex = this.options.indexOf(filterObject(this.options, (option) => {
-      return option === this.value || option.value === this.value;
+      return option === this.selected || option.value === this.selected;
     }));
 
     let end = this.getBoundingClientRect().right;
@@ -99,38 +99,41 @@ export class IoTabs extends IoElement {
       }
 
       last = Math.min(last, this._rects[i].right);
-
+      const selectedClass = buttons[i].className.search('io-selected-tab') !== -1;
       if (last < end) {
-        buttons[i].className = '';
+        buttons[i].className = selectedClass ? 'io-selected-tab' : '';
       } else {
-        buttons[i].className = 'io-hidden';
+        buttons[i].className = selectedClass ? 'io-selected-tab io-hidden' : 'io-hidden';
         overflow = true;
       }
     }
     this.overflow = overflow;
   }
-  valueChanged() {
+  selectedChanged() {
     this.setOverflow();
   }
   changed() {
-    const options = this.options;
-    let option = filterObject(options, (option) => {
-      return option === this.value || option.value === this.value;
-    });
+    const options = this.options.map(validateOptionObject);
+    let selectedOption = filterObject(options, option => { return option.value === this.selected; });
     const elements = [];
     for (let i = 0; i < options.length; i++) {
-      const selected = this.value && option === options[i];
+      const option = options[i];
+      let selectedSubOption = filterObject(option.options || [], option => { return option.value === this.selected; });
+      const selected = this.selected && (selectedOption === option || selectedOption === selectedSubOption);
       const button = ['io-menu-item', {
-        label: options[i].label || options[i].value || options[i],
-        value: options[i].value || options[i],
-        class: (selected ? 'io-selected-tab' : ''),
+        label: option.label,
+        value: option.value,
+        action: option.action,
+        button: option.button,
+        options: option.options || [],
+        class: selected ? 'io-selected-tab' : '',
       }];
       elements.push(button);
     }
     elements.push(['io-option', {
       label: '☰',
       title: 'select tab',
-      value: this.value,
+      value: this.selected,
       options: options,
       'on-value-set': this._onValueSet,
     }]);

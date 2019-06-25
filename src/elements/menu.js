@@ -1,4 +1,5 @@
 import {IoElement, html} from "../core/element.js";
+import {validateOptionObject} from "../utils/utility-functions.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuItem} from "./menu-item.js";
 
@@ -70,9 +71,8 @@ export class IoMenu extends IoElement {
   }
   open(event) {
     IoMenuLayer.singleton.collapseAll();
-    IoMenuLayer.singleton._x = event.clientX;
-    IoMenuLayer.singleton._y = event.clientY;
-    IoMenuLayer.singleton.collapseOnPointerup = false;
+    this.$options._x = event.clientX;
+    this.$options._y = event.clientY;
     window.getSelection().removeAllRanges();
     this.expanded = true;
   }
@@ -144,8 +144,10 @@ export class IoMenuOptions extends IoElement {
   _onMenuItemClicked(event) {
     const path = event.composedPath();
     if (path[0] !== this) {
+      if (path[0].expanded) path[0].expanded = false;
       event.stopPropagation();
-      if (this.$parent instanceof IoMenuItem) {
+      if (this.$parent instanceof IoMenuItem || this.$parent instanceof IoMenu) {
+        if (this.$parent.expanded) this.$parent.expanded = false;
         this.$parent.dispatchEvent('io-menu-item-clicked', event.detail, true);
       } else {
         this.dispatchEvent('io-menu-item-clicked', event.detail, true);
@@ -155,16 +157,55 @@ export class IoMenuOptions extends IoElement {
   expandedChanged() {
     if (this.parentElement === IoMenuLayer.singleton) {
       IoMenuLayer.singleton._onOptionsExpanded(this);
+      if (this.expanded && this.$parent) {
+        let rect = this.getBoundingClientRect();
+        let pRect = this.$parent.getBoundingClientRect();
+         // TODO: unhack horizontal long submenu bug.
+        if (this.position === 'bottom' && rect.height > (window.innerHeight - this._y)) this.position = 'right';
+        //
+        switch (this.position) {
+          case 'pointer':
+            this._x = this._x - 1 || pRect.x;
+            this._y = this._y - 1 || pRect.y;
+            break;
+          case 'top':
+            this._x = pRect.x;
+            this._y = pRect.top - rect.height;
+            break;
+          case 'left':
+            this._x = pRect.x - rect.width;
+            this._y = pRect.top;
+            break;
+          case 'bottom':
+            this._x = pRect.x;
+            this._y = pRect.bottom;
+            break;
+          case 'right':
+          default:
+            this._x = pRect.right;
+            this._y = pRect.y;
+            if (this._x + rect.width > window.innerWidth) {
+              this._x = pRect.x - rect.width;
+            }
+            break;
+        }
+        this._x = Math.max(0, Math.min(this._x, window.innerWidth - rect.width));
+        this._y = Math.min(this._y, window.innerHeight - rect.height);
+        this.style.left = this._x + 'px';
+        this.style.top = this._y + 'px';
+      }
     }
   }
   optionsChanged() {
     const itemPosition = this.horizontal ? 'bottom' : 'right';
-    const options = this.options.map(option => {return (option.label !== undefined || option.value !== undefined) ? option : {value: option};});
+    const options = this.options.map(validateOptionObject);
     this.template([options.map((elem, i) =>
       ['io-menu-item', {
         $parent: this,
         value: options[i].value,
         label: options[i].label,
+        action: options[i].action,
+        button: options[i].button,
         hint: options[i].hint,
         icon: options[i].icon,
         options: options[i].options || [],
