@@ -45,6 +45,11 @@ const setHashes = function(force) {
       }
     }
   }
+  for (let hash in hashes) {
+    if (!nodes[hash]) {
+      hashString += hash + '=' + hashes[hash] + '&';
+    }
+  }
   hashString = hashString.slice(0, -1);
   window.location.hash = hashString;
   if (!window.location.hash) history.replaceState({}, document.title, ".");

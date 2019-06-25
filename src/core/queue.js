@@ -47,6 +47,7 @@ export class NodeQueue extends Array {
         node.dispatchEvent('object-mutated', {object: node}, false, window);
       }
       node.changed();
+      node.applyCompose();
       this.length = 0;
     }
   }

@@ -50,9 +50,6 @@ export const IoNodeMixin = (superclass) => {
 
       this.__listeners.setPropListeners(initProps, this);
 
-      // TODO: Test and documentation.
-      if (this.compose) this.applyCompose(this.compose);
-
       this.setProperties(initProps);
     }
     /**
@@ -89,6 +86,18 @@ export const IoNodeMixin = (superclass) => {
       * default change handler.
       */
     changed() {}
+    /**
+      * Applies compose object on change.
+      */
+    applyCompose() {
+      // TODO: Test and documentation.
+      const compose = this.compose;
+      if (compose) {
+        for (let prop in compose) {
+          this[prop].setProperties(compose[prop]);
+        }
+      }
+    }
     /**
       * Returns a binding to a specified property`.
       * @param {string} prop - Property to bind to.
@@ -139,20 +148,6 @@ export const IoNodeMixin = (superclass) => {
       }
       if (this.__connected) this.queueDispatch();
     }
-    // TODO: Document.
-    // TODO: Refactor.
-    // TODO: Test extensively.
-    applyCompose(nodes) {
-      for (let n in nodes) {
-        const properties = nodes[n];
-        this[n].setProperties(properties);
-        this.addEventListener(n + '-changed', (event) => {
-          // TODO: Test.
-          if (event.detail.oldValue) event.detail.oldValue.dispose();
-          event.detail.value.setProperties(properties);
-        });
-      }
-    }
     /**
       * This function is called when `object-mutated` event is observed
       * and changed object is a property of the node.
@@ -167,6 +162,7 @@ export const IoNodeMixin = (superclass) => {
           // setTimeout(()=> {
             if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
             this.changed();
+            this.applyCompose();
           // });
           return;
         }

@@ -6,6 +6,7 @@ export class IoProperties extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+        align-self: stretch;
       }
       :host > .io-property {
         display: flex !important;
@@ -18,12 +19,13 @@ export class IoProperties extends IoElement {
         border-color: transparent;
       }
       :host > .io-property > .io-property-label {
-        margin: 0 var(--io-spacing) 0 0;
+        margin: 0;
         border: var(--io-border);
         border-color: transparent;
         color: var(--io-color);
         flex: 0 0 auto;
         padding: var(--io-spacing);
+        padding-right: 0;
       }
       :host > .io-property > .io-property-editor {
         flex: 1 1 auto;

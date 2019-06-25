@@ -13,14 +13,15 @@ export class IoMenu extends IoElement {
       $options: IoMenuOptions,
     };
   }
-  constructor(props) {
-    super(props);
-    this.$options.setProperties({
-      $parent: this,
-      options: this.bind('options'),
-      position: this.bind('position'),
-      expanded: this.bind('expanded'),
-    });
+  get compose() {
+    return {
+      $options: {
+        $parent: this,
+        expanded: this.bind('expanded'),
+        options: this.options,
+        position: this.position,
+      }
+    }
   }
   connectedCallback() {
     super.connectedCallback();
@@ -121,7 +122,8 @@ export class IoMenuOptions extends IoElement {
         reflect: true
       },
       role: 'listbox',
-      $parent: HTMLElement
+      $parent: HTMLElement,
+      depth: 0,
     };
   }
   static get listeners() {
@@ -184,7 +186,7 @@ export class IoMenuOptions extends IoElement {
           default:
             this._x = pRect.right;
             this._y = pRect.y;
-            if (this._x + rect.width > window.innerWidth) {
+            if ((this._x + rect.width > window.innerWidth) && pRect.x > 20) {
               this._x = pRect.x - rect.width;
             }
             break;
@@ -210,6 +212,7 @@ export class IoMenuOptions extends IoElement {
         icon: options[i].icon,
         options: options[i].options || [],
         position: itemPosition,
+        depth: this.depth + 1,
       }]
     )]);
   }

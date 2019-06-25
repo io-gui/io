@@ -10,9 +10,9 @@ export class IoTheme extends IoElement {
         --io-border-width: 1px;
 
         --io-background-color: rgb(42, 42, 42);
-        --io-background-color-light: rgb(72, 72, 72);
-        --io-background-color-dark: rgb(47, 47, 47);
-        --io-background-color-field: rgb(32, 32, 32);
+        --io-background-color-light: rgb(56, 56, 56);
+        --io-background-color-dark: rgb(32, 32, 32);
+        --io-background-color-field: rgb(16, 16, 16);
 
         --io-color: rgb(210, 210, 210);
         --io-color-error: rgb(255, 96, 16);

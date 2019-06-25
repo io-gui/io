@@ -7,6 +7,7 @@ export class IoOption extends IoMenuItem {
   static get style() {
     return html`<style>
       :host {
+        display: inline-block;
         background-color: var(--io-background-color-dark);
         background-image: var(--io-gradient-button);
         border: var(--io-outset-border);
@@ -22,6 +23,11 @@ export class IoOption extends IoMenuItem {
         padding-left: var(--io-spacing);
       }
     </style>`;
+  }
+  static get properties() {
+    return {
+      role: 'button',
+    };
   }
   static get listeners() {
     return {

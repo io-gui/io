@@ -38,6 +38,7 @@ export class IoMenuItem extends IoItem {
       position: 'bottom',
       $parent: HTMLElement,
       $options: IoMenuOptions,
+      depth: 0,
     };
   }
   static get listeners() {
@@ -46,14 +47,14 @@ export class IoMenuItem extends IoItem {
       'mousedown': '_onMousedown',
     };
   }
-  // TODO: test
   get compose() {
     return {
       $options: {
         $parent: this,
         expanded: this.bind('expanded'),
-        options: this.bind('options'),
-        position: this.bind('position'),
+        options: this.options,
+        position: this.position,
+        depth: this.depth,
       }
     }
   }
@@ -114,7 +115,7 @@ export class IoMenuItem extends IoItem {
   }
   _onClick() {
     if (typeof this.action === 'function') {
-      this.action.apply(null, [option.value]);
+      this.action.apply(null, [this.value]);
     }
     if (this.button instanceof HTMLElement) {
       // TODO: test

@@ -25,6 +25,7 @@ export class IoInspector extends IoElement {
     :host io-properties > .io-property {
       overflow: hidden;
       background-color: var(--io-background-color);
+      padding: var(--io-spacing) 0;
     }
     :host io-properties > .io-property:nth-child(2n) {
       background-color: var(--io-background-color-light);
@@ -42,6 +43,7 @@ export class IoInspector extends IoElement {
     :host io-properties > .io-property > :nth-child(2) {
       flex: 1 1 8em;
       min-width: 3em;
+      margin: 0 var(--io-spacing);
     }
     :host io-number,
     :host io-string {

@@ -92,6 +92,10 @@ export class IoMenuLayer extends IoElement {
   }
   registerOptions(options) {
     this.$options.push(options);
+    clearTimeout(this._T);
+    this._T = setTimeout(()=> {
+      this.$options.sort((a, b) => {return a.depth < b.depth ? -1 : 1});
+    });
   }
   unregisterOptions(options) {
     this.$options.splice(this.$options.indexOf(options), 1);

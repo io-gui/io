@@ -69,18 +69,19 @@ export class IoSelector extends IoElement {
     document.removeEventListener('readystatechange', this.precacheChanged);
   }
   checkImport(path, callback) {
-    this.__callback = callback;
     const importPath = path ? new URL(path, window.location).href : undefined;
-    if (importPath && !importedPaths[importPath]) {
-      importedPaths[importPath] = true;
-      import(importPath)
-      .then(() => {
-        this.__callback();
-        delete this.__callback;
-      });
+    if (!path || importedPaths[importPath]) {
+      callback();
     } else {
-      this.__callback();
-      delete this.__callback;
+      this.__callback = callback;
+      if (importPath && !importedPaths[importPath]) {
+        import(importPath)
+        .then(() => {
+          importedPaths[importPath] = true;
+          this.__callback();
+          delete this.__callback;
+        });
+      }
     }
   }
   precacheChanged() {
@@ -107,10 +108,6 @@ export class IoSelector extends IoElement {
       const elem = this.$.content.querySelector('#' + id);
       if (elem) {
         elem.scrollIntoView({behavior: 'smooth'});
-      }
-    } else {
-      if (this.$.content.children[0]) {
-        this.$.content.children[0].scrollIntoView({behavior: 'smooth'});
       }
     }
   }

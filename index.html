@@ -125,15 +125,15 @@
           selected: $('page', 'About', true),
           role: 'main',
           class: 'main',
-          // precache: true, //TODO
-          // maxWidth: 1000,
+          cache: true,
+          precache: true,
         };
       }
       constructor(props) {
         super(props);
         this.elements = [
           ['io-md-view', {name: 'About', path :'./docs/core/about.md'}],
-          ['io-selector-sidebar', {name: 'Docs', precache: true, class: 'docs', selected: $('doc', 'getting-started'),
+          ['io-selector-sidebar', {name: 'Docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started', true),
             options: [
               {label: "Getting Started", options: [
                 {label: "Importing Io", value: "getting-started#importing-io"},

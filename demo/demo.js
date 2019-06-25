@@ -53,7 +53,6 @@ export class IoDemo extends IoElement {
       null: null,
       NaN: NaN,
       undefined: undefined,
-      menuoptions: null,
     };
   }
   changed(event) {
@@ -136,7 +135,7 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoObject = ['div', {name: 'object'}, [
-      ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}], //TODO: labeled?
+      ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers']}], //TODO: labeled?
       ['io-object', {value: this, label: 'IoDemo (single configured property)', labeled: false, expanded: $('io-object2'), props: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
     ]];
 
@@ -151,67 +150,67 @@ export class IoDemo extends IoElement {
       {label: 'set four', value: 4, action: this.setNumber},
       {label: 'set five', value: 5, action: this.setNumber}
     ];
-    this.menuoptions = [
-      {label: 'file', options: options},
-      {label: 'view', options: [
-        {label: 'suboption one', options: options},
-        {label: 'suboption two', options: options},
-        {label: 'suboption three', options: options},
-      ]},
-      {label: 'long menu', options: new Array(100).fill({label: 'Set 0', value: 0, action: this.setNumber, icon: '>', hint: 'set'}), hint: 'list', icon: '⚠'}
-    ];
 
-    const demoMenu = ['div', {name: 'menu'}, [
-      ['div', [
-        ['span', 'right-click (contextmenu)'],
-        ['io-menu', {options: this.menuoptions, position: 'pointer', button: 2}], ['br'],
-      ]], ['br'],
-      ['div', [
-        ['span', 'click'],
-        ['io-menu', {options: this.menuoptions, position: 'pointer', button: 0}], ['br'],
-      ]], ['br'],
-      ['io-menu-options', {class: 'sidebar', options: this.menuoptions}], ['br'], ['br'],
-      ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
-    ]];
+    // this.menuoptions = [
+    //   {label: 'file', options: options},
+    //   {label: 'view', options: [
+    //     {label: 'suboption one', options: options},
+    //     {label: 'suboption two', options: options},
+    //     {label: 'suboption three', options: options},
+    //   ]},
+    //   {label: 'long menu', options: new Array(100).fill({label: 'Set 0', value: 0, action: this.setNumber, icon: '>', hint: 'set'}), hint: 'list', icon: '⚠'}
+    // ];
+    // const demoMenu = ['div', {name: 'menu'}, [
+    //   ['div', [
+    //     ['span', 'right-click (contextmenu)'],
+    //     ['io-menu', {options: this.menuoptions, position: 'pointer', button: 2}], ['br'],
+    //   ]], ['br'],
+    //   ['div', [
+    //     ['span', 'click'],
+    //     ['io-menu', {options: this.menuoptions, position: 'pointer', button: 0}], ['br'],
+    //   ]], ['br'],
+    //   ['io-menu-options', {class: 'sidebar', options: this.menuoptions}], ['br'], ['br'],
+    //   ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
+    // ]];
 
-    const demoLayout = ['io-layout', {
-      name: 'Layout',
-      orientation: 'horizontal',
-      elements: [
-        demoPrimitives,
-        demoSwitch,
-        demoSliders,
-        demoOptions,
-        demoButton,
-        demoObject,
-        demoInspector,
-        demoMenu,
-      ],
-      splits: [
-        {selected: 'sliders', tabs: ['sliders'], size: 280},
-        {orientation: 'vertical', splits: [
-          {tabs: ['button'], selected: 'button', size: 100},
-          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'menu', 'inspector'], selected: 'inspector'},
-          {tabs: ['primitives'], selected: 'primitives'},
-        ]},
-      ],
-    }];
+    // const demoLayout = ['io-layout', {
+    //   name: 'Layout',
+    //   orientation: 'horizontal',
+    //   elements: [
+    //     demoPrimitives,
+    //     demoSwitch,
+    //     demoSliders,
+    //     demoOptions,
+    //     demoButton,
+    //     demoObject,
+    //     demoInspector,
+    //     // demoMenu,
+    //   ],
+    //   splits: [
+    //     {selected: 'sliders', tabs: ['sliders'], size: 280},
+    //     {orientation: 'vertical', splits: [
+    //       {tabs: ['button'], selected: 'button', size: 100},
+    //       {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
+    //       {tabs: ['primitives'], selected: 'primitives'},
+    //     ]},
+    //   ],
+    // }];
 
     // TODO: Add demos for all remaining elements
 
     this.template([
-      ['io-selector-tabs', {precache: true, selected: $('demo', 'Elements'), elements: [
+      ['io-selector-tabs', {precache: true, selected: $('demo', 'Elements', true), elements: [
         ['div', {name: 'Elements'}, [
           ['h4', 'io-string io-number io-boolean'], demoPrimitives,
           ['h4', 'io-switch'], demoSwitch,
           ['h4', 'io-slider'], demoSliders,
           ['h4', 'io-options'], demoOptions,
           ['h4', 'io-button'], demoButton,
-          ['h4', 'io-menu'], demoMenu,
+          // ['h4', 'io-menu'], demoMenu,
           ['h4', 'io-object'], demoObject,
           ['h4', 'io-inspector'], demoInspector,
         ]],
-        demoLayout,
+        // demoLayout,
       ]}]
     ]);
   }
