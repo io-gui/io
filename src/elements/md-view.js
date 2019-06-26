@@ -11,6 +11,12 @@ export class IoMdView extends IoElement {
         background: var(--io-background-color);
         color: var(--io-color);
       }
+      :host > :first-child {
+        margin-top: 0;
+      }
+      :host > :last-child {
+        margin-top: 0;
+      }
       :host p {
         line-height: 1.4em;
       }
@@ -21,19 +27,19 @@ export class IoMdView extends IoElement {
       }
       :host h1 {
         margin: 0;
-        padding: 1em 0;
+        padding: 0.5em 0;
       }
       :host h2 {
         margin: 0;
-        padding: 0.75em 0;
+        padding: 0.4em 0;
       }
       :host h3 {
         margin: 0;
-        padding: 0.5em 0;
+        padding: 0.3em 0;
       }
       :host h4 {
         margin: 0;
-        padding: 0.25em 0;
+        padding: 0.2em 0;
       }
       :host code {
         background: rgba(0,0,0,0.25);
