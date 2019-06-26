@@ -30,24 +30,31 @@ export class NodeQueue extends Array {
   dispatch() {
     const node = this.node;
     if (this.length) {
+      let changed = false;
       for (let j = 0; j < this.length; j += 2) {
         const prop = this[j];
         const detail = this[j + 1];
         const payload = {detail: detail};
-        if (typeof detail.value === 'object' && detail.value === detail.oldValue) {
-          if (node[prop + 'Mutated']) node[prop + 'Mutated'](payload);
-          node.dispatchEvent(prop + '-mutated', payload.detail);
-        } else {
+        if (detail.value !== detail.oldValue) {
+          changed = true;
           if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
           node.dispatchEvent(prop + '-changed', payload.detail);
         }
+        else {
+          if (typeof detail.value === 'object') {
+            // if (node[prop + 'Mutated']) node[prop + 'Mutated'](payload);
+            // node.dispatchEvent(prop + '-mutated', payload.detail);
+          }
+        }
       }
       // TODO: Evaluate performance and consider refactoring.
-      if (node.isNode && !node.isElement) {
-        node.dispatchEvent('object-mutated', {object: node}, false, window);
+      if (changed) {
+        // if (node.isNode && !node.isElement) {
+        //   node.dispatchEvent('object-mutated', {object: node}, false, window);
+        // }
+        node.applyCompose();
+        node.changed();
       }
-      node.changed();
-      node.applyCompose();
       this.length = 0;
     }
   }
