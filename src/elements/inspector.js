@@ -1,5 +1,5 @@
 import {html, IoElement} from "../core/element.js";
-import {IoStorage} from "../core/storage.js";
+import {IoStorage as $} from "../core/storage.js";
 import {IoButton} from "./button.js";
 import "./breadcrumbs.js";
 import {isValuePropertyOf, getObjectLabel} from "../utils/utility-functions.js";
@@ -102,7 +102,7 @@ export class IoInspector extends IoElement {
       elements.push(
         ['io-collapsable', {
           label: group,
-          expanded: IoStorage('io-inspector-group-' + uuid + '-' + group, true),
+          expanded: $('io-inspector-group-' + uuid + '-' + group, true),
           elements: [
             ['io-properties', {
               value: this.value,

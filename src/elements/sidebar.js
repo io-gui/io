@@ -1,4 +1,5 @@
 import {html, IoElement} from "../core/element.js";
+import {IoStorage as $} from "../core/storage.js";
 import {filterObject, validateOptionObject} from "../utils/utility-functions.js";
 
 export class IoSidebar extends IoElement {
@@ -83,17 +84,19 @@ export class IoSidebar extends IoElement {
   _addOptions(options) {
     const elements = [];
     for (let i = 0; i < options.length; i++) {
-      if (options[i].options) {
+      const option = options[i];
+      if (option.options) {
+        const UID = option.label + ' ' + i + '/' + options.length + ' (' + option.options.length + ')';
         elements.push(['io-collapsable', {
-          label: options[i].label,
-          expanded: true,
-          elements: [...this._addOptions(options[i].options)]
+          label: option.label,
+          expanded: $('io-sidebar-collapse ' + UID, true),
+          elements: [...this._addOptions(option.options)]
         }]);
       } else {
-        const selected = this.selected && (this.selected === options[i] || this.selected === options[i].value);
+        const selected = this.selected && (this.selected === option || this.selected === option.value);
         elements.push(['io-button', {
-          label: options[i].label || options[i].value || options[i],
-          value: options[i].value || options[i],
+          label: option.label || option.value || option,
+          value: option.value || option,
           action: this._onSelect,
           class: (selected ? 'io-selected-tab' : '') + ' io-tab',
         }]);
