@@ -8,21 +8,38 @@ export class IoMdView extends IoElement {
     return html`<style>
       :host {
         display: block;
-        padding: 0.5em 1em;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3),
-                    0 15px 20px 0 rgba(0, 0, 0, 0.1);
-        border-radius: var(--io-border-radius);
-        overflow: hidden;
         background: var(--io-background-color);
         color: var(--io-color);
       }
+      :host > :first-child {
+        margin-top: 0;
+      }
+      :host > :last-child {
+        margin-top: 0;
+      }
       :host p {
-        line-height: 1.5em;
+        line-height: 1.4em;
       }
       :host a {
         font-weight: bold;
         text-decoration: none;
-        color: var(--io-link-color);
+        color: var(--io-color-link);
+      }
+      :host h1 {
+        margin: 0;
+        padding: 0.5em 0;
+      }
+      :host h2 {
+        margin: 0;
+        padding: 0.4em 0;
+      }
+      :host h3 {
+        margin: 0;
+        padding: 0.3em 0;
+      }
+      :host h4 {
+        margin: 0;
+        padding: 0.2em 0;
       }
       :host code {
         background: rgba(0,0,0,0.25);
@@ -40,15 +57,18 @@ export class IoMdView extends IoElement {
         padding: 0.5em 1em;
       }
       :host table  {
-        width: 100%;
+        width: 100% !important;
         border: 1px solid black;
         border-collapse: collapse;
+        table-layout: fixed;
       }
       :host table td,
       :host table tr,
       :host table th {
         border: 1px solid gray;
         padding: 0.25em;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       :host .videocontainer {
           width: 100%;
@@ -78,11 +98,12 @@ export class IoMdView extends IoElement {
   pathChanged() {
     const scope = this;
     fetch(this.path)
-    .then(function(response) {
+    .then(response => {
       return response.text();
     })
-    .then(function(text) {
+    .then(text => {
       if (window.marked) scope.innerHTML = window.marked(text);
+      this.dispatchEvent('content-ready', {}, true);
     });
   }
 }

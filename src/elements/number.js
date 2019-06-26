@@ -1,31 +1,17 @@
-import {html, IoElement} from "../core/element.js";
+import {html} from "../core/element.js";
+import {IoItem} from "./item.js";
 
-const selection = window.getSelection();
-const range = document.createRange();
-
-export class IoNumber extends IoElement {
+export class IoNumber extends IoItem {
   static get style() {
     return html`<style>
       :host {
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
-        padding: var(--io-padding);
-        color: var(--io-field-color);
-        background-color: var(--io-field-background-color);
-      }
-      :host:focus {
-        overflow: hidden;
-        text-overflow: clip;
-        outline: none;
-        border-color: var(--io-focus-color);
-      }
-      :host[aria-invalid] {
-        color: var(--io-error-color);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
+        user-select: text;
       }
     </style>`;
   }
@@ -46,30 +32,24 @@ export class IoNumber extends IoElement {
         value: 'pattern="[0-9]*"',
         reflect: true,
       },
-      tabindex: 0,
+      inputmode: {
+        value: 'numeric',
+        reflect: true,
+      },
       contenteditable: true,
-    };
-  }
-  static get listeners() {
-    return {
-      'focus': '_onFocus'
     };
   }
   constructor(props) {
     super(props);
     this.setAttribute('spellcheck', 'false');
   }
-  _onFocus() {
+  _onFocus(event) {
+    super._onFocus(event);
     this._innerTextOnFocus = this.innerText;
-    this.addEventListener('blur', this._onBlur);
-    this.addEventListener('keydown', this._onKeydown);
-    this._select();
   }
-  _onBlur() {
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
+  _onBlur(event) {
+    super._onBlur(event);
     if (this._innerTextOnFocus !== this.innerText) this.setFromText(this.innerText);
-    selection.removeAllRanges();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -77,7 +57,7 @@ export class IoNumber extends IoElement {
     const rng = window.getSelection().getRangeAt(0);
     const start = rng.startOffset;
     const end = rng.endOffset;
-    const length = this.childNodes[0].length;
+    const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
     // TODO: implement home/end for min/max
@@ -107,13 +87,6 @@ export class IoNumber extends IoElement {
       }
     }
   }
-  _select() {
-    range.selectNodeContents(this.childNodes[0]);
-    range.setStart(this.childNodes[0], 0);
-    range.setEnd(this.childNodes[0], this.childNodes[0].length);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
   setFromText(text) {
     // TODO: test conversion
     let value = Math.round(Number(text) / this.step) * this.step / this.conversion;
@@ -127,14 +100,16 @@ export class IoNumber extends IoElement {
     let value = this.value;
     if (typeof value == 'number' && !isNaN(value)) {
       value *= this.conversion;
-      value = value.toFixed(-Math.round(Math.log(this.step) / Math.LN10));
+      let d = -Math.round(Math.log(this.step) / Math.LN10);
+      d = Math.max(0, Math.min(100, d));
+      value = value.toFixed(d);
       this.innerText = Number(String(value));
     } else {
       this.innerText = 'NaN';
     }
-    this.setAttribute('aria-invalid', typeof this.value !== 'number' || isNaN(this.value));
-    this.setAttribute('aria-valuemin', this.min !== -Infinity ? this.min : undefined);
-    this.setAttribute('aria-valuemax', this.max !== Infinity ? this.max : undefined);
+    this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
+    this.setAttribute('aria-valuemin', this.min !== -Infinity ? this.min : false);
+    this.setAttribute('aria-valuemax', this.max !== Infinity ? this.max : false);
   }
 }
 

@@ -1,22 +1,13 @@
-### `<io-button>` ###
-
 A simple button element.
 
-When clicked or activated by space/enter key, it calls the `action` function with optional `value` argument. It also emits a bubbling `button-clicked` event.
+Extends `<io-item>`.
 
-When focused, the arrow keys navigate to the nearest focusable sibling element.
+<io-element-demo element="io-button" properties='{"label": "Button"}'></io-element-demo>
+
+When clicked or activated by space/enter key, it calls the `action` function with optional `value` argument.
 
 #### Properties ####
 
 | Property | Type | Description | Default |
 |:---------|:-----|:------------|:--------|
-| **`label`**  | String   | Button text                   | `'Button'`  |
 | **`action`** | Function | Function to call when clicked | `undefined` |
-| **`value`**  | _any_    | Argument for function action  | `undefined` |
-
-#### Events ####
-
-| Event | Description | Detail | Bubbles |
-|:------|:------------|:-------|:--------|
-| **`button-clicked`** | Clicked | `value`, `action` | false |
-| **`focus-to`** | Attempted to change focus but no suitable sibling found | `direction` | true |

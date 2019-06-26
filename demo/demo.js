@@ -1,5 +1,5 @@
-import {html, IoElement, IoStorage as $, IoInspector} from "../build/io.min.js";
-import {menuoptions} from "./demo_menuoptions.js";
+import {html, IoElement, IoStorage as $} from "../build/io.min.js";
+import "./todomvc/todo-app.js";
 
 export class IoDemo extends IoElement {
   static get style() {
@@ -9,12 +9,12 @@ export class IoDemo extends IoElement {
         flex-direction: column;
         flex: 1 0 auto;
       }
-      :host > io-tabbed-elements {
+      :host > io-selector-tabs {
         display: flex;
         flex-direction: column;
         flex: 1 0 auto;
       }
-      :host > io-tabbed-elements > io-element-cache {
+      :host > io-selector-tabs > io-selector {
         display: flex;
         flex-direction: column;
         flex: 1 0 auto;
@@ -31,7 +31,7 @@ export class IoDemo extends IoElement {
       :host io-slider:not(:last-of-type) {
         margin-bottom: var(--io-spacing);
       }
-      :host > io-tabbed-elements > io-element-cache > io-layout {
+      :host > io-selector-tabs > io-selector > io-layout {
         height: 600px;
         flex: 1 0 auto;
       }
@@ -54,7 +54,6 @@ export class IoDemo extends IoElement {
       null: null,
       NaN: NaN,
       undefined: undefined,
-      menuoptions: function() { return menuoptions },
     };
   }
   changed(event) {
@@ -65,18 +64,19 @@ export class IoDemo extends IoElement {
   setNumber(value) {
     this.number = value;
   }
+
   constructor(props) {
     super(props);
 
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
     const pointerEventsWarning = [
-      "PointerEvent" in window ? [] : ['div', {className: 'warning'}, [
+      "PointerEvent" in window ? [] : ['div', {class: 'warning'}, [
         ['p', 'This feature requires missing PointerEvents support!'],
         ['a', {href: "https://github.com/jquery/PEP#why-pointer-events"}, 'Learn more about the API!'],
       ]]
     ]
 
-    const demoPrimitives = ['div', {name: 'primitives', className: 'table'}, [
+    const demoPrimitives = ['div', {name: 'primitives', class: 'table'}, [
       ['span', 'io-string'],
       ['span', 'io-number'],
       ['span', 'io-boolean'],
@@ -105,7 +105,6 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoSliders = ['div', {name: 'sliders'}, [
-      pointerEventsWarning,
       ['io-slider', {value: this.bind('number')}],
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
@@ -115,7 +114,6 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoOptions = ['div', {name: 'options'}, [
-      pointerEventsWarning,
       ['io-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},
@@ -125,9 +123,10 @@ export class IoDemo extends IoElement {
         {label: 'four', value: 4},
         {label: 'leet', value: 1337},
       ], value: this.bind('number')}],
+      ['io-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
     ]];
 
-    const demoButton = ['div', {name: 'button', className: 'table'}, [
+    const demoButton = ['div', {name: 'button', class: 'table'}, [
       ['io-button', {label: 'set 0.3', action: this.setNumber, value: 0.3}],
       ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
       ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
@@ -137,22 +136,43 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoObject = ['div', {name: 'object'}, [
-      ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), props: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'menuoptions', 'options', 'numbers']}], //TODO: labeled?
-      ['io-object', {value: this, label: 'IoDemo (single configured property)', labeled: false, expanded: $('io-object2'), props: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
-      ['io-object', {value: menuoptions, label: 'Array (menu options)', expanded: $('io-object3')}],
+      ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers']}], //TODO: labeled?
+      ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2'), properties: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
     ]];
 
     const demoInspector = ['div', {name: 'inspector'}, [
       ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
-    const demoMenu = ['div', {name: 'menu'}, [
-      pointerEventsWarning,
-      ['div', 'right-click (contextmenu)'],
-      ['io-menu', {options: menuoptions, position: 'pointer', button: 2, ondown: false}], ['br'],
-      ['io-menu-options', {className: 'sidebar', options: menuoptions}], ['br'], ['br'],
-      ['io-menu-options', {className: 'menubar', options: menuoptions, horizontal: true}],
-    ]];
+    const options = [
+      {label: 'set one', value: 1, action: this.setNumber},
+      {label: 'set two', value: 2, action: this.setNumber},
+      {label: 'set three', value: 3, action: this.setNumber},
+      {label: 'set four', value: 4, action: this.setNumber},
+      {label: 'set five', value: 5, action: this.setNumber}
+    ];
+
+    // this.menuoptions = [
+    //   {label: 'file', options: options},
+    //   {label: 'view', options: [
+    //     {label: 'suboption one', options: options},
+    //     {label: 'suboption two', options: options},
+    //     {label: 'suboption three', options: options},
+    //   ]},
+    //   {label: 'long menu', options: new Array(100).fill({label: 'Set 0', value: 0, action: this.setNumber, icon: '>', hint: 'set'}), hint: 'list', icon: '⚠'}
+    // ];
+    // const demoMenu = ['div', {name: 'menu'}, [
+    //   ['div', [
+    //     ['span', 'right-click (contextmenu)'],
+    //     ['io-menu', {options: this.menuoptions, position: 'pointer', button: 2}], ['br'],
+    //   ]], ['br'],
+    //   ['div', [
+    //     ['span', 'click'],
+    //     ['io-menu', {options: this.menuoptions, position: 'pointer', button: 0}], ['br'],
+    //   ]], ['br'],
+    //   ['io-menu-options', {class: 'sidebar', options: this.menuoptions}], ['br'], ['br'],
+    //   ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
+    // ]];
 
     const demoLayout = ['io-layout', {
       name: 'Layout',
@@ -165,13 +185,13 @@ export class IoDemo extends IoElement {
         demoButton,
         demoObject,
         demoInspector,
-        demoMenu,
+        // demoMenu,
       ],
       splits: [
         {selected: 'sliders', tabs: ['sliders'], size: 280},
         {orientation: 'vertical', splits: [
           {tabs: ['button'], selected: 'button', size: 100},
-          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'menu', 'inspector'], selected: 'inspector'},
+          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
           {tabs: ['primitives'], selected: 'primitives'},
         ]},
       ],
@@ -180,18 +200,19 @@ export class IoDemo extends IoElement {
     // TODO: Add demos for all remaining elements
 
     this.template([
-      ['io-tabbed-elements', {precache: true, selected: $('demo', 'Elements'), elements: [
+      ['io-selector-tabs', {precache: true, selected: $('demo', 'Elements', true), elements: [
         ['div', {name: 'Elements'}, [
           ['h4', 'io-string io-number io-boolean'], demoPrimitives,
           ['h4', 'io-switch'], demoSwitch,
           ['h4', 'io-slider'], demoSliders,
           ['h4', 'io-options'], demoOptions,
           ['h4', 'io-button'], demoButton,
-          ['h4', 'io-menu'], demoMenu,
+          // ['h4', 'io-menu'], demoMenu,
           ['h4', 'io-object'], demoObject,
           ['h4', 'io-inspector'], demoInspector,
         ]],
         demoLayout,
+        ['todo-app', {name: 'Todo App'}],
       ]}]
     ]);
   }

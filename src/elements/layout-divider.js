@@ -15,17 +15,17 @@ export class IoLayoutDivider extends IoElement {
         transition: background-color 0.4s;
       }
       :host:hover {
-        background-color: var(--io-focus-color);
+        background-color: var(--io-color-focus);
       }
       :host[orientation=horizontal] {
         cursor: col-resize;
-        width: var(--io-padding);
+        width: var(--io-spacing);
         border-top: 0;
         border-bottom: 0;
       }
       :host[orientation=vertical] {
         cursor: row-resize;
-        height: var(--io-padding);
+        height: var(--io-spacing);
         border-left: 0;
         border-right: 0;
       }
@@ -66,7 +66,7 @@ export class IoLayoutDivider extends IoElement {
   }
   changed() {
     this.template([
-      ['div', {className: 'app-divider'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
+      ['div', {class: 'app-divider'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
     ]);
   }
 }

@@ -7,11 +7,11 @@ export class IoBoolean extends IoButton {
       :host {
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
-        color: var(--io-field-color);
-        background-color: var(--io-field-background-color);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
       }
       :host[aria-invalid] {
-        color: var(--io-error-color);
+        color: var(--io-color-error);
       }
     </style>`;
   }
@@ -19,7 +19,7 @@ export class IoBoolean extends IoButton {
     return {
       value: {
         type: Boolean,
-        reflect: true
+        reflect: true,
       },
       true: 'true',
       false: 'false',
@@ -35,7 +35,7 @@ export class IoBoolean extends IoButton {
   }
   changed() {
     this.setAttribute('aria-checked', String(this.value));
-    this.setAttribute('aria-invalid', typeof this.value !== 'boolean');
+    this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
     this.innerText = this.value ? this.true : this.false;
   }
 }

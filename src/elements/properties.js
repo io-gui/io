@@ -6,51 +6,59 @@ export class IoProperties extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
-        /* line-height: 1em; */
+        align-self: stretch;
       }
       :host > .io-property {
         display: flex !important;
         flex-direction: row;
+        flex: 1 0 auto;
+        align-items: flex-start;
+      }
+      :host > .io-property > * {
+        background: none;
+        border-color: transparent;
       }
       :host > .io-property > .io-property-label {
-        padding: 0 0.2em 0 0.5em;
-        flex: 0 0 auto;
+        margin: 0;
+        border: var(--io-border);
+        border-color: transparent;
         color: var(--io-color);
+        flex: 0 0 auto;
+        padding: var(--io-spacing);
+        padding-right: 0;
       }
       :host > .io-property > .io-property-editor {
-        margin: 0;
-        padding: 0;
+        flex: 1 1 auto;
       }
-      :host > .io-property > io-object,
-      :host > .io-property > io-object > io-boolean,
-      :host > .io-property > io-object > io-properties {
-        padding: 0 !important;
-        border: none !important;
-        background: none !important;
-      }
-      :host > .io-property > io-number,
-      :host > .io-property > io-string,
-      :host > .io-property > io-boolean {
-        border: none;
-        background: none;
+      :host io-number,
+      :host io-string,
+      :host io-boolean,
+      :host io-switch,
+      :host > .io-property > io-option {
+        flex: 0 0 auto;
+        padding: var(--io-spacing) !important;
       }
       :host > .io-property > io-number {
-        color: var(--io-number-color);
+        color: var(--io-color-number);
       }
       :host > .io-property > io-string {
-        color: var(--io-string-color);
+        color: var(--io-color-string);
       }
       :host > .io-property > io-boolean {
-        color: var(--io-boolean-color);
+        color: var(--io-color-boolean);
+      }
+      :host > .io-property > io-switch:not([value]),
+      :host > .io-property > io-boolean:not([value]) {
+        opacity: 0.5;
       }
     </style>`;
   }
   static get properties() {
     return {
-      value: Object,
-      config: Object,
-      props: Array,
       labeled: true,
+      value: Object,
+      properties: Array,
+      config: Object,
     };
   }
   get _config() {
@@ -61,12 +69,11 @@ export class IoProperties extends IoElement {
     if (path[0] === this) return;
     if (event.detail.object) return; // TODO: unhack
     event.stopPropagation();
-    const key = path[0].id;
-    if (key !== null) {
-      this.value[key] = event.detail.value;
-      const detail = Object.assign({object: this.value, key: key}, event.detail);
+    const prop = path[0].id;
+    if (prop !== null && event.detail.property === 'value') {
+      this.value[prop] = event.detail.value;
+      const detail = Object.assign({object: this.value, property: prop}, event.detail);
       this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
-      this.dispatchEvent('value-set', detail, false);
     }
   }
   // TODO: Consider valueMutated() instead
@@ -74,15 +81,15 @@ export class IoProperties extends IoElement {
     const config = this._config;
     const elements = [];
     for (let c in config) {
-      if (!this.props.length || this.props.indexOf(c) !== -1) {
+      if (!this.properties.length || this.properties.indexOf(c) !== -1) {
         // if (config[c]) {
         const tag = config[c][0];
         const protoConfig = config[c][1];
         const label = config[c].label || c;
-        const itemConfig = {className: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+        const itemConfig = {class: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
         elements.push(
-          ['div', {className: 'io-property'}, [
-            this.labeled ? ['span', {className: 'io-property-label', title: label}, label + ':'] : null,
+          ['div', {class: 'io-property'}, [
+            this.labeled ? ['span', {class: 'io-property-label', title: label}, label + ':'] : null,
             [tag, Object.assign(itemConfig, protoConfig)]
           ]]);
         // }
@@ -93,7 +100,7 @@ export class IoProperties extends IoElement {
   static get config() {
     return {
       'type:string': ['io-string', {}],
-      'type:number': ['io-number', {step: 0.01}],
+      'type:number': ['io-number', {step: 0.0000001}],
       'type:boolean': ['io-boolean', {}],
       'type:object': ['io-object', {}],
       'type:null': ['io-string', {}],
@@ -157,7 +164,7 @@ export class Config {
 
       const typeStr = 'type:' + type;
       const cstrStr = 'constructor:' + cstr;
-      const keyStr = k;
+      const keyStr = k.replace('type:', '').replace('constructor:', '');
 
       config[k] = {};
 

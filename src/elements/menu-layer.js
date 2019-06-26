@@ -1,13 +1,7 @@
 import {html, IoElement} from "../core/element.js";
+// import {IoMenuItem} from "./menu-item.js";
 
-let previousOption;
-let previousParent;
-let timeoutOpen;
-let timeoutReset;
-let WAIT_TIME = 1200;
-// let lastFocus;
-
-// TODO: implement search
+const WAIT_TIME = 100;
 
 export class IoMenuLayer extends IoElement {
   static get style() {
@@ -31,15 +25,20 @@ export class IoMenuLayer extends IoElement {
         visibility: visible;
         pointer-events: all;
       }
-      :host io-menu-options:not([expanded]) {
+      :host > io-menu-options:not([expanded]) {
         display: none;
       }
-      :host io-menu-options {
+      :host > io-menu-options {
         position: absolute;
-        transform: translateZ(0);
+        transform: translate3d(0, 0, 0);
         top: 0;
         left: 0;
-        min-width: 6em;
+      }
+      :host io-menu-item:hover {
+        background-color: inherit;
+      }
+      :host io-menu-item:focus {
+        background-color: var(--io-background-color-light);
       }
     </style>`;
   }
@@ -49,270 +48,244 @@ export class IoMenuLayer extends IoElement {
         type: Boolean,
         reflect: true,
       },
-      $options: Array
+      lastFocus: HTMLElement,
+      $options: Array,
     };
   }
   static get listeners() {
     return {
-      'pointerup': 'onPointerup',
-      'pointermove': 'onPointermove',
-      'dragstart': 'preventDefault',
-      'contextmenu': 'preventDefault',
+      'mousedown': '_onMousedown',
+      'mousemove': '_onMousemove',
+      'mouseup': '_onMouseup',
+      'touchstart': '_onTouchstart',
+      'touchmove': '_onTouchmove',
+      'touchend': '_onTouchend',
+      'contextmenu': '_onContextmenu',
     };
   }
   constructor(props) {
     super(props);
     this._hoveredItem = null;
-    this._hoveredGroup = null;
+    this._hoveredOptions = null;
     this._x = 0;
     this._y = 0;
     this._v = 0;
-    window.addEventListener('scroll', this.onScroll);
-    // window.addEventListener('focusin', this.onWindowFocus);
   }
-  registerGroup(group) {
-    this.$options.push(group);
-    group.addEventListener('focusin', this.onMenuItemFocused);
-    group.addEventListener('keydown', this.onKeydown);
-    group.addEventListener('expanded-changed', this.onGroupExpandedChanged);
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('scroll', this._onWindowScroll);
+    window.addEventListener('wheel', this._onWindowScroll);
   }
-  unregisterGroup(group) {
-    this.$options.splice(this.$options.indexOf(group), 1);
-    group.removeEventListener('focusin', this.onMenuItemFocused);
-    group.removeEventListener('keydown', this.onKeydown);
-    group.removeEventListener('expanded-changed', this.onGroupExpandedChanged);
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('scroll', this._onWindowScroll);
+    window.removeEventListener('wheel', this._onWindowScroll);
+    this._stopAnimation();
   }
-  collapseAllGroups() {
+  registerOptions(options) {
+    this.$options.push(options);
+    clearTimeout(this.__timeout);
+    this.__timeout = setTimeout(()=> {
+      this.$options.sort((a, b) => { return a.depth < b.depth ? -1 : 1; });
+    });
+  }
+  unregisterOptions(options) {
+    this.$options.splice(this.$options.indexOf(options), 1);
+  }
+  collapseAll() {
+    // if (this._preserveExpanded) {
+    //   this._preserveExpanded = false;
+    //   return;
+    // }
     for (let i = this.$options.length; i--;) {
-      this.$options[i].expanded = false;
-    }
-  }
-  runAction(option) {
-    if (typeof option.action === 'function') {
-      this.collapseAllGroups();
-      option.action.apply(null, [option.value]);
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
-    } else if (option.button) {
-      this.collapseAllGroups();
-      option.button.click(); // TODO: test
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
-    }
-  }
-  onScroll() {
-    if (this.expanded) {
-      this.collapseAllGroups();
-      // if (lastFocus) {
-      //   lastFocus.focus();
-      // }
-    }
-  }
-  // onWindowFocus(event) {
-  //   if (event.target.localName !== 'io-menu-item') lastFocus = event.target;
-  // }
-  onMenuItemFocused(event) {
-    const path = event.composedPath();
-    const item = path[0];
-    const optionschain = item.optionschain;
-    for (let i = this.$options.length; i--;) {
-      if (optionschain.indexOf(this.$options[i]) === -1) {
+      if (this.$options[i].parentElement === this) {
         this.$options[i].expanded = false;
       }
     }
+    this.expanded = false;
   }
-  onPointermove(event) {
+  _onOptionsExpanded() {
+    // TODO: optimize and simplify. Avoid redundant loop on collapseAll()
+    this.expanded = !!this.$options.find(option => { return option.expanded; });
+  }
+  _onWindowScroll() {
+    if (this.expanded) this.collapseAll();
+  }
+  _onMousedown(event) {
+    this._onPointerdown(event);
+  }
+  _onMousemove(event) {
+    this._onPointermove(event);
+  }
+  _onMouseup(event) {
+    this._onPointerup(event);
+  }
+  _onTouchstart(event) {
     event.preventDefault();
+    this._onPointerdown(event.changedTouches[0]);
+  }
+  _onTouchmove(event) {
+    event.preventDefault();
+    this._onPointermove(event.changedTouches[0]);
+  }
+  _onTouchend(event) {
+    event.preventDefault();
+    this._onPointerup(event);
+  }
+  _onContextmenu(event) {
+    event.preventDefault();
+    if (this.expanded) this.collapseAll();
+  }
+  _onFocus() {
+    const path = event.composedPath();
+    const item = path[0];
+
+    if (item.$parent && item.$parent.parentElement === this) {
+
+      item.expanded = !!item.options.length;
+
+      const optionschain = this._getOptionschain(item);
+      this._hoveredItem = item;
+      for (let i = this.$options.length; i--;) {
+        if (optionschain.indexOf(this.$options[i]) === -1) {
+          // if (this.$options[i].parentElement === this) {
+            this.$options[i].expanded = false;
+          // }
+        }
+      }
+
+    }
+  }
+  _onPointerdown(event) {
+    this._onPointermove(event);
+    if (!this._hoveredItem) {
+      this.collapseAll();
+    }
+  }
+  _onPointermove(event) {
+    const movementX = event.clientX - this._x;
+    const movementY = event.clientY - this._y;
+    this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
     this._x = event.clientX;
     this._y = event.clientY;
-    this._v = (2 * this._v + Math.abs(event.movementY) - Math.abs(event.movementX)) / 3;
-    let groups = this.$options;
-    for (let i = groups.length; i--;) {
-      if (groups[i].expanded) {
-        let rect = groups[i].getBoundingClientRect();
+    this._hoveredOptions = null;
+    this._hoveredItem = null;
+    let options = this.$options;
+    for (let i = options.length; i--;) {
+      if (options[i].expanded) {
+        this._hoveredOptions = options[i];
+        let rect = options[i].getBoundingClientRect();
         if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-          this._hover(groups[i]);
-          this._hoveredGroup = groups[i];
-          return groups[i];
+          let items = options[i].querySelectorAll('io-menu-item');
+          for (let j = items.length; j--;) {
+            let rect = items[j].getBoundingClientRect();
+            if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+              let force = options[i].horizontal;
+              this._focusItem(items[j], force);
+              this._hoveredItem = items[j];
+              return;
+            }
+          }
+          return options[i];
         }
       }
     }
-    this._hoveredItem = null;
-    this._hoveredGroup = null;
-  }
-  onPointerup(event) {
-    event.stopPropagation();
-    event.preventDefault();
-    const path = event.composedPath();
-    let elem = path[0];
-    if (elem.localName === 'io-menu-item') {
-      this.runAction(elem.option);
-      elem.menuroot.dispatchEvent('io-menu-item-clicked', elem.option);
-    } else if (elem === this) {
-      if (this._hoveredItem) {
-        this.runAction(this._hoveredItem.option);
-        this._hoveredItem.menuroot.dispatchEvent('io-menu-item-clicked', this._hoveredItem.option);
-      } else if (!this._hoveredGroup) {
-        this.collapseAllGroups();
-        // if (lastFocus) {
-        //   lastFocus.focus();
-        // }
-      }
+    const _focusSrc = IoMenuLayer.singleton._focusSrc;
+    let rect = _focusSrc.getBoundingClientRect();
+    if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+      this._hoveredItem = _focusSrc;
     }
   }
-  onKeydown(event) {
-    event.preventDefault();
-    const path = event.composedPath();
-    if (path[0].localName !== 'io-menu-item') return;
-
-    let elem = path[0];
-    let group = elem.$parent;
-    let siblings = [...group.querySelectorAll('io-menu-item')] || [];
-    let children = elem.$options ? [...elem.$options.querySelectorAll('io-menu-item')]  : [];
-    let index = siblings.indexOf(elem);
-
-    let command = '';
-
-    if (!group.horizontal) {
-      if (event.key == 'ArrowUp') command = 'prev';
-      if (event.key == 'ArrowRight') command = 'in';
-      if (event.key == 'ArrowDown') command = 'next';
-      if (event.key == 'ArrowLeft') command = 'out';
-    } else {
-      if (event.key == 'ArrowUp') command = 'out';
-      if (event.key == 'ArrowRight') command = 'next';
-      if (event.key == 'ArrowDown') command = 'in';
-      if (event.key == 'ArrowLeft') command = 'prev';
-    }
-    if (event.key == 'Tab') command = 'next';
-    if (event.key == 'Escape') command = 'exit';
-    if (event.key == 'Enter' || event.which == 32) command = 'action';
-
-    switch (command) {
-      case 'action':
-        this.onPointerup(event); // TODO: test
-        break;
-      case 'prev':
-        siblings[(index + siblings.length - 1) % (siblings.length)].focus();
-        break;
-      case 'next':
-        siblings[(index + 1) % (siblings.length)].focus();
-        break;
-      case 'in':
-        if (children.length) children[0].focus();
-        break;
-      case 'out':
-        if (group && group.$parent) group.$parent.focus();
-        break;
-      case 'exit':
-        this.collapseAllGroups();
-        break;
-      default:
-        break;
-    }
-  }
-  _hover(group) {
-    let items = group.querySelectorAll('io-menu-item');
-    for (let i = items.length; i--;) {
-      let rect = items[i].getBoundingClientRect();
-      if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-        let force = group.horizontal;
-        this._focus(items[i], force);
-        this._hoveredItem = items[i];
-        return items[i];
-      }
-    }
-    this._hoveredItem = null;
-    this._hoveredItem = null;
-  }
-  _focus(item, force) {
-    if (item !== previousOption) {
-      clearTimeout(timeoutOpen);
-      clearTimeout(timeoutReset);
-      if (this._v > 1 || item.parentNode !== previousParent || force) {
-        previousOption = item;
+  _focusItem(item, force) {
+    if (item !== this.__prevItem) {
+      clearTimeout(this.__timeoutOpen);
+      clearTimeout(this.__timeoutReset);
+      if (this._v > 1 || item.parentNode !== this.__prevParent || force) {
+        // if(this.__prevItem) this.__prevItem.expanded = false;
+        this.__prevItem = item;
+        // item.expanded = true;
         item.focus();
+        // this._onFocus();
       } else {
-        timeoutOpen = setTimeout(function() {
-          previousOption = item;
+        this.__timeoutOpen = setTimeout(function() {
+          // if(this.__prevItem) this.__prevItem.expanded = false;
+          this.__prevItem = item;
+          // item.expanded = true;
           item.focus();
+          // this._onFocus();
         }.bind(this), WAIT_TIME);
       }
-      previousParent = item.parentNode;
-      timeoutReset = setTimeout(function() {
-        previousOption = null;
-        previousParent = null;
+      this.__prevParent = item.parentNode;
+      this.__timeoutReset = setTimeout(function() {
+        this.__prevItem = null;
+        this.__prevParent = null;
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  onGroupExpandedChanged(event) {
-    const path = event.composedPath();
-    if (path[0].expanded) this._setGroupPosition(path[0]);
-    for (let i = this.$options.length; i--;) {
-      if (this.$options[i].expanded) {
-        this.expanded = true;
-        return;
-      }
-    }
-    setTimeout(() => { this.expanded = false; });
+  setLastFocus(element) {
+    const isInside = element.$parent && element.$parent.parentElement === this;
+    this.lastFocus = isInside ? this.lastFocus : element;
   }
-  _setGroupPosition(group) {
-    if (!group.$parent) return;
-    let rect = group.getBoundingClientRect();
-    let pRect = group.$parent.getBoundingClientRect();
-     // TODO: unhack horizontal long submenu bug.
-    if (group.position === 'bottom' && rect.height > (window.innerHeight - this._y)) group.position = 'right';
-    //
-    switch (group.position) {
-      case 'pointer':
-        group._x = this._x - 2 || pRect.x;
-        group._y = this._y - 2 || pRect.y;
-        break;
-      case 'bottom':
-        group._x = pRect.x;
-        group._y = pRect.bottom;
-        break;
-      case 'right':
-      default:
-        group._x = pRect.right;
-        group._y = pRect.y;
-        if (group._x + rect.width > window.innerWidth) {
-          group._x = pRect.x - rect.width;
-        }
-        break;
+  _onPointerup() {
+    if (this._hoveredItem) {
+      const collapse = !this._hoveredItem.options.length && this._hoveredItem !== IoMenuLayer.singleton._focusSrc;
+      if (collapse) this._hoveredItem._onClick();
+      if (collapse) this.collapseAll();
+    } else {
+      this.collapseAll();
     }
-    group._x = Math.max(0, Math.min(group._x, window.innerWidth - rect.width));
-    group._y = Math.min(group._y, window.innerHeight - rect.height);
-    group.style.left = group._x + 'px';
-    group.style.top = group._y + 'px';
+  }
+  _getOptionschain(item) {
+    const chain = [];
+    if (item.$options) chain.push(item.$options);
+    let parent = item.$parent;
+    while (parent) {
+      if (parent.localName == 'io-menu-options') chain.push(parent);
+      parent = parent.$parent;
+    }
+    return chain;
+  }
+  _moveHovered() {
+    // let options = this._hoveredOptions;
+    // if (options) {
+    //   let rect = options.getBoundingClientRect();
+    //   if (rect.height > window.innerHeight) {
+    //     if (this._y < 100 && rect.top < 0) {
+    //       let scrollSpeed = (100 - this._y) / 5000;
+    //       let overflow = rect.top;
+    //       options._y = options._y - Math.ceil(overflow * scrollSpeed) + 1;
+    //     } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
+    //       let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
+    //       let overflow = (rect.bottom - window.innerHeight);
+    //       options._y = options._y - Math.ceil(overflow * scrollSpeed) - 1;
+    //     }
+    //     options.style.left = options._x + 'px';
+    //     options.style.top = options._y + 'px';
+    //   }
+    // }
+  }
+  _startAnimation() {
+    this._moveHovered();
+    this._rAF_ID = requestAnimationFrame(this._startAnimation);
+  }
+  _stopAnimation() {
+    if (this._rAF_ID) cancelAnimationFrame(this._rAF_ID);
   }
   expandedChanged() {
-    if (!this.expanded) return;
-    let group = this._hoveredGroup;
-    if (group) {
-      let rect = group.getBoundingClientRect();
-      if (rect.height > window.innerHeight) {
-        if (this._y < 100 && rect.top < 0) {
-          let scrollSpeed = (100 - this._y) / 5000;
-          let overflow = rect.top;
-          group._y = group._y - Math.ceil(overflow * scrollSpeed) + 1;
-        } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
-          let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
-          let overflow = (rect.bottom - window.innerHeight);
-          group._y = group._y - Math.ceil(overflow * scrollSpeed) - 1;
-        }
-        group.style.left = group._x + 'px';
-        group.style.top = group._y + 'px';
+    if (this.expanded) {
+      this._startAnimation();
+    } else {
+      this._hoveredItem = null;
+      this._hoveredOptions = null;
+      this._stopAnimation();
+      if (this.lastFocus) {
+        this.lastFocus.focus();
+        delete this.lastFocus;
       }
     }
-    requestAnimationFrame(this.expandedChanged);
   }
 }
 
 IoMenuLayer.Register();
-
 IoMenuLayer.singleton = new IoMenuLayer();
-
 document.body.appendChild(IoMenuLayer.singleton);

@@ -11,7 +11,6 @@ export class IoServiceLoader extends IoNode {
       permission: window.Notification ? window.Notification.permission : 'default',
       subscription: '',
     };
-
   }
   constructor(props) {
     super(props);

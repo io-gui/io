@@ -1,5 +1,5 @@
 import {html, IoElement} from "../core/element.js";
-import "./element-cache.js";
+import "./selector.js";
 
 const _dragicon = document.createElement('io-tab-dragicon');
 const _dropzone = document.createElement('io-tab-dropzone');
@@ -16,9 +16,9 @@ const splitDirections = {
 };
 
 // TODO: Reconsider!
-// NOTE: Editable io-tabbed-elements cannot contain other editable io-tabbed-elements or io-layout
+// NOTE: Editable io-selector-tabs cannot contain other editable io-selector-tabs or io-layout
 
-export class IoTabbedElements extends IoElement {
+export class IoSelectorTabs extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -31,20 +31,18 @@ export class IoTabbedElements extends IoElement {
         z-index: 1;
         margin: var(--io-spacing);
         margin-bottom: 0;
+        flex-shrink: 0;
       }
-      :host > io-element-cache {
+      :host > io-selector {
         color: var(--io-color);
         background: var(--io-background-color);
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
         overflow: auto;
-        padding: var(--io-padding);
+        padding: var(--io-spacing);
         border: var(--io-border);
         border-radius: var(--io-border-radius);
-      }
-      :host > io-tabs {
-        flex-shrink: 0;
       }
     </style>`;
   }
@@ -56,12 +54,14 @@ export class IoTabbedElements extends IoElement {
       precache: false,
       cache: true,
       editable: Boolean,
+      role: {
+        reflect: false,
+      },
     };
   }
   elementsChanged() {
     if (this.filter === null) {
-      this.__properties.filter.value =
-          this.elements.map(element => { return element[1].name; });
+      this.__properties.filter.value = this.elements.map(element => { return element[1].name; });
     }
   }
   editableChanged() {
@@ -205,9 +205,8 @@ export class IoTabbedElements extends IoElement {
         filter: this.filter,
         selected: this.bind('selected'),
         editable: this.editable,
-        role: 'navigation',
       }],
-      ['io-element-cache', {
+      ['io-selector', {
         id: 'content',
         elements: this.elements,
         selected: this.selected,
@@ -219,7 +218,7 @@ export class IoTabbedElements extends IoElement {
   }
 }
 
-IoTabbedElements.Register();
+IoSelectorTabs.Register();
 
 export class IoTabs extends IoElement {
   static get style() {
@@ -240,7 +239,9 @@ export class IoTabs extends IoElement {
         border-bottom: none;
       }
       :host[overflow] > :nth-child(n+3):not(.edit-option) {
-        visibility: hidden;
+        /* visibility: hidden; */
+        /* left: 0; */
+        /* position: absolute; */
       }
       :host[editable] > io-button {
         touch-action: none;
@@ -253,23 +254,29 @@ export class IoTabs extends IoElement {
         border-bottom-color: var(--io-background-color);
         border-bottom-style: solid;
         background: var(--io-background-color);
-        color: var(--io-link-color);
+        color: var(--io-color-link);
         margin-bottom: -1px;
         background-image: none;
       }
       :host > io-button.io-tab-insert-before {
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(90deg, var(--io-focus-color) 0.3em, transparent 0.31em);
+                          linear-gradient(90deg, var(--io-color-focus) 0.3em, transparent 0.31em);
       }
       :host > io-button.io-tab-insert-after {
         background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(270deg, var(--io-focus-color) 0.3em, transparent 0.31em);
+                          linear-gradient(270deg, var(--io-color-focus) 0.3em, transparent 0.31em);
       }
       :host > io-button.io-selected-tab.io-tab-insert-before {
-        background-image: linear-gradient(90deg, var(--io-focus-color) 0.3em, transparent 0.31em);
+        background-image: linear-gradient(90deg, var(--io-color-focus) 0.3em, transparent 0.31em);
       }
       :host > io-button.io-selected-tab.io-tab-insert-after {
-        background-image: linear-gradient(270deg, var(--io-focus-color) 0.3em, transparent 0.31em);
+        background-image: linear-gradient(270deg, var(--io-color-focus) 0.3em, transparent 0.31em);
+      }
+      :host > io-option {
+        background: none !important;
+        border: none;
+        padding-left: calc(3 * var(--io-spacing));
+        padding-right: calc(3 * var(--io-spacing));
       }
       :host > .edit-spacer {
         flex: 0 0 3.5em;
@@ -300,6 +307,7 @@ export class IoTabs extends IoElement {
         reflect: true,
       },
       dropIndex: -1,
+      role: 'navigation',
     };
   }
   select(id) {
@@ -418,17 +426,17 @@ export class IoTabs extends IoElement {
     // const currentIndex = this.filter.indexOf(this.selected);
     for (let i = 0; i < this.filter.length; i++) {
       const selected = this.selected === this.filter[i];
-      let className = 'io-tab';
-      if (selected) className += ' io-selected-tab';
+      let _class = 'io-tab';
+      if (selected) _class += ' io-selected-tab';
       if (this.dropIndex !== -1) {// && this.dropIndex !== currentIndex && this.dropIndex !== currentIndex + 1) {
-        if (this.dropIndex === i) className += ' io-tab-insert-before';
-        if (this.dropIndex === i + 1) className += ' io-tab-insert-after';
+        if (this.dropIndex === i) _class += ' io-tab-insert-before';
+        if (this.dropIndex === i + 1) _class += ' io-tab-insert-after';
       }
       const button = ['io-button', {
         label: this.filter[i],
         value: this.filter[i],
         action: this.select,
-        className: className,
+        class: _class,
       }];
       if (this.editable) button[1]['on-pointerdown'] = this._onPointerdown;
       if (selected) selectedButton = button;
@@ -437,7 +445,7 @@ export class IoTabs extends IoElement {
     const elements = [];
     if (this.overflow) {
       elements.push(['io-option', {
-        label: '🍔',
+        label: '☰',
         title: 'select tab menu',
         value: this.bind('selected'),
         options: this.filter
@@ -450,9 +458,9 @@ export class IoTabs extends IoElement {
 
     if (this.editable) {
       elements.push(['div', {
-        className: 'edit-spacer'
+        class: 'edit-spacer'
       }], ['io-option', {
-        className: 'edit-option',
+        class: 'edit-option',
         label: '⚙️',
         options: options,
       }]);
@@ -477,9 +485,9 @@ export class IoTabDragicon extends IoElement {
         user-select: none;
         border: var(--io-outset-border);
         border-radius: var(--io-border-radius);
-        padding: var(--io-padding);
-        padding-left: calc(3 * var(--io-padding));
-        padding-right: calc(3 * var(--io-padding));
+        padding: var(--io-spacing);
+        padding-left: calc(3 * var(--io-spacing));
+        padding-right: calc(3 * var(--io-spacing));
         background: var(--io-background-color);
         color: var(--io-color);
         transform: translateZ(0);
@@ -504,7 +512,7 @@ export class IoTabDropzone extends IoElement {
         pointer-events: none;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
-        border: 4px solid var(--io-focus-color);
+        border: 4px solid var(--io-color-focus);
         border-radius: var(--io-border-radius);
         transform: translateZ(0);
         position: fixed;

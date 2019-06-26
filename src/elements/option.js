@@ -1,60 +1,53 @@
 import {html} from "../core/element.js";
-import {IoButton} from "./button.js";
+import {IoMenuLayer} from "./menu-layer.js";
+import {IoMenuItem} from "./menu-item.js";
 
-export class IoOption extends IoButton {
+export class IoOption extends IoMenuItem {
   static get style() {
     return html`<style>
       :host {
-        padding: var(--io-padding) calc(1.5 * var(--io-padding));
-        line-height: 1em;
+        white-space: pre;
+        display: inline-block;
+        background-color: var(--io-background-color-dark);
+        background-image: var(--io-gradient-button);
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
+        border-radius: var(--io-border-radius);
+        padding: var(--io-spacing);
+        padding-left: calc(3 * var(--io-spacing));
+        padding-right: var(--io-spacing);
+        transition: background-color 0.4s;
       }
-      :host::before {
+      :host:not([label])::after {
         content: '▾';
-        padding-right: var(--io-padding);
+        padding-left: var(--io-spacing);
       }
     </style>`;
   }
   static get properties() {
     return {
-      options: Array,
-      label: '',
+      role: 'button',
     };
   }
   static get listeners() {
     return {
-      'button-clicked': 'onClick'
+      'io-menu-item-clicked': '_onMenuItemClicked',
     };
   }
-  onClick() {
-    this.$['menu'].expanded = true;
-    let firstItem = this.$['menu'].$['group'].querySelector('io-menu-item');
-    if (firstItem) firstItem.focus();
-  }
-  onMenu(event) {
-    this.$['menu'].expanded = false;
+  _onMenuItemClicked(event) {
     this.set('value', event.detail.value);
+    IoMenuLayer.singleton.collapseAll();
   }
   changed() {
-    let label = this.value;
-    if (label instanceof Object) label = label.__proto__.constructor.name;
-    if (this.options) {
-      for (let i = 0; i < this.options.length; i++) {
-        if (this.options[i].value === this.value) {
-          label = this.options[i].label || label;
-          break;
-        }
-      }
-    }
-    this.template([
-      ['span', this.label || String(label)],
-      ['io-menu', {
-        id: 'menu',
-        options: this.options,
-        position: 'bottom',
-        button: 0,
-        ondown: false, // TODO: make open ondown and stay open with position:bottom
-        'on-io-menu-item-clicked': this.onMenu}]
-    ]);
+    const option = this.options.find(option => {return (typeof option === 'object' && option.value === this.value) || option === this.value;});
+    let label = this.label || (typeof option === 'object' ? (option.label || option.value) : this.value);
+    label = (label instanceof Object) ? label.__proto__.constructor.name : String(label);
+
+    this.title = label;
+    this.innerText = label;
+
+    this.setAttribute('aria-haspopup', 'listbox');
+    this.setAttribute('aria-expanded', String(this.expanded));
   }
 }
 

@@ -1,1 +1,0 @@
-### `IoTabbedElements` `<io-tabbed-elements>` ###

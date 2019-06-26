@@ -50,9 +50,6 @@ export const IoNodeMixin = (superclass) => {
 
       this.__listeners.setPropListeners(initProps, this);
 
-      // TODO: Test and documentation.
-      if (this.compose) this.applyCompose(this.compose);
-
       this.setProperties(initProps);
     }
     /**
@@ -90,6 +87,18 @@ export const IoNodeMixin = (superclass) => {
       */
     changed() {}
     /**
+      * Applies compose object on change.
+      */
+    applyCompose() {
+      // TODO: Test and documentation.
+      const compose = this.compose;
+      if (compose) {
+        for (let prop in compose) {
+          this[prop].setProperties(compose[prop]);
+        }
+      }
+    }
+    /**
       * Returns a binding to a specified property`.
       * @param {string} prop - Property to bind to.
       * @return {Binding} Binding object.
@@ -107,7 +116,7 @@ export const IoNodeMixin = (superclass) => {
       if (this[prop] !== value) {
         const oldValue = this[prop];
         this[prop] = value;
-        this.dispatchEvent(prop + '-set', {property: prop, value: value, oldValue: oldValue}, false);
+        this.dispatchEvent('value-set', {property: prop, value: value, oldValue: oldValue}, false);
       }
     }
     // TODO: consider renaming and simplifying `props` object structure.
@@ -125,11 +134,11 @@ export const IoNodeMixin = (superclass) => {
         if (value !== oldValue) this.queue(p, value, oldValue);
       }
 
-      if (props['className']) {
-        this.className = props['className'];
-      } else if (this.removeAttribute) {
-        this.removeAttribute('className');
-      }
+      // if (props['className']) {
+      //   this.className = props['className'];
+      // } else if (this.removeAttribute) {
+      //   this.removeAttribute('className');
+      // }
 
       if (props['style']) {
         for (let s in props['style']) {
@@ -139,26 +148,12 @@ export const IoNodeMixin = (superclass) => {
       }
       if (this.__connected) this.queueDispatch();
     }
-    // TODO: Document.
-    // TODO: Refactor.
-    // TODO: Test extensively.
-    applyCompose(nodes) {
-      for (let n in nodes) {
-        const properties = nodes[n];
-        this[n].setProperties(properties);
-        this.addEventListener(n + '-changed', (event) => {
-          // TODO: Test.
-          if (event.detail.oldValue) event.detail.oldValue.dispose();
-          event.detail.value.setProperties(properties);
-        });
-      }
-    }
     /**
       * This function is called when `object-mutated` event is observed
       * and changed object is a property of the node.
       * @param {Object} event - Property change event.
       */
-    onObjectMutation(event) {
+    _onObjectMutation(event) {
       for (let i = this.__objectProps.length; i--;) {
         const prop = this.__objectProps[i];
         const value = this.__properties[prop].value;
@@ -167,6 +162,7 @@ export const IoNodeMixin = (superclass) => {
           // setTimeout(()=> {
             if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
             this.changed();
+            this.applyCompose();
           // });
           return;
         }
@@ -180,7 +176,7 @@ export const IoNodeMixin = (superclass) => {
       this.__properties.connect();
       this.__connected = true;
       if (this.__objectProps.length) {
-        window.addEventListener('object-mutated', this.onObjectMutation);
+        window.addEventListener('object-mutated', this._onObjectMutation);
       }
       this.queueDispatch();
     }
@@ -192,7 +188,7 @@ export const IoNodeMixin = (superclass) => {
       this.__properties.disconnect();
       this.__connected = false;
       if (this.__objectProps.length) {
-        window.removeEventListener('object-mutated', this.onObjectMutation);
+        window.removeEventListener('object-mutated', this._onObjectMutation);
       }
     }
     /**

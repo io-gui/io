@@ -1,1 +1,0 @@
-### `IoElementCache` `<io-element-cache>` ###

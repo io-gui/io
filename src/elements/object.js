@@ -6,41 +6,42 @@ export class IoObject extends IoCollapsable {
   static get style() {
     return html`<style>
       :host {
-        padding: 0 !important;
-        border: none !important;
-        background: none !important;
+        padding: 0;
+        border: none;
+        background: none;
       }
-      :host > .io-collapsable-content {
+      :host > .io-content {
         display: block;
         overflow: auto;
-        padding: 0 0 0 var(--io-padding);
-        border: none !important;
-        background: none !important;
+        padding: 0;
+        border: none;
+        background: none;
       }
     </style>`;
   }
   static get properties() {
     return {
       value: Object,
-      props: Array,
-      config: null,
+      properties: Array,
+      config: Object,
       labeled: true,
     };
   }
   changed() {
     const label = this.label || this.value.constructor.name;
     this.template([
-      ['io-boolean', {true: label, false: label, value: this.bind('expanded')}],
+      ['io-boolean', {true: label, false: label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       this.expanded ? [
         ['io-properties', {
-          className: 'io-collapsable-content',
+          class: 'io-content',
           value: this.value,
-          props: this.props.length ? this.props : Object.keys(this.value),
+          properties: this.properties,
           config: this.config,
           labeled: this.labeled,
         }]
       ] : null
     ]);
+    this.setAttribute('aria-expanded', String(this.expanded));
   }
 }
 

@@ -2,13 +2,13 @@
 
 import {html, IoElement} from "../core/element.js";
 
-const animationQueue = [];
+const animationQueue = new Array();
 const animate = function() {
+  requestAnimationFrame(animate);
   for (let i = animationQueue.length; i--;) {
     animationQueue[i]();
   }
-  animationQueue.lenght = 0;
-  requestAnimationFrame(animate);
+  animationQueue.length = 0;
 };
 requestAnimationFrame(animate);
 
@@ -43,35 +43,23 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([3,2,1,3,1,0]), gl.STATIC_DRAW);
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
-const vertCode = `
-attribute vec3 position;
-attribute vec2 uv;
-varying vec2 vUv;
-void main(void) {
-  vUv = uv;
-  gl_Position = vec4(position, 1.0);
-}`;
-
-const vertShader = gl.createShader(gl.VERTEX_SHADER);
-gl.shaderSource(vertShader, vertCode);
-gl.compileShader(vertShader);
-
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 
 const shadersCache = new WeakMap();
 
-export class IoCanvas extends IoElement {
+// TODO: fix sizing logic
+
+export class IoQuad extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        user-select: none;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
       }
       :host > canvas {
         flex: 1 1 auto;
-        width: 100% !important;
-        height: 100% !important;
+        user-select: none;
         pointer-events: none;
         image-rendering: pixelated;
       }
@@ -79,25 +67,41 @@ export class IoCanvas extends IoElement {
   }
   static get properties() {
     return {
-      bg: [0, 0, 0, 1],
+      background: [0, 0, 0, 1],
       color: [1, 1, 1, 1],
-      size: [1, 1],
+      size: [0, 0],
     };
   }
+  static get vert() {
+    return /* glsl */`
+      attribute vec3 position;
+      attribute vec2 uv;
+      varying vec2 vUv;
+      void main(void) {
+        vUv = uv;
+        gl_Position = vec4(position, 1.0);
+      }
+    `;
+  }
   static get frag() {
-    return `
-    varying vec2 vUv;
-    void main(void) {
-      vec2 px = size * vUv;
-      px = mod(px, 5.0);
-      if (px.x > 1.0 && px.y > 1.0) discard;
-      gl_FragColor = color;
-    }`;
+    return /* glsl */`
+      varying vec2 vUv;
+      void main(void) {
+        vec2 px = size * vUv;
+        px = mod(px, 8.0);
+        gl_FragColor = background;
+        if (px.x <= 1.0 || px.y <= 1.0) gl_FragColor = vec4(vUv, 0.0, 1.0);
+        if (px.x <= 1.0 && px.y <= 1.0) gl_FragColor = color;
+      }
+    `;
   }
   constructor(props) {
     super(props);
 
-    let frag = 'precision mediump float;\n';
+    let frag = /* glsl */`
+      #extension GL_OES_standard_derivatives : enable
+      precision highp float;
+    `;
 
     for (let prop in this.__properties) {
       let type = this.__properties[prop].type;
@@ -109,6 +113,10 @@ export class IoCanvas extends IoElement {
       }
       // TODO: implement bool and matrices.
     }
+
+    const vertShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vertShader, this.constructor.vert);
+    gl.compileShader(vertShader);
 
     const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(fragShader, frag + this.constructor.frag);
@@ -139,12 +147,13 @@ export class IoCanvas extends IoElement {
     this._context2d = this.$.canvas.getContext('2d');
     this._context2d.imageSmoothingEnabled = false;
 
-    this.render();
+    this.render(); // TODO: hmm
   }
   resized() {
     const rect = this.$.canvas.getBoundingClientRect();
     this.size[0] = rect.width;
     this.size[1] = rect.height;
+    this.dispatchEvent('object-mutated', {object: this.size}, false, window);
     this.changed();
   }
   changed() {
@@ -154,11 +163,11 @@ export class IoCanvas extends IoElement {
     if (!this._shader) return;
     if (!this.__properties.size) return;
 
-    canvas.width = this.size[0];
-    canvas.height = this.size[1];
+    canvas.width = Math.ceil(this.size[0]) || 1;
+    canvas.height = Math.ceil(this.size[1]) || 1;
 
-    gl.viewport(0, 0, this.size[0], this.size[1]);
-    gl.clearColor(this.bg[0], this.bg[1], this.bg[2], this.bg[3]);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -197,4 +206,4 @@ export class IoCanvas extends IoElement {
   }
 }
 
-IoCanvas.Register();
+IoQuad.Register();

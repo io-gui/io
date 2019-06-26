@@ -1,8 +1,10 @@
-### `<io-boolean>` ###
+Input element for `Boolean` data type displayed as text.
 
 Extends `<io-button>`.
 
-Input element for `Boolean` data type displayed as text. It can be configured to display custom `true` or `false` string depending on its `value`.
+<io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
+
+It can be configured to display custom `true` or `false` string depending on its `value`.
 
 #### Properties ####
 
@@ -16,6 +18,4 @@ Input element for `Boolean` data type displayed as text. It can be configured to
 
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
-| **`button-clicked`** | Clicked | `value`, `action` | false |
 | **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |
-| **`focus-to`** | Attempted to change focus but no suitable sibling found | `direction` | true |

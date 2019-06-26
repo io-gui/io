@@ -1,31 +1,20 @@
-import {html, IoElement} from "../core/element.js";
+import {html} from "../core/element.js";
+import {IoItem} from "./item.js";
 
-const selection = window.getSelection();
-const range = document.createRange();
-
-export class IoString extends IoElement {
+export class IoString extends IoItem {
   static get style() {
     return html`<style>
       :host {
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
-        padding: var(--io-padding);
-        color: var(--io-field-color);
-        background-color: var(--io-field-background-color);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
+        user-select: text;
       }
-      :host:focus {
-        overflow: hidden;
-        text-overflow: clip;
-        outline: none;
-        border-color: var(--io-focus-color);
-      }
-      :host[aria-invalid] {
-        color: var(--io-error-color);
+      :host:empty:after {
+        display: inline-block;
+        content: '"';
       }
     </style>`;
   }
@@ -33,27 +22,16 @@ export class IoString extends IoElement {
     return {
       value: String,
       role: 'textbox',
-      tabindex: 0,
       contenteditable: true,
     };
   }
-  static get listeners() {
-    return {
-      'focus': '_onFocus'
-    };
-  }
-  _onFocus() {
-    this.addEventListener('blur', this._onBlur);
-    this.addEventListener('keydown', this._onKeydown);
-    this._select();
-  }
-  _onBlur() {
+  _onBlur(event) {
+    super._onBlur(event);
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     if (typeof this.value === 'string' || (this.innerText !== String(this.value))) {
       this.set('value', this.innerText);
     }
-    selection.removeAllRanges();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -61,7 +39,7 @@ export class IoString extends IoElement {
     const rng = window.getSelection().getRangeAt(0);
     const start = rng.startOffset;
     const end = rng.endOffset;
-    const length = this.childNodes[0].length;
+    const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
     if (event.which == 13) {
@@ -91,16 +69,9 @@ export class IoString extends IoElement {
       }
     }
   }
-  _select() {
-    range.selectNodeContents(this.childNodes[0]);
-    range.setStart(this.childNodes[0], 0);
-    range.setEnd(this.childNodes[0], this.childNodes[0].length);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
-  valueChanged() {
+  changed() {
     this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
-    this.setAttribute('aria-invalid', typeof this.value !== 'string');
+    this.setAttribute('aria-invalid', (typeof this.value !== 'string') ? 'true' : false);
   }
 }
 

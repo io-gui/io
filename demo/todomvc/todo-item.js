@@ -13,11 +13,11 @@ export class TodoItem extends IoElement {
   }
   changed() {
     this.template([
-      ['li', {className: (this.item.completed ? 'completed' : '') + (this.editing ? ' editing' : '')}, [
-        ['input', {type: 'checkbox', className: 'toggle', checked: this.item.completed, 'on-click': this.toggleItem}],
+      ['li', {class: (this.item.completed ? 'completed' : '') + (this.editing ? ' editing' : '')}, [
+        ['input', {type: 'checkbox', class: 'toggle', checked: this.item.completed, 'on-click': this.toggleItem}],
         ['label', {'on-dblclick': this.startEdit}, this.item.title],
-        ['button', {className: 'destroy', 'on-click': this.destroyItem}],
-        this.editing ? ['input', {id: 'input', className: 'edit', value: this.item.title, 'on-blur': this.endEdit, 'on-keyup': this.onInputKey}] : null
+        ['button', {class: 'destroy', 'on-click': this.destroyItem}],
+        this.editing ? ['input', {id: 'input', class: 'edit', value: this.item.title, 'on-blur': this.endEdit, 'on-keyup': this.onInputKey}] : null
       ]]
     ]);
   }

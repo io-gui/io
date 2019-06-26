@@ -1,8 +1,8 @@
-### `<io-switch>` ###
+Input element for `Boolean` data type displayed as switch toggle.
 
 Extends `<io-button>`.
 
-Input element for `Boolean` data type displayed as switch toggle.
+<io-element-demo element="io-switch" properties='{"value": true}'></io-element-demo>
 
 #### Properties ####
 
@@ -14,6 +14,4 @@ Input element for `Boolean` data type displayed as switch toggle.
 
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
-| **`button-clicked`** | Clicked | `value`, `action` | false |
 | **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |
-| **`focus-to`** | Attempted to change focus but no suitable sibling found | `direction` | true |

@@ -1,12 +1,12 @@
 import {html, IoElement} from "../core/element.js";
-import {IoCanvas} from "./canvas.js";
+import {IoQuad} from "../core/quad.js";
 
 export class IoSlider extends IoElement {
   static get style() {
     return html`<style>
       :host {
         display: flex;
-        min-width: 12em;
+        align-self: stretch;
       }
       :host > io-number {
         flex: 0 0 3.75em;
@@ -23,30 +23,41 @@ export class IoSlider extends IoElement {
       step: 0.001,
       min: 0,
       max: 1,
-      strict: true,
     };
   }
   _onValueSet(event) {
     this.dispatchEvent('value-set', event.detail, false);
     this.value = event.detail.value;
   }
-  _onFocusTo(event) {
-    const srcRect = event.target.getBoundingClientRect();
-    this.focusTo(event.detail.direction, srcRect);
-  }
   changed() {
     this.template([
-      ['io-number', {value: this.value, step: this.step, min: this.min, max: this.max, strict: this.strict, label: this.label, title: this.title,
-        id: 'number', 'on-value-set': this._onValueSet, 'on-focus-to': this._onFocusTo}],
-      ['io-slider-knob', {value: this.value, step: this.step, minValue: this.min, maxValue: this.max, label: this.label, title: this.title,
-        id: 'slider', 'on-value-set': this._onValueSet, 'on-focus-to': this._onFocusTo}]
+      ['io-number', {
+        id: 'number',
+        value: this.value,
+        step: this.step,
+        min: this.min,
+        max: this.max,
+        label: this.label,
+        title: this.title,
+        'on-value-set': this._onValueSet,
+      }],
+      ['io-slider-knob', {
+        id: 'slider',
+        value: this.value,
+        step: this.step,
+        minValue: this.min,
+        maxValue: this.max,
+        label: this.label,
+        title: this.title,
+        'on-value-set': this._onValueSet,
+      }]
     ]);
   }
 }
 
 IoSlider.Register();
 
-export class IoSliderKnob extends IoCanvas {
+export class IoSliderKnob extends IoQuad {
   static get style() {
     return html`<style>
       :host {
@@ -54,13 +65,15 @@ export class IoSliderKnob extends IoCanvas {
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
-      }
-      :host:focus {
-        outline: none;
-        border-color: var(--io-focus-color);
+        min-height: 1.2em;
+        align-self: stretch;
       }
       :host[aria-invalid] {
-        border-color: var(--io-error-color);
+        border-color: var(--io-color-error);
+      }
+      :host:focus {
+        outline: 1px solid var(--io-color-focus);
+        outline-offset: -1px;
       }
     </style>`;
   }
@@ -89,13 +102,13 @@ export class IoSliderKnob extends IoCanvas {
     };
   }
   _onTouchstart(event) {
-    event.preventDefault();
+    if (event.cancelable) event.preventDefault(); else return;
     this.focus();
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
   }
   _onTouchmove(event) {
-    event.preventDefault();
+    if (event.cancelable) event.preventDefault(); else return;
     this._moveSliderByPointer(event.changedTouches[0]);
   }
   _onTouchend() {
@@ -124,28 +137,30 @@ export class IoSliderKnob extends IoCanvas {
     const rect = this.getBoundingClientRect();
     const x = (pointer.clientX - rect.x) / rect.width;
     const pos = Math.max(0,Math.min(1, x));
-    let value = this.minValue + (this.maxValue - this.minValue) * pos;
-    value = Math.round(value / this.step) * this.step;
+    let value = (this.maxValue - this.minValue) * pos;
+    value = this.minValue + Math.round(value / this.step) * this.step;
     value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
-    value = Number(value.toFixed(-Math.round(Math.log(this.step) / Math.LN10)));
+    let d = -Math.round(Math.log(this.step) / Math.LN10);
+    d = Math.max(0, Math.min(100, d));
+    value = Number(value.toFixed(d));
     this.set('value', value);
   }
   _onKeydown(event) {
     if (event.which == 37) {
       event.preventDefault();
-      if (event.shiftKey) this.focusTo('left');
+      if (!event.shiftKey) this.focusTo('left');
       else this._moveSliderByKey('decrease');
     } else if (event.which == 38) {
       event.preventDefault();
-      if (event.shiftKey) this.focusTo('up');
+      if (!event.shiftKey) this.focusTo('up');
       else this._moveSliderByKey('decrease');
     } else if (event.which == 39) {
       event.preventDefault();
-      if (event.shiftKey) this.focusTo('right');
+      if (!event.shiftKey) this.focusTo('right');
       else this._moveSliderByKey('increase');
     } else if (event.which == 40) {
       event.preventDefault();
-      if (event.shiftKey) this.focusTo('down');
+      if (!event.shiftKey) this.focusTo('down');
       else this._moveSliderByKey('increase');
     } else if (event.which == 33) {
       event.preventDefault();
@@ -162,7 +177,7 @@ export class IoSliderKnob extends IoCanvas {
     }
   }
   _moveSliderByKey(key) {
-    let value = Math.round(this.value / this.step) * this.step;
+    let value = this.value;
     switch (key) {
       case 'increase':
         value += this.step;
@@ -178,12 +193,14 @@ export class IoSliderKnob extends IoCanvas {
         break;
     }
     value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
-    value = Number(value.toFixed(-Math.round(Math.log(this.step) / Math.LN10)));
+    let d = -Math.round(Math.log(this.step) / Math.LN10);
+    d = Math.max(0, Math.min(100, d));
+    value = Number(value.toFixed(d));
     this.set('value', value);
   }
   changed() {
     super.changed();
-    this.setAttribute('aria-invalid', typeof this.value !== 'number' || isNaN(this.value));
+    this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
     this.setAttribute('aria-valuenow', this.value);
     this.setAttribute('aria-valuemin', this.minValue);
     this.setAttribute('aria-valuemax', this.maxValue);

@@ -15,37 +15,61 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     return {
       id: {
         type: String,
-        enumerable: false
+        enumerable: false,
       },
       tabindex: {
         type: String,
         reflect: true,
-        enumerable: false
+        enumerable: false,
       },
       contenteditable: {
         type: Boolean,
         reflect: true,
-        enumerable: false
+        enumerable: false,
       },
       label: {
         type: String,
         reflect: true,
-        enumerable: false
+        enumerable: false,
       },
       title: {
         type: String,
         reflect: true,
-        enumerable: false
+        enumerable: false,
       },
       role: {
         type: String,
         reflect: true,
-        enumerable: false
+        enumerable: false,
+      },
+      class: {
+        type: String,
+        reflect: true,
       },
       $: {
         type: Object,
       },
     };
+  }
+  static get observedAttributes() {
+    const observed = [];
+    for (let prop in this.prototype.__properties) {
+      if (this.prototype.__properties[prop].observe) observed.push(prop);
+    }
+    return observed;
+  }
+  attributeChangedCallback(prop, oldValue, newValue) {
+    const type = this.__properties[prop].type;
+    if (type === Boolean) {
+      if (newValue === null) this[prop] = false;
+      else if (newValue === '') this[prop] = true;
+    } else if (type === Number || type === String) {
+      this[prop] = type(newValue);
+    } else if (type === Object || type === Array) {
+      this[prop] = JSON.parse(newValue);
+    } else {
+      this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
+    }
   }
   // TODO: performance check and optimize
   titleChanged() {
@@ -172,6 +196,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
                 // children[i].style[s] = vChildren[i].props[prop][s];
                 children[i].style.setProperty(s, vChildren[i].props[prop][s]);
               }
+            } else if (prop === 'id') {
+              // Skipping. Id's are used for $ in io.
+            } else if (prop === 'class') {
+              children[i]['className'] = vChildren[i].props[prop];
             } else {
               children[i][prop] = vChildren[i].props[prop];
             }
@@ -205,42 +233,50 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     }
   }
   focusTo(dir, srcRect) {
-    const siblings = this.parentElement.querySelectorAll('[tabindex="0"]');
     const rect = srcRect || this.getBoundingClientRect();
     let closest = this;
     let closestDist = Infinity;
-
-    for (let i = siblings.length; i--;) {
-      const sRect = siblings[i].getBoundingClientRect();
-      const dX = sRect.x - rect.x;
-      const dY = sRect.y - rect.y;
-      const dist = Math.sqrt(dX * dX + dY * dY);
-      switch (dir) {
-        case 'right':
-          if (dX > Math.abs(dY) && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
-        case 'left':
-          if (dX < -Math.abs(dY) && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
-        case 'down':
-          if (dY > Math.abs(dX) && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
-        case 'up':
-          if (dY < -Math.abs(dX) && dist < closestDist) {
-            closest = siblings[i], closestDist = dist;
-          }
-          break;
+    let parent = this.parentElement;
+    let depth = 0;
+    const DEPTH_LIMIT = 10;
+    while (parent && depth < DEPTH_LIMIT && closest === this) {
+      const siblings = parent.querySelectorAll('[tabindex="0"]');
+      for (let i = siblings.length; i--;) {
+        // TODO: consider looking up center or bbox instead tor-left corner
+        if (!siblings[i].offsetParent) continue;
+        const sRect = siblings[i].getBoundingClientRect();
+        const dX = sRect.x - rect.x;
+        const dY = sRect.y - rect.y;
+        const dist = Math.sqrt(dX * dX + dY * dY);
+        switch (dir) {
+          case 'right':
+            if (dX > 0 && dist < closestDist) {
+              closest = siblings[i], closestDist = dist;
+            }
+            break;
+          case 'left':
+            if (dX < 0 && dist < closestDist) {
+              closest = siblings[i], closestDist = dist;
+            }
+            break;
+          case 'down':
+            if (dY > 0 && dist < closestDist) {
+              closest = siblings[i], closestDist = dist;
+            }
+            break;
+          case 'up':
+            if (dY < 0 && dist < closestDist) {
+              closest = siblings[i], closestDist = dist;
+            }
+            break;
+        }
       }
-    }
-    if (closest !== this) closest.focus();
-    else {
-      this.dispatchEvent('focus-to', {direction: dir}, true);
+      parent = parent.parentElement;
+      depth++;
+      if (closest !== this) {
+        closest.focus();
+        return;
+      }
     }
   }
 }
@@ -325,6 +361,10 @@ const constructElement = function(vDOMNode) {
      for (let s in vDOMNode.props[prop]) {
        element.style[s] = vDOMNode.props[prop][s];
      }
+   } else if (prop === 'id') {
+     // Skipping. Id's are used for $ in io.
+   } else if (prop === 'class') {
+     element['className'] = vDOMNode.props[prop];
    } else element[prop] = vDOMNode.props[prop];
    if (prop === 'name') element.setAttribute('name', vDOMNode.props[prop]); // TODO: Reconsider
  }
@@ -349,13 +389,14 @@ const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.
   * @param {Array} prototypes - An array of prototypes to ge the styles from.
   */
 function initStyle(prototypes) {
-  let localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  const localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   for (let i = prototypes.length; i--;) {
-    let style = prototypes[i].constructor.style;
+    const style = prototypes[i].constructor.style;
+    const classLocalName = prototypes[i].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     if (style) {
       style.string = style.string.replace(new RegExp('<style>', 'g'), '');
       style.string = style.string.replace(new RegExp('</style>', 'g'), '');
-      let match = style.string.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
+      const match = style.string.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
       match.map(selector => {
         selector = selector.trim();
         if (!selector.startsWith('@') &&
@@ -365,11 +406,10 @@ function initStyle(prototypes) {
           console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
         }
       });
-
       style.string = style.string.replace(new RegExp(':host', 'g'), localName);
-      let element = document.createElement('style');
-      element.innerText = style.string;
-      element.setAttribute('id', 'io-style-' + localName + '-' + i);
+      const element = document.createElement('style');
+      element.innerHTML = style.string;
+      element.setAttribute('id', 'io-style_' + localName + (classLocalName !== localName ? ('_' + classLocalName) : ''));
       document.head.appendChild(element);
     }
 

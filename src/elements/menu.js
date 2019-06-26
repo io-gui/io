@@ -1,82 +1,222 @@
-import {IoElement} from "../core/element.js";
+import {IoElement, html} from "../core/element.js";
+import {validateOptionObject} from "../utils/utility-functions.js";
 import {IoMenuLayer} from "./menu-layer.js";
+import {IoMenuItem} from "./menu-item.js";
 
-// TODO: implement working mousestart/touchstart UX
-// TODO: implement keyboard modifiers maybe. Touch alternative?
 export class IoMenu extends IoElement {
   static get properties() {
     return {
       options: Array,
       expanded: Boolean,
       position: 'pointer',
-      ondown: true,
       button: 0,
+      $options: IoMenuOptions,
     };
   }
-  constructor(props) {
-    super(props);
-    this.template([
-      ['io-menu-options', {
-        id: 'group',
+  get compose() {
+    return {
+      $options: {
         $parent: this,
-        options: this.bind('options'),
-        position: this.bind('position'),
-        expanded: this.bind('expanded')
-      }]
-    ]);
-    this.$.group.__parent = this;
+        expanded: this.bind('expanded'),
+        options: this.options,
+        position: this.position,
+      }
+    };
   }
   connectedCallback() {
     super.connectedCallback();
-    this._parent = this.parentElement;
-    this._parent.addEventListener('pointerdown', this.onPointerdown);
-    this._parent.addEventListener('contextmenu', this.onContextmenu);
-    // this._parent.style['touch-action'] = 'none'; // TODO: reconsider
-    IoMenuLayer.singleton.appendChild(this.$['group']);
+    this.parentElement.addEventListener('contextmenu', this._onContextmenu);
+    this.parentElement.addEventListener('mousedown', this._onMousedown);
+    this.parentElement.addEventListener('touchstart', this._onTouchstart);
+    IoMenuLayer.singleton.appendChild(this.$options);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._parent.removeEventListener('pointerdown', this.onPointerdown);
-    this._parent.removeEventListener('contextmenu', this.onContextmenu);
-    // TODO: unhack
-    // if (this.$['group']) IoMenuLayer.singleton.removeChild(this.$['group']);
-    // https://github.com/arodic/io/issues/1
-    for (let i = 0; i < IoMenuLayer.singleton.children.length; i++) {
-      if (IoMenuLayer.singleton.children[i].__parent === this) {
-        IoMenuLayer.singleton.removeChild(IoMenuLayer.singleton.children[i]);
-        return;
-      }
-    }
+    this.parentElement.removeEventListener('contextmenu', this._onContextmenu);
+    this.parentElement.removeEventListener('mousedown', this._onMousedown);
+    this.parentElement.removeEventListener('touchstart', this._onTouchstart);
+    this.parentElement.removeEventListener('touchmove', this._onTouchmove);
+    this.parentElement.removeEventListener('touchend', this._onTouchend);
+    if (this.$options) IoMenuLayer.singleton.removeChild(this.$options);
   }
   getBoundingClientRect() {
-    return this._parent.getBoundingClientRect();
+    return this.parentElement.getBoundingClientRect();
   }
-  onContextmenu(event) {
+  _onContextmenu(event) {
     if (this.button === 2) {
       event.preventDefault();
       this.open(event);
     }
   }
-  onPointerdown(event) {
-    this._parent.setPointerCapture(event.pointerId);
-    this._parent.addEventListener('pointerup', this.onPointerup);
-    if (this.ondown && event.button === this.button) {
+  _onMousedown(event) {
+    if (event.button === this.button && event.button !== 2) {
       this.open(event);
     }
   }
-  onPointerup(event) {
-    this._parent.removeEventListener('pointerup', this.onPointerup);
-    if (!this.ondown && event.button === this.button) {
-      this.open(event);
+  _onTouchstart(event) {
+    if (this.button !== 2) {
+      event.preventDefault();
+      this.open(event.changedTouches[0]);
     }
+    this.parentElement.addEventListener('touchmove', this._onTouchmove);
+    this.parentElement.addEventListener('touchend', this._onTouchend);
+  }
+  _onTouchmove(event) {
+    if (this.expanded) event.preventDefault();
+    IoMenuLayer.singleton._onTouchmove(event);
+  }
+  _onTouchend(event) {
+    this.parentElement.removeEventListener('touchmove', this._onTouchmove);
+    this.parentElement.removeEventListener('touchend', this._onTouchend);
+    IoMenuLayer.singleton._onTouchend(event);
   }
   open(event) {
-    IoMenuLayer.singleton.collapseAllGroups();
-    if (event.pointerId) IoMenuLayer.singleton.setPointerCapture(event.pointerId);
-    IoMenuLayer.singleton._x = event.clientX;
-    IoMenuLayer.singleton._y = event.clientY;
+    IoMenuLayer.singleton.setLastFocus(document.activeElement);
+    window.getSelection().removeAllRanges();
+    IoMenuLayer.singleton.collapseAll();
+    this.$options._x = event.clientX;
+    this.$options._y = event.clientY;
     this.expanded = true;
   }
 }
 
+export class IoMenuOptions extends IoElement {
+  static get style() {
+    return html`<style>
+      :host {
+        display: flex;
+        flex-direction: column;
+        white-space: nowrap;
+        user-select: none;
+        touch-action: none;
+        background: var(--io-background-color);
+        color: var(--io-color);
+        padding: var(--io-spacing);
+        border-radius: var(--io-border-radius);
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
+        box-shadow: var(--io-shadow);
+      }
+      :host[horizontal] {
+        flex-direction: row;
+        align-self: stretch;
+      }
+      :host[horizontal] > io-menu-item {
+        margin: 0 0.5em;
+      }
+      :host[horizontal] > io-menu-item > .io-menu-hint,
+      :host[horizontal] > io-menu-item > .io-menu-more {
+        display: none;
+      }
+    </style>`;
+  }
+  static get properties() {
+    return {
+      options: Array,
+      expanded: {
+        type: Boolean,
+        reflect: true
+      },
+      position: 'right',
+      horizontal: {
+        type: Boolean,
+        reflect: true
+      },
+      role: 'listbox',
+      $parent: HTMLElement,
+      depth: 0,
+    };
+  }
+  static get listeners() {
+    return {
+      'io-menu-item-clicked': '_onMenuItemClicked',
+    };
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    IoMenuLayer.singleton.registerOptions(this);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    IoMenuLayer.singleton.unregisterOptions(this);
+  }
+  _onMenuItemClicked(event) {
+    const path = event.composedPath();
+    if (path[0] !== this) {
+      if (path[0].expanded) path[0].expanded = false;
+      event.stopPropagation();
+      if (this.$parent instanceof IoMenuItem || this.$parent instanceof IoMenu) {
+        if (this.$parent.expanded) this.$parent.expanded = false;
+        this.$parent.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      } else {
+        this.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      }
+    }
+  }
+  expandedChanged() {
+    if (this.parentElement === IoMenuLayer.singleton) {
+      IoMenuLayer.singleton._onOptionsExpanded(this);
+      if (this.expanded && this.$parent) {
+        let rect = this.getBoundingClientRect();
+        let pRect = this.$parent.getBoundingClientRect();
+         // TODO: unhack horizontal long submenu bug.
+        if (this.position === 'bottom' && rect.height > (window.innerHeight - this._y)) this.position = 'right';
+        //
+        switch (this.position) {
+          case 'pointer':
+            this._x = this._x - 1 || pRect.x;
+            this._y = this._y - 1 || pRect.y;
+            break;
+          case 'top':
+            this._x = pRect.x;
+            this._y = pRect.top - rect.height;
+            break;
+          case 'left':
+            this._x = pRect.x - rect.width;
+            this._y = pRect.top;
+            break;
+          case 'bottom':
+            this._x = pRect.x;
+            this._y = pRect.bottom;
+            break;
+          case 'right':
+          default:
+            this._x = pRect.right;
+            this._y = pRect.y;
+            if ((this._x + rect.width > window.innerWidth) && pRect.x > 20) {
+              this._x = pRect.x - rect.width;
+            }
+            break;
+        }
+        this._x = Math.max(0, Math.min(this._x, window.innerWidth - rect.width));
+        this._y = Math.min(this._y, window.innerHeight - rect.height);
+        this.style.left = this._x + 'px';
+        this.style.top = this._y + 'px';
+      }
+    }
+  }
+  horizontalChanged() {
+    this.optionsChanged();
+  }
+  optionsChanged() {
+    const itemPosition = this.horizontal ? 'bottom' : 'right';
+    const options = this.options.map(validateOptionObject);
+    this.template([options.map((elem, i) =>
+      ['io-menu-item', {
+        $parent: this,
+        value: options[i].value,
+        label: options[i].label,
+        action: options[i].action,
+        button: options[i].button,
+        hint: options[i].hint,
+        icon: options[i].icon,
+        options: options[i].options || [],
+        position: itemPosition,
+        depth: this.depth + 1,
+      }]
+    )]);
+  }
+}
+
 IoMenu.Register();
+IoMenuOptions.Register();

@@ -8,18 +8,20 @@ export class IoSwitch extends IoButton {
         background: none;
         border: none;
         padding: 0;
-        --io-toggle-size: calc(1.29em - calc(2 * var(--io-padding)));
+        --io-toggle-size: 1.39em;
         display: flex;
         align-items: center;
+      }
+      :host:focus {
+        outline: none;
       }
       :host > div {
         position: relative;
         flex: 0 0 calc(var(--io-toggle-size) * 2.5);
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
-        color: var(--io-field-color);
-        background-color: var(--io-field-background-color);
-        margin: var(--io-padding);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
         width: calc(var(--io-toggle-size) * 2.5);
         height: var(--io-toggle-size);
         border-radius: var(--io-toggle-size);
@@ -32,10 +34,10 @@ export class IoSwitch extends IoButton {
         background-color: inherit;
       }
       :host:hover > div {
-        background-color: var(--io-hover-bg);
+        background-color: var(--io-background-color-light);
       }
       :host:focus > div {
-        border-color: var(--io-focus-color);
+        border-color: var(--io-color-focus);
       }
       :host > div:after {
         display: inline-block;
@@ -45,7 +47,7 @@ export class IoSwitch extends IoButton {
         left: 0;
         height: calc(var(--io-toggle-size) - calc(2 * var(--io-border-width)));
         width: calc(var(--io-toggle-size) - calc(2 * var(--io-border-width)));
-        background-color: var(--io-hover-bg);
+        background-color: var(--io-background-color-light);
         border: var(--io-outset-border);
         border-color: var(--io-outset-border-color);
         border-radius: var(--io-toggle-size);
@@ -58,7 +60,7 @@ export class IoSwitch extends IoButton {
         left: calc(100% - var(--io-toggle-size));
       }
       :host[aria-invalid] > div:after {
-        background-color: var(--io-error-color);
+        background-color: var(--io-color-error);
       }
     </style>`;
   }
@@ -81,7 +83,7 @@ export class IoSwitch extends IoButton {
   }
   changed() {
     this.setAttribute('aria-checked', String(this.value));
-    this.setAttribute('aria-invalid', typeof this.value !== 'boolean');
+    this.setAttribute('aria-invalid', (typeof this.value !== 'boolean') ? 'true' : false);
   }
 }
 

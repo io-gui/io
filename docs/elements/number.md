@@ -1,14 +1,16 @@
-### `<io-number>` ###
+Input element for `Number` data type.
 
-Input element for `Number` data type. It can be configured to clamp its `value` to `min`/`max` values and display value using `conversion` factor.
+<io-element-demo element="io-number" properties='{"value": 1337, "conversion": 1, "step": 0.001, "min": 0, "max": 10000}'></io-element-demo>
 
-When focused, the arrow keys navigate to the nearest focusable sibling element.
+It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees.
+
+When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
 #### Properties ####
 
 | Property | Type | Description | Default |
 |:---------|:-----|:-----------|:--------|
-| **`value`** | Number | Value | `1` |
+| **`value`** | Number | Value | `0` |
 | **`conversion`** | Number | Conversion factor | `1` |
 | **`step`** | Number | Value increment/decimals | `0.001` |
 | **`min`** | Number | Minimum value | `-Infinity` |
@@ -19,4 +21,3 @@ When focused, the arrow keys navigate to the nearest focusable sibling element.
 | Event | Description | Detail | Bubbles |
 |:------|:------------|:-------|:--------|
 | **`value-set`** | Value set by user action | `property`, `value`, `oldValue` | false |
-| **`focus-to`** | Attempted to change focus but no suitable sibling found | `direction` | true |

@@ -135,6 +135,7 @@ class Property {
    * @param {*} config.value - Default value.
    * @param {function} config.type - Constructor of value.
    * @param {boolean} config.reflect - Reflects to HTML attribute
+   * @param {boolean} config.observe - Observes HTML attribute.
    * @param {Binding} config.binding - Binding object.
    * @param {boolean} config.enumerable - Makes property enumerable.
    */
@@ -160,6 +161,7 @@ class Property {
     if (config.value !== undefined) this.value = config.value;
     if (config.type !== undefined) this.type = config.type;
     if (config.reflect !== undefined) this.reflect = config.reflect;
+    if (config.observe !== undefined) this.observe = config.observe;
     if (config.binding !== undefined) this.binding = config.binding;
     this.enumerable = config.enumerable !== undefined ? config.enumerable : true;
   }

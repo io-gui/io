@@ -60,9 +60,9 @@ export class IoLayout extends IoElement {
         'flex-shrink': flexBasis ? 0 : 1,
       };
       if (split.tabs) {
-        children.push(['io-tabbed-elements', {
+        children.push(['io-selector-tabs', {
           elements: this.elements,
-          filter: split.tabs,
+          filter: split.tabs, // TODO: reimplement
           selected: split.selected,
           editable: this.editable,
           style: style,

@@ -25,7 +25,7 @@ export default class {
         });
       });
       describe('innerText', () => {
-        it('matches value', () => {
+        it('matches values', () => {
           this.element.value = 0;
           this.element.step = 1;
           chai.expect(this.element.innerHTML).to.equal('0');
@@ -79,10 +79,13 @@ export default class {
         it('has tabindex attribute', () => {
           chai.expect(this.element.getAttribute('tabindex')).to.equal('0');
         });
+        it('has contenteditable attribute', () => {
+          chai.expect(this.element.getAttribute('contenteditable')).to.equal('');
+        });
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('textbox');
           this.element.value = '';
-          chai.expect(this.element.getAttribute('aria-invalid')).to.equal('');
+          chai.expect(this.element.getAttribute('aria-invalid')).to.equal('true');
           this.element.value = 0;
           chai.expect(this.element.getAttribute('aria-invalid')).to.equal(null);
           this.element.min = 0;
@@ -90,9 +93,6 @@ export default class {
           this.element.max = 0;
           chai.expect(this.element.getAttribute('aria-valuemax')).to.equal('0');
           this.reset();
-        });
-        it('has contenteditable attribute', () => {
-          chai.expect(this.element.getAttribute('contenteditable')).to.equal('');
         });
       });
     });
