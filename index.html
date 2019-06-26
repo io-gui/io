@@ -76,7 +76,7 @@
         flex-direction: column;
       }
       io-md-view {
-        padding: 0 1em;
+        padding: 1em;
       }
       .main {
         display: flex;
@@ -105,10 +105,14 @@
       .docs > io-sidebar:not([overflow]) {
         flex-basis: 14em !important;
       }
+      .docs io-md-view {
+        padding-top: 0;
+      }
       .docs > .io-content {
+        padding: 0;
         border-radius: 0;
         border-width: 0 0 0 var(--io-border-width);
-        padding: 0 1em;
+        flex: 0 1 50em;
       }
       .docs[overflow] > .io-content {
         border-width: var(--io-border-width) 0 0 0;
