@@ -131,7 +131,8 @@
       constructor(props) {
         super(props);
         this.elements = [
-          ['io-selector-sidebar', {name: 'Docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started#about-io', true),
+          ['io-selector-sidebar', {name: 'Docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc',
+              'getting-started#about-io', true),
             options: [
               {label: "Getting Started", options: [
                 {label: "About", value: "getting-started#about-io"},
@@ -210,9 +211,8 @@
               //     ['io-md-view', {name: 'service-loader', path :'./docs/utils/service-loader.md'}],
             ]
           }],
-          ['io-test', {name: 'Test', import: "./tests/test.js"}],
           ['io-demo', {name: 'Demo', import: "./demo/demo.js"}],
-          ['todo-app', {name: 'TODO', import: "./demo/todomvc/todo-app.js"}],
+          ['io-test', {name: 'Test', import: "./tests/test.js"}],
         ];
       }
     }
