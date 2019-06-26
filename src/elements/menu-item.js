@@ -35,16 +35,9 @@ export class IoMenuItem extends IoItem {
       options: Array,
       position: 'bottom',
       action: Function,
-      button: HTMLElement,
       $parent: HTMLElement,
       $options: IoMenuOptions,
       depth: 0,
-    };
-  }
-  static get listeners() {
-    return {
-      'touchstart': '_onTouchstart',
-      'mousedown': '_onMousedown',
     };
   }
   get compose() {
@@ -185,9 +178,6 @@ export class IoMenuItem extends IoItem {
   _onClick() {
     if (typeof this.action === 'function') {
       this.action.apply(null, [this.value]);
-    }
-    if (this.button instanceof HTMLElement) {
-      this.button.click(); // TODO: test
     }
     if (this.value !== undefined) {
       this.dispatchEvent('io-menu-item-clicked', {value: this.value}, true);

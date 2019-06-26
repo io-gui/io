@@ -39,6 +39,8 @@ export class IoItem extends IoElement {
   static get listeners() {
     return {
       'focus': '_onFocus',
+      'touchstart': '_onTouchstart',
+      'mousedown': '_onMousedown',
     };
   }
   disconnectedCallback() {
@@ -46,6 +48,12 @@ export class IoItem extends IoElement {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('click', this._onClick);
+  }
+  _onTouchstart() {
+    this.focus();
+  }
+  _onMousedown() {
+    this.focus();
   }
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
