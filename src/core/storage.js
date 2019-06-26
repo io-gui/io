@@ -1,4 +1,4 @@
-import {IoNode} from "../core/node.js";
+import {IoNode} from "./node.js";
 
 const nodes = {};
 let hashes = {};

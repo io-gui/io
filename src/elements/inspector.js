@@ -1,8 +1,8 @@
 import {html, IoElement} from "../core/element.js";
+import {IoStorage} from "../core/storage.js";
 import {IoButton} from "./button.js";
 import "./breadcrumbs.js";
 import {isValuePropertyOf, getObjectLabel} from "../utils/utility-functions.js";
-import {IoStorage} from "../utils/storage.js";
 
 export class IoInspector extends IoElement {
   static get style() {
