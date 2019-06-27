@@ -35,6 +35,7 @@ export class IoOption extends IoMenuItem {
     };
   }
   _onMenuItemClicked(event) {
+    event.stopPropagation();
     this.set('value', event.detail.value);
   }
   _onClick() {

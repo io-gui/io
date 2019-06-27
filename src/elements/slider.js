@@ -102,14 +102,12 @@ export class IoSliderKnob extends IoQuad {
     };
   }
   _onTouchstart(event) {
-    if (event.cancelable) event.preventDefault(); else return;
-    this.focus();
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
+    this._onPointerdown(event);
   }
   _onTouchmove(event) {
-    if (event.cancelable) event.preventDefault(); else return;
-    this._moveSliderByPointer(event.changedTouches[0]);
+    this._onPointermove(event);
   }
   _onTouchend() {
     this.removeEventListener('touchmove', this._onTouchmove);
@@ -120,9 +118,10 @@ export class IoSliderKnob extends IoQuad {
     this.focus();
     window.addEventListener('mousemove', this._onMousemove);
     window.addEventListener('mouseup', this._onMouseup);
+    this._onPointerdown(event);
   }
   _onMousemove(event) {
-    this._moveSliderByPointer(event);
+    this._onPointermove(event);
   }
   _onMouseup() {
     window.removeEventListener('mousemove', this._onMousemove);
@@ -133,7 +132,28 @@ export class IoSliderKnob extends IoQuad {
     window.removeEventListener('mousemove', this._onMousemove);
     window.removeEventListener('mouseup', this._onMouseup);
   }
-  _moveSliderByPointer(pointer) {
+  _onPointerdown(event) {
+    const pointer = event.changedTouches ? event.changedTouches[0] : event;
+    this._x = pointer.clientX;
+    this._y = pointer.clientY;
+    this._active = -1;
+  }
+  _onPointermove(event) {
+    const pointer = event.changedTouches ? event.changedTouches[0] : event;
+
+    const dx = Math.abs(this._x - pointer.clientX);
+    const dy = Math.abs(this._y - pointer.clientY);
+
+    if (this._active === -1) {
+      this._active = (dx > dy && dy < 20) ? 1 : 0;
+    }
+
+    if (this._active === 0) return;
+    if (!event.cancelable) return;
+
+    event.preventDefault();
+    this.focus();
+
     const rect = this.getBoundingClientRect();
     const x = (pointer.clientX - rect.x) / rect.width;
     const pos = Math.max(0,Math.min(1, x));

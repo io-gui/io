@@ -49,9 +49,7 @@ export class IoItem extends IoElement {
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('click', this._onClick);
   }
-  _onTouchstart() {
-    this.focus();
-  }
+  _onTouchstart() {}
   _onMousedown() {
     this.focus();
   }

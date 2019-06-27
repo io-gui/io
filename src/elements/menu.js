@@ -80,6 +80,44 @@ export class IoMenu extends IoElement {
   }
 }
 
+function nudgeRight(elem, x, y, rect, pRect) {
+  if (x + rect.width < window.innerWidth) {
+    elem._x = x;
+    elem._y = Math.min(y, window.innerHeight - rect.height);
+    return true;
+  }
+  return false;
+}
+function nudgeLeft(elem, x, y, rect, pRect) {
+  if (x - rect.width > 0) {
+    elem._x = x - rect.width;
+    elem._y = Math.min(y, window.innerHeight - rect.height);
+    return true;
+  }
+  return false;
+}
+function nudgeBottom(elem, x, y, rect, pRect) {
+  if (y + rect.height < window.innerHeight) {
+    elem._y = y;
+    elem._x = Math.min(x, window.innerWidth - rect.width);
+    return true;
+  }
+  return false;
+}
+function nudgeTop(elem, x, y, rect, pRect) {
+  if (y - rect.height > 0) {
+    elem._y = y - rect.height;
+    elem._x = Math.min(x, window.innerWidth - rect.width);
+    return true;
+  }
+  return false;
+}
+function nudgeClip(elem, x, y, rect, pRect) {
+  // TODO: Better handling of small screens and large menus!
+  elem._x = Math.max(0, x);
+  elem._y = Math.max(0, y);
+}
+
 export class IoMenuOptions extends IoElement {
   static get style() {
     return html`<style>
@@ -159,37 +197,41 @@ export class IoMenuOptions extends IoElement {
       if (this.expanded && this.$parent) {
         let rect = this.getBoundingClientRect();
         let pRect = this.$parent.getBoundingClientRect();
-         // TODO: unhack horizontal long submenu bug.
-        if (this.position === 'bottom' && rect.height > (window.innerHeight - this._y)) this.position = 'right';
-        //
         switch (this.position) {
           case 'pointer':
             this._x = this._x - 1 || pRect.x;
             this._y = this._y - 1 || pRect.y;
             break;
           case 'top':
-            this._x = pRect.x;
-            this._y = pRect.top - rect.height;
+            nudgeTop(this, pRect.x, pRect.top, rect, pRect) ||
+            nudgeBottom(this, pRect.x, pRect.bottom, rect, pRect) ||
+            nudgeRight(this, pRect.right, pRect.top, rect, pRect) ||
+            nudgeLeft(this, pRect.x, pRect.top, rect, pRect) ||
+            nudgeClip(this, pRect.x, pRect.top - rect.height, rect, pRect);
             break;
           case 'left':
-            this._x = pRect.x - rect.width;
-            this._y = pRect.top;
+            nudgeLeft(this, pRect.x, pRect.top, rect, pRect) ||
+            nudgeRight(this, pRect.right, pRect.top, rect, pRect) ||
+            nudgeBottom(this, pRect.x, pRect.bottom, rect, pRect) ||
+            nudgeTop(this, pRect.x, pRect.top, rect, pRect) ||
+            nudgeClip(this, pRect.x - rect.width, pRect.top, rect, pRect);
             break;
           case 'bottom':
-            this._x = pRect.x;
-            this._y = pRect.bottom;
+            nudgeBottom(this, pRect.x, pRect.bottom, rect, pRect) ||
+            nudgeTop(this, pRect.x, pRect.top, rect, pRect) ||
+            nudgeRight(this, pRect.right, pRect.top, rect, pRect) ||
+            nudgeLeft(this, pRect.x, pRect.top, rect, pRect) ||
+            nudgeClip(this, pRect.x, pRect.bottom, rect, pRect);
             break;
           case 'right':
           default:
-            this._x = pRect.right;
-            this._y = pRect.y;
-            if ((this._x + rect.width > window.innerWidth) && pRect.x > 20) {
-              this._x = pRect.x - rect.width;
-            }
+            nudgeRight(this, pRect.right, pRect.top, rect, pRect) ||
+            nudgeLeft(this, pRect.x, pRect.top, rect, pRect) ||
+            nudgeBottom(this, pRect.right, pRect.bottom, rect, pRect) ||
+            nudgeTop(this, pRect.right, pRect.top, rect, pRect) ||
+            nudgeClip(this, pRect.right, pRect.top, rect, pRect);
             break;
         }
-        this._x = Math.max(0, Math.min(this._x, window.innerWidth - rect.width));
-        this._y = Math.min(this._y, window.innerHeight - rect.height);
         this.style.left = this._x + 'px';
         this.style.top = this._y + 'px';
       }
