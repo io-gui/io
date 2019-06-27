@@ -33,11 +33,12 @@ export class IoMenuItem extends IoItem {
       icon: String,
       hint: String,
       options: Array,
-      position: 'bottom',
+      direction: 'bottom',
+      autoColapse: true,
       action: Function,
       $parent: HTMLElement,
       $options: IoMenuOptions,
-      depth: 0,
+      _depth: 0,
     };
   }
   get compose() {
@@ -46,8 +47,8 @@ export class IoMenuItem extends IoItem {
         $parent: this,
         expanded: this.bind('expanded'),
         options: this.options,
-        position: this.position,
-        depth: this.depth,
+        position: this.direction,
+        _depth: this._depth,
       }
     };
   }
@@ -73,73 +74,72 @@ export class IoMenuItem extends IoItem {
       this.$options.parentNode.removeChild(this.$options);
     }
   }
-  toggleExpand(force) {
-    if (this.options.length) this.expanded = !!force || !this.expanded;
+  _toggleExpanded(set) {
+    if (this.options.length) this.expanded = set !== undefined ? set : !this.expanded;
     else this.expanded = false;
   }
-  _onMousedown() {
-    if (this.options.length) {
-      IoMenuLayer.singleton.setLastFocus(this);
-      this.toggleExpand(true);
-      this.$options.children[0].focus();
-      IoMenuLayer.singleton._focusSrc = this;
-    } else {
-      IoMenuLayer.singleton.setLastFocus(document.activeElement);
-      this.focus();
-      this._onClick();
+  _focusIn() {
+    IoMenuLayer.singleton.setLastFocus(this);
+    if (this.expanded) setTimeout(() => {
+      if (this.$options.children.length) this.$options.children[0].focus();
+    });
+  }
+  _focusOut() {
+    if (this.$parent && this.$parent.$parent) {
+      this.$parent.expanded = false;
+      this.$parent.$parent.expanded = false;
+      this.$parent.$parent.focus();
     }
   }
-  _onTouchstart() {
+  _onMousedown() {
+    IoMenuLayer.singleton.setLastFocus(this);
+    this.focus();
+    this._toggleExpanded(true);
+  }
+  _onTouchstart(event) {
+    event.preventDefault();
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
-    if (this.options.length) {
-      IoMenuLayer.singleton.setLastFocus(this);
-      this.toggleExpand(true);
-      this.$options.children[0].focus();
-      IoMenuLayer.singleton._focusSrc = this;
-    } else {
-      IoMenuLayer.singleton.setLastFocus(document.activeElement);
-      this.focus();
-      this._onClick();
-    }
+    this._onMousedown();
   }
   _onTouchmove(event) {
     IoMenuLayer.singleton._onTouchmove(event);
   }
   _onTouchend(event) {
+    event.preventDefault();
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
     IoMenuLayer.singleton._onTouchend(event);
   }
   _onKeydown(event) {
-    event.preventDefault();
     if (event.which === 13 || event.which === 32) {
+      event.preventDefault();
       if (this.options.length) {
-        IoMenuLayer.singleton.setLastFocus(this);
-        this.toggleExpand(true);
-        this.$options.children[0].focus();
-        // IoMenuLayer.singleton._hoveredItem = null; // TODO: ?
+        this._toggleExpanded(true);
+        this._focusIn();
       } else {
-        IoMenuLayer.singleton.setLastFocus(document.activeElement);
-        // this.focus(); // TODO: ?
         this._onClick();
       }
-    } else if (event.key == 'Escape') {
+    }
+    else if (event.key === 'Escape') {
+      event.preventDefault();
       IoMenuLayer.singleton.collapseAll();
     } else if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
       let command = '';
       if (!this.$parent.horizontal) {
-        if (event.key == 'ArrowUp') command = 'prev';
-        if (event.key == 'ArrowRight') command = 'in';
-        if (event.key == 'ArrowDown') command = 'next';
-        if (event.key == 'ArrowLeft') command = 'out';
+        if (event.key === 'ArrowUp') command = 'prev';
+        if (event.key === 'ArrowRight') command = 'in';
+        if (event.key === 'ArrowDown') command = 'next';
+        if (event.key === 'ArrowLeft') command = 'out';
       } else {
-        if (event.key == 'ArrowUp') command = 'out';
-        if (event.key == 'ArrowRight') command = 'next';
-        if (event.key == 'ArrowDown') command = 'in';
-        if (event.key == 'ArrowLeft') command = 'prev';
+        if (event.key === 'ArrowUp') command = 'out';
+        if (event.key === 'ArrowRight') command = 'next';
+        if (event.key === 'ArrowDown') command = 'in';
+        if (event.key === 'ArrowLeft') command = 'prev';
       }
-      if (event.key == 'Tab') command = 'next';
+      if (event.key === 'Tab') command = 'next';
+
+      if (command) event.preventDefault();
 
       const options = this.$parent;
       const siblings = [...options.children];
@@ -147,33 +147,27 @@ export class IoMenuItem extends IoItem {
 
       switch (command) {
         case 'prev':
+          this.expanded = false;
           siblings[(index + siblings.length - 1) % (siblings.length)].focus();
           break;
         case 'next':
+          this.expanded = false;
           siblings[(index + 1) % (siblings.length)].focus();
           break;
         case 'in':
-          if (this.$options.children.length) this.$options.children[0].focus();
+          this._focusIn();
           break;
         case 'out':
-          // TODO: generalize
-          if (this.$parent && this.$parent.$parent) {
-            this.expanded = false;
-            this.$parent.expanded = false;
-            this.$parent.$parent.expanded = false;
-            this.$parent.$parent.focus();
-          }
+          this.expanded = false;
+          this._focusOut();
           break;
         default:
           break;
       }
     } else {
+      this.expanded = false;
       super._onKeydown(event);
     }
-  }
-  _onFocus(event) {
-    super._onFocus(event);
-    IoMenuLayer.singleton._onFocus(event);
   }
   _onClick() {
     if (typeof this.action === 'function') {
@@ -182,10 +176,13 @@ export class IoMenuItem extends IoItem {
     if (this.value !== undefined) {
       this.dispatchEvent('io-menu-item-clicked', {value: this.value}, true);
     }
+    // if (this.autoColapse) IoMenuLayer.singleton.collapseAll();
+  }
+  optionsChanged() {
+    this._connectOptions();
+    this.setAttribute('hasmore', !!this.options.length && this.direction === 'right');
   }
   changed() {
-    this._connectOptions();
-    this.setAttribute('hasmore', !!this.options.length && this.position === 'right');
     this.template([
       ['span', {class: 'io-menu-icon'}, this.icon],
       ['span', {class: 'io-menu-label'}, this.label || String(this.value)],

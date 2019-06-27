@@ -43,7 +43,7 @@ export class IoMenu extends IoElement {
     return this.parentElement.getBoundingClientRect();
   }
   _onContextmenu(event) {
-    if (this.button === 2) {
+    if (event.cancelable && this.button === 2) {
       event.preventDefault();
       this.open(event);
     }
@@ -54,7 +54,7 @@ export class IoMenu extends IoElement {
     }
   }
   _onTouchstart(event) {
-    if (this.button !== 2) {
+    if (event.cancelable && this.button !== 2) {
       event.preventDefault();
       this.open(event.changedTouches[0]);
     }
@@ -124,7 +124,7 @@ export class IoMenuOptions extends IoElement {
       },
       role: 'listbox',
       $parent: HTMLElement,
-      depth: 0,
+      _depth: 0,
     };
   }
   static get listeners() {
@@ -141,17 +141,17 @@ export class IoMenuOptions extends IoElement {
     IoMenuLayer.singleton.unregisterOptions(this);
   }
   _onMenuItemClicked(event) {
-    const path = event.composedPath();
-    if (path[0] !== this) {
-      if (path[0].expanded) path[0].expanded = false;
-      event.stopPropagation();
-      if (this.$parent instanceof IoMenuItem || this.$parent instanceof IoMenu) {
-        if (this.$parent.expanded) this.$parent.expanded = false;
-        this.$parent.dispatchEvent('io-menu-item-clicked', event.detail, true);
-      } else {
-        this.dispatchEvent('io-menu-item-clicked', event.detail, true);
-      }
-    }
+    // const item = event.composedPath()[0];
+    // if (item !== this) {
+    //   if (item.expanded) item.expanded = false;
+    //   event.stopPropagation();
+    //   if (this.$parent instanceof IoMenuItem || this.$parent instanceof IoMenu) {
+    //     if (this.$parent.expanded) this.$parent.expanded = false;
+    //     this.$parent.dispatchEvent('io-menu-item-clicked', event.detail, true);
+    //   } else {
+    //     this.dispatchEvent('io-menu-item-clicked', event.detail, true);
+    //   }
+    // }
   }
   expandedChanged() {
     if (this.parentElement === IoMenuLayer.singleton) {
@@ -199,7 +199,7 @@ export class IoMenuOptions extends IoElement {
     this.optionsChanged();
   }
   optionsChanged() {
-    const itemPosition = this.horizontal ? 'bottom' : 'right';
+    const itemDirection = this.horizontal ? 'bottom' : 'right';
     const options = this.options.map(validateOptionObject);
     this.template([options.map((elem, i) =>
       ['io-menu-item', {
@@ -211,8 +211,8 @@ export class IoMenuOptions extends IoElement {
         hint: options[i].hint,
         icon: options[i].icon,
         options: options[i].options || [],
-        position: itemPosition,
-        depth: this.depth + 1,
+        direction: itemDirection,
+        _depth: this._depth + 1,
       }]
     )]);
   }

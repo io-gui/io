@@ -86,17 +86,13 @@ export class IoMenuLayer extends IoElement {
     this.$options.push(options);
     clearTimeout(this.__timeout);
     this.__timeout = setTimeout(()=> {
-      this.$options.sort((a, b) => { return a.depth < b.depth ? -1 : 1; });
+      this.$options.sort((a, b) => { return a._depth < b._depth ? -1 : 1; });
     });
   }
   unregisterOptions(options) {
     this.$options.splice(this.$options.indexOf(options), 1);
   }
   collapseAll() {
-    // if (this._preserveExpanded) {
-    //   this._preserveExpanded = false;
-    //   return;
-    // }
     for (let i = this.$options.length; i--;) {
       if (this.$options[i].parentElement === this) {
         this.$options[i].expanded = false;
@@ -104,24 +100,42 @@ export class IoMenuLayer extends IoElement {
     }
     this.expanded = false;
   }
+  collapseSiblings(item) {
+    const optionschain = this._getOptionschain(item);
+    for (let i = this.$options.length; i--;) {
+      if (optionschain.indexOf(this.$options[i]) === -1) {
+        this.$options[i].expanded = false;
+      }
+    }
+  }
+  setLastFocus(element) {
+    const isInside = element.$parent && element.$parent.parentElement === this;
+    const active = document.activeElement === document.body ? null : document.activeElement;
+    const activeIsInside = element.$parent && element.$parent.parentElement === this;
+    this.lastFocus = isInside ? (this.lastFocus || activeIsInside ? null : active) : element;
+  }
   _onOptionsExpanded() {
-    // TODO: optimize and simplify. Avoid redundant loop on collapseAll()
-    this.expanded = !!this.$options.find(option => { return option.expanded; });
+    this.expanded = !!this.$options.find(option => { return option.parentElement === this && option.expanded; });
   }
   _onWindowScroll() {
     if (this.expanded) this.collapseAll();
   }
   _onMousedown(event) {
+    event.preventDefault();
+    this._onPointermove(event);
     this._onPointerdown(event);
   }
   _onMousemove(event) {
+    event.preventDefault();
     this._onPointermove(event);
   }
   _onMouseup(event) {
+    event.preventDefault();
     this._onPointerup(event);
   }
   _onTouchstart(event) {
     event.preventDefault();
+    this._onPointermove(event.changedTouches[0]);
     this._onPointerdown(event.changedTouches[0]);
   }
   _onTouchmove(event) {
@@ -130,34 +144,13 @@ export class IoMenuLayer extends IoElement {
   }
   _onTouchend(event) {
     event.preventDefault();
-    this._onPointerup(event);
+    this._onPointerup(event.changedTouches[0]);
   }
   _onContextmenu(event) {
     event.preventDefault();
-    if (this.expanded) this.collapseAll();
-  }
-  _onFocus() {
-    const path = event.composedPath();
-    const item = path[0];
-
-    if (item.$parent && item.$parent.parentElement === this) {
-
-      item.expanded = !!item.options.length;
-
-      const optionschain = this._getOptionschain(item);
-      this._hoveredItem = item;
-      for (let i = this.$options.length; i--;) {
-        if (optionschain.indexOf(this.$options[i]) === -1) {
-          // if (this.$options[i].parentElement === this) {
-            this.$options[i].expanded = false;
-          // }
-        }
-      }
-
-    }
+    this.collapseAll();
   }
   _onPointerdown(event) {
-    this._onPointermove(event);
     if (!this._hoveredItem) {
       this.collapseAll();
     }
@@ -190,29 +183,31 @@ export class IoMenuLayer extends IoElement {
         }
       }
     }
-    const _focusSrc = IoMenuLayer.singleton._focusSrc;
-    let rect = _focusSrc.getBoundingClientRect();
-    if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-      this._hoveredItem = _focusSrc;
-    }
+    // const _focusSrc = IoMenuLayer.singleton._focusSrc;
+    // if (_focusSrc) {
+    //   let rect = _focusSrc.getBoundingClientRect();
+    //   if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+    //     this._hoveredItem = _focusSrc;
+    //   }
+    // }
   }
   _focusItem(item, force) {
     if (item !== this.__prevItem) {
       clearTimeout(this.__timeoutOpen);
       clearTimeout(this.__timeoutReset);
       if (this._v > 1 || item.parentNode !== this.__prevParent || force) {
-        // if(this.__prevItem) this.__prevItem.expanded = false;
         this.__prevItem = item;
-        // item.expanded = true;
+        this._hoveredItem = item;
+        item._toggleExpanded(true);
         item.focus();
-        // this._onFocus();
+        this.collapseSiblings(item);
       } else {
         this.__timeoutOpen = setTimeout(function() {
-          // if(this.__prevItem) this.__prevItem.expanded = false;
           this.__prevItem = item;
-          // item.expanded = true;
+          this._hoveredItem = item;
+          item._toggleExpanded(true);
           item.focus();
-          // this._onFocus();
+          this.collapseSiblings(item);
         }.bind(this), WAIT_TIME);
       }
       this.__prevParent = item.parentNode;
@@ -222,13 +217,9 @@ export class IoMenuLayer extends IoElement {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  setLastFocus(element) {
-    const isInside = element.$parent && element.$parent.parentElement === this;
-    this.lastFocus = isInside ? this.lastFocus : element;
-  }
   _onPointerup() {
     if (this._hoveredItem) {
-      const collapse = !this._hoveredItem.options.length && this._hoveredItem !== IoMenuLayer.singleton._focusSrc;
+      const collapse = !this._hoveredItem.options.length;// && this._hoveredItem !== IoMenuLayer.singleton._focusSrc;
       if (collapse) this._hoveredItem._onClick();
       if (collapse) this.collapseAll();
     } else {
@@ -271,8 +262,7 @@ export class IoMenuLayer extends IoElement {
   _stopAnimation() {
     if (this._rAF_ID) cancelAnimationFrame(this._rAF_ID);
   }
-  expandedChanged() {
-    if (this.expanded) {
+  expandedChanged() {    if (this.expanded) {
       this._startAnimation();
     } else {
       this._hoveredItem = null;
@@ -280,7 +270,7 @@ export class IoMenuLayer extends IoElement {
       this._stopAnimation();
       if (this.lastFocus) {
         this.lastFocus.focus();
-        delete this.lastFocus;
+        this.lastFocus = null;
       }
     }
   }

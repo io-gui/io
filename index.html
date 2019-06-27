@@ -140,6 +140,13 @@
       }
       constructor(props) {
         super(props);
+        this.options = [
+          {label: 'Docs Page', value: 'Docs'},
+          {label: 'Demo Page', value: 'Demo'},
+          {label: 'Test Page', value: 'Test'},
+          {label: 'Demo Page2', value: 'Demo'},
+          {label: 'Docs Page2', value: 'Docs'},
+        ];
         this.elements = [
           ['io-selector-sidebar', {name: 'Docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc',
               'getting-started#about-io', true),

@@ -65,11 +65,11 @@ export class IoProperties extends IoElement {
     return this.__proto__.__config.getConfig(this.value, this.config);
   }
   _onValueSet(event) {
-    const path = event.composedPath();
-    if (path[0] === this) return;
+    const item = event.composedPath()[0];
+    if (item === this) return;
     if (event.detail.object) return; // TODO: unhack
     event.stopPropagation();
-    const prop = path[0].id;
+    const prop = item.id;
     if (prop !== null && event.detail.property === 'value') {
       this.value[prop] = event.detail.value;
       const detail = Object.assign({object: this.value, property: prop}, event.detail);

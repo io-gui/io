@@ -27,6 +27,8 @@ export class IoOption extends IoMenuItem {
   static get properties() {
     return {
       role: 'button',
+      autoExpand: false,
+      autoColapse: false,
     };
   }
   static get listeners() {
@@ -36,7 +38,36 @@ export class IoOption extends IoMenuItem {
   }
   _onMenuItemClicked(event) {
     this.set('value', event.detail.value);
-    IoMenuLayer.singleton.collapseAll();
+  }
+  _onClick(event) {
+    this._toggleExpanded(true);
+  }
+  _onKeydown(event) {
+    if (event.which === 13 || event.which === 32) {
+      event.preventDefault();
+      this._toggleExpanded(true);
+      this._focusIn();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      IoMenuLayer.singleton.LastFocus === null;
+      this.expanded = false;
+      this.focusTo('left');
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      IoMenuLayer.singleton.LastFocus === null;
+      this.expanded = false;
+      this.focusTo('up');
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      IoMenuLayer.singleton.LastFocus === null;
+      this.expanded = false;
+      this.focusTo('right');
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      IoMenuLayer.singleton.LastFocus === null;
+      this.expanded = false;
+      this.focusTo('down');
+    }
   }
   changed() {
     const option = this.options.find(option => {return (typeof option === 'object' && option.value === this.value) || option === this.value;});

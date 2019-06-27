@@ -68,24 +68,22 @@ export class IoItem extends IoElement {
   _onKeydown(event) {
     if (event.which === 13 || event.which === 32) {
       event.preventDefault();
-      this._onClick();
-    } else if (event.which == 37) {
+      this._onClick(event);
+    } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
       this.focusTo('left');
-    } else if (event.which == 38) {
+    } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       this.focusTo('up');
-    } else if (event.which == 39) {
+    } else if (event.key === 'ArrowRight') {
       event.preventDefault();
       this.focusTo('right');
-    } else if (event.which == 40) {
+    } else if (event.key === 'ArrowDown') {
       event.preventDefault();
       this.focusTo('down');
     }
   }
-  _onClick(event) {
-    event;
-  }
+  _onClick() {}
   changed() {
     this.title = this.label || String(this.value);
     this.innerText = this.label || String(this.value);
