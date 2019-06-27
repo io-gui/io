@@ -190,6 +190,9 @@ export class IoMenuItem extends IoItem {
       this._toggleExpanded(true);
     }
   }
+  expandedChanged() {
+    if (this.expanded && this.$parent) this.$parent.expanded = true;
+  }
   optionsChanged() {
     this._connectOptions();
     this.setAttribute('hasmore', !!this.options.length && this.direction === 'right');

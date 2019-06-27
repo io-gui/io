@@ -43,26 +43,29 @@ export class IoMenu extends IoElement {
     return this.parentElement.getBoundingClientRect();
   }
   _onContextmenu(event) {
-    if (event.cancelable && this.button === 2) {
+    if (this.options.length && this.button === 2) {
       event.preventDefault();
-      this.open(event);
+      this.expanded = true;
+      this.$options.children[0].focus();
     }
   }
   _onMousedown(event) {
-    if (event.button === this.button && event.button !== 2) {
-      this.open(event);
+    if (this.options.length && event.button === this.button && event.button !== 2) {
+      event.preventDefault();
+      this.expanded = true;
+      this.$options.children[0].focus();
     }
   }
   _onTouchstart(event) {
-    if (event.cancelable && this.button !== 2) {
+    if (this.options.length && event.cancelable && this.button !== 2) {
       event.preventDefault();
-      this.open(event.changedTouches[0]);
+      this.parentElement.addEventListener('touchmove', this._onTouchmove);
+      this.parentElement.addEventListener('touchend', this._onTouchend);
+      this.expanded = true;
+      this.$options.children[0].focus();
     }
-    this.parentElement.addEventListener('touchmove', this._onTouchmove);
-    this.parentElement.addEventListener('touchend', this._onTouchend);
   }
   _onTouchmove(event) {
-    if (this.expanded) event.preventDefault();
     IoMenuLayer.singleton._onTouchmove(event);
   }
   _onTouchend(event) {
@@ -70,17 +73,9 @@ export class IoMenu extends IoElement {
     this.parentElement.removeEventListener('touchend', this._onTouchend);
     IoMenuLayer.singleton._onTouchend(event);
   }
-  open(event) {
-    IoMenuLayer.singleton.setLastFocus(document.activeElement);
-    window.getSelection().removeAllRanges();
-    IoMenuLayer.singleton.collapseAll();
-    this.$options._x = event.clientX;
-    this.$options._y = event.clientY;
-    this.expanded = true;
-  }
 }
 
-function nudgeRight(elem, x, y, rect, pRect) {
+function nudgeRight(elem, x, y, rect) {
   if (x + rect.width < window.innerWidth) {
     elem._x = x;
     elem._y = Math.min(y, window.innerHeight - rect.height);
@@ -88,7 +83,7 @@ function nudgeRight(elem, x, y, rect, pRect) {
   }
   return false;
 }
-function nudgeLeft(elem, x, y, rect, pRect) {
+function nudgeLeft(elem, x, y, rect) {
   if (x - rect.width > 0) {
     elem._x = x - rect.width;
     elem._y = Math.min(y, window.innerHeight - rect.height);
@@ -96,7 +91,7 @@ function nudgeLeft(elem, x, y, rect, pRect) {
   }
   return false;
 }
-function nudgeBottom(elem, x, y, rect, pRect) {
+function nudgeBottom(elem, x, y, rect) {
   if (y + rect.height < window.innerHeight) {
     elem._y = y;
     elem._x = Math.min(x, window.innerWidth - rect.width);
@@ -104,7 +99,7 @@ function nudgeBottom(elem, x, y, rect, pRect) {
   }
   return false;
 }
-function nudgeTop(elem, x, y, rect, pRect) {
+function nudgeTop(elem, x, y, rect) {
   if (y - rect.height > 0) {
     elem._y = y - rect.height;
     elem._x = Math.min(x, window.innerWidth - rect.width);
@@ -112,8 +107,7 @@ function nudgeTop(elem, x, y, rect, pRect) {
   }
   return false;
 }
-function nudgeClip(elem, x, y, rect, pRect) {
-  // TODO: Better handling of small screens and large menus!
+function nudgeClip(elem, x, y) {  // TODO: Better handling of small screens and large menus!
   elem._x = Math.max(0, x);
   elem._y = Math.max(0, y);
 }
@@ -152,7 +146,7 @@ export class IoMenuOptions extends IoElement {
     return {
       options: Array,
       expanded: {
-        type: Boolean,
+        value: true,
         reflect: true
       },
       position: 'right',
@@ -203,33 +197,33 @@ export class IoMenuOptions extends IoElement {
             this._y = this._y - 1 || pRect.y;
             break;
           case 'top':
-            nudgeTop(this, pRect.x, pRect.top, rect, pRect) ||
-            nudgeBottom(this, pRect.x, pRect.bottom, rect, pRect) ||
-            nudgeRight(this, pRect.right, pRect.top, rect, pRect) ||
-            nudgeLeft(this, pRect.x, pRect.top, rect, pRect) ||
-            nudgeClip(this, pRect.x, pRect.top - rect.height, rect, pRect);
+            nudgeTop(this, pRect.x, pRect.top, rect) ||
+            nudgeBottom(this, pRect.x, pRect.bottom, rect) ||
+            nudgeRight(this, pRect.right, pRect.top, rect) ||
+            nudgeLeft(this, pRect.x, pRect.top, rect) ||
+            nudgeClip(this, pRect.x, pRect.top - rect.height);
             break;
           case 'left':
-            nudgeLeft(this, pRect.x, pRect.top, rect, pRect) ||
-            nudgeRight(this, pRect.right, pRect.top, rect, pRect) ||
-            nudgeBottom(this, pRect.x, pRect.bottom, rect, pRect) ||
-            nudgeTop(this, pRect.x, pRect.top, rect, pRect) ||
-            nudgeClip(this, pRect.x - rect.width, pRect.top, rect, pRect);
+            nudgeLeft(this, pRect.x, pRect.top, rect) ||
+            nudgeRight(this, pRect.right, pRect.top, rect) ||
+            nudgeBottom(this, pRect.x, pRect.bottom, rect) ||
+            nudgeTop(this, pRect.x, pRect.top, rect) ||
+            nudgeClip(this, pRect.x - rect.width, pRect.top);
             break;
           case 'bottom':
-            nudgeBottom(this, pRect.x, pRect.bottom, rect, pRect) ||
-            nudgeTop(this, pRect.x, pRect.top, rect, pRect) ||
-            nudgeRight(this, pRect.right, pRect.top, rect, pRect) ||
-            nudgeLeft(this, pRect.x, pRect.top, rect, pRect) ||
-            nudgeClip(this, pRect.x, pRect.bottom, rect, pRect);
+            nudgeBottom(this, pRect.x, pRect.bottom, rect) ||
+            nudgeTop(this, pRect.x, pRect.top, rect) ||
+            nudgeRight(this, pRect.right, pRect.top, rect) ||
+            nudgeLeft(this, pRect.x, pRect.top, rect) ||
+            nudgeClip(this, pRect.x, pRect.bottom);
             break;
           case 'right':
           default:
-            nudgeRight(this, pRect.right, pRect.top, rect, pRect) ||
-            nudgeLeft(this, pRect.x, pRect.top, rect, pRect) ||
-            nudgeBottom(this, pRect.right, pRect.bottom, rect, pRect) ||
-            nudgeTop(this, pRect.right, pRect.top, rect, pRect) ||
-            nudgeClip(this, pRect.right, pRect.top, rect, pRect);
+            nudgeRight(this, pRect.right, pRect.top, rect) ||
+            nudgeLeft(this, pRect.x, pRect.top, rect) ||
+            nudgeBottom(this, pRect.right, pRect.bottom, rect) ||
+            nudgeTop(this, pRect.right, pRect.top, rect) ||
+            nudgeClip(this, pRect.right, pRect.top);
             break;
         }
         this.style.left = this._x + 'px';

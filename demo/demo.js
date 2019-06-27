@@ -152,27 +152,28 @@ export class IoDemo extends IoElement {
       {label: 'set five', value: 5, action: this.setNumber}
     ];
 
-    // this.menuoptions = [
-    //   {label: 'file', options: options},
-    //   {label: 'view', options: [
-    //     {label: 'suboption one', options: options},
-    //     {label: 'suboption two', options: options},
-    //     {label: 'suboption three', options: options},
-    //   ]},
-    //   {label: 'long menu', options: new Array(100).fill({label: 'Set 0', value: 0, action: this.setNumber, icon: '>', hint: 'set'}), hint: 'list', icon: '⚠'}
-    // ];
-    // const demoMenu = ['div', {name: 'menu'}, [
-    //   ['div', [
-    //     ['span', 'right-click (contextmenu)'],
-    //     ['io-menu', {options: this.menuoptions, position: 'pointer', button: 2}], ['br'],
-    //   ]], ['br'],
-    //   ['div', [
-    //     ['span', 'click'],
-    //     ['io-menu', {options: this.menuoptions, position: 'pointer', button: 0}], ['br'],
-    //   ]], ['br'],
-    //   ['io-menu-options', {class: 'sidebar', options: this.menuoptions}], ['br'], ['br'],
-    //   ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
-    // ]];
+    this.menuoptions = [
+      {label: 'file', options: options},
+      {label: 'view', options: [
+        {label: 'suboption one', options: options},
+        {label: 'suboption two', options: options},
+        {label: 'suboption three', options: options},
+      ]},
+      {label: 'long menu', options: new Array(100).fill({label: 'Set 0', value: 0, action: this.setNumber, icon: '>', hint: 'set'}), hint: 'list', icon: '⚠'}
+    ];
+
+    const demoMenu = ['div', {name: 'menu'}, [
+      ['div', [
+        ['span', 'right-click (contextmenu)'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer', button: 2}], ['br'],
+      ]], ['br'],
+      ['div', [
+        ['span', 'click'],
+        ['io-menu', {options: this.menuoptions, position: 'pointer', button: 0}], ['br'],
+      ]], ['br'],
+      ['io-menu-options', {class: 'sidebar', options: this.menuoptions}], ['br'], ['br'],
+      ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
+    ]];
 
     const demoLayout = ['io-layout', {
       name: 'Layout',
@@ -185,7 +186,7 @@ export class IoDemo extends IoElement {
         demoButton,
         demoObject,
         demoInspector,
-        // demoMenu,
+        demoMenu,
       ],
       splits: [
         {selected: 'sliders', tabs: ['sliders'], size: 280},
@@ -207,7 +208,7 @@ export class IoDemo extends IoElement {
           ['h4', 'io-slider'], demoSliders,
           ['h4', 'io-options'], demoOptions,
           ['h4', 'io-button'], demoButton,
-          // ['h4', 'io-menu'], demoMenu,
+          ['h4', 'io-menu'], demoMenu,
           ['h4', 'io-object'], demoObject,
           ['h4', 'io-inspector'], demoInspector,
         ]],

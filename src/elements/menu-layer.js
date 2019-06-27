@@ -238,23 +238,23 @@ export class IoMenuLayer extends IoElement {
     return chain;
   }
   _moveHovered() {
-    // let options = this._hoveredOptions;
-    // if (options) {
-    //   let rect = options.getBoundingClientRect();
-    //   if (rect.height > window.innerHeight) {
-    //     if (this._y < 100 && rect.top < 0) {
-    //       let scrollSpeed = (100 - this._y) / 5000;
-    //       let overflow = rect.top;
-    //       options._y = options._y - Math.ceil(overflow * scrollSpeed) + 1;
-    //     } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
-    //       let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
-    //       let overflow = (rect.bottom - window.innerHeight);
-    //       options._y = options._y - Math.ceil(overflow * scrollSpeed) - 1;
-    //     }
-    //     options.style.left = options._x + 'px';
-    //     options.style.top = options._y + 'px';
-    //   }
-    // }
+    let options = this._hoveredOptions;
+    if (options) {
+      let rect = options.getBoundingClientRect();
+      if (rect.height > window.innerHeight) {
+        if (this._y < 100 && rect.top < 0) {
+          let scrollSpeed = (100 - this._y) / 5000;
+          let overflow = rect.top;
+          options._y = options._y - Math.ceil(overflow * scrollSpeed) + 1;
+        } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
+          let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
+          let overflow = (rect.bottom - window.innerHeight);
+          options._y = options._y - Math.ceil(overflow * scrollSpeed) - 1;
+        }
+        options.style.left = options._x + 'px';
+        options.style.top = options._y + 'px';
+      }
+    }
   }
   _startAnimation() {
     this._moveHovered();
