@@ -27,8 +27,6 @@ export class IoOption extends IoMenuItem {
   static get properties() {
     return {
       role: 'button',
-      autoExpand: false,
-      autoColapse: false,
     };
   }
   static get listeners() {
@@ -65,8 +63,11 @@ export class IoOption extends IoMenuItem {
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
       IoMenuLayer.singleton.LastFocus === null;
-      this.expanded = false;
-      this.focusTo('down');
+      if (this.expanded) {
+        this._focusIn();
+      } else {
+        this.focusTo('down');
+      }
     }
   }
   changed() {

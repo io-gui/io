@@ -34,7 +34,6 @@ export class IoMenuItem extends IoItem {
       hint: String,
       options: Array,
       direction: 'bottom',
-      autoColapse: true,
       action: Function,
       $parent: HTMLElement,
       $options: IoMenuOptions,
@@ -95,12 +94,18 @@ export class IoMenuItem extends IoItem {
     IoMenuLayer.singleton.setLastFocus(this);
     this.focus();
     this._toggleExpanded(true);
+    IoMenuLayer.singleton._onMousemove(event);
   }
   _onTouchstart(event) {
-    event.preventDefault();
-    this.addEventListener('touchmove', this._onTouchmove);
-    this.addEventListener('touchend', this._onTouchend);
-    this._onMousedown();
+    if (event.cancelable) {
+      event.preventDefault();
+      this.addEventListener('touchmove', this._onTouchmove);
+      this.addEventListener('touchend', this._onTouchend);
+      IoMenuLayer.singleton.setLastFocus(this);
+      this.focus();
+      this._toggleExpanded(true);
+      IoMenuLayer.singleton._onTouchmove(event);
+    }
   }
   _onTouchmove(event) {
     IoMenuLayer.singleton._onTouchmove(event);
@@ -112,6 +117,20 @@ export class IoMenuItem extends IoItem {
     IoMenuLayer.singleton._onTouchend(event);
   }
   _onKeydown(event) {
+    let command = '';
+    if (this.direction === 'left' || this.direction === 'right') {
+      if (event.key === 'ArrowUp') command = 'prev';
+      if (event.key === 'ArrowRight') command = 'in';
+      if (event.key === 'ArrowDown') command = 'next';
+      if (event.key === 'ArrowLeft') command = 'out';
+    } else {
+      if (event.key === 'ArrowUp') command = 'out';
+      if (event.key === 'ArrowRight') command = 'next';
+      if (event.key === 'ArrowDown') command = 'in';
+      if (event.key === 'ArrowLeft') command = 'prev';
+    }
+    if (event.key === 'Tab') command = 'next'
+
     if (event.which === 13 || event.which === 32) {
       event.preventDefault();
       if (this.options.length) {
@@ -124,20 +143,7 @@ export class IoMenuItem extends IoItem {
     else if (event.key === 'Escape') {
       event.preventDefault();
       IoMenuLayer.singleton.collapseAll();
-    } else if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
-      let command = '';
-      if (!this.$parent.horizontal) {
-        if (event.key === 'ArrowUp') command = 'prev';
-        if (event.key === 'ArrowRight') command = 'in';
-        if (event.key === 'ArrowDown') command = 'next';
-        if (event.key === 'ArrowLeft') command = 'out';
-      } else {
-        if (event.key === 'ArrowUp') command = 'out';
-        if (event.key === 'ArrowRight') command = 'next';
-        if (event.key === 'ArrowDown') command = 'in';
-        if (event.key === 'ArrowLeft') command = 'prev';
-      }
-      if (event.key === 'Tab') command = 'next';
+    } else if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {;
 
       if (command) event.preventDefault();
 
@@ -165,8 +171,12 @@ export class IoMenuItem extends IoItem {
           break;
       }
     } else {
-      this.expanded = false;
-      super._onKeydown(event);
+      if (this.expanded && command === 'in') {
+        this._focusIn();
+      } else {
+        this.expanded = false;
+        super._onKeydown(event);
+      }
     }
   }
   _onClick() {
@@ -176,7 +186,12 @@ export class IoMenuItem extends IoItem {
     if (this.value !== undefined) {
       this.dispatchEvent('io-menu-item-clicked', {value: this.value}, true);
     }
-    // if (this.autoColapse) IoMenuLayer.singleton.collapseAll();
+  }
+  _onFocus() {
+    super._onFocus();
+    if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
+      this._toggleExpanded(true);
+    }
   }
   optionsChanged() {
     this._connectOptions();

@@ -141,17 +141,17 @@ export class IoMenuOptions extends IoElement {
     IoMenuLayer.singleton.unregisterOptions(this);
   }
   _onMenuItemClicked(event) {
-    // const item = event.composedPath()[0];
-    // if (item !== this) {
-    //   if (item.expanded) item.expanded = false;
-    //   event.stopPropagation();
-    //   if (this.$parent instanceof IoMenuItem || this.$parent instanceof IoMenu) {
-    //     if (this.$parent.expanded) this.$parent.expanded = false;
-    //     this.$parent.dispatchEvent('io-menu-item-clicked', event.detail, true);
-    //   } else {
-    //     this.dispatchEvent('io-menu-item-clicked', event.detail, true);
-    //   }
-    // }
+    const item = event.composedPath()[0];
+    if (item !== this) {
+      if (item.expanded) item.expanded = false;
+      event.stopPropagation();
+      if (this.$parent instanceof IoMenuItem || this.$parent instanceof IoMenu) {
+        if (this.$parent.expanded) this.$parent.expanded = false;
+        this.$parent.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      } else {
+        this.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      }
+    }
   }
   expandedChanged() {
     if (this.parentElement === IoMenuLayer.singleton) {

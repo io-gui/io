@@ -137,6 +137,9 @@ export class IoMenuLayer extends IoElement {
     event.preventDefault();
     this._onPointermove(event.changedTouches[0]);
     this._onPointerdown(event.changedTouches[0]);
+    if (this.lastFocus == this._hoveredItem) {
+
+    }
   }
   _onTouchmove(event) {
     event.preventDefault();
@@ -152,6 +155,8 @@ export class IoMenuLayer extends IoElement {
   }
   _onPointerdown(event) {
     if (!this._hoveredItem) {
+      this.collapseAll();
+    } else if (this.lastFocus == this._hoveredItem && this.lastFocus.expanded) {
       this.collapseAll();
     }
   }
@@ -183,13 +188,12 @@ export class IoMenuLayer extends IoElement {
         }
       }
     }
-    // const _focusSrc = IoMenuLayer.singleton._focusSrc;
-    // if (_focusSrc) {
-    //   let rect = _focusSrc.getBoundingClientRect();
-    //   if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-    //     this._hoveredItem = _focusSrc;
-    //   }
-    // }
+    if (this.lastFocus) {
+      let rect = this.lastFocus.getBoundingClientRect();
+      if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+        this._hoveredItem = this.lastFocus;
+      }
+    }
   }
   _focusItem(item, force) {
     if (item !== this.__prevItem) {
@@ -219,7 +223,7 @@ export class IoMenuLayer extends IoElement {
   }
   _onPointerup() {
     if (this._hoveredItem) {
-      const collapse = !this._hoveredItem.options.length;// && this._hoveredItem !== IoMenuLayer.singleton._focusSrc;
+      const collapse = !this._hoveredItem.options.length;
       if (collapse) this._hoveredItem._onClick();
       if (collapse) this.collapseAll();
     } else {
@@ -262,7 +266,8 @@ export class IoMenuLayer extends IoElement {
   _stopAnimation() {
     if (this._rAF_ID) cancelAnimationFrame(this._rAF_ID);
   }
-  expandedChanged() {    if (this.expanded) {
+  expandedChanged() {
+    if (this.expanded) {
       this._startAnimation();
     } else {
       this._hoveredItem = null;
