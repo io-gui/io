@@ -37,7 +37,7 @@ export class IoOption extends IoMenuItem {
   _onMenuItemClicked(event) {
     this.set('value', event.detail.value);
   }
-  _onClick(event) {
+  _onClick() {
     this._toggleExpanded(true);
   }
   _onKeydown(event) {

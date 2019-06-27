@@ -129,7 +129,7 @@ export class IoMenuItem extends IoItem {
       if (event.key === 'ArrowDown') command = 'in';
       if (event.key === 'ArrowLeft') command = 'prev';
     }
-    if (event.key === 'Tab') command = 'next'
+    if (event.key === 'Tab') command = 'next';
 
     if (event.which === 13 || event.which === 32) {
       event.preventDefault();
@@ -143,14 +143,11 @@ export class IoMenuItem extends IoItem {
     else if (event.key === 'Escape') {
       event.preventDefault();
       IoMenuLayer.singleton.collapseAll();
-    } else if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {;
-
-      if (command) event.preventDefault();
-
+    } else if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
       const options = this.$parent;
       const siblings = [...options.children];
       const index = siblings.indexOf(this);
-
+      if (command) event.preventDefault();
       switch (command) {
         case 'prev':
           this.expanded = false;
