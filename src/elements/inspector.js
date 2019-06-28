@@ -81,7 +81,7 @@ export class IoInspector extends IoElement {
     return this.__proto__.__config.getConfig(this.value, this.config);
   }
   _onSetInspectorValue(event) {
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     this.set('value', event.detail.value);
   }
   _onBreadcrumbsValue(event) {

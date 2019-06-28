@@ -351,7 +351,7 @@ export class IoTabs extends IoElement {
   }
   _onPointermove(event) {
     event.preventDefault();
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     const dist = Math.sqrt(Math.pow(this._X - event.clientX, 2) + Math.pow(this._Y - event.clientY, 2));
     if (dist > 8) {
       const rect = event.target.getBoundingClientRect();
@@ -393,7 +393,7 @@ export class IoTabs extends IoElement {
   }
   _onPointerup(event) {
     event.preventDefault();
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     event.target.releasePointerCapture(event.pointerId);
     event.target.removeEventListener('pointermove', this._onPointermove);
     event.target.removeEventListener('pointerup', this._onPointerup);

@@ -124,7 +124,7 @@ export class Listeners {
    */
   dispatchEvent(type, detail = {}, bubbles = true, src = this.node) {
     if (src instanceof HTMLElement || src === window) {
-      HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {type: type, detail: detail, bubbles: bubbles, composed: true}));
+      HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {type: type, detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
       const active = this.activeListeners;
       if (active[type] !== undefined) {

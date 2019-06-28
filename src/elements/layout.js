@@ -125,7 +125,7 @@ export class IoLayout extends IoElement {
   //   this.changed();
   // }
   _onLayoutTabInsert(event) {
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     const $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
     const srcTabs = event.detail.source;
     const destTabs = event.detail.destination;
@@ -160,7 +160,7 @@ export class IoLayout extends IoElement {
     this.changed();
   }
   _onDividerMove(event) {
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     let pi = event.detail.index;
     let ni = event.detail.index + 1;
 

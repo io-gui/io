@@ -51,7 +51,7 @@ export class IoSelector extends IoElement {
     };
   }
   _onIoContentReady(event) {
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     this.scrollIDChanged();
   }
   constructor(props) {

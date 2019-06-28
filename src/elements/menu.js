@@ -415,7 +415,7 @@ export class IoMenuOptions extends IoElement {
     const item = event.composedPath()[0];
     if (item !== this) {
       if (item.expanded) item.expanded = false;
-      event.stopPropagation();
+      event.stopImmediatePropagation();
       if (this.$parent instanceof IoMenuItem || this.$parent instanceof IoMenu) {
         if (this.$parent.expanded) this.$parent.expanded = false;
         this.$parent.dispatchEvent('io-menu-item-clicked', event.detail, true);

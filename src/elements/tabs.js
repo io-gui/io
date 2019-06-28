@@ -54,7 +54,7 @@ export class IoTabs extends IoElement {
     };
   }
   _onMenuItemClicked(event) {
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     if (event.detail.value) {
       this.set('selected', event.detail.value);
       IoMenuLayer.singleton.collapseAll();

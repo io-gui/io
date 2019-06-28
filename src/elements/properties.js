@@ -68,7 +68,7 @@ export class IoProperties extends IoElement {
     const item = event.composedPath()[0];
     if (item === this) return;
     if (event.detail.object) return; // TODO: unhack
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     const prop = item.id;
     if (prop !== null && event.detail.property === 'value') {
       this.value[prop] = event.detail.value;
