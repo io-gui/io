@@ -1,8 +1,9 @@
 import {html, IoElement} from "../core/element.js";
 import {IoStorage as $} from "../core/storage.js";
-import {IoButton} from "./button.js";
+import {IoItem} from "./item.js";
 import "./breadcrumbs.js";
-import {isValuePropertyOf, getObjectLabel} from "../utils/utility-functions.js";
+import {Option} from "../types/option.js";
+import {isValuePropertyOf} from "../utils/utility-functions.js";
 
 export class IoInspector extends IoElement {
   static get style() {
@@ -56,6 +57,12 @@ export class IoInspector extends IoElement {
       border: var(--io-inset-border);
       border-radius: var(--io-border-radius);
     }
+    :host io-item {
+      color: var(--io-color-link);
+    }
+    :host io-item:hover {
+      text-decoration: underline;
+    }
     </style>`;
   }
   static get properties() {
@@ -67,7 +74,7 @@ export class IoInspector extends IoElement {
   }
   static get listeners() {
     return {
-      'set-inspector-value': '_onSetInspectorValue',
+      'item-clicked': '_onSetInspectorValue',
     };
   }
   get groups() {
@@ -87,7 +94,7 @@ export class IoInspector extends IoElement {
     if (!option) {
       const lastOption = this._options[this._options.length - 1];
       if (!lastOption || !isValuePropertyOf(this.value, lastOption.value)) this._options.length = 0;
-      this._options.push({value: this.value, label: getObjectLabel(this.value)});
+      this._options.push(new Option(this.value));
       this.dispatchEvent('object-mutated', {object: this._options}, false, window);
     }
   }
@@ -108,7 +115,7 @@ export class IoInspector extends IoElement {
               value: this.value,
               properties: this.groups[group],
               config: Object.assign({
-                'type:object': ['io-inspector-link'],
+                'type:object': ['io-item'],
               }, this.config),
             }]
           ]
@@ -218,25 +225,3 @@ IoInspector.Register();
 // IoInspector.RegisterConfig = function(config) {
 //   this.prototype.__config.registerConfig(config);
 // };
-
-export class IoInspectorLink extends IoButton {
-  static get style() {
-    return html`<style>
-    :host {
-      color: var(--io-color-link) !important;
-    }
-    :host:hover {
-      text-decoration: underline;
-    }
-    </style>`;
-  }
-  _onClick() {
-    this.dispatchEvent('set-inspector-value', {value: this.value}, true);
-  }
-  changed() {
-    this.title = getObjectLabel(this.value);
-    this.innerText = getObjectLabel(this.value);
-  }
-}
-
-IoInspectorLink.Register();

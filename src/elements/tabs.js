@@ -1,7 +1,7 @@
 import {html, IoElement} from "../core/element.js";
-import {filterObject, validateOptionObject} from "../utils/utility-functions.js";
-import {IoMenuLayer} from "./menu-layer.js";
-import "./menu-item.js";
+import {filterObject} from "../utils/utility-functions.js";
+import {Option} from "../types/option.js";
+import {IoMenuLayer} from "./menu.js";
 
 export class IoTabs extends IoElement {
   static get style() {
@@ -117,7 +117,7 @@ export class IoTabs extends IoElement {
     this.setOverflow();
   }
   changed() {
-    const options = this.options.map(validateOptionObject);
+    const options = this.options.map(option => { return new Option(option); });
     let selectedOption = filterObject(options, option => { return option.value === this.selected; });
     const elements = [];
     for (let i = 0; i < options.length; i++) {

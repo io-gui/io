@@ -3,15 +3,6 @@ export function isValuePropertyOf(prop, object) {
   return null;
 }
 
-export function getObjectLabel(object) {
-  let label = object.constructor.name;
-  if (object.name) label += ' (' + object.name + ')';
-  else if (object.label) label += ' (' + object.label + ')';
-  else if (object.title) label += ' (' + object.title + ')';
-  else if (object.id) label += ' (' + object.id + ')';
-  return label;
-}
-
 export function filterObject(object, predicate) {
   if (predicate(object)) return object;
   for (let key in object) {
@@ -22,13 +13,4 @@ export function filterObject(object, predicate) {
       if (prop) return prop;
     }
   }
-}
-
-export function validateOptionObject(option) {
-  return (typeof option === 'object' && (
-    option.label !== undefined ||
-    option.value !== undefined ||
-    option.action !== undefined ||
-    option.button !== undefined
-  )) ? option : {value: option};
 }

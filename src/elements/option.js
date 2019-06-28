@@ -1,6 +1,5 @@
 import {html} from "../core/element.js";
-import {IoMenuLayer} from "./menu-layer.js";
-import {IoMenuItem} from "./menu-item.js";
+import {IoMenuItem, IoMenuLayer} from "./menu.js";
 
 export class IoOption extends IoMenuItem {
   static get style() {

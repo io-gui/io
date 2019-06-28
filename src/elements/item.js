@@ -81,10 +81,16 @@ export class IoItem extends IoElement {
       this.focusTo('down');
     }
   }
-  _onClick() {}
+  _onClick() {
+    this.dispatchEvent('item-clicked', {value: this.value, label: this.label}, true);
+  }
   changed() {
-    this.title = this.label || String(this.value);
-    this.innerText = this.label || String(this.value);
+    let label = String(this.value);
+    if (typeof this.value === 'object') {
+      label = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
+    }
+    this.title = this.label || label;
+    this.innerText = this.label || label;
   }
 }
 

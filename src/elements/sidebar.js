@@ -1,6 +1,7 @@
 import {html, IoElement} from "../core/element.js";
 import {IoStorage as $} from "../core/storage.js";
-import {filterObject, validateOptionObject} from "../utils/utility-functions.js";
+import {Option} from "../types/option.js";
+import {filterObject} from "../utils/utility-functions.js";
 
 export class IoSidebar extends IoElement {
   static get style() {
@@ -105,7 +106,7 @@ export class IoSidebar extends IoElement {
     return elements;
   }
   changed() {
-    const options = this.options.map(validateOptionObject);
+    const options = this.options.map(option => { return new Option(option); });
     let selectedOption = filterObject(options, option => { return option.value === this.selected; });
     if (this.overflow) {
       const label = selectedOption ? (selectedOption.label || String(selectedOption.value)) : String(this.selected).split('#')[0];
