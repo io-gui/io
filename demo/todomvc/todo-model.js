@@ -1,4 +1,4 @@
-import {IoNode} from "../../build/io.min.js";
+import {IoNode} from "../../build/io.js";
 
 export class TodoModel extends IoNode {
   static get properties() {

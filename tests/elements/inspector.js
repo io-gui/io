@@ -1,4 +1,4 @@
-import {IoInspector} from "../../build/io.min.js";
+import {IoInspector} from "../../build/io.js";
 
 const testValue = {
   "number": 0.5,

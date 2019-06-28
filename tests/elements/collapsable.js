@@ -1,4 +1,4 @@
-import {IoCollapsable} from "../../build/io.min.js";
+import {IoCollapsable} from "../../build/io.js";
 
 export default class {
   constructor() {

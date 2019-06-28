@@ -1,4 +1,4 @@
-import {IoSelectorTabs} from "../../build/io.min.js";
+import {IoSelectorTabs} from "../../build/io.js";
 
 export default class {
   constructor() {

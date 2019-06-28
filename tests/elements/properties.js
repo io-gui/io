@@ -1,4 +1,4 @@
-import {IoProperties} from "../../build/io.min.js";
+import {IoProperties} from "../../build/io.js";
 
 const testValue = {
   "number": 0.5,

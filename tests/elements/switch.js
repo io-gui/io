@@ -1,4 +1,4 @@
-import {IoSwitch} from "../../build/io.min.js";
+import {IoSwitch} from "../../build/io.js";
 
 export default class {
   constructor() {

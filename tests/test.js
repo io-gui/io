@@ -1,4 +1,4 @@
-import {html, IoElement} from "../build/io.min.js";
+import {html, IoElement} from "../build/io.js";
 
 import "../lib/mocha.js";
 import "../lib/chai.js";

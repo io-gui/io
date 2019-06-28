@@ -1,4 +1,4 @@
-import {IoString} from "../../build/io.min.js";
+import {IoString} from "../../build/io.js";
 
 export default class {
   constructor() {

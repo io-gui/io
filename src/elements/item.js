@@ -86,7 +86,7 @@ export class IoItem extends IoElement {
   }
   changed() {
     let label = String(this.value);
-    if (typeof this.value === 'object') {
+    if (this.value && typeof this.value === 'object') {
       label = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
     }
     this.title = this.label || label;

@@ -1,4 +1,4 @@
-import {IoElement, IoNode} from "../../build/io.min.js";
+import {IoElement, IoNode} from "../../build/io.js";
 
 import {TestNode} from "./node.js";
 

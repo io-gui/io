@@ -1,4 +1,4 @@
-import {IoObject} from "../../build/io.min.js";
+import {IoObject} from "../../build/io.js";
 
 const testValue = {
   "number": 0.5,
