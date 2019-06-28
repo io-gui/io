@@ -30,16 +30,4 @@ export default [
       }
     ],
   },
-  {
-    input: 'src/io-core.js',
-    plugins: [html()],
-    experimentalDynamicImport: true,
-    output: [
-      {
-        format: 'es',
-        file: 'build/io-core.js',
-        indent: '  '
-      }
-    ],
-  },
 ];
