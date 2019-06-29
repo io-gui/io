@@ -95,6 +95,7 @@ export const IoNodeMixin = (superclass) => {
       if (compose) {
         for (let prop in compose) {
           this[prop].setProperties(compose[prop]);
+          this[prop].__listeners.setPropListeners(compose[prop], this);
         }
       }
     }
@@ -112,8 +113,8 @@ export const IoNodeMixin = (superclass) => {
       * @param {string} prop - Property name.
       * @param {*} value - Property value.
       */
-    set(prop, value) {
-      if (this[prop] !== value) {
+    set(prop, value, force) {
+      if (this[prop] !== value || force) {
         const oldValue = this[prop];
         this[prop] = value;
         this.dispatchEvent('value-set', {property: prop, value: value, oldValue: oldValue}, false);
@@ -134,12 +135,7 @@ export const IoNodeMixin = (superclass) => {
         if (value !== oldValue) this.queue(p, value, oldValue);
       }
 
-      // if (props['className']) {
-      //   this.className = props['className'];
-      // } else if (this.removeAttribute) {
-      //   this.removeAttribute('className');
-      // }
-
+      // TODO: remove? 
       if (props['style']) {
         for (let s in props['style']) {
           this.style[s] = props['style'][s];
