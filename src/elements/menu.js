@@ -1,6 +1,7 @@
 import {IoElement, html} from "../core/element.js";
 import {Option} from "../types/option.js";
 import {IoItem} from "./item.js";
+import {filterObject} from "../utils/utility-functions.js";
 
 export class IoMenu extends IoElement {
   static get properties() {
@@ -362,7 +363,6 @@ export class IoMenuOptions extends IoElement {
         touch-action: none;
         background: var(--io-background-color);
         color: var(--io-color);
-        padding: var(--io-spacing);
         border-radius: var(--io-border-radius);
         border: var(--io-outset-border);
         border-color: var(--io-outset-border-color);
@@ -371,13 +371,18 @@ export class IoMenuOptions extends IoElement {
       :host[horizontal] {
         flex-direction: row;
         align-self: stretch;
+        flex-wrap: nowrap;
       }
-      :host[horizontal] > io-menu-item {
-        margin: 0 0.5em;
+      :host[horizontal] > * {
+        padding: calc(2 * var(--io-spacing)) calc(4 * var(--io-spacing));
       }
       :host[horizontal] > io-menu-item > .io-menu-hint,
       :host[horizontal] > io-menu-item > .io-menu-more {
         display: none;
+      }
+      :host[horizontal] > io-menu-item.io-hamburger {
+        line-height: 1.1em;
+        margin-left: auto;
       }
     </style>`;
   }
@@ -393,9 +398,15 @@ export class IoMenuOptions extends IoElement {
         type: Boolean,
         reflect: true
       },
+      selected: String,
+      overflow: {
+        type: Boolean,
+        reflect: true,
+      },
       role: 'listbox',
       $parent: HTMLElement,
       _depth: 0,
+      _rects: Array,
     };
   }
   static get listeners() {
@@ -414,14 +425,64 @@ export class IoMenuOptions extends IoElement {
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];
     if (item !== this) {
-      if (item.expanded) item.expanded = false;
       event.stopImmediatePropagation();
+      if (item.expanded) item.expanded = false;
+      if (event.detail.value !== undefined) {
+        this.set('selected', event.detail.value);
+        // IoMenuLayer.singleton.collapseAll(); // TODO? tabs?
+      }
       if (this.$parent instanceof IoMenuItem || this.$parent instanceof IoMenu) {
         if (this.$parent.expanded) this.$parent.expanded = false;
         this.$parent.dispatchEvent('io-menu-item-clicked', event.detail, true);
       } else {
         this.dispatchEvent('io-menu-item-clicked', event.detail, true);
       }
+    }
+  }
+  resized() {
+    this.setOverflow();
+  }
+  setOverflow() {
+    if (this.horizontal) {
+      const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
+      const hamburger = this.querySelector('io-menu-item.io-hamburger');
+      const rects = this._rects;
+      rects.length = buttons.length;
+
+      if (!rects.length) return;
+      if (!buttons.length) return;
+
+      let end = this.getBoundingClientRect().right;
+      let overflow = false;
+      let last = Infinity;
+      hamburger.hidden = true;
+
+      for (let i = buttons.length; i--;) {
+        const r = buttons[i].getBoundingClientRect();
+        rects[i] = rects[i] || {right: 0, width: 0};
+        rects[i].right = r.right ? Math.max(rects[i].right, r.right) : rects[i].right;
+        rects[i].width = r.width ? Math.max(rects[i].width, r.width) : rects[i].width;
+
+        if (hamburger.hidden && overflow) {
+          hamburger.hidden = false;
+          end -= hamburger.getBoundingClientRect().width;
+        }
+
+        if (buttons[i].selected) {
+          end -= rects[i].width;
+          buttons[i].hidden = false;
+          continue;
+        }
+
+        last = Math.min(last, rects[i].right);
+        if (last < end) {
+          buttons[i].hidden = false;
+        } else {
+         buttons[i].hidden = true;
+          overflow = true;
+        }
+      }
+      this.overflow = overflow;
     }
   }
   nudgeRight(x, y, rect) {
@@ -498,26 +559,35 @@ export class IoMenuOptions extends IoElement {
       }
     }
   }
-  horizontalChanged() {
-    this.optionsChanged();
-  }
-  optionsChanged() {
+  changed() {
     const itemDirection = this.horizontal ? 'bottom' : 'right';
     const options = this.options.map(option => { return new Option(option); });
-    this.template([options.map((elem, i) =>
+    const elements = [options.map(option =>
       ['io-menu-item', {
         $parent: this,
-        value: options[i].value,
-        label: options[i].label,
-        action: options[i].action,
-        button: options[i].button,
-        hint: options[i].hint,
-        icon: options[i].icon,
-        options: options[i].options || [],
+        value: option.value,
+        label: option.label,
+        action: option.action,
+        hint: option.hint,
+        icon: option.icon,
+        options: option.options || [],
+        selected: option.selected || option.value === this.selected,
         direction: itemDirection,
         _depth: this._depth + 1,
       }]
-    )]);
+    )];
+    if (this.horizontal) {
+      // TODO: Detect selectedSubOption selected!
+      elements.push(['io-menu-item', {
+        label: '☰',
+        title: 'select tab',
+        value: this.selected,
+        options: this.options,
+        class: 'io-hamburger',
+      }]);
+    }
+    this.template(elements);
+    this.setOverflow();
   }
 }
 
@@ -526,8 +596,10 @@ export class IoMenuItem extends IoItem {
     return html`<style>
       :host {
         display: flex;
+        flex: 0 0 auto;
         flex-direction: row;
         padding: calc(2 * var(--io-spacing));
+        background: none;
       }
       :host > * {
         padding: 0 var(--io-spacing);
@@ -545,6 +617,20 @@ export class IoMenuItem extends IoItem {
       :host[hasmore]:after {
         content: '▸';
       }
+      :host {
+        border: var(--io-border-width) solid transparent;
+      }
+      :host[selected] {
+        color: var(--io-color-link);
+      }
+      :host[selected][direction="top"],
+      :host[selected][direction="bottom"] {
+        border-bottom-color: var(--io-color-link);
+      }
+      :host[selected][direction="right"],
+      :host[selected][direction="left"] {
+        border-left-color: var(--io-color-link);
+      }
     </style>`;
   }
   static get properties() {
@@ -553,8 +639,16 @@ export class IoMenuItem extends IoItem {
       icon: String,
       hint: String,
       options: Array,
-      direction: 'bottom',
+      selected: {
+        type: Boolean,
+        reflect: true,
+      },
+      direction: {
+         value: 'bottom',
+         reflect: true,
+      },
       action: Function,
+      // button: HTMLElement, // TODO: add button ref ?
       $parent: HTMLElement,
       $options: IoMenuOptions,
       _depth: 0,
@@ -566,6 +660,7 @@ export class IoMenuItem extends IoItem {
         $parent: this,
         expanded: this.bind('expanded'),
         options: this.options,
+        selected: this.options.selected,
         position: this.direction,
         _depth: this._depth,
       }
@@ -586,6 +681,7 @@ export class IoMenuItem extends IoItem {
       if (!this.$options.parentNode) {
         IoMenuLayer.singleton.appendChild(this.$options);
       }
+      // this.$options.selected = this.options.selected;
     } else this._disconnectOptions();
   }
   _disconnectOptions() {
@@ -717,11 +813,15 @@ export class IoMenuItem extends IoItem {
     this._connectOptions();
     this.setAttribute('hasmore', !!this.options.length && this.direction === 'right');
   }
+  selectedChanged() {
+    console.log(this.options.selected);
+    this.$options.selected = this.options.selected;
+  }
   changed() {
     this.template([
-      ['span', {class: 'io-menu-icon'}, this.icon],
+      this.icon ? ['span', {class: 'io-menu-icon'}, this.icon] : null,
       ['span', {class: 'io-menu-label'}, this.label || String(this.value)],
-      ['span', {class: 'io-menu-hint'}, this.hint],
+      this.hint ? ['span', {class: 'io-menu-hint'}, this.hint] : null,
     ]);
   }
 }

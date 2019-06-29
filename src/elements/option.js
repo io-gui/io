@@ -40,6 +40,11 @@ export class IoOption extends IoMenuItem {
   _onClick() {
     this._toggleExpanded(true);
   }
+  // optionsChanged() {
+  //   console.log('asd', this);
+  //   this._connectOptions();
+  //   // this.setAttribute('hasmore', !!this.options.length && this.direction === 'right');
+  // }
   _onKeydown(event) {
     if (event.which === 13 || event.which === 32) {
       event.preventDefault();

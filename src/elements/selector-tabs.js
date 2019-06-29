@@ -1,6 +1,5 @@
 import {html} from "../core/element.js";
 import {IoSelector} from "./selector.js";
-import "./tabs.js";
 import {filterObject} from "../utils/utility-functions.js";
 
 export class IoSelectorTabs extends IoSelector {
@@ -9,6 +8,11 @@ export class IoSelectorTabs extends IoSelector {
       :host {
         flex-direction: column;
         align-self: stretch;
+      }
+      :host > io-menu-options {
+        border-radius: 0;
+        border: none;
+        font-size: 1.2em;
       }
       :host > .io-content {
         -webkit-overflow-scrolling: touch;
@@ -35,9 +39,10 @@ export class IoSelectorTabs extends IoSelector {
     }
   }
   renderShadow() {
-    const tabs = ['io-tabs', {
+    const tabs = ['io-menu-options', {
       id: 'tabs',
-      elements: this.elements,
+      role: 'navigation',
+      horizontal: true,
       selected: this.selected,
       options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
       'on-value-set': this._onSelected,

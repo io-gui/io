@@ -27,12 +27,19 @@ export class IoItem extends IoElement {
       :host[aria-invalid] {
         color: var(--io-color-error);
       }
+      :host[hidden] {
+        display: none;
+      }
     </style>`;
   }
   static get properties() {
     return {
       value: undefined,
       label: String,
+      hidden: {
+        type: Boolean,
+        reflect: true,
+      },
       tabindex: 0
     };
   }
