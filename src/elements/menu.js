@@ -398,7 +398,7 @@ export class IoMenuOptions extends IoElement {
         type: Boolean,
         reflect: true
       },
-      selected: String,
+      value: null,
       overflow: {
         type: Boolean,
         reflect: true,
@@ -428,7 +428,7 @@ export class IoMenuOptions extends IoElement {
       event.stopImmediatePropagation();
       if (item.expanded) item.expanded = false;
       if (event.detail.value !== undefined) {
-        this.set('selected', event.detail.value);
+        this.set('value', event.detail.value);
         // IoMenuLayer.singleton.collapseAll(); // TODO? tabs?
       }
       if (this.$parent instanceof IoMenuItem || this.$parent instanceof IoMenu) {
@@ -571,7 +571,7 @@ export class IoMenuOptions extends IoElement {
         hint: option.hint,
         icon: option.icon,
         options: option.options || [],
-        selected: option.selected || option.value === this.selected,
+        selected: option.selected || option.value === this.value,
         direction: itemDirection,
         _depth: this._depth + 1,
       }]
@@ -581,7 +581,7 @@ export class IoMenuOptions extends IoElement {
       elements.push(['io-menu-item', {
         label: '☰',
         title: 'select tab',
-        value: this.selected,
+        value: this.value,
         options: this.options,
         class: 'io-hamburger',
       }]);
@@ -620,9 +620,6 @@ export class IoMenuItem extends IoItem {
       :host {
         border: var(--io-border-width) solid transparent;
       }
-      :host[selected] {
-        color: var(--io-color-link);
-      }
       :host[selected][direction="top"],
       :host[selected][direction="bottom"] {
         border-bottom-color: var(--io-color-link);
@@ -639,10 +636,6 @@ export class IoMenuItem extends IoItem {
       icon: String,
       hint: String,
       options: Array,
-      selected: {
-        type: Boolean,
-        reflect: true,
-      },
       direction: {
          value: 'bottom',
          reflect: true,
@@ -660,7 +653,7 @@ export class IoMenuItem extends IoItem {
         $parent: this,
         expanded: this.bind('expanded'),
         options: this.options,
-        selected: this.options.selected,
+        // selected: this.options.selected,
         position: this.direction,
         _depth: this._depth,
       }
@@ -812,10 +805,6 @@ export class IoMenuItem extends IoItem {
   optionsChanged() {
     this._connectOptions();
     this.setAttribute('hasmore', !!this.options.length && this.direction === 'right');
-  }
-  selectedChanged() {
-    console.log(this.options.selected);
-    this.$options.selected = this.options.selected;
   }
   changed() {
     this.template([

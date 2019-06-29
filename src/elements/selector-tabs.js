@@ -25,7 +25,7 @@ export class IoSelectorTabs extends IoSelector {
     };
   }
   _onSelected(event) {
-    if (event.detail.property === 'selected') {
+    if (event.detail.property === 'value') {
       this.set('selected', event.detail.value);
     }
   }
@@ -43,7 +43,7 @@ export class IoSelectorTabs extends IoSelector {
       id: 'tabs',
       role: 'navigation',
       horizontal: true,
-      selected: this.selected,
+      value: this.selected,
       options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
       'on-value-set': this._onSelected,
     }];

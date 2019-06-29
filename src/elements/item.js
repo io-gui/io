@@ -30,6 +30,9 @@ export class IoItem extends IoElement {
       :host[hidden] {
         display: none;
       }
+      :host[selected] {
+        color: var(--io-color-link);
+      }
     </style>`;
   }
   static get properties() {
@@ -37,6 +40,10 @@ export class IoItem extends IoElement {
       value: undefined,
       label: String,
       hidden: {
+        type: Boolean,
+        reflect: true,
+      },
+      selected: {
         type: Boolean,
         reflect: true,
       },
