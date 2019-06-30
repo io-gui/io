@@ -57,16 +57,12 @@ class ProtoProperty {
       } else if (cfg instanceof Binding) {
         cfg = {value: cfg.value, binding: cfg};
       } else {
-        // console.log(cfg.type  );
         if (typeof cfg.type !== 'function') {
           if (cfg.value === undefined || cfg.value === null) {
-            // console.error('Defining an attribute requires value or type');
+            console.error('Properties require value or type');
           } else {
             cfg.type = cfg.value.constructor;
           }
-        } else if (cfg.type) {
-        } else {
-          console.error('Property error!', cfg);
         }
       }
     } else {
@@ -87,7 +83,7 @@ export class Properties {
     for (let prop in protoProperties) {
       this[prop] = new Property(protoProperties[prop]);
       this[prop].instantiateCustomType();
-      // TODO: ocnsider bindings
+      // TODO: consider bindings
       if (this[prop].value !== undefined) {
         if (typeof this[prop].value === 'object' && this[prop].value !== null) {
           if (this[prop].value.isNode) this[prop].value.connect(node);
@@ -185,6 +181,9 @@ class Property {
     this.notify = cfg.notify;
     if (this.type === Array && this.value) {
       this.value = [...this.value]; // TODO: reconsider
+    }
+    if (this.type === Object && this.value) {
+      this.value = {};
     }
     if (this.value === undefined && this.type) {
       if (this.type === Boolean) this.value = false;

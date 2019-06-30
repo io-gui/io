@@ -19,6 +19,9 @@ export class IoMenuOptions extends IoElement {
         border-color: var(--io-outset-border-color);
         box-shadow: var(--io-shadow);
       }
+      :host:not([expanded]) {
+        visibility: hidden;
+      }
       :host[horizontal] {
         flex-direction: row;
         align-self: stretch;

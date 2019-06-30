@@ -253,8 +253,9 @@ export class IoMenuItem extends IoItem {
     }
   }
   expandedChanged() {
+    // TODO: collapse on menus outside IoMenuLayer
     if (this.expanded && this.$parent) {
-      if (!this.$parent.expanded) console.warn('This should be expanded'); // TODO: remove
+      if (!this.$parent.expanded) console.warn('This should be expanded', this.$parent.expanded); // TODO: remove
     }
   }
    optionChanged() {
@@ -262,8 +263,6 @@ export class IoMenuItem extends IoItem {
   }
   changed() {
     this.setAttribute('hasmore', this._options && this.direction === 'right');
-    // this.selected = this._selected;
-    // console.log('asd', this);
     this.template([
       this._icon ? ['span', {class: 'io-menu-icon'}, this._icon] : null,
       ['span', {class: 'io-menu-label'}, this._label || String(this._value)],

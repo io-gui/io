@@ -23,9 +23,6 @@ export class IoMenuLayer extends IoElement {
         visibility: visible;
         pointer-events: all;
       }
-      :host > io-menu-options:not([expanded]) {
-        display: none;
-      }
       :host > io-menu-options {
         position: absolute;
         transform: translate3d(0, 0, 0);
@@ -103,7 +100,9 @@ export class IoMenuLayer extends IoElement {
     const optionschain = this._getOptionschain(item);
     for (let i = this.$options.length; i--;) {
       if (optionschain.indexOf(this.$options[i]) === -1) {
-        this.$options[i].expanded = false;
+        if (this.$options[i].parentElement === this) {
+          this.$options[i].expanded = false;
+        }
       }
     }
   }
@@ -221,8 +220,14 @@ export class IoMenuLayer extends IoElement {
   _onPointerup() {
     if (this._hoveredItem) {
       const collapse = !this._hoveredItem._options;
-      if (collapse) this._hoveredItem._onClick();
-      if (collapse) this.collapseAll();
+      if (collapse) {
+        if (this._hoveredItem._onClick) {
+          this._hoveredItem._onClick();
+        } else {
+          console.error('Hovered invalid item', this._hoveredItem);
+        }
+        this.collapseAll();
+      }
     } else {
       this.collapseAll();
     }

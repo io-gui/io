@@ -26,8 +26,8 @@ export class IoSlider extends IoElement {
     };
   }
   _onValueSet(event) {
-    this.dispatchEvent('value-set', event.detail, false);
     this.value = event.detail.value;
+    this.dispatchEvent('value-set', event.detail, false);
   }
   changed() {
     this.template([
@@ -144,12 +144,13 @@ export class IoSliderKnob extends IoQuad {
     const dx = Math.abs(this._x - pointer.clientX);
     const dy = Math.abs(this._y - pointer.clientY);
 
-    if (this._active === -1) {
-      this._active = (dx > dy && dy < 20) ? 1 : 0;
-    }
-
-    if (this._active === 0) return;
-    if (!event.cancelable) return;
+    // if (this._active === -1) {
+    //   this._active = (dx > dy && dy < 20) ? 1 : 0;
+    // }
+    //
+    // if (this._active !== 1) return;
+    // console.log('asd', this._active);
+    // if (!event.cancelable) return;
 
     event.preventDefault();
     this.focus();

@@ -157,12 +157,9 @@ export class IoQuad extends IoElement {
     this.changed();
   }
   changed() {
-    queueAnimation(this.render);
+    queueAnimation(this.render.bind(this));
   }
   render() {
-    if (!this._shader) return;
-    if (!this.__properties.size) return;
-
     canvas.width = Math.ceil(this.size[0]) || 1;
     canvas.height = Math.ceil(this.size[1]) || 1;
 
@@ -199,8 +196,8 @@ export class IoQuad extends IoElement {
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
     if (this._context2d && canvas.width && canvas.height) {
-      this.$.canvas.width = canvas.width;
-      this.$.canvas.height = canvas.height;
+      this.$.canvas.width = Number(canvas.width);
+      this.$.canvas.height = Number(canvas.height);
       this._context2d.drawImage(canvas, 0, 0, canvas.width, canvas.height);
     }
   }
