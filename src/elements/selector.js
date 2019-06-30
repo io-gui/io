@@ -29,6 +29,15 @@ export class IoSelector extends IoElement {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      // asd: "String"
+      asd: {
+        value: "asdval",
+        // observe: false,
+      }
+    }
+  }
   static get properties() {
     return {
       elements:  Array,
@@ -141,6 +150,7 @@ export class IoSelector extends IoElement {
     });
   }
   selectedChanged() {
+    // console.log(this.selected);
     const scrollID = this.selected.split('#')[1];
     const oldScrollID = this._scrollID;
     if (scrollID !== oldScrollID) {

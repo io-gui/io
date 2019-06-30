@@ -19,15 +19,19 @@ export class IoSelectorTabs extends IoSelector {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      asd2: String,
+      asd: {
+        value: 1,
+        observe: true,
+      }
+    }
+  }
   static get properties() {
     return {
       options:  Array,
     };
-  }
-  _onSelected(event) {
-    if (event.detail.property === 'value') {
-      this.set('selected', event.detail.value);
-    }
   }
   _onScroll() {
     super._onScroll();
@@ -43,9 +47,8 @@ export class IoSelectorTabs extends IoSelector {
       id: 'tabs',
       role: 'navigation',
       horizontal: true,
-      value: this.selected,
+      value: this.bind('selected'),
       options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
-      'on-value-set': this._onSelected,
     }];
     this.template([tabs, ['div', {id: 'content', class: 'io-content', 'on-scroll': this._onScroll}]]);
   }

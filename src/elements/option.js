@@ -1,5 +1,5 @@
 import {html} from "../core/element.js";
-import {IoMenuItem} from "./menu.js";
+import {IoMenuItem} from "./menu-item.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
 export class IoOption extends IoMenuItem {
@@ -26,26 +26,33 @@ export class IoOption extends IoMenuItem {
   }
   static get properties() {
     return {
+      options: Array,
       role: 'button',
     };
   }
-  static get listeners() {
-    return {
-      'io-menu-item-clicked': '_onMenuItemClicked',
-    };
-  }
+  // static get listeners() {
+  //   return {
+  //     'io-menu-item-clicked': '_onMenuItemClicked',
+  //   };
+  // }
+  // _onMenuItemClicked(event) {
+  //   event.stopImmediatePropagation();
+  //   this.set('value', event.detail.value);
+  //   console.log(this.value);
+  // }
   _onMenuItemClicked(event) {
-    event.stopImmediatePropagation();
-    this.set('value', event.detail.value);
+    console.log('asd');
+    const item = event.composedPath()[0];
+    if (item !== this) {
+      event.stopImmediatePropagation();
+      this.expanded = false;
+      this.set('value', event.detail.value, true);
+      this.dispatchEvent('io-menu-item-clicked', event.detail, true);
+    }
   }
   _onClick() {
     this._toggleExpanded(true);
   }
-  // optionsChanged() {
-  //   console.log('asd', this);
-  //   this._connectOptions();
-  //   // this.setAttribute('hasmore', !!this.options.length && this.direction === 'right');
-  // }
   _onKeydown(event) {
     if (event.which === 13 || event.which === 32) {
       event.preventDefault();
@@ -53,22 +60,22 @@ export class IoOption extends IoMenuItem {
       this._focusIn();
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
-      IoMenuLayer.singleton.LastFocus === null;
+      IoMenuLayer.singleton.LastFocus = null;
       this.expanded = false;
       this.focusTo('left');
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      IoMenuLayer.singleton.LastFocus === null;
+      IoMenuLayer.singleton.LastFocus = null;
       this.expanded = false;
       this.focusTo('up');
     } else if (event.key === 'ArrowRight') {
       event.preventDefault();
-      IoMenuLayer.singleton.LastFocus === null;
+      IoMenuLayer.singleton.LastFocus = null;
       this.expanded = false;
       this.focusTo('right');
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
-      IoMenuLayer.singleton.LastFocus === null;
+      IoMenuLayer.singleton.LastFocus = null;
       if (this.expanded) {
         this._focusIn();
       } else {
@@ -77,13 +84,22 @@ export class IoOption extends IoMenuItem {
     }
   }
   changed() {
-    const option = this.options.find(option => {return (typeof option === 'object' && option.value === this.value) || option === this.value;});
-    let label = this.label || (typeof option === 'object' ? (option.label || option.value) : this.value);
-    label = (label instanceof Object) ? label.__proto__.constructor.name : String(label);
-
-    this.title = label;
-    this.innerText = label;
-
+    const options = this.options;
+    let label = this.label;
+    if (options && !label) {
+      const option = this.options.find(option => {return option.value === this.value;});
+      if (option) {
+        if (option.label) {
+          label = option.label;
+        } else if (typeof option.value === 'object') {
+          label = `${option.value.constructor.name}` + (option.value instanceof Array ? `(${option.value.length})` : '');
+        } else {
+          label = String(option.value);
+        }
+      }
+    }
+    this.title = label || String(this.value);
+    this.innerText = label || String(this.value);
     this.setAttribute('aria-haspopup', 'listbox');
     this.setAttribute('aria-expanded', String(this.expanded));
   }

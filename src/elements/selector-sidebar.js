@@ -33,11 +33,6 @@ export class IoSelectorSidebar extends IoSelector {
       },
     };
   }
-  _onSelected(event) {
-    if (event.detail.property === 'selected') {
-      this.set('selected', event.detail.value);
-    }
-  }
   _onScroll() {
     super._onScroll();
     if (this.$.sidebar.selected !== this.selected) {
@@ -59,10 +54,9 @@ export class IoSelectorSidebar extends IoSelector {
     const tabs = ['io-sidebar', {
       id: 'sidebar',
       elements: this.elements,
-      selected: this.selected,
+      selected: this.bind('selected'),
       options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
       overflow: this.overflow,
-      'on-value-set': this._onSelected,
     }];
     if (this.left) {
       this.template([tabs, ['div', {id: 'content', class: 'io-content', 'on-scroll': this._onScroll}]]);

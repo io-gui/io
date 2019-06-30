@@ -105,6 +105,9 @@ export class IoSidebar extends IoElement {
     }
     return elements;
   }
+  // selectedChanged() {
+  //   console.log(this.selected);
+  // }
   changed() {
     const options = this.options.map(option => { return new Option(option); });
     let selectedOption = filterObject(options, option => { return option.value === this.selected; });
@@ -113,8 +116,8 @@ export class IoSidebar extends IoElement {
       this.template([['io-option', {
         label: '☰  ' + label,
         title: 'select tab',
-        value: this.selected,
-        options: this.options,
+        value: this.bind('selected'),
+        option: {options: this.options},
         'on-value-set': this._onValueSet,
       }]]);
     } else {
