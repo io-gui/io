@@ -135,7 +135,7 @@ export const IoNodeMixin = (superclass) => {
         if (value !== oldValue) this.queue(p, value, oldValue);
       }
 
-      // TODO: remove? 
+      // TODO: remove?
       if (props['style']) {
         for (let s in props['style']) {
           this.style[s] = props['style'][s];
@@ -291,7 +291,8 @@ const Register = function () {
 
   for (let prop in this.prototype.__protoProperties) {
     const isPublic = prop.charAt(0) !== '_';
-    const isEnumerable = !(this.prototype.__protoProperties[prop].enumerable === false);
+    const isEnumerable = !!this.prototype.__protoProperties[prop].enumerable;
+    const isNotify = !!this.prototype.__protoProperties[prop].notify;
     Object.defineProperty(this.prototype, prop, {
       get: function() {
         return this.__properties[prop].value;
@@ -301,7 +302,7 @@ const Register = function () {
         const oldValue = this.__properties.get(prop);
         this.__properties.set(prop, value);
         value = this.__properties.get(prop);
-        if (isPublic) {
+        if (isPublic && isNotify) {
           this.queue(prop, value, oldValue);
           if (this.__connected) {
             this.queueDispatch();

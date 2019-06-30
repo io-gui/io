@@ -138,6 +138,7 @@ class Property {
    * @param {boolean} config.observe - Observes HTML attribute.
    * @param {Binding} config.binding - Binding object.
    * @param {boolean} config.enumerable - Makes property enumerable.
+   * @param {boolean} config.notify - Trigger change handlers and change events.
    */
   constructor(config) {
     if (config === null || config === undefined) {
@@ -164,6 +165,7 @@ class Property {
     if (config.observe !== undefined) this.observe = config.observe;
     if (config.binding !== undefined) this.binding = config.binding;
     this.enumerable = config.enumerable !== undefined ? config.enumerable : true;
+    this.notify = config.notify !== undefined ? config.notify : true;
   }
   /**
    * Clones the property. If property value is objects it does one level deep object clone.
@@ -175,7 +177,7 @@ class Property {
       prop.type = prop.value.constructor;
     }
     if (prop.type === Array && prop.value) {
-      prop.value = [...prop.value];
+      prop.value = [...prop.value]; // TODO: reconsider
     }
     // Set default values.
     if (prop.value === undefined && prop.type) {
