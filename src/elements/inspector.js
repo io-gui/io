@@ -1,6 +1,5 @@
 import {html, IoElement} from "../core/element.js";
 import {IoStorage as $} from "../core/storage.js";
-import {IoItem} from "./item.js";
 import "./breadcrumbs.js";
 import {Option} from "../types/option.js";
 import {isValuePropertyOf} from "../utils/utility-functions.js";

@@ -164,13 +164,13 @@ export class Properties {
 
 class Property {
   /**
-   * @param {Object} config - Configuration object.
-   * @param {*} config.value - Default value.
-   * @param {function} config.type - Constructor of value.
-   * @param {boolean} config.reflect - Reflects to HTML attribute
-   * @param {Binding} config.binding - Binding object.
-   * @param {boolean} config.enumerable - Makes property enumerable.
-   * @param {boolean} config.notify - Trigger change handlers and change events.
+   * @param {Object} cfg - Configuration object.
+   * @param {*} cfg.value - Default value.
+   * @param {function} cfg.type - Constructor of value.
+   * @param {boolean} cfg.reflect - Reflects to HTML attribute
+   * @param {Binding} cfg.binding - Binding object.
+   * @param {boolean} cfg.enumerable - Makes property enumerable.
+   * @param {boolean} cfg.notify - Trigger change handlers and change events.
    */
   constructor(cfg) {
     this.value = cfg.value;

@@ -31,7 +31,7 @@ export class IoSelector extends IoElement {
   }
   static get attributes() {
     return {
-    }
+    };
   }
   static get properties() {
     return {

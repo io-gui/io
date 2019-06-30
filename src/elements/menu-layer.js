@@ -1,5 +1,4 @@
 import {IoElement, html} from "../core/element.js";
-import {filterObject} from "../utils/utility-functions.js";
 
 export class IoMenuLayer extends IoElement {
   static get style() {
@@ -279,7 +278,7 @@ export class IoMenuLayer extends IoElement {
         setTimeout(()=> {
           this.lastFocus.focus();
           this.lastFocus = null;
-        })
+        });
       }
     }
   }

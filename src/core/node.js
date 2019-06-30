@@ -112,6 +112,7 @@ export const IoNodeMixin = (superclass) => {
       * Use this when property is set by user action (e.g. mouse click).
       * @param {string} prop - Property name.
       * @param {*} value - Property value.
+      * @param {boolean} force - Force value set.
       */
     set(prop, value, force) {
       if (this[prop] !== value || force) {
