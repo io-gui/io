@@ -1,108 +1,146 @@
 import {Binding} from "./bindings.js";
 
-// TODO: Improve tests.
-
-/** Creates a map of all property configurations defined in the prototype chain. */
 export class ProtoProperties {
-  /**
-   * @param {Array} protochain Array of protochain constructors.
-   */
   constructor(protochain) {
-    const propertyDefs = {};
+    const defs = {};
     for (let i = protochain.length; i--;) {
+      // Attributes
+      const attrs = protochain[i].constructor.attributes;
+      for (let a in attrs) {
+        if (!defs[a]) defs[a] = new ProtoProperty(attrs[a]);
+        else Object.assign(defs[a], new ProtoProperty(attrs[a]));
+        if (defs[a].reflect === undefined) defs[a].reflect = true;
+        if (defs[a].notify === undefined) defs[a].notify = false;
+        if (defs[a].enumerable === undefined) defs[a].enumerable = false;
+      }
+      // Properties
       const props = protochain[i].constructor.properties;
-      for (let key in props) {
-        if (!propertyDefs[key]) propertyDefs[key] = new Property(props[key]);
-        else propertyDefs[key].assign(new Property(props[key]));
+      for (let p in props) {
+        if (!defs[p]) defs[p] = new ProtoProperty(props[p]);
+        else Object.assign(defs[p], new ProtoProperty(props[p]));
+        if (defs[p].reflect === undefined) defs[p].reflect = false;
+        if (defs[p].notify === undefined) defs[p].notify = true;
+        if (defs[p].enumerable === undefined) defs[p].enumerable = true;
       }
     }
-    for (let key in propertyDefs) {
-      this[key] = new Property(propertyDefs[key]);
+    for (let p in defs) {
+      const isPrivate = p.charAt(0) === '_';
+      if (isPrivate) {
+        defs[p].notify = false;
+        defs[p].enumerable = false;
+      }
+      this[p] = new Property(defs[p]);
     }
-  }
-  get(prop) {
-    console.warn('Property', prop, 'cannot be get before instance is constructed.');
-  }
-  set(prop) {
-    console.warn('Property', prop, 'cannot be set before instance is constructed.');
   }
 }
 
-/** Store for `IoNode` properties and their configurations. */
+class ProtoProperty {
+  constructor(cfg) {
+    const cType = typeof cfg;
+    if (cfg === null || cfg === undefined) {
+      cfg = {value: cfg};
+    } else if (cType === 'function') {
+      cfg = {type: cfg};
+    } else if (cType === 'number' || cType === 'string' || cType === 'boolean') {
+      cfg = {value: cfg, type: cfg.constructor};
+    } else if (cType === 'object') {
+      if (cfg instanceof Array) {
+        cfg = {value: [...cfg], type: Array}; // TODO: reconsider
+      } else if (cfg instanceof Binding) {
+        cfg = {value: cfg.value, binding: cfg};
+      } else {
+        // console.log(cfg.type  );
+        if (typeof cfg.type !== 'function') {
+          if (cfg.value === undefined || cfg.value === null) {
+            // console.error('Defining an attribute requires value or type');
+          } else {
+            cfg.type = cfg.value.constructor;
+          }
+        } else if (cfg.type) {
+        } else {
+          console.error('Property error!', cfg);
+        }
+      }
+    } else {
+      console.error('Property error!', cType, cfg);
+    }
+    if (cfg.value !== undefined) this.value = cfg.value;
+    if (cfg.type !== undefined) this.type = cfg.type;
+    if (cfg.reflect !== undefined) this.reflect = cfg.reflect;
+    if (cfg.observe !== undefined) this.observe = cfg.observe;
+    if (cfg.binding !== undefined) this.binding = cfg.binding;
+    if (cfg.enumerable !== undefined) this.enumerable = cfg.enumerable;
+    if (cfg.notify !== undefined) this.notify = cfg.notify;
+  }
+}
+
 export class Properties {
-  /**
-   * Creates properties object for `IoNode`.
-   * @param {IoNode} node - Reference to the node/element itself.
-   * @param {ProtoProperties} protoProperties - List of property configurations defined in the protochain.
-   */
   constructor(node, protoProperties) {
     Object.defineProperty(this, 'node', {value: node});
     for (let prop in protoProperties) {
-      this[prop] = protoProperties[prop].clone();
-      if (typeof this[prop].value === 'object') {
-        const value = this[prop].value;
-        if (value && value.isNode) value.connect(node);
-        node.queue(prop, value, undefined);
+      this[prop] = new Property(protoProperties[prop]);
+      this[prop].instantiateCustomType();
+      // TODO: ocnsider bindings
+      if (this[prop].value !== undefined) {
+        if (typeof this[prop].value === 'object' && this[prop].value !== null) {
+          if (this[prop].value.isNode) this[prop].value.connect(node);
+          node.queue(prop, this[prop].value, undefined);
+        } else if (this[prop].reflect) {
+          this.node.setAttribute(prop, this[prop].value);
+        }
       }
     }
   }
-  /**
-   * Gets specified property value.
-   * @param {string} prop - Property name.
-   * @return {*} Property value.
-   */
   get(prop) {
     return this[prop].value;
   }
-  /**
-   * Sets specified property value.
-   * @param {string} prop - Property name.
-   * @param {*} value Property value.
-   */
-  set(prop, value) {
-
-    let oldBinding = this[prop].binding;
+  set(prop, value, suspendDispatch) {
     let oldValue = this[prop].value;
+    if (value !== oldValue) {
+      let oldBinding = this[prop].binding;
 
-    let binding = (value instanceof Binding) ? value : null;
+      let binding = (value instanceof Binding) ? value : null;
 
-    if (binding && oldBinding && binding !== oldBinding) {
-      oldBinding.removeTarget(this.node, prop); // TODO: test extensively
+      if (binding && oldBinding && binding !== oldBinding) {
+        oldBinding.removeTarget(this.node, prop); // TODO: test extensively
+      }
+      if (binding) {
+        binding.addTarget(this.node, prop);
+        this[prop].binding = binding;
+        this[prop].value = value.source[value.sourceProp];
+        value = value.source[value.sourceProp];
+      } else {
+        this[prop].value = value;
+      }
+
+      if (value && value.isNode) {
+        value.connect(this.node);
+      }
+
+      if (oldValue && oldValue.isNode) {
+        oldValue.disconnect(this.node);
+      }
+
+      if (this[prop].notify && oldValue !== this[prop].value) {
+        this.node.queue(prop, this[prop].value, oldValue);
+        if (this.node.__connected && !suspendDispatch) {
+          this.node.queueDispatch();
+        }
+      }
+
+      if (this[prop].reflect) this.node.setAttribute(prop, value);
     }
-    if (binding) {
-      binding.addTarget(this.node, prop);
-      this[prop].binding = binding;
-      this[prop].value = value.source[value.sourceProp];
-      value = value.source[value.sourceProp];
-    } else {
-      this[prop].value = value;
-    }
 
-    if (value && value.isNode) {
-      value.connect(this.node);
-    }
-
-    if (value !== oldValue && oldValue && oldValue.isNode) {
-      oldValue.disconnect(this.node);
-    }
-
-    if (this[prop].reflect) this.node.setAttribute(prop, value);
   }
-  // TODO: test dispose and disconnect for memory leaks!!
-  // TODO: dispose bindings properly
-  /**
-   * Connects value bindings if defined.
-   */
   connect() {
+    // TODO: test dispose and disconnect for memory leaks!!
+    // TODO: dispose bindings properly
     for (let p in this) {
       if (this[p].binding) {
         this[p].binding.addTarget(this.node, p); //TODO: test
       }
     }
   }
-  /**
-   * Disonnects value bindings if defined.
-   */
   disconnect() {
     for (let p in this) {
       if (this[p].binding) {
@@ -110,11 +148,8 @@ export class Properties {
       }
     }
   }
-  /**
-   * Disonnects bindings and removes all property configurations.
-   * Use this when node is no longer needed.
-   */
   dispose() {
+    // TODO: use!
     for (let p in this) {
       if (this[p].binding) {
         this[p].binding.removeTarget(this.node, p);
@@ -125,12 +160,8 @@ export class Properties {
   }
 }
 
-/**
- * Property configuration.
- */
 class Property {
   /**
-   * Creates a property configuration object with following properties:
    * @param {Object} config - Configuration object.
    * @param {*} config.value - Default value.
    * @param {function} config.type - Constructor of value.
@@ -140,56 +171,31 @@ class Property {
    * @param {boolean} config.enumerable - Makes property enumerable.
    * @param {boolean} config.notify - Trigger change handlers and change events.
    */
-  constructor(config) {
-    if (config === null || config === undefined) {
-      config = {value: config};
-    } else if (typeof config === 'function') {
-      config = {type: config};
-    } else if (config instanceof Array) {
-      config = {type: Array, value: [...config]};
-    } else if (config instanceof Binding) {
-      config = {binding: config, value: config.value};
-    } else if (typeof config !== 'object') {
-      config = {value: config, type: config.constructor};
+  constructor(cfg) {
+    this.value = cfg.value;
+    this.type = cfg.type;
+    this.reflect = cfg.reflect;
+    this.observe = cfg.observe;
+    this.binding = cfg.binding;
+    this.enumerable = cfg.enumerable;
+    this.notify = cfg.notify;
+    if (this.type === Array && this.value) {
+      this.value = [...this.value]; // TODO: reconsider
     }
-    this.assign(config);
+    if (this.value === undefined && this.type) {
+      if (this.type === Boolean) this.value = false;
+      else if (this.type === String) this.value = '';
+      else if (this.type === Number) this.value = 0;
+      else if (this.type === Array) this.value = [];
+      else if (this.type === Object) this.value = {};
+    }
+    // TODO: ocnsider bindings
   }
-  /**
-   * Helper function to assign new values as we walk up the inheritance chain.
-   * @param {Object} config - Configuration object.
-   */
-  assign(config) {
-    if (config.value !== undefined) this.value = config.value;
-    if (config.type !== undefined) this.type = config.type;
-    if (config.reflect !== undefined) this.reflect = config.reflect;
-    if (config.observe !== undefined) this.observe = config.observe;
-    if (config.binding !== undefined) this.binding = config.binding;
-    this.enumerable = config.enumerable !== undefined ? config.enumerable : true;
-    this.notify = config.notify !== undefined ? config.notify : true;
-  }
-  /**
-   * Clones the property. If property value is objects it does one level deep object clone.
-   * @return {Property} - Property configuration.
-   */
-  clone() {
-    const prop = new Property(this);
-    if (prop.type === undefined && prop.value !== undefined && prop.value !== null) {
-      prop.type = prop.value.constructor;
-    }
-    if (prop.type === Array && prop.value) {
-      prop.value = [...prop.value]; // TODO: reconsider
-    }
-    // Set default values.
-    if (prop.value === undefined && prop.type) {
-      if (prop.type === Boolean) prop.value = false;
-      else if (prop.type === String) prop.value = '';
-      else if (prop.type === Number) prop.value = 0;
-      else if (prop.type === Array) prop.value = [];
-      else if (prop.type === Object) prop.value = {};
-      else if (prop.type !== HTMLElement && prop.type !== Function) {
-        prop.value = new prop.type();
+  instantiateCustomType() {
+    if (this.value === undefined && this.type) {
+      if (this.type !== HTMLElement && this.type !== Function) {
+        this.value = new this.type();
       }
     }
-    return prop;
   }
 }

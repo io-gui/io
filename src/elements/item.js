@@ -38,7 +38,10 @@ export class IoItem extends IoElement {
   static get properties() {
     return {
       value: undefined,
-      label: String,
+      label: {
+        type: String,
+        notify: true,
+      },
       hidden: {
         type: Boolean,
         reflect: true,

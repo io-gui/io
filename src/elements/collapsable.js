@@ -53,7 +53,10 @@ export class IoCollapsable extends IoElement {
   }
   static get properties() {
     return {
-      label: String,
+      label: {
+        type: String,
+        notify: true,
+      },
       expanded: {
         type: Boolean,
         reflect: true

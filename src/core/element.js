@@ -1,4 +1,3 @@
-import {ProtoAttributes, Attributes} from "./attributes.js";
 import {IoNodeMixin} from "./node.js";
 import {Listeners} from "./listeners.js";
 
@@ -12,40 +11,20 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
    * See IoNode for more details.
    * @return {Object} properties - Properties configuration objects.
    */
+  static get attributes() {
+    return {
+      tabindex: String,
+      contenteditable: Boolean,
+      class: String,
+      role: String,
+      title: String,
+      label: String,
+    };
+  }
   static get properties() {
     return {
       id: {
         type: String,
-        enumerable: false,
-      },
-      tabindex: {
-        type: String,
-        reflect: true,
-        enumerable: false,
-      },
-      contenteditable: {
-        type: Boolean,
-        reflect: true,
-        enumerable: false,
-      },
-      label: {
-        type: String,
-        reflect: true,
-        enumerable: false,
-      },
-      title: {
-        type: String,
-        reflect: true,
-        enumerable: false,
-      },
-      role: {
-        type: String,
-        reflect: true,
-        enumerable: false,
-      },
-      class: {
-        type: String,
-        reflect: true,
         enumerable: false,
       },
       $: {
@@ -53,23 +32,15 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       },
     };
   }
-  constructor(props) {
-    super(props);
-    Object.defineProperty(this, '__attributes', {value: new Attributes(this, this.__protoAttributes)});
-  }
   static get observedAttributes() {
     const observed = [];
     for (let prop in this.prototype.__protoProperties) {
       if (this.prototype.__protoProperties[prop].observe) observed.push(prop);
     }
-    for (let prop in this.prototype.__protoAttributes) {
-      if (this.prototype.__protoAttributes[prop].observe) observed.push(prop);
-    }
     return observed;
   }
   attributeChangedCallback(prop, oldValue, newValue) {
-    const config = this.__attributes[prop] || this.__properties[prop];
-    const type = config.type;
+    const type = this.__properties[prop].type;
     if (type === Boolean) {
       if (newValue === null) this[prop] = false;
       else if (newValue === '') this[prop] = true;
@@ -89,20 +60,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     this.setAttribute('aria-label', this.title || this.label);
   }
   /**
-    * Callback when `IoElement` is connected.
     * Resize listener is added here if element class has `resized()` function defined.
     */
   connectedCallback() {
     super.connectedCallback();
-    for (let prop in this.__properties) {
-      if (this.__properties[prop].reflect) {
-        this.setAttribute(prop, this.__properties[prop].value);
-      }
-      // TODO: test
-      if (this.__properties[prop].binding) {
-        this[prop] = this.__properties[prop].binding.value;
-      }
-    }
     if (typeof this.resized == 'function') {
       this.resized();
       if (ro) {
@@ -112,9 +73,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
     }
   }
-  /**
-    * Callback when `IoElement` is connected.
-    */
   disconnectedCallback() {
     super.disconnectedCallback();
     if (typeof this.resized == 'function') {
@@ -318,21 +276,6 @@ IoElement.Register = function() {
   }
 
   initStyle(this.prototype.__protochain);
-
-  Object.defineProperty(this.prototype, '__protoAttributes', {value: new ProtoAttributes(this.prototype.__protochain)});
-
-  for (let prop in this.prototype.__protoAttributes) {
-    Object.defineProperty(this.prototype, prop, {
-      get: function() {
-        return this.__attributes.get(prop);
-      },
-      set: function(value) {
-        this.__attributes.set(prop);
-      },
-      enumerable: true,
-      configurable: true,
-    });
-  }
 };
 
 let ro;
