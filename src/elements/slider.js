@@ -144,7 +144,7 @@ export class IoSliderKnob extends IoQuad {
     const dx = Math.abs(this._x - pointer.clientX);
     const dy = Math.abs(this._y - pointer.clientY);
 
-    if (this._active === -1) {
+    if (this._active === -1 && dx > 5) {
       this._active = (dx > dy && dy < 20) ? 1 : 0;
     }
 
