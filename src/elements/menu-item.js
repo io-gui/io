@@ -42,14 +42,22 @@ export class IoMenuItem extends IoItem {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      expanded: {
+        value: false,
+        notify: true,
+      },
+      direction: {
+        value: 'bottom',
+        // notify: true, // TODO
+      },
+    };
+  }
   static get properties() {
     return {
       expanded: Boolean,
       option: Object,
-      direction: {
-        value: 'bottom',
-        reflect: 1,
-      },
       $parent: HTMLElement,
       $options: IoMenuOptions,
       _depth: 0,

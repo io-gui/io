@@ -64,16 +64,23 @@ export class IoSidebar extends IoElement {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      role: 'navigation',
+      label: {
+        type: String,
+        notify: true,
+      },
+      overflow: {
+        type: Boolean,
+        notify: true,
+      }
+    };
+  }
   static get properties() {
     return {
       selected: String,
-      label: String,
       options: Array,
-      overflow: {
-        type: Boolean,
-        reflect: 1,
-      },
-      role: 'navigation',
     };
   }
   _onSelect(id) {

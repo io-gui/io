@@ -30,6 +30,9 @@ export class ProtoProperties {
         defs[p].notify = false;
         defs[p].enumerable = false;
       }
+      // TODO: reconsider
+      if (defs[p].value === undefined) defs[p].value = undefined;
+      if (defs[p].type === undefined) defs[p].type = undefined;
       this[p] = new Property(defs[p]);
     }
   }
@@ -59,7 +62,7 @@ class ProtoProperty {
       } else {
         if (typeof cfg.type !== 'function') {
           if (cfg.value === undefined || cfg.value === null) {
-            console.error('Properties require value or type');
+            // console.error('Properties require value or type');
           } else {
             cfg.type = cfg.value.constructor;
           }

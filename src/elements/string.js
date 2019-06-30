@@ -18,11 +18,15 @@ export class IoString extends IoItem {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      role: 'textbox',
+      contenteditable: true,
+    };
+  }
   static get properties() {
     return {
       value: String,
-      role: 'textbox',
-      contenteditable: true,
     };
   }
   _onBlur(event) {

@@ -17,12 +17,16 @@ export class IoButton extends IoItem {
       }
     </style>`;
   }
-  static get properties() {
+  static get attributes() {
     return {
       label: 'Button',
+      role: 'button',
+    };
+  }
+  static get properties() {
+    return {
       action: Function,
       value: undefined,
-      role: 'button',
     };
   }
   _onClick() {

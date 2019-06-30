@@ -40,24 +40,28 @@ export class IoMenuOptions extends IoElement {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      role: 'listbox',
+      expanded: {
+        value: true,
+        notify: true,
+      },
+      overflow: {
+        type: Boolean,
+        notify: true,
+      },
+      horizontal: {
+        type: Boolean,
+        notify: true,
+      },
+    };
+  }
   static get properties() {
     return {
       options: Array,
-      expanded: {
-        value: true,
-        reflect: 1
-      },
       position: 'right',
-      horizontal: {
-        type: Boolean,
-        reflect: 1
-      },
       value: null,
-      overflow: {
-        type: Boolean,
-        reflect: 1,
-      },
-      role: 'listbox',
       $parent: HTMLElement,
       _depth: 0,
       _rects: Array,

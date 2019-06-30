@@ -28,7 +28,7 @@ export class IoElementDemo extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get attributes() {
     return {
       element: {
         type: String,
@@ -42,6 +42,10 @@ export class IoElementDemo extends IoElement {
         type: Object,
         reflect: -1,
       },
+    };
+  }
+  static get properties() {
+    return {
       _properties: Object,
     };
   }

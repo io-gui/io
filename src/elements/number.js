@@ -15,6 +15,15 @@ export class IoNumber extends IoItem {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      role: 'textbox',
+      type: 'number',
+      pattern: 'pattern="[0-9]*"',
+      inputmode: 'numeric',
+      contenteditable: true,
+    };
+  }
   static get properties() {
     return {
       value: Number,
@@ -23,20 +32,6 @@ export class IoNumber extends IoItem {
       min: -Infinity,
       max: Infinity,
       strict: true,
-      role: 'textbox',
-      type: {
-        value: 'number',
-        reflect: 1
-      },
-      pattern: {
-        value: 'pattern="[0-9]*"',
-        reflect: 1,
-      },
-      inputmode: {
-        value: 'numeric',
-        reflect: 1,
-      },
-      contenteditable: true,
     };
   }
   constructor(props) {

@@ -24,10 +24,14 @@ export class IoOption extends IoMenuItem {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      role: 'button',
+    };
+  }
   static get properties() {
     return {
       options: Array,
-      role: 'button',
     };
   }
   // static get listeners() {

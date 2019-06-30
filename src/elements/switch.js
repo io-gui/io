@@ -64,13 +64,17 @@ export class IoSwitch extends IoButton {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      role: 'switch',
+    };
+  }
   static get properties() {
     return {
       value: {
         type: Boolean,
         reflect: 1
       },
-      role: 'switch',
     };
   }
   constructor(props) {

@@ -35,24 +35,19 @@ export class IoItem extends IoElement {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      label: {
+        notify: true,
+      },
+      hidden: Boolean,
+      selected: Boolean,
+      tabindex: 0,
+    };
+  }
   static get properties() {
     return {
       value: undefined,
-      label: {
-        type: String,
-        notify: true,
-      },
-      hidden: {
-        type: Boolean,
-        reflect: 1,
-        notify: false,
-      },
-      selected: {
-        type: Boolean,
-        reflect: 1,
-        notify: false,
-      },
-      tabindex: 0
     };
   }
   static get listeners() {

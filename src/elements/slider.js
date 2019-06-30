@@ -77,6 +77,12 @@ export class IoSliderKnob extends IoQuad {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      role: 'slider',
+      tabindex: 0,
+    };
+  }
   static get properties() {
     return {
       value: 0,
@@ -90,8 +96,6 @@ export class IoSliderKnob extends IoQuad {
       snapWidth: 2,
       slotWidth: 2,
       handleWidth: 4,
-      role: 'slider',
-      tabindex: 0,
     };
   }
   static get listeners() {

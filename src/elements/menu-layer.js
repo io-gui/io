@@ -37,12 +37,16 @@ export class IoMenuLayer extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get attributes() {
     return {
       expanded: {
-        type: Boolean,
-        reflect: 1,
+        value: false,
+        notify: true,
       },
+    };
+  }
+  static get properties() {
+    return {
       lastFocus: HTMLElement,
       $options: Array,
     };
@@ -65,6 +69,7 @@ export class IoMenuLayer extends IoElement {
     this._x = 0;
     this._y = 0;
     this._v = 0;
+    console.log(this.expanded);
   }
   connectedCallback() {
     super.connectedCallback();

@@ -85,6 +85,11 @@ export class IoMdView extends IoElement {
       }
     </style>`;
   }
+  static get attributes() {
+    return {
+      role: 'document',
+    };
+  }
   static get properties() {
     return {
       path: {
@@ -92,7 +97,6 @@ export class IoMdView extends IoElement {
         reflect: 1
       },
       vars: Object,
-      role: 'document',
     };
   }
   pathChanged() {
