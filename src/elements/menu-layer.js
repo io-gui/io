@@ -45,7 +45,7 @@ export class IoMenuLayer extends IoElement {
     return {
       expanded: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
       lastFocus: HTMLElement,
       $options: Array,

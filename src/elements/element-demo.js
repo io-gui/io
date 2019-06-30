@@ -32,15 +32,15 @@ export class IoElementDemo extends IoElement {
     return {
       element: {
         type: String,
-        observe: true,
+        reflect: -1,
       },
       properties: {
         type: Object,
-        observe: true,
+        reflect: -1,
       },
       config: {
         type: Object,
-        observe: true,
+        reflect: -1,
       },
       _properties: Object,
     };

@@ -29,7 +29,7 @@ export class IoSelectorSidebar extends IoSelector {
       minWidth: 410,
       overflow: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
     };
   }

@@ -26,15 +26,15 @@ export class IoNumber extends IoItem {
       role: 'textbox',
       type: {
         value: 'number',
-        reflect: true
+        reflect: 1
       },
       pattern: {
         value: 'pattern="[0-9]*"',
-        reflect: true,
+        reflect: 1,
       },
       inputmode: {
         value: 'numeric',
-        reflect: true,
+        reflect: 1,
       },
       contenteditable: true,
     };

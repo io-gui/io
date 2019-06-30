@@ -71,7 +71,7 @@ export class IoSidebar extends IoElement {
       options: Array,
       overflow: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
       role: 'navigation',
     };

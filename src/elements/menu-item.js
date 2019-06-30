@@ -48,7 +48,7 @@ export class IoMenuItem extends IoItem {
       option: Object,
       direction: {
         value: 'bottom',
-        reflect: true,
+        reflect: 1,
       },
       $parent: HTMLElement,
       $options: IoMenuOptions,

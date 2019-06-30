@@ -41,7 +41,7 @@ export class IoSelector extends IoElement {
       precache: Boolean,
       _loading: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
       _caches: Object,
       _selectedID: String,

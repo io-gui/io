@@ -26,7 +26,7 @@ export class IoLayout extends IoElement {
       editable: true,
       orientation: {
         value: 'horizontal',
-        reflect: true
+        reflect: 1
       }
     };
   }
@@ -245,7 +245,7 @@ export class IoLayoutDivider extends IoElement {
     return {
       orientation: {
         value: 'horizontal',
-        reflect: true
+        reflect: 1
       },
       index: Number,
       pointermode: 'relative'

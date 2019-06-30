@@ -300,11 +300,11 @@ export class IoTabs extends IoElement {
       selected: String,
       editable: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
       overflow: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
       dropIndex: -1,
       role: 'navigation',

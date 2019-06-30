@@ -10,7 +10,7 @@ export class ProtoProperties {
       for (let a in attrs) {
         if (!defs[a]) defs[a] = new ProtoProperty(attrs[a]);
         else Object.assign(defs[a], new ProtoProperty(attrs[a]));
-        if (defs[a].reflect === undefined) defs[a].reflect = true;
+        if (defs[a].reflect === undefined) defs[a].reflect = 1;
         if (defs[a].notify === undefined) defs[a].notify = false;
         if (defs[a].enumerable === undefined) defs[a].enumerable = false;
       }
@@ -19,7 +19,7 @@ export class ProtoProperties {
       for (let p in props) {
         if (!defs[p]) defs[p] = new ProtoProperty(props[p]);
         else Object.assign(defs[p], new ProtoProperty(props[p]));
-        if (defs[p].reflect === undefined) defs[p].reflect = false;
+        if (defs[p].reflect === undefined) defs[p].reflect = 0;
         if (defs[p].notify === undefined) defs[p].notify = true;
         if (defs[p].enumerable === undefined) defs[p].enumerable = true;
       }
@@ -30,7 +30,6 @@ export class ProtoProperties {
         defs[p].notify = false;
         defs[p].enumerable = false;
       }
-      if (defs[p].observe) defs[p].reflect = false; // TODO: combine reflect
       this[p] = new Property(defs[p]);
     }
   }
@@ -76,7 +75,6 @@ class ProtoProperty {
     if (cfg.value !== undefined) this.value = cfg.value;
     if (cfg.type !== undefined) this.type = cfg.type;
     if (cfg.reflect !== undefined) this.reflect = cfg.reflect;
-    if (cfg.observe !== undefined) this.observe = cfg.observe;
     if (cfg.binding !== undefined) this.binding = cfg.binding;
     if (cfg.enumerable !== undefined) this.enumerable = cfg.enumerable;
     if (cfg.notify !== undefined) this.notify = cfg.notify;
@@ -94,7 +92,7 @@ export class Properties {
         if (typeof this[prop].value === 'object' && this[prop].value !== null) {
           if (this[prop].value.isNode) this[prop].value.connect(node);
           node.queue(prop, this[prop].value, undefined);
-        } else if (this[prop].reflect) {
+        } else if (this[prop].reflect === 1) {
           this.node.setAttribute(prop, this[prop].value);
         }
       }
@@ -136,7 +134,7 @@ export class Properties {
           this.node.queueDispatch();
         }
       }
-      if (this[prop].reflect) this.node.setAttribute(prop, value);
+      if (this[prop].reflect === 1) this.node.setAttribute(prop, value);
     }
 
   }
@@ -174,7 +172,6 @@ class Property {
    * @param {*} config.value - Default value.
    * @param {function} config.type - Constructor of value.
    * @param {boolean} config.reflect - Reflects to HTML attribute
-   * @param {boolean} config.observe - Observes HTML attribute.
    * @param {Binding} config.binding - Binding object.
    * @param {boolean} config.enumerable - Makes property enumerable.
    * @param {boolean} config.notify - Trigger change handlers and change events.
@@ -183,7 +180,6 @@ class Property {
     this.value = cfg.value;
     this.type = cfg.type;
     this.reflect = cfg.reflect;
-    this.observe = cfg.observe;
     this.binding = cfg.binding;
     this.enumerable = cfg.enumerable;
     this.notify = cfg.notify;

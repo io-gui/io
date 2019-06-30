@@ -89,7 +89,7 @@ export class IoMdView extends IoElement {
     return {
       path: {
         type: String,
-        reflect: true
+        reflect: 1
       },
       vars: Object,
       role: 'document',

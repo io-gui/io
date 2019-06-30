@@ -68,7 +68,7 @@ export class IoSwitch extends IoButton {
     return {
       value: {
         type: Boolean,
-        reflect: true
+        reflect: 1
       },
       role: 'switch',
     };

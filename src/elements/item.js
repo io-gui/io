@@ -44,12 +44,12 @@ export class IoItem extends IoElement {
       },
       hidden: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
         notify: false,
       },
       selected: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
         notify: false,
       },
       tabindex: 0

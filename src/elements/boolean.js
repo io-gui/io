@@ -19,7 +19,7 @@ export class IoBoolean extends IoButton {
     return {
       value: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
       true: 'true',
       false: 'false',

@@ -59,7 +59,7 @@ export class IoCollapsable extends IoElement {
       },
       expanded: {
         type: Boolean,
-        reflect: true
+        reflect: 1,
       },
       elements: Array,
       role: 'region',

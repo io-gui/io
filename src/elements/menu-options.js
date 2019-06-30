@@ -42,17 +42,17 @@ export class IoMenuOptions extends IoElement {
       options: Array,
       expanded: {
         value: true,
-        reflect: true
+        reflect: 1
       },
       position: 'right',
       horizontal: {
         type: Boolean,
-        reflect: true
+        reflect: 1
       },
       value: null,
       overflow: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
       role: 'listbox',
       $parent: HTMLElement,

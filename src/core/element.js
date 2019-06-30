@@ -35,7 +35,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   static get observedAttributes() {
     const observed = [];
     for (let prop in this.prototype.__protoProperties) {
-      if (this.prototype.__protoProperties[prop].observe) observed.push(prop);
+      if (this.prototype.__protoProperties[prop].reflect === -1) {
+        observed.push(prop);
+      }
     }
     return observed;
   }
