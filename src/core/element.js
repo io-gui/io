@@ -1,3 +1,4 @@
+import {ProtoAttributes, Attributes} from "./attributes.js";
 import {IoNodeMixin} from "./node.js";
 import {Listeners} from "./listeners.js";
 
@@ -45,21 +46,30 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       class: {
         type: String,
         reflect: true,
+        enumerable: false,
       },
       $: {
         type: Object,
       },
     };
   }
+  constructor(props) {
+    super(props);
+    Object.defineProperty(this, '__attributes', {value: new Attributes(this, this.__protoAttributes)});
+  }
   static get observedAttributes() {
     const observed = [];
-    for (let prop in this.prototype.__properties) {
-      if (this.prototype.__properties[prop].observe) observed.push(prop);
+    for (let prop in this.prototype.__protoProperties) {
+      if (this.prototype.__protoProperties[prop].observe) observed.push(prop);
+    }
+    for (let prop in this.prototype.__protoAttributes) {
+      if (this.prototype.__protoAttributes[prop].observe) observed.push(prop);
     }
     return observed;
   }
   attributeChangedCallback(prop, oldValue, newValue) {
-    const type = this.__properties[prop].type;
+    const config = this.__attributes[prop] || this.__properties[prop];
+    const type = config.type;
     if (type === Boolean) {
       if (newValue === null) this[prop] = false;
       else if (newValue === '') this[prop] = true;
@@ -293,7 +303,6 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
   * Register function for `IoElement`. Registers custom element.
   */
 IoElement.Register = function() {
-
   IoNodeMixin.Register.call(this);
 
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
@@ -304,13 +313,26 @@ IoElement.Register = function() {
   if (window.customElements !== undefined) {
     window.customElements.define(localName, this);
   } else {
-
     document.body.insertBefore(warning, document.body.children[0]);
     return;
   }
 
   initStyle(this.prototype.__protochain);
 
+  Object.defineProperty(this.prototype, '__protoAttributes', {value: new ProtoAttributes(this.prototype.__protochain)});
+
+  for (let prop in this.prototype.__protoAttributes) {
+    Object.defineProperty(this.prototype, prop, {
+      get: function() {
+        return this.__attributes.get(prop);
+      },
+      set: function(value) {
+        this.__attributes.set(prop);
+      },
+      enumerable: true,
+      configurable: true,
+    });
+  }
 };
 
 let ro;
@@ -412,6 +434,5 @@ function initStyle(prototypes) {
       element.setAttribute('id', 'io-style_' + localName + (classLocalName !== localName ? ('_' + classLocalName) : ''));
       document.head.appendChild(element);
     }
-
   }
 }
