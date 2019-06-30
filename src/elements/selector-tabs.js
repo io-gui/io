@@ -21,12 +21,7 @@ export class IoSelectorTabs extends IoSelector {
   }
   static get attributes() {
     return {
-      asd2: String,
-      asd: {
-        value: 1,
-        observe: true,
-      }
-    }
+    };
   }
   static get properties() {
     return {

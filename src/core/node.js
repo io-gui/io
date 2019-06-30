@@ -296,6 +296,9 @@ const Register = function () {
         return this.__properties.get(prop);
       },
       set: function(value) {
+        if (!this.__properties.set) {
+          console.log(this, this.__properties);
+        }
         this.__properties.set(prop, value);
       },
       enumerable: !!protoProp.enumerable,

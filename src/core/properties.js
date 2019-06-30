@@ -2,6 +2,7 @@ import {Binding} from "./bindings.js";
 
 export class ProtoProperties {
   constructor(protochain) {
+    this._p = protochain;
     const defs = {};
     for (let i = protochain.length; i--;) {
       // Attributes
@@ -29,8 +30,16 @@ export class ProtoProperties {
         defs[p].notify = false;
         defs[p].enumerable = false;
       }
+      if (defs[p].observe) defs[p].reflect = false; // TODO: combine reflect
       this[p] = new Property(defs[p]);
     }
+  }
+
+  get() {
+    console.log('Error getting value');
+  }
+  set(prop, value) {
+    console.error('Error setting', prop, value, this._p[0].constructor);
   }
 }
 
@@ -127,7 +136,6 @@ export class Properties {
           this.node.queueDispatch();
         }
       }
-
       if (this[prop].reflect) this.node.setAttribute(prop, value);
     }
 

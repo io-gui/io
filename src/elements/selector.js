@@ -31,11 +31,6 @@ export class IoSelector extends IoElement {
   }
   static get attributes() {
     return {
-      // asd: "String"
-      asd: {
-        value: "asdval",
-        // observe: false,
-      }
     }
   }
   static get properties() {
