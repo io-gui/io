@@ -61,7 +61,10 @@ export class IoMenuOptions extends IoElement {
     return {
       options: Array,
       position: 'right',
-      value: null,
+      value: {
+        value: null,
+        notify: true,
+      },
       $parent: HTMLElement,
       _depth: 0,
       _rects: Array,
@@ -85,6 +88,8 @@ export class IoMenuOptions extends IoElement {
     if (item !== this) {
       event.stopImmediatePropagation();
       item.expanded = false;
+      this.__properties.value.value = undefined;
+      console.log(this.__properties.value.binding);
       this.set('value', event.detail.value, true);
       this.dispatchEvent('io-menu-item-clicked', event.detail, true);
     }
@@ -229,6 +234,7 @@ export class IoMenuOptions extends IoElement {
         value: this.value,
         option: {options: this.options},
         class: 'io-hamburger',
+        _depth: this._depth,
       }]);
     }
     this.template(elements);

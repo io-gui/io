@@ -50,7 +50,7 @@ export class IoMenuItem extends IoItem {
       },
       direction: {
         value: 'bottom',
-        // notify: true, // TODO
+        notify: true,
       },
     };
   }
@@ -81,6 +81,7 @@ export class IoMenuItem extends IoItem {
     if (item !== this) {
       event.stopImmediatePropagation();
       this.expanded = false;
+      console.log(console.log(this.__properties.value.binding));
       this.set('value', event.detail.value, true);
       this.dispatchEvent('io-menu-item-clicked', event.detail, true);
     }
@@ -244,14 +245,14 @@ export class IoMenuItem extends IoItem {
       }
     }
   }
-  _onClick() {
+  _onClick(event) {
     if (this._action) {
       this._action.apply(null, [this._value]);
     }
     if (this._value !== undefined) {
+      this.dispatchEvent('io-menu-item-clicked', {value: this._value}, true);
       this.expanded = false;
       this.set('value', this._value, true);
-      this.dispatchEvent('io-menu-item-clicked', {value: this._value}, true);
     }
   }
   _onFocus() {
@@ -266,10 +267,11 @@ export class IoMenuItem extends IoItem {
       if (!this.$parent.expanded) console.warn('This should be expanded', this.$parent.expanded); // TODO: remove
     }
   }
-   optionChanged() {
+  optionChanged() {
     this._connectOptions();
   }
   changed() {
+    this.selected = this._selected;
     this.setAttribute('hasmore', this._options && this.direction === 'right');
     this.template([
       this._icon ? ['span', {class: 'io-menu-icon'}, this._icon] : null,

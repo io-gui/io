@@ -13,15 +13,15 @@ export class TestNode extends IoNode {
       prop3: Number,
       // Internal counters
       _changedCounter: 0,
-      _handler1Counter: 0,
-      _handler2Counter: 0,
+      _prop1ChangeCounter: 0,
+      _prop2ChangeCounter: 0,
       _customHandlerCounter: 0,
     }
   }
   static get listeners() {
     return {
-      'prop1-changed': 'handler1',
-      'custom-event': 'customHandler',
+      'prop1-changed': 'onProp1Change',
+      'custom-event': 'onCustomEvent',
     };
   }
   reset() {
@@ -31,11 +31,11 @@ export class TestNode extends IoNode {
     this.prop3 = 0;
     this._changedCounter = 0;
     this._prop1ChangedCounter = 0;
-    this._handler1Counter = 0;
-    this._handler2Counter = 0;
+    this._prop1ChangeCounter = 0;
+    this._prop2ChangeCounter = 0;
     this._customHandlerCounter = 0;
-    this._handler1Payload = null;
-    this._handler2Payload = null;
+    this._prop1ChangePayload = null;
+    this._prop2ChangePayload = null;
     this._customHandlerPayload = null;
   }
   changed() {
@@ -45,15 +45,15 @@ export class TestNode extends IoNode {
     this._prop1ChangedCounter++;
     this._prop1ChangedPayload = event;
   }
-  handler1(event) {
-    this._handler1Counter++;
-    this._handler1Payload = event;
+  onProp1Change(event) {
+    this._prop1ChangeCounter++;
+    this._prop1ChangePayload = event;
   }
-  handler2(event) {
-    this._handler2Counter++;
-    this._handler2Payload = event;
+  onProp2Change(event) {
+    this._prop2ChangeCounter++;
+    this._prop2ChangePayload = event;
   }
-  customHandler(event) {
+  onCustomEvent(event) {
     this._customHandlerCounter++;
     this._customHandlerPayload = event;
   }
@@ -66,19 +66,19 @@ TestNode.Register();
 
 export default class {
   constructor() {
-    this._handler3Counter = 0;
-    this._handler3Payload = null;
-    this.handler3 = (event) => {
-      this._handler3Counter++;
-      this._handler3Payload = event;
+    this._prop3ChangeCounter = 0;
+    this._prop3ChangePayload = null;
+    this.prop3Change = (event) => {
+      this._prop3ChangeCounter++;
+      this._prop3ChangePayload = event;
     }
-    this.node = new TestNode({'on-prop2-changed': 'handler2', 'on-prop3-changed': this.handler3});
+    this.node = new TestNode({'on-prop2-changed': 'onProp2Change', 'on-prop3-changed': this.prop3Change});
     this.node.connect(window);
   }
   reset() {
     this.node.reset();
-    this._handler3Counter = 0;
-    this._handler3Payload = null;
+    this._prop3ChangeCounter = 0;
+    this._prop3ChangePayload = null;
   }
   run() {
     describe('IoNode', () => {
@@ -118,41 +118,41 @@ export default class {
           this.node.prop0 = 'test';
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler1Counter).to.equal(0);
-          chai.expect(this.node._handler2Counter).to.equal(0);
-          chai.expect(this._handler3Counter).to.equal(0);
+          chai.expect(this.node._prop1ChangeCounter).to.equal(0);
+          chai.expect(this.node._prop2ChangeCounter).to.equal(0);
+          chai.expect(this._prop3ChangeCounter).to.equal(0);
           chai.expect(this.node._customHandlerCounter).to.equal(0);
           this.reset();
           this.node.prop1 = true;
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(1);
-          chai.expect(this.node._handler1Counter).to.equal(1);
-          chai.expect(this.node._handler2Counter).to.equal(0);
-          chai.expect(this._handler3Counter).to.equal(0);
+          chai.expect(this.node._prop1ChangeCounter).to.equal(1);
+          chai.expect(this.node._prop2ChangeCounter).to.equal(0);
+          chai.expect(this._prop3ChangeCounter).to.equal(0);
           chai.expect(this.node._customHandlerCounter).to.equal(0);
           this.reset();
           this.node.dispatchEvent('custom-event');
           chai.expect(this.node._changedCounter).to.equal(0);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler1Counter).to.equal(0);
-          chai.expect(this.node._handler2Counter).to.equal(0);
-          chai.expect(this._handler3Counter).to.equal(0);
+          chai.expect(this.node._prop1ChangeCounter).to.equal(0);
+          chai.expect(this.node._prop2ChangeCounter).to.equal(0);
+          chai.expect(this._prop3ChangeCounter).to.equal(0);
           chai.expect(this.node._customHandlerCounter).to.equal(1);
           this.reset();
           this.node.prop2 = 1;
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler1Counter).to.equal(0);
-          chai.expect(this.node._handler2Counter).to.equal(1);
-          chai.expect(this._handler3Counter).to.equal(0);
+          chai.expect(this.node._prop1ChangeCounter).to.equal(0);
+          chai.expect(this.node._prop2ChangeCounter).to.equal(1);
+          chai.expect(this._prop3ChangeCounter).to.equal(0);
           chai.expect(this.node._customHandlerCounter).to.equal(0);
           this.reset();
           this.node.prop3 = 1;
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler1Counter).to.equal(0);
-          chai.expect(this.node._handler2Counter).to.equal(0);
-          chai.expect(this._handler3Counter).to.equal(1);
+          chai.expect(this.node._prop1ChangeCounter).to.equal(0);
+          chai.expect(this.node._prop2ChangeCounter).to.equal(0);
+          chai.expect(this._prop3ChangeCounter).to.equal(1);
           chai.expect(this.node._customHandlerCounter).to.equal(0);
         });
         it('should fire handler functions in batch when set with setProperties()', () => {
@@ -165,9 +165,9 @@ export default class {
           });
           chai.expect(this.node._changedCounter).to.equal(1);
           chai.expect(this.node._prop1ChangedCounter).to.equal(1);
-          chai.expect(this.node._handler1Counter).to.equal(1);
-          chai.expect(this.node._handler2Counter).to.equal(1);
-          chai.expect(this._handler3Counter).to.equal(1);
+          chai.expect(this.node._prop1ChangeCounter).to.equal(1);
+          chai.expect(this.node._prop2ChangeCounter).to.equal(1);
+          chai.expect(this._prop3ChangeCounter).to.equal(1);
           chai.expect(this.node._customHandlerCounter).to.equal(0);
         });
         it('should not fire handler functions when disconnected', () => {
@@ -180,9 +180,9 @@ export default class {
           this.node.dispatchEvent('custom-event');
           chai.expect(this.node._changedCounter).to.equal(0);
           chai.expect(this.node._prop1ChangedCounter).to.equal(0);
-          chai.expect(this.node._handler1Counter).to.equal(0);
-          chai.expect(this.node._handler2Counter).to.equal(0);
-          chai.expect(this._handler3Counter).to.equal(0);
+          chai.expect(this.node._prop1ChangeCounter).to.equal(0);
+          chai.expect(this.node._prop2ChangeCounter).to.equal(0);
+          chai.expect(this._prop3ChangeCounter).to.equal(0);
           chai.expect(this.node._customHandlerCounter).to.equal(0);
           this.node.connect(window);
         });
@@ -199,15 +199,15 @@ export default class {
           chai.expect(this.node._prop1ChangedPayload.detail.property).to.equal('prop1');
           chai.expect(this.node._prop1ChangedPayload.detail.oldValue).to.equal(false);
           chai.expect(this.node._prop1ChangedPayload.detail.value).to.equal(true);
-          chai.expect(this.node._handler1Payload.detail.property).to.equal('prop1');
-          chai.expect(this.node._handler1Payload.detail.oldValue).to.equal(false);
-          chai.expect(this.node._handler1Payload.detail.value).to.equal(true);
-          chai.expect(this.node._handler2Payload.detail.property).to.equal('prop2');
-          chai.expect(this.node._handler2Payload.detail.oldValue).to.equal(-1);
-          chai.expect(this.node._handler2Payload.detail.value).to.equal(2);
-          chai.expect(this._handler3Payload.detail.property).to.equal('prop3');
-          chai.expect(this._handler3Payload.detail.oldValue).to.equal(0);
-          chai.expect(this._handler3Payload.detail.value).to.equal(2);
+          chai.expect(this.node._prop1ChangePayload.detail.property).to.equal('prop1');
+          chai.expect(this.node._prop1ChangePayload.detail.oldValue).to.equal(false);
+          chai.expect(this.node._prop1ChangePayload.detail.value).to.equal(true);
+          chai.expect(this.node._prop2ChangePayload.detail.property).to.equal('prop2');
+          chai.expect(this.node._prop2ChangePayload.detail.oldValue).to.equal(-1);
+          chai.expect(this.node._prop2ChangePayload.detail.value).to.equal(2);
+          chai.expect(this._prop3ChangePayload.detail.property).to.equal('prop3');
+          chai.expect(this._prop3ChangePayload.detail.oldValue).to.equal(0);
+          chai.expect(this._prop3ChangePayload.detail.value).to.equal(2);
           this.node.setProperties({
             'prop0': 'test',
             'prop1': true,
@@ -217,15 +217,15 @@ export default class {
           chai.expect(this.node._prop1ChangedPayload.detail.property).to.equal('prop1');
           chai.expect(this.node._prop1ChangedPayload.detail.oldValue).to.equal(false);
           chai.expect(this.node._prop1ChangedPayload.detail.value).to.equal(true);
-          chai.expect(this.node._handler1Payload.detail.property).to.equal('prop1');
-          chai.expect(this.node._handler1Payload.detail.oldValue).to.equal(false);
-          chai.expect(this.node._handler1Payload.detail.value).to.equal(true);
-          chai.expect(this.node._handler2Payload.detail.property).to.equal('prop2');
-          chai.expect(this.node._handler2Payload.detail.oldValue).to.equal(-1);
-          chai.expect(this.node._handler2Payload.detail.value).to.equal(2);
-          chai.expect(this._handler3Payload.detail.property).to.equal('prop3');
-          chai.expect(this._handler3Payload.detail.oldValue).to.equal(0);
-          chai.expect(this._handler3Payload.detail.value).to.equal(2);
+          chai.expect(this.node._prop1ChangePayload.detail.property).to.equal('prop1');
+          chai.expect(this.node._prop1ChangePayload.detail.oldValue).to.equal(false);
+          chai.expect(this.node._prop1ChangePayload.detail.value).to.equal(true);
+          chai.expect(this.node._prop2ChangePayload.detail.property).to.equal('prop2');
+          chai.expect(this.node._prop2ChangePayload.detail.oldValue).to.equal(-1);
+          chai.expect(this.node._prop2ChangePayload.detail.value).to.equal(2);
+          chai.expect(this._prop3ChangePayload.detail.property).to.equal('prop3');
+          chai.expect(this._prop3ChangePayload.detail.oldValue).to.equal(0);
+          chai.expect(this._prop3ChangePayload.detail.value).to.equal(2);
         });
       });
       describe('Binding', () => {

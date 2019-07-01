@@ -85,7 +85,6 @@ export class IoTest extends IoElement {
     runTests();
     this.appendChild(mochaDiv);
     mochaDiv.style.display = 'block';
-    this.appendChild(mochaDiv);
   }
   disconnectedCallback() {
     super.disconnectedCallback();

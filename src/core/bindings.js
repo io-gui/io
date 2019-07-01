@@ -45,9 +45,9 @@ export class Binding {
     this.sourceProp = sourceProp;
     this.targets = [];
     this.targetsMap = new WeakMap();
-    this.updateSource = this.updateSource.bind(this);
-    this.updateTargets = this.updateTargets.bind(this);
-    this.source.addEventListener(this.sourceProp + '-changed', this.updateTargets);
+    this._onTargetChanged = this._onTargetChanged.bind(this);
+    this._onSourceChanged = this._onSourceChanged.bind(this);
+    this.source.addEventListener(this.sourceProp + '-changed', this._onSourceChanged);
   }
   get value() {
     return this.source[this.sourceProp];
@@ -63,11 +63,11 @@ export class Binding {
       const targetProps = this.targetsMap.get(targetNode);
       if (targetProps.indexOf(targetProp) === -1) {
         targetProps.push(targetProp);
-        targetNode.addEventListener(targetProp + '-changed', this.updateSource);
+        targetNode.addEventListener(targetProp + '-changed', this._onTargetChanged);
       }
     } else {
       this.targetsMap.set(targetNode, [targetProp]);
-      targetNode.addEventListener(targetProp + '-changed', this.updateSource);
+      targetNode.addEventListener(targetProp + '-changed', this._onTargetChanged);
     }
   }
   /**
@@ -84,10 +84,10 @@ export class Binding {
         if (index !== -1) {
           targetProps.splice(index, 1);
         }
-        targetNode.removeEventListener(targetProp + '-changed', this.updateSource);
+        targetNode.removeEventListener(targetProp + '-changed', this._onTargetChanged);
       } else {
         for (let i = targetProps.length; i--;) {
-          targetNode.removeEventListener(targetProps[i] + '-changed', this.updateSource);
+          targetNode.removeEventListener(targetProps[i] + '-changed', this._onTargetChanged);
         }
         targetProps.length = 0;
       }
@@ -101,10 +101,10 @@ export class Binding {
    * @param {Object} event.detail - Event detail.
    * @param {*} event.detail.value - New value.
    */
-  updateSource(event) {
+  _onTargetChanged(event) {
     if (this.targets.indexOf(event.target) === -1) {
       console.warn(
-        `io error: updateSource() should never fire when target is removed from binding.
+        `io error: _onTargetChanged() should never fire when target is removed from binding.
         Please file an issue at https://github.com/arodic/io/issues.`
       );
       return;
@@ -121,10 +121,10 @@ export class Binding {
    * @param {Object} event.detail - Event detail.
    * @param {*} event.detail.value - New value.
    */
-  updateTargets(event) {
+  _onSourceChanged(event) {
     if (event.target != this.source) {
       console.warn(
-        `io error: updateTargets() should always originate form source node.
+        `io error: _onSourceChanged() should always originate form source node.
         Please file an issue at https://github.com/arodic/io/issues.`
       );
       return;
@@ -147,7 +147,7 @@ export class Binding {
    * Use this when node is no longer needed.
    */
   dispose() {
-    this.source.removeEventListener(this.sourceProp + '-changed', this.updateTargets);
+    this.source.removeEventListener(this.sourceProp + '-changed', this._onSourceChanged);
     for (let t in this.targets) {
       this.removeTarget(this.targets[t]);
       delete this.targets[t];

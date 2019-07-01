@@ -12,14 +12,15 @@ export class TestElement extends IoElement {
       // Internal counters
       _changedCounter: 0,
       _prop1ChangedCounter: 0,
-      _handler0Counter: 0,
-      _handler1Payload: null,
+      _prop1AltCounter: 0,
+      _prop1Payload: null,
+      debug: true,
     };
   }
   static get listeners() {
     return {
-      'prop0-changed': 'handler1',
-      'custom-event': 'customHandler',
+      'prop0-changed': 'onProp1Change',
+      'custom-event': 'onCustomEvent',
     };
   }
   reset() {
@@ -27,11 +28,11 @@ export class TestElement extends IoElement {
     this.prop1 = 'default';
     this._changedCounter = 0;
     this._prop1ChangedCounter = 0;
-    this._handler0Counter = 0;
-    this._handler1Counter = 0;
+    this._prop1AltCounter = 0;
+    this._prop1Counter = 0;
     this._customHandlerCounter = 0;
-    this._handler0Payload = null;
-    this._handler1Payload = null;
+    this._prop1AltPayload = null;
+    this._prop1Payload = null;
     this._customHandlerPayload = null;
   }
   constructor(initProps) {
@@ -48,15 +49,15 @@ export class TestElement extends IoElement {
     this._prop1ChangedCounter++;
     this._prop1ChangedPayload = event;
   }
-  handler0(event) {
-    this._handler0Counter++;
-    this._handler0Payload = event;
+  onProp1ChangeAlt(event) {
+    this._prop1AltCounter++;
+    this._prop1AltPayload = event;
   }
-  handler1(event) {
-    this._handler1Counter++;
-    this._handler1Payload = event;
+  onProp1Change(event) {
+    this._prop1Counter++;
+    this._prop1Payload = event;
   }
-  customHandler(event) {
+  onCustomEvent(event) {
     this._customHandlerCounter++;
     this._customHandlerPayload = event;
   }
@@ -75,8 +76,7 @@ TestSubelement.Register();
 export default class {
   constructor() {
     this._changedCounter = 0;
-    this.changed = this.changed.bind(this);
-    this.element = new TestElement({'on-prop0-changed': this.changed, 'on-prop1-changed': 'handler0'});
+    this.element = new TestElement({'on-prop0-changed': this.changed.bind(this), 'on-prop1-changed': 'onProp1ChangeAlt', debug: true});
     document.body.appendChild(this.element);
   }
   changed(event) {
@@ -113,7 +113,7 @@ export default class {
           this.reset();
           this.element.prop0 = 1;
           this.element.prop1 = 'test';
-          chai.expect(this.element._handler0Counter).to.equal(1);
+          chai.expect(this.element._prop1AltCounter).to.equal(1);
           chai.expect(this.element._changedCounter).to.equal(2);
           chai.expect(this._changedCounter).to.equal(1);
         });
@@ -122,7 +122,7 @@ export default class {
           document.body.removeChild(this.element);
           this.element.prop0 = 2;
           this.element.prop1 = 'test2';
-          chai.expect(this.element._handler0Counter).to.equal(0);
+          chai.expect(this.element._prop1AltCounter).to.equal(0);
           chai.expect(this.element._changedCounter).to.equal(0);
           chai.expect(this._changedCounter).to.equal(0);
           document.body.appendChild(this.element);
@@ -131,11 +131,11 @@ export default class {
           this.reset();
           this.element.prop0 = 1;
           this.element.prop0 = 0;
-          chai.expect(this.element._handler1Payload.path[0]).to.equal(this.element);
-          chai.expect(this.element._handler1Payload.detail.value).to.equal(0);
+          chai.expect(this.element._prop1Payload.path[0]).to.equal(this.element);
+          chai.expect(this.element._prop1Payload.detail.value).to.equal(0);
           this.element.$.subelement.prop0 = 2;
-          chai.expect(this.element._handler1Payload.detail.oldValue).to.equal(0);
-          chai.expect(this.element._handler1Payload.detail.value).to.equal(2);
+          chai.expect(this.element._prop1Payload.detail.oldValue).to.equal(0);
+          chai.expect(this.element._prop1Payload.detail.value).to.equal(2);
           this.element.dispatchEvent('custom-event', {data: 'io'});
           chai.expect(this.element._customHandlerPayload.detail.data).to.equal('io');
         });

@@ -45,7 +45,6 @@ export class IoOption extends IoMenuItem {
   //   console.log(this.value);
   // }
   _onMenuItemClicked(event) {
-    console.log('asd');
     const item = event.composedPath()[0];
     if (item !== this) {
       event.stopImmediatePropagation();

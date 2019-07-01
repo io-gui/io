@@ -40,7 +40,7 @@ export class IoLayout extends IoElement {
       'io-layout-tab-insert': '_onLayoutTabInsert',
     };
   }
-  splitsMutated() {
+  _onSelectedChanged() {
     const $blocks = [].slice.call(this.children).filter(element => element.localName !== 'io-layout-divider');
     for (let i = 0; i < $blocks.length; i++) {
       if ($blocks[i].selected) {
@@ -69,7 +69,7 @@ export class IoLayout extends IoElement {
           selected: split.selected,
           editable: this.editable,
           style: style,
-          'on-selected-changed': this.splitsMutated
+          'on-selected-changed': this._onSelectedChanged
         }]);
         // children.push(['div', {style: style}, ' ' + split.size]);
       } else if (split.splits) {

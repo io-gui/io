@@ -29,6 +29,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       },
       $: {
         type: Object,
+        notify: false,
       },
     };
   }

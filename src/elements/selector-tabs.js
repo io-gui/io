@@ -37,6 +37,10 @@ export class IoSelectorTabs extends IoSelector {
       if (hasOption) this.$.tabs.selected = this.selected;
     }
   }
+  // selectedChanged() {
+  //   super.selectedChanged();
+  //   console.log(this.selected);
+  // }
   renderShadow() {
     const tabs = ['io-menu-options', {
       id: 'tabs',

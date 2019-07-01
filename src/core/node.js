@@ -36,8 +36,6 @@ export const IoNodeMixin = (superclass) => {
     constructor(initProps = {}) {
       super(initProps);
 
-      if (!this.constructor.prototype.__registered) this.constructor.Register();
-
       Object.defineProperty(this, '__nodeBindings', {value: new NodeBindings(this)});
       Object.defineProperty(this, '__nodeQueue', {value: new NodeQueue(this)});
 
@@ -250,59 +248,42 @@ export const IoNodeMixin = (superclass) => {
   * `IoElement` classes should call Register manually before first instance is created.
   */
 const Register = function () {
-  Object.defineProperty(this.prototype, '__registered', {value: true});
-
-  const protochain = [];
   let proto = this.prototype;
+  const protochain = [];
   while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
     protochain.push(proto); proto = proto.__proto__;
   }
   Object.defineProperty(this.prototype, 'isNode', {value: proto.constructor !== HTMLElement});
   Object.defineProperty(this.prototype, 'isElement', {value: proto.constructor === HTMLElement});
+  proto = this.prototype;
 
-  Object.defineProperty(this.prototype, '__protochain', {value: protochain});
-  Object.defineProperty(this.prototype, '__protoProperties', {value: new ProtoProperties(this.prototype.__protochain)});
-  Object.defineProperty(this.prototype, '__protoListeners', {value: new ProtoListeners(this.prototype.__protochain)});
+  Object.defineProperty(proto, '__protochain', {value: protochain});
+  Object.defineProperty(proto, '__protoProperties', {value: new ProtoProperties(protochain)});
+  Object.defineProperty(proto, '__protoListeners', {value: new ProtoListeners(protochain)});
 
-  // TODO: Unhack (hack for three.js-controls)
-  Object.defineProperty(this.prototype, '__properties', {value: this.prototype.__protoProperties});
-
-  const functions = [];
-  for (let i = this.prototype.__protochain.length; i--;) {
-    const proto = this.prototype.__protochain[i];
-    const names = Object.getOwnPropertyNames(proto);
+  const functions = new Set();
+  for (let i = protochain.length; i--;) {
+    const names = Object.getOwnPropertyNames(protochain[i]);
     for (let j = 0; j < names.length; j++) {
-      if (names[j] === 'constructor') continue;
-      if (Object.getOwnPropertyDescriptor(proto, names[j]).get) continue;
-      if (typeof proto[names[j]] !== 'function') continue;
-      if (proto[names[j]].name === 'anonymous') continue;
-      if (functions.indexOf(names[j]) === -1) functions.push(names[j]);
+      if (names[j].startsWith('_on') || names[j].startsWith('on')) functions.add(names[j]);
     }
   }
-  Object.defineProperty(this.prototype, '__functions', {value: functions});
+  Object.defineProperty(proto, '__functions', {value: [...functions]});
 
-  Object.defineProperty(this.prototype, '__objectProps', {value: []});
+  Object.defineProperty(proto, '__objectProps', {value: []});
   const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
-  for (let prop in this.prototype.__protoProperties) {
-    let type = this.prototype.__protoProperties[prop].type;
-    if (prop !== '$') { // TODO: unhack
-      if (ignore.indexOf(type) == -1) this.prototype.__objectProps.push(prop);
+  for (let p in proto.__protoProperties) {
+    const cfg = proto.__protoProperties[p];
+    if (cfg.notify && ignore.indexOf(cfg.type) == -1) {
+      proto.__objectProps.push(p);
     }
   }
 
-  for (let prop in this.prototype.__protoProperties) {
-    const protoProp = this.prototype.__protoProperties[prop];
-    Object.defineProperty(this.prototype, prop, {
-      get: function() {
-        return this.__properties.get(prop);
-      },
-      set: function(value) {
-        if (!this.__properties.set) {
-          console.log(this, this.__properties);
-        }
-        this.__properties.set(prop, value);
-      },
-      enumerable: !!protoProp.enumerable,
+  for (let p in proto.__protoProperties) {
+    Object.defineProperty(proto, p, {
+      get: function() { return this.__properties.get(p); },
+      set: function(value) { this.__properties.set(p, value); },
+      enumerable: !!proto.__protoProperties[p].enumerable,
       configurable: true,
     });
   }

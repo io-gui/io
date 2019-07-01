@@ -66,10 +66,11 @@ export class IoMenuLayer extends IoElement {
     super(props);
     this._hoveredItem = null;
     this._hoveredOptions = null;
+    this._startAnimation = this._startAnimation.bind(this)
+    this._stopAnimation = this._stopAnimation.bind(this)
     this._x = 0;
     this._y = 0;
     this._v = 0;
-    console.log(this.expanded);
   }
   connectedCallback() {
     super.connectedCallback();
@@ -221,12 +222,12 @@ export class IoMenuLayer extends IoElement {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  _onPointerup() {
+  _onPointerup(event) {
     if (this._hoveredItem) {
       const collapse = !this._hoveredItem._options;
       if (collapse) {
         if (this._hoveredItem._onClick) {
-          this._hoveredItem._onClick();
+          // this._hoveredItem._onClick(event);
         } else {
           console.error('Hovered invalid item', this._hoveredItem);
         }

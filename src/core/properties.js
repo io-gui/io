@@ -36,13 +36,6 @@ export class ProtoProperties {
       this[p] = new Property(defs[p]);
     }
   }
-
-  get() {
-    console.log('Error getting value');
-  }
-  set(prop, value) {
-    console.error('Error setting', prop, value, this._p[0].constructor);
-  }
 }
 
 class ProtoProperty {
@@ -62,7 +55,7 @@ class ProtoProperty {
       } else {
         if (typeof cfg.type !== 'function') {
           if (cfg.value === undefined || cfg.value === null) {
-            // console.error('Properties require value or type');
+            // console.error('Properties require value or type'); // TODO: reconsider
           } else {
             cfg.type = cfg.value.constructor;
           }
@@ -103,9 +96,11 @@ export class Properties {
   set(prop, value, suspendDispatch) {
     let oldValue = this[prop].value;
     if (value !== oldValue) {
+
       let oldBinding = this[prop].binding;
 
       let binding = (value instanceof Binding) ? value : null;
+
 
       if (binding && oldBinding && binding !== oldBinding) {
         oldBinding.removeTarget(this.node, prop); // TODO: test extensively
