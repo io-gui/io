@@ -227,7 +227,9 @@ export class IoMenuLayer extends IoElement {
       const collapse = !this._hoveredItem._options;
       if (collapse) {
         if (this._hoveredItem._onClick) {
-          // this._hoveredItem._onClick(event);
+          if (event.type === "touchend") {
+            this._hoveredItem._onClick(event); //TODO: unhack! Removing this make mouse click twice.
+          }
         } else {
           console.error('Hovered invalid item', this._hoveredItem);
         }
