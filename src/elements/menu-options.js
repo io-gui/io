@@ -108,6 +108,7 @@ export class IoMenuOptions extends IoElement {
       let overflow = false;
       let last = Infinity;
       hamburger.hidden = true;
+      const hamburgerOptions = [];
 
       for (let i = buttons.length; i--;) {
         const r = buttons[i].getBoundingClientRect();
@@ -131,9 +132,11 @@ export class IoMenuOptions extends IoElement {
           buttons[i].hidden = false;
         } else {
          buttons[i].hidden = true;
-          overflow = true;
+         hamburgerOptions.push(buttons[i].option);
+         overflow = true;
         }
       }
+      hamburger.option = {options: hamburgerOptions};
       this.overflow = overflow;
     }
   }
@@ -228,7 +231,7 @@ export class IoMenuOptions extends IoElement {
         label: '☰',
         title: 'select tab',
         value: this.value,
-        option: {options: this.options},
+        // option: {options: this.options},
         class: 'io-hamburger',
         _depth: this._depth,
       }]);
