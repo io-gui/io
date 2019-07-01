@@ -45,3 +45,5 @@ export class IoServiceLoader extends IoNode {
     if (data.subscription) this.subscription = JSON.stringify(data.subscription);
   }
 }
+
+IoServiceLoader.Register();
