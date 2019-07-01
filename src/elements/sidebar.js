@@ -121,7 +121,6 @@ export class IoSidebar extends IoElement {
     let selectedOption = filterObject(options, option => { return option.value === this.selected; });
     if (this.overflow) {
       const label = selectedOption ? (selectedOption.label || String(selectedOption.value)) : String(this.selected).split('#')[0];
-      console.log(this.selected);
       this.template([['io-option', {
         label: '☰  ' + label,
         title: 'select tab',

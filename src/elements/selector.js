@@ -149,9 +149,9 @@ export class IoSelector extends IoElement {
   }
   scrollIDChanged() {
     if (this._scrollID === undefined) return;
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       this.scrollTo(this._scrollID);
-    });
+    }, 100);
   }
   selectedChanged() {
     const oldScrollID = this._scrollID;
