@@ -79,30 +79,30 @@ export class IoMenuItem extends IoItem {
     }
   }
   get _action() {
-    if (this.option && this.option.action && typeof this.option.action === 'function') {
+    if (this.option && typeof this.option.action === 'function') {
       return this.option.action;
     }
   }
   get _value() {
-    if (this.option && this.option.value && this.option.value !== undefined) {
+    if (this.option && this.option.value !== undefined) {
       return this.option.value;
     }
     else return this.option;
   }
   get _icon() {
-    if (this.option && this.option.icon && this.option.icon !== undefined) {
+    if (this.option && this.option.icon !== undefined) {
       return this.option.icon;
     }
   }
   get _label() {
     if (this.label) return this.label;
-    if (this.option && this.option.label && this.option.label !== undefined) {
+    if (this.option && this.option.label !== undefined) {
       return this.option.label;
     }
     else return this.option;
   }
   get _hint() {
-    if (this.option && this.option.hint && this.option.hint !== undefined) {
+    if (this.option && this.option.hint !== undefined) {
       return this.option.hint;
     }
   }
@@ -278,6 +278,9 @@ export class IoMenuItem extends IoItem {
   expandedChanged() {
     // TODO: collapse on menus outside IoMenuLayer. // TODO: test and remove!
     if (this.expanded && this.$parent && !this.$parent.expanded) console.warn('This should be expanded', this.$parent.expanded);
+  }
+  valueChanged() {
+    this._updateOptions();
   }
   optionChanged() {
     this._updateOptions();

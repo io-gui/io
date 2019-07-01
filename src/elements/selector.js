@@ -45,7 +45,10 @@ export class IoSelector extends IoElement {
       },
       _caches: Object,
       _selectedID: String,
-      _scrollID: String,
+      _scrollID: {
+        type: String,
+        notify: true,
+      }
     };
   }
   static get listeners() {
@@ -116,45 +119,49 @@ export class IoSelector extends IoElement {
     }
   }
   _onScroll() {
-    // TODO: Change only only on scroll end!
-    if (this.__autoScrolling) return;
-    const scrollableElements = this.$.content.querySelectorAll('[id]');
-    const scroll = this.$.content.scrollTop + 30;
-    const oldScrollID = this._scrollID;
-    for (let i = scrollableElements.length; i--;) {
-      if (scrollableElements[i].offsetTop <= scroll) {
-        const scrollID = scrollableElements[i].id;
-        if (scrollID !== oldScrollID) {
-          this._scrollID = scrollID;
-          const oldSelected = this.selected;
-          const selected = this._selectedID + '#' + this._scrollID;
-          this.__properties.selected.value = selected;
-          this.dispatchEvent('selected-changed', {value: selected, oldValue: oldSelected});
+    if (this._scrollID === undefined) return;
+    clearTimeout(this.__scrollDebounce);
+    this.__scrollDebounce = setTimeout(() => {
+      delete this.__scrollDebounce;
+      const scrollableElements = [...this.$.content.querySelectorAll('[id]')];
+      const top = this.$.content.scrollTop;
+      const bottom = top + this.$.content.getBoundingClientRect().height / 2;
+      const oldScrollID = this._scrollID;
+      let scrollID;
+      for (let i = scrollableElements.length; i--;) {
+        const elem = scrollableElements[i];
+        const nextElem = scrollableElements[i + 1];
+        const elemTop = elem.offsetTop;
+        const elemBottom = nextElem ? nextElem.offsetTop : elemTop;
+        if ((elemTop < top - 5) && (elemBottom < bottom)) {
+          break;
         }
-        return;
+        scrollID = elem.id;
       }
-    }
+      if (scrollID !== oldScrollID) {
+        this._scrollID = scrollID;
+        const oldSelected = this.selected;
+        const selected = this._selectedID + '#' + this._scrollID;
+        this.__properties.selected.value = selected;
+        this.dispatchEvent('selected-changed', {value: selected, oldValue: oldSelected});
+      }
+    }, 100);
   }
   scrollIDChanged() {
-    clearTimeout(this.__autoScrolling);
-    this.__autoScrolling = setTimeout(()=>{
-      this.__autoScrolling = false;
-    }, 2000);
-    // TODO: detect auto scroll end instead waiting 2 seconds!
-    setTimeout(()=> {
+    if (this._scrollID === undefined) return;
+    requestAnimationFrame(() => {
       this.scrollTo(this._scrollID);
     });
   }
   selectedChanged() {
-    // console.log(this.selected);
-    const scrollID = this.selected.split('#')[1];
     const oldScrollID = this._scrollID;
+    const scrollID = this.selected.split('#')[1];
     if (scrollID !== oldScrollID) {
       this._scrollID = scrollID;
       this.scrollIDChanged();
     }
-    const selectedID = this.selected.split('#')[0];
     const oldSelectedID = this._selectedID;
+    const selectedID = this.selected.split('#')[0];
     if (selectedID !== oldSelectedID) {
       this._selectedID = selectedID;
       this.update();

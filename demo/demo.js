@@ -68,6 +68,8 @@ export class IoDemo extends IoElement {
   constructor(props) {
     super(props);
 
+    this.setNumber = this.setNumber.bind(this);
+
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
     const pointerEventsWarning = [
       "PointerEvent" in window ? [] : ['div', {class: 'warning'}, [
@@ -152,6 +154,19 @@ export class IoDemo extends IoElement {
       {label: 'set five', value: 5, action: this.setNumber}
     ];
 
+    const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
+      'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
+      'fusce', 'interdum', 'vestibulum', 'nunc', 'velit'];
+    const hearts = ["❤️", "💚", "💙"];
+    const longOptions = [];
+    for (let i = 0; i < 100; i++) {
+      const r1 = words[Math.floor(Math.random() * 20)];
+      const r2 = words[Math.floor(Math.random() * 20)];
+      const r3 = words[Math.floor(Math.random() * 20)];
+      const i = hearts[Math.floor(Math.random() * 9)] || '';
+      longOptions.push({icon: i, label: r1 + ' ' + r2, value: 0, action: this.setNumber, hint: r3});
+    }
+
     this.menuoptions = [
       {label: 'file', options: options},
       {label: 'view', options: [
@@ -159,7 +174,7 @@ export class IoDemo extends IoElement {
         {label: 'suboption two', options: options},
         {label: 'suboption three', options: options},
       ]},
-      {label: 'long menu', options: new Array(100).fill({label: 'Set 0', value: 0, action: this.setNumber, icon: '>', hint: 'set'}), hint: 'list', icon: '⚠'}
+      {label: 'long menu', options: longOptions, hint: 'list', icon: '⚠'}
     ];
 
     const demoMenu = ['div', {name: 'menu'}, [
