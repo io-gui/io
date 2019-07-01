@@ -116,6 +116,7 @@ export class IoSelector extends IoElement {
     }
   }
   _onScroll() {
+    // TODO: Change only only on scroll end!
     if (this.__autoScrolling) return;
     const scrollableElements = this.$.content.querySelectorAll('[id]');
     const scroll = this.$.content.scrollTop + 30;

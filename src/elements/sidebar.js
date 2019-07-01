@@ -116,6 +116,7 @@ export class IoSidebar extends IoElement {
   //   console.log(this.selected);
   // }
   changed() {
+    // TODO: change menu selected while scrolling
     const options = this.options.map(option => { return new Option(option); });
     let selectedOption = filterObject(options, option => { return option.value === this.selected; });
     if (this.overflow) {
