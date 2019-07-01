@@ -66,8 +66,8 @@ export class IoMenuLayer extends IoElement {
     super(props);
     this._hoveredItem = null;
     this._hoveredOptions = null;
-    this._startAnimation = this._startAnimation.bind(this)
-    this._stopAnimation = this._stopAnimation.bind(this)
+    this._startAnimation = this._startAnimation.bind(this);
+    this._stopAnimation = this._stopAnimation.bind(this);
     this._x = 0;
     this._y = 0;
     this._v = 0;
@@ -222,7 +222,7 @@ export class IoMenuLayer extends IoElement {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  _onPointerup(event) {
+  _onPointerup() {
     if (this._hoveredItem) {
       const collapse = !this._hoveredItem._options;
       if (collapse) {
@@ -280,12 +280,12 @@ export class IoMenuLayer extends IoElement {
       this._hoveredItem = null;
       this._hoveredOptions = null;
       this._stopAnimation();
-      if (this.lastFocus) {
-        setTimeout(()=> {
+      setTimeout(()=> {
+        if (this.lastFocus) {
           this.lastFocus.focus();
           this.lastFocus = null;
-        });
-      }
+        }
+      });
     }
   }
 }

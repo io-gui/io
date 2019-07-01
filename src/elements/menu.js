@@ -47,9 +47,9 @@ export class IoMenu extends IoElement {
     const item = event.composedPath()[0];
     if (item !== this) {
       event.stopImmediatePropagation();
-      this.expanded = false;
-      this.set('value', event.detail.value, true);
+      this.set('value', event.detail.value);
       this.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      this.expanded = false;
     }
   }
   _onContextmenu(event) {

@@ -1,5 +1,4 @@
 import {IoElement, html} from "../core/element.js";
-import {Option} from "../types/option.js";
 import "./menu-item.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
@@ -87,11 +86,9 @@ export class IoMenuOptions extends IoElement {
     const item = event.composedPath()[0];
     if (item !== this) {
       event.stopImmediatePropagation();
-      item.expanded = false;
-      this.__properties.value.value = undefined;
-      console.log(this.__properties.value.binding);
-      this.set('value', event.detail.value, true);
+      this.set('value', event.detail.value);
       this.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      item.expanded = false;
     }
   }
   resized() {
@@ -216,8 +213,7 @@ export class IoMenuOptions extends IoElement {
   }
   changed() {
     const itemDirection = this.horizontal ? 'bottom' : 'right';
-    const options = this.options.map(option => { return new Option(option); });
-    const elements = [options.map(option =>
+    const elements = [this.options.map(option =>
       ['io-menu-item', {
         $parent: this,
         option: option,

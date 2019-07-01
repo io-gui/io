@@ -1,4 +1,5 @@
 import {html} from "../core/element.js";
+import {filterObject} from "../utils/utility-functions.js";
 import {IoItem} from "./item.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuOptions} from "./menu-options.js";
@@ -59,31 +60,17 @@ export class IoMenuItem extends IoItem {
       expanded: Boolean,
       option: Object,
       $parent: HTMLElement,
-      $options: IoMenuOptions,
+      $options: HTMLElement,
       _depth: 0,
-    };
-  }
-  get compose() {
-    return {
-      $options: {
-        $parent: this,
-        expanded: this.bind('expanded'),
-        value: this.value,
-        options: this._options || [], // TODO: hmm
-        position: this.direction,
-        _depth: this._depth,
-        'on-io-menu-item-clicked': this._onMenuItemClicked,
-      }
     };
   }
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];
     if (item !== this) {
       event.stopImmediatePropagation();
-      this.expanded = false;
-      console.log(console.log(this.__properties.value.binding));
-      this.set('value', event.detail.value, true);
+      this.set('value', event.detail.value);
       this.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      this.expanded = false;
     }
   }
   get _options() {
@@ -100,6 +87,7 @@ export class IoMenuItem extends IoItem {
     if (this.option && this.option.value && this.option.value !== undefined) {
       return this.option.value;
     }
+    else return this.option;
   }
   get _icon() {
     if (this.option && this.option.icon && this.option.icon !== undefined) {
@@ -111,6 +99,7 @@ export class IoMenuItem extends IoItem {
     if (this.option && this.option.label && this.option.label !== undefined) {
       return this.option.label;
     }
+    else return this.option;
   }
   get _hint() {
     if (this.option && this.option.hint && this.option.hint !== undefined) {
@@ -118,11 +107,18 @@ export class IoMenuItem extends IoItem {
     }
   }
   get _selected() {
-    return (this.option && (this.option.selected || this.option.value === this.value));
+    if (this.option && (this.option.selected || this.option.value === this.value)) {
+      return true;
+    } else if (this.value === this.option) {
+      return true;
+    }
+    const options = this._options;
+    if (options) return !!filterObject(options, (o) => { return o === this.value || o.value === this.value; });
+    return false;
   }
   connectedCallback() {
     super.connectedCallback();
-    this._connectOptions();
+    this._updateOptions();
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -130,15 +126,32 @@ export class IoMenuItem extends IoItem {
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
   }
-  _connectOptions() {
+  _updateOptions() {
     if (this._options) {
+      if (!this.$options) {
+        this.$options = new IoMenuOptions({
+          $parent: this,
+          expanded: this.bind('expanded'),
+          value: this.value,
+          options: this._options || [], // TODO: hmm
+          position: this.direction,
+          _depth: this._depth,
+          'on-io-menu-item-clicked': this._onMenuItemClicked,
+        });
+      } else {
+        this.$options.setProperties({
+          value: this.value,
+          options: this._options || [], // TODO: hmm
+          position: this.direction,
+        });
+      }
       if (!this.$options.parentNode) {
         IoMenuLayer.singleton.appendChild(this.$options);
       }
     } else this._disconnectOptions();
   }
   _disconnectOptions() {
-    if (this.$options.parentNode) {
+    if (this.$options && this.$options.parentNode) {
       this.$options.parentNode.removeChild(this.$options);
     }
   }
@@ -206,7 +219,7 @@ export class IoMenuItem extends IoItem {
         this._toggleExpanded(true);
         this._focusIn();
       } else {
-        this._onClick();
+        this._onClick(event);
       }
     }
     else if (event.key === 'Escape') {
@@ -250,9 +263,10 @@ export class IoMenuItem extends IoItem {
       this._action.apply(null, [this._value]);
     }
     if (this._value !== undefined) {
+      event.stopImmediatePropagation();
+      this.set('value', this._value, true);
       this.dispatchEvent('io-menu-item-clicked', {value: this._value}, true);
       this.expanded = false;
-      this.set('value', this._value, true);
     }
   }
   _onFocus() {
@@ -262,13 +276,11 @@ export class IoMenuItem extends IoItem {
     }
   }
   expandedChanged() {
-    // TODO: collapse on menus outside IoMenuLayer
-    if (this.expanded && this.$parent) {
-      if (!this.$parent.expanded) console.warn('This should be expanded', this.$parent.expanded); // TODO: remove
-    }
+    // TODO: collapse on menus outside IoMenuLayer. // TODO: test and remove!
+    if (this.expanded && this.$parent && !this.$parent.expanded) console.warn('This should be expanded', this.$parent.expanded);
   }
   optionChanged() {
-    this._connectOptions();
+    this._updateOptions();
   }
   changed() {
     this.selected = this._selected;

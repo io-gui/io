@@ -1,7 +1,22 @@
+export class Options extends Array {
+  constructor(options) {
+    super(...(options.map ? options.map(option => { return new Option(option); }) : []));
+    // console.log(this);
+    // if (options) {
+    //   const _options = options.map(option => { return new Option(option); });
+    //   console.log(_options);
+    //   //
+    //   // this.push(_options);
+    // }
+  }
+}
 export class Option {
   constructor(option) {
     if (typeof option === 'object' && (option.options !== undefined || option.action !== undefined || option.value !== undefined)) {
       Object.assign(this, option);
+      if (this.options && this.options.length) {
+        if (!(this.options instanceof Options)) this.options = new Options(this.options);
+      }
     } else {
       this.value = option;
     }
