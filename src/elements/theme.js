@@ -63,7 +63,7 @@ export class IoTheme extends IoNode {
         --io-gradient-button: linear-gradient(0deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 75%);
         --io-gradient-collapsable: linear-gradient(100deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(280deg, rgba(255, 255, 255, 0.25), transparent 75%);
 
-        --io-border-color: rgb(255, 255, 255);
+        --io-border-color: rgb(210, 210, 210);
         --io-border: var(--io-border-width) solid var(--io-border-color);
         --io-inset-border-color: rgb(255, 255, 255) var(--io-border-color) var(--io-border-color) rgb(255, 255, 255);
         --io-inset-border: var(--io-border-width) inset var(--io-border-color);

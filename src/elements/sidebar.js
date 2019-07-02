@@ -31,8 +31,8 @@ export class IoSidebar extends IoElement {
         border: none;
         background: none;
       }
-      :host > io-collapsable > io-boolean {
-        opacity: 0.5;
+      :host > io-collapsable io-boolean {
+        opacity: 0.75;
       }
       :host .io-content {
         display: flex;

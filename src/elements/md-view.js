@@ -8,7 +8,7 @@ export class IoMdView extends IoElement {
     return html`<style>
       :host {
         display: block;
-        background: var(--io-background-color);
+        background-color: var(--io-background-color);
         color: var(--io-color);
       }
       :host > :first-child {
@@ -25,24 +25,25 @@ export class IoMdView extends IoElement {
         text-decoration: none;
         color: var(--io-color-link);
       }
-      :host h1 {
+      :host h1, :host h2, :host h3, :host h4 {
         margin: 0;
+        border: var(--io-border);
+        border-width: 0 0 var(--io-border-width) 0;
+      }
+      :host h1 {
         padding: 0.5em 0;
       }
       :host h2 {
-        margin: 0;
         padding: 0.4em 0;
       }
       :host h3 {
-        margin: 0;
         padding: 0.3em 0;
       }
       :host h4 {
-        margin: 0;
         padding: 0.2em 0;
       }
       :host code {
-        background: rgba(0,0,0,0.25);
+        background-color: var(--io-background-color-dark);
         overflow: auto;
         font-weight: bold;
       }
@@ -52,9 +53,10 @@ export class IoMdView extends IoElement {
         display: block;
       }
       :host blockquote {
-        border: 1px solid rgba(0,0,0,0.25);
-        margin: 0.5em 1em;
-        padding: 0.5em 1em;
+        font-size: 0.85em;
+        opacity: 0.5;
+        margin: 0;
+        padding: var(--io-spacing) 0;
       }
       :host table  {
         width: 100% !important;

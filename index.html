@@ -117,57 +117,66 @@
       constructor(props) {
         super(props);
         this.options = [
-          {label: 'Docs', value: 'Docs'},
-          {label: 'Demo', value: 'Demo'},
-          {label: 'Test', value: 'Test'},
+          {label: 'Docs', value: 'docs'},
+          {label: 'Demo', value: 'demo'},
+          {label: 'Test', value: 'test'},
         ];
         this.elements = [
-          ['io-selector-sidebar', {name: 'Docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc',
+          ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc',
               'getting-started#about-io', true),
             options: [
               {label: "Getting Started", options: [
-                {label: "About", value: "getting-started#about-io"},
+                {label: "About Io", value: "getting-started#about-io"},
                 {label: "Usage", value: "getting-started#usage"},
-                {label: "Defining Classes", value: "getting-started#defining-new-classes"},
-                {label: "Simple App", value: "getting-started#creating-a-simple-application"},
+                {label: "Simple App Example", value: "getting-started#simple-app-example"},
                 {label: "Style", value: "getting-started#style"},
                 {label: "Properties", value: "getting-started#properties"},
+                {label: "Attributes", value: "getting-started#attributes"},
                 {label: "Listeners", value: "getting-started#listeners"},
-                {label: "Change Handlers", value: "getting-started#change-handler-functions"},
+                {label: "Change Functions", value: "getting-started#change-functions"},
                 {label: "Simple App Recap", value: "getting-started#simple-app-recap"},
-                {label: "Virtual DOM", value: "getting-started#virtual-dom-arrays"},
-                {label: "Data Binding", value: "getting-started#data-binding"},
-                {label: "Data-Flow", value: "getting-started#data-flow"},
-                {label: "Events", value: "getting-started#events"},
               ]},
-              {label: "Core", options: [
-                "node",
-                "element",
-                "quad",
+              {label: "Advanced", options: [
+                {label: "Usage", value: "advanced#usage"},
+                {label: "Style", value: "advanced#style"},
+                {label: "Properties and Attributes", value: "advanced#properties-and-attributes"},
+                {label: "Listeners", value: "advanced#listeners"},
+                {label: "Change Functions", value: "advanced#change-functions"},
+                {label: "Virtual DOM Array", value: "advanced#virtual-dom-array"},
+                {label: "Data Binding", value: "advanced#data-binding"},
+                {label: "Data Flow", value: "advanced#data-flow"},
+                {label: "Events", value: "advanced#events"},
               ]},
-              {label: "Basic Elements", options: [
-                "item",
-                "button",
-                "boolean",
-                "switch",
-                "string",
-                "number",
-                "slider",
-                "option",
-              ]},
-              {label: "Layout & Navigation", options: [
-                "collapsable",
-                "selector",
-                "selector-tabs",
-                "selector-sidebar",
-                "sidebar",
-                "breadcrumbs",
-                "menu",
-              ]},
-              {label: "Object Editors", options: [
-                "properties",
-                "object",
-                "inspector",
+              {label: "Elements", options: [
+                {label: "Core", options: [
+                  "node",
+                  "element",
+                  "quad",
+                ]},
+                {label: "Basic Elements", options: [
+                  "item",
+                  "button",
+                  "boolean",
+                  "switch",
+                  "string",
+                  "number",
+                  "slider",
+                  "option",
+                ]},
+                {label: "Layout & Navigation", options: [
+                  "collapsable",
+                  "selector",
+                  "selector-tabs",
+                  "selector-sidebar",
+                  "sidebar",
+                  "breadcrumbs",
+                  "menu",
+                ]},
+                {label: "Object Editors", options: [
+                  "properties",
+                  "object",
+                  "inspector",
+                ]},
               ]},
             ],
             elements: [
@@ -195,6 +204,7 @@
               //     ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
               //
               ['io-md-view', {name: 'getting-started', path :'./docs/core/getting-started.md'}],
+              ['io-md-view', {name: 'advanced', path :'./docs/core/advanced.md'}],
               ['io-md-view', {name: 'quad', path :'./docs/core/quad.md'}],
               ['io-md-view', {name: 'node', path :'./docs/core/node.md'}],
               ['io-md-view', {name: 'element', path :'./docs/core/element.md'}],
@@ -203,8 +213,8 @@
               //     ['io-md-view', {name: 'service-loader', path :'./docs/core/service-loader.md'}],
             ]
           }],
-          ['io-demo', {name: 'Demo', import: "./demo/demo.js"}],
-          ['io-test', {name: 'Test', import: "./tests/test.js"}],
+          ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
+          ['io-test', {name: 'test', import: "./tests/test.js"}],
         ];
       }
     }
