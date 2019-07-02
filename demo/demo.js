@@ -216,7 +216,7 @@ export class IoDemo extends IoElement {
     // TODO: Add demos for all remaining elements
 
     this.template([
-      ['io-selector-tabs', {precache: true, selected: $('demo', 'Elements', true),
+      ['io-selector-tabs', {precache: true, selected: $('demo', 'elements', true),
         options: [
           {value: 'elements', label: "Elements"},
           {value: 'layout', label: "Layout"},
