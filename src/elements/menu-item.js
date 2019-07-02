@@ -88,8 +88,7 @@ export class IoMenuItem extends IoItem {
   get _value() {
     if (this.option && this.option.value !== undefined) {
       return this.option.value;
-    }
-    else return this.option;
+    } else if (this.option && typeof this.option !== 'object') return this.option;
   }
   get _icon() {
     if (this.option && this.option.icon !== undefined) {

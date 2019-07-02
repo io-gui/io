@@ -143,7 +143,7 @@ static get listeners() {
 
 ### Change Handler Functions ###
 
-When you instantiate an element, and every time one of its property changes, `.changed()` function will be called. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. Lastly, if a property value is an object `[propName]Mutated()` function will be called immediately after object mutation (see simple-data-flow requirements).
+When you instantiate an element, and every time one of its property changes, `.changed()` function will be called. Moreover, if `[propName]Changed()` function is defined, it will be called when the corresponding property changes. Lastly, if a property value is an object `[propName]Mutated()` function will be called immediately after object mutation (see data-flow requirements).
 
 ### Simple App Recap ###
 
@@ -239,7 +239,7 @@ If a property name is prefixed with `on-` it will be treated as a listener. Assi
 ['my-element', {'on-click': doSomethingFunction}],
 ```
 
-### Data Biding ###
+### Data Binding ###
 
 This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
 Keep in mind that this only works with io properties. In other words, binding to native HTML elements will not work.
@@ -259,7 +259,7 @@ myNode.dispose();
 
 **Note:** When object is no longer needed, call `dispose()` to prevent memory leakage. Elements will do this automatically when removed from the DOM.
 
-### Simple Data-Flow ###
+### Data-Flow ###
 
 On a fundamental level, data-flow in io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement designs where certain elements have the ability to modify and manage their own state. State changes are automatically communicated to the rest of the application following few simple rules.
 
@@ -273,7 +273,7 @@ On a fundamental level, data-flow in io is top down and UI designs with unidirec
 
 That is all! Object elements will automatically listen to `object-mutated` event and update if needed.
 
-### Events
+### Events ###
 
 | Event | Description | Detail |
 |:------:|:-----------:|:----------:|
