@@ -23,7 +23,12 @@ export const IoNodeMixin = (superclass) => {
      * @return {boolean} [properties.*.enumerable] - Makes property enumerable.
      */
     static get properties() {
-      return {};
+      return {
+        $: {
+          type: Object,
+          notify: false,
+        },
+      };
     }
     // TODO: refactor?
     get bindings() {

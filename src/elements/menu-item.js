@@ -15,8 +15,10 @@ export class IoMenuItem extends IoItem {
         background: none;
       }
       :host > * {
-        padding: 0 var(--io-spacing);
         pointer-events: none;
+      }
+      :host > :not(:empty) {
+        padding: 0 var(--io-spacing);
       }
       :host > .io-menu-icon {}
       :host > .io-menu-label {
@@ -99,7 +101,10 @@ export class IoMenuItem extends IoItem {
     if (this.option && this.option.label !== undefined) {
       return this.option.label;
     }
-    else return this.option;
+    if (this.option && this.option.value !== undefined) {
+      return String(this.option.value);
+    }
+    else return String(this.option);
   }
   get _hint() {
     if (this.option && this.option.hint !== undefined) {
@@ -285,13 +290,16 @@ export class IoMenuItem extends IoItem {
   optionChanged() {
     this._updateOptions();
   }
+  directionChanged() {
+    this._updateOptions();
+  }
   changed() {
     this.selected = this._selected;
     this.setAttribute('hasmore', this._options && this.direction === 'right');
     this.template([
-      this._icon ? ['span', {class: 'io-menu-icon'}, this._icon] : null,
+      ['span', {class: 'io-menu-icon'}, this._icon],
       ['span', {class: 'io-menu-label'}, this._label || String(this._value)],
-      this._hint ? ['span', {class: 'io-menu-hint'}, this._hint] : null,
+      ['span', {class: 'io-menu-hint'}, this._hint],
     ]);
   }
 }

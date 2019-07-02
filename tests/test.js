@@ -67,19 +67,6 @@ function runTests() {
 }
 
 export class IoTest extends IoElement {
-  static get style() {
-    return html`
-    <style>
-      :host {
-        display: block;
-        padding: 0.5em 1em;
-        background: #fff;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3),
-                    0 15px 30px 0 rgba(0, 0, 0, 0.15);
-      }
-    </style>
-    `;
-  }
   connectedCallback() {
     super.connectedCallback();
     runTests();

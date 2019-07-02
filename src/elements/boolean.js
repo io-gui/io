@@ -5,8 +5,8 @@ export class IoBoolean extends IoButton {
   static get style() {
     return html`<style>
       :host {
-        border: var(--io-inset-border);
-        border-color: var(--io-inset-border-color);
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
       }

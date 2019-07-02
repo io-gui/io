@@ -8,14 +8,19 @@ export class IoSelectorTabs extends IoSelector {
       :host {
         flex-direction: column;
         align-self: stretch;
+        flex: 1 1 auto;
       }
       :host > io-menu-options {
         border-radius: 0;
         border: none;
         font-size: 1.2em;
+        background-color: var(--io-background-color-dark);
       }
       :host > .io-content {
+        overflow: auto;
         -webkit-overflow-scrolling: touch;
+        border: var(--io-border);
+        border-width: var(--io-border-width) 0 0 0;
       }
     </style>`;
   }
@@ -37,10 +42,6 @@ export class IoSelectorTabs extends IoSelector {
       if (hasOption) this.$.tabs.selected = this.selected;
     }
   }
-  // selectedChanged() {
-  //   super.selectedChanged();
-  //   console.log(this.selected);
-  // }
   renderShadow() {
     const tabs = ['io-menu-options', {
       id: 'tabs',

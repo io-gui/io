@@ -10,22 +10,18 @@ export class IoSelector extends IoElement {
         flex-direction: column;
         align-self: stretch;
         overflow: auto;
-        position: relative;
       }
       :host[_loading] > .io-content {
-        background: repeating-linear-gradient(135deg, transparent, var(--io-background-color) 3px, var(--io-background-color) 7px, transparent 10px);
+        background: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px);
         background-repeat: repeat;
       }
       :host > .io-content {
-        color: var(--io-color);
         background: var(--io-background-color);
+        color: var(--io-color);
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
         overflow: auto;
-        padding: var(--io-spacing);
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
       }
     </style>`;
   }

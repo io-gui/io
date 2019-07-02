@@ -11,7 +11,7 @@ export class IoMenuOptions extends IoElement {
         white-space: nowrap;
         user-select: none;
         touch-action: none;
-        background: var(--io-background-color);
+        background: var(--io-background-color-dark);
         color: var(--io-color);
         border-radius: var(--io-border-radius);
         border: var(--io-outset-border);
@@ -28,6 +28,10 @@ export class IoMenuOptions extends IoElement {
       }
       :host[horizontal] > * {
         padding: calc(2 * var(--io-spacing)) calc(4 * var(--io-spacing));
+      }
+      :host:not([horizontal]) > io-menu-item > * {
+        min-width: 0.5em;
+        padding: 0 var(--io-spacing);
       }
       :host[horizontal] > io-menu-item > .io-menu-hint,
       :host[horizontal] > io-menu-item > .io-menu-more {
@@ -95,8 +99,8 @@ export class IoMenuOptions extends IoElement {
     this.setOverflow();
   }
   setOverflow() {
+    const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
     if (this.horizontal) {
-      const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
       const hamburger = this.querySelector('io-menu-item.io-hamburger');
       const rects = this._rects;
       rects.length = buttons.length;
@@ -113,8 +117,8 @@ export class IoMenuOptions extends IoElement {
       for (let i = buttons.length; i--;) {
         const r = buttons[i].getBoundingClientRect();
         rects[i] = rects[i] || {right: 0, width: 0};
-        rects[i].right = r.right ? Math.max(rects[i].right, r.right) : rects[i].right;
-        rects[i].width = r.width ? Math.max(rects[i].width, r.width) : rects[i].width;
+        if (r.right !== 0) rects[i].right = Math.min(rects[i].right || Infinity, r.right);
+        if (r.width !== 0) rects[i].width = Math.min(rects[i].width || Infinity, r.width);
 
         if (hamburger.hidden && overflow) {
           hamburger.hidden = false;
@@ -138,6 +142,10 @@ export class IoMenuOptions extends IoElement {
       }
       hamburger.option = {options: hamburgerOptions};
       this.overflow = overflow;
+    } else {
+      for (let i = buttons.length; i--;) {
+        buttons[i].hidden = false;
+      }
     }
   }
   nudgeRight(x, y, rect) {
@@ -226,12 +234,10 @@ export class IoMenuOptions extends IoElement {
       }]
     )];
     if (this.horizontal) {
-      // TODO: Detect selectedSubOption selected!
       elements.push(['io-menu-item', {
         label: '☰',
         title: 'select tab',
         value: this.value,
-        // option: {options: this.options},
         class: 'io-hamburger',
         _depth: this._depth,
       }]);

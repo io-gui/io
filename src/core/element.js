@@ -27,10 +27,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         type: String,
         enumerable: false,
       },
-      $: {
-        type: Object,
-        notify: false,
-      },
     };
   }
   static get observedAttributes() {

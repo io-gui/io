@@ -78,6 +78,8 @@
       io-md-view {
         padding: 1em;
       }
+      io-md-view pre > code {
+      }
       .main {
         display: flex;
         flex-direction: column;
@@ -85,42 +87,14 @@
         max-height: 100%;
         flex: 1 1 auto;
       }
-      .main > .io-content {
-        border-radius: 0;
-        border-width: var(--io-border-width) 0 0 0;
-        padding: 0;
-      }
-      .main > .io-content > * {
-        flex: 1 1 auto;
-      }
-      .main > io-tabs {
-        background: none !important;
-      }
-      .main > io-tabs > * {
-        background: none !important;
-      }
-      .docs > io-sidebar {
-        background: rgba(0, 0, 0, 0.2);
+      .main > io-menu-options {
+        background-color: var(--io-background-color);
       }
       .docs > io-sidebar[overflow] {
-        font-size: 1.3em !important;
-      }
-      .docs > io-sidebar > io-collapsable > io-boolean {
-        opacity: 0.5;
+        font-size: 1.4em !important;
       }
       .docs > io-sidebar:not([overflow]) {
         flex-basis: 14em !important;
-      }
-      .docs io-md-view {
-        padding-top: 0;
-      }
-      .docs > .io-content {
-        padding: 0;
-        border-radius: 0;
-        border-width: 0 0 0 var(--io-border-width);
-      }
-      .docs[overflow] > .io-content {
-        border-width: var(--io-border-width) 0 0 0;
       }
     </style>
     <link href="./lib/mocha.css" rel="stylesheet" />
@@ -129,6 +103,9 @@
     import {html, IoSelectorTabs, IoStorage as $} from "./build/io.js";
 
     export class IoMainPage extends IoSelectorTabs {
+      static get style() {
+        return '';
+      }
       static get properties() {
         return {
           selected: $('page', 'Docs', true),

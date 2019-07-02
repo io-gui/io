@@ -9,9 +9,13 @@ export class IoSelectorSidebar extends IoSelector {
       :host {
         flex-direction: row;
         align-self: stretch;
+        flex: 1 1 auto;
       }
       :host[overflow] {
         flex-direction: column;
+      }
+      :host > io-sidebar {
+        background-color: var(--io-background-color-dark);
       }
       :host:not([overflow]) > io-sidebar {
         flex: 0 0 8em;
@@ -19,6 +23,11 @@ export class IoSelectorSidebar extends IoSelector {
       :host > .io-content {
         overflow: auto;
         -webkit-overflow-scrolling: touch;
+        border: var(--io-border);
+        border-width: 0 0 0 var(--io-border-width);
+      }
+      :host[overflow] > .io-content {
+        border-width: var(--io-border-width) 0 0 0;
       }
     </style>`;
   }

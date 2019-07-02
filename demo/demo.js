@@ -191,7 +191,7 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoLayout = ['io-layout', {
-      name: 'Layout',
+      name: 'layout',
       orientation: 'horizontal',
       elements: [
         demoPrimitives,
@@ -216,20 +216,27 @@ export class IoDemo extends IoElement {
     // TODO: Add demos for all remaining elements
 
     this.template([
-      ['io-selector-tabs', {precache: true, selected: $('demo', 'Elements', true), elements: [
-        ['div', {name: 'Elements'}, [
-          ['h4', 'io-string io-number io-boolean'], demoPrimitives,
-          ['h4', 'io-switch'], demoSwitch,
-          ['h4', 'io-slider'], demoSliders,
-          ['h4', 'io-options'], demoOptions,
-          ['h4', 'io-button'], demoButton,
-          ['h4', 'io-menu'], demoMenu,
-          ['h4', 'io-object'], demoObject,
-          ['h4', 'io-inspector'], demoInspector,
-        ]],
-        demoLayout,
-        ['todo-app', {name: 'Todo App'}],
-      ]}]
+      ['io-selector-tabs', {precache: true, selected: $('demo', 'Elements', true),
+        options: [
+          {value: 'elements', label: "Elements"},
+          {value: 'layout', label: "Layout"},
+          {value: 'todo', label: "Todo App"},
+        ],
+        elements: [
+          ['div', {name: 'elements'}, [
+            ['h4', 'io-string io-number io-boolean'], demoPrimitives,
+            ['h4', 'io-switch'], demoSwitch,
+            ['h4', 'io-slider'], demoSliders,
+            ['h4', 'io-options'], demoOptions,
+            ['h4', 'io-button'], demoButton,
+            ['h4', 'io-menu'], demoMenu,
+            ['h4', 'io-object'], demoObject,
+            ['h4', 'io-inspector'], demoInspector,
+          ]],
+          demoLayout,
+          ['todo-app', {name: 'todo'}],
+        ]
+      }]
     ]);
   }
 }

@@ -27,13 +27,12 @@ export class IoSidebar extends IoElement {
       :host io-button {
         flex: 0 0 auto;
         margin: 0;
-        padding: var(--io-spacing);
+        padding: var(--io-spacing) calc(2 * var(--io-spacing));
         border: none;
         background: none;
       }
-      :host:not([overflow]) io-collapsable > io-button {
-        padding-left: 0.5em;
-        padding-right: 0.5em;
+      :host > io-collapsable > io-boolean {
+        opacity: 0.5;
       }
       :host .io-content {
         display: flex;

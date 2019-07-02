@@ -21,8 +21,8 @@ export class IoItem extends IoElement {
       :host:focus {
         overflow: hidden;
         text-overflow: clip;
-        outline: 1px solid var(--io-color-focus);
-        outline-offset: -1px;
+        border-color: var(--io-color-focus);
+        outline: 0;
       }
       :host[aria-invalid] {
         color: var(--io-color-error);

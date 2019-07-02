@@ -12,7 +12,7 @@ export class IoMenuLayer extends IoElement {
         bottom: 0;
         right: 0;
         z-index: 100000;
-        background: rgba(0, 0, 0, 0.2);
+        /* background: rgba(0, 0, 0, 0.05); */
         user-select: none;
         overflow: hidden;
         pointer-events: none;
@@ -27,7 +27,7 @@ export class IoMenuLayer extends IoElement {
         transform: translate3d(0, 0, 0);
         top: 0;
         left: 0;
-        max-width: 60vw !important;
+        max-width: 90vw !important;
       }
       :host io-menu-item:hover {
         background-color: inherit;
@@ -222,16 +222,13 @@ export class IoMenuLayer extends IoElement {
       }.bind(this), WAIT_TIME + 1);
     }
   }
-  _onPointerup() {
+  _onPointerup(event) {
     if (this._hoveredItem) {
       const collapse = !this._hoveredItem._options;
       if (collapse) {
         if (this._hoveredItem._onClick) {
-          if (event.type === "touchend") {
-            this._hoveredItem._onClick(event); //TODO: unhack! Removing this make mouse click twice.
-          }
-        } else {
-          console.error('Hovered invalid item', this._hoveredItem);
+          event.preventDefault();
+          this._hoveredItem._onClick(event);
         }
         this.collapseAll();
       }

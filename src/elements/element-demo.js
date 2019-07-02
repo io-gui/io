@@ -33,14 +33,17 @@ export class IoElementDemo extends IoElement {
       element: {
         type: String,
         reflect: -1,
+        notify: true,
       },
       properties: {
         type: Object,
         reflect: -1,
+        notify: true,
       },
       config: {
         type: Object,
         reflect: -1,
+        notify: true,
       },
     };
   }

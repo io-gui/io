@@ -34,16 +34,11 @@ export class IoOption extends IoMenuItem {
       options: Array,
     };
   }
-  // static get listeners() {
-  //   return {
-  //     'io-menu-item-clicked': '_onMenuItemClicked',
-  //   };
-  // }
-  // _onMenuItemClicked(event) {
-  //   event.stopImmediatePropagation();
-  //   this.set('value', event.detail.value);
-  //   console.log(this.value);
-  // }
+  get _options() {
+    if (this.options && this.options.length) {
+      return this.options;
+    }
+  }
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];
     if (item !== this) {
