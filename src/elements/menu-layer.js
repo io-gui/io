@@ -147,7 +147,7 @@ export class IoMenuLayer extends IoElement {
   }
   _onTouchend(event) {
     event.preventDefault();
-    this._onPointerup(event.changedTouches[0]);
+    this._onPointerup(event);
   }
   _onContextmenu(event) {
     event.preventDefault();

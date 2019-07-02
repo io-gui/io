@@ -124,7 +124,7 @@ export class IoSidebar extends IoElement {
         label: '☰  ' + label,
         title: 'select tab',
         value: this.selected,
-        option: {options: this.options},
+        options: this.options,
         'on-value-set': this._onValueSet,
       }]]);
     } else {
