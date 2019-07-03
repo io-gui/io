@@ -55,7 +55,7 @@ export class IoSelectorTabs extends IoElement {
       cache: true,
       editable: Boolean,
       role: {
-        reflect: false,
+        reflect: 0,
       },
     };
   }

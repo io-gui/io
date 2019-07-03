@@ -14,6 +14,7 @@ export class IoServiceLoader extends IoNode {
   }
   constructor(props) {
     super(props);
+    this.requestNotification = this.requestNotification.bind(this);
     if ("serviceWorker" in navigator) this.init();
   }
   async init() {

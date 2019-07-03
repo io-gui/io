@@ -193,4 +193,4 @@ class MyApp extends IoElement {
 MyApp.Register();
 ```
 
-> Cotinue reading [advanced documentation](#page=docs&doc=advanced#advanced-concepts).
+> Cotinue reading [advanced usage](#page=docs&doc=advanced#usage).

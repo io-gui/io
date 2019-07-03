@@ -40,7 +40,7 @@ Specifying configuration options is optional. In most cases, default values are 
 myProperty: {
   type: Boolean,
   value: false,
-  reflect: false,
+  reflect: 0,
   binding: null,
   enumerable: true
 }
