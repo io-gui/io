@@ -151,16 +151,19 @@ export class IoSelector extends IoElement {
   }
   selectedChanged() {
     const oldScrollID = this._scrollID;
-    const scrollID = this.selected.split('#')[1];
-    if (scrollID !== oldScrollID) {
-      this._scrollID = scrollID;
-      this.scrollIDChanged();
-    }
     const oldSelectedID = this._selectedID;
+
     const selectedID = this.selected.split('#')[0];
+    const scrollID = this.selected.split('#')[1];
+
     if (selectedID !== oldSelectedID) {
       this._selectedID = selectedID;
+      this._scrollID = scrollID;
+      this.scrollIDChanged();
       this.update();
+    } else if (scrollID !== oldScrollID) {
+      this._scrollID = scrollID;
+      this.scrollIDChanged();
     }
   }
   elementsChanged() {
