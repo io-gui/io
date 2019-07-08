@@ -25,10 +25,10 @@
     <link rel="icon" sizes="384x384" href="./images/logo/io-384.png" />
     <link rel="icon" sizes="512x512" href="./images/logo/io-512.png" />
 
-    <link rel="manifest" href="../manifest.json" />
+    <link rel="manifest" href="./manifest.json" />
 
-    <meta name="theme-color" content="#000000" />
-    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="theme-color" content="#f5f5f5" />
+    <meta name="msapplication-TileColor" content="#f5f5f5" />
 
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="application-name" content="UI library for web applications" />
@@ -54,13 +54,13 @@
     <meta property="og:description" content="UI library for web applications" />
     <meta property="og:locale" content="en_US" />
 
-    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap" rel="stylesheet">
 
     <meta name="google" content="notranslate">
 
     <style>
       html {
-        font: 16px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font: 16px 'Open Sans', Helvetica, Arial, sans-serif;
         letter-spacing: 0.05em;
         font-weight: 300;
         width: 100%;
@@ -100,7 +100,7 @@
     <link href="./lib/mocha.css" rel="stylesheet" />
     <script type="module">
 
-    import {html, IoSelectorTabs, IoStorage as $} from "./build/io.js";
+    import {html, IoSelectorTabs, IoStorage as $} from "./dist/io.js";
 
     export class IoMainPage extends IoSelectorTabs {
       static get style() {
