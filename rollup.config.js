@@ -25,7 +25,7 @@ export default [
     output: [
       {
         format: 'es',
-        file: 'build/io.js',
+        file: 'dist/io.js',
         indent: '  '
       }
     ],

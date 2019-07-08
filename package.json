@@ -1,13 +1,29 @@
 {
-  "name": "io",
-  "version": "2.4.0",
+  "name": "io-gui",
+  "version": "2.5.0",
   "description": "UI library for web applications.",
-  "author": "Aleksandar Rodic",
-  "license": "MIT",
+  "module": "dist/io.js",
+  "files": [
+    "src",
+    "dist/*.js"
+  ],
   "scripts": {
-    "uglify": "uglifyjs build/io.js -cmo build/io.js --comments",
+    "uglify": "uglifyjs dist/io.js -cmo dist/io.js --comments",
     "build": "eslint src && rollup -c && npm run uglify"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "io", "gui", "ui"
+  ],
+  "author": "Aleksandar Rodic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/io-gui/io/issues"
+  },
+  "homepage": "https://io-gui.dev",
   "devDependencies": {
     "babel-eslint": "^8.2.3",
     "eslint": "^4.19.1",

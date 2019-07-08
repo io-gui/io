@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorage as $} from "../build/io.js";
+import {html, IoElement, IoStorage as $} from "../dist/io.js";
 import "./todomvc/todo-app.js";
 
 export class IoDemo extends IoElement {

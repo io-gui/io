@@ -8,10 +8,10 @@ For a quick start, read this document, then check out the [source code](https://
 
 ## Usage ##
 
-Import Io module from `build/io.js` or `src/io.js`.
+Import Io module from `dist/io.js` or `src/io.js`.
 
 ```javascript
-import {IoElement} from "./io/build/io.js";
+import {IoElement} from "./io/dist/io.js";
 ```
 
 The library includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as [`<io-menu-options>`](#page=docs&doc=menu) for example, create the element, assign the options property, and add it to your DOM.
