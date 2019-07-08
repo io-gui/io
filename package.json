@@ -5,10 +5,12 @@
   "module": "dist/io.js",
   "files": [
     "src",
-    "dist/*.js"
+    "dist/*.js",
+    "LICENSE",
+    "readme.md"
   ],
   "scripts": {
-    "uglify": "uglifyjs dist/io.js -cmo dist/io.js --comments",
+    "uglify": "uglifyjs dist/io.js -cmo dist/io.js --comments && uglifyjs dist/io-extras.js -cmo dist/io-extras.js --comments",
     "build": "eslint src && rollup -c && npm run uglify"
   },
   "repository": {
@@ -16,7 +18,9 @@
     "url": "git+https://github.com/io-gui/io.git"
   },
   "keywords": [
-    "io", "gui", "ui"
+    "io",
+    "gui",
+    "ui"
   ],
   "author": "Aleksandar Rodic",
   "license": "MIT",
@@ -28,7 +32,6 @@
     "babel-eslint": "^8.2.3",
     "eslint": "^4.19.1",
     "rollup": "^0.59.4",
-    "uglify-es": "^3.3.10"
-  },
-  "dependencies": {}
+    "uglify-es": "^3.3.9"
+  }
 }

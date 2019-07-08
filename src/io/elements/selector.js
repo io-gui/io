@@ -25,10 +25,6 @@ export class IoSelector extends IoElement {
       }
     </style>`;
   }
-  static get attributes() {
-    return {
-    };
-  }
   static get properties() {
     return {
       elements:  Array,

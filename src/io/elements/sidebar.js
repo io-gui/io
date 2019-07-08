@@ -1,7 +1,6 @@
 import {html, IoElement} from "../core/element.js";
 import {IoStorage as $} from "../core/storage.js";
-import {Option} from "../types/option.js";
-import {filterObject} from "../utils/utility-functions.js";
+import {filterObject} from "../core/utils.js";
 
 export class IoSidebar extends IoElement {
   static get style() {
@@ -115,9 +114,7 @@ export class IoSidebar extends IoElement {
   //   console.log(this.selected);
   // }
   changed() {
-    // TODO: change menu selected while scrolling
-    const options = this.options.map(option => { return new Option(option); });
-    let selectedOption = filterObject(options, option => { return option.value === this.selected; });
+    let selectedOption = filterObject(this.options, option => { return option.value === this.selected; });
     if (this.overflow) {
       const label = selectedOption ? (selectedOption.label || String(selectedOption.value)) : String(this.selected).split('#')[0];
       this.template([['io-option', {

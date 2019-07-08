@@ -1,5 +1,5 @@
-import {html, IoElement} from "../core/element.js";
-import "../../lib/marked.min.js";
+import {html, IoElement} from "../../io.js";
+import "../../../lib/marked.min.js";
 
 if (window.marked) window.marked.setOptions({sanitize: false});
 

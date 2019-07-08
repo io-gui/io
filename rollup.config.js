@@ -1,3 +1,5 @@
+import path from 'path';
+
 function html() {
   return {
     transform( code, id ) {
@@ -29,5 +31,18 @@ export default [
         indent: '  '
       }
     ],
+  },
+  {
+    input: 'src/io-extras.js',
+    plugins: [html()],
+    experimentalDynamicImport: true,
+    output: [
+      {
+        format: 'es',
+        file: 'dist/io-extras.js',
+        indent: '  '
+      }
+    ],
+    external: [ path.resolve('src/io.js') ]
   },
 ];

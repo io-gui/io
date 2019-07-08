@@ -1,4 +1,4 @@
-/**
+/** @license
  * The MIT License
  *
  * Copyright © 2019 Aleksandar Rodic
@@ -22,36 +22,34 @@
  * THE SOFTWARE.
  */
 
-export {IoNodeMixin, IoNode} from "./core/node.js";
-export {IoElement, html} from "./core/element.js";
-export {Binding, NodeBindings} from "./core/bindings.js";
-export {IoQuad} from "./core/quad.js";
-export {IoStorage, storageNodes} from "./core/storage.js";
+export {IoNodeMixin, IoNode} from "./io/core/node.js";
+export {IoElement, html} from "./io/core/element.js";
+export {Binding, NodeBindings} from "./io/core/bindings.js";
+export {IoQuad} from "./io/core/quad.js";
+export {IoStorage, storageNodes} from "./io/core/storage.js";
 
-export {IoServiceLoader} from "./utils/service-loader.js";
+export {IoServiceLoader} from "./io/utils/service-loader.js";
 
-export {IoBoolean} from "./elements/boolean.js";
-export {IoBreadcrumbs} from "./elements/breadcrumbs.js";
-export {IoButton} from "./elements/button.js";
-export {IoCollapsable} from "./elements/collapsable.js";
-export {IoElementDemo} from "./elements/element-demo.js";
-export {IoInspector} from "./elements/inspector.js";
-export {IoItem} from "./elements/item.js";
-export {IoLayout} from "./elements/layout.js";
-export {IoMdView} from "./elements/md-view.js";
-export {IoMenuItem} from "./elements/menu-item.js";
-export {IoMenuLayer} from "./elements/menu-layer.js";
-export {IoMenuOptions} from "./elements/menu-options.js";
-export {IoMenu} from "./elements/menu.js";
-export {IoNumber} from "./elements/number.js";
-export {IoObject} from "./elements/object.js";
-export {IoOption} from "./elements/option.js";
-export {IoProperties} from "./elements/properties.js";
-export {IoSelectorSidebar} from "./elements/selector-sidebar.js";
-export {IoSelectorTabs} from "./elements/selector-tabs.js";
-export {IoSelector} from "./elements/selector.js";
-export {IoSlider} from "./elements/slider.js";
-export {IoString} from "./elements/string.js";
-export {IoSidebar} from "./elements/sidebar.js";
-export {IoSwitch} from "./elements/switch.js";
-export {IoTheme} from "./elements/theme.js";
+export {IoBoolean} from "./io/elements/boolean.js";
+export {IoBreadcrumbs} from "./io/elements/breadcrumbs.js";
+export {IoButton} from "./io/elements/button.js";
+export {IoCollapsable} from "./io/elements/collapsable.js";
+export {IoInspector} from "./io/elements/inspector.js";
+export {IoItem} from "./io/elements/item.js";
+export {IoLayout} from "./io/elements/layout.js";
+export {IoMenuItem} from "./io/elements/menu-item.js";
+export {IoMenuLayer} from "./io/elements/menu-layer.js";
+export {IoMenuOptions} from "./io/elements/menu-options.js";
+export {IoMenu} from "./io/elements/menu.js";
+export {IoNumber} from "./io/elements/number.js";
+export {IoObject} from "./io/elements/object.js";
+export {IoOption} from "./io/elements/option.js";
+export {IoProperties} from "./io/elements/properties.js";
+export {IoSelectorSidebar} from "./io/elements/selector-sidebar.js";
+export {IoSelectorTabs} from "./io/elements/selector-tabs.js";
+export {IoSelector} from "./io/elements/selector.js";
+export {IoSlider} from "./io/elements/slider.js";
+export {IoString} from "./io/elements/string.js";
+export {IoSidebar} from "./io/elements/sidebar.js";
+export {IoSwitch} from "./io/elements/switch.js";
+export {IoTheme} from "./io/elements/theme.js";

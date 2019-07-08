@@ -1,6 +1,6 @@
 import {html} from "../core/element.js";
 import {IoSelector} from "./selector.js";
-import {filterObject} from "../utils/utility-functions.js";
+import {filterObject} from "../core/utils.js";
 
 export class IoSelectorTabs extends IoSelector {
   static get style() {

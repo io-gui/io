@@ -1,30 +1,50 @@
-import {html, IoElement} from "../core/element.js";
+import {html, IoElement} from "../../io.js";
 
 export class IoElementDemo extends IoElement {
   static get style() {
     return html`<style>
       :host {
         display: flex;
+        flex-direction: row;
+        border-radius: calc(2 * var(--io-border-radius));
+        border: var(--io-border);
+        overflow: hidden;
+      }
+      :host[overflow] {
         flex-direction: column;
-        position: relative;
-        border: var(--io-inset-border);
-        border-color: var(--io-inset-border-color);
-        background: rgba(0, 0, 0, 0.125);
       }
-      :host > .demo-tag {
-        margin: var(--io-spacing);
-        margin-bottom: 0;
-      }
-      :host > io-properties {
-        margin-left: 0.5em;
-      }
-      :host > .io-content {
+      :host > div {
         display: flex;
         flex-direction: column;
+        border: var(--io-border);
+        border-width: 0;
+      }
+      :host > :first-child {
+        flex: 0 1 auto;
+        border-width: 0 var(--io-border-width) 0 0;
+      }
+      :host[overflow] > :first-child {
+        border-width: 0 0 var(--io-border-width) 0;
+      }
+      :host > :nth-child(2) {
+        flex: 1 1 auto;
+      }
+      :host > div > span {
+        font-weight: bold;
+        border: var(--io-border);
+        border-width: 0 0 var(--io-border-width) 0;
+        background: var(--io-background-color-field);
+        padding: var(--io-spacing) calc(4 * var(--io-spacing));
+      }
+      :host > div > io-properties {
+        margin-left: 0.5em;
+      }
+      :host > div > .io-content {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
         align-items: flex-start;
-        padding: var(--io-spacing);
         min-height: 1.2em;
-        background: rgba(255, 255, 255, 0.125);
       }
     </style>`;
   }
@@ -45,12 +65,17 @@ export class IoElementDemo extends IoElement {
         reflect: -1,
         notify: true,
       },
+      overflow: false,
     };
   }
   static get properties() {
     return {
+      minWidth: 640,
       _properties: Object,
     };
+  }
+  resized() {
+    this.overflow = this.getBoundingClientRect().width < this.minWidth;
   }
   _onPropSet(event) {
     this.properties[event.detail.property] = event.detail.value;
@@ -90,12 +115,17 @@ export class IoElementDemo extends IoElement {
     }
     if (this.element) {
       this.template([
-        ['div', {class: 'demo-tag'}, '<' + this.element + '>'],
-        ['io-properties', {value: this.properties, config: this.config}],
-        ['div', {class: 'io-content'}, [
-          [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
+        ['div', [
+          ['span', '<' + this.element + '>'],
+          ['io-properties', {value: this.properties, config: this.config}],
         ]],
-      ]);
+        ['div', [
+          ['span', 'RESULT'],
+          ['div', {class: 'io-content'}, [
+            [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
+          ]],
+        ]],
+       ]);
     } else {
       this.template([null]);
     }

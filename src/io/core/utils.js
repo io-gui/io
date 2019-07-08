@@ -1,8 +1,3 @@
-export function isValuePropertyOf(prop, object) {
-  for (let key in object) if (object[key] === prop) return key;
-  return null;
-}
-
 export function filterObject(object, predicate) {
   if (predicate(object)) return object;
   for (let key in object) {

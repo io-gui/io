@@ -1,15 +1,18 @@
 import {html} from "../core/element.js";
 import {IoSelector} from "./selector.js";
 import "./sidebar.js";
-import {filterObject} from "../utils/utility-functions.js";
+import {filterObject} from "../core/utils.js";
 
 export class IoSelectorSidebar extends IoSelector {
   static get style() {
     return html`<style>
       :host {
-        flex-direction: row;
+        flex-direction: row-reverse;
         align-self: stretch;
         flex: 1 1 auto;
+      }
+      :host[left] {
+        flex-direction: row;
       }
       :host[overflow] {
         flex-direction: column;
@@ -24,6 +27,9 @@ export class IoSelectorSidebar extends IoSelector {
         overflow: auto;
         -webkit-overflow-scrolling: touch;
         border: var(--io-border);
+        border-width: 0 var(--io-border-width) 0 0
+      }
+      :host[left] > .io-content {
         border-width: 0 0 0 var(--io-border-width);
       }
       :host[overflow] > .io-content {
@@ -41,13 +47,15 @@ export class IoSelectorSidebar extends IoSelector {
       overflow: {
         type: Boolean,
         notify: true,
-      }
+      },
+      left: {
+        value: true,
+      },
     };
   }
   static get properties() {
     return {
       options: Array,
-      left: true,
       minWidth: 410,
     };
   }
@@ -76,11 +84,7 @@ export class IoSelectorSidebar extends IoSelector {
       options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
       overflow: this.overflow,
     }];
-    if (this.left) {
-      this.template([tabs, ['div', {id: 'content', class: 'io-content', 'on-scroll': this._onScroll}]]);
-    } else {
-      this.template([['div', {id: 'content', class: 'io-content', 'on-scroll': this._onScroll}], tabs]);
-    }
+    this.template([tabs, ['div', {id: 'content', class: 'io-content', 'on-scroll': this._onScroll}]]);
   }
 }
 

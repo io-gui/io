@@ -3,6 +3,8 @@ import {IoNode} from "./node.js";
 const nodes = {};
 let hashes = {};
 
+// let permitted = !!localStorage.getItem('io-storage-permitted');
+
 const parseHashes = function() {
   return window.location.hash.substr(1).split('&').reduce(function (result, item) {
     const parts = item.split('=');
@@ -110,7 +112,6 @@ export function IoStorage(key, defValue, hash) {
     nodes[key] = new IoStorageNode({key: key, hash: hash}, defValue);
     nodes[key].binding = nodes[key].bind('value');
     nodes[key].connect(window);
-    nodes[key].valueChanged();
   }
   return nodes[key].binding;
 }

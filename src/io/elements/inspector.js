@@ -1,8 +1,12 @@
 import {html, IoElement} from "../core/element.js";
 import {IoStorage as $} from "../core/storage.js";
 import "./breadcrumbs.js";
-import {Option} from "../types/option.js";
-import {isValuePropertyOf} from "../utils/utility-functions.js";
+import {Item} from "./item.js";
+
+export function isValuePropertyOf(prop, object) {
+  for (let key in object) if (object[key] === prop) return key;
+  return null;
+}
 
 export class IoInspector extends IoElement {
   static get style() {
@@ -93,7 +97,7 @@ export class IoInspector extends IoElement {
     if (!option) {
       const lastOption = this._options[this._options.length - 1];
       if (!lastOption || !isValuePropertyOf(this.value, lastOption.value)) this._options.length = 0;
-      this._options.push(new Option(this.value));
+      this._options.push(new Item(this.value));
       this.dispatchEvent('object-mutated', {object: this._options}, false, window);
     }
   }
