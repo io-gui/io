@@ -1,8 +1,10 @@
 ## About Io ##
 
-Io is a JavaScript UI framework for data-driven web applications. It implements custom elements, virtual DOM, data binding and a simple data-flow design. This library is an experiment. **Use at own risk!**
+Io is a JavaScript UI framework for reactive web applications. It implements custom elements, virtual DOM, data binding and a simple data-flow design.
 
-For a quick start, read this document, then check out the [source code](https://github.com/arodic/io/) and [documentation](#page=docs).
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/io-gui/io/blob/master/LICENSE)
+
+For a quick start, read this document, then check out the [source code](https://github.com/io-gui/io/).
 
 ## Usage ##
 

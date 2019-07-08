@@ -2,7 +2,7 @@
   "name": "io",
   "version": "2.4.0",
   "description": "UI library for web applications.",
-  "author": "Aleksandar Aki Rodic",
+  "author": "Aleksandar Rodic",
   "license": "MIT",
   "scripts": {
     "uglify": "uglifyjs build/io.js -cmo build/io.js --comments",
