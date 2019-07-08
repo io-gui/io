@@ -60,12 +60,12 @@ export class IoSelector extends IoElement {
   connectedCallback() {
     super.connectedCallback();
     document.head.appendChild(this.stagingElement);
-    document.addEventListener('readystatechange', this.precacheChanged);
+    document.addEventListener('readystatechange', this.onReadyStateChange);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     document.head.removeChild(this.stagingElement);
-    document.removeEventListener('readystatechange', this.precacheChanged);
+    document.removeEventListener('readystatechange', this.onReadyStateChange);
   }
   checkImport(path, callback) {
     const importPath = path ? new URL(path, window.location).href : undefined;
@@ -82,6 +82,9 @@ export class IoSelector extends IoElement {
         });
       }
     }
+  }
+  onReadyStateChange() {
+    this.precacheChanged();
   }
   precacheChanged() {
     if (this.__connected && this.precache && document.readyState === 'complete') {
