@@ -45,6 +45,7 @@ export class IoElementDemo extends IoElement {
         flex-direction: column;
         align-items: flex-start;
         min-height: 1.2em;
+        padding: calc(2 * var(--io-spacing));
       }
     </style>`;
   }

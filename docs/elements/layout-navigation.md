@@ -1,4 +1,4 @@
-## &lt;io-collapsable&gt; ##
+## io-collapsable ##
 
 An element with collapsable content.
 
@@ -24,7 +24,7 @@ When clicked or activated by space/enter key, it toggles the visibility of the c
 
 &nbsp;
 
-## &lt;io-selector&gt; ##
+## io-selector ##
 
 Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
 
@@ -46,7 +46,7 @@ If `precache` property is set to `true`, all elements will be created for immedi
 
 &nbsp;
 
-## &lt;io-selector-tabs&gt; ##
+## io-selector-tabs ##
 
 Element selector with selectable tabs interfce. Extends `<io-selector>`.
 
@@ -68,7 +68,7 @@ Extends `<io-selector>`. Implements `<io-tabs>`.
 
 &nbsp;
 
-## &lt;io-selector-sidebar&gt; ##
+## io-selector-sidebar ##
 
 Element selector with selectable sidebar interfce. Extends `<io-selector>`.
 
@@ -92,7 +92,7 @@ Extends `<io-selector>`. Implements `<io-sidebar>`.
 
 &nbsp;
 
-## &lt;io-sidebar&gt; ##
+## io-sidebar ##
 
 Labeled tabs for selection.
 
@@ -119,7 +119,7 @@ When tabs are clicked, `selected` value is set.
 
 &nbsp;
 
-## &lt;io-breadcrumbs&gt; ##
+## io-breadcrumbs ##
 
 Breadcrumbs select element.
 

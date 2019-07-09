@@ -1,4 +1,4 @@
-## &lt;io-md-view&gt; ##
+## io-md-view ##
 
 **Properties**
 
@@ -6,7 +6,7 @@
 
 &nbsp;
 
-## &lt;io-element-demo&gt; ##
+## io-element-demo ##
 
 **Properties**
 
@@ -14,7 +14,7 @@
 
 &nbsp;
 
-## &lt;io-service-loader&gt; ##
+## io-service-loader ##
 
 **Properties**
 

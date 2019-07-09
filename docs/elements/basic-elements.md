@@ -1,4 +1,4 @@
-## &lt;io-item&gt; ##
+## io-item ##
 
 A simple focusable element.
 
@@ -17,7 +17,7 @@ When focused, arrow keys will change focus to the nearest focusable element in t
 
 &nbsp;
 
-## &lt;io-button&gt; ##
+## io-button ##
 
 A simple button element.
 
@@ -35,7 +35,7 @@ When clicked or activated by space/enter key, it calls the `action` function wit
 
 &nbsp;
 
-## &lt;io-boolean&gt; ##
+## io-boolean ##
 
 Input element for `Boolean` data type displayed as text.
 
@@ -61,7 +61,7 @@ It can be configured to display custom `true` or `false` string depending on its
 
 &nbsp;
 
-## &lt;io-switch&gt; ##
+## io-switch ##
 
 Input element for `Boolean` data type displayed as switch toggle.
 
@@ -83,7 +83,7 @@ Extends `<io-button>`.
 
 &nbsp;
 
-## &lt;io-string&gt; ##
+## io-string ##
 
 Input element for `String` data type.
 
@@ -105,7 +105,7 @@ When focused, arrow keys will change focus to the nearest focusable element in t
 
 &nbsp;
 
-## &lt;io-number&gt; ##
+## io-number ##
 
 Input element for `Number` data type.
 
@@ -133,7 +133,7 @@ When focused, arrow keys will change focus to the nearest focusable element in t
 
 &nbsp;
 
-## &lt;io-slider&gt; ##
+## io-slider ##
 
 Input element for `Number` data type displayed as interactive slider with a number field.
 
@@ -164,7 +164,7 @@ To change the value with arrow keys on focused slider, users should hold down th
 
 &nbsp;
 
-## &lt;io-option&gt; ##
+## io-option ##
 
 Option select element.
 
@@ -192,7 +192,7 @@ When clicked or activated by space/enter key, it expands a menu with selectable 
 
 &nbsp;
 
-## &lt;io-menu&gt; ##
+## io-menu ##
 
 <io-element-demo element="io-menu" properties='{"value": "", "button": 0, "position": "pointer", "options": [{"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]}, {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]}, {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}]}' config='{"button": ["io-option", {"options": [0, 1, 2]}], "position": ["io-option", {"options": ["pointer", "top", "right", "bottom", "left"]}]}'></io-element-demo>
 
@@ -200,7 +200,7 @@ When clicked or activated by space/enter key, it expands a menu with selectable 
 
 <io-element-demo element="io-menu-item" properties='{"value": "", "direction": "right", "option": {"label": "Hearts", "icon": "❤", "hint": "colors", "options": [{"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]}, {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]}, {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}]}}' config='{"position": ["io-option", {"options": ["top", "right", "bottom", "left"]}]}'></io-element-demo>
 
-## &lt;io-gl&gt; ##
+## io-gl ##
 
 WebGL canvas for rendering elements as shaders.
 

@@ -1,4 +1,4 @@
-## &lt;io-properties&gt; ##
+## io-properties ##
 
 Object property editor.
 
@@ -23,7 +23,7 @@ Displays a set of labeled property editors for the `value` object. It can be con
 
 &nbsp;
 
-## &lt;io-object&gt; ##
+## io-object ##
 
 Object property editor.
 
@@ -52,7 +52,7 @@ Displays a set of labeled property editors for the `value` object inside io-coll
 
 &nbsp;
 
-## &lt;io-inspector&gt; ##
+## io-inspector ##
 
 Object property editor.
 

@@ -72,8 +72,8 @@ export class IoSliderKnob extends IoGl {
         border-color: var(--io-color-error);
       }
       :host:focus {
-        outline: 1px solid var(--io-color-focus);
-        outline-offset: -1px;
+        outline: 0;
+        border-color: var(--io-color-focus);
       }
     </style>`;
   }
