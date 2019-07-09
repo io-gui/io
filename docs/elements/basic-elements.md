@@ -204,7 +204,7 @@ When clicked or activated by space/enter key, it expands a menu with selectable 
 
 WebGL canvas for rendering elements as shaders.
 
-<io-element-demo element="io-quad" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}]}'></io-element-demo>
+<io-element-demo element="io-gl" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}]}'></io-element-demo>
 
 This is a base class for WebGL shader elemenents.
 

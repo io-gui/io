@@ -27,6 +27,9 @@ export class IoItem extends IoElement {
       :host {
         display: inline-block;
         cursor: pointer;
+        border: var(--io-inset-border);
+        border-radius: var(--io-border-radius);
+        border-color: transparent;
         background-color: var(--io-background-color);
         color: var(--io-color);
         padding: var(--io-spacing);

@@ -30,12 +30,12 @@ export class IoProperties extends IoElement {
       :host > .io-property > .io-property-editor {
         flex: 1 1 auto;
       }
-      :host io-number,
-      :host io-string,
-      :host io-boolean,
-      :host io-switch,
+      :host > .io-property > io-number,
+      :host > .io-property > io-string,
+      :host > .io-property > io-boolean,
+      :host > .io-property > io-switch,
       :host > .io-property > io-option {
-        flex: 0 0 auto;
+        flex: 0 1 auto;
         padding: var(--io-spacing) !important;
       }
       :host > .io-property > io-number {

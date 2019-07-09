@@ -6,8 +6,6 @@ export class IoNumber extends IoItem {
     return html`<style>
       :host {
         white-space: nowrap;
-        border: var(--io-inset-border);
-        border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);

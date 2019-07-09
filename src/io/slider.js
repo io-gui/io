@@ -1,5 +1,5 @@
 import {html, IoElement} from "./core/element.js";
-import {IoQuad} from "./core/quad.js";
+import {IoGl} from "./gl.js";
 
 export class IoSlider extends IoElement {
   static get style() {
@@ -57,7 +57,7 @@ export class IoSlider extends IoElement {
 
 IoSlider.Register();
 
-export class IoSliderKnob extends IoQuad {
+export class IoSliderKnob extends IoGl {
   static get style() {
     return html`<style>
       :host {

@@ -22,6 +22,8 @@ export class IoSelector extends IoElement {
         flex-direction: column;
         flex: 1 1 auto;
         overflow: auto;
+        overflow-y: scroll;
+        overflow-x: hidden;
       }
     </style>`;
   }
@@ -51,7 +53,8 @@ export class IoSelector extends IoElement {
   }
   _onIoContentReady(event) {
     event.stopImmediatePropagation();
-    this.scrollIDChanged();
+    const elem = this.$.content.querySelector('#' + this._scrollID);
+    if (elem) elem.scrollIntoView({});
   }
   constructor(props) {
     super(props);
@@ -106,12 +109,8 @@ export class IoSelector extends IoElement {
     this.template([['div', {id: 'content', class: 'io-content'}]]);
   }
   scrollTo(id) {
-    if (id) {
-      const elem = this.$.content.querySelector('#' + id);
-      if (elem) {
-        elem.scrollIntoView({behavior: 'smooth'});
-      }
-    }
+    const elem = this.$.content.querySelector('#' + id);
+    if (elem) elem.scrollIntoView({behavior: 'smooth'});
   }
   _onScroll() {
     if (this._scrollID === undefined) return;

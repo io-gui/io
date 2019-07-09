@@ -131,6 +131,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     }
 
     for (let i = 0; i < children.length; i++) {
+
       // replace existing elements
       if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];
@@ -183,7 +184,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         this.$[vChildren[i].props.id] = children[i];
       }
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-        children[i].innerText = vChildren[i].children;
+        if (children[i].innerText !== vChildren[i].children) {
+          children[i].innerText = vChildren[i].children;
+        }
       } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
         this.traverse(vChildren[i].children, children[i]);
       }

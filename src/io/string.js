@@ -5,8 +5,6 @@ export class IoString extends IoItem {
   static get style() {
     return html`<style>
       :host {
-        border: var(--io-inset-border);
-        border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);

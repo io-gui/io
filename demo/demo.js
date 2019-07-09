@@ -5,24 +5,26 @@ export class IoDemo extends IoElement {
   static get style() {
     return html`<style>
       :host {
-        display: flex;
-        flex-direction: column;
-        flex: 1 0 auto;
+        display: block;
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* flex: 1 0 auto; */
       }
       :host > io-selector-tabs {
-        display: flex;
-        flex-direction: column;
-        flex: 1 0 auto;
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* flex: 1 0 auto; */
       }
       :host > io-selector-tabs > io-selector {
-        display: flex;
+        /* display: flex;
         flex-direction: column;
-        flex: 1 0 auto;
+        flex: 1 0 auto; */
       }
       :host .table {
         display: grid;
         grid-template-columns: 5.5em 5.5em 5.5em;
         grid-gap: var(--io-spacing);
+        overflow: hidden;
       }
       :host .sidebar {
         display: inline-block;
@@ -43,6 +45,13 @@ export class IoDemo extends IoElement {
       }
       :host div[name=Elements] {
         padding: var(--io-spacing);
+      }
+      :host h4 {
+        flex: 0 0 2em;
+        background: red;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
       }
     </style>`;
   }
@@ -97,9 +106,9 @@ export class IoDemo extends IoElement {
       ['io-string', {value: this.bind('null')}],
       ['io-number', {value: this.bind('null')}],
       ['io-boolean', {type: 'boolean', value: this.bind('null')}],
-      ['io-string', {value: this.bind('undefined')}],
-      ['io-number', {value: this.bind('undefined')}],
-      ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
+      // ['io-string', {value: this.bind('undefined')}],
+      // ['io-number', {value: this.bind('undefined')}],
+      // ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
     ]];
 
     const demoSwitch = ['div', {name: 'switch'}, [

@@ -25,7 +25,6 @@
 export {IoNodeMixin, IoNode} from "./io/core/node.js";
 export {IoElement, html} from "./io/core/element.js";
 export {Binding, NodeBindings} from "./io/core/bindings.js";
-export {IoQuad} from "./io/core/quad.js";
 export {IoStorage, storageNodes} from "./io/core/storage.js";
 
 export {IoBoolean} from "./io/boolean.js";
@@ -33,6 +32,7 @@ export {IoBreadcrumbs} from "./io/breadcrumbs.js";
 export {IoButton} from "./io/button.js";
 export {IoCollapsable} from "./io/collapsable.js";
 export {IoInspector} from "./io/inspector.js";
+export {IoGl} from "./io/gl.js";
 export {IoItem} from "./io/item.js";
 export {IoLayout} from "./io/layout.js";
 export {IoMenuItem} from "./io/menu-item.js";

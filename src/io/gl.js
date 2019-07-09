@@ -1,6 +1,6 @@
 // TODO: document, demo, test
 
-import {html, IoElement} from "./element.js";
+import {html, IoElement} from "./core/element.js";
 
 const animationQueue = new Array();
 const animate = function() {
@@ -49,7 +49,7 @@ const shadersCache = new WeakMap();
 
 // TODO: fix sizing logic
 
-export class IoQuad extends IoElement {
+export class IoGl extends IoElement {
   static get style() {
     return html`<style>
       :host {
@@ -203,4 +203,4 @@ export class IoQuad extends IoElement {
   }
 }
 
-IoQuad.Register();
+IoGl.Register();
