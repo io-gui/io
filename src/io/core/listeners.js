@@ -94,6 +94,7 @@ export class Listeners {
    * Adds an event listener.
    * @param {string} type - event name to listen to.
    * @param {function} listener - event handler function.
+   * @param {Object} options - event listener options.
    */
   addEventListener(type, listener, options) {
     const node = this.node;
@@ -109,6 +110,7 @@ export class Listeners {
    * Removes an event listener.
    * @param {string} type - event name to listen to.
    * @param {function} listener - event handler function.
+   * @param {Object} options - event listener options.
    */
   removeEventListener(type, listener, options) {
     const node = this.node;
