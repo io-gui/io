@@ -55,12 +55,6 @@ export class IoDemo extends IoElement {
     this.setNumber = this.setNumber.bind(this);
 
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
-    const pointerEventsWarning = [
-      "PointerEvent" in window ? [] : ['div', {class: 'warning'}, [
-        ['p', 'This feature requires missing PointerEvents support!'],
-        ['a', {href: "https://github.com/jquery/PEP#why-pointer-events"}, 'Learn more about the API!'],
-      ]]
-    ]
 
     const demoPrimitives = ['div', {name: 'primitives', class: 'table'}, [
       ['span', 'io-string'],
@@ -174,28 +168,28 @@ export class IoDemo extends IoElement {
       ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
     ]];
 
-    const demoLayout = ['io-layout', {
-      // name: 'layout',
-      // orientation: 'horizontal',
-      // elements: [
-      //   demoPrimitives,
-      //   demoSwitch,
-      //   demoSliders,
-      //   demoOptions,
-      //   demoButton,
-      //   demoObject,
-      //   demoInspector,
-      //   demoMenu,
-      // ],
-      // splits: [
-      //   {selected: 'sliders', tabs: ['sliders'], size: 280},
-      //   {orientation: 'vertical', splits: [
-      //     {tabs: ['button'], selected: 'button', size: 100},
-      //     {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
-      //     {tabs: ['primitives'], selected: 'primitives'},
-      //   ]},
-      // ],
-    }];
+    // const demoLayout = ['io-layout', {
+    //   name: 'layout',
+    //   orientation: 'horizontal',
+    //   elements: [
+    //     demoPrimitives,
+    //     demoSwitch,
+    //     demoSliders,
+    //     demoOptions,
+    //     demoButton,
+    //     demoObject,
+    //     demoInspector,
+    //     demoMenu,
+    //   ],
+    //   splits: [
+    //     {selected: 'sliders', tabs: ['sliders'], size: 280},
+    //     {orientation: 'vertical', splits: [
+    //       {tabs: ['button'], selected: 'button', size: 100},
+    //       {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
+    //       {tabs: ['primitives'], selected: 'primitives'},
+    //     ]},
+    //   ],
+    // }];
 
     // TODO: Add demos for all remaining elements
 

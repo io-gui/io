@@ -1,12 +1,9 @@
 # Io GUI
 
-[![NPM package][npm]][npm-url]
-[![Build Size][build-size]][build-size-url]
-[![Build Status][build-status]][build-status-url]
-[![Dependencies][dependencies]][dependencies-url]
-[![Dev Dependencies][dev-dependencies]][dev-dependencies-url]
 [![Language Grade][lgtm]][lgtm-url]
 
+[lgtm]: https://img.shields.io/lgtm/grade/javascript/g/io-gui/io.svg?label=code%20quality
+[lgtm-url]: https://lgtm.com/projects/g/io-gui/io/
 ## Lightweight UI Framework for The Web
 
 Io is a UI framework for reactive web applications. It implements custom elements, virtual DOM, data binding and a simple data-flow design. It comes with a collection of UI elements suitable for use with other frameworks.
