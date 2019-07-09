@@ -3,9 +3,9 @@
 <!-- [![NPM package][npm]][npm-url] -->
 <!-- [![Build Size][build-size]][build-size-url] -->
 <!-- [![Build Status][build-status]][build-status-url] -->
-[![Dependencies][dependencies]][dependencies-url]
-[![Dev Dependencies][dev-dependencies]][dev-dependencies-url]
-[![Language Grade][lgtm]][lgtm-url]
+[![Dependencies][deps]][deps-url]
+[![Dev Dependencies][dev-deps]][dev-deps-url]
+[![Code Quality][lgtm]][lgtm-url]
 
 <!-- [npm]: https://img.shields.io/npm/v/io-gui.svg
 [npm-url]: https://www.npmjs.com/package/io-gui
@@ -13,10 +13,10 @@
 [build-size-url]: https://bundlephobia.com/result?p=io-gui
 [build-status]: https://travis-ci.org/io-gui/io.svg?branch=dev
 [build-status-url]: https://travis-ci.org/io-gui/io -->
-[dependencies]: https://img.shields.io/david/io-gui/io.svg
-[dependencies-url]: https://david-dm.org/io-gui/io
-[dev-dependencies]: https://img.shields.io/david/dev/io-gui/io.svg
-[dev-dependencies-url]: https://david-dm.org/io-gui/io#info=devDependencies
+[deps]: https://img.shields.io/david/io-gui/io.svg
+[deps-url]: https://david-dm.org/io-gui/io
+[dev-deps]: https://img.shields.io/david/dev/io-gui/io.svg
+[dev-deps-url]: https://david-dm.org/io-gui/io?type=dev
 [lgtm]: https://img.shields.io/lgtm/grade/javascript/g/io-gui/io.svg?label=code%20quality
 [lgtm-url]: https://lgtm.com/projects/g/io-gui/io/
 
