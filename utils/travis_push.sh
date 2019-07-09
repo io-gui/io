@@ -16,6 +16,8 @@ git_push() {
   git push --quiet --set-upstream origin ${$TRAVIS_BRANCH}
 }
 
-git_setup
-git_commit
-git_push
+if [ "$TRAVIS_BRANCH" == "master" ]; then
+  git_setup
+  git_commit
+  git_push
+fi

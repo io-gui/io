@@ -4,4 +4,4 @@ node_js:
 script:
   - npm run travis
 after_success:
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then ./utils/travis_push.sh; fi
+  - ./utils/travis_push.sh;
