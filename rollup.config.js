@@ -23,7 +23,7 @@ export default [
   {
     input: 'src/io.js',
     plugins: [html()],
-    experimentalDynamicImport: true,
+    inlineDynamicImports: true,
     output: [
       {
         format: 'es',
@@ -35,7 +35,7 @@ export default [
   {
     input: 'src/io-extras.js',
     plugins: [html()],
-    experimentalDynamicImport: true,
+    inlineDynamicImports: true,
     output: [
       {
         format: 'es',
@@ -43,6 +43,10 @@ export default [
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/io.js') ]
+    external: [ path.resolve('src/io.js') ],
+    onwarn: (warning, warn) => {
+      if (warning.code === 'THIS_IS_UNDEFINED') return;
+      warn(warning);
+    }
   },
 ];
