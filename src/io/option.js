@@ -38,6 +38,7 @@ export class IoOption extends IoMenuItem {
     if (this.options && this.options.length) {
       return this.options;
     }
+    return undefined;
   }
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];

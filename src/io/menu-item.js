@@ -80,21 +80,25 @@ export class IoMenuItem extends IoItem {
     if (this.option && this.option.options && this.option.options.length) {
       return this.option.options;
     }
+    return undefined;
   }
   get _action() {
     if (this.option && typeof this.option.action === 'function') {
       return this.option.action;
     }
+    return undefined;
   }
   get _value() {
     if (this.option && this.option.value !== undefined) {
       return this.option.value;
     } else if (this.option && typeof this.option !== 'object') return this.option;
+    return undefined;
   }
   get _icon() {
     if (this.option && this.option.icon !== undefined) {
       return this.option.icon;
     }
+    return undefined;
   }
   get _label() {
     if (this.label) return this.label;
@@ -110,6 +114,7 @@ export class IoMenuItem extends IoItem {
     if (this.option && this.option.hint !== undefined) {
       return this.option.hint;
     }
+    return undefined;
   }
   get _selected() {
     if (this.option && (this.option.selected || this.option.value === this.value)) {

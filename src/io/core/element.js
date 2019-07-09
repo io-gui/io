@@ -148,7 +148,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         // children[i].className = ''; // TODO: test
         children[i].removeAttribute('className');
         // Io Elements
-        if (children[i].hasOwnProperty('__properties')) {
+
+        if (Object.prototype.hasOwnProperty.call(children[i], '__properties')) {
           // WARNING TODO: Better property and listeners reset.
           // WARNING TODO: Test property and listeners reset.
           children[i].setProperties(vChildren[i].props);

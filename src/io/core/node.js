@@ -30,10 +30,6 @@ export const IoNodeMixin = (superclass) => {
         },
       };
     }
-    // TODO: refactor?
-    get bindings() {
-      return;
-    }
     /**
       * Creates `IoNode` instance and initializes internals.
       * @param {Object} initProps - Property values to inialize instance with.
