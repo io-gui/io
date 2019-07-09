@@ -52,10 +52,10 @@ export class IoTheme extends IoNode {
         --io-background-color-field: rgb(225, 225, 225);
 
         --io-color: rgb(42, 42, 42);
-        --io-color-error: rgb(290, 0, 0);
+        --io-color-error: rgb(225, 100, 100);
         --io-color-link: rgb(30, 180, 30);
         --io-color-focus: rgb(80, 210, 355);
-        --io-color-field: rgb(20, 20, 50);
+        --io-color-field: rgb(0, 0, 0);
         --io-color-number: rgb(32, 164, 255);
         --io-color-string: rgb(240, 64, 22);
         --io-color-boolean: rgb(210, 90, 190);

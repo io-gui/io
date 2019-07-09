@@ -224,11 +224,11 @@ export class IoSliderKnob extends IoQuad {
   }
   changed() {
     super.changed();
-    this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
-    this.setAttribute('aria-valuenow', this.value);
+    this.setAttribute('aria-invalid', isNaN(this.value) ? 'true' : false);
+    this.setAttribute('aria-valuenow', isNaN(this.value) ? 0 : this.value);
     this.setAttribute('aria-valuemin', this.minValue);
     this.setAttribute('aria-valuemax', this.maxValue);
-    this.setAttribute('aria-valuestep', this.step);
+    // this.setAttribute('aria-valuestep', this.step);
   }
   // TODO: implement proper sdf shapes.
   static get frag() {

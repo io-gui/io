@@ -1,11 +1,11 @@
 import {IoElement, html} from "../core/element.js";
 
 export class Item {
-  constructor(option) {
-    if (typeof option === 'object' && (option.options !== undefined || option.action !== undefined || option.value !== undefined)) {
-      Object.assign(this, option);
+  constructor(value) {
+    if (typeof value === 'object' && (value.options !== undefined || value.action !== undefined || value.value !== undefined)) {
+      Object.assign(this, value);
     } else {
-      this.value = option;
+      this.value = value;
     }
     if (this.label === undefined) {
       if (this.value instanceof Array) {
@@ -46,7 +46,10 @@ export class IoItem extends IoElement {
         outline: 0;
       }
       :host[aria-invalid] {
-        color: var(--io-color-error);
+        text-decoration: underline;
+        text-decoration-style: dashed;
+        text-decoration-color: var(--io-color-error);
+        border-color: var(--io-color-error);
       }
       :host[hidden] {
         display: none;

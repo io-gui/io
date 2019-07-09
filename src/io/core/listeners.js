@@ -44,14 +44,20 @@ export class Listeners {
    */
   connect() {
     const node = this.node;
-    const propListeners = this.propListeners;
     for (let i in this) {
-      const listener = typeof this[i] === 'function' ? this[i] : node[this[i]];
-      node.addEventListener(i, listener);
+      if (this[i] instanceof Array) {
+        node.addEventListener(i, node[this[i][0]], this[i][1]);
+      } else {
+        node.addEventListener(i, node[this[i]]);
+      }
     }
-    for (let i in propListeners) {
-      const listener = typeof propListeners[i] === 'function' ? propListeners[i] : node[propListeners[i]];
-      node.addEventListener(i, listener);
+    const props = this.propListeners;
+    for (let i in props) {
+      if (props[i] instanceof Array) {
+        node.addEventListener(i, typeof props[i][0] === 'function' ? props[i][0] : node[props[i][0]], props[i][1]);
+      } else {
+        node.addEventListener(i, typeof props[i] === 'function' ? props[i] : node[props[i]]);
+      }
     }
   }
   /**
@@ -89,13 +95,13 @@ export class Listeners {
    * @param {string} type - event name to listen to.
    * @param {function} listener - event handler function.
    */
-  addEventListener(type, listener) {
+  addEventListener(type, listener, options) {
     const node = this.node;
     const active = this.activeListeners;
     active[type] = active[type] || [];
     const i = active[type].indexOf(listener);
     if (i === - 1) {
-      if (node.isElement) HTMLElement.prototype.addEventListener.call(node, type, listener);
+      if (node.isElement) HTMLElement.prototype.addEventListener.call(node, type, listener, options);
       active[type].push(listener);
     }
   }
@@ -104,13 +110,13 @@ export class Listeners {
    * @param {string} type - event name to listen to.
    * @param {function} listener - event handler function.
    */
-  removeEventListener(type, listener) {
+  removeEventListener(type, listener, options) {
     const node = this.node;
     const active = this.activeListeners;
     if (active[type] !== undefined) {
       const i = active[type].indexOf(listener);
       if (i !== - 1) {
-        if (node.isElement) HTMLElement.prototype.removeEventListener.call(node, type, listener);
+        if (node.isElement) HTMLElement.prototype.removeEventListener.call(node, type, listener, options);
         active[type].splice(i, 1);
       }
     }

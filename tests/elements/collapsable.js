@@ -36,10 +36,6 @@ export default class {
         });
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('region');
-          this.element.expanded = true;
-          chai.expect(this.element.children[0].getAttribute('aria-expanded')).to.equal('true');
-          this.element.expanded = false;
-          chai.expect(this.element.children[0].getAttribute('aria-expanded')).to.equal('false');
         });
       });
     });
