@@ -48,17 +48,14 @@ export default class {
         });
         it('has a11y attributes', () => {
           chai.expect(this.element.$.slider.getAttribute('role')).to.equal('slider');
-          this.element.value = '';
-          chai.expect(this.element.$.slider.getAttribute('aria-invalid')).to.equal('true');
           this.element.value = 0.1;
-          chai.expect(this.element.$.slider.getAttribute('aria-invalid')).to.equal(null);
           chai.expect(this.element.$.slider.getAttribute('aria-valuenow')).to.equal('0.1');
           this.element.min = 0;
           chai.expect(this.element.$.slider.getAttribute('aria-valuemin')).to.equal('0');
           this.element.max = 1;
           chai.expect(this.element.$.slider.getAttribute('aria-valuemax')).to.equal('1');
-          this.element.step = 0.1;
-          chai.expect(this.element.$.slider.getAttribute('aria-valuestep')).to.equal('0.1');
+          // this.element.step = 0.1;
+          // chai.expect(this.element.$.slider.getAttribute('aria-valuestep')).to.equal('0.1');
           this.reset();
         });
       });

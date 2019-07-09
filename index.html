@@ -119,12 +119,12 @@
         super(props);
         this.options = [
           {label: 'Docs', value: 'docs'},
+          {label: 'Elements', value: 'elements'},
           {label: 'Demo', value: 'demo'},
           {label: 'Test', value: 'test'},
         ];
         this.elements = [
-          ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc',
-              'getting-started#about-io', true),
+          ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started#about-io', true),
             options: [
               {label: "Getting Started", options: [
                 {label: "About Io", value: "getting-started#about-io"},
@@ -148,65 +148,50 @@
                 {label: "Data Flow", value: "advanced#data-flow"},
                 {label: "Events", value: "advanced#events"},
               ]},
-              {label: "Elements", options: [
-                // {label: "Core", options: [
-                //   "quad",
-                // ]},
-                {label: "Basic Elements", options: [
-                  "item",
-                  "button",
-                  "boolean",
-                  "switch",
-                  "string",
-                  "number",
-                  "slider",
-                  "option",
-                ]},
-                {label: "Layout & Navigation", options: [
-                  "collapsable",
-                  "selector",
-                  "selector-tabs",
-                  "selector-sidebar",
-                  "sidebar",
-                  "breadcrumbs",
-                  "menu",
-                ]},
-                {label: "Object Editors", options: [
-                  "properties",
-                  "object",
-                  "inspector",
-                ]},
+            ],
+            elements: [
+              ['io-md-view', {name: 'getting-started', path :'./docs/core/getting-started.md'}],
+              ['io-md-view', {name: 'advanced', path :'./docs/core/advanced.md'}],
+            ]
+          }],
+          ['io-selector-sidebar', {name: 'elements', precache: true, minWidth: 640, class: 'docs', selected: $('element', 'item', true),
+            options: [
+              {label: "Basic Elements", options: [
+                {label: "io-item", value: "basic-elements#io-item"},
+                {label: "io-button", value: "basic-elements#io-button"},
+                {label: "io-boolean", value: "basic-elements#io-boolean"},
+                {label: "io-switch", value: "basic-elements#io-switch"},
+                {label: "io-string", value: "basic-elements#io-string"},
+                {label: "io-number", value: "basic-elements#io-number"},
+                {label: "io-slider", value: "basic-elements#io-slider"},
+                {label: "io-option", value: "basic-elements#io-option"},
+                {label: "io-menu", value: "basic-elements#io-menu"},
+                {label: "io-gl", value: "basic-elements#io-gl"},
+              ]},
+              {label: "Layout & Navigation", options: [
+                {label: "io-collapsable", value: "layout-navigation#io-collapsable"},
+                {label: "io-selector", value: "layout-navigation#io-selector"},
+                {label: "io-selector-tabs", value: "layout-navigation#io-selector-tabs"},
+                {label: "io-selector-sidebar", value: "layout-navigation#io-selector-sidebar"},
+                {label: "io-sidebar", value: "layout-navigation#io-sidebar"},
+                {label: "io-breadcrumbs", value: "layout-navigation#io-breadcrumbs"},
+              ]},
+              {label: "Object Editors", options: [
+                {label: "io-properties", value: "object-editors#io-properties"},
+                {label: "io-object", value: "object-editors#io-object"},
+                {label: "io-inspector", value: "object-editors#io-inspector"},
+              ]},
+              {label: "Extra Elements", options: [
+                {label: "io-md-view", value: "extra-elements#io-md-view"},
+                {label: "io-element-demo", value: "extra-elements#io-element-demo"},
+                {label: "io-service-loader", value: "extra-elements#io-service-loader"},
               ]},
             ],
             elements: [
-              ['io-md-view', {name: 'item', path :'./docs/elements/item.md'}],
-              ['io-md-view', {name: 'button', path :'./docs/elements/button.md'}],
-              ['io-md-view', {name: 'boolean', path :'./docs/elements/boolean.md'}],
-              ['io-md-view', {name: 'switch', path :'./docs/elements/switch.md'}],
-              ['io-md-view', {name: 'number', path :'./docs/elements/number.md'}],
-              ['io-md-view', {name: 'string', path :'./docs/elements/string.md'}],
-              ['io-md-view', {name: 'slider', path :'./docs/elements/slider.md'}],
-              ['io-md-view', {name: 'option', path :'./docs/elements/option.md'}],
-              //
-              ['io-md-view', {name: 'collapsable', path :'./docs/elements/collapsable.md'}],
-              ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
-              ['io-md-view', {name: 'selector-tabs', path :'./docs/elements/selector-tabs.md'}],
-              ['io-md-view', {name: 'selector-sidebar', path :'./docs/elements/selector-sidebar.md'}],
-              ['io-md-view', {name: 'sidebar', path :'./docs/elements/sidebar.md'}],
-              ['io-md-view', {name: 'breadcrumbs', path :'./docs/elements/breadcrumbs.md'}],
-              ['io-md-view', {name: 'menu', path :'./docs/elements/menu.md'}],
-              //
-              ['io-md-view', {name: 'properties', path :'./docs/elements/properties.md'}],
-              ['io-md-view', {name: 'object', path :'./docs/elements/object.md'}],
-              ['io-md-view', {name: 'inspector', path :'./docs/elements/inspector.md'}],
-              //     ['io-md-view', {name: 'md-view', path :'./docs/elements/md-view.md'}],
-              //     ['io-md-view', {name: 'selector', path :'./docs/elements/selector.md'}],
-              //
-              ['io-md-view', {name: 'getting-started', path :'./docs/core/getting-started.md'}],
-              ['io-md-view', {name: 'advanced', path :'./docs/core/advanced.md'}],
-              // ['io-md-view', {name: 'quad', path :'./docs/core/quad.md'}],
-              // ['io-md-view', {name: 'storage', path :'./docs/core/storage.md'}],
-              // ['io-md-view', {name: 'service-loader', path :'./docs/core/service-loader.md'}],
+              ['io-md-view', {name: 'basic-elements', path :'./docs/elements/basic-elements.md'}],
+              ['io-md-view', {name: 'layout-navigation', path :'./docs/elements/layout-navigation.md'}],
+              ['io-md-view', {name: 'object-editors', path :'./docs/elements/object-editors.md'}],
+              ['io-md-view', {name: 'extra-elements', path :'./docs/elements/extra-elements.md'}],
             ]
           }],
           ['io-demo', {name: 'demo', import: "./demo/demo.js"}],

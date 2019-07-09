@@ -40,10 +40,6 @@ export default class {
         });
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('switch');
-          this.element.value = 0;
-          chai.expect(this.element.getAttribute('aria-invalid')).to.equal('true');
-          this.element.value = false;
-          chai.expect(this.element.getAttribute('aria-invalid')).to.equal(null);
         });
         it('has value attribute when value is true', () => {
           this.element.value = false;
