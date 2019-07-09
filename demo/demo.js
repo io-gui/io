@@ -27,8 +27,8 @@ export class IoDemo extends IoElement {
         border: 1px solid red;
         border-radius: 0.5em;
       }
-      :host div[id=Elements] {
-        padding: var(--io-spacing);
+      :host div[name=elements] {
+        padding: calc(3 * var(--io-spacing));
       }
     </style>`;
   }
@@ -203,7 +203,7 @@ export class IoDemo extends IoElement {
       ['io-selector-tabs', {precache: true, selected: $('demo', 'elements', true),
         options: [
           {value: 'elements', label: "Elements"},
-          {value: 'layout', label: "Layout"},
+          // {value: 'layout', label: "Layout"},
           {value: 'todo', label: "Todo App"},
         ],
         elements: [

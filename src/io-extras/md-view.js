@@ -1,8 +1,6 @@
 import {html, IoElement} from "../io.js";
 import "../../lib/marked.min.js";
 
-if (window.marked) window.marked.setOptions({sanitize: false});
-
 export class IoMdView extends IoElement {
   static get style() {
     return html`<style>
@@ -10,6 +8,7 @@ export class IoMdView extends IoElement {
         display: block;
         background-color: var(--io-background-color);
         color: var(--io-color);
+        --io-code-size: 12px;
       }
       :host > :first-child {
         margin-top: 0;
@@ -44,6 +43,7 @@ export class IoMdView extends IoElement {
       }
       :host code {
         background-color: var(--io-background-color-dark);
+        font-family: "Roboto Mono", Monaco, courier, monospace;
         overflow: auto;
         font-weight: bold;
       }
@@ -51,6 +51,7 @@ export class IoMdView extends IoElement {
       :host code.language-javascript {
         padding: 1em;
         display: block;
+        font-size: var(--io-code-size);
       }
       :host blockquote {
         font-size: 0.85em;
@@ -101,6 +102,10 @@ export class IoMdView extends IoElement {
       vars: Object,
     };
   }
+  resized() {
+    const width = this.getBoundingClientRect().width;
+    this.style.setProperty('--io-code-size', Math.min((width - 50) / 40, 12) + "px");
+  }
   pathChanged() {
     const scope = this;
     fetch(this.path)
@@ -108,8 +113,19 @@ export class IoMdView extends IoElement {
       return response.text();
     })
     .then(text => {
-      if (window.marked) scope.innerHTML = window.marked(text);
-      this.dispatchEvent('content-ready', {}, true);
+      if (window.marked) {
+        if (window.marked) {
+          window.marked.setOptions({
+            sanitize: false,
+            highlight: function(code) {
+              return window.hljs ? window.hljs.highlightAuto(code).value : null;
+            },
+          });
+        }
+
+        scope.innerHTML = window.marked(text);
+        this.dispatchEvent('content-ready', {}, true);
+      }
     });
   }
 }

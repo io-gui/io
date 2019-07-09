@@ -53,8 +53,7 @@ export class IoSelector extends IoElement {
   }
   _onIoContentReady(event) {
     event.stopImmediatePropagation();
-    const elem = this.$.content.querySelector('#' + this._scrollID);
-    if (elem) elem.scrollIntoView({});
+    this.scrollTo(this._scrollID, false);
   }
   constructor(props) {
     super(props);
@@ -108,9 +107,16 @@ export class IoSelector extends IoElement {
   renderShadow() {
     this.template([['div', {id: 'content', class: 'io-content'}]]);
   }
-  scrollTo(id) {
-    const elem = this.$.content.querySelector('#' + id);
-    if (elem) elem.scrollIntoView({behavior: 'smooth'});
+  scrollTo(id, smooth) {
+    if (this.$.content) {
+      const elem = this.$.content.querySelector('#' + id);
+      if (elem) elem.scrollIntoView({behavior: smooth ? 'smooth' : 'auto'});
+    } else {
+      setTimeout(()=>{
+        const elem = this.$.content.querySelector('#' + id);
+        if (elem) elem.scrollIntoView({behavior: smooth ? 'smooth' : 'auto'});
+      });
+    }
   }
   _onScroll() {
     if (this._scrollID === undefined) return;
@@ -127,12 +133,12 @@ export class IoSelector extends IoElement {
         const nextElem = scrollableElements[i + 1];
         const elemTop = elem.offsetTop;
         const elemBottom = nextElem ? nextElem.offsetTop : elemTop;
-        if ((elemTop < top - 5) && (elemBottom < bottom)) {
+        if ((elemTop < top - 5) && (elemBottom < bottom) && i !== scrollableElements.length - 1) {
           break;
         }
         scrollID = elem.id;
       }
-      if (scrollID !== oldScrollID) {
+      if (scrollID !== oldScrollID && scrollID) {
         this._scrollID = scrollID;
         const oldSelected = this.selected;
         const selected = this._selectedID + '#' + this._scrollID;
@@ -141,27 +147,16 @@ export class IoSelector extends IoElement {
       }
     }, 100);
   }
-  scrollIDChanged() {
-    if (this._scrollID === undefined) return;
-    setTimeout(() => {
-      this.scrollTo(this._scrollID);
-    }, 100);
-  }
   selectedChanged() {
     const oldScrollID = this._scrollID;
     const oldSelectedID = this._selectedID;
-
-    const selectedID = this.selected.split('#')[0];
-    const scrollID = this.selected.split('#')[1];
-
-    if (selectedID !== oldSelectedID) {
-      this._selectedID = selectedID;
-      this._scrollID = scrollID;
-      this.scrollIDChanged();
+    this._selectedID = this.selected.split('#')[0];
+    this._scrollID = this.selected.split('#')[1];
+    if (this._selectedID !== oldSelectedID) {
       this.update();
-    } else if (scrollID !== oldScrollID) {
-      this._scrollID = scrollID;
-      this.scrollIDChanged();
+      this.scrollTo(this._scrollID);
+    } else if (this._scrollID !== oldScrollID) {
+      this.scrollTo(this._scrollID, true);
     }
   }
   elementsChanged() {

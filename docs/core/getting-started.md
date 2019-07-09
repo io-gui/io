@@ -1,6 +1,6 @@
 ## About Io ##
 
-Io is a JavaScript UI framework for reactive web applications. It implements custom elements, virtual DOM, data binding and a simple data-flow design.
+Io is a UI framework for JavaScript applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements suitable for use with other frameworks.
 
 For a quick start, read this document, then check out the [source code](https://github.com/io-gui/io/).
 
@@ -12,7 +12,7 @@ Import Io module from `dist/io.js` or `src/io.js`.
 import {IoElement} from "./io/dist/io.js";
 ```
 
-The library includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as [`<io-menu-options>`](#page=docs&doc=menu) for example, create the element, assign the options property, and add it to your DOM.
+The library includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as [`<io-menu-options>`](#page=elements&element=basic-elements#io-menu) for example, create the element, assign the options property, and add it to your DOM.
 
 ```javascript
 const menu = document.createElement('io-menu-options');
@@ -184,7 +184,7 @@ class MyApp extends IoElement {
     this.clicked = true;
   }
   clickedChanged() {
-    if (this.clicked) this.message = 'Thanks for clicking!';
+    if (this.clicked) this.message = 'Clicked!';
   }
   changed() {
     this.template([['p', this.message]]);

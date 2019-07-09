@@ -12,6 +12,7 @@ export class IoMenuItem extends IoItem {
         flex: 0 0 auto;
         flex-direction: row;
         padding: calc(2 * var(--io-spacing));
+        border-radius: 0;
         background: none;
       }
       :host > * {

@@ -110,9 +110,6 @@ export class IoSidebar extends IoElement {
     }
     return elements;
   }
-  // selectedChanged() {
-  //   console.log(this.selected);
-  // }
   changed() {
     let selectedOption = filterObject(this.options, option => { return option.value === this.selected; });
     if (this.overflow) {
