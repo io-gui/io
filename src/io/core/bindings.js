@@ -103,14 +103,17 @@ export class Binding {
    */
   _onTargetChanged(event) {
     if (this.targets.indexOf(event.target) === -1) {
-      console.warn(
-        `io error: _onTargetChanged() should never fire when target is removed from binding.
+      console.error(
+        `Io: _onTargetChanged() should never fire when target is removed from binding.
         Please file an issue at https://github.com/arodic/io/issues.`
       );
       return;
     }
+    const oldValue = this.source[this.sourceProp];
     const value = event.detail.value;
-    if (this.source[this.sourceProp] !== value) {
+    if (oldValue !== value) {
+      // JavaScript is weird NaN != NaN
+      if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue))) return;
       this.source[this.sourceProp] = value;
     }
   }
@@ -123,8 +126,8 @@ export class Binding {
    */
   _onSourceChanged(event) {
     if (event.target != this.source) {
-      console.warn(
-        `io error: _onSourceChanged() should always originate form source node.
+      console.error(
+        `Io: _onSourceChanged() should always originate form source node.
         Please file an issue at https://github.com/arodic/io/issues.`
       );
       return;
@@ -133,10 +136,10 @@ export class Binding {
     for (let i = this.targets.length; i--;) {
       const targetProps = this.targetsMap.get(this.targets[i]);
       for (let j = targetProps.length; j--;) {
-        let oldValue = this.targets[i][targetProps[j]];
+        const oldValue = this.targets[i][targetProps[j]];
         if (oldValue !== value) {
           // JavaScript is weird NaN != NaN
-          if (typeof value == 'number' && typeof oldValue == 'number' && isNaN(value) && isNaN(oldValue)) continue;
+          if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue))) continue;
           this.targets[i][targetProps[j]] = value;
         }
       }

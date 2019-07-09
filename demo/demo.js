@@ -4,22 +4,6 @@ import "./todomvc/todo-app.js";
 export class IoDemo extends IoElement {
   static get style() {
     return html`<style>
-      :host {
-        display: block;
-        /* display: flex; */
-        /* flex-direction: column; */
-        /* flex: 1 0 auto; */
-      }
-      :host > io-selector-tabs {
-        /* display: flex; */
-        /* flex-direction: column; */
-        /* flex: 1 0 auto; */
-      }
-      :host > io-selector-tabs > io-selector {
-        /* display: flex;
-        flex-direction: column;
-        flex: 1 0 auto; */
-      }
       :host .table {
         display: grid;
         grid-template-columns: 5.5em 5.5em 5.5em;
@@ -43,15 +27,8 @@ export class IoDemo extends IoElement {
         border: 1px solid red;
         border-radius: 0.5em;
       }
-      :host div[name=Elements] {
+      :host div[id=Elements] {
         padding: var(--io-spacing);
-      }
-      :host h4 {
-        flex: 0 0 2em;
-        background: red;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
       }
     </style>`;
   }
@@ -66,8 +43,6 @@ export class IoDemo extends IoElement {
     };
   }
   changed(event) {
-    // console.log(this.number);
-    // TODO: investigade excessive change events.
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
   setNumber(value) {
@@ -106,9 +81,9 @@ export class IoDemo extends IoElement {
       ['io-string', {value: this.bind('null')}],
       ['io-number', {value: this.bind('null')}],
       ['io-boolean', {type: 'boolean', value: this.bind('null')}],
-      // ['io-string', {value: this.bind('undefined')}],
-      // ['io-number', {value: this.bind('undefined')}],
-      // ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
+      ['io-string', {value: this.bind('undefined')}],
+      ['io-number', {value: this.bind('undefined')}],
+      ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
     ]];
 
     const demoSwitch = ['div', {name: 'switch'}, [
@@ -200,26 +175,26 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoLayout = ['io-layout', {
-      name: 'layout',
-      orientation: 'horizontal',
-      elements: [
-        demoPrimitives,
-        demoSwitch,
-        demoSliders,
-        demoOptions,
-        demoButton,
-        demoObject,
-        demoInspector,
-        demoMenu,
-      ],
-      splits: [
-        {selected: 'sliders', tabs: ['sliders'], size: 280},
-        {orientation: 'vertical', splits: [
-          {tabs: ['button'], selected: 'button', size: 100},
-          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
-          {tabs: ['primitives'], selected: 'primitives'},
-        ]},
-      ],
+      // name: 'layout',
+      // orientation: 'horizontal',
+      // elements: [
+      //   demoPrimitives,
+      //   demoSwitch,
+      //   demoSliders,
+      //   demoOptions,
+      //   demoButton,
+      //   demoObject,
+      //   demoInspector,
+      //   demoMenu,
+      // ],
+      // splits: [
+      //   {selected: 'sliders', tabs: ['sliders'], size: 280},
+      //   {orientation: 'vertical', splits: [
+      //     {tabs: ['button'], selected: 'button', size: 100},
+      //     {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
+      //     {tabs: ['primitives'], selected: 'primitives'},
+      //   ]},
+      // ],
     }];
 
     // TODO: Add demos for all remaining elements
@@ -242,7 +217,7 @@ export class IoDemo extends IoElement {
             ['h4', 'io-object'], demoObject,
             ['h4', 'io-inspector'], demoInspector,
           ]],
-          demoLayout,
+          // demoLayout,
           ['todo-app', {name: 'todo'}],
         ]
       }]
