@@ -22,8 +22,6 @@ export class IoSelector extends IoElement {
         flex-direction: column;
         flex: 1 1 auto;
         overflow: auto;
-        overflow-y: scroll;
-        overflow-x: hidden;
       }
     </style>`;
   }
