@@ -4,7 +4,7 @@ function html() {
   return {
     transform( code, id ) {
       let transformedCode = code;
-      let regex = /<style>((.|\n|\t|\r)*?)<\/style>/gm;
+      let regex = /<style>([\s\S]*?)<\/style>/gm;
       if ( regex.test( code ) === true ) {
         let match = code.match(regex);
         for (var i = 0; i < match.length; i++) {
