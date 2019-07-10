@@ -1,7 +1,7 @@
 {
   "name": "io-gui",
-  "version": "1.0.0",
-  "description": "UI library for web applications.",
+  "version": "1.0.1-rc.1",
+  "description": "Lightweight UI framework for reactive web applications.",
   "jsnext:main": "dist/io.js",
   "module": "dist/io.js",
   "files": [

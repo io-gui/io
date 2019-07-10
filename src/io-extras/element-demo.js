@@ -66,13 +66,12 @@ export class IoElementDemo extends IoElement {
         reflect: -1,
         notify: true,
       },
-      overflow: false,
+      overflow: true,
     };
   }
   static get Properties() {
     return {
       minWidth: 640,
-      _properties: Object,
     };
   }
   resized() {

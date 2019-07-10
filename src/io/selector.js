@@ -11,9 +11,28 @@ export class IoSelector extends IoElement {
         align-self: stretch;
         overflow: auto;
       }
-      :host[_loading] > .io-content {
+      :host[loading] > .io-content {
         background: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px);
         background-repeat: repeat;
+        position: relative;
+      }
+      @keyframes spinner {
+        to {transform: rotate(360deg);}
+      }
+      :host[loading]:after {
+        content: '';
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        margin-top: -20px;
+        margin-left: -20px;
+        border-radius: 50%;
+        border: var(--io-border);
+        border-top-color: #000;
+        animation: spinner .6s linear infinite;
       }
       :host > .io-content {
         background: var(--io-background-color);
@@ -25,16 +44,17 @@ export class IoSelector extends IoElement {
       }
     </style>`;
   }
+  static get Attributes() {
+    return {
+      loading: Boolean,
+    };
+  }
   static get Properties() {
     return {
       elements:  Array,
       selected: String,
       cache: Boolean,
       precache: Boolean,
-      _loading: {
-        type: Boolean,
-        reflect: 1,
-      },
       _caches: Object,
       _selectedID: String,
       _scrollID: {
@@ -96,7 +116,7 @@ export class IoSelector extends IoElement {
             if (this.stagingElement.parentElement !== document.head) document.head.appendChild(this.stagingElement);
             this.template([this.elements[i]], this.stagingElement);
             this._caches[name] = this.stagingElement.childNodes[0];
-            this.stagingElement.innerText = '';
+            this.stagingElement.textContent = '';
           });
         }
       }
@@ -175,16 +195,17 @@ export class IoSelector extends IoElement {
 
     this.renderShadow();
     if (this.$.content) {
-      this.$.content.innerText = '';
+      this.$.content.textContent = '';
     }
 
+    this.loading = true;
     if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[selected]) {
       // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
       this.$.content.appendChild(this._caches[selected]);
+      this.loading = false;
     } else {
-      this._loading = true;
       this.checkImport(element[1].import, () => {
-        this._loading = false;
+        this.loading = false;
         this.template([element], this.$.content);
         this._caches[selected] = this.$.content.childNodes[0];
       });

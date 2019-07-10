@@ -57,10 +57,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   connectedCallback() {
     super.connectedCallback();
     if (typeof this.resized == 'function') {
-      this.resized();
       if (ro) {
         ro.observe(this);
       } else {
+        this.resized();
         window.addEventListener('resize', this.resized);
       }
     }
@@ -178,8 +178,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         this.$[vChildren[i].props.id] = children[i];
       }
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-        if (children[i].innerText !== vChildren[i].children) {
-          children[i].innerText = vChildren[i].children;
+        if (children[i].textContent !== vChildren[i].children) {
+          children[i].textContent = vChildren[i].children;
         }
       } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
         this.traverse(vChildren[i].children, children[i]);
@@ -362,6 +362,8 @@ function initStyle(prototypes) {
         selector = selector.trim();
         if (!selector.startsWith('@') &&
             !selector.startsWith(':host') &&
+            !selector.startsWith('from') &&
+            !selector.startsWith('to') &&
             !selector.startsWith('/*') &&
             !selector.startsWith('body')) {
           console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
