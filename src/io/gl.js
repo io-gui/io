@@ -72,7 +72,7 @@ export class IoGl extends IoElement {
       size: [0, 0],
     };
   }
-  static get vert() {
+  static get Vert() {
     return /* glsl */`
       attribute vec3 position;
       attribute vec2 uv;
@@ -83,7 +83,7 @@ export class IoGl extends IoElement {
       }
     `;
   }
-  static get frag() {
+  static get Frag() {
     return /* glsl */`
       varying vec2 vUv;
       void main(void) {
@@ -115,11 +115,11 @@ export class IoGl extends IoElement {
     }
 
     const vertShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertShader, this.constructor.vert);
+    gl.shaderSource(vertShader, this.constructor.Vert);
     gl.compileShader(vertShader);
 
     const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragShader, frag + this.constructor.frag);
+    gl.shaderSource(fragShader, frag + this.constructor.Frag);
     gl.compileShader(fragShader);
 
     if (shadersCache.has(this.constructor)) {

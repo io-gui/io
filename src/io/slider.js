@@ -231,7 +231,7 @@ export class IoSliderKnob extends IoGl {
     // this.setAttribute('aria-valuestep', this.step);
   }
   // TODO: implement proper sdf shapes.
-  static get frag() {
+  static get Frag() {
     return `
     #extension GL_OES_standard_derivatives : enable
 

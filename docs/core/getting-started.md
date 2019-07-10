@@ -1,10 +1,10 @@
-## About Io ##
+## About Io
 
 Io is a UI framework for JavaScript applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements suitable for use with other frameworks.
 
 For a quick start, read this document, then check out the [source code](https://github.com/io-gui/io/).
 
-## Usage ##
+## Usage
 
 Import Io module from `dist/io.js` or `src/io.js`.
 
@@ -20,7 +20,7 @@ menu.options = options;
 element.appendChild(menu);
 ```
 
-## Simple App Example ##
+## Simple App Example
 
 You can extend `IoElement` to create elements and applications.
 
@@ -55,14 +55,12 @@ Once the element has been connected and `change()` function evoked, the template
 </my-app>
 ```
 
-> To learn more about template function read [vitrual DOM array](#page=docs&doc=advanced#virtual-dom-array).
+## Style
 
-## Style ##
-
-Styles are defined inside `static get style()` return string. Let's specify text color for the `<p>` element.
+Styles are defined inside `static get Style()` return string. Let's specify text color for the `<p>` element.
 
 ```javascript
-static get style() {
+static get Style() {
   return html`
     <style>
       :host > p {
@@ -75,14 +73,12 @@ static get style() {
 
 **Note:** CSS selectors have to be prefixed with `:host` in order to prevent style leakage. Template literal handler `html` is optional but recommended for correct syntax highlighting.
 
-> For more details about style read [advanced style](#page=docs&doc=advanced#style).
+## Properties
 
-## Properties ##
-
-Properties are defined inside `static get properties()` return object. Let's define a `message` property with default value `'Hello io!'`.
+Properties are defined inside `static get Properties()` return object. Let's define a `message` property with default value `'Hello io!'`.
 
 ```javascript
-static get properties() {
+static get Properties() {
   return {
     message: 'Hello io!'
   }
@@ -95,18 +91,16 @@ Now you can use the message property inside the template.
 this.template([['p', this.message]]);
 ```
 
-> For more details about properties read [advanced properties](#page=docs&doc=advanced#properties-and-attributes).
+## Attributes
 
-## Attributes ##
-
-Attributes are defined inside `static get attributes()` return object.
+Attributes are defined inside `static get Attributes()` return object.
 
 Attributes are also properties but they behave in such way that their values are automatically reflected to HTML attributes so they can be used as CSS selectors.
 
 For example we can use `clicked` attribute to change text color.
 
 ```javascript
-static get style() {
+static get Style() {
   return html`
     <style>
       :host[clicked] > p {
@@ -115,21 +109,19 @@ static get style() {
     </style>
   `;
 }
-static get attributes() {
+static get Attributes() {
   return {
     clicked: false
   }
 }
 ```
 
-> For more details about attributes read [advanced attributes](#page=docs&doc=advanced#properties-and-attributes).
+## Listeners
 
-## Listeners ##
-
-Listeners are defined inside `static get listeners()` return object. Following listener will call `this.onClick(event)` handler function when `click` event is captured.
+Listeners are defined inside `static get Listeners()` return object. Following listener will call `this.onClick(event)` handler function when `click` event is captured.
 
 ```javascript
-static get listeners() {
+static get Listeners() {
   return {
     'click': 'onClick'
   }
@@ -138,9 +130,7 @@ static get listeners() {
 
 **Note:** Event handler function names should start with `on` or `_on`.
 
-> For more details about listeners read [advanced listeners](#page=docs&doc=advanced#listeners).
-
-## Change Functions ##
+## Change Functions
 
 Change functions are automatically called when properties change. If `[propName]Changed(value, oldValue)` function is defined, it will be called when corresponding property changes.
 
@@ -148,15 +138,13 @@ If property value is an object, `[propName]Mutated()` function will be called im
 
 Lastly, `changed()` function will be called **after** all of the property-specific change/mutation functions are called.
 
-> For more details about change functions read [advanced change functions](#page=docs&doc=advanced#change-functions).
-
-## Simple App Recap ##
+## Simple App Recap
 
 Here is `MyApp` element with all of the basic concepts applied. The element should change message text and color when clicked.
 
 ```javascript
 class MyApp extends IoElement {
-  static get style() {
+  static get Style() {
     return html`
       <style>
         :host[clicked] > p {
@@ -165,17 +153,17 @@ class MyApp extends IoElement {
       </style>
     `;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       clicked: false
     }
   }
-  static get properties() {
+  static get Properties() {
     return {
       message: 'Hello io!',
     }
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'click': 'onClick'
     }
@@ -193,4 +181,4 @@ class MyApp extends IoElement {
 MyApp.Register();
 ```
 
-> Cotinue reading [advanced usage](#page=docs&doc=advanced#usage).
+> Continue reading [advanced usage](#page=docs&doc=advanced#usage) or check out the [included elements](#page=elements).

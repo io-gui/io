@@ -98,6 +98,6 @@ This is a base class for WebGL shader elemenents.
 
 The element will automatically create shader uniforms for `Number` and `Array` properties and update canvas on property change.
 
-You can define custom shader code in `static get vert()` and `static get frag()` return string.
+You can define custom shader code in `static get Vert()` and `static get Frag()` return string.
 
 See `IoSliderKnob` for custom shader example.

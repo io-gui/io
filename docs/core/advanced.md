@@ -1,4 +1,4 @@
-## Usage ##
+## Usage
 
 ```javascript
 const menu = document.createElement('io-menu-options');
@@ -17,8 +17,7 @@ Even better, you can create elements with `IoElement.template()` function with v
 ```javascript
 this.template([['io-menu-options', {value: options}]]);
 ```
-## IoNode ##
-# `IoNodeMixin` #
+## IoNode
 
 Core mixin for io classes. It can be applied as a mixin to any class such as `Object` or `HTMLElement`.
 
@@ -26,9 +25,9 @@ Core mixin for io classes. It can be applied as a mixin to any class such as `Ob
 
 Static getters are evaluated once per class when the
 
-**`static get properties()`** Should return property definitions. See readme.md for more info.
+**`static get Properties()`** Should return property definitions. See readme.md for more info.
 
-**`static get listeners()`** Should return a map of default listeners and handler function names.
+**`static get Listeners()`** Should return a map of default listeners and handler function names.
 
 **`get compose()`** Experimental
 
@@ -88,9 +87,9 @@ class MyObject extends IoNode {}
 
 ```
 
-## Style ##
+## Style
 
-## Properties and Attributes ##
+## Properties and Attributes
 
 You can define properties by value, type or configuration object which may include: `type`, `value`, `reflect`, `binding` and `enumerable`.
 
@@ -111,15 +110,15 @@ myProperty: Boolean
 myProperty: false
 ```
 
-## Listeners ##
+## Listeners
 
 
 
-## Change Functions ##
+## Change Functions
 
 
 
-## Virtual DOM Array ##
+## Virtual DOM Array
 
 `IoElement.template()` uses virtual DOM structure similar to `React.createElement()` or `h()`, except the DOM tree is expressed as nested arrays to improve readability. For example, a virtual instance of `<my-element>` can be expressed like this:
 
@@ -165,7 +164,7 @@ If a property name is prefixed with `on-` it will be treated as a listener. Assi
 ['my-element', {'on-click': doSomethingFunction}],
 ```
 
-## Data Binding ##
+## Data Binding
 
 This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
 Keep in mind that this only works with io properties. In other words, binding to native HTML elements will not work.
@@ -185,7 +184,7 @@ myNode.dispose();
 
 **Note:** When object is no longer needed, call `dispose()` to prevent memory leakage. Elements will do this automatically when removed from the DOM.
 
-## Data-Flow ##
+## Data-Flow
 
 On a fundamental level, data-flow in io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement designs where certain elements have the ability to modify and manage their own state. State changes are automatically communicated to the rest of the application following few simple rules.
 
@@ -199,7 +198,7 @@ On a fundamental level, data-flow in io is top down and UI designs with unidirec
 
 That is all! Object elements will automatically listen to `object-mutated` event and update if needed.
 
-## Events ##
+## Events
 
 | Event | Description | Detail |
 |:------:|:-----------:|:----------:|
