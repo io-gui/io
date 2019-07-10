@@ -3,7 +3,7 @@ import {IoStorage as $} from "./core/storage.js";
 import {filterObject} from "./core/utils.js";
 
 export class IoSidebar extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -62,7 +62,7 @@ export class IoSidebar extends IoElement {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       role: 'navigation',
       label: {
@@ -75,7 +75,7 @@ export class IoSidebar extends IoElement {
       }
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       selected: String,
       options: Array,

@@ -1,7 +1,7 @@
 import {html, IoElement} from "./core/element.js";
 
 export class IoLayout extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         flex: 1;
@@ -19,7 +19,7 @@ export class IoLayout extends IoElement {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       orientation: {
         value: 'horizontal',
@@ -27,14 +27,14 @@ export class IoLayout extends IoElement {
       },
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       elements: Array,
       splits: Array,
       editable: true,
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'io-layout-divider-move': '_onDividerMove',
       'io-layout-tab-insert': '_onLayoutTabInsert',
@@ -207,7 +207,7 @@ export class IoLayout extends IoElement {
 IoLayout.Register();
 
 export class IoLayoutDivider extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         background: var(--io-background-color);
@@ -245,7 +245,7 @@ export class IoLayoutDivider extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       orientation: {
         value: 'horizontal',
@@ -255,7 +255,7 @@ export class IoLayoutDivider extends IoElement {
       pointermode: 'relative'
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'pointermove': '_onPointerMove'
     };

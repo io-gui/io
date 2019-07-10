@@ -9,7 +9,7 @@ export function isValuePropertyOf(prop, object) {
 }
 
 export class IoInspector extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
     :host {
       display: flex;
@@ -68,14 +68,14 @@ export class IoInspector extends IoElement {
     }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: Object,
       config: Object,
       _options: Array,
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'item-clicked': '_onSetInspectorValue',
     };

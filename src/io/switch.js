@@ -2,7 +2,7 @@ import {html} from "./core/element.js";
 import {IoButton} from "./button.js";
 
 export class IoSwitch extends IoButton {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         background: none;
@@ -64,12 +64,12 @@ export class IoSwitch extends IoButton {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       role: 'switch',
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: {
         type: Boolean,

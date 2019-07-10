@@ -2,7 +2,7 @@ import {html, IoElement} from "./core/element.js";
 import "./button.js";
 
 export class IoBreadcrumbs extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -46,7 +46,7 @@ export class IoBreadcrumbs extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: null,
       options: Array,

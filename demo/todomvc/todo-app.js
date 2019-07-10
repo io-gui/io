@@ -6,7 +6,7 @@ const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
 
 export class TodoApp extends IoElement {
-  static get style() {
+  static get Style() {
     return html`
     <style>
     :host {
@@ -374,7 +374,7 @@ export class TodoApp extends IoElement {
     </style>
     `;
   }
-  static get properties() {
+  static get Properties() {
     return {
       model: TodoModel,
       route: 'all',

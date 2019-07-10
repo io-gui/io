@@ -3,7 +3,7 @@ import {IoElement, IoNode} from "../../dist/io.js";
 import {TestNode} from "./node.js";
 
 export class TestElement extends IoElement {
-  static get properties() {
+  static get Properties() {
     return {
       prop0: -1,
       prop1: {
@@ -17,7 +17,7 @@ export class TestElement extends IoElement {
       debug: true,
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'prop0-changed': 'onProp1Change',
       'custom-event': 'onCustomEvent',
@@ -65,7 +65,7 @@ export class TestElement extends IoElement {
 TestElement.Register();
 
 export class TestSubelement extends IoElement {
-  static get properties() {
+  static get Properties() {
     return {
       prop0: 0,
     };

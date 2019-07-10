@@ -22,7 +22,7 @@ export const IoNodeMixin = (superclass) => {
      * @return {Binding} [properties.*.binding] - Binding object.
      * @return {boolean} [properties.*.enumerable] - Makes property enumerable.
      */
-    static get properties() {
+    static get Properties() {
       return {
         $: {
           type: Object,

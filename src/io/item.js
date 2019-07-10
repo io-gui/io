@@ -22,7 +22,7 @@ export class Item {
 }
 
 export class IoItem extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: inline-block;
@@ -62,7 +62,7 @@ export class IoItem extends IoElement {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       label: {
         notify: true,
@@ -72,12 +72,12 @@ export class IoItem extends IoElement {
       tabindex: 0,
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: undefined,
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'focus': '_onFocus',
       'touchstart': '_onTouchstart',

@@ -3,7 +3,7 @@ import "./menu-item.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
 export class IoMenuOptions extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -43,7 +43,7 @@ export class IoMenuOptions extends IoElement {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       role: 'listbox',
       expanded: {
@@ -60,7 +60,7 @@ export class IoMenuOptions extends IoElement {
       },
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       options: Array,
       position: 'right',
@@ -73,7 +73,7 @@ export class IoMenuOptions extends IoElement {
       _rects: Array,
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'io-menu-item-clicked': '_onMenuItemClicked',
     };

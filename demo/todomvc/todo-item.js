@@ -4,7 +4,7 @@ const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
 
 export class TodoItem extends IoElement {
-  static get properties() {
+  static get Properties() {
     return {
       item: Object,
       model: Object,

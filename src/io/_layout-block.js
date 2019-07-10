@@ -3,7 +3,7 @@ import {html, IoElement} from "./core/element.js";
 // import "./layout-tabs.js";
 
 export class IoLayoutBlock extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -40,14 +40,14 @@ export class IoLayoutBlock extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       elements: Object,
       tabs: Array,
       selected: String
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'layout-tabs-add': '_onAddTab',
       'layout-tabs-remove': '_onRemoveTab',

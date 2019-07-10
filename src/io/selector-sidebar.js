@@ -4,7 +4,7 @@ import "./sidebar.js";
 import {filterObject} from "./core/utils.js";
 
 export class IoSelectorSidebar extends IoSelector {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         flex-direction: row-reverse;
@@ -36,7 +36,7 @@ export class IoSelectorSidebar extends IoSelector {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       role: 'navigation',
       label: {
@@ -52,7 +52,7 @@ export class IoSelectorSidebar extends IoSelector {
       },
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       options: Array,
       minWidth: 410,

@@ -3,7 +3,7 @@ import {IoElement, html} from "./core/element.js";
 const importedPaths = {};
 
 export class IoSelector extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -25,7 +25,7 @@ export class IoSelector extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       elements:  Array,
       selected: String,
@@ -43,7 +43,7 @@ export class IoSelector extends IoElement {
       }
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'scroll': '_onScroll',
       'content-ready': '_onIoContentReady',

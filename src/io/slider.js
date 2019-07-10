@@ -2,7 +2,7 @@ import {html, IoElement} from "./core/element.js";
 import {IoGl} from "./gl.js";
 
 export class IoSlider extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -17,7 +17,7 @@ export class IoSlider extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: 0,
       step: 0.001,
@@ -58,7 +58,7 @@ export class IoSlider extends IoElement {
 IoSlider.Register();
 
 export class IoSliderKnob extends IoGl {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         cursor: ew-resize;
@@ -77,13 +77,13 @@ export class IoSliderKnob extends IoGl {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       role: 'slider',
       tabindex: 0,
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: 0,
       step: 0.01,
@@ -98,7 +98,7 @@ export class IoSliderKnob extends IoGl {
       handleWidth: 4,
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'touchstart': '_onTouchstart',
       'mousedown': '_onMousedown',

@@ -61,7 +61,7 @@ window.addEventListener("hashchange", getHashes, false);
 getHashes();
 
 class IoStorageNode extends IoNode {
-  static get properties() {
+  static get Properties() {
     return {
       key: String,
       value: undefined,

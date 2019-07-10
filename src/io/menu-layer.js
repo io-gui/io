@@ -1,7 +1,7 @@
 import {IoElement, html} from "./core/element.js";
 
 export class IoMenuLayer extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: block;
@@ -37,7 +37,7 @@ export class IoMenuLayer extends IoElement {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       expanded: {
         value: false,
@@ -45,13 +45,13 @@ export class IoMenuLayer extends IoElement {
       },
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       lastFocus: HTMLElement,
       $options: Array,
     };
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'mousedown': '_onMousedown',
       'mousemove': '_onMousemove',

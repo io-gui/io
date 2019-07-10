@@ -1,7 +1,7 @@
 import {html, IoElement} from "./core/element.js";
 
 export class IoProperties extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -54,7 +54,7 @@ export class IoProperties extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       labeled: true,
       value: Object,
@@ -98,7 +98,7 @@ export class IoProperties extends IoElement {
     }
     this.template(elements);
   }
-  static get config() {
+  static get Config() {
     return {
       'type:string': ['io-string', {}],
       'type:number': ['io-number', {step: 0.0000001}],
@@ -113,7 +113,7 @@ export class IoProperties extends IoElement {
 export class Config {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {
-      this.registerConfig(prototypes[i].constructor.config || {});
+      this.registerConfig(prototypes[i].constructor.Config || {});
     }
   }
   registerConfig(config) {

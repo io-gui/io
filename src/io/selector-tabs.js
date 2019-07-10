@@ -3,7 +3,7 @@ import {IoSelector} from "./selector.js";
 import {filterObject} from "./core/utils.js";
 
 export class IoSelectorTabs extends IoSelector {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         flex-direction: column;
@@ -23,11 +23,11 @@ export class IoSelectorTabs extends IoSelector {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       options:  Array,
     };
