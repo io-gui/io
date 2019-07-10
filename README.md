@@ -18,7 +18,7 @@
 [dev-deps]: https://img.shields.io/david/dev/io-gui/io.svg
 [dev-deps-url]: https://david-dm.org/io-gui/io?type=dev
 [lgtm]: https://img.shields.io/lgtm/grade/javascript/g/io-gui/io.svg?label=code%20quality
-[lgtm-url]: https://lgtm.com/projects/g/io-gui/io/
+[lgtm-url]: https://lgtm.com/projects/g/io-gui/io/context:javascript
 
 ## Lightweight UI Framework for The Web
 

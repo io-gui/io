@@ -19,14 +19,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       role: String,
       title: String,
       label: String,
-    };
-  }
-  static get Properties() {
-    return {
-      id: {
-        type: String,
-        enumerable: false,
-      },
+      id: String,
     };
   }
   static get observedAttributes() {

@@ -136,7 +136,7 @@ export class IoSelector extends IoElement {
         }
         scrollID = elem.id;
       }
-      if (scrollID !== oldScrollID && scrollID) {
+      if (scrollID !== undefined && scrollID !== oldScrollID) {
         this._scrollID = scrollID;
         const oldSelected = this.selected;
         const selected = this._selectedID + '#' + this._scrollID;
@@ -164,7 +164,10 @@ export class IoSelector extends IoElement {
     const selected = this._selectedID;
 
     let element = this.elements.find(element => {return element[1].name === selected;});
-    if (!element) element = ['div', {}];
+    if (!element) {
+      console.warn(`Could not find element with id:${selected}!`);
+      element = ['span', `Could not find element with id:${selected}!`];
+    }
     if (typeof element[1] !== 'object') element.splice(1, 0, {});
 
     const explicitlyCache = element[1].cache === true;
