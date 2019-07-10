@@ -2,7 +2,7 @@ import {html} from "./core/element.js";
 import {IoItem} from "./item.js";
 
 export class IoNumber extends IoItem {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         white-space: nowrap;
@@ -13,7 +13,7 @@ export class IoNumber extends IoItem {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       role: 'textbox',
       type: 'number',
@@ -22,7 +22,7 @@ export class IoNumber extends IoItem {
       contenteditable: true,
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: Number,
       conversion: 1,

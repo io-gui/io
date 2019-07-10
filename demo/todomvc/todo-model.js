@@ -1,7 +1,7 @@
 import {IoNode} from "../../dist/io.js";
 
 export class TodoModel extends IoNode {
-  static get properties() {
+  static get Properties() {
     return {
       items: Array,
       filters: function () {

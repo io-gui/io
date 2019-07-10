@@ -11,7 +11,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
    * See IoNode for more details.
    * @return {Object} properties - Properties configuration objects.
    */
-  static get attributes() {
+  static get Attributes() {
     return {
       tabindex: String,
       contenteditable: Boolean,
@@ -21,7 +21,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       label: String,
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       id: {
         type: String,
@@ -359,7 +359,7 @@ const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.
 function initStyle(prototypes) {
   const localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   for (let i = prototypes.length; i--;) {
-    const style = prototypes[i].constructor.style;
+    const style = prototypes[i].constructor.Style;
     const classLocalName = prototypes[i].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     if (style) {
       style.string = style.string.replace(new RegExp('<style>', 'g'), '');

@@ -1,7 +1,7 @@
 import {html, IoElement} from "./core/element.js";
 
 export class IoCollapsable extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -51,7 +51,7 @@ export class IoCollapsable extends IoElement {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       label: {
         notify: true,
@@ -63,7 +63,7 @@ export class IoCollapsable extends IoElement {
       role: 'region',
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       elements: Array,
     };

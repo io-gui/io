@@ -19,7 +19,7 @@ const splitDirections = {
 // NOTE: Editable io-selector-tabs cannot contain other editable io-selector-tabs or io-layout
 
 export class IoSelectorTabs extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -46,7 +46,7 @@ export class IoSelectorTabs extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       elements: Array,
       filter: null,
@@ -221,7 +221,7 @@ export class IoSelectorTabs extends IoElement {
 IoSelectorTabs.Register();
 
 export class IoTabs extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -293,7 +293,7 @@ export class IoTabs extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       elements: Array,
       filter: null,
@@ -473,7 +473,7 @@ export class IoTabs extends IoElement {
 IoTabs.Register();
 
 export class IoTabDragicon extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: inline-block;
@@ -503,7 +503,7 @@ export class IoTabDragicon extends IoElement {
 IoTabDragicon.Register();
 
 export class IoTabDropzone extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         width: 100px;

@@ -2,7 +2,7 @@ import {html} from "./core/element.js";
 import {IoItem} from "./item.js";
 
 export class IoString extends IoItem {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         border-color: var(--io-inset-border-color);
@@ -16,13 +16,13 @@ export class IoString extends IoItem {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       role: 'textbox',
       contenteditable: true,
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: String,
     };

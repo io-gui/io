@@ -1,7 +1,7 @@
 import {IoNode, Binding} from "../../dist/io.js";
 
 export class TestNode extends IoNode {
-  static get properties() {
+  static get Properties() {
     return {
       prop0: {
         type: String,
@@ -18,7 +18,7 @@ export class TestNode extends IoNode {
       _customHandlerCounter: 0,
     }
   }
-  static get listeners() {
+  static get Listeners() {
     return {
       'prop1-changed': 'onProp1Change',
       'custom-event': 'onCustomEvent',

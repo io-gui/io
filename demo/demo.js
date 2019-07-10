@@ -2,7 +2,7 @@ import {html, IoElement, IoStorage as $} from "../dist/io.js";
 import "./todomvc/todo-app.js";
 
 export class IoDemo extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host .table {
         display: grid;
@@ -32,7 +32,7 @@ export class IoDemo extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       number: 0.5,
       string: 'hello',
@@ -207,9 +207,9 @@ export class IoDemo extends IoElement {
             ['h4', 'io-slider'], demoSliders,
             ['h4', 'io-options'], demoOptions,
             ['h4', 'io-button'], demoButton,
-            ['h4', 'io-menu'], demoMenu,
+            // ['h4', 'io-menu'], demoMenu,
             ['h4', 'io-object'], demoObject,
-            ['h4', 'io-inspector'], demoInspector,
+            // ['h4', 'io-inspector'], demoInspector,
           ]],
           // demoLayout,
           ['todo-app', {name: 'todo'}],

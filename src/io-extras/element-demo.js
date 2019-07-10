@@ -1,7 +1,7 @@
 import {html, IoElement} from "../io.js";
 
 export class IoElementDemo extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -49,7 +49,7 @@ export class IoElementDemo extends IoElement {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       element: {
         type: String,
@@ -69,7 +69,7 @@ export class IoElementDemo extends IoElement {
       overflow: false,
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       minWidth: 640,
       _properties: Object,

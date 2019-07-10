@@ -2,7 +2,7 @@ import {html} from "./core/element.js";
 import {IoButton} from "./button.js";
 
 export class IoBoolean extends IoButton {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         border: var(--io-outset-border);
@@ -15,7 +15,7 @@ export class IoBoolean extends IoButton {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: {
         type: Boolean,

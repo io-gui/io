@@ -7,7 +7,7 @@ export class ProtoListeners {
    */
   constructor(protochain) {
     for (let i = protochain.length; i--;) {
-      const prop = protochain[i].constructor.listeners;
+      const prop = protochain[i].constructor.Listeners;
       for (let j in prop) this[j] = prop[j];
     }
   }

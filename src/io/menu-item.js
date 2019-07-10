@@ -5,7 +5,7 @@ import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuOptions} from "./menu-options.js";
 
 export class IoMenuItem extends IoItem {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -46,7 +46,7 @@ export class IoMenuItem extends IoItem {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       expanded: {
         value: false,
@@ -58,7 +58,7 @@ export class IoMenuItem extends IoItem {
       },
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       expanded: Boolean,
       option: Object,

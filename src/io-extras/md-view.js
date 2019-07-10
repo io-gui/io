@@ -2,7 +2,7 @@ import {html, IoElement} from "../io.js";
 import "../../lib/marked.min.js";
 
 export class IoMdView extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: block;
@@ -88,12 +88,12 @@ export class IoMdView extends IoElement {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       role: 'document',
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       path: {
         type: String,

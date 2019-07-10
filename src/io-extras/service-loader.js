@@ -4,7 +4,7 @@ if (!("serviceWorker" in navigator)) { console.warn("No Service Worker support!"
 if (!("PushManager" in window)) { console.warn("No Push API Support!"); }
 
 export class IoServiceLoader extends IoNode {
-  static get properties() {
+  static get Properties() {
     return {
       path: 'service.js',
       serviceWorker: undefined,

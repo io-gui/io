@@ -2,7 +2,7 @@ import {html} from "./core/element.js";
 import {IoItem} from "./item.js";
 
 export class IoButton extends IoItem {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         background-color: var(--io-background-color-dark);
@@ -17,13 +17,13 @@ export class IoButton extends IoItem {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       label: 'Button',
       role: 'button',
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       action: Function,
       value: undefined,

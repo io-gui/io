@@ -3,7 +3,7 @@ import "./properties.js";
 import {IoCollapsable} from "./collapsable.js";
 
 export class IoObject extends IoCollapsable {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         padding: 0;
@@ -19,7 +19,7 @@ export class IoObject extends IoCollapsable {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       value: Object,
       properties: Array,

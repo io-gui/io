@@ -3,7 +3,7 @@ import {IoMenuOptions} from "./menu-options.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
 export class IoMenu extends IoElement {
-  static get properties() {
+  static get Properties() {
     return {
       value: null,
       options: Array,

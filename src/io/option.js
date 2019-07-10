@@ -3,7 +3,7 @@ import {IoMenuItem} from "./menu-item.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
 export class IoOption extends IoMenuItem {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         white-space: pre;
@@ -24,12 +24,12 @@ export class IoOption extends IoMenuItem {
       }
     </style>`;
   }
-  static get attributes() {
+  static get Attributes() {
     return {
       role: 'button',
     };
   }
-  static get properties() {
+  static get Properties() {
     return {
       options: Array,
     };

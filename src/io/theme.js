@@ -74,7 +74,7 @@ export class IoTheme extends IoNode {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       theme: 'light',
     };

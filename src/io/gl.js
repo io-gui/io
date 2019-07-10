@@ -50,7 +50,7 @@ const shadersCache = new WeakMap();
 // TODO: fix sizing logic
 
 export class IoGl extends IoElement {
-  static get style() {
+  static get Style() {
     return html`<style>
       :host {
         display: flex;
@@ -65,7 +65,7 @@ export class IoGl extends IoElement {
       }
     </style>`;
   }
-  static get properties() {
+  static get Properties() {
     return {
       background: [0, 0, 0, 1],
       color: [1, 1, 1, 1],
