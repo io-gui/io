@@ -7,6 +7,18 @@
 [![Dev Dependencies][dev-deps]][dev-deps-url]
 [![Code Quality][lgtm]][lgtm-url]
 
+## Lightweight UI Framework
+
+Io is a lightweight UI framework for reactive web applications. It implements custom elements, virtual DOM, data binding and a simple data-flow design. It comes with a collection of UI elements suitable for use with other frameworks.
+
+For a quick start, read the [getting started guide](https://io-gui.dev/#page=docs).
+
+## License
+
+[![License][license]][license-url]
+
+Copyright © 2015-present, Aleksandar (Aki) Rodić
+
 [npm]: https://img.shields.io/npm/v/io-gui.svg
 [npm-url]: https://www.npmjs.com/package/io-gui
 [build-size]: https://badgen.net/bundlephobia/minzip/io-gui
@@ -19,15 +31,5 @@
 [dev-deps-url]: https://david-dm.org/io-gui/io?type=dev
 [lgtm]: https://img.shields.io/lgtm/grade/javascript/g/io-gui/io.svg?label=code%20quality
 [lgtm-url]: https://lgtm.com/projects/g/io-gui/io/context:javascript
-
-## Lightweight UI Framework for The Web
-
-Io is a lightweight UI framework for reactive web applications. It implements custom elements, virtual DOM, data binding and a simple data-flow design. It comes with a collection of UI elements suitable for use with other frameworks.
-
-For a quick start, read the [getting started guide](https://io-gui.dev/).
-
-## License
-
-[MIT](http://opensource.org/licenses/MIT)
-
-Copyright (c) 2019, Aleksandar (Aki) Rodić
+[license]: https://img.shields.io/npm/l/io-gui.svg
+[license-url]: https://github.com/io-gui/io/blob/master/LICENSE

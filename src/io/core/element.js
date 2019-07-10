@@ -179,6 +179,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
         if (children[i].innerText !== vChildren[i].children) {
+          console.log(children[i].innerText, vChildren[i].children)
           children[i].innerText = vChildren[i].children;
         }
       } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
