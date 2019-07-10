@@ -86,11 +86,16 @@ export class IoMdView extends IoElement {
           width: 100%;
           height: 100%;
       }
+      :host[loading] {
+        background: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px);
+        background-repeat: repeat;
+      }
     </style>`;
   }
   static get Attributes() {
     return {
       role: 'document',
+      loading: true,
     };
   }
   static get Properties() {
@@ -108,6 +113,7 @@ export class IoMdView extends IoElement {
   }
   pathChanged() {
     const scope = this;
+    this.loading = true;
     fetch(this.path)
     .then(response => {
       return response.text();
@@ -124,6 +130,7 @@ export class IoMdView extends IoElement {
         }
 
         scope.innerHTML = window.marked(text);
+        this.loading = false;
         this.dispatchEvent('content-ready', {}, true);
       }
     });

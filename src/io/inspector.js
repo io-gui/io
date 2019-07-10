@@ -127,7 +127,7 @@ export class IoInspector extends IoElement {
     }
     this.template(elements);
   }
-  static get config() {
+  static get Config() {
     return {
       'Object|hidden': [/^_/],
       'HTMLElement|hidden': [/^_/, 'innerText', 'outerText', 'innerHTML', 'outerHTML', 'textContent'],
@@ -138,7 +138,7 @@ export class IoInspector extends IoElement {
 export class Config {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {
-      this.registerConfig(prototypes[i].constructor.config || {});
+      this.registerConfig(prototypes[i].constructor.Config || {});
     }
   }
   registerConfig(config) {
