@@ -6,7 +6,7 @@ export class IoBreadcrumbs extends IoElement {
     return html`<style>
       :host {
         display: flex;
-        flex: 1 0 auto;
+        flex: 0 0 auto;
         flex-direction: row;
         align-self: stretch;
         border-radius: var(--io-border-radius);

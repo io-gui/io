@@ -1,21 +1,5 @@
-## io-md-view ##
+## &lt;io-md-view&gt; ##
 
-**Properties**
+## &lt;io-element-demo&gt; ##
 
-**Events**
-
-&nbsp;
-
-## io-element-demo ##
-
-**Properties**
-
-**Events**
-
-&nbsp;
-
-## io-service-loader ##
-
-**Properties**
-
-**Events**
+## &lt;io-service-loader&gt; ##
