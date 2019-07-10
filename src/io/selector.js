@@ -116,7 +116,7 @@ export class IoSelector extends IoElement {
             if (this.stagingElement.parentElement !== document.head) document.head.appendChild(this.stagingElement);
             this.template([this.elements[i]], this.stagingElement);
             this._caches[name] = this.stagingElement.childNodes[0];
-            this.stagingElement.innerText = '';
+            this.stagingElement.textContent = '';
           });
         }
       }
@@ -195,7 +195,7 @@ export class IoSelector extends IoElement {
 
     this.renderShadow();
     if (this.$.content) {
-      this.$.content.innerText = '';
+      this.$.content.textContent = '';
     }
 
     this.loading = true;

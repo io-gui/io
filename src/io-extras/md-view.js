@@ -127,10 +127,10 @@ export class IoMdView extends IoElement {
       vars: Object,
     };
   }
-  // resized() {
-  //   const width = this.getBoundingClientRect().width;
-  //   this.style.setProperty('--io-code-size', Math.min((width - 50) / 40, 12) + "px");
-  // }
+  resized() {
+    const width = this.getBoundingClientRect().width;
+    this.style.setProperty('--io-code-size', Math.min((width - 50) / 40, 12) + "px");
+  }
   pathChanged() {
     const scope = this;
     this.loading = true;
