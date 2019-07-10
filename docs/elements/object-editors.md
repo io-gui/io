@@ -1,4 +1,4 @@
-## &lt;io-properties&gt; ##
+## &lt;io-properties&gt;
 
 Object property editor.
 
@@ -6,7 +6,7 @@ Object property editor.
 
 Displays a set of labeled property editors for the `value` object. It can be configured to use custom property editors and display only specified properties.
 
-## &lt;io-object&gt; ##
+## &lt;io-object&gt;
 
 Object property editor.
 
@@ -16,7 +16,7 @@ Implements `<io-properties>` and `<io-boolean>`.
 
 Displays a set of labeled property editors for the `value` object inside io-collapsable element. It can be configured to use custom property editors and display only specified properties.
 
-## &lt;io-inspector&gt; ##
+## &lt;io-inspector&gt;
 
 Object property editor.
 
