@@ -1,4 +1,4 @@
-<p align="center"><a href="https://io-gui.dev" target="_blank" rel="noopener noreferrer"><img width="128" src="https://io-gui.dev/images/logo/io-logo.svg" alt="Io GUI Logo"></a></p>
+<p align="center"><a href="https://io-gui.dev" target="_blank" rel="noopener noreferrer"><img width="150" src="https://io-gui.dev/images/logo/io-logo.svg" alt="Io GUI Logo"></a></p>
 
 <p align="center">
 <a href="https://www.npmjs.com/package/io-gui"><img src="https://img.shields.io/npm/v/io-gui.svg" alt="NPM package" /></a>
@@ -20,6 +20,7 @@ For a quick start, read the [getting started guide](https://io-gui.dev/#page=doc
 ## License
 
 [![License][license]][license-url]
+
 [license]: https://img.shields.io/npm/l/io-gui.svg
 [license-url]: https://github.com/io-gui/io/blob/master/LICENSE
 
