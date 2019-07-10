@@ -168,28 +168,28 @@ export class IoDemo extends IoElement {
       ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
     ]];
 
-    // const demoLayout = ['io-layout', {
-    //   name: 'layout',
-    //   orientation: 'horizontal',
-    //   elements: [
-    //     demoPrimitives,
-    //     demoSwitch,
-    //     demoSliders,
-    //     demoOptions,
-    //     demoButton,
-    //     demoObject,
-    //     demoInspector,
-    //     demoMenu,
-    //   ],
-    //   splits: [
-    //     {selected: 'sliders', tabs: ['sliders'], size: 280},
-    //     {orientation: 'vertical', splits: [
-    //       {tabs: ['button'], selected: 'button', size: 100},
-    //       {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
-    //       {tabs: ['primitives'], selected: 'primitives'},
-    //     ]},
-    //   ],
-    // }];
+    const demoLayout = ['io-layout', {
+      name: 'layout',
+      orientation: 'horizontal',
+      elements: [
+        demoPrimitives,
+        demoSwitch,
+        demoSliders,
+        demoOptions,
+        demoButton,
+        demoObject,
+        demoInspector,
+        demoMenu,
+      ],
+      splits: [
+        {selected: 'sliders', tabs: ['sliders'], size: 280},
+        {orientation: 'vertical', splits: [
+          {tabs: ['button'], selected: 'button', size: 100},
+          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
+          {tabs: ['primitives'], selected: 'primitives'},
+        ]},
+      ],
+    }];
 
     // TODO: Add demos for all remaining elements
 
@@ -197,7 +197,7 @@ export class IoDemo extends IoElement {
       ['io-selector-tabs', {precache: true, selected: $('demo', 'elements', true),
         options: [
           {value: 'elements', label: "Elements"},
-          // {value: 'layout', label: "Layout"},
+          {value: 'layout', label: "Layout"},
           {value: 'todo', label: "Todo App"},
         ],
         elements: [
@@ -207,11 +207,11 @@ export class IoDemo extends IoElement {
             ['h4', 'io-slider'], demoSliders,
             ['h4', 'io-options'], demoOptions,
             ['h4', 'io-button'], demoButton,
-            // ['h4', 'io-menu'], demoMenu,
+            ['h4', 'io-menu'], demoMenu,
             ['h4', 'io-object'], demoObject,
-            // ['h4', 'io-inspector'], demoInspector,
+            ['h4', 'io-inspector'], demoInspector,
           ]],
-          // demoLayout,
+          demoLayout,
           ['todo-app', {name: 'todo'}],
         ]
       }]
