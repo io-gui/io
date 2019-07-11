@@ -39,7 +39,11 @@
     "ux",
     "navigation",
     "menu",
-    "io-gui"
+    "io-gui",
+    "web components",
+    "custom elements",
+    "reactive",
+    "data binding"
   ],
   "author": "Aleksandar (Aki) Rodić",
   "license": "MIT",
