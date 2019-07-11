@@ -52,28 +52,35 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     this.setAttribute('aria-label', this.title || this.label);
   }
   /**
-    * Resize listener is added here if element class has `resized()` function defined.
+    * Resize listener is added here if element class has `onResized()` function defined.
     */
   connectedCallback() {
     super.connectedCallback();
-    if (typeof this.resized == 'function') {
+    if (typeof this.onResized == 'function') {
       if (ro) {
         ro.observe(this);
       } else {
-        this.resized();
-        window.addEventListener('resize', this.resized);
+        this._onResized();
+        window.addEventListener('resize', this._onResized);
       }
     }
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (typeof this.resized == 'function') {
+    if (typeof this.onResized == 'function') {
       if (ro) {
         ro.unobserve(this);
       } else {
-        window.removeEventListener('resize', this.resized);
+        window.removeEventListener('resize', this._onResized);
       }
     }
+  }
+  _onResized() {
+    clearTimeout(this.__resizeDebounce);
+    this.__resizeDebounce = setTimeout(()=>{
+      this.onResized();
+      delete this.__resizeDebounce;
+    }, 100);
   }
   /**
     * Disposes all internals.
@@ -271,13 +278,15 @@ IoElement.Register = function() {
     return;
   }
 
+  window[this.name] = this;
+
   initStyle(this.prototype.__protochain);
 };
 
 let ro;
 if (window.ResizeObserver !== undefined) {
   ro = new ResizeObserver(entries => {
-    for (let entry of entries) entry.target.resized();
+    for (let entry of entries) entry.target._onResized();
   });
 }
 

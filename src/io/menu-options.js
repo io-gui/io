@@ -95,7 +95,7 @@ export class IoMenuOptions extends IoElement {
       item.expanded = false;
     }
   }
-  resized() {
+  onResized() {
     this.setOverflow();
   }
   setOverflow() {

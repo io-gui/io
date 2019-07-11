@@ -313,7 +313,7 @@ export class IoTabs extends IoElement {
   select(id) {
     this.selected = id;
   }
-  resized() {
+  onResized() {
     let right = this.getBoundingClientRect().right;
     const lastButton = this.children[this.children.length - 2];
     if (this.overflow) {
@@ -329,7 +329,7 @@ export class IoTabs extends IoElement {
     }
     this.filter.push(tabID);
     this.selected = tabID;
-    this.resized();
+    this.onResized();
     this.changed();
   }
   _onRemoveTab(tabID) {
@@ -339,7 +339,7 @@ export class IoTabs extends IoElement {
     if (this.filter.indexOf(this.selected) == -1) {
       this.selected = this.filter[0];
     }
-    this.resized();
+    this.onResized();
     this.changed();
   }
   _onPointerdown(event) {

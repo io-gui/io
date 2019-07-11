@@ -1,124 +1,132 @@
-## Usage
+## Core Classes
+
+`IoElement` class is the core of Io. It is a simple base class for creating fast, lightweight and responsive custom elements. It saves you time writing boilerplate code. The core API is defined in the underlying superclass `IoNode` which can be used to create non-element classes compatible with Io event system and data binding. You can also apply `IoNodeMixin` on top of existing classes for easier integration with Io.
+
+## Creating Elements
+
+You can create Io elements using different methods but to make the most out of Io, you should use the `template()` function inside elements created with `IoElement` class. See [virtual DOM arrays](#doc=advanced#virtual-dom-arrays) for more information.
 
 ```javascript
-const menu = document.createElement('io-menu-options');
-menu.options = options;
-element.appendChild(menu);
+// createElement
+const e = document.createElement('io-object');
+e.value = someObject;
+
+// Constructor
+const e = new IoObject({value: someObject});
+
+// Io Template
+this.template([['io-object', {value: someObject}]]);
 ```
-
-Alternatively, you can create the element with its constructor and assign properties in the configuration argument.
-
-```javascript
-element.appendChild(new IoMenu({value: options}));
-```
-
-Even better, you can create elements with `IoElement.template()` function with virtual DOM arrays (see virtual-dom-arrays).
-
-```javascript
-this.template([['io-menu-options', {value: options}]]);
-```
-## IoNode
-
-Core mixin for io classes. It can be applied as a mixin to any class such as `Object` or `HTMLElement`.
-
-### Getters ###
-
-Static getters are evaluated once per class when the
-
-**`static get Properties()`** Should return property definitions. See readme.md for more info.
-
-**`static get Listeners()`** Should return a map of default listeners and handler function names.
-
-**`get compose()`** Experimental
-
-### Functions ###
-
-**`changed()`** Change handler function. Called when any property changes.
-
-**`[propertyName]Changed()`** Change handler function. Called when specific property changes.
-
-**`[propertyName]Mutated()`** Change handler for object property mutation. Triggered by `object-mutated` event on window if specified object is a property value.
-
-**`connect()`** Triggers connectedCallback() for io objects (non-elements).
-
-**`disconnect()`** Triggers disconnectedCallback() for io objects (non-elements).
-
-**`dispose()`** Removes all event listeners and data bindings. It is called automatically for elements, manually for objects.
-
-**`bind(prop)`** Creates bi-directional data-binding. If can be assigned to properties in templates or constructors.
-
-**`set(prop, value)`** Used when property value is set by **user action**. It will trigger non-bubbling `[prop]-set` event.
-
-**`dispatchEvent(type, detail, bubbles = true, src = this)`** Shorthand for custom event dispatch.
-
-# `IoElement` `<io-element>` #
-
-`IoNodeMixin` applied to an `HTMLElement` class and some extra DOM-related functions.
-
-### Static Getters ###
-
-**`static get style()`** Should style string. See readme.md for more info.
-
-### Functions ###
-
-**`template()`** Generates virtual DOM from nested arrays. See readme.md for more info.
-
-**`resized()`** Handler function called when element size changes.
-
-#### Events ####
-
-| Event | Description | Detail |
-|:------:|:-----------:|:----------:|
-| **`[prop]-changed`** | Property changed     | `property`, `value`, `oldValue`           |
-| **`value-set`**      | Property set by user | `property`, `value`, `oldValue`           |
-| **`object-mutated`** | Object mutated       | `object`, `property`, `value`, `oldValue` |
-
-
-# `IoNode` #
-
-`IoNodeMixin` applied to `Object` class.
-
-
-To define a new class, extend `IoNode` or `IoElement` and call `Register()`.
-
-```javascript
-// Custom object node
-class MyObject extends IoNode {}
-
-```
-
-## Style
 
 ## Properties and Attributes
 
-You can define properties by value, type or configuration object which may include: `type`, `value`, `reflect`, `binding` and `enumerable`.
-
-Specifying configuration options is optional. In most cases, default values are just fine. You can simply define a property by value or type. For example, following variants are effectively the same:
+When defining new classes, you can use static getters to define properties. This evaluates once per class registration and it takes into account inherited property definitions for extended classes.
 
 ```javascript
-// Variant 1 (full property configuration)
-myProperty: {
-  type: Boolean,
-  value: false,
-  reflect: 0,
-  binding: null,
-  enumerable: true
+static get Properties() {
+  return {
+    myProperty: false
+  };
 }
-// Variant 2 (type only)
+static get Attributes() {
+  return {
+    myAttribute: false
+  };
+}
+```
+
+Although semantically different, `Properties()` and `Attributes()` both define **properties** under the hood. However, their default property configurations are different in such way that "Properties" evoke change events while "Attributes" reflect their values to HTML attribute strings. One is intended for properties to be used in reactive element logic and I/O, while the other is primarily used for attribute CSS selectors. However, sometimes you need properties that serve both purposes. For that, you can use custom property configurations.
+
+## Property Configuration
+
+Property configuration can be done in different ways. For your convenience, you can simply assign a `value` or `type` and one will be inferred from the other. For example, if you define `'myProperty: Hello World'`, `type: String` configuration will be inferred. For various type assignments, default values are following:
+
+|Type     |Default Value  |
+|:--------|:--------------|
+|`Boolean`|`false`        |
+|`String` |`''`           |
+|`Number` |`0`            |
+|`Array`  |`[...value]`   |
+|`Object` |`new Object()` |
+|`MyClass`|`new MyClass()`|
+
+In addition to setting `value` and `type`, you can be more specific when defining properties by providing configuration object which may include: `reflect`, `notify`, `enumerable` and `binding`.
+
+|Property    |Values                   |Description                    |
+|:-----------|:------------------------|:------------------------------|
+|`reflect`   |`0` \| `1` \| `-1` \| `2`|Attribute reflection direction |
+|`notify`    |`true` \| `false`        |Enables change events          |
+|`enumerable`|`true` \| `false`        |Makes property enumerable      |
+|`binding`   |`Binding`                |Binding object (internal)      |
+
+
+Specifying configuration options is optional. In most cases, default values are fine. You can simply define a property by value or type alone. For example, following variants are effectively the same:
+
+```javascript
+// Configuration object
+myProperty: {
+  value: false,
+  type: Boolean,
+  reflect: 0,
+  notify: true,
+  enumerable: true,
+  binding: null,
+}
+// Type only
 myProperty: Boolean
-// Variant 3 (value only)
+// Value only
 myProperty: false
 ```
 
-## Listeners
+The only difference with properties defined in the `Attributes()` getter is that property configurations have following values by default:
 
+```javascript
+reflect: 1,
+notify: false,
+enumerable: false,
+```
 
+## Functions
 
-## Change Functions
+**`changed()`**  
+Change handler function.
 
+**`[prop]Changed()`**  
+Property-specific change handler function.
 
+**`[prop]Mutated()`**  
+Property-specific mutation handler function.
 
-## Virtual DOM Array
+**`bind(prop)`**  
+Returns data-binding to specified property.
+
+**`set(prop, value)`**  
+Sets property and emits `[prop]-set` event.
+
+**`dispatchEvent(type, detail, bubbles, src)`**  
+Shorthand for custom event dispatch.
+
+**`template()`**  
+Generates virtual DOM from nested arrays.
+
+**`onResized()`**  
+
+<!-- **`connect()`** -->
+<!-- **`disconnect()`** -->
+<!-- **`dispose()`** -->
+Handler function called when element size changes.
+
+## Events
+
+Assigned
+
+| Event            | Detail                                  |
+|:-----------------|:----------------------------------------|
+| `[prop]-changed` |`property`, `value`, `oldValue`          |
+| `value-set`      |`property`, `value`, `oldValue`          |
+| `object-mutated` |`object`, `property`, `value`, `oldValue`|
+
+## Virtual DOM Arrays
 
 `IoElement.template()` uses virtual DOM structure similar to `React.createElement()` or `h()`, except the DOM tree is expressed as nested arrays to improve readability. For example, a virtual instance of `<my-element>` can be expressed like this:
 
@@ -170,9 +178,7 @@ This is a simple yet powerful feature designed to be used inside templates. You 
 Keep in mind that this only works with io properties. In other words, binding to native HTML elements will not work.
 
 ```javascript
-this.template([
-  ['child-element', {value: this.bind('value')}]
-]);
+this.template([['child-element', {value: this.bind('value')}]]);
 ```
 
 You can also use `this.bind()` outside template or bind to `IoNode` objects.
@@ -197,13 +203,5 @@ On a fundamental level, data-flow in io is top down and UI designs with unidirec
 * Object elements which are hosting editable leaf elements should listen to `value-set` event and dispatch `object-mutated` event on the window. See `IoProperties` for example.
 
 That is all! Object elements will automatically listen to `object-mutated` event and update if needed.
-
-## Events
-
-| Event | Description | Detail |
-|:------:|:-----------:|:----------:|
-| **`[prop]-changed`** | Property changed | `property`, `value`, `oldValue` |
-| **`[prop]-set`** | Property set by user | `property`, `value`, `oldValue` |
-| **`object-mutated`** | Object mutated | `object`, `property`, `value`, `oldValue` |
 
 **Note:** If the application state changed externally (e.g. server push), `object-mutated` event is required for UI update. Core application should also listen to `object-mutated` event from UI and react accordingly. `object-mutated` event payload should specify which object and property mutated. Otherwise brute-force UI update is performed.

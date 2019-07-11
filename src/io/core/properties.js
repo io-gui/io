@@ -67,9 +67,9 @@ class ProtoProperty {
     if (cfg.value !== undefined) this.value = cfg.value;
     if (cfg.type !== undefined) this.type = cfg.type;
     if (cfg.reflect !== undefined) this.reflect = cfg.reflect;
-    if (cfg.binding !== undefined) this.binding = cfg.binding;
-    if (cfg.enumerable !== undefined) this.enumerable = cfg.enumerable;
     if (cfg.notify !== undefined) this.notify = cfg.notify;
+    if (cfg.enumerable !== undefined) this.enumerable = cfg.enumerable;
+    if (cfg.binding !== undefined) this.binding = cfg.binding;
   }
 }
 
@@ -166,17 +166,17 @@ class Property {
    * @param {*} cfg.value - Default value.
    * @param {function} cfg.type - Constructor of value.
    * @param {boolean} cfg.reflect - Reflects to HTML attribute
-   * @param {Binding} cfg.binding - Binding object.
-   * @param {boolean} cfg.enumerable - Makes property enumerable.
    * @param {boolean} cfg.notify - Trigger change handlers and change events.
+   * @param {boolean} cfg.enumerable - Makes property enumerable.
+   * @param {Binding} cfg.binding - Binding object.
    */
   constructor(cfg) {
     this.value = cfg.value;
     this.type = cfg.type;
     this.reflect = cfg.reflect;
-    this.binding = cfg.binding;
-    this.enumerable = cfg.enumerable;
     this.notify = cfg.notify;
+    this.enumerable = cfg.enumerable;
+    this.binding = cfg.binding;
     if (this.type === Array && this.value) {
       this.value = [...this.value]; // TODO: reconsider
     }

@@ -19,8 +19,9 @@ export const IoNodeMixin = (superclass) => {
      * @return {*} [properties.*.value] - Default value.
      * @return {function} [properties.*.type] - Constructor of value.
      * @return {number} [properties.*.reflect] - Reflects to HTML attribute
-     * @return {Binding} [properties.*.binding] - Binding object.
+     * @return {boolean} [properties.*.notify] - Enables change events.
      * @return {boolean} [properties.*.enumerable] - Makes property enumerable.
+     * @return {Binding} [properties.*.binding] - Binding object.
      */
     static get Properties() {
       return {
