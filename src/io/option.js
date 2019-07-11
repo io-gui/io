@@ -52,7 +52,6 @@ export class IoOption extends IoMenuItem {
   }
   _onClick(event) {
     // TODO: dead code?
-    console.log(event)
     IoMenuLayer.singleton._x = event.clientX;
     IoMenuLayer.singleton._y = event.clientY;
     this._toggleExpanded(true);
