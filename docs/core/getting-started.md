@@ -1,6 +1,6 @@
 ## About Io
 
-Io is a UI framework for JavaScript applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements suitable for use with other frameworks.
+Io is a UI framework for JavaScript applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
 
 For a quick start, read this document, then check out the [source code](https://github.com/io-gui/io/).
 
@@ -16,7 +16,7 @@ The library includes a collection of useful UI elements suitable for use with ot
 
 ```javascript
 const menu = document.createElement('io-menu-options');
-menu.options = options;
+menu.options = ["one", "two", "three"];
 element.appendChild(menu);
 ```
 
@@ -57,7 +57,7 @@ Once the element has been connected and `change()` function evoked, the template
 
 ## Style
 
-Styles are defined inside `static get Style()` return string. Let's specify text color for the `<p>` element.
+Styles can be defined inside `static get Style()` return string. Alternatively, styles can be defined in external CSS files as usual. Let's specify text color for the `<p>` element.
 
 ```javascript
 static get Style() {

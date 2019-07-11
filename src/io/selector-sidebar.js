@@ -68,9 +68,9 @@ export class IoSelectorSidebar extends IoSelector {
     }
   }
   minWidthChanged() {
-    this.resized();
+    this.onResized();
   }
-  resized() {
+  onResized() {
     this.overflow = this.getBoundingClientRect().width < this.minWidth;
   }
   leftChanged() { this.renderShadow(); }

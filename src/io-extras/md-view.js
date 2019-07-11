@@ -9,7 +9,7 @@ export class IoMdView extends IoElement {
         flex: 1 1 auto;
         background-color: var(--io-background-color);
         color: var(--io-color);
-        --io-code-size: 12px;
+        --io-code-size: 15px;
       }
       :host[loading] {
         background: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px);
@@ -67,9 +67,12 @@ export class IoMdView extends IoElement {
       }
       :host code {
         background-color: var(--io-background-color-dark);
-        font-family: "Roboto Mono", Monaco, courier, monospace;
+        font-family: monospace, monospace;
+        -webkit-font-smoothing: auto;
         overflow: auto;
-        font-weight: bold;
+      }
+      :host pre > code {
+        line-height: 1.6em;
       }
       :host code.language-html,
       :host code.language-javascript {
@@ -127,9 +130,10 @@ export class IoMdView extends IoElement {
       vars: Object,
     };
   }
-  resized() {
-    const width = this.getBoundingClientRect().width;
-    this.style.setProperty('--io-code-size', Math.min((width - 50) / 40, 12) + "px");
+  onResized() {
+    let width = this.getBoundingClientRect().width;
+    width = Math.min((width - 30) / 35, 15);
+    this.style.setProperty('--io-code-size', width + "px");
   }
   pathChanged() {
     const scope = this;

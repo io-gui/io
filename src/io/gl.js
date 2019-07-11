@@ -149,7 +149,7 @@ export class IoGl extends IoElement {
 
     this.render(); // TODO: hmm
   }
-  resized() {
+  onResized() {
     const rect = this.$.canvas.getBoundingClientRect();
     this.size[0] = rect.width;
     this.size[1] = rect.height;
