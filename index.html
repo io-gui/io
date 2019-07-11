@@ -111,9 +111,6 @@
     import "./dist/io-extras.js";
 
     export class IoMainPage extends IoSelectorTabs {
-      static get Style() {
-        return '';
-      }
       static get Properties() {
         return {
           selected: $('page', 'docs', true),
@@ -128,7 +125,7 @@
           {label: 'Docs', value: 'docs'},
           {label: 'Elements', value: 'elements'},
           // {label: 'Demo', value: 'demo'},
-          // {label: 'Test', value: 'test'},
+          {label: 'Test', value: 'test'},
         ];
         this.elements = [
           ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started#about-io', true),
@@ -202,7 +199,7 @@
             ]
           }],
           // ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
-          // ['io-test', {name: 'test', import: "./tests/test.js"}],
+          ['io-test', {name: 'test', import: "./tests/test.js"}],
         ];
       }
     }

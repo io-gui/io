@@ -41,6 +41,7 @@ export class IoOption extends IoMenuItem {
     return undefined;
   }
   _onMenuItemClicked(event) {
+    // TODO: fires twice
     const item = event.composedPath()[0];
     if (item !== this) {
       event.stopImmediatePropagation();
@@ -49,7 +50,10 @@ export class IoOption extends IoMenuItem {
       this.dispatchEvent('io-menu-item-clicked', event.detail, true);
     }
   }
-  _onClick() {
+  _onClick(event) {
+    // TODO: dead code?
+    IoMenuLayer.singleton._x = event.clientX;
+    IoMenuLayer.singleton._y = event.clientY;
     this._toggleExpanded(true);
   }
   _onKeydown(event) {

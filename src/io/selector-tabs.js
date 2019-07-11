@@ -11,21 +11,19 @@ export class IoSelectorTabs extends IoSelector {
         flex: 1 1 auto;
       }
       :host > io-menu-options {
+        flex: 0 0 auto;
         border-radius: 0;
         border: none;
         font-size: 1.2em;
         background-color: var(--io-background-color-dark);
       }
       :host > .io-content {
+        flex: 1 1 auto;
         -webkit-overflow-scrolling: touch;
         border: var(--io-border);
         border-width: var(--io-border-width) 0 0 0;
       }
     </style>`;
-  }
-  static get Attributes() {
-    return {
-    };
   }
   static get Properties() {
     return {

@@ -114,11 +114,12 @@ export class IoMenuOptions extends IoElement {
       hamburger.hidden = true;
       const hamburgerOptions = [];
 
+
       for (let i = buttons.length; i--;) {
         const r = buttons[i].getBoundingClientRect();
         rects[i] = rects[i] || {right: 0, width: 0};
-        if (r.right !== 0) rects[i].right = Math.min(rects[i].right || Infinity, r.right);
-        if (r.width !== 0) rects[i].width = Math.min(rects[i].width || Infinity, r.width);
+        if (r.right !== 0) rects[i].right = r.right;
+        if (r.width !== 0) rects[i].width = r.width;
 
         if (hamburger.hidden && overflow) {
           hamburger.hidden = false;
@@ -148,6 +149,7 @@ export class IoMenuOptions extends IoElement {
       }
     }
   }
+  // TODO: refactor and unhack nudges.
   nudgeRight(x, y, rect) {
     if (x + rect.width < window.innerWidth) {
       this._x = x;
@@ -180,41 +182,44 @@ export class IoMenuOptions extends IoElement {
     }
     return false;
   }
+  nudgePointer(x, y, _x, _y, rect) {
+    this._x = Math.max(x + 14, Math.min(_x, window.innerWidth - rect.width));
+    this._y = Math.max(Math.min(_y, window.innerHeight - rect.height), 0);
+    return true;
+  }
   expandedChanged() {
     if (this.parentElement === IoMenuLayer.singleton) {
       IoMenuLayer.singleton._onOptionsExpanded(this);
       if (this.expanded && this.$parent) {
         let rect = this.getBoundingClientRect();
         let pRect = this.$parent.getBoundingClientRect();
+        const x = IoMenuLayer.singleton._x;
+        const y = IoMenuLayer.singleton._y;
         switch (this.position) {
           case 'pointer':
-            this._x = this._x - 1 || pRect.x;
-            this._y = this._y - 1 || pRect.y;
+            this._x = typeof x === 'number' ? (x - 4) : pRect.x;
+            this._y = typeof y === 'number' ? (y - 4) : pRect.y;
             break;
           case 'top':
             this.nudgeTop(pRect.x, pRect.top, rect) ||
             this.nudgeBottom(pRect.x, pRect.bottom, rect) ||
-            this.nudgeRight(pRect.right, pRect.top, rect) ||
-            this.nudgeLeft(pRect.x, pRect.top, rect);
+            this.nudgePointer(x, y, pRect.x, pRect.top - rect.height, rect);
             break;
           case 'left':
             this.nudgeLeft(pRect.x, pRect.top, rect) ||
             this.nudgeRight(pRect.right, pRect.top, rect) ||
-            this.nudgeBottom(pRect.x, pRect.bottom, rect) ||
-            this.nudgeTop(pRect.x, pRect.top, rect);
+            this.nudgePointer(x, y, pRect.x - rect.width, pRect.top, rect);
             break;
           case 'bottom':
             this.nudgeBottom(pRect.x, pRect.bottom, rect) ||
             this.nudgeTop(pRect.x, pRect.top, rect) ||
-            this.nudgeRight(pRect.right, pRect.top, rect) ||
-            this.nudgeLeft(pRect.x, pRect.top, rect);
+            this.nudgePointer(x, y, pRect.x, pRect.bottom, rect);
             break;
           case 'right':
           default:
             this.nudgeRight(pRect.right, pRect.top, rect) ||
             this.nudgeLeft(pRect.x, pRect.top, rect) ||
-            this.nudgeBottom(pRect.right, pRect.bottom, rect) ||
-            this.nudgeTop(pRect.right, pRect.top, rect);
+            this.nudgePointer(x, y, pRect.right, pRect.top, rect);
             break;
         }
         this.style.left = this._x + 'px';

@@ -185,8 +185,8 @@ export class IoMenuItem extends IoItem {
   _onMousedown() {
     IoMenuLayer.singleton.setLastFocus(this);
     this.focus();
-    this._toggleExpanded(true);
     IoMenuLayer.singleton._onMousemove(event);
+    this._toggleExpanded(true);
   }
   _onTouchstart(event) {
     if (event.cancelable) {
@@ -194,9 +194,9 @@ export class IoMenuItem extends IoItem {
       this.addEventListener('touchmove', this._onTouchmove);
       this.addEventListener('touchend', this._onTouchend);
       IoMenuLayer.singleton.setLastFocus(this);
+      IoMenuLayer.singleton._onTouchmove(event);
       this.focus();
       this._toggleExpanded(true);
-      IoMenuLayer.singleton._onTouchmove(event);
     }
   }
   _onTouchmove(event) {

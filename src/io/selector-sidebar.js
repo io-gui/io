@@ -18,12 +18,14 @@ export class IoSelectorSidebar extends IoSelector {
         flex-direction: column;
       }
       :host > io-sidebar {
+        flex: 0 0 auto;
         background-color: var(--io-background-color-dark);
       }
       :host:not([overflow]) > io-sidebar {
         flex: 0 0 8em;
       }
       :host > .io-content {
+        flex: 1 1 auto;
         -webkit-overflow-scrolling: touch;
         border: var(--io-border);
         border-width: 0 var(--io-border-width) 0 0

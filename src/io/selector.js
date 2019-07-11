@@ -126,15 +126,10 @@ export class IoSelector extends IoElement {
     this.template([['div', {id: 'content', class: 'io-content'}]]);
   }
   scrollTo(id, smooth) {
-    if (this.$.content) {
+    setTimeout(()=>{
       const elem = this.$.content.querySelector('#' + id);
       if (elem) elem.scrollIntoView({behavior: smooth ? 'smooth' : 'auto'});
-    } else {
-      setTimeout(()=>{
-        const elem = this.$.content.querySelector('#' + id);
-        if (elem) elem.scrollIntoView({behavior: smooth ? 'smooth' : 'auto'});
-      });
-    }
+    }, 100); // TODO: unhack!
   }
   _onScroll() {
     if (this._scrollID === undefined) return;
