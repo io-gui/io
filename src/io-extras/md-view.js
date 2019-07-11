@@ -44,8 +44,7 @@ export class IoMdView extends IoElement {
         line-height: 1.4em;
       }
       :host a {
-        font-weight: bold;
-        text-decoration: none;
+        text-decoration: underline;
         color: var(--io-color-link);
       }
       :host h1, :host h2, :host h3, :host h4 {
@@ -66,12 +65,14 @@ export class IoMdView extends IoElement {
         padding: 0.2em 0;
       }
       :host code {
-        background-color: var(--io-background-color-dark);
         font-family: monospace, monospace;
         -webkit-font-smoothing: auto;
         overflow: auto;
+        color: #007faa;
       }
       :host pre > code {
+        color: inherit;
+        background-color: var(--io-background-color-dark);
         line-height: 1.6em;
       }
       :host code.language-html,

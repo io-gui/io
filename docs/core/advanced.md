@@ -88,32 +88,32 @@ enumerable: false,
 
 ## Functions
 
-**`changed()`**  
+`changed()`  
 Change handler function.
 
-**`[prop]Changed()`**  
+`prop]Changed()`  
 Property-specific change handler function.
 
-**`[prop]Mutated()`**  
+`prop]Mutated()`  
 Property-specific mutation handler function.
 
-**`bind(prop)`**  
+`bind(prop)`  
 Returns data-binding to specified property.
 
-**`set(prop, value)`**  
+`set(prop, value)`  
 Sets property and emits `[prop]-set` event.
 
-**`dispatchEvent(type, detail, bubbles, src)`**  
+`dispatchEvent(type, detail, bubbles, src)`  
 Shorthand for custom event dispatch.
 
-**`template()`**  
+`template()`  
 Generates virtual DOM from nested arrays.
 
-**`onResized()`**  
+`onResized()`  
 
-<!-- **`connect()`** -->
-<!-- **`disconnect()`** -->
-<!-- **`dispose()`** -->
+<!-- `connect()` -->
+<!-- `disconnect()` -->
+<!-- `dispose()` -->
 Handler function called when element size changes.
 
 ## Events
