@@ -20,10 +20,11 @@ export class IoElementDemo extends IoElement {
         border-width: 0;
       }
       :host > :first-child {
-        flex: 0 1 auto;
+        flex: 0 1 18em;
         border-width: 0 var(--io-border-width) 0 0;
       }
       :host[overflow] > :first-child {
+        flex: 0 0 auto;
         border-width: 0 0 var(--io-border-width) 0;
       }
       :host > :nth-child(2) {
@@ -36,8 +37,9 @@ export class IoElementDemo extends IoElement {
         background: var(--io-background-color-field);
         padding: var(--io-spacing) calc(4 * var(--io-spacing));
       }
+      /* TODO: fix io-gl slider resize loop */
       :host > div > io-properties {
-        margin-left: 0.5em;
+        margin: 0 0.5em;
       }
       :host > div > .io-content {
         display: flex;

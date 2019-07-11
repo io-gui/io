@@ -138,8 +138,8 @@ export class IoMenuLayer extends IoElement {
   }
   _onTouchstart(event) {
     event.preventDefault();
-    this._onPointermove(event.changedTouches[0]);
     this._onPointerdown(event.changedTouches[0]);
+    this._onPointermove(event.changedTouches[0]);
   }
   _onTouchmove(event) {
     event.preventDefault();
@@ -153,7 +153,9 @@ export class IoMenuLayer extends IoElement {
     event.preventDefault();
     this.collapseAll();
   }
-  _onPointerdown() {
+  _onPointerdown(event) {
+    this._x = event.clientX;
+    this._y = event.clientY;
     if (!this._hoveredItem) {
       this.collapseAll();
     } else if (this.lastFocus === this._hoveredItem && this.lastFocus.expanded) {

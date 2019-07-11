@@ -56,8 +56,8 @@ export class IoMenu extends IoElement {
     if (this.options.length && this.button === 2) {
       event.preventDefault();
       IoMenuLayer.singleton.setLastFocus(document.activeElement);
-      this.$options._x = event.clientX - 5;
-      this.$options._y = event.clientY - 5;
+      IoMenuLayer.singleton._x = event.clientX;
+      IoMenuLayer.singleton._y = event.clientY;
       this.expanded = true;
       this.$options.children[0].focus();
     }
@@ -66,8 +66,8 @@ export class IoMenu extends IoElement {
     if (this.options.length && event.button === this.button && event.button !== 2) {
       event.preventDefault();
       IoMenuLayer.singleton.setLastFocus(document.activeElement);
-      this.$options._x = event.clientX - 5;
-      this.$options._y = event.clientY - 5;
+      IoMenuLayer.singleton._x = event.clientX;
+      IoMenuLayer.singleton._y = event.clientY;
       this.expanded = true;
       this.$options.children[0].focus();
     }
@@ -78,8 +78,8 @@ export class IoMenu extends IoElement {
       this.parentElement.addEventListener('touchmove', this._onTouchmove);
       this.parentElement.addEventListener('touchend', this._onTouchend);
       IoMenuLayer.singleton.setLastFocus(document.activeElement);
-      this.$options._x = event.changedTouches[0].clientX - 5;
-      this.$options._y = event.changedTouches[0].clientY - 5;
+      IoMenuLayer.singleton._x = event.changedTouches[0].clientX;
+      IoMenuLayer.singleton._y = event.changedTouches[0].clientY;
       this.expanded = true;
       this.$options.children[0].focus();
     }
