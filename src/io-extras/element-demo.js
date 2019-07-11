@@ -74,7 +74,7 @@ export class IoElementDemo extends IoElement {
       minWidth: 640,
     };
   }
-  resized() {
+  onResized() {
     this.overflow = this.getBoundingClientRect().width < this.minWidth;
   }
   _onPropSet(event) {
