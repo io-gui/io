@@ -14,6 +14,8 @@ export class IoMenuItem extends IoItem {
         padding: calc(2 * var(--io-spacing));
         border-radius: 0;
         background: none;
+        width: inherit;
+        height: inherit;
       }
       :host > * {
         pointer-events: none;
