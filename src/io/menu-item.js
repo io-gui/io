@@ -171,7 +171,7 @@ export class IoMenuItem extends IoItem {
     if (this._options) {
       const expanded = set !== undefined ? set : !this.expanded;
       if (expanded) this._connectOptions();
-      this.expanded = expanded
+      this.expanded = expanded;
     } else this.expanded = false;
   }
   _focusIn() {
