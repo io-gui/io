@@ -86,14 +86,14 @@
       io-md-view code {
         font-family: "Roboto Mono", Monaco, courier, monospace !important;
       }
-      .main {
+      io-main-page {
         display: flex;
         flex-direction: column;
         flex: 0 0 100%;
         max-height: 100%;
         flex: 1 1 auto;
       }
-      .main > io-menu-options {
+      io-main-page > io-menu-options {
         background-color: var(--io-background-color);
       }
       .docs > io-sidebar[overflow] {
@@ -114,7 +114,6 @@
         return {
           selected: $('page', 'docs', true),
           role: 'main',
-          class: 'main',
           cache: true,
         };
       }
@@ -127,7 +126,7 @@
         this.options = [
           {label: 'Docs', value: 'docs'},
           {label: 'Elements', value: 'elements'},
-          // {label: 'Demo', value: 'demo'},
+          {label: 'Demo', value: 'demo'},
           {label: 'Test', value: 'test'},
         ];
         this.elements = [
@@ -201,7 +200,7 @@
               ['io-md-view', {name: 'extra-elements', path :'./docs/elements/extra-elements.md'}],
             ]
           }],
-          // ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
+          ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
           ['io-test', {name: 'test', import: "./tests/test.js"}],
         ];
       }

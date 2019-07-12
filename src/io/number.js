@@ -20,6 +20,7 @@ export class IoNumber extends IoItem {
       pattern: 'pattern="[0-9]*"',
       inputmode: 'numeric',
       contenteditable: true,
+      spellcheck: false,
     };
   }
   static get Properties() {
@@ -32,17 +33,13 @@ export class IoNumber extends IoItem {
       strict: true,
     };
   }
-  constructor(props) {
-    super(props);
-    this.setAttribute('spellcheck', 'false');
-  }
   _onFocus(event) {
     super._onFocus(event);
-    this._innerTextOnFocus = this.innerText;
+    this._textContentOnFocus = this._textNode.nodeValue;
   }
   _onBlur(event) {
     super._onBlur(event);
-    if (this._innerTextOnFocus !== this.innerText) this.setFromText(this.innerText);
+    if (this._textContentOnFocus !== this._textNode.nodeValue) this.setFromText(this._textNode.nodeValue);
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -57,7 +54,7 @@ export class IoNumber extends IoItem {
 
     if (event.which == 13) {
       event.preventDefault();
-      this.setFromText(this.innerText);
+      this.setFromText(this._textNode.nodeValue);
     } else if (event.which == 37) {
       if (rngInside && start === end && start === 0) {
         event.preventDefault();
@@ -87,18 +84,22 @@ export class IoNumber extends IoItem {
       value = Math.min(this.max, Math.max(this.min, value));
     }
     if (!isNaN(value)) this.set('value', value);
-    else this.innerText = 'NaN';
+    else this._textNode.nodeValue = 'NaN';
   }
   changed() {
     let value = this.value;
+    let valueText;
     if (typeof value == 'number' && !isNaN(value)) {
       value *= this.conversion;
       let d = -Math.round(Math.log(this.step) / Math.LN10);
       d = Math.max(0, Math.min(100, d));
       value = value.toFixed(d);
-      this.innerText = Number(String(value));
+      valueText = Number(String(value));
     } else {
-      this.innerText = 'NaN';
+      valueText = 'NaN';
+    }
+    if (this._textNode.nodeValue !== valueText) {
+      this._textNode.nodeValue = valueText;
     }
     this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
   }

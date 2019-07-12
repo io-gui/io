@@ -31,8 +31,8 @@ export class IoString extends IoItem {
     super._onBlur(event);
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
-    if (typeof this.value === 'string' || (this.innerText !== String(this.value))) {
-      this.set('value', this.innerText);
+    if (typeof this.value === 'string' || (this._textNode.nodeValue !== String(this.value))) {
+      this.set('value', this._textNode.nodeValue);
     }
     this.scrollTop = 0;
     this.scrollLeft = 0;
@@ -46,8 +46,8 @@ export class IoString extends IoItem {
 
     if (event.which == 13) {
       event.preventDefault();
-      if (typeof this.value === 'string' || (this.innerText !== String(this.value))) {
-        this.set('value', this.innerText);
+      if (typeof this.value === 'string' || (this._textNode.nodeValue !== String(this.value))) {
+        this.set('value', this._textNode.nodeValue);
       }
     } else if (event.which == 37) {
       if (rngInside && start === end && start === 0) {
@@ -72,7 +72,10 @@ export class IoString extends IoItem {
     }
   }
   changed() {
-    this.innerText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
+    const valueText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
+    if (this._textNode.nodeValue !== valueText) {
+      this._textNode.nodeValue = valueText;
+    }
     this.setAttribute('aria-invalid', (typeof this.value !== 'string') ? 'true' : false);
   }
 }
