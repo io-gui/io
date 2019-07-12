@@ -5,6 +5,7 @@ export class IoMdView extends IoElement {
   static get Style() {
     return html`<style>
       :host {
+        display: block;
         align-self: stretch;
         flex: 1 1 auto;
         background-color: var(--io-background-color);
