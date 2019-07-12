@@ -120,6 +120,10 @@
       }
       constructor(props) {
         super(props);
+        this.slotted = [
+          ['img', {src: '/images/logo/io-logo-start.svg', height: '30'}],
+          ['img', {src: '/images/logo/io-logo-end.svg', height: '30'}],
+        ];
         this.options = [
           {label: 'Docs', value: 'docs'},
           {label: 'Elements', value: 'elements'},

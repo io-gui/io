@@ -28,6 +28,7 @@ export class IoSelectorTabs extends IoSelector {
   static get Properties() {
     return {
       options:  Array,
+      slotted: Array,
     };
   }
   _onScroll() {
@@ -40,13 +41,16 @@ export class IoSelectorTabs extends IoSelector {
     }
   }
   renderShadow() {
-    const tabs = ['io-menu-options', {
-      id: 'tabs',
-      role: 'navigation',
-      horizontal: true,
-      value: this.bind('selected'),
-      options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
-    }];
+    const tabs = [
+      ['io-menu-options', {
+        id: 'tabs',
+        role: 'navigation',
+        horizontal: true,
+        value: this.bind('selected'),
+        options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
+        slotted: this.slotted,
+      }],
+    ];
     this.template([tabs, ['div', {id: 'content', class: 'io-content', 'on-scroll': this._onScroll}]]);
   }
 }
