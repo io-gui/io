@@ -8,7 +8,8 @@ export class IoBoolean extends IoButton {
         border: var(--io-outset-border);
         border-color: var(--io-outset-border-color);
         color: var(--io-color-field);
-        background-color: var(--io-background-color-field);
+        text-align: center;
+        width: 4.5em;
       }
       :host[aria-invalid] {
         color: var(--io-color-error);
@@ -35,8 +36,11 @@ export class IoBoolean extends IoButton {
   }
   changed() {
     this.setAttribute('aria-checked', String(!!this.value));
-    // this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
-    this.innerText = this.value ? this.true : this.false;
+    this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
+    const valueText = this.value ? this.true : this.false;
+    if (this._textNode.nodeValue !== valueText) {
+      this._textNode.nodeValue = valueText;
+    }
   }
 }
 

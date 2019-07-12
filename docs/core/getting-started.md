@@ -146,16 +146,19 @@ Here is `MyApp` element with all of the basic concepts applied. The element shou
 class MyApp extends IoElement {
   static get Style() {
     return html`
-      <style>
-        :host[clicked] > p {
-          color: tomato;
-        }
-      </style>
+    <style>
+      :host[clicked] > p {
+        color: tomato;
+      }
+    </style>
     `;
   }
   static get Attributes() {
     return {
-      clicked: false
+      clicked: {
+        value: false,
+        notify: true,
+      }
     }
   }
   static get Properties() {
@@ -172,7 +175,7 @@ class MyApp extends IoElement {
     this.clicked = true;
   }
   clickedChanged() {
-    if (this.clicked) this.message = 'Clicked!';
+    this.message = 'Clicked!';
   }
   changed() {
     this.template([['p', this.message]]);

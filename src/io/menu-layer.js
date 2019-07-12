@@ -12,7 +12,6 @@ export class IoMenuLayer extends IoElement {
         bottom: 0;
         right: 0;
         z-index: 100000;
-        /* background: rgba(0, 0, 0, 0.05); */
         user-select: none;
         overflow: hidden;
         pointer-events: none;
@@ -283,7 +282,11 @@ export class IoMenuLayer extends IoElement {
       this._stopAnimation();
       setTimeout(()=> {
         if (this.lastFocus) {
-          this.lastFocus.focus();
+          // Prevent focus and scroll to lastFocus element if outside window.
+          let rect = this.lastFocus.getBoundingClientRect();
+          if (rect.top > 0 && rect.top < window.innerHeight && rect.left > 0 && rect.left < window.innerWidth) {
+            this.lastFocus.focus();
+          }
           this.lastFocus = null;
         }
       });

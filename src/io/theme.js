@@ -48,7 +48,7 @@ export class IoTheme extends IoNode {
 
         --io-background-color: rgb(245, 245, 245);
         --io-background-color-light: rgb(255, 255, 255);
-        --io-background-color-dark: rgb(235, 235, 235);
+        --io-background-color-dark: rgb(205, 205, 205);
         --io-background-color-field: rgb(225, 225, 225);
 
         --io-color: rgb(42, 42, 42);

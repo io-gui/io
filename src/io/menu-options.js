@@ -29,6 +29,10 @@ export class IoMenuOptions extends IoElement {
       :host[horizontal] > * {
         padding: calc(2 * var(--io-spacing)) calc(4 * var(--io-spacing));
       }
+      :host[horizontal] > :last-child:not(.io-hamburger) {
+        /* align-self: flex-end; */
+        /* margin-left: auto */
+      }
       :host:not([horizontal]) > io-menu-item > * {
         min-width: 0.5em;
         padding: 0 var(--io-spacing);
@@ -38,8 +42,17 @@ export class IoMenuOptions extends IoElement {
         display: none;
       }
       :host[horizontal] > io-menu-item.io-hamburger {
-        line-height: 1.1em;
+        font-size: 1.2em;
+        line-height: 1.2em;
         margin-left: auto;
+      }
+      :host[horizontal] > io-menu-item.io-hamburger[hidden] {
+        display: inline-block;
+        width: 0;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+        visibility: hidden;
       }
     </style>`;
   }
@@ -68,6 +81,7 @@ export class IoMenuOptions extends IoElement {
         value: null,
         notify: true,
       },
+      slotted: Array,
       $parent: HTMLElement,
       _depth: 0,
       _rects: Array,
@@ -101,7 +115,7 @@ export class IoMenuOptions extends IoElement {
   setOverflow() {
     const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
     if (this.horizontal) {
-      const hamburger = this.querySelector('io-menu-item.io-hamburger');
+      const hamburger = this.querySelector('.io-hamburger');
       const rects = this._rects;
       rects.length = buttons.length;
 
@@ -114,6 +128,10 @@ export class IoMenuOptions extends IoElement {
       hamburger.hidden = true;
       const hamburgerOptions = [];
 
+      const lastSlotted = this.children[this.children.length - 1];
+      if (lastSlotted !== hamburger) {
+        end -= lastSlotted.getBoundingClientRect().width;
+      }
 
       for (let i = buttons.length; i--;) {
         const r = buttons[i].getBoundingClientRect();
@@ -239,6 +257,7 @@ export class IoMenuOptions extends IoElement {
       }]
     )];
     if (this.horizontal) {
+      elements.splice(0, 0, this.slotted[0]);
       elements.push(['io-menu-item', {
         label: '☰',
         title: 'select tab',
@@ -246,6 +265,7 @@ export class IoMenuOptions extends IoElement {
         class: 'io-hamburger',
         _depth: this._depth,
       }]);
+      elements.push(this.slotted[1]);
     }
     this.template(elements);
     this.setOverflow();

@@ -136,6 +136,16 @@ export class IoMenuItem extends IoItem {
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
   }
+  _connectOptions() {
+    if (this.$options && this.$options.parentElement !== IoMenuLayer.singleton) {
+      IoMenuLayer.singleton.appendChild(this.$options);
+    }
+  }
+  _disconnectOptions() {
+    if (this.$options && this.$options.parentElement === IoMenuLayer.singleton) {
+      IoMenuLayer.singleton.removeChild(this.$options);
+    }
+  }
   _updateOptions() {
     if (this._options) {
       if (!this.$options) {
@@ -155,19 +165,14 @@ export class IoMenuItem extends IoItem {
           position: this.direction,
         });
       }
-      if (!this.$options.parentNode) {
-        IoMenuLayer.singleton.appendChild(this.$options);
-      }
     } else this._disconnectOptions();
   }
-  _disconnectOptions() {
-    if (this.$options && this.$options.parentNode) {
-      this.$options.parentNode.removeChild(this.$options);
-    }
-  }
   _toggleExpanded(set) {
-    if (this._options) this.expanded = set !== undefined ? set : !this.expanded;
-    else this.expanded = false;
+    if (this._options) {
+      const expanded = set !== undefined ? set : !this.expanded;
+      if (expanded) this._connectOptions();
+      this.expanded = expanded;
+    } else this.expanded = false;
   }
   _focusIn() {
     IoMenuLayer.singleton.setLastFocus(this);

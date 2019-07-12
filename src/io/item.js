@@ -21,6 +21,8 @@ export class Item {
   }
 }
 
+// NOTE: [optmization] Uses textNode and fixed size in em to avoid layout trashing on change.
+
 export class IoItem extends IoElement {
   static get Style() {
     return html`<style>
@@ -38,13 +40,12 @@ export class IoItem extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
+        height: 1.375em;
       }
       :host:hover {
         background-color: var(--io-background-color-light);
       }
       :host:focus {
-        overflow: hidden;
-        text-overflow: clip;
         border-color: var(--io-color-focus);
         outline: 0;
       }
@@ -83,6 +84,12 @@ export class IoItem extends IoElement {
       'touchstart': '_onTouchstart',
       'mousedown': '_onMousedown',
     };
+  }
+  constructor(props) {
+    super(props);
+    // TODO: consider getter/setter pattern.
+    this._textNode = document.createTextNode("");
+    this.appendChild(this._textNode);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -126,12 +133,15 @@ export class IoItem extends IoElement {
     this.dispatchEvent('item-clicked', {value: this.value, label: this.label}, true);
   }
   changed() {
-    let label = String(this.value);
+    let valueText = String(this.value);
     if (this.value && typeof this.value === 'object') {
-      label = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
+      valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
     }
-    this.title = this.label || label;
-    this.innerText = this.label || label;
+    valueText = this.label || valueText;
+    if (this._textNode.nodeValue !== valueText) {
+      this._textNode.nodeValue = valueText;
+    }
+    this.title = valueText;
   }
 }
 

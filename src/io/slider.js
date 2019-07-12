@@ -9,7 +9,7 @@ export class IoSlider extends IoElement {
         align-self: stretch;
       }
       :host > io-number {
-        flex: 0 0 3.75em;
+        flex: 0 0 auto;
         margin-right: var(--io-spacing);
       }
       :host > io-slider-knob {

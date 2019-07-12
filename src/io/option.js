@@ -88,21 +88,24 @@ export class IoOption extends IoMenuItem {
   }
   changed() {
     const options = this.options;
-    let label = this.label;
-    if (options && !label) {
+    let valueText = this.label;
+    if (options && !valueText) {
       const option = this.options.find(option => {return option.value === this.value;});
       if (option) {
         if (option.label) {
-          label = option.label;
+          valueText = option.label;
         } else if (typeof option.value === 'object') {
-          label = `${option.value.constructor.name}` + (option.value instanceof Array ? `(${option.value.length})` : '');
+          valueText = `${option.value.constructor.name}` + (option.value instanceof Array ? `(${option.value.length})` : '');
         } else {
-          label = String(option.value);
+          valueText = String(option.value);
         }
       }
     }
-    this.title = label || String(this.value);
-    this.innerText = label || String(this.value);
+    valueText = valueText || String(this.value);
+    if (this._textNode.nodeValue !== valueText) {
+      this._textNode.nodeValue = valueText;
+    }
+    this.title = valueText;
     this.setAttribute('aria-haspopup', 'listbox');
     this.setAttribute('aria-expanded', String(this.expanded));
   }
