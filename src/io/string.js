@@ -9,6 +9,7 @@ export class IoString extends IoItem {
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
         user-select: text;
+        width: 4.5em;
       }
       :host:empty:after {
         display: inline-block;

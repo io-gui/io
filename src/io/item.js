@@ -40,7 +40,6 @@ export class IoItem extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
-        width: 4.5em;
         height: 1.375em;
       }
       :host:hover {
@@ -138,10 +137,11 @@ export class IoItem extends IoElement {
     if (this.value && typeof this.value === 'object') {
       valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
     }
+    valueText = this.label || valueText;
     if (this._textNode.nodeValue !== valueText) {
       this._textNode.nodeValue = valueText;
     }
-    this.title = this.label || valueText;
+    this.title = valueText;
   }
 }
 

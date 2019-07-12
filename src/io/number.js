@@ -10,6 +10,7 @@ export class IoNumber extends IoItem {
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
         user-select: text;
+        width: 4.5em;
       }
     </style>`;
   }

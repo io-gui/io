@@ -20,7 +20,9 @@ export class IoCollapsable extends IoElement {
         border-color: transparent;
         background: none;
         padding: 0;
-        padding-right: 0.5em !important;;
+        padding-right: 0.5em !important;
+        width: inherit;
+        text-align: left;
       }
       :host > io-boolean:hover {
         background: none;
