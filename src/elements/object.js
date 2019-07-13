@@ -1,4 +1,4 @@
-import {html} from "../core/element.js";
+import {html} from "../io.js";
 import "./properties.js";
 import {IoCollapsable} from "./collapsable.js";
 

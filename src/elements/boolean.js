@@ -1,4 +1,4 @@
-import {html} from "../core/element.js";
+import {html} from "../io.js";
 import {IoButton} from "./button.js";
 
 export class IoBoolean extends IoButton {
