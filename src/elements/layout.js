@@ -1,4 +1,4 @@
-import {html, IoElement} from "../core/element.js";
+import {html, IoElement} from "../io.js";
 
 export class IoLayout extends IoElement {
   static get Style() {

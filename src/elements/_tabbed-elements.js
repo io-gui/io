@@ -1,4 +1,4 @@
-import {html, IoElement} from "../core/element.js";
+import {html, IoElement} from "../io.js";
 import "./selector.js";
 
 const _dragicon = document.createElement('io-tab-dragicon');

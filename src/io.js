@@ -26,3 +26,4 @@ export {IoNodeMixin, IoNode} from "./core/node.js";
 export {IoElement, html} from "./core/element.js";
 export {Binding, NodeBindings} from "./core/bindings.js";
 export {IoStorage, storageNodes} from "./core/storage.js";
+export {filterObject} from "./core/utils.js";
