@@ -93,7 +93,7 @@
         max-height: 100%;
         flex: 1 1 auto;
       }
-      io-main-page > io-menu-options {
+      .main > io-menu-options {
         background-color: var(--io-background-color);
       }
       .docs > io-sidebar[overflow] {
@@ -114,14 +114,14 @@
         return {
           selected: $('page', 'docs', true),
           role: 'main',
+          class: 'main',
           cache: true,
         };
       }
       constructor(props) {
         super(props);
         this.slotted = [
-          ['img', {src: '/images/logo/io-logo-start.svg', height: '30'}],
-          ['img', {src: '/images/logo/io-logo-end.svg', height: '30'}],
+          ['img', {src: '/images/logo/io-logo.svg', height: '28'}],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},
