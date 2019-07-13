@@ -1,4 +1,4 @@
-import {IoElement, html} from "./core/element.js";
+import {IoElement, html} from "../core/element.js";
 
 export class IoMenuLayer extends IoElement {
   static get Style() {

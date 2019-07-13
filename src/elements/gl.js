@@ -1,6 +1,6 @@
 // TODO: document, demo, test
 
-import {html, IoElement} from "./core/element.js";
+import {html, IoElement} from "../core/element.js";
 
 const animationQueue = new Array();
 const animate = function() {

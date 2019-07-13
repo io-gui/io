@@ -104,7 +104,8 @@
     <link href="/lib/mocha.css" rel="stylesheet" />
     <script type="module">
 
-    import {IoSelectorTabs, IoStorage as $} from "./dist/io.js";
+    import {IoStorage as $} from "./dist/io.js";
+    import {IoSelectorTabs} from "./dist/io-elements.js";
     import "./dist/io-extras.js";
 
     export class IoMainPage extends IoSelectorTabs {
@@ -195,7 +196,7 @@
               ['io-md-view', {name: 'basic-elements', path :'./docs/elements/basic-elements.md'}],
               ['io-md-view', {name: 'layout-navigation', path :'./docs/elements/layout-navigation.md'}],
               ['io-md-view', {name: 'object-editors', path :'./docs/elements/object-editors.md'}],
-              ['io-md-view', {name: 'extra-elements', path :'./docs/elements/extra-elements.md'}],
+              ['io-md-view', {name: 'extra-elements', path :'./docs/extras/extra-elements.md'}],
             ]
           }],
           ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
