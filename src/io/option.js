@@ -13,14 +13,13 @@ export class IoOption extends IoMenuItem {
         border: var(--io-outset-border);
         border-color: var(--io-outset-border-color);
         border-radius: var(--io-border-radius);
-        padding: var(--io-spacing);
-        padding-left: calc(3 * var(--io-spacing));
-        padding-right: var(--io-spacing);
+        padding: var(--io-spacing) calc(3 * var(--io-spacing));
         transition: background-color 0.4s;
+        height: 1.375em;
       }
       :host:not([label])::after {
         content: '▾';
-        padding-left: var(--io-spacing);
+        padding-left: calc(3 * var(--io-spacing));
       }
     </style>`;
   }
@@ -88,7 +87,7 @@ export class IoOption extends IoMenuItem {
   }
   changed() {
     const options = this.options;
-    let valueText = this.label;
+    let valueText;
     if (options && !valueText) {
       const option = this.options.find(option => {return option.value === this.value;});
       if (option) {
@@ -101,7 +100,7 @@ export class IoOption extends IoMenuItem {
         }
       }
     }
-    valueText = valueText || String(this.value);
+    valueText = this.label || valueText || String(this.value);
     if (this._textNode.nodeValue !== valueText) {
       this._textNode.nodeValue = valueText;
     }

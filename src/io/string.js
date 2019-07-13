@@ -10,6 +10,7 @@ export class IoString extends IoItem {
         background-color: var(--io-background-color-field);
         user-select: text;
         width: 4.5em;
+        height: 1.375em;
       }
       :host:empty:after {
         display: inline-block;
@@ -28,13 +29,20 @@ export class IoString extends IoItem {
       value: String,
     };
   }
+  _setFromTextNode() {
+    if (this.childNodes.length == 2) {
+      this._textNode = this.childNodes[0];
+      this.removeChild(this.childNodes[1]);
+    }
+    if (typeof this.value === 'string' || (this._textNode.nodeValue !== String(this.value))) {
+      this.set('value', this._textNode.nodeValue);
+    }
+  }
   _onBlur(event) {
     super._onBlur(event);
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
-    if (typeof this.value === 'string' || (this._textNode.nodeValue !== String(this.value))) {
-      this.set('value', this._textNode.nodeValue);
-    }
+    this._setFromTextNode();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -45,11 +53,10 @@ export class IoString extends IoItem {
     const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
+
     if (event.which == 13) {
       event.preventDefault();
-      if (typeof this.value === 'string' || (this._textNode.nodeValue !== String(this.value))) {
-        this.set('value', this._textNode.nodeValue);
-      }
+      this._setFromTextNode();
     } else if (event.which == 37) {
       if (rngInside && start === end && start === 0) {
         event.preventDefault();

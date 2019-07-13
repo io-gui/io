@@ -30,7 +30,7 @@ export class IoButton extends IoItem {
     };
   }
   _onClick() {
-    if (this.action) this.action(this.value);
+    if (typeof this.action === 'function') this.action(this.value);
   }
 }
 

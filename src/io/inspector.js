@@ -34,11 +34,6 @@ export class IoInspector extends IoElement {
     :host io-properties > .io-property:nth-child(2n) {
       background-color: var(--io-background-color-light);
     }
-    :host io-properties > .io-property > * {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
     :host io-properties > .io-property > :nth-child(1) {
       text-align: right;
       flex: 0 1 8em;
@@ -54,11 +49,16 @@ export class IoInspector extends IoElement {
       border-color: var(--io-inset-border-color) !important;
       color: var(--io-color-field) !important;
       background: var(--io-background-color-field) !important;
-      padding: 0 var(--io-spacing) !important;
     }
     :host io-properties > .io-property > io-properties {
       border: var(--io-inset-border);
       border-radius: var(--io-border-radius);
+      overflow: hidden;
+    }
+    :host io-properties > .io-property > * {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     :host io-item {
       color: var(--io-color-link);
