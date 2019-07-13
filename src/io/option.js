@@ -88,7 +88,6 @@ export class IoOption extends IoMenuItem {
   changed() {
     let valueText;
     if (this.options) {
-      const options = this.options;
       const option = this.options.find(option => {return option.value === this.value;});
       if (option) {
         if (option.label) {

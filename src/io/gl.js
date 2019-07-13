@@ -196,8 +196,7 @@ export class IoGl extends IoElement {
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
     if (this.size[0], this.size[1]) {
-      var imgData = canvas.toDataURL('image/png', 0.9);
-      this.$.img.src = imgData;
+      this.$.img.src = canvas.toDataURL('image/png', 0.9);
     }
   }
 }
