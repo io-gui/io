@@ -55,8 +55,6 @@ export class IoSlider extends IoElement {
   }
 }
 
-IoSlider.Register();
-
 export class IoSliderKnob extends IoGl {
   static get Style() {
     return html`<style>
@@ -272,3 +270,4 @@ export class IoSliderKnob extends IoGl {
 }
 
 IoSliderKnob.Register();
+IoSlider.Register();
