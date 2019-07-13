@@ -40,7 +40,7 @@ export class IoItem extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
-        height: 1.375em;
+        flex-wrap: nowrap;
       }
       :host:hover {
         background-color: var(--io-background-color-light);

@@ -14,7 +14,6 @@ export class IoSelectorTabs extends IoSelector {
         flex: 0 0 auto;
         border-radius: 0;
         border: none;
-        font-size: 1.2em;
         background-color: var(--io-background-color-dark);
       }
       :host > .io-content {

@@ -80,9 +80,6 @@
         display: flex;
         flex-direction: column;
       }
-      io-md-view {
-        padding: 1em;
-      }
       io-md-view code {
         font-family: "Roboto Mono", Monaco, courier, monospace !important;
       }
@@ -93,11 +90,12 @@
         max-height: 100%;
         flex: 1 1 auto;
       }
-      io-main-page > io-menu-options {
-        background-color: var(--io-background-color);
+      .logo {
+        height: 1.375em;
+        margin: var(--io-border-width);
       }
-      .docs > io-sidebar[overflow] {
-        font-size: 1.4em !important;
+      .main > io-menu-options {
+        background-color: var(--io-background-color);
       }
       .docs > io-sidebar:not([overflow]) {
         flex-basis: 14em !important;
@@ -114,14 +112,14 @@
         return {
           selected: $('page', 'docs', true),
           role: 'main',
+          class: 'main',
           cache: true,
         };
       }
       constructor(props) {
         super(props);
         this.slotted = [
-          ['img', {src: '/images/logo/io-logo-start.svg', height: '30'}],
-          ['img', {src: '/images/logo/io-logo-end.svg', height: '30'}],
+          ['img', {src: '/images/logo/io-logo.svg', class:'logo', height: '24'}],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},

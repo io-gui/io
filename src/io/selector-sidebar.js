@@ -42,16 +42,13 @@ export class IoSelectorSidebar extends IoSelector {
     return {
       role: 'navigation',
       label: {
-        type: String,
         notify: true,
       },
       overflow: {
         type: Boolean,
         notify: true,
       },
-      left: {
-        value: true,
-      },
+      left: true,
     };
   }
   static get Properties() {

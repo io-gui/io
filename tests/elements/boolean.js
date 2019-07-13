@@ -26,9 +26,9 @@ export default class {
           this.element.value = true;
           this.element.true = 'yes';
           this.element.false = 'no';
-          chai.expect(this.element.innerHTML).to.equal('yes');
+          chai.expect(this.element.textContent).to.equal('yes');
           this.element.toggle();
-          chai.expect(this.element.innerHTML).to.equal('no');
+          chai.expect(this.element.textContent).to.equal('no');
           this.element.value = false;
           this.element.true = 'true';
           this.element.false = 'false';

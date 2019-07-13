@@ -24,19 +24,19 @@ export default class {
       });
       describe('innerText', () => {
         it('matches values', () => {
-          chai.expect(this.element.innerHTML).to.equal('undefined');
+          chai.expect(this.element.textContent).to.equal('undefined');
           this.element.value = 2;
-          chai.expect(this.element.innerHTML).to.equal('2');
+          chai.expect(this.element.textContent).to.equal('2');
           this.element.setProperties({
             options: [{value: 1, label: 'one'}],
             value: 1,
             label: 'label'
           });
-          chai.expect(this.element.innerHTML).to.equal('label');
+          chai.expect(this.element.textContent).to.equal('label');
           this.element.label = '';
-          chai.expect(this.element.innerHTML).to.equal('one');
+          chai.expect(this.element.textContent).to.equal('one');
           this.element.options = [];
-          chai.expect(this.element.innerHTML).to.equal('1');
+          chai.expect(this.element.textContent).to.equal('1');
           this.reset();
         });
       });

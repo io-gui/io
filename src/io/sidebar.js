@@ -8,13 +8,13 @@ export class IoSidebar extends IoElement {
       :host {
         display: flex;
         flex-wrap: nowrap;
-        overflow: auto;
-        flex: 0 0 auto;
-        line-height: 1.5em;
-        padding: 0 var(--io-spacing);
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: var(--io-spacing);
       }
       :host[overflow] {
         font-size: 1.2em;
+        line-height: 1.2em;
       }
       :host:not([overflow]) {
         -webkit-overflow-scrolling: touch;
@@ -26,7 +26,7 @@ export class IoSidebar extends IoElement {
       :host io-button {
         flex: 0 0 auto;
         margin: 0;
-        padding: var(--io-spacing) calc(2 * var(--io-spacing));
+        padding: var(--io-spacing);
         border: none;
         background: none;
       }
@@ -42,23 +42,9 @@ export class IoSidebar extends IoElement {
         color: var(--io-color-link);
         text-decoration: underline;
       }
-      :host > span {
-        color: var(--io-color);
-        display: inline-block;
-        cursor: default;
-        white-space: nowrap;
-        -webkit-tap-highlight-color: transparent;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding: var(--io-spacing);
-        padding-left: calc(3 * var(--io-spacing));
-        padding-right: calc(3 * var(--io-spacing));
-      }
       :host > io-option {
         background: none !important;
         border: none;
-        padding-left: calc(3 * var(--io-spacing));
-        padding-right: calc(3 * var(--io-spacing));
       }
     </style>`;
   }
@@ -66,11 +52,9 @@ export class IoSidebar extends IoElement {
     return {
       role: 'navigation',
       label: {
-        type: String,
         notify: true,
       },
       overflow: {
-        type: Boolean,
         notify: true,
       }
     };

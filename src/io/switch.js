@@ -7,7 +7,6 @@ export class IoSwitch extends IoButton {
       :host {
         --io-switch-size: 1.375em;
         text-align: center;
-        /* align-items: center; */
         position: relative;
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
@@ -16,7 +15,8 @@ export class IoSwitch extends IoButton {
         background-color: var(--io-background-color-dark);
         padding: 0;
         margin: var(--io-spacing);
-        width: 3.5em !important;
+        width: 3.5em;
+        height: 1.375em;
         height: var(--io-switch-size);
         border-radius: var(--io-switch-size);
         transition: background-color 0.4s;

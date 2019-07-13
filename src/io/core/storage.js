@@ -54,7 +54,7 @@ const setHashes = function(force) {
   }
   hashString = hashString.slice(0, -1);
   window.location.hash = hashString;
-  if (!window.location.hash) history.replaceState({}, document.title, ".");
+  if (!window.location.hash) history.replaceState({}, document.title, window.location.pathname + window.location.search);
 };
 
 window.addEventListener("hashchange", getHashes, false);

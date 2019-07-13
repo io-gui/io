@@ -117,7 +117,7 @@ export class IoDemo extends IoElement {
 
     const demoObject = ['div', {name: 'object'}, [
       ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers']}], //TODO: labeled?
-      ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2'), properties: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
+      ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2'), properties: ['number'], config: {'number': ['io-slider', {step: 0.001}]}}],
     ]];
 
     const demoInspector = ['div', {name: 'inspector'}, [
@@ -168,28 +168,28 @@ export class IoDemo extends IoElement {
       ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
     ]];
 
-    const demoLayout = ['io-layout', {
-      name: 'layout',
-      orientation: 'horizontal',
-      elements: [
-        demoPrimitives,
-        demoSwitch,
-        demoSliders,
-        demoOptions,
-        demoButton,
-        demoObject,
-        demoInspector,
-        demoMenu,
-      ],
-      splits: [
-        {selected: 'sliders', tabs: ['sliders'], size: 280},
-        {orientation: 'vertical', splits: [
-          {tabs: ['button'], selected: 'button', size: 100},
-          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
-          {tabs: ['primitives'], selected: 'primitives'},
-        ]},
-      ],
-    }];
+    // const demoLayout = ['io-layout', {
+    //   name: 'layout',
+    //   orientation: 'horizontal',
+    //   elements: [
+    //     demoPrimitives,
+    //     demoSwitch,
+    //     demoSliders,
+    //     demoOptions,
+    //     demoButton,
+    //     demoObject,
+    //     demoInspector,
+    //     demoMenu,
+    //   ],
+    //   splits: [
+    //     {selected: 'sliders', tabs: ['sliders'], size: 280},
+    //     {orientation: 'vertical', splits: [
+    //       {tabs: ['button'], selected: 'button', size: 100},
+    //       {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
+    //       {tabs: ['primitives'], selected: 'primitives'},
+    //     ]},
+    //   ],
+    // }];
 
     // TODO: Add demos for all remaining elements
 
@@ -197,7 +197,7 @@ export class IoDemo extends IoElement {
       ['io-selector-tabs', {precache: true, selected: $('demo', 'elements', true),
         options: [
           {value: 'elements', label: "Elements"},
-          {value: 'layout', label: "Layout"},
+          // {value: 'layout', label: "Layout"},
           {value: 'todo', label: "Todo App"},
         ],
         elements: [
@@ -211,7 +211,7 @@ export class IoDemo extends IoElement {
             ['h4', 'io-object'], demoObject,
             ['h4', 'io-inspector'], demoInspector,
           ]],
-          demoLayout,
+          // demoLayout,
           ['todo-app', {name: 'todo'}],
         ]
       }]

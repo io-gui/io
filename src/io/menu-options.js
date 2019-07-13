@@ -29,10 +29,6 @@ export class IoMenuOptions extends IoElement {
       :host[horizontal] > * {
         padding: calc(2 * var(--io-spacing)) calc(4 * var(--io-spacing));
       }
-      :host[horizontal] > :last-child:not(.io-hamburger) {
-        /* align-self: flex-end; */
-        /* margin-left: auto */
-      }
       :host:not([horizontal]) > io-menu-item > * {
         min-width: 0.5em;
         padding: 0 var(--io-spacing);
@@ -127,11 +123,6 @@ export class IoMenuOptions extends IoElement {
       let last = Infinity;
       hamburger.hidden = true;
       const hamburgerOptions = [];
-
-      const lastSlotted = this.children[this.children.length - 1];
-      if (lastSlotted !== hamburger) {
-        end -= lastSlotted.getBoundingClientRect().width;
-      }
 
       for (let i = buttons.length; i--;) {
         const r = buttons[i].getBoundingClientRect();
@@ -265,7 +256,6 @@ export class IoMenuOptions extends IoElement {
         class: 'io-hamburger',
         _depth: this._depth,
       }]);
-      elements.push(this.slotted[1]);
     }
     this.template(elements);
     this.setOverflow();

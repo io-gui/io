@@ -34,17 +34,17 @@ export default class {
       describe('innerText', () => {
         it('matches values', () => {
           this.element.value = testValue;
-          chai.expect(this.element.children[0].children[0].innerHTML).to.equal('number:');
+          chai.expect(this.element.children[0].children[0].textContent).to.equal('number:');
           chai.expect(this.element.children[0].children[1].localName).to.equal('io-number');
-          chai.expect(this.element.children[1].children[0].innerHTML).to.equal('string:');
+          chai.expect(this.element.children[1].children[0].textContent).to.equal('string:');
           chai.expect(this.element.children[1].children[1].localName).to.equal('io-string');
-          chai.expect(this.element.children[2].children[0].innerHTML).to.equal('boolean:');
+          chai.expect(this.element.children[2].children[0].textContent).to.equal('boolean:');
           chai.expect(this.element.children[2].children[1].localName).to.equal('io-boolean');
-          chai.expect(this.element.children[3].children[0].innerHTML).to.equal('null:');
+          chai.expect(this.element.children[3].children[0].textContent).to.equal('null:');
           chai.expect(this.element.children[3].children[1].localName).to.equal('io-string');
-          chai.expect(this.element.children[4].children[0].innerHTML).to.equal('object:');
+          chai.expect(this.element.children[4].children[0].textContent).to.equal('object:');
           chai.expect(this.element.children[4].children[1].localName).to.equal('io-object');
-          chai.expect(this.element.children[5].children[0].innerHTML).to.equal('array:');
+          chai.expect(this.element.children[5].children[0].textContent).to.equal('array:');
           chai.expect(this.element.children[5].children[1].localName).to.equal('io-object');
           this.reset();
         });
@@ -62,8 +62,8 @@ export default class {
         it('matches value with custom properties', () => {
           this.element.value = testValue;
           this.element.properties = ['number', 'boolean'];
-          chai.expect(this.element.children[0].children[0].innerHTML).to.equal('number:');
-          chai.expect(this.element.children[1].children[0].innerHTML).to.equal('boolean:');
+          chai.expect(this.element.children[0].children[0].textContent).to.equal('number:');
+          chai.expect(this.element.children[1].children[0].textContent).to.equal('boolean:');
           chai.expect(this.element.children[3]).to.equal(undefined);
           this.reset();
         });

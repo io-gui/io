@@ -20,15 +20,19 @@ export class IoElementDemo extends IoElement {
         border-width: 0;
       }
       :host > :first-child {
-        flex: 0 1 18em;
+        flex: 0 0 14em;
         border-width: 0 var(--io-border-width) 0 0;
       }
       :host[overflow] > :first-child {
         flex: 0 0 auto;
         border-width: 0 0 var(--io-border-width) 0;
       }
+      :host:not([overflow]) > :first-child {
+        max-width: 22em;
+      }
       :host > :nth-child(2) {
         flex: 1 1 auto;
+        overflow: hidden;
       }
       :host > div > span {
         font-weight: bold;
