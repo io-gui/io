@@ -80,9 +80,6 @@
         display: flex;
         flex-direction: column;
       }
-      io-md-view {
-        padding: 1em;
-      }
       io-md-view code {
         font-family: "Roboto Mono", Monaco, courier, monospace !important;
       }
@@ -95,9 +92,6 @@
       }
       .main > io-menu-options {
         background-color: var(--io-background-color);
-      }
-      .docs > io-sidebar[overflow] {
-        font-size: 1.4em !important;
       }
       .docs > io-sidebar:not([overflow]) {
         flex-basis: 14em !important;
@@ -121,7 +115,7 @@
       constructor(props) {
         super(props);
         this.slotted = [
-          ['img', {src: '/images/logo/io-logo.svg', height: '28'}],
+          ['img', {src: '/images/logo/io-logo.svg', height: '24'}],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},

@@ -41,7 +41,7 @@ export class IoNumber extends IoItem {
   }
   _onBlur(event) {
     super._onBlur(event);
-    if (this._textContentOnFocus !== this._textNode.nodeValue) this.setFromText(this._textNode.nodeValue);
+    if (this._textContentOnFocus !== this._textNode.nodeValue) this._setFromTextNode();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -56,7 +56,7 @@ export class IoNumber extends IoItem {
 
     if (event.which == 13) {
       event.preventDefault();
-      this.setFromText(this._textNode.nodeValue);
+      this._setFromTextNode();
     } else if (event.which == 37) {
       if (rngInside && start === end && start === 0) {
         event.preventDefault();
@@ -79,13 +79,19 @@ export class IoNumber extends IoItem {
       }
     }
   }
-  setFromText(text) {
-    // TODO: test conversion
-    let value = Math.round(Number(text) / this.step) * this.step / this.conversion;
-    if (this.strict) {
-      value = Math.min(this.max, Math.max(this.min, value));
+  _setFromTextNode() {
+    if (this.childNodes.length == 2) {
+      this._textNode = this.childNodes[0];
+      this.removeChild(this.childNodes[1]);
     }
-    if (!isNaN(value)) this.set('value', value);
+
+    let valueText = this._textNode.nodeValue;
+    // TODO: test conversion
+    let valueNumber = Math.round(Number(valueText) / this.step) * this.step / this.conversion;
+    if (this.strict) {
+      valueNumber = Math.min(this.max, Math.max(this.min, valueNumber));
+    }
+    if (!isNaN(valueNumber)) this.set('value', valueNumber);
     else this._textNode.nodeValue = 'NaN';
   }
   changed() {

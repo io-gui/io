@@ -35,17 +35,17 @@ export default class {
       //     // this.element.expanded = true;
       //     // const properties = this.element.children[1];
       //     // chai.expect(properties.localName).to.equal('io-properties');
-      //     // chai.expect(properties.children[0].children[0].innerHTML).to.equal('number:');
+      //     // chai.expect(properties.children[0].children[0].textContent).to.equal('number:');
       //     // chai.expect(properties.children[0].children[1].localName).to.equal('io-number');
-      //     // chai.expect(properties.children[1].children[0].innerHTML).to.equal('string:');
+      //     // chai.expect(properties.children[1].children[0].textContent).to.equal('string:');
       //     // chai.expect(properties.children[1].children[1].localName).to.equal('io-string');
-      //     // chai.expect(properties.children[2].children[0].innerHTML).to.equal('boolean:');
+      //     // chai.expect(properties.children[2].children[0].textContent).to.equal('boolean:');
       //     // chai.expect(properties.children[2].children[1].localName).to.equal('io-boolean');
-      //     // chai.expect(properties.children[3].children[0].innerHTML).to.equal('null:');
+      //     // chai.expect(properties.children[3].children[0].textContent).to.equal('null:');
       //     // chai.expect(properties.children[3].children[1].localName).to.equal('io-string');
-      //     // chai.expect(properties.children[4].children[0].innerHTML).to.equal('object:');
+      //     // chai.expect(properties.children[4].children[0].textContent).to.equal('object:');
       //     // chai.expect(properties.children[4].children[1].localName).to.equal('io-object');
-      //     // chai.expect(properties.children[5].children[0].innerHTML).to.equal('array:');
+      //     // chai.expect(properties.children[5].children[0].textContent).to.equal('array:');
       //     // chai.expect(properties.children[5].children[1].localName).to.equal('io-object');
       //     this.reset();
       //   });
@@ -64,9 +64,9 @@ export default class {
       //   });
       //   it('matches value with labels disabled', () => {
       //     // this.element.value = testValue;
-      //     // chai.expect(this.element.children[0].innerHTML).to.equal('Object')
+      //     // chai.expect(this.element.children[0].textContent).to.equal('Object')
       //     // this.element.label = 'test';
-      //     // chai.expect(this.element.children[0].innerHTML).to.equal('test')
+      //     // chai.expect(this.element.children[0].textContent).to.equal('test')
       //     this.reset();
       //   });
       //   it('matches value with custom properties', () => {
@@ -74,8 +74,8 @@ export default class {
       //     // this.element.properties = ['number', 'boolean'];
       //     // this.element.expanded = true;
       //     // const properties = this.element.children[1];
-      //     // chai.expect(properties.children[0].children[0].innerHTML).to.equal('number:');
-      //     // chai.expect(properties.children[1].children[0].innerHTML).to.equal('boolean:');
+      //     // chai.expect(properties.children[0].children[0].textContent).to.equal('number:');
+      //     // chai.expect(properties.children[1].children[0].textContent).to.equal('boolean:');
       //     // chai.expect(properties.children[3]).to.equal(undefined);
       //     this.reset();
       //   });

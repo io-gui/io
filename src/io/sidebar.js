@@ -8,13 +8,13 @@ export class IoSidebar extends IoElement {
       :host {
         display: flex;
         flex-wrap: nowrap;
-        overflow: auto;
-        flex: 0 0 auto;
-        line-height: 1.5em;
+        overflow-x: hidden;
+        overflow-y: auto;
         padding: 0 var(--io-spacing);
       }
       :host[overflow] {
         font-size: 1.2em;
+        line-height: 1.2em;
       }
       :host:not([overflow]) {
         -webkit-overflow-scrolling: touch;
@@ -38,21 +38,11 @@ export class IoSidebar extends IoElement {
         flex-direction: column;
         padding-left: 1em;
       }
+      :host io-button {
+      }
       :host io-button.io-selected-tab {
         color: var(--io-color-link);
         text-decoration: underline;
-      }
-      :host > span {
-        color: var(--io-color);
-        display: inline-block;
-        cursor: default;
-        white-space: nowrap;
-        -webkit-tap-highlight-color: transparent;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding: var(--io-spacing);
-        padding-left: calc(3 * var(--io-spacing));
-        padding-right: calc(3 * var(--io-spacing));
       }
       :host > io-option {
         background: none !important;

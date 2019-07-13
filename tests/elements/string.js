@@ -16,17 +16,17 @@ export default class {
       describe('innerText', () => {
         it('matches values', () => {
           this.element.value = 'hello';
-          chai.expect(this.element.innerHTML).to.equal('hello');
+          chai.expect(this.element.textContent).to.equal('hello');
           this.element.value = false;
-          chai.expect(this.element.innerHTML).to.equal('false');
+          chai.expect(this.element.textContent).to.equal('false');
           this.element.value = null;
-          chai.expect(this.element.innerHTML).to.equal('null');
+          chai.expect(this.element.textContent).to.equal('null');
           this.element.value = undefined;
-          chai.expect(this.element.innerHTML).to.equal('undefined');
+          chai.expect(this.element.textContent).to.equal('undefined');
           this.element.value = NaN;
-          chai.expect(this.element.innerHTML).to.equal('NaN');
+          chai.expect(this.element.textContent).to.equal('NaN');
           this.element.value = 123;
-          chai.expect(this.element.innerHTML).to.equal('123');
+          chai.expect(this.element.textContent).to.equal('123');
           this.element.value = 0;
         });
       });

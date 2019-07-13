@@ -21,12 +21,14 @@ export class IoElementDemo extends IoElement {
       }
       :host > :first-child {
         flex: 0 0 14em;
-        max-width: 22em;
         border-width: 0 var(--io-border-width) 0 0;
       }
       :host[overflow] > :first-child {
         flex: 0 0 auto;
         border-width: 0 0 var(--io-border-width) 0;
+      }
+      :host:not([overflow]) > :first-child {
+        max-width: 22em;
       }
       :host > :nth-child(2) {
         flex: 1 1 auto;
