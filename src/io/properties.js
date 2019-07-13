@@ -33,8 +33,9 @@ export class IoProperties extends IoElement {
       :host > .io-property > io-boolean,
       :host > .io-property > io-object > io-boolean,
       :host > .io-property > io-option,
+      :host > .io-property > io-option,
       :host > .io-property > io-object {
-        flex: 0 1 auto !important;
+        flex: 1 1 auto !important;
       }
       :host > .io-property > io-number,
       :host > .io-property > io-string,

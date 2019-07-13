@@ -53,12 +53,12 @@ export class IoGl extends IoElement {
   static get Style() {
     return html`<style>
       :host {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
+        overflow: hidden !important;
+        position: relative !important;
+        border: 0 !important;
       }
-      :host > canvas {
-        flex: 1 1 auto;
+      :host > img {
+        position: absolute !important;
         user-select: none;
         pointer-events: none;
         image-rendering: pixelated;
@@ -143,16 +143,14 @@ export class IoGl extends IoElement {
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(uv);
 
-    this.template([['canvas', {id: 'canvas'}]]);
-    this._context2d = this.$.canvas.getContext('2d');
-    this._context2d.imageSmoothingEnabled = false;
+    this.template([['img', {id: 'img'}]]);
 
     this.render(); // TODO: hmm
   }
   onResized() {
-    const rect = this.$.canvas.getBoundingClientRect();
-    this.size[0] = rect.width;
-    this.size[1] = rect.height;
+    const rect = this.getBoundingClientRect();
+    this.size[0] = Math.ceil(rect.width);
+    this.size[1] = Math.ceil(rect.height);
     this.dispatchEvent('object-mutated', {object: this.size}, false, window);
     this.changed();
   }
@@ -160,10 +158,12 @@ export class IoGl extends IoElement {
     queueAnimation(this.render.bind(this));
   }
   render() {
-    canvas.width = Math.ceil(this.size[0]) || 1;
-    canvas.height = Math.ceil(this.size[1]) || 1;
+    canvas.width = (Math.ceil(this.size[0]) || 1);
+    canvas.height = (Math.ceil(this.size[1]) || 1);
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (!this.size[0] && !this.size[1]) return;
+
+    gl.viewport(0, 0, this.size[0], this.size[1]);
     gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -195,10 +195,9 @@ export class IoGl extends IoElement {
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
-    if (this._context2d && canvas.width && canvas.height) {
-      this.$.canvas.width = Number(canvas.width);
-      this.$.canvas.height = Number(canvas.height);
-      this._context2d.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+    if (this.size[0], this.size[1]) {
+      var imgData = canvas.toDataURL('image/png', 0.9);
+      this.$.img.src = imgData;
     }
   }
 }

@@ -117,7 +117,7 @@ export class IoDemo extends IoElement {
 
     const demoObject = ['div', {name: 'object'}, [
       ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1'), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers']}], //TODO: labeled?
-      ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2'), properties: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
+      ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2'), properties: ['number'], config: {'number': ['io-slider', {step: 0.001}]}}],
     ]];
 
     const demoInspector = ['div', {name: 'inspector'}, [
