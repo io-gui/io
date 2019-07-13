@@ -13,7 +13,7 @@ export class IoOption extends IoMenuItem {
         border: var(--io-outset-border);
         border-color: var(--io-outset-border-color);
         border-radius: var(--io-border-radius);
-        padding: var(--io-spacing) calc(3 * var(--io-spacing));
+        padding: var(--io-spacing);
         transition: background-color 0.4s;
         height: 1.375em;
       }

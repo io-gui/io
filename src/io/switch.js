@@ -7,7 +7,6 @@ export class IoSwitch extends IoButton {
       :host {
         --io-switch-size: 1.375em;
         text-align: center;
-        /* align-items: center; */
         position: relative;
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);

@@ -90,6 +90,10 @@
         max-height: 100%;
         flex: 1 1 auto;
       }
+      .logo {
+        height: 1.375em;
+        margin: var(--io-border-width);
+      }
       .main > io-menu-options {
         background-color: var(--io-background-color);
       }
@@ -115,7 +119,7 @@
       constructor(props) {
         super(props);
         this.slotted = [
-          ['img', {src: '/images/logo/io-logo.svg', height: '24'}],
+          ['img', {src: '/images/logo/io-logo.svg', class:'logo', height: '24'}],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},

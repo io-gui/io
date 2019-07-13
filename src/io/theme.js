@@ -1,15 +1,19 @@
-import {IoNode} from "./core/node.js";
+import {IoElement} from "./core/element.js";
 import {html} from "./core/element.js";
 
-export class IoTheme extends IoNode {
+export class IoTheme extends IoElement {
+  static get Style() {
+    return html`<style>
+    body {
+      --io-spacing: 2px;
+      --io-border-radius: 3px;
+      --io-border-width: 1px;
+    }
+    </style>`;
+  }
   get dark() {
     return html`<style>
       body {
-        --io-spacing: 4px;
-
-        --io-border-radius: 4px;
-        --io-border-width: 1px;
-
         --io-background-color: rgb(42, 42, 42);
         --io-background-color-light: rgb(56, 56, 56);
         --io-background-color-dark: rgb(64, 64, 64);
@@ -41,11 +45,6 @@ export class IoTheme extends IoNode {
   get light() {
     return html`<style>
       body {
-        --io-spacing: 4px;
-
-        --io-border-radius: 4px;
-        --io-border-width: 1px;
-
         --io-background-color: rgb(245, 245, 245);
         --io-background-color-light: rgb(255, 255, 255);
         --io-background-color-dark: rgb(225, 225, 225);
