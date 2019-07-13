@@ -1,5 +1,5 @@
-import {IoElement} from "./core/element.js";
-import {html} from "./core/element.js";
+import {IoElement} from "../core/element.js";
+import {html} from "../core/element.js";
 
 export class IoTheme extends IoElement {
   static get Style() {

@@ -26,6 +26,6 @@
  * https://github.com/markedjs/marked
  */
 
-export {IoElementDemo} from "./io-extras/element-demo.js";
-export {IoMdView} from "./io-extras/md-view.js";
-export {IoServiceLoader} from "./io-extras/service-loader.js";
+export {IoElementDemo} from "./extras/element-demo.js";
+export {IoMdView} from "./extras/md-view.js";
+export {IoServiceLoader} from "./extras/service-loader.js";
