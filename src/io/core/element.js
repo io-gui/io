@@ -185,8 +185,13 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         this.$[vChildren[i].props.id] = children[i];
       }
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-        if (children[i].textContent !== vChildren[i].children) {
-          children[i].textContent = vChildren[i].children;
+        if (!children[i]._textNode) {
+          if (children[i].childNodes.length) children[i].textContent = '';
+          children[i]._textNode = document.createTextNode("");
+          children[i].appendChild(children[i]._textNode);
+        } // TODO: consed edge cases (external modification of textNoded);
+        if (children[i]._textNode.nodeValue !== vChildren[i].children) {
+          children[i]._textNode.nodeValue = vChildren[i].children;
         }
       } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
         this.traverse(vChildren[i].children, children[i]);
