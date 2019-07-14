@@ -20,7 +20,6 @@ export class IoElementDemo extends IoElement {
         border-width: 0;
       }
       :host > :first-child {
-        flex: 0 0 14em;
         border-width: 0 var(--io-border-width) 0 0;
       }
       :host[overflow] > :first-child {
@@ -28,6 +27,7 @@ export class IoElementDemo extends IoElement {
         border-width: 0 0 var(--io-border-width) 0;
       }
       :host:not([overflow]) > :first-child {
+        flex: 0 0 22em;
         max-width: 22em;
       }
       :host > :nth-child(2) {
@@ -39,11 +39,10 @@ export class IoElementDemo extends IoElement {
         border: var(--io-border);
         border-width: 0 0 var(--io-border-width) 0;
         background: var(--io-background-color-field);
-        padding: var(--io-spacing) calc(4 * var(--io-spacing));
+        padding: var(--io-spacing) calc(2 * var(--io-spacing));
       }
-      /* TODO: fix io-gl slider resize loop */
       :host > div > io-properties {
-        margin: 0 0.5em;
+        margin: var(--io-spacing);
       }
       :host > div > .io-content {
         display: flex;
@@ -51,7 +50,7 @@ export class IoElementDemo extends IoElement {
         flex-direction: column;
         align-items: flex-start;
         min-height: 1.2em;
-        padding: calc(2 * var(--io-spacing));
+        padding: var(--io-spacing);
       }
     </style>`;
   }

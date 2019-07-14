@@ -19,7 +19,7 @@ export class IoOption extends IoMenuItem {
       }
       :host:not([label])::after {
         content: '▾';
-        padding-left: calc(3 * var(--io-spacing));
+        padding-left: var(--io-spacing);
       }
     </style>`;
   }

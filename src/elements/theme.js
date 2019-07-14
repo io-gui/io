@@ -5,7 +5,7 @@ export class IoTheme extends IoElement {
   static get Style() {
     return html`<style>
     body {
-      --io-spacing: 2px;
+      --io-spacing: 4px;
       --io-border-radius: 3px;
       --io-border-width: 1px;
     }

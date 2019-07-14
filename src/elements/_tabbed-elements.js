@@ -275,8 +275,8 @@ export class IoTabs extends IoElement {
       :host > io-option {
         background: none !important;
         border: none;
-        padding-left: calc(3 * var(--io-spacing));
-        padding-right: calc(3 * var(--io-spacing));
+        padding-left: calc(2 * var(--io-spacing));
+        padding-right: calc(2 * var(--io-spacing));
       }
       :host > .edit-spacer {
         flex: 0 0 3.5em;
@@ -486,8 +486,8 @@ export class IoTabDragicon extends IoElement {
         border: var(--io-outset-border);
         border-radius: var(--io-border-radius);
         padding: var(--io-spacing);
-        padding-left: calc(3 * var(--io-spacing));
-        padding-right: calc(3 * var(--io-spacing));
+        padding-left: calc(2 * var(--io-spacing));
+        padding-right: calc(2 * var(--io-spacing));
         background: var(--io-background-color);
         color: var(--io-color);
         transform: translateZ(0);

@@ -14,6 +14,9 @@ export class IoProperties extends IoElement {
         flex: 1 0 auto;
         align-items: flex-start;
       }
+      :host > .io-property:not(:last-of-type) {
+        margin-bottom: var(--io-spacing);
+      }
       :host > .io-property > * {
         background: none;
         border-color: transparent;
@@ -25,7 +28,6 @@ export class IoProperties extends IoElement {
         color: var(--io-color);
         flex: 0 0 auto;
         padding: var(--io-spacing);
-        padding-right: 0;
       }
       :host > .io-property > .io-property-editor {
         flex: 1 1 auto;

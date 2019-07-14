@@ -149,21 +149,25 @@ export class IoGl extends IoElement {
   }
   onResized() {
     const rect = this.getBoundingClientRect();
-    this.size[0] = Math.ceil(rect.width);
-    this.size[1] = Math.ceil(rect.height);
-    this.dispatchEvent('object-mutated', {object: this.size}, false, window);
+    this._width = Math.ceil(rect.width);
+    this._height = Math.ceil(rect.height);
     this.changed();
   }
   changed() {
+    this.style.width = this.size[0] ? this.size[0] + 'px' : null;
+    this.style.height = this.size[1] ? this.size[1] + 'px' : null;
     queueAnimation(this.render.bind(this));
   }
   render() {
-    canvas.width = (Math.ceil(this.size[0]) || 1);
-    canvas.height = (Math.ceil(this.size[1]) || 1);
 
-    if (!this.size[0] && !this.size[1]) return;
+    const width = Math.ceil(this.size[0] || this._width || 1);
+    const height = Math.ceil(this.size[1] || this._height || 1);
 
-    gl.viewport(0, 0, this.size[0], this.size[1]);
+    if (!width || !height) return;
+
+    canvas.width = width;
+    canvas.height = height;
+    gl.viewport(0, 0, width, height);
     gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -173,6 +177,9 @@ export class IoGl extends IoElement {
     for (let prop in this.__properties) {
       let type = this.__properties[prop].type;
       let value = this.__properties[prop].value;
+      if (prop === 'size') {
+        value = [width, height];
+      }
       if (type === Number) {
         const uniform = gl.getUniformLocation(this._shader, prop);
         gl.uniform1f(uniform, value || 0);
@@ -195,9 +202,7 @@ export class IoGl extends IoElement {
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
-    if (this.size[0], this.size[1]) {
-      this.$.img.src = canvas.toDataURL('image/png', 0.9);
-    }
+    this.$.img.src = canvas.toDataURL('image/png', 0.9);
   }
 }
 

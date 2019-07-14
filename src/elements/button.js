@@ -11,8 +11,8 @@ export class IoButton extends IoItem {
         border-color: var(--io-outset-border-color);
         border-radius: var(--io-border-radius);
         padding: var(--io-spacing);
-        padding-left: calc(3 * var(--io-spacing));
-        padding-right: calc(3 * var(--io-spacing));
+        padding-left: calc(2 * var(--io-spacing));
+        padding-right: calc(2 * var(--io-spacing));
         transition: background-color 0.4s;
       }
     </style>`;
