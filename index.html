@@ -94,8 +94,9 @@
         flex: 1 1 auto;
       }
       .logo {
+        display: block;
         height: 1.375em;
-        margin: var(--io-border-width);
+        /* margin: var(--io-border-width); */
       }
       .main > io-menu-options {
         background-color: var(--io-background-color);
@@ -124,12 +125,12 @@
       constructor(props) {
         super(props);
         this.slotted = [
-          ['img', {src: '/images/logo/io-logo.svg', class:'logo', height: '24'}],
+          ['a', {href: '#doc=getting-started#about-io'}, [['img', {src: '/images/logo/io-logo.svg', class:'logo'}],]],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},
           {label: 'Elements', value: 'elements'},
-          {label: 'Demo', value: 'demo'},
+          // {label: 'Demo', value: 'demo'},
           {label: 'Test', value: 'test'},
         ];
         this.elements = [
@@ -190,11 +191,6 @@
                 {label: "io-object", value: "object-editors#io-object"},
                 {label: "io-inspector", value: "object-editors#io-inspector"},
               ]},
-              {label: "Extra Elements", options: [
-                {label: "io-md-view", value: "extra-elements#io-md-view"},
-                {label: "io-element-demo", value: "extra-elements#io-element-demo"},
-                {label: "io-service-loader", value: "extra-elements#io-service-loader"},
-              ]},
               {label: "Math Elements", options: [
                 {label: "io-vector2", value: "math-elements#io-vector2"},
                 {label: "io-vector3", value: "math-elements#io-vector3"},
@@ -205,6 +201,11 @@
                 {label: "io-rgb", value: "math-elements#io-rgb"},
                 {label: "io-rgba", value: "math-elements#io-rgba"},
               ]},
+              {label: "Extra Elements", options: [
+                {label: "io-md-view", value: "extra-elements#io-md-view"},
+                {label: "io-element-demo", value: "extra-elements#io-element-demo"},
+                {label: "io-service-loader", value: "extra-elements#io-service-loader"},
+              ]},
             ],
             elements: [
               ['io-md-view', {name: 'basic-elements', path :'./docs/elements/basic-elements.md'}],
@@ -214,7 +215,7 @@
               ['io-md-view', {name: 'math-elements', path :'./docs/math/math-elements.md'}],
             ]
           }],
-          ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
+          // ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
           ['io-test', {name: 'test', import: "./tests/test.js"}],
         ];
       }
