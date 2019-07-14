@@ -1,4 +1,4 @@
-import {IoButton} from "../../dist/io.js";
+import {IoButton} from "../../dist/io-elements.js";
 
 export default class {
   constructor() {

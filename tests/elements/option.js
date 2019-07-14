@@ -1,4 +1,4 @@
-import {IoOption} from "../../dist/io.js";
+import {IoOption} from "../../dist/io-elements.js";
 
 export default class {
   constructor() {

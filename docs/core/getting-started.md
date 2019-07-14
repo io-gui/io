@@ -15,6 +15,7 @@ import {IoElement} from "./io/dist/io.js";
 The library includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as [`<io-menu-options>`](#page=elements&element=basic-elements#io-menu) for example, create the element, assign the options property, and add it to your DOM.
 
 ```javascript
+import "./io/dist/io-elements.js";
 const menu = document.createElement('io-menu-options');
 menu.options = ["one", "two", "three"];
 element.appendChild(menu);
