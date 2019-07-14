@@ -1,4 +1,4 @@
-import {IoObject} from "../../dist/io.js";
+import {IoObject} from "../../dist/io-elements.js";
 
 const testValue = {
   "number": 0.5,

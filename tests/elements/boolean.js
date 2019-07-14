@@ -1,4 +1,4 @@
-import {IoBoolean} from "../../dist/io.js";
+import {IoBoolean} from "../../dist/io-elements.js";
 
 export default class {
   constructor() {
