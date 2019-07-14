@@ -6,9 +6,11 @@ export class IoObject extends IoCollapsable {
   static get Style() {
     return html`<style>
       :host {
-        padding: 0;
-        border: none;
+        border-color: transparent;
         background: none;
+      }
+      :host > io-boolean[value] {
+        margin-bottom: var(--io-spacing);
       }
       :host > .io-content {
         display: block;

@@ -17,13 +17,13 @@ export class IoTheme extends IoElement {
         --io-background-color: rgb(42, 42, 42);
         --io-background-color-light: rgb(56, 56, 56);
         --io-background-color-dark: rgb(64, 64, 64);
-        --io-background-color-field: rgb(16, 16, 16);
+        --io-background-color-field: rgb(35, 35, 35);
 
         --io-color: rgb(210, 210, 210);
         --io-color-error: rgb(255, 96, 16);
         --io-color-link: rgb(190, 230, 150);
         --io-color-focus: rgb(80, 210, 355);
-        --io-color-field: rgb(150, 150, 150);
+        --io-color-field: rgb(190, 190, 190);
         --io-color-number: rgb(32, 164, 255);
         --io-color-string: rgb(240, 64, 22);
         --io-color-boolean: rgb(210, 90, 190);
@@ -47,8 +47,8 @@ export class IoTheme extends IoElement {
       body {
         --io-background-color: rgb(245, 245, 245);
         --io-background-color-light: rgb(255, 255, 255);
-        --io-background-color-dark: rgb(225, 225, 225);
-        --io-background-color-field: rgb(205, 205, 205);
+        --io-background-color-dark: rgb(215, 215, 215);
+        --io-background-color-field: rgb(235, 235, 235);
 
         --io-color: rgb(42, 42, 42);
         --io-color-error: rgb(225, 100, 100);
@@ -64,9 +64,9 @@ export class IoTheme extends IoElement {
 
         --io-border-color: rgb(180, 180, 180);
         --io-border: var(--io-border-width) solid var(--io-border-color);
-        --io-inset-border-color: rgb(255, 255, 255) var(--io-border-color) var(--io-border-color) rgb(255, 255, 255);
+        --io-inset-border-color: rgb(220, 220, 220) var(--io-border-color) var(--io-border-color) rgb(220, 220, 220);
         --io-inset-border: var(--io-border-width) inset var(--io-border-color);
-        --io-outset-border-color: var(--io-border-color) rgb(250, 250, 250) rgb(250, 250, 250) var(--io-border-color);
+        --io-outset-border-color: var(--io-border-color) rgb(210, 210, 210) rgb(210, 210, 210) var(--io-border-color);
         --io-outset-border: var(--io-border-width) outset var(--io-border-color);
 
         --io-shadow: 2px 3px 5px rgba(0,0,0,0.2);

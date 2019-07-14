@@ -8,7 +8,9 @@ export class IoBoolean extends IoButton {
         border: var(--io-outset-border);
         border-color: var(--io-outset-border-color);
         color: var(--io-color-field);
-
+      }
+      :host:not([value]) {
+        opacity: 0.75;
       }
       :host[aria-invalid] {
         color: var(--io-color-error);

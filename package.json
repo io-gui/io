@@ -27,7 +27,8 @@
     "uglify": "uglifyjs dist/io.js -cmo dist/io.js --comments",
     "uglify-elements": "uglifyjs dist/io-elements.js -cmo dist/io-elements.js --comments",
     "uglify-extras": "uglifyjs dist/io-extras.js -cmo dist/io-extras.js --comments",
-    "uglify-all": "npm run uglify && npm run uglify-elements && npm run uglify-extras",
+    "uglify-math": "uglifyjs dist/io-math.js -cmo dist/io-math.js --comments",
+    "uglify-all": "npm run uglify && npm run uglify-elements && npm run uglify-extras && npm run uglify-math",
     "build": "npm run lint && npm run rollup && npm run uglify-all",
     "travis": "npm run build"
   },

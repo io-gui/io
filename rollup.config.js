@@ -21,6 +21,18 @@ function html() {
 
 export default [
   {
+    input: 'src/io.js',
+    plugins: [html()],
+    inlineDynamicImports: true,
+    output: [
+      {
+        format: 'es',
+        file: 'dist/io.js',
+        indent: '  '
+      }
+    ],
+  },
+  {
     input: 'src/io-elements.js',
     plugins: [html()],
     inlineDynamicImports: true,
@@ -32,10 +44,6 @@ export default [
       }
     ],
     external: [ path.resolve('src/io.js') ],
-    onwarn: (warning, warn) => {
-      if (warning.code === 'THIS_IS_UNDEFINED') return;
-      warn(warning);
-    }
   },
   {
     input: 'src/io-extras.js',
@@ -55,15 +63,16 @@ export default [
     }
   },
   {
-    input: 'src/io.js',
+    input: 'src/io-math.js',
     plugins: [html()],
     inlineDynamicImports: true,
     output: [
       {
         format: 'es',
-        file: 'dist/io.js',
+        file: 'dist/io-math.js',
         indent: '  '
       }
     ],
+    external: [ path.resolve('src/io.js') ],
   },
 ];

@@ -80,8 +80,8 @@ export class IoNumber extends IoItem {
     }
   }
   _setFromTextNode() {
+    this._textNode = this.childNodes[0];
     if (this.childNodes.length == 2) {
-      this._textNode = this.childNodes[0];
       this.removeChild(this.childNodes[1]);
     }
 

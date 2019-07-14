@@ -30,8 +30,8 @@ export class IoString extends IoItem {
     };
   }
   _setFromTextNode() {
+    this._textNode = this.childNodes[0];
     if (this.childNodes.length == 2) {
-      this._textNode = this.childNodes[0];
       this.removeChild(this.childNodes[1]);
     }
     if (typeof this.value === 'string' || (this._textNode.nodeValue !== String(this.value))) {

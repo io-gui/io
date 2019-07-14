@@ -107,6 +107,7 @@
     import {IoStorage as $} from "./dist/io.js";
     import {IoSelectorTabs} from "./dist/io-elements.js";
     import "./dist/io-extras.js";
+    import "./dist/io-math.js";
 
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
@@ -168,10 +169,10 @@
                 {label: "io-switch", value: "basic-elements#io-switch"},
                 {label: "io-string", value: "basic-elements#io-string"},
                 {label: "io-number", value: "basic-elements#io-number"},
+                {label: "io-gl", value: "basic-elements#io-gl"},
                 {label: "io-slider", value: "basic-elements#io-slider"},
                 {label: "io-option", value: "basic-elements#io-option"},
                 {label: "io-menu", value: "basic-elements#io-menu"},
-                {label: "io-gl", value: "basic-elements#io-gl"},
               ]},
               {label: "Layout & Navigation", options: [
                 {label: "io-collapsable", value: "layout-navigation#io-collapsable"},
@@ -191,12 +192,23 @@
                 {label: "io-element-demo", value: "extra-elements#io-element-demo"},
                 {label: "io-service-loader", value: "extra-elements#io-service-loader"},
               ]},
+              {label: "Math Elements", options: [
+                {label: "io-vector2", value: "math-elements#io-vector2"},
+                {label: "io-vector3", value: "math-elements#io-vector3"},
+                {label: "io-vector4", value: "math-elements#io-vector4"},
+                {label: "io-matrix2", value: "math-elements#io-matrix2"},
+                {label: "io-matrix3", value: "math-elements#io-matrix3"},
+                {label: "io-matrix4", value: "math-elements#io-matrix4"},
+                {label: "io-rgb", value: "math-elements#io-rgb"},
+                {label: "io-rgba", value: "math-elements#io-rgba"},
+              ]},
             ],
             elements: [
               ['io-md-view', {name: 'basic-elements', path :'./docs/elements/basic-elements.md'}],
               ['io-md-view', {name: 'layout-navigation', path :'./docs/elements/layout-navigation.md'}],
               ['io-md-view', {name: 'object-editors', path :'./docs/elements/object-editors.md'}],
               ['io-md-view', {name: 'extra-elements', path :'./docs/extras/extra-elements.md'}],
+              ['io-md-view', {name: 'math-elements', path :'./docs/math/math-elements.md'}],
             ]
           }],
           ['io-demo', {name: 'demo', import: "./demo/demo.js"}],

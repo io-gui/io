@@ -29,6 +29,9 @@ export class IoSwitch extends IoButton {
       :host[value] {
         background-color: var(--io-background-color);
       }
+      :host:not([value]) {
+        opacity: 0.75;
+      }
       :host:after {
         display: inline-block;
         position: absolute;

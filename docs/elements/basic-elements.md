@@ -54,6 +54,20 @@ It can be configured to clamp the `value` to `min`/`max` and round it to the nea
 
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
+## &lt;io-gl&gt; ##
+
+WebGL canvas for rendering shader-based elements.
+
+<io-element-demo element="io-gl" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-rgba"], "color": ["io-rgba"]}'></io-element-demo>
+
+This is a base class for WebGL shader elemenents.
+
+The element will automatically create shader uniforms for `Number` and `Array` properties and update canvas on property change.
+
+You can define custom shader code in `static get Vert()` and `static get Frag()` return string.
+
+See `IoSliderKnob` for custom shader example.
+
 ## &lt;io-slider&gt; ##
 
 Input element for `Number` data type displayed as interactive slider with a number field.
@@ -87,17 +101,3 @@ When clicked or activated by space/enter key, it expands a menu with selectable 
 <io-element-demo element="io-menu-options" properties='{"value": "", "horizontal": false, "options": [{"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]}, {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]}, {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}]}' config='{"options": ["io-object", {"expanded": true}]}'></io-element-demo>
 
 <io-element-demo element="io-menu-item" properties='{"value": "", "direction": "right", "option": {"label": "Hearts", "icon": "❤", "hint": "colors", "options": [{"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]}, {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]}, {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}]}}' config='{"direction": ["io-option", {"options": ["top", "right", "bottom", "left"]}], "option": ["io-object", {"expanded": true}]}'></io-element-demo>
-
-## &lt;io-gl&gt; ##
-
-WebGL canvas for rendering elements as shaders.
-
-<io-element-demo element="io-gl" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}]}'></io-element-demo>
-
-This is a base class for WebGL shader elemenents.
-
-The element will automatically create shader uniforms for `Number` and `Array` properties and update canvas on property change.
-
-You can define custom shader code in `static get Vert()` and `static get Frag()` return string.
-
-See `IoSliderKnob` for custom shader example.

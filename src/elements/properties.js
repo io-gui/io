@@ -17,10 +17,6 @@ export class IoProperties extends IoElement {
       :host > .io-property:not(:last-of-type) {
         margin-bottom: var(--io-spacing);
       }
-      :host > .io-property > * {
-        background: none;
-        border-color: transparent;
-      }
       :host > .io-property > .io-property-label {
         margin: 0;
         border: var(--io-border);
@@ -32,9 +28,6 @@ export class IoProperties extends IoElement {
       :host > .io-property > .io-property-editor {
         flex: 1 1 auto;
       }
-      :host > .io-property > io-boolean,
-      :host > .io-property > io-object > io-boolean,
-      :host > .io-property > io-option,
       :host > .io-property > io-option,
       :host > .io-property > io-object {
         flex: 1 1 auto !important;
@@ -43,22 +36,10 @@ export class IoProperties extends IoElement {
       :host > .io-property > io-string,
       :host > .io-property > io-boolean,
       :host > .io-property > io-switch,
+      :host > .io-property > io-object,
       :host > .io-property > io-object > io-boolean,
       :host > .io-property > io-option {
-        padding: var(--io-spacing) !important;
-      }
-      :host > .io-property > io-number {
-        color: var(--io-color-number);
-      }
-      :host > .io-property > io-string {
-        color: var(--io-color-string);
-      }
-      :host > .io-property > io-boolean {
-        color: var(--io-color-boolean);
-      }
-      :host > .io-property > io-switch:not([value]),
-      :host > .io-property > io-boolean:not([value]) {
-        opacity: 0.5;
+        flex: 0 1 auto !important;
       }
     </style>`;
   }
@@ -74,14 +55,16 @@ export class IoProperties extends IoElement {
     return this.__proto__.__config.getConfig(this.value, this.config);
   }
   _onValueSet(event) {
+    if (event.detail.object) return; // TODO: unhack/remove?
     const item = event.composedPath()[0];
     if (item === this) return;
-    if (event.detail.object) return; // TODO: unhack
     event.stopImmediatePropagation();
     const prop = item.id;
     if (prop !== null && event.detail.property === 'value') {
-      this.value[prop] = event.detail.value;
-      const detail = Object.assign({object: this.value, property: prop}, event.detail);
+      const value = event.detail.value;
+      const oldValue = event.detail.oldValue;
+      this.value[prop] = value;
+      const detail = {object: this.value, property: prop, value: value, oldValue: oldValue};
       this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
     }
   }
