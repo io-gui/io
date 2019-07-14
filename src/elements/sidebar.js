@@ -40,7 +40,7 @@ export class IoSidebar extends IoElement {
       }
       :host > io-option {
         background: none !important;
-        border: none;
+        border-color: transparent;
       }
     </style>`;
   }

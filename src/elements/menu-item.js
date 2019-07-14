@@ -69,11 +69,12 @@ export class IoMenuItem extends IoItem {
   }
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];
+    // TODO: fires twice?
     if (item !== this) {
       event.stopImmediatePropagation();
+      this.expanded = false;
       this.set('value', event.detail.value);
       this.dispatchEvent('io-menu-item-clicked', event.detail, true);
-      this.expanded = false;
     }
   }
   get _options() {
