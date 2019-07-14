@@ -12,10 +12,6 @@ export class IoSidebar extends IoElement {
         overflow-y: auto;
         padding: var(--io-spacing);
       }
-      :host[overflow] {
-        font-size: 1.2em;
-        line-height: 1.2em;
-      }
       :host:not([overflow]) {
         -webkit-overflow-scrolling: touch;
         flex-direction: column;

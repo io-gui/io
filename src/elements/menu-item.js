@@ -11,7 +11,7 @@ export class IoMenuItem extends IoItem {
         display: flex;
         flex: 0 0 auto;
         flex-direction: row;
-        padding: calc(2 * var(--io-spacing));
+        padding: var(--io-spacing);
         border-radius: 0;
         background: none;
       }
