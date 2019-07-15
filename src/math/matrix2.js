@@ -7,8 +7,14 @@ export class IoMatrix2 extends IoElement {
         display: flex;
         flex-direction: row;
         display: grid;
+        align-self: stretch;
+        justify-self: stretch;
         grid-template-columns: auto auto;
         grid-gap: var(--io-spacing);
+      }
+      :host > io-number {
+        width: inherit;
+        flex: 1 1 auto;
       }
     </style>`;
   }

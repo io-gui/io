@@ -6,14 +6,18 @@ export class IoVector2 extends IoElement {
       :host {
         display: flex;
         flex-direction: row;
+        align-self: stretch;
+        justify-self: stretch;
       }
       :host > io-number {
+        width: inherit;
         flex: 1 1 auto;
       }
       :host > io-number:not(:last-child) {
         margin-right: var(--io-spacing);
       }
       :host > io-boolean {
+        flex: 0 0 auto;
         border-color: transparent;
         background: none;
       }
