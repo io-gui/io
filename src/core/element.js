@@ -185,6 +185,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         this.$[vChildren[i].props.id] = children[i];
       }
       if (vChildren[i].children && typeof vChildren[i].children === 'string') {
+
         if (!children[i]._textNode) {
           if (children[i].childNodes.length) children[i].textContent = '';
           children[i]._textNode = document.createTextNode("");

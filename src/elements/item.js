@@ -41,6 +41,7 @@ export class IoItem extends IoElement {
         text-overflow: ellipsis;
         user-select: none;
         flex-wrap: nowrap;
+        position: relative;
       }
       :host:hover {
         background-color: var(--io-background-color-light);
@@ -92,8 +93,8 @@ export class IoItem extends IoElement {
   }
   set textNode(value) {
     this._flattenTextNode();
-    if (this._textNode.nodeValue !== value) {
-      this._textNode.nodeValue = value;
+    if (this._textNode.nodeValue !== String(value)) {
+      this._textNode.nodeValue = String(value);
     }
   }
   _flattenTextNode() {
