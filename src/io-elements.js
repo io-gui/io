@@ -27,7 +27,6 @@ export {IoBreadcrumbs} from "./elements/breadcrumbs.js";
 export {IoButton} from "./elements/button.js";
 export {IoCollapsable} from "./elements/collapsable.js";
 export {IoInspector} from "./elements/inspector.js";
-export {IoGl} from "./elements/gl.js";
 export {IoItem} from "./elements/item.js";
 export {IoLayout} from "./elements/layout.js";
 export {IoMenuItem} from "./elements/menu-item.js";
@@ -46,3 +45,5 @@ export {IoString} from "./elements/string.js";
 export {IoSidebar} from "./elements/sidebar.js";
 export {IoSwitch} from "./elements/switch.js";
 export {IoTheme} from "./elements/theme.js";
+
+export {IoGl} from "./core/gl.js";

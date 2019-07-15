@@ -205,3 +205,17 @@ On a fundamental level, data-flow in io is top down and UI designs with unidirec
 That is all! Object elements will automatically listen to `object-mutated` event and update if needed.
 
 **Note:** If the application state changed externally (e.g. server push), `object-mutated` event is required for UI update. Core application should also listen to `object-mutated` event from UI and react accordingly. `object-mutated` event payload should specify which object and property mutated. Otherwise brute-force UI update is performed.
+
+## &lt;io-gl&gt;
+
+WebGL canvas for rendering shader-based elements.
+
+<io-element-demo element="io-gl" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-rgba"], "color": ["io-rgba"]}'></io-element-demo>
+
+This is a base class for WebGL shader elemenents.
+
+The element will automatically create shader uniforms for `Number` and `Array` properties and update canvas on property change.
+
+You can define custom shader code in `static get Vert()` and `static get Frag()` return string.
+
+See `IoSliderKnob` for custom shader example.

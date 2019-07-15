@@ -1,5 +1,4 @@
-import {html, IoElement} from "../io.js";
-import {IoGl} from "./gl.js";
+import {html, IoElement, IoGl} from "../io.js";
 
 export class IoSlider extends IoElement {
   static get Style() {
