@@ -4,11 +4,16 @@ export class IoColorPicker extends IoGl {
   static get Style() {
     return html`<style>
       :host {
-        display: flex;
         width: 165px;
-        height: 65px;
+        height: 133px;
       }
     </style>`;
+  }
+  static get Attributes() {
+    return {
+      role: 'slider',
+      tabindex: 0,
+    };
   }
   static get Properties() {
     return {
@@ -16,9 +21,71 @@ export class IoColorPicker extends IoGl {
       color: [1, 0, 1, 1],
       size: [0, 0],
       wheelWidth: 32,
-      radius: 8,
-      thicknes:1.5,
+      radius: 12,
+      thicknes: 4,
+      svPosition: [0.5, 0.5, 0.5],
     };
+  }
+  static get Listeners() {
+    return {
+      'touchstart': '_onTouchstart',
+      'mousedown': '_onMousedown',
+      'keydown': '_onKeydown',
+    };
+  }
+  _onTouchstart(event) {
+    this.addEventListener('touchmove', this._onTouchmove);
+    this.addEventListener('touchend', this._onTouchend);
+    this._onPointerdown(event);
+  }
+  _onTouchmove(event) {
+    this._onPointermove(event);
+  }
+  _onTouchend() {
+    this.removeEventListener('touchmove', this._onTouchmove);
+    this.removeEventListener('touchend', this._onTouchend);
+  }
+  _onMousedown(event) {
+    event.preventDefault();
+    this.focus();
+    window.addEventListener('mousemove', this._onMousemove);
+    window.addEventListener('mouseup', this._onMouseup);
+    this._onPointerdown(event);
+  }
+  _onMousemove(event) {
+    this._onPointermove(event);
+  }
+  _onMouseup() {
+    window.removeEventListener('mousemove', this._onMousemove);
+    window.removeEventListener('mouseup', this._onMouseup);
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('mousemove', this._onMousemove);
+    window.removeEventListener('mouseup', this._onMouseup);
+  }
+  _onPointerdown(event) {
+
+    const pointer = event.changedTouches ? event.changedTouches[0] : event;
+    const rect = this.getBoundingClientRect();
+    const x = (pointer.clientX - rect.x) / rect.width;
+    const wheelWidth = this.wheelWidth / window.devicePixelRatio;
+
+    this._mode = x < (rect.width - wheelWidth) / rect.width ? 'sv' : 'hue';
+  }
+  _onPointermove(event) {
+    const pointer = event.changedTouches ? event.changedTouches[0] : event;
+    const rect = this.getBoundingClientRect();
+    const x = Math.max(0, Math.min(1, (pointer.clientX - rect.x) / rect.width));
+    const y = Math.max(0, Math.min(1, (pointer.clientY - rect.y) / rect.height));
+    if (this._mode === 'sv') {
+      this.svPosition[0] = x;
+      this.svPosition[1] = 1 - y;
+    }
+    if (this._mode === 'hue') {
+      this.svPosition[2] = 1 - y;
+    }
+    this.changed();
   }
   static get Frag() {
     return /* glsl */`
@@ -46,8 +113,6 @@ export class IoColorPicker extends IoGl {
 
         // hue gradient and color marker
         vec3 hue = vec3(1.0, 0.0, 1.0);
-        vec2 val = vec2(0.5, 0.5);
-        float hueVal = 0.5;
 
         float split = max(0.5, ((size.x - wheelWidth) / size.x));
         if (vUv.x <= split) {
@@ -59,7 +124,7 @@ export class IoColorPicker extends IoGl {
           final = sv2Color(sv, hue);
 
           // Color marker
-          vec2 offset = vec2(vUv.x, vUv.y) - vec2(val.x, val.y);
+          vec2 offset = vec2(vUv.x, vUv.y) - vec2(svPosition.x, svPosition.y);
           float distOut = (length(offset * size) - (radius - (thicknes / 2.0)));
           float distIn = 1.0 - (length(offset * size) - (radius + (thicknes / 2.0)));
           float dist = min(1.0, max(min(distOut, distIn), 0.0));
@@ -81,16 +146,14 @@ export class IoColorPicker extends IoGl {
             }
           }
 
-          // Color marker
-        	float offset = abs(vUv.y - hueVal);
+          // Hue marker
+        	float offset = abs(vUv.y - svPosition[2]);
           float dist = (offset * size.y) - (thicknes / 2.0);
           dist = max(1.0 - dist, 0.0);
           final = mix(final, vec3(1.0), dist);
-
         }
 
         gl_FragColor = vec4(final, 1.0);
-
       }
     `;
   }

@@ -62,6 +62,8 @@ export class IoGl extends IoElement {
         user-select: none;
         pointer-events: none;
         image-rendering: pixelated;
+        width: 100%;
+        height: 100%;
       }
     </style>`;
   }
@@ -163,12 +165,13 @@ export class IoGl extends IoElement {
 
     const width = Math.ceil(this.size[0] || this._width || 1);
     const height = Math.ceil(this.size[1] || this._height || 1);
+    const pxRatio = window.devicePixelRatio;
 
     if (!width || !height) return;
 
-    canvas.width = width;
-    canvas.height = height;
-    gl.viewport(0, 0, width, height);
+    canvas.width = width * pxRatio;
+    canvas.height = height * pxRatio;
+    gl.viewport(0, 0, width * pxRatio, height * pxRatio);
     gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -179,7 +182,7 @@ export class IoGl extends IoElement {
       let type = this.__properties[prop].type;
       let value = this.__properties[prop].value;
       if (prop === 'size') {
-        value = [width, height];
+        value = [width * pxRatio, height * pxRatio];
       }
       if (prop === 'aspect') {
         value = width / height;
