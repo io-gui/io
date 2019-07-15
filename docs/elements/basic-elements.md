@@ -1,4 +1,4 @@
-## &lt;io-item&gt; ##
+## &lt;io-item&gt;
 
 A simple focusable element.
 
@@ -8,7 +8,7 @@ When clicked or activated by space/enter key, it calls the `_onClick()` function
 
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
-## &lt;io-button&gt; ##
+## &lt;io-button&gt;
 
 A simple button element.
 
@@ -18,7 +18,7 @@ Extends `<io-item>`.
 
 When clicked or activated by space/enter key, it calls the `action` function with optional `value` argument.
 
-## &lt;io-boolean&gt; ##
+## &lt;io-boolean&gt;
 
 Input element for `Boolean` data type displayed as text.
 
@@ -28,7 +28,7 @@ Extends `<io-button>`.
 
 It can be configured to display custom `true` or `false` string depending on its `value`.
 
-## &lt;io-switch&gt; ##
+## &lt;io-switch&gt;
 
 Input element for `Boolean` data type displayed as switch toggle.
 
@@ -36,7 +36,7 @@ Extends `<io-button>`.
 
 <io-element-demo element="io-switch" properties='{"value": true}'></io-element-demo>
 
-## &lt;io-string&gt; ##
+## &lt;io-string&gt;
 
 Input element for `String` data type.
 
@@ -44,7 +44,7 @@ Input element for `String` data type.
 
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
-## &lt;io-number&gt; ##
+## &lt;io-number&gt;
 
 Input element for `Number` data type.
 
@@ -54,21 +54,7 @@ It can be configured to clamp the `value` to `min`/`max` and round it to the nea
 
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
-## &lt;io-gl&gt; ##
-
-WebGL canvas for rendering shader-based elements.
-
-<io-element-demo element="io-gl" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-rgba"], "color": ["io-rgba"]}'></io-element-demo>
-
-This is a base class for WebGL shader elemenents.
-
-The element will automatically create shader uniforms for `Number` and `Array` properties and update canvas on property change.
-
-You can define custom shader code in `static get Vert()` and `static get Frag()` return string.
-
-See `IoSliderKnob` for custom shader example.
-
-## &lt;io-slider&gt; ##
+## &lt;io-slider&gt;
 
 Input element for `Number` data type displayed as interactive slider with a number field.
 
@@ -82,7 +68,7 @@ It can be configured to clamp the `value` to `min`/`max` and round it to the nea
 
 To change the value with arrow keys on focused slider, users should hold down the shift key.
 
-## &lt;io-option&gt; ##
+## &lt;io-option&gt;
 
 Option select element.
 
@@ -94,7 +80,7 @@ Extends `<io-button>`. Implements `<io-menu-options>`.
 
 When clicked or activated by space/enter key, it expands a menu with selectable options.
 
-## &lt;io-menu&gt; ##
+## &lt;io-menu&gt;
 
 <io-element-demo element="io-menu" properties='{"value": "", "button": 0, "position": "pointer", "options": [{"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]}, {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]}, {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}]}' config='{"button": ["io-option", {"options": [0, 1, 2]}], "position": ["io-option", {"options": ["pointer", "top", "right", "bottom", "left"]}], "type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]}'></io-element-demo>
 

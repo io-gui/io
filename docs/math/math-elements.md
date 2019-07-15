@@ -1,3 +1,7 @@
+## &lt;io-color-picker&gt;
+
+<io-element-demo element="io-color-picker" properties='{"value": [1, 0.5, 0, 1]}'></io-element-demo>
+
 ## &lt;io-vector2&gt;
 
 <io-element-demo element="io-vector2" properties='{"value": [1, 0.5]}'></io-element-demo>

@@ -32,5 +32,6 @@ export {IoVector4} from "./math/vector4.js";
 export {IoMatrix2} from "./math/matrix2.js";
 export {IoMatrix3} from "./math/matrix3.js";
 export {IoMatrix4} from "./math/matrix4.js";
+export {IoColorPicker} from "./math/color-picker.js";
 export {IoRgb} from "./math/rgb.js";
 export {IoRgba} from "./math/rgba.js";

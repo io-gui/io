@@ -1,6 +1,6 @@
 // TODO: document, demo, test
 
-import {html, IoElement} from "../io.js";
+import {html, IoElement} from "./element.js";
 
 const animationQueue = new Array();
 const animate = function() {
@@ -70,6 +70,7 @@ export class IoGl extends IoElement {
       background: [0, 0, 0, 1],
       color: [1, 1, 1, 1],
       size: [0, 0],
+      aspect: 1,
     };
   }
   static get Vert() {
@@ -179,6 +180,9 @@ export class IoGl extends IoElement {
       let value = this.__properties[prop].value;
       if (prop === 'size') {
         value = [width, height];
+      }
+      if (prop === 'aspect') {
+        value = width / height;
       }
       if (type === Number) {
         const uniform = gl.getUniformLocation(this._shader, prop);
