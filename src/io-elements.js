@@ -45,5 +45,3 @@ export {IoString} from "./elements/string.js";
 export {IoSidebar} from "./elements/sidebar.js";
 export {IoSwitch} from "./elements/switch.js";
 export {IoTheme} from "./elements/theme.js";
-
-export {IoGl} from "./core/gl.js";
