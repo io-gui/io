@@ -30,12 +30,9 @@ export class IoString extends IoItem {
     };
   }
   _setFromTextNode() {
-    this._textNode = this.childNodes[0];
-    if (this.childNodes.length == 2) {
-      this.removeChild(this.childNodes[1]);
-    }
-    if (typeof this.value === 'string' || (this._textNode.nodeValue !== String(this.value))) {
-      this.set('value', this._textNode.nodeValue);
+    const textNode = this.textNode;
+    if (typeof this.value === 'string' || (textNode !== String(this.value))) {
+      this.set('value', textNode);
     }
   }
   _onBlur(event) {
@@ -80,10 +77,7 @@ export class IoString extends IoItem {
     }
   }
   changed() {
-    const valueText = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
-    if (this._textNode.nodeValue !== valueText) {
-      this._textNode.nodeValue = valueText;
-    }
+    this.textNode = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
     this.setAttribute('aria-invalid', (typeof this.value !== 'string') ? 'true' : false);
   }
 }

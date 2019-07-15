@@ -86,9 +86,31 @@ export class IoItem extends IoElement {
       'mousedown': '_onMousedown',
     };
   }
+  get textNode() {
+    this._flattenTextNode();
+    return this._textNode.nodeValue;
+  }
+  set textNode(value) {
+    this._flattenTextNode();
+    if (this._textNode.nodeValue !== value) {
+      this._textNode.nodeValue = value;
+    }
+  }
+  _flattenTextNode() {
+    if (this.childNodes.length === 0) {
+      this.appendChild(document.createTextNode(""));
+    }
+    this._textNode = this.childNodes[0];
+    if (this.childNodes.length > 1) {
+      const textContent = this.textContent;
+      for (let i = this.childNodes.length; i--;) {
+        if (i !== 0) this.removeChild(this.childNodes[i]);
+      }
+      this._textNode.nodeValue = textContent;
+    }
+  }
   constructor(props) {
     super(props);
-    // TODO: consider getter/setter pattern.
     this._textNode = document.createTextNode("");
     this.appendChild(this._textNode);
   }
@@ -139,9 +161,7 @@ export class IoItem extends IoElement {
       valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
     }
     valueText = this.label || valueText;
-    if (this._textNode.nodeValue !== valueText) {
-      this._textNode.nodeValue = valueText;
-    }
+    this.textNode = valueText;
     this.title = valueText;
   }
 }

@@ -90,9 +90,7 @@ export class IoOption extends IoMenuItem {
       }
     }
     valueText = this.label || valueText || String(this.value);
-    if (this._textNode.nodeValue !== valueText) {
-      this._textNode.nodeValue = valueText;
-    }
+    this.textNode = valueText;
     this.title = valueText;
     this.setAttribute('aria-haspopup', 'listbox');
     this.setAttribute('aria-expanded', String(this.expanded));

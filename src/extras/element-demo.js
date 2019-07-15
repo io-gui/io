@@ -48,6 +48,9 @@ export class IoElementDemo extends IoElement {
         margin: var(--io-spacing);
         align-self: stretch;
       }
+      :host .io-demo-element {
+        margin: var(--io-spacing);
+      }
     </style>`;
   }
   static get Attributes() {
@@ -122,7 +125,7 @@ export class IoElementDemo extends IoElement {
         ]],
         ['div', [
           ['span', 'RESULT'],
-          [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
+          [this.element, Object.assign({'on-value-set': this._onPropSet, 'class': 'io-demo-element'}, this.properties)],
         ]],
        ]);
     } else {

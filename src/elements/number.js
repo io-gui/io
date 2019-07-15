@@ -37,11 +37,11 @@ export class IoNumber extends IoItem {
   }
   _onFocus(event) {
     super._onFocus(event);
-    this._textContentOnFocus = this._textNode.nodeValue;
+    this._textContentOnFocus = this.textNode;
   }
   _onBlur(event) {
     super._onBlur(event);
-    if (this._textContentOnFocus !== this._textNode.nodeValue) this._setFromTextNode();
+    if (this._textContentOnFocus !== this.textNode) this._setFromTextNode();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
@@ -80,19 +80,14 @@ export class IoNumber extends IoItem {
     }
   }
   _setFromTextNode() {
-    this._textNode = this.childNodes[0];
-    if (this.childNodes.length == 2) {
-      this.removeChild(this.childNodes[1]);
-    }
-
-    let valueText = this._textNode.nodeValue;
+    let valueText = this.textNode;
     // TODO: test conversion
     let valueNumber = Math.round(Number(valueText) / this.step) * this.step / this.conversion;
     if (this.strict) {
       valueNumber = Math.min(this.max, Math.max(this.min, valueNumber));
     }
     if (!isNaN(valueNumber)) this.set('value', valueNumber);
-    else this._textNode.nodeValue = 'NaN';
+    else this.textNode = 'NaN';
   }
   changed() {
     let value = this.value;
@@ -106,9 +101,7 @@ export class IoNumber extends IoItem {
     } else {
       valueText = 'NaN';
     }
-    if (this._textNode.nodeValue !== valueText) {
-      this._textNode.nodeValue = valueText;
-    }
+    this.textNode = valueText;
     this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
   }
 }

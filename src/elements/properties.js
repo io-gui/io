@@ -25,9 +25,13 @@ export class IoProperties extends IoElement {
       }
       :host:not([horizontal])[labeled] > io-item:nth-child(2n+1) {
         box-sizing: border-box;
+        align-self: start;
         min-width: 0;
         max-width: 100%;
       }
+      :host > io-object,
+      :host > io-properties,
+      :host > io-number,
       :host > io-string {
         width: auto;
         justify-self: stretch;
@@ -77,6 +81,9 @@ export class IoProperties extends IoElement {
         const protoConfig = config[c][1];
         const label = config[c].label || c;
         const itemConfig = {class: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+        // if (tag === 'io-properties') {
+        // }
+        itemConfig.config = this.config;
         elements.push(
           this.labeled ? ['io-item', {label: label + ':'}] : null,
           [tag, Object.assign(itemConfig, protoConfig)],

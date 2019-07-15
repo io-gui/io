@@ -38,10 +38,7 @@ export class IoBoolean extends IoButton {
   changed() {
     this.setAttribute('aria-checked', String(!!this.value));
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
-    const valueText = this.value ? this.true : this.false;
-    if (this._textNode.nodeValue !== valueText) {
-      this._textNode.nodeValue = valueText;
-    }
+    this.textNode = this.value ? this.true : this.false;
   }
 }
 
