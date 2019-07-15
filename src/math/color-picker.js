@@ -1,4 +1,4 @@
-import {html, IoElement, IoGl} from "../io.js";
+import {html, IoGl} from "../io.js";
 
 export class IoColorPicker extends IoGl {
   static get Style() {
