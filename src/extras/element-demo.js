@@ -15,6 +15,12 @@ export class IoElementDemo extends IoElement {
       }
       :host > div {
         display: flex;
+        flex: 1 1 auto;
+        overflow: hidden;
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: 1.2em;
+        display: flex;
         flex-direction: column;
         border: var(--io-border);
         border-width: 0;
@@ -30,27 +36,17 @@ export class IoElementDemo extends IoElement {
         flex: 0 0 22em;
         max-width: 22em;
       }
-      :host > :nth-child(2) {
-        flex: 1 1 auto;
-        overflow: hidden;
-      }
       :host > div > span {
         font-weight: bold;
         border: var(--io-border);
         border-width: 0 0 var(--io-border-width) 0;
         background: var(--io-background-color-field);
         padding: var(--io-spacing) calc(2 * var(--io-spacing));
+        align-self: stretch;
       }
       :host > div > io-properties {
         margin: var(--io-spacing);
-      }
-      :host > div > .io-content {
-        display: flex;
-        flex: 1 1 auto;
-        flex-direction: column;
-        align-items: flex-start;
-        min-height: 1.2em;
-        padding: var(--io-spacing);
+        align-self: stretch;
       }
     </style>`;
   }
@@ -122,13 +118,11 @@ export class IoElementDemo extends IoElement {
       this.template([
         ['div', [
           ['span', '<' + this.element + '>'],
-          ['io-properties', {value: this.properties, config: this.config}],
+          ['io-properties', {value: this.properties, config: Object.assign({'type:boolean': ['io-switch']}, this.config)}],
         ]],
         ['div', [
           ['span', 'RESULT'],
-          ['div', {class: 'io-content'}, [
-            [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
-          ]],
+          [this.element, Object.assign({'on-value-set': this._onPropSet}, this.properties)],
         ]],
        ]);
     } else {

@@ -15,6 +15,7 @@ export class IoInspector extends IoElement {
       display: flex;
       flex-direction: column;
       align-self: stretch;
+      justify-self: stretch;
       border: var(--io-border);
       border-radius: var(--io-border-radius);
       padding: var(--io-spacing);
@@ -23,47 +24,10 @@ export class IoInspector extends IoElement {
     :host > io-breadcrumbs {
       margin-bottom: var(--io-spacing);
     }
-    :host > io-collapsable > .io-content {
-      padding: 0;
-    }
-    :host io-properties > .io-property {
-      overflow: hidden;
-      background-color: var(--io-background-color);
-      padding: var(--io-spacing) 0;
-    }
-    :host io-properties > .io-property:nth-child(2n) {
-      background-color: var(--io-background-color-light);
-    }
-    :host io-properties > .io-property > :nth-child(1) {
-      text-align: right;
-      flex: 0 1 8em;
-      min-width: 3em;
-    }
-    :host io-properties > .io-property > :nth-child(2) {
-      flex: 1 1 8em;
-      min-width: 3em;
-      margin: 0 var(--io-spacing);
-    }
-    :host io-number,
-    :host io-string {
-      border-color: var(--io-inset-border-color) !important;
-      color: var(--io-color-field) !important;
-      background: var(--io-background-color-field) !important;
-    }
-    :host io-properties > .io-property > io-properties {
-      border: var(--io-inset-border);
-      border-radius: var(--io-border-radius);
-      overflow: hidden;
-    }
-    :host io-properties > .io-property > * {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    :host io-item {
+    :host io-item.io-property-editor {
       color: var(--io-color-link);
     }
-    :host io-item:hover {
+    :host io-item.io-property-editor:hover {
       text-decoration: underline;
     }
     </style>`;
@@ -109,6 +73,7 @@ export class IoInspector extends IoElement {
     let uuid = this.value.constructor.name;
     uuid += this.value.guid || this.value.uuid || this.value.id || '';
     for (let group in this.groups) {
+      // TODO: replace with io-object
       elements.push(
         ['io-collapsable', {
           label: group,

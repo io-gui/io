@@ -9,16 +9,6 @@ export class IoObject extends IoCollapsable {
         border-color: transparent;
         background: none;
       }
-      :host > io-boolean[value] {
-        margin-bottom: var(--io-spacing);
-      }
-      :host > .io-content {
-        display: block;
-        overflow: auto;
-        padding: 0;
-        border: none;
-        background: none;
-      }
     </style>`;
   }
   static get Properties() {

@@ -34,37 +34,37 @@ export default class {
       describe('innerText', () => {
         it('matches values', () => {
           this.element.value = testValue;
-          chai.expect(this.element.children[0].children[0].textContent).to.equal('number:');
-          chai.expect(this.element.children[0].children[1].localName).to.equal('io-number');
-          chai.expect(this.element.children[1].children[0].textContent).to.equal('string:');
-          chai.expect(this.element.children[1].children[1].localName).to.equal('io-string');
-          chai.expect(this.element.children[2].children[0].textContent).to.equal('boolean:');
-          chai.expect(this.element.children[2].children[1].localName).to.equal('io-boolean');
-          chai.expect(this.element.children[3].children[0].textContent).to.equal('null:');
-          chai.expect(this.element.children[3].children[1].localName).to.equal('io-string');
-          chai.expect(this.element.children[4].children[0].textContent).to.equal('object:');
-          chai.expect(this.element.children[4].children[1].localName).to.equal('io-object');
-          chai.expect(this.element.children[5].children[0].textContent).to.equal('array:');
-          chai.expect(this.element.children[5].children[1].localName).to.equal('io-object');
+          chai.expect(this.element.children[0].textContent).to.equal('number:');
+          chai.expect(this.element.children[1].localName).to.equal('io-number');
+          chai.expect(this.element.children[2].textContent).to.equal('string:');
+          chai.expect(this.element.children[3].localName).to.equal('io-string');
+          chai.expect(this.element.children[4].textContent).to.equal('boolean:');
+          chai.expect(this.element.children[5].localName).to.equal('io-boolean');
+          chai.expect(this.element.children[6].textContent).to.equal('null:');
+          chai.expect(this.element.children[7].localName).to.equal('io-string');
+          chai.expect(this.element.children[8].textContent).to.equal('object:');
+          chai.expect(this.element.children[9].localName).to.equal('io-object');
+          chai.expect(this.element.children[10].textContent).to.equal('array:');
+          chai.expect(this.element.children[11].localName).to.equal('io-object');
           this.reset();
         });
         it('matches value with labels disabled', () => {
           this.element.value = testValue;
           this.element.labeled = false;
-          chai.expect(this.element.children[0].children[0].localName).to.equal('io-number');
-          chai.expect(this.element.children[1].children[0].localName).to.equal('io-string');
-          chai.expect(this.element.children[2].children[0].localName).to.equal('io-boolean');
-          chai.expect(this.element.children[3].children[0].localName).to.equal('io-string');
-          chai.expect(this.element.children[4].children[0].localName).to.equal('io-object');
-          chai.expect(this.element.children[5].children[0].localName).to.equal('io-object');
+          chai.expect(this.element.children[0].localName).to.equal('io-number');
+          chai.expect(this.element.children[1].localName).to.equal('io-string');
+          chai.expect(this.element.children[2].localName).to.equal('io-boolean');
+          chai.expect(this.element.children[3].localName).to.equal('io-string');
+          chai.expect(this.element.children[4].localName).to.equal('io-object');
+          chai.expect(this.element.children[5].localName).to.equal('io-object');
           this.reset();
         });
         it('matches value with custom properties', () => {
           this.element.value = testValue;
           this.element.properties = ['number', 'boolean'];
-          chai.expect(this.element.children[0].children[0].textContent).to.equal('number:');
-          chai.expect(this.element.children[1].children[0].textContent).to.equal('boolean:');
-          chai.expect(this.element.children[3]).to.equal(undefined);
+          chai.expect(this.element.children[0].textContent).to.equal('number:');
+          chai.expect(this.element.children[2].textContent).to.equal('boolean:');
+          chai.expect(this.element.children[4]).to.equal(undefined);
           this.reset();
         });
         it('matches value with custom config', () => {
@@ -73,9 +73,9 @@ export default class {
             'number': ['io-slider', {step: 1}],
             'type:boolean': ['io-switch'],
           }
-          chai.expect(this.element.children[0].children[1].localName).to.equal('io-slider');
-          chai.expect(this.element.children[0].children[1].step).to.equal(1);
-          chai.expect(this.element.children[2].children[1].localName).to.equal('io-switch');
+          chai.expect(this.element.children[1].localName).to.equal('io-slider');
+          chai.expect(this.element.children[1].step).to.equal(1);
+          chai.expect(this.element.children[3].localName).to.equal('io-switch');
           this.reset();
         });
       });

@@ -53,7 +53,7 @@ export class IoString extends IoItem {
     const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
-
+    // TODO: consider using shiftKey for better UX
     if (event.which == 13) {
       event.preventDefault();
       this._setFromTextNode();

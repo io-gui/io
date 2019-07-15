@@ -53,7 +53,7 @@ export class IoNumber extends IoItem {
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
     // TODO: implement home/end for min/max
-
+    // TODO: consider using shiftKey for better UX
     if (event.which == 13) {
       event.preventDefault();
       this._setFromTextNode();

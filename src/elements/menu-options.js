@@ -27,6 +27,7 @@ export class IoMenuOptions extends IoElement {
       :host[horizontal] {
         flex-direction: row;
         align-self: stretch;
+        justify-self: stretch;
         flex-wrap: nowrap;
       }
       :host[horizontal] > * {

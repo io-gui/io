@@ -4,48 +4,46 @@ export class IoProperties extends IoElement {
   static get Style() {
     return html`<style>
       :host {
-        display: flex;
-        flex-direction: column;
-        align-self: stretch;
+        display: grid;
+        grid-gap: var(--io-spacing);
+        justify-items: start;
+        overflow: hidden;
+        white-space: nowrap;
       }
-      :host > .io-property {
-        display: flex !important;
-        flex-direction: row;
-        flex: 1 0 auto;
-        align-items: flex-start;
+      :host:not([horizontal]) {
+        grid-template-columns: auto;
       }
-      :host > .io-property:not(:last-of-type) {
-        margin-bottom: var(--io-spacing);
+      :host[horizontal] {
+        grid-auto-flow: column;
+        grid-template-rows: auto;
       }
-      :host > .io-property > .io-property-label {
-        margin: 0;
-        border: var(--io-border);
-        border-color: transparent;
-        color: var(--io-color);
-        flex: 0 0 auto;
-        padding: var(--io-spacing);
+      :host:not([horizontal])[labeled] {
+        grid-template-columns: auto 1fr;
       }
-      :host > .io-property > .io-property-editor {
-        flex: 1 1 auto;
+      :host[horizontal][labeled] {
+        grid-template-rows: auto auto;
       }
-      :host > .io-property > io-option,
-      :host > .io-property > io-object {
-        flex: 1 1 auto !important;
+      :host:not([horizontal])[labeled] > io-item:nth-child(2n+1) {
+        box-sizing: border-box;
+        min-width: 0;
+        max-width: 100%;
       }
-      :host > .io-property > io-number,
-      :host > .io-property > io-string,
-      :host > .io-property > io-boolean,
-      :host > .io-property > io-switch,
-      :host > .io-property > io-object,
-      :host > .io-property > io-object > io-boolean,
-      :host > .io-property > io-option {
-        flex: 0 1 auto !important;
+      :host > io-string {
+        width: auto;
+        justify-self: stretch;
       }
     </style>`;
   }
   static get Properties() {
     return {
-      labeled: true,
+      labeled: {
+        value: true,
+        reflect: 1,
+      },
+      horizontal: {
+        value: false,
+        reflect: 1,
+      },
       value: Object,
       properties: Array,
       config: Object,
@@ -80,10 +78,9 @@ export class IoProperties extends IoElement {
         const label = config[c].label || c;
         const itemConfig = {class: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
         elements.push(
-          ['div', {class: 'io-property'}, [
-            this.labeled ? ['span', {class: 'io-property-label', title: label}, label + ':'] : null,
-            [tag, Object.assign(itemConfig, protoConfig)]
-          ]]);
+          this.labeled ? ['io-item', {label: label + ':'}] : null,
+          [tag, Object.assign(itemConfig, protoConfig)],
+        );
         // }
       }
     }

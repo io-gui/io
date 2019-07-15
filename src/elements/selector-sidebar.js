@@ -9,6 +9,7 @@ export class IoSelectorSidebar extends IoSelector {
       :host {
         flex-direction: row-reverse;
         align-self: stretch;
+        justify-self: stretch;
         flex: 1 1 auto;
       }
       :host[left] {

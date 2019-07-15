@@ -8,6 +8,7 @@ export class IoSelectorTabs extends IoSelector {
       :host {
         flex-direction: column;
         align-self: stretch;
+        justify-self: stretch;
         flex: 1 1 auto;
       }
       :host > io-menu-options {

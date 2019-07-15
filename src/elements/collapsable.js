@@ -7,6 +7,7 @@ export class IoCollapsable extends IoElement {
         display: flex;
         flex-direction: column;
         align-self: stretch;
+        justify-self: stretch;
         border: var(--io-outset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-outset-border-color);
@@ -23,6 +24,10 @@ export class IoCollapsable extends IoElement {
         padding-right: 0.5em !important;
         width: inherit;
         text-align: left;
+        border: none;
+      }
+      :host > io-boolean[value] {
+        margin-bottom: var(--io-spacing);
       }
       :host > io-boolean:hover {
         background: none;
@@ -39,9 +44,6 @@ export class IoCollapsable extends IoElement {
         content: '▾';
       }
       :host > .io-content {
-        display: flex;
-        flex-direction: column;
-        overflow: auto;
         border-radius: var(--io-border-radius);
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
