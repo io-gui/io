@@ -2,7 +2,7 @@
 
 Io is a UI framework for JavaScript applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
 
-For a quick start, read this document, then check out the [source code](https://github.com/io-gui/io/).
+For a quick start, read this document, then check out included [elements library](https://io-gui.dev/#page=elements) and the [source code](https://github.com/io-gui/io/). 
 
 ## Usage
 
