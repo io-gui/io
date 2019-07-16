@@ -13,6 +13,8 @@ export class IoMdView extends IoElement {
         color: var(--io-color);
         --io-code-size: 15px;
         padding: var(--io-spacing) calc(4 * var(--io-spacing));
+        overflow-x: hidden;
+        overflow-y: auto;
       }
       :host[loading] {
         background: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px);

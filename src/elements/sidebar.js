@@ -16,6 +16,13 @@ export class IoSidebar extends IoElement {
         -webkit-overflow-scrolling: touch;
         flex-direction: column;
       }
+      :host io-boolean,
+      :host io-button {
+        width: 100%;
+      }
+      :host io-collapsable {
+        width: 100%;
+      }
       :host io-collapsable,
       :host io-boolean,
       :host .io-content,

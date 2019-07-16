@@ -24,7 +24,6 @@ export class IoProperties extends IoElement {
         grid-template-rows: auto auto;
       }
       :host:not([horizontal])[labeled] > io-item:nth-child(2n+1) {
-        box-sizing: border-box;
         align-self: start;
         min-width: 0;
         max-width: 100%;

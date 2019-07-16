@@ -41,7 +41,8 @@ export class IoSelector extends IoElement {
         display: flex;
         flex-direction: column;
         flex: 1 1 auto;
-        overflow: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
       }
     </style>`;
   }
