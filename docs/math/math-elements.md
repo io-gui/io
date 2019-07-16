@@ -1,6 +1,6 @@
 ## &lt;io-color-picker&gt;
 
-<io-element-demo element="io-color-picker" properties='{"value": [1, 0.5, 0, 1]}'></io-element-demo>
+<io-element-demo element="io-color-picker" properties='{"hsv": [0, 1, 1], "color": [0, 0, 0, 1]}' config='{"type:object": ["io-properties"], "type:number": ["io-slider"]}'></io-element-demo>
 
 ## &lt;io-vector2&gt;
 

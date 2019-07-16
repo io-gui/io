@@ -11,7 +11,7 @@ export class IoVector2 extends IoElement {
       }
       :host > io-number {
         width: inherit;
-        flex: 1 1 auto;
+        flex: 1 1;
       }
       :host > io-number:not(:last-child) {
         margin-right: var(--io-spacing);
