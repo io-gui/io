@@ -35,13 +35,13 @@ export class IoItem extends IoElement {
         background-color: var(--io-background-color);
         color: var(--io-color);
         padding: var(--io-spacing);
-        white-space: nowrap;
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
         flex-wrap: nowrap;
-        position: relative;
+        white-space: nowrap;
+        height: 1.375em;
       }
       :host:hover {
         background-color: var(--io-background-color-light);

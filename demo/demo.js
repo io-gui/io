@@ -4,11 +4,18 @@ import "./todomvc/todo-app.js";
 export class IoDemo extends IoElement {
   static get Style() {
     return html`<style>
+
+      :host {
+        overflow-x: hidden;
+      }
       :host .table {
         display: grid;
-        grid-template-columns: 5.5em 5.5em 5.5em;
+        grid-template-columns: 6em 6em 6em;
         grid-gap: var(--io-spacing);
         overflow: hidden;
+      }
+      :host .table > * {
+        width: auto;
       }
       :host .sidebar {
         display: inline-block;
@@ -57,9 +64,9 @@ export class IoDemo extends IoElement {
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
 
     const demoPrimitives = ['div', {name: 'primitives', class: 'table'}, [
-      ['span', 'io-string'],
-      ['span', 'io-number'],
-      ['span', 'io-boolean'],
+      ['io-item', 'io-string'],
+      ['io-item', 'io-number'],
+      ['io-item', 'io-boolean'],
       ['io-string', {id: 'string', value: this.bind('string')}],
       ['io-number', {value: this.bind('string')}],
       ['io-boolean', {type: 'boolean', value: this.bind('string')}],
@@ -202,7 +209,7 @@ export class IoDemo extends IoElement {
         ],
         elements: [
           ['div', {name: 'elements'}, [
-            ['h4', 'io-string io-number io-boolean'], demoPrimitives,
+            demoPrimitives,
             ['h4', 'io-switch'], demoSwitch,
             ['h4', 'io-slider'], demoSliders,
             ['h4', 'io-options'], demoOptions,
