@@ -1,6 +1,18 @@
 ## &lt;io-color-picker&gt;
 
-<io-element-demo element="io-color-picker" properties='{"hsv": [0, 1, 1], "color": [0, 0, 0, 1]}' config='{"type:object": ["io-properties"], "type:number": ["io-slider"]}'></io-element-demo>
+<io-element-demo element="io-color-picker"
+  properties='{
+    "width": 32,
+    "thicknes": 2,
+    "size": [192, 128],
+    "hsva": [0, 1, 1, 1]
+  }'
+  config='{
+    "type:number": ["io-slider", {"step": 1, "min": 0, "max": 64}],
+    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
+    "size": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 8, "min": 32, "max": 512}]}}]
+  }
+'></io-element-demo>
 
 ## &lt;io-vector2&gt;
 
