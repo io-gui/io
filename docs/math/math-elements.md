@@ -1,8 +1,10 @@
 ## &lt;io-color-picker&gt;
 
 <io-element-demo element="io-color-picker"
+  width="192px"
+  height="128px"
   properties='{
-    "hsva": [0, 1, 1, 1],
+    "value": [0, 1, 1, 1],
     "horizontal": true
   }'
   config='{
@@ -14,12 +16,27 @@
   }
 '></io-element-demo>
 
-## &lt;io-hsv-sv&gt;
+<io-element-demo element="io-color-picker"
+  width="160px"
+  height="128px"
+  properties='{
+    "value": [0, 1, 1]
+  }'
+  config='{
+    "type:number": ["io-slider", {"step": 1, "min": 0, "max": 64}],
+    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
+    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
+      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
+    }}]
+  }
+'></io-element-demo>
 
-<io-element-demo element="io-hsv-sv"
+## &lt;io-hsva-sv&gt;
+
+<io-element-demo element="io-hsva-sv"
   properties='{
     "size": [128, 128],
-    "hsva": [0, 1, 0, 1]
+    "value": [0, 1, 0, 1]
   }'
   config='{
     "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
@@ -29,12 +46,12 @@
   }
 '></io-element-demo>
 
-## &lt;io-hsv-hue&gt;
+## &lt;io-hsva-hue&gt;
 
-<io-element-demo element="io-hsv-hue"
+<io-element-demo element="io-hsva-hue"
   properties='{
     "size": [32, 128],
-    "hsva": [0, 1, 0, 1],
+    "value": [0, 1, 0, 1],
     "horizontal": false
   }'
   config='{
@@ -45,12 +62,12 @@
   }
 '></io-element-demo>
 
-## &lt;io-hsv-alpha&gt;
+## &lt;io-hsva-alpha&gt;
 
-<io-element-demo element="io-hsv-alpha"
+<io-element-demo element="io-hsva-alpha"
   properties='{
     "size": [32, 128],
-    "hsva": [0, 1, 0, 1],
+    "value": [0, 1, 0, 1],
     "horizontal": false
   }'
   config='{

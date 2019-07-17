@@ -48,7 +48,7 @@ export class IoElementDemo extends IoElement {
         margin: var(--io-spacing);
         align-self: stretch;
       }
-      :host .io-demo-element {
+      :host #demo-element {
         margin: var(--io-spacing);
       }
     </style>`;
@@ -64,6 +64,14 @@ export class IoElementDemo extends IoElement {
         type: Object,
         reflect: -1,
         notify: true,
+      },
+      width: {
+        type: String,
+        reflect: -1,
+      },
+      height: {
+        type: String,
+        reflect: -1,
       },
       config: {
         type: Object,
@@ -125,12 +133,14 @@ export class IoElementDemo extends IoElement {
         ]],
         ['div', [
           ['span', 'RESULT'],
-          [this.element, Object.assign({'on-value-set': this._onPropSet, 'class': 'io-demo-element'}, this.properties)],
+          [this.element, Object.assign({'on-value-set': this._onPropSet, 'id': 'demo-element'}, this.properties)],
         ]],
        ]);
     } else {
       this.template([null]);
     }
+    if (this.width) this.$['demo-element'].style.width = this.width;
+    if (this.height) this.$['demo-element'].style.height = this.height;
   }
 }
 

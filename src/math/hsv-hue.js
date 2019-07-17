@@ -1,11 +1,11 @@
 import {html, IoGl} from "../io.js";
 
-export class IoHsvHue extends IoGl {
+export class IoHsvaHue extends IoGl {
   static get Style() {
     return html`<style>
       :host {
         cursor: move;
-        min-width: 1.375em;
+        min-width: 32px;
         min-height: 1.375em;
       }
       :host[aria-invalid] {
@@ -24,7 +24,7 @@ export class IoHsvHue extends IoGl {
   }
   static get Properties() {
     return {
-      hsva: [0.5, 0.5, 0.5, 1],
+      value: [0.5, 0.5, 0.5, 1],
       horizontal: false,
     };
   }
@@ -51,13 +51,13 @@ export class IoHsvHue extends IoGl {
       void main(void) {
 
         // Hue spectrum
-        float axis = (horizontal == 1) ? vUv.x : vUv.y;
+        float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
         vec3 final = hsv_to_rgb(vec3(axis, 1.0, 1.0));
 
         float lineWidth = 1.0;
 
         // Hue marker
-      	float hueMarkerOffset = abs(axis - hsva[0]) * ((horizontal == 1) ? size.x : size.y);
+      	float hueMarkerOffset = abs(axis - uValue[0]) * ((uHorizontal == 1) ? uSize.x : uSize.y);
         float dist = hueMarkerOffset - lineWidth;
         float dist2 = hueMarkerOffset - (lineWidth + 1.0);
         final = mix(final, vec3(0.0), max(1.0 - dist2, 0.0));
@@ -116,12 +116,13 @@ export class IoHsvHue extends IoGl {
     const x = Math.max(0, Math.min(1, (pointer.clientX - rect.x) / rect.width));
     const y = Math.max(0, Math.min(1, (pointer.clientY - rect.y) / rect.height));
     this._setHSVA(x, y);
-    this.dispatchEvent('object-mutated', {object: this.hsva}, false, window);
+    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+    this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
     this.changed();
   }
   _setHSVA(x, y) {
-    this.hsva[0] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    this.value[0] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
   }
 }
 
-IoHsvHue.Register();
+IoHsvaHue.Register();

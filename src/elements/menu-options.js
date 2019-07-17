@@ -42,8 +42,6 @@ export class IoMenuOptions extends IoElement {
         display: none;
       }
       :host[horizontal] > io-menu-item.io-hamburger {
-        font-size: 1.2em;
-        line-height: 1.2em;
         margin-left: auto;
       }
       :host[horizontal] > io-menu-item.io-hamburger[hidden] {

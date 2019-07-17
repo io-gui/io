@@ -92,9 +92,9 @@ export class IoGl extends IoElement {
       void main(void) {
         vec2 px = size * vUv;
         px = mod(px, 8.0);
-        gl_FragColor = background;
+        gl_FragColor = uBackground;
         if (px.x <= 1.0 || px.y <= 1.0) gl_FragColor = vec4(vUv, 0.0, 1.0);
-        if (px.x <= 1.0 && px.y <= 1.0) gl_FragColor = color;
+        if (px.x <= 1.0 && px.y <= 1.0) gl_FragColor = uColor;
       }
     `;
   }
@@ -107,17 +107,21 @@ export class IoGl extends IoElement {
     `;
 
     for (let prop in this.__properties) {
-      let type = this.__properties[prop].type;
-      let value = this.__properties[prop].value;
-      if (type === Boolean) {
-        frag += 'uniform int ' + prop + ';\n';
+      const type = this.__properties[prop].type;
+      const value = this.__properties[prop].value;
+      const notify = this.__properties[prop].notify;
+      if (notify) {
+        const uName = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
+        if (type === Boolean) {
+          frag += 'uniform int ' + uName + ';\n';
+        }
+        if (type === Number) {
+          frag += 'uniform float ' + uName + ';\n';
+        } else if (type === Array) {
+          frag += 'uniform vec' + value.length + ' ' + uName + ';\n';
+        }
+        // TODO: implement matrices.
       }
-      if (type === Number) {
-        frag += 'uniform float ' + prop + ';\n';
-      } else if (type === Array) {
-        frag += 'uniform vec' + value.length + ' ' + prop + ';\n';
-      }
-      // TODO: implement bool and matrices.
     }
 
     const vertShader = gl.createShader(gl.VERTEX_SHADER);
@@ -126,7 +130,8 @@ export class IoGl extends IoElement {
 
     if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
       var compilationLog = gl.getShaderInfoLog(vertShader);
-      console.error('IoGl [Vertex Shader]: ' + compilationLog);
+      console.error('IoGl [Vertex Shader] ' + this.localName + ' error:');
+      console.warn(compilationLog);
     }
 
 
@@ -136,7 +141,8 @@ export class IoGl extends IoElement {
 
     if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
       var compilationLog = gl.getShaderInfoLog(fragShader);
-      console.error('IoGl [Frament Shader]: ' + compilationLog);
+      console.error('IoGl [Frament Shader] ' + this.localName + ' error:');
+      console.warn(compilationLog);
     }
 
     if (shadersCache.has(this.constructor)) {
@@ -193,34 +199,37 @@ export class IoGl extends IoElement {
     gl.useProgram(this._shader);
 
     for (let prop in this.__properties) {
-      let type = this.__properties[prop].type;
+      const type = this.__properties[prop].type;
       let value = this.__properties[prop].value;
-      if (prop === 'size') {
-        value = [width * pxRatio, height * pxRatio];
-      }
-      if (prop === 'aspect') {
-        value = width / height;
-      }
-      if (type === Boolean) {
-        const uniform = gl.getUniformLocation(this._shader, prop);
-        gl.uniform1i(uniform, value ? 1 : 0);
-      }
-      if (type === Number) {
-        const uniform = gl.getUniformLocation(this._shader, prop);
-        gl.uniform1f(uniform, value || 0);
-      } else if (type === Array) {
-        const uniform = gl.getUniformLocation(this._shader, prop);
-        switch (value.length) {
-          case 2:
+      const notify = this.__properties[prop].notify;
+      if (notify) {
+        const uName = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
+        const uniform = gl.getUniformLocation(this._shader, uName);
+
+        if (prop === 'size') {
+          value = [width * pxRatio, height * pxRatio];
+        }
+        if (prop === 'aspect') {
+          value = width / height;
+        }
+        if (type === Boolean) {
+          gl.uniform1i(uniform, value ? 1 : 0);
+        }
+        if (type === Number) {
+          gl.uniform1f(uniform, value || 0);
+        } else if (type === Array) {
+          switch (value.length) {
+            case 2:
             gl.uniform2f(uniform, value[0], value[1]);
             break;
-          case 3:
+            case 3:
             gl.uniform3f(uniform, value[0], value[1], value[2]);
             break;
-          case 4:
+            case 4:
             gl.uniform4f(uniform, value[0], value[1], value[2], value[3]);
             break;
-          default:
+            default:
+          }
         }
       }
     }

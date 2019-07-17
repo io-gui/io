@@ -56,9 +56,9 @@
  https://github.com/tobspr/GLSL-Color-Spaces/blob/master/ColorSpaces.inc.glsl
  */
 
-export {IoHsvSv} from "./math/hsv-sv.js";
-export {IoHsvHue} from "./math/hsv-hue.js";
-export {IoHsvAlpha} from "./math/hsv-alpha.js";
+export {IoHsvaSv} from "./math/hsv-sv.js";
+export {IoHsvaHue} from "./math/hsv-hue.js";
+export {IoHsvaAlpha} from "./math/hsv-alpha.js";
 export {IoColorPicker} from "./math/color-picker.js";
 
 export {IoVector2} from "./math/vector2.js";

@@ -1,6 +1,6 @@
-import {IoHsvHue} from "./hsv-hue.js";
+import {IoHsvaHue} from "./hsv-hue.js";
 
-export class IoHsvSv extends IoHsvHue {
+export class IoHsvaSv extends IoHsvaHue {
   static get Frag() {
     return /* glsl */`
       varying vec2 vUv;
@@ -23,11 +23,11 @@ export class IoHsvSv extends IoHsvHue {
 
       void main(void) {
 
-        vec2 alphaPos = floor(vUv * size / 32.0 * 3.0);
+        vec2 alphaPos = floor(vUv * uSize / 32.0 * 3.0);
         float alphaMask = mod(alphaPos.x + mod(alphaPos.y, 2.0), 2.0);
         vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), alphaMask);
 
-        vec3 currentColor = hsv_to_rgb(hsva.xyz);
+        vec3 currentColor = hsv_to_rgb(uValue.xyz);
 
         vec3 final = alphaPattern;
 
@@ -35,10 +35,10 @@ export class IoHsvSv extends IoHsvHue {
         float lineWidth = 1.0;
 
         // SV gradient
-        final = hsv_to_rgb(vec3(hsva[0], vUv.x, vUv.y));
+        final = hsv_to_rgb(vec3(uValue[0], vUv.x, vUv.y));
 
         // Color marker
-        float offset = length((vUv - vec2(hsva[1], hsva[2])) * size);
+        float offset = length((vUv - vec2(uValue[1], uValue[2])) * uSize);
 
         float distOut = (offset - (markerSize - lineWidth));
         float distIn = 1.0 - (offset - (markerSize + lineWidth));
@@ -48,7 +48,7 @@ export class IoHsvSv extends IoHsvHue {
         float distIn2 = 1.0 - (offset - (markerSize + (lineWidth + 1.0)));
         float dist2 = saturate(min(distOut2, distIn2));
 
-        currentColor = mix(alphaPattern, currentColor, hsva.a);
+        currentColor = mix(alphaPattern, currentColor, uValue.a);
 
         final = mix(final, currentColor, saturate(distIn));
         final = mix(final, vec3(0.0), dist2);
@@ -59,9 +59,9 @@ export class IoHsvSv extends IoHsvHue {
     `;
   }
   _setHSVA(x, y) {
-    this.hsva[1] = Math.max(0, Math.min(1, x));
-    this.hsva[2] = Math.max(0, Math.min(1, 1 - y));
+    this.value[1] = Math.max(0, Math.min(1, x));
+    this.value[2] = Math.max(0, Math.min(1, 1 - y));
   }
 }
 
-IoHsvSv.Register();
+IoHsvaSv.Register();

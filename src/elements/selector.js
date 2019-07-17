@@ -128,6 +128,7 @@ export class IoSelector extends IoElement {
     this.template([['div', {id: 'content', class: 'io-content'}]]);
   }
   scrollTo(id, smooth) {
+    if (!id) return;
     setTimeout(()=>{
       const elem = this.$.content.querySelector('#' + id);
       if (elem) elem.scrollIntoView({behavior: smooth ? 'smooth' : 'auto'});
