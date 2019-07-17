@@ -1,4 +1,6 @@
 import {html, IoElement} from "../../io.js";
+import "../../io-elements-core.js";
+import "../../io-elements-object.js";
 
 export class IoProperties extends IoElement {
   static get Style() {
@@ -7,7 +9,6 @@ export class IoProperties extends IoElement {
         display: grid;
         grid-gap: var(--io-spacing);
         justify-items: start;
-        overflow: hidden;
         white-space: nowrap;
       }
       :host:not([horizontal]) {

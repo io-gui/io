@@ -12,7 +12,7 @@ export class IoMatrix3 extends IoMatrix2 {
   static get Properties() {
     return {
       value: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      _components: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      _c: [0, 1, 2, 3, 4, 5, 6, 7, 8],
     };
   }
 }

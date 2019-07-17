@@ -1,7 +1,8 @@
 import {html, IoGl} from "../../io.js";
-import {IoColorPicker} from "./color-picker.js";
+import {IoHsvaPicker} from "./hsva-picker.js";
+import {IoMathLayer} from "./math-layer.js";
 
-export class IoColorSwatch extends IoGl {
+export class IoHsvaSwatch extends IoGl {
   static get Style() {
     return html`<style>
       :host {
@@ -35,6 +36,22 @@ export class IoColorSwatch extends IoGl {
     return /* glsl */`
       varying vec2 vUv;
 
+      #ifndef saturate
+        #define saturate(v) clamp(v, 0., 1.)
+      #endif
+
+      vec3 hue_to_rgb(float hue) {
+        float R = abs(hue * 6. - 3.) - 1.;
+        float G = 2. - abs(hue * 6. - 2.);
+        float B = 2. - abs(hue * 6. - 4.);
+        return saturate(vec3(R,G,B));
+      }
+
+      vec3 hsv_to_rgb(vec3 hsv) {
+        vec3 rgb = hue_to_rgb(hsv.r);
+        return ((rgb - 1.0) * hsv.g + 1.0) * hsv.b;
+      }
+
       void main(void) {
         float tileSize = uSize.x / 32.0;
         tileSize = (tileSize - mod(tileSize, 1.0)) * 5.0;
@@ -51,7 +68,7 @@ export class IoColorSwatch extends IoGl {
         if (pxUv.x > uSize.x - borderWidth) alpha = 1.0;
         if (pxUv.y > uSize.y - borderWidth) alpha = 1.0;
 
-        gl_FragColor = vec4(mix(alphaPattern, uValue.rgb, alpha), 1.0);
+        gl_FragColor = vec4(mix(alphaPattern, hsv_to_rgb(uValue.xyz), alpha), 1.0);
       }
     `;
   }
@@ -64,13 +81,19 @@ export class IoColorSwatch extends IoGl {
   _onMousedown() {
     event.preventDefault();
     this.focus();
-    IoColorPicker.singleton.value = this.value;
-    IoColorPicker.singleton.expanded = true;
+    this._expand();
   }
   _onKeydown() {
-    IoColorPicker.singleton.value = this.value;
-    IoColorPicker.singleton.expanded = true;
+    this._expand();
+  }
+  _expand() {
+    const hasAlpha = this.value[3] !== undefined || this.value.a !== undefined;
+    IoHsvaPicker.singleton.value = this.value;
+    IoHsvaPicker.singleton.style.width = hasAlpha ? '192px' : '160px';
+    IoHsvaPicker.singleton.style.height = '128px';
+    IoHsvaPicker.singleton.expanded = true;
+    IoMathLayer.singleton.setElementPosition(IoHsvaPicker.singleton, 'bottom', this.getBoundingClientRect());
   }
 }
 
-IoColorSwatch.Register();
+IoHsvaSwatch.Register();

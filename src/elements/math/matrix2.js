@@ -22,7 +22,7 @@ export class IoMatrix2 extends IoElement {
     return {
       value: [0, 0],
       step: 0.001,
-      _components: [0, 1, 2, 3],
+      _c: [0, 1, 2, 3],
     };
   }
   _onValueSet(event) {
@@ -39,8 +39,8 @@ export class IoMatrix2 extends IoElement {
   }
   changed() {
     const elements = [];
-    for (let i in this._components) {
-      const prop = this._components[i];
+    for (let i in this._c) {
+      const prop = this._c[i];
       if (this.value[prop] !== undefined) {
         elements.push(['io-number', {
           id: prop,

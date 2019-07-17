@@ -16,14 +16,19 @@ export class IoMathLayer extends IoElement {
         overflow: hidden;
         pointer-events: none;
         touch-action: none;
+        opacity: 0;
+        transition: opacity 0.1s;
       }
       :host[expanded] {
         visibility: visible;
         pointer-events: all;
+        opacity: 1;
       }
-      :host > io-color-picker {
-        width: 160px;
-        height: 128px;
+      :host > * {
+        position: absolute;
+      }
+      :host > *:not([expanded]) {
+        display: none;
       }
     </style>`;
   }
@@ -73,12 +78,74 @@ export class IoMathLayer extends IoElement {
       this.expanded = false;
     }
   }
-  _onChildExpanded() {
-    let expanded = false;
-    for (let i = 0; i < this.children.length; i++) {
-      if (this.children[i].expanded === true) expanded = true;
+  onChildExpanded(event) {
+    const elem = event.composedPath()[0];
+    if (elem.expanded) {
+      for (let i = 0; i < this.children.length; i++) {
+        if (this.children[i] !== elem) this.children[i].expanded = false;
+      }
     }
-    this.expanded = expanded;
+    setTimeout(()=> {
+      this.expanded = elem.expanded;
+    }, 100);
+  }
+  nudgeBottom(element, x, y, elemRect, force) {
+    if (y + elemRect.height < window.innerHeight || force) {
+      element.style.top = y + 'px';
+      element.style.left = Math.min(x, Math.max(0, window.innerWidth - elemRect.width)) + 'px';
+      return true;
+    }
+    return false;
+  }
+  nudgeTop(element, x, y, elemRect, force) {
+    if (y - elemRect.height > 0 || force) {
+      element.style.top = y - elemRect.height + 'px';
+      element.style.left = Math.min(x, Math.max(0, window.innerWidth - elemRect.width)) + 'px';
+      return true;
+    }
+    return false;
+  }
+  nudgeRight(element, x, y, elemRect, force) {
+    if (x + elemRect.width < window.innerWidth || force) {
+      element.style.left = x + 'px';
+      element.style.top = Math.min(y, window.innerHeight - elemRect.height) + 'px';
+      return true;
+    }
+    return false;
+  }
+  nudgeLeft(element, x, y, elemRect, force) {
+    if (x - elemRect.width > 0 || force) {
+      element.style.left = x - elemRect.width + 'px';
+      element.style.top = Math.min(y, window.innerHeight - elemRect.height) + 'px';
+      return true;
+    }
+    return false;
+  }
+  setElementPosition(element, direction, srcRect) {
+    const elemRect = element.getBoundingClientRect();
+    switch (direction) {
+      case 'top':
+        this.nudgeTop(element, srcRect.x, srcRect.top, elemRect) ||
+        this.nudgeBottom(element, srcRect.x, srcRect.bottom, elemRect) ||
+        this.nudgeTop(element, srcRect.x, srcRect.top, elemRect, true);
+        break;
+      case 'left':
+        this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect) ||
+        this.nudgeRight(element, srcRect.right, srcRect.top, elemRect) ||
+        this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect, true);
+        break;
+      case 'bottom':
+        this.nudgeBottom(element, srcRect.x, srcRect.bottom, elemRect) ||
+        this.nudgeTop(element, srcRect.x, srcRect.top, elemRect) ||
+        this.nudgeBottom(element, srcRect.x, srcRect.bottom, elemRect, true);
+        break;
+      case 'right':
+      default:
+        this.nudgeRight(element, srcRect.right, srcRect.top, elemRect) ||
+        this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect) ||
+        this.nudgeRight(element, srcRect.right, srcRect.top, elemRect, true);
+        break;
+    }
   }
   expandedChanged() {
     if (!this.expanded) {

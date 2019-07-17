@@ -7,7 +7,7 @@ export class IoVector3 extends IoVector2 {
     };
   }
   valueChanged() {
-    this._components = this.value instanceof Array ? [0, 1, 2] : ['x', 'y', 'z'];
+    this._c = this.value instanceof Array ? [0, 1, 2] : ['x', 'y', 'z'];
   }
 }
 

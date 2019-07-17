@@ -35,7 +35,7 @@ export class IoVector2 extends IoElement {
       max: Infinity,
       canlink: false,
       linked: false,
-      _components: [0, 1],
+      _c: [0, 1],
     };
   }
   _onValueSet(event) {
@@ -47,8 +47,8 @@ export class IoVector2 extends IoElement {
       this.value[prop] = value;
       if (this.linked) {
         const change = value / oldValue;
-        for (let i in this._components) {
-          const p = this._components[i];
+        for (let i in this._c) {
+          const p = this._c[i];
           if (oldValue === 0) {
             this.value[p] = value;
           } else if (p !== prop) {
@@ -62,12 +62,12 @@ export class IoVector2 extends IoElement {
     }
   }
   valueChanged() {
-    this._components = this.value instanceof Array ? [0, 1] : ['x', 'y'];
+    this._c = this.value instanceof Array ? [0, 1] : ['x', 'y'];
   }
   changed() {
     const elements = [];
-    for (let i in this._components) {
-      const prop = this._components[i];
+    for (let i in this._c) {
+      const prop = this._c[i];
       if (this.value[prop] !== undefined) {
         elements.push(['io-number', {
           id: prop,

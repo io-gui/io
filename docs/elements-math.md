@@ -24,90 +24,59 @@
 
 <io-element-demo element="io-matrix4" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
 
-## &lt;io-rgb&gt;
-
-<io-element-demo element="io-rgb" properties='{"value": [1, 0.5, 0]}'></io-element-demo>
-
 ## &lt;io-rgba&gt;
 
 <io-element-demo element="io-rgba" properties='{"value": [1, 0.5, 0, 0.5]}'></io-element-demo>
 
+<io-element-demo element="io-rgba" properties='{"value": {"r": 1, "g": 0.5, "b": 0, "a": 0.5}}'></io-element-demo>
+
+## &lt;io-hsva&gt;
+
+<io-element-demo element="io-hsva" properties='{"value": [1, 0.5, 1, 0.5]}'></io-element-demo>
+
+<io-element-demo element="io-hsva" properties='{"value": {"h": 1, "s": 0.5, "v": 1, "a": 0.5}}'></io-element-demo>
+
 ## &lt;io-hsva-sv&gt;
 
 <io-element-demo element="io-hsva-sv"
-  properties='{
-    "size": [128, 128],
-    "value": [0, 1, 0, 1]
-  }'
-  config='{
-    "type:object": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"step": 0.01}]}}],
-    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
-      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
-    }}]
-  }
+  width="128px"
+  height="128px"
+  properties='{"value": [0, 1, 0, 1]}'
+  config='{"value": ["io-hsva"]}
 '></io-element-demo>
 
 ## &lt;io-hsva-hue&gt;
 
 <io-element-demo element="io-hsva-hue"
-  properties='{
-    "size": [32, 128],
-    "value": [0.5, 0, 0, 1],
-    "horizontal": false
-  }'
-  config='{
-    "type:object": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"step": 0.01}]}}],
-    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
-      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
-    }}]
-  }
+  width="64px"
+  height="64px"
+  properties='{"value": [0.5, 0, 0], "horizontal": false}'
+  config='{"value": ["io-hsva"]}
 '></io-element-demo>
 
 ## &lt;io-hsva-alpha&gt;
 
 <io-element-demo element="io-hsva-alpha"
-  properties='{
-    "size": [32, 128],
-    "value": [0, 0, 0, 0.5],
-    "horizontal": false
-  }'
-  config='{
-    "type:object": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"step": 0.01}]}}],
-    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
-      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
-    }}]
-  }
+  width="64px"
+  height="64px"
+  properties='{"value": [0, 0, 0, 0.5], "horizontal": false}'
+  config='{"value": ["io-hsva"]}
 '></io-element-demo>
 
-## &lt;io-color-picker&gt;
+## &lt;io-rgba-picker&gt;
 
-<io-element-demo element="io-color-picker"
+<io-element-demo element="io-rgba-picker"
   width="192px"
   height="128px"
-  properties='{
-    "value": [0.2, 0.8, 0.5, 0.9],
-    "horizontal": true
-  }'
-  config='{
-    "type:number": ["io-slider", {"step": 1, "min": 0, "max": 64}],
-    "type:object": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"step": 0.01}]}}],
-    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
-      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
-    }}]
-  }
+  properties='{"value": [0.2, 0.8, 0.5, 0.9], "horizontal": true}'
+  config='{"value": ["io-rgba"]}
 '></io-element-demo>
 
-<io-element-demo element="io-color-picker"
-  width="160px"
+## &lt;io-hsva-picker&gt;
+
+<io-element-demo element="io-hsva-picker"
+  width="192px"
   height="128px"
-  properties='{
-    "value": [0.8, 0.5, 0.2]
-  }'
-  config='{
-    "type:number": ["io-slider", {"step": 1, "min": 0, "max": 64}],
-    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
-    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
-      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
-    }}]
-  }
+  properties='{"value": [0.2, 0.8, 0.5, 0.9], "horizontal": true}'
+  config='{"value": ["io-hsva"]}
 '></io-element-demo>

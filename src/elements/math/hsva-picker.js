@@ -36,7 +36,7 @@ function hsv2rgb(h, s, v) {
   }
 }
 
-export class IoColorPicker extends IoElement {
+export class IoHsvaPicker extends IoElement {
   static get Style() {
     return html`<style>
       :host {
@@ -63,49 +63,33 @@ export class IoColorPicker extends IoElement {
   }
   static get Properties() {
     return {
-      expanded: Boolean,
+      expanded: {
+        type: Boolean,
+        reflect: 1,
+      },
       value: [0.5, 0.5, 0.5, 1],
     };
   }
-  _onValueSet(event) {
-    const hsva = event.detail.value;
-    const rgb = hsv2rgb(hsva[0], hsva[1], hsva[2]);
-    this.value[0] = rgb[0];
-    this.value[1] = rgb[1];
-    this.value[2] = rgb[2];
-    if (this.value[3] !== undefined) this.value[3] = hsva[3];
-
-    this._suspendLoop = true;
-    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    setTimeout(()=> {
-      this._suspendLoop = false;
-    });
-  }
   changed() {
-    if (this._suspendLoop) return;
-    const hsv = rgb2hsv(this.value[0], this.value[1], this.value[2]);
-    this._hsva = [...hsv, this.value[3] || 1];
+    const hasAlpha = this.value[3] !== undefined || this.value.a !== undefined;
     this.template([
       ['io-hsva-sv', {
-        value: this._hsva,
-        'on-value-set': this._onValueSet,
+        value: this.value,
       }],
       ['io-hsva-hue', {
-        value: this._hsva,
+        value: this.value,
         horizontal: !this.horizontal,
-        'on-value-set': this._onValueSet,
       }],
-      this.value[3] !== undefined ? ['io-hsva-alpha', {
-        value: this._hsva,
+      hasAlpha ? ['io-hsva-alpha', {
+        value: this.value,
         horizontal: !this.horizontal,
-        'on-value-set': this._onValueSet,
       }] : null,
     ]);
   }
 }
 
-IoColorPicker.Register();
+IoHsvaPicker.Register();
 
-IoColorPicker.singleton = new IoColorPicker();
-IoMathLayer.singleton.appendChild(IoColorPicker.singleton);
-IoColorPicker.singleton.addEventListener('expanded-changed', IoMathLayer.singleton._onChildExpanded);
+IoHsvaPicker.singleton = new IoHsvaPicker();
+IoMathLayer.singleton.appendChild(IoHsvaPicker.singleton);
+IoHsvaPicker.singleton.addEventListener('expanded-changed', IoMathLayer.singleton.onChildExpanded);

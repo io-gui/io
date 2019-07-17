@@ -1,6 +1,6 @@
-import {IoHsvaHue} from "./hsv-hue.js";
+import {IoHsvaHue} from "./hsva-hue.js";
 
-export class IoHsvaSv extends IoHsvaHue {
+export class IoHsvaAlpha extends IoHsvaHue {
   static get Frag() {
     return /* glsl */`
       varying vec2 vUv;
@@ -33,37 +33,32 @@ export class IoHsvaSv extends IoHsvaHue {
 
         vec3 final = alphaPattern;
 
-        float markerSize = 12.0;
+        float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
         float lineWidth = 1.0;
 
-        // SV gradient
-        final = hsv_to_rgb(vec3(uValue[0], vUv.x, vUv.y));
+        // Apha gradient
+        final = mix(alphaPattern, currentColor, axis);
 
-        // Color marker
-        float offset = length((vUv - vec2(uValue[1], uValue[2])) * uSize);
-
-        float distOut = (offset - (markerSize - lineWidth));
-        float distIn = 1.0 - (offset - (markerSize + lineWidth));
-        float dist = saturate(min(distOut, distIn));
-
-        float distOut2 = (offset - (markerSize - (lineWidth + 1.0)));
-        float distIn2 = 1.0 - (offset - (markerSize + (lineWidth + 1.0)));
-        float dist2 = saturate(min(distOut2, distIn2));
-
-        currentColor = mix(alphaPattern, currentColor, uValue.a);
-
-        final = mix(final, currentColor, saturate(distIn));
-        final = mix(final, vec3(0.0), dist2);
-        final = mix(final, vec3(1.0), dist);
+        // Apha marker
+      	float hueMarkerOffset = abs(axis - uValue[3]) * ((uHorizontal == 1) ? uSize.x : uSize.y);
+        float dist = hueMarkerOffset - lineWidth;
+        float dist2 = hueMarkerOffset - (lineWidth + 1.0);
+        final = mix(final, vec3(0.0), max(1.0 - dist2, 0.0));
+        final = mix(final, vec3(1.0), max(1.0 - dist, 0.0));
 
         gl_FragColor = vec4(final, 1.0);
       }
     `;
   }
+  valueChanged() {
+    super.valueChanged();
+    const hasAlpha = this.value[this._c[3]] !== undefined;
+    this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
+  }
   _setHSVA(x, y) {
-    this.value[1] = Math.max(0, Math.min(1, x));
-    this.value[2] = Math.max(0, Math.min(1, 1 - y));
+    const hasAlpha = this.value[this._c[3]] !== undefined;
+    if (hasAlpha) this.value[this._c[3]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
   }
 }
 
-IoHsvaSv.Register();
+IoHsvaAlpha.Register();

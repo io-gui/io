@@ -26,43 +26,18 @@
  * https://github.com/markedjs/marked
  */
 
-/*
- GLSL Color Space Utility Functions
- (c) 2015 tobspr
- -------------------------------------------------------------------------------
- The MIT License (MIT)
- Copyright (c) 2015
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
- -------------------------------------------------------------------------------
- Most formulars / matrices are from:
- https://en.wikipedia.org/wiki/SRGB
- Some are from:
- http://www.chilliant.com/rgb2hsv.html
- https://www.fourcc.org/fccyvrgb.php
- https://github.com/tobspr/GLSL-Color-Spaces/blob/master/ColorSpaces.inc.glsl
- */
-
 import "./io-elements-core.js";
 
-export {IoHsvaSv} from "./elements/math/hsv-sv.js";
-export {IoHsvaHue} from "./elements/math/hsv-hue.js";
-export {IoHsvaAlpha} from "./elements/math/hsv-alpha.js";
-export {IoColorPicker} from "./elements/math/color-picker.js";
-export {IoColorSwatch} from "./elements/math/color-swatch.js";
+export {IoHsva} from "./elements/math/hsva.js";
+export {IoHsvaSv} from "./elements/math/hsva-sv.js";
+export {IoHsvaHue} from "./elements/math/hsva-hue.js";
+export {IoHsvaAlpha} from "./elements/math/hsva-alpha.js";
+export {IoHsvaSwatch} from "./elements/math/hsva-swatch.js";
+export {IoHsvaPicker} from "./elements/math/hsva-picker.js";
+
+export {IoRgba} from "./elements/math/rgba.js";
+export {IoRgbaSwatch} from "./elements/math/rgba-swatch.js";
+export {IoRgbaPicker} from "./elements/math/rgba-picker.js";
 
 export {IoVector2} from "./elements/math/vector2.js";
 export {IoVector3} from "./elements/math/vector3.js";
@@ -70,5 +45,3 @@ export {IoVector4} from "./elements/math/vector4.js";
 export {IoMatrix2} from "./elements/math/matrix2.js";
 export {IoMatrix3} from "./elements/math/matrix3.js";
 export {IoMatrix4} from "./elements/math/matrix4.js";
-export {IoRgb} from "./elements/math/rgb.js";
-export {IoRgba} from "./elements/math/rgba.js";

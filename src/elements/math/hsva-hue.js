@@ -9,7 +9,7 @@ export class IoHsvaHue extends IoGl {
         min-height: 1.375em;
       }
       :host[aria-invalid] {
-        outline: 1px solid var(--io-color-focus);
+        outline: 1px solid var(--io-color-error);
       }
       :host:focus {
         outline: 1px solid var(--io-color-focus);
@@ -74,6 +74,9 @@ export class IoHsvaHue extends IoGl {
       'keydown': '_onKeydown',
     };
   }
+  valueChanged() {
+    this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['h', 's', 'v', 'a'];
+  }
   _onTouchstart(event) {
     event.preventDefault();
     this.addEventListener('touchmove', this._onTouchmove);
@@ -121,7 +124,7 @@ export class IoHsvaHue extends IoGl {
     this.changed();
   }
   _setHSVA(x, y) {
-    this.value[0] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    this.value[this._c[0]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
   }
 }
 

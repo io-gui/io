@@ -1,17 +1,20 @@
 import {html} from "../../io.js";
 import {IoVector4} from "./vector4.js";
 
-export class IoRgba extends IoVector4 {
+export class IoHsva extends IoVector4 {
   static get Style() {
     return html`<style>
       :host > io-number:nth-child(1) {
-        border-bottom-color: red;
+        background-image: linear-gradient(to top, transparent 2px, var(--io-background-color-field) 2.5px),
+        linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
       }
       :host > io-number:nth-child(2) {
-        border-bottom-color: green;
+        background-image: linear-gradient(to top, transparent 2px, var(--io-background-color-field) 2.5px),
+        linear-gradient(to right, #ffffff 0%, #ff0000 100%);
       }
       :host > io-number:nth-child(3) {
-        border-bottom-color: blue;
+        background-image: linear-gradient(to top, transparent 2px, var(--io-background-color-field) 2.5px),
+        linear-gradient(to right, #000000 0%, #ffffff 100%);
       }
       :host > span {
         cursor: pointer;
@@ -34,7 +37,7 @@ export class IoRgba extends IoVector4 {
     };
   }
   valueChanged() {
-    this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['r', 'g', 'b', 'a'];
+    this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['h', 's', 'v', 'a'];
   }
   changed() {
     const elements = [];
@@ -52,9 +55,9 @@ export class IoRgba extends IoVector4 {
         }]);
       }
     }
-    elements.push(['io-rgba-swatch', {id: 'swatch', value: this.value}]);
+    elements.push(['io-hsva-swatch', {id: 'swatch', value: this.value}]);
     this.template(elements);
   }
 }
 
-IoRgba.Register();
+IoHsva.Register();
