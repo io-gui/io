@@ -109,6 +109,9 @@ export class IoGl extends IoElement {
     for (let prop in this.__properties) {
       let type = this.__properties[prop].type;
       let value = this.__properties[prop].value;
+      if (type === Boolean) {
+        frag += 'uniform int ' + prop + ';\n';
+      }
       if (type === Number) {
         frag += 'uniform float ' + prop + ';\n';
       } else if (type === Array) {
@@ -121,9 +124,20 @@ export class IoGl extends IoElement {
     gl.shaderSource(vertShader, this.constructor.Vert);
     gl.compileShader(vertShader);
 
+    if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
+      var compilationLog = gl.getShaderInfoLog(vertShader);
+      console.error('IoGl [Vertex Shader]: ' + compilationLog);
+    }
+
+
     const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(fragShader, frag + this.constructor.Frag);
     gl.compileShader(fragShader);
+
+    if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
+      var compilationLog = gl.getShaderInfoLog(fragShader);
+      console.error('IoGl [Frament Shader]: ' + compilationLog);
+    }
 
     if (shadersCache.has(this.constructor)) {
       this._shader = shadersCache.get(this.constructor);
@@ -186,6 +200,10 @@ export class IoGl extends IoElement {
       }
       if (prop === 'aspect') {
         value = width / height;
+      }
+      if (type === Boolean) {
+        const uniform = gl.getUniformLocation(this._shader, prop);
+        gl.uniform1i(uniform, value ? 1 : 0);
       }
       if (type === Number) {
         const uniform = gl.getUniformLocation(this._shader, prop);
