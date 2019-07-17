@@ -65,6 +65,7 @@ export class IoSliderKnob extends IoGl {
         border-color: var(--io-inset-border-color);
         min-height: 1.2em;
         align-self: stretch;
+        justify-self: stretch
       }
       :host[aria-invalid] {
         border-color: var(--io-color-error);

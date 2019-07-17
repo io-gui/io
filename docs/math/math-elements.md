@@ -2,15 +2,62 @@
 
 <io-element-demo element="io-color-picker"
   properties='{
-    "width": 32,
-    "thicknes": 2,
-    "size": [192, 128],
-    "hsva": [0, 1, 1, 1]
+    "hsva": [0, 1, 1, 1],
+    "horizontal": true
   }'
   config='{
     "type:number": ["io-slider", {"step": 1, "min": 0, "max": 64}],
     "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
-    "size": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 8, "min": 32, "max": 512}]}}]
+    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
+      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
+    }}]
+  }
+'></io-element-demo>
+
+## &lt;io-hsv-sv&gt;
+
+<io-element-demo element="io-hsv-sv"
+  properties='{
+    "size": [128, 128],
+    "hsva": [0, 1, 0, 1]
+  }'
+  config='{
+    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
+    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
+      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
+    }}]
+  }
+'></io-element-demo>
+
+## &lt;io-hsv-hue&gt;
+
+<io-element-demo element="io-hsv-hue"
+  properties='{
+    "size": [32, 128],
+    "hsva": [0, 1, 0, 1],
+    "horizontal": false
+  }'
+  config='{
+    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
+    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
+      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
+    }}]
+  }
+'></io-element-demo>
+
+## &lt;io-hsv-alpha&gt;
+
+<io-element-demo element="io-hsv-alpha"
+  properties='{
+    "size": [32, 128],
+    "hsva": [0, 1, 0, 1],
+    "horizontal": false
+  }'
+  config='{
+    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
+    "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
+      "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
+    }}]
   }
 '></io-element-demo>
 
