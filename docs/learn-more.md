@@ -210,7 +210,7 @@ That is all! Object elements will automatically listen to `object-mutated` event
 
 WebGL canvas for rendering shader-based elements.
 
-<io-element-demo element="io-gl" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-rgba"], "color": ["io-rgba"]}'></io-element-demo>
+<io-element-demo element="io-gl" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-rgba"], "color": ["io-rgba"]}'></io-element-demo>
 
 This is a base class for WebGL shader elemenents.
 

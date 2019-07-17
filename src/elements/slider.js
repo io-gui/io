@@ -68,11 +68,10 @@ export class IoSliderKnob extends IoGl {
         justify-self: stretch
       }
       :host[aria-invalid] {
-        border-color: var(--io-color-error);
+        outline: 1px solid var(--io-color-focus);
       }
       :host:focus {
-        outline: 0;
-        border-color: var(--io-color-focus);
+        outline: 1px solid var(--io-color-focus);
       }
     </style>`;
   }

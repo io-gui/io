@@ -63,6 +63,19 @@ export default [
     }
   },
   {
+    input: 'src/io-layout.js',
+    plugins: [html()],
+    inlineDynamicImports: true,
+    output: [
+      {
+        format: 'es',
+        file: 'dist/io-layout.js',
+        indent: '  '
+      }
+    ],
+    external: [ path.resolve('src/io.js') ],
+  },
+  {
     input: 'src/io-math.js',
     plugins: [html()],
     inlineDynamicImports: true,

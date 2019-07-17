@@ -1,5 +1,6 @@
 import {html} from "../io.js";
 import {IoVector4} from "./vector4.js";
+import "./color-swatch.js";
 
 export class IoRgba extends IoVector4 {
   static get Style() {
@@ -41,11 +42,11 @@ export class IoRgba extends IoVector4 {
     this.updateSwatch();
   }
   updateSwatch() {
-    const r = this.value[this._components[0]] * 255;
-    const g = this.value[this._components[1]] * 255;
-    const b = this.value[this._components[2]] * 255;
+    const r = this.value[this._components[0]];
+    const g = this.value[this._components[1]];
+    const b = this.value[this._components[2]];
     const a = this.value[this._components[3]] !== undefined ? this.value[this._components[3]] : 1;
-    this.$.swatch.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+    this.$.swatch.value = [r, g, b, a];
   }
   changed() {
     const elements = [];
@@ -63,7 +64,7 @@ export class IoRgba extends IoVector4 {
         }]);
       }
     }
-    elements.push(['span', {id: 'swatch'}]);
+    elements.push(['io-color-swatch', {id: 'swatch'}]);
     this.template(elements);
     this.updateSwatch();
   }

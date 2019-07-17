@@ -30,7 +30,7 @@
 
 ## &lt;io-rgba&gt;
 
-<io-element-demo element="io-rgba" properties='{"value": [1, 0.5, 0, 1]}'></io-element-demo>
+<io-element-demo element="io-rgba" properties='{"value": [1, 0.5, 0, 0.5]}'></io-element-demo>
 
 ## &lt;io-hsva-sv&gt;
 
@@ -52,7 +52,7 @@
 <io-element-demo element="io-hsva-hue"
   properties='{
     "size": [32, 128],
-    "value": [0, 1, 0, 1],
+    "value": [0.5, 0, 0, 1],
     "horizontal": false
   }'
   config='{
@@ -68,7 +68,7 @@
 <io-element-demo element="io-hsva-alpha"
   properties='{
     "size": [32, 128],
-    "value": [0, 1, 0, 1],
+    "value": [0, 0, 0, 0.5],
     "horizontal": false
   }'
   config='{
@@ -85,7 +85,7 @@
   width="192px"
   height="128px"
   properties='{
-    "value": [0, 1, 1, 1],
+    "value": [0.2, 0.8, 0.5, 0.9],
     "horizontal": true
   }'
   config='{
@@ -101,7 +101,7 @@
   width="160px"
   height="128px"
   properties='{
-    "value": [0, 1, 1]
+    "value": [0.8, 0.5, 0.2]
   }'
   config='{
     "type:number": ["io-slider", {"step": 1, "min": 0, "max": 64}],

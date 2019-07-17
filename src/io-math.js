@@ -60,6 +60,7 @@ export {IoHsvaSv} from "./math/hsv-sv.js";
 export {IoHsvaHue} from "./math/hsv-hue.js";
 export {IoHsvaAlpha} from "./math/hsv-alpha.js";
 export {IoColorPicker} from "./math/color-picker.js";
+export {IoColorSwatch} from "./math/color-swatch.js";
 
 export {IoVector2} from "./math/vector2.js";
 export {IoVector3} from "./math/vector3.js";

@@ -90,7 +90,7 @@ export class IoGl extends IoElement {
     return /* glsl */`
       varying vec2 vUv;
       void main(void) {
-        vec2 px = size * vUv;
+        vec2 px = uSize * vUv;
         px = mod(px, 8.0);
         gl_FragColor = uBackground;
         if (px.x <= 1.0 || px.y <= 1.0) gl_FragColor = vec4(vUv, 0.0, 1.0);

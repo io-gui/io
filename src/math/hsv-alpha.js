@@ -23,7 +23,9 @@ export class IoHsvaAlpha extends IoHsvaHue {
 
       void main(void) {
 
-        vec2 alphaPos = floor(vUv * uSize / 32.0 * 3.0);
+        float tileSize = uSize.x / 32.0;
+        tileSize = (tileSize - mod(tileSize, 1.0)) * 5.0;
+        vec2 alphaPos = floor(vUv * vec2(tileSize, tileSize / uAspect));
         float alphaMask = mod(alphaPos.x + mod(alphaPos.y, 2.0), 2.0);
         vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), alphaMask);
 
