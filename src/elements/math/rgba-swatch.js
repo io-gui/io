@@ -1,5 +1,6 @@
 import {html, IoGl} from "../../io.js";
 import {IoRgbaPicker} from "./rgba-picker.js";
+import {IoMathLayer} from "./math-layer.js";
 
 export class IoRgbaSwatch extends IoGl {
   static get Style() {
