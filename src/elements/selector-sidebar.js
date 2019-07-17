@@ -83,7 +83,7 @@ export class IoSelectorSidebar extends IoSelector {
       options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
       overflow: this.overflow,
     }];
-    this.template([tabs, ['div', {id: 'content', class: 'io-content', 'on-scroll': this._onScroll}]]);
+    this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);
   }
 }
 

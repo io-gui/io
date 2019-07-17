@@ -51,7 +51,7 @@ export class IoSelectorTabs extends IoSelector {
         slotted: this.slotted,
       }],
     ];
-    this.template([tabs, ['div', {id: 'content', class: 'io-content', 'on-scroll': this._onScroll}]]);
+    this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);
   }
 }
 

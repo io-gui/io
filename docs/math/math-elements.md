@@ -40,7 +40,7 @@
     "value": [0, 1, 0, 1]
   }'
   config='{
-    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
+    "type:object": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"step": 0.01}]}}],
     "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
       "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
     }}]
@@ -56,7 +56,7 @@
     "horizontal": false
   }'
   config='{
-    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
+    "type:object": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"step": 0.01}]}}],
     "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
       "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
     }}]
@@ -72,7 +72,7 @@
     "horizontal": false
   }'
   config='{
-    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
+    "type:object": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"step": 0.01}]}}],
     "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
       "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
     }}]
@@ -90,7 +90,7 @@
   }'
   config='{
     "type:number": ["io-slider", {"step": 1, "min": 0, "max": 64}],
-    "type:object": ["io-properties", {"config": {"type:number": ["io-slider", {"step": 0.01}]}}],
+    "type:object": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"step": 0.01}]}}],
     "size": ["io-properties", {"horizontal": true, "labeled": false, "config": {
       "type:number": ["io-slider-knob", {"step": 8, "minValue": 32, "maxValue": 256}]
     }}]

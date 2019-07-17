@@ -67,7 +67,7 @@ export class IoSelector extends IoElement {
   }
   static get Listeners() {
     return {
-      'scroll': '_onScroll',
+      'scroll': ['_onScroll', {capture: true}],
       'content-ready': '_onIoContentReady',
     };
   }
@@ -140,7 +140,7 @@ export class IoSelector extends IoElement {
     this.__scrollDebounce = setTimeout(() => {
       delete this.__scrollDebounce;
       const scrollableElements = [...this.$.content.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')];
-      const top = this.$.content.scrollTop;
+      const top = this.$.content.scrollTop || this.$.content.children[0].scrollTop;
       const bottom = top + this.$.content.getBoundingClientRect().height / 2;
       const oldScrollID = this._scrollID;
       let scrollID;
