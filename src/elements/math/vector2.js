@@ -45,7 +45,6 @@ export class IoVector2 extends IoElement {
       const value = event.detail.value;
       const oldValue = event.detail.oldValue;
       this.value[prop] = value;
-
       if (this.linked) {
         const change = value / oldValue;
         for (let i in this._components) {

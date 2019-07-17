@@ -56,10 +56,11 @@ export class IoGl extends IoElement {
         overflow: hidden !important;
         position: relative !important;
         border: 0 !important;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
       }
       :host > img {
         position: absolute !important;
-        user-select: none;
         pointer-events: none;
         image-rendering: pixelated;
         width: 100%;
@@ -106,6 +107,8 @@ export class IoGl extends IoElement {
       precision highp float;
     `;
 
+    this._arrayLengths = {};
+
     for (let prop in this.__properties) {
       const type = this.__properties[prop].type;
       const value = this.__properties[prop].value;
@@ -118,7 +121,10 @@ export class IoGl extends IoElement {
         if (type === Number) {
           frag += 'uniform float ' + uName + ';\n';
         } else if (type === Array) {
-          frag += 'uniform vec' + value.length + ' ' + uName + ';\n';
+          // TODO: unhack
+          const length = this.__protoProperties[prop].value.length
+          this._arrayLengths[uName] = length;
+          frag += 'uniform vec' + length + ' ' + uName + ';\n';
         }
         // TODO: implement matrices.
       }
@@ -218,15 +224,25 @@ export class IoGl extends IoElement {
         if (type === Number) {
           gl.uniform1f(uniform, value || 0);
         } else if (type === Array) {
-          switch (value.length) {
+          const length = this._arrayLengths[uName];
+          switch (length) {
             case 2:
-            gl.uniform2f(uniform, value[0], value[1]);
+            gl.uniform2f(uniform,
+              value[0] !== undefined ? value[0] : 1,
+              value[1] !== undefined ? value[1] : 1);
             break;
             case 3:
-            gl.uniform3f(uniform, value[0], value[1], value[2]);
+            gl.uniform3f(uniform,
+              value[0] !== undefined ? value[0] : 1,
+              value[1] !== undefined ? value[1] : 1,
+              value[2] !== undefined ? value[2] : 1);
             break;
             case 4:
-            gl.uniform4f(uniform, value[0], value[1], value[2], value[3]);
+            gl.uniform4f(uniform,
+              value[0] !== undefined ? value[0] : 1,
+              value[1] !== undefined ? value[1] : 1,
+              value[2] !== undefined ? value[2] : 1,
+              value[3] !== undefined ? value[3] : 1);
             break;
             default:
           }

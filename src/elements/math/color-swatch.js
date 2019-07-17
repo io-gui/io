@@ -1,9 +1,9 @@
 import {html, IoGl} from "../../io.js";
+import {IoColorPicker} from "./color-picker.js"
 
 export class IoColorSwatch extends IoGl {
   static get Style() {
     return html`<style>
-
       :host {
         cursor: pointer;
         border-radius: var(--io-border-radius);
@@ -61,13 +61,19 @@ export class IoColorSwatch extends IoGl {
       'keydown': '_onKeydown',
     };
   }
+  _onValueSet() {
+    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+  }
   _onMousedown() {
     event.preventDefault();
     this.focus();
-    console.log('down');
+    IoColorPicker.singleton.value = this.value;
+    IoColorPicker.singleton.expanded = true;
+    IoColorPicker.singleton.addEventListener('value-set', this._onValueSet);
   }
   _onKeydown() {
-    console.log('keydown');
+    IoColorPicker.singleton.value = this.value;
+    IoColorPicker.singleton.expanded = true;
   }
 }
 

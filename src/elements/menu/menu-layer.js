@@ -110,6 +110,7 @@ export class IoMenuLayer extends IoElement {
       }
     }
   }
+  // TODO: consider making automatic.
   setLastFocus(element) {
     const isOutside = !(element.$parent && element.$parent.parentElement === this);
     const active = document.activeElement === document.body ? null : document.activeElement;
@@ -296,4 +297,5 @@ export class IoMenuLayer extends IoElement {
 
 IoMenuLayer.Register();
 IoMenuLayer.singleton = new IoMenuLayer();
+
 document.body.appendChild(IoMenuLayer.singleton);

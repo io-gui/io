@@ -1,4 +1,5 @@
 import {html, IoElement} from "../../io.js";
+import {IoMathLayer} from "./math-layer.js"
 
 function rgb2hsv(r, g, b) {
   const max = Math.max(r, g, b);
@@ -41,6 +42,8 @@ export class IoColorPicker extends IoElement {
       :host {
         display: flex;
         cursor: move;
+        border: var(--io-inset-border);
+        border-radius: var(--io-border-radius);
         min-width: 2.75em;
         min-height: 1.375em;
         flex-direction: column;
@@ -60,6 +63,7 @@ export class IoColorPicker extends IoElement {
   }
   static get Properties() {
     return {
+      expanded: Boolean,
       value: [0.5, 0.5, 0.5, 1],
     };
   }
@@ -73,7 +77,6 @@ export class IoColorPicker extends IoElement {
 
     this._suspendLoop = true;
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
     setTimeout(()=> {
       this._suspendLoop = false;
     });
@@ -102,3 +105,7 @@ export class IoColorPicker extends IoElement {
 }
 
 IoColorPicker.Register();
+
+IoColorPicker.singleton = new IoColorPicker();
+IoMathLayer.singleton.appendChild(IoColorPicker.singleton);
+IoColorPicker.singleton.addEventListener('expanded-changed', IoMathLayer.singleton._onChildExpanded);

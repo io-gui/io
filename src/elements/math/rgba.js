@@ -37,17 +37,6 @@ export class IoRgba extends IoVector4 {
   valueChanged() {
     this._components = this.value instanceof Array ? [0, 1, 2, 3] : ['r', 'g', 'b', 'a'];
   }
-  _onValueSet(event) {
-    super._onValueSet(event);
-    this.updateSwatch();
-  }
-  updateSwatch() {
-    const r = this.value[this._components[0]];
-    const g = this.value[this._components[1]];
-    const b = this.value[this._components[2]];
-    const a = this.value[this._components[3]] !== undefined ? this.value[this._components[3]] : 1;
-    this.$.swatch.value = [r, g, b, a];
-  }
   changed() {
     const elements = [];
     for (let i in this._components) {
@@ -64,9 +53,8 @@ export class IoRgba extends IoVector4 {
         }]);
       }
     }
-    elements.push(['io-color-swatch', {id: 'swatch'}]);
+    elements.push(['io-color-swatch', {id: 'swatch', value: this.value}]);
     this.template(elements);
-    this.updateSwatch();
   }
 }
 
