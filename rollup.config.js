@@ -33,59 +33,85 @@ export default [
     ],
   },
   {
-    input: 'src/io-elements.js',
+    input: 'src/io-elements-core.js',
     plugins: [html()],
     inlineDynamicImports: true,
     output: [
       {
         format: 'es',
-        file: 'dist/io-elements.js',
+        file: 'dist/io-elements-core.js',
         indent: '  '
       }
     ],
     external: [ path.resolve('src/io.js') ],
   },
   {
-    input: 'src/io-extras.js',
+    input: 'src/io-elements-extras.js',
     plugins: [html()],
     inlineDynamicImports: true,
     output: [
       {
         format: 'es',
-        file: 'dist/io-extras.js',
+        file: 'dist/io-elements-extras.js',
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements.js') ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js') ],
     onwarn: (warning, warn) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       warn(warning);
     }
   },
   {
-    input: 'src/io-layout.js',
+    input: 'src/io-elements-layout.js',
     plugins: [html()],
     inlineDynamicImports: true,
     output: [
       {
         format: 'es',
-        file: 'dist/io-layout.js',
+        file: 'dist/io-elements-layout.js',
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements.js') ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js') ],
   },
   {
-    input: 'src/io-math.js',
+    input: 'src/io-elements-math.js',
     plugins: [html()],
     inlineDynamicImports: true,
     output: [
       {
         format: 'es',
-        file: 'dist/io-math.js',
+        file: 'dist/io-elements-math.js',
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements.js') ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js') ],
+  },
+  {
+    input: 'src/io-elements-menu.js',
+    plugins: [html()],
+    inlineDynamicImports: true,
+    output: [
+      {
+        format: 'es',
+        file: 'dist/io-elements-menu.js',
+        indent: '  '
+      }
+    ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js') ],
+  },
+  {
+    input: 'src/io-elements-object.js',
+    plugins: [html()],
+    inlineDynamicImports: true,
+    output: [
+      {
+        format: 'es',
+        file: 'dist/io-elements-object.js',
+        indent: '  '
+      }
+    ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js') ],
   },
 ];
