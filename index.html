@@ -109,10 +109,12 @@
     <script type="module">
 
     import {IoStorage as $} from "./dist/io.js";
-    import "./dist/io-elements.js";
-    import {IoSelectorTabs} from "./dist/io-layout.js";
-    import "./dist/io-extras.js";
-    import "./dist/io-math.js";
+    import "./dist/io-elements-core.js";
+    import {IoSelectorTabs} from "./dist/io-elements-layout.js";
+    import "./dist/io-elements-object.js";
+    import "./dist/io-elements-extras.js";
+    import "./dist/io-elements-math.js";
+    import "./dist/io-elements-menu.js";
 
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
@@ -220,8 +222,8 @@
               ['io-md-view', {name: 'math-elements', path :'./docs/elements-math.md'}],
             ]
           }],
-          ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
-          ['io-test', {name: 'test', import: "./tests/test.js"}],
+          // ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
+          // ['io-test', {name: 'test', import: "./tests/test.js"}],
         ];
       }
     }
