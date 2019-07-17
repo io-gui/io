@@ -111,7 +111,7 @@ export class IoGl extends IoElement {
 
     for (let prop in this.__properties) {
       const type = this.__properties[prop].type;
-      const value = this.__properties[prop].value;
+      const protpValue = this.__protoProperties[prop].value;
       const notify = this.__properties[prop].notify;
       if (notify) {
         const uName = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
@@ -122,9 +122,8 @@ export class IoGl extends IoElement {
           frag += 'uniform float ' + uName + ';\n';
         } else if (type === Array) {
           // TODO: unhack
-          const length = this.__protoProperties[prop].value.length
-          this._arrayLengths[uName] = length;
-          frag += 'uniform vec' + length + ' ' + uName + ';\n';
+          this._arrayLengths[uName] = protpValue.length;
+          frag += 'uniform vec' + protpValue.length + ' ' + uName + ';\n';
         }
         // TODO: implement matrices.
       }

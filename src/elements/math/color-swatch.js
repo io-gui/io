@@ -1,5 +1,5 @@
 import {html, IoGl} from "../../io.js";
-import {IoColorPicker} from "./color-picker.js"
+import {IoColorPicker} from "./color-picker.js";
 
 export class IoColorSwatch extends IoGl {
   static get Style() {

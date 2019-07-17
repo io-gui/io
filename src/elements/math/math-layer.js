@@ -75,14 +75,14 @@ export class IoMathLayer extends IoElement {
   }
   _onChildExpanded() {
     let expanded = false;
-    for (var i = 0; i < this.children.length; i++) {
+    for (let i = 0; i < this.children.length; i++) {
       if (this.children[i].expanded === true) expanded = true;
     }
     this.expanded = expanded;
   }
   expandedChanged() {
     if (!this.expanded) {
-      for (var i = 0; i < this.children.length; i++) {
+      for (let i = 0; i < this.children.length; i++) {
         this.children[i].expanded = false;
       }
     }

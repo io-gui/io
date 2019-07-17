@@ -1,5 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoMathLayer} from "./math-layer.js"
+import {IoMathLayer} from "./math-layer.js";
 
 function rgb2hsv(r, g, b) {
   const max = Math.max(r, g, b);
