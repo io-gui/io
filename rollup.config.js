@@ -56,7 +56,7 @@ export default [
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/io.js') ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements.js') ],
     onwarn: (warning, warn) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       warn(warning);
@@ -73,7 +73,7 @@ export default [
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/io.js') ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements.js') ],
   },
   {
     input: 'src/io-math.js',
@@ -86,6 +86,6 @@ export default [
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/io.js') ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements.js') ],
   },
 ];

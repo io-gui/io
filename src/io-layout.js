@@ -20,14 +20,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- *
- * marked - a markdown parser
- * Copyright (c) 2011-2018, Christopher Jeffrey. (MIT Licensed)
- * https://github.com/markedjs/marked
  */
 
 import "./io-elements.js";
 
-export {IoElementDemo} from "./extras/element-demo.js";
-export {IoMdView} from "./extras/md-view.js";
-export {IoServiceLoader} from "./extras/service-loader.js";
+export {IoCollapsable} from "./layout/collapsable.js";
+export {IoSelectorSidebar} from "./layout/selector-sidebar.js";
+export {IoSelectorTabs} from "./layout/selector-tabs.js";
+export {IoSelector} from "./layout/selector.js";
+export {IoSidebar} from "./layout/sidebar.js";

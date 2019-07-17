@@ -1,6 +1,4 @@
-import {html, IoElement} from "../io.js";
-import {IoStorage as $} from "../io.js";
-import {filterObject} from "../io.js";
+import {html, IoElement, IoStorage as $, filterObject} from "../io.js";
 
 export class IoSidebar extends IoElement {
   static get Style() {
@@ -82,7 +80,7 @@ export class IoSidebar extends IoElement {
         const UID = option.label + ' ' + i + '/' + options.length + ' (' + option.options.length + ')';
         elements.push(['io-collapsable', {
           label: option.label,
-          expanded: $('io-sidebar-collapse ' + UID, true),
+          expanded: $('io-sidebar-collapse ' + UID, false),
           elements: [...this._addOptions(option.options)]
         }]);
       } else {

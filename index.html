@@ -109,7 +109,8 @@
     <script type="module">
 
     import {IoStorage as $} from "./dist/io.js";
-    import {IoSelectorTabs} from "./dist/io-elements.js";
+    import "./dist/io-elements.js";
+    import {IoSelectorTabs} from "./dist/io-layout.js";
     import "./dist/io-extras.js";
     import "./dist/io-math.js";
 
@@ -184,11 +185,11 @@
                 {label: "io-selector-tabs", value: "layout-navigation#io-selector-tabs"},
                 {label: "io-selector-sidebar", value: "layout-navigation#io-selector-sidebar"},
                 {label: "io-sidebar", value: "layout-navigation#io-sidebar"},
-                {label: "io-breadcrumbs", value: "layout-navigation#io-breadcrumbs"},
               ]},
               {label: "Object Editors", options: [
                 {label: "io-properties", value: "object-editors#io-properties"},
                 {label: "io-object", value: "object-editors#io-object"},
+                {label: "io-breadcrumbs", value: "object-editors#io-breadcrumbs"},
                 {label: "io-inspector", value: "object-editors#io-inspector"},
               ]},
               {label: "Math Elements", options: [

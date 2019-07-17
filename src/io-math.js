@@ -56,6 +56,8 @@
  https://github.com/tobspr/GLSL-Color-Spaces/blob/master/ColorSpaces.inc.glsl
  */
 
+import "./io-elements.js";
+
 export {IoHsvaSv} from "./math/hsv-sv.js";
 export {IoHsvaHue} from "./math/hsv-hue.js";
 export {IoHsvaAlpha} from "./math/hsv-alpha.js";
