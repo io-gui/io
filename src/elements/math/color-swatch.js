@@ -61,15 +61,11 @@ export class IoColorSwatch extends IoGl {
       'keydown': '_onKeydown',
     };
   }
-  _onValueSet() {
-    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-  }
   _onMousedown() {
     event.preventDefault();
     this.focus();
     IoColorPicker.singleton.value = this.value;
     IoColorPicker.singleton.expanded = true;
-    IoColorPicker.singleton.addEventListener('value-set', this._onValueSet);
   }
   _onKeydown() {
     IoColorPicker.singleton.value = this.value;
