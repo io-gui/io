@@ -79,12 +79,9 @@ export class IoColorPicker extends IoElement {
     });
   }
   changed() {
-
     if (this._suspendLoop) return;
-
-    const hsv = rgb2hsv(this.value[0], this.value[1], this.value[2])
+    const hsv = rgb2hsv(this.value[0], this.value[1], this.value[2]);
     this._hsva = [...hsv, this.value[3] || 1];
-
     this.template([
       ['io-hsva-sv', {
         value: this._hsva,
@@ -100,7 +97,7 @@ export class IoColorPicker extends IoElement {
         horizontal: !this.horizontal,
         'on-value-set': this._onValueSet,
       }] : null,
-    ])
+    ]);
   }
 }
 

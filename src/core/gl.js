@@ -129,7 +129,7 @@ export class IoGl extends IoElement {
     gl.compileShader(vertShader);
 
     if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-      var compilationLog = gl.getShaderInfoLog(vertShader);
+      let compilationLog = gl.getShaderInfoLog(vertShader);
       console.error('IoGl [Vertex Shader] ' + this.localName + ' error:');
       console.warn(compilationLog);
     }
@@ -140,7 +140,7 @@ export class IoGl extends IoElement {
     gl.compileShader(fragShader);
 
     if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-      var compilationLog = gl.getShaderInfoLog(fragShader);
+      let compilationLog = gl.getShaderInfoLog(fragShader);
       console.error('IoGl [Frament Shader] ' + this.localName + ' error:');
       console.warn(compilationLog);
     }
