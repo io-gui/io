@@ -182,8 +182,8 @@ export class IoGl extends IoElement {
     this.changed();
   }
   changed() {
-    this.style.width = this.size[0] ? this.size[0] + 'px' : null;
-    this.style.height = this.size[1] ? this.size[1] + 'px' : null;
+    this.$.img.style.width = this.size[0] ? this.size[0] + 'px' : null;
+    this.$.img.style.height = this.size[1] ? this.size[1] + 'px' : null;
     queueAnimation(this.render.bind(this));
   }
   render() {
@@ -223,25 +223,32 @@ export class IoGl extends IoElement {
         if (type === Number) {
           gl.uniform1f(uniform, value || 0);
         } else if (type === Array) {
+          let _c = [0, 1, 2, 3];
+          if (!(value instanceof Array) && typeof value === 'object') {
+            if (value.x !== undefined) _c = ['x', 'y', 'z', 'w'];
+            else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a'];
+            else if (value.h !== undefined) _c = ['h', 's', 'v', 'a'];
+            else if (value.c !== undefined) _c = ['c', 'm', 'y', 'k'];
+          }
           const length = this._arrayLengths[uName];
           switch (length) {
             case 2:
             gl.uniform2f(uniform,
-              value[0] !== undefined ? value[0] : 1,
-              value[1] !== undefined ? value[1] : 1);
+              value[_c[0]] !== undefined ? value[_c[0]] : 1,
+              value[_c[1]] !== undefined ? value[_c[1]] : 1);
             break;
             case 3:
             gl.uniform3f(uniform,
-              value[0] !== undefined ? value[0] : 1,
-              value[1] !== undefined ? value[1] : 1,
-              value[2] !== undefined ? value[2] : 1);
+              value[_c[0]] !== undefined ? value[_c[0]] : 1,
+              value[_c[1]] !== undefined ? value[_c[1]] : 1,
+              value[_c[2]] !== undefined ? value[_c[2]] : 1);
             break;
             case 4:
             gl.uniform4f(uniform,
-              value[0] !== undefined ? value[0] : 1,
-              value[1] !== undefined ? value[1] : 1,
-              value[2] !== undefined ? value[2] : 1,
-              value[3] !== undefined ? value[3] : 1);
+              value[_c[0]] !== undefined ? value[_c[0]] : 1,
+              value[_c[1]] !== undefined ? value[_c[1]] : 1,
+              value[_c[2]] !== undefined ? value[_c[2]] : 1,
+              value[_c[3]] !== undefined ? value[_c[3]] : 1);
             break;
             default:
           }
