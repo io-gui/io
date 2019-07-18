@@ -8,6 +8,7 @@ export class IoString extends IoItem {
         border-color: var(--io-inset-border-color);
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
+        box-shadow: var(--io-shadow-inset);
         user-select: text;
         width: 4.5em;
         height: 1.375em;

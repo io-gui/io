@@ -17,6 +17,7 @@ export class IoSidebar extends IoElement {
       :host io-boolean,
       :host io-button {
         width: 100%;
+        box-shadow: none;
       }
       :host io-collapsable {
         width: 100%;

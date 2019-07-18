@@ -13,6 +13,7 @@ export class IoSwitch extends IoButton {
         color: var(--io-color-field);
         background-image: none;
         background-color: var(--io-background-color-dark);
+        box-shadow: var(--io-shadow-inset);
         padding: 0;
         margin: var(--io-spacing);
         width: 3.5em;
@@ -44,6 +45,7 @@ export class IoSwitch extends IoButton {
         border: var(--io-outset-border);
         border-color: var(--io-outset-border-color);
         border-radius: var(--io-switch-size);
+        box-shadow: var(--io-shadow-outset);
         transition-timing-function: ease-in-out;
         transition: left 0.25s;
       }

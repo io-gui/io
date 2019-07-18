@@ -33,12 +33,14 @@ export class IoTheme extends IoElement {
 
         --io-border-color: rgb(140, 140, 140);
         --io-border: var(--io-border-width) solid var(--io-border-color);
-        --io-inset-border-color: rgb(32, 32, 32) var(--io-border-color) var(--io-border-color) rgb(32, 32, 32);
+        --io-inset-border-color: rgb(140, 140, 140) var(--io-border-color) var(--io-border-color) rgb(140, 140, 140);
         --io-inset-border: var(--io-border-width) inset var(--io-border-color);
         --io-outset-border-color: var(--io-border-color) rgb(32, 32, 32) rgb(32, 32, 32) var(--io-border-color);
         --io-outset-border: var(--io-border-width) outset var(--io-border-color);
 
-        --io-shadow: 2px 3px 5px rgba(0,0,0,0.2);
+        --io-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        --io-shadow-inset: 2px 2px 2px inset rgba(0,0,0,0.05);
+        --io-shadow-outset: -1px -1px 2px inset rgba(0,0,0,0.1), 2px 2px 2px inset rgba(255,255,255,0.3);
       }
     </style>`;
   }
@@ -69,7 +71,9 @@ export class IoTheme extends IoElement {
         --io-outset-border-color: var(--io-border-color) rgb(210, 210, 210) rgb(210, 210, 210) var(--io-border-color);
         --io-outset-border: var(--io-border-width) outset var(--io-border-color);
 
-        --io-shadow: 2px 3px 5px rgba(0,0,0,0.2);
+        --io-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        --io-shadow-inset: 1px 1px 1px inset rgba(0,0,0,0.1);
+        --io-shadow-outset: -1px -1px 1px inset rgba(0,0,0,0.2), 1px 1px 1px inset rgba(255,255,255,0.6);
       }
     </style>`;
   }
