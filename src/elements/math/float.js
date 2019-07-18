@@ -3,6 +3,18 @@ import {IoNumber} from "../../io-elements-core.js";
 import {IoMathLayer} from "./math-layer.js";
 
 export class IoFloat extends IoNumber {
+  static get Listeners() {
+    return {
+      'touchstart': '_onTouchstart',
+    };
+  }
+  _onTouchstart(event) {
+    if (!this._expanded) {
+      IoLadder.singleton.opaque = true;
+      this._expandLadder();
+      event.preventDefault();
+    }
+  }
   _onClick(event) {
     super._onClick(event);
     this._expandLadder();
@@ -11,12 +23,15 @@ export class IoFloat extends IoNumber {
     this.set('value', event.detail.value);
   }
   _onBlur(event) {
+    this._expanded = false;
     super._onBlur(event);
     IoLadder.singleton.removeEventListener('value-set', this._onValueSet);
+    IoLadder.singleton.opaque = false;
     IoMathLayer.singleton.clickable = true;
     IoMathLayer.singleton.expanded = false;
   }
   _expandLadder() {
+    this._expanded = true;
     IoLadder.singleton.expanded = true;
     IoLadder.singleton.min = this.min;
     IoLadder.singleton.max = this.max;
@@ -94,6 +109,9 @@ export class IoLadder extends IoElement {
         background-color: var(--io-background-color-light);
         opacity: 1;
       }
+      :host[opaque] > span {
+        opacity: 1;
+      }
       :host > span.hidden {
         display: none;
       }
@@ -101,7 +119,8 @@ export class IoLadder extends IoElement {
   }
   static get Attributes() {
     return {
-      '_step': Number
+      _step: Number,
+      opaque: Boolean,
     };
   }
   static get Properties() {
