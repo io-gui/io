@@ -18,6 +18,7 @@ export class IoMathLayer extends IoElement {
         touch-action: none;
         opacity: 0;
         transition: opacity 0.25s;
+        /* background: rgba(0,0,0,0.2); */
       }
       :host[expanded] {
         visibility: visible;
@@ -25,6 +26,7 @@ export class IoMathLayer extends IoElement {
       }
       :host[expanded][clickblock] {
         pointer-events: all;
+        /* background: rgba(255,0,0,0.2); */
       }
       :host > * {
         position: absolute;
