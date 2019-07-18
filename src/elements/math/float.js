@@ -14,6 +14,7 @@ export class IoFloat extends IoNumber {
       IoLadder.singleton.opaque = true;
       this._expandLadder();
       event.preventDefault();
+      IoMathLayer.singleton.clickable = true;
     }
   }
   _onTouchend(event) {
