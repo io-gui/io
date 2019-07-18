@@ -25,7 +25,6 @@ export class IoCollapsable extends IoElement {
         width: inherit;
         text-align: left;
         border: none;
-        box-shadow: none;
       }
       :host > io-boolean[value] {
         margin-bottom: var(--io-spacing);

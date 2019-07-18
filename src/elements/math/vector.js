@@ -26,7 +26,6 @@ export class IoVector extends IoElement {
       :host io-boolean {
         border-color: transparent;
         background: none;
-        box-shadow: none;
       }
       :host io-boolean:not([value]) {
         opacity: 0.25;

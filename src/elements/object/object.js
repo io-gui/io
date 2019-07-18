@@ -18,7 +18,6 @@ export class IoObject extends IoElement {
     :host > io-boolean {
       color: var(--io-color);
       border-color: transparent;
-      box-shadow: none;
       background: none;
       padding: 0;
       padding-right: 0.5em !important;
