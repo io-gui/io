@@ -39,12 +39,22 @@ export class IoFloat extends IoNumber {
     super._onBlur(event);
     IoMathLayer.singleton.expanded = false;
   }
+  _onValueSet(event) {
+    this.set('value', event.detail.value);
+  }
   _expandLadder() {
     IoLadder.singleton.expanded = true;
     IoLadder.singleton.min = this.min;
     IoLadder.singleton.max = this.max;
     IoLadder.singleton.step = this.step;
-    IoLadder.singleton.value = this.bind('value');
+    IoLadder.singleton.value = this.value;
+    // TODO: unhack
+    if (IoLadder.singleton._target) {
+      IoLadder.singleton.removeEventListener('value-set', IoLadder.singleton._target._onValueSet);
+    }
+    IoLadder.singleton._target = this;
+    IoLadder.singleton.addEventListener('value-set', this._onValueSet);
+
     // TODO: disable nudge?
     IoMathLayer.singleton.setElementPosition(IoLadder.singleton, 'bottom', this.getBoundingClientRect());
     IoMathLayer.singleton.srcElement = this;
