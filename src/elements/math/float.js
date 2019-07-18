@@ -185,7 +185,7 @@ export class IoLadder extends IoElement {
     const item = event.composedPath()[0];
     this._step = Number(item.textContent);
   }
-  stepChanged() {
+  changed() {
     this.querySelector('.io-up4').classList.toggle('hidden', (this.max - this.min) < 1000);
     this.querySelector('.io-up3').classList.toggle('hidden', (this.max - this.min) < 100);
     this.querySelector('.io-up2').classList.toggle('hidden', (this.max - this.min) < 10);
