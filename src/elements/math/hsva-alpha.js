@@ -1,25 +1,12 @@
 import {IoHsvaHue} from "./hsva-hue.js";
+import {colorShaderChunk} from "./utils.js";
 
 export class IoHsvaAlpha extends IoHsvaHue {
   static get Frag() {
     return /* glsl */`
       varying vec2 vUv;
 
-      #ifndef saturate
-        #define saturate(v) clamp(v, 0., 1.)
-      #endif
-
-      vec3 hue_to_rgb(float hue) {
-        float R = abs(hue * 6. - 3.) - 1.;
-        float G = 2. - abs(hue * 6. - 2.);
-        float B = 2. - abs(hue * 6. - 4.);
-        return saturate(vec3(R,G,B));
-      }
-
-      vec3 hsv_to_rgb(vec3 hsv) {
-        vec3 rgb = hue_to_rgb(hsv.r);
-        return ((rgb - 1.0) * hsv.g + 1.0) * hsv.b;
-      }
+      ${colorShaderChunk}
 
       void main(void) {
 
@@ -29,7 +16,7 @@ export class IoHsvaAlpha extends IoHsvaHue {
         float alphaMask = mod(alphaPos.x + mod(alphaPos.y, 2.0), 2.0);
         vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), alphaMask);
 
-        vec3 currentColor = hsv_to_rgb(uValue.xyz);
+        vec3 currentColor = hsv2rgb(uValue.xyz);
 
         vec3 final = alphaPattern;
 

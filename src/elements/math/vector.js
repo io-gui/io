@@ -1,6 +1,6 @@
 import {html, IoElement} from "../../io.js";
 
-export class IoVector2 extends IoElement {
+export class IoVector extends IoElement {
   static get Style() {
     return html`<style>
       :host {
@@ -16,20 +16,26 @@ export class IoVector2 extends IoElement {
       :host > io-float:not(:last-child) {
         margin-right: var(--io-spacing);
       }
-      :host > io-boolean {
+      :host > .io-slot {
+        display: flex;
         flex: 0 0 auto;
+      }
+      :host > .io-slot > * {
+        flex: 0 0 auto;
+      }
+      :host io-boolean {
         border-color: transparent;
         background: none;
         box-shadow: none;
       }
-      :host > io-boolean:not([value]) {
+      :host io-boolean:not([value]) {
         opacity: 0.25;
       }
     </style>`;
   }
   static get Properties() {
     return {
-      value: [0, 0],
+      value: [0, 0, 0, 0],
       conversion: 1,
       step: 0.001,
       min: -Infinity,
@@ -63,7 +69,10 @@ export class IoVector2 extends IoElement {
     }
   }
   valueChanged() {
-    this._c = this.value instanceof Array ? [0, 1] : ['x', 'y'];
+    this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['x', 'y', 'z', 'w'];
+  }
+  insertTrailingElement() {
+
   }
   changed() {
     const elements = [];
@@ -81,11 +90,12 @@ export class IoVector2 extends IoElement {
         }]);
       }
     }
-    if (this.linkable) {
-      elements.push(['io-boolean', {value: this.bind('linked'), true: '🔗', false: '🔗'}]);
-    }
+    elements.push(['div', {id: 'slot', class: 'io-slot'}, [this.getSlotted()]]);
     this.template(elements);
+  }
+  getSlotted() {
+    return this.linkable ? ['io-boolean', {value: this.bind('linked'), true: '🔗', false: '🔗'}] : null;
   }
 }
 
-IoVector2.Register();
+IoVector.Register();

@@ -1,25 +1,38 @@
 import {html, IoElement} from "../../io.js";
 
-export class IoMatrix2 extends IoElement {
+export class IoMatrix extends IoElement {
   static get Style() {
     return html`<style>
       :host {
         display: grid;
         align-self: stretch;
         justify-self: stretch;
-        grid-template-columns: repeat(2, 1fr);
         grid-gap: var(--io-spacing);
+      }
+      :host[columns="4"] {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      :host[columns="3"] {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      :host[columns="2"] {
+        grid-template-columns: repeat(2, 1fr);
       }
       :host > io-float {
         width: inherit;
       }
     </style>`;
   }
+  static get Attributes() {
+    return {
+      columns: 4,
+    };
+  }
   static get Properties() {
     return {
-      value: [0, 0],
+      value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       step: 0.001,
-      _c: [0, 1, 2, 3],
+      _c: Array,
     };
   }
   _onValueSet(event) {
@@ -33,6 +46,22 @@ export class IoMatrix2 extends IoElement {
       const detail = {object: this.value, prop: prop, value: value, oldValue: oldValue};
       this.dispatchEvent('object-mutated', detail, false, window);
     }
+  }
+  valueChanged() {
+    let c;
+    if (this.value.length === 4) {
+      c = [0, 1, 2, 3];
+      this.columns = 2;
+    }
+    if (this.value.length === 9) {
+      c = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+      this.columns = 3;
+    }
+    if (this.value.length === 16) {
+      c = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+      this.columns = 4;
+    }
+    this._c = c;
   }
   changed() {
     const elements = [];
@@ -51,4 +80,4 @@ export class IoMatrix2 extends IoElement {
   }
 }
 
-IoMatrix2.Register();
+IoMatrix.Register();

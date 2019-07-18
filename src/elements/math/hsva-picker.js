@@ -9,6 +9,8 @@ export class IoHsvaPicker extends IoElement {
         cursor: move;
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
+        background-color: var(--io-background-color);
+        padding: var(--io-spacing);
         min-width: 2.75em;
         min-height: 1.375em;
         flex-direction: column;
