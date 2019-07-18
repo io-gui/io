@@ -5,49 +5,37 @@ export class IoElementDemo extends IoElement {
     return html`<style>
       :host {
         display: flex;
-        flex-direction: row;
-        border-radius: calc(2 * var(--io-border-radius));
-        border: var(--io-border);
-      }
-      :host[overflow] {
         flex-direction: column;
+        border: var(--io-outset-border);
+        border-radius: var(--io-border-radius);
+        border-color: var(--io-outset-border-color);
+        background: var(--io-background-color-dark);
+        background-image: var(--io-gradient-frame);
+        padding: var(--io-spacing);
       }
       :host > div {
         display: flex;
-        flex: 1 1 auto;
         flex-direction: column;
-        align-items: flex-start;
-        min-height: 1.2em;
-        display: flex;
-        flex-direction: column;
-        border: var(--io-border);
-        border-width: 0;
+        border-radius: var(--io-border-radius);
+        border: var(--io-inset-border);
+        border-color: var(--io-inset-border-color);
+        padding: var(--io-spacing);
+        background: var(--io-background-color);
       }
-      :host > :first-child {
-        border-width: 0 var(--io-border-width) 0 0;
+      :host > io-boolean {
+        background: none;
+        border: none;
       }
-      :host[overflow] > :first-child {
-        flex: 0 0 auto;
-        border-width: 0 0 var(--io-border-width) 0;
+      :host > .icon {
+        margin-bottom: -1.6em;
+        display: inline-block;
+        content: '🔩';
+        text-shadow: 0 0 4px #ffffff, 0 0 8px #ffffff, 0 0 16px #ffffff;
+        padding: 0 0.5em;
+        margin-left: auto;
       }
-      :host:not([overflow]) > :first-child {
-        flex: 0 0 22em;
-        max-width: 22em;
-      }
-      :host > div > span {
-        font-weight: bold;
-        border: var(--io-border);
-        border-width: 0 0 var(--io-border-width) 0;
-        background: var(--io-background-color-field);
-        padding: var(--io-spacing) calc(2 * var(--io-spacing));
-        align-self: stretch;
-      }
-      :host > div > io-properties {
-        margin: var(--io-spacing);
-        align-self: stretch;
-      }
-      :host #demo-element {
-        margin: var(--io-spacing);
+      :host > io-properties {
+        padding: var(--io-spacing);
       }
     </style>`;
   }
@@ -76,19 +64,17 @@ export class IoElementDemo extends IoElement {
         reflect: -1,
         notify: true,
       },
-      overflow: true,
     };
   }
   static get Properties() {
     return {
-      minWidth: 640,
+      expanded: false,
     };
   }
-  onResized() {
-    this.overflow = this.getBoundingClientRect().width < this.minWidth;
-  }
   _onPropSet(event) {
-    this.properties[event.detail.property] = event.detail.value;
+    if (this.properties[event.detail.property] !== undefined) {
+      this.properties[event.detail.property] = event.detail.value;
+    }
     this.dispatchEvent('object-mutated', {
       object: this.properties,
       property: event.detail.property,
@@ -117,31 +103,34 @@ export class IoElementDemo extends IoElement {
       }
     }
   }
-  elementChanged() {
+  changed() {
     for (let prop in this.properties) {
       if (this.properties[prop] === 'undefined') {
         this.properties[prop] = undefined;
       }
     }
     if (this.element) {
+      const hasProps = !!Object.keys(this.properties).length;
+      const label = '<' + this.element + '>';
       this.template([
-        ['div', [
-          ['span', '<' + this.element + '>'],
-          ['io-properties', {value: this.properties, config: Object.assign({
+        hasProps ? ['span', {class: 'icon'}, '🔩'] : null,
+        ['io-boolean', {value: this.bind('expanded'), true: label, false: label}],
+        (hasProps && this.expanded) ?
+        ['io-properties', {value: this.properties, config: Object.assign({
             'type:number': ['io-float'],
             'type:boolean': ['io-switch'],
-          }, this.config)}],
-        ]],
+          }, this.config)}] : null,
         ['div', [
-          ['span', 'RESULT'],
           [this.element, Object.assign({'on-value-set': this._onPropSet, 'id': 'demo-element'}, this.properties)],
         ]],
        ]);
+       if (this.$['demo-element']) {
+         if (this.width) this.$['demo-element'].style.width = this.width;
+         if (this.height) this.$['demo-element'].style.height = this.height;
+       }
     } else {
       this.template([null]);
     }
-    if (this.width) this.$['demo-element'].style.width = this.width;
-    if (this.height) this.$['demo-element'].style.height = this.height;
   }
 }
 

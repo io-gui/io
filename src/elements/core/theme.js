@@ -29,7 +29,7 @@ export class IoTheme extends IoElement {
         --io-color-boolean: rgb(210, 90, 190);
 
         --io-gradient-button: linear-gradient(0deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 50%);
-        --io-gradient-collapsable: linear-gradient(100deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(280deg, rgba(255, 255, 255, 0.075), transparent 50%);
+        --io-gradient-frame: linear-gradient(100deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(280deg, rgba(255, 255, 255, 0.075), transparent 50%);
 
         --io-border-color: rgb(140, 140, 140);
         --io-border: var(--io-border-width) solid var(--io-border-color);
@@ -62,7 +62,7 @@ export class IoTheme extends IoElement {
         --io-color-boolean: rgb(210, 90, 190);
 
         --io-gradient-button: linear-gradient(0deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 75%);
-        --io-gradient-collapsable: linear-gradient(100deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(280deg, rgba(255, 255, 255, 0.25), transparent 75%);
+        --io-gradient-frame: linear-gradient(100deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(280deg, rgba(255, 255, 255, 0.25), transparent 75%);
 
         --io-border-color: rgb(180, 180, 180);
         --io-border: var(--io-border-width) solid var(--io-border-color);

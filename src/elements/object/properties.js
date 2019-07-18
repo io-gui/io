@@ -24,10 +24,8 @@ export class IoProperties extends IoElement {
       :host[horizontal][labeled] {
         grid-template-rows: auto auto;
       }
-      :host:not([horizontal])[labeled] > io-item:nth-child(2n+1) {
-        align-self: start;
-        min-width: 0;
-        max-width: 100%;
+      :host > io-item {
+        background: none;
       }
       :host > io-object,
       :host > io-properties,

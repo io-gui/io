@@ -13,7 +13,6 @@ export class IoButton extends IoItem {
         padding: var(--io-spacing);
         padding-left: calc(2 * var(--io-spacing));
         padding-right: calc(2 * var(--io-spacing));
-        box-shadow: var(--io-shadow-outset);
         transition: background-color 0.4s;
       }
     </style>`;
