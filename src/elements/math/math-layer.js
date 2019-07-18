@@ -23,7 +23,7 @@ export class IoMathLayer extends IoElement {
         visibility: visible;
         opacity: 1;
       }
-      :host[expanded][clickable] {
+      :host[expanded][clickblock] {
         pointer-events: all;
       }
       :host > * {
@@ -37,11 +37,16 @@ export class IoMathLayer extends IoElement {
   }
   static get Attributes() {
     return {
-      clickable: true,
+      clickblock: true,
       expanded: {
         value: false,
         notify: true,
       },
+    };
+  }
+  static get Properties() {
+    return {
+      srcElement: HTMLElement
     };
   }
   static get Listeners() {
@@ -53,28 +58,42 @@ export class IoMathLayer extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('scroll', this._onWindowScroll, {capture: true});
-    window.addEventListener('wheel', this._onWindowScroll, {capture: true});
+    window.addEventListener('scroll', this._onWindowChange, {capture: true});
+    window.addEventListener('wheel', this._onWindowChange, {capture: true});
+    window.addEventListener('resize', this._onWindowChange, {capture: true});
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('scroll', this._onWindowScroll, {capture: true});
-    window.removeEventListener('wheel', this._onWindowScroll, {capture: true});
+    window.removeEventListener('scroll', this._onWindowChange, {capture: true});
+    window.removeEventListener('wheel', this._onWindowChange, {capture: true});
+    window.removeEventListener('resize', this._onWindowChange, {capture: true});
   }
-  _onWindowScroll() {
+  _onWindowChange() {
     this.expanded = false;
   }
   _onMousedown(event) {
     if (event.composedPath()[0] === this) {
       event.preventDefault();
-      this.expanded = false;
+      this._collapseOrFocusSrcElement(event);
     }
   }
   _onTouchstart(event) {
     if (event.composedPath()[0] === this) {
       event.preventDefault();
-      this.expanded = false;
+      this._collapseOrFocusSrcElement(event.changedTouches[0]);
     }
+  }
+  _collapseOrFocusSrcElement(pointer) {
+    const rect = this.srcElement.getBoundingClientRect();
+    const x = pointer.clientX;
+    const y = pointer.clientY;
+    if (this.srcElement) {
+      if (x > rect.x && x < rect.right && y > rect.y && y < rect.bottom) {
+        this.srcElement.focus();
+        return;
+      }
+    }
+    this.expanded = false;
   }
   _onContextmenu(event) {
     if (event.composedPath()[0] === this) {
@@ -89,9 +108,7 @@ export class IoMathLayer extends IoElement {
         if (this.children[i] !== elem) this.children[i].expanded = false;
       }
     }
-    setTimeout(()=> {
-      this.expanded = elem.expanded;
-    }, 100);
+    this.expanded = elem.expanded;
   }
   nudgeBottom(element, x, y, elemRect, force) {
     if (y + elemRect.height < window.innerHeight || force) {
@@ -156,6 +173,7 @@ export class IoMathLayer extends IoElement {
       for (let i = 0; i < this.children.length; i++) {
         this.children[i].expanded = false;
       }
+      this.clickblock = true;
     }
   }
 }

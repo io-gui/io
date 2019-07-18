@@ -10,49 +10,44 @@ export class IoFloat extends IoNumber {
     };
   }
   _onTouchstart(event) {
-    if (!this._expanded) {
-      IoLadder.singleton.opaque = true;
-      this._expandLadder();
-      event.preventDefault();
-      IoMathLayer.singleton.clickable = true;
-    }
+    this._x = event.changedTouches[0].clientX;
+    this._y = event.changedTouches[0].clientY;
   }
   _onTouchend(event) {
-    if (!this._expanded) {
-      event.preventDefault();
+    if (event.cancelable) event.preventDefault();
+    const dx = event.changedTouches[0].clientX - this._x;
+    const dy = event.changedTouches[0].clientY - this._y;
+    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {
+      if (IoLadder.singleton.expanded) {
+        this.focus();
+      }
+      document.activeElement.blur();
+      IoMathLayer.singleton.clickblock = true;
+      IoLadder.singleton.opaque = true;
+      this._expandLadder();
     }
   }
   _onClick(event) {
     super._onClick(event);
     this._expandLadder();
   }
-  _onValueSet(event) {
-    this.set('value', event.detail.value);
+  _onFocus(event) {
+    super._onFocus(event);
+    IoMathLayer.singleton.clickblock = false;
   }
   _onBlur(event) {
-    this._expanded = false;
     super._onBlur(event);
-    IoLadder.singleton.removeEventListener('value-set', this._onValueSet);
-    IoLadder.singleton.opaque = false;
-    IoMathLayer.singleton.clickable = true;
     IoMathLayer.singleton.expanded = false;
   }
   _expandLadder() {
-    this._expanded = true;
     IoLadder.singleton.expanded = true;
     IoLadder.singleton.min = this.min;
     IoLadder.singleton.max = this.max;
     IoLadder.singleton.step = this.step;
-    IoLadder.singleton.value = this.value;
-    if (IoLadder.singleton._target) {
-      IoLadder.singleton.removeEventListener('value-set', IoLadder.singleton._target._onValueSet);
-      IoLadder.singleton._target._expanded = false;
-    }
-    IoLadder.singleton._target = this;
-    IoLadder.singleton.addEventListener('value-set', this._onValueSet);
-
-    IoMathLayer.singleton.clickable = false;
-    IoMathLayer.singleton.setElementPosition(IoLadder.singleton, 'bottom', this.getBoundingClientRect()); // TODO: disable nudge?
+    IoLadder.singleton.value = this.bind('value');
+    // TODO: disable nudge?
+    IoMathLayer.singleton.setElementPosition(IoLadder.singleton, 'bottom', this.getBoundingClientRect());
+    IoMathLayer.singleton.srcElement = this;
   }
 }
 
@@ -63,8 +58,10 @@ export class IoLadder extends IoElement {
     return html`<style>
       :host {
         position: relative;
+        pointer-event: none;
       }
       :host > span {
+        pointer-event: all;
         position: absolute;
         display: inline-block;
         cursor: ew-resize;
@@ -153,36 +150,39 @@ export class IoLadder extends IoElement {
     };
   }
   _onMousedown(event) {
-    this._onPointerDown(event);
+    event.preventDefault();
+    event.stopImmediatePropagation();
     window.addEventListener('mousemove', this._onMousemove);
     window.addEventListener('mouseup', this._onMouseup);
+    const item = event.composedPath()[0];
+    this._step = Number(item.textContent);
     IoMathLayer.singleton.style.cursor = 'ew-resize';
-    IoMathLayer.singleton.clickable = true;
-    this._valStart = this.value;
-    this._xStart = event.clientX;
+    this._value = this.value;
+    this._x = event.clientX;
   }
   _onMousemove(event) {
-    const newValue = this._valStart + Math.round((event.clientX - this._xStart) / 10) * this._step;
+    const newValue = this._value + Math.round((event.clientX - this._x) / 10) * this._step;
     this.set('value', Math.max(this.min, Math.min(this.max, newValue)));
   }
   _onMouseup() {
     window.removeEventListener('mousemove', this._onMousemove);
     window.removeEventListener('mouseup', this._onMouseup);
     IoMathLayer.singleton.style.cursor = '';
-    IoMathLayer.singleton.clickable = false;
     this._step = 0;
-    this.expanded = false;
   }
   _onTouchstart(event) {
-    this._onPointerDown(event);
+    event.preventDefault();
+    event.stopImmediatePropagation();
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
-    this._valStart = this.value;
-    this._xStart = event.changedTouches[0].clientX;
+    const item = event.composedPath()[0];
+    this._step = Number(item.textContent);
+    this._value = this.value;
+    this._x = event.changedTouches[0].clientX;
   }
   _onTouchmove(event) {
     event.preventDefault();
-    const newValue = this._valStart + Math.round((event.changedTouches[0].clientX - this._xStart) / 5) * this._step;
+    const newValue = this._value + Math.round((event.changedTouches[0].clientX - this._x) / 5) * this._step;
     this.set('value', Math.max(this.min, Math.min(this.max, newValue)));
   }
   _onTouchend(event) {
@@ -190,20 +190,18 @@ export class IoLadder extends IoElement {
     this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('touchend', this._onTouchend);
     this._step = 0;
-    this.expanded = false;
   }
-  _onPointerDown(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    const item = event.composedPath()[0];
-    this._step = Number(item.textContent);
+  expandedChanged() {
+    if (!this.expanded) {
+      this.srcElement = undefined;
+      this.opaque = false;
+    }
   }
   changed() {
     this.querySelector('.io-up4').classList.toggle('hidden', (this.max - this.min) < 1000);
     this.querySelector('.io-up3').classList.toggle('hidden', (this.max - this.min) < 100);
     this.querySelector('.io-up2').classList.toggle('hidden', (this.max - this.min) < 10);
     this.querySelector('.io-up1').classList.toggle('hidden', (this.max - this.min) < 1);
-
     this.querySelector('.io-down1').classList.toggle('hidden', this.step > 0.1);
     this.querySelector('.io-down2').classList.toggle('hidden', this.step > 0.01);
     this.querySelector('.io-down3').classList.toggle('hidden', this.step > 0.001);
