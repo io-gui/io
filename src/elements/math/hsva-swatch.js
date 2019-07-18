@@ -92,6 +92,8 @@ export class IoHsvaSwatch extends IoGl {
     IoHsvaPicker.singleton.style.width = hasAlpha ? '192px' : '160px';
     IoHsvaPicker.singleton.style.height = '128px';
     IoHsvaPicker.singleton.expanded = true;
+    IoMathLayer.singleton.clickblock = true;
+    IoMathLayer.singleton.srcElement = this;
     IoMathLayer.singleton.setElementPosition(IoHsvaPicker.singleton, 'bottom', this.getBoundingClientRect());
   }
 }
