@@ -80,6 +80,9 @@
         display: flex;
         flex-direction: column;
       }
+      io-md-view {
+        padding-top: 0 !important;
+      }
       io-md-view code {
         font-family: "Roboto Mono", Monaco, courier, monospace !important;
       }
@@ -91,8 +94,9 @@
         flex: 1 1 auto;
       }
       .logo {
+        display: block;
         height: 1.375em;
-        margin: var(--io-border-width);
+        /* margin: var(--io-border-width); */
       }
       .main > io-menu-options {
         background-color: var(--io-background-color);
@@ -105,8 +109,12 @@
     <script type="module">
 
     import {IoStorage as $} from "./dist/io.js";
-    import {IoSelectorTabs} from "./dist/io-elements.js";
-    import "./dist/io-extras.js";
+    import "./dist/io-elements-core.js";
+    import {IoSelectorTabs} from "./dist/io-elements-layout.js";
+    import "./dist/io-elements-object.js";
+    import "./dist/io-elements-extras.js";
+    import "./dist/io-elements-math.js";
+    import "./dist/io-elements-menu.js";
 
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
@@ -120,7 +128,7 @@
       constructor(props) {
         super(props);
         this.slotted = [
-          ['img', {src: '/images/logo/io-logo.svg', class:'logo', height: '24'}],
+          ['a', {href: '#doc=getting-started#about-io'}, [['img', {src: '/images/logo/io-logo.svg', class:'logo'}],]],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},
@@ -142,21 +150,22 @@
                 {label: "Change Functions", value: "getting-started#change-functions"},
                 {label: "Simple App Recap", value: "getting-started#simple-app-recap"},
               ]},
-              {label: "Advanced", options: [
-                {label: "Core Classes", value: "advanced#core-classes"},
-                {label: "Creating Elements", value: "advanced#creating-elements"},
-                {label: "Properties and Attributes", value: "advanced#properties-and-attributes"},
-                {label: "Property Configuration", value: "advanced#property-configuration"},
-                {label: "Functions", value: "advanced#functions"},
-                {label: "Events", value: "advanced#events"},
-                {label: "Virtual DOM Arrays", value: "advanced#virtual-dom-arrays"},
-                {label: "Data Binding", value: "advanced#data-binding"},
-                {label: "Data Flow", value: "advanced#data-flow"},
+              {label: "Learn More", options: [
+                {label: "Core Classes", value: "learn-more#core-classes"},
+                {label: "Creating Elements", value: "learn-more#creating-elements"},
+                {label: "Properties and Attributes", value: "learn-more#properties-and-attributes"},
+                {label: "Property Configuration", value: "learn-more#property-configuration"},
+                {label: "Functions", value: "learn-more#functions"},
+                {label: "Events", value: "learn-more#events"},
+                {label: "Virtual DOM Arrays", value: "learn-more#virtual-dom-arrays"},
+                {label: "Data Binding", value: "learn-more#data-binding"},
+                {label: "Data Flow", value: "learn-more#data-flow"},
+                {label: "WebGL", value: "learn-more#io-gl"},
               ]},
             ],
             elements: [
-              ['io-md-view', {name: 'getting-started', path :'./docs/core/getting-started.md'}],
-              ['io-md-view', {name: 'advanced', path :'./docs/core/advanced.md'}],
+              ['io-md-view', {name: 'getting-started', path :'./docs/getting-started.md'}],
+              ['io-md-view', {name: 'learn-more', path :'./docs/learn-more.md'}],
             ]
           }],
           ['io-selector-sidebar', {name: 'elements', precache: true, minWidth: 640, class: 'docs', selected: $('element', 'basic-elements#io-item', true),
@@ -171,7 +180,6 @@
                 {label: "io-slider", value: "basic-elements#io-slider"},
                 {label: "io-option", value: "basic-elements#io-option"},
                 {label: "io-menu", value: "basic-elements#io-menu"},
-                {label: "io-gl", value: "basic-elements#io-gl"},
               ]},
               {label: "Layout & Navigation", options: [
                 {label: "io-collapsable", value: "layout-navigation#io-collapsable"},
@@ -179,12 +187,28 @@
                 {label: "io-selector-tabs", value: "layout-navigation#io-selector-tabs"},
                 {label: "io-selector-sidebar", value: "layout-navigation#io-selector-sidebar"},
                 {label: "io-sidebar", value: "layout-navigation#io-sidebar"},
-                {label: "io-breadcrumbs", value: "layout-navigation#io-breadcrumbs"},
               ]},
               {label: "Object Editors", options: [
                 {label: "io-properties", value: "object-editors#io-properties"},
                 {label: "io-object", value: "object-editors#io-object"},
+                {label: "io-breadcrumbs", value: "object-editors#io-breadcrumbs"},
                 {label: "io-inspector", value: "object-editors#io-inspector"},
+              ]},
+              {label: "Math Elements", options: [
+                {label: "io-float", value: "math-elements#io-float"},
+                {label: "io-vector2", value: "math-elements#io-vector2"},
+                {label: "io-vector3", value: "math-elements#io-vector3"},
+                {label: "io-vector4", value: "math-elements#io-vector4"},
+                {label: "io-matrix2", value: "math-elements#io-matrix2"},
+                {label: "io-matrix3", value: "math-elements#io-matrix3"},
+                {label: "io-matrix4", value: "math-elements#io-matrix4"},
+                {label: "io-rgba", value: "math-elements#io-rgba"},
+                {label: "io-hsva", value: "math-elements#io-hsva"},
+                {label: "io-hsva-sv", value: "math-elements#io-hsva-sv"},
+                {label: "io-hsva-hue", value: "math-elements#io-hsva-hue"},
+                {label: "io-hsva-alpha", value: "math-elements#io-hsva-alpha"},
+                {label: "io-rgba-picker", value: "math-elements#io-rgba-picker"},
+                {label: "io-hsva-picker", value: "math-elements#io-hsva-picker"},
               ]},
               {label: "Extra Elements", options: [
                 {label: "io-md-view", value: "extra-elements#io-md-view"},
@@ -193,10 +217,11 @@
               ]},
             ],
             elements: [
-              ['io-md-view', {name: 'basic-elements', path :'./docs/elements/basic-elements.md'}],
-              ['io-md-view', {name: 'layout-navigation', path :'./docs/elements/layout-navigation.md'}],
-              ['io-md-view', {name: 'object-editors', path :'./docs/elements/object-editors.md'}],
-              ['io-md-view', {name: 'extra-elements', path :'./docs/extras/extra-elements.md'}],
+              ['io-md-view', {name: 'basic-elements', path :'./docs/elements-core.md'}],
+              ['io-md-view', {name: 'layout-navigation', path :'./docs/elements-layout.md'}],
+              ['io-md-view', {name: 'object-editors', path :'./docs/elements-object-editors.md'}],
+              ['io-md-view', {name: 'extra-elements', path :'./docs/elements-extras.md'}],
+              ['io-md-view', {name: 'math-elements', path :'./docs/elements-math.md'}],
             ]
           }],
           ['io-demo', {name: 'demo', import: "./demo/demo.js"}],

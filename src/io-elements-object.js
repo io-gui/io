@@ -22,9 +22,8 @@
  * THE SOFTWARE.
  */
 
-export {IoNodeMixin, IoNode} from "./core/node.js";
-export {IoElement, html} from "./core/element.js";
-export {Binding, NodeBindings} from "./core/bindings.js";
-export {IoStorage, storageNodes} from "./core/storage.js";
-export {IoGl} from "./core/gl.js";
-export {filterObject} from "./core/utils.js";
+import "./io-elements-core.js";
+
+export {IoInspector} from "./elements/object/inspector.js";
+export {IoObject} from "./elements/object/object.js";
+export {IoProperties} from "./elements/object/properties.js";

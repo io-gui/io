@@ -22,9 +22,11 @@
  * THE SOFTWARE.
  */
 
-export {IoNodeMixin, IoNode} from "./core/node.js";
-export {IoElement, html} from "./core/element.js";
-export {Binding, NodeBindings} from "./core/bindings.js";
-export {IoStorage, storageNodes} from "./core/storage.js";
-export {IoGl} from "./core/gl.js";
-export {filterObject} from "./core/utils.js";
+import "./io-elements-core.js";
+
+// export {IoLayout} from "./elements/elements/layout.js";
+export {IoCollapsable} from "./elements/layout/collapsable.js";
+export {IoSelectorSidebar} from "./elements/layout/selector-sidebar.js";
+export {IoSelectorTabs} from "./elements/layout/selector-tabs.js";
+export {IoSelector} from "./elements/layout/selector.js";
+export {IoSidebar} from "./elements/layout/sidebar.js";

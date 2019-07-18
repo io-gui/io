@@ -22,9 +22,11 @@
  * THE SOFTWARE.
  */
 
-export {IoNodeMixin, IoNode} from "./core/node.js";
-export {IoElement, html} from "./core/element.js";
-export {Binding, NodeBindings} from "./core/bindings.js";
-export {IoStorage, storageNodes} from "./core/storage.js";
-export {IoGl} from "./core/gl.js";
-export {filterObject} from "./core/utils.js";
+export {IoBoolean} from "./elements/core/boolean.js";
+export {IoButton} from "./elements/core/button.js";
+export {IoItem, Item} from "./elements/core/item.js";
+export {IoNumber} from "./elements/core/number.js";
+export {IoSlider} from "./elements/core/slider.js";
+export {IoString} from "./elements/core/string.js";
+export {IoSwitch} from "./elements/core/switch.js";
+export {IoTheme} from "./elements/core/theme.js";
