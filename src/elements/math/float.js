@@ -133,7 +133,7 @@ export class IoLadder extends IoElement {
     const newValue = this._valStart + Math.round((event.clientX - this._xStart) / 5) * this._step;
     this.set('value', Math.max(this.min, Math.min(this.max, newValue)));
   }
-  _onMouseup(event) {
+  _onMouseup() {
     window.removeEventListener('mousemove', this._onMousemove);
     window.removeEventListener('mouseup', this._onMouseup);
     IoMathLayer.singleton.style.cursor = '';
@@ -188,7 +188,7 @@ export class IoLadder extends IoElement {
       ['span', {class: 'io-down2'}, '.01'],
       ['span', {class: 'io-down3'}, '.001'],
       ['span', {class: 'io-down4'}, '.0001'],
-    ])
+    ]);
   }
 }
 
