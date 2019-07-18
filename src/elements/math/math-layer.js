@@ -31,7 +31,7 @@ export class IoMathLayer extends IoElement {
         pointer-events: all;
       }
       :host > *:not([expanded]) {
-        display: none;
+        visibility: hidden;
       }
     </style>`;
   }
@@ -84,10 +84,10 @@ export class IoMathLayer extends IoElement {
     }
   }
   _collapseOrFocusSrcElement(pointer) {
-    const rect = this.srcElement.getBoundingClientRect();
     const x = pointer.clientX;
     const y = pointer.clientY;
     if (this.srcElement) {
+      const rect = this.srcElement.getBoundingClientRect();
       if (x > rect.x && x < rect.right && y > rect.y && y < rect.bottom) {
         this.srcElement.focus();
         return;

@@ -85,6 +85,8 @@ export class IoLadder extends IoElement {
         user-select: none;
         width: 3em;
         height: 1.375em;
+        transform: translateZ(0);
+
       }
       :host > :nth-child(1) {
         border-top-left-radius: var(--io-border-radius);
@@ -94,26 +96,38 @@ export class IoLadder extends IoElement {
         border-bottom-left-radius: var(--io-border-radius);
         border-bottom-right-radius: var(--io-border-radius);
       }
-      :host > .io-up1, :host > .io-down1{
+      :host > .io-up1,
+      :host > .io-down1{
+        transition: transform 0.10s;
+        transform: translateY(-2em);
         opacity: 0.3;
       }
-      :host > .io-up2, :host > .io-down2 {
+      :host > .io-up2,
+      :host > .io-down2 {
+        transition: transform 0.15s;
+        transform: translateY(-2em);
         opacity: 0.20;
       }
-      :host > .io-up3, :host > .io-down3 {
+      :host > .io-up3,
+      :host > .io-down3 {
+        transition: transform 0.20s;
+        transform: translateY(-2em);
         opacity: 0.12;
       }
-      :host > .io-up4, :host > .io-down4 {
+      :host > .io-up4,
+      :host > .io-down4 {
+        transition: transform 0.25s;
+        transform: translateY(-2em);
         opacity: 0.05;
       }
-      :host > .io-up1 { top: -4em; }
-      :host > .io-up2 { top: -6em; }
-      :host > .io-up3 { top: -8em; }
-      :host > .io-up4 { top: -10em; }
-      :host > .io-down1 { top: 0em; }
-      :host > .io-down2 { top: 2em; }
-      :host > .io-down3 { top: 4em; }
-      :host > .io-down4 { top: 6em; }
+      :host[expanded] > .io-up4 { transform: translateY(-10em); }
+      :host[expanded] > .io-up3 { transform: translateY(-8em); }
+      :host[expanded] > .io-up2 { transform: translateY(-6em); }
+      :host[expanded] > .io-up1 { transform: translateY(-4em); }
+      :host[expanded] > .io-down1 { transform: translateY(0em); }
+      :host[expanded] > .io-down2 { transform: translateY(2em); }
+      :host[expanded] > .io-down3 { transform: translateY(4em); }
+      :host[expanded] > .io-down4 { transform: translateY(6em); }
       :host > span:hover {
         background-color: var(--io-background-color);
         opacity: 1;
