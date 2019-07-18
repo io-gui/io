@@ -149,7 +149,7 @@ export class IoLadder extends IoElement {
     this._xStart = event.clientX;
   }
   _onMousemove(event) {
-    const newValue = this._valStart + Math.round((event.clientX - this._xStart) / 5) * this._step;
+    const newValue = this._valStart + Math.round((event.clientX - this._xStart) / 10) * this._step;
     this.set('value', Math.max(this.min, Math.min(this.max, newValue)));
   }
   _onMouseup() {
