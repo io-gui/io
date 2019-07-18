@@ -127,7 +127,10 @@ export class IoElementDemo extends IoElement {
       this.template([
         ['div', [
           ['span', '<' + this.element + '>'],
-          ['io-properties', {value: this.properties, config: Object.assign({'type:boolean': ['io-switch']}, this.config)}],
+          ['io-properties', {value: this.properties, config: Object.assign({
+            'type:number': ['io-float'],
+            'type:boolean': ['io-switch'],
+          }, this.config)}],
         ]],
         ['div', [
           ['span', 'RESULT'],
