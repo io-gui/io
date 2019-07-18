@@ -34,7 +34,7 @@ Input element for `Boolean` data type displayed as switch toggle.
 
 Extends `<io-button>`.
 
-<io-element-demo element="io-switch" properties='{"value": true}'></io-element-demo>
+<io-element-demo element="io-switch"></io-element-demo>
 
 ## &lt;io-string&gt;
 

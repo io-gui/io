@@ -1,6 +1,6 @@
 ## &lt;io-float&gt;
 
-<io-element-demo element="io-float" properties='{"value": 0.5}'></io-element-demo>
+<io-element-demo element="io-float"></io-element-demo>
 
 ## &lt;io-vector2&gt;
 
