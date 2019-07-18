@@ -6,12 +6,18 @@ export class IoFloat extends IoNumber {
   static get Listeners() {
     return {
       'touchstart': '_onTouchstart',
+      'touchend': '_onTouchend',
     };
   }
   _onTouchstart(event) {
     if (!this._expanded) {
       IoLadder.singleton.opaque = true;
       this._expandLadder();
+      event.preventDefault();
+    }
+  }
+  _onTouchend(event) {
+    if (!this._expanded) {
       event.preventDefault();
     }
   }
@@ -37,7 +43,13 @@ export class IoFloat extends IoNumber {
     IoLadder.singleton.max = this.max;
     IoLadder.singleton.step = this.step;
     IoLadder.singleton.value = this.value;
+    if (IoLadder.singleton._target) {
+      IoLadder.singleton.removeEventListener('value-set', IoLadder.singleton._target._onValueSet);
+      IoLadder.singleton._target._expanded = false;
+    }
+    IoLadder.singleton._target = this;
     IoLadder.singleton.addEventListener('value-set', this._onValueSet);
+
     IoMathLayer.singleton.clickable = false;
     IoMathLayer.singleton.setElementPosition(IoLadder.singleton, 'bottom', this.getBoundingClientRect()); // TODO: disable nudge?
   }
