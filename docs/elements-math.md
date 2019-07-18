@@ -4,29 +4,15 @@
 
 ## &lt;io-vector2&gt;
 
-<io-element-demo element="io-vector2" properties='{"value": [1, 0.5]}'></io-element-demo>
+<io-element-demo element="io-vector" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>
 
-<io-element-demo element="io-vector2" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>
+<io-element-demo element="io-vector" properties='{"value": [1, 0.5, 0.1, 0], "linkable": false}'></io-element-demo>
 
-## &lt;io-vector3&gt;
+## &lt;io-matrix&gt;
 
-<io-element-demo element="io-vector3" properties='{"value": [1, 0.5, 0.1], "linkable": false}'></io-element-demo>
+<io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 1]}'></io-element-demo>
 
-## &lt;io-vector4&gt;
-
-<io-element-demo element="io-vector4" properties='{"value": [1, 0.5, 0.1, 0], "linkable": false}'></io-element-demo>
-
-## &lt;io-matrix2&gt;
-
-<io-element-demo element="io-matrix2" properties='{"value": [1, 0, 0, 1]}'></io-element-demo>
-
-## &lt;io-matrix3&gt;
-
-<io-element-demo element="io-matrix3" properties='{"value": [1, 0, 0, 0, 1, 0, 0, 0, 1]}'></io-element-demo>
-
-## &lt;io-matrix4&gt;
-
-<io-element-demo element="io-matrix4" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
+<io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
 
 ## &lt;io-rgba&gt;
 

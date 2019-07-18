@@ -117,7 +117,7 @@ export class IoElementDemo extends IoElement {
       }
     }
   }
-  changed() {
+  elementChanged() {
     for (let prop in this.properties) {
       if (this.properties[prop] === 'undefined') {
         this.properties[prop] = undefined;

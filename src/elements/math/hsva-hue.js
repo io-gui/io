@@ -1,12 +1,16 @@
 import {html, IoGl} from "../../io.js";
+import {colorShaderChunk} from "./utils.js";
 
 export class IoHsvaHue extends IoGl {
   static get Style() {
     return html`<style>
       :host {
-        cursor: move;
+        cursor: ns-resize;
         min-width: 32px;
         min-height: 1.375em;
+      }
+      :host[horizontal] {
+        cursor: ew-resize;
       }
       :host[aria-invalid] {
         outline: 1px solid var(--io-color-error);
@@ -25,34 +29,23 @@ export class IoHsvaHue extends IoGl {
   static get Properties() {
     return {
       value: [0.5, 0.5, 0.5, 1],
-      horizontal: false,
+      horizontal: {
+        value: false,
+        reflect: 1,
+      }
     };
   }
   static get Frag() {
     return /* glsl */`
       varying vec2 vUv;
 
-      #ifndef saturate
-        #define saturate(v) clamp(v, 0., 1.)
-      #endif
-
-      vec3 hue_to_rgb(float hue) {
-        float R = abs(hue * 6. - 3.) - 1.;
-        float G = 2. - abs(hue * 6. - 2.);
-        float B = 2. - abs(hue * 6. - 4.);
-        return saturate(vec3(R,G,B));
-      }
-
-      vec3 hsv_to_rgb(vec3 hsv) {
-        vec3 rgb = hue_to_rgb(hsv.r);
-        return ((rgb - 1.0) * hsv.g + 1.0) * hsv.b;
-      }
+      ${colorShaderChunk}
 
       void main(void) {
 
         // Hue spectrum
         float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
-        vec3 final = hsv_to_rgb(vec3(axis, 1.0, 1.0));
+        vec3 final = hsv2rgb(vec3(axis, 1.0, 1.0));
 
         float lineWidth = 1.0;
 

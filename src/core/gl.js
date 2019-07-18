@@ -173,6 +173,8 @@ export class IoGl extends IoElement {
 
     this.template([['img', {id: 'img'}]]);
 
+    this.render = this.render.bind(this);
+
     this.render(); // TODO: hmm
   }
   onResized() {
@@ -182,11 +184,11 @@ export class IoGl extends IoElement {
     this.changed();
   }
   changed() {
-    this.$.img.style.width = this.size[0] ? this.size[0] + 'px' : null;
-    this.$.img.style.height = this.size[1] ? this.size[1] + 'px' : null;
-    queueAnimation(this.render.bind(this));
+    queueAnimation(this.render);
   }
   render() {
+    this.$.img.style.width = this.size[0] ? this.size[0] + 'px' : null;
+    this.$.img.style.height = this.size[1] ? this.size[1] + 'px' : null;
 
     const width = Math.ceil(this.size[0] || this._width || 1);
     const height = Math.ceil(this.size[1] || this._height || 1);
