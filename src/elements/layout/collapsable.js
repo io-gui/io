@@ -13,7 +13,7 @@ export class IoCollapsable extends IoElement {
         border-color: var(--io-outset-border-color);
         padding: var(--io-spacing);
         background: var(--io-background-color-dark);
-        background-image: var(--io-gradient-collapsable);
+        background-image: var(--io-gradient-frame);
         transition: background-color 0.4s;
       }
       :host > io-boolean {
@@ -25,13 +25,13 @@ export class IoCollapsable extends IoElement {
         width: inherit;
         text-align: left;
         border: none;
+        box-shadow: none;
       }
       :host > io-boolean[value] {
         margin-bottom: var(--io-spacing);
       }
       :host > io-boolean:hover {
         background: none;
-        border-image: none;
       }
       :host > io-boolean::before {
         display: inline-block;
