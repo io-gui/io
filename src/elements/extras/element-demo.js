@@ -8,7 +8,6 @@ export class IoElementDemo extends IoElement {
         flex-direction: row;
         border-radius: calc(2 * var(--io-border-radius));
         border: var(--io-border);
-        overflow: hidden;
       }
       :host[overflow] {
         flex-direction: column;
@@ -16,7 +15,6 @@ export class IoElementDemo extends IoElement {
       :host > div {
         display: flex;
         flex: 1 1 auto;
-        overflow: hidden;
         flex-direction: column;
         align-items: flex-start;
         min-height: 1.2em;

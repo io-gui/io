@@ -73,13 +73,13 @@ export class IoMenuLayer extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('scroll', this._onWindowScroll);
-    window.addEventListener('wheel', this._onWindowScroll);
+    window.addEventListener('scroll', this._onWindowScroll, {capture: true});
+    window.addEventListener('wheel', this._onWindowScroll, {capture: true});
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('scroll', this._onWindowScroll);
-    window.removeEventListener('wheel', this._onWindowScroll);
+    window.removeEventListener('scroll', this._onWindowScroll, {capture: true});
+    window.removeEventListener('wheel', this._onWindowScroll, {capture: true});
     this._stopAnimation();
   }
   registerOptions(options) {

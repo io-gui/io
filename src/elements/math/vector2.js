@@ -9,11 +9,11 @@ export class IoVector2 extends IoElement {
         align-self: stretch;
         justify-self: stretch;
       }
-      :host > io-number {
+      :host > io-float {
         width: inherit;
         flex: 1 1;
       }
-      :host > io-number:not(:last-child) {
+      :host > io-float:not(:last-child) {
         margin-right: var(--io-spacing);
       }
       :host > io-boolean {
@@ -33,7 +33,7 @@ export class IoVector2 extends IoElement {
       step: 0.001,
       min: -Infinity,
       max: Infinity,
-      canlink: false,
+      linkable: false,
       linked: false,
       _c: [0, 1],
     };
@@ -69,7 +69,7 @@ export class IoVector2 extends IoElement {
     for (let i in this._c) {
       const prop = this._c[i];
       if (this.value[prop] !== undefined) {
-        elements.push(['io-number', {
+        elements.push(['io-float', {
           id: prop,
           value: this.value[prop],
           conversion: this.conversion,
@@ -80,7 +80,7 @@ export class IoVector2 extends IoElement {
         }]);
       }
     }
-    if (this.canlink) {
+    if (this.linkable) {
       elements.push(['io-boolean', {value: this.bind('linked'), true: '🔗', false: '🔗'}]);
     }
     this.template(elements);

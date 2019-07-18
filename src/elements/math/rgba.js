@@ -4,13 +4,13 @@ import {IoVector4} from "./vector4.js";
 export class IoRgba extends IoVector4 {
   static get Style() {
     return html`<style>
-      :host > io-number:nth-child(1) {
+      :host > io-float:nth-child(1) {
         border-bottom-color: red;
       }
-      :host > io-number:nth-child(2) {
+      :host > io-float:nth-child(2) {
         border-bottom-color: green;
       }
-      :host > io-number:nth-child(3) {
+      :host > io-float:nth-child(3) {
         border-bottom-color: blue;
       }
       :host > span {
@@ -41,7 +41,7 @@ export class IoRgba extends IoVector4 {
     for (let i in this._c) {
       const prop = this._c[i];
       if (this.value[prop] !== undefined) {
-        elements.push(['io-number', {
+        elements.push(['io-float', {
           id: prop,
           value: this.value[prop],
           conversion: this.conversion,

@@ -28,6 +28,15 @@
 
 import "./io-elements-core.js";
 
+export {IoFloat} from "./elements/math/float.js";
+
+export {IoVector2} from "./elements/math/vector2.js";
+export {IoVector3} from "./elements/math/vector3.js";
+export {IoVector4} from "./elements/math/vector4.js";
+export {IoMatrix2} from "./elements/math/matrix2.js";
+export {IoMatrix3} from "./elements/math/matrix3.js";
+export {IoMatrix4} from "./elements/math/matrix4.js";
+
 export {IoHsva} from "./elements/math/hsva.js";
 export {IoHsvaSv} from "./elements/math/hsva-sv.js";
 export {IoHsvaHue} from "./elements/math/hsva-hue.js";
@@ -38,10 +47,3 @@ export {IoHsvaPicker} from "./elements/math/hsva-picker.js";
 export {IoRgba} from "./elements/math/rgba.js";
 export {IoRgbaSwatch} from "./elements/math/rgba-swatch.js";
 export {IoRgbaPicker} from "./elements/math/rgba-picker.js";
-
-export {IoVector2} from "./elements/math/vector2.js";
-export {IoVector3} from "./elements/math/vector3.js";
-export {IoVector4} from "./elements/math/vector4.js";
-export {IoMatrix2} from "./elements/math/matrix2.js";
-export {IoMatrix3} from "./elements/math/matrix3.js";
-export {IoMatrix4} from "./elements/math/matrix4.js";

@@ -4,17 +4,14 @@ export class IoMatrix2 extends IoElement {
   static get Style() {
     return html`<style>
       :host {
-        display: flex;
-        flex-direction: row;
         display: grid;
         align-self: stretch;
         justify-self: stretch;
-        grid-template-columns: auto auto;
+        grid-template-columns: repeat(2, 1fr);
         grid-gap: var(--io-spacing);
       }
-      :host > io-number {
+      :host > io-float {
         width: inherit;
-        flex: 1 1 auto;
       }
     </style>`;
   }
@@ -42,7 +39,7 @@ export class IoMatrix2 extends IoElement {
     for (let i in this._c) {
       const prop = this._c[i];
       if (this.value[prop] !== undefined) {
-        elements.push(['io-number', {
+        elements.push(['io-float', {
           id: prop,
           value: this.value[prop],
           step: this.step,

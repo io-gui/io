@@ -17,15 +17,18 @@ export class IoMathLayer extends IoElement {
         pointer-events: none;
         touch-action: none;
         opacity: 0;
-        transition: opacity 0.1s;
+        transition: opacity 0.25s;
       }
       :host[expanded] {
         visibility: visible;
-        pointer-events: all;
         opacity: 1;
+      }
+      :host[expanded][clickable] {
+        pointer-events: all;
       }
       :host > * {
         position: absolute;
+        pointer-events: all;
       }
       :host > *:not([expanded]) {
         display: none;
@@ -34,6 +37,7 @@ export class IoMathLayer extends IoElement {
   }
   static get Attributes() {
     return {
+      clickable: true,
       expanded: {
         value: false,
         notify: true,
@@ -49,13 +53,13 @@ export class IoMathLayer extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('scroll', this._onWindowScroll);
-    window.addEventListener('wheel', this._onWindowScroll);
+    window.addEventListener('scroll', this._onWindowScroll, {capture: true});
+    window.addEventListener('wheel', this._onWindowScroll, {capture: true});
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('scroll', this._onWindowScroll);
-    window.removeEventListener('wheel', this._onWindowScroll);
+    window.removeEventListener('scroll', this._onWindowScroll, {capture: true});
+    window.removeEventListener('wheel', this._onWindowScroll, {capture: true});
   }
   _onWindowScroll() {
     this.expanded = false;

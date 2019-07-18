@@ -5,7 +5,7 @@ export class IoMatrix3 extends IoMatrix2 {
   static get Style() {
     return html`<style>
       :host {
-        grid-template-columns: auto auto auto;
+        grid-template-columns: repeat(3, 1fr);
       }
     </style>`;
   }
