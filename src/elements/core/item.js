@@ -83,8 +83,8 @@ export class IoItem extends IoElement {
   static get Listeners() {
     return {
       'focus': '_onFocus',
-      'touchstart': '_onTouchstart',
-      'mousedown': '_onMousedown',
+      // 'touchstart': '_onTouchstart',
+      // 'mousedown': '_onMousedown',
     };
   }
   get textNode() {
@@ -121,10 +121,10 @@ export class IoItem extends IoElement {
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('click', this._onClick);
   }
-  _onTouchstart() {}
-  _onMousedown() {
-    this.focus();
-  }
+  // _onTouchstart() {}
+  // _onMousedown() {
+  //   this.focus();
+  // }
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);

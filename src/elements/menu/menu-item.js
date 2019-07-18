@@ -67,6 +67,12 @@ export class IoMenuItem extends IoItem {
       _depth: 0,
     };
   }
+  static get Listeners() {
+    return {
+      'touchstart': '_onTouchstart',
+      'mousedown': '_onMousedown',
+    };
+  }
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];
     // TODO: fires twice?
