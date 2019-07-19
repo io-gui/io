@@ -1,5 +1,6 @@
 import {IoElement, html} from "./element.js";
 import {IoNode} from "./node.js";
+import {glGlobals} from "./gl.js";
 
 export class IoThemeMixin extends IoNode {
   static get Style() {
@@ -224,9 +225,11 @@ export class IoTheme extends IoElement {
   }
   changed() {
     this.styleElement.innerHTML = this[this.theme].string;
+    setTimeout(() => {
+      glGlobals.updateValues();
+    });
   }
 }
-
 IoTheme.Register();
 
 export const IoThemeSingleton = new IoTheme();

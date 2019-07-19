@@ -33,7 +33,6 @@ export class IoHsvaSv extends IoHsvaHue {
         vec3 final = alphaPattern;
 
         float markerSize = 12.0;
-        float lineWidth = 1.0;
 
         // SV gradient
         final = hsv2rgb(vec3(uValue[0], vUv.x, vUv.y));
@@ -41,12 +40,12 @@ export class IoHsvaSv extends IoHsvaHue {
         // Color marker
         float offset = length((vUv - vec2(uValue[1], uValue[2])) * uSize);
 
-        float distOut = (offset - (markerSize - lineWidth));
-        float distIn = 1.0 - (offset - (markerSize + lineWidth));
+        float distOut = (offset - (markerSize - gLineWidth));
+        float distIn = 1.0 - (offset - (markerSize + gLineWidth));
         float dist = saturate(min(distOut, distIn));
 
-        float distOut2 = (offset - (markerSize - (lineWidth + 1.0)));
-        float distIn2 = 1.0 - (offset - (markerSize + (lineWidth + 1.0)));
+        float distOut2 = (offset - (markerSize - (gLineWidth + 1.0)));
+        float distIn2 = 1.0 - (offset - (markerSize + (gLineWidth + 1.0)));
         float dist2 = saturate(min(distOut2, distIn2));
 
         currentColor = mix(alphaPattern, currentColor, uValue.a);

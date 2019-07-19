@@ -170,6 +170,15 @@ export class IoMenuLayer extends IoElement {
     this._y = event.clientY;
     this._hoveredOptions = null;
     this._hoveredItem = null;
+
+    if (this.lastFocus) {
+      let rect = this.lastFocus.getBoundingClientRect();
+      if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+        this._hoveredItem = this.lastFocus;
+        return;
+      }
+    }
+
     let options = this.$options;
     for (let i = options.length; i--;) {
       if (options[i].expanded) {
@@ -190,12 +199,7 @@ export class IoMenuLayer extends IoElement {
         }
       }
     }
-    if (this.lastFocus) {
-      let rect = this.lastFocus.getBoundingClientRect();
-      if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-        this._hoveredItem = this.lastFocus;
-      }
-    }
+
   }
   _focusItem(item, force) {
     if (item !== this.__prevItem) {

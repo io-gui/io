@@ -38,7 +38,7 @@ export class ProtoProperties {
   }
 }
 
-class ProtoProperty {
+export class ProtoProperty {
   constructor(cfg) {
     const cType = typeof cfg;
     if (cfg === null || cfg === undefined) {
