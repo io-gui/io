@@ -1,4 +1,4 @@
-import {IoSwitch} from "../../dist/io-elements.js";
+import {IoSwitch} from "../../dist/io-elements-core.js";
 
 export default class {
   constructor() {

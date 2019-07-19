@@ -167,6 +167,7 @@ export class IoSelector extends IoElement {
     if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[selected]) {
       // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
       this.$.content.appendChild(this._caches[selected]);
+      this.$.content.classList.toggle('io-loading', false);
     } else {
       this.checkImport(element[1].import, () => {
         this.$.content.classList.toggle('io-loading', false);

@@ -1,4 +1,4 @@
-import {IoObject} from "../../dist/io-elements.js";
+import {IoObject} from "../../dist/io-elements-object.js";
 
 const testValue = {
   "number": 0.5,
@@ -72,11 +72,11 @@ export default class {
         });
         it('matches value with labels disabled', () => {
           this.element.value = testValue;
-          chai.expect(this.element.children[0].textContent).to.equal('Object')
+          chai.expect(this.element.children[0].textContent).to.equal('▸ Object')
           this.element.label = 'test';
-          chai.expect(this.element.children[0].textContent).to.equal('test')
+          chai.expect(this.element.children[0].textContent).to.equal('▸ test')
           this.reset();
-          chai.expect(this.element.children[0].textContent).to.equal('Object')
+          chai.expect(this.element.children[0].textContent).to.equal('▸ Object')
         });
         it('matches value with custom properties', () => {
           this.element.value = testValue;

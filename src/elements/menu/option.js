@@ -33,11 +33,25 @@ export class IoOption extends IoMenuItem {
       options: Array,
     };
   }
+  static get Listeners() {
+    return {
+      'io-menu-item-clicked': '_onMenuItemClicked',
+    };
+  }
   get _options() {
     if (this.options && this.options.length) {
       return this.options;
     }
     return undefined;
+  }
+  _onMenuItemClicked(event) {
+    const item = event.composedPath()[0];
+    if (item !== this) {
+      event.stopImmediatePropagation();
+      this.set('value', event.detail.value);
+      // this.dispatchEvent('io-menu-item-clicked', event.detail, true);
+      item.expanded = false;
+    }
   }
   _onClick(event) {
     // TODO: dead code?
