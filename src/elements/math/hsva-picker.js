@@ -1,16 +1,17 @@
 import {html, IoElement} from "../../io.js";
 import {IoMathLayer} from "./math-layer.js";
+import {IoThemeMixinSingleton as mixin} from "../../io-elements-core.js";
 
 export class IoHsvaPicker extends IoElement {
   static get Style() {
     return html`<style>
       :host {
+        ${mixin.panel}
+      }
+      :host {
         display: flex;
         cursor: move;
-        border: var(--io-inset-border);
-        border-radius: var(--io-border-radius);
-        background-color: var(--io-background-color);
-        padding: var(--io-spacing);
+        align-items: stretch;
         min-width: 2.75em;
         min-height: 1.375em;
         flex-direction: column;
@@ -40,17 +41,9 @@ export class IoHsvaPicker extends IoElement {
   changed() {
     const hasAlpha = this.value[3] !== undefined || this.value.a !== undefined;
     this.template([
-      ['io-hsva-sv', {
-        value: this.value,
-      }],
-      ['io-hsva-hue', {
-        value: this.value,
-        horizontal: !this.horizontal,
-      }],
-      hasAlpha ? ['io-hsva-alpha', {
-        value: this.value,
-        horizontal: !this.horizontal,
-      }] : null,
+      ['io-hsva-sv', {value: this.value}],
+      ['io-hsva-hue', {value: this.value, horizontal: !this.horizontal}],
+      hasAlpha ? ['io-hsva-alpha', {value: this.value, horizontal: !this.horizontal}] : null,
     ]);
   }
 }

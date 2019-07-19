@@ -1,40 +1,29 @@
 import {html, IoElement} from "../../io.js";
+import {IoThemeMixinSingleton as mixin} from "../../io-elements-core.js";
 
 export class IoElementDemo extends IoElement {
   static get Style() {
     return html`<style>
       :host {
-        display: flex;
-        flex-direction: column;
-        border: var(--io-outset-border);
-        border-radius: var(--io-border-radius);
-        border-color: var(--io-outset-border-color);
-        background: var(--io-background-color-dark);
-        background-image: var(--io-gradient-frame);
-        padding: var(--io-spacing);
-      }
-      :host > div {
-        display: flex;
-        flex-direction: column;
-        border-radius: var(--io-border-radius);
-        border: var(--io-inset-border);
-        border-color: var(--io-inset-border-color);
-        padding: var(--io-spacing);
-        background: var(--io-background-color);
+        ${mixin.panel}
       }
       :host > io-boolean {
-        background: none;
-        border: none;
+        cursor: pointer !important;
+        align-self: stretch;
       }
       :host > .icon {
-        margin-bottom: -1.6em;
+        margin-top: 0.2em;
+        margin-bottom: -1.55em;
         display: inline-block;
-        content: '🔩';
         text-shadow: 0 0 4px #ffffff, 0 0 8px #ffffff, 0 0 16px #ffffff;
         padding: 0 0.5em;
         margin-left: auto;
       }
+      :host > io-boolean {
+        margin-bottom: var(--io-spacing);
+      }
       :host > io-properties {
+        align-self: stretch;
         padding: var(--io-spacing);
       }
     </style>`;
@@ -113,14 +102,14 @@ export class IoElementDemo extends IoElement {
       const hasProps = !!Object.keys(this.properties).length;
       const label = '<' + this.element + '>';
       this.template([
-        hasProps ? ['span', {class: 'icon'}, '🔩'] : null,
-        ['io-boolean', {value: this.bind('expanded'), true: label, false: label}],
+        hasProps ? ['span', {class: 'icon'}, '🔧'] : null,
+        ['io-boolean', {class: 'io-item', value: this.bind('expanded'), true: label, false: label}],
         (hasProps && this.expanded) ?
         ['io-properties', {value: this.properties, config: Object.assign({
             'type:number': ['io-float'],
             'type:boolean': ['io-switch'],
           }, this.config)}] : null,
-        ['div', [
+        ['div', {class: 'io-frame'}, [
           [this.element, Object.assign({'on-value-set': this._onPropSet, 'id': 'demo-element'}, this.properties)],
         ]],
        ]);

@@ -17,8 +17,6 @@ export class IoSelectorTabs extends IoSelector {
         background-color: var(--io-background-color-dark);
       }
       :host > .io-content {
-        flex: 1 1 auto;
-        -webkit-overflow-scrolling: touch;
         border: var(--io-border);
         border-width: var(--io-border-width) 0 0 0;
       }

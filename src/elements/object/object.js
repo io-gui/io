@@ -1,55 +1,22 @@
 import {html, IoElement} from "../../io.js";
+import {IoThemeMixinSingleton as mixin} from "../../io-elements-core.js";
 import "./properties.js";
 
 export class IoObject extends IoElement {
   static get Style() {
     return html`<style>
     :host {
-      display: flex;
-      flex-direction: column;
-      align-self: stretch;
-      justify-self: stretch;
-      border: var(--io-outset-border);
-      border-radius: var(--io-border-radius);
-      border-color: transparent;
-      padding: var(--io-spacing);
-      background: none;
+      ${mixin.panel}
     }
     :host > io-boolean {
-      color: var(--io-color);
-      border-color: transparent;
-      background: none;
-      padding: 0;
-      padding-right: 0.5em !important;
-      width: inherit;
-      text-align: left;
-      border: none;
+      cursor: pointer !important;
+      align-self: stretch;
     }
-    :host > io-boolean[value] {
-      margin-bottom: var(--io-spacing);
+    :host > io-properties {
+      display: grid !important;
+      padding: calc(2 * var(--io-spacing)) var(--io-spacing) !important;
     }
-    :host > io-boolean:hover {
-      background: none;
-      border-image: none;
-    }
-    :host > io-boolean::before {
-      display: inline-block;
-      content: '▸';
-      line-height: 1em;
-      width: 0.5em;
-      padding: 0 0.5em 0 0;
-    }
-    :host[expanded] > io-boolean::before{
-      content: '▾';
-    }
-    :host > .io-content {
-      border-radius: var(--io-border-radius);
-      border: var(--io-inset-border);
-      border-color: var(--io-inset-border-color);
-      padding: var(--io-spacing);
-      background: var(--io-background-color);
-    }
-    :host:not([expanded]) > .io-content {
+    :host:not([expanded]) > io-properties {
       display: none;
     }
     </style>`;
@@ -80,10 +47,10 @@ export class IoObject extends IoElement {
   changed() {
     const label = this.label || this.value.constructor.name;
     this.template([
-      ['io-boolean', {true: label, false: label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
+      ['io-boolean', {class: 'io-item', true: '▾ ' + label, false: '▸ ' + label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       this.expanded ? [
         ['io-properties', {
-          class: 'io-content',
+          class: 'io-frame',
           value: this.value,
           properties: this.properties,
           config: this.config,

@@ -15,37 +15,27 @@ export class IoSidebar extends IoElement {
         flex-direction: column;
       }
       :host io-boolean,
-      :host io-button {
-        width: 100%;
-      }
+      :host io-button,
       :host io-collapsable {
-        width: 100%;
+        width: 100%; /* Prevents layout trashing when overflown */
       }
       :host io-collapsable,
       :host io-boolean,
-      :host .io-content,
+      :host .io-frame,
       :host io-button {
         flex: 0 0 auto;
         margin: 0;
         padding: var(--io-spacing);
         border: none;
         background: none;
+        box-shadow: none;
       }
-      :host > io-collapsable io-boolean {
-        opacity: 0.75;
-      }
-      :host .io-content {
-        display: flex;
-        flex-direction: column;
+      :host .io-frame {
         padding-left: 1em;
       }
       :host io-button.io-selected-tab {
         color: var(--io-color-link);
         text-decoration: underline;
-      }
-      :host > io-option {
-        background: none !important;
-        border-color: transparent;
       }
     </style>`;
   }
@@ -89,7 +79,7 @@ export class IoSidebar extends IoElement {
           label: option.label || option.value || option,
           value: option.value || option,
           action: this._onSelect,
-          class: (selected ? 'io-selected-tab' : '') + ' io-tab',
+          class: (selected ? 'io-selected-tab' : ''),
         }]);
       }
     }
@@ -104,6 +94,7 @@ export class IoSidebar extends IoElement {
         title: 'select tab',
         value: this.selected,
         options: this.options,
+        class: 'io-item',
         'on-value-set': this._onValueSet,
       }]]);
     } else {
