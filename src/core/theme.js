@@ -1,5 +1,5 @@
-import {IoElement, IoNode} from "../../io.js";
-import {html} from "../../io.js";
+import {IoElement, html} from "./element.js";
+import {IoNode} from "./node.js";
 
 export class IoThemeMixin extends IoNode {
   static get Style() {
