@@ -1,21 +1,12 @@
 import {html} from "../../io.js";
 import {IoItem} from "./item.js";
+import {IoThemeMixinSingleton as mixin} from "./theme.js";
 
 export class IoString extends IoItem {
   static get Style() {
     return html`<style>
       :host {
-        border-color: var(--io-inset-border-color);
-        color: var(--io-color-field);
-        background-color: var(--io-background-color-field);
-        box-shadow: var(--io-shadow-inset);
-        user-select: text;
-        width: 4.5em;
-        height: 1.375em;
-      }
-      :host:empty:after {
-        display: inline-block;
-        content: '"';
+        ${mixin.field}
       }
     </style>`;
   }

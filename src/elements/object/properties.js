@@ -1,6 +1,7 @@
 import {html, IoElement} from "../../io.js";
 import "../../io-elements-core.js";
 import "../../io-elements-object.js";
+import {IoThemeMixinSingleton as mixin} from "../../io-elements-core.js";
 
 export class IoProperties extends IoElement {
   static get Style() {
@@ -24,8 +25,15 @@ export class IoProperties extends IoElement {
       :host[horizontal][labeled] {
         grid-template-rows: auto auto;
       }
-      :host > io-item {
-        background: none;
+      :host > io-object {}
+        /* ${mixin.item} */
+      :host > io-object {
+        padding: 0;
+        border: var(--io-inset-border);
+        border-radius: var(--io-border-radius);
+        border-color: transparent;
+        background-color: transparent;
+        background-image: none;
       }
       :host > io-object,
       :host > io-properties,
@@ -83,7 +91,7 @@ export class IoProperties extends IoElement {
         // }
         itemConfig.config = this.config;
         elements.push(
-          this.labeled ? ['io-item', {label: label + ':'}] : null,
+          this.labeled ? ['span', {class: 'io-item'}, label + ':'] : null,
           [tag, Object.assign(itemConfig, protoConfig)],
         );
         // }

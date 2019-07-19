@@ -1,4 +1,5 @@
 import {IoElement, html} from "../../io.js";
+import {IoThemeMixinSingleton as mixin} from "./theme.js";
 
 export class Item {
   constructor(value) {
@@ -27,21 +28,13 @@ export class IoItem extends IoElement {
   static get Style() {
     return html`<style>
       :host {
-        display: inline-block;
+        ${mixin.item};
+      }
+      :host {
         cursor: pointer;
-        border: var(--io-inset-border);
-        border-radius: var(--io-border-radius);
-        border-color: transparent;
+        user-select: none;
         background-color: var(--io-background-color);
         color: var(--io-color);
-        padding: var(--io-spacing);
-        -webkit-tap-highlight-color: transparent;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        user-select: none;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        height: 1.375em;
       }
       :host:hover {
         background-color: var(--io-background-color-light);

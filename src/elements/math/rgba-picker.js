@@ -14,7 +14,6 @@ export class IoRgbaPicker extends IoHsvaPicker {
     this.value[c[1]] = rgb[1];
     this.value[c[2]] = rgb[2];
     if (this.value[c[3]] !== undefined) this.value[c[3]] = hsva[3];
-
     this._suspendLoop = true;
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     setTimeout(()=> {
@@ -26,21 +25,11 @@ export class IoRgbaPicker extends IoHsvaPicker {
     const c = this._c;
     const hsv = rgb2hsv(this.value[c[0]], this.value[c[1]], this.value[c[2]]);
     this._hsva = [...hsv, this.value[c[3]] || 1];
+    const hasAlpha = this.value[c[3]] !== undefined;
     this.template([
-      ['io-hsva-sv', {
-        value: this._hsva,
-        'on-value-set': this._onValueSet,
-      }],
-      ['io-hsva-hue', {
-        value: this._hsva,
-        horizontal: !this.horizontal,
-        'on-value-set': this._onValueSet,
-      }],
-      this.value[c[3]] !== undefined ? ['io-hsva-alpha', {
-        value: this._hsva,
-        horizontal: !this.horizontal,
-        'on-value-set': this._onValueSet,
-      }] : null,
+      ['io-hsva-sv', {value: this._hsva, 'on-value-set': this._onValueSet}],
+      ['io-hsva-hue', {value: this._hsva, horizontal: !this.horizontal, 'on-value-set': this._onValueSet}],
+      hasAlpha ? ['io-hsva-alpha', {value: this._hsva, horizontal: !this.horizontal, 'on-value-set': this._onValueSet}] : null,
     ]);
   }
 }

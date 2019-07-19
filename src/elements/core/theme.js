@@ -1,5 +1,117 @@
-import {IoElement} from "../../io.js";
+import {IoElement, IoNode} from "../../io.js";
 import {html} from "../../io.js";
+
+export class IoThemeMixin extends IoNode {
+  static get Style() {
+    return html`<style>
+    item {
+      cursor: default;
+      display: inline-block;
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      height: 1.375em;
+      border: var(--io-inset-border);
+      border-radius: var(--io-border-radius);
+      border-color: transparent;
+      background-color: transparent;
+      background-image: none;
+      padding: var(--io-spacing);
+    }
+    button {
+      background-color: var(--io-background-color-dark);
+      background-image: var(--io-gradient-button);
+      border: var(--io-outset-border);
+      border-color: var(--io-outset-border-color);
+      border-radius: var(--io-border-radius);
+      padding: var(--io-spacing);
+      padding-left: calc(2 * var(--io-spacing));
+      padding-right: calc(2 * var(--io-spacing));
+      transition: background-color 0.25s;
+    }
+    field {
+      border: var(--io-inset-border);
+      border-radius: var(--io-border-radius);
+      color: var(--io-color-field);
+      background-color: var(--io-background-color-field);
+      background-image: none;
+      box-shadow: var(--io-shadow-inset);
+      padding: var(--io-spacing);
+      user-select: text;
+      width: 4.5em;
+      height: 1.375em;
+      min-width: 0.5em;
+    }
+    panel {
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      justify-self: stretch;
+      align-items: flex-start;
+      border: var(--io-outset-border);
+      border-radius: var(--io-border-radius);
+      border-color: var(--io-outset-border-color);
+      padding: var(--io-spacing);
+      background: var(--io-background-color-dark);
+      background-image: var(--io-gradient-panel);
+    }
+    frame {
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      justify-self: stretch;
+      align-items: flex-start;
+      border: var(--io-inset-border);
+      border-radius: var(--io-border-radius);
+      color: var(--io-color);
+      background-color: var(--io-background-color);
+      background-image: none;
+      box-shadow: var(--io-shadow-inset);
+      padding: var(--io-spacing);
+    }
+    content {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      -webkit-tap-highlight-color: transparent;
+    }
+    </style>`;
+  }
+  constructor(props) {
+    super(props);
+    this.styleElement = document.createElement('style');
+    this.styleElement.setAttribute('id', 'io-theme-mixins');
+    this.styleElement.innerHTML = this.mixins;
+    document.head.appendChild(this.styleElement);
+  }
+}
+IoThemeMixin.Register = function() {
+  IoNode.Register.call(this);
+  let mixins = '';
+  for (let i = this.prototype.__protochain.length; i--;) {
+    const style = this.prototype.__protochain[i].constructor.Style;
+    if (style) {
+      // TODO: improve CSS parsing to support comments etc.
+      const match = Array.from(style.string.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
+      for (let j = 0; j < match.length; j++) {
+        const name = match[j][1].replace(/\s/g, '');
+        const value = match[j][2];
+        Object.defineProperty(this.prototype, name, {value: value});
+        mixins += `.io-${name} {\n${value}\n}\n`;
+      }
+    }
+  }
+  Object.defineProperty(this.prototype, 'mixins', { value: mixins });
+};
+
+IoThemeMixin.Register();
+
+export const IoThemeMixinSingleton = new IoThemeMixin();
 
 export class IoTheme extends IoElement {
   static get Style() {
@@ -8,6 +120,33 @@ export class IoTheme extends IoElement {
       --io-spacing: 4px;
       --io-border-radius: 3px;
       --io-border-width: 1px;
+    }
+    @keyframes spinner {
+      to {transform: rotate(360deg);}
+    }
+    .io-loading {
+      background-image: repeating-linear-gradient(135deg,
+        var(--io-background-color-light),
+        var(--io-background-color) 3px,
+        var(--io-background-color) 7px,
+        var(--io-background-color-light) 10px) !important;
+      background-repeat: repeat;
+      position: relative;
+    }
+    .io-loading:after {
+      content: '';
+      box-sizing: border-box;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      margin-top: -20px;
+      margin-left: -20px;
+      border-radius: 50%;
+      border: var(--io-border);
+      border-top-color: #000;
+      animation: spinner .6s linear infinite;
     }
     </style>`;
   }
@@ -29,7 +168,7 @@ export class IoTheme extends IoElement {
         --io-color-boolean: rgb(210, 90, 190);
 
         --io-gradient-button: linear-gradient(0deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 50%);
-        --io-gradient-frame: linear-gradient(100deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(280deg, rgba(255, 255, 255, 0.075), transparent 50%);
+        --io-gradient-panel: linear-gradient(100deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(280deg, rgba(255, 255, 255, 0.075), transparent 50%);
 
         --io-border-color: rgb(140, 140, 140);
         --io-border: var(--io-border-width) solid var(--io-border-color);
@@ -62,7 +201,7 @@ export class IoTheme extends IoElement {
         --io-color-boolean: rgb(210, 90, 190);
 
         --io-gradient-button: linear-gradient(0deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 75%);
-        --io-gradient-frame: linear-gradient(100deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(280deg, rgba(255, 255, 255, 0.25), transparent 75%);
+        --io-gradient-panel: linear-gradient(100deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(280deg, rgba(255, 255, 255, 0.25), transparent 75%);
 
         --io-border-color: rgb(180, 180, 180);
         --io-border: var(--io-border-width) solid var(--io-border-color);
@@ -88,14 +227,12 @@ export class IoTheme extends IoElement {
     this.styleElement.setAttribute('id', 'io-theme');
   }
   changed() {
-    let styleString = this[this.theme].string;
-    styleString = styleString.replace(new RegExp('<style>', 'g'), '');
-    styleString = styleString.replace(new RegExp('</style>', 'g'), '');
-    this.styleElement.innerHTML = styleString;
+    this.styleElement.innerHTML = this[this.theme].string;
   }
 }
 
 IoTheme.Register();
-IoTheme.singleton = new IoTheme();
-IoTheme.singleton.connect();
-document.head.appendChild(IoTheme.singleton.styleElement);
+
+export const IoThemeSingleton = new IoTheme();
+IoThemeSingleton.connect();
+document.head.appendChild(IoThemeSingleton.styleElement);

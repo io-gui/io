@@ -12,44 +12,11 @@ export class IoSelector extends IoElement {
         justify-self: stretch;
         overflow: auto;
       }
-      :host[loading] > .io-content {
-        background: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px);
-        background-repeat: repeat;
-        position: relative;
-      }
-      @keyframes spinner {
-        to {transform: rotate(360deg);}
-      }
-      :host[loading]:after {
-        content: '';
-        box-sizing: border-box;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 40px;
-        height: 40px;
-        margin-top: -20px;
-        margin-left: -20px;
-        border-radius: 50%;
-        border: var(--io-border);
-        border-top-color: #000;
-        animation: spinner .6s linear infinite;
-      }
       :host > .io-content {
         background: var(--io-background-color);
         color: var(--io-color);
-        display: flex;
-        flex-direction: column;
-        flex: 1 1 auto;
-        overflow-x: hidden;
-        overflow-y: auto;
       }
     </style>`;
-  }
-  static get Attributes() {
-    return {
-      loading: Boolean,
-    };
   }
   static get Properties() {
     return {
@@ -196,14 +163,13 @@ export class IoSelector extends IoElement {
       this.$.content.textContent = '';
     }
 
-    this.loading = true;
+    this.$.content.classList.toggle('io-loading', true);
     if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[selected]) {
       // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
       this.$.content.appendChild(this._caches[selected]);
-      this.loading = false;
     } else {
       this.checkImport(element[1].import, () => {
-        this.loading = false;
+        this.$.content.classList.toggle('io-loading', false);
         this.template([element], this.$.content);
         this._caches[selected] = this.$.content.childNodes[0];
       });

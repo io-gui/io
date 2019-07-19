@@ -284,8 +284,7 @@ IoElement.Register = function() {
     return;
   }
 
-  window[this.name] = this;
-
+  // window[this.name] = this; // TODO: consider since custom elements are global anyway.
   initStyle(this.prototype.__protochain);
 };
 
@@ -310,6 +309,8 @@ export function html(parts) {
   for (let i = 0; i < parts.length; i++) {
     result.string += parts[i] + (arguments[i + 1] || '');
   }
+  result.string = result.string.replace(new RegExp('<style>', 'g'), '');
+  result.string = result.string.replace(new RegExp('</style>', 'g'), '');
   let vars = result.string.match(/-{2}?([a-z][a-z0-9]*)\b[^;]*;?/gi);
   if (vars) {
     for (let i = 0; i < vars.length; i++) {
@@ -370,8 +371,6 @@ function initStyle(prototypes) {
     const style = prototypes[i].constructor.Style;
     const classLocalName = prototypes[i].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     if (style) {
-      style.string = style.string.replace(new RegExp('<style>', 'g'), '');
-      style.string = style.string.replace(new RegExp('</style>', 'g'), '');
       const match = style.string.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
       match.map(selector => {
         selector = selector.trim();

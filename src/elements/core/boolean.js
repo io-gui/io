@@ -1,21 +1,22 @@
 import {html} from "../../io.js";
-import {IoButton} from "./button.js";
+import {IoItem} from "./item.js";
+import {IoThemeMixinSingleton as mixin} from "./theme.js";
 
-export class IoBoolean extends IoButton {
+export class IoBoolean extends IoItem {
   static get Style() {
     return html`<style>
       :host {
-        border: var(--io-outset-border);
-        border-color: var(--io-outset-border-color);
-        color: var(--io-color-field);
+        ${mixin.button}
       }
       :host:not([value]) {
         opacity: 0.75;
       }
-      :host[aria-invalid] {
-        color: var(--io-color-error);
-      }
     </style>`;
+  }
+  static get Attributes() {
+    return {
+      role: 'switch',
+    };
   }
   static get Properties() {
     return {
@@ -28,9 +29,8 @@ export class IoBoolean extends IoButton {
       role: 'switch',
     };
   }
-  constructor(props) {
-    super(props);
-    this.__properties.action.value = this.toggle;
+  _onClick() {
+    this.toggle();
   }
   toggle() {
     this.set('value', !this.value);

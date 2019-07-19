@@ -9,7 +9,6 @@ export class IoHsvaSwatch extends IoGl {
       :host {
         cursor: pointer;
         border-radius: var(--io-border-radius);
-        -webkit-tap-highlight-color: transparent;
         min-width: 32px;
         min-height: 1.375em;
       }
