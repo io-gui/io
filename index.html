@@ -139,10 +139,6 @@
           {label: 'Elements', value: 'elements'},
           {label: 'Demo', value: 'demo'},
           {label: 'Test', value: 'test'},
-          // {label: 'Theme', options: [
-          //   {value: 'light', action: this.setTheme},
-          //   {value: 'dark', action: this.setTheme},
-          // ]},
         ];
         this.elements = [
           ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started#about-io', true),
@@ -178,7 +174,7 @@
           }],
           ['io-selector-sidebar', {name: 'elements', precache: true, minWidth: 640, class: 'docs', selected: $('element', 'basic-elements#io-item', true),
             options: [
-              {label: "Basic Elements", options: [
+              {label: "Core Elements", options: [
                 {label: "io-item", value: "basic-elements#io-item"},
                 {label: "io-button", value: "basic-elements#io-button"},
                 {label: "io-boolean", value: "basic-elements#io-boolean"},
@@ -186,10 +182,8 @@
                 {label: "io-string", value: "basic-elements#io-string"},
                 {label: "io-number", value: "basic-elements#io-number"},
                 {label: "io-slider", value: "basic-elements#io-slider"},
-                {label: "io-option", value: "basic-elements#io-option"},
-                {label: "io-menu", value: "basic-elements#io-menu"},
               ]},
-              {label: "Layout & Navigation", options: [
+              {label: "Layout", options: [
                 {label: "io-collapsable", value: "layout-navigation#io-collapsable"},
                 {label: "io-selector", value: "layout-navigation#io-selector"},
                 {label: "io-selector-tabs", value: "layout-navigation#io-selector-tabs"},
@@ -202,7 +196,12 @@
                 {label: "io-breadcrumbs", value: "object-editors#io-breadcrumbs"},
                 {label: "io-inspector", value: "object-editors#io-inspector"},
               ]},
-              {label: "Math Elements", options: [
+              {label: "Menus", options: [
+                {label: "io-menu-item", value: "elements-menus#io-menu-item"},
+                {label: "io-menu-options", value: "elements-menus#io-menu-options"},
+                {label: "io-menu-option", value: "elements-menus#io-menu-option"},
+              ]},
+              {label: "Math", options: [
                 {label: "io-float", value: "math-elements#io-float"},
                 {label: "io-vector2", value: "math-elements#io-vector2"},
                 {label: "io-vector3", value: "math-elements#io-vector3"},
@@ -218,17 +217,18 @@
                 {label: "io-rgba-picker", value: "math-elements#io-rgba-picker"},
                 {label: "io-hsva-picker", value: "math-elements#io-hsva-picker"},
               ]},
-              {label: "Extra Elements", options: [
-                {label: "io-md-view", value: "extra-elements#io-md-view"},
-                {label: "io-element-demo", value: "extra-elements#io-element-demo"},
-                {label: "io-service-loader", value: "extra-elements#io-service-loader"},
+              {label: "Extras", options: [
+                {label: "io-md-view", value: "extras-elements#io-md-view"},
+                {label: "io-element-demo", value: "extras-elements#io-element-demo"},
+                {label: "io-service-loader", value: "extras-elements#io-service-loader"},
               ]},
             ],
             elements: [
               ['io-md-view', {name: 'basic-elements', path :'./docs/elements-core.md'}],
               ['io-md-view', {name: 'layout-navigation', path :'./docs/elements-layout.md'}],
+              ['io-md-view', {name: 'elements-menus', path :'./docs/elements-menus.md'}],
               ['io-md-view', {name: 'object-editors', path :'./docs/elements-object-editors.md'}],
-              ['io-md-view', {name: 'extra-elements', path :'./docs/elements-extras.md'}],
+              ['io-md-view', {name: 'extras-elements', path :'./docs/elements-extras.md'}],
               ['io-md-view', {name: 'math-elements', path :'./docs/elements-math.md'}],
             ]
           }],
