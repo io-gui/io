@@ -47,10 +47,11 @@ export class IoHsvaSwatch extends IoGl {
 
         float alpha = uValue.a;
         vec2 pxUv = vUv * uSize;
-        if (pxUv.x < gLineWidth) alpha = 1.0;
-        if (pxUv.y < gLineWidth) alpha = 1.0;
-        if (pxUv.x > uSize.x - gLineWidth) alpha = 1.0;
-        if (pxUv.y > uSize.y - gLineWidth) alpha = 1.0;
+        float lineWidth = 4.0;
+        if (pxUv.x < lineWidth) alpha = 1.0;
+        if (pxUv.y < lineWidth) alpha = 1.0;
+        if (pxUv.x > uSize.x - lineWidth) alpha = 1.0;
+        if (pxUv.y > uSize.y - lineWidth) alpha = 1.0;
 
         gl_FragColor = vec4(mix(alphaPattern, hsv2rgb(uValue.xyz), alpha), 1.0);
       }
