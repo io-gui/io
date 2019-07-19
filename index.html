@@ -109,7 +109,7 @@
     <script type="module">
 
     import {IoStorage as $} from "./dist/io.js";
-    import "./dist/io-elements-core.js";
+    import {IoThemeSingleton} from "./dist/io-elements-core.js";
     import {IoSelectorTabs} from "./dist/io-elements-layout.js";
     import "./dist/io-elements-object.js";
     import "./dist/io-elements-extras.js";
@@ -129,6 +129,7 @@
         super(props);
         this.slotted = [
           ['a', {href: '#doc=getting-started#about-io'}, [['img', {src: '/images/logo/io-logo.svg', class:'logo'}],]],
+          // ['io-option', {class: 'io-item', value: IoThemeSingleton.bind('theme'), options: ['light', 'dark', 'pink']}],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},

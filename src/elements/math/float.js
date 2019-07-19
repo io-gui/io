@@ -186,6 +186,8 @@ export class IoLadder extends IoElement {
     window.addEventListener('mouseup', this._onMouseup);
     const item = event.composedPath()[0];
     this._step = Number(item.textContent);
+    this._clickblockRestore = IoMathLayer.singleton.clickblock;
+    IoMathLayer.singleton.clickblock = true;
     IoMathLayer.singleton.style.cursor = 'ew-resize';
     this._value = this.value;
     this._x = event.clientX;
@@ -197,6 +199,7 @@ export class IoLadder extends IoElement {
   _onMouseup() {
     window.removeEventListener('mousemove', this._onMousemove);
     window.removeEventListener('mouseup', this._onMouseup);
+    IoMathLayer.singleton.clickblock = this._clickblockRestore;
     IoMathLayer.singleton.style.cursor = '';
     this._step = 0;
   }
