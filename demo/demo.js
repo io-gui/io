@@ -101,7 +101,7 @@ export class IoDemo extends IoElement {
     ]];
 
     const demoOptions = ['div', {name: 'options'}, [
-      ['io-option', {options: [
+      ['io-menu-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},
         {label: 'one', value: 1},
@@ -110,7 +110,7 @@ export class IoDemo extends IoElement {
         {label: 'four', value: 4},
         {label: 'leet', value: 1337},
       ], value: this.bind('number')}],
-      ['io-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
+      ['io-menu-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
     ]];
 
     const demoButton = ['div', {name: 'button', class: 'table'}, [
@@ -212,7 +212,7 @@ export class IoDemo extends IoElement {
             demoPrimitives,
             ['h4', 'io-switch'], demoSwitch,
             ['h4', 'io-slider'], demoSliders,
-            ['h4', 'io-options'], demoOptions,
+            ['h4', 'io-menu-options'], demoOptions,
             ['h4', 'io-button'], demoButton,
             ['h4', 'io-menu'], demoMenu,
             ['h4', 'io-object'], demoObject,
