@@ -250,7 +250,7 @@ export class IoMenuOptions extends IoElement {
       }]
     )];
     if (this.horizontal) {
-      elements.splice(0, 0, this.slotted[0]);
+      elements.splice(0, 0, ...this.slotted);
       elements.push(['io-menu-item', {
         label: '☰',
         title: 'select tab',
