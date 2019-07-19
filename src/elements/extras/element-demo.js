@@ -15,7 +15,6 @@ export class IoElementDemo extends IoElement {
         margin-top: 0.2em;
         margin-bottom: -1.55em;
         display: inline-block;
-        text-shadow: 0 0 4px #ffffff, 0 0 8px #ffffff, 0 0 16px #ffffff;
         padding: 0 0.5em;
         margin-left: auto;
       }

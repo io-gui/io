@@ -2,7 +2,7 @@ import {html} from "../../io.js";
 import {IoMenuItem} from "./menu-item.js";
 import {IoMenuLayer} from "./menu-layer.js";
 
-export class IoOption extends IoMenuItem {
+export class IoMenuOption extends IoMenuItem {
   static get Style() {
     return html`<style>
       :host {
@@ -112,4 +112,4 @@ export class IoOption extends IoMenuItem {
   }
 }
 
-IoOption.Register();
+IoMenuOption.Register();

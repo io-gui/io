@@ -24,8 +24,8 @@
 
 import "./io-elements-core.js";
 
-export {IoOption} from "./elements/menu/option.js";
-export {IoMenuItem} from "./elements/menu/menu-item.js";
-export {IoMenuLayer} from "./elements/menu/menu-layer.js";
-export {IoMenuOptions} from "./elements/menu/menu-options.js";
-export {IoMenu} from "./elements/menu/menu.js";
+export {IoMenuOption} from "./elements/menus/option.js";
+export {IoMenuItem} from "./elements/menus/menu-item.js";
+export {IoMenuLayer} from "./elements/menus/menu-layer.js";
+export {IoMenuOptions} from "./elements/menus/menu-options.js";
+export {IoMenu} from "./elements/menus/menu.js";
