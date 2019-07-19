@@ -2,7 +2,6 @@
 
 import {html, IoElement} from "./element.js";
 import {IoNode} from "./node.js";
-import {ProtoProperty, Properties} from "./properties.js";
 
 const animationQueue = new Array();
 const animate = function() {
