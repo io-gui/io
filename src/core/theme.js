@@ -124,16 +124,12 @@ export class IoTheme extends IoElement {
     @keyframes spinner {
       to {transform: rotate(360deg);}
     }
-    .io-loading {
-      background-image: repeating-linear-gradient(135deg,
-        var(--io-background-color-light),
-        var(--io-background-color) 3px,
-        var(--io-background-color) 7px,
-        var(--io-background-color-light) 10px) !important;
+    body .io-loading {
+      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
       background-repeat: repeat;
       position: relative;
     }
-    .io-loading:after {
+    body .io-loading:after {
       content: '';
       box-sizing: border-box;
       position: absolute;
