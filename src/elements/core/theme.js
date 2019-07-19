@@ -98,7 +98,7 @@ IoThemeMixin.Register = function() {
     if (style) {
       // TODO: improve CSS parsing to support comments etc.
       const match = Array.from(style.string.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
-      for (var j = 0; j < match.length; j++) {
+      for (let j = 0; j < match.length; j++) {
         const name = match[j][1].replace(/\s/g, '');
         const value = match[j][2];
         Object.defineProperty(this.prototype, name, {value: value});
