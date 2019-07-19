@@ -108,8 +108,8 @@
     <link href="/lib/mocha.css" rel="stylesheet" />
     <script type="module">
 
-    import {IoStorage as $} from "./dist/io.js";
-    import "./dist/io-elements-core.js";
+    import {IoStorage as $, IoThemeSingleton} from "./dist/io.js";
+    // import {IoThemeSingleton} from "./dist/io.js";
     import {IoSelectorTabs} from "./dist/io-elements-layout.js";
     import "./dist/io-elements-object.js";
     import "./dist/io-elements-extras.js";
@@ -125,16 +125,24 @@
           cache: true,
         };
       }
+      setTheme(value) {
+        IoThemeSingleton.theme = value;
+      }
       constructor(props) {
         super(props);
         this.slotted = [
-          ['a', {href: '#doc=getting-started#about-io'}, [['img', {src: '/images/logo/io-logo.svg', class:'logo'}],]],
+          ['a', {href: '#doc=getting-started#about-io'}, [['img', {src: '/images/logo/io-logo.svg', class:'logo'}]]],
+          ['io-option', {label: 'Theme', class: 'io-item', value: IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},
           {label: 'Elements', value: 'elements'},
           {label: 'Demo', value: 'demo'},
           {label: 'Test', value: 'test'},
+          // {label: 'Theme', options: [
+          //   {value: 'light', action: this.setTheme},
+          //   {value: 'dark', action: this.setTheme},
+          // ]},
         ];
         this.elements = [
           ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started#about-io', true),

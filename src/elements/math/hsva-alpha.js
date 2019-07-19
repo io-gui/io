@@ -21,15 +21,14 @@ export class IoHsvaAlpha extends IoHsvaHue {
         vec3 final = alphaPattern;
 
         float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
-        float lineWidth = 1.0;
 
         // Apha gradient
         final = mix(alphaPattern, currentColor, axis);
 
         // Apha marker
       	float hueMarkerOffset = abs(axis - uValue[3]) * ((uHorizontal == 1) ? uSize.x : uSize.y);
-        float dist = hueMarkerOffset - lineWidth;
-        float dist2 = hueMarkerOffset - (lineWidth + 1.0);
+        float dist = hueMarkerOffset - gLineWidth;
+        float dist2 = hueMarkerOffset - (gLineWidth + 1.0);
         final = mix(final, vec3(0.0), max(1.0 - dist2, 0.0));
         final = mix(final, vec3(1.0), max(1.0 - dist, 0.0));
 

@@ -87,13 +87,6 @@ export class IoSliderKnob extends IoGl {
       step: 0.01,
       minValue: 0,
       maxValue: 1000,
-      startColor: [0.3, 0.9, 1, 1],
-      endColor: [0.9, 1, 0.5, 1],
-      lineColor: [0.5, 0.5, 0.5, 1],
-      bg: [0.2, 0.2, 0.2, 1],
-      snapWidth: 2,
-      slotWidth: 2,
-      handleWidth: 4,
     };
   }
   static get Listeners() {
@@ -237,33 +230,34 @@ export class IoSliderKnob extends IoGl {
 
     void main(void) {
 
-      vec4 finalColor = uBg;
+      vec4 finalColor = gBackground;
 
       float _range = uMaxValue - uMinValue;
       float _progress = (uValue - uMinValue) / _range;
       float _value = mix(uMinValue, uMaxValue, vUv.x);
       float _stepRange = uSize.x / (_range / uStep);
 
-      if (_stepRange > uSnapWidth * 2.0) {
+      if (_stepRange > gLineWidth * 2.0) {
         float res = _value / uStep;
-        float line = abs(fract(res - 0.5) - 0.5) / abs(dFdx(res)) / uSnapWidth;
-        finalColor = mix(finalColor, uLineColor, 1.0 - min(line, 1.0));
+        float line = abs(fract(res - 0.5) - 0.5) / abs(dFdx(res)) / gLineWidth;
+        if (line < 0.999) line = 0.0;
+        finalColor = mix(finalColor, gColor, 1.0 - min(line, 1.0));
       }
 
-      float slot = (abs(0.5 - vUv.y) * 2.0) * uSize.y;
-      slot = (1.0 - slot) + uSlotWidth;
+      float slot = (abs(0.5 - vUv.y)) * uSize.y;
+      slot = (1.0 - slot) + gLineWidth * 2.0;
       slot = clamp(slot, 0.0, 1.0);
-      vec4 slotColor = mix(uStartColor, uEndColor, vUv.x);
+      vec4 slotColor = mix(gColorFocus, gColorLink, vUv.x);
       float progress = (vUv.x - _progress) * uSize.x;
       progress = clamp(progress, 0.0, 1.0);
-      slotColor = mix(slotColor, uLineColor, progress);
+      slotColor = mix(slotColor, mix(gColor, gBackground, 0.5), progress);
 
       float handle = abs(vUv.x - _progress) * uSize.x;
-      handle = (1.0 - handle) + uHandleWidth;
+      handle = (1.0 - handle) + gLineWidth * 2.0;
       handle = clamp(handle, 0.0, 1.0);
 
       finalColor = mix(finalColor, slotColor, slot);
-      finalColor = mix(finalColor, mix(uStartColor, uEndColor, _progress), handle);
+      finalColor = mix(finalColor, mix(gColorFocus, gColorLink, _progress), handle);
       gl_FragColor = finalColor;
     }`;
   }

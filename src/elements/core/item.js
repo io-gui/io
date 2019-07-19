@@ -1,5 +1,5 @@
 import {IoElement, html} from "../../io.js";
-import {IoThemeMixinSingleton as mixin} from "./theme.js";
+import {IoThemeMixinSingleton as mixin} from "../../io.js";
 
 export class Item {
   constructor(value) {

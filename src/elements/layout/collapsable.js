@@ -1,5 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoThemeMixinSingleton as mixin} from "../../io-elements-core.js";
+import {IoThemeMixinSingleton as mixin} from "../../io.js";
 
 export class IoCollapsable extends IoElement {
   static get Style() {

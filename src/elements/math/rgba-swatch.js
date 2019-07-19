@@ -43,13 +43,11 @@ export class IoRgbaSwatch extends IoGl {
         vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), alphaMask);
 
         float alpha = uValue.a;
-
-        float borderWidth = 4.0;
         vec2 pxUv = vUv * uSize;
-        if (pxUv.x < borderWidth) alpha = 1.0;
-        if (pxUv.y < borderWidth) alpha = 1.0;
-        if (pxUv.x > uSize.x - borderWidth) alpha = 1.0;
-        if (pxUv.y > uSize.y - borderWidth) alpha = 1.0;
+        if (pxUv.x < gLineWidth) alpha = 1.0;
+        if (pxUv.y < gLineWidth) alpha = 1.0;
+        if (pxUv.x > uSize.x - gLineWidth) alpha = 1.0;
+        if (pxUv.y > uSize.y - gLineWidth) alpha = 1.0;
 
         gl_FragColor = vec4(mix(alphaPattern, uValue.rgb, alpha), 1.0);
       }

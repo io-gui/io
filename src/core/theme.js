@@ -1,5 +1,6 @@
-import {IoElement, IoNode} from "../../io.js";
-import {html} from "../../io.js";
+import {IoElement, html} from "./element.js";
+import {IoNode} from "./node.js";
+import {glGlobals} from "./gl.js";
 
 export class IoThemeMixin extends IoNode {
   static get Style() {
@@ -124,16 +125,12 @@ export class IoTheme extends IoElement {
     @keyframes spinner {
       to {transform: rotate(360deg);}
     }
-    .io-loading {
-      background-image: repeating-linear-gradient(135deg,
-        var(--io-background-color-light),
-        var(--io-background-color) 3px,
-        var(--io-background-color) 7px,
-        var(--io-background-color-light) 10px) !important;
+    body .io-loading {
+      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
       background-repeat: repeat;
       position: relative;
     }
-    .io-loading:after {
+    body .io-loading:after {
       content: '';
       box-sizing: border-box;
       position: absolute;
@@ -228,9 +225,11 @@ export class IoTheme extends IoElement {
   }
   changed() {
     this.styleElement.innerHTML = this[this.theme].string;
+    setTimeout(() => {
+      glGlobals.updateValues();
+    });
   }
 }
-
 IoTheme.Register();
 
 export const IoThemeSingleton = new IoTheme();

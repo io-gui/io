@@ -31,6 +31,7 @@ export class IoOption extends IoMenuItem {
   static get Properties() {
     return {
       options: Array,
+      _depth: 100,
     };
   }
   static get Listeners() {
