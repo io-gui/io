@@ -230,34 +230,34 @@ export class IoSliderKnob extends IoGl {
 
     void main(void) {
 
-      vec4 finalColor = gBackground;
+      vec4 finalColor = cssBackgroundColor;
 
       float _range = uMaxValue - uMinValue;
       float _progress = (uValue - uMinValue) / _range;
       float _value = mix(uMinValue, uMaxValue, vUv.x);
       float _stepRange = uSize.x / (_range / uStep);
 
-      if (_stepRange > gLineWidth * 2.0) {
+      if (_stepRange > cssBorderWidth * 2.0) {
         float res = _value / uStep;
-        float line = abs(fract(res - 0.5) - 0.5) / abs(dFdx(res)) / gLineWidth;
+        float line = abs(fract(res - 0.5) - 0.5) / abs(dFdx(res)) / cssBorderWidth;
         if (line < 0.999) line = 0.0;
-        finalColor = mix(finalColor, gColor, 1.0 - min(line, 1.0));
+        finalColor = mix(cssColor, finalColor, min(line, 1.0));
       }
 
       float slot = (abs(0.5 - vUv.y)) * uSize.y;
-      slot = (1.0 - slot) + gLineWidth * 2.0;
+      slot = (1.0 - slot) + cssBorderWidth * 2.0;
       slot = clamp(slot, 0.0, 1.0);
-      vec4 slotColor = mix(gColorFocus, gColorLink, vUv.x);
+      vec4 slotColor = mix(cssColorFocus, cssColorLink, vUv.x);
       float progress = (vUv.x - _progress) * uSize.x;
       progress = clamp(progress, 0.0, 1.0);
-      slotColor = mix(slotColor, mix(gColor, gBackground, 0.5), progress);
+      slotColor = mix(slotColor, mix(cssColor, cssBackgroundColor, 0.5), progress);
 
       float handle = abs(vUv.x - _progress) * uSize.x;
-      handle = (1.0 - handle) + gLineWidth * 2.0;
+      handle = (1.0 - handle) + cssBorderWidth * 2.0;
       handle = clamp(handle, 0.0, 1.0);
 
       finalColor = mix(finalColor, slotColor, slot);
-      finalColor = mix(finalColor, mix(gColorFocus, gColorLink, _progress), handle);
+      finalColor = mix(finalColor, mix(cssColorFocus, cssColorLink, _progress), handle);
       gl_FragColor = finalColor;
     }`;
   }

@@ -53,8 +53,8 @@ export class IoHsvaSv extends IoHsvaHue {
         currentColor = mix(alphaPattern, currentColor, uValue.a);
 
         final = mix(final, currentColor, saturate(distIn));
-        final = mix(final, gColor.rgb, dist2);
-        final = mix(final, gBackground.rgb, dist);
+        final = mix(final, cssColor.rgb, dist2);
+        final = mix(final, cssBackgroundColor.rgb, dist);
 
         gl_FragColor = vec4(final, 1.0);
       }

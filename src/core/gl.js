@@ -1,7 +1,7 @@
-// TODO: document, demo, test
-
 import {html, IoElement} from "./element.js";
-import {IoNode} from "./node.js";
+import {IoCssSingleton} from "./css.js";
+
+// TODO: document and test
 
 const animationQueue = new Array();
 const animate = function() {
@@ -47,40 +47,7 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 
 const shadersCache = new WeakMap();
-
-class IoGlGlobals extends IoNode {
-  static get Properties() {
-    return {
-      background: [0, 0, 0, 1],
-      color: [0.7, 0.7, 0.7, 1],
-      colorLink: [190/255, 230/255, 150/255, 1],
-      colorFocus: [80/255, 210/255, 355/255, 1],
-      lineWidth: 1,
-    };
-  }
-  updateValues() {
-    const cs = getComputedStyle(document.body);
-
-    const c = cs.getPropertyValue('--io-color').split("(")[1].split(")")[0].split(",");
-    c[0] = c[0]/255; c[1] = c[1]/255; c[2] = c[2]/255;
-
-    const b = cs.getPropertyValue('--io-background-color-dark').split("(")[1].split(")")[0].split(",");
-    b[0] = b[0]/255; b[1] = b[1]/255; b[2] = b[2]/255;
-
-    const lw = parseInt(cs.getPropertyValue('--io-border-width'));
-
-    this.color = c;
-    this.background = b;
-    this.lineWidth = lw;
-  }
-  changed() {
-    this.dispatchEvent('object-mutated', {object: this}, false, window);
-  }
-}
-IoGlGlobals.Register();
-
-export const glGlobals = new IoGlGlobals();
-glGlobals.connect();
+let currentProgram;
 
 export class IoGl extends IoElement {
   static get Style() {
@@ -105,6 +72,7 @@ export class IoGl extends IoElement {
     return {
       size: [0, 0],
       aspect: 1,
+      pxRatio: 1,
       globals: Object,
     };
   }
@@ -125,74 +93,59 @@ export class IoGl extends IoElement {
       void main(void) {
         vec2 px = uSize * vUv;
         px = mod(px, 8.0);
-        gl_FragColor = gBackground;
+        gl_FragColor = cssBackgroundColor;
         if (px.x <= 1.0 || px.y <= 1.0) gl_FragColor = vec4(vUv, 0.0, 1.0);
-        if (px.x <= 1.0 && px.y <= 1.0) gl_FragColor = gColor;
+        if (px.x <= 1.0 && px.y <= 1.0) gl_FragColor = cssColor;
       }\n\n`;
   }
-  globalsMutated() {
-    queueAnimation(this.render);
-  }
-  connectedCallback() {
-    super.connectedCallback();
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
+  initPropertyUniform(name, property) {
+    if (property.notify) {
+      switch (property.type) {
+        case Boolean:
+          return 'uniform int ' + name + ';\n';
+          break;
+        case Number:
+          return 'uniform float ' + name + ';\n';
+          break;
+        case Array:
+          this._vecLengths[name] = property.value.length;
+          return 'uniform vec' + property.value.length + ' ' + name + ';\n';
+          break;
+        default:
+      }
+      // TODO: implement matrices.
+    }
+    return '';
   }
   constructor(props) {
     super(props);
 
-    this.globals = glGlobals;
+    this.globals = IoCssSingleton;
 
     let frag = /* glsl */`
       #extension GL_OES_standard_derivatives : enable
       precision highp float;\n\n`;
 
-    this._arrayLengths = {};
+    this._vecLengths = {};
 
-    for (let prop in glGlobals.__properties) {
-      const type = glGlobals.__properties[prop].type;
-      const protpValue = glGlobals.__protoProperties[prop].value;
-      const notify = glGlobals.__properties[prop].notify;
-      if (notify) {
-        const uName = 'g' + prop.charAt(0).toUpperCase() + prop.slice(1);
-        if (type === Boolean) {
-          frag += '      uniform int ' + uName + ';\n';
-        }
-        if (type === Number) {
-          frag += '      uniform float ' + uName + ';\n';
-        } else if (type === Array) {
-          this._arrayLengths[uName] = protpValue.length;
-          frag += '      uniform vec' + protpValue.length + ' ' + uName + ';\n';
-        }
-        // TODO: implement matrices.
-      }
+    for (let prop in IoCssSingleton.__properties) {
+      const name = 'css' + prop.charAt(0).toUpperCase() + prop.slice(1);
+      const property = IoCssSingleton.__protoProperties[prop];
+      frag += this.initPropertyUniform(name, property);
     }
 
     frag += '\n';
 
     for (let prop in this.__properties) {
-      const type = this.__properties[prop].type;
-      const protpValue = this.__protoProperties[prop].value;
-      const notify = this.__properties[prop].notify;
-      if (notify) {
-        const uName = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-        if (type === Boolean) {
-          frag += '      uniform int ' + uName + ';\n';
-        }
-        if (type === Number) {
-          frag += '      uniform float ' + uName + ';\n';
-        } else if (type === Array) {
-          this._arrayLengths[uName] = protpValue.length;
-          frag += '      uniform vec' + protpValue.length + ' ' + uName + ';\n';
-        }
-        // TODO: implement matrices.
-      }
+      const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
+      const property = this.__protoProperties[prop];
+      frag += this.initPropertyUniform(name, property);
     }
 
     const vertShader = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vertShader, this.constructor.Vert);
     gl.compileShader(vertShader);
+
 
     if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
       let compilationLog = gl.getShaderInfoLog(vertShader);
@@ -204,6 +157,7 @@ export class IoGl extends IoElement {
     const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(fragShader, frag + this.constructor.Frag);
     gl.compileShader(fragShader);
+
 
     if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
       let compilationLog = gl.getShaderInfoLog(fragShader);
@@ -236,148 +190,108 @@ export class IoGl extends IoElement {
 
     this.render = this.render.bind(this);
 
-    this.render(); // TODO: hmm
+    this.updateCssUniforms();
   }
   onResized() {
     const rect = this.getBoundingClientRect();
-    this._width = Math.ceil(rect.width);
-    this._height = Math.ceil(rect.height);
-    this.changed();
+    const pxRatio = window.devicePixelRatio;
+    const width = Math.ceil(rect.width * pxRatio);
+    const height = Math.ceil(rect.height * pxRatio);
+    this.setProperties({
+      size: [width, height],
+      aspect: width / height,
+      pxRatio: pxRatio,
+    });
+  }
+  globalsMutated() {
+    this.updateCssUniforms();
+    queueAnimation(this.render);
+  }
+  propertyChanged(event) {
+    const p = event.detail.property;
+    const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
+    this.updatePropertyUniform(name, this.__properties[p]);
   }
   changed() {
     queueAnimation(this.render);
   }
   render() {
-    this.$.img.style.width = this.size[0] ? this.size[0] + 'px' : null;
-    this.$.img.style.height = this.size[1] ? this.size[1] + 'px' : null;
-
-    const width = Math.ceil(this.size[0] || this._width || 1);
-    const height = Math.ceil(this.size[1] || this._height || 1);
-    const pxRatio = window.devicePixelRatio;
+    const width = this.size[0];
+    const height = this.size[1];
 
     if (!width || !height) return;
 
-    canvas.width = width * pxRatio;
-    canvas.height = height * pxRatio;
-    gl.viewport(0, 0, width * pxRatio, height * pxRatio);
-    gl.clearColor(glGlobals.background[0], glGlobals.background[1], glGlobals.background[2], glGlobals.background[3]);
+    canvas.width = width;
+    canvas.height = height;
+    gl.viewport(0, 0, width, height);
+    gl.clearColor(0, 0, 0, 0);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    gl.useProgram(this._shader);
-
-    // TODO: don't brute force uniform update!
-    for (let prop in this.__properties) {
-      const type = this.__properties[prop].type;
-      let value = this.__properties[prop].value;
-      const notify = this.__properties[prop].notify;
-      if (notify) {
-        const uName = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-        const uniform = gl.getUniformLocation(this._shader, uName);
-
-        if (prop === 'size') {
-          value = [width * pxRatio, height * pxRatio];
-        }
-        if (prop === 'aspect') {
-          value = width / height;
-        }
-        if (type === Boolean) {
-          gl.uniform1i(uniform, value ? 1 : 0);
-        }
-        if (type === Number) {
-          gl.uniform1f(uniform, value || 0);
-        } else if (type === Array) {
-          let _c = [0, 1, 2, 3];
-          if (!(value instanceof Array) && typeof value === 'object') {
-            if (value.x !== undefined) _c = ['x', 'y', 'z', 'w'];
-            else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a'];
-            else if (value.h !== undefined) _c = ['h', 's', 'v', 'a'];
-            else if (value.c !== undefined) _c = ['c', 'm', 'y', 'k'];
-          }
-          const length = this._arrayLengths[uName];
-          switch (length) {
-            case 2:
-            gl.uniform2f(uniform,
-              value[_c[0]] !== undefined ? value[_c[0]] : 1,
-              value[_c[1]] !== undefined ? value[_c[1]] : 1);
-            break;
-            case 3:
-            gl.uniform3f(uniform,
-              value[_c[0]] !== undefined ? value[_c[0]] : 1,
-              value[_c[1]] !== undefined ? value[_c[1]] : 1,
-              value[_c[2]] !== undefined ? value[_c[2]] : 1);
-            break;
-            case 4:
-            gl.uniform4f(uniform,
-              value[_c[0]] !== undefined ? value[_c[0]] : 1,
-              value[_c[1]] !== undefined ? value[_c[1]] : 1,
-              value[_c[2]] !== undefined ? value[_c[2]] : 1,
-              value[_c[3]] !== undefined ? value[_c[3]] : 1);
-            break;
-            default:
-          }
-        }
-      }
-    }
-
-    // TODO: don't brute force uniform update!
-    for (let prop in glGlobals.__properties) {
-      const type = glGlobals.__properties[prop].type;
-      let value = glGlobals.__properties[prop].value;
-      const notify = glGlobals.__properties[prop].notify;
-      if (notify) {
-        const uName = 'g' + prop.charAt(0).toUpperCase() + prop.slice(1);
-        const uniform = gl.getUniformLocation(this._shader, uName);
-        // console.log(uName);
-
-        // if (prop === 'size') {
-        //   value = [width * pxRatio, height * pxRatio];
-        // }
-        // if (prop === 'aspect') {
-        //   value = width / height;
-        // }
-        if (type === Boolean) {
-          gl.uniform1i(uniform, value ? 1 : 0);
-        }
-        if (type === Number) {
-          gl.uniform1f(uniform, value || 0);
-        } else if (type === Array) {
-          let _c = [0, 1, 2, 3];
-          if (!(value instanceof Array) && typeof value === 'object') {
-            if (value.x !== undefined) _c = ['x', 'y', 'z', 'w'];
-            else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a'];
-            else if (value.h !== undefined) _c = ['h', 's', 'v', 'a'];
-            else if (value.c !== undefined) _c = ['c', 'm', 'y', 'k'];
-          }
-          const length = this._arrayLengths[uName];
-          switch (length) {
-            case 2:
-            gl.uniform2f(uniform,
-              value[_c[0]] !== undefined ? value[_c[0]] : 1,
-              value[_c[1]] !== undefined ? value[_c[1]] : 1);
-            break;
-            case 3:
-            gl.uniform3f(uniform,
-              value[_c[0]] !== undefined ? value[_c[0]] : 1,
-              value[_c[1]] !== undefined ? value[_c[1]] : 1,
-              value[_c[2]] !== undefined ? value[_c[2]] : 1);
-            break;
-            case 4:
-            gl.uniform4f(uniform,
-              value[_c[0]] !== undefined ? value[_c[0]] : 1,
-              value[_c[1]] !== undefined ? value[_c[1]] : 1,
-              value[_c[2]] !== undefined ? value[_c[2]] : 1,
-              value[_c[3]] !== undefined ? value[_c[3]] : 1);
-            break;
-            default:
-          }
-        }
-      }
-    }
-
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-
     this.$.img.src = canvas.toDataURL('image/png', 0.9);
+  }
+  setShaderProgram() {
+    if (currentProgram !== this._shader) {
+      currentProgram = this._shader;
+      gl.useProgram(this._shader);
+    }
+  }
+  updatePropertyUniform(name, property) {
+    this.setShaderProgram();
+    if (property.notify) {
+      this.setUniform(name, property.type, property.value);
+    }
+  }
+  updateCssUniforms() {
+    this.setShaderProgram();
+    for (let p in IoCssSingleton.__properties) {
+      const name = 'css' + p.charAt(0).toUpperCase() + p.slice(1);
+      this.updatePropertyUniform(name, IoCssSingleton.__properties[p]);
+    }
+  }
+  setUniform(name, type, value) {
+    const uniform = gl.getUniformLocation(this._shader, name);
+    switch (type) {
+      case Boolean:
+        gl.uniform1i(uniform, value ? 1 : 0);
+        break;
+      case Number:
+        gl.uniform1f(uniform, value || 0);
+        break;
+      case Array:
+        let _c = [0, 1, 2, 3];
+        if (!(value instanceof Array) && typeof value === 'object') {
+          if (value.x !== undefined) _c = ['x', 'y', 'z', 'w'];
+          else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a'];
+          else if (value.h !== undefined) _c = ['h', 's', 'v', 'a'];
+          else if (value.c !== undefined) _c = ['c', 'm', 'y', 'k'];
+        }
+        const length = this._vecLengths[name];
+        switch (length) {
+          case 2:
+            gl.uniform2f(uniform,
+                value[_c[0]] !== undefined ? value[_c[0]] : 1,
+                value[_c[1]] !== undefined ? value[_c[1]] : 1);
+            break;
+          case 3:
+            gl.uniform3f(uniform,
+                value[_c[0]] !== undefined ? value[_c[0]] : 1,
+                value[_c[1]] !== undefined ? value[_c[1]] : 1,
+                value[_c[2]] !== undefined ? value[_c[2]] : 1);
+            break;
+          case 4:
+            gl.uniform4f(uniform,
+                value[_c[0]] !== undefined ? value[_c[0]] : 1,
+                value[_c[1]] !== undefined ? value[_c[1]] : 1,
+                value[_c[2]] !== undefined ? value[_c[2]] : 1,
+                value[_c[3]] !== undefined ? value[_c[3]] : 1);
+                break;
+          default:
+        }
+        break;
+      default:
+    }
   }
 }
 

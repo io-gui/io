@@ -30,8 +30,8 @@ export class IoHsvaAlpha extends IoHsvaHue {
       	float hueMarkerOffset = abs(axis - uValue[3]) * ((uHorizontal == 1) ? uSize.x : uSize.y);
         float dist = hueMarkerOffset - lineWidth;
         float dist2 = hueMarkerOffset - (lineWidth + 1.0);
-        final = mix(final, gColor.rgb, saturate(1.0 - dist2));
-        final = mix(final, gBackground.rgb, saturate(1.0 - dist));
+        final = mix(final, cssColor.rgb, saturate(1.0 - dist2));
+        final = mix(final, cssBackgroundColor.rgb, saturate(1.0 - dist));
 
         gl_FragColor = vec4(final, 1.0);
       }
