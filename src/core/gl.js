@@ -103,14 +103,11 @@ export class IoGl extends IoElement {
       switch (property.type) {
         case Boolean:
           return 'uniform int ' + name + ';\n';
-          break;
         case Number:
           return 'uniform float ' + name + ';\n';
-          break;
         case Array:
           this._vecLengths[name] = property.value.length;
           return 'uniform vec' + property.value.length + ' ' + name + ';\n';
-          break;
         default:
       }
       // TODO: implement matrices.
@@ -252,6 +249,7 @@ export class IoGl extends IoElement {
   }
   setUniform(name, type, value) {
     const uniform = gl.getUniformLocation(this._shader, name);
+    let _c;
     switch (type) {
       case Boolean:
         gl.uniform1i(uniform, value ? 1 : 0);
@@ -260,15 +258,14 @@ export class IoGl extends IoElement {
         gl.uniform1f(uniform, value || 0);
         break;
       case Array:
-        let _c = [0, 1, 2, 3];
+        _c = [0, 1, 2, 3];
         if (!(value instanceof Array) && typeof value === 'object') {
           if (value.x !== undefined) _c = ['x', 'y', 'z', 'w'];
           else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a'];
           else if (value.h !== undefined) _c = ['h', 's', 'v', 'a'];
           else if (value.c !== undefined) _c = ['c', 'm', 'y', 'k'];
         }
-        const length = this._vecLengths[name];
-        switch (length) {
+        switch (this._vecLengths[name]) {
           case 2:
             gl.uniform2f(uniform,
                 value[_c[0]] !== undefined ? value[_c[0]] : 1,
