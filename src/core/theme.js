@@ -1,12 +1,11 @@
 import {IoElement, html} from "./element.js";
 import {IoNode} from "./node.js";
-import {glGlobals} from "./gl.js";
+import {IoCssSingleton} from "./css.js";
 
 export class IoThemeMixin extends IoNode {
   static get Style() {
     return html`<style>
     item {
-      cursor: default;
       display: inline-block;
       -webkit-tap-highlight-color: transparent;
       overflow: hidden;
@@ -226,7 +225,7 @@ export class IoTheme extends IoElement {
   changed() {
     this.styleElement.innerHTML = this[this.theme].string;
     setTimeout(() => {
-      glGlobals.updateValues();
+      IoCssSingleton.updateValues();
     });
   }
 }

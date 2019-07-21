@@ -2,7 +2,7 @@
 
 Io is a UI framework for JavaScript applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
 
-For a quick start, read this document, then check out included [elements library](https://io-gui.dev/#page=elements) and the [source code](https://github.com/io-gui/io/). 
+For a quick start, read this document, then check out included [elements library](https://io-gui.dev/#page=elements) and the [source code](https://github.com/io-gui/io/).
 
 ## Usage
 
@@ -12,7 +12,7 @@ Import Io module from `dist/io.js` or `src/io.js`.
 import {IoElement} from "./io/dist/io.js";
 ```
 
-The library includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as [`<io-menu-options>`](#page=elements&element=basic-elements#io-menu) for example, create the element, assign the options property, and add it to your DOM.
+The library includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as [`<io-menu-options>`](#page=elements&element=elements-menus#io-menu-options) for example, create the element, assign the options property, and add it to your DOM.
 
 ```javascript
 import "./io/dist/io-elements.js";
@@ -185,4 +185,4 @@ class MyApp extends IoElement {
 MyApp.Register();
 ```
 
-> Continue reading [advanced usage](#page=docs&doc=advanced#usage) or check out the [included elements](#page=elements).
+> Continue reading [advanced usage](#page=docs&doc=learn-more) or check out the [included elements](#page=elements).

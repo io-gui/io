@@ -38,6 +38,7 @@ export class NodeQueue extends Array {
         if (detail.value !== detail.oldValue) {
           changed = true;
           if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
+          if (node['propertyChanged']) node['propertyChanged'](payload);
           node.dispatchEvent(prop + '-changed', payload.detail);
         }
         else {

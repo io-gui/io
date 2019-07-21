@@ -43,16 +43,18 @@ export class IoHsvaHue extends IoGl {
 
       void main(void) {
 
-        // Hue spectrum
         float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
+
+        // Hue spectrum
         vec3 final = hsv2rgb(vec3(axis, 1.0, 1.0));
 
         // Hue marker
+        float lineWidth = 4.0;
       	float hueMarkerOffset = abs(axis - uValue[0]) * ((uHorizontal == 1) ? uSize.x : uSize.y);
-        float dist = hueMarkerOffset - gLineWidth;
-        float dist2 = hueMarkerOffset - (gLineWidth + 1.0);
-        final = mix(final, vec3(0.0), max(1.0 - dist2, 0.0));
-        final = mix(final, vec3(1.0), max(1.0 - dist, 0.0));
+        float dist = hueMarkerOffset - lineWidth;
+        float dist2 = hueMarkerOffset - (lineWidth + 1.0);
+        final = mix(final, cssColor.rgb, saturate(1.0 - dist2));
+        final = mix(final, cssBackgroundColor.rgb, saturate(1.0 - dist));
 
         gl_FragColor = vec4(final, 1.0);
       }
