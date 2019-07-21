@@ -14,24 +14,24 @@ export class TodoItem extends IoElement {
   changed() {
     this.template([
       ['li', {class: (this.item.completed ? 'completed' : '') + (this.editing ? ' editing' : '')}, [
-        ['input', {type: 'checkbox', class: 'toggle', checked: this.item.completed, 'on-click': this.toggleItem}],
-        ['label', {'on-dblclick': this.startEdit}, this.item.title],
-        ['button', {class: 'destroy', 'on-click': this.destroyItem}],
-        this.editing ? ['input', {id: 'input', class: 'edit', value: this.item.title, 'on-blur': this.endEdit, 'on-keyup': this.onInputKey}] : null
+        ['input', {type: 'checkbox', class: 'toggle', checked: this.item.completed, 'on-click': this.onToggleItem}],
+        ['label', {'on-dblclick': this.onStartEdit}, this.item.title],
+        ['button', {class: 'destroy', 'on-click': this.onDestroyItem}],
+        this.editing ? ['input', {id: 'input', class: 'edit', value: this.item.title, 'on-blur': this.onEndEdit, 'on-keyup': this.onInputKey}] : null
       ]]
     ]);
   }
-  destroyItem() {
+  onDestroyItem() {
     this.model.destroyItem(this.item);
   }
-  toggleItem() {
+  onToggleItem() {
     this.model.toggleItem(this.item);
   }
-  startEdit() {
+  onStartEdit() {
     this.editing = true;
     this.querySelector('input.edit').focus();
   }
-  endEdit() {
+  onEndEdit() {
     this.model.updateItemTitle(this.item, this.querySelector('input.edit').value);
     this.editing = false;
   }
