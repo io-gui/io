@@ -95,7 +95,7 @@ export class IoDemo extends IoElement {
       ['io-slider', {value: this.bind('number')}],
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
-      ['io-slider', {value: this.bind('number'), min: -2, max: 3, step: 1}],
+      ['io-slider', {value: this.bind('number'), min: -1.33, max: 3, step: 1}],
       ['io-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
       ['io-slider', {value: this.bind('NaN'), step: 0.1}],
     ]];

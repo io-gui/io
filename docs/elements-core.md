@@ -62,7 +62,7 @@ Implements `<io-number>` and `<io-slider-knob>`.
 
 <io-element-demo element="io-slider" properties='{"value": 0.1, "step": 0.1, "min": 0, "max": 1}'></io-element-demo>
 
-<io-element-demo element="io-slider-knob" properties='{"value": 0.1, "step": 0.1, "minValue": 0, "maxValue": 1}'></io-element-demo>
+<io-element-demo element="io-slider-knob" properties='{"value": 0.1, "step": 0.1, "minV": 0, "max": 1}'></io-element-demo>
 
 It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment.
 

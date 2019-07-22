@@ -1,4 +1,4 @@
-import {html, IoElement, IoGl} from "../../io.js";
+import {html, IoElement, IoGl, shaderChunk} from "../../io.js";
 
 export class IoSlider extends IoElement {
   static get Style() {
@@ -45,8 +45,8 @@ export class IoSlider extends IoElement {
         id: 'slider',
         value: this.value,
         step: this.step,
-        minValue: this.min,
-        maxValue: this.max,
+        min: this.min,
+        max: this.max,
         label: this.label,
         title: this.title,
         'on-value-set': this._onValueSet,
@@ -85,8 +85,8 @@ export class IoSliderKnob extends IoGl {
     return {
       value: 0,
       step: 0.01,
-      minValue: 0,
-      maxValue: 1000,
+      min: 0,
+      max: 1000,
     };
   }
   static get Listeners() {
@@ -152,9 +152,9 @@ export class IoSliderKnob extends IoGl {
     const rect = this.getBoundingClientRect();
     const x = (pointer.clientX - rect.x) / rect.width;
     const pos = Math.max(0,Math.min(1, x));
-    let value = (this.maxValue - this.minValue) * pos;
-    value = this.minValue + Math.round(value / this.step) * this.step;
-    value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
+    let value = (this.max - this.min) * pos;
+    value = this.min + Math.round(value / this.step) * this.step;
+    value = Math.min(this.max, Math.max(this.min, (value)));
     let d = -Math.round(Math.log(this.step) / Math.LN10);
     d = Math.max(0, Math.min(100, d));
     value = Number(value.toFixed(d));
@@ -201,13 +201,13 @@ export class IoSliderKnob extends IoGl {
         value -= this.step;
         break;
       case 'min':
-        value = this.minValue;
+        value = this.min;
         break;
       case 'max':
-        value = this.maxValue;
+        value = this.max;
         break;
     }
-    value = Math.min(this.maxValue, Math.max(this.minValue, (value)));
+    value = Math.min(this.max, Math.max(this.min, (value)));
     let d = -Math.round(Math.log(this.step) / Math.LN10);
     d = Math.max(0, Math.min(100, d));
     value = Number(value.toFixed(d));
@@ -217,8 +217,8 @@ export class IoSliderKnob extends IoGl {
     super.changed();
     this.setAttribute('aria-invalid', isNaN(this.value) ? 'true' : false);
     this.setAttribute('aria-valuenow', isNaN(this.value) ? 0 : this.value);
-    this.setAttribute('aria-valuemin', this.minValue);
-    this.setAttribute('aria-valuemax', this.maxValue);
+    this.setAttribute('aria-valuemin', this.min);
+    this.setAttribute('aria-valuemax', this.max);
     // this.setAttribute('aria-valuestep', this.step);
   }
   // TODO: implement proper sdf shapes.
@@ -226,38 +226,42 @@ export class IoSliderKnob extends IoGl {
     return `
     #extension GL_OES_standard_derivatives : enable
 
+    ${shaderChunk.saturate}
+    ${shaderChunk.translate}
+    ${shaderChunk.circle}
+    ${shaderChunk.grid}
+
     varying vec2 vUv;
 
     void main(void) {
+      vec2 position = vUv * uSize;
 
-      vec4 finalColor = cssBackgroundColor;
+      vec4 finalColor = cssBackgroundColorField;
+      vec4 slotColorBg = mix(cssColor, cssBackgroundColorField, 0.5);
+      vec4 stepColorBg = mix(slotColorBg, cssBackgroundColorField, 0.75);
+      vec4 slotColor = mix(cssColorFocus, cssColorLink, vUv.x);
 
-      float _range = uMaxValue - uMinValue;
-      float _progress = (uValue - uMinValue) / _range;
-      float _value = mix(uMinValue, uMaxValue, vUv.x);
-      float _stepRange = uSize.x / (_range / uStep);
+      float lineWidth = cssBorderWidth;
+      float slotWidth = cssBorderWidth;
 
-      if (_stepRange > cssBorderWidth * 2.0) {
-        float res = _value / uStep;
-        float line = abs(fract(res - 0.5) - 0.5) / abs(dFdx(res)) / cssBorderWidth;
-        if (line < 0.999) line = 0.0;
-        finalColor = mix(cssColor, finalColor, min(line, 1.0));
+      float stepInPx = uSize.x / ((uMax - uMin) / uStep);
+
+      if (stepInPx > lineWidth * 2.0) {
+        float gridWidth = uSize.x / ((uMax - uMin) / uStep);
+        float gridOffset = mod(uMin, uStep) / (uMax - uMin) * uSize.x;
+        float gridShape = grid(translate(position, - gridOffset, 0.0), gridWidth, uSize.y, lineWidth);
+        finalColor = mix(stepColorBg, finalColor, gridShape);
       }
 
-      float slot = (abs(0.5 - vUv.y)) * uSize.y;
-      slot = (1.0 - slot) + cssBorderWidth * 2.0;
-      slot = clamp(slot, 0.0, 1.0);
-      vec4 slotColor = mix(cssColorFocus, cssColorLink, vUv.x);
-      float progress = (vUv.x - _progress) * uSize.x;
-      progress = clamp(progress, 0.0, 1.0);
-      slotColor = mix(slotColor, mix(cssColor, cssBackgroundColor, 0.5), progress);
+      float valueInRange = (uValue - uMin) / (uMax - uMin);
+      float valueField = saturate((vUv.x - valueInRange) * uSize.x);
+      float slotField = saturate((abs(0.5 - vUv.y)) * uSize.y - slotWidth);
 
-      float handle = abs(vUv.x - _progress) * uSize.x;
-      handle = (1.0 - handle) + cssBorderWidth * 2.0;
-      handle = clamp(handle, 0.0, 1.0);
+      finalColor = mix(mix(slotColor, slotColorBg, valueField), finalColor, slotField);
 
-      finalColor = mix(finalColor, slotColor, slot);
-      finalColor = mix(finalColor, mix(cssColorFocus, cssColorLink, _progress), handle);
+      float circleShape = circle(translate(position, valueInRange * uSize.x, 0.5 * uSize.y), uSize.y / 4.0);
+      finalColor = mix(slotColor, finalColor, circleShape);
+
       gl_FragColor = finalColor;
     }`;
   }

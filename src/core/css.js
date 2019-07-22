@@ -4,6 +4,7 @@ class IoCss extends IoNode {
   static get Properties() {
     return {
       backgroundColor: [0, 0, 0, 1],
+      backgroundColorField: [0, 0, 0, 1],
       color: [1, 1, 1, 1],
       colorLink: [1, 1, 1, 1],
       colorFocus: [1, 1, 1, 1],
@@ -12,7 +13,7 @@ class IoCss extends IoNode {
   }
   getCssRgba(style, property) {
     const rgba = style.getPropertyValue(property).split("(")[1].split(")")[0].split(",");
-    return rgba.map(color => { return color / 255 * window.devicePixelRatio; });
+    return rgba.map(color => { return color / 255; });
   }
   getCssFloat(style, property) {
     return parseFloat(style.getPropertyValue(property)) * window.devicePixelRatio;
@@ -22,6 +23,7 @@ class IoCss extends IoNode {
     this.setProperties({
       color: this.getCssRgba(cs, '--io-color'),
       backgroundColor: this.getCssRgba(cs, '--io-background-color'),
+      backgroundColorField: this.getCssRgba(cs, '--io-background-color-field'),
       borderWidth: this.getCssFloat(cs, '--io-border-width'),
       colorLink: this.getCssRgba(cs, '--io-color-link'),
       colorFocus: this.getCssRgba(cs, '--io-color-focus'),

@@ -204,11 +204,12 @@ export class IoGl extends IoElement {
     this.updateCssUniforms();
     queueAnimation(this.render);
   }
-  propertyChanged(event) {
-    const p = event.detail.property;
-    const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-    this.updatePropertyUniform(name, this.__properties[p]);
-  }
+  // TODO: make better uniform update
+  // propertyChanged(event) {
+  //   const p = event.detail.property;
+  //   const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
+  //   this.updatePropertyUniform(name, this.__properties[p]);
+  // }
   changed() {
     queueAnimation(this.render);
   }
@@ -217,6 +218,14 @@ export class IoGl extends IoElement {
     const height = this.size[1];
 
     if (!width || !height) return;
+
+    this.setShaderProgram();
+
+    // TODO: dont brute-force uniform update.
+    for (let p in this.__properties) {
+      const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
+      this.updatePropertyUniform(name, this.__properties[p]);
+    }
 
     canvas.width = width;
     canvas.height = height;
