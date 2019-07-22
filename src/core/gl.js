@@ -1,5 +1,5 @@
 import {html, IoElement} from "./element.js";
-import {IoCssSingleton} from "./css.js";
+import {IoThemeSingleton} from "./theme.js";
 
 // TODO: document and test
 
@@ -117,7 +117,7 @@ export class IoGl extends IoElement {
   constructor(props) {
     super(props);
 
-    this.globals = IoCssSingleton;
+    this.globals = IoThemeSingleton;
 
     let frag = /* glsl */`
       #extension GL_OES_standard_derivatives : enable
@@ -125,9 +125,8 @@ export class IoGl extends IoElement {
 
     this._vecLengths = {};
 
-    for (let prop in IoCssSingleton.__properties) {
-      const name = 'css' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = IoCssSingleton.__protoProperties[prop];
+    for (let name in IoThemeSingleton.__properties) {
+      const property = IoThemeSingleton.__protoProperties[name];
       frag += this.initPropertyUniform(name, property);
     }
 
@@ -251,9 +250,8 @@ export class IoGl extends IoElement {
   }
   updateCssUniforms() {
     this.setShaderProgram();
-    for (let p in IoCssSingleton.__properties) {
-      const name = 'css' + p.charAt(0).toUpperCase() + p.slice(1);
-      this.updatePropertyUniform(name, IoCssSingleton.__properties[p]);
+    for (let name in IoThemeSingleton.__properties) {
+      this.updatePropertyUniform(name, IoThemeSingleton.__properties[name]);
     }
   }
   setUniform(name, type, value) {
