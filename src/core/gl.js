@@ -3,7 +3,7 @@ import {IoThemeSingleton} from "./theme.js";
 
 // TODO: document and test
 
-export const glChunk = {
+export const chunk = {
   translate: `vec2 translate(vec2 samplePosition, float x, float y){
     return samplePosition - vec2(x, y);
   }\n`,
@@ -97,6 +97,7 @@ export class IoGl extends IoElement {
   static get Properties() {
     return {
       size: [0, 0],
+      color: [1, 1, 1, 1],
       aspect: 1,
       pxRatio: 1,
       globals: Object,
@@ -119,9 +120,8 @@ export class IoGl extends IoElement {
       void main(void) {
         vec2 px = uSize * vUv;
         px = mod(px, 8.0);
-        gl_FragColor = cssBackgroundColor;
+        gl_FragColor = uColor;
         if (px.x <= 1.0 || px.y <= 1.0) gl_FragColor = vec4(vUv, 0.0, 1.0);
-        if (px.x <= 1.0 && px.y <= 1.0) gl_FragColor = cssColor;
       }\n\n`;
   }
   initPropertyUniform(name, property) {

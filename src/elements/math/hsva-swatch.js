@@ -1,4 +1,4 @@
-import {html, IoGl, glChunk} from "../../io.js";
+import {html, IoGl, chunk} from "../../io.js";
 import {IoHsvaPicker} from "./hsva-picker.js";
 import {IoMathLayer} from "./math-layer.js";
 
@@ -35,8 +35,8 @@ export class IoHsvaSwatch extends IoGl {
     return /* glsl */`
       varying vec2 vUv;
 
-      ${glChunk.hue2rgb}
-      ${glChunk.hsv2rgb}
+      ${chunk.hue2rgb}
+      ${chunk.hsv2rgb}
 
       void main(void) {
         float tileSize = uSize.x / 32.0;

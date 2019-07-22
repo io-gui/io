@@ -203,7 +203,8 @@ export class IoDemo extends IoElement {
     this.template([
       ['io-selector-tabs', {precache: true, selected: $('demo', 'elements', true),
         slotted: [
-          ['io-menu-option', {label: 'Theme', class: 'io-item', value: IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
+          ['io-menu-option', {label: 'Theme', class: 'io-item', value:
+           IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
         ],
         options: [
           {value: 'elements', label: "Elements"},

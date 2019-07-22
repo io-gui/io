@@ -1,4 +1,4 @@
-import {html, IoGl, glChunk} from "../../io.js";
+import {html, IoGl, chunk} from "../../io.js";
 
 export class IoHsvaHue extends IoGl {
   static get Style() {
@@ -38,8 +38,8 @@ export class IoHsvaHue extends IoGl {
     return /* glsl */`
       varying vec2 vUv;
 
-      ${glChunk.hue2rgb}
-      ${glChunk.hsv2rgb}
+      ${chunk.hue2rgb}
+      ${chunk.hsv2rgb}
 
       void main(void) {
 

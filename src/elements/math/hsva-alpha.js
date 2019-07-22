@@ -1,4 +1,4 @@
-import {glChunk} from "../../io.js";
+import {chunk} from "../../io.js";
 import {IoHsvaHue} from "./hsva-hue.js";
 
 export class IoHsvaAlpha extends IoHsvaHue {
@@ -6,8 +6,8 @@ export class IoHsvaAlpha extends IoHsvaHue {
     return /* glsl */`
       varying vec2 vUv;
 
-      ${glChunk.hue2rgb}
-      ${glChunk.hsv2rgb}
+      ${chunk.hue2rgb}
+      ${chunk.hsv2rgb}
 
       void main(void) {
 

@@ -1,4 +1,5 @@
 import {IoElement, html} from "./element.js";
+import {IoStorage as $} from "./storage.js";
 
 export class IoTheme extends IoElement {
   static get Style() {
@@ -181,7 +182,7 @@ export class IoTheme extends IoElement {
   }
   static get Properties() {
     return {
-      theme: 'light',
+      theme: $('theme', 'light'),
       cssBackgroundColor: [0, 0, 0, 1],
       cssBackgroundColorField: [0, 0, 0, 1],
       cssColor: [1, 1, 1, 1],
