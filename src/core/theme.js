@@ -1,9 +1,41 @@
 import {IoElement, html} from "./element.js";
-import {IoNode} from "./node.js";
-import {IoCssSingleton} from "./css.js";
+import {IoStorage as $} from "./storage.js";
 
-export class IoThemeMixin extends IoNode {
+export class IoTheme extends IoElement {
   static get Style() {
+    return html`<style>
+    body {
+      --io-spacing: 4px;
+      --io-border-radius: 3px;
+      --io-border-width: 1px;
+    }
+    /* TODO: Move */
+    @keyframes spinner {
+      to {transform: rotate(360deg);}
+    }
+    body .io-loading {
+      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
+      background-repeat: repeat;
+      position: relative;
+    }
+    body .io-loading:after {
+      content: '';
+      box-sizing: border-box;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      margin-top: -20px;
+      margin-left: -20px;
+      border-radius: 50%;
+      border: var(--io-border);
+      border-top-color: #000;
+      animation: spinner .6s linear infinite;
+    }
+    </style>`;
+  }
+  static get Mixins() {
     return html`<style>
     item {
       display: inline-block;
@@ -82,70 +114,6 @@ export class IoThemeMixin extends IoNode {
     }
     </style>`;
   }
-  constructor(props) {
-    super(props);
-    this.styleElement = document.createElement('style');
-    this.styleElement.setAttribute('id', 'io-theme-mixins');
-    this.styleElement.innerHTML = this.mixins;
-    document.head.appendChild(this.styleElement);
-  }
-}
-IoThemeMixin.Register = function() {
-  IoNode.Register.call(this);
-  let mixins = '';
-  for (let i = this.prototype.__protochain.length; i--;) {
-    const style = this.prototype.__protochain[i].constructor.Style;
-    if (style) {
-      // TODO: improve CSS parsing to support comments etc.
-      const match = Array.from(style.string.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
-      for (let j = 0; j < match.length; j++) {
-        const name = match[j][1].replace(/\s/g, '');
-        const value = match[j][2];
-        Object.defineProperty(this.prototype, name, {value: value});
-        mixins += `.io-${name} {\n${value}\n}\n`;
-      }
-    }
-  }
-  Object.defineProperty(this.prototype, 'mixins', { value: mixins });
-};
-
-IoThemeMixin.Register();
-
-export const IoThemeMixinSingleton = new IoThemeMixin();
-
-export class IoTheme extends IoElement {
-  static get Style() {
-    return html`<style>
-    body {
-      --io-spacing: 4px;
-      --io-border-radius: 3px;
-      --io-border-width: 1px;
-    }
-    @keyframes spinner {
-      to {transform: rotate(360deg);}
-    }
-    body .io-loading {
-      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
-      background-repeat: repeat;
-      position: relative;
-    }
-    body .io-loading:after {
-      content: '';
-      box-sizing: border-box;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 40px;
-      height: 40px;
-      margin-top: -20px;
-      margin-left: -20px;
-      border-radius: 50%;
-      border: var(--io-border);
-      border-top-color: #000;
-      animation: spinner .6s linear infinite;
-    }
-    </style>`;
-  }
   get dark() {
     return html`<style>
       body {
@@ -214,21 +182,72 @@ export class IoTheme extends IoElement {
   }
   static get Properties() {
     return {
-      theme: 'light',
+      theme: $('theme', 'light'),
+      cssBackgroundColor: [0, 0, 0, 1],
+      cssBackgroundColorField: [0, 0, 0, 1],
+      cssColor: [1, 1, 1, 1],
+      cssColorLink: [1, 1, 1, 1],
+      cssColorFocus: [1, 1, 1, 1],
+      cssBorderWidth: 1,
     };
   }
   constructor(props) {
     super(props);
     this.styleElement = document.createElement('style');
     this.styleElement.setAttribute('id', 'io-theme');
+
+    this.mixinsElement = document.createElement('style');
+    this.mixinsElement.setAttribute('id', 'io-theme-mixins');
+    this.mixinsElement.innerHTML = this.mixins;
+
+    this.themeChanged();
+
+    document.head.appendChild(this.mixinsElement);
   }
-  changed() {
+  themeChanged() {
     this.styleElement.innerHTML = this[this.theme].string;
     setTimeout(() => {
-      IoCssSingleton.updateValues();
+      this.updatePropertiesFromCSS();
     });
   }
+  getCssRgba(style, property) {
+    const rgba = style.getPropertyValue(property).split("(")[1].split(")")[0].split(",");
+    return rgba.map(color => { return color / 255; });
+  }
+  getCssFloat(style, property) {
+    return parseFloat(style.getPropertyValue(property)) * window.devicePixelRatio;
+  }
+  updatePropertiesFromCSS() {
+    const cs = getComputedStyle(document.body);
+    this.setProperties({
+      cssColor: this.getCssRgba(cs, '--io-color'),
+      cssBackgroundColor: this.getCssRgba(cs, '--io-background-color'),
+      cssBackgroundColorField: this.getCssRgba(cs, '--io-background-color-field'),
+      cssBorderWidth: this.getCssFloat(cs, '--io-border-width'),
+      cssColorLink: this.getCssRgba(cs, '--io-color-link'),
+      cssColorFocus: this.getCssRgba(cs, '--io-color-focus'),
+    });
+    this.dispatchEvent('object-mutated', {object: this}, false, window);
+  }
 }
+IoTheme.Register = function() {
+  IoElement.Register.call(this);
+  let mixins = '';
+  for (let i = this.prototype.__protochain.length; i--;) {
+    const style = this.prototype.__protochain[i].constructor.Mixins;
+    if (style) {
+      // TODO: improve CSS parsing to support comments etc.
+      const match = Array.from(style.string.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
+      for (let j = 0; j < match.length; j++) {
+        const name = match[j][1].replace(/\s/g, '');
+        const value = match[j][2];
+        Object.defineProperty(this.prototype, name, {value: value});
+        mixins += `.io-${name} {\n${value}\n}\n`;
+      }
+    }
+  }
+  Object.defineProperty(this.prototype, 'mixins', { value: mixins });
+};
 IoTheme.Register();
 
 export const IoThemeSingleton = new IoTheme();

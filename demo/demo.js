@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorage as $} from "../dist/io.js";
+import {html, IoElement, IoStorage as $, IoThemeSingleton} from "../dist/io.js";
 import "./todomvc/todo-app.js";
 
 export class IoDemo extends IoElement {
@@ -95,7 +95,7 @@ export class IoDemo extends IoElement {
       ['io-slider', {value: this.bind('number')}],
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
-      ['io-slider', {value: this.bind('number'), min: -2, max: 3, step: 1}],
+      ['io-slider', {value: this.bind('number'), min: -1.33, max: 3, step: 1}],
       ['io-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
       ['io-slider', {value: this.bind('NaN'), step: 0.1}],
     ]];
@@ -202,6 +202,10 @@ export class IoDemo extends IoElement {
 
     this.template([
       ['io-selector-tabs', {precache: true, selected: $('demo', 'elements', true),
+        slotted: [
+          ['io-menu-option', {label: 'Theme', class: 'io-item', value:
+           IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
+        ],
         options: [
           {value: 'elements', label: "Elements"},
           // {value: 'layout', label: "Layout"},

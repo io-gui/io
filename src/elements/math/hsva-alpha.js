@@ -1,12 +1,13 @@
+import {chunk} from "../../io.js";
 import {IoHsvaHue} from "./hsva-hue.js";
-import {colorShaderChunk} from "./utils.js";
 
 export class IoHsvaAlpha extends IoHsvaHue {
   static get Frag() {
     return /* glsl */`
       varying vec2 vUv;
 
-      ${colorShaderChunk}
+      ${chunk.hue2rgb}
+      ${chunk.hsv2rgb}
 
       void main(void) {
 

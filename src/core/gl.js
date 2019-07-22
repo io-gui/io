@@ -1,7 +1,33 @@
 import {html, IoElement} from "./element.js";
-import {IoCssSingleton} from "./css.js";
+import {IoThemeSingleton} from "./theme.js";
 
 // TODO: document and test
+
+export const chunk = {
+  translate: `vec2 translate(vec2 samplePosition, float x, float y){
+    return samplePosition - vec2(x, y);
+  }\n`,
+  circle: `float circle(vec2 samplePosition, float radius){
+    return saturate(length(samplePosition) - radius);
+  }\n`,
+  grid: `float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
+    vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
+    float hw = lineWidth / 2.0;
+    float linex = abs(fract(sp.x - 0.5) - 0.5) / abs(dFdx(sp.x)) - hw;
+    float liney = abs(fract(sp.y - 0.5) - 0.5) / abs(dFdy(sp.y)) - hw;
+    return saturate(min(linex, liney));
+  }\n`,
+  hue2rgb: `vec3 hue2rgb(float hue) {
+    float R = abs(hue * 6. - 3.) - 1.;
+    float G = 2. - abs(hue * 6. - 2.);
+    float B = 2. - abs(hue * 6. - 4.);
+    return saturate(vec3(R,G,B));
+  }\n`,
+  hsv2rgb: `vec3 hsv2rgb(vec3 hsv) {
+    vec3 rgb = hue2rgb(hsv.r);
+    return ((rgb - 1.0) * hsv.g + 1.0) * hsv.b;
+  }\n`,
+};
 
 const animationQueue = new Array();
 const animate = function() {
@@ -71,6 +97,7 @@ export class IoGl extends IoElement {
   static get Properties() {
     return {
       size: [0, 0],
+      color: [1, 1, 1, 1],
       aspect: 1,
       pxRatio: 1,
       globals: Object,
@@ -93,9 +120,8 @@ export class IoGl extends IoElement {
       void main(void) {
         vec2 px = uSize * vUv;
         px = mod(px, 8.0);
-        gl_FragColor = cssBackgroundColor;
+        gl_FragColor = uColor;
         if (px.x <= 1.0 || px.y <= 1.0) gl_FragColor = vec4(vUv, 0.0, 1.0);
-        if (px.x <= 1.0 && px.y <= 1.0) gl_FragColor = cssColor;
       }\n\n`;
   }
   initPropertyUniform(name, property) {
@@ -117,17 +143,19 @@ export class IoGl extends IoElement {
   constructor(props) {
     super(props);
 
-    this.globals = IoCssSingleton;
+    this.globals = IoThemeSingleton;
 
     let frag = /* glsl */`
       #extension GL_OES_standard_derivatives : enable
-      precision highp float;\n\n`;
+      precision highp float;
+      #ifndef saturate
+        #define saturate(v) clamp(v, 0., 1.)
+      #endif\n\n`;
 
     this._vecLengths = {};
 
-    for (let prop in IoCssSingleton.__properties) {
-      const name = 'css' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = IoCssSingleton.__protoProperties[prop];
+    for (let name in IoThemeSingleton.__properties) {
+      const property = IoThemeSingleton.__protoProperties[name];
       frag += this.initPropertyUniform(name, property);
     }
 
@@ -204,11 +232,12 @@ export class IoGl extends IoElement {
     this.updateCssUniforms();
     queueAnimation(this.render);
   }
-  propertyChanged(event) {
-    const p = event.detail.property;
-    const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-    this.updatePropertyUniform(name, this.__properties[p]);
-  }
+  // TODO: make better uniform update
+  // propertyChanged(event) {
+  //   const p = event.detail.property;
+  //   const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
+  //   this.updatePropertyUniform(name, this.__properties[p]);
+  // }
   changed() {
     queueAnimation(this.render);
   }
@@ -217,6 +246,14 @@ export class IoGl extends IoElement {
     const height = this.size[1];
 
     if (!width || !height) return;
+
+    this.setShaderProgram();
+
+    // TODO: dont brute-force uniform update.
+    for (let p in this.__properties) {
+      const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
+      this.updatePropertyUniform(name, this.__properties[p]);
+    }
 
     canvas.width = width;
     canvas.height = height;
@@ -242,9 +279,8 @@ export class IoGl extends IoElement {
   }
   updateCssUniforms() {
     this.setShaderProgram();
-    for (let p in IoCssSingleton.__properties) {
-      const name = 'css' + p.charAt(0).toUpperCase() + p.slice(1);
-      this.updatePropertyUniform(name, IoCssSingleton.__properties[p]);
+    for (let name in IoThemeSingleton.__properties) {
+      this.updatePropertyUniform(name, IoThemeSingleton.__properties[name]);
     }
   }
   setUniform(name, type, value) {

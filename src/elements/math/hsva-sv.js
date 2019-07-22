@@ -1,6 +1,5 @@
-import {html} from "../../io.js";
+import {html, chunk} from "../../io.js";
 import {IoHsvaHue} from "./hsva-hue.js";
-import {colorShaderChunk} from "./utils.js";
 
 export class IoHsvaSv extends IoHsvaHue {
   static get Style() {
@@ -14,11 +13,9 @@ export class IoHsvaSv extends IoHsvaHue {
     return /* glsl */`
       varying vec2 vUv;
 
-      #ifndef saturate
-        #define saturate(v) clamp(v, 0., 1.)
-      #endif
-
-      ${colorShaderChunk}
+      ${chunk.hue2rgb}
+      ${chunk.hsv2rgb}
+      ${chunk.translate}
 
       void main(void) {
 
