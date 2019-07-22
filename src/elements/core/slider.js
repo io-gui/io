@@ -226,7 +226,6 @@ export class IoSliderKnob extends IoGl {
     return `
     #extension GL_OES_standard_derivatives : enable
 
-    ${glChunk.saturate}
     ${glChunk.translate}
     ${glChunk.circle}
     ${glChunk.grid}

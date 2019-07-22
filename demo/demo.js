@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorage as $} from "../dist/io.js";
+import {html, IoElement, IoStorage as $, IoThemeSingleton} from "../dist/io.js";
 import "./todomvc/todo-app.js";
 
 export class IoDemo extends IoElement {
@@ -202,6 +202,9 @@ export class IoDemo extends IoElement {
 
     this.template([
       ['io-selector-tabs', {precache: true, selected: $('demo', 'elements', true),
+        slotted: [
+          ['io-menu-option', {label: 'Theme', class: 'io-item', value: IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
+        ],
         options: [
           {value: 'elements', label: "Elements"},
           // {value: 'layout', label: "Layout"},
