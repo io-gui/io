@@ -142,9 +142,9 @@ static get Listeners() {
 
 ## Change Functions
 
-Change functions are automatically called when properties change. If `[propName]Changed(value, oldValue)` function is defined, it will be called when corresponding property changes.
+Change functions are automatically called when properties change. If `[propName]Changed(event)` function is defined, it will be called when corresponding property changes. Alternatively, you can define a generic `propChanged(event)` function instead and get property name from the event detail.
 
-If property value is an object, `[propName]Mutated()` function will be called immediately after object mutation (see data-flow requirements).
+If property value is an object, `[propName]Mutated()` function will be called immediately after object mutation (see [data-flow requirements](#doc=learn-more#data-flow)).
 
 Lastly, `changed()` function will be called **after** all of the property-specific change/mutation functions are called.
 
