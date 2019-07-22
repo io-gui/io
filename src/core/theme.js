@@ -198,9 +198,12 @@ export class IoTheme extends IoElement {
     this.mixinsElement = document.createElement('style');
     this.mixinsElement.setAttribute('id', 'io-theme-mixins');
     this.mixinsElement.innerHTML = this.mixins;
+
+    this.themeChanged();
+
     document.head.appendChild(this.mixinsElement);
   }
-  changed() {
+  themeChanged() {
     this.styleElement.innerHTML = this[this.theme].string;
     setTimeout(() => {
       this.updatePropertiesFromCSS();

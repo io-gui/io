@@ -1,4 +1,4 @@
-import {html, IoElement, IoGl, shaderChunk} from "../../io.js";
+import {html, IoElement, IoGl, glChunk} from "../../io.js";
 
 export class IoSlider extends IoElement {
   static get Style() {
@@ -226,10 +226,10 @@ export class IoSliderKnob extends IoGl {
     return `
     #extension GL_OES_standard_derivatives : enable
 
-    ${shaderChunk.saturate}
-    ${shaderChunk.translate}
-    ${shaderChunk.circle}
-    ${shaderChunk.grid}
+    ${glChunk.saturate}
+    ${glChunk.translate}
+    ${glChunk.circle}
+    ${glChunk.grid}
 
     varying vec2 vUv;
 

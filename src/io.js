@@ -26,6 +26,6 @@ export {IoNodeMixin, IoNode} from "./core/node.js";
 export {IoElement, html} from "./core/element.js";
 export {Binding, NodeBindings} from "./core/bindings.js";
 export {IoStorage, storageNodes} from "./core/storage.js";
-export {IoGl} from "./core/gl.js";
-export {filterObject, shaderChunk} from "./core/utils.js";
+export {IoGl, glChunk} from "./core/gl.js";
+export {filterObject} from "./core/utils.js";
 export {IoTheme, IoThemeSingleton} from "./core/theme.js";
