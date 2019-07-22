@@ -27,7 +27,7 @@ export const glChunk = {
     vec3 rgb = hue2rgb(hsv.r);
     return ((rgb - 1.0) * hsv.g + 1.0) * hsv.b;
   }\n`,
-}
+};
 
 const animationQueue = new Array();
 const animate = function() {
