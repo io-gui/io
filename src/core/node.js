@@ -207,6 +207,7 @@ export const IoNodeMixin = (superclass) => {
     addEventListener(type, listener, options) {
       if (typeof listener !== 'function') {
         console.warn(`Io ${this.constructor.name} "${type}" listener handler is not a function`);
+        return;
       }
       this.__listeners.addEventListener(type, listener, options);
     }
@@ -272,7 +273,14 @@ const Register = function () {
   for (let i = protochain.length; i--;) {
     const names = Object.getOwnPropertyNames(protochain[i]);
     for (let j = 0; j < names.length; j++) {
-      if (names[j].startsWith('_on') || names[j].startsWith('on')) functions.add(names[j]);
+      if (names[j] === 'constructor') continue;
+      const p = Object.getOwnPropertyDescriptor(protochain[i], names[j]);
+      if (p.get || p.set) continue;
+      if (typeof protochain[i][names[j]] === 'function') {
+        if (names[j].startsWith('_') || names[j].startsWith('on')) {
+          functions.add(names[j]);
+        }
+      }
     }
   }
   Object.defineProperty(proto, '__functions', {value: [...functions]});
