@@ -205,6 +205,9 @@ export const IoNodeMixin = (superclass) => {
       * @param {Object} options - event listener options.
       */
     addEventListener(type, listener, options) {
+      if (typeof listener !== 'function') {
+        console.warn(`Io ${this.constructor.name} "${type}" listener handler is not a function`);
+      }
       this.__listeners.addEventListener(type, listener, options);
     }
     /**
