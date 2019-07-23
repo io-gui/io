@@ -1,6 +1,6 @@
 import {html, IoGl, chunk} from "../../io.js";
 import {IoHsvaPicker} from "./hsva-picker.js";
-import {IoMathLayer} from "./math-layer.js";
+import {IoLayer} from "../../io-elements-core.js";
 
 export class IoHsvaSwatch extends IoGl {
   static get Style() {
@@ -77,9 +77,9 @@ export class IoHsvaSwatch extends IoGl {
     IoHsvaPicker.singleton.style.width = hasAlpha ? '192px' : '160px';
     IoHsvaPicker.singleton.style.height = '128px';
     IoHsvaPicker.singleton.expanded = true;
-    IoMathLayer.singleton.clickblock = true;
-    IoMathLayer.singleton.srcElement = this;
-    IoMathLayer.singleton.setElementPosition(IoHsvaPicker.singleton, 'bottom', this.getBoundingClientRect());
+    IoLayer.singleton.clickblock = true;
+    IoLayer.singleton.srcElement = this;
+    IoLayer.singleton.setElementPosition(IoHsvaPicker.singleton, 'bottom', this.getBoundingClientRect());
   }
 }
 

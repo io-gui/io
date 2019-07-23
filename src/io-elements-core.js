@@ -29,3 +29,4 @@ export {IoNumber} from "./elements/core/number.js";
 export {IoSlider} from "./elements/core/slider.js";
 export {IoString} from "./elements/core/string.js";
 export {IoSwitch} from "./elements/core/switch.js";
+export {IoLayer} from "./elements/core/layer.js";

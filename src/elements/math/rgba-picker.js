@@ -1,6 +1,7 @@
-import {IoMathLayer} from "./math-layer.js";
+import {IoLayer} from "../../io-elements-core.js";
 import {IoHsvaPicker} from "./hsva-picker.js";
 import {rgb2hsv, hsv2rgb} from "./utils.js";
+
 
 export class IoRgbaPicker extends IoHsvaPicker {
   valueChanged() {
@@ -37,5 +38,5 @@ export class IoRgbaPicker extends IoHsvaPicker {
 IoRgbaPicker.Register();
 
 IoRgbaPicker.singleton = new IoRgbaPicker();
-IoMathLayer.singleton.appendChild(IoRgbaPicker.singleton);
-IoRgbaPicker.singleton.addEventListener('expanded-changed', IoMathLayer.singleton.onChildExpanded);
+IoLayer.singleton.appendChild(IoRgbaPicker.singleton);
+IoRgbaPicker.singleton.addEventListener('expanded-changed', IoLayer.singleton.onChildExpanded);

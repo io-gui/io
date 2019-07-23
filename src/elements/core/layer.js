@@ -1,6 +1,6 @@
 import {IoElement, html} from "../../io.js";
 
-export class IoMathLayer extends IoElement {
+export class IoLayer extends IoElement {
   static get Style() {
     return html`<style>
       :host {
@@ -180,7 +180,7 @@ export class IoMathLayer extends IoElement {
   }
 }
 
-IoMathLayer.Register();
+IoLayer.Register();
 
-IoMathLayer.singleton = new IoMathLayer();
-document.body.appendChild(IoMathLayer.singleton);
+IoLayer.singleton = new IoLayer();
+document.body.appendChild(IoLayer.singleton);
