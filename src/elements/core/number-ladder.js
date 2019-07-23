@@ -127,7 +127,8 @@ class IoNumberLadder extends IoElement {
     this._clickblockRestore = IoLayerSingleton.clickblock;
     IoLayerSingleton.clickblock = true;
     IoLayerSingleton.style.cursor = 'ew-resize';
-    this._value = this.value;
+    this._value = Math.min(this.max, Math.max(this.min, this.value));
+    this._value = Math.round(this._value / this.step) * this.step;
     this._x = event.clientX;
   }
   _onMousemove(event) {

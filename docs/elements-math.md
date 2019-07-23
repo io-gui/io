@@ -1,7 +1,3 @@
-## &lt;io-float&gt;
-
-<io-element-demo element="io-float" properties='{"value": 0.5}'></io-element-demo>
-
 ## &lt;io-vector2&gt;
 
 <io-element-demo element="io-vector" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>

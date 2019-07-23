@@ -18,7 +18,7 @@ export class IoMatrix extends IoElement {
       :host[columns="2"] {
         grid-template-columns: repeat(2, 1fr);
       }
-      :host > io-float {
+      :host > io-number {
         width: inherit;
       }
     </style>`;
@@ -68,7 +68,7 @@ export class IoMatrix extends IoElement {
     for (let i in this._c) {
       const prop = this._c[i];
       if (this.value[prop] !== undefined) {
-        elements.push(['io-float', {
+        elements.push(['io-number', {
           id: prop,
           value: this.value[prop],
           step: this.step,

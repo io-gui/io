@@ -4,13 +4,13 @@ import {IoVector} from "./vector.js";
 export class IoRgba extends IoVector {
   static get Style() {
     return html`<style>
-      :host > io-float:nth-child(1) {
+      :host > io-number:nth-child(1) {
         border-bottom-color: red;
       }
-      :host > io-float:nth-child(2) {
+      :host > io-number:nth-child(2) {
         border-bottom-color: green;
       }
-      :host > io-float:nth-child(3) {
+      :host > io-number:nth-child(3) {
         border-bottom-color: blue;
       }
     </style>`;

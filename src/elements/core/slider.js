@@ -40,6 +40,7 @@ export class IoSlider extends IoElement {
         max: this.max,
         label: this.label,
         title: this.title,
+        ladder: true,
         'on-value-set': this._onValueSet,
       }],
       ['io-slider-knob', {
@@ -208,9 +209,7 @@ export class IoSliderKnob extends IoGl {
         break;
     }
     value = Math.min(this.max, Math.max(this.min, (value)));
-    let d = -Math.round(Math.log(this.step) / Math.LN10);
-    d = Math.max(0, Math.min(100, d));
-    value = Number(value.toFixed(d));
+    value = Number(value.toFixed(4));
     this.set('value', value);
   }
   changed() {
