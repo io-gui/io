@@ -28,8 +28,6 @@
 
 import "./io-elements-core.js";
 
-export {IoFloat} from "./elements/math/float.js";
-
 export {IoVector} from "./elements/math/vector.js";
 export {IoMatrix} from "./elements/math/matrix.js";
 

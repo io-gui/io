@@ -1,5 +1,4 @@
-import {html} from "../../io.js";
-import {filterObject} from "../../io.js";
+import {html, filterObject} from "../../io.js";
 import {IoItem} from "../../io-elements-core.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuOptions} from "./menu-options.js";

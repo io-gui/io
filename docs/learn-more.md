@@ -18,38 +18,6 @@ class myNode extends IoNodeMixin(OtherClass) {}
 class myElement extends IoElement {}
 ```
 
-**IoThemeSingleton**
-
-`IoThemeSingleton` holds top-level CSS variables for Io design system. Variables are grouped in different themes and can be collectively switched by changing `theme` property.
-
-```javascript
-IoThemeSingleton.theme = 'dark';
-```
-
-Moreover, some of the key theme variables such as `'--io-color'` and `'--io-background-color'` are mapped to numeric properties `cssColor` and `cssBackgroundColor` source code for more advanced example.
-
-**IoGL**
-
-`IoGL` is a base class for WebGL-based custom elements. The appearance of such elements is defined with fragment shader programs that execute on the GPU. All numeric properties are automatically bound to shader uniforms, including `IoThemeSingleton` properties. You can define your custom shaders inside `static get Frag()` return string.
-
-<io-element-demo element="io-gl" width="257px" height="257px" properties='{"color": [0, 0, 0, 1]}' config='{"size": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-rgba"], "color": ["io-rgba"]}'></io-element-demo>
-
-
-An example of the most basic fragment shader program:
-
-```javascript
-class myElement extends IoGL {
-  static get Frag() {
-    return `
-    void main(void) {
-      gl_FragColor = cssBackgroundColor;
-    }`;
-  }
-}
-```
-
-See `IoSliderKnob` and `IoHsvaSv` for more advanced example.
-
 ## Creating Elements
 
 You can create Io elements using different methods but to make the most out of Io, you should use the `template()` function inside elements created with `IoElement` class. See [virtual DOM arrays](#doc=learn-more#virtual-dom-arrays) for more information.

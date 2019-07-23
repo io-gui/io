@@ -1,4 +1,5 @@
-import {html, IoGl, chunk} from "../../io.js";
+import {html} from "../../io.js";
+import {IoGl, chunk} from "../../io-elements-core.js";
 
 export class IoHsvaHue extends IoGl {
   static get Style() {

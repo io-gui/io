@@ -1,4 +1,4 @@
-import {chunk} from "../../io.js";
+import {chunk} from "../../io-elements-core.js";
 import {IoHsvaHue} from "./hsva-hue.js";
 
 export class IoHsvaAlpha extends IoHsvaHue {

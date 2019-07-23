@@ -1,6 +1,6 @@
-import {html, IoGl} from "../../io.js";
+import {html} from "../../io.js";
+import {IoLayerSingleton, IoGl} from "../../io-elements-core.js";
 import {IoRgbaPicker} from "./rgba-picker.js";
-import {IoMathLayer} from "./math-layer.js";
 
 export class IoRgbaSwatch extends IoGl {
   static get Style() {
@@ -74,9 +74,9 @@ export class IoRgbaSwatch extends IoGl {
     IoRgbaPicker.singleton.style.width = hasAlpha ? '192px' : '160px';
     IoRgbaPicker.singleton.style.height = '128px';
     IoRgbaPicker.singleton.expanded = true;
-    IoMathLayer.singleton.clickblock = true;
-    IoMathLayer.singleton.srcElement = this;
-    IoMathLayer.singleton.setElementPosition(IoRgbaPicker.singleton, 'bottom', this.getBoundingClientRect());
+    IoLayerSingleton.clickblock = true;
+    IoLayerSingleton.srcElement = this;
+    IoLayerSingleton.setElementPosition(IoRgbaPicker.singleton, 'bottom', this.getBoundingClientRect());
   }
 }
 

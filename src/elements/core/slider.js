@@ -1,4 +1,5 @@
-import {html, IoElement, IoGl, chunk} from "../../io.js";
+import {html, IoElement} from "../../io.js";
+import {IoGl, chunk} from "./gl.js";
 
 export class IoSlider extends IoElement {
   static get Style() {
@@ -150,14 +151,13 @@ export class IoSliderKnob extends IoGl {
     this.focus();
 
     const rect = this.getBoundingClientRect();
-    const x = (pointer.clientX - rect.x) / rect.width;
-    const pos = Math.max(0,Math.min(1, x));
-    let value = (this.max - this.min) * pos;
-    value = this.min + Math.round(value / this.step) * this.step;
-    value = Math.min(this.max, Math.max(this.min, (value)));
-    let d = -Math.round(Math.log(this.step) / Math.LN10);
-    d = Math.max(0, Math.min(100, d));
-    value = Number(value.toFixed(d));
+    const pos = Math.max(0, Math.min(1, (pointer.clientX - rect.x) / rect.width));
+
+    let value = this.min * (1 - pos) + this.max * pos;
+    value = Math.min(this.max, Math.max(this.min, value));
+    value = Math.round(value / this.step) * this.step;
+    value = Number(value.toFixed(4));
+
     this.set('value', value);
   }
   _onKeydown(event) {
