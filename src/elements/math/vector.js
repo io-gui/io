@@ -36,7 +36,7 @@ export class IoVector extends IoElement {
     return {
       value: [0, 0, 0, 0],
       conversion: 1,
-      step: 0.001,
+      step: 0.01,
       min: -Infinity,
       max: Infinity,
       linkable: false,
