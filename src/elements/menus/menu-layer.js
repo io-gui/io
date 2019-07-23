@@ -175,6 +175,7 @@ export class IoMenuLayer extends IoElement {
       let rect = this.lastFocus.getBoundingClientRect();
       if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
         this._hoveredItem = this.lastFocus;
+        this._focusItem(this._hoveredItem);
         return;
       }
     }
