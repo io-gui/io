@@ -1,4 +1,4 @@
-import {IoElement, html} from "../../io.js";
+import {html} from "../../io.js";
 import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoItem} from "./item.js";
 import {IoLayerSingleton} from "./layer.js";
