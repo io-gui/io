@@ -1,6 +1,6 @@
-import {html, IoGl, chunk} from "../../io.js";
+import {html} from "../../io.js";
 import {IoHsvaPicker} from "./hsva-picker.js";
-import {IoLayer} from "../../io-elements-core.js";
+import {IoLayer, IoGl, chunk} from "../../io-elements-core.js";
 
 export class IoHsvaSwatch extends IoGl {
   static get Style() {

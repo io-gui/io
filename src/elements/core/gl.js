@@ -1,4 +1,4 @@
-import {html, IoElement} from "./element.js";
+import {html, IoElement} from "../../io.js";
 import {IoThemeSingleton} from "./theme.js";
 
 // TODO: document and test

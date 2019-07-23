@@ -1,6 +1,6 @@
 import {IoElement} from "../../io.js";
-import {IoMenuOptions} from "./menu-options.js";
 import {IoMenuLayer} from "./menu-layer.js";
+import {IoMenuOptions} from "./menu-options.js";
 
 export class IoMenu extends IoElement {
   static get Properties() {

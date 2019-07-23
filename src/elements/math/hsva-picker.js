@@ -1,6 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoLayer} from "../../io-elements-core.js";
-import {IoThemeSingleton as mixin} from "../../io.js";
+import {IoLayer, IoThemeSingleton as mixin} from "../../io-elements-core.js";
 
 export class IoHsvaPicker extends IoElement {
   static get Style() {

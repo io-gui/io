@@ -1,5 +1,6 @@
-import {html, chunk} from "../../io.js";
+import {html} from "../../io.js";
 import {IoHsvaHue} from "./hsva-hue.js";
+import {chunk} from "../../io-elements-core.js";
 
 export class IoHsvaSv extends IoHsvaHue {
   static get Style() {

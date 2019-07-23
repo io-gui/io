@@ -1,5 +1,5 @@
-import {html, IoGl} from "../../io.js";
-import {IoLayer} from "../../io-elements-core.js";
+import {html} from "../../io.js";
+import {IoLayer, IoGl} from "../../io-elements-core.js";
 import {IoRgbaPicker} from "./rgba-picker.js";
 
 export class IoRgbaSwatch extends IoGl {

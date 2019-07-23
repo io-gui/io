@@ -1,5 +1,4 @@
 import {html, IoElement} from "../../io.js";
-import "../../io-elements-core.js";
 
 export class IoBreadcrumbs extends IoElement {
   static get Style() {

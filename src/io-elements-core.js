@@ -22,6 +22,7 @@
  * THE SOFTWARE.
  */
 
+export {IoThemeSingleton} from "./elements/core/theme.js";
 export {IoBoolean} from "./elements/core/boolean.js";
 export {IoButton} from "./elements/core/button.js";
 export {IoItem, Item} from "./elements/core/item.js";
@@ -30,3 +31,4 @@ export {IoSlider} from "./elements/core/slider.js";
 export {IoString} from "./elements/core/string.js";
 export {IoSwitch} from "./elements/core/switch.js";
 export {IoLayer} from "./elements/core/layer.js";
+export {IoGl, chunk} from "./elements/core/gl.js";

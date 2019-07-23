@@ -1,6 +1,6 @@
 import {html} from "../../io.js";
+import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoItem} from "./item.js";
-import {IoThemeSingleton as mixin} from "../../io.js";
 
 export class IoString extends IoItem {
   static get Style() {
