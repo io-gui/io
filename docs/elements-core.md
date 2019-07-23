@@ -52,6 +52,8 @@ Input element for `Number` data type.
 
 It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees.
 
+Enable `ladder` property to use interactive float ladder element. 
+
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
 ## &lt;io-slider&gt;

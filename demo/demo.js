@@ -10,13 +10,18 @@ export class IoDemo extends IoElement {
         overflow-x: hidden;
       }
       :host .table {
+        max-width: 24em;
         display: grid;
-        grid-template-columns: 6em 6em 6em;
+        grid-template-columns: repeat(4, 1fr);
         grid-gap: var(--io-spacing);
         overflow: hidden;
       }
       :host .table > * {
         width: auto;
+      }
+      :host .io-frame {
+        margin: var(--io-spacing) 0;
+        max-width: 24em;
       }
       :host .sidebar {
         display: inline-block;
@@ -65,34 +70,21 @@ export class IoDemo extends IoElement {
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
 
     const demoPrimitives = ['div', {name: 'primitives', class: 'table'}, [
-      ['io-item', 'io-string'],
-      ['io-item', 'io-number'],
-      ['io-item', 'io-boolean'],
       ['io-string', {id: 'string', value: this.bind('string')}],
       ['io-number', {value: this.bind('string')}],
-      ['io-boolean', {type: 'boolean', value: this.bind('string')}],
+      ['io-boolean', {value: this.bind('string')}],
+      ['io-switch', {value: this.bind('string')}],
       ['io-string', {value: this.bind('number')}],
       ['io-number', {id: 'number', value: this.bind('number')}],
-      ['io-boolean', {type: 'boolean', value: this.bind('number')}],
+      ['io-boolean', {value: this.bind('number')}],
+      ['io-switch', {value: this.bind('number')}],
       ['io-string', {value: this.bind('boolean')}],
       ['io-number', {value: this.bind('boolean')}],
-      ['io-boolean', {id: 'boolean', type: 'boolean', value: this.bind('boolean')}],
-      ['io-string', {value: this.bind('NaN')}],
-      ['io-number', {value: this.bind('NaN')}],
-      ['io-boolean', {type: 'boolean', value: this.bind('NaN')}],
-      ['io-string', {value: this.bind('null')}],
-      ['io-number', {value: this.bind('null')}],
-      ['io-boolean', {type: 'boolean', value: this.bind('null')}],
-      ['io-string', {value: this.bind('undefined')}],
-      ['io-number', {value: this.bind('undefined')}],
-      ['io-boolean', {type: 'boolean', value: this.bind('undefined')}],
+      ['io-boolean', {id: 'boolean', value: this.bind('boolean')}],
+      ['io-switch', {id: 'boolean', value: this.bind('boolean')}],
     ]];
 
-    const demoSwitch = ['div', {name: 'switch'}, [
-      ['io-switch', {value: this.bind('boolean')}],
-    ]];
-
-    const demoSliders = ['div', {name: 'sliders'}, [
+    const demoSliders = ['div', {name: 'sliders', class: 'io-frame'}, [
       ['io-slider', {value: this.bind('number')}],
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
@@ -101,7 +93,7 @@ export class IoDemo extends IoElement {
       ['io-slider', {value: this.bind('NaN'), step: 0.1}],
     ]];
 
-    const demoOptions = ['div', {name: 'options'}, [
+    const demoOptions = ['div', {name: 'options', class: 'io-frame'}, [
       ['io-menu-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},
@@ -114,7 +106,7 @@ export class IoDemo extends IoElement {
       ['io-menu-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
     ]];
 
-    const demoButton = ['div', {name: 'button', class: 'table'}, [
+    const demoButton = ['div', {name: 'button', class: 'table io-frame'}, [
       ['io-button', {label: 'set 0.3', action: this.setNumber, value: 0.3}],
       ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
       ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
@@ -123,12 +115,12 @@ export class IoDemo extends IoElement {
       ['io-button', {label: 'undef', action: this.setNumber, value: undefined}],
     ]];
 
-    const demoObject = ['div', {name: 'object'}, [
+    const demoObject = ['div', {name: 'object', class: 'io-frame'}, [
       ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1', true), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers']}], //TODO: labeled?
       ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2', true), properties: ['number'], config: {'number': ['io-slider', {step: 0.001}]}}],
     ]];
 
-    const demoInspector = ['div', {name: 'inspector'}, [
+    const demoInspector = ['div', {name: 'inspector', class: 'io-frame'}, [
       ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
@@ -163,16 +155,16 @@ export class IoDemo extends IoElement {
       {label: 'long menu', options: longOptions, hint: 'list', icon: '⚠'}
     ];
 
-    const demoMenu = ['div', {name: 'menu'}, [
+    const demoMenu = ['div', {name: 'menu', class: 'io-frame'}, [
       ['div', [
         ['span', 'right-click (contextmenu)'],
         ['io-menu', {options: this.menuoptions, position: 'pointer', button: 2}], ['br'],
-      ]], ['br'],
+      ]],
       ['div', [
         ['span', 'click'],
         ['io-menu', {options: this.menuoptions, position: 'pointer', button: 0}], ['br'],
-      ]], ['br'],
-      ['io-menu-options', {class: 'sidebar', options: this.menuoptions}], ['br'], ['br'],
+      ]],
+      ['io-menu-options', {class: 'sidebar', options: this.menuoptions}],
       ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
     ]];
 
@@ -215,13 +207,12 @@ export class IoDemo extends IoElement {
         elements: [
           ['div', {name: 'elements'}, [
             demoPrimitives,
-            ['h4', 'io-switch'], demoSwitch,
-            ['h4', 'io-slider'], demoSliders,
-            ['h4', 'io-menu-options'], demoOptions,
-            ['h4', 'io-button'], demoButton,
-            ['h4', 'io-menu'], demoMenu,
-            ['h4', 'io-object'], demoObject,
-            ['h4', 'io-inspector'], demoInspector,
+            demoSliders,
+            demoOptions,
+            demoButton,
+            demoMenu,
+            demoObject,
+            demoInspector,
           ]],
           // demoLayout,
           ['todo-app', {name: 'todo'}],
