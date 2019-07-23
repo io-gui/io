@@ -105,7 +105,7 @@ export class IoElementDemo extends IoElement {
         ['io-boolean', {class: 'io-item', value: this.bind('expanded'), true: label, false: label}],
         (hasProps && this.expanded) ?
         ['io-properties', {value: this.properties, config: Object.assign({
-            'type:number': ['io-float'],
+            'type:number': ['io-number', {ladder: true}],
             'type:boolean': ['io-switch'],
           }, this.config)}] : null,
         ['div', {class: 'io-frame'}, [

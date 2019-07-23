@@ -9,11 +9,11 @@ export class IoVector extends IoElement {
         align-self: stretch;
         justify-self: stretch;
       }
-      :host > io-float {
+      :host > io-number {
         width: inherit;
         flex: 1 1;
       }
-      :host > io-float:not(:last-child) {
+      :host > io-number:not(:last-child) {
         margin-right: var(--io-spacing);
       }
       :host > .io-slot {
@@ -78,13 +78,14 @@ export class IoVector extends IoElement {
     for (let i in this._c) {
       const prop = this._c[i];
       if (this.value[prop] !== undefined) {
-        elements.push(['io-float', {
+        elements.push(['io-number', {
           id: prop,
           value: this.value[prop],
           conversion: this.conversion,
           step: this.step,
           min: this.min,
           max: this.max,
+          ladder: true,
           'on-value-set': this._onValueSet
         }]);
       }
