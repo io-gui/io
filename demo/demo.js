@@ -1,4 +1,5 @@
-import {html, IoElement, IoStorage as $, IoThemeSingleton} from "../dist/io.js";
+import {html, IoElement, IoStorage as $} from "../dist/io.js";
+import {IoThemeSingleton} from "../dist/io-elements-core.js";
 import "./todomvc/todo-app.js";
 
 export class IoDemo extends IoElement {

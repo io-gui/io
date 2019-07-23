@@ -1,68 +1,7 @@
-import {html, IoElement} from "../../io.js";
-import {IoNumber, IoLayer} from "../../io-elements-core.js";
+import {IoElement, html} from "../../io.js";
+import {IoLayerSingleton} from "./layer.js";
 
-export class IoFloat extends IoNumber {
-  static get Listeners() {
-    return {
-      'touchstart': '_onTouchstart',
-      'touchend': '_onTouchend',
-    };
-  }
-  _onTouchstart(event) {
-    this._x = event.changedTouches[0].clientX;
-    this._y = event.changedTouches[0].clientY;
-  }
-  _onTouchend(event) {
-    if (event.cancelable) event.preventDefault();
-    const dx = event.changedTouches[0].clientX - this._x;
-    const dy = event.changedTouches[0].clientY - this._y;
-    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {
-      if (IoLadder.singleton.expanded) {
-        this.focus();
-      }
-      document.activeElement.blur();
-      IoLayer.singleton.clickblock = true;
-      IoLadder.singleton.opaque = true;
-      this._expandLadder();
-    }
-  }
-  _onClick(event) {
-    super._onClick(event);
-    this._expandLadder();
-  }
-  _onFocus(event) {
-    super._onFocus(event);
-    IoLayer.singleton.clickblock = false;
-  }
-  _onBlur(event) {
-    super._onBlur(event);
-    IoLayer.singleton.expanded = false;
-  }
-  _onValueSet(event) {
-    this.set('value', event.detail.value);
-  }
-  _expandLadder() {
-    IoLadder.singleton.expanded = true;
-    IoLadder.singleton.min = this.min;
-    IoLadder.singleton.max = this.max;
-    IoLadder.singleton.step = this.step;
-    IoLadder.singleton.value = this.value;
-    // TODO: unhack
-    if (IoLadder.singleton._target) {
-      IoLadder.singleton.removeEventListener('value-set', IoLadder.singleton._target._onValueSet);
-    }
-    IoLadder.singleton._target = this;
-    IoLadder.singleton.addEventListener('value-set', this._onValueSet);
-
-    // TODO: disable nudge?
-    IoLayer.singleton.setElementPosition(IoLadder.singleton, 'bottom', this.getBoundingClientRect());
-    IoLayer.singleton.srcElement = this;
-  }
-}
-
-IoFloat.Register();
-
-export class IoLadder extends IoElement {
+class IoNumberLadder extends IoElement {
   static get Style() {
     return html`<style>
       :host {
@@ -185,9 +124,9 @@ export class IoLadder extends IoElement {
     window.addEventListener('mouseup', this._onMouseup);
     const item = event.composedPath()[0];
     this._step = Number(item.textContent);
-    this._clickblockRestore = IoLayer.singleton.clickblock;
-    IoLayer.singleton.clickblock = true;
-    IoLayer.singleton.style.cursor = 'ew-resize';
+    this._clickblockRestore = IoLayerSingleton.clickblock;
+    IoLayerSingleton.clickblock = true;
+    IoLayerSingleton.style.cursor = 'ew-resize';
     this._value = this.value;
     this._x = event.clientX;
   }
@@ -198,8 +137,8 @@ export class IoLadder extends IoElement {
   _onMouseup() {
     window.removeEventListener('mousemove', this._onMousemove);
     window.removeEventListener('mouseup', this._onMouseup);
-    IoLayer.singleton.clickblock = this._clickblockRestore;
-    IoLayer.singleton.style.cursor = '';
+    IoLayerSingleton.clickblock = this._clickblockRestore;
+    IoLayerSingleton.style.cursor = '';
     this._step = 0;
   }
   _onTouchstart(event) {
@@ -254,8 +193,8 @@ export class IoLadder extends IoElement {
   }
 }
 
-IoLadder.Register();
+IoNumberLadder.Register();
 
-IoLadder.singleton = new IoLadder();
-IoLayer.singleton.appendChild(IoLadder.singleton);
-IoLadder.singleton.addEventListener('expanded-changed', IoLayer.singleton.onChildExpanded);
+export const IoNumberLadderSingleton = new IoNumberLadder();
+IoLayerSingleton.appendChild(IoNumberLadderSingleton);
+IoNumberLadderSingleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);

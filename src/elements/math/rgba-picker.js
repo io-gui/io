@@ -1,4 +1,4 @@
-import {IoLayer} from "../../io-elements-core.js";
+import {IoLayerSingleton} from "../../io-elements-core.js";
 import {IoHsvaPicker} from "./hsva-picker.js";
 import {rgb2hsv, hsv2rgb} from "./utils.js";
 
@@ -38,5 +38,5 @@ export class IoRgbaPicker extends IoHsvaPicker {
 IoRgbaPicker.Register();
 
 IoRgbaPicker.singleton = new IoRgbaPicker();
-IoLayer.singleton.appendChild(IoRgbaPicker.singleton);
-IoRgbaPicker.singleton.addEventListener('expanded-changed', IoLayer.singleton.onChildExpanded);
+IoLayerSingleton.appendChild(IoRgbaPicker.singleton);
+IoRgbaPicker.singleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);

@@ -1,5 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoLayer, IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-elements-core.js";
 
 export class IoHsvaPicker extends IoElement {
   static get Style() {
@@ -50,5 +50,5 @@ export class IoHsvaPicker extends IoElement {
 IoHsvaPicker.Register();
 
 IoHsvaPicker.singleton = new IoHsvaPicker();
-IoLayer.singleton.appendChild(IoHsvaPicker.singleton);
-IoHsvaPicker.singleton.addEventListener('expanded-changed', IoLayer.singleton.onChildExpanded);
+IoLayerSingleton.appendChild(IoHsvaPicker.singleton);
+IoHsvaPicker.singleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);

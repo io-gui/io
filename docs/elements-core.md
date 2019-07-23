@@ -60,7 +60,7 @@ Input element for `Number` data type displayed as interactive slider with a numb
 
 Implements `<io-number>` and `<io-slider-knob>`.
 
-<io-element-demo element="io-slider" properties='{"value": 0.1, "step": 0.3, "min": 0.1, "max": 1}'></io-element-demo>
+<io-element-demo element="io-slider" properties='{"value": 0.1, "step": 0.01, "min": -0.5, "max": 0.5}'></io-element-demo>
 
 <io-element-demo element="io-slider-knob" properties='{"value": 0.1, "step": 0.1, "minV": 0, "max": 1}'></io-element-demo>
 

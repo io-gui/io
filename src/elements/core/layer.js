@@ -1,6 +1,6 @@
 import {IoElement, html} from "../../io.js";
 
-export class IoLayer extends IoElement {
+class IoLayer extends IoElement {
   static get Style() {
     return html`<style>
       :host {
@@ -182,5 +182,5 @@ export class IoLayer extends IoElement {
 
 IoLayer.Register();
 
-IoLayer.singleton = new IoLayer();
-document.body.appendChild(IoLayer.singleton);
+export const IoLayerSingleton = new IoLayer();
+document.body.appendChild(IoLayerSingleton);
