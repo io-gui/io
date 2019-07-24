@@ -111,6 +111,14 @@ export class IoTheme extends IoElement {
       -webkit-overflow-scrolling: touch;
       -webkit-tap-highlight-color: transparent;
     }
+    row {
+      display: flex;
+      flex-direction: row;
+    }
+    column {
+      display: flex;
+      flex-direction: column;
+    }
     </style>`;
   }
   get dark() {

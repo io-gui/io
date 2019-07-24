@@ -24,7 +24,7 @@
 
 import "./io-elements-core.js";
 
-// export {IoLayout} from "./elements/elements/layout.js";
+export {IoLayout} from "./elements/layout/layout.js";
 export {IoCollapsable} from "./elements/layout/collapsable.js";
 export {IoSelectorSidebar} from "./elements/layout/selector-sidebar.js";
 export {IoSelectorTabs} from "./elements/layout/selector-tabs.js";
