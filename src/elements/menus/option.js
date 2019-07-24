@@ -17,10 +17,6 @@ export class IoMenuOption extends IoMenuItem {
         transition: background-color 0.4s;
         height: 1.375em;
       }
-      :host:not([label])::after {
-        content: '▾';
-        padding-left: var(--io-spacing);
-      }
     </style>`;
   }
   static get Attributes() {
@@ -104,7 +100,7 @@ export class IoMenuOption extends IoMenuItem {
         }
       }
     }
-    valueText = this.label || valueText || String(this.value);
+    valueText = this.label || (valueText || String(this.value)) + ' ▾';
     this.textNode = valueText;
     this.title = valueText;
     this.setAttribute('aria-haspopup', 'listbox');

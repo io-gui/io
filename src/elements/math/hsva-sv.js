@@ -48,7 +48,7 @@ export class IoHsvaSv extends IoHsvaHue {
         float distIn2 = 1.0 - (offset - (markerSize + (lineWidth + 1.0)));
         float dist2 = saturate(min(distOut2, distIn2));
 
-        currentColor = mix(alphaPattern, currentColor, uValue.a);
+        currentColor = mix(alphaPattern, currentColor, saturate(uValue.a));
 
         final = mix(final, currentColor, saturate(distIn));
         final = mix(final, cssColor.rgb, dist2);

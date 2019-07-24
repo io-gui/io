@@ -50,7 +50,7 @@ export class IoRgbaSwatch extends IoGl {
         if (pxUv.x > uSize.x - lineWidth) alpha = 1.0;
         if (pxUv.y > uSize.y - lineWidth) alpha = 1.0;
 
-        gl_FragColor = vec4(mix(alphaPattern, uValue.rgb, alpha), 1.0);
+        gl_FragColor = vec4(mix(alphaPattern, uValue.rgb, saturate(alpha)), 1.0);
       }
     `;
   }

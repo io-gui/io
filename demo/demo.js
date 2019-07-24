@@ -36,7 +36,7 @@ export class IoDemo extends IoElement {
       number: 0.0,
       string: 'hello',
       boolean: true,
-      color: [1, 0.5, 0, 1],
+      color: [1, 0.5, 0.1, 1],
       null: null,
       NaN: NaN,
       undefined: undefined,
@@ -76,6 +76,7 @@ export class IoDemo extends IoElement {
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
       ['io-slider', {value: this.bind('number'), min: -1.33, max: 3.5, step: 0.8}],
       ['io-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
+      ['io-vector', {value: this.bind('color'), linkable: true}],
       ['io-rgba', {value: this.bind('color')}],
     ]];
 
@@ -92,7 +93,7 @@ export class IoDemo extends IoElement {
       ], value: this.bind('number')}],
       ['io-menu-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
       ['io-button', {label: 'set 0.5', action: this.setNumber, value: 0.5}],
-      ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
+      ['io-menu-option', {label: 'Theme ▾', value: IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
     ]];
 
     const options = [
@@ -115,8 +116,8 @@ export class IoDemo extends IoElement {
       longOptions.push({icon: i, label: r1 + ' ' + r2, value: 0, action: this.setNumber, hint: r3});
     }
     const menuoptions = [
-      {label: 'file', options: options},
-      {label: 'view', options: [
+      {label: 'first', options: options},
+      {label: 'second', options: [
         {label: 'suboption one', options: options},
         {label: 'suboption two', options: options},
         {label: 'suboption three', options: options},
@@ -142,8 +143,8 @@ export class IoDemo extends IoElement {
     ]];
 
     const object = ['div', {name: 'object', class: 'io-column'}, [
-      ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1', true), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers', 'color']}], //TODO: labeled?
-      ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2', true), properties: ['number'], config: {'number': ['io-slider', {step: 0.001}]}}],
+      ['io-object', {value: this, label: 'IoObject (filtered properties)', expanded: $('io-object1', true), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers', 'color']}], //TODO: labeled?
+      ['io-object', {value: this, label: 'IoObject (configured property)', expanded: $('io-object2', true), properties: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
     ]];
 
     const inspector = ['div', {name: 'inspector', class: 'io-column'}, [
@@ -175,12 +176,8 @@ export class IoDemo extends IoElement {
 
     this.template([
       ['io-selector-tabs', {precache: true, selected: $('demo', 'elements', true),
-        slotted: [
-          ['io-menu-option', {label: 'Theme', class: 'io-item', value:
-           IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
-        ],
         options: [
-          {value: 'elements', label: "Elements"},
+          {value: 'elements', label: "All Elements"},
           // {value: 'layout', label: "Layout"},
           {value: 'todo', label: "Todo App"},
         ],
