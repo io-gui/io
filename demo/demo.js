@@ -5,6 +5,13 @@ import "./todomvc/todo-app.js";
 export class IoDemo extends IoElement {
   static get Style() {
     return html`<style>
+      :host {
+        display: flex;
+        flex: 1 1;
+      }
+      :host > io-selector-tabs {
+        flex: 1 1;
+      }
       :host .table {
         max-width: 24em;
         display: grid;
@@ -26,7 +33,7 @@ export class IoDemo extends IoElement {
         max-width: 24em;
       }
       :host .menuframe {
-        flex: 1 1 auto;
+        flex: 1 1;
         align-self: stretch;
         margin: var(--io-spacing);
       }
@@ -134,7 +141,7 @@ export class IoDemo extends IoElement {
             ['io-menu', {options: menuoptions, position: 'pointer', button: 0}],
           ]],
           ['div', {class: 'io-frame menuframe'}, [
-            ['span', 'right-click for contextmenu'],
+            ['span', 'right-click for menu'],
             ['io-menu', {options: menuoptions, position: 'pointer', button: 2}],
           ]],
 

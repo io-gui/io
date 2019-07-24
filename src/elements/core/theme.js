@@ -113,11 +113,17 @@ export class IoTheme extends IoElement {
     }
     row {
       display: flex;
+      flex: 1 1;
       flex-direction: row;
+      align-self: stretch;
+      justify-self: stretch;
     }
     column {
       display: flex;
+      flex: 1 1;
       flex-direction: column;
+      align-self: stretch;
+      justify-self: stretch;
     }
     </style>`;
   }
