@@ -5,51 +5,38 @@ import "./todomvc/todo-app.js";
 export class IoDemo extends IoElement {
   static get Style() {
     return html`<style>
-
-      :host {
-        overflow-x: hidden;
-      }
-      :host .table {
+      :host div[name=elements] > .table {
         max-width: 24em;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-gap: var(--io-spacing);
-        overflow: hidden;
       }
       :host .table > * {
         width: auto;
       }
-      :host .io-frame {
+      :host div[name=elements] {
+        padding: var(--io-spacing);
+      }
+      :host div[name=elements] > .io-column {
         margin: var(--io-spacing) 0;
         max-width: 24em;
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: var(--io-spacing);
       }
-      :host .sidebar {
-        display: inline-block;
-      }
-      :host io-object:not(:last-of-type),
-      :host io-slider:not(:last-of-type) {
-        margin-bottom: var(--io-spacing);
-      }
-      :host > io-selector-tabs > io-selector > io-layout {
-        height: 600px;
-        flex: 1 0 auto;
-      }
-      :host .warning {
-        margin: 0.5em;
-        padding: 0.5em;
-        border: 1px solid red;
-        border-radius: 0.5em;
-      }
-      :host div[name=elements] {
-        padding: calc(3 * var(--io-spacing));
+      :host .menuframe {
+        flex: 1 1;
+        align-self: stretch;
+        margin: var(--io-spacing);
       }
     </style>`;
   }
   static get Properties() {
     return {
-      number: 0.5,
+      number: 0.0,
       string: 'hello',
       boolean: true,
+      color: [1, 0.5, 0, 1],
       null: null,
       NaN: NaN,
       undefined: undefined,
@@ -69,7 +56,7 @@ export class IoDemo extends IoElement {
 
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
 
-    const demoPrimitives = ['div', {name: 'primitives', class: 'table'}, [
+    const primitives = ['div', {name: 'primitives', class: 'table'}, [
       ['io-string', {id: 'string', value: this.bind('string')}],
       ['io-number', {value: this.bind('string')}],
       ['io-boolean', {value: this.bind('string')}],
@@ -84,19 +71,19 @@ export class IoDemo extends IoElement {
       ['io-switch', {id: 'boolean', value: this.bind('boolean')}],
     ]];
 
-    const demoSliders = ['div', {name: 'sliders', class: 'io-frame'}, [
-      ['io-slider', {value: this.bind('number')}],
+    const sliders = ['div', {name: 'sliders', class: 'io-column'}, [
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
       ['io-slider', {value: this.bind('number'), min: -1.33, max: 3.5, step: 0.8}],
       ['io-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
-      ['io-slider', {value: this.bind('NaN'), step: 0.1}],
+      ['io-rgba', {value: this.bind('color')}],
     ]];
 
-    const demoOptions = ['div', {name: 'options', class: 'io-frame'}, [
+    const buttons = ['div', {name: 'button', class: 'table'}, [
       ['io-menu-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},
+        {label: 'half', value: 0.5},
         {label: 'one', value: 1},
         {label: 'two', value: 2},
         {label: 'three', value: 3},
@@ -104,24 +91,8 @@ export class IoDemo extends IoElement {
         {label: 'leet', value: 1337},
       ], value: this.bind('number')}],
       ['io-menu-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
-    ]];
-
-    const demoButton = ['div', {name: 'button', class: 'table io-frame'}, [
-      ['io-button', {label: 'set 0.3', action: this.setNumber, value: 0.3}],
+      ['io-button', {label: 'set 0.5', action: this.setNumber, value: 0.5}],
       ['io-button', {label: 'set 1', action: this.setNumber, value: 1}],
-      ['io-button', {label: 'set 2', action: this.setNumber, value: 2}],
-      ['io-button', {label: 'null', action: this.setNumber, value: null}],
-      ['io-button', {label: 'NaN', action: this.setNumber, value: NaN}],
-      ['io-button', {label: 'undef', action: this.setNumber, value: undefined}],
-    ]];
-
-    const demoObject = ['div', {name: 'object', class: 'io-frame'}, [
-      ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1', true), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers']}], //TODO: labeled?
-      ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2', true), properties: ['number'], config: {'number': ['io-slider', {step: 0.001}]}}],
-    ]];
-
-    const demoInspector = ['div', {name: 'inspector', class: 'io-frame'}, [
-      ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
     const options = [
@@ -131,7 +102,6 @@ export class IoDemo extends IoElement {
       {label: 'set four', value: 4, action: this.setNumber},
       {label: 'set five', value: 5, action: this.setNumber}
     ];
-
     const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
       'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
       'fusce', 'interdum', 'vestibulum', 'nunc', 'velit'];
@@ -144,8 +114,7 @@ export class IoDemo extends IoElement {
       const i = hearts[Math.floor(Math.random() * 9)] || '';
       longOptions.push({icon: i, label: r1 + ' ' + r2, value: 0, action: this.setNumber, hint: r3});
     }
-
-    this.menuoptions = [
+    const menuoptions = [
       {label: 'file', options: options},
       {label: 'view', options: [
         {label: 'suboption one', options: options},
@@ -154,32 +123,43 @@ export class IoDemo extends IoElement {
       ]},
       {label: 'long menu', options: longOptions, hint: 'list', icon: '⚠'}
     ];
+    const menu = ['div', {name: 'menu', class: 'io-column'}, [
+      ['io-menu-options', {options: menuoptions, horizontal: true}],
+      ['div', {class: 'io-row'}, [
+        ['io-menu-options', {options: menuoptions}],
+        ['div', {class: 'io-column'}, [
+          ['div', {class: 'io-frame menuframe'}, [
+            ['span', 'click for menu'],
+            ['io-menu', {options: menuoptions, position: 'pointer', button: 0}],
+          ]],
+          ['div', {class: 'io-frame menuframe'}, [
+            ['span', 'right-click for menu'],
+            ['io-menu', {options: menuoptions, position: 'pointer', button: 2}],
+          ]],
 
-    const demoMenu = ['div', {name: 'menu', class: 'io-frame'}, [
-      ['div', [
-        ['span', 'right-click (contextmenu)'],
-        ['io-menu', {options: this.menuoptions, position: 'pointer', button: 2}], ['br'],
-      ]],
-      ['div', [
-        ['span', 'click'],
-        ['io-menu', {options: this.menuoptions, position: 'pointer', button: 0}], ['br'],
-      ]],
-      ['io-menu-options', {class: 'sidebar', options: this.menuoptions}],
-      ['io-menu-options', {class: 'menubar', options: this.menuoptions, horizontal: true}],
+        ]]
+      ]]
+    ]];
+
+    const object = ['div', {name: 'object', class: 'io-column'}, [
+      ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1', true), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers', 'color']}], //TODO: labeled?
+      ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2', true), properties: ['number'], config: {'number': ['io-slider', {step: 0.001}]}}],
+    ]];
+
+    const inspector = ['div', {name: 'inspector', class: 'io-column'}, [
+      ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
     // const demoLayout = ['io-layout', {
     //   name: 'layout',
     //   orientation: 'horizontal',
     //   elements: [
-    //     demoPrimitives,
-    //     demoSwitch,
-    //     demoSliders,
-    //     demoOptions,
-    //     demoButton,
-    //     demoObject,
-    //     demoInspector,
-    //     demoMenu,
+    //     primitives,
+    //     sliders,
+    //     buttons,
+    //     object,
+    //     inspector,
+    //     menu,
     //   ],
     //   splits: [
     //     {selected: 'sliders', tabs: ['sliders'], size: 280},
@@ -206,13 +186,12 @@ export class IoDemo extends IoElement {
         ],
         elements: [
           ['div', {name: 'elements'}, [
-            demoPrimitives,
-            demoSliders,
-            demoOptions,
-            demoButton,
-            demoMenu,
-            demoObject,
-            demoInspector,
+            primitives,
+            sliders,
+            buttons,
+            menu,
+            object,
+            inspector,
           ]],
           // demoLayout,
           ['todo-app', {name: 'todo'}],

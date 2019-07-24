@@ -1,5 +1,11 @@
 import {IoElement, html} from "../../io.js";
 
+let lastFocus = null;
+window.addEventListener('focusin', _onWindowFocusIn, {capture: false});
+function _onWindowFocusIn() {
+  lastFocus = document.activeElement;
+}
+
 export class IoMenuLayer extends IoElement {
   static get Style() {
     return html`<style>
@@ -63,6 +69,7 @@ export class IoMenuLayer extends IoElement {
   }
   constructor(props) {
     super(props);
+    this._menuRoot = null;
     this._hoveredItem = null;
     this._hoveredOptions = null;
     this._startAnimation = this._startAnimation.bind(this);
@@ -70,6 +77,13 @@ export class IoMenuLayer extends IoElement {
     this._x = 0;
     this._y = 0;
     this._v = 0;
+    this.addEventListener('focusin', this._onFocusIn, {capture: true});
+  }
+  _onFocusIn() {
+    if (lastFocus) {
+      const isInside = lastFocus.$parent && lastFocus.$parent.parentElement === this;
+      this.lastFocus = isInside ? this.lastFocus : lastFocus;
+    }
   }
   connectedCallback() {
     super.connectedCallback();
@@ -101,7 +115,7 @@ export class IoMenuLayer extends IoElement {
     this.expanded = false;
   }
   collapseSiblings(item) {
-    const optionschain = this._getOptionschain(item);
+    const optionschain = this._getParentOptions(item);
     for (let i = this.$options.length; i--;) {
       if (optionschain.indexOf(this.$options[i]) === -1) {
         if (this.$options[i].parentElement === this) {
@@ -110,14 +124,10 @@ export class IoMenuLayer extends IoElement {
       }
     }
   }
-  // TODO: consider making automatic.
-  setLastFocus(element) {
-    const isOutside = !(element.$parent && element.$parent.parentElement === this);
-    const active = document.activeElement === document.body ? null : document.activeElement;
-    const activeIsOutside = !(active && active.$parent && active.$parent.parentElement === this);
-    this.lastFocus = isOutside ? element : activeIsOutside ? active : this.lastFocus;
-  }
-  _onOptionsExpanded() {
+  _onOptionsExpanded(options) {
+    const parent = options.$parent;
+    const isInside = parent.$parent && parent.$parent.parentElement === this;
+    this._menuRoot = isInside ? this._menuRoot : parent;
     this.expanded = !!this.$options.find(option => { return option.parentElement === this && option.expanded; });
   }
   _onWindowScroll() {
@@ -125,8 +135,8 @@ export class IoMenuLayer extends IoElement {
   }
   _onMousedown(event) {
     event.preventDefault();
-    this._onPointermove(event);
     this._onPointerdown(event);
+    this._onPointermove(event);
   }
   _onMousemove(event) {
     event.preventDefault();
@@ -168,8 +178,30 @@ export class IoMenuLayer extends IoElement {
     this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
     this._x = event.clientX;
     this._y = event.clientY;
-    this._hoveredOptions = null;
-    this._hoveredItem = null;
+    let options = this.$options;
+    for (let i = options.length; i--;) {
+      if (options[i].expanded) {
+        let rect = options[i].getBoundingClientRect();
+        if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+          this._hoveredOptions = options[i];
+          let items = options[i].querySelectorAll('io-menu-item');
+          for (let j = items.length; j--;) {
+            const optionschain = this._getParentOptions(items[j]);
+            let rect = items[j].getBoundingClientRect();
+            if (optionschain.indexOf(this._menuRoot) !== -1) {
+              if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+                let force = options[i].horizontal;
+                this._focusItem(items[j], force);
+                this._hoveredItem = items[j];
+                return;
+              }
+            }
+
+          }
+          return options[i];
+        }
+      }
+    }
 
     if (this.lastFocus) {
       let rect = this.lastFocus.getBoundingClientRect();
@@ -179,28 +211,8 @@ export class IoMenuLayer extends IoElement {
         return;
       }
     }
-
-    let options = this.$options;
-    for (let i = options.length; i--;) {
-      if (options[i].expanded) {
-        this._hoveredOptions = options[i];
-        let rect = options[i].getBoundingClientRect();
-        if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-          let items = options[i].querySelectorAll('io-menu-item');
-          for (let j = items.length; j--;) {
-            let rect = items[j].getBoundingClientRect();
-            if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-              let force = options[i].horizontal;
-              this._focusItem(items[j], force);
-              this._hoveredItem = items[j];
-              return;
-            }
-          }
-          return options[i];
-        }
-      }
-    }
-
+    this._hoveredOptions = null;
+    this._hoveredItem = null;
   }
   _focusItem(item, force) {
     if (item !== this.__prevItem) {
@@ -210,16 +222,20 @@ export class IoMenuLayer extends IoElement {
       if (this._v > 1 || item.parentNode !== this.__prevParent || force) {
         this.__prevItem = item;
         this._hoveredItem = item;
-        item._toggleExpanded(true);
-        item.focus();
-        this.collapseSiblings(item);
+        if (typeof item._toggleExpanded === 'function') {
+          item._toggleExpanded(true);
+          item.focus();
+          this.collapseSiblings(item);
+        }
       } else {
         this.__timeoutOpen = setTimeout(function() {
           this.__prevItem = item;
           this._hoveredItem = item;
-          item._toggleExpanded(true);
-          item.focus();
-          this.collapseSiblings(item);
+          if (typeof item._toggleExpanded === 'function') {
+            item._toggleExpanded(true);
+            item.focus();
+            this.collapseSiblings(item);
+          }
         }.bind(this), WAIT_TIME);
       }
       this.__prevParent = item.parentNode;
@@ -232,23 +248,26 @@ export class IoMenuLayer extends IoElement {
   _onPointerup(event) {
     if (this._hoveredItem) {
       const collapse = !this._hoveredItem._options;
+      // TODO: unhack. this is necessary for touch only
+      if (event.type === 'touchend' && this._hoveredItem._onClick) {
+        event.preventDefault();
+        this._hoveredItem._onClick(event);
+      }
       if (collapse) {
-        if (this._hoveredItem._onClick) {
-          event.preventDefault();
-          this._hoveredItem._onClick(event);
-        }
         this.collapseAll();
       }
+    } else if (this._hoveredOptions) {
+      // TODO
     } else {
       this.collapseAll();
     }
   }
-  _getOptionschain(item) {
+  _getParentOptions(item) {
     const chain = [];
     if (item.$options) chain.push(item.$options);
     let parent = item.$parent;
     while (parent) {
-      if (parent.localName == 'io-menu-options') chain.push(parent);
+      chain.push(parent);
       parent = parent.$parent;
     }
     return chain;
@@ -290,7 +309,7 @@ export class IoMenuLayer extends IoElement {
         if (this.lastFocus) {
           // Prevent focus and scroll to lastFocus element if outside window.
           let rect = this.lastFocus.getBoundingClientRect();
-          if (rect.top > 0 && rect.top < window.innerHeight && rect.left > 0 && rect.left < window.innerWidth) {
+          if (rect.bottom > 0 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth) {
             this.lastFocus.focus();
           }
           this.lastFocus = null;

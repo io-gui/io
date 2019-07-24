@@ -20,8 +20,11 @@ export class IoSelector extends IoElement {
   }
   static get Properties() {
     return {
-      elements:  Array,
-      selected: String,
+      elements: Array,
+      selected: {
+        type: String,
+        reflect: 1,
+      },
       cache: Boolean,
       precache: Boolean,
       _caches: Object,
@@ -63,11 +66,12 @@ export class IoSelector extends IoElement {
     } else {
       this.__callback = callback;
       if (importPath && !importedPaths[importPath]) {
+        console.log(importPath);
         import(importPath)
         .then(() => {
           importedPaths[importPath] = true;
           this.__callback();
-          delete this.__callback;
+          // delete this.__callback;
         });
       }
     }

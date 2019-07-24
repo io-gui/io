@@ -399,7 +399,7 @@ export class TodoApp extends IoElement {
         ]],
         ['input', {id: 'input', class: 'new-todo', placeholder: 'What needs to be done?', 'on-keyup': this.onInputKey, autofocus: true}],
         ['section', {class: 'main'}, [
-          ['input', {type: 'checkbox', class: 'toggle-all', checked: allCompleted, 'on-click': this.model.toggleItemsCompleted}],
+          ['input', {type: 'checkbox', class: 'toggle-all', checked: allCompleted, 'on-click': this.model._toggleItemsCompleted}],
           ['ul', {class: 'todo-list'}, [
             items.map((item, i) => ['todo-item', {item: item, model: this.model}])
           ]]
