@@ -94,6 +94,7 @@ export class IoSidebar extends IoElement {
         title: 'select tab',
         value: this.selected,
         options: this.options,
+        selectable: true,
         class: 'io-item',
         'on-value-set': this._onValueSet,
       }]]);

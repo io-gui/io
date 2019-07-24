@@ -12,6 +12,8 @@ export class IoSelectorTabs extends IoSelector {
       }
       :host > io-menu-options {
         flex: 0 0 auto;
+        border: none;
+        border-radius: 0;
         background-color: var(--io-background-color-dark);
       }
       :host > .io-content {
@@ -44,6 +46,7 @@ export class IoSelectorTabs extends IoSelector {
         value: this.bind('selected'),
         options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
         slotted: this.slotted,
+        selectable: true,
       }],
     ];
     this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);

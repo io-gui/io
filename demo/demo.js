@@ -128,6 +128,7 @@ export class IoDemo extends IoElement {
       ['div', {class: 'io-row'}, [
         ['io-menu-options', {options: menuoptions}],
         ['div', {class: 'io-column'}, [
+          ['io-menu-item', {label: 'menu item', option: {options: menuoptions}}],
           ['div', {class: 'io-frame menuframe'}, [
             ['span', 'click for menu'],
             ['io-menu', {options: menuoptions, position: 'pointer', button: 0}],
@@ -136,7 +137,6 @@ export class IoDemo extends IoElement {
             ['span', 'right-click for menu'],
             ['io-menu', {options: menuoptions, position: 'pointer', button: 2}],
           ]],
-
         ]]
       ]]
     ]];

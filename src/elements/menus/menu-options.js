@@ -11,8 +11,10 @@ export class IoMenuOptions extends IoElement {
         flex-direction: column;
         white-space: nowrap;
         user-select: none;
-        touch-action: none;
         background: var(--io-background-color-light);
+        border-radius: var(--io-border-radius);
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
         color: var(--io-color);
       }
       :host:not([horizontal]) {
@@ -72,6 +74,7 @@ export class IoMenuOptions extends IoElement {
     return {
       options: Array,
       position: 'right',
+      selectable: false,
       value: {
         value: null,
         notify: true,
@@ -202,6 +205,7 @@ export class IoMenuOptions extends IoElement {
         option: option,
         value: this.value,
         direction: itemDirection,
+        selectable: this.selectable,
         _depth: this._depth + 1,
       }]
     )];
@@ -211,6 +215,7 @@ export class IoMenuOptions extends IoElement {
         label: '☰',
         title: 'select tab',
         value: this.value,
+        selectable: this.selectable,
         class: 'io-hamburger',
         _depth: this._depth,
       }]);
