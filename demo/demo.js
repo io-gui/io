@@ -5,14 +5,7 @@ import "./todomvc/todo-app.js";
 export class IoDemo extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex: 1 1;
-      }
-      :host > io-selector-tabs {
-        flex: 1 1;
-      }
-      :host .table {
+      :host div[name=elements] > .table {
         max-width: 24em;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -21,16 +14,15 @@ export class IoDemo extends IoElement {
       :host .table > * {
         width: auto;
       }
-      :host io-object:not(:last-of-type),
-      :host io-slider:not(:last-of-type) {
-        margin-bottom: var(--io-spacing);
-      }
       :host div[name=elements] {
         padding: var(--io-spacing);
       }
-      :host div[name=elements] > .io-frame {
+      :host div[name=elements] > .io-column {
         margin: var(--io-spacing) 0;
         max-width: 24em;
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: var(--io-spacing);
       }
       :host .menuframe {
         flex: 1 1;
@@ -44,6 +36,7 @@ export class IoDemo extends IoElement {
       number: 0.0,
       string: 'hello',
       boolean: true,
+      color: [1, 0.5, 0, 1],
       null: null,
       NaN: NaN,
       undefined: undefined,
@@ -78,14 +71,15 @@ export class IoDemo extends IoElement {
       ['io-switch', {id: 'boolean', value: this.bind('boolean')}],
     ]];
 
-    const sliders = ['div', {name: 'sliders', class: 'io-frame'}, [
+    const sliders = ['div', {name: 'sliders', class: 'io-column'}, [
       ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
       ['io-slider', {value: this.bind('number'), min: -1.33, max: 3.5, step: 0.8}],
       ['io-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
+      ['io-rgba', {value: this.bind('color')}],
     ]];
 
-    const buttons = ['div', {name: 'button', class: 'table io-frame'}, [
+    const buttons = ['div', {name: 'button', class: 'table'}, [
       ['io-menu-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},
@@ -129,7 +123,7 @@ export class IoDemo extends IoElement {
       ]},
       {label: 'long menu', options: longOptions, hint: 'list', icon: '⚠'}
     ];
-    const menu = ['div', {name: 'menu', class: 'io-frame'}, [
+    const menu = ['div', {name: 'menu', class: 'io-column'}, [
       ['io-menu-options', {options: menuoptions, horizontal: true}],
       ['div', {class: 'io-row'}, [
         ['io-menu-options', {options: menuoptions}],
@@ -147,35 +141,35 @@ export class IoDemo extends IoElement {
       ]]
     ]];
 
-    const object = ['div', {name: 'object', class: 'io-frame'}, [
-      ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1', true), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers']}], //TODO: labeled?
+    const object = ['div', {name: 'object', class: 'io-column'}, [
+      ['io-object', {value: this, label: 'IoDemo (filtered property list)', expanded: $('io-object1', true), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined', 'object', 'options', 'numbers', 'color']}], //TODO: labeled?
       ['io-object', {value: this, label: 'IoDemo (single configured property)', expanded: $('io-object2', true), properties: ['number'], config: {'number': ['io-slider', {step: 0.001}]}}],
     ]];
 
-    const inspector = ['div', {name: 'inspector', class: 'io-frame'}, [
+    const inspector = ['div', {name: 'inspector', class: 'io-column'}, [
       ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
-    const demoLayout = ['io-layout', {
-      name: 'layout',
-      orientation: 'horizontal',
-      elements: [
-        primitives,
-        sliders,
-        buttons,
-        object,
-        inspector,
-        menu,
-      ],
-      splits: [
-        {selected: 'sliders', tabs: ['sliders'], size: 280},
-        {orientation: 'vertical', splits: [
-          {tabs: ['button'], selected: 'button', size: 100},
-          {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
-          {tabs: ['primitives'], selected: 'primitives'},
-        ]},
-      ],
-    }];
+    // const demoLayout = ['io-layout', {
+    //   name: 'layout',
+    //   orientation: 'horizontal',
+    //   elements: [
+    //     primitives,
+    //     sliders,
+    //     buttons,
+    //     object,
+    //     inspector,
+    //     menu,
+    //   ],
+    //   splits: [
+    //     {selected: 'sliders', tabs: ['sliders'], size: 280},
+    //     {orientation: 'vertical', splits: [
+    //       {tabs: ['button'], selected: 'button', size: 100},
+    //       {tabs: ['primitives', 'sliders', 'options', 'button', 'object', 'inspector'], selected: 'inspector'},
+    //       {tabs: ['primitives'], selected: 'primitives'},
+    //     ]},
+    //   ],
+    // }];
 
     // TODO: Add demos for all remaining elements
 
@@ -187,7 +181,7 @@ export class IoDemo extends IoElement {
         ],
         options: [
           {value: 'elements', label: "Elements"},
-          {value: 'layout', label: "Layout"},
+          // {value: 'layout', label: "Layout"},
           {value: 'todo', label: "Todo App"},
         ],
         elements: [
@@ -199,7 +193,7 @@ export class IoDemo extends IoElement {
             object,
             inspector,
           ]],
-          demoLayout,
+          // demoLayout,
           ['todo-app', {name: 'todo'}],
         ]
       }]
