@@ -29,6 +29,10 @@ export class IoMenuLayer extends IoElement {
       }
       :host > io-menu-options {
         position: absolute;
+        border-radius: var(--io-border-radius);
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
+        box-shadow: var(--io-shadow);
         transform: translate3d(0, 0, 0);
         top: 0;
         left: 0;

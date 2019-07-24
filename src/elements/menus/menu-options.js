@@ -14,10 +14,6 @@ export class IoMenuOptions extends IoElement {
         touch-action: none;
         background: var(--io-background-color-light);
         color: var(--io-color);
-        border-radius: var(--io-border-radius);
-        border: var(--io-outset-border);
-        border-color: var(--io-outset-border-color);
-        box-shadow: var(--io-shadow);
       }
       :host:not([horizontal]) {
         padding: calc(2 * var(--io-spacing)) 0;
