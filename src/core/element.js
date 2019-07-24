@@ -80,7 +80,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     this.__resizeDebounce = setTimeout(()=>{
       this.onResized();
       delete this.__resizeDebounce;
-    }, 100);
+    }, 10);
   }
   /**
     * Disposes all internals.

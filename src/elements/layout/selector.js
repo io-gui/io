@@ -66,12 +66,11 @@ export class IoSelector extends IoElement {
     } else {
       this.__callback = callback;
       if (importPath && !importedPaths[importPath]) {
-        console.log(importPath);
         import(importPath)
         .then(() => {
           importedPaths[importPath] = true;
           this.__callback();
-          // delete this.__callback;
+          delete this.__callback;
         });
       }
     }
