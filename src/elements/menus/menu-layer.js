@@ -79,7 +79,7 @@ export class IoMenuLayer extends IoElement {
     this._v = 0;
     this.addEventListener('focusin', this._onFocusIn, {capture: true});
   }
-  _onFocusIn(event) {
+  _onFocusIn() {
     if (lastFocus) {
       const isInside = lastFocus.$parent && lastFocus.$parent.parentElement === this;
       this.lastFocus = isInside ? this.lastFocus : lastFocus;
