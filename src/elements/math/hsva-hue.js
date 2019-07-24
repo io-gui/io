@@ -76,6 +76,7 @@ export class IoHsvaHue extends IoGl {
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
     this._onPointerdown(event);
+    this.focus();
   }
   _onTouchmove(event) {
     event.preventDefault();

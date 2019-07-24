@@ -58,7 +58,6 @@ export class IoMenu extends IoElement {
   _expand() {
     this.expanded = true;
     IoMenuLayer.singleton._hoveredOptions = this.$options;
-    this.$options.children[0].focus();
   }
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];

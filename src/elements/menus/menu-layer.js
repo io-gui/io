@@ -178,8 +178,6 @@ export class IoMenuLayer extends IoElement {
     this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
     this._x = event.clientX;
     this._y = event.clientY;
-    this._hoveredOptions = null;
-    this._hoveredItem = null;
     let options = this.$options;
     for (let i = options.length; i--;) {
       if (options[i].expanded) {
@@ -210,10 +208,11 @@ export class IoMenuLayer extends IoElement {
       if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
         this._hoveredItem = this.lastFocus;
         this._focusItem(this._hoveredItem);
-        // return;
+        return;
       }
     }
-
+    this._hoveredOptions = null;
+    this._hoveredItem = null;
   }
   _focusItem(item, force) {
     if (item !== this.__prevItem) {
@@ -249,11 +248,12 @@ export class IoMenuLayer extends IoElement {
   _onPointerup(event) {
     if (this._hoveredItem) {
       const collapse = !this._hoveredItem._options;
+      // TODO: unhack. this is necessary for touch only
+      if (event.type === 'touchend' && this._hoveredItem._onClick) {
+        event.preventDefault();
+        this._hoveredItem._onClick(event);
+      }
       if (collapse) {
-        if (this._hoveredItem._onClick) {
-          event.preventDefault();
-          this._hoveredItem._onClick(event);
-        }
         this.collapseAll();
       }
     } else if (this._hoveredOptions) {

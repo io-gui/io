@@ -194,7 +194,7 @@ export class IoMenuItem extends IoItem {
     }
   }
   _onMousedown() {
-    IoMenuLayer.singleton._onMousemove(event);
+    IoMenuLayer.singleton._onMousedown(event);
     this._toggleExpanded(true);
     this.focus();
   }
@@ -203,7 +203,8 @@ export class IoMenuItem extends IoItem {
       event.preventDefault();
       this.addEventListener('touchmove', this._onTouchmove);
       this.addEventListener('touchend', this._onTouchend);
-      IoMenuLayer.singleton._onTouchmove(event);
+      IoMenuLayer.singleton._hoveredItem = this;
+      IoMenuLayer.singleton._onTouchstart(event);
       this._toggleExpanded(true);
       this.focus();
     }
