@@ -144,6 +144,12 @@ class IoLayer extends IoElement {
     }
     return false;
   }
+
+  nudgePointer(element, x, y, elemRect, force) {
+    element.style.left = Math.max(0, Math.min(x, window.innerWidth - elemRect.width)) + 'px';
+    element.style.top = Math.max(0, Math.min(y, window.innerHeight - elemRect.height)) + 'px';
+    return true;
+  }
   setElementPosition(element, direction, srcRect) {
     const elemRect = element.getBoundingClientRect();
     switch (direction) {

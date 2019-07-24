@@ -178,10 +178,10 @@ export class IoMenuItem extends IoItem {
       const expanded = set !== undefined ? set : !this.expanded;
       if (expanded) this._connectOptions();
       this.expanded = expanded;
+      IoMenuLayer.singleton._hoveredOptions = this.$options;
     } else this.expanded = false;
   }
   _focusIn() {
-    IoMenuLayer.singleton.setLastFocus(this);
     if (this.expanded) setTimeout(() => {
       if (this.$options.children.length) this.$options.children[0].focus();
     });
@@ -194,20 +194,18 @@ export class IoMenuItem extends IoItem {
     }
   }
   _onMousedown() {
-    IoMenuLayer.singleton.setLastFocus(this);
-    this.focus();
     IoMenuLayer.singleton._onMousemove(event);
     this._toggleExpanded(true);
+    this.focus();
   }
   _onTouchstart(event) {
     if (event.cancelable) {
       event.preventDefault();
       this.addEventListener('touchmove', this._onTouchmove);
       this.addEventListener('touchend', this._onTouchend);
-      IoMenuLayer.singleton.setLastFocus(this);
       IoMenuLayer.singleton._onTouchmove(event);
-      this.focus();
       this._toggleExpanded(true);
+      this.focus();
     }
   }
   _onTouchmove(event) {
