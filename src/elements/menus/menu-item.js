@@ -15,6 +15,7 @@ export class IoMenuItem extends IoItem {
         background: none;
       }
       :host > * {
+        overflow: visible;
         pointer-events: none;
       }
       :host > :not(:empty) {
@@ -23,7 +24,6 @@ export class IoMenuItem extends IoItem {
       :host > .io-menu-icon {}
       :host > .io-menu-label {
         flex: 1 1 auto;
-        overflow: hidden;
         text-overflow: ellipsis;
       }
       :host > .io-menu-hint {

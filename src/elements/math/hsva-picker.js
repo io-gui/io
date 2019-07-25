@@ -11,8 +11,8 @@ export class IoHsvaPicker extends IoElement {
         display: flex;
         cursor: move;
         align-items: stretch;
-        min-width: 2.75em;
-        min-height: 1.375em;
+        min-width: var(--io-line-height);
+        min-height: var(--io-line-height);
         flex-direction: column;
       }
       :host[horizontal] {

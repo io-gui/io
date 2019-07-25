@@ -26,7 +26,7 @@ Extends `<io-button>`.
 
 <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
 
-<io-element-demo element="io-boolean" properties='{"value": true, "display": "icon", "true": "icons:link", "false": "icons:unlink"}'></io-element-demo>
+<io-element-demo element="io-boolean" properties='{"value": true, "display": "icon", "trueicon": "icons:check", "falseicon": "icons:uncheck"}'></io-element-demo>
 
 <io-element-demo element="io-boolean" properties='{"value": true, "display": "switch"}'></io-element-demo>
 

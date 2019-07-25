@@ -93,12 +93,16 @@
         flex: 1 1 auto;
       }
       .logo {
-        display: block;
-        width: 2.7em;
-        height: 1.4em;
+        width: 33px;
+        height: 33px;
+        padding: 0px 6px;
       }
       .main > io-menu-options {
         background-color: var(--io-background-color);
+      }
+      .main > io-menu-options > a {
+        display: flex;
+        padding: 0;
       }
       .docs > io-sidebar:not([overflow]) {
         flex-basis: 14em !important;
@@ -126,7 +130,7 @@
       constructor(props) {
         super(props);
         this.slotted = [
-          ['a', {href: '#doc=getting-started#about-io'}, [['img', {src: '/images/logo/io-logo.svg', class:'logo'}]]],
+          ['a', {href: '#doc=getting-started#about-io'}, [['io-icon', {icon: 'icons:io-gui-logo-io', class:'logo'}]]],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},

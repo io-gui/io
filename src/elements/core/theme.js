@@ -4,11 +4,12 @@ export class IoTheme extends IoElement {
   static get Style() {
     return html`<style>
     body {
-      --io-spacing: 4px;
+      --io-spacing: 3px;
       --io-border-radius: 3px;
       --io-border-width: 1px;
       --io-stroke-width: 0.5px;
-      --io-line-height: 1.375em;
+      --io-line-height: 20px;
+      --io-font-size: 13px;
     }
     </style>`;
   }
@@ -17,6 +18,7 @@ export class IoTheme extends IoElement {
     item {
       display: inline-block;
       height: var(--io-line-height);
+      font-size: var(--io-font-size);
       line-height: var(--io-line-height);
       border-radius: var(--io-border-radius);
       border: var(--io-inset-border);
@@ -25,26 +27,13 @@ export class IoTheme extends IoElement {
       background-color: transparent;
       background-image: none;
       padding: var(--io-spacing);
-    }
-    icon {
-      display: inline-block;
-      width: var(--io-line-height);
-      height: var(--io-line-height);
-      line-height: var(--io-line-height);
-      border-radius: var(--io-border-radius);
-      border: var(--io-inset-border);
-      border-color: transparent;
-      background-color: transparent;
-      background-image: none;
-      padding: var(--io-spacing);
-      fill: var(--io-background-color);
-      stroke: var(--io-color);
-      stroke-width: var(--io-stroke-width);
+
     }
     button {
       display: inline-block;
       text-align: center;
       height: var(--io-line-height);
+      font-size: var(--io-font-size);
       line-height: var(--io-line-height);
       border-radius: var(--io-border-radius);
       border: var(--io-outset-border);
@@ -56,11 +45,13 @@ export class IoTheme extends IoElement {
       padding-left: calc(2 * var(--io-spacing));
       padding-right: calc(2 * var(--io-spacing));
       transition: background-color 0.25s;
+
     }
     field {
       display: inline-block;
       width: calc(4 * var(--io-line-height));
       height: var(--io-line-height);
+      font-size: var(--io-font-size);
       line-height: var(--io-line-height);
       border-radius: var(--io-border-radius);
       border: var(--io-inset-border);

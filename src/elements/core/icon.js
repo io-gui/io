@@ -6,7 +6,16 @@ export class IoIcon extends IoElement {
   static get Style() {
     return html`<style>
       :host {
-        ${mixin.icon};
+        ${mixin.item};
+      }
+      :host {
+        width: var(--io-line-height);
+        height: var(--io-line-height);
+        fill: var(--io-background-color, currentcolor);
+      }
+      :host[stroke] {
+        stroke: var(--io-color, currentcolor);
+        stroke-width: var(--io-stroke-width);
       }
       :host > svg {
         width: 100%;
@@ -23,6 +32,10 @@ export class IoIcon extends IoElement {
       icon: {
         value: '',
         reflect: -1,
+      },
+      stroke: {
+        type: Boolean,
+        reflect: 1,
       },
     };
   }

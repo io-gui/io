@@ -10,7 +10,16 @@ export class IoBoolean extends IoItem {
         ${mixin.button}
       }
       :host[display="icon"] {
-        ${mixin.icon};
+        ${mixin.item};
+      }
+      :host[display="icon"] {
+        width: var(--io-line-height);
+        height: var(--io-line-height);
+        fill: var(--io-color, currentcolor);
+      }
+      :host[stroke] {
+        stroke: var(--io-background-color, currentcolor);
+        stroke-width: var(--io-stroke-width);
       }
       :host[display="icon"] > svg {
         width: 100%;
@@ -56,7 +65,7 @@ export class IoBoolean extends IoItem {
         left: calc(100% - var(--io-line-height));
       }
       :host:not([value]) {
-        opacity: 0.75;
+        opacity: 0.5;
       }
       :host[aria-invalid] {
         border: var(--io-border-error);
@@ -89,6 +98,8 @@ export class IoBoolean extends IoItem {
       },
       true: 'true',
       false: 'false',
+      trueicon: 'icons:check',
+      falseicon: 'icons:uncheck',
       role: 'switch',
     };
   }
@@ -105,7 +116,7 @@ export class IoBoolean extends IoItem {
     this.setAttribute('aria-checked', String(!!this.value));
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
     if (this.display === 'icon') {
-      this.innerHTML = IoIconsetSingleton.getIcon(this.value ? this.true : this.false);
+      this.innerHTML = IoIconsetSingleton.getIcon(this.value ? this.trueicon : this.falseicon);
     } else if (this.display === 'button') {
       this.textNode = this.value ? this.true : this.false;
     } else if (this.display === 'switch') {

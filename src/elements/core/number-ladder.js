@@ -21,8 +21,8 @@ class IoNumberLadder extends IoElement {
         box-shadow: var(--io-shadow);
         -webkit-tap-highlight-color: transparent;
         user-select: none;
-        width: 3em;
-        height: 1.375em;
+        width: calc(2 * var(--io-line-height));
+        height: var(--io-line-height);
         transform: translateZ(0);
       }
       :host > :nth-child(1) {
