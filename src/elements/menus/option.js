@@ -1,4 +1,5 @@
 import {html} from "../../io.js";
+import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuItem} from "./menu-item.js";
 
@@ -6,16 +7,10 @@ export class IoMenuOption extends IoMenuItem {
   static get Style() {
     return html`<style>
       :host {
-        white-space: pre;
-        display: inline-block;
-        background-color: var(--io-background-color-dark);
-        background-image: var(--io-gradient-button);
-        border: var(--io-outset-border);
-        border-color: var(--io-outset-border-color);
-        border-radius: var(--io-border-radius);
-        padding: var(--io-spacing);
-        transition: background-color 0.4s;
-        height: 1.375em;
+        ${mixin.button}
+      }
+      :host {
+        text-align: left;
       }
     </style>`;
   }

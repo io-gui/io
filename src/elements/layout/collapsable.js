@@ -8,7 +8,7 @@ export class IoCollapsable extends IoElement {
         ${mixin.panel}
       }
       :host > io-boolean {
-        cursor: pointer !important;
+        text-align: left;
         align-self: stretch;
       }
       :host > io-boolean[value] {

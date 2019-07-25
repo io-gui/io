@@ -11,6 +11,10 @@ export class IoNumber extends IoItem {
       :host {
         ${mixin.field}
       }
+      :host {
+        user-select: text;
+        min-width: 0.5em;
+      }
     </style>`;
   }
   static get Attributes() {

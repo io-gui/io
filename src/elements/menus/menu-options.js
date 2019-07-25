@@ -1,5 +1,5 @@
 import {IoElement, html} from "../../io.js";
-import {IoLayerSingleton} from "../../io-elements-core.js";
+import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import "./menu-item.js";
 
@@ -7,18 +7,19 @@ export class IoMenuOptions extends IoElement {
   static get Style() {
     return html`<style>
       :host {
+        ${mixin.panel}
+      }
+      :host {
         display: flex;
         flex-direction: column;
+        align-items: stretch;
         white-space: nowrap;
         user-select: none;
-        background: var(--io-background-color-light);
-        border-radius: var(--io-border-radius);
-        border: var(--io-outset-border);
-        border-color: var(--io-outset-border-color);
-        color: var(--io-color);
+        background-image: none;
+        padding: 0;
       }
       :host:not([horizontal]) {
-        padding: calc(2 * var(--io-spacing)) 0;
+        padding: var(--io-spacing) 0;
       }
       :host:not([expanded]) {
         visibility: hidden;

@@ -14,12 +14,22 @@ export class IoDemo extends IoElement {
       :host div[name=elements] {
         padding: var(--io-spacing);
       }
+      :host div[name=color] {
+        height: 100px;
+      }
+      :host div[name=elements] > .io-row,
       :host div[name=elements] > .io-column {
         margin: var(--io-spacing) 0;
         max-width: 24em;
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-        grid-gap: var(--io-spacing);
+      }
+      :host div[name=elements] > .io-column > *:not(:last-child) {
+        margin-bottom: var(--io-spacing);
+      }
+      :host div[name=elements] > .io-row > *:not(:last-child) {
+        margin-right: var(--io-spacing);
+      }
+      :host io-rgba-picker {
+        flex: 1 1;
       }
       :host .menuframe {
         flex: 1 1;
@@ -76,6 +86,7 @@ export class IoDemo extends IoElement {
       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
       ['io-slider', {value: this.bind('number'), min: -1.33, max: 3.5, step: 0.8}],
       ['io-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
+      ['io-slider', {value: this.bind('string'), min: -0.25, max: 0.25, step: 0.01}],
       ['io-vector', {value: this.bind('color'), linkable: true}],
       ['io-rgba', {value: this.bind('color')}],
     ]];
@@ -151,6 +162,11 @@ export class IoDemo extends IoElement {
       ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
+    const color = ['div', {name: 'color', class: 'io-row'}, [
+      ['io-rgba-picker', {value: this.bind('color')}],
+      ['io-rgba-picker', {value: this.bind('color'), horizontal: false}],
+    ]];
+
     // const demoLayout = ['io-layout', {
     //   name: 'layout',
     //   orientation: 'horizontal',
@@ -185,6 +201,7 @@ export class IoDemo extends IoElement {
           ['div', {name: 'elements'}, [
             primitives,
             sliders,
+            color,
             buttons,
             menu,
             object,

@@ -6,7 +6,7 @@ export class IoIcon extends IoElement {
   static get Style() {
     return html`<style>
       :host {
-        ${mixin.item};
+        ${mixin.icon};
       }
       :host > svg {
         width: 100%;

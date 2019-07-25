@@ -8,15 +8,9 @@ export class IoBoolean extends IoItem {
     return html`<style>
       :host {
         ${mixin.button}
-        position: relative;
       }
       :host[display="icon"] {
-        padding: var(--io-spacing);
-        width: var(--io-line-height);
-        height: var(--io-line-height);
-        fill: var(--io-background-color);
-        stroke: var(--io-color);
-        stroke-width: var(--io-stroke-width);
+        ${mixin.icon};
       }
       :host[display="icon"] > svg {
         width: 100%;
@@ -27,6 +21,7 @@ export class IoBoolean extends IoItem {
         transform-origin: 0px 0px;
       }
       :host[display="switch"] {
+        position: relative;
         border: var(--io-inset-border);
         border-color: var(--io-inset-border-color);
         color: var(--io-color-field);
@@ -64,7 +59,8 @@ export class IoBoolean extends IoItem {
         opacity: 0.75;
       }
       :host[aria-invalid] {
-        background-color: var(--io-color-error);
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
       }
       :host:hover,
       :host[display="switch"][value]:not([aria-invalid]) {
@@ -88,7 +84,7 @@ export class IoBoolean extends IoItem {
         reflect: 1,
       },
       display: {
-        value: 'string',
+        value: 'button',
         reflect: 1,
       },
       true: 'true',
@@ -110,7 +106,7 @@ export class IoBoolean extends IoItem {
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
     if (this.display === 'icon') {
       this.innerHTML = IoIconsetSingleton.getIcon(this.value ? this.true : this.false);
-    } else if (this.display === 'string') {
+    } else if (this.display === 'button') {
       this.textNode = this.value ? this.true : this.false;
     } else if (this.display === 'switch') {
       this.textNode = '';

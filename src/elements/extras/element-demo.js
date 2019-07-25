@@ -11,9 +11,9 @@ export class IoElementDemo extends IoElement {
         cursor: pointer !important;
         align-self: stretch;
       }
-      :host > .icon {
-        margin-top: 0.2em;
-        margin-bottom: -1.55em;
+      :host > io-icon {
+        margin-top: 0.3em;
+        margin-bottom: -1.75em;
         display: inline-block;
         padding: 0 0.5em;
         margin-left: auto;
@@ -102,7 +102,7 @@ export class IoElementDemo extends IoElement {
       const hasProps = !!Object.keys(this.properties).length;
       const label = '<' + this.element + '>';
       this.template([
-        hasProps ? ['span', {class: 'icon'}, '🔧'] : null,
+        hasProps ? ['io-icon', {icon: 'icons:gear'}] : null,
         ['io-boolean', {class: 'io-item', value: this.bind('expanded'), true: label, false: label}],
         (hasProps && this.expanded) ?
         ['io-properties', {value: this.properties, config: Object.assign({

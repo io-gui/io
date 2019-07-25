@@ -94,7 +94,7 @@ export class IoVector extends IoElement {
     this.template(elements);
   }
   getSlotted() {
-    return this.linkable ? ['io-boolean', {display: "icon", value: this.bind('linked'), true: 'icons:link', false: 'icons:link'}] : null;
+    return this.linkable ? ['io-boolean', {display: "icon", value: this.bind('linked'), true: 'icons:link', false: 'icons:unlink'}] : null;
   }
 }
 

@@ -16,50 +16,60 @@ export class IoTheme extends IoElement {
     return html`<style>
     item {
       display: inline-block;
-      -webkit-tap-highlight-color: transparent;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex-wrap: nowrap;
-      white-space: nowrap;
       height: var(--io-line-height);
       line-height: var(--io-line-height);
-      border: var(--io-inset-border);
       border-radius: var(--io-border-radius);
+      border: var(--io-inset-border);
       border-color: transparent;
+      color: var(--io-color);
       background-color: transparent;
       background-image: none;
       padding: var(--io-spacing);
     }
     icon {
+      display: inline-block;
       width: var(--io-line-height);
       height: var(--io-line-height);
+      line-height: var(--io-line-height);
+      border-radius: var(--io-border-radius);
+      border: var(--io-inset-border);
+      border-color: transparent;
+      background-color: transparent;
+      background-image: none;
+      padding: var(--io-spacing);
       fill: var(--io-background-color);
       stroke: var(--io-color);
       stroke-width: var(--io-stroke-width);
     }
     button {
-      background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-button);
+      display: inline-block;
+      text-align: center;
+      height: var(--io-line-height);
+      line-height: var(--io-line-height);
+      border-radius: var(--io-border-radius);
       border: var(--io-outset-border);
       border-color: var(--io-outset-border-color);
-      border-radius: var(--io-border-radius);
+      color: var(--io-color);
+      background-color: var(--io-background-color-dark);
+      background-image: var(--io-gradient-button);
       padding: var(--io-spacing);
       padding-left: calc(2 * var(--io-spacing));
       padding-right: calc(2 * var(--io-spacing));
       transition: background-color 0.25s;
     }
     field {
-      border: var(--io-inset-border);
+      display: inline-block;
+      width: calc(4 * var(--io-line-height));
+      height: var(--io-line-height);
+      line-height: var(--io-line-height);
       border-radius: var(--io-border-radius);
+      border: var(--io-inset-border);
+      border-color: var(--io-inset-border-color);
       color: var(--io-color-field);
       background-color: var(--io-background-color-field);
       background-image: none;
-      box-shadow: var(--io-shadow-inset);
       padding: var(--io-spacing);
-      user-select: text;
-      width: calc(3 * var(--io-line-height));
-      height: var(--io-line-height);
-      min-width: 0.5em;
+      box-shadow: var(--io-shadow-inset);
     }
     panel {
       display: flex;
@@ -67,12 +77,13 @@ export class IoTheme extends IoElement {
       align-self: stretch;
       justify-self: stretch;
       align-items: flex-start;
-      border: var(--io-outset-border);
       border-radius: var(--io-border-radius);
+      border: var(--io-outset-border);
       border-color: var(--io-outset-border-color);
-      padding: var(--io-spacing);
-      background: var(--io-background-color-dark);
+      color: var(--io-color-field);
+      background-color: var(--io-background-color-dark);
       background-image: var(--io-gradient-panel);
+      padding: var(--io-spacing);
     }
     frame {
       display: flex;
@@ -80,13 +91,13 @@ export class IoTheme extends IoElement {
       align-self: stretch;
       justify-self: stretch;
       align-items: flex-start;
-      border: var(--io-inset-border);
       border-radius: var(--io-border-radius);
+      border: var(--io-inset-border);
       color: var(--io-color);
       background-color: var(--io-background-color);
       background-image: none;
-      box-shadow: var(--io-shadow-inset);
       padding: var(--io-spacing);
+      box-shadow: var(--io-shadow-inset);
     }
     content {
       display: flex;
@@ -152,9 +163,11 @@ export class IoTheme extends IoElement {
 
         --io-gradient-button: linear-gradient(0deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 50%);
         --io-gradient-panel: linear-gradient(100deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(280deg, rgba(255, 255, 255, 0.075), transparent 50%);
+        --io-gradient-error: repeating-linear-gradient(135deg, transparent, rgba(255, 0, 0, 0.1) 1px, rgba(255, 0, 0, 0.1) 4px, transparent 6px);
 
         --io-border-color: rgb(140, 140, 140);
         --io-border: var(--io-border-width) solid var(--io-border-color);
+        --io-border-error: var(--io-border-width) solid var(--io-color-error);
         --io-inset-border-color: rgb(140, 140, 140) var(--io-border-color) var(--io-border-color) rgb(140, 140, 140);
         --io-inset-border: var(--io-border-width) inset var(--io-border-color);
         --io-outset-border-color: var(--io-border-color) rgb(32, 32, 32) rgb(32, 32, 32) var(--io-border-color);
@@ -185,9 +198,11 @@ export class IoTheme extends IoElement {
 
         --io-gradient-button: linear-gradient(0deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 75%);
         --io-gradient-panel: linear-gradient(100deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(280deg, rgba(255, 255, 255, 0.25), transparent 75%);
+        --io-gradient-error: repeating-linear-gradient(135deg, transparent, rgba(255, 0, 0, 0.1) 1px, rgba(255, 0, 0, 0.1) 4px, transparent 6px);
 
         --io-border-color: rgb(180, 180, 180);
         --io-border: var(--io-border-width) solid var(--io-border-color);
+        --io-border-error: var(--io-border-width) solid var(--io-color-error);
         --io-inset-border-color: rgb(220, 220, 220) var(--io-border-color) var(--io-border-color) rgb(220, 220, 220);
         --io-inset-border: var(--io-border-width) inset var(--io-border-color);
         --io-outset-border-color: var(--io-border-color) rgb(210, 210, 210) rgb(210, 210, 210) var(--io-border-color);

@@ -33,22 +33,25 @@ export class IoItem extends IoElement {
       :host {
         cursor: pointer;
         user-select: none;
-        background-color: var(--io-background-color);
+        -webkit-tap-highlight-color: transparent;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-wrap: nowrap;
+        white-space: nowrap;
         color: var(--io-color);
+        background-color: var(--io-background-color);
       }
       :host:hover {
         background-color: var(--io-background-color-light);
       }
       :host:focus {
+        outline: 0;
         text-overflow: inherit;
         border-color: var(--io-color-focus);
-        outline: 0;
       }
       :host[aria-invalid] {
-        text-decoration: underline;
-        text-decoration-style: dashed;
-        text-decoration-color: var(--io-color-error);
-        border-color: var(--io-color-error);
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
       }
       :host[hidden] {
         display: none;
