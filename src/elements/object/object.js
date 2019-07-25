@@ -11,6 +11,7 @@ export class IoObject extends IoElement {
     :host > io-boolean {
       text-align: left;
       align-self: stretch;
+      width: auto;
     }
     :host > io-properties {
       display: grid !important;

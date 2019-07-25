@@ -8,6 +8,7 @@ export class IoBoolean extends IoItem {
     return html`<style>
       :host {
         ${mixin.button}
+        width: calc(2 * var(--io-line-height));
       }
       :host[display="icon"] {
         ${mixin.item};
