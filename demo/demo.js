@@ -7,9 +7,6 @@ export class IoDemo extends IoElement {
     return html`<style>
       :host div[name=elements] > .table {
         max-width: 24em;
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        grid-gap: var(--io-spacing);
       }
       :host .table > * {
         width: auto;
@@ -56,7 +53,7 @@ export class IoDemo extends IoElement {
 
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
 
-    const primitives = ['div', {name: 'primitives', class: 'table'}, [
+    const primitives = ['div', {name: 'primitives', class: 'io-table5 table'}, [
       ['io-string', {value: this.bind('string')}],
       ['io-number', {value: this.bind('string')}],
       ['io-boolean', {value: this.bind('string'), display: 'icon', true: 'icons:link', false: 'icons:link'}],
@@ -83,7 +80,7 @@ export class IoDemo extends IoElement {
       ['io-rgba', {value: this.bind('color')}],
     ]];
 
-    const buttons = ['div', {name: 'button', class: 'table'}, [
+    const buttons = ['div', {name: 'button', class: 'io-table4 table'}, [
       ['io-menu-option', {options: [
         {label: 'negative one', value: -1},
         {label: 'zero', value: 0},

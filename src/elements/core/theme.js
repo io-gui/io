@@ -10,30 +10,6 @@ export class IoTheme extends IoElement {
       --io-stroke-width: 0.5px;
       --io-line-height: 1.375em;
     }
-    /* TODO: Move */
-    @keyframes spinner {
-      to {transform: rotate(360deg);}
-    }
-    body .io-loading {
-      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
-      background-repeat: repeat;
-      position: relative;
-    }
-    body .io-loading:after {
-      content: '';
-      box-sizing: border-box;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 40px;
-      height: 40px;
-      margin-top: -20px;
-      margin-left: -20px;
-      border-radius: 50%;
-      border: var(--io-border);
-      border-top-color: #000;
-      animation: spinner .6s linear infinite;
-    }
     </style>`;
   }
   static get Mixins() {
@@ -55,14 +31,6 @@ export class IoTheme extends IoElement {
       padding: var(--io-spacing);
     }
     icon {
-      display: inline-block;
-      -webkit-tap-highlight-color: transparent;
-      border: var(--io-inset-border);
-      border-radius: var(--io-border-radius);
-      border-color: transparent;
-      background-color: transparent;
-      background-image: none;
-      padding: var(--io-spacing);
       width: var(--io-line-height);
       height: var(--io-line-height);
       fill: var(--io-background-color);
@@ -89,8 +57,8 @@ export class IoTheme extends IoElement {
       box-shadow: var(--io-shadow-inset);
       padding: var(--io-spacing);
       user-select: text;
-      width: 4.5em;
-      height: 1.375em;
+      width: calc(3 * var(--io-line-height));
+      height: var(--io-line-height);
       min-width: 0.5em;
     }
     panel {
@@ -142,6 +110,26 @@ export class IoTheme extends IoElement {
       flex-direction: column;
       align-self: stretch;
       justify-self: stretch;
+    }
+    table2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: var(--io-spacing);
+    }
+    table3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: var(--io-spacing);
+    }
+    table4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: var(--io-spacing);
+    }
+    table5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-gap: var(--io-spacing);
     }
     </style>`;
   }
