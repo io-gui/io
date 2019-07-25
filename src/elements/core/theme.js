@@ -7,6 +7,8 @@ export class IoTheme extends IoElement {
       --io-spacing: 4px;
       --io-border-radius: 3px;
       --io-border-width: 1px;
+      --io-stroke-width: 0.5px;
+      --io-line-height: 1.375em;
     }
     /* TODO: Move */
     @keyframes spinner {
@@ -43,13 +45,29 @@ export class IoTheme extends IoElement {
       text-overflow: ellipsis;
       flex-wrap: nowrap;
       white-space: nowrap;
-      height: 1.375em;
+      height: var(--io-line-height);
+      line-height: var(--io-line-height);
       border: var(--io-inset-border);
       border-radius: var(--io-border-radius);
       border-color: transparent;
       background-color: transparent;
       background-image: none;
       padding: var(--io-spacing);
+    }
+    icon {
+      display: inline-block;
+      -webkit-tap-highlight-color: transparent;
+      border: var(--io-inset-border);
+      border-radius: var(--io-border-radius);
+      border-color: transparent;
+      background-color: transparent;
+      background-image: none;
+      padding: var(--io-spacing);
+      width: var(--io-line-height);
+      height: var(--io-line-height);
+      fill: var(--io-background-color);
+      stroke: var(--io-color);
+      stroke-width: var(--io-stroke-width);
     }
     button {
       background-color: var(--io-background-color-dark);

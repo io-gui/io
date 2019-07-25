@@ -94,6 +94,10 @@ export class IoItem extends IoElement {
     if (this.childNodes.length === 0) {
       this.appendChild(document.createTextNode(""));
     }
+    if (this.childNodes[0].nodeName !== "#text") {
+      this.innerHTML = '';
+      this.appendChild(document.createTextNode(""));
+    }
     this._textNode = this.childNodes[0];
     if (this.childNodes.length > 1) {
       const textContent = this.textContent;

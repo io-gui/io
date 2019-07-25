@@ -4,7 +4,7 @@ Input element for vector arrays and objects. Array `value` can have between 2 an
 
 <io-element-demo element="io-vector" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>
 
-<io-element-demo element="io-vector" properties='{"value": [1, 0.5, 0.1, 0], "linkable": false}'></io-element-demo>
+<io-element-demo element="io-vector" properties='{"value": [1, 0.5, 0.1, 0], "linkable": true}'></io-element-demo>
 
 ## &lt;io-matrix&gt;
 

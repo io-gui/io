@@ -8,7 +8,7 @@ export class IoDemo extends IoElement {
       :host div[name=elements] > .table {
         max-width: 24em;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         grid-gap: var(--io-spacing);
       }
       :host .table > * {
@@ -57,18 +57,21 @@ export class IoDemo extends IoElement {
     if (!("PointerEvent" in window)) console.warn("No PointerEvents support!");
 
     const primitives = ['div', {name: 'primitives', class: 'table'}, [
-      ['io-string', {id: 'string', value: this.bind('string')}],
+      ['io-string', {value: this.bind('string')}],
       ['io-number', {value: this.bind('string')}],
+      ['io-boolean', {value: this.bind('string'), display: 'icon', true: 'icons:link', false: 'icons:link'}],
       ['io-boolean', {value: this.bind('string')}],
-      ['io-switch', {value: this.bind('string')}],
+      ['io-boolean', {value: this.bind('string'), display: 'switch'}],
       ['io-string', {value: this.bind('number')}],
-      ['io-number', {id: 'number', value: this.bind('number')}],
+      ['io-number', {value: this.bind('number')}],
+      ['io-boolean', {value: this.bind('number'), display: 'icon', true: 'icons:link', false: 'icons:link'}],
       ['io-boolean', {value: this.bind('number')}],
-      ['io-switch', {value: this.bind('number')}],
+      ['io-boolean', {value: this.bind('number'), display: 'switch'}],
       ['io-string', {value: this.bind('boolean')}],
       ['io-number', {value: this.bind('boolean')}],
-      ['io-boolean', {id: 'boolean', value: this.bind('boolean')}],
-      ['io-switch', {id: 'boolean', value: this.bind('boolean')}],
+      ['io-boolean', {value: this.bind('boolean'), display: 'icon', true: 'icons:link', false: 'icons:link'}],
+      ['io-boolean', {value: this.bind('boolean')}],
+      ['io-boolean', {value: this.bind('boolean'), display: 'switch'}],
     ]];
 
     const sliders = ['div', {name: 'sliders', class: 'io-column'}, [

@@ -26,15 +26,11 @@ Extends `<io-button>`.
 
 <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
 
+<io-element-demo element="io-boolean" properties='{"value": true, "display": "icon", "true": "icons:link", "false": "icons:unlink"}'></io-element-demo>
+
+<io-element-demo element="io-boolean" properties='{"value": true, "display": "switch"}'></io-element-demo>
+
 It can be configured to display custom `true` or `false` string depending on its `value`.
-
-## &lt;io-switch&gt;
-
-Input element for `Boolean` data type displayed as switch toggle.
-
-Extends `<io-button>`.
-
-<io-element-demo element="io-switch"></io-element-demo>
 
 ## &lt;io-string&gt;
 
@@ -52,7 +48,7 @@ Input element for `Number` data type.
 
 It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees.
 
-Enable `ladder` property to use interactive float ladder element. 
+Enable `ladder` property to use interactive float ladder element.
 
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
@@ -69,6 +65,12 @@ Implements `<io-number>` and `<io-slider-knob>`.
 It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment.
 
 To change the value with arrow keys on focused slider, users should hold down the shift key.
+
+## &lt;io-icon&gt;
+
+SVG icon element.
+
+<io-element-demo element="io-icon" properties='{"icon": "icons:link"}'></io-element-demo>
 
 ## &lt;io-theme-singleton&gt;
 

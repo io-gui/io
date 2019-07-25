@@ -23,7 +23,8 @@ export class IoElementDemo extends IoElement {
       }
       :host > io-properties {
         align-self: stretch;
-        padding: var(--io-spacing);
+        padding: var(--io-spacing) 0;
+        margin-bottom: calc(2 * var(--io-spacing));
       }
     </style>`;
   }
@@ -106,7 +107,7 @@ export class IoElementDemo extends IoElement {
         (hasProps && this.expanded) ?
         ['io-properties', {value: this.properties, config: Object.assign({
             'type:number': ['io-number', {ladder: true}],
-            'type:boolean': ['io-switch'],
+            'type:boolean': ['io-boolean', {display: 'switch'}],
           }, this.config)}] : null,
         ['div', {class: 'io-frame'}, [
           [this.element, Object.assign({'on-value-set': this._onPropSet, 'id': 'demo-element'}, this.properties)],
