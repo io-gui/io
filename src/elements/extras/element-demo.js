@@ -8,8 +8,9 @@ export class IoElementDemo extends IoElement {
         ${mixin.panel}
       }
       :host > io-boolean {
-        cursor: pointer !important;
         align-self: stretch;
+        width: auto;
+        text-align: left;
       }
       :host > io-icon {
         margin-top: 0.3em;
