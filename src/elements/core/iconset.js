@@ -1,6 +1,6 @@
 import {IoNode, html} from "../../io.js";
 
-export const IoIconsetDB = {}
+const IoIconsetDB = {};
 
 export class IoIconset extends IoNode {
   registerIcons(name, svg) {
