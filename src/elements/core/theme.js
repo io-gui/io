@@ -230,7 +230,7 @@ export class IoTheme extends IoElement {
     document.head.appendChild(this.mixinsElement);
   }
   themeChanged() {
-    this.styleElement.innerHTML = this[this.theme].string;
+    this.styleElement.innerHTML = this[this.theme];
     setTimeout(() => {
       this.updatePropertiesFromCSS();
     });
@@ -259,10 +259,10 @@ IoTheme.Register = function() {
   IoElement.Register.call(this);
   let mixins = '';
   for (let i = this.prototype.__protochain.length; i--;) {
-    const style = this.prototype.__protochain[i].constructor.Mixins;
-    if (style) {
+    const styleString = this.prototype.__protochain[i].constructor.Mixins;
+    if (styleString) {
       // TODO: improve CSS parsing to support comments etc.
-      const match = Array.from(style.string.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
+      const match = Array.from(styleString.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
       for (let j = 0; j < match.length; j++) {
         const name = match[j][1].replace(/\s/g, '');
         const value = match[j][2];

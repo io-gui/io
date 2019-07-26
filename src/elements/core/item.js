@@ -84,31 +84,12 @@ export class IoItem extends IoElement {
     };
   }
   get textNode() {
-    this._flattenTextNode();
+    this.flattenTextNode(this);
     return this._textNode.nodeValue;
   }
   set textNode(value) {
-    this._flattenTextNode();
-    if (this._textNode.nodeValue !== String(value)) {
-      this._textNode.nodeValue = String(value);
-    }
-  }
-  _flattenTextNode() {
-    if (this.childNodes.length === 0) {
-      this.appendChild(document.createTextNode(""));
-    }
-    if (this.childNodes[0].nodeName !== "#text") {
-      this.innerHTML = '';
-      this.appendChild(document.createTextNode(""));
-    }
-    this._textNode = this.childNodes[0];
-    if (this.childNodes.length > 1) {
-      const textContent = this.textContent;
-      for (let i = this.childNodes.length; i--;) {
-        if (i !== 0) this.removeChild(this.childNodes[i]);
-      }
-      this._textNode.nodeValue = textContent;
-    }
+    this.flattenTextNode(this);
+    this._textNode.nodeValue = String(value);
   }
   constructor(props) {
     super(props);

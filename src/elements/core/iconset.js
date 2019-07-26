@@ -5,7 +5,7 @@ const IoIconsetDB = {};
 export class IoIconset extends IoNode {
   registerIcons(name, svg) {
     const stagingElement = document.createElement('div');
-    stagingElement.innerHTML = svg.string;
+    stagingElement.innerHTML = svg;
     stagingElement.querySelectorAll('[id]').forEach(icon => {
       IoIconsetDB[name] = IoIconsetDB[name] || {};
       IoIconsetDB[name][icon.id] = icon.outerHTML;

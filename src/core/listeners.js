@@ -43,6 +43,7 @@ export class Listeners {
    * Adds event listeners.
    */
   connect() {
+    this._connected = true;
     const node = this.node;
     for (let i in this) {
       if (this[i] instanceof Array) {
