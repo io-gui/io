@@ -262,10 +262,15 @@ IoTheme.Register = function() {
     const styleString = this.prototype.__protochain[i].constructor.Mixins;
     if (styleString) {
       // TODO: improve CSS parsing to support comments etc.
-      const match = Array.from(styleString.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
+      // const match = Array.from(styleString.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
+      const match = Array.from(styleString.match(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
       for (let j = 0; j < match.length; j++) {
-        const name = match[j][1].replace(/\s/g, '');
-        const value = match[j][2];
+        const i = match[j].indexOf('{');
+        // console.log(, match[j].split('{')[1].replace('}', ''));
+        // console.log(match[j][1], match[j][2]);
+        // console.log(i, match[j].split('{'));
+        const name = match[j].split('{')[0].replace(/\s/g, '');
+        const value = match[j].split('{')[1].replace('}', '');
         Object.defineProperty(this.prototype, name, {value: value});
         mixins += `.io-${name} {\n${value}\n}\n`;
       }
