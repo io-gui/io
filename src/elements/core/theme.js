@@ -265,7 +265,7 @@ IoTheme.Register = function() {
       // const match = Array.from(styleString.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
       const match = Array.from(styleString.match(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
       for (let j = 0; j < match.length; j++) {
-        const i = match[j].indexOf('{');
+        // const i = match[j].indexOf('{');
         // console.log(, match[j].split('{')[1].replace('}', ''));
         // console.log(match[j][1], match[j][2]);
         // console.log(i, match[j].split('{'));
