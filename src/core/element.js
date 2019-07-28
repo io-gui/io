@@ -312,9 +312,8 @@ const setNativeElementProps = function(element, props) {
   if (!element.__listeners) {
     Object.defineProperty(element, '__listeners', {value: new Listeners(element)});
     element.__listeners.connect();
-  } else {
-    element.__listeners.setPropListeners(props, element);
   }
+  element.__listeners.setPropListeners(props, element);
 };
 
 // Creates a `<style>` element for all `static get Style()` return strings.

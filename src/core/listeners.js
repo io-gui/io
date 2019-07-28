@@ -38,6 +38,17 @@ export class Listeners {
         this.propListeners[l.slice(3, l.length)] = props[l];
       }
     }
+    if (this._connected) {
+      const props = this.propListeners;
+      const node = this.node;
+      for (let l in props) {
+        if (props[l] instanceof Array) {
+          node.addEventListener(l, typeof props[l][0] === 'function' ? props[l][0] : node[props[l][0]], props[l][1]);
+        } else {
+          node.addEventListener(l, typeof props[l] === 'function' ? props[l] : node[props[l]]);
+        }
+      }
+    }
   }
   /**
    * Adds event listeners.
@@ -45,19 +56,19 @@ export class Listeners {
   connect() {
     this._connected = true;
     const node = this.node;
-    for (let i in this) {
-      if (this[i] instanceof Array) {
-        node.addEventListener(i, node[this[i][0]], this[i][1]);
-      } else if (typeof node[this[i]] === 'function') {
-        node.addEventListener(i, node[this[i]]);
+    for (let l in this) {
+      if (this[l] instanceof Array) {
+        node.addEventListener(l, node[this[l][0]], this[l][1]);
+      } else if (typeof node[this[l]] === 'function') {
+        node.addEventListener(l, node[this[l]]);
       }
     }
     const props = this.propListeners;
-    for (let i in props) {
-      if (props[i] instanceof Array) {
-        node.addEventListener(i, typeof props[i][0] === 'function' ? props[i][0] : node[props[i][0]], props[i][1]);
+    for (let l in props) {
+      if (props[l] instanceof Array) {
+        node.addEventListener(l, typeof props[l][0] === 'function' ? props[l][0] : node[props[l][0]], props[l][1]);
       } else {
-        node.addEventListener(i, typeof props[i] === 'function' ? props[i] : node[props[i]]);
+        node.addEventListener(l, typeof props[l] === 'function' ? props[l] : node[props[l]]);
       }
     }
   }
