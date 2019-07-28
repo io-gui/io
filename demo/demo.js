@@ -5,11 +5,24 @@ import "./todomvc/todo-app.js";
 export class IoDemo extends IoElement {
   static get Style() {
     return html`<style>
+      :host,
+      :host > io-selector-tabs {
+        display: flex;
+        flex: 1 1;
+      }
       :host div[name=elements] > .table {
         max-width: 24em;
       }
       :host .table > * {
         width: auto;
+      }
+      :host .io-content {
+        flex: 1 1 auto;
+
+      }
+      :host iframe[name=todo] {
+        border: none;
+        flex: 1 1;
       }
       :host div[name=elements] {
         padding: var(--io-spacing);
@@ -208,7 +221,7 @@ export class IoDemo extends IoElement {
             inspector,
           ]],
           // demoLayout,
-          ['todo-app', {name: 'todo'}],
+          ['iframe', {name: 'todo', src: './demo/todomvc/index.html'}],
         ]
       }]
     ]);
