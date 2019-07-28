@@ -278,7 +278,6 @@ export class IoGl extends IoElement {
     }
   }
   updateCssUniforms() {
-    this.setShaderProgram();
     for (let name in IoThemeSingleton.__properties) {
       this.updatePropertyUniform(name, IoThemeSingleton.__properties[name]);
     }
@@ -291,7 +290,7 @@ export class IoGl extends IoElement {
         gl.uniform1i(uniform, value ? 1 : 0);
         break;
       case Number:
-        gl.uniform1f(uniform, value || 0);
+        gl.uniform1f(uniform, value !== undefined ? value : 0);
         break;
       case Array:
         _c = [0, 1, 2, 3];

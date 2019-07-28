@@ -214,6 +214,12 @@ export class IoMenuLayer extends IoElement {
         return;
       }
     }
+
+    let rect = this._menuRoot.getBoundingClientRect();
+    if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
+      this._hoveredItem = this._menuRoot;
+      return;
+    }
   }
   _focusItem(item, force) {
     if (item !== this.__prevItem) {

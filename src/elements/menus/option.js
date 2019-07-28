@@ -25,11 +25,6 @@ export class IoMenuOption extends IoMenuItem {
       _depth: 100,
     };
   }
-  static get Listeners() {
-    return {
-      'io-menu-item-clicked': '_onMenuItemClicked',
-    };
-  }
   get _options() {
     if (this.options && this.options.length) {
       return this.options;

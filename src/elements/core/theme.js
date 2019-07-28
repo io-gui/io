@@ -9,6 +9,7 @@ export class IoTheme extends IoElement {
       --io-border-width: 1px;
       --io-stroke-width: 0.5px;
       --io-line-height: 20px;
+      --io-item-height: 28px; /* line+2*spacing+2*border */
       --io-font-size: 13px;
     }
     </style>`;
@@ -265,7 +266,6 @@ IoTheme.Register = function() {
       // const match = Array.from(styleString.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
       const match = Array.from(styleString.match(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
       for (let j = 0; j < match.length; j++) {
-        // const i = match[j].indexOf('{');
         // console.log(, match[j].split('{')[1].replace('}', ''));
         // console.log(match[j][1], match[j][2]);
         // console.log(i, match[j].split('{'));

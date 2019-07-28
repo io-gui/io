@@ -21,7 +21,8 @@ export class IoHsvaSv extends IoHsvaHue {
       void main(void) {
 
         float tileSize = uSize.x / 32.0;
-        tileSize = (tileSize - mod(tileSize, 1.0)) * 5.0;
+        tileSize = max(1.0, tileSize - mod(tileSize, 1.0));
+        tileSize *= 5.0;
         vec2 alphaPos = floor(vUv * vec2(tileSize, tileSize / uAspect));
         float alphaMask = mod(alphaPos.x + mod(alphaPos.y, 2.0), 2.0);
         vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), alphaMask);
@@ -48,7 +49,7 @@ export class IoHsvaSv extends IoHsvaHue {
         float distIn2 = 1.0 - (offset - (markerSize + (lineWidth + 1.0)));
         float dist2 = saturate(min(distOut2, distIn2));
 
-        currentColor = mix(alphaPattern, currentColor, saturate(uValue.a));
+        currentColor = mix(alphaPattern, saturate(currentColor), saturate(uValue.a));
 
         final = mix(final, currentColor, saturate(distIn));
         final = mix(final, cssColor.rgb, dist2);
