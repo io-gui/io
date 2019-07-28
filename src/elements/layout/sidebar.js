@@ -18,10 +18,15 @@ export class IoSidebar extends IoElement {
         font-weight: bold;
         margin: 0 !important;
       }
-      :host io-collapsable > .io-frame > io-button {
+      :host io-button {
         text-align: left;
-        padding-left: 1.5em;
         align-self: stretch;
+      }
+      :host io-collapsable > .io-frame > io-collapsable {
+        padding-left: 0.75em;
+      }
+      :host io-collapsable > .io-frame > io-button {
+        padding-left: 1.5em;
       }
       :host:not([overflow]) {
         -webkit-overflow-scrolling: touch;
