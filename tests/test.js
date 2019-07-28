@@ -8,7 +8,6 @@ import Element from "../tests/core/element.js"
 
 import Boolean from "../tests/elements/boolean.js"
 import Button from "../tests/elements/button.js"
-import Switch from "../tests/elements/switch.js"
 import Number from "../tests/elements/number.js"
 import Sting from "../tests/elements/string.js"
 import Slider from "../tests/elements/slider.js"
@@ -43,7 +42,6 @@ function runTests() {
 
     new Button().run();
     new Boolean().run();
-    new Switch().run();
     new Number().run();
     new Sting().run();
     new Slider().run();

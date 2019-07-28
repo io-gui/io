@@ -1,12 +1,19 @@
 import {html} from "../../io.js";
+import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoItem} from "./item.js";
-import {IoThemeMixinSingleton as mixin} from "../../io.js";
+import {IoLayerSingleton} from "./layer.js";
+
+import {IoNumberLadderSingleton} from "./number-ladder.js";
 
 export class IoNumber extends IoItem {
   static get Style() {
     return html`<style>
       :host {
         ${mixin.field}
+      }
+      :host {
+        user-select: text;
+        min-width: 0.5em;
       }
     </style>`;
   }
@@ -28,17 +35,71 @@ export class IoNumber extends IoItem {
       min: -Infinity,
       max: Infinity,
       strict: true,
+      ladder: false,
     };
+  }
+  static get Listeners() {
+    return {
+      'touchstart': '_onTouchstart',
+      'touchend': '_onTouchend',
+    };
+  }
+  _onTouchstart(event) {
+    if (!this.ladder) return;
+    this._x = event.changedTouches[0].clientX;
+    this._y = event.changedTouches[0].clientY;
+  }
+  _onTouchend(event) {
+    if (!this.ladder) return;
+    if (event.cancelable) event.preventDefault();
+    const dx = event.changedTouches[0].clientX - this._x;
+    const dy = event.changedTouches[0].clientY - this._y;
+    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {
+      if (IoNumberLadderSingleton.expanded) {
+        this.focus();
+      }
+      document.activeElement.blur();
+      IoLayerSingleton.clickblock = true;
+      IoNumberLadderSingleton.opaque = true;
+      this._expandLadder();
+    }
   }
   _onFocus(event) {
     super._onFocus(event);
     this._textContentOnFocus = this.textNode;
+    if (this.ladder) IoLayerSingleton.clickblock = false;
   }
   _onBlur(event) {
     super._onBlur(event);
     if (this._textContentOnFocus !== this.textNode) this._setFromTextNode();
     this.scrollTop = 0;
     this.scrollLeft = 0;
+    IoLayerSingleton.expanded = false;
+  }
+  _onClick(event) {
+    super._onClick(event);
+    this._expandLadder();
+  }
+  _onValueSet(event) {
+    this.set('value', event.detail.value);
+  }
+  _expandLadder() {
+    if (!this.ladder) return;
+    IoNumberLadderSingleton.expanded = true;
+    IoNumberLadderSingleton.min = this.min;
+    IoNumberLadderSingleton.max = this.max;
+    IoNumberLadderSingleton.step = this.step;
+    IoNumberLadderSingleton.value = this.value;
+    // TODO: unhack
+    if (IoNumberLadderSingleton._target) {
+      IoNumberLadderSingleton.removeEventListener('value-set', IoNumberLadderSingleton._target._onValueSet);
+    }
+    IoNumberLadderSingleton._target = this;
+    IoNumberLadderSingleton.addEventListener('value-set', this._onValueSet);
+
+    // TODO: disable nudge?
+    IoLayerSingleton.setElementPosition(IoNumberLadderSingleton, 'bottom', this.getBoundingClientRect());
+    IoLayerSingleton.srcElement = this;
   }
   _onKeydown(event) {
     const rng = window.getSelection().getRangeAt(0);

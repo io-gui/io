@@ -1,5 +1,4 @@
-import {html} from "../../io.js";
-import {filterObject} from "../../io.js";
+import {html, filterObject} from "../../io.js";
 import {IoItem} from "../../io-elements-core.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuOptions} from "./menu-options.js";
@@ -16,6 +15,7 @@ export class IoMenuItem extends IoItem {
         background: none;
       }
       :host > * {
+        overflow: visible;
         pointer-events: none;
       }
       :host > :not(:empty) {
@@ -24,7 +24,6 @@ export class IoMenuItem extends IoItem {
       :host > .io-menu-icon {}
       :host > .io-menu-label {
         flex: 1 1 auto;
-        overflow: hidden;
         text-overflow: ellipsis;
       }
       :host > .io-menu-hint {
@@ -64,6 +63,7 @@ export class IoMenuItem extends IoItem {
       option: Object,
       $parent: HTMLElement,
       $options: HTMLElement,
+      selectable: false,
       _depth: 0,
     };
   }
@@ -124,6 +124,7 @@ export class IoMenuItem extends IoItem {
     return undefined;
   }
   get _selected() {
+    if (!this.selectable) return false;
     if (this.option && (this.option.selected || this.option.value === this.value)) {
       return true;
     } else if (this.value === this.option) {
@@ -132,6 +133,16 @@ export class IoMenuItem extends IoItem {
     const options = this._options;
     if (options) return !!filterObject(options, (o) => { return o === this.value || o.value === this.value; });
     return false;
+  }
+  get _isInLayer() {
+    return this.$parent && this.$parent.parentElement === IoMenuLayer.singleton;
+  }
+  get _menuRoot() {
+    let root = this;
+    while (root && root.$parent) {
+      root = root.$parent;
+    }
+    return root;
   }
   connectedCallback() {
     super.connectedCallback();
@@ -162,6 +173,7 @@ export class IoMenuItem extends IoItem {
           value: this.value,
           options: this._options || [], // TODO: hmm
           position: this.direction,
+          selectable: this.selectable,
           _depth: this._depth,
           'on-io-menu-item-clicked': this._onMenuItemClicked,
         });
@@ -179,10 +191,10 @@ export class IoMenuItem extends IoItem {
       const expanded = set !== undefined ? set : !this.expanded;
       if (expanded) this._connectOptions();
       this.expanded = expanded;
+      IoMenuLayer.singleton._hoveredOptions = this.$options;
     } else this.expanded = false;
   }
   _focusIn() {
-    IoMenuLayer.singleton.setLastFocus(this);
     if (this.expanded) setTimeout(() => {
       if (this.$options.children.length) this.$options.children[0].focus();
     });
@@ -195,30 +207,33 @@ export class IoMenuItem extends IoItem {
     }
   }
   _onMousedown() {
-    IoMenuLayer.singleton.setLastFocus(this);
-    this.focus();
-    IoMenuLayer.singleton._onMousemove(event);
+    IoMenuLayer.singleton._onMousedown(event);
     this._toggleExpanded(true);
+    this.focus();
   }
   _onTouchstart(event) {
-    if (event.cancelable) {
+    if (event.cancelable && (this.expanded || this._isInLayer)) {
       event.preventDefault();
       this.addEventListener('touchmove', this._onTouchmove);
       this.addEventListener('touchend', this._onTouchend);
-      IoMenuLayer.singleton.setLastFocus(this);
-      IoMenuLayer.singleton._onTouchmove(event);
-      this.focus();
+      IoMenuLayer.singleton._hoveredItem = this;
+      IoMenuLayer.singleton._onTouchstart(event);
       this._toggleExpanded(true);
+      this.focus();
     }
   }
   _onTouchmove(event) {
-    IoMenuLayer.singleton._onTouchmove(event);
+    if (this.expanded) {
+      IoMenuLayer.singleton._onTouchmove(event);
+    }
   }
   _onTouchend(event) {
-    event.preventDefault();
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-    IoMenuLayer.singleton._onTouchend(event);
+    if (this.expanded) {
+      event.preventDefault();
+      this.removeEventListener('touchmove', this._onTouchmove);
+      this.removeEventListener('touchend', this._onTouchend);
+      IoMenuLayer.singleton._onTouchend(event);
+    }
   }
   _onKeydown(event) {
     let command = '';
@@ -247,7 +262,7 @@ export class IoMenuItem extends IoItem {
     else if (event.key === 'Escape') {
       event.preventDefault();
       IoMenuLayer.singleton.collapseAll();
-    } else if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
+    } else if (this._isInLayer) {
       const options = this.$parent;
       const siblings = [...options.children];
       const index = siblings.indexOf(this);
@@ -293,13 +308,15 @@ export class IoMenuItem extends IoItem {
   }
   _onFocus() {
     super._onFocus();
-    if (this.$parent && this.$parent.parentElement === IoMenuLayer.singleton) {
+    if (this._isInLayer) {
       this._toggleExpanded(true);
     }
   }
   expandedChanged() {
     // TODO: collapse on menus outside IoMenuLayer. // TODO: test and remove!
-    if (this.expanded && this.$parent && !this.$parent.expanded) console.warn('This should be expanded', this.$parent.expanded);
+    if (this.expanded && this.$parent && !this.$parent.expanded) {
+      console.warn('This should be expanded', this.$parent.expanded);
+    }
   }
   valueChanged() {
     this._updateOptions();

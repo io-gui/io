@@ -1,22 +1,25 @@
-import {html, IoGl} from "../../io.js";
-import {colorShaderChunk} from "./utils.js";
+import {html} from "../../io.js";
+import {IoGl, chunk} from "../../io-elements-core.js";
 
 export class IoHsvaHue extends IoGl {
   static get Style() {
     return html`<style>
       :host {
+        border-radius: var(--io-border-radius);
+        border: var(--io-inset-border);
+        min-width: var(--io-line-height);
+        min-height: var(--io-line-height);
         cursor: ns-resize;
-        min-width: 32px;
-        min-height: 1.375em;
       }
       :host[horizontal] {
         cursor: ew-resize;
       }
       :host[aria-invalid] {
-        outline: 1px solid var(--io-color-error);
+        border: var(--io-border-error);
       }
       :host:focus {
-        outline: 1px solid var(--io-color-focus);
+        outline: 0;
+        border-color: var(--io-color-focus);
       }
     </style>`;
   }
@@ -39,20 +42,23 @@ export class IoHsvaHue extends IoGl {
     return /* glsl */`
       varying vec2 vUv;
 
-      ${colorShaderChunk}
+      ${chunk.hue2rgb}
+      ${chunk.hsv2rgb}
 
       void main(void) {
 
-        // Hue spectrum
         float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
+
+        // Hue spectrum
         vec3 final = hsv2rgb(vec3(axis, 1.0, 1.0));
 
         // Hue marker
+        float lineWidth = 4.0;
       	float hueMarkerOffset = abs(axis - uValue[0]) * ((uHorizontal == 1) ? uSize.x : uSize.y);
-        float dist = hueMarkerOffset - gLineWidth;
-        float dist2 = hueMarkerOffset - (gLineWidth + 1.0);
-        final = mix(final, vec3(0.0), max(1.0 - dist2, 0.0));
-        final = mix(final, vec3(1.0), max(1.0 - dist, 0.0));
+        float dist = hueMarkerOffset - lineWidth;
+        float dist2 = hueMarkerOffset - (lineWidth + 1.0);
+        final = mix(final, cssColor.rgb, saturate(1.0 - dist2));
+        final = mix(final, cssBackgroundColor.rgb, saturate(1.0 - dist));
 
         gl_FragColor = vec4(final, 1.0);
       }
@@ -73,6 +79,7 @@ export class IoHsvaHue extends IoGl {
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
     this._onPointerdown(event);
+    this.focus();
   }
   _onTouchmove(event) {
     event.preventDefault();

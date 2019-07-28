@@ -399,7 +399,7 @@ export class TodoApp extends IoElement {
         ]],
         ['input', {id: 'input', class: 'new-todo', placeholder: 'What needs to be done?', 'on-keyup': this.onInputKey, autofocus: true}],
         ['section', {class: 'main'}, [
-          ['input', {type: 'checkbox', class: 'toggle-all', checked: allCompleted, 'on-click': this.model.toggleItemsCompleted}],
+          ['input', {type: 'checkbox', class: 'toggle-all', checked: allCompleted, 'on-click': this.model._toggleItemsCompleted}],
           ['ul', {class: 'todo-list'}, [
             items.map((item, i) => ['todo-item', {item: item, model: this.model}])
           ]]
@@ -407,11 +407,11 @@ export class TodoApp extends IoElement {
         itemCount ? ['footer', {class: 'footer'}, [
           ['span', {class: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'],
           ['div', {class: 'filters'}, [
-            ['a', {'on-click': this.setRoute, class: this.route === 'all' ? 'selected' : ''}, 'All'],
-            ['a', {'on-click': this.setRoute, class: this.route === 'active' ? 'selected' : ''}, 'Active'],
-            ['a', {'on-click': this.setRoute, class: this.route === 'completed' ? 'selected' : ''}, 'Completed']
+            ['a', {'on-click': this.onSetRoute, class: this.route === 'all' ? 'selected' : ''}, 'All'],
+            ['a', {'on-click': this.onSetRoute, class: this.route === 'active' ? 'selected' : ''}, 'Active'],
+            ['a', {'on-click': this.onSetRoute, class: this.route === 'completed' ? 'selected' : ''}, 'Completed']
           ]],
-          completedCount? ['button', {class: 'clear-completed', 'on-click': this.model.clearCompletedItems}, 'Clear completed'] : null
+          completedCount? ['button', {class: 'clear-completed', 'on-click': this.onClear}, 'Clear completed'] : null
         ]] : null
       ]],
       ['footer', {class: 'info'}, [
@@ -421,7 +421,10 @@ export class TodoApp extends IoElement {
       ]]
     ]);
   }
-  setRoute(event) {
+  onClear(event) {
+    this.model.clearCompletedItems();
+  }
+  onSetRoute(event) {
     this.route = event.target.innerText.toLowerCase();
   }
   onInputKey(event) {

@@ -1,25 +1,25 @@
 import {IoElement, html} from "../../io.js";
-import "./menu-item.js";
+import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoMenuLayer} from "./menu-layer.js";
+import "./menu-item.js";
 
 export class IoMenuOptions extends IoElement {
   static get Style() {
     return html`<style>
       :host {
+        ${mixin.panel}
+      }
+      :host {
         display: flex;
         flex-direction: column;
+        align-items: stretch;
         white-space: nowrap;
         user-select: none;
-        touch-action: none;
-        background: var(--io-background-color-light);
-        color: var(--io-color);
-        border-radius: var(--io-border-radius);
-        border: var(--io-outset-border);
-        border-color: var(--io-outset-border-color);
-        box-shadow: var(--io-shadow);
+        background-image: none;
+        padding: 0;
       }
       :host:not([horizontal]) {
-        padding: calc(2 * var(--io-spacing)) 0;
+        padding: var(--io-spacing) 0;
       }
       :host:not([expanded]) {
         visibility: hidden;
@@ -75,6 +75,7 @@ export class IoMenuOptions extends IoElement {
     return {
       options: Array,
       position: 'right',
+      selectable: false,
       value: {
         value: null,
         notify: true,
@@ -160,44 +161,6 @@ export class IoMenuOptions extends IoElement {
       }
     }
   }
-  // TODO: refactor and unhack nudges.
-  nudgeRight(x, y, rect) {
-    if (x + rect.width < window.innerWidth) {
-      this._x = x;
-      this._y = Math.min(y, window.innerHeight - rect.height);
-      return true;
-    }
-    return false;
-  }
-  nudgeLeft(x, y, rect) {
-    if (x - rect.width > 0) {
-      this._x = x - rect.width;
-      this._y = Math.min(y, window.innerHeight - rect.height);
-      return true;
-    }
-    return false;
-  }
-  nudgeBottom(x, y, rect) {
-    if (y + rect.height < window.innerHeight) {
-      this._y = y;
-      this._x = Math.min(x, window.innerWidth - rect.width);
-      return true;
-    }
-    return false;
-  }
-  nudgeTop(x, y, rect) {
-    if (y - rect.height > 0) {
-      this._y = y - rect.height;
-      this._x = Math.min(x, window.innerWidth - rect.width);
-      return true;
-    }
-    return false;
-  }
-  nudgePointer(x, y, _x, _y, rect) {
-    this._x = Math.max(x + 14, Math.min(_x, window.innerWidth - rect.width));
-    this._y = Math.max(Math.min(_y, window.innerHeight - rect.height), 0);
-    return true;
-  }
   expandedChanged() {
     if (this.parentElement === IoMenuLayer.singleton) {
       IoMenuLayer.singleton._onOptionsExpanded(this);
@@ -208,33 +171,30 @@ export class IoMenuOptions extends IoElement {
         const y = IoMenuLayer.singleton._y;
         switch (this.position) {
           case 'pointer':
-            this._x = typeof x === 'number' ? (x - 4) : pRect.x;
-            this._y = typeof y === 'number' ? (y - 4) : pRect.y;
+            IoLayerSingleton.nudgePointer(this, x, y, rect);
             break;
           case 'top':
-            this.nudgeTop(pRect.x, pRect.top, rect) ||
-            this.nudgeBottom(pRect.x, pRect.bottom, rect) ||
-            this.nudgePointer(x, y, pRect.x, pRect.top - rect.height, rect);
+            IoLayerSingleton.nudgeTop(this, pRect.x, pRect.top, rect) ||
+            IoLayerSingleton.nudgeBottom(this, pRect.x, pRect.bottom, rect) ||
+            IoLayerSingleton.nudgePointer(this, x, y, rect);
             break;
           case 'left':
-            this.nudgeLeft(pRect.x, pRect.top, rect) ||
-            this.nudgeRight(pRect.right, pRect.top, rect) ||
-            this.nudgePointer(x, y, pRect.x - rect.width, pRect.top, rect);
+            IoLayerSingleton.nudgeLeft(this, pRect.x, pRect.top, rect) ||
+            IoLayerSingleton.nudgeRight(this, pRect.right, pRect.top, rect) ||
+            IoLayerSingleton.nudgePointer(this, x, y, rect);
             break;
           case 'bottom':
-            this.nudgeBottom(pRect.x, pRect.bottom, rect) ||
-            this.nudgeTop(pRect.x, pRect.top, rect) ||
-            this.nudgePointer(x, y, pRect.x, pRect.bottom, rect);
+            IoLayerSingleton.nudgeBottom(this, pRect.x, pRect.bottom, rect) ||
+            IoLayerSingleton.nudgeTop(this, pRect.x, pRect.top, rect) ||
+            IoLayerSingleton.nudgePointer(this, x, y, rect);
             break;
           case 'right':
           default:
-            this.nudgeRight(pRect.right, pRect.top, rect) ||
-            this.nudgeLeft(pRect.x, pRect.top, rect) ||
-            this.nudgePointer(x, y, pRect.right, pRect.top, rect);
+            IoLayerSingleton.nudgeRight(this, pRect.right, pRect.top, rect) ||
+            IoLayerSingleton.nudgeLeft(this, pRect.x, pRect.top, rect) ||
+            IoLayerSingleton.nudgePointer(this, x, y, rect);
             break;
         }
-        this.style.left = this._x + 'px';
-        this.style.top = this._y + 'px';
       }
     }
   }
@@ -246,6 +206,7 @@ export class IoMenuOptions extends IoElement {
         option: option,
         value: this.value,
         direction: itemDirection,
+        selectable: this.selectable,
         _depth: this._depth + 1,
       }]
     )];
@@ -255,6 +216,7 @@ export class IoMenuOptions extends IoElement {
         label: '☰',
         title: 'select tab',
         value: this.value,
+        selectable: this.selectable,
         class: 'io-hamburger',
         _depth: this._depth,
       }]);

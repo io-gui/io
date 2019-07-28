@@ -1,6 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoMathLayer} from "./math-layer.js";
-import {IoThemeMixinSingleton as mixin} from "../../io.js";
+import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-elements-core.js";
 
 export class IoHsvaPicker extends IoElement {
   static get Style() {
@@ -12,8 +11,8 @@ export class IoHsvaPicker extends IoElement {
         display: flex;
         cursor: move;
         align-items: stretch;
-        min-width: 2.75em;
-        min-height: 1.375em;
+        min-width: var(--io-line-height);
+        min-height: var(--io-line-height);
         flex-direction: column;
       }
       :host[horizontal] {
@@ -21,6 +20,12 @@ export class IoHsvaPicker extends IoElement {
       }
       :host > io-hsva-sv {
         flex: 1 1;
+      }
+      :host > *:not(:last-child) {
+        margin: 0 0 var(--io-spacing) 0;
+      }
+      :host[horizontal] > *:not(:last-child) {
+        margin: 0 var(--io-spacing) 0 0;
       }
     </style>`;
   }
@@ -51,5 +56,5 @@ export class IoHsvaPicker extends IoElement {
 IoHsvaPicker.Register();
 
 IoHsvaPicker.singleton = new IoHsvaPicker();
-IoMathLayer.singleton.appendChild(IoHsvaPicker.singleton);
-IoHsvaPicker.singleton.addEventListener('expanded-changed', IoMathLayer.singleton.onChildExpanded);
+IoLayerSingleton.appendChild(IoHsvaPicker.singleton);
+IoHsvaPicker.singleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);

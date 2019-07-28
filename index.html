@@ -11,36 +11,38 @@
 
     <meta itemprop="name" content="Lightweight UI framework for reactive web applications" />
     <meta itemprop="description" content="Lightweight UI framework for reactive web applications" />
-    <meta itemprop="image" content="/images/logo/io-512.png" />
 
+    <!-- Web application enable -->
     <link rel="manifest" href="/manifest.json" />
-
-    <meta name="theme-color" content="#f5f5f5" />
-    <meta name="msapplication-TileColor" content="#f5f5f5" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="application-name" content="Lightweight UI framework for reactive web applications" />
-
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="#f5f5f5" />
+
+    <!-- Web application name -->
+    <meta name="application-name" content="Lightweight UI framework for reactive web applications" />
     <meta name="apple-mobile-web-app-title" content="Lightweight UI framework for reactive web applications" />
 
-    <link rel="apple-touch-icon" href="/images/logo/io-152.png" />
-    <!-- <link rel="apple-touch-icon" sizes="57x57" href="/images/logo/io-57.png"> -->
-    <!-- <link rel="apple-touch-icon" sizes="60x60" href="/images/logo/io-60.png"> -->
-    <link rel="apple-touch-icon" sizes="72x72" href="/images/logo/io-72.png">
-    <!-- <link rel="apple-touch-icon" sizes="76x76" href="/images/logo/io-76.png"> -->
-    <!-- <link rel="apple-touch-icon" sizes="114x114" href="/images/logo/io-114.png"> -->
-    <!-- <link rel="apple-touch-icon" sizes="120x120" href="/images/logo/io-120.png"> -->
+    <!-- Browser UI color -->
+    <meta name="theme-color" content="#f5f5f5" />
+    <meta name="msapplication-TileColor" content="#f5f5f5" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#f5f5f5" />
+
+    <!-- Home screen icons -->
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <meta itemprop="image" content="/images/logo/io-512.png" />
+    <meta name="msapplication-TileImage" content="/images/logo/io-144-precomposed.png" />
     <link rel="apple-touch-icon" sizes="144x144" href="/images/logo/io-144.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/images/logo/io-152.png">
-    <!-- <link rel="apple-touch-icon" sizes="180x180" href="/images/logo/io-180.png"> -->
 
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="Io GUI: Documentation" />
-    <meta property="og:description" content="Lightweight UI framework for reactive web applications" />
-    <meta property="og:image" content="https://io-gui.dev/images/logo/io-512.png?001" />
-    <meta property="og:locale" content="en_US" />
+    <!-- Other icons -->
+    <link rel="icon" type="image/png" href="/images/logo/io-512.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/logo/io-192.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/logo/io-96.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/logo/io-32-alt.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/logo/io-16.png" />
+    <link rel="apple-touch-icon" href="/images/logo/io-152.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/logo/io-72.png">
 
+    <!-- Social sharing data -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Io GUI: Documentation" />
     <meta name="twitter:description" content="Lightweight UI framework for reactive web applications" />
@@ -48,16 +50,13 @@
     <meta name="twitter:creator" content="akirodic" />
     <meta name="twitter:image" content="https://io-gui.dev/images/logo/io-512.png?001">
     <meta name="twitter:image:alt" content="Io GUI">
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Io GUI: Documentation" />
+    <meta property="og:description" content="Lightweight UI framework for reactive web applications" />
+    <meta property="og:image" content="https://io-gui.dev/images/logo/io-512.png?001" />
+    <meta property="og:locale" content="en_US" />
 
-    <link rel="icon" type="image/png" href="/images/logo/io-512.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/images/logo/io-192.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/images/logo/io-96.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/logo/io-32-alt.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/logo/io-16.png" />
-
-    <meta name="msapplication-TileImage" content="/images/logo/io-144-precomposed.png" />
-
-    <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet">
+    <!-- <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet"> -->
 
     <link lazyload href="/lib/highlight.a11y-light.css" rel="stylesheet">
     <script src="./lib/highlight.pack.js"></script>
@@ -94,12 +93,16 @@
         flex: 1 1 auto;
       }
       .logo {
-        display: block;
-        height: 1.375em;
-        /* margin: var(--io-border-width); */
+        width: 32px;
+        height: 32px;
+        padding: 0px 6px;
       }
       .main > io-menu-options {
         background-color: var(--io-background-color);
+      }
+      .main > io-menu-options > a {
+        display: flex;
+        padding: 0;
       }
       .docs > io-sidebar:not([overflow]) {
         flex-basis: 14em !important;
@@ -108,8 +111,7 @@
     <link href="/lib/mocha.css" rel="stylesheet" />
     <script type="module">
 
-    import {IoStorage as $, IoThemeSingleton} from "./dist/io.js";
-    // import {IoThemeSingleton} from "./dist/io.js";
+    import {IoStorage as $} from "./dist/io.js";
     import {IoSelectorTabs} from "./dist/io-elements-layout.js";
     import "./dist/io-elements-object.js";
     import "./dist/io-elements-extras.js";
@@ -125,14 +127,10 @@
           cache: true,
         };
       }
-      setTheme(value) {
-        IoThemeSingleton.theme = value;
-      }
       constructor(props) {
         super(props);
         this.slotted = [
-          ['a', {href: '#doc=getting-started#about-io'}, [['img', {src: '/images/logo/io-logo.svg', class:'logo'}]]],
-          ['io-menu-option', {label: 'Theme', class: 'io-item', value: IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
+          ['a', {href: '#doc=getting-started#about-io'}, [['io-icon', {icon: 'icons:io-gui-logo-io', class:'logo'}]]],
         ];
         this.options = [
           {label: 'Docs', value: 'docs'},
@@ -178,10 +176,13 @@
                 {label: "io-item", value: "basic-elements#io-item"},
                 {label: "io-button", value: "basic-elements#io-button"},
                 {label: "io-boolean", value: "basic-elements#io-boolean"},
-                {label: "io-switch", value: "basic-elements#io-switch"},
                 {label: "io-string", value: "basic-elements#io-string"},
                 {label: "io-number", value: "basic-elements#io-number"},
                 {label: "io-slider", value: "basic-elements#io-slider"},
+                {label: "io-gl", value: "basic-elements#io-gl"},
+                {label: "io-theme-singleton", value: "basic-elements#io-theme-singleton"},
+                {label: "io-icon", value: "basic-elements#io-icon"},
+                {label: "io-iconset", value: "basic-elements#io-iconset"},
               ]},
               {label: "Layout", options: [
                 {label: "io-collapsable", value: "layout-navigation#io-collapsable"},
@@ -202,13 +203,8 @@
                 {label: "io-menu-option", value: "elements-menus#io-menu-option"},
               ]},
               {label: "Math", options: [
-                {label: "io-float", value: "math-elements#io-float"},
-                {label: "io-vector2", value: "math-elements#io-vector2"},
-                {label: "io-vector3", value: "math-elements#io-vector3"},
                 {label: "io-vector", value: "math-elements#io-vector"},
-                {label: "io-matrix2", value: "math-elements#io-matrix2"},
-                {label: "io-matrix3", value: "math-elements#io-matrix3"},
-                {label: "io-matrix4", value: "math-elements#io-matrix4"},
+                {label: "io-matrix", value: "math-elements#io-matrix"},
                 {label: "io-rgba", value: "math-elements#io-rgba"},
                 {label: "io-hsva", value: "math-elements#io-hsva"},
                 {label: "io-hsva-sv", value: "math-elements#io-hsva-sv"},

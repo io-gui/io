@@ -1,7 +1,6 @@
-import {html, IoGl} from "../../io.js";
+import {html} from "../../io.js";
 import {IoHsvaPicker} from "./hsva-picker.js";
-import {IoMathLayer} from "./math-layer.js";
-import {colorShaderChunk} from "./utils.js";
+import {IoLayerSingleton, IoGl, chunk} from "../../io-elements-core.js";
 
 export class IoHsvaSwatch extends IoGl {
   static get Style() {
@@ -9,8 +8,9 @@ export class IoHsvaSwatch extends IoGl {
       :host {
         cursor: pointer;
         border-radius: var(--io-border-radius);
-        min-width: 32px;
-        min-height: 1.375em;
+        border: var(--io-inset-border);
+        width: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
+        height: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
       }
       :host[aria-invalid] {
         outline: 1px solid var(--io-color-focus);
@@ -36,7 +36,8 @@ export class IoHsvaSwatch extends IoGl {
     return /* glsl */`
       varying vec2 vUv;
 
-      ${colorShaderChunk}
+      ${chunk.hue2rgb}
+      ${chunk.hsv2rgb}
 
       void main(void) {
         float tileSize = uSize.x / 32.0;
@@ -47,12 +48,13 @@ export class IoHsvaSwatch extends IoGl {
 
         float alpha = uValue.a;
         vec2 pxUv = vUv * uSize;
-        if (pxUv.x < gLineWidth) alpha = 1.0;
-        if (pxUv.y < gLineWidth) alpha = 1.0;
-        if (pxUv.x > uSize.x - gLineWidth) alpha = 1.0;
-        if (pxUv.y > uSize.y - gLineWidth) alpha = 1.0;
+        float lineWidth = 4.0;
+        if (pxUv.x < lineWidth) alpha = 1.0;
+        if (pxUv.y < lineWidth) alpha = 1.0;
+        if (pxUv.x > uSize.x - lineWidth) alpha = 1.0;
+        if (pxUv.y > uSize.y - lineWidth) alpha = 1.0;
 
-        gl_FragColor = vec4(mix(alphaPattern, hsv2rgb(uValue.xyz), alpha), 1.0);
+        gl_FragColor = vec4(mix(alphaPattern, hsv2rgb(uValue.xyz), saturate(alpha)), 1.0);
       }
     `;
   }
@@ -76,9 +78,9 @@ export class IoHsvaSwatch extends IoGl {
     IoHsvaPicker.singleton.style.width = hasAlpha ? '192px' : '160px';
     IoHsvaPicker.singleton.style.height = '128px';
     IoHsvaPicker.singleton.expanded = true;
-    IoMathLayer.singleton.clickblock = true;
-    IoMathLayer.singleton.srcElement = this;
-    IoMathLayer.singleton.setElementPosition(IoHsvaPicker.singleton, 'bottom', this.getBoundingClientRect());
+    IoLayerSingleton.clickblock = true;
+    IoLayerSingleton.srcElement = this;
+    IoLayerSingleton.setElementPosition(IoHsvaPicker.singleton, 'bottom', this.getBoundingClientRect());
   }
 }
 

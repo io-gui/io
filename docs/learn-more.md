@@ -1,10 +1,26 @@
 ## Core Classes
 
-`IoElement` class is the core of Io. It is a simple base class for creating fast, lightweight and responsive custom elements. It saves you time writing boilerplate code. The core API is defined in the underlying superclass `IoNode` which can be used to create non-element classes compatible with Io event system and data binding. You can also apply `IoNodeMixin` on top of existing classes for easier integration with Io.
+**IoNode**
+
+`IoNode` class is the core of Io. It includes most of the core APIs. It is also available as mixin `IoNodeMixin` so it can be applied on top of existing classes.
+
+```javascript
+class myNode extends IoNode {}
+// or
+class myNode extends IoNodeMixin(OtherClass) {}
+```
+
+**IoElement**
+
+`IoElement` is `IoNode` class applied to `HTMLElement` with some additinal DOM API. It is a simple base class for creating fast, lightweight and responsive custom elements.
+
+```javascript
+class myElement extends IoElement {}
+```
 
 ## Creating Elements
 
-You can create Io elements using different methods but to make the most out of Io, you should use the `template()` function inside elements created with `IoElement` class. See [virtual DOM arrays](#doc=advanced#virtual-dom-arrays) for more information.
+You can create Io elements using different methods but to make the most out of Io, you should use the `template()` function inside elements created with `IoElement` class. See [virtual DOM arrays](#doc=learn-more#virtual-dom-arrays) for more information.
 
 ```javascript
 // createElement
@@ -39,16 +55,16 @@ Although semantically different, `Properties()` and `Attributes()` both define *
 
 ## Property Configuration
 
-Property configuration can be done in different ways. For your convenience, you can simply assign a `value` or `type` and one will be inferred from the other. For example, if you define `'myProperty: Hello World'`, `type: String` configuration will be inferred. For various type assignments, default values are following:
+Property configuration can be done in different ways. For your convenience, you can simply assign a `value` or `type` and one will be inferred from the other. For example, if you define `myProperty: Hello World`, you dont have to specify type because configuration `type: String` will be inferred. For various type assignments, default values are following:
 
-|Type     |Default Value  |
-|:--------|:--------------|
-|`Boolean`|`false`        |
-|`String` |`''`           |
-|`Number` |`0`            |
-|`Array`  |`[...value]`   |
-|`Object` |`new Object()` |
-|`MyClass`|`new MyClass()`|
+|Type     |Default Value          |
+|:--------|:----------------------|
+|`Boolean`|`false`                |
+|`String` |`''`                   |
+|`Number` |`0`                    |
+|`Array`  |`[...value]` or `[]`   |
+|`Object` |`{}`                   |
+|`MyClass`|`new MyClass()`        |
 
 In addition to setting `value` and `type`, you can be more specific when defining properties by providing configuration object which may include: `reflect`, `notify`, `enumerable` and `binding`.
 
@@ -57,10 +73,10 @@ In addition to setting `value` and `type`, you can be more specific when definin
 |`reflect`   |`0` \| `1` \| `-1` \| `2`|Attribute reflection direction |
 |`notify`    |`true` \| `false`        |Enables change events          |
 |`enumerable`|`true` \| `false`        |Makes property enumerable      |
-|`binding`   |`Binding`                |Binding object (internal)      |
+|`binding`   |`Binding`                |Binding object                 |
 
 
-Specifying configuration options is optional. In most cases, default values are fine. You can simply define a property by value or type alone. For example, following variants are effectively the same:
+Specifying configuration options is not mandatory. In most cases, default values are fine. You can simply define a property by value or type alone. For example, following variants are effectively the same:
 
 ```javascript
 // Configuration object
@@ -88,28 +104,31 @@ enumerable: false,
 
 ## Functions
 
-`changed()`  
+`changed()`
 Change handler function.
 
-`prop]Changed()`  
+`[prop]Changed()`
 Property-specific change handler function.
 
-`prop]Mutated()`  
+`propChanged()`
+Property-agnostic change handler function.
+
+`[prop]Mutated()`
 Property-specific mutation handler function.
 
-`bind(prop)`  
-Returns data-binding to specified property.
+`bind(prop)`
+Returns data-binding for specified property.
 
-`set(prop, value)`  
-Sets property and emits `[prop]-set` event.
+`set(prop, value)`
+Sets property and emits `value-set` event.
 
-`dispatchEvent(type, detail, bubbles, src)`  
+`dispatchEvent(type, detail, bubbles, src)`
 Shorthand for custom event dispatch.
 
-`template()`  
+`template()`
 Generates virtual DOM from nested arrays.
 
-`onResized()`  
+`onResized()`
 
 <!-- `connect()` -->
 <!-- `disconnect()` -->
@@ -175,7 +194,7 @@ If a property name is prefixed with `on-` it will be treated as a listener. Assi
 ## Data Binding
 
 This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
-Keep in mind that this only works with io properties. In other words, binding to native HTML elements will not work.
+Keep in mind that this only works with Io properties. In other words, binding to native HTML elements will not work.
 
 ```javascript
 this.template([['child-element', {value: this.bind('value')}]]);
@@ -192,7 +211,7 @@ myNode.dispose();
 
 ## Data-Flow
 
-On a fundamental level, data-flow in io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement designs where certain elements have the ability to modify and manage their own state. State changes are automatically communicated to the rest of the application following few simple rules.
+On a fundamental level, data-flow in Io is top down and UI designs with unidirectional data-flow are possible. However, elements and examples in this repository implement designs where certain elements have the ability to modify and manage the state. State changes are automatically communicated to the rest of the application following few simple rules.
 
 * By convention state tree is passed down the UI tree as `value` property. This is not mandatory but it makes it easier to understand and debug the data-flow.
 
@@ -205,17 +224,3 @@ On a fundamental level, data-flow in io is top down and UI designs with unidirec
 That is all! Object elements will automatically listen to `object-mutated` event and update if needed.
 
 **Note:** If the application state changed externally (e.g. server push), `object-mutated` event is required for UI update. Core application should also listen to `object-mutated` event from UI and react accordingly. `object-mutated` event payload should specify which object and property mutated. Otherwise brute-force UI update is performed.
-
-## &lt;io-gl&gt;
-
-WebGL canvas for rendering shader-based elements.
-
-<io-element-demo element="io-gl" properties='{"background": [0, 0, 0, 1], "color": [1, 1, 1, 1], "size": [257, 257]}' config='{"size": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-rgba"], "color": ["io-rgba"]}'></io-element-demo>
-
-This is a base class for WebGL shader elemenents.
-
-The element will automatically create shader uniforms for `Number` and `Array` properties and update canvas on property change.
-
-You can define custom shader code in `static get Vert()` and `static get Frag()` return string.
-
-See `IoSliderKnob` for custom shader example.

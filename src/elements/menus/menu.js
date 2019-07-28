@@ -1,6 +1,6 @@
 import {IoElement} from "../../io.js";
-import {IoMenuOptions} from "./menu-options.js";
 import {IoMenuLayer} from "./menu-layer.js";
+import {IoMenuOptions} from "./menu-options.js";
 
 export class IoMenu extends IoElement {
   static get Properties() {
@@ -10,6 +10,7 @@ export class IoMenu extends IoElement {
       expanded: Boolean,
       position: 'pointer',
       button: 0,
+      selectable: false,
       $options: IoMenuOptions,
     };
   }
@@ -18,6 +19,7 @@ export class IoMenu extends IoElement {
       $options: {
         $parent: this,
         expanded: this.bind('expanded'),
+        selectable: this.bind('selectable'),
         options: this.options,
         position: this.position,
         'on-io-menu-item-clicked': this._onMenuItemClicked,
@@ -41,7 +43,6 @@ export class IoMenu extends IoElement {
     this._parent.removeEventListener('touchend', this._onTouchend);
     this._disconnectOptions();
     this._parent.style.userSelect = null;
-    delete this._parent;
   }
   getBoundingClientRect() {
     return this.parentElement.getBoundingClientRect();
@@ -56,6 +57,10 @@ export class IoMenu extends IoElement {
       IoMenuLayer.singleton.removeChild(this.$options);
     }
   }
+  _expand() {
+    this.expanded = true;
+    IoMenuLayer.singleton._hoveredOptions = this.$options;
+  }
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];
     if (item !== this) {
@@ -67,38 +72,25 @@ export class IoMenu extends IoElement {
   }
   _onContextmenu(event) {
     if (this.options.length && this.button === 2) {
-      event.preventDefault();
-      IoMenuLayer.singleton.setLastFocus(document.activeElement);
-      IoMenuLayer.singleton._x = event.clientX;
-      IoMenuLayer.singleton._y = event.clientY;
       this._connectOptions();
-      this.expanded = true;
-      this.$options.children[0].focus();
+      IoMenuLayer.singleton._onMousedown(event);
+      this._expand();
     }
   }
   _onMousedown(event) {
     if (this.options.length && event.button === this.button && event.button !== 2) {
-      event.preventDefault();
-      IoMenuLayer.singleton.setLastFocus(document.activeElement);
-      IoMenuLayer.singleton._x = event.clientX;
-      IoMenuLayer.singleton._y = event.clientY;
       this._connectOptions();
-      this.expanded = true;
-      this.$options.children[0].focus();
+      IoMenuLayer.singleton._onMousedown(event);
+      this._expand();
     }
   }
   _onTouchstart(event) {
     if (this.options.length && event.cancelable && this.button !== 2) {
-      event.preventDefault();
+      this._connectOptions();
       this.parentElement.addEventListener('touchmove', this._onTouchmove);
       this.parentElement.addEventListener('touchend', this._onTouchend);
-      IoMenuLayer.singleton.setLastFocus(document.activeElement);
-      IoMenuLayer.singleton._x = event.changedTouches[0].clientX;
-      IoMenuLayer.singleton._y = event.changedTouches[0].clientY;
-      this._connectOptions();
-      this.expanded = true;
-      this.$options.children[0].focus();
-      IoMenuLayer.singleton._onTouchmove(event);
+      IoMenuLayer.singleton._onTouchstart(event);
+      this._expand();
     }
   }
   _onTouchmove(event) {

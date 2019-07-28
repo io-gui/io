@@ -1,6 +1,6 @@
-import {html, IoGl} from "../../io.js";
+import {html} from "../../io.js";
+import {IoLayerSingleton, IoGl} from "../../io-elements-core.js";
 import {IoRgbaPicker} from "./rgba-picker.js";
-import {IoMathLayer} from "./math-layer.js";
 
 export class IoRgbaSwatch extends IoGl {
   static get Style() {
@@ -8,8 +8,9 @@ export class IoRgbaSwatch extends IoGl {
       :host {
         cursor: pointer;
         border-radius: var(--io-border-radius);
-        min-width: 32px;
-        min-height: 1.375em;
+        border: var(--io-inset-border);
+        width: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
+        height: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
       }
       :host[aria-invalid] {
         outline: 1px solid var(--io-color-focus);
@@ -44,12 +45,13 @@ export class IoRgbaSwatch extends IoGl {
 
         float alpha = uValue.a;
         vec2 pxUv = vUv * uSize;
-        if (pxUv.x < gLineWidth) alpha = 1.0;
-        if (pxUv.y < gLineWidth) alpha = 1.0;
-        if (pxUv.x > uSize.x - gLineWidth) alpha = 1.0;
-        if (pxUv.y > uSize.y - gLineWidth) alpha = 1.0;
+        float lineWidth = 4.0;
+        if (pxUv.x < lineWidth) alpha = 1.0;
+        if (pxUv.y < lineWidth) alpha = 1.0;
+        if (pxUv.x > uSize.x - lineWidth) alpha = 1.0;
+        if (pxUv.y > uSize.y - lineWidth) alpha = 1.0;
 
-        gl_FragColor = vec4(mix(alphaPattern, uValue.rgb, alpha), 1.0);
+        gl_FragColor = vec4(mix(alphaPattern, uValue.rgb, saturate(alpha)), 1.0);
       }
     `;
   }
@@ -73,9 +75,9 @@ export class IoRgbaSwatch extends IoGl {
     IoRgbaPicker.singleton.style.width = hasAlpha ? '192px' : '160px';
     IoRgbaPicker.singleton.style.height = '128px';
     IoRgbaPicker.singleton.expanded = true;
-    IoMathLayer.singleton.clickblock = true;
-    IoMathLayer.singleton.srcElement = this;
-    IoMathLayer.singleton.setElementPosition(IoRgbaPicker.singleton, 'bottom', this.getBoundingClientRect());
+    IoLayerSingleton.clickblock = true;
+    IoLayerSingleton.srcElement = this;
+    IoLayerSingleton.setElementPosition(IoRgbaPicker.singleton, 'bottom', this.getBoundingClientRect());
   }
 }
 

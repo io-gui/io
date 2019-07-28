@@ -1,21 +1,29 @@
 ## About Io
 
-Io is a UI framework for JavaScript applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
+Io is a UI framework for building web applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
 
-For a quick start, read this document, then check out included [elements library](https://io-gui.dev/#page=elements) and the [source code](https://github.com/io-gui/io/). 
+For a quick start, read this document, then check out included [collection of elements](https://io-gui.dev/#page=elements) and the [source code](https://github.com/io-gui/io/).
+
+**Core UI library**
+
+The core library includes the most basic classes for buliding custom elements with minimal boilerplate. It also provides data binding, reactive functions and event-based data synchronization.
+
+**Design System**
+
+Io design system includes a [collection of UI elements](https://io-gui.dev/#page=elements) that range from simple input fields, to [menu systems](#page=elements&element=elements-menus) and [responsive layouts](#page=elements&element=layout-navigation).
 
 ## Usage
 
-Import Io module from `dist/io.js` or `src/io.js`.
+Import Io core module from `dist/io.js` or `src/io.js`.
 
 ```javascript
 import {IoElement} from "./io/dist/io.js";
 ```
 
-The library includes a collection of useful UI elements suitable for use with other UI libraries and frameworks. To use one of the elements, such as [`<io-menu-options>`](#page=elements&element=basic-elements#io-menu) for example, create the element, assign the options property, and add it to your DOM.
+To use one of the elements, such as `<io-menu-options>` for example, import the corresponding element collection, create the element, assign the options property, and add it to your DOM.
 
 ```javascript
-import "./io/dist/io-elements.js";
+import "./io/dist/io-elements-menus.js";
 const menu = document.createElement('io-menu-options');
 menu.options = ["one", "two", "three"];
 element.appendChild(menu);
@@ -23,13 +31,13 @@ element.appendChild(menu);
 
 ## Simple App Example
 
-You can extend `IoElement` to create elements and applications.
+You can extend `IoElement` to create anything from simple elements to complex applications.
 
 ```javascript
 class MyApp extends IoElement {}
 MyApp.Register();
 ```
-You should call `Register()` immediately after defining the class. Custom elements are registered as kebab-case. For example `MyApp` class will register as `<my-app>`.
+You should call `Register()` immediately after defining a new class. Elements are registered as kebab-case. For example `MyApp` class will register as `<my-app>`.
 
 Now you can use the `template()` function to add contents to your application.
 
@@ -48,17 +56,18 @@ Then, add `<my-app>` element to your document and you are done!
 <my-app></my-app>
 ```
 
-Once the element has been connected and `change()` function evoked, the template will be applied to the DOM.
+Once the element has been connected, `change()` function will fire and template will be applied to the DOM.
 
 ```html
 <my-app>
+  <!-- Automatically generated! -->
   <p>Hello io!</p>
 </my-app>
 ```
 
 ## Style
 
-Styles can be defined inside `static get Style()` return string. Alternatively, styles can be defined in external CSS files as usual. Let's specify text color for the `<p>` element.
+Styles are defined inside `static get Style()` return string. Alternatively, styles can be defined in external CSS files as usual. Let's specify text color for the `<p>` element.
 
 ```javascript
 static get Style() {
@@ -129,13 +138,13 @@ static get Listeners() {
 }
 ```
 
-**Note:** Event handler function names should start with `on` or `_on`.
+**Note:** Event handler function names should start with `on` or `_`.
 
 ## Change Functions
 
-Change functions are automatically called when properties change. If `[propName]Changed(value, oldValue)` function is defined, it will be called when corresponding property changes.
+Change functions are automatically called when properties change. If `[propName]Changed(event)` function is defined, it will be called when corresponding property changes. Alternatively, you can define a generic `propChanged(event)` function instead and get property name from the event detail.
 
-If property value is an object, `[propName]Mutated()` function will be called immediately after object mutation (see data-flow requirements).
+If property value is an object, `[propName]Mutated()` function will be called immediately after object mutation (see [data-flow requirements](#doc=learn-more#data-flow)).
 
 Lastly, `changed()` function will be called **after** all of the property-specific change/mutation functions are called.
 
@@ -185,4 +194,4 @@ class MyApp extends IoElement {
 MyApp.Register();
 ```
 
-> Continue reading [advanced usage](#page=docs&doc=advanced#usage) or check out the [included elements](#page=elements).
+> Continue reading [advanced usage](#page=docs&doc=learn-more) or check out the [included elements](#page=elements).

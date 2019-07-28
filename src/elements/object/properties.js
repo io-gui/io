@@ -1,7 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import "../../io-elements-core.js";
-import "../../io-elements-object.js";
-import {IoThemeMixinSingleton as mixin} from "../../io.js";
+import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 
 export class IoProperties extends IoElement {
   static get Style() {

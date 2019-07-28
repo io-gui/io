@@ -92,13 +92,13 @@ export default class {
           this.element.value = testValue;
           this.element.config = {
             'number': ['io-slider', {step: 1}],
-            'type:boolean': ['io-switch'],
+            'type:boolean': ['io-string'],
           }
           this.element.expanded = true;
           const properties = this.element.children[1];
           chai.expect(properties.children[1].localName).to.equal('io-slider');
           chai.expect(properties.children[1].step).to.equal(1);
-          chai.expect(properties.children[5].localName).to.equal('io-switch');
+          chai.expect(properties.children[5].localName).to.equal('io-string');
           this.reset();
         });
       });

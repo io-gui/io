@@ -1,5 +1,4 @@
-import {html, IoElement} from "../../io.js";
-import {IoStorage as $} from "../../io.js";
+import {html, IoElement, IoStorage as $} from "../../io.js";
 import "./breadcrumbs.js";
 import {Item} from "../../io-elements-core.js";
 

@@ -32,21 +32,3 @@ export function hsv2rgb(h, s, v) {
     case 5: return [v, p, q];
   }
 }
-
-export const colorShaderChunk = `
-#ifndef saturate
-  #define saturate(v) clamp(v, 0., 1.)
-#endif
-
-vec3 hue2rgb(float hue) {
-  float R = abs(hue * 6. - 3.) - 1.;
-  float G = 2. - abs(hue * 6. - 2.);
-  float B = 2. - abs(hue * 6. - 4.);
-  return saturate(vec3(R,G,B));
-}
-
-vec3 hsv2rgb(vec3 hsv) {
-  vec3 rgb = hue2rgb(hsv.r);
-  return ((rgb - 1.0) * hsv.g + 1.0) * hsv.b;
-}
-`;

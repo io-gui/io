@@ -1,16 +1,8 @@
 import {IoNodeMixin} from "./node.js";
 import {Listeners} from "./listeners.js";
+import {buildTree} from "../../lib/ijk.js";
 
-// TODO: Improve tests.
-/**
-  * Base class for custom elements.
-  * `IoNodeMixin` applied to `HTMLElement` and a few custom functions.
-  */
 export class IoElement extends IoNodeMixin(HTMLElement) {
-  /**
-   * See IoNode for more details.
-   * @return {Object} properties - Properties configuration objects.
-   */
   static get Attributes() {
     return {
       tabindex: String,
@@ -44,62 +36,48 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
     }
   }
-  // TODO: performance check and optimize
   titleChanged() {
-    this.setAttribute('aria-label', this.title || this.label);
+    this.setAttribute('aria-label', this.label || this.title);
   }
   labelChanged() {
-    this.setAttribute('aria-label', this.title || this.label);
+    this.setAttribute('aria-label', this.label || this.title);
   }
   /**
-    * Resize listener is added here if element class has `onResized()` function defined.
-    */
+   * Add resize listener if `onResized()` is defined in subclass.
+   */
   connectedCallback() {
     super.connectedCallback();
-    if (typeof this.onResized == 'function') {
+    if (typeof this.onResized === 'function') {
       if (ro) {
         ro.observe(this);
       } else {
-        this._onResized();
-        window.addEventListener('resize', this._onResized);
+        this.onResized();
+        window.addEventListener('resize', this.onResized);
       }
     }
   }
+  /**
+   * Removes resize listener if `onResized()` is defined in subclass.
+   */
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (typeof this.onResized == 'function') {
+    if (typeof this.onResized === 'function') {
       if (ro) {
         ro.unobserve(this);
       } else {
-        window.removeEventListener('resize', this._onResized);
+        window.removeEventListener('resize', this.onResized);
       }
     }
-  }
-  _onResized() {
-    clearTimeout(this.__resizeDebounce);
-    this.__resizeDebounce = setTimeout(()=>{
-      this.onResized();
-      delete this.__resizeDebounce;
-    }, 100);
-  }
-  /**
-    * Disposes all internals.
-    * Use this when node is no longer needed.
-    */
-  dispose() {
-    super.dispose();
-    delete this.parent;
-    this.children.lenght = 0;
-    // this.__properties.$.value = {};
   }
   /**
     * Renders DOM from virtual DOM arrays.
     * @param {Array} children - Array of vDOM children.
     * @param {HTMLElement} [host] - Optional template target.
     */
-  template(children, host) {
-    // this.__properties.$.value = {};
-    this.traverse(buildTree()(['root', children]).children, host || this);
+  template(vDOM, host) {
+    const vChildren = buildTree()(['root', vDOM]).children;
+    if (host === this) this.__properties.$.value = {};
+    this.traverse(vChildren, host || this);
   }
   /**
     * Recurively traverses vDOM.
@@ -111,15 +89,11 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     // remove trailing elements
     while (children.length > vChildren.length) {
       const child = children[children.length - 1];
-      let nodes = Array.from(child.querySelectorAll('*'));
-      for (let i = nodes.length; i--;) {
-        // if (nodes[i].dispose) nodes[i].dispose(); // TODO: re-enable after fixing #2
-      }
-      // if (child.dispose) child.dispose(); // TODO: re-enable after fixing #2
-      // TODO: not sure why dispose needs to be called ahead of remove children
-      // Otherwise some bindings get disconnected.
-      // https://github.com/arodic/io/issues/1
       host.removeChild(child);
+      // TODO: enable and test!
+      // const nodes = Array.from(child.querySelectorAll('*'));
+      // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
+      // if (child.dispose) child.dispose();
     }
     // create new elements after existing
     if (children.length < vChildren.length) {
@@ -129,83 +103,77 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
       host.appendChild(frag);
     }
-
+    // replace existing elements
     for (let i = 0; i < children.length; i++) {
-
-      // replace existing elements
       if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];
         host.insertBefore(constructElement(vChildren[i]), oldElement);
-        let nodes = Array.from(oldElement.querySelectorAll('*'));
         host.removeChild(oldElement);
-        for (let i = nodes.length; i--;) {
-          // if (nodes[i].dispose) nodes[i].dispose(); // TODO: re-enable after fixing #2
-        }
-        // if (oldElement.dispose) oldElement.dispose(); // TODO: re-enable after fixing #2
-
+        // TODO: enable and test!
+        // const nodes = Array.from(oldElement.querySelectorAll('*'));
+        // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
+        // if (oldElement.dispose) oldElement.dispose();
       // update existing elements
       } else {
-        // children[i].className = ''; // TODO: test
         children[i].removeAttribute('className');
-        // Io Elements
-
         if (Object.prototype.hasOwnProperty.call(children[i], '__properties')) {
-          // WARNING TODO: Better property and listeners reset.
-          // WARNING TODO: Test property and listeners reset.
+          // Set IoElement element properties
+          // TODO: Test property and listeners reset. Consider optimizing.
           children[i].setProperties(vChildren[i].props);
-          // TODO: Test and remove. Redundant with setProperties().
-          // children[i].queueDispatch();
-          children[i].__listeners.setPropListeners(vChildren[i].props, children[i]);
-          children[i].__listeners.connect();
-        // Native HTML Elements
         } else {
-          for (let prop in vChildren[i].props) {
-            if (prop === 'style') {
-              for (let s in vChildren[i].props['style']) {
-                // children[i].style[s] = vChildren[i].props[prop][s];
-                children[i].style.setProperty(s, vChildren[i].props[prop][s]);
-              }
-            } else if (prop === 'id') {
-              // Skipping. Id's are used for $ in io.
-            } else if (prop === 'class') {
-              children[i]['className'] = vChildren[i].props[prop];
-            } else {
-              children[i][prop] = vChildren[i].props[prop];
-            }
-          }
-          // TODO: Refactor for native elements.
-          children[i].__listeners.setPropListeners(vChildren[i].props, children[i]);
-          children[i].__listeners.connect();
-          ///
+          // Set native HTML element properties
+          setNativeElementProps(children[i], vChildren[i].props);
         }
       }
     }
     for (let i = 0; i < vChildren.length; i++) {
-      if (vChildren[i].props.id) {
-        this.$[vChildren[i].props.id] = children[i];
-      }
-      if (vChildren[i].children && typeof vChildren[i].children === 'string') {
-
-        if (!children[i]._textNode) {
-          if (children[i].childNodes.length) children[i].textContent = '';
-          children[i]._textNode = document.createTextNode("");
-          children[i].appendChild(children[i]._textNode);
-        } // TODO: consed edge cases (external modification of textNoded);
-        if (children[i]._textNode.nodeValue !== vChildren[i].children) {
-          children[i]._textNode.nodeValue = vChildren[i].children;
+      // Update this.$ map of ids.
+      if (vChildren[i].props.id) this.$[vChildren[i].props.id] = children[i];
+      if (vChildren[i].children) {
+        if (typeof vChildren[i].children === 'string') {
+          // Set textNode value.
+          this.flattenTextNode(children[i]);
+          children[i]._textNode.nodeValue = String(vChildren[i].children);
+        } else if (typeof vChildren[i].children === 'object') {
+          // Traverse deeper.
+          this.traverse(vChildren[i].children, children[i]);
         }
-      } else if (vChildren[i].children && typeof vChildren[i].children === 'object') {
-        this.traverse(vChildren[i].children, children[i]);
       }
     }
   }
-  // fixup for HTMLElement setAttribute
+  /**
+   * Helper function to flatten textContent into a single TextNode.
+   * Update textContent via TextNode is better for layout performance.
+   * @param {HTMLElement} element - Element to flatten.
+   */
+  flattenTextNode(element) {
+    if (element.childNodes.length === 0) {
+      element.appendChild(document.createTextNode(""));
+    }
+    if (element.childNodes[0].nodeName !== "#text") {
+      element.innerHTML = '';
+      element.appendChild(document.createTextNode(""));
+    }
+    element._textNode = element.childNodes[0];
+    if (element.childNodes.length > 1) {
+      const textContent = element.textContent;
+      for (let i = element.childNodes.length; i--;) {
+        if (i !== 0) element.removeChild(element.childNodes[i]);
+      }
+      element._textNode.nodeValue = textContent;
+    }
+  }
+  /**
+   * Alias for HTMLElement setAttribute where falsey values remove the attribute.
+   * @param {string} attr - Attribute name.
+   * @param {*} value - Attribute value.
+   */
   setAttribute(attr, value) {
     if (value === true) {
       HTMLElement.prototype.setAttribute.call(this, attr, '');
     } else if (value === false || value === '') {
       this.removeAttribute(attr);
-    } else if (typeof value == 'string' || typeof value == 'number') {
+    } else if (typeof value === 'string' || typeof value === 'number') {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
@@ -267,10 +235,11 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
 <a href="https://www.apple.com/lae/safari/">Safari</a>`;
 
 /**
-  * Register function for `IoElement`. Registers custom element.
-  */
+ * Register function for `IoElement`. Registers custom element.
+ */
 IoElement.Register = function() {
   IoNodeMixin.Register.call(this);
+  IoElement.isIoElement = true;
 
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
@@ -284,94 +253,82 @@ IoElement.Register = function() {
     return;
   }
 
-  // window[this.name] = this; // TODO: consider since custom elements are global anyway.
-  initStyle(this.prototype.__protochain);
+  _initProtoStyle(this.prototype.__protochain);
 };
 
 let ro;
 if (window.ResizeObserver !== undefined) {
   ro = new ResizeObserver(entries => {
-    for (let entry of entries) entry.target._onResized();
+    for (let entry of entries) entry.target.onResized();
   });
 }
 
-// TODO: refactor and make more powerful.
 /**
-  * Template literal handler for HTML strings.
-  * @param {Array} parts - Template literal array argument.
-  * @return {string} - Created HTML code.
-  */
+ * Template literal handler for CSS code in HTML.
+ * @param {Array} parts - Template literal array argument.
+ * @return {string} - Created HTML code.
+ */
 export function html(parts) {
-  let result = {
-    string: '',
-    vars: {},
-  };
+  let result = '';
   for (let i = 0; i < parts.length; i++) {
-    result.string += parts[i] + (arguments[i + 1] || '');
+    result += parts[i] + (arguments[i + 1] || '');
   }
-  result.string = result.string.replace(new RegExp('<style>', 'g'), '');
-  result.string = result.string.replace(new RegExp('</style>', 'g'), '');
-  let vars = result.string.match(/-{2}?([a-z][a-z0-9]*)\b[^;]*;?/gi);
-  if (vars) {
-    for (let i = 0; i < vars.length; i++) {
-      let v = vars[i].split(':');
-      if (v.length === 2) {
-        result.vars[v[0].trim()] = v[1].trim();
-      }
-    }
-  }
+  result = result.replace(new RegExp('<style>', 'g'), '');
+  result = result.replace(new RegExp('</style>', 'g'), '');
   return result;
 }
 
 /**
-  * Creates an element from virtual dom array.
-  * @param {Array} vDOMNode - Virtual dom array.
-  * @return {HTMLElement} - Created element.
-  */
+ * Creates an element from a virtual dom object.
+ * @param {Object} vDOMNode - Virtual dom object.
+ * @param {string} vDOMNode.name - Element tag.
+ * @param {Object} vDOMNode.props - Element properties.
+ * @return {HTMLElement} - Created element.
+ */
 const constructElement = function(vDOMNode) {
- let ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
- if (ConstructorClass) return new ConstructorClass(vDOMNode.props);
+  const name = vDOMNode.name;
+  const props = vDOMNode.props;
 
- let element = document.createElement(vDOMNode.name);
- for (let prop in vDOMNode.props) {
-   if (prop === 'style') {
-     for (let s in vDOMNode.props[prop]) {
-       element.style[s] = vDOMNode.props[prop][s];
-     }
-   } else if (prop === 'id') {
-     // Skipping. Id's are used for $ in io.
-   } else if (prop === 'class') {
-     element['className'] = vDOMNode.props[prop];
-   } else element[prop] = vDOMNode.props[prop];
-   if (prop === 'name') element.setAttribute('name', vDOMNode.props[prop]); // TODO: Reconsider
- }
- // TODO: Refactor for native elements
- Object.defineProperty(element, '__listeners', {value: new Listeners(element)});
- element.__listeners.setPropListeners(vDOMNode.props, element);
- element.__listeners.connect();
+  // IoElement classes constructed with constructor.
+  const ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
+  if (ConstructorClass && ConstructorClass.isIoElement) return new ConstructorClass(vDOMNode.props);
 
- return element;
+  // Other element classes constructed with document.createElement.
+  const element = document.createElement(vDOMNode.name);
+  setNativeElementProps(element, vDOMNode.props);
+  return element;
 };
 
-// https://github.com/lukejacksonn/ijk
-const clense = (a, b) => !b ? a : typeof b[0] === 'string' ? [...a, b] : [...a, ...b];
-const buildTree = () => node => !!node && typeof node[1] === 'object' && !Array.isArray(node[1]) ? {
-   ['name']: node[0],
-   ['props']: node[1],
-   ['children']: Array.isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2] || ''
- } : buildTree()([node[0], {}, node[1] || '']);
-
 /**
-  * Initializes the element style.
-  * @param {Array} prototypes - An array of prototypes to ge the styles from.
-  */
-function initStyle(prototypes) {
+ * Sets element properties.
+ * @param {HTMLElement} element - Element to set properties on.
+ * @param {Object} props - Element properties.
+ */
+const setNativeElementProps = function(element, props) {
+  for (let p in props) {
+    const prop = props[p];
+    if (p === 'style') for (let s in prop) element.style.setProperty(s, prop[s]);
+    else if (p === 'class') element['className'] = prop;
+    else element[p] = prop;
+    if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
+  }
+  if (!element.__listeners) {
+    Object.defineProperty(element, '__listeners', {value: new Listeners(element)});
+    element.__listeners.connect();
+  } else {
+    element.__listeners.setPropListeners(props, element);
+  }
+}
+
+// Creates a `<style>` element for all `static get Style()` return strings.
+function _initProtoStyle(prototypes) {
   const localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   for (let i = prototypes.length; i--;) {
-    const style = prototypes[i].constructor.Style;
+    let styleString = prototypes[i].constructor.Style;
     const classLocalName = prototypes[i].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-    if (style) {
-      const match = style.string.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
+    if (styleString) {
+      // TODO: Do proper CSS parsing.
+      const match = styleString.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
       match.map(selector => {
         selector = selector.trim();
         if (!selector.startsWith('@') &&
@@ -383,9 +340,10 @@ function initStyle(prototypes) {
           console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
         }
       });
-      style.string = style.string.replace(new RegExp(':host', 'g'), localName);
+      // Replace `:host` with element tag.
+      styleString = styleString.replace(new RegExp(':host', 'g'), localName);
       const element = document.createElement('style');
-      element.innerHTML = style.string;
+      element.innerHTML = styleString;
       element.setAttribute('id', 'io-style_' + localName + (classLocalName !== localName ? ('_' + classLocalName) : ''));
       document.head.appendChild(element);
     }

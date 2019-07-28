@@ -1,5 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoThemeMixinSingleton as mixin} from "../../io.js";
+import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 
 export class IoCollapsable extends IoElement {
   static get Style() {
@@ -8,8 +8,9 @@ export class IoCollapsable extends IoElement {
         ${mixin.panel}
       }
       :host > io-boolean {
-        cursor: pointer !important;
+        text-align: left;
         align-self: stretch;
+        width: auto;
       }
       :host > io-boolean[value] {
         margin-bottom: var(--io-spacing);

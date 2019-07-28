@@ -1,6 +1,6 @@
 import {html} from "../../io.js";
 import {IoHsvaHue} from "./hsva-hue.js";
-import {colorShaderChunk} from "./utils.js";
+import {chunk} from "../../io-elements-core.js";
 
 export class IoHsvaSv extends IoHsvaHue {
   static get Style() {
@@ -14,11 +14,9 @@ export class IoHsvaSv extends IoHsvaHue {
     return /* glsl */`
       varying vec2 vUv;
 
-      #ifndef saturate
-        #define saturate(v) clamp(v, 0., 1.)
-      #endif
-
-      ${colorShaderChunk}
+      ${chunk.hue2rgb}
+      ${chunk.hsv2rgb}
+      ${chunk.translate}
 
       void main(void) {
 
@@ -32,7 +30,7 @@ export class IoHsvaSv extends IoHsvaHue {
 
         vec3 final = alphaPattern;
 
-        float markerSize = 12.0;
+        float markerSize = 18.0;
 
         // SV gradient
         final = hsv2rgb(vec3(uValue[0], vUv.x, vUv.y));
@@ -40,19 +38,21 @@ export class IoHsvaSv extends IoHsvaHue {
         // Color marker
         float offset = length((vUv - vec2(uValue[1], uValue[2])) * uSize);
 
-        float distOut = (offset - (markerSize - gLineWidth));
-        float distIn = 1.0 - (offset - (markerSize + gLineWidth));
+        float lineWidth = 4.0;
+
+        float distOut = (offset - (markerSize - lineWidth));
+        float distIn = 1.0 - (offset - (markerSize + lineWidth));
         float dist = saturate(min(distOut, distIn));
 
-        float distOut2 = (offset - (markerSize - (gLineWidth + 1.0)));
-        float distIn2 = 1.0 - (offset - (markerSize + (gLineWidth + 1.0)));
+        float distOut2 = (offset - (markerSize - (lineWidth + 1.0)));
+        float distIn2 = 1.0 - (offset - (markerSize + (lineWidth + 1.0)));
         float dist2 = saturate(min(distOut2, distIn2));
 
-        currentColor = mix(alphaPattern, currentColor, uValue.a);
+        currentColor = mix(alphaPattern, currentColor, saturate(uValue.a));
 
         final = mix(final, currentColor, saturate(distIn));
-        final = mix(final, vec3(0.0), dist2);
-        final = mix(final, vec3(1.0), dist);
+        final = mix(final, cssColor.rgb, dist2);
+        final = mix(final, cssBackgroundColor.rgb, dist);
 
         gl_FragColor = vec4(final, 1.0);
       }
