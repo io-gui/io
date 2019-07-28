@@ -182,6 +182,7 @@ export class IoMenuItem extends IoItem {
           value: this.value,
           options: this._options || [], // TODO: hmm
           position: this.direction,
+          'on-io-menu-item-clicked': this._onMenuItemClicked, // TODO: this should be redundant with above. If removed io-menu-option does not recieve event.
         });
       }
     } else this._disconnectOptions();
