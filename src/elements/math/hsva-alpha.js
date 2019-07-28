@@ -17,7 +17,7 @@ export class IoHsvaAlpha extends IoHsvaHue {
         float alphaMask = mod(alphaPos.x + mod(alphaPos.y, 2.0), 2.0);
         vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), alphaMask);
 
-        vec3 currentColor = hsv2rgb(uValue.xyz);
+        vec3 currentColor = saturate(hsv2rgb(uValue.xyz));
 
         vec3 final = alphaPattern;
 
