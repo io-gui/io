@@ -9,6 +9,7 @@ export class IoTheme extends IoElement {
       --io-border-width: 1px;
       --io-stroke-width: 0.5px;
       --io-line-height: 20px;
+      --io-item-height: 28px; /* line+2*spacing+2*border */
       --io-font-size: 13px;
     }
     </style>`;

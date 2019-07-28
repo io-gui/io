@@ -53,22 +53,22 @@ class IoNumberLadder extends IoElement {
         transition: transform 0.25s;
         opacity: 0.05;
       }
-      :host > .io-up4 { transform: translateY(-4em); }
-      :host > .io-up3 { transform: translateY(-4em); }
-      :host > .io-up2 { transform: translateY(-4em); }
-      :host > .io-up1 { transform: translateY(-4em); }
+      :host > .io-up4 { transform: translateY(var(--io-item-height)); }
+      :host > .io-up3 { transform: translateY(var(--io-item-height)); }
+      :host > .io-up2 { transform: translateY(var(--io-item-height)); }
+      :host > .io-up1 { transform: translateY(var(--io-item-height)); }
       :host > .io-down1 { transform: translateY(0em); }
       :host > .io-down2 { transform: translateY(0em); }
       :host > .io-down3 { transform: translateY(0em); }
       :host > .io-down4 { transform: translateY(0em); }
-      :host[expanded] > .io-up4 { transform: translateY(-10em); }
-      :host[expanded] > .io-up3 { transform: translateY(-8em); }
-      :host[expanded] > .io-up2 { transform: translateY(-6em); }
-      :host[expanded] > .io-up1 { transform: translateY(-4em); }
-      :host[expanded] > .io-down1 { transform: translateY(0em); }
-      :host[expanded] > .io-down2 { transform: translateY(2em); }
-      :host[expanded] > .io-down3 { transform: translateY(4em); }
-      :host[expanded] > .io-down4 { transform: translateY(6em); }
+      :host[expanded] > .io-up4 { transform: translateY(calc(-5 * var(--io-item-height))); }
+      :host[expanded] > .io-up3 { transform: translateY(calc(-4 * var(--io-item-height))); }
+      :host[expanded] > .io-up2 { transform: translateY(calc(-3 * var(--io-item-height))); }
+      :host[expanded] > .io-up1 { transform: translateY(calc(-2 * var(--io-item-height))); }
+      :host[expanded] > .io-down1 { transform: translateY(calc(0 * var(--io-item-height))); }
+      :host[expanded] > .io-down2 { transform: translateY(calc(1 * var(--io-item-height))); }
+      :host[expanded] > .io-down3 { transform: translateY(calc(2 * var(--io-item-height))); }
+      :host[expanded] > .io-down4 { transform: translateY(calc(3 * var(--io-item-height))); }
       :host > span:hover {
         background-color: var(--io-background-color);
         opacity: 1;
