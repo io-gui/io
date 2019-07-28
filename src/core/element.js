@@ -71,7 +71,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
   /**
     * Renders DOM from virtual DOM arrays.
-    * @param {Array} children - Array of vDOM children.
+    * @param {Array} vDOM - Array of vDOM children.
     * @param {HTMLElement} [host] - Optional template target.
     */
   template(vDOM, host) {
@@ -286,9 +286,6 @@ export function html(parts) {
  * @return {HTMLElement} - Created element.
  */
 const constructElement = function(vDOMNode) {
-  const name = vDOMNode.name;
-  const props = vDOMNode.props;
-
   // IoElement classes constructed with constructor.
   const ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
   if (ConstructorClass && ConstructorClass.isIoElement) return new ConstructorClass(vDOMNode.props);
@@ -318,7 +315,7 @@ const setNativeElementProps = function(element, props) {
   } else {
     element.__listeners.setPropListeners(props, element);
   }
-}
+};
 
 // Creates a `<style>` element for all `static get Style()` return strings.
 function _initProtoStyle(prototypes) {
