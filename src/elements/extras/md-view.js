@@ -96,6 +96,29 @@ export class IoMdView extends IoElement {
           width: 100%;
           height: 100%;
       }
+      @keyframes spinner {
+        to {transform: rotate(360deg);}
+      }
+      :host .io-loading {
+        background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
+        background-repeat: repeat;
+        position: relative;
+      }
+      :host .io-loading:after {
+        content: '';
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        margin-top: -20px;
+        margin-left: -20px;
+        border-radius: 50%;
+        border: var(--io-border);
+        border-top-color: #000;
+        animation: spinner .6s linear infinite;
+      }
     </style>`;
   }
   static get Attributes() {

@@ -2,7 +2,7 @@
 
 Object property editor.
 
-<io-element-demo element="io-properties" properties='{"labeled": true, "horizontal": false, "value": {"number": 0.5, "string": "hello", "boolean": true, "object": {"prop": "prop"}, "array": [1, 2, 3]}, "config": {"type:boolean": ["io-switch"], "type:number": ["io-slider", {"step": 0.01}]}}' config='{"value": ["io-object"], "properties": ["io-object"], "type:object": ["io-properties"]}'></io-element-demo>
+<io-element-demo element="io-properties" properties='{"labeled": true, "horizontal": false, "value": {"number": 0.5, "string": "hello", "boolean": true, "object": {"prop": "prop"}, "array": [1, 2, 3]}, "config": {"type:number": ["io-slider", {"step": 0.01}]}}' config='{"value": ["io-object"], "properties": ["io-object"], "type:object": ["io-properties"]}'></io-element-demo>
 
 Displays a set of labeled property editors for the `value` object. It can be configured to use custom property editors and display only specified properties.
 

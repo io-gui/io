@@ -33,22 +33,25 @@ export class IoItem extends IoElement {
       :host {
         cursor: pointer;
         user-select: none;
-        background-color: var(--io-background-color);
+        -webkit-tap-highlight-color: transparent;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-wrap: nowrap;
+        white-space: nowrap;
         color: var(--io-color);
+        background-color: var(--io-background-color);
       }
       :host:hover {
         background-color: var(--io-background-color-light);
       }
       :host:focus {
+        outline: 0;
         text-overflow: inherit;
         border-color: var(--io-color-focus);
-        outline: 0;
       }
       :host[aria-invalid] {
-        text-decoration: underline;
-        text-decoration-style: dashed;
-        text-decoration-color: var(--io-color-error);
-        border-color: var(--io-color-error);
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
       }
       :host[hidden] {
         display: none;
@@ -81,27 +84,12 @@ export class IoItem extends IoElement {
     };
   }
   get textNode() {
-    this._flattenTextNode();
+    this.flattenTextNode(this);
     return this._textNode.nodeValue;
   }
   set textNode(value) {
-    this._flattenTextNode();
-    if (this._textNode.nodeValue !== String(value)) {
-      this._textNode.nodeValue = String(value);
-    }
-  }
-  _flattenTextNode() {
-    if (this.childNodes.length === 0) {
-      this.appendChild(document.createTextNode(""));
-    }
-    this._textNode = this.childNodes[0];
-    if (this.childNodes.length > 1) {
-      const textContent = this.textContent;
-      for (let i = this.childNodes.length; i--;) {
-        if (i !== 0) this.removeChild(this.childNodes[i]);
-      }
-      this._textNode.nodeValue = textContent;
-    }
+    this.flattenTextNode(this);
+    this._textNode.nodeValue = String(value);
   }
   constructor(props) {
     super(props);

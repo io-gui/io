@@ -22,6 +22,7 @@ export class IoMenuLayer extends IoElement {
         overflow: hidden;
         pointer-events: none;
         touch-action: none;
+        /* background: rgba(0, 0, 0, 0.1); */
       }
       :host[expanded] {
         visibility: visible;
@@ -29,6 +30,8 @@ export class IoMenuLayer extends IoElement {
       }
       :host > io-menu-options {
         position: absolute;
+        touch-action: none;
+        box-shadow: var(--io-shadow);
         transform: translate3d(0, 0, 0);
         top: 0;
         left: 0;
@@ -125,9 +128,7 @@ export class IoMenuLayer extends IoElement {
     }
   }
   _onOptionsExpanded(options) {
-    const parent = options.$parent;
-    const isInside = parent.$parent && parent.$parent.parentElement === this;
-    this._menuRoot = isInside ? this._menuRoot : parent;
+    this._menuRoot = options.$parent._menuRoot || options.$parent;
     this.expanded = !!this.$options.find(option => { return option.parentElement === this && option.expanded; });
   }
   _onWindowScroll() {
@@ -203,16 +204,16 @@ export class IoMenuLayer extends IoElement {
       }
     }
 
+    this._hoveredOptions = null;
+    this._hoveredItem = null;
+
     if (this.lastFocus) {
       let rect = this.lastFocus.getBoundingClientRect();
       if (rect.top < this._y && rect.bottom > this._y && rect.left < this._x && rect.right > this._x) {
-        this._hoveredItem = this.lastFocus;
-        this._focusItem(this._hoveredItem);
+        this._focusItem(this.lastFocus);
         return;
       }
     }
-    this._hoveredOptions = null;
-    this._hoveredItem = null;
   }
   _focusItem(item, force) {
     if (item !== this.__prevItem) {

@@ -4,33 +4,13 @@ export class IoTheme extends IoElement {
   static get Style() {
     return html`<style>
     body {
-      --io-spacing: 4px;
+      --io-spacing: 3px;
       --io-border-radius: 3px;
       --io-border-width: 1px;
-    }
-    /* TODO: Move */
-    @keyframes spinner {
-      to {transform: rotate(360deg);}
-    }
-    body .io-loading {
-      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
-      background-repeat: repeat;
-      position: relative;
-    }
-    body .io-loading:after {
-      content: '';
-      box-sizing: border-box;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 40px;
-      height: 40px;
-      margin-top: -20px;
-      margin-left: -20px;
-      border-radius: 50%;
-      border: var(--io-border);
-      border-top-color: #000;
-      animation: spinner .6s linear infinite;
+      --io-stroke-width: 0.5px;
+      --io-line-height: 20px;
+      --io-item-height: 28px; /* line+2*spacing+2*border */
+      --io-font-size: 13px;
     }
     </style>`;
   }
@@ -38,42 +18,50 @@ export class IoTheme extends IoElement {
     return html`<style>
     item {
       display: inline-block;
-      -webkit-tap-highlight-color: transparent;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex-wrap: nowrap;
-      white-space: nowrap;
-      height: 1.375em;
-      border: var(--io-inset-border);
+      height: var(--io-line-height);
+      font-size: var(--io-font-size);
+      line-height: var(--io-line-height);
       border-radius: var(--io-border-radius);
+      border: var(--io-inset-border);
       border-color: transparent;
+      color: var(--io-color);
       background-color: transparent;
       background-image: none;
       padding: var(--io-spacing);
+
     }
     button {
-      background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-button);
+      display: inline-block;
+      text-align: center;
+      height: var(--io-line-height);
+      font-size: var(--io-font-size);
+      line-height: var(--io-line-height);
+      border-radius: var(--io-border-radius);
       border: var(--io-outset-border);
       border-color: var(--io-outset-border-color);
-      border-radius: var(--io-border-radius);
+      color: var(--io-color);
+      background-color: var(--io-background-color-dark);
+      background-image: var(--io-gradient-button);
       padding: var(--io-spacing);
       padding-left: calc(2 * var(--io-spacing));
       padding-right: calc(2 * var(--io-spacing));
       transition: background-color 0.25s;
+
     }
     field {
-      border: var(--io-inset-border);
+      display: inline-block;
+      width: calc(4 * var(--io-line-height));
+      height: var(--io-line-height);
+      font-size: var(--io-font-size);
+      line-height: var(--io-line-height);
       border-radius: var(--io-border-radius);
+      border: var(--io-inset-border);
+      border-color: var(--io-inset-border-color);
       color: var(--io-color-field);
       background-color: var(--io-background-color-field);
       background-image: none;
-      box-shadow: var(--io-shadow-inset);
       padding: var(--io-spacing);
-      user-select: text;
-      width: 4.5em;
-      height: 1.375em;
-      min-width: 0.5em;
+      box-shadow: var(--io-shadow-inset);
     }
     panel {
       display: flex;
@@ -81,12 +69,13 @@ export class IoTheme extends IoElement {
       align-self: stretch;
       justify-self: stretch;
       align-items: flex-start;
-      border: var(--io-outset-border);
       border-radius: var(--io-border-radius);
+      border: var(--io-outset-border);
       border-color: var(--io-outset-border-color);
-      padding: var(--io-spacing);
-      background: var(--io-background-color-dark);
+      color: var(--io-color-field);
+      background-color: var(--io-background-color-dark);
       background-image: var(--io-gradient-panel);
+      padding: var(--io-spacing);
     }
     frame {
       display: flex;
@@ -94,13 +83,13 @@ export class IoTheme extends IoElement {
       align-self: stretch;
       justify-self: stretch;
       align-items: flex-start;
-      border: var(--io-inset-border);
       border-radius: var(--io-border-radius);
+      border: var(--io-inset-border);
       color: var(--io-color);
       background-color: var(--io-background-color);
       background-image: none;
-      box-shadow: var(--io-shadow-inset);
       padding: var(--io-spacing);
+      box-shadow: var(--io-shadow-inset);
     }
     content {
       display: flex;
@@ -125,6 +114,26 @@ export class IoTheme extends IoElement {
       align-self: stretch;
       justify-self: stretch;
     }
+    table2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: var(--io-spacing);
+    }
+    table3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: var(--io-spacing);
+    }
+    table4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: var(--io-spacing);
+    }
+    table5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-gap: var(--io-spacing);
+    }
     </style>`;
   }
   get dark() {
@@ -146,9 +155,11 @@ export class IoTheme extends IoElement {
 
         --io-gradient-button: linear-gradient(0deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 50%);
         --io-gradient-panel: linear-gradient(100deg, rgba(0, 0, 0, 0.25), transparent 50%), linear-gradient(280deg, rgba(255, 255, 255, 0.075), transparent 50%);
+        --io-gradient-error: repeating-linear-gradient(135deg, transparent, rgba(255, 0, 0, 0.1) 1px, rgba(255, 0, 0, 0.1) 4px, transparent 6px);
 
         --io-border-color: rgb(140, 140, 140);
         --io-border: var(--io-border-width) solid var(--io-border-color);
+        --io-border-error: var(--io-border-width) solid var(--io-color-error);
         --io-inset-border-color: rgb(140, 140, 140) var(--io-border-color) var(--io-border-color) rgb(140, 140, 140);
         --io-inset-border: var(--io-border-width) inset var(--io-border-color);
         --io-outset-border-color: var(--io-border-color) rgb(32, 32, 32) rgb(32, 32, 32) var(--io-border-color);
@@ -179,9 +190,11 @@ export class IoTheme extends IoElement {
 
         --io-gradient-button: linear-gradient(0deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 75%);
         --io-gradient-panel: linear-gradient(100deg, rgba(0, 0, 0, 0.15), transparent 75%), linear-gradient(280deg, rgba(255, 255, 255, 0.25), transparent 75%);
+        --io-gradient-error: repeating-linear-gradient(135deg, transparent, rgba(255, 0, 0, 0.1) 1px, rgba(255, 0, 0, 0.1) 4px, transparent 6px);
 
         --io-border-color: rgb(180, 180, 180);
         --io-border: var(--io-border-width) solid var(--io-border-color);
+        --io-border-error: var(--io-border-width) solid var(--io-color-error);
         --io-inset-border-color: rgb(220, 220, 220) var(--io-border-color) var(--io-border-color) rgb(220, 220, 220);
         --io-inset-border: var(--io-border-width) inset var(--io-border-color);
         --io-outset-border-color: var(--io-border-color) rgb(210, 210, 210) rgb(210, 210, 210) var(--io-border-color);
@@ -218,7 +231,7 @@ export class IoTheme extends IoElement {
     document.head.appendChild(this.mixinsElement);
   }
   themeChanged() {
-    this.styleElement.innerHTML = this[this.theme].string;
+    this.styleElement.innerHTML = this[this.theme];
     setTimeout(() => {
       this.updatePropertiesFromCSS();
     });
@@ -247,13 +260,17 @@ IoTheme.Register = function() {
   IoElement.Register.call(this);
   let mixins = '';
   for (let i = this.prototype.__protochain.length; i--;) {
-    const style = this.prototype.__protochain[i].constructor.Mixins;
-    if (style) {
+    const styleString = this.prototype.__protochain[i].constructor.Mixins;
+    if (styleString) {
       // TODO: improve CSS parsing to support comments etc.
-      const match = Array.from(style.string.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
+      // const match = Array.from(styleString.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
+      const match = Array.from(styleString.match(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
       for (let j = 0; j < match.length; j++) {
-        const name = match[j][1].replace(/\s/g, '');
-        const value = match[j][2];
+        // console.log(, match[j].split('{')[1].replace('}', ''));
+        // console.log(match[j][1], match[j][2]);
+        // console.log(i, match[j].split('{'));
+        const name = match[j].split('{')[0].replace(/\s/g, '');
+        const value = match[j].split('{')[1].replace('}', '');
         Object.defineProperty(this.prototype, name, {value: value});
         mixins += `.io-${name} {\n${value}\n}\n`;
       }

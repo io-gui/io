@@ -70,10 +70,15 @@ export class IoSliderKnob extends IoGl {
         justify-self: stretch
       }
       :host[aria-invalid] {
-        outline: 1px solid var(--io-color-focus);
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
+      }
+      :host[aria-invalid] > img {
+        opacity: 0;
       }
       :host:focus {
-        outline: 1px solid var(--io-color-focus);
+        outline: 0;
+        border-color: var(--io-color-focus);
       }
     </style>`;
   }

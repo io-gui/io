@@ -81,7 +81,6 @@ export class IoGl extends IoElement {
       :host {
         overflow: hidden !important;
         position: relative !important;
-        border: 0 !important;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
       }
@@ -219,9 +218,10 @@ export class IoGl extends IoElement {
   }
   onResized() {
     const rect = this.getBoundingClientRect();
+    const borderWidth = parseFloat(getComputedStyle(this).borderWidth);
     const pxRatio = window.devicePixelRatio;
-    const width = Math.ceil(rect.width * pxRatio);
-    const height = Math.ceil(rect.height * pxRatio);
+    const width = Math.ceil((rect.width - borderWidth * 2) * pxRatio);
+    const height = Math.ceil((rect.height - borderWidth * 2) * pxRatio);
     this.setProperties({
       size: [width, height],
       aspect: width / height,

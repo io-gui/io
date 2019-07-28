@@ -5,18 +5,21 @@ export class IoHsvaHue extends IoGl {
   static get Style() {
     return html`<style>
       :host {
+        border-radius: var(--io-border-radius);
+        border: var(--io-inset-border);
+        min-width: var(--io-line-height);
+        min-height: var(--io-line-height);
         cursor: ns-resize;
-        min-width: 32px;
-        min-height: 1.375em;
       }
       :host[horizontal] {
         cursor: ew-resize;
       }
       :host[aria-invalid] {
-        outline: 1px solid var(--io-color-error);
+        border: var(--io-border-error);
       }
       :host:focus {
-        outline: 1px solid var(--io-color-focus);
+        outline: 0;
+        border-color: var(--io-color-focus);
       }
     </style>`;
   }

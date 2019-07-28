@@ -8,8 +8,9 @@ export class IoHsvaSwatch extends IoGl {
       :host {
         cursor: pointer;
         border-radius: var(--io-border-radius);
-        min-width: 32px;
-        min-height: 1.375em;
+        border: var(--io-inset-border);
+        width: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
+        height: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
       }
       :host[aria-invalid] {
         outline: 1px solid var(--io-color-focus);
@@ -53,7 +54,7 @@ export class IoHsvaSwatch extends IoGl {
         if (pxUv.x > uSize.x - lineWidth) alpha = 1.0;
         if (pxUv.y > uSize.y - lineWidth) alpha = 1.0;
 
-        gl_FragColor = vec4(mix(alphaPattern, hsv2rgb(uValue.xyz), alpha), 1.0);
+        gl_FragColor = vec4(mix(alphaPattern, hsv2rgb(uValue.xyz), saturate(alpha)), 1.0);
       }
     `;
   }

@@ -48,8 +48,6 @@ export const IoNodeMixin = (superclass) => {
         this[this.__functions[i]] = this[this.__functions[i]].bind(this);
       }
 
-      this.__listeners.setPropListeners(initProps, this);
-
       this.setProperties(initProps);
     }
     /**
@@ -95,7 +93,6 @@ export const IoNodeMixin = (superclass) => {
       if (compose) {
         for (let prop in compose) {
           this[prop].setProperties(compose[prop]);
-          this[prop].__listeners.setPropListeners(compose[prop], this);
         }
       }
     }
@@ -143,6 +140,9 @@ export const IoNodeMixin = (superclass) => {
           this.style.setProperty(s, props['style'][s]);
         }
       }
+
+      this.__listeners.setPropListeners(props, this);
+
       if (this.__connected) this.queueDispatch();
     }
     /**

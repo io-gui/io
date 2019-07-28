@@ -8,12 +8,13 @@ export class IoElementDemo extends IoElement {
         ${mixin.panel}
       }
       :host > io-boolean {
-        cursor: pointer !important;
         align-self: stretch;
+        width: auto;
+        text-align: left;
       }
-      :host > .icon {
-        margin-top: 0.2em;
-        margin-bottom: -1.55em;
+      :host > io-icon {
+        margin-top: 0.3em;
+        margin-bottom: -1.75em;
         display: inline-block;
         padding: 0 0.5em;
         margin-left: auto;
@@ -23,7 +24,8 @@ export class IoElementDemo extends IoElement {
       }
       :host > io-properties {
         align-self: stretch;
-        padding: var(--io-spacing);
+        padding: var(--io-spacing) 0;
+        margin-bottom: calc(2 * var(--io-spacing));
       }
     </style>`;
   }
@@ -101,12 +103,12 @@ export class IoElementDemo extends IoElement {
       const hasProps = !!Object.keys(this.properties).length;
       const label = '<' + this.element + '>';
       this.template([
-        hasProps ? ['span', {class: 'icon'}, '🔧'] : null,
+        hasProps ? ['io-icon', {icon: 'icons:gear'}] : null,
         ['io-boolean', {class: 'io-item', value: this.bind('expanded'), true: label, false: label}],
         (hasProps && this.expanded) ?
         ['io-properties', {value: this.properties, config: Object.assign({
             'type:number': ['io-number', {ladder: true}],
-            'type:boolean': ['io-switch'],
+            'type:boolean': ['io-boolean', {display: 'switch'}],
           }, this.config)}] : null,
         ['div', {class: 'io-frame'}, [
           [this.element, Object.assign({'on-value-set': this._onPropSet, 'id': 'demo-element'}, this.properties)],

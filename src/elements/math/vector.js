@@ -23,13 +23,6 @@ export class IoVector extends IoElement {
       :host > .io-slot > * {
         flex: 0 0 auto;
       }
-      :host io-boolean {
-        border-color: transparent;
-        background: none;
-      }
-      :host io-boolean:not([value]) {
-        opacity: 0.25;
-      }
     </style>`;
   }
   static get Properties() {
@@ -94,7 +87,7 @@ export class IoVector extends IoElement {
     this.template(elements);
   }
   getSlotted() {
-    return this.linkable ? ['io-boolean', {value: this.bind('linked'), true: '🔗', false: '🔗'}] : null;
+    return this.linkable ? ['io-boolean', {display: "icon", value: this.bind('linked'), trueicon: 'icons:link', falseicon: 'icons:unlink'}] : null;
   }
 }
 

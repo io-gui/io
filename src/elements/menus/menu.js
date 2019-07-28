@@ -10,6 +10,7 @@ export class IoMenu extends IoElement {
       expanded: Boolean,
       position: 'pointer',
       button: 0,
+      selectable: false,
       $options: IoMenuOptions,
     };
   }
@@ -18,6 +19,7 @@ export class IoMenu extends IoElement {
       $options: {
         $parent: this,
         expanded: this.bind('expanded'),
+        selectable: this.bind('selectable'),
         options: this.options,
         position: this.position,
         'on-io-menu-item-clicked': this._onMenuItemClicked,

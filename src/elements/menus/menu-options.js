@@ -1,5 +1,5 @@
 import {IoElement, html} from "../../io.js";
-import {IoLayerSingleton} from "../../io-elements-core.js";
+import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import "./menu-item.js";
 
@@ -7,20 +7,19 @@ export class IoMenuOptions extends IoElement {
   static get Style() {
     return html`<style>
       :host {
+        ${mixin.panel}
+      }
+      :host {
         display: flex;
         flex-direction: column;
+        align-items: stretch;
         white-space: nowrap;
         user-select: none;
-        touch-action: none;
-        background: var(--io-background-color-light);
-        color: var(--io-color);
-        border-radius: var(--io-border-radius);
-        border: var(--io-outset-border);
-        border-color: var(--io-outset-border-color);
-        box-shadow: var(--io-shadow);
+        background-image: none;
+        padding: 0;
       }
       :host:not([horizontal]) {
-        padding: calc(2 * var(--io-spacing)) 0;
+        padding: var(--io-spacing) 0;
       }
       :host:not([expanded]) {
         visibility: hidden;
@@ -76,6 +75,7 @@ export class IoMenuOptions extends IoElement {
     return {
       options: Array,
       position: 'right',
+      selectable: false,
       value: {
         value: null,
         notify: true,
@@ -206,6 +206,7 @@ export class IoMenuOptions extends IoElement {
         option: option,
         value: this.value,
         direction: itemDirection,
+        selectable: this.selectable,
         _depth: this._depth + 1,
       }]
     )];
@@ -215,6 +216,7 @@ export class IoMenuOptions extends IoElement {
         label: '☰',
         title: 'select tab',
         value: this.value,
+        selectable: this.selectable,
         class: 'io-hamburger',
         _depth: this._depth,
       }]);
