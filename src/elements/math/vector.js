@@ -40,7 +40,7 @@ export class IoVector extends IoElement {
   _onValueSet(event) {
     const item = event.composedPath()[0];
     const prop = item.id;
-    if (prop !== null) {
+    if (prop !== null) { //TODO: is this necessary?
       const value = event.detail.value;
       const oldValue = event.detail.oldValue;
       this.value[prop] = value;
