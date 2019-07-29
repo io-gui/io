@@ -63,9 +63,6 @@ export class IoVector extends IoElement {
   valueChanged() {
     this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['x', 'y', 'z', 'w'];
   }
-  insertTrailingElement() {
-
-  }
   changed() {
     const elements = [];
     for (let i in this._c) {
