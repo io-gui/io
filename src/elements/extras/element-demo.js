@@ -72,8 +72,7 @@ export class IoElementDemo extends IoElement {
       oldValue: event.detail.oldValue,
     }, false, window);
   }
-  _onObjectMutation(event) {
-    super._onObjectMutation(event);
+  propMutated(prop) {
     for (let p in this.properties) {
       if (typeof this.properties[p] === 'object') {
         this._bubbleMutation(this.properties[p], this.properties, event.detail.object);

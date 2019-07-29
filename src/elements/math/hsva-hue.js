@@ -117,9 +117,27 @@ export class IoHsvaHue extends IoGl {
     const x = Math.max(0, Math.min(1, (pointer.clientX - rect.x) / rect.width));
     const y = Math.max(0, Math.min(1, (pointer.clientY - rect.y) / rect.height));
     this._setHSVA(x, y);
+    // TODO: debounce!
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
     this.changed();
+    // if (!this._t) {
+    //   this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+    //   this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
+    //   this.changed();
+    //   this._t = true;
+    //   requestAnimationFrame(() => {
+    //     this._t = false;
+    //   });
+    // } else {
+    //   cancelAnimationFrame(this._raf);
+    //   this._raf = requestAnimationFrame(() => {
+    //     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+    //     this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
+    //     this.changed();
+    //     this._t = false;
+    //   })
+    // }
   }
   _setHSVA(x, y) {
     this.value[this._c[0]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));

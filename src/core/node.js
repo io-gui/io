@@ -145,25 +145,25 @@ export const IoNodeMixin = (superclass) => {
 
       if (this.__connected) this.queueDispatch();
     }
-    /**
-      * This function is called when `object-mutated` event is observed
-      * and changed object is a property of the node.
-      * @param {Object} event - Property change event.
-      */
     _onObjectMutation(event) {
       for (let i = this.__objectProps.length; i--;) {
         const prop = this.__objectProps[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
-          // TODO: consider optimizing
-          // setTimeout(()=> {
-            if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
-            this.changed();
-            this.applyCompose();
-          // });
-          return;
+          debounce(this._onObjectMutationDebounced, prop);
         }
       }
+    }
+    /**
+      * This function is called when `object-mutated` event is observed
+      * and changed object is a property of the node.
+      * @param {string} prop - Mutated object property name.
+      */
+    _onObjectMutationDebounced(prop) {
+      if (this['propMutated']) this['propMutated'](prop);
+      if (this[prop + 'Mutated']) this[prop + 'Mutated']();
+      this.changed();
+      this.applyCompose();
     }
     /**
       * Callback when `IoNode` is connected.
@@ -305,6 +305,31 @@ const Register = function () {
 };
 
 IoNodeMixin.Register = Register;
+
+const debouncePreQueue = new Array();
+const debounceQueue = new Array();
+const debouncePropQueue = new Array();
+const animate = function() {
+  requestAnimationFrame(animate);
+  for (let i = debounceQueue.length; i--;) {
+    debounceQueue[i](debouncePropQueue[i]);
+  }
+  debounceQueue.length = 0;
+  debouncePreQueue.length = 0;
+  debouncePropQueue.length = 0;
+};
+requestAnimationFrame(animate);
+
+// TODO: make debounce work with multi-prop mutations!
+function debounce(func, prop) {
+  if (debouncePreQueue.indexOf(func) === -1) {
+    debouncePreQueue.push(func);
+    func(prop);
+  } else if (debounceQueue.indexOf(func) === -1) {
+    debounceQueue.push(func);
+    debouncePropQueue.push(prop);
+  }
+}
 
 /**
   * IoNodeMixin applied to `Object` class.
