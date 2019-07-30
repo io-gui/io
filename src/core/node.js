@@ -150,7 +150,7 @@ export const IoNodeMixin = (superclass) => {
         const prop = this.__objectProps[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
-          debounce(this._onObjectMutationDebounced, prop);
+          this.debounce(this._onObjectMutationDebounced, prop);
         }
       }
     }
@@ -245,6 +245,27 @@ export const IoNodeMixin = (superclass) => {
     queueDispatch() {
       this.__nodeQueue.dispatch();
     }
+    /**
+      * Debounces function execution to next frame (rAF) if the function has been executed in current frame.
+      * This helps unblocking the main thread if excessive function invocation happens. 
+      */
+    debounce(func, arg) {
+      if (preDebounceQueue.indexOf(func) === -1) {
+        preDebounceQueue.push(func);
+        func(arg);
+        return;
+      }
+      if (debounceQueue.indexOf(func) === -1) {
+        debounceQueue.push(func);
+      }
+      // TODO: improve argument handling. Consider edge-cases.
+      if (argQueue.has(func) && typeof arg !== 'object') {
+        const queue = argQueue.get(func);
+        if (queue.indexOf(arg) === -1) queue.push(arg);
+      } else {
+        argQueue.set(func, [arg]);
+      }
+    }
   };
   classConstructor.Register = Register;
   return classConstructor;
@@ -306,30 +327,23 @@ const Register = function () {
 
 IoNodeMixin.Register = Register;
 
-const debouncePreQueue = new Array();
+const preDebounceQueue = new Array();
 const debounceQueue = new Array();
-const debouncePropQueue = new Array();
+const argQueue = new WeakMap();
+
 const animate = function() {
   requestAnimationFrame(animate);
   for (let i = debounceQueue.length; i--;) {
-    debounceQueue[i](debouncePropQueue[i]);
+    const queue = argQueue.get(debounceQueue[i]);
+    for (let p = queue.length; p--;) {
+      debounceQueue[i](queue[p]);
+    }
+    queue.length = 0;
   }
   debounceQueue.length = 0;
-  debouncePreQueue.length = 0;
-  debouncePropQueue.length = 0;
+  preDebounceQueue.length = 0;
 };
 requestAnimationFrame(animate);
-
-// TODO: make debounce work with multi-prop mutations!
-function debounce(func, prop) {
-  if (debouncePreQueue.indexOf(func) === -1) {
-    debouncePreQueue.push(func);
-    func(prop);
-  } else if (debounceQueue.indexOf(func) === -1) {
-    debounceQueue.push(func);
-    debouncePropQueue.push(prop);
-  }
-}
 
 /**
   * IoNodeMixin applied to `Object` class.

@@ -111,7 +111,7 @@ export class IoHsvaHue extends IoGl {
   _onPointerdown(event) {
     this._onPointermove(event);
   }
-  _onPointermove(event) {
+  _onPointermoveDebounced(event) {
     const pointer = event.changedTouches ? event.changedTouches[0] : event;
     const rect = this.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (pointer.clientX - rect.x) / rect.width));
@@ -121,23 +121,9 @@ export class IoHsvaHue extends IoGl {
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
     this.changed();
-    // if (!this._t) {
-    //   this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    //   this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
-    //   this.changed();
-    //   this._t = true;
-    //   requestAnimationFrame(() => {
-    //     this._t = false;
-    //   });
-    // } else {
-    //   cancelAnimationFrame(this._raf);
-    //   this._raf = requestAnimationFrame(() => {
-    //     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    //     this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
-    //     this.changed();
-    //     this._t = false;
-    //   })
-    // }
+  }
+  _onPointermove(event) {
+    this.debounce(this._onPointermoveDebounced, event);
   }
   _setHSVA(x, y) {
     this.value[this._c[0]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));

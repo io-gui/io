@@ -141,6 +141,9 @@ export class IoSliderKnob extends IoGl {
     this._active = -1;
   }
   _onPointermove(event) {
+    this.debounce(this._onPointermoveDebounced, event);
+  }
+  _onPointermoveDebounced(event) {
     const pointer = event.changedTouches ? event.changedTouches[0] : event;
 
     const dx = Math.abs(this._x - pointer.clientX);
