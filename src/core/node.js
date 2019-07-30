@@ -246,8 +246,7 @@ export const IoNodeMixin = (superclass) => {
       this.__nodeQueue.dispatch();
     }
     /**
-      * Debounces function execution to next frame (rAF) if the function has been executed in current frame.
-      * This helps unblocking the main thread if excessive function invocation happens. 
+      * Debounces function execution to next frame (rAF) if the function has been executed in the current frame.
       */
     debounce(func, arg) {
       if (preDebounceQueue.indexOf(func) === -1) {
@@ -332,16 +331,18 @@ const debounceQueue = new Array();
 const argQueue = new WeakMap();
 
 const animate = function() {
-  requestAnimationFrame(animate);
+  for (let i = preDebounceQueue.length; i--;) {
+    preDebounceQueue.splice(preDebounceQueue.indexOf(preDebounceQueue[i]), 1);
+  }
   for (let i = debounceQueue.length; i--;) {
     const queue = argQueue.get(debounceQueue[i]);
     for (let p = queue.length; p--;) {
       debounceQueue[i](queue[p]);
+      queue.splice(queue.indexOf(p), 1);
     }
-    queue.length = 0;
+    debounceQueue.splice(debounceQueue.indexOf(debounceQueue[i]), 1);
   }
-  debounceQueue.length = 0;
-  preDebounceQueue.length = 0;
+  requestAnimationFrame(animate);
 };
 requestAnimationFrame(animate);
 
