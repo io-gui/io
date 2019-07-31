@@ -247,6 +247,8 @@ export const IoNodeMixin = (superclass) => {
     }
     /**
       * Debounces function execution to next frame (rAF) if the function has been executed in the current frame.
+      * @param {function} func - Function to debounce.
+      * @param {*} arg - argument for debounced function.
       */
     debounce(func, arg) {
       if (preDebounceQueue.indexOf(func) === -1) {

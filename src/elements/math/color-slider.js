@@ -144,6 +144,7 @@ export class IoColorSlider extends IoGl {
     this.debounce(this._onPointermoveDebounced, event);
   }
   _setValue(x, y) {
+    x, y;
     // NOTE: implement in subclass
   }
 }

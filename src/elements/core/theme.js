@@ -1,6 +1,6 @@
 import {IoElement, html, IoStorage as $} from "../../io.js";
 
-const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches
+const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 export class IoTheme extends IoElement {
   static get Style() {
@@ -226,7 +226,6 @@ export class IoTheme extends IoElement {
       cssColorLink: [1, 1, 1, 1],
       cssColorFocus: [1, 1, 1, 1],
       cssColorField: [1, 1, 1, 1],
-      cssBorderWidth: 1,
     };
   }
   constructor(props) {
@@ -273,7 +272,6 @@ export class IoTheme extends IoElement {
       cssColorLink: this.getCssRgba(cs, '--io-color-link'),
       cssColorFocus: this.getCssRgba(cs, '--io-color-focus'),
       cssColorField: this.getCssRgba(cs, '--io-color-field'),
-      cssBorderWidth: this.getCssFloat(cs, '--io-border-width'),
     });
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }

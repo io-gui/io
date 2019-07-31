@@ -1,4 +1,3 @@
-import {html} from "../../io.js";
 import {chunk} from "../../io-elements-core.js";
 import {IoColorSlider} from "./color-slider.js";
 
