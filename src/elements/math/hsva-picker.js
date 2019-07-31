@@ -18,7 +18,7 @@ export class IoHsvaPicker extends IoElement {
       :host[horizontal] {
         flex-direction: row;
       }
-      :host > io-hsva-sv {
+      :host > io-color-slider-sv {
         flex: 1 1;
       }
       :host > *:not(:last-child) {
@@ -46,9 +46,9 @@ export class IoHsvaPicker extends IoElement {
   changed() {
     const hasAlpha = this.value[3] !== undefined || this.value.a !== undefined;
     this.template([
-      ['io-hsva-sv', {value: this.value}],
-      ['io-hsva-hue', {value: this.value, horizontal: !this.horizontal}],
-      hasAlpha ? ['io-hsva-alpha', {value: this.value, horizontal: !this.horizontal}] : null,
+      ['io-color-slider-sv', {value: this.value}],
+      ['io-color-slider-hue', {value: this.value, horizontal: !this.horizontal}],
+      hasAlpha ? ['io-color-slider-alpha', {value: this.value, horizontal: !this.horizontal}] : null,
     ]);
   }
 }

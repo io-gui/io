@@ -1,5 +1,5 @@
 import {html} from "../../io.js";
-import {IoLayerSingleton, IoGl} from "../../io-elements-core.js";
+import {IoLayerSingleton, IoGl, chunk} from "../../io-elements-core.js";
 import {IoRgbaPicker} from "./rgba-picker.js";
 
 export class IoRgbaSwatch extends IoGl {
@@ -36,23 +36,26 @@ export class IoRgbaSwatch extends IoGl {
     return /* glsl */`
       varying vec2 vUv;
 
+      ${chunk.checker}
+
       void main(void) {
-        float tileSize = uSize.x / 32.0;
-        tileSize = max(1.0, tileSize - mod(tileSize, 1.0));
-        tileSize *= 5.0;
-        vec2 alphaPos = floor(vUv * vec2(tileSize, tileSize / uAspect));
-        float alphaMask = mod(alphaPos.x + mod(alphaPos.y, 2.0), 2.0);
-        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), alphaMask);
+        vec2 position = vUv * uSize;
+
+        // Alpha pattern
+        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 5.0));
+        vec3 finalColor = uValue.rgb;
 
         float alpha = uValue.a;
+        float lineWidth = cssStrokeWidth * 2.0;
+
         vec2 pxUv = vUv * uSize;
-        float lineWidth = 4.0;
         if (pxUv.x < lineWidth) alpha = 1.0;
         if (pxUv.y < lineWidth) alpha = 1.0;
         if (pxUv.x > uSize.x - lineWidth) alpha = 1.0;
         if (pxUv.y > uSize.y - lineWidth) alpha = 1.0;
+        finalColor = mix(alphaPattern, finalColor, saturate(alpha));
 
-        gl_FragColor = vec4(mix(alphaPattern, uValue.rgb, saturate(alpha)), 1.0);
+        gl_FragColor = vec4(finalColor, 1.0);
       }
     `;
   }

@@ -31,10 +31,15 @@ import "./io-elements-core.js";
 export {IoVector} from "./elements/math/vector.js";
 export {IoMatrix} from "./elements/math/matrix.js";
 
+export {IoColorSlider} from "./elements/math/color-slider.js";
+export {IoColorSliderHue} from "./elements/math/color-slider-hue.js";
+export {IoColorSliderSaturation} from "./elements/math/color-slider-saturation.js";
+export {IoColorSliderValue} from "./elements/math/color-slider-value.js";
+export {IoColorSliderHs} from "./elements/math/color-slider-hs.js";
+export {IoColorSliderSv} from "./elements/math/color-slider-sv.js";
+export {IoColorSliderAlpha} from "./elements/math/color-slider-alpha.js";
+
 export {IoHsva} from "./elements/math/hsva.js";
-export {IoHsvaSv} from "./elements/math/hsva-sv.js";
-export {IoHsvaHue} from "./elements/math/hsva-hue.js";
-export {IoHsvaAlpha} from "./elements/math/hsva-alpha.js";
 export {IoHsvaSwatch} from "./elements/math/hsva-swatch.js";
 export {IoHsvaPicker} from "./elements/math/hsva-picker.js";
 

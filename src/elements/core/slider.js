@@ -1,5 +1,6 @@
 import {html, IoElement} from "../../io.js";
-import {IoGl, chunk} from "./gl.js";
+import {IoGl} from "./gl.js";
+import {chunk} from "./gl-chunk.js";
 
 export class IoSlider extends IoElement {
   static get Style() {
@@ -249,6 +250,7 @@ export class IoSliderKnob extends IoGl {
 
     ${chunk.translate}
     ${chunk.circle}
+    ${chunk.rectangle}
     ${chunk.grid}
 
     varying vec2 vUv;
@@ -257,30 +259,40 @@ export class IoSliderKnob extends IoGl {
       vec2 position = vUv * uSize;
 
       vec4 finalColor = cssBackgroundColorField;
-      vec4 slotColorBg = mix(cssColor, cssBackgroundColorField, 0.5);
-      vec4 stepColorBg = mix(slotColorBg, cssBackgroundColorField, 0.75);
-      vec4 slotColor = mix(cssColorFocus, cssColorLink, vUv.x);
+      vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
+      vec4 slotColor = mix(cssColor, cssBackgroundColorField, 0.125);
+      vec4 slotGradient = mix(cssColorFocus, cssColorLink, vUv.x);
 
-      float lineWidth = cssBorderWidth;
-      float slotWidth = cssBorderWidth;
+      float stepWidth = cssStrokeWidth * 1.0;
+      float slotWidth = cssStrokeWidth * 2.0;
 
       float stepInPx = uSize.x / ((uMax - uMin) / uStep);
 
-      if (stepInPx > lineWidth * 2.0) {
+      if (stepInPx > stepWidth * 2.0) {
         float gridWidth = uSize.x / ((uMax - uMin) / uStep);
         float gridOffset = mod(uMin, uStep) / (uMax - uMin) * uSize.x;
-        float gridShape = grid(translate(position, - gridOffset, 0.0), gridWidth, uSize.y, lineWidth);
+        float gridShape = grid(translate(position, - gridOffset, 0.0), gridWidth, uSize.y, stepWidth);
         finalColor = mix(stepColorBg, finalColor, gridShape);
       }
 
       float valueInRange = (uValue - uMin) / (uMax - uMin);
       float valueField = saturate((vUv.x - valueInRange) * uSize.x);
-      float slotField = saturate((abs(0.5 - vUv.y)) * uSize.y - slotWidth);
+      float slotField = saturate(((abs(0.5 - vUv.y)) * uSize.y - slotWidth) * 2.0);
 
-      finalColor = mix(mix(slotColor, slotColorBg, valueField), finalColor, slotField);
+      finalColor = mix(slotColor, finalColor, slotField);
 
-      float circleShape = circle(translate(position, valueInRange * uSize.x, 0.5 * uSize.y), uSize.y / 4.0);
-      finalColor = mix(slotColor, finalColor, circleShape);
+      float knobRadius = uSize.y / 4.0;
+      vec2 circlePos = translate(position, valueInRange * uSize.x, 0.5 * uSize.y);
+      float circleStrokeShape = circle(circlePos, knobRadius + cssStrokeWidth);
+      finalColor = mix(slotColor, finalColor, circleStrokeShape);
+
+      float circleShape = circle(circlePos, knobRadius);
+      finalColor = mix(slotGradient, finalColor, circleShape);
+
+      float rectSize = valueInRange * uSize.x * 0.5;
+      vec2 rectPos = translate(position, rectSize, 0.5 * uSize.y);
+      float rectShape = rectangle(rectPos, vec2(rectSize, slotWidth - cssStrokeWidth));
+      finalColor = mix(slotGradient, finalColor, rectShape);
 
       gl_FragColor = finalColor;
     }`;

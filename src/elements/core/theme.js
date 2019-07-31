@@ -1,5 +1,7 @@
 import {IoElement, html, IoStorage as $} from "../../io.js";
 
+const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches
+
 export class IoTheme extends IoElement {
   static get Style() {
     return html`<style>
@@ -7,7 +9,7 @@ export class IoTheme extends IoElement {
       --io-spacing: 3px;
       --io-border-radius: 3px;
       --io-border-width: 1px;
-      --io-stroke-width: 0.5px;
+      --io-stroke-width: 1px;
       --io-line-height: 20px;
       --io-item-height: 28px; /* line+2*spacing+2*border */
       --io-font-size: 13px;
@@ -208,12 +210,22 @@ export class IoTheme extends IoElement {
   }
   static get Properties() {
     return {
-      theme: $('theme', 'light'),
+      theme: $('theme', isDarkMode ? 'dark' : 'light'),
+      cssSpacing: 0,
+      cssBorderRadius: 0,
+      cssBorderWidth: 0,
+      cssStrokeWidth: 0,
+      cssLineHeight: 0,
+      cssItemHeight: 0,
       cssBackgroundColor: [0, 0, 0, 1],
+      cssBackgroundColorLight: [0, 0, 0, 1],
+      cssBackgroundColorDark: [0, 0, 0, 1],
       cssBackgroundColorField: [0, 0, 0, 1],
       cssColor: [1, 1, 1, 1],
+      cssColorError: [1, 1, 1, 1],
       cssColorLink: [1, 1, 1, 1],
       cssColorFocus: [1, 1, 1, 1],
+      cssColorField: [1, 1, 1, 1],
       cssBorderWidth: 1,
     };
   }
@@ -246,12 +258,22 @@ export class IoTheme extends IoElement {
   updatePropertiesFromCSS() {
     const cs = getComputedStyle(document.body);
     this.setProperties({
-      cssColor: this.getCssRgba(cs, '--io-color'),
-      cssBackgroundColor: this.getCssRgba(cs, '--io-background-color'),
-      cssBackgroundColorField: this.getCssRgba(cs, '--io-background-color-field'),
+      cssSpacing: this.getCssFloat(cs, '--io-spacing'),
+      cssBorderRadius: this.getCssFloat(cs, '--io-border-radius'),
       cssBorderWidth: this.getCssFloat(cs, '--io-border-width'),
+      cssStrokeWidth: this.getCssFloat(cs, '--io-stroke-width'),
+      cssLineHeight: this.getCssFloat(cs, '--io-line-height'),
+      cssItemHeight: this.getCssFloat(cs, '--io-item-height'),
+      cssBackgroundColor: this.getCssRgba(cs, '--io-background-color'),
+      cssBackgroundColorLight: this.getCssRgba(cs, '--io-background-color-light'),
+      cssBackgroundColorDark: this.getCssRgba(cs, '--io-background-color-dark'),
+      cssBackgroundColorField: this.getCssRgba(cs, '--io-background-color-field'),
+      cssColor: this.getCssRgba(cs, '--io-color'),
+      cssColorError: this.getCssRgba(cs, '--io-color-error'),
       cssColorLink: this.getCssRgba(cs, '--io-color-link'),
       cssColorFocus: this.getCssRgba(cs, '--io-color-focus'),
+      cssColorField: this.getCssRgba(cs, '--io-color-field'),
+      cssBorderWidth: this.getCssFloat(cs, '--io-border-width'),
     });
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }

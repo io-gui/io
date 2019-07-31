@@ -1,7 +1,7 @@
 import {html} from "../../io.js";
 import {IoGl, chunk} from "../../io-elements-core.js";
 
-export class IoHsvaHue extends IoGl {
+export class IoColorSlider extends IoGl {
   static get Style() {
     return html`<style>
       :host {
@@ -31,11 +31,16 @@ export class IoHsvaHue extends IoGl {
   }
   static get Properties() {
     return {
-      value: [0.5, 0.5, 0.5, 1],
+      value: [1, 1, 1, 1],
       horizontal: {
         value: false,
         reflect: 1,
-      }
+      },
+      // 0 - rgb
+      // 1 - hsv
+      // 2 - hsl
+      // 3 - cmyk
+      colorMode: 0,
     };
   }
   static get Frag() {
@@ -46,21 +51,17 @@ export class IoHsvaHue extends IoGl {
       ${chunk.hsv2rgb}
 
       void main(void) {
-
-        float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
-
-        // Hue spectrum
-        vec3 final = hsv2rgb(vec3(axis, 1.0, 1.0));
-
-        // Hue marker
-        float lineWidth = 4.0;
-      	float hueMarkerOffset = abs(axis - uValue[0]) * ((uHorizontal == 1) ? uSize.x : uSize.y);
-        float dist = hueMarkerOffset - lineWidth;
-        float dist2 = hueMarkerOffset - (lineWidth + 1.0);
-        final = mix(final, cssColor.rgb, saturate(1.0 - dist2));
-        final = mix(final, cssBackgroundColor.rgb, saturate(1.0 - dist));
-
-        gl_FragColor = vec4(final, 1.0);
+        vec3 finalColor = uValue.rgb;
+        float alpha = uValue.a;
+        if (uColorMode == 1.0) {
+          finalColor = hsv2rgb(uValue.xyz);
+        } else if (uColorMode == 2.0) {
+          // finalColor = hsl2rgb(uValue.xyz);
+        } else if (uColorMode == 3.0) {
+          // finalColor = cmyk2rgb(uValue);
+          alpha = 1.0;
+        }
+        gl_FragColor = saturate(vec4(finalColor, alpha));
       }
     `;
   }
@@ -72,7 +73,25 @@ export class IoHsvaHue extends IoGl {
     };
   }
   valueChanged() {
-    this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['h', 's', 'v', 'a'];
+    const c = new Array();
+    if (this.value instanceof Array) {
+      for (let i = 0; i < this.value.length; i++) c.push(i);
+    }
+    if (typeof this.value === 'object') {
+      if (this.value.r !== undefined) c.push('r');
+      if (this.value.g !== undefined) c.push('g');
+      if (this.value.b !== undefined) { c.push('b'); this.colorMode = 0; }
+      if (this.value.h !== undefined) c.push('h');
+      if (this.value.s !== undefined) c.push('s');
+      if (this.value.v !== undefined) { c.push('v'); this.colorMode = 1; }
+      if (this.value.l !== undefined) { c.push('l'); this.colorMode = 2; }
+      if (this.value.c !== undefined) c.push('c');
+      if (this.value.m !== undefined) c.push('m');
+      if (this.value.y !== undefined) c.push('y');
+      if (this.value.k !== undefined) { c.push('k'); this.colorMode = 3; }
+      if (this.value.a !== undefined) c.push('a');
+    }
+    this._c = c;
   }
   _onTouchstart(event) {
     event.preventDefault();
@@ -116,8 +135,7 @@ export class IoHsvaHue extends IoGl {
     const rect = this.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (pointer.clientX - rect.x) / rect.width));
     const y = Math.max(0, Math.min(1, (pointer.clientY - rect.y) / rect.height));
-    this._setHSVA(x, y);
-    // TODO: debounce!
+    this._setValue(x, y);
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
     this.changed();
@@ -125,9 +143,9 @@ export class IoHsvaHue extends IoGl {
   _onPointermove(event) {
     this.debounce(this._onPointermoveDebounced, event);
   }
-  _setHSVA(x, y) {
-    this.value[this._c[0]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+  _setValue(x, y) {
+    // NOTE: implement in subclass
   }
 }
 
-IoHsvaHue.Register();
+IoColorSlider.Register();

@@ -29,9 +29,9 @@ export class IoRgbaPicker extends IoHsvaPicker {
     const hasAlpha = this.value[c[3]] !== undefined;
     this._hsva = [...hsv, hasAlpha ? this.value[c[3]] : 1];
     this.template([
-      ['io-hsva-sv', {value: this._hsva, 'on-value-set': this._onValueSet}],
-      ['io-hsva-hue', {value: this._hsva, horizontal: !this.horizontal, 'on-value-set': this._onValueSet}],
-      hasAlpha ? ['io-hsva-alpha', {value: this._hsva, horizontal: !this.horizontal, 'on-value-set': this._onValueSet}] : null,
+      ['io-color-slider-sv', {value: this._hsva, 'on-value-set': this._onValueSet}],
+      ['io-color-slider-hue', {value: this._hsva, horizontal: !this.horizontal, 'on-value-set': this._onValueSet}],
+      hasAlpha ? ['io-color-slider-alpha', {value: this._hsva, horizontal: !this.horizontal, 'on-value-set': this._onValueSet}] : null,
     ]);
   }
 }
