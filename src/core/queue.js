@@ -28,36 +28,43 @@ export class NodeQueue extends Array {
    * Dispatch the queue.
    */
   dispatch() {
+    if (this._dispatchInProgress === true) return;
+    this._dispatchInProgress = true;
+
     const node = this.node;
-    if (this.length) {
-      let changed = false;
-      for (let j = 0; j < this.length; j += 2) {
-        const prop = this[j];
-        const detail = this[j + 1];
-        const payload = {detail: detail};
-        if (detail.value !== detail.oldValue) {
-          changed = true;
-          if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
-          if (node['propertyChanged']) node['propertyChanged'](payload);
-          node.dispatchEvent(prop + '-changed', payload.detail);
-        }
-        else {
-          if (typeof detail.value === 'object') {
-            // if (node[prop + 'Mutated']) node[prop + 'Mutated'](payload);
-            // node.dispatchEvent(prop + '-mutated', payload.detail);
-          }
+    let changed = false;
+
+    while (this.length) {
+      const j = this.length - 2;
+      const prop = this[j];
+      const detail = this[j + 1];
+      const payload = {detail: detail};
+
+      if (detail.value !== detail.oldValue) {
+        changed = true;
+        if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
+        if (node['propertyChanged']) node['propertyChanged'](payload);
+        node.dispatchEvent(prop + '-changed', payload.detail);
+      } else {
+        if (typeof detail.value === 'object') {
+          // if (node[prop + 'Mutated']) node[prop + 'Mutated'](payload);
+          // node.dispatchEvent(prop + '-mutated', payload.detail);
         }
       }
-      // TODO: Evaluate performance and consider refactoring.
-      if (changed) {
-        // if (node.isNode && !node.isElement) {
-        //   node.dispatchEvent('object-mutated', {object: node}, false, window);
-        // }
-        node.applyCompose();
-        node.changed();
-      }
-      this.length = 0;
+      this.splice(j, 2);
     }
+
+    // TODO: Evaluate performance and consider refactoring.
+    if (changed) {
+      // if (node.isNode && !node.isElement) {
+      //   node.dispatchEvent('object-mutated', {object: node}, false, window);
+      // }
+      node.applyCompose();
+      node.changed();
+    }
+    this.length = 0;
+
+    this._dispatchInProgress = false;
   }
   /**
    * Remove queue items and the node reference.

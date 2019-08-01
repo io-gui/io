@@ -122,6 +122,7 @@ export class Properties {
         oldValue.disconnect(this.node);
       }
 
+
       if (this[prop].notify && oldValue !== this[prop].value) {
         this.node.queue(prop, this[prop].value, oldValue);
         if (this.node.__connected && !suspendDispatch) {

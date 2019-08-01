@@ -127,10 +127,7 @@ export const IoNodeMixin = (superclass) => {
     setProperties(props) {
       for (let p in props) {
         if (this.__properties[p] === undefined) continue;
-        const oldValue = this.__properties[p].value;
         this.__properties.set(p, props[p], true);
-        const value = this.__properties[p].value;
-        if (value !== oldValue) this.queue(p, value, oldValue);
       }
 
       // TODO: remove?
