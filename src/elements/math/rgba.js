@@ -24,7 +24,7 @@ export class IoRgba extends IoVector {
     };
   }
   valueChanged() {
-    this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['r', 'g', 'b', 'a'];
+    this.components = this.value instanceof Array ? [0, 1, 2, 3] : ['r', 'g', 'b', 'a'];
   }
   getSlotted() {
     return ['io-rgba-swatch', {id: 'swatch', value: this.value}];

@@ -32,7 +32,10 @@ export class IoMatrix extends IoElement {
     return {
       value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       step: 0.001,
-      _c: Array,
+      components: {
+        type: Array,
+        notify: false,
+      },
     };
   }
   _onValueSet(event) {
@@ -61,12 +64,12 @@ export class IoMatrix extends IoElement {
       c = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
       this.columns = 4;
     }
-    this._c = c;
+    this.components = c;
   }
   changed() {
     const elements = [];
-    for (let i in this._c) {
-      const prop = this._c[i];
+    for (let i in this.components) {
+      const prop = this.components[i];
       if (this.value[prop] !== undefined) {
         elements.push(['io-number', {
           id: prop,

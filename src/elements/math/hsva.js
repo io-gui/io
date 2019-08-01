@@ -10,7 +10,7 @@ export class IoHsva extends IoVector {
     };
   }
   valueChanged() {
-    this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['h', 's', 'v', 'a'];
+    this.components = this.value instanceof Array ? [0, 1, 2, 3] : ['h', 's', 'v', 'a'];
   }
   getSlotted() {
     return ['io-hsva-swatch', {id: 'swatch', value: this.value}];

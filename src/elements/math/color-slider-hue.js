@@ -47,7 +47,7 @@ export class IoColorSliderHue extends IoColorSlider {
     `;
   }
   _setValue(x, y) {
-    this.value[this._c[0]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    this.value[this.components[0]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
   }
 }
 

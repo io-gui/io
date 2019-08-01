@@ -50,7 +50,7 @@ export class IoColorSliderSaturation extends IoColorSlider {
     `;
   }
   _setValue(x, y) {
-    this.value[this._c[1]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    this.value[this.components[1]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
   }
 }
 

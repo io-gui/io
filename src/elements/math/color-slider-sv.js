@@ -53,8 +53,8 @@ export class IoColorSliderSv extends IoColorSlider {
     `;
   }
   _setValue(x, y) {
-    this.value[this._c[1]] = Math.max(0, Math.min(1, x));
-    this.value[this._c[2]] = Math.max(0, Math.min(1, 1 - y));
+    this.value[this.components[1]] = Math.max(0, Math.min(1, x));
+    this.value[this.components[2]] = Math.max(0, Math.min(1, 1 - y));
   }
 }
 

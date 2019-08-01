@@ -5,10 +5,10 @@ import {rgb2hsv, hsv2rgb} from "./utils.js";
 
 export class IoRgbaPicker extends IoHsvaPicker {
   valueChanged() {
-    this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['r', 'g', 'b', 'a'];
+    this.components = this.value instanceof Array ? [0, 1, 2, 3] : ['r', 'g', 'b', 'a'];
   }
   _onValueSet(event) {
-    const c = this._c;
+    const c = this.components;
     const hsva = event.detail.value;
     const rgb = hsv2rgb(hsva[0], hsva[1], hsva[2]);
     const hasAlpha = this.value[c[3]] !== undefined;
@@ -24,7 +24,7 @@ export class IoRgbaPicker extends IoHsvaPicker {
   }
   changed() {
     if (this._suspendLoop) return;
-    const c = this._c;
+    const c = this.components;
     const hsv = rgb2hsv(this.value[c[0]], this.value[c[1]], this.value[c[2]]);
     const hasAlpha = this.value[c[3]] !== undefined;
     this._hsva = [...hsv, hasAlpha ? this.value[c[3]] : 1];

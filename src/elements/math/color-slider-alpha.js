@@ -47,12 +47,12 @@ export class IoColorSliderAlpha extends IoColorSlider {
   }
   valueChanged() {
     super.valueChanged();
-    const hasAlpha = this.value[this._c[3]] !== undefined;
+    const hasAlpha = this.value[this.components[3]] !== undefined;
     this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
   }
   _setValue(x, y) {
-    const hasAlpha = this.value[this._c[3]] !== undefined;
-    if (hasAlpha) this.value[this._c[3]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    const hasAlpha = this.value[this.components[3]] !== undefined;
+    if (hasAlpha) this.value[this.components[3]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
   }
 }
 
