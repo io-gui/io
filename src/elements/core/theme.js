@@ -286,11 +286,9 @@ IoTheme.Register = function() {
       // const match = Array.from(styleString.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
       const match = Array.from(styleString.match(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
       for (let j = 0; j < match.length; j++) {
-        // console.log(, match[j].split('{')[1].replace('}', ''));
-        // console.log(match[j][1], match[j][2]);
-        // console.log(i, match[j].split('{'));
+        // TODO: unhack!
         const name = match[j].split('{')[0].replace(/\s/g, '');
-        const value = match[j].split('{')[1].replace('}', '');
+        const value = match[j].split('{')[1].replace(/}/g, '');
         Object.defineProperty(this.prototype, name, {value: value});
         mixins += `.io-${name} {\n${value}\n}\n`;
       }

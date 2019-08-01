@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorage} from "../../dist/io.js";
+import {IoElement, IoStorage} from "../../dist/io.js";
 import {TodoModel} from "./todo-model.js";
 import "./todo-new-item.js";
 import "./todo-list.js";

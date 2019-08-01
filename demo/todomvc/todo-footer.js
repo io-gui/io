@@ -22,7 +22,6 @@ export class TodoFooter extends IoElement {
     this.route = event.target.innerText.toLowerCase();
   }
   changed() {
-    const itemCount = this.model.items.length;
     const activeLeft = this.model.getActiveCount();
     const completedCount = this.model.getCompletedCount();
     this.template([
