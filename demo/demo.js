@@ -27,8 +27,10 @@ export class IoDemo extends IoElement {
       :host div[name=elements] {
         padding: var(--io-spacing);
       }
-      :host div[name=color] {
-        height: 100px;
+      :host div[name=color] > div > io-vector {
+        flex: 1 1 auto;
+      }
+      :host div[name=color] > div > :not(io-vector) {
       }
       :host div[name=elements] > .io-row,
       :host div[name=elements] > .io-column {
@@ -56,7 +58,13 @@ export class IoDemo extends IoElement {
       number: 0.0,
       string: 'hello',
       boolean: true,
-      color: [1, 0.5, 0.1, 1],
+
+      color: [],
+      rgba: {},
+      hsva: {},
+      hsla: {},
+      cmyka: {},
+
       null: null,
       NaN: NaN,
       undefined: undefined,
@@ -71,6 +79,12 @@ export class IoDemo extends IoElement {
 
   constructor(props) {
     super(props);
+
+    this.color = [1.0000, 0.5019, 0.2509, 1];
+    this.rgba = {r: 1.0000, g: 0.5019, b: 0.2509, a:1};
+    this.hsva = {h: 0.0558, s: 0.7490, v: 1.0000, a:1};
+    this.hsla = {h: 0.0558, s: 1.0000, l: 0.6255, a:1};
+    this.cmyka = {c: 0, m: 0.4980, y: 0.7490, k: 0, a:1};
 
     this.setNumber = this.setNumber.bind(this);
 
@@ -118,6 +132,73 @@ export class IoDemo extends IoElement {
       ['io-menu-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
       ['io-button', {label: 'set 0.5', action: this.setNumber, value: 0.5}],
       ['io-menu-option', {label: 'Theme ▾', value: IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
+    ]];
+
+    const color = ['div', {name: 'color', class: 'io-column'}, [
+      ['div', {class: 'io-row'}, [
+        ['io-rgba-picker', {value: this.bind('color'), horizontal: false}],
+        ['io-rgba-picker', {value: this.bind('color')}],
+      ]],
+      ['div', {class: 'io-row'}, [
+        ['io-color-slider', {value: this.bind('color')}],
+        ['io-color-slider-hue', {value: this.bind('color')}],
+        ['io-color-slider-saturation', {value: this.bind('color')}],
+        ['io-color-slider-value', {value: this.bind('color')}],
+        ['io-color-slider-level', {value: this.bind('color')}],
+        ['io-color-slider-hs', {value: this.bind('color')}],
+        ['io-color-slider-sv', {value: this.bind('color')}],
+        ['io-color-slider-sl', {value: this.bind('color')}],
+        ['io-color-slider-alpha', {value: this.bind('color')}],
+        ['io-vector', {value: this.bind('color')}],
+      ]],
+      ['div', {class: 'io-row'}, [
+        ['io-color-slider', {value: this.bind('rgba')}],
+        ['io-color-slider-hue', {value: this.bind('rgba')}],
+        ['io-color-slider-saturation', {value: this.bind('rgba')}],
+        ['io-color-slider-value', {value: this.bind('rgba')}],
+        ['io-color-slider-level', {value: this.bind('rgba')}],
+        ['io-color-slider-hs', {value: this.bind('rgba')}],
+        ['io-color-slider-sv', {value: this.bind('rgba')}],
+        ['io-color-slider-sl', {value: this.bind('rgba')}],
+        ['io-color-slider-alpha', {value: this.bind('rgba')}],
+        ['io-vector', {value: this.bind('rgba')}],
+      ]],
+      ['div', {class: 'io-row'}, [
+        ['io-color-slider', {value: this.bind('hsva')}],
+        ['io-color-slider-hue', {value: this.bind('hsva')}],
+        ['io-color-slider-saturation', {value: this.bind('hsva')}],
+        ['io-color-slider-value', {value: this.bind('hsva')}],
+        ['io-color-slider-level', {value: this.bind('hsva')}],
+        ['io-color-slider-hs', {value: this.bind('hsva')}],
+        ['io-color-slider-sv', {value: this.bind('hsva')}],
+        ['io-color-slider-sl', {value: this.bind('hsva')}],
+        ['io-color-slider-alpha', {value: this.bind('hsva')}],
+        ['io-vector', {value: this.bind('hsva')}],
+      ]],
+      ['div', {class: 'io-row'}, [
+        ['io-color-slider', {value: this.bind('hsla')}],
+        ['io-color-slider-hue', {value: this.bind('hsla')}],
+        ['io-color-slider-saturation', {value: this.bind('hsla')}],
+        ['io-color-slider-value', {value: this.bind('hsla')}],
+        ['io-color-slider-level', {value: this.bind('hsla')}],
+        ['io-color-slider-hs', {value: this.bind('hsla')}],
+        ['io-color-slider-sv', {value: this.bind('hsla')}],
+        ['io-color-slider-sl', {value: this.bind('hsla')}],
+        ['io-color-slider-alpha', {value: this.bind('hsla')}],
+        ['io-vector', {value: this.bind('hsla')}],
+      ]],
+      ['div', {class: 'io-row'}, [
+        ['io-color-slider', {value: this.bind('cmyka')}],
+        ['io-color-slider-hue', {value: this.bind('cmyka')}],
+        ['io-color-slider-saturation', {value: this.bind('cmyka')}],
+        ['io-color-slider-value', {value: this.bind('cmyka')}],
+        ['io-color-slider-level', {value: this.bind('cmyka')}],
+        ['io-color-slider-hs', {value: this.bind('cmyka')}],
+        ['io-color-slider-sv', {value: this.bind('cmyka')}],
+        ['io-color-slider-sl', {value: this.bind('cmyka')}],
+        ['io-color-slider-alpha', {value: this.bind('cmyka')}],
+        ['io-vector', {value: this.bind('cmyka')}],
+      ]],
     ]];
 
     const options = [
@@ -175,11 +256,6 @@ export class IoDemo extends IoElement {
       ['io-inspector', {value: this, expanded: ['properties']}],
     ]];
 
-    const color = ['div', {name: 'color', class: 'io-row'}, [
-      ['io-rgba-picker', {value: this.bind('color')}],
-      ['io-rgba-picker', {value: this.bind('color'), horizontal: false}],
-    ]];
-
     // const demoLayout = ['io-layout', {
     //   name: 'layout',
     //   orientation: 'horizontal',
@@ -212,13 +288,13 @@ export class IoDemo extends IoElement {
         ],
         elements: [
           ['div', {name: 'elements'}, [
-            primitives,
-            sliders,
+            // primitives,
+            // sliders,
+            // buttons,
             color,
-            buttons,
-            menu,
-            object,
-            inspector,
+            // menu,
+            // object,
+            // inspector,
           ]],
           // demoLayout,
           ['iframe', {name: 'todo', src: './demo/todomvc/index.html'}],

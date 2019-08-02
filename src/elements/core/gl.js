@@ -276,17 +276,29 @@ export class IoGl extends IoElement {
         }
         switch (this._vecLengths[name]) {
           case 2:
+            if (value === undefined) {
+              gl.uniform2f(uniform, 0, 0);
+              break;
+            }
             gl.uniform2f(uniform,
                 value[_c[0]] !== undefined ? value[_c[0]] : 1,
                 value[_c[1]] !== undefined ? value[_c[1]] : 1);
             break;
           case 3:
+            if (value === undefined) {
+              gl.uniform3f(uniform, 0, 0, 0);
+              break;
+            }
             gl.uniform3f(uniform,
                 value[_c[0]] !== undefined ? value[_c[0]] : 1,
                 value[_c[1]] !== undefined ? value[_c[1]] : 1,
                 value[_c[2]] !== undefined ? value[_c[2]] : 1);
             break;
           case 4:
+            if (value === undefined) {
+              gl.uniform4f(uniform, 0, 0, 0, 0);
+              break;
+            }
             gl.uniform4f(uniform,
                 value[_c[0]] !== undefined ? value[_c[0]] : 1,
                 value[_c[1]] !== undefined ? value[_c[1]] : 1,

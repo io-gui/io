@@ -35,8 +35,10 @@ export {IoColorSlider} from "./elements/math/color-slider.js";
 export {IoColorSliderHue} from "./elements/math/color-slider-hue.js";
 export {IoColorSliderSaturation} from "./elements/math/color-slider-saturation.js";
 export {IoColorSliderValue} from "./elements/math/color-slider-value.js";
+export {IoColorSliderLevel} from "./elements/math/color-slider-level.js";
 export {IoColorSliderHs} from "./elements/math/color-slider-hs.js";
 export {IoColorSliderSv} from "./elements/math/color-slider-sv.js";
+export {IoColorSliderSl} from "./elements/math/color-slider-sl.js";
 export {IoColorSliderAlpha} from "./elements/math/color-slider-alpha.js";
 
 export {IoHsva} from "./elements/math/hsva.js";

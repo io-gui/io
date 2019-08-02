@@ -1,5 +1,7 @@
 import {html} from "../../io.js";
 import {IoGl, chunk} from "../../io-elements-core.js";
+import {chunk as colorChunk} from "./gl-chunk.js";
+import {convert} from "../../../lib/color-convert.js";
 
 export class IoColorSlider extends IoGl {
   static get Style() {
@@ -36,14 +38,20 @@ export class IoColorSlider extends IoGl {
         value: false,
         reflect: 1,
       },
+      // Internal
+      rgb: [1, 1, 1],
+      hsv: [1, 1, 1],
+      hsl: [1, 1, 1],
+      cmyk: [1, 1, 1, 1],
+      alpha: 1,
       components: {
         type: Array,
         notify: false,
       },
-      // 0 - rgb
-      // 1 - hsv
-      // 2 - hsl
-      // 3 - cmyk
+      // 0 - rgba
+      // 1 - hsva
+      // 2 - hsla
+      // 3 - cmyka
       mode: 0,
     };
   }
@@ -51,21 +59,16 @@ export class IoColorSlider extends IoGl {
     return /* glsl */`
       varying vec2 vUv;
 
-      ${chunk.hue2rgb}
-      ${chunk.hsv2rgb}
+      ${chunk.translate}
+      ${chunk.checker}
 
       void main(void) {
-        vec3 finalColor = uValue.rgb;
-        float alpha = uValue.a;
-        if (uMode == 1.0) {
-          finalColor = hsv2rgb(uValue.xyz);
-        } else if (uMode == 2.0) {
-          // finalColor = hsl2rgb(uValue.xyz);
-        } else if (uMode == 3.0) {
-          // finalColor = cmyk2rgb(uValue);
-          alpha = 1.0;
-        }
-        gl_FragColor = saturate(vec4(finalColor, alpha));
+        vec2 position = vUv * uSize;
+
+        // Alpha pattern
+        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 5.0));
+
+        gl_FragColor = saturate(vec4(mix(alphaPattern, uRgb.rgb, uAlpha), 1.0));
       }
     `;
   }
@@ -76,57 +79,74 @@ export class IoColorSlider extends IoGl {
       'keydown': '_onKeydown',
     };
   }
+  valueMutated() {
+    this.valueChanged();
+  }
   valueChanged() {
-    const c = new Array();
-    let mode = this.mode;
+    let c = [];
     if (this.value instanceof Array) {
-      for (let i = 0; i < this.value.length; i++) c.push(i);
-      console.warn();
+      for (var i = 0; i < this.value.length; i++) {
+        c.push(i);
+      }
+    } else {
+      c.push(...Object.keys(this.value));
     }
-    if (typeof this.value === 'object') {
-      if (this.value.r !== undefined) {
-        c.push('r');
-      }
-      if (this.value.g !== undefined) {
-        c.push('g');
-      }
-      if (this.value.b !== undefined) {
-        c.push('b');
-        mode = 0;
-      }
-      if (this.value.h !== undefined) {
-        c.push('h');
-      }
-      if (this.value.s !== undefined) {
-        c.push('s');
-      }
-      if (this.value.v !== undefined) {
-        c.push('v');
-        mode = 1;
-      }
-      if (this.value.l !== undefined) {
-        c.push('l');
-        mode = 2;
-      }
-      if (this.value.c !== undefined) {
-        c.push('c');
-      }
-      if (this.value.m !== undefined) {
-        c.push('m');
-      }
-      if (this.value.y !== undefined) {
-        c.push('y');
-      }
-      if (this.value.k !== undefined) {
-        c.push('k');
-        mode = 3;
-      }
-      if (this.value.a !== undefined) {
-        c.push('a');
-      }
+
+    let mode = this.mode;
+    if (c.indexOf('r') !== -1) mode = 0;
+    else if (c.indexOf('h') !== -1 && c.indexOf('v') !== -1) mode = 1;
+    else if (c.indexOf('h') !== -1 && c.indexOf('l') !== -1) mode = 2;
+    else if (c.indexOf('c') !== -1) mode = 3;
+
+    const val = [];
+    for (let i = 0; i < c.length; i++) {
+      val.push(this.value[c[i]]);
     }
-    console.log(mode);
+
+    let rgb;
+    let hsv;
+    let hsl;
+    let cmyk;
+    let alpha = 1;
+
+    switch (mode) {
+      case 3:
+        cmyk = [val[0] * 100, val[1] * 100, val[2] * 100, val[3] * 100];
+        rgb = convert.cmyk.rgb(cmyk);
+        hsv = convert.rgb.hsv(convert.cmyk.rgb(cmyk));
+        hsl = convert.rgb.hsl(convert.cmyk.rgb(cmyk));
+        if (val[4] !== undefined) alpha = val[4] * 100;
+        break;
+      case 2:
+        hsl = [val[0] * 360, val[1] * 100, val[2] * 100];
+        rgb = convert.hsl.rgb(hsl);
+        hsv = convert.hsl.hsv(hsl);
+        cmyk = convert.rgb.cmyk(convert.hsl.rgb(hsl));
+        if (val[3] !== undefined) alpha = val[3] * 100;
+        break;
+      case 1:
+        hsv = [val[0] * 360, val[1] * 100, val[2] * 100];
+        rgb = convert.hsv.rgb(hsv);
+        hsl = convert.hsv.hsl(hsv);
+        cmyk = convert.rgb.cmyk(convert.hsv.rgb(hsv));
+        if (val[3] !== undefined) alpha = val[3] * 100;
+        break;
+      case 0:
+      default:
+        rgb = [val[0] * 255, val[1] * 255, val[2] * 255];
+        hsv = convert.rgb.hsv(rgb);
+        hsl = convert.rgb.hsl(rgb);
+        cmyk = convert.rgb.cmyk(rgb);
+        if (val[3] !== undefined) alpha = val[3] * 100;
+        break;
+    }
+
     this.setProperties({
+      rgb: [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255],
+      hsv: [hsv[0] / 360, hsv[1] / 100, hsv[2] / 100],
+      hsl: [hsl[0] / 360, hsl[1] / 100, hsl[2] / 100],
+      cmyk: [cmyk[0] / 100, cmyk[1] / 100, cmyk[2] / 100, cmyk[3] / 100],
+      alpha: alpha / 100,
       components: c,
       mode: mode,
     });
@@ -176,6 +196,7 @@ export class IoColorSlider extends IoGl {
     this._setValue(x, y);
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
+    this.valueChanged();
     this.changed();
   }
   _onPointermove(event) {

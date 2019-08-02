@@ -1,4 +1,6 @@
 import {chunk} from "../../io-elements-core.js";
+import {chunk as colorChunk} from "./gl-chunk.js";
+import {convert} from "../../../lib/color-convert.js";
 import {IoColorSlider} from "./color-slider.js";
 
 export class IoColorSliderValue extends IoColorSlider {
@@ -6,8 +8,8 @@ export class IoColorSliderValue extends IoColorSlider {
     return /* glsl */`
       varying vec2 vUv;
 
-      ${chunk.hue2rgb}
-      ${chunk.hsv2rgb}
+      ${colorChunk}
+
       ${chunk.translate}
       ${chunk.checker}
       ${chunk.circle}
@@ -18,13 +20,11 @@ export class IoColorSliderValue extends IoColorSlider {
 
         // Value gradient
         float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
-        vec3 finalColor = hsv2rgb(vec3(uValue[0], uValue[1], axis));
-
-        vec3 currentColor = saturate(hsv2rgb(uValue.xyz));
+        vec3 finalColor = hsv2rgb(vec3(uHsv[0], uHsv[1], axis));
 
         // Marker
-        float posX = uSize.x * ((uHorizontal == 1) ? uValue[2] : 0.5);
-        float posY = uSize.y * ((uHorizontal == 1) ? 0.5 : uValue[2]);
+        float posX = uSize.x * ((uHorizontal == 1) ? uHsv[2] : 0.5);
+        float posY = uSize.y * ((uHorizontal == 1) ? 0.5 : uHsv[2]);
         float radius = cssItemHeight / 5.0;
         float widthX = (uHorizontal == 1) ? cssStrokeWidth * 2.0 : uSize.x;
         float widthY = (uHorizontal == 1) ? uSize.y : cssStrokeWidth * 2.0;
@@ -41,14 +41,54 @@ export class IoColorSliderValue extends IoColorSlider {
 
         float circleInnerShape = circle(markerPos, radius - cssStrokeWidth);
         float rectInnerShape = rectangle(markerPos, vec2(widthX - cssStrokeWidth, widthY - cssStrokeWidth));
-        finalColor = mix(currentColor.rgb, finalColor, min(rectInnerShape, circleInnerShape));
+        finalColor = mix(uRgb, finalColor, min(rectInnerShape, circleInnerShape));
 
         gl_FragColor = vec4(finalColor, 1.0);
       }
     `;
   }
   _setValue(x, y) {
-    this.value[this.components[2]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    this.valueChanged();
+    const v = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    switch (this.mode) {
+      case 0:
+        this.hsv[2] = v;
+        const rgb = convert.hsv.rgb([
+          this.hsv[0] * 360,
+          this.hsv[1] * 100,
+          this.hsv[2] * 100,
+        ]);
+        this.value[this.components[0]] = rgb[0] / 255;
+        this.value[this.components[1]] = rgb[1] / 255;
+        this.value[this.components[2]] = rgb[2] / 255;
+        break;
+      case 3:
+        this.hsv[2] = v;
+        const cmyk = convert.rgb.cmyk(convert.hsv.rgb([
+          this.hsv[0] * 360,
+          this.hsv[1] * 100,
+          this.hsv[2] * 100,
+        ]));
+        this.value[this.components[0]] = cmyk[0] / 100;
+        this.value[this.components[1]] = cmyk[1] / 100;
+        this.value[this.components[2]] = cmyk[2] / 100;
+        this.value[this.components[3]] = cmyk[3] / 100;
+        break;
+      case 1:
+        this.value[this.components[2]] = v;
+        break;
+      case 2:
+        this.hsv[2] = v;
+        const hsl = convert.rgb.hsl(convert.hsv.rgb([
+          this.hsv[0] * 100,
+          this.hsv[1] * 100,
+          this.hsv[2] * 100,
+        ]));
+        this.value[this.components[0]] = hsl[0] / 100;
+        this.value[this.components[1]] = hsl[1] / 100;
+        this.value[this.components[2]] = hsl[2] / 100;
+        break;
+    }
   }
 }
 

@@ -41,14 +41,12 @@ export class IoMatrix extends IoElement {
   _onValueSet(event) {
     if (event.detail.object) return; // TODO: unhack
     const item = event.composedPath()[0];
-    const prop = item.id;
-    if (prop !== null) {
-      const value = event.detail.value;
-      const oldValue = event.detail.oldValue;
-      this.value[prop] = value;
-      const detail = {object: this.value, prop: prop, value: value, oldValue: oldValue};
-      this.dispatchEvent('object-mutated', detail, false, window);
-    }
+    const c = item.id;
+    const value = event.detail.value;
+    const oldValue = event.detail.oldValue;
+    this.value[c] = value;
+    const detail = {object: this.value, property: c, value: value, oldValue: oldValue};
+    this.dispatchEvent('object-mutated', detail, false, window);
   }
   valueChanged() {
     let c;
@@ -69,11 +67,11 @@ export class IoMatrix extends IoElement {
   changed() {
     const elements = [];
     for (let i in this.components) {
-      const prop = this.components[i];
-      if (this.value[prop] !== undefined) {
+      const c = this.components[i];
+      if (this.value[c] !== undefined) {
         elements.push(['io-number', {
-          id: prop,
-          value: this.value[prop],
+          id: c,
+          value: this.value[c],
           step: this.step,
           'on-value-set': this._onValueSet
         }]);

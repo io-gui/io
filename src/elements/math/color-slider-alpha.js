@@ -1,4 +1,5 @@
 import {chunk} from "../../io-elements-core.js";
+import {chunk as colorChunk} from "./gl-chunk.js";
 import {IoColorSlider} from "./color-slider.js";
 
 export class IoColorSliderAlpha extends IoColorSlider {
@@ -6,8 +7,8 @@ export class IoColorSliderAlpha extends IoColorSlider {
     return /* glsl */`
       varying vec2 vUv;
 
-      ${chunk.hue2rgb}
-      ${chunk.hsv2rgb}
+      ${colorChunk}
+
       ${chunk.translate}
       ${chunk.checker}
       ${chunk.circle}
@@ -25,8 +26,8 @@ export class IoColorSliderAlpha extends IoColorSlider {
         finalColor = mix(finalColor, vec3(1.0), axis);
 
         // Marker
-        float posX = uSize.x * ((uHorizontal == 1) ? uValue[3] : 0.5);
-        float posY = uSize.y * ((uHorizontal == 1) ? 0.5 : uValue[3]);
+        float posX = uSize.x * ((uHorizontal == 1) ? uAlpha : 0.5);
+        float posY = uSize.y * ((uHorizontal == 1) ? 0.5 : uAlpha);
         float radius = cssItemHeight / 5.0;
         float widthX = (uHorizontal == 1) ? cssStrokeWidth * 2.0 : uSize.x;
         float widthY = (uHorizontal == 1) ? uSize.y : cssStrokeWidth * 2.0;
@@ -51,8 +52,10 @@ export class IoColorSliderAlpha extends IoColorSlider {
     this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
   }
   _setValue(x, y) {
-    const hasAlpha = this.value[this.components[3]] !== undefined;
-    if (hasAlpha) this.value[this.components[3]] = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    const a = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    const c = this.mode === 3 ? 4 : 3;
+    const hasAlpha = this.value[this.components[c]] !== undefined;
+    if (hasAlpha) this.value[this.components[c]] = a;
   }
 }
 

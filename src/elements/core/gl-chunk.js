@@ -23,14 +23,4 @@ export const chunk = {
     float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
     return checkerMask;
   }\n`,
-  hue2rgb: `vec3 hue2rgb(float hue) {
-    float R = abs(hue * 6. - 3.) - 1.;
-    float G = 2. - abs(hue * 6. - 2.);
-    float B = 2. - abs(hue * 6. - 4.);
-    return saturate(vec3(R,G,B));
-  }\n`,
-  hsv2rgb: `vec3 hsv2rgb(vec3 hsv) {
-    vec3 rgb = hue2rgb(hsv.r);
-    return ((rgb - 1.0) * hsv.g + 1.0) * hsv.b;
-  }\n`,
 };

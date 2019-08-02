@@ -4,7 +4,7 @@ import {chunk} from "../../io-elements-core.js";
 import {convert} from "../../../lib/color-convert.js";
 import {chunk as colorChunk} from "./gl-chunk.js";
 
-export class IoColorSliderHs extends IoColorSlider {
+export class IoColorSliderSl extends IoColorSlider {
   static get Style() {
     return html`<style>
       :host {
@@ -25,17 +25,12 @@ export class IoColorSliderHs extends IoColorSlider {
       void main(void) {
         vec2 position = vUv * uSize;
 
-        // HS gradient
-        vec3 finalColor = hsv2rgb(vec3(vUv.x, vUv.y, uHsv[2]));
-        float saturation = uHsv[1];
-        if (uMode == 2.0) {
-          saturation = uHsl[1];
-          finalColor = hsl2rgb(vec3(vUv.x, vUv.y, uHsl[2]));
-        }
+        // SV gradient
+        vec3 finalColor = hsl2rgb(vec3(uHsl[0], vUv.x, vUv.y));
 
         // Marker
-        float posX = uSize.x * uHsv[0];
-        float posY = uSize.y * uHsv[1];
+        float posX = uSize.x * uHsl[1];
+        float posY = uSize.y * uHsl[2];
         float radius = min(cssItemHeight / 2., min(uSize.x / 4., uSize.y / 4.));
 
         vec2 markerPos = translate(position, posX, posY);
@@ -55,28 +50,28 @@ export class IoColorSliderHs extends IoColorSlider {
   }
   _setValue(x, y) {
     this.valueChanged();
-    const h = Math.max(0, Math.min(1, x));
-    const s = Math.max(0, Math.min(1, 1 - y))
+    x = Math.max(0, Math.min(1, x));
+    y = Math.max(0, Math.min(1, 1 - y));
     switch (this.mode) {
       case 0:
-        this.hsv[0] = h;
-        this.hsv[1] = s;
-        const rgb = convert.hsv.rgb([
-          this.hsv[0] * 360,
-          this.hsv[1] * 100,
-          this.hsv[2] * 100,
+        this.hsl[1] = x;
+        this.hsl[2] = y;
+        const rgb = convert.hsl.rgb([
+          this.hsl[0] * 360,
+          this.hsl[1] * 100,
+          this.hsl[2] * 100,
         ]);
         this.value[this.components[0]] = rgb[0] / 255;
         this.value[this.components[1]] = rgb[1] / 255;
         this.value[this.components[2]] = rgb[2] / 255;
         break;
       case 3:
-        this.hsv[0] = h;
-        this.hsv[1] = s;
-        const cmyk = convert.rgb.cmyk(convert.hsv.rgb([
-          this.hsv[0] * 360,
-          this.hsv[1] * 100,
-          this.hsv[2] * 100,
+        this.hsl[1] = x;
+        this.hsl[2] = y;
+        const cmyk = convert.rgb.cmyk(convert.hsl.rgb([
+          this.hsl[0] * 360,
+          this.hsl[1] * 100,
+          this.hsl[2] * 100,
         ]));
         this.value[this.components[0]] = cmyk[0] / 100;
         this.value[this.components[1]] = cmyk[1] / 100;
@@ -84,12 +79,23 @@ export class IoColorSliderHs extends IoColorSlider {
         this.value[this.components[3]] = cmyk[3] / 100;
         break;
       case 1:
+        this.hsl[1] = x;
+        this.hsl[2] = y;
+        const hsv = convert.rgb.hsv(convert.hsl.rgb([
+          this.hsl[0] * 100,
+          this.hsl[1] * 100,
+          this.hsl[2] * 100,
+        ]));
+        this.value[this.components[0]] = hsv[0] / 100;
+        this.value[this.components[1]] = hsv[1] / 100;
+        this.value[this.components[2]] = hsv[2] / 100;
+        break;
       case 2:
-        this.value[this.components[0]] = h;
-        this.value[this.components[1]] = s;
+        this.value[this.components[1]] = x;
+        this.value[this.components[2]] = y;
         break;
     }
   }
 }
 
-IoColorSliderHs.Register();
+IoColorSliderSl.Register();
