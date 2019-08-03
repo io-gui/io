@@ -73,7 +73,7 @@ export class IoGl extends IoElement {
       color: [1, 1, 1, 1],
       aspect: 1,
       pxRatio: 1,
-      globals: Object,
+      css: Object,
     };
   }
   static get Vert() {
@@ -86,6 +86,39 @@ export class IoGl extends IoElement {
         vUv = uv;
         gl_Position = vec4(position, 1.0);
       }\n\n`;
+  }
+  static get GlUtils() {
+    return /* glsl */`
+    #extension GL_OES_standard_derivatives : enable
+    precision highp float;
+    #ifndef saturate
+      #define saturate(v) clamp(v, 0., 1.)
+    #endif
+
+    vec2 translate(vec2 samplePosition, float x, float y){
+      return samplePosition - vec2(x, y);
+    }
+    float circle(vec2 samplePosition, float radius){
+      return saturate(length(samplePosition) - radius);
+    }
+    float rectangle(vec2 samplePosition, vec2 halfSize){
+      vec2 edgeDistance = abs(samplePosition) - halfSize;
+      float outside = length(max(edgeDistance, 0.));
+      float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
+      return saturate(outside + inside);
+    }
+    float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
+      vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
+      float hw = lineWidth / 2.0;
+      float linex = abs(fract(sp.x - 0.5) - 0.5) / abs(dFdx(sp.x)) - hw;
+      float liney = abs(fract(sp.y - 0.5) - 0.5) / abs(dFdy(sp.y)) - hw;
+      return saturate(min(linex, liney) * 2.0);
+    }
+    float checker(vec2 samplePosition, float size) {
+      vec2 checkerPos = floor(samplePosition / size);
+      float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
+      return checkerMask;
+    }\n\n`;
   }
   static get Frag() {
     return /* glsl */`
@@ -113,22 +146,19 @@ export class IoGl extends IoElement {
     }
     return '';
   }
-  constructor(props) {
-    super(props);
+  initShader() {
+    let frag = ''
 
-    this.globals = IoThemeSingleton;
+    for (let i = this.__protochain.length; i--;) {
+      const constructor = this.__protochain[i].constructor;
+      const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
+      if (glUtilsProp && glUtilsProp.get) {
+        frag += constructor.GlUtils;
+      }
+    }
 
-    let frag = /* glsl */`
-      #extension GL_OES_standard_derivatives : enable
-      precision highp float;
-      #ifndef saturate
-        #define saturate(v) clamp(v, 0., 1.)
-      #endif\n\n`;
-
-    this._vecLengths = {};
-
-    for (let name in IoThemeSingleton.__properties) {
-      const property = IoThemeSingleton.__protoProperties[name];
+    for (let name in this.css.__properties) {
+      const property = this.css.__protoProperties[name];
       frag += this.initPropertyUniform(name, property);
     }
 
@@ -144,18 +174,15 @@ export class IoGl extends IoElement {
     gl.shaderSource(vertShader, this.constructor.Vert);
     gl.compileShader(vertShader);
 
-
     if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
       let compilationLog = gl.getShaderInfoLog(vertShader);
       console.error('IoGl [Vertex Shader] ' + this.localName + ' error:');
       console.warn(compilationLog);
     }
 
-
     const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
     gl.shaderSource(fragShader, frag + this.constructor.Frag);
     gl.compileShader(fragShader);
-
 
     if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
       let compilationLog = gl.getShaderInfoLog(fragShader);
@@ -163,12 +190,36 @@ export class IoGl extends IoElement {
       console.warn(compilationLog);
     }
 
+    const shader = gl.createProgram();
+    gl.attachShader(shader, vertShader);
+    gl.attachShader(shader, fragShader);
+
+    return shader;
+  }
+  constructor(props) {
+    super(props);
+
+    this.css = IoThemeSingleton;
+
+    this._vecLengths = {};
+    for (let name in this.css.__properties) {
+      const property = this.css.__protoProperties[name];
+      if (property.notify && property.type === Array) {
+        this._vecLengths[name] = property.value.length;
+      }
+    }
+    for (let prop in this.__properties) {
+      const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
+      const property = this.__protoProperties[prop];
+      if (property.notify && property.type === Array) {
+        this._vecLengths[name] = property.value.length;
+      }
+    }
+
     if (shadersCache.has(this.constructor)) {
       this._shader = shadersCache.get(this.constructor);
     } else {
-      this._shader = gl.createProgram();
-      gl.attachShader(this._shader, vertShader);
-      gl.attachShader(this._shader, fragShader);
+      this._shader = this.initShader();
       shadersCache.set(this.constructor, this._shader);
     }
 
@@ -202,7 +253,7 @@ export class IoGl extends IoElement {
       pxRatio: pxRatio,
     });
   }
-  globalsMutated() {
+  cssMutated() {
     this.updateCssUniforms();
     queueAnimation(this.render);
   }
@@ -252,8 +303,8 @@ export class IoGl extends IoElement {
     }
   }
   updateCssUniforms() {
-    for (let name in IoThemeSingleton.__properties) {
-      this.updatePropertyUniform(name, IoThemeSingleton.__properties[name]);
+    for (let name in this.css.__properties) {
+      this.updatePropertyUniform(name, this.css.__properties[name]);
     }
   }
   setUniform(name, type, value) {

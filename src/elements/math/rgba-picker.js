@@ -1,6 +1,6 @@
 import {IoLayerSingleton} from "../../io-elements-core.js";
 import {IoHsvaPicker} from "./hsva-picker.js";
-import {rgb2hsv, hsv2rgb} from "./utils.js";
+import {convert} from "../../../lib/color-convert.js";
 
 
 export class IoRgbaPicker extends IoHsvaPicker {
@@ -10,11 +10,15 @@ export class IoRgbaPicker extends IoHsvaPicker {
   _onValueSet(event) {
     const c = this.components;
     const hsva = event.detail.value;
-    const rgb = hsv2rgb(hsva[0], hsva[1], hsva[2]);
+    const rgb = convert.hsv.rgb(
+      hsva[0] * 360,
+      hsva[1] * 100,
+      hsva[2] * 100
+    );
     const hasAlpha = this.value[c[3]] !== undefined;
-    this.value[c[0]] = rgb[0];
-    this.value[c[1]] = rgb[1];
-    this.value[c[2]] = rgb[2];
+    this.value[c[0]] = rgb[0] / 255;
+    this.value[c[1]] = rgb[1] / 255;
+    this.value[c[2]] = rgb[2] / 255;
     if (hasAlpha) this.value[c[3]] = hsva[3];
     this._suspendLoop = true;
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
@@ -25,9 +29,17 @@ export class IoRgbaPicker extends IoHsvaPicker {
   changed() {
     if (this._suspendLoop) return;
     const c = this.components;
-    const hsv = rgb2hsv(this.value[c[0]], this.value[c[1]], this.value[c[2]]);
+    const hsv = convert.rgb.hsv(
+      this.value[c[0]] * 255,
+      this.value[c[1]] * 255,
+      this.value[c[2]] * 255
+    );
     const hasAlpha = this.value[c[3]] !== undefined;
-    this._hsva = [...hsv, hasAlpha ? this.value[c[3]] : 1];
+    this._hsva = [
+      hsv[0] / 360,
+      hsv[1] / 100,
+      hsv[2] / 100,
+      hasAlpha ? this.value[c[3]] : 1];
     this.template([
       ['io-color-slider-sv', {value: this._hsva, 'on-value-set': this._onValueSet}],
       ['io-color-slider-hue', {value: this._hsva, horizontal: !this.horizontal, 'on-value-set': this._onValueSet}],

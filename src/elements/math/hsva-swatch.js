@@ -1,5 +1,5 @@
 import {html} from "../../io.js";
-import {IoLayerSingleton, IoGl, chunk} from "../../io-elements-core.js";
+import {IoLayerSingleton, IoGl} from "../../io-elements-core.js";
 import {IoHsvaPicker} from "./hsva-picker.js";
 
 export class IoHsvaSwatch extends IoGl {
@@ -35,10 +35,6 @@ export class IoHsvaSwatch extends IoGl {
   static get Frag() {
     return /* glsl */`
       varying vec2 vUv;
-
-      ${chunk.hue2rgb}
-      ${chunk.hsv2rgb}
-      ${chunk.checker}
 
       void main(void) {
         vec2 position = vUv * uSize;

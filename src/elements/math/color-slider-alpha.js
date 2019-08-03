@@ -1,18 +1,9 @@
-import {chunk} from "../../io-elements-core.js";
-import {chunk as colorChunk} from "./gl-chunk.js";
 import {IoColorSlider} from "./color-slider.js";
 
 export class IoColorSliderAlpha extends IoColorSlider {
   static get Frag() {
     return /* glsl */`
       varying vec2 vUv;
-
-      ${colorChunk}
-
-      ${chunk.translate}
-      ${chunk.checker}
-      ${chunk.circle}
-      ${chunk.rectangle}
 
       void main(void) {
         vec2 position = vUv * uSize;

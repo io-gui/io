@@ -1,5 +1,5 @@
 import {html} from "../../io.js";
-import {IoLayerSingleton, IoGl, chunk} from "../../io-elements-core.js";
+import {IoLayerSingleton, IoGl} from "../../io-elements-core.js";
 import {IoRgbaPicker} from "./rgba-picker.js";
 
 export class IoRgbaSwatch extends IoGl {
@@ -35,8 +35,6 @@ export class IoRgbaSwatch extends IoGl {
   static get Frag() {
     return /* glsl */`
       varying vec2 vUv;
-
-      ${chunk.checker}
 
       void main(void) {
         vec2 position = vUv * uSize;

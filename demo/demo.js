@@ -10,7 +10,7 @@ export class IoDemo extends IoElement {
         display: flex;
         flex: 1 1;
       }
-      :host div[name=elements] > .table {
+      :host div[name=elements] > div {
         max-width: 24em;
       }
       :host .table > * {
@@ -28,7 +28,7 @@ export class IoDemo extends IoElement {
         padding: var(--io-spacing);
       }
       :host div[name=color] > div > io-vector {
-        flex: 1 1 auto;
+        flex: 1 1;
       }
       :host div[name=color] > div > :not(io-vector) {
       }
@@ -36,6 +36,7 @@ export class IoDemo extends IoElement {
       :host div[name=elements] > .io-column {
         margin: var(--io-spacing) 0;
         max-width: 24em;
+        width: 24em;
       }
       :host div[name=elements] > .io-column > *:not(:last-child) {
         margin-bottom: var(--io-spacing);

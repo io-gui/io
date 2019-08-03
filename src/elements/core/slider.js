@@ -1,6 +1,5 @@
 import {html, IoElement} from "../../io.js";
 import {IoGl} from "./gl.js";
-import {chunk} from "./gl-chunk.js";
 
 export class IoSlider extends IoElement {
   static get Style() {
@@ -247,11 +246,6 @@ export class IoSliderKnob extends IoGl {
   static get Frag() {
     return `
     #extension GL_OES_standard_derivatives : enable
-
-    ${chunk.translate}
-    ${chunk.circle}
-    ${chunk.rectangle}
-    ${chunk.grid}
 
     varying vec2 vUv;
 
