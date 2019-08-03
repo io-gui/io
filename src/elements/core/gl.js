@@ -89,8 +89,6 @@ export class IoGl extends IoElement {
   }
   static get GlUtils() {
     return /* glsl */`
-    #extension GL_OES_standard_derivatives : enable
-    precision highp float;
     #ifndef saturate
       #define saturate(v) clamp(v, 0., 1.)
     #endif
@@ -147,15 +145,9 @@ export class IoGl extends IoElement {
     return '';
   }
   initShader() {
-    let frag = ''
-
-    for (let i = this.__protochain.length; i--;) {
-      const constructor = this.__protochain[i].constructor;
-      const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
-      if (glUtilsProp && glUtilsProp.get) {
-        frag += constructor.GlUtils;
-      }
-    }
+    let frag = `
+    #extension GL_OES_standard_derivatives : enable
+    precision highp float;\n`;
 
     for (let name in this.css.__properties) {
       const property = this.css.__protoProperties[name];
@@ -168,6 +160,14 @@ export class IoGl extends IoElement {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
       const property = this.__protoProperties[prop];
       frag += this.initPropertyUniform(name, property);
+    }
+
+    for (let i = this.__protochain.length; i--;) {
+      const constructor = this.__protochain[i].constructor;
+      const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
+      if (glUtilsProp && glUtilsProp.get) {
+        frag += constructor.GlUtils;
+      }
     }
 
     const vertShader = gl.createShader(gl.VERTEX_SHADER);

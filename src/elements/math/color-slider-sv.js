@@ -6,7 +6,7 @@ export class IoColorSliderSv extends IoColorSlider {
   static get Style() {
     return html`<style>
       :host {
-        cursor: move;
+        cursor: move !important;
       }
     </style>`;
   }
@@ -18,32 +18,22 @@ export class IoColorSliderSv extends IoColorSlider {
         vec2 position = vUv * uSize;
 
         // SV gradient
-        vec3 finalColor = hsv2rgb(vec3(uHsv[0], vUv.x, vUv.y));
+        vec2 axis = (uHorizontal == 1) ? vec2(vUv.y, vUv.x) : vec2(vUv.x, vUv.y);
+        vec3 finalColor = hsv2rgb(vec3(uHsv[0], axis.x, axis.y));
 
         // Marker
-        float posX = uSize.x * uHsv[1];
-        float posY = uSize.y * uHsv[2];
-        float radius = min(cssItemHeight / 2., min(uSize.x / 4., uSize.y / 4.));
-
-        vec2 markerPos = translate(position, posX, posY);
-
-        float circleStrokeShape = circle(markerPos, radius + cssStrokeWidth);
-        finalColor = mix(cssColor.rgb, finalColor, circleStrokeShape);
-
-        float circleShape = circle(markerPos, radius);
-        finalColor = mix(cssBackgroundColor.rgb, finalColor, circleShape);
-
-        float circleInnerShape = circle(markerPos, radius - cssStrokeWidth);
-        finalColor = mix(uRgb, finalColor, circleInnerShape);
+        vec2 markerPos = translateSlider(position, vec2(uHsv[2], uHsv[1]));
+        vec4 slider = paintSlider2D(markerPos, uRgb);
+        finalColor = mix(finalColor, slider.rgb, slider.a);
 
         gl_FragColor = vec4(finalColor, 1.0);
       }
     `;
   }
-  _setValue(x, y) {
+  _setValue(_x, _y) {
     this.valueChanged();
-    x = Math.max(0, Math.min(1, x));
-    y = Math.max(0, Math.min(1, 1 - y));
+    const x = Math.max(0, Math.min(1, this.horizontal ? (1 - _y) : _x));
+    const y = Math.max(0, Math.min(1, this.horizontal ? _x : (1 - _y)));
     switch (this.mode) {
       case 0:
         this.hsv[1] = x;

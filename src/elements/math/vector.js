@@ -13,15 +13,11 @@ export class IoVector extends IoElement {
         width: inherit;
         flex: 1 1;
       }
-      :host > io-number:not(:last-child) {
+      :host > *:not(:last-child) {
         margin-right: var(--io-spacing);
       }
-      :host > .io-slot {
-        display: flex;
-        flex: 0 0 auto;
-      }
-      :host > .io-slot > * {
-        flex: 0 0 auto;
+      :host > io-boolean {
+        width: var(--io-line-height) !important;
       }
     </style>`;
   }
@@ -81,7 +77,7 @@ export class IoVector extends IoElement {
         }]);
       }
     }
-    elements.push(['div', {id: 'slot', class: 'io-slot'}, [this.getSlotted()]]);
+    elements.push(this.getSlotted());
     this.template(elements);
   }
   getSlotted() {

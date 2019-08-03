@@ -41,10 +41,6 @@ export {IoColorSliderSv} from "./elements/math/color-slider-sv.js";
 export {IoColorSliderSl} from "./elements/math/color-slider-sl.js";
 export {IoColorSliderAlpha} from "./elements/math/color-slider-alpha.js";
 
-export {IoHsva} from "./elements/math/hsva.js";
-export {IoHsvaSwatch} from "./elements/math/hsva-swatch.js";
-export {IoHsvaPicker} from "./elements/math/hsva-picker.js";
-
-export {IoRgba} from "./elements/math/rgba.js";
-export {IoRgbaSwatch} from "./elements/math/rgba-swatch.js";
-export {IoRgbaPicker} from "./elements/math/rgba-picker.js";
+export {IoColorPanel} from "./elements/math/color-panel.js";
+export {IoColorPicker} from "./elements/math/color-picker.js";
+export {IoColorVector} from "./elements/math/color-vector.js";

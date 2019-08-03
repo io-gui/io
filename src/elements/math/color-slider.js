@@ -22,24 +22,54 @@ export class IoColorSlider extends IoColorSwatch {
   static get Properties() {
     return {
       horizontal: {
-        value: false,
+        value: true,
+        // value: false,
         reflect: 1,
       },
     };
   }
-  static get Frag() {
+  static get GlUtils() {
     return /* glsl */`
-      varying vec2 vUv;
-
-      void main(void) {
-        vec2 position = vUv * uSize;
-
-        // Alpha pattern
-        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 5.0));
-
-        gl_FragColor = saturate(vec4(mix(alphaPattern, uRgb.rgb, uAlpha), 1.0));
-      }
-    `;
+    vec2 translateSlider(vec2 position, vec2 value) {
+      float posX = uSize.x * ((uHorizontal == 1) ? value.x : value.y);
+      float posY = uSize.y * ((uHorizontal == 1) ? value.y : value.x);
+      return translate(position, posX, posY);
+    }
+    vec2 repeatX(vec2 position) {
+      float x = min(mod(uSize.x + position.x, uSize.x), mod(uSize.x - position.x, uSize.x));
+      return vec2(x, position.y);
+    }
+    vec2 repeatY(vec2 position) {
+      float y = min(mod(uSize.y + position.y, uSize.y), mod(uSize.y - position.y, uSize.y));
+      return vec2(position.x, y);
+    }
+    vec4 paintSlider(vec2 position, vec3 color) {
+      vec4 sliderColor = vec4(0.0);
+      float radius = cssItemHeight / 5.0;
+      float stroke = cssStrokeWidth;
+      vec2 width = (uHorizontal == 1) ? vec2(stroke * 2.0, uSize.y) : vec2(uSize.x, stroke * 2.0);
+      float strokeShape = min(rectangle(position, width + vec2(stroke)), circle(position, radius + stroke));
+      sliderColor = mix(vec4(cssColor.rgb, 1.0), sliderColor, strokeShape);
+      float fillShape = min(rectangle(position, width), circle(position, radius));
+      sliderColor = mix(vec4(cssBackgroundColor.rgb, 1.0), sliderColor, fillShape);
+      float colorShape = min(rectangle(position, width - vec2(stroke)), circle(position, radius - stroke));
+      sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
+      return sliderColor;
+    }
+    vec4 paintSlider2D(vec2 position, vec3 color) {
+      vec4 sliderColor = vec4(0.0);
+      float radius = cssItemHeight / 5.0;
+      float stroke = cssStrokeWidth;
+      vec2 width = (uHorizontal == 1) ? vec2(stroke * 2.0, uSize.y) : vec2(uSize.x, stroke * 2.0);
+      float strokeShape = circle(position, radius + stroke);
+      sliderColor = mix(vec4(cssColor.rgb, 1.0), sliderColor, strokeShape);
+      float fillShape = circle(position, radius);
+      sliderColor = mix(vec4(cssBackgroundColor.rgb, 1.0), sliderColor, fillShape);
+      float colorShape = circle(position, radius - stroke);
+      sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
+      return sliderColor;
+    }
+    \n\n`;
   }
   static get Listeners() {
     return {

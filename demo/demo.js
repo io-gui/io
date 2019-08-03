@@ -1,6 +1,7 @@
 import {html, IoElement, IoStorage as $} from "../dist/io.js";
 import {IoThemeSingleton} from "../dist/io-elements-core.js";
 import "./todomvc/todo-app.js";
+import "./demo-elements-math.js";
 
 export class IoDemo extends IoElement {
   static get Style() {
@@ -27,11 +28,6 @@ export class IoDemo extends IoElement {
       :host div[name=elements] {
         padding: var(--io-spacing);
       }
-      :host div[name=color] > div > io-vector {
-        flex: 1 1;
-      }
-      :host div[name=color] > div > :not(io-vector) {
-      }
       :host div[name=elements] > .io-row,
       :host div[name=elements] > .io-column {
         margin: var(--io-spacing) 0;
@@ -44,8 +40,18 @@ export class IoDemo extends IoElement {
       :host div[name=elements] > .io-row > *:not(:last-child) {
         margin-right: var(--io-spacing);
       }
-      :host io-rgba-picker {
-        flex: 1 1;
+      :host .io-column.colors > :not(:last-child) {
+        margin-bottom: var(--io-spacing);
+      }
+      :host .io-column.colors > io-color-panel {
+        height: 88px;
+      }
+      :host .io-column.colors > .io-row > * {
+        width: 44px;
+        height: 44px;
+      }
+      :host .io-column.colors > .io-row > :not(:last-child) {
+        margin-left: var(--io-spacing);
       }
       :host .menuframe {
         flex: 1 1;
@@ -136,69 +142,72 @@ export class IoDemo extends IoElement {
     ]];
 
     const color = ['div', {name: 'color', class: 'io-column'}, [
-      ['div', {class: 'io-row'}, [
-        ['io-rgba-picker', {value: this.bind('color'), horizontal: false}],
-        ['io-rgba-picker', {value: this.bind('color')}],
-      ]],
-      ['div', {class: 'io-row'}, [
-        ['io-color-slider', {value: this.bind('color')}],
-        ['io-color-slider-hue', {value: this.bind('color')}],
-        ['io-color-slider-saturation', {value: this.bind('color')}],
-        ['io-color-slider-value', {value: this.bind('color')}],
-        ['io-color-slider-level', {value: this.bind('color')}],
-        ['io-color-slider-hs', {value: this.bind('color')}],
-        ['io-color-slider-sv', {value: this.bind('color')}],
-        ['io-color-slider-sl', {value: this.bind('color')}],
-        ['io-color-slider-alpha', {value: this.bind('color')}],
-        ['io-vector', {value: this.bind('color')}],
-      ]],
-      ['div', {class: 'io-row'}, [
-        ['io-color-slider', {value: this.bind('rgba')}],
-        ['io-color-slider-hue', {value: this.bind('rgba')}],
-        ['io-color-slider-saturation', {value: this.bind('rgba')}],
-        ['io-color-slider-value', {value: this.bind('rgba')}],
-        ['io-color-slider-level', {value: this.bind('rgba')}],
-        ['io-color-slider-hs', {value: this.bind('rgba')}],
-        ['io-color-slider-sv', {value: this.bind('rgba')}],
-        ['io-color-slider-sl', {value: this.bind('rgba')}],
-        ['io-color-slider-alpha', {value: this.bind('rgba')}],
-        ['io-vector', {value: this.bind('rgba')}],
-      ]],
-      ['div', {class: 'io-row'}, [
-        ['io-color-slider', {value: this.bind('hsva')}],
-        ['io-color-slider-hue', {value: this.bind('hsva')}],
-        ['io-color-slider-saturation', {value: this.bind('hsva')}],
-        ['io-color-slider-value', {value: this.bind('hsva')}],
-        ['io-color-slider-level', {value: this.bind('hsva')}],
-        ['io-color-slider-hs', {value: this.bind('hsva')}],
-        ['io-color-slider-sv', {value: this.bind('hsva')}],
-        ['io-color-slider-sl', {value: this.bind('hsva')}],
-        ['io-color-slider-alpha', {value: this.bind('hsva')}],
-        ['io-vector', {value: this.bind('hsva')}],
-      ]],
-      ['div', {class: 'io-row'}, [
-        ['io-color-slider', {value: this.bind('hsla')}],
-        ['io-color-slider-hue', {value: this.bind('hsla')}],
-        ['io-color-slider-saturation', {value: this.bind('hsla')}],
-        ['io-color-slider-value', {value: this.bind('hsla')}],
-        ['io-color-slider-level', {value: this.bind('hsla')}],
-        ['io-color-slider-hs', {value: this.bind('hsla')}],
-        ['io-color-slider-sv', {value: this.bind('hsla')}],
-        ['io-color-slider-sl', {value: this.bind('hsla')}],
-        ['io-color-slider-alpha', {value: this.bind('hsla')}],
-        ['io-vector', {value: this.bind('hsla')}],
-      ]],
-      ['div', {class: 'io-row'}, [
-        ['io-color-slider', {value: this.bind('cmyka')}],
-        ['io-color-slider-hue', {value: this.bind('cmyka')}],
-        ['io-color-slider-saturation', {value: this.bind('cmyka')}],
-        ['io-color-slider-value', {value: this.bind('cmyka')}],
-        ['io-color-slider-level', {value: this.bind('cmyka')}],
-        ['io-color-slider-hs', {value: this.bind('cmyka')}],
-        ['io-color-slider-sv', {value: this.bind('cmyka')}],
-        ['io-color-slider-sl', {value: this.bind('cmyka')}],
-        ['io-color-slider-alpha', {value: this.bind('cmyka')}],
-        ['io-vector', {value: this.bind('cmyka')}],
+      ['div', {class: 'io-column colors'}, [
+        ['io-object', {label: 'Color Array (rgba)', value: this.bind('color')}],
+        ['io-color-panel', {value: this.bind('color')}],
+        ['io-color-vector', {value: this.bind('color')}],
+        ['div', {class: 'io-row'}, [
+          ['io-color-slider-hue', {value: this.bind('color')}],
+          ['io-color-slider-saturation', {value: this.bind('color')}],
+          ['io-color-slider-value', {value: this.bind('color')}],
+          ['io-color-slider-level', {value: this.bind('color')}],
+          ['io-color-slider-hs', {value: this.bind('color')}],
+          ['io-color-slider-sv', {value: this.bind('color')}],
+          ['io-color-slider-sl', {value: this.bind('color')}],
+          ['io-color-slider-alpha', {value: this.bind('color')}],
+        ]],
+        ['io-object', {label: 'Color Object (rgba)', value: this.bind('rgba')}],
+        ['io-color-panel', {value: this.bind('rgba')}],
+        ['io-color-vector', {value: this.bind('rgba')}],
+        ['div', {class: 'io-row'}, [
+          ['io-color-slider-hue', {value: this.bind('rgba')}],
+          ['io-color-slider-saturation', {value: this.bind('rgba')}],
+          ['io-color-slider-value', {value: this.bind('rgba')}],
+          ['io-color-slider-level', {value: this.bind('rgba')}],
+          ['io-color-slider-hs', {value: this.bind('rgba')}],
+          ['io-color-slider-sv', {value: this.bind('rgba')}],
+          ['io-color-slider-sl', {value: this.bind('rgba')}],
+          ['io-color-slider-alpha', {value: this.bind('rgba')}],
+        ]],
+        ['io-object', {label: 'Color Object (hsva)', value: this.bind('hsva')}],
+        ['io-color-panel', {value: this.bind('hsva')}],
+        ['io-color-vector', {value: this.bind('hsva')}],
+        ['div', {class: 'io-row'}, [
+          ['io-color-slider-hue', {value: this.bind('hsva')}],
+          ['io-color-slider-saturation', {value: this.bind('hsva')}],
+          ['io-color-slider-value', {value: this.bind('hsva')}],
+          ['io-color-slider-level', {value: this.bind('hsva')}],
+          ['io-color-slider-hs', {value: this.bind('hsva')}],
+          ['io-color-slider-sv', {value: this.bind('hsva')}],
+          ['io-color-slider-sl', {value: this.bind('hsva')}],
+          ['io-color-slider-alpha', {value: this.bind('hsva')}],
+        ]],
+        ['io-object', {label: 'Color Object (hsla)', value: this.bind('hsla')}],
+        ['io-color-panel', {value: this.bind('hsla')}],
+        ['io-color-vector', {value: this.bind('hsla')}],
+        ['div', {class: 'io-row'}, [
+          ['io-color-slider-hue', {value: this.bind('hsla')}],
+          ['io-color-slider-saturation', {value: this.bind('hsla')}],
+          ['io-color-slider-value', {value: this.bind('hsla')}],
+          ['io-color-slider-level', {value: this.bind('hsla')}],
+          ['io-color-slider-hs', {value: this.bind('hsla')}],
+          ['io-color-slider-sv', {value: this.bind('hsla')}],
+          ['io-color-slider-sl', {value: this.bind('hsla')}],
+          ['io-color-slider-alpha', {value: this.bind('hsla')}],
+        ]],
+        ['io-object', {label: 'Color Object (cmyka)', value: this.bind('cmyka')}],
+        ['io-color-panel', {value: this.bind('cmyka')}],
+        ['io-color-vector', {value: this.bind('cmyka')}],
+        ['div', {class: 'io-row'}, [
+          ['io-color-slider-hue', {value: this.bind('cmyka')}],
+          ['io-color-slider-saturation', {value: this.bind('cmyka')}],
+          ['io-color-slider-value', {value: this.bind('cmyka')}],
+          ['io-color-slider-level', {value: this.bind('cmyka')}],
+          ['io-color-slider-hs', {value: this.bind('cmyka')}],
+          ['io-color-slider-sv', {value: this.bind('cmyka')}],
+          ['io-color-slider-sl', {value: this.bind('cmyka')}],
+          ['io-color-slider-alpha', {value: this.bind('cmyka')}],
+        ]],
       ]],
     ]];
 
@@ -289,13 +298,13 @@ export class IoDemo extends IoElement {
         ],
         elements: [
           ['div', {name: 'elements'}, [
-            // primitives,
-            // sliders,
-            // buttons,
-            color,
-            // menu,
-            // object,
-            // inspector,
+            primitives,
+            sliders,
+            buttons,
+            // ['io-demo-elements-math'],
+            menu,
+            object,
+            inspector,
           ]],
           // demoLayout,
           ['iframe', {name: 'todo', src: './demo/todomvc/index.html'}],

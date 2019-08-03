@@ -17,21 +17,9 @@ export class IoColorSliderAlpha extends IoColorSlider {
         finalColor = mix(finalColor, vec3(1.0), axis);
 
         // Marker
-        float posX = uSize.x * ((uHorizontal == 1) ? uAlpha : 0.5);
-        float posY = uSize.y * ((uHorizontal == 1) ? 0.5 : uAlpha);
-        float radius = cssItemHeight / 5.0;
-        float widthX = (uHorizontal == 1) ? cssStrokeWidth * 2.0 : uSize.x;
-        float widthY = (uHorizontal == 1) ? uSize.y : cssStrokeWidth * 2.0;
-
-        vec2 markerPos = translate(position, posX, posY);
-
-        float circleStrokeShape = circle(markerPos, radius + cssStrokeWidth);
-        float rectStrokeShape = rectangle(markerPos, vec2(widthX + cssStrokeWidth, widthY + cssStrokeWidth));
-        finalColor = mix(cssColor.rgb, finalColor, min(rectStrokeShape, circleStrokeShape));
-
-        float circleShape = circle(markerPos, radius);
-        float rectShape = rectangle(markerPos, vec2(widthX, widthY));
-        finalColor = mix(cssBackgroundColor.rgb, finalColor, min(rectShape, circleShape));
+        vec2 markerPos = translateSlider(position, vec2(uAlpha, 0.5));
+        vec4 slider = paintSlider(markerPos, vec3(1.0));
+        finalColor = mix(finalColor, slider.rgb, slider.a);
 
         gl_FragColor = vec4(finalColor, 1.0);
       }
@@ -42,11 +30,12 @@ export class IoColorSliderAlpha extends IoColorSlider {
     const hasAlpha = this.value[this.components[3]] !== undefined;
     this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
   }
-  _setValue(x, y) {
-    const a = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+  _setValue(_x, _y) {
+    this.valueChanged();
+    const y = Math.max(0, Math.min(1, this.horizontal ? _x : (1 - _y)));
     const c = this.mode === 3 ? 4 : 3;
     const hasAlpha = this.value[this.components[c]] !== undefined;
-    if (hasAlpha) this.value[this.components[c]] = a;
+    if (hasAlpha) this.value[this.components[c]] = y;
   }
 }
 

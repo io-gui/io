@@ -14,36 +14,20 @@ export class IoColorSliderLevel extends IoColorSlider {
         vec3 finalColor = hsl2rgb(vec3(uHsl[0], uHsl[1], axis));
 
         // Marker
-        float posX = uSize.x * ((uHorizontal == 1) ? uHsl[2] : 0.5);
-        float posY = uSize.y * ((uHorizontal == 1) ? 0.5 : uHsl[2]);
-        float radius = cssItemHeight / 5.0;
-        float widthX = (uHorizontal == 1) ? cssStrokeWidth * 2.0 : uSize.x;
-        float widthY = (uHorizontal == 1) ? uSize.y : cssStrokeWidth * 2.0;
-
-        vec2 markerPos = translate(position, posX, posY);
-
-        float circleStrokeShape = circle(markerPos, radius + cssStrokeWidth);
-        float rectStrokeShape = rectangle(markerPos, vec2(widthX + cssStrokeWidth, widthY + cssStrokeWidth));
-        finalColor = mix(cssColor.rgb, finalColor, min(rectStrokeShape, circleStrokeShape));
-
-        float circleShape = circle(markerPos, radius);
-        float rectShape = rectangle(markerPos, vec2(widthX, widthY));
-        finalColor = mix(cssBackgroundColor.rgb, finalColor, min(rectShape, circleShape));
-
-        float circleInnerShape = circle(markerPos, radius - cssStrokeWidth);
-        float rectInnerShape = rectangle(markerPos, vec2(widthX - cssStrokeWidth, widthY - cssStrokeWidth));
-        finalColor = mix(uRgb, finalColor, min(rectInnerShape, circleInnerShape));
+        vec2 markerPos = translateSlider(position, vec2(uHsl[2], 0.5));
+        vec4 slider = paintSlider(markerPos, uRgb);
+        finalColor = mix(finalColor, slider.rgb, slider.a);
 
         gl_FragColor = vec4(finalColor, 1.0);
       }
     `;
   }
-  _setValue(x, y) {
+  _setValue(_x, _y) {
     this.valueChanged();
-    const l = Math.max(0, Math.min(1, this.horizontal ? x : (1 - y)));
+    const y = Math.max(0, Math.min(1, this.horizontal ? _x : (1 - _y)));
     switch (this.mode) {
       case 0:
-        this.hsl[2] = l;
+        this.hsl[2] = y;
         const rgb = convert.hsl.rgb([
           this.hsl[0] * 360,
           this.hsl[1] * 100,
@@ -54,7 +38,7 @@ export class IoColorSliderLevel extends IoColorSlider {
         this.value[this.components[2]] = rgb[2] / 255;
         break;
       case 3:
-        this.hsl[2] = l;
+        this.hsl[2] = y;
         const cmyk = convert.rgb.cmyk(convert.hsl.rgb([
           this.hsl[0] * 360,
           this.hsl[1] * 100,
@@ -66,7 +50,7 @@ export class IoColorSliderLevel extends IoColorSlider {
         this.value[this.components[3]] = cmyk[3] / 100;
         break;
       case 1:
-        this.hsl[2] = l;
+        this.hsl[2] = y;
         const hsv = convert.rgb.hsv(convert.hsl.rgb([
           this.hsl[0] * 100,
           this.hsl[1] * 100,
@@ -77,7 +61,7 @@ export class IoColorSliderLevel extends IoColorSlider {
         this.value[this.components[2]] = hsv[2] / 100;
         break;
       case 2:
-        this.value[this.components[2]] = l;
+        this.value[this.components[2]] = y;
         break;
     }
   }
