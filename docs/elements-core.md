@@ -70,7 +70,7 @@ To change the value with arrow keys on focused slider, users should hold down th
 
 SVG icon element.
 
-<io-element-demo element="io-icon" properties='{"icon": "icons:link"}'></io-element-demo>
+<io-element-demo element="io-icon" properties='{"icon": "icons:link"}' config='{"icon": ["io-menu-option", {"options": ["icons:link", "icons:unlink", "icons:check", "icons:uncheck"]}]}'></io-element-demo>
 
 ## &lt;io-theme-singleton&gt;
 
@@ -86,7 +86,7 @@ Moreover, some of the key theme variables such as `'--io-color'` and `'--io-back
 
 `IoGL` is a base class for WebGL-based custom elements. The appearance of such elements is defined with fragment shader programs that execute on the GPU. All numeric properties are automatically bound to shader uniforms, including `IoThemeSingleton` properties. You can define your custom shaders inside `static get Frag()` return string.
 
-<io-element-demo element="io-gl" width="257px" height="257px" properties='{"color": [0, 0, 0, 1]}' config='{"size": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-rgba"], "color": ["io-rgba"]}'></io-element-demo>
+<io-element-demo element="io-gl" width="257px" height="257px" properties='{"color": [0, 0, 0, 1]}' config='{"size": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-color-vector"], "color": ["io-color-vector"]}'></io-element-demo>
 
 
 An example of the most basic fragment shader program:

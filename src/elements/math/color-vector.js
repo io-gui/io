@@ -18,7 +18,7 @@ export class IoColorVector extends IoColorMixin(IoVector) {
     };
   }
   getSlotted() {
-    return ['io-color-picker', {id: 'swatch', value: this.value}];
+    return ['io-color-picker', {id: 'swatch', mode: this.mode, value: this.value}];
   }
 }
 

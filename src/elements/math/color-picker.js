@@ -30,8 +30,9 @@ export class IoColorPicker extends IoColorSwatch {
     this._expand();
   }
   _expand() {
-    const hasAlpha = this.value[3] !== undefined || this.value.a !== undefined;
+    const hasAlpha = this.alpha !== undefined;
     IoColorPanelSingleton.value = this.value;
+    IoColorPanelSingleton.mode = this.mode;
     IoColorPanelSingleton.style.width = hasAlpha ? '192px' : '160px';
     IoColorPanelSingleton.style.height = '128px';
     IoColorPanelSingleton.expanded = true;

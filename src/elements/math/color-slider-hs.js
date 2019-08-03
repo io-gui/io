@@ -28,7 +28,7 @@ export class IoColorSliderHs extends IoColorSlider {
 
         // Marker
         vec2 markerPos = translateSlider(position, vec2(uHsv[1], uHsv[0]));
-        markerPos = repeatX(markerPos);
+        markerPos = (uHorizontal == 1) ? repeatY(markerPos) : repeatX(markerPos);
         vec4 slider = paintSlider2D(markerPos, uRgb);
         finalColor = mix(finalColor, slider.rgb, slider.a);
 

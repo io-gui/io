@@ -22,8 +22,7 @@ export class IoColorSlider extends IoColorSwatch {
   static get Properties() {
     return {
       horizontal: {
-        value: true,
-        // value: false,
+        value: false,
         reflect: 1,
       },
     };

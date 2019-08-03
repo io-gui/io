@@ -16,14 +16,17 @@ export const IoColorMixin = (superclass) => {
           type: Array,
           notify: false,
         },
-        // 0 - rgba
-        // 1 - hsva
-        // 2 - hsla
-        // 3 - cmyka
+        // 0 - rgb
+        // 1 - hsv
+        // 2 - hsl
+        // 3 - cmyk
         mode: 0,
       };
     }
     valueMutated() {
+      this.valueChanged();
+    }
+    modeChanged() {
       this.valueChanged();
     }
     valueChanged() {
@@ -51,7 +54,7 @@ export const IoColorMixin = (superclass) => {
       let hsv;
       let hsl;
       let cmyk;
-      let alpha = 1;
+      let alpha = undefined;
 
       switch (mode) {
         case 3:
@@ -90,7 +93,7 @@ export const IoColorMixin = (superclass) => {
         hsv: [hsv[0] / 360, hsv[1] / 100, hsv[2] / 100],
         hsl: [hsl[0] / 360, hsl[1] / 100, hsl[2] / 100],
         cmyk: [cmyk[0] / 100, cmyk[1] / 100, cmyk[2] / 100, cmyk[3] / 100],
-        alpha: alpha / 100,
+        alpha: alpha !== undefined ? alpha / 100 : undefined,
         components: c,
         mode: mode,
       });

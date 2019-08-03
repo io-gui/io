@@ -15,6 +15,7 @@ export class IoSlider extends IoElement {
       }
       :host > io-slider-knob {
         flex: 1 1 4.5em;
+        min-width: 4.5em;
       }
     </style>`;
   }

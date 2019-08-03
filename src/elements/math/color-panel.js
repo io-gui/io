@@ -90,13 +90,14 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
       this._suspendLoop = false;
     });
   }
+  expandedChanged() {
+    this.valueChanged();
+  }
   changed() {
-    const c = this.components;
-    const hasAlpha = this.value[c[3]] !== undefined;
     this.template([
       ['io-color-slider-sv', {value: this.hsv, mode: 1, 'on-value-set': this._onHsvSet}],
       ['io-color-slider-hue', {value: this.hsv, mode: 1, horizontal: !this.horizontal, 'on-value-set': this._onHsvSet}],
-      hasAlpha ? ['io-color-slider-alpha', {value: this.value, horizontal: !this.horizontal}] : null,
+      this.alpha !== undefined ? ['io-color-slider-alpha', {value: this.value, horizontal: !this.horizontal}] : null,
     ]);
   }
 }
