@@ -8,6 +8,9 @@ export class IoDemoElementsMath extends IoElement {
       padding: var(--io-spacing);
       grid-template-columns: auto 1fr !important;
     }
+    :host > :nth-child(2n+1) {
+      text-align: right;
+    }
     @media only screen and (max-width: 400px) {
       :host {
         grid-template-columns: 0 1fr !important;
