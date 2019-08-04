@@ -18,10 +18,15 @@ export class IoSidebar extends IoElement {
         font-weight: bold;
         margin: 0 !important;
       }
-      :host io-collapsable > .io-frame > io-button {
+      :host io-button {
         text-align: left;
-        padding-left: 1.5em;
         align-self: stretch;
+      }
+      :host io-collapsable > .io-frame > io-collapsable {
+        padding-left: 0.75em;
+      }
+      :host io-collapsable > .io-frame > io-button {
+        padding-left: 1.5em;
       }
       :host:not([overflow]) {
         -webkit-overflow-scrolling: touch;
@@ -65,9 +70,10 @@ export class IoSidebar extends IoElement {
       const option = options[i];
       if (option.options) {
         const UID = option.label + ' ' + i + '/' + options.length + ' (' + option.options.length + ')';
+        let selectedOption = filterObject(option.options, option => { return option.value === this.selected; });
         elements.push(['io-collapsable', {
           label: option.label,
-          expanded: $('io-sidebar-collapse ' + UID, false),
+          expanded: !!selectedOption || $('io-sidebar-collapse ' + UID, false),
           elements: [...this._addOptions(option.options)]
         }]);
       } else {
@@ -76,7 +82,7 @@ export class IoSidebar extends IoElement {
           label: option.label || option.value || option,
           value: option.value || option,
           action: this._onSelect,
-          class: (selected ? 'io-selected-tab' : ''),
+          selected: selected,
         }]);
       }
     }

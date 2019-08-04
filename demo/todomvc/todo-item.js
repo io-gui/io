@@ -1,9 +1,16 @@
-import {IoElement} from "../../dist/io.js";
+import {IoElement, html} from "../../dist/io.js";
 
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
 
 export class TodoItem extends IoElement {
+  static get Style() {
+    return html`<style>
+    :host {
+      display: contents;
+    }
+    </style>`;
+  }
   static get Properties() {
     return {
       item: Object,
@@ -13,11 +20,13 @@ export class TodoItem extends IoElement {
   }
   changed() {
     this.template([
-      ['li', {class: (this.item.completed ? 'completed' : '') + (this.editing ? ' editing' : '')}, [
-        ['input', {type: 'checkbox', class: 'toggle', checked: this.item.completed, 'on-click': this.onToggleItem}],
-        ['label', {'on-dblclick': this.onStartEdit}, this.item.title],
-        ['button', {class: 'destroy', 'on-click': this.onDestroyItem}],
-        this.editing ? ['input', {id: 'input', class: 'edit', value: this.item.title, 'on-blur': this.onEndEdit, 'on-keyup': this.onInputKey}] : null
+      ['li', {class: 'todo ' + (this.item.completed ? 'completed ' : '') + (this.editing ? 'editing' : '')}, [
+        ['div', {class: 'view'}, [
+          ['input', {type: 'checkbox', class: 'toggle', checked: this.item.completed, 'on-click': this.onToggleItem}],
+          ['label', {'on-dblclick': this.onStartEdit}, this.item.title],
+          ['button', {class: 'destroy', 'on-click': this.onDestroyItem}],
+        ]],
+        ['input', {id: 'input', class: 'edit', value: this.item.title, 'on-blur': this.onEndEdit, 'on-keyup': this.onInputKey}]
       ]]
     ]);
   }

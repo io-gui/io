@@ -30,6 +30,6 @@ export {IoNumber} from "./elements/core/number.js";
 export {IoSlider} from "./elements/core/slider.js";
 export {IoString} from "./elements/core/string.js";
 export {IoLayerSingleton} from "./elements/core/layer.js";
-export {IoGl, chunk} from "./elements/core/gl.js";
+export {IoGl} from "./elements/core/gl.js";
 export {IoIconset} from "./elements/core/iconset.js";
 export {IoIcon} from "./elements/core/icon.js";

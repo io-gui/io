@@ -132,7 +132,6 @@ export class IoMdView extends IoElement {
         type: String,
         reflect: 1
       },
-      vars: Object,
     };
   }
   onResized() {
@@ -140,27 +139,29 @@ export class IoMdView extends IoElement {
     width = Math.min((width - 30) / 35, 15);
     this.style.setProperty('--io-code-size', width + "px");
   }
+  parseMarkdown(markdown) {
+    if (window.marked) {
+      if (window.marked) {
+        window.marked.setOptions({
+          sanitize: false,
+          highlight: function(code) {
+            return window.hljs ? window.hljs.highlightAuto(code).value : null;
+          },
+        });
+      }
+      this.innerHTML = window.marked(markdown);
+      this.classList.toggle('io-loading', false);
+      this.dispatchEvent('content-ready', {}, true);
+    }
+  }
   pathChanged() {
-    const scope = this;
     this.classList.toggle('io-loading', true);
     fetch(this.path)
     .then(response => {
       return response.text();
     })
     .then(text => {
-      if (window.marked) {
-        if (window.marked) {
-          window.marked.setOptions({
-            sanitize: false,
-            highlight: function(code) {
-              return window.hljs ? window.hljs.highlightAuto(code).value : null;
-            },
-          });
-        }
-        scope.innerHTML = window.marked(text);
-        this.classList.toggle('io-loading', false);
-        this.dispatchEvent('content-ready', {}, true);
-      }
+      this.parseMarkdown(text);
     });
   }
 }

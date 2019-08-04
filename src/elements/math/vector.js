@@ -13,15 +13,11 @@ export class IoVector extends IoElement {
         width: inherit;
         flex: 1 1;
       }
-      :host > io-number:not(:last-child) {
+      :host > *:not(:last-child) {
         margin-right: var(--io-spacing);
       }
-      :host > .io-slot {
-        display: flex;
-        flex: 0 0 auto;
-      }
-      :host > .io-slot > * {
-        flex: 0 0 auto;
+      :host > io-boolean {
+        width: var(--io-line-height) !important;
       }
     </style>`;
   }
@@ -29,51 +25,49 @@ export class IoVector extends IoElement {
     return {
       value: [0, 0, 0, 0],
       conversion: 1,
-      step: 0.01,
+      step: 0.001,
       min: -Infinity,
       max: Infinity,
       linkable: false,
       linked: false,
-      _c: [0, 1],
+      components: {
+        type: Array,
+        notify: false,
+      },
     };
   }
   _onValueSet(event) {
     const item = event.composedPath()[0];
-    const prop = item.id;
-    if (prop !== null) { //TODO: is this necessary?
-      const value = event.detail.value;
-      const oldValue = event.detail.oldValue;
-      this.value[prop] = value;
-      if (this.linked) {
-        const change = value / oldValue;
-        for (let i in this._c) {
-          const p = this._c[i];
-          if (oldValue === 0) {
-            this.value[p] = value;
-          } else if (p !== prop) {
-            this.value[p] *= change;
-          }
+    const c = item.id;
+    const value = event.detail.value;
+    const oldValue = event.detail.oldValue;
+    this.value[c] = value;
+    if (this.linked) {
+      const change = value / oldValue;
+      for (let i in this.components) {
+        const p = this.components[i];
+        if (oldValue === 0) {
+          this.value[p] = value;
+        } else if (p !== c) {
+          this.value[p] *= change;
         }
       }
-      // TODO: test
-      const detail = {object: this.value, prop: this.linked ? null : prop, value: value, oldValue: oldValue};
-      this.dispatchEvent('object-mutated', detail, false, window);
     }
+    // TODO: test
+    const detail = {object: this.value, property: this.linked ? null : c, value: value, oldValue: oldValue};
+    this.dispatchEvent('object-mutated', detail, false, window);
   }
   valueChanged() {
-    this._c = this.value instanceof Array ? [0, 1, 2, 3] : ['x', 'y', 'z', 'w'];
-  }
-  insertTrailingElement() {
-
+    this.components = Object.keys(this.value);
   }
   changed() {
     const elements = [];
-    for (let i in this._c) {
-      const prop = this._c[i];
-      if (this.value[prop] !== undefined) {
+    for (let i in this.components) {
+      const c = this.components[i];
+      if (this.value[c] !== undefined) {
         elements.push(['io-number', {
-          id: prop,
-          value: this.value[prop],
+          id: c,
+          value: this.value[c],
           conversion: this.conversion,
           step: this.step,
           min: this.min,
@@ -83,7 +77,7 @@ export class IoVector extends IoElement {
         }]);
       }
     }
-    elements.push(['div', {id: 'slot', class: 'io-slot'}, [this.getSlotted()]]);
+    elements.push(this.getSlotted());
     this.template(elements);
   }
   getSlotted() {

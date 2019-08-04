@@ -127,10 +127,7 @@ export const IoNodeMixin = (superclass) => {
     setProperties(props) {
       for (let p in props) {
         if (this.__properties[p] === undefined) continue;
-        const oldValue = this.__properties[p].value;
         this.__properties.set(p, props[p], true);
-        const value = this.__properties[p].value;
-        if (value !== oldValue) this.queue(p, value, oldValue);
       }
 
       // TODO: remove?
@@ -145,25 +142,25 @@ export const IoNodeMixin = (superclass) => {
 
       if (this.__connected) this.queueDispatch();
     }
-    /**
-      * This function is called when `object-mutated` event is observed
-      * and changed object is a property of the node.
-      * @param {Object} event - Property change event.
-      */
     _onObjectMutation(event) {
       for (let i = this.__objectProps.length; i--;) {
         const prop = this.__objectProps[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
-          // TODO: consider optimizing
-          // setTimeout(()=> {
-            if (this[prop + 'Mutated']) this[prop + 'Mutated'](event);
-            this.changed();
-            this.applyCompose();
-          // });
-          return;
+          this.debounce(this._onObjectMutationDebounced, prop);
         }
       }
+    }
+    /**
+      * This function is called when `object-mutated` event is observed
+      * and changed object is a property of the node.
+      * @param {string} prop - Mutated object property name.
+      */
+    _onObjectMutationDebounced(prop) {
+      if (this['propMutated']) this['propMutated'](prop);
+      if (this[prop + 'Mutated']) this[prop + 'Mutated']();
+      this.changed();
+      this.applyCompose();
     }
     /**
       * Callback when `IoNode` is connected.
@@ -245,6 +242,28 @@ export const IoNodeMixin = (superclass) => {
     queueDispatch() {
       this.__nodeQueue.dispatch();
     }
+    /**
+      * Debounces function execution to next frame (rAF) if the function has been executed in the current frame.
+      * @param {function} func - Function to debounce.
+      * @param {*} arg - argument for debounced function.
+      */
+    debounce(func, arg) {
+      if (preDebounceQueue.indexOf(func) === -1) {
+        preDebounceQueue.push(func);
+        func(arg);
+        return;
+      }
+      if (debounceQueue.indexOf(func) === -1) {
+        debounceQueue.push(func);
+      }
+      // TODO: improve argument handling. Consider edge-cases.
+      if (argQueue.has(func) && typeof arg !== 'object') {
+        const queue = argQueue.get(func);
+        if (queue.indexOf(arg) === -1) queue.push(arg);
+      } else {
+        argQueue.set(func, [arg]);
+      }
+    }
   };
   classConstructor.Register = Register;
   return classConstructor;
@@ -305,6 +324,26 @@ const Register = function () {
 };
 
 IoNodeMixin.Register = Register;
+
+const preDebounceQueue = new Array();
+const debounceQueue = new Array();
+const argQueue = new WeakMap();
+
+const animate = function() {
+  for (let i = preDebounceQueue.length; i--;) {
+    preDebounceQueue.splice(preDebounceQueue.indexOf(preDebounceQueue[i]), 1);
+  }
+  for (let i = debounceQueue.length; i--;) {
+    const queue = argQueue.get(debounceQueue[i]);
+    for (let p = queue.length; p--;) {
+      debounceQueue[i](queue[p]);
+      queue.splice(queue.indexOf(p), 1);
+    }
+    debounceQueue.splice(debounceQueue.indexOf(debounceQueue[i]), 1);
+  }
+  requestAnimationFrame(animate);
+};
+requestAnimationFrame(animate);
 
 /**
   * IoNodeMixin applied to `Object` class.

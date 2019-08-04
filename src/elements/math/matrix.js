@@ -32,20 +32,21 @@ export class IoMatrix extends IoElement {
     return {
       value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       step: 0.001,
-      _c: Array,
+      components: {
+        type: Array,
+        notify: false,
+      },
     };
   }
   _onValueSet(event) {
     if (event.detail.object) return; // TODO: unhack
     const item = event.composedPath()[0];
-    const prop = item.id;
-    if (prop !== null) {
-      const value = event.detail.value;
-      const oldValue = event.detail.oldValue;
-      this.value[prop] = value;
-      const detail = {object: this.value, prop: prop, value: value, oldValue: oldValue};
-      this.dispatchEvent('object-mutated', detail, false, window);
-    }
+    const c = item.id;
+    const value = event.detail.value;
+    const oldValue = event.detail.oldValue;
+    this.value[c] = value;
+    const detail = {object: this.value, property: c, value: value, oldValue: oldValue};
+    this.dispatchEvent('object-mutated', detail, false, window);
   }
   valueChanged() {
     let c;
@@ -61,16 +62,16 @@ export class IoMatrix extends IoElement {
       c = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
       this.columns = 4;
     }
-    this._c = c;
+    this.components = c;
   }
   changed() {
     const elements = [];
-    for (let i in this._c) {
-      const prop = this._c[i];
-      if (this.value[prop] !== undefined) {
+    for (let i in this.components) {
+      const c = this.components[i];
+      if (this.value[c] !== undefined) {
         elements.push(['io-number', {
-          id: prop,
-          value: this.value[prop],
+          id: c,
+          value: this.value[c],
           step: this.step,
           'on-value-set': this._onValueSet
         }]);
