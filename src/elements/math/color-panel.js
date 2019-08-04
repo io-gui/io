@@ -44,9 +44,9 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
       },
     };
   }
-  _onHsvSet(event) {
+  _onHsvSet() {
     switch (this.mode) {
-      case 0:
+      case 0: {
         const rgb = convert.hsv.rgb([
           this.hsv[0] * 360,
           this.hsv[1] * 100,
@@ -56,8 +56,8 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
         this.value[this.components[1]] = rgb[1] / 255;
         this.value[this.components[2]] = rgb[2] / 255;
         break;
-      case 3:
-        // this.hsv[0] = h;
+      }
+      case 3: {
         const cmyk = convert.rgb.cmyk(convert.hsv.rgb([
           this.hsv[0] * 360,
           this.hsv[1] * 100,
@@ -68,12 +68,14 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
         this.value[this.components[2]] = cmyk[2] / 100;
         this.value[this.components[3]] = cmyk[3] / 100;
         break;
-      case 1:
+      }
+      case 1: {
         this.value[this.components[0]] = this.hsv[0];
         this.value[this.components[1]] = this.hsv[1];
         this.value[this.components[2]] = this.hsv[2];
         break;
-      case 2:
+      }
+      case 2: {
         const hsl = convert.rgb.hsl(convert.hsv.rgb([
           this.hsv[0] * 100,
           this.hsv[1] * 100,
@@ -83,6 +85,7 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
         this.value[this.components[1]] = hsl[1] / 100;
         this.value[this.components[2]] = hsl[2] / 100;
         break;
+      }
     }
     this._suspendLoop = true;
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);

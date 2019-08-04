@@ -26,7 +26,7 @@ export class IoColorSliderLevel extends IoColorSlider {
     this.valueChanged();
     const y = Math.max(0, Math.min(1, this.horizontal ? _x : (1 - _y)));
     switch (this.mode) {
-      case 0:
+      case 0: {
         this.hsl[2] = y;
         const rgb = convert.hsl.rgb([
           this.hsl[0] * 360,
@@ -37,7 +37,8 @@ export class IoColorSliderLevel extends IoColorSlider {
         this.value[this.components[1]] = rgb[1] / 255;
         this.value[this.components[2]] = rgb[2] / 255;
         break;
-      case 3:
+      }
+      case 3: {
         this.hsl[2] = y;
         const cmyk = convert.rgb.cmyk(convert.hsl.rgb([
           this.hsl[0] * 360,
@@ -49,7 +50,8 @@ export class IoColorSliderLevel extends IoColorSlider {
         this.value[this.components[2]] = cmyk[2] / 100;
         this.value[this.components[3]] = cmyk[3] / 100;
         break;
-      case 1:
+      }
+      case 1: {
         this.hsl[2] = y;
         const hsv = convert.rgb.hsv(convert.hsl.rgb([
           this.hsl[0] * 100,
@@ -60,9 +62,11 @@ export class IoColorSliderLevel extends IoColorSlider {
         this.value[this.components[1]] = hsv[1] / 100;
         this.value[this.components[2]] = hsv[2] / 100;
         break;
-      case 2:
+      }
+      case 2: {
         this.value[this.components[2]] = y;
         break;
+      }
     }
   }
 }

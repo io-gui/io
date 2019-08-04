@@ -1,4 +1,4 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {convert} from "../../../lib/color-convert.js";
 
 export const IoColorMixin = (superclass) => {
@@ -32,7 +32,7 @@ export const IoColorMixin = (superclass) => {
     valueChanged() {
       let c = [];
       if (this.value instanceof Array) {
-        for (var i = 0; i < this.value.length; i++) {
+        for (let i = 0; i < this.value.length; i++) {
           c.push(i);
         }
       } else {
@@ -98,7 +98,7 @@ export const IoColorMixin = (superclass) => {
         mode: mode,
       });
     }
-  }
+  };
   classConstructor.Register = IoElement.Register;
   return classConstructor;
-}
+};
