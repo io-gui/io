@@ -13,7 +13,6 @@ const animate = function() {
       element.render();
     }
   }
-  renderQueue.length = 0;
 };
 requestAnimationFrame(animate);
 
@@ -249,10 +248,11 @@ export class IoGl extends IoElement {
   }
   onResized() {
     const rect = this.getBoundingClientRect();
-    const borderWidth = parseFloat(getComputedStyle(this).borderWidth);
+    const borderWidth = parseFloat(getComputedStyle(this).borderTopWidth); // TODO: FF bug borderWidth resolves empty string.
     const pxRatio = window.devicePixelRatio;
     const width = Math.ceil((rect.width - borderWidth * 2) * pxRatio);
     const height = Math.ceil((rect.height - borderWidth * 2) * pxRatio);
+
     this.setProperties({
       size: [width, height],
       aspect: width / height,
@@ -269,6 +269,7 @@ export class IoGl extends IoElement {
   render() {
     const width = this.size[0];
     const height = this.size[1];
+
 
     if (!width || !height) return;
 

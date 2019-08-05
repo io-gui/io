@@ -119,7 +119,7 @@ export class IoDemoElementsCore extends IoElement {
         ['io-boolean', {value: this.bind('boolean')}],
         ['io-boolean', {value: this.bind('boolean'), display: 'switch'}],
       ]],
-      ['io-item', {label: 'Sliders'}],
+      ['div'],
       ['div', {class: 'io-column'}, [
         ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
         ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
@@ -127,7 +127,7 @@ export class IoDemoElementsCore extends IoElement {
         ['io-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
         ['io-slider', {value: this.bind('string'), min: -0.25, max: 0.25, step: 0.01}],
       ]],
-      ['io-item', {label: 'Buttons'}],
+      ['div'],
       ['div', {class: 'io-table4 table'}, [
         ['io-menu-option', {options: [
           {label: 'negative one', value: -1},
