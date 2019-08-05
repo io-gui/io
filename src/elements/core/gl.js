@@ -3,24 +3,28 @@ import {IoThemeSingleton} from "./theme.js";
 
 // TODO: document and test
 
-const animationQueue = new Array();
+const renderQueue = new Array();
 const animate = function() {
   requestAnimationFrame(animate);
-  for (let i = animationQueue.length; i--;) {
-    animationQueue[i]();
+  for (let i = renderQueue.length; i--;) {
+    const element = renderQueue[i];
+    if (!element.$.img.loading) {
+      renderQueue.splice(renderQueue.indexOf(element), 1);
+      element.render();
+    }
   }
-  animationQueue.length = 0;
+  renderQueue.length = 0;
 };
 requestAnimationFrame(animate);
 
-function queueAnimation(func) {
-  if (animationQueue.indexOf(func) === -1) {
-    animationQueue.push(func);
+function queueRender(element) {
+  if (renderQueue.indexOf(element) === -1) {
+    renderQueue.push(element);
   }
 }
 
 const canvas = document.createElement('canvas');
-const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false});
+const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true});
 gl.imageSmoothingEnabled = false;
 
 gl.getExtension('OES_standard_derivatives');
@@ -239,6 +243,8 @@ export class IoGl extends IoElement {
 
     this.render = this.render.bind(this);
 
+    this.$.img.onload = () => { this.$.img.loading = false; }
+
     this.updateCssUniforms();
   }
   onResized() {
@@ -255,16 +261,10 @@ export class IoGl extends IoElement {
   }
   cssMutated() {
     this.updateCssUniforms();
-    queueAnimation(this.render);
+    queueRender(this);
   }
-  // TODO: make better uniform update
-  // propertyChanged(event) {
-  //   const p = event.detail.property;
-  //   const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-  //   this.updatePropertyUniform(name, this.__properties[p]);
-  // }
   changed() {
-    queueAnimation(this.render);
+    queueRender(this);
   }
   render() {
     const width = this.size[0];
@@ -289,6 +289,7 @@ export class IoGl extends IoElement {
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
     this.$.img.src = canvas.toDataURL('image/png', 0.9);
+    this.$.img.loading = true;
   }
   setShaderProgram() {
     if (currentProgram !== this._shader) {

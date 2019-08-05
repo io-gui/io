@@ -214,7 +214,7 @@ export class IoMenuItem extends IoItem {
     this.focus();
   }
   _onTouchstart(event) {
-    if (event.cancelable && (this.expanded || this._isInLayer)) {
+    if (this.expanded || this._isInLayer) {
       event.preventDefault();
       this.addEventListener('touchmove', this._onTouchmove);
       this.addEventListener('touchend', this._onTouchend);

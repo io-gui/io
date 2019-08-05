@@ -51,7 +51,7 @@ export class IoNumber extends IoItem {
   }
   _onTouchend(event) {
     if (!this.ladder) return;
-    if (event.cancelable) event.preventDefault();
+    event.preventDefault();
     const dx = event.changedTouches[0].clientX - this._x;
     const dy = event.changedTouches[0].clientY - this._y;
     if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {

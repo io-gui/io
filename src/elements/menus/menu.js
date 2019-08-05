@@ -85,7 +85,7 @@ export class IoMenu extends IoElement {
     }
   }
   _onTouchstart(event) {
-    if (this.options.length && event.cancelable && this.button !== 2) {
+    if (this.options.length && this.button !== 2) {
       this._connectOptions();
       this.parentElement.addEventListener('touchmove', this._onTouchmove);
       this.parentElement.addEventListener('touchend', this._onTouchend);

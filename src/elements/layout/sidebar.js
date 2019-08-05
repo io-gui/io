@@ -10,27 +10,22 @@ export class IoSidebar extends IoElement {
         overflow-y: auto;
         padding: var(--io-spacing);
       }
-      :host io-collapsable,
-      :host io-collapsable > .io-frame {
+      :host:not([overflow]) {
+        -webkit-overflow-scrolling: touch;
+        flex-direction: column;
+      }
+      :host > * {
+        flex: 0 0 auto;
+      }
+      :host io-collapsable {
         padding: 0;
       }
-      :host io-collapsable > io-boolean {
-        font-weight: bold;
-        margin: 0 !important;
+      :host io-collapsable > .io-frame {
+        padding: 0 0 0 0.75em;
       }
       :host io-button {
         text-align: left;
         align-self: stretch;
-      }
-      :host io-collapsable > .io-frame > io-collapsable {
-        padding-left: 0.75em;
-      }
-      :host io-collapsable > .io-frame > io-button {
-        padding-left: 1.5em;
-      }
-      :host:not([overflow]) {
-        -webkit-overflow-scrolling: touch;
-        flex-direction: column;
       }
       :host io-button,
       :host io-collapsable,

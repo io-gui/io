@@ -155,9 +155,8 @@ export class IoSliderKnob extends IoGl {
     }
 
     if (this._active !== 1) return;
-    if (!event.cancelable) return;
-
     event.preventDefault();
+
     this.focus();
 
     const rect = this.getBoundingClientRect();
@@ -168,21 +167,7 @@ export class IoSliderKnob extends IoGl {
     value = Math.round(value / this.step) * this.step;
     value = Number(value.toFixed(4));
 
-    // TODO: debounce!
     this.set('value', value);
-    // if (!this._t) {
-    //   this.set('value', value);
-    //   this._t = true;
-    //   requestAnimationFrame(() => {
-    //     this._t = false;
-    //   });
-    // } else {
-    //   cancelAnimationFrame(this._raf);
-    //   this._raf = requestAnimationFrame(() => {
-    //     this.set('value', value);
-    //     this._t = false;
-    //   })
-    // }
   }
   _onKeydown(event) {
     if (event.which == 37) {
