@@ -1,9 +1,6 @@
 import {html, IoElement, IoStorage as $} from "../dist/io.js";
 import {IoThemeSingleton} from "../dist/io-elements-core.js";
 import {IoSelectorTabs} from "../dist/io-elements-layout.js";
-import "./todomvc/todo-app.js";
-import "./demo-elements-core.js";
-import "./demo-elements-math.js";
 
 export class IoDemo extends IoSelectorTabs {
   static get Style() {
@@ -23,8 +20,8 @@ export class IoDemo extends IoSelectorTabs {
         {value: 'todo', label: "Todo App"},
       ],
       elements: [
-        ['io-demo-elements-core', {name: 'elements-core'}],
-        ['io-demo-elements-math', {name: 'elements-math'}],
+        ['io-demo-elements-core', {name: 'elements-core', import: new URL('demo-elements-core.js', import.meta.url)}],
+        ['io-demo-elements-math', {name: 'elements-math', import: new URL('demo-elements-math.js', import.meta.url)}],
         ['iframe', {name: 'todo', src: './demo/todomvc/index.html'}],
       ],
     };

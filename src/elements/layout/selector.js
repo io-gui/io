@@ -71,6 +71,7 @@ export class IoSelector extends IoElement {
   constructor(props) {
     super(props);
     this.stagingElement = document.createElement('io-selector-staging');
+    document.head.appendChild(this.stagingElement);
   }
   connectedCallback() {
     super.connectedCallback();
@@ -82,24 +83,20 @@ export class IoSelector extends IoElement {
     document.head.removeChild(this.stagingElement);
     document.removeEventListener('readystatechange', this.onReadyStateChange);
   }
-  checkImport(element, callback) {
-    const path = element[1].import;
-    const importPath = path ? new URL(path, window.location).href : undefined;
-    if (!path || importedPaths[importPath]) {
-      callback();
-    } else {
-      this.__callback = callback;
-      if (importPath && !importedPaths[importPath]) {
+  // TODO: consider moving to IoElement class.
+  import(path) {
+    const importPath = new URL(path, window.location).href;
+    return new Promise(function(resolve, reject) {
+      if (!path || importedPaths[importPath]) {
+        resolve(importPath);
+      } else {
         import(importPath)
         .then(() => {
           importedPaths[importPath] = true;
-          if (element[1].name === this.selected) {
-            this.__callback();
-          }
-          delete this.__callback;
+          resolve(importPath);
         });
       }
-    }
+    });
   }
   onReadyStateChange() {
     this.precacheChanged();
@@ -110,8 +107,7 @@ export class IoSelector extends IoElement {
         const name = this.elements[i][1].name;
         const explicitlyDontCache = this.elements[i][1].cache === false || !!this.elements[i][1].import;
         if (!this._caches[name] && !explicitlyDontCache) {
-          this.checkImport(this.elements[i], () => {
-            if (this.stagingElement.parentElement !== document.head) document.head.appendChild(this.stagingElement);
+          this.import(this.elements[i][1].import).then(() => {
             this.template([this.elements[i]], this.stagingElement);
             this._caches[name] = this.stagingElement.childNodes[0];
             this.stagingElement.textContent = '';
@@ -198,10 +194,12 @@ export class IoSelector extends IoElement {
       this.$.content.appendChild(this._caches[selected]);
       this.$.content.classList.toggle('io-loading', false);
     } else {
-      this.checkImport(element, () => {
-        this.$.content.classList.toggle('io-loading', false);
-        this.template([element], this.$.content);
-        this._caches[selected] = this.$.content.childNodes[0];
+      this.import(element[1].import).then(() => {
+        if (element[1].name === this.selected.split('#')[0]) {
+          this.$.content.classList.toggle('io-loading', false);
+          this.template([element], this.$.content);
+          this._caches[selected] = this.$.content.childNodes[0];
+        }
       });
     }
   }
