@@ -20,27 +20,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- *
- * marked - a markdown parser
- * Copyright (c) 2011-2018, Christopher Jeffrey. (MIT Licensed)
- * https://github.com/markedjs/marked
  */
 
 import "./io-elements-core.js";
 
 export {IoVector} from "./elements/math/vector.js";
 export {IoMatrix} from "./elements/math/matrix.js";
-
-export {IoColorSlider} from "./elements/math/color-slider.js";
-export {IoColorSliderHue} from "./elements/math/color-slider-hue.js";
-export {IoColorSliderSaturation} from "./elements/math/color-slider-saturation.js";
-export {IoColorSliderValue} from "./elements/math/color-slider-value.js";
-export {IoColorSliderLevel} from "./elements/math/color-slider-level.js";
-export {IoColorSliderHs} from "./elements/math/color-slider-hs.js";
-export {IoColorSliderSv} from "./elements/math/color-slider-sv.js";
-export {IoColorSliderSl} from "./elements/math/color-slider-sl.js";
-export {IoColorSliderAlpha} from "./elements/math/color-slider-alpha.js";
-
-export {IoColorPanel} from "./elements/math/color-panel.js";
-export {IoColorPicker} from "./elements/math/color-picker.js";
-export {IoColorVector} from "./elements/math/color-vector.js";

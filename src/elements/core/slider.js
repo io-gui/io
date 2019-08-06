@@ -204,19 +204,19 @@ export class IoSlider extends IoGl {
 
       float strokeShape = min(
         circle(position, radius + stroke),
-        rectangle(position, vec2(10000., slotWidth + stroke))
+        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth + stroke))
       );
       sliderColor = mix(vec4(slotColor.rgb, 1.0), sliderColor, strokeShape);
 
       float fillShape = min(
         circle(position, radius),
-        rectangle(position + vec2(10000., 0.), vec2(10000., slotWidth))
+        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth))
       );
       sliderColor = mix(vec4(cssBackgroundColor.rgb, 1.0), sliderColor, fillShape);
 
       float colorShape = min(
         circle(position, radius - stroke),
-        rectangle(position + vec2(10000., 0.), vec2(10000., slotWidth - stroke))
+        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth - stroke))
       );
       sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
 

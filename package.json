@@ -29,9 +29,10 @@
     "uglify-extras": "uglifyjs dist/io-elements-extras.js -cmo dist/io-elements-extras.js --comments",
     "uglify-layout": "uglifyjs dist/io-elements-layout.js -cmo dist/io-elements-layout.js --comments",
     "uglify-math": "uglifyjs dist/io-elements-math.js -cmo dist/io-elements-math.js --comments",
+    "uglify-color": "uglifyjs dist/io-elements-color.js -cmo dist/io-elements-color.js --comments",
     "uglify-menu": "uglifyjs dist/io-elements-menu.js -cmo dist/io-elements-menu.js --comments",
     "uglify-object": "uglifyjs dist/io-elements-object.js -cmo dist/io-elements-object.js --comments",
-    "uglify-all": "npm run uglify && npm run uglify-core && npm run uglify-extras && npm run uglify-layout && npm run uglify-math && npm run uglify-menu && npm run uglify-object",
+    "uglify-all": "npm run uglify && npm run uglify-core && npm run uglify-extras && npm run uglify-layout && npm run uglify-math && npm run uglify-color && npm run uglify-menu && npm run uglify-object",
     "build": "npm run lint && npm run rollup && npm run uglify-all",
     "travis": "npm run build"
   },

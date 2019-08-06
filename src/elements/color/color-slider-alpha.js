@@ -19,7 +19,7 @@ export class IoColorSliderAlpha extends IoColorSlider {
 
         // Marker
         vec2 markerPos = translate(position, vec2(size.x * uAlpha, size.y * 0.5));
-        vec4 slider = paintSlider(markerPos, vec3(1.0));
+        vec4 slider = paintColorSlider(markerPos, vec3(1.0));
         finalColor = mix(finalColor, slider.rgb, slider.a);
 
         gl_FragColor = vec4(finalColor, 1.0);

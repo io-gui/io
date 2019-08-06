@@ -16,7 +16,7 @@ export class IoColorSliderHue extends IoColorSlider {
 
         // Marker
         vec2 markerPos = translate(position, vec2(size.x * uHsv[0], size.y * 0.5));
-        vec4 slider = paintSlider(markerPos, uRgb);
+        vec4 slider = paintColorSlider(markerPos, uRgb);
         finalColor = mix(finalColor, slider.rgb, slider.a);
 
         gl_FragColor = vec4(finalColor, 1.0);
@@ -40,36 +40,7 @@ export class IoColorSliderHue extends IoColorSlider {
   _setValue(x) {
     this.valueChanged();
     this.hsv[0] = x;
-    switch (this.mode) {
-      case 0: {
-        const rgb = convert.hsv.rgb([
-          this.hsv[0] * 360,
-          this.hsv[1] * 100,
-          this.hsv[2] * 100,
-        ]);
-        this.value[this.components[0]] = rgb[0] / 255;
-        this.value[this.components[1]] = rgb[1] / 255;
-        this.value[this.components[2]] = rgb[2] / 255;
-        break;
-      }
-      case 3: {
-        const cmyk = convert.rgb.cmyk(convert.hsv.rgb([
-          this.hsv[0] * 360,
-          this.hsv[1] * 100,
-          this.hsv[2] * 100,
-        ]));
-        this.value[this.components[0]] = cmyk[0] / 100;
-        this.value[this.components[1]] = cmyk[1] / 100;
-        this.value[this.components[2]] = cmyk[2] / 100;
-        this.value[this.components[3]] = cmyk[3] / 100;
-        break;
-      }
-      case 1:
-      case 2: {
-        this.value[this.components[0]] = this.hsv[0];
-        break;
-      }
-    }
+    this.setValueFromHsv();
   }
 }
 
