@@ -89,6 +89,19 @@ export default [
     external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js') ],
   },
   {
+    input: 'src/io-elements-color.js',
+    plugins: [html()],
+    inlineDynamicImports: true,
+    output: [
+      {
+        format: 'es',
+        file: 'dist/io-elements-color.js',
+        indent: '  '
+      }
+    ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js') ],
+  },
+  {
     input: 'src/io-elements-menu.js',
     plugins: [html()],
     inlineDynamicImports: true,
