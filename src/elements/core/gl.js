@@ -64,6 +64,8 @@ export class IoGl extends IoElement {
       :host > img {
         top: 0;
         left: 0;
+        width: 100%;
+        height: 100%;
         position: absolute !important;
         pointer-events: none;
         image-rendering: pixelated;
