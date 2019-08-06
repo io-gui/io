@@ -13,7 +13,7 @@ export class IoDemo extends IoSelectorTabs {
   }
   static get Properties() {
     return {
-      selected:  $('demo', 'elements-math'),
+      selected:  $('demo', 'elements-math', true),
       options: [
         {value: 'elements-core', label: "Core"},
         {value: 'elements-menus', label: "Menus"},
