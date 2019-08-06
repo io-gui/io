@@ -1,4 +1,3 @@
-import {html} from "../../io.js";
 import {IoSlider} from "../../io-elements-core.js";
 import {IoColorMixin} from "./color.js";
 

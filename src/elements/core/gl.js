@@ -245,7 +245,7 @@ export class IoGl extends IoElement {
 
     this.render = this.render.bind(this);
 
-    this.$.img.onload = () => { this.$.img.loading = false; }
+    this.$.img.onload = () => { this.$.img.loading = false; };
 
     this.updateCssUniforms();
   }

@@ -127,7 +127,7 @@ export class IoSlider extends IoGl {
 
     this._setValue(this.horizontal ? _x : _y, this.horizontal ? _y : _x);
   }
-  _setValue(x, y) {
+  _setValue(x) {
     this.set('value', Number(x.toFixed(4)));
   }
   _onKeydown(event) {

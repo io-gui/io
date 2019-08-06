@@ -36,9 +36,11 @@ export class IoColorSliderAlpha extends IoColorSlider {
   _setDecrease() {
   }
   _setMin() {
+    const c = this.mode === 3 ? 4 : 3;
     this.value[this.components[c]] = 0;
   }
   _setMax() {
+    const c = this.mode === 3 ? 4 : 3;
     this.value[this.components[c]] = 1;
   }
   _setValue(x) {

@@ -86,7 +86,7 @@ export class IoSelector extends IoElement {
   // TODO: consider moving to IoElement class.
   import(path) {
     const importPath = new URL(path, window.location).href;
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       if (!path || importedPaths[importPath]) {
         resolve(importPath);
       } else {

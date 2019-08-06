@@ -1,6 +1,5 @@
 import {html} from "../../io.js";
 import {IoColorSlider} from "./color-slider.js";
-import {convert} from "../../../lib/color-convert.js";
 
 export class IoColorSliderSv extends IoColorSlider {
   static get Style() {

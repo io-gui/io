@@ -1,4 +1,3 @@
-import {convert} from "../../../lib/color-convert.js";
 import {IoColorSlider} from "./color-slider.js";
 
 export class IoColorSliderBlue extends IoColorSlider {
