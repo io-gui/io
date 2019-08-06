@@ -7,14 +7,15 @@ export class IoColorSliderValue extends IoColorSlider {
       varying vec2 vUv;
 
       void main(void) {
-        vec2 position = vUv * uSize;
+        vec2 size = (uHorizontal == 1) ? uSize : uSize.yx;
+        vec2 uv = uHorizontal == 1 ? vUv.xy : vUv.yx;
+        vec2 position = size * uv;
 
         // Value gradient
-        float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
-        vec3 finalColor = hsv2rgb(vec3(uHsv[0], uHsv[1], axis));
+        vec3 finalColor = hsv2rgb(vec3(uHsv[0], uHsv[1], uv.x));
 
         // Marker
-        vec2 markerPos = translateSlider(position, vec2(uHsv[2], 0.5));
+        vec2 markerPos = translate(position, vec2(size.x * uHsv[2], size.y * 0.5));
         vec4 slider = paintSlider(markerPos, uRgb);
         finalColor = mix(finalColor, slider.rgb, slider.a);
 
@@ -22,12 +23,11 @@ export class IoColorSliderValue extends IoColorSlider {
       }
     `;
   }
-  _setValue(_x, _y) {
+  _setValue(x) {
     this.valueChanged();
-    const y = Math.max(0, Math.min(1, this.horizontal ? _x : (1 - _y)));
+    this.hsv[2] = x;
     switch (this.mode) {
       case 0: {
-        this.hsv[2] = y;
         const rgb = convert.hsv.rgb([
           this.hsv[0] * 360,
           this.hsv[1] * 100,
@@ -39,7 +39,6 @@ export class IoColorSliderValue extends IoColorSlider {
         break;
       }
       case 3: {
-        this.hsv[2] = y;
         const cmyk = convert.rgb.cmyk(convert.hsv.rgb([
           this.hsv[0] * 360,
           this.hsv[1] * 100,
@@ -52,11 +51,10 @@ export class IoColorSliderValue extends IoColorSlider {
         break;
       }
       case 1: {
-        this.value[this.components[2]] = y;
+        this.value[this.components[2]] = this.hsv[2];
         break;
       }
       case 2: {
-        this.hsv[2] = y;
         const hsl = convert.rgb.hsl(convert.hsv.rgb([
           this.hsv[0] * 100,
           this.hsv[1] * 100,

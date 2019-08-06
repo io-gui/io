@@ -6,18 +6,19 @@ export class IoColorSliderAlpha extends IoColorSlider {
       varying vec2 vUv;
 
       void main(void) {
-        vec2 position = vUv * uSize;
+        vec2 size = (uHorizontal == 1) ? uSize : uSize.yx;
+        vec2 uv = uHorizontal == 1 ? vUv.xy : vUv.yx;
+        vec2 position = size * uv;
 
         // Alpha pattern
         vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 5.0));
         vec3 finalColor = alphaPattern;
 
         // Apha gradient
-        float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
-        finalColor = mix(finalColor, vec3(1.0), axis);
+        finalColor = mix(finalColor, vec3(1.0), uv.x);
 
         // Marker
-        vec2 markerPos = translateSlider(position, vec2(uAlpha, 0.5));
+        vec2 markerPos = translate(position, vec2(size.x * uAlpha, size.y * 0.5));
         vec4 slider = paintSlider(markerPos, vec3(1.0));
         finalColor = mix(finalColor, slider.rgb, slider.a);
 
@@ -25,17 +26,26 @@ export class IoColorSliderAlpha extends IoColorSlider {
       }
     `;
   }
-  valueChanged() {
-    super.valueChanged();
+  setAria() {
+    // TODO
     const hasAlpha = this.value[this.components[3]] !== undefined;
     this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
   }
-  _setValue(_x, _y) {
+  _setIncrease() {
+  }
+  _setDecrease() {
+  }
+  _setMin() {
+    this.value[this.components[c]] = 0;
+  }
+  _setMax() {
+    this.value[this.components[c]] = 1;
+  }
+  _setValue(x) {
     this.valueChanged();
-    const y = Math.max(0, Math.min(1, this.horizontal ? _x : (1 - _y)));
     const c = this.mode === 3 ? 4 : 3;
     const hasAlpha = this.value[this.components[c]] !== undefined;
-    if (hasAlpha) this.value[this.components[c]] = y;
+    if (hasAlpha) this.value[this.components[c]] = x;
   }
 }
 

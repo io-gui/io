@@ -28,8 +28,11 @@ export class IoDemoElementsCore extends IoElement {
       width: auto;
     }
     :host > *,
+    :host .io-row > *:not(:last-child) {
+      margin-right: var(--io-spacing);
+    }
     :host .io-column > *:not(:last-child) {
-      margin-bottom: var(--io-spacing)
+      margin-bottom: var(--io-spacing);
     }
     </style>`;
   }
@@ -83,7 +86,7 @@ export class IoDemoElementsCore extends IoElement {
       {label: 'long menu', options: longOptions, hint: 'list', icon: '⚠'}
     ];
     const menu = ['div', {class: 'io-column'}, [
-      ['io-menu-options', {options: menuoptions, horizontal: true}],
+      ['io-menu-options', {options: menuoptions}],
       ['div', {class: 'io-row'}, [
         ['io-menu-options', {options: menuoptions}],
         ['div', {class: 'io-column'}, [
@@ -120,12 +123,15 @@ export class IoDemoElementsCore extends IoElement {
         ['io-boolean', {value: this.bind('boolean'), display: 'switch'}],
       ]],
       ['div'],
-      ['div', {class: 'io-column'}, [
-        ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
-        ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
-        ['io-slider', {value: this.bind('number'), min: -1.33, max: 3.5, step: 0.8}],
-        ['io-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
-        ['io-slider', {value: this.bind('string'), min: -0.25, max: 0.25, step: 0.01}],
+      ['div', {class: 'io-row'}, [
+        ['io-slider', {value: this.bind('number'), horizontal: false, min: 0, max: 2, step: 0.01}],
+        ['div', {class: 'io-column'}, [
+          ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
+          ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
+          ['io-slider', {value: this.bind('number'), min: -1.33, max: 3.5, step: 0.8}],
+          ['io-number-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
+          ['io-number-slider', {value: this.bind('string'), min: -0.25, max: 0.25, step: 0.01}],
+        ]],
       ]],
       ['div'],
       ['div', {class: 'io-table4 table'}, [

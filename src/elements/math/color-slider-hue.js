@@ -7,15 +7,15 @@ export class IoColorSliderHue extends IoColorSlider {
       varying vec2 vUv;
 
       void main(void) {
-        vec2 position = vUv * uSize;
+        vec2 size = (uHorizontal == 1) ? uSize : uSize.yx;
+        vec2 uv = uHorizontal == 1 ? vUv.xy : vUv.yx;
+        vec2 position = size * uv;
 
         // Hue spectrum
-        float axis = (uHorizontal == 1) ? vUv.x : vUv.y;
-        vec3 finalColor = hsv2rgb(vec3(axis, uHsv[1], uHsv[2]));
+        vec3 finalColor = hsv2rgb(vec3(uv.x, uHsv[1], uHsv[2]));
 
         // Marker
-        vec2 markerPos = translateSlider(position, vec2(uHsv[0], 0.5));
-        markerPos = (uHorizontal == 1) ? repeatX(markerPos) : repeatY(markerPos);
+        vec2 markerPos = translate(position, vec2(size.x * uHsv[0], size.y * 0.5));
         vec4 slider = paintSlider(markerPos, uRgb);
         finalColor = mix(finalColor, slider.rgb, slider.a);
 
@@ -23,12 +23,25 @@ export class IoColorSliderHue extends IoColorSlider {
       }
     `;
   }
-  _setValue(_x, _y) {
+  _setIncrease() {
+
+  }
+  _setDecrease() {
+
+  }
+  _setMin() {
     this.valueChanged();
-    const y = Math.max(0, Math.min(1, this.horizontal ? _x : (1 - _y)));
+    this._setValue(0, 0);
+  }
+  _setMax() {
+    this.valueChanged();
+    this._setValue(0, 1);
+  }
+  _setValue(x) {
+    this.valueChanged();
+    this.hsv[0] = x;
     switch (this.mode) {
       case 0: {
-        this.hsv[0] = y;
         const rgb = convert.hsv.rgb([
           this.hsv[0] * 360,
           this.hsv[1] * 100,
@@ -40,7 +53,6 @@ export class IoColorSliderHue extends IoColorSlider {
         break;
       }
       case 3: {
-        this.hsv[0] = y;
         const cmyk = convert.rgb.cmyk(convert.hsv.rgb([
           this.hsv[0] * 360,
           this.hsv[1] * 100,
@@ -52,12 +64,9 @@ export class IoColorSliderHue extends IoColorSlider {
         this.value[this.components[3]] = cmyk[3] / 100;
         break;
       }
-      case 1: {
-        this.value[this.components[0]] = y;
-        break;
-      }
+      case 1:
       case 2: {
-        this.value[this.components[0]] = y;
+        this.value[this.components[0]] = this.hsv[0];
         break;
       }
     }

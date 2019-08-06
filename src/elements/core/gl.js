@@ -96,6 +96,9 @@ export class IoGl extends IoElement {
       #define saturate(v) clamp(v, 0., 1.)
     #endif
 
+    vec2 translate(vec2 samplePosition, vec2 xy){
+      return samplePosition - vec2(xy.x, xy.y);
+    }
     vec2 translate(vec2 samplePosition, float x, float y){
       return samplePosition - vec2(x, y);
     }
@@ -106,7 +109,7 @@ export class IoGl extends IoElement {
       vec2 edgeDistance = abs(samplePosition) - halfSize;
       float outside = length(max(edgeDistance, 0.));
       float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-      return saturate(outside + inside);
+      return saturate((outside + inside) * 2.0);
     }
     float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
       vec2 sp = samplePosition / vec2(gridWidth, gridHeight);

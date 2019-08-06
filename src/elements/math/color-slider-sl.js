@@ -15,14 +15,15 @@ export class IoColorSliderSl extends IoColorSlider {
       varying vec2 vUv;
 
       void main(void) {
-        vec2 position = vUv * uSize;
+        vec2 size = (uHorizontal == 1) ? uSize : uSize.yx;
+        vec2 uv = uHorizontal == 1 ? vUv.xy : vUv.yx;
+        vec2 position = size * uv;
 
         // SV gradient
-        vec2 axis = (uHorizontal == 1) ? vec2(vUv.y, vUv.x) : vec2(vUv.x, vUv.y);
-        vec3 finalColor = hsl2rgb(vec3(uHsl[0], axis.x, axis.y));
+        vec3 finalColor = hsl2rgb(vec3(uHsl[0], uv));
 
         // Marker
-        vec2 markerPos = translateSlider(position, vec2(uHsl[2], uHsl[1]));
+        vec2 markerPos = translate(position, vec2(size.x * uHsl[1], size.y * uHsl[2]));
         vec4 slider = paintSlider2D(markerPos, uRgb);
         finalColor = mix(finalColor, slider.rgb, slider.a);
 
@@ -30,14 +31,12 @@ export class IoColorSliderSl extends IoColorSlider {
       }
     `;
   }
-  _setValue(_x, _y) {
+  _setValue(x, y) {
     this.valueChanged();
-    const x = Math.max(0, Math.min(1, this.horizontal ? (1 - _y) : _x));
-    const y = Math.max(0, Math.min(1, this.horizontal ? _x : (1 - _y)));
+    this.hsl[1] = x;
+    this.hsl[2] = y;
     switch (this.mode) {
       case 0: {
-        this.hsl[1] = x;
-        this.hsl[2] = y;
         const rgb = convert.hsl.rgb([
           this.hsl[0] * 360,
           this.hsl[1] * 100,
@@ -49,8 +48,6 @@ export class IoColorSliderSl extends IoColorSlider {
         break;
       }
       case 3: {
-        this.hsl[1] = x;
-        this.hsl[2] = y;
         const cmyk = convert.rgb.cmyk(convert.hsl.rgb([
           this.hsl[0] * 360,
           this.hsl[1] * 100,
@@ -63,8 +60,6 @@ export class IoColorSliderSl extends IoColorSlider {
         break;
       }
       case 1: {
-        this.hsl[1] = x;
-        this.hsl[2] = y;
         const hsv = convert.rgb.hsv(convert.hsl.rgb([
           this.hsl[0] * 100,
           this.hsl[1] * 100,
@@ -76,8 +71,8 @@ export class IoColorSliderSl extends IoColorSlider {
         break;
       }
       case 2: {
-        this.value[this.components[1]] = x;
-        this.value[this.components[2]] = y;
+        this.value[this.components[1]] = this.hsl[1];
+        this.value[this.components[2]] = this.hsl[2];
         break;
       }
     }
