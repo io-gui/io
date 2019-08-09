@@ -8,7 +8,7 @@ const animate = function() {
   requestAnimationFrame(animate);
   for (let i = renderQueue.length; i--;) {
     const element = renderQueue[i];
-    if (!element.$.img.loading) {
+    if (!element.$.canvas.loading) {
       renderQueue.splice(renderQueue.indexOf(element), 1);
       element.render();
     }
@@ -57,16 +57,11 @@ export class IoGl extends IoElement {
     return html`<style>
       :host {
         overflow: hidden !important;
-        position: relative !important;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
       }
-      :host > img {
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        position: absolute !important;
+      :host > #canvas {
+        display: none;
         pointer-events: none;
         image-rendering: pixelated;
       }
@@ -76,7 +71,6 @@ export class IoGl extends IoElement {
     return {
       size: [0, 0],
       color: [1, 1, 1, 1],
-      aspect: 1,
       pxRatio: 1,
       css: Object,
     };
@@ -130,10 +124,11 @@ export class IoGl extends IoElement {
     return /* glsl */`
       varying vec2 vUv;
       void main(void) {
-        vec2 px = uSize * vUv;
-        px = mod(px, 8.0);
-        gl_FragColor = uColor;
-        if (px.x <= 1.0 || px.y <= 1.0) gl_FragColor = vec4(vUv, 0.0, 1.0);
+        vec2 position = uSize * vUv;
+        float gridWidth = 8. * uPxRatio;
+        float lineWidth = 1. * uPxRatio;
+        float gridShape = grid(position, gridWidth, gridWidth, lineWidth);
+        gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
   }
   initPropertyUniform(name, property) {
@@ -209,6 +204,8 @@ export class IoGl extends IoElement {
 
     this.css = IoThemeSingleton;
 
+
+    // TODO: improve code clarity
     this._vecLengths = {};
     for (let name in this.css.__properties) {
       const property = this.css.__protoProperties[name];
@@ -243,24 +240,35 @@ export class IoGl extends IoElement {
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(uv);
 
-    this.template([['img', {id: 'img'}]]);
-
     this.render = this.render.bind(this);
 
-    this.$.img.onload = () => { this.$.img.loading = false; };
+    // this.template([['img', {id: 'canvas'}]]);
+    // this.$.canvas.onload = () => { this.$.canvas.loading = false; };
+
+    this.template([['canvas', {id: 'canvas'}]]);
+    this.$.canvas.ctx = this.$.canvas.getContext('2d');
 
     this.updateCssUniforms();
   }
   onResized() {
+    // TODO: consider optimizing
+    const pxRatio = window.devicePixelRatio;
     const rect = this.getBoundingClientRect();
     const borderWidth = parseFloat(getComputedStyle(this).borderTopWidth); // TODO: FF bug borderWidth resolves empty string.
-    const pxRatio = window.devicePixelRatio;
-    const width = Math.ceil((rect.width - borderWidth * 2) * pxRatio);
-    const height = Math.ceil((rect.height - borderWidth * 2) * pxRatio);
+
+    // TODO: confirm and test
+    const width = Math.ceil((rect.width - borderWidth * 2));
+    const height = Math.ceil((rect.height - borderWidth * 2));
+
+    this.$.canvas.style.width = Math.floor(width) + 'px';
+    this.$.canvas.style.height = Math.floor(height) + 'px';
+    this.$.canvas.style.display = 'block';
+
+    this.$.canvas.width = Math.floor(width * pxRatio);
+    this.$.canvas.height = Math.floor(height * pxRatio);
 
     this.setProperties({
       size: [width, height],
-      aspect: width / height,
       pxRatio: pxRatio,
     });
   }
@@ -272,8 +280,9 @@ export class IoGl extends IoElement {
     queueRender(this);
   }
   render() {
-    const width = this.size[0];
-    const height = this.size[1];
+    const pxRatio = window.devicePixelRatio;
+    const width = this.size[0] * pxRatio;
+    const height = this.size[1] * pxRatio;
 
 
     if (!width || !height) return;
@@ -294,8 +303,11 @@ export class IoGl extends IoElement {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-    this.$.img.src = canvas.toDataURL('image/png', 0.9);
-    this.$.img.loading = true;
+
+    // this.$.canvas.src = canvas.toDataURL('image/png', 0.9);
+    // this.$.canvas.loading = true;
+
+    this.$.canvas.ctx.drawImage(canvas, 0, 0);
   }
   setShaderProgram() {
     if (currentProgram !== this._shader) {

@@ -51,8 +51,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (ro) {
         ro.observe(this);
       } else {
-        this.onResized();
+        // TODO: remove once resize observer implemented in Safari.
+        // https://caniuse.com/#feat=resizeobserver
         window.addEventListener('resize', this.onResized);
+        setTimeout(() => { this.onResized(); });
       }
     }
   }
@@ -65,6 +67,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (ro) {
         ro.unobserve(this);
       } else {
+        // TODO: remove once resize observer implemented in Safari.
+        // https://caniuse.com/#feat=resizeobserver
         window.removeEventListener('resize', this.onResized);
       }
     }
