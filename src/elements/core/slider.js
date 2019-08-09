@@ -13,6 +13,7 @@ export class IoSlider extends IoGl {
         min-height: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
         align-self: stretch;
         justify-self: stretch;
+        overflow: hidden;
       }
       :host[horizontal] {
         cursor: ew-resize;
@@ -24,7 +25,7 @@ export class IoSlider extends IoGl {
         border: var(--io-border-error);
         background-image: var(--io-gradient-error);
       }
-      :host[aria-invalid] > img {
+      :host[aria-invalid] > #canvas {
         opacity: 0.5;
       }
       :host:focus {
@@ -198,8 +199,8 @@ export class IoSlider extends IoGl {
     vec4 paintSlider(vec2 position, vec3 color) {
       vec4 slotColor = mix(cssColor, cssBackgroundColorField, 0.125);
       vec4 sliderColor = vec4(0.0);
-      float slotWidth = cssStrokeWidth * 2.0;
-      float radius = cssItemHeight / 5.0;
+      float slotWidth = cssStrokeWidth * 2.;
+      float radius = cssItemHeight / 8.0;
       float stroke = cssStrokeWidth;
 
       float strokeShape = min(
