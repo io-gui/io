@@ -56,11 +56,14 @@ export class IoGl extends IoElement {
   static get Style() {
     return html`<style>
       :host {
+        position: relative;
         overflow: hidden !important;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
       }
       :host > #canvas {
+        max-width: 100%;
+        max-height: 100%;
         display: none;
         pointer-events: none;
         image-rendering: pixelated;
