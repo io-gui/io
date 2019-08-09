@@ -82,9 +82,8 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
     this.valueChanged();
     this.changed();
   }
-  _setValue(x, y) {
+  _setValue() {
     // NOTE: implement in subclass
-    x, y;
   }
 }
 

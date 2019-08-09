@@ -1,4 +1,3 @@
-import {IoElement} from "../../dist/io.js";
 import {IoMdView} from "../../dist/io-elements-extras.js";
 
 export class TodoInfo extends IoMdView {

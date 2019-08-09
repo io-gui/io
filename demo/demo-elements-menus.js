@@ -1,5 +1,4 @@
-import {html, IoElement, IoStorage as $} from "../dist/io.js";
-import {IoThemeSingleton} from "../dist/io-elements-core.js";
+import {html, IoElement} from "../dist/io.js";
 
 export class IoDemoElementsMenus extends IoElement {
   static get Style() {

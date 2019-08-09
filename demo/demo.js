@@ -23,11 +23,11 @@ export class IoDemo extends IoSelectorTabs {
         {value: 'todo', label: "Todo App"},
       ],
       elements: [
-        ['io-demo-elements-core', {name: 'elements-core', import: new URL('demo-elements-core.js', import.meta.url)}],
-        ['io-demo-elements-menus', {name: 'elements-menus', import: new URL('demo-elements-menus.js', import.meta.url)}],
-        ['io-demo-elements-object', {name: 'elements-object', import: new URL('demo-elements-object.js', import.meta.url)}],
-        ['io-demo-elements-math', {name: 'elements-math', import: new URL('demo-elements-math.js', import.meta.url)}],
-        ['io-demo-elements-color', {name: 'elements-color', import: new URL('demo-elements-color.js', import.meta.url)}],
+        ['io-demo-elements-core', {name: 'elements-core', import: 'demo/demo-elements-core.js'}],
+        ['io-demo-elements-menus', {name: 'elements-menus', import: 'demo/demo-elements-menus.js'}],
+        ['io-demo-elements-object', {name: 'elements-object', import: 'demo/demo-elements-object.js'}],
+        ['io-demo-elements-math', {name: 'elements-math', import: 'demo/demo-elements-math.js'}],
+        ['io-demo-elements-color', {name: 'elements-color', import: 'demo/demo-elements-color.js'}],
         ['iframe', {name: 'todo', src: './demo/todomvc/index.html'}],
       ],
     };

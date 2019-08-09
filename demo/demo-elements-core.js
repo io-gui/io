@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorage as $} from "../dist/io.js";
+import {html, IoElement} from "../dist/io.js";
 import {IoThemeSingleton} from "../dist/io-elements-core.js";
 
 export class IoDemoElementsCore extends IoElement {
@@ -18,7 +18,7 @@ export class IoDemoElementsCore extends IoElement {
     :host .io-row > *:not(:last-child) {
       margin-right: var(--io-spacing);
     }
-    :host > *, 
+    :host > *,
     :host .io-column > *:not(:last-child) {
       margin-bottom: var(--io-spacing);
     }
