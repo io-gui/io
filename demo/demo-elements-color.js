@@ -16,7 +16,7 @@ export class IoDemoElementsColor extends IoElement {
       height: 5em;
     }
     :host .sliders-2d {
-      flex: 1 1 auto;
+      flex: 1 1;
     }
     @media only screen and (max-width: 400px) {
       :host {

@@ -1,7 +1,15 @@
+import {html} from "../../io.js";
 import {IoSlider} from "../../io-elements-core.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorSlider extends IoColorMixin(IoSlider) {
+  static get Style() {
+    return html`<style>
+      :host {
+        border-width: 2px;
+      }
+    </style>`;
+  }
   static get Properties() {
     return {
       value: [1, 1, 1, 1],
@@ -20,25 +28,12 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
       float slotWidth = cssStrokeWidth * 1.5;
       float radius = cssItemHeight / 4.;
       float stroke = cssStrokeWidth;
-
-      float strokeShape = min(
-        circle(position, radius + stroke),
-        rectangle(position - vec2(0., 2500.), vec2(slotWidth + stroke, 5000.))
-      );
+      float strokeShape = min(circle(position, radius + stroke), rectangle(position - vec2(0., 2500.), vec2(slotWidth + stroke, 5000.)));
       sliderColor = mix(vec4(slotColor.rgb, 1.), sliderColor, strokeShape);
-
-      float fillShape = min(
-        circle(position, radius),
-        rectangle(position - vec2(0., 2500.), vec2(slotWidth, 5000.))
-      );
+      float fillShape = min(circle(position, radius), rectangle(position - vec2(0., 2500.), vec2(slotWidth, 5000.)));
       sliderColor = mix(fillColor, sliderColor, fillShape);
-
-      float colorShape = min(
-        circle(position, radius - stroke),
-        rectangle(position - vec2(0., 2500.), vec2(slotWidth - stroke, 5000.))
-      );
+      float colorShape = min(circle(position, radius - stroke), rectangle(position - vec2(0., 2500.), vec2(slotWidth - stroke, 5000.)));
       sliderColor = mix(vec4(color, 1.), sliderColor, colorShape);
-
       return sliderColor;
     }
     vec4 paintColorSlider2D(vec2 position, vec3 color) {

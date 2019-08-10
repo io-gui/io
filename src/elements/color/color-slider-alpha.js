@@ -11,7 +11,7 @@ export class IoColorSliderAlpha extends IoColorSlider {
         vec2 position = size * uv;
 
         // Alpha pattern
-        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 26./12. * uPxRatio));
+        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 6. * uPxRatio));
         vec3 finalColor = alphaPattern;
 
         // Apha gradient
@@ -28,7 +28,8 @@ export class IoColorSliderAlpha extends IoColorSlider {
   }
   setAria() {
     // TODO
-    const hasAlpha = this.value[this.components[3]] !== undefined;
+    const c = this.mode === 3 ? 4 : 3;
+    const hasAlpha = this.value[this.components[c]] !== undefined;
     this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
   }
   _setIncrease() {

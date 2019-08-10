@@ -297,6 +297,25 @@ export const IoColorMixin = (superclass) => {
           break;
       }
 
+      // Prevent color collapsing to 0.
+
+      if (hsv[1] === 0) hsv[0] = this.hsv[0] * 360;
+      if (hsv[2] === 0) hsv[1] = this.hsv[1] * 100;
+
+      if (hsl[1] === 0) hsl[0] = this.hsl[0] * 360;
+      if (hsl[2] === 0 || hsl[2] === 100) {
+        hsl[0] = this.hsl[0] * 360;
+        hsl[1] = this.hsl[1] * 100;
+      }
+
+      if (cmyk[3] === 100) {
+        cmyk[0] = this.cmyk[0] * 100;
+        cmyk[1] = this.cmyk[1] * 100;
+        cmyk[2] = this.cmyk[2] * 100;
+      }
+
+      //
+
       this.setProperties({
         rgb: [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255],
         hsv: [hsv[0] / 360, hsv[1] / 100, hsv[2] / 100],

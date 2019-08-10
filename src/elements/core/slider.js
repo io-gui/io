@@ -9,8 +9,8 @@ export class IoSlider extends IoGl {
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-inset-border-color);
-        min-width: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
-        min-height: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
+        min-width: var(--io-item-height);
+        min-height: var(--io-item-height);
         align-self: stretch;
         justify-self: stretch;
         overflow: hidden;
@@ -94,7 +94,7 @@ export class IoSlider extends IoGl {
     const pointer = event.changedTouches ? event.changedTouches[0] : event;
     this._x = pointer.clientX;
     this._y = pointer.clientY;
-    if (document.activeElement === this) {
+    if (document.activeElement === this || this.horizontal === false) {
       this._active = 1;
       event.preventDefault();
     } else {
@@ -200,24 +200,24 @@ export class IoSlider extends IoGl {
       vec4 slotColor = mix(cssColor, cssBackgroundColorField, 0.125);
       vec4 sliderColor = vec4(0.0);
       float slotWidth = cssStrokeWidth * 2.;
-      float radius = cssItemHeight / 8.0;
+      float radius = cssItemHeight / 4.0;
       float stroke = cssStrokeWidth;
 
       float strokeShape = min(
         circle(position, radius + stroke),
-        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth + stroke))
+        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth + stroke)) * 2.
       );
       sliderColor = mix(vec4(slotColor.rgb, 1.0), sliderColor, strokeShape);
 
       float fillShape = min(
         circle(position, radius),
-        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth))
+        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth)) * 2.
       );
       sliderColor = mix(vec4(cssBackgroundColor.rgb, 1.0), sliderColor, fillShape);
 
       float colorShape = min(
         circle(position, radius - stroke),
-        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth - stroke))
+        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth - stroke)) * 2.
       );
       sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
 

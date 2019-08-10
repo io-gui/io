@@ -60,6 +60,7 @@ export class IoGl extends IoElement {
         overflow: hidden !important;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
+        box-sizing: border-box;
       }
       :host > #canvas {
         max-width: 100%;
