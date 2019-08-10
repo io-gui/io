@@ -5,7 +5,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   static get Properties() {
     return {
       value: [1, 1, 1, 1],
-      step: 0.01,
+      step: 0.001,
       min: 0,
       max: 1,
     };
@@ -18,7 +18,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
       vec4 fillColor = vec4(.8, .8, .8, 1.);
       vec4 sliderColor = vec4(0.);
       float slotWidth = cssStrokeWidth * 1.5;
-      float radius = cssItemHeight / 8.;
+      float radius = cssItemHeight / 4.;
       float stroke = cssStrokeWidth;
 
       float strokeShape = min(
@@ -43,7 +43,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
     }
     vec4 paintColorSlider2D(vec2 position, vec3 color) {
       vec4 sliderColor = vec4(0.);
-      float radius = cssItemHeight / 5.;
+      float radius = cssItemHeight / 4.;
       float stroke = cssStrokeWidth;
       vec4 slotColor = vec4(.2, .2, .2, 1.);
       vec4 fillColor = vec4(.8, .8, .8, 1.);

@@ -102,20 +102,20 @@ export class IoGl extends IoElement {
       return samplePosition - vec2(x, y);
     }
     float circle(vec2 samplePosition, float radius){
-      return saturate(length(samplePosition) - radius);
+      return saturate((length(samplePosition) - radius) * uPxRatio);
     }
     float rectangle(vec2 samplePosition, vec2 halfSize){
       vec2 edgeDistance = abs(samplePosition) - halfSize;
       float outside = length(max(edgeDistance, 0.));
       float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-      return saturate((outside + inside) * 2.0);
+      return saturate((outside + inside) * uPxRatio);
     }
     float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
       vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
       float hw = lineWidth / 2.0;
       float linex = abs(fract(sp.x - 0.5) - 0.5) / abs(dFdx(sp.x)) - hw;
       float liney = abs(fract(sp.y - 0.5) - 0.5) / abs(dFdy(sp.y)) - hw;
-      return saturate(min(linex, liney) * 2.0);
+      return saturate(min(linex, liney) * uPxRatio);
     }
     float checker(vec2 samplePosition, float size) {
       vec2 checkerPos = floor(samplePosition / size);

@@ -252,7 +252,7 @@ export class IoTheme extends IoElement {
     return rgba.map(color => { return color / 255; });
   }
   getCssFloat(style, property) {
-    return parseFloat(style.getPropertyValue(property)) * window.devicePixelRatio;
+    return parseFloat(style.getPropertyValue(property));
   }
   updatePropertiesFromCSS() {
     const cs = getComputedStyle(document.body);
