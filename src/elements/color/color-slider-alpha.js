@@ -11,7 +11,7 @@ export class IoColorSliderAlpha extends IoColorSlider {
         vec2 position = size * uv;
 
         // Alpha pattern
-        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 6. * uPxRatio));
+        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 6.));
         vec3 finalColor = alphaPattern;
 
         // Apha gradient

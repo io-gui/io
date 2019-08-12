@@ -238,14 +238,14 @@ export class IoSlider extends IoGl {
       vec2 uv = uHorizontal == 1 ? vUv.xy : vUv.yx;
       vec2 position = size * uv;
 
-      float stepWidth = cssStrokeWidth * 1.0;
       float stepInPx = uSize.x / ((uMax - uMin) / uStep);
       vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
 
-      if (stepInPx > stepWidth * 2.0) {
+      float lineWidth = cssStrokeWidth * 1.0;
+      if (stepInPx > lineWidth * 2.0) {
         float gridWidth = size.x / ((uMax - uMin) / uStep);
         float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
-        float gridShape = grid(translate(position, - gridOffset, 0.0), gridWidth, size.y, stepWidth);
+        float gridShape = grid(translate(position, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);
         finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
       }
 

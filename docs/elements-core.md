@@ -84,7 +84,7 @@ Moreover, some of the key theme variables such as `'--io-color'` and `'--io-back
 
 `IoGL` is a base class for WebGL-based custom elements. The appearance of such elements is defined with fragment shader programs that execute on the GPU. All numeric properties are automatically bound to shader uniforms, including `IoThemeSingleton` properties. You can define your custom shaders inside `static get Frag()` return string.
 
-<io-element-demo element="io-gl" width="256px" height="256px" properties='{"color": [0, 0, 0, 1]}' config='{"size": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-color-vector"], "color": ["io-color-vector"]}'></io-element-demo>
+<io-element-demo element="io-gl" width="255px" height="255px" properties='{"color": [0, 0, 0, 1]}' config='{"size": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-color-vector"], "color": ["io-color-vector"]}'></io-element-demo>
 
 
 An example of the most basic fragment shader program:

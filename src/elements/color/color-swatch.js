@@ -27,7 +27,7 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
         vec2 position = vUv * uSize;
 
         // Alpha pattern
-        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 6. * uPxRatio));
+        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 6.));
 
         float alpha = uAlpha;
         float lineWidth = cssStrokeWidth * 2.0;

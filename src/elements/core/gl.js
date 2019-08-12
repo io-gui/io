@@ -63,9 +63,9 @@ export class IoGl extends IoElement {
         box-sizing: border-box;
       }
       :host > #canvas {
-        max-width: 100%;
-        max-height: 100%;
-        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
         pointer-events: none;
         image-rendering: pixelated;
       }
@@ -109,14 +109,13 @@ export class IoGl extends IoElement {
       vec2 edgeDistance = abs(samplePosition) - halfSize;
       float outside = length(max(edgeDistance, 0.));
       float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-      return saturate((outside + inside) * uPxRatio);
+      return saturate((outside + inside)* uPxRatio);
     }
     float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
       vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
-      float hw = lineWidth / 2.0;
-      float linex = abs(fract(sp.x - 0.5) - 0.5) / abs(dFdx(sp.x)) - hw;
-      float liney = abs(fract(sp.y - 0.5) - 0.5) / abs(dFdy(sp.y)) - hw;
-      return saturate(min(linex, liney) * uPxRatio);
+      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(dFdx(sp.x)) - lineWidth;
+      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(dFdy(sp.y)) - lineWidth;
+      return saturate(min(linex, liney));
     }
     float checker(vec2 samplePosition, float size) {
       vec2 checkerPos = floor(samplePosition / size);
@@ -258,15 +257,14 @@ export class IoGl extends IoElement {
     // TODO: consider optimizing
     const pxRatio = window.devicePixelRatio;
     const rect = this.getBoundingClientRect();
-    const borderWidth = parseFloat(getComputedStyle(this).borderTopWidth); // TODO: FF bug borderWidth resolves empty string.
+    const style = getComputedStyle(this);
 
     // TODO: confirm and test
-    const width = Math.ceil((rect.width - borderWidth * 2));
-    const height = Math.ceil((rect.height - borderWidth * 2));
+    const width = Math.ceil((rect.width - parseFloat(style.borderLeftWidth) - parseFloat(style.borderRightWidth)));
+    const height = Math.ceil((rect.height - parseFloat(style.borderTopWidth) - parseFloat(style.borderBottomWidth)));
 
     this.$.canvas.style.width = Math.floor(width) + 'px';
     this.$.canvas.style.height = Math.floor(height) + 'px';
-    this.$.canvas.style.display = 'block';
 
     this.$.canvas.width = Math.floor(width * pxRatio);
     this.$.canvas.height = Math.floor(height * pxRatio);
