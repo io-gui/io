@@ -48,10 +48,10 @@ export class IoInspector extends IoElement {
   }
   _onSetInspectorValue(event) {
     event.stopImmediatePropagation();
-    this.set('value', event.detail.value);
-  }
-  _onBreadcrumbsValue(event) {
-    this.set('value', event.detail.value);
+    const value = event.detail.value;
+    if (value && typeof value === 'object') {
+      this.set('value', value);
+    }
   }
   valueChanged() {
     const option = this._options.find((option) => {
@@ -66,7 +66,7 @@ export class IoInspector extends IoElement {
   }
   changed() {
     const elements = [
-      ['io-breadcrumbs', {value: this.value, options: this._options, trim: true, 'on-value-set': this._onBreadcrumbsValue}],
+      ['io-breadcrumbs', {value: this.value, options: this._options, trim: true, 'on-value-set': this._onSetInspectorValue}],
     ];
     // TODO: rewise and document use of storage
     let uuid = this.value.constructor.name;
