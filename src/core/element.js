@@ -9,7 +9,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       contenteditable: Boolean,
       class: String,
       role: String,
-      title: String,
       label: String,
       id: String,
     };
@@ -35,12 +34,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     } else {
       this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
     }
-  }
-  titleChanged() {
-    this.setAttribute('aria-label', this.label || this.title);
-  }
-  labelChanged() {
-    this.setAttribute('aria-label', this.label || this.title);
   }
   /**
    * Add resize listener if `onResized()` is defined in subclass.
@@ -191,31 +184,33 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     while (parent && depth < DEPTH_LIMIT && closest === this) {
       const siblings = parent.querySelectorAll('[tabindex="0"]');
       for (let i = siblings.length; i--;) {
-        // TODO: consider looking up center or bbox instead tor-left corner
+
         if (!siblings[i].offsetParent) continue;
         const sRect = siblings[i].getBoundingClientRect();
         const dX = (sRect.x + sRect.width / 2) - (rect.x + rect.width / 2);
         const dY = (sRect.y + sRect.height / 2) - (rect.y + rect.height / 2);
+        const isInHorizontalDir = (Math.abs(dX) > Math.abs(dY));
+
         const dist = Math.sqrt(dX * dX + dY * dY);
         switch (dir) {
           case 'right':
-            if (dX > 0 && dist < closestDist) {
+            if (dX > 0 && dist < closestDist && isInHorizontalDir) {
               closest = siblings[i], closestDist = dist;
             }
             break;
           case 'left':
-            if (dX < 0 && dist < closestDist) {
+            if (dX < 0 && dist < closestDist && isInHorizontalDir) {
               closest = siblings[i], closestDist = dist;
             }
             break;
           case 'down':
-            if (dY > 0 && dist < closestDist) {
-              closest = siblings[i], closestDist = dist;
+            if (dY > 0 && dY < closestDist) {
+              closest = siblings[i], closestDist = dY;
             }
             break;
           case 'up':
-            if (dY < 0 && dist < closestDist) {
-              closest = siblings[i], closestDist = dist;
+            if (dY < 0 && dY < closestDist) {
+              closest = siblings[i], closestDist = dY;
             }
             break;
         }
