@@ -1,34 +1,26 @@
-import {IoBoolean} from "../../../dist/io-elements-core.js";
+import {IoBooleanIcon, IoIconsetSingleton} from "../../../dist/io-elements-core.js";
 
 export default class {
   constructor() {
-    this.element = new IoBoolean();
+    this.element = new IoBooleanIcon();
     this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {
-    describe('IoBoolean', () => {
+    describe('IoBooleanIcon', () => {
       describe('default values', () => {
         it('has default values', () => {
           chai.expect(this.element.value).to.equal(false);
-          chai.expect(this.element.true).to.equal('true');
-          chai.expect(this.element.false).to.equal('false');
+          chai.expect(this.element.true).to.equal('icons:check');
+          chai.expect(this.element.false).to.equal('icons:uncheck');
         });
       });
       describe('innerText', () => {
-        it('matches values', () => {
+        it('matches value', () => {
+          chai.expect(this.element.innerHTML).to.equal(IoIconsetSingleton.getIcon(this.element.false));
+          this.element.value = true;
+          chai.expect(this.element.innerHTML).to.equal(IoIconsetSingleton.getIcon(this.element.true));
           this.element.value = false;
-          chai.expect(this.element.innerText).to.equal(this.element.false);
-          this.element.toggle();
-          chai.expect(this.element.innerText).to.equal(this.element.true);
-          this.element.true = 'yes';
-          this.element.false = 'no';
-          chai.expect(this.element.textContent).to.equal('yes');
-          this.element.toggle();
-          chai.expect(this.element.textContent).to.equal('no');
-          this.element.value = false;
-          this.element.true = 'true';
-          this.element.false = 'false';
         });
       });
       describe('attributes', () => {

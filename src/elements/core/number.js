@@ -20,12 +20,12 @@ export class IoNumber extends IoItem {
   }
   static get Attributes() {
     return {
+      contenteditable: true,
       role: 'textbox',
       type: 'number',
       pattern: 'pattern="[0-9]*"',
       inputmode: 'numeric',
-      contenteditable: true,
-      spellcheck: false,
+      spellcheck: 'false',
     };
   }
   static get Properties() {
@@ -39,6 +39,7 @@ export class IoNumber extends IoItem {
       ladder: false,
     };
   }
+  // TODO: implement pointerevents
   static get Listeners() {
     return {
       'touchstart': '_onTouchstart',
@@ -147,6 +148,7 @@ export class IoNumber extends IoItem {
     else this.textNode = 'NaN';
   }
   changed() {
+    this.title = this.label;
     let value = this.value;
     let valueText;
     if (typeof value == 'number' && !isNaN(value)) {

@@ -27,7 +27,7 @@ export default class {
           chai.expect(this.element.textContent).to.equal('NaN');
           this.element.value = 123;
           chai.expect(this.element.textContent).to.equal('123');
-          this.element.value = 0;
+          this.element.value = '';
         });
       });
       describe('attributes', () => {
@@ -43,6 +43,11 @@ export default class {
           chai.expect(this.element.getAttribute('aria-invalid')).to.equal('true');
           this.element.value = '';
           chai.expect(this.element.getAttribute('aria-invalid')).to.equal(null);
+        });
+        it('has title attribute', () => {
+          this.element.label = 'Enter text';
+          chai.expect(this.element.getAttribute('title')).to.equal('Enter text');
+          this.element.label = '';
         });
       });
     });

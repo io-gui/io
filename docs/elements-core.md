@@ -19,37 +19,43 @@ Button element. When clicked or activated by space/enter key, it calls the `acti
 
 ## &lt;io-boolean&gt;
 
-Input element for `Boolean` data type displayed as text.
-
 Extends `<io-button>`.
+
+Input element for `Boolean` data type displayed as text. It can be configured to display custom `true` or `false` string depending on its `value`.
 
 <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
 
-<io-element-demo element="io-boolean" properties='{"value": true, "display": "icon", "trueicon": "icons:check", "falseicon": "icons:uncheck"}'></io-element-demo>
+## &lt;io-boolean-icon&gt;
 
-<io-element-demo element="io-boolean" properties='{"value": true, "display": "switch"}'></io-element-demo>
+Extends `<io-boolean>`. Implements `<io-icon>`.
 
-It can be configured to display custom `true` or `false` string depending on its `value`.
+Input element for `Boolean` data type displayed as switch. It can be configured to display custom `true` or `false` icon depending on its `value`.
+
+<io-element-demo element="io-boolean-icon" properties='{"value": true, "true": "icons:check", "false": "icons:uncheck"}'></io-element-demo>
+
+## &lt;io-switch&gt;
+
+Extends `<io-boolean>`.
+
+Input element for `Boolean` data type displayed as icon.
+
+<io-element-demo element="io-switch" properties='{"value": true}'></io-element-demo>
 
 ## &lt;io-string&gt;
+
+Extends `<io-item>`.
 
 Input element for `String` data type.
 
 <io-element-demo element="io-string" properties='{"value": "Hello io!"}'></io-element-demo>
 
-When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
-
 ## &lt;io-number&gt;
 
-Input element for `Number` data type.
+Extends `<io-item>`.
+
+Input element for `Number` data type. It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees. Enable `ladder` property to use interactive float ladder element.
 
 <io-element-demo element="io-number" properties='{"value": 1337, "conversion": 1, "step": 0.001, "min": 0, "max": 10000, "ladder": false}'></io-element-demo>
-
-It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees.
-
-Enable `ladder` property to use interactive float ladder element.
-
-When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
 ## &lt;io-gl&gt;
 

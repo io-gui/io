@@ -22,6 +22,8 @@ export default class {
           chai.expect(this.element.step).to.equal(0.001);
           chai.expect(this.element.min).to.equal(-Infinity);
           chai.expect(this.element.max).to.equal(Infinity);
+          chai.expect(this.element.strict).to.equal(true);
+          chai.expect(this.element.ladder).to.equal(false);
         });
       });
       describe('innerText', () => {
@@ -80,8 +82,13 @@ export default class {
         it('has tabindex attribute', () => {
           chai.expect(this.element.getAttribute('tabindex')).to.equal('0');
         });
-        it('has contenteditable attribute', () => {
+        it('has contenteditable attributes', () => {
           chai.expect(this.element.getAttribute('contenteditable')).to.equal('');
+          chai.expect(this.element.getAttribute('type')).to.equal('number');
+          chai.expect(this.element.getAttribute('pattern')).to.equal('pattern="[0-9]*"');
+          chai.expect(this.element.getAttribute('inputmode')).to.equal('numeric');
+          chai.expect(this.element.getAttribute('contenteditable')).to.equal('');
+          chai.expect(this.element.getAttribute('spellcheck')).to.equal('false');
         });
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('textbox');
@@ -90,6 +97,11 @@ export default class {
           this.element.value = 0;
           chai.expect(this.element.getAttribute('aria-invalid')).to.equal(null);
           this.reset();
+        });
+        it('has title attribute', () => {
+          this.element.label = 'Enter text';
+          chai.expect(this.element.getAttribute('title')).to.equal('Enter text');
+          this.element.label = '';
         });
       });
     });

@@ -17,8 +17,8 @@ export class IoString extends IoItem {
   }
   static get Attributes() {
     return {
-      role: 'textbox',
       contenteditable: true,
+      role: 'textbox',
     };
   }
   static get Properties() {
@@ -74,6 +74,7 @@ export class IoString extends IoItem {
     }
   }
   changed() {
+    this.title = this.label;
     this.textNode = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
     this.setAttribute('aria-invalid', (typeof this.value !== 'string') ? 'true' : false);
   }

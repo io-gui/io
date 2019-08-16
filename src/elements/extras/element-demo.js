@@ -107,7 +107,7 @@ export class IoElementDemo extends IoElement {
         (hasProps && this.expanded) ?
         ['io-properties', {value: this.properties, config: Object.assign({
             'type:number': ['io-number', {step: 0.00001}],
-            'type:boolean': ['io-boolean', {display: 'switch'}],
+            'type:boolean': ['io-switch'],
           }, this.config)}] : null,
         ['div', {class: 'io-frame'}, [
           [this.element, Object.assign({'on-value-set': this._onPropSet, 'id': 'demo-element'}, this.properties)],

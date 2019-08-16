@@ -8,9 +8,11 @@ import Element from "../tests/core/element.js"
 
 import Item from "../tests/elements/core/item.js"
 import Button from "../tests/elements/core/button.js"
-// import Boolean from "../tests/elements/core/boolean.js"
-// import Number from "../tests/elements/core/number.js"
-// import Sting from "../tests/elements/core/string.js"
+import Boolean from "../tests/elements/core/boolean.js"
+import BooleanIcon from "../tests/elements/core/boolean-icon.js"
+import Switch from "../tests/elements/core/switch.js"
+import Sting from "../tests/elements/core/string.js"
+import Number from "../tests/elements/core/number.js"
 // import Slider from "../tests/elements/core/slider.js"
 // import Option from "../tests/elements/core/option.js"
 // import Collapsable from "../tests/elements/core/collapsable.js"
@@ -34,9 +36,12 @@ function runTests() {
 
     new Item().run();
     new Button().run();
-    // new Boolean().run();
-    // new Number().run();
-    // new Sting().run();
+    new Boolean().run();
+    new Boolean().run();
+    new BooleanIcon().run();
+    new Switch().run();
+    new Sting().run();
+    new Number().run();
     // new Slider().run();
     // new Option().run();
     // new Collapsable().run();
