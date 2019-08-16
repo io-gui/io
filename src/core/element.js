@@ -194,8 +194,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         // TODO: consider looking up center or bbox instead tor-left corner
         if (!siblings[i].offsetParent) continue;
         const sRect = siblings[i].getBoundingClientRect();
-        const dX = sRect.x - rect.x;
-        const dY = sRect.y - rect.y;
+        const dX = (sRect.x + sRect.width / 2) - (rect.x + rect.width / 2);
+        const dY = (sRect.y + sRect.height / 2) - (rect.y + rect.height / 2);
         const dist = Math.sqrt(dX * dX + dY * dY);
         switch (dir) {
           case 'right':
