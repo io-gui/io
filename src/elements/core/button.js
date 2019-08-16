@@ -1,12 +1,17 @@
 import {html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoItem} from "./item.js";
 
 export class IoButton extends IoItem {
   static get Style() {
     return html`<style>
       :host {
-        ${mixin.button}
+        text-align: center;
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
+        background-color: var(--io-background-color-dark);
+        background-image: var(--io-gradient-button);
+        padding-left: calc(2 * var(--io-spacing));
+        padding-right: calc(2 * var(--io-spacing));
       }
     </style>`;
   }

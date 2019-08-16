@@ -48,7 +48,7 @@ export class IoObject extends IoElement {
   changed() {
     const label = this.label || this.value.constructor.name;
     this.template([
-      ['io-boolean', {class: 'io-item', true: '▾ ' + label, false: '▸ ' + label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
+      ['io-boolean', {true: '▾ ' + label, false: '▸ ' + label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       this.expanded ? [
         ['io-properties', {
           class: 'io-frame',

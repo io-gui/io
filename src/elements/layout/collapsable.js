@@ -42,7 +42,7 @@ export class IoCollapsable extends IoElement {
   }
   changed() {
     this.template([
-      ['io-boolean', {class: 'io-item', true: '▾ ' + this.label, false: '▸ ' + this.label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
+      ['io-boolean', {true: '▾ ' + this.label, false: '▸ ' + this.label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       ['div', {id: 'content', class: 'io-frame'}, (this.expanded && this.elements.length) ? this.elements : [null]],
     ]);
   }

@@ -103,7 +103,7 @@ export class IoElementDemo extends IoElement {
       const label = '<' + this.element + '>';
       this.template([
         hasProps ? ['io-icon', {icon: 'icons:gear'}] : null,
-        ['io-boolean', {class: 'io-item', value: this.bind('expanded'), true: label, false: label}],
+        ['io-boolean', {value: this.bind('expanded'), true: label, false: label}],
         (hasProps && this.expanded) ?
         ['io-properties', {value: this.properties, config: Object.assign({
             'type:number': ['io-number', {step: 0.00001}],

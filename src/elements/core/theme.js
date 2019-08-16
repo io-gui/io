@@ -11,7 +11,7 @@ export class IoTheme extends IoElement {
       --io-border-width: 1px;
       --io-stroke-width: 1px;
       --io-line-height: 20px;
-      --io-item-height: 28px; /* line+2*spacing+2*border */
+      --io-item-height: 28px; /* line-height+2*spacing+2*border-width */
       --io-font-size: 13px;
     }
     </style>`;
@@ -27,9 +27,10 @@ export class IoTheme extends IoElement {
       text-overflow: ellipsis;
       flex-wrap: nowrap;
       white-space: nowrap;
-      height: var(--io-line-height);
-      font-size: var(--io-font-size);
+      box-sizing: border-box;
       line-height: var(--io-line-height);
+      height: var(--io-item-height);
+      font-size: var(--io-font-size);
       border-radius: var(--io-border-radius);
       border: var(--io-inset-border);
       border-color: transparent;
@@ -38,38 +39,6 @@ export class IoTheme extends IoElement {
       background-image: none;
       padding: var(--io-spacing);
       transition: background-color 0.25s;
-    }
-    button {
-      display: inline-block;
-      text-align: center;
-      height: var(--io-line-height);
-      font-size: var(--io-font-size);
-      line-height: var(--io-line-height);
-      border-radius: var(--io-border-radius);
-      border: var(--io-outset-border);
-      border-color: var(--io-outset-border-color);
-      color: var(--io-color);
-      background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-button);
-      padding: var(--io-spacing);
-      padding-left: calc(2 * var(--io-spacing));
-      padding-right: calc(2 * var(--io-spacing));
-      transition: background-color 0.25s;
-    }
-    field {
-      display: inline-block;
-      width: calc(4 * var(--io-line-height));
-      height: var(--io-line-height);
-      font-size: var(--io-font-size);
-      line-height: var(--io-line-height);
-      border-radius: var(--io-border-radius);
-      border: var(--io-inset-border);
-      border-color: var(--io-inset-border-color);
-      color: var(--io-color-field);
-      background-color: var(--io-background-color-field);
-      background-image: none;
-      padding: var(--io-spacing);
-      box-shadow: var(--io-shadow-inset);
     }
     panel {
       display: flex;

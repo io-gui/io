@@ -7,7 +7,14 @@ export class IoMenuOption extends IoMenuItem {
   static get Style() {
     return html`<style>
       :host {
-        ${mixin.button}
+        text-align: center;
+        border-radius: var(--io-border-radius);
+        border: var(--io-outset-border);
+        border-color: var(--io-outset-border-color);
+        background-color: var(--io-background-color-dark);
+        background-image: var(--io-gradient-button);
+        padding-left: calc(2 * var(--io-spacing));
+        padding-right: calc(2 * var(--io-spacing));
       }
       :host {
         text-align: left;

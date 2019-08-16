@@ -22,7 +22,7 @@ export class IoBreadcrumbs extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         background: none;
-        padding: 0 var(--io-spacing);
+        padding: var(--io-spacing);
       }
       :host > io-button:hover {
         text-decoration: underline;

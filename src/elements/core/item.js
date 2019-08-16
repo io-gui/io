@@ -9,14 +9,6 @@ export class IoItem extends IoElement {
       :host {
         ${mixin.item};
       }
-      :host {
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-      }
       :host:hover {
         background-color: var(--io-background-color-light);
       }
@@ -55,8 +47,6 @@ export class IoItem extends IoElement {
   static get Listeners() {
     return {
       'focus': '_onFocus',
-      // 'touchstart': '_onTouchstart',
-      // 'mousedown': '_onMousedown',
     };
   }
   get textNode() {
@@ -78,10 +68,6 @@ export class IoItem extends IoElement {
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('click', this._onClick);
   }
-  // _onTouchstart() {}
-  // _onMousedown() {
-  //   this.focus();
-  // }
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
@@ -114,13 +100,19 @@ export class IoItem extends IoElement {
     this.dispatchEvent('item-clicked', {value: this.value, label: this.label}, true);
   }
   changed() {
-    let valueText = String(this.value);
-    if (this.value && typeof this.value === 'object') {
-      valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
+    if (this.label) {
+      this.textNode = this.label;
+      this.title = this.label;
+    } else {
+      let valueText;
+      if (this.value && typeof this.value === 'object') {
+        valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
+      } else {
+        valueText = String(this.value);
+      }
+      this.textNode = valueText;
+      this.title = valueText;
     }
-    valueText = this.label || valueText;
-    this.textNode = valueText;
-    this.title = valueText;
   }
 }
 

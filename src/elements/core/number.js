@@ -1,5 +1,4 @@
 import {html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoItem} from "./item.js";
 import {IoLayerSingleton} from "./layer.js";
 
@@ -9,11 +8,13 @@ export class IoNumber extends IoItem {
   static get Style() {
     return html`<style>
       :host {
-        ${mixin.field}
-      }
-      :host {
+        cursor: text;
         user-select: text;
-        min-width: 0.5em;
+        min-width: var(--io-item-height);
+        border-color: var(--io-inset-border-color);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
+        box-shadow: var(--io-shadow-inset);
       }
     </style>`;
   }

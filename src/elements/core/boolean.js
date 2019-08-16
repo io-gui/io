@@ -6,16 +6,9 @@ import {IoIconsetSingleton} from "./iconset.js";
 export class IoBoolean extends IoItem {
   static get Style() {
     return html`<style>
-      :host {
-        ${mixin.button}
-        width: calc(2 * var(--io-line-height));
-      }
       :host[display="icon"] {
-        ${mixin.item};
-      }
-      :host[display="icon"] {
-        width: var(--io-line-height);
-        height: var(--io-line-height);
+        width: var(--io-item-height);
+        height: var(--io-item-height);
         fill: var(--io-color, currentcolor);
       }
       :host[stroke] {
@@ -94,7 +87,7 @@ export class IoBoolean extends IoItem {
         reflect: 1,
       },
       display: {
-        value: 'button',
+        value: 'text',
         reflect: 1,
       },
       true: 'true',
@@ -118,7 +111,7 @@ export class IoBoolean extends IoItem {
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
     if (this.display === 'icon') {
       this.innerHTML = IoIconsetSingleton.getIcon(this.value ? this.trueicon : this.falseicon);
-    } else if (this.display === 'button') {
+    } else if (this.display === 'text') {
       this.textNode = this.value ? this.true : this.false;
     } else if (this.display === 'switch') {
       this.textNode = '';
