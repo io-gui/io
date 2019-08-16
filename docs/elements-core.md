@@ -1,22 +1,21 @@
 ## &lt;io-item&gt;
 
-A simple focusable element.
+Extends `<io-element>`.
+
+A superclass for various other elements.
+InnerText displays label or value property converted to string.
+When clicked or activated by space/enter key, it calls the `_onClick(event)` function.
+When focused, arrow keys will change focus to the nearest focusable element in the chosen direction using `.focusTo(direction)` method.
 
 <io-element-demo element="io-item" properties='{"label": "Item", "value": "null"}'></io-element-demo>
 
-When clicked or activated by space/enter key, it calls the `_onClick()` function with optional `value` argument. This element is used as a base class for other elements.
-
-When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
-
 ## &lt;io-button&gt;
-
-A simple button element.
 
 Extends `<io-item>`.
 
-<io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
+Button element. When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
 
-When clicked or activated by space/enter key, it calls the `action` function with optional `value` argument.
+<io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
 
 ## &lt;io-boolean&gt;
 

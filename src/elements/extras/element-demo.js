@@ -13,8 +13,8 @@ export class IoElementDemo extends IoElement {
         text-align: left;
       }
       :host > io-icon {
-        margin-top: 0.3em;
-        margin-bottom: -1.75em;
+        margin-top: 0.0em;
+        margin-bottom: -2.25em;
         display: inline-block;
         padding: 0 0.5em;
         margin-left: auto;

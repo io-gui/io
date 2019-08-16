@@ -30,9 +30,9 @@ export class IoSidebar extends IoElement {
       :host io-button,
       :host io-collapsable,
       :host .io-frame {
-        border: none;
         background: none;
         box-shadow: none;
+        border-color: transparent;
       }
     </style>`;
   }

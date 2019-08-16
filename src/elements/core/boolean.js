@@ -1,5 +1,5 @@
 import {html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoThemeSingleton as mixin} from "./theme.js";
 import {IoItem} from "./item.js";
 import {IoIconsetSingleton} from "./iconset.js";
 

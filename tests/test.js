@@ -6,25 +6,17 @@ import "../lib/chai.js";
 import Node from "../tests/core/node.js"
 import Element from "../tests/core/element.js"
 
-import Boolean from "../tests/elements/boolean.js"
-import Button from "../tests/elements/button.js"
-import Number from "../tests/elements/number.js"
-import Sting from "../tests/elements/string.js"
-import Slider from "../tests/elements/slider.js"
-import Option from "../tests/elements/option.js"
-import Collapsable from "../tests/elements/collapsable.js"
-import Properties from "../tests/elements/properties.js"
-import Object from "../tests/elements/object.js"
-import Inspector from "../tests/elements/inspector.js"
-// import Quad from "../tests/elements/quad.js"
-// import Menu from "../tests/elements/menu.js"
-// import Selector from "../tests/elements/selector.js"
-// import SelectorTabs from "../tests/elements/selector-tabs.js"
-// import SelectorSidebar from "../tests/elements/selector-sidebar.js"
-// import Tabs from "../tests/elements/tabs.js"
-// import Sidebar from "../tests/elements/sidebar.js"
-
-// import Storage from "../tests/objects/storage.js"
+import Item from "../tests/elements/core/item.js"
+import Button from "../tests/elements/core/button.js"
+// import Boolean from "../tests/elements/core/boolean.js"
+// import Number from "../tests/elements/core/number.js"
+// import Sting from "../tests/elements/core/string.js"
+// import Slider from "../tests/elements/core/slider.js"
+// import Option from "../tests/elements/core/option.js"
+// import Collapsable from "../tests/elements/core/collapsable.js"
+// import Properties from "../tests/elements/core/properties.js"
+// import Object from "../tests/elements/core/object.js"
+// import Inspector from "../tests/elements/core/inspector.js"
 
 mocha.setup('bdd');
 
@@ -37,27 +29,20 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    new Node().run();
-    new Element().run();
+    // new Node().run();
+    // new Element().run();
 
+    new Item().run();
     new Button().run();
-    new Boolean().run();
-    new Number().run();
-    new Sting().run();
-    new Slider().run();
-    new Option().run();
-    new Collapsable().run();
-    new Properties().run();
-    new Object().run();
-    new Inspector().run();
-    // new Quad().run();
-    // new Menu().run();
-    // new Selector().run();
-    // new SelectorTabs().run();
-    // new SelectorSidebar().run();
-    // new Tabs().run();
-    // new Sidebar().run();
-    // new Storage().run();
+    // new Boolean().run();
+    // new Number().run();
+    // new Sting().run();
+    // new Slider().run();
+    // new Option().run();
+    // new Collapsable().run();
+    // new Properties().run();
+    // new Object().run();
+    // new Inspector().run();
     mocha.checkLeaks();
     mocha.run();
     testCompleted = true;

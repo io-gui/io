@@ -1,4 +1,4 @@
-import {IoButton} from "../../dist/io-elements-core.js";
+import {IoButton} from "../../../dist/io-elements-core.js";
 
 export default class {
   constructor() {
@@ -10,7 +10,19 @@ export default class {
     describe('IoButton', () => {
       describe('default values', () => {
         it('has default values', () => {
+          chai.expect(this.element.value).to.equal(undefined);
           chai.expect(this.element.label).to.equal('Button');
+          chai.expect(this.element.action).to.equal(undefined);
+        });
+      });
+      describe('innerText', () => {
+        it('matches values', () => {
+          this.element.value = false;
+          chai.expect(this.element.innerText).to.equal('Button');
+          this.element.label = 'click me';
+          chai.expect(this.element.innerText).to.equal('click me');
+          this.element.value = undefined;
+          this.element.label = 'Button';
         });
       });
       describe('attributes', () => {
@@ -19,6 +31,11 @@ export default class {
         });
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('button');
+          chai.expect(this.element.getAttribute('aria-label')).to.equal('Button');
+          this.element.label = 'click here';
+          chai.expect(this.element.getAttribute('aria-label')).to.equal('click here');
+          this.element.label = 'Button';
+          chai.expect(this.element.getAttribute('aria-label')).to.equal('Button');
         });
         it('has title attribute', () => {
           this.element.label = 'click here';

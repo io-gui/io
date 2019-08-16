@@ -31,7 +31,7 @@ export class IoMenuOptions extends IoElement {
         flex-wrap: nowrap;
       }
       :host[horizontal] > * {
-        padding: calc(2 * var(--io-spacing)) calc(4 * var(--io-spacing));
+        padding: var(--io-spacing) calc(4 * var(--io-spacing));
       }
       :host:not([horizontal]) > io-menu-item > * {
         min-width: 0.5em;

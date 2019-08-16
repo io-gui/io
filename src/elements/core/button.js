@@ -13,6 +13,10 @@ export class IoButton extends IoItem {
         padding-left: calc(2 * var(--io-spacing));
         padding-right: calc(2 * var(--io-spacing));
       }
+      :host[pressed] {
+        border: var(--io-inset-border);
+        border-color: var(--io-inset-border-color);
+      }
     </style>`;
   }
   static get Attributes() {

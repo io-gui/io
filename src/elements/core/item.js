@@ -1,5 +1,5 @@
 import {IoElement, html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoThemeSingleton as mixin} from "./theme.js";
 
 // NOTE: [optmization] Uses textNode and fixed size to avoid layout trashing on change.
 
@@ -17,9 +17,9 @@ export class IoItem extends IoElement {
         text-overflow: inherit;
         border-color: var(--io-color-focus);
       }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
+      :host[pressed] {
+        border-color: var(--io-inset-border-color);
+        box-shadow: var(--io-shadow-inset);
       }
       :host[hidden] {
         display: none;
@@ -27,13 +27,19 @@ export class IoItem extends IoElement {
       :host[selected] {
         color: var(--io-color-link);
       }
+      :host[aria-invalid] {
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
+      }
     </style>`;
   }
   static get Attributes() {
     return {
       label: {
+        type: String,
         notify: true,
       },
+      pressed: Boolean,
       hidden: Boolean,
       selected: Boolean,
       tabindex: 0,
@@ -47,6 +53,7 @@ export class IoItem extends IoElement {
   static get Listeners() {
     return {
       'focus': '_onFocus',
+      'pointerdown': '_onPointerDown',
     };
   }
   get textNode() {
@@ -71,15 +78,37 @@ export class IoItem extends IoElement {
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
+    this.addEventListener('keyup', this._onKeyup);
     this.addEventListener('click', this._onClick);
   }
   _onBlur() {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
+    this.removeEventListener('keyup', this._onKeyup);
     this.removeEventListener('click', this._onClick);
+  }
+  _onPointerDown(event) {
+    this.pressed = true;
+    this.addEventListener('pointermove', this._onPointerMove);
+    this.addEventListener('pointerleave', this._onPointerLeave);
+    this.addEventListener('pointerup', this._onPointerUp);
+    event.preventDefault();
+  }
+  _onPointerMove() {}
+  _onPointerLeave(event) {
+    event.preventDefault();
+    this.pressed = false;
+  }
+  _onPointerUp() {
+    this.pressed = false;
+    this.removeEventListener('pointermove', this._onPointerMove);
+    this.removeEventListener('pointerleave', this._onPointerLeave);
+    this.removeEventListener('pointerup', this._onPointerUp);
+    this.focus();
   }
   _onKeydown(event) {
     if (event.which === 13 || event.which === 32) {
+      this.pressed = true;
       event.preventDefault();
       this._onClick(event);
     } else if (event.key === 'ArrowLeft') {
@@ -96,6 +125,9 @@ export class IoItem extends IoElement {
       this.focusTo('down');
     }
   }
+  _onKeyup() {
+    this.pressed = false;
+  }
   _onClick() {
     this.dispatchEvent('item-clicked', {value: this.value, label: this.label}, true);
   }
@@ -103,6 +135,7 @@ export class IoItem extends IoElement {
     if (this.label) {
       this.textNode = this.label;
       this.title = this.label;
+      this.setAttribute('aria-label', this.label);
     } else {
       let valueText;
       if (this.value && typeof this.value === 'object') {
@@ -112,6 +145,7 @@ export class IoItem extends IoElement {
       }
       this.textNode = valueText;
       this.title = valueText;
+      this.setAttribute('aria-label', false);
     }
   }
 }
