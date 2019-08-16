@@ -1,28 +1,7 @@
 import {IoElement, html} from "../../io.js";
 import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 
-export class Item {
-  constructor(value) {
-    if (typeof value === 'object' && (value.options !== undefined || value.action !== undefined || value.value !== undefined)) {
-      Object.assign(this, value);
-    } else {
-      this.value = value;
-    }
-    if (this.label === undefined) {
-      if (this.value instanceof Array) {
-        this.label = String(`${this.value.constructor.name} (${this.value.length})`);
-      } else if (typeof this.value === 'object') {
-        this.label = String(`${this.value.constructor.name}`);
-      } else if (this.value !== undefined) {
-        this.label = String(this.value);
-      } else {
-        console.warn('Option must have label or value!');
-      }
-    }
-  }
-}
-
-// NOTE: [optmization] Uses textNode and fixed size in em to avoid layout trashing on change.
+// NOTE: [optmization] Uses textNode and fixed size to avoid layout trashing on change.
 
 export class IoItem extends IoElement {
   static get Style() {
@@ -32,14 +11,11 @@ export class IoItem extends IoElement {
       }
       :host {
         cursor: pointer;
-        user-select: none;
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
         text-overflow: ellipsis;
         flex-wrap: nowrap;
         white-space: nowrap;
-        color: var(--io-color);
-        background-color: var(--io-background-color);
       }
       :host:hover {
         background-color: var(--io-background-color-light);

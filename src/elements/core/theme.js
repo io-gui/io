@@ -20,6 +20,13 @@ export class IoTheme extends IoElement {
     return html`<style>
     item {
       display: inline-block;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-wrap: nowrap;
+      white-space: nowrap;
       height: var(--io-line-height);
       font-size: var(--io-font-size);
       line-height: var(--io-line-height);
@@ -30,7 +37,7 @@ export class IoTheme extends IoElement {
       background-color: transparent;
       background-image: none;
       padding: var(--io-spacing);
-
+      transition: background-color 0.25s;
     }
     button {
       display: inline-block;
@@ -48,7 +55,6 @@ export class IoTheme extends IoElement {
       padding-left: calc(2 * var(--io-spacing));
       padding-right: calc(2 * var(--io-spacing));
       transition: background-color 0.25s;
-
     }
     field {
       display: inline-block;
