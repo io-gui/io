@@ -1,5 +1,6 @@
 import {html, filterObject} from "../../io.js";
 import {IoSelector} from "./selector.js";
+// TODO: remove io-menu-options dependency.
 
 export class IoSelectorTabs extends IoSelector {
   static get Style() {

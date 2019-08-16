@@ -52,34 +52,6 @@ Enable `ladder` property to use interactive float ladder element.
 
 When focused, arrow keys will change focus to the nearest focusable element in the chosen direction.
 
-## &lt;io-slider&gt;
-
-Input element for `Number` data type displayed as interactive slider with a number field.
-
-Implements `<io-number>` and `<io-slider-knob>`.
-
-<io-element-demo element="io-slider" properties='{"value": 0.1, "step": 0.01, "min": -0.5, "max": 0.5}'></io-element-demo>
-
-It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment.
-
-To change the value with arrow keys on focused slider, users should hold down the shift key.
-
-## &lt;io-icon&gt;
-
-SVG icon element.
-
-<io-element-demo element="io-icon" properties='{"icon": "icons:link"}' config='{"icon": ["io-menu-option", {"options": ["icons:link", "icons:unlink", "icons:check", "icons:uncheck"]}]}'></io-element-demo>
-
-## &lt;io-theme-singleton&gt;
-
-`IoThemeSingleton` holds top-level CSS variables for Io design system. Variables are grouped in different themes and can be collectively switched by changing `theme` property.
-
-```javascript
-IoThemeSingleton.theme = 'dark';
-```
-
-Moreover, some of the key theme variables such as `'--io-color'` and `'--io-background-color'` are mapped to numeric properties `cssColor` and `cssBackgroundColor` source code for more advanced example.
-
 ## &lt;io-gl&gt;
 
 `IoGL` is a base class for WebGL-based custom elements. The appearance of such elements is defined with fragment shader programs that execute on the GPU. All numeric properties are automatically bound to shader uniforms, including `IoThemeSingleton` properties. You can define your custom shaders inside `static get Frag()` return string.
@@ -101,3 +73,47 @@ class myElement extends IoGL {
 ```
 
 See `IoSliderKnob` and `IoHsvaSv` for more advanced example.
+
+## &lt;io-slider&gt;
+
+Input element for `Number` data type displayed as interactive slider with a number field.
+
+Implements `<io-number>` and `<io-slider-knob>`.
+
+<io-element-demo element="io-slider" properties='{"value": 0.1, "step": 0.01, "min": -0.5, "max": 0.5}'></io-element-demo>
+
+It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment.
+
+To change the value with arrow keys on focused slider, users should hold down the shift key.
+
+## &lt;io-number-slider&gt;
+
+TODO
+
+## &lt;io-number-ladder&gt;
+
+TODO
+
+## &lt;io-icon&gt;
+
+SVG icon element.
+
+<io-element-demo element="io-icon" properties='{"icon": "icons:link"}' config='{"icon": ["io-menu-option", {"options": ["icons:link", "icons:unlink", "icons:check", "icons:uncheck"]}]}'></io-element-demo>
+
+## &lt;io-iconset&gt;
+
+TODO
+
+## &lt;io-layer-singleton&gt;
+
+TODO
+
+## &lt;io-theme-singleton&gt;
+
+`IoThemeSingleton` holds top-level CSS variables for Io design system. Variables are grouped in different themes and can be collectively switched by changing `theme` property.
+
+```javascript
+IoThemeSingleton.theme = 'dark';
+```
+
+Moreover, some of the key theme variables such as `'--io-color'` and `'--io-background-color'` are mapped to numeric properties `cssColor` and `cssBackgroundColor` source code for more advanced example.

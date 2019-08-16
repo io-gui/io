@@ -45,3 +45,7 @@ Implements `<io-menu-option>` and `<io-button>`.
 <io-element-demo element="io-sidebar" properties='{"selected": 1, "options": [{"label": "Options", "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}]}], "overflow": false}' config='{"options": ["io-object", {"expanded": true}]}'></io-element-demo>
 
 When tabs are clicked, `selected` value is set.
+
+## &lt;io-layout&gt;
+
+TODO
