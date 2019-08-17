@@ -84,7 +84,8 @@ export class IoNumber extends IoItem {
     this._expandLadder();
   }
   _onValueSet(event) {
-    this.set('value', event.detail.value / this.conversion);
+    // TODO: implement conversion properly in ladder
+    this.set('value', event.detail.value * this.conversion);
   }
   _expandLadder() {
     if (!this.ladder) return;
@@ -103,6 +104,24 @@ export class IoNumber extends IoItem {
     // TODO: disable nudge?
     IoLayerSingleton.setElementPosition(IoLadderSingleton, 'bottom', this.getBoundingClientRect());
     IoLayerSingleton.srcElement = this;
+  }
+  _onPointerDown(event) {
+    this.pressed = true;
+    this.addEventListener('pointermove', this._onPointerMove);
+    this.addEventListener('pointerleave', this._onPointerLeave);
+    this.addEventListener('pointerup', this._onPointerUp);
+  }
+  _onPointerMove() {}
+  _onPointerLeave(event) {
+    event.preventDefault();
+    this.pressed = false;
+  }
+  _onPointerUp() {
+    this.pressed = false;
+    this.removeEventListener('pointermove', this._onPointerMove);
+    this.removeEventListener('pointerleave', this._onPointerLeave);
+    this.removeEventListener('pointerup', this._onPointerUp);
+    this.focus();
   }
   _onKeydown(event) {
     const rng = window.getSelection().getRangeAt(0);

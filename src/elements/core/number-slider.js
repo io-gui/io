@@ -23,11 +23,18 @@ export class IoNumberSlider extends IoElement {
     return {
       value: 0,
       step: 0.01,
+      conversion: 1,
       min: 0,
       max: 1,
     };
   }
-  _onValueSet(event) {
+  _onNumberSet(event) {
+    event.detail.value = event.detail.value / this.conversion;
+    this.value = event.detail.value;
+    this.dispatchEvent('value-set', event.detail, false);
+  }
+  _onSliderSet(event) {
+    event.detail.value = event.detail.value / this.conversion;
     this.value = event.detail.value;
     this.dispatchEvent('value-set', event.detail, false);
   }
@@ -36,23 +43,22 @@ export class IoNumberSlider extends IoElement {
       ['io-number', {
         id: 'number',
         value: this.value,
-        step: this.step,
+        step: this.step * this.conversion,
+        conversion: this.conversion,
         min: this.min,
         max: this.max,
         label: this.label,
-        title: this.title,
         ladder: true,
-        'on-value-set': this._onValueSet,
+        'on-value-set': this._onNumberSet,
       }],
       ['io-slider', {
         id: 'slider',
-        value: this.value,
-        step: this.step,
-        min: this.min,
-        max: this.max,
+        value: this.value * this.conversion,
+        step: this.step * this.conversion,
+        min: this.min * this.conversion,
+        max: this.max * this.conversion,
         label: this.label,
-        title: this.title,
-        'on-value-set': this._onValueSet,
+        'on-value-set': this._onSliderSet,
       }]
     ]);
   }

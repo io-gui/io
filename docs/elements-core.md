@@ -93,7 +93,14 @@ To change the value with arrow keys on focused slider, users should hold down th
 
 ## &lt;io-number-slider&gt;
 
-TODO
+Implements `<io-number>` and `<io-slider>`.
+
+Input element for `Number` data type combining `<io-number>` and `<io-slider>`
+
+<io-element-demo element="io-number-slider" properties='{"value": 0.1, "step": 0.1, "conversion": 1, "min": -0.5, "max": 0.5}'></io-element-demo>
+<io-element-demo element="io-number-slider" properties='{"value": 0, "step": 0.2617993877991494, "conversion": 57.29577951308232, "min": -6.283185307179586, "max": 6.283185307179586}'></io-element-demo>
+<io-element-demo element="io-number-slider" properties='{"value": 0.1, "step": 0.1, "conversion": 0.3, "min": -0.5, "max": 0.5}'></io-element-demo>
+
 
 ## &lt;io-ladder&gt;
 
