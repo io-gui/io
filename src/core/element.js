@@ -176,41 +176,59 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
   focusTo(dir, srcRect) {
     const rect = srcRect || this.getBoundingClientRect();
+    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
     let closest = this;
     let closestDist = Infinity;
     let parent = this.parentElement;
     let depth = 0;
     const DEPTH_LIMIT = 10;
+
+    const backtrack = focusBacktrack.get(this);
+    if (backtrack && backtrack[dir]) {
+      backtrack[dir].focus();
+      setBacktrack(backtrack[dir], dir, this);
+      return;
+    }
+
     while (parent && depth < DEPTH_LIMIT && closest === this) {
       const siblings = parent.querySelectorAll('[tabindex="0"]');
       for (let i = siblings.length; i--;) {
 
         if (!siblings[i].offsetParent) continue;
         const sRect = siblings[i].getBoundingClientRect();
-        const dX = (sRect.x + sRect.width / 2) - (rect.x + rect.width / 2);
-        const dY = (sRect.y + sRect.height / 2) - (rect.y + rect.height / 2);
-        const isInHorizontalDir = (Math.abs(dX) > Math.abs(dY));
+        sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
 
-        const dist = Math.sqrt(dX * dX + dY * dY);
+        const dX = sRect.center.x - rect.center.x;
+        const dY = sRect.center.y - rect.center.y;
+
+        const isRight = sRect.right > rect.right + 1;
+        const isLeft = sRect.left < rect.left - 1;
+        const isDown = sRect.center.y > rect.center.y + 1;
+        const isUp = sRect.center.y < rect.center.y - 1;
+
+        const distY = Math.sqrt(0.2 * dX * dX + dY * dY);
+        const distX = Math.sqrt(dX * dX + 0.2 * dY * dY);
+
+        // TODO: improve automatic direction routing.
         switch (dir) {
           case 'right':
-            if (dX > 0 && dist < closestDist && isInHorizontalDir) {
-              closest = siblings[i], closestDist = dist;
+            if (dX > 0 && distX < closestDist && isRight) {
+              closest = siblings[i], closestDist = distX;
             }
             break;
           case 'left':
-            if (dX < 0 && dist < closestDist && isInHorizontalDir) {
-              closest = siblings[i], closestDist = dist;
+            if (dX < 0 && distX < closestDist && isLeft) {
+              closest = siblings[i], closestDist = distX;
             }
             break;
           case 'down':
-            if (dY > 0 && dY < closestDist) {
-              closest = siblings[i], closestDist = dY;
+            if (dY > 0 && distY < closestDist && isDown) {
+              closest = siblings[i], closestDist = distY;
             }
             break;
           case 'up':
-            if (dY < 0 && dY < closestDist) {
-              closest = siblings[i], closestDist = dY;
+            if (dY < 0 && distY < closestDist && isUp) {
+              closest = siblings[i], closestDist = distY;
             }
             break;
         }
@@ -219,10 +237,19 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       depth++;
       if (closest !== this) {
         closest.focus();
+        setBacktrack(closest, dir, this);
         return;
       }
     }
   }
+}
+
+const focusBacktrack = new WeakMap();
+const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'}
+function setBacktrack(element, dir, target) {
+  const backtrack = focusBacktrack.get(element) || {};
+  backtrack[backtrackDir[dir]] = target;
+  focusBacktrack.set(element, backtrack);
 }
 
 const warning = document.createElement('div');
