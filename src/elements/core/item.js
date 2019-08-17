@@ -9,14 +9,6 @@ export class IoItem extends IoElement {
       :host {
         ${mixin.item};
       }
-      :host:hover {
-        background-color: var(--io-background-color-light);
-      }
-      :host:focus {
-        outline: 0;
-        text-overflow: inherit;
-        border-color: var(--io-color-focus);
-      }
       :host[pressed] {
         border-color: var(--io-inset-border-color);
         box-shadow: var(--io-shadow-inset);
@@ -30,6 +22,14 @@ export class IoItem extends IoElement {
       :host[aria-invalid] {
         border: var(--io-border-error);
         background-image: var(--io-gradient-error);
+      }
+      :host:hover {
+        background-color: var(--io-background-color-light);
+      }
+      :host:focus {
+        outline: 0;
+        text-overflow: inherit;
+        border-color: var(--io-color-focus);
       }
     </style>`;
   }
