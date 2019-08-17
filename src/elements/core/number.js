@@ -2,7 +2,7 @@ import {html} from "../../io.js";
 import {IoItem} from "./item.js";
 import {IoLayerSingleton} from "./layer.js";
 
-import {IoNumberLadderSingleton} from "./number-ladder.js";
+import {IoLadderSingleton} from "./ladder.js";
 
 export class IoNumber extends IoItem {
   static get Style() {
@@ -58,12 +58,12 @@ export class IoNumber extends IoItem {
     const dx = event.changedTouches[0].clientX - this._x;
     const dy = event.changedTouches[0].clientY - this._y;
     if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {
-      if (IoNumberLadderSingleton.expanded) {
+      if (IoLadderSingleton.expanded) {
         this.focus();
       }
       document.activeElement.blur();
       IoLayerSingleton.clickblock = true;
-      IoNumberLadderSingleton.opaque = true;
+      IoLadderSingleton.opaque = true;
       this._expandLadder();
     }
   }
@@ -88,20 +88,20 @@ export class IoNumber extends IoItem {
   }
   _expandLadder() {
     if (!this.ladder) return;
-    IoNumberLadderSingleton.expanded = true;
-    IoNumberLadderSingleton.min = this.min;
-    IoNumberLadderSingleton.max = this.max;
-    IoNumberLadderSingleton.step = this.step;
-    IoNumberLadderSingleton.value = this.value;
+    IoLadderSingleton.expanded = true;
+    IoLadderSingleton.min = this.min;
+    IoLadderSingleton.max = this.max;
+    IoLadderSingleton.step = this.step;
+    IoLadderSingleton.value = this.value;
     // TODO: unhack
-    if (IoNumberLadderSingleton._target) {
-      IoNumberLadderSingleton.removeEventListener('value-set', IoNumberLadderSingleton._target._onValueSet);
+    if (IoLadderSingleton._target) {
+      IoLadderSingleton.removeEventListener('value-set', IoLadderSingleton._target._onValueSet);
     }
-    IoNumberLadderSingleton._target = this;
-    IoNumberLadderSingleton.addEventListener('value-set', this._onValueSet);
+    IoLadderSingleton._target = this;
+    IoLadderSingleton.addEventListener('value-set', this._onValueSet);
 
     // TODO: disable nudge?
-    IoLayerSingleton.setElementPosition(IoNumberLadderSingleton, 'bottom', this.getBoundingClientRect());
+    IoLayerSingleton.setElementPosition(IoLadderSingleton, 'bottom', this.getBoundingClientRect());
     IoLayerSingleton.srcElement = this;
   }
   _onKeydown(event) {
@@ -137,25 +137,31 @@ export class IoNumber extends IoItem {
       }
       this._setFromTextNode();
     } else if (event.which == 37) { // left
-      if (event.altKey || (rngInside && start === end && start === 0)) {
+      if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('left');
       }
     } else if (event.which == 38) { // up
-      if (event.altKey || (rngInside && start === end && start === 0)) {
+      if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('up');
       }
     } else if (event.which == 39) { // right
-      if (event.altKey || (rngInside && start === end && start === length)) {
+      if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('right');
       }
     } else if (event.which == 40) { // down
-      if (event.altKey || (rngInside && start === end && start === length)) {
+      if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('down');
       }
+    }
+  }
+  _onKeyup(event) {
+    if (event.which === 17) { // ctrl
+      // TODO: implement keybord navigation for io-ladder
+      this._expandLadder();
     }
   }
   _setFromTextNode() {

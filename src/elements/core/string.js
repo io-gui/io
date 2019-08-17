@@ -53,22 +53,22 @@ export class IoString extends IoItem {
       event.preventDefault();
       this._setFromTextNode();
     } else if (event.which == 37) {
-      if (event.altKey || (rngInside && start === end && start === 0)) {
+      if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('left');
       }
     } else if (event.which == 38) {
-      if (event.altKey || (rngInside && start === end && start === 0)) {
+      if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('up');
       }
     } else if (event.which == 39) {
-      if (event.altKey || (rngInside && start === end && start === length)) {
+      if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('right');
       }
     } else if (event.which == 40) {
-      if (event.altKey || (rngInside && start === end && start === length)) {
+      if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('down');
       }

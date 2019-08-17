@@ -1,7 +1,7 @@
 import {IoElement, html} from "../../io.js";
 import {IoLayerSingleton} from "./layer.js";
 
-class IoNumberLadder extends IoElement {
+class IoLadder extends IoElement {
   static get Style() {
     return html`<style>
       :host {
@@ -196,8 +196,8 @@ class IoNumberLadder extends IoElement {
   }
 }
 
-IoNumberLadder.Register();
+IoLadder.Register();
 
-export const IoNumberLadderSingleton = new IoNumberLadder();
-IoLayerSingleton.appendChild(IoNumberLadderSingleton);
-IoNumberLadderSingleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);
+export const IoLadderSingleton = new IoLadder();
+IoLayerSingleton.appendChild(IoLadderSingleton);
+IoLadderSingleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);

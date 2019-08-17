@@ -95,7 +95,7 @@ To change the value with arrow keys on focused slider, users should hold down th
 
 TODO
 
-## &lt;io-number-ladder&gt;
+## &lt;io-ladder&gt;
 
 TODO
 
