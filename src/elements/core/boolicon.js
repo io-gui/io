@@ -2,7 +2,7 @@ import {html} from "../../io.js";
 import {IoBoolean} from "./boolean.js";
 import {IoIconsetSingleton} from "./iconset.js";
 
-export class IoBooleanIcon extends IoBoolean {
+export class IoBoolicon extends IoBoolean {
   static get Style() {
     return html`<style>
       :host {
@@ -44,4 +44,4 @@ export class IoBooleanIcon extends IoBoolean {
   }
 }
 
-IoBooleanIcon.Register();
+IoBoolicon.Register();

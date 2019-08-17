@@ -25,13 +25,13 @@ Input element for `Boolean` data type displayed as text. It can be configured to
 
 <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
 
-## &lt;io-boolean-icon&gt;
+## &lt;io-boolicon&gt;
 
 Extends `<io-boolean>`. Implements `<io-icon>`.
 
 Input element for `Boolean` data type displayed as switch. It can be configured to display custom `true` or `false` icon depending on its `value`.
 
-<io-element-demo element="io-boolean-icon" properties='{"value": true, "true": "icons:check", "false": "icons:uncheck"}'></io-element-demo>
+<io-element-demo element="io-boolicon" properties='{"value": true, "true": "icons:check", "false": "icons:uncheck"}'></io-element-demo>
 
 ## &lt;io-switch&gt;
 

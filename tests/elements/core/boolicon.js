@@ -1,13 +1,13 @@
-import {IoBooleanIcon, IoIconsetSingleton} from "../../../dist/io-elements-core.js";
+import {IoBoolicon, IoIconsetSingleton} from "../../../dist/io-elements-core.js";
 
 export default class {
   constructor() {
-    this.element = new IoBooleanIcon();
+    this.element = new IoBoolicon();
     this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {
-    describe('IoBooleanIcon', () => {
+    describe('IoBoolicon', () => {
       describe('default values', () => {
         it('has default values', () => {
           chai.expect(this.element.value).to.equal(false);

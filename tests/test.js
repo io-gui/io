@@ -9,7 +9,7 @@ import Element from "../tests/core/element.js"
 import Item from "../tests/elements/core/item.js"
 import Button from "../tests/elements/core/button.js"
 import Boolean from "../tests/elements/core/boolean.js"
-import BooleanIcon from "../tests/elements/core/boolean-icon.js"
+import Boolicon from "../tests/elements/core/boolicon.js"
 import Switch from "../tests/elements/core/switch.js"
 import Sting from "../tests/elements/core/string.js"
 import Number from "../tests/elements/core/number.js"
@@ -38,7 +38,7 @@ function runTests() {
     // new Button().run();
     // new Boolean().run();
     // new Boolean().run();
-    // new BooleanIcon().run();
+    // new Boolicon().run();
     // new Switch().run();
     new Sting().run();
     new Number().run();
