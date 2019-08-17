@@ -101,13 +101,25 @@ TODO
 
 ## &lt;io-icon&gt;
 
-SVG icon element.
+SVG icon element. Displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
 
 <io-element-demo element="io-icon" properties='{"icon": "icons:link"}' config='{"icon": ["io-menu-option", {"options": ["icons:link", "icons:unlink", "icons:check", "icons:uncheck"]}]}'></io-element-demo>
 
-## &lt;io-iconset&gt;
+## IoIconsetSingleton
 
-TODO
+Extends `IoNode`.
+
+Global database for SVG assets to be used with `<io-icon>`. Icons are registered using `namespace` and `id` attribute.
+
+```javascript
+import {IoIconsetSingleton} from "./path_to/io-elements-core.js";
+const svgString = `<g id="myicon"><path d="..."/></g>`;
+
+/* register icons under "custom" namespace */
+IoIconsetSingleton.registerIcons('custom', svgString);
+/* retrieve specific icon */
+const icon = IoIconsetSingleton.getIcon('custom:myicon');
+```
 
 ## &lt;io-layer-singleton&gt;
 

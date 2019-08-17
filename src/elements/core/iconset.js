@@ -2,7 +2,7 @@ import {IoNode, html} from "../../io.js";
 
 const IoIconsetDB = {};
 
-export class IoIconset extends IoNode {
+class IoIconset extends IoNode {
   registerIcons(name, svg) {
     const stagingElement = document.createElement('div');
     stagingElement.innerHTML = svg;
@@ -28,8 +28,6 @@ IoIconset.Register();
 export const IoIconsetSingleton = new IoIconset();
 
 const icons = html`
-<svg>
-  <defs>
   <g id="unlink">
     <path d="M3.2,12c0-1.9,1.5-3.4,3.4-3.4h4.3V6.6H6.6c-3,0-5.4,2.4-5.4,5.4s2.4,5.4,5.4,5.4h4.3v-2.1H6.6C4.7,15.4,3.2,13.9,3.2,12z
        M17.4,6.6h-4.4v2.1h4.4c1.9,0,3.4,1.5,3.4,3.4s-1.5,3.4-3.4,3.4h-4.4v2.1h4.4c3,0,5.4-2.4,5.4-5.4S20.4,6.6,17.4,6.6z"/>
@@ -69,8 +67,6 @@ const icons = html`
     <path d="M20.4,3.4v16.9H3.5V3.4H20.4 M20.4,1H3.5C2.2,1,1.1,2.1,1.1,3.4v16.9c0,1.3,1.1,2.4,2.4,2.4h16.9c1.3,0,2.4-1.1,2.4-2.4
       V3.4C22.8,2.1,21.7,1,20.4,1z"/>
   </g>
-  </defs>
-</svg>
 `;
 
 IoIconsetSingleton.registerIcons('icons', icons);

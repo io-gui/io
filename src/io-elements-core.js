@@ -23,6 +23,9 @@
  */
 
 export {IoThemeSingleton} from "./elements/core/theme.js";
+export {IoLayerSingleton} from "./elements/core/layer.js";
+export {IoIconsetSingleton} from "./elements/core/iconset.js";
+
 export {IoBoolean} from "./elements/core/boolean.js";
 export {IoBoolicon} from "./elements/core/boolicon.js";
 export {IoSwitch} from "./elements/core/switch.js";
@@ -32,7 +35,5 @@ export {IoNumber} from "./elements/core/number.js";
 export {IoSlider} from "./elements/core/slider.js";
 export {IoNumberSlider} from "./elements/core/number-slider.js";
 export {IoString} from "./elements/core/string.js";
-export {IoLayerSingleton} from "./elements/core/layer.js";
 export {IoGl} from "./elements/core/gl.js";
-export {IoIconset, IoIconsetSingleton} from "./elements/core/iconset.js";
 export {IoIcon} from "./elements/core/icon.js";
