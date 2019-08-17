@@ -13,7 +13,15 @@ import Boolicon from "../tests/elements/core/boolicon.js"
 import Switch from "../tests/elements/core/switch.js"
 import Sting from "../tests/elements/core/string.js"
 import Number from "../tests/elements/core/number.js"
-// import Slider from "../tests/elements/core/slider.js"
+import Gl from "../tests/elements/core/gl.js"
+import Slider from "../tests/elements/core/slider.js"
+import NumberSlider from "../tests/elements/core/number-slider.js"
+// import Ladder from "../tests/elements/core/ladder.js"
+// import Icon from "../tests/elements/core/icon.js"
+// import IconSet from "../tests/elements/core/iconset.js"
+// import Layer from "../tests/elements/core/layer.js"
+// import Theme from "../tests/elements/core/theme.js"
+
 // import Option from "../tests/elements/core/option.js"
 // import Collapsable from "../tests/elements/core/collapsable.js"
 // import Properties from "../tests/elements/core/properties.js"
@@ -31,18 +39,21 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    // new Node().run();
-    // new Element().run();
+    new Node().run();
+    new Element().run();
 
-    // new Item().run();
-    // new Button().run();
-    // new Boolean().run();
-    // new Boolean().run();
-    // new Boolicon().run();
-    // new Switch().run();
+    new Item().run();
+    new Button().run();
+    new Boolean().run();
+    new Boolean().run();
+    new Boolicon().run();
+    new Switch().run();
     new Sting().run();
     new Number().run();
-    // new Slider().run();
+    new Gl().run();
+    new Slider().run();
+    new NumberSlider().run();
+
     // new Option().run();
     // new Collapsable().run();
     // new Properties().run();

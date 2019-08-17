@@ -22,7 +22,7 @@ export class IoNumberSlider extends IoElement {
   static get Properties() {
     return {
       value: 0,
-      step: 0.001,
+      step: 0.01,
       min: 0,
       max: 1,
     };

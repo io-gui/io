@@ -245,7 +245,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 }
 
 const focusBacktrack = new WeakMap();
-const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'}
+const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
 function setBacktrack(element, dir, target) {
   const backtrack = focusBacktrack.get(element) || {};
   backtrack[backtrackDir[dir]] = target;

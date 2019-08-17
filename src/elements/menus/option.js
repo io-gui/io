@@ -1,5 +1,4 @@
 import {html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import {IoMenuLayer} from "./menu-layer.js";
 import {IoMenuItem} from "./menu-item.js";
 

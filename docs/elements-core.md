@@ -113,7 +113,7 @@ Global database for SVG assets to be used with `<io-icon>`. Icons are registered
 
 ```javascript
 import {IoIconsetSingleton} from "./path_to/io-elements-core.js";
-const svgString = `<g id="myicon"><path d="..."/></g>`;
+const svgString = `<svg><g id="myicon"><path d="..."/></g></svg>`;
 
 /* register icons under "custom" namespace */
 IoIconsetSingleton.registerIcons('custom', svgString);

@@ -282,10 +282,8 @@ export class IoGl extends IoElement {
     queueRender(this);
   }
   render() {
-    const pxRatio = window.devicePixelRatio;
-    const width = this.size[0] * pxRatio;
-    const height = this.size[1] * pxRatio;
-
+    const width = this.size[0] * this.pxRatio;
+    const height = this.size[1] * this.pxRatio;
 
     if (!width || !height) return;
 
