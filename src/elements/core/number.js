@@ -35,7 +35,6 @@ export class IoNumber extends IoItem {
       step: 0.001,
       min: -Infinity,
       max: Infinity,
-      strict: true,
       ladder: false,
     };
   }
@@ -83,7 +82,7 @@ export class IoNumber extends IoItem {
     this._expandLadder();
   }
   _onValueSet(event) {
-    this.set('value', event.detail.value);
+    this.set('value', event.detail.value / this.conversion);
   }
   _expandLadder() {
     if (!this.ladder) return;
@@ -110,28 +109,48 @@ export class IoNumber extends IoItem {
     const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
-    // TODO: implement home/end for min/max
-    // TODO: consider using shiftKey for better UX
-    if (event.which == 13) {
+    if (event.which == 13) { // enter
       event.preventDefault();
       this._setFromTextNode();
-    } else if (event.which == 37) {
-      if (rngInside && start === end && start === 0) {
+    } else if (event.which == 36) { // home
+      this.textNode = this.min;
+      this._setFromTextNode();
+    } else if (event.which == 35) { // end
+      this.textNode = this.max;
+      this._setFromTextNode();
+    } else if (event.which == 33) { // pgup
+      const valueNumber = Number(this.textNode);
+      if (typeof valueNumber == 'number' && !isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
+        this.textNode = Number(this.textNode) + this.step;
+      } else {
+        this.textNode = this.step;
+      }
+      this._setFromTextNode();
+    } else if (event.which == 34) { // pgdown
+      const valueNumber = Number(this.textNode);
+      if (typeof valueNumber == 'number' && !isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
+        this.textNode = Number(this.textNode) - this.step;
+      } else {
+        this.textNode = -this.step;
+      }
+      this._setFromTextNode();
+    } else if (event.which == 37) { // left
+      if (event.altKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('left');
       }
-    } else if (event.which == 38) {
-      if (rngInside && start === end && start === 0) {
+    } else if (event.which == 38) { // up
+      if (event.altKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('up');
       }
-    } else if (event.which == 39) {
-      if (rngInside && start === end && start === length) {
+    } else if (event.which == 39) { // right
+      if (event.altKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('right');
       }
-    } else if (event.which == 40) {
-      if (rngInside && start === end && start === length) {
+    } else if (event.which == 40) { // down
+      if (event.altKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('down');
       }
@@ -140,11 +159,12 @@ export class IoNumber extends IoItem {
   _setFromTextNode() {
     let valueText = this.textNode;
     // TODO: test conversion
-    let valueNumber = Math.round(Number(valueText) / this.step) * this.step / this.conversion;
-    if (this.strict) {
-      valueNumber = Math.min(this.max, Math.max(this.min, valueNumber));
-    }
-    if (!isNaN(valueNumber)) this.set('value', valueNumber);
+    let valueNumber = Number(valueText);
+    valueNumber = Math.min(this.max, Math.max(this.min, valueNumber));
+    valueNumber = Math.round(valueNumber / this.step) * this.step;
+    let d = Math.max(0, Math.min(100, -Math.round(Math.log(this.step) / Math.LN10)));
+    valueNumber = Number(valueNumber.toFixed(d));
+    if (!isNaN(valueNumber)) this.set('value', valueNumber / this.conversion);
     else this.textNode = 'NaN';
   }
   changed() {

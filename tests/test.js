@@ -34,12 +34,12 @@ function runTests() {
     // new Node().run();
     // new Element().run();
 
-    new Item().run();
-    new Button().run();
-    new Boolean().run();
-    new Boolean().run();
-    new BooleanIcon().run();
-    new Switch().run();
+    // new Item().run();
+    // new Button().run();
+    // new Boolean().run();
+    // new Boolean().run();
+    // new BooleanIcon().run();
+    // new Switch().run();
     new Sting().run();
     new Number().run();
     // new Slider().run();

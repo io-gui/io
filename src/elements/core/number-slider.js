@@ -10,7 +10,7 @@ export class IoNumberSlider extends IoElement {
         justify-self: stretch;
       }
       :host > io-number {
-        flex: 0 0 auto;
+        flex: 0 0 4.5em;
         margin-right: var(--io-spacing);
       }
       :host > io-slider {

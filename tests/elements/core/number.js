@@ -22,7 +22,6 @@ export default class {
           chai.expect(this.element.step).to.equal(0.001);
           chai.expect(this.element.min).to.equal(-Infinity);
           chai.expect(this.element.max).to.equal(Infinity);
-          chai.expect(this.element.strict).to.equal(true);
           chai.expect(this.element.ladder).to.equal(false);
         });
       });
@@ -61,10 +60,10 @@ export default class {
           this.element.step = 1;
           this.element.min = 2;
           this.element.max = 5;
-          this.element._textNode.nodeValue = 10;
+          this.element.textNode = 10;
           this.element._setFromTextNode();
           chai.expect(this.element.value).to.equal(5);
-          this.element._textNode.nodeValue = 0;
+          this.element.textNode = 0;
           this.element._setFromTextNode();
           chai.expect(this.element.value).to.equal(2);
           this.reset();
@@ -75,6 +74,9 @@ export default class {
           chai.expect(this.element.textContent).to.equal('0.1');
           this.element.conversion = 0.01;
           chai.expect(this.element.textContent).to.equal('0.01');
+          this.element.textNode = 10;
+          this.element._setFromTextNode();
+          chai.expect(this.element.value).to.equal(1000);
           this.reset();
         });
       });

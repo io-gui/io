@@ -108,6 +108,8 @@ class IoNumberLadder extends IoElement {
         type: Boolean,
         reflect: 1,
       },
+      min: -Infinity,
+      max: Infinity,
       step: 0.0001,
     };
   }

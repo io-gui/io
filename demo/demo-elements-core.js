@@ -52,7 +52,7 @@ export class IoDemoElementsCore extends IoElement {
         ['io-switch', {value: this.bind('string')}],
         ['io-boolean', {value: this.bind('string')}],
         ['io-string', {value: this.bind('number')}],
-        ['io-number', {value: this.bind('number')}],
+        ['io-number', {ladder: true, conversion: 2, value: this.bind('number')}],
         ['io-boolean-icon', {value: this.bind('number')}],
         ['io-switch', {value: this.bind('number')}],
         ['io-boolean', {value: this.bind('number')}],

@@ -47,27 +47,26 @@ export class IoString extends IoItem {
     const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
-    // TODO: consider using shiftKey for better UX
     if (event.which == 13) {
       event.preventDefault();
       this._setFromTextNode();
     } else if (event.which == 37) {
-      if (rngInside && start === end && start === 0) {
+      if (event.altKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('left');
       }
     } else if (event.which == 38) {
-      if (rngInside && start === end && start === 0) {
+      if (event.altKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('up');
       }
     } else if (event.which == 39) {
-      if (rngInside && start === end && start === length) {
+      if (event.altKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('right');
       }
     } else if (event.which == 40) {
-      if (rngInside && start === end && start === length) {
+      if (event.altKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('down');
       }
