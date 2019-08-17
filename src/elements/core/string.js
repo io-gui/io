@@ -7,6 +7,8 @@ export class IoString extends IoItem {
       :host {
         cursor: text;
         user-select: text;
+        -webkit-user-select: text;
+        -webkit-touch-callout: default;
         min-width: var(--io-item-height);
         border-color: var(--io-inset-border-color);
         color: var(--io-color-field);

@@ -23,6 +23,8 @@ export class IoTheme extends IoElement {
       cursor: pointer;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
       overflow: hidden;
       text-overflow: ellipsis;
       flex-wrap: nowrap;
