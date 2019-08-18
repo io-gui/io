@@ -104,7 +104,7 @@ export class IoNumber extends IoItem {
     IoLayerSingleton.setElementPosition(IoLadderSingleton, 'bottom', this.getBoundingClientRect());
     IoLayerSingleton.srcElement = this;
   }
-  _onPointerDown(event) {
+  _onPointerDown() {
     this.pressed = true;
     this.addEventListener('pointermove', this._onPointerMove);
     this.addEventListener('pointerleave', this._onPointerLeave);

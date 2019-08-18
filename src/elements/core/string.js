@@ -42,7 +42,7 @@ export class IoString extends IoItem {
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
-  _onPointerDown(event) {
+  _onPointerDown() {
     this.pressed = true;
     this.addEventListener('pointermove', this._onPointerMove);
     this.addEventListener('pointerleave', this._onPointerLeave);
