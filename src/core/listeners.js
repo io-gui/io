@@ -25,6 +25,7 @@ export class Listeners {
     Object.defineProperty(this, 'node', {value: node});
     Object.defineProperty(this, 'propListeners', {value: {}});
     Object.defineProperty(this, 'activeListeners', {value: {}});
+    Object.defineProperty(this, '__connected', {enumerable: false, writable: true});
     for (let prop in protoListeners) this[prop] = protoListeners[prop];
   }
   /**
@@ -38,7 +39,7 @@ export class Listeners {
         this.propListeners[l.slice(3, l.length)] = props[l];
       }
     }
-    if (this._connected) {
+    if (this.__connected) {
       const props = this.propListeners;
       const node = this.node;
       for (let l in props) {
@@ -54,21 +55,23 @@ export class Listeners {
    * Adds event listeners.
    */
   connect() {
-    this._connected = true;
+    this.__connected = true;
     const node = this.node;
     for (let l in this) {
       if (this[l] instanceof Array) {
-        node.addEventListener(l, node[this[l][0]], this[l][1]);
-      } else if (typeof node[this[l]] === 'function') {
-        node.addEventListener(l, node[this[l]]);
+        this.addEventListener(l, node[this[l][0]], this[l][1]);
+      } else {
+        this.addEventListener(l, node[this[l]]);
       }
     }
     const props = this.propListeners;
     for (let l in props) {
       if (props[l] instanceof Array) {
-        node.addEventListener(l, typeof props[l][0] === 'function' ? props[l][0] : node[props[l][0]], props[l][1]);
+        const listener = typeof props[l][0] === 'function' ? props[l][0] : node[props[l][0]];
+        this.addEventListener(l, listener, props[l][1]);
       } else {
-        node.addEventListener(l, typeof props[l] === 'function' ? props[l] : node[props[l]]);
+        const listener = typeof props[l] === 'function' ? props[l] : node[props[l]];
+        this.addEventListener(l, listener);
       }
     }
   }
@@ -76,28 +79,37 @@ export class Listeners {
    * Removes event listeners.
    */
   disconnect() {
+    this.__connected = false;
     const node = this.node;
-    const propListeners = this.propListeners;
-    for (let i in this) {
-      const listener = typeof this[i] === 'function' ? this[i] : node[this[i]];
-      node.removeEventListener(i, listener);
+    for (let l in this) {
+      if (this[l] instanceof Array) {
+        this.removeEventListener(l, node[this[l][0]], this[l][1]);
+      } else {
+        this.removeEventListener(l, node[this[l]]);
+      }
     }
-    for (let i in propListeners) {
-      const listener = typeof propListeners[i] === 'function' ? propListeners[i] : node[propListeners[i]];
-      node.removeEventListener(i, listener);
+    const props = this.props;
+    for (let l in props) {
+      if (props[l] instanceof Array) {
+        const listener = typeof props[l][0] === 'function' ? props[l][0] : node[props[l][0]];
+        this.removeEventListener(l, listener, props[l][1]);
+      } else {
+        const listener = typeof props[l] === 'function' ? props[l] : node[props[l]];
+        this.removeEventListener(l, listener);
+      }
     }
   }
   /**
    * Removes all event listeners.
    * Use this when node is no longer needed.
    */
+   // TODO: test
   dispose() {
     this.disconnect();
-    const node = this.node;
     const active = this.activeListeners;
     for (let i in active) {
       for (let j = active[i].length; j--;) {
-        if (node.isElement) HTMLElement.prototype.removeEventListener.call(node, i, active[i][j]);
+        if (this.node.isElement) HTMLElement.prototype.removeEventListener.call(this.node, i, active[i][j]);
         active[i].splice(j, 1);
       }
     }
@@ -109,12 +121,11 @@ export class Listeners {
    * @param {Object} options - event listener options.
    */
   addEventListener(type, listener, options) {
-    const node = this.node;
     const active = this.activeListeners;
     active[type] = active[type] || [];
     const i = active[type].indexOf(listener);
     if (i === -1) {
-      if (node.isElement) HTMLElement.prototype.addEventListener.call(node, type, listener, options);
+      if (this.node.isElement) HTMLElement.prototype.addEventListener.call(this.node, type, listener, options);
       active[type].push(listener);
     }
   }
@@ -125,12 +136,11 @@ export class Listeners {
    * @param {Object} options - event listener options.
    */
   removeEventListener(type, listener, options) {
-    const node = this.node;
     const active = this.activeListeners;
     if (active[type] !== undefined) {
       const i = active[type].indexOf(listener);
       if (i !== - 1) {
-        if (node.isElement) HTMLElement.prototype.removeEventListener.call(node, type, listener, options);
+        if (this.node.isElement) HTMLElement.prototype.removeEventListener.call(this.node, type, listener, options);
         active[type].splice(i, 1);
       }
     }

@@ -44,6 +44,8 @@ export const IoNodeMixin = (superclass) => {
       Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
       Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
 
+      Object.defineProperty(this, '__connected', {enumerable: false, writable: true});
+
       for (let i = 0; i < this.__functions.length; i++) {
         this[this.__functions[i]] = this[this.__functions[i]].bind(this);
       }
