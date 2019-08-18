@@ -7,25 +7,27 @@ export class IoElementDemo extends IoElement {
       :host {
         ${mixin.panel}
       }
-      :host > io-boolean {
-        align-self: stretch;
-        width: auto;
-        text-align: left;
+      :host {
+        position: relative;
       }
-      :host > io-icon {
-        margin-top: 0.0em;
-        margin-bottom: -2.25em;
-        display: inline-block;
-        padding: 0 0.5em;
-        margin-left: auto;
+      :host > io-boolicon {
+        z-index: 2;
+        position: absolute;
+        top: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
+        right: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
       }
-      :host > io-boolean {
-        margin-bottom: var(--io-spacing);
+      :host > io-boolicon:not([value]):not(:hover) {
+        opacity: 0.5;
       }
       :host > io-properties {
         align-self: stretch;
         padding: var(--io-spacing) 0;
+        margin: var(--io-border-width);
+        margin-right: var(--io-spacing);
         margin-bottom: calc(2 * var(--io-spacing));
+      }
+      :host > io-properties > :nth-child(2) {
+        margin-right: calc(var(--io-item-height) + var(--io-spacing));
       }
     </style>`;
   }
@@ -54,11 +56,11 @@ export class IoElementDemo extends IoElement {
         reflect: -1,
         notify: true,
       },
-    };
-  }
-  static get Properties() {
-    return {
-      expanded: false,
+      expanded: {
+        type: Boolean,
+        reflect: -1,
+        notify: true,
+      }
     };
   }
   _onPropSet(event) {
@@ -100,10 +102,8 @@ export class IoElementDemo extends IoElement {
     }
     if (this.element) {
       const hasProps = !!Object.keys(this.properties).length;
-      const label = '<' + this.element + '>';
       this.template([
-        hasProps ? ['io-icon', {icon: 'icons:gear'}] : null,
-        ['io-boolean', {value: this.bind('expanded'), true: label, false: label}],
+        hasProps ? ['io-boolicon', {value: this.bind('expanded'), true: 'icons:gear', false: 'icons:gear'}] : null,
         (hasProps && this.expanded) ?
         ['io-properties', {value: this.properties, config: Object.assign({
             'type:number': ['io-number', {step: 0.00001}],

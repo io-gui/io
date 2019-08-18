@@ -188,17 +188,32 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 
     const backtrack = focusBacktrack.get(this);
     if (backtrack && backtrack[dir]) {
-      backtrack[dir].focus();
-      setBacktrack(backtrack[dir], dir, this);
-      return;
+      const sStyle = window.getComputedStyle(backtrack[dir]);
+      if (sStyle.visibility === 'visible') {
+        // TODO: unhack
+        backtrack[dir].focus();
+        setBacktrack(backtrack[dir], dir, this);
+        return;
+      }
     }
 
     while (parent && depth < DEPTH_LIMIT && closest === this) {
       const siblings = parent.querySelectorAll('[tabindex="0"]');
       for (let i = siblings.length; i--;) {
 
-        if (!siblings[i].offsetParent) continue;
+        if (!siblings[i].offsetParent) {
+          // TODO: check
+          // console.log(siblings[i]);
+          continue;
+        };
         const sRect = siblings[i].getBoundingClientRect();
+        const sStyle = window.getComputedStyle(siblings[i]);
+        if (sStyle.visibility !== 'visible') {
+          // TODO: unhack
+          // console.log(siblings[i]);
+          continue;
+        }
+
         sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
 
         const dX = sRect.center.x - rect.center.x;
@@ -247,6 +262,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
 }
 
+// TODO: fix backtracking for dynamic and hidden siblings. See io-ladder doc demo
 const focusBacktrack = new WeakMap();
 const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
 function setBacktrack(element, dir, target) {

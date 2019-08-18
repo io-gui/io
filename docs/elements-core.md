@@ -1,3 +1,25 @@
+## &lt;io-gl&gt;
+
+`IoGL` is a base class for WebGL-based custom elements. The appearance of such elements is defined in fragment shader programs that execute on the GPU. All numeric properties are automatically bound to shader uniforms, including `IoThemeSingleton` CSS properties. You can define your custom shaders inside `static get Frag()` return string.
+
+<io-element-demo element="io-gl" width="255px" height="255px" properties='{"color": [0, 0, 0, 1]}' config='{"background": ["io-color-vector"], "color": ["io-color-vector"]}'></io-element-demo>
+
+
+An example of the most basic fragment shader program:
+
+```javascript
+class MyElement extends IoGl {
+  static get Frag() {
+    return `
+    void main(void) {
+      gl_FragColor = cssBackgroundColor;
+    }`;
+  }
+}
+```
+
+See `IoSliderKnob` and `IoHsvaSv` for more advanced examples.
+
 ## &lt;io-item&gt;
 
 Extends `<io-element>`.
@@ -57,27 +79,9 @@ Input element for `Number` data type. It can be configured to clamp the `value` 
 
 <io-element-demo element="io-number" properties='{"value": 1337, "conversion": 1, "step": 0.001, "min": 0, "max": 10000, "ladder": false}'></io-element-demo>
 
-## &lt;io-gl&gt;
+## &lt;io-ladder&gt;
 
-`IoGL` is a base class for WebGL-based custom elements. The appearance of such elements is defined with fragment shader programs that execute on the GPU. All numeric properties are automatically bound to shader uniforms, including `IoThemeSingleton` properties. You can define your custom shaders inside `static get Frag()` return string.
-
-<io-element-demo element="io-gl" width="255px" height="255px" properties='{"color": [0, 0, 0, 1]}' config='{"size": ["io-properties", {"labeled": false, "config": {"type:number": ["io-slider", {"min": 1, "max": 257, "step": 8}]}}], "background": ["io-color-vector"], "color": ["io-color-vector"]}'></io-element-demo>
-
-
-An example of the most basic fragment shader program:
-
-```javascript
-class myElement extends IoGL {
-  static get Frag() {
-    return `
-    void main(void) {
-      gl_FragColor = cssBackgroundColor;
-    }`;
-  }
-}
-```
-
-See `IoSliderKnob` and `IoHsvaSv` for more advanced example.
+<io-element-demo element="io-ladder" expanded properties='{"value": 0.1, "step": 0.0001, "conversion": 1, "min": -1000, "max": 1000, "expanded": true, "opaque": false}'></io-element-demo>
 
 ## &lt;io-slider&gt;
 
@@ -100,11 +104,6 @@ Input element for `Number` data type combining `<io-number>` and `<io-slider>`
 <io-element-demo element="io-number-slider" properties='{"value": 0.1, "step": 0.1, "conversion": 1, "min": -0.5, "max": 0.5}'></io-element-demo>
 <io-element-demo element="io-number-slider" properties='{"value": 0, "step": 0.2617993877991494, "conversion": 57.29577951308232, "min": -6.283185307179586, "max": 6.283185307179586}'></io-element-demo>
 <io-element-demo element="io-number-slider" properties='{"value": 0.1, "step": 0.1, "conversion": 0.3, "min": -0.5, "max": 0.5}'></io-element-demo>
-
-
-## &lt;io-ladder&gt;
-
-TODO
 
 ## &lt;io-icon&gt;
 

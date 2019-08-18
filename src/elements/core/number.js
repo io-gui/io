@@ -17,6 +17,12 @@ export class IoNumber extends IoItem {
         background-color: var(--io-background-color-field);
         box-shadow: var(--io-shadow-inset);
       }
+      :host:before {
+        content: '-';
+      }
+      :host:not([positive]):before {
+        content: '';
+      }
     </style>`;
   }
   static get Attributes() {
@@ -206,6 +212,7 @@ export class IoNumber extends IoItem {
       valueText = 'NaN';
     }
     this.textNode = valueText;
+    this.setAttribute('positive', this.value >= 0);
     this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
   }
 }

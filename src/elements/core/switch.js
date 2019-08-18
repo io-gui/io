@@ -22,6 +22,7 @@ export class IoSwitch extends IoBoolean {
       :host:after {
         display: inline-block;
         position: absolute;
+        visibility: visible;
         content: '';
         top: 0;
         left: 0;
