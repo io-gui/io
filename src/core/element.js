@@ -330,7 +330,9 @@ const constructElement = function(vDOMNode) {
 const setNativeElementProps = function(element, props) {
   for (let p in props) {
     const prop = props[p];
-    if (p === 'style') for (let s in prop) element.style.setProperty(s, prop[s]);
+    if (p.startsWith('@')) {
+      element.setAttribute(p.substr(1), prop);
+    } else if (p === 'style') for (let s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
     else element[p] = prop;
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider

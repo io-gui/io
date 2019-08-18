@@ -43,7 +43,7 @@ export class IoNumber extends IoItem {
   // TODO: implement pointerevents
   static get Listeners() {
     return {
-      'touchstart': '_onTouchstart',
+      'touchstart': ['_onTouchstart', {passive: true}],
       'touchend': '_onTouchend',
     };
   }

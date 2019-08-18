@@ -50,11 +50,13 @@ export class IoMdView extends IoElement {
         font-family: monospace, monospace;
         -webkit-font-smoothing: auto;
         overflow: auto;
-        color: #007faa;
+        color: var(--io-color-link);
+        font-weight: bold;
+        background: var(--io-background-color-light);
       }
       :host pre > code {
         color: inherit;
-        background-color: var(--io-background-color-dark);
+        background-color: var(--io-background-color-light);
         line-height: 1.6em;
       }
       :host code.language-html,

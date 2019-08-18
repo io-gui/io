@@ -160,7 +160,7 @@ export class IoTheme extends IoElement {
 
         --io-color: rgb(42, 42, 42);
         --io-color-error: rgb(225, 100, 100);
-        --io-color-link: rgb(30, 180, 30);
+        --io-color-link: rgb(20, 120, 20);
         --io-color-focus: rgb(80, 210, 355);
         --io-color-field: rgb(0, 0, 0);
         --io-color-number: rgb(32, 164, 255);

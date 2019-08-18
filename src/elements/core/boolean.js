@@ -1,14 +1,6 @@
-import {html} from "../../io.js";
 import {IoItem} from "./item.js";
 
 export class IoBoolean extends IoItem {
-  static get Style() {
-    return html`<style>
-      :host:not([value]) {
-        opacity: 0.5;
-      }
-    </style>`;
-  }
   static get Attributes() {
     return {
       role: 'switch',

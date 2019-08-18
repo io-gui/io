@@ -54,7 +54,7 @@ export class IoSlider extends IoGl {
   }
   static get Listeners() {
     return {
-      'touchstart': '_onTouchstart',
+      'touchstart': ['_onTouchstart', {passive: true}],
       'mousedown': '_onMousedown',
       'keydown': '_onKeydown',
     };

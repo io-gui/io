@@ -18,6 +18,7 @@ export class IoItem extends IoElement {
       }
       :host[selected] {
         color: var(--io-color-link);
+        background-color: var(--io-background-color-light);
       }
       :host[aria-invalid] {
         border: var(--io-border-error);
@@ -53,7 +54,7 @@ export class IoItem extends IoElement {
   static get Listeners() {
     return {
       'focus': '_onFocus',
-      'pointerdown': '_onPointerDown',
+      'pointerdown': ['_onPointerDown', {passive: true}],
     };
   }
   get textNode() {

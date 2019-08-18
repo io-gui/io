@@ -69,7 +69,7 @@ export class IoMenuItem extends IoItem {
   }
   static get Listeners() {
     return {
-      'touchstart': '_onTouchstart',
+      'touchstart': ['_onTouchstart', {passive: true}],
       'mousedown': '_onMousedown',
     };
   }

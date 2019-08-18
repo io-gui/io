@@ -113,7 +113,7 @@ export class Listeners {
     const active = this.activeListeners;
     active[type] = active[type] || [];
     const i = active[type].indexOf(listener);
-    if (i === - 1) {
+    if (i === -1) {
       if (node.isElement) HTMLElement.prototype.addEventListener.call(node, type, listener, options);
       active[type].push(listener);
     }
