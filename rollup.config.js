@@ -19,6 +19,26 @@ function html() {
   };
 }
 
+function svg() {
+  return {
+    transform( code, id ) {
+      let transformedCode = code;
+      let regex = /<svg>([\s\S]*?)<\/svg>/gm;
+      if ( regex.test( code ) === true ) {
+        let match = code.match(regex);
+        for (var i = 0; i < match.length; i++) {
+          transformedCode = transformedCode.replace(match[i], match[i].replace((/  |\r\n|\n|\r/gm), ""));
+        }
+      };
+      return {
+        code: transformedCode,
+        map: { mappings: '' }
+      };
+    }
+  };
+}
+
+
 export default [
   {
     input: 'src/io.js',
@@ -34,7 +54,7 @@ export default [
   },
   {
     input: 'src/io-elements-core.js',
-    plugins: [html()],
+    plugins: [html(), svg()],
     inlineDynamicImports: true,
     output: [
       {
