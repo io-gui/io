@@ -62,7 +62,7 @@ export class IoGl extends IoElement {
         user-select: none;
         box-sizing: border-box;
       }
-      :host > #canvas {
+      :host > .io-gl-canvas {
         position: absolute;
         top: 0;
         left: 0;
@@ -248,7 +248,7 @@ export class IoGl extends IoElement {
     // this.template([['img', {id: 'canvas'}]]);
     // this.$.canvas.onload = () => { this.$.canvas.loading = false; };
 
-    this.template([['canvas', {id: 'canvas'}]]);
+    this.template([['canvas', {id: 'canvas', class: 'io-gl-canvas'}]]);
     this.$.canvas.ctx = this.$.canvas.getContext('2d');
 
     this.updateCssUniforms();

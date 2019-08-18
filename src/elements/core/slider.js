@@ -25,7 +25,7 @@ export class IoSlider extends IoGl {
         border: var(--io-border-error);
         background-image: var(--io-gradient-error);
       }
-      :host[aria-invalid] > #canvas {
+      :host[aria-invalid] > .io-gl-canvas {
         opacity: 0.5;
       }
       :host:focus {

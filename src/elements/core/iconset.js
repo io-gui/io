@@ -14,8 +14,9 @@ class IoIconset extends IoNode {
   getIcon(icon) {
     const iconset = IoIconsetDB[icon.split(':')[0]];
     if (iconset) {
-      const group = iconset[icon.split(':')[1]];
-      if (group) {
+      const id = icon.split(':')[1];
+      if (iconset[id]) {
+        const group = iconset[id].replace(' id="', ' class="icon-id-');
         return `<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">${group}</svg>`;
       }
     }

@@ -10,7 +10,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       class: String,
       role: String,
       label: String,
-      id: String,
+      id: {
+        type: String,
+        reflect: -1,
+      },
     };
   }
   static get observedAttributes() {
@@ -334,7 +337,7 @@ const setNativeElementProps = function(element, props) {
       element.setAttribute(p.substr(1), prop);
     } else if (p === 'style') for (let s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
-    else element[p] = prop;
+    else if (p !== 'id') element[p] = prop;
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
   }
   if (!element.__listeners) {

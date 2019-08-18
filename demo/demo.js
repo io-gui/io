@@ -27,7 +27,7 @@ export class IoDemo extends IoSelectorTabs {
         ['io-demo-elements-object', {name: 'elements-object', import: 'demo/demo-elements-object.js'}],
         ['io-demo-elements-math', {name: 'elements-math', import: 'demo/demo-elements-math.js'}],
         ['io-demo-elements-color', {name: 'elements-color', import: 'demo/demo-elements-color.js'}],
-        ['iframe', {name: 'todo', src: './demo/todomvc/index.html'}],
+        ['iframe', {name: 'todo', title: 'TODO MVC', src: './demo/todomvc/index.html'}],
       ],
     };
   }
