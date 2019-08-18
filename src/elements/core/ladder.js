@@ -157,8 +157,10 @@ class IoLadder extends IoElement {
     event.stopImmediatePropagation();
     const step = event.detail.step;
     const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
-    const newValue = value + step;
-    this.set('value', Math.max(this.min, Math.min(this.max, newValue)));
+
+    let newValue = Math.min(this.max, Math.max(this.min, value + step));
+
+    this.set('value', Number(newValue.toFixed(5)));
   }
   _onLadderStepCollapse() {
     event.stopImmediatePropagation();
@@ -175,37 +177,38 @@ class IoLadder extends IoElement {
     const range = this.max - this.min;
     const hiddenItem = ['span', {class: 'io-item hidden'}];
 
+    // TODO: unhack
     let step = this.step / 10000;
-    while (step <= .1) step = step * 10;
-    //TODO: fix
+    while (step < .1) step = step * 10;
 
-    const upStep4 = 1000 * step;
-    const upStep3 = 100 * step;
-    const upStep2 = 10 * step;
-    const upStep1 = 1 * step;
-    const downStep1 = .1 * step;
-    const downStep2 = .01 * step;
-    const downStep3 = .001 * step;
-    const downStep4 = .0001 * step;
-    const upLabel4 = (upStep4 * this.conversion).toFixed(0);
-    const upLabel3 = (upStep3 * this.conversion).toFixed(0);
-    const upLabel2 = (upStep2 * this.conversion).toFixed(0);
-    const upLabel1 = (upStep1 * this.conversion).toFixed(0);
-    const downLabel1 = (downStep1 * this.conversion).toFixed(1);
-    const downLabel2 = (downStep2 * this.conversion).toFixed(2);
-    const downLabel3 = (downStep3 * this.conversion).toFixed(3);
-    const downLabel4 = (downStep4 * this.conversion).toFixed(4);
+    const upStep4 = 10000 * step;
+    const upStep3 = 1000 * step;
+    const upStep2 = 100 * step;
+    const upStep1 = 10 * step;
+    const downStep1 = 1 * step;
+    const downStep2 = .1 * step;
+    const downStep3 = .01 * step;
+    const downStep4 = .001 * step;
+
+    const upLabel4 = Number((upStep4 * this.conversion).toFixed(0));
+    const upLabel3 = Number((upStep3 * this.conversion).toFixed(0));
+    const upLabel2 = Number((upStep2 * this.conversion).toFixed(0));
+    const upLabel1 = Number((upStep1 * this.conversion).toFixed(0));
+    const downLabel1 = Number((downStep1 * this.conversion).toFixed(1));
+    const downLabel2 = Number((downStep2 * this.conversion).toFixed(2));
+    const downLabel3 = Number((downStep3 * this.conversion).toFixed(3));
+    const downLabel4 = Number((downStep4 * this.conversion).toFixed(4));
 
     this.template([
-      (range > upStep4) ? ['io-ladder-step', {class: 'io-up4', value: upStep4, label: upLabel4}] : hiddenItem,
-      (range > upStep3) ? ['io-ladder-step', {class: 'io-up3', value: upStep3, label: upLabel3}] : hiddenItem,
-      (range > upStep2) ? ['io-ladder-step', {class: 'io-up2', value: upStep2, label: upLabel2}] : hiddenItem,
-      (range > upStep1) ? ['io-ladder-step', {class: 'io-up1', value: upStep1, label: upLabel1}] : hiddenItem,
+      (range >= upStep4) ? ['io-ladder-step', {class: 'io-up4', value: upStep4, label: upLabel4}] : hiddenItem,
+      (range >= upStep3) ? ['io-ladder-step', {class: 'io-up3', value: upStep3, label: upLabel3}] : hiddenItem,
+      (range >= upStep2) ? ['io-ladder-step', {class: 'io-up2', value: upStep2, label: upLabel2}] : hiddenItem,
+      (range >= upStep1) ? ['io-ladder-step', {class: 'io-up1', value: upStep1, label: upLabel1}] : hiddenItem,
       hiddenItem,
-      (this.step < downStep1) ? ['io-ladder-step', {class: 'io-down1', value: downStep1, label: downLabel1}] : hiddenItem,
-      (this.step < downStep2) ? ['io-ladder-step', {class: 'io-down2', value: downStep2, label: downLabel2}] : hiddenItem,
-      (this.step < downStep3) ? ['io-ladder-step', {class: 'io-down3', value: downStep3, label: downLabel3}] : hiddenItem,
-      (this.step < downStep4) ? ['io-ladder-step', {class: 'io-down4', value: downStep4, label: downLabel4}] : hiddenItem,
+      (this.step <= downStep1) ? ['io-ladder-step', {class: 'io-down1', value: downStep1, label: downLabel1}] : hiddenItem,
+      (this.step <= downStep2) ? ['io-ladder-step', {class: 'io-down2', value: downStep2, label: downLabel2}] : hiddenItem,
+      (this.step <= downStep3) ? ['io-ladder-step', {class: 'io-down3', value: downStep3, label: downLabel3}] : hiddenItem,
+      (this.step <= downStep4) ? ['io-ladder-step', {class: 'io-down4', value: downStep4, label: downLabel4}] : hiddenItem,
     ]);
   }
 }

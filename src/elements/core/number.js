@@ -101,12 +101,14 @@ export class IoNumber extends IoItem {
   _expandLadder() {
     if (!this.ladder) return;
     // TODO: disable if no PointerEvents
-    IoLadderSingleton.min = this.min;
-    IoLadderSingleton.max = this.max;
-    IoLadderSingleton.step = this.step;
-    IoLadderSingleton.value = this.value;
-    IoLadderSingleton.conversion = this.conversion;
-    IoLadderSingleton.expanded = true;
+    IoLadderSingleton.setProperties({
+      min: this.min,
+      max: this.max,
+      step: this.step,
+      value: this.value,
+      conversion: this.conversion,
+      expanded: true,
+    });
     // TODO: unhack
     if (IoLadderSingleton._target) {
       IoLadderSingleton.removeEventListener('value-set', IoLadderSingleton._target._onValueSet);
@@ -178,17 +180,21 @@ export class IoNumber extends IoItem {
   _onKeyup(event) {
     if (event.which === 17) { // ctrl
       // TODO: implement keybord navigation for io-ladder
+      // TODO: fix Escape > NaN
+      this.blur();
       this._expandLadder();
+      // TODO: consider no io-up1
+      IoLadderSingleton.querySelector('.io-up1').focus();
     }
   }
   _setFromTextNode() {
     let valueText = this.textNode;
-    let valueNumber = Number(valueText);
+    let valueNumber = Number(valueText) / this.conversion;
     valueNumber = Math.min(this.max, Math.max(this.min, valueNumber));
     valueNumber = Math.round(valueNumber / this.step) * this.step;
     let d = Math.max(0, Math.min(100, -Math.round(Math.log(this.step) / Math.LN10)));
     valueNumber = Number(valueNumber.toFixed(d));
-    if (!isNaN(valueNumber)) this.set('value', valueNumber / this.conversion);
+    if (!isNaN(valueNumber)) this.set('value', valueNumber);
     else this.textNode = 'NaN';
   }
   changed() {

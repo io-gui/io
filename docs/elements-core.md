@@ -75,15 +75,22 @@ Input element for `String` data type.
 
 Extends `<io-item>`.
 
-Input element for `Number` data type. It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees. Enable `ladder` property to use interactive float ladder element.
+Input element for `Number` data type. It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Enable `ladder` property to use interactive float ladder element.
 
-<io-element-demo element="io-number" width="6em" properties='{"value": 1337, "conversion": 1, "step": 0.001, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
+<io-element-demo element="io-number" width="6em" properties='{"value": 1337, "conversion": 1, "step": 0.1, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
 <io-element-demo element="io-number" width="6em" properties='{"value": 1337, "conversion": 1, "step": 0.0002, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
+
+Value can be displayed using `conversion` factor. For example, conversion factor of `180/π` would display radians as degrees.
+
 <io-element-demo element="io-number" width="6em" properties='{"value": 0, "step": 0.2617993877991494, "conversion": 57.29577951308232, "min": -6.283185307179586, "max": 6.283185307179586, "ladder": true}'></io-element-demo>
 
 ## &lt;io-ladder&gt;
 
-<io-element-demo element="io-ladder" expanded properties='{"value": 0.1, "step": 0.0001, "conversion": 1, "min": -1000, "max": 1000, "expanded": true, "opaque": false}'></io-element-demo>
+Interactive number ladder enables fine tuning of number values by dragging ladder steps horizontally. Dragging to the left/right decreases/increases the value by chosen increments. Dragging speed affects the rate of change exponentially. Ladder steps can be focused by up/down arrow keys while left/right keys decrease/increase the value. Escape key collapses the ladder and restores the focus to previously focused element. Holding shift key while changing value, rounds the value to the chosen increment.
+
+Just like `<io-number>`, value can be displayed using `conversion` factor.
+
+<io-element-demo element="io-ladder" expanded properties='{"value": 0.1, "step": 0.0001, "conversion": 1, "min": -1000, "max": 1000, "expanded": true}'></io-element-demo>
 
 ## &lt;io-slider&gt;
 
