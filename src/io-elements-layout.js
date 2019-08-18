@@ -23,6 +23,7 @@
  */
 
 import "./io-elements-core.js";
+import "./io-elements-menu.js"; // TODO: remove dependency
 
 export {IoLayout} from "./elements/layout/layout.js";
 export {IoCollapsable} from "./elements/layout/collapsable.js";

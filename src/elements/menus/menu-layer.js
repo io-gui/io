@@ -64,9 +64,9 @@ export class IoMenuLayer extends IoElement {
       'mousedown': '_onMousedown',
       'mousemove': '_onMousemove',
       'mouseup': '_onMouseup',
-      'touchstart': '_onTouchstart',
-      'touchmove': '_onTouchmove',
-      'touchend': '_onTouchend',
+      'touchstart': ['_onTouchstart', {passive: true}],
+      'touchmove': ['_onTouchmove', {passive: true}],
+      'touchend': ['_onTouchend', {passive: true}],
       'contextmenu': '_onContextmenu',
     };
   }
@@ -90,13 +90,13 @@ export class IoMenuLayer extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('scroll', this._onWindowScroll, {capture: true});
-    window.addEventListener('wheel', this._onWindowScroll, {capture: true});
+    window.addEventListener('scroll', this._onWindowScroll, {capture: true, passive: true});
+    window.addEventListener('wheel', this._onWindowScroll, {capture: true, passive: true});
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('scroll', this._onWindowScroll, {capture: true});
-    window.removeEventListener('wheel', this._onWindowScroll, {capture: true});
+    window.removeEventListener('scroll', this._onWindowScroll, {capture: true, passive: true});
+    window.removeEventListener('wheel', this._onWindowScroll, {capture: true, passive: true});
     this._stopAnimation();
   }
   registerOptions(options) {
@@ -148,16 +148,13 @@ export class IoMenuLayer extends IoElement {
     this._onPointerup(event);
   }
   _onTouchstart(event) {
-    event.preventDefault();
     this._onPointerdown(event.changedTouches[0]);
     this._onPointermove(event.changedTouches[0]);
   }
   _onTouchmove(event) {
-    event.preventDefault();
     this._onPointermove(event.changedTouches[0]);
   }
   _onTouchend(event) {
-    event.preventDefault();
     this._onPointerup(event);
   }
   _onContextmenu(event) {

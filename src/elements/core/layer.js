@@ -54,21 +54,21 @@ class IoLayer extends IoElement {
   static get Listeners() {
     return {
       'mousedown': '_onMousedown',
-      'touchstart': '_onTouchstart',
+      'touchstart': ['_onTouchstart', {passive: true}],
       'contextmenu': '_onContextmenu',
     };
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('scroll', this._onWindowChange, {capture: true});
-    window.addEventListener('wheel', this._onWindowChange, {capture: true});
-    window.addEventListener('resize', this._onWindowChange, {capture: true});
+    window.addEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
+    window.addEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
+    window.addEventListener('resize', this._onWindowChange, {capture: true, passive: true});
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('scroll', this._onWindowChange, {capture: true});
-    window.removeEventListener('wheel', this._onWindowChange, {capture: true});
-    window.removeEventListener('resize', this._onWindowChange, {capture: true});
+    window.removeEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
+    window.removeEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
+    window.removeEventListener('resize', this._onWindowChange, {capture: true, passive: true});
   }
   _onWindowChange() {
     this.expanded = false;

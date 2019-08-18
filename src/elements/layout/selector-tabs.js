@@ -1,4 +1,5 @@
-import {html, filterObject} from "../../io.js";
+import {html} from "../../io.js";
+import {filterObject} from "../../io-elements-menu.js";
 import {IoSelector} from "./selector.js";
 // TODO: remove io-menu-options dependency.
 

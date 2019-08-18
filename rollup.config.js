@@ -73,7 +73,8 @@ export default [
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js') ],
+    // TODO: remove menu dependency
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js'), path.resolve('src/io-elements-menu.js') ],
   },
   {
     input: 'src/io-elements-math.js',

@@ -1,4 +1,5 @@
-import {html, IoElement, IoStorage as $, filterObject} from "../../io.js";
+import {html, IoElement, IoStorage as $} from "../../io.js";
+import {filterObject} from "../../io-elements-menu.js";
 
 export class IoSidebar extends IoElement {
   static get Style() {

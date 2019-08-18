@@ -54,7 +54,7 @@ export class IoItem extends IoElement {
   static get Listeners() {
     return {
       'focus': '_onFocus',
-      'pointerdown': ['_onPointerDown', {passive: true}],
+      'pointerdown': '_onPointerDown',
     };
   }
   get textNode() {

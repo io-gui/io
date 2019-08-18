@@ -60,7 +60,7 @@ export class IoSelector extends IoElement {
   }
   static get Listeners() {
     return {
-      'scroll': ['_onScroll', {capture: true}],
+      'scroll': ['_onScroll', {capture: true, passive: true}],
       'content-ready': '_onIoContentReady',
     };
   }

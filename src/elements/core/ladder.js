@@ -116,7 +116,7 @@ class IoLadder extends IoElement {
   static get Listeners() {
     return {
       'mousedown': '_onMousedown',
-      'touchstart': '_onTouchstart',
+      'touchstart': ['_onTouchstart', {passive: true}],
     };
   }
   _onMousedown(event) {

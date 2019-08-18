@@ -29,18 +29,18 @@ export class IoMenu extends IoElement {
   connectedCallback() {
     super.connectedCallback();
     this._parent = this.parentElement;
-    this.parentElement.addEventListener('contextmenu', this._onContextmenu);
-    this.parentElement.addEventListener('mousedown', this._onMousedown);
-    this.parentElement.addEventListener('touchstart', this._onTouchstart);
+    this.parentElement.addEventListener('contextmenu', this._onContextmenu, {passive: true});
+    this.parentElement.addEventListener('mousedown', this._onMousedown, {passive: true});
+    this.parentElement.addEventListener('touchstart', this._onTouchstart, {passive: true});
     this.parentElement.style.userSelect = 'none';
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._parent.removeEventListener('contextmenu', this._onContextmenu);
-    this._parent.removeEventListener('mousedown', this._onMousedown);
-    this._parent.removeEventListener('touchstart', this._onTouchstart);
-    this._parent.removeEventListener('touchmove', this._onTouchmove);
-    this._parent.removeEventListener('touchend', this._onTouchend);
+    this._parent.removeEventListener('contextmenu', this._onContextmenu, {passive: true});
+    this._parent.removeEventListener('mousedown', this._onMousedown, {passive: true});
+    this._parent.removeEventListener('touchstart', this._onTouchstart, {passive: true});
+    this._parent.removeEventListener('touchmove', this._onTouchmove, {passive: true});
+    this._parent.removeEventListener('touchend', this._onTouchend, {passive: true});
     this._disconnectOptions();
     this._parent.style.userSelect = null;
   }
@@ -87,8 +87,8 @@ export class IoMenu extends IoElement {
   _onTouchstart(event) {
     if (this.options.length && this.button !== 2) {
       this._connectOptions();
-      this.parentElement.addEventListener('touchmove', this._onTouchmove);
-      this.parentElement.addEventListener('touchend', this._onTouchend);
+      this.parentElement.addEventListener('touchmove', this._onTouchmove, {passive: true});
+      this.parentElement.addEventListener('touchend', this._onTouchend, {passive: true});
       IoMenuLayer.singleton._onTouchstart(event);
       this._expand();
     }
@@ -97,8 +97,8 @@ export class IoMenu extends IoElement {
     IoMenuLayer.singleton._onTouchmove(event);
   }
   _onTouchend(event) {
-    this.parentElement.removeEventListener('touchmove', this._onTouchmove);
-    this.parentElement.removeEventListener('touchend', this._onTouchend);
+    this.parentElement.removeEventListener('touchmove', this._onTouchmove, {passive: true});
+    this.parentElement.removeEventListener('touchend', this._onTouchend, {passive: true});
     IoMenuLayer.singleton._onTouchend(event);
   }
 }
