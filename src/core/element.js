@@ -205,7 +205,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
           // TODO: check
           // console.log(siblings[i]);
           continue;
-        };
+        }
         const sRect = siblings[i].getBoundingClientRect();
         const sStyle = window.getComputedStyle(siblings[i]);
         if (sStyle.visibility !== 'visible') {
