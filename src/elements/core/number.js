@@ -17,6 +17,12 @@ export class IoNumber extends IoItem {
         background-color: var(--io-background-color-field);
         box-shadow: var(--io-shadow-inset);
       }
+      :host:before,
+      :host:after {
+        content: ' ';
+        white-space: pre;
+        visibility: hidden;
+      }
       :host:before {
         content: '-';
       }
@@ -90,15 +96,17 @@ export class IoNumber extends IoItem {
   }
   _onValueSet(event) {
     // TODO: implement conversion properly in ladder
-    this.set('value', event.detail.value * this.conversion);
+    this.set('value', event.detail.value);
   }
   _expandLadder() {
     if (!this.ladder) return;
-    IoLadderSingleton.expanded = true;
+    // TODO: disable if no PointerEvents
     IoLadderSingleton.min = this.min;
     IoLadderSingleton.max = this.max;
     IoLadderSingleton.step = this.step;
     IoLadderSingleton.value = this.value;
+    IoLadderSingleton.conversion = this.conversion;
+    IoLadderSingleton.expanded = true;
     // TODO: unhack
     if (IoLadderSingleton._target) {
       IoLadderSingleton.removeEventListener('value-set', IoLadderSingleton._target._onValueSet);
@@ -110,24 +118,9 @@ export class IoNumber extends IoItem {
     IoLayerSingleton.setElementPosition(IoLadderSingleton, 'bottom', this.getBoundingClientRect());
     IoLayerSingleton.srcElement = this;
   }
-  _onPointerDown() {
-    this.pressed = true;
-    this.addEventListener('pointermove', this._onPointerMove);
-    this.addEventListener('pointerleave', this._onPointerLeave);
-    this.addEventListener('pointerup', this._onPointerUp);
-  }
+  _onPointerDown() {}
   _onPointerMove() {}
-  _onPointerLeave(event) {
-    event.preventDefault();
-    this.pressed = false;
-  }
-  _onPointerUp() {
-    this.pressed = false;
-    this.removeEventListener('pointermove', this._onPointerMove);
-    this.removeEventListener('pointerleave', this._onPointerLeave);
-    this.removeEventListener('pointerup', this._onPointerUp);
-    this.focus();
-  }
+  _onPointerUp() {}
   _onKeydown(event) {
     const rng = window.getSelection().getRangeAt(0);
     const start = rng.startOffset;

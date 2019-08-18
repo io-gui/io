@@ -6,6 +6,7 @@ export class IoMenuOption extends IoMenuItem {
   static get Style() {
     return html`<style>
       :host {
+        display: inline-block;
         text-align: center;
         border-radius: var(--io-border-radius);
         border: var(--io-outset-border);
@@ -27,7 +28,13 @@ export class IoMenuOption extends IoMenuItem {
   }
   static get Properties() {
     return {
-      options: Array,
+      value: {
+        reflect: -1,
+      },
+      options: {
+        type: Array,
+        reflect: -1,
+      },
       _depth: 100,
     };
   }

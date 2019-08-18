@@ -24,10 +24,14 @@ To use one of the elements, such as `<io-menu-options>` for example, import the 
 
 ```javascript
 import "./io/dist/io-elements-menus.js";
-const menu = document.createElement('io-menu-options');
+const menu = document.createElement('io-menu-option');
 menu.options = ["one", "two", "three"];
 element.appendChild(menu);
 ```
+
+Result:
+
+<io-menu-option value="one" options='["one", "two", "three"]'></io-menu-option>
 
 ## Simple App Example
 

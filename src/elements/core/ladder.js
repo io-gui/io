@@ -45,7 +45,7 @@ class IoLadderStep extends IoItem {
     }
     if (stepMove !== 0) {
       let d = Math.max(0, Math.min(100, -Math.round(Math.log(this.value) / Math.LN10)));
-      this.dispatchEvent('ladder-step-change', {value: Number(stepMove.toFixed(d))}, true);
+      this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(d)), round: event.shiftKey}, true);
     }
   }
   _onPointerDown(event) {
@@ -61,8 +61,9 @@ class IoLadderStep extends IoItem {
       const expMove = Math.pow(deltaX / 5, 3);
       const roundMove = deltaX > 0 ? Math.floor(expMove) : Math.ceil(expMove);
       let stepMove = this.value * roundMove;
-      let d = Math.max(0, Math.min(100, -Math.round(Math.log(this.value) / Math.LN10)));
-      this.dispatchEvent('ladder-step-change', {value: Number(stepMove.toFixed(d))}, true);
+      // let d = Math.max(0, Math.min(100, -Math.round(Math.log(this.value) / Math.LN10)));
+      // this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(d)), round: event.shiftKey}, true);
+      this.dispatchEvent('ladder-step-change', {step: Number(stepMove), round: event.shiftKey}, true);
       this._startX = event.clientX;
     }
   }
@@ -74,6 +75,12 @@ class IoLadderStep extends IoItem {
 }
 
 IoLadderStep.Register();
+
+let lastFocus = null;
+window.addEventListener('focusin', _onWindowFocusIn, {capture: false});
+function _onWindowFocusIn() {
+  lastFocus = document.activeElement;
+}
 
 class IoLadder extends IoElement {
   static get Style() {
@@ -96,22 +103,18 @@ class IoLadder extends IoElement {
       }
       :host > .io-up1,
       :host > .io-down1{
-        opacity: 0.92;
         transition: opacity 0.1s;
       }
       :host > .io-up2,
       :host > .io-down2 {
-        opacity: 0.48;
         transition: opacity 0.2s;
       }
       :host > .io-up3,
       :host > .io-down3 {
-        opacity: 0.24;
         transition: opacity 0.4s;
       }
       :host > .io-up4,
       :host > .io-down4 {
-        opacity: 0.05;
         transition: opacity 0.8s;
       }
       :host > io-ladder-step:focus,
@@ -121,22 +124,15 @@ class IoLadder extends IoElement {
         transition: opacity 0.2s;
         opacity: 1;
       }
-      :host[opaque] > io-ladder-step {
-        opacity: 1;
-      }
       :host > span.hidden {
         visibility: hidden;
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      opaque: Boolean,
-    };
-  }
   static get Properties() {
     return {
       value: Number,
+      conversion: 1,
       expanded: {
         type: Boolean,
         reflect: 1,
@@ -154,37 +150,62 @@ class IoLadder extends IoElement {
     };
   }
   _onFocusIn(event) {
-    // console.log(event);
-    // TODO: rtestore focus;
+    event.stopImmediatePropagation();
+    if (lastFocus) this._lastFocus = lastFocus;
   }
   _onLadderStepChange(event) {
     event.stopImmediatePropagation();
-    const newValue = this.value + event.detail.value;
+    const step = event.detail.step;
+    const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
+    const newValue = value + step;
     this.set('value', Math.max(this.min, Math.min(this.max, newValue)));
   }
   _onLadderStepCollapse() {
     event.stopImmediatePropagation();
-    this.expanded = false;
+    this.set('expanded', false);
   }
   expandedChanged() {
     if (!this.expanded) {
+      if (this._lastFocus) this._lastFocus.focus();
       this.srcElement = undefined;
-      this.opaque = false;
-      // TODO: rtestore focus;
+      this._lastFocus = undefined;
     }
   }
   changed() {
     const range = this.max - this.min;
+    const hiddenItem = ['span', {class: 'io-item hidden'}];
+
+    let step = this.step / 10000;
+    while (step <= .1) step = step * 10;
+    //TODO: fix
+
+    const upStep4 = 1000 * step;
+    const upStep3 = 100 * step;
+    const upStep2 = 10 * step;
+    const upStep1 = 1 * step;
+    const downStep1 = .1 * step;
+    const downStep2 = .01 * step;
+    const downStep3 = .001 * step;
+    const downStep4 = .0001 * step;
+    const upLabel4 = (upStep4 * this.conversion).toFixed(0);
+    const upLabel3 = (upStep3 * this.conversion).toFixed(0);
+    const upLabel2 = (upStep2 * this.conversion).toFixed(0);
+    const upLabel1 = (upStep1 * this.conversion).toFixed(0);
+    const downLabel1 = (downStep1 * this.conversion).toFixed(1);
+    const downLabel2 = (downStep2 * this.conversion).toFixed(2);
+    const downLabel3 = (downStep3 * this.conversion).toFixed(3);
+    const downLabel4 = (downStep4 * this.conversion).toFixed(4);
+
     this.template([
-      (range > 1000) ? ['io-ladder-step', {class: 'io-up4', value: 1000}] : null,
-      (range > 100) ? ['io-ladder-step', {class: 'io-up3', value: 100}] : null,
-      (range > 10) ? ['io-ladder-step', {class: 'io-up2', value: 10}] : null,
-      (range > 1) ? ['io-ladder-step', {class: 'io-up1', value: 1}] : null,
-      ['span', {class: 'io-item hidden'}],
-      (this.step < 0.1) ? ['io-ladder-step', {class: 'io-down1', value: .1}] : null,
-      (this.step < 0.01) ? ['io-ladder-step', {class: 'io-down2', value: .01}] : null,
-      (this.step < 0.001) ? ['io-ladder-step', {class: 'io-down3', value: .001}] : null,
-      (this.step < 0.0001) ? ['io-ladder-step', {class: 'io-down4', value: .0001}] : null,
+      (range > upStep4) ? ['io-ladder-step', {class: 'io-up4', value: upStep4, label: upLabel4}] : hiddenItem,
+      (range > upStep3) ? ['io-ladder-step', {class: 'io-up3', value: upStep3, label: upLabel3}] : hiddenItem,
+      (range > upStep2) ? ['io-ladder-step', {class: 'io-up2', value: upStep2, label: upLabel2}] : hiddenItem,
+      (range > upStep1) ? ['io-ladder-step', {class: 'io-up1', value: upStep1, label: upLabel1}] : hiddenItem,
+      hiddenItem,
+      (this.step < downStep1) ? ['io-ladder-step', {class: 'io-down1', value: downStep1, label: downLabel1}] : hiddenItem,
+      (this.step < downStep2) ? ['io-ladder-step', {class: 'io-down2', value: downStep2, label: downLabel2}] : hiddenItem,
+      (this.step < downStep3) ? ['io-ladder-step', {class: 'io-down3', value: downStep3, label: downLabel3}] : hiddenItem,
+      (this.step < downStep4) ? ['io-ladder-step', {class: 'io-down4', value: downStep4, label: downLabel4}] : hiddenItem,
     ]);
   }
 }
@@ -192,5 +213,7 @@ class IoLadder extends IoElement {
 IoLadder.Register();
 
 export const IoLadderSingleton = new IoLadder();
+IoLadderSingleton.style.position = 'absolute';
+IoLadderSingleton.style.marginTop = 'calc(-5 * var(--io-item-height))';
 IoLayerSingleton.appendChild(IoLadderSingleton);
 IoLadderSingleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);

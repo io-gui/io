@@ -15,6 +15,12 @@ export class IoString extends IoItem {
         background-color: var(--io-background-color-field);
         box-shadow: var(--io-shadow-inset);
       }
+      :host:before,
+      :host:after {
+        content: ' ';
+        white-space: pre;
+        visibility: hidden;
+      }
     </style>`;
   }
   static get Attributes() {

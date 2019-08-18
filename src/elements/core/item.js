@@ -9,14 +9,6 @@ export class IoItem extends IoElement {
       :host {
         ${mixin.item};
       }
-      :host:before,
-      :host:after {
-        content: ' ';
-        white-space: pre;
-        visibility: hidden;
-        user-select: none;
-        -webkit-user-select: none;
-      }
       :host[pressed] {
         border-color: var(--io-inset-border-color);
         box-shadow: var(--io-shadow-inset);
