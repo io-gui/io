@@ -54,6 +54,7 @@ export class IoItem extends IoElement {
   static get Listeners() {
     return {
       'focus': '_onFocus',
+      'contextmenu': '_onContextmenu',
       'pointerdown': '_onPointerDown',
     };
   }
@@ -87,6 +88,9 @@ export class IoItem extends IoElement {
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('keyup', this._onKeyup);
     this.removeEventListener('click', this._onClick);
+  }
+  _onContextmenu(event) {
+    event.preventDefault();
   }
   _onPointerDown(event) {
     this.pressed = true;

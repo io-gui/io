@@ -1,9 +1,17 @@
 import {IoElement, html} from "../../io.js";
 
 let lastFocus = null;
-window.addEventListener('focusin', _onWindowFocusIn, {capture: false});
-function _onWindowFocusIn() {
-  lastFocus = document.activeElement;
+{  
+  window.addEventListener('focusin', () => {
+    lastFocus = document.activeElement;
+  }, {capture: false});
+  window.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (document.activeElement === document.body) {
+        lastFocus = null;
+      }
+    });
+  }, {capture: true});
 }
 
 export class IoMenuLayer extends IoElement {
@@ -82,7 +90,8 @@ export class IoMenuLayer extends IoElement {
     this._v = 0;
     this.addEventListener('focusin', this._onFocusIn, {capture: true});
   }
-  _onFocusIn() {
+  _onFocusIn(event) {
+    event.stopImmediatePropagation();
     if (lastFocus) {
       const isInside = lastFocus.$parent && lastFocus.$parent.parentElement === this;
       this.lastFocus = isInside ? this.lastFocus : lastFocus;

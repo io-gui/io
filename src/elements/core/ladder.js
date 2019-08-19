@@ -2,6 +2,20 @@ import {IoElement, html} from "../../io.js";
 import {IoItem} from "./item.js";
 import {IoLayerSingleton} from "./layer.js";
 
+let lastFocus = null;
+{
+  window.addEventListener('focusin', () => {
+    lastFocus = document.activeElement;
+  }, {capture: false});
+  window.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (document.activeElement === document.body) {
+        lastFocus = null;
+      }
+    });
+  }, {capture: true});
+}
+
 class IoLadderStep extends IoItem {
   static get Style() {
     return html`<style>
@@ -12,6 +26,7 @@ class IoLadderStep extends IoItem {
         text-align: center;
         background-color: var(--io-background-color-light);
         align-self: stretch;
+        touch-action: none;
       }
       :host:before,
       :host:after {
@@ -28,15 +43,15 @@ class IoLadderStep extends IoItem {
   }
   _onKeydown(event) {
     let stepMove = 0;
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' || event.key === ' ') {
       this.dispatchEvent('ladder-step-collapse', {}, true);
-    } else if (event.key === 'ArrowLeft') {
+    } else if (event.key === 'ArrowLeft' || event.key === 'Backspace') {
       event.preventDefault();
       stepMove = this.value * -1;
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       this.focusTo('up');
-    } else if (event.key === 'ArrowRight') {
+    } else if (event.key === 'ArrowRight' || event.key === 'Enter') {
       event.preventDefault();
       stepMove = this.value * 1;
     } else if (event.key === 'ArrowDown') {
@@ -44,8 +59,7 @@ class IoLadderStep extends IoItem {
       this.focusTo('down');
     }
     if (stepMove !== 0) {
-      let d = Math.max(0, Math.min(100, -Math.round(Math.log(this.value) / Math.LN10)));
-      this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(d)), round: event.shiftKey}, true);
+      this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
     }
   }
   _onPointerDown(event) {
@@ -53,17 +67,17 @@ class IoLadderStep extends IoItem {
     this.addEventListener('pointermove', this._onPointerMove);
     this.addEventListener('pointerup', this._onPointerUp);
     event.preventDefault();
+    this.focus();
     this._startX = event.clientX;
   }
   _onPointerMove(event) {
+    event.preventDefault();
     const deltaX = event.clientX - this._startX;
     if (Math.abs(deltaX) > 5) {
       const expMove = Math.pow(deltaX / 5, 3);
       const roundMove = deltaX > 0 ? Math.floor(expMove) : Math.ceil(expMove);
       let stepMove = this.value * roundMove;
-      // let d = Math.max(0, Math.min(100, -Math.round(Math.log(this.value) / Math.LN10)));
-      // this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(d)), round: event.shiftKey}, true);
-      this.dispatchEvent('ladder-step-change', {step: Number(stepMove), round: event.shiftKey}, true);
+      this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
       this._startX = event.clientX;
     }
   }
@@ -75,12 +89,6 @@ class IoLadderStep extends IoItem {
 }
 
 IoLadderStep.Register();
-
-let lastFocus = null;
-window.addEventListener('focusin', _onWindowFocusIn, {capture: false});
-function _onWindowFocusIn() {
-  lastFocus = document.activeElement;
-}
 
 class IoLadder extends IoElement {
   static get Style() {
@@ -101,24 +109,54 @@ class IoLadder extends IoElement {
       :host:not([expanded]) > io-ladder-step {
         opacity: 0;
       }
+      :host > :nth-child(-n+5) {
+        box-shadow: 0 -1px 4px rgba(0,0,0,0.2);
+      }
+      :host > :nth-child(n+6) {
+        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      }
       :host > .io-up1,
       :host > .io-down1{
-        transition: opacity 0.1s;
+        z-index: 4;
+        transition: opacity 0.1s, transform 0.1s;
       }
       :host > .io-up2,
       :host > .io-down2 {
-        transition: opacity 0.2s;
+        z-index: 3;
+        opacity: 0.8;
+        transition: opacity 0.2s, transform 0.2s;
+      }
+      :host:not([expanded]) > .io-up4 {
+        transform: translateY(calc(3 * var(--io-item-height)));
+      }
+      :host:not([expanded]) > .io-up3 {
+        transform: translateY(calc(2 * var(--io-item-height)));
+      }
+      :host:not([expanded]) > .io-up2 {
+        transform: translateY(calc(1 * var(--io-item-height)));
+      }
+      :host:not([expanded]) > .io-down2 {
+        transform: translateY(calc(-1 * var(--io-item-height)));
+      }
+      :host:not([expanded]) > .io-down3 {
+        transform: translateY(calc(-2 * var(--io-item-height)));
+      }
+      :host:not([expanded]) > .io-down4 {
+        transform: translateY(calc(-3 * var(--io-item-height)));
       }
       :host > .io-up3,
       :host > .io-down3 {
-        transition: opacity 0.4s;
+        z-index: 2;
+        opacity: 0.6;
+        transition: opacity 0.4s, transform 0.4s;
       }
       :host > .io-up4,
       :host > .io-down4 {
-        transition: opacity 0.8s;
+        z-index: 1;
+        opacity: 0.4;
+        transition: opacity 0.8s, transform 0.8s;
       }
-      :host > io-ladder-step:focus,
-      :host > io-ladder-step:hover {
+      :host > io-ladder-step:focus {
         background-color: var(--io-background-color-light);
         border-color: var(--io-color-focus);
         transition: opacity 0.2s;
@@ -131,6 +169,7 @@ class IoLadder extends IoElement {
   }
   static get Properties() {
     return {
+      srcElement: HTMLElement,
       value: Number,
       conversion: 1,
       expanded: {
@@ -151,7 +190,6 @@ class IoLadder extends IoElement {
   }
   _onFocusIn(event) {
     event.stopImmediatePropagation();
-    if (lastFocus) this._lastFocus = lastFocus;
   }
   _onLadderStepChange(event) {
     event.stopImmediatePropagation();
@@ -167,10 +205,19 @@ class IoLadder extends IoElement {
     this.set('expanded', false);
   }
   expandedChanged() {
-    if (!this.expanded) {
-      if (this._lastFocus) this._lastFocus.focus();
+    if (this.expanded) {
+      if (this.srcElement) {
+        const rect = this.srcElement.getBoundingClientRect();
+        this.style.top = rect.bottom + 'px';
+        this.style.left = rect.left + 'px';
+        this.style.position = 'absolute';
+        this.style.marginTop = 'calc(-5 * var(--io-item-height))';
+      } else {
+        this.removeAttribute('style');
+      }
+    } else {
+      if (lastFocus) lastFocus.focus();
       this.srcElement = undefined;
-      this._lastFocus = undefined;
     }
   }
   changed() {
@@ -216,7 +263,5 @@ class IoLadder extends IoElement {
 IoLadder.Register();
 
 export const IoLadderSingleton = new IoLadder();
-IoLadderSingleton.style.position = 'absolute';
-IoLadderSingleton.style.marginTop = 'calc(-5 * var(--io-item-height))';
 IoLayerSingleton.appendChild(IoLadderSingleton);
 IoLadderSingleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);

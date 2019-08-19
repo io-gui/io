@@ -95,13 +95,19 @@ export class IoNumber extends IoItem {
     this._expandLadder();
   }
   _onValueSet(event) {
-    // TODO: implement conversion properly in ladder
-    this.set('value', event.detail.value);
+    if (event.detail.property === 'value') {
+      this.set('value', event.detail.value);
+    }
   }
   _expandLadder() {
     if (!this.ladder) return;
     // TODO: disable if no PointerEvents
+
+    if (IoLadderSingleton.srcElement) {
+      IoLadderSingleton.removeEventListener('value-set', IoLadderSingleton.srcElement._onValueSet);
+    }
     IoLadderSingleton.setProperties({
+      srcElement: this,
       min: this.min,
       max: this.max,
       step: this.step,
@@ -109,16 +115,7 @@ export class IoNumber extends IoItem {
       conversion: this.conversion,
       expanded: true,
     });
-    // TODO: unhack
-    if (IoLadderSingleton._target) {
-      IoLadderSingleton.removeEventListener('value-set', IoLadderSingleton._target._onValueSet);
-    }
-    IoLadderSingleton._target = this;
     IoLadderSingleton.addEventListener('value-set', this._onValueSet);
-
-    // TODO: disable nudge?
-    IoLayerSingleton.setElementPosition(IoLadderSingleton, 'bottom', this.getBoundingClientRect());
-    IoLayerSingleton.srcElement = this;
   }
   _onPointerDown() {}
   _onPointerMove() {}
@@ -180,10 +177,9 @@ export class IoNumber extends IoItem {
   _onKeyup(event) {
     if (event.which === 17) { // ctrl
       // TODO: implement keybord navigation for io-ladder
-      // TODO: fix Escape > NaN
       this.blur();
       this._expandLadder();
-      // TODO: consider no io-up1
+      // TODO: consider edge cases such as no io-up1
       IoLadderSingleton.querySelector('.io-up1').focus();
     }
   }

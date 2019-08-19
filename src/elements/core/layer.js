@@ -81,7 +81,6 @@ class IoLayer extends IoElement {
   }
   _onTouchstart(event) {
     if (event.composedPath()[0] === this) {
-      event.preventDefault();
       this._collapseOrFocusSrcElement(event.changedTouches[0]);
     }
   }
