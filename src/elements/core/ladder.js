@@ -222,8 +222,10 @@ class IoLadder extends IoElement {
     if (this.expanded) {
       if (this.srcElement) {
         const rect = this.srcElement.getBoundingClientRect();
-        this.style.top = rect.bottom + 'px';
-        this.style.left = rect.left + 'px';
+        // NOTE: layerRect fix for Safari zoom.
+        const layerRect = IoLayerSingleton.getBoundingClientRect();
+        this.style.top = rect.bottom - layerRect.top + 'px';
+        this.style.left = rect.left - layerRect.left + 'px';
         this.style.position = 'absolute';
         this.style.marginTop = 'calc(-5 * var(--io-item-height))';
       } else {
@@ -254,14 +256,14 @@ class IoLadder extends IoElement {
     const downStep3 = .01 * step;
     const downStep4 = .001 * step;
 
-    const upLabel4 = Number((upStep4 * this.conversion).toFixed(0));
-    const upLabel3 = Number((upStep3 * this.conversion).toFixed(0));
-    const upLabel2 = Number((upStep2 * this.conversion).toFixed(0));
-    const upLabel1 = Number((upStep1 * this.conversion).toFixed(0));
-    const downLabel1 = Number((downStep1 * this.conversion).toFixed(1));
-    const downLabel2 = Number((downStep2 * this.conversion).toFixed(2));
-    const downLabel3 = Number((downStep3 * this.conversion).toFixed(3));
-    const downLabel4 = Number((downStep4 * this.conversion).toFixed(4));
+    const upLabel4 = Number((upStep4 * this.conversion).toFixed(6));
+    const upLabel3 = Number((upStep3 * this.conversion).toFixed(6));
+    const upLabel2 = Number((upStep2 * this.conversion).toFixed(6));
+    const upLabel1 = Number((upStep1 * this.conversion).toFixed(6));
+    const downLabel1 = Number((downStep1 * this.conversion).toFixed(6));
+    const downLabel2 = Number((downStep2 * this.conversion).toFixed(6));
+    const downLabel3 = Number((downStep3 * this.conversion).toFixed(6));
+    const downLabel4 = Number((downStep4 * this.conversion).toFixed(6));
 
     this.template([
       (range >= upStep4) ? ['io-ladder-step', {class: 'io-up4', value: upStep4, label: upLabel4}] : hiddenItem,

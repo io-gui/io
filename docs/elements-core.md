@@ -88,7 +88,7 @@ Value can be displayed using `conversion` factor. For example, conversion factor
 
 Interactive number ladder for number values. Drag steps horizontally to change the value. Dragging speed affects the rate of change exponentially. Use arrow keys to focus steps and change the value. Escape key collapses the ladder and restores the focus to previously focused element. Hold shift key for value rounding.
 
-<io-element-demo element="io-ladder" expanded properties='{"value": 0.1, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
+<io-element-demo element="io-ladder" expanded properties='{"value": 0.1, "step": 0.0001, "conversion": 0.25, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
 
 **Note:** `<io-ladder>` uses PointerEvents API.
 
@@ -112,7 +112,7 @@ Input element for `Number` data type combining `<io-number>` and `<io-slider>`
 
 <io-element-demo element="io-number-slider" properties='{"value": 0.1, "step": 0.1, "conversion": 1, "min": -0.5, "max": 0.5}'></io-element-demo>
 <io-element-demo element="io-number-slider" properties='{"value": 0, "step": 0.2617993877991494, "conversion": 57.29577951308232, "min": -6.283185307179586, "max": 6.283185307179586}'></io-element-demo>
-<io-element-demo element="io-number-slider" properties='{"value": 0.1, "step": 0.1, "conversion": 0.3, "min": -0.5, "max": 0.5}'></io-element-demo>
+<io-element-demo element="io-number-slider" properties='{"value": 0.1, "step": 0.1, "conversion": 0.2, "min": -0.5, "max": 0.5}'></io-element-demo>
 
 ## &lt;io-icon&gt;
 

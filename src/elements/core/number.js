@@ -73,6 +73,7 @@ export class IoNumber extends IoItem {
         this.focus();
         IoLadderSingleton.expanded = false;
       } else {
+        // document.activeElement.blur();
         this._expandLadder();
       }
     }
@@ -97,11 +98,11 @@ export class IoNumber extends IoItem {
     super._onClick(event);
     this._expandLadder();
   }
-  // _onValueSet(event) {
-  //   if (event.detail.property === 'value') {
-  //     this.set('value', event.detail.value);
-  //   }
-  // }
+  _onValueSet(event) {
+    if (event.detail.property === 'value') {
+      this.set('value', event.detail.value);
+    }
+  }
   _expandLadder() {
     if (!this.ladder) return;
     if (!window.PointerEvent) {
@@ -109,21 +110,17 @@ export class IoNumber extends IoItem {
       return;
     }
 
-    // if (IoLadderSingleton.srcElement) {
-    //   IoLadderSingleton.removeEventListener('value-set', IoLadderSingleton.srcElement._onValueSet);
-    // }
-
     IoLayerSingleton.srcElement = this;
     IoLadderSingleton.setProperties({
       srcElement: this,
       min: this.min,
       max: this.max,
       step: this.step,
-      value: this.bind('value'),
+      value: this.value,
       conversion: this.conversion,
       expanded: true,
+      'on-value-set': this._onValueSet,
     });
-    // IoLadderSingleton.addEventListener('value-set', this._onValueSet);
   }
   _onPointerDown() {}
   _onPointerMove() {}
@@ -211,7 +208,7 @@ export class IoNumber extends IoItem {
     let valueText;
     if (typeof value == 'number' && !isNaN(value)) {
       value *= this.conversion;
-      let d = -Math.round(Math.log(this.step) / Math.LN10);
+      let d = -Math.round(Math.log(this.step * this.conversion) / Math.LN10);
       d = Math.max(0, Math.min(100, d));
       value = value.toFixed(d);
       valueText = Number(String(value));
