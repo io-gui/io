@@ -14,6 +14,7 @@ export class IoSlider extends IoGl {
         align-self: stretch;
         justify-self: stretch;
         overflow: hidden;
+        touch-action: none;
       }
       :host[horizontal] {
         cursor: ew-resize;

@@ -9,8 +9,6 @@ export class IoMdView extends IoElement {
         align-self: stretch;
         justify-self: stretch;
         flex: 1 1 auto;
-        background-color: var(--io-background-color);
-        color: var(--io-color);
         --io-code-size: 15px;
         padding: var(--io-spacing) calc(4 * var(--io-spacing));
         overflow-x: hidden;

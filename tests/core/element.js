@@ -131,7 +131,7 @@ export default class {
           this.reset();
           this.element.prop0 = 1;
           this.element.prop0 = 0;
-          chai.expect(this.element._prop1Payload.path[0]).to.equal(this.element);
+          chai.expect(this.element._prop1Payload.srcElement).to.equal(this.element);
           chai.expect(this.element._prop1Payload.detail.value).to.equal(0);
           this.element.$.subelement.prop0 = 2;
           chai.expect(this.element._prop1Payload.detail.oldValue).to.equal(0);

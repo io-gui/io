@@ -260,8 +260,8 @@ export class IoGl extends IoElement {
     const style = getComputedStyle(this);
 
     // TODO: confirm and test
-    const width = Math.ceil((rect.width - parseFloat(style.borderLeftWidth) - parseFloat(style.borderRightWidth)));
-    const height = Math.ceil((rect.height - parseFloat(style.borderTopWidth) - parseFloat(style.borderBottomWidth)));
+    const width = Math.max(0, Math.ceil((rect.width - parseFloat(style.borderLeftWidth) - parseFloat(style.borderRightWidth))));
+    const height = Math.max(0, Math.ceil((rect.height - parseFloat(style.borderTopWidth) - parseFloat(style.borderBottomWidth))));
 
     this.$.canvas.style.width = Math.floor(width) + 'px';
     this.$.canvas.style.height = Math.floor(height) + 'px';

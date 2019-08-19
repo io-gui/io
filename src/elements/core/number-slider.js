@@ -29,7 +29,6 @@ export class IoNumberSlider extends IoElement {
     };
   }
   _onNumberSet(event) {
-    this.value = event.detail.value;
     this.dispatchEvent('value-set', event.detail, false);
   }
   _onSliderSet(event) {
@@ -41,7 +40,7 @@ export class IoNumberSlider extends IoElement {
     this.template([
       ['io-number', {
         id: 'number',
-        value: this.value,
+        value: this.bind('value'),
         step: this.step,
         conversion: this.conversion,
         min: this.min,

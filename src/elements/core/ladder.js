@@ -194,14 +194,14 @@ class IoLadder extends IoElement {
   }
   _onFocusTo(event) {
     event.stopImmediatePropagation();
-    const src = event.composedPath()[0];
+    const srcStep = event.composedPath()[0];
+    const src = this.srcElement;
     const dir = event.detail.dir;
-    if (this.srcElement) {
-      if (src === this.querySelector('.io-up1') && dir === 'down') {
-        this.srcElement.focus();
-        return;
-      } else if (src === this.querySelector('.io-down1') && dir === 'up') {
-        this.srcElement.focus();
+    if (src) {
+      if ((srcStep === this.querySelector('.io-up1') && dir === 'down') ||
+          (srcStep === this.querySelector('.io-down1') && dir === 'up')) {
+        src.focus();
+        src.selectionStart = src.selectionEnd = src.textNode.length;
         return;
       }
     }
@@ -211,9 +211,7 @@ class IoLadder extends IoElement {
     event.stopImmediatePropagation();
     const step = event.detail.step;
     const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
-
     let newValue = Math.min(this.max, Math.max(this.min, value + step));
-
     this.set('value', Number(newValue.toFixed(5)));
   }
   _onLadderStepCollapse() {

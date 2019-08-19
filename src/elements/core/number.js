@@ -84,7 +84,7 @@ export class IoNumber extends IoItem {
   _onBlur(event) {
     super._onBlur(event);
     if (this._textContentOnFocus !== this.textNode) this._setFromTextNode();
-    IoLadderSingleton.value = this.value;
+    // IoLadderSingleton.value = this.value;
     this.scrollTop = 0;
     this.scrollLeft = 0;
     setTimeout(() => {
@@ -97,11 +97,11 @@ export class IoNumber extends IoItem {
     super._onClick(event);
     this._expandLadder();
   }
-  _onValueSet(event) {
-    if (event.detail.property === 'value') {
-      this.set('value', event.detail.value);
-    }
-  }
+  // _onValueSet(event) {
+  //   if (event.detail.property === 'value') {
+  //     this.set('value', event.detail.value);
+  //   }
+  // }
   _expandLadder() {
     if (!this.ladder) return;
     if (!window.PointerEvent) {
@@ -109,9 +109,9 @@ export class IoNumber extends IoItem {
       return;
     }
 
-    if (IoLadderSingleton.srcElement) {
-      IoLadderSingleton.removeEventListener('value-set', IoLadderSingleton.srcElement._onValueSet);
-    }
+    // if (IoLadderSingleton.srcElement) {
+    //   IoLadderSingleton.removeEventListener('value-set', IoLadderSingleton.srcElement._onValueSet);
+    // }
 
     IoLayerSingleton.srcElement = this;
     IoLadderSingleton.setProperties({
@@ -119,11 +119,11 @@ export class IoNumber extends IoItem {
       min: this.min,
       max: this.max,
       step: this.step,
-      value: this.value,
+      value: this.bind('value'),
       conversion: this.conversion,
       expanded: true,
     });
-    IoLadderSingleton.addEventListener('value-set', this._onValueSet);
+    // IoLadderSingleton.addEventListener('value-set', this._onValueSet);
   }
   _onPointerDown() {}
   _onPointerMove() {}
@@ -163,13 +163,12 @@ export class IoNumber extends IoItem {
     } else if (event.which === 37) { // left
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
+        IoLadderSingleton.srcElement = null;
         this.focusTo('left');
       }
     } else if (event.which === 38) { // up
-      if (IoLayerSingleton.expanded) {
-        IoLayerSingleton.querySelector('.io-up1').focus();
-        IoLayerSingleton.expanded = true;
-        IoLayerSingleton.querySelector('.io-up1').focus();
+      if (IoLadderSingleton.expanded) {
+        IoLadderSingleton.querySelector('.io-up1').focus();
       } else if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('up');
@@ -177,13 +176,12 @@ export class IoNumber extends IoItem {
     } else if (event.which === 39) { // right
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
+        IoLadderSingleton.srcElement = null;
         this.focusTo('right');
       }
     } else if (event.which === 40) { // down
-      if (IoLayerSingleton.expanded) {
-        IoLayerSingleton.querySelector('.io-down1').focus();
-        IoLayerSingleton.expanded = true;
-        IoLayerSingleton.querySelector('.io-down1').focus();
+      if (IoLadderSingleton.expanded) {
+        IoLadderSingleton.querySelector('.io-down1').focus();
       } else if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('down');
