@@ -195,7 +195,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 
       const backtrack = focusBacktrack.get(src);
       if (backtrack && backtrack[dir]) {
-        const sStyle = window.getComputedStyle(backtrack[dir]);
         backtrack[dir].focus();
         setBacktrack(backtrack[dir], dir, src);
         return;
