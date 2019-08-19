@@ -71,24 +71,27 @@ export class IoNumber extends IoItem {
     if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {
       if (IoLadderSingleton.expanded) {
         this.focus();
+        IoLadderSingleton.expanded = false;
+      } else {
+        this._expandLadder();
       }
-      document.activeElement.blur();
-      IoLayerSingleton.clickblock = true;
-      IoLadderSingleton.opaque = true;
-      this._expandLadder();
     }
   }
   _onFocus(event) {
     super._onFocus(event);
     this._textContentOnFocus = this.textNode;
-    if (this.ladder) IoLayerSingleton.clickblock = false;
   }
   _onBlur(event) {
     super._onBlur(event);
     if (this._textContentOnFocus !== this.textNode) this._setFromTextNode();
+    IoLadderSingleton.value = this.value;
     this.scrollTop = 0;
     this.scrollLeft = 0;
-    IoLayerSingleton.expanded = false;
+    setTimeout(() => {
+      if (!(document.activeElement.parentElement === IoLadderSingleton)) {
+        IoLadderSingleton.expanded = false;
+      }
+    });
   }
   _onClick(event) {
     super._onClick(event);
@@ -101,11 +104,16 @@ export class IoNumber extends IoItem {
   }
   _expandLadder() {
     if (!this.ladder) return;
-    // TODO: disable if no PointerEvents
+    if (!window.PointerEvent) {
+      console.error('IoNumber: No PointerEvent support detected!');
+      return;
+    }
 
     if (IoLadderSingleton.srcElement) {
       IoLadderSingleton.removeEventListener('value-set', IoLadderSingleton.srcElement._onValueSet);
     }
+
+    IoLayerSingleton.srcElement = this;
     IoLadderSingleton.setProperties({
       srcElement: this,
       min: this.min,
@@ -127,16 +135,16 @@ export class IoNumber extends IoItem {
     const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
-    if (event.which == 13) { // enter
+    if (event.which === 27 || event.which === 13 || event.which === 32) { //  esc || enter || space
       event.preventDefault();
       this._setFromTextNode();
-    } else if (event.which == 36) { // home
+    } else if (event.which === 36) { // home
       this.textNode = this.min;
       this._setFromTextNode();
-    } else if (event.which == 35) { // end
+    } else if (event.which === 35) { // end
       this.textNode = this.max;
       this._setFromTextNode();
-    } else if (event.which == 33) { // pgup
+    } else if (event.which === 33) { // pgup
       const valueNumber = Number(this.textNode);
       if (typeof valueNumber == 'number' && !isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
         this.textNode = Number(this.textNode) + this.step;
@@ -144,7 +152,7 @@ export class IoNumber extends IoItem {
         this.textNode = this.step;
       }
       this._setFromTextNode();
-    } else if (event.which == 34) { // pgdown
+    } else if (event.which === 34) { // pgdown
       const valueNumber = Number(this.textNode);
       if (typeof valueNumber == 'number' && !isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
         this.textNode = Number(this.textNode) - this.step;
@@ -152,23 +160,31 @@ export class IoNumber extends IoItem {
         this.textNode = -this.step;
       }
       this._setFromTextNode();
-    } else if (event.which == 37) { // left
+    } else if (event.which === 37) { // left
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('left');
       }
-    } else if (event.which == 38) { // up
-      if (event.ctrlKey || (rngInside && start === end && start === 0)) {
+    } else if (event.which === 38) { // up
+      if (IoLayerSingleton.expanded) {
+        IoLayerSingleton.querySelector('.io-up1').focus();
+        IoLayerSingleton.expanded = true;
+        IoLayerSingleton.querySelector('.io-up1').focus();
+      } else if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('up');
       }
-    } else if (event.which == 39) { // right
+    } else if (event.which === 39) { // right
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('right');
       }
-    } else if (event.which == 40) { // down
-      if (event.ctrlKey || (rngInside && start === end && start === length)) {
+    } else if (event.which === 40) { // down
+      if (IoLayerSingleton.expanded) {
+        IoLayerSingleton.querySelector('.io-down1').focus();
+        IoLayerSingleton.expanded = true;
+        IoLayerSingleton.querySelector('.io-down1').focus();
+      } else if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('down');
       }
@@ -176,11 +192,9 @@ export class IoNumber extends IoItem {
   }
   _onKeyup(event) {
     if (event.which === 17) { // ctrl
-      // TODO: implement keybord navigation for io-ladder
-      this.blur();
       this._expandLadder();
-      // TODO: consider edge cases such as no io-up1
-      IoLadderSingleton.querySelector('.io-up1').focus();
+    } else if (event.which === 27 || event.which === 13 || event.which === 32) { // esc || enter || space
+      IoLayerSingleton.expanded = false;
     }
   }
   _setFromTextNode() {

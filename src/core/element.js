@@ -16,6 +16,11 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       },
     };
   }
+  static get Listeners() {
+    return {
+      'focus-to': '_onFocusTo',
+    };
+  }
   static get observedAttributes() {
     const observed = [];
     for (let prop in this.prototype.__protoProperties) {
@@ -178,28 +183,26 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
-  focusTo(dir, srcRect) {
-    const rect = srcRect || this.getBoundingClientRect();
-    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
-    let closest = this;
-    let closestDist = Infinity;
-    let parent = this.parentElement;
-    let depth = 0;
-    const DEPTH_LIMIT = 10;
+  _onFocusTo(event) {
+    const src = event.composedPath()[0];
+    if (src !== this) {
 
-    const backtrack = focusBacktrack.get(this);
-    if (backtrack && backtrack[dir]) {
-      const sStyle = window.getComputedStyle(backtrack[dir]);
-      if (sStyle.visibility === 'visible') {
-        // TODO: unhack
+      const dir = event.detail.dir;
+      const rect = event.detail.rect;
+
+      let closest = src;
+      let closestDist = Infinity;
+
+      const backtrack = focusBacktrack.get(src);
+      if (backtrack && backtrack[dir]) {
+        const sStyle = window.getComputedStyle(backtrack[dir]);
         backtrack[dir].focus();
-        setBacktrack(backtrack[dir], dir, this);
+        setBacktrack(backtrack[dir], dir, src);
         return;
       }
-    }
 
-    while (parent && depth < DEPTH_LIMIT && closest === this) {
-      const siblings = parent.querySelectorAll('[tabindex="0"]');
+      const siblings = this.querySelectorAll('[tabindex="0"]');
+
       for (let i = siblings.length; i--;) {
 
         if (!siblings[i].offsetParent) {
@@ -207,7 +210,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
           // console.log(siblings[i]);
           continue;
         }
-        const sRect = siblings[i].getBoundingClientRect();
         const sStyle = window.getComputedStyle(siblings[i]);
         if (sStyle.visibility !== 'visible') {
           // TODO: unhack
@@ -215,6 +217,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
           continue;
         }
 
+        const sRect = siblings[i].getBoundingClientRect();
         sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
 
         const dX = sRect.center.x - rect.center.x;
@@ -252,14 +255,18 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
             break;
         }
       }
-      parent = parent.parentElement;
-      depth++;
-      if (closest !== this) {
+
+      if (closest !== src) {
         closest.focus();
-        setBacktrack(closest, dir, this);
-        return;
+        setBacktrack(closest, dir, src);
+        event.stopImmediatePropagation();
       }
     }
+  }
+  focusTo(dir) {
+    const rect = this.getBoundingClientRect();
+    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
+    this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
   }
 }
 

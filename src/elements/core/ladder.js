@@ -27,6 +27,7 @@ class IoLadderStep extends IoItem {
         background-color: var(--io-background-color-light);
         align-self: stretch;
         touch-action: none;
+        width: 6em;
       }
       :host:before,
       :host:after {
@@ -191,6 +192,21 @@ class IoLadder extends IoElement {
   _onFocusIn(event) {
     event.stopImmediatePropagation();
   }
+  _onFocusTo(event) {
+    event.stopImmediatePropagation();
+    const src = event.composedPath()[0];
+    const dir = event.detail.dir;
+    if (this.srcElement) {
+      if (src === this.querySelector('.io-up1') && dir === 'down') {
+        this.srcElement.focus();
+        return;
+      } else if (src === this.querySelector('.io-down1') && dir === 'up') {
+        this.srcElement.focus();
+        return;
+      }
+    }
+    super._onFocusTo(event);
+  }
   _onLadderStepChange(event) {
     event.stopImmediatePropagation();
     const step = event.detail.step;
@@ -216,8 +232,11 @@ class IoLadder extends IoElement {
         this.removeAttribute('style');
       }
     } else {
-      if (lastFocus) lastFocus.focus();
-      this.srcElement = undefined;
+      if (this.srcElement) {
+        this.srcElement.focus();
+      } else if (lastFocus) {
+        lastFocus.focus();
+      }
     }
   }
   changed() {

@@ -75,7 +75,7 @@ Input element for `String` data type.
 
 Extends `<io-item>`.
 
-Input element for `Number` data type. It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment. Enable `ladder` property to use interactive float ladder element.
+Input element for `Number` data type. It clamps the `value` to `min`/`max` and rounds it to the nearest `step` increment. Enable `ladder` property to use interactive float ladder element. If focused by keyboard event, ctrl key expands the ladder.
 
 <io-element-demo element="io-number" width="6em" properties='{"value": 1337, "conversion": 1, "step": 0.1, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
 <io-element-demo element="io-number" width="6em" properties='{"value": 1337, "conversion": 1, "step": 0.0002, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
@@ -86,11 +86,11 @@ Value can be displayed using `conversion` factor. For example, conversion factor
 
 ## &lt;io-ladder&gt;
 
-Interactive number ladder for number values. Drag steps horizontally to decrease/increase the value. Dragging speed affects the rate of change exponentially. Use arrow keys to focus steps and change the value. Escape key collapses the ladder and restores the focus to previously focused element. Hold shift key for value rounding.
-
-Just like `<io-number>`, values can be displayed using `conversion` factor.
+Interactive number ladder for number values. Drag steps horizontally to change the value. Dragging speed affects the rate of change exponentially. Use arrow keys to focus steps and change the value. Escape key collapses the ladder and restores the focus to previously focused element. Hold shift key for value rounding.
 
 <io-element-demo element="io-ladder" expanded properties='{"value": 0.1, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
+
+**Note:** `<io-ladder>` uses PointerEvents API.
 
 ## &lt;io-slider&gt;
 

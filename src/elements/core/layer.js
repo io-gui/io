@@ -21,11 +21,9 @@ class IoLayer extends IoElement {
         /* background: rgba(0,0,0,0.2); */
       }
       :host[expanded] {
+        pointer-events: all;
         visibility: visible;
         opacity: 1;
-      }
-      :host[expanded][clickblock] {
-        pointer-events: all;
         /* background: rgba(255,0,0,0.2); */
       }
       :host > * {
@@ -39,7 +37,6 @@ class IoLayer extends IoElement {
   }
   static get Attributes() {
     return {
-      clickblock: true,
       expanded: {
         value: false,
         notify: true,
@@ -179,7 +176,6 @@ class IoLayer extends IoElement {
       for (let i = 0; i < this.children.length; i++) {
         this.children[i].expanded = false;
       }
-      this.clickblock = true;
     }
   }
 }

@@ -25,6 +25,7 @@ export class IoMenuItem extends IoItem {
         padding: var(--io-spacing);
         border-radius: 0;
         background: none;
+        touch-action: none;
       }
       :host > * {
         overflow: visible;
@@ -227,7 +228,6 @@ export class IoMenuItem extends IoItem {
   }
   _onTouchstart(event) {
     if (this.expanded || this._isInLayer) {
-      event.preventDefault();
       this.addEventListener('touchmove', this._onTouchmove);
       this.addEventListener('touchend', this._onTouchend);
       this._toggleExpanded(true);

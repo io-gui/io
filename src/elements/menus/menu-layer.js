@@ -1,7 +1,7 @@
 import {IoElement, html} from "../../io.js";
 
 let lastFocus = null;
-{  
+{
   window.addEventListener('focusin', () => {
     lastFocus = document.activeElement;
   }, {capture: false});
@@ -263,7 +263,6 @@ export class IoMenuLayer extends IoElement {
       const collapse = !this._hoveredItem._options;
       // TODO: unhack. this is necessary for touch only
       if (event.type === 'touchend' && this._hoveredItem._onClick) {
-        event.preventDefault();
         this._hoveredItem._onClick(event);
       }
       if (collapse) {
