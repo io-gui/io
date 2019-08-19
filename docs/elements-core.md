@@ -86,11 +86,11 @@ Value can be displayed using `conversion` factor. For example, conversion factor
 
 ## &lt;io-ladder&gt;
 
-Interactive number ladder enables fine tuning of number values by dragging ladder steps horizontally. Dragging to the left/right decreases/increases the value by chosen increments. Dragging speed affects the rate of change exponentially. Ladder steps can be focused by up/down arrow keys while left/right keys decrease/increase the value. Escape key collapses the ladder and restores the focus to previously focused element. Holding shift key while changing value, rounds the value to the chosen increment.
+Interactive number ladder for number values. Drag steps horizontally to decrease/increase the value. Dragging speed affects the rate of change exponentially. Use arrow keys to focus steps and change the value. Escape key collapses the ladder and restores the focus to previously focused element. Hold shift key for value rounding.
 
-Just like `<io-number>`, value can be displayed using `conversion` factor.
+Just like `<io-number>`, values can be displayed using `conversion` factor.
 
-<io-element-demo element="io-ladder" expanded properties='{"value": 0.1, "step": 0.0001, "conversion": 1, "min": -1000, "max": 1000, "expanded": true}'></io-element-demo>
+<io-element-demo element="io-ladder" expanded properties='{"value": 0.1, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
 
 ## &lt;io-slider&gt;
 
