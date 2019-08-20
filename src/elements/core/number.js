@@ -73,7 +73,7 @@ export class IoNumber extends IoItem {
       // TODO: unhack race condition
       setTimeout(() => {
         this._expandLadder();
-      })
+      });
     }
   }
   _onFocus(event) {

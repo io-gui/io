@@ -112,7 +112,7 @@ class IoLayer extends IoElement {
   }
   onChildExpanded() {
     for (let i = this.children.length; i--;) {
-      if (this.children[i].expanded) { this.expanded = true; return; };
+      if (this.children[i].expanded) { this.expanded = true; return; }
     }
     this.expanded = false;
   }
