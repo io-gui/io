@@ -52,6 +52,8 @@ class IoLayer extends IoElement {
     return {
       'pointerdown': '_onPointerdown',
       'contextmenu': '_onContextmenu',
+      'expanded': 'onChildExpanded',
+
     };
   }
   connectedCallback() {

@@ -27,18 +27,7 @@ class IoLadderStep extends IoItem {
         background-color: var(--io-background-color-light);
         align-self: stretch;
         touch-action: none;
-        width: 6em;
-      }
-      :host:before,
-      :host:after {
-        visibility: visible;
-        opacity: 0.1;
-      }
-      :host:before {
-        content: '< ';
-      }
-      :host:after {
-        content: ' >';
+        width: 5em;
       }
     </style>`;
   }
@@ -242,6 +231,7 @@ class IoLadder extends IoElement {
         lastFocus.focus();
       }
     }
+    this.dispatchEvent('expanded', {value: this.expanded}, true);
   }
   changed() {
     const range = this.max - this.min;
@@ -287,4 +277,3 @@ IoLadder.Register();
 
 export const IoLadderSingleton = new IoLadder();
 IoLayerSingleton.appendChild(IoLadderSingleton);
-IoLadderSingleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);
