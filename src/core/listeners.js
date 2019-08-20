@@ -32,21 +32,32 @@ export class Listeners {
    * Sets listeners from properties (filtered form properties map by 'on-' prefix).
    * @param {Object} props - Map of all properties.
    */
+   // TODO: figure out how to unset propListeners.
   setPropListeners(props) {
-    for (let l in this.propListeners) delete this.propListeners[l];
+    const listeners = this.propListeners;
+    const node = this.node;
+    const newListeners = {};
     for (let l in props) {
-      if (l.startsWith('on-')) {
-        this.propListeners[l.slice(3, l.length)] = props[l];
-      }
+      if (l.startsWith('on-')) newListeners[l.slice(3, l.length)] = props[l];
     }
-    if (this.__connected) {
-      const props = this.propListeners;
-      const node = this.node;
-      for (let l in props) {
-        if (props[l] instanceof Array) {
-          node.addEventListener(l, typeof props[l][0] === 'function' ? props[l][0] : node[props[l][0]], props[l][1]);
+    for (let l in newListeners) {
+      if (listeners[l]) {
+        if (listeners[l] instanceof Array) {
+          const listener = typeof listeners[l][0] === 'function' ? listeners[l][0] : node[listeners[l][0]];
+          node.removeEventListener(l, listener, listeners[l][1]);
         } else {
-          node.addEventListener(l, typeof props[l] === 'function' ? props[l] : node[props[l]]);
+          const listener = typeof listeners[l] === 'function' ? listeners[l] : node[listeners[l]];
+          node.removeEventListener(l, listener);
+        }
+      }
+      listeners[l] = newListeners[l];
+      if (this.__connected) {
+        if (newListeners[l] instanceof Array) {
+          const listener = typeof newListeners[l][0] === 'function' ? newListeners[l][0] : node[newListeners[l][0]];
+          node.addEventListener(l, listener, newListeners[l][1]);
+        } else {
+          const listener = typeof newListeners[l] === 'function' ? newListeners[l] : node[newListeners[l]];
+          node.addEventListener(l, listener);
         }
       }
     }
@@ -57,6 +68,7 @@ export class Listeners {
   connect() {
     this.__connected = true;
     const node = this.node;
+    const listeners = this.propListeners;
     for (let l in this) {
       if (this[l] instanceof Array) {
         this.addEventListener(l, node[this[l][0]], this[l][1]);
@@ -64,13 +76,12 @@ export class Listeners {
         this.addEventListener(l, node[this[l]]);
       }
     }
-    const props = this.propListeners;
-    for (let l in props) {
-      if (props[l] instanceof Array) {
-        const listener = typeof props[l][0] === 'function' ? props[l][0] : node[props[l][0]];
-        this.addEventListener(l, listener, props[l][1]);
+    for (let l in listeners) {
+      if (listeners[l] instanceof Array) {
+        const listener = typeof listeners[l][0] === 'function' ? listeners[l][0] : node[listeners[l][0]];
+        this.addEventListener(l, listener, listeners[l][1]);
       } else {
-        const listener = typeof props[l] === 'function' ? props[l] : node[props[l]];
+        const listener = typeof listeners[l] === 'function' ? listeners[l] : node[listeners[l]];
         this.addEventListener(l, listener);
       }
     }
@@ -81,6 +92,7 @@ export class Listeners {
   disconnect() {
     this.__connected = false;
     const node = this.node;
+    const listeners = this.propListeners;
     for (let l in this) {
       if (this[l] instanceof Array) {
         this.removeEventListener(l, node[this[l][0]], this[l][1]);
@@ -88,13 +100,12 @@ export class Listeners {
         this.removeEventListener(l, node[this[l]]);
       }
     }
-    const props = this.props;
-    for (let l in props) {
-      if (props[l] instanceof Array) {
-        const listener = typeof props[l][0] === 'function' ? props[l][0] : node[props[l][0]];
-        this.removeEventListener(l, listener, props[l][1]);
+    for (let l in listeners) {
+      if (listeners[l] instanceof Array) {
+        const listener = typeof listeners[l][0] === 'function' ? listeners[l][0] : node[listeners[l][0]];
+        this.removeEventListener(l, listener, listeners[l][1]);
       } else {
-        const listener = typeof props[l] === 'function' ? props[l] : node[props[l]];
+        const listener = typeof listeners[l] === 'function' ? listeners[l] : node[listeners[l]];
         this.removeEventListener(l, listener);
       }
     }
