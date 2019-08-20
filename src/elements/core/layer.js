@@ -50,8 +50,7 @@ class IoLayer extends IoElement {
   }
   static get Listeners() {
     return {
-      'mousedown': '_onMousedown',
-      'touchstart': ['_onTouchstart', {passive: true}],
+      'pointerdown': '_onPointerdown',
       'contextmenu': '_onContextmenu',
     };
   }
@@ -66,19 +65,37 @@ class IoLayer extends IoElement {
     window.removeEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
     window.removeEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
     window.removeEventListener('resize', this._onWindowChange, {capture: true, passive: true});
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
   }
   _onWindowChange() {
     this.expanded = false;
   }
-  _onMousedown(event) {
+  _onPointerdown(event) {
     if (event.composedPath()[0] === this) {
       event.preventDefault();
-      this._collapseOrFocusSrcElement(event);
+      event.stopImmediatePropagation();
+      this.setPointerCapture(event.pointerId);
+      this.addEventListener('pointermove', this._onPointermove);
+      this.addEventListener('pointerup', this._onPointerup);
     }
   }
-  _onTouchstart(event) {
+  _onPointermove(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+  _onPointerup(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.releasePointerCapture(event.pointerId);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
+    this._collapseOrFocusSrcElement(event);
+  }
+  _onContextmenu(event) {
     if (event.composedPath()[0] === this) {
-      this._collapseOrFocusSrcElement(event.changedTouches[0]);
+      event.preventDefault();
+      this.expanded = false;
     }
   }
   _collapseOrFocusSrcElement(pointer) {
@@ -93,20 +110,11 @@ class IoLayer extends IoElement {
     }
     this.expanded = false;
   }
-  _onContextmenu(event) {
-    if (event.composedPath()[0] === this) {
-      event.preventDefault();
-      this.expanded = false;
+  onChildExpanded() {
+    for (let i = this.children.length; i--;) {
+      if (this.children[i].expanded) { this.expanded = true; return; };
     }
-  }
-  onChildExpanded(event) {
-    const elem = event.composedPath()[0];
-    if (elem.expanded) {
-      for (let i = 0; i < this.children.length; i++) {
-        if (this.children[i] !== elem) this.children[i].expanded = false;
-      }
-    }
-    this.expanded = elem.expanded;
+    this.expanded = false;
   }
   nudgeBottom(element, x, y, elemRect, force) {
     if (y + elemRect.height < window.innerHeight || force) {
@@ -173,7 +181,7 @@ class IoLayer extends IoElement {
   }
   expandedChanged() {
     if (!this.expanded) {
-      for (let i = 0; i < this.children.length; i++) {
+      for (let i = this.children.length; i--;) {
         this.children[i].expanded = false;
       }
     }

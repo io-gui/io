@@ -51,52 +51,48 @@ export class IoNumber extends IoItem {
       ladder: false,
     };
   }
-  // TODO: implement pointerevents
-  static get Listeners() {
-    return {
-      'touchstart': ['_onTouchstart', {passive: true}],
-      'touchend': '_onTouchend',
-    };
+  constructor(props) {
+    super(props);
+    Object.defineProperty(this, '_pointerType', {value: 'touch', writable: true});
   }
-  _onTouchstart(event) {
-    if (!this.ladder) return;
-    this._x = event.changedTouches[0].clientX;
-    this._y = event.changedTouches[0].clientY;
+  _onPointerDown(event) {
+    super._onPointerDown(event);
+    this._pointerType = event.pointerType;
   }
-  _onTouchend(event) {
-    if (!this.ladder) return;
-    event.preventDefault();
-    const dx = event.changedTouches[0].clientX - this._x;
-    const dy = event.changedTouches[0].clientY - this._y;
-    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {
-      if (IoLadderSingleton.expanded) {
-        this.focus();
-        IoLadderSingleton.expanded = false;
-      } else {
-        // document.activeElement.blur();
+  _onPointerUp(event) {
+    this.pressed = false;
+    this.removeEventListener('pointermove', this._onPointerMove);
+    this.removeEventListener('pointerleave', this._onPointerLeave);
+    this.removeEventListener('pointerup', this._onPointerUp);
+    if (this.ladder && this._pointerType === 'touch') {
+      event.preventDefault();
+      document.activeElement.blur();
+      this._expandLadder();
+    } else {
+      this.focus();
+      // TODO: unhack race condition
+      setTimeout(() => {
         this._expandLadder();
-      }
+      })
     }
   }
   _onFocus(event) {
     super._onFocus(event);
-    this._textContentOnFocus = this.textNode;
+    if (this._pointerType === 'touch') {
+      IoLadderSingleton.expanded = false;
+    }
   }
   _onBlur(event) {
     super._onBlur(event);
-    if (this._textContentOnFocus !== this.textNode) this._setFromTextNode();
-    // IoLadderSingleton.value = this.value;
+    IoLadderSingleton.value = this.value;
     this.scrollTop = 0;
     this.scrollLeft = 0;
+    // TODO: unhack race condition
     setTimeout(() => {
       if (!(document.activeElement.parentElement === IoLadderSingleton)) {
         IoLadderSingleton.expanded = false;
       }
     });
-  }
-  _onClick(event) {
-    super._onClick(event);
-    this._expandLadder();
   }
   _onValueSet(event) {
     if (event.detail.property === 'value') {
@@ -105,11 +101,6 @@ export class IoNumber extends IoItem {
   }
   _expandLadder() {
     if (!this.ladder) return;
-    if (!window.PointerEvent) {
-      console.error('IoNumber: No PointerEvent support detected!');
-      return;
-    }
-
     IoLayerSingleton.srcElement = this;
     IoLadderSingleton.setProperties({
       srcElement: this,
@@ -122,9 +113,6 @@ export class IoNumber extends IoItem {
       'on-value-set': this._onValueSet,
     });
   }
-  _onPointerDown() {}
-  _onPointerMove() {}
-  _onPointerUp() {}
   _onKeydown(event) {
     const rng = window.getSelection().getRangeAt(0);
     const start = rng.startOffset;

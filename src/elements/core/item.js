@@ -68,14 +68,18 @@ export class IoItem extends IoElement {
   }
   constructor(props) {
     super(props);
-    this._textNode = document.createTextNode("");
+    Object.defineProperty(this, '_textNode', {value: document.createTextNode(""), writable: true});
     this.appendChild(this._textNode);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
+    this.removeEventListener('keyup', this._onKeydown);
     this.removeEventListener('click', this._onClick);
+    this.removeEventListener('pointermove', this._onPointerMove);
+    this.removeEventListener('pointerleave', this._onPointerLeave);
+    this.removeEventListener('pointerup', this._onPointerUp);
   }
   _onFocus() {
     this.addEventListener('blur', this._onBlur);

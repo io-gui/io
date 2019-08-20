@@ -64,15 +64,17 @@ class IoLadderStep extends IoItem {
     }
   }
   _onPointerDown(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this._onPointerMove);
     this.addEventListener('pointerup', this._onPointerUp);
-    event.preventDefault();
     this.focus();
     this._startX = event.clientX;
   }
   _onPointerMove(event) {
     event.preventDefault();
+    event.stopImmediatePropagation();
     const deltaX = event.clientX - this._startX;
     if (Math.abs(deltaX) > 5) {
       const expMove = Math.pow(deltaX / 5, 3);
@@ -83,6 +85,8 @@ class IoLadderStep extends IoItem {
     }
   }
   _onPointerUp(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
     this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this._onPointerMove);
     this.removeEventListener('pointerup', this._onPointerUp);
@@ -232,7 +236,7 @@ class IoLadder extends IoElement {
         this.removeAttribute('style');
       }
     } else {
-      if (this.srcElement) {
+      if (this.srcElement && this.srcElement._pointerType !== 'touch') {
         this.srcElement.focus();
       } else if (lastFocus) {
         lastFocus.focus();
