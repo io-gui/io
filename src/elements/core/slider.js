@@ -55,70 +55,55 @@ export class IoSlider extends IoGl {
   }
   static get Listeners() {
     return {
-      'touchstart': ['_onTouchstart', {passive: true}],
-      'mousedown': '_onMousedown',
-      'keydown': '_onKeydown',
+      'focus': '_onFocus',
+      'contextmenu': '_onContextmenu',
+      'pointerdown': '_onPointerdown',
     };
-  }
-  _onTouchstart(event) {
-    this.addEventListener('touchmove', this._onTouchmove);
-    this.addEventListener('touchend', this._onTouchend);
-    this._onPointerdown(event);
-  }
-  _onTouchmove(event) {
-    this._onPointermove(event);
-  }
-  _onTouchend() {
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-  }
-  _onMousedown(event) {
-    event.preventDefault();
-    this.focus();
-    window.addEventListener('mousemove', this._onMousemove);
-    window.addEventListener('mouseup', this._onMouseup);
-    this._onPointerdown(event);
-  }
-  _onMousemove(event) {
-    this._onPointermove(event);
-  }
-  _onMouseup() {
-    window.removeEventListener('mousemove', this._onMousemove);
-    window.removeEventListener('mouseup', this._onMouseup);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('mousemove', this._onMousemove);
-    window.removeEventListener('mouseup', this._onMouseup);
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
+  }
+  _onFocus() {
+    this.addEventListener('blur', this._onBlur);
+    this.addEventListener('keydown', this._onKeydown);
+  }
+  _onBlur() {
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+  }
+  _onContextmenu(event) {
+    event.preventDefault();
   }
   _onPointerdown(event) {
-    const pointer = event.changedTouches ? event.changedTouches[0] : event;
-    this._x = pointer.clientX;
-    this._y = pointer.clientY;
-    if (document.activeElement === this || this.horizontal === false) {
-      this._active = 1;
-      event.preventDefault();
-    } else {
-      this._active = -1;
-    }
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerup', this._onPointerup);
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.setPointerCapture(event.pointerId);
+    this.focus();
   }
   _onPointermove(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerup', this._onPointerup);
     this.debounce(this._onPointermoveDebounced, event);
   }
-  _onPointermoveDebounced(event) {
-    const pointer = event.changedTouches ? event.changedTouches[0] : event;
-    const dx = Math.abs(this._x - pointer.clientX);
-    const dy = Math.abs(this._y - pointer.clientY);
-    if (this._active === -1 && dx > 5) {
-      this._active = (dx > dy && dy < 20) ? 1 : 0;
-    }
-    if (this._active !== 1) return;
+  _onPointerup() {
     event.preventDefault();
-    this.focus();
-
+    event.stopImmediatePropagation();
+    this.releasePointerCapture(event.pointerId);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
+  }
+  _onPointermoveDebounced(event) {
     const rect = this.getBoundingClientRect();
-    const x = Math.max(0, Math.min(1, (pointer.clientX - rect.x) / rect.width));
-    const y = Math.max(0, Math.min(1, 1 - (pointer.clientY - rect.y) / rect.height));
+    const x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
+    const y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
 
     let _x = this.min * (1 - x) + this.max * x;
     _x = Math.min(this.max, Math.max(this.min, _x));

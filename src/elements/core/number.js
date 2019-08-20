@@ -84,6 +84,7 @@ export class IoNumber extends IoItem {
   }
   _onBlur(event) {
     super._onBlur(event);
+    this._setFromTextNode();
     IoLadderSingleton.value = this.value;
     this.scrollTop = 0;
     this.scrollLeft = 0;
