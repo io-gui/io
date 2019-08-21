@@ -1,4 +1,4 @@
-import {IoElement, IoNode, html, IoStorage as $} from "../../io.js";
+import {IoNode, html, IoStorage as $} from "../../io.js";
 
 const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -10,7 +10,7 @@ const themeSizes =  {
   cssLineHeight: 20,
   cssItemHeight: 28,
   cssFontSize: 13,
-}
+};
 const themeDB = {
   light: Object.assign({
     cssBackgroundColor: [0.96, 0.96, 0.96, 1],
@@ -52,12 +52,12 @@ const themeDB = {
     cssColorGradientEnd: [1, 1, 1, 0.25],
     cssColorShadow: [0, 0, 0, 0.2],
   }, themeSizes),
-}
+};
 
 const theme = $('theme', isDarkMode ? 'dark' : 'light');
 const vars = themeDB[theme.value] || themeDB['light'];
 
-export class IoTheme extends IoElement {
+export class IoTheme extends IoNode {
   static get Mixins() {
     return html`<style>
     item {
@@ -294,7 +294,7 @@ export class IoTheme extends IoElement {
   }
 }
 IoTheme.Register = function() {
-  IoElement.Register.call(this);
+  IoNode.Register.call(this);
   let mixins = '';
   for (let i = this.prototype.__protochain.length; i--;) {
     const styleString = this.prototype.__protochain[i].constructor.Mixins;

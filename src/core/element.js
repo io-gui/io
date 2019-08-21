@@ -347,7 +347,7 @@ const constructElement = function(vDOMNode) {
   return element;
 };
 
-var superCreateElement = document.createElement;
+const superCreateElement = document.createElement;
 document.createElement = function() {
   const tag = arguments[0];
   if (tag.startsWith('io-')) {
@@ -360,7 +360,7 @@ document.createElement = function() {
   } else  {
     return superCreateElement.apply(this, arguments);
   }
-}
+};
 
 /**
  * Sets element properties.
