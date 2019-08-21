@@ -66,7 +66,7 @@ export class IoGl extends IoElement {
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: var(--io-border-radius);
+        border-radius: calc(var(--io-border-radius) - var(--io-border-width));
         pointer-events: none;
         /* image-rendering: pixelated; */
       }
@@ -110,12 +110,12 @@ export class IoGl extends IoElement {
       vec2 edgeDistance = abs(samplePosition) - halfSize;
       float outside = length(max(edgeDistance, 0.));
       float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-      return saturate((outside + inside)* uPxRatio);
+      return saturate((outside + inside) * uPxRatio * 2.); // TODO: check
     }
     float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
       vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
-      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(dFdx(sp.x)) - lineWidth * 2.;
-      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(dFdy(sp.y)) - lineWidth * 2.;
+      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(dFdx(sp.x)) - lineWidth;
+      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(dFdy(sp.y)) - lineWidth;
       return saturate(min(linex, liney));
     }
     float checker(vec2 samplePosition, float size) {

@@ -71,7 +71,8 @@ export class IoDemoElementsCore extends IoElement {
           ['io-number-slider', {value: this.bind('string'), min: -0.25, max: 0.25, step: 0.01}],
         ]],
       ]],
-      ['div', {class: 'n', {options: [
+      ['div', {class: 'io-table4 table'}, [
+        ['io-menu-option', {options: [
           {label: 'negative one', value: -1},
           {label: 'zero', value: 0},
           {label: 'half', value: 0.5},

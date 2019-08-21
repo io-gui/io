@@ -2,7 +2,7 @@
 
 Io is a UI framework for building web applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
 
-For a quick start, read this document, then check out included [collection of elements](https://io-gui.dev/#doc=elements-core#io-item) and the [source code](https://github.com/io-gui/io/).
+For a quick start, read this document, then check out included [collection of elements](#doc=elements-core#ioitem) and the [source code](https://github.com/io-gui/io/).
 
 **Core UI library**
 
@@ -10,7 +10,7 @@ The core library includes the most basic classes for buliding custom elements wi
 
 **Design System**
 
-Io design system includes a [collection of UI elements](https://io-gui.dev/#doc=elements-core#io-item) that range from simple input fields, to [menu systems](#doc=elements-menus#io-menu-item) and [responsive layouts](#doc=elements-layout#io-collapsable).
+Io design system includes a [collection of UI elements](#doc=elements-core#ioitem) that range from simple input fields, to [menu systems](#doc=elements-menus#io-menu-item) and [responsive layouts](#doc=elements-layout#io-collapsable).
 
 ## Usage
 
@@ -198,4 +198,4 @@ class MyApp extends IoElement {
 MyApp.Register();
 ```
 
-> Continue reading [advanced usage](#doc=learn-more) or check out the [included elements](#doc=elements-core#io-item).
+> Continue reading [advanced usage](#doc=learn-more) or check out the [included elements](#doc=elements-core#ioitem).
