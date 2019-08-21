@@ -27,7 +27,7 @@ export class IoProperties extends IoElement {
         /* ${mixin.item} */
       :host > io-object {
         padding: 0;
-        border: var(--io-inset-border);
+        border: var(--io-border);
         border-radius: var(--io-border-radius);
         border-color: transparent;
         background-color: transparent;

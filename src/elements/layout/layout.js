@@ -8,7 +8,7 @@ export class IoLayout extends IoElement {
         display: flex;
         overflow: hidden;
         touch-action: none;
-        /* border: var(--io-outset-border); */
+        /* border: var(--io-border); */
         /* border-color: var(--io-color-border-outset); */
       }
       :host[orientation=horizontal] {
@@ -215,7 +215,7 @@ export class IoLayoutDivider extends IoElement {
         z-index: 1;
         display: flex;
         flex: none;
-        border: var(--io-outset-border);
+        border: var(--io-border);
         border-color: var(--io-color-border-outset);
         user-select: none;
         transition: background-color 0.4s;

@@ -66,6 +66,7 @@ export class IoGl extends IoElement {
         position: absolute;
         top: 0;
         left: 0;
+        border-radius: var(--io-border-radius);
         pointer-events: none;
         image-rendering: pixelated;
       }

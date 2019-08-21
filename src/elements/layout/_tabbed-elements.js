@@ -483,7 +483,7 @@ export class IoTabDragicon extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
-        border: var(--io-outset-border);
+        border: var(--io-border);
         border-radius: var(--io-border-radius);
         padding: var(--io-spacing);
         padding-left: calc(2 * var(--io-spacing));

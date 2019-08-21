@@ -9,7 +9,7 @@ export class IoMenuOption extends IoMenuItem {
         display: inline-block;
         text-align: center;
         border-radius: var(--io-border-radius);
-        border: var(--io-outset-border);
+        border: var(--io-border);
         border-color: var(--io-color-border-outset);
         background-color: var(--io-background-color-dark);
         background-image: var(--io-gradient-button);

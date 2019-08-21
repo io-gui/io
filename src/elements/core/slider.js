@@ -6,14 +6,14 @@ export class IoSlider extends IoGl {
     return html`<style>
       :host {
         cursor: ns-resize;
-        border: var(--io-inset-border);
+        box-sizing: border-box;
+        border: var(--io-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-color-border-inset);
         min-width: var(--io-item-height);
         min-height: var(--io-item-height);
         align-self: stretch;
         justify-self: stretch;
-        overflow: hidden;
         touch-action: none;
       }
       :host[horizontal] {

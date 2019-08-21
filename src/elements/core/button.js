@@ -6,7 +6,7 @@ export class IoButton extends IoItem {
     return html`<style>
       :host {
         text-align: center;
-        border: var(--io-outset-border);
+        border: var(--io-border);
         border-color: var(--io-color-border-outset);
         background-color: var(--io-background-color-dark);
         background-image: var(--io-gradient-button);
@@ -14,7 +14,7 @@ export class IoButton extends IoItem {
         padding-right: calc(2 * var(--io-spacing));
       }
       :host[pressed] {
-        border: var(--io-inset-border);
+        border: var(--io-border);
         border-color: var(--io-color-border-inset);
       }
     </style>`;

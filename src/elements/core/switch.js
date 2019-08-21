@@ -6,7 +6,7 @@ export class IoSwitch extends IoBoolean {
     return html`<style>
       :host {
         position: relative;
-        border: var(--io-inset-border);
+        border: var(--io-border);
         border-color: var(--io-color-border-inset);
         color: var(--io-color-field);
         background-image: none;
@@ -29,7 +29,7 @@ export class IoSwitch extends IoBoolean {
         height: calc(var(--io-line-height) - calc(4 * var(--io-border-width)));
         width: calc(var(--io-line-height) - calc(4 * var(--io-border-width)));
         background-color: var(--io-background-color-dark);
-        border: var(--io-outset-border);
+        border: var(--io-border);
         border-color: var(--io-color-border-outset);
         border-radius: var(--io-line-height);
         transition-timing-function: ease-in-out;

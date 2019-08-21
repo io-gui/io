@@ -45,9 +45,9 @@ const themeDB = {
     cssColorNumber: [0.125, 0.64, 1, 1],
     cssColorString: [0.94, 0.25, 0.086, 1],
     cssColorBoolean: [0.82, 0.35, 0.75, 1],
-    cssColorBorder: [0.55, 0.55, 0.55, 1],
-    cssColorBorderLight: [0.55, 0.55, 0.55, 1],
-    cssColorBorderDark: [0.12, 0.12, 0.12, 1],
+    cssColorBorder: [0.4, 0.4, 0.4, 1],
+    cssColorBorderLight: [0.5, 0.5, 0.5, 1],
+    cssColorBorderDark: [0.1, 0.1, 0.1, 1],
     cssColorGradientStart: [0, 0, 0, 0.15],
     cssColorGradientEnd: [1, 1, 1, 0.25],
     cssColorShadow: [0, 0, 0, 0.2],
@@ -76,7 +76,7 @@ export class IoTheme extends IoNode {
       height: var(--io-item-height);
       font-size: var(--io-font-size);
       border-radius: var(--io-border-radius);
-      border: var(--io-inset-border);
+      border: var(--io-border);
       border-color: transparent;
       color: var(--io-color);
       background-color: transparent;
@@ -91,7 +91,7 @@ export class IoTheme extends IoNode {
       justify-self: stretch;
       align-items: flex-start;
       border-radius: var(--io-border-radius);
-      border: var(--io-outset-border);
+      border: var(--io-border);
       border-color: var(--io-color-border-outset);
       color: var(--io-color-field);
       background-color: var(--io-background-color-dark);
@@ -105,7 +105,7 @@ export class IoTheme extends IoNode {
       justify-self: stretch;
       align-items: flex-start;
       border-radius: var(--io-border-radius);
-      border: var(--io-inset-border);
+      border: var(--io-border);
       color: var(--io-color);
       background-color: var(--io-background-color);
       background-image: none;
@@ -275,12 +275,11 @@ export class IoTheme extends IoNode {
         --io-color-gradient-end: ${this._toCss(this.cssColorGradientEnd)};
         --io-color-shadow: ${this._toCss(this.cssColorShadow)};
 
-        --io-color-border-inset: var(--io-color-border-light) var(--io-color-border) var(--io-color-border) var(--io-color-border-light);
-        --io-color-border-outset: var(--io-color-border) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border);
+
         --io-border: var(--io-border-width) solid var(--io-color-border);
         --io-border-error: var(--io-border-width) solid var(--io-color-error);
-        --io-inset-border: var(--io-border-width) inset var(--io-color-border);
-        --io-outset-border: var(--io-border-width) outset var(--io-color-border);
+        --io-color-border-inset: var(--io-color-border-dark) var(--io-color-border-light) var(--io-color-border-light) var(--io-color-border-dark);
+        --io-color-border-outset: var(--io-color-border-light) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border-light);
 
         --io-gradient-button: linear-gradient(0deg, var(--io-color-gradient-start), transparent 75%), linear-gradient(180deg, var(--io-color-gradient-end), transparent 75%);
         --io-gradient-panel: linear-gradient(100deg, var(--io-color-gradient-start), transparent 75%), linear-gradient(280deg, var(--io-color-gradient-end), transparent 75%);
