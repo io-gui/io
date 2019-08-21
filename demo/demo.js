@@ -15,6 +15,7 @@ export class IoDemo extends IoSelectorTabs {
       selected:  $('demo', 'elements-math', true),
       options: [
         {value: 'elements-core', label: "Core"},
+        {value: 'elements-theme', label: "Theme"},
         {value: 'elements-menus', label: "Menus"},
         {value: 'elements-object', label: "Object"},
         {value: 'elements-math', label: "Math"},
@@ -23,6 +24,7 @@ export class IoDemo extends IoSelectorTabs {
       ],
       elements: [
         ['io-demo-elements-core', {name: 'elements-core', import: 'demo/demo-elements-core.js'}],
+        ['io-demo-elements-theme', {name: 'elements-theme', import: 'demo/demo-elements-theme.js'}],
         ['io-demo-elements-menus', {name: 'elements-menus', import: 'demo/demo-elements-menus.js'}],
         ['io-demo-elements-object', {name: 'elements-object', import: 'demo/demo-elements-object.js'}],
         ['io-demo-elements-math', {name: 'elements-math', import: 'demo/demo-elements-math.js'}],

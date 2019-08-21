@@ -33,6 +33,10 @@ export class IoIcon extends IoElement {
         value: '',
         reflect: -1,
       },
+      label: {
+        value: '',
+        reflect: 1,
+      },
       stroke: {
         type: Boolean,
         reflect: 1,

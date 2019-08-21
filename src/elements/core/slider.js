@@ -8,7 +8,7 @@ export class IoSlider extends IoGl {
         cursor: ns-resize;
         border: var(--io-inset-border);
         border-radius: var(--io-border-radius);
-        border-color: var(--io-inset-border-color);
+        border-color: var(--io-color-border-inset);
         min-width: var(--io-item-height);
         min-height: var(--io-item-height);
         align-self: stretch;

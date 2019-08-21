@@ -16,11 +16,11 @@ import Sting from "../tests/elements/core/string.js"
 import Number from "../tests/elements/core/number.js"
 import Slider from "../tests/elements/core/slider.js"
 import NumberSlider from "../tests/elements/core/number-slider.js"
-// import Icon from "../tests/elements/core/icon.js"
-// import IconSet from "../tests/elements/core/iconset.js"
+import Icon from "../tests/elements/core/icon.js"
+import IconSet from "../tests/elements/core/iconset.js"
 // import Layer from "../tests/elements/core/layer.js"
 import Ladder from "../tests/elements/core/ladder.js"
-// import Theme from "../tests/elements/core/theme.js"
+import Theme from "../tests/elements/core/theme.js"
 
 // import Option from "../tests/elements/core/option.js"
 // import Collapsable from "../tests/elements/core/collapsable.js"
@@ -53,10 +53,11 @@ function runTests() {
     // new Number().run();
     // new Slider().run();
     // new NumberSlider().run();
-    //
-    //
-    //
-    new Ladder().run();
+    // new Icon().run();
+    // new IconSet().run();
+    // new Layer().run();
+    // new Ladder().run();
+    new Theme().run();
 
     // new Option().run();
     // new Collapsable().run();

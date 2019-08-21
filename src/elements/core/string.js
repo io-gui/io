@@ -10,7 +10,7 @@ export class IoString extends IoItem {
         -webkit-user-select: text;
         -webkit-touch-callout: default;
         min-width: var(--io-item-height);
-        border-color: var(--io-inset-border-color);
+        border-color: var(--io-color-border-inset);
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
         box-shadow: var(--io-shadow-inset);

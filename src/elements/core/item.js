@@ -10,7 +10,7 @@ export class IoItem extends IoElement {
         ${mixin.item};
       }
       :host[pressed] {
-        border-color: var(--io-inset-border-color);
+        border-color: var(--io-color-border-inset);
         box-shadow: var(--io-shadow-inset);
       }
       :host[hidden] {

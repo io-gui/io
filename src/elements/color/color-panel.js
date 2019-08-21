@@ -19,6 +19,9 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
       :host[horizontal] {
         flex-direction: row;
       }
+      :host > * {
+        border-radius: calc(var(--io-border-radius) - var(--io-border-width));
+      }
       :host > io-color-slider-sv {
         flex: 1 1;
       }

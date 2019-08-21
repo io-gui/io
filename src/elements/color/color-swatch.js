@@ -6,10 +6,11 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
   static get Style() {
     return html`<style>
       :host {
+        box-sizing: border-box;
         border-radius: var(--io-border-radius);
         border: var(--io-inset-border);
-        min-width: var(--io-line-height);
-        min-height: var(--io-line-height);
+        min-width: var(--io-item-height);
+        min-height: var(--io-item-height);
       }
       :host[aria-invalid] {
         border: var(--io-border-error);

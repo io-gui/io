@@ -9,7 +9,7 @@ export class IoLayout extends IoElement {
         overflow: hidden;
         touch-action: none;
         /* border: var(--io-outset-border); */
-        /* border-color: var(--io-outset-border-color); */
+        /* border-color: var(--io-color-border-outset); */
       }
       :host[orientation=horizontal] {
         flex-direction: row;
@@ -216,7 +216,7 @@ export class IoLayoutDivider extends IoElement {
         display: flex;
         flex: none;
         border: var(--io-outset-border);
-        border-color: var(--io-outset-border-color);
+        border-color: var(--io-color-border-outset);
         user-select: none;
         transition: background-color 0.4s;
       }

@@ -7,7 +7,7 @@ export class IoButton extends IoItem {
       :host {
         text-align: center;
         border: var(--io-outset-border);
-        border-color: var(--io-outset-border-color);
+        border-color: var(--io-color-border-outset);
         background-color: var(--io-background-color-dark);
         background-image: var(--io-gradient-button);
         padding-left: calc(2 * var(--io-spacing));
@@ -15,7 +15,7 @@ export class IoButton extends IoItem {
       }
       :host[pressed] {
         border: var(--io-inset-border);
-        border-color: var(--io-inset-border-color);
+        border-color: var(--io-color-border-inset);
       }
     </style>`;
   }
