@@ -144,7 +144,6 @@ export class IoItem extends IoElement {
     if (this.label) {
       this.textNode = this.label;
       this.title = this.label;
-      this.setAttribute('aria-label', this.label);
     } else {
       let valueText;
       if (this.value && typeof this.value === 'object') {
@@ -154,6 +153,13 @@ export class IoItem extends IoElement {
       }
       this.textNode = valueText;
       this.title = valueText;
+    }
+    this.setAria();
+  }
+  setAria() {
+    if (this.label) {
+      this.setAttribute('aria-label', this.label);
+    } else {
       this.setAttribute('aria-label', false);
     }
   }

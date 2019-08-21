@@ -7,6 +7,7 @@ import Node from "../tests/core/node.js"
 import Element from "../tests/core/element.js"
 
 import Item from "../tests/elements/core/item.js"
+import Gl from "../tests/elements/core/gl.js"
 import Button from "../tests/elements/core/button.js"
 import Boolean from "../tests/elements/core/boolean.js"
 import Boolicon from "../tests/elements/core/boolicon.js"
@@ -15,11 +16,10 @@ import Sting from "../tests/elements/core/string.js"
 import Number from "../tests/elements/core/number.js"
 import Slider from "../tests/elements/core/slider.js"
 import NumberSlider from "../tests/elements/core/number-slider.js"
-import Gl from "../tests/elements/core/gl.js"
-// import Ladder from "../tests/elements/core/ladder.js"
 // import Icon from "../tests/elements/core/icon.js"
 // import IconSet from "../tests/elements/core/iconset.js"
 // import Layer from "../tests/elements/core/layer.js"
+import Ladder from "../tests/elements/core/ladder.js"
 // import Theme from "../tests/elements/core/theme.js"
 
 // import Option from "../tests/elements/core/option.js"
@@ -39,20 +39,24 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    new Node().run();
-    new Element().run();
+    // new Node().run();
+    // new Element().run();
 
-    new Item().run();
-    new Button().run();
-    new Boolean().run();
-    new Boolean().run();
-    new Boolicon().run();
-    new Switch().run();
-    new Sting().run();
-    new Number().run();
-    new Gl().run();
-    new Slider().run();
-    new NumberSlider().run();
+    // new Item().run();
+    // new Gl().run();
+    // new Button().run();
+    // new Boolean().run();
+    // new Boolean().run();
+    // new Boolicon().run();
+    // new Switch().run();
+    // new Sting().run();
+    // new Number().run();
+    // new Slider().run();
+    // new NumberSlider().run();
+    //
+    //
+    //
+    new Ladder().run();
 
     // new Option().run();
     // new Collapsable().run();

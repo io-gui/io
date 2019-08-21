@@ -73,7 +73,7 @@ Input element for `String` data type.
 
 Extends `IoItem`.
 
-Input element for `Number` data type. It clamps the `value` to `min`/`max` and rounds it to the nearest `step` increment. If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped. If focused by keyboard event, ctrl key expands the ladder.
+Input element for `Number` data type. It clamps the `value` to `min`/`max` and rounds it to the nearest `step` increment. If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped. Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
 
 <io-element-demo element="io-number" width="5em" properties='{"value": 1337, "conversion": 1, "step": 0.1, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
 <io-element-demo element="io-number" width="5em" properties='{"value": 1337, "conversion": 1, "step": 0.0002, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>

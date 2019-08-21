@@ -31,6 +31,12 @@ class IoLadderStep extends IoItem {
       }
     </style>`;
   }
+  static get Attributes() {
+    return {
+      role: 'spinbutton',
+      type: 'number',
+    };
+  }
   _onKeydown(event) {
     let stepMove = 0;
     if (event.key === 'Escape' || event.key === ' ') {
@@ -50,6 +56,7 @@ class IoLadderStep extends IoItem {
     }
     if (stepMove !== 0) {
       this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
+      this.setAttribute('aria-valuenow', this.parentElement.value);
     }
   }
   _onPointerDown(event) {
@@ -69,8 +76,8 @@ class IoLadderStep extends IoItem {
       const expMove = Math.pow(deltaX / 5, 3);
       const roundMove = deltaX > 0 ? Math.floor(expMove) : Math.ceil(expMove);
       let stepMove = this.value * roundMove;
-      this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
       this._startX = event.clientX;
+      this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
     }
   }
   _onPointerUp(event) {
@@ -79,6 +86,12 @@ class IoLadderStep extends IoItem {
     this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this._onPointerMove);
     this.removeEventListener('pointerup', this._onPointerUp);
+  }
+  setAria() {
+    super.setAria();
+    this.setAttribute('aria-valuemax', this.parentElement.max);
+    this.setAttribute('aria-valuemin', this.parentElement.min);
+    this.setAttribute('aria-valuenow', this.parentElement.value);
   }
 }
 
@@ -173,6 +186,7 @@ class IoLadder extends IoElement {
       min: -Infinity,
       max: Infinity,
       step: 0.0001,
+      role: 'list',
     };
   }
   static get Listeners() {
@@ -270,6 +284,9 @@ class IoLadder extends IoElement {
       (this.step <= downStep3) ? ['io-ladder-step', {class: 'io-down3', value: downStep3, label: downLabel3}] : hiddenItem,
       (this.step <= downStep4) ? ['io-ladder-step', {class: 'io-down4', value: downStep4, label: downLabel4}] : hiddenItem,
     ]);
+
+    const steps = this.querySelectorAll('io-ladder-step');
+    for (let i = steps.length; i--;) steps[i].setAria();
   }
 }
 
