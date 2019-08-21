@@ -347,6 +347,21 @@ const constructElement = function(vDOMNode) {
   return element;
 };
 
+var superCreateElement = document.createElement;
+document.createElement = function() {
+  const tag = arguments[0];
+  if (tag.startsWith('io-')) {
+    const constructor = customElements.get(tag);
+    if (constructor) {
+      return new constructor();
+    } else {
+      return superCreateElement.apply(this, arguments);
+    }
+  } else  {
+    return superCreateElement.apply(this, arguments);
+  }
+}
+
 /**
  * Sets element properties.
  * @param {HTMLElement} element - Element to set properties on.
