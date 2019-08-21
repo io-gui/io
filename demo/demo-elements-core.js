@@ -1,5 +1,4 @@
 import {html, IoElement} from "../dist/io.js";
-import {IoThemeSingleton} from "../dist/io-elements-core.js";
 
 export class IoDemoElementsCore extends IoElement {
   static get Style() {
@@ -72,8 +71,7 @@ export class IoDemoElementsCore extends IoElement {
           ['io-number-slider', {value: this.bind('string'), min: -0.25, max: 0.25, step: 0.01}],
         ]],
       ]],
-      ['div', {class: 'io-table4 table'}, [
-        ['io-menu-option', {options: [
+      ['div', {class: 'n', {options: [
           {label: 'negative one', value: -1},
           {label: 'zero', value: 0},
           {label: 'half', value: 0.5},
@@ -85,7 +83,6 @@ export class IoDemoElementsCore extends IoElement {
         ], value: this.bind('number')}],
         ['io-menu-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
         ['io-button', {label: 'set 0.5', action: this.setNumber, value: 0.5}],
-        ['io-menu-option', {label: 'Theme ▾', value: IoThemeSingleton.bind('theme'), options: ['light', 'dark']}],
       ]],
     ]);
   }

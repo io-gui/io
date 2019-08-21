@@ -18,7 +18,7 @@ import Slider from "../tests/elements/core/slider.js"
 import NumberSlider from "../tests/elements/core/number-slider.js"
 import Icon from "../tests/elements/core/icon.js"
 import IconSet from "../tests/elements/core/iconset.js"
-// import Layer from "../tests/elements/core/layer.js"
+import Layer from "../tests/elements/core/layer.js"
 import Ladder from "../tests/elements/core/ladder.js"
 import Theme from "../tests/elements/core/theme.js"
 
@@ -39,24 +39,24 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    // new Node().run();
-    // new Element().run();
+    new Node().run();
+    new Element().run();
 
-    // new Item().run();
-    // new Gl().run();
-    // new Button().run();
-    // new Boolean().run();
-    // new Boolean().run();
-    // new Boolicon().run();
-    // new Switch().run();
-    // new Sting().run();
-    // new Number().run();
-    // new Slider().run();
-    // new NumberSlider().run();
-    // new Icon().run();
-    // new IconSet().run();
-    // new Layer().run();
-    // new Ladder().run();
+    new Item().run();
+    new Gl().run();
+    new Button().run();
+    new Boolean().run();
+    new Boolean().run();
+    new Boolicon().run();
+    new Switch().run();
+    new Sting().run();
+    new Number().run();
+    new Slider().run();
+    new NumberSlider().run();
+    new Icon().run();
+    new IconSet().run();
+    new Layer().run();
+    new Ladder().run();
     new Theme().run();
 
     // new Option().run();

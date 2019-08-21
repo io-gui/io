@@ -24,15 +24,24 @@ export class IoDemoElementsTheme extends IoElement {
       class: 'io-table2',
     };
   }
+  _setTheme(value) {
+    IoThemeSingleton.theme = value;
+  }
   constructor(props) {
     super(props);
+    const options = [
+      {value: 'light', action: this._setTheme},
+      {value: 'dark', action: this._setTheme},
+      // {label: 'reset', action: this._resetTheme},
+    ]
     this.template([
-      ['io-item', {label: 'cssSpacing'}], ['io-slider', {value: IoThemeSingleton.bind('cssSpacing'), min: 0, max: 20, step: 1}],
-      ['io-item', {label: 'cssBorderRadius'}], ['io-slider', {value: IoThemeSingleton.bind('cssBorderRadius'), min: 0, max: 20}],
-      ['io-item', {label: 'cssBorderWidth'}], ['io-slider', {value: IoThemeSingleton.bind('cssBorderWidth'), min: 0, max: 5, step: 1}],
-      ['io-item', {label: 'cssStrokeWidth'}], ['io-slider', {value: IoThemeSingleton.bind('cssStrokeWidth'), min: 0, max: 10, step: 1}],
-      ['io-item', {label: 'cssLineHeight'}], ['io-slider', {value: IoThemeSingleton.bind('cssLineHeight'), min: 10, max: 50, step: 1}],
-      ['io-item', {label: 'cssFontSize'}], ['io-slider', {value: IoThemeSingleton.bind('cssFontSize'), min: 5, max: 20}],
+      ['io-item', {label: ' '}], ['io-menu-option', {label: 'Theme ▾', options: options}],
+      ['io-item', {label: 'cssSpacing'}], ['io-number-slider', {value: IoThemeSingleton.bind('cssSpacing'), min: 0, max: 20, step: 1}],
+      ['io-item', {label: 'cssBorderRadius'}], ['io-number-slider', {value: IoThemeSingleton.bind('cssBorderRadius'), min: 0, max: 20}],
+      ['io-item', {label: 'cssBorderWidth'}], ['io-number-slider', {value: IoThemeSingleton.bind('cssBorderWidth'), min: 0, max: 5, step: 1}],
+      ['io-item', {label: 'cssStrokeWidth'}], ['io-number-slider', {value: IoThemeSingleton.bind('cssStrokeWidth'), min: 0, max: 10, step: 1}],
+      ['io-item', {label: 'cssLineHeight'}], ['io-number-slider', {value: IoThemeSingleton.bind('cssLineHeight'), min: 10, max: 50, step: 1}],
+      ['io-item', {label: 'cssFontSize'}], ['io-number-slider', {value: IoThemeSingleton.bind('cssFontSize'), min: 5, max: 20}],
       ['io-item', {label: 'cssBackgroundColor'}], ['io-color-vector', {value: IoThemeSingleton.bind('cssBackgroundColor'), mode: 0}],
       ['io-item', {label: 'cssBackgroundColorLight'}], ['io-color-vector', {value: IoThemeSingleton.bind('cssBackgroundColorLight'), mode: 0}],
       ['io-item', {label: 'cssBackgroundColorDark'}], ['io-color-vector', {value: IoThemeSingleton.bind('cssBackgroundColorDark'), mode: 0}],

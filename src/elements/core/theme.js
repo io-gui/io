@@ -203,7 +203,7 @@ export class IoTheme extends IoElement {
     const r = Math.floor(rgba[0] * 255);
     const g = Math.floor(rgba[1] * 255);
     const b = Math.floor(rgba[2] * 255);
-    if (rgba[3]) {
+    if (rgba[3] !== undefined) {
       return `rgba(${r}, ${g}, ${b}, ${rgba[3]})`;
     } else {
       return `rgb(${r}, ${g}, ${b})`;
@@ -241,6 +241,8 @@ export class IoTheme extends IoElement {
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
   changed() {
+    // TODO: consider removing (required for gl updates in theme demo)
+    this.dispatchEvent('object-mutated', {object: this}, false, window);
     this.__properties.cssItemHeight.value =
       this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth);
     this.variablesElement.innerHTML = `
