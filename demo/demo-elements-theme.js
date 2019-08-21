@@ -9,14 +9,6 @@ export class IoDemoElementsTheme extends IoElement {
       padding: var(--io-spacing);
       grid-template-columns: auto 1fr !important;
     }
-    :host > *,
-    :host .io-row > *:not(:last-child) {
-      margin-right: var(--io-spacing);
-    }
-    :host > *,
-    :host .io-column > *:not(:last-child) {
-      margin-bottom: var(--io-spacing);
-    }
     </style>`;
   }
   static get Properties() {
@@ -32,7 +24,6 @@ export class IoDemoElementsTheme extends IoElement {
     const options = [
       {value: 'light', action: this._setTheme},
       {value: 'dark', action: this._setTheme},
-      // {label: 'reset', action: this._resetTheme},
     ]
     this.template([
       ['io-item', {label: ' '}], ['io-menu-option', {label: 'Theme ▾', options: options}],
@@ -43,7 +34,7 @@ export class IoDemoElementsTheme extends IoElement {
       ['io-item', {label: 'cssBorderWidth'}],
       ['io-number-slider', {value: IoThemeSingleton.bind('cssBorderWidth'), min: 0, max: 5, step: 1}],
       ['io-item', {label: 'cssStrokeWidth'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('cssStrokeWidth'), min: 0, max: 10, step: 1}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('cssStrokeWidth'), min: 1, max: 20, step: 1}],
       ['io-item', {label: 'cssLineHeight'}],
       ['io-number-slider', {value: IoThemeSingleton.bind('cssLineHeight'), min: 10, max: 50, step: 1}],
       ['io-item', {label: 'cssFontSize'}],

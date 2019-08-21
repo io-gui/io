@@ -19,17 +19,17 @@ const themeDB = {
     cssBackgroundColorField: [0.92, 0.92, 0.92, 1],
     cssColor: [0.16, 0.16, 0.16, 1],
     cssColorError: [0.91, 0.5, 0.5, 1],
-    cssColorLink: [0.08, 0.89, 0.08, 1],
+    cssColorLink: [0.2, 0.75, 0.2, 1],
     cssColorFocus: [0.3, 0.82, 1, 1],
     cssColorField: [0, 0, 0, 1],
     cssColorNumber: [0.12, 0.64, 1, 1],
     cssColorString: [0.95, 0.25, 0.1, 1],
     cssColorBoolean: [0.82, 0.35, 0.75, 1],
     cssColorBorder: [0.7, 0.7, 0.7, 1],
-    cssColorBorderLight: [0.82, 0.82, 0.82, 1],
-    cssColorBorderDark: [0.86, 0.86, 0.86, 1],
-    cssColorGradientStart: [0, 0, 0, 0.15],
-    cssColorGradientEnd: [1, 1, 1, 0.25],
+    cssColorBorderLight: [1, 1, 1, 1],
+    cssColorBorderDark: [0.72, 0.72, 0.72, 1],
+    cssColorGradientStart: [1, 1, 1, 0.5],
+    cssColorGradientEnd: [0, 0, 0, 0.25],
     cssColorShadow: [0, 0, 0, 0.2],
   }, themeSizes),
   dark: Object.assign({
@@ -48,8 +48,8 @@ const themeDB = {
     cssColorBorder: [0.4, 0.4, 0.4, 1],
     cssColorBorderLight: [0.5, 0.5, 0.5, 1],
     cssColorBorderDark: [0.1, 0.1, 0.1, 1],
-    cssColorGradientStart: [0, 0, 0, 0.15],
-    cssColorGradientEnd: [1, 1, 1, 0.25],
+    cssColorGradientStart: [1, 1, 1, 0.1],
+    cssColorGradientEnd: [0, 0, 0, 0.2],
     cssColorShadow: [0, 0, 0, 0.2],
   }, themeSizes),
 };
@@ -90,7 +90,7 @@ export class IoTheme extends IoNode {
       align-self: stretch;
       justify-self: stretch;
       align-items: flex-start;
-      border-radius: var(--io-border-radius);
+      border-radius: calc(var(--io-border-radius) + var(--io-spacing));
       border: var(--io-border);
       border-color: var(--io-color-border-outset);
       color: var(--io-color-field);
@@ -106,6 +106,7 @@ export class IoTheme extends IoNode {
       align-items: flex-start;
       border-radius: var(--io-border-radius);
       border: var(--io-border);
+      border-color: var(--io-color-border-inset);
       color: var(--io-color);
       background-color: var(--io-background-color);
       background-image: none;
@@ -281,8 +282,8 @@ export class IoTheme extends IoNode {
         --io-color-border-inset: var(--io-color-border-dark) var(--io-color-border-light) var(--io-color-border-light) var(--io-color-border-dark);
         --io-color-border-outset: var(--io-color-border-light) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border-light);
 
-        --io-gradient-button: linear-gradient(0deg, var(--io-color-gradient-start), transparent 75%), linear-gradient(180deg, var(--io-color-gradient-end), transparent 75%);
-        --io-gradient-panel: linear-gradient(100deg, var(--io-color-gradient-start), transparent 75%), linear-gradient(280deg, var(--io-color-gradient-end), transparent 75%);
+        --io-gradient-button: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
+        --io-gradient-panel: linear-gradient(45deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
         --io-gradient-error: repeating-linear-gradient(135deg, transparent, var(--io-color-error) 1px, var(--io-color-error) 4px, transparent 6px);
 
         --io-shadow: 2px 2px 5px var(--io-color-shadow);

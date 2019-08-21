@@ -185,25 +185,25 @@ export class IoSlider extends IoGl {
     vec4 paintSlider(vec2 position, vec3 color) {
       vec4 slotColor = mix(cssColor, cssBackgroundColorField, 0.125);
       vec4 sliderColor = vec4(0.0);
-      float slotWidth = cssStrokeWidth * 2.;
-      float radius = cssItemHeight / 4.0;
+      float slotWidth = cssStrokeWidth;
+      float radius = cssItemHeight * 0.25;
       float stroke = cssStrokeWidth;
 
       float strokeShape = min(
-        circle(position, radius + stroke),
-        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth + stroke)) * 2.
+        circle(position, radius + stroke + stroke),
+        rectangle(vec2(0., position.y), vec2(-position.x, stroke + stroke + stroke))
       );
       sliderColor = mix(vec4(slotColor.rgb, 1.0), sliderColor, strokeShape);
 
       float fillShape = min(
-        circle(position, radius),
-        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth)) * 2.
+        circle(position, radius + stroke),
+        rectangle(vec2(0., position.y), vec2(-position.x, stroke + stroke))
       );
       sliderColor = mix(vec4(cssBackgroundColor.rgb, 1.0), sliderColor, fillShape);
 
       float colorShape = min(
-        circle(position, radius - stroke),
-        rectangle(vec2(0., position.y), vec2(-position.x, slotWidth - stroke)) * 2.
+        circle(position, radius),
+        rectangle(vec2(0., position.y), vec2(-position.x, stroke))
       );
       sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
 
@@ -227,7 +227,7 @@ export class IoSlider extends IoGl {
       float stepInPx = uSize.x / ((uMax - uMin) / uStep);
       vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
 
-      float lineWidth = cssStrokeWidth * 1.0;
+      float lineWidth = cssStrokeWidth;
       if (stepInPx > lineWidth * 2.0) {
         float gridWidth = size.x / ((uMax - uMin) / uStep);
         float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;

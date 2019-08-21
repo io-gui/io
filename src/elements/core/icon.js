@@ -11,10 +11,10 @@ export class IoIcon extends IoElement {
       :host {
         width: var(--io-item-height);
         height: var(--io-item-height);
-        fill: var(--io-color, currentcolor);
+        fill: var(--io-background-color, currentcolor);
       }
       :host[stroke] {
-        stroke: var(--io-background-color, currentcolor);
+        stroke: var(--io-color, currentcolor);
         stroke-width: var(--io-stroke-width);
       }
       :host > svg {

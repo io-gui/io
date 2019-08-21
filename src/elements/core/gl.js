@@ -68,7 +68,7 @@ export class IoGl extends IoElement {
         left: 0;
         border-radius: var(--io-border-radius);
         pointer-events: none;
-        image-rendering: pixelated;
+        /* image-rendering: pixelated; */
       }
     </style>`;
   }
@@ -114,8 +114,8 @@ export class IoGl extends IoElement {
     }
     float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
       vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
-      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(dFdx(sp.x)) - lineWidth;
-      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(dFdy(sp.y)) - lineWidth;
+      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(dFdx(sp.x)) - lineWidth * 2.;
+      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(dFdy(sp.y)) - lineWidth * 2.;
       return saturate(min(linex, liney));
     }
     float checker(vec2 samplePosition, float size) {
@@ -258,29 +258,40 @@ export class IoGl extends IoElement {
     // TODO: consider optimizing
     const pxRatio = window.devicePixelRatio;
     const rect = this.getBoundingClientRect();
-    const style = getComputedStyle(this);
 
     // TODO: confirm and test
-    const width = Math.max(0, Math.ceil((rect.width - parseFloat(style.borderLeftWidth) - parseFloat(style.borderRightWidth))));
-    const height = Math.max(0, Math.ceil((rect.height - parseFloat(style.borderTopWidth) - parseFloat(style.borderBottomWidth))));
+    const width = Math.max(0, Math.floor((rect.width - 2 * IoThemeSingleton.cssBorderWidth)));
+    const height = Math.max(0, Math.floor((rect.height - 2 * IoThemeSingleton.cssBorderWidth)));
 
-    this.$.canvas.style.width = Math.floor(width) + 'px';
-    this.$.canvas.style.height = Math.floor(height) + 'px';
+    const hasResized = (width !== this.size[0] || height !== this.size[1] || pxRatio !== this.pxRatio);
 
-    this.$.canvas.width = Math.floor(width * pxRatio);
-    this.$.canvas.height = Math.floor(height * pxRatio);
+    if (hasResized) {
+      this.$.canvas.style.width = Math.floor(width) + 'px';
+      this.$.canvas.style.height = Math.floor(height) + 'px';
 
-    this.setProperties({
-      size: [width, height],
-      pxRatio: pxRatio,
-    });
+      this.$.canvas.width = Math.floor(width * pxRatio);
+      this.$.canvas.height = Math.floor(height * pxRatio);
+
+      this.setProperties({
+        size: [width, height],
+        pxRatio: pxRatio,
+      });
+    }
   }
   cssMutated() {
     this.updateCssUniforms();
     queueRender(this);
   }
   changed() {
-    queueRender(this);
+    // TODO: unhack when ResizeObserver is available in Safari
+    if (!window.ResizeObserver) {
+      setTimeout(() => {
+        this.onResized();
+        queueRender(this);
+      });
+    } else {
+      queueRender(this);
+    }
   }
   render() {
     const width = this.size[0] * this.pxRatio;
