@@ -34,7 +34,7 @@ export class IoMenuOptions extends IoElement {
       :host[horizontal] > * {
         border-left-width: 0;
         border-right-width: 0;
-        padding: var(--io-spacing) calc(1 * var(--io-spacing));
+        padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
       }
       :host:not([horizontal]) > io-menu-item > * {
         min-width: 0.5em;
