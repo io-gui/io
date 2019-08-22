@@ -30,9 +30,14 @@ export class IoMenuLayer extends IoElement {
         overflow: hidden;
         pointer-events: none;
         touch-action: none;
-        /* background: rgba(0, 0, 0, 0.1); */
+        background-color: transparent;
+        transition: background-color 0.5s;
+      }
+      :host > * {
+        touch-action: none;
       }
       :host[expanded] {
+        background-color: rgba(0, 0, 0, 0.15);
         visibility: visible;
         pointer-events: all;
       }
@@ -53,28 +58,19 @@ export class IoMenuLayer extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
+  static get Properties() {
     return {
       expanded: {
         value: false,
-        notify: true,
+        reflect: 1,
       },
-    };
-  }
-  static get Properties() {
-    return {
       lastFocus: HTMLElement,
       $options: Array,
     };
   }
   static get Listeners() {
     return {
-      'mousedown': '_onMousedown',
-      'mousemove': '_onMousemove',
-      'mouseup': '_onMouseup',
-      'touchstart': ['_onTouchstart', {passive: true}],
-      'touchmove': ['_onTouchmove', {passive: true}],
-      'touchend': ['_onTouchend', {passive: true}],
+      'pointerdown': '_onPointerdown',
       'contextmenu': '_onContextmenu',
     };
   }
@@ -99,87 +95,44 @@ export class IoMenuLayer extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('scroll', this._onWindowScroll, {capture: true, passive: true});
-    window.addEventListener('wheel', this._onWindowScroll, {capture: true, passive: true});
+    window.addEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
+    window.addEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
+    window.addEventListener('resize', this._onWindowChange, {capture: true, passive: true});
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('scroll', this._onWindowScroll, {capture: true, passive: true});
-    window.removeEventListener('wheel', this._onWindowScroll, {capture: true, passive: true});
+    window.removeEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
+    window.removeEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
+    window.removeEventListener('resize', this._onWindowChange, {capture: true, passive: true});
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
     this._stopAnimation();
   }
-  registerOptions(options) {
-    this.$options.push(options);
-    clearTimeout(this.__timeout);
-    this.__timeout = setTimeout(()=> {
-      this.$options.sort((a, b) => { return a._depth < b._depth ? -1 : 1; });
-    });
-  }
-  unregisterOptions(options) {
-    this.$options.splice(this.$options.indexOf(options), 1);
-  }
-  collapseAll() {
-    for (let i = this.$options.length; i--;) {
-      if (this.$options[i].parentElement === this) {
-        this.$options[i].expanded = false;
-      }
-    }
+  _onWindowChange() {
     this.expanded = false;
   }
-  collapseSiblings(item) {
-    const optionschain = this._getParentOptions(item);
-    for (let i = this.$options.length; i--;) {
-      if (optionschain.indexOf(this.$options[i]) === -1) {
-        if (this.$options[i].parentElement === this) {
-          this.$options[i].expanded = false;
-        }
-      }
-    }
-  }
-  _onOptionsExpanded(options) {
-    this._menuRoot = options.$parent._menuRoot || options.$parent;
-    this.expanded = !!this.$options.find(option => { return option.parentElement === this && option.expanded; });
-  }
-  _onWindowScroll() {
-    if (this.expanded) this.collapseAll();
-  }
-  _onMousedown(event) {
-    event.preventDefault();
-    this._onPointerdown(event);
-    this._onPointermove(event);
-  }
-  _onMousemove(event) {
-    event.preventDefault();
-    this._onPointermove(event);
-  }
-  _onMouseup(event) {
-    event.preventDefault();
-    this._onPointerup(event);
-  }
-  _onTouchstart(event) {
-    this._onPointerdown(event.changedTouches[0]);
-    this._onPointermove(event.changedTouches[0]);
-  }
-  _onTouchmove(event) {
-    this._onPointermove(event.changedTouches[0]);
-  }
-  _onTouchend(event) {
-    this._onPointerup(event);
-  }
-  _onContextmenu(event) {
-    event.preventDefault();
-    this.collapseAll();
-  }
   _onPointerdown(event) {
+    if (event.composedPath()[0] === this) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      this.setPointerCapture(event.pointerId);
+      this.addEventListener('pointermove', this._onPointermove);
+      this.addEventListener('pointerup', this._onPointerup);
+    }
+    //
     this._x = event.clientX;
     this._y = event.clientY;
     if (!this._hoveredItem) {
-      this.collapseAll();
+      this.expanded = false;
     } else if (this.lastFocus === this._hoveredItem && this.lastFocus.expanded) {
-      this.collapseAll();
+      this.expanded = false;
     }
   }
   _onPointermove(event) {
+    if (event.composedPath()[0] === this) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
     const movementX = event.clientX - this._x;
     const movementY = event.clientY - this._y;
     this._v = (2 * this._v + Math.abs(movementY) - Math.abs(movementX)) / 3;
@@ -227,6 +180,60 @@ export class IoMenuLayer extends IoElement {
       return;
     }
   }
+  _onPointerup(event) {
+    if (event.composedPath()[0] === this) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      this.releasePointerCapture(event.pointerId);
+      this.removeEventListener('pointermove', this._onPointermove);
+      this.removeEventListener('pointerup', this._onPointerup);
+    }
+    //
+    if (this._hoveredItem) {
+      const collapse = !this._hoveredItem._options;
+      // TODO: unhack. this is necessary for touch only
+      if (event.type === 'touchend' && this._hoveredItem._onClick) {
+        this._hoveredItem._onClick(event);
+      }
+      if (collapse) {
+        this.expanded = false;
+      }
+    } else if (this._hoveredOptions) {
+      // TODO
+    } else {
+      this.expanded = false;
+    }
+  }
+  _onContextmenu(event) {
+    if (event.composedPath()[0] === this) {
+      event.preventDefault();
+      this.expanded = false;
+    }
+  }
+  registerOptions(options) {
+    this.$options.push(options);
+    clearTimeout(this.__timeout);
+    this.__timeout = setTimeout(()=> {
+      this.$options.sort((a, b) => { return a._depth < b._depth ? -1 : 1; });
+    });
+  }
+  unregisterOptions(options) {
+    this.$options.splice(this.$options.indexOf(options), 1);
+  }
+  collapseSiblings(item) {
+    const optionschain = this._getParentOptions(item);
+    for (let i = this.$options.length; i--;) {
+      if (optionschain.indexOf(this.$options[i]) === -1) {
+        if (this.$options[i].parentElement === this) {
+          this.$options[i].expanded = false;
+        }
+      }
+    }
+  }
+  _onOptionsExpanded(options) {
+    this._menuRoot = options.$parent._menuRoot || options.$parent;
+    this.expanded = !!this.$options.find(option => { return option.parentElement === this && option.expanded; });
+  }
   _focusItem(item, force) {
     if (item !== this.__prevItem) {
       const WAIT_TIME = 100;
@@ -256,22 +263,6 @@ export class IoMenuLayer extends IoElement {
         this.__prevItem = null;
         this.__prevParent = null;
       }.bind(this), WAIT_TIME + 1);
-    }
-  }
-  _onPointerup(event) {
-    if (this._hoveredItem) {
-      const collapse = !this._hoveredItem._options;
-      // TODO: unhack. this is necessary for touch only
-      if (event.type === 'touchend' && this._hoveredItem._onClick) {
-        this._hoveredItem._onClick(event);
-      }
-      if (collapse) {
-        this.collapseAll();
-      }
-    } else if (this._hoveredOptions) {
-      // TODO
-    } else {
-      this.collapseAll();
     }
   }
   _getParentOptions(item) {
@@ -314,6 +305,9 @@ export class IoMenuLayer extends IoElement {
     if (this.expanded) {
       this._startAnimation();
     } else {
+      for (let i = this.children.length; i--;) {
+        this.children[i].expanded = false;
+      }
       this._hoveredItem = null;
       this._hoveredOptions = null;
       this._stopAnimation();

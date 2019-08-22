@@ -83,15 +83,19 @@ class IoLayer extends IoElement {
     }
   }
   _onPointermove(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
+    if (event.composedPath()[0] === this) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
   _onPointerup(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    this.releasePointerCapture(event.pointerId);
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerup', this._onPointerup);
+    if (event.composedPath()[0] === this) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      this.releasePointerCapture(event.pointerId);
+      this.removeEventListener('pointermove', this._onPointermove);
+      this.removeEventListener('pointerup', this._onPointerup);
+    }
     this._collapseOrFocusSrcElement(event);
   }
   _onContextmenu(event) {

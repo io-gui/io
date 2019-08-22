@@ -59,16 +59,16 @@ class IoLadderStep extends IoItem {
       this.setAttribute('aria-valuenow', this.parentElement.value);
     }
   }
-  _onPointerDown(event) {
+  _onPointerdown(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
     this.setPointerCapture(event.pointerId);
-    this.addEventListener('pointermove', this._onPointerMove);
-    this.addEventListener('pointerup', this._onPointerUp);
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerup', this._onPointerup);
     this.focus();
     this._startX = event.clientX;
   }
-  _onPointerMove(event) {
+  _onPointermove(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
     const deltaX = event.clientX - this._startX;
@@ -80,12 +80,12 @@ class IoLadderStep extends IoItem {
       this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
     }
   }
-  _onPointerUp(event) {
+  _onPointerup(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
     this.releasePointerCapture(event.pointerId);
-    this.removeEventListener('pointermove', this._onPointerMove);
-    this.removeEventListener('pointerup', this._onPointerUp);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
   }
   setAria() {
     super.setAria();

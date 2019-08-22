@@ -80,12 +80,6 @@ export class IoMenuItem extends IoItem {
       _depth: 0,
     };
   }
-  static get Listeners() {
-    return {
-      'touchstart': ['_onTouchstart', {passive: true}],
-      'mousedown': '_onMousedown',
-    };
-  }
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];
     // TODO: fires twice?
@@ -164,8 +158,6 @@ export class IoMenuItem extends IoItem {
   disconnectedCallback() {
     super.disconnectedCallback();
     this._disconnectOptions();
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
   }
   _connectOptions() {
     if (this.$options && this.$options.parentElement !== IoMenuLayer.singleton) {
@@ -220,35 +212,31 @@ export class IoMenuItem extends IoItem {
       this.$parent.$parent.focus();
     }
   }
-  _onMousedown() {
+  _onPointerdown(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.setPointerCapture(event.pointerId);
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerup', this._onPointerup);
     this._toggleExpanded(true);
     IoMenuLayer.singleton._hoveredItem = this;
-    IoMenuLayer.singleton._onMousedown(event);
+    IoMenuLayer.singleton._onPointerdown(event); // TODO: check
     this.focus();
   }
-  _onTouchstart(event) {
-    if (this.expanded || this._isInLayer) {
-      this.addEventListener('touchmove', this._onTouchmove);
-      this.addEventListener('touchend', this._onTouchend);
-      this._toggleExpanded(true);
-      IoMenuLayer.singleton._hoveredItem = this;
-      IoMenuLayer.singleton._onTouchstart(event);
-      this.focus();
-    }
-  }
-  _onTouchmove(event) {
+  _onPointermove(event) {
     if (this.expanded) {
-      IoMenuLayer.singleton._onTouchmove(event);
+      IoMenuLayer.singleton._onPointermove(event);
     }
   }
-  _onTouchend(event) {
-    if (this.expanded) {
-      event.preventDefault();
-      this.removeEventListener('touchmove', this._onTouchmove);
-      this.removeEventListener('touchend', this._onTouchend);
-      IoMenuLayer.singleton._onTouchend(event);
-    }
+  _onPointerup(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.releasePointerCapture(event.pointerId);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
+    IoMenuLayer.singleton._onPointerup(event);
   }
+
   _onKeydown(event) {
     let command = '';
     if (this.direction === 'left' || this.direction === 'right') {
@@ -275,7 +263,7 @@ export class IoMenuItem extends IoItem {
     }
     else if (event.key === 'Escape') {
       event.preventDefault();
-      IoMenuLayer.singleton.collapseAll();
+      IoMenuLayer.singleton.expanded = false;
     } else if (this._isInLayer) {
       const options = this.$parent;
       const siblings = [...options.children];

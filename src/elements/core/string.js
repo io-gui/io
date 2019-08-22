@@ -48,22 +48,22 @@ export class IoString extends IoItem {
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
-  _onPointerDown() {
+  _onPointerdown() {
     this.pressed = true;
-    this.addEventListener('pointermove', this._onPointerMove);
-    this.addEventListener('pointerleave', this._onPointerLeave);
-    this.addEventListener('pointerup', this._onPointerUp);
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerleave', this._onPointerleave);
+    this.addEventListener('pointerup', this._onPointerup);
   }
-  _onPointerMove() {}
-  _onPointerLeave(event) {
+  _onPointermove() {}
+  _onPointerleave(event) {
     event.preventDefault();
     this.pressed = false;
   }
-  _onPointerUp() {
+  _onPointerup() {
     this.pressed = false;
-    this.removeEventListener('pointermove', this._onPointerMove);
-    this.removeEventListener('pointerleave', this._onPointerLeave);
-    this.removeEventListener('pointerup', this._onPointerUp);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerleave', this._onPointerleave);
+    this.removeEventListener('pointerup', this._onPointerup);
     this.focus();
   }
   _onKeydown(event) {

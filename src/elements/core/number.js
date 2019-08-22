@@ -55,16 +55,16 @@ export class IoNumber extends IoItem {
     super(props);
     Object.defineProperty(this, '_pointerType', {value: 'touch', writable: true});
   }
-  _onPointerDown(event) {
+  _onPointerdown(event) {
     if (document.activeElement === this && event.button === 0) return;
-    super._onPointerDown(event);
+    super._onPointerdown(event);
     this._pointerType = event.pointerType;
   }
-  _onPointerUp(event) {
+  _onPointerup(event) {
     this.pressed = false;
-    this.removeEventListener('pointermove', this._onPointerMove);
-    this.removeEventListener('pointerleave', this._onPointerLeave);
-    this.removeEventListener('pointerup', this._onPointerUp);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerleave', this._onPointerleave);
+    this.removeEventListener('pointerup', this._onPointerup);
     if (document.activeElement === this && event.button === 0) return;
     if (this.ladder || event.button === 1) {
       if (this._pointerType === 'touch') {
