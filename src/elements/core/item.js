@@ -77,6 +77,7 @@ export class IoItem extends IoElement {
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('keyup', this._onKeydown);
     this.removeEventListener('click', this._onClick);
+    this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerleave', this._onPointerleave);
     this.removeEventListener('pointerup', this._onPointerup);
@@ -98,29 +99,39 @@ export class IoItem extends IoElement {
   }
   _onPointerdown(event) {
     event.preventDefault();
-    this.pressed = true;
+    this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerleave', this._onPointerleave);
     this.addEventListener('pointerup', this._onPointerup);
+    this.pressed = true;
   }
+  _onTouchmove() {}
   _onPointermove() {}
-  _onPointerleave(event) {
-    event.preventDefault();
-    this.pressed = false;
-  }
-  _onPointerup() {
-    this.pressed = false;
+  _onPointerleave() {
+    this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerleave', this._onPointerleave);
     this.removeEventListener('pointerup', this._onPointerup);
+    this.pressed = false;
+  }
+  _onPointerup() {
+    this.removeEventListener('touchmove', this._onTouchmove);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerleave', this._onPointerleave);
+    this.removeEventListener('pointerup', this._onPointerup);
+    this.pressed = false;
     this.focus();
   }
+  _onClick() {
+    this.dispatchEvent('item-clicked', {value: this.value, label: this.label}, true);
+  }
   _onKeydown(event) {
-    if (event.which === 13 || event.which === 32) {
+    if (event.key === 'Enter' || event.key === ' ') {
       this.pressed = true;
       event.preventDefault();
       this._onClick(event);
-    } else if (event.key === 'ArrowLeft') {
+    }
+    else if (event.key === 'ArrowLeft') {
       event.preventDefault();
       this.focusTo('left');
     } else if (event.key === 'ArrowUp') {
@@ -136,9 +147,6 @@ export class IoItem extends IoElement {
   }
   _onKeyup() {
     this.pressed = false;
-  }
-  _onClick() {
-    this.dispatchEvent('item-clicked', {value: this.value, label: this.label}, true);
   }
   changed() {
     if (this.label) {

@@ -1,5 +1,5 @@
 import {html} from "../../io.js";
-import {IoMenuLayer} from "./menu-layer.js";
+import {IoLayerSingleton} from "../../io-elements-core.js";
 import {IoMenuItem} from "./menu-item.js";
 
 export class IoMenuOption extends IoMenuItem {
@@ -35,7 +35,6 @@ export class IoMenuOption extends IoMenuItem {
         type: Array,
         reflect: -1,
       },
-      _depth: 100,
     };
   }
   get _options() {
@@ -44,44 +43,35 @@ export class IoMenuOption extends IoMenuItem {
     }
     return undefined;
   }
-  _onMenuItemClicked(event) {
-    const item = event.composedPath()[0];
-    if (item !== this) {
-      event.stopImmediatePropagation();
-      this.set('value', event.detail.value);
-      // this.dispatchEvent('io-menu-item-clicked', event.detail, true);
-      item.expanded = false;
-    }
-  }
   _onClick(event) {
-    // TODO: dead code?
-    IoMenuLayer.singleton._x = event.clientX;
-    IoMenuLayer.singleton._y = event.clientY;
-    this._toggleExpanded(true);
+    // TODO: fires twice?
+    // IoLayerSingleton._x = event.clientX;
+    // IoLayerSingleton._y = event.clientY;
+    if (event.pointerType === 'touch') this.expanded = true;
   }
   _onKeydown(event) {
     if (event.which === 13 || event.which === 32) {
       event.preventDefault();
-      this._toggleExpanded(true);
+      this.expanded = true;
       this._focusIn();
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
-      IoMenuLayer.singleton.LastFocus = null;
+      // IoLayerSingleton.LastFocus = null;
       this.expanded = false;
       this.focusTo('left');
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      IoMenuLayer.singleton.LastFocus = null;
+      // IoLayerSingleton.LastFocus = null;
       this.expanded = false;
       this.focusTo('up');
     } else if (event.key === 'ArrowRight') {
       event.preventDefault();
-      IoMenuLayer.singleton.LastFocus = null;
+      // IoLayerSingleton.LastFocus = null;
       this.expanded = false;
       this.focusTo('right');
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
-      IoMenuLayer.singleton.LastFocus = null;
+      // IoLayerSingleton.LastFocus = null;
       if (this.expanded) {
         this._focusIn();
       } else {
@@ -108,6 +98,12 @@ export class IoMenuOption extends IoMenuItem {
     this.title = valueText;
     this.setAttribute('aria-haspopup', 'listbox');
     this.setAttribute('aria-expanded', String(this.expanded));
+    this.$options.setProperties({
+      value: this.value,
+      options: this._options,
+      selectable: this.selectable,
+      position: this.direction,
+    });
   }
 }
 

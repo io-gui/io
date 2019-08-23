@@ -1,5 +1,19 @@
 import {IoElement, html} from "../../io.js";
 
+let lastFocus = null;
+{
+  window.addEventListener('focusin', () => {
+    lastFocus = document.activeElement;
+  }, {capture: false});
+  window.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (document.activeElement === document.body) {
+        lastFocus = null;
+      }
+    });
+  }, {capture: true});
+}
+
 class IoLayer extends IoElement {
   static get Style() {
     return html`<style>
@@ -18,17 +32,18 @@ class IoLayer extends IoElement {
         touch-action: none;
         opacity: 0;
         transition: opacity 0.25s;
-        /* background: rgba(0,0,0,0.2); */
+        background: transparent;
       }
       :host[expanded] {
         pointer-events: all;
         visibility: visible;
         opacity: 1;
-        /* background: rgba(255,0,0,0.2); */
+        background: rgba(255,0,0,0.2);
       }
       :host > * {
         position: absolute;
         pointer-events: all;
+        touch-action: none;
       }
       :host > *:not([expanded]) {
         visibility: hidden;
@@ -53,7 +68,7 @@ class IoLayer extends IoElement {
       'pointerdown': '_onPointerdown',
       'contextmenu': '_onContextmenu',
       'expanded': 'onChildExpanded',
-
+      'focusin': '_onFocusIn',
     };
   }
   connectedCallback() {
@@ -69,6 +84,9 @@ class IoLayer extends IoElement {
     window.removeEventListener('resize', this._onWindowChange, {capture: true, passive: true});
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
+  }
+  _onFocusIn(event) {
+    event.stopImmediatePropagation();
   }
   _onWindowChange() {
     this.expanded = false;
@@ -190,6 +208,7 @@ class IoLayer extends IoElement {
       for (let i = this.children.length; i--;) {
         this.children[i].expanded = false;
       }
+      if (lastFocus) lastFocus.focus();
     }
   }
 }

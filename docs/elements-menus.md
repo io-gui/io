@@ -4,7 +4,23 @@ TODO
 
 ## &lt;io-menu-item&gt;
 
-<io-element-demo element="io-menu-item" properties='{"value": "", "direction": "right", "option": {"label": "Hearts", "icon": "❤", "hint": "colors", "options": [{"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]}, {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]}, {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}]}}' config='{"direction": ["io-menu-option", {"options": ["top", "right", "bottom", "left"]}], "type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]}'></io-element-demo>
+<io-element-demo element="io-menu-item" expanded properties='{
+  "value": "",
+  "selectable": false,
+  "expanded": false,
+  "direction": "right",
+  "option": {
+    "label": "Hearts",
+    "icon": "❤",
+    "hint": "colors",
+    "options": [
+      {"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]},
+      {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]},
+      {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}
+    ]}
+}' config='{
+  "direction": ["io-menu-option", {"options": ["top", "right", "bottom", "left"]}], "type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]
+}'></io-element-demo>
 
 ## &lt;io-menu-options&gt;
 
@@ -23,5 +39,3 @@ Extends `<io-button>`. Implements `<io-menu-options>`.
 When clicked or activated by space/enter key, it expands a menu with selectable options.
 
 ## &lt;io-menu-layer-singleton&gt;
-
-TODO
