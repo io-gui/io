@@ -28,6 +28,7 @@ export class IoMenu extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
+    IoLayerSingleton.appendChild(this.$options);
     this._parent = this.parentElement;
     this.parentElement.addEventListener('contextmenu', this._onContextmenu, {passive: true});
     this.parentElement.addEventListener('mousedown', this._onMousedown, {passive: true});
@@ -36,30 +37,16 @@ export class IoMenu extends IoElement {
   }
   disconnectedCallback() {
     super.disconnectedCallback();
+    IoLayerSingleton.removeChild(this.$options);
     this._parent.removeEventListener('contextmenu', this._onContextmenu, {passive: true});
     this._parent.removeEventListener('mousedown', this._onMousedown, {passive: true});
     this._parent.removeEventListener('touchstart', this._onTouchstart, {passive: true});
     this._parent.removeEventListener('touchmove', this._onTouchmove, {passive: true});
     this._parent.removeEventListener('touchend', this._onTouchend, {passive: true});
-    this._disconnectOptions();
     this._parent.style.userSelect = null;
   }
   getBoundingClientRect() {
     return this.parentElement.getBoundingClientRect();
-  }
-  _connectOptions() {
-    // if (this.$options.parentElement !== IoLayerSingleton) {
-    //   IoLayerSingleton.appendChild(this.$options);
-    // }
-  }
-  _disconnectOptions() {
-    // if (this.$options.parentElement === IoLayerSingleton) {
-    //   IoLayerSingleton.removeChild(this.$options);
-    // }
-  }
-  _expand() {
-    this.expanded = true;
-    // IoLayerSingleton._hoveredOptions = this.$options;
   }
   _onMenuItemClicked(event) {
     const item = event.composedPath()[0];
@@ -72,25 +59,19 @@ export class IoMenu extends IoElement {
   }
   _onContextmenu(event) {
     if (this.options.length && this.button === 2) {
-      this._connectOptions();
-      // IoLayerSingleton._onMousedown(event);
-      this._expand();
+      this.expanded = true;
     }
   }
   _onMousedown(event) {
     if (this.options.length && event.button === this.button && event.button !== 2) {
-      this._connectOptions();
-      // IoLayerSingleton._onMousedown(event);
-      this._expand();
+      this.expanded = true;
     }
   }
   _onTouchstart(event) {
     if (this.options.length && this.button !== 2) {
-      this._connectOptions();
       this.parentElement.addEventListener('touchmove', this._onTouchmove, {passive: true});
       this.parentElement.addEventListener('touchend', this._onTouchend, {passive: true});
-      // IoLayerSingleton._onTouchstart(event);
-      this._expand();
+      this.expanded = true;
     }
   }
   _onTouchmove(event) {

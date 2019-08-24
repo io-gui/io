@@ -186,7 +186,7 @@ export class IoMenuItem extends IoItem {
     // TODO unhack (prevents _onClick on pointer origin on release)
     if (event.type === 'click') return;
     //
-    if (this._value || this._action) {
+    if (this._value !== undefined || this._action) {
       if (this._value !== undefined) {
         this.set('value', this._value, true);
       }
@@ -203,7 +203,9 @@ export class IoMenuItem extends IoItem {
     }
   }
   _onTouchmove(event) {
-    if (this.expanded && event.cancelable) event.preventDefault();
+    if (this.expanded && event.cancelable) {
+      event.preventDefault();
+    }
   }
   _onPointerdown(event) {
     super._onPointerdown(event);
@@ -228,12 +230,14 @@ export class IoMenuItem extends IoItem {
     return _hoveredItem;
   }
   _onPointermove(event) {
+    // TODO? // if (event.pointerType === 'touch') IoLayerSingleton._scrollOnPointerHover(event);
+    IoLayerSingleton._nudgeOnPointerHover(event);
     // TODO: consider horizintal menus
+    clearTimeout(this.__timeoutOpen);
     this._v = (2 * this._v + Math.abs(event.movementY) - Math.abs(event.movementX)) / 3;
     let _hoveredItem = this._getHoveredItem(event);
     if (_hoveredItem) {
       const WAIT_TIME = 100;
-      clearTimeout(this.__timeoutOpen);
       if (this._p !== _hoveredItem.parentElement) {
         this._p = _hoveredItem.parentElement;
         _hoveredItem.focus();
@@ -268,34 +272,9 @@ export class IoMenuItem extends IoItem {
     const r = this.getBoundingClientRect();
     const x = event.clientX;
     const y = event.clientY;
+    if (r.top < 0 || r.bottom > window.innerHeight || r.left < 0 || r.right > window.innerWidth) return false;
     return (r.top < y && r.bottom > y && r.left < x && r.right > x);
   }
-  // _moveHovered() {
-  //   let options = this._hoveredOptions;
-  //   if (options) {
-  //     let rect = options.getBoundingClientRect();
-  //     if (rect.height > window.innerHeight) {
-  //       if (this._y < 100 && rect.top < 0) {
-  //         let scrollSpeed = (100 - this._y) / 5000;
-  //         let overflow = rect.top;
-  //         options._y = options._y - Math.ceil(overflow * scrollSpeed) + 1;
-  //       } else if (this._y > window.innerHeight - 100 && rect.bottom > window.innerHeight) {
-  //         let scrollSpeed = (100 - (window.innerHeight - this._y)) / 5000;
-  //         let overflow = (rect.bottom - window.innerHeight);
-  //         options._y = options._y - Math.ceil(overflow * scrollSpeed) - 1;
-  //       }
-  //       options.style.left = options._x + 'px';
-  //       options.style.top = options._y + 'px';
-  //     }
-  //   }
-  // }
-  // _startAnimation() {
-  //   this._moveHovered();
-  //   this._rAF_ID = requestAnimationFrame(this._startAnimation);
-  // }
-  // _stopAnimation() {
-  //   if (this._rAF_ID) cancelAnimationFrame(this._rAF_ID);
-  // }
   _onKeydown(event) {
     if (event.key === 'Enter' || event.key === ' ') {
       this.pressed = true;
@@ -375,14 +354,14 @@ export class IoMenuItem extends IoItem {
           items[i].expanded = false;
         }
       }
-      // const descendants = getElementDescendants(this.$options);
-      // for (let i = descendants.length; i--;) {
-      //   descendants[i].expanded = false;
-      // }
+      const descendants = getElementDescendants(this.$options);
+      for (let i = descendants.length; i--;) {
+        descendants[i].expanded = false;
+      }
     } else {
-      const items = getElementDescendants(this);
-      for (let i = items.length; i--;) {
-        items[i].expanded = false;
+      const descendants = getElementDescendants(this);
+      for (let i = descendants.length; i--;) {
+        descendants[i].expanded = false;
       }
     }
   }

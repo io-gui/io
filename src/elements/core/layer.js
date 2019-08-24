@@ -88,7 +88,8 @@ class IoLayer extends IoElement {
   _onFocusIn(event) {
     event.stopImmediatePropagation();
   }
-  _onWindowChange() {
+  _onWindowChange(event) {
+    event.preventDefault();
     this.expanded = false;
   }
   _onPointerdown(event) {
@@ -105,6 +106,7 @@ class IoLayer extends IoElement {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
+    this.nudgeOnPointerHover(event);
   }
   _onPointerup(event) {
     if (event.composedPath()[0] === this) {
@@ -122,9 +124,17 @@ class IoLayer extends IoElement {
       this.expanded = false;
     }
   }
-  _collapseOrFocusSrcElement(pointer) {
-    const x = pointer.clientX;
-    const y = pointer.clientY;
+  _nudgeOnPointerHover(event) {
+    for (let i = this.children.length; i--;) {
+      if (this.children[i].expanded) {
+        this.children[i]._x = event.clientX;
+        this.children[i]._y = event.clientY;
+      }
+    }
+  }
+  _collapseOrFocusSrcElement(event) {
+    const x = event.clientX;
+    const y = event.clientY;
     if (this.srcElement) {
       const rect = this.srcElement.getBoundingClientRect();
       if (x > rect.x && x < rect.right && y > rect.y && y < rect.bottom) {
@@ -203,12 +213,58 @@ class IoLayer extends IoElement {
         break;
     }
   }
+  _nudgeAnimate() {
+    if (this.expanded) {
+      this.requestAnimationFrameOnce(this._nudgeAnimate);
+      for (let i = this.children.length; i--;) {
+        if (this.children[i].expanded) {
+          const x = this.children[i]._x;
+          const y = this.children[i]._y;
+          if (x === undefined || y === undefined) continue;
+          const r = this.children[i].getBoundingClientRect();
+          if (!(r.top < y && r.bottom > y && r.left < x && r.right > x)) continue;
+          if (r.height > window.innerHeight) {
+            let ry = r.y;
+            if (y < 100 && r.top < 0) {
+              const scrollSpeed = (100 - y) / 5000;
+              const overflow = r.top;
+              ry = ry - Math.ceil(overflow * scrollSpeed) + 1;
+            } else if (y > window.innerHeight - 100 && r.bottom > window.innerHeight) {
+              const scrollSpeed = (100 - (window.innerHeight - y)) / 5000;
+              const overflow = (r.bottom - window.innerHeight);
+              ry = ry - Math.ceil(overflow * scrollSpeed) - 1;
+            }
+            this.children[i].style.top = ry + 'px';
+          }
+          if (r.width > window.innerHeight) {
+            let rx = r.x;
+            if (x < 100 && r.left < 0) {
+              const scrollSpeed = (100 - x) / 5000;
+              const overflow = r.left;
+              rx = rx - Math.ceil(overflow * scrollSpeed) + 1;
+            } else if (x > window.innerHeight - 100 && r.right > window.innerHeight) {
+              const scrollSpeed = (100 - (window.innerHeight - x)) / 5000;
+              const overflow = (r.right - window.innerHeight);
+              rx = rx - Math.ceil(overflow * scrollSpeed) - 1;
+            }
+            this.children[i].style.left = rx + 'px';
+          }
+        } else {
+          delete this.children[i]._x;
+          delete this.children[i]._y;
+        }
+      }
+    }
+
+  }
   expandedChanged() {
     if (!this.expanded) {
       for (let i = this.children.length; i--;) {
         this.children[i].expanded = false;
       }
       if (lastFocus) lastFocus.focus();
+    } else {
+      this.requestAnimationFrameOnce(this._nudgeAnimate);
     }
   }
 }

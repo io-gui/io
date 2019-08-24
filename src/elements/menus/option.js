@@ -44,9 +44,9 @@ export class IoMenuOption extends IoMenuItem {
     return undefined;
   }
   _onClick(event) {
-    // TODO: fires twice?
-    // IoLayerSingleton._x = event.clientX;
-    // IoLayerSingleton._y = event.clientY;
+    // TODO: unhack
+    // TODO: fires twice on mouse?
+    // TODO: on poiter up outside?
     if (event.pointerType === 'touch') this.expanded = true;
   }
   _onKeydown(event) {

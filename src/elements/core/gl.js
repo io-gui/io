@@ -1,27 +1,6 @@
 import {html, IoElement} from "../../io.js";
 import {IoThemeSingleton} from "./theme.js";
 
-// TODO: document and test
-
-const renderQueue = new Array();
-const animate = function() {
-  requestAnimationFrame(animate);
-  for (let i = renderQueue.length; i--;) {
-    const element = renderQueue[i];
-    if (!element.$.canvas.loading) {
-      renderQueue.splice(renderQueue.indexOf(element), 1);
-      element.render();
-    }
-  }
-};
-requestAnimationFrame(animate);
-
-function queueRender(element) {
-  if (renderQueue.indexOf(element) === -1) {
-    renderQueue.push(element);
-  }
-}
-
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true});
 gl.imageSmoothingEnabled = false;
@@ -280,17 +259,17 @@ export class IoGl extends IoElement {
   }
   cssMutated() {
     this.updateCssUniforms();
-    queueRender(this);
+    this.requestAnimationFrameOnce(this.render);
   }
   changed() {
     // TODO: unhack when ResizeObserver is available in Safari
     if (!window.ResizeObserver) {
       setTimeout(() => {
         this.onResized();
-        queueRender(this);
+        this.requestAnimationFrameOnce(this.render);
       });
     } else {
-      queueRender(this);
+      this.requestAnimationFrameOnce(this.render);
     }
   }
   render() {

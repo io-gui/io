@@ -36,7 +36,8 @@ export class IoDemoElementsMenus extends IoElement {
       {label: 'set two', value: 2, action: this.setNumber},
       {label: 'set three', value: 3, action: this.setNumber},
       {label: 'set four', value: 4, action: this.setNumber},
-      {label: 'set five', value: 5, action: this.setNumber}
+      {label: 'set five', value: 5, action: this.setNumber},
+      {label: 'set null', value: null, action: this.setNumber},
     ];
     const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
       'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
