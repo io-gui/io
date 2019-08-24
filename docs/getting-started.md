@@ -1,6 +1,6 @@
 ## About Io
 
-Io is a UI framework for building web applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
+Io is a UI framework for computer graphics applications on the web. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
 
 For a quick start, read this document, then check out included [collection of elements](#doc=elements-core#ioitem) and the [source code](https://github.com/io-gui/io/).
 

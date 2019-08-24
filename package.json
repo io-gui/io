@@ -1,6 +1,6 @@
 {
   "name": "io-gui",
-  "version": "1.0.7",
+  "version": "1.0.8-rc.1",
   "description": "UI framework for computer graphics on the web.",
   "jsnext:main": "dist/io.js",
   "module": "dist/io.js",
@@ -50,6 +50,7 @@
     "io-gui",
     "web components",
     "custom elements",
+    "computer graphics",
     "reactive",
     "data binding"
   ],
