@@ -89,7 +89,6 @@ class IoLayer extends IoElement {
     event.stopImmediatePropagation();
   }
   _onWindowChange(event) {
-    event.preventDefault();
     this.expanded = false;
   }
   _onPointerdown(event) {
