@@ -38,7 +38,7 @@ class IoLayer extends IoElement {
         pointer-events: all;
         visibility: visible;
         opacity: 1;
-        background: rgba(255,0,0,0.2);
+        /* background: rgba(255,0,0,0.2); */
       }
       :host > * {
         position: absolute;

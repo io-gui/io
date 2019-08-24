@@ -6,9 +6,6 @@ TODO
 
 <io-element-demo element="io-menu-item" expanded properties='{
   "value": "",
-  "selectable": false,
-  "expanded": false,
-  "direction": "right",
   "option": {
     "label": "Hearts",
     "icon": "❤",
@@ -17,14 +14,28 @@ TODO
       {"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]},
       {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]},
       {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}
-    ]}
+    ]},
+    "expanded": false,
+    "direction": "right",
+    "selectable": false
 }' config='{
   "direction": ["io-menu-option", {"options": ["top", "right", "bottom", "left"]}], "type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]
 }'></io-element-demo>
 
 ## &lt;io-menu-options&gt;
 
-<io-element-demo element="io-menu-options" properties='{"value": "", "horizontal": false, "options": [{"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]}, {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]}, {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}]}' config='{"type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]}'></io-element-demo>
+<io-element-demo element="io-menu-options" properties='{
+  "value": "",
+  "selectable": false,
+  "expanded": false,
+  "horizontal": false,
+  "options": [
+    {"label": "Red", "icon": "❤️", "options": ["red1", "red2", "red3"]},
+    {"label": "Green", "icon": "💚", "options": ["green1", "green2", "green3"]},
+    {"label": "Blue", "icon": "💙", "options": ["blue1", "blue2", "blue3"]}]
+}' config='{
+  "type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]
+}'></io-element-demo>
 
 ## &lt;io-option&gt;
 

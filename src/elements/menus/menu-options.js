@@ -2,6 +2,8 @@ import {IoElement, html} from "../../io.js";
 import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-elements-core.js";
 import "./menu-item.js";
 
+const rects = new WeakMap();
+
 export class IoMenuOptions extends IoElement {
   static get Style() {
     return html`<style>
@@ -21,7 +23,7 @@ export class IoMenuOptions extends IoElement {
       :host:not([horizontal]) {
         padding: var(--io-spacing) 0;
       }
-      :host:not([expanded]) {
+      :host[inlayer]:not([expanded]) {
         visibility: hidden;
       }
       :host[horizontal] {
@@ -56,104 +58,102 @@ export class IoMenuOptions extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      role: 'listbox',
-      expanded: {
-        value: true,
-        notify: true,
-      },
-      overflow: {
-        type: Boolean,
-        notify: true,
-      },
-      horizontal: {
-        type: Boolean,
-        notify: true,
-      },
-    };
-  }
   static get Properties() {
     return {
-      options: Array,
-      position: 'right',
-      selectable: false,
       value: {
         value: null,
         notify: true,
       },
+      options: Array,
+      expanded: {
+        value: false,
+        reflect: 1,
+      },
+      horizontal: {
+        type: Boolean,
+        reflect: 1,
+      },
+      position: 'right',
+      selectable: false,
+      overflow: {
+        type: Boolean,
+        reflect: 1,
+      },
       slotted: Array,
       $parent: HTMLElement,
       _rects: Array,
+      role: 'listbox',
     };
   }
   static get Listeners() {
     return {
-      'io-menu-item-clicked': '_onMenuItemClicked',
+      'item-clicked': '_onMenuItemClicked',
     };
   }
+  connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute('inlayer', this.parentElement === IoLayerSingleton);
+  }
   _onMenuItemClicked(event) {
-    const item = event.composedPath()[0];
-    if (item !== this) {
+    if (event.composedPath()[0] !== this) {
       event.stopImmediatePropagation();
       this.set('value', event.detail.value);
-      this.dispatchEvent('io-menu-item-clicked', event.detail, true);
-      item.expanded = false;
+      this.dispatchEvent('item-clicked', event.detail, true);
+      this.expanded = false;
     }
   }
-  // onResized() {
-  //   this.setOverflow();
-  // }
-  // setOverflow() {
-  //   const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
-  //   if (this.horizontal) {
-  //     const hamburger = this.querySelector('.io-hamburger');
-  //     const rects = this._rects;
-  //     rects.length = buttons.length;
-  //
-  //     if (!rects.length) return;
-  //     if (!buttons.length) return;
-  //
-  //     let end = this.getBoundingClientRect().right;
-  //     let overflow = false;
-  //     let last = Infinity;
-  //     hamburger.hidden = true;
-  //     const hamburgerOptions = [];
-  //
-  //     for (let i = buttons.length; i--;) {
-  //       const r = buttons[i].getBoundingClientRect();
-  //       rects[i] = rects[i] || {right: 0, width: 0};
-  //       if (r.right !== 0) rects[i].right = r.right;
-  //       if (r.width !== 0) rects[i].width = r.width;
-  //
-  //       if (hamburger.hidden && overflow) {
-  //         hamburger.hidden = false;
-  //         end -= hamburger.getBoundingClientRect().width;
-  //       }
-  //
-  //       if (buttons[i].selected) {
-  //         end -= rects[i].width;
-  //         buttons[i].hidden = false;
-  //         continue;
-  //       }
-  //
-  //       last = Math.min(last, rects[i].right);
-  //       if (last < end) {
-  //         buttons[i].hidden = false;
-  //       } else {
-  //        buttons[i].hidden = true;
-  //        hamburgerOptions.push(buttons[i].option);
-  //        overflow = true;
-  //       }
-  //     }
-  //     hamburger.option = {options: hamburgerOptions};
-  //     this.overflow = overflow;
-  //   } else {
-  //     for (let i = buttons.length; i--;) {
-  //       buttons[i].hidden = false;
-  //     }
-  //   }
-  // }
+  onResized() {
+    this.setOverflow();
+  }
+  setOverflow() {
+    const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
+    if (this.horizontal) {
+      const hamburger = this.querySelector('.io-hamburger');
+      if (!buttons.length) return;
+
+      let end = this.getBoundingClientRect().right;
+      let overflow = false;
+      let last = Infinity;
+      hamburger.hidden = true;
+      const hamburgerOptions = [];
+
+      for (let i = buttons.length; i--;) {
+        const r = buttons[i].getBoundingClientRect();
+        const rect = rects.get(buttons[i]) || {right: 0, width: 0};
+        if (r.right !== 0 && r.width !== 0)  {
+          rect.right = r.right;
+          rect.width = r.width;
+          rects.set(buttons[i], rect);
+        }
+
+        if (hamburger.hidden && overflow) {
+          hamburger.hidden = false;
+          end -= hamburger.getBoundingClientRect().width;
+        }
+
+        if (buttons[i].selected) {
+          end -= rect.width;
+          buttons[i].hidden = false;
+          continue;
+        }
+
+        last = Math.min(last, rect.right);
+        if (last < end) {
+          buttons[i].hidden = false;
+        } else {
+         buttons[i].hidden = true;
+         hamburgerOptions.push(buttons[i].option);
+         overflow = true;
+        }
+      }
+      hamburger.option = {options: hamburgerOptions};
+      this.overflow = overflow;
+    } else {
+      for (let i = buttons.length; i--;) {
+        buttons[i].hidden = false;
+      }
+    }
+  }
   expandedChanged() {
     if (this.parentElement === IoLayerSingleton) {
       if (this.expanded && this.$parent) {
@@ -165,26 +165,8 @@ export class IoMenuOptions extends IoElement {
           case 'pointer':
             IoLayerSingleton.nudgePointer(this, x, y, rect);
             break;
-          case 'top':
-            IoLayerSingleton.nudgeTop(this, pRect.x, pRect.top, rect) ||
-            IoLayerSingleton.nudgeBottom(this, pRect.x, pRect.bottom, rect) ||
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
-            break;
-          case 'left':
-            IoLayerSingleton.nudgeLeft(this, pRect.x, pRect.top, rect) ||
-            IoLayerSingleton.nudgeRight(this, pRect.right, pRect.top, rect) ||
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
-            break;
-          case 'bottom':
-            IoLayerSingleton.nudgeBottom(this, pRect.x, pRect.bottom, rect) ||
-            IoLayerSingleton.nudgeTop(this, pRect.x, pRect.top, rect) ||
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
-            break;
-          case 'right':
           default:
-            IoLayerSingleton.nudgeRight(this, pRect.right, pRect.top, rect) ||
-            IoLayerSingleton.nudgeLeft(this, pRect.x, pRect.top, rect) ||
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
+            IoLayerSingleton.setElementPosition(this, this.position, pRect);
             break;
         }
       }
@@ -215,7 +197,8 @@ export class IoMenuOptions extends IoElement {
       }]);
     }
     this.template(elements);
-    // this.setOverflow();
+    this.setOverflow();
+    this.setOverflow(); // TODO: unhack
   }
 }
 

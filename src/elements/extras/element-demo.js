@@ -99,6 +99,7 @@ export class IoElementDemo extends IoElement {
       if (this.properties[prop] === 'undefined') {
         this.properties[prop] = undefined;
       }
+      this.properties['on-' + prop + '-changed'] = this._onPropSet;
     }
     if (this.element) {
       const hasProps = !!Object.keys(this.properties).length;
@@ -110,7 +111,7 @@ export class IoElementDemo extends IoElement {
             'type:boolean': ['io-switch'],
           }, this.config)}] : null,
         ['div', {class: 'io-frame'}, [
-          [this.element, Object.assign({'on-value-set': this._onPropSet, 'id': 'demo-element'}, this.properties)],
+          [this.element, Object.assign({'id': 'demo-element'}, this.properties)],
         ]],
        ]);
        if (this.$['demo-element']) {
