@@ -184,7 +184,7 @@ export class IoMenuOptions extends IoElement {
           direction: itemDirection,
           selectable: this.selectable,
         }]
-      )])
+      )]);
     }
     if (this.horizontal) {
       elements.splice(0, 0, ...this.slotted);

@@ -88,7 +88,7 @@ class IoLayer extends IoElement {
   _onFocusIn(event) {
     event.stopImmediatePropagation();
   }
-  _onWindowChange(event) {
+  _onWindowChange() {
     this.expanded = false;
   }
   _onPointerdown(event) {

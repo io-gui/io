@@ -57,7 +57,7 @@ export class IoMenu extends IoElement {
       this.expanded = false;
     }
   }
-  _onContextmenu(event) {
+  _onContextmenu() {
     if (this.options.length && this.button === 2) {
       this.expanded = true;
     }
@@ -67,17 +67,17 @@ export class IoMenu extends IoElement {
       this.expanded = true;
     }
   }
-  _onTouchstart(event) {
+  _onTouchstart() {
     if (this.options.length && this.button !== 2) {
       this.parentElement.addEventListener('touchmove', this._onTouchmove, {passive: true});
       this.parentElement.addEventListener('touchend', this._onTouchend, {passive: true});
       this.expanded = true;
     }
   }
-  _onTouchmove(event) {
+  _onTouchmove() {
     // IoLayerSingleton._onTouchmove(event);
   }
-  _onTouchend(event) {
+  _onTouchend() {
     this.parentElement.removeEventListener('touchmove', this._onTouchmove, {passive: true});
     this.parentElement.removeEventListener('touchend', this._onTouchend, {passive: true});
     // IoLayerSingleton._onTouchend(event);

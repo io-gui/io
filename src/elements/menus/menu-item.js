@@ -19,7 +19,7 @@ function getElementDescendants(element) {
   let items;
   // TODO: unhack
   if ('io-menu-item, io-menu-option'.search(element.localName) !== -1) {
-    descendants.push(element)
+    descendants.push(element);
     items = element.$options.querySelectorAll('io-menu-item, io-menu-option');
   } else {
     items = element.querySelectorAll('io-menu-item, io-menu-option');
@@ -310,18 +310,20 @@ export class IoMenuItem extends IoItem {
     if (command && (inLayer || this.expanded)) {
       event.preventDefault();
       switch (command) {
-        case 'prev':
+        case 'prev': {
           const prev = siblings[(index + siblings.length - 1) % (siblings.length)];
           this.expanded = false;
           if (prev._options) prev.expanded = true;
           prev.focus();
           break;
-        case 'next':
+        }
+        case 'next': {
           const next = siblings[(index + 1) % (siblings.length)];
           this.expanded = false;
           if (next._options) next.expanded = true;
           next.focus();
           break;
+        }
         case 'in':
           if (this.$options.children.length) this.$options.children[0].focus();
           break;
