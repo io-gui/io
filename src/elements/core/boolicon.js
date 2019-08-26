@@ -15,24 +15,23 @@ export class IoBoolicon extends IoBoolean {
         stroke-width: var(--io-stroke-width);
       }
       :host > svg {
+        pointer-events: none;
         width: 100%;
         height: 100%;
       }
       :host > svg > g {
-        pointer-events: none;
         transform-origin: 0px 0px;
       }
     </style>`;
-  }
-  static get Attributes() {
-    return {
-      stroke: true,
-    };
   }
   static get Properties() {
     return {
       true: 'icons:check',
       false: 'icons:uncheck',
+      stroke: {
+        value: true,
+        reflect: 1,
+      },
     };
   }
   changed() {

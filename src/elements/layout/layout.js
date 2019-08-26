@@ -19,19 +19,15 @@ export class IoLayout extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      orientation: {
-        value: 'horizontal',
-        notify: true,
-      },
-    };
-  }
   static get Properties() {
     return {
       elements: Array,
       splits: Array,
       editable: true,
+      orientation: {
+        value: 'horizontal',
+        reflect: 1,
+      },
     };
   }
   static get Listeners() {

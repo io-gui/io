@@ -35,12 +35,6 @@ export class IoSlider extends IoGl {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      role: 'slider',
-      tabindex: 0,
-    };
-  }
   static get Properties() {
     return {
       value: 0,
@@ -51,6 +45,8 @@ export class IoSlider extends IoGl {
         value: true,
         reflect: 1,
       },
+      role: 'slider',
+      tabindex: 0,
     };
   }
   static get Listeners() {

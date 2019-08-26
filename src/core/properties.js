@@ -5,15 +5,6 @@ export class ProtoProperties {
     this._p = protochain;
     const defs = {};
     for (let i = protochain.length; i--;) {
-      // Attributes
-      const attrs = protochain[i].constructor.Attributes;
-      for (let a in attrs) {
-        if (!defs[a]) defs[a] = new ProtoProperty(attrs[a]);
-        else Object.assign(defs[a], new ProtoProperty(attrs[a]));
-        if (defs[a].reflect === undefined) defs[a].reflect = 1;
-        if (defs[a].notify === undefined) defs[a].notify = false;
-        if (defs[a].enumerable === undefined) defs[a].enumerable = false;
-      }
       // Properties
       const props = protochain[i].constructor.Properties;
       for (let p in props) {

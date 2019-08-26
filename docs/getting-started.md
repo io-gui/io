@@ -105,13 +105,9 @@ Now you can use the message property inside the template.
 this.template([['p', this.message]]);
 ```
 
-## Attributes
+If you specify a property with `reflect: 1` configuration option, it will be automatically reflected to HTML attributes.
 
-Attributes are defined inside `static get Attributes()` return object.
-
-Attributes are also properties but they behave in such way that their values are automatically reflected to HTML attributes so they can be used as CSS selectors.
-
-For example we can use `clicked` attribute to change text color.
+For example we can use `clicked` attribute to change text color in CSS.
 
 ```javascript
 static get Style() {
@@ -123,9 +119,12 @@ static get Style() {
     </style>
   `;
 }
-static get Attributes() {
+static get Properties() {
   return {
-    clicked: false
+    clicked: {
+      value: false,
+      reflect: 1,
+    }
   }
 }
 ```
@@ -167,17 +166,13 @@ class MyApp extends IoElement {
     </style>
     `;
   }
-  static get Attributes() {
-    return {
-      clicked: {
-        value: false,
-        notify: true,
-      }
-    }
-  }
   static get Properties() {
     return {
       message: 'Hello io!',
+      clicked: {
+        value: false,
+        reflect: 1,
+      }
     }
   }
   static get Listeners() {

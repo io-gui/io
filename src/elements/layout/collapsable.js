@@ -20,21 +20,17 @@ export class IoCollapsable extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      label: {
-        notify: true,
-      },
-      expanded: {
-        type: Boolean,
-        notify: true,
-      },
-      role: 'region',
-    };
-  }
   static get Properties() {
     return {
       elements: Array,
+      label: {
+        reflect: 1,
+      },
+      expanded: {
+        type: Boolean,
+        reflect: 1,
+      },
+      role: 'region',
     };
   }
   _onButtonValueSet(event) {

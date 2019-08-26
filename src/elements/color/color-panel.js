@@ -33,15 +33,14 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      horizontal: true,
-    };
-  }
   static get Properties() {
     return {
       expanded: {
         type: Boolean,
+        reflect: 1,
+      },
+      horizontal: {
+        value: true,
         reflect: 1,
       },
     };

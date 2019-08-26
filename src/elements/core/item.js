@@ -34,21 +34,22 @@ export class IoItem extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      label: {
-        type: String,
-        notify: true,
-      },
-      pressed: Boolean,
-      hidden: Boolean,
-      selected: Boolean,
-      tabindex: 0,
-    };
-  }
   static get Properties() {
     return {
       value: undefined,
+      pressed: {
+        type: Boolean,
+        reflect: true,
+      },
+      hidden: {
+        type: Boolean,
+        reflect: true,
+      },
+      selected: {
+        type: Boolean,
+        reflect: true,
+      },
+      tabindex: 0,
     };
   }
   static get Listeners() {

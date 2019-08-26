@@ -3,16 +3,12 @@ import {IoColorSwatch} from "./color-swatch.js";
 import {IoColorPanelSingleton} from "./color-panel.js";
 
 export class IoColorPicker extends IoColorSwatch {
-  static get Attributes() {
-    return {
-      role: 'slider',
-      tabindex: 0,
-    };
-  }
   static get Properties() {
     return {
       value: [0.5, 0.5, 0.5, 0.5],
       horizontal: false,
+      role: 'slider',
+      tabindex: 0,
     };
   }
   static get Listeners() {

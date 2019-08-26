@@ -50,17 +50,13 @@ class IoLayer extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
+  static get Properties() {
     return {
       expanded: {
         value: false,
-        notify: true,
+        reflect: 1,
       },
-    };
-  }
-  static get Properties() {
-    return {
-      srcElement: HTMLElement
+      srcElement: HTMLElement,
     };
   }
   static get Listeners() {

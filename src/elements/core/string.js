@@ -23,15 +23,11 @@ export class IoString extends IoItem {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      contenteditable: true,
-      role: 'textbox',
-    };
-  }
   static get Properties() {
     return {
       value: String,
+      contenteditable: true,
+      role: 'textbox',
     };
   }
   _setFromTextNode() {

@@ -1,11 +1,6 @@
 import {IoItem} from "./item.js";
 
 export class IoBoolean extends IoItem {
-  static get Attributes() {
-    return {
-      role: 'switch',
-    };
-  }
   static get Properties() {
     return {
       label: 'Boolean',
@@ -15,12 +10,14 @@ export class IoBoolean extends IoItem {
       },
       true: 'true',
       false: 'false',
+      role: 'switch',
     };
   }
   _onClick() {
     this.toggle();
   }
   toggle() {
+    console.log('asd');
     this.set('value', !this.value);
   }
   valueChanged() {

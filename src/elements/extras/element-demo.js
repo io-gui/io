@@ -31,17 +31,15 @@ export class IoElementDemo extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
+  static get Properties() {
     return {
       element: {
         type: String,
         reflect: -1,
-        notify: true,
       },
       properties: {
         type: Object,
         reflect: -1,
-        notify: true,
       },
       width: {
         type: String,
@@ -54,12 +52,10 @@ export class IoElementDemo extends IoElement {
       config: {
         type: Object,
         reflect: -1,
-        notify: true,
       },
       expanded: {
         type: Boolean,
         reflect: -1,
-        notify: true,
       }
     };
   }

@@ -31,10 +31,13 @@ class IoLadderStep extends IoItem {
       }
     </style>`;
   }
-  static get Attributes() {
+  static get Properties() {
     return {
       role: 'spinbutton',
-      type: 'number',
+      type: {
+        value: 'number',
+        reflect: 1,
+      },
     };
   }
   _onKeydown(event) {

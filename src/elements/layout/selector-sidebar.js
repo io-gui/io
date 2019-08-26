@@ -37,23 +37,22 @@ export class IoSelectorSidebar extends IoSelector {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      role: 'navigation',
-      label: {
-        notify: true,
-      },
-      overflow: {
-        type: Boolean,
-        notify: true,
-      },
-      left: true,
-    };
-  }
   static get Properties() {
     return {
       options: Array,
       minWidth: 410,
+      label: {
+        reflect: 1,
+      },
+      overflow: {
+        type: Boolean,
+        reflect: 1,
+      },
+      left: {
+        value: true,
+        reflect: 1,
+      },
+      role: 'navigation',
     };
   }
   _onScroll() {

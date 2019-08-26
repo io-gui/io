@@ -37,21 +37,17 @@ export class IoSidebar extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      role: 'navigation',
-      label: {
-        notify: true,
-      },
-      overflow: {
-        notify: true,
-      }
-    };
-  }
   static get Properties() {
     return {
       selected: String,
       options: Array,
+      label: {
+        reflect: 1,
+      },
+      overflow: {
+        reflect: 1,
+      },
+      role: 'navigation',
     };
   }
   _onSelect(id) {

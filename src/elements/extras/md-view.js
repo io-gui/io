@@ -121,17 +121,13 @@ export class IoMdView extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      role: 'document',
-    };
-  }
   static get Properties() {
     return {
       path: {
         type: String,
         reflect: 1
       },
+      role: 'document',
     };
   }
   onResized() {

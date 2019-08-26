@@ -21,11 +21,6 @@ export class IoMenuOption extends IoMenuItem {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      role: 'button',
-    };
-  }
   static get Properties() {
     return {
       value: {
@@ -35,6 +30,7 @@ export class IoMenuOption extends IoMenuItem {
         type: Array,
         reflect: -1,
       },
+      role: 'button',
     };
   }
   get _options() {

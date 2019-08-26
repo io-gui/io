@@ -23,11 +23,6 @@ export class IoMatrix extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      columns: 4,
-    };
-  }
   static get Properties() {
     return {
       value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -35,6 +30,10 @@ export class IoMatrix extends IoElement {
       components: {
         type: Array,
         notify: false,
+      },
+      columns: {
+        value: 4,
+        reflect: 1,
       },
     };
   }

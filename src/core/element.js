@@ -3,13 +3,28 @@ import {Listeners} from "./listeners.js";
 import {buildTree} from "../../lib/ijk.js";
 
 export class IoElement extends IoNodeMixin(HTMLElement) {
-  static get Attributes() {
+  static get Properties() {
     return {
-      tabindex: String,
-      contenteditable: Boolean,
-      class: String,
-      role: String,
-      label: String,
+      tabindex: {
+        type: String,
+        reflect: 1,
+      },
+      contenteditable: {
+        type: Boolean,
+        reflect: 1,
+      },
+      class: {
+        type: String,
+        reflect: 1,
+      },
+      role: {
+        type: String,
+        reflect: 1,
+      },
+      label: {
+        type: String,
+        reflect: 1,
+      },
       id: {
         type: String,
         reflect: -1,

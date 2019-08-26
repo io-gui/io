@@ -22,24 +22,20 @@ export class IoObject extends IoElement {
     }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      label: {
-        notify: true,
-      },
-      expanded: {
-        type: Boolean,
-        notify: true,
-      },
-      role: 'region',
-    };
-  }
   static get Properties() {
     return {
       value: Object,
       properties: Array,
       config: Object,
       labeled: true,
+      label: {
+        reflect: 1,
+      },
+      expanded: {
+        type: Boolean,
+        reflect: 1,
+      },
+      role: 'region',
     };
   }
   _onButtonValueSet(event) {
