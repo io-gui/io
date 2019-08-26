@@ -145,7 +145,7 @@ class IoLayer extends IoElement {
     }
     this.expanded = false;
   }
-  nudgeBottom(element, x, y, elemRect, force) {
+  nudgeDown(element, x, y, elemRect, force) {
     if (y + elemRect.height < window.innerHeight || force) {
       element.style.top = y + 'px';
       element.style.left = Math.min(x, Math.max(0, window.innerWidth - elemRect.width)) + 'px';
@@ -153,7 +153,7 @@ class IoLayer extends IoElement {
     }
     return false;
   }
-  nudgeTop(element, x, y, elemRect, force) {
+  nudgeUp(element, x, y, elemRect, force) {
     if (y - elemRect.height > 0 || force) {
       element.style.top = y - elemRect.height + 'px';
       element.style.left = Math.min(x, Math.max(0, window.innerWidth - elemRect.width)) + 'px';
@@ -186,9 +186,9 @@ class IoLayer extends IoElement {
     const elemRect = element.getBoundingClientRect();
     switch (direction) {
       case 'top':
-        this.nudgeTop(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeBottom(element, srcRect.x, srcRect.bottom, elemRect) ||
-        this.nudgeTop(element, srcRect.x, srcRect.top, elemRect, true);
+        this.nudgeUp(element, srcRect.x, srcRect.top, elemRect) ||
+        this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect) ||
+        this.nudgeUp(element, srcRect.x, srcRect.top, elemRect, true);
         break;
       case 'left':
         this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect) ||
@@ -196,9 +196,9 @@ class IoLayer extends IoElement {
         this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect, true);
         break;
       case 'bottom':
-        this.nudgeBottom(element, srcRect.x, srcRect.bottom, elemRect) ||
-        this.nudgeTop(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeBottom(element, srcRect.x, srcRect.bottom, elemRect, true);
+        this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect) ||
+        this.nudgeUp(element, srcRect.x, srcRect.top, elemRect) ||
+        this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect, true);
         break;
       case 'right':
       default:
