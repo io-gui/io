@@ -27,6 +27,7 @@ export default class {
       })
       describe('size', () => {
         it('has correct size and pxRatio', () => {
+          this.element.style.border = 'none';
           this.element.style.width = '32px';
           this.element.style.height = '32px';
           this.element.onResized();

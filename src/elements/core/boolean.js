@@ -17,7 +17,6 @@ export class IoBoolean extends IoItem {
     this.toggle();
   }
   toggle() {
-    console.log('asd');
     this.set('value', !this.value);
   }
   valueChanged() {

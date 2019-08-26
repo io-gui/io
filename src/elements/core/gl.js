@@ -237,10 +237,13 @@ export class IoGl extends IoElement {
     // TODO: consider optimizing
     const pxRatio = window.devicePixelRatio;
     const rect = this.getBoundingClientRect();
+    const style = window.getComputedStyle(this);
+    const bw = parseInt(style.borderRightWidth) + parseInt(style.borderLeftWidth)
+    const bh = parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth)
 
     // TODO: confirm and test
-    const width = Math.max(0, Math.floor((rect.width - 2 * IoThemeSingleton.cssBorderWidth)));
-    const height = Math.max(0, Math.floor((rect.height - 2 * IoThemeSingleton.cssBorderWidth)));
+    const width = Math.max(0, Math.floor(rect.width - bw));
+    const height = Math.max(0, Math.floor(rect.height - bh));
 
     const hasResized = (width !== this.size[0] || height !== this.size[1] || pxRatio !== this.pxRatio);
 
