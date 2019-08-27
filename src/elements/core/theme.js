@@ -20,7 +20,7 @@ const themeDB = {
     cssColor: [0.16, 0.16, 0.16, 1],
     cssColorError: [0.91, 0.5, 0.5, 1],
     cssColorLink: [0.2, 0.75, 0.2, 1],
-    cssColorFocus: [0.3, 0.82, 1, 1],
+    cssColorFocus: [0.3, 0.6, 1, 1],
     cssColorField: [0, 0, 0, 1],
     cssColorNumber: [0.12, 0.64, 1, 1],
     cssColorString: [0.95, 0.25, 0.1, 1],

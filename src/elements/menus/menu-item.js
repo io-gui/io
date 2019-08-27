@@ -61,9 +61,10 @@ export class IoMenuItem extends IoItem {
         padding: var(--io-spacing);
         border-radius: 0;
         background: none;
+        border: var(--io-border-width) solid transparent;
       }
-      :host[expanded] {
-        color: var(--io-color-link);
+      :host:hover {
+        background-color: inherit;
       }
       :host > * {
         overflow: visible;
@@ -83,9 +84,6 @@ export class IoMenuItem extends IoItem {
       :host[hasmore]:after {
         content: '▸';
       }
-      :host {
-        border: var(--io-border-width) solid transparent;
-      }
       :host[selected][direction="top"],
       :host[selected][direction="bottom"] {
         border-bottom-color: var(--io-color-link);
@@ -102,6 +100,9 @@ export class IoMenuItem extends IoItem {
       expanded: {
         value: false,
         reflect: 1,
+      },
+      pressed: {
+        reflect: 0,
       },
       direction: {
         value: 'bottom',
@@ -232,7 +233,10 @@ export class IoMenuItem extends IoItem {
     return _hoveredItem;
   }
   _onPointermove(event) {
-    // TODO? // if (event.pointerType === 'touch') IoLayerSingleton._scrollOnPointerHover(event);
+    const inLayer = this.$parent && this.$parent.parentElement === IoLayerSingleton;
+    if (!this.expanded && event.pointerType === 'touch' && !inLayer) {
+      return;
+    }
     IoLayerSingleton._nudgeOnPointerHover(event);
     // TODO: consider horizintal menus
     clearTimeout(this.__timeoutOpen);
@@ -278,9 +282,15 @@ export class IoMenuItem extends IoItem {
     return (r.top < y && r.bottom > y && r.left < x && r.right > x);
   }
   _onKeydown(event) {
+    const inLayer = this.$parent && this.$parent.parentElement === IoLayerSingleton;
+
     if (event.key === 'Enter' || event.key === ' ') {
       this.pressed = true;
       event.preventDefault();
+      if (this.expanded) {
+        this.expanded = false;
+        return;
+      }
       this._onClick(event);
       if (this.expanded) {
         if (this.$options.children.length) this.$options.children[0].focus();
@@ -304,9 +314,8 @@ export class IoMenuItem extends IoItem {
       if (event.key === 'ArrowDown') command = 'in';
       if (event.key === 'ArrowLeft') command = 'prev';
     }
-    if (event.key === 'Tab') command = 'next';
+    if (inLayer && event.key === 'Tab') command = 'next';
 
-    const inLayer = this.$parent && this.$parent.parentElement === IoLayerSingleton;
     const siblings = this.$parent ? [...this.$parent.children] : [];
     const index = siblings.indexOf(this);
     if (command && (inLayer || this.expanded)) {
@@ -315,15 +324,19 @@ export class IoMenuItem extends IoItem {
         case 'prev': {
           const prev = siblings[(index + siblings.length - 1) % (siblings.length)];
           this.expanded = false;
-          if (prev._options) prev.expanded = true;
-          prev.focus();
+          if (prev) {
+            if (prev._options) prev.expanded = true;
+            prev.focus();
+          }
           break;
         }
         case 'next': {
           const next = siblings[(index + 1) % (siblings.length)];
           this.expanded = false;
-          if (next._options) next.expanded = true;
-          next.focus();
+          if (next) {
+            if (next._options) next.expanded = true;
+            next.focus();
+          }
           break;
         }
         case 'in':
@@ -339,6 +352,7 @@ export class IoMenuItem extends IoItem {
           break;
       }
     } else {
+      this.expanded = false;
       super._onKeydown(event);
     }
   }

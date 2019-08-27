@@ -30,6 +30,9 @@ export class IoSelectorTabs extends IoSelector {
       slotted: Array,
     };
   }
+  _onValueSet(event) {
+    this.set('selected', event.detail.value.toLowerCase());
+  }
   _onScroll() {
     super._onScroll();
     if (this.$.tabs.selected !== this.selected) {
@@ -45,10 +48,11 @@ export class IoSelectorTabs extends IoSelector {
         id: 'tabs',
         role: 'navigation',
         horizontal: true,
-        value: this.bind('selected'),
+        value: this.selected,
         options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
         slotted: this.slotted,
         selectable: true,
+        'on-value-set': this._onValueSet,
       }],
     ];
     this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);

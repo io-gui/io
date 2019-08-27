@@ -51,10 +51,10 @@ export class IoSidebar extends IoElement {
     };
   }
   _onSelect(id) {
-    this.set('selected', id);
+    this.set('selected', id.toLowerCase());
   }
   _onValueSet(event) {
-    this.set('selected', event.detail.value);
+    this.set('selected', event.detail.value.toLowerCase());
   }
   _addOptions(options) {
     const elements = [];

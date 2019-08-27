@@ -30,8 +30,8 @@ export class IoSlider extends IoGl {
         opacity: 0.5;
       }
       :host:focus {
-        /* outline: 0; */
         border-color: var(--io-color-focus);
+        outline-color: var(--io-color-focus);
       }
     </style>`;
   }

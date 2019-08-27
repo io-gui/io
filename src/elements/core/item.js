@@ -28,9 +28,9 @@ export class IoItem extends IoElement {
         background-color: var(--io-background-color-light);
       }
       :host:focus {
-        /* outline: 0; */
         text-overflow: inherit;
         border-color: var(--io-color-focus);
+        outline-color: var(--io-color-focus);
       }
     </style>`;
   }

@@ -101,7 +101,7 @@ class IoLayer extends IoElement {
       event.preventDefault();
       event.stopImmediatePropagation();
     }
-    this.nudgeOnPointerHover(event);
+    this._nudgeOnPointerHover(event);
   }
   _onPointerup(event) {
     if (event.composedPath()[0] === this) {

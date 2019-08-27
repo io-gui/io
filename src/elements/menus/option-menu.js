@@ -41,43 +41,6 @@ export class IoOptionMenu extends IoMenuItem {
     }
     return undefined;
   }
-  _onClick(event) {
-    // TODO: unhack
-    // TODO: fires twice on mouse?
-    // TODO: on poiter up outside?
-    if (event.pointerType === 'touch') this.expanded = true;
-  }
-  // TODO: implement keyboard navigation.
-  _onKeydown(event) {
-    if (event.which === 13 || event.which === 32) {
-      event.preventDefault();
-      this.expanded = true;
-      this._focusIn();
-    } else if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      // IoLayerSingleton.LastFocus = null;
-      this.expanded = false;
-      this.focusTo('left');
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      // IoLayerSingleton.LastFocus = null;
-      this.expanded = false;
-      this.focusTo('up');
-    } else if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      // IoLayerSingleton.LastFocus = null;
-      this.expanded = false;
-      this.focusTo('right');
-    } else if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      // IoLayerSingleton.LastFocus = null;
-      if (this.expanded) {
-        this._focusIn();
-      } else {
-        this.focusTo('down');
-      }
-    }
-  }
   changed() {
     let valueText;
     if (this.options) {

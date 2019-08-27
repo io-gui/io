@@ -17,8 +17,8 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
         border: var(--io-border-error);
       }
       :host:focus {
-        outline: 0;
         border-color: var(--io-color-focus);
+        outline-color: var(--io-color-focus);
       }
     </style>`;
   }
