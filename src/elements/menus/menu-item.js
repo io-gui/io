@@ -1,6 +1,6 @@
 import {html} from "../../io.js";
 import {IoItem, IoLayerSingleton} from "../../io-elements-core.js";
-import {IoOptionMenus} from "./menu-options.js";
+import {IoMenuOptions} from "./menu-options.js";
 
 export function filterObject(object, predicate) {
   if (predicate(object)) return object;
@@ -115,7 +115,7 @@ export class IoMenuItem extends IoItem {
   constructor(props) {
     super(props);
     // TODO: consider optimizing-out on leaf item elements.
-    this.$options = new IoOptionMenus({
+    this.$options = new IoMenuOptions({
       $parent: this,
       expanded: this.bind('expanded'),
       'on-item-clicked': this._onOptionItemClicked,

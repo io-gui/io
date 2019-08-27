@@ -1,6 +1,6 @@
 import {IoElement} from "../../io.js";
 import {IoLayerSingleton} from "../../io-elements-core.js";
-import {IoOptionMenus} from "./menu-options.js";
+import {IoMenuOptions} from "./menu-options.js";
 
 export class IoMenu extends IoElement {
   static get Properties() {
@@ -11,7 +11,7 @@ export class IoMenu extends IoElement {
       position: 'pointer',
       button: 0,
       selectable: false,
-      $options: IoOptionMenus,
+      $options: IoMenuOptions,
     };
   }
   get compose() {
