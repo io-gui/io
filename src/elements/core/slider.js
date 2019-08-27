@@ -30,7 +30,7 @@ export class IoSlider extends IoGl {
         opacity: 0.5;
       }
       :host:focus {
-        outline: 0;
+        /* outline: 0; */
         border-color: var(--io-color-focus);
       }
     </style>`;
@@ -144,6 +144,7 @@ export class IoSlider extends IoGl {
       this._setMax();
     }
   }
+  // TODO: round to step
   _setIncrease() {
     let value = this.value + this.step;
     value = Math.min(this.max, Math.max(this.min, (value)));

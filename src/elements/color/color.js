@@ -12,10 +12,6 @@ export const IoColorMixin = (superclass) => {
         hsl: [1, 1, 1],
         cmyk: [1, 1, 1, 1],
         alpha: 1,
-        components: {
-          type: Array,
-          notify: false,
-        },
         // 0 - rgb
         // 1 - hsv
         // 2 - hsl
@@ -56,7 +52,7 @@ export const IoColorMixin = (superclass) => {
       this.valueChanged();
     }
     setValueFromRgb() {
-      const c = this.components;
+      const c = Object.keys(this.value);
       switch (this.mode) {
         case 0: {
           this.value[c[0]] = this.rgb[0];
@@ -101,7 +97,7 @@ export const IoColorMixin = (superclass) => {
       }
     }
     setValueFromHsv() {
-      const c = this.components;
+      const c = Object.keys(this.value);
       switch (this.mode) {
         case 0: {
           const rgb = convert.hsv.rgb([
@@ -146,7 +142,7 @@ export const IoColorMixin = (superclass) => {
       }
     }
     setValueFromHsl() {
-      const c = this.components;
+      const c = Object.keys(this.value);
       switch (this.mode) {
         case 0: {
           const rgb = convert.hsl.rgb([
@@ -191,7 +187,7 @@ export const IoColorMixin = (superclass) => {
       }
     }
     setValueFromCmyk() {
-      const c = this.components;
+      const c = Object.keys(this.value);
       switch (this.mode) {
         case 0: {
           const rgb = convert.cmyk.rgb([
@@ -239,14 +235,7 @@ export const IoColorMixin = (superclass) => {
       }
     }
     valueChanged() {
-      let c = [];
-      if (this.value instanceof Array) {
-        for (let i = 0; i < this.value.length; i++) {
-          c.push(i);
-        }
-      } else {
-        c.push(...Object.keys(this.value));
-      }
+      let c = Object.keys(this.value);
 
       let mode = this.mode;
       if (c.indexOf('r') !== -1) mode = 0;
@@ -322,7 +311,6 @@ export const IoColorMixin = (superclass) => {
         hsl: [hsl[0] / 360, hsl[1] / 100, hsl[2] / 100],
         cmyk: [cmyk[0] / 100, cmyk[1] / 100, cmyk[2] / 100, cmyk[3] / 100],
         alpha: alpha !== undefined ? alpha / 100 : undefined,
-        components: c,
         mode: mode,
       });
     }

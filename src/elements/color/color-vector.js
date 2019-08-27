@@ -1,5 +1,6 @@
 import {html, IoElement} from "../../io.js";
 import {IoColorMixin} from "./color.js";
+import "./color-picker.js";
 
 export class IoColorVector extends IoColorMixin(IoElement) {
   static get Style() {
@@ -29,10 +30,6 @@ export class IoColorVector extends IoColorMixin(IoElement) {
       step: 0.01,
       min: 0,
       max: 1,
-      components: {
-        type: Array,
-        notify: false,
-      },
     };
   }
   _onValueSet(event) {
@@ -47,8 +44,9 @@ export class IoColorVector extends IoColorMixin(IoElement) {
   }
   changed() {
     const elements = [];
-    for (let i in this.components) {
-      const c = this.components[i];
+    const components = Object.keys(this.value);
+    for (let i in components) {
+      const c = components[i];
       if (this.value[c] !== undefined) {
         elements.push(['io-number', {
           id: c,

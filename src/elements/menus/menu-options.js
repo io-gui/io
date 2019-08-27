@@ -11,6 +11,7 @@ export class IoMenuOptions extends IoElement {
         ${mixin.panel}
       }
       :host {
+        align-self: flex-start;
         display: flex;
         flex-direction: column;
         align-items: stretch;

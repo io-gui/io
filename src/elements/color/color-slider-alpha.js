@@ -28,8 +28,9 @@ export class IoColorSliderAlpha extends IoColorSlider {
   }
   setAria() {
     // TODO
-    const c = this.mode === 3 ? 4 : 3;
-    const hasAlpha = this.value[this.components[c]] !== undefined;
+    const i = this.mode === 3 ? 4 : 3;
+    const components = Object.keys(this.value);
+    const hasAlpha = this.value[components[i]] !== undefined;
     this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
   }
   _setIncrease() {
@@ -37,18 +38,21 @@ export class IoColorSliderAlpha extends IoColorSlider {
   _setDecrease() {
   }
   _setMin() {
-    const c = this.mode === 3 ? 4 : 3;
-    this.value[this.components[c]] = 0;
+    const i = this.mode === 3 ? 4 : 3;
+    const components = Object.keys(this.value);
+    this.value[components[i]] = 0;
   }
   _setMax() {
-    const c = this.mode === 3 ? 4 : 3;
-    this.value[this.components[c]] = 1;
+    const i = this.mode === 3 ? 4 : 3;
+    const components = Object.keys(this.value);
+    this.value[components[i]] = 1;
   }
   _setValue(x) {
     this.valueChanged();
-    const c = this.mode === 3 ? 4 : 3;
-    const hasAlpha = this.value[this.components[c]] !== undefined;
-    if (hasAlpha) this.value[this.components[c]] = x;
+    const i = this.mode === 3 ? 4 : 3;
+    const components = Object.keys(this.value);
+    const hasAlpha = this.value[components[i]] !== undefined;
+    if (hasAlpha) this.value[components[i]] = x;
   }
 }
 

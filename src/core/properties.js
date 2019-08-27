@@ -75,7 +75,7 @@ export class Properties {
         if (typeof this[prop].value === 'object' && this[prop].value !== null) {
           if (this[prop].value.isNode) this[prop].value.connect(node);
           node.queue(prop, this[prop].value, undefined);
-        } else if (this[prop].reflect === 1) {
+        } else if (this[prop].reflect >= 1) {
           this.node.setAttribute(prop, this[prop].value);
         }
       }
@@ -120,7 +120,7 @@ export class Properties {
           this.node.queueDispatch();
         }
       }
-      if (this[prop].reflect === 1) this.node.setAttribute(prop, value);
+      if (this[prop].reflect >= 1) this.node.setAttribute(prop, value);
     }
 
   }

@@ -2,6 +2,8 @@ import {html} from "../../io.js";
 // import {IoLayerSingleton} from "../../io-elements-core.js";
 import {IoMenuItem} from "./menu-item.js";
 
+// TODO: fix tab-out without collapse
+
 export class IoMenuOption extends IoMenuItem {
   static get Style() {
     return html`<style>
@@ -45,6 +47,7 @@ export class IoMenuOption extends IoMenuItem {
     // TODO: on poiter up outside?
     if (event.pointerType === 'touch') this.expanded = true;
   }
+  // TODO: implement keyboard navigation.
   _onKeydown(event) {
     if (event.which === 13 || event.which === 32) {
       event.preventDefault();

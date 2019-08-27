@@ -1,43 +1,208 @@
-## &lt;io-color&gt;
+## `IoColorMixin`
 
-## &lt;io-color-vector&gt;
+A mixin class for all `IoColor*` elements. Its `value` property can be a color of `Array` or `Object` type in **rgb**, **hsv**, **hsl** or **cmyk** color space. If `value` is an array, its color space is inferred as **rgb** unless explicit color mode is specified with `mode` property which can have values **0 - rgb**, **1 - hsv**, **2 - hsl**, **3 - cmyk**. If `value` is an object, it should have keys corresponding to the color space components and color space will be determined automatically. Alpha component `a` is optional.
 
-Input element for colors. Array `value` can have 3 or 4 number elements. Object `value` can have keys `r`, `g`, `b` and optionally `a`.
+Upon value change and mutation, color properties in all color spaces are calculated, including `rgb`, `hsv`, `hsl`, `cmyk` and `alpha`.
 
-<io-element-demo element="io-color-vector" properties='{"value": [1, 0.5, 0, 0.5]}'></io-element-demo>
+## `IoColorVector`
 
-<io-element-demo element="io-color-vector" properties='{"value": {"r": 1, "g": 0.5, "b": 0, "a": 0.5}}'></io-element-demo>
+Extends `IoColorMixin(IoElement)`.
 
-<io-element-demo element="io-color-vector" properties='{"value": {"h": 1, "s": 0.5, "v": 1, "a": 0.5}}'></io-element-demo>
+Implements `IoNumber` and `IoColorPicker`.
 
-## &lt;io-color-swatch&gt;
+Input element for color displayed as vector and an interactive picker.
 
-## &lt;io-color-slider&gt;
-
-Base class for color sliders. It should not be used as it is.
-
-<io-element-demo element="io-color-slider"
-  width="64px"
-  height="64px"
-  properties='{"value": [0.5, 0.5, 0.5, 0.5], "colorMode": 0}
+<io-element-demo element="io-color-vector"
+properties='{"mode": 0, "value": [1, 0.5, 0, 0.5]}'
+config='{"value": ["io-properties"], "mode": ["io-menu-option", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}, {"value": 3, "label": "3 - cmyk"}]}]}
 '></io-element-demo>
 
-## &lt;io-color-panel&gt;
 
-## &lt;io-color-picker&gt;
+## `IoColorPanel`
 
-Input element for colors picking in rgb color space. Array `value` can have 3 or 4 number elements. Object `value` can have keys `r`, `g`, `b` and optionally `a`.
+Extends `IoColorMixin(IoElement)`.
+
+Input element for color displayed as a set of sliders.
+
+<io-element-demo element="io-color-panel"
+width= "192px"
+height= "128px"
+properties='{"mode": 0, "value": [1, 0.5, 0, 0.5], "horizontal": true}'
+config='{"value": ["io-properties"], "mode": ["io-menu-option", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}, {"value": 3, "label": "3 - cmyk"}]}]}
+'></io-element-demo>
+
+## `IoColorPanelSingleton`
+
+Implements `IoColorPanel` and `IoLayerSingleton`.
+
+A singleton instance of `IoColorPanel` to be used with `IoColorPicker` or other elements requiring a temporary `IoColorPanel` element.
+
+## `IoColorSwatch`
+
+Extends `IoColorMixin(IoElement)`.
+
+Display element for color.
+
+<io-element-demo element="io-color-swatch"
+properties='{"value": {"h": 1, "s": 0.5, "v": 1, "a": 0.5}}'
+config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorPicker`
+
+Extends `IoColorMixin(IoElement)`.
+
+Implements `IoColorSwatch`, `IoColorPanelSingleton` and `IoLayerSingleton`.
+
+Input element for color picking. Expands a floating color panel when clicked or activated by keyboard.
 
 <io-element-demo element="io-color-picker"
-  width="192px"
-  height="128px"
-  properties='{"value": [0.2, 0.8, 0.5, 0.9], "horizontal": true}'
+  properties='{"value": [0.2, 0.8, 0.5, 0.9]}'
   config='{"value": ["io-color-vector"]}
 '></io-element-demo>
 
-<io-element-demo element="io-color-picker"
-  width="192px"
-  height="128px"
-  properties='{"value": [0.2, 0.8, 0.5, 0.9], "horizontal": true}'
-  config='{"value": ["io-hsva"]}
+## `IoColorSlider`
+
+Extends `IoColorMixin(IoSlider)`.
+
+Base class for color sliders for any color type.
+
+## `IoColorSliderHs`
+
+Extends `IoColorSlider`.
+
+2D slider. Modifies **hue** and **saturation** of the color `value` in **hsv** or **hsl** color space.
+
+<io-element-demo element="io-color-slider-hs"
+width="64px" height="64px"
+properties='{"value": [0.5, 1, 0.5, 0.5], "horizontal": true}'
+config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderSv`
+
+2D slider. Modifies **saturation** and **value** of the color `value` in **hsv** color space.
+
+<io-element-demo element="io-color-slider-sv"
+  width="64px" height="64px"
+  properties='{"value": [1, 0.5, 0.5, 0.5], "horizontal": true}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderSl`
+
+2D slider. Modifies **saturation** and **level** of the color `value` in **hsl** color space.
+
+<io-element-demo element="io-color-slider-sl"
+  width="64px" height="64px"
+  properties='{"value": [1, 0.5, 0.5, 0.5], "horizontal": true}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderRed`
+
+Modifies **red** component the color `value` in **rgb** color space.
+
+<io-element-demo element="io-color-slider-red"
+  properties='{"value": [0, 0, 0, 1]}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderGreen`
+
+Modifies **green** component the color `value` in **rgb** color space.
+
+<io-element-demo element="io-color-slider-green"
+  properties='{"value": [0, 0, 0, 1]}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderBlue`
+
+Modifies **blue** component the color `value` in **rgb** color space.
+
+<io-element-demo element="io-color-slider-blue"
+  properties='{"value": [0, 0, 0, 1]}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderAlpha`
+
+Modifies **alpha** component the color `value`.
+
+<io-element-demo element="io-color-slider-alpha"
+  properties='{"value": [1, 1, 1, 0.5]}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderHue`
+
+Modifies **hue** component the color `value` in **hsv** color space.
+
+<io-element-demo element="io-color-slider-hue"
+  properties='{"value": [1, 0, 0, 1], "mode": 0}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderSaturation`
+
+Modifies **saturation** component the color `value` in **hsv** or **hsl** color space.
+
+<io-element-demo element="io-color-slider-saturation"
+  properties='{"value": [1, 0, 0, 1], "mode": 1}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderValue`
+
+Modifies **value** component the color `value` in **hsv** color space.
+
+<io-element-demo element="io-color-slider-value"
+  properties='{"value": [1, 0, 0, 1], "mode": 1}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderLevel`
+
+Modifies **level** component the color `value` in **hsl** color space.
+
+<io-element-demo element="io-color-slider-level"
+  properties='{"value": [1, 0, 0, 1], "mode": 2}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderCyan`
+
+Modifies **cyan** component the color `value` in **cmyk** color space.
+
+<io-element-demo element="io-color-slider-cyan"
+  properties='{"value": [0, 0, 0, 0], "mode": 3}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderMagenta`
+
+Modifies **magenta** component the color `value` in **cmyk** color space.
+
+<io-element-demo element="io-color-slider-magenta"
+  properties='{"value": [0, 0, 0, 0], "mode": 3}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderYellow`
+
+Modifies **yellow** component the color `value` in **cmyk** color space.
+
+<io-element-demo element="io-color-slider-yellow"
+  properties='{"value": [0, 0, 0, 0], "mode": 3}'
+  config='{"value": ["io-properties"]}
+'></io-element-demo>
+
+## `IoColorSliderKey`
+
+Modifies **key** component the color `value` in **cmyk** color space.
+
+<io-element-demo element="io-color-slider-key"
+  properties='{"value": [0, 0, 0, 0], "mode": 3}'
+  config='{"value": ["io-properties"]}
 '></io-element-demo>

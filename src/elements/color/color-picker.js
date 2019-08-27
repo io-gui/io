@@ -1,8 +1,31 @@
-import {IoLayerSingleton} from "../../io-elements-core.js";
-import {IoColorSwatch} from "./color-swatch.js";
+import {html} from "../../io.js";
+import {IoItem, IoLayerSingleton} from "../../io-elements-core.js";
+import {IoColorMixin} from "./color.js";
+import "./color-swatch.js";
 import {IoColorPanelSingleton} from "./color-panel.js";
 
-export class IoColorPicker extends IoColorSwatch {
+export class IoColorPicker extends IoColorMixin(IoItem) {
+  static get Style() {
+    return html`<style>
+      :host {
+        display: flex;
+        box-sizing: border-box;
+        border-radius: var(--io-border-radius);
+        border: var(--io-border);
+        border-color: var(--io-color-border-inset);
+        min-width: var(--io-item-height);
+        min-height: var(--io-item-height);
+        padding: 0;
+      }
+      :host > io-color-swatch {
+        border: 0;
+        flex: 1 1 auto;
+        min-width: 0;
+        min-height: 0;
+        border-radius: 0;
+      }
+    </style>`;
+  }
   static get Properties() {
     return {
       value: [0.5, 0.5, 0.5, 0.5],
@@ -13,28 +36,59 @@ export class IoColorPicker extends IoColorSwatch {
   }
   static get Listeners() {
     return {
-      'mousedown': '_onMousedown',
+      'click': '_onClick',
       'keydown': '_onKeydown',
     };
   }
-  _onMousedown() {
+  _onClick() {
     event.preventDefault();
     this.focus();
-    this._expand();
+    this.toggle();
   }
-  _onKeydown() {
-    this._expand();
+  get expanded() {
+    return IoColorPanelSingleton.expanded && IoLayerSingleton.srcElement === this;
   }
-  _expand() {
+  _onKeydown(event) {
+    const rect = this.getBoundingClientRect();
+    const pRect = IoColorPanelSingleton.getBoundingClientRect();
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.toggle();
+      if (this.expanded) IoColorPanelSingleton.firstChild.focus();
+    } else if (this.expanded && pRect.top >= rect.bottom && event.key === 'ArrowDown') {
+      event.preventDefault();
+      IoColorPanelSingleton.firstChild.focus();
+    } else if (this.expanded && pRect.bottom <= rect.top && event.key === 'ArrowUp') {
+      event.preventDefault();
+      IoColorPanelSingleton.firstChild.focus();
+    } else {
+      this.collapse();
+      super._onKeydown(event);
+    }
+  }
+  toggle() {
+    if (this.expanded) {
+      this.collapse();
+    } else {
+      this.expand();
+    }
+  }
+  expand() {
     const hasAlpha = this.alpha !== undefined;
     IoColorPanelSingleton.value = this.value;
     IoColorPanelSingleton.mode = this.mode;
     IoColorPanelSingleton.style.width = hasAlpha ? '192px' : '160px';
     IoColorPanelSingleton.style.height = '128px';
     IoColorPanelSingleton.expanded = true;
-    IoLayerSingleton.clickblock = true;
     IoLayerSingleton.srcElement = this;
     IoLayerSingleton.setElementPosition(IoColorPanelSingleton, 'bottom', this.getBoundingClientRect());
+  }
+  collapse() {
+    IoColorPanelSingleton.expanded = false;
+    IoLayerSingleton.srcElement = undefined;
+  }
+  changed() {
+    this.template([['io-color-swatch', {value: this.value, mode: this.mode}]]);
   }
 }
 

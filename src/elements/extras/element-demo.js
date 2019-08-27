@@ -29,6 +29,9 @@ export class IoElementDemo extends IoElement {
       :host > io-properties > :nth-child(2) {
         margin-right: calc(var(--io-item-height) + var(--io-spacing));
       }
+      :host:not([expanded]) > .io-frame {
+        margin-right: calc(var(--io-item-height) + calc(3 * var(--io-spacing)));
+      }
     </style>`;
   }
   static get Properties() {
@@ -55,7 +58,7 @@ export class IoElementDemo extends IoElement {
       },
       expanded: {
         type: Boolean,
-        reflect: -1,
+        reflect: 2,
       }
     };
   }

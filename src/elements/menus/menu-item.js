@@ -14,6 +14,8 @@ export function filterObject(object, predicate) {
   }
 }
 
+// TODO: fix and improve keyboard navigation in all cases.
+
 function getElementDescendants(element) {
   const descendants = [];
   let items;

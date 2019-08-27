@@ -22,6 +22,7 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
       :host > * {
         border-radius: calc(var(--io-border-radius) - var(--io-border-width));
       }
+      :host > io-color-slider-sl,
       :host > io-color-slider-sv {
         flex: 1 1;
       }
@@ -45,21 +46,23 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
       },
     };
   }
-  _onHsvSet() {
-    this.setValueFromHsv();
-    this._suspendLoop = true;
-    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    setTimeout(()=> {
-      this._suspendLoop = false;
-    });
+  static get Listeners() {
+    return {
+      'keydown': '_onKeydown',
+    };
   }
-  expandedChanged() {
-    this.valueChanged();
+  _onKeydown(event) {
+    if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.expanded = false;
+    }
   }
   changed() {
     this.template([
-      ['io-color-slider-sv', {value: this.hsv, mode: 1, 'on-value-set': this._onHsvSet}],
-      ['io-color-slider-hue', {value: this.hsv, mode: 1, horizontal: !this.horizontal, 'on-value-set': this._onHsvSet}],
+      this.mode === 2 ?
+        ['io-color-slider-sl', {value: this.value, mode: this.mode}] :
+        ['io-color-slider-sv', {value: this.value, mode: this.mode}],
+      ['io-color-slider-hue', {value: this.value, mode: this.mode, horizontal: !this.horizontal}],
       this.alpha !== undefined ? ['io-color-slider-alpha', {value: this.value, horizontal: !this.horizontal}] : null,
     ]);
   }
