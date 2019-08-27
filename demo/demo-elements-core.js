@@ -72,7 +72,7 @@ export class IoDemoElementsCore extends IoElement {
         ]],
       ]],
       ['div', {class: 'io-table4 table'}, [
-        ['io-menu-option', {options: [
+        ['io-option-menu', {options: [
           {label: 'negative one', value: -1},
           {label: 'zero', value: 0},
           {label: 'half', value: 0.5},
@@ -82,7 +82,7 @@ export class IoDemoElementsCore extends IoElement {
           {label: 'four', value: 4},
           {label: 'leet', value: 1337},
         ], value: this.bind('number')}],
-        ['io-menu-option', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
+        ['io-option-menu', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
         ['io-button', {label: 'set 0.5', action: this.setNumber, value: 0.5}],
       ]],
     ]);

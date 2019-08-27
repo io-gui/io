@@ -1,6 +1,6 @@
 import {html} from "../../io.js";
 import {IoItem, IoLayerSingleton} from "../../io-elements-core.js";
-import {IoMenuOptions} from "./menu-options.js";
+import {IoOptionMenus} from "./menu-options.js";
 
 export function filterObject(object, predicate) {
   if (predicate(object)) return object;
@@ -20,11 +20,11 @@ function getElementDescendants(element) {
   const descendants = [];
   let items;
   // TODO: unhack
-  if ('io-menu-item, io-menu-option'.search(element.localName) !== -1) {
+  if ('io-menu-item, io-option-menu'.search(element.localName) !== -1) {
     descendants.push(element);
-    items = element.$options.querySelectorAll('io-menu-item, io-menu-option');
+    items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
   } else {
-    items = element.querySelectorAll('io-menu-item, io-menu-option');
+    items = element.querySelectorAll('io-menu-item, io-option-menu');
   }
   for (let i = items.length; i--;) {
     descendants.push(items[i]);
@@ -115,7 +115,7 @@ export class IoMenuItem extends IoItem {
   constructor(props) {
     super(props);
     // TODO: consider optimizing-out on leaf item elements.
-    this.$options = new IoMenuOptions({
+    this.$options = new IoOptionMenus({
       $parent: this,
       expanded: this.bind('expanded'),
       'on-item-clicked': this._onOptionItemClicked,

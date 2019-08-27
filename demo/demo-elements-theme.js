@@ -26,7 +26,7 @@ export class IoDemoElementsTheme extends IoElement {
       {value: 'dark', action: this._setTheme},
     ]
     this.template([
-      ['io-item', {label: ' '}], ['io-menu-option', {label: 'Theme ▾', options: options}],
+      ['io-item', {label: ' '}], ['io-option-menu', {label: 'Theme ▾', options: options}],
       ['io-item', {label: 'cssSpacing'}],
       ['io-number-slider', {value: IoThemeSingleton.bind('cssSpacing'), min: 0, max: 20, step: 1}],
       ['io-item', {label: 'cssBorderRadius'}],

@@ -43,7 +43,7 @@ export class IoDemoElementsColor extends IoElement {
     super(props);
     this.template([
       ['io-item', {label: 'Mode'}],
-      ['io-menu-option', {value: this.bind('mode'), options: [
+      ['io-option-menu', {value: this.bind('mode'), options: [
         {label: 'rgb', value: 0},
         {label: 'hsv', value: 1},
         {label: 'hsl', value: 2},

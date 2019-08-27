@@ -12,7 +12,7 @@ When clicked or activated by space/enter key, it toggles the visibility of the c
 
 Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
 
-<io-element-demo element="io-selector" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false, "precache": false}' config='{"selected": ["io-menu-option", {"options": ["first", "second", "third", "fourth"]}]}'></io-element-demo>
+<io-element-demo element="io-selector" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false, "precache": false}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}]}'></io-element-demo>
 
 If `cache` property is set to `true`, a reference to the element will be kept fo later use.
 
@@ -24,7 +24,7 @@ Element selector with selectable tabs interfce. Extends `<io-selector>`.
 
 Extends `<io-selector>`. Implements `<io-tabs>`.
 
-<io-element-demo element="io-selector-tabs" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"], ["div", {"name": "fifth"}, "Fifth content"], ["div", {"name": "sixth"}, "Sixth content"]], "selected": "first", "cache": false, "precache": false, "options": ["first", "second", "third", "fourth", {"label" : "more", "options": ["fifth", "sixth"]}]}' config='{"selected": ["io-menu-option", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
+<io-element-demo element="io-selector-tabs" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"], ["div", {"name": "fifth"}, "Fifth content"], ["div", {"name": "sixth"}, "Sixth content"]], "selected": "first", "cache": false, "precache": false, "options": ["first", "second", "third", "fourth", {"label" : "more", "options": ["fifth", "sixth"]}]}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
 
 ## &lt;io-selector-sidebar&gt;
 
@@ -32,13 +32,13 @@ Element selector with selectable sidebar interfce. Extends `<io-selector>`.
 
 Extends `<io-selector>`. Implements `<io-sidebar>`.
 
-<io-element-demo element="io-selector-sidebar" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false, "precache": false, "options": [{"label": "elements", "options": ["first", "second", "third", "fourth"]}], "left": true, "minWidth": 410}' config='{"selected": ["io-menu-option", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
+<io-element-demo element="io-selector-sidebar" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false, "precache": false, "options": [{"label": "elements", "options": ["first", "second", "third", "fourth"]}], "left": true, "minWidth": 410}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
 
 ## &lt;io-sidebar&gt;
 
 Labeled tabs for selection.
 
-Implements `<io-menu-option>` and `<io-button>`.
+Implements `<io-option-menu>` and `<io-button>`.
 
 <io-element-demo element="io-sidebar" properties='{"selected": 1, "options": [1,2,3], "overflow": false}' config='{"options": ["io-object", {"expanded": true}]}'></io-element-demo>
 

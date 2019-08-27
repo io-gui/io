@@ -4,7 +4,7 @@ import "./menu-item.js";
 
 const rects = new WeakMap();
 
-export class IoMenuOptions extends IoElement {
+export class IoOptionMenus extends IoElement {
   static get Style() {
     return html`<style>
       :host {
@@ -203,4 +203,4 @@ export class IoMenuOptions extends IoElement {
   }
 }
 
-IoMenuOptions.Register();
+IoOptionMenus.Register();

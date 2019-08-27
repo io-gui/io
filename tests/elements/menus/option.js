@@ -1,8 +1,8 @@
-import {IoMenuOption} from "../../../dist/io-elements-menu.js";
+import {IoOptionMenu} from "../../../dist/io-elements-menu.js";
 
 export default class {
   constructor() {
-    this.element = new IoMenuOption();
+    this.element = new IoOptionMenu();
     this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
@@ -13,7 +13,7 @@ export default class {
     this.element.expanded = false;
   }
   run() {
-    describe('IoMenuOption', () => {
+    describe('IoOptionMenu', () => {
       describe('default values', () => {
         it('has default values', () => {
           chai.expect(this.element.value).to.equal(undefined);

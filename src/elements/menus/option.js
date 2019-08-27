@@ -4,7 +4,7 @@ import {IoMenuItem} from "./menu-item.js";
 
 // TODO: fix tab-out without collapse
 
-export class IoMenuOption extends IoMenuItem {
+export class IoOptionMenu extends IoMenuItem {
   static get Style() {
     return html`<style>
       :host {
@@ -106,4 +106,4 @@ export class IoMenuOption extends IoMenuItem {
   }
 }
 
-IoMenuOption.Register();
+IoOptionMenu.Register();
