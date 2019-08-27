@@ -63,10 +63,16 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
     super._onKeydown(event);
     this._notifyValueChange();
   }
-  _setIncrease() {}
-  _setDecrease() {}
-  _setMin() {}
-  _setMax() {}
+  _setIncrease() {
+  }
+  _setDecrease() {
+  }
+  _setMin() {
+    this._setValue(0, 0);
+  }
+  _setMax() {
+    this._setValue(1, 1);
+  }
   _onPointermoveDebounced(event) {
     super._onPointermoveDebounced(event);
     this._notifyValueChange();
@@ -74,8 +80,6 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   _notifyValueChange() {
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
-    this.valueChanged();
-    this.changed();
   }
   _setValue() {
     // NOTE: implement in subclass

@@ -34,8 +34,14 @@ export class IoColorSliderAlpha extends IoColorSlider {
     this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
   }
   _setIncrease() {
+    const i = this.mode === 3 ? 4 : 3;
+    const components = Object.keys(this.value);
+    this.value[components[i]] = Math.min(1, this.value[components[i]] + 0.01);
   }
   _setDecrease() {
+    const i = this.mode === 3 ? 4 : 3;
+    const components = Object.keys(this.value);
+    this.value[components[i]] = Math.max(0, this.value[components[i]] - 0.01);
   }
   _setMin() {
     const i = this.mode === 3 ? 4 : 3;
@@ -48,7 +54,6 @@ export class IoColorSliderAlpha extends IoColorSlider {
     this.value[components[i]] = 1;
   }
   _setValue(x) {
-    this.valueChanged();
     const i = this.mode === 3 ? 4 : 3;
     const components = Object.keys(this.value);
     const hasAlpha = this.value[components[i]] !== undefined;

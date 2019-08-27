@@ -27,8 +27,15 @@ export class IoColorSliderSaturation extends IoColorSlider {
       }
     `;
   }
+  _setIncrease() {
+    this.hsv[1] = Math.min(1, this.hsv[1] + 0.01);
+    this.setValueFromHsv();
+  }
+  _setDecrease() {
+    this.hsv[1] = Math.max(0, this.hsv[1] - 0.01);
+    this.setValueFromHsv();
+  }
   _setValue(x) {
-    this.valueChanged();
     this.hsv[1] = x;
     this.setValueFromHsv();
   }

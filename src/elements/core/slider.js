@@ -114,32 +114,32 @@ export class IoSlider extends IoGl {
     this.set('value', Number(x.toFixed(5)));
   }
   _onKeydown(event) {
-    if (event.which == 37) {
+    if (event.key === 'ArrowLeft') {
       event.preventDefault();
       if (!event.shiftKey) this.focusTo('left');
       else this._setDecrease();
-    } else if (event.which == 38) {
+    } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       if (!event.shiftKey) this.focusTo('up');
-      else this._setDecrease();
-    } else if (event.which == 39) {
+      else this._setIncrease();
+    } else if (event.key === 'ArrowRight') {
       event.preventDefault();
       if (!event.shiftKey) this.focusTo('right');
       else this._setIncrease();
-    } else if (event.which == 40) {
+    } else if (event.key === 'ArrowDown') {
       event.preventDefault();
       if (!event.shiftKey) this.focusTo('down');
-      else this._setIncrease();
-    } else if (event.which == 33) {
+      else this._setDecrease();
+    } else if (event.key === 'PageUp' || event.key === '+') {
       event.preventDefault();
       this._setIncrease();
-    } else if (event.which == 34) {
+    } else if (event.key === 'PageDown' || event.key === '-') {
       event.preventDefault();
       this._setDecrease();
-    } else if (event.which == 36) {
+    } else if (event.key === 'Home') {
       event.preventDefault();
       this._setMin();
-    } else if (event.which == 35) {
+    } else if (event.key === 'PageDown') {
       event.preventDefault();
       this._setMax();
     }

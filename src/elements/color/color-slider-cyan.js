@@ -22,8 +22,15 @@ export class IoColorSliderCyan extends IoColorSlider {
       }
     `;
   }
+  _setIncrease() {
+    this.cmyk[0] = Math.min(1, this.cmyk[0] + 0.01);
+    this.setValueFromCmyk();
+  }
+  _setDecrease() {
+    this.cmyk[0] = Math.max(0, this.cmyk[0] - 0.01);
+    this.setValueFromCmyk();
+  }
   _setValue(x) {
-    this.valueChanged();
     this.cmyk[0] = x;
     this.setValueFromCmyk();
   }

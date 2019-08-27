@@ -31,7 +31,6 @@ export class IoColorSliderSv extends IoColorSlider {
     `;
   }
   _setValue(x, y) {
-    this.valueChanged();
     this.hsv[1] = x;
     this.hsv[2] = y;
     this.setValueFromHsv();

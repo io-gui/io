@@ -22,8 +22,15 @@ export class IoColorSliderGreen extends IoColorSlider {
       }
     `;
   }
+  _setIncrease() {
+    this.rgb[1] = Math.min(1, this.rgb[1] + 0.01);
+    this.setValueFromRgb();
+  }
+  _setDecrease() {
+    this.rgb[1] = Math.max(0, this.rgb[1] - 0.01);
+    this.setValueFromRgb();
+  }
   _setValue(x) {
-    this.valueChanged();
     this.rgb[1] = x;
     this.setValueFromRgb();
   }

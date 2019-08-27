@@ -33,6 +33,43 @@ export class IoColorSliderHs extends IoColorSlider {
       }
     `;
   }
+  _onKeydown(event) {
+    if (event.shiftKey && event.key === 'ArrowLeft') {
+      event.preventDefault();
+      if (this.horizontal) {
+        this.hsv[0] = Math.max(0, this.hsv[0] - 0.01);
+      } else {
+        this.hsv[1] = Math.max(0, this.hsv[1] - 0.01);
+      }
+      this.setValueFromHsv();
+    } else if (event.shiftKey && event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (this.horizontal) {
+        this.hsv[1] = Math.min(1, this.hsv[1] + 0.01);
+      } else {
+        this.hsv[0] = Math.min(1, this.hsv[0] + 0.01);
+      }
+      this.setValueFromHsv();
+    } else if (event.shiftKey && event.key === 'ArrowRight') {
+      event.preventDefault();
+      if (this.horizontal) {
+        this.hsv[0] = Math.min(1, this.hsv[0] + 0.01);
+      } else {
+        this.hsv[1] = Math.min(1, this.hsv[1] + 0.01);
+      }
+      this.setValueFromHsv();
+    } else if (event.shiftKey && event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (this.horizontal) {
+        this.hsv[1] = Math.max(0, this.hsv[1] - 0.01);
+      } else {
+        this.hsv[0] = Math.max(0, this.hsv[0] - 0.01);
+      }
+      this.setValueFromHsv();
+    } else {
+      super._onKeydown(event);
+    }
+  }
   _setValue(x, y) {
     this.hsv[0] = x;
     this.hsv[1] = y;

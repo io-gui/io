@@ -23,21 +23,14 @@ export class IoColorSliderHue extends IoColorSlider {
     `;
   }
   _setIncrease() {
-
+    this.hsv[0] = Math.min(1, this.hsv[0] + 0.01);
+    this.setValueFromHsv();
   }
   _setDecrease() {
-
-  }
-  _setMin() {
-    this.valueChanged();
-    this._setValue(0, 0);
-  }
-  _setMax() {
-    this.valueChanged();
-    this._setValue(0, 1);
+    this.hsv[0] = Math.max(0, this.hsv[0] - 0.01);
+    this.setValueFromHsv();
   }
   _setValue(x) {
-    this.valueChanged();
     this.hsv[0] = x;
     this.setValueFromHsv();
   }

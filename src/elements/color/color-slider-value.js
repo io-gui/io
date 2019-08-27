@@ -22,8 +22,15 @@ export class IoColorSliderValue extends IoColorSlider {
       }
     `;
   }
+  _setIncrease() {
+    this.hsv[2] = Math.min(1, this.hsv[2] + 0.01);
+    this.setValueFromHsv();
+  }
+  _setDecrease() {
+    this.hsv[2] = Math.max(0, this.hsv[2] - 0.01);
+    this.setValueFromHsv();
+  }
   _setValue(x) {
-    this.valueChanged();
     this.hsv[2] = x;
     this.setValueFromHsv();
   }

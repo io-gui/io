@@ -95,6 +95,7 @@ export const IoColorMixin = (superclass) => {
           break;
         }
       }
+      this._notifyValueChange();
     }
     setValueFromHsv() {
       const c = Object.keys(this.value);
@@ -140,6 +141,7 @@ export const IoColorMixin = (superclass) => {
           break;
         }
       }
+      this._notifyValueChange();
     }
     setValueFromHsl() {
       const c = Object.keys(this.value);
@@ -185,6 +187,7 @@ export const IoColorMixin = (superclass) => {
           break;
         }
       }
+      this._notifyValueChange();
     }
     setValueFromCmyk() {
       const c = Object.keys(this.value);
@@ -233,6 +236,7 @@ export const IoColorMixin = (superclass) => {
           break;
         }
       }
+      this._notifyValueChange();
     }
     valueChanged() {
       let c = Object.keys(this.value);

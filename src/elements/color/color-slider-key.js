@@ -22,8 +22,15 @@ export class IoColorSliderKey extends IoColorSlider {
       }
     `;
   }
+  _setIncrease() {
+    this.cmyk[3] = Math.min(1, this.cmyk[3] + 0.01);
+    this.setValueFromCmyk();
+  }
+  _setDecrease() {
+    this.cmyk[3] = Math.max(0, this.cmyk[3] - 0.01);
+    this.setValueFromCmyk();
+  }
   _setValue(x) {
-    this.valueChanged();
     this.cmyk[3] = x;
     this.setValueFromCmyk();
   }
