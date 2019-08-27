@@ -238,8 +238,8 @@ export class IoGl extends IoElement {
     const pxRatio = window.devicePixelRatio;
     const rect = this.getBoundingClientRect();
     const style = window.getComputedStyle(this);
-    const bw = parseInt(style.borderRightWidth) + parseInt(style.borderLeftWidth)
-    const bh = parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth)
+    const bw = parseInt(style.borderRightWidth) + parseInt(style.borderLeftWidth);
+    const bh = parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth);
 
     // TODO: confirm and test
     const width = Math.max(0, Math.floor(rect.width - bw));
