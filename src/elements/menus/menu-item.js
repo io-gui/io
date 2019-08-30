@@ -209,12 +209,6 @@ export class IoMenuItem extends IoItem {
     IoLayerSingleton.removeEventListener('pointermove', this._onLayerPointermove);
   }
   _onClick(event) {
-    // TODO unhack (prevents _onClick on pointer origin on release)
-    if (event.type === 'click') {
-      console.log('asd');
-      return;
-    }
-    //
     if (this._value !== undefined || this._action) {
       if (this._value !== undefined) {
         this.set('value', this._value, true);
