@@ -1,4 +1,4 @@
-import {IoProperties} from "../../../dist/io-object.js";
+import {IoProperties} from "../../../src/io-object.js";
 
 const testValue = {
   "number": 0.5,

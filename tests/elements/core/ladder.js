@@ -1,4 +1,4 @@
-import "../../../dist/io-core.js";
+import "../../../src/io-core.js";
 
 export default class {
   constructor() {

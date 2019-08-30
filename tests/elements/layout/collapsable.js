@@ -1,4 +1,4 @@
-import {IoCollapsable} from "../../../dist/io-layout.js";
+import {IoCollapsable} from "../../../src/io-layout.js";
 
 export default class {
   constructor() {

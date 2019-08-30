@@ -1,4 +1,4 @@
-import {IoThemeSingleton} from "../../../dist/io-core.js";
+import {IoThemeSingleton} from "../../../src/io-core.js";
 
 export default class {
   constructor() {

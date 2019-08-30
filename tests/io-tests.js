@@ -1,4 +1,4 @@
-import {html, IoElement} from "../dist/io.js";
+import {html, IoElement} from "../src/io.js";
 
 import "../lib/mocha.js";
 import "../lib/chai.js";

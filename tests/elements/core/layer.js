@@ -1,4 +1,4 @@
-import {IoLayerSingleton} from "../../../dist/io-core.js";
+import {IoLayerSingleton} from "../../../src/io-core.js";
 
 export default class {
   constructor() {

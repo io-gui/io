@@ -1,4 +1,4 @@
-import {IoSlider} from "../../../dist/io-core.js";
+import {IoSlider} from "../../../src/io-core.js";
 
 export default class {
   constructor() {

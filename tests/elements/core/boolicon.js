@@ -1,4 +1,4 @@
-import {IoBoolicon, IoIconsetSingleton} from "../../../dist/io-core.js";
+import {IoBoolicon, IoIconsetSingleton} from "../../../src/io-core.js";
 
 export default class {
   constructor() {

@@ -1,4 +1,4 @@
-import {IoNode, Binding} from "../../dist/io.js";
+import {IoNode, Binding} from "../../src/io.js";
 
 export class TestNode extends IoNode {
   static get Properties() {

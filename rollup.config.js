@@ -38,158 +38,39 @@ function svg() {
   };
 }
 
+const externals = [];
 
-export default [
-  {
-    input: 'src/io.js',
-    plugins: [html()],
-    inlineDynamicImports: true,
-    output: [
-      {
-        format: 'es',
-        file: 'dist/io.js',
-        indent: '  '
-      }
-    ],
-  },
-  {
-    input: 'src/io-core.js',
+function makeTarget(src, target) {
+  externals.push(path.resolve(src));
+  return {
+    input: src,
     plugins: [html(), svg()],
     inlineDynamicImports: true,
     output: [
       {
         format: 'es',
-        file: 'dist/io-core.js',
+        file: target,
         indent: '  '
       }
     ],
-    external: [ path.resolve('src/io.js') ],
-  },
-  {
-    input: 'src/io-extras.js',
-    plugins: [html()],
-    inlineDynamicImports: true,
-    output: [
-      {
-        format: 'es',
-        file: 'dist/io-extras.js',
-        indent: '  '
-      }
-    ],
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-core.js') ],
+    external: externals,
     onwarn: (warning, warn) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       warn(warning);
     }
-  },
-  {
-    input: 'src/io-layout.js',
-    plugins: [html()],
-    inlineDynamicImports: true,
-    output: [
-      {
-        format: 'es',
-        file: 'dist/io-layout.js',
-        indent: '  '
-      }
-    ],
-    // TODO: remove menu dependency
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-core.js') ],
-  },
-  {
-    input: 'src/io-math.js',
-    plugins: [html()],
-    inlineDynamicImports: true,
-    output: [
-      {
-        format: 'es',
-        file: 'dist/io-math.js',
-        indent: '  '
-      }
-    ],
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-core.js') ],
-  },
-  {
-    input: 'src/io-color.js',
-    plugins: [html()],
-    inlineDynamicImports: true,
-    output: [
-      {
-        format: 'es',
-        file: 'dist/io-color.js',
-        indent: '  '
-      }
-    ],
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-core.js') ],
-  },
-  {
-    input: 'src/io-menu.js',
-    plugins: [html()],
-    inlineDynamicImports: true,
-    output: [
-      {
-        format: 'es',
-        file: 'dist/io-menu.js',
-        indent: '  '
-      }
-    ],
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-core.js') ],
-  },
-  {
-    input: 'src/io-object.js',
-    plugins: [html()],
-    inlineDynamicImports: true,
-    output: [
-      {
-        format: 'es',
-        file: 'dist/io-object.js',
-        indent: '  '
-      }
-    ],
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-core.js') ],
-  },
-  {
-    input: 'src/demo/io-demo.js',
-    plugins: [html()],
-    inlineDynamicImports: true,
-    output: [
-      {
-        format: 'es',
-        file: 'dist/io-demo.js',
-        indent: '  '
-      }
-    ],
-    external: [
-      path.resolve('src/io.js'),
-      path.resolve('src/io-core.js'),
-      path.resolve('src/io-color.js'),
-      path.resolve('src/io-extras.js'),
-      path.resolve('src/io-layout.js'),
-      path.resolve('src/io-math.js'),
-      path.resolve('src/io-menu.js'),
-      path.resolve('src/io-object.js'),
-    ],
-  },
-  // {
-  //   input: 'tests/io-tests.js',
-  //   plugins: [html()],
-  //   inlineDynamicImports: true,
-  //   output: [
-  //     {
-  //       format: 'es',
-  //       file: 'dist/io-tests.js',
-  //       indent: '  '
-  //     }
-  //   ],
-  //   external: [
-  //     path.resolve('src/io.js'),
-  //     path.resolve('dist/io-core.js'),
-  //     path.resolve('dist/io-color.js'),
-  //     path.resolve('dist/io-extras.js'),
-  //     path.resolve('dist/io-layout.js'),
-  //     path.resolve('dist/io-math.js'),
-  //     path.resolve('dist/io-menu.js'),
-  //     path.resolve('dist/io-object.js'),
-  //   ],
-  // },
+  }
+}
+
+
+export default [
+  makeTarget('src/io.js', 'dist/io.js'),
+  makeTarget('src/io-core.js', 'dist/io-core.js'),
+  makeTarget('src/io-extras.js', 'dist/io-extras.js'),
+  makeTarget('src/io-layout.js', 'dist/io-layout.js'),
+  makeTarget('src/io-math.js', 'dist/io-math.js'),
+  makeTarget('src/io-color.js', 'dist/io-color.js'),
+  makeTarget('src/io-menu.js', 'dist/io-menu.js'),
+  makeTarget('src/io-object.js', 'dist/io-object.js'),
+  makeTarget('src/demo/io-demo.js', 'dist/io-demo.js'),
+  makeTarget('src/tests/io-tests.js', 'dist/io-tests.js'),
 ];
