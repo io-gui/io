@@ -1,34 +1,16 @@
-import {IoBoolean} from "../../../src/io-core.js";
+import {IoSwitch} from "../../../io-core.js";
 
 export default class {
   constructor() {
-    this.element = new IoBoolean();
+    this.element = new IoSwitch();
     this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {
-    describe('IoBoolean', () => {
+    describe('IoSwitch', () => {
       describe('default values', () => {
         it('has default values', () => {
           chai.expect(this.element.value).to.equal(false);
-          chai.expect(this.element.true).to.equal('true');
-          chai.expect(this.element.false).to.equal('false');
-        });
-      });
-      describe('innerText', () => {
-        it('matches values', () => {
-          this.element.value = false;
-          chai.expect(this.element.innerText).to.equal(this.element.false);
-          this.element.toggle();
-          chai.expect(this.element.innerText).to.equal(this.element.true);
-          this.element.true = 'yes';
-          this.element.false = 'no';
-          chai.expect(this.element.textContent).to.equal('yes');
-          this.element.toggle();
-          chai.expect(this.element.textContent).to.equal('no');
-          this.element.value = false;
-          this.element.true = 'true';
-          this.element.false = 'false';
         });
       });
       describe('attributes', () => {

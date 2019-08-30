@@ -1,1 +1,1 @@
-export * from "../tests/io-tests.js";
+export * from "../src/tests/io-tests.js";
