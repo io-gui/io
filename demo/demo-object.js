@@ -1,6 +1,6 @@
 import {html, IoElement, IoStorage as $} from "../dist/io.js";
 
-export class IoDemoElementsObject extends IoElement {
+export class IoDemoObject extends IoElement {
   static get Style() {
     return html`<style>
     :host {
@@ -64,4 +64,4 @@ export class IoDemoElementsObject extends IoElement {
   }
 }
 
-IoDemoElementsObject.Register();
+IoDemoObject.Register();

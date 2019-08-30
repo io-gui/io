@@ -1,6 +1,6 @@
 import {html, IoElement} from "../dist/io.js";
 
-export class IoDemoElementsMenus extends IoElement {
+export class IoDemoMenus extends IoElement {
   static get Style() {
     return html`<style>
     :host {
@@ -70,11 +70,11 @@ export class IoDemoElementsMenus extends IoElement {
             ['io-menu-item', {label: 'menu item', option: {options: menuoptions}}],
             ['div', {class: 'io-frame menuframe'}, [
               ['span', 'click for menu'],
-              ['io-menu', {options: menuoptions, position: 'pointer', button: 0}],
+              ['io-context-menu', {options: menuoptions, position: 'pointer', button: 0}],
             ]],
             ['div', {class: 'io-frame menuframe'}, [
               ['span', 'right-click for menu'],
-              ['io-menu', {options: menuoptions, position: 'pointer', button: 2}],
+              ['io-context-menu', {options: menuoptions, position: 'pointer', button: 2}],
             ]],
           ]]
         ]]
@@ -83,4 +83,4 @@ export class IoDemoElementsMenus extends IoElement {
   }
 }
 
-IoDemoElementsMenus.Register();
+IoDemoMenus.Register();

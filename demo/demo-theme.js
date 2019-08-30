@@ -1,7 +1,7 @@
 import {html, IoElement} from "../dist/io.js";
 import {IoThemeSingleton} from "../dist/io-elements-core.js";
 
-export class IoDemoElementsTheme extends IoElement {
+export class IoDemoTheme extends IoElement {
   static get Style() {
     return html`<style>
     :host {
@@ -80,4 +80,4 @@ export class IoDemoElementsTheme extends IoElement {
   }
 }
 
-IoDemoElementsTheme.Register();
+IoDemoTheme.Register();

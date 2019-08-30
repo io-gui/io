@@ -1,6 +1,6 @@
 import {html, IoElement} from "../dist/io.js";
 
-export class IoDemoElementsColor extends IoElement {
+export class IoDemoColor extends IoElement {
   static get Style() {
     return html`<style>
     :host {
@@ -81,4 +81,4 @@ export class IoDemoElementsColor extends IoElement {
   }
 }
 
-IoDemoElementsColor.Register();
+IoDemoColor.Register();

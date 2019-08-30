@@ -1,6 +1,6 @@
 import {html, IoElement} from "../dist/io.js";
 
-export class IoDemoElementsMath extends IoElement {
+export class IoDemoMath extends IoElement {
   static get Style() {
     return html`<style>
     :host {
@@ -49,4 +49,4 @@ export class IoDemoElementsMath extends IoElement {
   }
 }
 
-IoDemoElementsMath.Register();
+IoDemoMath.Register();
