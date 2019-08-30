@@ -72,11 +72,11 @@ export default class {
         });
         it('matches value with labels disabled', () => {
           this.element.value = testValue;
-          chai.expect(this.element.children[0].textContent).to.equal('▸ Object')
+          chai.expect(this.element.children[0].textContent).to.equal('▸ Object');
           this.element.label = 'test';
-          chai.expect(this.element.children[0].textContent).to.equal('▸ test')
+          chai.expect(this.element.children[0].textContent).to.equal('▸ test');
           this.reset();
-          chai.expect(this.element.children[0].textContent).to.equal('▸ Object')
+          chai.expect(this.element.children[0].textContent).to.equal('▸ Object');
         });
         it('matches value with custom properties', () => {
           this.element.value = testValue;
@@ -93,7 +93,7 @@ export default class {
           this.element.config = {
             'number': ['io-slider', {step: 1}],
             'type:boolean': ['io-string'],
-          }
+          };
           this.element.expanded = true;
           const properties = this.element.children[1];
           chai.expect(properties.children[1].localName).to.equal('io-slider');

@@ -16,7 +16,7 @@ export class TestNode extends IoNode {
       _prop1ChangeCounter: 0,
       _prop2ChangeCounter: 0,
       _customHandlerCounter: 0,
-    }
+    };
   }
   static get Listeners() {
     return {
@@ -71,7 +71,7 @@ export default class {
     this.prop3Change = (event) => {
       this._prop3ChangeCounter++;
       this._prop3ChangePayload = event;
-    }
+    };
     this.node = new TestNode({'on-prop2-changed': 'onProp2Change', 'on-prop3-changed': this.prop3Change});
     this.node.connect(window);
   }

@@ -1,4 +1,4 @@
-import {IoElement, IoNode} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 import {TestNode} from "./node.js";
 

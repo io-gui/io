@@ -24,7 +24,7 @@ export default class {
         it('has theme singleton variables', () => {
           chai.expect(this.element.css).to.equal(IoThemeSingleton);
         });
-      })
+      });
       describe('size', () => {
         it('has correct size and pxRatio', () => {
           this.element.style.border = 'none';
@@ -37,6 +37,6 @@ export default class {
         });
       });
       // TODO: test color values, uniforms, rAF throttling.
-    })
+    });
   }
 }

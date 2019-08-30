@@ -27,7 +27,7 @@ export default class {
         });
       });
       describe('steps innerText', () => {
-        const $ = (selector) => { return this.element.querySelector(selector); }
+        const $ = (selector) => { return this.element.querySelector(selector); };
         it('matches values', () => {
           chai.expect($('.io-up1').value).to.equal(1);
           chai.expect($('.io-up1').textContent).to.equal('1');
@@ -82,7 +82,7 @@ export default class {
         });
       });
       describe('attributes', () => {
-        const $ = (selector) => { return this.element.querySelector(selector); }
+        const $ = (selector) => { return this.element.querySelector(selector); };
         it('steps have tabindex attribute', () => {
           chai.expect($('.io-up1').getAttribute('tabindex')).to.equal('0');
           chai.expect($('.io-down1').getAttribute('tabindex')).to.equal('0');

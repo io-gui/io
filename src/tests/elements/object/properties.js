@@ -72,7 +72,7 @@ export default class {
           this.element.config = {
             'number': ['io-slider', {step: 1}],
             'type:boolean': ['io-string'],
-          }
+          };
           chai.expect(this.element.children[1].localName).to.equal('io-slider');
           chai.expect(this.element.children[1].step).to.equal(1);
           chai.expect(this.element.children[5].localName).to.equal('io-string');
