@@ -1,5 +1,5 @@
 import {html} from "../../io.js";
-import {IoItem, IoLayerSingleton} from "../../io-elements-core.js";
+import {IoItem, IoLayerSingleton} from "../../io-core.js";
 import {IoMenuOptions} from "./menu-options.js";
 
 function filterObject(object, predicate) {

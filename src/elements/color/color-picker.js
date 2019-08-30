@@ -1,5 +1,5 @@
 import {html} from "../../io.js";
-import {IoItem, IoLayerSingleton} from "../../io-elements-core.js";
+import {IoItem, IoLayerSingleton} from "../../io-core.js";
 import {IoColorMixin} from "./color.js";
 import "./color-swatch.js";
 import {IoColorPanelSingleton} from "./color-panel.js";

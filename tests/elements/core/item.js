@@ -1,4 +1,4 @@
-import {IoItem} from "../../../dist/io-elements-core.js";
+import {IoItem} from "../../../dist/io-core.js";
 
 export default class {
   constructor() {

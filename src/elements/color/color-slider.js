@@ -1,5 +1,5 @@
 import {html} from "../../io.js";
-import {IoSlider} from "../../io-elements-core.js";
+import {IoSlider} from "../../io-core.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorSlider extends IoColorMixin(IoSlider) {

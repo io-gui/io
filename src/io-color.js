@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-import "./io-elements-core.js";
+import "./io-core.js";
 
 export {IoColorSlider} from "./elements/color/color-slider.js";
 

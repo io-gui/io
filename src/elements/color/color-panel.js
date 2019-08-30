@@ -1,5 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-core.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorPanel extends IoColorMixin(IoElement) {

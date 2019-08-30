@@ -22,9 +22,12 @@
  * THE SOFTWARE.
  */
 
-import "./io-elements-core.js";
+import "./io-core.js";
+import "./io-menu.js"; // TODO: remove dependency
 
-export {IoMenuItem} from "./elements/menus/menu-item.js";
-export {IoMenuOptions} from "./elements/menus/menu-options.js";
-export {IoOptionMenu} from "./elements/menus/option-menu.js";
-export {IoContextMenu} from "./elements/menus/context-menu.js";
+export {IoLayout} from "./elements/layout/layout.js";
+export {IoCollapsable} from "./elements/layout/collapsable.js";
+export {IoSelectorSidebar} from "./elements/layout/selector-sidebar.js";
+export {IoSelectorTabs} from "./elements/layout/selector-tabs.js";
+export {IoSelector} from "./elements/layout/selector.js";
+export {IoSidebar} from "./elements/layout/sidebar.js";

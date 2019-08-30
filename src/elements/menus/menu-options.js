@@ -1,5 +1,5 @@
 import {IoElement, html} from "../../io.js";
-import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-core.js";
 import "./menu-item.js";
 
 const rects = new WeakMap();

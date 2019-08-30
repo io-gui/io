@@ -113,13 +113,13 @@
     <script type="module">
 
     import {IoStorage as $} from "./dist/io.js";
-    import "./dist/io-elements-core.js";
-    import {IoSelectorTabs} from "./dist/io-elements-layout.js";
-    import "./dist/io-elements-object.js";
-    import "./dist/io-elements-extras.js";
-    import "./dist/io-elements-math.js";
-    import "./dist/io-elements-color.js";
-    import "./dist/io-elements-menu.js";
+    import "./dist/io-core.js";
+    import {IoSelectorTabs} from "./dist/io-layout.js";
+    import "./dist/io-object.js";
+    import "./dist/io-extras.js";
+    import "./dist/io-math.js";
+    import "./dist/io-color.js";
+    import "./dist/io-menu.js";
 
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
@@ -156,73 +156,73 @@
               ]},
               {label: "Elements", options: [
                 {label: "Core Elements", options: [
-                  {label: "IoItem", value: "elements-core#IoItem"},
-                  {label: "IoGl", value: "elements-core#IoGl"},
-                  {label: "IoButton", value: "elements-core#IoButton"},
-                  {label: "IoBoolean", value: "elements-core#IoBoolean"},
-                  {label: "IoBoolicon", value: "elements-core#IoBoolicon"},
-                  {label: "IoSwitch", value: "elements-core#IoSwitch"},
-                  {label: "IoString", value: "elements-core#IoString"},
-                  {label: "IoNumber", value: "elements-core#IoNumber"},
-                  {label: "IoSlider", value: "elements-core#IoSlider"},
-                  {label: "IoNumberSlider", value: "elements-core#IoNumberSlider"},
-                  {label: "IoIcon", value: "elements-core#IoIcon"},
-                  {label: "IoIconsetSingleton", value: "elements-core#IoIconsetSingleton"},
-                  {label: "IoLayerSingleton", value: "elements-core#IoLayerSingleton"},
-                  {label: "IoLadderSingleton", value: "elements-core#IoLadderSingleton"},
-                  {label: "IoThemeSingleton", value: "elements-core#IoThemeSingleton"},
+                  {label: "IoItem", value: "core#IoItem"},
+                  {label: "IoGl", value: "core#IoGl"},
+                  {label: "IoButton", value: "core#IoButton"},
+                  {label: "IoBoolean", value: "core#IoBoolean"},
+                  {label: "IoBoolicon", value: "core#IoBoolicon"},
+                  {label: "IoSwitch", value: "core#IoSwitch"},
+                  {label: "IoString", value: "core#IoString"},
+                  {label: "IoNumber", value: "core#IoNumber"},
+                  {label: "IoSlider", value: "core#IoSlider"},
+                  {label: "IoNumberSlider", value: "core#IoNumberSlider"},
+                  {label: "IoIcon", value: "core#IoIcon"},
+                  {label: "IoIconsetSingleton", value: "core#IoIconsetSingleton"},
+                  {label: "IoLayerSingleton", value: "core#IoLayerSingleton"},
+                  {label: "IoLadderSingleton", value: "core#IoLadderSingleton"},
+                  {label: "IoThemeSingleton", value: "core#IoThemeSingleton"},
                 ]},
                 {label: "Menus", options: [
-                  {label: "IoMenuItem", value: "elements-menus#IoMenuItem"},
-                  {label: "IoMenuOptions", value: "elements-menus#IoMenuOptions"},
-                  {label: "IoOptionMenu", value: "elements-menus#IoOptionMenu"},
-                  {label: "IoContextMenu", value: "elements-menus#IoContextMenu"},
+                  {label: "IoMenuItem", value: "menus#IoMenuItem"},
+                  {label: "IoMenuOptions", value: "menus#IoMenuOptions"},
+                  {label: "IoOptionMenu", value: "menus#IoOptionMenu"},
+                  {label: "IoContextMenu", value: "menus#IoContextMenu"},
                 ]},
                 {label: "Object Editors", options: [
-                  {label: "io-properties", value: "elements-object#io-properties"},
-                  {label: "io-object", value: "elements-object#io-object"},
-                  {label: "io-inspector", value: "elements-object#io-inspector"},
-                  {label: "io-breadcrumbs", value: "elements-object#io-breadcrumbs"},
+                  {label: "io-properties", value: "object#io-properties"},
+                  {label: "io-object", value: "object#io-object"},
+                  {label: "io-inspector", value: "object#io-inspector"},
+                  {label: "io-breadcrumbs", value: "object#io-breadcrumbs"},
                 ]},
                 {label: "Math", options: [
-                  {label: "io-vector", value: "elements-math#io-vector"},
-                  {label: "io-matrix", value: "elements-math#io-matrix"},
+                  {label: "io-vector", value: "math#io-vector"},
+                  {label: "io-matrix", value: "math#io-matrix"},
                 ]},
                 {label: "Color", options: [
-                  {label: "IoColorMixin", value: "elements-color#IoColorMixin"},
-                  {label: "IoColorVector", value: "elements-color#IoColorVector"},
-                  {label: "IoColorPanel", value: "elements-color#IoColorPanel"},
-                  {label: "IoColorPanelSingleton", value: "elements-color#IoColorPanelSingleton"},
-                  {label: "IoColorSwatch", value: "elements-color#IoColorSwatch"},
-                  {label: "IoColorPicker", value: "elements-color#IoColorPicker"},
-                  {label: "IoColorSliderHs", value: "elements-color#IoColorSliderHs"},
-                  {label: "IoColorSliderSv", value: "elements-color#IoColorSliderSv"},
-                  {label: "IoColorSliderSl", value: "elements-color#IoColorSliderSl"},
-                  {label: "IoColorSliderRed", value: "elements-color#IoColorSliderRed"},
-                  {label: "IoColorSliderGreen", value: "elements-color#IoColorSliderGreen"},
-                  {label: "IoColorSliderBlue", value: "elements-color#IoColorSliderBlue"},
-                  {label: "IoColorSliderAlpha", value: "elements-color#IoColorSliderAlpha"},
-                  {label: "IoColorSliderHue", value: "elements-color#IoColorSliderHue"},
-                  {label: "IoColorSliderSaturation", value: "elements-color#IoColorSliderSaturation"},
-                  {label: "IoColorSliderValue", value: "elements-color#IoColorSliderValue"},
-                  {label: "IoColorSliderLevel", value: "elements-color#IoColorSliderLevel"},
-                  {label: "IoColorSliderCyan", value: "elements-color#IoColorSliderCyan"},
-                  {label: "IoColorSliderMagenta", value: "elements-color#IoColorSliderMagenta"},
-                  {label: "IoColorSliderYellow", value: "elements-color#IoColorSliderYellow"},
-                  {label: "IoColorSliderKey", value: "elements-color#IoColorSliderKey"},
+                  {label: "IoColorMixin", value: "color#IoColorMixin"},
+                  {label: "IoColorVector", value: "color#IoColorVector"},
+                  {label: "IoColorPanel", value: "color#IoColorPanel"},
+                  {label: "IoColorPanelSingleton", value: "color#IoColorPanelSingleton"},
+                  {label: "IoColorSwatch", value: "color#IoColorSwatch"},
+                  {label: "IoColorPicker", value: "color#IoColorPicker"},
+                  {label: "IoColorSliderHs", value: "color#IoColorSliderHs"},
+                  {label: "IoColorSliderSv", value: "color#IoColorSliderSv"},
+                  {label: "IoColorSliderSl", value: "color#IoColorSliderSl"},
+                  {label: "IoColorSliderRed", value: "color#IoColorSliderRed"},
+                  {label: "IoColorSliderGreen", value: "color#IoColorSliderGreen"},
+                  {label: "IoColorSliderBlue", value: "color#IoColorSliderBlue"},
+                  {label: "IoColorSliderAlpha", value: "color#IoColorSliderAlpha"},
+                  {label: "IoColorSliderHue", value: "color#IoColorSliderHue"},
+                  {label: "IoColorSliderSaturation", value: "color#IoColorSliderSaturation"},
+                  {label: "IoColorSliderValue", value: "color#IoColorSliderValue"},
+                  {label: "IoColorSliderLevel", value: "color#IoColorSliderLevel"},
+                  {label: "IoColorSliderCyan", value: "color#IoColorSliderCyan"},
+                  {label: "IoColorSliderMagenta", value: "color#IoColorSliderMagenta"},
+                  {label: "IoColorSliderYellow", value: "color#IoColorSliderYellow"},
+                  {label: "IoColorSliderKey", value: "color#IoColorSliderKey"},
                 ]},
                 {label: "Layout", options: [
-                  {label: "io-collapsable", value: "elements-layout#io-collapsable"},
-                  {label: "io-selector", value: "elements-layout#io-selector"},
-                  {label: "io-selector-tabs", value: "elements-layout#io-selector-tabs"},
-                  {label: "io-selector-sidebar", value: "elements-layout#io-selector-sidebar"},
-                  {label: "io-sidebar", value: "elements-layout#io-sidebar"},
-                  {label: "io-layout", value: "elements-layout#io-layout"},
+                  {label: "io-collapsable", value: "layout#io-collapsable"},
+                  {label: "io-selector", value: "layout#io-selector"},
+                  {label: "io-selector-tabs", value: "layout#io-selector-tabs"},
+                  {label: "io-selector-sidebar", value: "layout#io-selector-sidebar"},
+                  {label: "io-sidebar", value: "layout#io-sidebar"},
+                  {label: "io-layout", value: "layout#io-layout"},
                 ]},
                 {label: "Extras", options: [
-                  {label: "io-element-demo", value: "elements-extras#io-element-demo"},
-                  {label: "io-md-view", value: "elements-extras#io-md-view"},
-                  {label: "io-service-loader", value: "elements-extras#io-service-loader"},
+                  {label: "io-element-demo", value: "extras#io-element-demo"},
+                  {label: "io-md-view", value: "extras#io-md-view"},
+                  {label: "io-service-loader", value: "extras#io-service-loader"},
                 ]},
               ]},
               {label: "Learn More", options: [
@@ -241,17 +241,17 @@
             elements: [
               ['io-md-view', {name: 'getting-started', path :'./docs/getting-started.md'}],
               ['io-md-view', {name: 'learn-more', path :'./docs/learn-more.md'}],
-              ['io-md-view', {name: 'elements-core', path :'./docs/elements-core.md'}],
-              ['io-md-view', {name: 'elements-menus', path :'./docs/elements-menus.md'}],
-              ['io-md-view', {name: 'elements-object', path :'./docs/elements-object.md'}],
-              ['io-md-view', {name: 'elements-math', path :'./docs/elements-math.md'}],
-              ['io-md-view', {name: 'elements-color', path :'./docs/elements-color.md'}],
-              ['io-md-view', {name: 'elements-layout', path :'./docs/elements-layout.md'}],
-              ['io-md-view', {name: 'elements-extras', path :'./docs/elements-extras.md'}],
+              ['io-md-view', {name: 'core', path :'./docs/core.md'}],
+              ['io-md-view', {name: 'menus', path :'./docs/menus.md'}],
+              ['io-md-view', {name: 'object', path :'./docs/object.md'}],
+              ['io-md-view', {name: 'math', path :'./docs/math.md'}],
+              ['io-md-view', {name: 'color', path :'./docs/color.md'}],
+              ['io-md-view', {name: 'layout', path :'./docs/layout.md'}],
+              ['io-md-view', {name: 'extras', path :'./docs/extras.md'}],
             ],
           }],
-          ['io-demo', {name: 'demo', import: "./demo/demo.js"}],
-          ['io-test', {name: 'test', import: "./tests/test.js"}],
+          ['io-demo', {name: 'demo', import: "./dist/io-demo.js"}],
+          ['io-test', {name: 'test', import: "./dist/io-tests.js"}],
         ];
       }
     }

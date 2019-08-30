@@ -23,7 +23,7 @@ import {IoElement} from "./io/dist/io.js";
 To use one of the elements, such as `<io-menu-options>` for example, import the corresponding element collection, create the element, assign the options property, and add it to your DOM.
 
 ```javascript
-import "./io/dist/io-elements-menus.js";
+import "./io/dist/io-menus.js";
 const menu = document.createElement('io-option-menu');
 menu.options = ["one", "two", "three"];
 element.appendChild(menu);

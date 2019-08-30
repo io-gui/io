@@ -1,6 +1,6 @@
 import {html, IoElement, IoStorage as $} from "../../io.js";
 import "./breadcrumbs.js";
-// import {Item} from "../../io-elements-core.js";
+// import {Item} from "../../io-core.js";
 
 class Item {
   constructor(value) {

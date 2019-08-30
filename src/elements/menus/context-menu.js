@@ -1,5 +1,5 @@
 import {IoElement} from "../../io.js";
-import {IoLayerSingleton} from "../../io-elements-core.js";
+import {IoLayerSingleton} from "../../io-core.js";
 import {IoMenuOptions} from "./menu-options.js";
 
 export class IoContextMenu extends IoElement {

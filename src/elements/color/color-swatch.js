@@ -1,5 +1,5 @@
 import {html} from "../../io.js";
-import {IoGl} from "../../io-elements-core.js";
+import {IoGl} from "../../io-core.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorSwatch extends IoColorMixin(IoGl) {

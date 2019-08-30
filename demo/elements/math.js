@@ -1,4 +1,4 @@
-import {html, IoElement} from "../dist/io.js";
+import {html, IoElement} from "../../dist/io.js";
 
 export class IoDemoMath extends IoElement {
   static get Style() {

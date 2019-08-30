@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-import "./io-elements-core.js";
+import "./io-core.js";
 
 export {IoInspector} from "./elements/object/inspector.js";
 export {IoObject} from "./elements/object/object.js";
