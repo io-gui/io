@@ -17,7 +17,6 @@ export class IoMenuOptions extends IoElement {
         align-items: stretch;
         white-space: nowrap;
         user-select: none;
-        touch-action: none;
         background-image: none;
         padding: 0;
       }

@@ -94,7 +94,7 @@ export default [
       }
     ],
     // TODO: remove menu dependency
-    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js'), path.resolve('src/io-elements-menu.js') ],
+    external: [ path.resolve('src/io.js'), path.resolve('src/io-elements-core.js') ],
   },
   {
     input: 'src/io-elements-math.js',

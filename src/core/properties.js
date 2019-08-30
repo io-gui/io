@@ -92,7 +92,6 @@ export class Properties {
 
       let binding = (value instanceof Binding) ? value : null;
 
-
       if (binding && oldBinding && binding !== oldBinding) {
         oldBinding.removeTarget(this.node, prop); // TODO: test extensively
       }
@@ -112,7 +111,6 @@ export class Properties {
       if (oldValue && oldValue.isNode) {
         oldValue.disconnect(this.node);
       }
-
 
       if (this[prop].notify && oldValue !== this[prop].value) {
         this.node.queue(prop, this[prop].value, oldValue);

@@ -55,8 +55,8 @@ export class IoItem extends IoElement {
   static get Listeners() {
     return {
       'focus': '_onFocus',
-      'contextmenu': '_onContextmenu',
       'pointerdown': '_onPointerdown',
+      'click': '_onClick',
     };
   }
   get textNode() {
@@ -77,8 +77,6 @@ export class IoItem extends IoElement {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('keyup', this._onKeydown);
-    this.removeEventListener('click', this._onClick);
-    this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerleave', this._onPointerleave);
     this.removeEventListener('pointerup', this._onPointerup);
@@ -87,36 +85,27 @@ export class IoItem extends IoElement {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
     this.addEventListener('keyup', this._onKeyup);
-    this.addEventListener('click', this._onClick);
   }
   _onBlur() {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
     this.removeEventListener('keyup', this._onKeyup);
-    this.removeEventListener('click', this._onClick);
-  }
-  _onContextmenu(event) {
-    event.preventDefault();
   }
   _onPointerdown(event) {
     event.preventDefault();
-    this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerleave', this._onPointerleave);
     this.addEventListener('pointerup', this._onPointerup);
     this.pressed = true;
   }
-  _onTouchmove() {}
   _onPointermove() {}
   _onPointerleave() {
-    this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerleave', this._onPointerleave);
     this.removeEventListener('pointerup', this._onPointerup);
     this.pressed = false;
   }
   _onPointerup() {
-    this.removeEventListener('touchmove', this._onTouchmove);
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerleave', this._onPointerleave);
     this.removeEventListener('pointerup', this._onPointerup);

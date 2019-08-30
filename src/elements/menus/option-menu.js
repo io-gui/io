@@ -1,5 +1,4 @@
 import {html} from "../../io.js";
-// import {IoLayerSingleton} from "../../io-elements-core.js";
 import {IoMenuItem} from "./menu-item.js";
 
 // TODO: fix tab-out without collapse
@@ -28,6 +27,7 @@ export class IoOptionMenu extends IoMenuItem {
       value: {
         reflect: -1,
       },
+      selectable: true,
       options: {
         type: Array,
         reflect: -1,

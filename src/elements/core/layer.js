@@ -38,7 +38,7 @@ class IoLayer extends IoElement {
         pointer-events: all;
         visibility: visible;
         opacity: 1;
-        /* background: rgba(255,0,0,0.2); */
+        background: rgba(0,0,0,0.2);
       }
       :host > * {
         position: absolute;
@@ -47,6 +47,7 @@ class IoLayer extends IoElement {
       }
       :host > *:not([expanded]) {
         visibility: hidden;
+        pointer-events: none;
       }
     </style>`;
   }
@@ -62,9 +63,12 @@ class IoLayer extends IoElement {
   static get Listeners() {
     return {
       'pointerdown': '_onPointerdown',
-      'contextmenu': '_onContextmenu',
-      'expanded': 'onChildExpanded',
-      'focusin': '_onFocusIn',
+      'pointermove': '_onPointermove',
+      'pointerup': '_onPointerup',
+      'touchstart': '_preventDefault',
+      'mousedown': '_preventDefault',
+      'contextmenu': '_preventDefault',
+      'focusin': '_preventDefault',
     };
   }
   connectedCallback() {
@@ -78,52 +82,72 @@ class IoLayer extends IoElement {
     window.removeEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
     window.removeEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
     window.removeEventListener('resize', this._onWindowChange, {capture: true, passive: true});
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerup', this._onPointerup);
+  }
+  _preventDefault(event) {
+    event.stopPropagation();
+    event.preventDefault();
   }
   _onFocusIn(event) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
   }
   _onWindowChange() {
     this.expanded = false;
   }
   _onPointerdown(event) {
+    event.stopPropagation();
     if (event.composedPath()[0] === this) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
       this.setPointerCapture(event.pointerId);
-      this.addEventListener('pointermove', this._onPointermove);
-      this.addEventListener('pointerup', this._onPointerup);
     }
   }
   _onPointermove(event) {
-    if (event.composedPath()[0] === this) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    }
-    this._nudgeOnPointerHover(event);
+    event.stopPropagation();
+    this._x = event.clientX;
+    this._y = event.clientY;
   }
   _onPointerup(event) {
+    event.stopPropagation();
     if (event.composedPath()[0] === this) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
       this.releasePointerCapture(event.pointerId);
-      this.removeEventListener('pointermove', this._onPointermove);
-      this.removeEventListener('pointerup', this._onPointerup);
-    }
-    this._collapseOrFocusSrcElement(event);
-  }
-  _onContextmenu(event) {
-    if (event.composedPath()[0] === this) {
-      event.preventDefault();
-      this.expanded = false;
+      this._collapseOrFocusSrcElement(event);
     }
   }
-  _nudgeOnPointerHover(event) {
-    for (let i = this.children.length; i--;) {
-      if (this.children[i].expanded) {
-        this.children[i]._x = event.clientX;
-        this.children[i]._y = event.clientY;
+  _nudgeAnimate() {
+    if (this.expanded) {
+      this.requestAnimationFrameOnce(this._nudgeAnimate);
+      const x = this._x;
+      const y = this._y;
+      for (let i = this.children.length; i--;) {
+        if (this.children[i].expanded) {
+          if (x === undefined || y === undefined) continue;
+          const r = this.children[i].getBoundingClientRect();
+          if (!(r.top < y && r.bottom > y && r.left < x && r.right > x)) continue;
+          if (r.height > window.innerHeight) {
+            let ry = r.y;
+            if (y < 100 && r.top < 0) {
+              const scrollSpeed = (100 - y) / 5000;
+              const overflow = r.top;
+              ry = ry - Math.ceil(overflow * scrollSpeed) + 1;
+            } else if (y > window.innerHeight - 100 && r.bottom > window.innerHeight) {
+              const scrollSpeed = (100 - (window.innerHeight - y)) / 5000;
+              const overflow = (r.bottom - window.innerHeight);
+              ry = ry - Math.ceil(overflow * scrollSpeed) - 1;
+            }
+            this.children[i].style.top = ry + 'px';
+          }
+          if (r.width > window.innerHeight) {
+            let rx = r.x;
+            if (x < 100 && r.left < 0) {
+              const scrollSpeed = (100 - x) / 5000;
+              const overflow = r.left;
+              rx = rx - Math.ceil(overflow * scrollSpeed) + 1;
+            } else if (x > window.innerHeight - 100 && r.right > window.innerHeight) {
+              const scrollSpeed = (100 - (window.innerHeight - x)) / 5000;
+              const overflow = (r.right - window.innerHeight);
+              rx = rx - Math.ceil(overflow * scrollSpeed) - 1;
+            }
+            this.children[i].style.left = rx + 'px';
+          }
+        }
       }
     }
   }
@@ -136,12 +160,6 @@ class IoLayer extends IoElement {
         this.srcElement.focus();
         return;
       }
-    }
-    this.expanded = false;
-  }
-  onChildExpanded() {
-    for (let i = this.children.length; i--;) {
-      if (this.children[i].expanded) { this.expanded = true; return; }
     }
     this.expanded = false;
   }
@@ -208,49 +226,17 @@ class IoLayer extends IoElement {
         break;
     }
   }
-  _nudgeAnimate() {
-    if (this.expanded) {
-      this.requestAnimationFrameOnce(this._nudgeAnimate);
-      for (let i = this.children.length; i--;) {
-        if (this.children[i].expanded) {
-          const x = this.children[i]._x;
-          const y = this.children[i]._y;
-          if (x === undefined || y === undefined) continue;
-          const r = this.children[i].getBoundingClientRect();
-          if (!(r.top < y && r.bottom > y && r.left < x && r.right > x)) continue;
-          if (r.height > window.innerHeight) {
-            let ry = r.y;
-            if (y < 100 && r.top < 0) {
-              const scrollSpeed = (100 - y) / 5000;
-              const overflow = r.top;
-              ry = ry - Math.ceil(overflow * scrollSpeed) + 1;
-            } else if (y > window.innerHeight - 100 && r.bottom > window.innerHeight) {
-              const scrollSpeed = (100 - (window.innerHeight - y)) / 5000;
-              const overflow = (r.bottom - window.innerHeight);
-              ry = ry - Math.ceil(overflow * scrollSpeed) - 1;
-            }
-            this.children[i].style.top = ry + 'px';
-          }
-          if (r.width > window.innerHeight) {
-            let rx = r.x;
-            if (x < 100 && r.left < 0) {
-              const scrollSpeed = (100 - x) / 5000;
-              const overflow = r.left;
-              rx = rx - Math.ceil(overflow * scrollSpeed) + 1;
-            } else if (x > window.innerHeight - 100 && r.right > window.innerHeight) {
-              const scrollSpeed = (100 - (window.innerHeight - x)) / 5000;
-              const overflow = (r.right - window.innerHeight);
-              rx = rx - Math.ceil(overflow * scrollSpeed) - 1;
-            }
-            this.children[i].style.left = rx + 'px';
-          }
-        } else {
-          delete this.children[i]._x;
-          delete this.children[i]._y;
-        }
+  onChildExpanded() {
+    this.requestAnimationFrameOnce(this.onChildExpandedDelayed);
+  }
+  onChildExpandedDelayed() {
+    for (let i = this.children.length; i--;) {
+      if (this.children[i].expanded) {
+        this.expanded = true;
+        return;
       }
     }
-
+    this.expanded = false;
   }
   expandedChanged() {
     if (!this.expanded) {

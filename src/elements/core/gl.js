@@ -89,7 +89,7 @@ export class IoGl extends IoElement {
       vec2 edgeDistance = abs(samplePosition) - halfSize;
       float outside = length(max(edgeDistance, 0.));
       float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-      return saturate((outside + inside) * uPxRatio * 2.); // TODO: check
+      return saturate((outside + inside) * uPxRatio); // TODO: check
     }
     float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
       vec2 sp = samplePosition / vec2(gridWidth, gridHeight);

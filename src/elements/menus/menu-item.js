@@ -2,7 +2,7 @@ import {html} from "../../io.js";
 import {IoItem, IoLayerSingleton} from "../../io-elements-core.js";
 import {IoMenuOptions} from "./menu-options.js";
 
-export function filterObject(object, predicate) {
+function filterObject(object, predicate) {
   if (predicate(object)) return object;
   for (let key in object) {
     if (predicate(object[key])) {
@@ -22,6 +22,8 @@ function getElementDescendants(element) {
   // TODO: unhack
   if ('io-menu-item, io-option-menu'.search(element.localName) !== -1) {
     descendants.push(element);
+    items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
+  } else if (element.localName === 'io-context-menu') {
     items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
   } else {
     items = element.querySelectorAll('io-menu-item, io-option-menu');
@@ -51,6 +53,14 @@ function getRootElement(element) {
   return root;
 }
 
+function isPointerAboveElement(event, element) {
+  const r = element.getBoundingClientRect();
+  const x = event.clientX;
+  const y = event.clientY;
+  if (r.top < 0 || r.bottom > window.innerHeight || r.left < 0 || r.right > window.innerWidth) return false;
+  return (r.top < y && r.bottom > y && r.left < x && r.right > x);
+}
+
 export class IoMenuItem extends IoItem {
   static get Style() {
     return html`<style>
@@ -63,7 +73,7 @@ export class IoMenuItem extends IoItem {
         background: none;
         border: var(--io-border-width) solid transparent;
       }
-      :host:hover {
+      :host:hover:not([selected]) {
         background-color: inherit;
       }
       :host > * {
@@ -101,9 +111,6 @@ export class IoMenuItem extends IoItem {
         value: false,
         reflect: 1,
       },
-      pressed: {
-        reflect: 0,
-      },
       direction: {
         value: 'bottom',
         reflect: 1,
@@ -112,6 +119,15 @@ export class IoMenuItem extends IoItem {
       $options: HTMLElement,
       selectable: false,
     };
+  }
+  static get Listeners() {
+    return {
+      'click': '_preventDefault',
+    };
+  }
+  _preventDefault(event) {
+    event.stopPropagation();
+    event.preventDefault();
   }
   constructor(props) {
     super(props);
@@ -177,17 +193,27 @@ export class IoMenuItem extends IoItem {
     if (options) return !!filterObject(options, (o) => { return o === this.value || o.value === this.value; });
     return false;
   }
+  get _inLayer() {
+    return this.$parent && this.$parent.parentElement === IoLayerSingleton;
+  }
   connectedCallback() {
     super.connectedCallback();
     IoLayerSingleton.appendChild(this.$options);
+    if (!this._inLayer) {
+      IoLayerSingleton.addEventListener('pointermove', this._onLayerPointermove);
+    }
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     IoLayerSingleton.removeChild(this.$options);
+    IoLayerSingleton.removeEventListener('pointermove', this._onLayerPointermove);
   }
   _onClick(event) {
     // TODO unhack (prevents _onClick on pointer origin on release)
-    if (event.type === 'click') return;
+    if (event.type === 'click') {
+      console.log('asd');
+      return;
+    }
     //
     if (this._value !== undefined || this._action) {
       if (this._value !== undefined) {
@@ -205,16 +231,12 @@ export class IoMenuItem extends IoItem {
       this.expanded = true;
     }
   }
-  _onTouchmove(event) {
-    if (this.expanded && event.cancelable) {
-      event.preventDefault();
-    }
-  }
   _onPointerdown(event) {
-    super._onPointerdown(event);
-    const inLayer = this.$parent && this.$parent.parentElement === IoLayerSingleton;
+    event.stopPropagation();
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerup', this._onPointerup);
     this.setPointerCapture(event.pointerId);
-    if (this.expanded || event.pointerType === 'mouse' || inLayer) {
+    if (this.expanded || event.pointerType === 'mouse' || this._inLayer) {
       this.focus();
       if (this._options) this.expanded = true;
     }
@@ -225,7 +247,7 @@ export class IoMenuItem extends IoItem {
     const items = getElementDescendants(getRootElement(this));
     let _hoveredItem;
     for (let i = items.length; i--;) {
-      if (items[i]._isPointerAboveElement(event)) {
+      if (isPointerAboveElement(event, items[i])) {
         _hoveredItem = items[i];
         continue;
       }
@@ -233,11 +255,11 @@ export class IoMenuItem extends IoItem {
     return _hoveredItem;
   }
   _onPointermove(event) {
-    const inLayer = this.$parent && this.$parent.parentElement === IoLayerSingleton;
-    if (!this.expanded && event.pointerType === 'touch' && !inLayer) {
+    if (!this.expanded && event.pointerType === 'touch' && !this._inLayer) {
       return;
     }
-    IoLayerSingleton._nudgeOnPointerHover(event);
+    IoLayerSingleton._x = event.clientX;
+    IoLayerSingleton._y = event.clientY;
     // TODO: consider horizintal menus
     clearTimeout(this.__timeoutOpen);
     this._v = (2 * this._v + Math.abs(event.movementY) - Math.abs(event.movementX)) / 3;
@@ -254,7 +276,7 @@ export class IoMenuItem extends IoItem {
           descendants[i].expanded = false;
         }
 
-      } else if (this._v > 1) {
+      } else if (this._v > 0.5) {
         _hoveredItem.focus();
         if (_hoveredItem._options) _hoveredItem.expanded = true;
       } else {
@@ -265,25 +287,21 @@ export class IoMenuItem extends IoItem {
       }
     }
   }
+  _onLayerPointermove(event) {
+    if (this.expanded) this._onPointermove(event);
+  }
   _onPointerup(event) {
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
+    this.pressed = false;
     let _hoveredItem = this._getHoveredItem(event);
-    super._onPointerup(event);
     if (!_hoveredItem) {
       this.expanded = false;
     } else {
       _hoveredItem._onClick(event);
     }
   }
-  _isPointerAboveElement(event) {
-    const r = this.getBoundingClientRect();
-    const x = event.clientX;
-    const y = event.clientY;
-    if (r.top < 0 || r.bottom > window.innerHeight || r.left < 0 || r.right > window.innerWidth) return false;
-    return (r.top < y && r.bottom > y && r.left < x && r.right > x);
-  }
   _onKeydown(event) {
-    const inLayer = this.$parent && this.$parent.parentElement === IoLayerSingleton;
-
     if (event.key === 'Enter' || event.key === ' ') {
       this.pressed = true;
       event.preventDefault();
@@ -292,9 +310,6 @@ export class IoMenuItem extends IoItem {
         return;
       }
       this._onClick(event);
-      if (this.expanded) {
-        if (this.$options.children.length) this.$options.children[0].focus();
-      }
       return;
     } else if (event.key === 'Escape') {
       event.preventDefault();
@@ -314,11 +329,11 @@ export class IoMenuItem extends IoItem {
       if (event.key === 'ArrowDown') command = 'in';
       if (event.key === 'ArrowLeft') command = 'prev';
     }
-    if (inLayer && event.key === 'Tab') command = 'next';
+    if (this._inLayer && event.key === 'Tab') command = 'next';
 
     const siblings = this.$parent ? [...this.$parent.children] : [];
     const index = siblings.indexOf(this);
-    if (command && (inLayer || this.expanded)) {
+    if (command && (this._inLayer || this.expanded)) {
       event.preventDefault();
       switch (command) {
         case 'prev': {
