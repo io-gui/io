@@ -71,6 +71,6 @@ export default [
   makeTarget('src/io-color.js', 'dist/io-color.js'),
   makeTarget('src/io-menu.js', 'dist/io-menu.js'),
   makeTarget('src/io-object.js', 'dist/io-object.js'),
-  makeTarget('src/demo/io-demo.js', 'dist/io-demo.js'),
-  makeTarget('src/tests/io-tests.js', 'dist/io-tests.js'),
+  makeTarget('src/io-demo.js', 'dist/io-demo.js'),
+  makeTarget('src/io-tests.js', 'dist/io-tests.js'),
 ];
