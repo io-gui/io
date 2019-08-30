@@ -3,21 +3,44 @@ import {Listeners} from "./listeners.js";
 import {buildTree} from "../../lib/ijk.js";
 
 export class IoElement extends IoNodeMixin(HTMLElement) {
-  static get Attributes() {
+  static get Properties() {
     return {
-      tabindex: String,
-      contenteditable: Boolean,
-      class: String,
-      role: String,
-      title: String,
-      label: String,
-      id: String,
+      tabindex: {
+        type: String,
+        reflect: 1,
+      },
+      contenteditable: {
+        type: Boolean,
+        reflect: 1,
+      },
+      class: {
+        type: String,
+        reflect: 1,
+      },
+      role: {
+        type: String,
+        reflect: 1,
+      },
+      label: {
+        type: String,
+        reflect: 1,
+      },
+      id: {
+        type: String,
+        reflect: -1,
+      },
+    };
+  }
+  static get Listeners() {
+    return {
+      'focus-to': '_onFocusTo',
     };
   }
   static get observedAttributes() {
     const observed = [];
     for (let prop in this.prototype.__protoProperties) {
-      if (this.prototype.__protoProperties[prop].reflect === -1) {
+      const r  = this.prototype.__protoProperties[prop].reflect;
+      if (r === -1 || r === 2) {
         observed.push(prop);
       }
     }
@@ -36,12 +59,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
     }
   }
-  titleChanged() {
-    this.setAttribute('aria-label', this.label || this.title);
-  }
-  labelChanged() {
-    this.setAttribute('aria-label', this.label || this.title);
-  }
   /**
    * Add resize listener if `onResized()` is defined in subclass.
    */
@@ -51,8 +68,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (ro) {
         ro.observe(this);
       } else {
-        this.onResized();
+        // TODO: remove once resize observer implemented in Safari.
+        // https://caniuse.com/#feat=resizeobserver
         window.addEventListener('resize', this.onResized);
+        setTimeout(() => { this.onResized(); });
       }
     }
   }
@@ -65,6 +84,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (ro) {
         ro.unobserve(this);
       } else {
+        // TODO: remove once resize observer implemented in Safari.
+        // https://caniuse.com/#feat=resizeobserver
         window.removeEventListener('resize', this.onResized);
       }
     }
@@ -86,6 +107,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     */
   traverse(vChildren, host) {
     const children = host.children;
+    focusBacktrack = new WeakMap();
     // remove trailing elements
     while (children.length > vChildren.length) {
       const child = children[children.length - 1];
@@ -177,53 +199,98 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
-  focusTo(dir, srcRect) {
-    const rect = srcRect || this.getBoundingClientRect();
-    let closest = this;
-    let closestDist = Infinity;
-    let parent = this.parentElement;
-    let depth = 0;
-    const DEPTH_LIMIT = 10;
-    while (parent && depth < DEPTH_LIMIT && closest === this) {
-      const siblings = parent.querySelectorAll('[tabindex="0"]');
+  _onFocusTo(event) {
+    const src = event.composedPath()[0];
+    if (src !== this) {
+
+      const dir = event.detail.dir;
+      const rect = event.detail.rect;
+
+      let closest = src;
+      let closestDist = Infinity;
+
+      const backtrack = focusBacktrack.get(src);
+      if (backtrack && backtrack[dir]) {
+        backtrack[dir].focus();
+        setBacktrack(backtrack[dir], dir, src);
+        return;
+      }
+
+      const siblings = this.querySelectorAll('[tabindex="0"]');
+
       for (let i = siblings.length; i--;) {
-        // TODO: consider looking up center or bbox instead tor-left corner
-        if (!siblings[i].offsetParent) continue;
+
+        if (!siblings[i].offsetParent) {
+          // TODO: check
+          // console.log(siblings[i]);
+          continue;
+        }
+        const sStyle = window.getComputedStyle(siblings[i]);
+        if (sStyle.visibility !== 'visible') {
+          // TODO: unhack
+          // console.log(siblings[i]);
+          continue;
+        }
+
         const sRect = siblings[i].getBoundingClientRect();
-        const dX = sRect.x - rect.x;
-        const dY = sRect.y - rect.y;
-        const dist = Math.sqrt(dX * dX + dY * dY);
+        sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
+
+        const dX = sRect.center.x - rect.center.x;
+        const dY = sRect.center.y - rect.center.y;
+
+        const isRight = sRect.right > rect.right + 1;
+        const isLeft = sRect.left < rect.left - 1;
+        const isDown = sRect.center.y > rect.center.y + 1;
+        const isUp = sRect.center.y < rect.center.y - 1;
+
+        const distY = Math.sqrt(0.2 * dX * dX + dY * dY);
+        const distX = Math.sqrt(dX * dX + 0.2 * dY * dY);
+
+        // TODO: improve automatic direction routing.
         switch (dir) {
           case 'right':
-            if (dX > 0 && dist < closestDist) {
-              closest = siblings[i], closestDist = dist;
+            if (dX > 0 && distX < closestDist && isRight) {
+              closest = siblings[i], closestDist = distX;
             }
             break;
           case 'left':
-            if (dX < 0 && dist < closestDist) {
-              closest = siblings[i], closestDist = dist;
+            if (dX < 0 && distX < closestDist && isLeft) {
+              closest = siblings[i], closestDist = distX;
             }
             break;
           case 'down':
-            if (dY > 0 && dist < closestDist) {
-              closest = siblings[i], closestDist = dist;
+            if (dY > 0 && distY < closestDist && isDown) {
+              closest = siblings[i], closestDist = distY;
             }
             break;
           case 'up':
-            if (dY < 0 && dist < closestDist) {
-              closest = siblings[i], closestDist = dist;
+            if (dY < 0 && distY < closestDist && isUp) {
+              closest = siblings[i], closestDist = distY;
             }
             break;
         }
       }
-      parent = parent.parentElement;
-      depth++;
-      if (closest !== this) {
+
+      if (closest !== src) {
         closest.focus();
-        return;
+        setBacktrack(closest, dir, src);
+        event.stopImmediatePropagation();
       }
     }
   }
+  focusTo(dir) {
+    const rect = this.getBoundingClientRect();
+    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
+    this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
+  }
+}
+
+let focusBacktrack = new WeakMap();
+const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
+function setBacktrack(element, dir, target) {
+  const backtrack = focusBacktrack.get(element) || {};
+  backtrack[backtrackDir[dir]] = target;
+  focusBacktrack.set(element, backtrack);
 }
 
 const warning = document.createElement('div');
@@ -296,6 +363,21 @@ const constructElement = function(vDOMNode) {
   return element;
 };
 
+const superCreateElement = document.createElement;
+document.createElement = function() {
+  const tag = arguments[0];
+  if (tag.startsWith('io-')) {
+    const constructor = customElements.get(tag);
+    if (constructor) {
+      return new constructor();
+    } else {
+      return superCreateElement.apply(this, arguments);
+    }
+  } else  {
+    return superCreateElement.apply(this, arguments);
+  }
+};
+
 /**
  * Sets element properties.
  * @param {HTMLElement} element - Element to set properties on.
@@ -304,9 +386,11 @@ const constructElement = function(vDOMNode) {
 const setNativeElementProps = function(element, props) {
   for (let p in props) {
     const prop = props[p];
-    if (p === 'style') for (let s in prop) element.style.setProperty(s, prop[s]);
+    if (p.startsWith('@')) {
+      element.setAttribute(p.substr(1), prop);
+    } else if (p === 'style') for (let s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
-    else element[p] = prop;
+    else if (p !== 'id') element[p] = prop;
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
   }
   if (!element.__listeners) {

@@ -44,6 +44,8 @@ export const IoNodeMixin = (superclass) => {
       Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
       Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
 
+      Object.defineProperty(this, '__connected', {enumerable: false, writable: true});
+
       for (let i = 0; i < this.__functions.length; i++) {
         this[this.__functions[i]] = this[this.__functions[i]].bind(this);
       }
@@ -248,6 +250,7 @@ export const IoNodeMixin = (superclass) => {
       * @param {*} arg - argument for debounced function.
       */
     debounce(func, arg) {
+      // TODO: move to extenal debounce function, document and test.
       if (preDebounceQueue.indexOf(func) === -1) {
         preDebounceQueue.push(func);
         func(arg);
@@ -263,6 +266,9 @@ export const IoNodeMixin = (superclass) => {
       } else {
         argQueue.set(func, [arg]);
       }
+    }
+    requestAnimationFrameOnce(func) {
+      requestAnimationFrameOnce(func);
     }
   };
   classConstructor.Register = Register;
@@ -325,11 +331,15 @@ const Register = function () {
 
 IoNodeMixin.Register = Register;
 
+// TODO: document and test
 const preDebounceQueue = new Array();
 const debounceQueue = new Array();
 const argQueue = new WeakMap();
+//
+const funcQueue = new Array();
 
 const animate = function() {
+  requestAnimationFrame(animate);
   for (let i = preDebounceQueue.length; i--;) {
     preDebounceQueue.splice(preDebounceQueue.indexOf(preDebounceQueue[i]), 1);
   }
@@ -341,9 +351,18 @@ const animate = function() {
     }
     debounceQueue.splice(debounceQueue.indexOf(debounceQueue[i]), 1);
   }
-  requestAnimationFrame(animate);
+  //
+  for (let i = funcQueue.length; i--;) {
+    const func = funcQueue[i];
+    funcQueue.splice(funcQueue.indexOf(func), 1);
+    func();
+  }
 };
 requestAnimationFrame(animate);
+
+function requestAnimationFrameOnce(func) {
+  if (funcQueue.indexOf(func) === -1) funcQueue.push(func);
+}
 
 /**
   * IoNodeMixin applied to `Object` class.

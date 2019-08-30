@@ -9,8 +9,6 @@ export class IoMdView extends IoElement {
         align-self: stretch;
         justify-self: stretch;
         flex: 1 1 auto;
-        background-color: var(--io-background-color);
-        color: var(--io-color);
         --io-code-size: 15px;
         padding: var(--io-spacing) calc(4 * var(--io-spacing));
         overflow-x: hidden;
@@ -50,11 +48,13 @@ export class IoMdView extends IoElement {
         font-family: monospace, monospace;
         -webkit-font-smoothing: auto;
         overflow: auto;
-        color: #007faa;
+        color: var(--io-color-link);
+        font-weight: bold;
+        background: var(--io-background-color-light);
       }
       :host pre > code {
         color: inherit;
-        background-color: var(--io-background-color-dark);
+        background-color: var(--io-background-color-light);
         line-height: 1.6em;
       }
       :host code.language-html,
@@ -121,17 +121,13 @@ export class IoMdView extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      role: 'document',
-    };
-  }
   static get Properties() {
     return {
       path: {
         type: String,
         reflect: 1
       },
+      role: 'document',
     };
   }
   onResized() {

@@ -1,6 +1,18 @@
-import {html, filterObject} from "../../io.js";
+import {html} from "../../io.js";
 import {IoSelector} from "./selector.js";
 import "./sidebar.js";
+
+export function filterObject(object, predicate) {
+  if (predicate(object)) return object;
+  for (let key in object) {
+    if (predicate(object[key])) {
+        return object[key];
+    } else if (typeof object[key] === 'object') {
+      const prop = filterObject(object[key], predicate);
+      if (prop) return prop;
+    }
+  }
+}
 
 export class IoSelectorSidebar extends IoSelector {
   static get Style() {
@@ -36,23 +48,22 @@ export class IoSelectorSidebar extends IoSelector {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      role: 'navigation',
-      label: {
-        notify: true,
-      },
-      overflow: {
-        type: Boolean,
-        notify: true,
-      },
-      left: true,
-    };
-  }
   static get Properties() {
     return {
       options: Array,
       minWidth: 410,
+      label: {
+        reflect: 1,
+      },
+      overflow: {
+        type: Boolean,
+        reflect: 1,
+      },
+      left: {
+        value: true,
+        reflect: 1,
+      },
+      role: 'navigation',
     };
   }
   _onScroll() {

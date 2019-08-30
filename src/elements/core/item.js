@@ -1,28 +1,7 @@
 import {IoElement, html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoThemeSingleton as mixin} from "./theme.js";
 
-export class Item {
-  constructor(value) {
-    if (typeof value === 'object' && (value.options !== undefined || value.action !== undefined || value.value !== undefined)) {
-      Object.assign(this, value);
-    } else {
-      this.value = value;
-    }
-    if (this.label === undefined) {
-      if (this.value instanceof Array) {
-        this.label = String(`${this.value.constructor.name} (${this.value.length})`);
-      } else if (typeof this.value === 'object') {
-        this.label = String(`${this.value.constructor.name}`);
-      } else if (this.value !== undefined) {
-        this.label = String(this.value);
-      } else {
-        console.warn('Option must have label or value!');
-      }
-    }
-  }
-}
-
-// NOTE: [optmization] Uses textNode and fixed size in em to avoid layout trashing on change.
+// NOTE: [optmization] Uses textNode and fixed size to avoid layout trashing on change.
 
 export class IoItem extends IoElement {
   static get Style() {
@@ -30,57 +9,54 @@ export class IoItem extends IoElement {
       :host {
         ${mixin.item};
       }
-      :host {
-        cursor: pointer;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        color: var(--io-color);
-        background-color: var(--io-background-color);
-      }
-      :host:hover {
-        background-color: var(--io-background-color-light);
-      }
-      :host:focus {
-        outline: 0;
-        text-overflow: inherit;
-        border-color: var(--io-color-focus);
-      }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
+      :host[pressed] {
+        border-color: var(--io-color-border-inset);
+        box-shadow: var(--io-shadow-inset);
       }
       :host[hidden] {
         display: none;
       }
       :host[selected] {
         color: var(--io-color-link);
+        background-color: var(--io-background-color-light);
+      }
+      :host[aria-invalid] {
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
+      }
+      :host:hover {
+        background-color: var(--io-background-color-light);
+      }
+      :host:focus {
+        text-overflow: inherit;
+        border-color: var(--io-color-focus);
+        outline-color: var(--io-color-focus);
       }
     </style>`;
-  }
-  static get Attributes() {
-    return {
-      label: {
-        notify: true,
-      },
-      hidden: Boolean,
-      selected: Boolean,
-      tabindex: 0,
-    };
   }
   static get Properties() {
     return {
       value: undefined,
+      pressed: {
+        type: Boolean,
+        reflect: true,
+      },
+      hidden: {
+        type: Boolean,
+        reflect: true,
+      },
+      selected: {
+        type: Boolean,
+        reflect: true,
+      },
+      tabindex: 0,
     };
   }
   static get Listeners() {
     return {
       'focus': '_onFocus',
-      // 'touchstart': '_onTouchstart',
-      // 'mousedown': '_onMousedown',
+      'pointerdown': '_onPointerdown',
+      'click': '_onClick',
     };
   }
   get textNode() {
@@ -93,34 +69,59 @@ export class IoItem extends IoElement {
   }
   constructor(props) {
     super(props);
-    this._textNode = document.createTextNode("");
+    Object.defineProperty(this, '_textNode', {value: document.createTextNode(""), writable: true});
     this.appendChild(this._textNode);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
-    this.removeEventListener('click', this._onClick);
+    this.removeEventListener('keyup', this._onKeydown);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerleave', this._onPointerleave);
+    this.removeEventListener('pointerup', this._onPointerup);
   }
-  // _onTouchstart() {}
-  // _onMousedown() {
-  //   this.focus();
-  // }
   _onFocus() {
     this.addEventListener('blur', this._onBlur);
     this.addEventListener('keydown', this._onKeydown);
-    this.addEventListener('click', this._onClick);
+    this.addEventListener('keyup', this._onKeyup);
   }
   _onBlur() {
     this.removeEventListener('blur', this._onBlur);
     this.removeEventListener('keydown', this._onKeydown);
-    this.removeEventListener('click', this._onClick);
+    this.removeEventListener('keyup', this._onKeyup);
+  }
+  _onPointerdown(event) {
+    event.preventDefault();
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerleave', this._onPointerleave);
+    this.addEventListener('pointerup', this._onPointerup);
+    this.pressed = true;
+  }
+  _onPointermove() {}
+  _onPointerleave() {
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerleave', this._onPointerleave);
+    this.removeEventListener('pointerup', this._onPointerup);
+    this.pressed = false;
+  }
+  _onPointerup() {
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerleave', this._onPointerleave);
+    this.removeEventListener('pointerup', this._onPointerup);
+    this.pressed = false;
+    this.focus();
+  }
+  _onClick() {
+    this.dispatchEvent('item-clicked', {value: this.value, label: this.label}, true);
   }
   _onKeydown(event) {
-    if (event.which === 13 || event.which === 32) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.pressed = true;
       event.preventDefault();
       this._onClick(event);
-    } else if (event.key === 'ArrowLeft') {
+    }
+    else if (event.key === 'ArrowLeft') {
       event.preventDefault();
       this.focusTo('left');
     } else if (event.key === 'ArrowUp') {
@@ -134,17 +135,31 @@ export class IoItem extends IoElement {
       this.focusTo('down');
     }
   }
-  _onClick() {
-    this.dispatchEvent('item-clicked', {value: this.value, label: this.label}, true);
+  _onKeyup() {
+    this.pressed = false;
   }
   changed() {
-    let valueText = String(this.value);
-    if (this.value && typeof this.value === 'object') {
-      valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
+    if (this.label) {
+      this.textNode = this.label;
+      this.title = this.label;
+    } else {
+      let valueText;
+      if (this.value && typeof this.value === 'object') {
+        valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
+      } else {
+        valueText = String(this.value);
+      }
+      this.textNode = valueText;
+      this.title = valueText;
     }
-    valueText = this.label || valueText;
-    this.textNode = valueText;
-    this.title = valueText;
+    this.setAria();
+  }
+  setAria() {
+    if (this.label) {
+      this.setAttribute('aria-label', this.label);
+    } else {
+      this.setAttribute('aria-label', false);
+    }
   }
 }
 

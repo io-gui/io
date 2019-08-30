@@ -1,26 +1,8 @@
 import {html, IoElement} from "../../io.js";
 import {IoThemeSingleton} from "./theme.js";
 
-// TODO: document and test
-
-const animationQueue = new Array();
-const animate = function() {
-  requestAnimationFrame(animate);
-  for (let i = animationQueue.length; i--;) {
-    animationQueue[i]();
-  }
-  animationQueue.length = 0;
-};
-requestAnimationFrame(animate);
-
-function queueAnimation(func) {
-  if (animationQueue.indexOf(func) === -1) {
-    animationQueue.push(func);
-  }
-}
-
 const canvas = document.createElement('canvas');
-const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false});
+const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true});
 gl.imageSmoothingEnabled = false;
 
 gl.getExtension('OES_standard_derivatives');
@@ -53,17 +35,19 @@ export class IoGl extends IoElement {
   static get Style() {
     return html`<style>
       :host {
+        position: relative;
         overflow: hidden !important;
-        position: relative !important;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
+        box-sizing: border-box;
       }
-      :host > img {
-        position: absolute !important;
+      :host > .io-gl-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: calc(var(--io-border-radius) - var(--io-border-width));
         pointer-events: none;
-        image-rendering: pixelated;
-        width: 100%;
-        height: 100%;
+        /* image-rendering: pixelated; */
       }
     </style>`;
   }
@@ -71,7 +55,6 @@ export class IoGl extends IoElement {
     return {
       size: [0, 0],
       color: [1, 1, 1, 1],
-      aspect: 1,
       pxRatio: 1,
       css: Object,
     };
@@ -93,24 +76,26 @@ export class IoGl extends IoElement {
       #define saturate(v) clamp(v, 0., 1.)
     #endif
 
+    vec2 translate(vec2 samplePosition, vec2 xy){
+      return samplePosition - vec2(xy.x, xy.y);
+    }
     vec2 translate(vec2 samplePosition, float x, float y){
       return samplePosition - vec2(x, y);
     }
     float circle(vec2 samplePosition, float radius){
-      return saturate(length(samplePosition) - radius);
+      return saturate((length(samplePosition) - radius) * uPxRatio);
     }
     float rectangle(vec2 samplePosition, vec2 halfSize){
       vec2 edgeDistance = abs(samplePosition) - halfSize;
       float outside = length(max(edgeDistance, 0.));
       float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-      return saturate(outside + inside);
+      return saturate((outside + inside) * uPxRatio); // TODO: check
     }
     float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
       vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
-      float hw = lineWidth / 2.0;
-      float linex = abs(fract(sp.x - 0.5) - 0.5) / abs(dFdx(sp.x)) - hw;
-      float liney = abs(fract(sp.y - 0.5) - 0.5) / abs(dFdy(sp.y)) - hw;
-      return saturate(min(linex, liney) * 2.0);
+      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(dFdx(sp.x)) - lineWidth;
+      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(dFdy(sp.y)) - lineWidth;
+      return saturate(min(linex, liney));
     }
     float checker(vec2 samplePosition, float size) {
       vec2 checkerPos = floor(samplePosition / size);
@@ -122,10 +107,11 @@ export class IoGl extends IoElement {
     return /* glsl */`
       varying vec2 vUv;
       void main(void) {
-        vec2 px = uSize * vUv;
-        px = mod(px, 8.0);
-        gl_FragColor = uColor;
-        if (px.x <= 1.0 || px.y <= 1.0) gl_FragColor = vec4(vUv, 0.0, 1.0);
+        vec2 position = uSize * vUv;
+        float gridWidth = 8. * uPxRatio;
+        float lineWidth = 1. * uPxRatio;
+        float gridShape = grid(position, gridWidth, gridWidth, lineWidth);
+        gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
   }
   initPropertyUniform(name, property) {
@@ -201,6 +187,8 @@ export class IoGl extends IoElement {
 
     this.css = IoThemeSingleton;
 
+
+    // TODO: improve code clarity
     this._vecLengths = {};
     for (let name in this.css.__properties) {
       const property = this.css.__protoProperties[name];
@@ -235,40 +223,61 @@ export class IoGl extends IoElement {
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(uv);
 
-    this.template([['img', {id: 'img'}]]);
-
     this.render = this.render.bind(this);
+
+    // this.template([['img', {id: 'canvas'}]]);
+    // this.$.canvas.onload = () => { this.$.canvas.loading = false; };
+
+    this.template([['canvas', {id: 'canvas', class: 'io-gl-canvas'}]]);
+    this.$.canvas.ctx = this.$.canvas.getContext('2d');
 
     this.updateCssUniforms();
   }
   onResized() {
-    const rect = this.getBoundingClientRect();
-    const borderWidth = parseFloat(getComputedStyle(this).borderWidth);
+    // TODO: consider optimizing
     const pxRatio = window.devicePixelRatio;
-    const width = Math.ceil((rect.width - borderWidth * 2) * pxRatio);
-    const height = Math.ceil((rect.height - borderWidth * 2) * pxRatio);
-    this.setProperties({
-      size: [width, height],
-      aspect: width / height,
-      pxRatio: pxRatio,
-    });
+    const rect = this.getBoundingClientRect();
+    const style = window.getComputedStyle(this);
+    const bw = parseInt(style.borderRightWidth) + parseInt(style.borderLeftWidth);
+    const bh = parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth);
+
+    // TODO: confirm and test
+    const width = Math.max(0, Math.floor(rect.width - bw));
+    const height = Math.max(0, Math.floor(rect.height - bh));
+
+    const hasResized = (width !== this.size[0] || height !== this.size[1] || pxRatio !== this.pxRatio);
+
+    if (hasResized) {
+      this.$.canvas.style.width = Math.floor(width) + 'px';
+      this.$.canvas.style.height = Math.floor(height) + 'px';
+
+      this.$.canvas.width = Math.floor(width * pxRatio);
+      this.$.canvas.height = Math.floor(height * pxRatio);
+
+      this.setProperties({
+        size: [width, height],
+        pxRatio: pxRatio,
+      });
+    }
   }
   cssMutated() {
     this.updateCssUniforms();
-    queueAnimation(this.render);
+    this.requestAnimationFrameOnce(this.render);
   }
-  // TODO: make better uniform update
-  // propertyChanged(event) {
-  //   const p = event.detail.property;
-  //   const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-  //   this.updatePropertyUniform(name, this.__properties[p]);
-  // }
   changed() {
-    queueAnimation(this.render);
+    // TODO: unhack when ResizeObserver is available in Safari
+    if (!window.ResizeObserver) {
+      setTimeout(() => {
+        this.onResized();
+        this.requestAnimationFrameOnce(this.render);
+      });
+    } else {
+      this.requestAnimationFrameOnce(this.render);
+    }
   }
   render() {
-    const width = this.size[0];
-    const height = this.size[1];
+    const width = this.size[0] * this.pxRatio;
+    const height = this.size[1] * this.pxRatio;
 
     if (!width || !height) return;
 
@@ -288,7 +297,11 @@ export class IoGl extends IoElement {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
-    this.$.img.src = canvas.toDataURL('image/png', 0.9);
+
+    // this.$.canvas.src = canvas.toDataURL('image/png', 0.9);
+    // this.$.canvas.loading = true;
+
+    this.$.canvas.ctx.drawImage(canvas, 0, 0);
   }
   setShaderProgram() {
     if (currentProgram !== this._shader) {

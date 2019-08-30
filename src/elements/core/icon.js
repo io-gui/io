@@ -1,5 +1,5 @@
 import {IoElement, html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoThemeSingleton as mixin} from "./theme.js";
 import {IoIconsetSingleton} from "./iconset.js";
 
 export class IoIcon extends IoElement {
@@ -9,12 +9,12 @@ export class IoIcon extends IoElement {
         ${mixin.item};
       }
       :host {
-        width: var(--io-line-height);
-        height: var(--io-line-height);
-        fill: var(--io-color, currentcolor);
+        width: var(--io-item-height);
+        height: var(--io-item-height);
+        fill: var(--io-background-color, currentcolor);
       }
       :host[stroke] {
-        stroke: var(--io-background-color, currentcolor);
+        stroke: var(--io-color, currentcolor);
         stroke-width: var(--io-stroke-width);
       }
       :host > svg {
@@ -32,6 +32,10 @@ export class IoIcon extends IoElement {
       icon: {
         value: '',
         reflect: -1,
+      },
+      label: {
+        value: '',
+        reflect: 1,
       },
       stroke: {
         type: Boolean,

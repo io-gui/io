@@ -1,7 +1,8 @@
 import {IoElement, html} from "../../io.js";
-import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-elements-core.js";
-import {IoMenuLayer} from "./menu-layer.js";
+import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-core.js";
 import "./menu-item.js";
+
+const rects = new WeakMap();
 
 export class IoMenuOptions extends IoElement {
   static get Style() {
@@ -10,6 +11,7 @@ export class IoMenuOptions extends IoElement {
         ${mixin.panel}
       }
       :host {
+        align-self: flex-start;
         display: flex;
         flex-direction: column;
         align-items: stretch;
@@ -21,7 +23,7 @@ export class IoMenuOptions extends IoElement {
       :host:not([horizontal]) {
         padding: var(--io-spacing) 0;
       }
-      :host:not([expanded]) {
+      :host[inlayer]:not([expanded]) {
         visibility: hidden;
       }
       :host[horizontal] {
@@ -31,7 +33,9 @@ export class IoMenuOptions extends IoElement {
         flex-wrap: nowrap;
       }
       :host[horizontal] > * {
-        padding: calc(2 * var(--io-spacing)) calc(4 * var(--io-spacing));
+        border-left-width: 0;
+        border-right-width: 0;
+        padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
       }
       :host:not([horizontal]) > io-menu-item > * {
         min-width: 0.5em;
@@ -54,58 +58,48 @@ export class IoMenuOptions extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      role: 'listbox',
-      expanded: {
-        value: true,
-        notify: true,
-      },
-      overflow: {
-        type: Boolean,
-        notify: true,
-      },
-      horizontal: {
-        type: Boolean,
-        notify: true,
-      },
-    };
-  }
   static get Properties() {
     return {
-      options: Array,
-      position: 'right',
-      selectable: false,
       value: {
         value: null,
         notify: true,
       },
+      options: Array,
+      expanded: {
+        value: false,
+        reflect: 1,
+      },
+      horizontal: {
+        type: Boolean,
+        reflect: 1,
+      },
+      position: 'right',
+      selectable: false,
+      overflow: {
+        type: Boolean,
+        reflect: 1,
+      },
       slotted: Array,
       $parent: HTMLElement,
-      _depth: 0,
       _rects: Array,
+      role: 'listbox',
     };
   }
   static get Listeners() {
     return {
-      'io-menu-item-clicked': '_onMenuItemClicked',
+      'item-clicked': '_onMenuItemClicked',
     };
   }
   connectedCallback() {
     super.connectedCallback();
-    IoMenuLayer.singleton.registerOptions(this);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    IoMenuLayer.singleton.unregisterOptions(this);
+    this.setAttribute('inlayer', this.parentElement === IoLayerSingleton);
   }
   _onMenuItemClicked(event) {
-    const item = event.composedPath()[0];
-    if (item !== this) {
+    if (event.composedPath()[0] !== this) {
       event.stopImmediatePropagation();
       this.set('value', event.detail.value);
-      this.dispatchEvent('io-menu-item-clicked', event.detail, true);
-      item.expanded = false;
+      this.dispatchEvent('item-clicked', event.detail, true);
+      this.expanded = false;
     }
   }
   onResized() {
@@ -115,10 +109,6 @@ export class IoMenuOptions extends IoElement {
     const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
     if (this.horizontal) {
       const hamburger = this.querySelector('.io-hamburger');
-      const rects = this._rects;
-      rects.length = buttons.length;
-
-      if (!rects.length) return;
       if (!buttons.length) return;
 
       let end = this.getBoundingClientRect().right;
@@ -129,9 +119,12 @@ export class IoMenuOptions extends IoElement {
 
       for (let i = buttons.length; i--;) {
         const r = buttons[i].getBoundingClientRect();
-        rects[i] = rects[i] || {right: 0, width: 0};
-        if (r.right !== 0) rects[i].right = r.right;
-        if (r.width !== 0) rects[i].width = r.width;
+        const rect = rects.get(buttons[i]) || {right: 0, width: 0};
+        if (r.right !== 0 && r.width !== 0)  {
+          rect.right = r.right;
+          rect.width = r.width;
+          rects.set(buttons[i], rect);
+        }
 
         if (hamburger.hidden && overflow) {
           hamburger.hidden = false;
@@ -139,12 +132,12 @@ export class IoMenuOptions extends IoElement {
         }
 
         if (buttons[i].selected) {
-          end -= rects[i].width;
+          end -= rect.width;
           buttons[i].hidden = false;
           continue;
         }
 
-        last = Math.min(last, rects[i].right);
+        last = Math.min(last, rect.right);
         if (last < end) {
           buttons[i].hidden = false;
         } else {
@@ -162,37 +155,18 @@ export class IoMenuOptions extends IoElement {
     }
   }
   expandedChanged() {
-    if (this.parentElement === IoMenuLayer.singleton) {
-      IoMenuLayer.singleton._onOptionsExpanded(this);
+    if (this.parentElement === IoLayerSingleton) {
       if (this.expanded && this.$parent) {
         let rect = this.getBoundingClientRect();
         let pRect = this.$parent.getBoundingClientRect();
-        const x = IoMenuLayer.singleton._x;
-        const y = IoMenuLayer.singleton._y;
+        const x = IoLayerSingleton._x;
+        const y = IoLayerSingleton._y;
         switch (this.position) {
           case 'pointer':
             IoLayerSingleton.nudgePointer(this, x, y, rect);
             break;
-          case 'top':
-            IoLayerSingleton.nudgeTop(this, pRect.x, pRect.top, rect) ||
-            IoLayerSingleton.nudgeBottom(this, pRect.x, pRect.bottom, rect) ||
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
-            break;
-          case 'left':
-            IoLayerSingleton.nudgeLeft(this, pRect.x, pRect.top, rect) ||
-            IoLayerSingleton.nudgeRight(this, pRect.right, pRect.top, rect) ||
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
-            break;
-          case 'bottom':
-            IoLayerSingleton.nudgeBottom(this, pRect.x, pRect.bottom, rect) ||
-            IoLayerSingleton.nudgeTop(this, pRect.x, pRect.top, rect) ||
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
-            break;
-          case 'right':
           default:
-            IoLayerSingleton.nudgeRight(this, pRect.right, pRect.top, rect) ||
-            IoLayerSingleton.nudgeLeft(this, pRect.x, pRect.top, rect) ||
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
+            IoLayerSingleton.setElementPosition(this, this.position, pRect);
             break;
         }
       }
@@ -200,16 +174,18 @@ export class IoMenuOptions extends IoElement {
   }
   changed() {
     const itemDirection = this.horizontal ? 'bottom' : 'right';
-    const elements = [this.options.map(option =>
-      ['io-menu-item', {
-        $parent: this,
-        option: option,
-        value: this.value,
-        direction: itemDirection,
-        selectable: this.selectable,
-        _depth: this._depth + 1,
-      }]
-    )];
+    const elements = [];
+    if (this.options) {
+      elements.push(...[this.options.map(option =>
+        ['io-menu-item', {
+          $parent: this,
+          option: option,
+          value: this.value,
+          direction: itemDirection,
+          selectable: this.selectable,
+        }]
+      )]);
+    }
     if (this.horizontal) {
       elements.splice(0, 0, ...this.slotted);
       elements.push(['io-menu-item', {
@@ -218,11 +194,11 @@ export class IoMenuOptions extends IoElement {
         value: this.value,
         selectable: this.selectable,
         class: 'io-hamburger',
-        _depth: this._depth,
       }]);
     }
     this.template(elements);
     this.setOverflow();
+    this.setOverflow(); // TODO: unhack
   }
 }
 

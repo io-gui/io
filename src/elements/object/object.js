@@ -1,5 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoThemeSingleton as mixin} from "../../io-core.js";
 import "./properties.js";
 
 export class IoObject extends IoElement {
@@ -22,24 +22,20 @@ export class IoObject extends IoElement {
     }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      label: {
-        notify: true,
-      },
-      expanded: {
-        type: Boolean,
-        notify: true,
-      },
-      role: 'region',
-    };
-  }
   static get Properties() {
     return {
       value: Object,
       properties: Array,
       config: Object,
       labeled: true,
+      label: {
+        reflect: 1,
+      },
+      expanded: {
+        type: Boolean,
+        reflect: 1,
+      },
+      role: 'region',
     };
   }
   _onButtonValueSet(event) {
@@ -48,7 +44,7 @@ export class IoObject extends IoElement {
   changed() {
     const label = this.label || this.value.constructor.name;
     this.template([
-      ['io-boolean', {class: 'io-item', true: '▾ ' + label, false: '▸ ' + label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
+      ['io-boolean', {true: '▾ ' + label, false: '▸ ' + label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       this.expanded ? [
         ['io-properties', {
           class: 'io-frame',

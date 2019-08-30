@@ -1,5 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoThemeSingleton as mixin} from "../../io-core.js";
 
 export class IoProperties extends IoElement {
   static get Style() {
@@ -27,7 +27,7 @@ export class IoProperties extends IoElement {
         /* ${mixin.item} */
       :host > io-object {
         padding: 0;
-        border: var(--io-inset-border);
+        border: var(--io-border);
         border-radius: var(--io-border-radius);
         border-color: transparent;
         background-color: transparent;

@@ -1,5 +1,5 @@
 import {html, IoElement} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-elements-core.js";
+import {IoThemeSingleton as mixin} from "../../io-core.js";
 
 export class IoElementDemo extends IoElement {
   static get Style() {
@@ -7,39 +7,42 @@ export class IoElementDemo extends IoElement {
       :host {
         ${mixin.panel}
       }
-      :host > io-boolean {
-        align-self: stretch;
-        width: auto;
-        text-align: left;
+      :host {
+        position: relative;
       }
-      :host > io-icon {
-        margin-top: 0.3em;
-        margin-bottom: -1.75em;
-        display: inline-block;
-        padding: 0 0.5em;
-        margin-left: auto;
+      :host > io-boolicon {
+        z-index: 2;
+        position: absolute;
+        top: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
+        right: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
       }
-      :host > io-boolean {
-        margin-bottom: var(--io-spacing);
+      :host > io-boolicon:not([value]):not(:hover) {
+        opacity: 0.5;
       }
       :host > io-properties {
         align-self: stretch;
         padding: var(--io-spacing) 0;
+        margin: var(--io-border-width);
+        margin-right: var(--io-spacing);
         margin-bottom: calc(2 * var(--io-spacing));
+      }
+      :host > io-properties > :nth-child(2) {
+        margin-right: calc(var(--io-item-height) + var(--io-spacing));
+      }
+      :host:not([expanded]) > .io-frame {
+        margin-right: calc(var(--io-item-height) + calc(3 * var(--io-spacing)));
       }
     </style>`;
   }
-  static get Attributes() {
+  static get Properties() {
     return {
       element: {
         type: String,
         reflect: -1,
-        notify: true,
       },
       properties: {
         type: Object,
         reflect: -1,
-        notify: true,
       },
       width: {
         type: String,
@@ -52,13 +55,11 @@ export class IoElementDemo extends IoElement {
       config: {
         type: Object,
         reflect: -1,
-        notify: true,
       },
-    };
-  }
-  static get Properties() {
-    return {
-      expanded: false,
+      expanded: {
+        type: Boolean,
+        reflect: 2,
+      }
     };
   }
   _onPropSet(event) {
@@ -97,20 +98,19 @@ export class IoElementDemo extends IoElement {
       if (this.properties[prop] === 'undefined') {
         this.properties[prop] = undefined;
       }
+      this.properties['on-' + prop + '-changed'] = this._onPropSet;
     }
     if (this.element) {
       const hasProps = !!Object.keys(this.properties).length;
-      const label = '<' + this.element + '>';
       this.template([
-        hasProps ? ['io-icon', {icon: 'icons:gear'}] : null,
-        ['io-boolean', {class: 'io-item', value: this.bind('expanded'), true: label, false: label}],
+        hasProps ? ['io-boolicon', {value: this.bind('expanded'), true: 'icons:gear', false: 'icons:gear'}] : null,
         (hasProps && this.expanded) ?
         ['io-properties', {value: this.properties, config: Object.assign({
-            'type:number': ['io-number', {ladder: true}],
-            'type:boolean': ['io-boolean', {display: 'switch'}],
+            'type:number': ['io-number', {step: 0.00001}],
+            'type:boolean': ['io-switch'],
           }, this.config)}] : null,
         ['div', {class: 'io-frame'}, [
-          [this.element, Object.assign({'on-value-set': this._onPropSet, 'id': 'demo-element'}, this.properties)],
+          [this.element, Object.assign({'id': 'demo-element'}, this.properties)],
         ]],
        ]);
        if (this.$['demo-element']) {

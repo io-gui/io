@@ -1,8 +1,8 @@
 ## About Io
 
-Io is a UI framework for building web applications and custom elements. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
+Io is a UI framework for computer graphics applications on the web. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for basic interactions, menus, layout and presentation.
 
-For a quick start, read this document, then check out included [collection of elements](https://io-gui.dev/#doc=elements-core#io-item) and the [source code](https://github.com/io-gui/io/).
+For a quick start, read this document, then check out included [collection of elements](#doc=elements-core#ioitem) and the [source code](https://github.com/io-gui/io/).
 
 **Core UI library**
 
@@ -10,7 +10,7 @@ The core library includes the most basic classes for buliding custom elements wi
 
 **Design System**
 
-Io design system includes a [collection of UI elements](https://io-gui.dev/#doc=elements-core#io-item) that range from simple input fields, to [menu systems](#doc=elements-menus#io-menu-item) and [responsive layouts](#doc=elements-layout#io-collapsable).
+Io design system includes a [collection of UI elements](#doc=elements-core#ioitem) that range from simple input fields, to [menu systems](#doc=elements-menus#io-menu-item) and [responsive layouts](#doc=elements-layout#io-collapsable).
 
 ## Usage
 
@@ -23,11 +23,15 @@ import {IoElement} from "./io/dist/io.js";
 To use one of the elements, such as `<io-menu-options>` for example, import the corresponding element collection, create the element, assign the options property, and add it to your DOM.
 
 ```javascript
-import "./io/dist/io-elements-menus.js";
-const menu = document.createElement('io-menu-options');
+import "./io/dist/io-menus.js";
+const menu = document.createElement('io-option-menu');
 menu.options = ["one", "two", "three"];
 element.appendChild(menu);
 ```
+
+Result:
+
+<io-option-menu value="one" options='["one", "two", "three"]'></io-option-menu>
 
 ## Simple App Example
 
@@ -101,13 +105,9 @@ Now you can use the message property inside the template.
 this.template([['p', this.message]]);
 ```
 
-## Attributes
+If you specify a property with `reflect: 1` configuration option, it will be automatically reflected to HTML attributes.
 
-Attributes are defined inside `static get Attributes()` return object.
-
-Attributes are also properties but they behave in such way that their values are automatically reflected to HTML attributes so they can be used as CSS selectors.
-
-For example we can use `clicked` attribute to change text color.
+For example we can use `clicked` attribute to change text color in CSS.
 
 ```javascript
 static get Style() {
@@ -119,9 +119,12 @@ static get Style() {
     </style>
   `;
 }
-static get Attributes() {
+static get Properties() {
   return {
-    clicked: false
+    clicked: {
+      value: false,
+      reflect: 1,
+    }
   }
 }
 ```
@@ -163,17 +166,13 @@ class MyApp extends IoElement {
     </style>
     `;
   }
-  static get Attributes() {
-    return {
-      clicked: {
-        value: false,
-        notify: true,
-      }
-    }
-  }
   static get Properties() {
     return {
       message: 'Hello io!',
+      clicked: {
+        value: false,
+        reflect: 1,
+      }
     }
   }
   static get Listeners() {
@@ -194,4 +193,4 @@ class MyApp extends IoElement {
 MyApp.Register();
 ```
 
-> Continue reading [advanced usage](#doc=learn-more) or check out the [included elements](#doc=elements-core#io-item).
+> Continue reading [advanced usage](#doc=learn-more) or check out the [included elements](#doc=elements-core#ioitem).

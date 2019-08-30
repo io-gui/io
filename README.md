@@ -9,9 +9,9 @@
 <a href="https://lgtm.com/projects/g/io-gui/io/context:javascript"><img src="https://img.shields.io/lgtm/grade/javascript/g/io-gui/io.svg?label=code%20quality" alt="Code Quality" /></a>
 </p>
 
-## Io: Lightweight UI Framework
+## UI framework for computer graphics on the web
 
-Io is a lightweight UI framework for reactive web applications. It implements custom elements, virtual DOM, data binding and a simple data-flow design. It comes with a collection of UI elements suitable for use with other frameworks.
+Io is a UI framework for computer graphics on the web. It implements custom elements, virtual DOM, data binding and a simple data-flow design. It comes with a collection of UI elements suitable for use with other frameworks.
 
 For a quick start, read the [getting started guide](https://io-gui.dev/#page=docs).
 

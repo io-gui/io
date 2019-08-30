@@ -34,7 +34,7 @@ const e = new IoObject({value: someObject});
 this.template([['io-object', {value: someObject}]]);
 ```
 
-## Properties and Attributes
+## Properties
 
 When defining new classes, you can use static getters to define properties. This evaluates once per class registration and it takes into account inherited property definitions for extended classes.
 
@@ -44,14 +44,7 @@ static get Properties() {
     myProperty: false
   };
 }
-static get Attributes() {
-  return {
-    myAttribute: false
-  };
-}
 ```
-
-Although semantically different, `Properties()` and `Attributes()` both define **properties** under the hood. However, their default property configurations are different in such way that "Properties" evoke change events while "Attributes" reflect their values to HTML attribute strings. One is intended for properties to be used in reactive element logic and I/O, while the other is primarily used for attribute CSS selectors. However, sometimes you need properties that serve both purposes. For that, you can use custom property configurations.
 
 ## Property Configuration
 

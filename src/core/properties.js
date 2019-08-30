@@ -5,15 +5,6 @@ export class ProtoProperties {
     this._p = protochain;
     const defs = {};
     for (let i = protochain.length; i--;) {
-      // Attributes
-      const attrs = protochain[i].constructor.Attributes;
-      for (let a in attrs) {
-        if (!defs[a]) defs[a] = new ProtoProperty(attrs[a]);
-        else Object.assign(defs[a], new ProtoProperty(attrs[a]));
-        if (defs[a].reflect === undefined) defs[a].reflect = 1;
-        if (defs[a].notify === undefined) defs[a].notify = false;
-        if (defs[a].enumerable === undefined) defs[a].enumerable = false;
-      }
       // Properties
       const props = protochain[i].constructor.Properties;
       for (let p in props) {
@@ -84,7 +75,7 @@ export class Properties {
         if (typeof this[prop].value === 'object' && this[prop].value !== null) {
           if (this[prop].value.isNode) this[prop].value.connect(node);
           node.queue(prop, this[prop].value, undefined);
-        } else if (this[prop].reflect === 1) {
+        } else if (this[prop].reflect >= 1) {
           this.node.setAttribute(prop, this[prop].value);
         }
       }
@@ -100,7 +91,6 @@ export class Properties {
       let oldBinding = this[prop].binding;
 
       let binding = (value instanceof Binding) ? value : null;
-
 
       if (binding && oldBinding && binding !== oldBinding) {
         oldBinding.removeTarget(this.node, prop); // TODO: test extensively
@@ -122,14 +112,13 @@ export class Properties {
         oldValue.disconnect(this.node);
       }
 
-
       if (this[prop].notify && oldValue !== this[prop].value) {
         this.node.queue(prop, this[prop].value, oldValue);
         if (this.node.__connected && !suspendDispatch) {
           this.node.queueDispatch();
         }
       }
-      if (this[prop].reflect === 1) this.node.setAttribute(prop, value);
+      if (this[prop].reflect >= 1) this.node.setAttribute(prop, value);
     }
 
   }

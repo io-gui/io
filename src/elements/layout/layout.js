@@ -8,8 +8,8 @@ export class IoLayout extends IoElement {
         display: flex;
         overflow: hidden;
         touch-action: none;
-        /* border: var(--io-outset-border); */
-        /* border-color: var(--io-outset-border-color); */
+        /* border: var(--io-border); */
+        /* border-color: var(--io-color-border-outset); */
       }
       :host[orientation=horizontal] {
         flex-direction: row;
@@ -19,19 +19,15 @@ export class IoLayout extends IoElement {
       }
     </style>`;
   }
-  static get Attributes() {
-    return {
-      orientation: {
-        value: 'horizontal',
-        notify: true,
-      },
-    };
-  }
   static get Properties() {
     return {
       elements: Array,
       splits: Array,
       editable: true,
+      orientation: {
+        value: 'horizontal',
+        reflect: 1,
+      },
     };
   }
   static get Listeners() {
@@ -215,8 +211,8 @@ export class IoLayoutDivider extends IoElement {
         z-index: 1;
         display: flex;
         flex: none;
-        border: var(--io-outset-border);
-        border-color: var(--io-outset-border-color);
+        border: var(--io-border);
+        border-color: var(--io-color-border-outset);
         user-select: none;
         transition: background-color 0.4s;
       }
@@ -257,10 +253,10 @@ export class IoLayoutDivider extends IoElement {
   }
   static get Listeners() {
     return {
-      'pointermove': '_onPointerMove'
+      'pointermove': '_onPointermove'
     };
   }
-  _onPointerMove(event) {
+  _onPointermove(event) {
     if (event.buttons) {
       event.preventDefault();
       this.setPointerCapture(event.pointerId);

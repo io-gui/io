@@ -1,249 +1,213 @@
-import {html, IoElement} from "../../io.js";
+import {html} from "../../io.js";
 import {IoGl} from "./gl.js";
 
-export class IoSlider extends IoElement {
+export class IoSlider extends IoGl {
   static get Style() {
     return html`<style>
       :host {
-        display: flex;
+        cursor: ns-resize;
+        box-sizing: border-box;
+        border: var(--io-border);
+        border-radius: var(--io-border-radius);
+        border-color: var(--io-color-border-inset);
+        min-width: var(--io-item-height);
+        min-height: var(--io-item-height);
         align-self: stretch;
         justify-self: stretch;
+        touch-action: none;
       }
-      :host > io-number {
-        flex: 0 0 auto;
-        margin-right: var(--io-spacing);
-      }
-      :host > io-slider-knob {
-        flex: 1 1 4.5em;
-        min-width: 4.5em;
-      }
-    </style>`;
-  }
-  static get Properties() {
-    return {
-      value: 0,
-      step: 0.001,
-      min: 0,
-      max: 1,
-    };
-  }
-  _onValueSet(event) {
-    this.value = event.detail.value;
-    this.dispatchEvent('value-set', event.detail, false);
-  }
-  changed() {
-    this.template([
-      ['io-number', {
-        id: 'number',
-        value: this.value,
-        step: this.step,
-        min: this.min,
-        max: this.max,
-        label: this.label,
-        title: this.title,
-        ladder: true,
-        'on-value-set': this._onValueSet,
-      }],
-      ['io-slider-knob', {
-        id: 'slider',
-        value: this.value,
-        step: this.step,
-        min: this.min,
-        max: this.max,
-        label: this.label,
-        title: this.title,
-        'on-value-set': this._onValueSet,
-      }]
-    ]);
-  }
-}
-
-export class IoSliderKnob extends IoGl {
-  static get Style() {
-    return html`<style>
-      :host {
+      :host[horizontal] {
         cursor: ew-resize;
-        border: var(--io-inset-border);
-        border-radius: var(--io-border-radius);
-        border-color: var(--io-inset-border-color);
-        min-height: 1.2em;
-        align-self: stretch;
-        justify-self: stretch
+      }
+      :host[orientation="2d"] {
+        cursor: move;
       }
       :host[aria-invalid] {
         border: var(--io-border-error);
         background-image: var(--io-gradient-error);
       }
-      :host[aria-invalid] > img {
-        opacity: 0;
+      :host[aria-invalid] > .io-gl-canvas {
+        opacity: 0.5;
       }
       :host:focus {
-        outline: 0;
         border-color: var(--io-color-focus);
+        outline-color: var(--io-color-focus);
       }
     </style>`;
-  }
-  static get Attributes() {
-    return {
-      role: 'slider',
-      tabindex: 0,
-    };
   }
   static get Properties() {
     return {
       value: 0,
       step: 0.01,
       min: 0,
-      max: 1000,
+      max: 1,
+      horizontal: {
+        value: true,
+        reflect: 1,
+      },
+      role: 'slider',
+      tabindex: 0,
     };
   }
   static get Listeners() {
     return {
-      'touchstart': '_onTouchstart',
-      'mousedown': '_onMousedown',
-      'keydown': '_onKeydown',
+      'focus': '_onFocus',
+      'contextmenu': '_onContextmenu',
+      'pointerdown': '_onPointerdown',
     };
-  }
-  _onTouchstart(event) {
-    this.addEventListener('touchmove', this._onTouchmove);
-    this.addEventListener('touchend', this._onTouchend);
-    this._onPointerdown(event);
-  }
-  _onTouchmove(event) {
-    this._onPointermove(event);
-  }
-  _onTouchend() {
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-  }
-  _onMousedown(event) {
-    event.preventDefault();
-    this.focus();
-    window.addEventListener('mousemove', this._onMousemove);
-    window.addEventListener('mouseup', this._onMouseup);
-    this._onPointerdown(event);
-  }
-  _onMousemove(event) {
-    this._onPointermove(event);
-  }
-  _onMouseup() {
-    window.removeEventListener('mousemove', this._onMousemove);
-    window.removeEventListener('mouseup', this._onMouseup);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('mousemove', this._onMousemove);
-    window.removeEventListener('mouseup', this._onMouseup);
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
+  }
+  _onFocus() {
+    this.addEventListener('blur', this._onBlur);
+    this.addEventListener('keydown', this._onKeydown);
+  }
+  _onBlur() {
+    this.removeEventListener('blur', this._onBlur);
+    this.removeEventListener('keydown', this._onKeydown);
+  }
+  _onContextmenu(event) {
+    event.preventDefault();
   }
   _onPointerdown(event) {
-    const pointer = event.changedTouches ? event.changedTouches[0] : event;
-    this._x = pointer.clientX;
-    this._y = pointer.clientY;
-    this._active = -1;
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerup', this._onPointerup);
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.setPointerCapture(event.pointerId);
+    this.focus();
   }
   _onPointermove(event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerup', this._onPointerup);
     this.debounce(this._onPointermoveDebounced, event);
   }
-  _onPointermoveDebounced(event) {
-    const pointer = event.changedTouches ? event.changedTouches[0] : event;
-
-    const dx = Math.abs(this._x - pointer.clientX);
-    const dy = Math.abs(this._y - pointer.clientY);
-
-    if (this._active === -1 && dx > 5) {
-      this._active = (dx > dy && dy < 20) ? 1 : 0;
-    }
-
-    if (this._active !== 1) return;
-    if (!event.cancelable) return;
-
+  _onPointerup() {
     event.preventDefault();
-    this.focus();
-
+    event.stopImmediatePropagation();
+    this.releasePointerCapture(event.pointerId);
+    this.removeEventListener('pointermove', this._onPointermove);
+    this.removeEventListener('pointerup', this._onPointerup);
+  }
+  _onPointermoveDebounced(event) {
     const rect = this.getBoundingClientRect();
-    const pos = Math.max(0, Math.min(1, (pointer.clientX - rect.x) / rect.width));
+    const x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
+    const y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
 
-    let value = this.min * (1 - pos) + this.max * pos;
-    value = Math.min(this.max, Math.max(this.min, value));
-    value = Math.round(value / this.step) * this.step;
-    value = Number(value.toFixed(4));
+    let _x = this.min * (1 - x) + this.max * x;
+    _x = Math.min(this.max, Math.max(this.min, _x));
+    _x = Math.round(_x / this.step) * this.step;
+    let _y = this.min * (1 - y) + this.max * y;
+    _y = Math.min(this.max, Math.max(this.min, _y));
+    _y = Math.round(_y / this.step) * this.step;
 
-    // TODO: debounce!
-    this.set('value', value);
-    // if (!this._t) {
-    //   this.set('value', value);
-    //   this._t = true;
-    //   requestAnimationFrame(() => {
-    //     this._t = false;
-    //   });
-    // } else {
-    //   cancelAnimationFrame(this._raf);
-    //   this._raf = requestAnimationFrame(() => {
-    //     this.set('value', value);
-    //     this._t = false;
-    //   })
-    // }
+    this._setValue(this.horizontal ? _x : _y, this.horizontal ? _y : _x);
+  }
+  _setValue(x) {
+    this.set('value', Number(x.toFixed(5)));
   }
   _onKeydown(event) {
-    if (event.which == 37) {
+    if (event.key === 'ArrowLeft') {
       event.preventDefault();
       if (!event.shiftKey) this.focusTo('left');
-      else this._moveSliderByKey('decrease');
-    } else if (event.which == 38) {
+      else this._setDecrease();
+    } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       if (!event.shiftKey) this.focusTo('up');
-      else this._moveSliderByKey('decrease');
-    } else if (event.which == 39) {
+      else this._setIncrease();
+    } else if (event.key === 'ArrowRight') {
       event.preventDefault();
       if (!event.shiftKey) this.focusTo('right');
-      else this._moveSliderByKey('increase');
-    } else if (event.which == 40) {
+      else this._setIncrease();
+    } else if (event.key === 'ArrowDown') {
       event.preventDefault();
       if (!event.shiftKey) this.focusTo('down');
-      else this._moveSliderByKey('increase');
-    } else if (event.which == 33) {
+      else this._setDecrease();
+    } else if (event.key === 'PageUp' || event.key === '+') {
       event.preventDefault();
-      this._moveSliderByKey('increase');
-    } else if (event.which == 34) {
+      this._setIncrease();
+    } else if (event.key === 'PageDown' || event.key === '-') {
       event.preventDefault();
-      this._moveSliderByKey('decrease');
-    } else if (event.which == 36) {
+      this._setDecrease();
+    } else if (event.key === 'Home') {
       event.preventDefault();
-      this._moveSliderByKey('min');
-    } else if (event.which == 35) {
+      this._setMin();
+    } else if (event.key === 'PageDown') {
       event.preventDefault();
-      this._moveSliderByKey('max');
+      this._setMax();
     }
   }
-  _moveSliderByKey(key) {
-    let value = this.value;
-    switch (key) {
-      case 'increase':
-        value += this.step;
-        break;
-      case 'decrease':
-        value -= this.step;
-        break;
-      case 'min':
-        value = this.min;
-        break;
-      case 'max':
-        value = this.max;
-        break;
-    }
+  // TODO: round to step
+  _setIncrease() {
+    let value = this.value + this.step;
     value = Math.min(this.max, Math.max(this.min, (value)));
-    value = Number(value.toFixed(4));
-    this.set('value', value);
+    this.set('value', Number(value.toFixed(4)));
   }
+  _setDecrease() {
+    let value = this.value - this.step;
+    value = Math.min(this.max, Math.max(this.min, (value)));
+    this.set('value', Number(value.toFixed(4)));
+  }
+  _setMin() {
+    let value = this.min;
+    value = Math.min(this.max, Math.max(this.min, (value)));
+    this.set('value', Number(value.toFixed(4)));
+  }
+  _setMax() {
+    let value = this.max;
+    value = Math.min(this.max, Math.max(this.min, (value)));
+    this.set('value', Number(value.toFixed(4)));
+  }
+  // TODO: consider moving or standardizing.
   changed() {
     super.changed();
+    this.setAria();
+  }
+  setAria() {
     this.setAttribute('aria-invalid', isNaN(this.value) ? 'true' : false);
     this.setAttribute('aria-valuenow', isNaN(this.value) ? 0 : this.value);
     this.setAttribute('aria-valuemin', this.min);
     this.setAttribute('aria-valuemax', this.max);
     // this.setAttribute('aria-valuestep', this.step);
   }
-  // TODO: implement proper sdf shapes.
+  static get GlUtils() {
+    return /* glsl */`
+    vec4 paintSlider(vec2 position, vec3 color) {
+      vec4 slotColor = mix(cssColor, cssBackgroundColorField, 0.125);
+      vec4 sliderColor = vec4(0.0);
+      float slotWidth = cssStrokeWidth;
+      float stroke = cssStrokeWidth;
+      float radius = cssItemHeight * 0.125;
+
+      float strokeShape = min(
+        circle(position, radius + stroke + stroke),
+        rectangle(vec2(0., position.y), vec2(-position.x, radius + stroke + stroke))
+      );
+      sliderColor = mix(vec4(slotColor.rgb, 1.0), sliderColor, strokeShape);
+
+      float fillShape = min(
+        circle(position, radius + stroke),
+        rectangle(vec2(0., position.y), vec2(-position.x, radius + stroke))
+      );
+      sliderColor = mix(vec4(cssBackgroundColor.rgb, 1.0), sliderColor, fillShape);
+
+      float colorShape = min(
+        circle(position, radius),
+        rectangle(vec2(0., position.y), vec2(-position.x, radius))
+      );
+      sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
+
+      return sliderColor;
+    }
+    \n\n`;
+  }
   static get Frag() {
     return `
     #extension GL_OES_standard_derivatives : enable
@@ -251,48 +215,32 @@ export class IoSliderKnob extends IoGl {
     varying vec2 vUv;
 
     void main(void) {
-      vec2 position = vUv * uSize;
+      vec3 finalColor = cssBackgroundColorField.rgb;
 
-      vec4 finalColor = cssBackgroundColorField;
-      vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
-      vec4 slotColor = mix(cssColor, cssBackgroundColorField, 0.125);
-      vec4 slotGradient = mix(cssColorFocus, cssColorLink, vUv.x);
-
-      float stepWidth = cssStrokeWidth * 1.0;
-      float slotWidth = cssStrokeWidth * 2.0;
+      vec2 size = (uHorizontal == 1) ? uSize : uSize.yx;
+      vec2 uv = uHorizontal == 1 ? vUv.xy : vUv.yx;
+      vec2 position = size * uv;
 
       float stepInPx = uSize.x / ((uMax - uMin) / uStep);
+      vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
 
-      if (stepInPx > stepWidth * 2.0) {
-        float gridWidth = uSize.x / ((uMax - uMin) / uStep);
-        float gridOffset = mod(uMin, uStep) / (uMax - uMin) * uSize.x;
-        float gridShape = grid(translate(position, - gridOffset, 0.0), gridWidth, uSize.y, stepWidth);
-        finalColor = mix(stepColorBg, finalColor, gridShape);
+      float lineWidth = cssStrokeWidth;
+      if (stepInPx > lineWidth * 2.0) {
+        float gridWidth = size.x / ((uMax - uMin) / uStep);
+        float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
+        float gridShape = grid(translate(position, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);
+        finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
       }
 
       float valueInRange = (uValue - uMin) / (uMax - uMin);
-      float valueField = saturate((vUv.x - valueInRange) * uSize.x);
-      float slotField = saturate(((abs(0.5 - vUv.y)) * uSize.y - slotWidth) * 2.0);
+      vec4 slotGradient = mix(cssColorFocus, cssColorLink, uv.x);
+      vec2 markerPos = translate(position, vec2(size.x * valueInRange, size.y * 0.5));
+      vec4 slider = paintSlider(markerPos, slotGradient.rgb);
+      finalColor = mix(finalColor.rgb, slider.rgb, slider.a);
 
-      finalColor = mix(slotColor, finalColor, slotField);
-
-      float knobRadius = uSize.y / 4.0;
-      vec2 circlePos = translate(position, valueInRange * uSize.x, 0.5 * uSize.y);
-      float circleStrokeShape = circle(circlePos, knobRadius + cssStrokeWidth);
-      finalColor = mix(slotColor, finalColor, circleStrokeShape);
-
-      float circleShape = circle(circlePos, knobRadius);
-      finalColor = mix(slotGradient, finalColor, circleShape);
-
-      float rectSize = valueInRange * uSize.x * 0.5;
-      vec2 rectPos = translate(position, rectSize, 0.5 * uSize.y);
-      float rectShape = rectangle(rectPos, vec2(rectSize, slotWidth - cssStrokeWidth));
-      finalColor = mix(slotGradient, finalColor, rectShape);
-
-      gl_FragColor = finalColor;
+      gl_FragColor = vec4(finalColor, 1.0);
     }`;
   }
 }
 
-IoSliderKnob.Register();
 IoSlider.Register();

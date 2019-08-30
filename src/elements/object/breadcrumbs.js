@@ -10,8 +10,8 @@ export class IoBreadcrumbs extends IoElement {
         align-self: stretch;
         justify-self: stretch;
         border-radius: var(--io-border-radius);
-        border: var(--io-inset-border);
-        border-color: var(--io-inset-border-color);
+        border: var(--io-border);
+        border-color: var(--io-color-border-inset);
         padding: var(--io-spacing);
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
@@ -22,7 +22,7 @@ export class IoBreadcrumbs extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         background: none;
-        padding: 0 var(--io-spacing);
+        padding: var(--io-spacing);
       }
       :host > io-button:hover {
         text-decoration: underline;

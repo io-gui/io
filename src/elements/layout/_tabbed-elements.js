@@ -272,7 +272,7 @@ export class IoTabs extends IoElement {
       :host > io-button.io-selected-tab.io-tab-insert-after {
         background-image: linear-gradient(270deg, var(--io-color-focus) 0.3em, transparent 0.31em);
       }
-      :host > io-menu-option {
+      :host > io-option-menu {
         background: none !important;
         border: none;
         padding-left: calc(2 * var(--io-spacing));
@@ -444,7 +444,7 @@ export class IoTabs extends IoElement {
     }
     const elements = [];
     if (this.overflow) {
-      elements.push(['io-menu-option', {
+      elements.push(['io-option-menu', {
         label: '☰',
         title: 'select tab menu',
         value: this.bind('selected'),
@@ -459,7 +459,7 @@ export class IoTabs extends IoElement {
     if (this.editable) {
       elements.push(['div', {
         class: 'edit-spacer'
-      }], ['io-menu-option', {
+      }], ['io-option-menu', {
         class: 'edit-option',
         label: '⚙️',
         options: options,
@@ -483,7 +483,7 @@ export class IoTabDragicon extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         user-select: none;
-        border: var(--io-outset-border);
+        border: var(--io-border);
         border-radius: var(--io-border-radius);
         padding: var(--io-spacing);
         padding-left: calc(2 * var(--io-spacing));

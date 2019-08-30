@@ -1,6 +1,27 @@
 import {html, IoElement, IoStorage as $} from "../../io.js";
 import "./breadcrumbs.js";
-import {Item} from "../../io-elements-core.js";
+// import {Item} from "../../io-core.js";
+
+class Item {
+  constructor(value) {
+    if (typeof value === 'object' && (value.options !== undefined || value.action !== undefined || value.value !== undefined)) {
+      Object.assign(this, value);
+    } else {
+      this.value = value;
+    }
+    if (this.label === undefined) {
+      if (this.value instanceof Array) {
+        this.label = String(`${this.value.constructor.name} (${this.value.length})`);
+      } else if (typeof this.value === 'object') {
+        this.label = String(`${this.value.constructor.name}`);
+      } else if (this.value !== undefined) {
+        this.label = String(this.value);
+      } else {
+        console.warn('Option must have label or value!');
+      }
+    }
+  }
+}
 
 export function isValuePropertyOf(prop, object) {
   for (let key in object) if (object[key] === prop) return key;
@@ -48,10 +69,10 @@ export class IoInspector extends IoElement {
   }
   _onSetInspectorValue(event) {
     event.stopImmediatePropagation();
-    this.set('value', event.detail.value);
-  }
-  _onBreadcrumbsValue(event) {
-    this.set('value', event.detail.value);
+    const value = event.detail.value;
+    if (value && typeof value === 'object') {
+      this.set('value', value);
+    }
   }
   valueChanged() {
     const option = this._options.find((option) => {
@@ -66,7 +87,7 @@ export class IoInspector extends IoElement {
   }
   changed() {
     const elements = [
-      ['io-breadcrumbs', {value: this.value, options: this._options, trim: true, 'on-value-set': this._onBreadcrumbsValue}],
+      ['io-breadcrumbs', {value: this.value, options: this._options, trim: true, 'on-value-set': this._onSetInspectorValue}],
     ];
     // TODO: rewise and document use of storage
     let uuid = this.value.constructor.name;

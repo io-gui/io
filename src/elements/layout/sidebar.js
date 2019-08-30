@@ -1,4 +1,16 @@
-import {html, IoElement, IoStorage as $, filterObject} from "../../io.js";
+import {html, IoElement, IoStorage as $} from "../../io.js";
+
+export function filterObject(object, predicate) {
+  if (predicate(object)) return object;
+  for (let key in object) {
+    if (predicate(object[key])) {
+        return object[key];
+    } else if (typeof object[key] === 'object') {
+      const prop = filterObject(object[key], predicate);
+      if (prop) return prop;
+    }
+  }
+}
 
 export class IoSidebar extends IoElement {
   static get Style() {
@@ -10,59 +22,50 @@ export class IoSidebar extends IoElement {
         overflow-y: auto;
         padding: var(--io-spacing);
       }
-      :host io-collapsable,
-      :host io-collapsable > .io-frame {
+      :host:not([overflow]) {
+        -webkit-overflow-scrolling: touch;
+        flex-direction: column;
+      }
+      :host > * {
+        flex: 0 0 auto;
+      }
+      :host io-collapsable {
         padding: 0;
       }
-      :host io-collapsable > io-boolean {
-        font-weight: bold;
-        margin: 0 !important;
+      :host io-collapsable > .io-frame {
+        padding: 0 0 0 0.75em;
       }
       :host io-button {
         text-align: left;
         align-self: stretch;
       }
-      :host io-collapsable > .io-frame > io-collapsable {
-        padding-left: 0.75em;
-      }
-      :host io-collapsable > .io-frame > io-button {
-        padding-left: 1.5em;
-      }
-      :host:not([overflow]) {
-        -webkit-overflow-scrolling: touch;
-        flex-direction: column;
-      }
       :host io-button,
       :host io-collapsable,
       :host .io-frame {
-        border: none;
         background: none;
         box-shadow: none;
+        border-color: transparent;
       }
     </style>`;
-  }
-  static get Attributes() {
-    return {
-      role: 'navigation',
-      label: {
-        notify: true,
-      },
-      overflow: {
-        notify: true,
-      }
-    };
   }
   static get Properties() {
     return {
       selected: String,
       options: Array,
+      label: {
+        reflect: 1,
+      },
+      overflow: {
+        reflect: 1,
+      },
+      role: 'navigation',
     };
   }
   _onSelect(id) {
-    this.set('selected', id);
+    this.set('selected', id.toLowerCase());
   }
   _onValueSet(event) {
-    this.set('selected', event.detail.value);
+    this.set('selected', event.detail.value.toLowerCase());
   }
   _addOptions(options) {
     const elements = [];
@@ -92,7 +95,7 @@ export class IoSidebar extends IoElement {
     let selectedOption = filterObject(this.options, option => { return option.value === this.selected; });
     if (this.overflow) {
       const label = selectedOption ? (selectedOption.label || String(selectedOption.value)) : String(this.selected).split('#')[0];
-      this.template([['io-menu-option', {
+      this.template([['io-option-menu', {
         label: '☰  ' + label,
         title: 'select tab',
         value: this.selected,

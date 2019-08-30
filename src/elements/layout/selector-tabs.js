@@ -1,5 +1,18 @@
-import {html, filterObject} from "../../io.js";
+import {html} from "../../io.js";
 import {IoSelector} from "./selector.js";
+// TODO: remove io-menu-options dependency.
+
+export function filterObject(object, predicate) {
+  if (predicate(object)) return object;
+  for (let key in object) {
+    if (predicate(object[key])) {
+        return object[key];
+    } else if (typeof object[key] === 'object') {
+      const prop = filterObject(object[key], predicate);
+      if (prop) return prop;
+    }
+  }
+}
 
 export class IoSelectorTabs extends IoSelector {
   static get Style() {
@@ -28,6 +41,9 @@ export class IoSelectorTabs extends IoSelector {
       slotted: Array,
     };
   }
+  _onValueSet(event) {
+    this.set('selected', event.detail.value.toLowerCase());
+  }
   _onScroll() {
     super._onScroll();
     if (this.$.tabs.selected !== this.selected) {
@@ -43,10 +59,11 @@ export class IoSelectorTabs extends IoSelector {
         id: 'tabs',
         role: 'navigation',
         horizontal: true,
-        value: this.bind('selected'),
+        value: this.selected,
         options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
         slotted: this.slotted,
         selectable: true,
+        'on-value-set': this._onValueSet,
       }],
     ];
     this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);
