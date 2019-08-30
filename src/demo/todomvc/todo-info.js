@@ -1,4 +1,4 @@
-import {IoMdView} from "../../dist/io-extras.js";
+import {IoMdView} from "../../io-extras.js";
 
 export class TodoInfo extends IoMdView {
   changed() {

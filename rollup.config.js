@@ -148,4 +148,48 @@ export default [
     ],
     external: [ path.resolve('src/io.js'), path.resolve('src/io-core.js') ],
   },
+  {
+    input: 'demo/io-demo.js',
+    plugins: [html()],
+    inlineDynamicImports: true,
+    output: [
+      {
+        format: 'es',
+        file: 'dist/io-demo.js',
+        indent: '  '
+      }
+    ],
+    external: [
+      path.resolve('src/io.js'),
+      path.resolve('src/io-core.js'),
+      path.resolve('dist/io-color.js'),
+      path.resolve('dist/io-extras.js'),
+      path.resolve('dist/io-layout.js'),
+      path.resolve('dist/io-math.js'),
+      path.resolve('dist/io-menu.js'),
+      path.resolve('dist/io-object.js'),
+    ],
+  },
+  // {
+  //   input: 'tests/io-tests.js',
+  //   plugins: [html()],
+  //   inlineDynamicImports: true,
+  //   output: [
+  //     {
+  //       format: 'es',
+  //       file: 'dist/io-tests.js',
+  //       indent: '  '
+  //     }
+  //   ],
+  //   external: [
+  //     path.resolve('src/io.js'),
+  //     path.resolve('dist/io-core.js'),
+  //     path.resolve('dist/io-color.js'),
+  //     path.resolve('dist/io-extras.js'),
+  //     path.resolve('dist/io-layout.js'),
+  //     path.resolve('dist/io-math.js'),
+  //     path.resolve('dist/io-menu.js'),
+  //     path.resolve('dist/io-object.js'),
+  //   ],
+  // },
 ];

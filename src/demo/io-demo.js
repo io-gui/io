@@ -1,5 +1,5 @@
-import {html, IoStorage as $} from "../dist/io.js";
-import {IoSelectorTabs} from "../dist/io-layout.js";
+import {html, IoStorage as $} from "../io.js";
+import {IoSelectorTabs} from "../io-layout.js";
 
 import "./elements/core.js"
 import "./elements/theme.js"
@@ -7,7 +7,6 @@ import "./elements/menus.js"
 import "./elements/object.js"
 import "./elements/math.js"
 import "./elements/color.js"
-
 
 export class IoDemo extends IoSelectorTabs {
   static get Style() {
@@ -37,7 +36,7 @@ export class IoDemo extends IoSelectorTabs {
         ['io-demo-object', {name: 'elements-object'}],
         ['io-demo-math', {name: 'elements-math'}],
         ['io-demo-color', {name: 'elements-color'}],
-        ['iframe', {name: 'todo', title: 'TODO MVC', src: './demo/todomvc/index.html'}],
+        ['iframe', {name: 'todo', title: 'TODO MVC', src: './src/demo/todomvc/index.html'}],
       ],
     };
   }
