@@ -1,3 +1,4 @@
+import {IoNode} from "./node.js";
 // TODO: Improve tests.
 
 /** Manager for `IoNode` and `IoElement` bindings. */

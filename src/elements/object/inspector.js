@@ -97,7 +97,7 @@ export class IoInspector extends IoElement {
       elements.push(
         ['io-collapsable', {
           label: group,
-          expanded: $('io-inspector-group-' + uuid + '-' + group, true),
+          expanded: $('io-inspector-group-' + uuid + '-' + group, true, 'local'),
           elements: [
             ['io-properties', {
               value: this.value,

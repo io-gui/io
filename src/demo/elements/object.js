@@ -53,8 +53,8 @@ export class IoDemoObject extends IoElement {
       ]],
       ['io-item', {label: 'io-object'}],
       ['div', {class: 'io-column'}, [
-        ['io-object', {value: this, label: 'io-object (filtered properties)', expanded: $('io-object1', true), properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined']}], //TODO: labeled?
-        ['io-object', {value: this, label: 'io-object (configured property)', expanded: $('io-object2', true), properties: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
+        ['io-object', {value: this, label: 'io-object (filtered properties)', expanded: true, properties: ['number', 'string', 'boolean', 'null', 'NaN', 'undefined']}], //TODO: labeled?
+        ['io-object', {value: this, label: 'io-object (configured property)', expanded: true, properties: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
       ]],
       ['io-item', {label: 'io-inspector'}],
       ['div', {class: 'io-column'}, [

@@ -1,5 +1,13 @@
-import {html, IoElement} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-core.js";
+import {html, IoElement, Binding, IoStorage as $} from "../io.js";
+import {IoThemeSingleton, IoThemeSingleton as mixin} from "../io-core.js";
+
+const demoValues = {
+  'demo:boolean': $('demo:boolean', true),
+  'demo:string': $('demo:string', 'Hello io!'),
+  'demo:leet': $('demo:leet', 1337),
+  'demo:number': $('demo:number', 0),
+  'demo:theme': IoThemeSingleton.bind('theme'),
+};
 
 export class IoElementDemo extends IoElement {
   static get Style() {
@@ -81,6 +89,7 @@ export class IoElementDemo extends IoElement {
     }
   }
   _bubbleMutation(object, parentObject, srcObject) {
+    if (object instanceof Binding) return; // Unhack
     if (object === srcObject) {
       this.dispatchEvent('object-mutated', {
         object: parentObject,
@@ -97,6 +106,11 @@ export class IoElementDemo extends IoElement {
     for (let prop in this.properties) {
       if (this.properties[prop] === 'undefined') {
         this.properties[prop] = undefined;
+      } else if (typeof this.properties[prop] === 'string') {
+        // Unhack
+        if (demoValues[this.properties[prop]] !== undefined) {
+          this.properties[prop] = demoValues[this.properties[prop]];
+        }
       }
       this.properties['on-' + prop + '-changed'] = this._onPropSet;
     }

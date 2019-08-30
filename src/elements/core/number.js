@@ -125,6 +125,7 @@ export class IoNumber extends IoItem {
       conversion: this.conversion,
       expanded: true,
       'on-value-set': this._onValueSet,
+      'on-expanded-changed': IoLayerSingleton.onChildExpanded,
     });
   }
   _onKeydown(event) {

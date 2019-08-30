@@ -118,11 +118,12 @@
     import "./dist/io-math.js";
     import "./dist/io-color.js";
     import "./dist/io-menu.js";
+    import "./dist/io-demo.js";
 
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
         return {
-          selected: $('page', 'docs', true),
+          selected: $('page', 'docs', 'hash'),
           role: 'main',
           class: 'main',
           cache: true,
@@ -139,7 +140,7 @@
           {label: 'Test', value: 'test'},
         ];
         this.elements = [
-          ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started#about-io', true),
+          ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started#about-io', 'hash'),
             options: [
               {label: "Getting Started", options: [
                 {label: "About Io", value: "getting-started#about-io"},
@@ -248,7 +249,7 @@
               ['io-md-view', {name: 'extras', path :'./docs/extras.md'}],
             ],
           }],
-          ['io-demo', {name: 'demo', import: "./dist/io-demo.js"}],
+          ['io-demo', {name: 'demo'}],
           ['io-test', {name: 'test', import: "./dist/io-tests.js"}],
         ];
       }

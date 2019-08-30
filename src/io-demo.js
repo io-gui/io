@@ -1,6 +1,7 @@
 import {html, IoStorage as $} from "./io.js";
 import {IoSelectorTabs} from "./io-layout.js";
 
+import "./demo/element-demo.js";
 import "./demo/elements/core.js";
 import "./demo/elements/theme.js";
 import "./demo/elements/menus.js";
@@ -19,7 +20,7 @@ export class IoDemo extends IoSelectorTabs {
   }
   static get Properties() {
     return {
-      selected:  $('demo', 'core', true),
+      selected:  $('demo', 'core', 'hash'),
       options: [
         {value: 'core', label: "Core"},
         {value: 'theme', label: "Theme"},

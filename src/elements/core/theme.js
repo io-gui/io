@@ -54,7 +54,7 @@ const themeDB = {
   }, themeSizes),
 };
 
-const theme = $('theme', isDarkMode ? 'dark' : 'light');
+const theme = $('theme', isDarkMode ? 'dark' : 'light', 'local');
 const vars = themeDB[theme.value] || themeDB['light'];
 
 export class IoTheme extends IoNode {

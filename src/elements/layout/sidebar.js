@@ -76,7 +76,7 @@ export class IoSidebar extends IoElement {
         let selectedOption = filterObject(option.options, option => { return option.value === this.selected; });
         elements.push(['io-collapsable', {
           label: option.label,
-          expanded: !!selectedOption || $('io-sidebar-collapse ' + UID, false),
+          expanded: !!selectedOption || $('io-sidebar-collapse ' + UID, false, 'local'),
           elements: [...this._addOptions(option.options)]
         }]);
       } else {
