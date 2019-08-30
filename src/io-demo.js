@@ -19,23 +19,23 @@ export class IoDemo extends IoSelectorTabs {
   }
   static get Properties() {
     return {
-      selected:  $('demo', 'elements-math', true),
+      selected:  $('demo', 'core', true),
       options: [
-        {value: 'elements-core', label: "Core"},
-        {value: 'elements-theme', label: "Theme"},
-        {value: 'elements-menus', label: "Menus"},
-        {value: 'elements-object', label: "Object"},
-        {value: 'elements-math', label: "Math"},
-        {value: 'elements-color', label: "Color"},
+        {value: 'core', label: "Core"},
+        {value: 'theme', label: "Theme"},
+        {value: 'menus', label: "Menus"},
+        {value: 'object', label: "Object"},
+        {value: 'math', label: "Math"},
+        {value: 'color', label: "Color"},
         {value: 'todo', label: "Todo App"},
       ],
       elements: [
-        ['io-demo-core', {name: 'elements-core'}],
-        ['io-demo-theme', {name: 'elements-theme'}],
-        ['io-demo-menus', {name: 'elements-menus'}],
-        ['io-demo-object', {name: 'elements-object'}],
-        ['io-demo-math', {name: 'elements-math'}],
-        ['io-demo-color', {name: 'elements-color'}],
+        ['io-demo-core', {name: 'core'}],
+        ['io-demo-theme', {name: 'theme'}],
+        ['io-demo-menus', {name: 'menus'}],
+        ['io-demo-object', {name: 'object'}],
+        ['io-demo-math', {name: 'math'}],
+        ['io-demo-color', {name: 'color'}],
         ['iframe', {name: 'todo', title: 'TODO MVC', src: './src/demo/todomvc/index.html'}],
       ],
     };
