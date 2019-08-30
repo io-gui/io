@@ -208,7 +208,7 @@ export class IoMenuItem extends IoItem {
     IoLayerSingleton.removeChild(this.$options);
     IoLayerSingleton.removeEventListener('pointermove', this._onLayerPointermove);
   }
-  _onClick(event) {
+  _onClick() {
     if (this._value !== undefined || this._action) {
       if (this._value !== undefined) {
         this.set('value', this._value, true);

@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorage as $} from "../../io.js";
+import {html, IoElement} from "../../io.js";
 
 export class IoDemoObject extends IoElement {
   static get Style() {
