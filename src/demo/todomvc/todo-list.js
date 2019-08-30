@@ -20,7 +20,7 @@ export class TodoList extends IoElement {
         ['input', {type: 'checkbox', id: 'toggle-all', class: 'toggle-all', checked: allCompleted, 'on-click': this.model._toggleItemsCompleted}],
         this.model.items.length ? ['label', {for: 'toggle-all'}, 'Mark all as complete'] : null,
         ['ul', {class: 'todo-list'}, [
-          itemsInRoute.map((item, i) => ['todo-item', {item: item, model: this.model}])
+          itemsInRoute.map((item) => ['todo-item', {item: item, model: this.model}])
         ]]
       ]],
     ]);

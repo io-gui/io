@@ -21,7 +21,7 @@ export class IoDemoMenus extends IoElement {
       number: 0.0,
     };
   }
-  changed(event) {
+  changed() {
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
   setNumber(value) {

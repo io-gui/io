@@ -1,12 +1,12 @@
 import {html, IoStorage as $} from "../io.js";
 import {IoSelectorTabs} from "../io-layout.js";
 
-import "./elements/core.js"
-import "./elements/theme.js"
-import "./elements/menus.js"
-import "./elements/object.js"
-import "./elements/math.js"
-import "./elements/color.js"
+import "./elements/core.js";
+import "./elements/theme.js";
+import "./elements/menus.js";
+import "./elements/object.js";
+import "./elements/math.js";
+import "./elements/color.js";
 
 export class IoDemo extends IoSelectorTabs {
   static get Style() {

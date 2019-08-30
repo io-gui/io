@@ -24,7 +24,7 @@ export class IoDemoTheme extends IoElement {
     const options = [
       {value: 'light', action: this._setTheme},
       {value: 'dark', action: this._setTheme},
-    ]
+    ];
     this.template([
       ['io-item', {label: ' '}], ['io-option-menu', {label: 'Theme ▾', options: options}],
       ['io-item', {label: 'cssSpacing'}],

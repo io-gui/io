@@ -15,7 +15,7 @@ export class TodoModel extends IoNode {
           completed: function(item) {
             return item.completed;
           }
-        }
+        };
       }
     };
   }
@@ -39,15 +39,15 @@ export class TodoModel extends IoNode {
     return this.items ? (this.items.length - this.getCompletedCount(this.items)) : 0;
   }
   destroyItem(item) {
-    var i = this.items.indexOf(item);
-    this.items.splice(i, 1)
+    let i = this.items.indexOf(item);
+    this.items.splice(i, 1);
     this.dispatchEvent('object-mutated', {object: this}, false, window);
     this.save();
   }
   updateItemTitle(item, title) {
     title = String(title).trim();
     if (title) {
-      var i = this.items.indexOf(item);
+      let i = this.items.indexOf(item);
       this.items[i].title = title;
       this.dispatchEvent('object-mutated', {object: this}, false, window);
       this.save();
@@ -65,7 +65,7 @@ export class TodoModel extends IoNode {
   }
   _toggleItemsCompleted() {
     let completed = !(this.items.length === this.getCompletedCount());
-    for (var i = this.items.length; i--;) {
+    for (let i = this.items.length; i--;) {
       this.items[i].completed = completed;
     }
     this.dispatchEvent('object-mutated', {object: this}, false, window);

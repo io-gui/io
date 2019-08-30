@@ -32,10 +32,9 @@ export class IoDemoMath extends IoElement {
       matrix4: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     };
   }
-  changed(event) {
+  changed() {
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
-
   constructor(props) {
     super(props);
     this.template([

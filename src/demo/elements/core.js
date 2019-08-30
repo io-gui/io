@@ -33,7 +33,7 @@ export class IoDemoCore extends IoElement {
       undefined: undefined,
     };
   }
-  changed(event) {
+  changed() {
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
   setNumber(value) {

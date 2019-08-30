@@ -15,7 +15,7 @@ export class TodoFooter extends IoElement {
       route: 'all',
     };
   }
-  _clear(event) {
+  _clear() {
     this.model.clearCompletedItems();
   }
   _setRoute(event) {

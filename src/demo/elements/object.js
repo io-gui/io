@@ -40,7 +40,7 @@ export class IoDemoObject extends IoElement {
       undefined: undefined,
     };
   }
-  changed(event) {
+  changed() {
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
   constructor(props) {

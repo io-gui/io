@@ -149,7 +149,7 @@ export default [
     external: [ path.resolve('src/io.js'), path.resolve('src/io-core.js') ],
   },
   {
-    input: 'demo/io-demo.js',
+    input: 'src/demo/io-demo.js',
     plugins: [html()],
     inlineDynamicImports: true,
     output: [
@@ -162,12 +162,12 @@ export default [
     external: [
       path.resolve('src/io.js'),
       path.resolve('src/io-core.js'),
-      path.resolve('dist/io-color.js'),
-      path.resolve('dist/io-extras.js'),
-      path.resolve('dist/io-layout.js'),
-      path.resolve('dist/io-math.js'),
-      path.resolve('dist/io-menu.js'),
-      path.resolve('dist/io-object.js'),
+      path.resolve('src/io-color.js'),
+      path.resolve('src/io-extras.js'),
+      path.resolve('src/io-layout.js'),
+      path.resolve('src/io-math.js'),
+      path.resolve('src/io-menu.js'),
+      path.resolve('src/io-object.js'),
     ],
   },
   // {
