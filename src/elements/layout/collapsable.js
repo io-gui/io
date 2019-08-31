@@ -1,12 +1,9 @@
 import {html, IoElement} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-core.js";
+import {IoPanel} from "../../io-core.js";
 
-export class IoCollapsable extends IoElement {
+export class IoCollapsable extends IoPanel {
   static get Style() {
     return html`<style>
-      :host {
-        ${mixin.panel}
-      }
       :host > io-boolean {
         text-align: left;
         align-self: stretch;

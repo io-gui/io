@@ -1,13 +1,10 @@
-import {html, IoElement} from "../../io.js";
-import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-core.js";
+import {html} from "../../io.js";
+import {IoLayerSingleton, IoPanel} from "../../io-core.js";
 import {IoColorMixin} from "./color.js";
 
-export class IoColorPanel extends IoColorMixin(IoElement) {
+export class IoColorPanel extends IoColorMixin(IoPanel) {
   static get Style() {
     return html`<style>
-      :host {
-        ${mixin.panel}
-      }
       :host {
         display: flex;
         cursor: move;

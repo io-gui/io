@@ -1,13 +1,10 @@
-import {html, IoElement} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-core.js";
+import {html} from "../../io.js";
+import {IoPanel} from "../../io-core.js";
 import "./properties.js";
 
-export class IoObject extends IoElement {
+export class IoObject extends IoPanel {
   static get Style() {
     return html`<style>
-    :host {
-      ${mixin.panel}
-    }
     :host > io-boolean {
       text-align: left;
       align-self: stretch;

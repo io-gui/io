@@ -24,6 +24,7 @@
 
 
 export {IoItem} from "./elements/core/item.js";
+export {IoPanel} from "./elements/core/panel.js";
 export {IoGl} from "./elements/core/gl.js";
 export {IoButton} from "./elements/core/button.js";
 export {IoBoolean} from "./elements/core/boolean.js";

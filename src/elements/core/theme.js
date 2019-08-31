@@ -1,4 +1,4 @@
-import {IoNode, html, IoStorageFactory as $} from "../../io.js";
+import {IoElement, html, IoStorageFactory as $} from "../../io.js";
 
 const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -57,48 +57,10 @@ const themeDB = {
 const theme = $({value: isDarkMode ? 'dark' : 'light', storage: 'local', key: 'theme'});
 const vars = themeDB[theme.value] || themeDB['light'];
 
-export class IoTheme extends IoNode {
-  static get Mixins() {
+export class IoTheme extends IoElement {
+  static get Style() {
     return html`<style>
-    item {
-      align-self: flex-start;
-      display: inline-block;
-      cursor: pointer;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex-wrap: nowrap;
-      white-space: nowrap;
-      box-sizing: border-box;
-      line-height: var(--io-line-height);
-      height: var(--io-item-height);
-      font-size: var(--io-font-size);
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: transparent;
-      color: var(--io-color);
-      background-color: transparent;
-      background-image: none;
-      padding: var(--io-spacing);
-      transition: background-color 0.25s;
-    }
-    panel {
-      display: flex;
-      flex-direction: column;
-      align-self: stretch;
-      justify-self: stretch;
-      border-radius: calc(var(--io-border-radius) + var(--io-spacing));
-      border: var(--io-border);
-      border-color: var(--io-color-border-outset);
-      color: var(--io-color-field);
-      background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-panel);
-      padding: var(--io-spacing);
-    }
-    frame {
+    --io-frame: {
       display: flex;
       flex-direction: column;
       align-self: stretch;
@@ -112,7 +74,7 @@ export class IoTheme extends IoNode {
       padding: var(--io-spacing);
       box-shadow: var(--io-shadow-inset);
     }
-    content {
+    --io-content: {
       display: flex;
       flex-direction: column;
       flex: 1 1 auto;
@@ -121,36 +83,36 @@ export class IoTheme extends IoNode {
       -webkit-overflow-scrolling: touch;
       -webkit-tap-highlight-color: transparent;
     }
-    row {
+    --io-row: {
       display: flex;
       flex: 1 1;
       flex-direction: row;
       align-self: stretch;
       justify-self: stretch;
     }
-    column {
+    --io-column: {
       display: flex;
       flex: 1 1;
       flex-direction: column;
       align-self: stretch;
       justify-self: stretch;
     }
-    table2 {
+    --io-table2: {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-gap: var(--io-spacing);
     }
-    table3 {
+    --io-table3: {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-gap: var(--io-spacing);
     }
-    table4 {
+    --io-table4: {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: var(--io-spacing);
     }
-    table5 {
+    --io-table5: {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       grid-gap: var(--io-spacing);
@@ -190,11 +152,6 @@ export class IoTheme extends IoNode {
   }
   constructor(props) {
     super(props);
-    this.mixinsElement = document.createElement('style');
-    this.mixinsElement.setAttribute('id', 'io-theme-mixins');
-    this.mixinsElement.innerHTML = this.mixins;
-    document.head.appendChild(this.mixinsElement);
-
     this.variablesElement = document.createElement('style');
     this.variablesElement.setAttribute('id', 'io-theme-variables');
     document.head.appendChild(this.variablesElement);
@@ -292,26 +249,6 @@ export class IoTheme extends IoNode {
     `;
   }
 }
-IoTheme.Register = function() {
-  IoNode.Register.call(this);
-  let mixins = '';
-  for (let i = this.prototype.__protochain.length; i--;) {
-    const styleString = this.prototype.__protochain[i].constructor.Mixins;
-    if (styleString) {
-      // TODO: improve CSS parsing to support comments etc.
-      // const match = Array.from(styleString.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
-      const match = Array.from(styleString.match(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
-      for (let j = 0; j < match.length; j++) {
-        // TODO: unhack!
-        const name = match[j].split('{')[0].replace(/\s/g, '');
-        const value = match[j].split('{')[1].replace(/}/g, '');
-        Object.defineProperty(this.prototype, name, {value: value});
-        mixins += `.io-${name} {\n${value}\n}\n`;
-      }
-    }
-  }
-  Object.defineProperty(this.prototype, 'mixins', { value: mixins });
-};
 IoTheme.Register();
 
 export const IoThemeSingleton = new IoTheme();

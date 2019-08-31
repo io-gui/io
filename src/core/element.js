@@ -400,26 +400,82 @@ const setNativeElementProps = function(element, props) {
   element.__listeners.setPropListeners(props, element);
 };
 
+const mixinDB = {};
+
+const commentsRegex =  new RegExp('(\\/\\*[\\s\\S]*?\\*\\/)', 'gi');
+const keyframeRegex =  new RegExp('((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
+const mediaQueryRegex =  new RegExp('((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
+const mixinRegex = new RegExp('((--[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
+const applyRegex = new RegExp('@apply(.|\s!;)*', 'gi');
+const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi'); //to match css & media queries together
+
 // Creates a `<style>` element for all `static get Style()` return strings.
 function _initProtoStyle(prototypes) {
   const localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
+  let styleString = prototypes[0].constructor.Style;
+  if (styleString) {
+    const mixins = styleString.match(mixinRegex);
+    if (mixins) {
+      for (let i = 0; i < mixins.length; i++) {
+        const m = mixins[i].split(': {');
+        const name = m[0];
+        const value = m[1].replace('}', '').trim().replace(/^ +/gm, '');
+        mixinDB[name] = value;
+
+        const element = document.createElement('style');
+        element.innerHTML = mixins[i].replace('--', '.').replace(': {', ' {');
+        element.setAttribute('id', 'io-mixin' + name);
+        document.head.appendChild(element);
+      }
+    }
+  }
+
   for (let i = prototypes.length; i--;) {
     let styleString = prototypes[i].constructor.Style;
     const classLocalName = prototypes[i].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     if (styleString) {
-      // TODO: Do proper CSS parsing.
-      const match = styleString.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
-      match.map(selector => {
-        selector = selector.trim();
-        if (!selector.startsWith('@') &&
-            !selector.startsWith(':host') &&
-            !selector.startsWith('from') &&
-            !selector.startsWith('to') &&
-            !selector.startsWith('/*') &&
-            !selector.startsWith('body')) {
-          console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
+
+      // Remove mixins
+      styleString = styleString.replace(mixinRegex, '');
+
+      const apply = styleString.match(applyRegex);
+      if (apply) {
+        for (let i = 0; i < apply.length; i++) {
+          const name = apply[i].split('@apply ')[1].replace(';', '');
+          if (mixinDB[name]) {
+            styleString = styleString.replace(apply[i], mixinDB[name]);
+          } else {
+            console.warn('IoElement: cound not find mixin:', name);
+          }
         }
-      });
+      }
+
+      // Check selector validity (:host prefix)
+      {
+        let styleStringStripped = styleString;
+
+        // Remove comments
+        styleStringStripped = styleStringStripped.replace(commentsRegex, '');
+
+        // Remove keyframes
+        styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
+
+        // Remove media queries
+        styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
+
+        const match = styleStringStripped.match(cssRegex);
+        if (match) {
+          match.map(selector => {
+            selector = selector.trim();
+            if (!selector.startsWith(':host')) {
+              console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
+              console.warn(selector);
+            }
+          });
+        }
+      }
+
       // Replace `:host` with element tag.
       styleString = styleString.replace(new RegExp(':host', 'g'), localName);
       const element = document.createElement('style');

@@ -6,7 +6,7 @@ export class IoIcon extends IoElement {
   static get Style() {
     return html`<style>
       :host {
-        ${mixin.item};
+        @apply --io-item;
       }
       :host {
         width: var(--io-item-height);

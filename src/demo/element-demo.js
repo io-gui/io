@@ -1,5 +1,5 @@
-import {html, IoElement, Binding, IoStorageFactory as $} from "../io.js";
-import {IoThemeSingleton, IoThemeSingleton as mixin} from "../io-core.js";
+import {html, Binding, IoStorageFactory as $} from "../io.js";
+import {IoThemeSingleton, IoPanel} from "../io-core.js";
 
 const options = [
   {label: "Red", icon: "❤️", options: ["red1", "red2", "red3"]},
@@ -31,12 +31,9 @@ $({key: 'demo:object', value: {
   "array": [1, 2, 3, 4, 5],
 }});
 
-export class IoElementDemo extends IoElement {
+export class IoElementDemo extends IoPanel {
   static get Style() {
     return html`<style>
-      :host {
-        ${mixin.panel}
-      }
       :host {
         position: relative;
       }

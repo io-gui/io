@@ -1,15 +1,12 @@
-import {IoElement, html} from "../../io.js";
-import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-core.js";
+import {html} from "../../io.js";
+import {IoLayerSingleton, IoPanel} from "../../io-core.js";
 import "./menu-item.js";
 
 const rects = new WeakMap();
 
-export class IoMenuOptions extends IoElement {
+export class IoMenuOptions extends IoPanel {
   static get Style() {
     return html`<style>
-      :host {
-        ${mixin.panel}
-      }
       :host {
         align-self: flex-start;
         display: flex;

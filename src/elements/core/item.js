@@ -6,8 +6,33 @@ import {IoThemeSingleton as mixin} from "./theme.js";
 export class IoItem extends IoElement {
   static get Style() {
     return html`<style>
+      --io-item: {
+        align-self: flex-start;
+        display: inline-block;
+        cursor: pointer;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        box-sizing: border-box;
+        line-height: var(--io-line-height);
+        height: var(--io-item-height);
+        font-size: var(--io-font-size);
+        border-radius: var(--io-border-radius);
+        border: var(--io-border);
+        border-color: transparent;
+        color: var(--io-color);
+        background-color: transparent;
+        background-image: none;
+        padding: var(--io-spacing);
+        transition: background-color 0.25s;
+      }
       :host {
-        ${mixin.item};
+        @apply --io-item;
       }
       :host[pressed] {
         border-color: var(--io-color-border-inset);

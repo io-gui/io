@@ -16,8 +16,10 @@ export class IoSelector extends IoElement {
         background: var(--io-background-color);
         color: var(--io-color);
       }
-      @keyframes spinner {
-        to {transform: rotate(360deg);}
+      @keyframes io-selector-spinner {
+        to {
+          transform: rotate(360deg);
+        }
       }
       :host .io-loading {
         background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
@@ -37,7 +39,7 @@ export class IoSelector extends IoElement {
         border-radius: 50%;
         border: var(--io-border);
         border-top-color: #000;
-        animation: spinner .6s linear infinite;
+        animation: io-selector-spinner .6s linear infinite;
       }
     </style>`;
   }
