@@ -121,7 +121,7 @@ export class IoElementDemo extends IoElement {
   propertiesChanged() {
     // TODO: Unhack demovalues
     for (let p in this.properties) {
-      const prop = this.properties[p]
+      const prop = this.properties[p];
       if (typeof prop === 'string' && prop.startsWith('demo:')) {
         this.properties[p] = $({key: prop});
       }
