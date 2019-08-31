@@ -13,7 +13,7 @@
 
 Io is a UI framework for computer graphics on the web. It implements custom elements, virtual DOM, data binding and a simple data-flow design. It comes with a collection of UI elements suitable for use with other frameworks.
 
-For a quick start, read the [getting started guide](https://io-gui.dev/#page=docs).
+For a quick start, read the [getting started guide and live demos](https://io-gui.dev/#page=docs).
 
 Stay in touch on [Twitter](https://twitter.com/io_gui_js).
 
