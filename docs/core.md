@@ -51,7 +51,7 @@ Extends `IoBoolean`. Implements `IoIcon`.
 
 Input element for `Boolean` data type displayed as icon. It can be configured to display custom `true` or `false` icon depending on its `value`.
 
-<io-element-demo element="io-boolicon" properties='{"value": "demo:boolean", "true": "icons:check", "false": "icons:uncheck"}'></io-element-demo>
+<io-element-demo element="io-boolicon" properties='{"value": "demo:boolean", "true": "icons:check", "false": "icons:uncheck", "stroke": false}'></io-element-demo>
 
 ## `IoSwitch`
 
@@ -95,7 +95,7 @@ Keys left/right/up/down+shift and pageup/pagedown change the value in step incem
 
 ## `IoNumberSlider`
 
-Implements `IoNumber` and `IoSlider`.
+Extends `IoElement`. Implements `IoNumber` and `IoSlider`.
 
 Input element for `Number` data type combining `IoNumber` and `IoSlider`
 
@@ -104,6 +104,8 @@ Input element for `Number` data type combining `IoNumber` and `IoSlider`
 <io-element-demo element="io-number-slider" properties='{"value": "demo:number", "step": 0.1, "conversion": 0.2, "min": -0.5, "max": 0.5}'></io-element-demo>
 
 ## `IoIcon`
+
+Extends `IoElement`.
 
 SVG icon element. Displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
 
@@ -127,15 +129,21 @@ const icon = IoIconsetSingleton.getIcon('custom:myicon');
 
 ## `IoLayerSingleton`
 
+Extends `IoElement`.
+
 Full-window click-blocking layer for elements designed to be displayed on top all other interface. When clicked, it collapses all clild elements by setting their `expanded` property to `false`. Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 ## `IoLadderSingleton`
+
+Extends `IoElement`. Implements `IoLadderStep` and `IoItem`.
 
 Interactive number ladder. When dragged horizontally, it changes the value in step increments. Dragging speed affects the rate of change exponentially. Up/down arrow keys change the step focus while left/right change the value in step increments. Escape key collapses the ladder and restores the focus to previously focused element. If shift key is pressed, value is rounded to the nearest step incement.
 
 <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
 
 ## `IoThemeSingleton`
+
+Extends `IoNode`.
 
 `IoThemeSingleton` holds top-level CSS variables for Io design system. Variables are grouped in different themes and can be collectively switched by changing `theme` property.
 

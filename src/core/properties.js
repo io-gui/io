@@ -12,6 +12,7 @@ export class ProtoProperties {
         else Object.assign(defs[p], new ProtoProperty(props[p]));
         if (defs[p].reflect === undefined) defs[p].reflect = 0;
         if (defs[p].notify === undefined) defs[p].notify = true;
+        if (defs[p].observe === undefined) defs[p].observe = false;
         if (defs[p].enumerable === undefined) defs[p].enumerable = true;
       }
     }
@@ -24,6 +25,7 @@ export class ProtoProperties {
       // TODO: reconsider
       if (defs[p].value === undefined) defs[p].value = undefined;
       if (defs[p].type === undefined) defs[p].type = undefined;
+      // if (defs[p].observe === undefined) defs[p].observe = [Object, Array].indexOf(defs[p].type) !== -1;
       this[p] = new Property(defs[p]);
     }
   }
@@ -59,6 +61,7 @@ export class ProtoProperty {
     if (cfg.type !== undefined) this.type = cfg.type;
     if (cfg.reflect !== undefined) this.reflect = cfg.reflect;
     if (cfg.notify !== undefined) this.notify = cfg.notify;
+    if (cfg.observe !== undefined) this.observe = cfg.observe;
     if (cfg.enumerable !== undefined) this.enumerable = cfg.enumerable;
     if (cfg.binding !== undefined) this.binding = cfg.binding;
   }
@@ -157,6 +160,7 @@ class Property {
    * @param {function} cfg.type - Constructor of value.
    * @param {boolean} cfg.reflect - Reflects to HTML attribute
    * @param {boolean} cfg.notify - Trigger change handlers and change events.
+   * @param {boolean} cfg.observe - Observe object mutations for this property.
    * @param {boolean} cfg.enumerable - Makes property enumerable.
    * @param {Binding} cfg.binding - Binding object.
    */
@@ -165,6 +169,7 @@ class Property {
     this.type = cfg.type;
     this.reflect = cfg.reflect;
     this.notify = cfg.notify;
+    this.observe = cfg.observe;
     this.enumerable = cfg.enumerable;
     this.binding = cfg.binding;
     if (this.type === Array && this.value) {

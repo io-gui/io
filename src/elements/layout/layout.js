@@ -8,8 +8,6 @@ export class IoLayout extends IoElement {
         display: flex;
         overflow: hidden;
         touch-action: none;
-        /* border: var(--io-border); */
-        /* border-color: var(--io-color-border-outset); */
       }
       :host[orientation=horizontal] {
         flex-direction: row;
@@ -22,7 +20,10 @@ export class IoLayout extends IoElement {
   static get Properties() {
     return {
       elements: Array,
-      splits: Array,
+      splits: {
+        type: Array,
+        observe: true,
+      },
       editable: true,
       orientation: {
         value: 'horizontal',

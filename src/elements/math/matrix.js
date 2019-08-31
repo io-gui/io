@@ -25,7 +25,10 @@ export class IoMatrix extends IoElement {
   }
   static get Properties() {
     return {
-      value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      value: {
+        value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        observe: true,
+      },
       step: 0.001,
       components: {
         type: Array,

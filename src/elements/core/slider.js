@@ -217,11 +217,11 @@ export class IoSlider extends IoGl {
     void main(void) {
       vec3 finalColor = cssBackgroundColorField.rgb;
 
-      vec2 size = (uHorizontal == 1) ? uSize : uSize.yx;
-      vec2 uv = uHorizontal == 1 ? vUv.xy : vUv.yx;
+      vec2 size = uHorizontal == 1 ? uSize : uSize.yx;
+      vec2 uv = uHorizontal == 1 ? vUv : vUv.yx;
       vec2 position = size * uv;
 
-      float stepInPx = uSize.x / ((uMax - uMin) / uStep);
+      float stepInPx = size.x / ((uMax - uMin) / uStep);
       vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
 
       float lineWidth = cssStrokeWidth;

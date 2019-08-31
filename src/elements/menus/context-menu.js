@@ -6,7 +6,10 @@ export class IoContextMenu extends IoElement {
   static get Properties() {
     return {
       value: null,
-      options: Array,
+      options: {
+        type: Array,
+        observe: true,
+      },
       expanded: Boolean,
       position: 'pointer',
       button: 0,

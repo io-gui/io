@@ -1,8 +1,6 @@
 ## `IoVector`
 
-Extends `IoElement`.
-
-Implements `IoNumber` and `IoBoolicon`.
+Extends `IoElement`. Implements `IoNumber` and `IoBoolicon`.
 
 Input element for vector arrays and objects.
 
@@ -14,9 +12,7 @@ Input element for vector arrays and objects.
 
 ## `IoMatrix`
 
-Extends `IoElement`.
-
-Implements `IoNumber`.
+Extends `IoElement`. Implements `IoNumber`.
 
 Input element for vector arrays dispalayed as 2D matrices. Array `value` can have 4, 9, and 16 elements for 2x2, 3x3 and 4x4 matrices.
 

@@ -89,7 +89,6 @@ export class IoTheme extends IoNode {
       flex-direction: column;
       align-self: stretch;
       justify-self: stretch;
-      align-items: flex-start;
       border-radius: calc(var(--io-border-radius) + var(--io-spacing));
       border: var(--io-border);
       border-color: var(--io-color-border-outset);
@@ -103,7 +102,6 @@ export class IoTheme extends IoNode {
       flex-direction: column;
       align-self: stretch;
       justify-self: stretch;
-      align-items: flex-start;
       border-radius: var(--io-border-radius);
       border: var(--io-border);
       border-color: var(--io-color-border-inset);

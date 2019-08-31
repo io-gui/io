@@ -7,6 +7,7 @@ export class IoProperties extends IoElement {
       :host {
         display: grid;
         grid-gap: var(--io-spacing);
+        justify-self: stretch;
         justify-items: start;
         white-space: nowrap;
       }
@@ -24,7 +25,6 @@ export class IoProperties extends IoElement {
         grid-template-rows: auto auto;
       }
       :host > io-object {}
-        /* ${mixin.item} */
       :host > io-object {
         padding: 0;
         border: var(--io-border);
@@ -52,9 +52,18 @@ export class IoProperties extends IoElement {
         value: false,
         reflect: 1,
       },
-      value: Object,
-      properties: Array,
-      config: Object,
+      value: {
+        type: Object,
+        observe: true,
+      },
+      properties: {
+        type: Array,
+        observe: true,
+      },
+      config: {
+        type: Object,
+        observe: Infinity,
+      },
     };
   }
   get _config() {

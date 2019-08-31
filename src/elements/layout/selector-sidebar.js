@@ -50,7 +50,10 @@ export class IoSelectorSidebar extends IoSelector {
   }
   static get Properties() {
     return {
-      options: Array,
+      options: {
+        type: Array,
+        observe: true,
+      },
       minWidth: 410,
       label: {
         reflect: 1,

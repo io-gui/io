@@ -23,6 +23,13 @@ $({key: 'demo:options', value: options});
 $({key: 'demo:option', value: option});
 $({key: 'demo:rgba', value: {"r": 1, "g": 0.5, "b": 0, "a": 1}});
 $({key: 'demo:cmyk', value: {"c": 0, "m": 0, "y": 0, "k": 0}});
+$({key: 'demo:object', value: {
+  "number": 0.5,
+  "string": "hello",
+  "boolean": true,
+  "object": {"prop1": 1, "prop2": 2},
+  "array": [1, 2, 3, 4, 5],
+}});
 
 export class IoElementDemo extends IoElement {
   static get Style() {
@@ -66,6 +73,7 @@ export class IoElementDemo extends IoElement {
       properties: {
         type: Object,
         reflect: -1,
+        observe: true,
       },
       width: {
         type: String,
@@ -78,6 +86,7 @@ export class IoElementDemo extends IoElement {
       config: {
         type: Object,
         reflect: -1,
+        observe: true,
       },
       expanded: {
         type: Boolean,
@@ -98,27 +107,6 @@ export class IoElementDemo extends IoElement {
       value: event.detail.value,
       oldValue: event.detail.oldValue,
     }, false, window);
-  }
-  propMutated(propName) {
-    for (let p in this.properties) {
-      // TODO: Unhack demo value IoStorage bindings
-      if (typeof this.properties[p] === 'object' && !(this.properties[p] instanceof Binding)) {
-        this._bubbleMutation(this.properties[p], this.properties, this[propName]);
-      }
-    }
-  }
-  _bubbleMutation(object, parentObject, srcObject) {
-    if (object === srcObject) {
-      this.dispatchEvent('object-mutated', {
-        object: parentObject,
-      }, false, window);
-    } else {
-      for (let p in object) {
-        if (typeof object[p] === 'object') {
-          this._bubbleMutation(object[p], object, srcObject);
-        }
-      }
-    }
   }
   propertiesChanged() {
     // TODO: Unhack demovalues

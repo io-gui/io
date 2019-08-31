@@ -51,7 +51,10 @@ export class IoSidebar extends IoElement {
   static get Properties() {
     return {
       selected: String,
-      options: Array,
+      options: {
+        type: Array,
+        observe: true,
+      },
       label: {
         reflect: 1,
       },

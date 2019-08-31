@@ -5,7 +5,10 @@ export const IoColorMixin = (superclass) => {
   const classConstructor = class extends superclass {
     static get Properties() {
       return {
-        value: [1, 1, 1, 1],
+        value: {
+          value: [1, 1, 1, 1],
+          observe: true,
+        },
         // Internal
         rgb: [1, 1, 1],
         hsv: [1, 1, 1],

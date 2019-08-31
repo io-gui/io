@@ -49,7 +49,10 @@ export class IoBreadcrumbs extends IoElement {
   static get Properties() {
     return {
       value: null,
-      options: Array,
+      options: {
+        type: Array,
+        observe: true,
+      },
       trim: Boolean,
     };
   }

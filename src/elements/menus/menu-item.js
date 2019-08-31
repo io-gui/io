@@ -106,7 +106,10 @@ export class IoMenuItem extends IoItem {
   }
   static get Properties() {
     return {
-      option: Object,
+      option: {
+        type: Object,
+        observe: true,
+      },
       expanded: {
         value: false,
         reflect: 1,

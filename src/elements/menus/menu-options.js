@@ -64,7 +64,10 @@ export class IoMenuOptions extends IoElement {
         value: null,
         notify: true,
       },
-      options: Array,
+      options: {
+        type: Array,
+        observe: true,
+      },
       expanded: {
         value: false,
         reflect: 1,

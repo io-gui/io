@@ -23,7 +23,10 @@ export class IoVector extends IoElement {
   }
   static get Properties() {
     return {
-      value: [0, 0, 0, 0],
+      value: {
+        value: [0, 0, 0, 0],
+        observe: true,
+      },
       conversion: 1,
       step: 0.001,
       min: -Infinity,

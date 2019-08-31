@@ -46,7 +46,7 @@ export class IoDemoCore extends IoElement {
         ['io-boolean', {value: boolean}],
       ]],
       ['div', {class: 'io-row'}, [
-        ['io-slider', {value: number, horizontal: false, min: 0, max: 2, step: 0.01}],
+        ['io-slider', {value: number, horizontal: false, min: 0, max: 2, step: 0.25}],
         ['div', {class: 'io-column'}, [
           ['io-slider', {value: number, min: 0.05, step: 0.1}],
           ['io-slider', {value: number, min: 0, max: 2, step: 1}],

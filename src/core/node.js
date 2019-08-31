@@ -1,4 +1,4 @@
-import {NodeBindings} from "./bindings.js";
+import {NodeBindings, Binding} from "./bindings.js";
 import {NodeQueue} from "./queue.js";
 import {ProtoListeners, Listeners} from "./listeners.js";
 import {Properties, ProtoProperties} from "./properties.js";
@@ -141,15 +141,24 @@ export const IoNodeMixin = (superclass) => {
       }
 
       this.__listeners.setPropListeners(props, this);
-
       if (this.__connected) this.queueDispatch();
     }
+
     _onObjectMutation(event) {
-      for (let i = this.__objectProps.length; i--;) {
-        const prop = this.__objectProps[i];
+      for (let i = this.__observedProps.length; i--;) {
+        const prop = this.__observedProps[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
           this.debounce(this._onObjectMutationDebounced, prop);
+          return;
+        }
+        // TODO: documentation
+        if (this.__properties[prop].observe === Infinity) {
+          const hasObject = !!this.filterObject(value, (o) => { return o === event.detail.object; });
+          if (hasObject) {
+            this.debounce(this._onObjectMutationDebounced, prop);
+            return;
+          }
         }
       }
     }
@@ -171,7 +180,7 @@ export const IoNodeMixin = (superclass) => {
       this.__listeners.connect();
       this.__properties.connect();
       this.__connected = true;
-      if (this.__objectProps.length) {
+      if (this.__observedProps.length) {
         window.addEventListener('object-mutated', this._onObjectMutation);
       }
       this.queueDispatch();
@@ -183,7 +192,7 @@ export const IoNodeMixin = (superclass) => {
       this.__listeners.disconnect();
       this.__properties.disconnect();
       this.__connected = false;
-      if (this.__objectProps.length) {
+      if (this.__observedProps.length) {
         window.removeEventListener('object-mutated', this._onObjectMutation);
       }
     }
@@ -270,6 +279,17 @@ export const IoNodeMixin = (superclass) => {
     requestAnimationFrameOnce(func) {
       requestAnimationFrameOnce(func);
     }
+    filterObject(object, predicate) {
+      if (predicate(object)) return object;
+      for (let key in object) {
+        const value = object[key] instanceof Binding ? object[key].value : object[key];
+        if (predicate(value)) return value;
+        if (typeof value === 'object') {
+          const subvalue = this.filterObject(value, predicate);
+          if (subvalue) return subvalue;
+        }
+      }
+    }
   };
   classConstructor.Register = Register;
   return classConstructor;
@@ -310,13 +330,10 @@ const Register = function () {
   }
   Object.defineProperty(proto, '__functions', {value: [...functions]});
 
-  Object.defineProperty(proto, '__objectProps', {value: []});
-  const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
+  Object.defineProperty(proto, '__observedProps', {value: []});
+  // const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
   for (let p in proto.__protoProperties) {
-    const cfg = proto.__protoProperties[p];
-    if (cfg.notify && ignore.indexOf(cfg.type) == -1) {
-      proto.__objectProps.push(p);
-    }
+    if (proto.__protoProperties[p].observe) proto.__observedProps.push(p);
   }
 
   for (let p in proto.__protoProperties) {

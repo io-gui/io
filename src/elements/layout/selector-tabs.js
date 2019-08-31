@@ -37,8 +37,14 @@ export class IoSelectorTabs extends IoSelector {
   }
   static get Properties() {
     return {
-      options:  Array,
-      slotted: Array,
+      options: {
+        type: Array,
+        observe: true,
+      },
+      slotted: {
+        type: Array,
+        observe: true,
+      },
     };
   }
   _onValueSet(event) {

@@ -31,6 +31,7 @@ export class IoOptionMenu extends IoMenuItem {
       options: {
         type: Array,
         reflect: -1,
+        observe: true,
       },
       role: 'button',
     };

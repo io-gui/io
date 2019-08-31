@@ -2,7 +2,7 @@
 
 An element with collapsable content.
 
-Implements `<io-boolean>`.
+Extends `IoElement`. Implements `IoBoolean`.
 
 <io-element-demo element="io-collapsable" properties='{"label": "Collapsable", "expanded": true, "elements": [["div", "Content"]]}'></io-element-demo>
 
@@ -20,17 +20,17 @@ If `precache` property is set to `true`, all elements will be created for immedi
 
 ## &lt;io-selector-tabs&gt;
 
-Element selector with selectable tabs interfce. Extends `<io-selector>`.
+Extends `IoSelector`. Implements `IoMenuOptions`.
 
-Extends `<io-selector>`. Implements `<io-tabs>`.
+Element selector with selectable tabs interfce.
 
 <io-element-demo element="io-selector-tabs" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"], ["div", {"name": "fifth"}, "Fifth content"], ["div", {"name": "sixth"}, "Sixth content"]], "selected": "first", "cache": false, "precache": false, "options": ["first", "second", "third", "fourth", {"label" : "more", "options": ["fifth", "sixth"]}]}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
 
 ## &lt;io-selector-sidebar&gt;
 
-Element selector with selectable sidebar interfce. Extends `<io-selector>`.
+Extends `IoSelector`. Implements `IoSidebar`.
 
-Extends `<io-selector>`. Implements `<io-sidebar>`.
+Element selector with selectable sidebar interfce.
 
 <io-element-demo element="io-selector-sidebar" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false, "precache": false, "options": [{"label": "elements", "options": ["first", "second", "third", "fourth"]}], "left": true, "minWidth": 410}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
 

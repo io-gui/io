@@ -1,8 +1,6 @@
 ## `IoMenuItem`
 
-Extends `IoItem`.
-
-Implements `IoMenuOptions` and `IoLayerSingleton`.
+Extends `IoItem`. Implements `IoMenuOptions` and `IoLayerSingleton`.
 
 It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
 
@@ -18,9 +16,7 @@ It displays `option.icon`, `option.label` and `option.hint` property and it crea
 
 ## `IoMenuOptions`
 
-Extends `IoElement`.
-
-Implements `IoMenuItem` and `IoLayerSingleton`.
+Extends `IoElement`. Implements `IoMenuItem` and `IoLayerSingleton`.
 
 It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
 
@@ -60,6 +56,8 @@ Option select element. Similar to `IoMenuItem`, except it is displayed as a butt
 When clicked or activated by space/enter key, it expands a menu with selectable options.
 
 ## `IoContextMenu`
+
+Extends `IoElement`.
 
 An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
 
