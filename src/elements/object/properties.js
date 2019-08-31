@@ -1,5 +1,4 @@
 import {html, Binding, IoElement} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-core.js";
 
 export class IoProperties extends IoElement {
   static get Style() {
