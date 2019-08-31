@@ -1,5 +1,4 @@
 import {IoElement, html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "./theme.js";
 
 // NOTE: [optmization] Uses textNode and fixed size to avoid layout trashing on change.
 

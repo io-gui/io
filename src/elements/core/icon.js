@@ -1,5 +1,4 @@
 import {IoElement, html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "./theme.js";
 import {IoIconsetSingleton} from "./iconset.js";
 
 export class IoIcon extends IoElement {

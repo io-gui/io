@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../io.js";
+import {html} from "../../io.js";
 import {IoPanel} from "../../io-core.js";
 
 export class IoCollapsable extends IoPanel {
