@@ -61,6 +61,7 @@ export class IoTheme extends IoNode {
   static get Mixins() {
     return html`<style>
     item {
+      align-self: flex-start;
       display: inline-block;
       cursor: pointer;
       user-select: none;

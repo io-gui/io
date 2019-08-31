@@ -20,6 +20,9 @@ export class IoMenuOptions extends IoElement {
         background-image: none;
         padding: 0;
       }
+      :host > * {
+        align-self: stretch !important;
+      }
       :host:not([horizontal]) {
         padding: var(--io-spacing) 0;
       }
