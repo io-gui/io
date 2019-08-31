@@ -110,7 +110,7 @@
     <link href="/lib/mocha.css" rel="stylesheet" />
     <script type="module">
 
-    import {IoStorage as $} from "./dist/io.js";
+    import {IoStorageFactory as $} from "./dist/io.js";
     import "./dist/io-core.js";
     import {IoSelectorTabs} from "./dist/io-layout.js";
     import "./dist/io-object.js";
@@ -123,7 +123,7 @@
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
         return {
-          selected: $('page', 'docs', 'hash'),
+          selected: $({value: 'docs', storage: 'hash', key: 'page'}),
           role: 'main',
           class: 'main',
           cache: true,
@@ -140,7 +140,7 @@
           {label: 'Test', value: 'test'},
         ];
         this.elements = [
-          ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $('doc', 'getting-started#about-io', 'hash'),
+          ['io-selector-sidebar', {name: 'docs', precache: true, minWidth: 640, class: 'docs', selected: $({value: 'getting-started#about-io', storage: 'hash', key: 'doc'}),
             options: [
               {label: "Getting Started", options: [
                 {label: "About Io", value: "getting-started#about-io"},

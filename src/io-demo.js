@@ -1,4 +1,4 @@
-import {html, IoStorage as $} from "./io.js";
+import {html, IoStorageFactory as $} from "./io.js";
 import {IoSelectorTabs} from "./io-layout.js";
 
 import "./demo/element-demo.js";
@@ -20,7 +20,7 @@ export class IoDemo extends IoSelectorTabs {
   }
   static get Properties() {
     return {
-      selected:  $('demo', 'core', 'hash'),
+      selected:  $({value: 'core', storage: 'hash', key: 'demo'}),
       options: [
         {value: 'core', label: "Core"},
         {value: 'theme', label: "Theme"},

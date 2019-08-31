@@ -49,6 +49,9 @@ export class Binding {
     this._onSourceChanged = this._onSourceChanged.bind(this);
     this.source.addEventListener(this.sourceProp + '-changed', this._onSourceChanged);
   }
+  set value(value) {
+    this.source[this.sourceProp] = value;
+  }
   get value() {
     return this.source[this.sourceProp];
   }
@@ -58,6 +61,7 @@ export class Binding {
    * @param {string} targetProp - Target property.
    */
   addTarget(targetNode, targetProp) {
+    targetNode[targetProp] = this.source[this.sourceProp];
     if (this.targets.indexOf(targetNode) === -1) this.targets.push(targetNode);
     if (this.targetsMap.has(targetNode)) {
       const targetProps = this.targetsMap.get(targetNode);

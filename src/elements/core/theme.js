@@ -1,4 +1,4 @@
-import {IoNode, html, IoStorage as $} from "../../io.js";
+import {IoNode, html, IoStorageFactory as $} from "../../io.js";
 
 const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -54,7 +54,7 @@ const themeDB = {
   }, themeSizes),
 };
 
-const theme = $('theme', isDarkMode ? 'dark' : 'light', 'local');
+const theme = $({value: isDarkMode ? 'dark' : 'light', storage: 'local', key: 'theme'});
 const vars = themeDB[theme.value] || themeDB['light'];
 
 export class IoTheme extends IoNode {

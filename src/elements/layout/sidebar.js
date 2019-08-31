@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorage as $} from "../../io.js";
+import {html, IoElement, IoStorageFactory as $} from "../../io.js";
 
 export function filterObject(object, predicate) {
   if (predicate(object)) return object;
@@ -76,7 +76,7 @@ export class IoSidebar extends IoElement {
         let selectedOption = filterObject(option.options, option => { return option.value === this.selected; });
         elements.push(['io-collapsable', {
           label: option.label,
-          expanded: !!selectedOption || $('io-sidebar-collapse ' + UID, false, 'local'),
+          expanded: !!selectedOption || $({value: false, storage: 'local', key: 'io-sidebar-collapse ' + UID}),
           elements: [...this._addOptions(option.options)]
         }]);
       } else {

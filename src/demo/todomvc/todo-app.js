@@ -1,4 +1,4 @@
-import {IoElement, IoStorage} from "../../io.js";
+import {IoElement, IoStorageFactory} from "../../io.js";
 import {TodoModel} from "./todo-model.js";
 import "./todo-new-item.js";
 import "./todo-list.js";
@@ -9,7 +9,7 @@ export class TodoApp extends IoElement {
   static get Properties() {
     return {
       model: TodoModel,
-      route: IoStorage('route', 'all', true),
+      route: IoStorageFactory('route', 'all', true),
     };
   }
   changed() {

@@ -1,13 +1,26 @@
-import {html, IoElement, Binding, IoStorage as $} from "../io.js";
+import {html, IoElement, Binding, IoStorageFactory as $} from "../io.js";
 import {IoThemeSingleton, IoThemeSingleton as mixin} from "../io-core.js";
 
-const demoValues = {
-  'demo:boolean': $('demo:boolean', true),
-  'demo:string': $('demo:string', 'Hello io!'),
-  'demo:leet': $('demo:leet', 1337),
-  'demo:number': $('demo:number', 0),
-  'demo:theme': IoThemeSingleton.bind('theme'),
+const options = [
+  {label: "Red", icon: "❤️", options: ["red1", "red2", "red3"]},
+  {label: "Green", icon: "💚", options: ["green1", "green2", "green3"]},
+  {label: "Blue", icon: "💙", options: ["blue1", "blue2", "blue3"]},
+];
+
+const option = {
+  "label": "Hearts",
+  "icon": "❤",
+  "hint": "colors",
+  "options": options,
 };
+
+$({key: 'demo:boolean', value: true});
+$({key: 'demo:string', value: 'Hello io!'});
+$({key: 'demo:leet', value: 1337});
+$({key: 'demo:number', value: 0});
+$({key: 'demo:theme', value: IoThemeSingleton.bind('theme')});
+$({key: 'demo:options', value: options});
+$({key: 'demo:option', value: option});
 
 export class IoElementDemo extends IoElement {
   static get Style() {
@@ -71,25 +84,28 @@ export class IoElementDemo extends IoElement {
     };
   }
   _onPropSet(event) {
-    if (this.properties[event.detail.property] !== undefined) {
-      this.properties[event.detail.property] = event.detail.value;
+    const p = event.detail.property;
+    if (this.properties[p] instanceof Binding) {
+      // TODO: unhack
+    } else if (this.properties[p] !== undefined) {
+      this.properties[p] = event.detail.value;
     }
     this.dispatchEvent('object-mutated', {
       object: this.properties,
-      property: event.detail.property,
+      property: p,
       value: event.detail.value,
       oldValue: event.detail.oldValue,
     }, false, window);
   }
-  propMutated(prop) {
+  propMutated(propName) {
     for (let p in this.properties) {
-      if (typeof this.properties[p] === 'object') {
-        this._bubbleMutation(this.properties[p], this.properties, this[prop]);
+      // TODO: Unhack demo value IoStorage bindings
+      if (typeof this.properties[p] === 'object' && !(this.properties[p] instanceof Binding)) {
+        this._bubbleMutation(this.properties[p], this.properties, this[propName]);
       }
     }
   }
   _bubbleMutation(object, parentObject, srcObject) {
-    if (object instanceof Binding) return; // Unhack
     if (object === srcObject) {
       this.dispatchEvent('object-mutated', {
         object: parentObject,
@@ -102,29 +118,33 @@ export class IoElementDemo extends IoElement {
       }
     }
   }
-  changed() {
-    for (let prop in this.properties) {
-      if (this.properties[prop] === 'undefined') {
-        this.properties[prop] = undefined;
-      } else if (typeof this.properties[prop] === 'string') {
-        // Unhack
-        if (demoValues[this.properties[prop]] !== undefined) {
-          this.properties[prop] = demoValues[this.properties[prop]];
-        }
+  propertiesChanged() {
+    // TODO: Unhack demovalues
+    for (let p in this.properties) {
+      const prop = this.properties[p]
+      if (typeof prop === 'string' && prop.startsWith('demo:')) {
+        this.properties[p] = $({key: prop});
       }
-      this.properties['on-' + prop + '-changed'] = this._onPropSet;
+      if (prop === 'undefined') {
+        this.properties[p] = undefined;
+      }
+      this.properties['on-' + p + '-changed'] = this._onPropSet;
     }
+  }
+  changed() {
+    const properties = this.properties;
     if (this.element) {
-      const hasProps = !!Object.keys(this.properties).length;
+      const hasProps = !!Object.keys(properties).length;
       this.template([
         hasProps ? ['io-boolicon', {value: this.bind('expanded'), true: 'icons:gear', false: 'icons:gear'}] : null,
         (hasProps && this.expanded) ?
-        ['io-properties', {value: this.properties, config: Object.assign({
+        ['io-properties', {value: properties, config: Object.assign({
             'type:number': ['io-number', {step: 0.00001}],
             'type:boolean': ['io-switch'],
           }, this.config)}] : null,
         ['div', {class: 'io-frame'}, [
-          [this.element, Object.assign({'id': 'demo-element'}, this.properties)],
+          // TODO: unhack demovalues
+          [this.element, Object.assign({'id': 'demo-element'}, properties)],
         ]],
        ]);
        if (this.$['demo-element']) {

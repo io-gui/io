@@ -1,4 +1,8 @@
-import {html, IoElement} from "../../io.js";
+import {html, IoElement, IoStorageFactory as $} from "../../io.js";
+
+const boolean = $({key: 'demo:boolean', value: false});
+const string = $({key: 'demo:string', value: 'Hello io!'});
+const number = $({key: 'demo:number', value: 0});
 
 export class IoDemoCore extends IoElement {
   static get Style() {
@@ -23,21 +27,11 @@ export class IoDemoCore extends IoElement {
     }
     </style>`;
   }
-  static get Properties() {
-    return {
-      number: 0.0,
-      string: 'hello',
-      boolean: true,
-      null: null,
-      NaN: NaN,
-      undefined: undefined,
-    };
-  }
   changed() {
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
   setNumber(value) {
-    this.number = value;
+    number.value = value;
   }
   constructor(props) {
     super(props);
@@ -45,30 +39,19 @@ export class IoDemoCore extends IoElement {
 
     this.template([
       ['div', {class: 'io-table5 table'}, [
-        ['io-string', {value: this.bind('string')}],
-        // ['io-number', {value: this.bind('string')}],
-        // ['io-boolicon', {value: this.bind('string')}],
-        // ['io-switch', {value: this.bind('string')}],
-        // ['io-boolean', {value: this.bind('string')}],
-        // ['io-string', {value: this.bind('number')}],
-        ['io-number', {ladder: true, conversion: 2, value: this.bind('number')}],
-        // ['io-boolicon', {value: this.bind('number')}],
-        // ['io-switch', {value: this.bind('number')}],
-        // ['io-boolean', {value: this.bind('number')}],
-        // ['io-string', {value: this.bind('boolean')}],
-        // ['io-number', {value: this.bind('boolean')}],
-        ['io-boolicon', {value: this.bind('boolean')}],
-        ['io-switch', {value: this.bind('boolean')}],
-        ['io-boolean', {value: this.bind('boolean')}],
+        ['io-string', {value: string}],
+        ['io-number', {ladder: true, conversion: 2, value: number}],
+        ['io-boolicon', {value: boolean}],
+        ['io-switch', {value: boolean}],
+        ['io-boolean', {value: boolean}],
       ]],
       ['div', {class: 'io-row'}, [
-        ['io-slider', {value: this.bind('number'), horizontal: false, min: 0, max: 2, step: 0.01}],
+        ['io-slider', {value: number, horizontal: false, min: 0, max: 2, step: 0.01}],
         ['div', {class: 'io-column'}, [
-          ['io-slider', {value: this.bind('number'), min: 0.05, step: 0.1}],
-          ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 1}],
-          ['io-slider', {value: this.bind('number'), min: -1.33, max: 3.5, step: 0.8}],
-          ['io-number-slider', {value: this.bind('number'), min: -0.25, max: 0.25, step: 0.01}],
-          // ['io-number-slider', {value: this.bind('string'), min: -0.25, max: 0.25, step: 0.01}],
+          ['io-slider', {value: number, min: 0.05, step: 0.1}],
+          ['io-slider', {value: number, min: 0, max: 2, step: 1}],
+          ['io-slider', {value: number, min: -1.33, max: 3.5, step: 0.8}],
+          ['io-number-slider', {value: number, min: -0.25, max: 0.25, step: 0.01}],
         ]],
       ]],
       ['div', {class: 'io-table3 table'}, [
@@ -81,8 +64,8 @@ export class IoDemoCore extends IoElement {
           {label: 'three', value: 3},
           {label: 'four', value: 4},
           {label: 'leet', value: 1337},
-        ], value: this.bind('number')}],
-        ['io-option-menu', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: this.bind('number')}],
+        ], value: number}],
+        ['io-option-menu', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: number}],
         ['io-button', {label: 'set 0.5', action: this.setNumber, value: 0.5}],
       ]],
     ]);

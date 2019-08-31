@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../io.js";
+import {html, Binding, IoElement} from "../../io.js";
 import {IoThemeSingleton as mixin} from "../../io-core.js";
 
 export class IoProperties extends IoElement {
@@ -156,7 +156,9 @@ export class Config {
 
     for (let i = 0; i < keys.length; i++) {
       const k = keys[i];
-      const value = object[k];
+      const value = object[k] instanceof Binding ? object[k].value : object[k]; // TODO: Unhack demovalues
+      // const value = object[k]
+
       const type = value === null ? 'null' : typeof value;
       const cstr = (value != undefined && value.constructor) ? value.constructor.name : 'null';
 

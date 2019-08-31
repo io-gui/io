@@ -1,6 +1,5 @@
-import {html, IoElement, IoStorage as $} from "../../io.js";
+import {html, IoElement, IoStorageFactory as $} from "../../io.js";
 import "./breadcrumbs.js";
-// import {Item} from "../../io-core.js";
 
 class Item {
   constructor(value) {
@@ -97,7 +96,7 @@ export class IoInspector extends IoElement {
       elements.push(
         ['io-collapsable', {
           label: group,
-          expanded: $('io-inspector-group-' + uuid + '-' + group, true, 'local'),
+          expanded: $({value: true, storage: 'local', key: 'io-inspector-group-' + uuid + '-' + group}),
           elements: [
             ['io-properties', {
               value: this.value,

@@ -77,6 +77,7 @@ export class IoSelector extends IoElement {
     super.connectedCallback();
     document.head.appendChild(this.stagingElement);
     document.addEventListener('readystatechange', this.onReadyStateChange);
+    this.scrollTo(this._scrollID, false);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -193,6 +194,7 @@ export class IoSelector extends IoElement {
       // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
       this.$.content.appendChild(this._caches[selected]);
       this.$.content.classList.toggle('io-loading', false);
+      // TODO: IMPORTANT update all bindings inside when reconnected (page change)!
     } else {
       this.import(element[1].import).then(() => {
         if (element[1].name === this.selected.split('#')[0]) {

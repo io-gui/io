@@ -25,4 +25,4 @@
 export {IoNode, IoNodeMixin} from "./core/node.js";
 export {IoElement, html} from "./core/element.js";
 export {Binding} from "./core/bindings.js";
-export {IoStorage, IoStorageNode} from "./core/storage.js";
+export {IoStorageFactory, IoStorage} from "./core/storage.js";

@@ -30,7 +30,7 @@ const getHashes = function() {
     }
   }
   for (let node in nodes) {
-    if (nodes[node].persist === 'hash' && !hashes[node]) {
+    if (nodes[node].storage === 'hash' && !hashes[node]) {
       nodes[node].value = nodes[node].default;
     }
   }
@@ -39,7 +39,7 @@ const getHashes = function() {
 const setHashes = function(force) {
   let hashString = '';
   for (let node in nodes) {
-    if ((nodes[node].persist === 'hash' || force) && nodes[node].value !== undefined && nodes[node].value !== '' && nodes[node].value !== nodes[node].default) {
+    if ((nodes[node].storage === 'hash' || force) && nodes[node].value !== undefined && nodes[node].value !== '' && nodes[node].value !== nodes[node].default) {
       if (typeof nodes[node].value === 'string') {
         hashString += node + '=' + nodes[node].value + '&';
       } else {
@@ -60,63 +60,78 @@ const setHashes = function(force) {
 window.addEventListener("hashchange", getHashes, false);
 getHashes();
 
-export class IoStorageNode extends IoNode {
+export class IoStorage extends IoNode {
   static get Properties() {
     return {
       key: String,
       value: undefined,
       default: undefined,
-      persist: 'local',
+      storage: undefined,
     };
   }
   constructor(props) {
-    super(props);
-    this.default = this.value;
-    this.value = undefined;
+    super(Object.assign({default: props.value}, props));
+    if (props.key) nodes[props.key] = nodes[props.key] || this;
     this.binding = this.bind('value');
+    this.getStorageValue();
     this.connect(window);
-    if (this.persist === 'hash') {
-      if (hashes[this.key] !== undefined) {
-        const hashValue = hashes[this.key].replace(/%20/g, " ");
-        try {
-          this.value = JSON.parse(hashValue);
-        } catch (e) {
-          this.value = hashValue;
+  }
+  getStorageValue() {
+    switch (this.storage) {
+      case 'hash': {
+        if (hashes[this.key] !== undefined) {
+          const hashValue = hashes[this.key].replace(/%20/g, " ");
+          try {
+            this.value = JSON.parse(hashValue);
+          } catch (e) {
+            this.value = hashValue;
+          }
+        } else {
+          this.value = this.default;
         }
-      } else {
+        break;
+      }
+      case 'local': {
+        const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
+        const localValue = localStorage.getItem(key);
+        if (localValue !== null && localValue !== undefined) {
+          this.value = JSON.parse(localValue);
+        } else {
+          this.value = this.default;
+        }
+        break;
+      }
+      default: {
         this.value = this.default;
       }
-    } else if (this.persist === 'local') {
-      const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
-      const localValue = localStorage.getItem(key);
-      if (localValue !== null && localValue !== undefined) {
-        this.value = JSON.parse(localValue);
-      } else {
-        this.value = this.default;
-      }
-    } else {
-      this.value = this.default;
     }
   }
   valueChanged() {
-    if (this.persist === 'hash') {
-      setHashes();
-    } else if (this.persist === 'local') {
-      const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
-      if (this.value === null || this.value === undefined) {
-        localStorage.removeItem(key);
-      } else {
-        localStorage.setItem(key, JSON.stringify(this.value));
+    switch (this.storage) {
+      case 'hash': {
+        setHashes();
+        break;
+      }
+      case 'local': {
+        const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
+        if (this.value === null || this.value === undefined) {
+          localStorage.removeItem(key);
+        } else {
+          localStorage.setItem(key, JSON.stringify(this.value));
+        }
+        break;
       }
     }
   }
 }
 
-export function IoStorage(key, value, persist) {
-  if (!nodes[key]) {
-    nodes[key] = new IoStorageNode({key: key, persist: persist, value: value});
+export function IoStorageFactory(props) {
+  if (props && props.key && nodes[props.key]) {
+    if (props.storage) nodes[props.key].storage = props.storage;
+    if (props.value !== undefined) nodes[props.key].default = props.value;
+    return nodes[props.key].binding;
   }
-  return nodes[key].binding;
+  return new IoStorage(props).binding;
 }
 
-IoStorageNode.Register();
+IoStorage.Register();
