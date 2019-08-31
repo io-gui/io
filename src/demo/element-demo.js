@@ -21,6 +21,8 @@ $({key: 'demo:number', value: 0});
 $({key: 'demo:theme', value: IoThemeSingleton.bind('theme')});
 $({key: 'demo:options', value: options});
 $({key: 'demo:option', value: option});
+$({key: 'demo:rgba', value: {"r": 1, "g": 0.5, "b": 0, "a": 1}});
+$({key: 'demo:cmyk', value: {"c": 0, "m": 0, "y": 0, "k": 0}});
 
 export class IoElementDemo extends IoElement {
   static get Style() {

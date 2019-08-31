@@ -11,7 +11,7 @@ Implements `IoNumber` and `IoColorPicker`.
 Input element for color displayed as vector and an interactive picker.
 
 <io-element-demo element="io-color-vector"
-properties='{"mode": 0, "value": [1, 0.5, 0, 0.5]}'
+properties='{"mode": 0, "value": "demo:rgba"}'
 config='{"value": ["io-properties"], "mode": ["io-option-menu", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}, {"value": 3, "label": "3 - cmyk"}]}]}
 '></io-element-demo>
 
@@ -25,7 +25,7 @@ Input element for color displayed as a set of sliders.
 <io-element-demo element="io-color-panel"
 width= "192px"
 height= "128px"
-properties='{"mode": 0, "value": [1, 0.5, 0, 0.5], "horizontal": true}'
+properties='{"mode": 0, "value": "demo:rgba", "horizontal": true}'
 config='{"value": ["io-properties"], "mode": ["io-option-menu", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}, {"value": 3, "label": "3 - cmyk"}]}]}
 '></io-element-demo>
 
@@ -42,7 +42,7 @@ Extends `IoColorMixin(IoElement)`.
 Display element for color.
 
 <io-element-demo element="io-color-swatch"
-properties='{"value": {"h": 1, "s": 0.5, "v": 1, "a": 0.5}}'
+properties='{"value": "demo:rgba"}'
 config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -55,7 +55,7 @@ Implements `IoColorSwatch`, `IoColorPanelSingleton` and `IoLayerSingleton`.
 Input element for color picking. Expands a floating color panel when clicked or activated by keyboard.
 
 <io-element-demo element="io-color-picker"
-  properties='{"value": [0.2, 0.8, 0.5, 0.9]}'
+  properties='{"value": "demo:rgba"}'
   config='{"value": ["io-color-vector"]}
 '></io-element-demo>
 
@@ -73,7 +73,7 @@ Extends `IoColorSlider`.
 
 <io-element-demo element="io-color-slider-hs"
 width="64px" height="64px"
-properties='{"value": {"h": 0.5, "s": 1, "v": 1}, "horizontal": true}'
+properties='{"value": "demo:rgba", "horizontal": true}'
 config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -83,7 +83,7 @@ config='{"value": ["io-properties"]}
 
 <io-element-demo element="io-color-slider-sv"
   width="64px" height="64px"
-  properties='{"value": {"h": 0.5, "s": 1, "v": 1}, "horizontal": true}'
+  properties='{"value": "demo:rgba", "horizontal": true}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -93,7 +93,7 @@ config='{"value": ["io-properties"]}
 
 <io-element-demo element="io-color-slider-sl"
   width="64px" height="64px"
-  properties='{"value": {"h": 0.5, "s": 1, "l": 0.5}, "horizontal": true}'
+  properties='{"value": "demo:rgba", "horizontal": true}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -102,7 +102,7 @@ config='{"value": ["io-properties"]}
 Modifies **red** component the color `value` in **rgb** color space.
 
 <io-element-demo element="io-color-slider-red"
-  properties='{"value": {"r": 0, "g": 0, "b": 0}}'
+  properties='{"value": "demo:rgba"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -111,7 +111,7 @@ Modifies **red** component the color `value` in **rgb** color space.
 Modifies **green** component the color `value` in **rgb** color space.
 
 <io-element-demo element="io-color-slider-green"
-  properties='{"value": {"r": 0, "g": 0, "b": 0}}'
+  properties='{"value": "demo:rgba"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -120,7 +120,7 @@ Modifies **green** component the color `value` in **rgb** color space.
 Modifies **blue** component the color `value` in **rgb** color space.
 
 <io-element-demo element="io-color-slider-blue"
-  properties='{"value": {"r": 0, "g": 0, "b": 0}}'
+  properties='{"value": "demo:rgba"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -129,7 +129,7 @@ Modifies **blue** component the color `value` in **rgb** color space.
 Modifies **alpha** component the color `value`.
 
 <io-element-demo element="io-color-slider-alpha"
-  properties='{"value": {"r": 0, "g": 0, "b": 0, "a": 0.5}}'
+  properties='{"value": "demo:rgba"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -138,7 +138,7 @@ Modifies **alpha** component the color `value`.
 Modifies **hue** component the color `value` in **hsv** color space.
 
 <io-element-demo element="io-color-slider-hue"
-  properties='{"value": {"h": 0.5, "s": 1, "v": 1}}'
+  properties='{"value": "demo:rgba"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -147,7 +147,7 @@ Modifies **hue** component the color `value` in **hsv** color space.
 Modifies **saturation** component the color `value` in **hsv** or **hsl** color space.
 
 <io-element-demo element="io-color-slider-saturation"
-  properties='{"value": {"h": 0.5, "s": 0.5, "v": 1}}'
+  properties='{"value": "demo:rgba"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -156,7 +156,7 @@ Modifies **saturation** component the color `value` in **hsv** or **hsl** color 
 Modifies **value** component the color `value` in **hsv** color space.
 
 <io-element-demo element="io-color-slider-value"
-  properties='{"value": {"h": 0.5, "s": 1, "v": 0.5}}'
+  properties='{"value": "demo:rgba"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -165,7 +165,7 @@ Modifies **value** component the color `value` in **hsv** color space.
 Modifies **level** component the color `value` in **hsl** color space.
 
 <io-element-demo element="io-color-slider-level"
-  properties='{"value": {"h": 0.5, "s": 1, "l": 0.5}}'
+  properties='{"value": "demo:rgba"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -174,7 +174,7 @@ Modifies **level** component the color `value` in **hsl** color space.
 Modifies **cyan** component the color `value` in **cmyk** color space.
 
 <io-element-demo element="io-color-slider-cyan"
-  properties='{"value": {"c": 0, "m": 0, "y": 0, "k": 0}}'
+  properties='{"value": "demo:cmyk"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -183,7 +183,7 @@ Modifies **cyan** component the color `value` in **cmyk** color space.
 Modifies **magenta** component the color `value` in **cmyk** color space.
 
 <io-element-demo element="io-color-slider-magenta"
-  properties='{"value": {"c": 0, "m": 0, "y": 0, "k": 0}}'
+  properties='{"value": "demo:cmyk"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -192,7 +192,7 @@ Modifies **magenta** component the color `value` in **cmyk** color space.
 Modifies **yellow** component the color `value` in **cmyk** color space.
 
 <io-element-demo element="io-color-slider-yellow"
-  properties='{"value": {"c": 0, "m": 0, "y": 0, "k": 0}}'
+  properties='{"value": "demo:cmyk"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>
 
@@ -201,6 +201,6 @@ Modifies **yellow** component the color `value` in **cmyk** color space.
 Modifies **key** component the color `value` in **cmyk** color space.
 
 <io-element-demo element="io-color-slider-key"
-  properties='{"value": {"c": 0, "m": 0, "y": 0, "k": 0}}'
+  properties='{"value": "demo:cmyk"}'
   config='{"value": ["io-properties"]}
 '></io-element-demo>

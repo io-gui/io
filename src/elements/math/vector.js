@@ -58,7 +58,7 @@ export class IoVector extends IoElement {
     this.dispatchEvent('object-mutated', detail, false, window);
   }
   valueChanged() {
-    this.components = Object.keys(this.value);
+    this.components = Object.keys(this.value).filter(key => typeof this.value[key] === 'number');
   }
   changed() {
     const elements = [];
