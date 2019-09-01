@@ -2,13 +2,15 @@
 
 An element with collapsable content.
 
-Extends `IoElement`. Implements `IoBoolean`.
+Extends `IoElement`. Implements `IoBoolean` and `IoContent`.
 
 <io-element-demo element="io-collapsable" properties='{"label": "Collapsable", "expanded": true, "elements": [["div", "Content"]]}'></io-element-demo>
 
 When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
 
 ## `IoSelector`
+
+Extends `IoElement` and `IoContent`.
 
 Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
 

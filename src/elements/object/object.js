@@ -46,7 +46,7 @@ export class IoObject extends IoElement {
       ['io-boolean', {true: '▾ ' + label, false: '▸ ' + label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
       this.expanded ? [
         ['io-properties', {
-          class: 'io-frame',
+          class: 'io-content',
           value: this.value,
           properties: this.properties,
           config: this.config,

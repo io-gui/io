@@ -32,8 +32,19 @@ export class IoString extends IoItem {
   }
   _setFromTextNode() {
     const textNode = this.textNode;
-    if (typeof this.value === 'string' || (textNode !== String(this.value))) {
+    if (typeof this.value === 'string' && textNode !== String(this.value)) {
       this.set('value', textNode);
+    }
+  }
+  _tryParseFromTextNode() {
+    const textNode = this.textNode;
+    try {
+      const value = JSON.parse(textNode.replace(/[\t\n\r ]+/g, " "));
+      this.set('value', value);
+    } catch (error) {
+      console.warn('IoString: Cannot parse value', textNode);
+      console.error(error);
+      this._setFromTextNode();
     }
   }
   _onBlur(event) {
@@ -61,25 +72,29 @@ export class IoString extends IoItem {
     const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
-    if (event.which == 13) {
+    if (event.key == 'Enter') {
       event.preventDefault();
-      this._setFromTextNode();
-    } else if (event.which == 37) {
+      if (event.shiftKey) {
+        this._tryParseFromTextNode();
+      } else {
+        this._setFromTextNode();
+      }
+    } else if (event.key == 'ArrowLeft') {
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('left');
       }
-    } else if (event.which == 38) {
+    } else if (event.key == 'ArrowUp') {
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('up');
       }
-    } else if (event.which == 39) {
+    } else if (event.key == 'ArrowRight') {
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('right');
       }
-    } else if (event.which == 40) {
+    } else if (event.key == 'ArrowDown') {
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('down');

@@ -306,8 +306,11 @@ const Register = function () {
   while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
     protochain.push(proto); proto = proto.__proto__;
   }
-  Object.defineProperty(this.prototype, 'isNode', {value: proto.constructor !== HTMLElement});
-  Object.defineProperty(this.prototype, 'isElement', {value: proto.constructor === HTMLElement});
+
+  const isIoNode = proto.constructor !== HTMLElement;
+  this.isIoNode = isIoNode;
+  Object.defineProperty(this.prototype, 'isIoNode', {value: isIoNode});
+
   proto = this.prototype;
 
   Object.defineProperty(proto, '__protochain', {value: protochain});

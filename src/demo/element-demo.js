@@ -58,7 +58,7 @@ export class IoElementDemo extends IoElement {
     :host > io-properties > :nth-child(2) {
       margin-right: calc(var(--io-item-height) + var(--io-spacing));
     }
-    :host:not([expanded]) > .io-frame {
+    :host:not([expanded]) > .io-content {
       margin-right: calc(var(--io-item-height) + calc(3 * var(--io-spacing)));
     }
     </style>`;
@@ -131,7 +131,7 @@ export class IoElementDemo extends IoElement {
             'type:number': ['io-number', {step: 0.00001}],
             'type:boolean': ['io-switch'],
           }, this.config)}] : null,
-        ['div', {class: 'io-frame'}, [
+        ['div', {class: 'io-content'}, [
           // TODO: unhack demovalues
           [this.element, Object.assign({'id': 'demo-element'}, properties)],
         ]],

@@ -76,7 +76,7 @@ export class Properties {
       // TODO: consider bindings
       if (this[prop].value !== undefined) {
         if (typeof this[prop].value === 'object' && this[prop].value !== null) {
-          if (this[prop].value.isNode) this[prop].value.connect(node);
+          if (this[prop].value.isIoNode) this[prop].value.connect(node);
           node.queue(prop, this[prop].value, undefined);
         } else if (this[prop].reflect >= 1) {
           this.node.setAttribute(prop, this[prop].value);
@@ -107,11 +107,11 @@ export class Properties {
         this[prop].value = value;
       }
 
-      if (value && value.isNode) {
+      if (value && value.isIoNode) {
         value.connect(this.node);
       }
 
-      if (oldValue && oldValue.isNode) {
+      if (oldValue && oldValue.isIoNode) {
         oldValue.disconnect(this.node);
       }
 

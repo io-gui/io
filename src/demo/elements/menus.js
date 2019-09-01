@@ -68,11 +68,11 @@ export class IoDemoMenus extends IoElement {
           ['io-menu-options', {options: menuoptions}],
           ['div', {class: 'io-column'}, [
             ['io-menu-item', {label: 'menu item', option: {options: menuoptions}}],
-            ['div', {class: 'io-frame'}, [
+            ['div', {class: 'io-content'}, [
               ['span', 'click for menu'],
               ['io-context-menu', {options: menuoptions, position: 'pointer', button: 0}],
             ]],
-            ['div', {class: 'io-frame'}, [
+            ['div', {class: 'io-content'}, [
               ['span', 'right-click for menu'],
               ['io-context-menu', {options: menuoptions, position: 'pointer', button: 2}],
             ]],

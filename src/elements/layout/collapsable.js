@@ -14,9 +14,6 @@ export class IoCollapsable extends IoElement {
     :host > io-boolean[value] {
       margin-bottom: var(--io-spacing);
     }
-    :host:not([expanded]) > .io-frame {
-      display: none;
-    }
     </style>`;
   }
   static get Properties() {
@@ -38,7 +35,7 @@ export class IoCollapsable extends IoElement {
   changed() {
     this.template([
       ['io-boolean', {true: '▾ ' + this.label, false: '▸ ' + this.label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
-      ['div', {id: 'content', class: 'io-frame'}, (this.expanded && this.elements.length) ? this.elements : [null]],
+      ['io-content', {elements: this.elements, expanded: this.expanded}],
     ]);
   }
 }

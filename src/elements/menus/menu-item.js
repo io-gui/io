@@ -2,18 +2,6 @@ import {html} from "../../io.js";
 import {IoItem, IoLayerSingleton} from "../../io-core.js";
 import {IoMenuOptions} from "./menu-options.js";
 
-function filterObject(object, predicate) {
-  if (predicate(object)) return object;
-  for (let key in object) {
-    if (predicate(object[key])) {
-        return object[key];
-    } else if (typeof object[key] === 'object') {
-      const prop = filterObject(object[key], predicate);
-      if (prop) return prop;
-    }
-  }
-}
-
 // TODO: fix and improve keyboard navigation in all cases.
 
 function getElementDescendants(element) {
@@ -193,7 +181,7 @@ export class IoMenuItem extends IoItem {
       return true;
     }
     const options = this._options;
-    if (options) return !!filterObject(options, (o) => { return o === this.value || o.value === this.value; });
+    if (options) return !!this.filterObject(options, (o) => { return o === this.value || o.value === this.value; });
     return false;
   }
   get _inLayer() {

@@ -25,6 +25,7 @@
 
 export {IoThemeSingleton} from "./elements/core/theme.js";
 export {IoItem} from "./elements/core/item.js";
+export {IoContent} from "./elements/core/content.js";
 export {IoGl} from "./elements/core/gl.js";
 export {IoButton} from "./elements/core/button.js";
 export {IoBoolean} from "./elements/core/boolean.js";

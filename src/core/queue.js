@@ -56,7 +56,7 @@ export class NodeQueue extends Array {
 
     // TODO: Evaluate performance and consider refactoring.
     if (changed) {
-      // if (node.isNode && !node.isElement) {
+      // if (node.isIoNode && !node.isIoElement) {
       //   node.dispatchEvent('object-mutated', {object: node}, false, window);
       // }
       node.applyCompose();

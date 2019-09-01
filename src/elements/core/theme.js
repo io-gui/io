@@ -95,14 +95,18 @@ export class IoTheme extends IoElement {
       border-color: var(--io-color-border-outset);
       color: var(--io-color-field);
       background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-panel);
       padding: var(--io-spacing);
     }
-    --io-frame: {
+    --io-content: {
       display: flex;
       flex-direction: column;
       align-self: stretch;
       justify-self: stretch;
+      flex: 1 1 auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      -webkit-tap-highlight-color: transparent;
       border-radius: var(--io-border-radius);
       border: var(--io-border);
       border-color: var(--io-color-border-inset);
@@ -111,15 +115,6 @@ export class IoTheme extends IoElement {
       background-image: none;
       padding: var(--io-spacing);
       box-shadow: var(--io-shadow-inset);
-    }
-    --io-content: {
-      display: flex;
-      flex-direction: column;
-      flex: 1 1 auto;
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      -webkit-tap-highlight-color: transparent;
     }
     --io-row: {
       display: flex;
@@ -277,7 +272,6 @@ export class IoTheme extends IoElement {
         --io-color-border-outset: var(--io-color-border-light) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border-light);
 
         --io-gradient-button: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
-        --io-gradient-panel: linear-gradient(45deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
         --io-gradient-error: repeating-linear-gradient(135deg, transparent, var(--io-color-error) 1px, var(--io-color-error) 4px, transparent 6px);
 
         --io-shadow: 2px 2px 5px var(--io-color-shadow);

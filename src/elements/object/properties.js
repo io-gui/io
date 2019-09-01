@@ -39,6 +39,11 @@ export class IoProperties extends IoElement {
       width: auto;
       justify-self: stretch;
     }
+    :host io-properties {
+      border: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
     </style>`;
   }
   static get Properties() {
@@ -61,7 +66,7 @@ export class IoProperties extends IoElement {
       },
       config: {
         type: Object,
-        observe: Infinity,
+        observe: Infinity, // TODO: remove?
       },
     };
   }

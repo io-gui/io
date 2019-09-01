@@ -138,7 +138,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       // update existing elements
       } else {
         children[i].removeAttribute('className');
-        if (Object.prototype.hasOwnProperty.call(children[i], '__properties')) {
+        if (children[i].isIoElement) {
           // Set IoElement element properties
           // TODO: Test property and listeners reset. Consider optimizing.
           children[i].setProperties(vChildren[i].props);
@@ -151,11 +151,15 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     for (let i = 0; i < vChildren.length; i++) {
       // Update this.$ map of ids.
       if (vChildren[i].props.id) this.$[vChildren[i].props.id] = children[i];
-      if (vChildren[i].children) {
+      if (vChildren[i].children !== undefined) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
-          this.flattenTextNode(children[i]);
-          children[i]._textNode.nodeValue = String(vChildren[i].children);
+          if (!children[i].isIoElement) {
+            this.flattenTextNode(children[i]);
+            children[i]._textNode.nodeValue = String(vChildren[i].children);
+          } else {
+            console.log(children[i], children[i].isIoElement, vChildren[i]);
+          }
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
           this.traverse(vChildren[i].children, children[i]);
@@ -306,7 +310,9 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
  */
 IoElement.Register = function() {
   IoNodeMixin.Register.call(this);
-  IoElement.isIoElement = true;
+
+  this.isIoElement = true;
+  Object.defineProperty(this.prototype, 'isIoElement', {value: true});
 
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 

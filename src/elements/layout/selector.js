@@ -1,5 +1,7 @@
 import {IoElement, html} from "../../io.js";
 
+// TODO: use IoContent for caching and display.
+
 const importedPaths = {};
 
 export class IoSelector extends IoElement {
@@ -11,10 +13,6 @@ export class IoSelector extends IoElement {
       align-self: stretch;
       justify-self: stretch;
       overflow: auto;
-    }
-    :host > .io-content {
-      background: var(--io-background-color);
-      color: var(--io-color);
     }
     @keyframes io-selector-spinner {
       to {
@@ -45,7 +43,10 @@ export class IoSelector extends IoElement {
   }
   static get Properties() {
     return {
-      elements: Array,
+      elements: {
+        type: Array,
+        observe: Infinity,
+      },
       selected: {
         type: String,
         reflect: 1,
@@ -159,6 +160,12 @@ export class IoSelector extends IoElement {
     }, 100);
   }
   selectedChanged() {
+    this.updateScroll();
+  }
+  elementsChanged() {
+    this.updateScroll();
+  }
+  updateScroll() {
     const oldScrollID = this._scrollID;
     const oldSelectedID = this._selectedID;
     this._selectedID = this.selected.split('#')[0];
@@ -169,9 +176,6 @@ export class IoSelector extends IoElement {
     } else if (this._scrollID !== oldScrollID) {
       this.scrollTo(this._scrollID, true);
     }
-  }
-  elementsChanged() {
-    this.selectedChanged();
   }
   update() {
     const selected = this._selectedID;

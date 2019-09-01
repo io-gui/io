@@ -2,18 +2,6 @@ import {html} from "../../io.js";
 import {IoSelector} from "./selector.js";
 // TODO: remove io-menu-options dependency.
 
-export function filterObject(object, predicate) {
-  if (predicate(object)) return object;
-  for (let key in object) {
-    if (predicate(object[key])) {
-        return object[key];
-    } else if (typeof object[key] === 'object') {
-      const prop = filterObject(object[key], predicate);
-      if (prop) return prop;
-    }
-  }
-}
-
 export class IoSelectorTabs extends IoSelector {
   static get Style() {
     return html`<style>
@@ -32,6 +20,9 @@ export class IoSelectorTabs extends IoSelector {
     :host > .io-content {
       border: var(--io-border);
       border-width: var(--io-border-width) 0 0 0;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
     }
     </style>`;
   }
@@ -53,8 +44,8 @@ export class IoSelectorTabs extends IoSelector {
   _onScroll() {
     super._onScroll();
     if (this.$.tabs.selected !== this.selected) {
-      let hasOption = !!filterObject(this.options, (property) => {
-        return property === this.selected || property.value === this.selected;
+      let hasOption = !!this.filterObject(this.options, (option) => {
+        return String(option).toLowerCase() === this.selected || String(option.value).toLowerCase() === this.selected;
       });
       if (hasOption) this.$.tabs.selected = this.selected;
     }
