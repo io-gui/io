@@ -57,17 +57,10 @@ export class IoSelectorSidebar extends IoSelector {
         value: true,
         reflect: 1,
       },
-      role: 'navigation',
     };
   }
-  _onScroll() {
-    super._onScroll();
-    if (this.$.sidebar.selected !== this.selected) {
-      let hasOption = !!this.filterObject(this.options, (option) => {
-        return String(option).toLowerCase() === this.selected || String(option.value).toLowerCase() === this.selected;
-      });
-      if (hasOption) this.$.sidebar.selected = this.selected;
-    }
+  get _options() {
+    return this.options.length ? this.options : this.elements.map(element => { return element[1].name; })
   }
   minWidthChanged() {
     this.onResized();
@@ -77,15 +70,15 @@ export class IoSelectorSidebar extends IoSelector {
   }
   leftChanged() { this.renderShadow(); }
   overflowChanged() { this.renderShadow(); }
-  renderShadow() {
-    const tabs = ['io-sidebar', {
+  getSlotted() {
+    return ['io-sidebar', {
       id: 'sidebar',
+      role: 'navigation',
       elements: this.elements,
       selected: this.bind('selected'),
-      options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
+      options: this._options,
       overflow: this.overflow,
     }];
-    this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);
   }
 }
 

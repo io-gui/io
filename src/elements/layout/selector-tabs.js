@@ -38,32 +38,19 @@ export class IoSelectorTabs extends IoSelector {
       },
     };
   }
-  _onValueSet(event) {
-    this.set('selected', event.detail.value.toLowerCase());
+  get _options() {
+    return this.options.length ? this.options : this.elements.map(element => { return element[1].name; })
   }
-  _onScroll() {
-    super._onScroll();
-    if (this.$.tabs.selected !== this.selected) {
-      let hasOption = !!this.filterObject(this.options, (option) => {
-        return String(option).toLowerCase() === this.selected || String(option.value).toLowerCase() === this.selected;
-      });
-      if (hasOption) this.$.tabs.selected = this.selected;
-    }
-  }
-  renderShadow() {
-    const tabs = [
-      ['io-menu-options', {
-        id: 'tabs',
-        role: 'navigation',
-        horizontal: true,
-        value: this.selected,
-        options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
-        slotted: this.slotted,
-        selectable: true,
-        'on-value-set': this._onValueSet,
-      }],
-    ];
-    this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);
+  getSlotted() {
+    return ['io-menu-options', {
+      id: 'tabs',
+      role: 'navigation',
+      horizontal: true,
+      value: this.bind('selected'),
+      options: this._options,
+      slotted: this.slotted,
+      selectable: true,
+    }];
   }
 }
 

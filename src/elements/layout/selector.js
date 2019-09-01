@@ -45,14 +45,13 @@ export class IoSelector extends IoElement {
     return {
       elements: {
         type: Array,
-        observe: Infinity,
+        observe: true,
       },
       selected: {
         type: String,
         reflect: 1,
       },
       cache: Boolean,
-      precache: Boolean,
       _caches: Object,
       _selectedID: String,
       _scrollID: {
@@ -71,21 +70,9 @@ export class IoSelector extends IoElement {
     event.stopImmediatePropagation();
     this.scrollTo(this._scrollID, false);
   }
-  constructor(props) {
-    super(props);
-    this.stagingElement = document.createElement('io-selector-staging');
-    document.head.appendChild(this.stagingElement);
-  }
   connectedCallback() {
     super.connectedCallback();
-    document.head.appendChild(this.stagingElement);
-    document.addEventListener('readystatechange', this.onReadyStateChange);
     this.scrollTo(this._scrollID, false);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    document.head.removeChild(this.stagingElement);
-    document.removeEventListener('readystatechange', this.onReadyStateChange);
   }
   // TODO: consider moving to IoElement class.
   import(path) {
@@ -101,27 +88,6 @@ export class IoSelector extends IoElement {
         });
       }
     });
-  }
-  onReadyStateChange() {
-    this.precacheChanged();
-  }
-  precacheChanged() {
-    if (this.__connected && this.precache && document.readyState === 'complete') {
-      for (let i = 0; i < this.elements.length; i++) {
-        const name = this.elements[i][1].name;
-        const explicitlyDontCache = this.elements[i][1].cache === false || !!this.elements[i][1].import;
-        if (!this._caches[name] && !explicitlyDontCache) {
-          this.import(this.elements[i][1].import).then(() => {
-            this.template([this.elements[i]], this.stagingElement);
-            this._caches[name] = this.stagingElement.childNodes[0];
-            this.stagingElement.textContent = '';
-          });
-        }
-      }
-    }
-  }
-  renderShadow() {
-    this.template([['div', {id: 'content', class: 'io-content'}]]);
   }
   scrollTo(id, smooth) {
     if (!id) return;
@@ -177,6 +143,9 @@ export class IoSelector extends IoElement {
       this.scrollTo(this._scrollID, true);
     }
   }
+  getSlotted() {
+    return null;
+  }
   update() {
     const selected = this._selectedID;
 
@@ -190,13 +159,17 @@ export class IoSelector extends IoElement {
     const explicitlyCache = element[1].cache === true;
     const explicitlyDontCache = element[1].cache === false;
 
-    this.renderShadow();
+    this.template([
+      this.getSlotted(),
+      ['div', {id: 'content', class: 'io-content'}],
+    ]);
+
     if (this.$.content) {
       this.$.content.textContent = '';
     }
 
     this.$.content.classList.toggle('io-loading', true);
-    if (!explicitlyDontCache && (this.precache || this.cache || explicitlyCache) && this._caches[selected]) {
+    if (!explicitlyDontCache && (this.cache || explicitlyCache) && this._caches[selected]) {
       // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
       this.$.content.appendChild(this._caches[selected]);
       this.$.content.classList.toggle('io-loading', false);

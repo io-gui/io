@@ -24,14 +24,11 @@ export class IoContent extends IoElement {
         reflect: 1,
       },
       cache: Boolean,
-      precache: Boolean,
     };
   }
   changed() {
     // TODO: cache outside DOM and disconnect!
     if (this.expanded) {
-      this.template([this.elements]);
-    } else if (this.precache) {
       this.template([this.elements]);
     } else if (!this.cache) {
       this.template([null]);

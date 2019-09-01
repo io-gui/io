@@ -51,7 +51,6 @@ export class IoSelectorTabs extends IoElement {
       elements: Array,
       filter: null,
       selected: String,
-      precache: false,
       cache: true,
       editable: Boolean,
       role: {
@@ -210,7 +209,6 @@ export class IoSelectorTabs extends IoElement {
         id: 'content',
         elements: this.elements,
         selected: this.selected,
-        precache: this.precache,
         cache: this.cache,
         role: this.role,
       }],

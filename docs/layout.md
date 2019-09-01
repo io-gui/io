@@ -14,11 +14,9 @@ Extends `IoElement` and `IoContent`.
 
 Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
 
-<io-element-demo element="io-selector" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false, "precache": false}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}]}'></io-element-demo>
+<io-element-demo element="io-selector" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}]}'></io-element-demo>
 
 If `cache` property is set to `true`, a reference to the element will be kept fo later use.
-
-If `precache` property is set to `true`, all elements will be created for immediate use.
 
 ## `IoSelectorTabs`
 
@@ -26,7 +24,7 @@ Extends `IoSelector`. Implements `IoMenuOptions`.
 
 Element selector with selectable tabs interfce.
 
-<io-element-demo element="io-selector-tabs" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"], ["div", {"name": "fifth"}, "Fifth content"], ["div", {"name": "sixth"}, "Sixth content"]], "selected": "first", "cache": false, "precache": false, "options": ["first", "second", "third", "fourth", {"label" : "more", "options": ["fifth", "sixth"]}]}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
+<io-element-demo element="io-selector-tabs" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"], ["div", {"name": "fifth"}, "Fifth content"], ["div", {"name": "sixth"}, "Sixth content"]], "selected": "first", "cache": false, "options": ["first", "second", "third", "fourth", {"label" : "more", "options": ["fifth", "sixth"]}]}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
 
 ## `IoSelectorSidebar`
 
@@ -34,7 +32,7 @@ Extends `IoSelector`. Implements `IoSidebar`.
 
 Element selector with selectable sidebar interfce.
 
-<io-element-demo element="io-selector-sidebar" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false, "precache": false, "options": [{"label": "elements", "options": ["first", "second", "third", "fourth"]}], "left": true, "minWidth": 410}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
+<io-element-demo element="io-selector-sidebar" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false, "options": [{"label": "elements", "options": ["first", "second", "third", "fourth"]}], "left": true, "minWidth": 410}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
 
 ## `IoSidebar`
 
