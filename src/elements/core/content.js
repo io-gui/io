@@ -17,7 +17,7 @@ export class IoContent extends IoElement {
     return {
       elements: {
         type: Array,
-        observe: Infinity,
+        observe: true,
       },
       expanded: {
         type: Boolean,

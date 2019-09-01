@@ -98,7 +98,6 @@ export class IoMenuItem extends IoItem {
     return {
       option: {
         type: Object,
-        observe: true,
       },
       expanded: {
         value: false,
@@ -122,15 +121,17 @@ export class IoMenuItem extends IoItem {
     event.stopPropagation();
     event.preventDefault();
   }
-  constructor(props) {
-    super(props);
-    // TODO: consider optimizing-out on leaf item elements.
-    this.$options = new IoMenuOptions({
-      $parent: this,
-      expanded: this.bind('expanded'),
-      'on-item-clicked': this._onOptionItemClicked,
-      'on-expanded-changed': IoLayerSingleton.onChildExpanded,
-    });
+  optionChanged() {
+    if (this._options) {
+      if (this.$options) IoLayerSingleton.removeChild(this.$options);
+      this.$options = new IoMenuOptions({
+        $parent: this,
+        expanded: this.bind('expanded'),
+        'on-item-clicked': this._onOptionItemClicked,
+        'on-expanded-changed': IoLayerSingleton.onChildExpanded,
+      });
+      IoLayerSingleton.appendChild(this.$options);
+    }
   }
   get _options() {
     if (this.option && this.option.options && this.option.options.length) {
@@ -189,14 +190,14 @@ export class IoMenuItem extends IoItem {
   }
   connectedCallback() {
     super.connectedCallback();
-    IoLayerSingleton.appendChild(this.$options);
+    if (this.$options) IoLayerSingleton.appendChild(this.$options);
     if (!this._inLayer) {
       IoLayerSingleton.addEventListener('pointermove', this._onLayerPointermove);
     }
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    IoLayerSingleton.removeChild(this.$options);
+    if (this.$options) IoLayerSingleton.removeChild(this.$options);
     IoLayerSingleton.removeEventListener('pointermove', this._onLayerPointermove);
   }
   _onClick() {
@@ -261,10 +262,12 @@ export class IoMenuItem extends IoItem {
   }
   _expandHovered() {
     hoveredItem.focus();
-    if (hoveredItem._options) hoveredItem.expanded = true;
-    const descendants = getElementDescendants(hoveredItem.$options);
-    for (let i = descendants.length; i--;) {
-      descendants[i].expanded = false;
+    if (hoveredItem._options) {
+      hoveredItem.expanded = true;
+      const descendants = getElementDescendants(hoveredItem.$options);
+      for (let i = descendants.length; i--;) {
+        descendants[i].expanded = false;
+      }
     }
   }
   _onLayerPointermove(event) {
@@ -365,9 +368,11 @@ export class IoMenuItem extends IoItem {
           items[i].expanded = false;
         }
       }
-      const descendants = getElementDescendants(this.$options);
-      for (let i = descendants.length; i--;) {
-        descendants[i].expanded = false;
+      if (this.$options) {
+        const descendants = getElementDescendants(this.$options);
+        for (let i = descendants.length; i--;) {
+          descendants[i].expanded = false;
+        }
       }
     } else {
       const descendants = getElementDescendants(this);
@@ -385,13 +390,16 @@ export class IoMenuItem extends IoItem {
       ['span', {class: 'io-menu-label'}, this._label || String(this._value)],
       ['span', {class: 'io-menu-hint'}, this._hint],
     ]);
-    // TODO: consider optimizing-out on leaf item elements.
-    this.$options.setProperties({
-      value: this.value,
-      options: this._options,
-      selectable: this.selectable,
-      position: this.direction,
-    });
+    // TODO: consider optimizing-out on leaf item elements
+    if (this.$options) {
+      this.$options.setProperties({
+        value: this.value,
+        options: this._options,
+        selectable: this.selectable,
+        position: this.direction,
+      });
+    }
+
   }
 }
 

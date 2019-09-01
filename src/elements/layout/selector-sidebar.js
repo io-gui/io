@@ -72,9 +72,6 @@ export class IoSelectorSidebar extends IoSelector {
   overflowChanged() { this.renderShadow(); }
   getSlotted() {
     return ['io-sidebar', {
-      id: 'sidebar',
-      role: 'navigation',
-      elements: this.elements,
       selected: this.bind('selected'),
       options: this._options,
       overflow: this.overflow,

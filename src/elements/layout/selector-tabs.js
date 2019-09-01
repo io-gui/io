@@ -43,7 +43,6 @@ export class IoSelectorTabs extends IoSelector {
   }
   getSlotted() {
     return ['io-menu-options', {
-      id: 'tabs',
       role: 'navigation',
       horizontal: true,
       value: this.bind('selected'),
