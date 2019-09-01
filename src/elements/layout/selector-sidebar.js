@@ -60,7 +60,7 @@ export class IoSelectorSidebar extends IoSelector {
     };
   }
   get _options() {
-    return this.options.length ? this.options : this.elements.map(element => { return element[1].name; })
+    return this.options.length ? this.options : this.elements.map(element => { return element[1].name; });
   }
   minWidthChanged() {
     this.onResized();

@@ -39,7 +39,7 @@ export class IoSelectorTabs extends IoSelector {
     };
   }
   get _options() {
-    return this.options.length ? this.options : this.elements.map(element => { return element[1].name; })
+    return this.options.length ? this.options : this.elements.map(element => { return element[1].name; });
   }
   getSlotted() {
     return ['io-menu-options', {
