@@ -1,5 +1,5 @@
-import {html, Binding, IoStorageFactory as $} from "../io.js";
-import {IoThemeSingleton, IoPanel} from "../io-core.js";
+import {html, IoElement, Binding, IoStorageFactory as $} from "../io.js";
+import {IoThemeSingleton} from "../io-core.js";
 
 const options = [
   {label: "Red", icon: "❤️", options: ["red1", "red2", "red3"]},
@@ -21,6 +21,7 @@ $({key: 'demo:number', value: 0});
 $({key: 'demo:theme', value: IoThemeSingleton.bind('theme')});
 $({key: 'demo:options', value: options});
 $({key: 'demo:option', value: option});
+// $({key: 'demo:vector', value: [0, 0, 0, 0]});
 $({key: 'demo:rgba', value: {"r": 1, "g": 0.5, "b": 0, "a": 1}});
 $({key: 'demo:cmyk', value: {"c": 0, "m": 0, "y": 0, "k": 0}});
 $({key: 'demo:object', value: {
@@ -31,7 +32,7 @@ $({key: 'demo:object', value: {
   "array": [1, 2, 3, 4, 5],
 }});
 
-export class IoElementDemo extends IoPanel {
+export class IoElementDemo extends IoElement {
   static get Style() {
     return html`<style>
       :host {

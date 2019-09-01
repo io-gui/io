@@ -1,8 +1,7 @@
-import {html} from "../../io.js";
-import {IoPanel} from "../../io-core.js";
+import {html, IoElement} from "../../io.js";
 import "./properties.js";
 
-export class IoObject extends IoPanel {
+export class IoObject extends IoElement {
   static get Style() {
     return html`<style>
     :host > io-boolean {

@@ -1,7 +1,6 @@
-import {html} from "../../io.js";
-import {IoPanel} from "../../io-core.js";
+import {html, IoElement} from "../../io.js";
 
-export class IoCollapsable extends IoPanel {
+export class IoCollapsable extends IoElement {
   static get Style() {
     return html`<style>
       :host > io-boolean {

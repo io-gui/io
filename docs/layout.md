@@ -1,4 +1,4 @@
-## &lt;io-collapsable&gt;
+## `IoCollapsable`
 
 An element with collapsable content.
 
@@ -8,7 +8,7 @@ Extends `IoElement`. Implements `IoBoolean`.
 
 When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
 
-## &lt;io-selector&gt;
+## `IoSelector`
 
 Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
 
@@ -18,7 +18,7 @@ If `cache` property is set to `true`, a reference to the element will be kept fo
 
 If `precache` property is set to `true`, all elements will be created for immediate use.
 
-## &lt;io-selector-tabs&gt;
+## `IoSelectorTabs`
 
 Extends `IoSelector`. Implements `IoMenuOptions`.
 
@@ -26,7 +26,7 @@ Element selector with selectable tabs interfce.
 
 <io-element-demo element="io-selector-tabs" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"], ["div", {"name": "fifth"}, "Fifth content"], ["div", {"name": "sixth"}, "Sixth content"]], "selected": "first", "cache": false, "precache": false, "options": ["first", "second", "third", "fourth", {"label" : "more", "options": ["fifth", "sixth"]}]}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
 
-## &lt;io-selector-sidebar&gt;
+## `IoSelectorSidebar`
 
 Extends `IoSelector`. Implements `IoSidebar`.
 
@@ -34,7 +34,7 @@ Element selector with selectable sidebar interfce.
 
 <io-element-demo element="io-selector-sidebar" properties='{"elements": [["div", {"name": "first"}, "First content"], ["div", {"name": "second"}, "Second content"], ["div", {"name": "third"}, "Third content"], ["div", {"name": "fourth"}, "Fourth content"]], "selected": "first", "cache": false, "precache": false, "options": [{"label": "elements", "options": ["first", "second", "third", "fourth"]}], "left": true, "minWidth": 410}' config='{"selected": ["io-option-menu", {"options": ["first", "second", "third", "fourth"]}], "options": ["io-object", {"expanded": true}]}'></io-element-demo>
 
-## &lt;io-sidebar&gt;
+## `IoSidebar`
 
 Labeled tabs for selection.
 
@@ -46,6 +46,6 @@ Implements `<io-option-menu>` and `<io-button>`.
 
 When tabs are clicked, `selected` value is set.
 
-## &lt;io-layout&gt;
+## `IoLayout`
 
 TODO

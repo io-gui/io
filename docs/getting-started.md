@@ -87,6 +87,24 @@ static get Style() {
 
 **Note:** CSS selectors have to be prefixed with `:host` in order to prevent style leakage. Template literal handler `html` is optional but recommended for correct syntax highlighting.
 
+CSS selectors starting with `--` and ending with `:` are treated as mixins (CSS property declaration lists). They can be appied using `@apply` CSS rule to any element class derived from `IoElement`.
+
+```javascript
+static get Style() {
+  return html`
+    <style>
+      --io-column: {
+        display: flex;
+        flex-direction: column;
+      }
+      :host {
+        @apply --io-column;
+      }
+    </style>
+  `;
+}
+```
+
 ## Properties
 
 Properties are defined inside `static get Properties()` return object. Let's define a `message` property with default value `'Hello io!'`.
