@@ -71,6 +71,11 @@ class IoLayer extends IoElement {
       'focusin': '_preventDefault',
     };
   }
+  constructor(props) {
+    super(props);
+    Object.defineProperty(this, 'x', {value: null, writable: true});
+    Object.defineProperty(this, 'y', {value: null, writable: true});
+  }
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
@@ -101,11 +106,13 @@ class IoLayer extends IoElement {
   }
   _onPointermove(event) {
     event.stopPropagation();
-    this._x = event.clientX;
-    this._y = event.clientY;
+    this.x = event.clientX;
+    this.y = event.clientY;
   }
   _onPointerup(event) {
     event.stopPropagation();
+    this.x = null;
+    this.y = null;
     if (event.composedPath()[0] === this) {
       this.releasePointerCapture(event.pointerId);
       this._collapseOrFocusSrcElement(event);
@@ -114,14 +121,14 @@ class IoLayer extends IoElement {
   _nudgeAnimate() {
     if (this.expanded) {
       this.requestAnimationFrameOnce(this._nudgeAnimate);
-      const x = this._x;
-      const y = this._y;
+      const x = this.x;
+      const y = this.y;
+      if (x === undefined || y === undefined) return;
       for (let i = this.children.length; i--;) {
         if (this.children[i].expanded) {
-          if (x === undefined || y === undefined) continue;
           const r = this.children[i].getBoundingClientRect();
           if (!(r.top < y && r.bottom > y && r.left < x && r.right > x)) continue;
-          if (r.height > window.innerHeight) {
+          if (r.bottom > window.innerHeight || r.top < 0) {
             let ry = r.y;
             if (y < 100 && r.top < 0) {
               const scrollSpeed = (100 - y) / 5000;
@@ -134,15 +141,15 @@ class IoLayer extends IoElement {
             }
             this.children[i].style.top = ry + 'px';
           }
-          if (r.width > window.innerHeight) {
+          if (r.right > window.innerWidth || r.left < 0) {
             let rx = r.x;
             if (x < 100 && r.left < 0) {
               const scrollSpeed = (100 - x) / 5000;
               const overflow = r.left;
               rx = rx - Math.ceil(overflow * scrollSpeed) + 1;
-            } else if (x > window.innerHeight - 100 && r.right > window.innerHeight) {
-              const scrollSpeed = (100 - (window.innerHeight - x)) / 5000;
-              const overflow = (r.right - window.innerHeight);
+            } else if (x > window.innerWidth - 100 && r.right > window.innerWidth) {
+              const scrollSpeed = (100 - (window.innerWidth - x)) / 5000;
+              const overflow = (r.right - window.innerWidth);
               rx = rx - Math.ceil(overflow * scrollSpeed) - 1;
             }
             this.children[i].style.left = rx + 'px';
@@ -240,6 +247,8 @@ class IoLayer extends IoElement {
   }
   expandedChanged() {
     if (!this.expanded) {
+      this.x = null;
+      this.y = null;
       for (let i = this.children.length; i--;) {
         this.children[i].expanded = false;
       }

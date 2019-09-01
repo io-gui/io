@@ -9,7 +9,7 @@ export class TodoApp extends IoElement {
   static get Properties() {
     return {
       model: TodoModel,
-      route: IoStorageFactory('route', 'all', true),
+      route: IoStorageFactory({value: 'all', storage: 'hash', key: 'route'}),
     };
   }
   changed() {

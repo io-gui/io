@@ -57,9 +57,11 @@ function isPointerAboveElement(event, element) {
   const r = element.getBoundingClientRect();
   const x = event.clientX;
   const y = event.clientY;
-  if (r.top < 0 || r.bottom > window.innerHeight || r.left < 0 || r.right > window.innerWidth) return false;
   return (r.top < y && r.bottom > y && r.left < x && r.right > x);
 }
+
+let hoveredItem;
+let hoveredParent;
 
 export class IoMenuItem extends IoItem {
   static get Style() {
@@ -141,8 +143,6 @@ export class IoMenuItem extends IoItem {
       'on-item-clicked': this._onOptionItemClicked,
       'on-expanded-changed': IoLayerSingleton.onChildExpanded,
     });
-    Object.defineProperty(this, '_v', {value: 0, writable: true});
-    Object.defineProperty(this, '_p', {value: null, writable: true});
   }
   get _options() {
     if (this.option && this.option.options && this.option.options.length) {
@@ -237,51 +237,48 @@ export class IoMenuItem extends IoItem {
       this.focus();
       if (this._options) this.expanded = true;
     }
-    this._v = 0;
-    this._p = this.parentElement;
+    hoveredItem = this;
+    hoveredParent = this.parentElement;
   }
   _getHoveredItem(event) {
     const items = getElementDescendants(getRootElement(this));
-    let _hoveredItem;
+    let hoveredItem;
     for (let i = items.length; i--;) {
       if (isPointerAboveElement(event, items[i])) {
-        _hoveredItem = items[i];
-        continue;
+        return items[i];
       }
     }
-    return _hoveredItem;
   }
   _onPointermove(event) {
     if (!this.expanded && event.pointerType === 'touch' && !this._inLayer) {
       return;
     }
-    IoLayerSingleton._x = event.clientX;
-    IoLayerSingleton._y = event.clientY;
-    // TODO: consider horizintal menus
+    IoLayerSingleton.x = event.clientX;
+    IoLayerSingleton.y = event.clientY;
+    // TODO: consider horizontal menus
     clearTimeout(this.__timeoutOpen);
-    this._v = (2 * this._v + Math.abs(event.movementY) - Math.abs(event.movementX)) / 3;
-    let _hoveredItem = this._getHoveredItem(event);
-    if (_hoveredItem) {
-      const WAIT_TIME = 100;
-      if (this._p !== _hoveredItem.parentElement) {
-        this._p = _hoveredItem.parentElement;
-        _hoveredItem.focus();
-        if (_hoveredItem._options) _hoveredItem.expanded = true;
-
-        const descendants = getElementDescendants(_hoveredItem.$options);
-        for (let i = descendants.length; i--;) {
-          descendants[i].expanded = false;
-        }
-
-      } else if (this._v > 0.5) {
-        _hoveredItem.focus();
-        if (_hoveredItem._options) _hoveredItem.expanded = true;
+    hoveredItem = this._getHoveredItem(event);
+    if (hoveredItem) {
+      const v = Math.abs(event.movementY) - Math.abs(event.movementX);
+      const h = hoveredParent.horizontal;
+      if (hoveredParent !== hoveredItem.parentElement) {
+        hoveredParent = hoveredItem.parentElement;
+        this._expandHovered();
+      } else if (h ? v < -0.5 : v > 0.5) {
+        this._expandHovered();
       } else {
         this.__timeoutOpen = setTimeout(() => {
-          _hoveredItem.focus();
-          if (_hoveredItem._options) _hoveredItem.expanded = true;
-        }, WAIT_TIME);
+          this._expandHovered();
+        }, 100);
       }
+    }
+  }
+  _expandHovered() {
+    hoveredItem.focus();
+    if (hoveredItem._options) hoveredItem.expanded = true;
+    const descendants = getElementDescendants(hoveredItem.$options);
+    for (let i = descendants.length; i--;) {
+      descendants[i].expanded = false;
     }
   }
   _onLayerPointermove(event) {
@@ -290,17 +287,15 @@ export class IoMenuItem extends IoItem {
   _onPointerup(event) {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
-    this.pressed = false;
-    let _hoveredItem = this._getHoveredItem(event);
-    if (!_hoveredItem) {
+    let hoveredItem = this._getHoveredItem(event);
+    if (!hoveredItem) {
       this.expanded = false;
     } else {
-      _hoveredItem._onClick(event);
+      hoveredItem._onClick(event);
     }
   }
   _onKeydown(event) {
     if (event.key === 'Enter' || event.key === ' ') {
-      this.pressed = true;
       event.preventDefault();
       if (this.expanded) {
         this.expanded = false;

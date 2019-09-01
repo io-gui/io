@@ -112,8 +112,6 @@ export class IoContextMenu extends IoElement {
   }
   expand(event) {
     if (!this.expanded && this.options.length) {
-      IoLayerSingleton._x = event.clientX;
-      IoLayerSingleton._y = event.clientY;
       this.expanded = true;
     }
   }
