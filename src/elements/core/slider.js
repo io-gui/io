@@ -4,35 +4,35 @@ import {IoGl} from "./gl.js";
 export class IoSlider extends IoGl {
   static get Style() {
     return html`<style>
-      :host {
-        cursor: ns-resize;
-        box-sizing: border-box;
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
-        border-color: var(--io-color-border-inset);
-        min-width: var(--io-item-height);
-        min-height: var(--io-item-height);
-        align-self: stretch;
-        justify-self: stretch;
-        touch-action: none;
-      }
-      :host[horizontal] {
-        cursor: ew-resize;
-      }
-      :host[orientation="2d"] {
-        cursor: move;
-      }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
-      }
-      :host[aria-invalid] > .io-gl-canvas {
-        opacity: 0.5;
-      }
-      :host:focus {
-        border-color: var(--io-color-focus);
-        outline-color: var(--io-color-focus);
-      }
+    :host {
+      cursor: ns-resize;
+      box-sizing: border-box;
+      border: var(--io-border);
+      border-radius: var(--io-border-radius);
+      border-color: var(--io-color-border-inset);
+      min-width: var(--io-item-height);
+      min-height: var(--io-item-height);
+      align-self: stretch;
+      justify-self: stretch;
+      touch-action: none;
+    }
+    :host[horizontal] {
+      cursor: ew-resize;
+    }
+    :host[orientation="2d"] {
+      cursor: move;
+    }
+    :host[aria-invalid] {
+      border: var(--io-border-error);
+      background-image: var(--io-gradient-error);
+    }
+    :host[aria-invalid] > .io-gl-canvas {
+      opacity: 0.5;
+    }
+    :host:focus {
+      border-color: var(--io-color-focus);
+      outline-color: var(--io-color-focus);
+    }
     </style>`;
   }
   static get Properties() {

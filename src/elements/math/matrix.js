@@ -3,24 +3,24 @@ import {html, IoElement} from "../../io.js";
 export class IoMatrix extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: grid;
-        align-self: stretch;
-        justify-self: stretch;
-        grid-gap: var(--io-spacing);
-      }
-      :host[columns="4"] {
-        grid-template-columns: repeat(4, 1fr);
-      }
-      :host[columns="3"] {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      :host[columns="2"] {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      :host > io-number {
-        width: inherit;
-      }
+    :host {
+      display: grid;
+      align-self: stretch;
+      justify-self: stretch;
+      grid-gap: var(--io-spacing);
+    }
+    :host[columns="4"] {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    :host[columns="3"] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    :host[columns="2"] {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    :host > io-number {
+      width: inherit;
+    }
     </style>`;
   }
   static get Properties() {

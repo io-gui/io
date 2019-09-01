@@ -7,23 +7,23 @@ import {IoColorPanelSingleton} from "./color-panel.js";
 export class IoColorPicker extends IoColorMixin(IoItem) {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        box-sizing: border-box;
-        border-radius: var(--io-border-radius);
-        border: var(--io-border);
-        border-color: var(--io-color-border-inset);
-        min-width: var(--io-item-height);
-        min-height: var(--io-item-height);
-        padding: 0;
-      }
-      :host > io-color-swatch {
-        border: 0;
-        flex: 1 1 auto;
-        min-width: 0;
-        min-height: 0;
-        border-radius: 0;
-      }
+    :host {
+      display: flex;
+      box-sizing: border-box;
+      border-radius: var(--io-border-radius);
+      border: var(--io-border);
+      border-color: var(--io-color-border-inset);
+      min-width: var(--io-item-height);
+      min-height: var(--io-item-height);
+      padding: 0;
+    }
+    :host > io-color-swatch {
+      border: 0;
+      flex: 1 1 auto;
+      min-width: 0;
+      min-height: 0;
+      border-radius: 0;
+    }
     </style>`;
   }
   static get Properties() {

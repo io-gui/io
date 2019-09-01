@@ -3,22 +3,22 @@ import {html, IoElement} from "../../io.js";
 export class IoVector extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex-direction: row;
-        align-self: stretch;
-        justify-self: stretch;
-      }
-      :host > io-number {
-        width: inherit;
-        flex: 1 1;
-      }
-      :host > *:not(:last-child) {
-        margin-right: var(--io-spacing);
-      }
-      :host > io-boolean {
-        width: var(--io-line-height) !important;
-      }
+    :host {
+      display: flex;
+      flex-direction: row;
+      align-self: stretch;
+      justify-self: stretch;
+    }
+    :host > io-number {
+      width: inherit;
+      flex: 1 1;
+    }
+    :host > *:not(:last-child) {
+      margin-right: var(--io-spacing);
+    }
+    :host > io-boolean {
+      width: var(--io-line-height) !important;
+    }
     </style>`;
   }
   static get Properties() {

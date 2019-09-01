@@ -77,9 +77,9 @@ Styles are defined inside `static get Style()` return string. Alternatively, sty
 static get Style() {
   return html`
     <style>
-      :host > p {
-        color: tomato;
-      }
+    :host > p {
+      color: tomato;
+    }
     </style>
   `;
 }
@@ -93,13 +93,13 @@ CSS selectors starting with `--` and ending with `:` are treated as mixins (CSS 
 static get Style() {
   return html`
     <style>
-      --io-column: {
-        display: flex;
-        flex-direction: column;
-      }
-      :host {
-        @apply --io-column;
-      }
+    --io-column: {
+      display: flex;
+      flex-direction: column;
+    }
+    :host {
+      @apply --io-column;
+    }
     </style>
   `;
 }
@@ -131,9 +131,9 @@ For example we can use `clicked` attribute to change text color in CSS.
 static get Style() {
   return html`
     <style>
-      :host[clicked] > p {
-        color: tomato;
-      }
+    :host[clicked] > p {
+      color: tomato;
+    }
     </style>
   `;
 }
@@ -178,9 +178,9 @@ class MyApp extends IoElement {
   static get Style() {
     return html`
     <style>
-      :host[clicked] > p {
-        color: tomato;
-      }
+    :host[clicked] > p {
+      color: tomato;
+    }
     </style>
     `;
   }

@@ -3,47 +3,47 @@ import {html, IoElement} from "../../io.js";
 export class IoBreadcrumbs extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex: 0 0 auto;
-        flex-direction: row;
-        align-self: stretch;
-        justify-self: stretch;
-        border-radius: var(--io-border-radius);
-        border: var(--io-border);
-        border-color: var(--io-color-border-inset);
-        padding: var(--io-spacing);
-        color: var(--io-color-field);
-        background-color: var(--io-background-color-field);
-        padding: var(--io-spacing);
-      }
-      :host > io-button {
-        border: none;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        background: none;
-        padding: var(--io-spacing);
-      }
-      :host > io-button:hover {
-        text-decoration: underline;
-      }
-      :host > io-button:first-of-type {
-        color: var(--io-color);
-        overflow: visible;
-        text-overflow: clip;
-        margin-left: var(--io-spacing);
-      }
-      :host > io-button:last-of-type {
-        overflow: visible;
-        text-overflow: clip;
-        margin-right: var(--io-spacing);
-      }
-      :host > io-button:not(:first-of-type):before {
-        content: '>';
-        margin: 0 var(--io-spacing);
-        padding: 0 var(--io-spacing) 0 0;
-        opacity: 0.25;
-      }
+    :host {
+      display: flex;
+      flex: 0 0 auto;
+      flex-direction: row;
+      align-self: stretch;
+      justify-self: stretch;
+      border-radius: var(--io-border-radius);
+      border: var(--io-border);
+      border-color: var(--io-color-border-inset);
+      padding: var(--io-spacing);
+      color: var(--io-color-field);
+      background-color: var(--io-background-color-field);
+      padding: var(--io-spacing);
+    }
+    :host > io-button {
+      border: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      background: none;
+      padding: var(--io-spacing);
+    }
+    :host > io-button:hover {
+      text-decoration: underline;
+    }
+    :host > io-button:first-of-type {
+      color: var(--io-color);
+      overflow: visible;
+      text-overflow: clip;
+      margin-left: var(--io-spacing);
+    }
+    :host > io-button:last-of-type {
+      overflow: visible;
+      text-overflow: clip;
+      margin-right: var(--io-spacing);
+    }
+    :host > io-button:not(:first-of-type):before {
+      content: '>';
+      margin: 0 var(--io-spacing);
+      padding: 0 var(--io-spacing) 0 0;
+      opacity: 0.25;
+    }
     </style>`;
   }
   static get Properties() {

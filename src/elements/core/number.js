@@ -6,29 +6,29 @@ import {IoLadderSingleton} from "./ladder.js";
 export class IoNumber extends IoItem {
   static get Style() {
     return html`<style>
-      :host {
-        cursor: text;
-        user-select: text;
-        -webkit-user-select: text;
-        -webkit-touch-callout: default;
-        min-width: var(--io-item-height);
-        border-color: var(--io-color-border-inset);
-        color: var(--io-color-field);
-        background-color: var(--io-background-color-field);
-        box-shadow: var(--io-shadow-inset);
-      }
-      :host:before,
-      :host:after {
-        content: ' ';
-        white-space: pre;
-        visibility: hidden;
-      }
-      :host:before {
-        content: '-';
-      }
-      :host:not([positive]):before {
-        content: '';
-      }
+    :host {
+      cursor: text;
+      user-select: text;
+      -webkit-user-select: text;
+      -webkit-touch-callout: default;
+      min-width: var(--io-item-height);
+      border-color: var(--io-color-border-inset);
+      color: var(--io-color-field);
+      background-color: var(--io-background-color-field);
+      box-shadow: var(--io-shadow-inset);
+    }
+    :host:before,
+    :host:after {
+      content: ' ';
+      white-space: pre;
+      visibility: hidden;
+    }
+    :host:before {
+      content: '-';
+    }
+    :host:not([positive]):before {
+      content: '';
+    }
     </style>`;
   }
   static get Properties() {

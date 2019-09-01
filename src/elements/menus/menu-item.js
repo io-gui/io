@@ -64,44 +64,44 @@ function isPointerAboveElement(event, element) {
 export class IoMenuItem extends IoItem {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex: 0 0 auto;
-        flex-direction: row;
-        padding: var(--io-spacing);
-        border-radius: 0;
-        background: none;
-        border: var(--io-border-width) solid transparent;
-      }
-      :host:hover:not([selected]) {
-        background-color: inherit;
-      }
-      :host > * {
-        overflow: visible;
-        pointer-events: none;
-      }
-      :host > :not(:empty) {
-        padding: 0 var(--io-spacing);
-      }
-      :host > .io-menu-icon {}
-      :host > .io-menu-label {
-        flex: 1 1 auto;
-        text-overflow: ellipsis;
-      }
-      :host > .io-menu-hint {
-        opacity: 0.25;
-      }
-      :host[hasmore]:after {
-        content: '▸';
-      }
-      :host[selected][direction="top"],
-      :host[selected][direction="bottom"] {
-        border-bottom-color: var(--io-color-link);
-      }
-      :host[selected][direction="right"],
-      :host[selected][direction="left"] {
-        border-left-color: var(--io-color-link);
-      }
+    :host {
+      display: flex;
+      flex: 0 0 auto;
+      flex-direction: row;
+      padding: var(--io-spacing);
+      border-radius: 0;
+      background: none;
+      border: var(--io-border-width) solid transparent;
+    }
+    :host:hover:not([selected]) {
+      background-color: inherit;
+    }
+    :host > * {
+      overflow: visible;
+      pointer-events: none;
+    }
+    :host > :not(:empty) {
+      padding: 0 var(--io-spacing);
+    }
+    :host > .io-menu-icon {}
+    :host > .io-menu-label {
+      flex: 1 1 auto;
+      text-overflow: ellipsis;
+    }
+    :host > .io-menu-hint {
+      opacity: 0.25;
+    }
+    :host[hasmore]:after {
+      content: '▸';
+    }
+    :host[selected][direction="top"],
+    :host[selected][direction="bottom"] {
+      border-bottom-color: var(--io-color-link);
+    }
+    :host[selected][direction="right"],
+    :host[selected][direction="left"] {
+      border-left-color: var(--io-color-link);
+    }
     </style>`;
   }
   static get Properties() {

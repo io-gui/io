@@ -5,22 +5,22 @@ import "./color-picker.js";
 export class IoColorVector extends IoColorMixin(IoElement) {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex-direction: row;
-        align-self: stretch;
-        justify-self: stretch;
-      }
-      :host > io-number {
-        width: inherit;
-        flex: 1 1;
-      }
-      :host > *:not(:last-child) {
-        margin-right: var(--io-spacing);
-      }
-      :host > io-color-picker {
-        width: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
-      }
+    :host {
+      display: flex;
+      flex-direction: row;
+      align-self: stretch;
+      justify-self: stretch;
+    }
+    :host > io-number {
+      width: inherit;
+      flex: 1 1;
+    }
+    :host > *:not(:last-child) {
+      margin-right: var(--io-spacing);
+    }
+    :host > io-color-picker {
+      width: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
+    }
     </style>`;
   }
   static get Properties() {

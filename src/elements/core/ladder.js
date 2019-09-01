@@ -19,16 +19,16 @@ let lastFocus = null;
 class IoLadderStep extends IoItem {
   static get Style() {
     return html`<style>
-      :host {
-        pointer-events: all;
-        display: inline-block;
-        cursor: ew-resize;
-        text-align: center;
-        background-color: var(--io-background-color-light);
-        align-self: stretch;
-        touch-action: none;
-        width: 5em;
-      }
+    :host {
+      pointer-events: all;
+      display: inline-block;
+      cursor: ew-resize;
+      text-align: center;
+      background-color: var(--io-background-color-light);
+      align-self: stretch;
+      touch-action: none;
+      width: 5em;
+    }
     </style>`;
   }
   static get Properties() {
@@ -103,78 +103,78 @@ IoLadderStep.Register();
 class IoLadder extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        position: relative;
-        pointer-events: none;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        display: flex;
-        flex-direction: column;
-      }
-      :host:not([expanded]) {
-        visibility: hidden;
-      }
-      :host:not([expanded]) > io-ladder-step {
-        opacity: 0;
-      }
-      :host > :nth-child(-n+5) {
-        box-shadow: 0 -1px 4px rgba(0,0,0,0.2);
-      }
-      :host > :nth-child(n+6) {
-        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      }
-      :host > .io-up1,
-      :host > .io-down1{
-        z-index: 4;
-        transition: opacity 0.1s, transform 0.1s;
-      }
-      :host > .io-up2,
-      :host > .io-down2 {
-        z-index: 3;
-        opacity: 0.8;
-        transition: opacity 0.2s, transform 0.2s;
-      }
-      :host:not([expanded]) > .io-up4 {
-        transform: translateY(calc(3 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-up3 {
-        transform: translateY(calc(2 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-up2 {
-        transform: translateY(calc(1 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-down2 {
-        transform: translateY(calc(-1 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-down3 {
-        transform: translateY(calc(-2 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-down4 {
-        transform: translateY(calc(-3 * var(--io-item-height)));
-      }
-      :host > .io-up3,
-      :host > .io-down3 {
-        z-index: 2;
-        opacity: 0.6;
-        transition: opacity 0.4s, transform 0.4s;
-      }
-      :host > .io-up4,
-      :host > .io-down4 {
-        z-index: 1;
-        opacity: 0.4;
-        transition: opacity 0.8s, transform 0.8s;
-      }
-      :host > io-ladder-step:focus {
-        background-color: var(--io-background-color-light);
-        border-color: var(--io-color-focus);
-        transition: opacity 0.2s;
-        opacity: 1;
-      }
-      :host > span.hidden {
-        visibility: hidden;
-      }
+    :host {
+      position: relative;
+      pointer-events: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      display: flex;
+      flex-direction: column;
+    }
+    :host:not([expanded]) {
+      visibility: hidden;
+    }
+    :host:not([expanded]) > io-ladder-step {
+      opacity: 0;
+    }
+    :host > :nth-child(-n+5) {
+      box-shadow: 0 -1px 4px rgba(0,0,0,0.2);
+    }
+    :host > :nth-child(n+6) {
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    :host > .io-up1,
+    :host > .io-down1{
+      z-index: 4;
+      transition: opacity 0.1s, transform 0.1s;
+    }
+    :host > .io-up2,
+    :host > .io-down2 {
+      z-index: 3;
+      opacity: 0.8;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    :host:not([expanded]) > .io-up4 {
+      transform: translateY(calc(3 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-up3 {
+      transform: translateY(calc(2 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-up2 {
+      transform: translateY(calc(1 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-down2 {
+      transform: translateY(calc(-1 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-down3 {
+      transform: translateY(calc(-2 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-down4 {
+      transform: translateY(calc(-3 * var(--io-item-height)));
+    }
+    :host > .io-up3,
+    :host > .io-down3 {
+      z-index: 2;
+      opacity: 0.6;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    :host > .io-up4,
+    :host > .io-down4 {
+      z-index: 1;
+      opacity: 0.4;
+      transition: opacity 0.8s, transform 0.8s;
+    }
+    :host > io-ladder-step:focus {
+      background-color: var(--io-background-color-light);
+      border-color: var(--io-color-focus);
+      transition: opacity 0.2s;
+      opacity: 1;
+    }
+    :host > span.hidden {
+      visibility: hidden;
+    }
     </style>`;
   }
   static get Properties() {

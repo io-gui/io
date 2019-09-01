@@ -5,42 +5,42 @@ const importedPaths = {};
 export class IoSelector extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex-direction: column;
-        align-self: stretch;
-        justify-self: stretch;
-        overflow: auto;
+    :host {
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      justify-self: stretch;
+      overflow: auto;
+    }
+    :host > .io-content {
+      background: var(--io-background-color);
+      color: var(--io-color);
+    }
+    @keyframes io-selector-spinner {
+      to {
+        transform: rotate(360deg);
       }
-      :host > .io-content {
-        background: var(--io-background-color);
-        color: var(--io-color);
-      }
-      @keyframes io-selector-spinner {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-      :host .io-loading {
-        background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
-        background-repeat: repeat;
-        position: relative;
-      }
-      :host .io-loading:after {
-        content: '';
-        box-sizing: border-box;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 40px;
-        height: 40px;
-        margin-top: -20px;
-        margin-left: -20px;
-        border-radius: 50%;
-        border: var(--io-border);
-        border-top-color: #000;
-        animation: io-selector-spinner .6s linear infinite;
-      }
+    }
+    :host .io-loading {
+      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
+      background-repeat: repeat;
+      position: relative;
+    }
+    :host .io-loading:after {
+      content: '';
+      box-sizing: border-box;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      margin-top: -20px;
+      margin-left: -20px;
+      border-radius: 50%;
+      border: var(--io-border);
+      border-top-color: #000;
+      animation: io-selector-spinner .6s linear infinite;
+    }
     </style>`;
   }
   static get Properties() {

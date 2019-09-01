@@ -17,35 +17,35 @@ export function filterObject(object, predicate) {
 export class IoSelectorSidebar extends IoSelector {
   static get Style() {
     return html`<style>
-      :host {
-        flex-direction: row-reverse;
-        align-self: stretch;
-        justify-self: stretch;
-        flex: 1 1 auto;
-      }
-      :host[left] {
-        flex-direction: row;
-      }
-      :host[overflow] {
-        flex-direction: column;
-      }
-      :host > io-sidebar {
-        flex: 0 0 auto;
-        background-color: var(--io-background-color-dark);
-      }
-      :host:not([overflow]) > io-sidebar {
-        flex: 0 0 8em;
-      }
-      :host > .io-content {
-        border: var(--io-border);
-        border-width: 0 var(--io-border-width) 0 0
-      }
-      :host[left] > .io-content {
-        border-width: 0 0 0 var(--io-border-width);
-      }
-      :host[overflow] > .io-content {
-        border-width: var(--io-border-width) 0 0 0;
-      }
+    :host {
+      flex-direction: row-reverse;
+      align-self: stretch;
+      justify-self: stretch;
+      flex: 1 1 auto;
+    }
+    :host[left] {
+      flex-direction: row;
+    }
+    :host[overflow] {
+      flex-direction: column;
+    }
+    :host > io-sidebar {
+      flex: 0 0 auto;
+      background-color: var(--io-background-color-dark);
+    }
+    :host:not([overflow]) > io-sidebar {
+      flex: 0 0 8em;
+    }
+    :host > .io-content {
+      border: var(--io-border);
+      border-width: 0 var(--io-border-width) 0 0
+    }
+    :host[left] > .io-content {
+      border-width: 0 0 0 var(--io-border-width);
+    }
+    :host[overflow] > .io-content {
+      border-width: var(--io-border-width) 0 0 0;
+    }
     </style>`;
   }
   static get Properties() {

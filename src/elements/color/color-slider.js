@@ -3,13 +3,6 @@ import {IoSlider} from "../../io-core.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorSlider extends IoColorMixin(IoSlider) {
-  static get Style() {
-    return html`<style>
-      :host {
-        border-width: 2px;
-      }
-    </style>`;
-  }
   static get Properties() {
     return {
       value: [1, 1, 1, 1],

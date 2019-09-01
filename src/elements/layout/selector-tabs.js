@@ -17,22 +17,22 @@ export function filterObject(object, predicate) {
 export class IoSelectorTabs extends IoSelector {
   static get Style() {
     return html`<style>
-      :host {
-        flex-direction: column;
-        align-self: stretch;
-        justify-self: stretch;
-        flex: 1 1 auto;
-      }
-      :host > io-menu-options {
-        flex: 0 0 auto;
-        border: none;
-        border-radius: 0;
-        background-color: var(--io-background-color-dark);
-      }
-      :host > .io-content {
-        border: var(--io-border);
-        border-width: var(--io-border-width) 0 0 0;
-      }
+    :host {
+      flex-direction: column;
+      align-self: stretch;
+      justify-self: stretch;
+      flex: 1 1 auto;
+    }
+    :host > io-menu-options {
+      flex: 0 0 auto;
+      border: none;
+      border-radius: 0;
+      background-color: var(--io-background-color-dark);
+    }
+    :host > .io-content {
+      border: var(--io-border);
+      border-width: var(--io-border-width) 0 0 0;
+    }
     </style>`;
   }
   static get Properties() {

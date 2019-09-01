@@ -23,6 +23,7 @@
  */
 
 
+export {IoThemeSingleton} from "./elements/core/theme.js";
 export {IoItem} from "./elements/core/item.js";
 export {IoGl} from "./elements/core/gl.js";
 export {IoButton} from "./elements/core/button.js";
@@ -37,4 +38,3 @@ export {IoLadderSingleton} from "./elements/core/ladder.js";
 export {IoIcon} from "./elements/core/icon.js";
 export {IoIconsetSingleton} from "./elements/core/iconset.js";
 export {IoLayerSingleton} from "./elements/core/layer.js";
-export {IoThemeSingleton} from "./elements/core/theme.js";

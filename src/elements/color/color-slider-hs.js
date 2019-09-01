@@ -4,9 +4,9 @@ import {IoColorSlider} from "./color-slider.js";
 export class IoColorSliderHs extends IoColorSlider {
   static get Style() {
     return html`<style>
-      :host {
-        cursor: move !important;
-      }
+    :host {
+      cursor: move !important;
+    }
     </style>`;
   }
   static get Frag() {

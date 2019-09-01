@@ -21,29 +21,29 @@ const splitDirections = {
 export class IoSelectorTabs extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex-direction: column;
-        overflow: auto;
-        position: relative;
-      }
-      :host > io-tabs {
-        z-index: 1;
-        margin: var(--io-spacing);
-        margin-bottom: 0;
-        flex-shrink: 0;
-      }
-      :host > io-selector {
-        color: var(--io-color);
-        background: var(--io-background-color);
-        display: flex;
-        flex-direction: column;
-        flex: 1 1 auto;
-        overflow: auto;
-        padding: var(--io-spacing);
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
-      }
+    :host {
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      position: relative;
+    }
+    :host > io-tabs {
+      z-index: 1;
+      margin: var(--io-spacing);
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+    :host > io-selector {
+      color: var(--io-color);
+      background: var(--io-background-color);
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      overflow: auto;
+      padding: var(--io-spacing);
+      border: var(--io-border);
+      border-radius: var(--io-border-radius);
+    }
     </style>`;
   }
   static get Properties() {
@@ -223,74 +223,74 @@ IoSelectorTabs.Register();
 export class IoTabs extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        overflow: visible;
-        flex: 0 1 auto;
-        position: relative;
-      }
-      :host > * {
-        flex: 0 0 auto;
-        margin-right: var(--io-spacing);
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        border-bottom: none;
-      }
-      :host[overflow] > :nth-child(n+3):not(.edit-option) {
-        /* visibility: hidden; */
-        /* left: 0; */
-        /* position: absolute; */
-      }
-      :host[editable] > io-button {
-        touch-action: none;
-      }
-      :host > io-button:focus {
-        border-style: solid;
-        border-bottom: none;
-      }
-      :host > io-button.io-selected-tab {
-        border-bottom-color: var(--io-background-color);
-        border-bottom-style: solid;
-        background: var(--io-background-color);
-        color: var(--io-color-link);
-        margin-bottom: -1px;
-        background-image: none;
-      }
-      :host > io-button.io-tab-insert-before {
-        background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(90deg, var(--io-color-focus) 0.3em, transparent 0.31em);
-      }
-      :host > io-button.io-tab-insert-after {
-        background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                          linear-gradient(270deg, var(--io-color-focus) 0.3em, transparent 0.31em);
-      }
-      :host > io-button.io-selected-tab.io-tab-insert-before {
-        background-image: linear-gradient(90deg, var(--io-color-focus) 0.3em, transparent 0.31em);
-      }
-      :host > io-button.io-selected-tab.io-tab-insert-after {
-        background-image: linear-gradient(270deg, var(--io-color-focus) 0.3em, transparent 0.31em);
-      }
-      :host > io-option-menu {
-        background: none !important;
-        border: none;
-        padding-left: calc(2 * var(--io-spacing));
-        padding-right: calc(2 * var(--io-spacing));
-      }
-      :host > .edit-spacer {
-        flex: 0 0 3.5em;
-        background: none;
-      }
-      :host > .edit-option {
-        border: none;
-        background: none;
-        position: absolute;
-        right: 0;
-      }
-      :host > .edit-option:not(:hover) {
-        opacity: 0.3;
-      }
+    :host {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow: visible;
+      flex: 0 1 auto;
+      position: relative;
+    }
+    :host > * {
+      flex: 0 0 auto;
+      margin-right: var(--io-spacing);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom: none;
+    }
+    :host[overflow] > :nth-child(n+3):not(.edit-option) {
+      /* visibility: hidden; */
+      /* left: 0; */
+      /* position: absolute; */
+    }
+    :host[editable] > io-button {
+      touch-action: none;
+    }
+    :host > io-button:focus {
+      border-style: solid;
+      border-bottom: none;
+    }
+    :host > io-button.io-selected-tab {
+      border-bottom-color: var(--io-background-color);
+      border-bottom-style: solid;
+      background: var(--io-background-color);
+      color: var(--io-color-link);
+      margin-bottom: -1px;
+      background-image: none;
+    }
+    :host > io-button.io-tab-insert-before {
+      background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
+                        linear-gradient(90deg, var(--io-color-focus) 0.3em, transparent 0.31em);
+    }
+    :host > io-button.io-tab-insert-after {
+      background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
+                        linear-gradient(270deg, var(--io-color-focus) 0.3em, transparent 0.31em);
+    }
+    :host > io-button.io-selected-tab.io-tab-insert-before {
+      background-image: linear-gradient(90deg, var(--io-color-focus) 0.3em, transparent 0.31em);
+    }
+    :host > io-button.io-selected-tab.io-tab-insert-after {
+      background-image: linear-gradient(270deg, var(--io-color-focus) 0.3em, transparent 0.31em);
+    }
+    :host > io-option-menu {
+      background: none !important;
+      border: none;
+      padding-left: calc(2 * var(--io-spacing));
+      padding-right: calc(2 * var(--io-spacing));
+    }
+    :host > .edit-spacer {
+      flex: 0 0 3.5em;
+      background: none;
+    }
+    :host > .edit-option {
+      border: none;
+      background: none;
+      position: absolute;
+      right: 0;
+    }
+    :host > .edit-option:not(:hover) {
+      opacity: 0.3;
+    }
     </style>`;
   }
   static get Properties() {
@@ -475,27 +475,27 @@ IoTabs.Register();
 export class IoTabDragicon extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: inline-block;
-        cursor: pointer;
-        white-space: nowrap;
-        -webkit-tap-highlight-color: transparent;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        user-select: none;
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
-        padding: var(--io-spacing);
-        padding-left: calc(2 * var(--io-spacing));
-        padding-right: calc(2 * var(--io-spacing));
-        background: var(--io-background-color);
-        color: var(--io-color);
-        transform: translateZ(0);
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index:2147483647;
-      }
+    :host {
+      display: inline-block;
+      cursor: pointer;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      user-select: none;
+      border: var(--io-border);
+      border-radius: var(--io-border-radius);
+      padding: var(--io-spacing);
+      padding-left: calc(2 * var(--io-spacing));
+      padding-right: calc(2 * var(--io-spacing));
+      background: var(--io-background-color);
+      color: var(--io-color);
+      transform: translateZ(0);
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index:2147483647;
+    }
     </style>`;
   }
 }
@@ -505,25 +505,25 @@ IoTabDragicon.Register();
 export class IoTabDropzone extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        width: 100px;
-        height: 100px;
-        display: inline-block;
-        pointer-events: none;
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-        border: 4px solid var(--io-color-focus);
-        border-radius: var(--io-border-radius);
-        transform: translateZ(0);
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index:2147483647;
-        transition: opacity ease-in-out 0.3s,
-                    transform ease-in-out 0.3s,
-                    width ease-in-out 0.3s,
-                    height ease-in-out 0.3s;
-      }
+    :host {
+      width: 100px;
+      height: 100px;
+      display: inline-block;
+      pointer-events: none;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      border: 4px solid var(--io-color-focus);
+      border-radius: var(--io-border-radius);
+      transform: translateZ(0);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index:2147483647;
+      transition: opacity ease-in-out 0.3s,
+                  transform ease-in-out 0.3s,
+                  width ease-in-out 0.3s,
+                  height ease-in-out 0.3s;
+    }
     </style>`;
   }
 }

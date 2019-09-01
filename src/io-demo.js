@@ -12,10 +12,10 @@ import "./demo/elements/color.js";
 export class IoDemo extends IoSelectorTabs {
   static get Style() {
     return html`<style>
-      :host iframe[name=todo] {
-        border: none;
-        flex: 1 1;
-      }
+    :host iframe[name=todo] {
+      border: none;
+      flex: 1 1;
+    }
     </style>`;
   }
   static get Properties() {

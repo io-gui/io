@@ -17,38 +17,38 @@ let lastFocus = null;
 class IoLayer extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: block;
-        visibility: hidden;
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        z-index: 100000;
-        user-select: none;
-        overflow: hidden;
-        pointer-events: none;
-        touch-action: none;
-        opacity: 0;
-        transition: opacity 0.25s;
-        background: transparent;
-      }
-      :host[expanded] {
-        pointer-events: all;
-        visibility: visible;
-        opacity: 1;
-        background: rgba(0,0,0,0.2);
-      }
-      :host > * {
-        position: absolute;
-        pointer-events: all;
-        touch-action: none;
-      }
-      :host > *:not([expanded]) {
-        visibility: hidden;
-        pointer-events: none;
-      }
+    :host {
+      display: block;
+      visibility: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 100000;
+      user-select: none;
+      overflow: hidden;
+      pointer-events: none;
+      touch-action: none;
+      opacity: 0;
+      transition: opacity 0.25s;
+      background: transparent;
+    }
+    :host[expanded] {
+      pointer-events: all;
+      visibility: visible;
+      opacity: 1;
+      background: rgba(0,0,0,0.2);
+    }
+    :host > * {
+      position: absolute;
+      pointer-events: all;
+      touch-action: none;
+    }
+    :host > *:not([expanded]) {
+      visibility: hidden;
+      pointer-events: none;
+    }
     </style>`;
   }
   static get Properties() {

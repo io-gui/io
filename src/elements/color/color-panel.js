@@ -5,30 +5,31 @@ import {IoColorMixin} from "./color.js";
 export class IoColorPanel extends IoColorMixin(IoElement) {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        cursor: move;
-        align-items: stretch;
-        min-width: var(--io-line-height);
-        min-height: var(--io-line-height);
-        flex-direction: column;
-      }
-      :host[horizontal] {
-        flex-direction: row;
-      }
-      :host > * {
-        border-radius: calc(var(--io-border-radius) - var(--io-border-width));
-      }
-      :host > io-color-slider-sl,
-      :host > io-color-slider-sv {
-        flex: 1 1;
-      }
-      :host > *:not(:last-child) {
-        margin: 0 0 var(--io-spacing) 0;
-      }
-      :host[horizontal] > *:not(:last-child) {
-        margin: 0 var(--io-spacing) 0 0;
-      }
+    :host {
+      @apply --io-panel;
+      display: flex;
+      cursor: move;
+      align-items: stretch;
+      min-width: var(--io-line-height);
+      min-height: var(--io-line-height);
+      flex-direction: column;
+    }
+    :host[horizontal] {
+      flex-direction: row;
+    }
+    :host > * {
+      border-radius: calc(var(--io-border-radius) - var(--io-border-width));
+    }
+    :host > io-color-slider-sl,
+    :host > io-color-slider-sv {
+      flex: 1 1;
+    }
+    :host > *:not(:last-child) {
+      margin: 0 0 var(--io-spacing) 0;
+    }
+    :host[horizontal] > *:not(:last-child) {
+      margin: 0 var(--io-spacing) 0 0;
+    }
     </style>`;
   }
   static get Properties() {

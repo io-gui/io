@@ -15,37 +15,37 @@ export function filterObject(object, predicate) {
 export class IoSidebar extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: hidden;
-        overflow-y: auto;
-        padding: var(--io-spacing);
-      }
-      :host:not([overflow]) {
-        -webkit-overflow-scrolling: touch;
-        flex-direction: column;
-      }
-      :host > * {
-        flex: 0 0 auto;
-      }
-      :host io-collapsable {
-        padding: 0;
-      }
-      :host io-collapsable > .io-frame {
-        padding: 0 0 0 0.75em;
-      }
-      :host io-button {
-        text-align: left;
-        align-self: stretch;
-      }
-      :host io-button,
-      :host io-collapsable,
-      :host .io-frame {
-        background: none;
-        box-shadow: none;
-        border-color: transparent;
-      }
+    :host {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: var(--io-spacing);
+    }
+    :host:not([overflow]) {
+      -webkit-overflow-scrolling: touch;
+      flex-direction: column;
+    }
+    :host > * {
+      flex: 0 0 auto;
+    }
+    :host io-collapsable {
+      padding: 0;
+    }
+    :host io-collapsable > .io-frame {
+      padding: 0 0 0 0.75em;
+    }
+    :host io-button {
+      text-align: left;
+      align-self: stretch;
+    }
+    :host io-button,
+    :host io-collapsable,
+    :host .io-frame {
+      background: none;
+      box-shadow: none;
+      border-color: transparent;
+    }
     </style>`;
   }
   static get Properties() {

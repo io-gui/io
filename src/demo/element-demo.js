@@ -35,31 +35,32 @@ $({key: 'demo:object', value: {
 export class IoElementDemo extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        position: relative;
-      }
-      :host > io-boolicon {
-        z-index: 2;
-        position: absolute;
-        top: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
-        right: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
-      }
-      :host > io-boolicon:not([value]):not(:hover) {
-        opacity: 0.5;
-      }
-      :host > io-properties {
-        align-self: stretch;
-        padding: var(--io-spacing) 0;
-        margin: var(--io-border-width);
-        margin-right: var(--io-spacing);
-        margin-bottom: calc(2 * var(--io-spacing));
-      }
-      :host > io-properties > :nth-child(2) {
-        margin-right: calc(var(--io-item-height) + var(--io-spacing));
-      }
-      :host:not([expanded]) > .io-frame {
-        margin-right: calc(var(--io-item-height) + calc(3 * var(--io-spacing)));
-      }
+    :host {
+      @apply --io-panel;
+      position: relative;
+    }
+    :host > io-boolicon {
+      z-index: 2;
+      position: absolute;
+      top: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
+      right: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
+    }
+    :host > io-boolicon:not([value]):not(:hover) {
+      opacity: 0.5;
+    }
+    :host > io-properties {
+      align-self: stretch;
+      padding: var(--io-spacing) 0;
+      margin: var(--io-border-width);
+      margin-right: var(--io-spacing);
+      margin-bottom: calc(2 * var(--io-spacing));
+    }
+    :host > io-properties > :nth-child(2) {
+      margin-right: calc(var(--io-item-height) + var(--io-spacing));
+    }
+    :host:not([expanded]) > .io-frame {
+      margin-right: calc(var(--io-item-height) + calc(3 * var(--io-spacing)));
+    }
     </style>`;
   }
   static get Properties() {

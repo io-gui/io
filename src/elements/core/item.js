@@ -5,57 +5,32 @@ import {IoElement, html} from "../../io.js";
 export class IoItem extends IoElement {
   static get Style() {
     return html`<style>
-      --io-item: {
-        align-self: flex-start;
-        display: inline-block;
-        cursor: pointer;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        box-sizing: border-box;
-        line-height: var(--io-line-height);
-        height: var(--io-item-height);
-        font-size: var(--io-font-size);
-        border-radius: var(--io-border-radius);
-        border: var(--io-border);
-        border-color: transparent;
-        color: var(--io-color);
-        background-color: transparent;
-        background-image: none;
-        padding: var(--io-spacing);
-        transition: background-color 0.25s;
-      }
-      :host {
-        @apply --io-item;
-      }
-      :host[pressed] {
-        border-color: var(--io-color-border-inset);
-        box-shadow: var(--io-shadow-inset);
-      }
-      :host[hidden] {
-        display: none;
-      }
-      :host[selected] {
-        color: var(--io-color-link);
-        background-color: var(--io-background-color-light);
-      }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
-      }
-      :host:hover {
-        background-color: var(--io-background-color-light);
-      }
-      :host:focus {
-        text-overflow: inherit;
-        border-color: var(--io-color-focus);
-        outline-color: var(--io-color-focus);
-      }
+    :host {
+      @apply --io-item;
+    }
+    :host[pressed] {
+      border-color: var(--io-color-border-inset);
+      box-shadow: var(--io-shadow-inset);
+    }
+    :host[hidden] {
+      display: none;
+    }
+    :host[selected] {
+      color: var(--io-color-link);
+      background-color: var(--io-background-color-light);
+    }
+    :host[aria-invalid] {
+      border: var(--io-border-error);
+      background-image: var(--io-gradient-error);
+    }
+    :host:hover {
+      background-color: var(--io-background-color-light);
+    }
+    :host:focus {
+      text-overflow: inherit;
+      border-color: var(--io-color-focus);
+      outline-color: var(--io-color-focus);
+    }
     </style>`;
   }
   static get Properties() {

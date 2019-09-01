@@ -3,42 +3,42 @@ import {html, Binding, IoElement} from "../../io.js";
 export class IoProperties extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        display: grid;
-        grid-gap: var(--io-spacing);
-        justify-self: stretch;
-        justify-items: start;
-        white-space: nowrap;
-      }
-      :host:not([horizontal]) {
-        grid-template-columns: auto;
-      }
-      :host[horizontal] {
-        grid-auto-flow: column;
-        grid-template-rows: auto;
-      }
-      :host:not([horizontal])[labeled] {
-        grid-template-columns: auto 1fr;
-      }
-      :host[horizontal][labeled] {
-        grid-template-rows: auto auto;
-      }
-      :host > io-object {}
-      :host > io-object {
-        padding: 0;
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
-        border-color: transparent;
-        background-color: transparent;
-        background-image: none;
-      }
-      :host > io-object,
-      :host > io-properties,
-      :host > io-number,
-      :host > io-string {
-        width: auto;
-        justify-self: stretch;
-      }
+    :host {
+      display: grid;
+      grid-gap: var(--io-spacing);
+      justify-self: stretch;
+      justify-items: start;
+      white-space: nowrap;
+    }
+    :host:not([horizontal]) {
+      grid-template-columns: auto;
+    }
+    :host[horizontal] {
+      grid-auto-flow: column;
+      grid-template-rows: auto;
+    }
+    :host:not([horizontal])[labeled] {
+      grid-template-columns: auto 1fr;
+    }
+    :host[horizontal][labeled] {
+      grid-template-rows: auto auto;
+    }
+    :host > io-object {}
+    :host > io-object {
+      padding: 0;
+      border: var(--io-border);
+      border-radius: var(--io-border-radius);
+      border-color: transparent;
+      background-color: transparent;
+      background-image: none;
+    }
+    :host > io-object,
+    :host > io-properties,
+    :host > io-number,
+    :host > io-string {
+      width: auto;
+      justify-self: stretch;
+    }
     </style>`;
   }
   static get Properties() {

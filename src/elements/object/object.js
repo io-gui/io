@@ -4,6 +4,9 @@ import "./properties.js";
 export class IoObject extends IoElement {
   static get Style() {
     return html`<style>
+    :host {
+      @apply --io-panel;
+    }
     :host > io-boolean {
       text-align: left;
       align-self: stretch;

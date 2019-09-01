@@ -7,55 +7,56 @@ const rects = new WeakMap();
 export class IoMenuOptions extends IoElement {
   static get Style() {
     return html`<style>
-      :host {
-        align-self: flex-start;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        white-space: nowrap;
-        user-select: none;
-        background-image: none;
-        padding: 0;
-      }
-      :host > * {
-        align-self: stretch !important;
-      }
-      :host:not([horizontal]) {
-        padding: var(--io-spacing) 0;
-      }
-      :host[inlayer]:not([expanded]) {
-        visibility: hidden;
-      }
-      :host[horizontal] {
-        flex-direction: row;
-        align-self: stretch;
-        justify-self: stretch;
-        flex-wrap: nowrap;
-      }
-      :host[horizontal] > * {
-        border-left-width: 0;
-        border-right-width: 0;
-        padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
-      }
-      :host:not([horizontal]) > io-menu-item > * {
-        min-width: 0.5em;
-        padding: 0 var(--io-spacing);
-      }
-      :host[horizontal] > io-menu-item > .io-menu-hint,
-      :host[horizontal] > io-menu-item > .io-menu-more {
-        display: none;
-      }
-      :host[horizontal] > io-menu-item.io-hamburger {
-        margin-left: auto;
-      }
-      :host[horizontal] > io-menu-item.io-hamburger[hidden] {
-        display: inline-block;
-        width: 0;
-        padding: 0;
-        border: 0;
-        overflow: hidden;
-        visibility: hidden;
-      }
+    :host {
+      @apply --io-panel;
+      align-self: flex-start;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      white-space: nowrap;
+      user-select: none;
+      background-image: none;
+      padding: 0;
+    }
+    :host > * {
+      align-self: stretch !important;
+    }
+    :host:not([horizontal]) {
+      padding: var(--io-spacing) 0;
+    }
+    :host[inlayer]:not([expanded]) {
+      visibility: hidden;
+    }
+    :host[horizontal] {
+      flex-direction: row;
+      align-self: stretch;
+      justify-self: stretch;
+      flex-wrap: nowrap;
+    }
+    :host[horizontal] > * {
+      border-left-width: 0;
+      border-right-width: 0;
+      padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
+    }
+    :host:not([horizontal]) > io-menu-item > * {
+      min-width: 0.5em;
+      padding: 0 var(--io-spacing);
+    }
+    :host[horizontal] > io-menu-item > .io-menu-hint,
+    :host[horizontal] > io-menu-item > .io-menu-more {
+      display: none;
+    }
+    :host[horizontal] > io-menu-item.io-hamburger {
+      margin-left: auto;
+    }
+    :host[horizontal] > io-menu-item.io-hamburger[hidden] {
+      display: inline-block;
+      width: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
     </style>`;
   }
   static get Properties() {

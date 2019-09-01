@@ -3,17 +3,20 @@ import {html, IoElement} from "../../io.js";
 export class IoCollapsable extends IoElement {
   static get Style() {
     return html`<style>
-      :host > io-boolean {
-        text-align: left;
-        align-self: stretch;
-        width: auto;
-      }
-      :host > io-boolean[value] {
-        margin-bottom: var(--io-spacing);
-      }
-      :host:not([expanded]) > .io-frame {
-        display: none;
-      }
+    :host {
+      @apply --io-panel;
+    }
+    :host > io-boolean {
+      text-align: left;
+      align-self: stretch;
+      width: auto;
+    }
+    :host > io-boolean[value] {
+      margin-bottom: var(--io-spacing);
+    }
+    :host:not([expanded]) > .io-frame {
+      display: none;
+    }
     </style>`;
   }
   static get Properties() {
