@@ -91,15 +91,17 @@ export class Properties {
     let oldValue = this[prop].value;
     if (value !== oldValue) {
 
+      const node = this.node;
+
       let oldBinding = this[prop].binding;
 
       let binding = (value instanceof Binding) ? value : null;
 
       if (binding && oldBinding && binding !== oldBinding) {
-        oldBinding.removeTarget(this.node, prop); // TODO: test extensively
+        oldBinding.removeTarget(node, prop); // TODO: test extensively
       }
       if (binding) {
-        binding.addTarget(this.node, prop);
+        binding.addTarget(node, prop);
         this[prop].binding = binding;
         this[prop].value = value.source[value.sourceProp];
         value = value.source[value.sourceProp];
@@ -108,20 +110,20 @@ export class Properties {
       }
 
       if (value && value.isIoNode) {
-        value.connect(this.node);
+        value.connect(node);
       }
 
       if (oldValue && oldValue.isIoNode) {
-        oldValue.disconnect(this.node);
+        oldValue.disconnect(node);
       }
 
       if (this[prop].notify && oldValue !== this[prop].value) {
-        this.node.queue(prop, this[prop].value, oldValue);
-        if (this.node.__connected && !suspendDispatch) {
-          this.node.queueDispatch();
+        node.queue(prop, this[prop].value, oldValue);
+        if (node.__connected && !suspendDispatch) {
+          node.queueDispatch();
         }
       }
-      if (this[prop].reflect >= 1) this.node.setAttribute(prop, value);
+      if (this[prop].reflect >= 1) node.setAttribute(prop, value);
     }
 
   }
