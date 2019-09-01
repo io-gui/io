@@ -242,7 +242,6 @@ export class IoMenuItem extends IoItem {
   }
   _getHoveredItem(event) {
     const items = getElementDescendants(getRootElement(this));
-    let hoveredItem;
     for (let i = items.length; i--;) {
       if (isPointerAboveElement(event, items[i])) {
         return items[i];

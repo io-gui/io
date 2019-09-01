@@ -110,7 +110,7 @@ export class IoContextMenu extends IoElement {
   _onClick(event) {
     if (event.button === this.button && event.button !== 2) this.expand(event);
   }
-  expand(event) {
+  expand() {
     if (!this.expanded && this.options.length) {
       this.expanded = true;
     }
