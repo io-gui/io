@@ -255,7 +255,6 @@ export class IoMenuItem extends IoItem {
     }
     IoLayerSingleton.x = event.clientX;
     IoLayerSingleton.y = event.clientY;
-    // TODO: consider horizontal menus
     clearTimeout(this.__timeoutOpen);
     hoveredItem = this._getHoveredItem(event);
     if (hoveredItem) {

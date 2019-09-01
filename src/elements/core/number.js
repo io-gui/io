@@ -64,30 +64,25 @@ export class IoNumber extends IoItem {
     Object.defineProperty(this, '_pointerType', {value: 'touch', writable: true});
   }
   _onPointerdown(event) {
+    if (this._pointerType === 'touch') event.preventDefault();
+    this.addEventListener('pointermove', this._onPointermove);
+    this.addEventListener('pointerup', this._onPointerup);
     if (document.activeElement === this && event.button === 0) return;
-    super._onPointerdown(event);
     this._pointerType = event.pointerType;
   }
   _onPointerup(event) {
-    this.pressed = false;
     this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerleave', this._onPointerleave);
     this.removeEventListener('pointerup', this._onPointerup);
-    if (document.activeElement === this && event.button === 0) return;
     if (this.ladder || event.button === 1) {
       if (this._pointerType === 'touch') {
         event.preventDefault();
         document.activeElement.blur();
-        this._expandLadder();
       } else {
-        this.focus();
-        // TODO: unhack race condition
-        setTimeout(() => {
-          this._expandLadder();
-        });
+        if (document.activeElement !== this) this.focus();
       }
+      this._expandLadder();
     } else {
-      this.focus();
+      if (document.activeElement !== this) this.focus();
     }
   }
   _onFocus(event) {
