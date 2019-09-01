@@ -172,7 +172,8 @@ class IoLadder extends IoElement {
       transition: opacity 0.2s;
       opacity: 1;
     }
-    :host > span.hidden {
+    :host > span {
+      height: calc(1.5 * var(--io-item-height));
       visibility: hidden;
     }
     </style>`;
@@ -237,7 +238,7 @@ class IoLadder extends IoElement {
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
         this.style.position = 'absolute';
-        this.style.marginTop = 'calc(-5 * var(--io-item-height))';
+        this.style.marginTop = 'calc(-5.25 * var(--io-item-height))';
       } else {
         this.removeAttribute('style');
       }
@@ -252,7 +253,7 @@ class IoLadder extends IoElement {
   }
   changed() {
     const range = this.max - this.min;
-    const hiddenItem = ['span', {class: 'io-item hidden'}];
+    const hiddenItem = ['span'];
 
     // TODO: unhack
     let step = this.step / 10000;

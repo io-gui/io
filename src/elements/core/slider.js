@@ -19,9 +19,6 @@ export class IoSlider extends IoGl {
     :host[horizontal] {
       cursor: ew-resize;
     }
-    :host[orientation="2d"] {
-      cursor: move;
-    }
     :host[aria-invalid] {
       border: var(--io-border-error);
       background-image: var(--io-gradient-error);
