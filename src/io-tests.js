@@ -7,7 +7,7 @@ import Node from "./core/node.test.js";
 import Element from "./core/element.test.js";
 
 import Item from "./elements/core/item.test.js";
-import Content from "./elements/core/content.test.js";
+// import Content from "./elements/core/content.test.js";
 import Gl from "./elements/core/gl.test.js";
 import Button from "./elements/core/button.test.js";
 import Boolean from "./elements/core/boolean.test.js";
@@ -23,11 +23,11 @@ import Layer from "./elements/core/layer.test.js";
 import Ladder from "./elements/core/ladder.test.js";
 import Theme from "./elements/core/theme.test.js";
 
-import Collapsable from "./elements/layout/collapsable.test.js";
-import Properties from "./elements/object/properties.test.js";
-import Object from "./elements/object/object.test.js";
-import Inspector from "./elements/object/inspector.test.js";
-import OptionMenu from "./elements/menus/option-menu.test.js";
+// import Collapsable from "./elements/layout/collapsable.test.js";
+// import Properties from "./elements/object/properties.test.js";
+// import Object from "./elements/object/object.test.js";
+// import Inspector from "./elements/object/inspector.test.js";
+// import OptionMenu from "./elements/menus/option-menu.test.js";
 
 mocha.setup('bdd');
 
