@@ -251,6 +251,12 @@ export const IoNodeMixin = (superclass) => {
       * Dispatches the queue.
       */
     queueDispatch() {
+      // preDebounceQueue.push(this._queueDispatchDebounced);
+      // this.debounce(this._queueDispatchDebounced);
+      // this.requestAnimationFrameOnce(this._queueDispatchDebounced);
+      this.__nodeQueue.dispatch();
+    }
+    _queueDispatchDebounced() {
       this.__nodeQueue.dispatch();
     }
     /**
