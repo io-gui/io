@@ -424,6 +424,7 @@ function _initProtoStyle(prototypes) {
 
   if (!finalStyleString) {
 
+    // Convert mixins to classes
     let styleString = prototypes[0].constructor.Style;
     if (styleString) {
       const mixins = styleString.match(mixinRegex);
@@ -440,12 +441,12 @@ function _initProtoStyle(prototypes) {
 
     for (let i = prototypes.length; i--;) {
       let styleString = prototypes[i].constructor.Style;
-      const classLocalName = prototypes[i].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
       if (styleString) {
 
         // Remove mixins
         styleString = styleString.replace(mixinRegex, '');
 
+        // Apply mixins
         const apply = styleString.match(applyRegex);
         if (apply) {
           for (let i = 0; i < apply.length; i++) {

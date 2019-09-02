@@ -253,7 +253,6 @@ export const IoNodeMixin = (superclass) => {
       */
     queueDispatch() {
       if (this.lazy) {
-        // this.requestAnimationFrameOnce(this._queueDispatchLazy);
         preDebounceQueue.push(this._queueDispatchLazy);
         this.debounce(this._queueDispatchLazy);
       } else {
