@@ -121,18 +121,6 @@ export class IoMenuItem extends IoItem {
     event.stopPropagation();
     event.preventDefault();
   }
-  optionChanged() {
-    if (this._options) {
-      if (this.$options) IoLayerSingleton.removeChild(this.$options);
-      this.$options = new IoMenuOptions({
-        $parent: this,
-        expanded: this.bind('expanded'),
-        'on-item-clicked': this._onOptionItemClicked,
-        'on-expanded-changed': IoLayerSingleton.onChildExpanded,
-      });
-      IoLayerSingleton.appendChild(this.$options);
-    }
-  }
   get _options() {
     if (this.option && this.option.options && this.option.options.length) {
       return this.option.options;
@@ -359,8 +347,23 @@ export class IoMenuItem extends IoItem {
       this.dispatchEvent('item-clicked', event.detail, true);
     }
   }
+  optionChanged() {
+    if (this._options) {
+      if (!this.$options) {
+        this.$options = new IoMenuOptions({
+          $parent: this,
+          expanded: this.bind('expanded'),
+          'on-item-clicked': this._onOptionItemClicked,
+          'on-expanded-changed': IoLayerSingleton.onChildExpanded,
+        });
+      }
+    }
+  }
   expandedChanged() {
     if (this.expanded) {
+      if (this.$options && this.$options.parentElement !== IoLayerSingleton) {
+        IoLayerSingleton.appendChild(this.$options);
+      }
       const items = getElementDescendants(getRootElement(this));
       const ancestors = getElementAncestors(this);
       for (let i = items.length; i--;) {
@@ -390,7 +393,6 @@ export class IoMenuItem extends IoItem {
       ['span', {class: 'io-menu-label'}, this._label || String(this._value)],
       ['span', {class: 'io-menu-hint'}, this._hint],
     ]);
-    // TODO: consider optimizing-out on leaf item elements
     if (this.$options) {
       this.$options.setProperties({
         value: this.value,
