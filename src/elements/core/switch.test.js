@@ -1,26 +1,16 @@
-import {IoBoolicon, IoIconsetSingleton} from "../../../io-core.js";
+import {IoSwitch} from "../../io-core.js";
 
 export default class {
   constructor() {
-    this.element = new IoBoolicon();
+    this.element = new IoSwitch();
     this.element.style.display = 'none';
     document.body.appendChild(this.element);
   }
   run() {
-    describe('IoBoolicon', () => {
+    describe('IoSwitch', () => {
       describe('default values', () => {
         it('has default values', () => {
           chai.expect(this.element.value).to.equal(false);
-          chai.expect(this.element.true).to.equal('icons:check');
-          chai.expect(this.element.false).to.equal('icons:uncheck');
-        });
-      });
-      describe('innerText', () => {
-        it('matches value', () => {
-          chai.expect(this.element.innerHTML).to.equal(IoIconsetSingleton.getIcon(this.element.false));
-          this.element.value = true;
-          chai.expect(this.element.innerHTML).to.equal(IoIconsetSingleton.getIcon(this.element.true));
-          this.element.value = false;
         });
       });
       describe('attributes', () => {

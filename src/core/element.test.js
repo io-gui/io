@@ -1,6 +1,6 @@
-import {IoElement} from "../../io.js";
+import {IoElement} from "../io.js";
 
-import {TestNode} from "./node.js";
+import {TestNode} from "./node.test.js";
 
 export class TestElement extends IoElement {
   static get Properties() {

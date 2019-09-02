@@ -1,4 +1,4 @@
-import {IoObject} from "../../../io-object.js";
+import {IoObject} from "../../io-object.js";
 
 const testValue = {
   "number": 0.5,

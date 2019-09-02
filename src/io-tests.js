@@ -3,30 +3,31 @@ import {IoElement} from "./io.js";
 import "../lib/mocha.js";
 import "../lib/chai.js";
 
-import Node from "./tests/core/node.js";
-import Element from "./tests/core/element.js";
+import Node from "./core/node.test.js";
+import Element from "./core/element.test.js";
 
-import Item from "./tests/elements/core/item.js";
-import Gl from "./tests/elements/core/gl.js";
-import Button from "./tests/elements/core/button.js";
-import Boolean from "./tests/elements/core/boolean.js";
-import Boolicon from "./tests/elements/core/boolicon.js";
-import Switch from "./tests/elements/core/switch.js";
-import Sting from "./tests/elements/core/string.js";
-import Number from "./tests/elements/core/number.js";
-import Slider from "./tests/elements/core/slider.js";
-import NumberSlider from "./tests/elements/core/number-slider.js";
-import Icon from "./tests/elements/core/icon.js";
-import IconSet from "./tests/elements/core/iconset.js";
-import Layer from "./tests/elements/core/layer.js";
-import Ladder from "./tests/elements/core/ladder.js";
-import Theme from "./tests/elements/core/theme.js";
+import Item from "./elements/core/item.test.js";
+import Content from "./elements/core/content.test.js";
+import Gl from "./elements/core/gl.test.js";
+import Button from "./elements/core/button.test.js";
+import Boolean from "./elements/core/boolean.test.js";
+import Boolicon from "./elements/core/boolicon.test.js";
+import Switch from "./elements/core/switch.test.js";
+import Sting from "./elements/core/string.test.js";
+import Number from "./elements/core/number.test.js";
+import Slider from "./elements/core/slider.test.js";
+import NumberSlider from "./elements/core/number-slider.test.js";
+import Icon from "./elements/core/icon.test.js";
+import IconSet from "./elements/core/iconset.test.js";
+import Layer from "./elements/core/layer.test.js";
+import Ladder from "./elements/core/ladder.test.js";
+import Theme from "./elements/core/theme.test.js";
 
-// import Option from "./elements/core/option.js";
-// import Collapsable from "./elements/core/collapsable.js";
-// import Properties from "./elements/core/properties.js";
-// import Object from "./elements/core/object.js";
-// import Inspector from "./elements/core/inspector.js";
+import Collapsable from "./elements/layout/collapsable.test.js";
+import Properties from "./elements/object/properties.test.js";
+import Object from "./elements/object/object.test.js";
+import Inspector from "./elements/object/inspector.test.js";
+import OptionMenu from "./elements/menus/option-menu.test.js";
 
 mocha.setup('bdd');
 
@@ -43,6 +44,7 @@ function runTests() {
     new Element().run();
 
     new Item().run();
+    // TODO: new Content().run();
     new Gl().run();
     new Button().run();
     new Boolean().run();
@@ -59,11 +61,13 @@ function runTests() {
     new Ladder().run();
     new Theme().run();
 
-    // new Option().run();
+    // TODO
+    // new OptionMenu().run();
     // new Collapsable().run();
     // new Properties().run();
     // new Object().run();
     // new Inspector().run();
+
     mocha.checkLeaks();
     mocha.run();
     testCompleted = true;
