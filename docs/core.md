@@ -73,7 +73,7 @@ Input element for `String` data type.
 
 Extends `IoItem`.
 
-Input element for `Number` data type. It clamps the `value` to `min`/`max` and rounds it to the nearest `step` increment. If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped. Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
+Input element for `Number` data type. It clamps the `value` to `min` / `max` and rounds it to the nearest `step` increment. If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped. Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
 
 <io-element-demo element="io-number" width="5em" properties='{"value": "demo:leet", "conversion": 1, "step": 0.1, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
 
@@ -88,7 +88,7 @@ Value can be displayed using `conversion` factor. For example, conversion factor
 Extends `IoGl`.
 
 Input element for `Number` data type displayed as slider.
-It can be configured to clamp the `value` to `min`/`max` and round it to the nearest `step` increment.
+It can be configured to clamp the `value` to `min` / `max` and round it to the nearest `step` increment.
 Keys left/right/up/down+shift and pageup/pagedown change the value in step incements. Home/end keys set the value to min/max.
 
 <io-element-demo element="io-slider" properties='{"value": "demo:number", "step": 0.01, "min": -0.5, "max": 0.5}'></io-element-demo>

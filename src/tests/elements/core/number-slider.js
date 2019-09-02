@@ -5,6 +5,7 @@ export default class {
     this.element = new IoNumberSlider();
     this.element.style.display = 'none';
     document.body.appendChild(this.element);
+    this.element.$.slider.lazy = false;
   }
   reset() {
     this.element.value = 0;

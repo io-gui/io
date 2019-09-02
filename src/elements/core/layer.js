@@ -213,6 +213,9 @@ class IoLayer extends IoElement {
   setElementPosition(element, direction, srcRect) {
     const elemRect = element.getBoundingClientRect();
     switch (direction) {
+      case 'pointer':
+        this.nudgePointer(element, this.x, this.y, elemRect);
+        break;
       case 'top':
         this.nudgeUp(element, srcRect.x, srcRect.top, elemRect) ||
         this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect) ||

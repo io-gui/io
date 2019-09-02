@@ -219,6 +219,9 @@ export class IoMenuItem extends IoItem {
     }
     hoveredItem = this;
     hoveredParent = this.parentElement;
+    // TODO: Safari temp fix for event.movement = 0
+    this._x = event.clientX;
+    this._y = event.clientY;
   }
   _getHoveredItem(event) {
     const items = getElementDescendants(getRootElement(this));
@@ -232,13 +235,19 @@ export class IoMenuItem extends IoItem {
     if (!this.expanded && event.pointerType === 'touch' && !this._inLayer) {
       return;
     }
+    // TODO: Safari temp fix for event.movement = 0
+    const movementX = event.clientX - this._x;
+    const movementY = event.clientY - this._y;
+    this._x = event.clientX;
+    this._y = event.clientY;
+
     IoLayerSingleton.x = event.clientX;
     IoLayerSingleton.y = event.clientY;
     clearTimeout(this.__timeoutOpen);
     hoveredItem = this._getHoveredItem(event);
     if (hoveredItem) {
-      const v = Math.abs(event.movementY) - Math.abs(event.movementX);
-      const h = hoveredParent.horizontal;
+      const v = Math.abs(movementY) - Math.abs(movementX);
+      const h = hoveredItem.parentElement.horizontal;
       if (hoveredParent !== hoveredItem.parentElement) {
         hoveredParent = hoveredItem.parentElement;
         this._expandHovered();
@@ -252,12 +261,14 @@ export class IoMenuItem extends IoItem {
     }
   }
   _expandHovered() {
-    hoveredItem.focus();
-    if (hoveredItem._options) {
-      hoveredItem.expanded = true;
-      const descendants = getElementDescendants(hoveredItem.$options);
-      for (let i = descendants.length; i--;) {
-        descendants[i].expanded = false;
+    if (hoveredItem) {
+      hoveredItem.focus();
+      if (hoveredItem._options) {
+        hoveredItem.expanded = true;
+        const descendants = getElementDescendants(hoveredItem.$options);
+        for (let i = descendants.length; i--;) {
+          descendants[i].expanded = false;
+        }
       }
     }
   }

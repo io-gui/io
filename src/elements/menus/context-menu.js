@@ -72,6 +72,8 @@ export class IoContextMenu extends IoElement {
     }
   }
   _onPointerdown(event) {
+    IoLayerSingleton.x = event.clientX;
+    IoLayerSingleton.y = event.clientY;
     this._parent.setPointerCapture(event.pointerId);
     this._parent.addEventListener('pointermove', this._onPointermove);
     this._parent.addEventListener('pointerup', this._onPointerup);
