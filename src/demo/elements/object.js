@@ -35,9 +35,6 @@ export class IoDemoObject extends IoElement {
       number: 0.0,
       string: 'hello',
       boolean: true,
-      null: null,
-      NaN: NaN,
-      undefined: undefined,
     };
   }
   changed() {

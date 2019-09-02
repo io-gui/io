@@ -108,9 +108,9 @@ export class IoMenuOptions extends IoElement {
     }
   }
   onResized() {
-    this.setOverflow();
+    this.requestAnimationFrameOnce(this._setOverflow);
   }
-  setOverflow() {
+  _setOverflow() {
     const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
     if (this.horizontal) {
       const hamburger = this.querySelector('.io-hamburger');
@@ -162,20 +162,14 @@ export class IoMenuOptions extends IoElement {
   expandedChanged() {
     if (this.parentElement === IoLayerSingleton) {
       if (this.expanded && this.$parent) {
-        let rect = this.getBoundingClientRect();
-        let pRect = this.$parent.getBoundingClientRect();
-        const x = IoLayerSingleton._x;
-        const y = IoLayerSingleton._y;
-        switch (this.position) {
-          case 'pointer':
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
-            break;
-          default:
-            IoLayerSingleton.setElementPosition(this, this.position, pRect);
-            break;
-        }
+        // TODO: unhack incorrect this.rect on first expand.
+        requestAnimationFrame(this._expandedChangedLazy);
       }
     }
+  }
+  _expandedChangedLazy() {
+    let pRect = this.$parent.getBoundingClientRect();
+    IoLayerSingleton.setElementPosition(this, this.position, pRect);
   }
   changed() {
     const itemDirection = this.horizontal ? 'bottom' : 'right';
@@ -202,8 +196,7 @@ export class IoMenuOptions extends IoElement {
       }]);
     }
     this.template(elements);
-    this.setOverflow();
-    this.setOverflow(); // TODO: unhack
+    this.requestAnimationFrameOnce(this._setOverflow);
   }
 }
 

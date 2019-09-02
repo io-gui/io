@@ -172,17 +172,19 @@ class IoLayer extends IoElement {
     this.expanded = false;
   }
   nudgeDown(element, x, y, elemRect, force) {
+    x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
     if (y + elemRect.height < window.innerHeight || force) {
+      element.style.left = x + 'px';
       element.style.top = y + 'px';
-      element.style.left = Math.min(x, Math.max(0, window.innerWidth - elemRect.width)) + 'px';
       return true;
     }
     return false;
   }
   nudgeUp(element, x, y, elemRect, force) {
+    x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
     if (y - elemRect.height > 0 || force) {
+      element.style.left = x + 'px';
       element.style.top = y - elemRect.height + 'px';
-      element.style.left = Math.min(x, Math.max(0, window.innerWidth - elemRect.width)) + 'px';
       return true;
     }
     return false;

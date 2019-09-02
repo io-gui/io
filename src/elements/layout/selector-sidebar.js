@@ -68,8 +68,8 @@ export class IoSelectorSidebar extends IoSelector {
   onResized() {
     this.overflow = this.getBoundingClientRect().width < this.minWidth;
   }
-  leftChanged() { this.renderShadow(); }
-  overflowChanged() { this.renderShadow(); }
+  leftChanged() { this.update(); }
+  overflowChanged() { this.update(); }
   getSlotted() {
     return ['io-sidebar', {
       selected: this.bind('selected'),
