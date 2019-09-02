@@ -26,11 +26,11 @@ const themeDB = {
     cssColorString: [0.95, 0.25, 0.1, 1],
     cssColorBoolean: [0.82, 0.35, 0.75, 1],
     cssColorBorder: [0.7, 0.7, 0.7, 1],
-    cssColorBorderLight: [1, 1, 1, 1],
-    cssColorBorderDark: [0.72, 0.72, 0.72, 1],
+    cssColorBorderLight: [0.85, 0.85, 0.85, 1],
+    cssColorBorderDark: [0.65, 0.65, 0.65, 1],
     cssColorGradientStart: [1, 1, 1, 0.5],
     cssColorGradientEnd: [0, 0, 0, 0.25],
-    cssColorShadow: [0, 0, 0, 0.2],
+    cssColorShadow: [0, 0, 0, 0.1],
   }, themeSizes),
   dark: Object.assign({
     cssBackgroundColor: [0.164, 0.164, 0.164, 1],
@@ -50,7 +50,7 @@ const themeDB = {
     cssColorBorderDark: [0.1, 0.1, 0.1, 1],
     cssColorGradientStart: [1, 1, 1, 0.1],
     cssColorGradientEnd: [0, 0, 0, 0.2],
-    cssColorShadow: [0, 0, 0, 0.2],
+    cssColorShadow: [0, 0, 0, 0.1],
   }, themeSizes),
 };
 

@@ -6,28 +6,33 @@ export class IoSwitch extends IoBoolean {
     return html`<style>
     :host {
       position: relative;
-      border: var(--io-border);
-      border-color: var(--io-color-border-inset);
-      color: var(--io-color-field);
-      background-image: none;
-      background-color: var(--io-background-color-dark);
-      box-shadow: var(--io-shadow-inset);
-      padding: 0;
-      margin: var(--io-spacing);
-      width: calc(2 * var(--io-line-height));
+      width: calc(2 * var(--io-item-height));
+    }
+    :host:before {
+      display: inline-block;
+      box-sizing: border-box;
+      position: absolute;
+      content: '';
+      top: var(--io-spacing);
+      left: 0;
+      width: calc(100% - calc(2 * var(--io-border-width)));
       height: var(--io-line-height);
       border-radius: var(--io-line-height);
+      border: var(--io-border);
+      border-color: var(--io-color-border-inset);
+      background-color: var(--io-background-color-dark);
+      box-shadow: var(--io-shadow-inset);
       transition: background-color 0.4s;
     }
     :host:after {
       display: inline-block;
+      box-sizing: border-box;
       position: absolute;
-      visibility: visible;
       content: '';
-      top: 0;
-      left: 0;
-      height: calc(var(--io-line-height) - calc(4 * var(--io-border-width)));
-      width: calc(var(--io-line-height) - calc(4 * var(--io-border-width)));
+      top: calc(var(--io-border-width) + var(--io-spacing));
+      left: var(--io-border-width);
+      height: calc(var(--io-line-height) - calc(2 * var(--io-border-width)));
+      width: calc(var(--io-line-height) - calc(2 * var(--io-border-width)));
       background-color: var(--io-background-color-dark);
       border: var(--io-border);
       border-color: var(--io-color-border-outset);
@@ -37,7 +42,7 @@ export class IoSwitch extends IoBoolean {
     }
     :host[value]:after {
       background-color: rgba(80, 210, 355, 0.75);
-      left: calc(calc(100% - var(--io-line-height)) + calc(2 * var(--io-border-width)));
+      left: calc(calc(100% - var(--io-line-height)) - var(--io-border-width));
     }
     :host:not([value]) {
       opacity: 0.5;
@@ -46,12 +51,15 @@ export class IoSwitch extends IoBoolean {
       border: var(--io-border-error);
       background-image: var(--io-gradient-error);
     }
-    :host:hover,
-    :host[display="switch"][value]:not([aria-invalid]) {
+    :host:hover:before,
+    :host[display="switch"][value]:not([aria-invalid]):before {
       background-color: var(--io-background-color);
     }
-    :host:focus {
+    :host:focus:before,
+    :host:focus:after {
       border-color: var(--io-color-focus);
+    }
+    :host:focus {
       outline-color: var(--io-color-focus);
     }
     </style>`;
