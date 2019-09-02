@@ -53,10 +53,10 @@ export class IoSidebar extends IoElement {
     };
   }
   _onSelect(id) {
-    this.set('selected', id.toLowerCase());
+    this.set('selected', id);
   }
   _onValueSet(event) {
-    this.set('selected', event.detail.value.toLowerCase());
+    this.set('selected', event.detail.value);
   }
   _addOptions(options) {
     const elements = [];
@@ -64,16 +64,14 @@ export class IoSidebar extends IoElement {
       const option = options[i];
       if (option.options) {
         const UID = option.label + ' ' + i + '/' + options.length + ' (' + option.options.length + ')';
-        let selectedOption = this.filterObject(option.options, option => {
-          return String(option.value).toLowerCase() === this.selected;
-        });
+        let selectedOption = this.filterObject(option.options, option => matches(this.selected, option));
         elements.push(['io-collapsable', {
           label: option.label,
           expanded: !!selectedOption || $({value: false, storage: 'local', key: 'io-sidebar-collapse ' + UID}),
           elements: [...this._addOptions(option.options)]
         }]);
       } else {
-        const selected = this.selected && (this.selected === String(option).toLowerCase() || this.selected === String(option.value).toLowerCase());
+        const selected = matches(this.selected, option);
         elements.push(['io-button', {
           label: option.label || option.value || option,
           value: option.value || option,
@@ -85,11 +83,9 @@ export class IoSidebar extends IoElement {
     return elements;
   }
   changed() {
-    let selectedOption = this.filterObject(this.options, option => {
-      return String(option.value).toLowerCase() === this.selected;
-    });
+    let selectedOption = this.filterObject(this.options, option => matches(this.selected, option));
     if (this.overflow) {
-      const label = selectedOption ? (selectedOption.label || String(selectedOption.value).toLowerCase()) : String(this.selected).split('#')[0];
+      const label = selectedOption ? (selectedOption.label || String(selectedOption.value)) : String(this.selected).split('#')[0];
       this.template([['io-option-menu', {
         label: '☰  ' + label,
         title: 'select tab',
@@ -106,3 +102,9 @@ export class IoSidebar extends IoElement {
 }
 
 IoSidebar.Register();
+
+function matches(selected, option) {
+  if (selected === undefined) return false;
+  if (typeof option === 'object') option = option.value;
+  return String(selected).toLowerCase() === String(option).toLowerCase();
+}

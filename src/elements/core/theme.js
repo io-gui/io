@@ -181,6 +181,8 @@ export class IoTheme extends IoElement {
       cssColorGradientStart: vars.cssColorGradientStart,
       cssColorGradientEnd: vars.cssColorGradientEnd,
       cssColorShadow: vars.cssColorShadow,
+      //
+      lazy: true,
     };
   }
   constructor(props) {

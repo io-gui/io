@@ -44,7 +44,7 @@ export class IoDemoMenus extends IoElement {
       'fusce', 'interdum', 'vestibulum', 'nunc', 'velit'];
     const hearts = ["❤️", "💚", "💙"];
     const longOptions = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 1000; i++) {
       const r1 = words[Math.floor(Math.random() * 20)];
       const r2 = words[Math.floor(Math.random() * 20)];
       const r3 = words[Math.floor(Math.random() * 20)];

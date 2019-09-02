@@ -110,6 +110,7 @@ export class IoMenuItem extends IoItem {
       $parent: HTMLElement,
       $options: HTMLElement,
       selectable: false,
+      lazy: true,
     };
   }
   static get Listeners() {
@@ -185,7 +186,9 @@ export class IoMenuItem extends IoItem {
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.$options) IoLayerSingleton.removeChild(this.$options);
+    if (this.$options && this.$options.parentElement === IoLayerSingleton) {
+      IoLayerSingleton.removeChild(this.$options);
+    }
     IoLayerSingleton.removeEventListener('pointermove', this._onLayerPointermove);
   }
   _onClick() {

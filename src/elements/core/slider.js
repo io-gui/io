@@ -44,6 +44,7 @@ export class IoSlider extends IoGl {
       },
       role: 'slider',
       tabindex: 0,
+      lazy: true,
     };
   }
   static get Listeners() {

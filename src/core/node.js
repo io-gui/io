@@ -29,6 +29,7 @@ export const IoNodeMixin = (superclass) => {
           type: Object,
           notify: false,
         },
+        lazy: Boolean,
       };
     }
     /**
@@ -251,12 +252,15 @@ export const IoNodeMixin = (superclass) => {
       * Dispatches the queue.
       */
     queueDispatch() {
-      // preDebounceQueue.push(this._queueDispatchDebounced);
-      // this.debounce(this._queueDispatchDebounced);
-      // this.requestAnimationFrameOnce(this._queueDispatchDebounced);
-      this.__nodeQueue.dispatch();
+      if (this.lazy) {
+        // this.requestAnimationFrameOnce(this._queueDispatchLazy);
+        preDebounceQueue.push(this._queueDispatchLazy);
+        this.debounce(this._queueDispatchLazy);
+      } else {
+        this.__nodeQueue.dispatch();
+      }
     }
-    _queueDispatchDebounced() {
+    _queueDispatchLazy() {
       this.__nodeQueue.dispatch();
     }
     /**

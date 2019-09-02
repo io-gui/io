@@ -92,7 +92,7 @@ export class IoSelector extends IoElement {
   scrollTo(id, smooth) {
     if (!id) return;
     setTimeout(()=>{
-      const elem = this.$.content.querySelector('#' + id);
+      const elem = this.$.content.querySelector('#' + id.toLowerCase());
       if (elem) elem.scrollIntoView({behavior: smooth ? 'smooth' : 'auto'});
     }, 100); // TODO: unhack!
   }
