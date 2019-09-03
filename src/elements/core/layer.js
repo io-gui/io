@@ -44,7 +44,6 @@ class IoLayer extends IoElement {
       position: absolute;
       pointer-events: all;
       touch-action: none;
-      box-shadow: var(--io-shadow);
     }
     :host > *:not([expanded]) {
       visibility: hidden;

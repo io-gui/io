@@ -20,6 +20,7 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
     :host > io-color-swatch {
       border: 0;
       flex: 1 1 auto;
+      align-self: stretch;
       min-width: 0;
       min-height: 0;
       border-radius: 0;

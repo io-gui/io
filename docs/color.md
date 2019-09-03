@@ -37,7 +37,7 @@ A singleton instance of `IoColorPanel` floating inside `IoLayerSingleton`. It is
 
 ## `IoColorSwatch`
 
-Extends `IoColorMixin(IoElement)`.
+Extends `IoColorMixin(IoGl)`.
 
 Display element for color.
 
@@ -48,7 +48,7 @@ config='{"value": ["io-properties"]}
 
 ## `IoColorPicker`
 
-Extends `IoColorMixin(IoElement)`.
+Extends `IoColorMixin(IoItem)`.
 
 Implements `IoColorSwatch`, `IoColorPanelSingleton` and `IoLayerSingleton`.
 

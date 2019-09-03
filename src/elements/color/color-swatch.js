@@ -7,6 +7,7 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
     return html`<style>
     :host {
       box-sizing: border-box;
+      align-self: flex-start;
       border-radius: var(--io-border-radius);
       border: var(--io-border);
       border-color: var(--io-color-border-inset);

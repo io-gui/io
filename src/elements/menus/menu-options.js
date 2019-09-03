@@ -29,6 +29,9 @@ export class IoMenuOptions extends IoElement {
     :host:not([horizontal]) {
       padding: var(--io-spacing) 0;
     }
+    :host[inlayer] {
+      box-shadow: var(--io-shadow);
+    }
     :host[inlayer]:not([expanded]) {
       visibility: hidden;
       opacity: 0;
