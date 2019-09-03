@@ -56,7 +56,10 @@ export class IoGl extends IoElement {
       size: [0, 0],
       color: [1, 1, 1, 1],
       pxRatio: 1,
-      css: Object,
+      css: {
+        type: Object,
+        observe: true,
+      },
     };
   }
   static get Vert() {
@@ -186,7 +189,6 @@ export class IoGl extends IoElement {
     super(props);
 
     this.css = IoThemeSingleton;
-
 
     // TODO: improve code clarity
     this._vecLengths = {};

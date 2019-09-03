@@ -86,7 +86,6 @@ export class IoMenuOptions extends IoElement {
       slotted: Array,
       $parent: HTMLElement,
       _rects: Array,
-      lazy: true,
       role: 'listbox',
     };
   }
@@ -163,7 +162,7 @@ export class IoMenuOptions extends IoElement {
     if (this.parentElement === IoLayerSingleton) {
       if (this.expanded && this.$parent) {
         // TODO: unhack incorrect this.rect on first expand.
-        requestAnimationFrame(this._expandedChangedLazy);
+        setTimeout(this._expandedChangedLazy);
       }
     }
   }
@@ -180,6 +179,7 @@ export class IoMenuOptions extends IoElement {
           $parent: this,
           option: option,
           value: this.value,
+          lazy: !this.expanded,
           direction: itemDirection,
           selectable: this.selectable,
         }]

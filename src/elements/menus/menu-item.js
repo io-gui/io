@@ -62,9 +62,8 @@ export class IoMenuItem extends IoItem {
       border-radius: 0;
       background: none;
       border: var(--io-border-width) solid transparent;
-    }
-    :host:hover:not([selected]) {
-      background-color: inherit;
+      background-color: transparent;
+      border-color: transparent;
     }
     :host > * {
       overflow: visible;

@@ -163,24 +163,24 @@ export class IoTheme extends IoElement {
       cssLineHeight: vars.cssLineHeight,
       cssItemHeight: vars.cssItemHeight,
       cssFontSize: vars.cssFontSize,
-      cssBackgroundColor: vars.cssBackgroundColor,
-      cssBackgroundColorLight: vars.cssBackgroundColorLight,
-      cssBackgroundColorDark: vars.cssBackgroundColorDark,
-      cssBackgroundColorField: vars.cssBackgroundColorField,
-      cssColor: vars.cssColor,
-      cssColorError: vars.cssColorError,
-      cssColorLink: vars.cssColorLink,
-      cssColorFocus: vars.cssColorFocus,
-      cssColorField: vars.cssColorField,
-      cssColorNumber: vars.cssColorNumber,
-      cssColorString: vars.cssColorString,
-      cssColorBoolean: vars.cssColorBoolean,
-      cssColorBorder: vars.cssColorBorder,
-      cssColorBorderLight: vars.cssColorBorderLight,
-      cssColorBorderDark: vars.cssColorBorderDark,
-      cssColorGradientStart: vars.cssColorGradientStart,
-      cssColorGradientEnd: vars.cssColorGradientEnd,
-      cssColorShadow: vars.cssColorShadow,
+      cssBackgroundColor: {value: vars.cssBackgroundColor, observe: true},
+      cssBackgroundColorLight: {value: vars.cssBackgroundColorLight, observe: true},
+      cssBackgroundColorDark: {value: vars.cssBackgroundColorDark, observe: true},
+      cssBackgroundColorField: {value: vars.cssBackgroundColorField, observe: true},
+      cssColor: {value: vars.cssColor, observe: true},
+      cssColorError: {value: vars.cssColorError, observe: true},
+      cssColorLink: {value: vars.cssColorLink, observe: true},
+      cssColorFocus: {value: vars.cssColorFocus, observe: true},
+      cssColorField: {value: vars.cssColorField, observe: true},
+      cssColorNumber: {value: vars.cssColorNumber, observe: true},
+      cssColorString: {value: vars.cssColorString, observe: true},
+      cssColorBoolean: {value: vars.cssColorBoolean, observe: true},
+      cssColorBorder: {value: vars.cssColorBorder, observe: true},
+      cssColorBorderLight: {value: vars.cssColorBorderLight, observe: true},
+      cssColorBorderDark: {value: vars.cssColorBorderDark, observe: true},
+      cssColorGradientStart: {value: vars.cssColorGradientStart, observe: true},
+      cssColorGradientEnd: {value: vars.cssColorGradientEnd, observe: true},
+      cssColorShadow: {value: vars.cssColorShadow, observe: true},
       //
       lazy: true,
     };
@@ -230,11 +230,8 @@ export class IoTheme extends IoElement {
       cssColorGradientEnd: vars.cssColorGradientEnd,
       cssColorShadow: vars.cssColorShadow,
     });
-    this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
   changed() {
-    // TODO: consider removing (required for gl updates in theme demo)
-    this.dispatchEvent('object-mutated', {object: this}, false, window);
     this.__properties.cssItemHeight.value =
       this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth);
     this.variablesElement.innerHTML = `
@@ -281,6 +278,8 @@ export class IoTheme extends IoElement {
         --io-shadow-outset: -1px -1px 1px inset var(--io-color-shadow);
       }
     `;
+    // TODO: consider removing (required for gl updates in theme demo)
+    this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
 }
 IoTheme.Register();
