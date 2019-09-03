@@ -9,6 +9,7 @@ export class IoMenuOptions extends IoElement {
     return html`<style>
     :host {
       @apply --io-panel;
+      box-sizing: border-box;
       align-self: flex-start;
       display: flex;
       flex-direction: column;
@@ -17,15 +18,20 @@ export class IoMenuOptions extends IoElement {
       user-select: none;
       background-image: none;
       padding: 0;
+      opacity: 1;
+      transition: opacity 0.25s;
+      overflow-y: scroll !important;
     }
     :host > * {
       align-self: stretch !important;
+      flex: 0 0;
     }
     :host:not([horizontal]) {
       padding: var(--io-spacing) 0;
     }
     :host[inlayer]:not([expanded]) {
       visibility: hidden;
+      opacity: 0;
     }
     :host[horizontal] {
       flex-direction: row;
@@ -162,7 +168,7 @@ export class IoMenuOptions extends IoElement {
     if (this.parentElement === IoLayerSingleton) {
       if (this.expanded && this.$parent) {
         // TODO: unhack incorrect this.rect on first expand.
-        setTimeout(this._expandedChangedLazy);
+        this.requestAnimationFrameOnce(this._expandedChangedLazy);
       }
     }
   }

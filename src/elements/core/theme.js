@@ -26,11 +26,11 @@ const themeDB = {
     cssColorString: [0.95, 0.25, 0.1, 1],
     cssColorBoolean: [0.82, 0.35, 0.75, 1],
     cssColorBorder: [0.7, 0.7, 0.7, 1],
-    cssColorBorderLight: [0.85, 0.85, 0.85, 1],
+    cssColorBorderLight: [0.9, 0.9, 0.9, 1],
     cssColorBorderDark: [0.65, 0.65, 0.65, 1],
     cssColorGradientStart: [1, 1, 1, 0.5],
     cssColorGradientEnd: [0, 0, 0, 0.25],
-    cssColorShadow: [0, 0, 0, 0.1],
+    cssColorShadow: [0, 0, 0, 0.3],
   }, themeSizes),
   dark: Object.assign({
     cssBackgroundColor: [0.164, 0.164, 0.164, 1],
@@ -50,7 +50,7 @@ const themeDB = {
     cssColorBorderDark: [0.1, 0.1, 0.1, 1],
     cssColorGradientStart: [1, 1, 1, 0.1],
     cssColorGradientEnd: [0, 0, 0, 0.2],
-    cssColorShadow: [0, 0, 0, 0.1],
+    cssColorShadow: [0, 0, 0, 0.6],
   }, themeSizes),
 };
 
@@ -273,7 +273,8 @@ export class IoTheme extends IoElement {
         --io-gradient-button: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
         --io-gradient-error: repeating-linear-gradient(135deg, transparent, var(--io-color-error) 1px, var(--io-color-error) 4px, transparent 6px);
 
-        --io-shadow: 2px 2px 5px var(--io-color-shadow);
+        --io-shadow: 2px 2px 6px var(--io-color-shadow),
+                     1px 1px 1px var(--io-color-shadow);
         --io-shadow-inset: 1px 1px 1px inset var(--io-color-shadow);
         --io-shadow-outset: -1px -1px 1px inset var(--io-color-shadow);
       }

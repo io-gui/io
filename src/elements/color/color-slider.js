@@ -65,8 +65,8 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   _setMax() {
     this._setValue(1, 1);
   }
-  _onPointermoveDebounced(event) {
-    super._onPointermoveDebounced(event);
+  _onPointermoveThrottled(event) {
+    super._onPointermoveThrottled(event);
     this._notifyValueChange();
   }
   _notifyValueChange() {

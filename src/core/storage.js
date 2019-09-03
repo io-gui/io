@@ -126,6 +126,9 @@ export class IoStorage extends IoNode {
 }
 
 export function IoStorageFactory(props) {
+  if (props && typeof props === 'string') {
+    props = {key: props};
+  }
   if (props && props.key && nodes[props.key]) {
     if (props.storage) nodes[props.key].storage = props.storage;
     if (props.value !== undefined) nodes[props.key].default = props.value;

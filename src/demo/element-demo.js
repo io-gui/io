@@ -1,27 +1,55 @@
 import {html, IoElement, Binding, IoStorageFactory as $} from "../io.js";
 import {IoThemeSingleton} from "../io-core.js";
 
+const suboptions = [];
 const options = [
   {label: "Red", icon: "❤️", options: ["red1", "red2", "red3"]},
   {label: "Green", icon: "💚", options: ["green1", "green2", "green3"]},
   {label: "Blue", icon: "💙", options: ["blue1", "blue2", "blue3"]},
+  {label: "Numbers", options: [
+    {label: 'one', value: 1},
+    {label: 'two', value: 2},
+    {label: 'three', value: 3},
+    {label: 'four', value: 4},
+    {label: 'five', value: 5},
+  ]},
+  {label: "Suboptions", options: suboptions},
 ];
+suboptions.push(...[
+  {label: 'Hearts', options: options},
+  {label: 'suboption one', options: options},
+  {label: 'suboption two', options: options},
+  {label: 'suboption three', options: options},
+]);
 
 const option = {
   "label": "Hearts",
-  "icon": "❤",
+  "icon": "💕",
   "hint": "colors",
   "options": options,
 };
+
+const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
+  'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
+  'fusce', 'interdum', 'vestibulum', 'nunc', 'velit'];
+const hearts = ["❤️", "💚", "💙", "💜", "🧡", "💔", "💖", "🖤", "💗", "💘"];
+const longOptions = [];
+for (let i = 0; i < 100; i++) {
+  const r1 = words[Math.floor(Math.random() * 20)];
+  const r2 = words[Math.floor(Math.random() * 20)];
+  const r3 = words[Math.floor(Math.random() * 20)];
+  const i = hearts[Math.floor(Math.random() * 10)] || '';
+  longOptions.push({icon: i, label: r1 + ' ' + r2, value: Math.random(), hint: r3});
+}
 
 $({key: 'demo:boolean', value: true});
 $({key: 'demo:string', value: 'Hello io!'});
 $({key: 'demo:leet', value: 1337});
 $({key: 'demo:number', value: 0});
 $({key: 'demo:theme', value: IoThemeSingleton.bind('theme')});
-$({key: 'demo:options', value: options});
-$({key: 'demo:option', value: option});
-// $({key: 'demo:vector', value: [0, 0, 0, 0]});
+$({key: 'demo:menuoptions', value: options});
+$({key: 'demo:longmenuoptions', value: longOptions});
+$({key: 'demo:menuoption', value: option});
 $({key: 'demo:rgba', value: {"r": 1, "g": 0.5, "b": 0, "a": 1}});
 $({key: 'demo:cmyk', value: {"c": 0, "m": 0, "y": 0, "k": 0}});
 $({key: 'demo:object', value: {

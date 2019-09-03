@@ -144,20 +144,19 @@ export const IoNodeMixin = (superclass) => {
       this.__listeners.setPropListeners(props, this);
       if (this.__connected) this.queueDispatch();
     }
-
     _onObjectMutation(event) {
       for (let i = this.__observedProps.length; i--;) {
         const prop = this.__observedProps[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
-          this.debounce(this._onObjectMutationDebounced, prop);
+          this.throttle(this._onObjectMutationThrottled, prop);
           return;
         }
-        // TODO: documentation
+        // TODO: documentation and performance warning!
         if (this.__properties[prop].observe === Infinity) {
           const hasObject = !!this.filterObject(value, (o) => { return o === event.detail.object; });
           if (hasObject) {
-            this.debounce(this._onObjectMutationDebounced, prop);
+            this.throttle(this._onObjectMutationThrottled, prop);
             return;
           }
         }
@@ -168,7 +167,7 @@ export const IoNodeMixin = (superclass) => {
       * and changed object is a property of the node.
       * @param {string} prop - Mutated object property name.
       */
-    _onObjectMutationDebounced(prop) {
+    _onObjectMutationThrottled(prop) {
       if (this['propMutated']) this['propMutated'](prop);
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
       this.changed();
@@ -253,8 +252,8 @@ export const IoNodeMixin = (superclass) => {
       */
     queueDispatch() {
       if (this.lazy) {
-        preDebounceQueue.push(this._queueDispatchLazy);
-        this.debounce(this._queueDispatchLazy);
+        preThrottleQueue.push(this._queueDispatchLazy);
+        this.throttle(this._queueDispatchLazy);
       } else {
         this.__nodeQueue.dispatch();
       }
@@ -263,19 +262,22 @@ export const IoNodeMixin = (superclass) => {
       this.__nodeQueue.dispatch();
     }
     /**
-      * Debounces function execution to next frame (rAF) if the function has been executed in the current frame.
-      * @param {function} func - Function to debounce.
-      * @param {*} arg - argument for debounced function.
+      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+      * @param {function} func - Function to throttle.
+      * @param {*} arg - argument for throttled function.
+      * @param {boolean} asynchronous - execute with timeout.
       */
-    debounce(func, arg) {
-      // TODO: move to extenal debounce function, document and test.
-      if (preDebounceQueue.indexOf(func) === -1) {
-        preDebounceQueue.push(func);
-        func(arg);
-        return;
+    throttle(func, arg, asynchronous) {
+      // TODO: move to extenal throttle function, document and test.
+      if (preThrottleQueue.indexOf(func) === -1) {
+        preThrottleQueue.push(func);
+        if (!asynchronous) {
+          func(arg);
+          return;
+        }
       }
-      if (debounceQueue.indexOf(func) === -1) {
-        debounceQueue.push(func);
+      if (throttleQueue.indexOf(func) === -1) {
+        throttleQueue.push(func);
       }
       // TODO: improve argument handling. Consider edge-cases.
       if (argQueue.has(func) && typeof arg !== 'object') {
@@ -288,13 +290,17 @@ export const IoNodeMixin = (superclass) => {
     requestAnimationFrameOnce(func) {
       requestAnimationFrameOnce(func);
     }
-    filterObject(object, predicate) {
+    filterObject(object, predicate, _depth = 5, _chain = [], _i = 0) {
       if (predicate(object)) return object;
+      if (_i > _depth) return;
+      _i++;
+      if (_chain.indexOf(object) !== -1) return;
+      _chain.push(object);
       for (let key in object) {
         const value = object[key] instanceof Binding ? object[key].value : object[key];
         if (predicate(value)) return value;
         if (typeof value === 'object') {
-          const subvalue = this.filterObject(value, predicate);
+          const subvalue = this.filterObject(value, predicate, _depth, _chain, _i);
           if (subvalue) return subvalue;
         }
       }
@@ -361,24 +367,24 @@ const Register = function () {
 IoNodeMixin.Register = Register;
 
 // TODO: document and test
-const preDebounceQueue = new Array();
-const debounceQueue = new Array();
+const preThrottleQueue = new Array();
+const throttleQueue = new Array();
 const argQueue = new WeakMap();
 //
 const funcQueue = new Array();
 
 const animate = function() {
   requestAnimationFrame(animate);
-  for (let i = preDebounceQueue.length; i--;) {
-    preDebounceQueue.splice(preDebounceQueue.indexOf(preDebounceQueue[i]), 1);
+  for (let i = preThrottleQueue.length; i--;) {
+    preThrottleQueue.splice(preThrottleQueue.indexOf(preThrottleQueue[i]), 1);
   }
-  for (let i = debounceQueue.length; i--;) {
-    const queue = argQueue.get(debounceQueue[i]);
+  for (let i = throttleQueue.length; i--;) {
+    const queue = argQueue.get(throttleQueue[i]);
     for (let p = queue.length; p--;) {
-      debounceQueue[i](queue[p]);
+      throttleQueue[i](queue[p]);
       queue.splice(queue.indexOf(p), 1);
     }
-    debounceQueue.splice(debounceQueue.indexOf(debounceQueue[i]), 1);
+    throttleQueue.splice(throttleQueue.indexOf(throttleQueue[i]), 1);
   }
   //
   for (let i = funcQueue.length; i--;) {

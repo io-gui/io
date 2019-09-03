@@ -278,7 +278,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (closest !== src) {
         closest.focus();
         setBacktrack(closest, dir, src);
-        event.stopImmediatePropagation();
+        event.stopPropagation();
       }
     }
   }

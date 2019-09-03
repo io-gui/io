@@ -44,6 +44,7 @@ class IoLayer extends IoElement {
       position: absolute;
       pointer-events: all;
       touch-action: none;
+      box-shadow: var(--io-shadow);
     }
     :host > *:not([expanded]) {
       visibility: hidden;
@@ -65,10 +66,12 @@ class IoLayer extends IoElement {
       'pointerdown': '_onPointerdown',
       'pointermove': '_onPointermove',
       'pointerup': '_onPointerup',
-      'touchstart': '_preventDefault',
-      'mousedown': '_preventDefault',
-      'contextmenu': '_preventDefault',
-      'focusin': '_preventDefault',
+      'touchstart': '_stopPreventDefault',
+      'mousedown': '_stopPreventDefault',
+      'contextmenu': '_stopPreventDefault',
+      'focusin': '_stopPreventDefault',
+      'scroll': '_stopPropagation',
+      'wheel': '_stopPropagation',
     };
   }
   constructor(props) {
@@ -78,24 +81,23 @@ class IoLayer extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
-    window.addEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
-    window.addEventListener('resize', this._onWindowChange, {capture: true, passive: true});
+    window.addEventListener('resize', this._onWindowResize, {capture: true, passive: true});
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
-    window.removeEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
-    window.removeEventListener('resize', this._onWindowChange, {capture: true, passive: true});
+    window.removeEventListener('resize', this._onWindowResize, {capture: true, passive: true});
   }
-  _preventDefault(event) {
+  _stopPropagation(event) {
     event.stopPropagation();
+  }
+  _stopPreventDefault(event) {
     event.preventDefault();
+    event.stopImmediatePropagation();
   }
   _onFocusIn(event) {
     event.stopPropagation();
   }
-  _onWindowChange() {
+  _onWindowResize() {
     this.expanded = false;
   }
   _onPointerdown(event) {
@@ -118,46 +120,46 @@ class IoLayer extends IoElement {
       this._collapseOrFocusSrcElement(event);
     }
   }
-  // _nudgeAnimate() {
-  //   if (this.expanded) {
-  //     this.requestAnimationFrameOnce(this._nudgeAnimate);
-  //     const x = this.x;
-  //     const y = this.y;
-  //     if (x === undefined || y === undefined) return;
-  //     for (let i = this.children.length; i--;) {
-  //       if (this.children[i].expanded) {
-  //         const r = this.children[i].getBoundingClientRect();
-  //         if (!(r.top < y && r.bottom > y && r.left < x && r.right > x)) continue;
-  //         if (r.bottom > window.innerHeight || r.top < 0) {
-  //           let ry = r.y;
-  //           if (y < 100 && r.top < 0) {
-  //             const scrollSpeed = (100 - y) / 5000;
-  //             const overflow = r.top;
-  //             ry = ry - Math.ceil(overflow * scrollSpeed) + 1;
-  //           } else if (y > window.innerHeight - 100 && r.bottom > window.innerHeight) {
-  //             const scrollSpeed = (100 - (window.innerHeight - y)) / 5000;
-  //             const overflow = (r.bottom - window.innerHeight);
-  //             ry = ry - Math.ceil(overflow * scrollSpeed) - 1;
-  //           }
-  //           this.children[i].style.top = ry + 'px';
-  //         }
-  //         if (r.right > window.innerWidth || r.left < 0) {
-  //           let rx = r.x;
-  //           if (x < 100 && r.left < 0) {
-  //             const scrollSpeed = (100 - x) / 5000;
-  //             const overflow = r.left;
-  //             rx = rx - Math.ceil(overflow * scrollSpeed) + 1;
-  //           } else if (x > window.innerWidth - 100 && r.right > window.innerWidth) {
-  //             const scrollSpeed = (100 - (window.innerWidth - x)) / 5000;
-  //             const overflow = (r.right - window.innerWidth);
-  //             rx = rx - Math.ceil(overflow * scrollSpeed) - 1;
-  //           }
-  //           this.children[i].style.left = rx + 'px';
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  _nudgeAnimate() {
+    if (this.expanded) {
+      this.requestAnimationFrameOnce(this._nudgeAnimate);
+      const x = this.x;
+      const y = this.y;
+      if (x === undefined || y === undefined) return;
+      for (let i = this.children.length; i--;) {
+        if (this.children[i].expanded) {
+          const r = this.children[i].getBoundingClientRect();
+          if (!(r.top < y && r.bottom > y && r.left < x && r.right > x)) continue;
+          if (r.bottom > window.innerHeight || r.top < 0) {
+            let ry = r.y;
+            if (y < 100 && r.top < 0) {
+              const scrollSpeed = (100 - y) / 5000;
+              const overflow = r.top;
+              ry = ry - Math.ceil(overflow * scrollSpeed) + 1;
+            } else if (y > window.innerHeight - 100 && r.bottom > window.innerHeight) {
+              const scrollSpeed = (100 - (window.innerHeight - y)) / 5000;
+              const overflow = (r.bottom - window.innerHeight);
+              ry = ry - Math.ceil(overflow * scrollSpeed) - 1;
+            }
+            this.children[i].style.top = ry + 'px';
+          }
+          if (r.right > window.innerWidth || r.left < 0) {
+            let rx = r.x;
+            if (x < 100 && r.left < 0) {
+              const scrollSpeed = (100 - x) / 5000;
+              const overflow = r.left;
+              rx = rx - Math.ceil(overflow * scrollSpeed) + 1;
+            } else if (x > window.innerWidth - 100 && r.right > window.innerWidth) {
+              const scrollSpeed = (100 - (window.innerWidth - x)) / 5000;
+              const overflow = (r.right - window.innerWidth);
+              rx = rx - Math.ceil(overflow * scrollSpeed) - 1;
+            }
+            this.children[i].style.left = rx + 'px';
+          }
+        }
+      }
+    }
+  }
   _collapseOrFocusSrcElement(event) {
     const x = event.clientX;
     const y = event.clientY;
@@ -212,30 +214,40 @@ class IoLayer extends IoElement {
   }
   setElementPosition(element, direction, srcRect) {
     const elemRect = element.getBoundingClientRect();
+    const left = srcRect.left;
+    const top = srcRect.top;
+    const right = srcRect.right;
+    const bottom = srcRect.bottom;
+    const bottomToHeight = window.innerHeight - bottom;
+    const rightToWidth = window.innerWidth - right;
     switch (direction) {
       case 'pointer':
         this.nudgePointer(element, this.x, this.y, elemRect);
         break;
       case 'top':
-        this.nudgeUp(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect) ||
-        this.nudgeUp(element, srcRect.x, srcRect.top, elemRect, true);
+        this.nudgeUp(element, left, top, elemRect) ||
+        this.nudgeDown(element, left, bottom, elemRect) ||
+        this.nudgeUp(element, left, top, elemRect, top > bottomToHeight) ||
+        this.nudgeDown(element, left, bottom, elemRect, top <= bottomToHeight);
         break;
       case 'left':
-        this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeRight(element, srcRect.right, srcRect.top, elemRect) ||
-        this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect, true);
+        this.nudgeLeft(element, left, top, elemRect) ||
+        this.nudgeRight(element, right, top, elemRect) ||
+        this.nudgeLeft(element, left, top, elemRect, left > rightToWidth) ||
+        this.nudgeRight(element, right, top, elemRect, left <= rightToWidth);
         break;
       case 'bottom':
-        this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect) ||
-        this.nudgeUp(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect, true);
+        this.nudgeDown(element, left, bottom, elemRect) ||
+        this.nudgeUp(element, left, top, elemRect) ||
+        this.nudgeDown(element, left, bottom, elemRect, bottomToHeight > top) ||
+        this.nudgeUp(element, left, top, elemRect, bottomToHeight <= top);
         break;
       case 'right':
       default:
-        this.nudgeRight(element, srcRect.right, srcRect.top, elemRect) ||
-        this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeRight(element, srcRect.right, srcRect.top, elemRect, true);
+        this.nudgeRight(element, right, top, elemRect) ||
+        this.nudgeLeft(element, left, top, elemRect) ||
+        this.nudgeRight(element, right, top, elemRect, rightToWidth > left) ||
+        this.nudgeLeft(element, left, top, elemRect, rightToWidth <= left);
         break;
     }
   }
@@ -260,9 +272,9 @@ class IoLayer extends IoElement {
       }
       if (lastFocus) lastFocus.focus();
     }
-    // else {
-    //   this.requestAnimationFrameOnce(this._nudgeAnimate);
-    // }
+    else {
+      this.requestAnimationFrameOnce(this._nudgeAnimate);
+    }
   }
 }
 

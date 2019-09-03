@@ -98,9 +98,9 @@ export class IoSelector extends IoElement {
   }
   _onScroll() {
     if (this._scrollID === undefined) return;
-    clearTimeout(this.__scrollDebounce);
-    this.__scrollDebounce = setTimeout(() => {
-      delete this.__scrollDebounce;
+    clearTimeout(this.__scrollThrottle);
+    this.__scrollThrottle = setTimeout(() => {
+      delete this.__scrollThrottle;
       const scrollableElements = [...this.$.content.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')];
       const top = this.$.content.scrollTop || this.$.content.children[0].scrollTop;
       const bottom = top + this.$.content.getBoundingClientRect().height / 2;

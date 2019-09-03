@@ -6,7 +6,7 @@ It displays `option.icon`, `option.label` and `option.hint` property and it crea
 
 <io-element-demo element="io-menu-item" properties='{
   "value": "demo:string",
-  "option": "demo:option",
+  "option": "demo:menuoption",
   "expanded": false,
   "direction": "right",
   "selectable": false
@@ -25,7 +25,7 @@ It generates a list of `IoMenuItem` elements from `options` property. If `horizo
   "selectable": false,
   "expanded": false,
   "horizontal": false,
-  "options": "demo:options"
+  "options": "demo:menuoptions"
 }' config='{
   "type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]
 }'></io-element-demo>
@@ -66,7 +66,7 @@ An invisible element that inserts a floating menu when its `parentElement` is cl
   properties='{
   "value": "demo:string",
   "button": 0,
-  "options": "demo:options",
+  "options": "demo:menuoptions",
   "expanded": false,
   "position": "pointer",
   "selectable": false

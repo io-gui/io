@@ -85,7 +85,7 @@ export class IoSlider extends IoGl {
     event.stopImmediatePropagation();
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
-    this.debounce(this._onPointermoveDebounced, event);
+    this.throttle(this._onPointermoveThrottled, event);
   }
   _onPointerup() {
     event.preventDefault();
@@ -94,7 +94,7 @@ export class IoSlider extends IoGl {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
   }
-  _onPointermoveDebounced(event) {
+  _onPointermoveThrottled(event) {
     const rect = this.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
     const y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
