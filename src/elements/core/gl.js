@@ -54,7 +54,10 @@ export class IoGl extends IoElement {
   static get Properties() {
     return {
       size: [0, 0],
-      color: [1, 1, 1, 1],
+      color: {
+        value: [1, 1, 1, 1],
+        observe: true,
+      },
       pxRatio: 1,
       css: {
         type: Object,
