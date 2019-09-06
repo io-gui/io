@@ -211,65 +211,95 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       const rect = event.detail.rect;
 
       let closest = src;
-      let closestDist = Infinity;
+      let closestX = Infinity;
+      let closestY = Infinity;
 
-      const backtrack = focusBacktrack.get(src);
-      if (backtrack && backtrack[dir]) {
-        backtrack[dir].focus();
-        setBacktrack(backtrack[dir], dir, src);
-        return;
-      }
+      // const backtrack = focusBacktrack.get(src);
+      // if (backtrack && backtrack[dir]) {
+      //   backtrack[dir].focus();
+      //   setBacktrack(backtrack[dir], dir, src);
+      //   return;
+      // }
 
       const siblings = this.querySelectorAll('[tabindex="0"]');
 
       for (let i = siblings.length; i--;) {
 
         if (!siblings[i].offsetParent) {
-          // TODO: check
-          // console.log(siblings[i]);
           continue;
         }
+        // TODO: unhack
         const sStyle = window.getComputedStyle(siblings[i]);
         if (sStyle.visibility !== 'visible') {
-          // TODO: unhack
-          // console.log(siblings[i]);
           continue;
         }
 
         const sRect = siblings[i].getBoundingClientRect();
         sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
 
-        const dX = sRect.center.x - rect.center.x;
-        const dY = sRect.center.y - rect.center.y;
+        let dX = Math.abs(sRect.center.x - rect.center.x);
+        let dY = Math.abs(sRect.center.y - rect.center.y);
 
-        const isRight = sRect.right > rect.right + 1;
-        const isLeft = sRect.left < rect.left - 1;
-        const isDown = sRect.center.y > rect.center.y + 1;
-        const isUp = sRect.center.y < rect.center.y - 1;
+        const isRight = sRect.left > rect.right;
+        const isLeft = sRect.right < rect.left;
+        const isDown = sRect.top > rect.bottom;
+        const isUp = sRect.bottom < rect.top;
 
-        const distY = Math.sqrt(0.2 * dX * dX + dY * dY);
-        const distX = Math.sqrt(dX * dX + 0.2 * dY * dY);
+        // let distY = Math.sqrt(dX * dX + dY * dY * 0.1);
+        // let distX = Math.sqrt(dX * dX * 0.1 + dY * dY);
 
         // TODO: improve automatic direction routing.
         switch (dir) {
           case 'right':
-            if (dX > 0 && distX < closestDist && isRight) {
-              closest = siblings[i], closestDist = distX;
+            if (isRight) {
+              if (dX < closestX) {
+                closest = siblings[i];
+                closestY = dY;
+                closestX = dX;
+              } else if (dX === closestX && dY < closestY) {
+                closest = siblings[i];
+                closestY = dY;
+                closestX = dX;
+              }
             }
             break;
           case 'left':
-            if (dX < 0 && distX < closestDist && isLeft) {
-              closest = siblings[i], closestDist = distX;
+            if (isLeft) {
+              if (dX < closestX) {
+                closest = siblings[i];
+                closestY = dY;
+                closestX = dX;
+              } else if (dX === closestX && dY < closestY) {
+                closest = siblings[i];
+                closestY = dY;
+                closestX = dX;
+              }
             }
             break;
           case 'down':
-            if (dY > 0 && distY < closestDist && isDown) {
-              closest = siblings[i], closestDist = distY;
+            if (isDown) {
+              if (dY < closestY) {
+                closest = siblings[i];
+                closestY = dY;
+                closestX = dX;
+              } else if (dY === closestY && dX < closestX) {
+                closest = siblings[i];
+                closestY = dY;
+                closestX = dX;
+              }
             }
             break;
           case 'up':
-            if (dY < 0 && distY < closestDist && isUp) {
-              closest = siblings[i], closestDist = distY;
+            if (isUp) {
+              if (dY < closestY) {
+                closest = siblings[i];
+                closestY = dY;
+                closestX = dX;
+              } else if (dY === closestY && dX < closestX) {
+                closest = siblings[i];
+                closestY = dY;
+                closestX = dX;
+              }
             }
             break;
         }
@@ -277,7 +307,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 
       if (closest !== src) {
         closest.focus();
-        setBacktrack(closest, dir, src);
+        // setBacktrack(closest, dir, src);
         event.stopPropagation();
       }
     }

@@ -120,44 +120,44 @@ class IoLayer extends IoElement {
     }
   }
   _nudgeAnimate() {
-    if (this.expanded) {
-      this.requestAnimationFrameOnce(this._nudgeAnimate);
-      const x = this.x;
-      const y = this.y;
-      if (x === undefined || y === undefined) return;
-      for (let i = this.children.length; i--;) {
-        if (this.children[i].expanded) {
-          const r = this.children[i].getBoundingClientRect();
-          if (!(r.top < y && r.bottom > y && r.left < x && r.right > x)) continue;
-          if (r.bottom > window.innerHeight || r.top < 0) {
-            let ry = r.y;
-            if (y < 100 && r.top < 0) {
-              const scrollSpeed = (100 - y) / 5000;
-              const overflow = r.top;
-              ry = ry - Math.ceil(overflow * scrollSpeed) + 1;
-            } else if (y > window.innerHeight - 100 && r.bottom > window.innerHeight) {
-              const scrollSpeed = (100 - (window.innerHeight - y)) / 5000;
-              const overflow = (r.bottom - window.innerHeight);
-              ry = ry - Math.ceil(overflow * scrollSpeed) - 1;
-            }
-            this.children[i].style.top = ry + 'px';
-          }
-          if (r.right > window.innerWidth || r.left < 0) {
-            let rx = r.x;
-            if (x < 100 && r.left < 0) {
-              const scrollSpeed = (100 - x) / 5000;
-              const overflow = r.left;
-              rx = rx - Math.ceil(overflow * scrollSpeed) + 1;
-            } else if (x > window.innerWidth - 100 && r.right > window.innerWidth) {
-              const scrollSpeed = (100 - (window.innerWidth - x)) / 5000;
-              const overflow = (r.right - window.innerWidth);
-              rx = rx - Math.ceil(overflow * scrollSpeed) - 1;
-            }
-            this.children[i].style.left = rx + 'px';
-          }
-        }
-      }
-    }
+    // if (this.expanded) {
+    //   this.requestAnimationFrameOnce(this._nudgeAnimate);
+    //   const x = this.x;
+    //   const y = this.y;
+    //   if (x === undefined || y === undefined) return;
+    //   for (let i = this.children.length; i--;) {
+    //     if (this.children[i].expanded) {
+    //       const r = this.children[i].getBoundingClientRect();
+    //       if (!(r.top < y && r.bottom > y && r.left < x && r.right > x)) continue;
+    //       if (r.bottom > window.innerHeight || r.top < 0) {
+    //         let ry = r.y;
+    //         if (y < 100 && r.top < 0) {
+    //           const scrollSpeed = (100 - y) / 5000;
+    //           const overflow = r.top;
+    //           ry = ry - Math.ceil(overflow * scrollSpeed) + 1;
+    //         } else if (y > window.innerHeight - 100 && r.bottom > window.innerHeight) {
+    //           const scrollSpeed = (100 - (window.innerHeight - y)) / 5000;
+    //           const overflow = (r.bottom - window.innerHeight);
+    //           ry = ry - Math.ceil(overflow * scrollSpeed) - 1;
+    //         }
+    //         this.children[i].style.top = ry + 'px';
+    //       }
+    //       if (r.right > window.innerWidth || r.left < 0) {
+    //         let rx = r.x;
+    //         if (x < 100 && r.left < 0) {
+    //           const scrollSpeed = (100 - x) / 5000;
+    //           const overflow = r.left;
+    //           rx = rx - Math.ceil(overflow * scrollSpeed) + 1;
+    //         } else if (x > window.innerWidth - 100 && r.right > window.innerWidth) {
+    //           const scrollSpeed = (100 - (window.innerWidth - x)) / 5000;
+    //           const overflow = (r.right - window.innerWidth);
+    //           rx = rx - Math.ceil(overflow * scrollSpeed) - 1;
+    //         }
+    //         this.children[i].style.left = rx + 'px';
+    //       }
+    //     }
+    //   }
+    // }
   }
   _collapseOrFocusSrcElement(event) {
     const x = event.clientX;

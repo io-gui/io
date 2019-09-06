@@ -33,7 +33,7 @@ let currentProgram;
 
 export class IoGl extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* html */`<style>
     :host {
       position: relative;
       overflow: hidden !important;

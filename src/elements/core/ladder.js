@@ -117,12 +117,12 @@ class IoLadder extends IoElement {
       visibility: hidden;
     }
     :host:not([expanded]) > io-ladder-step {
-      opacity: 0;
+      opacity: 0.5;
     }
-    :host > :nth-child(-n+5) {
+    :host > io-ladder-step:nth-child(-n+5) {
       box-shadow: 0 -1px 4px rgba(0,0,0,0.2);
     }
-    :host > :nth-child(n+6) {
+    :host > io-ladder-step:nth-child(n+6) {
       box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
     :host > .io-up1,
@@ -166,15 +166,18 @@ class IoLadder extends IoElement {
       opacity: 0.4;
       transition: opacity 0.8s, transform 0.8s;
     }
+    :host > io-ladder-step:hover,
     :host > io-ladder-step:focus {
       background-color: var(--io-background-color-light);
       border-color: var(--io-color-focus);
       transition: opacity 0.2s;
       opacity: 1;
     }
-    :host > span {
+    :host > .io-ladder-empty {
+      height: var(--io-item-height);
+    }
+    :host > .io-ladder-center {
       height: calc(1.5 * var(--io-item-height));
-      visibility: hidden;
     }
     </style>`;
   }
@@ -253,7 +256,7 @@ class IoLadder extends IoElement {
   }
   changed() {
     const range = this.max - this.min;
-    const hiddenItem = ['span'];
+    const hiddenItem = ['span', {class: 'io-ladder-empty'}];
 
     // TODO: unhack
     let step = this.step / 10000;
@@ -282,7 +285,7 @@ class IoLadder extends IoElement {
       (range >= upStep3) ? ['io-ladder-step', {class: 'io-up3', value: upStep3, label: upLabel3}] : hiddenItem,
       (range >= upStep2) ? ['io-ladder-step', {class: 'io-up2', value: upStep2, label: upLabel2}] : hiddenItem,
       (range >= upStep1) ? ['io-ladder-step', {class: 'io-up1', value: upStep1, label: upLabel1}] : hiddenItem,
-      hiddenItem,
+      ['span', {class: 'io-ladder-center'}],
       (this.step <= downStep1) ? ['io-ladder-step', {class: 'io-down1', value: downStep1, label: downLabel1}] : hiddenItem,
       (this.step <= downStep2) ? ['io-ladder-step', {class: 'io-down2', value: downStep2, label: downLabel2}] : hiddenItem,
       (this.step <= downStep3) ? ['io-ladder-step', {class: 'io-down3', value: downStep3, label: downLabel3}] : hiddenItem,
