@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {IoLayerSingleton} from "../../io-core.js";
 import "./menu-item.js";
 
@@ -6,7 +6,7 @@ const rects = new WeakMap();
 
 export class IoMenuOptions extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       @apply --io-panel;
       box-sizing: border-box;
@@ -66,7 +66,7 @@ export class IoMenuOptions extends IoElement {
       overflow: hidden;
       visibility: hidden;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

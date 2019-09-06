@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorageFactory as $} from "../../io.js";
+import {IoElement, IoStorageFactory as $} from "../../io.js";
 
 const menuoptions = [
   {label: 'Long Menu', options: $('demo:longmenuoptions').value},
@@ -7,7 +7,7 @@ const menuoptions = [
 
 export class IoDemoMenus extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       padding-top: var(--io-spacing);
     }
@@ -17,7 +17,7 @@ export class IoDemoMenus extends IoElement {
     :host .io-column > *:not(:last-child) {
       margin-bottom: var(--io-spacing);
     }
-    </style>`;
+    `;
   }
   constructor(props) {
     super(props);

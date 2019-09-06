@@ -1,8 +1,8 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoDemoMath extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       max-width: 32em;
       padding: var(--io-spacing);
@@ -19,7 +19,7 @@ export class IoDemoMath extends IoElement {
         visibility: hidden;
       }
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

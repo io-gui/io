@@ -1,8 +1,8 @@
-import {html, Binding, IoElement} from "../../io.js";
+import {Binding, IoElement} from "../../io.js";
 
 export class IoProperties extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: grid;
       grid-gap: var(--io-spacing);
@@ -44,7 +44,7 @@ export class IoProperties extends IoElement {
       border-radius: 0 !important;
       box-shadow: none !important;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

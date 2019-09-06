@@ -1,10 +1,10 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 // NOTE: [optmization] Uses textNode and fixed size to avoid layout trashing on change.
 
 export class IoItem extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       @apply --io-item;
     }
@@ -31,7 +31,7 @@ export class IoItem extends IoElement {
       border-color: var(--io-color-focus);
       outline-color: var(--io-color-focus);
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

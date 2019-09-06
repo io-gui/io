@@ -1,10 +1,9 @@
-import {html} from "../../io.js";
 import {IoGl} from "../../io-core.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorSwatch extends IoColorMixin(IoGl) {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       box-sizing: border-box;
       align-self: flex-start;
@@ -21,7 +20,7 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
       border-color: var(--io-color-focus);
       outline-color: var(--io-color-focus);
     }
-    </style>`;
+    `;
   }
   static get Frag() {
     return /* glsl */`

@@ -1,4 +1,3 @@
-import {html} from "../../io.js";
 import {IoItem, IoLayerSingleton} from "../../io-core.js";
 import {IoMenuOptions} from "./menu-options.js";
 
@@ -53,7 +52,7 @@ let hoveredParent;
 
 export class IoMenuItem extends IoItem {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       flex: 0 0 auto;
@@ -91,7 +90,7 @@ export class IoMenuItem extends IoItem {
     :host[selected][direction="left"] {
       border-left-color: var(--io-color-link);
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

@@ -1,9 +1,8 @@
-import {html} from "../../io.js";
 import {IoItem} from "./item.js";
 
 export class IoButton extends IoItem {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       text-align: center;
       border: var(--io-border);
@@ -17,7 +16,7 @@ export class IoButton extends IoItem {
       border: var(--io-border);
       border-color: var(--io-color-border-inset);
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

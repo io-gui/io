@@ -1,10 +1,9 @@
-import {html} from "../../io.js";
 import {IoSelector} from "./selector.js";
 // TODO: remove io-menu-options dependency.
 
 export class IoSelectorTabs extends IoSelector {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       flex-direction: column;
       align-self: stretch;
@@ -24,7 +23,7 @@ export class IoSelectorTabs extends IoSelector {
       box-shadow: none;
       border-radius: 0;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

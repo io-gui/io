@@ -1,17 +1,17 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 // TODO: test and documentation
 
 export class IoContent extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       @apply --io-content;
     }
     :host:not([expanded]) {
       display: none;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

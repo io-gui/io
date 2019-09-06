@@ -1,8 +1,8 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoVector extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       flex-direction: row;
@@ -19,7 +19,7 @@ export class IoVector extends IoElement {
     :host > io-boolean {
       width: var(--io-line-height) !important;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

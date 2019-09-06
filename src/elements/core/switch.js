@@ -1,9 +1,8 @@
-import {html} from "../../io.js";
 import {IoBoolean} from "./boolean.js";
 
 export class IoSwitch extends IoBoolean {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       position: relative;
       width: calc(2 * var(--io-item-height));
@@ -62,7 +61,7 @@ export class IoSwitch extends IoBoolean {
     :host:focus {
       outline-color: var(--io-color-focus);
     }
-    </style>`;
+    `;
   }
   changed() {
     this.setAttribute('aria-checked', String(!!this.value));

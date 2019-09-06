@@ -1,11 +1,10 @@
-import {html} from "../../io.js";
 import {IoMenuItem} from "./menu-item.js";
 
 // TODO: fix tab-out without collapse
 
 export class IoOptionMenu extends IoMenuItem {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: inline-block;
       text-align: center;
@@ -20,7 +19,7 @@ export class IoOptionMenu extends IoMenuItem {
     :host {
       text-align: left;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

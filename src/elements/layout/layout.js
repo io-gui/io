@@ -1,8 +1,8 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoLayout extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       flex: 1;
       display: flex;
@@ -15,7 +15,7 @@ export class IoLayout extends IoElement {
     :host[orientation=vertical] {
       flex-direction: column;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {
@@ -205,7 +205,7 @@ IoLayout.Register();
 
 export class IoLayoutDivider extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       background: var(--io-background-color);
       color: var(--io-color);
@@ -240,7 +240,7 @@ export class IoLayoutDivider extends IoElement {
       align-items: center;
       justify-content: center;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

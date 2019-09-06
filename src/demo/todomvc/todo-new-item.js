@@ -1,4 +1,4 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {TodoModel} from "./todo-model.js";
 
 const ENTER_KEY = 13;
@@ -6,11 +6,11 @@ const ESCAPE_KEY = 27;
 
 export class TodoNewItem extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: contents;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

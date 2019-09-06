@@ -1,13 +1,13 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {TodoModel} from "./todo-model.js";
 
 export class TodoFooter extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: block;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

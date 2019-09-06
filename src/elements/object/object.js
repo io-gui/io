@@ -1,9 +1,9 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import "./properties.js";
 
 export class IoObject extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       @apply --io-panel;
     }
@@ -19,7 +19,7 @@ export class IoObject extends IoElement {
     :host:not([expanded]) > io-properties {
       display: none;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

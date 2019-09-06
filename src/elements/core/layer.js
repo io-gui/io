@@ -1,4 +1,4 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 let lastFocus = null;
 {
@@ -16,7 +16,7 @@ let lastFocus = null;
 
 class IoLayer extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: block;
       visibility: hidden;
@@ -49,7 +49,7 @@ class IoLayer extends IoElement {
       visibility: hidden;
       pointer-events: none;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

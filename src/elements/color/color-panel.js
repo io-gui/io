@@ -1,10 +1,10 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {IoLayerSingleton} from "../../io-core.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorPanel extends IoColorMixin(IoElement) {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       @apply --io-panel;
       display: flex;
@@ -30,7 +30,7 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
     :host[horizontal] > *:not(:last-child) {
       margin: 0 var(--io-spacing) 0 0;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

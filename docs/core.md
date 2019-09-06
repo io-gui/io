@@ -19,7 +19,7 @@ An example of the most basic fragment shader program:
 ```javascript
 class MyElement extends IoGl {
   static get Frag() {
-    return `
+    return /* glsl */`
     void main(void) {
       gl_FragColor = cssBackgroundColor;
     }`;

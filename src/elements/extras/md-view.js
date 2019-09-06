@@ -1,9 +1,9 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import "../../../lib/marked.min.js";
 
 export class IoMdView extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: block;
       align-self: stretch;
@@ -119,7 +119,7 @@ export class IoMdView extends IoElement {
       border-top-color: #000;
       animation: spinner .6s linear infinite;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

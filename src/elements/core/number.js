@@ -1,11 +1,10 @@
-import {html} from "../../io.js";
 import {IoItem} from "./item.js";
 import {IoLayerSingleton} from "./layer.js";
 import {IoLadderSingleton} from "./ladder.js";
 
 export class IoNumber extends IoItem {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       cursor: text;
       user-select: text;
@@ -29,7 +28,7 @@ export class IoNumber extends IoItem {
     :host:not([positive]):before {
       content: '';
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

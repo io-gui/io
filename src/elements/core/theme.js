@@ -1,4 +1,4 @@
-import {IoElement, html, IoStorageFactory as $} from "../../io.js";
+import {IoElement, IoStorageFactory as $} from "../../io.js";
 
 const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -59,7 +59,7 @@ const vars = themeDB[theme.value] || themeDB['light'];
 
 export class IoTheme extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     --io-item: {
       align-self: flex-start;
       display: inline-block;
@@ -150,7 +150,7 @@ export class IoTheme extends IoElement {
       grid-template-columns: repeat(5, 1fr);
       grid-gap: var(--io-spacing);
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

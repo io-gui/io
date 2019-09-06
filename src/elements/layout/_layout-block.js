@@ -1,10 +1,10 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 // import "./_layout-tab.js";
 // import "./layout-tabs.js";
 
 export class IoLayoutBlock extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       overflow: hidden;
@@ -38,7 +38,7 @@ export class IoLayoutBlock extends IoElement {
     :host layout-tab[highlightdrop = "after"] {
       border-right: 4px dashed #4f6;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

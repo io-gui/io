@@ -1,4 +1,4 @@
-import {IoNode, html} from "../../io.js";
+import {IoNode} from "../../io.js";
 
 const IoIconsetDB = {};
 
@@ -28,7 +28,7 @@ IoIconset.Register();
 
 export const IoIconsetSingleton = new IoIconset();
 
-const icons = html`
+const icons = /* html */`
 <svg>
   <g id="unlink">
     <path d="M3.2,12c0-1.9,1.5-3.4,3.4-3.4h4.3V6.6H6.6c-3,0-5.4,2.4-5.4,5.4s2.4,5.4,5.4,5.4h4.3v-2.1H6.6C4.7,15.4,3.2,13.9,3.2,12z

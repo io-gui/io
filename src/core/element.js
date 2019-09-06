@@ -367,21 +367,6 @@ if (window.ResizeObserver !== undefined) {
 }
 
 /**
- * Template literal handler for CSS code in HTML.
- * @param {Array} parts - Template literal array argument.
- * @return {string} - Created HTML code.
- */
-export function html(parts) {
-  let result = '';
-  for (let i = 0; i < parts.length; i++) {
-    result += parts[i] + (arguments[i + 1] || '');
-  }
-  result = result.replace(new RegExp('<style>', 'g'), '');
-  result = result.replace(new RegExp('</style>', 'g'), '');
-  return result;
-}
-
-/**
  * Creates an element from a virtual dom object.
  * @param {Object} vDOMNode - Virtual dom object.
  * @param {string} vDOMNode.name - Element tag.
@@ -456,6 +441,7 @@ function _initProtoStyle(prototypes) {
 
     // Convert mixins to classes
     let styleString = prototypes[0].constructor.Style;
+    
     if (styleString) {
       const mixins = styleString.match(mixinRegex);
       if (mixins) {
@@ -468,11 +454,10 @@ function _initProtoStyle(prototypes) {
         }
       }
     }
-
+    
     for (let i = prototypes.length; i--;) {
       let styleString = prototypes[i].constructor.Style;
       if (styleString) {
-
         // Remove mixins
         styleString = styleString.replace(mixinRegex, '');
 

@@ -1,8 +1,8 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoMatrix extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: grid;
       align-self: stretch;
@@ -21,7 +21,7 @@ export class IoMatrix extends IoElement {
     :host > io-number {
       width: inherit;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

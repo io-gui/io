@@ -1,8 +1,8 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoDemoObject extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       max-width: 32em;
       padding: var(--io-spacing);
@@ -27,7 +27,7 @@ export class IoDemoObject extends IoElement {
     :host .io-column > *:not(:last-child) {
       margin-bottom: var(--io-spacing);
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

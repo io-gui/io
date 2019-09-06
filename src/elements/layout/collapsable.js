@@ -1,8 +1,8 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoCollapsable extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       @apply --io-panel;
     }
@@ -14,7 +14,7 @@ export class IoCollapsable extends IoElement {
     :host > io-boolean[value] {
       margin-bottom: var(--io-spacing);
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

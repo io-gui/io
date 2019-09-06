@@ -1,4 +1,3 @@
-import {html} from "../../io.js";
 import {IoItem, IoLayerSingleton} from "../../io-core.js";
 import {IoColorMixin} from "./color.js";
 import "./color-swatch.js";
@@ -6,7 +5,7 @@ import {IoColorPanelSingleton} from "./color-panel.js";
 
 export class IoColorPicker extends IoColorMixin(IoItem) {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       box-sizing: border-box;
@@ -25,7 +24,7 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
       min-height: 0;
       border-radius: 0;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

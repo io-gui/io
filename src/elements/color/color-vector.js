@@ -1,10 +1,10 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {IoColorMixin} from "./color.js";
 import "./color-picker.js";
 
 export class IoColorVector extends IoColorMixin(IoElement) {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       flex-direction: row;
@@ -21,7 +21,7 @@ export class IoColorVector extends IoColorMixin(IoElement) {
     :host > io-color-picker {
       width: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

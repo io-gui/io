@@ -1,8 +1,8 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoBreadcrumbs extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       flex: 0 0 auto;
@@ -44,7 +44,7 @@ export class IoBreadcrumbs extends IoElement {
       padding: 0 var(--io-spacing) 0 0;
       opacity: 0.25;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

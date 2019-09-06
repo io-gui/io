@@ -1,9 +1,8 @@
-import {html} from "../../io.js";
 import {IoGl} from "./gl.js";
 
 export class IoSlider extends IoGl {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       cursor: ns-resize;
       box-sizing: border-box;
@@ -30,7 +29,7 @@ export class IoSlider extends IoGl {
       border-color: var(--io-color-focus);
       outline-color: var(--io-color-focus);
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

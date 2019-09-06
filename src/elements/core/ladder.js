@@ -1,4 +1,4 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {IoItem} from "./item.js";
 import {IoLayerSingleton} from "./layer.js";
 
@@ -18,7 +18,7 @@ let lastFocus = null;
 
 class IoLadderStep extends IoItem {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       pointer-events: all;
       display: inline-block;
@@ -29,7 +29,7 @@ class IoLadderStep extends IoItem {
       touch-action: none;
       width: 5em;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {
@@ -102,7 +102,7 @@ IoLadderStep.Register();
 
 class IoLadder extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       position: relative;
       pointer-events: none;
@@ -179,7 +179,7 @@ class IoLadder extends IoElement {
     :host > .io-ladder-center {
       height: calc(1.5 * var(--io-item-height));
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

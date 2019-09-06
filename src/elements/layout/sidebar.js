@@ -1,8 +1,8 @@
-import {html, IoElement, IoStorageFactory as $} from "../../io.js";
+import {IoElement, IoStorageFactory as $} from "../../io.js";
 
 export class IoSidebar extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       flex-wrap: nowrap;
@@ -34,7 +34,7 @@ export class IoSidebar extends IoElement {
       box-shadow: none;
       border-color: transparent;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

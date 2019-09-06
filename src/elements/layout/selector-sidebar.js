@@ -1,10 +1,9 @@
-import {html} from "../../io.js";
 import {IoSelector} from "./selector.js";
 import "./sidebar.js";
 
 export class IoSelectorSidebar extends IoSelector {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       flex-direction: row-reverse;
       align-self: stretch;
@@ -37,7 +36,7 @@ export class IoSelectorSidebar extends IoSelector {
     :host[overflow] > .io-content {
       border-width: var(--io-border-width) 0 0 0;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

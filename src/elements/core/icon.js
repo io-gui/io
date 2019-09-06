@@ -1,9 +1,9 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {IoIconsetSingleton} from "./iconset.js";
 
 export class IoIcon extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       @apply --io-item;
     }
@@ -24,7 +24,7 @@ export class IoIcon extends IoElement {
       pointer-events: none;
       transform-origin: 0px 0px;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

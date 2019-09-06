@@ -1,4 +1,4 @@
-import {html, IoElement, Binding, IoStorageFactory as $} from "../io.js";
+import {IoElement, Binding, IoStorageFactory as $} from "../io.js";
 import {IoThemeSingleton} from "../io-core.js";
 
 const suboptions = [];
@@ -62,7 +62,7 @@ $({key: 'demo:object', value: {
 
 export class IoElementDemo extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       @apply --io-panel;
       position: relative;
@@ -89,7 +89,7 @@ export class IoElementDemo extends IoElement {
     :host:not([expanded]) > .io-content {
       margin-right: calc(var(--io-item-height) + calc(3 * var(--io-spacing)));
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

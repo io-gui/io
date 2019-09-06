@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorageFactory as $} from "../../io.js";
+import {IoElement, IoStorageFactory as $} from "../../io.js";
 
 const boolean = $({key: 'demo:boolean', value: false});
 const string = $({key: 'demo:string', value: 'Hello io!'});
@@ -6,7 +6,7 @@ const number = $({key: 'demo:number', value: 0});
 
 export class IoDemoCore extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       max-width: 32em;
       padding: var(--io-spacing);
@@ -25,7 +25,7 @@ export class IoDemoCore extends IoElement {
     :host .io-column > *:not(:last-child) {
       margin-bottom: var(--io-spacing);
     }
-    </style>`;
+    `;
   }
   changed() {
     this.dispatchEvent('object-mutated', {object: this}, false, window);

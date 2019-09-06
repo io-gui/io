@@ -1,4 +1,4 @@
-import {html, IoStorageFactory as $} from "./io.js";
+import {IoStorageFactory as $} from "./io.js";
 import {IoSelectorTabs} from "./io-layout.js";
 
 import "./demo/element-demo.js";
@@ -11,12 +11,12 @@ import "./demo/elements/color.js";
 
 export class IoDemo extends IoSelectorTabs {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host iframe[name=todo] {
       border: none;
       flex: 1 1;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

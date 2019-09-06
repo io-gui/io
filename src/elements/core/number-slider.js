@@ -1,9 +1,9 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import "./slider.js";
 
 export class IoNumberSlider extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       align-self: stretch;
@@ -17,7 +17,7 @@ export class IoNumberSlider extends IoElement {
       flex: 1 1 calc(2 * var(--io-item-height));
       min-width: calc(2 * var(--io-item-height));
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

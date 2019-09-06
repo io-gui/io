@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {IoThemeSingleton} from "./theme.js";
 
 const canvas = document.createElement('canvas');
@@ -33,7 +33,7 @@ let currentProgram;
 
 export class IoGl extends IoElement {
   static get Style() {
-    return /* html */`<style>
+    return /* css */`
     :host {
       position: relative;
       overflow: hidden !important;
@@ -49,7 +49,7 @@ export class IoGl extends IoElement {
       pointer-events: none;
       /* image-rendering: pixelated; */
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

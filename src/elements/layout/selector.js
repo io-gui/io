@@ -1,4 +1,4 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 // TODO: use IoContent for caching and display.
 
@@ -6,7 +6,7 @@ const importedPaths = {};
 
 export class IoSelector extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       flex-direction: column;
@@ -39,7 +39,7 @@ export class IoSelector extends IoElement {
       border-top-color: #000;
       animation: io-selector-spinner .6s linear infinite;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

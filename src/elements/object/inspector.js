@@ -1,4 +1,4 @@
-import {html, IoElement, IoStorageFactory as $} from "../../io.js";
+import {IoElement, IoStorageFactory as $} from "../../io.js";
 import "./breadcrumbs.js";
 
 class Item {
@@ -29,7 +29,7 @@ export function isValuePropertyOf(prop, object) {
 
 export class IoInspector extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       flex-direction: column;
@@ -49,7 +49,7 @@ export class IoInspector extends IoElement {
     :host io-item.io-property-editor:hover {
       text-decoration: underline;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

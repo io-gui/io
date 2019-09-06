@@ -1,15 +1,15 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {IoThemeSingleton} from "../../io-core.js";
 
 export class IoDemoTheme extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       max-width: 32em;
       padding: var(--io-spacing);
       grid-template-columns: auto 1fr !important;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {

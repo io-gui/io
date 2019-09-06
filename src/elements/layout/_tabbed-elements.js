@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import "./selector.js";
 
 const _dragicon = document.createElement('io-tab-dragicon');
@@ -20,7 +20,7 @@ const splitDirections = {
 
 export class IoSelectorTabs extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       flex-direction: column;
@@ -44,7 +44,7 @@ export class IoSelectorTabs extends IoElement {
       border: var(--io-border);
       border-radius: var(--io-border-radius);
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {
@@ -220,7 +220,7 @@ IoSelectorTabs.Register();
 
 export class IoTabs extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: flex;
       flex-direction: row;
@@ -289,7 +289,7 @@ export class IoTabs extends IoElement {
     :host > .edit-option:not(:hover) {
       opacity: 0.3;
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {
@@ -472,7 +472,7 @@ IoTabs.Register();
 
 export class IoTabDragicon extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       display: inline-block;
       cursor: pointer;
@@ -494,7 +494,7 @@ export class IoTabDragicon extends IoElement {
       left: 0;
       z-index:2147483647;
     }
-    </style>`;
+    `;
   }
 }
 
@@ -502,7 +502,7 @@ IoTabDragicon.Register();
 
 export class IoTabDropzone extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
       width: 100px;
       height: 100px;
@@ -522,7 +522,7 @@ export class IoTabDropzone extends IoElement {
                   width ease-in-out 0.3s,
                   height ease-in-out 0.3s;
     }
-    </style>`;
+    `;
   }
 }
 
