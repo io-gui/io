@@ -107,7 +107,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     */
   traverse(vChildren, host) {
     const children = host.children;
-    focusBacktrack = new WeakMap();
+    // focusBacktrack = new WeakMap();
     // remove trailing elements
     while (children.length > vChildren.length) {
       const child = children[children.length - 1];
@@ -319,13 +319,13 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
 }
 
-let focusBacktrack = new WeakMap();
-const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
-function setBacktrack(element, dir, target) {
-  const backtrack = focusBacktrack.get(element) || {};
-  backtrack[backtrackDir[dir]] = target;
-  focusBacktrack.set(element, backtrack);
-}
+// let focusBacktrack = new WeakMap();
+// const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
+// function setBacktrack(element, dir, target) {
+//   const backtrack = focusBacktrack.get(element) || {};
+//   backtrack[backtrackDir[dir]] = target;
+//   focusBacktrack.set(element, backtrack);
+// }
 
 const warning = document.createElement('div');
 warning.innerHTML = `
