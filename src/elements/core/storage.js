@@ -9,6 +9,7 @@ class EmulatedLocalStorage {
     } catch (error) {
       console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
     }
+    return undefined;
   }
   set permited(value) {
     try {
@@ -207,7 +208,7 @@ const IoStorageFactory = function(props) {
     return nodes[props.key].binding;
   }
   return new IoStorage(props).binding;
-}
+};
 
 Object.defineProperty(IoStorageFactory, 'permitted', {
   get: () => {

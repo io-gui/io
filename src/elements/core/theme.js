@@ -1,5 +1,5 @@
 import {IoElement} from "../../io.js";
-import {IoStorageFactory as $} from "../../io-core.js";
+import {IoStorageFactory as $} from "./storage.js";
 
 const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
 
