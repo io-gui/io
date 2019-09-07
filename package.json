@@ -35,7 +35,7 @@
     "uglify-demo": "uglifyjs dist/io-demo.js -cmo dist/io-demo.js --comments",
     "uglify-notify": "uglifyjs dist/io-notify.js -cmo dist/io-notify.js --comments",
     "uglify-tests": "uglifyjs dist/io-tests.js -cmo dist/io-tests.js --comments",
-    "uglify-all": "npm run uglify && npm run uglify-core && npm run uglify-extras && npm run uglify-layout && npm run uglify-math && npm run uglify-color && npm run uglify-menu && npm run uglify-object && npm run uglify-demo && npm uglify-notify && npm run uglify-tests",
+    "uglify-all": "npm run uglify && npm run uglify-core && npm run uglify-extras && npm run uglify-layout && npm run uglify-math && npm run uglify-color && npm run uglify-menu && npm run uglify-object && npm run uglify-demo && npm run uglify-notify && npm run uglify-tests",
     "build": "npm run lint && npm run rollup && npm run uglify-all",
     "travis": "npm run build"
   },
