@@ -16,16 +16,20 @@ export class IoNotify extends IoElement {
       font-weight: bold;
       align-items: center;
       justify-content: center;
+      padding: 0 var(--io-spacing);
     }
     :host > span {
       cursor: default;
       box-sizing: border-box;
-      line-height: var(--io-line-height);
+      line-height: var(--io-item-height);
       font-size: var(--io-font-size);
-      border: var(--io-border);
-      border-color: transparent;
       color: var(--io-color);
-      padding: var(--io-spacing);
+      padding: 0 var(--io-spacing);
+    }
+    :host > :nth-child(n+2) {
+      flex-shrink: 0;
+      align-self: center;
+      white-space: nowrap;
     }
     @keyframes io-notification-fade {
       to {
@@ -53,10 +57,10 @@ export class IoNotify extends IoElement {
   constructor(props) {
     super(props);
     this.template([
-      ['span', "This application uses cookies for user interface customization."],
-      ['span', "I agree"],
+      ['span', "This app uses cookies for user interface customization."],
+      ['span', "Agree"],
       ['io-boolicon', {'on-value-set': this._onAgree}],
-      ['span', "I disagree"],
+      ['span', "Disagree"],
       ['io-boolicon', {'on-value-set': this._onDisgree}],
     ]);
   }
