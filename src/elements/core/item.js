@@ -15,17 +15,17 @@ export class IoItem extends IoElement {
     :host[hidden] {
       display: none;
     }
-    :host[selected] {
+    /* :host[selected] {
       color: var(--io-color-link);
       background-color: var(--io-background-color-light);
-    }
+    } */
     :host[aria-invalid] {
       border: var(--io-border-error);
       background-image: var(--io-gradient-error);
     }
-    :host:hover {
+    /* :host:hover {
       background-color: var(--io-background-color-light);
-    }
+    } */
     :host:focus {
       text-overflow: inherit;
       border-color: var(--io-color-focus);

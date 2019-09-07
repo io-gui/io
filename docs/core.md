@@ -131,7 +131,7 @@ const icon = IoIconsetSingleton.getIcon('custom:myicon');
 
 Extends `IoElement`.
 
-Full-window click-blocking layer for elements designed to be displayed on top all other interface. When clicked, it collapses all clild elements by setting their `expanded` property to `false`. Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
+Full-window click-blocking layer for elements designed to be displayed on top all other interface. When clicked, it collapses all child elements by setting their `expanded` property to `false`. Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 ## `IoLadderSingleton`
 

@@ -1,45 +1,76 @@
 import {IoNode} from "../../io.js";
 
-let localStorage;
+// TODO: test different value types
 
-// Temporary localStorage for disabled od unaproved cookies.
-class TempLocalStorage {
+class EmulatedLocalStorage {
+  get permited() {
+    try {
+      return self.localStorage.getItem('io-storage-user-permitted');
+    } catch (error) {
+      console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
+    }
+  }
+  set permited(value) {
+    try {
+      self.localStorage.setItem('io-storage-user-permitted', value);
+      const permited = self.localStorage.getItem('io-storage-user-permitted');
+      if (permited === 'true') {
+        for (let i in this.store) {
+          self.localStorage.setItem(i, this.store[i]);
+          delete this.store[i];
+        }
+        console.log('IoStorage: Saved localStorage state.');    
+      }
+    } catch (error) {
+      console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
+    }
+  }
   constructor() {
-    Object.defineProperty(this, 'store', {value: {}});
+    Object.defineProperty(this, 'store', {value: {}, writable: true});
     Object.defineProperty(this, 'warned', {value: false, writable: true});
   }
   setItem(key, value) {
-    this.store[key] = JSON.stringify(value);
-    this.commit();
+    if (this.permited === 'true') {
+      self.localStorage.setItem(key, value);
+    } else {
+      this.store[key] = typeof value === 'object' ? JSON.stringify(value) : String(value);
+      if (!this.warned) {
+        if (this.permited === 'false') {
+          console.warn('IoStorage: localStorage permission denied by user.');
+        } else {
+          console.warn('IoStorage: localStorage pending permission by user.');
+        }
+        this.warned = true;
+      }
+      if (key === 'io-storage-user-permitted') {
+        this.permited = this.store[key];
+      }
+    }
   }
   getItem(key) {
-    return this.store[key];
+    if (this.permited === 'true') {
+      return self.localStorage.getItem(key);
+    } else {
+      return this.store[key];
+    }
   }
-  commit() {
-    const permited = this.getItem('io-storage-permitted');
-    if (permited) {
-      try {
-        localStorage = self.localStorage;
-        for (let i in this.store) {
-          localStorage.setItem(i, JSON.parse(this.store[i]));
-        }
-        console.log('IoStorage: Saved localStorage state.');
-      } catch (error) {
-        console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!')
-      }      
-    } else if (!this.warned) {
-      console.warn('localStorage not permited by user!');
-      this.warned = true;
+  removeItem(key) {
+    if (this.permited === 'true') {
+      return self.localStorage.removeItem(key);
+    } else {
+      delete this.store[key];
+    }
+  }
+  clear() {
+    if (this.permited === 'true') {
+      return self.localStorage.clear();
+    } else {
+      this.store = {};
     }
   }
 }
 
-try {
-  localStorage = !!self.localStorage.getItem('io-storage-permitted') ? self.localStorage : new TempLocalStorage();
-} catch (error) {
-  console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!')
-  localStorage = new TempLocalStorage();
-}
+const localStorage = new EmulatedLocalStorage();
 
 const nodes = {};
 let hashes = {};
@@ -166,7 +197,7 @@ class IoStorage extends IoNode {
 
 IoStorage.Register();
 
-export function IoStorageFactory(props) {
+const IoStorageFactory = function(props) {
   if (props && typeof props === 'string') {
     props = {key: props};
   }
@@ -177,3 +208,14 @@ export function IoStorageFactory(props) {
   }
   return new IoStorage(props).binding;
 }
+
+Object.defineProperty(IoStorageFactory, 'permitted', {
+  get: () => {
+    return localStorage.permited;
+  },
+  set: (value) => {
+    localStorage.permited = value;
+  }
+});
+
+export {IoStorageFactory};
