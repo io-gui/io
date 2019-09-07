@@ -1,4 +1,4 @@
-import {IoStorageFactory as $} from "./io.js";
+import {IoStorageFactory as $} from "./io-core.js";
 import {IoSelectorTabs} from "./io-layout.js";
 
 import "./demo/element-demo.js";

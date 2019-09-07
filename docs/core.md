@@ -141,6 +141,10 @@ Interactive number ladder. When dragged horizontally, it changes the value in st
 
 <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
 
+## `IoStorage`
+
+TODO
+
 ## `IoThemeSingleton`
 
 Extends `IoNode`.

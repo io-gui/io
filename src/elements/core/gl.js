@@ -297,15 +297,15 @@ export class IoGl extends IoElement {
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
-    gl.clearColor(0, 0, 0, 0);
-
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    // gl.clearColor(0, 0, 0, 1);
+    // gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
     // this.$.canvas.src = canvas.toDataURL('image/png', 0.9);
     // this.$.canvas.loading = true;
 
+    // this.$.canvas.ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.$.canvas.ctx.drawImage(canvas, 0, 0);
   }
   setShaderProgram() {

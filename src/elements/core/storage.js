@@ -1,12 +1,51 @@
-import {IoNode} from "./node.js";
+import {IoNode} from "../../io.js";
+
+let localStorage;
+
+// Temporary localStorage for disabled od unaproved cookies.
+class TempLocalStorage {
+  constructor() {
+    Object.defineProperty(this, 'store', {value: {}});
+    Object.defineProperty(this, 'warned', {value: false, writable: true});
+  }
+  setItem(key, value) {
+    this.store[key] = JSON.stringify(value);
+    this.commit();
+  }
+  getItem(key) {
+    return this.store[key];
+  }
+  commit() {
+    const permited = this.getItem('io-storage-permitted');
+    if (permited) {
+      try {
+        localStorage = self.localStorage;
+        for (let i in this.store) {
+          localStorage.setItem(i, JSON.parse(this.store[i]));
+        }
+        console.log('IoStorage: Saved localStorage state.');
+      } catch (error) {
+        console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!')
+      }      
+    } else if (!this.warned) {
+      console.warn('localStorage not permited by user!');
+      this.warned = true;
+    }
+  }
+}
+
+try {
+  localStorage = !!self.localStorage.getItem('io-storage-permitted') ? self.localStorage : new TempLocalStorage();
+} catch (error) {
+  console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!')
+  localStorage = new TempLocalStorage();
+}
 
 const nodes = {};
 let hashes = {};
 
-// let permitted = !!localStorage.getItem('io-storage-permitted');
-
 const parseHashes = function() {
-  return window.location.hash.substr(1).split('&').reduce(function (result, item) {
+  return self.location.hash.substr(1).split('&').reduce(function (result, item) {
     const parts = item.split('=');
     result[parts[0]] = parts[1];
     return result;
@@ -53,14 +92,14 @@ const setHashes = function(force) {
     }
   }
   hashString = hashString.slice(0, -1);
-  window.location.hash = hashString;
-  if (!window.location.hash) history.replaceState({}, document.title, window.location.pathname + window.location.search);
+  self.location.hash = hashString;
+  if (!self.location.hash) history.replaceState({}, document.title, self.location.pathname + self.location.search);
 };
 
-window.addEventListener("hashchange", getHashes, false);
+self.addEventListener("hashchange", getHashes, false);
 getHashes();
 
-export class IoStorage extends IoNode {
+class IoStorage extends IoNode {
   static get Properties() {
     return {
       key: String,
@@ -92,7 +131,7 @@ export class IoStorage extends IoNode {
         break;
       }
       case 'local': {
-        const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
+        const key = self.location.pathname !== '/' ? self.location.pathname + this.key : this.key;
         const localValue = localStorage.getItem(key);
         if (localValue !== null && localValue !== undefined) {
           this.value = JSON.parse(localValue);
@@ -113,7 +152,7 @@ export class IoStorage extends IoNode {
         break;
       }
       case 'local': {
-        const key = window.location.pathname !== '/' ? window.location.pathname + this.key : this.key;
+        const key = self.location.pathname !== '/' ? self.location.pathname + this.key : this.key;
         if (this.value === null || this.value === undefined) {
           localStorage.removeItem(key);
         } else {
@@ -124,6 +163,8 @@ export class IoStorage extends IoNode {
     }
   }
 }
+
+IoStorage.Register();
 
 export function IoStorageFactory(props) {
   if (props && typeof props === 'string') {
@@ -136,5 +177,3 @@ export function IoStorageFactory(props) {
   }
   return new IoStorage(props).binding;
 }
-
-IoStorage.Register();

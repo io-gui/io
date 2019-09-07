@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-
+export {IoStorageFactory} from "./elements/core/storage.js";
 export {IoThemeSingleton} from "./elements/core/theme.js";
 export {IoItem} from "./elements/core/item.js";
 export {IoContent} from "./elements/core/content.js";
