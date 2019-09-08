@@ -162,7 +162,8 @@ export class IoNumber extends IoItem {
       }
     } else if (event.which === 38) { // up
       if (IoLadderSingleton.expanded) {
-        IoLadderSingleton.querySelector('.io-up1').focus();
+        const upStep = IoLadderSingleton.querySelector('.io-up1')
+        if (upStep) upStep.focus();
       } else if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('up');
@@ -175,7 +176,8 @@ export class IoNumber extends IoItem {
       }
     } else if (event.which === 40) { // down
       if (IoLadderSingleton.expanded) {
-        IoLadderSingleton.querySelector('.io-down1').focus();
+        const downStep = IoLadderSingleton.querySelector('.io-down1');
+        if (downStep) downStep.focus();
       } else if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('down');

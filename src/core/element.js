@@ -205,21 +205,22 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
   _onFocusTo(event) {
     const src = event.composedPath()[0];
+    const dir = event.detail.dir;
+    const rect = event.detail.rect;
+    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
+
     if (src !== this) {
-
-      const dir = event.detail.dir;
-      const rect = event.detail.rect;
-
       let closest = src;
       let closestX = Infinity;
       let closestY = Infinity;
 
-      // const backtrack = focusBacktrack.get(src);
-      // if (backtrack && backtrack[dir]) {
-      //   backtrack[dir].focus();
-      //   setBacktrack(backtrack[dir], dir, src);
-      //   return;
-      // }
+      // TODO: improve backtracking
+      const backtrack = focusBacktrack.get(src);
+      if (backtrack && backtrack[dir]) {
+        backtrack[dir].focus();
+        setBacktrack(backtrack[dir], dir, src);
+        return;
+      }
 
       const siblings = this.querySelectorAll('[tabindex="0"]');
 
@@ -236,96 +237,95 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 
         const sRect = siblings[i].getBoundingClientRect();
         sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
-
+        
         let dX = Math.abs(sRect.center.x - rect.center.x);
         let dY = Math.abs(sRect.center.y - rect.center.y);
 
-        const isRight = sRect.left > rect.right;
-        const isLeft = sRect.right < rect.left;
-        const isDown = sRect.top > rect.bottom;
-        const isUp = sRect.bottom < rect.top;
-
-        // let distY = Math.sqrt(dX * dX + dY * dY * 0.1);
-        // let distX = Math.sqrt(dX * dX * 0.1 + dY * dY);
-
         // TODO: improve automatic direction routing.
         switch (dir) {
-          case 'right':
-            if (isRight) {
-              if (dX < closestX) {
+          case 'right': {
+            if (sRect.left >= (rect.right - 1)) {
+              const distX = Math.abs(sRect.left - rect.right);
+              const distY = Math.abs(sRect.center.y - rect.center.y);
+              if (distX < closestX || distY < closestY / 3) {
                 closest = siblings[i];
-                closestY = dY;
-                closestX = dX;
-              } else if (dX === closestX && dY < closestY) {
+                closestX = distX;
+                closestY = distY;
+              } else if (distX === closestX && distY < closestY) {
                 closest = siblings[i];
-                closestY = dY;
-                closestX = dX;
+                closestY = distY;
               }
             }
             break;
-          case 'left':
-            if (isLeft) {
-              if (dX < closestX) {
+          }
+          case 'left': {
+            if (sRect.right <= (rect.left + 1)) {
+              const distX = Math.abs(sRect.right - rect.left);
+              const distY = Math.abs(sRect.center.y - rect.center.y);
+              if (distX < closestX || distY < closestY / 3) {
                 closest = siblings[i];
-                closestY = dY;
-                closestX = dX;
-              } else if (dX === closestX && dY < closestY) {
+                closestX = distX;
+                closestY = distY;
+              } else if (distX === closestX && distY < closestY) {
                 closest = siblings[i];
-                closestY = dY;
-                closestX = dX;
+                closestY = distY;
               }
             }
             break;
-          case 'down':
-            if (isDown) {
-              if (dY < closestY) {
+          }
+          case 'down': {
+            if (sRect.top >= (rect.bottom - 1)) {
+              const distX = Math.abs(sRect.center.x - rect.center.x);
+              const distY = Math.abs(sRect.top - rect.bottom);
+              if (distY < closestY || distX < closestX / 3) {
                 closest = siblings[i];
-                closestY = dY;
-                closestX = dX;
-              } else if (dY === closestY && dX < closestX) {
+                closestX = distX;
+                closestY = distY;
+              } else if (distY === closestY && distX < closestX) {
                 closest = siblings[i];
-                closestY = dY;
-                closestX = dX;
+                closestX = distX;
               }
             }
             break;
-          case 'up':
-            if (isUp) {
-              if (dY < closestY) {
+          }
+          case 'up':{
+            if (sRect.bottom <= (rect.top + 1)) {
+              const distX = Math.abs(sRect.center.x - rect.center.x);
+              const distY = Math.abs(sRect.bottom - rect.top);
+              if (distY < closestY || distX < closestX / 3) {
                 closest = siblings[i];
-                closestY = dY;
-                closestX = dX;
-              } else if (dY === closestY && dX < closestX) {
+                closestX = distX;
+                closestY = distY;
+              } else if (distY === closestY && distX < closestX) {
                 closest = siblings[i];
-                closestY = dY;
-                closestX = dX;
+                closestX = distX;
               }
             }
             break;
+          }
         }
       }
 
       if (closest !== src) {
         closest.focus();
-        // setBacktrack(closest, dir, src);
+        setBacktrack(closest, dir, src);
         event.stopPropagation();
       }
     }
   }
   focusTo(dir) {
     const rect = this.getBoundingClientRect();
-    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
     this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
   }
 }
 
-// let focusBacktrack = new WeakMap();
-// const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
-// function setBacktrack(element, dir, target) {
-//   const backtrack = focusBacktrack.get(element) || {};
-//   backtrack[backtrackDir[dir]] = target;
-//   focusBacktrack.set(element, backtrack);
-// }
+let focusBacktrack = new WeakMap();
+const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
+function setBacktrack(element, dir, target) {
+  const backtrack = focusBacktrack.get(element) || {};
+  backtrack[backtrackDir[dir]] = target;
+  focusBacktrack.set(element, backtrack);
+}
 
 const warning = document.createElement('div');
 warning.innerHTML = `
