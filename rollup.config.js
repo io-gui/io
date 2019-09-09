@@ -63,6 +63,22 @@ function makeTarget(src, target) {
 
 
 export default [
+  {
+    input: 'src/io-all.js',
+    plugins: [html(), svg()],
+    inlineDynamicImports: true,
+    output: [
+      {
+        format: 'es',
+        file: 'dist/io-all.js',
+        indent: '  '
+      }
+    ],
+    onwarn: (warning, warn) => {
+      if (warning.code === 'THIS_IS_UNDEFINED') return;
+      warn(warning);
+    }
+  },
   makeTarget('src/io.js', 'dist/io.js'),
   makeTarget('src/io-core.js', 'dist/io-core.js'),
   makeTarget('src/io-extras.js', 'dist/io-extras.js'),
