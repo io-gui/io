@@ -207,7 +207,7 @@ export class IoMenuOptions extends IoElement {
     const itemDirection = this.horizontal ? 'bottom' : 'right';
     const elements = [];
     if (this.searchable) {
-      elements.push(['io-string', {value: this.bind('search'), live: true}])
+      elements.push(['io-string', {value: this.bind('search'), live: true}]);
     }
     if (this._options) {
       elements.push(...[this._options.map(option =>

@@ -162,7 +162,7 @@ export class IoNumber extends IoItem {
       }
     } else if (event.which === 38) { // up
       if (IoLadderSingleton.expanded) {
-        const upStep = IoLadderSingleton.querySelector('.io-up1')
+        const upStep = IoLadderSingleton.querySelector('.io-up1');
         if (upStep) upStep.focus();
       } else if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();

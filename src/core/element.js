@@ -248,9 +248,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 
         const sRect = siblings[i].getBoundingClientRect();
         sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
-        
-        let dX = Math.abs(sRect.center.x - rect.center.x);
-        let dY = Math.abs(sRect.center.y - rect.center.y);
 
         // TODO: improve automatic direction routing.
         switch (dir) {
