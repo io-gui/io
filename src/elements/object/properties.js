@@ -66,7 +66,7 @@ export class IoProperties extends IoElement {
       },
       config: {
         type: Object,
-        observe: Infinity, // TODO: remove?
+        observe: true,
       },
     };
   }
