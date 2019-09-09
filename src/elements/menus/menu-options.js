@@ -39,6 +39,7 @@ export class IoMenuOptions extends IoElement {
       align-self: stretch;
       justify-self: stretch;
       flex-wrap: nowrap;
+      padding: 0 var(--io-spacing);
     }
     :host[horizontal] > io-menu-item {
       border-left-width: 0;
