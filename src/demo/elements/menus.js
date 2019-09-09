@@ -22,24 +22,26 @@ export class IoDemoMenus extends IoElement {
   }
   constructor(props) {
     super(props);
+    const value = $({value: 'menu value'});
     this.template([
       ['div', {class: 'io-column'}, [
-        ['io-menu-options', {options: menuoptions, horizontal: true, selectable: true}],
+        ['io-menu-options', {value: value, options: menuoptions, horizontal: true, selectable: true}],
         ['div', {class: 'io-row'}, [
-          ['io-menu-options', {options: menuoptions, searchable: true}],
+          ['io-menu-options', {value: value, options: menuoptions, searchable: true}],
           ['div', {class: 'io-column'}, [
+            ['div', [['span', {class: 'io-item'}, 'Selected:'], ['io-item', {value: value}]]],
             ['io-menu-item', {label: 'menu item', option: $('demo:menuoption')}],
             ['div', {class: 'io-content'}, [
               ['span', 'click for menu'],
-              ['io-context-menu', {options: menuoptions, position: 'pointer', button: 0}],
+              ['io-context-menu', {value: value, options: menuoptions, position: 'pointer', button: 0}],
             ]],
             ['div', {class: 'io-content'}, [
               ['span', 'right-click for menu'],
-              ['io-context-menu', {options: menuoptions, position: 'pointer', button: 2}],
+              ['io-context-menu', {value: value, options: menuoptions, position: 'pointer', button: 2}],
             ]],
-          ]]
-        ]]
-      ]]
+          ]],
+        ]],
+      ]],
     ]);
   }
 }

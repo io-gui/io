@@ -125,6 +125,7 @@ export class IoMenuOptions extends IoElement {
       this.set('value', event.detail.value);
       this.dispatchEvent('item-clicked', event.detail, true);
       this.expanded = false;
+      this.search = '';
     }
   }
   onResized() {
