@@ -49,7 +49,7 @@ export class IoDemoColor extends IoElement {
         {label: 'cmyk', value: 3},
       ]}],
       ['io-item', {label: 'io-color-panel'}],
-      ['io-color-panel', {value: this.color, mode: this.bind('mode'), class: 'color-slider'}],
+      ['io-color-panel', {expanded: true, value: this.color, mode: this.bind('mode'), class: 'color-slider'}],
       ['io-item', {label: 'red'}], ['io-color-slider-red', {value: this.color, mode: this.bind('mode')}],
       ['io-item', {label: 'green'}], ['io-color-slider-green', {value: this.color, mode: this.bind('mode')}],
       ['io-item', {label: 'blue'}], ['io-color-slider-blue', {value: this.color, mode: this.bind('mode')}],
