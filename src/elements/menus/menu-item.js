@@ -145,19 +145,19 @@ export class IoMenuItem extends IoItem {
     }
     return !!this.filterObject(this._options || {}, (o) => { return o === this.value || o.value === this.value; });
   }
-  get _inLayer() {
-    return this.$parent && this.$parent.parentElement === IoLayerSingleton;
+  get inlayer() {
+    return this.$parent && this.$parent.inlayer;
   }
   connectedCallback() {
     super.connectedCallback();
     if (this.$options) IoLayerSingleton.appendChild(this.$options);
-    if (!this._inLayer) {
+    if (!this.inlayer) {
       IoLayerSingleton.addEventListener('pointermove', this._onLayerPointermove);
     }
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.$options && this.$options.parentElement === IoLayerSingleton) {
+    if (this.$options && this.$options.inlayer) {
       IoLayerSingleton.removeChild(this.$options);
     }
     IoLayerSingleton.removeEventListener('pointermove', this._onLayerPointermove);
@@ -181,10 +181,10 @@ export class IoMenuItem extends IoItem {
   }
   _onPointerdown(event) {
     event.stopPropagation();
+    this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
-    this.setPointerCapture(event.pointerId);
-    if (this.expanded || event.pointerType === 'mouse' || this._inLayer) {
+    if (this.expanded || event.pointerType === 'mouse' || this.inlayer) {
       this.focus();
       if (this._options) this.expanded = true;
     }
@@ -203,9 +203,15 @@ export class IoMenuItem extends IoItem {
     }
   }
   _onPointermove(event) {
-    if (!this.expanded && event.pointerType === 'touch' && !this._inLayer) {
+    event.stopPropagation();
+    if (!this.expanded && event.pointerType === 'touch' && !this.inlayer) {
+      return;
+    }    
+    const clipped = !!this.$parent && !!this.$parent.style.height;
+    if (event.pointerType === 'touch' && clipped) {
       return;
     }
+
     // TODO: Safari temp fix for event.movement = 0
     const movementX = event.clientX - this._x;
     const movementY = event.clientY - this._y;
@@ -247,6 +253,7 @@ export class IoMenuItem extends IoItem {
     if (this.expanded) this._onPointermove(event);
   }
   _onPointerup(event) {
+    event.stopPropagation();
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
     let hoveredItem = this._getHoveredItem(event);
@@ -283,11 +290,11 @@ export class IoMenuItem extends IoItem {
       if (event.key === 'ArrowDown') command = 'in';
       if (event.key === 'ArrowLeft') command = 'prev';
     }
-    if (this._inLayer && event.key === 'Tab') command = 'next';
+    if (this.inlayer && event.key === 'Tab') command = 'next';
 
     const siblings = this.$parent ? [...this.$parent.children] : [];
     const index = siblings.indexOf(this);
-    if (command && (this._inLayer || this.expanded)) {
+    if (command && (this.inlayer || this.expanded)) {
       event.preventDefault();
       switch (command) {
         case 'prev': {

@@ -117,6 +117,7 @@ export class IoMenuOptions extends IoElement {
   static get Listeners() {
     return {
       'item-clicked': '_onMenuItemClicked',
+      'touchstart': '_stopPropagation',
     };
   }
   connectedCallback() {
@@ -131,6 +132,10 @@ export class IoMenuOptions extends IoElement {
       this.expanded = false;
       this.search = '';
     }
+  }
+  // Prevents IoLayer from stopping scroll in clipped options
+  _stopPropagation(event) {
+    event.stopPropagation();
   }
   onResized() {
     this.requestAnimationFrameOnce(this._setOverflow);
@@ -217,11 +222,14 @@ export class IoMenuOptions extends IoElement {
     if (rectTop < 0) {
       this.style.top = '0px';
       this.style.height = (rectHeight + rectTop)  + 'px';
+      this.style.touchAction = 'pan-y';
     } else if (rectBottom > window.innerHeight) {
       this.style.height = (window.innerHeight - rectTop)  + 'px';
+      this.style.touchAction = 'pan-y';
     } else {
       this.style.top = top;
       this.style.height = null;
+      this.style.touchAction = null;
     }
   }
   get _options() {
@@ -230,6 +238,7 @@ export class IoMenuOptions extends IoElement {
         if (typeof option == 'object' && !!option.value) {
           if (typeof option.value === 'string' && option.value.search(this.search) !== -1) return true;
           if (typeof option.label === 'string' && option.label.search(this.search) !== -1) return true;
+          if (typeof option.hint === 'string' && option.hint.search(this.search) !== -1) return true;
         }
       });
       if (options) return options;
