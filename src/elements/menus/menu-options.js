@@ -104,6 +104,10 @@ export class IoMenuOptions extends IoElement {
         type: Boolean,
         reflect: 1,
       },
+      inlayer: {
+        type: Boolean,
+        reflect: 1,
+      },
       slotted: Array,
       $parent: HTMLElement,
       _rects: Array,
@@ -117,10 +121,10 @@ export class IoMenuOptions extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    this.setAttribute('inlayer', this.parentElement === IoLayerSingleton);
+    this.inlayer = this.parentElement === IoLayerSingleton;
   }
   _onMenuItemClicked(event) {
-    if (event.composedPath()[0] !== this) {
+    if (event.composedPath()[0].localName == 'io-menu-item') {
       event.stopImmediatePropagation();
       this.set('value', event.detail.value);
       this.dispatchEvent('item-clicked', event.detail, true);
@@ -181,17 +185,44 @@ export class IoMenuOptions extends IoElement {
     }
   }
   expandedChanged() {
-    if (this.parentElement === IoLayerSingleton) {
-      if (this.expanded && this.$parent) {
+    if (this.expanded) {
+      this.inlayer = this.parentElement === IoLayerSingleton;
+      if (this.inlayer && this.$parent) {
         // TODO: unhack incorrect this.rect on first expand.
         this.requestAnimationFrameOnce(this._expandedChangedLazy);
       }
+    } else {
+      this.style.top = null;
+      this.style.height = null;
+      this.search = '';
     }
-    if (!this.expanded) this.search = '';
+  }
+  searchChanged() {
+    if (this.inlayer && this.$parent) {
+      this.requestAnimationFrameOnce(this._clipHeight);
+    }
   }
   _expandedChangedLazy() {
-    let pRect = this.$parent.getBoundingClientRect();
+    const pRect = this.$parent.getBoundingClientRect();
     IoLayerSingleton.setElementPosition(this, this.position, pRect);
+    this._clipHeight();
+    this.searchable = !!this.style.height;
+  }
+  _clipHeight() {
+    const rectTop = this.getBoundingClientRect().top;
+    const rectBottom = this.lastChild.getBoundingClientRect().bottom;
+    const rectHeight = rectBottom - rectTop;
+
+    const top = this.style.top;
+    if (rectTop < 0) {
+      this.style.top = '0px';
+      this.style.height = (rectHeight + rectTop)  + 'px';
+    } else if (rectBottom > window.innerHeight) {
+      this.style.height = (window.innerHeight - rectTop)  + 'px';
+    } else {
+      this.style.top = top;
+      this.style.height = null;
+    }
   }
   get _options() {
     if (this.search) {
