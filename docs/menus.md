@@ -11,7 +11,7 @@ It displays `option.icon`, `option.label` and `option.hint` property and it crea
   "direction": "right",
   "selectable": false
 }' config='{
-  "direction": ["io-option-menu", {"options": ["top", "right", "bottom", "left"]}], "type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]
+  "direction": ["io-option-menu", {"options": ["top", "right", "bottom", "left"]}], "type:object": ["io-object"]
 }'></io-element-demo>
 
 ## `IoMenuOptions`
@@ -22,12 +22,14 @@ It generates a list of `IoMenuItem` elements from `options` property. If `horizo
 
 <io-element-demo element="io-menu-options" properties='{
   "value": "demo:string",
-  "selectable": false,
+  "selectable": true,
+  "searchable": true,
+  "search": "",
   "expanded": false,
   "horizontal": false,
   "options": "demo:menuoptions"
 }' config='{
-  "type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]
+  "type:object": ["io-object"]
 }'></io-element-demo>
 
 ## `IoOptionMenu`
@@ -71,5 +73,5 @@ An invisible element that inserts a floating menu when its `parentElement` is cl
   "position": "pointer",
   "selectable": false
 }' config='{
-  "position": ["io-option-menu", {"options": ["pointer", "top", "right", "bottom", "left"]}], "type:object": ["io-object", {"config": {"type:object": ["io-properties"]}}]
+  "position": ["io-option-menu", {"options": ["pointer", "top", "right", "bottom", "left"]}], "type:object": ["io-object"]
 }'></io-element-demo>

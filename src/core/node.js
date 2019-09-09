@@ -291,11 +291,12 @@ export const IoNodeMixin = (superclass) => {
       requestAnimationFrameOnce(func);
     }
     filterObject(object, predicate, _depth = 5, _chain = [], _i = 0) {
+
+      if (_chain.indexOf(object) !== -1) return; _chain.push(object);
+      if (_i > _depth) return; _i++;
+
       if (predicate(object)) return object;
-      if (_i > _depth) return;
-      _i++;
-      if (_chain.indexOf(object) !== -1) return;
-      _chain.push(object);
+
       for (let key in object) {
         const value = object[key] instanceof Binding ? object[key].value : object[key];
         if (predicate(value)) return value;
@@ -304,6 +305,23 @@ export const IoNodeMixin = (superclass) => {
           if (subvalue) return subvalue;
         }
       }
+    }
+    filterObjects(object, predicate, _depth = 5, _chain = [], _i = 0) {
+      const result = [];
+      if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
+      if (_i > _depth) return result; _i++;
+      if (predicate(object) && result.indexOf(object) === -1) result.push(object);
+      for (let key in object) {
+        const value = object[key] instanceof Binding ? object[key].value : object[key];
+        if (predicate(value) && result.indexOf(value) === -1) result.push(value);
+        if (typeof value === 'object') {
+          const results = this.filterObjects(value, predicate, _depth, _chain, _i);
+          for (let i = 0; i < results.length; i++) {
+            if (result.indexOf(results[i]) === -1) result.push(results[i]);
+          }
+        }
+      }
+      return result;
     }
   };
   classConstructor.Register = Register;

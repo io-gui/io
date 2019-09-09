@@ -24,6 +24,7 @@ export class IoString extends IoItem {
   }
   static get Properties() {
     return {
+      live: Boolean,
       value: String,
       contenteditable: true,
       role: 'textbox',
@@ -63,6 +64,14 @@ export class IoString extends IoItem {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
     if (document.activeElement !== this) this.focus();
+  }
+  _onKeyup(event) {
+    super._onKeyup(event);
+    if (this.live) {
+      const carretPosition = getCaretPosition(this);
+      this._setFromTextNode();
+      setCaretPosition(this, carretPosition);
+    }
   }
   _onKeydown(event) {
     const rng = window.getSelection().getRangeAt(0);
@@ -108,3 +117,27 @@ export class IoString extends IoItem {
 }
 
 IoString.Register();
+
+function getCaretPosition(el){
+  let position = 0;
+  const selection = window.getSelection();
+  if (selection.rangeCount) {
+    const range = selection.getRangeAt(0);
+    const selected = range.toString().length;
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(el);
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+    position = preCaretRange.toString().length - selected;
+  }
+  return position;
+}
+
+function setCaretPosition(el, position){
+  if (!position) return;
+  const sel = window.getSelection();
+  const range = document.createRange();
+  range.setStart(el.firstChild, position);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}

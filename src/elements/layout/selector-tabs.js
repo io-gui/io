@@ -15,6 +15,7 @@ export class IoSelectorTabs extends IoSelector {
       border: none;
       border-radius: 0;
       background-color: var(--io-background-color-dark);
+      padding: 0 var(--io-spacing);
     }
     :host > .io-content {
       border: var(--io-border);

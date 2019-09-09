@@ -3,9 +3,9 @@ import {IoThemeSingleton, IoStorageFactory as $} from "../io-core.js";
 
 const suboptions = [];
 const options = [
-  {label: "Red", icon: "❤️", options: ["red1", "red2", "red3"]},
-  {label: "Green", icon: "💚", options: ["green1", "green2", "green3"]},
-  {label: "Blue", icon: "💙", options: ["blue1", "blue2", "blue3"]},
+  {label: "Red", icon: "❤️", options: [{value: "Red1"}, {value: "Red2"}, {value: "Red3"}]},
+  {label: "Green", icon: "💚", options: [{value: "Green1"}, {value: "Green2"}, {value: "Green3"}]},
+  {label: "Blue", icon: "💙", options: [{value: "Blue1"}, {value: "Blue2"}, {value: "Blue3"}]},
   {label: "Numbers", options: [
     {label: 'one', value: 1},
     {label: 'two', value: 2},

@@ -1,7 +1,5 @@
 import {IoElement} from "../../io.js";
 
-// NOTE: [optmization] Uses textNode and fixed size to avoid layout trashing on change.
-
 export class IoItem extends IoElement {
   static get Style() {
     return /* css */`
@@ -15,17 +13,14 @@ export class IoItem extends IoElement {
     :host[hidden] {
       display: none;
     }
-    /* :host[selected] {
+    :host[selected] {
       color: var(--io-color-link);
       background-color: var(--io-background-color-light);
-    } */
+    }
     :host[aria-invalid] {
       border: var(--io-border-error);
       background-image: var(--io-gradient-error);
     }
-    /* :host:hover {
-      background-color: var(--io-background-color-light);
-    } */
     :host:focus {
       text-overflow: inherit;
       border-color: var(--io-color-focus);
@@ -57,14 +52,6 @@ export class IoItem extends IoElement {
       'pointerdown': '_onPointerdown',
       'click': '_onClick',
     };
-  }
-  get textNode() {
-    this.flattenTextNode(this);
-    return this._textNode.nodeValue;
-  }
-  set textNode(value) {
-    this.flattenTextNode(this);
-    this._textNode.nodeValue = String(value);
   }
   constructor(props) {
     super(props);

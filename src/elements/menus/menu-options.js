@@ -21,13 +21,11 @@ export class IoMenuOptions extends IoElement {
       opacity: 1;
       transition: opacity 0.25s;
       overflow-y: scroll !important;
+      padding: var(--io-spacing);
     }
-    :host > * {
-      align-self: stretch !important;
-      flex: 0 0;
-    }
-    :host:not([horizontal]) {
-      padding: var(--io-spacing) 0;
+    :host > io-menu-item {
+      align-self: stretch;
+      flex: 0 0 auto;
     }
     :host[inlayer] {
       box-shadow: var(--io-shadow);
@@ -42,7 +40,7 @@ export class IoMenuOptions extends IoElement {
       justify-self: stretch;
       flex-wrap: nowrap;
     }
-    :host[horizontal] > * {
+    :host[horizontal] > io-menu-item {
       border-left-width: 0;
       border-right-width: 0;
       padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
@@ -66,6 +64,17 @@ export class IoMenuOptions extends IoElement {
       overflow: hidden;
       visibility: hidden;
     }
+    :host > io-string {
+      align-self: stretch;
+      flex: 0 0 auto;
+      min-width: 8em;
+    }
+    :host > io-string:empty:before {
+      content: ' 🔍 Search';
+      white-space: pre;
+      visibility: visible;
+      opacity: 0.33;
+    }
     `;
   }
   static get Properties() {
@@ -87,7 +96,9 @@ export class IoMenuOptions extends IoElement {
         reflect: 1,
       },
       position: 'right',
-      selectable: false,
+      selectable: Boolean,
+      searchable: Boolean,
+      search: String,
       overflow: {
         type: Boolean,
         reflect: 1,
@@ -174,16 +185,32 @@ export class IoMenuOptions extends IoElement {
         this.requestAnimationFrameOnce(this._expandedChangedLazy);
       }
     }
+    if (!this.expanded) this.search = '';
   }
   _expandedChangedLazy() {
     let pRect = this.$parent.getBoundingClientRect();
     IoLayerSingleton.setElementPosition(this, this.position, pRect);
   }
+  get _options() {
+    if (this.search) {
+      const options = this.filterObjects(this.options, option => {
+        if (typeof option == 'object' && !!option.value) {
+          if (typeof option.value === 'string' && option.value.search(this.search) !== -1) return true;
+          if (typeof option.label === 'string' && option.label.search(this.search) !== -1) return true;
+        }
+      });
+      if (options) return options;
+    }
+    return this.options;
+  }
   changed() {
     const itemDirection = this.horizontal ? 'bottom' : 'right';
     const elements = [];
-    if (this.options) {
-      elements.push(...[this.options.map(option =>
+    if (this.searchable) {
+      elements.push(['io-string', {value: this.bind('search'), live: true}])
+    }
+    if (this._options) {
+      elements.push(...[this._options.map(option =>
         ['io-menu-item', {
           $parent: this,
           option: option,

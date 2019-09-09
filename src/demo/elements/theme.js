@@ -16,17 +16,10 @@ export class IoDemoTheme extends IoElement {
       class: 'io-table2',
     };
   }
-  _setTheme(value) {
-    IoThemeSingleton.theme = value;
-  }
   constructor(props) {
     super(props);
-    const options = [
-      {value: 'light', action: this._setTheme},
-      {value: 'dark', action: this._setTheme},
-    ];
     this.template([
-      ['io-item', {label: ' '}], ['io-option-menu', {label: 'Theme ▾', options: options}],
+      ['io-item', {label: 'Choose theme:'}], ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: [{value: 'light'}, {value: 'dark'}]}],
       ['io-item', {label: 'cssSpacing'}],
       ['io-number-slider', {value: IoThemeSingleton.bind('cssSpacing'), min: 0, max: 20, step: 1}],
       ['io-item', {label: 'cssBorderRadius'}],

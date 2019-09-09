@@ -121,56 +121,29 @@ export class IoMenuItem extends IoItem {
     event.preventDefault();
   }
   get _options() {
-    if (this.option && this.option.options && this.option.options.length) {
-      return this.option.options;
-    }
-    return undefined;
+    return this._option.options;
   }
   get _action() {
-    if (this.option && typeof this.option.action === 'function') {
-      return this.option.action;
-    }
-    return undefined;
+    return this._option.action;
   }
   get _value() {
-    if (this.option && this.option.value !== undefined) {
-      return this.option.value;
-    } else if (this.option !== undefined && typeof this.option !== 'object') return this.option;
-    return undefined;
+    return this._option.value;
   }
   get _icon() {
-    if (this.option && this.option.icon !== undefined) {
-      return this.option.icon;
-    }
-    return undefined;
+    return this._option.icon || '';
   }
   get _label() {
-    if (this.label) return this.label;
-    if (this.option && this.option.label !== undefined) {
-      return this.option.label;
-    }
-    if (this.option && this.option.value !== undefined) {
-      return String(this.option.value);
-    }
-    else return String(this.option);
+    return this.label || this._option.label || String(this._option.value) || '';
   }
   get _hint() {
-    if (this.option && this.option.hint !== undefined) {
-      return this.option.hint;
-    }
-    return undefined;
+    return this._option.hint || '';
   }
   get _selected() {
-    // TODO: make optional selectable on individual options.
     if (!this.selectable) return false;
-    if (this.option && (this.option.selected || this.option.value === this.value)) {
-      return true;
-    } else if (this.value === this.option) {
+    if (this._option.selected || this._option.value === this.value) {
       return true;
     }
-    const options = this._options;
-    if (options) return !!this.filterObject(options, (o) => { return o === this.value || o.value === this.value; });
-    return false;
+    return !!this.filterObject(this._options || {}, (o) => { return o === this.value || o.value === this.value; });
   }
   get _inLayer() {
     return this.$parent && this.$parent.parentElement === IoLayerSingleton;
@@ -336,7 +309,7 @@ export class IoMenuItem extends IoItem {
           break;
         }
         case 'in':
-          if (this.$options.children.length) this.$options.children[0].focus();
+          if (this.$options && this.$options.children.length) this.$options.children[0].focus();
           break;
         case 'out':
           this.expanded = false;
@@ -360,6 +333,11 @@ export class IoMenuItem extends IoItem {
     }
   }
   optionChanged() {
+    if (this.option && typeof this.option === 'object') {
+      this._option = this.option;
+    } else {
+      this._option = {value: this.option};
+    }
     if (this._options) {
       if (!this.$options) {
         this.$options = new IoMenuOptions({
@@ -399,10 +377,10 @@ export class IoMenuItem extends IoItem {
   changed() {
     this.__properties.selected.value = this._selected;
     this.setAttribute('selected', this._selected);
-    this.setAttribute('hasmore', this._options && this.direction === 'right');
+    this.setAttribute('hasmore', !!this._options && this.direction === 'right');
     this.template([
       ['span', {class: 'io-menu-icon'}, this._icon],
-      ['span', {class: 'io-menu-label'}, this._label || String(this._value)],
+      ['span', {class: 'io-menu-label'}, this._label],
       ['span', {class: 'io-menu-hint'}, this._hint],
     ]);
     if (this.$options) {

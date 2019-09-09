@@ -37,10 +37,7 @@ export class IoOptionMenu extends IoMenuItem {
     };
   }
   get _options() {
-    if (this.options && this.options.length) {
-      return this.options;
-    }
-    return undefined;
+    return this.options;
   }
   changed() {
     let valueText;

@@ -26,7 +26,7 @@ export class IoDemoMenus extends IoElement {
       ['div', {class: 'io-column'}, [
         ['io-menu-options', {options: menuoptions, horizontal: true, selectable: true}],
         ['div', {class: 'io-row'}, [
-          ['io-menu-options', {options: menuoptions}],
+          ['io-menu-options', {options: menuoptions, searchable: true}],
           ['div', {class: 'io-column'}, [
             ['io-menu-item', {label: 'menu item', option: $('demo:menuoption')}],
             ['div', {class: 'io-content'}, [

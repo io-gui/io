@@ -97,13 +97,14 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     */
   template(vDOM, host) {
     const vChildren = buildTree()(['root', vDOM]).children;
+    host = host || this;
     if (host === this) this.__properties.$.value = {};
-    this.traverse(vChildren, host || this);
+    this.traverse(vChildren, host);
   }
   /**
-    * Recurively traverses vDOM.
-    * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
-    * @param {HTMLElement} [host] - Optional template target.
+   * Recurively traverses vDOM.
+   * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
+   * @param {HTMLElement} [host] - Optional template target.
     */
   traverse(vChildren, host) {
     const children = host.children;
@@ -121,7 +122,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     if (children.length < vChildren.length) {
       const frag = document.createDocumentFragment();
       for (let i = children.length; i < vChildren.length; i++) {
-        frag.appendChild(constructElement(vChildren[i]));
+        const element = constructElement(vChildren[i]);
+        frag.appendChild(element);
       }
       host.appendChild(frag);
     }
@@ -129,7 +131,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     for (let i = 0; i < children.length; i++) {
       if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];
-        host.insertBefore(constructElement(vChildren[i]), oldElement);
+        const element = constructElement(vChildren[i]);
+        host.insertBefore(element, oldElement);
         host.removeChild(oldElement);
         // TODO: enable and test!
         // const nodes = Array.from(oldElement.querySelectorAll('*'));
@@ -187,7 +190,15 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         if (i !== 0) element.removeChild(element.childNodes[i]);
       }
       element._textNode.nodeValue = textContent;
-    }
+    } 
+  }
+  get textNode() {
+    this.flattenTextNode(this);
+    return this._textNode.nodeValue;
+  }
+  set textNode(value) {
+    this.flattenTextNode(this);
+    this._textNode.nodeValue = String(value);
   }
   /**
    * Alias for HTMLElement setAttribute where falsey values remove the attribute.
