@@ -323,6 +323,20 @@ export const IoNodeMixin = (superclass) => {
       }
       return result;
     }
+    import(path) {
+      const importPath = new URL(path, window.location).href;
+      return new Promise(resolve => {
+        if (!path || importedPaths[importPath]) {
+          resolve(importPath);
+        } else {
+          import(importPath)
+          .then(() => {
+            importedPaths[importPath] = true;
+            resolve(importPath);
+          });
+        }
+      });
+    }
   };
   classConstructor.Register = Register;
   return classConstructor;
@@ -383,6 +397,8 @@ const Register = function () {
 };
 
 IoNodeMixin.Register = Register;
+
+const importedPaths = {};
 
 // TODO: document and test
 const preThrottleQueue = new Array();

@@ -2,8 +2,6 @@ import {IoElement} from "../../io.js";
 
 // TODO: use IoContent for caching and display.
 
-const importedPaths = {};
-
 export class IoSelector extends IoElement {
   static get Style() {
     return /* css */`
@@ -73,21 +71,6 @@ export class IoSelector extends IoElement {
   connectedCallback() {
     super.connectedCallback();
     this.scrollTo(this._scrollID, false);
-  }
-  // TODO: consider moving to IoElement class.
-  import(path) {
-    const importPath = new URL(path, window.location).href;
-    return new Promise(function(resolve) {
-      if (!path || importedPaths[importPath]) {
-        resolve(importPath);
-      } else {
-        import(importPath)
-        .then(() => {
-          importedPaths[importPath] = true;
-          resolve(importPath);
-        });
-      }
-    });
   }
   scrollTo(id, smooth) {
     if (!id) return;
