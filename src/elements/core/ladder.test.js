@@ -1,5 +1,7 @@
 import "../../io-core.js";
 
+// TODO: test with src element.
+
 export default class {
   constructor() {
     this.element = document.createElement('io-ladder');
@@ -7,7 +9,6 @@ export default class {
     document.body.appendChild(this.element);
   }
   reset() {
-    this.element.value = 0;
     this.element.conversion = 1;
     this.element.step = 0.0001;
     this.element.min = -Infinity;
@@ -18,7 +19,6 @@ export default class {
       describe('default values', () => {
         it('has default values', () => {
           chai.expect(this.element.label).to.equal('');
-          chai.expect(this.element.value).to.equal(0);
           chai.expect(this.element.conversion).to.equal(1);
           chai.expect(this.element.expanded).to.equal(false);
           chai.expect(this.element.min).to.equal(-Infinity);
@@ -96,9 +96,10 @@ export default class {
           chai.expect($('.io-up1').getAttribute('aria-label')).to.equal('1');
           chai.expect($('.io-up1').getAttribute('aria-valuemax')).to.equal('Infinity');
           chai.expect($('.io-up1').getAttribute('aria-valuemin')).to.equal('-Infinity');
-          chai.expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('0');
-          this.element.value = 3;
-          chai.expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('3');
+          // TODO: test with src element
+          // chai.expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('0');
+          // this.element.value = 3;
+          // chai.expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('3');
           this.element.step = 0.5;
           chai.expect($('.io-up1').getAttribute('aria-label')).to.equal('5');
         });
