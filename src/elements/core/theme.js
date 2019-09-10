@@ -108,14 +108,9 @@ export class IoTheme extends IoElement {
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       -webkit-tap-highlight-color: transparent;
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: var(--io-color-border-inset);
       color: var(--io-color);
       background-color: var(--io-background-color);
       background-image: none;
-      padding: var(--io-spacing);
-      box-shadow: var(--io-shadow-inset);
     }
     --io-row: {
       display: flex;

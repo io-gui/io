@@ -234,14 +234,15 @@ export class IoMenuOptions extends IoElement {
   }
   get _options() {
     if (this.search) {
-      const options = this.filterObjects(this.options, option => {
-        if (typeof option == 'object' && !!option.value) {
-          if (typeof option.value === 'string' && option.value.search(this.search) !== -1) return true;
-          if (typeof option.label === 'string' && option.label.search(this.search) !== -1) return true;
-          if (typeof option.hint === 'string' && option.hint.search(this.search) !== -1) return true;
+      const s = this.search.toLowerCase();
+      const options = this.filterObjects(this.options, o => {
+        if (!!o.value || !!o.action) {
+          if (String(o.value).toLowerCase().search(s) !== -1) return true;
+          if (o.label && o.label.toLowerCase().search(s) !== -1) return true;
+          if (o.hint && o.hint.toLowerCase().search(s) !== -1) return true;
         }
       });
-      if (options) return options;
+      return options.length ? options : [{label: 'No matches'}];
     }
     return this.options;
   }

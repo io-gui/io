@@ -5,36 +5,26 @@ export class IoSelectorSidebar extends IoSelector {
   static get Style() {
     return /* css */`
     :host {
-      flex-direction: row-reverse;
-      align-self: stretch;
-      justify-self: stretch;
-      flex: 1 1 auto;
-    }
-    :host[left] {
       flex-direction: row;
     }
-    :host[overflow] {
+    :host[right] {
+      flex-direction: row-reverse;
+    }
+    :host[collapsed] {
       flex-direction: column;
     }
     :host > io-sidebar {
-      flex: 0 0 auto;
-      background-color: var(--io-background-color-dark);
-    }
-    :host:not([overflow]) > io-sidebar {
       flex: 0 0 8em;
-    }
-    :host > .io-content {
+      background-color: var(--io-background-color-dark);
       border: var(--io-border);
       border-width: 0 var(--io-border-width) 0 0;
-      padding: 0;
-      box-shadow: none;
-      border-radius: 0;
     }
-    :host[left] > .io-content {
+    :host[right] > io-sidebar {
       border-width: 0 0 0 var(--io-border-width);
-    }
-    :host[overflow] > .io-content {
-      border-width: var(--io-border-width) 0 0 0;
+    } 
+    :host[collapsed] > io-sidebar {
+      flex: 0 0 auto;
+      border-width: 0 0 var(--io-border-width) 0;
     }
     `;
   }
@@ -44,36 +34,26 @@ export class IoSelectorSidebar extends IoSelector {
         type: Array,
         observe: true,
       },
-      minWidth: 410,
-      label: {
-        reflect: 1,
-      },
-      overflow: {
+      collapseWidth: 410,
+      collapsed: {
         type: Boolean,
         reflect: 1,
       },
-      left: {
-        value: true,
+      right: {
+        type: Boolean,
         reflect: 1,
       },
     };
   }
-  get _options() {
-    return this.options.length ? this.options : this.elements.map(element => { return element[1].name; });
-  }
-  minWidthChanged() {
-    this.onResized();
-  }
   onResized() {
-    this.overflow = this.getBoundingClientRect().width < this.minWidth;
+    this.collapsed = this.getBoundingClientRect().width < this.collapseWidth;
   }
-  leftChanged() { this.update(); }
-  overflowChanged() { this.update(); }
+  collapsedChanged() { this.update(); }
   getSlotted() {
     return ['io-sidebar', {
       selected: this.bind('selected'),
-      options: this._options,
-      overflow: this.overflow,
+      options: this.options,
+      collapsed: this.collapsed,
     }];
   }
 }

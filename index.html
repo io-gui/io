@@ -103,7 +103,7 @@
         display: flex;
         padding: 0;
       }
-      .docs > io-sidebar:not([overflow]) {
+      .docs > io-sidebar:not([collapsed]) {
         flex-basis: 11em !important;
       }
     </style>
@@ -140,7 +140,7 @@
           {label: 'Test', value: 'test'},
         ];
         this.elements = [
-          ['io-selector-sidebar', {name: 'docs', minWidth: 640, class: 'docs', selected: $({value: 'getting-started#about-io', storage: 'hash', key: 'doc'}),
+          ['io-selector-sidebar', {name: 'docs', collapseWidth: 640, class: 'docs', selected: $({value: 'getting-started#about-io', storage: 'hash', key: 'doc'}),
             options: [
               {label: "Getting Started", options: [
                 {label: "About Io", value: "getting-started#about-io"},

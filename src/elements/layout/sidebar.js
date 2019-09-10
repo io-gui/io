@@ -11,7 +11,7 @@ export class IoSidebar extends IoElement {
       overflow-y: auto;
       padding: var(--io-spacing);
     }
-    :host:not([overflow]) {
+    :host:not([collapsed]) {
       -webkit-overflow-scrolling: touch;
       flex-direction: column;
     }
@@ -44,10 +44,8 @@ export class IoSidebar extends IoElement {
         type: Array,
         observe: true,
       },
-      label: {
-        reflect: 1,
-      },
-      overflow: {
+      collapsed: {
+        type: Boolean,
         reflect: 1,
       },
       role: 'navigation',
@@ -85,7 +83,7 @@ export class IoSidebar extends IoElement {
   }
   changed() {
     let selectedOption = this.filterObject(this.options, option => matches(this.selected, option));
-    if (this.overflow) {
+    if (this.collapsed) {
       const label = selectedOption ? (selectedOption.label || String(selectedOption.value)) : String(this.selected).split('#')[0];
       this.template([['io-option-menu', {
         label: '☰  ' + label,

@@ -39,7 +39,7 @@ for (let i = 0; i < 100; i++) {
   const r2 = words[Math.floor(Math.random() * 20)];
   const r3 = words[Math.floor(Math.random() * 20)];
   const i = hearts[Math.floor(Math.random() * 10)] || '';
-  longOptions.push({icon: i, label: r1 + ' ' + r2, value: Math.random(), hint: r3});
+  longOptions.push({icon: i, label: r1 + ' ' + r2, value: r1 + ' ' + r2, hint: r3});
 }
 
 $({key: 'demo:boolean', value: true});
@@ -85,6 +85,13 @@ export class IoElementDemo extends IoElement {
     }
     :host > io-properties > :nth-child(2) {
       margin-right: calc(var(--io-item-height) + var(--io-spacing));
+    }
+    :host > .io-content {
+      border-radius: var(--io-border-radius);
+      border: var(--io-border);
+      border-color: var(--io-color-border-inset);
+      padding: var(--io-spacing);
+      box-shadow: var(--io-shadow-inset);
     }
     :host:not([expanded]) > .io-content {
       margin-right: calc(var(--io-item-height) + calc(3 * var(--io-spacing)));
@@ -168,6 +175,7 @@ export class IoElementDemo extends IoElement {
          if (this.width) this.$['demo-element'].style.width = this.width;
          if (this.height) this.$['demo-element'].style.height = this.height;
        }
+       if (this.$['demo-element'].onResized) this.$['demo-element'].onResized();
     } else {
       this.template([null]);
     }
