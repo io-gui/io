@@ -126,7 +126,7 @@ export class IoMenuOptions extends IoElement {
   }
   _onMenuItemClicked(event) {
     if (event.composedPath()[0].localName == 'io-menu-item') {
-      event.stopImmediatePropagation();
+      event.stopPropagation();
       this.set('value', event.detail.value);
       this.dispatchEvent('item-clicked', event.detail, true);
       this.expanded = false;

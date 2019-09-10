@@ -63,17 +63,12 @@ class IoLadderStep extends IoItem {
     }
   }
   _onPointerdown(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
-    this.focus();
     this._startX = event.clientX;
   }
   _onPointermove(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
     const deltaX = event.clientX - this._startX;
     if (Math.abs(deltaX) > 5) {
       const expMove = Math.pow(deltaX / 5, 3);
@@ -84,8 +79,6 @@ class IoLadderStep extends IoItem {
     }
   }
   _onPointerup(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
     this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
@@ -183,8 +176,7 @@ class IoLadder extends IoElement {
   }
   static get Properties() {
     return {
-      srcElement: HTMLElement,
-      value: Number,
+      src: HTMLElement,
       conversion: 1,
       expanded: {
         type: Boolean,
@@ -203,13 +195,16 @@ class IoLadder extends IoElement {
       'focusin': '_onFocusIn',
     };
   }
+  get value() {
+    return this.src ? this.src.value : 0;
+  }
   _onFocusIn(event) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
   }
   _onFocusTo(event) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
     const srcStep = event.composedPath()[0];
-    const src = this.srcElement;
+    const src = this.src;
     const dir = event.detail.dir;
     if (src) {
       if ((srcStep === this.querySelector('.io-up1') && dir === 'down') ||
@@ -222,20 +217,32 @@ class IoLadder extends IoElement {
     super._onFocusTo(event);
   }
   _onLadderStepChange(event) {
-    event.stopImmediatePropagation();
-    const step = event.detail.step;
-    const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
-    let newValue = Math.min(this.max, Math.max(this.min, value + step));
-    this.set('value', Number(newValue.toFixed(5)));
+    const src = this.src;
+    if (this.src) {
+      const step = event.detail.step;
+      const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
+      let newValue = Math.min(this.max, Math.max(this.min, value + step));
+      newValue = Number(newValue.toFixed(5));
+      src.set('value', newValue);
+    }
   }
   _onLadderStepCollapse() {
-    event.stopImmediatePropagation();
     this.set('expanded', false);
   }
+  srcChanged() {
+    const src = this.src;
+    if (src) this.setProperties({
+      min: src.min,
+      max: src.max,
+      step: src.step,
+      conversion: src.conversion,
+    });
+  }
   expandedChanged() {
+    const src = this.src;
     if (this.expanded) {
-      if (this.srcElement) {
-        const rect = this.srcElement.getBoundingClientRect();
+      if (src) {
+        const rect = src.getBoundingClientRect();
         // NOTE: layerRect fix for Safari zoom.
         const layerRect = IoLayerSingleton.getBoundingClientRect();
         this.style.top = rect.bottom - layerRect.top + 'px';
@@ -246,8 +253,8 @@ class IoLadder extends IoElement {
         this.removeAttribute('style');
       }
     } else {
-      if (this.srcElement && this.srcElement._pointerType !== 'touch') {
-        this.srcElement.focus();
+      if (src && src._pointerType !== 'touch') {
+        src.focus();
       } else if (lastFocus) {
         lastFocus.focus();
       }

@@ -42,12 +42,7 @@ class IoLayer extends IoElement {
     }
     :host > * {
       position: absolute;
-      pointer-events: all;
       touch-action: none;
-    }
-    :host > *:not([expanded]) {
-      visibility: hidden;
-      pointer-events: none;
     }
     `;
   }
@@ -57,18 +52,13 @@ class IoLayer extends IoElement {
         value: false,
         reflect: 1,
       },
-      srcElement: HTMLElement,
     };
   }
   static get Listeners() {
     return {
       'pointerdown': '_onPointerdown',
-      'pointermove': '_onPointermove',
-      'pointerup': '_onPointerup',
-      'touchstart': '_stopPreventDefault',
-      'mousedown': '_stopPreventDefault',
-      'contextmenu': '_stopPreventDefault',
-      'focusin': '_stopPreventDefault',
+      'contextmenu': '_onContextmenu',
+      'focusin': '_onFocusIn',
       'scroll': '_onScroll',
       'wheel': '_onScroll',
     };
@@ -78,62 +68,22 @@ class IoLayer extends IoElement {
     Object.defineProperty(this, 'x', {value: null, writable: true});
     Object.defineProperty(this, 'y', {value: null, writable: true});
   }
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener('resize', this._onWindowResize, {capture: true, passive: true});
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('resize', this._onWindowResize, {capture: true, passive: true});
-  }
-  _onScroll(event) {
-    event.stopPropagation();
+  _onPointerdown(event) {
     if (event.composedPath()[0] === this) {
+      this.setPointerCapture(event.pointerId);
       this.expanded = false;
     }
   }
-  _stopPreventDefault(event) {
+  _onContextmenu(event) {
     event.preventDefault();
-    event.stopImmediatePropagation();
   }
   _onFocusIn(event) {
     event.stopPropagation();
   }
-  _onWindowResize() {
-    this.expanded = false;
-  }
-  _onPointerdown(event) {
-    event.stopPropagation();
+  _onScroll(event) {
     if (event.composedPath()[0] === this) {
-      this.setPointerCapture(event.pointerId);
+      this.expanded = false;
     }
-  }
-  _onPointermove(event) {
-    event.stopPropagation();
-    this.x = event.clientX;
-    this.y = event.clientY;
-  }
-  _onPointerup(event) {
-    event.stopPropagation();
-    this.x = null;
-    this.y = null;
-    if (event.composedPath()[0] === this) {
-      this.releasePointerCapture(event.pointerId);
-      this._collapseOrFocusSrcElement(event);
-    }
-  }
-  _collapseOrFocusSrcElement(event) {
-    const x = event.clientX;
-    const y = event.clientY;
-    if (this.srcElement) {
-      const rect = this.srcElement.getBoundingClientRect();
-      if (x > rect.x && x < rect.right && y > rect.y && y < rect.bottom) {
-        this.srcElement.focus();
-        this.expanded = false;
-        return;
-      }
-    }
-    this.expanded = false;
   }
   nudgeDown(element, x, y, elemRect, force) {
     x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
@@ -212,6 +162,16 @@ class IoLayer extends IoElement {
         this.nudgeLeft(element, left, top, elemRect, rightToWidth <= left);
         break;
     }
+  }
+  appendChild(child) {
+    super.appendChild(child);
+    child.addEventListener('expanded-changed', this.onChildExpanded);
+    this.onChildExpanded();
+  }
+  removeChild(child) {
+    super.removeChild(child);
+    child.removeEventListener('expanded-changed', this.onChildExpanded);
+    this.onChildExpanded();
   }
   onChildExpanded() {
     this.requestAnimationFrameOnce(this.onChildExpandedDelayed);

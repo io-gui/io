@@ -33,7 +33,7 @@ export class IoOptionMenu extends IoMenuItem {
         observe: true,
       },
       role: 'button',
-      lazy: false,
+      // lazy: false,
     };
   }
   get _options() {

@@ -14,6 +14,9 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
       min-height: var(--io-line-height);
       flex-direction: column;
     }
+    :host:not([expanded]) {
+      display: none;
+    }
     :host[horizontal] {
       flex-direction: row;
     }
@@ -70,4 +73,3 @@ IoColorPanel.Register();
 
 export const IoColorPanelSingleton = new IoColorPanel();
 IoLayerSingleton.appendChild(IoColorPanelSingleton);
-IoColorPanelSingleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);

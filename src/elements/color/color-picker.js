@@ -46,7 +46,7 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
     this.toggle();
   }
   get expanded() {
-    return IoColorPanelSingleton.expanded && IoLayerSingleton.srcElement === this;
+    return IoColorPanelSingleton.expanded && IoColorPanelSingleton.value === this.value;
   }
   _onKeydown(event) {
     const rect = this.getBoundingClientRect();
@@ -80,12 +80,10 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
     IoColorPanelSingleton.style.width = hasAlpha ? '192px' : '160px';
     IoColorPanelSingleton.style.height = '128px';
     IoColorPanelSingleton.expanded = true;
-    IoLayerSingleton.srcElement = this;
     IoLayerSingleton.setElementPosition(IoColorPanelSingleton, 'bottom', this.getBoundingClientRect());
   }
   collapse() {
     IoColorPanelSingleton.expanded = false;
-    IoLayerSingleton.srcElement = undefined;
   }
   changed() {
     this.template([['io-color-swatch', {value: this.value, mode: this.mode}]]);

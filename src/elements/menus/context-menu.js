@@ -27,7 +27,6 @@ export class IoContextMenu extends IoElement {
         options: this.options,
         position: this.position,
         'on-io-menu-item-clicked': this._onOptionItemClicked,
-        'on-expanded-changed': IoLayerSingleton.onChildExpanded,
       }
     };
   }

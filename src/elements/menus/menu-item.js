@@ -334,11 +334,12 @@ export class IoMenuItem extends IoItem {
   }
   _onOptionItemClicked(event) {
     if (event.composedPath()[0] !== this) {
-      event.stopImmediatePropagation();
+      event.stopPropagation();
       this.set('value', event.detail.value);
       this.dispatchEvent('item-clicked', event.detail, true);
     }
   }
+
   optionChanged() {
     if (this.option && typeof this.option === 'object') {
       this._option = this.option;
@@ -351,13 +352,13 @@ export class IoMenuItem extends IoItem {
           $parent: this,
           expanded: this.bind('expanded'),
           'on-item-clicked': this._onOptionItemClicked,
-          'on-expanded-changed': IoLayerSingleton.onChildExpanded,
         });
       }
     }
   }
   expandedChanged() {
     if (this.expanded) {
+      this.lazy = false;
       if (this.$options && this.$options.parentElement !== IoLayerSingleton) {
         IoLayerSingleton.appendChild(this.$options);
       }

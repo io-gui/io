@@ -60,20 +60,20 @@ export class IoNumber extends IoItem {
   }
   constructor(props) {
     super(props);
-    Object.defineProperty(this, '_pointerType', {value: 'touch', writable: true});
+    Object.defineProperty(this, '_pointer', {value: 'touch', writable: true});
   }
   _onPointerdown(event) {
-    if (this._pointerType === 'touch') event.preventDefault();
+    if (this._pointer === 'touch') event.preventDefault();
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
     if (document.activeElement === this && event.button === 0) return;
-    this._pointerType = event.pointerType;
+    this._pointer = event.pointerType;
   }
   _onPointerup(event) {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
     if (this.ladder || event.button === 1) {
-      if (this._pointerType === 'touch') {
+      if (this._pointer === 'touch') {
         event.preventDefault();
         document.activeElement.blur();
       } else {
@@ -86,14 +86,13 @@ export class IoNumber extends IoItem {
   }
   _onFocus(event) {
     super._onFocus(event);
-    if (this._pointerType === 'touch') {
+    if (this._pointer === 'touch') {
       IoLadderSingleton.expanded = false;
     }
   }
   _onBlur(event) {
     super._onBlur(event);
     this._setFromTextNode();
-    IoLadderSingleton.value = this.value;
     this.scrollTop = 0;
     this.scrollLeft = 0;
     // TODO: unhack race condition
@@ -103,24 +102,9 @@ export class IoNumber extends IoItem {
       }
     });
   }
-  _onValueSet(event) {
-    if (event.detail.property === 'value') {
-      this.set('value', event.detail.value);
-    }
-  }
   _expandLadder() {
-    IoLayerSingleton.srcElement = this;
-    IoLadderSingleton.setProperties({
-      srcElement: this,
-      min: this.min,
-      max: this.max,
-      step: this.step,
-      value: this.value,
-      conversion: this.conversion,
-      expanded: true,
-      'on-value-set': this._onValueSet,
-      'on-expanded-changed': IoLayerSingleton.onChildExpanded,
-    });
+    IoLadderSingleton.src = this;
+    IoLadderSingleton.expanded = true;
   }
   _onKeydown(event) {
     const rng = window.getSelection().getRangeAt(0);
@@ -157,7 +141,6 @@ export class IoNumber extends IoItem {
     } else if (event.which === 37) { // left
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
-        IoLadderSingleton.srcElement = null;
         this.focusTo('left');
       }
     } else if (event.which === 38) { // up
@@ -171,7 +154,6 @@ export class IoNumber extends IoItem {
     } else if (event.which === 39) { // right
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
-        IoLadderSingleton.srcElement = null;
         this.focusTo('right');
       }
     } else if (event.which === 40) { // down
