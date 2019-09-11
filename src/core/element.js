@@ -226,12 +226,12 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       let closestY = Infinity;
 
       // TODO: improve backtracking
-      const backtrack = focusBacktrack.get(src);
-      if (backtrack && backtrack[dir]) {
-        backtrack[dir].focus();
-        setBacktrack(backtrack[dir], dir, src);
-        return;
-      }
+      // const backtrack = focusBacktrack.get(src);
+      // if (backtrack && backtrack[dir]) {
+      //   backtrack[dir].focus();
+      //   setBacktrack(backtrack[dir], dir, src);
+      //   return;
+      // }
 
       const siblings = this.querySelectorAll('[tabindex="0"]');
 
@@ -316,7 +316,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 
       if (closest !== src) {
         closest.focus();
-        setBacktrack(closest, dir, src);
+        // setBacktrack(closest, dir, src);
         event.stopPropagation();
       }
     }
@@ -327,13 +327,13 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
 }
 
-let focusBacktrack = new WeakMap();
-const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
-function setBacktrack(element, dir, target) {
-  const backtrack = focusBacktrack.get(element) || {};
-  backtrack[backtrackDir[dir]] = target;
-  focusBacktrack.set(element, backtrack);
-}
+// let focusBacktrack = new WeakMap();
+// const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
+// function setBacktrack(element, dir, target) {
+//   const backtrack = focusBacktrack.get(element) || {};
+//   backtrack[backtrackDir[dir]] = target;
+//   focusBacktrack.set(element, backtrack);
+// }
 
 const warning = document.createElement('div');
 warning.innerHTML = `
