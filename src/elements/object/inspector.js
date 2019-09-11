@@ -13,6 +13,9 @@ export class IoInspector extends IoElement {
     :host > io-breadcrumbs {
       margin-bottom: var(--io-spacing);
     }
+    :host > io-object > io-boolean {
+      text-transform: capitalize;
+    }
     :host > io-object > io-properties {
       border-radius: var(--io-border-radius);
       background-color: var(--io-background-color) !important;
@@ -31,10 +34,17 @@ export class IoInspector extends IoElement {
   }
   static get Properties() {
     return {
-      value: Object,
-      selected: Object,
+      value: {
+        type: Object,
+        observe: 2,
+      },
+      selected: {
+        type: Object,
+        observe: 1,
+      },
       groups: Object,
       config: Object,
+      autoExpand: ['properties'],
     };
   }
   static get Listeners() {
@@ -64,10 +74,11 @@ export class IoInspector extends IoElement {
     const groups = this.__proto__.__groups.getGroups(this.selected, this.groups);
     const config = this.__proto__.__config.getConfig(this.selected, this.config);
     for (let group in groups) {
+      const autoExpanded = this.autoExpand.indexOf(group) !== -1;
       elements.push(
         ['io-object', {
           label: group,
-          expanded: $({value: true, storage: 'local', key: this.uuid + '-' + group}),
+          expanded: $({value: autoExpanded, storage: 'local', key: this.uuid + '-' + group}),
           value: this.selected,
           properties: groups[group],
           config: config,

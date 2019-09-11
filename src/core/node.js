@@ -152,6 +152,17 @@ export const IoNodeMixin = (superclass) => {
           this.throttle(this._onObjectMutationThrottled, prop);
           return;
         }
+        // TODO: documentation!
+        // TODO: consider removing!
+        if (typeof this.__properties[prop].observe === 'number') {
+          const depth = this.__properties[prop].observe;
+          // console.warn('IoNode: Severe performance penalty! Debug feature only');
+          const hasObject = !!this.filterObject(value, (o) => { return o === event.detail.object; }, depth);
+          if (hasObject) {
+            this.throttle(this._onObjectMutationThrottled, prop);
+            return;
+          }
+        }
       }
     }
     /**

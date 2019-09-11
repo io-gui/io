@@ -39,7 +39,7 @@ export class Groups {
         if (grp.length === 1) grp.splice(0, 0, 'Object');
         if (prototypes.indexOf(grp[0]) !== -1) {
           protoGroups[grp[1]] = protoGroups[grp[1]] || [];
-          protoGroups[grp[1]].push(customGroups[i]);
+          protoGroups[grp[1]].push(...customGroups[i]);
         }
       }
   
@@ -68,14 +68,10 @@ export class Groups {
           }
         }
       }
+
   
       if (assigned.length === 0) {
         groups['properties'] = keys;
-      } else {
-        for (let i = 0; i < keys.length; i++) {
-          groups['properties'] = groups['properties'] || [];
-          if (assigned.indexOf(keys[i]) === -1) groups['properties'].push(keys[i]);
-        }
       }
   
       for (let group in groups) { if (groups[group].length === 0) delete groups[group]; }

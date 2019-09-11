@@ -53,11 +53,17 @@ $({key: 'demo:menuoption', value: option});
 $({key: 'demo:rgba', value: {"r": 1, "g": 0.5, "b": 0, "a": 1}});
 $({key: 'demo:cmyk', value: {"c": 0, "m": 0, "y": 0, "k": 0}});
 $({key: 'demo:object', value: {
-  "number": 0.5,
-  "string": "hello",
-  "boolean": true,
-  "object": {"prop1": 1, "prop2": 2},
-  "array": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+  number: 0.5,
+  string: "hello",
+  boolean: true,
+  object: {prop1: 1, prop2: 2},
+  array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+  vector2: [1, 1],
+  vector3: [1, 1, 1],
+  vector4: [1, 1, 1, 1],
+  matrix2: [1, 1, 1, 1],
+  matrix3: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+  matrix4: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 }});
 
 export class IoElementDemo extends IoElement {
