@@ -17,28 +17,23 @@ export class IoBreadcrumbs extends IoElement {
       background-color: var(--io-background-color-field);
       padding: var(--io-spacing);
     }
-    :host > io-button {
-      border: none;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      background: none;
+    :host > io-item {
       padding: var(--io-spacing);
     }
-    :host > io-button:hover {
+    :host > io-item:hover {
       text-decoration: underline;
     }
-    :host > io-button:first-of-type {
-      color: var(--io-color);
+    :host > io-item:first-of-type {
       overflow: visible;
       text-overflow: clip;
       margin-left: var(--io-spacing);
     }
-    :host > io-button:last-of-type {
+    :host > io-item:last-of-type {
       overflow: visible;
       text-overflow: clip;
       margin-right: var(--io-spacing);
     }
-    :host > io-button:not(:first-of-type):before {
+    :host > io-item:not(:first-of-type):before {
       content: '>';
       margin: 0 var(--io-spacing);
       padding: 0 var(--io-spacing) 0 0;
@@ -48,31 +43,50 @@ export class IoBreadcrumbs extends IoElement {
   }
   static get Properties() {
     return {
-      value: null,
+      value: Object,
+      selected: null,
       options: {
         type: Array,
         observe: true,
       },
-      trim: Boolean,
     };
   }
-  _onClick(option) {
-    this.set('value', option.value);
-    if (this.trim) {
-      this.options.length = option.index + 1;
-      this.dispatchEvent('object-mutated', {object: this.options}, false, window);
+  _onClick(event) {
+    this.set('selected', this.options[event.detail.value]);
+  }
+  valueChanged() {
+    this.options.length = 0;
+    this.options.push(this.value);
+  }
+  selectedChanged() {
+    const index = this.options.indexOf(this.selected);
+    if (index !== -1) {
+      this.options.length = index + 1;
+    } else {
+      this.options.push(this.selected);
     }
   }
   changed() {
-    const options = this.options.map(option => {
-      return (option.label !== undefined || option.value !== undefined) ? option : {value: option};
-    });
-    this.template([options.map((option, index) => ['io-button', {
-      action: this._onClick,
-      value: {index: index, value: option.value},
-      label: option.label || option.value
-    }])]);
+    const elements = [];
+    for (let i = 0; i < this.options.length; i++) {
+      elements.push(['io-item', {
+        value: i,
+        label: getLabel(this.options[i]),
+        'on-item-clicked': this._onClick,
+      }]);
+    }
+    this.template(elements);
   }
 }
 
 IoBreadcrumbs.Register();
+
+function getLabel(object) {
+  if (object instanceof Array) {
+    return String(`${object.constructor.name} (${object.length})`);
+  } else if (typeof object === 'object') {
+    return String(`${object.constructor.name}`);
+  } else {
+    return String(object);
+  }
+}
