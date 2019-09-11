@@ -57,7 +57,7 @@ $({key: 'demo:object', value: {
   "string": "hello",
   "boolean": true,
   "object": {"prop1": 1, "prop2": 2},
-  "array": [1, 2, 3, 4, 5],
+  "array": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 }});
 
 export class IoElementDemo extends IoElement {

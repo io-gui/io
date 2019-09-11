@@ -78,7 +78,6 @@ export class IoInspector extends IoElement {
   }
   static get Config() {
     return {
-      // 'Array|type:number': ['io-slider'],
       'type:object': ['io-item'],
       'type:null': ['io-item'],
     };
@@ -86,7 +85,6 @@ export class IoInspector extends IoElement {
   static get Groups() {
     return {
       'Object|hidden': [/^_/],
-      'HTMLElement|hidden': [/^_/, 'innerText', 'outerText', 'innerHTML', 'outerHTML', 'textContent'],
     };
   }
 }
@@ -122,6 +120,5 @@ IoInspector.RegisterGroups = function(groups) {
 IoInspector.Register();
 
 IoInspector.RegisterGroups({
-  'Array|main': ['length'],
-  // 'Array|hidden': ['0', '1'],
+  'Array|values': [/^[0-9]+$/],
 });
