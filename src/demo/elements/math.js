@@ -4,6 +4,7 @@ export class IoDemoMath extends IoElement {
   static get Style() {
     return /* css */`
     :host {
+      @apply --io-table2;
       max-width: 32em;
       padding: var(--io-spacing);
       grid-template-columns: auto 1fr !important;
@@ -23,7 +24,6 @@ export class IoDemoMath extends IoElement {
   }
   static get Properties() {
     return {
-      class: 'io-table2',
       vector2: [1, 1],
       vector3: [1, 1, 1],
       vector4: [1, 1, 1, 1],

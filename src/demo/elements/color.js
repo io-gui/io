@@ -4,6 +4,7 @@ export class IoDemoColor extends IoElement {
   static get Style() {
     return /* css */`
     :host {
+      @apply --io-table2;
       max-width: 32em;
       padding: var(--io-spacing);
       grid-template-columns: auto 1fr !important;
@@ -30,7 +31,6 @@ export class IoDemoColor extends IoElement {
   }
   static get Properties() {
     return {
-      class: 'io-table2',
       mode: 0,
       color: [1, 1, 1, 1],
     };

@@ -5,16 +5,12 @@ export class IoDemoTheme extends IoElement {
   static get Style() {
     return /* css */`
     :host {
+      @apply --io-table2;
       max-width: 32em;
       padding: var(--io-spacing);
       grid-template-columns: auto 1fr !important;
     }
     `;
-  }
-  static get Properties() {
-    return {
-      class: 'io-table2',
-    };
   }
   constructor(props) {
     super(props);
