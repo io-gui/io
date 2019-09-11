@@ -1,5 +1,7 @@
 import {Binding} from "../../io.js";
 
+// TODO: display read only as non-editable
+
 export class Config {
     constructor(prototypes) {
       for (let i = 0; i < prototypes.length; i++) {
@@ -20,8 +22,8 @@ export class Config {
       let proto = object.__proto__;
       while (proto) {
         prototypes.push(proto.constructor.name);
-        keys.push(...Object.getOwnPropertyNames(proto));
-        // keys.push(...Object.keys(proto));
+        // keys.push(...Object.getOwnPropertyNames(proto));
+        keys.push(...Object.keys(proto));
         proto = proto.__proto__;
       }
   

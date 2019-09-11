@@ -18,8 +18,8 @@ export class Groups {
       let proto = object.__proto__;
       while (proto) {
         prototypes.push(proto.constructor.name);
-        keys.push(...Object.getOwnPropertyNames(proto));
-        // keys.push(...Object.keys(proto));
+        // keys.push(...Object.getOwnPropertyNames(proto));
+        keys.push(...Object.keys(proto));
         proto = proto.__proto__;
       }
   
@@ -55,12 +55,12 @@ export class Groups {
           for (let i = 0; i < keys.length; i++) {
             const k = keys[i];
             if (typeof gKey === 'string') {
-              if (k == gKey) {
+              if (k == gKey && assigned.indexOf(k) == -1) {
                 groups[g].push(k);
                 assigned.push(k);
               }
             } else if (typeof gKey === 'object') {
-              if (reg.exec(k)) {
+              if (reg.exec(k) && assigned.indexOf(k) == -1) {
                 groups[g].push(k);
                 assigned.push(k);
               }

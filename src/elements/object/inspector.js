@@ -85,6 +85,12 @@ export class IoInspector extends IoElement {
   static get Groups() {
     return {
       'Object|hidden': [/^_/],
+      // TODO
+      'HTMLElement|hidden': [/^on/, /^[A-Z0-9_]*$/, 'childElementCount'],
+      'HTMLElement|info': ['localName', 'tagName', 'nodeName', /class/i, /attribute/i],
+      'HTMLElement|content': [/content/i, /inner/i, /outer/i],
+      'HTMLElement|display': [/width/i, /height/i, /top/i, /left/i, /scroll/i, /style/i],
+      'HTMLElement|hierarchy': [/parent/i, /child/i, /element/i, /root/i, /slot/i, /sibling/i, /document/i],
     };
   }
 }

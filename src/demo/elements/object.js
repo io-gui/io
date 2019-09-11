@@ -21,7 +21,6 @@ export class IoDemoObject extends IoElement {
         visibility: hidden;
       }
     }
-
     :host > *,
     :host .io-row > *:not(:last-child) {
       margin-right: var(--io-spacing);
