@@ -1,4 +1,5 @@
-import {Binding, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
+import {Config} from "./__config.js";
 
 export class IoProperties extends IoElement {
   static get Style() {
@@ -10,18 +11,21 @@ export class IoProperties extends IoElement {
       justify-items: start;
       white-space: nowrap;
     }
-    :host:not([horizontal]) {
-      grid-template-columns: auto;
-    }
     :host[horizontal] {
       grid-auto-flow: column;
       grid-template-rows: auto;
     }
-    :host:not([horizontal])[labeled] {
-      grid-template-columns: auto 1fr;
-    }
     :host[horizontal][labeled] {
       grid-template-rows: auto auto;
+    }
+    :host:not([horizontal]) {
+      grid-template-columns: auto;
+    }
+    :host:not([horizontal])[labeled] {
+      grid-template-columns: auto minmax(75%, 1fr);;
+    }
+    :host:not([horizontal])[labeled] > :nth-child(2n-1) {
+      max-width: 100%;
     }
     :host > io-object {}
     :host > io-object {
@@ -60,18 +64,9 @@ export class IoProperties extends IoElement {
         type: Object,
         observe: true,
       },
-      properties: {
-        type: Array,
-        observe: true,
-      },
-      config: {
-        type: Object,
-        observe: true,
-      },
+      properties: Array,
+      config: Object,
     };
-  }
-  get _config() {
-    return this.__proto__.__config.getConfig(this.value, this.config);
   }
   _onValueSet(event) {
     if (event.detail.object) return; // TODO: unhack/remove?
@@ -89,7 +84,7 @@ export class IoProperties extends IoElement {
   }
   // TODO: Consider valueMutated() instead
   changed() {
-    const config = this._config;
+    const config = this.__proto__.__config.getConfig(this.value, this.config);
     const elements = [];
     for (let c in config) {
       if (!this.properties.length || this.properties.indexOf(c) !== -1) {
@@ -97,7 +92,7 @@ export class IoProperties extends IoElement {
         const tag = config[c][0];
         const protoConfig = config[c][1];
         const label = config[c].label || c;
-        const itemConfig = {class: 'io-property-editor', title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+        const itemConfig = {title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
         // if (tag === 'io-properties') {
         // }
         itemConfig.config = this.config;
@@ -122,82 +117,14 @@ export class IoProperties extends IoElement {
   }
 }
 
-export class Config {
-  constructor(prototypes) {
-    for (let i = 0; i < prototypes.length; i++) {
-      this.registerConfig(prototypes[i].constructor.Config || {});
-    }
-  }
-  registerConfig(config) {
-    for (let c in config) {
-      this[c] = this[c] || [];
-      this[c] = [config[c][0] || this[c][0], Object.assign(this[c][1] || {}, config[c][1] || {})];
-    }
-  }
-  getConfig(object, customConfig) {
-    const keys = Object.keys(object);
-    const prototypes = [];
-
-    let proto = object.__proto__;
-    while (proto) {
-      if (proto.constructor !== HTMLElement
-          && proto.constructor !== Element
-          && proto.constructor !== Node
-          && proto.constructor !== EventTarget
-          && proto.constructor !== Object) {
-        keys.push(...Object.keys(proto));
-      }
-      prototypes.push(proto.constructor.name);
-      proto = proto.__proto__;
-    }
-
-    const protoConfigs = {};
-
-    for (let i in this) {
-      const cfg = i.split('|');
-      if (cfg.length === 1) cfg.splice(0, 0, 'Object');
-      if (prototypes.indexOf(cfg[0]) !== -1) protoConfigs[cfg[1]] = this[i];
-    }
-
-    for (let i in customConfig) {
-      const cfg = i.split('|');
-      if (cfg.length === 1) cfg.splice(0, 0, 'Object');
-      if (prototypes.indexOf(cfg[0]) !== -1) protoConfigs[cfg[1]] = customConfig[i];
-    }
-
-    const config = {};
-
-    for (let i = 0; i < keys.length; i++) {
-      const k = keys[i];
-      const value = object[k] instanceof Binding ? object[k].value : object[k]; // TODO: Unhack demovalues
-      // const value = object[k]
-
-      const type = value === null ? 'null' : typeof value;
-      const cstr = (value != undefined && value.constructor) ? value.constructor.name : 'null';
-
-      if (type == 'function') continue;
-
-      const typeStr = 'type:' + type;
-      const cstrStr = 'constructor:' + cstr;
-      const keyStr = k.replace('type:', '').replace('constructor:', '');
-
-      config[k] = {};
-
-      if (protoConfigs[typeStr]) config[k] = protoConfigs[typeStr];
-      if (protoConfigs[cstrStr]) config[k] = protoConfigs[cstrStr];
-      if (protoConfigs[keyStr]) config[k] = protoConfigs[keyStr];
-    }
-
-    return config;
-  }
-}
-
 IoProperties.Register = function() {
   IoElement.Register.call(this);
   Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__protochain)});
 };
 
-IoProperties.Register();
 IoProperties.RegisterConfig = function(config) {
   this.prototype.__config.registerConfig(config);
 };
+
+IoProperties.Register();
+
