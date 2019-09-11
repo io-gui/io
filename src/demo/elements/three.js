@@ -9,12 +9,9 @@ import {
   BoxBufferGeometry,
   MeshLambertMaterial,
   Mesh,
-  Math as ThreeMath
 } from "../../../node_modules/three/build/three.module.js";
 import {OrbitControls} from "../../../node_modules/three/examples/jsm/controls/OrbitControls.js";
 import {TransformControls} from "../../../node_modules/three/examples/jsm/controls/TransformControls.js";
-
-const scene = new Scene();
 
 export class IoDemoThree extends IoElement {
   static get Style() {
@@ -90,17 +87,17 @@ export class IoDemoThree extends IoElement {
     camera.lookAt( 0, 200, 0 );
     scene.add( camera );
 
-    var light = new DirectionalLight( 0xffffff, 2 );
+    const light = new DirectionalLight( 0xffffff, 2 );
     light.position.set( 1, 1, 1 );
     scene.add( light );
 
-    var texture = new TextureLoader().load( 'images/logo/io-512.png', this.render );
+    const texture = new TextureLoader().load( 'images/logo/io-512.png', this.render );
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
-    var geometry = new BoxBufferGeometry( 200, 200, 200 );
-    var material = new MeshLambertMaterial( { map: texture, transparent: true } );
+    const geometry = new BoxBufferGeometry( 200, 200, 200 );
+    const material = new MeshLambertMaterial( { map: texture, transparent: true } );
 
-    var mesh = new Mesh( geometry, material );
+    const mesh = new Mesh( geometry, material );
     scene.add( mesh );
 
     const orbit = new OrbitControls( camera, renderer.domElement );

@@ -5,7 +5,6 @@ import * as CONST from "./__constants.js";
 function makeOptions(list) {
   const options = [];
   for (let i = 0; i < list.length; i++) {
-    const constant = list[i];
     options.push({value: CONST[list[i]], label: list[i]});
   }
   return ['io-option-menu', {'options': options}];
