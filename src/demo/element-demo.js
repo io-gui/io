@@ -1,4 +1,4 @@
-import {IoElement, Binding} from "../io.js";
+import {IoElement} from "../io.js";
 import {IoThemeSingleton, IoStorageFactory as $} from "../io-core.js";
 
 const suboptions = [];
