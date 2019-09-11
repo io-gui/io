@@ -73,5 +73,6 @@ export default [
   makeTarget('src/io-object.js', 'dist/io-object.js'),
   makeTarget('src/io-demo.js', 'dist/io-demo.js'),
   makeTarget('src/io-notify.js', 'dist/io-notify.js'),
+  makeTarget('src/io-three.js', 'dist/io-three.js'),
   makeTarget('src/io-tests.js', 'dist/io-tests.js'),
 ];
