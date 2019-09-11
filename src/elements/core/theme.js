@@ -14,7 +14,7 @@ const themeSizes =  {
 };
 const themeDB = {
   light: Object.assign({
-    cssBackgroundColor: [0.96, 0.96, 0.96, 1],
+    cssBackgroundColor: [0.95, 0.95, 0.95, 1],
     cssBackgroundColorLight: [1, 1, 1, 1],
     cssBackgroundColorDark: [0.84, 0.84, 0.84, 1],
     cssBackgroundColorField: [0.92, 0.92, 0.92, 1],
@@ -27,11 +27,11 @@ const themeDB = {
     cssColorString: [0.95, 0.25, 0.1, 1],
     cssColorBoolean: [0.82, 0.35, 0.75, 1],
     cssColorBorder: [0.7, 0.7, 0.7, 1],
-    cssColorBorderLight: [0.9, 0.9, 0.9, 1],
-    cssColorBorderDark: [0.65, 0.65, 0.65, 1],
+    cssColorBorderLight: [1, 1, 1, 1],
+    cssColorBorderDark: [0.6, 0.6, 0.6, 1],
     cssColorGradientStart: [1, 1, 1, 0.5],
     cssColorGradientEnd: [0, 0, 0, 0.25],
-    cssColorShadow: [0, 0, 0, 0.3],
+    cssColorShadow: [0, 0, 0, 0.2],
   }, themeSizes),
   dark: Object.assign({
     cssBackgroundColor: [0.164, 0.164, 0.164, 1],
@@ -46,12 +46,12 @@ const themeDB = {
     cssColorNumber: [0.125, 0.64, 1, 1],
     cssColorString: [0.94, 0.25, 0.086, 1],
     cssColorBoolean: [0.82, 0.35, 0.75, 1],
-    cssColorBorder: [0.4, 0.4, 0.4, 1],
-    cssColorBorderLight: [0.5, 0.5, 0.5, 1],
-    cssColorBorderDark: [0.1, 0.1, 0.1, 1],
+    cssColorBorder: [0.3, 0.3, 0.3, 1],
+    cssColorBorderLight: [0.4, 0.4, 0.4, 1],
+    cssColorBorderDark: [0, 0, 0, 1],
     cssColorGradientStart: [1, 1, 1, 0.1],
     cssColorGradientEnd: [0, 0, 0, 0.2],
-    cssColorShadow: [0, 0, 0, 0.6],
+    cssColorShadow: [0, 0, 0, 0.2],
   }, themeSizes),
 };
 
@@ -110,7 +110,6 @@ export class IoTheme extends IoElement {
       -webkit-tap-highlight-color: transparent;
       color: var(--io-color);
       background-color: var(--io-background-color);
-      background-image: none;
     }
     --io-row: {
       display: flex;
@@ -271,8 +270,8 @@ export class IoTheme extends IoElement {
 
         --io-shadow: 2px 2px 6px var(--io-color-shadow),
                      1px 1px 1px var(--io-color-shadow);
-        --io-shadow-inset: 1px 1px 1px inset var(--io-color-shadow);
-        --io-shadow-outset: -1px -1px 1px inset var(--io-color-shadow);
+        --io-shadow-inset: 1px 1px 2px inset var(--io-color-shadow);
+        --io-shadow-outset: -1px -1px 2px inset var(--io-color-shadow);
       }
     `;
     // TODO: consider removing (required for gl updates in theme demo)

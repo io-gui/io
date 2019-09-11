@@ -22,6 +22,8 @@ export class IoItem extends IoElement {
       background-image: var(--io-gradient-error);
     }
     :host:focus {
+      z-index: 200;
+      position: relative;
       text-overflow: inherit;
       border-color: var(--io-color-focus);
       outline-color: var(--io-color-focus);
