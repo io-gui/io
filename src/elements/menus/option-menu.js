@@ -27,6 +27,7 @@ export class IoOptionMenu extends IoMenuItem {
         reflect: -1,
       },
       selectable: true,
+      hamburger: false,
       options: {
         type: Array,
         reflect: -1,
@@ -53,7 +54,11 @@ export class IoOptionMenu extends IoMenuItem {
         }
       }
     }
-    valueText = this.label || (valueText || String(this.value)) + ' ▾';
+    if (this.hamburger) {
+      valueText = '☰  ' + (this.label || (valueText || String(this.value)));
+    } else {
+      valueText = this.label || (valueText || String(this.value)) + ' ▾';
+    }
     this.textNode = valueText;
     this.title = valueText;
     this.setAttribute('aria-haspopup', 'listbox');
