@@ -30,7 +30,7 @@ export class IoDemoMenus extends IoElement {
           ['io-menu-options', {value: value, options: menuoptions, searchable: true}],
           ['div', {class: 'io-column'}, [
             ['div', [['span', {class: 'io-item'}, 'Selected:'], ['io-item', {value: value}]]],
-            ['io-menu-item', {label: 'menu item', option: $('demo:menuoption')}],
+            ['io-menu-item', {label: 'menu item', value: value, option: $('demo:menuoption')}],
             ['div', {class: 'io-content'}, [
               ['span', 'click for menu'],
               ['io-context-menu', {value: value, options: menuoptions, position: 'pointer', button: 0}],

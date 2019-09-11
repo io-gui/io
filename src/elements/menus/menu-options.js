@@ -125,12 +125,14 @@ export class IoMenuOptions extends IoElement {
     this.inlayer = this.parentElement === IoLayerSingleton;
   }
   _onMenuItemClicked(event) {
-    if (event.composedPath()[0].localName == 'io-menu-item') {
-      event.stopPropagation();
-      this.set('value', event.detail.value);
-      this.dispatchEvent('item-clicked', event.detail, true);
-      this.expanded = false;
-      this.search = '';
+    if (event.composedPath()[0] !== this) {
+      event.stopImmediatePropagation();
+      if (event.composedPath()[0].localName == 'io-menu-item') {
+        this.set('value', event.detail.value);
+        this.dispatchEvent('item-clicked', event.detail, true);
+        this.expanded = false;
+        this.search = '';
+      }
     }
   }
   // Prevents IoLayer from stopping scroll in clipped options
