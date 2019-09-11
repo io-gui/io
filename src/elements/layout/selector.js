@@ -7,6 +7,7 @@ export class IoSelector extends IoElement {
     return /* css */`
     :host {
       display: flex;
+      flex: 1 1;
       flex-direction: column;
       align-self: stretch;
       justify-self: stretch;

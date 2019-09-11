@@ -18,6 +18,9 @@ export class IoSidebar extends IoElement {
     :host > * {
       flex: 0 0 auto;
     }
+    :host * {
+      overflow: visible !important;
+    }
     :host io-collapsable {
       padding: 0;
     }
@@ -34,6 +37,9 @@ export class IoSidebar extends IoElement {
       background: none;
       box-shadow: none;
       border-color: transparent;
+    }
+    :host io-boolean:not(:focus) {
+      border-bottom-color: transparent  !important;
     }
     `;
   }
@@ -54,26 +60,23 @@ export class IoSidebar extends IoElement {
   _onSelect(id) {
     this.set('selected', id);
   }
-  _onValueSet(event) {
-    this.set('selected', event.detail.value);
-  }
   _addOptions(options) {
     const elements = [];
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
       if (option.options) {
-        const UID = option.label + ' ' + i + '/' + options.length + ' (' + option.options.length + ')';
-        let selectedOption = this.filterObject(option.options, option => matches(this.selected, option));
+        const containsSelected = !!this.filterObject(option.options, o => matches(this.selected, o));
+        const collapsableState = $({value: false, storage: 'local', key: genUUID(options, i)});
         elements.push(['io-collapsable', {
           label: option.label,
-          expanded: !!selectedOption || $({value: false, storage: 'local', key: 'io-sidebar-collapse ' + UID}),
+          expanded: containsSelected || collapsableState,
           elements: [...this._addOptions(option.options)]
         }]);
       } else {
         const selected = matches(this.selected, option);
         elements.push(['io-button', {
-          label: option.label || option.value || option,
           value: option.value || option,
+          label: option.label || option.value || option,
           action: this._onSelect,
           selected: selected,
         }]);
@@ -82,17 +85,14 @@ export class IoSidebar extends IoElement {
     return elements;
   }
   changed() {
-    let selectedOption = this.filterObject(this.options, option => matches(this.selected, option));
     if (this.collapsed) {
-      const label = selectedOption ? (selectedOption.label || String(selectedOption.value)) : String(this.selected).split('#')[0];
       this.template([['io-option-menu', {
-        label: '☰  ' + label,
-        title: 'select tab',
-        value: this.selected,
         options: this.options,
+        value: this.bind('selected'),
+        hamburger: true,
         selectable: true,
+        title: 'select tab',
         class: 'io-item',
-        'on-value-set': this._onValueSet,
       }]]);
     } else {
       this.template([...this._addOptions(this.options)]);
@@ -101,6 +101,14 @@ export class IoSidebar extends IoElement {
 }
 
 IoSidebar.Register();
+
+function genUUID(options, i) {
+  const option = options[i];
+  let UUID = 'io-sidebar-collapse-state-' + i + '-' + options.length;
+  if (option.label) UUID += '-' + option.label;
+  if (option.options.length) UUID += '(' + option.options.length + ')';
+  return UUID;
+}
 
 function matches(selected, option) {
   if (selected === undefined) return false;
