@@ -29,8 +29,8 @@ const themeDB = {
 		cssColorBorder: [0.7, 0.7, 0.7, 1],
 		cssColorBorderLight: [1, 1, 1, 1],
 		cssColorBorderDark: [0.6, 0.6, 0.6, 1],
-		cssColorGradientStart: [1, 1, 1, 0.5],
-		cssColorGradientEnd: [0, 0, 0, 0.25],
+		cssColorGradientStart: [0.9, 0.9, 0.9, 1],
+		cssColorGradientEnd: [0.75, 0.75, 0.75, 1],
 		cssColorShadow: [0, 0, 0, 0.2],
 	}, themeSizes),
 	dark: Object.assign({

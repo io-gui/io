@@ -40,7 +40,7 @@ export class IoInspector extends IoElement {
 			},
 			selected: {
 				type: Object,
-				observe: 1,
+				observe: 2,
 			},
 			groups: Object,
 			config: Object,
