@@ -65,7 +65,7 @@ export class IoOptionMenu extends IoMenuItem {
 		this.setAttribute('aria-expanded', String(this.expanded));
 		this.$options.setProperties({
 			value: this.value,
-			options: this._options,
+			options: this.options,
 			selectable: this.selectable,
 			position: this.direction,
 		});

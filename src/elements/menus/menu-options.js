@@ -195,12 +195,15 @@ export class IoMenuOptions extends IoElement {
 		if (this.expanded) {
 			this.inlayer = this.parentElement === IoLayerSingleton;
 			if (this.inlayer && this.$parent) {
+				this._expandedChangedLazy();
 				// TODO: unhack incorrect this.rect on first expand.
-				this.requestAnimationFrameOnce(this._expandedChangedLazy);
+				this.throttle(this._expandedChangedLazy, null, true);
 			}
 		} else {
 			this.style.top = null;
 			this.style.height = null;
+			this.style.touchAction = null;
+			this.scrollTop = 0;
 			this.search = '';
 		}
 	}
@@ -216,11 +219,13 @@ export class IoMenuOptions extends IoElement {
 		this.searchable = !!this.style.height;
 	}
 	_clipHeight() {
-		const rectTop = this.getBoundingClientRect().top;
+		this.scrollTop = 0;
+		if (!this.firstChild) return;
+
+		const rectTop = this.firstChild.getBoundingClientRect().top;
 		const rectBottom = this.lastChild.getBoundingClientRect().bottom;
 		const rectHeight = rectBottom - rectTop;
 
-		const top = this.style.top;
 		if (rectTop < 0) {
 			this.style.top = '0px';
 			this.style.height = (rectHeight + rectTop)	+ 'px';
@@ -229,7 +234,6 @@ export class IoMenuOptions extends IoElement {
 			this.style.height = (window.innerHeight - rectTop)	+ 'px';
 			this.style.touchAction = 'pan-y';
 		} else {
-			this.style.top = top;
 			this.style.height = null;
 			this.style.touchAction = null;
 		}

@@ -61,12 +61,23 @@ class IoLayer extends IoElement {
 			'focusin': '_onFocusIn',
 			'scroll': '_onScroll',
 			'wheel': '_onScroll',
+			'mousedown': 'stopPropagation',
+			'mouseup': 'stopPropagation',
+			'mousemove': 'stopPropagation',
+			'touchstart': 'stopPropagation',
+			'touchmove': 'stopPropagation',
+			'touchend': 'stopPropagation',
+			'keydown': 'stopPropagation',
+			'keyup': 'stopPropagation',
 		};
 	}
 	constructor(props) {
 		super(props);
 		Object.defineProperty(this, 'x', {value: null, writable: true});
 		Object.defineProperty(this, 'y', {value: null, writable: true});
+	}
+	stopPropagation(event) {
+		event.stopPropagation();
 	}
 	_onPointerdown(event) {
 		if (event.composedPath()[0] === this) {

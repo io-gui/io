@@ -77,11 +77,17 @@ export class IoNumber extends IoItem {
 				event.preventDefault();
 				document.activeElement.blur();
 			} else {
-				if (document.activeElement !== this) this.focus();
+				if (document.activeElement !== this) {
+					this.focus();
+					this.setCaretPosition(this.textNode.length);
+				}
 			}
 			this._expandLadder();
 		} else {
-			if (document.activeElement !== this) this.focus();
+			if (document.activeElement !== this) {
+				this.focus();
+				this.setCaretPosition(this.textNode.length);
+			}
 		}
 	}
 	_onFocus(event) {

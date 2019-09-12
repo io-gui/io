@@ -149,6 +149,28 @@ export class IoItem extends IoElement {
 			this.setAttribute('aria-label', false);
 		}
 	}
+	getCaretPosition() {
+		let position = 0;
+		const selection = window.getSelection();
+		if (selection.rangeCount) {
+			const range = selection.getRangeAt(0);
+			const selected = range.toString().length;
+			const preCaretRange = range.cloneRange();
+			preCaretRange.selectNodeContents(this);
+			preCaretRange.setEnd(range.endContainer, range.endOffset);
+			position = preCaretRange.toString().length - selected;
+		}
+		return position;
+	}
+	setCaretPosition(position){
+		if (!position) return;
+		const sel = window.getSelection();
+		const range = document.createRange();
+		range.setStart(this.firstChild, position);
+		range.collapse(true);
+		sel.removeAllRanges();
+		sel.addRange(range);
+	}
 }
 
 IoItem.Register();
