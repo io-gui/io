@@ -1,13 +1,12 @@
-import {html} from "../../io.js";
 import {IoColorSlider} from "./color-slider.js";
 
 export class IoColorSliderSv extends IoColorSlider {
   static get Style() {
-    return html`<style>
-      :host {
-        cursor: move !important;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      cursor: move !important;
+    }
+    `;
   }
   static get Frag() {
     return /* glsl */`
@@ -29,6 +28,43 @@ export class IoColorSliderSv extends IoColorSlider {
         gl_FragColor = vec4(finalColor, 1.0);
       }
     `;
+  }
+  _onKeydown(event) {
+    if (event.shiftKey && event.key === 'ArrowLeft') {
+      event.preventDefault();
+      if (this.horizontal) {
+        this.hsv[1] = Math.max(0, this.hsv[1] - 0.01);
+      } else {
+        this.hsv[2] = Math.max(0, this.hsv[2] - 0.01);
+      }
+      this.setValueFromHsv();
+    } else if (event.shiftKey && event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (this.horizontal) {
+        this.hsv[2] = Math.min(1, this.hsv[2] + 0.01);
+      } else {
+        this.hsv[1] = Math.min(1, this.hsv[1] + 0.01);
+      }
+      this.setValueFromHsv();
+    } else if (event.shiftKey && event.key === 'ArrowRight') {
+      event.preventDefault();
+      if (this.horizontal) {
+        this.hsv[1] = Math.min(1, this.hsv[1] + 0.01);
+      } else {
+        this.hsv[2] = Math.min(1, this.hsv[2] + 0.01);
+      }
+      this.setValueFromHsv();
+    } else if (event.shiftKey && event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (this.horizontal) {
+        this.hsv[2] = Math.max(0, this.hsv[2] - 0.01);
+      } else {
+        this.hsv[1] = Math.max(0, this.hsv[1] - 0.01);
+      }
+      this.setValueFromHsv();
+    } else {
+      super._onKeydown(event);
+    }
   }
   _setValue(x, y) {
     this.hsv[1] = x;

@@ -1,24 +1,33 @@
-import {html, IoElement} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-core.js";
+import {IoElement} from "../../io.js";
 
 export class IoCollapsable extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        ${mixin.panel}
-      }
-      :host > io-boolean {
-        text-align: left;
-        align-self: stretch;
-        width: auto;
-      }
-      :host > io-boolean[value] {
-        margin-bottom: var(--io-spacing);
-      }
-      :host:not([expanded]) > .io-frame {
-        display: none;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      justify-self: stretch;
+    }
+    :host > io-boolean {
+      text-align: left;
+      align-self: stretch;
+      width: auto;
+      border-radius: 0;
+      background-color: var(--io-background-color-dark);
+    }
+    :host > io-boolean:before {
+      display: inline-block;
+      width: 1.125em;
+      content: "▸"
+    }
+    :host > io-boolean[value]:before {
+      content: "▾";
+    }
+    :host > io-boolean[value]:not(:focus) {
+      border-bottom-color: var(--io-color-border);
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -33,13 +42,10 @@ export class IoCollapsable extends IoElement {
       role: 'region',
     };
   }
-  _onButtonValueSet(event) {
-    this.set('expanded', event.detail.value);
-  }
   changed() {
     this.template([
-      ['io-boolean', {true: '▾ ' + this.label, false: '▸ ' + this.label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
-      ['div', {id: 'content', class: 'io-frame'}, (this.expanded && this.elements.length) ? this.elements : [null]],
+      ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
+      ['io-content', {elements: this.elements, expanded: this.expanded}],
     ]);
   }
 }

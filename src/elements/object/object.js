@@ -1,26 +1,27 @@
-import {html, IoElement} from "../../io.js";
-import {IoThemeSingleton as mixin} from "../../io-core.js";
+import {IoElement} from "../../io.js";
 import "./properties.js";
 
 export class IoObject extends IoElement {
   static get Style() {
-    return html`<style>
+    return /* css */`
     :host {
-      ${mixin.panel}
+      @apply --io-panel;
     }
     :host > io-boolean {
-      text-align: left;
       align-self: stretch;
-      width: auto;
     }
-    :host > io-properties {
-      display: grid !important;
-      padding: calc(2 * var(--io-spacing)) var(--io-spacing) !important;
+    :host > io-boolean:before {
+      display: inline-block;
+      width: 1.125em;
+      content: "▸"
     }
-    :host:not([expanded]) > io-properties {
-      display: none;
+    :host > io-boolean[value]:before {
+      content: "▾";
     }
-    </style>`;
+    :host > io-boolean[value] {
+      margin-bottom: var(--io-spacing);
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -38,23 +39,18 @@ export class IoObject extends IoElement {
       role: 'region',
     };
   }
-  _onButtonValueSet(event) {
-    this.set('expanded', event.detail.value);
-  }
   changed() {
     const label = this.label || this.value.constructor.name;
-    this.template([
-      ['io-boolean', {true: '▾ ' + label, false: '▸ ' + label, value: this.expanded, 'on-value-set': this._onButtonValueSet}],
-      this.expanded ? [
-        ['io-properties', {
-          class: 'io-frame',
-          value: this.value,
-          properties: this.properties,
-          config: this.config,
-          labeled: this.labeled,
-        }]
-      ] : null
-    ]);
+    const elements = [['io-boolean', {true: label, false: label, value: this.bind('expanded')}]];
+    if (this.expanded) {
+      elements.push(['io-properties', {
+        value: this.value,
+        properties: this.properties,
+        config: this.config,
+        labeled: this.labeled,
+      }]);
+    }
+    this.template(elements);
     this.setAttribute('aria-expanded', String(this.expanded));
   }
 }

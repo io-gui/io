@@ -1,97 +1,60 @@
-import {html} from "../../io.js";
 import {IoSelector} from "./selector.js";
 import "./sidebar.js";
 
-export function filterObject(object, predicate) {
-  if (predicate(object)) return object;
-  for (let key in object) {
-    if (predicate(object[key])) {
-        return object[key];
-    } else if (typeof object[key] === 'object') {
-      const prop = filterObject(object[key], predicate);
-      if (prop) return prop;
-    }
-  }
-}
-
 export class IoSelectorSidebar extends IoSelector {
   static get Style() {
-    return html`<style>
-      :host {
-        flex-direction: row-reverse;
-        align-self: stretch;
-        justify-self: stretch;
-        flex: 1 1 auto;
-      }
-      :host[left] {
-        flex-direction: row;
-      }
-      :host[overflow] {
-        flex-direction: column;
-      }
-      :host > io-sidebar {
-        flex: 0 0 auto;
-        background-color: var(--io-background-color-dark);
-      }
-      :host:not([overflow]) > io-sidebar {
-        flex: 0 0 8em;
-      }
-      :host > .io-content {
-        border: var(--io-border);
-        border-width: 0 var(--io-border-width) 0 0
-      }
-      :host[left] > .io-content {
-        border-width: 0 0 0 var(--io-border-width);
-      }
-      :host[overflow] > .io-content {
-        border-width: var(--io-border-width) 0 0 0;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      flex-direction: row;
+    }
+    :host[right] {
+      flex-direction: row-reverse;
+    }
+    :host[collapsed] {
+      flex-direction: column;
+    }
+    :host > io-sidebar {
+      flex: 0 0 8em;
+      background-color: var(--io-background-color-dark);
+      border: var(--io-border);
+      border-width: 0 var(--io-border-width) 0 0;
+    }
+    :host[right] > io-sidebar {
+      border-width: 0 0 0 var(--io-border-width);
+    } 
+    :host[collapsed] > io-sidebar {
+      flex: 0 0 auto;
+      border-width: 0 0 var(--io-border-width) 0;
+    }
+    `;
   }
   static get Properties() {
     return {
-      options: Array,
-      minWidth: 410,
-      label: {
-        reflect: 1,
+      options: {
+        type: Array,
+        observe: true,
       },
-      overflow: {
+      collapseWidth: 410,
+      collapsed: {
         type: Boolean,
         reflect: 1,
       },
-      left: {
-        value: true,
+      right: {
+        type: Boolean,
         reflect: 1,
       },
-      role: 'navigation',
     };
   }
-  _onScroll() {
-    super._onScroll();
-    if (this.$.sidebar.selected !== this.selected) {
-      let hasOption = !!filterObject(this.options, (option) => {
-        return option === this.selected || option.value === this.selected;
-      });
-      if (hasOption) this.$.sidebar.selected = this.selected;
-    }
-  }
-  minWidthChanged() {
-    this.onResized();
-  }
   onResized() {
-    this.overflow = this.getBoundingClientRect().width < this.minWidth;
+    this.collapsed = this.getBoundingClientRect().width < this.collapseWidth;
   }
-  leftChanged() { this.renderShadow(); }
-  overflowChanged() { this.renderShadow(); }
-  renderShadow() {
-    const tabs = ['io-sidebar', {
-      id: 'sidebar',
-      elements: this.elements,
+  collapsedChanged() { this.update(); }
+  getSlotted() {
+    return ['io-sidebar', {
       selected: this.bind('selected'),
-      options: this.options.length ? this.options : this.elements.map(element => { return element[1].name; }),
-      overflow: this.overflow,
+      options: this.options,
+      collapsed: this.collapsed,
     }];
-    this.template([tabs, ['div', {id: 'content', class: 'io-content'}]]);
   }
 }
 

@@ -1,28 +1,27 @@
-import {html} from "../../io.js";
 import {IoBoolean} from "./boolean.js";
 import {IoIconsetSingleton} from "./iconset.js";
 
 export class IoBoolicon extends IoBoolean {
   static get Style() {
-    return html`<style>
-      :host {
-        width: var(--io-item-height);
-        height: var(--io-item-height);
-        fill: var(--io-color, currentcolor);
-      }
-      :host[stroke] {
-        stroke: var(--io-background-color, currentcolor);
-        stroke-width: var(--io-stroke-width);
-      }
-      :host > svg {
-        pointer-events: none;
-        width: 100%;
-        height: 100%;
-      }
-      :host > svg > g {
-        transform-origin: 0px 0px;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      width: var(--io-item-height);
+      height: var(--io-item-height);
+      fill: var(--io-color, currentcolor);
+    }
+    :host[stroke] {
+      stroke: var(--io-background-color, currentcolor);
+      stroke-width: var(--io-stroke-width);
+    }
+    :host > svg {
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+    }
+    :host > svg > g {
+      transform-origin: 0px 0px;
+    }
+    `;
   }
   static get Properties() {
     return {

@@ -1,30 +1,31 @@
-import {html} from "../../io.js";
-import {IoItem, IoLayerSingleton} from "../../io-core.js";
+import {IoItem} from "../core/item.js";
+import {IoLayerSingleton} from "../core/layer.js";
 import {IoColorMixin} from "./color.js";
 import "./color-swatch.js";
 import {IoColorPanelSingleton} from "./color-panel.js";
 
 export class IoColorPicker extends IoColorMixin(IoItem) {
   static get Style() {
-    return html`<style>
-      :host {
-        display: flex;
-        box-sizing: border-box;
-        border-radius: var(--io-border-radius);
-        border: var(--io-border);
-        border-color: var(--io-color-border-inset);
-        min-width: var(--io-item-height);
-        min-height: var(--io-item-height);
-        padding: 0;
-      }
-      :host > io-color-swatch {
-        border: 0;
-        flex: 1 1 auto;
-        min-width: 0;
-        min-height: 0;
-        border-radius: 0;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      display: flex;
+      box-sizing: border-box;
+      border-radius: var(--io-border-radius);
+      border: var(--io-border);
+      border-color: var(--io-color-border-inset);
+      min-width: var(--io-item-height);
+      min-height: var(--io-item-height);
+      padding: 0;
+    }
+    :host > io-color-swatch {
+      border: 0;
+      flex: 1 1 auto;
+      align-self: stretch;
+      min-width: 0;
+      min-height: 0;
+      border-radius: 0;
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -46,7 +47,7 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
     this.toggle();
   }
   get expanded() {
-    return IoColorPanelSingleton.expanded && IoLayerSingleton.srcElement === this;
+    return IoColorPanelSingleton.expanded && IoColorPanelSingleton.value === this.value;
   }
   _onKeydown(event) {
     const rect = this.getBoundingClientRect();
@@ -80,12 +81,10 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
     IoColorPanelSingleton.style.width = hasAlpha ? '192px' : '160px';
     IoColorPanelSingleton.style.height = '128px';
     IoColorPanelSingleton.expanded = true;
-    IoLayerSingleton.srcElement = this;
     IoLayerSingleton.setElementPosition(IoColorPanelSingleton, 'bottom', this.getBoundingClientRect());
   }
   collapse() {
     IoColorPanelSingleton.expanded = false;
-    IoLayerSingleton.srcElement = undefined;
   }
   changed() {
     this.template([['io-color-swatch', {value: this.value, mode: this.mode}]]);

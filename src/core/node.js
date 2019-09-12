@@ -1,4 +1,4 @@
-import {NodeBindings} from "./bindings.js";
+import {NodeBindings, Binding} from "./bindings.js";
 import {NodeQueue} from "./queue.js";
 import {ProtoListeners, Listeners} from "./listeners.js";
 import {Properties, ProtoProperties} from "./properties.js";
@@ -29,6 +29,7 @@ export const IoNodeMixin = (superclass) => {
           type: Object,
           notify: false,
         },
+        lazy: Boolean,
       };
     }
     /**
@@ -141,15 +142,26 @@ export const IoNodeMixin = (superclass) => {
       }
 
       this.__listeners.setPropListeners(props, this);
-
       if (this.__connected) this.queueDispatch();
     }
     _onObjectMutation(event) {
-      for (let i = this.__objectProps.length; i--;) {
-        const prop = this.__objectProps[i];
+      for (let i = this.__observedProps.length; i--;) {
+        const prop = this.__observedProps[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
-          this.debounce(this._onObjectMutationDebounced, prop);
+          this.throttle(this._onObjectMutationThrottled, prop);
+          return;
+        }
+        // TODO: documentation!
+        // TODO: consider removing!
+        if (typeof this.__properties[prop].observe === 'number') {
+          const depth = this.__properties[prop].observe;
+          // console.warn('IoNode: Severe performance penalty! Debug feature only');
+          const hasObject = !!this.filterObject(value, (o) => { return o === event.detail.object; }, depth);
+          if (hasObject) {
+            this.throttle(this._onObjectMutationThrottled, prop);
+            return;
+          }
         }
       }
     }
@@ -158,7 +170,7 @@ export const IoNodeMixin = (superclass) => {
       * and changed object is a property of the node.
       * @param {string} prop - Mutated object property name.
       */
-    _onObjectMutationDebounced(prop) {
+    _onObjectMutationThrottled(prop) {
       if (this['propMutated']) this['propMutated'](prop);
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
       this.changed();
@@ -171,7 +183,7 @@ export const IoNodeMixin = (superclass) => {
       this.__listeners.connect();
       this.__properties.connect();
       this.__connected = true;
-      if (this.__objectProps.length) {
+      if (this.__observedProps.length) {
         window.addEventListener('object-mutated', this._onObjectMutation);
       }
       this.queueDispatch();
@@ -183,7 +195,7 @@ export const IoNodeMixin = (superclass) => {
       this.__listeners.disconnect();
       this.__properties.disconnect();
       this.__connected = false;
-      if (this.__objectProps.length) {
+      if (this.__observedProps.length) {
         window.removeEventListener('object-mutated', this._onObjectMutation);
       }
     }
@@ -242,22 +254,33 @@ export const IoNodeMixin = (superclass) => {
       * Dispatches the queue.
       */
     queueDispatch() {
+      if (this.lazy) {
+        preThrottleQueue.push(this._queueDispatchLazy);
+        this.throttle(this._queueDispatchLazy);
+      } else {
+        this.__nodeQueue.dispatch();
+      }
+    }
+    _queueDispatchLazy() {
       this.__nodeQueue.dispatch();
     }
     /**
-      * Debounces function execution to next frame (rAF) if the function has been executed in the current frame.
-      * @param {function} func - Function to debounce.
-      * @param {*} arg - argument for debounced function.
+      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+      * @param {function} func - Function to throttle.
+      * @param {*} arg - argument for throttled function.
+      * @param {boolean} asynchronous - execute with timeout.
       */
-    debounce(func, arg) {
-      // TODO: move to extenal debounce function, document and test.
-      if (preDebounceQueue.indexOf(func) === -1) {
-        preDebounceQueue.push(func);
-        func(arg);
-        return;
+    throttle(func, arg, asynchronous) {
+      // TODO: move to extenal throttle function, document and test.
+      if (preThrottleQueue.indexOf(func) === -1) {
+        preThrottleQueue.push(func);
+        if (!asynchronous) {
+          func(arg);
+          return;
+        }
       }
-      if (debounceQueue.indexOf(func) === -1) {
-        debounceQueue.push(func);
+      if (throttleQueue.indexOf(func) === -1) {
+        throttleQueue.push(func);
       }
       // TODO: improve argument handling. Consider edge-cases.
       if (argQueue.has(func) && typeof arg !== 'object') {
@@ -269,6 +292,53 @@ export const IoNodeMixin = (superclass) => {
     }
     requestAnimationFrameOnce(func) {
       requestAnimationFrameOnce(func);
+    }
+    filterObject(object, predicate, _depth = 5, _chain = [], _i = 0) {
+
+      if (_chain.indexOf(object) !== -1) return; _chain.push(object);
+      if (_i > _depth) return; _i++;
+
+      if (predicate(object)) return object;
+
+      for (let key in object) {
+        const value = object[key] instanceof Binding ? object[key].value : object[key];
+        if (predicate(value)) return value;
+        if (typeof value === 'object') {
+          const subvalue = this.filterObject(value, predicate, _depth, _chain, _i);
+          if (subvalue) return subvalue;
+        }
+      }
+    }
+    filterObjects(object, predicate, _depth = 5, _chain = [], _i = 0) {
+      const result = [];
+      if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
+      if (_i > _depth) return result; _i++;
+      if (predicate(object) && result.indexOf(object) === -1) result.push(object);
+      for (let key in object) {
+        const value = object[key] instanceof Binding ? object[key].value : object[key];
+        if (predicate(value) && result.indexOf(value) === -1) result.push(value);
+        if (typeof value === 'object') {
+          const results = this.filterObjects(value, predicate, _depth, _chain, _i);
+          for (let i = 0; i < results.length; i++) {
+            if (result.indexOf(results[i]) === -1) result.push(results[i]);
+          }
+        }
+      }
+      return result;
+    }
+    import(path) {
+      const importPath = new URL(path, window.location).href;
+      return new Promise(resolve => {
+        if (!path || importedPaths[importPath]) {
+          resolve(importPath);
+        } else {
+          import(importPath)
+          .then(() => {
+            importedPaths[importPath] = true;
+            resolve(importPath);
+          });
+        }
+      });
     }
   };
   classConstructor.Register = Register;
@@ -286,8 +356,11 @@ const Register = function () {
   while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
     protochain.push(proto); proto = proto.__proto__;
   }
-  Object.defineProperty(this.prototype, 'isNode', {value: proto.constructor !== HTMLElement});
-  Object.defineProperty(this.prototype, 'isElement', {value: proto.constructor === HTMLElement});
+
+  const isIoNode = proto.constructor !== HTMLElement;
+  this.isIoNode = isIoNode;
+  Object.defineProperty(this.prototype, 'isIoNode', {value: isIoNode});
+
   proto = this.prototype;
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
@@ -310,13 +383,10 @@ const Register = function () {
   }
   Object.defineProperty(proto, '__functions', {value: [...functions]});
 
-  Object.defineProperty(proto, '__objectProps', {value: []});
-  const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
+  Object.defineProperty(proto, '__observedProps', {value: []});
+  // const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
   for (let p in proto.__protoProperties) {
-    const cfg = proto.__protoProperties[p];
-    if (cfg.notify && ignore.indexOf(cfg.type) == -1) {
-      proto.__objectProps.push(p);
-    }
+    if (proto.__protoProperties[p].observe) proto.__observedProps.push(p);
   }
 
   for (let p in proto.__protoProperties) {
@@ -331,25 +401,27 @@ const Register = function () {
 
 IoNodeMixin.Register = Register;
 
+const importedPaths = {};
+
 // TODO: document and test
-const preDebounceQueue = new Array();
-const debounceQueue = new Array();
+const preThrottleQueue = new Array();
+const throttleQueue = new Array();
 const argQueue = new WeakMap();
 //
 const funcQueue = new Array();
 
 const animate = function() {
   requestAnimationFrame(animate);
-  for (let i = preDebounceQueue.length; i--;) {
-    preDebounceQueue.splice(preDebounceQueue.indexOf(preDebounceQueue[i]), 1);
+  for (let i = preThrottleQueue.length; i--;) {
+    preThrottleQueue.splice(preThrottleQueue.indexOf(preThrottleQueue[i]), 1);
   }
-  for (let i = debounceQueue.length; i--;) {
-    const queue = argQueue.get(debounceQueue[i]);
+  for (let i = throttleQueue.length; i--;) {
+    const queue = argQueue.get(throttleQueue[i]);
     for (let p = queue.length; p--;) {
-      debounceQueue[i](queue[p]);
+      throttleQueue[i](queue[p]);
       queue.splice(queue.indexOf(p), 1);
     }
-    debounceQueue.splice(debounceQueue.indexOf(debounceQueue[i]), 1);
+    throttleQueue.splice(throttleQueue.indexOf(throttleQueue[i]), 1);
   }
   //
   for (let i = funcQueue.length; i--;) {

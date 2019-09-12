@@ -1,4 +1,4 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 let lastFocus = null;
 {
@@ -16,40 +16,35 @@ let lastFocus = null;
 
 class IoLayer extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        display: block;
-        visibility: hidden;
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        z-index: 100000;
-        user-select: none;
-        overflow: hidden;
-        pointer-events: none;
-        touch-action: none;
-        opacity: 0;
-        transition: opacity 0.25s;
-        background: transparent;
-      }
-      :host[expanded] {
-        pointer-events: all;
-        visibility: visible;
-        opacity: 1;
-        background: rgba(0,0,0,0.2);
-      }
-      :host > * {
-        position: absolute;
-        pointer-events: all;
-        touch-action: none;
-      }
-      :host > *:not([expanded]) {
-        visibility: hidden;
-        pointer-events: none;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      display: block;
+      visibility: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 100000;
+      user-select: none;
+      overflow: hidden;
+      pointer-events: none;
+      touch-action: none;
+      opacity: 0;
+      transition: opacity 0.25s;
+      background: transparent;
+    }
+    :host[expanded] {
+      pointer-events: all;
+      visibility: visible;
+      opacity: 1;
+      /* background: rgba(0,0,0,0.2); */
+    }
+    :host > * {
+      position: absolute;
+      touch-action: none;
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -57,124 +52,53 @@ class IoLayer extends IoElement {
         value: false,
         reflect: 1,
       },
-      srcElement: HTMLElement,
     };
   }
   static get Listeners() {
     return {
       'pointerdown': '_onPointerdown',
-      'pointermove': '_onPointermove',
-      'pointerup': '_onPointerup',
-      'touchstart': '_preventDefault',
-      'mousedown': '_preventDefault',
-      'contextmenu': '_preventDefault',
-      'focusin': '_preventDefault',
+      'contextmenu': '_onContextmenu',
+      'focusin': '_onFocusIn',
+      'scroll': '_onScroll',
+      'wheel': '_onScroll',
     };
   }
-  connectedCallback() {
-    super.connectedCallback();
-    window.addEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
-    window.addEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
-    window.addEventListener('resize', this._onWindowChange, {capture: true, passive: true});
+  constructor(props) {
+    super(props);
+    Object.defineProperty(this, 'x', {value: null, writable: true});
+    Object.defineProperty(this, 'y', {value: null, writable: true});
   }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    window.removeEventListener('scroll', this._onWindowChange, {capture: true, passive: true});
-    window.removeEventListener('wheel', this._onWindowChange, {capture: true, passive: true});
-    window.removeEventListener('resize', this._onWindowChange, {capture: true, passive: true});
+  _onPointerdown(event) {
+    if (event.composedPath()[0] === this) {
+      this.setPointerCapture(event.pointerId);
+      this.expanded = false;
+    }
   }
-  _preventDefault(event) {
-    event.stopPropagation();
+  _onContextmenu(event) {
     event.preventDefault();
   }
   _onFocusIn(event) {
     event.stopPropagation();
   }
-  _onWindowChange() {
-    this.expanded = false;
-  }
-  _onPointerdown(event) {
-    event.stopPropagation();
+  _onScroll(event) {
     if (event.composedPath()[0] === this) {
-      this.setPointerCapture(event.pointerId);
+      this.expanded = false;
     }
-  }
-  _onPointermove(event) {
-    event.stopPropagation();
-    this._x = event.clientX;
-    this._y = event.clientY;
-  }
-  _onPointerup(event) {
-    event.stopPropagation();
-    if (event.composedPath()[0] === this) {
-      this.releasePointerCapture(event.pointerId);
-      this._collapseOrFocusSrcElement(event);
-    }
-  }
-  _nudgeAnimate() {
-    if (this.expanded) {
-      this.requestAnimationFrameOnce(this._nudgeAnimate);
-      const x = this._x;
-      const y = this._y;
-      for (let i = this.children.length; i--;) {
-        if (this.children[i].expanded) {
-          if (x === undefined || y === undefined) continue;
-          const r = this.children[i].getBoundingClientRect();
-          if (!(r.top < y && r.bottom > y && r.left < x && r.right > x)) continue;
-          if (r.height > window.innerHeight) {
-            let ry = r.y;
-            if (y < 100 && r.top < 0) {
-              const scrollSpeed = (100 - y) / 5000;
-              const overflow = r.top;
-              ry = ry - Math.ceil(overflow * scrollSpeed) + 1;
-            } else if (y > window.innerHeight - 100 && r.bottom > window.innerHeight) {
-              const scrollSpeed = (100 - (window.innerHeight - y)) / 5000;
-              const overflow = (r.bottom - window.innerHeight);
-              ry = ry - Math.ceil(overflow * scrollSpeed) - 1;
-            }
-            this.children[i].style.top = ry + 'px';
-          }
-          if (r.width > window.innerHeight) {
-            let rx = r.x;
-            if (x < 100 && r.left < 0) {
-              const scrollSpeed = (100 - x) / 5000;
-              const overflow = r.left;
-              rx = rx - Math.ceil(overflow * scrollSpeed) + 1;
-            } else if (x > window.innerHeight - 100 && r.right > window.innerHeight) {
-              const scrollSpeed = (100 - (window.innerHeight - x)) / 5000;
-              const overflow = (r.right - window.innerHeight);
-              rx = rx - Math.ceil(overflow * scrollSpeed) - 1;
-            }
-            this.children[i].style.left = rx + 'px';
-          }
-        }
-      }
-    }
-  }
-  _collapseOrFocusSrcElement(event) {
-    const x = event.clientX;
-    const y = event.clientY;
-    if (this.srcElement) {
-      const rect = this.srcElement.getBoundingClientRect();
-      if (x > rect.x && x < rect.right && y > rect.y && y < rect.bottom) {
-        this.srcElement.focus();
-        return;
-      }
-    }
-    this.expanded = false;
   }
   nudgeDown(element, x, y, elemRect, force) {
+    x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
     if (y + elemRect.height < window.innerHeight || force) {
+      element.style.left = x + 'px';
       element.style.top = y + 'px';
-      element.style.left = Math.min(x, Math.max(0, window.innerWidth - elemRect.width)) + 'px';
       return true;
     }
     return false;
   }
   nudgeUp(element, x, y, elemRect, force) {
+    x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
     if (y - elemRect.height > 0 || force) {
+      element.style.left = x + 'px';
       element.style.top = y - elemRect.height + 'px';
-      element.style.left = Math.min(x, Math.max(0, window.innerWidth - elemRect.width)) + 'px';
       return true;
     }
     return false;
@@ -202,29 +126,52 @@ class IoLayer extends IoElement {
   }
   setElementPosition(element, direction, srcRect) {
     const elemRect = element.getBoundingClientRect();
+    const left = srcRect.left;
+    const top = srcRect.top;
+    const right = srcRect.right;
+    const bottom = srcRect.bottom;
+    const bottomToHeight = window.innerHeight - bottom;
+    const rightToWidth = window.innerWidth - right;
     switch (direction) {
+      case 'pointer':
+        this.nudgePointer(element, this.x, this.y, elemRect);
+        break;
       case 'top':
-        this.nudgeUp(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect) ||
-        this.nudgeUp(element, srcRect.x, srcRect.top, elemRect, true);
+        this.nudgeUp(element, left, top, elemRect) ||
+        this.nudgeDown(element, left, bottom, elemRect) ||
+        this.nudgeUp(element, left, top, elemRect, top > bottomToHeight) ||
+        this.nudgeDown(element, left, bottom, elemRect, top <= bottomToHeight);
         break;
       case 'left':
-        this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeRight(element, srcRect.right, srcRect.top, elemRect) ||
-        this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect, true);
+        this.nudgeLeft(element, left, top, elemRect) ||
+        this.nudgeRight(element, right, top, elemRect) ||
+        this.nudgeLeft(element, left, top, elemRect, left > rightToWidth) ||
+        this.nudgeRight(element, right, top, elemRect, left <= rightToWidth);
         break;
       case 'bottom':
-        this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect) ||
-        this.nudgeUp(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeDown(element, srcRect.x, srcRect.bottom, elemRect, true);
+        this.nudgeDown(element, left, bottom, elemRect) ||
+        this.nudgeUp(element, left, top, elemRect) ||
+        this.nudgeDown(element, left, bottom, elemRect, bottomToHeight > top) ||
+        this.nudgeUp(element, left, top, elemRect, bottomToHeight <= top);
         break;
       case 'right':
       default:
-        this.nudgeRight(element, srcRect.right, srcRect.top, elemRect) ||
-        this.nudgeLeft(element, srcRect.x, srcRect.top, elemRect) ||
-        this.nudgeRight(element, srcRect.right, srcRect.top, elemRect, true);
+        this.nudgeRight(element, right, top, elemRect) ||
+        this.nudgeLeft(element, left, top, elemRect) ||
+        this.nudgeRight(element, right, top, elemRect, rightToWidth > left) ||
+        this.nudgeLeft(element, left, top, elemRect, rightToWidth <= left);
         break;
     }
+  }
+  appendChild(child) {
+    super.appendChild(child);
+    child.addEventListener('expanded-changed', this.onChildExpanded);
+    this.onChildExpanded();
+  }
+  removeChild(child) {
+    super.removeChild(child);
+    child.removeEventListener('expanded-changed', this.onChildExpanded);
+    this.onChildExpanded();
   }
   onChildExpanded() {
     this.requestAnimationFrameOnce(this.onChildExpandedDelayed);
@@ -240,12 +187,12 @@ class IoLayer extends IoElement {
   }
   expandedChanged() {
     if (!this.expanded) {
+      this.x = null;
+      this.y = null;
       for (let i = this.children.length; i--;) {
         this.children[i].expanded = false;
       }
       if (lastFocus) lastFocus.focus();
-    } else {
-      this.requestAnimationFrameOnce(this._nudgeAnimate);
     }
   }
 }

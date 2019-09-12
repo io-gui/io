@@ -1,62 +1,82 @@
-import {IoElement, html} from "../../io.js";
-import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-core.js";
+import {IoElement} from "../../io.js";
+import {IoLayerSingleton} from "../core/layer.js";
 import "./menu-item.js";
 
 const rects = new WeakMap();
 
 export class IoMenuOptions extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        ${mixin.panel}
-      }
-      :host {
-        align-self: flex-start;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        white-space: nowrap;
-        user-select: none;
-        background-image: none;
-        padding: 0;
-      }
-      :host:not([horizontal]) {
-        padding: var(--io-spacing) 0;
-      }
-      :host[inlayer]:not([expanded]) {
-        visibility: hidden;
-      }
-      :host[horizontal] {
-        flex-direction: row;
-        align-self: stretch;
-        justify-self: stretch;
-        flex-wrap: nowrap;
-      }
-      :host[horizontal] > * {
-        border-left-width: 0;
-        border-right-width: 0;
-        padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
-      }
-      :host:not([horizontal]) > io-menu-item > * {
-        min-width: 0.5em;
-        padding: 0 var(--io-spacing);
-      }
-      :host[horizontal] > io-menu-item > .io-menu-hint,
-      :host[horizontal] > io-menu-item > .io-menu-more {
-        display: none;
-      }
-      :host[horizontal] > io-menu-item.io-hamburger {
-        margin-left: auto;
-      }
-      :host[horizontal] > io-menu-item.io-hamburger[hidden] {
-        display: inline-block;
-        width: 0;
-        padding: 0;
-        border: 0;
-        overflow: hidden;
-        visibility: hidden;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      @apply --io-panel;
+      box-sizing: border-box;
+      align-self: flex-start;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      white-space: nowrap;
+      user-select: none;
+      background-image: none;
+      padding: 0;
+      opacity: 1;
+      transition: opacity 0.25s;
+      overflow-y: scroll !important;
+      padding: var(--io-spacing);
+    }
+    :host > io-menu-item {
+      align-self: stretch;
+      flex: 0 0 auto;
+    }
+    :host[inlayer] {
+      box-shadow: var(--io-shadow);
+    }
+    :host[inlayer]:not([expanded]) {
+      visibility: hidden;
+      opacity: 0;
+    }
+    :host[horizontal] {
+      flex-direction: row;
+      align-self: stretch;
+      justify-self: stretch;
+      flex-wrap: nowrap;
+      padding: 0 var(--io-spacing);
+    }
+    :host[horizontal] > io-menu-item {
+      border-left-width: 0;
+      border-right-width: 0;
+      padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
+    }
+    :host:not([horizontal]) > io-menu-item > * {
+      min-width: 0.5em;
+      padding: 0 var(--io-spacing);
+    }
+    :host[horizontal] > io-menu-item > .io-menu-hint,
+    :host[horizontal] > io-menu-item > .io-menu-more {
+      display: none;
+    }
+    :host[horizontal] > io-menu-item.io-hamburger {
+      margin-left: auto;
+    }
+    :host[horizontal] > io-menu-item.io-hamburger[hidden] {
+      display: inline-block;
+      width: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+    :host > io-string {
+      align-self: stretch;
+      flex: 0 0 auto;
+      min-width: 8em;
+    }
+    :host > io-string:empty:before {
+      content: ' 🔍 Search';
+      white-space: pre;
+      visibility: visible;
+      opacity: 0.33;
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -64,7 +84,10 @@ export class IoMenuOptions extends IoElement {
         value: null,
         notify: true,
       },
-      options: Array,
+      options: {
+        type: Array,
+        observe: true,
+      },
       expanded: {
         value: false,
         reflect: 1,
@@ -74,8 +97,14 @@ export class IoMenuOptions extends IoElement {
         reflect: 1,
       },
       position: 'right',
-      selectable: false,
+      selectable: Boolean,
+      searchable: Boolean,
+      search: String,
       overflow: {
+        type: Boolean,
+        reflect: 1,
+      },
+      inlayer: {
         type: Boolean,
         reflect: 1,
       },
@@ -88,24 +117,32 @@ export class IoMenuOptions extends IoElement {
   static get Listeners() {
     return {
       'item-clicked': '_onMenuItemClicked',
+      'touchstart': '_stopPropagation',
     };
   }
   connectedCallback() {
     super.connectedCallback();
-    this.setAttribute('inlayer', this.parentElement === IoLayerSingleton);
+    this.inlayer = this.parentElement === IoLayerSingleton;
   }
   _onMenuItemClicked(event) {
     if (event.composedPath()[0] !== this) {
       event.stopImmediatePropagation();
-      this.set('value', event.detail.value);
-      this.dispatchEvent('item-clicked', event.detail, true);
-      this.expanded = false;
+      if (event.composedPath()[0].localName == 'io-menu-item') {
+        this.set('value', event.detail.value);
+        this.dispatchEvent('item-clicked', event.detail, true);
+        this.expanded = false;
+        this.search = '';
+      }
     }
   }
-  onResized() {
-    this.setOverflow();
+  // Prevents IoLayer from stopping scroll in clipped options
+  _stopPropagation(event) {
+    event.stopPropagation();
   }
-  setOverflow() {
+  onResized() {
+    this.requestAnimationFrameOnce(this._setOverflow);
+  }
+  _setOverflow() {
     const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
     if (this.horizontal) {
       const hamburger = this.querySelector('.io-hamburger');
@@ -155,32 +192,75 @@ export class IoMenuOptions extends IoElement {
     }
   }
   expandedChanged() {
-    if (this.parentElement === IoLayerSingleton) {
-      if (this.expanded && this.$parent) {
-        let rect = this.getBoundingClientRect();
-        let pRect = this.$parent.getBoundingClientRect();
-        const x = IoLayerSingleton._x;
-        const y = IoLayerSingleton._y;
-        switch (this.position) {
-          case 'pointer':
-            IoLayerSingleton.nudgePointer(this, x, y, rect);
-            break;
-          default:
-            IoLayerSingleton.setElementPosition(this, this.position, pRect);
-            break;
-        }
+    if (this.expanded) {
+      this.inlayer = this.parentElement === IoLayerSingleton;
+      if (this.inlayer && this.$parent) {
+        // TODO: unhack incorrect this.rect on first expand.
+        this.requestAnimationFrameOnce(this._expandedChangedLazy);
       }
+    } else {
+      this.style.top = null;
+      this.style.height = null;
+      this.search = '';
     }
+  }
+  searchChanged() {
+    if (this.inlayer && this.$parent) {
+      this.requestAnimationFrameOnce(this._clipHeight);
+    }
+  }
+  _expandedChangedLazy() {
+    const pRect = this.$parent.getBoundingClientRect();
+    IoLayerSingleton.setElementPosition(this, this.position, pRect);
+    this._clipHeight();
+    this.searchable = !!this.style.height;
+  }
+  _clipHeight() {
+    const rectTop = this.getBoundingClientRect().top;
+    const rectBottom = this.lastChild.getBoundingClientRect().bottom;
+    const rectHeight = rectBottom - rectTop;
+
+    const top = this.style.top;
+    if (rectTop < 0) {
+      this.style.top = '0px';
+      this.style.height = (rectHeight + rectTop)  + 'px';
+      this.style.touchAction = 'pan-y';
+    } else if (rectBottom > window.innerHeight) {
+      this.style.height = (window.innerHeight - rectTop)  + 'px';
+      this.style.touchAction = 'pan-y';
+    } else {
+      this.style.top = top;
+      this.style.height = null;
+      this.style.touchAction = null;
+    }
+  }
+  get _options() {
+    if (this.search) {
+      const s = this.search.toLowerCase();
+      const options = this.filterObjects(this.options, o => {
+        if (!!o.value || !!o.action) {
+          if (String(o.value).toLowerCase().search(s) !== -1) return true;
+          if (o.label && o.label.toLowerCase().search(s) !== -1) return true;
+          if (o.hint && o.hint.toLowerCase().search(s) !== -1) return true;
+        }
+      });
+      return options.length ? options : [{label: 'No matches'}];
+    }
+    return this.options;
   }
   changed() {
     const itemDirection = this.horizontal ? 'bottom' : 'right';
     const elements = [];
-    if (this.options) {
-      elements.push(...[this.options.map(option =>
+    if (this.searchable) {
+      elements.push(['io-string', {value: this.bind('search'), live: true}]);
+    }
+    if (this._options) {
+      elements.push(...[this._options.map(option =>
         ['io-menu-item', {
           $parent: this,
           option: option,
           value: this.value,
+          lazy: !this.expanded,
           direction: itemDirection,
           selectable: this.selectable,
         }]
@@ -197,8 +277,7 @@ export class IoMenuOptions extends IoElement {
       }]);
     }
     this.template(elements);
-    this.setOverflow();
-    this.setOverflow(); // TODO: unhack
+    this.requestAnimationFrameOnce(this._setOverflow);
   }
 }
 

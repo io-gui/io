@@ -75,17 +75,31 @@ Styles are defined inside `static get Style()` return string. Alternatively, sty
 
 ```javascript
 static get Style() {
-  return html`
-    <style>
-      :host > p {
-        color: tomato;
-      }
-    </style>
+  return /* css */`
+    :host > p {
+      color: tomato;
+    }
   `;
 }
 ```
 
-**Note:** CSS selectors have to be prefixed with `:host` in order to prevent style leakage. Template literal handler `html` is optional but recommended for correct syntax highlighting.
+**Note:** CSS selectors have to be prefixed with `:host` in order to prevent style leakage. Template literal comment `/* css */` is optional but recommended for correct syntax highlighting.
+
+CSS selectors starting with `--` and ending with `:` are treated as mixins (CSS property declaration lists). They can be appied using `@apply` CSS rule to any element class derived from `IoElement`.
+
+```javascript
+static get Style() {
+  return /* css */`
+    --io-column: {
+      display: flex;
+      flex-direction: column;
+    }
+    :host {
+      @apply --io-column;
+    }
+  `;
+}
+```
 
 ## Properties
 
@@ -111,12 +125,10 @@ For example we can use `clicked` attribute to change text color in CSS.
 
 ```javascript
 static get Style() {
-  return html`
-    <style>
-      :host[clicked] > p {
-        color: tomato;
-      }
-    </style>
+  return /* css */`
+    :host[clicked] > p {
+      color: tomato;
+    }
   `;
 }
 static get Properties() {
@@ -158,12 +170,10 @@ Here is `MyApp` element with all of the basic concepts applied. The element shou
 ```javascript
 class MyApp extends IoElement {
   static get Style() {
-    return html`
-    <style>
-      :host[clicked] > p {
-        color: tomato;
-      }
-    </style>
+    return /* css */`
+    :host[clicked] > p {
+      color: tomato;
+    }
     `;
   }
   static get Properties() {

@@ -12,6 +12,7 @@ export class ProtoProperties {
         else Object.assign(defs[p], new ProtoProperty(props[p]));
         if (defs[p].reflect === undefined) defs[p].reflect = 0;
         if (defs[p].notify === undefined) defs[p].notify = true;
+        if (defs[p].observe === undefined) defs[p].observe = false;
         if (defs[p].enumerable === undefined) defs[p].enumerable = true;
       }
     }
@@ -24,6 +25,7 @@ export class ProtoProperties {
       // TODO: reconsider
       if (defs[p].value === undefined) defs[p].value = undefined;
       if (defs[p].type === undefined) defs[p].type = undefined;
+      // if (defs[p].observe === undefined) defs[p].observe = [Object, Array].indexOf(defs[p].type) !== -1;
       this[p] = new Property(defs[p]);
     }
   }
@@ -59,6 +61,7 @@ export class ProtoProperty {
     if (cfg.type !== undefined) this.type = cfg.type;
     if (cfg.reflect !== undefined) this.reflect = cfg.reflect;
     if (cfg.notify !== undefined) this.notify = cfg.notify;
+    if (cfg.observe !== undefined) this.observe = cfg.observe;
     if (cfg.enumerable !== undefined) this.enumerable = cfg.enumerable;
     if (cfg.binding !== undefined) this.binding = cfg.binding;
   }
@@ -73,7 +76,7 @@ export class Properties {
       // TODO: consider bindings
       if (this[prop].value !== undefined) {
         if (typeof this[prop].value === 'object' && this[prop].value !== null) {
-          if (this[prop].value.isNode) this[prop].value.connect(node);
+          if (this[prop].value.isIoNode) this[prop].value.connect(node);
           node.queue(prop, this[prop].value, undefined);
         } else if (this[prop].reflect >= 1) {
           this.node.setAttribute(prop, this[prop].value);
@@ -88,15 +91,17 @@ export class Properties {
     let oldValue = this[prop].value;
     if (value !== oldValue) {
 
+      const node = this.node;
+
       let oldBinding = this[prop].binding;
 
       let binding = (value instanceof Binding) ? value : null;
 
       if (binding && oldBinding && binding !== oldBinding) {
-        oldBinding.removeTarget(this.node, prop); // TODO: test extensively
+        oldBinding.removeTarget(node, prop); // TODO: test extensively
       }
       if (binding) {
-        binding.addTarget(this.node, prop);
+        binding.addTarget(node, prop);
         this[prop].binding = binding;
         this[prop].value = value.source[value.sourceProp];
         value = value.source[value.sourceProp];
@@ -104,21 +109,21 @@ export class Properties {
         this[prop].value = value;
       }
 
-      if (value && value.isNode) {
-        value.connect(this.node);
+      if (value && value.isIoNode) {
+        value.connect(node);
       }
 
-      if (oldValue && oldValue.isNode) {
-        oldValue.disconnect(this.node);
+      if (oldValue && oldValue.isIoNode) {
+        oldValue.disconnect(node);
       }
 
       if (this[prop].notify && oldValue !== this[prop].value) {
-        this.node.queue(prop, this[prop].value, oldValue);
-        if (this.node.__connected && !suspendDispatch) {
-          this.node.queueDispatch();
+        node.queue(prop, this[prop].value, oldValue);
+        if (node.__connected && !suspendDispatch) {
+          node.queueDispatch();
         }
       }
-      if (this[prop].reflect >= 1) this.node.setAttribute(prop, value);
+      if (this[prop].reflect >= 1) node.setAttribute(prop, value);
     }
 
   }
@@ -157,6 +162,7 @@ class Property {
    * @param {function} cfg.type - Constructor of value.
    * @param {boolean} cfg.reflect - Reflects to HTML attribute
    * @param {boolean} cfg.notify - Trigger change handlers and change events.
+   * @param {boolean} cfg.observe - Observe object mutations for this property.
    * @param {boolean} cfg.enumerable - Makes property enumerable.
    * @param {Binding} cfg.binding - Binding object.
    */
@@ -165,6 +171,7 @@ class Property {
     this.type = cfg.type;
     this.reflect = cfg.reflect;
     this.notify = cfg.notify;
+    this.observe = cfg.observe;
     this.enumerable = cfg.enumerable;
     this.binding = cfg.binding;
     if (this.type === Array && this.value) {

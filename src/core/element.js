@@ -97,17 +97,18 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     */
   template(vDOM, host) {
     const vChildren = buildTree()(['root', vDOM]).children;
+    host = host || this;
     if (host === this) this.__properties.$.value = {};
-    this.traverse(vChildren, host || this);
+    this.traverse(vChildren, host);
   }
   /**
-    * Recurively traverses vDOM.
-    * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
-    * @param {HTMLElement} [host] - Optional template target.
+   * Recurively traverses vDOM.
+   * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
+   * @param {HTMLElement} [host] - Optional template target.
     */
   traverse(vChildren, host) {
     const children = host.children;
-    focusBacktrack = new WeakMap();
+    // focusBacktrack = new WeakMap();
     // remove trailing elements
     while (children.length > vChildren.length) {
       const child = children[children.length - 1];
@@ -121,7 +122,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     if (children.length < vChildren.length) {
       const frag = document.createDocumentFragment();
       for (let i = children.length; i < vChildren.length; i++) {
-        frag.appendChild(constructElement(vChildren[i]));
+        const element = constructElement(vChildren[i]);
+        frag.appendChild(element);
       }
       host.appendChild(frag);
     }
@@ -129,7 +131,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     for (let i = 0; i < children.length; i++) {
       if (children[i].localName !== vChildren[i].name) {
         const oldElement = children[i];
-        host.insertBefore(constructElement(vChildren[i]), oldElement);
+        const element = constructElement(vChildren[i]);
+        host.insertBefore(element, oldElement);
         host.removeChild(oldElement);
         // TODO: enable and test!
         // const nodes = Array.from(oldElement.querySelectorAll('*'));
@@ -138,7 +141,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       // update existing elements
       } else {
         children[i].removeAttribute('className');
-        if (Object.prototype.hasOwnProperty.call(children[i], '__properties')) {
+        if (children[i].isIoElement) {
           // Set IoElement element properties
           // TODO: Test property and listeners reset. Consider optimizing.
           children[i].setProperties(vChildren[i].props);
@@ -151,11 +154,15 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     for (let i = 0; i < vChildren.length; i++) {
       // Update this.$ map of ids.
       if (vChildren[i].props.id) this.$[vChildren[i].props.id] = children[i];
-      if (vChildren[i].children) {
+      if (vChildren[i].children !== undefined) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
-          this.flattenTextNode(children[i]);
-          children[i]._textNode.nodeValue = String(vChildren[i].children);
+          if (!children[i].isIoElement) {
+            this.flattenTextNode(children[i]);
+            children[i]._textNode.nodeValue = String(vChildren[i].children);
+          } else {
+            console.log(children[i], children[i].isIoElement, vChildren[i]);
+          }
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
           this.traverse(vChildren[i].children, children[i]);
@@ -183,7 +190,15 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         if (i !== 0) element.removeChild(element.childNodes[i]);
       }
       element._textNode.nodeValue = textContent;
-    }
+    } 
+  }
+  get textNode() {
+    this.flattenTextNode(this);
+    return this._textNode.nodeValue;
+  }
+  set textNode(value) {
+    this.flattenTextNode(this);
+    this._textNode.nodeValue = String(value);
   }
   /**
    * Alias for HTMLElement setAttribute where falsey values remove the attribute.
@@ -201,97 +216,124 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
   _onFocusTo(event) {
     const src = event.composedPath()[0];
+    const dir = event.detail.dir;
+    const rect = event.detail.rect;
+    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
+
     if (src !== this) {
-
-      const dir = event.detail.dir;
-      const rect = event.detail.rect;
-
       let closest = src;
-      let closestDist = Infinity;
+      let closestX = Infinity;
+      let closestY = Infinity;
 
-      const backtrack = focusBacktrack.get(src);
-      if (backtrack && backtrack[dir]) {
-        backtrack[dir].focus();
-        setBacktrack(backtrack[dir], dir, src);
-        return;
-      }
+      // TODO: improve backtracking
+      // const backtrack = focusBacktrack.get(src);
+      // if (backtrack && backtrack[dir]) {
+      //   backtrack[dir].focus();
+      //   setBacktrack(backtrack[dir], dir, src);
+      //   return;
+      // }
 
       const siblings = this.querySelectorAll('[tabindex="0"]');
 
       for (let i = siblings.length; i--;) {
 
         if (!siblings[i].offsetParent) {
-          // TODO: check
-          // console.log(siblings[i]);
           continue;
         }
+        // TODO: unhack
         const sStyle = window.getComputedStyle(siblings[i]);
         if (sStyle.visibility !== 'visible') {
-          // TODO: unhack
-          // console.log(siblings[i]);
           continue;
         }
 
         const sRect = siblings[i].getBoundingClientRect();
         sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
 
-        const dX = sRect.center.x - rect.center.x;
-        const dY = sRect.center.y - rect.center.y;
-
-        const isRight = sRect.right > rect.right + 1;
-        const isLeft = sRect.left < rect.left - 1;
-        const isDown = sRect.center.y > rect.center.y + 1;
-        const isUp = sRect.center.y < rect.center.y - 1;
-
-        const distY = Math.sqrt(0.2 * dX * dX + dY * dY);
-        const distX = Math.sqrt(dX * dX + 0.2 * dY * dY);
-
         // TODO: improve automatic direction routing.
         switch (dir) {
-          case 'right':
-            if (dX > 0 && distX < closestDist && isRight) {
-              closest = siblings[i], closestDist = distX;
+          case 'right': {
+            if (sRect.left >= (rect.right - 1)) {
+              const distX = Math.abs(sRect.left - rect.right);
+              const distY = Math.abs(sRect.center.y - rect.center.y);
+              if (distX < closestX || distY < closestY / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distX === closestX && distY < closestY) {
+                closest = siblings[i];
+                closestY = distY;
+              }
             }
             break;
-          case 'left':
-            if (dX < 0 && distX < closestDist && isLeft) {
-              closest = siblings[i], closestDist = distX;
+          }
+          case 'left': {
+            if (sRect.right <= (rect.left + 1)) {
+              const distX = Math.abs(sRect.right - rect.left);
+              const distY = Math.abs(sRect.center.y - rect.center.y);
+              if (distX < closestX || distY < closestY / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distX === closestX && distY < closestY) {
+                closest = siblings[i];
+                closestY = distY;
+              }
             }
             break;
-          case 'down':
-            if (dY > 0 && distY < closestDist && isDown) {
-              closest = siblings[i], closestDist = distY;
+          }
+          case 'down': {
+            if (sRect.top >= (rect.bottom - 1)) {
+              const distX = Math.abs(sRect.center.x - rect.center.x);
+              const distY = Math.abs(sRect.top - rect.bottom);
+              if (distY < closestY || distX < closestX / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distY === closestY && distX < closestX) {
+                closest = siblings[i];
+                closestX = distX;
+              }
             }
             break;
-          case 'up':
-            if (dY < 0 && distY < closestDist && isUp) {
-              closest = siblings[i], closestDist = distY;
+          }
+          case 'up':{
+            if (sRect.bottom <= (rect.top + 1)) {
+              const distX = Math.abs(sRect.center.x - rect.center.x);
+              const distY = Math.abs(sRect.bottom - rect.top);
+              if (distY < closestY || distX < closestX / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distY === closestY && distX < closestX) {
+                closest = siblings[i];
+                closestX = distX;
+              }
             }
             break;
+          }
         }
       }
 
       if (closest !== src) {
         closest.focus();
-        setBacktrack(closest, dir, src);
-        event.stopImmediatePropagation();
+        // setBacktrack(closest, dir, src);
+        event.stopPropagation();
       }
     }
   }
   focusTo(dir) {
     const rect = this.getBoundingClientRect();
-    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
     this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
   }
 }
 
-let focusBacktrack = new WeakMap();
-const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
-function setBacktrack(element, dir, target) {
-  const backtrack = focusBacktrack.get(element) || {};
-  backtrack[backtrackDir[dir]] = target;
-  focusBacktrack.set(element, backtrack);
-}
+// let focusBacktrack = new WeakMap();
+// const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
+// function setBacktrack(element, dir, target) {
+//   const backtrack = focusBacktrack.get(element) || {};
+//   backtrack[backtrackDir[dir]] = target;
+//   focusBacktrack.set(element, backtrack);
+// }
 
 const warning = document.createElement('div');
 warning.innerHTML = `
@@ -306,7 +348,9 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
  */
 IoElement.Register = function() {
   IoNodeMixin.Register.call(this);
-  IoElement.isIoElement = true;
+
+  this.isIoElement = true;
+  Object.defineProperty(this.prototype, 'isIoElement', {value: true});
 
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
@@ -328,21 +372,6 @@ if (window.ResizeObserver !== undefined) {
   ro = new ResizeObserver(entries => {
     for (let entry of entries) entry.target.onResized();
   });
-}
-
-/**
- * Template literal handler for CSS code in HTML.
- * @param {Array} parts - Template literal array argument.
- * @return {string} - Created HTML code.
- */
-export function html(parts) {
-  let result = '';
-  for (let i = 0; i < parts.length; i++) {
-    result += parts[i] + (arguments[i + 1] || '');
-  }
-  result = result.replace(new RegExp('<style>', 'g'), '');
-  result = result.replace(new RegExp('</style>', 'g'), '');
-  return result;
 }
 
 /**
@@ -400,32 +429,94 @@ const setNativeElementProps = function(element, props) {
   element.__listeners.setPropListeners(props, element);
 };
 
+const mixinDB = {};
+
+const commentsRegex =  new RegExp('(\\/\\*[\\s\\S]*?\\*\\/)', 'gi');
+const keyframeRegex =  new RegExp('((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
+const mediaQueryRegex =  new RegExp('((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
+const mixinRegex = new RegExp('((--[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
+const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
+const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
+
 // Creates a `<style>` element for all `static get Style()` return strings.
 function _initProtoStyle(prototypes) {
   const localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-  for (let i = prototypes.length; i--;) {
-    let styleString = prototypes[i].constructor.Style;
-    const classLocalName = prototypes[i].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  const styleID = 'io-style-' + localName.replace('io-', '');
+
+  let finalStyleString = '';
+
+  if (!finalStyleString) {
+
+    // Convert mixins to classes
+    let styleString = prototypes[0].constructor.Style;
+    
     if (styleString) {
-      // TODO: Do proper CSS parsing.
-      const match = styleString.match(new RegExp(/([^,{}]+)(,(?=[^}]*{)|\s*{)/, 'g'));
-      match.map(selector => {
-        selector = selector.trim();
-        if (!selector.startsWith('@') &&
-            !selector.startsWith(':host') &&
-            !selector.startsWith('from') &&
-            !selector.startsWith('to') &&
-            !selector.startsWith('/*') &&
-            !selector.startsWith('body')) {
-          console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
+      const mixins = styleString.match(mixinRegex);
+      if (mixins) {
+        for (let i = 0; i < mixins.length; i++) {
+          const m = mixins[i].split(': {');
+          const name = m[0];
+          const value = m[1].replace('}', '').trim().replace(/^ +/gm, '');
+          mixinDB[name] = value;
+          finalStyleString += mixins[i].replace('--', '.').replace(': {', ' {');
         }
-      });
-      // Replace `:host` with element tag.
-      styleString = styleString.replace(new RegExp(':host', 'g'), localName);
-      const element = document.createElement('style');
-      element.innerHTML = styleString;
-      element.setAttribute('id', 'io-style_' + localName + (classLocalName !== localName ? ('_' + classLocalName) : ''));
-      document.head.appendChild(element);
+      }
     }
+    
+    for (let i = prototypes.length; i--;) {
+      let styleString = prototypes[i].constructor.Style;
+      if (styleString) {
+        // Remove mixins
+        styleString = styleString.replace(mixinRegex, '');
+
+        // Apply mixins
+        const apply = styleString.match(applyRegex);
+        if (apply) {
+          for (let i = 0; i < apply.length; i++) {
+            const name = apply[i].split('@apply ')[1].replace(';', '');
+            if (mixinDB[name]) {
+              styleString = styleString.replace(apply[i], mixinDB[name]);
+            } else {
+              console.warn('IoElement: cound not find mixin:', name);
+            }
+          }
+        }
+
+        // Check selector validity (:host prefix)
+        {
+          let styleStringStripped = styleString;
+
+          // Remove comments
+          styleStringStripped = styleStringStripped.replace(commentsRegex, '');
+
+          // Remove keyframes
+          styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
+
+          // Remove media queries
+          styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
+
+          const match = styleStringStripped.match(cssRegex);
+          if (match) {
+            match.map(selector => {
+              selector = selector.trim();
+              if (!selector.startsWith(':host')) {
+                console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
+                console.warn(selector);
+              }
+            });
+          }
+        }
+
+        // Replace `:host` with element tag.
+        finalStyleString += styleString.replace(new RegExp(':host', 'g'), localName);
+      }
+    }
+  }
+
+  if (finalStyleString) {
+    const element = document.createElement('style');
+    element.innerHTML = finalStyleString;
+    element.setAttribute('id', styleID);
+    document.head.appendChild(element);
   }
 }

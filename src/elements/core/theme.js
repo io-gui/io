@@ -1,4 +1,5 @@
-import {IoNode, html, IoStorage as $} from "../../io.js";
+import {IoElement} from "../../io.js";
+import {IoStorageFactory as $} from "./storage.js";
 
 const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -13,7 +14,7 @@ const themeSizes =  {
 };
 const themeDB = {
   light: Object.assign({
-    cssBackgroundColor: [0.96, 0.96, 0.96, 1],
+    cssBackgroundColor: [0.95, 0.95, 0.95, 1],
     cssBackgroundColorLight: [1, 1, 1, 1],
     cssBackgroundColorDark: [0.84, 0.84, 0.84, 1],
     cssBackgroundColorField: [0.92, 0.92, 0.92, 1],
@@ -27,7 +28,7 @@ const themeDB = {
     cssColorBoolean: [0.82, 0.35, 0.75, 1],
     cssColorBorder: [0.7, 0.7, 0.7, 1],
     cssColorBorderLight: [1, 1, 1, 1],
-    cssColorBorderDark: [0.72, 0.72, 0.72, 1],
+    cssColorBorderDark: [0.6, 0.6, 0.6, 1],
     cssColorGradientStart: [1, 1, 1, 0.5],
     cssColorGradientEnd: [0, 0, 0, 0.25],
     cssColorShadow: [0, 0, 0, 0.2],
@@ -45,22 +46,23 @@ const themeDB = {
     cssColorNumber: [0.125, 0.64, 1, 1],
     cssColorString: [0.94, 0.25, 0.086, 1],
     cssColorBoolean: [0.82, 0.35, 0.75, 1],
-    cssColorBorder: [0.4, 0.4, 0.4, 1],
-    cssColorBorderLight: [0.5, 0.5, 0.5, 1],
-    cssColorBorderDark: [0.1, 0.1, 0.1, 1],
+    cssColorBorder: [0.3, 0.3, 0.3, 1],
+    cssColorBorderLight: [0.4, 0.4, 0.4, 1],
+    cssColorBorderDark: [0, 0, 0, 1],
     cssColorGradientStart: [1, 1, 1, 0.1],
     cssColorGradientEnd: [0, 0, 0, 0.2],
     cssColorShadow: [0, 0, 0, 0.2],
   }, themeSizes),
 };
 
-const theme = $('theme', isDarkMode ? 'dark' : 'light');
+const theme = $({value: isDarkMode ? 'dark' : 'light', storage: 'local', key: 'theme'});
 const vars = themeDB[theme.value] || themeDB['light'];
 
-export class IoTheme extends IoNode {
-  static get Mixins() {
-    return html`<style>
-    item {
+export class IoTheme extends IoElement {
+  static get Style() {
+    return /* css */`
+    --io-item: {
+      align-self: flex-start;
       display: inline-block;
       cursor: pointer;
       user-select: none;
@@ -84,79 +86,66 @@ export class IoTheme extends IoNode {
       padding: var(--io-spacing);
       transition: background-color 0.25s;
     }
-    panel {
+    --io-panel: {
       display: flex;
       flex-direction: column;
       align-self: stretch;
       justify-self: stretch;
-      align-items: flex-start;
       border-radius: calc(var(--io-border-radius) + var(--io-spacing));
       border: var(--io-border);
       border-color: var(--io-color-border-outset);
       color: var(--io-color-field);
       background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-panel);
       padding: var(--io-spacing);
     }
-    frame {
+    --io-content: {
       display: flex;
       flex-direction: column;
       align-self: stretch;
       justify-self: stretch;
-      align-items: flex-start;
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: var(--io-color-border-inset);
-      color: var(--io-color);
-      background-color: var(--io-background-color);
-      background-image: none;
-      padding: var(--io-spacing);
-      box-shadow: var(--io-shadow-inset);
-    }
-    content {
-      display: flex;
-      flex-direction: column;
       flex: 1 1 auto;
       overflow-x: hidden;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       -webkit-tap-highlight-color: transparent;
+      color: var(--io-color);
+      background-color: var(--io-background-color);
     }
-    row {
+    --io-row: {
       display: flex;
       flex: 1 1;
       flex-direction: row;
       align-self: stretch;
       justify-self: stretch;
     }
-    column {
+    --io-column: {
       display: flex;
       flex: 1 1;
       flex-direction: column;
       align-self: stretch;
       justify-self: stretch;
     }
-    table2 {
+    --io-table2: {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-gap: var(--io-spacing);
     }
-    table3 {
+    --io-table3: {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-gap: var(--io-spacing);
     }
-    table4 {
+    --io-table4: {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       grid-gap: var(--io-spacing);
     }
-    table5 {
+    --io-table5: {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       grid-gap: var(--io-spacing);
     }
-    </style>`;
+    `;
   }
   static get Properties() {
     return {
@@ -169,33 +158,30 @@ export class IoTheme extends IoNode {
       cssLineHeight: vars.cssLineHeight,
       cssItemHeight: vars.cssItemHeight,
       cssFontSize: vars.cssFontSize,
-      cssBackgroundColor: vars.cssBackgroundColor,
-      cssBackgroundColorLight: vars.cssBackgroundColorLight,
-      cssBackgroundColorDark: vars.cssBackgroundColorDark,
-      cssBackgroundColorField: vars.cssBackgroundColorField,
-      cssColor: vars.cssColor,
-      cssColorError: vars.cssColorError,
-      cssColorLink: vars.cssColorLink,
-      cssColorFocus: vars.cssColorFocus,
-      cssColorField: vars.cssColorField,
-      cssColorNumber: vars.cssColorNumber,
-      cssColorString: vars.cssColorString,
-      cssColorBoolean: vars.cssColorBoolean,
-      cssColorBorder: vars.cssColorBorder,
-      cssColorBorderLight: vars.cssColorBorderLight,
-      cssColorBorderDark: vars.cssColorBorderDark,
-      cssColorGradientStart: vars.cssColorGradientStart,
-      cssColorGradientEnd: vars.cssColorGradientEnd,
-      cssColorShadow: vars.cssColorShadow,
+      cssBackgroundColor: {value: vars.cssBackgroundColor, observe: true},
+      cssBackgroundColorLight: {value: vars.cssBackgroundColorLight, observe: true},
+      cssBackgroundColorDark: {value: vars.cssBackgroundColorDark, observe: true},
+      cssBackgroundColorField: {value: vars.cssBackgroundColorField, observe: true},
+      cssColor: {value: vars.cssColor, observe: true},
+      cssColorError: {value: vars.cssColorError, observe: true},
+      cssColorLink: {value: vars.cssColorLink, observe: true},
+      cssColorFocus: {value: vars.cssColorFocus, observe: true},
+      cssColorField: {value: vars.cssColorField, observe: true},
+      cssColorNumber: {value: vars.cssColorNumber, observe: true},
+      cssColorString: {value: vars.cssColorString, observe: true},
+      cssColorBoolean: {value: vars.cssColorBoolean, observe: true},
+      cssColorBorder: {value: vars.cssColorBorder, observe: true},
+      cssColorBorderLight: {value: vars.cssColorBorderLight, observe: true},
+      cssColorBorderDark: {value: vars.cssColorBorderDark, observe: true},
+      cssColorGradientStart: {value: vars.cssColorGradientStart, observe: true},
+      cssColorGradientEnd: {value: vars.cssColorGradientEnd, observe: true},
+      cssColorShadow: {value: vars.cssColorShadow, observe: true},
+      //
+      lazy: true,
     };
   }
   constructor(props) {
     super(props);
-    this.mixinsElement = document.createElement('style');
-    this.mixinsElement.setAttribute('id', 'io-theme-mixins');
-    this.mixinsElement.innerHTML = this.mixins;
-    document.head.appendChild(this.mixinsElement);
-
     this.variablesElement = document.createElement('style');
     this.variablesElement.setAttribute('id', 'io-theme-variables');
     document.head.appendChild(this.variablesElement);
@@ -239,11 +225,8 @@ export class IoTheme extends IoNode {
       cssColorGradientEnd: vars.cssColorGradientEnd,
       cssColorShadow: vars.cssColorShadow,
     });
-    this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
   changed() {
-    // TODO: consider removing (required for gl updates in theme demo)
-    this.dispatchEvent('object-mutated', {object: this}, false, window);
     this.__properties.cssItemHeight.value =
       this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth);
     this.variablesElement.innerHTML = `
@@ -283,36 +266,18 @@ export class IoTheme extends IoNode {
         --io-color-border-outset: var(--io-color-border-light) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border-light);
 
         --io-gradient-button: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
-        --io-gradient-panel: linear-gradient(45deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
         --io-gradient-error: repeating-linear-gradient(135deg, transparent, var(--io-color-error) 1px, var(--io-color-error) 4px, transparent 6px);
 
-        --io-shadow: 2px 2px 5px var(--io-color-shadow);
-        --io-shadow-inset: 1px 1px 1px inset var(--io-color-shadow);
-        --io-shadow-outset: -1px -1px 1px inset var(--io-color-shadow);
+        --io-shadow: 2px 2px 6px var(--io-color-shadow),
+                     1px 1px 1px var(--io-color-shadow);
+        --io-shadow-inset: 1px 1px 2px inset var(--io-color-shadow);
+        --io-shadow-outset: -1px -1px 2px inset var(--io-color-shadow);
       }
     `;
+    // TODO: consider removing (required for gl updates in theme demo)
+    this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
 }
-IoTheme.Register = function() {
-  IoNode.Register.call(this);
-  let mixins = '';
-  for (let i = this.prototype.__protochain.length; i--;) {
-    const styleString = this.prototype.__protochain[i].constructor.Mixins;
-    if (styleString) {
-      // TODO: improve CSS parsing to support comments etc.
-      // const match = Array.from(styleString.matchAll(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
-      const match = Array.from(styleString.match(new RegExp(/([\s\S]*?){([\s\S]*?)}/, 'g')));
-      for (let j = 0; j < match.length; j++) {
-        // TODO: unhack!
-        const name = match[j].split('{')[0].replace(/\s/g, '');
-        const value = match[j].split('{')[1].replace(/}/g, '');
-        Object.defineProperty(this.prototype, name, {value: value});
-        mixins += `.io-${name} {\n${value}\n}\n`;
-      }
-    }
-  }
-  Object.defineProperty(this.prototype, 'mixins', { value: mixins });
-};
 IoTheme.Register();
 
 export const IoThemeSingleton = new IoTheme();

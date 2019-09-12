@@ -1,12 +1,15 @@
 import {IoElement} from "../../io.js";
-import {IoLayerSingleton} from "../../io-core.js";
+import {IoLayerSingleton} from "../core/layer.js";
 import {IoMenuOptions} from "./menu-options.js";
 
 export class IoContextMenu extends IoElement {
   static get Properties() {
     return {
       value: null,
-      options: Array,
+      options: {
+        type: Array,
+        observe: true,
+      },
       expanded: Boolean,
       position: 'pointer',
       button: 0,
@@ -24,7 +27,6 @@ export class IoContextMenu extends IoElement {
         options: this.options,
         position: this.position,
         'on-io-menu-item-clicked': this._onOptionItemClicked,
-        'on-expanded-changed': IoLayerSingleton.onChildExpanded,
       }
     };
   }
@@ -34,6 +36,8 @@ export class IoContextMenu extends IoElement {
     IoLayerSingleton.addEventListener('pointermove', this._onLayerPointermove);
     this._parent = this.parentElement;
     this._parent.style.userSelect = 'none';
+    this._parent.style.webkitUserSelect = 'none';
+    this._parent.style.webkitTouchCallout = 'default';
     this._parent.addEventListener('contextmenu', this._onContextmenu);
     this._parent.addEventListener('pointerdown', this._onPointerdown);
     this._parent.addEventListener('click', this._onClick);
@@ -43,6 +47,8 @@ export class IoContextMenu extends IoElement {
     IoLayerSingleton.removeChild(this.$options);
     IoLayerSingleton.removeEventListener('pointermove', this._onLayerPointermove);
     this._parent.style.userSelect = null;
+    this._parent.style.webkitUserSelect = null;
+    this._parent.style.webkitTouchCallout = null;
     this._parent.removeEventListener('contextmenu', this._onContextmenu);
     this._parent.removeEventListener('pointerdown', this._onPointerdown);
     this._parent.removeEventListener('click', this._onClick);
@@ -59,28 +65,38 @@ export class IoContextMenu extends IoElement {
     }
   }
   _onContextmenu(event) {
+    event.preventDefault();
     if (this.button === 2) {
-      event.preventDefault();
       this.expand(event);
     }
   }
   _onPointerdown(event) {
+    IoLayerSingleton.x = event.clientX;
+    IoLayerSingleton.y = event.clientY;
+    this._parent.setPointerCapture(event.pointerId);
+    this._parent.addEventListener('pointermove', this._onPointermove);
+    this._parent.addEventListener('pointerup', this._onPointerup);
     if (event.pointerType === 'mouse') {
       if (event.button === this.button && event.button !== 2) {
-        this._parent.setPointerCapture(event.pointerId);
-        this._parent.addEventListener('pointermove', this._onPointermove);
-        this._parent.addEventListener('pointerup', this._onPointerup);
         this.expand(event);
       }
     }
+    clearTimeout(this._contextTimeout);
+    // iOS Safari contextmenu event emulation.
+    this._contextTimeout = setTimeout(() => {
+      event.preventDefault();
+      this.expand(event);
+    }, 1000);
   }
   _onPointermove(event) {
+    clearTimeout(this._contextTimeout);
     if (this.expanded) {
       const item = this.$options.querySelector('io-menu-item');
       if (item) item._onPointermove(event);
     }
   }
   _onPointerup() {
+    clearTimeout(this._contextTimeout);
     if (this.expanded) {
       const item = this.$options.querySelector('io-menu-item');
       if (item) item._onPointerup(event);
@@ -95,10 +111,8 @@ export class IoContextMenu extends IoElement {
   _onClick(event) {
     if (event.button === this.button && event.button !== 2) this.expand(event);
   }
-  expand(event) {
+  expand() {
     if (!this.expanded && this.options.length) {
-      IoLayerSingleton._x = event.clientX;
-      IoLayerSingleton._y = event.clientY;
       this.expanded = true;
     }
   }

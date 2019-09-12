@@ -120,7 +120,7 @@ export class Listeners {
     const active = this.activeListeners;
     for (let i in active) {
       for (let j = active[i].length; j--;) {
-        if (this.node.isElement) HTMLElement.prototype.removeEventListener.call(this.node, i, active[i][j]);
+        if (this.node.isIoElement) HTMLElement.prototype.removeEventListener.call(this.node, i, active[i][j]);
         active[i].splice(j, 1);
       }
     }
@@ -136,7 +136,7 @@ export class Listeners {
     active[type] = active[type] || [];
     const i = active[type].indexOf(listener);
     if (i === -1) {
-      if (this.node.isElement) HTMLElement.prototype.addEventListener.call(this.node, type, listener, options);
+      if (this.node.isIoElement) HTMLElement.prototype.addEventListener.call(this.node, type, listener, options);
       active[type].push(listener);
     }
   }
@@ -151,7 +151,7 @@ export class Listeners {
     if (active[type] !== undefined) {
       const i = active[type].indexOf(listener);
       if (i !== - 1) {
-        if (this.node.isElement) HTMLElement.prototype.removeEventListener.call(this.node, type, listener, options);
+        if (this.node.isIoElement) HTMLElement.prototype.removeEventListener.call(this.node, type, listener, options);
         active[type].splice(i, 1);
       }
     }

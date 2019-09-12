@@ -1,6 +1,6 @@
 {
   "name": "io-gui",
-  "version": "1.0.8",
+  "version": "1.0.9-rc.1",
   "description": "UI framework for computer graphics on the web.",
   "jsnext:main": "dist/io.js",
   "module": "dist/io.js",
@@ -24,18 +24,12 @@
   "scripts": {
     "lint": "eslint src",
     "rollup": "rollup -c",
-    "uglify": "uglifyjs dist/io.js -cmo dist/io.js --comments",
+    "uglify-io": "uglifyjs dist/io.js -cmo dist/io.js --comments",
     "uglify-core": "uglifyjs dist/io-core.js -cmo dist/io-core.js --comments",
     "uglify-extras": "uglifyjs dist/io-extras.js -cmo dist/io-extras.js --comments",
-    "uglify-layout": "uglifyjs dist/io-layout.js -cmo dist/io-layout.js --comments",
-    "uglify-math": "uglifyjs dist/io-math.js -cmo dist/io-math.js --comments",
-    "uglify-color": "uglifyjs dist/io-color.js -cmo dist/io-color.js --comments",
-    "uglify-menu": "uglifyjs dist/io-menu.js -cmo dist/io-menu.js --comments",
-    "uglify-object": "uglifyjs dist/io-object.js -cmo dist/io-object.js --comments",
-    "uglify-demo": "uglifyjs dist/io-demo.js -cmo dist/io-demo.js --comments",
     "uglify-tests": "uglifyjs dist/io-tests.js -cmo dist/io-tests.js --comments",
-    "uglify-all": "npm run uglify && npm run uglify-core && npm run uglify-extras && npm run uglify-layout && npm run uglify-math && npm run uglify-color && npm run uglify-menu && npm run uglify-object && npm run uglify-demo && npm run uglify-tests",
-    "build": "npm run lint && npm run rollup && npm run uglify-all",
+    "uglify": "npm run uglify-io && npm run uglify-core && npm run uglify-extras && npm run uglify-tests",
+    "build": "npm run lint && npm run rollup && npm run uglify",
     "travis": "npm run build"
   },
   "repository": {
@@ -63,9 +57,9 @@
   },
   "homepage": "https://io-gui.dev",
   "devDependencies": {
-    "babel-eslint": "^10.0.2",
-    "eslint": "^6.0.1",
-    "rollup": "^1.16.7",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.3.0",
+    "rollup": "^1.21.2",
     "uglify-es": "^3.3.10"
   }
 }

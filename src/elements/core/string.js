@@ -1,30 +1,30 @@
-import {html} from "../../io.js";
 import {IoItem} from "./item.js";
 
 export class IoString extends IoItem {
   static get Style() {
-    return html`<style>
-      :host {
-        cursor: text;
-        user-select: text;
-        -webkit-user-select: text;
-        -webkit-touch-callout: default;
-        min-width: var(--io-item-height);
-        border-color: var(--io-color-border-inset);
-        color: var(--io-color-field);
-        background-color: var(--io-background-color-field);
-        box-shadow: var(--io-shadow-inset);
-      }
-      :host:before,
-      :host:after {
-        content: ' ';
-        white-space: pre;
-        visibility: hidden;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      cursor: text;
+      user-select: text;
+      -webkit-user-select: text;
+      -webkit-touch-callout: default;
+      min-width: var(--io-item-height);
+      border-color: var(--io-color-border-inset);
+      color: var(--io-color-field);
+      background-color: var(--io-background-color-field);
+      box-shadow: var(--io-shadow-inset);
+    }
+    :host:before,
+    :host:after {
+      content: ' ';
+      white-space: pre;
+      visibility: hidden;
+    }
+    `;
   }
   static get Properties() {
     return {
+      live: Boolean,
       value: String,
       contenteditable: true,
       role: 'textbox',
@@ -32,8 +32,19 @@ export class IoString extends IoItem {
   }
   _setFromTextNode() {
     const textNode = this.textNode;
-    if (typeof this.value === 'string' || (textNode !== String(this.value))) {
+    if (typeof this.value === 'string' && textNode !== String(this.value)) {
       this.set('value', textNode);
+    }
+  }
+  _tryParseFromTextNode() {
+    const textNode = this.textNode;
+    try {
+      const value = JSON.parse(textNode.replace(/[\t\n\r ]+/g, " "));
+      this.set('value', value);
+    } catch (error) {
+      console.warn('IoString: Cannot parse value', textNode);
+      console.error(error);
+      this._setFromTextNode();
     }
   }
   _onBlur(event) {
@@ -45,22 +56,22 @@ export class IoString extends IoItem {
     this.scrollLeft = 0;
   }
   _onPointerdown() {
-    this.pressed = true;
     this.addEventListener('pointermove', this._onPointermove);
-    this.addEventListener('pointerleave', this._onPointerleave);
     this.addEventListener('pointerup', this._onPointerup);
   }
   _onPointermove() {}
-  _onPointerleave(event) {
-    event.preventDefault();
-    this.pressed = false;
-  }
   _onPointerup() {
-    this.pressed = false;
     this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerleave', this._onPointerleave);
     this.removeEventListener('pointerup', this._onPointerup);
-    this.focus();
+    if (document.activeElement !== this) this.focus();
+  }
+  _onKeyup(event) {
+    super._onKeyup(event);
+    if (this.live) {
+      const carretPosition = getCaretPosition(this);
+      this._setFromTextNode();
+      setCaretPosition(this, carretPosition);
+    }
   }
   _onKeydown(event) {
     const rng = window.getSelection().getRangeAt(0);
@@ -69,25 +80,29 @@ export class IoString extends IoItem {
     const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this);
 
-    if (event.which == 13) {
+    if (event.key == 'Enter') {
       event.preventDefault();
-      this._setFromTextNode();
-    } else if (event.which == 37) {
+      if (event.shiftKey) {
+        this._tryParseFromTextNode();
+      } else {
+        this._setFromTextNode();
+      }
+    } else if (event.key == 'ArrowLeft') {
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('left');
       }
-    } else if (event.which == 38) {
+    } else if (event.key == 'ArrowUp') {
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
         this.focusTo('up');
       }
-    } else if (event.which == 39) {
+    } else if (event.key == 'ArrowRight') {
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('right');
       }
-    } else if (event.which == 40) {
+    } else if (event.key == 'ArrowDown') {
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
         this.focusTo('down');
@@ -102,3 +117,27 @@ export class IoString extends IoItem {
 }
 
 IoString.Register();
+
+function getCaretPosition(el){
+  let position = 0;
+  const selection = window.getSelection();
+  if (selection.rangeCount) {
+    const range = selection.getRangeAt(0);
+    const selected = range.toString().length;
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(el);
+    preCaretRange.setEnd(range.endContainer, range.endOffset);
+    position = preCaretRange.toString().length - selected;
+  }
+  return position;
+}
+
+function setCaretPosition(el, position){
+  if (!position) return;
+  const sel = window.getSelection();
+  const range = document.createRange();
+  range.setStart(el.firstChild, position);
+  range.collapse(true);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}

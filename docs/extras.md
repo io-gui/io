@@ -1,7 +1,3 @@
-## &lt;io-element-demo&gt;
-
-TODO
-
 ## &lt;io-md-view&gt;
 
 TODO

@@ -1,26 +1,26 @@
-import {html} from "../../io.js";
-import {IoGl} from "../../io-core.js";
+import {IoGl} from "../core/gl.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorSwatch extends IoColorMixin(IoGl) {
   static get Style() {
-    return html`<style>
-      :host {
-        box-sizing: border-box;
-        border-radius: var(--io-border-radius);
-        border: var(--io-border);
-        border-color: var(--io-color-border-inset);
-        min-width: var(--io-item-height);
-        min-height: var(--io-item-height);
-      }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-      }
-      :host:focus {
-        border-color: var(--io-color-focus);
-        outline-color: var(--io-color-focus);
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      box-sizing: border-box;
+      align-self: flex-start;
+      border-radius: var(--io-border-radius);
+      border: var(--io-border);
+      border-color: var(--io-color-border-inset);
+      min-width: var(--io-item-height);
+      min-height: var(--io-item-height);
+    }
+    :host[aria-invalid] {
+      border: var(--io-border-error);
+    }
+    :host:focus {
+      border-color: var(--io-color-focus);
+      outline-color: var(--io-color-focus);
+    }
+    `;
   }
   static get Frag() {
     return /* glsl */`

@@ -1,4 +1,4 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {IoThemeSingleton} from "./theme.js";
 
 const canvas = document.createElement('canvas');
@@ -33,30 +33,36 @@ let currentProgram;
 
 export class IoGl extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        position: relative;
-        overflow: hidden !important;
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-        box-sizing: border-box;
-      }
-      :host > .io-gl-canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-radius: calc(var(--io-border-radius) - var(--io-border-width));
-        pointer-events: none;
-        /* image-rendering: pixelated; */
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      position: relative;
+      overflow: hidden !important;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    :host > .io-gl-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: calc(var(--io-border-radius) - var(--io-border-width));
+      pointer-events: none;
+      /* image-rendering: pixelated; */
+    }
+    `;
   }
   static get Properties() {
     return {
       size: [0, 0],
-      color: [1, 1, 1, 1],
+      color: {
+        value: [1, 1, 1, 1],
+        observe: true,
+      },
       pxRatio: 1,
-      css: Object,
+      css: {
+        type: Object,
+        observe: true,
+      },
     };
   }
   static get Vert() {
@@ -93,8 +99,8 @@ export class IoGl extends IoElement {
     }
     float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
       vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
-      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(dFdx(sp.x)) - lineWidth;
-      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(dFdy(sp.y)) - lineWidth;
+      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(max(dFdx(sp.x), dFdy(sp.x))) - lineWidth;
+      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(max(dFdy(sp.y), dFdx(sp.y))) - lineWidth;
       return saturate(min(linex, liney));
     }
     float checker(vec2 samplePosition, float size) {
@@ -186,7 +192,6 @@ export class IoGl extends IoElement {
     super(props);
 
     this.css = IoThemeSingleton;
-
 
     // TODO: improve code clarity
     this._vecLengths = {};
@@ -292,15 +297,15 @@ export class IoGl extends IoElement {
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
-    gl.clearColor(0, 0, 0, 0);
-
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    // gl.clearColor(0, 0, 0, 1);
+    // gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
     // this.$.canvas.src = canvas.toDataURL('image/png', 0.9);
     // this.$.canvas.loading = true;
 
+    // this.$.canvas.ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.$.canvas.ctx.drawImage(canvas, 0, 0);
   }
   setShaderProgram() {

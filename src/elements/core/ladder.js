@@ -1,4 +1,4 @@
-import {IoElement, html} from "../../io.js";
+import {IoElement} from "../../io.js";
 import {IoItem} from "./item.js";
 import {IoLayerSingleton} from "./layer.js";
 
@@ -18,18 +18,18 @@ let lastFocus = null;
 
 class IoLadderStep extends IoItem {
   static get Style() {
-    return html`<style>
-      :host {
-        pointer-events: all;
-        display: inline-block;
-        cursor: ew-resize;
-        text-align: center;
-        background-color: var(--io-background-color-light);
-        align-self: stretch;
-        touch-action: none;
-        width: 5em;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      pointer-events: all;
+      display: inline-block;
+      cursor: ew-resize;
+      text-align: center;
+      background-color: var(--io-background-color-light);
+      align-self: stretch;
+      touch-action: none;
+      width: 5em;
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -63,17 +63,12 @@ class IoLadderStep extends IoItem {
     }
   }
   _onPointerdown(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
-    this.focus();
     this._startX = event.clientX;
   }
   _onPointermove(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
     const deltaX = event.clientX - this._startX;
     if (Math.abs(deltaX) > 5) {
       const expMove = Math.pow(deltaX / 5, 3);
@@ -84,8 +79,6 @@ class IoLadderStep extends IoItem {
     }
   }
   _onPointerup(event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
     this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
@@ -102,85 +95,88 @@ IoLadderStep.Register();
 
 class IoLadder extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        position: relative;
-        pointer-events: none;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        display: flex;
-        flex-direction: column;
-      }
-      :host:not([expanded]) {
-        visibility: hidden;
-      }
-      :host:not([expanded]) > io-ladder-step {
-        opacity: 0;
-      }
-      :host > :nth-child(-n+5) {
-        box-shadow: 0 -1px 4px rgba(0,0,0,0.2);
-      }
-      :host > :nth-child(n+6) {
-        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      }
-      :host > .io-up1,
-      :host > .io-down1{
-        z-index: 4;
-        transition: opacity 0.1s, transform 0.1s;
-      }
-      :host > .io-up2,
-      :host > .io-down2 {
-        z-index: 3;
-        opacity: 0.8;
-        transition: opacity 0.2s, transform 0.2s;
-      }
-      :host:not([expanded]) > .io-up4 {
-        transform: translateY(calc(3 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-up3 {
-        transform: translateY(calc(2 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-up2 {
-        transform: translateY(calc(1 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-down2 {
-        transform: translateY(calc(-1 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-down3 {
-        transform: translateY(calc(-2 * var(--io-item-height)));
-      }
-      :host:not([expanded]) > .io-down4 {
-        transform: translateY(calc(-3 * var(--io-item-height)));
-      }
-      :host > .io-up3,
-      :host > .io-down3 {
-        z-index: 2;
-        opacity: 0.6;
-        transition: opacity 0.4s, transform 0.4s;
-      }
-      :host > .io-up4,
-      :host > .io-down4 {
-        z-index: 1;
-        opacity: 0.4;
-        transition: opacity 0.8s, transform 0.8s;
-      }
-      :host > io-ladder-step:focus {
-        background-color: var(--io-background-color-light);
-        border-color: var(--io-color-focus);
-        transition: opacity 0.2s;
-        opacity: 1;
-      }
-      :host > span.hidden {
-        visibility: hidden;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      position: relative;
+      pointer-events: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      display: flex;
+      flex-direction: column;
+    }
+    :host:not([expanded]) {
+      visibility: hidden;
+    }
+    :host:not([expanded]) > io-ladder-step {
+      opacity: 0.5;
+    }
+    :host > io-ladder-step:nth-child(-n+5) {
+      box-shadow: 0 -1px 4px rgba(0,0,0,0.2);
+    }
+    :host > io-ladder-step:nth-child(n+6) {
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    :host > .io-up1,
+    :host > .io-down1{
+      z-index: 4;
+      transition: opacity 0.1s, transform 0.1s;
+    }
+    :host > .io-up2,
+    :host > .io-down2 {
+      z-index: 3;
+      opacity: 0.8;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    :host:not([expanded]) > .io-up4 {
+      transform: translateY(calc(3 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-up3 {
+      transform: translateY(calc(2 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-up2 {
+      transform: translateY(calc(1 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-down2 {
+      transform: translateY(calc(-1 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-down3 {
+      transform: translateY(calc(-2 * var(--io-item-height)));
+    }
+    :host:not([expanded]) > .io-down4 {
+      transform: translateY(calc(-3 * var(--io-item-height)));
+    }
+    :host > .io-up3,
+    :host > .io-down3 {
+      z-index: 2;
+      opacity: 0.6;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    :host > .io-up4,
+    :host > .io-down4 {
+      z-index: 1;
+      opacity: 0.4;
+      transition: opacity 0.8s, transform 0.8s;
+    }
+    :host > io-ladder-step:hover,
+    :host > io-ladder-step:focus {
+      background-color: var(--io-background-color-light);
+      border-color: var(--io-color-focus);
+      transition: opacity 0.2s;
+      opacity: 1;
+    }
+    :host > .io-ladder-empty {
+      height: var(--io-item-height);
+    }
+    :host > .io-ladder-center {
+      height: calc(1.5 * var(--io-item-height));
+    }
+    `;
   }
   static get Properties() {
     return {
-      srcElement: HTMLElement,
-      value: Number,
+      src: HTMLElement,
       conversion: 1,
       expanded: {
         type: Boolean,
@@ -199,13 +195,16 @@ class IoLadder extends IoElement {
       'focusin': '_onFocusIn',
     };
   }
+  get value() {
+    return this.src ? this.src.value : 0;
+  }
   _onFocusIn(event) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
   }
   _onFocusTo(event) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
     const srcStep = event.composedPath()[0];
-    const src = this.srcElement;
+    const src = this.src;
     const dir = event.detail.dir;
     if (src) {
       if ((srcStep === this.querySelector('.io-up1') && dir === 'down') ||
@@ -218,32 +217,44 @@ class IoLadder extends IoElement {
     super._onFocusTo(event);
   }
   _onLadderStepChange(event) {
-    event.stopImmediatePropagation();
-    const step = event.detail.step;
-    const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
-    let newValue = Math.min(this.max, Math.max(this.min, value + step));
-    this.set('value', Number(newValue.toFixed(5)));
+    const src = this.src;
+    if (this.src) {
+      const step = event.detail.step;
+      const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
+      let newValue = Math.min(this.max, Math.max(this.min, value + step));
+      newValue = Number(newValue.toFixed(5));
+      src.set('value', newValue);
+    }
   }
   _onLadderStepCollapse() {
-    event.stopImmediatePropagation();
     this.set('expanded', false);
   }
+  srcChanged() {
+    const src = this.src;
+    if (src) this.setProperties({
+      min: src.min,
+      max: src.max,
+      step: src.step,
+      conversion: src.conversion,
+    });
+  }
   expandedChanged() {
+    const src = this.src;
     if (this.expanded) {
-      if (this.srcElement) {
-        const rect = this.srcElement.getBoundingClientRect();
+      if (src) {
+        const rect = src.getBoundingClientRect();
         // NOTE: layerRect fix for Safari zoom.
         const layerRect = IoLayerSingleton.getBoundingClientRect();
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
         this.style.position = 'absolute';
-        this.style.marginTop = 'calc(-5 * var(--io-item-height))';
+        this.style.marginTop = 'calc(-5.25 * var(--io-item-height))';
       } else {
         this.removeAttribute('style');
       }
     } else {
-      if (this.srcElement && this.srcElement._pointerType !== 'touch') {
-        this.srcElement.focus();
+      if (src && src._pointerType !== 'touch') {
+        src.focus();
       } else if (lastFocus) {
         lastFocus.focus();
       }
@@ -252,7 +263,7 @@ class IoLadder extends IoElement {
   }
   changed() {
     const range = this.max - this.min;
-    const hiddenItem = ['span', {class: 'io-item hidden'}];
+    const hiddenItem = ['span', {class: 'io-ladder-empty'}];
 
     // TODO: unhack
     let step = this.step / 10000;
@@ -281,7 +292,7 @@ class IoLadder extends IoElement {
       (range >= upStep3) ? ['io-ladder-step', {class: 'io-up3', value: upStep3, label: upLabel3}] : hiddenItem,
       (range >= upStep2) ? ['io-ladder-step', {class: 'io-up2', value: upStep2, label: upLabel2}] : hiddenItem,
       (range >= upStep1) ? ['io-ladder-step', {class: 'io-up1', value: upStep1, label: upLabel1}] : hiddenItem,
-      hiddenItem,
+      ['span', {class: 'io-ladder-center'}],
       (this.step <= downStep1) ? ['io-ladder-step', {class: 'io-down1', value: downStep1, label: downLabel1}] : hiddenItem,
       (this.step <= downStep2) ? ['io-ladder-step', {class: 'io-down2', value: downStep2, label: downLabel2}] : hiddenItem,
       (this.step <= downStep3) ? ['io-ladder-step', {class: 'io-down3', value: downStep3, label: downLabel3}] : hiddenItem,

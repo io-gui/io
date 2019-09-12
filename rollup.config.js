@@ -38,7 +38,7 @@ function svg() {
   };
 }
 
-const externals = [];
+const externals = ['../three.js/build/three.module.js'];
 
 function makeTarget(src, target) {
   externals.push(path.resolve(src));
@@ -61,16 +61,10 @@ function makeTarget(src, target) {
   }
 }
 
-
 export default [
   makeTarget('src/io.js', 'dist/io.js'),
   makeTarget('src/io-core.js', 'dist/io-core.js'),
   makeTarget('src/io-extras.js', 'dist/io-extras.js'),
-  makeTarget('src/io-layout.js', 'dist/io-layout.js'),
-  makeTarget('src/io-math.js', 'dist/io-math.js'),
-  makeTarget('src/io-color.js', 'dist/io-color.js'),
-  makeTarget('src/io-menu.js', 'dist/io-menu.js'),
-  makeTarget('src/io-object.js', 'dist/io-object.js'),
-  makeTarget('src/io-demo.js', 'dist/io-demo.js'),
+  makeTarget('src/io-three.js', 'dist/io-three.js'),
   makeTarget('src/io-tests.js', 'dist/io-tests.js'),
 ];

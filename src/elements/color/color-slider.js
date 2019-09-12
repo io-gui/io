@@ -1,15 +1,7 @@
-import {html} from "../../io.js";
-import {IoSlider} from "../../io-core.js";
+import {IoSlider} from "../core/slider.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorSlider extends IoColorMixin(IoSlider) {
-  static get Style() {
-    return html`<style>
-      :host {
-        border-width: 2px;
-      }
-    </style>`;
-  }
   static get Properties() {
     return {
       value: [1, 1, 1, 1],
@@ -73,8 +65,8 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   _setMax() {
     this._setValue(1, 1);
   }
-  _onPointermoveDebounced(event) {
-    super._onPointermoveDebounced(event);
+  _onPointermoveThrottled(event) {
+    super._onPointermoveThrottled(event);
     this._notifyValueChange();
   }
   _notifyValueChange() {

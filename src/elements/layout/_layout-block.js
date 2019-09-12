@@ -1,44 +1,44 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 // import "./_layout-tab.js";
 // import "./layout-tabs.js";
 
 export class IoLayoutBlock extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        display: flex;
-        overflow: hidden;
-        flex-direction: column;
-      }
-      :host[droptarget="top"] {
-        border-top: 4px dashed #4f6;
-      }
-      :host[droptarget="left"] {
-        border-left: 4px dashed #4f6;
-      }
-      :host[droptarget="right"] {
-        border-right: 4px dashed #4f6;
-      }
-      :host[droptarget="bottom"] {
-        border-bottom: 4px dashed #4f6;
-      }
-      :host > :nth-child(2) {
-        flex: 1;
-      }
-      :host[droptarget="this"] > :nth-child(2) {
-        opacity: 0.25;
-      }
-      :host[droptarget="this"] > layout-tabs {
-        border-bottom: 4px dashed #4f6;
-        margin-bottom: -4px;
-      }
-      :host layout-tab[highlightdrop = "before"] {
-        border-left: 4px dashed #4f6;
-      }
-      :host layout-tab[highlightdrop = "after"] {
-        border-right: 4px dashed #4f6;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      display: flex;
+      overflow: hidden;
+      flex-direction: column;
+    }
+    :host[droptarget="top"] {
+      border-top: 4px dashed #4f6;
+    }
+    :host[droptarget="left"] {
+      border-left: 4px dashed #4f6;
+    }
+    :host[droptarget="right"] {
+      border-right: 4px dashed #4f6;
+    }
+    :host[droptarget="bottom"] {
+      border-bottom: 4px dashed #4f6;
+    }
+    :host > :nth-child(2) {
+      flex: 1;
+    }
+    :host[droptarget="this"] > :nth-child(2) {
+      opacity: 0.25;
+    }
+    :host[droptarget="this"] > layout-tabs {
+      border-bottom: 4px dashed #4f6;
+      margin-bottom: -4px;
+    }
+    :host layout-tab[highlightdrop = "before"] {
+      border-left: 4px dashed #4f6;
+    }
+    :host layout-tab[highlightdrop = "after"] {
+      border-right: 4px dashed #4f6;
+    }
+    `;
   }
   static get Properties() {
     return {

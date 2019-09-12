@@ -1,38 +1,39 @@
-import {html, IoElement} from "../../io.js";
-import {IoLayerSingleton, IoThemeSingleton as mixin} from "../../io-core.js";
+import {IoElement} from "../../io.js";
+import {IoLayerSingleton} from "../core/layer.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorPanel extends IoColorMixin(IoElement) {
   static get Style() {
-    return html`<style>
-      :host {
-        ${mixin.panel}
-      }
-      :host {
-        display: flex;
-        cursor: move;
-        align-items: stretch;
-        min-width: var(--io-line-height);
-        min-height: var(--io-line-height);
-        flex-direction: column;
-      }
-      :host[horizontal] {
-        flex-direction: row;
-      }
-      :host > * {
-        border-radius: calc(var(--io-border-radius) - var(--io-border-width));
-      }
-      :host > io-color-slider-sl,
-      :host > io-color-slider-sv {
-        flex: 1 1;
-      }
-      :host > *:not(:last-child) {
-        margin: 0 0 var(--io-spacing) 0;
-      }
-      :host[horizontal] > *:not(:last-child) {
-        margin: 0 var(--io-spacing) 0 0;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      @apply --io-panel;
+      display: flex;
+      cursor: move;
+      align-items: stretch;
+      min-width: var(--io-line-height);
+      min-height: var(--io-line-height);
+      flex-direction: column;
+    }
+    :host:not([expanded]) {
+      display: none;
+    }
+    :host[horizontal] {
+      flex-direction: row;
+    }
+    :host > * {
+      border-radius: calc(var(--io-border-radius) - var(--io-border-width));
+    }
+    :host > io-color-slider-sl,
+    :host > io-color-slider-sv {
+      flex: 1 1;
+    }
+    :host > *:not(:last-child) {
+      margin: 0 0 var(--io-spacing) 0;
+    }
+    :host[horizontal] > *:not(:last-child) {
+      margin: 0 var(--io-spacing) 0 0;
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -72,4 +73,3 @@ IoColorPanel.Register();
 
 export const IoColorPanelSingleton = new IoColorPanel();
 IoLayerSingleton.appendChild(IoColorPanelSingleton);
-IoColorPanelSingleton.addEventListener('expanded-changed', IoLayerSingleton.onChildExpanded);

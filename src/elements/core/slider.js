@@ -1,39 +1,35 @@
-import {html} from "../../io.js";
 import {IoGl} from "./gl.js";
 
 export class IoSlider extends IoGl {
   static get Style() {
-    return html`<style>
-      :host {
-        cursor: ns-resize;
-        box-sizing: border-box;
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
-        border-color: var(--io-color-border-inset);
-        min-width: var(--io-item-height);
-        min-height: var(--io-item-height);
-        align-self: stretch;
-        justify-self: stretch;
-        touch-action: none;
-      }
-      :host[horizontal] {
-        cursor: ew-resize;
-      }
-      :host[orientation="2d"] {
-        cursor: move;
-      }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
-      }
-      :host[aria-invalid] > .io-gl-canvas {
-        opacity: 0.5;
-      }
-      :host:focus {
-        border-color: var(--io-color-focus);
-        outline-color: var(--io-color-focus);
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      cursor: ns-resize;
+      box-sizing: border-box;
+      border: var(--io-border);
+      border-radius: var(--io-border-radius);
+      border-color: var(--io-color-border-inset);
+      min-width: var(--io-item-height);
+      min-height: var(--io-item-height);
+      align-self: stretch;
+      justify-self: stretch;
+      touch-action: none;
+    }
+    :host[horizontal] {
+      cursor: ew-resize;
+    }
+    :host[aria-invalid] {
+      border: var(--io-border-error);
+      background-image: var(--io-gradient-error);
+    }
+    :host[aria-invalid] > .io-gl-canvas {
+      opacity: 0.5;
+    }
+    :host:focus {
+      border-color: var(--io-color-focus);
+      outline-color: var(--io-color-focus);
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -47,6 +43,7 @@ export class IoSlider extends IoGl {
       },
       role: 'slider',
       tabindex: 0,
+      lazy: true,
     };
   }
   static get Listeners() {
@@ -87,7 +84,7 @@ export class IoSlider extends IoGl {
     event.stopImmediatePropagation();
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
-    this.debounce(this._onPointermoveDebounced, event);
+    this.throttle(this._onPointermoveThrottled, event);
   }
   _onPointerup() {
     event.preventDefault();
@@ -96,7 +93,7 @@ export class IoSlider extends IoGl {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
   }
-  _onPointermoveDebounced(event) {
+  _onPointermoveThrottled(event) {
     const rect = this.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
     const y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
@@ -217,11 +214,11 @@ export class IoSlider extends IoGl {
     void main(void) {
       vec3 finalColor = cssBackgroundColorField.rgb;
 
-      vec2 size = (uHorizontal == 1) ? uSize : uSize.yx;
-      vec2 uv = uHorizontal == 1 ? vUv.xy : vUv.yx;
+      vec2 size = uHorizontal == 1 ? uSize : uSize.yx;
+      vec2 uv = uHorizontal == 1 ? vUv : vUv.yx;
       vec2 position = size * uv;
 
-      float stepInPx = uSize.x / ((uMax - uMin) / uStep);
+      float stepInPx = size.x / ((uMax - uMin) / uStep);
       vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
 
       float lineWidth = cssStrokeWidth;

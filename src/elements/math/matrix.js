@@ -1,31 +1,34 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoMatrix extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        display: grid;
-        align-self: stretch;
-        justify-self: stretch;
-        grid-gap: var(--io-spacing);
-      }
-      :host[columns="4"] {
-        grid-template-columns: repeat(4, 1fr);
-      }
-      :host[columns="3"] {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      :host[columns="2"] {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      :host > io-number {
-        width: inherit;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      display: grid;
+      align-self: stretch;
+      justify-self: stretch;
+      grid-gap: var(--io-spacing);
+    }
+    :host[columns="4"] {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    :host[columns="3"] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    :host[columns="2"] {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    :host > io-number {
+      width: inherit;
+    }
+    `;
   }
   static get Properties() {
     return {
-      value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      value: {
+        value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        observe: true,
+      },
       step: 0.001,
       components: {
         type: Array,

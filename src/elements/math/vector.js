@@ -1,29 +1,32 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoVector extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        display: flex;
-        flex-direction: row;
-        align-self: stretch;
-        justify-self: stretch;
-      }
-      :host > io-number {
-        width: inherit;
-        flex: 1 1;
-      }
-      :host > *:not(:last-child) {
-        margin-right: var(--io-spacing);
-      }
-      :host > io-boolean {
-        width: var(--io-line-height) !important;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      display: flex;
+      flex-direction: row;
+      align-self: stretch;
+      justify-self: stretch;
+    }
+    :host > io-number {
+      width: inherit;
+      flex: 1 1;
+    }
+    :host > *:not(:last-child) {
+      margin-right: var(--io-spacing);
+    }
+    :host > io-boolean {
+      width: var(--io-line-height) !important;
+    }
+    `;
   }
   static get Properties() {
     return {
-      value: [0, 0, 0, 0],
+      value: {
+        value: [0, 0, 0, 0],
+        observe: true,
+      },
       conversion: 1,
       step: 0.001,
       min: -Infinity,
@@ -58,7 +61,7 @@ export class IoVector extends IoElement {
     this.dispatchEvent('object-mutated', detail, false, window);
   }
   valueChanged() {
-    this.components = Object.keys(this.value);
+    this.components = Object.keys(this.value).filter(key => typeof this.value[key] === 'number');
   }
   changed() {
     const elements = [];

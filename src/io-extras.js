@@ -28,6 +28,6 @@
 
 import "./io-core.js";
 
-export {IoElementDemo} from "./elements/extras/element-demo.js";
 export {IoMdView} from "./elements/extras/md-view.js";
 export {IoServiceLoader} from "./elements/extras/service-loader.js";
+export {IoElementDemo} from "./elements/extras/element-demo.js";

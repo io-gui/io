@@ -1,28 +1,29 @@
-import {html, IoElement} from "../../io.js";
+import {IoElement} from "../../io.js";
 
 export class IoLayout extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        flex: 1;
-        display: flex;
-        overflow: hidden;
-        touch-action: none;
-        /* border: var(--io-border); */
-        /* border-color: var(--io-color-border-outset); */
-      }
-      :host[orientation=horizontal] {
-        flex-direction: row;
-      }
-      :host[orientation=vertical] {
-        flex-direction: column;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      touch-action: none;
+    }
+    :host[orientation=horizontal] {
+      flex-direction: row;
+    }
+    :host[orientation=vertical] {
+      flex-direction: column;
+    }
+    `;
   }
   static get Properties() {
     return {
       elements: Array,
-      splits: Array,
+      splits: {
+        type: Array,
+        observe: true,
+      },
       editable: true,
       orientation: {
         value: 'horizontal',
@@ -204,42 +205,42 @@ IoLayout.Register();
 
 export class IoLayoutDivider extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        background: var(--io-background-color);
-        color: var(--io-color);
-        z-index: 1;
-        display: flex;
-        flex: none;
-        border: var(--io-border);
-        border-color: var(--io-color-border-outset);
-        user-select: none;
-        transition: background-color 0.4s;
-      }
-      :host:hover {
-        background-color: var(--io-color-focus);
-      }
-      :host[orientation=horizontal] {
-        cursor: col-resize;
-        width: var(--io-spacing);
-        border-top: 0;
-        border-bottom: 0;
-      }
-      :host[orientation=vertical] {
-        cursor: row-resize;
-        height: var(--io-spacing);
-        border-left: 0;
-        border-right: 0;
-      }
-      :host > .app-divider {
-        flex: 1;
-        display: flex;
-        margin-left: -0.03em;
-        margin-top: -0.06em;
-        align-items: center;
-        justify-content: center;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      background: var(--io-background-color);
+      color: var(--io-color);
+      z-index: 1;
+      display: flex;
+      flex: none;
+      border: var(--io-border);
+      border-color: var(--io-color-border-outset);
+      user-select: none;
+      transition: background-color 0.4s;
+    }
+    :host:hover {
+      background-color: var(--io-color-focus);
+    }
+    :host[orientation=horizontal] {
+      cursor: col-resize;
+      width: var(--io-spacing);
+      border-top: 0;
+      border-bottom: 0;
+    }
+    :host[orientation=vertical] {
+      cursor: row-resize;
+      height: var(--io-spacing);
+      border-left: 0;
+      border-right: 0;
+    }
+    :host > .app-divider {
+      flex: 1;
+      display: flex;
+      margin-left: -0.03em;
+      margin-top: -0.06em;
+      align-items: center;
+      justify-content: center;
+    }
+    `;
   }
   static get Properties() {
     return {

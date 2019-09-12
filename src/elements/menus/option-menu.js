@@ -1,26 +1,25 @@
-import {html} from "../../io.js";
 import {IoMenuItem} from "./menu-item.js";
 
 // TODO: fix tab-out without collapse
 
 export class IoOptionMenu extends IoMenuItem {
   static get Style() {
-    return html`<style>
-      :host {
-        display: inline-block;
-        text-align: center;
-        border-radius: var(--io-border-radius);
-        border: var(--io-border);
-        border-color: var(--io-color-border-outset);
-        background-color: var(--io-background-color-dark);
-        background-image: var(--io-gradient-button);
-        padding-left: calc(2 * var(--io-spacing));
-        padding-right: calc(2 * var(--io-spacing));
-      }
-      :host {
-        text-align: left;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      display: inline-block;
+      text-align: center;
+      border-radius: var(--io-border-radius);
+      border: var(--io-border);
+      border-color: var(--io-color-border-outset);
+      background-color: var(--io-background-color-dark);
+      background-image: var(--io-gradient-button);
+      padding-left: calc(2 * var(--io-spacing));
+      padding-right: calc(2 * var(--io-spacing));
+    }
+    :host {
+      text-align: left;
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -28,18 +27,18 @@ export class IoOptionMenu extends IoMenuItem {
         reflect: -1,
       },
       selectable: true,
+      hamburger: false,
       options: {
         type: Array,
         reflect: -1,
+        observe: true,
       },
       role: 'button',
+      lazy: false,
     };
   }
   get _options() {
-    if (this.options && this.options.length) {
-      return this.options;
-    }
-    return undefined;
+    return this.options;
   }
   changed() {
     let valueText;
@@ -55,7 +54,11 @@ export class IoOptionMenu extends IoMenuItem {
         }
       }
     }
-    valueText = this.label || (valueText || String(this.value)) + ' ▾';
+    if (this.hamburger) {
+      valueText = '☰  ' + (this.label || (valueText || String(this.value)));
+    } else {
+      valueText = this.label || (valueText || String(this.value)) + ' ▾';
+    }
     this.textNode = valueText;
     this.title = valueText;
     this.setAttribute('aria-haspopup', 'listbox');

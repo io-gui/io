@@ -1,13 +1,12 @@
-import {html} from "../../io.js";
 import {IoColorSlider} from "./color-slider.js";
 
 export class IoColorSliderHs extends IoColorSlider {
   static get Style() {
-    return html`<style>
-      :host {
-        cursor: move !important;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      cursor: move !important;
+    }
+    `;
   }
   static get Frag() {
     return /* glsl */`

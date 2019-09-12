@@ -1,38 +1,34 @@
-import {IoElement, html} from "../../io.js";
-import {IoThemeSingleton as mixin} from "./theme.js";
-
-// NOTE: [optmization] Uses textNode and fixed size to avoid layout trashing on change.
+import {IoElement} from "../../io.js";
 
 export class IoItem extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        ${mixin.item};
-      }
-      :host[pressed] {
-        border-color: var(--io-color-border-inset);
-        box-shadow: var(--io-shadow-inset);
-      }
-      :host[hidden] {
-        display: none;
-      }
-      :host[selected] {
-        color: var(--io-color-link);
-        background-color: var(--io-background-color-light);
-      }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
-      }
-      :host:hover {
-        background-color: var(--io-background-color-light);
-      }
-      :host:focus {
-        text-overflow: inherit;
-        border-color: var(--io-color-focus);
-        outline-color: var(--io-color-focus);
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      @apply --io-item;
+    }
+    :host[pressed] {
+      border-color: var(--io-color-border-inset);
+      box-shadow: var(--io-shadow-inset);
+    }
+    :host[hidden] {
+      display: none;
+    }
+    :host[selected] {
+      color: var(--io-color-link);
+      background-color: var(--io-background-color-light);
+    }
+    :host[aria-invalid] {
+      border: var(--io-border-error);
+      background-image: var(--io-gradient-error);
+    }
+    :host:focus {
+      z-index: 200;
+      position: relative;
+      text-overflow: inherit;
+      border-color: var(--io-color-focus);
+      outline-color: var(--io-color-focus);
+    }
+    `;
   }
   static get Properties() {
     return {
@@ -58,14 +54,6 @@ export class IoItem extends IoElement {
       'pointerdown': '_onPointerdown',
       'click': '_onClick',
     };
-  }
-  get textNode() {
-    this.flattenTextNode(this);
-    return this._textNode.nodeValue;
-  }
-  set textNode(value) {
-    this.flattenTextNode(this);
-    this._textNode.nodeValue = String(value);
   }
   constructor(props) {
     super(props);

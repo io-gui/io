@@ -1,89 +1,82 @@
-import {html, IoElement, IoStorage as $} from "../../io.js";
-
-export function filterObject(object, predicate) {
-  if (predicate(object)) return object;
-  for (let key in object) {
-    if (predicate(object[key])) {
-        return object[key];
-    } else if (typeof object[key] === 'object') {
-      const prop = filterObject(object[key], predicate);
-      if (prop) return prop;
-    }
-  }
-}
+import {IoElement} from "../../io.js";
+import {IoStorageFactory as $} from "../core/storage.js";
 
 export class IoSidebar extends IoElement {
   static get Style() {
-    return html`<style>
-      :host {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: hidden;
-        overflow-y: auto;
-        padding: var(--io-spacing);
-      }
-      :host:not([overflow]) {
-        -webkit-overflow-scrolling: touch;
-        flex-direction: column;
-      }
-      :host > * {
-        flex: 0 0 auto;
-      }
-      :host io-collapsable {
-        padding: 0;
-      }
-      :host io-collapsable > .io-frame {
-        padding: 0 0 0 0.75em;
-      }
-      :host io-button {
-        text-align: left;
-        align-self: stretch;
-      }
-      :host io-button,
-      :host io-collapsable,
-      :host .io-frame {
-        background: none;
-        box-shadow: none;
-        border-color: transparent;
-      }
-    </style>`;
+    return /* css */`
+    :host {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: var(--io-spacing);
+    }
+    :host:not([collapsed]) {
+      -webkit-overflow-scrolling: touch;
+      flex-direction: column;
+    }
+    :host > * {
+      flex: 0 0 auto;
+    }
+    :host * {
+      overflow: visible !important;
+    }
+    :host io-collapsable {
+      padding: 0;
+    }
+    :host io-collapsable > io-content {
+      padding: 0 0 0 0.75em;
+    }
+    :host io-button {
+      text-align: left;
+      align-self: stretch;
+    }
+    :host io-button,
+    :host io-collapsable,
+    :host io-content {
+      background: none;
+      box-shadow: none;
+      border-color: transparent;
+    }
+    :host io-boolean:not(:focus) {
+      border-bottom-color: transparent  !important;
+    }
+    `;
   }
   static get Properties() {
     return {
       selected: String,
-      options: Array,
-      label: {
-        reflect: 1,
+      options: {
+        type: Array,
+        observe: true,
       },
-      overflow: {
+      collapsed: {
+        type: Boolean,
         reflect: 1,
       },
       role: 'navigation',
     };
   }
   _onSelect(id) {
-    this.set('selected', id.toLowerCase());
-  }
-  _onValueSet(event) {
-    this.set('selected', event.detail.value.toLowerCase());
+    this.set('selected', id);
   }
   _addOptions(options) {
     const elements = [];
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
       if (option.options) {
-        const UID = option.label + ' ' + i + '/' + options.length + ' (' + option.options.length + ')';
-        let selectedOption = filterObject(option.options, option => { return option.value === this.selected; });
+        const containsSelected = !!this.filterObject(option.options, o => matches(this.selected, o));
+        const collapsableState = $({value: false, storage: 'local', key: genUUID(options, i)});
         elements.push(['io-collapsable', {
           label: option.label,
-          expanded: !!selectedOption || $('io-sidebar-collapse ' + UID, false),
+          expanded: containsSelected || collapsableState,
           elements: [...this._addOptions(option.options)]
         }]);
       } else {
-        const selected = this.selected && (this.selected === option || this.selected === option.value);
+        const selected = matches(this.selected, option);
         elements.push(['io-button', {
-          label: option.label || option.value || option,
           value: option.value || option,
+          label: option.label || option.value || option,
           action: this._onSelect,
           selected: selected,
         }]);
@@ -92,17 +85,14 @@ export class IoSidebar extends IoElement {
     return elements;
   }
   changed() {
-    let selectedOption = filterObject(this.options, option => { return option.value === this.selected; });
-    if (this.overflow) {
-      const label = selectedOption ? (selectedOption.label || String(selectedOption.value)) : String(this.selected).split('#')[0];
+    if (this.collapsed) {
       this.template([['io-option-menu', {
-        label: '☰  ' + label,
-        title: 'select tab',
-        value: this.selected,
         options: this.options,
+        value: this.bind('selected'),
+        hamburger: true,
         selectable: true,
+        title: 'select tab',
         class: 'io-item',
-        'on-value-set': this._onValueSet,
       }]]);
     } else {
       this.template([...this._addOptions(this.options)]);
@@ -111,3 +101,17 @@ export class IoSidebar extends IoElement {
 }
 
 IoSidebar.Register();
+
+function genUUID(options, i) {
+  const option = options[i];
+  let UUID = 'io-sidebar-collapse-state-' + i + '-' + options.length;
+  if (option.label) UUID += '-' + option.label;
+  if (option.options.length) UUID += '(' + option.options.length + ')';
+  return UUID;
+}
+
+function matches(selected, option) {
+  if (selected === undefined) return false;
+  if (typeof option === 'object') option = option.value;
+  return String(selected).toLowerCase() === String(option).toLowerCase();
+}
