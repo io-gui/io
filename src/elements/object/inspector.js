@@ -44,7 +44,7 @@ export class IoInspector extends IoElement {
 			},
 			groups: Object,
 			config: Object,
-			autoExpand: ['properties'],
+			autoExpand: ['properties', 'values'],
 		};
 	}
 	static get Listeners() {
