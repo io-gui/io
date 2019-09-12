@@ -74,7 +74,7 @@ function runTests() {
   }
 }
 
-export class IoTest extends IoElement {
+export class IoTests extends IoElement {
   connectedCallback() {
     super.connectedCallback();
     runTests();
@@ -88,4 +88,4 @@ export class IoTest extends IoElement {
   }
 }
 
-IoTest.Register();
+IoTests.Register();
