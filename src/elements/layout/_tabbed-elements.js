@@ -118,7 +118,7 @@ export class IoSelectorTabs extends IoElement {
 				_dropzone.style.transform = 'translate3d(' + rect.left + 'px,' +	rect.top + 'px,0)';
 				_dropzone.style.width = rect.width - 8 + 'px';
 				_dropzone.style.height = '0px';
-			 } else if (xyInRect(x, y, rectTabs) || xyInRect(x, y - rectTabs.height, rectTabs)) {
+			} else if (xyInRect(x, y, rectTabs) || xyInRect(x, y - rectTabs.height, rectTabs)) {
 				_dropzone.style.transform = 'translate3d(' + rectContent.left + 'px,' +	rectContent.top + 'px,0)';
 				_dropzone.style.width = rectContent.width - 8 + 'px';
 				_dropzone.style.height = rectContent.height - 8 + 'px';

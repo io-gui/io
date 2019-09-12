@@ -32,7 +32,7 @@ export class Listeners {
 	 * Sets listeners from properties (filtered form properties map by 'on-' prefix).
 	 * @param {Object} props - Map of all properties.
 	 */
-	 // TODO: figure out how to unset propListeners.
+	// TODO: figure out how to unset propListeners.
 	setPropListeners(props) {
 		const listeners = this.propListeners;
 		const node = this.node;
@@ -114,7 +114,7 @@ export class Listeners {
 	 * Removes all event listeners.
 	 * Use this when node is no longer needed.
 	 */
-	 // TODO: test
+	// TODO: test
 	dispose() {
 		this.disconnect();
 		const active = this.activeListeners;

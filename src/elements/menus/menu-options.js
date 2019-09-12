@@ -178,9 +178,9 @@ export class IoMenuOptions extends IoElement {
 				if (last < end) {
 					buttons[i].hidden = false;
 				} else {
-				 buttons[i].hidden = true;
-				 hamburgerOptions.push(buttons[i].option);
-				 overflow = true;
+					buttons[i].hidden = true;
+					hamburgerOptions.push(buttons[i].option);
+					overflow = true;
 				}
 			}
 			hamburger.option = {options: hamburgerOptions};
