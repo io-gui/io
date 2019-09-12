@@ -1,5 +1,5 @@
 import {IoElement} from "../../io.js";
-import {IoStorageFactory as $} from "../../io-core.js";
+import {IoStorageFactory as $} from "../core/storage.js";
 import {Config} from "./__config.js";
 import {Groups} from "./__groups.js";
 import "./breadcrumbs.js";

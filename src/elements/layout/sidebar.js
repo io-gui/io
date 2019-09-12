@@ -1,5 +1,5 @@
 import {IoElement} from "../../io.js";
-import {IoStorageFactory as $} from "../../io-core.js";
+import {IoStorageFactory as $} from "../core/storage.js";
 
 export class IoSidebar extends IoElement {
   static get Style() {

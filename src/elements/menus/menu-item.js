@@ -1,4 +1,5 @@
-import {IoItem, IoLayerSingleton} from "../../io-core.js";
+import {IoItem} from "../core/item.js";
+import {IoLayerSingleton} from "../core/layer.js";
 import {IoMenuOptions} from "./menu-options.js";
 
 // TODO: fix and improve keyboard navigation in all cases.

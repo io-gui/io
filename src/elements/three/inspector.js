@@ -1,4 +1,5 @@
-import {IoInspector, IoProperties} from "../../io-core.js";
+import {IoInspector} from "../object/inspector.js";
+import {IoProperties} from "../object/properties.js";
 import * as CONST from "./__constants.js";
 
 function makeOptions(list) {

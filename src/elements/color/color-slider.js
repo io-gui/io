@@ -1,4 +1,4 @@
-import {IoSlider} from "../../io-core.js";
+import {IoSlider} from "../core/slider.js";
 import {IoColorMixin} from "./color.js";
 
 export class IoColorSlider extends IoColorMixin(IoSlider) {
