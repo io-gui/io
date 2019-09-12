@@ -1,4 +1,4 @@
-import {IoElement} from "../../io.js";
+import {IoElement} from "../dist/io.js";
 import {
   PerspectiveCamera,
   WebGLRenderer,
@@ -9,9 +9,9 @@ import {
   BoxBufferGeometry,
   MeshLambertMaterial,
   Mesh,
-} from "../../../node_modules/three/build/three.module.js";
-import {OrbitControls} from "../../../node_modules/three/examples/jsm/controls/OrbitControls.js";
-import {TransformControls} from "../../../node_modules/three/examples/jsm/controls/TransformControls.js";
+} from "../../../three.js/build/three.module.js";
+import {OrbitControls} from "../../../three.js/examples/jsm/controls/OrbitControls.js";
+import {TransformControls} from "../../../three.js/examples/jsm/controls/TransformControls.js";
 
 export class IoDemoThree extends IoElement {
   static get Style() {

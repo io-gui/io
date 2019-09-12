@@ -1,4 +1,4 @@
-import {IoElement} from "../../io.js";
+import {IoElement} from "../../dist/io.js";
 
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;

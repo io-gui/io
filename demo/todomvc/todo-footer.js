@@ -1,4 +1,4 @@
-import {IoElement} from "../../io.js";
+import {IoElement} from "../../dist/io.js";
 import {TodoModel} from "./todo-model.js";
 
 export class TodoFooter extends IoElement {

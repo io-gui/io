@@ -106,20 +106,17 @@
       .docs > io-sidebar:not([collapsed]) {
         flex-basis: 11em !important;
       }
+      iframe[name=todo] {
+        border: none;
+        flex: 1 1;
+      }
     </style>
     <link href="/lib/mocha.css" rel="stylesheet" />
     <script type="module">
 
-    import {IoStorageFactory as $} from "./dist/io-core.js";
-    import {IoSelectorTabs} from "./dist/io-layout.js";
-    import "./dist/io-object.js";
+    import {IoSelectorTabs, IoStorageFactory as $} from "./dist/io-core.js";
     import "./dist/io-extras.js";
-    import "./dist/io-math.js";
-    import "./dist/io-color.js";
-    import "./dist/io-menu.js";
-    import "./dist/io-notify.js";
     import "./dist/io-three.js";
-    import "./dist/io-demo.js"; 
 
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
@@ -249,7 +246,20 @@
               ['io-md-view', {name: 'extras', path :'./docs/extras.md'}],
             ],
           }],
-          ['io-demo', {name: 'demo'}],
+          ['io-selector-tabs', {name: 'demo', selected:  $({value: 'elements', storage: 'hash', key: 'demo'}),
+            options: [
+              {value: 'elements', label: "Elements"},
+              {value: 'theme', label: "Theme"},
+              {value: 'three', label: "Three.js"},
+              {value: 'todo', label: "Todo App"},
+            ],
+            elements: [
+              ['io-demo-core', {name: 'elements', import: './demo/elements.js'}],
+              ['io-demo-theme', {name: 'theme', import: './demo/theme.js'}],
+              ['io-demo-three', {name: 'three', import: './demo/three.js'}],
+              ['iframe', {name: 'todo', title: 'TODO MVC', src: './demo/todomvc/index.html'}],
+            ],
+          }],
           ['io-test', {name: 'test', import: "./dist/io-tests.js"}],
         ];
       }
