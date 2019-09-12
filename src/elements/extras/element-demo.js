@@ -1,6 +1,5 @@
 import {IoElement} from "../../io.js";
-import {IoThemeSingleton} from "../core/theme.js";
-import {IoStorageFactory as $} from "../core/storage.js";
+import {IoThemeSingleton, IoStorageFactory as $} from "../../io-core.js";
 
 const suboptions = [];
 const options = [
