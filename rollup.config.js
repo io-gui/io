@@ -65,6 +65,5 @@ export default [
   makeTarget('src/io.js', 'build/io.js'),
   makeTarget('src/io-core.js', 'build/io-core.js'),
   makeTarget('src/io-extras.js', 'build/io-extras.js'),
-  makeTarget('src/io-three.js', 'build/io-three.js'),
   makeTarget('src/io-tests.js', 'build/io-tests.js'),
 ];
