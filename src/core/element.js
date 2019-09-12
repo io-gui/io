@@ -445,21 +445,18 @@ function _initProtoStyle(prototypes) {
 
 	let finalStyleString = '';
 
-	if (!finalStyleString) {
+	// Convert mixins to classes
+	let styleString = prototypes[0].constructor.Style;
 
-		// Convert mixins to classes
-		let styleString = prototypes[0].constructor.Style;
-
-		if (styleString) {
-			const mixins = styleString.match(mixinRegex);
-			if (mixins) {
-				for (let i = 0; i < mixins.length; i++) {
-					const m = mixins[i].split(': {');
-					const name = m[0];
-					const value = m[1].replace('}', '').trim().replace(/^ +/gm, '');
-					mixinDB[name] = value;
-					finalStyleString += mixins[i].replace('--', '.').replace(': {', ' {');
-				}
+	if (styleString) {
+		const mixins = styleString.match(mixinRegex);
+		if (mixins) {
+			for (let i = 0; i < mixins.length; i++) {
+				const m = mixins[i].split(': {');
+				const name = m[0];
+				const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
+				mixinDB[name] = value;
+				finalStyleString += mixins[i].replace('--', '.').replace(': {', ' {');
 			}
 		}
 
