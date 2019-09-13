@@ -68,6 +68,16 @@ export class IoProperties extends IoElement {
 			config: Object,
 		};
 	}
+	static get Config() {
+		return {
+			'type:string': ['io-string', {}],
+			'type:number': ['io-number', {step: 0.0000001}],
+			'type:boolean': ['io-boolean', {}],
+			'type:object': ['io-object', {}],
+			'type:null': ['io-string', {}],
+			'type:undefined': ['io-string', {}],
+		};
+	}
 	_onValueSet(event) {
 		if (event.detail.object) return; // TODO: unhack/remove?
 		const item = event.composedPath()[0];
@@ -82,38 +92,50 @@ export class IoProperties extends IoElement {
 			this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
 		}
 	}
-	// TODO: Consider valueMutated() instead
+	valueMutated() {
+		// this._changedThrottled();
+		// TODO implement debounce
+		clearTimeout(this._cfgTimeout);
+		this._cfgTimeout = setTimeout(()=>{
+			this._updateChildren();
+		}, 1000/30);
+	}
+	// TODO: unhack?
+	_updateChildren() {
+		const all = this.querySelectorAll(':scope > *, io-properties > *');
+		const subobjects = this.filterObjects(this.value, o => typeof o === 'object', 1);
+		for (let i = 0; i < all.length; i++) {
+			const child = all[i];
+			if (typeof child.value === 'object') {
+				if (subobjects.indexOf(child.value) !== -1) {
+					if (child.changed) child.changed();
+				}
+			}
+		}
+	}
 	changed() {
+		this._changedThrottled();
+	}
+	_changedThrottled() {
+		this.throttle(this._changed, null, true);
+	}
+	_changed() {
 		const config = this.__proto__.__config.getConfig(this.value, this.config);
 		const elements = [];
 		for (let c in config) {
 			if (!this.properties.length || this.properties.indexOf(c) !== -1) {
-				// if (config[c]) {
 				const tag = config[c][0];
 				const protoConfig = config[c][1];
 				const label = config[c].label || c;
 				const itemConfig = {title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
-				// if (tag === 'io-properties') {
-				// }
 				itemConfig.config = this.config;
 				elements.push(
 					this.labeled ? ['span', {class: 'io-item'}, label + ':'] : null,
 					[tag, Object.assign(itemConfig, protoConfig)],
 				);
-				// }
 			}
 		}
 		this.template(elements);
-	}
-	static get Config() {
-		return {
-			'type:string': ['io-string', {}],
-			'type:number': ['io-number', {step: 0.0000001}],
-			'type:boolean': ['io-boolean', {}],
-			'type:object': ['io-object', {}],
-			'type:null': ['io-string', {}],
-			'type:undefined': ['io-string', {}],
-		};
 	}
 }
 

@@ -36,11 +36,11 @@ export class IoInspector extends IoElement {
 		return {
 			value: {
 				type: Object,
-				observe: 2,
+				observe: true,
 			},
 			selected: {
 				type: Object,
-				observe: 2,
+				observe: true,
 			},
 			groups: Object,
 			config: Object,
@@ -66,7 +66,13 @@ export class IoInspector extends IoElement {
 	valueChanged() {
 		this.selected = this.value;
 	}
-	selectedChanged() {
+	changed() {
+		this._changedThrottled();
+	}
+	_changedThrottled() {
+		this.throttle(this._changed, null, true);
+	}
+	_changed() {
 		this.uuid = genUUID(this.selected);
 		const elements = [
 			['io-breadcrumbs', {value: this.value, selected: this.bind('selected'), trim: true}],
