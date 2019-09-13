@@ -119,6 +119,8 @@ export const IoNodeMixin = (superclass) => {
 				const oldValue = this[prop];
 				this[prop] = value;
 				this.dispatchEvent('value-set', {property: prop, value: value, oldValue: oldValue}, false);
+				// TODO: documentation!
+				this.dispatchEvent('io-value-set', {property: prop, value: value, oldValue: oldValue}, true);
 			}
 		}
 		// TODO: consider renaming and simplifying `props` object structure.
@@ -147,21 +149,9 @@ export const IoNodeMixin = (superclass) => {
 		_onObjectMutation(event) {
 			for (let i = this.__observedProps.length; i--;) {
 				const prop = this.__observedProps[i];
-				const value = this.__properties[prop].value;
-				if (value === event.detail.object) {
+				if (this.__properties[prop].value === event.detail.object) {
 					this.throttle(this._onObjectMutationThrottled, prop);
 					return;
-				}
-				// TODO: documentation!
-				// TODO: consider removing!
-				if (typeof this.__properties[prop].observe === 'number') {
-					const depth = this.__properties[prop].observe;
-					// console.warn('IoNode: Severe performance penalty! Debug feature only');
-					const hasObject = !!this.filterObject(value, (o) => { return o === event.detail.object; }, depth);
-					if (hasObject) {
-						this.throttle(this._onObjectMutationThrottled, prop);
-						return;
-					}
 				}
 			}
 		}
@@ -290,6 +280,7 @@ export const IoNodeMixin = (superclass) => {
 				argQueue.set(func, [arg]);
 			}
 		}
+		// TODO: implement fAF debounce
 		requestAnimationFrameOnce(func) {
 			requestAnimationFrameOnce(func);
 		}
