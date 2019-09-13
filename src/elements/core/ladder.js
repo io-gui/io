@@ -71,7 +71,7 @@ class IoLadderStep extends IoItem {
 	_onPointermove(event) {
 		const deltaX = event.clientX - this._startX;
 		if (Math.abs(deltaX) > 5) {
-			const expMove = Math.pow(deltaX / 5, 3);
+			const expMove = Math.pow(deltaX / 5, 2) * deltaX < 0 ? -1: 1;
 			const roundMove = deltaX > 0 ? Math.floor(expMove) : Math.ceil(expMove);
 			let stepMove = this.value * roundMove;
 			this._startX = event.clientX;
