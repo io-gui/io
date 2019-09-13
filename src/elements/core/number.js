@@ -26,7 +26,7 @@ export class IoNumber extends IoItem {
 			content: '-';
 		}
 		:host:not([positive]):before {
-			content: '';
+			content: ' ';
 		}
 		`;
 	}
