@@ -114,10 +114,10 @@ export class IoMenuItem extends IoItem {
 	}
 	static get Listeners() {
 		return {
-			'click': '_preventDefault',
+			'click': 'preventDefault',
 		};
 	}
-	_preventDefault(event) {
+	preventDefault(event) {
 		event.stopPropagation();
 		event.preventDefault();
 	}
@@ -262,7 +262,7 @@ export class IoMenuItem extends IoItem {
 		this.removeEventListener('pointerup', this._onPointerup);
 		let hoveredItem = this._getHoveredItem(event);
 		if (!hoveredItem) {
-			this.expanded = false;
+			this.requestAnimationFrameOnce(this._collapse);
 		} else {
 			hoveredItem._onClick(event);
 		}
@@ -358,6 +358,9 @@ export class IoMenuItem extends IoItem {
 				});
 			}
 		}
+	}
+	_collapse() {
+		this.expanded = false;
 	}
 	expandedChanged() {
 		if (this.expanded) {
