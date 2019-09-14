@@ -24,6 +24,9 @@ export class IoInspector extends IoElement {
 			box-shadow: var(--io-shadow-inset);
 			padding: var(--io-spacing);
 		}
+		:host > io-object > io-properties > :nth-child(2n-1) {
+			max-width: 10em;
+		}
 		:host io-properties > io-item {
 			color: var(--io-color-link);
 		}
