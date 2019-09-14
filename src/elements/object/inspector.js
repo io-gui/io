@@ -79,6 +79,7 @@ export class IoInspector extends IoElement {
 		];
 		const groups = this.__proto__.__groups.getGroups(this.selected, this.groups);
 		const config = this.__proto__.__config.getConfig(this.selected, this.config);
+
 		for (let group in groups) {
 			const autoExpanded = this.autoExpand.indexOf(group) !== -1;
 			elements.push(
@@ -102,6 +103,7 @@ export class IoInspector extends IoElement {
 	static get Groups() {
 		return {
 			'Object|hidden': [/^_/],
+			'Object|other': [/^/],
 			// TODO
 			'HTMLElement|hidden': [/^on/, /^[A-Z0-9_]*$/, 'childElementCount'],
 			'HTMLElement|info': ['localName', 'tagName', 'nodeName', /class/i, /attribute/i],

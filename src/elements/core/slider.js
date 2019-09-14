@@ -13,7 +13,6 @@ export class IoSlider extends IoGl {
 			min-height: var(--io-item-height);
 			align-self: stretch;
 			justify-self: stretch;
-			touch-action: none;
 		}
 		:host[horizontal] {
 			cursor: ew-resize;
@@ -41,6 +40,7 @@ export class IoSlider extends IoGl {
 				value: true,
 				reflect: 1,
 			},
+			noscroll: false,
 			role: 'slider',
 			tabindex: 0,
 			lazy: true,
@@ -51,6 +51,7 @@ export class IoSlider extends IoGl {
 			'focus': '_onFocus',
 			'contextmenu': '_onContextmenu',
 			'pointerdown': '_onPointerdown',
+			'touchstart': '_onTouchstart',
 		};
 	}
 	disconnectedCallback() {
@@ -59,6 +60,9 @@ export class IoSlider extends IoGl {
 		this.removeEventListener('keydown', this._onKeydown);
 		this.removeEventListener('pointermove', this._onPointermove);
 		this.removeEventListener('pointerup', this._onPointerup);
+		this.removeEventListener('touchstart', this._onTouchstart);
+		this.removeEventListener('touchmove', this._onTouchmove);
+		this.removeEventListener('touchend', this._onTouchend);
 	}
 	_onFocus() {
 		this.addEventListener('blur', this._onBlur);
@@ -71,24 +75,46 @@ export class IoSlider extends IoGl {
 	_onContextmenu(event) {
 		event.preventDefault();
 	}
+	_onTouchstart(event) {
+    this.addEventListener('touchmove', this._onTouchmove);
+    this.addEventListener('touchend', this._onTouchend);
+    this._x = event.changedTouches[0].clientX;
+    this._y = event.changedTouches[0].clientY;
+		this._active = this.noscroll ? 1 : -1;
+  }
+  _onTouchmove(event) {
+    const dx = Math.abs(this._x - event.changedTouches[0].clientX);
+		const dy = Math.abs(this._y - event.changedTouches[0].clientY);
+		if (this._active === -1) {
+			if (this.horizontal) {
+				if (dx > 3) {
+					this._active = (dx > dy && dy < 10) ? 1 : 0;
+				}
+			} else {
+				if (dy > 3) {
+					this._active = (dy > dx && dx < 10) ? 1 : 0;
+				}
+			}
+		}
+    if (this._active !== 1) return;
+    event.preventDefault();
+  }
+  _onTouchend() {
+    this.removeEventListener('touchmove', this._onTouchmove);
+    this.removeEventListener('touchend', this._onTouchend);
+  }
 	_onPointerdown(event) {
+		this.setPointerCapture(event.pointerId);
 		this.addEventListener('pointermove', this._onPointermove);
 		this.addEventListener('pointerup', this._onPointerup);
-		event.preventDefault();
-		event.stopImmediatePropagation();
-		this.setPointerCapture(event.pointerId);
-		this.focus();
 	}
 	_onPointermove(event) {
-		event.preventDefault();
-		event.stopImmediatePropagation();
-		this.addEventListener('pointermove', this._onPointermove);
-		this.addEventListener('pointerup', this._onPointerup);
-		this.throttle(this._onPointermoveThrottled, event);
+		if (this._active === 1) {
+			if (document.activeElement !== this ) this.focus();
+			this.throttle(this._onPointermoveThrottled, event);
+		}
 	}
 	_onPointerup() {
-		event.preventDefault();
-		event.stopImmediatePropagation();
 		this.releasePointerCapture(event.pointerId);
 		this.removeEventListener('pointermove', this._onPointermove);
 		this.removeEventListener('pointerup', this._onPointerup);

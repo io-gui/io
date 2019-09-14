@@ -39,6 +39,10 @@ export const IoNodeMixin = (superclass) => {
 		constructor(initProps = {}) {
 			super(initProps);
 
+			if (!this.__registered) {
+				this.__proto__.constructor.Register();
+			}
+
 			Object.defineProperty(this, '__nodeBindings', {value: new NodeBindings(this)});
 			Object.defineProperty(this, '__nodeQueue', {value: new NodeQueue(this)});
 
@@ -156,7 +160,11 @@ export const IoNodeMixin = (superclass) => {
 		_onObjectMutation(event) {
 			for (let i = this.__observedProps.length; i--;) {
 				const prop = this.__observedProps[i];
-				if (this.__properties[prop].value === event.detail.object) {
+				const value = this.__properties[prop].value;
+				if (value === event.detail.object) {
+					this.throttle(this._onObjectMutationThrottled, prop);
+					return;
+				} else if (event.detail.objects && event.detail.objects.indexOf(value) !== -1) {
 					this.throttle(this._onObjectMutationThrottled, prop);
 					return;
 				}
@@ -358,6 +366,7 @@ const Register = function () {
 	const isIoNode = proto.constructor !== HTMLElement;
 	this.isIoNode = isIoNode;
 	Object.defineProperty(this.prototype, 'isIoNode', {value: isIoNode});
+	Object.defineProperty(this.prototype, '__registered', {value: true});
 
 	proto = this.prototype;
 
