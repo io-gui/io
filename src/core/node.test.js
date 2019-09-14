@@ -62,8 +62,6 @@ export class TestNode extends IoNode {
 	}
 }
 
-TestNode.Register();
-
 export default class {
 	constructor() {
 		this._prop3ChangeCounter = 0;
