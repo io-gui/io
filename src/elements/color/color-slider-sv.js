@@ -8,6 +8,11 @@ export class IoColorSliderSv extends IoColorSlider {
 		}
 		`;
 	}
+	static get Properties() {
+		return {
+			noscroll: true,
+		};
+	}
 	static get Frag() {
 		return /* glsl */`
 			varying vec2 vUv;
