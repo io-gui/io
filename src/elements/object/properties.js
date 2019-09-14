@@ -93,7 +93,6 @@ export class IoProperties extends IoElement {
 		}
 	}
 	valueMutated() {
-		// this._changedThrottled();
 		// TODO implement debounce
 		clearTimeout(this._cfgTimeout);
 		this._cfgTimeout = setTimeout(()=>{
