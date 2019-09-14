@@ -47,7 +47,6 @@ export class IoNumberSlider extends IoElement {
 				min: this.min,
 				max: this.max,
 				label: this.label,
-				ladder: true,
 				'on-value-set': this._onNumberSet,
 			}],
 			['io-slider', {
