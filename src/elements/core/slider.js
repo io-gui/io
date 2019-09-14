@@ -76,14 +76,14 @@ export class IoSlider extends IoGl {
 		event.preventDefault();
 	}
 	_onTouchstart(event) {
-    this.addEventListener('touchmove', this._onTouchmove);
-    this.addEventListener('touchend', this._onTouchend);
-    this._x = event.changedTouches[0].clientX;
-    this._y = event.changedTouches[0].clientY;
+		this.addEventListener('touchmove', this._onTouchmove);
+		this.addEventListener('touchend', this._onTouchend);
+		this._x = event.changedTouches[0].clientX;
+		this._y = event.changedTouches[0].clientY;
 		this._active = this.noscroll ? 1 : -1;
-  }
-  _onTouchmove(event) {
-    const dx = Math.abs(this._x - event.changedTouches[0].clientX);
+	}
+	_onTouchmove(event) {
+		const dx = Math.abs(this._x - event.changedTouches[0].clientX);
 		const dy = Math.abs(this._y - event.changedTouches[0].clientY);
 		if (this._active === -1) {
 			if (this.horizontal) {
@@ -96,13 +96,13 @@ export class IoSlider extends IoGl {
 				}
 			}
 		}
-    if (this._active !== 1) return;
-    event.preventDefault();
-  }
-  _onTouchend() {
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-  }
+		if (this._active !== 1) return;
+		event.preventDefault();
+	}
+	_onTouchend() {
+		this.removeEventListener('touchmove', this._onTouchmove);
+		this.removeEventListener('touchend', this._onTouchend);
+	}
 	_onPointerdown(event) {
 		this.setPointerCapture(event.pointerId);
 		this.addEventListener('pointermove', this._onPointermove);
