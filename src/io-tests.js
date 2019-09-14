@@ -39,53 +39,53 @@ mochaDiv.style.display = 'none';
 let testCompleted = false;
 
 function runTests() {
-  if (!testCompleted) {
-    new Node().run();
-    new Element().run();
+	if (!testCompleted) {
+		new Node().run();
+		new Element().run();
 
-    new Item().run();
-    // TODO: new Content().run();
-    new Gl().run();
-    new Button().run();
-    new Boolean().run();
-    new Boolean().run();
-    new Boolicon().run();
-    new Switch().run();
-    new Sting().run();
-    new Number().run();
-    new Slider().run();
-    new NumberSlider().run();
-    new Icon().run();
-    new IconSet().run();
-    new Layer().run();
-    new Ladder().run();
-    new Theme().run();
+		new Item().run();
+		// TODO: new Content().run();
+		new Gl().run();
+		new Button().run();
+		new Boolean().run();
+		new Boolean().run();
+		new Boolicon().run();
+		new Switch().run();
+		new Sting().run();
+		new Number().run();
+		new Slider().run();
+		new NumberSlider().run();
+		new Icon().run();
+		new IconSet().run();
+		new Layer().run();
+		new Ladder().run();
+		new Theme().run();
 
-    // TODO
-    // new OptionMenu().run();
-    // new Collapsable().run();
-    // new Properties().run();
-    // new Object().run();
-    // new Inspector().run();
+		// TODO
+		// new OptionMenu().run();
+		// new Collapsable().run();
+		// new Properties().run();
+		// new Object().run();
+		// new Inspector().run();
 
-    mocha.checkLeaks();
-    mocha.run();
-    testCompleted = true;
-  }
+		mocha.checkLeaks();
+		mocha.run();
+		testCompleted = true;
+	}
 }
 
-export class IoTest extends IoElement {
-  connectedCallback() {
-    super.connectedCallback();
-    runTests();
-    this.appendChild(mochaDiv);
-    mochaDiv.style.display = 'block';
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    document.body.appendChild(mochaDiv);
-    mochaDiv.style.display = 'none';
-  }
+export class IoTests extends IoElement {
+	connectedCallback() {
+		super.connectedCallback();
+		runTests();
+		this.appendChild(mochaDiv);
+		mochaDiv.style.display = 'block';
+	}
+	disconnectedCallback() {
+		super.disconnectedCallback();
+		document.body.appendChild(mochaDiv);
+		mochaDiv.style.display = 'none';
+	}
 }
 
-IoTest.Register();
+IoTests.Register();
