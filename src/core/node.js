@@ -33,9 +33,9 @@ export const IoNodeMixin = (superclass) => {
 			};
 		}
 		/**
-			* Creates `IoNode` instance and initializes internals.
-			* @param {Object} initProps - Property values to inialize instance with.
-			*/
+		 * Creates `IoNode` instance and initializes internals.
+		 * @param {Object} initProps - Property values to inialize instance with.
+		 */
 		constructor(initProps = {}) {
 			super(initProps);
 
@@ -54,9 +54,9 @@ export const IoNodeMixin = (superclass) => {
 			this.setProperties(initProps);
 		}
 		/**
-			* Connects IoNode to the application.
-			* @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
-			*/
+		 * Connects IoNode to the application.
+		 * @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
+		 */
 		connect(owner) {
 			this._owner = this._owner || [];
 			if (this._owner.indexOf(owner) === -1) {
@@ -65,9 +65,9 @@ export const IoNodeMixin = (superclass) => {
 			}
 		}
 		/**
-			* Disconnects IoNode from the application.
-			* @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
-			*/
+		 * Disconnects IoNode from the application.
+		 * @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
+		 */
 		disconnect(owner) {
 			if (this._owner.indexOf(owner) !== -1) {
 				this._owner.splice(this._owner.indexOf(owner), 1);
@@ -77,19 +77,26 @@ export const IoNodeMixin = (superclass) => {
 			}
 		}
 		/**
-			* Shorthand for `event.preventDefault()`.
-			* @param {Object} event - Event object.
-			*/
+		 * Handler function with `event.preventDefault()`.
+		 * @param {Object} event - Event object.
+		 */
 		preventDefault(event) {
 			event.preventDefault();
 		}
 		/**
-			* default change handler.
-			*/
+		 * Handler function with `event.stopPropagation()`.
+		 * @param {Object} event - Event object.
+		 */
+		stopPropagation(event) {
+			event.stopPropagation();
+		}
+		/**
+		 * default change handler.
+		 */
 		changed() {}
 		/**
-			* Applies compose object on change.
-			*/
+		 * Applies compose object on change.
+		 */
 		applyCompose() {
 			// TODO: Test and documentation.
 			const compose = this.compose;
@@ -100,20 +107,20 @@ export const IoNodeMixin = (superclass) => {
 			}
 		}
 		/**
-			* Returns a binding to a specified property`.
-			* @param {string} prop - Property to bind to.
-			* @return {Binding} Binding object.
-			*/
+		 * Returns a binding to a specified property`.
+		 * @param {string} prop - Property to bind to.
+		 * @return {Binding} Binding object.
+		 */
 		bind(prop) {
 			return this.__nodeBindings.get(prop);
 		}
 		/**
-			* Sets a property and emits [property]-set` event.
-			* Use this when property is set by user action (e.g. mouse click).
-			* @param {string} prop - Property name.
-			* @param {*} value - Property value.
-			* @param {boolean} force - Force value set.
-			*/
+		 * Sets a property and emits [property]-set` event.
+		 * Use this when property is set by user action (e.g. mouse click).
+		 * @param {string} prop - Property name.
+		 * @param {*} value - Property value.
+		 * @param {boolean} force - Force value set.
+		 */
 		set(prop, value, force) {
 			if (this[prop] !== value || force) {
 				const oldValue = this[prop];
@@ -125,10 +132,10 @@ export const IoNodeMixin = (superclass) => {
 		}
 		// TODO: consider renaming and simplifying `props` object structure.
 		/**
-			* Sets multiple properties in batch.
-			* [property]-changed` events will be broadcast in the end.
-			* @param {Object} props - Map of property names and values.
-			*/
+		 * Sets multiple properties in batch.
+		 * [property]-changed` events will be broadcast in the end.
+		 * @param {Object} props - Map of property names and values.
+		 */
 		setProperties(props) {
 			for (let p in props) {
 				if (this.__properties[p] === undefined) continue;
@@ -156,10 +163,10 @@ export const IoNodeMixin = (superclass) => {
 			}
 		}
 		/**
-			* This function is called when `object-mutated` event is observed
-			* and changed object is a property of the node.
-			* @param {string} prop - Mutated object property name.
-			*/
+		 * This function is called when `object-mutated` event is observed
+		 * and changed object is a property of the node.
+		 * @param {string} prop - Mutated object property name.
+		 */
 		_onObjectMutationThrottled(prop) {
 			if (this['propMutated']) this['propMutated'](prop);
 			if (this[prop + 'Mutated']) this[prop + 'Mutated']();
@@ -167,8 +174,8 @@ export const IoNodeMixin = (superclass) => {
 			this.applyCompose();
 		}
 		/**
-			* Callback when `IoNode` is connected.
-			*/
+		 * Callback when `IoNode` is connected.
+		 */
 		connectedCallback() {
 			this.__listeners.connect();
 			this.__properties.connect();
@@ -179,8 +186,8 @@ export const IoNodeMixin = (superclass) => {
 			this.queueDispatch();
 		}
 		/**
-			* Callback when `IoNode` is disconnected.
-			*/
+		 * Callback when `IoNode` is disconnected.
+		 */
 		disconnectedCallback() {
 			this.__listeners.disconnect();
 			this.__properties.disconnect();
@@ -190,9 +197,9 @@ export const IoNodeMixin = (superclass) => {
 			}
 		}
 		/**
-			* Disposes all internals.
-			* Use this when node is no longer needed.
-			*/
+		 * Disposes all internals.
+		 * Use this when node is no longer needed.
+		 */
 		dispose() {
 			this.__nodeQueue.dispose();
 			this.__nodeBindings.dispose();
@@ -200,11 +207,11 @@ export const IoNodeMixin = (superclass) => {
 			this.__properties.dispose();
 		}
 		/**
-			* Wrapper for addEventListener.
-			* @param {string} type - listener name.
-			* @param {function} listener - listener handler.
-			* @param {Object} options - event listener options.
-			*/
+		 * Wrapper for addEventListener.
+		 * @param {string} type - listener name.
+		 * @param {function} listener - listener handler.
+		 * @param {Object} options - event listener options.
+		 */
 		addEventListener(type, listener, options) {
 			if (typeof listener !== 'function') {
 				console.warn(`Io ${this.constructor.name} "${type}" listener handler is not a function`);
@@ -213,36 +220,36 @@ export const IoNodeMixin = (superclass) => {
 			this.__listeners.addEventListener(type, listener, options);
 		}
 		/**
-			* Wrapper for removeEventListener.
-			* @param {string} type - event name to listen to.
-			* @param {function} listener - listener handler.
-			* @param {Object} options - event listener options.
-			*/
+		 * Wrapper for removeEventListener.
+		 * @param {string} type - event name to listen to.
+		 * @param {function} listener - listener handler.
+		 * @param {Object} options - event listener options.
+		 */
 		removeEventListener(type, listener, options) {
 			this.__listeners.removeEventListener(type, listener, options);
 		}
 		/**
-			* Wrapper for dispatchEvent.
-			* @param {string} type - event name to dispatch.
-			* @param {Object} detail - event detail.
-			* @param {boolean} bubbles - event bubbles.
-			* @param {HTMLElement|IoNode} src source node/element to dispatch event from.
-			*/
+		 * Wrapper for dispatchEvent.
+		 * @param {string} type - event name to dispatch.
+		 * @param {Object} detail - event detail.
+		 * @param {boolean} bubbles - event bubbles.
+		 * @param {HTMLElement|IoNode} src source node/element to dispatch event from.
+		 */
 		dispatchEvent(type, detail, bubbles = false, src) {
 			this.__listeners.dispatchEvent(type, detail, bubbles, src);
 		}
 		/**
-			* Adds property change to the queue.
-			* @param {string} prop - Property name.
-			* @param {*} value - Property value.
-			* @param {*} oldValue - Old property value.
-			*/
+		 * Adds property change to the queue.
+		 * @param {string} prop - Property name.
+		 * @param {*} value - Property value.
+		 * @param {*} oldValue - Old property value.
+		 */
 		queue(prop, value, oldValue) {
 			this.__nodeQueue.queue(prop, value, oldValue);
 		}
 		/**
-			* Dispatches the queue.
-			*/
+		 * Dispatches the queue.
+		 */
 		queueDispatch() {
 			if (this.lazy) {
 				preThrottleQueue.push(this._queueDispatchLazy);
@@ -255,11 +262,11 @@ export const IoNodeMixin = (superclass) => {
 			this.__nodeQueue.dispatch();
 		}
 		/**
-			* Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
-			* @param {function} func - Function to throttle.
-			* @param {*} arg - argument for throttled function.
-			* @param {boolean} asynchronous - execute with timeout.
-			*/
+		 * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+		 * @param {function} func - Function to throttle.
+		 * @param {*} arg - argument for throttled function.
+		 * @param {boolean} asynchronous - execute with timeout.
+		 */
 		throttle(func, arg, asynchronous) {
 			// TODO: move to extenal throttle function, document and test.
 			if (preThrottleQueue.indexOf(func) === -1) {
