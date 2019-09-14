@@ -109,7 +109,7 @@ export class IoSlider extends IoGl {
 		this.addEventListener('pointerup', this._onPointerup);
 	}
 	_onPointermove(event) {
-		if (this._active === 1) {
+		if (this._active !== 0) {
 			if (document.activeElement !== this ) this.focus();
 			this.throttle(this._onPointermoveThrottled, event);
 		}

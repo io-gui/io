@@ -24,9 +24,9 @@ export class IoProperties extends IoElement {
 		:host:not([horizontal])[labeled] {
 			grid-template-columns: auto minmax(50%, 1fr);
 		}
-		:host:not([horizontal])[labeled] > :nth-child(2n-1) {
+		/* :host:not([horizontal])[labeled] > :nth-child(2n-1) {
 			max-width: 100%;
-		}
+		} */
 		:host > io-object {}
 		:host > io-object {
 			padding: 0;
