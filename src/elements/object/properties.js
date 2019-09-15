@@ -1,5 +1,5 @@
 import {IoElement} from "../../io.js";
-import {Config} from "./__config.js";
+import {Config} from "./config.js";
 
 export class IoProperties extends IoElement {
 	static get Style() {
@@ -22,11 +22,11 @@ export class IoProperties extends IoElement {
 			grid-template-columns: auto;
 		}
 		:host:not([horizontal])[labeled] {
-			grid-template-columns: auto minmax(50%, 1fr);
+			grid-template-columns: minmax(auto, 7em) minmax(8em, 1fr);
 		}
-		/* :host:not([horizontal])[labeled] > :nth-child(2n-1) {
+		:host:not([horizontal])[labeled] > :nth-child(2n-1) {
 			max-width: 100%;
-		} */
+		}
 		:host > io-object {}
 		:host > io-object {
 			padding: 0;
