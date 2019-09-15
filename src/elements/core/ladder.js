@@ -27,7 +27,17 @@ class IoLadderStep extends IoItem {
 			background-color: var(--io-background-color-light);
 			align-self: stretch;
 			touch-action: none;
-			width: 5em;
+			width: 6em;
+		}
+		:host:before {
+			float: left;
+			content: '<';
+			opacity: 0.25;
+		}
+		:host:after {
+			float: right;
+			content: '>';
+			opacity: 0.25;
 		}
 		`;
 	}
@@ -82,6 +92,7 @@ class IoLadderStep extends IoItem {
 		this.releasePointerCapture(event.pointerId);
 		this.removeEventListener('pointermove', this._onPointermove);
 		this.removeEventListener('pointerup', this._onPointerup);
+		this.dispatchEvent('ladder-step-collapse', {}, true);
 	}
 	setAria() {
 		super.setAria();

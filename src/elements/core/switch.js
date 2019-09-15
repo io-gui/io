@@ -43,9 +43,6 @@ export class IoSwitch extends IoBoolean {
 			background-color: rgba(80, 210, 355, 0.75);
 			left: calc(calc(100% - var(--io-line-height)) - var(--io-border-width));
 		}
-		:host:not([value]) {
-			opacity: 0.5;
-		}
 		:host[aria-invalid] {
 			border: var(--io-border-error);
 			background-image: var(--io-gradient-error);
