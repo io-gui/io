@@ -36,6 +36,7 @@ export class IoSlider extends IoGl {
 			step: 0.01,
 			min: 0,
 			max: 1,
+			exponent: 1,
 			horizontal: {
 				value: true,
 				reflect: 1,
@@ -121,8 +122,8 @@ export class IoSlider extends IoGl {
 	}
 	_onPointermoveThrottled(event) {
 		const rect = this.getBoundingClientRect();
-		const x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
-		const y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
+		const x = Math.pow(Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width)), this.exponent);
+		const y = Math.pow(Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height)), this.exponent);
 
 		let _x = this.min * (1 - x) + this.max * x;
 		_x = Math.min(this.max, Math.max(this.min, _x));
@@ -244,18 +245,21 @@ export class IoSlider extends IoGl {
 			vec2 uv = uHorizontal == 1 ? vUv : vUv.yx;
 			vec2 position = size * uv;
 
+
 			float stepInPx = size.x / ((uMax - uMin) / uStep);
 			vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
 
 			float lineWidth = cssStrokeWidth;
 			if (stepInPx > lineWidth * 2.0) {
+				// TODO: grid with exponent
 				float gridWidth = size.x / ((uMax - uMin) / uStep);
 				float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
 				float gridShape = grid(translate(position, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);
 				finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
 			}
 
-			float valueInRange = (uValue - uMin) / (uMax - uMin);
+			float valueInRange = saturate((uValue - uMin) / (uMax - uMin));
+			valueInRange = pow(valueInRange, 1./uExponent);
 			vec4 slotGradient = mix(cssColorFocus, cssColorLink, uv.x);
 			vec2 markerPos = translate(position, vec2(size.x * valueInRange, size.y * 0.5));
 			vec4 slider = paintSlider(markerPos, slotGradient.rgb);

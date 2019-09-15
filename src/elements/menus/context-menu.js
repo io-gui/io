@@ -59,7 +59,7 @@ export class IoContextMenu extends IoElement {
 	_onOptionItemClicked(event) {
 		if (event.composedPath()[0] !== this) {
 			event.stopPropagation();
-			this.set('value', event.detail.value);
+			if (event.detail.selectable !== false) this.set('value', event.detail.value);
 			this.dispatchEvent('item-clicked', event.detail, true);
 			this.expanded = false;
 		}
@@ -73,7 +73,6 @@ export class IoContextMenu extends IoElement {
 	_onPointerdown(event) {
 		IoLayerSingleton.x = event.clientX;
 		IoLayerSingleton.y = event.clientY;
-		this._parent.setPointerCapture(event.pointerId);
 		this._parent.addEventListener('pointermove', this._onPointermove);
 		this._parent.addEventListener('pointerup', this._onPointerup);
 		if (event.pointerType === 'mouse') {
@@ -101,7 +100,6 @@ export class IoContextMenu extends IoElement {
 			const item = this.$options.querySelector('io-menu-item');
 			if (item) item._onPointerup(event);
 		}
-		this._parent.releasePointerCapture(event.pointerId);
 		this._parent.removeEventListener('pointermove', this._onPointermove);
 		this._parent.removeEventListener('pointerup', this._onPointerup);
 	}

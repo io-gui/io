@@ -128,7 +128,7 @@ export class IoMenuOptions extends IoElement {
 		if (event.composedPath()[0] !== this) {
 			event.stopImmediatePropagation();
 			if (event.composedPath()[0].localName == 'io-menu-item') {
-				this.set('value', event.detail.value);
+				if (event.detail.selectable !== false) this.set('value', event.detail.value);
 				this.dispatchEvent('item-clicked', event.detail, true);
 				this.expanded = false;
 				this.search = '';

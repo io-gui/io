@@ -140,7 +140,7 @@ export class IoMenuItem extends IoItem {
 		return this._option.hint || '';
 	}
 	get _selected() {
-		if (!this.selectable) return false;
+		if (!this.selectable || this._option.selectable === false) return false;
 		if (this._option.selected || this._option.value === this.value) {
 			return true;
 		}
@@ -173,7 +173,8 @@ export class IoMenuItem extends IoItem {
 			}
 			this.dispatchEvent('item-clicked', {
 				value: this._value,
-				action: this._action
+				action: this._action,
+				selectable: this._option.selectable,
 			}, true);
 			getRootElement(this).expanded = false;
 		} else if (this._options) {
@@ -339,8 +340,8 @@ export class IoMenuItem extends IoItem {
 	_onOptionItemClicked(event) {
 		if (event.composedPath()[0] !== this) {
 			event.stopImmediatePropagation();
-			this.set('value', event.detail.value);
 			this.dispatchEvent('item-clicked', event.detail, true);
+			if (event.detail.selectable !== false) this.set('value', event.detail.value);
 		}
 	}
 	optionChanged() {

@@ -1,7 +1,7 @@
 import {IoElement} from "../../io.js";
 import {IoStorageFactory as $} from "../core/storage.js";
-import {Config} from "./__config.js";
-import {Groups} from "./__groups.js";
+import {Config} from "./config.js";
+import {Groups} from "./groups.js";
 import "./breadcrumbs.js";
 
 export class IoInspector extends IoElement {
@@ -23,9 +23,7 @@ export class IoInspector extends IoElement {
 			border-color: var(--io-color-border-inset);
 			box-shadow: var(--io-shadow-inset);
 			padding: var(--io-spacing);
-		}
-		:host > io-object > io-properties > :nth-child(2n-1) {
-			max-width: 10em;
+			overflow: hidden;
 		}
 		:host io-properties > io-item {
 			color: var(--io-color-link);

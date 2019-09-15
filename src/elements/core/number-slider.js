@@ -26,6 +26,7 @@ export class IoNumberSlider extends IoElement {
 			conversion: 1,
 			min: 0,
 			max: 1,
+			exponent: 1,
 		};
 	}
 	_onNumberSet(event) {
@@ -44,8 +45,6 @@ export class IoNumberSlider extends IoElement {
 				value: this.value,
 				step: this.step,
 				conversion: this.conversion,
-				min: this.min,
-				max: this.max,
 				label: this.label,
 				'on-value-set': this._onNumberSet,
 			}],
@@ -55,6 +54,7 @@ export class IoNumberSlider extends IoElement {
 				step: this.step * this.conversion,
 				min: this.min * this.conversion,
 				max: this.max * this.conversion,
+				exponent: this.exponent,
 				label: this.label,
 				'on-value-set': this._onSliderSet,
 			}]
