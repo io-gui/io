@@ -1,5 +1,5 @@
 import {IoElement} from "../../io.js";
-import {IoLayerSingleton} from "../core/layer.js";
+import {IoLayerSingleton as Layer} from "../core/layer.js";
 import "./menu-item.js";
 
 const rects = new WeakMap();
@@ -20,7 +20,7 @@ export class IoMenuOptions extends IoElement {
 			padding: 0;
 			opacity: 1;
 			transition: opacity 0.25s;
-			overflow-y: scroll !important;
+			overflow-y: auto !important;
 			padding: var(--io-spacing);
 		}
 		:host > io-menu-item {
@@ -116,23 +116,26 @@ export class IoMenuOptions extends IoElement {
 	}
 	static get Listeners() {
 		return {
-			'item-clicked': '_onMenuItemClicked',
+			'item-clicked': '_onItemClicked',
 			'touchstart': '_stopPropagation',
 		};
 	}
 	connectedCallback() {
 		super.connectedCallback();
-		this.inlayer = this.parentElement === IoLayerSingleton;
+		this.inlayer = this.parentElement === Layer;
 	}
-	_onMenuItemClicked(event) {
-		if (event.composedPath()[0] !== this) {
+	_onItemClicked(event) {
+		const item = event.composedPath()[0];
+		const d = event.detail;
+		if (item.localName == 'io-string') {
 			event.stopImmediatePropagation();
-			if (event.composedPath()[0].localName == 'io-menu-item') {
-				if (event.detail.selectable !== false) this.set('value', event.detail.value);
-				this.dispatchEvent('item-clicked', event.detail, true);
-				this.expanded = false;
-				this.search = '';
-			}
+			return;
+		}
+		if (item !== this) {
+			event.stopImmediatePropagation();
+			if (d.value !== undefined && d.selectable !== false) this.set('value', d.value);
+			this.dispatchEvent('item-clicked', d, true);
+			this.requestAnimationFrameOnce(this._collapse);
 		}
 	}
 	// Prevents IoLayer from stopping scroll in clipped options
@@ -191,9 +194,17 @@ export class IoMenuOptions extends IoElement {
 			}
 		}
 	}
+	_collapse() {
+		const focusSearch = this.selectable && !!this.search && !this.inlayer;
+		this.setProperties({
+			search: '',
+			expanded: false,
+		});
+		if (focusSearch) this.$.search.focus();
+	}
 	expandedChanged() {
 		if (this.expanded) {
-			this.inlayer = this.parentElement === IoLayerSingleton;
+			this.inlayer = this.parentElement === Layer;
 			if (this.inlayer && this.$parent) {
 				this._expandedChangedLazy();
 				// TODO: unhack incorrect this.rect on first expand.
@@ -214,7 +225,7 @@ export class IoMenuOptions extends IoElement {
 	}
 	_expandedChangedLazy() {
 		const pRect = this.$parent.getBoundingClientRect();
-		IoLayerSingleton.setElementPosition(this, this.position, pRect);
+		Layer.setElementPosition(this, this.position, pRect);
 		this._clipHeight();
 		this.searchable = !!this.style.height;
 	}
@@ -256,7 +267,7 @@ export class IoMenuOptions extends IoElement {
 		const itemDirection = this.horizontal ? 'bottom' : 'right';
 		const elements = [];
 		if (this.searchable) {
-			elements.push(['io-string', {value: this.bind('search'), live: true}]);
+			elements.push(['io-string', {id: 'search', value: this.bind('search'), live: true}]);
 		}
 		if (this._options) {
 			elements.push(...[this._options.map(option =>
@@ -264,9 +275,9 @@ export class IoMenuOptions extends IoElement {
 					$parent: this,
 					option: option,
 					value: this.value,
-					lazy: !this.expanded,
 					direction: itemDirection,
 					selectable: this.selectable,
+					lazy: false,
 				}]
 			)]);
 		}
@@ -278,6 +289,7 @@ export class IoMenuOptions extends IoElement {
 				value: this.value,
 				selectable: this.selectable,
 				class: 'io-hamburger',
+				lazy: false,
 			}]);
 		}
 		this.template(elements);

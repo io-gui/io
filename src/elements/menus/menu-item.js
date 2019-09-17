@@ -1,55 +1,8 @@
 import {IoItem} from "../core/item.js";
-import {IoLayerSingleton} from "../core/layer.js";
+import {IoLayerSingleton as Layer} from "../core/layer.js";
 import {IoMenuOptions} from "./menu-options.js";
 
 // TODO: fix and improve keyboard navigation in all cases.
-
-function getElementDescendants(element) {
-	const descendants = [];
-	let items;
-	// TODO: unhack
-	if ('io-menu-item, io-option-menu'.search(element.localName) !== -1) {
-		descendants.push(element);
-		items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
-	} else if (element.localName === 'io-context-menu') {
-		items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
-	} else {
-		items = element.querySelectorAll('io-menu-item, io-option-menu');
-	}
-	for (let i = items.length; i--;) {
-		descendants.push(items[i]);
-		if (items[i].expanded) descendants.push(...getElementDescendants(items[i]));
-	}
-	return descendants;
-}
-
-function getElementAncestors(element) {
-	let item = element;
-	const ancestors = [element];
-	while (item && item.$parent) {
-		item = item.$parent;
-		if (item) ancestors.push(item);
-	}
-	return ancestors;
-}
-
-function getRootElement(element) {
-	let root = element;
-	while (root && root.$parent) {
-		root = root.$parent;
-	}
-	return root;
-}
-
-function isPointerAboveElement(event, element) {
-	const r = element.getBoundingClientRect();
-	const x = event.clientX;
-	const y = event.clientY;
-	return (r.top < y && r.bottom > y && r.left < x && r.right > x);
-}
-
-let hoveredItem;
-let hoveredParent;
 
 export class IoMenuItem extends IoItem {
 	static get Style() {
@@ -124,6 +77,17 @@ export class IoMenuItem extends IoItem {
 	get _options() {
 		return this._option.options;
 	}
+	get _option() {
+		if (this.option && typeof this.option === 'object') {
+			return this.option;
+		} else {
+			// TODO: reconsider using only object types.
+			return {value: this.option};
+		}
+	}
+	get _selectable() {
+		return this.selectable && this._option.selectable !== false;
+	}
 	get _action() {
 		return this._option.action;
 	}
@@ -151,38 +115,38 @@ export class IoMenuItem extends IoItem {
 	}
 	connectedCallback() {
 		super.connectedCallback();
-		if (this.$options) IoLayerSingleton.appendChild(this.$options);
-		if (!this.inlayer) {
-			IoLayerSingleton.addEventListener('pointermove', this._onLayerPointermove);
-		}
+		if (this.$options) Layer.appendChild(this.$options);
+		if (!this.inlayer) Layer.addEventListener('pointermove', this._onLayerPointermove);
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		if (this.$options && this.$options.inlayer) {
-			IoLayerSingleton.removeChild(this.$options);
-		}
-		IoLayerSingleton.removeEventListener('pointermove', this._onLayerPointermove);
+		if (this.$options && this.$options.inlayer) Layer.removeChild(this.$options);
+		Layer.removeEventListener('pointermove', this._onLayerPointermove);
 	}
 	_onClick() {
-		if (this._value !== undefined || this._action) {
-			if (this._value !== undefined) {
-				this.set('value', this._value, true);
-			}
-			if (this._action) {
-				this._action.apply(null, [this._value]);
-			}
-			this.dispatchEvent('item-clicked', {
-				value: this._value,
-				action: this._action,
-				selectable: this._option.selectable,
-			}, true);
-			getRootElement(this).expanded = false;
-		} else if (this._options) {
-			this.expanded = true;
+		const selectable = this._value !== undefined && this._selectable;
+		const actionable = typeof this._action === 'function';
+		if (selectable || actionable) {
+			if (selectable) this.set('value', this._value, true);
+			if (actionable) this._action.apply(null, [this._value]);
+			this.dispatchEvent('item-clicked', {value: this._value, action: this._action, selectable: this._selectable}, true);
+			this.requestAnimationFrameOnce(this._collapse);
+		} else if (!this.expanded && this._options) this.expanded = true;
+	}
+	_onItemClicked(event) {
+		const item = event.composedPath()[0];
+		const d = event.detail;
+		if (item !== this) {
+			event.stopImmediatePropagation();
+			const selectable = d.value !== undefined && d.selectable;
+			if (selectable) this.set('value', d.value);
+			this.dispatchEvent('item-clicked', d, true);
 		}
+		if (this.expanded) this.requestAnimationFrameOnce(this._collapse);
 	}
 	_onPointerdown(event) {
 		event.stopPropagation();
+		event.preventDefault(); // Prevents focus
 		this.setPointerCapture(event.pointerId);
 		this.addEventListener('pointermove', this._onPointermove);
 		this.addEventListener('pointerup', this._onPointerup);
@@ -190,22 +154,11 @@ export class IoMenuItem extends IoItem {
 			this.focus();
 			if (this._options) this.expanded = true;
 		}
-		hoveredItem = this;
+		hovered = this;
 		hoveredParent = this.parentElement;
 		// TODO: Safari temp fix for event.movement = 0
 		this._x = event.clientX;
 		this._y = event.clientY;
-	}
-	_getHoveredItem(event) {
-		const items = getElementDescendants(getRootElement(this));
-		for (let i = items.length; i--;) {
-			const item = items[i];
-			const parent = item.parentElement;
-			if (isPointerAboveElement(event, item)//) {
-				&& isPointerAboveElement(event, parent)) {
-				return item;
-			}
-		}
 	}
 	_onPointermove(event) {
 		event.stopPropagation();
@@ -223,15 +176,15 @@ export class IoMenuItem extends IoItem {
 		this._x = event.clientX;
 		this._y = event.clientY;
 
-		IoLayerSingleton.x = event.clientX;
-		IoLayerSingleton.y = event.clientY;
+		Layer.x = event.clientX;
+		Layer.y = event.clientY;
 		clearTimeout(this.__timeoutOpen);
-		hoveredItem = this._getHoveredItem(event);
-		if (hoveredItem) {
+		hovered = this._gethovered(event);
+		if (hovered) {
 			const v = Math.abs(movementY) - Math.abs(movementX);
-			const h = hoveredItem.parentElement.horizontal;
-			if (hoveredParent !== hoveredItem.parentElement) {
-				hoveredParent = hoveredItem.parentElement;
+			const h = hovered.parentElement.horizontal;
+			if (hoveredParent !== hovered.parentElement) {
+				hoveredParent = hovered.parentElement;
 				this._expandHovered();
 			} else if (h ? v < -0.5 : v > 0.5) {
 				this._expandHovered();
@@ -242,44 +195,52 @@ export class IoMenuItem extends IoItem {
 			}
 		}
 	}
+	_gethovered(event) {
+		const items = getElementDescendants(getRootElement(this));
+		for (let i = items.length; i--;) {
+			if (isPointerAboveItem(event, items[i])) return items[i];
+		}
+	}
 	_expandHovered() {
-		if (hoveredItem) {
-			hoveredItem.focus();
-			if (hoveredItem._options) {
-				hoveredItem.expanded = true;
-				const descendants = getElementDescendants(hoveredItem.$options);
-				for (let i = descendants.length; i--;) {
-					descendants[i].expanded = false;
+		if (hovered) {
+			hovered.focus();
+			if (hovered._options) {
+				if (hovered.$options) {
+					const descendants = getElementDescendants(hovered.$options);
+					for (let i = descendants.length; i--;) {
+						descendants[i].expanded = false;
+					}
 				}
+				hovered.expanded = true;
 			}
 		}
 	}
 	_onLayerPointermove(event) {
 		if (this.expanded) this._onPointermove(event);
 	}
-	_onPointerup(event) {
+	_onPointerup(event, options) {
 		event.stopPropagation();
 		this.removeEventListener('pointermove', this._onPointermove);
 		this.removeEventListener('pointerup', this._onPointerup);
-		let hoveredItem = this._getHoveredItem(event);
-		if (!hoveredItem) {
-			this.requestAnimationFrameOnce(this._collapse);
+		const item = this._gethovered(event);
+		const nocollapse = options && options.nocollapse;
+		if (item) {
+			item.focus();
+			item._onClick(event);
 		} else {
-			hoveredItem._onClick(event);
+			if (!nocollapse) {
+				this.requestAnimationFrameOnce(this._collapseRoot);
+			}
 		}
 	}
 	_onKeydown(event) {
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
-			if (this.expanded) {
-				this.expanded = false;
-				return;
-			}
 			this._onClick(event);
 			return;
 		} else if (event.key === 'Escape') {
 			event.preventDefault();
-			getRootElement(this).expanded = false;
+			this.requestAnimationFrameOnce(this._collapseRoot);
 			return;
 		}
 
@@ -333,40 +294,26 @@ export class IoMenuItem extends IoItem {
 					break;
 			}
 		} else {
-			this.expanded = false;
 			super._onKeydown(event);
-		}
-	}
-	_onOptionItemClicked(event) {
-		if (event.composedPath()[0] !== this) {
-			event.stopImmediatePropagation();
-			this.dispatchEvent('item-clicked', event.detail, true);
-			if (event.detail.selectable !== false) this.set('value', event.detail.value);
-		}
-	}
-	optionChanged() {
-		if (this.option && typeof this.option === 'object') {
-			this._option = this.option;
-		} else {
-			this._option = {value: this.option};
-		}
-		if (this._options) {
-			if (!this.$options) {
-				this.$options = new IoMenuOptions({
-					$parent: this,
-					expanded: this.bind('expanded'),
-					'on-item-clicked': this._onOptionItemClicked,
-				});
-			}
 		}
 	}
 	_collapse() {
 		this.expanded = false;
 	}
+	_collapseRoot() {
+		getRootElement(this).expanded = false;
+	}
 	expandedChanged() {
 		if (this.expanded) {
-			if (this.$options && this.$options.parentElement !== IoLayerSingleton) {
-				IoLayerSingleton.appendChild(this.$options);
+			if (!this.$options) {
+				this.$options = new IoMenuOptions({
+					$parent: this,
+					expanded: this.bind('expanded'),
+					'on-item-clicked': this._onItemClicked,
+				});
+			}
+			if (this.$options && this.$options.parentElement !== Layer) {
+				Layer.appendChild(this.$options);
 			}
 			const items = getElementDescendants(getRootElement(this));
 			const ancestors = getElementAncestors(this);
@@ -397,16 +344,76 @@ export class IoMenuItem extends IoItem {
 			['span', {class: 'io-menu-label'}, this._label],
 			['span', {class: 'io-menu-hint'}, this._hint],
 		]);
-		if (this.$options) {
+		if (this.$options && this.expanded) {
 			this.$options.setProperties({
 				value: this.value,
 				options: this._options,
-				selectable: this.selectable,
+				selectable: this._selectable,
 				position: this.direction,
 			});
 		}
-
 	}
 }
 
 IoMenuItem.Register();
+
+export function getElementDescendants(element) {
+	const descendants = [];
+	let items;
+	// TODO: unhack
+	if ('io-menu-item, io-option-menu'.search(element.localName) !== -1) {
+		descendants.push(element);
+		if (element.$options) {
+			items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
+		}
+	} else if (element.localName === 'io-context-menu') {
+		if (element.$options) {
+			items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
+		}
+	} else {
+		items = element.querySelectorAll('io-menu-item, io-option-menu');
+	}
+	for (let i = items.length; i--;) {
+		descendants.push(items[i]);
+		if (items[i].expanded) descendants.push(...getElementDescendants(items[i]));
+	}
+	return descendants;
+}
+
+function getElementAncestors(element) {
+	let item = element;
+	const ancestors = [element];
+	while (item && item.$parent) {
+		item = item.$parent;
+		if (item) ancestors.push(item);
+	}
+	return ancestors;
+}
+
+function getRootElement(element) {
+	let root = element;
+	while (root && root.$parent) {
+		root = root.$parent;
+	}
+	return root;
+}
+
+function isPointerAboveItem(event, element) {
+	const r = element.getBoundingClientRect();
+	const x = event.clientX;
+	const y = event.clientY;
+	if (['io-menu-item', 'io-option-menu'].indexOf(element.localName) !== -1) {
+		if (!element.inlayer || element.parentElement.expanded) {
+			const hovered = (
+				r.top <= y &&
+				r.bottom >= y &&
+				r.left <= x &&
+				r.right >= x
+				);
+			return hovered;
+		}
+	}
+}
+
+let hovered;
+let hoveredParent;
