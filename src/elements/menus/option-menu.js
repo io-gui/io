@@ -63,12 +63,14 @@ export class IoOptionMenu extends IoMenuItem {
 		this.title = valueText;
 		this.setAttribute('aria-haspopup', 'listbox');
 		this.setAttribute('aria-expanded', String(this.expanded));
-		this.$options.setProperties({
-			value: this.value,
-			options: this.options,
-			selectable: this.selectable,
-			position: this.direction,
-		});
+		if (this.expanded) {
+			this.$options.setProperties({
+				value: this.value,
+				options: this.options,
+				selectable: this.selectable,
+				position: this.direction,
+			});
+		}
 	}
 }
 

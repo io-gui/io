@@ -56,7 +56,7 @@ class IoLayer extends IoElement {
 	}
 	static get Listeners() {
 		return {
-			'pointerdown': '_onPointerdown',
+			'pointerup': '_onPointerup',
 			'contextmenu': '_onContextmenu',
 			'focusin': '_onFocusIn',
 			'scroll': '_onScroll',
@@ -79,11 +79,13 @@ class IoLayer extends IoElement {
 	stopPropagation(event) {
 		event.stopPropagation();
 	}
-	_onPointerdown(event) {
+	_onPointerup(event) {
 		if (event.composedPath()[0] === this) {
-			this.setPointerCapture(event.pointerId);
-			this.expanded = false;
+			this.requestAnimationFrameOnce(this._collapse);
 		}
+	}
+	_collapse() {
+		this.expanded = false;
 	}
 	_onContextmenu(event) {
 		event.preventDefault();
@@ -93,7 +95,7 @@ class IoLayer extends IoElement {
 	}
 	_onScroll(event) {
 		if (event.composedPath()[0] === this) {
-			this.expanded = false;
+			this.requestAnimationFrameOnce(this._collapse);
 		}
 	}
 	nudgeDown(element, x, y, elemRect, force) {
@@ -145,7 +147,7 @@ class IoLayer extends IoElement {
 		const rightToWidth = window.innerWidth - right;
 		switch (direction) {
 			case 'pointer':
-				this.nudgePointer(element, this.x, this.y, elemRect);
+				this.nudgePointer(element, this.x + 5, this.y + 5, elemRect);
 				break;
 			case 'top':
 				this.nudgeUp(element, left, top, elemRect) ||
@@ -194,7 +196,7 @@ class IoLayer extends IoElement {
 				return;
 			}
 		}
-		this.expanded = false;
+		this.requestAnimationFrameOnce(this._collapse);
 	}
 	expandedChanged() {
 		if (!this.expanded) {
