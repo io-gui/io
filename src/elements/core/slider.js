@@ -88,11 +88,11 @@ export class IoSlider extends IoGl {
 		const dy = Math.abs(this._y - event.changedTouches[0].clientY);
 		if (this._active === -1) {
 			if (this.horizontal) {
-				if (dx > 3) {
+				if (dx > 1) {
 					this._active = (dx > dy && dy < 10) ? 1 : 0;
 				}
 			} else {
-				if (dy > 3) {
+				if (dy > 1) {
 					this._active = (dy > dx && dx < 10) ? 1 : 0;
 				}
 			}
@@ -110,10 +110,8 @@ export class IoSlider extends IoGl {
 		this.addEventListener('pointerup', this._onPointerup);
 	}
 	_onPointermove(event) {
-		if (this._active !== 0) {
-			if (document.activeElement !== this ) this.focus();
-			this.throttle(this._onPointermoveThrottled, event);
-		}
+		if (event.pointerType !== 'touch') this._active = 1;
+		this.throttle(this._onPointermoveThrottled, event, true);
 	}
 	_onPointerup() {
 		this.releasePointerCapture(event.pointerId);
@@ -121,18 +119,21 @@ export class IoSlider extends IoGl {
 		this.removeEventListener('pointerup', this._onPointerup);
 	}
 	_onPointermoveThrottled(event) {
-		const rect = this.getBoundingClientRect();
-		const x = Math.pow(Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width)), this.exponent);
-		const y = Math.pow(Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height)), this.exponent);
+		if (this._active === 1) {
+			if (document.activeElement !== this ) this.focus();
+			const rect = this.getBoundingClientRect();
+			const x = Math.pow(Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width)), this.exponent);
+			const y = Math.pow(Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height)), this.exponent);
 
-		let _x = this.min * (1 - x) + this.max * x;
-		_x = Math.min(this.max, Math.max(this.min, _x));
-		_x = Math.round(_x / this.step) * this.step;
-		let _y = this.min * (1 - y) + this.max * y;
-		_y = Math.min(this.max, Math.max(this.min, _y));
-		_y = Math.round(_y / this.step) * this.step;
+			let _x = this.min * (1 - x) + this.max * x;
+			_x = Math.min(this.max, Math.max(this.min, _x));
+			_x = Math.round(_x / this.step) * this.step;
+			let _y = this.min * (1 - y) + this.max * y;
+			_y = Math.min(this.max, Math.max(this.min, _y));
+			_y = Math.round(_y / this.step) * this.step;
 
-		this._setValue(this.horizontal ? _x : _y, this.horizontal ? _y : _x);
+			this._setValue(this.horizontal ? _x : _y, this.horizontal ? _y : _x);
+		}
 	}
 	_setValue(x) {
 		this.set('value', Number(x.toFixed(5)));
@@ -172,22 +173,22 @@ export class IoSlider extends IoGl {
 	_setIncrease() {
 		let value = this.value + this.step;
 		value = Math.min(this.max, Math.max(this.min, (value)));
-		this.set('value', Number(value.toFixed(4)));
+		this._setValue(value);
 	}
 	_setDecrease() {
 		let value = this.value - this.step;
 		value = Math.min(this.max, Math.max(this.min, (value)));
-		this.set('value', Number(value.toFixed(4)));
+		this._setValue(value);
 	}
 	_setMin() {
 		let value = this.min;
 		value = Math.min(this.max, Math.max(this.min, (value)));
-		this.set('value', Number(value.toFixed(4)));
+		this._setValue(value);
 	}
 	_setMax() {
 		let value = this.max;
 		value = Math.min(this.max, Math.max(this.min, (value)));
-		this.set('value', Number(value.toFixed(4)));
+		this._setValue(value);
 	}
 	// TODO: consider moving or standardizing.
 	changed() {
@@ -203,28 +204,34 @@ export class IoSlider extends IoGl {
 	}
 	static get GlUtils() {
 		return /* glsl */`
-		vec4 paintSlider(vec2 position, vec3 color) {
+		vec4 paintSlider(vec2 position, vec2 sliderStart, vec2 sliderEnd, float knobRadius, float slotWidth, vec3 color) {
 			vec4 slotColor = mix(cssColor, cssBackgroundColorField, 0.125);
 			vec4 sliderColor = vec4(0.0);
-			float slotWidth = cssStrokeWidth;
 			float stroke = cssStrokeWidth;
-			float radius = cssItemHeight * 0.125;
 
-			float strokeShape = min(
-				circle(position, radius + stroke + stroke),
-				rectangle(vec2(0., position.y), vec2(-position.x, radius + stroke + stroke))
+			vec2 startPos = translate(position, sliderStart);
+			vec2 endPos = translate(position, sliderEnd);
+			vec2 slotCenter = (startPos + endPos) / 2.;
+			float slotSpan = abs(startPos.x - endPos.x) / 2.0;
+
+			float strokeShape = min(min(
+				circle(startPos, knobRadius + stroke + stroke),
+				rectangle(slotCenter, vec2(slotSpan, slotWidth + stroke + stroke))),
+				circle(endPos, knobRadius + stroke + stroke)
 			);
 			sliderColor = mix(vec4(slotColor.rgb, 1.0), sliderColor, strokeShape);
 
-			float fillShape = min(
-				circle(position, radius + stroke),
-				rectangle(vec2(0., position.y), vec2(-position.x, radius + stroke))
+			float fillShape = min(min(
+				circle(startPos, knobRadius + stroke),
+				rectangle(slotCenter, vec2(slotSpan, slotWidth + stroke))),
+				circle(endPos, knobRadius + stroke)
 			);
 			sliderColor = mix(vec4(cssBackgroundColor.rgb, 1.0), sliderColor, fillShape);
 
-			float colorShape = min(
-				circle(position, radius),
-				rectangle(vec2(0., position.y), vec2(-position.x, radius))
+			float colorShape = min(min(
+				circle(startPos, knobRadius),
+				rectangle(slotCenter, vec2(slotSpan, slotWidth))),
+				circle(endPos, knobRadius)
 			);
 			sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
 
@@ -233,7 +240,7 @@ export class IoSlider extends IoGl {
 		\n\n`;
 	}
 	static get Frag() {
-		return `
+		return /* glsl */`
 		#extension GL_OES_standard_derivatives : enable
 
 		varying vec2 vUv;
@@ -254,15 +261,22 @@ export class IoSlider extends IoGl {
 				// TODO: grid with exponent
 				float gridWidth = size.x / ((uMax - uMin) / uStep);
 				float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
-				float gridShape = grid(translate(position, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);
+				vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
+				float gridShape = grid(translate(expPosition, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);
 				finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
 			}
 
+			vec4 slotGradient = mix(cssColorFocus, cssColorLink, uv.x);
+			float knobRadius = cssItemHeight * 0.125;
+			float slotWidth = cssItemHeight * 0.125;
+
 			float valueInRange = saturate((uValue - uMin) / (uMax - uMin));
 			valueInRange = pow(valueInRange, 1./uExponent);
-			vec4 slotGradient = mix(cssColorFocus, cssColorLink, uv.x);
-			vec2 markerPos = translate(position, vec2(size.x * valueInRange, size.y * 0.5));
-			vec4 slider = paintSlider(markerPos, slotGradient.rgb);
+
+			vec2 sliderStart = vec2(0, size.y * 0.5);
+			vec2 sliderEnd = vec2(size.x * valueInRange, size.y * 0.5);
+
+			vec4 slider = paintSlider(position, sliderStart, sliderEnd, knobRadius, slotWidth, slotGradient.rgb);
 			finalColor = mix(finalColor.rgb, slider.rgb, slider.a);
 
 			gl_FragColor = vec4(finalColor, 1.0);
