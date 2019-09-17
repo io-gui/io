@@ -359,7 +359,7 @@ IoMenuItem.Register();
 
 export function getElementDescendants(element) {
 	const descendants = [];
-	let items;
+	let items = [];
 	// TODO: unhack
 	if ('io-menu-item, io-option-menu'.search(element.localName) !== -1) {
 		descendants.push(element);
