@@ -280,8 +280,8 @@ export class IoSlider extends IoGl {
 			float sign = valueInRange < 0.0 ? -1.0 : 1.0;
 			valueInRange = abs(pow(valueInRange, 1./uExponent)) * sign;
 
-			vec2 sliderStart = vec2(0, size.y * 0.5);
-			vec2 sliderEnd = vec2(size.x * valueInRange, size.y * 0.5);
+			vec2 sliderStart = vec2(0.0, size.y * 0.5);
+			vec2 sliderEnd = vec2(size.x * min(2.0, max(-1.0, (valueInRange))), size.y * 0.5);
 
 			vec4 slider = paintSlider(position, sliderStart, sliderEnd, knobRadius, slotWidth, slotGradient.rgb);
 			finalColor = mix(finalColor.rgb, slider.rgb, slider.a);
