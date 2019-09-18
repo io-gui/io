@@ -88,11 +88,11 @@ export class IoSlider extends IoGl {
 		const dy = Math.abs(this._y - event.changedTouches[0].clientY);
 		if (this._active === -1) {
 			if (this.horizontal) {
-				if (dx > 1) {
+				if (dx > 3 && dx > dy) {
 					this._active = (dx > dy && dy < 10) ? 1 : 0;
 				}
 			} else {
-				if (dy > 1) {
+				if (dy > 3 && dy > dx) {
 					this._active = (dy > dx && dx < 10) ? 1 : 0;
 				}
 			}
@@ -118,20 +118,26 @@ export class IoSlider extends IoGl {
 		this.removeEventListener('pointermove', this._onPointermove);
 		this.removeEventListener('pointerup', this._onPointerup);
 	}
+	_getPointerCoord(event) {
+		const rect = this.getBoundingClientRect();
+		const x = Math.pow(Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width)), this.exponent);
+		const y = Math.pow(Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height)), this.exponent);
+		return [x, y];
+	}
+	_getValueFromCoord(coord) {
+		let value = this.min * (1 - coord) + this.max * coord;
+		value = Math.min(this.max, Math.max(this.min, value));
+		return Math.round(value / this.step) * this.step;
+	}
+	_getCoordFromValue(value) {
+		return (value - this.min) / (this.max - this.min);
+	}
 	_onPointermoveThrottled(event) {
 		if (this._active === 1) {
 			if (document.activeElement !== this ) this.focus();
-			const rect = this.getBoundingClientRect();
-			const x = Math.pow(Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width)), this.exponent);
-			const y = Math.pow(Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height)), this.exponent);
-
-			let _x = this.min * (1 - x) + this.max * x;
-			_x = Math.min(this.max, Math.max(this.min, _x));
-			_x = Math.round(_x / this.step) * this.step;
-			let _y = this.min * (1 - y) + this.max * y;
-			_y = Math.min(this.max, Math.max(this.min, _y));
-			_y = Math.round(_y / this.step) * this.step;
-
+			const p = this._getPointerCoord(event);
+			let _x = this._getValueFromCoord(p[0]);
+			let _y = this._getValueFromCoord(p[1]);
 			this._setValue(this.horizontal ? _x : _y, this.horizontal ? _y : _x);
 		}
 	}
@@ -172,22 +178,22 @@ export class IoSlider extends IoGl {
 	// TODO: round to step
 	_setIncrease() {
 		let value = this.value + this.step;
-		value = Math.min(this.max, Math.max(this.min, (value)));
+		value = Math.min(this.max, Math.max(this.min, value));
 		this._setValue(value);
 	}
 	_setDecrease() {
 		let value = this.value - this.step;
-		value = Math.min(this.max, Math.max(this.min, (value)));
+		value = Math.min(this.max, Math.max(this.min, value));
 		this._setValue(value);
 	}
 	_setMin() {
 		let value = this.min;
-		value = Math.min(this.max, Math.max(this.min, (value)));
+		value = Math.min(this.max, Math.max(this.min, value));
 		this._setValue(value);
 	}
 	_setMax() {
 		let value = this.max;
-		value = Math.min(this.max, Math.max(this.min, (value)));
+		value = Math.min(this.max, Math.max(this.min, value));
 		this._setValue(value);
 	}
 	// TODO: consider moving or standardizing.
@@ -270,8 +276,9 @@ export class IoSlider extends IoGl {
 			float knobRadius = cssItemHeight * 0.125;
 			float slotWidth = cssItemHeight * 0.125;
 
-			float valueInRange = saturate((uValue - uMin) / (uMax - uMin));
-			valueInRange = pow(valueInRange, 1./uExponent);
+			float valueInRange = (uValue - uMin) / (uMax - uMin);
+			float sign = valueInRange < 0.0 ? -1.0 : 1.0;
+			valueInRange = abs(pow(valueInRange, 1./uExponent)) * sign;
 
 			vec2 sliderStart = vec2(0, size.y * 0.5);
 			vec2 sliderEnd = vec2(size.x * valueInRange, size.y * 0.5);
