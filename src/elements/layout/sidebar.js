@@ -86,9 +86,11 @@ export class IoSidebar extends IoElement {
 	}
 	changed() {
 		if (this.collapsed) {
+			const selected = this.filterObject(this.options, o => matches(this.selected, o));
 			this.template([['io-option-menu', {
 				options: this.options,
 				value: this.bind('selected'),
+				label: selected.label,
 				hamburger: true,
 				selectable: true,
 				title: 'select tab',

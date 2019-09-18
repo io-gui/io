@@ -31,7 +31,7 @@ export class IoContextMenu extends IoElement {
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		Layer.removeChild(this.$options);
+		if (this.$options) Layer.removeChild(this.$options);
 		Layer.removeEventListener('pointermove', this._onLayerPointermove);
 		this._parent.style.userSelect = null;
 		this._parent.style.webkitUserSelect = null;
@@ -80,14 +80,14 @@ export class IoContextMenu extends IoElement {
 	}
 	_onPointermove(event) {
 		clearTimeout(this._contextTimeout);
-		if (this.expanded) {
+		if (this.expanded && this.$options) {
 			const item = this.$options.querySelector('io-menu-item');
 			if (item) item._onPointermove(event);
 		}
 	}
 	_onPointerup(event) {
 		clearTimeout(this._contextTimeout);
-		if (this.expanded) {
+		if (this.expanded && this.$options) {
 			const item = this.$options.querySelector('io-menu-item');
 			if (item) item._onPointerup(event, {nocollapse: true});
 		}

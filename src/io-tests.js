@@ -7,7 +7,7 @@ import Node from "./core/node.test.js";
 import Element from "./core/element.test.js";
 
 import Item from "./elements/core/item.test.js";
-// import Content from "./elements/core/content.test.js";
+import Content from "./elements/core/content.test.js"; // TODO
 import Gl from "./elements/core/gl.test.js";
 import Button from "./elements/core/button.test.js";
 import Boolean from "./elements/core/boolean.test.js";
@@ -16,7 +16,9 @@ import Switch from "./elements/core/switch.test.js";
 import Sting from "./elements/core/string.test.js";
 import Number from "./elements/core/number.test.js";
 import Slider from "./elements/core/slider.test.js";
+import SliderRange from "./elements/core/slider-range.test.js"; // TODO
 import NumberSlider from "./elements/core/number-slider.test.js";
+import NumberSliderRange from "./elements/core/number-slider-range.test.js"; // TODO
 import Icon from "./elements/core/icon.test.js";
 import IconSet from "./elements/core/iconset.test.js";
 import Layer from "./elements/core/layer.test.js";
@@ -44,7 +46,7 @@ function runTests() {
 		new Element().run();
 
 		new Item().run();
-		// TODO: new Content().run();
+		new Content().run();
 		new Gl().run();
 		new Button().run();
 		new Boolean().run();
@@ -54,7 +56,9 @@ function runTests() {
 		new Sting().run();
 		new Number().run();
 		new Slider().run();
+		new SliderRange().run();
 		new NumberSlider().run();
+		new NumberSliderRange().run();
 		new Icon().run();
 		new IconSet().run();
 		new Layer().run();
