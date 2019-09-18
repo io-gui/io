@@ -184,7 +184,7 @@ export class IoNumber extends IoItem {
 		let valueNumber = Number(valueText) / this.conversion;
 		valueNumber = Math.min(this.max, Math.max(this.min, valueNumber));
 		valueNumber = Math.round(valueNumber / this.step) * this.step;
-		let d = Math.max(0, Math.min(100, -Math.round(Math.log(this.step) / Math.LN10)));
+		let d = Math.max(0, Math.min(100, -Math.floor(Math.log(this.step) / Math.LN10)));
 		valueNumber = Number(valueNumber.toFixed(d));
 		if (!isNaN(valueNumber)) this.set('value', valueNumber);
 		else this.textNode = 'NaN';
@@ -195,7 +195,7 @@ export class IoNumber extends IoItem {
 		let valueText;
 		if (typeof value == 'number' && !isNaN(value)) {
 			value *= this.conversion;
-			let d = -Math.round(Math.log(this.step * this.conversion) / Math.LN10);
+			let d = -Math.floor(Math.log(this.step * this.conversion) / Math.LN10);
 			d = Math.max(0, Math.min(100, d));
 			value = value.toFixed(d);
 			valueText = Number(String(value));
