@@ -149,8 +149,8 @@ export class IoSliderRange extends IoSlider {
 			}
 			vec4 slotGradient = mix(cssColorFocus, cssColorLink, grad);
 
-			vec2 sliderStart = vec2(size.x * valueInRangeStart, size.y * 0.5);
-			vec2 sliderEnd = vec2(size.x * valueInRangeEnd, size.y * 0.5);
+			vec2 sliderStart = vec2(size.x * min(2.0, max(-1.0, (valueInRangeStart))), size.y * 0.5);
+			vec2 sliderEnd = vec2(size.x * min(2.0, max(-1.0, (valueInRangeEnd))), size.y * 0.5);
 
 			vec4 slider = paintSlider(position, sliderStart, sliderEnd, knobRadius, slotWidth, slotGradient.rgb);
 			finalColor = mix(finalColor.rgb, slider.rgb, slider.a);
