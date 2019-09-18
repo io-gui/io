@@ -116,7 +116,7 @@ export class IoProperties extends IoElement {
 		this._changedThrottled();
 	}
 	_changedThrottled() {
-		this.throttle(this._changed, null, true);
+		this.throttle(this._changed, null); // TODO: consider async
 	}
 	_changed() {
 		const config = this.__proto__.__config.getConfig(this.value, this.config);

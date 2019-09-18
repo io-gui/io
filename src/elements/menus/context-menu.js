@@ -31,7 +31,7 @@ export class IoContextMenu extends IoElement {
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback();
-		Layer.removeChild(this.$options);
+		if (this.$options) Layer.removeChild(this.$options);
 		Layer.removeEventListener('pointermove', this._onLayerPointermove);
 		this._parent.style.userSelect = null;
 		this._parent.style.webkitUserSelect = null;
@@ -64,7 +64,6 @@ export class IoContextMenu extends IoElement {
 		Layer.y = event.clientY;
 		this._parent.addEventListener('pointermove', this._onPointermove);
 		this._parent.addEventListener('pointerup', this._onPointerup);
-		this._parent.setPointerCapture(event.pointerId);
 		clearTimeout(this._contextTimeout);
 		if (event.pointerType !== 'touch') {
 			if (event.button === this.button) {
@@ -80,20 +79,19 @@ export class IoContextMenu extends IoElement {
 	}
 	_onPointermove(event) {
 		clearTimeout(this._contextTimeout);
-		if (this.expanded) {
+		if (this.expanded && this.$options) {
 			const item = this.$options.querySelector('io-menu-item');
 			if (item) item._onPointermove(event);
 		}
 	}
 	_onPointerup(event) {
 		clearTimeout(this._contextTimeout);
-		if (this.expanded) {
+		if (this.expanded && this.$options) {
 			const item = this.$options.querySelector('io-menu-item');
 			if (item) item._onPointerup(event, {nocollapse: true});
 		}
 		this._parent.removeEventListener('pointermove', this._onPointermove);
 		this._parent.removeEventListener('pointerup', this._onPointerup);
-		this._parent.releasePointerCapture(event.pointerId);
 	}
 	_onLayerPointermove(event) {
 		if (this.expanded) this._onPointermove(event);

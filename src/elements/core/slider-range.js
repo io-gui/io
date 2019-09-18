@@ -13,8 +13,8 @@ export class IoSliderRange extends IoSlider {
 	_onPointerdown(event) {
 		super._onPointerdown(event);
 		const p = this._getPointerCoord(event);
-		const c0 = this._getCoordFromValue(this.value[0]);
-		const c1 = this._getCoordFromValue(this.value[1]);
+		const c0 = this._getCoordFromValue(Math.min(this.max, Math.max(this.min, this.value[0])));
+		const c1 = this._getCoordFromValue(Math.min(this.max, Math.max(this.min, this.value[1])));
 		if (this.horizontal) {
 			this._index = Math.abs(c0 - p[0]) < Math.abs(c1 - p[0]) ? 0 : 1;
 		} else {
@@ -145,7 +145,7 @@ export class IoSliderRange extends IoSlider {
 			if (valueInRangeEnd > valueInRangeStart) {
 				grad = (uv.x - valueInRangeStart) / max(valueInRangeEnd - valueInRangeStart, 0.01);
 			} else if (valueInRangeEnd < valueInRangeStart) {
-				grad = (uv.x - valueInRangeEnd) / max(valueInRangeStart - valueInRangeEnd, 0.01);
+				grad = 1.0 - (uv.x - valueInRangeEnd) / max(valueInRangeStart - valueInRangeEnd, 0.01);
 			}
 			vec4 slotGradient = mix(cssColorFocus, cssColorLink, grad);
 
