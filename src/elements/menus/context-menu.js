@@ -64,7 +64,6 @@ export class IoContextMenu extends IoElement {
 		Layer.y = event.clientY;
 		this._parent.addEventListener('pointermove', this._onPointermove);
 		this._parent.addEventListener('pointerup', this._onPointerup);
-		this._parent.setPointerCapture(event.pointerId);
 		clearTimeout(this._contextTimeout);
 		if (event.pointerType !== 'touch') {
 			if (event.button === this.button) {
@@ -93,7 +92,6 @@ export class IoContextMenu extends IoElement {
 		}
 		this._parent.removeEventListener('pointermove', this._onPointermove);
 		this._parent.removeEventListener('pointerup', this._onPointerup);
-		this._parent.releasePointerCapture(event.pointerId);
 	}
 	_onLayerPointermove(event) {
 		if (this.expanded) this._onPointermove(event);
