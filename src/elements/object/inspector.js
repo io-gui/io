@@ -10,8 +10,32 @@ export class IoInspector extends IoElement {
 		:host {
 			@apply --io-column;
 		}
-		:host > io-breadcrumbs {
+		:host > .inspector-header {
 			margin-bottom: var(--io-spacing);
+			flex-grow: 0;
+		}
+		:host > .inspector-header > io-breadcrumbs {
+			flex: 1 1;
+		}
+		:host > .inspector-header > io-boolicon {
+			width: calc(var(--io-spacing) + var(--io-item-height));
+			align-self: stretch;
+			height: auto;
+		}
+		:host > .inspector-header > io-string {
+			margin: 0 var(--io-spacing);
+			padding: calc(2 * var(--io-spacing));
+			align-self: stretch;
+			height: auto;
+		}
+		:host > .inspector-header > io-string:focus {
+			width: 6em;
+		}
+		:host > .inspector-header > io-string:empty:before {
+			content: ' 🔍';
+			white-space: pre;
+			visibility: visible;
+			opacity: 0.33;
 		}
 		:host > io-object > io-boolean {
 			text-transform: capitalize;
@@ -43,6 +67,8 @@ export class IoInspector extends IoElement {
 				type: Object,
 				observe: true,
 			},
+			search: String,
+			advanced: Boolean,
 			groups: Object,
 			config: Object,
 			autoExpand: ['main'],
@@ -70,7 +96,13 @@ export class IoInspector extends IoElement {
 	}
 	selectedChanged() {
 		this._config = this.__proto__.__config.getConfig(this.selected, this.config);
-		this._groups = this.__proto__.__groups.getGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config));
+		this._getGroups();
+	}
+	advancedChanged() {
+		this._getGroups();
+	}
+	_getGroups() {
+		this._groups = this.__proto__.__groups.getGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config), this.advanced);
 	}
 	changed() {
 		this._changedThrottled();
@@ -81,7 +113,11 @@ export class IoInspector extends IoElement {
 	_changed() {
 		this.uuid = genUUID(this.selected);
 		const elements = [
-			['io-breadcrumbs', {value: this.value, selected: this.bind('selected'), trim: true}],
+			['div', {class: 'inspector-header io-row'}, [
+				['io-breadcrumbs', {value: this.value, selected: this.bind('selected'), trim: true}],
+				['io-string', {id: 'search', value: this.bind('search'), live: true}],
+				['io-boolicon', {value: this.bind('advanced')}],
+			]]
 		];
 
 

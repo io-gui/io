@@ -124,7 +124,10 @@ export class IoProperties extends IoElement {
 	_changed() {
 		const config = this._config;
 		const elements = [];
-		for (let c in config) {
+		const properties = this.properties.length ? this.properties : Object.keys(config);
+
+		for (let i = 0; i < properties.length; i++) {
+			const c = properties[i];
 			if (!this.properties.length || this.properties.indexOf(c) !== -1) {
 				const tag = config[c][0];
 				const protoConfig = config[c][1];
