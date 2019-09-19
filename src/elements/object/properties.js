@@ -92,12 +92,15 @@ export class IoProperties extends IoElement {
 			this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
 		}
 	}
+	valueChanged() {
+		this._config = this.__proto__.__config.getConfig(this.value, this.config);
+	}
 	valueMutated() {
 		// TODO implement debounce
 		clearTimeout(this._cfgTimeout);
 		this._cfgTimeout = setTimeout(()=>{
 			this._updateChildren();
-		}, 1000/30);
+		}, 1000/10);
 	}
 	// TODO: unhack?
 	_updateChildren() {
@@ -119,7 +122,7 @@ export class IoProperties extends IoElement {
 		this.throttle(this._changed, null); // TODO: consider async
 	}
 	_changed() {
-		const config = this.__proto__.__config.getConfig(this.value, this.config);
+		const config = this._config;
 		const elements = [];
 		for (let c in config) {
 			if (!this.properties.length || this.properties.indexOf(c) !== -1) {

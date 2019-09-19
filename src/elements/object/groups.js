@@ -10,19 +10,14 @@ export class Groups {
 				this[g] = [...this[g], ...groups[g]];
 			}
 		}
-		getGroups(object, customGroups) {
-			const keys = Object.getOwnPropertyNames(object);
-			// const keys = Object.keys(object);
+		getGroups(object, customGroups, keys) {
 			const prototypes = [];
 
 			let proto = object.__proto__;
 			while (proto) {
 				prototypes.push(proto.constructor.name);
-				// keys.push(...Object.getOwnPropertyNames(proto));
-				keys.push(...Object.keys(proto));
 				proto = proto.__proto__;
 			}
-
 			const protoGroups = {};
 
 			for (let i in this) {
@@ -72,10 +67,19 @@ export class Groups {
 
 			if (assigned.length === 0) {
 				groups['properties'] = keys;
+			} else {
+				groups['properties'] = groups['properties'] || [];
+				for (let i = 0; i < keys.length; i++) {
+					if (assigned.indexOf(keys[i]) === -1) groups['properties'].push(keys[i]);
+				}
 			}
 
-			for (let group in groups) { if (groups[group].length === 0) delete groups[group]; }
+			for (let group in groups) {
+				if (groups[group].length === 0) delete groups[group];
+			}
+
 			delete groups.hidden;
+
 
 			return groups;
 		}

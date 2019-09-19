@@ -45,27 +45,32 @@ export class IoInspector extends IoElement {
 			},
 			groups: Object,
 			config: Object,
-			autoExpand: ['properties', 'values'],
+			autoExpand: ['main'],
 		};
 	}
 	static get Listeners() {
 		return {
-			'item-clicked': '_onSetInspectorValue',
+			'item-clicked': '_onItemClicked',
 		};
 	}
 	constructor(props) {
 		super(props);
 		Object.defineProperty(this, 'uuid', {value: null, writable: true});
 	}
-	_onSetInspectorValue(event) {
+	_onItemClicked(event) {
 		event.stopPropagation();
+		const item = event.composedPath()[0];
 		const value = event.detail.value;
-		if (value && typeof value === 'object') {
+		if (item.localName == 'io-item' && value && typeof value === 'object') {
 			this.set('selected', value);
 		}
 	}
 	valueChanged() {
 		this.selected = this.value;
+	}
+	selectedChanged() {
+		this._config = this.__proto__.__config.getConfig(this.selected, this.config);
+		this._groups = this.__proto__.__groups.getGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config));
 	}
 	changed() {
 		this._changedThrottled();
@@ -78,18 +83,17 @@ export class IoInspector extends IoElement {
 		const elements = [
 			['io-breadcrumbs', {value: this.value, selected: this.bind('selected'), trim: true}],
 		];
-		const groups = this.__proto__.__groups.getGroups(this.selected, this.groups);
-		const config = this.__proto__.__config.getConfig(this.selected, this.config);
 
-		for (let group in groups) {
+
+		for (let group in this._groups) {
 			const autoExpanded = this.autoExpand.indexOf(group) !== -1;
 			elements.push(
 				['io-object', {
 					label: group,
 					expanded: $({value: autoExpanded, storage: 'local', key: this.uuid + '-' + group}),
 					value: this.selected,
-					properties: groups[group],
-					config: config,
+					properties: this._groups[group],
+					config: this._config,
 				}],
 			);
 		}
@@ -104,10 +108,9 @@ export class IoInspector extends IoElement {
 	static get Groups() {
 		return {
 			'Object|hidden': [/^_/],
-			'Object|other': [/^/],
 			// TODO
+			'HTMLElement|main': ['localName', 'tagName', 'nodeName', /class/i, /attribute/i],
 			'HTMLElement|hidden': [/^on/, /^[A-Z0-9_]*$/, 'childElementCount'],
-			'HTMLElement|info': ['localName', 'tagName', 'nodeName', /class/i, /attribute/i],
 			'HTMLElement|content': [/content/i, /inner/i, /outer/i],
 			'HTMLElement|display': [/width/i, /height/i, /top/i, /left/i, /scroll/i, /style/i],
 			'HTMLElement|hierarchy': [/parent/i, /child/i, /element/i, /root/i, /slot/i, /sibling/i, /document/i],
@@ -146,5 +149,5 @@ IoInspector.RegisterGroups = function(groups) {
 IoInspector.Register();
 
 IoInspector.RegisterGroups({
-	'Array|values': [/^[0-9]+$/],
+	'Array|main': [/^[0-9]+$/],
 });
