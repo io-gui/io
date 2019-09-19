@@ -73,8 +73,8 @@ class IoLayer extends IoElement {
 	}
 	constructor(props) {
 		super(props);
-		Object.defineProperty(this, 'x', {value: null, writable: true});
-		Object.defineProperty(this, 'y', {value: null, writable: true});
+		Object.defineProperty(this, 'x', {value: 0, writable: true});
+		Object.defineProperty(this, 'y', {value: 0, writable: true});
 	}
 	stopPropagation(event) {
 		event.stopPropagation();
@@ -200,8 +200,6 @@ class IoLayer extends IoElement {
 	}
 	expandedChanged() {
 		if (!this.expanded) {
-			this.x = null;
-			this.y = null;
 			for (let i = this.children.length; i--;) {
 				this.children[i].expanded = false;
 			}

@@ -74,7 +74,7 @@ export class IoContextMenu extends IoElement {
 			event.preventDefault();
 			this._contextTimeout = setTimeout(() => {
 				this.expanded = true;
-			}, 250);
+			}, 150);
 		}
 	}
 	_onPointermove(event) {
