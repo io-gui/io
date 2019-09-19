@@ -11,8 +11,6 @@ export class IoMdView extends IoElement {
 			flex: 1 1 auto;
 			--io-code-size: 15px;
 			padding: var(--io-spacing) calc(4 * var(--io-spacing));
-			overflow-x: hidden;
-			overflow-y: auto;
 		}
 		:host > :first-child {
 			margin-top: 0;
