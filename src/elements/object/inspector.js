@@ -2,6 +2,7 @@ import {IoElement} from "../../io.js";
 import {IoStorageFactory as $} from "../core/storage.js";
 import {Config} from "./config.js";
 import {Groups} from "./groups.js";
+import {Widgets} from "./widgets.js";
 import "./breadcrumbs.js";
 
 export class IoInspector extends IoElement {
@@ -9,6 +10,9 @@ export class IoInspector extends IoElement {
 		return /* css */`
 		:host {
 			@apply --io-column;
+		}
+		:host > * {
+			flex-shrink: 0;
 		}
 		:host > .inspector-header {
 			margin-bottom: var(--io-spacing);
@@ -71,6 +75,7 @@ export class IoInspector extends IoElement {
 			advanced: Boolean,
 			groups: Object,
 			config: Object,
+			widgets: Object,
 			autoExpand: ['main'],
 		};
 	}
@@ -97,12 +102,17 @@ export class IoInspector extends IoElement {
 	selectedChanged() {
 		this._config = this.__proto__.__config.getConfig(this.selected, this.config);
 		this._getGroups();
+		this._getWidgets();
 	}
 	advancedChanged() {
 		this._getGroups();
+		this._getWidgets();
 	}
 	_getGroups() {
 		this._groups = this.__proto__.__groups.getGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config), this.advanced);
+	}
+	_getWidgets() {
+		this._widgets = this.__proto__.__widgets.getWidgets(this.selected, this.widgets);
 	}
 	changed() {
 		this._changedThrottled();
@@ -117,9 +127,9 @@ export class IoInspector extends IoElement {
 				['io-breadcrumbs', {value: this.value, selected: this.bind('selected'), trim: true}],
 				['io-string', {id: 'search', value: this.bind('search'), live: true}],
 				['io-boolicon', {value: this.bind('advanced')}],
-			]]
+			]],
+			this._widgets.main ? this._widgets.main : null
 		];
-
 
 		for (let group in this._groups) {
 			const autoExpanded = this.autoExpand.indexOf(group) !== -1;
@@ -130,6 +140,7 @@ export class IoInspector extends IoElement {
 					value: this.selected,
 					properties: this._groups[group],
 					config: this._config,
+					slotted: this._widgets.groups[group] || [],
 				}],
 			);
 		}
@@ -152,6 +163,12 @@ export class IoInspector extends IoElement {
 			'HTMLElement|hierarchy': [/parent/i, /child/i, /element/i, /root/i, /slot/i, /sibling/i, /document/i],
 		};
 	}
+	static get Widgets() {
+		return {
+			// 'Object': ['io-item', {label: 'This is a main widget'}],
+			// 'Object|main': ['io-item', {label: 'This is a main group widget'}],
+		};
+	}
 }
 
 function genUUID(object) {
@@ -172,6 +189,7 @@ IoInspector.Register = function() {
 	IoElement.Register.call(this);
 	Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__protochain)});
 	Object.defineProperty(this.prototype, '__groups', {value: new Groups(this.prototype.__protochain)});
+	Object.defineProperty(this.prototype, '__widgets', {value: new Widgets(this.prototype.__protochain)});
 };
 
 IoInspector.RegisterConfig = function(config) {
@@ -180,6 +198,10 @@ IoInspector.RegisterConfig = function(config) {
 
 IoInspector.RegisterGroups = function(groups) {
 	this.prototype.__groups.registerGroups(groups);
+};
+
+IoInspector.RegisterWidgets = function(widgets) {
+	this.prototype.__widgets.registerWidgets(widgets);
 };
 
 IoInspector.Register();
