@@ -5,7 +5,7 @@ export class IoSwitch extends IoBoolean {
 		return /* css */`
 		:host {
 			position: relative;
-			width: calc(2 * var(--io-item-height));
+			width: calc(1.5 * var(--io-item-height));
 		}
 		:host:before {
 			display: inline-block;
