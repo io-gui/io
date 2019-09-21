@@ -25,10 +25,10 @@ export class IoBoolicon extends IoBoolean {
 	}
 	static get Properties() {
 		return {
-			true: 'icons:check',
-			false: 'icons:uncheck',
+			true: 'icons:box_fill_checked',
+			false: 'icons:box',
 			stroke: {
-				value: true,
+				value: false,
 				reflect: 1,
 			},
 		};
