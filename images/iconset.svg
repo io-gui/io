@@ -1,35 +1,6 @@
-import {IoNode} from "../../io.js";
-
-const IoIconsetDB = {};
-
-class IoIconset extends IoNode {
-	registerIcons(name, svg) {
-		const stagingElement = document.createElement('div');
-		stagingElement.innerHTML = svg;
-		stagingElement.querySelectorAll('[id]').forEach(icon => {
-			IoIconsetDB[name] = IoIconsetDB[name] || {};
-			IoIconsetDB[name][icon.id] = icon.outerHTML;
-		});
-	}
-	getIcon(icon) {
-		const iconset = IoIconsetDB[icon.split(':')[0]];
-		if (iconset) {
-			const id = icon.split(':')[1];
-			if (iconset[id]) {
-				const group = iconset[id].replace(' id="', ' class="icon-id-');
-				return `<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">${group}</svg>`;
-			}
-		}
-		return `<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"></svg>`;
-	}
-}
-
-IoIconset.Register();
-
-export const IoIconsetSingleton = new IoIconset();
-
-const icons = /* html */`
-<svg>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
 <g id="io">
 	<ellipse fill="#83A61E" cx="5.4" cy="12.1" rx="3.4" ry="3.4"/>
 	<path fill="#646464" d="M16.3,17.7c-3.1,0-5.6-2.6-5.6-5.6s2.6-5.6,5.6-5.6s5.6,2.6,5.6,5.6S19.3,17.7,16.3,17.7z M16.3,8.8
@@ -453,6 +424,4 @@ const icons = /* html */`
 		 M3.3,2.1L2,3.3l4.2,4.2L2.9,10l1.6,1.2l7.3,5.7l2.1-1.6l1.4,1.4l-3.3,2.7l-7.3-5.7l-1.6,1.2l8.9,7l4.9-3.8l3.7,3.7l1.2-1.2
 		L3.3,2.1z"/>
 </g>
-</svg>`;
-
-IoIconsetSingleton.registerIcons('icons', icons);
+</svg>

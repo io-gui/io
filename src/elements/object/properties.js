@@ -92,12 +92,24 @@ export class IoProperties extends IoElement {
 			this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
 		}
 	}
+	_getConfig() {
+		const propLength = Object.getOwnPropertyNames(this.value).length;
+		if (!this._config || this.config !== this._currentConfig || this.value !== this._currentValue || propLength !== this._currentLength) {
+			this._currentConfig = this.config;
+			this._currentValue = this.value;
+			this._currentLength = propLength;
+			this._config = this.__proto__.__config.getConfig(this.value, this.config);
+			return this._config;
+		}
+		return this._config;
+	}
 	valueMutated() {
 		// TODO implement debounce
+		this._changedThrottled();
 		clearTimeout(this._cfgTimeout);
 		this._cfgTimeout = setTimeout(()=>{
 			this._updateChildren();
-		}, 1000/30);
+		}, 1000/10);
 	}
 	// TODO: unhack?
 	_updateChildren() {
@@ -119,9 +131,14 @@ export class IoProperties extends IoElement {
 		this.throttle(this._changed, null); // TODO: consider async
 	}
 	_changed() {
-		const config = this.__proto__.__config.getConfig(this.value, this.config);
+		this._config = this._getConfig();
+
+		const config = this._config;
 		const elements = [];
-		for (let c in config) {
+		const properties = this.properties.length ? this.properties : Object.keys(config);
+
+		for (let i = 0; i < properties.length; i++) {
+			const c = properties[i];
 			if (!this.properties.length || this.properties.indexOf(c) !== -1) {
 				const tag = config[c][0];
 				const protoConfig = config[c][1];

@@ -10,36 +10,39 @@ export class Groups {
 				this[g] = [...this[g], ...groups[g]];
 			}
 		}
-		getGroups(object, customGroups) {
-			const keys = Object.getOwnPropertyNames(object);
-			// const keys = Object.keys(object);
+		getGroups(object, customGroups, keys, doAdvanced = false) {
 			const prototypes = [];
 
 			let proto = object.__proto__;
 			while (proto) {
 				prototypes.push(proto.constructor.name);
-				// keys.push(...Object.getOwnPropertyNames(proto));
-				keys.push(...Object.keys(proto));
 				proto = proto.__proto__;
 			}
-
 			const protoGroups = {};
 
 			for (let i in this) {
 				const grp = i.split('|');
 				if (grp.length === 1) grp.splice(0, 0, 'Object');
+				grp[1] = grp[1].split(':');
 				if (prototypes.indexOf(grp[0]) !== -1) {
-					protoGroups[grp[1]] = protoGroups[grp[1]] || [];
-					protoGroups[grp[1]].push(...this[i]);
+					const advanced = grp[1][1] === 'advanced';
+					if (!advanced || doAdvanced) {
+						protoGroups[grp[1][0]] = protoGroups[grp[1][0]] || [];
+						protoGroups[grp[1][0]].push(...this[i]);
+					}
 				}
 			}
 
 			for (let i in customGroups) {
 				const grp = i.split('|');
 				if (grp.length === 1) grp.splice(0, 0, 'Object');
+				grp[1] = grp[1].split(':');
 				if (prototypes.indexOf(grp[0]) !== -1) {
-					protoGroups[grp[1]] = protoGroups[grp[1]] || [];
-					protoGroups[grp[1]].push(...customGroups[i]);
+					const advanced = grp[1][1] === 'advanced';
+					if (!advanced || doAdvanced) {
+						protoGroups[grp[1][0]] = protoGroups[grp[1][0]] || [];
+						protoGroups[grp[1][0]].push(...customGroups[i]);
+					}
 				}
 			}
 
@@ -60,6 +63,7 @@ export class Groups {
 								assigned.push(k);
 							}
 						} else if (typeof gKey === 'object') {
+							// Regex
 							if (reg.exec(k) && assigned.indexOf(k) == -1) {
 								groups[g].push(k);
 								assigned.push(k);
@@ -72,10 +76,19 @@ export class Groups {
 
 			if (assigned.length === 0) {
 				groups['properties'] = keys;
+			} else {
+				groups['advanced'] = groups['advanced'] || [];
+				for (let i = 0; i < keys.length; i++) {
+					if (assigned.indexOf(keys[i]) === -1) groups['advanced'].push(keys[i]);
+				}
 			}
 
-			for (let group in groups) { if (groups[group].length === 0) delete groups[group]; }
+			for (let group in groups) {
+				if (groups[group].length === 0) delete groups[group];
+			}
+
 			delete groups.hidden;
+
 
 			return groups;
 		}

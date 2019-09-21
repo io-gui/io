@@ -27,6 +27,7 @@ export class IoButton extends IoItem {
 		};
 	}
 	_onClick() {
+		super._onClick();
 		if (typeof this.action === 'function') this.action(this.value);
 	}
 }

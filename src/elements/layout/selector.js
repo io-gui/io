@@ -11,7 +11,8 @@ export class IoSelector extends IoElement {
 			flex-direction: column;
 			align-self: stretch;
 			justify-self: stretch;
-			overflow: auto;
+			overflow-x: hidden;
+			overflow-y: auto;
 		}
 		@keyframes io-selector-spinner {
 			to {

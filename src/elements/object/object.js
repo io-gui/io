@@ -18,8 +18,8 @@ export class IoObject extends IoElement {
 		:host > io-boolean[value]:before {
 			content: "▾";
 		}
-		:host > io-boolean[value] {
-			margin-bottom: var(--io-spacing);
+		:host > :nth-child(n+2) {
+			margin-top: var(--io-spacing);
 		}
 		`;
 	}
@@ -36,6 +36,7 @@ export class IoObject extends IoElement {
 				type: Boolean,
 				reflect: 1,
 			},
+			slotted: Array,
 			role: 'region',
 		};
 	}
@@ -43,6 +44,7 @@ export class IoObject extends IoElement {
 		const label = this.label || this.value.constructor.name;
 		const elements = [['io-boolean', {true: label, false: label, value: this.bind('expanded')}]];
 		if (this.expanded) {
+			if (this.slotted.length) elements.push(this.slotted);
 			elements.push(['io-properties', {
 				value: this.value,
 				properties: this.properties,
