@@ -1,3 +1,4 @@
+import {IoElement} from "../../io.js";
 import {IoItem} from "./item.js";
 
 export class IoButton extends IoItem {

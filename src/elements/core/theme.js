@@ -4,12 +4,12 @@ import {IoStorageFactory as $} from "./storage.js";
 const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 const themeSizes =	{
-	cssSpacing: 3,
+	cssSpacing: 2,
 	cssBorderRadius: 3,
 	cssBorderWidth: 1,
 	cssStrokeWidth: 1,
-	cssLineHeight: 20,
-	cssItemHeight: 28,
+	cssLineHeight: 16,
+	cssItemHeight: 22,
 	cssFontSize: 13,
 };
 const themeDB = {

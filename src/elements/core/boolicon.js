@@ -8,6 +8,7 @@ export class IoBoolicon extends IoBoolean {
 			width: var(--io-item-height);
 			height: var(--io-item-height);
 			fill: var(--io-color, currentcolor);
+			padding: 0;
 		}
 		:host[stroke] {
 			stroke: var(--io-background-color, currentcolor);

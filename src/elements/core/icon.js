@@ -6,6 +6,7 @@ export class IoIcon extends IoElement {
 		return /* css */`
 		:host {
 			@apply --io-item;
+			padding: 0;
 		}
 		:host {
 			width: var(--io-item-height);
