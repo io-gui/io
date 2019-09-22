@@ -44,12 +44,12 @@ export class IoObject extends IoElement {
 		const label = this.label || this.value.constructor.name;
 		const elements = [['io-boolean', {true: label, false: label, value: this.bind('expanded')}]];
 		if (this.expanded) {
-			if (this.slotted.length) elements.push(this.slotted);
 			elements.push(['io-properties', {
 				value: this.value,
 				properties: this.properties,
 				config: this.config,
 				labeled: this.labeled,
+				slotted: this.slotted,
 			}]);
 		}
 		this.template(elements);

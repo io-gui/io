@@ -26,6 +26,9 @@ export class IoInspector extends IoElement {
 			align-self: stretch;
 			height: auto;
 		}
+		:host > .inspector-header > io-boolicon:not([value]) {
+			opacity: 0.25;
+		}
 		:host > .inspector-header > io-string {
 			margin: 0 var(--io-spacing);
 			padding: calc(2 * var(--io-spacing));
@@ -53,10 +56,10 @@ export class IoInspector extends IoElement {
 			padding: var(--io-spacing);
 			overflow: hidden;
 		}
-		:host io-properties > io-item {
+		:host io-properties > io-item.select {
 			color: var(--io-color-link);
 		}
-		:host io-properties > io-item:hover {
+		:host io-properties > io-item.select:hover {
 			text-decoration: underline;
 		}
 		`;
@@ -137,7 +140,7 @@ export class IoInspector extends IoElement {
 		this._getAll();
 		this.uuid = genUUID(this.selected);
 		const elements = [
-			['div', {class: 'inspector-header io-row'}, [
+			['div', {class: 'inspector-header io-row io-panel'}, [
 				['io-breadcrumbs', {value: this.value, selected: this.bind('selected'), trim: true}],
 				['io-string', {id: 'search', value: this.bind('search'), live: true}],
 				['io-boolicon', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],

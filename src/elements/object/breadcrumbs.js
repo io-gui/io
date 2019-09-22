@@ -15,6 +15,7 @@ export class IoBreadcrumbs extends IoElement {
 			padding: var(--io-spacing);
 			color: var(--io-color-field);
 			background-color: var(--io-background-color-field);
+			overflow-x: hidden;
 		}
 		:host > io-item:hover {
 			text-decoration: underline;

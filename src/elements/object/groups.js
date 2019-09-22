@@ -76,7 +76,7 @@ export class Groups {
 
 			if (assigned.length === 0) {
 				groups['properties'] = keys;
-			} else {
+			} else if (doAdvanced) {
 				groups['advanced'] = groups['advanced'] || [];
 				for (let i = 0; i < keys.length; i++) {
 					if (assigned.indexOf(keys[i]) === -1) groups['advanced'].push(keys[i]);

@@ -22,10 +22,14 @@ export class IoProperties extends IoElement {
 			grid-template-columns: auto;
 		}
 		:host:not([horizontal])[labeled] {
-			grid-template-columns: minmax(3em, 5em) minmax(6em, 1fr);
+			grid-template-columns: minmax(3em, 8em) minmax(6em, 1fr);
 		}
 		:host:not([horizontal])[labeled] > :nth-child(2n-1) {
 			max-width: 100%;
+		}
+		:host > :first-child {
+			grid-column: span 2;
+			width: 100%;
 		}
 		:host > io-object {}
 		:host > io-object {
@@ -65,6 +69,7 @@ export class IoProperties extends IoElement {
 				observe: true,
 			},
 			properties: Array,
+			slotted: Array,
 			config: Object,
 		};
 	}
@@ -136,6 +141,12 @@ export class IoProperties extends IoElement {
 		const config = this._config;
 		const elements = [];
 		const properties = this.properties.length ? this.properties : Object.keys(config);
+
+		if (this.slotted.length) {
+			elements.push(this.slotted);
+		} else {
+			elements.push(['slotted-dummy']);
+		}
 
 		for (let i = 0; i < properties.length; i++) {
 			const c = properties[i];
