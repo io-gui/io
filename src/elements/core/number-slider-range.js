@@ -34,12 +34,14 @@ export class IoNumberSliderRange extends IoElement {
 			exponent: 1,
 		};
 	}
-	_onNumberSet() {
-		// this.value = event.detail.value;
-		// this.dispatchEvent('value-set', event.detail, false);
+	_onNumberSet(event) {
+		const item = event.composedPath()[0];
+		if (item == this.$.number0) this.value[0] = event.detail.value;
+		if (item == this.$.number1) this.value[1] = event.detail.value;
+		event.detail.value = this.value;
+		this.dispatchEvent('value-set', event.detail, false);
 	}
 	_onSliderSet() {
-		// event.detail.value = event.detail.value / this.conversion;
 		this.value = event.detail.value;
 		this.dispatchEvent('value-set', event.detail, false);
 	}
