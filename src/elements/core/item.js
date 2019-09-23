@@ -28,6 +28,19 @@ export class IoItem extends IoElement {
 			border-color: var(--io-color-focus);
 			outline-color: var(--io-color-focus);
 		}
+		:host > io-icon {
+			display: block;
+			vertical-align: text-bottom;
+			padding: 0;
+			border: 0;
+			margin: calc(-1 * var(--io-spacing));
+			width: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
+			height: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
+			float: left;
+		}
+		:host > :nth-child(2) {
+			margin-left: var(--io-spacing);
+		}
 		`;
 	}
 	static get Properties() {
@@ -45,6 +58,7 @@ export class IoItem extends IoElement {
 				type: Boolean,
 				reflect: true,
 			},
+			icon: String,
 			tabindex: 0,
 		};
 	}
@@ -127,8 +141,9 @@ export class IoItem extends IoElement {
 		this.pressed = false;
 	}
 	changed() {
-		if (this.label) {
-			this.textNode = this.label;
+		let label;
+		if (this.label || this.icon) {
+			label = this.label;
 			this.title = this.label;
 		} else {
 			let valueText;
@@ -137,9 +152,13 @@ export class IoItem extends IoElement {
 			} else {
 				valueText = String(this.value);
 			}
-			this.textNode = valueText;
 			this.title = valueText;
+			label = valueText;
 		}
+		this.template([
+			this.icon ? ['io-icon', {icon: this.icon}] : null,
+			label ? ['span', label] : null,
+		]);
 		this.setAria();
 	}
 	setAria() {

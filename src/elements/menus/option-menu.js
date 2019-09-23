@@ -59,10 +59,13 @@ export class IoOptionMenu extends IoMenuItem {
 		} else {
 			valueText = this.label || (valueText || String(this.value)) + ' ▾';
 		}
-		this.textNode = valueText;
+
 		this.title = valueText;
+
 		this.setAttribute('aria-haspopup', 'listbox');
 		this.setAttribute('aria-expanded', String(this.expanded));
+		this.template([this.icon ? ['io-icon', {icon: this.icon}] : null, ['span', valueText]]);
+
 		if (this.expanded) {
 			this.$options.setProperties({
 				value: this.value,
