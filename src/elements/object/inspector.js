@@ -41,6 +41,7 @@ export class IoInspector extends IoElement {
 			visibility: visible;
 			opacity: 0.33;
 		}
+		:host > io-collapsable > io-boolean,
 		:host > io-object > io-boolean {
 			text-transform: capitalize;
 		}
@@ -72,7 +73,7 @@ export class IoInspector extends IoElement {
 				observe: true,
 			},
 			search: String,
-			advanced: Boolean,
+			advanced: false,
 			groups: Object,
 			config: Object,
 			widgets: Object,
@@ -136,6 +137,7 @@ export class IoInspector extends IoElement {
 	_changed() {
 		this._getAll();
 		this.uuid = genUUID(this.selected);
+		this.advanced = $({value: false, storage: 'local', key: 'inspector-show-advanced'});
 		const elements = [
 			['div', {class: 'inspector-header io-row'}, [
 				['io-breadcrumbs', {value: this.value, selected: this.bind('selected'), trim: true}],
@@ -144,6 +146,20 @@ export class IoInspector extends IoElement {
 			]],
 			this._widgets.main ? this._widgets.main : null
 		];
+
+		for (let group in this._widgets.groups) {
+			if (!this._groups[group]) {
+				const autoExpanded = this.autoExpand.indexOf(group) !== -1;
+				elements.push(
+					['io-collapsable', {
+						label: group,
+						expanded: $({value: autoExpanded, storage: 'local', key: this.uuid + '-' + group}),
+						elements: [this._widgets.groups[group]] || [],
+						class: 'io-panel',
+					}]
+				);
+			}
+		}
 
 		for (let group in this._groups) {
 			const autoExpanded = this.autoExpand.indexOf(group) !== -1;

@@ -13,6 +13,8 @@ export class IoSelector extends IoElement {
 			justify-self: stretch;
 			overflow-x: hidden;
 			overflow-y: auto;
+			color: var(--io-color);
+			background-color: var(--io-background-color);
 		}
 		@keyframes io-selector-spinner {
 			to {
