@@ -57,6 +57,12 @@ export class IoInspector extends IoElement {
 			padding: var(--io-spacing);
 			overflow: hidden;
 		}
+		:host > io-object > io-properties:not([horizontal])[labeled] {
+			grid-template-columns: minmax(6em, min-content) minmax(12em, 1fr);
+		}
+		:host > io-object > io-properties:not([horizontal])[labeled] > span.io-item {
+			text-align: right;
+		}
 		:host io-properties > io-item.select {
 			color: var(--io-color-link);
 		}
@@ -132,6 +138,7 @@ export class IoInspector extends IoElement {
 		}
 	}
 	changed() {
+		this.advanced = $({value: false, storage: 'local', key: 'inspector-show-advanced'});
 		this._changedThrottled();
 	}
 	_changedThrottled() {
@@ -140,7 +147,6 @@ export class IoInspector extends IoElement {
 	_changed() {
 		this._getAll();
 		this.uuid = genUUID(this.selected);
-		this.advanced = $({value: false, storage: 'local', key: 'inspector-show-advanced'});
 		const elements = [
 			['div', {class: 'inspector-header io-row io-panel'}, [
 				['io-breadcrumbs', {value: this.value, selected: this.bind('selected'), trim: true}],
