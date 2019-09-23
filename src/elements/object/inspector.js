@@ -44,6 +44,7 @@ export class IoInspector extends IoElement {
 			visibility: visible;
 			opacity: 0.33;
 		}
+		:host > io-collapsable > io-boolean,
 		:host > io-object > io-boolean {
 			text-transform: capitalize;
 		}
@@ -55,6 +56,12 @@ export class IoInspector extends IoElement {
 			box-shadow: var(--io-shadow-inset);
 			padding: var(--io-spacing);
 			overflow: hidden;
+		}
+		:host > io-object > io-properties:not([horizontal])[labeled] {
+			grid-template-columns: minmax(6em, min-content) minmax(12em, 1fr);
+		}
+		:host > io-object > io-properties:not([horizontal])[labeled] > span.io-item {
+			text-align: right;
 		}
 		:host io-properties > io-item.select {
 			color: var(--io-color-link);
@@ -75,7 +82,7 @@ export class IoInspector extends IoElement {
 				observe: true,
 			},
 			search: String,
-			advanced: Boolean,
+			advanced: false,
 			groups: Object,
 			config: Object,
 			widgets: Object,
@@ -131,6 +138,7 @@ export class IoInspector extends IoElement {
 		}
 	}
 	changed() {
+		this.advanced = $({value: false, storage: 'local', key: 'inspector-show-advanced'});
 		this._changedThrottled();
 	}
 	_changedThrottled() {
@@ -147,6 +155,20 @@ export class IoInspector extends IoElement {
 			]],
 			this._widgets.main ? this._widgets.main : null
 		];
+
+		for (let group in this._widgets.groups) {
+			if (!this._groups[group]) {
+				const autoExpanded = this.autoExpand.indexOf(group) !== -1;
+				elements.push(
+					['io-collapsable', {
+						label: group,
+						expanded: $({value: autoExpanded, storage: 'local', key: this.uuid + '-' + group}),
+						elements: [this._widgets.groups[group]] || [],
+						class: 'io-panel',
+					}]
+				);
+			}
+		}
 
 		for (let group in this._groups) {
 			const autoExpanded = this.autoExpand.indexOf(group) !== -1;
