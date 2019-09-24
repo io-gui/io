@@ -147,7 +147,7 @@ export class IoSliderRange extends IoSlider {
 			} else if (valueInRangeEnd < valueInRangeStart) {
 				grad = 1.0 - (uv.x - valueInRangeEnd) / max(valueInRangeStart - valueInRangeEnd, 0.01);
 			}
-			vec4 slotGradient = mix(cssColorFocus, cssColorLink, grad);
+			vec4 slotGradient = mix(cssColorFocus, cssColorLink, saturate(grad));
 
 			vec2 sliderStart = vec2(size.x * min(2.0, max(-1.0, (valueInRangeStart))), size.y * 0.5);
 			vec2 sliderEnd = vec2(size.x * min(2.0, max(-1.0, (valueInRangeEnd))), size.y * 0.5);
