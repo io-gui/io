@@ -27,12 +27,12 @@ export class IoOptionMenu extends IoMenuItem {
 				reflect: -1,
 			},
 			selectable: true,
-			hamburger: false,
 			options: {
 				type: Array,
 				reflect: -1,
 				observe: true,
 			},
+			icon: '▾',
 			role: 'button',
 			lazy: false,
 		};
@@ -40,8 +40,12 @@ export class IoOptionMenu extends IoMenuItem {
 	get _options() {
 		return this.options;
 	}
+	get _label() {
+		const valueText = (this.value !== undefined) ? String(this.value) : '';
+		return this.label || valueText || '';
+	}
 	changed() {
-		let valueText;
+		let valueText = '';
 		if (this.options) {
 			const option = this.options.find(option => {return option.value === this.value;});
 			if (option) {
@@ -54,17 +58,16 @@ export class IoOptionMenu extends IoMenuItem {
 				}
 			}
 		}
-		if (this.hamburger) {
-			valueText = '☰	' + (this.label || (valueText || String(this.value)));
-		} else {
-			valueText = this.label || (valueText || String(this.value)) + ' ▾';
+		if (!valueText) valueText = this._label;
+		if (this.icon) {
+			valueText = this.icon + '	' + valueText;
 		}
 
 		this.title = valueText;
+		this.textNode = valueText;
 
 		this.setAttribute('aria-haspopup', 'listbox');
 		this.setAttribute('aria-expanded', String(this.expanded));
-		this.template([this.icon ? ['io-icon', {icon: this.icon}] : null, ['span', valueText]]);
 
 		if (this.expanded) {
 			this.$options.setProperties({

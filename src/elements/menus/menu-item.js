@@ -98,7 +98,8 @@ export class IoMenuItem extends IoItem {
 		return this._option.icon || '';
 	}
 	get _label() {
-		return this.label || this._option.label || String(this._option.value) || '';
+		const valueText = (this._option.value !== undefined) ? String(this._option.value) : '';
+		return this.label || this._option.label || valueText || '';
 	}
 	get _hint() {
 		return this._option.hint || '';

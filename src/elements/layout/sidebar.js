@@ -91,7 +91,7 @@ export class IoSidebar extends IoElement {
 				options: this.options,
 				value: this.bind('selected'),
 				label: selected.label,
-				hamburger: true,
+				icon: '☰',
 				selectable: true,
 				title: 'select tab',
 				class: 'io-item',
