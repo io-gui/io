@@ -155,10 +155,7 @@ export class IoItem extends IoElement {
 			this.title = valueText;
 			label = valueText;
 		}
-		this.template([
-			this.icon ? ['io-icon', {icon: this.icon}] : null,
-			label ? ['span', label] : null,
-		]);
+		this.textNode = label;
 		this.setAria();
 	}
 	setAria() {

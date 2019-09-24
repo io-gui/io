@@ -25,6 +25,7 @@ class IoLadderStep extends IoItem {
 			cursor: ew-resize;
 			text-align: center;
 			background-color: var(--io-background-color-light);
+			color: var(--io-color);
 			align-self: stretch;
 			touch-action: none;
 			width: 6em;
