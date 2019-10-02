@@ -22,6 +22,9 @@ export class IoMenuItem extends IoItem {
 			overflow: visible;
 			pointer-events: none;
 		}
+		:host > :empty {
+			display: none;
+		}
 		:host > :not(:empty) {
 			padding: 0 var(--io-spacing);
 		}

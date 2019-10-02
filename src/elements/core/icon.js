@@ -6,11 +6,12 @@ export class IoIcon extends IoElement {
 		return /* css */`
 		:host {
 			@apply --io-item;
-			padding: 0;
 		}
 		:host {
 			width: var(--io-item-height);
 			height: var(--io-item-height);
+			border: 0;
+			padding: 0;
 			fill: var(--io-color, currentcolor);
 		}
 		:host[stroke] {
