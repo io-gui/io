@@ -1,18 +1,17 @@
 import {IoElement} from "../../io.js";
 import {IoStorageFactory as $} from "./storage.js";
 
-const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-const themeSizes =	{
+const themePropDefaults =	{
 	cssSpacing: 2,
 	cssBorderRadius: 3,
 	cssBorderWidth: 1,
 	cssStrokeWidth: 1,
-	cssLineHeight: 16,
-	cssItemHeight: 22,
-	cssFontSize: 13,
+	cssLineHeight: 22,
+	cssItemHeight: 0, // automatically calculated
+	cssFontSize: 14,
 };
-const themeDB = {
+
+const themeDBDefaults = {
 	light: Object.assign({
 		cssBackgroundColor: [0.95, 0.95, 0.95, 1],
 		cssBackgroundColorLight: [1, 1, 1, 1],
@@ -32,7 +31,7 @@ const themeDB = {
 		cssColorGradientStart: [0.9, 0.9, 0.9, 1],
 		cssColorGradientEnd: [0.75, 0.75, 0.75, 1],
 		cssColorShadow: [0, 0, 0, 0.2],
-	}, themeSizes),
+	}, themePropDefaults),
 	dark: Object.assign({
 		cssBackgroundColor: [0.164, 0.164, 0.164, 1],
 		cssBackgroundColorLight: [0.22, 0.22, 0.22, 1],
@@ -52,11 +51,11 @@ const themeDB = {
 		cssColorGradientStart: [1, 1, 1, 0.1],
 		cssColorGradientEnd: [0, 0, 0, 0.2],
 		cssColorShadow: [0, 0, 0, 0.2],
-	}, themeSizes),
+	}, themePropDefaults),
 };
 
-const theme = $({value: isDarkMode ? 'dark' : 'light', storage: 'local', key: 'theme'});
-const vars = themeDB[theme.value] || themeDB['light'];
+
+const themeDB = $({value: JSON.parse(JSON.stringify(themeDBDefaults)), storage: 'local', key: 'themeDB'});
 
 export class IoTheme extends IoElement {
 	static get Style() {
@@ -146,6 +145,9 @@ export class IoTheme extends IoElement {
 		`;
 	}
 	static get Properties() {
+		const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
+		const theme = $({value: isDarkMode ? 'dark' : 'light', storage: 'local', key: 'theme'});
+		const vars = themeDB.value[theme.value];
 		return {
 			theme: theme,
 			//
@@ -194,8 +196,12 @@ export class IoTheme extends IoElement {
 			return `rgb(${r}, ${g}, ${b})`;
 		}
 	}
+	reset() {
+		themeDB.value = Object.assign({}, JSON.parse(JSON.stringify(themeDBDefaults)));
+		this.themeChanged();
+	}
 	themeChanged() {
-		const vars = themeDB[this.theme] || themeDB['light'];
+		const vars = themeDB.value[this.theme];
 		this.setProperties({
 			cssSpacing: vars.cssSpacing,
 			cssBorderRadius: vars.cssBorderRadius,
@@ -225,9 +231,8 @@ export class IoTheme extends IoElement {
 		});
 	}
 	changed() {
-		this.__properties.cssItemHeight.value =
-			this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth);
-		this.variablesElement.innerHTML = `
+		this.__properties.cssItemHeight.value = this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth);
+		this.variablesElement.innerHTML = /* css */`
 			body {
 				--io-spacing: ${this.cssSpacing}px;
 				--io-border-radius: ${this.cssBorderRadius}px;
@@ -272,7 +277,16 @@ export class IoTheme extends IoElement {
 				--io-shadow-outset: -1px -1px 2px inset var(--io-color-shadow);
 			}
 		`;
+
+		const vars = themeDB.value[this.theme];
+		for (let prop in this.__properties) {
+			if (prop.startsWith('css')) {
+				vars[prop] = this.__properties[prop].value;
+			}
+		}
+		themeDB.value = Object.assign({}, themeDB.value);
 		// TODO: consider removing (required for gl updates in theme demo)
+
 		this.dispatchEvent('object-mutated', {object: this}, false, window);
 	}
 }
