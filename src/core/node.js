@@ -178,8 +178,9 @@ export const IoNodeMixin = (superclass) => {
 		_onObjectMutationThrottled(prop) {
 			if (this['propMutated']) this['propMutated'](prop);
 			if (this[prop + 'Mutated']) this[prop + 'Mutated']();
-			this.changed();
 			this.applyCompose();
+			this.changed();
+			if (this.setAria) this.setAria();
 		}
 		/**
 		 * Callback when `IoNode` is connected.

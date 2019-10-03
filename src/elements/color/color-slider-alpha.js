@@ -27,6 +27,7 @@ export class IoColorSliderAlpha extends IoColorSlider {
 		`;
 	}
 	setAria() {
+		super.setAria();
 		// TODO
 		const i = this.mode === 3 ? 4 : 3;
 		const components = Object.keys(this.value);

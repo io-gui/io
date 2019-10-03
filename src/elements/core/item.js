@@ -6,20 +6,9 @@ export class IoItem extends IoElement {
 		:host {
 			@apply --io-item;
 		}
-		:host[pressed] {
-			border-color: var(--io-color-border-inset);
-			box-shadow: var(--io-shadow-inset);
-		}
-		:host[hidden] {
-			display: none;
-		}
 		:host[selected] {
 			color: var(--io-color-link);
 			background-color: var(--io-background-color-light);
-		}
-		:host[aria-invalid] {
-			border: var(--io-border-error);
-			background-image: var(--io-gradient-error);
 		}
 		:host:focus {
 			z-index: 200;
@@ -28,37 +17,15 @@ export class IoItem extends IoElement {
 			border-color: var(--io-color-focus);
 			outline-color: var(--io-color-focus);
 		}
-		:host > io-icon {
-			display: block;
-			vertical-align: text-bottom;
-			padding: 0;
-			border: 0;
-			margin: calc(-1 * var(--io-spacing));
-			width: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
-			height: calc(var(--io-line-height) + calc(2 * var(--io-spacing)));
-			float: left;
-		}
-		:host > :nth-child(2) {
-			margin-left: var(--io-spacing);
-		}
 		`;
 	}
 	static get Properties() {
 		return {
 			value: undefined,
-			pressed: {
-				type: Boolean,
-				reflect: true,
-			},
-			hidden: {
-				type: Boolean,
-				reflect: true,
-			},
 			selected: {
 				type: Boolean,
 				reflect: true,
 			},
-			icon: String,
 			tabindex: 0,
 		};
 	}
@@ -98,20 +65,17 @@ export class IoItem extends IoElement {
 		this.addEventListener('pointermove', this._onPointermove);
 		this.addEventListener('pointerleave', this._onPointerleave);
 		this.addEventListener('pointerup', this._onPointerup);
-		this.pressed = true;
 	}
 	_onPointermove() {}
 	_onPointerleave() {
 		this.removeEventListener('pointermove', this._onPointermove);
 		this.removeEventListener('pointerleave', this._onPointerleave);
 		this.removeEventListener('pointerup', this._onPointerup);
-		this.pressed = false;
 	}
 	_onPointerup() {
 		this.removeEventListener('pointermove', this._onPointermove);
 		this.removeEventListener('pointerleave', this._onPointerleave);
 		this.removeEventListener('pointerup', this._onPointerup);
-		this.pressed = false;
 		this.focus();
 	}
 	_onClick() {
@@ -119,7 +83,6 @@ export class IoItem extends IoElement {
 	}
 	_onKeydown(event) {
 		if (event.key === 'Enter' || event.key === ' ') {
-			this.pressed = true;
 			event.preventDefault();
 			this._onClick(event);
 		}
@@ -137,12 +100,10 @@ export class IoItem extends IoElement {
 			this.focusTo('down');
 		}
 	}
-	_onKeyup() {
-		this.pressed = false;
-	}
+	_onKeyup() {}
 	changed() {
 		let label;
-		if (this.label || this.icon) {
+		if (this.label) {
 			label = this.label;
 			this.title = this.label;
 		} else {
@@ -156,14 +117,6 @@ export class IoItem extends IoElement {
 			label = valueText;
 		}
 		this.textNode = label;
-		this.setAria();
-	}
-	setAria() {
-		if (this.label) {
-			this.setAttribute('aria-label', this.label);
-		} else {
-			this.setAttribute('aria-label', false);
-		}
 	}
 	getCaretPosition() {
 		let position = 0;

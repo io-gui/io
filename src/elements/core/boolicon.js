@@ -22,6 +22,10 @@ export class IoBoolicon extends IoBoolean {
 		:host > svg > g {
 			transform-origin: 0px 0px;
 		}
+		:host[aria-invalid] {
+			border: var(--io-border-error);
+			background-image: var(--io-gradient-error);
+		}
 		`;
 	}
 	static get Properties() {
@@ -35,11 +39,13 @@ export class IoBoolicon extends IoBoolean {
 		};
 	}
 	changed() {
-		this.setAttribute('aria-checked', String(!!this.value));
-		this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
-		this.setAttribute('aria-label', this.label);
 		this.title = this.label;
 		this.innerHTML = IoIconsetSingleton.getIcon(this.value ? this.true : this.false);
+	}
+	setAria() {
+		super.setAria();
+		this.setAttribute('aria-checked', String(!!this.value));
+		this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
 	}
 }
 

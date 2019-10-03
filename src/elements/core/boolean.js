@@ -1,6 +1,14 @@
 import {IoItem} from "./item.js";
 
 export class IoBoolean extends IoItem {
+	static get Style() {
+		return /* css */`
+		:host[aria-invalid] {
+			border: var(--io-border-error);
+			background-image: var(--io-gradient-error);
+		}
+		`;
+	}
 	static get Properties() {
 		return {
 			label: 'Boolean',
@@ -23,11 +31,13 @@ export class IoBoolean extends IoItem {
 		this.setAttribute('value', Boolean(this.value));
 	}
 	changed() {
-		this.setAttribute('aria-checked', String(!!this.value));
-		this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
-		this.setAttribute('aria-label', this.label);
 		this.title = this.label;
 		this.textNode = this.value ? this.true : this.false;
+	}
+	setAria() {
+		super.setAria();
+		this.setAttribute('aria-checked', String(!!this.value));
+		this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
 	}
 }
 

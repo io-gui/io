@@ -61,6 +61,7 @@ export class NodeQueue extends Array {
 			// }
 			node.applyCompose();
 			node.changed();
+			if (node.setAria) node.setAria();
 		}
 		this.length = 0;
 

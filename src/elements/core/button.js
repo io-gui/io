@@ -22,9 +22,35 @@ export class IoButton extends IoItem {
 		return {
 			action: Function,
 			value: undefined,
+			pressed: {
+				type: Boolean,
+				reflect: true,
+			},
 			label: 'Button',
 			role: 'button',
 		};
+	}
+	_onPointerdown(event) {
+		super._onPointerdown(event);
+		this.pressed = true;
+	}
+	_onPointerleave(event) {
+		super._onPointerleave(event);
+		this.pressed = false;
+	}
+	_onPointerup(event) {
+		super._onPointerup(event);
+		this.pressed = false;
+	}
+	_onKeydown(event) {
+		super._onKeydown(event);
+		if (event.key === 'Enter' || event.key === ' ') {
+			this.pressed = true;
+		}
+	}
+	_onKeyup(event) {
+		super._onKeyup(event);
+		this.pressed = false;
 	}
 	_onClick() {
 		super._onClick();
