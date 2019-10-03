@@ -98,6 +98,7 @@ export class IoSliderRange extends IoSlider {
 		this._setValue(x, y);
 	}
 	setAria() {
+		super.setAria();
 		this.setAttribute('aria-invalid', (this.value instanceof Array && this.value.length === 2) ? false : 'true');
 		this.setAttribute('aria-valuemin', this.min);
 		this.setAttribute('aria-valuemax', this.max);
