@@ -10,10 +10,6 @@ export class IoItem extends IoElement {
 			color: var(--io-color-link);
 			background-color: var(--io-background-color-light);
 		}
-		:host[aria-invalid] {
-			border: var(--io-border-error);
-			background-image: var(--io-gradient-error);
-		}
 		:host:focus {
 			z-index: 200;
 			position: relative;
