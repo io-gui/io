@@ -98,6 +98,7 @@ export class IoSliderRange extends IoSlider {
 		this._setValue(x, y);
 	}
 	setAria() {
+		super.setAria();
 		this.setAttribute('aria-invalid', (this.value instanceof Array && this.value.length === 2) ? false : 'true');
 		this.setAttribute('aria-valuemin', this.min);
 		this.setAttribute('aria-valuemax', this.max);
@@ -147,7 +148,7 @@ export class IoSliderRange extends IoSlider {
 			} else if (valueInRangeEnd < valueInRangeStart) {
 				grad = 1.0 - (uv.x - valueInRangeEnd) / max(valueInRangeStart - valueInRangeEnd, 0.01);
 			}
-			vec4 slotGradient = mix(cssColorFocus, cssColorLink, grad);
+			vec4 slotGradient = mix(cssColorFocus, cssColorLink, saturate(grad));
 
 			vec2 sliderStart = vec2(size.x * min(2.0, max(-1.0, (valueInRangeStart))), size.y * 0.5);
 			vec2 sliderEnd = vec2(size.x * min(2.0, max(-1.0, (valueInRangeEnd))), size.y * 0.5);

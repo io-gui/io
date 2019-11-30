@@ -71,7 +71,7 @@ export class IoMenuOptions extends IoElement {
 			min-width: 8em;
 		}
 		:host > io-string:empty:before {
-			content: ' 🔍 Search';
+			content: ' 🔍';
 			white-space: pre;
 			visibility: visible;
 			opacity: 0.33;

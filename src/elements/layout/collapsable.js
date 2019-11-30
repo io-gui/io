@@ -24,8 +24,8 @@ export class IoCollapsable extends IoElement {
 		:host > io-boolean[value]:before {
 			content: "▾";
 		}
-		:host > io-boolean[value]:not(:focus) {
-			border-bottom-color: var(--io-color-border);
+		:host > :nth-child(n+2) {
+			margin-top: var(--io-spacing);
 		}
 		`;
 	}

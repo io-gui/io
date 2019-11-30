@@ -3,6 +3,13 @@ import {Listeners} from "./listeners.js";
 import {buildTree} from "../../lib/ijk.js";
 
 export class IoElement extends IoNodeMixin(HTMLElement) {
+	static get Style() {
+		return /* css */`
+		:host[hidden] {
+			display: none;
+		}
+		`;
+	}
 	static get Properties() {
 		return {
 			tabindex: {
@@ -28,6 +35,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 			id: {
 				type: String,
 				reflect: -1,
+			},
+			hidden: {
+				type: Boolean,
+				reflect: true,
 			},
 		};
 	}
@@ -212,6 +223,16 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 			this.removeAttribute(attr);
 		} else if (typeof value === 'string' || typeof value === 'number') {
 			if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
+		}
+	}
+	/**
+	 * Sets aria attributes.
+	 */
+	setAria() {
+		if (this.label) {
+			this.setAttribute('aria-label', this.label);
+		} else {
+			this.setAttribute('aria-label', false);
 		}
 	}
 	_onFocusTo(event) {

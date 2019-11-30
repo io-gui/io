@@ -20,6 +20,10 @@ export class IoString extends IoItem {
 			white-space: pre;
 			visibility: hidden;
 		}
+		:host[aria-invalid] {
+			border: var(--io-border-error);
+			background-image: var(--io-gradient-error);
+		}
 		`;
 	}
 	static get Properties() {
@@ -115,6 +119,9 @@ export class IoString extends IoItem {
 	changed() {
 		this.title = this.label;
 		this.textNode = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
+	}
+	setAria() {
+		super.setAria();
 		this.setAttribute('aria-invalid', (typeof this.value !== 'string') ? 'true' : false);
 	}
 }

@@ -6,20 +6,9 @@ export class IoItem extends IoElement {
 		:host {
 			@apply --io-item;
 		}
-		:host[pressed] {
-			border-color: var(--io-color-border-inset);
-			box-shadow: var(--io-shadow-inset);
-		}
-		:host[hidden] {
-			display: none;
-		}
 		:host[selected] {
 			color: var(--io-color-link);
 			background-color: var(--io-background-color-light);
-		}
-		:host[aria-invalid] {
-			border: var(--io-border-error);
-			background-image: var(--io-gradient-error);
 		}
 		:host:focus {
 			z-index: 200;
@@ -33,14 +22,6 @@ export class IoItem extends IoElement {
 	static get Properties() {
 		return {
 			value: undefined,
-			pressed: {
-				type: Boolean,
-				reflect: true,
-			},
-			hidden: {
-				type: Boolean,
-				reflect: true,
-			},
 			selected: {
 				type: Boolean,
 				reflect: true,
@@ -84,20 +65,17 @@ export class IoItem extends IoElement {
 		this.addEventListener('pointermove', this._onPointermove);
 		this.addEventListener('pointerleave', this._onPointerleave);
 		this.addEventListener('pointerup', this._onPointerup);
-		this.pressed = true;
 	}
 	_onPointermove() {}
 	_onPointerleave() {
 		this.removeEventListener('pointermove', this._onPointermove);
 		this.removeEventListener('pointerleave', this._onPointerleave);
 		this.removeEventListener('pointerup', this._onPointerup);
-		this.pressed = false;
 	}
 	_onPointerup() {
 		this.removeEventListener('pointermove', this._onPointermove);
 		this.removeEventListener('pointerleave', this._onPointerleave);
 		this.removeEventListener('pointerup', this._onPointerup);
-		this.pressed = false;
 		this.focus();
 	}
 	_onClick() {
@@ -105,7 +83,6 @@ export class IoItem extends IoElement {
 	}
 	_onKeydown(event) {
 		if (event.key === 'Enter' || event.key === ' ') {
-			this.pressed = true;
 			event.preventDefault();
 			this._onClick(event);
 		}
@@ -123,12 +100,11 @@ export class IoItem extends IoElement {
 			this.focusTo('down');
 		}
 	}
-	_onKeyup() {
-		this.pressed = false;
-	}
+	_onKeyup() {}
 	changed() {
+		let label;
 		if (this.label) {
-			this.textNode = this.label;
+			label = this.label;
 			this.title = this.label;
 		} else {
 			let valueText;
@@ -137,17 +113,10 @@ export class IoItem extends IoElement {
 			} else {
 				valueText = String(this.value);
 			}
-			this.textNode = valueText;
 			this.title = valueText;
+			label = valueText;
 		}
-		this.setAria();
-	}
-	setAria() {
-		if (this.label) {
-			this.setAttribute('aria-label', this.label);
-		} else {
-			this.setAttribute('aria-label', false);
-		}
+		this.textNode = label;
 	}
 	getCaretPosition() {
 		let position = 0;

@@ -18,8 +18,8 @@ export class IoObject extends IoElement {
 		:host > io-boolean[value]:before {
 			content: "▾";
 		}
-		:host > io-boolean[value] {
-			margin-bottom: var(--io-spacing);
+		:host > :nth-child(n+2) {
+			margin-top: var(--io-spacing);
 		}
 		`;
 	}
@@ -36,6 +36,7 @@ export class IoObject extends IoElement {
 				type: Boolean,
 				reflect: 1,
 			},
+			slotted: Array,
 			role: 'region',
 		};
 	}
@@ -48,6 +49,7 @@ export class IoObject extends IoElement {
 				properties: this.properties,
 				config: this.config,
 				labeled: this.labeled,
+				slotted: this.slotted,
 			}]);
 		}
 		this.template(elements);

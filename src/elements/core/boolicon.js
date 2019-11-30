@@ -8,6 +8,7 @@ export class IoBoolicon extends IoBoolean {
 			width: var(--io-item-height);
 			height: var(--io-item-height);
 			fill: var(--io-color, currentcolor);
+			padding: 0;
 		}
 		:host[stroke] {
 			stroke: var(--io-background-color, currentcolor);
@@ -21,24 +22,30 @@ export class IoBoolicon extends IoBoolean {
 		:host > svg > g {
 			transform-origin: 0px 0px;
 		}
+		:host[aria-invalid] {
+			border: var(--io-border-error);
+			background-image: var(--io-gradient-error);
+		}
 		`;
 	}
 	static get Properties() {
 		return {
-			true: 'icons:check',
-			false: 'icons:uncheck',
+			true: 'icons:box_fill_checked',
+			false: 'icons:box',
 			stroke: {
-				value: true,
+				value: false,
 				reflect: 1,
 			},
 		};
 	}
 	changed() {
-		this.setAttribute('aria-checked', String(!!this.value));
-		this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
-		this.setAttribute('aria-label', this.label);
 		this.title = this.label;
 		this.innerHTML = IoIconsetSingleton.getIcon(this.value ? this.true : this.false);
+	}
+	setAria() {
+		super.setAria();
+		this.setAttribute('aria-checked', String(!!this.value));
+		this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
 	}
 }
 
