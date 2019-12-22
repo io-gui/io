@@ -9,7 +9,7 @@ export default class {
 	}
 	reset() {
 		this.element.value = 0;
-		this.element.step = 0.001;
+		this.element.step = 0.01;
 		this.element.min = 0;
 		this.element.max = 1;
 	}
@@ -17,6 +17,7 @@ export default class {
 		describe('IoSlider', () => {
 			describe('default values', () => {
 				it('has default values', () => {
+					this.reset();
 					chai.expect(this.element.value).to.equal(0);
 					chai.expect(this.element.step).to.equal(0.01);
 					chai.expect(this.element.min).to.equal(0);
@@ -31,6 +32,7 @@ export default class {
 					chai.expect(this.element.getAttribute('contenteditable')).to.equal(null);
 				});
 				it('has a11y attributes', () => {
+					this.reset();
 					chai.expect(this.element.getAttribute('role')).to.equal('slider');
 					this.element.value = 0.1;
 					chai.expect(this.element.getAttribute('aria-valuenow')).to.equal('0.1');

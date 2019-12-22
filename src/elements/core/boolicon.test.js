@@ -11,8 +11,8 @@ export default class {
 			describe('default values', () => {
 				it('has default values', () => {
 					chai.expect(this.element.value).to.equal(false);
-					chai.expect(this.element.true).to.equal('icons:check');
-					chai.expect(this.element.false).to.equal('icons:uncheck');
+					chai.expect(this.element.true).to.equal('icons:box_fill_checked');
+					chai.expect(this.element.false).to.equal('icons:box');
 				});
 			});
 			describe('innerText', () => {
