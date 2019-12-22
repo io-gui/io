@@ -11,7 +11,7 @@
 
 ## UI framework for computer graphics on the web
 
-Io is a UI framework for computer graphics on the web. It implements custom elements, virtual DOM, data binding and a simple data-flow design. It comes with a collection of UI elements suitable for use with other frameworks.
+Io is a UI framework for computer graphics applications on the web. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for interactions, menus, layout and presentation.
 
 For a quick start, read the [getting started guide and live demos](https://io-gui.dev/#page=docs).
 
