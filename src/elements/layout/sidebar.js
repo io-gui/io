@@ -10,12 +10,11 @@ export class IoSidebar extends IoElement {
 			overflow-x: hidden;
 			overflow-y: auto;
 			padding: var(--io-spacing);
-		}
-		:host:not([collapsed]) {
-			-webkit-overflow-scrolling: touch;
 			flex-direction: column;
+			-webkit-overflow-scrolling: touch;
 		}
 		:host > * {
+			align-self: stretch !important;
 			flex: 0 0 auto;
 		}
 		:host * {
