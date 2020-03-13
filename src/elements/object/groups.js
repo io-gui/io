@@ -28,7 +28,19 @@ export class Groups {
 					const advanced = grp[1][1] === 'advanced';
 					if (!advanced || doAdvanced) {
 						protoGroups[grp[1][0]] = protoGroups[grp[1][0]] || [];
-						protoGroups[grp[1][0]].push(...this[i]);
+						for (let j = 0; j < this[i].length; j++) {
+							const propName = this[i][j];
+							if (typeof propName == 'string' && propName.startsWith('constructor:')) {
+								const constructorName = propName.replace('constructor:', '');
+								for (let k = 0; k < keys.length; k++) {
+									if (object[keys[k]] && object[keys[k]].constructor.name == constructorName) {
+										protoGroups[grp[1][0]].push(keys[k]);
+									}
+								}
+							} else {
+								protoGroups[grp[1][0]].push(propName);
+							}
+						}
 					}
 				}
 			}
