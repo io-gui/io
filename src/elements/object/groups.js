@@ -37,6 +37,13 @@ export class Groups {
 										protoGroups[grp[1][0]].push(keys[k]);
 									}
 								}
+							} else if (typeof propName == 'string' && propName.startsWith('type:')) {
+								const typeName = propName.replace('type:', '');
+								for (let k = 0; k < keys.length; k++) {
+									if (object[keys[k]] && typeof object[keys[k]] == typeName) {
+										protoGroups[grp[1][0]].push(keys[k]);
+									}
+								}
 							} else {
 								protoGroups[grp[1][0]].push(propName);
 							}
