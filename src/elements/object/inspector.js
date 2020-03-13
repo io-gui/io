@@ -86,7 +86,7 @@ export class IoInspector extends IoElement {
 			groups: Object,
 			config: Object,
 			widgets: Object,
-			autoExpand: ['main'],
+			autoExpand: ['main', 'properties'],
 		};
 	}
 	static get Listeners() {
