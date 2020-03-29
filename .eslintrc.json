@@ -10,6 +10,7 @@
     "no-var": "error",
     "semi": "error",
     "strict": "error",
+    "quotes": ["error", "single"],
     "valid-jsdoc": ["error", {
       "requireReturn": false,
       "prefer": {
@@ -25,6 +26,9 @@
       }
     }]
   },
+  "plugins": [
+    "html"
+  ],
   "env": {
     "browser": true,
     "es6": true
@@ -34,6 +38,7 @@
     "chai": true,
     "it": true,
     "describe": true,
-    "mocha": true
+    "mocha": true,
+    "hljs": true
   }
 }
