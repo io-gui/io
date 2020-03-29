@@ -1,4 +1,4 @@
-import {IoSliderRange} from '../../io-core.js';
+import {IoSliderRange} from '../../io-elements.js';
 
 export default class {
 	constructor() {

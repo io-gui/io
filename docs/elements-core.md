@@ -138,7 +138,7 @@ Extends `IoNode`.
 Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace` and `id` attribute.
 
 ```javascript
-import {IoIconsetSingleton} from "./path_to/io-core.js";
+import {IoIconsetSingleton} from "./path_to/io-elements.js";
 const svgString = `<svg><g id="myicon"><path d="..."/></g></svg>`;
 
 /* register icons under "custom" namespace */

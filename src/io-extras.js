@@ -26,7 +26,7 @@
  * https://github.com/markedjs/marked
  */
 
-import './io-core.js';
+import './io-elements.js';
 
 export {IoMdView} from './elements/extras/md-view.js';
 export {IoServiceLoader} from './elements/extras/service-loader.js';

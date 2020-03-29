@@ -1,4 +1,4 @@
-import {IoNumber} from '../../io-core.js';
+import {IoNumber} from '../../io-elements.js';
 
 export default class {
 	constructor() {

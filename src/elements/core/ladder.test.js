@@ -1,4 +1,4 @@
-import '../../io-core.js';
+import '../../io-elements.js';
 
 // TODO: test with src element.
 

@@ -1,4 +1,4 @@
-import {IoSelectorSidebar, IoStorageFactory as $} from './io-core.js';
+import {IoSelectorSidebar, IoStorageFactory as $} from './io-elements.js';
 import './io-extras.js';
 
 const docPath = (new URL(import.meta.url).pathname).replace('io-docs.js', '../docs/');
