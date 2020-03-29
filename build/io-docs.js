@@ -1,1 +1,1 @@
-export * from '../src/io-docs.js';
+export*from"../src/io-docs.js";

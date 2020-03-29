@@ -1,4 +1,4 @@
-import {IoItem} from '../../io-core.js';
+import {IoItem} from '../../io-elements.js';
 
 export default class {
 	constructor() {

@@ -1,4 +1,4 @@
-import {IoGl, IoThemeSingleton} from '../../io-core.js';
+import {IoGl, IoThemeSingleton} from '../../io-elements.js';
 
 export default class {
 	constructor() {
