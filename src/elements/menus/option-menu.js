@@ -1,4 +1,4 @@
-import {IoMenuItem} from "./menu-item.js";
+import {IoMenuItem} from './menu-item.js';
 
 // TODO: fix tab-out without collapse
 

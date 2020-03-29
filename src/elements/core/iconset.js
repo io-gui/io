@@ -1,4 +1,4 @@
-import {IoNode} from "../../io.js";
+import {IoNode} from '../../io.js';
 
 const IoIconsetDB = {};
 
@@ -20,7 +20,7 @@ class IoIconset extends IoNode {
 				return `<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">${group}</svg>`;
 			}
 		}
-		return `<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"></svg>`;
+		return '<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"></svg>';
 	}
 }
 

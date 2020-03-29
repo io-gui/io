@@ -1,4 +1,4 @@
-import {IoElement} from "../../io.js";
+import {IoElement} from '../../io.js';
 
 export class IoMatrix extends IoElement {
 	static get Style() {

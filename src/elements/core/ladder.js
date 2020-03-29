@@ -1,6 +1,6 @@
-import {IoElement} from "../../io.js";
-import {IoItem} from "./item.js";
-import {IoLayerSingleton} from "./layer.js";
+import {IoElement} from '../../io.js';
+import {IoItem} from './item.js';
+import {IoLayerSingleton} from './layer.js';
 
 let lastFocus = null;
 {

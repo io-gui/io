@@ -1,4 +1,4 @@
-import {IoNode} from "../../io.js";
+import {IoNode} from '../../io.js';
 
 // TODO: test different value types
 
@@ -89,7 +89,7 @@ const getHashes = function() {
 	for (let hash in hashes) {
 		if (nodes[hash]) {
 			if (nodes[hash] !== '') {
-				const hashValue = hashes[hash].replace(/%20/g, " ");
+				const hashValue = hashes[hash].replace(/%20/g, ' ');
 				if (!isNaN(hashValue)) {
 					nodes[hash].value = JSON.parse(hashValue);
 				} else if (hashValue === 'true' || hashValue === 'false') {
@@ -128,7 +128,7 @@ const setHashes = function(force) {
 	if (!self.location.hash) history.replaceState({}, document.title, self.location.pathname + self.location.search);
 };
 
-self.addEventListener("hashchange", getHashes, false);
+self.addEventListener('hashchange', getHashes, false);
 getHashes();
 
 class IoStorage extends IoNode {
@@ -151,7 +151,7 @@ class IoStorage extends IoNode {
 		switch (this.storage) {
 			case 'hash': {
 				if (hashes[this.key] !== undefined) {
-					const hashValue = hashes[this.key].replace(/%20/g, " ");
+					const hashValue = hashes[this.key].replace(/%20/g, ' ');
 					try {
 						this.value = JSON.parse(hashValue);
 					} catch (e) {

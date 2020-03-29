@@ -1,5 +1,5 @@
-import {IoElement} from "../../io.js";
-import {IoIconsetSingleton} from "./iconset.js";
+import {IoElement} from '../../io.js';
+import {IoIconsetSingleton} from './iconset.js';
 
 export class IoIcon extends IoElement {
 	static get Style() {

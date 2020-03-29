@@ -1,5 +1,5 @@
-import {IoElement} from "../../io.js";
-import {IoStorageFactory} from "../core/storage.js";
+import {IoElement} from '../../io.js';
+import {IoStorageFactory} from '../core/storage.js';
 
 export class IoNotify extends IoElement {
 	static get Style() {
@@ -57,10 +57,10 @@ export class IoNotify extends IoElement {
 	constructor(props) {
 		super(props);
 		this.template([
-			['span', "This app uses cookies for user interface customization."],
-			['span', "Agree"],
+			['span', 'This app uses cookies for user interface customization.'],
+			['span', 'Agree'],
 			['io-boolicon', {'on-value-set': this._onAgree}],
-			['span', "Disagree"],
+			['span', 'Disagree'],
 			['io-boolicon', {'on-value-set': this._onDisgree}],
 		]);
 	}

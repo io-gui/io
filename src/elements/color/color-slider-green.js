@@ -1,4 +1,4 @@
-import {IoColorSlider} from "./color-slider.js";
+import {IoColorSlider} from './color-slider.js';
 
 export class IoColorSliderGreen extends IoColorSlider {
 	static get Frag() {

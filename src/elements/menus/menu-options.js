@@ -1,6 +1,6 @@
-import {IoElement} from "../../io.js";
-import {IoLayerSingleton as Layer} from "../core/layer.js";
-import "./menu-item.js";
+import {IoElement} from '../../io.js';
+import {IoLayerSingleton as Layer} from '../core/layer.js';
+import './menu-item.js';
 
 const rects = new WeakMap();
 

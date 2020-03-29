@@ -1,4 +1,4 @@
-import {IoNumberSlider} from "../../io-core.js";
+import {IoNumberSlider} from '../../io-core.js';
 
 export default class {
 	constructor() {

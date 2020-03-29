@@ -1,7 +1,7 @@
-import {NodeBindings, Binding} from "./bindings.js";
-import {NodeQueue} from "./queue.js";
-import {ProtoListeners, Listeners} from "./listeners.js";
-import {Properties, ProtoProperties} from "./properties.js";
+import {NodeBindings, Binding} from './bindings.js';
+import {NodeQueue} from './queue.js';
+import {ProtoListeners, Listeners} from './listeners.js';
+import {Properties, ProtoProperties} from './properties.js';
 
 // TODO: Improve tests.
 

@@ -1,4 +1,4 @@
-import {IoGl} from "./gl.js";
+import {IoGl} from './gl.js';
 
 export class IoSlider extends IoGl {
 	static get Style() {

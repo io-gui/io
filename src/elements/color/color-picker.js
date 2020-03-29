@@ -1,8 +1,8 @@
-import {IoItem} from "../core/item.js";
-import {IoLayerSingleton} from "../core/layer.js";
-import {IoColorMixin} from "./color.js";
-import "./color-swatch.js";
-import {IoColorPanelSingleton} from "./color-panel.js";
+import {IoItem} from '../core/item.js';
+import {IoLayerSingleton} from '../core/layer.js';
+import {IoColorMixin} from './color.js';
+import './color-swatch.js';
+import {IoColorPanelSingleton} from './color-panel.js';
 
 export class IoColorPicker extends IoColorMixin(IoItem) {
 	static get Style() {

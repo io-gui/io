@@ -1,4 +1,4 @@
-import {IoElement} from "../../io.js";
+import {IoElement} from '../../io.js';
 
 export class IoItem extends IoElement {
 	static get Style() {
@@ -38,7 +38,7 @@ export class IoItem extends IoElement {
 	}
 	constructor(props) {
 		super(props);
-		Object.defineProperty(this, '_textNode', {value: document.createTextNode(""), writable: true});
+		Object.defineProperty(this, '_textNode', {value: document.createTextNode(''), writable: true});
 		this.appendChild(this._textNode);
 	}
 	disconnectedCallback() {

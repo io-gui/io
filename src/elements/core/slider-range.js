@@ -1,4 +1,4 @@
-import {IoSlider} from "./slider.js";
+import {IoSlider} from './slider.js';
 
 export class IoSliderRange extends IoSlider {
 	static get Properties() {

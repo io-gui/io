@@ -1,5 +1,5 @@
-import {IoGl} from "../core/gl.js";
-import {IoColorMixin} from "./color.js";
+import {IoGl} from '../core/gl.js';
+import {IoColorMixin} from './color.js';
 
 export class IoColorSwatch extends IoColorMixin(IoGl) {
 	static get Style() {
