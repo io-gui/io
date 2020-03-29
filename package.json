@@ -58,8 +58,9 @@
   "homepage": "https://io-gui.dev",
   "devDependencies": {
     "babel-eslint": "^10.1.0",
+    "eslint-plugin-html": "^6.0.0",
     "eslint": "^6.8.0",
-    "rollup": "^2.1.0",
+    "rollup": "^2.2.0",
     "uglify-es": "^3.3.9"
   }
 }

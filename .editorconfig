@@ -9,7 +9,7 @@ insert_final_newline = true
 
 [*.{js,ts,html}]
 charset = utf-8
-indent_style = tab
+indent_style = space
 tab_width = 2
 
 [{*.json,*.md,*.yml}]
