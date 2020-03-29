@@ -1,1 +1,1 @@
-export * from "../src/io-core.js";
+export * from '../src/io-core.js';
