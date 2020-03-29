@@ -1,4 +1,4 @@
-import {IoBoolean} from "./boolean.js";
+import {IoBoolean} from './boolean.js';
 
 export class IoSwitch extends IoBoolean {
 	static get Style() {

@@ -1,5 +1,5 @@
-import {IoElement} from "../../io.js";
-import "../../../lib/marked.min.js";
+import {IoElement} from '../../io.js';
+import '../../../lib/marked.min.js';
 
 export class IoMdView extends IoElement {
 	static get Style() {
@@ -131,7 +131,7 @@ export class IoMdView extends IoElement {
 	onResized() {
 		let width = this.getBoundingClientRect().width;
 		width = Math.min((width - 30) / 35, 15);
-		this.style.setProperty('--io-code-size', width + "px");
+		this.style.setProperty('--io-code-size', width + 'px');
 	}
 	parseMarkdown(markdown) {
 		if (window.marked) {

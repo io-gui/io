@@ -1,7 +1,7 @@
-import {IoElement} from "../../io.js";
-import {IoLayerSingleton as Layer} from "../core/layer.js";
-import {IoMenuOptions} from "./menu-options.js";
-import {getElementDescendants} from "./menu-item.js";
+import {IoElement} from '../../io.js';
+import {IoLayerSingleton as Layer} from '../core/layer.js';
+import {IoMenuOptions} from './menu-options.js';
+import {getElementDescendants} from './menu-item.js';
 
 export class IoContextMenu extends IoElement {
 	static get Properties() {

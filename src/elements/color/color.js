@@ -1,5 +1,5 @@
-import {IoElement} from "../../io.js";
-import {convert} from "../../../lib/color-convert.js";
+import {IoElement} from '../../io.js';
+import {convert} from '../../../lib/color-convert.js';
 
 export const IoColorMixin = (superclass) => {
 	const classConstructor = class extends superclass {

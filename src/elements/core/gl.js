@@ -1,5 +1,5 @@
-import {IoElement} from "../../io.js";
-import {IoThemeSingleton} from "./theme.js";
+import {IoElement} from '../../io.js';
+import {IoThemeSingleton} from './theme.js';
 
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true});
@@ -218,12 +218,12 @@ export class IoGl extends IoElement {
 
 		gl.linkProgram(this._shader);
 
-		const position = gl.getAttribLocation(this._shader, "position");
+		const position = gl.getAttribLocation(this._shader, 'position');
 		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuff);
 		gl.vertexAttribPointer(position, 3, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(position);
 
-		const uv = gl.getAttribLocation(this._shader, "uv");
+		const uv = gl.getAttribLocation(this._shader, 'uv');
 		gl.bindBuffer(gl.ARRAY_BUFFER, uvBuff);
 		gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
 		gl.enableVertexAttribArray(uv);

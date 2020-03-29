@@ -1,4 +1,4 @@
-import {IoSelector} from "./selector.js";
+import {IoSelector} from './selector.js';
 
 export class IoSelectorTabs extends IoSelector {
 	static get Style() {

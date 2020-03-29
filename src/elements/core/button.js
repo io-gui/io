@@ -1,4 +1,4 @@
-import {IoItem} from "./item.js";
+import {IoItem} from './item.js';
 
 export class IoButton extends IoItem {
 	static get Style() {

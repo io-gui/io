@@ -1,5 +1,5 @@
-import {IoElement} from "../../io.js";
-import "./properties.js";
+import {IoElement} from '../../io.js';
+import './properties.js';
 
 export class IoObject extends IoElement {
 	static get Style() {

@@ -1,5 +1,5 @@
-import {IoBoolean} from "./boolean.js";
-import {IoIconsetSingleton} from "./iconset.js";
+import {IoBoolean} from './boolean.js';
+import {IoIconsetSingleton} from './iconset.js';
 
 export class IoBoolicon extends IoBoolean {
 	static get Style() {

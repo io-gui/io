@@ -1,4 +1,4 @@
-import {IoItem} from "./item.js";
+import {IoItem} from './item.js';
 
 export class IoString extends IoItem {
 	static get Style() {
@@ -43,7 +43,7 @@ export class IoString extends IoItem {
 	_tryParseFromTextNode() {
 		const textNode = this.textNode;
 		try {
-			const value = JSON.parse(textNode.replace(/[\t\n\r ]+/g, " "));
+			const value = JSON.parse(textNode.replace(/[\t\n\r ]+/g, ' '));
 			this.set('value', value);
 		} catch (error) {
 			console.warn('IoString: Cannot parse value', textNode);

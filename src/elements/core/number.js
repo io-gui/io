@@ -1,6 +1,6 @@
-import {IoItem} from "./item.js";
-import {IoLayerSingleton} from "./layer.js";
-import {IoLadderSingleton} from "./ladder.js";
+import {IoItem} from './item.js';
+import {IoLayerSingleton} from './layer.js';
+import {IoLadderSingleton} from './ladder.js';
 
 export class IoNumber extends IoItem {
 	static get Style() {

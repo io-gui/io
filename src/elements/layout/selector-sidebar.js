@@ -1,5 +1,5 @@
-import {IoSelector} from "./selector.js";
-import "./sidebar.js";
+import {IoSelector} from './selector.js';
+import './sidebar.js';
 
 export class IoSelectorSidebar extends IoSelector {
 	static get Style() {

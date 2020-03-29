@@ -1,4 +1,4 @@
-import {IoItem} from "./item.js";
+import {IoItem} from './item.js';
 
 export class IoBoolean extends IoItem {
 	static get Style() {

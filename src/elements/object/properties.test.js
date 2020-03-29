@@ -1,12 +1,12 @@
-import {IoProperties} from "../../io-object.js";
+import {IoProperties} from '../../io-object.js';
 
 const testValue = {
-	"number": 0.5,
-	"string": "hello",
-	"boolean": true,
-	"null": null,
-	"object": {"prop": "prop"},
-	"array": [1, 2, 3]
+	'number': 0.5,
+	'string': 'hello',
+	'boolean': true,
+	'null': null,
+	'object': {'prop': 'prop'},
+	'array': [1, 2, 3]
 };
 
 export default class {

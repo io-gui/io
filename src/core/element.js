@@ -1,6 +1,6 @@
-import {IoNodeMixin} from "./node.js";
-import {Listeners} from "./listeners.js";
-import {buildTree} from "../../lib/ijk.js";
+import {IoNodeMixin} from './node.js';
+import {Listeners} from './listeners.js';
+import {buildTree} from '../../lib/ijk.js';
 
 export class IoElement extends IoNodeMixin(HTMLElement) {
 	static get Style() {
@@ -38,7 +38,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 			},
 			hidden: {
 				type: Boolean,
-				reflect: true,
+				reflect: 1,
 			},
 		};
 	}
@@ -188,11 +188,11 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 	 */
 	flattenTextNode(element) {
 		if (element.childNodes.length === 0) {
-			element.appendChild(document.createTextNode(""));
+			element.appendChild(document.createTextNode(''));
 		}
-		if (element.childNodes[0].nodeName !== "#text") {
+		if (element.childNodes[0].nodeName !== '#text') {
 			element.innerHTML = '';
-			element.appendChild(document.createTextNode(""));
+			element.appendChild(document.createTextNode(''));
 		}
 		element._textNode = element.childNodes[0];
 		if (element.childNodes.length > 1) {

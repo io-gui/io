@@ -1,5 +1,5 @@
-import {IoElement} from "../../io.js";
-import {IoStorageFactory as $} from "./storage.js";
+import {IoElement} from '../../io.js';
+import {IoStorageFactory as $} from './storage.js';
 
 const themePropDefaults =	{
 	cssSpacing: 2,
@@ -145,7 +145,7 @@ export class IoTheme extends IoElement {
 		`;
 	}
 	static get Properties() {
-		const isDarkMode = !!window.matchMedia("(prefers-color-scheme: dark)").matches;
+		const isDarkMode = !!window.matchMedia('(prefers-color-scheme: dark)').matches;
 		const theme = $({value: isDarkMode ? 'dark' : 'light', storage: 'local', key: 'theme'});
 		const vars = themeDB.value[theme.value];
 		return {

@@ -1,4 +1,4 @@
-import {IoContent} from "../../io-core.js";
+import {IoContent} from '../../io-core.js';
 
 export default class {
 	constructor() {
