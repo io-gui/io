@@ -1,5 +1,5 @@
 import {IoElement} from '../../io.js';
-import '../../../lib/marked.min.js';
+import marked from '../../../lib/marked.esm.js';
 
 export class IoMdView extends IoElement {
 	static get Style() {
@@ -134,16 +134,16 @@ export class IoMdView extends IoElement {
 		this.style.setProperty('--io-code-size', width + 'px');
 	}
 	parseMarkdown(markdown) {
-		if (window.marked) {
-			if (window.marked) {
-				window.marked.setOptions({
+		if (marked) {
+			if (marked) {
+				marked.setOptions({
 					sanitize: false,
 					highlight: function(code) {
 						return window.hljs ? window.hljs.highlightAuto(code).value : null;
 					},
 				});
 			}
-			this.innerHTML = window.marked(markdown);
+			this.innerHTML = marked(markdown);
 			this.classList.toggle('io-loading', false);
 			this.dispatchEvent('content-ready', {}, true);
 		}
