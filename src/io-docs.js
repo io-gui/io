@@ -2,7 +2,7 @@ import {IoSelectorSidebar, IoStorageFactory as $} from './io-elements.js';
 import './io-extras.js';
 
 const docPath = (new URL(import.meta.url).pathname).replace('io-docs.js', '../docs/');
-const srcPath = (new URL(import.meta.url).pathname).replace('io-docs.js', '');
+const srcPath = (new URL(import.meta.url).pathname).replace('io-docs.js', '../src/');
 
 export class IoDocs extends IoSelectorSidebar {
   static get Style() {
