@@ -28,5 +28,5 @@
 
 import './io-elements.js';
 
-export {IoMdView} from './elements/extras/md-view.js';
-export {IoServiceLoader} from './elements/extras/service-loader.js';
+export {IoMdView} from './extras/md-view.js';
+export {IoServiceLoader} from './extras/service-loader.js';

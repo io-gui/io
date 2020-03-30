@@ -1,4 +1,4 @@
-import {IoNode} from '../../io.js';
+import {IoNode} from '../io.js';
 
 if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
 if (!('PushManager' in window)) { console.warn('No Push API Support!'); }
