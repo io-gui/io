@@ -1,3 +1,3 @@
-## &lt;io-md-view&gt;
+## IoMdView
 
 TODO

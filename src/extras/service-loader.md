@@ -1,3 +1,3 @@
-## &lt;io-service-loader&gt;
+## IoServiceLoader
 
 TODO
