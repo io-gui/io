@@ -31,11 +31,10 @@ export class IoDocs extends IoSelectorSidebar {
     return {
       name: 'Io-GUI Documentation',
       collapseWidth: 640,
-      selected: $({value: 'about-io-gui', storage: 'hash', key: 'doc'}),
+      selected: $({value: 'getting-started', storage: 'hash', key: 'doc'}),
       cache: true,
       elements: [
         // Documentation pages
-        ['io-md-view', {name: 'about-io-gui', path: docPath + 'about-io-gui.md'}],
         ['io-md-view', {name: 'getting-started', path: docPath + 'getting-started.md'}],
         ['io-md-view', {name: 'learn-more', path: docPath + 'learn-more.md'}],
         // Source Documentation (Core)
@@ -111,7 +110,6 @@ export class IoDocs extends IoSelectorSidebar {
         ['io-md-view', {name: 'extras-service-loader', path: srcPath + 'extras/service-loader.md'}],
       ],
       options: [
-        {label: 'Io-GUI', value: 'about-io-gui'},
         {label: 'Getting Started', options: [
           {label: 'Usage', value: 'getting-started#usage'},
           {label: 'Simple App Example', value: 'getting-started#simple-app-example'},
