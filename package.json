@@ -7,20 +7,10 @@
   "files": [
     "src",
     "build/*.js",
-    "package.json",
     "LICENSE",
     "README.md"
   ],
-  "jspm": {
-    "files": [
-      "src",
-      "build/*.js",
-      "package.json",
-      "LICENSE",
-      "README.md"
-    ],
-    "directories": {}
-  },
+  "sideEffects": false,
   "scripts": {
     "lint": "eslint src --fix",
     "rollup": "rollup -c",
