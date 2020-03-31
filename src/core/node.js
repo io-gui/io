@@ -443,7 +443,6 @@ requestAnimationFrame(animate);
 function requestAnimationFrameOnce(func) {
   if (funcQueue.indexOf(func) === -1) funcQueue.push(func);
 }
-
 /**
   * IoNodeMixin applied to `Object` class.
   */
