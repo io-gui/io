@@ -23,7 +23,7 @@ export class IoProperties extends IoElement {
     }
     :host:not([horizontal])[labeled] {
       display: grid;
-      grid-template-columns: min-content minmax(12em, 1fr);
+      grid-template-columns: min-content minmax(4em, 1fr);
     }
     :host > span.io-item {
       max-width: 8em !important;

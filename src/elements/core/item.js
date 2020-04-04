@@ -8,7 +8,7 @@ export class IoItem extends IoElement {
     }
     :host[selected] {
       color: var(--io-color-link);
-      background-color: var(--io-background-color-light);
+      background-color: var(--io-background-color-highlight);
     }
     :host:focus {
       z-index: 200;
@@ -101,23 +101,6 @@ export class IoItem extends IoElement {
     }
   }
   _onKeyup() {}
-  changed() {
-    let label;
-    if (this.label) {
-      label = this.label;
-      this.title = this.label;
-    } else {
-      let valueText;
-      if (this.value && typeof this.value === 'object') {
-        valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
-      } else {
-        valueText = String(this.value);
-      }
-      this.title = valueText;
-      label = valueText;
-    }
-    this.textNode = label;
-  }
   getCaretPosition() {
     let position = 0;
     const selection = window.getSelection();
@@ -139,6 +122,23 @@ export class IoItem extends IoElement {
     range.collapse(true);
     sel.removeAllRanges();
     sel.addRange(range);
+  }
+  changed() {
+    let label;
+    if (this.label) {
+      label = this.label;
+      this.title = this.label;
+    } else {
+      let valueText;
+      if (this.value && typeof this.value === 'object') {
+        valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
+      } else {
+        valueText = String(this.value);
+      }
+      this.title = valueText;
+      label = valueText;
+    }
+    this.textNode = label;
   }
 }
 

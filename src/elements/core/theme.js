@@ -243,7 +243,7 @@ export class IoTheme extends IoElement {
         --io-font-size: ${this.cssFontSize}px;
 
         --io-background-color: ${this._toCss(this.cssBackgroundColor)};
-        --io-background-color-light: ${this._toCss(this.cssBackgroundColorLight)};
+        --io-background-color-highlight: ${this._toCss(this.cssBackgroundColorLight)};
         --io-background-color-dark: ${this._toCss(this.cssBackgroundColorDark)};
         --io-background-color-field: ${this._toCss(this.cssBackgroundColorField)};
 

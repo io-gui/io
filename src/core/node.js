@@ -10,7 +10,7 @@ import {Properties, ProtoProperties} from './properties.js';
   * @param {function} superclass - Class to extend.
   * @return {IoNodeMixin} - Extended class with `IoNodeMixin` applied to it.
   */
-export const IoNodeMixin = (superclass) => {
+const IoNodeMixin = (superclass) => {
   const classConstructor = class extends superclass {
     /**
      * Static properties getter. Node properties should be defined here.
@@ -446,4 +446,6 @@ function requestAnimationFrameOnce(func) {
 /**
   * IoNodeMixin applied to `Object` class.
   */
-export class IoNode extends IoNodeMixin(Object) {}
+class IoNode extends IoNodeMixin(Object) {}
+
+export {IoNode, IoNodeMixin};

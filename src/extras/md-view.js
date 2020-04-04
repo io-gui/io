@@ -48,11 +48,11 @@ export class IoMdView extends IoElement {
       overflow: auto;
       color: var(--io-color-link);
       font-weight: bold;
-      background: var(--io-background-color-light);
+      background: var(--io-background-color-highlight);
     }
     :host pre > code {
       color: inherit;
-      background-color: var(--io-background-color-light);
+      background-color: var(--io-background-color-highlight);
       line-height: 1.6em;
     }
     :host code.language-html,
@@ -98,7 +98,7 @@ export class IoMdView extends IoElement {
       to {transform: rotate(360deg);}
     }
     :host .io-loading {
-      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
+      background-image: repeating-linear-gradient(135deg, var(--io-background-color-highlight), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-highlight) 10px) !important;
       background-repeat: repeat;
       position: relative;
     }

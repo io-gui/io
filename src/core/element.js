@@ -8,6 +8,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     :host[hidden] {
       display: none;
     }
+    :host[disabled] {
+      pointer-events: none;
+      opacity: 0.5;
+    }
     `;
   }
   static get Properties() {
@@ -39,6 +43,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       hidden: {
         type: Boolean,
         reflect: 1,
+      },
+      disabled: {
+        type: Boolean,
+        reflect: true,
       },
     };
   }
@@ -232,7 +240,12 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     if (this.label) {
       this.setAttribute('aria-label', this.label);
     } else {
-      this.setAttribute('aria-label', false);
+      this.removeAttribute('aria-label');
+    }
+    if (this.disabled) {
+      this.setAttribute('aria-disabled', true);
+    } else {
+      this.removeAttribute('aria-disabled');
     }
   }
   _onFocusTo(event) {
@@ -254,7 +267,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       //   return;
       // }
 
-      const siblings = this.querySelectorAll('[tabindex="0"]');
+      const siblings = this.querySelectorAll('[tabindex="0"]:not([disabled])');
 
       for (let i = siblings.length; i--;) {
 

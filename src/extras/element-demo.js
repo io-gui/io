@@ -90,7 +90,7 @@ export class IoElementDemo extends IoElement {
       margin-right: var(--io-spacing);
       margin-bottom: calc(2 * var(--io-spacing));
     }
-    :host > io-properties > :nth-child(2) {
+    :host > io-properties > :nth-child(3) {
       margin-right: calc(var(--io-item-height) + var(--io-spacing));
     }
     :host > .io-content {
