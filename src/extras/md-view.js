@@ -10,7 +10,7 @@ export class IoMdView extends IoElement {
       justify-self: stretch;
       flex: 1 1 auto;
       --io-code-size: 15px;
-      padding: var(--io-spacing) calc(4 * var(--io-spacing));
+      padding: 0.5em 1em;
     }
     :host > :first-child {
       margin-top: 0;
@@ -20,6 +20,7 @@ export class IoMdView extends IoElement {
     }
     :host p {
       line-height: 1.4em;
+      padding: 0 0.5em;
     }
     :host a {
       text-decoration: underline;
@@ -38,23 +39,27 @@ export class IoMdView extends IoElement {
     }
     :host h3 {
       padding: 0.3em 0;
+      border: 0;
     }
     :host h4 {
       padding: 0.2em 0;
+      border: 0;
     }
     :host code {
       font-family: monospace, monospace;
       -webkit-font-smoothing: auto;
       overflow: auto;
       color: var(--io-color-link);
-      font-weight: bold;
+    }
+    :host strong code {
       background: var(--io-background-color-highlight);
     }
     :host pre > code {
+      background: var(--io-background-color-highlight);
       color: inherit;
-      background-color: var(--io-background-color-highlight);
       line-height: 1.6em;
     }
+
     :host code.language-html,
     :host code.language-javascript {
       padding: 1em;

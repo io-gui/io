@@ -7,7 +7,7 @@ export class TestNode extends IoNode {
         type: String,
       },
       prop1: {
-        value: false
+        value: false,
       },
       prop2: -1,
       prop3: Number,
@@ -62,6 +62,8 @@ export class TestNode extends IoNode {
   }
 }
 
+TestNode.Register();
+
 export default class {
   constructor() {
     this._prop3ChangeCounter = 0;
@@ -72,6 +74,13 @@ export default class {
     };
     this.node = new TestNode({'on-prop2-changed': 'onProp2Change', 'on-prop3-changed': this.prop3Change});
     this.node.connect(window);
+
+    for (let i in this.node) {
+      console.log(i);
+    }
+
+    // console.log(Object.keys(this.node.__proto__));
+    
   }
   reset() {
     this.node.reset();

@@ -7,14 +7,6 @@ const srcPath = (new URL(import.meta.url).pathname).replace('io-docs.js', '../sr
 export class IoDocs extends IoSelectorSidebar {
   static get Style() {
     return /* css */`
-      :host io-md-view {
-        padding-top: 0 !important;
-        color: var(--io-color);
-        background-color: var(--io-background-color);
-      }
-      :host io-md-view code {
-        font-family: "Roboto Mono", Monaco, courier, monospace !important;
-      }
       :host > io-sidebar:not([collapsed]) {
         flex-basis: 11em !important;
       }
@@ -40,6 +32,10 @@ export class IoDocs extends IoSelectorSidebar {
         // Source Documentation (Core)
         ['io-md-view', {name: 'core-node', path: srcPath + 'core/node.md'}],
         ['io-md-view', {name: 'core-element', path: srcPath + 'core/element.md'}],
+        ['io-md-view', {name: 'core-properties', path: srcPath + 'core/properties.md'}],
+        ['io-md-view', {name: 'core-queue', path: srcPath + 'core/queue.md'}],
+        ['io-md-view', {name: 'core-binding', path: srcPath + 'core/bindings.md'}],
+        ['io-md-view', {name: 'core-listeners', path: srcPath + 'core/listeners.md'}],
         // Source Documentation (Core Elements)
         ['io-md-view', {name: 'elements-core-boolean', path: srcPath + 'elements/core/boolean.md'}],
         ['io-md-view', {name: 'elements-core-boolicon', path: srcPath + 'elements/core/boolicon.md'}],
@@ -206,6 +202,10 @@ export class IoDocs extends IoSelectorSidebar {
         {label: 'Core Classes', options: [
           {label: 'IoNode', value: 'core-node'},
           {label: 'IoElement', value: 'core-element'},
+          {label: 'Properties', value: 'core-properties'},
+          {label: 'Bindings', value: 'core-binding'},
+          {label: 'Listeners', value: 'core-listeners'},
+          {label: 'Queue', value: 'core-queue'},
         ]},
       ],
     };

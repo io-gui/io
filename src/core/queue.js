@@ -1,7 +1,7 @@
 // TODO: Improve tests.
 
 /** Manager for `IoNode` event queue and change handle functions. */
-export class NodeQueue extends Array {
+export class QueueManager extends Array {
   /**
    * Creates queue manager for `IoNode`.
    * @param {IoNode} node - Reference to the node/element itself.
@@ -56,7 +56,7 @@ export class NodeQueue extends Array {
 
     // TODO: Evaluate performance and consider refactoring.
     if (changed) {
-      // if (node.isIoNode && !node.isIoElement) {
+      // if (node.__isIoNode && !node.__isIoElement) {
       //   node.dispatchEvent('object-mutated', {object: node}, false, window);
       // }
       node.applyCompose();

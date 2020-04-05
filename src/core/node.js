@@ -1,12 +1,10 @@
-import {NodeBindings, Binding} from './bindings.js';
-import {NodeQueue} from './queue.js';
+import {BindingManager, Binding} from './bindings.js';
+import {QueueManager} from './queue.js';
+import {ProtoProperties, Properties} from './properties.js';
 import {ProtoListeners, Listeners} from './listeners.js';
-import {Properties, ProtoProperties} from './properties.js';
-
-// TODO: Improve tests.
 
 /**
-  * Core mixin for `IoNode` and `IoElement` classes.
+  * Core mixin for `IoNode` classes.
   * @param {function} superclass - Class to extend.
   * @return {IoNodeMixin} - Extended class with `IoNodeMixin` applied to it.
   */
@@ -39,17 +37,18 @@ const IoNodeMixin = (superclass) => {
     constructor(initProps = {}) {
       super(initProps);
 
-      if (!this.__registered) {
-        this.__proto__.constructor.Register();
+      if (!this.__isRegistered) {
+        console.error('IoNodeMixin: Not registered! Call `Register()` before using the class!');
       }
 
-      Object.defineProperty(this, '__nodeBindings', {value: new NodeBindings(this)});
-      Object.defineProperty(this, '__nodeQueue', {value: new NodeQueue(this)});
+      Object.defineProperty(this, '__bindingManager', {value: new BindingManager(this)});
+      Object.defineProperty(this, '__queueManager', {value: new QueueManager(this)});
 
       Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
       Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
 
-      Object.defineProperty(this, '__connected', {enumerable: false, writable: true});
+      Object.defineProperty(this, '__isConnected', {enumerable: false, writable: true});
+      Object.defineProperty(this, '__connections', {enumerable: false, value: []});
 
       for (let i = 0; i < this.__functions.length; i++) {
         this[this.__functions[i]] = this[this.__functions[i]].bind(this);
@@ -62,10 +61,9 @@ const IoNodeMixin = (superclass) => {
      * @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
      */
     connect(owner) {
-      this._owner = this._owner || [];
-      if (this._owner.indexOf(owner) === -1) {
-        this._owner.push(owner);
-        if (!this.__connected) this.connectedCallback();
+      if (this.__connections.indexOf(owner) === -1) {
+        this.__connections.push(owner);
+        if (!this.__isConnected) this.connectedCallback();
       }
     }
     /**
@@ -73,10 +71,10 @@ const IoNodeMixin = (superclass) => {
      * @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
      */
     disconnect(owner) {
-      if (this._owner.indexOf(owner) !== -1) {
-        this._owner.splice(this._owner.indexOf(owner), 1);
+      if (this.__connections.indexOf(owner) !== -1) {
+        this.__connections.splice(this.__connections.indexOf(owner), 1);
       }
-      if (this._owner.length === 0 && this.__connected) {
+      if (this.__connections.length === 0 && this.__isConnected) {
         this.disconnectedCallback();
       }
     }
@@ -116,7 +114,7 @@ const IoNodeMixin = (superclass) => {
      * @return {Binding} Binding object.
      */
     bind(prop) {
-      return this.__nodeBindings.get(prop);
+      return this.__bindingManager.get(prop);
     }
     /**
      * Sets a property and emits [property]-set` event.
@@ -155,7 +153,7 @@ const IoNodeMixin = (superclass) => {
       }
 
       this.__listeners.setPropListeners(props, this);
-      if (this.__connected) this.queueDispatch();
+      if (this.__isConnected) this.queueDispatch();
     }
     _onObjectMutation(event) {
       for (let i = this.__observedProps.length; i--;) {
@@ -188,7 +186,7 @@ const IoNodeMixin = (superclass) => {
     connectedCallback() {
       this.__listeners.connect();
       this.__properties.connect();
-      this.__connected = true;
+      this.__isConnected = true;
       if (this.__observedProps.length) {
         window.addEventListener('object-mutated', this._onObjectMutation);
       }
@@ -200,7 +198,7 @@ const IoNodeMixin = (superclass) => {
     disconnectedCallback() {
       this.__listeners.disconnect();
       this.__properties.disconnect();
-      this.__connected = false;
+      this.__isConnected = false;
       if (this.__observedProps.length) {
         window.removeEventListener('object-mutated', this._onObjectMutation);
       }
@@ -210,8 +208,8 @@ const IoNodeMixin = (superclass) => {
      * Use this when node is no longer needed.
      */
     dispose() {
-      this.__nodeQueue.dispose();
-      this.__nodeBindings.dispose();
+      this.__queueManager.dispose();
+      this.__bindingManager.dispose();
       this.__listeners.dispose();
       this.__properties.dispose();
     }
@@ -254,7 +252,7 @@ const IoNodeMixin = (superclass) => {
      * @param {*} oldValue - Old property value.
      */
     queue(prop, value, oldValue) {
-      this.__nodeQueue.queue(prop, value, oldValue);
+      this.__queueManager.queue(prop, value, oldValue);
     }
     /**
      * Dispatches the queue.
@@ -264,11 +262,11 @@ const IoNodeMixin = (superclass) => {
         preThrottleQueue.push(this._queueDispatchLazy);
         this.throttle(this._queueDispatchLazy);
       } else {
-        this.__nodeQueue.dispatch();
+        this.__queueManager.dispatch();
       }
     }
     _queueDispatchLazy() {
-      this.__nodeQueue.dispatch();
+      this.__queueManager.dispatch();
     }
     /**
      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
@@ -363,13 +361,10 @@ const Register = function () {
   while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
     protochain.push(proto); proto = proto.__proto__;
   }
-
-  const isIoNode = proto.constructor !== HTMLElement;
-  this.isIoNode = isIoNode;
-  Object.defineProperty(this.prototype, 'isIoNode', {value: isIoNode});
-  Object.defineProperty(this.prototype, '__registered', {value: true});
-
-  proto = this.prototype;
+  proto = this.prototype; // important
+  
+  Object.defineProperty(proto, '__isIoNode', {value: true});
+  Object.defineProperty(proto, '__isRegistered', {value: true});
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
   Object.defineProperty(proto, '__protoProperties', {value: new ProtoProperties(protochain)});
@@ -397,7 +392,9 @@ const Register = function () {
     if (proto.__protoProperties[p].observe) proto.__observedProps.push(p);
   }
 
+  
   for (let p in proto.__protoProperties) {
+    // console.log(proto, p);
     Object.defineProperty(proto, p, {
       get: function() { return this.__properties.get(p); },
       set: function(value) { this.__properties.set(p, value); },

@@ -25,7 +25,7 @@ export class Listeners {
     Object.defineProperty(this, 'node', {value: node});
     Object.defineProperty(this, 'propListeners', {value: {}});
     Object.defineProperty(this, 'activeListeners', {value: {}});
-    Object.defineProperty(this, '__connected', {enumerable: false, writable: true});
+    Object.defineProperty(this, '__isConnected', {enumerable: false, writable: true});
     for (let prop in protoListeners) this[prop] = protoListeners[prop];
   }
   /**
@@ -51,7 +51,7 @@ export class Listeners {
         }
       }
       listeners[l] = newListeners[l];
-      if (this.__connected) {
+      if (this.__isConnected) {
         if (newListeners[l] instanceof Array) {
           const listener = typeof newListeners[l][0] === 'function' ? newListeners[l][0] : node[newListeners[l][0]];
           node.addEventListener(l, listener, newListeners[l][1]);
@@ -66,7 +66,7 @@ export class Listeners {
    * Adds event listeners.
    */
   connect() {
-    this.__connected = true;
+    this.__isConnected = true;
     const node = this.node;
     const listeners = this.propListeners;
     for (let l in this) {
@@ -90,7 +90,7 @@ export class Listeners {
    * Removes event listeners.
    */
   disconnect() {
-    this.__connected = false;
+    this.__isConnected = false;
     const node = this.node;
     const listeners = this.propListeners;
     for (let l in this) {
@@ -120,7 +120,7 @@ export class Listeners {
     const active = this.activeListeners;
     for (let i in active) {
       for (let j = active[i].length; j--;) {
-        if (this.node.isIoElement) HTMLElement.prototype.removeEventListener.call(this.node, i, active[i][j]);
+        if (this.node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.node, i, active[i][j]);
         active[i].splice(j, 1);
       }
     }
@@ -136,7 +136,7 @@ export class Listeners {
     active[type] = active[type] || [];
     const i = active[type].indexOf(listener);
     if (i === -1) {
-      if (this.node.isIoElement) HTMLElement.prototype.addEventListener.call(this.node, type, listener, options);
+      if (this.node.__isIoElement) HTMLElement.prototype.addEventListener.call(this.node, type, listener, options);
       active[type].push(listener);
     }
   }
@@ -151,7 +151,7 @@ export class Listeners {
     if (active[type] !== undefined) {
       const i = active[type].indexOf(listener);
       if (i !== - 1) {
-        if (this.node.isIoElement) HTMLElement.prototype.removeEventListener.call(this.node, type, listener, options);
+        if (this.node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.node, type, listener, options);
         active[type].splice(i, 1);
       }
     }

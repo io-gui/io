@@ -1,16 +1,16 @@
-// TODO: Improve tests.
-
-/** Manager for `IoNode` and `IoElement` bindings. */
-export class NodeBindings {
+/**
+ * Manager for `IoNode` property bindings. It holds all bindings for a particular IoNode.
+ */
+export class BindingManager {
   /**
-   * Creates binding manager for `IoNode`.
-   * @param {IoNode|IoElement} node - Reference to the node/element itself.
+   * Creates binding manager with a node reference.
+   * @param {IoNode} node - Reference to the node.
    */
   constructor(node) {
     Object.defineProperty(this, 'node', {value: node, configurable: true});
   }
   /**
-   * Returns a binding to the specified property.
+   * Returns a binding to the specified property name or creates one if it dpes not exist.
    * @param {string} prop - property name.
    * @return {Binding} Property binding.
    */
@@ -19,8 +19,7 @@ export class NodeBindings {
     return this[prop];
   }
   /**
-   * Disposes all bindings.
-   * Use this when node is no longer needed.
+   * Disposes all bindings. Use this when node is no longer needed.
    */
   dispose() {
     for (let b in this) {
@@ -101,7 +100,7 @@ export class Binding {
   /**
    * Event handler that updates source property when one of the targets emits `[prop]-changed` event.
    * @param {Object} event - Event object.
-   * @param {IoNode|HTMLElement} event.target - Event target (source node that emitted the event).
+   * @param {IoNode} event.target - Event target (source node that emitted the event).
    * @param {Object} event.detail - Event detail.
    * @param {*} event.detail.value - New value.
    */
@@ -124,7 +123,7 @@ export class Binding {
   /**
    * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
    * @param {Object} event - Event object.
-   * @param {IoNode|HTMLElement} event.target - Event target (source node that emitted the event).
+   * @param {IoNode} event.target - Event target (source node that emitted the event).
    * @param {Object} event.detail - Event detail.
    * @param {*} event.detail.value - New value.
    */
