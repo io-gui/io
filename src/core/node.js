@@ -4,29 +4,14 @@ import {ProtoProperties, Properties} from './properties.js';
 import {ProtoListeners, Listeners} from './listeners.js';
 
 /**
-  * Core mixin for `IoNode` classes.
-  * @param {function} superclass - Class to extend.
-  * @return {IoNodeMixin} - Extended class with `IoNodeMixin` applied to it.
-  */
+ * Core mixin for `IoNode` classes.
+ * @param {function} superclass - Class to extend.
+ * @return {IoNodeMixin} - Extended class with `IoNodeMixin` applied to it.
+ */
 const IoNodeMixin = (superclass) => {
   const classConstructor = class extends superclass {
-    /**
-     * Static properties getter. Node properties should be defined here.
-     * @return {Object} properties - Properties configuration objects.
-     * @return {Object|*} [properties.*] - Configuration object or one of the configuration parameters.
-     * @return {*} [properties.*.value] - Default value.
-     * @return {function} [properties.*.type] - Constructor of value.
-     * @return {number} [properties.*.reflect] - Reflects to HTML attribute
-     * @return {boolean} [properties.*.notify] - Enables change events.
-     * @return {boolean} [properties.*.enumerable] - Makes property enumerable.
-     * @return {Binding} [properties.*.binding] - Binding object.
-     */
     static get Properties() {
       return {
-        $: {
-          type: Object,
-          notify: false,
-        },
         lazy: Boolean,
       };
     }
@@ -100,6 +85,7 @@ const IoNodeMixin = (superclass) => {
      * Applies compose object on change.
      */
     applyCompose() {
+      
       // TODO: Test and documentation.
       const compose = this.compose;
       if (compose) {
@@ -128,11 +114,8 @@ const IoNodeMixin = (superclass) => {
         const oldValue = this[prop];
         this[prop] = value;
         this.dispatchEvent('value-set', {property: prop, value: value, oldValue: oldValue}, false);
-        // TODO: documentation!
-        this.dispatchEvent('io-value-set', {property: prop, value: value, oldValue: oldValue}, true);
       }
     }
-    // TODO: consider renaming and simplifying `props` object structure.
     /**
      * Sets multiple properties in batch.
      * [property]-changed` events will be broadcast in the end.
@@ -143,15 +126,6 @@ const IoNodeMixin = (superclass) => {
         if (this.__properties[p] === undefined) continue;
         this.__properties.set(p, props[p], true);
       }
-
-      // TODO: remove?
-      if (props['style']) {
-        for (let s in props['style']) {
-          this.style[s] = props['style'][s];
-          this.style.setProperty(s, props['style'][s]);
-        }
-      }
-
       this.__listeners.setPropListeners(props, this);
       if (this.__isConnected) this.queueDispatch();
     }
@@ -299,12 +273,9 @@ const IoNodeMixin = (superclass) => {
       requestAnimationFrameOnce(func);
     }
     filterObject(object, predicate, _depth = 5, _chain = [], _i = 0) {
-
       if (_chain.indexOf(object) !== -1) return; _chain.push(object);
       if (_i > _depth) return; _i++;
-
       if (predicate(object)) return object;
-
       for (let key in object) {
         const value = object[key] instanceof Binding ? object[key].value : object[key];
         if (predicate(value)) return value;
@@ -334,12 +305,12 @@ const IoNodeMixin = (superclass) => {
     import(path) {
       const importPath = new URL(path, window.location).href;
       return new Promise(resolve => {
-        if (!path || importedPaths[importPath]) {
+        if (!path || IMPORTED_PATHS[importPath]) {
           resolve(importPath);
         } else {
           import(importPath)
           .then(() => {
-            importedPaths[importPath] = true;
+            IMPORTED_PATHS[importPath] = true;
             resolve(importPath);
           });
         }
@@ -351,10 +322,8 @@ const IoNodeMixin = (superclass) => {
 };
 
 /**
-  * Register function to be called once per class.
-  * `IoNode` will self-register on first instance constructor.
-  * `IoElement` classes should call Register manually before first instance is created.
-  */
+ * Register function to be called once per class.
+ */
 const Register = function () {
   let proto = this.prototype;
   const protochain = [];
@@ -387,14 +356,11 @@ const Register = function () {
   Object.defineProperty(proto, '__functions', {value: [...functions]});
 
   Object.defineProperty(proto, '__observedProps', {value: []});
-  // const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
   for (let p in proto.__protoProperties) {
     if (proto.__protoProperties[p].observe) proto.__observedProps.push(p);
   }
 
-  
   for (let p in proto.__protoProperties) {
-    // console.log(proto, p);
     Object.defineProperty(proto, p, {
       get: function() { return this.__properties.get(p); },
       set: function(value) { this.__properties.set(p, value); },
@@ -406,7 +372,13 @@ const Register = function () {
 
 IoNodeMixin.Register = Register;
 
-const importedPaths = {};
+/**
+ * IoNodeMixin applied to `Object` class.
+ */
+class IoNode extends IoNodeMixin(Object) {}
+
+
+const IMPORTED_PATHS = {};
 
 // TODO: document and test
 const preThrottleQueue = new Array();
@@ -440,9 +412,6 @@ requestAnimationFrame(animate);
 function requestAnimationFrameOnce(func) {
   if (funcQueue.indexOf(func) === -1) funcQueue.push(func);
 }
-/**
-  * IoNodeMixin applied to `Object` class.
-  */
-class IoNode extends IoNodeMixin(Object) {}
+
 
 export {IoNode, IoNodeMixin};

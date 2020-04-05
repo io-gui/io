@@ -16,6 +16,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
   static get Properties() {
     return {
+      $: {
+        type: Object,
+        notify: false,
+      },
       tabindex: {
         type: String,
         reflect: 1,
@@ -218,6 +222,14 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   set textNode(value) {
     this.flattenTextNode(this);
     this._textNode.nodeValue = String(value);
+  }
+  setProperties(props) {
+    super.setProperties(props);
+    if (props['style']) {
+      for (let s in props['style']) {
+        this.style[s] = props['style'][s];
+      }
+    }
   }
   /**
    * Alias for HTMLElement setAttribute where falsey values remove the attribute.
