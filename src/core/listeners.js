@@ -1,7 +1,8 @@
-// TODO: Improve tests.
-
 /** Creates a map of all listeners defined in the prototype chain. */
-export class ProtoListeners {
+/**
+ * Core `IoElement` class.
+ */
+class ProtoListeners {
   /**
    * @param {Array} protochain - Array of protochain constructors.
    */
@@ -14,7 +15,7 @@ export class ProtoListeners {
 }
 
 /** Manager for `IoNode` listeners. */
-export class Listeners {
+class Listeners {
   /**
    * Creates listener manager for `IoNode`.
    * @param {IoNode} node - Reference to the node/element itself.
@@ -178,3 +179,5 @@ export class Listeners {
     }
   }
 }
+
+export { ProtoListeners, Listeners };

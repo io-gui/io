@@ -1,7 +1,7 @@
-// TODO: Improve tests.
-
-/** Manager for `IoNode` event queue and change handle functions. */
-export class QueueManager extends Array {
+/**
+ * Manager for `IoNode` event queue and change handle functions.
+ */
+class QueueManager extends Array {
   /**
    * Creates queue manager for `IoNode`.
    * @param {IoNode} node - Reference to the node/element itself.
@@ -76,3 +76,5 @@ export class QueueManager extends Array {
     delete this.node;
   }
 }
+
+export { QueueManager };

@@ -2,7 +2,10 @@ import {IoNodeMixin} from './node.js';
 import {Listeners} from './listeners.js';
 import {buildTree} from '../../lib/ijk.js';
 
-export class IoElement extends IoNodeMixin(HTMLElement) {
+/**
+ * Core `IoElement` class.
+ */
+class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style() {
     return /* css */`
     :host[hidden] {
@@ -563,3 +566,5 @@ function _initProtoStyle(prototypes) {
     document.head.appendChild(element);
   }
 }
+
+export { IoElement };

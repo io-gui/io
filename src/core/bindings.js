@@ -1,7 +1,7 @@
 /**
  * Manager for `IoNode` property bindings. It holds all bindings for a particular IoNode.
  */
-export class BindingManager {
+class BindingManager {
   /**
    * Creates binding manager with a node reference.
    * @param {IoNode} node - Reference to the node.
@@ -33,7 +33,7 @@ export class BindingManager {
 /**
  * Binding object. It manages data binding between source and targets using `[prop]-changed` events.
  */
-export class Binding {
+class Binding {
   /**
    * Creates a binding object with specified `sourceNode` and `sourceProp`.
    * @param {IoNode} sourceNode - Source node.
@@ -160,3 +160,5 @@ export class Binding {
     }
   }
 }
+
+export { BindingManager, Binding };

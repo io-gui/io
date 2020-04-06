@@ -1,5 +1,8 @@
 import {Binding} from './bindings.js';
 
+/**
+ * `Property` class.
+ */
 class Property {
   /**
    * @param {Object} cfg - Configuration object.
@@ -42,7 +45,9 @@ class Property {
   }
 }
 
-
+/**
+ * `Properties` class.
+ */
 class Properties {
   /**
    * @param {IoNode} node - Configuration object.
@@ -134,7 +139,9 @@ class Properties {
   }
 }
 
-
+/**
+ * `ProtoProperty` class.
+ */
 class ProtoProperty {
   constructor(cfg) {
     const cType = typeof cfg;
@@ -171,6 +178,9 @@ class ProtoProperty {
   }
 }
 
+/**
+ * `ProtoProperties` class.
+ */
 class ProtoProperties {
   constructor(protochain) {
     this._p = protochain;

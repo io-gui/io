@@ -6,7 +6,7 @@ import {ProtoListeners, Listeners} from './listeners.js';
 /**
  * Core mixin for `IoNode` classes.
  * @param {function} superclass - Class to extend.
- * @return {IoNodeMixin} - Extended class with `IoNodeMixin` applied to it.
+ * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
  */
 const IoNodeMixin = (superclass) => {
   const classConstructor = class extends superclass {
@@ -43,7 +43,7 @@ const IoNodeMixin = (superclass) => {
     }
     /**
      * Connects IoNode to the application.
-     * @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
+     * @param {IoNode} owner - Node to connect to.
      */
     connect(owner) {
       if (this.__connections.indexOf(owner) === -1) {
@@ -53,7 +53,7 @@ const IoNodeMixin = (superclass) => {
     }
     /**
      * Disconnects IoNode from the application.
-     * @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
+     * @param {IoNode} owner - Node to disconnect from.
      */
     disconnect(owner) {
       if (this.__connections.indexOf(owner) !== -1) {
@@ -85,7 +85,6 @@ const IoNodeMixin = (superclass) => {
      * Applies compose object on change.
      */
     applyCompose() {
-      
       // TODO: Test and documentation.
       const compose = this.compose;
       if (compose) {
@@ -103,7 +102,7 @@ const IoNodeMixin = (superclass) => {
       return this.__bindingManager.get(prop);
     }
     /**
-     * Sets a property and emits [property]-set` event.
+     * Sets a property and emits `[property]-set` event.
      * Use this when property is set by user action (e.g. mouse click).
      * @param {string} prop - Property name.
      * @param {*} value - Property value.
@@ -414,4 +413,4 @@ function requestAnimationFrameOnce(func) {
 }
 
 
-export {IoNode, IoNodeMixin};
+export { IoNode, IoNodeMixin };

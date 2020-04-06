@@ -1,63 +1,96 @@
-## `IoNode` and `IoNodeMixin`
+## .IoNodeMixin(superclass: function) : function
 
-Core `IoNode` class, also available as `IoNodeMixin`. You can use it to create your own Io classes as following:
+Core mixin for `IoNode` classes.
 
-```javascript
-// Extend `IoNode` to create a new Io class.
-class MyClass extends IoNode {}
+### classConstructor
 
-// Or use `IoNodeMixin` to add Io features to anoher class.
-class MyClass extends IoNodeMixin(SomeOtherClass) {}
-```
+Creates `IoNode` instance and initializes internals.
 
-### `.Register()`
+### .connect(owner: IoNode)
 
-Register function should be called on the class itself before it can be used.
+Connects IoNode to the application.
 
-```javascript
-MyClass.Register()
-```
+### .disconnect(owner: IoNode)
 
-### `static get Properties()`
+Disconnects IoNode from the application.
 
-Properties are defined with a static property configuration object:
+### .preventDefault(event: Object)
 
-```javascript
-static get Properties() {
-  return {
-    myProperty: {
-      type: String,
-      notify: true,
-    },
-    myOtherProperty: Boolean,
-  };
-}
-```
+Handler function with `event.preventDefault()`.
 
-See [Proprties](/#doc=core-properties) for more.
+### .stopPropagation(event: Object)
 
-## Internal references
+Handler function with `event.stopPropagation()`.
 
-`.__bindingManager`: Reference to node's [BindingManager](/#doc=core-binding).
+### .changed()
 
-`.__queueManager`: Reference to node's [QueueManager](/#doc=core-queue).
+default change handler.
 
-`.__properties`: Reference to node's [Properties](/#doc=core-properties).
+### .applyCompose()
 
-`.__listeners`: Reference to node's [Listeners](/#doc=core-listeners).
+Applies compose object on change.
 
-`.__isConnected`: Set to `true` when the node is connected.
+### .bind(prop: string) : Binding
 
-`.__isRegistered`: Set to `true` when the node is registered.
+Returns a binding to a specified property`.
 
-`.__isIoNode`: Always `true` for decendants of `IoNode` class.
+### .set(prop: string, value: *, force: boolean)
 
-`.__protochain`: An array of all prototypes in the prototype chain.
+Sets a property and emits `[property]-set` event.
+Use this when property is set by user action (e.g. mouse click).
 
-`.__protoProperties`: All properties inherited from the prototype chain.
+### .setProperties(props: Object)
 
-`.__protoListeners`: All listeners inherited from the prototype chain.
+Sets multiple properties in batch.
+[property]-changed` events will be broadcast in the end.
 
-`.__functions`: A list of all auto-binding functions names starting with `_` or `on`.
+### ._onObjectMutationThrottled(prop: string)
 
-`.__observedProps`: A list of all mutaion-observed object-properties. 
+This function is called when `object-mutated` event is observed
+and changed object is a property of the node.
+
+### .connectedCallback()
+
+Callback when `IoNode` is connected.
+
+### .disconnectedCallback()
+
+Callback when `IoNode` is disconnected.
+
+### .dispose()
+
+Disposes all internals.
+Use this when node is no longer needed.
+
+### .addEventListener(type: string, listener: function, options: Object)
+
+Wrapper for addEventListener.
+
+### .removeEventListener(type: string, listener: function, options: Object)
+
+Wrapper for removeEventListener.
+
+### .dispatchEvent(type: string, detail: Object, bubbles: boolean, src: HTMLElement)
+
+Wrapper for dispatchEvent.
+
+### .queue(prop: string, value: *, oldValue: *)
+
+Adds property change to the queue.
+
+### .queueDispatch()
+
+Dispatches the queue.
+
+### .throttle(func: function, arg: *, asynchronous: boolean)
+
+Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+
+## .Register()
+
+Register function to be called once per class.
+
+## IoNode
+
+IoNodeMixin applied to `Object` class.
+
