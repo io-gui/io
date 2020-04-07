@@ -1,4 +1,4 @@
-import {IoNodeMixin} from './node.js';
+import {IoNodeMixin} from './io-node.js';
 import {Listeners} from './listeners.js';
 import {buildTree} from '../../lib/ijk.js';
 

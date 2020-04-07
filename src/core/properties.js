@@ -1,4 +1,4 @@
-import {Binding} from './bindings.js';
+import {Binding} from './binding.js';
 
 /**
  * `Property` class.

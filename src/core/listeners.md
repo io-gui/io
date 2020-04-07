@@ -1,10 +1,10 @@
 ## ProtoListeners
 
-Flat map of all listeners defined in the prototype chain.
+Map of all listeners defined in the prototype chain.
 
 ### ProtoListeners(protochain: `Protochain`)
 
-Creates map of all listeners from protochain.
+Creates a flat map of all listeners from protochain.
 
 ## Listeners
 
