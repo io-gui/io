@@ -1,10 +1,10 @@
-/** Creates a map of all listeners defined in the prototype chain. */
 /**
- * Core `IoElement` class.
+ * Map of all listeners defined in the prototype chain.
  */
 class ProtoListeners {
   /**
-   * @param {Array} protochain - Array of protochain constructors.
+   * Creates a flat map of all listeners from protochain.
+   * @param {Protochain} protochain - Array of protochain constructors.
    */
   constructor(protochain) {
     for (let i = protochain.length; i--;) {
