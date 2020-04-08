@@ -22,4 +22,4 @@ class ProtoFunctions extends Array{
   }
 }
 
-export { ProtoFunctions };
+export {ProtoFunctions};

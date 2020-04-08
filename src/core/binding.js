@@ -161,4 +161,4 @@ class Binding {
   }
 }
 
-export { BindingManager, Binding };
+export {BindingManager, Binding};

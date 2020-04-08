@@ -15,4 +15,4 @@ class ProtoChain extends Array {
   }
 }
 
-export { ProtoChain };
+export {ProtoChain};

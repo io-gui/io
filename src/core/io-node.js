@@ -396,4 +396,4 @@ function requestAnimationFrameOnce(func) {
 }
 
 
-export { IoNode, IoNodeMixin };
+export {IoNode, IoNodeMixin};

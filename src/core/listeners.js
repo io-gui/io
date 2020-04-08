@@ -180,4 +180,4 @@ class Listeners {
   }
 }
 
-export { ProtoListeners, Listeners };
+export {ProtoListeners, Listeners};

@@ -567,4 +567,4 @@ function _initProtoStyle(prototypes) {
   }
 }
 
-export { IoElement };
+export {IoElement};
