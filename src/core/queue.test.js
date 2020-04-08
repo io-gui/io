@@ -51,13 +51,13 @@ export default class {
         chai.expect(this.eventPayload.oldValue).to.be.equal(0);
         chai.expect(this.eventCounter).to.be.equal(1);
         chai.expect(this.changeCounter).to.be.equal(1);
-        this.queue.queue('test2', 0, Infinity);
+        this.queue.queue('test2', 0, -1);
         this.queue.queue('test3', 2, 1);
         this.queue.dispatch();
         chai.expect(this.eventName).to.be.equal('test2-changed');
         chai.expect(this.eventPayload.property).to.be.equal('test2');
         chai.expect(this.eventPayload.value).to.be.equal(0);
-        chai.expect(this.eventPayload.oldValue).to.be.equal(Infinity);
+        chai.expect(this.eventPayload.oldValue).to.be.equal(-1);
         chai.expect(this.eventCounter).to.be.equal(3);
         chai.expect(this.idChangeCounter).to.be.equal(0);
         chai.expect(this.changeCounter).to.be.equal(2);

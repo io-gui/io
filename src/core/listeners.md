@@ -2,7 +2,7 @@
 
 Map of all listeners defined in the prototype chain.
 
-### ProtoListeners(protochain: `Protochain`)
+### ProtoListeners(protochain: `ProtoChain`)
 
 Creates a flat map of all listeners from protochain.
 

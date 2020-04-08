@@ -6,7 +6,7 @@ It is responsible for triggering both change events and change handler functions
 ### Queue(node: `IoNode`)
 
 Creates queue manager for specified instance of `IoNode`.
-It should be evoked by the `IoNode` constructor itself.
+It should be evoked by the `IoNode` constructor.
 
 ### .queue(prop: `string`, value: `*`, oldValue: `*`)
 
