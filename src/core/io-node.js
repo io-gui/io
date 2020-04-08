@@ -1,4 +1,4 @@
-import {Protochain} from './protochain.js';
+import {ProtoChain} from './protochain.js';
 import {ProtoFunctions} from './functions.js';
 import {BindingManager, Binding} from './binding.js';
 import {Queue} from './queue.js';
@@ -327,7 +327,7 @@ const IoNodeMixin = (superclass) => {
  * Register function to be called once per class.
  */
 const Register = function () {
-  const protochain = new Protochain(this.prototype);
+  const protochain = new ProtoChain(this.prototype);
   let proto = this.prototype;
   
   Object.defineProperty(proto, '__isIoNode', {value: true});

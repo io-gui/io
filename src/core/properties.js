@@ -1,29 +1,165 @@
 import {Binding} from './binding.js';
 
+// TODO: consider and test bindings
+
 /**
- * `Property` class.
+ * Property configuration object for class **prototypes**.
+ * It is generated from property definitions in `static get Properties()` return object.
+ * @property {*} value - Default value.
+ * @property {function} type - Constructor of value.
+ * @property {number} reflect - Reflects to HTML attribute
+ * @property {boolean} notify - Trigger change handlers and change events.
+ * @property {boolean} observe - Observe object mutations for this property.
+ * @property {boolean} enumerable - Makes property enumerable.
+ * @property {Binding} binding - Binding object.
+ */
+class ProtoProperty {
+  /**
+   * Creates the property configuration object and sets default values.
+   * @param {ProtoProperty} prop - Configuration object.
+   * @param {boolean} noDefaults - Assign default values.
+   */
+  constructor(prop, noDefaults) {
+
+    if (!noDefaults) {
+      this.value = undefined;
+      this.type = undefined;
+      this.notify = true;
+      this.reflect = 0;
+      this.observe = false;
+      this.enumerable = true;
+      this.binding = undefined;
+    }
+
+    if (prop === null) {
+
+      this.value = null;
+
+    } else if (typeof prop === 'function') {
+
+      this.type = prop;
+
+      if (!noDefaults) {
+        if (this.type === Boolean) this.value = false;
+        else if (this.type === String) this.value = '';
+        else if (this.type === Number) this.value = 0;
+        else if (this.type === Object) this.value = {};
+        else if (this.type === Array) this.value = [];
+      }
+
+    } else if (typeof prop === 'number' || typeof prop === 'string' || typeof prop === 'boolean') {
+
+      this.value = prop;
+      this.type = prop.constructor;
+
+    } else if (typeof prop === 'object') {
+
+      if (prop instanceof Array) {
+
+        this.value = [...prop];
+        this.type = Array;
+        
+      } else if (prop instanceof Binding) {
+        
+        this.value = prop.value;
+        this.binding = prop;
+
+      } else {
+
+        if (typeof prop.type !== 'function' && prop.value && prop.value.constructor) {
+          prop.type = prop.value.constructor;
+        }
+
+        if (prop && prop.value !== undefined) {
+          if (prop.value instanceof Array) {
+            this.value = [...prop.value];
+          } else if (prop.value && typeof prop.value === 'object') {
+            this.value = new prop.value.constructor();
+          } else {
+            this.value = prop.value;
+          }
+        }
+
+        if (typeof prop.type === 'function') {
+          this.type = prop.type;
+          if (this.value === undefined) {
+            if (prop.type === Boolean) this.value = false;
+            else if (prop.type === String) this.value = '';
+            else if (prop.type === Number) this.value = 0;
+            else if (prop.type === Object) this.value = {};
+            else if (prop.type === Array) this.value = [];
+            else if (prop.type !== HTMLElement && prop.type !== Function) {
+              this.value = new prop.type();
+            }
+          }
+        }
+
+      }
+      
+    }
+
+    prop = prop || {};
+
+    if (typeof prop.notify == 'boolean') this.notify = prop.notify;
+    if (typeof prop.reflect == 'number') this.reflect = prop.reflect;
+    if (typeof prop.observe == 'boolean') this.observe = prop.observe;
+    if (typeof prop.enumerable == 'boolean') this.enumerable = prop.enumerable;
+    if (prop.binding instanceof Binding) this.binding = prop.binding;
+
+    return this;
+  }
+}
+
+/**
+ * Collection of all property configurations for class **prototypes**.
+ * Property configurations are inferred from all property definitions in the prototype chain.
+ */
+class ProtoProperties {
+  /**
+   * Creates all property configurations for specified prototype chain.
+   * @param {ProtoChain} protochain - Configuration object.
+   */
+  constructor(protochain) {
+    for (let i = protochain.length; i--;) {
+      const props = protochain[i].constructor.Properties;
+      for (let p in props) {
+        if (!this[p]) this[p] = new ProtoProperty(props[p]);
+        else Object.assign(this[p], new ProtoProperty(props[p], true));
+        if (p.charAt(0) === '_') {
+          this[p].notify = false;
+          this[p].enumerable = false;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Property configuration object for class **instances**.
+ * It is copied from the corresponding `ProtoProperty`.
+ * @property {*} value - Default value.
+ * @property {function} type - Constructor of value.
+ * @property {number} reflect - Reflects to HTML attribute
+ * @property {boolean} notify - Trigger change handlers and change events.
+ * @property {boolean} observe - Observe object mutations for this property.
+ * @property {boolean} enumerable - Makes property enumerable.
+ * @property {Binding} binding - Binding object.
  */
 class Property {
   /**
-   * @param {Object} cfg - Configuration object.
-   * @param {*} cfg.value - Default value.
-   * @param {function} cfg.type - Constructor of value.
-   * @param {boolean} cfg.reflect - Reflects to HTML attribute
-   * @param {boolean} cfg.notify - Trigger change handlers and change events.
-   * @param {boolean} cfg.observe - Observe object mutations for this property.
-   * @param {boolean} cfg.enumerable - Makes property enumerable.
-   * @param {Binding} cfg.binding - Binding object.
+   * Created the property configuration object and copies values from `ProtoProperty`.
+   * @param {ProtoProperty} protoProp - Configuration object.
    */
-  constructor(cfg) {
-    this.value = cfg.value;
-    this.type = cfg.type;
-    this.reflect = cfg.reflect;
-    this.notify = cfg.notify;
-    this.observe = cfg.observe;
-    this.enumerable = cfg.enumerable;
-    this.binding = cfg.binding;
-    if (this.type === Array && this.value) {
-      this.value = [...this.value]; // TODO: reconsider
+  constructor(protoProp) {
+    this.value = protoProp.value;
+    this.type = protoProp.type;
+    this.reflect = protoProp.reflect;
+    this.notify = protoProp.notify;
+    this.observe = protoProp.observe;
+    this.enumerable = protoProp.enumerable;
+    this.binding = protoProp.binding;
+    if (this.type === Array && this.value instanceof Array) {
+      this.value = [...this.value];
     }
     if (this.type === Object && this.value) {
       this.value = {};
@@ -35,8 +171,6 @@ class Property {
       else if (this.type === Array) this.value = [];
       else if (this.type === Object) this.value = {};
     }
-    // TODO: consider bindings
-    // instantiateCustomType
     if (this.value === undefined && this.type) {
       if (this.type !== HTMLElement && this.type !== Function) {
         this.value = new this.type();
@@ -46,7 +180,8 @@ class Property {
 }
 
 /**
- * `Properties` class.
+ * Collection of all property configurations for class **instances**.
+ * Property configurations are inferred from all property definitions in the prototype chain.
  */
 class Properties {
   /**
@@ -139,77 +274,4 @@ class Properties {
   }
 }
 
-/**
- * `ProtoProperty` class.
- */
-class ProtoProperty {
-  constructor(cfg) {
-    const cType = typeof cfg;
-    if (cfg === null || cfg === undefined) {
-      cfg = {value: cfg};
-    } else if (cType === 'function') {
-      cfg = {type: cfg};
-    } else if (cType === 'number' || cType === 'string' || cType === 'boolean') {
-      cfg = {value: cfg, type: cfg.constructor};
-    } else if (cType === 'object') {
-      if (cfg instanceof Array) {
-        cfg = {value: [...cfg], type: Array}; // TODO: reconsider
-      } else if (cfg instanceof Binding) {
-        cfg = {value: cfg.value, binding: cfg};
-      } else {
-        if (typeof cfg.type !== 'function') {
-          if (cfg.value === undefined || cfg.value === null) {
-            // console.error('Properties require value or type'); // TODO: reconsider
-          } else {
-            cfg.type = cfg.value.constructor;
-          }
-        }
-      }
-    } else {
-      console.error('Property error!', cType, cfg);
-    }
-    if (cfg.value !== undefined) this.value = cfg.value;
-    if (cfg.type !== undefined) this.type = cfg.type;
-    if (cfg.reflect !== undefined) this.reflect = cfg.reflect;
-    if (cfg.notify !== undefined) this.notify = cfg.notify;
-    if (cfg.observe !== undefined) this.observe = cfg.observe;
-    if (cfg.enumerable !== undefined) this.enumerable = cfg.enumerable;
-    if (cfg.binding !== undefined) this.binding = cfg.binding;
-  }
-}
-
-/**
- * `ProtoProperties` class.
- */
-class ProtoProperties {
-  constructor(protochain) {
-    this._p = protochain;
-    const defs = {};
-    for (let i = protochain.length; i--;) {
-      // Properties
-      const props = protochain[i].constructor.Properties;
-      for (let p in props) {
-        if (!defs[p]) defs[p] = new ProtoProperty(props[p]);
-        else Object.assign(defs[p], new ProtoProperty(props[p]));
-        if (defs[p].reflect === undefined) defs[p].reflect = 0;
-        if (defs[p].notify === undefined) defs[p].notify = true;
-        if (defs[p].observe === undefined) defs[p].observe = false;
-        if (defs[p].enumerable === undefined) defs[p].enumerable = true;
-      }
-    }
-    for (let p in defs) {
-      const isPrivate = p.charAt(0) === '_';
-      if (isPrivate) {
-        defs[p].notify = false;
-        defs[p].enumerable = false;
-      }
-      // TODO: reconsider
-      if (defs[p].value === undefined) defs[p].value = undefined;
-      if (defs[p].type === undefined) defs[p].type = undefined;
-      // if (defs[p].observe === undefined) defs[p].observe = [Object, Array].indexOf(defs[p].type) !== -1;
-      this[p] = new Property(defs[p]);
-    }
-  }
-}
-
-export { Property, Properties, ProtoProperty, ProtoProperties };
+export {ProtoProperty, ProtoProperties, Property, Properties};

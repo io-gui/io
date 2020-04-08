@@ -122,11 +122,11 @@ export class IoDocs extends IoSelectorSidebar {
         {label: 'Core Classes', options: [
           {label: 'IoNode', value: srcPath + 'core/io-node'},
           {label: 'IoElement', value: srcPath + 'core/io-element'},
-          {label: 'Protochain', value: srcPath + 'core/protochain'},
           {label: 'Binding', value: srcPath + 'core/binding'},
-          {label: 'Properties', value: srcPath + 'core/properties'},
           {label: 'Functions', value: srcPath + 'core/functions'},
           {label: 'Listeners', value: srcPath + 'core/listeners'},
+          {label: 'Properties', value: srcPath + 'core/properties'},
+          {label: 'ProtoChain', value: srcPath + 'core/protochain'},
           {label: 'Queue', value: srcPath + 'core/queue'},
         ]},
       ],

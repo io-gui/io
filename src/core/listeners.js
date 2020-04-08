@@ -4,7 +4,7 @@
 class ProtoListeners {
   /**
    * Creates a flat map of all listeners from protochain.
-   * @param {Protochain} protochain - Array of protochain constructors.
+   * @param {ProtoChain} protochain - Array of protochain constructors.
    */
   constructor(protochain) {
     for (let i = protochain.length; i--;) {

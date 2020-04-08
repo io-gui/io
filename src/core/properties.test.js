@@ -251,6 +251,38 @@ export default class {
         chai.expect(props2._prop.enumerable).to.be.equal(false);
         
       });
+      it('Should not override explicit property options with implicit', () => {
+        class Object1 {
+          static get Properties() {
+            return {
+              prop1: {
+                value: 2,
+                notify: false,
+                reflect: 2,
+                observe: true,
+                enumerable: false,
+              },
+            };
+          }
+        }
+        
+        class Object2 extends Object1 {
+          static get Properties() {
+            return {
+              prop1: 'hello',
+            };
+          }
+        }
+
+        const protochain = new ProtoChain(Object2.prototype);
+        const props = new ProtoProperties(protochain);
+
+        chai.expect(props.prop1.type).to.be.equal(String);
+        chai.expect(props.prop1.notify).to.be.equal(false);
+        chai.expect(props.prop1.reflect).to.be.equal(2);
+        chai.expect(props.prop1.observe).to.be.equal(true);
+        chai.expect(props.prop1.enumerable).to.be.equal(false);
+      });
     });
   }
 }
