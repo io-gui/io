@@ -24,8 +24,10 @@ const IoNodeMixin = (superclass) => {
     constructor(initProps = {}) {
       super(initProps);
 
-      if (!this.__isRegistered) {
-        console.error('IoNodeMixin: Not registered! Call `Register()` before using the class!');
+
+      const constructor = this.__proto__.constructor;
+      if (constructor.__isRegisteredAs !== constructor.name) {
+        console.error(`${constructor.name}: Not registered! Call "Register()" before using ${constructor.name} class!`);
       }
 
       this.__protoFunctions.bind(this);
@@ -33,11 +35,12 @@ const IoNodeMixin = (superclass) => {
       Object.defineProperty(this, '__bindingManager', {value: new BindingManager(this)});
       Object.defineProperty(this, '__queue', {value: new Queue(this)});
 
-      Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
       Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
 
       Object.defineProperty(this, '__isConnected', {enumerable: false, writable: true});
       Object.defineProperty(this, '__connections', {enumerable: false, value: []});
+
+      Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
 
       this.setProperties(initProps);
     }
@@ -331,9 +334,10 @@ const Register = function () {
   let proto = this.prototype;
   
   Object.defineProperty(proto, '__isIoNode', {value: true});
-  Object.defineProperty(proto, '__isRegistered', {value: true});
+  Object.defineProperty(proto.constructor, '__isRegisteredAs', {value: proto.constructor.name});  
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
+
   Object.defineProperty(proto, '__protoFunctions', {value: new ProtoFunctions(protochain)});
   Object.defineProperty(proto, '__protoProperties', {value: new ProtoProperties(protochain)});
   Object.defineProperty(proto, '__protoListeners', {value: new ProtoListeners(protochain)});
@@ -359,6 +363,8 @@ IoNodeMixin.Register = Register;
  * IoNodeMixin applied to `Object` class.
  */
 class IoNode extends IoNodeMixin(Object) {}
+
+IoNode.Register();
 
 const IMPORTED_PATHS = {};
 

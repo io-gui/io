@@ -15,7 +15,7 @@ class HTML3 extends HTML2 {}
 export default class {
   run() {
     describe('ProtoChain', () => {
-      it('Should have prototype chain elements ', () => {
+      it('Should have all prototypes from the inheritance chain', () => {
         const protochain = new ProtoChain(Array3.prototype);
         chai.expect(protochain[0]).to.be.equal(Array3.prototype);
         chai.expect(protochain[1]).to.be.equal(Array2.prototype);

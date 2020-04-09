@@ -1,7 +1,5 @@
 import {Binding} from './binding.js';
 
-// TODO: consider and test bindings
-
 /**
  * Property configuration object for class **prototypes**.
  * It is generated from property definitions in `static get Properties()` return object.
@@ -104,7 +102,10 @@ class ProtoProperty {
     if (typeof prop.reflect == 'number') this.reflect = prop.reflect;
     if (typeof prop.observe == 'boolean') this.observe = prop.observe;
     if (typeof prop.enumerable == 'boolean') this.enumerable = prop.enumerable;
-    if (prop.binding instanceof Binding) this.binding = prop.binding;
+    if (prop.binding instanceof Binding) {
+      this.binding = prop.binding;
+      this.value = prop.binding.value;
+    }
 
     return this;
   }
@@ -152,11 +153,11 @@ class Property {
    */
   constructor(protoProp) {
     this.value = protoProp.value;
-    this.type = protoProp.type;
-    this.reflect = protoProp.reflect;
     this.notify = protoProp.notify;
+    this.reflect = protoProp.reflect;
     this.observe = protoProp.observe;
     this.enumerable = protoProp.enumerable;
+    this.type = protoProp.type;
     this.binding = protoProp.binding;
     if (this.type === Array && this.value instanceof Array) {
       this.value = [...this.value];
@@ -180,27 +181,30 @@ class Property {
 }
 
 /**
- * Collection of all property configurations for class **instances**.
- * Property configurations are inferred from all property definitions in the prototype chain.
+ * Collection of all property configurations for class **instances** compied from corresponding `ProtoProperties`.
+ * 
+ * It also stores current property values and creates the interface between `IoNode` and itself.
  */
 class Properties {
   /**
-   * @param {IoNode} node - Configuration object.
-   * @param {ProtoProperties} protoProperties - Configuration object.
+   * @param {IoNode} node - Owner instance of `IoNode`.
+   * @param {ProtoProperties} protoProps - Configuration object.
    */
-  constructor(node, protoProperties) {
+  constructor(node, protoProps) {
     Object.defineProperty(this, 'node', {value: node});
-    for (let prop in protoProperties) {
-      this[prop] = new Property(protoProperties[prop]);
-      // TODO: consider bindings
-      if (this[prop].value !== undefined) {
-        if (typeof this[prop].value === 'object' && this[prop].value !== null) {
-          if (this[prop].value.__isIoNode) this[prop].value.connect(node);
-          node.queue(prop, this[prop].value, undefined);
+    for (let prop in protoProps) {
+      Object.defineProperty(this, prop, {value: new Property(protoProps[prop]), enumerable: true, configurable: true});
+      const value = this[prop].value;
+      if (value !== undefined && value !== null) {
+        if (typeof value === 'object') {
+          node.queue(prop, value, undefined);
+          if (value.__isIoNode) value.connect(node);
         } else if (this[prop].reflect >= 1) {
-          this.node.setAttribute(prop, this[prop].value);
+          node.setAttribute(prop, value);
         }
       }
+      const binding = this[prop].binding;
+      if (binding) binding.addTarget(node, prop);
     }
   }
   get(prop) {

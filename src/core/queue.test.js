@@ -34,6 +34,7 @@ export default class {
         chai.expect(typeof this.queue.array).to.be.equal('object');
         chai.expect(this.queue.array.length).to.be.equal(0);
         chai.expect(this.queue.array instanceof Array).to.be.equal(true);
+        this.reset();
       });
       it('Should dispose correctly', () => {
         this.queue.dispose();

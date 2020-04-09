@@ -60,7 +60,7 @@ class Binding {
    * @param {string} targetProp - Target property.
    */
   addTarget(targetNode, targetProp) {
-    targetNode[targetProp] = this.source[this.sourceProp];
+    // targetNode[targetProp] = this.source[this.sourceProp]; // TODO: test
     if (this.targets.indexOf(targetNode) === -1) this.targets.push(targetNode);
     if (this.targetsMap.has(targetNode)) {
       const targetProps = this.targetsMap.get(targetNode);

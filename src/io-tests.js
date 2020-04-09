@@ -46,32 +46,32 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    // new Node().run();
-    // new Element().run();
-
     new Properties().run();
     new ProtoChain().run();
     new Queue().run();
 
-    // new Item().run();
-    // new Content().run();
-    // new Gl().run();
-    // new Button().run();
-    // new Boolean().run();
-    // new Boolean().run();
-    // new Boolicon().run();
-    // new Switch().run();
-    // new Sting().run();
-    // new Number().run();
-    // new Slider().run();
-    // new SliderRange().run();
-    // new NumberSlider().run();
-    // new NumberSliderRange().run();
-    // new Icon().run();
-    // new IconSet().run();
-    // new Layer().run();
-    // new Ladder().run();
-    // new Theme().run();
+    new Node().run();
+    new Element().run();
+
+    new Item().run();
+    new Content().run();
+    new Gl().run();
+    new Button().run();
+    new Boolean().run();
+    new Boolean().run();
+    new Boolicon().run();
+    new Switch().run();
+    new Sting().run();
+    new Number().run();
+    new Slider().run();
+    new SliderRange().run();
+    new NumberSlider().run();
+    new NumberSliderRange().run();
+    new Icon().run();
+    new IconSet().run();
+    new Layer().run();
+    new Ladder().run();
+    new Theme().run();
 
     // TODO
     // new OptionMenu().run();

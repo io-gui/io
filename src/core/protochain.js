@@ -1,9 +1,9 @@
 /**
- * An array of all prototype objects in the inheritance chain.
+ * An array of all prototypes in the inheritance chain.
  */
 class ProtoChain extends Array {
   /**
-   * Walks down the prototype inheritance chain of the specified prototype object and adds each prototype to itself.
+   * Walks down the prototype inheritance chain of the specified prototype and adds each prototype to itself.
    * It terminates with `HTMLElement`, `Object` or `Array`.
    * @param {Object} proto - Prototype object.
    */

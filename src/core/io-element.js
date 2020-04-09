@@ -567,4 +567,6 @@ function _initProtoStyle(prototypes) {
   }
 }
 
+IoElement.Register();
+
 export {IoElement};
