@@ -1,8 +1,9 @@
 import {IoSelectorSidebar, IoStorageFactory as $} from './io-elements.js';
 import './io-extras.js';
 
-const docPath = (new URL(import.meta.url).pathname).replace('io-docs.js', '../docs/');
-const srcPath = (new URL(import.meta.url).pathname).replace('io-docs.js', '../src/');
+const absPath = import.meta.url.replace('io-docs.js', '');
+const docPath = new URL(absPath + '../docs/').pathname;
+const srcPath = new URL(absPath + '../src/').pathname;
 
 // TODO: move to extras
 export class IoDocs extends IoSelectorSidebar {
@@ -24,7 +25,7 @@ export class IoDocs extends IoSelectorSidebar {
     return {
       name: 'Io-GUI Documentation',
       collapseWidth: 640,
-      selected: $({value: 'getting-started', storage: 'hash', key: 'doc'}),
+      selected: $({value: docPath + 'getting-started', storage: 'hash', key: 'doc'}),
       options: [
         {label: 'Getting Started', options: [
           {label: 'Usage', value: docPath + 'getting-started#usage'},
