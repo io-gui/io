@@ -74,13 +74,6 @@ export default class {
     };
     this.node = new TestNode({'on-prop2-changed': 'onProp2Change', 'on-prop3-changed': this.prop3Change});
     this.node.connect(window);
-
-    for (let i in this.node) {
-      console.log(i);
-    }
-
-    // console.log(Object.keys(this.node.__proto__));
-    
   }
   reset() {
     this.node.reset();

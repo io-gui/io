@@ -27,6 +27,7 @@ Created the property configuration object and copies values from `ProtoProperty`
 
 ## Properties
 
-Collection of all property configurations for class **instances**.
-Property configurations are inferred from all property definitions in the prototype chain.
+Collection of all property configurations for class **instances** compied from corresponding `ProtoProperties`.
+
+It also stores current property values and creates the interface between `IoNode` and itself.
 

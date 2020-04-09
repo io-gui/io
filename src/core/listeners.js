@@ -151,7 +151,7 @@ class Listeners {
     const active = this.activeListeners;
     if (active[type] !== undefined) {
       const i = active[type].indexOf(listener);
-      if (i !== - 1) {
+      if (i !== - 1 || listener === undefined) {
         if (this.node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.node, type, listener, options);
         active[type].splice(i, 1);
       }

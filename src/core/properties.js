@@ -191,90 +191,106 @@ class Properties {
    * @param {ProtoProperties} protoProps - Configuration object.
    */
   constructor(node, protoProps) {
-    Object.defineProperty(this, 'node', {value: node});
+    Object.defineProperty(this, '__node', {value: node, configurable: true});
     for (let prop in protoProps) {
-      Object.defineProperty(this, prop, {value: new Property(protoProps[prop]), enumerable: true, configurable: true});
+      Object.defineProperty(this, prop, {
+        value: new Property(protoProps[prop]),
+        enumerable: protoProps[prop].enumerable,
+        configurable: true
+      });
       const value = this[prop].value;
       if (value !== undefined && value !== null) {
+        // TODO: document special handling of object and node values
         if (typeof value === 'object') {
           node.queue(prop, value, undefined);
-          if (value.__isIoNode) value.connect(node);
-        } else if (this[prop].reflect >= 1) {
+          if (value.__isIoNode && node.__isConnected) value.connect(node);
+        } else if (this[prop].reflect >= 1 && node.__isIoElement) {
           node.setAttribute(prop, value);
         }
       }
       const binding = this[prop].binding;
       if (binding) binding.addTarget(node, prop);
     }
+    Object.defineProperty(this, '__keys', {value: Object.getOwnPropertyNames(this), configurable: true});
   }
-  get(prop) {
-    return this[prop].value;
+  get(key) {
+    return this[key].value;
   }
-  set(prop, value, suspendDispatch) {
-    let oldValue = this[prop].value;
+  set(key, value, suspendDispatch) {
+
+    const prop = this[key];
+    const oldValue = prop.value;
+
     if (value !== oldValue) {
 
-      const node = this.node;
+      const node = this.__node;
+      const binding = (value instanceof Binding) ? value : undefined;
 
-      let oldBinding = this[prop].binding;
-
-      let binding = (value instanceof Binding) ? value : null;
-
-      if (binding && oldBinding && binding !== oldBinding) {
-        oldBinding.removeTarget(node, prop); // TODO: test extensively
-      }
       if (binding) {
-        binding.addTarget(node, prop);
-        this[prop].binding = binding;
-        this[prop].value = value.source[value.sourceProp];
+
+        const oldBinding = prop.binding;
+        if (oldBinding && binding !== oldBinding) {
+          oldBinding.removeTarget(node, key);
+        }
+
+        binding.addTarget(node, key);
+        prop.binding = binding;
+        prop.value = value.source[value.sourceProp];
         value = value.source[value.sourceProp];
+
       } else {
-        this[prop].value = value;
+
+        prop.value = value;
+
       }
 
-      if (value && value.__isIoNode) {
-        value.connect(node);
-      }
+      if (value && value.__isIoNode) value.connect(node);
+      if (oldValue && oldValue.__isIoNode) oldValue.disconnect(node);
 
-      if (oldValue && oldValue.__isIoNode) {
-        oldValue.disconnect(node);
-      }
-
-      if (this[prop].notify && oldValue !== this[prop].value) {
-        node.queue(prop, this[prop].value, oldValue);
+      if (prop.notify && oldValue !== value) {
+        node.queue(key, value, oldValue);
         if (node.__isConnected && !suspendDispatch) {
           node.queueDispatch();
         }
       }
-      if (this[prop].reflect >= 1) node.setAttribute(prop, value);
+
+      if (prop.reflect >= 1 && node.__isIoElement) node.setAttribute(key, value);
     }
 
   }
   connect() {
-    // TODO: test dispose and disconnect for memory leaks!!
-    // TODO: dispose bindings properly
-    for (let p in this) {
+    for (let i = this.__keys.length; i--;) {
+      const p = this.__keys[i];
       if (this[p].binding) {
-        this[p].binding.addTarget(this.node, p); //TODO: test
+        this[p].binding.addTarget(this.__node, p);
+      }
+      if (this[p].value && this[p].value.__isIoNode) {
+        this[p].value.connect(this.__node);
       }
     }
   }
   disconnect() {
-    for (let p in this) {
+    for (let i = this.__keys.length; i--;) {
+      const p = this.__keys[i];
       if (this[p].binding) {
-        this[p].binding.removeTarget(this.node, p);
+        this[p].binding.removeTarget(this.__node, p);
+      }
+      if (this[p].value && this[p].value.__isIoNode) {
+        this[p].value.disconnect(this.__node);
       }
     }
   }
   dispose() {
-    // TODO: use!
-    for (let p in this) {
+    for (let i = this.__keys.length; i--;) {
+      const p = this.__keys[i];
       if (this[p].binding) {
-        this[p].binding.removeTarget(this.node, p);
+        this[p].binding.removeTarget(this.__node, p);
         delete this[p].binding;
       }
       delete this[p];
     }
+    delete this['__node'];
+    delete this['__keys'];
   }
 }
 

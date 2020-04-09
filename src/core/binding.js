@@ -59,6 +59,7 @@ class Binding {
    * @param {IoNode} targetNode - Target node.
    * @param {string} targetProp - Target property.
    */
+  // TODO: test!!
   addTarget(targetNode, targetProp) {
     // targetNode[targetProp] = this.source[this.sourceProp]; // TODO: test
     if (this.targets.indexOf(targetNode) === -1) this.targets.push(targetNode);
@@ -79,6 +80,7 @@ class Binding {
    * @param {IoNode} targetNode - Target node.
    * @param {string} targetProp - Target property.
    */
+  // TODO: test!!
   removeTarget(targetNode, targetProp) {
     if (this.targetsMap.has(targetNode)) {
       const targetProps = this.targetsMap.get(targetNode);
