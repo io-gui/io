@@ -6,6 +6,9 @@ import '../lib/chai.js';
 import Node from './core/io-node.test.js';
 import Element from './core/io-element.test.js';
 
+import Binding from './core/binding.test.js';
+import Functions from './core/functions.test.js';
+import Listeners from './core/listeners.test.js';
 import Properties from './core/properties.test.js';
 import ProtoChain from './core/protochain.test.js';
 import Queue from './core/queue.test.js';
@@ -48,7 +51,10 @@ function runTests() {
   if (!testCompleted) {
     new Properties().run();
     new ProtoChain().run();
+    new Binding().run();
     new Queue().run();
+    new Listeners().run();
+    new Functions().run();
 
     new Node().run();
     new Element().run();

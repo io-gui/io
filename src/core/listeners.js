@@ -1,9 +1,9 @@
 /**
- * Map of all listeners defined in the prototype chain.
+ * Collection of all listeners defined in the prototype chain.
  */
 class ProtoListeners {
   /**
-   * Creates a flat map of all listeners from protochain.
+   * Creates a collection of all listeners from protochain.
    * @param {ProtoChain} protochain - Array of protochain constructors.
    */
   constructor(protochain) {
@@ -14,27 +14,28 @@ class ProtoListeners {
   }
 }
 
-/** Manager for `IoNode` listeners. */
+/**
+ * Manager of listeners for a class **instance**.
+ */
 class Listeners {
   /**
-   * Creates listener manager for `IoNode`.
+   * Creates manager for listener.
    * @param {IoNode} node - Reference to the node/element itself.
-   * @param {ProtoListeners} protoListeners - List of listeners defined in the protochain.
+   * @param {ProtoListeners} protoListeners - Collection of all listeners defined in the protochain.
    */
   constructor(node, protoListeners) {
-    // Copy listeners from protolisteners.
     Object.defineProperty(this, 'node', {value: node});
     Object.defineProperty(this, 'propListeners', {value: {}});
     Object.defineProperty(this, 'activeListeners', {value: {}});
-    Object.defineProperty(this, '__isConnected', {enumerable: false, writable: true});
+    Object.defineProperty(this, '__isConnected', {writable: true});
     for (let prop in protoListeners) this[prop] = protoListeners[prop];
   }
   /**
-   * Sets listeners from properties (filtered form properties map by 'on-' prefix).
-   * @param {Object} props - Map of all properties.
+   * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
+   * @param {Object} props - Properties.
    */
-  // TODO: figure out how to unset propListeners.
   setPropListeners(props) {
+    // TODO: Unset propListeners, test.
     const listeners = this.propListeners;
     const node = this.node;
     const newListeners = {};
@@ -64,7 +65,7 @@ class Listeners {
     }
   }
   /**
-   * Adds event listeners.
+   * Connects all event listeners.
    */
   connect() {
     this.__isConnected = true;
@@ -88,7 +89,7 @@ class Listeners {
     }
   }
   /**
-   * Removes event listeners.
+   * Disconnects all event listeners.
    */
   disconnect() {
     this.__isConnected = false;
@@ -112,11 +113,11 @@ class Listeners {
     }
   }
   /**
-   * Removes all event listeners.
+   * Disconnects all event listeners and removes all references.
    * Use this when node is no longer needed.
    */
-  // TODO: test
   dispose() {
+    // TODO: test
     this.disconnect();
     const active = this.activeListeners;
     for (let i in active) {
@@ -127,6 +128,7 @@ class Listeners {
     }
   }
   /**
+   * Proxy for `addEventListener` method.
    * Adds an event listener.
    * @param {string} type - event name to listen to.
    * @param {function} listener - event handler function.
@@ -142,6 +144,7 @@ class Listeners {
     }
   }
   /**
+   * Proxy for `removeEventListener` method.
    * Removes an event listener.
    * @param {string} type - event name to listen to.
    * @param {function} listener - event handler function.
@@ -158,7 +161,7 @@ class Listeners {
     }
   }
   /**
-   * Shorthand for event dispatch.
+   * Shorthand for custom event dispatch.
    * @param {string} type - event name to dispatch.
    * @param {Object} detail - event detail.
    * @param {boolean} bubbles - event bubbles.

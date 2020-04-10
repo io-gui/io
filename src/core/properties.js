@@ -1,7 +1,7 @@
 import {Binding} from './binding.js';
 
 /**
- * Property configuration object for class **prototypes**.
+ * Property configuration object for a class **prototype**.
  * It is generated from property definitions in `static get Properties()` return object.
  * @property {*} value - Default value.
  * @property {function} type - Constructor of value.
@@ -13,7 +13,7 @@ import {Binding} from './binding.js';
  */
 class ProtoProperty {
   /**
-   * Creates the property configuration object and sets default values.
+   * Creates the property configuration object and sets the default values.
    * @param {ProtoProperty} prop - Configuration object.
    * @param {boolean} noDefaults - Assign default values.
    */
@@ -112,13 +112,13 @@ class ProtoProperty {
 }
 
 /**
- * Collection of all property configurations for class **prototypes**.
+ * Collection of all property configurations for a class **prototype**.
  * Property configurations are inferred from all property definitions in the prototype chain.
  */
 class ProtoProperties {
   /**
    * Creates all property configurations for specified prototype chain.
-   * @param {ProtoChain} protochain - Configuration object.
+   * @param {ProtoChain} protochain - Prototype chain.
    */
   constructor(protochain) {
     for (let i = protochain.length; i--;) {
@@ -136,20 +136,20 @@ class ProtoProperties {
 }
 
 /**
- * Property configuration object for class **instances**.
+ * Property configuration object for a class **instance**.
  * It is copied from the corresponding `ProtoProperty`.
- * @property {*} value - Default value.
- * @property {function} type - Constructor of value.
- * @property {number} reflect - Reflects to HTML attribute
- * @property {boolean} notify - Trigger change handlers and change events.
+ * @property {*} value - Property value.
+ * @property {function} type - Constructor of the property value.
+ * @property {number} reflect - HTML attribute [-1, 0, 1 or 2]
+ * @property {boolean} notify - Enables change handlers and events.
  * @property {boolean} observe - Observe object mutations for this property.
  * @property {boolean} enumerable - Makes property enumerable.
  * @property {Binding} binding - Binding object.
  */
 class Property {
   /**
-   * Created the property configuration object and copies values from `ProtoProperty`.
-   * @param {ProtoProperty} protoProp - Configuration object.
+   * Creates the property configuration object and copies values from `ProtoProperty`.
+   * @param {ProtoProperty} protoProp - ProtoProperty.
    */
   constructor(protoProp) {
     this.value = protoProp.value;
@@ -181,12 +181,12 @@ class Property {
 }
 
 /**
- * Collection of all property configurations for class **instances** compied from corresponding `ProtoProperties`.
- * 
- * It also stores current property values and creates the interface between `IoNode` and itself.
+ * Collection of all property configurations and values for a class **instance** compied from corresponding `ProtoProperties`.
+ * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 class Properties {
   /**
+   * Creates the properties for specified `IoNode`.
    * @param {IoNode} node - Owner instance of `IoNode`.
    * @param {ProtoProperties} protoProps - Configuration object.
    */
@@ -213,10 +213,21 @@ class Properties {
     }
     Object.defineProperty(this, '__keys', {value: Object.getOwnPropertyNames(this), configurable: true});
   }
+  /**
+   * Returns the property value.
+   * @param {string} key - property name.
+   * @return {*} Property value.
+   */
   get(key) {
     return this[key].value;
   }
-  set(key, value, suspendDispatch) {
+  /**
+   * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+   * @param {string} key - property name.
+   * @param {*} value - property value or binding.
+   * @param {boolean} skipDispatch - Skips queue dispatch if `true`.
+   */
+  set(key, value, skipDispatch) {
 
     const prop = this[key];
     const oldValue = prop.value;
@@ -234,9 +245,7 @@ class Properties {
         }
 
         binding.addTarget(node, key);
-        prop.binding = binding;
-        prop.value = value.source[value.sourceProp];
-        value = value.source[value.sourceProp];
+        value = binding.source[binding.sourceProp];
 
       } else {
 
@@ -249,7 +258,7 @@ class Properties {
 
       if (prop.notify && oldValue !== value) {
         node.queue(key, value, oldValue);
-        if (node.__isConnected && !suspendDispatch) {
+        if (node.__isConnected && !skipDispatch) {
           node.queueDispatch();
         }
       }
@@ -258,6 +267,9 @@ class Properties {
     }
 
   }
+  /**
+   * Connects all property bindings and `IoNode` properties.
+   */
   connect() {
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];
@@ -269,6 +281,9 @@ class Properties {
       }
     }
   }
+  /**
+   * Disconnects all property bindings and `IoNode` properties.
+   */
   disconnect() {
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];
@@ -280,6 +295,10 @@ class Properties {
       }
     }
   }
+  /**
+   * Disconnects all property bindings and `IoNode` properties.
+   * Use this when properties are no loner needed.
+   */
   dispose() {
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];

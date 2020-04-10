@@ -1,26 +1,24 @@
 ## Queue
 
-Manager for property change queue.
-It is responsible for triggering both change events and change handler functions.
+Property change queue manager responsible for dispatching change events and triggering change handler functions.
 
 ### Queue(node: `IoNode`)
 
-Creates queue manager for specified instance of `IoNode`.
-It should be constructed from within the `IoNode` constructor.
+Creates queue manager for the specified `IoNode` instance.
 
 ### .queue(prop: `string`, value: `*`, oldValue: `*`)
 
 Adds property change to the queue by specifying property name, previous and the new value.
-If the property change is already waiting in the queue, only the new value is updated in the queue.
+If the change is already in the queue, the new value is updated.
 
 ### .dispatch()
 
-Dispatches the queue and clears all the properties and values from the queue.
-For each property change in the queue, `'[propName]-changed'` event will fire with queue payload.
-In addition, if `[propName]Changed()` change handler is defined it will also execute.
+Dispatches and clears the queue.
+For each property change in the queue, it fires the `'[propName]-changed'` event with `oldValue` and new `value` in `event.detail` payload.
+It also executes node's `[propName]Changed(payload)` change handler function if it is defined.
 
 ### .dispose()
 
-Remove queue items and the node reference.
-Use this when node is no longer needed.
+Clears the queue and removes the node reference.
+Use this when node queue is no longer needed.
 

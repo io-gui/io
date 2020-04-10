@@ -1,6 +1,6 @@
 import {ProtoChain} from './protochain.js';
 import {ProtoFunctions} from './functions.js';
-import {BindingManager, Binding} from './binding.js';
+import {Bindings, Binding} from './binding.js';
 import {Queue} from './queue.js';
 import {ProtoProperties, Properties} from './properties.js';
 import {ProtoListeners, Listeners} from './listeners.js';
@@ -32,7 +32,7 @@ const IoNodeMixin = (superclass) => {
 
       this.__protoFunctions.bind(this);
 
-      Object.defineProperty(this, '__bindingManager', {value: new BindingManager(this)});
+      Object.defineProperty(this, '__bindings', {value: new Bindings(this)});
       Object.defineProperty(this, '__queue', {value: new Queue(this)});
 
       Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
@@ -42,7 +42,12 @@ const IoNodeMixin = (superclass) => {
 
       Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
 
+      this.objectMutated = this.objectMutated.bind(this);
+      this.objectMutatedThrottled = this.objectMutatedThrottled.bind(this);
+      this.queueDispatchLazy = this.queueDispatchLazy.bind(this);
+
       this.setProperties(initProps);
+      // TODO: consider auto-connect
     }
     /**
      * Connects IoNode to the application.
@@ -62,7 +67,7 @@ const IoNodeMixin = (superclass) => {
       if (this.__connections.indexOf(owner) !== -1) {
         this.__connections.splice(this.__connections.indexOf(owner), 1);
       }
-      if (this.__connections.length === 0 && this.__isConnected) {
+      if (this.__connections.length === 0) {// && this.__isConnected) {
         this.disconnectedCallback();
       }
     }
@@ -107,7 +112,16 @@ const IoNodeMixin = (superclass) => {
      * @return {Binding} Binding object.
      */
     bind(prop) {
-      return this.__bindingManager.get(prop);
+      return this.__bindings.bind(prop);
+    }
+    /**
+     * Unbinds a binding to a specified property`.
+     * @param {string} prop - Property to unbind.
+     */
+    unbind(prop) {
+      this.__bindings.unbind(prop);
+      const binding = this.__properties[prop].binding;
+      if (binding) binding.removeTarget(this, prop);
     }
     /**
      * Sets a property and emits `[property]-set` event.
@@ -136,15 +150,15 @@ const IoNodeMixin = (superclass) => {
       this.__listeners.setPropListeners(props, this);
       if (this.__isConnected) this.queueDispatch();
     }
-    _onObjectMutation(event) {
+    objectMutated(event) {
       for (let i = this.__observedProps.length; i--;) {
         const prop = this.__observedProps[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
-          this.throttle(this._onObjectMutationThrottled, prop);
+          this.throttle(this.objectMutatedThrottled, prop);
           return;
         } else if (event.detail.objects && event.detail.objects.indexOf(value) !== -1) {
-          this.throttle(this._onObjectMutationThrottled, prop);
+          this.throttle(this.objectMutatedThrottled, prop);
           return;
         }
       }
@@ -154,7 +168,7 @@ const IoNodeMixin = (superclass) => {
      * and changed object is a property of the node.
      * @param {string} prop - Mutated object property name.
      */
-    _onObjectMutationThrottled(prop) {
+    objectMutatedThrottled(prop) {
       if (this['propMutated']) this['propMutated'](prop);
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
       this.dispatchChange();
@@ -167,7 +181,7 @@ const IoNodeMixin = (superclass) => {
       this.__properties.connect();
       this.__isConnected = true;
       if (this.__observedProps.length) {
-        window.addEventListener('object-mutated', this._onObjectMutation);
+        window.addEventListener('object-mutated', this.objectMutated);
       }
       this.queueDispatch();
     }
@@ -179,7 +193,7 @@ const IoNodeMixin = (superclass) => {
       this.__properties.disconnect();
       this.__isConnected = false;
       if (this.__observedProps.length) {
-        window.removeEventListener('object-mutated', this._onObjectMutation);
+        window.removeEventListener('object-mutated', this.objectMutated);
       }
     }
     /**
@@ -188,7 +202,7 @@ const IoNodeMixin = (superclass) => {
      */
     dispose() {
       this.__queue.dispose();
-      this.__bindingManager.dispose();
+      this.__bindings.dispose();
       this.__listeners.dispose();
       this.__properties.dispose();
     }
@@ -238,13 +252,13 @@ const IoNodeMixin = (superclass) => {
      */
     queueDispatch() {
       if (this.lazy) {
-        preThrottleQueue.push(this._queueDispatchLazy);
-        this.throttle(this._queueDispatchLazy);
+        preThrottleQueue.push(this.queueDispatchLazy);
+        this.throttle(this.queueDispatchLazy);
       } else {
         this.__queue.dispatch();
       }
     }
-    _queueDispatchLazy() {
+    queueDispatchLazy() {
       this.__queue.dispatch();
     }
     /**

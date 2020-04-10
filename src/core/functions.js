@@ -1,4 +1,11 @@
-class ProtoFunctions extends Array{
+/**
+ * Collection of all functions defined in the prototype chain that start with "on" or "_"
+ */
+class ProtoFunctions extends Array {
+  /**
+   * Creates a collection of all function from protochain that start with "on" or "_".
+   * @param {ProtoChain} protochain - Array of protochain constructors.
+   */
   constructor(protochain) {
     super();
     for (let i = protochain.length; i--;) {
@@ -15,6 +22,10 @@ class ProtoFunctions extends Array{
       }
     }
   }
+  /**
+   * Binds all functions to `this`.
+   * @param {IoNode} instance - Array of protochain constructors.
+   */
   bind(instance) {
     for (let i = this.length; i--;) {
       instance[this[i]] = instance[this[i]].bind(instance);

@@ -137,8 +137,8 @@ export class IoElementDemo extends IoElement {
       }
     };
   }
-  _onObjectMutation(event) {
-    super._onObjectMutation(event);
+  objectMutated(event) {
+    super.objectMutated(event);
     for (let i = this.__observedProps.length; i--;) {
       const prop = this.__observedProps[i];
       const value = this.__properties[prop].value;

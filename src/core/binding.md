@@ -1,19 +1,3 @@
-## BindingManager
-
-Manager for `IoNode` property bindings. It holds all bindings for a particular IoNode.
-
-### BindingManager(node: `IoNode`)
-
-Creates binding manager with a node reference.
-
-### .get(prop: `string`) : Binding
-
-Returns a binding to the specified property name or creates one if it dpes not exist.
-
-### .dispose()
-
-Disposes all bindings. Use this when node is no longer needed.
-
 ## Binding
 
 Binding object. It manages data binding between source and targets using `[prop]-changed` events.
@@ -43,4 +27,24 @@ Event handler that updates bound properties on target nodes when source node emi
 
 Dispose of the binding by removing all targets and listeners.
 Use this when node is no longer needed.
+
+## Bindings
+
+Manager for `IoNode` property bindings. It holds all bindings for a particular IoNode.
+
+### Bindings(node: `IoNode`)
+
+Creates binding manager with a node reference.
+
+### .bind(prop: `string`) : Binding
+
+Returns a binding to the specified property name or creates one if it does not exist.
+
+### .unbind(prop: `string`)
+
+Disposes a binding for the specified property name.
+
+### .dispose()
+
+Disposes all bindings. Use this when node is no longer needed.
 

@@ -34,6 +34,10 @@ Applies compose object on change.
 
 Returns a binding to a specified property`.
 
+### .unbind(prop: `string`)
+
+Unbinds a binding to a specified property`.
+
 ### .set(prop: `string`, value: `*`, force: `boolean`)
 
 Sets a property and emits `[property]-set` event.
@@ -44,7 +48,7 @@ Use this when property is set by user action (e.g. mouse click).
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
-### ._onObjectMutationThrottled(prop: `string`)
+### .objectMutatedThrottled(prop: `string`)
 
 This function is called when `object-mutated` event is observed
 and changed object is a property of the node.
