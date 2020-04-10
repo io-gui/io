@@ -1,78 +1,70 @@
-// TODO: Improve tests.
-
-/** Manager for `IoNode` event queue and change handle functions. */
-export class NodeQueue extends Array {
+/**
+ * Property change queue manager responsible for dispatching change events and triggering change handler functions.
+ */
+class Queue {
   /**
-   * Creates queue manager for `IoNode`.
-   * @param {IoNode} node - Reference to the node/element itself.
+   * Creates queue manager for the specified `IoNode` instance.
+   * @param {IoNode} node - Reference to the owner node/element.
    */
   constructor(node) {
-    super();
-    Object.defineProperty(this, 'node', {value: node, configurable: true});
+    Object.defineProperty(this, '__array', {value: new Array(), configurable: true});
+    Object.defineProperty(this, '__node', {value: node, configurable: true});
   }
   /**
-   * Add property change to the queue.
+   * Adds property change to the queue by specifying property name, previous and the new value.
+   * If the change is already in the queue, the new value is updated.
    * @param {string} prop - Property name.
    * @param {*} value Property value.
    * @param {*} oldValue Old property value.
    */
   queue(prop, value, oldValue) {
-    const i = this.indexOf(prop);
+    const i = this.__array.indexOf(prop);
     if (i === -1) {
-      this.push(prop, {property: prop, value: value, oldValue: oldValue});
+      this.__array.push(prop, {property: prop, value: value, oldValue: oldValue});
     } else {
-      this[i + 1].value = value;
+      this.__array[i + 1].value = value;
     }
   }
   /**
-   * Dispatch the queue.
+   * Dispatches and clears the queue.
+   * For each property change in the queue, it fires the `'[propName]-changed'` event with `oldValue` and new `value` in `event.detail` payload.
+   * It also executes node's `[propName]Changed(payload)` change handler function if it is defined.
    */
   dispatch() {
     if (this._dispatchInProgress === true) return;
     this._dispatchInProgress = true;
 
-    const node = this.node;
+    const node = this.__node;
     let changed = false;
 
-    while (this.length) {
-      const j = this.length - 2;
-      const prop = this[j];
-      const detail = this[j + 1];
+    while (this.__array.length) {
+      const j = this.__array.length - 2;
+      const prop = this.__array[j];
+      const detail = this.__array[j + 1];
       const payload = {detail: detail};
 
       if (detail.value !== detail.oldValue) {
         changed = true;
         if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
-        if (node['propertyChanged']) node['propertyChanged'](payload);
         node.dispatchEvent(prop + '-changed', payload.detail);
-      } else {
-        if (typeof detail.value === 'object') {
-          // if (node[prop + 'Mutated']) node[prop + 'Mutated'](payload);
-          // node.dispatchEvent(prop + '-mutated', payload.detail);
-        }
       }
-      this.splice(j, 2);
+      this.__array.splice(j, 2);
     }
 
-    // TODO: Evaluate performance and consider refactoring.
-    if (changed) {
-      // if (node.isIoNode && !node.isIoElement) {
-      //   node.dispatchEvent('object-mutated', {object: node}, false, window);
-      // }
-      node.applyCompose();
-      node.changed();
-      if (node.setAria) node.setAria();
-    }
-    this.length = 0;
+    if (changed) node.dispatchChange();
 
+    this.__array.length = 0;
     this._dispatchInProgress = false;
   }
   /**
-   * Remove queue items and the node reference.
-   * Use this when node is no longer needed.
+   * Clears the queue and removes the node reference.
+   * Use this when node queue is no longer needed.
    */
   dispose() {
-    this.length = 0;
-    delete this.node;
+    this.__array.length = 0;
+    delete this.__node;
+    delete this.__array;
   }
 }
+
+export { Queue };

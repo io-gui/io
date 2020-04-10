@@ -90,7 +90,7 @@ export class IoElementDemo extends IoElement {
       margin-right: var(--io-spacing);
       margin-bottom: calc(2 * var(--io-spacing));
     }
-    :host > io-properties > :nth-child(2) {
+    :host > io-properties > :nth-child(3) {
       margin-right: calc(var(--io-item-height) + var(--io-spacing));
     }
     :host > .io-content {
@@ -137,8 +137,8 @@ export class IoElementDemo extends IoElement {
       }
     };
   }
-  _onObjectMutation(event) {
-    super._onObjectMutation(event);
+  objectMutated(event) {
+    super.objectMutated(event);
     for (let i = this.__observedProps.length; i--;) {
       const prop = this.__observedProps[i];
       const value = this.__properties[prop].value;

@@ -72,7 +72,6 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   _notifyValueChange() {
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
-    this.dispatchEvent('io-value-set', {property: 'value', value: this.value}, true);
   }
   _setValue() {
     // NOTE: implement in subclass

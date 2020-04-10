@@ -1,181 +1,166 @@
-import {Binding} from './bindings.js';
+import {Binding} from './binding.js';
 
-export class ProtoProperties {
-  constructor(protochain) {
-    this._p = protochain;
-    const defs = {};
-    for (let i = protochain.length; i--;) {
-      // Properties
-      const props = protochain[i].constructor.Properties;
-      for (let p in props) {
-        if (!defs[p]) defs[p] = new ProtoProperty(props[p]);
-        else Object.assign(defs[p], new ProtoProperty(props[p]));
-        if (defs[p].reflect === undefined) defs[p].reflect = 0;
-        if (defs[p].notify === undefined) defs[p].notify = true;
-        if (defs[p].observe === undefined) defs[p].observe = false;
-        if (defs[p].enumerable === undefined) defs[p].enumerable = true;
-      }
-    }
-    for (let p in defs) {
-      const isPrivate = p.charAt(0) === '_';
-      if (isPrivate) {
-        defs[p].notify = false;
-        defs[p].enumerable = false;
-      }
-      // TODO: reconsider
-      if (defs[p].value === undefined) defs[p].value = undefined;
-      if (defs[p].type === undefined) defs[p].type = undefined;
-      // if (defs[p].observe === undefined) defs[p].observe = [Object, Array].indexOf(defs[p].type) !== -1;
-      this[p] = new Property(defs[p]);
-    }
-  }
-}
+/**
+ * Property configuration object for a class **prototype**.
+ * It is generated from property definitions in `static get Properties()` return object.
+ * @property {*} value - Default value.
+ * @property {function} type - Constructor of value.
+ * @property {number} reflect - Reflects to HTML attribute
+ * @property {boolean} notify - Trigger change handlers and change events.
+ * @property {boolean} observe - Observe object mutations for this property.
+ * @property {boolean} enumerable - Makes property enumerable.
+ * @property {Binding} binding - Binding object.
+ */
+class ProtoProperty {
+  /**
+   * Creates the property configuration object and sets the default values.
+   * @param {ProtoProperty} prop - Configuration object.
+   * @param {boolean} noDefaults - Assign default values.
+   */
+  constructor(prop, noDefaults) {
 
-export class ProtoProperty {
-  constructor(cfg) {
-    const cType = typeof cfg;
-    if (cfg === null || cfg === undefined) {
-      cfg = {value: cfg};
-    } else if (cType === 'function') {
-      cfg = {type: cfg};
-    } else if (cType === 'number' || cType === 'string' || cType === 'boolean') {
-      cfg = {value: cfg, type: cfg.constructor};
-    } else if (cType === 'object') {
-      if (cfg instanceof Array) {
-        cfg = {value: [...cfg], type: Array}; // TODO: reconsider
-      } else if (cfg instanceof Binding) {
-        cfg = {value: cfg.value, binding: cfg};
+    if (!noDefaults) {
+      this.value = undefined;
+      this.type = undefined;
+      this.notify = true;
+      this.reflect = 0;
+      this.observe = false;
+      this.enumerable = true;
+      this.binding = undefined;
+    }
+
+    if (prop === null) {
+
+      this.value = null;
+
+    } else if (typeof prop === 'function') {
+
+      this.type = prop;
+
+      if (!noDefaults) {
+        if (this.type === Boolean) this.value = false;
+        else if (this.type === String) this.value = '';
+        else if (this.type === Number) this.value = 0;
+        else if (this.type === Object) this.value = {};
+        else if (this.type === Array) this.value = [];
+      }
+
+    } else if (typeof prop === 'number' || typeof prop === 'string' || typeof prop === 'boolean') {
+
+      this.value = prop;
+      this.type = prop.constructor;
+
+    } else if (typeof prop === 'object') {
+
+      if (prop instanceof Array) {
+
+        this.value = [...prop];
+        this.type = Array;
+        
+      } else if (prop instanceof Binding) {
+        
+        this.value = prop.value;
+        this.binding = prop;
+
       } else {
-        if (typeof cfg.type !== 'function') {
-          if (cfg.value === undefined || cfg.value === null) {
-            // console.error('Properties require value or type'); // TODO: reconsider
+
+        if (typeof prop.type !== 'function' && prop.value && prop.value.constructor) {
+          prop.type = prop.value.constructor;
+        }
+
+        if (prop && prop.value !== undefined) {
+          if (prop.value instanceof Array) {
+            this.value = [...prop.value];
+          } else if (prop.value && typeof prop.value === 'object') {
+            this.value = new prop.value.constructor();
           } else {
-            cfg.type = cfg.value.constructor;
+            this.value = prop.value;
           }
         }
+
+        if (typeof prop.type === 'function') {
+          this.type = prop.type;
+          if (this.value === undefined) {
+            if (prop.type === Boolean) this.value = false;
+            else if (prop.type === String) this.value = '';
+            else if (prop.type === Number) this.value = 0;
+            else if (prop.type === Object) this.value = {};
+            else if (prop.type === Array) this.value = [];
+            else if (prop.type !== HTMLElement && prop.type !== Function) {
+              this.value = new prop.type();
+            }
+          }
+        }
+
       }
-    } else {
-      console.error('Property error!', cType, cfg);
+      
     }
-    if (cfg.value !== undefined) this.value = cfg.value;
-    if (cfg.type !== undefined) this.type = cfg.type;
-    if (cfg.reflect !== undefined) this.reflect = cfg.reflect;
-    if (cfg.notify !== undefined) this.notify = cfg.notify;
-    if (cfg.observe !== undefined) this.observe = cfg.observe;
-    if (cfg.enumerable !== undefined) this.enumerable = cfg.enumerable;
-    if (cfg.binding !== undefined) this.binding = cfg.binding;
+
+    prop = prop || {};
+
+    if (typeof prop.notify == 'boolean') this.notify = prop.notify;
+    if (typeof prop.reflect == 'number') this.reflect = prop.reflect;
+    if (typeof prop.observe == 'boolean') this.observe = prop.observe;
+    if (typeof prop.enumerable == 'boolean') this.enumerable = prop.enumerable;
+    if (prop.binding instanceof Binding) {
+      this.binding = prop.binding;
+      this.value = prop.binding.value;
+    }
+
+    return this;
   }
 }
 
-export class Properties {
-  constructor(node, protoProperties) {
-    Object.defineProperty(this, 'node', {value: node});
-    for (let prop in protoProperties) {
-      this[prop] = new Property(protoProperties[prop]);
-      this[prop].instantiateCustomType();
-      // TODO: consider bindings
-      if (this[prop].value !== undefined) {
-        if (typeof this[prop].value === 'object' && this[prop].value !== null) {
-          if (this[prop].value.isIoNode) this[prop].value.connect(node);
-          node.queue(prop, this[prop].value, undefined);
-        } else if (this[prop].reflect >= 1) {
-          this.node.setAttribute(prop, this[prop].value);
+/**
+ * Collection of all property configurations for a class **prototype**.
+ * Property configurations are inferred from all property definitions in the prototype chain.
+ */
+class ProtoProperties {
+  /**
+   * Creates all property configurations for specified prototype chain.
+   * @param {ProtoChain} protochain - Prototype chain.
+   */
+  constructor(protochain) {
+    for (let i = protochain.length; i--;) {
+      const props = protochain[i].constructor.Properties;
+      for (let p in props) {
+        if (!this[p]) this[p] = new ProtoProperty(props[p]);
+        else Object.assign(this[p], new ProtoProperty(props[p], true));
+        if (p.charAt(0) === '_') {
+          this[p].notify = false;
+          this[p].enumerable = false;
         }
       }
     }
   }
-  get(prop) {
-    return this[prop].value;
-  }
-  set(prop, value, suspendDispatch) {
-    let oldValue = this[prop].value;
-    if (value !== oldValue) {
-
-      const node = this.node;
-
-      let oldBinding = this[prop].binding;
-
-      let binding = (value instanceof Binding) ? value : null;
-
-      if (binding && oldBinding && binding !== oldBinding) {
-        oldBinding.removeTarget(node, prop); // TODO: test extensively
-      }
-      if (binding) {
-        binding.addTarget(node, prop);
-        this[prop].binding = binding;
-        this[prop].value = value.source[value.sourceProp];
-        value = value.source[value.sourceProp];
-      } else {
-        this[prop].value = value;
-      }
-
-      if (value && value.isIoNode) {
-        value.connect(node);
-      }
-
-      if (oldValue && oldValue.isIoNode) {
-        oldValue.disconnect(node);
-      }
-
-      if (this[prop].notify && oldValue !== this[prop].value) {
-        node.queue(prop, this[prop].value, oldValue);
-        if (node.__connected && !suspendDispatch) {
-          node.queueDispatch();
-        }
-      }
-      if (this[prop].reflect >= 1) node.setAttribute(prop, value);
-    }
-
-  }
-  connect() {
-    // TODO: test dispose and disconnect for memory leaks!!
-    // TODO: dispose bindings properly
-    for (let p in this) {
-      if (this[p].binding) {
-        this[p].binding.addTarget(this.node, p); //TODO: test
-      }
-    }
-  }
-  disconnect() {
-    for (let p in this) {
-      if (this[p].binding) {
-        this[p].binding.removeTarget(this.node, p);
-      }
-    }
-  }
-  dispose() {
-    // TODO: use!
-    for (let p in this) {
-      if (this[p].binding) {
-        this[p].binding.removeTarget(this.node, p);
-        delete this[p].binding;
-      }
-      delete this[p];
-    }
-  }
 }
 
+/**
+ * Property configuration object for a class **instance**.
+ * It is copied from the corresponding `ProtoProperty`.
+ * @property {*} value - Property value.
+ * @property {function} type - Constructor of the property value.
+ * @property {number} reflect - HTML attribute [-1, 0, 1 or 2]
+ * @property {boolean} notify - Enables change handlers and events.
+ * @property {boolean} observe - Observe object mutations for this property.
+ * @property {boolean} enumerable - Makes property enumerable.
+ * @property {Binding} binding - Binding object.
+ */
 class Property {
   /**
-   * @param {Object} cfg - Configuration object.
-   * @param {*} cfg.value - Default value.
-   * @param {function} cfg.type - Constructor of value.
-   * @param {boolean} cfg.reflect - Reflects to HTML attribute
-   * @param {boolean} cfg.notify - Trigger change handlers and change events.
-   * @param {boolean} cfg.observe - Observe object mutations for this property.
-   * @param {boolean} cfg.enumerable - Makes property enumerable.
-   * @param {Binding} cfg.binding - Binding object.
+   * Creates the property configuration object and copies values from `ProtoProperty`.
+   * @param {ProtoProperty} protoProp - ProtoProperty.
    */
-  constructor(cfg) {
-    this.value = cfg.value;
-    this.type = cfg.type;
-    this.reflect = cfg.reflect;
-    this.notify = cfg.notify;
-    this.observe = cfg.observe;
-    this.enumerable = cfg.enumerable;
-    this.binding = cfg.binding;
-    if (this.type === Array && this.value) {
-      this.value = [...this.value]; // TODO: reconsider
+  constructor(protoProp) {
+    this.value = protoProp.value;
+    this.notify = protoProp.notify;
+    this.reflect = protoProp.reflect;
+    this.observe = protoProp.observe;
+    this.enumerable = protoProp.enumerable;
+    this.type = protoProp.type;
+    this.binding = protoProp.binding;
+    if (this.type === Array && this.value instanceof Array) {
+      this.value = [...this.value];
     }
     if (this.type === Object && this.value) {
       this.value = {};
@@ -187,9 +172,6 @@ class Property {
       else if (this.type === Array) this.value = [];
       else if (this.type === Object) this.value = {};
     }
-    // TODO: ocnsider bindings
-  }
-  instantiateCustomType() {
     if (this.value === undefined && this.type) {
       if (this.type !== HTMLElement && this.type !== Function) {
         this.value = new this.type();
@@ -197,3 +179,138 @@ class Property {
     }
   }
 }
+
+/**
+ * Collection of all property configurations and values for a class **instance** compied from corresponding `ProtoProperties`.
+ * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
+ */
+class Properties {
+  /**
+   * Creates the properties for specified `IoNode`.
+   * @param {IoNode} node - Owner instance of `IoNode`.
+   * @param {ProtoProperties} protoProps - Configuration object.
+   */
+  constructor(node, protoProps) {
+    Object.defineProperty(this, '__node', {value: node, configurable: true});
+    for (let prop in protoProps) {
+      Object.defineProperty(this, prop, {
+        value: new Property(protoProps[prop]),
+        enumerable: protoProps[prop].enumerable,
+        configurable: true
+      });
+      const value = this[prop].value;
+      if (value !== undefined && value !== null) {
+        // TODO: document special handling of object and node values
+        if (typeof value === 'object') {
+          node.queue(prop, value, undefined);
+          if (value.__isIoNode && node.__isConnected) value.connect(node);
+        } else if (this[prop].reflect >= 1 && node.__isIoElement) {
+          node.setAttribute(prop, value);
+        }
+      }
+      const binding = this[prop].binding;
+      if (binding) binding.addTarget(node, prop);
+    }
+    Object.defineProperty(this, '__keys', {value: Object.getOwnPropertyNames(this), configurable: true});
+  }
+  /**
+   * Returns the property value.
+   * @param {string} key - property name.
+   * @return {*} Property value.
+   */
+  get(key) {
+    return this[key].value;
+  }
+  /**
+   * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+   * @param {string} key - property name.
+   * @param {*} value - property value or binding.
+   * @param {boolean} skipDispatch - Skips queue dispatch if `true`.
+   */
+  set(key, value, skipDispatch) {
+
+    const prop = this[key];
+    const oldValue = prop.value;
+
+    if (value !== oldValue) {
+
+      const node = this.__node;
+      const binding = (value instanceof Binding) ? value : undefined;
+
+      if (binding) {
+
+        const oldBinding = prop.binding;
+        if (oldBinding && binding !== oldBinding) {
+          oldBinding.removeTarget(node, key);
+        }
+
+        binding.addTarget(node, key);
+        value = binding.source[binding.sourceProp];
+
+      } else {
+
+        prop.value = value;
+
+      }
+
+      if (value && value.__isIoNode) value.connect(node);
+      if (oldValue && oldValue.__isIoNode) oldValue.disconnect(node);
+
+      if (prop.notify && oldValue !== value) {
+        node.queue(key, value, oldValue);
+        if (node.__isConnected && !skipDispatch) {
+          node.queueDispatch();
+        }
+      }
+
+      if (prop.reflect >= 1 && node.__isIoElement) node.setAttribute(key, value);
+    }
+
+  }
+  /**
+   * Connects all property bindings and `IoNode` properties.
+   */
+  connect() {
+    for (let i = this.__keys.length; i--;) {
+      const p = this.__keys[i];
+      if (this[p].binding) {
+        this[p].binding.addTarget(this.__node, p);
+      }
+      if (this[p].value && this[p].value.__isIoNode) {
+        this[p].value.connect(this.__node);
+      }
+    }
+  }
+  /**
+   * Disconnects all property bindings and `IoNode` properties.
+   */
+  disconnect() {
+    for (let i = this.__keys.length; i--;) {
+      const p = this.__keys[i];
+      if (this[p].binding) {
+        this[p].binding.removeTarget(this.__node, p);
+      }
+      if (this[p].value && this[p].value.__isIoNode) {
+        this[p].value.disconnect(this.__node);
+      }
+    }
+  }
+  /**
+   * Disconnects all property bindings and `IoNode` properties.
+   * Use this when properties are no loner needed.
+   */
+  dispose() {
+    for (let i = this.__keys.length; i--;) {
+      const p = this.__keys[i];
+      if (this[p].binding) {
+        this[p].binding.removeTarget(this.__node, p);
+        delete this[p].binding;
+      }
+      delete this[p];
+    }
+    delete this['__node'];
+    delete this['__keys'];
+  }
+}
+
+export {ProtoProperty, ProtoProperties, Property, Properties};

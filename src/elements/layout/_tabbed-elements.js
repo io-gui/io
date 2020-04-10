@@ -64,7 +64,7 @@ export class IoSelectorTabs extends IoElement {
     }
   }
   editableChanged() {
-    if (this.editable && this.__connected) this.connectDragListeners();
+    if (this.editable && this.__isConnected) this.connectDragListeners();
     else this.disconnectDragListeners();
   }
   selectedChanged() {

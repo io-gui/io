@@ -24,7 +24,7 @@ class IoLadderStep extends IoItem {
       display: inline-block;
       cursor: ew-resize;
       text-align: center;
-      background-color: var(--io-background-color-light);
+      background-color: var(--io-background-color-highlight);
       color: var(--io-color);
       align-self: stretch;
       touch-action: none;
@@ -173,7 +173,7 @@ class IoLadder extends IoElement {
     }
     :host > io-ladder-step:hover,
     :host > io-ladder-step:focus {
-      background-color: var(--io-background-color-light);
+      background-color: var(--io-background-color-highlight);
       border-color: var(--io-color-focus);
       transition: opacity 0.2s;
       opacity: 1;

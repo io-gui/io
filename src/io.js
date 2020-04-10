@@ -1,7 +1,7 @@
 /** @license
  * The MIT License
  *
- * Copyright © 2019 Aleksandar (Aki) Rodić
+ * Copyright � 2019 Aleksandar (Aki) Rodic
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,6 @@
  * THE SOFTWARE.
  */
 
-export {IoNode, IoNodeMixin} from './core/node.js';
-export {IoElement} from './core/element.js';
-export {Binding} from './core/bindings.js';
+export {IoNode, IoNodeMixin} from './core/io-node.js';
+export {IoElement} from './core/io-element.js';
+export {Binding} from './core/binding.js';

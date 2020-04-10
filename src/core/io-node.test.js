@@ -7,7 +7,7 @@ export class TestNode extends IoNode {
         type: String,
       },
       prop1: {
-        value: false
+        value: false,
       },
       prop2: -1,
       prop3: Number,
@@ -61,6 +61,8 @@ export class TestNode extends IoNode {
     super(props);
   }
 }
+
+TestNode.Register();
 
 export default class {
   constructor() {
@@ -242,10 +244,10 @@ export default class {
           chai.expect(binding.targets[0]).to.be.equal(boundNode0);
           chai.expect(binding.targets[1]).to.be.equal(boundNode1);
           chai.expect(binding.targets.length).to.be.equal(2);
-          chai.expect(binding.targetsMap.get(boundNode0)[0]).to.be.equal('prop3');
-          chai.expect(binding.targetsMap.get(boundNode0)[1]).to.be.equal(undefined);
-          chai.expect(binding.targetsMap.get(boundNode1)[0]).to.be.equal('prop2');
-          chai.expect(binding.targetsMap.get(boundNode1)[1]).to.be.equal('prop3');
+          chai.expect(binding.targetProps.get(boundNode0)[0]).to.be.equal('prop3');
+          chai.expect(binding.targetProps.get(boundNode0)[1]).to.be.equal(undefined);
+          chai.expect(binding.targetProps.get(boundNode1)[0]).to.be.equal('prop2');
+          chai.expect(binding.targetProps.get(boundNode1)[1]).to.be.equal('prop3');
           boundNode0.dispose();
           boundNode1.dispose();
           chai.expect(binding.targets.length).to.be.equal(0);

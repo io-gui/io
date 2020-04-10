@@ -1,34 +1,19 @@
-import {NodeBindings, Binding} from './bindings.js';
-import {NodeQueue} from './queue.js';
+import {ProtoChain} from './protochain.js';
+import {ProtoFunctions} from './functions.js';
+import {Bindings, Binding} from './binding.js';
+import {Queue} from './queue.js';
+import {ProtoProperties, Properties} from './properties.js';
 import {ProtoListeners, Listeners} from './listeners.js';
-import {Properties, ProtoProperties} from './properties.js';
-
-// TODO: Improve tests.
 
 /**
-  * Core mixin for `IoNode` and `IoElement` classes.
-  * @param {function} superclass - Class to extend.
-  * @return {IoNodeMixin} - Extended class with `IoNodeMixin` applied to it.
-  */
-export const IoNodeMixin = (superclass) => {
+ * Core mixin for `IoNode` classes.
+ * @param {function} superclass - Class to extend.
+ * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
+ */
+const IoNodeMixin = (superclass) => {
   const classConstructor = class extends superclass {
-    /**
-     * Static properties getter. Node properties should be defined here.
-     * @return {Object} properties - Properties configuration objects.
-     * @return {Object|*} [properties.*] - Configuration object or one of the configuration parameters.
-     * @return {*} [properties.*.value] - Default value.
-     * @return {function} [properties.*.type] - Constructor of value.
-     * @return {number} [properties.*.reflect] - Reflects to HTML attribute
-     * @return {boolean} [properties.*.notify] - Enables change events.
-     * @return {boolean} [properties.*.enumerable] - Makes property enumerable.
-     * @return {Binding} [properties.*.binding] - Binding object.
-     */
     static get Properties() {
       return {
-        $: {
-          type: Object,
-          notify: false,
-        },
         lazy: Boolean,
       };
     }
@@ -39,44 +24,50 @@ export const IoNodeMixin = (superclass) => {
     constructor(initProps = {}) {
       super(initProps);
 
-      if (!this.__registered) {
-        this.__proto__.constructor.Register();
+
+      const constructor = this.__proto__.constructor;
+      if (constructor.__isRegisteredAs !== constructor.name) {
+        console.error(`${constructor.name}: Not registered! Call "Register()" before using ${constructor.name} class!`);
       }
 
-      Object.defineProperty(this, '__nodeBindings', {value: new NodeBindings(this)});
-      Object.defineProperty(this, '__nodeQueue', {value: new NodeQueue(this)});
+      this.__protoFunctions.bind(this);
 
-      Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
+      Object.defineProperty(this, '__bindings', {value: new Bindings(this)});
+      Object.defineProperty(this, '__queue', {value: new Queue(this)});
+
       Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
 
-      Object.defineProperty(this, '__connected', {enumerable: false, writable: true});
+      Object.defineProperty(this, '__isConnected', {enumerable: false, writable: true});
+      Object.defineProperty(this, '__connections', {enumerable: false, value: []});
 
-      for (let i = 0; i < this.__functions.length; i++) {
-        this[this.__functions[i]] = this[this.__functions[i]].bind(this);
-      }
+      Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
+
+      this.objectMutated = this.objectMutated.bind(this);
+      this.objectMutatedThrottled = this.objectMutatedThrottled.bind(this);
+      this.queueDispatchLazy = this.queueDispatchLazy.bind(this);
 
       this.setProperties(initProps);
+      // TODO: consider auto-connect
     }
     /**
      * Connects IoNode to the application.
-     * @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
+     * @param {IoNode} owner - Node to connect to.
      */
     connect(owner) {
-      this._owner = this._owner || [];
-      if (this._owner.indexOf(owner) === -1) {
-        this._owner.push(owner);
-        if (!this.__connected) this.connectedCallback();
+      if (this.__connections.indexOf(owner) === -1) {
+        this.__connections.push(owner);
+        if (!this.__isConnected) this.connectedCallback();
       }
     }
     /**
      * Disconnects IoNode from the application.
-     * @param {IoNode|IoElement} owner - Node or element `IoNode` is connected to.
+     * @param {IoNode} owner - Node to disconnect from.
      */
     disconnect(owner) {
-      if (this._owner.indexOf(owner) !== -1) {
-        this._owner.splice(this._owner.indexOf(owner), 1);
+      if (this.__connections.indexOf(owner) !== -1) {
+        this.__connections.splice(this.__connections.indexOf(owner), 1);
       }
-      if (this._owner.length === 0 && this.__connected) {
+      if (this.__connections.length === 0) {// && this.__isConnected) {
         this.disconnectedCallback();
       }
     }
@@ -110,16 +101,30 @@ export const IoNodeMixin = (superclass) => {
         }
       }
     }
+    dispatchChange() {
+      this.applyCompose();
+      this.changed();
+      if (this.setAria) this.setAria();
+    }
     /**
      * Returns a binding to a specified property`.
      * @param {string} prop - Property to bind to.
      * @return {Binding} Binding object.
      */
     bind(prop) {
-      return this.__nodeBindings.get(prop);
+      return this.__bindings.bind(prop);
     }
     /**
-     * Sets a property and emits [property]-set` event.
+     * Unbinds a binding to a specified property`.
+     * @param {string} prop - Property to unbind.
+     */
+    unbind(prop) {
+      this.__bindings.unbind(prop);
+      const binding = this.__properties[prop].binding;
+      if (binding) binding.removeTarget(this, prop);
+    }
+    /**
+     * Sets a property and emits `[property]-set` event.
      * Use this when property is set by user action (e.g. mouse click).
      * @param {string} prop - Property name.
      * @param {*} value - Property value.
@@ -130,11 +135,8 @@ export const IoNodeMixin = (superclass) => {
         const oldValue = this[prop];
         this[prop] = value;
         this.dispatchEvent('value-set', {property: prop, value: value, oldValue: oldValue}, false);
-        // TODO: documentation!
-        this.dispatchEvent('io-value-set', {property: prop, value: value, oldValue: oldValue}, true);
       }
     }
-    // TODO: consider renaming and simplifying `props` object structure.
     /**
      * Sets multiple properties in batch.
      * [property]-changed` events will be broadcast in the end.
@@ -145,27 +147,18 @@ export const IoNodeMixin = (superclass) => {
         if (this.__properties[p] === undefined) continue;
         this.__properties.set(p, props[p], true);
       }
-
-      // TODO: remove?
-      if (props['style']) {
-        for (let s in props['style']) {
-          this.style[s] = props['style'][s];
-          this.style.setProperty(s, props['style'][s]);
-        }
-      }
-
       this.__listeners.setPropListeners(props, this);
-      if (this.__connected) this.queueDispatch();
+      if (this.__isConnected) this.queueDispatch();
     }
-    _onObjectMutation(event) {
+    objectMutated(event) {
       for (let i = this.__observedProps.length; i--;) {
         const prop = this.__observedProps[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
-          this.throttle(this._onObjectMutationThrottled, prop);
+          this.throttle(this.objectMutatedThrottled, prop);
           return;
         } else if (event.detail.objects && event.detail.objects.indexOf(value) !== -1) {
-          this.throttle(this._onObjectMutationThrottled, prop);
+          this.throttle(this.objectMutatedThrottled, prop);
           return;
         }
       }
@@ -175,12 +168,10 @@ export const IoNodeMixin = (superclass) => {
      * and changed object is a property of the node.
      * @param {string} prop - Mutated object property name.
      */
-    _onObjectMutationThrottled(prop) {
+    objectMutatedThrottled(prop) {
       if (this['propMutated']) this['propMutated'](prop);
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
-      this.applyCompose();
-      this.changed();
-      if (this.setAria) this.setAria();
+      this.dispatchChange();
     }
     /**
      * Callback when `IoNode` is connected.
@@ -188,9 +179,9 @@ export const IoNodeMixin = (superclass) => {
     connectedCallback() {
       this.__listeners.connect();
       this.__properties.connect();
-      this.__connected = true;
+      this.__isConnected = true;
       if (this.__observedProps.length) {
-        window.addEventListener('object-mutated', this._onObjectMutation);
+        window.addEventListener('object-mutated', this.objectMutated);
       }
       this.queueDispatch();
     }
@@ -200,9 +191,9 @@ export const IoNodeMixin = (superclass) => {
     disconnectedCallback() {
       this.__listeners.disconnect();
       this.__properties.disconnect();
-      this.__connected = false;
+      this.__isConnected = false;
       if (this.__observedProps.length) {
-        window.removeEventListener('object-mutated', this._onObjectMutation);
+        window.removeEventListener('object-mutated', this.objectMutated);
       }
     }
     /**
@@ -210,8 +201,8 @@ export const IoNodeMixin = (superclass) => {
      * Use this when node is no longer needed.
      */
     dispose() {
-      this.__nodeQueue.dispose();
-      this.__nodeBindings.dispose();
+      this.__queue.dispose();
+      this.__bindings.dispose();
       this.__listeners.dispose();
       this.__properties.dispose();
     }
@@ -254,21 +245,21 @@ export const IoNodeMixin = (superclass) => {
      * @param {*} oldValue - Old property value.
      */
     queue(prop, value, oldValue) {
-      this.__nodeQueue.queue(prop, value, oldValue);
+      this.__queue.queue(prop, value, oldValue);
     }
     /**
      * Dispatches the queue.
      */
     queueDispatch() {
       if (this.lazy) {
-        preThrottleQueue.push(this._queueDispatchLazy);
-        this.throttle(this._queueDispatchLazy);
+        preThrottleQueue.push(this.queueDispatchLazy);
+        this.throttle(this.queueDispatchLazy);
       } else {
-        this.__nodeQueue.dispatch();
+        this.__queue.dispatch();
       }
     }
-    _queueDispatchLazy() {
-      this.__nodeQueue.dispatch();
+    queueDispatchLazy() {
+      this.__queue.dispatch();
     }
     /**
      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
@@ -301,12 +292,9 @@ export const IoNodeMixin = (superclass) => {
       requestAnimationFrameOnce(func);
     }
     filterObject(object, predicate, _depth = 5, _chain = [], _i = 0) {
-
       if (_chain.indexOf(object) !== -1) return; _chain.push(object);
       if (_i > _depth) return; _i++;
-
       if (predicate(object)) return object;
-
       for (let key in object) {
         const value = object[key] instanceof Binding ? object[key].value : object[key];
         if (predicate(value)) return value;
@@ -336,12 +324,12 @@ export const IoNodeMixin = (superclass) => {
     import(path) {
       const importPath = new URL(path, window.location).href;
       return new Promise(resolve => {
-        if (!path || importedPaths[importPath]) {
+        if (!path || IMPORTED_PATHS[importPath]) {
           resolve(importPath);
         } else {
           import(importPath)
           .then(() => {
-            importedPaths[importPath] = true;
+            IMPORTED_PATHS[importPath] = true;
             resolve(importPath);
           });
         }
@@ -353,46 +341,22 @@ export const IoNodeMixin = (superclass) => {
 };
 
 /**
-  * Register function to be called once per class.
-  * `IoNode` will self-register on first instance constructor.
-  * `IoElement` classes should call Register manually before first instance is created.
-  */
+ * Register function to be called once per class.
+ */
 const Register = function () {
+  const protochain = new ProtoChain(this.prototype);
   let proto = this.prototype;
-  const protochain = [];
-  while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object) {
-    protochain.push(proto); proto = proto.__proto__;
-  }
-
-  const isIoNode = proto.constructor !== HTMLElement;
-  this.isIoNode = isIoNode;
-  Object.defineProperty(this.prototype, 'isIoNode', {value: isIoNode});
-  Object.defineProperty(this.prototype, '__registered', {value: true});
-
-  proto = this.prototype;
+  
+  Object.defineProperty(proto, '__isIoNode', {value: true});
+  Object.defineProperty(proto.constructor, '__isRegisteredAs', {value: proto.constructor.name});  
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
+
+  Object.defineProperty(proto, '__protoFunctions', {value: new ProtoFunctions(protochain)});
   Object.defineProperty(proto, '__protoProperties', {value: new ProtoProperties(protochain)});
   Object.defineProperty(proto, '__protoListeners', {value: new ProtoListeners(protochain)});
 
-  const functions = new Set();
-  for (let i = protochain.length; i--;) {
-    const names = Object.getOwnPropertyNames(protochain[i]);
-    for (let j = 0; j < names.length; j++) {
-      if (names[j] === 'constructor') continue;
-      const p = Object.getOwnPropertyDescriptor(protochain[i], names[j]);
-      if (p.get || p.set) continue;
-      if (typeof protochain[i][names[j]] === 'function') {
-        if (names[j].startsWith('_') || names[j].startsWith('on')) {
-          functions.add(names[j]);
-        }
-      }
-    }
-  }
-  Object.defineProperty(proto, '__functions', {value: [...functions]});
-
   Object.defineProperty(proto, '__observedProps', {value: []});
-  // const ignore = [Boolean, String, Number, HTMLElement, Function, undefined];
   for (let p in proto.__protoProperties) {
     if (proto.__protoProperties[p].observe) proto.__observedProps.push(p);
   }
@@ -409,7 +373,14 @@ const Register = function () {
 
 IoNodeMixin.Register = Register;
 
-const importedPaths = {};
+/**
+ * IoNodeMixin applied to `Object` class.
+ */
+class IoNode extends IoNodeMixin(Object) {}
+
+IoNode.Register();
+
+const IMPORTED_PATHS = {};
 
 // TODO: document and test
 const preThrottleQueue = new Array();
@@ -443,7 +414,6 @@ requestAnimationFrame(animate);
 function requestAnimationFrameOnce(func) {
   if (funcQueue.indexOf(func) === -1) funcQueue.push(func);
 }
-/**
-  * IoNodeMixin applied to `Object` class.
-  */
-export class IoNode extends IoNodeMixin(Object) {}
+
+
+export {IoNode, IoNodeMixin};

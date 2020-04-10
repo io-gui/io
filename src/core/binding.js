@@ -1,50 +1,17 @@
-// TODO: Improve tests.
-
-/** Manager for `IoNode` and `IoElement` bindings. */
-export class NodeBindings {
-  /**
-   * Creates binding manager for `IoNode`.
-   * @param {IoNode|IoElement} node - Reference to the node/element itself.
-   */
-  constructor(node) {
-    Object.defineProperty(this, 'node', {value: node, configurable: true});
-  }
-  /**
-   * Returns a binding to the specified property.
-   * @param {string} prop - property name.
-   * @return {Binding} Property binding.
-   */
-  get(prop) {
-    this[prop] = this[prop] || new Binding(this.node, prop);
-    return this[prop];
-  }
-  /**
-   * Disposes all bindings.
-   * Use this when node is no longer needed.
-   */
-  dispose() {
-    for (let b in this) {
-      this[b].dispose();
-      delete this[b];
-    }
-    delete this.node;
-  }
-}
-
 /**
  * Binding object. It manages data binding between source and targets using `[prop]-changed` events.
  */
-export class Binding {
+class Binding {
   /**
    * Creates a binding object with specified `sourceNode` and `sourceProp`.
    * @param {IoNode} sourceNode - Source node.
    * @param {string} sourceProp - Source property.
    */
   constructor(sourceNode, sourceProp) {
-    this.source = sourceNode;
-    this.sourceProp = sourceProp;
-    this.targets = [];
-    this.targetsMap = new WeakMap();
+    Object.defineProperty(this, 'source', {value: sourceNode, configurable: true});
+    Object.defineProperty(this, 'sourceProp', {value: sourceProp, configurable: true});
+    Object.defineProperty(this, 'targets', {value: [], configurable: true});
+    Object.defineProperty(this, 'targetProps', {value: new WeakMap(), configurable: true});
     this._onTargetChanged = this._onTargetChanged.bind(this);
     this._onSourceChanged = this._onSourceChanged.bind(this);
     this.source.addEventListener(this.sourceProp + '-changed', this._onSourceChanged);
@@ -61,16 +28,21 @@ export class Binding {
    * @param {string} targetProp - Target property.
    */
   addTarget(targetNode, targetProp) {
-    targetNode[targetProp] = this.source[this.sourceProp];
+    const props = targetNode.__properties;
+    if (props) {
+      props[targetProp].binding = this;
+      props[targetProp].value = this.source[this.sourceProp];
+    }
+
     if (this.targets.indexOf(targetNode) === -1) this.targets.push(targetNode);
-    if (this.targetsMap.has(targetNode)) {
-      const targetProps = this.targetsMap.get(targetNode);
+    if (this.targetProps.has(targetNode)) {
+      const targetProps = this.targetProps.get(targetNode);
       if (targetProps.indexOf(targetProp) === -1) {
         targetProps.push(targetProp);
         targetNode.addEventListener(targetProp + '-changed', this._onTargetChanged);
       }
     } else {
-      this.targetsMap.set(targetNode, [targetProp]);
+      this.targetProps.set(targetNode, [targetProp]);
       targetNode.addEventListener(targetProp + '-changed', this._onTargetChanged);
     }
   }
@@ -81,8 +53,8 @@ export class Binding {
    * @param {string} targetProp - Target property.
    */
   removeTarget(targetNode, targetProp) {
-    if (this.targetsMap.has(targetNode)) {
-      const targetProps = this.targetsMap.get(targetNode);
+    if (this.targetProps.has(targetNode)) {
+      const targetProps = this.targetProps.get(targetNode);
       if (targetProp) {
         const index = targetProps.indexOf(targetProp);
         if (index !== -1) {
@@ -101,7 +73,7 @@ export class Binding {
   /**
    * Event handler that updates source property when one of the targets emits `[prop]-changed` event.
    * @param {Object} event - Event object.
-   * @param {IoNode|HTMLElement} event.target - Event target (source node that emitted the event).
+   * @param {IoNode} event.target - Event target (source node that emitted the event).
    * @param {Object} event.detail - Event detail.
    * @param {*} event.detail.value - New value.
    */
@@ -124,7 +96,7 @@ export class Binding {
   /**
    * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
    * @param {Object} event - Event object.
-   * @param {IoNode|HTMLElement} event.target - Event target (source node that emitted the event).
+   * @param {IoNode} event.target - Event target (source node that emitted the event).
    * @param {Object} event.detail - Event detail.
    * @param {*} event.detail.value - New value.
    */
@@ -138,7 +110,7 @@ export class Binding {
     }
     const value = event.detail.value;
     for (let i = this.targets.length; i--;) {
-      const targetProps = this.targetsMap.get(this.targets[i]);
+      const targetProps = this.targetProps.get(this.targets[i]);
       for (let j = targetProps.length; j--;) {
         const oldValue = this.targets[i][targetProps[j]];
         if (oldValue !== value) {
@@ -159,5 +131,53 @@ export class Binding {
       this.removeTarget(this.targets[t]);
       delete this.targets[t];
     }
+    delete this.source;
+    delete this.sourceProp;
+    delete this.targets;
+    delete this.targetProps;
+    delete this._onTargetChanged;
+    delete this._onSourceChanged;
   }
 }
+
+/**
+ * Manager for `IoNode` property bindings. It holds all bindings for a particular IoNode.
+ */
+class Bindings {
+  /**
+   * Creates binding manager with a node reference.
+   * @param {IoNode} node - Reference to the node.
+   */
+  constructor(node) {
+    Object.defineProperty(this, '__node', {value: node, configurable: true});
+  }
+  /**
+   * Returns a binding to the specified property name or creates one if it does not exist.
+   * @param {string} prop - property name.
+   * @return {Binding} Property binding.
+   */
+  bind(prop) {
+    this[prop] = this[prop] || new Binding(this.__node, prop);
+    return this[prop];
+  }
+  /**
+   * Disposes a binding for the specified property name.
+   * @param {string} prop - property name.
+   */
+  unbind(prop) {
+    if (this[prop]) this[prop].dispose();
+    delete this[prop];
+  }
+  /**
+   * Disposes all bindings. Use this when node is no longer needed.
+   */
+  dispose() {
+    for (let prop in this) {
+      this[prop].dispose();
+      delete this[prop];
+    }
+    delete this.__node;
+  }
+}
+
+export {Bindings, Binding};

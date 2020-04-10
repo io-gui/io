@@ -1,17 +1,28 @@
-import {IoNodeMixin} from './node.js';
+import {IoNodeMixin} from './io-node.js';
 import {Listeners} from './listeners.js';
 import {buildTree} from '../../lib/ijk.js';
 
-export class IoElement extends IoNodeMixin(HTMLElement) {
+/**
+ * Core `IoElement` class.
+ */
+class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style() {
     return /* css */`
     :host[hidden] {
       display: none;
     }
+    :host[disabled] {
+      pointer-events: none;
+      opacity: 0.5;
+    }
     `;
   }
   static get Properties() {
     return {
+      $: {
+        type: Object,
+        notify: false,
+      },
       tabindex: {
         type: String,
         reflect: 1,
@@ -39,6 +50,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       hidden: {
         type: Boolean,
         reflect: 1,
+      },
+      disabled: {
+        type: Boolean,
+        reflect: true,
       },
     };
   }
@@ -152,7 +167,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       // update existing elements
       } else {
         children[i].removeAttribute('className');
-        if (children[i].isIoElement) {
+        if (children[i].__isIoElement) {
           // Set IoElement element properties
           // TODO: Test property and listeners reset. Consider optimizing.
           children[i].setProperties(vChildren[i].props);
@@ -168,11 +183,11 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (vChildren[i].children !== undefined) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
-          if (!children[i].isIoElement) {
+          if (!children[i].__isIoElement) {
             this.flattenTextNode(children[i]);
             children[i]._textNode.nodeValue = String(vChildren[i].children);
           } else {
-            console.log(children[i], children[i].isIoElement, vChildren[i]);
+            console.log(children[i], children[i].__isIoElement, vChildren[i]);
           }
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
@@ -211,6 +226,14 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     this.flattenTextNode(this);
     this._textNode.nodeValue = String(value);
   }
+  setProperties(props) {
+    super.setProperties(props);
+    if (props['style']) {
+      for (let s in props['style']) {
+        this.style[s] = props['style'][s];
+      }
+    }
+  }
   /**
    * Alias for HTMLElement setAttribute where falsey values remove the attribute.
    * @param {string} attr - Attribute name.
@@ -232,7 +255,12 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     if (this.label) {
       this.setAttribute('aria-label', this.label);
     } else {
-      this.setAttribute('aria-label', false);
+      this.removeAttribute('aria-label');
+    }
+    if (this.disabled) {
+      this.setAttribute('aria-disabled', true);
+    } else {
+      this.removeAttribute('aria-disabled');
     }
   }
   _onFocusTo(event) {
@@ -254,7 +282,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       //   return;
       // }
 
-      const siblings = this.querySelectorAll('[tabindex="0"]');
+      const siblings = this.querySelectorAll('[tabindex="0"]:not([disabled])');
 
       for (let i = siblings.length; i--;) {
 
@@ -369,14 +397,14 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
  */
 IoElement.Register = function() {
   IoNodeMixin.Register.call(this);
-
-  this.isIoElement = true;
-  Object.defineProperty(this.prototype, 'isIoElement', {value: true});
-
+  
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
   Object.defineProperty(this, 'localName', {value: localName});
   Object.defineProperty(this.prototype, 'localName', {value: localName});
+
+  Object.defineProperty(this, '__isIoElement', {value: true});
+  Object.defineProperty(this.prototype, '__isIoElement', {value: true});
 
   if (window.customElements !== undefined) {
     window.customElements.define(localName, this);
@@ -405,7 +433,7 @@ if (window.ResizeObserver !== undefined) {
 const constructElement = function(vDOMNode) {
   // IoElement classes constructed with constructor.
   const ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
-  if (ConstructorClass && ConstructorClass.isIoElement) return new ConstructorClass(vDOMNode.props);
+  if (ConstructorClass && ConstructorClass.__isIoElement) return new ConstructorClass(vDOMNode.props);
 
   // Other element classes constructed with document.createElement.
   const element = document.createElement(vDOMNode.name);
@@ -538,3 +566,7 @@ function _initProtoStyle(prototypes) {
     document.head.appendChild(element);
   }
 }
+
+IoElement.Register();
+
+export {IoElement};

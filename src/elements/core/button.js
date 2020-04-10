@@ -27,6 +27,7 @@ export class IoButton extends IoItem {
         reflect: true,
       },
       label: 'Button',
+      icon: '',
       role: 'button',
     };
   }

@@ -28,7 +28,10 @@ export class IoMenuItem extends IoItem {
     :host > :not(:empty) {
       padding: 0 var(--io-spacing);
     }
-    :host > .io-menu-icon {}
+    :host > .io-menu-icon {
+      width: var(--io-line-height);
+      height: var(--io-line-height);
+    }
     :host > .io-menu-label {
       flex: 1 1 auto;
       text-overflow: ellipsis;
@@ -344,7 +347,7 @@ export class IoMenuItem extends IoItem {
     this.setAttribute('selected', this._selected);
     this.setAttribute('hasmore', !!this._options && this.direction === 'right');
     this.template([
-      ['span', {class: 'io-menu-icon'}, this._icon],
+      this._icon.search(':') != -1 ? ['io-icon', {icon: this._icon, class: 'io-menu-icon'}] : ['span', {class: 'io-menu-icon'}, this._icon],
       ['span', {class: 'io-menu-label'}, this._label],
       ['span', {class: 'io-menu-hint'}, this._hint],
     ]);
