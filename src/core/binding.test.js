@@ -1,4 +1,4 @@
-import {IoNode} from './io-node.js';
+import {IoNode} from '../io.js';
 
 class Node extends IoNode {
   static get Properties() {

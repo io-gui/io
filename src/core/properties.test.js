@@ -1,8 +1,4 @@
-import {ProtoChain} from './protochain.js';
-import {Binding} from './binding.js';
-import {IoNode} from './io-node.js';
-import {IoElement} from './io-element.js';
-import {ProtoProperty, ProtoProperties, Property} from './properties.js';
+import {IoNode, IoElement, Binding, ProtoChain, ProtoProperty, ProtoProperties, Property} from '../io.js';
 
 const string = (object) => {
   return JSON.stringify(object);
