@@ -14,7 +14,7 @@ export class IoSelectorSidebar extends IoSelector {
       flex-direction: column;
     }
     :host > io-sidebar {
-      flex: 0 0 8em;
+      flex: 0 0 auto;
       background-color: var(--io-background-color-dark);
       border: var(--io-border);
       border-width: 0 var(--io-border-width) 0 0;

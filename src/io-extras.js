@@ -1,7 +1,7 @@
 /** @license
  * The MIT License
  *
- * Copyright © 2019 Aleksandar (Aki) Rodić
+ * Copyright © 2019 Aleksandar (Aki) Rodic
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,5 +29,6 @@
 import './io-elements.js';
 
 export {IoMdView} from './extras/md-view.js';
+export {IoMdViewSelector} from './extras/md-view-selector.js';
 export {IoServiceLoader} from './extras/service-loader.js';
 export {IoElementDemo} from './extras/element-demo.js';

@@ -16,11 +16,9 @@
     "lint": "eslint src --fix",
     "rollup": "rollup -c",
     "uglify-io": "uglifyjs build/io.js -cmo build/io.js --comments",
-    "uglify-docs": "uglifyjs build/io-docs.js -cmo build/io-docs.js --comments",
     "uglify-elements": "uglifyjs build/io-elements.js -cmo build/io-elements.js --comments",
     "uglify-extras": "uglifyjs build/io-extras.js -cmo build/io-extras.js --comments",
-    "uglify-tests": "uglifyjs build/io-tests.js -cmo build/io-tests.js --comments",
-    "uglify": "npm run uglify-io && npm run uglify-docs && npm run uglify-elements && npm run uglify-extras && npm run uglify-tests",
+    "uglify": "npm run uglify-io && npm run uglify-elements && npm run uglify-extras",
     "build": "eslint src && npm run rollup && npm run uglify",
     "travis": "npm run build"
   },

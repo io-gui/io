@@ -17,11 +17,10 @@ export class IoMenuOptions extends IoElement {
       white-space: nowrap;
       user-select: none;
       background-image: none;
-      padding: 0;
       opacity: 1;
       transition: opacity 0.25s;
       overflow-y: auto !important;
-      padding: var(--io-spacing);
+      padding: 0;
     }
     :host > io-menu-item {
       align-self: stretch;
@@ -42,9 +41,21 @@ export class IoMenuOptions extends IoElement {
       padding: 0 var(--io-spacing);
     }
     :host[horizontal] > io-menu-item {
-      border-left-width: 0;
-      border-right-width: 0;
-      padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
+      /* TODO: add to theme */
+      --size-offset: calc(var(--io-line-height) * 0.5); 
+      line-height: calc(var(--size-offset) + var(--io-line-height));
+      height: calc(var(--size-offset) + var(--io-item-height));
+      padding: calc(1 * var(--io-spacing)) var(--size-offset);
+    }
+    :host[horizontal] > io-menu-item > io-icon {
+      /* TODO: make themable and customizable*/
+      --size-offset: calc(var(--io-line-height) * 0.25); 
+      width: calc(var(--size-offset) + var(--io-item-height));
+      height: calc(var(--size-offset) + var(--io-item-height));
+      padding: 0;
+    }
+    :host[horizontal] > io-menu-item {
+      border-right:1px solid var(--io-color-border);
     }
     :host:not([horizontal]) > io-menu-item > * {
       min-width: 0.5em;
@@ -71,8 +82,9 @@ export class IoMenuOptions extends IoElement {
       min-width: 8em;
     }
     :host > io-string:empty:before {
-      content: ' 🔍';
+      content: '\\1F50D';
       white-space: pre;
+      padding: 0 0.25em;
       visibility: visible;
       opacity: 0.33;
     }
@@ -284,7 +296,7 @@ export class IoMenuOptions extends IoElement {
     if (this.horizontal) {
       elements.splice(0, 0, ...this.slotted);
       elements.push(['io-menu-item', {
-        label: '☰',
+        label: '\u2630',
         title: 'select tab',
         value: this.value,
         selectable: this.selectable,
