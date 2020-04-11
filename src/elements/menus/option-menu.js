@@ -32,7 +32,11 @@ export class IoOptionMenu extends IoMenuItem {
         reflect: -1,
         observe: true,
       },
-      icon: '▾',
+      icon: '\u25BE',
+      // hasmore: {
+      //   value: true,
+      //   reflect: 1,
+      // },
       role: 'button',
       lazy: false,
     };

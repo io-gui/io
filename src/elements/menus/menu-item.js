@@ -31,6 +31,7 @@ export class IoMenuItem extends IoItem {
     :host > .io-menu-icon {
       width: var(--io-line-height);
       height: var(--io-line-height);
+      margin-right: var(--io-spacing);
     }
     :host > .io-menu-label {
       flex: 1 1 auto;
@@ -39,8 +40,21 @@ export class IoMenuItem extends IoItem {
     :host > .io-menu-hint {
       opacity: 0.25;
     }
-    :host[hasmore]:after {
-      content: '▸';
+    :host[hasmore][direction="up"]:after {
+      content: '\\25B4';
+      margin-left: 0.5em;
+    }
+    :host[hasmore][direction="right"]:after {
+      content: '\\25B8';
+      margin-left: 0.5em;
+    }
+    :host[hasmore][direction="bottom"]:after {
+      content: '\\25BE';
+      margin-left: 0.5em;
+    }
+    :host[hasmore][direction="left"]:before {
+      content: '\\25C2';
+      margin-right: 0.5em;
     }
     :host[selected][direction="top"],
     :host[selected][direction="bottom"] {
@@ -315,9 +329,10 @@ export class IoMenuItem extends IoItem {
       if (!this.$options) {
         this.$options = new IoMenuOptions({
           $parent: this,
-          expanded: this.bind('expanded'),
           'on-item-clicked': this._onItemClicked,
         });
+        Layer.appendChild(this.$options);
+        this.$options.expanded = this.bind('expanded');
       }
       if (this.$options && this.$options.parentElement !== Layer) {
         Layer.appendChild(this.$options);
@@ -345,7 +360,7 @@ export class IoMenuItem extends IoItem {
   changed() {
     this.__properties.selected.value = this._selected;
     this.setAttribute('selected', this._selected);
-    this.setAttribute('hasmore', !!this._options && this.direction === 'right');
+    this.setAttribute('hasmore', !!this._options);
     this.template([
       this._icon.search(':') != -1 ? ['io-icon', {icon: this._icon, class: 'io-menu-icon'}] : ['span', {class: 'io-menu-icon'}, this._icon],
       ['span', {class: 'io-menu-label'}, this._label],
