@@ -138,8 +138,8 @@ export class IoSelector extends IoElement {
 
     let element = this.elements.find(element => {return element[1].name === selected;});
     if (!element) {
-      console.warn(`Could not find element with id:${selected}!`);
-      element = ['span', `Could not find element with id:${selected}!`];
+      console.warn(`Could not find element with name:${selected}!`);
+      element = ['span', `Could not find element with name:${selected}!`];
     }
     if (typeof element[1] !== 'object') element.splice(1, 0, {});
 

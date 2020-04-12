@@ -82,6 +82,7 @@ export class IoMenuItem extends IoItem {
       $parent: HTMLElement,
       $options: HTMLElement,
       selectable: false,
+      depth: Infinity,
       lazy: true,
     };
   }
@@ -325,10 +326,11 @@ export class IoMenuItem extends IoItem {
     getRootElement(this).expanded = false;
   }
   expandedChanged() {
-    if (this.expanded) {
+    if (this.expanded && this.depth > 0) {
       if (!this.$options) {
         this.$options = new IoMenuOptions({
           $parent: this,
+          depth: this.depth - 1,
           'on-item-clicked': this._onItemClicked,
         });
         Layer.appendChild(this.$options);
@@ -360,7 +362,7 @@ export class IoMenuItem extends IoItem {
   changed() {
     this.__properties.selected.value = this._selected;
     this.setAttribute('selected', this._selected);
-    this.setAttribute('hasmore', !!this._options);
+    this.setAttribute('hasmore', !!this._options && this.depth > 0);
     this.template([
       this._icon.search(':') != -1 ? ['io-icon', {icon: this._icon, class: 'io-menu-icon'}] : ['span', {class: 'io-menu-icon'}, this._icon],
       ['span', {class: 'io-menu-label'}, this._label],

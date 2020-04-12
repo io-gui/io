@@ -23,6 +23,7 @@ export class IoSelectorTabs extends IoSelector {
         type: Array,
         observe: true,
       },
+      depth: Infinity,
     };
   }
   getSlotted() {
@@ -31,6 +32,7 @@ export class IoSelectorTabs extends IoSelector {
       horizontal: true,
       value: this.bind('selected'),
       options: this.options,
+      depth: this.depth,
       slotted: this.slotted,
       selectable: true,
     }];
