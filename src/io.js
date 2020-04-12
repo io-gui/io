@@ -25,5 +25,6 @@
 export {IoNode, IoNodeMixin} from './core/io-node.js';
 export {IoElement} from './core/io-element.js';
 export {Binding} from './core/binding.js';
+export {Options} from './core/options.js';
 export {ProtoChain} from './core/protochain.js';
 export {ProtoProperty, ProtoProperties, Property} from './core/properties.js';

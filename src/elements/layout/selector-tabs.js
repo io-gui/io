@@ -15,10 +15,6 @@ export class IoSelectorTabs extends IoSelector {
   }
   static get Properties() {
     return {
-      options: {
-        type: Array,
-        observe: true,
-      },
       slotted: {
         type: Array,
         observe: true,

@@ -30,10 +30,6 @@ export class IoSelectorSidebar extends IoSelector {
   }
   static get Properties() {
     return {
-      options: {
-        type: Array,
-        observe: true,
-      },
       collapseWidth: 410,
       collapsed: {
         type: Boolean,
