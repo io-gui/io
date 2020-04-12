@@ -132,6 +132,9 @@ export class IoMenuItem extends IoItem {
     }
     return !!this.filterObject(this._options || {}, (o) => { return o === this.value || o.value === this.value; });
   }
+  get _hasmore() {
+    return !!this._options && this.depth > 0;
+  }
   get inlayer() {
     return this.$parent && this.$parent.inlayer;
   }
@@ -148,7 +151,7 @@ export class IoMenuItem extends IoItem {
     Layer.removeEventListener('pointerup', this._onLayerPointerup);
   }
   _onClick() {
-    const selectable = this._value !== undefined && this._selectable;
+    const selectable = (this._value !== undefined && !this._hasmore) && this._selectable;
     const actionable = typeof this._action === 'function';
     if (selectable || actionable) {
       if (selectable) this.set('value', this._value, true);
@@ -368,7 +371,7 @@ export class IoMenuItem extends IoItem {
   changed() {
     this.__properties.selected.value = this._selected;
     this.setAttribute('selected', this._selected);
-    this.setAttribute('hasmore', !!this._options && this.depth > 0);
+    this.setAttribute('hasmore', this._hasmore);
     this.template([
       this._icon.search(':') != -1 ? ['io-icon', {icon: this._icon, class: 'io-menu-icon'}] : ['span', {class: 'io-menu-icon'}, this._icon],
       ['span', {class: 'io-menu-label'}, this._label],
