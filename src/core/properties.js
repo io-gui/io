@@ -8,6 +8,7 @@ import {Binding} from './binding.js';
  * @property {number} reflect - Reflects to HTML attribute
  * @property {boolean} notify - Trigger change handlers and change events.
  * @property {boolean} observe - Observe object mutations for this property.
+ * @property {boolean} strict - Enforce stric typing. // TODO: document and test
  * @property {boolean} enumerable - Makes property enumerable.
  * @property {Binding} binding - Binding object.
  */
@@ -25,6 +26,7 @@ class ProtoProperty {
       this.notify = true;
       this.reflect = 0;
       this.observe = false;
+      this.strict = false;
       this.enumerable = true;
       this.binding = undefined;
     }
@@ -101,6 +103,7 @@ class ProtoProperty {
     if (typeof prop.notify == 'boolean') this.notify = prop.notify;
     if (typeof prop.reflect == 'number') this.reflect = prop.reflect;
     if (typeof prop.observe == 'boolean') this.observe = prop.observe;
+    if (typeof prop.strict == 'boolean') this.strict = prop.strict;
     if (typeof prop.enumerable == 'boolean') this.enumerable = prop.enumerable;
     if (prop.binding instanceof Binding) {
       this.binding = prop.binding;
@@ -143,6 +146,7 @@ class ProtoProperties {
  * @property {number} reflect - HTML attribute [-1, 0, 1 or 2]
  * @property {boolean} notify - Enables change handlers and events.
  * @property {boolean} observe - Observe object mutations for this property.
+ * @property {boolean} strict - Enforce stric typing. // TODO: document and test
  * @property {boolean} enumerable - Makes property enumerable.
  * @property {Binding} binding - Binding object.
  */
@@ -156,6 +160,7 @@ class Property {
     this.notify = protoProp.notify;
     this.reflect = protoProp.reflect;
     this.observe = protoProp.observe;
+    this.strict = protoProp.strict;
     this.enumerable = protoProp.enumerable;
     this.type = protoProp.type;
     this.binding = protoProp.binding;
@@ -250,7 +255,11 @@ class Properties {
 
       } else {
 
-        prop.value = value;
+        if (prop.strict && !(value instanceof prop.type)) {
+          console.error('Properties runtime error: invalid value type!');
+        } else {
+          prop.value = value;
+        }
 
       }
 
