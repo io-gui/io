@@ -205,6 +205,7 @@ class Properties {
           node.queue(prop, value, undefined);
           if (value.__isIoNode && node.__isConnected) value.connect(node);
         } else if (this[prop].reflect >= 1 && node.__isIoElement) {
+          // TODO: figure out how to resolve bi-directionsl reflection when attributes are set in html (role, etc...)
           node.setAttribute(prop, value);
         }
       }

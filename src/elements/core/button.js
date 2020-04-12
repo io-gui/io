@@ -24,7 +24,7 @@ export class IoButton extends IoItem {
       value: undefined,
       pressed: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
       label: 'Button',
       icon: '',

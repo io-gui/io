@@ -24,7 +24,7 @@ export class IoItem extends IoElement {
       value: undefined,
       selected: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
       tabindex: 0,
     };
