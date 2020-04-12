@@ -259,8 +259,8 @@ body {
 
 #mocha-stats {
   position: fixed;
-  top: 15px;
-  right: 10px;
+  top: 5em;
+  right: 3em;
   font-size: 12px;
   margin: 0;
   color: #888;
@@ -281,6 +281,15 @@ body {
   -moz-box-shadow: none;
   box-shadow: none;
   background-color: initial;
+}
+
+#mocha-stats .passes {
+  color: #0c0;
+}
+
+#mocha-stats .failures {
+  color: #f00;
+  font-weight: bold;
 }
 
 #mocha-stats em {
