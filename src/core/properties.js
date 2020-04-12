@@ -277,7 +277,8 @@ class Properties {
       if (this[p].binding) {
         this[p].binding.addTarget(this.__node, p);
       }
-      if (this[p].value && this[p].value.__isIoNode) {
+      // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
+      if (this[p].value && this[p].value.__isIoNode && !this[p].value.__isIoElement) {
         this[p].value.connect(this.__node);
       }
     }
@@ -291,7 +292,8 @@ class Properties {
       if (this[p].binding) {
         this[p].binding.removeTarget(this.__node, p);
       }
-      if (this[p].value && this[p].value.__isIoNode) {
+      // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
+      if (this[p].value && this[p].value.__isIoNode && !this[p].value.__isIoElement) {
         this[p].value.disconnect(this.__node);
       }
     }

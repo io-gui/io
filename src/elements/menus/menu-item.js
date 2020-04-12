@@ -139,11 +139,13 @@ export class IoMenuItem extends IoItem {
     super.connectedCallback();
     if (this.$options) Layer.appendChild(this.$options);
     if (!this.inlayer) Layer.addEventListener('pointermove', this._onLayerPointermove);
+    if (!this.inlayer) Layer.addEventListener('pointerup', this._onLayerPointerup);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.$options && this.$options.inlayer) Layer.removeChild(this.$options);
     Layer.removeEventListener('pointermove', this._onLayerPointermove);
+    Layer.removeEventListener('pointerup', this._onLayerPointerup);
   }
   _onClick() {
     const selectable = this._value !== undefined && this._selectable;
@@ -240,12 +242,16 @@ export class IoMenuItem extends IoItem {
   _onLayerPointermove(event) {
     if (this.expanded) this._onPointermove(event);
   }
+  _onLayerPointerup(event) {
+    if (this.expanded) this._onPointerup(event);
+  }
   _onPointerup(event, options) {
     event.stopPropagation();
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
     const item = this._gethovered(event);
-    const nocollapse = options && options.nocollapse;
+    const nocollapse = options && options.nocollapse;    
+
     if (item) {
       item.focus();
       item._onClick(event);

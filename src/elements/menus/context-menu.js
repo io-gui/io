@@ -31,7 +31,7 @@ export class IoContextMenu extends IoElement {
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.$options) Layer.removeChild(this.$options);
+    if (this.$options && this.$options.parentElement) Layer.removeChild(this.$options);
     Layer.removeEventListener('pointermove', this._onLayerPointermove);
     this._parent.style.userSelect = null;
     this._parent.style.webkitUserSelect = null;
@@ -68,12 +68,14 @@ export class IoContextMenu extends IoElement {
     if (event.pointerType !== 'touch') {
       if (event.button === this.button) {
         this.expanded = true;
+        Layer.skipCollapse = true;
       }
     } else {
       // iOS Safari contextmenu event emulation.
       event.preventDefault();
       this._contextTimeout = setTimeout(() => {
         this.expanded = true;
+        Layer.skipCollapse = true;
       }, 150);
     }
   }
