@@ -29407,6 +29407,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29416,6 +29417,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
           
@@ -29426,6 +29428,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29435,6 +29438,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29444,6 +29448,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29453,6 +29458,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29462,6 +29468,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29471,6 +29478,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29480,6 +29488,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29488,6 +29497,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29497,6 +29507,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29512,6 +29523,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
         });
@@ -29577,6 +29589,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29588,6 +29601,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
         });
@@ -29595,12 +29609,13 @@ class Properties {
           let prop, cfg = {value: {}};
 
           prop = new ProtoProperty(cfg);
-          chai.expect(prop.value).not.to.be.equal(cfg.value);          
+          chai.expect(prop.value).to.be.equal(cfg.value);
           chai.expect(string$3(prop)).to.be.equal(string$3({
             value: {},
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29612,6 +29627,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
         });
@@ -29637,6 +29653,7 @@ class Properties {
                   value: 2,
                   notify: false,
                   observe: true,
+                  strict: false,
                   enumerable: false,
                 },
                 _prop: {
@@ -29657,6 +29674,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29665,6 +29683,7 @@ class Properties {
             notify: false,
             reflect: 0,
             observe: true,
+            strict: false,
             enumerable: false
           }));
 
@@ -29683,6 +29702,7 @@ class Properties {
                   notify: false,
                   reflect: 2,
                   observe: true,
+                  strict: false,
                   enumerable: false,
                 },
               };
@@ -29723,6 +29743,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29733,6 +29754,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
           
@@ -29744,6 +29766,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29754,6 +29777,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29764,6 +29788,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29774,6 +29799,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29784,6 +29810,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29794,6 +29821,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29804,6 +29832,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29813,6 +29842,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29823,6 +29853,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29839,6 +29870,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
         });
@@ -29915,6 +29947,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29927,6 +29960,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
         });
@@ -29941,6 +29975,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -29953,6 +29988,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
         });
@@ -29979,6 +30015,7 @@ class Properties {
                   value: 2,
                   notify: false,
                   observe: true,
+                  strict: false,
                   enumerable: false,
                 },
                 _prop: {
@@ -30008,6 +30045,7 @@ class Properties {
             notify: true,
             reflect: 0,
             observe: false,
+            strict: false,
             enumerable: true
           }));
 
@@ -30016,6 +30054,7 @@ class Properties {
             notify: false,
             reflect: 0,
             observe: true,
+            strict: false,
             enumerable: false
           }));
 
@@ -30559,7 +30598,7 @@ class Button {
         it('has default values', () => {
           chai.expect(this.element.value).to.equal(undefined);
           chai.expect(this.element.label).to.equal('Button');
-          chai.expect(this.element.action).to.equal(undefined);
+          chai.expect(this.element.action).to.equal(null);
         });
       });
       describe('innerText', () => {
