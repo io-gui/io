@@ -20,7 +20,7 @@ export class IoButton extends IoItem {
   }
   static get Properties() {
     return {
-      action: Function,
+      action: null,
       value: undefined,
       pressed: {
         type: Boolean,

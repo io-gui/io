@@ -188,7 +188,7 @@ class IoLadder extends IoElement {
   }
   static get Properties() {
     return {
-      src: HTMLElement,
+      src: null,
       conversion: 1,
       expanded: {
         type: Boolean,

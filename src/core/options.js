@@ -1,3 +1,5 @@
+import {IoNode} from './io-node.js';
+
 // TODO: document and test!
 
 class Option {
@@ -34,3 +36,82 @@ export class Options extends Array {
     }
   }
 }
+
+export class Route extends IoNode {
+  static get Properties() {
+    return {
+      value: '',
+      options: Options,
+    };
+  }
+  constructor(props) {
+    super(props);
+    this.value = this._getDefault().value;
+
+    // if (this.options instanceof Array) {
+    //   for (let i = 0; i < this.options.length; i++) {
+    //     const option = this.options[i];
+    //     if (typeof option === 'object' && option.options) {
+    //       this[option.value] = new Route({options: option.options});
+    //     }
+    //   }
+    // }
+
+    // this.connect();
+  }
+  _getValidOption(option) {
+    if (typeof option === 'string') {
+      return {value: option};
+    } else if (typeof option === 'object') {
+      return {
+        value: option.value,
+        options: option.options,
+      };
+    }
+  }
+  _getDefault() {
+    if (this.options instanceof Array && this.options[0]) {
+      return this._getValidOption(this.options[0]);
+    }
+  }
+  _getSelected() {
+    const value = this.value;
+    for (let i = 0; i < this.options.length; i++) {
+      let option = this.options[i];
+      if (typeof option === 'string' && option === value) {
+        return [this._getValidOption(option)];
+      } else if (typeof option === 'object') {
+        option = this._getValidOption(option);
+        if (option.value === value) {
+          if (option.options && this[value] instanceof Route) {
+            const selected = this[value]._getSelected();
+            return [option, ...selected];
+          } else {
+            return [option];
+          }
+        }
+      }
+    }
+  }
+  valueChanged() {
+    const selected = this._getSelected();
+    let values = '';
+    for (let i = 0; i < selected.length; i++) {
+      values = values + '/' + selected[i].value;
+    }
+    console.log('value:', values);
+  }
+}
+Route.Register();
+
+// export class Router extends Route {
+//   valueChanged() {
+//     const selected = this._getSelected();
+//     let values = '';
+//     for (let i = 0; i < selected.length; i++) {
+//       values = values + '/' + selected[i].value;
+//     }
+//     console.log('value:', values);
+//   }
+// }
+// Router.Register();

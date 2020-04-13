@@ -12,7 +12,7 @@ export default class {
         it('has default values', () => {
           chai.expect(this.element.value).to.equal(undefined);
           chai.expect(this.element.label).to.equal('Button');
-          chai.expect(this.element.action).to.equal(undefined);
+          chai.expect(this.element.action).to.equal(null);
         });
       });
       describe('innerText', () => {

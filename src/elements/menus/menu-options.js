@@ -111,7 +111,7 @@ export class IoMenuOptions extends IoElement {
         reflect: 1,
       },
       slotted: Array,
-      $parent: HTMLElement,
+      $parent: null,
       _rects: Array,
       role: 'listbox',
     };

@@ -15,7 +15,7 @@ export class IoContextMenu extends IoElement {
       position: 'pointer',
       button: 0,
       selectable: false,
-      $options: HTMLElement,
+      $options: null,
     };
   }
   connectedCallback() {

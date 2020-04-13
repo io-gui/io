@@ -31,80 +31,83 @@ class ProtoProperty {
       this.binding = undefined;
     }
 
-    if (prop === null) {
+    if (prop === undefined || prop === null) {
 
-      this.value = null;
+      prop = {value: prop};
 
     } else if (typeof prop === 'function') {
 
-      this.type = prop;
+      prop = {type: prop};
+    
+    } else if (prop instanceof Binding) {
 
-      if (!noDefaults) {
-        if (this.type === Boolean) this.value = false;
-        else if (this.type === String) this.value = '';
-        else if (this.type === Number) this.value = 0;
-        else if (this.type === Object) this.value = {};
-        else if (this.type === Array) this.value = [];
-      }
+      prop = {binding: prop};
 
-    } else if (typeof prop === 'number' || typeof prop === 'string' || typeof prop === 'boolean') {
+    } else if (!(prop && prop.constructor === Object)) {
 
-      this.value = prop;
-      this.type = prop.constructor;
+      prop = {value: prop};
 
-    } else if (typeof prop === 'object') {
+    }
 
-      if (prop instanceof Array) {
+    //
 
-        this.value = [...prop];
-        this.type = Array;
+    if (prop.value === undefined || prop.value === null) {
+
+      if (prop.binding instanceof Binding) {
         
-      } else if (prop instanceof Binding) {
-        
-        this.value = prop.value;
-        this.binding = prop;
+        prop.value = prop.binding.value;
 
       } else {
 
-        if (typeof prop.type !== 'function' && prop.value && prop.value.constructor) {
-          prop.type = prop.value.constructor;
-        }
-
-        if (prop && prop.value !== undefined) {
-          if (prop.value instanceof Array) {
-            this.value = [...prop.value];
-          } else if (prop.value && typeof prop.value === 'object') {
-            this.value = new prop.value.constructor();
-          } else {
-            this.value = prop.value;
-          }
-        }
-
-        if (typeof prop.type === 'function') {
-          this.type = prop.type;
-          if (this.value === undefined) {
-            if (prop.type === Boolean) this.value = false;
-            else if (prop.type === String) this.value = '';
-            else if (prop.type === Number) this.value = 0;
-            else if (prop.type === Object) this.value = {};
-            else if (prop.type === Array) this.value = [];
-            else if (prop.type !== HTMLElement && prop.type !== Function) {
-              this.value = new prop.type();
-            }
-          }
-        }
+        this.value = prop.value;
 
       }
-      
+
     }
 
-    prop = prop || {};
+    if (prop.type === undefined) {
+
+      if (prop.value !== undefined && prop.value !== null) {
+
+        prop.type = prop.value.constructor;
+
+      }
+
+    }
+
+    if (prop.type !== undefined) this.type = prop.type;
+
+    if (prop.value === undefined) {
+
+      if (typeof prop.type === 'function') {
+
+        if (prop.type === Boolean) this.value = false;
+        else if (prop.type === String) this.value = '';
+        else if (prop.type === Number) this.value = 0;
+        else if (prop.type === Object) this.value = {};
+        else if (prop.type === Array) this.value = [];
+        else this.value = new prop.type();
+
+      }
+
+    } else {
+
+      this.value = prop.value;
+
+    }
+
+    if (this.value !== undefined) {
+
+      if (this.value instanceof Array) this.value = [...this.value];
+
+    }
 
     if (typeof prop.notify == 'boolean') this.notify = prop.notify;
     if (typeof prop.reflect == 'number') this.reflect = prop.reflect;
     if (typeof prop.observe == 'boolean') this.observe = prop.observe;
     if (typeof prop.strict == 'boolean') this.strict = prop.strict;
     if (typeof prop.enumerable == 'boolean') this.enumerable = prop.enumerable;
+
     if (prop.binding instanceof Binding) {
       this.binding = prop.binding;
       this.value = prop.binding.value;
@@ -164,6 +167,7 @@ class Property {
     this.enumerable = protoProp.enumerable;
     this.type = protoProp.type;
     this.binding = protoProp.binding;
+    // TODO: cleanup
     if (this.type === Array && this.value instanceof Array) {
       this.value = [...this.value];
     }
@@ -176,11 +180,7 @@ class Property {
       else if (this.type === Number) this.value = 0;
       else if (this.type === Array) this.value = [];
       else if (this.type === Object) this.value = {};
-    }
-    if (this.value === undefined && this.type) {
-      if (this.type !== HTMLElement && this.type !== Function) {
-        this.value = new this.type();
-      }
+      else this.value = new this.type();
     }
   }
 }

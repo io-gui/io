@@ -232,7 +232,7 @@ export default class {
           let prop, cfg = {value: {}};
 
           prop = new ProtoProperty(cfg);
-          chai.expect(prop.value).not.to.be.equal(cfg.value);          
+          chai.expect(prop.value).to.be.equal(cfg.value);
           chai.expect(string(prop)).to.be.equal(string({
             value: {},
             notify: true,
