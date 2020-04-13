@@ -1,5 +1,4 @@
 import {IoElement} from '../../io.js';
-
 // TODO: use IoContent for caching and display.
 
 export class IoSelector extends IoElement {
@@ -45,6 +44,10 @@ export class IoSelector extends IoElement {
   }
   static get Properties() {
     return {
+      options: {
+        type: Array,
+        observe: true,
+      },
       elements: {
         type: Array,
         observe: true,
@@ -67,6 +70,12 @@ export class IoSelector extends IoElement {
       'scroll': ['_onScroll', {capture: true, passive: true}],
       'content-ready': '_onIoContentReady',
     };
+  }
+  constructor(props) {
+    super(props);
+    if (!this.selected && this.options[0]) {
+      this.selected = this.options[0].value;
+    }
   }
   _onIoContentReady(event) {
     event.stopImmediatePropagation();
@@ -115,6 +124,11 @@ export class IoSelector extends IoElement {
   selectedChanged() {
     this.updateScroll();
   }
+  optionsChanged() {
+    if (!this.selected && this.options[0]) {
+      this.selected = this.options[0].value;
+    }
+  }
   elementsChanged() {
     this.updateScroll();
   }
@@ -138,8 +152,8 @@ export class IoSelector extends IoElement {
 
     let element = this.elements.find(element => {return element[1].name === selected;});
     if (!element) {
-      console.warn(`Could not find element with id:${selected}!`);
-      element = ['span', `Could not find element with id:${selected}!`];
+      console.warn(`Could not find element with name:${selected}!`);
+      element = ['span', `Could not find element with name:${selected}!`];
     }
     if (typeof element[1] !== 'object') element.splice(1, 0, {});
 

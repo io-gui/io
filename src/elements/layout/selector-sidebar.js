@@ -30,10 +30,6 @@ export class IoSelectorSidebar extends IoSelector {
   }
   static get Properties() {
     return {
-      options: {
-        type: Array,
-        observe: true,
-      },
       collapseWidth: 410,
       collapsed: {
         type: Boolean,
@@ -43,6 +39,7 @@ export class IoSelectorSidebar extends IoSelector {
         type: Boolean,
         reflect: 1,
       },
+      depth: Infinity,
     };
   }
   onResized() {
@@ -54,6 +51,7 @@ export class IoSelectorSidebar extends IoSelector {
       selected: this.bind('selected'),
       options: this.options,
       collapsed: this.collapsed,
+      depth: this.depth,
     }];
   }
 }

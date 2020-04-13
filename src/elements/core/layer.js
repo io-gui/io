@@ -52,6 +52,7 @@ class IoLayer extends IoElement {
         value: false,
         reflect: 1,
       },
+      skipCollapse: Boolean,
     };
   }
   static get Listeners() {
@@ -81,7 +82,10 @@ class IoLayer extends IoElement {
   }
   _onPointerup(event) {
     if (event.composedPath()[0] === this) {
-      this.requestAnimationFrameOnce(this._collapse);
+      if (!this.skipCollapse) {
+        this.requestAnimationFrameOnce(this._collapse);
+      }
+      this.skipCollapse = false;
     }
   }
   _collapse() {

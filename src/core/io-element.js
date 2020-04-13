@@ -53,7 +53,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       },
       disabled: {
         type: Boolean,
-        reflect: true,
+        reflect: 1,
       },
     };
   }

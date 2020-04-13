@@ -79,9 +79,10 @@ export class IoMenuItem extends IoItem {
         value: 'bottom',
         reflect: 1,
       },
-      $parent: HTMLElement,
-      $options: HTMLElement,
+      $parent: null,
+      $options: null,
       selectable: false,
+      depth: Infinity,
       lazy: true,
     };
   }
@@ -131,6 +132,9 @@ export class IoMenuItem extends IoItem {
     }
     return !!this.filterObject(this._options || {}, (o) => { return o === this.value || o.value === this.value; });
   }
+  get _hasmore() {
+    return !!this._options && this.depth > 0;
+  }
   get inlayer() {
     return this.$parent && this.$parent.inlayer;
   }
@@ -138,14 +142,16 @@ export class IoMenuItem extends IoItem {
     super.connectedCallback();
     if (this.$options) Layer.appendChild(this.$options);
     if (!this.inlayer) Layer.addEventListener('pointermove', this._onLayerPointermove);
+    if (!this.inlayer) Layer.addEventListener('pointerup', this._onLayerPointerup);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.$options && this.$options.inlayer) Layer.removeChild(this.$options);
     Layer.removeEventListener('pointermove', this._onLayerPointermove);
+    Layer.removeEventListener('pointerup', this._onLayerPointerup);
   }
   _onClick() {
-    const selectable = this._value !== undefined && this._selectable;
+    const selectable = (this._value !== undefined && !this._hasmore) && this._selectable;
     const actionable = typeof this._action === 'function';
     if (selectable || actionable) {
       if (selectable) this.set('value', this._value, true);
@@ -239,12 +245,16 @@ export class IoMenuItem extends IoItem {
   _onLayerPointermove(event) {
     if (this.expanded) this._onPointermove(event);
   }
+  _onLayerPointerup(event) {
+    if (this.expanded) this._onPointerup(event);
+  }
   _onPointerup(event, options) {
     event.stopPropagation();
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
     const item = this._gethovered(event);
-    const nocollapse = options && options.nocollapse;
+    const nocollapse = options && options.nocollapse;    
+
     if (item) {
       item.focus();
       item._onClick(event);
@@ -325,10 +335,11 @@ export class IoMenuItem extends IoItem {
     getRootElement(this).expanded = false;
   }
   expandedChanged() {
-    if (this.expanded) {
+    if (this.expanded && this.depth > 0) {
       if (!this.$options) {
         this.$options = new IoMenuOptions({
           $parent: this,
+          depth: this.depth - 1,
           'on-item-clicked': this._onItemClicked,
         });
         Layer.appendChild(this.$options);
@@ -360,7 +371,7 @@ export class IoMenuItem extends IoItem {
   changed() {
     this.__properties.selected.value = this._selected;
     this.setAttribute('selected', this._selected);
-    this.setAttribute('hasmore', !!this._options);
+    this.setAttribute('hasmore', this._hasmore);
     this.template([
       this._icon.search(':') != -1 ? ['io-icon', {icon: this._icon, class: 'io-menu-icon'}] : ['span', {class: 'io-menu-icon'}, this._icon],
       ['span', {class: 'io-menu-label'}, this._label],

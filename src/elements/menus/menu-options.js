@@ -41,18 +41,7 @@ export class IoMenuOptions extends IoElement {
       padding: 0 var(--io-spacing);
     }
     :host[horizontal] > io-menu-item {
-      /* TODO: add to theme */
-      --size-offset: calc(var(--io-line-height) * 0.5); 
-      line-height: calc(var(--size-offset) + var(--io-line-height));
-      height: calc(var(--size-offset) + var(--io-item-height));
-      padding: calc(1 * var(--io-spacing)) var(--size-offset);
-    }
-    :host[horizontal] > io-menu-item > io-icon {
-      /* TODO: make themable and customizable*/
-      --size-offset: calc(var(--io-line-height) * 0.25); 
-      width: calc(var(--size-offset) + var(--io-item-height));
-      height: calc(var(--size-offset) + var(--io-item-height));
-      padding: 0;
+      padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
     }
     :host[horizontal] > io-menu-item {
       border-right:1px solid var(--io-color-border);
@@ -110,6 +99,7 @@ export class IoMenuOptions extends IoElement {
       },
       position: 'right',
       selectable: Boolean,
+      depth: Infinity,
       searchable: Boolean,
       search: String,
       overflow: {
@@ -121,7 +111,7 @@ export class IoMenuOptions extends IoElement {
         reflect: 1,
       },
       slotted: Array,
-      $parent: HTMLElement,
+      $parent: null,
       _rects: Array,
       role: 'listbox',
     };
@@ -289,6 +279,7 @@ export class IoMenuOptions extends IoElement {
           value: this.value,
           direction: itemDirection,
           selectable: this.selectable,
+          depth: this.depth,
           lazy: false,
         }]
       )]);
@@ -300,6 +291,7 @@ export class IoMenuOptions extends IoElement {
         title: 'select tab',
         value: this.value,
         selectable: this.selectable,
+        depth: this.depth + 1,
         class: 'io-hamburger',
         lazy: false,
       }]);

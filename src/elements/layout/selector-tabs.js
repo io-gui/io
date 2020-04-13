@@ -15,14 +15,11 @@ export class IoSelectorTabs extends IoSelector {
   }
   static get Properties() {
     return {
-      options: {
-        type: Array,
-        observe: true,
-      },
       slotted: {
         type: Array,
         observe: true,
       },
+      depth: Infinity,
     };
   }
   getSlotted() {
@@ -31,6 +28,7 @@ export class IoSelectorTabs extends IoSelector {
       horizontal: true,
       value: this.bind('selected'),
       options: this.options,
+      depth: this.depth,
       slotted: this.slotted,
       selectable: true,
     }];
