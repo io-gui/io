@@ -31,7 +31,7 @@ class Binding {
     const props = targetNode.__properties;
     if (props) {
       props[targetProp].binding = this;
-      props[targetProp].value = this.source[this.sourceProp];
+      props.set(targetProp, this.source[this.sourceProp]);
     }
 
     if (this.targets.indexOf(targetNode) === -1) this.targets.push(targetNode);
