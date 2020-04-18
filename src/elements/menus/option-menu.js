@@ -27,7 +27,7 @@ export class IoOptionMenu extends IoMenuItem {
       value: {
         reflect: -1,
       },
-      selectable: true,
+      select: 'pick',
       options: {
         type: Options,
         reflect: -1,
@@ -35,12 +35,13 @@ export class IoOptionMenu extends IoMenuItem {
         strict: true,
       },
       icon: '\u25BE',
-      // hasmore: {
-      //   value: true,
-      //   reflect: 1,
-      // },
       role: 'button',
       lazy: false,
+    };
+  }
+  get compose() {
+    return {
+      options: {selected: this.bind('value')}
     };
   }
   get _label() {
@@ -49,8 +50,8 @@ export class IoOptionMenu extends IoMenuItem {
   }
   changed() {
     let valueText = '';
-    if (this.options) {
-      const option = this.options.find(option => {return option.value === this.value;});
+    if (this.options.__options.length) {
+      const option = this.options.__options.find(option => {return option.value === this.value;});      
       if (option) {
         if (option.label) {
           valueText = option.label;
@@ -59,6 +60,10 @@ export class IoOptionMenu extends IoMenuItem {
         } else {
           valueText = String(option.value);
         }
+      }
+      // TODO: clean up - make reactive or composed
+      for (let i = 0; i < this.options.__options.length; i++) {
+        this.options.__options[i].select = this.select;
       }
     }
     if (!valueText) valueText = this._label;
@@ -71,12 +76,14 @@ export class IoOptionMenu extends IoMenuItem {
 
     this.setAttribute('aria-haspopup', 'listbox');
     this.setAttribute('aria-expanded', String(this.expanded));
+    // this.setAttribute('hasmore', this.hasmore);
 
     if (this.expanded) {
       this.$options.setProperties({
-        value: this.value,
+        $parent: this,
+        expanded: this.bind('expanded'),
         options: this.options,
-        selectable: this.selectable,
+        select: this.select,
         position: this.direction,
       });
     }

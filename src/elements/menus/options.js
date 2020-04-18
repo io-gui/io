@@ -13,6 +13,9 @@ export class Options extends IoNode {
     Object.defineProperty(this, '__options', {value: []});
     if (options && options instanceof Array) {
       for (let i = 0; i < options.length; i++) {
+        if (!options[i].select && props && props.select) {
+          options[i].select = props.select;
+        }
         let option = (options[i] instanceof Option) ? options[i] : new Option(options[i]);
         option.connect(this);
         option.addEventListener('selected-changed', this.onSubOptionSelectedChanged);
@@ -46,7 +49,6 @@ export class Options extends IoNode {
       }
       this.dispatchEvent('option-picked', target);
       this.selected = target.value;
-      // console.log(this.selected, target);
     }
   }
   unpickAll(option) {
@@ -68,7 +70,7 @@ export class Option extends IoNode {
       icon: '',
       hint: '',
       action: undefined,
-      select: 'pick', // 'toggle' | 'pick' | 'none'
+      select: '', // 'toggle' | 'pick' | 'none'
       selected: undefined,
       options: {
         type: Options,
@@ -90,7 +92,11 @@ export class Option extends IoNode {
       };
     }
     if (option.options) {
-      option.options = option.options instanceof Options ? option.options : new Options(option.options);
+      if (option.options instanceof Options && option.select) {
+        option.options.select = option.select;
+      } else {
+        option.options = new Options(option.options, {select: option.select});
+      }
     }
     super(option);
   }

@@ -81,6 +81,8 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       this[prop] = type(newValue);
     } else if (type === Object || type === Array) {
       this[prop] = JSON.parse(newValue);
+    } else if (typeof type === 'function') {
+      this[prop] = new type(JSON.parse(newValue));
     } else {
       this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
     }

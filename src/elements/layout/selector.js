@@ -95,7 +95,7 @@ export class IoSelector extends IoElement {
     setTimeout(()=>{
       const elem = this.$.content.querySelector('#' + id.toLowerCase());
       if (elem) elem.scrollIntoView({behavior: smooth ? 'smooth' : 'auto'});
-    }, 100); // TODO: unhack!
+    }, 250); // TODO: unhack!
   }
   _onScroll() {
     if (this._scrollID === undefined) return;
