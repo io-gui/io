@@ -49,7 +49,7 @@ export class IoSelectorSidebar extends IoSelector {
   getSlotted() {
     return ['io-sidebar', {
       selected: this.bind('selected'),
-      options: this.options,
+      // options: this.options,
       collapsed: this.collapsed,
       depth: this.depth,
     }];

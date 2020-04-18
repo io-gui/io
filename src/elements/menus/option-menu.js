@@ -1,4 +1,5 @@
 import {IoMenuItem} from './menu-item.js';
+import {Options} from './options.js';
 
 // TODO: fix tab-out without collapse
 
@@ -28,9 +29,10 @@ export class IoOptionMenu extends IoMenuItem {
       },
       selectable: true,
       options: {
-        type: Array,
+        type: Options,
         reflect: -1,
         observe: true,
+        strict: true,
       },
       icon: '\u25BE',
       // hasmore: {
@@ -40,9 +42,6 @@ export class IoOptionMenu extends IoMenuItem {
       role: 'button',
       lazy: false,
     };
-  }
-  get _options() {
-    return this.options;
   }
   get _label() {
     const valueText = (this.value !== undefined) ? String(this.value) : '';

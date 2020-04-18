@@ -1,5 +1,5 @@
 import {IoElement} from '../../io/build/io.js';
-import {IoThemeSingleton} from '../../io/build/io-elements.js';
+import {IoThemeSingleton, Options} from '../../io/build/io-elements.js';
 
 export class IoDemoThemeEditor extends IoElement {
   static get Style() {
@@ -18,7 +18,7 @@ export class IoDemoThemeEditor extends IoElement {
       ['io-item', {label: 'Reset Current Theme:'}],
       ['io-button', {label: 'Reset', selectable: false, action: () => IoThemeSingleton.reset() }],
       ['io-item', {label: 'Choose theme:'}],
-      ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: [{value: 'light'}, {value: 'dark'}]}],
+      ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: new Options([{value: 'light'}, {value: 'dark'}])}],
       ['io-item', {label: 'cssSpacing'}],
       ['io-number-slider', {value: IoThemeSingleton.bind('cssSpacing'), min: 0, max: 20, step: 1}],
       ['io-item', {label: 'cssBorderRadius'}],

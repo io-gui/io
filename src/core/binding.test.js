@@ -48,12 +48,15 @@ export default class {
           const binding2 = srcNode.bind('prop2');
 
           const dstNode1 = new Node();
+          dstNode1.connect();
           dstNode1.prop1 = binding1;
           dstNode1.prop2 = binding2;
-
+          
           const dstNode2 = new Node({prop1: binding1});
-
+          dstNode2.connect();
+          
           const dstNode3 = new Node({prop1: binding1, prop2: binding1});
+          dstNode3.connect();
 
           chai.expect(binding1.targets[0]).to.be.equal(dstNode1);
           chai.expect(binding1.targets[1]).to.be.equal(dstNode2);

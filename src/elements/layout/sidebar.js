@@ -1,4 +1,5 @@
 import {IoElement} from '../../io.js';
+import {Options} from '../../io-elements.js';
 import {IoStorageFactory as $} from '../core/storage.js';
 
 export class IoSidebar extends IoElement {
@@ -46,8 +47,9 @@ export class IoSidebar extends IoElement {
     return {
       selected: String,
       options: {
-        type: Array,
+        type: Options,
         observe: true,
+        strict: true,
       },
       collapsed: {
         type: Boolean,
@@ -84,20 +86,20 @@ export class IoSidebar extends IoElement {
     return elements;
   }
   changed() {
-    if (this.collapsed) {
-      const selected = this.filterObject(this.options, o => matches(this.selected, o));
-      this.template([['io-option-menu', {
-        options: this.options,
-        value: this.bind('selected'),
-        label: selected.label,
-        icon: '☰',
-        selectable: true,
-        title: 'select tab',
-        class: 'io-item',
-      }]]);
-    } else {
-      this.template([...this._addOptions(this.options)]);
-    }
+    // if (this.collapsed) {
+    //   const selected = this.filterObject(this.options, o => matches(this.selected, o));
+    //   this.template([['io-option-menu', {
+    //     options: this.options,
+    //     value: this.bind('selected'),
+    //     label: selected.label,
+    //     icon: '☰',
+    //     selectable: true,
+    //     title: 'select tab',
+    //     class: 'io-item',
+    //   }]]);
+    // } else {
+    //   this.template([...this._addOptions(this.options)]);
+    // }
   }
 }
 

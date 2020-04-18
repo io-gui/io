@@ -1,4 +1,5 @@
 import {IoElement} from '../../io.js';
+import {Options} from '../../io-elements.js';
 // TODO: use IoContent for caching and display.
 
 export class IoSelector extends IoElement {
@@ -45,8 +46,9 @@ export class IoSelector extends IoElement {
   static get Properties() {
     return {
       options: {
-        type: Array,
+        type: Options,
         observe: true,
+        strict: true,
       },
       elements: {
         type: Array,
@@ -73,8 +75,11 @@ export class IoSelector extends IoElement {
   }
   constructor(props) {
     super(props);
-    if (!this.selected && this.options[0]) {
-      this.selected = this.options[0].value;
+    this._selectDefault();
+  }
+  _selectDefault() {
+    if (!this.selected && this.options.__options[0]) {
+      this.selected = this.options.__options[0].value;
     }
   }
   _onIoContentReady(event) {
@@ -122,17 +127,18 @@ export class IoSelector extends IoElement {
     }, 100);
   }
   selectedChanged() {
+    this._selectDefault();
     this.updateScroll();
   }
   optionsChanged() {
-    if (!this.selected && this.options[0]) {
-      this.selected = this.options[0].value;
-    }
+    this._selectDefault();
+    this.updateScroll();
   }
   elementsChanged() {
     this.updateScroll();
   }
   updateScroll() {
+    if (!this.selected) return;
     const oldScrollID = this._scrollID;
     const oldSelectedID = this._selectedID;
     this._selectedID = this.selected.split('#')[0];
@@ -171,10 +177,8 @@ export class IoSelector extends IoElement {
 
     this.$.content.classList.toggle('io-loading', true);
     if (!explicitlyDontCache && (this.cache || explicitlyCache) && this._caches[selected]) {
-      // NOTE: Cached elements shound't be removed with `template()` to avoid `dispose()`
       this.$.content.appendChild(this._caches[selected]);
       this.$.content.classList.toggle('io-loading', false);
-      // TODO: IMPORTANT update all bindings inside when reconnected (page change)!
     } else {
       this.import(element[1].import).then(() => {
         if (element[1].name === this.selected.split('#')[0]) {

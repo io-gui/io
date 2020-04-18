@@ -1,15 +1,15 @@
 import {IoElement} from '../../io/build/io.js';
-import {IoStorageFactory as $} from '../../io/build/io-elements.js';
+import {IoStorageFactory as $, Options} from '../../io/build/io-elements.js';
 import '../../io/build/io-extras.js';
 
 const boolean = $({key: 'demo:boolean', value: false});
 const string = $({key: 'demo:string', value: 'Hello io!'});
 const number = $({key: 'demo:number', value: 0});
 
-const menuoptions = [
+const menuoptions = new Options([
   {label: 'Long Menu', options: $('demo:longmenuoptions').value},
-  ...$('demo:menuoptions').value,
-];
+  // ...$('demo:menuoptions').value,
+]);
 
 export class IoDemoElementsCore extends IoElement {
   static get Style() {
@@ -107,7 +107,7 @@ export class IoDemoElementsCore extends IoElement {
       ]],
       ['io-item', {label: 'io-option-menu'}],
       ['div', {class: 'io-table3 table'}, [
-        ['io-option-menu', {options: [
+        ['io-option-menu', {options: new Options([
           {label: 'negative one', value: -1},
           {label: 'zero', value: 0},
           {label: 'half', value: 0.5},
@@ -116,8 +116,8 @@ export class IoDemoElementsCore extends IoElement {
           {label: 'three', value: 3},
           {label: 'four', value: 4},
           {label: 'leet', value: 1337},
-        ], value: number}],
-        ['io-option-menu', {options: [ -1, 0, 1, 2, 3, 4, 1337], value: number}],
+        ]), value: number}],
+        ['io-option-menu', {options: new Options([ -1, 0, 1, 2, 3, 4, 1337]), value: number}],
         ['io-button', {label: 'set 0.5', action: this.setNumber, value: 0.5}],
       ]],
       ['io-item', {label: 'io-menu'}],
@@ -174,12 +174,12 @@ export class IoDemoElementsCore extends IoElement {
       ]],
       // Colors
       ['io-item', {label: 'Mode'}],
-      ['io-option-menu', {value: this.bind('mode'), options: [
+      ['io-option-menu', {value: this.bind('mode'), options: new Options([
         {label: 'rgb', value: 0},
         {label: 'hsv', value: 1},
         {label: 'hsl', value: 2},
         {label: 'cmyk', value: 3},
-      ]}],
+      ])}],
       ['io-item', {label: 'io-color-panel'}],
       ['io-color-panel', {expanded: true, value: this.color, mode: this.bind('mode'), class: 'color-slider'}],
       ['io-item', {label: 'red'}], ['io-color-slider-red', {value: this.color, mode: this.bind('mode')}],

@@ -1,6 +1,7 @@
 import {IoElement} from '../../io.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
 import './menu-item.js';
+import {Options, Option} from './options.js';
 
 const rects = new WeakMap();
 
@@ -81,13 +82,10 @@ export class IoMenuOptions extends IoElement {
   }
   static get Properties() {
     return {
-      value: {
-        value: null,
-        notify: true,
-      },
       options: {
-        type: Array,
+        type: Options,
         observe: true,
+        strict: true,
       },
       expanded: {
         value: false,
@@ -98,7 +96,6 @@ export class IoMenuOptions extends IoElement {
         reflect: 1,
       },
       position: 'right',
-      selectable: Boolean,
       depth: Infinity,
       searchable: Boolean,
       search: String,
@@ -188,7 +185,7 @@ export class IoMenuOptions extends IoElement {
           overflow = true;
         }
       }
-      hamburger.option = {options: hamburgerOptions};
+      hamburger.option = new Option({options: new Options(hamburgerOptions)});
       this.overflow = overflow;
     } else {
       for (let i = buttons.length; i--;) {
@@ -261,7 +258,7 @@ export class IoMenuOptions extends IoElement {
           if (o.hint && o.hint.toLowerCase().search(s) !== -1) return true;
         }
       });
-      return options.length ? options : [{label: 'No matches'}];
+      return options.length ? options : new Options([new Option({label: 'No matches'})]);
     }
     return this.options;
   }
@@ -272,16 +269,15 @@ export class IoMenuOptions extends IoElement {
       elements.push(['io-string', {id: 'search', value: this.bind('search'), live: true}]);
     }
     if (this._options) {
-      elements.push(...[this._options.map(option =>
-        ['io-menu-item', {
-          $parent: this,
-          option: option,
-          value: this.value,
-          direction: itemDirection,
-          selectable: this.selectable,
-          depth: this.depth,
-          lazy: false,
-        }]
+      elements.push(...[this._options.map((option) => {
+        return ['io-menu-item', {
+            $parent: this,
+            option: option,
+            direction: itemDirection,
+            depth: this.depth,
+            lazy: false,
+          }];
+        }
       )]);
     }
     if (this.horizontal) {
@@ -289,8 +285,6 @@ export class IoMenuOptions extends IoElement {
       elements.push(['io-menu-item', {
         label: '\u2630',
         title: 'select tab',
-        value: this.value,
-        selectable: this.selectable,
         depth: this.depth + 1,
         class: 'io-hamburger',
         lazy: false,
