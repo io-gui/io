@@ -24,7 +24,6 @@ const IoNodeMixin = (superclass) => {
     constructor(initProps = {}) {
       super(initProps);
 
-
       const constructor = this.__proto__.constructor;
       if (constructor.__isRegisteredAs !== constructor.name) {
         console.error(`${constructor.name}: Not registered! Call "Register()" before using ${constructor.name} class!`);
@@ -42,9 +41,9 @@ const IoNodeMixin = (superclass) => {
 
       Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
 
-      this.objectMutated = this.objectMutated.bind(this);
-      this.objectMutatedThrottled = this.objectMutatedThrottled.bind(this);
-      this.queueDispatchLazy = this.queueDispatchLazy.bind(this);
+      Object.defineProperty(this, 'objectMutated', {value: this.objectMutated.bind(this)});
+      Object.defineProperty(this, 'objectMutatedThrottled', {value: this.objectMutatedThrottled.bind(this)});
+      Object.defineProperty(this, 'queueDispatchLazy', {value: this.queueDispatchLazy.bind(this)});
 
       this.setProperties(initProps);
       // TODO: consider auto-connect
@@ -67,7 +66,7 @@ const IoNodeMixin = (superclass) => {
       if (this.__connections.indexOf(owner) !== -1) {
         this.__connections.splice(this.__connections.indexOf(owner), 1);
       }
-      if (this.__connections.length === 0) {// && this.__isConnected) {
+      if (this.__connections.length === 0 && this.__isConnected) {
         this.disconnectedCallback();
       }
     }
@@ -177,9 +176,9 @@ const IoNodeMixin = (superclass) => {
      * Callback when `IoNode` is connected.
      */
     connectedCallback() {
+      this.__isConnected = true;
       this.__listeners.connect();
       this.__properties.connect();
-      this.__isConnected = true;
       if (this.__observedProps.length) {
         window.addEventListener('object-mutated', this.objectMutated);
       }
@@ -189,9 +188,9 @@ const IoNodeMixin = (superclass) => {
      * Callback when `IoNode` is disconnected.
      */
     disconnectedCallback() {
+      this.__isConnected = false;
       this.__listeners.disconnect();
       this.__properties.disconnect();
-      this.__isConnected = false;
       if (this.__observedProps.length) {
         window.removeEventListener('object-mutated', this.objectMutated);
       }
@@ -363,8 +362,12 @@ const Register = function () {
 
   for (let p in proto.__protoProperties) {
     Object.defineProperty(proto, p, {
-      get: function() { return this.__properties.get(p); },
-      set: function(value) { this.__properties.set(p, value); },
+      get: function() {
+        return this.__properties.get(p);
+      },
+      set: function(value) {
+        this.__properties.set(p, value);
+      },
       enumerable: !!proto.__protoProperties[p].enumerable,
       configurable: true,
     });
