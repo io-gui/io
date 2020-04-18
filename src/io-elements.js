@@ -47,6 +47,7 @@ export {IoMenuItem} from './elements/menus/menu-item.js';
 export {IoMenuOptions} from './elements/menus/menu-options.js';
 export {IoOptionMenu} from './elements/menus/option-menu.js';
 export {IoContextMenu} from './elements/menus/context-menu.js';
+export {Options, Option} from './elements/menus/options.js';
 
 export {IoVector} from './elements/math/vector.js';
 export {IoMatrix} from './elements/math/matrix.js';
