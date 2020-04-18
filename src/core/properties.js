@@ -214,7 +214,7 @@ class Properties {
       } else {
 
         if (prop.strict && prop.type && !(value instanceof prop.type)) {
-          console.error('Properties runtime error: invalid value type!');
+          console.error(`IoGui property runtime error: invalid type for "${key}" property!`, this.value, this.__node);
         } else {
           prop.value = value;
         }
