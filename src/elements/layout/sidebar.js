@@ -1,4 +1,5 @@
 import {IoElement} from '../../io.js';
+import {Options} from '../../io-elements.js';
 import {IoStorageFactory as $} from '../core/storage.js';
 
 export class IoSidebar extends IoElement {
@@ -46,8 +47,9 @@ export class IoSidebar extends IoElement {
     return {
       selected: String,
       options: {
-        type: Array,
+        type: Options,
         observe: true,
+        strict: true,
       },
       collapsed: {
         type: Boolean,
@@ -63,13 +65,13 @@ export class IoSidebar extends IoElement {
     const elements = [];
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
-      if (option.options) {
-        const containsSelected = !!this.filterObject(option.options, o => matches(this.selected, o));
+      if (option.options.__options.length) {
+        const containsSelected = !!this.filterObject(option.options.__options, o => matches(this.selected, o));
         const collapsableState = $({value: false, storage: 'local', key: genUUID(options, i)});
         elements.push(['io-collapsable', {
           label: option.label,
           expanded: containsSelected || collapsableState,
-          elements: [...this._addOptions(option.options)]
+          elements: [...this._addOptions(option.options.__options)]
         }]);
       } else {
         const selected = matches(this.selected, option);
@@ -96,7 +98,7 @@ export class IoSidebar extends IoElement {
         class: 'io-item',
       }]]);
     } else {
-      this.template([...this._addOptions(this.options)]);
+      this.template([...this._addOptions(this.options.__options)]);
     }
   }
 }

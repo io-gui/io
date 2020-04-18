@@ -49,22 +49,6 @@ class ProtoProperty {
 
     }
 
-    //
-
-    if (prop.value === undefined || prop.value === null) {
-
-      if (prop.binding instanceof Binding) {
-        
-        prop.value = prop.binding.value;
-
-      } else {
-
-        this.value = prop.value;
-
-      }
-
-    }
-
     if (prop.type === undefined) {
 
       if (prop.value !== undefined && prop.value !== null) {
@@ -75,69 +59,16 @@ class ProtoProperty {
 
     }
 
-    if (prop.type !== undefined) this.type = prop.type;
-
-    if (prop.value === undefined) {
-
-      if (typeof prop.type === 'function') {
-
-        if (prop.type === Boolean) this.value = false;
-        else if (prop.type === String) this.value = '';
-        else if (prop.type === Number) this.value = 0;
-        else if (prop.type === Object) this.value = {};
-        else if (prop.type === Array) this.value = [];
-        else this.value = new prop.type();
-
-      }
-
-    } else {
-
-      this.value = prop.value;
-
-    }
-
-    if (this.value !== undefined) {
-
-      if (this.value instanceof Array) this.value = [...this.value];
-
-    }
-
+    if (prop.value !== undefined) this.value = prop.value;
+    if (typeof prop.type === 'function') this.type = prop.type;
     if (typeof prop.notify == 'boolean') this.notify = prop.notify;
     if (typeof prop.reflect == 'number') this.reflect = prop.reflect;
     if (typeof prop.observe == 'boolean') this.observe = prop.observe;
     if (typeof prop.strict == 'boolean') this.strict = prop.strict;
     if (typeof prop.enumerable == 'boolean') this.enumerable = prop.enumerable;
-
-    if (prop.binding instanceof Binding) {
-      this.binding = prop.binding;
-      this.value = prop.binding.value;
-    }
+    if (prop.binding instanceof Binding) this.binding = prop.binding;
 
     return this;
-  }
-}
-
-/**
- * Collection of all property configurations for a class **prototype**.
- * Property configurations are inferred from all property definitions in the prototype chain.
- */
-class ProtoProperties {
-  /**
-   * Creates all property configurations for specified prototype chain.
-   * @param {ProtoChain} protochain - Prototype chain.
-   */
-  constructor(protochain) {
-    for (let i = protochain.length; i--;) {
-      const props = protochain[i].constructor.Properties;
-      for (let p in props) {
-        if (!this[p]) this[p] = new ProtoProperty(props[p]);
-        else Object.assign(this[p], new ProtoProperty(props[p], true));
-        if (p.charAt(0) === '_') {
-          this[p].notify = false;
-          this[p].enumerable = false;
-        }
-      }
-    }
   }
 }
 
@@ -167,20 +98,47 @@ class Property {
     this.enumerable = protoProp.enumerable;
     this.type = protoProp.type;
     this.binding = protoProp.binding;
-    // TODO: cleanup
-    if (this.type === Array && this.value instanceof Array) {
-      this.value = [...this.value];
+
+    if (this.binding instanceof Binding) this.value = this.binding.value;
+    else if (this.value === undefined || this.value === null) {
+      if (typeof this.type === 'function') {
+        if (this.type === Boolean) this.value = false;
+        else if (this.type === String) this.value = '';
+        else if (this.type === Number) this.value = 0;
+        else if (this.type === Array) this.value = [];
+        else if (this.type === Object) this.value = {};
+        else this.value = new this.type();
+      }
+    } else {
+      if (this.type === Array && this.value instanceof Array) {
+        this.value = [...this.value];
+      } else if (this.type === Object && this.value instanceof Object) {
+        this.value = Object.assign({}, this.value);
+      }
     }
-    if (this.type === Object && this.value) {
-      this.value = {};
-    }
-    if (this.value === undefined && this.type) {
-      if (this.type === Boolean) this.value = false;
-      else if (this.type === String) this.value = '';
-      else if (this.type === Number) this.value = 0;
-      else if (this.type === Array) this.value = [];
-      else if (this.type === Object) this.value = {};
-      else this.value = new this.type();
+  }
+}
+
+/**
+ * Collection of all property configurations for a class **prototype**.
+ * Property configurations are inferred from all property definitions in the prototype chain.
+ */
+class ProtoProperties {
+  /**
+   * Creates all property configurations for specified prototype chain.
+   * @param {ProtoChain} protochain - Prototype chain.
+   */
+  constructor(protochain) {
+    for (let i = protochain.length; i--;) {
+      const props = protochain[i].constructor.Properties;
+      for (let p in props) {
+        if (!this[p]) this[p] = new ProtoProperty(props[p]);
+        else Object.assign(this[p], new ProtoProperty(props[p], true));
+        if (p.charAt(0) === '_') {
+          this[p].notify = false;
+          this[p].enumerable = false;
+        }
+      }
     }
   }
 }
@@ -255,8 +213,8 @@ class Properties {
 
       } else {
 
-        if (prop.strict && !(value instanceof prop.type)) {
-          console.error('Properties runtime error: invalid value type!');
+        if (prop.strict && prop.type && !(value instanceof prop.type)) {
+          console.error(`IoGui property runtime error: invalid type for "${key}" property!`, this.value, this.__node);
         } else {
           prop.value = value;
         }

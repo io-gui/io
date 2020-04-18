@@ -1,8 +1,8 @@
 import {IoElement} from '../io.js';
-import {IoThemeSingleton, IoStorageFactory as $} from '../io-elements.js';
+import {IoThemeSingleton, IoStorageFactory as $, Options, Option} from '../io-elements.js';
 
-const suboptions = [];
-const options = [
+const suboptions = new Options();
+const options = new Options([
   {label: 'Red', icon: '❤️', options: [{value: 'Red1'}, {value: 'Red2'}, {value: 'Red3'}]},
   {label: 'Green', icon: '💚', options: [{value: 'Green1'}, {value: 'Green2'}, {value: 'Green3'}]},
   {label: 'Blue', icon: '💙', options: [{value: 'Blue1'}, {value: 'Blue2'}, {value: 'Blue3'}]},
@@ -14,20 +14,20 @@ const options = [
     {label: 'five', value: 5},
   ]},
   {label: 'Suboptions', options: suboptions},
-];
-suboptions.push(...[
+]);
+suboptions.__options.push(...[
   {label: 'Hearts', options: options},
   {label: 'suboption one', options: options},
   {label: 'suboption two', options: options},
   {label: 'suboption three', options: options},
 ]);
 
-const option = {
+const option = new Option({
   'label': 'Hearts',
   'icon': '💕',
   'hint': 'colors',
   'options': options,
-};
+});
 
 const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
   'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',

@@ -15,7 +15,7 @@ class ProtoFunctions extends Array {
         const p = Object.getOwnPropertyDescriptor(protochain[i], names[j]);
         if (p.get || p.set) continue;
         if (typeof protochain[i][names[j]] === 'function') {
-          if (names[j].startsWith('_') || names[j].startsWith('on')) {
+          if (this.indexOf(names[j]) === -1 && (names[j].startsWith('_') || names[j].startsWith('on'))) {
             this.push(names[j]);
           }
         }
@@ -28,7 +28,7 @@ class ProtoFunctions extends Array {
    */
   bind(instance) {
     for (let i = this.length; i--;) {
-      instance[this[i]] = instance[this[i]].bind(instance);
+      Object.defineProperty(instance, this[i], {value: instance[this[i]].bind(instance)});
     }
   }
 }

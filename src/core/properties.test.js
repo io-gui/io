@@ -1,8 +1,14 @@
-import {IoNode, IoElement, Binding, ProtoChain, ProtoProperty, ProtoProperties, Property} from '../io.js';
+import {IoNode, IoElement, Binding, ProtoChain, ProtoProperty, ProtoProperties, Property, Properties} from '../io.js';
 
 const string = (object) => {
   return JSON.stringify(object);
 };
+
+class Object1 {
+  constructor() {
+    this.prop = true;
+  }
+}
 
 class TestNode extends IoNode {
   static get Properties() {
@@ -12,253 +18,236 @@ class TestNode extends IoNode {
   }
 }
 TestNode.Register();
-
+'';
 export default class {
   run() {
     describe('Properties', () => {
-      describe('ProtoProperty', () => {
-        it('Should initialize value properly', () => {
-          let prop;
+      describe('Property', () => {
+        it('Should initialize properly', () => {
+          let protoProp, prop;
 
-          prop = new ProtoProperty();
+          // initialize without argument
+          protoProp = new ProtoProperty();
+          prop = new Property(protoProp);
+          chai.expect(Object.prototype.hasOwnProperty.call(protoProp, 'value')).to.be.equal(true);
+          chai.expect(Object.prototype.hasOwnProperty.call(protoProp, 'type')).to.be.equal(true);
           chai.expect(Object.prototype.hasOwnProperty.call(prop, 'value')).to.be.equal(true);
-          chai.expect(prop.value).to.be.equal(undefined);
+          chai.expect(Object.prototype.hasOwnProperty.call(prop, 'type')).to.be.equal(true);
 
-          prop = new ProtoProperty(null);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: null,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(undefined);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(undefined);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(Number);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: 0,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-          
+          // initialize with null argument
+          protoProp = new ProtoProperty(null);
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(null);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(undefined);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(String);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: '',
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          // initialize with an empty object argument
+          protoProp = new ProtoProperty({});
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(undefined);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(undefined);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(Boolean);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: false,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          // initialize with Number argument
+          protoProp = new ProtoProperty(Number);
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(undefined);
+          chai.expect(prop.value).to.be.equal(0);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Number);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(Object);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: {},
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
 
-          prop = new ProtoProperty(Array);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: [],
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          // initialize with String argument
+          protoProp = new ProtoProperty(String);
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(undefined);
+          chai.expect(prop.value).to.be.equal('');
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(String);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(1);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: 1,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          // initialize with Boolean argument
+          protoProp = new ProtoProperty(Boolean);
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(undefined);
+          chai.expect(prop.value).to.be.equal(false);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Boolean);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty('test');
-          chai.expect(string(prop)).to.be.equal(string({
-            value: 'test',
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          // initialize with Object argument
+          protoProp = new ProtoProperty(Object);
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(undefined);
+          chai.expect(prop.value).to.be.deep.equal({});
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Object);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(true);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: true,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          // initialize with Array argument
+          protoProp = new ProtoProperty(Array);
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(undefined);
+          chai.expect(prop.value).to.be.deep.equal([]);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Array);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty({});
-          chai.expect(string(prop)).to.be.equal(string({
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          // initialize with custom Object1 argument
+          protoProp = new ProtoProperty(Object1);
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(undefined);
+          chai.expect(prop.value).to.be.deep.equal(new Object1());
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Object1);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty([]);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: [],
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          // initialize with number argument
+          protoProp = new ProtoProperty(1);
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(1);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Number);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          class Object1 {
-            constructor() {
-              this.prop = true;
-            }
-          }
+          // initialize with string argument
+          protoProp = new ProtoProperty('test');
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal('test');
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(String);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty({type: Object1});
-          chai.expect(string(prop)).to.be.equal(string({
-            value: new Object1(),
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-        });
-        it('Should initialize type properly', () => {
-          let prop;
+          // initialize with boolean argument
+          protoProp = new ProtoProperty(true);
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(true);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Boolean);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(Number);
-          chai.expect(prop.type).to.be.equal(Number);
+          // initialize with an object argument with object value property
+          let object = {prop: true};
+          protoProp = new ProtoProperty({value: object});
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(object);
+          chai.expect(prop.value).to.be.deep.equal(object);
+          chai.expect(prop.value).not.to.be.equal(object);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Object);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(String);
-          chai.expect(prop.type).to.be.equal(String);
+          // initialize with an object argument with object value property
+          let array = [1, 2, 3];
+          protoProp = new ProtoProperty({value: array});
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(array);
+          chai.expect(prop.value).to.be.deep.equal(array);
+          chai.expect(prop.value).not.to.be.equal(array);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Array);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(Boolean);
-          chai.expect(prop.type).to.be.equal(Boolean);
+          // initialize with an object argument with custom object1 value property
+          let object1 = new Object1();
+          protoProp = new ProtoProperty({value: object1});
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(object1);
+          chai.expect(prop.value).to.be.equal(object1);
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Object1);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
-          prop = new ProtoProperty(Object);
-          chai.expect(prop.type).to.be.equal(Object);
-
-          prop = new ProtoProperty(Array);
-          chai.expect(prop.type).to.be.equal(Array);
-
-          prop = new ProtoProperty(1);
-          chai.expect(prop.type).to.be.equal(Number);
-
-          prop = new ProtoProperty('test');
-          chai.expect(prop.type).to.be.equal(String);
-
-          prop = new ProtoProperty(true);
-          chai.expect(prop.type).to.be.equal(Boolean);
-
-          prop = new ProtoProperty({});
-          chai.expect(prop.type).to.be.equal(undefined);
-
-          prop = new ProtoProperty([]);
-          chai.expect(prop.type).to.be.equal(Array);
-
-          class Object1 {}
-
-          prop = new ProtoProperty({value: new Object1()});
-          chai.expect(prop.type).to.be.equal(Object1);
+          // initialize with an object argument with custom Object1 type property
+          protoProp = new ProtoProperty({type: Object1});
+          prop = new Property(protoProp);
+          chai.expect(protoProp.value).to.be.equal(undefined);
+          chai.expect(prop.value).to.be.deep.equal(new Object1());
+          chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Object1);
+          chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
+          chai.expect(protoProp.reflect).to.be.equal(prop.reflect).to.be.equal(0);
+          chai.expect(protoProp.observe).to.be.equal(prop.observe).to.be.equal(false);
+          chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
+          chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
         });
         it('Should initialize binding properly', () => {
-          let prop, binding = new Binding(new TestNode({label: 'lorem'}), 'label');
+          let protoProp, prop;
+          let binding = new Binding(new TestNode({label: 'lorem'}), 'label');
 
-          prop = new ProtoProperty(binding);
-          chai.expect(prop.binding).to.be.equal(binding);
+          protoProp = new ProtoProperty(binding);
+          prop = new Property(protoProp);
+
+          chai.expect(protoProp.binding).to.be.equal(prop.binding).to.be.equal(binding);
+          chai.expect(protoProp.value).to.be.equal(undefined);
           chai.expect(prop.value).to.be.equal('lorem');
 
           let node = new TestNode({label: 'lorem'});
           binding = new Binding(node, 'label');
 
-          prop = new ProtoProperty({binding: binding});
-          chai.expect(prop.binding).to.be.equal(binding);
+          protoProp = new ProtoProperty({binding: binding, value: 'ipsum'});
+          prop = new Property(protoProp);
+          chai.expect(protoProp.binding).to.be.equal(prop.binding).to.be.equal(binding);
+          chai.expect(protoProp.value).to.be.equal('ipsum');
           chai.expect(prop.value).to.be.equal('lorem');
         });
-        it('Should initialize array value properly', () => {
-          let prop, cfg = {value: [0, 1, 2, true]};
-
-          prop = new ProtoProperty(cfg);
-          chai.expect(prop.value).not.to.be.equal(cfg.value);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: [0, 1, 2, true],
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          cfg = [0, 1, 2, true];
-          prop = new ProtoProperty(cfg);
-          chai.expect(prop.value).not.to.be.equal(cfg);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: [0, 1, 2, true],
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-        });
-        it('Should initialize empty object value properly', () => {
-          let prop, cfg = {value: {}};
-
-          prop = new ProtoProperty(cfg);
-          chai.expect(prop.value).to.be.equal(cfg.value);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: {},
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          cfg = {};
-          prop = new ProtoProperty(cfg);
-          chai.expect(prop.value).not.to.be.equal(cfg);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: undefined,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-        });
       });
-      describe('ProtoProperties', () => {
+      describe('Properties', () => {
         it('Should correctly initialize properties from protochain', () => {
 
-          class Object1 {
+          class Object1 extends IoNode {
             static get Properties() {
               return {
                 prop1: {
@@ -268,369 +257,8 @@ export default class {
               };
             }
           }
-
-          class Object2 extends Object1 {
-            static get Properties() {
-              return {
-                prop1: {
-                  value: 2,
-                  notify: false,
-                  observe: true,
-                  strict: false,
-                  enumerable: false,
-                },
-                _prop: {
-                  notify: true,
-                  enumerable: true,
-                }
-              };
-            }
-          }
-
-          const protochain1 = new ProtoChain(Object1.prototype);
-          const protochain2 = new ProtoChain(Object2.prototype);
-          const props1 = new ProtoProperties(protochain1);
-          const props2 = new ProtoProperties(protochain2);
-
-          chai.expect(string(props1.prop1)).to.be.equal(string({
-            value: 0,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          chai.expect(string(props2.prop1)).to.be.equal(string({
-            value: 2,
-            notify: false,
-            reflect: 0,
-            observe: true,
-            strict: false,
-            enumerable: false
-          }));
-
-          chai.expect(props1._prop.notify).to.be.equal(false);
-          chai.expect(props1._prop.enumerable).to.be.equal(false);
-          chai.expect(props2._prop.notify).to.be.equal(false);
-          chai.expect(props2._prop.enumerable).to.be.equal(false);
-          
-        });
-        it('Should not override explicit property options with implicit', () => {
-          class Object1 {
-            static get Properties() {
-              return {
-                prop1: {
-                  value: 2,
-                  notify: false,
-                  reflect: 2,
-                  observe: true,
-                  strict: false,
-                  enumerable: false,
-                },
-              };
-            }
-          }
-          
-          class Object2 extends Object1 {
-            static get Properties() {
-              return {
-                prop1: 'hello',
-              };
-            }
-          }
-
-          const protochain = new ProtoChain(Object2.prototype);
-          const props = new ProtoProperties(protochain);
-
-          chai.expect(props.prop1.type).to.be.equal(String);
-          chai.expect(props.prop1.notify).to.be.equal(false);
-          chai.expect(props.prop1.reflect).to.be.equal(2);
-          chai.expect(props.prop1.observe).to.be.equal(true);
-          chai.expect(props.prop1.enumerable).to.be.equal(false);
-        });
-      });
-      describe('Property', () => {
-        it('Should initialize value properly', () => {
-          let prop, protoProp;
-
-          protoProp = new ProtoProperty();
-          prop = new Property(protoProp);
-          chai.expect(Object.prototype.hasOwnProperty.call(prop, 'value')).to.be.equal(true);
-          chai.expect(prop.value).to.be.equal(undefined);
-
-          protoProp = new ProtoProperty(null);
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: null,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          protoProp = new ProtoProperty(Number);
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: 0,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-          
-
-          protoProp = new ProtoProperty(String);
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: '',
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          protoProp = new ProtoProperty(Boolean);
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: false,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          protoProp = new ProtoProperty(Object);
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: {},
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          protoProp = new ProtoProperty(Array);
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: [],
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          protoProp = new ProtoProperty(1);
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: 1,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          protoProp = new ProtoProperty('test');
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: 'test',
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          protoProp = new ProtoProperty(true);
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: true,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          protoProp = new ProtoProperty({});
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          protoProp = new ProtoProperty([]);
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: [],
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          class Object1 {
-            constructor() {
-              this.prop = true;
-            }
-          }
-
-          protoProp = new ProtoProperty({type: Object1});
-          prop = new Property(protoProp);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: new Object1(),
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-        });
-        it('Should initialize type properly', () => {
-          let prop, protoProp;
-
-          protoProp = new ProtoProperty(Number);
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(Number);
-
-          protoProp = new ProtoProperty(String);
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(String);
-
-          protoProp = new ProtoProperty(Boolean);
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(Boolean);
-
-          protoProp = new ProtoProperty(Object);
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(Object);
-
-          protoProp = new ProtoProperty(Array);
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(Array);
-
-          protoProp = new ProtoProperty(1);
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(Number);
-
-          protoProp = new ProtoProperty('test');
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(String);
-
-          protoProp = new ProtoProperty(true);
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(Boolean);
-
-          protoProp = new ProtoProperty({});
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(undefined);
-
-          protoProp = new ProtoProperty([]);
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(Array);
-
-          class Object1 {}
-
-          protoProp = new ProtoProperty({value: new Object1()});
-          prop = new Property(protoProp);
-          chai.expect(prop.type).to.be.equal(Object1);
-        });
-        it('Should initialize binding properly', () => {
-          let prop, protoProp, binding = new Binding(new TestNode({label: 'lorem'}), 'label');
-
-          protoProp = new ProtoProperty(binding);
-          prop = new Property(protoProp);
-          chai.expect(prop.binding).to.be.equal(binding);
-          chai.expect(prop.value).to.be.equal('lorem');
-          
-          protoProp = new ProtoProperty({binding: binding});
-          prop = new Property(protoProp);
-          chai.expect(prop.binding).to.be.equal(binding);
-          chai.expect(prop.value).to.be.equal('lorem');
-        });
-        it('Should initialize array value properly', () => {
-          let prop, protoProp, cfg = {value: [0, 1, 2, true]};
-
-          protoProp = new ProtoProperty(cfg);
-          prop = new Property(protoProp);
-          chai.expect(prop.value).not.to.be.equal(cfg.value);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: [0, 1, 2, true],
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          cfg = [0, 1, 2, true];
-          protoProp = new ProtoProperty(cfg);
-          prop = new Property(protoProp);
-          chai.expect(prop.value).not.to.be.equal(cfg);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: [0, 1, 2, true],
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-        });
-        it('Should initialize empty object value properly', () => {
-          let prop, protoProp, cfg = {value: {}};
-
-          protoProp = new ProtoProperty(cfg);
-          prop = new Property(protoProp);
-          chai.expect(prop.value).not.to.be.equal(cfg.value);          
-          chai.expect(string(prop)).to.be.equal(string({
-            value: {},
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-
-          cfg = {};
-          protoProp = new ProtoProperty(cfg);
-          prop = new Property(protoProp);
-          chai.expect(prop.value).not.to.be.equal(cfg);
-          chai.expect(string(prop)).to.be.equal(string({
-            value: undefined,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
-        });
-      });
-      describe('Properties', () => {
-        it('Should correctly initialize properties', () => {
-          class Object1 extends IoNode {
-            static get Properties() {
-              return {
-                prop1: {
-                  value: 0,
-                  enumerable: true,
-                },
-                _prop: null
-              };
-            }
-          }
           Object1.Register();
-          
+
           class Object2 extends Object1 {
             static get Properties() {
               return {
@@ -654,6 +282,8 @@ export default class {
           const node1 = new Object1();
           const node2 = new Object2();
 
+          const protoProps1 = node1.__protoProperties;
+          const protoProps2 = node2.__protoProperties;
           const props1 = node1.__properties;
           const props2 = node2.__properties;
 
@@ -663,28 +293,63 @@ export default class {
           chai.expect(props1.__node).to.be.equal(node1);
           chai.expect(props2.__node).to.be.equal(node2);
 
-          chai.expect(string(props1.prop1)).to.be.equal(string({
-            value: 0,
-            notify: true,
-            reflect: 0,
-            observe: false,
-            strict: false,
-            enumerable: true
-          }));
+          chai.expect(protoProps1.prop1.value).to.be.equal(0);
+          chai.expect(props1.prop1.value).to.be.equal(0);
+          chai.expect(props1.prop1.type).to.be.equal(Number);
+          chai.expect(props1.prop1.notify).to.be.equal(true);
+          chai.expect(props1.prop1.reflect).to.be.equal(0);
+          chai.expect(props1.prop1.observe).to.be.equal(false);
+          chai.expect(props1.prop1.strict).to.be.equal(false);
+          chai.expect(props1.prop1.enumerable).to.be.equal(true);
 
-          chai.expect(string(props2.prop1)).to.be.equal(string({
-            value: 2,
-            notify: false,
-            reflect: 0,
-            observe: true,
-            strict: false,
-            enumerable: false
-          }));
+          chai.expect(protoProps2.prop1.value).to.be.equal(2); 
+          chai.expect(props2.prop1.value).to.be.equal(2); 
+          chai.expect(props2.prop1.type).to.be.equal(Number);
+          chai.expect(props2.prop1.notify).to.be.equal(false);
+          chai.expect(props2.prop1.reflect).to.be.equal(0);
+          chai.expect(props2.prop1.observe).to.be.equal(true);
+          chai.expect(props2.prop1.strict).to.be.equal(false);
+          chai.expect(props2.prop1.enumerable).to.be.equal(false);
 
+          chai.expect(props1._prop.value).to.be.equal(null);
           chai.expect(props1._prop.notify).to.be.equal(false);
           chai.expect(props1._prop.enumerable).to.be.equal(false);
+          chai.expect(props2._prop.value).to.be.equal(null);
           chai.expect(props2._prop.notify).to.be.equal(false);
           chai.expect(props2._prop.enumerable).to.be.equal(false);
+        });
+        it('Should not override explicit property options with implicit', () => {
+          class Object1 {
+            static get Properties() {
+              return {
+                prop1: {
+                  value: 2,
+                  notify: false,
+                  reflect: 2,
+                  observe: true,
+                  strict: false,
+                  enumerable: false,
+                },
+              };
+            }
+          }
+
+          class Object2 extends Object1 {
+            static get Properties() {
+              return {
+                prop1: 'hello',
+              };
+            }
+          }
+
+          const protochain = new ProtoChain(Object2.prototype);
+          const props = new ProtoProperties(protochain);
+
+          chai.expect(props.prop1.type).to.be.equal(String);
+          chai.expect(props.prop1.notify).to.be.equal(false);
+          chai.expect(props.prop1.reflect).to.be.equal(2);
+          chai.expect(props.prop1.observe).to.be.equal(true);
+          chai.expect(props.prop1.enumerable).to.be.equal(false);
         });
         it('Should correctly initialize bound properties', () => {
           const binding1 = new Binding(new TestNode({label: 'binding1'}), 'label');
@@ -699,7 +364,7 @@ export default class {
             }
           }
           Object1.Register();
-          
+
           class Object2 extends Object1 {
             static get Properties() {
               return {
@@ -731,7 +396,7 @@ export default class {
           chai.expect(props2._prop3.value).to.be.equal('binding3');
         });
         it('Should correctly get/set properties', () => {
-          
+
           class TestNode extends IoNode {
             static get Properties() {
               return {
@@ -765,7 +430,7 @@ export default class {
 
           const binding1 = new Binding(new TestNode({label: 'binding1'}), 'label');
           const binding2 = new Binding(new TestNode({label: 'binding2'}), 'label');
-          
+
           class TestNode2 extends IoNode {
             static get Properties() {
               return {
@@ -783,7 +448,7 @@ export default class {
 
           chai.expect(properties.prop1.binding).to.be.equal(binding1);
           chai.expect(binding1.targets[0]).to.be.equal(node);
-          
+
           properties.set('prop1', binding2);
           chai.expect(properties.get('prop1')).to.be.equal('binding2');
           chai.expect(node.prop1).to.be.equal('binding2');
@@ -833,18 +498,18 @@ export default class {
           node.connect();
 
           node.removeEventListener('prop-changed');
-          
+
           node.addEventListener('prop-changed', (event) => {
             const value = event.detail.value;
             const oldValue = event.detail.oldValue;
             chai.expect(string(value)).to.be.equal(string({}));
             chai.expect(string(oldValue)).to.be.equal(string({}));
           });
-          
+
           node.prop = {};
-          
+
           node.removeEventListener('prop-changed');
-          
+
           node.addEventListener('prop-changed', () => {
             chai.expect('This should never happen!').to.be.equal(true);
           });
@@ -874,7 +539,7 @@ export default class {
                 propChangeCounter: 0,
               };
             }
-            propChanged() {              
+            propChanged() {
               this.propChangeCounter++;
             }
           }
@@ -904,11 +569,11 @@ export default class {
           chai.expect(subNode1.propChangeCounter).to.be.equal(3);
           node.connect();
           chai.expect(subNode1.propChangeCounter).to.be.equal(4);
-          
+
           node.prop = new TestNodeValue();
           const subNode2 = node.prop;
           subNode1.prop = {};
-          
+
           chai.expect(subNode1.propChangeCounter).to.be.equal(4);
           chai.expect(subNode2.propChangeCounter).to.be.equal(1);
         });
