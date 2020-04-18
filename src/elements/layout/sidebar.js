@@ -1,5 +1,5 @@
 import {IoElement} from '../../io.js';
-import {Options} from '../../io-elements.js';
+import {Options} from '../menus/options.js';
 import {IoStorageFactory as $} from '../core/storage.js';
 
 export class IoSidebar extends IoElement {

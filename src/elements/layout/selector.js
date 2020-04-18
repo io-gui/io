@@ -1,5 +1,5 @@
 import {IoElement} from '../../io.js';
-import {Options} from '../../io-elements.js';
+import {Options} from '../menus/options.js';
 // TODO: use IoContent for caching and display.
 
 export class IoSelector extends IoElement {
