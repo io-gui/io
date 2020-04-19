@@ -44,7 +44,7 @@ export class Options extends IoNodeMixin(Array) {
     }
   }
   unpickAll(option) {
-    if (option.select === 'pick') {
+    if (option.select === 'pick' && option.selected) {
       option.selected = false;
       for (let i = 0; i < option.options.length; i++) {
         this.unpickAll(option.options[i]);
@@ -73,7 +73,7 @@ export class Option extends IoNode {
   // TODO: test for robustness and document.
   get compose() {
 		return {
-			options: {'on-selected-changed': this.onSuboptionPicked},
+			options: {'on-selected-changed': this.onOptionsSelectedChanged},
 		};
 	}
   constructor(option) {
@@ -95,8 +95,7 @@ export class Option extends IoNode {
   get hasmore() {
     return !!(this.options.length);
   }
-  onSuboptionPicked(event) {
-    console.log(event.detail.value);
+  onOptionsSelectedChanged(event) {
     this.selected = event.detail.value;
   }
   changed() {
