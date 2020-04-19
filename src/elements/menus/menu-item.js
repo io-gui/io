@@ -116,16 +116,17 @@ export class IoMenuItem extends IoItem {
   }
   _onClick() {
     const option = this.option;
-    if (option.action) {
-      option.action.apply(null, [option.value]);
-    }
-    if (option.select === 'pick' && !option.hasmore) {
-      option.selected = true;
-    } if (option.select === 'toggle') {
-      option.selected = !option.selected;
-    }
-    // if (option.hasmore) this.expanded = true;
-    if ((option.select === 'pick' && !option.hasmore) || option.action) {
+    if (option.hasmore) {
+      if (!this.expanded) this.expanded = true;
+    } else {
+      if (option.action) {
+        option.action.apply(null, [option.value]);
+      }
+      if (option.select === 'pick') {
+        option.selected = true;
+      } if (option.select === 'toggle') {
+        option.selected = !option.selected;
+      }
       this.dispatchEvent('item-clicked', option, true);
       this.requestAnimationFrameOnce(this._collapse);
     }
@@ -156,13 +157,11 @@ export class IoMenuItem extends IoItem {
   }
   _onPointermove(event) {
     event.stopPropagation();
-    if (!this.expanded && event.pointerType === 'touch' && !this.inlayer) {
-      return;
-    }
+    if (!this.expanded && event.pointerType === 'touch' && !this.inlayer) return;
+
     const clipped = !!this.$parent && !!this.$parent.style.height;
-    if (event.pointerType === 'touch' && clipped) {
-      return;
-    }
+    
+    if (event.pointerType === 'touch' && clipped) return;
 
     // TODO: Safari temp fix for event.movement = 0
     const movementX = event.clientX - this._x;
@@ -219,7 +218,7 @@ export class IoMenuItem extends IoItem {
     event.stopPropagation();
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
-    const item = this._gethovered(event);    
+    const item = this._gethovered(event);
 
     if (item) {
       item.focus();

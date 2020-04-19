@@ -1,61 +1,53 @@
-import {IoNode} from '../../io.js';
+import {IoNode, IoNodeMixin} from '../../io.js';
 
 // TODO: document and test!
-
-export class Options extends IoNode {
+export class Options extends IoNodeMixin(Array) {
   static get Properties() {
     return {
       selected: undefined,
     };
   }
-  constructor(options, props) {
+  constructor(options = [], props = {}) {
     super(props);
-    Object.defineProperty(this, '__options', {value: []});
-    if (options && options instanceof Array) {
-      for (let i = 0; i < options.length; i++) {
-        if (!options[i].select && props && props.select) {
-          options[i].select = props.select;
-        }
-        let option = (options[i] instanceof Option) ? options[i] : new Option(options[i]);
-        option.connect(this);
-        option.addEventListener('selected-changed', this.onSubOptionSelectedChanged);
-        // TODO: Test node connections!
-        this.__options.push(option);
+    for (let i = 0; i < options.length; i++) {
+      let option;
+      if (options[i] instanceof Option) {
+        options[i].select = options[i].select || props.select || '';
+        option = options[i];
+      } else if (typeof options[i] === 'object') {
+        options[i].select = options[i].select || props.select || '';
+        option = new Option(options[i]);
+      } else {
+        option = new Option({value: options[i], select: props.select});
       }
+      option.connect(this);
+      option.addEventListener('selected-changed', this.onSubOptionSelectedChanged);
+      this.push(option);
     }
   }
   option(value) {
-    for (let i = 0; i < this.__options.length; i++) {
-      if (this.__options[i].value === value) {
-        return this.__options[i];
-      }
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].value === value) return this[i];
     }
     return null; 
-  }
-  map(fn) {
-    return this.__options.map(fn);
-  }
-  find(fn) {
-    return this.__options.find(fn);
   }
   onSubOptionSelectedChanged(event) {
     const target = event.target;
     if ((target.select === 'pick') && event.detail.value) {
-      for (let i = 0; i < this.__options.length; i++) {
-        const option = this.__options[i];
+      for (let i = 0; i < this.length; i++) {
+        const option = this[i];
         if (option !== target) {
           this.unpickAll(option);
         }
       }
-      this.dispatchEvent('option-picked', target);
       this.selected = target.value;
     }
   }
   unpickAll(option) {
     if (option.select === 'pick') {
       option.selected = false;
-      for (let i = 0; i < option.options.__options.length; i++) {
-        this.unpickAll(option.options.__options[i]);
+      for (let i = 0; i < option.options.length; i++) {
+        this.unpickAll(option.options[i]);
       }
     }
   }
@@ -81,7 +73,7 @@ export class Option extends IoNode {
   // TODO: test for robustness and document.
   get compose() {
 		return {
-			options: {'on-option-picked': this.onSuboptionPicked},
+			options: {'on-selected-changed': this.onSuboptionPicked},
 		};
 	}
   constructor(option) {
@@ -101,9 +93,10 @@ export class Option extends IoNode {
     super(option);
   }
   get hasmore() {
-    return !!(this.options.__options.length);
+    return !!(this.options.length);
   }
   onSuboptionPicked(event) {
+    console.log(event.detail.value);
     this.selected = event.detail.value;
   }
   changed() {

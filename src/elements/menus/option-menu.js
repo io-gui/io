@@ -50,8 +50,8 @@ export class IoOptionMenu extends IoMenuItem {
   }
   changed() {
     let valueText = '';
-    if (this.options.__options.length) {
-      const option = this.options.__options.find(option => {return option.value === this.value;});      
+    if (this.options.length) {
+      const option = this.options.find(option => {return option.value === this.value;});      
       if (option) {
         if (option.label) {
           valueText = option.label;
@@ -62,8 +62,8 @@ export class IoOptionMenu extends IoMenuItem {
         }
       }
       // TODO: clean up - make reactive or composed
-      for (let i = 0; i < this.options.__options.length; i++) {
-        this.options.__options[i].select = this.select;
+      for (let i = 0; i < this.options.length; i++) {
+        this.options[i].select = this.select;
       }
     }
     if (!valueText) valueText = this._label;

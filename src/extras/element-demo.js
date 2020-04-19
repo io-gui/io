@@ -15,7 +15,7 @@ const options = new Options([
   ]},
   {label: 'Suboptions', options: suboptions},
 ]);
-suboptions.__options.push(...[
+suboptions.push(...[
   {label: 'Hearts', options: options},
   {label: 'suboption one', options: options},
   {label: 'suboption two', options: options},
