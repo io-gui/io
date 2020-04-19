@@ -21,8 +21,8 @@ const IoNodeMixin = (superclass) => {
      * Creates `IoNode` instance and initializes internals.
      * @param {Object} initProps - Property values to inialize instance with.
      */
-    constructor(initProps = {}) {
-      super(initProps);
+    constructor(initProps = {}, ...args) {
+      super(...args);
 
       const constructor = this.__proto__.constructor;
       if (constructor.__isRegisteredAs !== constructor.name) {

@@ -78,8 +78,8 @@ export class IoSelector extends IoElement {
     this._selectDefault();
   }
   _selectDefault() {
-    if (!this.selected && this.options.__options[0]) {
-      this.selected = this.options.__options[0].value;
+    if (!this.selected && this.options[0]) {
+      this.selected = this.options[0].value;
     }
   }
   _onIoContentReady(event) {
