@@ -90,6 +90,13 @@ export class Option extends IoNode {
         option.options = new Options(option.options, {select: option.select});
       }
     }
+    if (!option.label) {
+      if (typeof option.value === 'object') {
+        option.label = option.value.constructor.name;
+      } else {
+        option.label = String(option.value);
+      }
+    }
     super(option);
   }
   get hasmore() {
@@ -103,51 +110,3 @@ export class Option extends IoNode {
   }
 }
 Option.Register();
-
-// export class Route extends IoNode {
-//   static get Properties() {
-//     return {
-//       value: '',
-//       options: Options,
-//     };
-//   }
-//   constructor(props) {
-//     super(props);
-//     this.value = this._getDefault().value;
-//   }
-//   _getValidOption(option) {
-//     if (typeof option === 'string') {
-//       return {value: option};
-//     } else if (typeof option === 'object') {
-//       return {
-//         value: option.value,
-//         options: option.options,
-//       };
-//     }
-//   }
-//   _getDefault() {
-//     if (this.options instanceof Array && this.options[0]) {
-//       return this._getValidOption(this.options[0]);
-//     }
-//   }
-//   _getSelected() {
-//     const value = this.value;
-//     for (let i = 0; i < this.options.length; i++) {
-//       let option = this.options[i];
-//       if (typeof option === 'string' && option === value) {
-//         return [this._getValidOption(option)];
-//       } else if (typeof option === 'object') {
-//         option = this._getValidOption(option);
-//         if (option.value === value) {
-//           if (option.options && this[value] instanceof Route) {
-//             const selected = this[value]._getSelected();
-//             return [option, ...selected];
-//           } else {
-//             return [option];
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-// Route.Register();
