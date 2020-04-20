@@ -1,9 +1,10 @@
-import {IoMenuItem} from './menu-item.js';
-import {Options} from './options.js';
+import {IoElement} from '../../io.js';
+import {Options, Option} from './options.js';
+import './menu-item.js';
 
 // TODO: fix tab-out without collapse
 
-export class IoOptionMenu extends IoMenuItem {
+export class IoOptionMenu extends IoElement {
   static get Style() {
     return /* css */`
     :host {
@@ -27,23 +28,20 @@ export class IoOptionMenu extends IoMenuItem {
       value: {
         reflect: -1,
       },
-      select: 'pick',
       options: {
         type: Options,
         reflect: -1,
         observe: true,
         strict: true,
       },
-      icon: '\u25BE',
       role: 'button',
-      lazy: false,
     };
   }
-  get compose() {
-    return {
-      options: {selected: this.bind('value')}
-    };
-  }
+  // get compose() {
+  //   return {
+  //     options: {selected: this.bind('value')}
+  //   };
+  // }
   get _label() {
     const valueText = (this.value !== undefined) ? String(this.value) : '';
     return this.label || valueText || '';
@@ -61,32 +59,28 @@ export class IoOptionMenu extends IoMenuItem {
           valueText = String(option.value);
         }
       }
-      // TODO: clean up - make reactive or composed
-      for (let i = 0; i < this.options.length; i++) {
-        this.options[i].select = this.select;
-      }
     }
     if (!valueText) valueText = this._label;
     if (this.icon) {
       valueText = this.icon + '  ' + valueText;
     }
 
-    this.title = valueText;
-    this.textNode = valueText;
-
-    this.setAttribute('aria-haspopup', 'listbox');
-    this.setAttribute('aria-expanded', String(this.expanded));
-    // this.setAttribute('hasmore', this.hasmore);
-
-    if (this.expanded) {
-      this.$options.setProperties({
-        $parent: this,
-        expanded: this.bind('expanded'),
-        options: this.options,
-        select: this.select,
-        position: this.direction,
-      });
+    const option = new Option({
+      label: valueText,
+      options: this.options,
+    });
+    // TODO: clean up - make reactive or composed
+    for (let i = 0; i < this.options.length; i++) {
+      this.options[i].select = 'pick'; // TODO: reconsider
     }
+    this.options.selected = this.bind('value'); // TODO: consider conpose()
+
+    this.template([
+      ['io-menu-item', {
+        option: option,
+        position: 'bottom',
+      }]
+    ]);
   }
 }
 

@@ -54,8 +54,15 @@ class Queue {
 
     if (changed) node.dispatchChange();
 
-    this.__array.length = 0;
     this._dispatchInProgress = false;
+
+    // TODO: It is possible that an effect of change adds additional items to the queue
+    // TODO: Test and document! 
+    // this.__array.length = 0;
+    if (this.__array.length) {
+      this.dispatch();
+      return;
+    }
   }
   /**
    * Clears the queue and removes the node reference.

@@ -118,14 +118,14 @@ export class IoMenuItem extends IoItem {
     const option = this.option;
     if (option.hasmore) {
       if (!this.expanded) this.expanded = true;
+    } else if (option.select === 'toggle') {
+      option.selected = !option.selected;
     } else {
       if (option.action) {
         option.action.apply(null, [option.value]);
       }
       if (option.select === 'pick') {
         option.selected = true;
-      } if (option.select === 'toggle') {
-        option.selected = !option.selected;
       }
       this.dispatchEvent('item-clicked', option, true);
       this.requestAnimationFrameOnce(this._collapse);
