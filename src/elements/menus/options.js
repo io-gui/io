@@ -4,6 +4,7 @@ import {IoNode, IoNodeMixin} from '../../io.js';
 export class Options extends IoNodeMixin(Array) {
   static get Properties() {
     return {
+      select: 'pick',
       selected: undefined,
     };
   }
@@ -12,16 +13,17 @@ export class Options extends IoNodeMixin(Array) {
     for (let i = 0; i < options.length; i++) {
       let option;
       if (options[i] instanceof Option) {
-        options[i].select = options[i].select || props.select || '';
+        if (props.select) options[i].select = props.select;
         option = options[i];
       } else if (typeof options[i] === 'object') {
-        options[i].select = options[i].select || props.select || '';
+        if (props.select) options[i].select = props.select;
         option = new Option(options[i]);
       } else {
         option = new Option({value: options[i], select: props.select});
       }
+      // TODO: consider menu model mutations.
       option.connect(this);
-      option.addEventListener('selected-changed', this.onSubOptionSelectedChanged);
+      option.addEventListener('selected-changed', this.onOptionSelectedChanged);
       this.push(option);
     }
   }
@@ -31,16 +33,27 @@ export class Options extends IoNodeMixin(Array) {
     }
     return null; 
   }
-  onSubOptionSelectedChanged(event) {
-    const target = event.target;
-    if ((target.select === 'pick') && event.detail.value) {
-      for (let i = 0; i < this.length; i++) {
-        const option = this[i];
-        if (option !== target) {
-          this.unpickAll(option);
-        }
+  selectChanged() {
+    for (let i = 0; i < this.length; i++) {
+      if (this.select === 'toggle') this[i].select = this.select;
+    }
+  }
+  selectedChanged() {
+    if (this.selected) return;
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].value !== this.selected) {
+        this[i].selected = false; 
+        this.unpickAll(this[i]);
       }
+    }
+  }
+  onOptionSelectedChanged(event) {
+    const target = event.target;
+    if ((target.select === 'pick') && target.selected) {
       this.selected = target.value;
+      for (let i = 0; i < this.length; i++) {
+        if (this[i] !== target) this.unpickAll(this[i]);
+      }
     }
   }
   unpickAll(option) {
@@ -62,7 +75,7 @@ export class Option extends IoNode {
       icon: '',
       hint: '',
       action: undefined,
-      select: '', // 'toggle' | 'pick' | 'none'
+      select: 'pick', // 'toggle' | 'pick' | 'none'
       selected: undefined,
       options: {
         type: Options,
@@ -72,10 +85,10 @@ export class Option extends IoNode {
   }
   // TODO: test for robustness and document.
   get compose() {
-		return {
-			options: {'on-selected-changed': this.onOptionsSelectedChanged},
-		};
-	}
+    return {
+      options: {'on-selected-changed': this.onOptionsSelectedChanged},
+    };
+  }
   constructor(option) {
     if (typeof option !== 'object' || option === null) {
       option = {
@@ -84,11 +97,10 @@ export class Option extends IoNode {
       };
     }
     if (option.options) {
-      if (option.options instanceof Options && option.select) {
-        option.options.select = option.select;
-      } else {
-        option.options = new Options(option.options, {select: option.select});
+      if (!(option.options instanceof Options)) {
+        option.options = new Options(option.options);
       }
+      if (option.select) option.options.select = option.select;
     }
     if (!option.label) {
       if (typeof option.value === 'object') {
