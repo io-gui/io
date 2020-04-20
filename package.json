@@ -1,6 +1,6 @@
 {
   "name": "io-gui",
-  "version": "1.0.14",
+  "version": "1.1.0-rc1",
   "description": "UI framework for computer graphics on the web.",
   "jsnext:main": "build/io.js",
   "module": "build/io.js",
