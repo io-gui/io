@@ -10,7 +10,7 @@ class IoOptionsDemoView extends IoElement {
         border: 1px solid gray;
       }
       :host > div {
-        background-color: rgb(220,220,205);
+        background-color: var(--io-background-color-dark);
         display: flex;
       }
       :host io-option-item-demo-view {
@@ -20,13 +20,13 @@ class IoOptionsDemoView extends IoElement {
         margin-left: 0.5em;
       }
       :host io-item.root {
-        color: rgba(120, 20, 0, 0.5);
+        color: var(--io-color-link);
       }
       :host io-options-path-demo > io-item {
-        color: rgba(20, 120, 0, 0.5);
+        color: var(--io-color-string);
       }
       :host io-item.leaf {
-        color: rgba(0, 20, 120, 0.5);
+        color: var(--io-color-focus);
       }
     `;
   }

@@ -73,7 +73,7 @@ export class IoOptionMenu extends IoElement {
     for (let i = 0; i < this.options.length; i++) {
       this.options[i].select = 'pick'; // TODO: reconsider
     }
-    this.options.selected = this.bind('value'); // TODO: consider conpose()
+    this.options.selectedLeaf = this.bind('value'); // TODO: consider conpose()
 
     this.template([
       ['io-menu-item', {
