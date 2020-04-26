@@ -1,7 +1,7 @@
+import {OptionItem} from '../../io.js';
 import {IoItem} from '../core/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
 import {IoMenuOptions} from './menu-options.js';
-import {Option} from './options.js';
 
 // TODO: fix and improve keyboard navigation in all cases.
 
@@ -70,7 +70,7 @@ export class IoMenuItem extends IoItem {
   static get Properties() {
     return {
       option: {
-        type: Option,
+        type: OptionItem,
         strict: true,
       },
       expanded: {
@@ -160,7 +160,7 @@ export class IoMenuItem extends IoItem {
     if (!this.expanded && event.pointerType === 'touch' && !this.inlayer) return;
 
     const clipped = !!this.$parent && !!this.$parent.style.height;
-    
+
     if (event.pointerType === 'touch' && clipped) return;
 
     // TODO: Safari temp fix for event.movement = 0
@@ -303,7 +303,7 @@ export class IoMenuItem extends IoItem {
       if (!this.$options) this.$options = new IoMenuOptions();
       if (this.$options.parentElement !== Layer) Layer.appendChild(this.$options);
 
-      const $allitems = getElementDescendants(getRootElement(this));      
+      const $allitems = getElementDescendants(getRootElement(this));
       const $ancestoritems = getElementAncestors(this);
       for (let i = $allitems.length; i--;) {
         if ($ancestoritems.indexOf($allitems[i]) === -1) {

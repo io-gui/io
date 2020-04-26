@@ -111,7 +111,11 @@ const IoNodeMixin = (superclass) => {
      * @return {Binding} Binding object.
      */
     bind(prop) {
-      return this.__bindings.bind(prop);
+      if (this.__properties[prop]) {
+        return this.__bindings.bind(prop);
+      } else {
+        console.warn(`IoGUI IoNode: cannot bind to ${prop} property. Does not exist!`);
+      }
     }
     /**
      * Unbinds a binding to a specified property`.
@@ -345,7 +349,7 @@ const IoNodeMixin = (superclass) => {
 const Register = function () {
   const protochain = new ProtoChain(this.prototype);
   let proto = this.prototype;
-  
+
   Object.defineProperty(proto, '__isIoNode', {value: true});
   Object.defineProperty(proto.constructor, '__isRegisteredAs', {value: proto.constructor.name});  
 

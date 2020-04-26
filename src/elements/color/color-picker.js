@@ -68,7 +68,7 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
     }
   }
   _onValueSet() {
-    this.dispatchEvent('value-set', {property: 'value', value: this.value}, true);    
+    this.dispatchEvent('value-set', {property: 'value', value: this.value}, true);
   }
   toggle() {
     if (this.expanded) {

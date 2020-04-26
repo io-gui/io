@@ -1,7 +1,6 @@
-import {IoElement} from '../../io.js';
+import {IoElement, Options, OptionItem} from '../../io.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
 import './menu-item.js';
-import {Options, Option} from './options.js';
 
 const rects = new WeakMap();
 
@@ -185,7 +184,7 @@ export class IoMenuOptions extends IoElement {
           overflow = true;
         }
       }
-      hamburger.option = new Option({options: new Options(hamburgerOptions)});
+      hamburger.option = new OptionItem({options: new Options(hamburgerOptions)});
       this.overflow = overflow;
     } else {
       for (let i = buttons.length; i--;) {
@@ -258,7 +257,7 @@ export class IoMenuOptions extends IoElement {
           if (o.hint && o.hint.toLowerCase().search(s) !== -1) return true;
         }
       });
-      return options.length ? options : new Options([new Option({label: 'No matches'})]);
+      return options.length ? options : new Options([new OptionItem({label: 'No matches'})]);
     }
     return this.options;
   }

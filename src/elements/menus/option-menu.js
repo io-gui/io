@@ -1,5 +1,4 @@
-import {IoElement} from '../../io.js';
-import {Options, Option} from './options.js';
+import {IoElement, Options, OptionItem} from '../../io.js';
 import './menu-item.js';
 
 // TODO: fix tab-out without collapse
@@ -17,9 +16,10 @@ export class IoOptionMenu extends IoElement {
       background-image: var(--io-gradient-button);
       padding-left: calc(2 * var(--io-spacing));
       padding-right: calc(2 * var(--io-spacing));
-    }
-    :host {
       text-align: left;
+    }
+    :host > io-menu-item {
+      margin: calc(-1 * var(--io-border-width));
     }
     `;
   }
@@ -49,7 +49,7 @@ export class IoOptionMenu extends IoElement {
   changed() {
     let valueText = '';
     if (this.options.length) {
-      const option = this.options.find(option => {return option.value === this.value;});      
+      const option = this.options.find(option => {return option.value === this.value;});
       if (option) {
         if (option.label) {
           valueText = option.label;
@@ -65,7 +65,7 @@ export class IoOptionMenu extends IoElement {
       valueText = this.icon + '  ' + valueText;
     }
 
-    const option = new Option({
+    const option = new OptionItem({
       label: valueText,
       options: this.options,
     });

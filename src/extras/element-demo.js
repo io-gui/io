@@ -1,5 +1,5 @@
-import {IoElement} from '../io.js';
-import {IoThemeSingleton, IoStorageFactory as $, Options, Option} from '../io-elements.js';
+import {IoElement, Options, OptionItem} from '../io.js';
+import {IoThemeSingleton, IoStorageFactory as $} from '../io-elements.js';
 
 const suboptions = new Options();
 const options = new Options([
@@ -22,7 +22,7 @@ suboptions.push(...[
   {label: 'suboption three', options: options},
 ]);
 
-const option = new Option({
+const option = new OptionItem({
   'label': 'Hearts',
   'icon': '💕',
   'hint': 'colors',
