@@ -29229,10 +29229,10 @@ class Binding {
           dstNode1.connect();
           dstNode1.prop1 = binding1;
           dstNode1.prop2 = binding2;
-          
+
           const dstNode2 = new Node$1({prop1: binding1});
           dstNode2.connect();
-          
+
           const dstNode3 = new Node$1({prop1: binding1, prop2: binding1});
           dstNode3.connect();
 
@@ -29251,7 +29251,7 @@ class Binding {
           chai.expect(string(binding1.targetProps.get(dstNode1))).to.be.equal(string([]));
           chai.expect(string(binding1.targetProps.get(dstNode2))).to.be.equal(string([]));
           chai.expect(string(binding1.targetProps.get(dstNode3))).to.be.equal(string(['prop2']));
-          
+
           dstNode2.prop2 = binding1;
           dstNode2.connect();
 
