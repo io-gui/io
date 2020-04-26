@@ -100,7 +100,7 @@ class Property {
     this.binding = protoProp.binding;
 
     if (this.binding instanceof Binding) this.value = this.binding.value;
-    else if (this.value === undefined || this.value === null) {
+    else if (this.value === undefined) {
       if (typeof this.type === 'function') {
         if (this.type === Boolean) this.value = false;
         else if (this.type === String) this.value = '';

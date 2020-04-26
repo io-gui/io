@@ -43,6 +43,16 @@ export class Options extends IoNodeMixin(Array) {
           this[i].setSelectedPath([]);
         }
       }
+    } else {
+      this.setSelectedPath(this.selectedPath);
+      const selected = this.selectedPath[0];
+      for (let i = 0; i < this.length; i++) {
+        if (this[i].select === 'pick' && this[i].value === selected) {
+          const nextpath = [...this.selectedPath];
+          nextpath.shift();
+          this[i].setSelectedPath(nextpath);
+        }
+      }
     }
   }
   onOptionItemSelectedPathChanged(event) {

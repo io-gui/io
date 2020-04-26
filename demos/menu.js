@@ -1,11 +1,6 @@
 import {IoElement, Options, OptionItem} from '../../io/build/io.js';
 import  '../../io/build/io-elements.js';
 
-function writePath(path) {
-  if (path && path.length) return JSON.stringify(path);
-  return '';
-}
-
 class IoOptionsDemoView extends IoElement {
   static get Style() {
     return /* css */`
@@ -27,7 +22,7 @@ class IoOptionsDemoView extends IoElement {
       :host io-item.root {
         color: rgba(120, 20, 0, 0.5);
       }
-      :host io-item.path {
+      :host io-options-path-demo > io-item {
         color: rgba(20, 120, 0, 0.5);
       }
       :host io-item.leaf {
@@ -51,13 +46,14 @@ class IoOptionsDemoView extends IoElement {
     this.template([
       ['div', [
         ['io-item', {value: this.options.bind('selectedRoot'), class: 'root'}],
-        ['io-item', {value: writePath(this.options.selectedPath), class: 'path'}],
+        ['io-options-path-demo', {value: this.options.bind('selectedPath')}],
         ['io-item', {value: this.options.bind('selectedLeaf'), class: 'leaf'}],
       ]],
       options
     ]);
   }
 }
+
 IoOptionsDemoView.Register();
 
 class IoOptionItemDemoView extends IoElement {
@@ -89,14 +85,27 @@ class IoOptionItemDemoView extends IoElement {
         [this.option.select === 'toggle' ? 'io-boolicon' : 'io-switch', {value: this.option.bind('selected')}],
         ['io-item', {value: this.option.bind('value')}],
         ['io-item', {value: this.option.bind('selectedRoot'), class: 'root'}],
-        ['io-item', {value: writePath(this.option.selectedPath), class: 'path'}],
+        ['io-options-path-demo', {value: this.option.bind('selectedPath')}],
         ['io-item', {value: this.option.bind('selectedLeaf'), class: 'leaf'}],
       ]],
       this.option.hasmore ? ['io-options-demo-view', {options: this.option.options}] : null
     ]);
   }
 }
+
 IoOptionItemDemoView.Register();
+
+class IoOptionsPathDemo extends IoElement {
+  static get Properties() {
+    return {
+      value: Array,
+    };
+  }
+  changed() {
+    this.template([['io-item', {value: (this.value && this.value.length) ? JSON.stringify(this.value) : ''}]]);
+  }
+}
+IoOptionsPathDemo.Register();
 
 export class IoDemoMenu extends IoOptionsDemoView {
   static get Properties() {
@@ -133,4 +142,5 @@ export class IoDemoMenu extends IoOptionsDemoView {
     };
   }
 }
+
 IoDemoMenu.Register();

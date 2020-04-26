@@ -185,12 +185,8 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       if (vChildren[i].children !== undefined) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
-          if (!children[i].__isIoElement) {
-            this.flattenTextNode(children[i]);
-            children[i]._textNode.nodeValue = String(vChildren[i].children);
-          } else {
-            console.log(children[i], children[i].__isIoElement, vChildren[i]);
-          }
+          this.flattenTextNode(children[i]);
+          children[i]._textNode.nodeValue = String(vChildren[i].children);
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
           this.traverse(vChildren[i].children, children[i]);
