@@ -1,11 +1,13 @@
 import {IoNode, IoNodeMixin} from '../../io.js';
 
 // TODO: document and test!
+// TODO: consider menu model mutations.
 export class Options extends IoNodeMixin(Array) {
   static get Properties() {
     return {
-      select: 'pick',
-      selected: undefined,
+      selectedRoot: String,
+      selectedPath: String,
+      selectedLeaf: String,
     };
   }
   constructor(options = [], props = {}) {
@@ -13,18 +15,16 @@ export class Options extends IoNodeMixin(Array) {
     for (let i = 0; i < options.length; i++) {
       let option;
       if (options[i] instanceof Option) {
-        if (props.select) options[i].select = props.select;
         option = options[i];
       } else if (typeof options[i] === 'object') {
-        if (props.select) options[i].select = props.select;
         option = new Option(options[i]);
       } else {
-        option = new Option({value: options[i], select: props.select});
+        option = new Option({value: options[i]});
       }
-      // TODO: consider menu model mutations.
-      option.connect(this);
-      option.addEventListener('selected-changed', this.onOptionSelectedChanged);
       this.push(option);
+      option.addEventListener('selected-changed', this.onOptionSelectedChanged);
+      option.addEventListener('selectedPath-changed', this.onOptionSelectedPathChanged);
+      option.connect(this);
     }
   }
   option(value) {
@@ -33,40 +33,60 @@ export class Options extends IoNodeMixin(Array) {
     }
     return null; 
   }
-  selectChanged() {
-    for (let i = 0; i < this.length; i++) {
-      if (this.select === 'toggle') this[i].select = this.select;
+  selectedPathChanged() {
+    if (!this.selectedPath) {
+      for (let i = 0; i < this.length; i++) {
+        if (this[i].select === 'pick') {
+          this[i].setSelectedPath(null);
+        }
+      }
     }
   }
-  selectedChanged() {
-    if (this.selected) return;
-    for (let i = 0; i < this.length; i++) {
-      if (this[i].value !== this.selected) {
-        this[i].selected = false; 
-        this.unpickAll(this[i]);
+  onOptionSelectedPathChanged(event) {
+    const target = event.target;
+    if (target.select === 'pick') {
+      if (target.selectedPath) {
+        this.setSelectedPath(String(target.value) + '///' + target.selectedPath);
       }
     }
   }
   onOptionSelectedChanged(event) {
     const target = event.target;
-    if ((target.select === 'pick') && target.selected) {
-      this.selected = target.value;
-      for (let i = 0; i < this.length; i++) {
-        if (this[i] !== target) this.unpickAll(this[i]);
+    if (target.select === 'pick') {
+      if (target.selected) {
+        let selectedPath = String(target.value) + '///' + target.selectedPath;
+        for (let i = 0; i < this.length; i++) {
+          if (this[i].select === 'pick' && this[i] !== target) {
+            this[i].setSelectedPath(null);
+          }
+        }
+        this.setSelectedPath(selectedPath);
+      } else {
+        let hasSelected = false;
+        for (let i = 0; i < this.length; i++) {
+          if (this[i].selected) {
+            hasSelected = true;
+            continue;
+          }
+        }
+        if (!hasSelected) this.setSelectedPath(null);
       }
     }
   }
-  unpickAll(option) {
-    if (option.select === 'pick' && option.selected) {
-      option.selected = false;
-      for (let i = 0; i < option.options.length; i++) {
-        this.unpickAll(option.options[i]);
-      }
-    }
+  setSelectedPath(path) {
+    this.setProperties({
+      selectedRoot: path ? path.split('///')[0] : '',
+      selectedPath: path || '',
+      selectedLeaf: path ? path.split('///').slice(-2)[0] : '',
+    });
+  }
+  changed() {
+    this.dispatchEvent('changed');
   }
 }
 Options.Register();
 
+// TODO: test for robustness and document.
 export class Option extends IoNode {
   static get Properties() {
     return {
@@ -76,17 +96,20 @@ export class Option extends IoNode {
       hint: '',
       action: undefined,
       select: 'pick', // 'toggle' | 'pick' | 'none'
-      selected: undefined,
+      selected: Boolean,
+      selectedPath: String,
+      selectedRoot: String,
+      selectedLeaf: String,
       options: {
         type: Options,
         strict: true
       }
     };
   }
-  // TODO: test for robustness and document.
+  
   get compose() {
     return {
-      options: {'on-selected-changed': this.onOptionsSelectedChanged},
+      options: {'on-selectedPath-changed': this.onOptionsSelectedPathChanged},
     };
   }
   constructor(option) {
@@ -100,7 +123,6 @@ export class Option extends IoNode {
       if (!(option.options instanceof Options)) {
         option.options = new Options(option.options);
       }
-      if (option.select) option.options.select = option.select;
     }
     if (!option.label) {
       if (typeof option.value === 'object') {
@@ -109,13 +131,45 @@ export class Option extends IoNode {
         option.label = String(option.value);
       }
     }
+    if (option.select === 'toggle' && option.options && option.options.length) {
+      console.warn('IoGUI Option: options with {select: "toggle"} cannot have suboptions!');
+      option.options = new Options();
+    }
+    if (typeof option.value === 'string' && option.value.search('///') != -1) {
+      console.error('IoGUI Option: option values should not contain "///" string!');
+    }
+    if (option.select === 'pick' && option.options.length) {
+      option.selected = !!option.options.selectedPath;
+      option.selectedPath = option.options.selectedPath; 
+    }
     super(option);
+    if (this.select === 'pick' && this.options.length) {
+      this.setSelectedPath(this.options.selectedPath);
+    }
   }
   get hasmore() {
     return !!(this.options.length);
   }
-  onOptionsSelectedChanged(event) {
-    this.selected = event.detail.value;
+  onOptionsSelectedPathChanged() {    
+    if (this.select === 'pick') {
+      this.setSelectedPath(this.options.selectedPath);
+    }
+  }
+  selectedChanged() {
+    if (this.select === 'pick') {
+      if (!this.selected) {
+        this.options.setSelectedPath(null);
+        this.setSelectedPath(null);
+      }
+    }
+  }
+  setSelectedPath(path) {
+    this.setProperties({
+      selected: path ? true : false,
+      selectedRoot: path ? path.split('///')[0] : '',
+      selectedPath: path || '',
+      selectedLeaf: path ? path.split('///').slice(-2)[0] : '',
+    });
   }
   changed() {
     this.dispatchEvent('changed');

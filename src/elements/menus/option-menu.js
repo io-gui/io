@@ -17,9 +17,10 @@ export class IoOptionMenu extends IoElement {
       background-image: var(--io-gradient-button);
       padding-left: calc(2 * var(--io-spacing));
       padding-right: calc(2 * var(--io-spacing));
-    }
-    :host {
       text-align: left;
+    }
+    :host > io-menu-item {
+      margin: calc(-1 * var(--io-border-width));
     }
     `;
   }
