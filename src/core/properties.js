@@ -38,7 +38,7 @@ class ProtoProperty {
     } else if (typeof prop === 'function') {
 
       prop = {type: prop};
-    
+
     } else if (prop instanceof Binding) {
 
       prop = {binding: prop};

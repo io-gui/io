@@ -1,5 +1,10 @@
-import {IoElement} from '../../io/build/io.js';
-import {Options, Option} from '../../io/build/io-elements.js';
+import {IoElement, Options, OptionItem} from '../../io/build/io.js';
+import  '../../io/build/io-elements.js';
+
+function writePath(path) {
+  if (path && path.length) return JSON.stringify(path);
+  return '';
+}
 
 class IoOptionsDemoView extends IoElement {
   static get Style() {
@@ -46,7 +51,7 @@ class IoOptionsDemoView extends IoElement {
     this.template([
       ['div', [
         ['io-item', {value: this.options.bind('selectedRoot'), class: 'root'}],
-        ['io-item', {value: this.options.bind('selectedPath'), class: 'path'}],
+        ['io-item', {value: writePath(this.options.selectedPath), class: 'path'}],
         ['io-item', {value: this.options.bind('selectedLeaf'), class: 'leaf'}],
       ]],
       options
@@ -73,7 +78,7 @@ class IoOptionItemDemoView extends IoElement {
   static get Properties() {
     return {
       option: {
-        type: Option,
+        type: OptionItem,
         strict: true,
       },
     };
@@ -84,7 +89,7 @@ class IoOptionItemDemoView extends IoElement {
         [this.option.select === 'toggle' ? 'io-boolicon' : 'io-switch', {value: this.option.bind('selected')}],
         ['io-item', {value: this.option.bind('value')}],
         ['io-item', {value: this.option.bind('selectedRoot'), class: 'root'}],
-        ['io-item', {value: this.option.bind('selectedPath'), class: 'path'}],
+        ['io-item', {value: writePath(this.option.selectedPath), class: 'path'}],
         ['io-item', {value: this.option.bind('selectedLeaf'), class: 'leaf'}],
       ]],
       this.option.hasmore ? ['io-options-demo-view', {options: this.option.options}] : null
@@ -98,29 +103,29 @@ export class IoDemoMenu extends IoOptionsDemoView {
     return {
       options: new Options([
         {value: 'home'}, 
-        {value: 'docs', options: [
-          {value: 'introduction', options: [
-            {value: 'usage', selected: true}, // TODO: use default selection instead selected: 'introduction', 
-            {value: 'example'},
-            {value: 'style'},
+        {value: 'food', options: [
+          {value: 'fruits', options: [
+            {value: 'apples', selected: true}, // TODO: use default selection instead selected: 'introduction', 
+            {value: 'mangos'},
+            {value: 'bannanas'},
           ]},
-          {value: 'advanced', options: [
-            {value: 'elements'},
-            {value: 'properties'},
-            {value: 'configuration'},
+          {value: 'nuts', options: [
+            {value: 'chestnuts'},
+            {value: 'almonds'},
+            {value: 'cashews'},
           ]},
         ]}, 
-        {value: 'demos', options: [
-          {value: 'elements'},
-          {value: 'theme'},
-          {value: 'togles', options: [
+        {value: 'mixed', options: [
+          {value: 'selectable1'},
+          {value: 'selecrable2'},
+          {value: 'togglables', options: [
             {value: 'toggle1', select: 'toggle'},
             {value: 'toggle2', select: 'toggle'},
             {value: 'toggle3', select: 'toggle'},
             {value: 'toggle4', select: 'toggle'},
           ]},
-          {value: 'toggle', options: [
-            {value: 'toggle1', select: 'toggle'},
+          {value: 'nested mixed', options: [
+            {value: 'toggle', select: 'toggle'},
             {value: 'selectable'},
           ]},
         ]}

@@ -1,12 +1,15 @@
-import {IoNode, IoNodeMixin} from '../../io.js';
+import {IoNode, IoNodeMixin} from './io-node.js';
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
 export class Options extends IoNodeMixin(Array) {
   static get Properties() {
     return {
+      selectedPath: {
+        type: Array,
+        strict: true,
+      },
       selectedRoot: String,
-      selectedPath: String,
       selectedLeaf: String,
     };
   }
@@ -14,16 +17,16 @@ export class Options extends IoNodeMixin(Array) {
     super(props);
     for (let i = 0; i < options.length; i++) {
       let option;
-      if (options[i] instanceof Option) {
+      if (options[i] instanceof OptionItem) {
         option = options[i];
       } else if (typeof options[i] === 'object') {
-        option = new Option(options[i]);
+        option = new OptionItem(options[i]);
       } else {
-        option = new Option({value: options[i]});
+        option = new OptionItem({value: options[i]});
       }
       this.push(option);
-      option.addEventListener('selected-changed', this.onOptionSelectedChanged);
-      option.addEventListener('selectedPath-changed', this.onOptionSelectedPathChanged);
+      option.addEventListener('selected-changed', this.onOptionItemSelectedChanged);
+      option.addEventListener('selectedPath-changed', this.onOptionItemSelectedPathChanged);
       option.connect(this);
     }
   }
@@ -34,33 +37,32 @@ export class Options extends IoNodeMixin(Array) {
     return null; 
   }
   selectedPathChanged() {
-    if (!this.selectedPath) {
+    if (!this.selectedPath.length) {
       for (let i = 0; i < this.length; i++) {
         if (this[i].select === 'pick') {
-          this[i].setSelectedPath(null);
+          this[i].setSelectedPath([]);
         }
       }
     }
   }
-  onOptionSelectedPathChanged(event) {
+  onOptionItemSelectedPathChanged(event) {
     const target = event.target;
     if (target.select === 'pick') {
-      if (target.selectedPath) {
-        this.setSelectedPath(String(target.value) + '///' + target.selectedPath);
+      if (target.selectedPath.length) {
+        this.setSelectedPath([target.value, ...target.selectedPath]);
       }
     }
   }
-  onOptionSelectedChanged(event) {
+  onOptionItemSelectedChanged(event) {
     const target = event.target;
     if (target.select === 'pick') {
       if (target.selected) {
-        let selectedPath = String(target.value) + '///' + target.selectedPath;
         for (let i = 0; i < this.length; i++) {
           if (this[i].select === 'pick' && this[i] !== target) {
-            this[i].setSelectedPath(null);
+            this[i].setSelectedPath([]);
           }
         }
-        this.setSelectedPath(selectedPath);
+        this.setSelectedPath([target.value, ...target.selectedPath]);
       } else {
         let hasSelected = false;
         for (let i = 0; i < this.length; i++) {
@@ -69,15 +71,15 @@ export class Options extends IoNodeMixin(Array) {
             continue;
           }
         }
-        if (!hasSelected) this.setSelectedPath(null);
+        if (!hasSelected) this.setSelectedPath([]);
       }
     }
   }
-  setSelectedPath(path) {
+  setSelectedPath(path = []) {
     this.setProperties({
-      selectedRoot: path ? path.split('///')[0] : '',
-      selectedPath: path || '',
-      selectedLeaf: path ? path.split('///').slice(-2)[0] : '',
+      selectedPath: path,
+      selectedRoot: path[0] || '',
+      selectedLeaf: path[path.length - 1] || '',
     });
   }
   changed() {
@@ -87,7 +89,7 @@ export class Options extends IoNodeMixin(Array) {
 Options.Register();
 
 // TODO: test for robustness and document.
-export class Option extends IoNode {
+export class OptionItem extends IoNode {
   static get Properties() {
     return {
       value: undefined,
@@ -97,7 +99,10 @@ export class Option extends IoNode {
       action: undefined,
       select: 'pick', // 'toggle' | 'pick' | 'none'
       selected: Boolean,
-      selectedPath: String,
+      selectedPath: {
+        type: Array,
+        strict: true,
+      },
       selectedRoot: String,
       selectedLeaf: String,
       options: {
@@ -106,7 +111,6 @@ export class Option extends IoNode {
       }
     };
   }
-  
   get compose() {
     return {
       options: {'on-selectedPath-changed': this.onOptionsSelectedPathChanged},
@@ -132,47 +136,44 @@ export class Option extends IoNode {
       }
     }
     if (option.select === 'toggle' && option.options && option.options.length) {
-      console.warn('IoGUI Option: options with {select: "toggle"} cannot have suboptions!');
+      console.warn('IoGUI OptionItem: options with {select: "toggle"} cannot have suboptions!');
       option.options = new Options();
     }
-    if (typeof option.value === 'string' && option.value.search('///') != -1) {
-      console.error('IoGUI Option: option values should not contain "///" string!');
-    }
     if (option.select === 'pick' && option.options.length) {
-      option.selected = !!option.options.selectedPath;
-      option.selectedPath = option.options.selectedPath; 
+      option.selected = !!option.options.selectedPath.length;
+      option.selectedPath = [...option.options.selectedPath]; 
     }
     super(option);
     if (this.select === 'pick' && this.options.length) {
-      this.setSelectedPath(this.options.selectedPath);
+      this.setSelectedPath([...this.options.selectedPath]);
     }
   }
   get hasmore() {
     return !!(this.options.length);
   }
-  onOptionsSelectedPathChanged() {    
+  onOptionsSelectedPathChanged() {
     if (this.select === 'pick') {
-      this.setSelectedPath(this.options.selectedPath);
+      this.setSelectedPath([...this.options.selectedPath]);
     }
   }
   selectedChanged() {
     if (this.select === 'pick') {
       if (!this.selected) {
-        this.options.setSelectedPath(null);
-        this.setSelectedPath(null);
+        this.options.setSelectedPath([]);
+        this.setSelectedPath([]);
       }
     }
   }
-  setSelectedPath(path) {
+  setSelectedPath(path = []) {
     this.setProperties({
-      selected: path ? true : false,
-      selectedRoot: path ? path.split('///')[0] : '',
-      selectedPath: path || '',
-      selectedLeaf: path ? path.split('///').slice(-2)[0] : '',
+      selected: path.length ? true : false,
+      selectedPath: path ,
+      selectedRoot: path[0] || '',
+      selectedLeaf: path[path.length - 1] || '',
     });
   }
   changed() {
     this.dispatchEvent('changed');
   }
 }
-Option.Register();
+OptionItem.Register();

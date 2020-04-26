@@ -349,7 +349,7 @@ const IoNodeMixin = (superclass) => {
 const Register = function () {
   const protochain = new ProtoChain(this.prototype);
   let proto = this.prototype;
-  
+
   Object.defineProperty(proto, '__isIoNode', {value: true});
   Object.defineProperty(proto.constructor, '__isRegisteredAs', {value: proto.constructor.name});  
 

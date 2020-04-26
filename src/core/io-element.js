@@ -399,7 +399,7 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
  */
 IoElement.Register = function() {
   IoNodeMixin.Register.call(this);
-  
+
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
   Object.defineProperty(this, 'localName', {value: localName});

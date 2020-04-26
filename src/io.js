@@ -27,3 +27,4 @@ export {IoElement} from './core/io-element.js';
 export {Binding} from './core/binding.js';
 export {ProtoChain} from './core/protochain.js';
 export {ProtoProperty, ProtoProperties, Property, Properties} from './core/properties.js';
+export {Options, OptionItem} from './core/options.js';

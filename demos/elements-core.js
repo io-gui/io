@@ -1,5 +1,5 @@
-import {IoElement} from '../../io/build/io.js';
-import {IoStorageFactory as $, Options} from '../../io/build/io-elements.js';
+import {IoElement, Options} from '../../io/build/io.js';
+import {IoStorageFactory as $} from '../../io/build/io-elements.js';
 import '../../io/build/io-extras.js';
 
 const boolean = $({key: 'demo:boolean', value: false});
