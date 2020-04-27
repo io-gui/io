@@ -109,6 +109,9 @@ export class IoTests extends IoElement {
         font-size: 12px;
         margin: 0;
       }
+      :host #mocha-stats em {
+        color: var(--io-color);
+      }
       :host #mocha-stats li {
         padding: 0;
       }
