@@ -17,6 +17,7 @@ class IoOptionsDemoView extends IoElement {
         margin-left: 0.5em;
       }
       :host io-item {
+        pointer-events: none;
         margin-left: 0.5em;
       }
       :host io-item.root {
