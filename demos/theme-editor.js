@@ -18,7 +18,7 @@ export class IoDemoThemeEditor extends IoElement {
       ['io-item', {label: 'Reset Current Theme:'}],
       ['io-button', {label: 'Reset', selectable: false, action: () => IoThemeSingleton.reset() }],
       ['io-item', {label: 'Choose theme:'}],
-      ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: new Options([{value: 'light'}, {value: 'dark'}])}],
+      ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: new Options(['light', 'dark'])}],
       ['io-item', {label: 'cssSpacing'}],
       ['io-number-slider', {value: IoThemeSingleton.bind('cssSpacing'), min: 0, max: 20, step: 1}],
       ['io-item', {label: 'cssBorderRadius'}],

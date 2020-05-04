@@ -100,7 +100,7 @@ class Property {
     this.binding = protoProp.binding;
 
     if (this.binding instanceof Binding) this.value = this.binding.value;
-    else if (this.value === undefined || this.value === null) {
+    else if (this.value === undefined) {
       if (typeof this.type === 'function') {
         if (this.type === Boolean) this.value = false;
         else if (this.type === String) this.value = '';
@@ -214,10 +214,10 @@ class Properties {
       } else {
 
         if (prop.strict && prop.type && !(value instanceof prop.type)) {
-          console.error(`IoGui property runtime error: invalid type for "${key}" property!`, this.value, this.__node);
-        } else {
-          prop.value = value;
+          // console.warn(`IoGUI strict type mismatch for "${key}" property!`);
+          value = new prop.type(value);
         }
+        prop.value = value;
 
       }
 

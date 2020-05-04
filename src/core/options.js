@@ -40,7 +40,18 @@ export class Options extends IoNodeMixin(Array) {
     if (!this.selectedPath.length) {
       for (let i = 0; i < this.length; i++) {
         if (this[i].select === 'pick') {
-          this[i].setSelectedPath([]);
+          this[i].setSelectedPath(false, []);
+        }
+      }
+    } else {
+      this.setSelectedPath(this.selectedPath);
+      const selected = this.selectedPath[0];
+      for (let i = 0; i < this.length; i++) {
+        if (this[i].select === 'pick' && this[i].value === selected) {
+          const nextpath = [...this.selectedPath];
+          nextpath.shift();
+          this[i].setSelectedPath(true, nextpath);
+          return;
         }
       }
     }
@@ -59,7 +70,7 @@ export class Options extends IoNodeMixin(Array) {
       if (target.selected) {
         for (let i = 0; i < this.length; i++) {
           if (this[i].select === 'pick' && this[i] !== target) {
-            this[i].setSelectedPath([]);
+            this[i].setSelectedPath(false, []);
           }
         }
         this.setSelectedPath([target.value, ...target.selectedPath]);
@@ -81,6 +92,21 @@ export class Options extends IoNodeMixin(Array) {
       selectedRoot: path[0] || '',
       selectedLeaf: path[path.length - 1] || '',
     });
+  }
+  // TODO: test
+  selectDefault() {
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].select === 'pick') {
+        if (this[i].hasmore) {
+          const selected = this[i].options.selectDefault();
+          if (selected) return true;
+        } else {
+          this[i].setSelectedPath(true, []);
+          return true;
+        }
+      }
+    }
+    return false;
   }
   changed() {
     this.dispatchEvent('changed');
@@ -145,28 +171,31 @@ export class OptionItem extends IoNode {
     }
     super(option);
     if (this.select === 'pick' && this.options.length) {
-      this.setSelectedPath([...this.options.selectedPath]);
+      this.setSelectedPath(!!this.options.selectedPath.length, [...this.options.selectedPath]);
     }
   }
   get hasmore() {
     return !!(this.options.length);
   }
+  option(value) {
+    return this.options.option(value);
+  }
   onOptionsSelectedPathChanged() {
     if (this.select === 'pick') {
-      this.setSelectedPath([...this.options.selectedPath]);
+      this.setSelectedPath(!!this.options.selectedPath.length, [...this.options.selectedPath]);
     }
   }
   selectedChanged() {
     if (this.select === 'pick') {
       if (!this.selected) {
         this.options.setSelectedPath([]);
-        this.setSelectedPath([]);
+        this.setSelectedPath(false, []);
       }
     }
   }
-  setSelectedPath(path = []) {
+  setSelectedPath(selected, path = []) {
     this.setProperties({
-      selected: path.length ? true : false,
+      selected: selected,
       selectedPath: path ,
       selectedRoot: path[0] || '',
       selectedLeaf: path[path.length - 1] || '',

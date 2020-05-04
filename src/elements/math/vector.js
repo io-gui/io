@@ -1,5 +1,6 @@
 import {IoElement} from '../../io.js';
 
+// TODO: preserve linked scaling through zero.
 export class IoVector extends IoElement {
   static get Style() {
     return /* css */`

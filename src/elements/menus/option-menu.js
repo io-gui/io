@@ -20,6 +20,11 @@ export class IoOptionMenu extends IoElement {
     }
     :host > io-menu-item {
       margin: calc(-1 * var(--io-border-width));
+      background-color: transparent !important;
+      border-color: transparent !important;
+    }
+    :host > io-menu-item[selected] {
+      color: var(--io-color);
     }
     `;
   }
@@ -31,20 +36,23 @@ export class IoOptionMenu extends IoElement {
       options: {
         type: Options,
         reflect: -1,
-        observe: true,
+        // observe: true,
         strict: true,
       },
       role: 'button',
     };
   }
-  // get compose() {
-  //   return {
-  //     options: {selected: this.bind('value')}
-  //   };
-  // }
+  get compose() {
+    return {
+      options: {'on-selectedLeaf-changed': this._setValue}
+    };
+  }
   get _label() {
     const valueText = (this.value !== undefined) ? String(this.value) : '';
     return this.label || valueText || '';
+  }
+  _setValue(event) {
+    this.set('value', event.detail.value);
   }
   changed() {
     let valueText = '';
@@ -65,15 +73,19 @@ export class IoOptionMenu extends IoElement {
       valueText = this.icon + '  ' + valueText;
     }
 
+    // TODO: Clean up binding of value to menu model.
+    this.options.setSelectedPath([this.value]);
+    for (let i = 0; i < this.options.length; i++) {
+      const option = this.options[i];
+      if (option.value === this.value) {
+        option.selected = true;
+      }
+    }
+
     const option = new OptionItem({
       label: valueText,
       options: this.options,
     });
-    // TODO: clean up - make reactive or composed
-    for (let i = 0; i < this.options.length; i++) {
-      this.options[i].select = 'pick'; // TODO: reconsider
-    }
-    this.options.selected = this.bind('value'); // TODO: consider conpose()
 
     this.template([
       ['io-menu-item', {

@@ -6,8 +6,7 @@ body {
 
 #mocha {
   font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
-  margin: 1em;
-  position: relative;
+  margin: 60px 50px;
 }
 
 #mocha ul,
@@ -259,9 +258,9 @@ body {
 }
 
 #mocha-stats {
-  position: absolute;
-  top: -0.2em;
-  right: -0.8em;
+  position: fixed;
+  top: 15px;
+  right: 10px;
   font-size: 12px;
   margin: 0;
   color: #888;
@@ -282,19 +281,6 @@ body {
   -moz-box-shadow: none;
   box-shadow: none;
   background-color: initial;
-}
-
-#mocha-stats .passes {
-  color: #0c0;
-}
-
-#mocha-stats .failures {
-  color: #f00;
-  font-weight: bold;
-}
-
-#mocha-stats .duration {
-  display: none;
 }
 
 #mocha-stats em {
