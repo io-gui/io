@@ -12,15 +12,9 @@ export class IoMenuItem extends IoItem {
       display: flex;
       flex: 0 0 auto;
       flex-direction: row;
-      padding: var(--io-spacing);
       border-radius: 0;
-      background: none;
-      border: var(--io-border-width) solid transparent;
-      background-color: transparent;
-      border-color: transparent;
     }
     :host > * {
-      overflow: visible;
       pointer-events: none;
     }
     :host > :empty {
@@ -29,7 +23,7 @@ export class IoMenuItem extends IoItem {
     :host > :not(:empty) {
       padding: 0 var(--io-spacing);
     }
-    :host > .io-menu-icon {
+    :host > io-icon {
       width: var(--io-line-height);
       height: var(--io-line-height);
       margin-right: var(--io-spacing);
@@ -116,7 +110,7 @@ export class IoMenuItem extends IoItem {
   }
   _onClick() {
     const option = this.option;
-    if (option.hasmore) {
+    if (this.hasmore) {
       if (!this.expanded) this.expanded = true;
     } else if (option.select === 'toggle') {
       option.selected = !option.selected;
@@ -125,7 +119,11 @@ export class IoMenuItem extends IoItem {
         option.action.apply(null, [option.value]);
       }
       if (option.select === 'pick') {
-        option.selected = true;
+        if (option.hasmore && this.depth <= 0) {
+          option.options.selectDefault();
+        } else {
+          option.selected = true;
+        }
       }
       this.dispatchEvent('item-clicked', option, true);
       this.requestAnimationFrameOnce(this._collapse);
@@ -298,9 +296,9 @@ export class IoMenuItem extends IoItem {
     getRootElement(this).expanded = false;
   }
   expandedChanged() {
+    if (!this.$options) this.$options = new IoMenuOptions();
     if (this.expanded && this.depth > 0) {
 
-      if (!this.$options) this.$options = new IoMenuOptions();
       if (this.$options.parentElement !== Layer) Layer.appendChild(this.$options);
 
       const $allitems = getElementDescendants(getRootElement(this));
@@ -339,10 +337,11 @@ export class IoMenuItem extends IoItem {
   }
   changed() {
     const option = this.option;
+    const icon = this.icon || option.icon;
     this.setAttribute('selected', option.selected);
     this.setAttribute('hasmore', this.hasmore);
     this.template([
-      ['io-icon', {icon: option.icon, class: 'io-menu-icon'}],
+      icon ? ['io-icon', {icon: icon}] : null,
       ['span', {class: 'io-menu-label'}, option.label],
       ['span', {class: 'io-menu-hint'}, option.hint],
     ]);
@@ -352,7 +351,6 @@ export class IoMenuItem extends IoItem {
         depth: this.depth - 1,
         expanded: this.bind('expanded'),
         options: option.options,
-        select: option.select,
         position: this.direction,
       });
     }
