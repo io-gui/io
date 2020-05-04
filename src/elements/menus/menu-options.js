@@ -57,6 +57,10 @@ export class IoMenuOptions extends IoElement {
     :host[horizontal] > io-menu-item.io-hamburger {
       margin-left: auto;
     }
+    :host[horizontal] > io-menu-item.io-hamburger:after {
+      content: '';
+      display: none;
+    }
     :host[horizontal] > io-menu-item.io-hamburger[hidden] {
       display: inline-block;
       width: 0;
@@ -184,7 +188,7 @@ export class IoMenuOptions extends IoElement {
           overflow = true;
         }
       }
-      hamburger.option = new OptionItem({options: new Options(hamburgerOptions)});
+      // hamburger.__properties.option.value = new OptionItem({options: new Options(hamburgerOptions)});
       this.overflow = overflow;
     } else {
       for (let i = buttons.length; i--;) {
@@ -283,9 +287,13 @@ export class IoMenuOptions extends IoElement {
       elements.splice(0, 0, ...this.slotted);
       elements.push(['io-menu-item', {
         label: '\u2630',
+        icon: '\u2630',
         title: 'select tab',
         depth: this.depth + 1,
         class: 'io-hamburger',
+        option: new OptionItem({
+          options: this._options
+        }),
         lazy: false,
       }]);
     }
