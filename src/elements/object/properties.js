@@ -13,7 +13,6 @@ export class IoProperties extends IoElement {
     }
     :host[horizontal] {
       grid-auto-flow: column;
-      grid-template-rows: auto;
     }
     :host[horizontal][labeled] {
       grid-template-rows: auto auto;
@@ -22,7 +21,6 @@ export class IoProperties extends IoElement {
       grid-template-columns: auto;
     }
     :host:not([horizontal])[labeled] {
-      display: grid;
       grid-template-columns: min-content minmax(4em, 1fr);
     }
     :host > span.io-item {
@@ -32,7 +30,7 @@ export class IoProperties extends IoElement {
     :host:not([horizontal]) > * {
       max-width: 100%;
     }
-    :host > :first-child {
+    :host[labeled] > :first-child {
       grid-column: span 2;
       width: 100%;
     }
