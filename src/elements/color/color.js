@@ -242,7 +242,11 @@ export const IoColorMixin = (superclass) => {
       this._notifyValueChange();
     }
     valueChanged() {
-      let c = Object.keys(this.value);
+      const c = Object.keys(this.value);
+      if (c.length < 3 | c.length > 4) {
+        console.error('IoGUI Color: Incorrect color type', this.value);
+        return;
+      }
 
       let mode = this.mode;
       if (c.indexOf('r') !== -1) mode = 0;
