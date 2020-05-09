@@ -26,11 +26,11 @@ export class IoSelectorTabs extends IoSelector {
     return ['io-menu-options', {
       role: 'navigation',
       horizontal: true,
-      value: this.bind('selected'),
+      // value: this.bind('selected'), // TODO: Does not exist
       options: this.options,
       depth: this.depth,
       slotted: this.slotted,
-      selectable: true,
+      // selectable: true, // TODO: Does not exist
     }];
   }
 }

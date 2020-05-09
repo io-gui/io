@@ -75,6 +75,7 @@ export class IoMenuItem extends IoItem {
         value: 'bottom',
         reflect: 1,
       },
+      icon: String,
       $parent: null,
       $options: null,
       depth: Infinity,
