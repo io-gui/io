@@ -1,6 +1,6 @@
 import {IoElement} from '../io.js';
 
-import {TestNode} from './io-node.test.js';
+import {TestNode} from './node.test.js';
 
 export class TestElement extends IoElement {
   static get Properties() {
@@ -158,13 +158,13 @@ export default class {
           this.element.$.subelement.prop0 = 2;
           chai.expect(this.element.prop0).to.equal(2);
         });
-        it('should bind to IoNode node', () => {
+        it('should bind to Node node', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.subnode.prop2).to.equal(Infinity);
           this.element.subnode.prop2 = 0;
           chai.expect(this.element.prop0).to.equal(0);
         });
-        it('should disconnect binding when IoNode node is disconnected', () => {
+        it('should disconnect binding when Node node is disconnected', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.subnode.prop2).to.equal(Infinity);
           this.element.subnode.disconnect(window);

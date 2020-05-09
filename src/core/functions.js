@@ -24,7 +24,7 @@ class ProtoFunctions extends Array {
   }
   /**
    * Binds all functions to `this`.
-   * @param {IoNode} instance - Array of protochain constructors.
+   * @param {Node} instance - Array of protochain constructors.
    */
   bind(instance) {
     for (let i = this.length; i--;) {

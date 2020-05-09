@@ -1,6 +1,6 @@
-import {IoNode} from '../io.js';
+import {Node} from '../io.js';
 
-class Node extends IoNode {
+class TestNode extends Node {
   static get Properties() {
     return {
       prop1: 0,
@@ -16,7 +16,7 @@ class Node extends IoNode {
     this.prop2ChangeCounter++;
   }
 }
-Node.Register();
+TestNode.Register();
 
 const string = (object) => {
   return JSON.stringify(object);
@@ -27,13 +27,13 @@ export default class {
     describe('Binding', () => {
       describe('Binding', () => {
         it('Should initialize with source and sourceProperty', () => {
-          const node = new Node();
+          const node = new TestNode();
           const binding1 = node.bind('prop1');
           chai.expect(binding1.source).to.be.equal(node);
           chai.expect(binding1.sourceProp).to.be.equal('prop1');
         });
         it('Should set/return source prop value', () => {
-          const node = new Node();
+          const node = new TestNode();
           const binding1 = node.bind('prop1');
           node.prop1 = 1;
           chai.expect(binding1.value).to.be.equal(1);
@@ -43,19 +43,19 @@ export default class {
           chai.expect(node.prop1).to.be.equal(3);
         });
         it('Should add/remove targets and targetProps when assigned to values', () => {
-          const srcNode = new Node();
+          const srcNode = new TestNode();
           const binding1 = srcNode.bind('prop1');
           const binding2 = srcNode.bind('prop2');
 
-          const dstNode1 = new Node();
+          const dstNode1 = new TestNode();
           dstNode1.connect();
           dstNode1.prop1 = binding1;
           dstNode1.prop2 = binding2;
 
-          const dstNode2 = new Node({prop1: binding1});
+          const dstNode2 = new TestNode({prop1: binding1});
           dstNode2.connect();
 
-          const dstNode3 = new Node({prop1: binding1, prop2: binding1});
+          const dstNode3 = new TestNode({prop1: binding1, prop2: binding1});
           dstNode3.connect();
 
           chai.expect(binding1.targets[0]).to.be.equal(dstNode1);
@@ -85,19 +85,19 @@ export default class {
       });
       describe('Bindings', () => {
         it('Should return existing binding or create a new when on "bind()"', () => {
-          const node = new Node();
+          const node = new TestNode();
           const binding1 = node.bind('prop1');
           chai.expect(binding1).to.be.equal(node.__bindings.prop1);
           chai.expect(binding1).to.be.equal(node.bind('prop1'));
         });
         it('Should dispose bindings correctly', () => {
-          const node1 = new Node();
+          const node1 = new TestNode();
           const binding1 = node1.bind('prop1');
           node1.unbind('prop1');
           chai.expect(undefined).to.be.equal(node1.__bindings.prop1);
           chai.expect(binding1.prop1).to.be.equal(undefined);
 
-          const node2 = new Node();
+          const node2 = new TestNode();
           const binding2 = node2.bind('prop1');
           node2.__bindings.dispose();
           chai.expect(undefined).to.be.equal(node2.__bindings.prop1);

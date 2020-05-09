@@ -1,4 +1,4 @@
-import {IoNode, IoElement, Binding, ProtoChain, ProtoProperty, ProtoProperties, Property} from '../io.js';
+import {Node, IoElement, Binding, ProtoChain, ProtoProperty, ProtoProperties, Property} from '../io.js';
 
 const string = (object) => {
   return JSON.stringify(object);
@@ -10,7 +10,7 @@ class Object1 {
   }
 }
 
-class TestNode extends IoNode {
+class TestNode extends Node {
   static get Properties() {
     return {
       label: ''
@@ -247,7 +247,7 @@ export default class {
       describe('Properties', () => {
         it('Should correctly initialize properties from protochain', () => {
 
-          class Object1 extends IoNode {
+          class Object1 extends Node {
             static get Properties() {
               return {
                 prop1: {
@@ -356,7 +356,7 @@ export default class {
           const binding2 = new Binding(new TestNode({label: 'binding2'}), 'label');
           const binding3 = new Binding(new TestNode({label: 'binding3'}), 'label');
 
-          class Object1 extends IoNode {
+          class Object1 extends Node {
             static get Properties() {
               return {
                 prop1: binding1,
@@ -397,7 +397,7 @@ export default class {
         });
         it('Should correctly get/set properties', () => {
 
-          class TestNode extends IoNode {
+          class TestNode extends Node {
             static get Properties() {
               return {
                 prop1: {
@@ -419,7 +419,7 @@ export default class {
         });
         it('Should correctly get/set bound properties', () => {
 
-          class TestNode extends IoNode {
+          class TestNode extends Node {
             static get Properties() {
               return {
                 label: '',
@@ -431,7 +431,7 @@ export default class {
           const binding1 = new Binding(new TestNode({label: 'binding1'}), 'label');
           const binding2 = new Binding(new TestNode({label: 'binding2'}), 'label');
 
-          class TestNode2 extends IoNode {
+          class TestNode2 extends Node {
             static get Properties() {
               return {
                 prop1: binding1
@@ -477,7 +477,7 @@ export default class {
           chai.expect(element.getAttribute('label')).to.be.equal('label3');
         });
         it('Should dipatch queue on object value initialization and value set', () => {
-          class TestNode extends IoNode {
+          class TestNode extends Node {
             static get Properties() {
               return {
                 prop: Object,
@@ -532,7 +532,7 @@ export default class {
           node.prop = {};
         });
         it('Should connect/disconnect node value on initialization and value set', () => {
-          class TestNodeValue extends IoNode {
+          class TestNodeValue extends Node {
             static get Properties() {
               return {
                 prop: Object,
@@ -545,7 +545,7 @@ export default class {
           }
           TestNodeValue.Register();
 
-          class TestNode extends IoNode {
+          class TestNode extends Node {
             static get Properties() {
               return {
                 prop: TestNodeValue

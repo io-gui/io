@@ -10,7 +10,7 @@ Stay in touch on [Twitter](https://twitter.com/io_gui_js).
 
 ### Core UI library
 
-The core library includes the most basic classes such as [IoNode](#doc=core-classes#IoNode) and [IoElement](#doc=core-classes#IoElement) for buliding custom elements with minimal boilerplate. It also provides data binding, reactive functions and event-based data synchronization.
+The core library includes the most basic classes such as [Node](#doc=core-classes#Node) and [IoElement](#doc=core-classes#IoElement) for buliding custom elements with minimal boilerplate. It also provides data binding, reactive functions and event-based data synchronization.
 
 ### Design System
 

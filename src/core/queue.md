@@ -2,9 +2,9 @@
 
 Property change queue manager responsible for dispatching change events and triggering change handler functions.
 
-### Queue(node: `IoNode`)
+### Queue(node: `Node`)
 
-Creates queue manager for the specified `IoNode` instance.
+Creates queue manager for the specified `Node` instance.
 
 ### .queue(prop: `string`, value: `*`, oldValue: `*`)
 

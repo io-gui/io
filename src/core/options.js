@@ -1,8 +1,8 @@
-import {IoNode, IoNodeMixin} from './io-node.js';
+import {Node, NodeMixin} from './node.js';
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
-export class Options extends IoNodeMixin(Array) {
+export class Options extends NodeMixin(Array) {
   static get Properties() {
     return {
       selectedPath: {
@@ -115,7 +115,7 @@ export class Options extends IoNodeMixin(Array) {
 Options.Register();
 
 // TODO: test for robustness and document.
-export class OptionItem extends IoNode {
+export class OptionItem extends Node {
   static get Properties() {
     return {
       value: undefined,

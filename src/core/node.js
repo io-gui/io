@@ -6,11 +6,11 @@ import {ProtoProperties, Properties} from './properties.js';
 import {ProtoListeners, Listeners} from './listeners.js';
 
 /**
- * Core mixin for `IoNode` classes.
+ * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
- * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
+ * @return {function} - Extended class constructor with `NodeMixin` applied to it.
  */
-const IoNodeMixin = (superclass) => {
+const NodeMixin = (superclass) => {
   const classConstructor = class extends superclass {
     static get Properties() {
       return {
@@ -18,92 +18,202 @@ const IoNodeMixin = (superclass) => {
       };
     }
     /**
-     * Creates `IoNode` instance and initializes internals.
-     * @param {Object} initProps - Property values to inialize instance with.
+     * `compose` object lets you reactively assign property values to other object's properties.
+     * For example, you can assign `this.value` property to the `this.objectProp.result` property.
+     *
+     * ```
+     * get compose () {
+     *   return {
+     *     objectProp: {result: this.value}
+     *   };
+     *  }
+     * ```
+     *
+     * Node class does not use `compose` by itself but this feature is available to its sublasses.
+     */
+    get compose () {
+      return null;
+    }
+     /**
+     * Creates a class instance and initializes the internals.
+     * @param {Object} initProps - Initial property values.
      */
     constructor(initProps = {}, ...args) {
       super(...args);
 
       const constructor = this.__proto__.constructor;
-      if (constructor.__isRegisteredAs !== constructor.name) {
-        console.error(`${constructor.name}: Not registered! Call "Register()" before using ${constructor.name} class!`);
+      if (constructor.__registeredAs !== constructor.name) {
+        console.error(`${constructor.name} not registered! Call "Register()" before using ${constructor.name} class!`);
       }
 
       this.__protoFunctions.bind(this);
 
-      Object.defineProperty(this, '__bindings', {value: new Bindings(this)});
-      Object.defineProperty(this, '__queue', {value: new Queue(this)});
+      Object.defineProperty(this, '__bindings', {enumerable: false, value: new Bindings(this)});
+      Object.defineProperty(this, '__queue', {enumerable: false, value: new Queue(this)});
+      Object.defineProperty(this, '__listeners', {enumerable: false, value: new Listeners(this, this.__protoListeners)});
+      Object.defineProperty(this, '__properties', {enumerable: false, value: new Properties(this, this.__protoProperties)});
 
-      Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
-
-      Object.defineProperty(this, '__isConnected', {enumerable: false, writable: true});
-      Object.defineProperty(this, '__connections', {enumerable: false, value: []});
-
-      Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
-
-      Object.defineProperty(this, 'objectMutated', {value: this.objectMutated.bind(this)});
-      Object.defineProperty(this, 'objectMutatedThrottled', {value: this.objectMutatedThrottled.bind(this)});
-      Object.defineProperty(this, 'queueDispatchLazy', {value: this.queueDispatchLazy.bind(this)});
+      Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
+      Object.defineProperty(this, 'objectMutatedThrottled', {enumerable: false, value: this.objectMutatedThrottled.bind(this)});
+      Object.defineProperty(this, 'queueDispatchLazy', {enumerable: false, value: this.queueDispatchLazy.bind(this)});
+      
+      Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
+      if (!this.__proto__.__isIoElement) {
+        Object.defineProperty(this, '__connections', {enumerable: false, value: []});
+      }
 
       this.setProperties(initProps);
-      // TODO: consider auto-connect
     }
     /**
-     * Connects IoNode to the application.
-     * @param {IoNode} owner - Node to connect to.
+     * Connects the instance to another node or element.
+     * @param {Node} node - Node to connect to.
      */
-    connect(owner) {
-      if (this.__connections.indexOf(owner) === -1) {
-        this.__connections.push(owner);
-        if (!this.__isConnected) this.connectedCallback();
+    connect(node) {
+      debug:
+      if (this.__isIoElement) {
+        console.error('"connect()" function is not intended for DOM Elements!');
+        return;
       }
+      debug:
+      if (this.__connections.indexOf(node) !== -1) {
+        console.warn('Node already connected to node');
+        return;
+      }
+      this.__connections.push(node);
+      if (!this.__connected) this.connectedCallback();
     }
     /**
-     * Disconnects IoNode from the application.
-     * @param {IoNode} owner - Node to disconnect from.
+     * Disconnects the instance from an another node or element.
+     * @param {Node} node - Node to disconnect from.
      */
-    disconnect(owner) {
-      if (this.__connections.indexOf(owner) !== -1) {
-        this.__connections.splice(this.__connections.indexOf(owner), 1);
+    disconnect(node) {
+      debug:
+      if (this.__isIoElement) {
+        console.error('"disconnect()" function is not intended for DOM Elements!');
+        return;
       }
-      if (this.__connections.length === 0 && this.__isConnected) {
+      debug:
+      if (this.__connections.indexOf(node) === -1) {
+        console.error('Node not connected to node');
+        return;
+      }
+      this.__connections.splice(this.__connections.indexOf(node), 1);
+      if (this.__connections.length === 0 && this.__connected) {
         this.disconnectedCallback();
       }
     }
     /**
-     * Handler function with `event.preventDefault()`.
-     * @param {Object} event - Event object.
+     * Connected callback.
      */
-    preventDefault(event) {
-      event.preventDefault();
+    connectedCallback() {
+      this.__connected = true;
+      this.__listeners.connect();
+      this.__properties.connect();
+      if (this.__observedObjects.length) {
+        window.addEventListener('object-mutated', this.objectMutated);
+      }
+      this.queueDispatch();
     }
     /**
-     * Handler function with `event.stopPropagation()`.
-     * @param {Object} event - Event object.
+     * Disconnected callback.
      */
-    stopPropagation(event) {
-      event.stopPropagation();
+    disconnectedCallback() {
+      this.__connected = false;
+      this.__listeners.disconnect();
+      this.__properties.disconnect();
+      if (this.__observedObjects.length) {
+        window.removeEventListener('object-mutated', this.objectMutated);
+      }
+    }
+    /**
+     * Disposes all internals.
+     * Use this when instance is no longer needed.
+     */
+    dispose() {
+      this.__connected = false;
+      this.__connections.length = 0;
+      this.__queue.dispose();
+      this.__bindings.dispose();
+      this.__listeners.dispose();
+      this.__properties.dispose();
+      if (this.__observedObjects.length) {
+        window.removeEventListener('object-mutated', this.objectMutated);
+      }
     }
     /**
      * default change handler.
+     * Invoked when one of the properties change.
      */
     changed() {}
     /**
-     * Applies compose object on change.
+     * sets composed properties and invokes `changed()` function on change.
      */
-    applyCompose() {
-      // TODO: Test and documentation.
-      const compose = this.compose;
-      if (compose) {
-        for (let prop in compose) {
-          this[prop].setProperties(compose[prop]);
+    dispatchChange() {
+      // TODO: test compose
+      if (this.compose) {
+        for (let prop in this.compose) {
+          debug:
+          if (!this.__properties[prop] || typeof this.__properties[prop].value !== 'object') {
+            console.error(`Composed property ${prop} is not a Node or an object.`);
+            continue;
+          }
+          const object = this.__properties[prop].value;
+          if (object.__isNode) {
+            object.setProperties(this.compose[prop]);
+          } else {
+            for (let p in this.compose[prop]) {
+              object[p] = this.compose[prop][p];
+            }
+          }
+        }
+      }
+      this.changed();
+    }
+    /**
+     * Adds property change to the queue.
+     * @param {string} prop - Property name.
+     * @param {*} value - Property value.
+     * @param {*} oldValue - Old property value.
+     */
+    queue(prop, value, oldValue) {
+      this.__queue.queue(prop, value, oldValue);
+    }
+    /**
+     * Dispatches the queue.
+     */
+    queueDispatch() {
+      if (this.lazy) {
+        preThrottleQueue.push(this.queueDispatchLazy);
+        this.throttle(this.queueDispatchLazy);
+      } else {
+        this.__queue.dispatch();
+      }
+    }
+    queueDispatchLazy() {
+      this.__queue.dispatch();
+    }
+    objectMutated(event) {
+      for (let i = this.__observedObjects.length; i--;) {
+        const prop = this.__observedObjects[i];
+        const value = this.__properties[prop].value;
+        if (value === event.detail.object) {
+          this.throttle(this.objectMutatedThrottled, prop);
+          return;
+        } else if (event.detail.objects && event.detail.objects.indexOf(value) !== -1) {
+          this.throttle(this.objectMutatedThrottled, prop);
+          return;
         }
       }
     }
-    dispatchChange() {
-      this.applyCompose();
-      this.changed();
-      if (this.setAria) this.setAria();
+    /**
+     * This function is called when `object-mutated` event is observed
+     * and changed object is a property of the node.
+     * @param {string} prop - Mutated object property name.
+     */
+    objectMutatedThrottled(prop) {
+      if (this['propMutated']) this['propMutated'](prop);
+      if (this[prop + 'Mutated']) this[prop + 'Mutated']();
+      this.dispatchChange();
     }
     /**
      * Returns a binding to a specified property`.
@@ -114,7 +224,7 @@ const IoNodeMixin = (superclass) => {
       if (this.__properties[prop]) {
         return this.__bindings.bind(prop);
       } else {
-        console.warn(`IoGUI IoNode: cannot bind to ${prop} property. Does not exist!`);
+        console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
       }
     }
     /**
@@ -151,63 +261,7 @@ const IoNodeMixin = (superclass) => {
         this.__properties.set(p, props[p], true);
       }
       this.__listeners.setPropListeners(props, this);
-      if (this.__isConnected) this.queueDispatch();
-    }
-    objectMutated(event) {
-      for (let i = this.__observedProps.length; i--;) {
-        const prop = this.__observedProps[i];
-        const value = this.__properties[prop].value;
-        if (value === event.detail.object) {
-          this.throttle(this.objectMutatedThrottled, prop);
-          return;
-        } else if (event.detail.objects && event.detail.objects.indexOf(value) !== -1) {
-          this.throttle(this.objectMutatedThrottled, prop);
-          return;
-        }
-      }
-    }
-    /**
-     * This function is called when `object-mutated` event is observed
-     * and changed object is a property of the node.
-     * @param {string} prop - Mutated object property name.
-     */
-    objectMutatedThrottled(prop) {
-      if (this['propMutated']) this['propMutated'](prop);
-      if (this[prop + 'Mutated']) this[prop + 'Mutated']();
-      this.dispatchChange();
-    }
-    /**
-     * Callback when `IoNode` is connected.
-     */
-    connectedCallback() {
-      this.__isConnected = true;
-      this.__listeners.connect();
-      this.__properties.connect();
-      if (this.__observedProps.length) {
-        window.addEventListener('object-mutated', this.objectMutated);
-      }
-      this.queueDispatch();
-    }
-    /**
-     * Callback when `IoNode` is disconnected.
-     */
-    disconnectedCallback() {
-      this.__isConnected = false;
-      this.__listeners.disconnect();
-      this.__properties.disconnect();
-      if (this.__observedProps.length) {
-        window.removeEventListener('object-mutated', this.objectMutated);
-      }
-    }
-    /**
-     * Disposes all internals.
-     * Use this when node is no longer needed.
-     */
-    dispose() {
-      this.__queue.dispose();
-      this.__bindings.dispose();
-      this.__listeners.dispose();
-      this.__properties.dispose();
+      if (this.__connected) this.queueDispatch();
     }
     /**
      * Wrapper for addEventListener.
@@ -236,33 +290,10 @@ const IoNodeMixin = (superclass) => {
      * @param {string} type - event name to dispatch.
      * @param {Object} detail - event detail.
      * @param {boolean} bubbles - event bubbles.
-     * @param {HTMLElement|IoNode} src source node/element to dispatch event from.
+     * @param {HTMLElement|Node} src source node/element to dispatch event from.
      */
     dispatchEvent(type, detail, bubbles = false, src) {
       this.__listeners.dispatchEvent(type, detail, bubbles, src);
-    }
-    /**
-     * Adds property change to the queue.
-     * @param {string} prop - Property name.
-     * @param {*} value - Property value.
-     * @param {*} oldValue - Old property value.
-     */
-    queue(prop, value, oldValue) {
-      this.__queue.queue(prop, value, oldValue);
-    }
-    /**
-     * Dispatches the queue.
-     */
-    queueDispatch() {
-      if (this.lazy) {
-        preThrottleQueue.push(this.queueDispatchLazy);
-        this.throttle(this.queueDispatchLazy);
-      } else {
-        this.__queue.dispatch();
-      }
-    }
-    queueDispatchLazy() {
-      this.__queue.dispatch();
     }
     /**
      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
@@ -338,6 +369,20 @@ const IoNodeMixin = (superclass) => {
         }
       });
     }
+    /**
+     * Handler function with `event.preventDefault()`.
+     * @param {Object} event - Event object.
+     */
+    preventDefault(event) {
+      event.preventDefault();
+    }
+    /**
+     * Handler function with `event.stopPropagation()`.
+     * @param {Object} event - Event object.
+     */
+    stopPropagation(event) {
+      event.stopPropagation();
+    }
   };
   classConstructor.Register = Register;
   return classConstructor;
@@ -350,8 +395,8 @@ const Register = function () {
   const protochain = new ProtoChain(this.prototype);
   let proto = this.prototype;
 
-  Object.defineProperty(proto, '__isIoNode', {value: true});
-  Object.defineProperty(proto.constructor, '__isRegisteredAs', {value: proto.constructor.name});  
+  Object.defineProperty(proto, '__isNode', {value: true});
+  Object.defineProperty(proto.constructor, '__registeredAs', {value: proto.constructor.name});  
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
 
@@ -359,9 +404,9 @@ const Register = function () {
   Object.defineProperty(proto, '__protoProperties', {value: new ProtoProperties(protochain)});
   Object.defineProperty(proto, '__protoListeners', {value: new ProtoListeners(protochain)});
 
-  Object.defineProperty(proto, '__observedProps', {value: []});
+  Object.defineProperty(proto, '__observedObjects', {value: []});
   for (let p in proto.__protoProperties) {
-    if (proto.__protoProperties[p].observe) proto.__observedProps.push(p);
+    if (proto.__protoProperties[p].observe) proto.__observedObjects.push(p);
   }
 
   for (let p in proto.__protoProperties) {
@@ -378,14 +423,14 @@ const Register = function () {
   }
 };
 
-IoNodeMixin.Register = Register;
+NodeMixin.Register = Register;
 
 /**
- * IoNodeMixin applied to `Object` class.
+ * NodeMixin applied to `Object` class.
  */
-class IoNode extends IoNodeMixin(Object) {}
+class Node extends NodeMixin(Object) {}
 
-IoNode.Register();
+Node.Register();
 
 const IMPORTED_PATHS = {};
 
@@ -423,4 +468,4 @@ function requestAnimationFrameOnce(func) {
 }
 
 
-export {IoNode, IoNodeMixin};
+export {Node, NodeMixin};

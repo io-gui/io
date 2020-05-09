@@ -10,7 +10,7 @@ Creates a collection of all listeners from protochain.
 
 Manager of listeners for a class **instance**.
 
-### Listeners(node: `IoNode`, protoListeners: `ProtoListeners`)
+### Listeners(node: `Node`, protoListeners: `ProtoListeners`)
 
 Creates manager for listener.
 

@@ -24,7 +24,7 @@ export default class {
       dispatchChange(){
         scope.changeCounter++;
       },
-      __isConnected: true
+      _connected: true
     };
     this.queue = new Queue(this.fakeNode);
   }

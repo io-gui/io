@@ -4,7 +4,7 @@
 class Binding {
   /**
    * Creates a binding object with specified `sourceNode` and `sourceProp`.
-   * @param {IoNode} sourceNode - Source node.
+   * @param {Node} sourceNode - Source node.
    * @param {string} sourceProp - Source property.
    */
   constructor(sourceNode, sourceProp) {
@@ -24,7 +24,7 @@ class Binding {
   }
   /**
    * Adds a target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
-   * @param {IoNode} targetNode - Target node.
+   * @param {Node} targetNode - Target node.
    * @param {string} targetProp - Target property.
    */
   addTarget(targetNode, targetProp) {
@@ -49,7 +49,7 @@ class Binding {
   /**
    * Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
    * If `targetProp` is not specified, it removes all target properties.
-   * @param {IoNode} targetNode - Target node.
+   * @param {Node} targetNode - Target node.
    * @param {string} targetProp - Target property.
    */
   removeTarget(targetNode, targetProp) {
@@ -73,14 +73,14 @@ class Binding {
   /**
    * Event handler that updates source property when one of the targets emits `[prop]-changed` event.
    * @param {Object} event - Event object.
-   * @param {IoNode} event.target - Event target (source node that emitted the event).
+   * @param {Node} event.target - Event target (source node that emitted the event).
    * @param {Object} event.detail - Event detail.
    * @param {*} event.detail.value - New value.
    */
   _onTargetChanged(event) {
     if (this.targets.indexOf(event.target) === -1) {
       console.error(
-        `Io: _onTargetChanged() should never fire when target is removed from binding.
+        `_onTargetChanged() should never fire when target is removed from binding.
         Please file an issue at https://github.com/arodic/io/issues.`
       );
       return;
@@ -96,14 +96,14 @@ class Binding {
   /**
    * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
    * @param {Object} event - Event object.
-   * @param {IoNode} event.target - Event target (source node that emitted the event).
+   * @param {Node} event.target - Event target (source node that emitted the event).
    * @param {Object} event.detail - Event detail.
    * @param {*} event.detail.value - New value.
    */
   _onSourceChanged(event) {
     if (event.target != this.source) {
       console.error(
-        `Io: _onSourceChanged() should always originate form source node.
+        `_onSourceChanged() should always originate form source node.
         Please file an issue at https://github.com/arodic/io/issues.`
       );
       return;
@@ -141,15 +141,15 @@ class Binding {
 }
 
 /**
- * Manager for `IoNode` property bindings. It holds all bindings for a particular IoNode.
+ * Manager for `Node` property bindings. It holds all bindings for a particular Node.
  */
 class Bindings {
   /**
    * Creates binding manager with a node reference.
-   * @param {IoNode} node - Reference to the node.
+   * @param {Node} node - Reference to the node.
    */
   constructor(node) {
-    Object.defineProperty(this, '__node', {value: node, configurable: true});
+    Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
   }
   /**
    * Returns a binding to the specified property name or creates one if it does not exist.

@@ -1,9 +1,9 @@
-import {IoNode} from '../io.js';
+import {Node} from '../io.js';
 
 if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
 if (!('PushManager' in window)) { console.warn('No Push API Support!'); }
 
-export class IoServiceLoader extends IoNode {
+export class IoServiceLoader extends Node {
   static get Properties() {
     return {
       path: 'service.js',

@@ -20,14 +20,14 @@ class ProtoListeners {
 class Listeners {
   /**
    * Creates manager for listener.
-   * @param {IoNode} node - Reference to the node/element itself.
+   * @param {Node} node - Reference to the node/element itself.
    * @param {ProtoListeners} protoListeners - Collection of all listeners defined in the protochain.
    */
   constructor(node, protoListeners) {
     Object.defineProperty(this, 'node', {value: node});
     Object.defineProperty(this, 'propListeners', {value: {}});
     Object.defineProperty(this, 'activeListeners', {value: {}});
-    Object.defineProperty(this, '__isConnected', {writable: true});
+    Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
     for (let prop in protoListeners) this[prop] = protoListeners[prop];
   }
   /**
@@ -53,7 +53,7 @@ class Listeners {
         }
       }
       listeners[l] = newListeners[l];
-      if (this.__isConnected) {
+      if (this.__connected) {
         if (newListeners[l] instanceof Array) {
           const listener = typeof newListeners[l][0] === 'function' ? newListeners[l][0] : node[newListeners[l][0]];
           node.addEventListener(l, listener, newListeners[l][1]);
@@ -68,7 +68,7 @@ class Listeners {
    * Connects all event listeners.
    */
   connect() {
-    this.__isConnected = true;
+    this.__connected = true;
     const node = this.node;
     const listeners = this.propListeners;
     for (let l in this) {
@@ -92,7 +92,7 @@ class Listeners {
    * Disconnects all event listeners.
    */
   disconnect() {
-    this.__isConnected = false;
+    this.__connected = false;
     const node = this.node;
     const listeners = this.propListeners;
     for (let l in this) {
@@ -165,7 +165,7 @@ class Listeners {
    * @param {string} type - event name to dispatch.
    * @param {Object} detail - event detail.
    * @param {boolean} bubbles - event bubbles.
-   * @param {HTMLElement|IoNode} src source node/element to dispatch event from.
+   * @param {HTMLElement|Node} src source node/element to dispatch event from.
    */
   dispatchEvent(type, detail = {}, bubbles = true, src = this.node) {
     if (src instanceof HTMLElement || src === window) {

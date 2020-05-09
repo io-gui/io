@@ -145,34 +145,43 @@ export class IoSlider extends IoGl {
     this.set('value', Number(x.toFixed(5)));
   }
   _onKeydown(event) {
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      if (!event.shiftKey) this.focusTo('left');
-      else this._setDecrease();
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      if (!event.shiftKey) this.focusTo('up');
-      else this._setIncrease();
-    } else if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      if (!event.shiftKey) this.focusTo('right');
-      else this._setIncrease();
-    } else if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      if (!event.shiftKey) this.focusTo('down');
-      else this._setDecrease();
-    } else if (event.key === 'PageUp' || event.key === '+') {
-      event.preventDefault();
-      this._setIncrease();
-    } else if (event.key === 'PageDown' || event.key === '-') {
-      event.preventDefault();
-      this._setDecrease();
-    } else if (event.key === 'Home') {
-      event.preventDefault();
-      this._setMin();
-    } else if (event.key === 'PageDown') {
-      event.preventDefault();
-      this._setMax();
+    switch (event.key) {
+      case 'ArrowLeft':
+        event.preventDefault();
+        if (!event.shiftKey) this.focusTo('left');
+        else this._setDecrease();
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        if (!event.shiftKey) this.focusTo('up');
+        else this._setIncrease();
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        if (!event.shiftKey) this.focusTo('right');
+        else this._setIncrease();
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        if (!event.shiftKey) this.focusTo('down');
+        else this._setDecrease();
+        break;
+      case 'PageUp':
+      case '+':
+        event.preventDefault();
+        this._setIncrease();
+        break;
+      case 'PageDown':
+      case '-':
+        event.preventDefault();
+        this._setDecrease();
+        break;
+      case 'Home':
+        event.preventDefault();
+        this._setMin();
+        break;
+      default:
+        break;
     }
   }
   // TODO: round to step

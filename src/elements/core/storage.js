@@ -1,4 +1,4 @@
-import {IoNode} from '../../io.js';
+import {Node} from '../../io.js';
 
 // TODO: test different value types
 
@@ -131,7 +131,7 @@ const setHashes = function(force) {
 self.addEventListener('hashchange', getHashes, false);
 getHashes();
 
-class IoStorage extends IoNode {
+class IoStorage extends Node {
   static get Properties() {
     return {
       key: String,
