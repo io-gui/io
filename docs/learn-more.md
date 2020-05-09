@@ -173,7 +173,7 @@ Keep in mind that this only works with Io properties. In other words, binding to
 this.template([['child-element', {value: this.bind('value')}]]);
 ```
 
-You can also use `this.bind()` outside template or bind to `IoNode` objects.
+You can also use `this.bind()` outside template or bind to `Node` objects.
 
 ```javascript
 let myNode = new MyNode({value: this.bind('value')});

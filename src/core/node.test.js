@@ -1,6 +1,6 @@
-import {IoNode, Binding} from '../io.js';
+import {Node, Binding} from '../io.js';
 
-export class TestNode extends IoNode {
+export class TestNode extends Node {
   static get Properties() {
     return {
       prop0: {
@@ -81,7 +81,7 @@ export default class {
     this._prop3ChangePayload = null;
   }
   run() {
-    describe('IoNode', () => {
+    describe('Node', () => {
       describe('Initialized object', () => {
         it('should have correct property defaults', () => {
           chai.expect(this.node.prop0).to.be.equal('');

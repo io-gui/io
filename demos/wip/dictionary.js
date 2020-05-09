@@ -1,6 +1,6 @@
-import {IoNode} from '../../build.io.js';
+import {Node} from '../../build.io.js';
 
-class DictionaryItem extends IoNode {
+class DictionaryItem extends Node {
   static get Properties() {
     return {
       key: null,
@@ -18,7 +18,7 @@ class DictionaryItem extends IoNode {
 }
 DictionaryItem.Register();
 
-class Dictionary extends IoNode {
+class Dictionary extends Node {
   static get Properties() {
     return {
       valueStore: Object,

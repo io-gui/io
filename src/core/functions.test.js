@@ -1,10 +1,10 @@
-import {IoNode} from '../io.js';
+import {Node} from '../io.js';
 
 const string = (object) => {
   return JSON.stringify(object);
 };
 
-class Node1 extends IoNode {
+class Node1 extends Node {
   function1() {}
   onFunction1() {}
   _function1() {}

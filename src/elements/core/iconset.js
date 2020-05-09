@@ -1,8 +1,8 @@
-import {IoNode} from '../../io.js';
+import {Node} from '../../io.js';
 
 const IoIconsetDB = {};
 
-class IoIconset extends IoNode {
+class IoIconset extends Node {
   registerIcons(name, svg) {
     const stagingElement = document.createElement('div');
     stagingElement.innerHTML = svg;

@@ -1,11 +1,11 @@
-import {IoNodeMixin} from './io-node.js';
+import {NodeMixin} from './node.js';
 import {Listeners} from './listeners.js';
 import {buildTree} from '../../lib/ijk.js';
 
 /**
  * Core `IoElement` class.
  */
-class IoElement extends IoNodeMixin(HTMLElement) {
+class IoElement extends NodeMixin(HTMLElement) {
   static get Style() {
     return /* css */`
     :host[hidden] {
@@ -394,7 +394,7 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
  * Register function for `IoElement`. Registers custom element.
  */
 IoElement.Register = function() {
-  IoNodeMixin.Register.call(this);
+  NodeMixin.Register.call(this);
 
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 

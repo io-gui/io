@@ -149,8 +149,8 @@ class ProtoProperties {
  */
 class Properties {
   /**
-   * Creates the properties for specified `IoNode`.
-   * @param {IoNode} node - Owner instance of `IoNode`.
+   * Creates the properties for specified `Node`.
+   * @param {Node} node - Owner instance of `Node`.
    * @param {ProtoProperties} protoProps - Configuration object.
    */
   constructor(node, protoProps) {
@@ -166,7 +166,7 @@ class Properties {
         // TODO: document special handling of object and node values
         if (typeof value === 'object') {
           node.queue(prop, value, undefined);
-          if (value.__isIoNode && node.__isConnected) value.connect(node);
+          if (value.__isNode && node.__isConnected) value.connect(node);
         } else if (this[prop].reflect >= 1 && node.__isIoElement) {
           // TODO: figure out how to resolve bi-directionsl reflection when attributes are set in html (role, etc...)
           node.setAttribute(prop, value);
@@ -221,8 +221,8 @@ class Properties {
 
       }
 
-      if (value && value.__isIoNode) value.connect(node);
-      if (oldValue && oldValue.__isIoNode) oldValue.disconnect(node);
+      if (value && value.__isNode) value.connect(node);
+      if (oldValue && oldValue.__isNode) oldValue.disconnect(node);
 
       if (prop.notify && oldValue !== value) {
         node.queue(key, value, oldValue);
@@ -236,7 +236,7 @@ class Properties {
 
   }
   /**
-   * Connects all property bindings and `IoNode` properties.
+   * Connects all property bindings and `Node` properties.
    */
   connect() {
     for (let i = this.__keys.length; i--;) {
@@ -245,13 +245,13 @@ class Properties {
         this[p].binding.addTarget(this.__node, p);
       }
       // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
-      if (this[p].value && this[p].value.__isIoNode && !this[p].value.__isIoElement) {
+      if (this[p].value && this[p].value.__isNode && !this[p].value.__isIoElement) {
         this[p].value.connect(this.__node);
       }
     }
   }
   /**
-   * Disconnects all property bindings and `IoNode` properties.
+   * Disconnects all property bindings and `Node` properties.
    */
   disconnect() {
     for (let i = this.__keys.length; i--;) {
@@ -260,13 +260,13 @@ class Properties {
         this[p].binding.removeTarget(this.__node, p);
       }
       // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
-      if (this[p].value && this[p].value.__isIoNode && !this[p].value.__isIoElement) {
+      if (this[p].value && this[p].value.__isNode && !this[p].value.__isIoElement) {
         this[p].value.disconnect(this.__node);
       }
     }
   }
   /**
-   * Disconnects all property bindings and `IoNode` properties.
+   * Disconnects all property bindings and `Node` properties.
    * Use this when properties are no loner needed.
    */
   dispose() {

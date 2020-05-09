@@ -20,7 +20,7 @@ class ProtoListeners {
 class Listeners {
   /**
    * Creates manager for listener.
-   * @param {IoNode} node - Reference to the node/element itself.
+   * @param {Node} node - Reference to the node/element itself.
    * @param {ProtoListeners} protoListeners - Collection of all listeners defined in the protochain.
    */
   constructor(node, protoListeners) {
@@ -165,7 +165,7 @@ class Listeners {
    * @param {string} type - event name to dispatch.
    * @param {Object} detail - event detail.
    * @param {boolean} bubbles - event bubbles.
-   * @param {HTMLElement|IoNode} src source node/element to dispatch event from.
+   * @param {HTMLElement|Node} src source node/element to dispatch event from.
    */
   dispatchEvent(type, detail = {}, bubbles = true, src = this.node) {
     if (src instanceof HTMLElement || src === window) {

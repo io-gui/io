@@ -1,18 +1,18 @@
-### .IoNodeMixin(superclass: `function`) : function
+### .NodeMixin(superclass: `function`) : function
 
-Core mixin for `IoNode` classes.
+Core mixin for `Node` classes.
 
 ### classConstructor(initProps: `Object`)
 
-Creates `IoNode` instance and initializes internals.
+Creates `Node` instance and initializes internals.
 
-### .connect(owner: `IoNode`)
+### .connect(owner: `Node`)
 
-Connects IoNode to the application.
+Connects Node to the application.
 
-### .disconnect(owner: `IoNode`)
+### .disconnect(owner: `Node`)
 
-Disconnects IoNode from the application.
+Disconnects Node from the application.
 
 ### .preventDefault(event: `Object`)
 
@@ -55,11 +55,11 @@ and changed object is a property of the node.
 
 ### .connectedCallback()
 
-Callback when `IoNode` is connected.
+Callback when `Node` is connected.
 
 ### .disconnectedCallback()
 
-Callback when `IoNode` is disconnected.
+Callback when `Node` is disconnected.
 
 ### .dispose()
 
@@ -94,7 +94,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 Register function to be called once per class.
 
-## IoNode
+## Node
 
-IoNodeMixin applied to `Object` class.
+NodeMixin applied to `Object` class.
 

@@ -3,7 +3,7 @@ import {IoElement} from './io.js';
 import '../lib/mocha.js';
 import '../lib/chai.js';
 
-import Node from './core/io-node.test.js';
+import Node from './core/node.test.js';
 import Element from './core/io-element.test.js';
 
 import Binding from './core/binding.test.js';

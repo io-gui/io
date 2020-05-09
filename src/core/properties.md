@@ -30,9 +30,9 @@ Creates the property configuration object and copies values from `ProtoProperty`
 Collection of all property configurations and values for a class **instance** compied from corresponding `ProtoProperties`.
 It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
 
-### Properties(node: `IoNode`, protoProps: `ProtoProperties`)
+### Properties(node: `Node`, protoProps: `ProtoProperties`)
 
-Creates the properties for specified `IoNode`.
+Creates the properties for specified `Node`.
 
 ### .get(key: `string`) : *
 
@@ -44,14 +44,14 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 ### .connect()
 
-Connects all property bindings and `IoNode` properties.
+Connects all property bindings and `Node` properties.
 
 ### .disconnect()
 
-Disconnects all property bindings and `IoNode` properties.
+Disconnects all property bindings and `Node` properties.
 
 ### .dispose()
 
-Disconnects all property bindings and `IoNode` properties.
+Disconnects all property bindings and `Node` properties.
 Use this when properties are no loner needed.
 

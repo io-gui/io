@@ -3,8 +3,8 @@
  */
 class Queue {
   /**
-   * Creates queue manager for the specified `IoNode` instance.
-   * @param {IoNode} node - Reference to the owner node/element.
+   * Creates queue manager for the specified `Node` instance.
+   * @param {Node} node - Reference to the owner node/element.
    */
   constructor(node) {
     Object.defineProperty(this, '__array', {value: new Array(), configurable: true});

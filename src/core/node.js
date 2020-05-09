@@ -6,11 +6,11 @@ import {ProtoProperties, Properties} from './properties.js';
 import {ProtoListeners, Listeners} from './listeners.js';
 
 /**
- * Core mixin for `IoNode` classes.
+ * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
- * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
+ * @return {function} - Extended class constructor with `NodeMixin` applied to it.
  */
-const IoNodeMixin = (superclass) => {
+const NodeMixin = (superclass) => {
   const classConstructor = class extends superclass {
     static get Properties() {
       return {
@@ -18,7 +18,7 @@ const IoNodeMixin = (superclass) => {
       };
     }
     /**
-     * Creates `IoNode` instance and initializes internals.
+     * Creates `Node` instance and initializes internals.
      * @param {Object} initProps - Property values to inialize instance with.
      */
     constructor(initProps = {}, ...args) {
@@ -49,8 +49,8 @@ const IoNodeMixin = (superclass) => {
       // TODO: consider auto-connect
     }
     /**
-     * Connects IoNode to the application.
-     * @param {IoNode} owner - Node to connect to.
+     * Connects Node to the application.
+     * @param {Node} owner - Node to connect to.
      */
     connect(owner) {
       if (this.__connections.indexOf(owner) === -1) {
@@ -59,8 +59,8 @@ const IoNodeMixin = (superclass) => {
       }
     }
     /**
-     * Disconnects IoNode from the application.
-     * @param {IoNode} owner - Node to disconnect from.
+     * Disconnects Node from the application.
+     * @param {Node} owner - Node to disconnect from.
      */
     disconnect(owner) {
       if (this.__connections.indexOf(owner) !== -1) {
@@ -114,7 +114,7 @@ const IoNodeMixin = (superclass) => {
       if (this.__properties[prop]) {
         return this.__bindings.bind(prop);
       } else {
-        console.warn(`IoGUI IoNode: cannot bind to ${prop} property. Does not exist!`);
+        console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
       }
     }
     /**
@@ -177,7 +177,7 @@ const IoNodeMixin = (superclass) => {
       this.dispatchChange();
     }
     /**
-     * Callback when `IoNode` is connected.
+     * Callback when `Node` is connected.
      */
     connectedCallback() {
       this.__isConnected = true;
@@ -189,7 +189,7 @@ const IoNodeMixin = (superclass) => {
       this.queueDispatch();
     }
     /**
-     * Callback when `IoNode` is disconnected.
+     * Callback when `Node` is disconnected.
      */
     disconnectedCallback() {
       this.__isConnected = false;
@@ -236,7 +236,7 @@ const IoNodeMixin = (superclass) => {
      * @param {string} type - event name to dispatch.
      * @param {Object} detail - event detail.
      * @param {boolean} bubbles - event bubbles.
-     * @param {HTMLElement|IoNode} src source node/element to dispatch event from.
+     * @param {HTMLElement|Node} src source node/element to dispatch event from.
      */
     dispatchEvent(type, detail, bubbles = false, src) {
       this.__listeners.dispatchEvent(type, detail, bubbles, src);
@@ -350,7 +350,7 @@ const Register = function () {
   const protochain = new ProtoChain(this.prototype);
   let proto = this.prototype;
 
-  Object.defineProperty(proto, '__isIoNode', {value: true});
+  Object.defineProperty(proto, '__isNode', {value: true});
   Object.defineProperty(proto.constructor, '__isRegisteredAs', {value: proto.constructor.name});  
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
@@ -378,14 +378,14 @@ const Register = function () {
   }
 };
 
-IoNodeMixin.Register = Register;
+NodeMixin.Register = Register;
 
 /**
- * IoNodeMixin applied to `Object` class.
+ * NodeMixin applied to `Object` class.
  */
-class IoNode extends IoNodeMixin(Object) {}
+class Node extends NodeMixin(Object) {}
 
-IoNode.Register();
+Node.Register();
 
 const IMPORTED_PATHS = {};
 
@@ -423,4 +423,4 @@ function requestAnimationFrameOnce(func) {
 }
 
 
-export {IoNode, IoNodeMixin};
+export {Node, NodeMixin};
