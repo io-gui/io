@@ -1,4 +1,5 @@
 import path from 'path';
+import strip from '@rollup/plugin-strip';
 
 function html() {
   return {
@@ -44,7 +45,14 @@ function makeTarget(src, target) {
   externals.push(path.resolve(src));
   return {
     input: src,
-    plugins: [html(), svg()],
+    plugins: [
+      html(),
+      svg(),
+      strip({
+        debugger: false,
+        labels: ['debug']
+      })
+    ],
     inlineDynamicImports: true,
     output: [
       {
