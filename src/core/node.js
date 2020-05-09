@@ -15,6 +15,11 @@ const NodeMixin = (superclass) => {
     static get Properties() {
       return {
         lazy: Boolean,
+        // TODO: implement import as property.
+        // import: {
+        //   type: String,
+        //   reflect: -1,
+        // },
       };
     }
     /**
@@ -55,6 +60,7 @@ const NodeMixin = (superclass) => {
 
       Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
       Object.defineProperty(this, 'objectMutatedThrottled', {enumerable: false, value: this.objectMutatedThrottled.bind(this)});
+      Object.defineProperty(this, 'queueDispatch', {enumerable: false, value: this.queueDispatch.bind(this)});
       Object.defineProperty(this, 'queueDispatchLazy', {enumerable: false, value: this.queueDispatchLazy.bind(this)});
       
       Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
@@ -94,7 +100,7 @@ const NodeMixin = (superclass) => {
       }
       debug:
       if (this.__connections.indexOf(node) === -1) {
-        console.error('Node not connected to node');
+        console.error('Node not connected to:', node);
         return;
       }
       this.__connections.splice(this.__connections.indexOf(node), 1);
@@ -189,11 +195,21 @@ const NodeMixin = (superclass) => {
         this.__queue.dispatch();
       }
     }
+    /**
+     * Dispatches the queue in the next rAF cycle.
+     */
     queueDispatchLazy() {
       this.__queue.dispatch();
     }
+    /**
+     * Event handler for 'object-mutated' event emitted from the `window`.
+     * Node should be listening for this event if it has an object property
+     * with `observe: true` configuration.
+     * @param {Object} event - Event payload.
+     * @param {Object} event.detail.object - Mutated object.
+     */
     objectMutated(event) {
-      for (let i = this.__observedObjects.length; i--;) {
+      for (let i = 0; i < this.__observedObjects.length; i++) {
         const prop = this.__observedObjects[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
@@ -206,8 +222,8 @@ const NodeMixin = (superclass) => {
       }
     }
     /**
-     * This function is called when `object-mutated` event is observed
-     * and changed object is a property of the node.
+     * This function is called after `objectMutated()` determines that one of
+     * the object properties has mutated.
      * @param {string} prop - Mutated object property name.
      */
     objectMutatedThrottled(prop) {
@@ -221,11 +237,12 @@ const NodeMixin = (superclass) => {
      * @return {Binding} Binding object.
      */
     bind(prop) {
-      if (this.__properties[prop]) {
-        return this.__bindings.bind(prop);
-      } else {
+      debug:
+      if (!this.__properties[prop]) {
         console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
+        return;
       }
+      return this.__bindings.bind(prop);
     }
     /**
      * Unbinds a binding to a specified property`.
@@ -257,7 +274,13 @@ const NodeMixin = (superclass) => {
      */
     setProperties(props) {
       for (let p in props) {
-        if (this.__properties[p] === undefined) continue;
+        if (this.__properties[p] === undefined) {
+          debug:
+          if (!p.startsWith('on-') && p !== 'import') {
+            console.warn(`Property "${p}" is not defined`, this);
+          }
+          continue;
+        }
         this.__properties.set(p, props[p], true);
       }
       this.__listeners.setPropListeners(props, this);
@@ -270,8 +293,9 @@ const NodeMixin = (superclass) => {
      * @param {Object} options - event listener options.
      */
     addEventListener(type, listener, options) {
+      debug:
       if (typeof listener !== 'function') {
-        console.warn(`Io ${this.constructor.name} "${type}" listener handler is not a function`);
+        console.warn(`${this.constructor.name}.${type}() is not a function`, this);
         return;
       }
       this.__listeners.addEventListener(type, listener, options);

@@ -43,6 +43,14 @@ class IoElement extends NodeMixin(HTMLElement) {
         type: String,
         reflect: 1,
       },
+      name: {
+        type: String,
+        reflect: 1,
+      },
+      title: {
+        type: String,
+        reflect: 1,
+      },
       id: {
         type: String,
         reflect: -1,
