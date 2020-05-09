@@ -32,7 +32,7 @@ class Queue {
    */
   dispatch() {
     if (this._dispatchInProgress === true) return;
-    if (!this.__node.__isConnected) return;
+    if (!this.__node.__connected) return;
     this._dispatchInProgress = true;
 
     const node = this.__node;

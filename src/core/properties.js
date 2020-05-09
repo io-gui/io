@@ -155,6 +155,7 @@ class Properties {
    */
   constructor(node, protoProps) {
     Object.defineProperty(this, '__node', {value: node, configurable: true});
+    Object.defineProperty(this, '__connected', {value: false, enumerable: false, writable: true});
     for (let prop in protoProps) {
       Object.defineProperty(this, prop, {
         value: new Property(protoProps[prop]),
@@ -166,7 +167,7 @@ class Properties {
         // TODO: document special handling of object and node values
         if (typeof value === 'object') {
           node.queue(prop, value, undefined);
-          if (value.__isNode && node.__isConnected) value.connect(node);
+          if (value.__isNode && node.__connected) value.connect(node);
         } else if (this[prop].reflect >= 1 && node.__isIoElement) {
           // TODO: figure out how to resolve bi-directionsl reflection when attributes are set in html (role, etc...)
           node.setAttribute(prop, value);
@@ -175,7 +176,7 @@ class Properties {
       const binding = this[prop].binding;
       if (binding) binding.addTarget(node, prop);
     }
-    Object.defineProperty(this, '__keys', {value: Object.getOwnPropertyNames(this), configurable: true});
+    Object.defineProperty(this, '__keys', {value: Object.keys(this), configurable: true});
   }
   /**
    * Returns the property value.
@@ -221,12 +222,12 @@ class Properties {
 
       }
 
-      if (value && value.__isNode) value.connect(node);
-      if (oldValue && oldValue.__isNode) oldValue.disconnect(node);
+      if (value && value.__isNode && !value.__isIoElement) value.connect(node);
+      if (oldValue && oldValue.__isNode && oldValue.__connected && !oldValue.__isIoElement) oldValue.disconnect(node);
 
       if (prop.notify && oldValue !== value) {
         node.queue(key, value, oldValue);
-        if (node.__isConnected && !skipDispatch) {
+        if (node.__connected && !skipDispatch) {
           node.queueDispatch();
         }
       }
@@ -239,13 +240,14 @@ class Properties {
    * Connects all property bindings and `Node` properties.
    */
   connect() {
+    this.__connected = true;
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];
       if (this[p].binding) {
         this[p].binding.addTarget(this.__node, p);
       }
       // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
-      if (this[p].value && this[p].value.__isNode && !this[p].value.__isIoElement) {
+      if (this[p].value && this[p].value.__isNode && !this[p].value.__connected && !this[p].value.__isIoElement) {
         this[p].value.connect(this.__node);
       }
     }
@@ -254,6 +256,7 @@ class Properties {
    * Disconnects all property bindings and `Node` properties.
    */
   disconnect() {
+    this.__connected = false;
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];
       if (this[p].binding) {
