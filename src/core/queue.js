@@ -7,8 +7,8 @@ class Queue {
    * @param {Node} node - Reference to the owner node/element.
    */
   constructor(node) {
-    Object.defineProperty(this, '__array', {value: new Array(), configurable: true});
-    Object.defineProperty(this, '__node', {value: node, configurable: true});
+    Object.defineProperty(this, '__array', {enumerable: false, configurable: true, value: new Array()});
+    Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
   }
   /**
    * Adds property change to the queue by specifying property name, previous and the new value.

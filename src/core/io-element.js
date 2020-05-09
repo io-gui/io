@@ -186,7 +186,7 @@ class IoElement extends NodeMixin(HTMLElement) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
           this.flattenTextNode(children[i]);
-          children[i]._textNode.nodeValue = String(vChildren[i].children);
+          children[i].__textNode.nodeValue = String(vChildren[i].children);
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
           this.traverse(vChildren[i].children, children[i]);
@@ -207,22 +207,22 @@ class IoElement extends NodeMixin(HTMLElement) {
       element.innerHTML = '';
       element.appendChild(document.createTextNode(''));
     }
-    element._textNode = element.childNodes[0];
+    element.__textNode = element.childNodes[0];
     if (element.childNodes.length > 1) {
       const textContent = element.textContent;
       for (let i = element.childNodes.length; i--;) {
         if (i !== 0) element.removeChild(element.childNodes[i]);
       }
-      element._textNode.nodeValue = textContent;
+      element.__textNode.nodeValue = textContent;
     }
   }
   get textNode() {
     this.flattenTextNode(this);
-    return this._textNode.nodeValue;
+    return this.__textNode.nodeValue;
   }
   set textNode(value) {
     this.flattenTextNode(this);
-    this._textNode.nodeValue = String(value);
+    this.__textNode.nodeValue = String(value);
   }
   setProperties(props) {
     super.setProperties(props);
@@ -401,8 +401,8 @@ IoElement.Register = function() {
   Object.defineProperty(this, 'localName', {value: localName});
   Object.defineProperty(this.prototype, 'localName', {value: localName});
 
-  Object.defineProperty(this, '__isIoElement', {value: true});
-  Object.defineProperty(this.prototype, '__isIoElement', {value: true});
+  Object.defineProperty(this, '__isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(this.prototype, '__isIoElement', {enumerable: false, value: true});
 
   if (window.customElements !== undefined) {
     window.customElements.define(localName, this);

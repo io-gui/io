@@ -64,7 +64,7 @@ export class IoNumber extends IoItem {
   }
   constructor(props) {
     super(props);
-    Object.defineProperty(this, '_pointer', {value: 'touch', writable: true});
+    Object.defineProperty(this, '_pointer', {enumerable: false, writable: true, value: 'touch'});
   }
   _onPointerdown(event) {
     if (this._pointer === 'touch') event.preventDefault();

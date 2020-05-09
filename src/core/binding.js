@@ -149,7 +149,7 @@ class Bindings {
    * @param {Node} node - Reference to the node.
    */
   constructor(node) {
-    Object.defineProperty(this, '__node', {value: node, configurable: true});
+    Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
   }
   /**
    * Returns a binding to the specified property name or creates one if it does not exist.

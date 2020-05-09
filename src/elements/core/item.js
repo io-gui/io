@@ -38,8 +38,8 @@ export class IoItem extends IoElement {
   }
   constructor(props) {
     super(props);
-    Object.defineProperty(this, '_textNode', {value: document.createTextNode(''), writable: true});
-    this.appendChild(this._textNode);
+    Object.defineProperty(this, '__textNode', {enumerable: false, writable: true, value: document.createTextNode('')});
+    this.appendChild(this.__textNode);
   }
   disconnectedCallback() {
     super.disconnectedCallback();

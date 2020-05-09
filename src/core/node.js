@@ -31,16 +31,16 @@ const NodeMixin = (superclass) => {
 
       this.__protoFunctions.bind(this);
 
-      Object.defineProperty(this, '__bindings', {value: new Bindings(this)});
-      Object.defineProperty(this, '__queue', {value: new Queue(this)});
-      Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
-      Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
+      Object.defineProperty(this, '__bindings', {enumerable: false, value: new Bindings(this)});
+      Object.defineProperty(this, '__queue', {enumerable: false, value: new Queue(this)});
+      Object.defineProperty(this, '__listeners', {enumerable: false, value: new Listeners(this, this.__protoListeners)});
+      Object.defineProperty(this, '__properties', {enumerable: false, value: new Properties(this, this.__protoProperties)});
 
-      Object.defineProperty(this, 'objectMutated', {value: this.objectMutated.bind(this)});
-      Object.defineProperty(this, 'objectMutatedThrottled', {value: this.objectMutatedThrottled.bind(this)});
-      Object.defineProperty(this, 'queueDispatchLazy', {value: this.queueDispatchLazy.bind(this)});
+      Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
+      Object.defineProperty(this, 'objectMutatedThrottled', {enumerable: false, value: this.objectMutatedThrottled.bind(this)});
+      Object.defineProperty(this, 'queueDispatchLazy', {enumerable: false, value: this.queueDispatchLazy.bind(this)});
       
-      Object.defineProperty(this, '__connected', {value: false, enumerable: false, writable: true});
+      Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
       if (!this.__proto__.__isIoElement) {
         Object.defineProperty(this, '__connections', {enumerable: false, value: []});
       }

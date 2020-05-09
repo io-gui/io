@@ -154,8 +154,8 @@ class Properties {
    * @param {ProtoProperties} protoProps - Configuration object.
    */
   constructor(node, protoProps) {
-    Object.defineProperty(this, '__node', {value: node, configurable: true});
-    Object.defineProperty(this, '__connected', {value: false, enumerable: false, writable: true});
+    Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
+    Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
     for (let prop in protoProps) {
       Object.defineProperty(this, prop, {
         value: new Property(protoProps[prop]),
@@ -176,7 +176,7 @@ class Properties {
       const binding = this[prop].binding;
       if (binding) binding.addTarget(node, prop);
     }
-    Object.defineProperty(this, '__keys', {value: Object.keys(this), configurable: true});
+    Object.defineProperty(this, '__keys', {enumerable: false, configurable: true, value: Object.keys(this)});
   }
   /**
    * Returns the property value.
