@@ -273,6 +273,7 @@ class Properties {
    * Use this when properties are no loner needed.
    */
   dispose() {
+    this.disconnect();
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];
       if (this[p].binding) {

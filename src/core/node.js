@@ -18,6 +18,23 @@ const NodeMixin = (superclass) => {
       };
     }
     /**
+     * `compose` object lets you reactively assign property values to other object's properties.
+     * For example, you can assign `this.value` property to the `this.objectProp.result` property.
+     *
+     * ```
+     * get compose () {
+     *   return {
+     *     objectProp: {result: this.value}
+     *   };
+     *  }
+     * ```
+     *
+     * Node class does not use `compose` by itself but this feature is available to its sublasses.
+     */
+    get compose () {
+      return null;
+    }
+     /**
      * Creates a class instance and initializes the internals.
      * @param {Object} initProps - Initial property values.
      */
@@ -113,6 +130,8 @@ const NodeMixin = (superclass) => {
      * Use this when instance is no longer needed.
      */
     dispose() {
+      this.__connected = false;
+      this.__connections.length = 0;
       this.__queue.dispose();
       this.__bindings.dispose();
       this.__listeners.dispose();
@@ -123,24 +142,78 @@ const NodeMixin = (superclass) => {
     }
     /**
      * default change handler.
+     * Invoked when one of the properties change.
      */
     changed() {}
     /**
-     * Applies compose object on change.
+     * sets composed properties and invokes `changed()` function on change.
      */
-    applyCompose() {
-      // TODO: Test and documentation.
-      const compose = this.compose;
-      if (compose) {
-        for (let prop in compose) {
-          this[prop].setProperties(compose[prop]);
+    dispatchChange() {
+      // TODO: test compose
+      if (this.compose) {
+        for (let prop in this.compose) {
+          debug:
+          if (!this.__properties[prop] || typeof this.__properties[prop].value !== 'object') {
+            console.error(`Composed property ${prop} is not a Node or an object.`);
+            continue;
+          }
+          const object = this.__properties[prop].value;
+          if (object.__isNode) {
+            object.setProperties(this.compose[prop]);
+          } else {
+            for (let p in this.compose[prop]) {
+              object[p] = this.compose[prop][p];
+            }
+          }
+        }
+      }
+      this.changed();
+    }
+    /**
+     * Adds property change to the queue.
+     * @param {string} prop - Property name.
+     * @param {*} value - Property value.
+     * @param {*} oldValue - Old property value.
+     */
+    queue(prop, value, oldValue) {
+      this.__queue.queue(prop, value, oldValue);
+    }
+    /**
+     * Dispatches the queue.
+     */
+    queueDispatch() {
+      if (this.lazy) {
+        preThrottleQueue.push(this.queueDispatchLazy);
+        this.throttle(this.queueDispatchLazy);
+      } else {
+        this.__queue.dispatch();
+      }
+    }
+    queueDispatchLazy() {
+      this.__queue.dispatch();
+    }
+    objectMutated(event) {
+      for (let i = this.__observedObjects.length; i--;) {
+        const prop = this.__observedObjects[i];
+        const value = this.__properties[prop].value;
+        if (value === event.detail.object) {
+          this.throttle(this.objectMutatedThrottled, prop);
+          return;
+        } else if (event.detail.objects && event.detail.objects.indexOf(value) !== -1) {
+          this.throttle(this.objectMutatedThrottled, prop);
+          return;
         }
       }
     }
-    dispatchChange() {
-      this.applyCompose();
-      this.changed();
-      if (this.setAria) this.setAria();
+    /**
+     * This function is called when `object-mutated` event is observed
+     * and changed object is a property of the node.
+     * @param {string} prop - Mutated object property name.
+     */
+    objectMutatedThrottled(prop) {
+      if (this['propMutated']) this['propMutated'](prop);
+      if (this[prop + 'Mutated']) this[prop + 'Mutated']();
+      this.dispatchChange();
     }
     /**
      * Returns a binding to a specified property`.
@@ -190,29 +263,6 @@ const NodeMixin = (superclass) => {
       this.__listeners.setPropListeners(props, this);
       if (this.__connected) this.queueDispatch();
     }
-    objectMutated(event) {
-      for (let i = this.__observedObjects.length; i--;) {
-        const prop = this.__observedObjects[i];
-        const value = this.__properties[prop].value;
-        if (value === event.detail.object) {
-          this.throttle(this.objectMutatedThrottled, prop);
-          return;
-        } else if (event.detail.objects && event.detail.objects.indexOf(value) !== -1) {
-          this.throttle(this.objectMutatedThrottled, prop);
-          return;
-        }
-      }
-    }
-    /**
-     * This function is called when `object-mutated` event is observed
-     * and changed object is a property of the node.
-     * @param {string} prop - Mutated object property name.
-     */
-    objectMutatedThrottled(prop) {
-      if (this['propMutated']) this['propMutated'](prop);
-      if (this[prop + 'Mutated']) this[prop + 'Mutated']();
-      this.dispatchChange();
-    }
     /**
      * Wrapper for addEventListener.
      * @param {string} type - listener name.
@@ -244,29 +294,6 @@ const NodeMixin = (superclass) => {
      */
     dispatchEvent(type, detail, bubbles = false, src) {
       this.__listeners.dispatchEvent(type, detail, bubbles, src);
-    }
-    /**
-     * Adds property change to the queue.
-     * @param {string} prop - Property name.
-     * @param {*} value - Property value.
-     * @param {*} oldValue - Old property value.
-     */
-    queue(prop, value, oldValue) {
-      this.__queue.queue(prop, value, oldValue);
-    }
-    /**
-     * Dispatches the queue.
-     */
-    queueDispatch() {
-      if (this.lazy) {
-        preThrottleQueue.push(this.queueDispatchLazy);
-        this.throttle(this.queueDispatchLazy);
-      } else {
-        this.__queue.dispatch();
-      }
-    }
-    queueDispatchLazy() {
-      this.__queue.dispatch();
     }
     /**
      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.

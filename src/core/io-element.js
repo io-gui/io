@@ -246,6 +246,10 @@ class IoElement extends NodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
+  dispatchChange() {
+    super.dispatchChange();
+    this.setAria();
+  }
   /**
    * Sets aria attributes.
    */

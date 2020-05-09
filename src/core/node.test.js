@@ -84,67 +84,82 @@ export default class {
     describe('Node', () => {
       describe('Lifecycle check', () => {
         it('should have lifecycle functions defined', () => {
-          chai.expect(this.node.connect).to.be.a('function');
-          chai.expect(this.node.disconnect).to.be.a('function');
-          chai.expect(this.node.connectedCallback).to.be.a('function');
-          chai.expect(this.node.disconnectedCallback).to.be.a('function');
-          chai.expect(this.node.dispose).to.be.a('function');
+          const node = new Node();
+          node.connect(window);
+          chai.expect(node.connect).to.be.a('function');
+          chai.expect(node.disconnect).to.be.a('function');
+          chai.expect(node.connectedCallback).to.be.a('function');
+          chai.expect(node.disconnectedCallback).to.be.a('function');
+          chai.expect(node.dispose).to.be.a('function');
+          node.dispose();
         });
         it('should account connections correctly', () => {
-          chai.expect(this.node.__connected).to.be.equal(true);
-          this.node.connect(document);
-          chai.expect(this.node.__listeners.__connected).to.be.equal(true);
-          chai.expect(this.node.__properties.__connected).to.be.equal(true);
-          chai.expect(this.node.__connected).to.be.equal(true);
-          chai.expect(this.node.__connections).to.be.deep.equal([window, document]);
-          this.node.disconnect(window);
-          chai.expect(this.node.__listeners.__connected).to.be.equal(true);
-          chai.expect(this.node.__properties.__connected).to.be.equal(true);
-          chai.expect(this.node.__connected).to.be.equal(true);
-          chai.expect(this.node.__connections).to.be.deep.equal([document]);
-          this.node.disconnect(document);
-          chai.expect(this.node.__connected).to.be.equal(false);
-          chai.expect(this.node.__listeners.__connected).to.be.equal(false);
-          chai.expect(this.node.__properties.__connected).to.be.equal(false);
-          chai.expect(this.node.__connections).to.be.deep.equal([]);
-          this.node.connect(window);
-          chai.expect(this.node.__listeners.__connected).to.be.equal(true);
-          chai.expect(this.node.__properties.__connected).to.be.equal(true);
-          chai.expect(this.node.__connected).to.be.equal(true);
-          chai.expect(this.node.__connections).to.be.deep.equal([window]);
+          const node = new Node();
+          node.connect(window);
+          chai.expect(node.__connected).to.be.equal(true);
+          node.connect(document);
+          chai.expect(node.__listeners.__connected).to.be.equal(true);
+          chai.expect(node.__properties.__connected).to.be.equal(true);
+          chai.expect(node.__connected).to.be.equal(true);
+          chai.expect(node.__connections).to.be.deep.equal([window, document]);
+          node.disconnect(window);
+          chai.expect(node.__listeners.__connected).to.be.equal(true);
+          chai.expect(node.__properties.__connected).to.be.equal(true);
+          chai.expect(node.__connected).to.be.equal(true);
+          chai.expect(node.__connections).to.be.deep.equal([document]);
+          node.disconnect(document);
+          chai.expect(node.__connected).to.be.equal(false);
+          chai.expect(node.__listeners.__connected).to.be.equal(false);
+          chai.expect(node.__properties.__connected).to.be.equal(false);
+          chai.expect(node.__connections).to.be.deep.equal([]);
+          node.connect(window);
+          chai.expect(node.__listeners.__connected).to.be.equal(true);
+          chai.expect(node.__properties.__connected).to.be.equal(true);
+          chai.expect(node.__connected).to.be.equal(true);
+          chai.expect(node.__connections).to.be.deep.equal([window]);
+          node.dispose();
+          chai.expect(node.__connected).to.be.equal(false);
+          chai.expect(node.__listeners.__connected).to.be.equal(false);
+          chai.expect(node.__properties.__connected).to.be.equal(false);
+          chai.expect(node.__connections).to.be.deep.equal([]);
+        });
+      });
+      describe('Reactivity check', () => {
+        it('should have change handler functions defined', () => {
+          const node = new Node();
+          chai.expect(node.changed).to.be.a('function');
+          node.dispose();
         });
       });
       describe('Initialized object', () => {
         it('should have core API defined', () => {
+          const node = new Node();
+          chai.expect(node.dispatchChange).to.be.a('function');
           // Data-binding function
-          chai.expect(this.node.bind).to.be.a('function');
-          // Built-in property change handlers
-          chai.expect(this.node.changed).to.be.a('function');
-          chai.expect(this.node.applyCompose).to.be.a('function');
-          chai.expect(this.node.dispatchChange).to.be.a('function');
-          //
-          chai.expect(this.node.bind).to.be.a('function');
-          chai.expect(this.node.unbind).to.be.a('function');
+          chai.expect(node.bind).to.be.a('function');
+          chai.expect(node.unbind).to.be.a('function');
           // Property setters
-          chai.expect(this.node.set).to.be.a('function');
-          chai.expect(this.node.setProperties).to.be.a('function');
-          chai.expect(this.node.objectMutated).to.be.a('function');
-          chai.expect(this.node.objectMutatedThrottled).to.be.a('function');
+          chai.expect(node.set).to.be.a('function');
+          chai.expect(node.setProperties).to.be.a('function');
+          chai.expect(node.objectMutated).to.be.a('function');
+          chai.expect(node.objectMutatedThrottled).to.be.a('function');
           // Event-related functions
-          chai.expect(this.node.addEventListener).to.be.a('function');
-          chai.expect(this.node.removeEventListener).to.be.a('function');
-          chai.expect(this.node.dispatchEvent).to.be.a('function');
-          chai.expect(this.node.queue).to.be.a('function');
-          chai.expect(this.node.queueDispatch).to.be.a('function');
-          chai.expect(this.node.queueDispatchLazy).to.be.a('function');
+          chai.expect(node.addEventListener).to.be.a('function');
+          chai.expect(node.removeEventListener).to.be.a('function');
+          chai.expect(node.dispatchEvent).to.be.a('function');
+          chai.expect(node.queue).to.be.a('function');
+          chai.expect(node.queueDispatch).to.be.a('function');
+          chai.expect(node.queueDispatchLazy).to.be.a('function');
           // TODO: fully test core API
-          chai.expect(this.node.throttle).to.be.a('function');
-          chai.expect(this.node.requestAnimationFrameOnce).to.be.a('function');
-          chai.expect(this.node.filterObject).to.be.a('function');
-          chai.expect(this.node.filterObjects).to.be.a('function');
-          chai.expect(this.node.import).to.be.a('function');
-          chai.expect(this.node.preventDefault).to.be.a('function');
-          chai.expect(this.node.stopPropagation).to.be.a('function');
+          chai.expect(node.throttle).to.be.a('function');
+          chai.expect(node.requestAnimationFrameOnce).to.be.a('function');
+          // Utility functions
+          chai.expect(node.filterObject).to.be.a('function');
+          chai.expect(node.filterObjects).to.be.a('function');
+          chai.expect(node.import).to.be.a('function');
+          chai.expect(node.preventDefault).to.be.a('function');
+          chai.expect(node.stopPropagation).to.be.a('function');
+          node.dispose();
         });
         it('should have correct property defaults', () => {
           chai.expect(this.node.prop0).to.be.equal('');
