@@ -50,10 +50,10 @@ const menuoptions = new Options([
 export class IoDemoElementsMenus extends IoElement {
   static get Style() {
     return /* css */`
-      io-menu-options[horizontal] {
+      :host > io-menu-options[horizontal] {
         margin-bottom: 0.5em;
       }
-      io-menu-options:not([horizontal]) {
+      :host > io-menu-options:not([horizontal]) {
         margin-right: 0.5em;
       }
     `;
