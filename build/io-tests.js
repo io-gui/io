@@ -1,4 +1,4 @@
-import { IoNode, Binding as Binding$1, IoElement, ProtoProperty, Property, ProtoChain as ProtoChain$1, ProtoProperties } from './io.js';
+import { Node as Node$1, Binding as Binding$1, IoElement, ProtoProperty, Property, ProtoChain as ProtoChain$1, ProtoProperties } from './io.js';
 import { IoItem, IoContent, IoGl, IoThemeSingleton, IoButton, IoBoolean, IoBoolicon, IoIconsetSingleton, IoSwitch, IoString, IoNumber, IoSlider, IoSliderRange, IoNumberSlider, IoNumberSliderRange, IoIcon, IoLayerSingleton } from './io-elements.js';
 
 /* eslint-disable */
@@ -364,7 +364,6 @@ function display(runner) {
  * @param {Error} err - Why notification didn't happen.
  */
 function notPermitted(err) {
-  console.error('notification error:', err.message);
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
@@ -1596,17 +1595,9 @@ Mocha.prototype.reporter = function(reporter, reporterOptions) {
           } catch (_err) {
             _err.code !== 'MODULE_NOT_FOUND' ||
             _err.message.indexOf('Cannot find module') !== -1
-              ? console.warn(sQuote(reporter) + ' reporter not found')
-              : console.warn(
-                  sQuote(reporter) +
-                    ' reporter blew up with error:\n' +
-                    err.stack
-                );
+              ? void 0
+              : void 0;
           }
-        } else {
-          console.warn(
-            sQuote(reporter) + ' reporter blew up with error:\n' + err.stack
-          );
         }
       }
     }
@@ -1919,7 +1910,6 @@ Mocha.prototype.growl = function() {
     var detail = process.browser
       ? 'notification support not available in this browser...'
       : 'notification support prerequisites not installed...';
-    console.error(detail + ' cannot enable!');
   }
   return this;
 };
@@ -7992,7 +7982,6 @@ function emitWarning(msg, type) {
     process.emitWarning(msg, type);
   } else {
     process.nextTick(function() {
-      console.warn(type + ': ' + msg);
     });
   }
 }
@@ -8433,11 +8422,7 @@ function BrowserStdout(opts) {
 
 BrowserStdout.prototype._write = function(chunks, encoding, cb) {
   var output = chunks.toString ? chunks.toString() : chunks;
-  if (this.label === false) {
-    console.log(output);
-  } else {
-    console.log(this.label+':', output);
-  }
+  if (this.label === false) ;
   process.nextTick(cb);
 };
 
@@ -8474,12 +8459,7 @@ exports.kMaxLength = K_MAX_LENGTH;
 Buffer.TYPED_ARRAY_SUPPORT = typedArraySupport();
 
 if (!Buffer.TYPED_ARRAY_SUPPORT && typeof console !== 'undefined' &&
-    typeof console.error === 'function') {
-  console.error(
-    'This browser lacks typed array (Uint8Array) support which is required by ' +
-    '`buffer` v5.x. Use `buffer` v4.x if you require old browser support.'
-  );
-}
+    typeof console.error === 'function') ;
 
 function typedArraySupport () {
   // Can typed array instances can be augmented?
@@ -12895,9 +12875,6 @@ function _addListener(target, type, listener, prepend) {
         w.emitter = target;
         w.type = type;
         w.count = existing.length;
-        if (typeof console === 'object' && console.warn) {
-          console.warn('%s: %s', w.name, w.message);
-        }
       }
     }
   }
@@ -17232,11 +17209,7 @@ function deprecate (fn, msg) {
     if (!warned) {
       if (config('throwDeprecation')) {
         throw new Error(msg);
-      } else if (config('traceDeprecation')) {
-        console.trace(msg);
-      } else {
-        console.warn(msg);
-      }
+      } else if (config('traceDeprecation')) ;
       warned = true;
     }
     return fn.apply(this, arguments);
@@ -17356,11 +17329,7 @@ exports.deprecate = function(fn, msg) {
     if (!warned) {
       if (process.throwDeprecation) {
         throw new Error(msg);
-      } else if (process.traceDeprecation) {
-        console.trace(msg);
-      } else {
-        console.error(msg);
-      }
+      } else if (process.traceDeprecation) ;
       warned = true;
     }
     return fn.apply(this, arguments);
@@ -17381,7 +17350,6 @@ exports.debuglog = function(set) {
       var pid = process.pid;
       debugs[set] = function() {
         var msg = exports.format.apply(exports, arguments);
-        console.error('%s %d: %s', set, pid, msg);
       };
     } else {
       debugs[set] = function() {};
@@ -17805,27 +17773,8 @@ function objectToString(o) {
 }
 
 
-function pad(n) {
-  return n < 10 ? '0' + n.toString(10) : n.toString(10);
-}
-
-
-var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-              'Oct', 'Nov', 'Dec'];
-
-// 26 Feb 16:19:34
-function timestamp() {
-  var d = new Date();
-  var time = [pad(d.getHours()),
-              pad(d.getMinutes()),
-              pad(d.getSeconds())].join(':');
-  return [d.getDate(), months[d.getMonth()], time].join(' ');
-}
-
-
 // log is just a thin wrapper to console.log that prepends a timestamp
 exports.log = function() {
-  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
 };
 
 
@@ -18042,22 +17991,18 @@ module.exports={
   
     Object.defineProperty(Assertion, 'includeStack', {
       get: function() {
-        console.warn('Assertion.includeStack is deprecated, use chai.config.includeStack instead.');
         return config.includeStack;
       },
       set: function(value) {
-        console.warn('Assertion.includeStack is deprecated, use chai.config.includeStack instead.');
         config.includeStack = value;
       }
     });
   
     Object.defineProperty(Assertion, 'showDiff', {
       get: function() {
-        console.warn('Assertion.showDiff is deprecated, use chai.config.showDiff instead.');
         return config.showDiff;
       },
       set: function(value) {
-        console.warn('Assertion.showDiff is deprecated, use chai.config.showDiff instead.');
         config.showDiff = value;
       }
     });
@@ -28727,7 +28672,7 @@ module.exports={
   },{}]},{},[1])(1);
   });
 
-class TestNode extends IoNode {
+class TestNode extends Node$1 {
   static get Properties() {
     return {
       prop0: {
@@ -28808,35 +28753,91 @@ class Node {
     this._prop3ChangePayload = null;
   }
   run() {
-    describe('IoNode', () => {
+    describe('Node', () => {
+      describe('Lifecycle check', () => {
+        it('should have lifecycle functions defined', () => {
+          const node = new Node$1();
+          node.connect(window);
+          chai.expect(node.connect).to.be.a('function');
+          chai.expect(node.disconnect).to.be.a('function');
+          chai.expect(node.connectedCallback).to.be.a('function');
+          chai.expect(node.disconnectedCallback).to.be.a('function');
+          chai.expect(node.dispose).to.be.a('function');
+          node.dispose();
+        });
+        it('should account connections correctly', () => {
+          const node = new Node$1();
+          node.connect(window);
+          chai.expect(node.__connected).to.be.equal(true);
+          node.connect(document);
+          chai.expect(node.__listeners.__connected).to.be.equal(true);
+          chai.expect(node.__properties.__connected).to.be.equal(true);
+          chai.expect(node.__connected).to.be.equal(true);
+          chai.expect(node.__connections).to.be.deep.equal([window, document]);
+          node.disconnect(window);
+          chai.expect(node.__listeners.__connected).to.be.equal(true);
+          chai.expect(node.__properties.__connected).to.be.equal(true);
+          chai.expect(node.__connected).to.be.equal(true);
+          chai.expect(node.__connections).to.be.deep.equal([document]);
+          node.disconnect(document);
+          chai.expect(node.__connected).to.be.equal(false);
+          chai.expect(node.__listeners.__connected).to.be.equal(false);
+          chai.expect(node.__properties.__connected).to.be.equal(false);
+          chai.expect(node.__connections).to.be.deep.equal([]);
+          node.connect(window);
+          chai.expect(node.__listeners.__connected).to.be.equal(true);
+          chai.expect(node.__properties.__connected).to.be.equal(true);
+          chai.expect(node.__connected).to.be.equal(true);
+          chai.expect(node.__connections).to.be.deep.equal([window]);
+          node.dispose();
+          chai.expect(node.__connected).to.be.equal(false);
+          chai.expect(node.__listeners.__connected).to.be.equal(false);
+          chai.expect(node.__properties.__connected).to.be.equal(false);
+          chai.expect(node.__connections).to.be.deep.equal([]);
+        });
+      });
+      describe('Reactivity check', () => {
+        it('should have change handler functions defined', () => {
+          const node = new Node$1();
+          chai.expect(node.changed).to.be.a('function');
+          node.dispose();
+        });
+      });
       describe('Initialized object', () => {
+        it('should have core API defined', () => {
+          const node = new Node$1();
+          chai.expect(node.dispatchChange).to.be.a('function');
+          // Data-binding function
+          chai.expect(node.bind).to.be.a('function');
+          chai.expect(node.unbind).to.be.a('function');
+          // Property setters
+          chai.expect(node.set).to.be.a('function');
+          chai.expect(node.setProperties).to.be.a('function');
+          chai.expect(node.objectMutated).to.be.a('function');
+          chai.expect(node.objectMutatedThrottled).to.be.a('function');
+          // Event-related functions
+          chai.expect(node.addEventListener).to.be.a('function');
+          chai.expect(node.removeEventListener).to.be.a('function');
+          chai.expect(node.dispatchEvent).to.be.a('function');
+          chai.expect(node.queue).to.be.a('function');
+          chai.expect(node.queueDispatch).to.be.a('function');
+          chai.expect(node.queueDispatchLazy).to.be.a('function');
+          // TODO: fully test core API
+          chai.expect(node.throttle).to.be.a('function');
+          chai.expect(node.requestAnimationFrameOnce).to.be.a('function');
+          // Utility functions
+          chai.expect(node.filterObject).to.be.a('function');
+          chai.expect(node.filterObjects).to.be.a('function');
+          chai.expect(node.import).to.be.a('function');
+          chai.expect(node.preventDefault).to.be.a('function');
+          chai.expect(node.stopPropagation).to.be.a('function');
+          node.dispose();
+        });
         it('should have correct property defaults', () => {
           chai.expect(this.node.prop0).to.be.equal('');
           chai.expect(this.node.prop1).to.be.equal(false);
           chai.expect(this.node.prop2).to.be.equal(-1);
           chai.expect(this.node.prop3).to.be.equal(0);
-        });
-        it('should have core API defined', () => {
-          // Data-binding function
-          chai.expect(this.node.bind).to.be.a('function');
-          // Built-in property change handlers
-          chai.expect(this.node.changed).to.be.a('function');
-          // Lifecycle functions
-          chai.expect(this.node.connect).to.be.a('function');
-          chai.expect(this.node.disconnect).to.be.a('function');
-          chai.expect(this.node.connectedCallback).to.be.a('function');
-          chai.expect(this.node.disconnectedCallback).to.be.a('function');
-          chai.expect(this.node.dispose).to.be.a('function');
-          // Event-related functions
-          chai.expect(this.node.addEventListener).to.be.a('function');
-          chai.expect(this.node.removeEventListener).to.be.a('function');
-          chai.expect(this.node.dispatchEvent).to.be.a('function');
-          chai.expect(this.node.queue).to.be.a('function');
-          chai.expect(this.node.queueDispatch).to.be.a('function');
-          // Property setters
-          chai.expect(this.node.set).to.be.a('function');
-          chai.expect(this.node.setProperties).to.be.a('function');
-          // TODO: fully test core API
         });
       });
       describe('Observed properties', () => {
@@ -29156,13 +29157,13 @@ class Element {
           this.element.$.subelement.prop0 = 2;
           chai.expect(this.element.prop0).to.equal(2);
         });
-        it('should bind to IoNode node', () => {
+        it('should bind to Node node', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.subnode.prop2).to.equal(Infinity);
           this.element.subnode.prop2 = 0;
           chai.expect(this.element.prop0).to.equal(0);
         });
-        it('should disconnect binding when IoNode node is disconnected', () => {
+        it('should disconnect binding when Node node is disconnected', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.subnode.prop2).to.equal(Infinity);
           this.element.subnode.disconnect(window);
@@ -29178,7 +29179,7 @@ class Element {
   }
 }
 
-class Node$1 extends IoNode {
+class TestNode$1 extends Node$1 {
   static get Properties() {
     return {
       prop1: 0,
@@ -29194,7 +29195,7 @@ class Node$1 extends IoNode {
     this.prop2ChangeCounter++;
   }
 }
-Node$1.Register();
+TestNode$1.Register();
 
 const string = (object) => {
   return JSON.stringify(object);
@@ -29205,13 +29206,13 @@ class Binding {
     describe('Binding', () => {
       describe('Binding', () => {
         it('Should initialize with source and sourceProperty', () => {
-          const node = new Node$1();
+          const node = new TestNode$1();
           const binding1 = node.bind('prop1');
           chai.expect(binding1.source).to.be.equal(node);
           chai.expect(binding1.sourceProp).to.be.equal('prop1');
         });
         it('Should set/return source prop value', () => {
-          const node = new Node$1();
+          const node = new TestNode$1();
           const binding1 = node.bind('prop1');
           node.prop1 = 1;
           chai.expect(binding1.value).to.be.equal(1);
@@ -29221,19 +29222,19 @@ class Binding {
           chai.expect(node.prop1).to.be.equal(3);
         });
         it('Should add/remove targets and targetProps when assigned to values', () => {
-          const srcNode = new Node$1();
+          const srcNode = new TestNode$1();
           const binding1 = srcNode.bind('prop1');
           const binding2 = srcNode.bind('prop2');
 
-          const dstNode1 = new Node$1();
+          const dstNode1 = new TestNode$1();
           dstNode1.connect();
           dstNode1.prop1 = binding1;
           dstNode1.prop2 = binding2;
 
-          const dstNode2 = new Node$1({prop1: binding1});
+          const dstNode2 = new TestNode$1({prop1: binding1});
           dstNode2.connect();
 
-          const dstNode3 = new Node$1({prop1: binding1, prop2: binding1});
+          const dstNode3 = new TestNode$1({prop1: binding1, prop2: binding1});
           dstNode3.connect();
 
           chai.expect(binding1.targets[0]).to.be.equal(dstNode1);
@@ -29263,19 +29264,19 @@ class Binding {
       });
       describe('Bindings', () => {
         it('Should return existing binding or create a new when on "bind()"', () => {
-          const node = new Node$1();
+          const node = new TestNode$1();
           const binding1 = node.bind('prop1');
           chai.expect(binding1).to.be.equal(node.__bindings.prop1);
           chai.expect(binding1).to.be.equal(node.bind('prop1'));
         });
         it('Should dispose bindings correctly', () => {
-          const node1 = new Node$1();
+          const node1 = new TestNode$1();
           const binding1 = node1.bind('prop1');
           node1.unbind('prop1');
           chai.expect(undefined).to.be.equal(node1.__bindings.prop1);
           chai.expect(binding1.prop1).to.be.equal(undefined);
 
-          const node2 = new Node$1();
+          const node2 = new TestNode$1();
           const binding2 = node2.bind('prop1');
           node2.__bindings.dispose();
           chai.expect(undefined).to.be.equal(node2.__bindings.prop1);
@@ -29290,7 +29291,7 @@ const string$1 = (object) => {
   return JSON.stringify(object);
 };
 
-class Node1 extends IoNode {
+class Node1 extends Node$1 {
   function1() {}
   onFunction1() {}
   _function1() {}
@@ -29328,7 +29329,7 @@ const string$2 = (object) => {
   return JSON.stringify(object);
 };
 
-class Node1$1 extends IoNode {
+class Node1$1 extends Node$1 {
   static get Listeners() {
     return {
       'event1': 'handler1',
@@ -29390,14 +29391,14 @@ class Object1 {
   }
 }
 
-class TestNode$1 extends IoNode {
+class TestNode$2 extends Node$1 {
   static get Properties() {
     return {
       label: ''
     };
   }
 }
-TestNode$1.Register();
+TestNode$2.Register();
 class Properties {
   run() {
     describe('Properties', () => {
@@ -29604,7 +29605,7 @@ class Properties {
         });
         it('Should initialize binding properly', () => {
           let protoProp, prop;
-          let binding = new Binding$1(new TestNode$1({label: 'lorem'}), 'label');
+          let binding = new Binding$1(new TestNode$2({label: 'lorem'}), 'label');
 
           protoProp = new ProtoProperty(binding);
           prop = new Property(protoProp);
@@ -29613,7 +29614,7 @@ class Properties {
           chai.expect(protoProp.value).to.be.equal(undefined);
           chai.expect(prop.value).to.be.equal('lorem');
 
-          let node = new TestNode$1({label: 'lorem'});
+          let node = new TestNode$2({label: 'lorem'});
           binding = new Binding$1(node, 'label');
 
           protoProp = new ProtoProperty({binding: binding, value: 'ipsum'});
@@ -29626,7 +29627,7 @@ class Properties {
       describe('Properties', () => {
         it('Should correctly initialize properties from protochain', () => {
 
-          class Object1 extends IoNode {
+          class Object1 extends Node$1 {
             static get Properties() {
               return {
                 prop1: {
@@ -29731,11 +29732,11 @@ class Properties {
           chai.expect(props.prop1.enumerable).to.be.equal(false);
         });
         it('Should correctly initialize bound properties', () => {
-          const binding1 = new Binding$1(new TestNode$1({label: 'binding1'}), 'label');
-          const binding2 = new Binding$1(new TestNode$1({label: 'binding2'}), 'label');
-          const binding3 = new Binding$1(new TestNode$1({label: 'binding3'}), 'label');
+          const binding1 = new Binding$1(new TestNode$2({label: 'binding1'}), 'label');
+          const binding2 = new Binding$1(new TestNode$2({label: 'binding2'}), 'label');
+          const binding3 = new Binding$1(new TestNode$2({label: 'binding3'}), 'label');
 
-          class Object1 extends IoNode {
+          class Object1 extends Node$1 {
             static get Properties() {
               return {
                 prop1: binding1,
@@ -29776,7 +29777,7 @@ class Properties {
         });
         it('Should correctly get/set properties', () => {
 
-          class TestNode extends IoNode {
+          class TestNode extends Node$1 {
             static get Properties() {
               return {
                 prop1: {
@@ -29798,7 +29799,7 @@ class Properties {
         });
         it('Should correctly get/set bound properties', () => {
 
-          class TestNode extends IoNode {
+          class TestNode extends Node$1 {
             static get Properties() {
               return {
                 label: '',
@@ -29810,7 +29811,7 @@ class Properties {
           const binding1 = new Binding$1(new TestNode({label: 'binding1'}), 'label');
           const binding2 = new Binding$1(new TestNode({label: 'binding2'}), 'label');
 
-          class TestNode2 extends IoNode {
+          class TestNode2 extends Node$1 {
             static get Properties() {
               return {
                 prop1: binding1
@@ -29856,7 +29857,7 @@ class Properties {
           chai.expect(element.getAttribute('label')).to.be.equal('label3');
         });
         it('Should dipatch queue on object value initialization and value set', () => {
-          class TestNode extends IoNode {
+          class TestNode extends Node$1 {
             static get Properties() {
               return {
                 prop: Object,
@@ -29911,7 +29912,7 @@ class Properties {
           node.prop = {};
         });
         it('Should connect/disconnect node value on initialization and value set', () => {
-          class TestNodeValue extends IoNode {
+          class TestNodeValue extends Node$1 {
             static get Properties() {
               return {
                 prop: Object,
@@ -29924,7 +29925,7 @@ class Properties {
           }
           TestNodeValue.Register();
 
-          class TestNode extends IoNode {
+          class TestNode extends Node$1 {
             static get Properties() {
               return {
                 prop: TestNodeValue
@@ -30001,12 +30002,12 @@ class ProtoChain {
  */
 class Queue {
   /**
-   * Creates queue manager for the specified `IoNode` instance.
-   * @param {IoNode} node - Reference to the owner node/element.
+   * Creates queue manager for the specified `Node` instance.
+   * @param {Node} node - Reference to the owner node/element.
    */
   constructor(node) {
-    Object.defineProperty(this, '__array', {value: new Array(), configurable: true});
-    Object.defineProperty(this, '__node', {value: node, configurable: true});
+    Object.defineProperty(this, '__array', {enumerable: false, configurable: true, value: new Array()});
+    Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
   }
   /**
    * Adds property change to the queue by specifying property name, previous and the new value.
@@ -30030,7 +30031,7 @@ class Queue {
    */
   dispatch() {
     if (this._dispatchInProgress === true) return;
-    if (!this.__node.__isConnected) return;
+    if (!this.__node.__connected) return;
     this._dispatchInProgress = true;
 
     const node = this.__node;
@@ -30097,7 +30098,7 @@ class Queue$1 {
       dispatchChange(){
         scope.changeCounter++;
       },
-      __isConnected: true
+      _connected: true
     };
     this.queue = new Queue(this.fakeNode);
   }
