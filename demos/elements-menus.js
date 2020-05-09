@@ -22,12 +22,12 @@ suboptions.push(...[
   {label: 'suboption three', options: options},
 ]);
 
-const option = new OptionItem({
-  label: 'Hearts',
-  icon: '💕',
-  hint: 'colors',
-  options: options,
-});
+// const option = new OptionItem({
+//   label: 'Hearts',
+//   icon: '💕',
+//   hint: 'colors',
+//   options: options,
+// });
 
 const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
   'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
