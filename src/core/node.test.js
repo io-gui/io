@@ -82,34 +82,75 @@ export default class {
   }
   run() {
     describe('Node', () => {
-      describe('Initialized object', () => {
-        it('should have correct property defaults', () => {
-          chai.expect(this.node.prop0).to.be.equal('');
-          chai.expect(this.node.prop1).to.be.equal(false);
-          chai.expect(this.node.prop2).to.be.equal(-1);
-          chai.expect(this.node.prop3).to.be.equal(0);
-        });
-        it('should have core API defined', () => {
-          // Data-binding function
-          chai.expect(this.node.bind).to.be.a('function');
-          // Built-in property change handlers
-          chai.expect(this.node.changed).to.be.a('function');
-          // Lifecycle functions
+      describe('Lifecycle check', () => {
+        it('should have lifecycle functions defined', () => {
           chai.expect(this.node.connect).to.be.a('function');
           chai.expect(this.node.disconnect).to.be.a('function');
           chai.expect(this.node.connectedCallback).to.be.a('function');
           chai.expect(this.node.disconnectedCallback).to.be.a('function');
           chai.expect(this.node.dispose).to.be.a('function');
+        });
+        it('should account connections correctly', () => {
+          chai.expect(this.node.__connected).to.be.equal(true);
+          this.node.connect(document);
+          chai.expect(this.node.__listeners.__connected).to.be.equal(true);
+          chai.expect(this.node.__properties.__connected).to.be.equal(true);
+          chai.expect(this.node.__connected).to.be.equal(true);
+          chai.expect(this.node.__connections).to.be.deep.equal([window, document]);
+          this.node.disconnect(window);
+          chai.expect(this.node.__listeners.__connected).to.be.equal(true);
+          chai.expect(this.node.__properties.__connected).to.be.equal(true);
+          chai.expect(this.node.__connected).to.be.equal(true);
+          chai.expect(this.node.__connections).to.be.deep.equal([document]);
+          this.node.disconnect(document);
+          chai.expect(this.node.__connected).to.be.equal(false);
+          chai.expect(this.node.__listeners.__connected).to.be.equal(false);
+          chai.expect(this.node.__properties.__connected).to.be.equal(false);
+          chai.expect(this.node.__connections).to.be.deep.equal([]);
+          this.node.connect(window);
+          chai.expect(this.node.__listeners.__connected).to.be.equal(true);
+          chai.expect(this.node.__properties.__connected).to.be.equal(true);
+          chai.expect(this.node.__connected).to.be.equal(true);
+          chai.expect(this.node.__connections).to.be.deep.equal([window]);
+        });
+      });
+      describe('Initialized object', () => {
+        it('should have core API defined', () => {
+          // Data-binding function
+          chai.expect(this.node.bind).to.be.a('function');
+          // Built-in property change handlers
+          chai.expect(this.node.changed).to.be.a('function');
+          chai.expect(this.node.applyCompose).to.be.a('function');
+          chai.expect(this.node.dispatchChange).to.be.a('function');
+          //
+          chai.expect(this.node.bind).to.be.a('function');
+          chai.expect(this.node.unbind).to.be.a('function');
+          // Property setters
+          chai.expect(this.node.set).to.be.a('function');
+          chai.expect(this.node.setProperties).to.be.a('function');
+          chai.expect(this.node.objectMutated).to.be.a('function');
+          chai.expect(this.node.objectMutatedThrottled).to.be.a('function');
           // Event-related functions
           chai.expect(this.node.addEventListener).to.be.a('function');
           chai.expect(this.node.removeEventListener).to.be.a('function');
           chai.expect(this.node.dispatchEvent).to.be.a('function');
           chai.expect(this.node.queue).to.be.a('function');
           chai.expect(this.node.queueDispatch).to.be.a('function');
-          // Property setters
-          chai.expect(this.node.set).to.be.a('function');
-          chai.expect(this.node.setProperties).to.be.a('function');
+          chai.expect(this.node.queueDispatchLazy).to.be.a('function');
           // TODO: fully test core API
+          chai.expect(this.node.throttle).to.be.a('function');
+          chai.expect(this.node.requestAnimationFrameOnce).to.be.a('function');
+          chai.expect(this.node.filterObject).to.be.a('function');
+          chai.expect(this.node.filterObjects).to.be.a('function');
+          chai.expect(this.node.import).to.be.a('function');
+          chai.expect(this.node.preventDefault).to.be.a('function');
+          chai.expect(this.node.stopPropagation).to.be.a('function');
+        });
+        it('should have correct property defaults', () => {
+          chai.expect(this.node.prop0).to.be.equal('');
+          chai.expect(this.node.prop1).to.be.equal(false);
+          chai.expect(this.node.prop2).to.be.equal(-1);
+          chai.expect(this.node.prop3).to.be.equal(0);
         });
       });
       describe('Observed properties', () => {

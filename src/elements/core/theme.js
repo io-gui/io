@@ -292,5 +292,7 @@ export class IoTheme extends IoElement {
 }
 IoTheme.Register();
 
-export const IoThemeSingleton = new IoTheme();
-IoThemeSingleton.connect();
+const IoThemeSingleton = new IoTheme();
+document.head.appendChild(IoThemeSingleton);
+
+export { IoThemeSingleton };

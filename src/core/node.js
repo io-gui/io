@@ -18,71 +18,108 @@ const NodeMixin = (superclass) => {
       };
     }
     /**
-     * Creates `Node` instance and initializes internals.
-     * @param {Object} initProps - Property values to inialize instance with.
+     * Creates a class instance and initializes the internals.
+     * @param {Object} initProps - Initial property values.
      */
     constructor(initProps = {}, ...args) {
       super(...args);
 
       const constructor = this.__proto__.constructor;
-      if (constructor.__isRegisteredAs !== constructor.name) {
-        console.error(`${constructor.name}: Not registered! Call "Register()" before using ${constructor.name} class!`);
+      if (constructor.__registeredAs !== constructor.name) {
+        console.error(`${constructor.name} not registered! Call "Register()" before using ${constructor.name} class!`);
       }
 
       this.__protoFunctions.bind(this);
 
       Object.defineProperty(this, '__bindings', {value: new Bindings(this)});
       Object.defineProperty(this, '__queue', {value: new Queue(this)});
-
       Object.defineProperty(this, '__listeners', {value: new Listeners(this, this.__protoListeners)});
-
-      Object.defineProperty(this, '__isConnected', {enumerable: false, writable: true});
-      Object.defineProperty(this, '__connections', {enumerable: false, value: []});
-
       Object.defineProperty(this, '__properties', {value: new Properties(this, this.__protoProperties)});
 
       Object.defineProperty(this, 'objectMutated', {value: this.objectMutated.bind(this)});
       Object.defineProperty(this, 'objectMutatedThrottled', {value: this.objectMutatedThrottled.bind(this)});
       Object.defineProperty(this, 'queueDispatchLazy', {value: this.queueDispatchLazy.bind(this)});
+      
+      Object.defineProperty(this, '__connected', {value: false, enumerable: false, writable: true});
+      if (!this.__proto__.__isIoElement) {
+        Object.defineProperty(this, '__connections', {enumerable: false, value: []});
+      }
 
       this.setProperties(initProps);
-      // TODO: consider auto-connect
     }
     /**
-     * Connects Node to the application.
-     * @param {Node} owner - Node to connect to.
+     * Connects the instance to another node or element.
+     * @param {Node} node - Node to connect to.
      */
-    connect(owner) {
-      if (this.__connections.indexOf(owner) === -1) {
-        this.__connections.push(owner);
-        if (!this.__isConnected) this.connectedCallback();
+    connect(node) {
+      debug:
+      if (this.__isIoElement) {
+        console.error('"connect()" function is not intended for DOM Elements!');
+        return;
       }
+      debug:
+      if (this.__connections.indexOf(node) !== -1) {
+        console.warn('Node already connected to node');
+        return;
+      }
+      this.__connections.push(node);
+      if (!this.__connected) this.connectedCallback();
     }
     /**
-     * Disconnects Node from the application.
-     * @param {Node} owner - Node to disconnect from.
+     * Disconnects the instance from an another node or element.
+     * @param {Node} node - Node to disconnect from.
      */
-    disconnect(owner) {
-      if (this.__connections.indexOf(owner) !== -1) {
-        this.__connections.splice(this.__connections.indexOf(owner), 1);
+    disconnect(node) {
+      debug:
+      if (this.__isIoElement) {
+        console.error('"disconnect()" function is not intended for DOM Elements!');
+        return;
       }
-      if (this.__connections.length === 0 && this.__isConnected) {
+      debug:
+      if (this.__connections.indexOf(node) === -1) {
+        console.error('Node not connected to node');
+        return;
+      }
+      this.__connections.splice(this.__connections.indexOf(node), 1);
+      if (this.__connections.length === 0 && this.__connected) {
         this.disconnectedCallback();
       }
     }
     /**
-     * Handler function with `event.preventDefault()`.
-     * @param {Object} event - Event object.
+     * Connected callback.
      */
-    preventDefault(event) {
-      event.preventDefault();
+    connectedCallback() {
+      this.__connected = true;
+      this.__listeners.connect();
+      this.__properties.connect();
+      if (this.__observedObjects.length) {
+        window.addEventListener('object-mutated', this.objectMutated);
+      }
+      this.queueDispatch();
     }
     /**
-     * Handler function with `event.stopPropagation()`.
-     * @param {Object} event - Event object.
+     * Disconnected callback.
      */
-    stopPropagation(event) {
-      event.stopPropagation();
+    disconnectedCallback() {
+      this.__connected = false;
+      this.__listeners.disconnect();
+      this.__properties.disconnect();
+      if (this.__observedObjects.length) {
+        window.removeEventListener('object-mutated', this.objectMutated);
+      }
+    }
+    /**
+     * Disposes all internals.
+     * Use this when instance is no longer needed.
+     */
+    dispose() {
+      this.__queue.dispose();
+      this.__bindings.dispose();
+      this.__listeners.dispose();
+      this.__properties.dispose();
+      if (this.__observedObjects.length) {
+        window.removeEventListener('object-mutated', this.objectMutated);
+      }
     }
     /**
      * default change handler.
@@ -151,11 +188,11 @@ const NodeMixin = (superclass) => {
         this.__properties.set(p, props[p], true);
       }
       this.__listeners.setPropListeners(props, this);
-      if (this.__isConnected) this.queueDispatch();
+      if (this.__connected) this.queueDispatch();
     }
     objectMutated(event) {
-      for (let i = this.__observedProps.length; i--;) {
-        const prop = this.__observedProps[i];
+      for (let i = this.__observedObjects.length; i--;) {
+        const prop = this.__observedObjects[i];
         const value = this.__properties[prop].value;
         if (value === event.detail.object) {
           this.throttle(this.objectMutatedThrottled, prop);
@@ -175,39 +212,6 @@ const NodeMixin = (superclass) => {
       if (this['propMutated']) this['propMutated'](prop);
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
       this.dispatchChange();
-    }
-    /**
-     * Callback when `Node` is connected.
-     */
-    connectedCallback() {
-      this.__isConnected = true;
-      this.__listeners.connect();
-      this.__properties.connect();
-      if (this.__observedProps.length) {
-        window.addEventListener('object-mutated', this.objectMutated);
-      }
-      this.queueDispatch();
-    }
-    /**
-     * Callback when `Node` is disconnected.
-     */
-    disconnectedCallback() {
-      this.__isConnected = false;
-      this.__listeners.disconnect();
-      this.__properties.disconnect();
-      if (this.__observedProps.length) {
-        window.removeEventListener('object-mutated', this.objectMutated);
-      }
-    }
-    /**
-     * Disposes all internals.
-     * Use this when node is no longer needed.
-     */
-    dispose() {
-      this.__queue.dispose();
-      this.__bindings.dispose();
-      this.__listeners.dispose();
-      this.__properties.dispose();
     }
     /**
      * Wrapper for addEventListener.
@@ -338,6 +342,20 @@ const NodeMixin = (superclass) => {
         }
       });
     }
+    /**
+     * Handler function with `event.preventDefault()`.
+     * @param {Object} event - Event object.
+     */
+    preventDefault(event) {
+      event.preventDefault();
+    }
+    /**
+     * Handler function with `event.stopPropagation()`.
+     * @param {Object} event - Event object.
+     */
+    stopPropagation(event) {
+      event.stopPropagation();
+    }
   };
   classConstructor.Register = Register;
   return classConstructor;
@@ -351,7 +369,7 @@ const Register = function () {
   let proto = this.prototype;
 
   Object.defineProperty(proto, '__isNode', {value: true});
-  Object.defineProperty(proto.constructor, '__isRegisteredAs', {value: proto.constructor.name});  
+  Object.defineProperty(proto.constructor, '__registeredAs', {value: proto.constructor.name});  
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
 
@@ -359,9 +377,9 @@ const Register = function () {
   Object.defineProperty(proto, '__protoProperties', {value: new ProtoProperties(protochain)});
   Object.defineProperty(proto, '__protoListeners', {value: new ProtoListeners(protochain)});
 
-  Object.defineProperty(proto, '__observedProps', {value: []});
+  Object.defineProperty(proto, '__observedObjects', {value: []});
   for (let p in proto.__protoProperties) {
-    if (proto.__protoProperties[p].observe) proto.__observedProps.push(p);
+    if (proto.__protoProperties[p].observe) proto.__observedObjects.push(p);
   }
 
   for (let p in proto.__protoProperties) {
