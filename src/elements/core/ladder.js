@@ -300,15 +300,15 @@ class IoLadder extends IoElement {
     const downLabel4 = Number((downStep4 * this.conversion).toFixed(6));
 
     this.template([
-      (range >= upStep4) ? ['io-ladder-step', {class: 'io-up4', value: upStep4, label: upLabel4}] : hiddenItem,
-      (range >= upStep3) ? ['io-ladder-step', {class: 'io-up3', value: upStep3, label: upLabel3}] : hiddenItem,
-      (range >= upStep2) ? ['io-ladder-step', {class: 'io-up2', value: upStep2, label: upLabel2}] : hiddenItem,
-      (range >= upStep1) ? ['io-ladder-step', {class: 'io-up1', value: upStep1, label: upLabel1}] : hiddenItem,
+      (range >= upStep4) ? ['io-ladder-step', {class: 'io-up4', value: upStep4, label: String(upLabel4)}] : hiddenItem,
+      (range >= upStep3) ? ['io-ladder-step', {class: 'io-up3', value: upStep3, label: String(upLabel3)}] : hiddenItem,
+      (range >= upStep2) ? ['io-ladder-step', {class: 'io-up2', value: upStep2, label: String(upLabel2)}] : hiddenItem,
+      (range >= upStep1) ? ['io-ladder-step', {class: 'io-up1', value: upStep1, label: String(upLabel1)}] : hiddenItem,
       ['span', {class: 'io-ladder-center'}],
-      (this.step <= downStep1) ? ['io-ladder-step', {class: 'io-down1', value: downStep1, label: downLabel1}] : hiddenItem,
-      (this.step <= downStep2) ? ['io-ladder-step', {class: 'io-down2', value: downStep2, label: downLabel2}] : hiddenItem,
-      (this.step <= downStep3) ? ['io-ladder-step', {class: 'io-down3', value: downStep3, label: downLabel3}] : hiddenItem,
-      (this.step <= downStep4) ? ['io-ladder-step', {class: 'io-down4', value: downStep4, label: downLabel4}] : hiddenItem,
+      (this.step <= downStep1) ? ['io-ladder-step', {class: 'io-down1', value: downStep1, label: String(downLabel1)}] : hiddenItem,
+      (this.step <= downStep2) ? ['io-ladder-step', {class: 'io-down2', value: downStep2, label: String(downLabel2)}] : hiddenItem,
+      (this.step <= downStep3) ? ['io-ladder-step', {class: 'io-down3', value: downStep3, label: String(downLabel3)}] : hiddenItem,
+      (this.step <= downStep4) ? ['io-ladder-step', {class: 'io-down4', value: downStep4, label: String(downLabel4)}] : hiddenItem,
     ]);
 
     const steps = this.querySelectorAll('io-ladder-step');

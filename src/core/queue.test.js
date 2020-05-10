@@ -32,15 +32,15 @@ export default class {
     describe('Queue', () => {
       it('Should have correct defaults', () => {
         chai.expect(typeof this.queue.__node).to.be.equal('object');
-        chai.expect(typeof this.queue.__array).to.be.equal('object');
-        chai.expect(this.queue.__array.length).to.be.equal(0);
-        chai.expect(this.queue.__array instanceof Array).to.be.equal(true);
+        chai.expect(typeof this.queue.__changes).to.be.equal('object');
+        chai.expect(this.queue.__changes.length).to.be.equal(0);
+        chai.expect(this.queue.__changes instanceof Array).to.be.equal(true);
         this.reset();
       });
       it('Should dispose correctly', () => {
         this.queue.dispose();
         chai.expect(typeof this.queue.__node).to.be.equal('undefined');
-        chai.expect(typeof this.queue.__array).to.be.equal('undefined');
+        chai.expect(typeof this.queue.__changes).to.be.equal('undefined');
         this.reset();
       });
       it('Should trigger change events', () => {

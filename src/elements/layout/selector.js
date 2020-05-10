@@ -54,7 +54,6 @@ export class IoSelector extends IoElement {
         observe: true,
       },
       selected: {
-        type: String,
         reflect: 1,
       },
       cache: Boolean,
@@ -117,7 +116,7 @@ export class IoSelector extends IoElement {
         scrollID = elem.id;
       }
       if (scrollID !== undefined && scrollID !== oldScrollID) {
-        this._scrollID = scrollID;
+        this._scrollID = scrollID || '';
         const oldSelected = this.selected;
         const selected = this._selectedID + '#' + this._scrollID;
         this.__properties.selected.value = selected;
@@ -140,8 +139,8 @@ export class IoSelector extends IoElement {
     if (!this.selected) return;
     const oldScrollID = this._scrollID;
     const oldSelectedID = this._selectedID;
-    this._selectedID = this.selected.split('#')[0];
-    this._scrollID = this.selected.split('#')[1];
+    this._selectedID = this.selected.split('#')[0] || '';
+    this._scrollID = this.selected.split('#')[1] || '';
     if (this._selectedID !== oldSelectedID) {
       this.update();
       this.scrollTo(this._scrollID);

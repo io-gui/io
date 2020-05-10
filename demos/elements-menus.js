@@ -22,12 +22,12 @@ suboptions.push(...[
   {label: 'suboption three', options: options},
 ]);
 
-// const option = new OptionItem({
-//   label: 'Hearts',
-//   icon: '💕',
-//   hint: 'colors',
-//   options: options,
-// });
+const option = new OptionItem({
+  label: 'Hearts',
+  icon: '💕',
+  hint: 'colors',
+  options: options,
+});
 
 const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
   'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
@@ -87,19 +87,19 @@ export class IoDemoElementsMenus extends IoElement {
       ]],
       ['br'],
       ['div', {class: 'io-column'}, [
-        ['io-menu-options', {value: menuValue, options: menuoptions, horizontal: true, selectable: true}],
+        ['io-menu-options', {options: menuoptions, horizontal: true}],
         ['div', {class: 'io-row'}, [
-          ['io-menu-options', {value: menuValue, selectable: true, options: menuoptions, searchable: true}],
+          ['io-menu-options', {options: menuoptions, searchable: true}],
           ['div', {class: 'io-column'}, [
             ['div', [['span', {class: 'io-item'}, 'Selected:'], ['io-item', {value: menuValue}]]],
-            ['io-menu-item', {label: 'menu item', value: menuValue, selectable: true, option: $('demo:menuoption')}],
+            ['io-menu-item', {label: 'menu item', option: option}],
             ['div', {class: 'io-content'}, [
               ['span', 'click for menu'],
-              ['io-context-menu', {value: menuValue, selectable: true, options: menuoptions, position: 'pointer', button: 0}],
+              ['io-context-menu', {options: menuoptions, position: 'pointer', button: 0}],
             ]],
             ['div', {class: 'io-content'}, [
               ['span', 'right-click for menu'],
-              ['io-context-menu', {value: menuValue, selectable: true, options: menuoptions, position: 'pointer', button: 2}],
+              ['io-context-menu', {options: menuoptions, position: 'pointer', button: 2}],
             ]],
           ]],
         ]],

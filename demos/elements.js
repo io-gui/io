@@ -39,36 +39,44 @@ export class IoDemoElements extends IoElement {
   }
   constructor(props) {
     super(props);
-    const bindings = {
-      string: this.bind('string'),
-      number: this.bind('number'),
-      boolean: this.bind('boolean'),
-      vector2: this.bind('vector2'),
-      vector3: this.bind('vector3'),
-      vector4: this.bind('vector4'),
-      matrix2: this.bind('matrix2'),
-      matrix3: this.bind('matrix3'),
-      matrix4: this.bind('matrix4'),
-    };
-    // bindings.object = this;
     this.template([
       ['io-item', {label: 'Basic Inputs'}],
-      ['io-demo-elements-core', bindings],
+      ['io-demo-elements-core', {
+        string: this.bind('string'),
+        number: this.bind('number'),
+        boolean: this.bind('boolean'),
+      }],
 
       ['io-item', {label: 'Sliders'}],
-      ['io-demo-elements-sliders', bindings],
+      ['io-demo-elements-sliders', {
+        number: this.bind('number'),
+        vector2: this.bind('vector2'),
+      }],
 
       ['io-item', {label: 'Menus'}],
-      ['io-demo-elements-menus', bindings],
+      ['io-demo-elements-menus', {
+        number: this.bind('number'),
+      }],
 
       ['io-item', {label: 'Object'}],
-      ['io-demo-elements-object', bindings],
+      ['io-demo-elements-object'],
 
       ['io-item', {label: 'Math'}],
-      ['io-demo-elements-math', bindings],
+      ['io-demo-elements-math', {
+        number: this.bind('number'),
+        vector2: this.bind('vector2'),
+        vector3: this.bind('vector3'),
+        vector4: this.bind('vector4'),
+        matrix2: this.bind('matrix2'),
+        matrix3: this.bind('matrix3'),
+        matrix4: this.bind('matrix4'),
+      }],
 
       ['io-item', {label: 'Color Editors'}],
-      ['io-demo-elements-color', bindings],
+      ['io-demo-elements-color', {
+        vector3: this.bind('vector3'),
+        vector4: this.bind('vector4'),
+      }],
     ]);
   }
 }

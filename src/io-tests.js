@@ -49,12 +49,12 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    // new Properties().run();
-    // new ProtoChain().run();
-    // new Binding().run();
-    // new Queue().run();
-    // new Listeners().run();
-    // new Functions().run();
+    new Properties().run();
+    new ProtoChain().run();
+    new Binding().run();
+    new Queue().run();
+    new Listeners().run();
+    new Functions().run();
 
     new Node().run();
     new Element().run();

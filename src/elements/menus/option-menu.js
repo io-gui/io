@@ -90,7 +90,7 @@ export class IoOptionMenu extends IoElement {
     this.template([
       ['io-menu-item', {
         option: option,
-        position: 'bottom',
+        direction: 'bottom',
       }]
     ]);
   }

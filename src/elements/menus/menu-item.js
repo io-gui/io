@@ -338,6 +338,9 @@ export class IoMenuItem extends IoItem {
   }
   changed() {
     const option = this.option;
+    if (option === undefined) {
+      console.log(this);
+    }
     const icon = this.icon || option.icon;
     this.setAttribute('selected', option.selected);
     this.setAttribute('hasmore', this.hasmore);

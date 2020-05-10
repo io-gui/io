@@ -7,7 +7,7 @@ class Queue {
    * @param {Node} node - Reference to the owner node/element.
    */
   constructor(node) {
-    Object.defineProperty(this, '__array', {enumerable: false, configurable: true, value: new Array()});
+    Object.defineProperty(this, '__changes', {enumerable: false, configurable: true, value: new Array()});
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
   }
   /**
@@ -18,11 +18,11 @@ class Queue {
    * @param {*} oldValue Old property value.
    */
   queue(prop, value, oldValue) {
-    const i = this.__array.indexOf(prop);
+    const i = this.__changes.indexOf(prop);
     if (i === -1) {
-      this.__array.push(prop, {property: prop, value: value, oldValue: oldValue});
+      this.__changes.push(prop, {property: prop, value: value, oldValue: oldValue});
     } else {
-      this.__array[i + 1].value = value;
+      this.__changes[i + 1].value = value;
     }
   }
   /**
@@ -38,10 +38,10 @@ class Queue {
     const node = this.__node;
     let changed = false;
 
-    while (this.__array.length) {
-      const j = this.__array.length - 2;
-      const prop = this.__array[j];
-      const detail = this.__array[j + 1];
+    while (this.__changes.length) {
+      const j = this.__changes.length - 2;
+      const prop = this.__changes[j];
+      const detail = this.__changes[j + 1];
       const payload = {detail: detail};
 
       if (detail.value !== detail.oldValue) {
@@ -49,7 +49,7 @@ class Queue {
         if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
         node.dispatchEvent(prop + '-changed', payload.detail);
       }
-      this.__array.splice(j, 2);
+      this.__changes.splice(j, 2);
     }
 
     if (changed) node.dispatchChange();
@@ -58,8 +58,8 @@ class Queue {
 
     // TODO: It is possible that an effect of change adds additional items to the queue
     // TODO: Test and document! 
-    // this.__array.length = 0;
-    if (this.__array.length) {
+    // this.__changes.length = 0;
+    if (this.__changes.length) {
       this.dispatch();
       return;
     }
@@ -69,9 +69,9 @@ class Queue {
    * Use this when node queue is no longer needed.
    */
   dispose() {
-    this.__array.length = 0;
+    this.__changes.length = 0;
     delete this.__node;
-    delete this.__array;
+    delete this.__changes;
   }
 }
 
