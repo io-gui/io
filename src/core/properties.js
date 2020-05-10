@@ -23,8 +23,8 @@ class ProtoProperty {
     if (!noDefaults) {
       this.value = undefined;
       this.type = undefined;
-      this.notify = true;
       this.reflect = 0;
+      this.notify = true;
       this.observe = false;
       this.strict = false;
       this.enumerable = true;
@@ -61,8 +61,8 @@ class ProtoProperty {
 
     if (prop.value !== undefined) this.value = prop.value;
     if (typeof prop.type === 'function') this.type = prop.type;
-    if (typeof prop.notify == 'boolean') this.notify = prop.notify;
     if (typeof prop.reflect == 'number') this.reflect = prop.reflect;
+    if (typeof prop.notify == 'boolean') this.notify = prop.notify;
     if (typeof prop.observe == 'boolean') this.observe = prop.observe;
     if (typeof prop.strict == 'boolean') this.strict = prop.strict;
     if (typeof prop.enumerable == 'boolean') this.enumerable = prop.enumerable;
@@ -91,12 +91,12 @@ class Property {
    */
   constructor(protoProp) {
     this.value = protoProp.value;
-    this.notify = protoProp.notify;
+    this.type = protoProp.type;
     this.reflect = protoProp.reflect;
+    this.notify = protoProp.notify;
     this.observe = protoProp.observe;
     this.strict = protoProp.strict;
     this.enumerable = protoProp.enumerable;
-    this.type = protoProp.type;
     this.binding = protoProp.binding;
 
     if (this.binding instanceof Binding) this.value = this.binding.value;

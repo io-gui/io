@@ -1,5 +1,13 @@
 import {Node, Binding} from '../io.js';
 
+async function waitTick() {
+  return new Promise((resolve) => {
+    setTimeout(()=>{
+      resolve();
+    });
+  });
+}
+
 export default class {
   run() {
     describe('Node', () => {
@@ -152,7 +160,7 @@ export default class {
 
         node.dispose();
       });
-      it('should invoke property mutation handler functions on mutation event', () => {
+      it('should invoke property mutation handler functions on mutation event', async () => {
         class TestNode extends Node {
           static get Properties() {
             return {
@@ -186,15 +194,26 @@ export default class {
 
         chai.expect(node._changedCounter).to.equal(1);
         chai.expect(node._obj1MutatedCounter).to.equal(0);
+
         node.dispatchEvent('object-mutated', {object: node.obj1}, false, window);
+
+        // chai.expect(node._changedCounter).to.equal(1);
+        // chai.expect(node._obj1MutatedCounter).to.equal(0);
+        // chai.expect(node._obj2MutatedCounter).to.equal(0);
+
+        await waitTick();
+        
         chai.expect(node._changedCounter).to.equal(2);
         chai.expect(node._obj1MutatedCounter).to.equal(1);
         chai.expect(node._obj2MutatedCounter).to.equal(0);
 
-        // node.dispatchEvent('object-mutated', {object: node.obj2}, false, window);
-        // chai.expect(node._changedCounter).to.equal(3);
-        // chai.expect(node._obj1MutatedCounter).to.equal(1);
-        // chai.expect(node._obj2MutatedCounter).to.equal(1);
+        node.dispatchEvent('object-mutated', {object: node.obj2}, false, window);
+
+        await waitTick();
+
+        chai.expect(node._changedCounter).to.equal(3);
+        chai.expect(node._obj1MutatedCounter).to.equal(1);
+        chai.expect(node._obj2MutatedCounter).to.equal(1);
 
         // chai.expect(node._prop2ChangedCounter).to.equal(0);
         // chai.expect(node._prop1ChangedPayload.detail.property).to.equal('prop1');

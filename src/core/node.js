@@ -212,7 +212,6 @@ const NodeMixin = (superclass) => {
       for (let i = 0; i < this.__observedObjects.length; i++) {
         const prop = this.__observedObjects[i];
         const value = this.__properties[prop].value;
-        const observe = this.__properties[prop].observe;
         if (value === event.detail.object) {
           this.throttle(this.objectMutatedThrottled, prop, false);
           return;
