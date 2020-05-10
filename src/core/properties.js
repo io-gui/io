@@ -274,14 +274,6 @@ class Properties {
    */
   dispose() {
     this.disconnect();
-    for (let i = this.__keys.length; i--;) {
-      const p = this.__keys[i];
-      if (this[p].binding) {
-        this[p].binding.removeTarget(this.__node, p);
-        delete this[p].binding;
-      }
-      delete this[p];
-    }
     delete this['__node'];
     delete this['__keys'];
   }

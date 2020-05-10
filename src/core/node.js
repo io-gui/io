@@ -204,7 +204,7 @@ const NodeMixin = (superclass) => {
     /**
      * Event handler for 'object-mutated' event emitted from the `window`.
      * Node should be listening for this event if it has an object property
-     * with `observe: true` configuration.
+     * with `observe: "sync" || "async"` configuration.
      * @param {Object} event - Event payload.
      * @param {Object} event.detail.object - Mutated object.
      */
@@ -212,11 +212,14 @@ const NodeMixin = (superclass) => {
       for (let i = 0; i < this.__observedObjects.length; i++) {
         const prop = this.__observedObjects[i];
         const value = this.__properties[prop].value;
+        const observe = this.__properties[prop].observe;
         if (value === event.detail.object) {
-          this.throttle(this.objectMutatedThrottled, prop);
+          this.throttle(this.objectMutatedThrottled, prop, false);
           return;
-        } else if (event.detail.objects && event.detail.objects.indexOf(value) !== -1) {
-          this.throttle(this.objectMutatedThrottled, prop);
+        }
+        debug:
+        if (event.detail.objects) {
+          console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');   
           return;
         }
       }
@@ -227,7 +230,6 @@ const NodeMixin = (superclass) => {
      * @param {string} prop - Mutated object property name.
      */
     objectMutatedThrottled(prop) {
-      if (this['propMutated']) this['propMutated'](prop);
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
       this.dispatchChange();
     }
