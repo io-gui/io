@@ -72,7 +72,7 @@ export class IoMatrix extends IoElement {
       const c = this.components[i];
       if (this.value[c] !== undefined) {
         elements.push(['io-number', {
-          id: c,
+          id: String(c),
           value: this.value[c],
           step: this.step,
           'on-value-set': this._onValueSet

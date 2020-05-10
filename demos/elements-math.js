@@ -21,9 +21,9 @@ export class IoDemoElementsMath extends IoElement {
         ['io-vector', {value: this.bind('vector2'), linkable: true}],
         ['io-vector', {value: this.bind('vector3'), linkable: true}],
         ['io-vector', {value: this.bind('vector4'), linkable: true}],
-        ['io-matrix', {value: this.bind('matrix2'), linkable: true}],
-        ['io-matrix', {value: this.bind('matrix3'), linkable: true}],
-        ['io-matrix', {value: this.bind('matrix4'), linkable: true}],
+        ['io-matrix', {value: this.bind('matrix2')}],
+        ['io-matrix', {value: this.bind('matrix3')}],
+        ['io-matrix', {value: this.bind('matrix4')}],
       ]],
     ]);
   }

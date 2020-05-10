@@ -197,11 +197,7 @@ export default class {
 
         node.dispatchEvent('object-mutated', {object: node.obj1}, false, window);
 
-        // chai.expect(node._changedCounter).to.equal(1);
-        // chai.expect(node._obj1MutatedCounter).to.equal(0);
-        // chai.expect(node._obj2MutatedCounter).to.equal(0);
-
-        await waitTick();
+        // await waitTick();
         
         chai.expect(node._changedCounter).to.equal(2);
         chai.expect(node._obj1MutatedCounter).to.equal(1);

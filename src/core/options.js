@@ -9,8 +9,8 @@ export class Options extends NodeMixin(Array) {
         type: Array,
         strict: true,
       },
-      selectedRoot: String,
-      selectedLeaf: String,
+      selectedRoot: null,
+      selectedLeaf: null,
     };
   }
   constructor(options = [], props = {}) {
@@ -89,8 +89,8 @@ export class Options extends NodeMixin(Array) {
   setSelectedPath(path = []) {
     this.setProperties({
       selectedPath: path,
-      selectedRoot: path[0] || '',
-      selectedLeaf: path[path.length - 1] || '',
+      selectedRoot: path[0],// || '',
+      selectedLeaf: path[path.length - 1],// || '',
     });
   }
   // TODO: test
@@ -129,8 +129,8 @@ export class OptionItem extends Node {
         type: Array,
         strict: true,
       },
-      selectedRoot: String,
-      selectedLeaf: String,
+      selectedRoot: null,
+      selectedLeaf: null,
       options: {
         type: Options,
         strict: true

@@ -26,8 +26,6 @@ export default class {
           chai.expect(this.element.innerText).to.equal('Array(4)');
           this.element.label = 'label';
           chai.expect(this.element.innerText).to.equal('label');
-          this.element.label = {};
-          chai.expect(this.element.innerText).to.equal('[object Object]');
           this.element.value = undefined;
           this.element.label = '';
         });

@@ -1,6 +1,14 @@
-import {IoElement} from '../io.js';
+import {IoElement, Node} from '../io.js';
 
-import {TestNode} from './node.test.js';
+class TestNode extends Node {
+  static get Properties() {
+    return {
+      prop0: String,
+      prop2: Infinity,
+    };
+  }
+}
+TestNode.Register();
 
 export class TestElement extends IoElement {
   static get Properties() {

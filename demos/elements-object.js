@@ -31,7 +31,6 @@ export class IoDemoElementsObject extends IoElement {
       ['io-object', {value: this.object, expanded: true, properties: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
       ['io-inspector', {
         value: this.object,
-        expanded: ['properties'],
         groups: {
           'Object|properties': [],
           'Object|vectors and matrices': [/vector/i, /matrix/i],

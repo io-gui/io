@@ -116,6 +116,11 @@ class Property {
         this.value = Object.assign({}, this.value);
       }
     }
+
+    debug:
+    if ([-1, 0, 1, 2].indexOf(this.reflect) == -1) {
+      console.error(`Invalid reflect value ${this.reflect}!`);
+    }
   }
 }
 
@@ -215,12 +220,37 @@ class Properties {
       } else {
 
         if (prop.strict && prop.type && !(value instanceof prop.type)) {
-          // console.warn(`IoGUI strict type mismatch for "${key}" property!`);
+          debug: {
+            // console.warn(`IoGUI strict type mismatch for "${key}" property! Value automatically converted to "${prop.type.name}."`);
+          }
           value = new prop.type(value);
         }
-        prop.value = value;
 
       }
+
+      prop.value = value;
+
+      debug:
+      {
+        if (prop.type == String) {
+          if (typeof value !== 'string') {
+            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
+          }
+        } else if (prop.type == Number) {
+          if (typeof value !== 'number') {
+            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
+          }
+        } else if (prop.type == Boolean) {
+          if (typeof value !== 'boolean') {
+            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
+          }
+        } else if (prop.type) {
+          if (!(value instanceof prop.type)) {
+            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
+          }
+        }
+      }
+
 
       if (value && value.__isNode && !value.__isIoElement) value.connect(node);
       if (oldValue && oldValue.__isNode && oldValue.__connected && !oldValue.__isIoElement) oldValue.disconnect(node);
@@ -262,9 +292,14 @@ class Properties {
       if (this[p].binding) {
         this[p].binding.removeTarget(this.__node, p);
       }
-      // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
+      // TODO: investigate and test element property connections
+      // possible clash with element's native `disconenctedCallback()`
+      // TODO: fix BUG - diconnecting already disconencted.
       if (this[p].value && this[p].value.__isNode && !this[p].value.__isIoElement) {
-        this[p].value.disconnect(this.__node);
+        // TODO: remove this workaround once the bug is fixed properly.
+        if (this[p].value.__connections.indexOf(this.__node) !== -1) {
+          this[p].value.disconnect(this.__node);
+        }
       }
     }
   }

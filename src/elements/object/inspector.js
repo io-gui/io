@@ -149,7 +149,7 @@ export class IoInspector extends IoElement {
     this.uuid = genUUID(this.selected);
     const elements = [
       ['div', {class: 'inspector-header io-row io-panel'}, [
-        ['io-breadcrumbs', {value: this.value, selected: this.bind('selected'), trim: true}],
+        ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
         ['io-string', {id: 'search', value: this.bind('search'), live: true}],
         ['io-boolicon', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
       ]],
