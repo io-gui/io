@@ -28672,86 +28672,15 @@ module.exports={
   },{}]},{},[1])(1);
   });
 
-class TestNode extends Node$1 {
-  static get Properties() {
-    return {
-      prop0: {
-        type: String,
-      },
-      prop1: {
-        value: false,
-      },
-      prop2: -1,
-      prop3: Number,
-      // Internal counters
-      _changedCounter: 0,
-      _prop1ChangeCounter: 0,
-      _prop2ChangeCounter: 0,
-      _customHandlerCounter: 0,
-    };
-  }
-  static get Listeners() {
-    return {
-      'prop1-changed': 'onProp1Change',
-      'custom-event': 'onCustomEvent',
-    };
-  }
-  reset() {
-    this.prop0 = '';
-    this.prop1 = false;
-    this.prop2 = -1;
-    this.prop3 = 0;
-    this._changedCounter = 0;
-    this._prop1ChangedCounter = 0;
-    this._prop1ChangeCounter = 0;
-    this._prop2ChangeCounter = 0;
-    this._customHandlerCounter = 0;
-    this._prop1ChangePayload = null;
-    this._prop2ChangePayload = null;
-    this._customHandlerPayload = null;
-  }
-  changed() {
-    this._changedCounter++;
-  }
-  prop1Changed(event) {
-    this._prop1ChangedCounter++;
-    this._prop1ChangedPayload = event;
-  }
-  onProp1Change(event) {
-    this._prop1ChangeCounter++;
-    this._prop1ChangePayload = event;
-  }
-  onProp2Change(event) {
-    this._prop2ChangeCounter++;
-    this._prop2ChangePayload = event;
-  }
-  onCustomEvent(event) {
-    this._customHandlerCounter++;
-    this._customHandlerPayload = event;
-  }
-  constructor(props) {
-    super(props);
-  }
+async function waitTick() {
+  return new Promise((resolve) => {
+    setTimeout(()=>{
+      resolve();
+    });
+  });
 }
 
-TestNode.Register();
-
 class Node {
-  constructor() {
-    this._prop3ChangeCounter = 0;
-    this._prop3ChangePayload = null;
-    this.prop3Change = (event) => {
-      this._prop3ChangeCounter++;
-      this._prop3ChangePayload = event;
-    };
-    this.node = new TestNode({'on-prop2-changed': 'onProp2Change', 'on-prop3-changed': this.prop3Change});
-    this.node.connect(window);
-  }
-  reset() {
-    this.node.reset();
-    this._prop3ChangeCounter = 0;
-    this._prop3ChangePayload = null;
-  }
   run() {
     describe('Node', () => {
       it('should have core API defined', () => {
@@ -28903,6 +28832,64 @@ class Node {
 
         node.dispose();
       });
+      it('should invoke property mutation handler functions on mutation event', async () => {
+        class TestNode extends Node$1 {
+          static get Properties() {
+            return {
+              obj1: {
+                type: Object,
+                observe: true,
+              },
+              obj2: {
+                type: Object,
+                observe: true,
+              },
+              _changedCounter: 0,
+              _obj1MutatedCounter: 0,
+              _obj2MutatedCounter: 0,
+            };
+          }
+          changed() {
+            this._changedCounter++;
+          }
+          obj1Mutated() {
+            this._obj1MutatedCounter++;
+          }
+          obj2Mutated() {
+            this._obj2MutatedCounter++;
+          }
+        }
+        TestNode.Register();
+
+        const node = new TestNode();
+        node.connect(window);
+
+        chai.expect(node._changedCounter).to.equal(1);
+        chai.expect(node._obj1MutatedCounter).to.equal(0);
+
+        node.dispatchEvent('object-mutated', {object: node.obj1}, false, window);
+
+        // await waitTick();
+        
+        chai.expect(node._changedCounter).to.equal(2);
+        chai.expect(node._obj1MutatedCounter).to.equal(1);
+        chai.expect(node._obj2MutatedCounter).to.equal(0);
+
+        node.dispatchEvent('object-mutated', {object: node.obj2}, false, window);
+
+        await waitTick();
+
+        chai.expect(node._changedCounter).to.equal(3);
+        chai.expect(node._obj1MutatedCounter).to.equal(1);
+        chai.expect(node._obj2MutatedCounter).to.equal(1);
+
+        // chai.expect(node._prop2ChangedCounter).to.equal(0);
+        // chai.expect(node._prop1ChangedPayload.detail.property).to.equal('prop1');
+        // chai.expect(node._prop1ChangedPayload.detail.oldValue).to.equal('');
+        // chai.expect(node._prop1ChangedPayload.detail.value).to.equal('one');
+
+        node.dispose();
+      });
       it('should invoke listener handler functions on events', () => {
         class TestNode extends Node$1 {
           static get Properties() {
@@ -29005,57 +28992,50 @@ class Node {
         chai.expect(binding.source).to.be.equal(node);
         chai.expect(binding.sourceProp).to.be.equal('prop1');
         
-        const boundNode0 = new TestNode({prop1: binding});
         const boundNode1 = new TestNode({prop1: binding});
-        boundNode1.prop2 = binding;
-        boundNode0.connect(window);
+        const boundNode2 = new TestNode({prop1: binding});
+        boundNode2.prop2 = binding;
         boundNode1.connect(window);
+        boundNode2.connect(window);
 
-        chai.expect(binding.targets[0]).to.be.equal(boundNode0);
-        chai.expect(binding.targets[1]).to.be.equal(boundNode1);
-        chai.expect(binding.targets.length).to.be.equal(2);
-        chai.expect(binding.targetProps.get(boundNode0)[0]).to.be.equal('prop1');
-        chai.expect(binding.targetProps.get(boundNode0)[1]).to.be.equal(undefined);
+        chai.expect(binding.targets[0]).to.be.equal(boundNode1);
+        chai.expect(binding.targets[1]).to.be.equal(boundNode2);
         chai.expect(binding.targetProps.get(boundNode1)[0]).to.be.equal('prop1');
-        chai.expect(binding.targetProps.get(boundNode1)[1]).to.be.equal('prop2');
-
-        node.prop1 = 'one';
-        chai.expect(boundNode0.prop1).to.be.equal('one');
-        chai.expect(boundNode0.prop2).to.be.equal('');
-        chai.expect(boundNode1.prop1).to.be.equal('one');
-        chai.expect(boundNode1.prop2).to.be.equal('one');
+        chai.expect(binding.targetProps.get(boundNode1)[1]).to.be.equal(undefined);
+        chai.expect(binding.targetProps.get(boundNode2)[0]).to.be.equal('prop1');
+        chai.expect(binding.targetProps.get(boundNode2)[1]).to.be.equal('prop2');
         
-        boundNode0.prop1 = 'two';
+        node.prop1 = 'one';
+        chai.expect(boundNode1.prop1).to.be.equal('one');
+        chai.expect(boundNode1.prop2).to.be.equal('');
+        chai.expect(boundNode2.prop1).to.be.equal('one');
+        chai.expect(boundNode2.prop2).to.be.equal('one');
+        
+        boundNode1.prop1 = 'two';
         chai.expect(node.prop1).to.be.equal('two');
-        chai.expect(boundNode1.prop1).to.be.equal('two');
-
-        boundNode0.dispose();
+        chai.expect(boundNode2.prop1).to.be.equal('two');
+        
+        chai.expect(binding.targets.length).to.be.equal(2);
         boundNode1.dispose();
+        chai.expect(binding.targets.length).to.be.equal(1);
+        boundNode2.dispose();
         chai.expect(binding.targets.length).to.be.equal(0);
 
         node.dispose();
       });
-      describe('Binding', () => {
-
-        it('should update bound values correctly', () => {
-          const binding = this.node.bind('prop2');
-          const boundNode = new TestNode({prop3: binding});
-          const boundNode1 = new TestNode();
-          boundNode1.prop3 = binding;
-          this.reset();
-          this.node.prop2 = 9;
-          chai.expect(boundNode.prop3).to.be.equal(9);
-          this.reset();
-          chai.expect(boundNode.prop3).to.be.equal(-1);
-          boundNode.dispose();
-          boundNode1.dispose();
-          // binding.dispose();
-        });
-        // Im plement and test binding disconnection and disposal
-      });
     });
   }
 }
+
+class TestNode extends Node$1 {
+  static get Properties() {
+    return {
+      prop0: String,
+      prop2: Infinity,
+    };
+  }
+}
+TestNode.Register();
 
 class TestElement extends IoElement {
   static get Properties() {
@@ -30062,7 +30042,7 @@ class Queue {
    * @param {Node} node - Reference to the owner node/element.
    */
   constructor(node) {
-    Object.defineProperty(this, '__array', {enumerable: false, configurable: true, value: new Array()});
+    Object.defineProperty(this, '__changes', {enumerable: false, configurable: true, value: new Array()});
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
   }
   /**
@@ -30073,11 +30053,11 @@ class Queue {
    * @param {*} oldValue Old property value.
    */
   queue(prop, value, oldValue) {
-    const i = this.__array.indexOf(prop);
+    const i = this.__changes.indexOf(prop);
     if (i === -1) {
-      this.__array.push(prop, {property: prop, value: value, oldValue: oldValue});
+      this.__changes.push(prop, {property: prop, value: value, oldValue: oldValue});
     } else {
-      this.__array[i + 1].value = value;
+      this.__changes[i + 1].value = value;
     }
   }
   /**
@@ -30093,10 +30073,10 @@ class Queue {
     const node = this.__node;
     let changed = false;
 
-    while (this.__array.length) {
-      const j = this.__array.length - 2;
-      const prop = this.__array[j];
-      const detail = this.__array[j + 1];
+    while (this.__changes.length) {
+      const j = this.__changes.length - 2;
+      const prop = this.__changes[j];
+      const detail = this.__changes[j + 1];
       const payload = {detail: detail};
 
       if (detail.value !== detail.oldValue) {
@@ -30104,7 +30084,7 @@ class Queue {
         if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
         node.dispatchEvent(prop + '-changed', payload.detail);
       }
-      this.__array.splice(j, 2);
+      this.__changes.splice(j, 2);
     }
 
     if (changed) node.dispatchChange();
@@ -30113,8 +30093,8 @@ class Queue {
 
     // TODO: It is possible that an effect of change adds additional items to the queue
     // TODO: Test and document! 
-    // this.__array.length = 0;
-    if (this.__array.length) {
+    // this.__changes.length = 0;
+    if (this.__changes.length) {
       this.dispatch();
       return;
     }
@@ -30124,9 +30104,9 @@ class Queue {
    * Use this when node queue is no longer needed.
    */
   dispose() {
-    this.__array.length = 0;
+    this.__changes.length = 0;
     delete this.__node;
-    delete this.__array;
+    delete this.__changes;
   }
 }
 
@@ -30162,15 +30142,15 @@ class Queue$1 {
     describe('Queue', () => {
       it('Should have correct defaults', () => {
         chai.expect(typeof this.queue.__node).to.be.equal('object');
-        chai.expect(typeof this.queue.__array).to.be.equal('object');
-        chai.expect(this.queue.__array.length).to.be.equal(0);
-        chai.expect(this.queue.__array instanceof Array).to.be.equal(true);
+        chai.expect(typeof this.queue.__changes).to.be.equal('object');
+        chai.expect(this.queue.__changes.length).to.be.equal(0);
+        chai.expect(this.queue.__changes instanceof Array).to.be.equal(true);
         this.reset();
       });
       it('Should dispose correctly', () => {
         this.queue.dispose();
         chai.expect(typeof this.queue.__node).to.be.equal('undefined');
-        chai.expect(typeof this.queue.__array).to.be.equal('undefined');
+        chai.expect(typeof this.queue.__changes).to.be.equal('undefined');
         this.reset();
       });
       it('Should trigger change events', () => {
@@ -30233,8 +30213,6 @@ class Item {
           chai.expect(this.element.innerText).to.equal('Array(4)');
           this.element.label = 'label';
           chai.expect(this.element.innerText).to.equal('label');
-          this.element.label = {};
-          chai.expect(this.element.innerText).to.equal('[object Object]');
           this.element.value = undefined;
           this.element.label = '';
         });
