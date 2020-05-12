@@ -1,7 +1,7 @@
 {
   "name": "io-gui",
   "version": "1.1.0-rc2",
-  "description": "UI framework for computer graphics on the web.",
+  "description": "IoGui is a future-oriented framework for the web.",
   "jsnext:main": "build/io.js",
   "module": "build/io.js",
   "files": [
@@ -26,20 +26,7 @@
     "type": "git",
     "url": "git+https://github.com/io-gui/io.git"
   },
-  "keywords": [
-    "io",
-    "gui",
-    "ui",
-    "ux",
-    "navigation",
-    "menu",
-    "io-gui",
-    "web components",
-    "custom elements",
-    "computer graphics",
-    "reactive",
-    "data binding"
-  ],
+  "keywords": ["io","gui","io-gui","iogui"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
   "bugs": {
