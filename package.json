@@ -1,6 +1,6 @@
 {
   "name": "iogui",
-  "version": "1.1.0-rc2",
+  "version": "0.0.1-rc1",
   "description": "IoGui is a simple web framework for the web.",
   "jsnext:main": "build/io.js",
   "module": "build/io.js",
