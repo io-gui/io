@@ -1,7 +1,7 @@
 {
   "name": "io-gui",
   "version": "1.1.0-rc2",
-  "description": "IoGui is a future-oriented framework for the web.",
+  "description": "IoGui is a a simple web framework for the web.",
   "jsnext:main": "build/io.js",
   "module": "build/io.js",
   "files": [

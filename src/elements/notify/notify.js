@@ -7,6 +7,8 @@ export class IoNotify extends IoElement {
     :host {
       display: flex;
       position: fixed;
+      top: 0;
+      left: 0;
       box-sizing: border-box;
       background-color: var(--io-background-color-dark);
       border: var(--io-border);

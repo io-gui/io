@@ -140,14 +140,12 @@ export class IoMdView extends IoElement {
   }
   parseMarkdown(markdown) {
     if (marked) {
-      if (marked) {
-        marked.setOptions({
-          sanitize: false,
-          highlight: function(code) {
-            return window.hljs ? window.hljs.highlightAuto(code).value : null;
-          },
-        });
-      }
+      marked.setOptions({
+        sanitize: false,
+        highlight: function(code) {
+          return window.hljs ? window.hljs.highlightAuto(code).value : null;
+        },
+      });
       this.innerHTML = marked(markdown);
       this.classList.toggle('io-loading', false);
       this.dispatchEvent('content-ready', {}, true);
