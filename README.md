@@ -10,14 +10,14 @@ IoGui lets you write fast, type-safe and reactive custom elements that update on
 
 IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting.
 
-For quick start, read about the [basic usage](https://iogui.dev/#path=docs/introduction/), check out the included [collection of elements](https://iogui.dev/#path=demos/elements) and the the <a href="https://github.com/iogui/iogui/" target="_blank">source code</a>. Stay in touch on [Twitter](https://twitter.com/io_gui_js).
+For quick start, read about the [basic usage](https://iogui.dev/#path=docs/introduction/), check out the included [collection of elements](https://iogui.dev/#path=demos/elements) and the the <a href="https://github.com/io-gui/iogui/" target="_blank">source code</a>. Stay in touch on [Twitter](https://twitter.com/io_gui_js).
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/iogui"><img src="https://img.shields.io/npm/v/iogui.svg" alt="NPM package" /></a>
-  <a href="https://bundlephobia.com/result?p=iogui"><img src="https://badgen.net/bundlephobia/minzip/iogui" alt="Build Size" /></a>
-  <a href="https://travis-ci.org/iogui/io"><img src="https://travis-ci.org/iogui/io.svg?branch=dev" alt="Build Status" /></a>
-  <a href="https://david-dm.org/iogui/io"><img src="https://img.shields.io/david/iogui/io.svg" alt="Dependencies" /></a>
-  <a href="https://david-dm.org/iogui/io?type=dev"><img src="https://img.shields.io/david/dev/iogui/io.svg" alt="Dev Dependencies" /></a>
-  <a href="https://lgtm.com/projects/g/iogui/iogui/context:javascript"><img src="https://img.shields.io/lgtm/grade/javascript/g/iogui/io.svg?label=code%20quality" alt="Code Quality" /></a>
-  <a href="https://github.com/iogui/iogui/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/iogui.svg" alt="License" /></a>
+  <a href="https://www.npmjs.com/package/@iogui/iogui"><img src="https://img.shields.io/npm/v/@iogui/iogui.svg" alt="NPM package" /></a>
+  <a href="https://bundlephobia.com/result?p=@iogui/iogui"><img src="https://badgen.net/bundlephobia/minzip/@iogui/iogui" alt="Build Size" /></a>
+  <a href="https://travis-ci.org/io-gui/iogui"><img src="https://travis-ci.org/io-gui/iogui.svg?branch=dev" alt="Build Status" /></a>
+  <a href="https://david-dm.org/io-gui/iogui"><img src="https://img.shields.io/david/io-gui/iogui.svg" alt="Dependencies" /></a>
+  <a href="https://david-dm.org/io-gui/iogui?type=dev"><img src="https://img.shields.io/david/dev/io-gui/iogui.svg" alt="Dev Dependencies" /></a>
+  <a href="https://lgtm.com/projects/g/io-gui/iogui/context:javascript"><img src="https://img.shields.io/lgtm/grade/javascript/g/io-gui/iogui.svg?label=code%20quality" alt="Code Quality" /></a>
+  <a href="https://github.com/io-gui/iogui/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/iogui.svg" alt="License" /></a>
 </p>
