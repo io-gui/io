@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <title>UI framework for computer graphics on the web</title>
+    <title>IoGui - a simple web framework</title>
 
-    <meta name="description" content="Io is a UI framework for computer graphics applications on the web. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for interactions, menus, layout and presentation." />
+    <meta name="description" content="IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
     <meta name="keywords" content="io, gui, ui, ux, navigation, menu, io-gui, web components, custom elements, reactive, data binding, user interface, library, javascript, web development, webdev" />
 
-    <meta itemprop="name" content="UI framework for computer graphics on the web" />
-    <meta itemprop="description" content="Io is a UI framework for computer graphics applications on the web. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for interactions, menus, layout and presentation." />
+    <meta itemprop="name" content="IoGui is a a simple web framework for the web." />
+    <meta itemprop="description" content="IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
 
     <!-- Web application enable -->
     <link rel="manifest" href="/manifest.json" />
@@ -18,8 +18,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <!-- Web application name -->
-    <meta name="application-name" content="UI framework for computer graphics on the web" />
-    <meta name="apple-mobile-web-app-title" content="UI framework for computer graphics on the web" />
+    <meta name="application-name" content="IoGui is a a simple web framework for the web." />
+    <meta name="apple-mobile-web-app-title" content="IoGui is a a simple web framework for the web." />
 
     <!-- Browser UI color -->
     <meta name="theme-color" content="#f5f5f5" />
@@ -45,37 +45,279 @@
     <!-- Social sharing data -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Io GUI: Documentation" />
-    <meta name="twitter:description" content="Io is a UI framework for computer graphics applications on the web. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for interactions, menus, layout and presentation." />
+    <meta name="twitter:description" content="IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
     <meta name="twitter:site" content="io-gui.dev" />
     <meta name="twitter:creator" content="akirodic" />
-    <meta name="twitter:image" content="https://io-gui.dev/images/logo/io-512.png?001">
+    <meta name="twitter:image" content="https://io-gui.dev/io/images/logo/io-512.png?002">
     <meta name="twitter:image:alt" content="Io GUI">
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Io GUI: Documentation" />
-    <meta property="og:description" content="Io is a UI framework for computer graphics applications on the web. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for interactions, menus, layout and presentation." />
-    <meta property="og:image" content="https://io-gui.dev/images/logo/io-512.png?001" />
+    <meta property="og:description" content="IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
+    <meta property="og:image" content="https://io-gui.dev/io/images/logo/io-512.png?002" />
     <meta property="og:locale" content="en_US" />
+
+    <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet">
 
     <link lazyload href="./lib/highlight.a11y-light.css" rel="stylesheet">
     <script src="./lib/detect.js"></script>
     <script src="./lib/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+
     <style>
-      html, body {
+      html {
         font: 16px 'Open Sans', Helvetica, Arial, sans-serif;
+        width: 100%;
+        height: 100%;
+      }
+      body {
         padding: 0;
         margin: 0;
         width: 100%;
         height: 100%;
       }
-      io-docs {
+      io-main-page {
+        display: flex;
+        flex-direction: column;
         height: 100%;
       }
+      .main > io-menu-options {
+        background-color: var(--io-background-color);
+      }
+      io-sidebar:not([collapsed]) {
+        flex-basis: 11em !important;
+      }
+      io-main-page iframe {
+        border: none;
+        flex: 1 1;
+      }
     </style>
-    <script type="module" src="./build/io-docs.js"></script>
+    <link href="./lib/mocha.css" rel="stylesheet" />
   </head>
   <body>
+    <script type="module">
+
+    import {Node, Options} from './build/io.js';
+    import {IoSelectorTabs, IoThemeSingleton, IoStorageFactory as $} from './build/io-elements.js';
+    import './build/io-extras.js';
+
+    class PathString extends Node {
+      static get Properties() {
+        return {
+          path: {
+            type: Array,
+            value: null,
+          },
+          string: $({key: 'path', storage: 'hash'}),
+        };
+      }
+      constructor(props) {
+        super(props);
+        this.stringChanged();
+      }
+      pathChanged() {
+        let string = '';
+        for (let i = 0; i < this.path.length; i++) {
+          if (this.path[i].search(/\/|\#|\s/) !== -1) {
+            console.warn(`IoGUI PathString: path value ${this.path[i]} cannot be converted to string. Don't use "/", " " and "#"`);
+            break;
+          }
+          string += this.path[i];
+          if (i !== this.path.length - 1) {
+            string += '/';
+          }
+        }
+        this.string = string;
+      }
+      stringChanged() {
+        if (!this.string) this.path = [];
+        else this.path = this.string.split(/\//);
+      }
+    }
+    PathString.Register();
+
+    const pathString = new PathString();
+    pathString.connect(this);
+
+    const docPath = './docs/';
+    const srcPath = './src/';
+    const elementsPath = './src/elements/';
+
+    const OPTIONS = new Options([
+      {label: 'About', value: 'home', icon: 'icons:io_logo'}, 
+      {label: 'Documentation', value: 'docs', options: [
+        {label: 'Introduction', value: 'introduction', options: [
+          {label: 'Usage', value: docPath + 'getting-started.md#usage'},
+          {label: 'Simple App Example', value: docPath + 'getting-started.md#simple-app-example'},
+          {label: 'Style', value: docPath + 'getting-started.md#style'},
+          {label: 'Properties', value: docPath + 'getting-started.md#properties'},
+          {label: 'Listeners', value: docPath + 'getting-started.md#listeners'},
+          {label: 'Change Functions', value: docPath + 'getting-started.md#change-functions'},
+          {label: 'Simple App Recap', value: docPath + 'getting-started.md#simple-app-recap'},
+        ]},
+        {label: 'Advanced', value: 'advanced', options: [
+          {label: 'Creating Elements', value: docPath + 'learn-more.md#creating-elements'},
+          {label: 'Properties', value: docPath + 'learn-more.md#properties'},
+          {label: 'Property Configuration', value: docPath + 'learn-more.md#property-configuration'},
+          {label: 'Functions', value: docPath + 'learn-more.md#functions'},
+          {label: 'Events', value: docPath + 'learn-more.md#events'},
+          {label: 'Virtual DOM Arrays', value: docPath + 'learn-more.md#virtual-dom-arrays'},
+          {label: 'Data Binding', value: docPath + 'learn-more.md#data-binding'},
+          {label: 'Data Flow', value: docPath + 'learn-more.md#data-flow'},
+        ]},
+        {label: 'Reference', value: 'reference', options: [
+          {label: 'Node', value: srcPath + 'core/node.md'},
+          {label: 'IoElement', value: srcPath + 'core/io-element.md'},
+          {label: 'Core Elements', value: 'coreelements', options: [
+            {label: 'IoItem', value: elementsPath + 'core/item.md'},
+            {label: 'IoGl', value: elementsPath + 'core/gl.md'},
+            {label: 'IoButton', value: elementsPath + 'core/button.md'},
+            {label: 'IoBoolean', value: elementsPath + 'core/boolean.md'},
+            {label: 'IoBoolicon', value: elementsPath + 'core/boolicon.md'},
+            {label: 'IoSwitch', value: elementsPath + 'core/switch.md'},
+            {label: 'IoString', value: elementsPath + 'core/string.md'},
+            {label: 'IoNumber', value: elementsPath + 'core/number.md'},
+            {label: 'IoSlider', value: elementsPath + 'core/slider.md'},
+            {label: 'IoNumberSlider', value: elementsPath + 'core/number-slider.md'},
+            {label: 'IoSliderRange', value: elementsPath + 'core/slider-range.md'},
+            {label: 'IoNumberSliderRange', value: elementsPath + 'core/number-slider-range.md'},
+            {label: 'IoIcon', value: elementsPath + 'core/icon.md'},
+            {label: 'IoIconsetSingleton', value: elementsPath + 'core/iconset.md'}, // TODO: singleton callout
+            {label: 'IoLayerSingleton', value: elementsPath + 'core/layer.md'}, // TODO: singleton callout
+            {label: 'IoLadderSingleton', value: elementsPath + 'core/ladder.md'}, // TODO: singleton callout
+            {label: 'IoThemeSingleton', value: elementsPath + 'core/theme.md'}, // TODO: singleton callout
+          ]},
+          {label: 'Menus', value: 'menus', options: [
+            {label: 'IoMenuItem', value: elementsPath + 'menus/menu-item.md'},
+            {label: 'IoMenuOptions', value: elementsPath + 'menus/menu-options.md'},
+            {label: 'IoOptionMenu', value: elementsPath + 'menus/option-menu.md'},
+            {label: 'IoContextMenu', value: elementsPath + 'menus/context-menu.md'},
+          ]},
+          {label: 'Object Editors', value: 'objecteditors', options: [
+            {label: 'IoProperties', value: elementsPath + 'object/properties.md'},
+            {label: 'IoObject', value: elementsPath + 'object/object.md'},
+            {label: 'IoInspector', value: elementsPath + 'object/inspector.md'},
+            {label: 'IoBreadcrumbs', value: elementsPath + 'object/breadcrumbs.md'},
+            {label: 'IoConfig', value: elementsPath + 'object/config.md'},
+            {label: 'IoGroups', value: elementsPath + 'object/groups.md'},
+            {label: 'IoWidgets', value: elementsPath + 'object/widgets.md'},
+          ]},
+          {label: 'Math', value: 'math', options: [
+            {label: 'IoVector', value: elementsPath + 'math/vector.md'},
+            {label: 'IoMatrix', value: elementsPath + 'math/matrix.md'},
+          ]},
+          {label: 'Color', value: 'color', options: [
+            {label: 'IoColorMixin', value: elementsPath + 'color/color.md'},
+            {label: 'IoColorVector', value: elementsPath + 'color/color-vector.md'},
+            {label: 'IoColorPanel', value: elementsPath + 'color/color-panel.md'}, // TODO: singleton callout
+            {label: 'IoColorSwatch', value: elementsPath + 'color/color-swatch.md'},
+            {label: 'IoColorPicker', value: elementsPath + 'color/color-picker.md'},
+            {label: 'IoColorSliderHs', value: elementsPath + 'color/color-slider-hs.md'},
+            {label: 'IoColorSliderSv', value: elementsPath + 'color/color-slider-sv.md'},
+            {label: 'IoColorSliderSl', value: elementsPath + 'color/color-slider-sl.md'},
+            {label: 'IoColorSliderRed', value: elementsPath + 'color/color-slider-red.md'},
+            {label: 'IoColorSliderGreen', value: elementsPath + 'color/color-slider-green.md'},
+            {label: 'IoColorSliderBlue', value: elementsPath + 'color/color-slider-blue.md'},
+            {label: 'IoColorSliderAlpha', value: elementsPath + 'color/color-slider-alpha.md'},
+            {label: 'IoColorSliderHue', value: elementsPath + 'color/color-slider-hue.md'},
+            {label: 'IoColorSliderSaturation', value: elementsPath + 'color/color-slider-saturation.md'},
+            {label: 'IoColorSliderValue', value: elementsPath + 'color/color-slider-value.md'},
+            {label: 'IoColorSliderLevel', value: elementsPath + 'color/color-slider-level.md'},
+            {label: 'IoColorSliderCyan', value: elementsPath + 'color/color-slider-cyan.md'},
+            {label: 'IoColorSliderMagenta', value: elementsPath + 'color/color-slider-magenta.md'},
+            {label: 'IoColorSliderYellow', value: elementsPath + 'color/color-slider-yellow.md'},
+            {label: 'IoColorSliderKey', value: elementsPath + 'color/color-slider-key.md'},
+          ]},
+          {label: 'Layout', value: 'layout', options: [
+            {label: 'IoCollapsable', value: elementsPath + 'layout/collapsable.md'},
+            {label: 'IoSelector', value: elementsPath + 'layout/selector.md'},
+            {label: 'IoSelectorTabs', value: elementsPath + 'layout/selector-tabs.md'},
+            {label: 'IoSelectorSidebar', value: elementsPath + 'layout/selector-sidebar.md'},
+            {label: 'IoSidebar', value: elementsPath + 'layout/sidebar.md'},
+            {label: 'IoLayout', value: elementsPath + 'layout/layout.md'},
+          ]},
+          {label: 'Extras', value: 'extras', options: [
+            {label: 'io-md-view', value: srcPath + 'extras/md-view.md'}, // TODO: md-view-selector
+            {label: 'io-service-loader', value: srcPath + 'extras/service-loader.md'},
+          ]},
+          {label: 'Core Classes', value: 'coreclasses', options: [
+            {label: 'Binding', value: srcPath + 'core/binding.md'},
+            {label: 'Functions', value: srcPath + 'core/functions.md'},
+            {label: 'Listeners', value: srcPath + 'core/listeners.md'},
+            {label: 'Properties', value: srcPath + 'core/properties.md'},
+            {label: 'ProtoChain', value: srcPath + 'core/protochain.md'},
+            {label: 'Queue', value: srcPath + 'core/queue.md'},
+          ]},
+        ]},
+      ]}, 
+      {label: 'Demos', value: 'demos', options: [
+        {label: 'Elements', value: 'elements'},
+        {label: 'Theme', value: 'theme'},
+        {label: 'Todo App', value: 'todo'},
+        {label: 'Three.js', value: 'three'},
+        {label: 'Menu', value: 'menu'},
+        {label: 'Toggles', value: 'togles', options: [
+          {label: 'Toggle1', value: 'toggle1', select: 'toggle'},
+          {label: 'Toggle2', value: 'toggle2', select: 'toggle'},
+          {label: 'Toggle3', value: 'toggle3', select: 'toggle'},
+          {label: 'Toggle4', value: 'toggle4', select: 'toggle'},
+        ]},
+        {label: 'Toggle', value: 'toggle', select: 'toggle'},
+      ]},
+      {label: 'Tests', value: 'tests'},
+    ], {
+      selectedPath: pathString.bind('path')
+    });
+
+    export class IoMainPage extends IoSelectorTabs {
+      static get Properties() {
+        return {
+          role: 'main',
+          class: 'main',
+          cache: true,
+          horizontal: true,
+          options: OPTIONS,
+          selected: OPTIONS.bind('selectedRoot'),
+          depth: 2,
+          elements: [
+            ['io-md-view', {
+              name: 'home',
+              path: './README.md',
+              import: './build/io-extras.js'}],
+            ['io-selector', {
+              name: 'docs',
+              selected: OPTIONS.option('docs').bind('selectedRoot'),
+              elements: [
+                ['io-md-view-selector', {
+                  name: 'introduction',
+                  selected: OPTIONS.option('docs').option('introduction').bind('selectedLeaf'),
+                  options: OPTIONS.option('docs').option('introduction').options,
+                }],
+                ['io-md-view-selector', {
+                  name: 'advanced',
+                  selected: OPTIONS.option('docs').option('advanced').bind('selectedLeaf'),
+                  options: OPTIONS.option('docs').option('advanced').options,
+                }],
+                ['io-md-view-selector', {
+                  name: 'reference',
+                  selected: OPTIONS.option('docs').option('reference').bind('selectedLeaf'),
+                  options: OPTIONS.option('docs').option('reference').options,
+                }],
+              ]
+            }],
+            ['io-selector', {name: 'demos', selected: OPTIONS.option('demos').bind('selectedRoot'), elements: [
+              ['io-demo-elements', {name: 'elements', import: './demos/elements.js'}],
+              ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],
+              ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],
+              ['iframe', {name: 'todo', title: 'TODO MVC', src: './demos/todomvc/index.html'}],
+            ]}],
+            ['io-tests', {name: 'tests', title: 'Tests', import: './build/io-tests.js'}],
+          ]
+        };
+      }
+    }
+    IoMainPage.Register();
+    </script>
     <noscript>JavaScript is required to view this page!</noscript>
-    <io-docs role="main"></io-docs>
+    <io-main-page></io-main-page>
   </body>
 </html>

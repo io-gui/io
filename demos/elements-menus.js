@@ -1,5 +1,4 @@
 import {IoElement, Options, OptionItem} from '../../io/build/io.js';
-import {IoStorageFactory as $} from '../../io/build/io-elements.js';
 
 const suboptions = new Options();
 const options = new Options([

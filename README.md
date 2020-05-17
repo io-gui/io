@@ -1,20 +1,16 @@
-<p align="center" style="margin-top:2em"><a href="https://io-gui.dev" target="_blank" rel="noopener noreferrer"><img width="150" src="https://io-gui.dev/io/images/logo/io-logo.svg" alt="Io GUI Logo"></a></p>
+  <p style="margin-top:2em"><a href="https://io-gui.dev" target="_blank" rel="noopener noreferrer"><img width="256" src="https://io-gui.dev/io/images/logo/io-logo.svg" alt="Io GUI Logo"></a></p>
 
-## About Io
+## Introduction
 
-Io is a UI framework for computer graphics applications on the web. It supports virtual DOM, reactive rendering and data binding. It comes with a collection of UI elements for interactions, menus, layout and presentation.
+IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process.
 
-For quick start, read this document, then check out included [collection of elements](#doc=elements-core#IoItem) and the the <a href="https://github.com/io-gui/io/" target="_blank">source code</a>.
+IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript.
 
-Stay in touch on [Twitter](https://twitter.com/io_gui_js).
+IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos.
 
-### Core UI library
+IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting.
 
-The core library includes the most basic classes such as [Node](#doc=core-classes#Node) and [IoElement](#doc=core-classes#IoElement) for buliding custom elements with minimal boilerplate. It also provides data binding, reactive functions and event-based data synchronization.
-
-### Design System
-
-Io design system includes a [collection of UI elements](#doc=elements-core#IoItem) that range from simple [input fields](#doc=elements-core#IoString), to [menu systems](#doc=elements-menus#IoMenuItem) and [responsive layouts](#doc=elements-layout#IoCollapsable).
+For quick start, read about the [basic usage](https://io-gui.dev/#path=docs/introduction/), check out the included [collection of elements](https://io-gui.dev/#path=demos/elements) and the the <a href="https://github.com/io-gui/io/" target="_blank">source code</a>. Stay in touch on [Twitter](https://twitter.com/io_gui_js).
 
 <p align="center">
   <a href="https://www.npmjs.com/package/io-gui"><img src="https://img.shields.io/npm/v/io-gui.svg" alt="NPM package" /></a>

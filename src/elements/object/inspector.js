@@ -163,7 +163,7 @@ export class IoInspector extends IoElement {
           ['io-collapsable', {
             label: group,
             expanded: $({value: autoExpanded, storage: 'local', key: this.uuid + '-' + group}),
-            elements: [this._widgets.groups[group]] || [],
+            elements: [this._widgets.groups[group]],
             class: 'io-panel',
           }]
         );
