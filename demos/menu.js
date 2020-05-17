@@ -1,5 +1,5 @@
-import {IoElement, Options, OptionItem} from '../../iogui/build/io.js';
-import  '../../iogui/build/io-elements.js';
+import {IoElement, Options, OptionItem} from '../build/io.js';
+import  '../build/io-elements.js';
 
 class IoOptionsDemoView extends IoElement {
   static get Style() {
