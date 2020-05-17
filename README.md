@@ -1,4 +1,4 @@
-  <p style="margin-top:2em"><a href="https://io-gui.dev" target="_blank" rel="noopener noreferrer"><img width="256" src="https://io-gui.dev/io/images/logo/io-logo.svg" alt="Io GUI Logo"></a></p>
+  <p style="margin-top:2em"><a href="https://io-gui.dev" target="_blank" rel="noopener noreferrer"><img width="256" src="https://io-gui.dev/io/images/logo/io-logo.svg" alt="IoGui Logo"></a></p>
 
 ## Introduction
 
