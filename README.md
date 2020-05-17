@@ -6,7 +6,7 @@ IoGui is a user interface library and a framework for web development written in
 
 IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript.
 
-IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos.
+IoGui lets you write fast, type-safe and reactive custom elements that respond to state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos.
 
 IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting.
 
