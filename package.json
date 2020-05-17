@@ -1,5 +1,5 @@
 {
-  "name": "iogui",
+  "name": "@iogui/iogui",
   "version": "0.0.1-rc1",
   "description": "IoGui is a simple web framework for the web.",
   "jsnext:main": "build/io.js",
