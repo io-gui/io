@@ -1,5 +1,5 @@
-import {IoElement} from '../../io/build/io.js';
-import '../../io/build/io-elements.js';
+import {IoElement} from '../../iogui/build/io.js';
+import '../../iogui/build/io-elements.js';
 
 export class IoDemoElementsCore extends IoElement {
   static get Properties() {

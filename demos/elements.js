@@ -1,4 +1,4 @@
-import {IoElement} from '../../io/build/io.js';
+import {IoElement} from '../../iogui/build/io.js';
 import './elements-core.js';
 import './elements-sliders.js';
 import './elements-math.js';

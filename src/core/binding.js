@@ -81,7 +81,7 @@ class Binding {
     if (this.targets.indexOf(event.target) === -1) {
       console.error(
         `_onTargetChanged() should never fire when target is removed from binding.
-        Please file an issue at https://github.com/arodic/io/issues.`
+        Please file an issue at https://github.com/arodic/iogui/issues.`
       );
       return;
     }
@@ -104,7 +104,7 @@ class Binding {
     if (event.target != this.source) {
       console.error(
         `_onSourceChanged() should always originate form source node.
-        Please file an issue at https://github.com/arodic/io/issues.`
+        Please file an issue at https://github.com/arodic/iogui/issues.`
       );
       return;
     }

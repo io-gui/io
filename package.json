@@ -30,7 +30,7 @@
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/iogui/io/issues"
+    "url": "https://github.com/iogui/iogui/issues"
   },
   "homepage": "https://iogui.dev",
   "devDependencies": {

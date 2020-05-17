@@ -1,4 +1,4 @@
-import {IoElement, Options, OptionItem} from '../../io/build/io.js';
+import {IoElement, Options, OptionItem} from '../../iogui/build/io.js';
 
 const suboptions = new Options();
 const options = new Options([
