@@ -10,7 +10,7 @@ IoGui lets you write fast, type-safe and reactive custom elements that respond t
 
 IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting.
 
-For quick start, read about the [basic usage](https://iogui.dev/#path=docs/introduction/), check out the included [collection of elements](https://iogui.dev/#path=demos/elements) and the the <a href="https://github.com/io-gui/iogui/" target="_blank">source code</a>. Stay in touch on [Twitter](https://twitter.com/io_gui_js).
+For quick start, read about the [basic usage](https://iogui.dev/#path=docs/introduction/), check out the included [collection of elements](https://iogui.dev/#path=demos/elements) and the the <a href="https://github.com/io-gui/iogui/" target="_blank">source code</a>. Stay in touch on [Twitter](https://twitter.com/ioguijs).
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@iogui/iogui"><img src="https://img.shields.io/npm/v/@iogui/iogui.svg" alt="NPM package" /></a>
