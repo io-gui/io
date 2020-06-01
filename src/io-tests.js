@@ -1,4 +1,4 @@
-import {IoElement} from './io.js';
+import {IoElement} from './iogui.js';
 
 import '../lib/mocha.js';
 import '../lib/chai.js';

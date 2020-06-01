@@ -1,4 +1,4 @@
-import {IoElement, Options} from '../../io.js';
+import {IoElement, Options} from '../../iogui.js';
 // TODO: use IoContent for caching and display.
 
 export class IoSelector extends IoElement {

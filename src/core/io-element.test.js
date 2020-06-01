@@ -1,4 +1,4 @@
-import {IoElement, Node} from '../io.js';
+import {IoElement, Node} from '../iogui.js';
 
 class TestNode extends Node {
   static get Properties() {

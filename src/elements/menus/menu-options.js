@@ -1,4 +1,4 @@
-import {IoElement, Options, OptionItem} from '../../io.js';
+import {IoElement, Options, OptionItem} from '../../iogui.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
 import './menu-item.js';
 

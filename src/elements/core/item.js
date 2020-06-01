@@ -1,4 +1,4 @@
-import {IoElement} from '../../io.js';
+import {IoElement} from '../../iogui.js';
 
 export class IoItem extends IoElement {
   static get Style() {

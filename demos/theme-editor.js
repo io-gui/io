@@ -1,4 +1,4 @@
-import {IoElement, Options} from '../build/io.js';
+import {IoElement, Options} from '../build/iogui.js';
 import {IoThemeSingleton} from '../build/io-elements.js';
 
 export class IoDemoThemeEditor extends IoElement {

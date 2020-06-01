@@ -1,4 +1,4 @@
-import {Node, Binding} from '../io.js';
+import {Node, Binding} from '../iogui.js';
 
 async function waitTick() {
   return new Promise((resolve) => {

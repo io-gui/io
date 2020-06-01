@@ -1,4 +1,4 @@
-import {IoElement, Options, OptionItem} from '../build/io.js';
+import {IoElement, Options, OptionItem} from '../build/iogui.js';
 import  '../build/io-elements.js';
 
 class IoOptionsDemoView extends IoElement {

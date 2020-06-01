@@ -1,4 +1,4 @@
-import {IoElement} from '../../io.js';
+import {IoElement} from '../../iogui.js';
 import './properties.js';
 
 export class IoObject extends IoElement {

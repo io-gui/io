@@ -1,4 +1,4 @@
-import {ProtoChain} from '../io.js';
+import {ProtoChain} from '../iogui.js';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}

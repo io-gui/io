@@ -1,4 +1,4 @@
-import {IoElement} from '../build/io.js';
+import {IoElement} from '../build/iogui.js';
 import '../build/io-elements.js';
 
 export class IoDemoElementsMath extends IoElement {

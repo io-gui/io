@@ -1,5 +1,5 @@
 import './md-view.js';
-import {IoSelectorSidebar} from '../io-elements.js';
+import {IoSelectorSidebar} from '../layout/selector-sidebar.js';
 
 export class IoMdViewSelector extends IoSelectorSidebar  {
   update() {

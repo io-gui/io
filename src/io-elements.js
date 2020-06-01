@@ -82,5 +82,10 @@ export {IoSelectorTabs} from './elements/layout/selector-tabs.js';
 export {IoSelector} from './elements/layout/selector.js';
 export {IoSidebar} from './elements/layout/sidebar.js';
 
+export {IoMdView} from './elements/extras/md-view.js';
+export {IoMdViewSelector} from './elements/extras/md-view-selector.js';
+export {IoServiceLoader} from './elements/extras/service-loader.js';
+export {IoElementDemo} from './elements/extras/element-demo.js';
+
 // TODO
 export {IoNotify} from './elements/notify/notify.js';

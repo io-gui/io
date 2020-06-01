@@ -1,4 +1,4 @@
-import {IoElement} from '../../io.js';
+import {IoElement} from '../../iogui.js';
 import {IoColorMixin} from './color.js';
 import './color-picker.js';
 

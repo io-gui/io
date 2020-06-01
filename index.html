@@ -96,9 +96,8 @@
   <body>
     <script type="module">
 
-    import {Node, Options} from './build/io.js';
+    import {Node, Options} from './build/iogui.js';
     import {IoSelectorTabs, IoThemeSingleton, IoStorageFactory as $} from './build/io-elements.js';
-    import './build/io-extras.js';
 
     class PathString extends Node {
       static get Properties() {
@@ -281,8 +280,7 @@
           elements: [
             ['io-md-view', {
               name: 'home',
-              path: './README.md',
-              import: './build/io-extras.js'}],
+              path: './README.md'}],
             ['io-selector', {
               name: 'docs',
               selected: OPTIONS.option('docs').bind('selectedRoot'),

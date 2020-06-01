@@ -1,4 +1,4 @@
-import {Node} from '../../build/io.js';
+import {Node} from '../../build/iogui.js';
 
 export class TodoModel extends Node {
   static get Properties() {

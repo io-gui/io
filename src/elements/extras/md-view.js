@@ -1,5 +1,5 @@
-import {IoElement} from '../io.js';
-import marked from '../../lib/marked.esm.js';
+import {IoElement} from '../../iogui.js';
+import marked from '../../../lib/marked.esm.js';
 
 export class IoMdView extends IoElement {
   static get Style() {
