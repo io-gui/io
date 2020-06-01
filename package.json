@@ -3,7 +3,6 @@
   "version": "0.0.1-rc1",
   "description": "IoGui is a simple web framework for the web.",
   "main": "build/iogui.js",
-  "jsnext:main": "build/iogui.js",
   "module": "build/iogui.js",
   "type": "module",
   "files": [
@@ -27,7 +26,12 @@
     "type": "git",
     "url": "git+https://github.com/iogui/io.git"
   },
-  "keywords": ["io","gui","iogui","iogui"],
+  "keywords": [
+    "io",
+    "gui",
+    "iogui",
+    "iogui"
+  ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
   "bugs": {
