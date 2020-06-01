@@ -10,7 +10,7 @@ export class IoMdView extends IoElement {
       justify-self: stretch;
       flex: 1 1 auto;
       --io-code-size: 15px;
-      padding: 0.5em 1em;
+      padding: 0 1em;
     }
     :host > :first-child {
       margin-top: 0;
