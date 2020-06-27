@@ -1,4 +1,4 @@
-import {IoSlider} from '../../io-elements.js';
+import {IoSlider} from '../../iogui.js';
 
 export default class {
   constructor() {

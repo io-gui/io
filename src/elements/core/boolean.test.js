@@ -1,4 +1,4 @@
-import {IoBoolean} from '../../io-elements.js';
+import {IoBoolean} from '../../iogui.js';
 
 export default class {
   constructor() {

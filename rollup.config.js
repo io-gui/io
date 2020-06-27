@@ -71,6 +71,6 @@ function makeTarget(src, target) {
 
 export default [
   makeTarget('src/iogui.js', 'build/iogui.js'),
-  makeTarget('src/io-elements.js', 'build/io-elements.js'),
-  makeTarget('src/io-tests.js', 'build/io-tests.js'),
+  makeTarget('src/iogui.js', 'build/iogui.js'),
+  makeTarget('src/iogui.test.js', 'build/iogui.test.js'),
 ];

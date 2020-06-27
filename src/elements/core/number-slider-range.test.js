@@ -1,4 +1,4 @@
-import {IoNumberSliderRange} from '../../io-elements.js';
+import {IoNumberSliderRange} from '../../iogui.js';
 
 export default class {
   constructor() {

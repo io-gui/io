@@ -92,7 +92,7 @@ function runTests() {
   }
 }
 
-export class IoTests extends IoElement {
+export class IoTest extends IoElement {
   static get Style() {
     return /* css */`
       :host #mocha {
@@ -146,4 +146,4 @@ export class IoTests extends IoElement {
   }
 }
 
-IoTests.Register();
+IoTest.Register();

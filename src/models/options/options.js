@@ -1,4 +1,4 @@
-import {Node, NodeMixin} from './node.js';
+import {Node, NodeMixin} from '../../core/node.js';
 
 // TODO: document and test!
 // TODO: consider menu model mutations.

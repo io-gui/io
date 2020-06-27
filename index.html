@@ -97,7 +97,7 @@
     <script type="module">
 
     import {Node, Options} from './build/iogui.js';
-    import {IoSelectorTabs, IoThemeSingleton, IoStorageFactory as $} from './build/io-elements.js';
+    import {IoSelectorTabs, IoThemeSingleton, IoStorageFactory as $} from './build/iogui.js';
 
     class PathString extends Node {
       static get Properties() {
@@ -308,7 +308,7 @@
               ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],
               ['iframe', {name: 'todo', title: 'TODO MVC', src: './demos/todomvc/index.html'}],
             ]}],
-            ['io-tests', {name: 'tests', title: 'Tests', import: './build/io-tests.js'}],
+            ['io-test', {name: 'tests', title: 'Tests', import: './build/iogui.test.js'}],
           ]
         };
       }
