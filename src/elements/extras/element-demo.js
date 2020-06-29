@@ -1,5 +1,4 @@
-import {IoElement} from '../../iogui.js';
-import {IoStorageFactory as $} from '../core/storage.js';
+import {IoElement} from '../../core/io-element.js';
 
 export class IoElementDemo extends IoElement {
   static get Style() {

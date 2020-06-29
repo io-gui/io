@@ -1,4 +1,4 @@
-import {Node} from '../../iogui.js';
+import {Node} from '../../core/node.js';
 
 if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
 if (!('PushManager' in window)) { console.warn('No Push API Support!'); }

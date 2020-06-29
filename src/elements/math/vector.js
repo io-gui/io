@@ -1,4 +1,4 @@
-import {IoElement} from '../../iogui.js';
+import {IoElement} from '../../core/io-element.js';
 
 // TODO: preserve linked scaling through zero.
 export class IoVector extends IoElement {

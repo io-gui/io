@@ -1,6 +1,6 @@
 {
   "name": "@iogui/iogui",
-  "version": "0.0.1-rc1",
+  "version": "0.0.1-rc2",
   "description": "IoGui is a simple web framework for the web.",
   "main": "build/iogui.js",
   "module": "build/iogui.js",
@@ -16,9 +16,7 @@
     "docs": "node ./lib/generate-docs.js",
     "lint": "eslint src --fix",
     "rollup": "rollup -c",
-    "uglify-io": "uglifyjs build/iogui.js -cmo build/iogui.js --comments",
-    "uglify-elements": "uglifyjs build/iogui.js -cmo build/iogui.js --comments",
-    "uglify": "npm run uglify-io && npm run uglify-elements",
+    "uglify": "uglifyjs build/iogui.js -cmo build/iogui.js --comments",
     "build": "eslint src && npm run rollup && npm run uglify",
     "travis": "npm run build"
   },
