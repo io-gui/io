@@ -8,6 +8,6 @@ Extends `Node`.
 IoThemeSingleton.theme = 'dark';
 ```
 
-<io-element-demo element="io-option-menu" properties='{"value": "demo:theme", "options": ["light", "dark"]}'></io-element-demo>
+<io-element-demo element="io-option-menu" properties='{"value": "light", "options": ["light", "dark"]}'></io-element-demo>
 
 Moreover, some of the key theme variables such as `'--io-color'` and `'--io-background-color'` are mapped to numeric properties `cssColor` and `cssBackgroundColor` source code for more advanced example.

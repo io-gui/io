@@ -1,4 +1,4 @@
-import {IoElement, Options, OptionItem} from '../../iogui.js';
+import {IoElement, Options, Item} from '../../iogui.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
 import './menu-item.js';
 
@@ -188,7 +188,7 @@ export class IoMenuOptions extends IoElement {
           overflow = true;
         }
       }
-      // hamburger.__properties.option.value = new OptionItem({options: new Options(hamburgerOptions)});
+      // hamburger.__properties.option.value = new Item({options: new Options(hamburgerOptions)});
       this.overflow = overflow;
     } else {
       for (let i = buttons.length; i--;) {
@@ -261,7 +261,7 @@ export class IoMenuOptions extends IoElement {
           if (o.hint && o.hint.toLowerCase().search(s) !== -1) return true;
         }
       });
-      return options.length ? options : new Options([new OptionItem({label: 'No matches'})]);
+      return options.length ? options : new Options([new Item({label: 'No matches'})]);
     }
     return this.options;
   }
@@ -291,7 +291,7 @@ export class IoMenuOptions extends IoElement {
         title: 'select tab',
         depth: this.depth + 1,
         class: 'io-hamburger',
-        option: new OptionItem({
+        option: new Item({
           options: this._options
         }),
         lazy: false,

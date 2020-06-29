@@ -1,4 +1,4 @@
-import {IoElement, Options, OptionItem} from '../build/iogui.js';
+import {IoElement, Options, Item} from '../build/iogui.js';
 import  '../build/iogui.js';
 
 class IoOptionsDemoView extends IoElement {
@@ -13,7 +13,7 @@ class IoOptionsDemoView extends IoElement {
         background-color: var(--io-background-color-dark);
         display: flex;
       }
-      :host io-option-item-demo-view {
+      :host io-item-demo-view {
         margin-left: 0.5em;
       }
       :host io-item {
@@ -42,7 +42,7 @@ class IoOptionsDemoView extends IoElement {
   changed() {
     const options = [];
     for (let i = 0; i < this.options.length; i++) {
-      options.push(['io-option-item-demo-view', {option: this.options[i]}]);
+      options.push(['io-item-demo-view', {option: this.options[i]}]);
     }
     this.template([
       ['div', [
@@ -57,7 +57,7 @@ class IoOptionsDemoView extends IoElement {
 
 IoOptionsDemoView.Register();
 
-class IoOptionItemDemoView extends IoElement {
+class IoItemDemoView extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -75,7 +75,7 @@ class IoOptionItemDemoView extends IoElement {
   static get Properties() {
     return {
       option: {
-        type: OptionItem,
+        type: Item,
         strict: true,
       },
     };
@@ -94,7 +94,7 @@ class IoOptionItemDemoView extends IoElement {
   }
 }
 
-IoOptionItemDemoView.Register();
+IoItemDemoView.Register();
 
 class IoOptionsPathDemo extends IoElement {
   static get Properties() {

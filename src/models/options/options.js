@@ -1,5 +1,5 @@
 import {NodeMixin} from '../../core/node.js';
-import {OptionItem} from '../option-item/option-item.js';
+import {Item} from '../item/item.js';
 import {Path} from '../path/path.js';
 
 // TODO: document and test!
@@ -7,6 +7,11 @@ import {Path} from '../path/path.js';
 export class Options extends NodeMixin(Array) {
   static get Properties() {
     return {
+      items: {
+        type: Array,
+        readonly: true,
+        strict: true,
+      },
       path: {
         type: Path,
         readonly: true,
@@ -16,18 +21,19 @@ export class Options extends NodeMixin(Array) {
   }
   constructor(options = [], props = {}) {
     super(props);
+
     for (let i = 0; i < options.length; i++) {
       let option;
-      if (options[i] instanceof OptionItem) {
+      if (options[i] instanceof Item) {
         option = options[i];
       } else if (typeof options[i] === 'object') {
-        option = new OptionItem(options[i]);
+        option = new Item(options[i]);
       } else {
-        option = new OptionItem({value: options[i]});
+        option = new Item({value: options[i]});
       }
       this.push(option);
-      option.addEventListener('selected-changed', this.onOptionItemSelectedChanged);
-      option.addEventListener('path-changed', this.onOptionItemSelectedPathChanged);
+      option.addEventListener('selected-changed', this.onItemSelectedChanged);
+      option.addEventListener('path-changed', this.onItemSelectedPathChanged);
       option.connect(this);
     }
   }
@@ -58,8 +64,8 @@ export class Options extends NodeMixin(Array) {
       }
     }
   }
-  onOptionItemSelectedPathChanged(event) {
-    console.log('OPTION PATH CHANGED');
+  onItemSelectedPathChanged(event) {
+    // console.log('OPTION PATH CHANGED');
     const target = event.target;
     const targetPath = target.path.value;
     if (target.select === 'pick') {
@@ -68,7 +74,7 @@ export class Options extends NodeMixin(Array) {
       }
     }
   }
-  onOptionItemSelectedChanged(event) {
+  onItemSelectedChanged(event) {
     const target = event.target;
     const targetPath = target.path.value;
     if (target.select === 'pick') {

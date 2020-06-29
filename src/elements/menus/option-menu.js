@@ -1,4 +1,4 @@
-import {IoElement, Options, OptionItem} from '../../iogui.js';
+import {IoElement, Options, Item} from '../../iogui.js';
 import './menu-item.js';
 
 // TODO: fix tab-out without collapse
@@ -82,7 +82,7 @@ export class IoOptionMenu extends IoElement {
       }
     }
 
-    const option = new OptionItem({
+    const option = new Item({
       label: valueText,
       options: this.options,
     });

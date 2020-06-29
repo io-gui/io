@@ -85,15 +85,6 @@ export class IoElementDemo extends IoElement {
       }
     }
   }
-  propertiesChanged() {
-    // TODO: Unhack demovalues
-    for (let p in this.properties) {
-      const prop = this.properties[p];
-      if (typeof prop === 'string' && prop.startsWith('demo:')) {
-        this.properties[p] = $({key: prop});
-      }
-    }
-  }
   changed() {
     const properties = this.properties;
     const elements = [['io-boolicon', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];

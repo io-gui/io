@@ -5,14 +5,8 @@ export class Path extends Node {
     return {
       value: Array,
       string: String,
-      root: {
-        value: null,
-        readonly: true,
-      },
-      leaf: {
-        value: null,
-        readonly: true,
-      },
+      root: null,
+      leaf: null,
       delimiter: ':',
     };
   }
@@ -37,7 +31,7 @@ export class Path extends Node {
     let string = '';
     for (let i = 0; i < this.value.length; i++) {
       debug:
-      if (this.value[i].search(this.delimiter) !== -1) {
+      if (this.value[i] && typeof this.value[i] === 'string' && this.value[i].search(this.delimiter) !== -1) {
         console.warn(`IoGUI Path: Value ${this.value[i]} with special string "${this.delimiter}" cannot be used in path!`);
         break;
       }
@@ -55,5 +49,46 @@ export class Path extends Node {
     }
     this.value.length = array.length;
   }
+  rootChanged() {
+    if (this.value[0] !== this.root) {
+      this.value = [this.root];
+    }
+  }
+  leafChanged() {
+    const i = Math.max(0, this.value.length - 1);
+    if (this.value[i] !== this.leaf) {
+      this.value[i] = this.leaf;
+    }
+  }
 }
 Path.Register();
+
+// const path = new Path();
+// path.connect(window);
+
+// path.value.push('home');
+// console.log(path.root, path.value, path.leaf);
+
+// path.value.push('about');
+// console.log(path.root, path.value, path.leaf);
+
+// path.value.push('maybe');
+// console.log(path.root, path.value, path.leaf);
+
+// path.string = 'home:about:maybe:tomorrow/afternoon';
+// console.log(path.root, path.value, path.leaf);
+
+// path.value.push('hello/world#again');
+// console.log(path.root, path.value, path.leaf);
+
+// path.value.length = 0;
+// console.log(path.root, path.value, path.leaf);
+
+// path.value = ['hasta', 'la', 'vista'];
+// console.log(path.root, path.value, path.leaf);
+
+// path.string = 'one:two:three';
+// console.log(path.root, path.value, path.leaf);
+
+// path.root = 'zero';
+// console.log(path.root, path.value, path.leaf);

@@ -1,4 +1,4 @@
-import {IoElement, Options, OptionItem} from '../build/iogui.js';
+import {IoElement, Options, Item} from '../build/iogui.js';
 
 const suboptions = new Options();
 const options = new Options([
@@ -21,7 +21,7 @@ suboptions.push(...[
   {label: 'suboption three', options: options},
 ]);
 
-const option = new OptionItem({
+const option = new Item({
   label: 'Hearts',
   icon: '💕',
   hint: 'colors',
@@ -38,7 +38,7 @@ for (let i = 0; i < 100; i++) {
   const r2 = words[Math.floor(Math.random() * 20)];
   const r3 = words[Math.floor(Math.random() * 20)];
   const i = hearts[Math.floor(Math.random() * 10)] || '';
-  longOptions.push(new OptionItem({icon: i, label: r1 + ' ' + r2, value: r1 + ' ' + r2, hint: r3}));
+  longOptions.push(new Item({icon: i, label: r1 + ' ' + r2, value: r1 + ' ' + r2, hint: r3}));
 }
 
 const menuoptions = new Options([

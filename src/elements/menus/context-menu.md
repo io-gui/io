@@ -7,9 +7,9 @@ An invisible element that inserts a floating menu when its `parentElement` is cl
 <io-element-demo element="io-context-menu"
   height="256px"
   properties='{
-  "value": "demo:string",
+  "value": "hello world",
   "button": 0,
-  "options": "demo:menuoptions",
+  "options": ["one", "two", "three"],
   "expanded": false,
   "position": "pointer",
   "selectable": false

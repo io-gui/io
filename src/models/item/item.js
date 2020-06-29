@@ -5,7 +5,7 @@ import {Path} from '../path/path.js';
 // TODO: document and test!
 // TODO: consider menu model mutations.
 // TODO: test for robustness and document.
-export class OptionItem extends Node {
+export class Item extends Node {
   static get Properties() {
     return {
       value: undefined,
@@ -51,7 +51,7 @@ export class OptionItem extends Node {
       }
     }
     if (option.select === 'toggle' && option.options && option.options.length) {
-      console.warn('IoGUI OptionItem: options with {select: "toggle"} cannot have suboptions!');
+      console.warn('IoGUI Item: options with {select: "toggle"} cannot have suboptions!');
       option.options = new Options();
     }
     if (option.select === 'pick' && option.options.length) {
@@ -91,4 +91,4 @@ export class OptionItem extends Node {
     this.dispatchEvent('changed');
   }
 }
-OptionItem.Register();
+Item.Register();

@@ -44,7 +44,7 @@ export class IoSidebar extends IoElement {
   }
   static get Properties() {
     return {
-      selected: String,
+      selected: null,
       options: {
         type: Options,
         observe: true,
@@ -90,7 +90,7 @@ export class IoSidebar extends IoElement {
       this.template([['io-option-menu', {
         options: this.options,
         value: this.bind('selected'),
-        label: selected.label,
+        label: selected ? selected.label : '',
         icon: '☰',
         selectable: true,
         title: 'select tab',

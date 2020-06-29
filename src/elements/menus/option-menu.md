@@ -6,13 +6,13 @@ Option select element. Similar to `IoMenuItem`, except it is displayed as a butt
 
 <io-element-demo element="io-option-menu" properties='{
   "label": "",
-  "value": "demo:number",
+  "value": 0,
   "options": [1,2,3]}
 ' config='{"type:object": ["io-properties"]}'></io-element-demo>
 
 <io-element-demo element="io-option-menu" properties='{
   "label": "",
-  "value": "demo:number",
+  "value": 0,
   "options": [
     {"value": 0, "label": "zero"},
     {"value": 1, "label": "one"},

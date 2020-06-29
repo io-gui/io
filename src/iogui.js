@@ -30,7 +30,7 @@ export {ProtoChain} from './core/protochain.js';
 export {ProtoProperty, ProtoProperties, Property, Properties} from './core/properties.js';
 
 // MODELS
-export {OptionItem} from './models/option-item/option-item.js';
+export {Item} from './models/item/item.js';
 export {Options} from './models/options/options.js';
 export {Path} from './models/path/path.js';
 
