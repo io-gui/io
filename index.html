@@ -264,7 +264,7 @@
       ]},
       {label: 'Tests', value: 'tests'},
     ], {
-      selectedPath: pathString.bind('path')
+      path: pathString.bind('path')
     });
 
     export class IoMainPage extends IoSelectorTabs {
@@ -275,7 +275,7 @@
           cache: true,
           horizontal: true,
           options: OPTIONS,
-          selected: OPTIONS.bind('selectedRoot'),
+          selected: OPTIONS.path.bind('root'),
           depth: 2,
           elements: [
             ['io-md-view', {
@@ -283,26 +283,26 @@
               path: './README.md'}],
             ['io-selector', {
               name: 'docs',
-              selected: OPTIONS.option('docs').bind('selectedRoot'),
+              selected: OPTIONS.option('docs').path.bind('root'),
               elements: [
                 ['io-md-view-selector', {
                   name: 'introduction',
-                  selected: OPTIONS.option('docs').option('introduction').bind('selectedLeaf'),
+                  selected: OPTIONS.option('docs').option('introduction').path.bind('leaf'),
                   options: OPTIONS.option('docs').option('introduction').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'advanced',
-                  selected: OPTIONS.option('docs').option('advanced').bind('selectedLeaf'),
+                  selected: OPTIONS.option('docs').option('advanced').path.bind('leaf'),
                   options: OPTIONS.option('docs').option('advanced').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'reference',
-                  selected: OPTIONS.option('docs').option('reference').bind('selectedLeaf'),
+                  selected: OPTIONS.option('docs').option('reference').path.bind('leaf'),
                   options: OPTIONS.option('docs').option('reference').options,
                 }],
               ]
             }],
-            ['io-selector', {name: 'demos', selected: OPTIONS.option('demos').bind('selectedRoot'), elements: [
+            ['io-selector', {name: 'demos', selected: OPTIONS.option('demos').path.bind('root'), elements: [
               ['io-demo-elements', {name: 'elements', import: './demos/elements.js'}],
               ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],
               ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],

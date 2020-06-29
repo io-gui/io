@@ -15,12 +15,11 @@ export class OptionItem extends Node {
       action: undefined,
       select: 'pick', // 'toggle' | 'pick' | 'none'
       selected: Boolean,
-      selectedPath: {
-        type: Array,
+      path: {
+        type: Path,
+        readonly: true,
         strict: true,
       },
-      selectedRoot: null,
-      selectedLeaf: null,
       options: {
         type: Options,
         strict: true
@@ -29,7 +28,7 @@ export class OptionItem extends Node {
   }
   get compose() {
     return {
-      options: {'on-selectedPath-changed': this.onOptionsSelectedPathChanged},
+      options: {'on-path-changed': this.onOptionsSelectedPathChanged},
     };
   }
   constructor(option) {
@@ -56,12 +55,12 @@ export class OptionItem extends Node {
       option.options = new Options();
     }
     if (option.select === 'pick' && option.options.length) {
-      option.selected = !!option.options.selectedPath.length;
-      option.selectedPath = [...option.options.selectedPath]; 
+      option.selected = !!option.options.path.value.length;
+      option.path.value = [...option.options.path.value]; 
     }
     super(option);
     if (this.select === 'pick' && this.options.length) {
-      this.setSelectedPath(!!this.options.selectedPath.length, [...this.options.selectedPath]);
+      this.setSelectedPath(!!this.options.path.value.length, [...this.options.path.value]);
     }
   }
   get hasmore() {
@@ -72,7 +71,7 @@ export class OptionItem extends Node {
   }
   onOptionsSelectedPathChanged() {
     if (this.select === 'pick') {
-      this.setSelectedPath(!!this.options.selectedPath.length, [...this.options.selectedPath]);
+      this.setSelectedPath(!!this.options.path.value.length, [...this.options.path.value]);
     }
   }
   selectedChanged() {
@@ -84,12 +83,9 @@ export class OptionItem extends Node {
     }
   }
   setSelectedPath(selected, path = []) {
-    this.setProperties({
-      selected: selected,
-      selectedPath: path ,
-      selectedRoot: path[0] || '',
-      selectedLeaf: path[path.length - 1] || '',
-    });
+    this.path.value = path;
+    this.selected = selected;
+    this.dispatchEvent('path-changed'); // TODO: TEMP HACK
   }
   changed() {
     this.dispatchEvent('changed');

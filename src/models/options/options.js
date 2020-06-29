@@ -1,17 +1,17 @@
 import {NodeMixin} from '../../core/node.js';
 import {OptionItem} from '../option-item/option-item.js';
+import {Path} from '../path/path.js';
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
 export class Options extends NodeMixin(Array) {
   static get Properties() {
     return {
-      selectedPath: {
-        type: Array,
+      path: {
+        type: Path,
+        readonly: true,
         strict: true,
       },
-      selectedRoot: null,
-      selectedLeaf: null,
     };
   }
   constructor(options = [], props = {}) {
@@ -27,7 +27,7 @@ export class Options extends NodeMixin(Array) {
       }
       this.push(option);
       option.addEventListener('selected-changed', this.onOptionItemSelectedChanged);
-      option.addEventListener('selectedPath-changed', this.onOptionItemSelectedPathChanged);
+      option.addEventListener('path-changed', this.onOptionItemSelectedPathChanged);
       option.connect(this);
     }
   }
@@ -37,19 +37,20 @@ export class Options extends NodeMixin(Array) {
     }
     return null; 
   }
-  selectedPathChanged() {
-    if (!this.selectedPath.length) {
+  pathChanged() {
+    const path = this.path.value;
+    if (!path.length) {
       for (let i = 0; i < this.length; i++) {
         if (this[i].select === 'pick') {
           this[i].setSelectedPath(false, []);
         }
       }
     } else {
-      this.setSelectedPath(this.selectedPath);
-      const selected = this.selectedPath[0];
+      this.setSelectedPath(path);
+      const selected = path[0];
       for (let i = 0; i < this.length; i++) {
         if (this[i].select === 'pick' && this[i].value === selected) {
-          const nextpath = [...this.selectedPath];
+          const nextpath = [...path];
           nextpath.shift();
           this[i].setSelectedPath(true, nextpath);
           return;
@@ -58,15 +59,18 @@ export class Options extends NodeMixin(Array) {
     }
   }
   onOptionItemSelectedPathChanged(event) {
+    console.log('OPTION PATH CHANGED');
     const target = event.target;
+    const targetPath = target.path.value;
     if (target.select === 'pick') {
-      if (target.selectedPath.length) {
-        this.setSelectedPath([target.value, ...target.selectedPath]);
+      if (targetPath.length) {
+        this.setSelectedPath([target.value, ...targetPath]);
       }
     }
   }
   onOptionItemSelectedChanged(event) {
     const target = event.target;
+    const targetPath = target.path.value;
     if (target.select === 'pick') {
       if (target.selected) {
         for (let i = 0; i < this.length; i++) {
@@ -74,7 +78,7 @@ export class Options extends NodeMixin(Array) {
             this[i].setSelectedPath(false, []);
           }
         }
-        this.setSelectedPath([target.value, ...target.selectedPath]);
+        this.setSelectedPath([target.value, ...targetPath]);
       } else {
         let hasSelected = false;
         for (let i = 0; i < this.length; i++) {
@@ -88,11 +92,16 @@ export class Options extends NodeMixin(Array) {
     }
   }
   setSelectedPath(path = []) {
-    this.setProperties({
-      selectedPath: path,
-      selectedRoot: path[0],// || '',
-      selectedLeaf: path[path.length - 1],// || '',
-    });
+    this.path.value = path;
+    // TODO: TEMP HACK (pathChanged should not happen due to readonly)
+    if (!path.length) {
+      for (let i = 0; i < this.length; i++) {
+        if (this[i].select === 'pick') {
+          this[i].setSelectedPath(false, []);
+        }
+      }
+    }
+    this.dispatchEvent('path-changed'); // TODO: TEMP HACK
   }
   // TODO: test
   selectDefault() {

@@ -46,9 +46,9 @@ class IoOptionsDemoView extends IoElement {
     }
     this.template([
       ['div', [
-        ['io-item', {value: this.options.bind('selectedRoot'), class: 'root'}],
-        ['io-options-path-demo', {value: this.options.bind('selectedPath')}],
-        ['io-item', {value: this.options.bind('selectedLeaf'), class: 'leaf'}],
+        ['io-item', {value: this.options.path.bind('root'), class: 'root'}],
+        ['io-options-path-demo', {value: this.options.path.bind('value')}],
+        ['io-item', {value: this.options.path.bind('root'), class: 'leaf'}],
       ]],
       options
     ]);
@@ -85,9 +85,9 @@ class IoOptionItemDemoView extends IoElement {
       ['div', [
         [this.option.select === 'toggle' ? 'io-boolicon' : 'io-switch', {value: this.option.bind('selected')}],
         ['io-item', {value: this.option.bind('value')}],
-        ['io-item', {value: this.option.bind('selectedRoot'), class: 'root'}],
-        ['io-options-path-demo', {value: this.option.bind('selectedPath')}],
-        ['io-item', {value: this.option.bind('selectedLeaf'), class: 'leaf'}],
+        ['io-item', {value: this.option.path.bind('root'), class: 'root'}],
+        ['io-options-path-demo', {value: this.option.path.bind('value')}],
+        ['io-item', {value: this.option.path.bind('leaf'), class: 'leaf'}],
       ]],
       this.option.hasmore ? ['io-options-demo-view', {options: this.option.options}] : null
     ]);

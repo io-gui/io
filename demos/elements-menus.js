@@ -68,7 +68,7 @@ export class IoDemoElementsMenus extends IoElement {
   constructor(props) {
     super(props);
     this.setNumber = this.setNumber.bind(this);
-    const menuValue = menuoptions.bind('selectedLeaf');
+    const menuValue = menuoptions.path.bind('leaf');
     this.template([
       ['div', {class: 'io-table3 table'}, [
         ['io-option-menu', {options: new Options([

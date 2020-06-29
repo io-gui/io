@@ -23,14 +23,14 @@ export class Path extends Node {
         if (target[prop] === value) return true;
         target[prop] = value;
         this.update();
-        this.throttle(this.onValueMutated, null, true);
+        this.throttle(this.onMutation, null, true);
         return true;
       }
     });
     this.update();
-    this.throttle(this.onValueMutated, null, false);
+    this.throttle(this.onMutation, null, false);
   }
-  onValueMutated() {
+  onMutation() {
     if (this.__connected) this.queueDispatch();
   }
   update() {
@@ -49,7 +49,7 @@ export class Path extends Node {
     this.__properties.set('leaf', this.value[this.value.length - 1], true);
   }
   stringChanged() {
-    const array = [...this.string.split(this.delimiter)];
+    const array = this.string ? [...this.string.split(this.delimiter)] : [];
     for (let i = 0; i < array.length; i++) {
       if (this.value[i] !== array[i]) this.value[i] = array[i];
     }

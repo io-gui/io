@@ -44,7 +44,7 @@ export class IoOptionMenu extends IoElement {
   }
   get compose() {
     return {
-      options: {'on-selectedLeaf-changed': this._setValue}
+      options: {'on-path-changed': this._setValue}
     };
   }
   get _label() {
