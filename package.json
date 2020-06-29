@@ -1,6 +1,6 @@
 {
   "name": "@iogui/iogui",
-  "version": "0.0.1-rc1",
+  "version": "0.0.1-rc2",
   "description": "IoGui is a simple web framework for the web.",
   "main": "build/iogui.js",
   "module": "build/iogui.js",
