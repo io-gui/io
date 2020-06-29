@@ -1,4 +1,4 @@
-import {IoNumberSlider} from '../../io-elements.js';
+import {IoNumberSlider} from '../../iogui.js';
 
 export default class {
   constructor() {

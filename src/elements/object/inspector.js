@@ -1,4 +1,4 @@
-import {IoElement} from '../../io.js';
+import {IoElement} from '../../iogui.js';
 import {IoStorageFactory as $} from '../core/storage.js';
 import {Config} from './config.js';
 import {Groups} from './groups.js';

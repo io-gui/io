@@ -1,4 +1,4 @@
-import {Node} from '../io.js';
+import {Node} from '../iogui.js';
 
 const string = (object) => {
   return JSON.stringify(object);

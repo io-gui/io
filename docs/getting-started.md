@@ -1,9 +1,9 @@
 ## Usage
 
-Import Io core module from `build/io.js` or `src/io.js`.
+Import Io core module from `build/iogui.js` or `src/iogui.js`.
 
 ```javascript
-import {IoElement} from "iogui/build/io.js";
+import {IoElement} from "iogui/build/iogui.js";
 ```
 
 To use one of the elements, such as `<io-option-menu>` for example, import the corresponding element collection, create the element, assign the options property, and add it to your DOM.

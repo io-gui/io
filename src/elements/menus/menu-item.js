@@ -1,4 +1,4 @@
-import {OptionItem} from '../../io.js';
+import {Item} from '../../iogui.js';
 import {IoItem} from '../core/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
 import {IoMenuOptions} from './menu-options.js';
@@ -64,7 +64,7 @@ export class IoMenuItem extends IoItem {
   static get Properties() {
     return {
       option: {
-        type: OptionItem,
+        type: Item,
         strict: true,
       },
       expanded: {

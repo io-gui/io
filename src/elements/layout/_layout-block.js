@@ -1,4 +1,4 @@
-import {IoElement} from '../../io.js';
+import {IoElement} from '../../iogui.js';
 // import "./_layout-tab.js";
 // import "./layout-tabs.js";
 

@@ -1,5 +1,5 @@
-import {IoElement} from '../io.js';
-import {IoStorageFactory as $} from '../io-elements.js';
+import {IoElement} from '../../iogui.js';
+import {IoStorageFactory as $} from '../core/storage.js';
 
 export class IoElementDemo extends IoElement {
   static get Style() {
@@ -82,15 +82,6 @@ export class IoElementDemo extends IoElement {
         for (let i = 0; i < children.length; i++) {
           if (children[i].changed) children[i].changed();
         }
-      }
-    }
-  }
-  propertiesChanged() {
-    // TODO: Unhack demovalues
-    for (let p in this.properties) {
-      const prop = this.properties[p];
-      if (typeof prop === 'string' && prop.startsWith('demo:')) {
-        this.properties[p] = $({key: prop});
       }
     }
   }

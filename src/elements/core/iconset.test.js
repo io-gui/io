@@ -1,4 +1,4 @@
-import {IoIconsetSingleton} from '../../io-elements.js';
+import {IoIconsetSingleton} from '../../iogui.js';
 
 export default class {
   constructor() {

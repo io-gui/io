@@ -1,4 +1,4 @@
-import {IoNumber} from '../../io-elements.js';
+import {IoNumber} from '../../iogui.js';
 
 export default class {
   constructor() {

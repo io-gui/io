@@ -447,6 +447,9 @@ const Register = function () {
         return this.__properties.get(p);
       },
       set: function(value) {
+        debug: {
+          if (proto.__protoProperties[p].readonly) console.error(`IoGUI error. Cannot set value "${value}" to read only property "${p}"`);
+        }
         this.__properties.set(p, value);
       },
       enumerable: !!proto.__protoProperties[p].enumerable,

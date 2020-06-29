@@ -6,6 +6,6 @@ Extends `IoColorSlider`.
 
 <io-element-demo element="io-color-slider-hs"
 width="64px" height="64px"
-properties='{"value": "demo:rgba", "horizontal": true}'
+properties='{"value": [1, 0.5, 0, 1], "horizontal": true}'
 config='{"value": ["io-properties"]}
 '></io-element-demo>

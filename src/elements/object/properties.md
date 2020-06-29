@@ -7,7 +7,7 @@ Object editor. It displays a set of labeled property editors for the `value` obj
 <io-element-demo element="io-properties" properties='{
   "labeled": true,
   "horizontal": false,
-  "value": "demo:object"
+  "value": {"hello": "world"}
 }' config='{
   "value": ["io-object"],
   "properties": ["io-object"],
@@ -20,7 +20,7 @@ By setting `config` property, `IoProperties` can be configured to use custom pro
 <io-element-demo element="io-properties" properties='{
   "labeled": true,
   "horizontal": false,
-  "value": "demo:object",
+  "value": {"hello": "world"},
   "properties": ["number", "array"],
   "config": {
     "type:number": ["io-number-slider", {"step": 0.01}],

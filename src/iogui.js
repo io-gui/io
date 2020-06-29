@@ -1,7 +1,7 @@
 /** @license
  * The MIT License
  *
- * Copyright ©2020 Aleksandarr (Aki) Rodić
+ * Copyright �2020 Aleksandarr (Aki) Rodic
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,19 @@
  * THE SOFTWARE.
  */
 
+// CORE
+export {Node, NodeMixin} from './core/node.js';
+export {IoElement} from './core/io-element.js';
+export {Binding} from './core/binding.js';
+export {ProtoChain} from './core/protochain.js';
+export {ProtoProperty, ProtoProperties, Property, Properties} from './core/properties.js';
+
+// MODELS
+export {Item} from './models/item/item.js';
+export {Options} from './models/options/options.js';
+export {Path} from './models/path/path.js';
+
+// ELEMENTS
 export {IoStorageFactory} from './elements/core/storage.js';
 export {IoThemeSingleton} from './elements/core/theme.js';
 
@@ -82,5 +95,11 @@ export {IoSelectorTabs} from './elements/layout/selector-tabs.js';
 export {IoSelector} from './elements/layout/selector.js';
 export {IoSidebar} from './elements/layout/sidebar.js';
 
+export {IoMdView} from './elements/extras/md-view.js';
+export {IoMdViewSelector} from './elements/extras/md-view-selector.js';
+export {IoServiceLoader} from './elements/extras/service-loader.js';
+export {IoElementDemo} from './elements/extras/element-demo.js';
+
 // TODO
 export {IoNotify} from './elements/notify/notify.js';
+

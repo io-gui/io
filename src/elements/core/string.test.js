@@ -1,4 +1,4 @@
-import {IoString} from '../../io-elements.js';
+import {IoString} from '../../iogui.js';
 
 export default class {
   constructor() {

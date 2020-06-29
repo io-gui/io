@@ -1,4 +1,4 @@
-import {IoElement} from './io.js';
+import {IoElement} from './iogui.js';
 
 import '../lib/mocha.js';
 import '../lib/chai.js';
@@ -92,7 +92,7 @@ function runTests() {
   }
 }
 
-export class IoTests extends IoElement {
+export class IoTest extends IoElement {
   static get Style() {
     return /* css */`
       :host #mocha {
@@ -146,4 +146,4 @@ export class IoTests extends IoElement {
   }
 }
 
-IoTests.Register();
+IoTest.Register();

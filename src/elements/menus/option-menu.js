@@ -1,4 +1,4 @@
-import {IoElement, Options, OptionItem} from '../../io.js';
+import {IoElement, Options, Item} from '../../iogui.js';
 import './menu-item.js';
 
 // TODO: fix tab-out without collapse
@@ -44,7 +44,7 @@ export class IoOptionMenu extends IoElement {
   }
   get compose() {
     return {
-      options: {'on-selectedLeaf-changed': this._setValue}
+      options: {'on-path-changed': this._setValue}
     };
   }
   get _label() {
@@ -82,7 +82,7 @@ export class IoOptionMenu extends IoElement {
       }
     }
 
-    const option = new OptionItem({
+    const option = new Item({
       label: valueText,
       options: this.options,
     });

@@ -1,4 +1,4 @@
-import '../../io-elements.js';
+import '../../iogui.js';
 
 // TODO: test with src element.
 

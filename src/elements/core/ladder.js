@@ -1,4 +1,4 @@
-import {IoElement} from '../../io.js';
+import {IoElement} from '../../iogui.js';
 import {IoItem} from './item.js';
 import {IoLayerSingleton} from './layer.js';
 

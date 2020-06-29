@@ -1,4 +1,4 @@
-import {Node, IoElement, Binding, ProtoChain, ProtoProperty, ProtoProperties, Property} from '../io.js';
+import {Node, IoElement, Binding, ProtoChain, ProtoProperty, ProtoProperties, Property} from '../iogui.js';
 
 const string = (object) => {
   return JSON.stringify(object);

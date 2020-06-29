@@ -1,5 +1,5 @@
-import {IoElement, Options, OptionItem} from '../build/io.js';
-import  '../build/io-elements.js';
+import {IoElement, Options, Item} from '../build/iogui.js';
+import  '../build/iogui.js';
 
 class IoOptionsDemoView extends IoElement {
   static get Style() {
@@ -13,7 +13,7 @@ class IoOptionsDemoView extends IoElement {
         background-color: var(--io-background-color-dark);
         display: flex;
       }
-      :host io-option-item-demo-view {
+      :host io-item-demo-view {
         margin-left: 0.5em;
       }
       :host io-item {
@@ -42,13 +42,13 @@ class IoOptionsDemoView extends IoElement {
   changed() {
     const options = [];
     for (let i = 0; i < this.options.length; i++) {
-      options.push(['io-option-item-demo-view', {option: this.options[i]}]);
+      options.push(['io-item-demo-view', {option: this.options[i]}]);
     }
     this.template([
       ['div', [
-        ['io-item', {value: this.options.bind('selectedRoot'), class: 'root'}],
-        ['io-options-path-demo', {value: this.options.bind('selectedPath')}],
-        ['io-item', {value: this.options.bind('selectedLeaf'), class: 'leaf'}],
+        ['io-item', {value: this.options.path.bind('root'), class: 'root'}],
+        ['io-options-path-demo', {value: this.options.path.bind('value')}],
+        ['io-item', {value: this.options.path.bind('root'), class: 'leaf'}],
       ]],
       options
     ]);
@@ -57,7 +57,7 @@ class IoOptionsDemoView extends IoElement {
 
 IoOptionsDemoView.Register();
 
-class IoOptionItemDemoView extends IoElement {
+class IoItemDemoView extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -75,7 +75,7 @@ class IoOptionItemDemoView extends IoElement {
   static get Properties() {
     return {
       option: {
-        type: OptionItem,
+        type: Item,
         strict: true,
       },
     };
@@ -85,16 +85,16 @@ class IoOptionItemDemoView extends IoElement {
       ['div', [
         [this.option.select === 'toggle' ? 'io-boolicon' : 'io-switch', {value: this.option.bind('selected')}],
         ['io-item', {value: this.option.bind('value')}],
-        ['io-item', {value: this.option.bind('selectedRoot'), class: 'root'}],
-        ['io-options-path-demo', {value: this.option.bind('selectedPath')}],
-        ['io-item', {value: this.option.bind('selectedLeaf'), class: 'leaf'}],
+        ['io-item', {value: this.option.path.bind('root'), class: 'root'}],
+        ['io-options-path-demo', {value: this.option.path.bind('value')}],
+        ['io-item', {value: this.option.path.bind('leaf'), class: 'leaf'}],
       ]],
       this.option.hasmore ? ['io-options-demo-view', {options: this.option.options}] : null
     ]);
   }
 }
 
-IoOptionItemDemoView.Register();
+IoItemDemoView.Register();
 
 class IoOptionsPathDemo extends IoElement {
   static get Properties() {

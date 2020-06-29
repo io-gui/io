@@ -7,15 +7,6 @@ It is generated from property definitions in `static get Properties()` return ob
 
 Creates the property configuration object and sets the default values.
 
-## ProtoProperties
-
-Collection of all property configurations for a class **prototype**.
-Property configurations are inferred from all property definitions in the prototype chain.
-
-### ProtoProperties(protochain: `ProtoChain`)
-
-Creates all property configurations for specified prototype chain.
-
 ## Property
 
 Property configuration object for a class **instance**.
@@ -24,6 +15,15 @@ It is copied from the corresponding `ProtoProperty`.
 ### Property(protoProp: `ProtoProperty`)
 
 Creates the property configuration object and copies values from `ProtoProperty`.
+
+## ProtoProperties
+
+Collection of all property configurations for a class **prototype**.
+Property configurations are inferred from all property definitions in the prototype chain.
+
+### ProtoProperties(protochain: `ProtoChain`)
+
+Creates all property configurations for specified prototype chain.
 
 ## Properties
 
