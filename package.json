@@ -16,9 +16,7 @@
     "docs": "node ./lib/generate-docs.js",
     "lint": "eslint src --fix",
     "rollup": "rollup -c",
-    "uglify-io": "uglifyjs build/iogui.js -cmo build/iogui.js --comments",
-    "uglify-elements": "uglifyjs build/iogui.js -cmo build/iogui.js --comments",
-    "uglify": "npm run uglify-io && npm run uglify-elements",
+    "uglify": "uglifyjs build/iogui.js -cmo build/iogui.js --comments",
     "build": "eslint src && npm run rollup && npm run uglify",
     "travis": "npm run build"
   },

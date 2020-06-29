@@ -1,4 +1,4 @@
-import {IoElement} from '../../iogui.js';
+import {IoElement} from '../../core/io-element.js';
 
 export class IoBreadcrumbs extends IoElement {
   static get Style() {

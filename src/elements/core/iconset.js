@@ -1,4 +1,4 @@
-import {Node} from '../../iogui.js';
+import {Node} from '../../core/node.js';
 
 const IoIconsetDB = {};
 

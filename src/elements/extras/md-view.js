@@ -1,4 +1,4 @@
-import {IoElement} from '../../iogui.js';
+import {IoElement} from '../../core/io-element.js';
 import marked from '../../../lib/marked.esm.js';
 
 export class IoMdView extends IoElement {

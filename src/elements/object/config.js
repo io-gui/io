@@ -1,4 +1,4 @@
-import {Binding} from '../../iogui.js';
+import {Binding} from '../../core/binding.js';
 
 // TODO: display read only as non-editable
 
