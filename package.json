@@ -41,6 +41,7 @@
     "eslint": "^7.3.1",
     "eslint-plugin-html": "^6.0.2",
     "jsdoc-to-markdown": "^6.0.1",
+    "puppeteer": "^4.0.1",
     "rollup": "^2.18.1",
     "uglify-es": "^3.3.10"
   }
