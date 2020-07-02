@@ -109,7 +109,7 @@ class Binding {
       return;
     }
     const value = event.detail.value;
-    for (var i = this.targets.length; i--;) {
+    for (let i = this.targets.length; i--;) {
       const targetProps = this.targetProps.get(this.targets[i]);
       for (let j = targetProps.length; j--;) {
         const oldValue = this.targets[i][targetProps[j]];
