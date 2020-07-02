@@ -17,8 +17,7 @@
     "lint": "eslint src --fix",
     "rollup": "rollup -c",
     "uglify": "uglifyjs build/iogui.js -cmo build/iogui.js --comments",
-    "build": "eslint src && npm run rollup && npm run uglify",
-    "travis": "npm run build"
+    "build": "eslint src && npm run rollup && npm run uglify"
   },
   "repository": {
     "type": "git",
