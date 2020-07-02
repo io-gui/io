@@ -57,7 +57,7 @@ class Queue {
     this._dispatchInProgress = false;
 
     // TODO: It is possible that an effect of change adds additional items to the queue
-    // TODO: Test and document! 
+    // TODO: Test and document!
     // this.__changes.length = 0;
     if (this.__changes.length) {
       this.dispatch();

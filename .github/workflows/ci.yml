@@ -31,7 +31,6 @@ jobs:
           restore-keys: ${{ runner.os }}-ci-${{ env.cache-name }}-
       - name: Install packages
         run: npm ci
-
       - name: === Linting ===
         run: npm run lint
 

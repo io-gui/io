@@ -41,7 +41,7 @@ export class Options extends NodeMixin(Array) {
     for (let i = 0; i < this.length; i++) {
       if (this[i].value === value) return this[i];
     }
-    return null; 
+    return null;
   }
   pathChanged() {
     const path = this.path.value;
