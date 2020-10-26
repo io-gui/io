@@ -37,8 +37,6 @@ jobs:
   unit:
     name: "Unit testing"
     runs-on: ubuntu-latest
-    ports:
-      - 5500:5500
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
