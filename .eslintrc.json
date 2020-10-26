@@ -9,6 +9,7 @@
     "no-console": "off",
     "no-unused-labels": "off",
     "no-var": "error",
+    "no-trailing-spaces": "error",
     "semi": "error",
     "strict": "error",
     "quotes": ["error", "single"],

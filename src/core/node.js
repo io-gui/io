@@ -62,7 +62,7 @@ const NodeMixin = (superclass) => {
       Object.defineProperty(this, 'objectMutatedThrottled', {enumerable: false, value: this.objectMutatedThrottled.bind(this)});
       Object.defineProperty(this, 'queueDispatch', {enumerable: false, value: this.queueDispatch.bind(this)});
       Object.defineProperty(this, 'queueDispatchLazy', {enumerable: false, value: this.queueDispatchLazy.bind(this)});
-      
+
       Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
       if (!this.__proto__.__isIoElement) {
         Object.defineProperty(this, '__connections', {enumerable: false, value: []});
@@ -224,7 +224,7 @@ const NodeMixin = (superclass) => {
 
         debug:
         if (event.detail.objects) {
-          console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');   
+          console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');
           return;
         }
       }
@@ -428,7 +428,7 @@ const Register = function () {
   let proto = this.prototype;
 
   Object.defineProperty(proto, '__isNode', {value: true});
-  Object.defineProperty(proto.constructor, '__registeredAs', {value: proto.constructor.name});  
+  Object.defineProperty(proto.constructor, '__registeredAs', {value: proto.constructor.name});
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
 

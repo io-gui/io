@@ -56,7 +56,7 @@ export class Item extends Node {
     }
     if (option.select === 'pick' && option.options.length) {
       option.selected = !!option.options.path.value.length;
-      option.path.value = [...option.options.path.value]; 
+      option.path.value = [...option.options.path.value];
     }
     super(option);
     if (this.select === 'pick' && this.options.length) {

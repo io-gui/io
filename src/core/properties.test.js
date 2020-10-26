@@ -302,8 +302,8 @@ export default class {
           chai.expect(props1.prop1.strict).to.be.equal(false);
           chai.expect(props1.prop1.enumerable).to.be.equal(true);
 
-          chai.expect(protoProps2.prop1.value).to.be.equal(2); 
-          chai.expect(props2.prop1.value).to.be.equal(2); 
+          chai.expect(protoProps2.prop1.value).to.be.equal(2);
+          chai.expect(props2.prop1.value).to.be.equal(2);
           chai.expect(props2.prop1.type).to.be.equal(Number);
           chai.expect(props2.prop1.notify).to.be.equal(false);
           chai.expect(props2.prop1.reflect).to.be.equal(0);

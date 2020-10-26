@@ -198,7 +198,7 @@ export default class {
         node.dispatchEvent('object-mutated', {object: node.obj1}, false, window);
 
         // await waitTick();
-        
+
         chai.expect(node._changedCounter).to.equal(2);
         chai.expect(node._obj1MutatedCounter).to.equal(1);
         chai.expect(node._obj2MutatedCounter).to.equal(0);
@@ -267,7 +267,7 @@ export default class {
         chai.expect(node._onProp1ChangedPayload.detail.property).to.equal('prop1');
         chai.expect(node._onProp1ChangedPayload.detail.oldValue).to.equal('');
         chai.expect(node._onProp1ChangedPayload.detail.value).to.equal('one');
-        
+
         node.dispatchEvent('custom-event', {value: 'goodbye'});
         chai.expect(node._onCustomEventCounter).to.equal(1);
         chai.expect(node._onCustomEventPayload.path[0]).to.equal(node);
@@ -314,12 +314,12 @@ export default class {
 
         const node = new TestNode();
         node.connect(window);
-        
+
         let binding = node.bind('prop1');
         chai.expect(binding).to.be.instanceof(Binding);
         chai.expect(binding.source).to.be.equal(node);
         chai.expect(binding.sourceProp).to.be.equal('prop1');
-        
+
         const boundNode1 = new TestNode({prop1: binding});
         const boundNode2 = new TestNode({prop1: binding});
         boundNode2.prop2 = binding;
@@ -332,17 +332,17 @@ export default class {
         chai.expect(binding.targetProps.get(boundNode1)[1]).to.be.equal(undefined);
         chai.expect(binding.targetProps.get(boundNode2)[0]).to.be.equal('prop1');
         chai.expect(binding.targetProps.get(boundNode2)[1]).to.be.equal('prop2');
-        
+
         node.prop1 = 'one';
         chai.expect(boundNode1.prop1).to.be.equal('one');
         chai.expect(boundNode1.prop2).to.be.equal('');
         chai.expect(boundNode2.prop1).to.be.equal('one');
         chai.expect(boundNode2.prop2).to.be.equal('one');
-        
+
         boundNode1.prop1 = 'two';
         chai.expect(node.prop1).to.be.equal('two');
         chai.expect(boundNode2.prop1).to.be.equal('two');
-        
+
         chai.expect(binding.targets.length).to.be.equal(2);
         boundNode1.dispose();
         chai.expect(binding.targets.length).to.be.equal(1);
