@@ -1,6 +1,6 @@
 {
   "name": "@iogui/iogui",
-  "version": "0.0.1-rc2",
+  "version": "0.0.1-rc3",
   "description": "IoGui is a simple web framework for the web.",
   "main": "build/iogui.js",
   "module": "build/iogui.js",
@@ -17,7 +17,7 @@
     "lint": "eslint src --fix",
     "rollup": "rollup -c",
     "uglify": "uglifyjs build/iogui.js -cmo build/iogui.js --comments",
-    "build": "eslint src && npm run rollup && npm run uglify"
+    "build": "npm run lint && npm run rollup && npm run uglify"
   },
   "repository": {
     "type": "git",
