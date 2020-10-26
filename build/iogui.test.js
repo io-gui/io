@@ -17208,7 +17208,7 @@ function deprecate (fn, msg) {
     if (!warned) {
       if (config('throwDeprecation')) {
         throw new Error(msg);
-      } else if (config('traceDeprecation')) ;
+      } else if (config('traceDeprecation')) ; else ;
       warned = true;
     }
     return fn.apply(this, arguments);
@@ -17328,7 +17328,7 @@ exports.deprecate = function(fn, msg) {
     if (!warned) {
       if (process.throwDeprecation) {
         throw new Error(msg);
-      } else if (process.traceDeprecation) ;
+      } else if (process.traceDeprecation) ; else ;
       warned = true;
     }
     return fn.apply(this, arguments);
@@ -28869,7 +28869,7 @@ class Node {
         node.dispatchEvent('object-mutated', {object: node.obj1}, false, window);
 
         // await waitTick();
-        
+
         chai.expect(node._changedCounter).to.equal(2);
         chai.expect(node._obj1MutatedCounter).to.equal(1);
         chai.expect(node._obj2MutatedCounter).to.equal(0);
@@ -28938,7 +28938,7 @@ class Node {
         chai.expect(node._onProp1ChangedPayload.detail.property).to.equal('prop1');
         chai.expect(node._onProp1ChangedPayload.detail.oldValue).to.equal('');
         chai.expect(node._onProp1ChangedPayload.detail.value).to.equal('one');
-        
+
         node.dispatchEvent('custom-event', {value: 'goodbye'});
         chai.expect(node._onCustomEventCounter).to.equal(1);
         chai.expect(node._onCustomEventPayload.path[0]).to.equal(node);
@@ -28985,12 +28985,12 @@ class Node {
 
         const node = new TestNode();
         node.connect(window);
-        
+
         let binding = node.bind('prop1');
         chai.expect(binding).to.be.instanceof(Binding$1);
         chai.expect(binding.source).to.be.equal(node);
         chai.expect(binding.sourceProp).to.be.equal('prop1');
-        
+
         const boundNode1 = new TestNode({prop1: binding});
         const boundNode2 = new TestNode({prop1: binding});
         boundNode2.prop2 = binding;
@@ -29003,17 +29003,17 @@ class Node {
         chai.expect(binding.targetProps.get(boundNode1)[1]).to.be.equal(undefined);
         chai.expect(binding.targetProps.get(boundNode2)[0]).to.be.equal('prop1');
         chai.expect(binding.targetProps.get(boundNode2)[1]).to.be.equal('prop2');
-        
+
         node.prop1 = 'one';
         chai.expect(boundNode1.prop1).to.be.equal('one');
         chai.expect(boundNode1.prop2).to.be.equal('');
         chai.expect(boundNode2.prop1).to.be.equal('one');
         chai.expect(boundNode2.prop2).to.be.equal('one');
-        
+
         boundNode1.prop1 = 'two';
         chai.expect(node.prop1).to.be.equal('two');
         chai.expect(boundNode2.prop1).to.be.equal('two');
-        
+
         chai.expect(binding.targets.length).to.be.equal(2);
         boundNode1.dispose();
         chai.expect(binding.targets.length).to.be.equal(1);
@@ -29717,8 +29717,8 @@ class Properties {
           chai.expect(props1.prop1.strict).to.be.equal(false);
           chai.expect(props1.prop1.enumerable).to.be.equal(true);
 
-          chai.expect(protoProps2.prop1.value).to.be.equal(2); 
-          chai.expect(props2.prop1.value).to.be.equal(2); 
+          chai.expect(protoProps2.prop1.value).to.be.equal(2);
+          chai.expect(props2.prop1.value).to.be.equal(2);
           chai.expect(props2.prop1.type).to.be.equal(Number);
           chai.expect(props2.prop1.notify).to.be.equal(false);
           chai.expect(props2.prop1.reflect).to.be.equal(0);
@@ -30091,7 +30091,7 @@ class Queue {
     this._dispatchInProgress = false;
 
     // TODO: It is possible that an effect of change adds additional items to the queue
-    // TODO: Test and document! 
+    // TODO: Test and document!
     // this.__changes.length = 0;
     if (this.__changes.length) {
       this.dispatch();
