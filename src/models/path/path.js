@@ -62,33 +62,3 @@ export class Path extends Node {
   }
 }
 Path.Register();
-
-// const path = new Path();
-// path.connect(window);
-
-// path.value.push('home');
-// console.log(path.root, path.value, path.leaf);
-
-// path.value.push('about');
-// console.log(path.root, path.value, path.leaf);
-
-// path.value.push('maybe');
-// console.log(path.root, path.value, path.leaf);
-
-// path.string = 'home:about:maybe:tomorrow/afternoon';
-// console.log(path.root, path.value, path.leaf);
-
-// path.value.push('hello/world#again');
-// console.log(path.root, path.value, path.leaf);
-
-// path.value.length = 0;
-// console.log(path.root, path.value, path.leaf);
-
-// path.value = ['hasta', 'la', 'vista'];
-// console.log(path.root, path.value, path.leaf);
-
-// path.string = 'one:two:three';
-// console.log(path.root, path.value, path.leaf);
-
-// path.root = 'zero';
-// console.log(path.root, path.value, path.leaf);

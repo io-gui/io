@@ -44,17 +44,19 @@ export class IoOptionMenu extends IoElement {
       role: 'button',
     };
   }
-  get compose() {
-    return {
-      options: {'on-path-changed': this._setValue}
-    };
-  }
   get _label() {
     const valueText = (this.value !== undefined) ? String(this.value) : '';
     return this.label || valueText || '';
   }
   _setValue(event) {
-    this.set('value', event.detail.value);
+    // TODO: Fix Path convering values to string type.
+    if (event.detail.leaf !== undefined) {
+      try {
+        this.set('value', JSON.parse(event.detail.leaf));
+      } catch {
+        this.set('value', event.detail.leaf);
+      }
+    }
   }
   changed() {
     let valueText = '';
@@ -87,6 +89,7 @@ export class IoOptionMenu extends IoElement {
     const option = new Item({
       label: valueText,
       options: this.options,
+      'on-path-changed': this._setValue,
     });
 
     this.template([

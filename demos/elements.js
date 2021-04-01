@@ -46,7 +46,6 @@ export class IoDemoElements extends IoElement {
         number: this.bind('number'),
         boolean: this.bind('boolean'),
       }],
-
       ['io-item', {label: 'Sliders'}],
       ['io-demo-elements-sliders', {
         number: this.bind('number'),

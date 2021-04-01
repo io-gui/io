@@ -71,16 +71,20 @@ export class IoDemoElementsMenus extends IoElement {
     const menuValue = menuoptions.path.bind('leaf');
     this.template([
       ['div', {class: 'io-table3 table'}, [
-        ['io-option-menu', {options: new Options([
-          {label: 'negative one', value: -1},
-          {label: 'zero', value: 0},
-          {label: 'half', value: 0.5},
-          {label: 'one', value: 1},
-          {label: 'two', value: 2},
-          {label: 'three', value: 3},
-          {label: 'four', value: 4},
-          {label: 'leet', value: 1337},
-        ]), value: this.bind('number')}],
+        ['io-option-menu', 
+        {
+          options: new Options([
+            {label: 'negative one', value: -1},
+            {label: 'zero', value: 0},
+            {label: 'half', value: 0.5},
+            {label: 'one', value: 1},
+            {label: 'two', value: 2},
+            {label: 'three', value: 3},
+            {label: 'four', value: 4},
+            {label: 'leet', value: 1337},
+          ]),
+          value: this.bind('number')
+        }],
         ['io-option-menu', {options: new Options([ -1, 0, 0.5, 1, 2, 3, 4, 1337]), value: this.bind('number')}],
         ['io-button', {label: 'set 0.5', action: this.setNumber, value: 0.5}],
       ]],

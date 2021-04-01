@@ -7,4 +7,4 @@ It can be configured to clamp the `value` compoents to `min` / `max` and round i
 
 Keys left/right/up/down+shift and pageup/pagedown change the value in step incements. Home/end keys set the value to min/max.
 
-<io-element-demo element="io-slider-range" properties='{"value": [0, 0], "step": 0.1, "min": -1, "max": 2, "exponent": 1}'></io-element-demo>
+<io-element-demo element="io-slider-range" properties='{"value": [0, 1], "step": 0.1, "min": -1, "max": 2, "exponent": 1}'></io-element-demo>

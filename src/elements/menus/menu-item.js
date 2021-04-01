@@ -132,6 +132,7 @@ export class IoMenuItem extends IoItem {
   }
   _onItemClicked(event) {
     const item = event.composedPath()[0];
+    
     if (item !== this) {
       event.stopImmediatePropagation();
       this.dispatchEvent('item-clicked', event.detail, true);
