@@ -14,8 +14,8 @@ For quick start, read about the [basic usage](https://iogui.dev/#path=docs/intro
   <a href="https://www.npmjs.com/package/@iogui/iogui"><img src="https://img.shields.io/npm/v/@iogui/iogui.svg" alt="NPM package" /></a>
   <a href="https://bundlephobia.com/result?p=@iogui/iogui"><img src="https://badgen.net/bundlephobia/minzip/@iogui/iogui" alt="Build Size" /></a>
   <a href="https://github.com/io-gui/iogui/actions?query=workflow%3ACI"><img src="https://github.com/io-gui/iogui/workflows/CI/badge.svg" alt="Build Status" /></a>
-  <a href="https://david-dm.org/io-gui/iogui"><img src="https://img.shields.io/david/io-gui/iogui.svg" alt="Dependencies" /></a>
-  <a href="https://david-dm.org/io-gui/iogui?type=dev"><img src="https://img.shields.io/david/dev/io-gui/iogui.svg" alt="Dev Dependencies" /></a>
+  <a href="https://david-dm.org/io-gui/iogui"><img src="https://status.david-dm.org/gh/io-gui/iogui.svg" alt="Dependencies" /></a>
+  <a href="https://david-dm.org/io-gui/iogui?type=dev"><img src="https://status.david-dm.org/gh/io-gui/iogui.svg?type=dev" alt="Dev Dependencies" /></a>
   <a href="https://lgtm.com/projects/g/io-gui/iogui/context:javascript"><img src="https://img.shields.io/lgtm/grade/javascript/g/io-gui/iogui.svg?label=code%20quality" alt="Code Quality" /></a>
   <a href="https://github.com/io-gui/iogui/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@iogui/iogui.svg" alt="License" /></a>
 </p>
