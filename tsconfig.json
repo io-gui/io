@@ -16,6 +16,7 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     /* Additional Checks */
@@ -31,5 +32,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["./srct"]
+  "include": ["./srct", "src/core/properties.test.ts"]
 }

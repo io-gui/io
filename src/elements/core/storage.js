@@ -1,4 +1,4 @@
-import {Node} from '../../core/node.js';
+import {Node} from '../../../srcj/core/node.js';
 
 // TODO: test different value types
 

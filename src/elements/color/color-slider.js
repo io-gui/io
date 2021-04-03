@@ -48,7 +48,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   valueMutated() {
     this.valueChanged();
   }
-  setAria() {
+  applyAria() {
     // TODO
   }
   _onKeydown(event) {

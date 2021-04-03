@@ -120,8 +120,8 @@ export class IoString extends IoItem {
     this.title = this.label;
     this.textNode = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
-  setAria() {
-    super.setAria();
+  applyAria() {
+    super.applyAria();
     this.setAttribute('aria-invalid', (typeof this.value !== 'string') ? 'true' : false);
   }
 }

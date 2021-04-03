@@ -1,13 +1,16 @@
-declare type Constructor = new (...args: any[]) => Object;
+declare type Prototype = Object & {
+    constructor: Function;
+};
 /**
- * An array of all prototypes in the inheritance chain.
+ * An array of all inherited prototypes in the prototype chain.
  */
-declare class ProtoChain extends Array<Constructor> {
+declare class ProtoChain extends Array<Prototype> {
     /**
-     * Creates an array of protptypes by traversing down the prototype inheritance chain of the specified prototype and adds each prototype to itself.
+     * Creates an array of inherited prototypes by traversing down the prototype chain of the specified prototype and adds each prototype to itself.
      * It terminates with `HTMLElement`, `Object` or `Array`.
+     * @param {Object} prototype - Prototype object.
      */
-    constructor(proto: Constructor);
+    constructor(prototype: Prototype);
 }
 export { ProtoChain };
 //# sourceMappingURL=protochain.d.ts.map

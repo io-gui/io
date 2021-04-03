@@ -4,9 +4,9 @@ Collection of all functions defined in the prototype chain that start with "on" 
 
 ### ProtoFunctions(protochain: `ProtoChain`)
 
-Creates a collection of all function from protochain that start with "on" or "_".
+Creates a collection of all functions from protochain that start with "on" or "_".
 
-### .bind(instance: `Node`)
+### .bind(node: `Node`)
 
-Binds all functions to `this`.
+Binds all functions to node instance.
 

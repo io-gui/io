@@ -37,6 +37,8 @@
   "homepage": "https://iogui.dev",
   "devDependencies": {
     "@rollup/plugin-strip": "^2.0.0",
+    "@types/chai": "^4.2.16",
+    "@types/mocha": "^8.2.2",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
     "babel-eslint": "^10.1.0",

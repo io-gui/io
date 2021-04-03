@@ -10,8 +10,8 @@ import Binding from './core/binding.test.js';
 import Functions from './core/functions.test.js';
 import Listeners from './core/listeners.test.js';
 import Properties from './core/properties.test.js';
-import ProtoChain from './core/protochain.test.js';
-import Queue from './core/queue.test.js';
+import ProtoChain from '../srcj/core/protochain.test.js';
+import Queue from '../srcj/core/queue.test.js';
 
 import Item from './elements/core/item.test.js';
 import Content from './elements/core/content.test.js'; // TODO

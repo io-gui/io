@@ -95,8 +95,8 @@ class IoLadderStep extends IoItem {
     this.removeEventListener('pointerup', this._onPointerup);
     this.dispatchEvent('ladder-step-collapse', {}, true);
   }
-  setAria() {
-    super.setAria();
+  applyAria() {
+    super.applyAria();
     this.setAttribute('aria-valuemax', this.parentElement.max);
     this.setAttribute('aria-valuemin', this.parentElement.min);
     this.setAttribute('aria-valuenow', this.parentElement.value);
@@ -312,7 +312,7 @@ class IoLadder extends IoElement {
     ]);
 
     const steps = this.querySelectorAll('io-ladder-step');
-    for (let i = steps.length; i--;) steps[i].setAria();
+    for (let i = steps.length; i--;) steps[i].applyAria();
   }
 }
 

@@ -34,8 +34,8 @@ export class IoBoolean extends IoItem {
     this.title = this.label;
     this.textNode = this.value ? this.true : this.false;
   }
-  setAria() {
-    super.setAria();
+  applyAria() {
+    super.applyAria();
     this.setAttribute('aria-checked', String(!!this.value));
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
   }

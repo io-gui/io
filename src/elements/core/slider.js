@@ -209,8 +209,8 @@ export class IoSlider extends IoGl {
   changed() {
     super.changed();
   }
-  setAria() {
-    super.setAria();
+  applyAria() {
+    super.applyAria();
     this.setAttribute('aria-invalid', isNaN(this.value) ? 'true' : false);
     this.setAttribute('aria-valuenow', isNaN(this.value) ? 0 : this.value);
     this.setAttribute('aria-valuemin', this.min);

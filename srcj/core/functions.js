@@ -3,7 +3,7 @@
  */
 class ProtoFunctions extends Array {
     /**
-     * Creates a collection of all function from protochain that start with "on" or "_".
+     * Creates a collection of all functions from protochain that start with "on" or "_".
      * @param {ProtoChain} protochain - Array of protochain constructors.
      */
     constructor(protochain) {
@@ -16,7 +16,7 @@ class ProtoFunctions extends Array {
                 if (fname === 'constructor')
                     continue;
                 const p = Object.getOwnPropertyDescriptor(constructor, fname);
-                if (p.get || p.set)
+                if (p === undefined || p.get || p.set)
                     continue;
                 if (typeof constructor[fname] === 'function') {
                     if (this.indexOf(fname) === -1 && (fname.startsWith('_') || fname.startsWith('on'))) {
@@ -27,11 +27,12 @@ class ProtoFunctions extends Array {
         }
     }
     /**
-     * Binds all functions to `this`.
+     * Binds all functions to node instance.
+     * @param {Node} node - Node instance to bind functions to.
      */
-    bind(instance) {
+    bind(node) {
         for (let i = this.length; i--;) {
-            Object.defineProperty(instance, this[i], { value: instance[this[i]].bind(instance) });
+            Object.defineProperty(node, this[i], { value: node[this[i]].bind(node) });
         }
     }
 }

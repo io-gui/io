@@ -18,7 +18,7 @@ class TestNode extends Node {
   }
 }
 TestNode.Register();
-'';
+
 export default class {
   run() {
     describe('Properties', () => {

@@ -47,9 +47,9 @@ Use this when instance is no longer needed.
 default change handler.
 Invoked when one of the properties change.
 
-### .dispatchChange()
+### .applyCompose()
 
-sets composed properties and invokes `changed()` function on change.
+Applies composed values to properties.
 
 ### .queue(prop: `string`, value: `*`, oldValue: `*`)
 

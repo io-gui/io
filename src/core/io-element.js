@@ -1,4 +1,4 @@
-import {NodeMixin} from './node.js';
+import {NodeMixin} from '../../srcj/core/node.js';
 import {Listeners} from '../../srcj/core/listeners.js';
 import {buildTree} from '../../lib/ijk.js';
 
@@ -254,14 +254,14 @@ class IoElement extends NodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
     }
   }
-  dispatchChange() {
-    super.dispatchChange();
-    this.setAria();
+  applyCompose() {
+    super.applyCompose();
+    this.applyAria();
   }
   /**
    * Sets aria attributes.
    */
-  setAria() {
+  applyAria() {
     if (this.label) {
       this.setAttribute('aria-label', this.label);
     } else {

@@ -1,4 +1,4 @@
-import {Node} from '../../core/node.js';
+import {Node} from '../../../srcj/core/node.js';
 
 if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
 if (!('PushManager' in window)) { console.warn('No Push API Support!'); }

@@ -1,8 +1,16 @@
-import {Queue} from '../../srcj/core/queue.js';
+import {Queue} from './queue.js';
 
 export default class {
+  idChangeCounter = 0;
+  changeCounter = 0;
+  eventCounter = 0;
+  eventName: any = null;
+  eventPayload: any = null;
+  fakeNode?: any = null;
+  queue: Queue;
   constructor() {
     this.reset();
+    this.queue = new Queue(this.fakeNode);
   }
   reset() {
     this.idChangeCounter = 0;
@@ -16,12 +24,13 @@ export default class {
       idChanged() {
         scope.idChangeCounter++;
       },
-      dispatchEvent(eventName, eventPayload) {
+      dispatchEvent(eventName: string, eventPayload: any) {
         scope.eventCounter++;
         scope.eventName = eventName;
         scope.eventPayload = eventPayload;
       },
-      dispatchChange(){
+      applyCompose(){},
+      changed() {
         scope.changeCounter++;
       },
       __connected: true
@@ -31,16 +40,16 @@ export default class {
   run() {
     describe('Queue', () => {
       it('Should have correct defaults', () => {
-        chai.expect(typeof this.queue.__node).to.be.equal('object');
-        chai.expect(typeof this.queue.__changes).to.be.equal('object');
-        chai.expect(this.queue.__changes.length).to.be.equal(0);
-        chai.expect(this.queue.__changes instanceof Array).to.be.equal(true);
+        chai.expect(typeof (this.queue as any).__node).to.be.equal('object');
+        chai.expect(typeof (this.queue as any).__changes).to.be.equal('object');
+        chai.expect((this.queue as any).__changes.length).to.be.equal(0);
+        chai.expect((this.queue as any).__changes instanceof Array).to.be.equal(true);
         this.reset();
       });
       it('Should dispose correctly', () => {
         this.queue.dispose();
-        chai.expect(typeof this.queue.__node).to.be.equal('undefined');
-        chai.expect(typeof this.queue.__changes).to.be.equal('undefined');
+        chai.expect(typeof (this.queue as any).__node).to.be.equal('undefined');
+        chai.expect(typeof (this.queue as any).__changes).to.be.equal('undefined');
         this.reset();
       });
       it('Should trigger change events', () => {

@@ -209,8 +209,8 @@ export class IoNumber extends IoItem {
     this.textNode = valueText;
     this.setAttribute('positive', this.value >= 0);
   }
-  setAria() {
-    super.setAria();
+  applyAria() {
+    super.applyAria();
     this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
   }
 }

@@ -1,17 +1,19 @@
-import {ProtoChain} from '../../srcj/core/protochain.js';
-import {ProtoFunctions} from '../../srcj/core/functions.js';
-import {Bindings, Binding} from '../../srcj/core/binding.js';
-import {Queue} from '../../srcj/core/queue.js';
-import {ProtoProperties, Properties} from '../../srcj/core/properties.js';
-import {ProtoListeners, Listeners} from '../../srcj/core/listeners.js';
+import {ProtoChain} from './protochain.js';
+import {ProtoFunctions} from './functions.js';
+import {Bindings, Binding} from './binding.js';
+import {Queue} from './queue.js';
+import {ProtoProperties, Properties} from './properties.js';
+import {ProtoListeners, Listeners} from './listeners.js';
+
+type Constructor<T extends any> = new (...args: any[]) => T;
 
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
  * @return {function} - Extended class constructor with `NodeMixin` applied to it.
  */
-const NodeMixin = (superclass) => {
-  const classConstructor = class extends superclass {
+function NodeMixin<T extends Constructor<any>>(superclass: T) {
+  const classConstructor = class extends (superclass as any) {
     static get Properties() {
       return {
         lazy: Boolean,
@@ -43,7 +45,7 @@ const NodeMixin = (superclass) => {
      * Creates a class instance and initializes the internals.
      * @param {Object} initProps - Initial property values.
      */
-    constructor(initProps = {}, ...args) {
+    constructor(initProps = {}, ...args: any[]) {
       super(...args);
 
       const constructor = this.__proto__.constructor;
@@ -74,7 +76,7 @@ const NodeMixin = (superclass) => {
      * Connects the instance to another node or element.
      * @param {Node} node - Node to connect to.
      */
-    connect(node) {
+    connect(node: any) {
       debug:
       if (this.__isIoElement) {
         console.error('"connect()" function is not intended for DOM Elements!');
@@ -92,7 +94,7 @@ const NodeMixin = (superclass) => {
      * Disconnects the instance from an another node or element.
      * @param {Node} node - Node to disconnect from.
      */
-    disconnect(node) {
+    disconnect(node: any) {
       debug:
       if (this.__isIoElement) {
         console.error('"disconnect()" function is not intended for DOM Elements!');
@@ -152,12 +154,13 @@ const NodeMixin = (superclass) => {
      */
     changed() {}
     /**
-     * sets composed properties and invokes `changed()` function on change.
+     * Applies composed values to properties.
      */
-    dispatchChange() {
+    applyCompose() {
       // TODO: test compose
+      const self = this as any;
       if (this.compose) {
-        for (let prop in this.compose) {
+        for (let prop in self.compose) {
           debug:
           if (!this.__properties[prop] || typeof this.__properties[prop].value !== 'object') {
             console.error(`Composed property ${prop} is not a Node or an object.`);
@@ -165,15 +168,14 @@ const NodeMixin = (superclass) => {
           }
           const object = this.__properties[prop].value;
           if (object.__isNode) {
-            object.setProperties(this.compose[prop]);
+            object.setProperties(self.compose[prop]);
           } else {
-            for (let p in this.compose[prop]) {
-              object[p] = this.compose[prop][p];
+            for (let p in self.compose[prop]) {
+              object[p] = self.compose[prop][p];
             }
           }
         }
       }
-      this.changed();
     }
     /**
      * Adds property change to the queue.
@@ -181,7 +183,7 @@ const NodeMixin = (superclass) => {
      * @param {*} value - Property value.
      * @param {*} oldValue - Old property value.
      */
-    queue(prop, value, oldValue) {
+    queue(prop: string, value: any, oldValue: any) {
       this.__queue.queue(prop, value, oldValue);
     }
     /**
@@ -208,7 +210,7 @@ const NodeMixin = (superclass) => {
      * @param {Object} event - Event payload.
      * @param {Object} event.detail.object - Mutated object.
      */
-    objectMutated(event) {
+    objectMutated(event: any) {
       for (let i = 0; i < this.__observedObjects.length; i++) {
         const prop = this.__observedObjects[i];
         const value = this.__properties[prop].value;
@@ -234,16 +236,17 @@ const NodeMixin = (superclass) => {
      * the object properties has mutated.
      * @param {string} prop - Mutated object property name.
      */
-    objectMutatedThrottled(prop) {
+    objectMutatedThrottled(prop: string) {
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
-      this.dispatchChange();
+      this.applyCompose();
+      this.changed();
     }
     /**
      * Returns a binding to a specified property`.
      * @param {string} prop - Property to bind to.
      * @return {Binding} Binding object.
      */
-    bind(prop) {
+    bind(prop: string) {
       debug:
       if (!this.__properties[prop]) {
         console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
@@ -255,7 +258,7 @@ const NodeMixin = (superclass) => {
      * Unbinds a binding to a specified property`.
      * @param {string} prop - Property to unbind.
      */
-    unbind(prop) {
+    unbind(prop: string) {
       this.__bindings.unbind(prop);
       const binding = this.__properties[prop].binding;
       if (binding) binding.removeTarget(this, prop);
@@ -267,7 +270,7 @@ const NodeMixin = (superclass) => {
      * @param {*} value - Property value.
      * @param {boolean} force - Force value set.
      */
-    set(prop, value, force) {
+    set(prop: string, value: any, force: any) {
       if (this[prop] !== value || force) {
         const oldValue = this[prop];
         this[prop] = value;
@@ -279,7 +282,7 @@ const NodeMixin = (superclass) => {
      * [property]-changed` events will be broadcast in the end.
      * @param {Object} props - Map of property names and values.
      */
-    setProperties(props) {
+    setProperties(props: any) {
       for (let p in props) {
         if (this.__properties[p] === undefined) {
           debug:
@@ -300,7 +303,7 @@ const NodeMixin = (superclass) => {
      * @param {function} listener - listener handler.
      * @param {Object} options - event listener options.
      */
-    addEventListener(type, listener, options) {
+    addEventListener(type: string, listener: Function, options?: any) {
       debug:
       if (typeof listener !== 'function') {
         console.warn(`${this.constructor.name}.${type}() is not a function`, this);
@@ -314,7 +317,7 @@ const NodeMixin = (superclass) => {
      * @param {function} listener - listener handler.
      * @param {Object} options - event listener options.
      */
-    removeEventListener(type, listener, options) {
+    removeEventListener(type: string, listener: Function, options?: any) {
       this.__listeners.removeEventListener(type, listener, options);
     }
     /**
@@ -324,7 +327,7 @@ const NodeMixin = (superclass) => {
      * @param {boolean} bubbles - event bubbles.
      * @param {HTMLElement|Node} src source node/element to dispatch event from.
      */
-    dispatchEvent(type, detail, bubbles = false, src) {
+    dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node) {
       this.__listeners.dispatchEvent(type, detail, bubbles, src);
     }
     /**
@@ -333,7 +336,7 @@ const NodeMixin = (superclass) => {
      * @param {*} arg - argument for throttled function.
      * @param {boolean} asynchronous - execute with timeout.
      */
-    throttle(func, arg, asynchronous) {
+    throttle(func: Function, arg?: any, asynchronous?: boolean) {
       // TODO: move to extenal throttle function, document and test.
       if (preThrottleQueue.indexOf(func) === -1) {
         preThrottleQueue.push(func);
@@ -354,10 +357,10 @@ const NodeMixin = (superclass) => {
       }
     }
     // TODO: implement fAF debounce
-    requestAnimationFrameOnce(func) {
+    requestAnimationFrameOnce(func: Function) {
       requestAnimationFrameOnce(func);
     }
-    filterObject(object, predicate, _depth = 5, _chain = [], _i = 0) {
+    filterObject(object: any, predicate: Function, _depth: number = 5, _chain: any[] = [], _i = 0): any {
       if (_chain.indexOf(object) !== -1) return; _chain.push(object);
       if (_i > _depth) return; _i++;
       if (predicate(object)) return object;
@@ -370,8 +373,8 @@ const NodeMixin = (superclass) => {
         }
       }
     }
-    filterObjects(object, predicate, _depth = 5, _chain = [], _i = 0) {
-      const result = [];
+    filterObjects(object: any, predicate: Function, _depth: number = 5, _chain: any[] = [], _i = 0): any {
+      const result: any = [];
       if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
       if (_i > _depth) return result; _i++;
       if (predicate(object) && result.indexOf(object) === -1) result.push(object);
@@ -387,8 +390,8 @@ const NodeMixin = (superclass) => {
       }
       return result;
     }
-    import(path) {
-      const importPath = new URL(path, window.location).href;
+    import(path: string) {
+      const importPath = new URL(path, String(window.location)).href as string;
       return new Promise(resolve => {
         if (!path || IMPORTED_PATHS[importPath]) {
           resolve(importPath);
@@ -405,20 +408,20 @@ const NodeMixin = (superclass) => {
      * Handler function with `event.preventDefault()`.
      * @param {Object} event - Event object.
      */
-    preventDefault(event) {
+    preventDefault(event: Event) {
       event.preventDefault();
     }
     /**
      * Handler function with `event.stopPropagation()`.
      * @param {Object} event - Event object.
      */
-    stopPropagation(event) {
+    stopPropagation(event: Event) {
       event.stopPropagation();
     }
   };
   classConstructor.Register = Register;
   return classConstructor;
-};
+}
 
 /**
  * Register function to be called once per class.
@@ -467,7 +470,7 @@ class Node extends NodeMixin(Object) {}
 
 Node.Register();
 
-const IMPORTED_PATHS = {};
+const IMPORTED_PATHS: Record<string, boolean> = {};
 
 // TODO: document and test
 const preThrottleQueue = new Array();
@@ -498,7 +501,7 @@ const animate = function() {
 };
 requestAnimationFrame(animate);
 
-function requestAnimationFrameOnce(func) {
+function requestAnimationFrameOnce(func: Function) {
   if (funcQueue.indexOf(func) === -1) funcQueue.push(func);
 }
 

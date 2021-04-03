@@ -6,7 +6,7 @@ Property change queue manager responsible for dispatching change events and trig
 
 Creates queue manager for the specified `Node` instance.
 
-### .queue(prop: `string`, value: `*`, oldValue: `*`)
+### .queue(property: `string`, value: `*`, oldValue: `*`)
 
 Adds property change to the queue by specifying property name, previous and the new value.
 If the change is already in the queue, the new value is updated.

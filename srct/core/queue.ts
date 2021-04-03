@@ -1,32 +1,42 @@
+type Node = any;
+
+type Change = {
+  property: string,
+  value: any,
+  oldValue: any,
+}
+
 /**
  * Property change queue manager responsible for dispatching change events and triggering change handler functions.
  */
 class Queue {
+  private __node: Node;
+  private __changes: Array<Change>;
+  private __dispatchInProgress: boolean = false;
   /**
    * Creates queue manager for the specified `Node` instance.
    * @param {Node} node - Reference to the owner node/element.
    */
-   __changes: Array<any> = [];
-   __node: any;
-   _dispatchInProgress: boolean = false;
-
-   constructor(node: any) {
-    Object.defineProperty(this, '__changes', {enumerable: false, configurable: true, value: []});
-    Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
+  constructor(node: Node) {
+    this.__node = node;
+    this.__changes = [];
+    Object.defineProperty(this, '__node',               {enumerable: false, configurable: true});
+    Object.defineProperty(this, '__changes',            {enumerable: false, configurable: true});
+    Object.defineProperty(this, '__dispatchInProgress', {enumerable: false, configurable: true});
   }
   /**
    * Adds property change to the queue by specifying property name, previous and the new value.
    * If the change is already in the queue, the new value is updated.
-   * @param {string} prop - Property name.
-   * @param {*} value Property value.
-   * @param {*} oldValue Old property value.
+   * @param {string} property - Property name.
+   * @param {any} value Property value.
+   * @param {any} oldValue Old property value.
    */
-  queue(prop: string, value: any, oldValue: any) {
-    const i = this.__changes.indexOf(prop);
+  queue(property: string, value: any, oldValue: any) {
+    const i = this.__changes.findIndex(change => change.property === property);
     if (i === -1) {
-      this.__changes.push(prop, {property: prop, value: value, oldValue: oldValue});
+      this.__changes.push({property: property, value: value, oldValue: oldValue});
     } else {
-      this.__changes[i + 1].value = value;
+      this.__changes[i].value = value;
     }
   }
   /**
@@ -35,38 +45,29 @@ class Queue {
    * It also executes node's `[propName]Changed(payload)` change handler function if it is defined.
    */
   dispatch() {
-    if (this._dispatchInProgress === true) return;
-    if (!this.__node.__connected) return;
-    this._dispatchInProgress = true;
-
+    if (this.__dispatchInProgress === true) return;
     const node = this.__node;
+    if (!node.__connected) return;
+    this.__dispatchInProgress = true;
     let changed = false;
 
     while (this.__changes.length) {
-      const j = this.__changes.length - 2;
-      const prop = this.__changes[j];
-      const detail = this.__changes[j + 1];
-      const payload = {detail: detail};
-
-      if (detail.value !== detail.oldValue) {
+      const i = this.__changes.length - 1;
+      const change = this.__changes[i];
+      const property = change.property;
+      if (change.value !== change.oldValue) {
         changed = true;
-        if (node[prop + 'Changed']) node[prop + 'Changed'](payload);
-        node.dispatchEvent(prop + '-changed', payload.detail);
+        if (node[property + 'Changed']) node[property + 'Changed']({detail: change});
+        node.dispatchEvent(property + '-changed', change);
       }
-      this.__changes.splice(j, 2);
+      this.__changes.splice(i, 1);
     }
 
-    if (changed) node.dispatchChange();
-
-    this._dispatchInProgress = false;
-
-    // TODO: It is possible that an effect of change adds additional items to the queue
-    // TODO: Test and document!
-    // this.__changes.length = 0;
-    if (this.__changes.length) {
-      this.dispatch();
-      return;
+    if (changed) {
+      node.applyCompose();
+      node.changed();
     }
+    this.__dispatchInProgress = false;
   }
   /**
    * Clears the queue and removes the node reference.
@@ -74,8 +75,8 @@ class Queue {
    */
   dispose() {
     this.__changes.length = 0;
-    delete this.__node;
-    delete this.__changes;
+    delete (this as any).__node;
+    delete (this as any).__changes;
   }
 }
 

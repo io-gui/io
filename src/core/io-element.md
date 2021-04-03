@@ -27,7 +27,7 @@ Update textContent via TextNode is better for layout performance.
 
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
-### .setAria()
+### .applyAria()
 
 Sets aria attributes.
 

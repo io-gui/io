@@ -1,4 +1,4 @@
-import {NodeMixin} from '../../core/node.js';
+import {NodeMixin} from '../../../srcj/core/node.js';
 import {Item} from '../item/item.js';
 import {Path} from '../path/path.js';
 

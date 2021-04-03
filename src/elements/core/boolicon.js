@@ -42,8 +42,8 @@ export class IoBoolicon extends IoBoolean {
     this.title = this.label;
     this.innerHTML = IoIconsetSingleton.getIcon(this.value ? this.true : this.false);
   }
-  setAria() {
-    super.setAria();
+  applyAria() {
+    super.applyAria();
     this.setAttribute('aria-checked', String(!!this.value));
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
   }

@@ -1,16 +1,17 @@
 /**
- * An array of all prototypes in the inheritance chain.
+ * An array of all inherited prototypes in the prototype chain.
  */
 class ProtoChain extends Array {
     /**
-     * Creates an array of protptypes by traversing down the prototype inheritance chain of the specified prototype and adds each prototype to itself.
+     * Creates an array of inherited prototypes by traversing down the prototype chain of the specified prototype and adds each prototype to itself.
      * It terminates with `HTMLElement`, `Object` or `Array`.
+     * @param {Object} prototype - Prototype object.
      */
-    constructor(proto) {
+    constructor(prototype) {
         super();
-        while (proto && proto.constructor !== HTMLElement && proto.constructor !== Object && proto.constructor !== Array) {
-            this.push(proto);
-            proto = proto.__proto__;
+        while (prototype && prototype.constructor !== HTMLElement && prototype.constructor !== Object && prototype.constructor !== Array) {
+            this.push(prototype);
+            prototype = prototype.__proto__;
         }
     }
 }
