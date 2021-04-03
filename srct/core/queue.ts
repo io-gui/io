@@ -6,8 +6,12 @@ class Queue {
    * Creates queue manager for the specified `Node` instance.
    * @param {Node} node - Reference to the owner node/element.
    */
-  constructor(node) {
-    Object.defineProperty(this, '__changes', {enumerable: false, configurable: true, value: new Array()});
+   __changes: Array<any> = [];
+   __node: any;
+   _dispatchInProgress: boolean = false;
+
+   constructor(node: any) {
+    Object.defineProperty(this, '__changes', {enumerable: false, configurable: true, value: []});
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
   }
   /**
@@ -17,7 +21,7 @@ class Queue {
    * @param {*} value Property value.
    * @param {*} oldValue Old property value.
    */
-  queue(prop, value, oldValue) {
+  queue(prop: string, value: any, oldValue: any) {
     const i = this.__changes.indexOf(prop);
     if (i === -1) {
       this.__changes.push(prop, {property: prop, value: value, oldValue: oldValue});

@@ -1,9 +1,9 @@
-import {ProtoChain} from './protochain.js';
-import {ProtoFunctions} from './functions.js';
-import {Bindings, Binding} from './binding.js';
-import {Queue} from './queue.js';
-import {ProtoProperties, Properties} from './properties.js';
-import {ProtoListeners, Listeners} from './listeners.js';
+import {ProtoChain} from '../../srcj/core/protochain.js';
+import {ProtoFunctions} from '../../srcj/core/functions.js';
+import {Bindings, Binding} from '../../srcj/core/binding.js';
+import {Queue} from '../../srcj/core/queue.js';
+import {ProtoProperties, Properties} from '../../srcj/core/properties.js';
+import {ProtoListeners, Listeners} from '../../srcj/core/listeners.js';
 
 /**
  * Core mixin for `Node` classes.

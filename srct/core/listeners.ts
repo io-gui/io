@@ -1,15 +1,18 @@
+import {ProtoChain} from './protochain.js';
+
+type PropListeners = Record<string, any>
+
 /**
  * Collection of all listeners defined in the prototype chain.
  */
 class ProtoListeners {
   /**
    * Creates a collection of all listeners from protochain.
-   * @param {ProtoChain} protochain - Array of protochain constructors.
    */
-  constructor(protochain) {
+  constructor(protochain: ProtoChain) {
     for (let i = protochain.length; i--;) {
-      const prop = protochain[i].constructor.Listeners;
-      for (let j in prop) this[j] = prop[j];
+      const prop = (protochain[i].constructor as any).Listeners;
+      for (let j in prop) (this as any)[j] = prop[j];
     }
   }
 }
@@ -18,27 +21,29 @@ class ProtoListeners {
  * Manager of listeners for a class **instance**.
  */
 class Listeners {
+  node: any;
+  propListeners: Record<string, any> = {};
+  activeListeners: Record<string, any> = {};
+  __connected: boolean = false;
   /**
    * Creates manager for listener.
-   * @param {Node} node - Reference to the node/element itself.
-   * @param {ProtoListeners} protoListeners - Collection of all listeners defined in the protochain.
    */
-  constructor(node, protoListeners) {
+  constructor(node: any, protoListeners: ProtoListeners) {
     Object.defineProperty(this, 'node', {value: node});
     Object.defineProperty(this, 'propListeners', {value: {}});
     Object.defineProperty(this, 'activeListeners', {value: {}});
     Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
-    for (let prop in protoListeners) this[prop] = protoListeners[prop];
+    for (let prop in protoListeners) (this as any)[prop] = (protoListeners as any)[prop];
   }
   /**
    * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
    * @param {Object} props - Properties.
    */
-  setPropListeners(props) {
+  setPropListeners(props: PropListeners) {
     // TODO: Unset propListeners, test.
     const listeners = this.propListeners;
     const node = this.node;
-    const newListeners = {};
+    const newListeners: Record<string, any> = {};
     for (let l in props) {
       if (l.startsWith('on-')) newListeners[l.slice(3, l.length)] = props[l];
     }
@@ -71,11 +76,12 @@ class Listeners {
     this.__connected = true;
     const node = this.node;
     const listeners = this.propListeners;
+    const self = this as any;
     for (let l in this) {
       if (this[l] instanceof Array) {
-        this.addEventListener(l, node[this[l][0]], this[l][1]);
+        this.addEventListener(l, node[self[l][0]], self[l][1]);
       } else {
-        this.addEventListener(l, node[this[l]]);
+        this.addEventListener(l, node[self[l]]);
       }
     }
     for (let l in listeners) {
@@ -95,11 +101,12 @@ class Listeners {
     this.__connected = false;
     const node = this.node;
     const listeners = this.propListeners;
+    const self = this as any;
     for (let l in this) {
-      if (this[l] instanceof Array) {
-        this.removeEventListener(l, node[this[l][0]], this[l][1]);
+      if (self[l] instanceof Array) {
+        this.removeEventListener(l, node[self[l][0]], self[l][1]);
       } else {
-        this.removeEventListener(l, node[this[l]]);
+        this.removeEventListener(l, node[self[l]]);
       }
     }
     for (let l in listeners) {
@@ -130,11 +137,8 @@ class Listeners {
   /**
    * Proxy for `addEventListener` method.
    * Adds an event listener.
-   * @param {string} type - event name to listen to.
-   * @param {function} listener - event handler function.
-   * @param {Object} options - event listener options.
    */
-  addEventListener(type, listener, options) {
+  addEventListener(type: string, listener: any, options?: Record<string, any>) {
     const active = this.activeListeners;
     active[type] = active[type] || [];
     const i = active[type].indexOf(listener);
@@ -146,11 +150,8 @@ class Listeners {
   /**
    * Proxy for `removeEventListener` method.
    * Removes an event listener.
-   * @param {string} type - event name to listen to.
-   * @param {function} listener - event handler function.
-   * @param {Object} options - event listener options.
    */
-  removeEventListener(type, listener, options) {
+  removeEventListener(type: string, listener: any, options?: Record<string, any>) {
     const active = this.activeListeners;
     if (active[type] !== undefined) {
       const i = active[type].indexOf(listener);
@@ -162,14 +163,11 @@ class Listeners {
   }
   /**
    * Shorthand for custom event dispatch.
-   * @param {string} type - event name to dispatch.
-   * @param {Object} detail - event detail.
-   * @param {boolean} bubbles - event bubbles.
-   * @param {HTMLElement|Node} src source node/element to dispatch event from.
    */
-  dispatchEvent(type, detail = {}, bubbles = true, src = this.node) {
+  dispatchEvent(type: string, detail: Record<string, any> = {}, bubbles: boolean = true, src: HTMLElement | any = this.node) {
     if (src instanceof HTMLElement || src === window) {
-      HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {type: type, detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
+      HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
+      // HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {type: type, detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
       const active = this.activeListeners;
       if (active[type] !== undefined) {

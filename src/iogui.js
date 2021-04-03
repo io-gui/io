@@ -25,9 +25,9 @@
 // CORE
 export {Node, NodeMixin} from './core/node.js';
 export {IoElement} from './core/io-element.js';
-export {Binding} from './core/binding.js';
-export {ProtoChain} from './core/protochain.js';
-export {ProtoProperty, ProtoProperties, Property, Properties} from './core/properties.js';
+export {Binding} from '../srcj/core/binding.js';
+export {ProtoChain} from '../srcj/core/protochain.js';
+export {ProtoProperty, ProtoProperties, Property, Properties} from '../srcj/core/properties.js';
 
 // MODELS
 export {Item} from './models/item/item.js';

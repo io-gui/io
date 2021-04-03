@@ -1,11 +1,21 @@
 {
-  "extends": "eslint:recommended",
-  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 6,
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
   "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/consistent-type-assertions": "error",
+    "@typescript-eslint/no-floating-promises": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "eqeqeq": "error",
     "no-console": "off",
     "no-unused-labels": "off",
     "no-var": "error",
@@ -29,7 +39,8 @@
     }]
   },
   "plugins": [
-    "html"
+    "html",
+    "@typescript-eslint"
   ],
   "env": {
     "browser": true,

@@ -1,5 +1,5 @@
 import {NodeMixin} from './node.js';
-import {Listeners} from './listeners.js';
+import {Listeners} from '../../srcj/core/listeners.js';
 import {buildTree} from '../../lib/ijk.js';
 
 /**

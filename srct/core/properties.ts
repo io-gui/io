@@ -1,25 +1,35 @@
 import {Binding} from './binding.js';
+import {ProtoChain} from './protochain.js';
+
+type Constructor = new (...args: any[]) => Object;
 
 /**
  * Property configuration object for a class **prototype**.
  * It is generated from property definitions in `static get Properties()` return object.
- * @property {*} value - Default value.
- * @property {function} type - Constructor of value.
- * @property {number} reflect - Reflects to HTML attribute
- * @property {boolean} notify - Trigger change handlers and change events.
- * @property {boolean} observe - Observe object mutations for this property.
- * @property {boolean} readonly - Makes the property readonly. // TODO: document and test
- * @property {boolean} strict - Enforce stric typing. // TODO: document and test
- * @property {boolean} enumerable - Makes property enumerable.
- * @property {Binding} binding - Binding object.
  */
 class ProtoProperty {
+  //Default value.
+  value?: any;
+  //Constructor of value.
+  type?: Constructor;
+  //Reflects to HTML attribute [-1, 0, 1 or 2]
+  reflect?: number;
+  //Trigger change handlers and change events.
+  notify?: boolean;
+  //Observe object mutations for this property.
+  observe?: boolean;
+  //Makes the property readonly. // TODO: document and test
+  readonly?: boolean;
+  //Enforce stric typing. // TODO: document and test
+  strict?: boolean;
+  //Makes property enumerable.
+  enumerable?: boolean;
+  //Binding object.
+  binding?: Binding;
   /**
    * Creates the property configuration object and sets the default values.
-   * @param {ProtoProperty} prop - Configuration object.
-   * @param {boolean} noDefaults - Assign default values.
    */
-  constructor(prop, noDefaults) {
+  constructor(prop: string | Record<string, any> | any, noDefaults?: boolean) {
 
     if (!noDefaults) {
       this.value = undefined;
@@ -78,22 +88,30 @@ class ProtoProperty {
 /**
  * Property configuration object for a class **instance**.
  * It is copied from the corresponding `ProtoProperty`.
- * @property {*} value - Property value.
- * @property {function} type - Constructor of the property value.
- * @property {number} reflect - HTML attribute [-1, 0, 1 or 2]
- * @property {boolean} notify - Enables change handlers and events.
- * @property {boolean} observe - Observe object mutations for this property.
- * @property {boolean} readonly - Makes the property readonly. // TODO: document and test
- * @property {boolean} strict - Enforce stric typing. // TODO: document and test
- * @property {boolean} enumerable - Makes property enumerable.
- * @property {Binding} binding - Binding object.
  */
 class Property {
+  //Property value.
+  value?: any;
+  //Constructor of the property value.
+  type?: Constructor;
+  //Reflects to HTML attribute [-1, 0, 1 or 2]
+  reflect?: number;
+  //Enables change handlers and events.
+  notify?: boolean;
+  //Observe object mutations for this property.
+  observe?: boolean;
+  //Makes the property readonly. // TODO: document and test
+  readonly?: boolean;
+  //Enforce stric typing. // TODO?: document and test
+  strict?: boolean;
+  //Makes property enumerable.
+  enumerable?: boolean;
+  //Binding object.
+  binding?: Binding;
   /**
    * Creates the property configuration object and copies values from `ProtoProperty`.
-   * @param {ProtoProperty} protoProp - ProtoProperty.
    */
-  constructor(protoProp) {
+  constructor(protoProp: ProtoProperty) {
     this.value = protoProp.value;
     this.type = protoProp.type;
     this.reflect = protoProp.reflect;
@@ -123,7 +141,7 @@ class Property {
     }
 
     debug:
-    if ([-1, 0, 1, 2].indexOf(this.reflect) == -1) {
+    if (([-1, 0, 1, 2] as any).indexOf(this.reflect) == -1) {
       console.error(`Invalid reflect value ${this.reflect}!`);
     }
   }
@@ -136,17 +154,17 @@ class Property {
 class ProtoProperties {
   /**
    * Creates all property configurations for specified prototype chain.
-   * @param {ProtoChain} protochain - Prototype chain.
    */
-  constructor(protochain) {
+  constructor(protochain: ProtoChain) {
+    const self = this as any;
     for (let i = protochain.length; i--;) {
-      const props = protochain[i].constructor.Properties;
+      const props = (protochain[i].constructor as any).Properties;
       for (let p in props) {
-        if (!this[p]) this[p] = new ProtoProperty(props[p]);
-        else Object.assign(this[p], new ProtoProperty(props[p], true));
+        if (!self[p]) self[p] = new ProtoProperty(props[p]);
+        else Object.assign(self[p], new ProtoProperty(props[p], true));
         if (p.charAt(0) === '_') {
-          this[p].notify = false;
-          this[p].enumerable = false;
+          self[p].notify = false;
+          self[p].enumerable = false;
         }
       }
     }
@@ -158,53 +176,51 @@ class ProtoProperties {
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 class Properties {
+  __node: any;
+  __connected: boolean = false;
+  __keys: Array<string> = [];
   /**
    * Creates the properties for specified `Node`.
-   * @param {Node} node - Owner instance of `Node`.
-   * @param {ProtoProperties} protoProps - Configuration object.
    */
-  constructor(node, protoProps) {
+  constructor(node: any, protoProps: ProtoProperties) {
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
     Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
     for (let prop in protoProps) {
+      const protoProp = protoProps as Record<string, ProtoProperty>;
       Object.defineProperty(this, prop, {
-        value: new Property(protoProps[prop]),
-        enumerable: protoProps[prop].enumerable,
+        value: new Property(protoProp[prop]),
+        enumerable: protoProp[prop].enumerable,
         configurable: true
       });
-      const value = this[prop].value;
+      const property = (this as any)[prop] as Property;
+      const value = property.value;
       if (value !== undefined && value !== null) {
         // TODO: document special handling of object and node values
         if (typeof value === 'object') {
           node.queue(prop, value, undefined);
           if (value.__isNode && node.__connected) value.connect(node);
-        } else if (this[prop].reflect >= 1 && node.__isIoElement) {
+        } else if (property.reflect !== undefined && property.reflect >= 1 && node.__isIoElement) {
           // TODO: figure out how to resolve bi-directionsl reflection when attributes are set in html (role, etc...)
           node.setAttribute(prop, value);
         }
       }
-      const binding = this[prop].binding;
+      const binding = property.binding;
       if (binding) binding.addTarget(node, prop);
     }
     Object.defineProperty(this, '__keys', {enumerable: false, configurable: true, value: Object.keys(this)});
   }
   /**
    * Returns the property value.
-   * @param {string} key - property name.
-   * @return {*} Property value.
    */
-  get(key) {
-    return this[key].value;
+  get(key: string): any {
+    return ((this as any)[key] as Property).value;
   }
   /**
    * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
-   * @param {string} key - property name.
-   * @param {*} value - property value or binding.
-   * @param {boolean} skipDispatch - Skips queue dispatch if `true`.
    */
-  set(key, value, skipDispatch) {
+  set(key: string, value: any, skipDispatch: boolean = false) {
 
-    const prop = this[key];
+    const prop = (this as any)[key] as Property;
     const oldValue = prop.value;
 
     if (value !== oldValue) {
@@ -267,7 +283,7 @@ class Properties {
         }
       }
 
-      if (prop.reflect >= 1 && node.__isIoElement) node.setAttribute(key, value);
+      if (prop.reflect !== undefined && prop.reflect >= 1 && node.__isIoElement) node.setAttribute(key, value);
     }
 
   }
@@ -278,12 +294,13 @@ class Properties {
     this.__connected = true;
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];
-      if (this[p].binding) {
-        this[p].binding.addTarget(this.__node, p);
+      const property = (this as any)[p] as Property;
+      if (property.binding) {
+        property.binding.addTarget(this.__node, p);
       }
       // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
-      if (this[p].value && this[p].value.__isNode && !this[p].value.__connected && !this[p].value.__isIoElement) {
-        this[p].value.connect(this.__node);
+      if (property.value && property.value.__isNode && !property.value.__connected && !property.value.__isIoElement) {
+        property.value.connect(this.__node);
       }
     }
   }
@@ -294,16 +311,17 @@ class Properties {
     this.__connected = false;
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];
-      if (this[p].binding) {
-        this[p].binding.removeTarget(this.__node, p);
+      const property = (this as any)[p] as Property;
+      if (property.binding) {
+        property.binding.removeTarget(this.__node, p);
       }
       // TODO: investigate and test element property connections
       // possible clash with element's native `disconenctedCallback()`
       // TODO: fix BUG - diconnecting already disconencted.
-      if (this[p].value && this[p].value.__isNode && !this[p].value.__isIoElement) {
+      if (property.value && property.value.__isNode && !property.value.__isIoElement) {
         // TODO: remove this workaround once the bug is fixed properly.
-        if (this[p].value.__connections.indexOf(this.__node) !== -1) {
-          this[p].value.disconnect(this.__node);
+        if (property.value.__connections.indexOf(this.__node) !== -1) {
+          property.value.disconnect(this.__node);
         }
       }
     }

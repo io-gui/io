@@ -1,13 +1,19 @@
+interface ChangeEvent {
+  target: any,
+  detail: Record<string, any>,
+}
 /**
  * Binding object. It manages data binding between source and targets using `[prop]-changed` events.
  */
 class Binding {
+  sourceProp: string = '';
+  source: any;
+  targets: Array<any> = [];
+  targetProps: WeakMap<any, any> = new WeakMap();
   /**
    * Creates a binding object with specified `sourceNode` and `sourceProp`.
-   * @param {Node} sourceNode - Source node.
-   * @param {string} sourceProp - Source property.
    */
-  constructor(sourceNode, sourceProp) {
+  constructor(sourceNode: any, sourceProp: string) {
     Object.defineProperty(this, 'source', {value: sourceNode, configurable: true});
     Object.defineProperty(this, 'sourceProp', {value: sourceProp, configurable: true});
     Object.defineProperty(this, 'targets', {value: [], configurable: true});
@@ -27,7 +33,7 @@ class Binding {
    * @param {Node} targetNode - Target node.
    * @param {string} targetProp - Target property.
    */
-  addTarget(targetNode, targetProp) {
+  addTarget(targetNode: any, targetProp: string) {
     const props = targetNode.__properties;
     if (props) {
       props[targetProp].binding = this;
@@ -49,10 +55,8 @@ class Binding {
   /**
    * Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
    * If `targetProp` is not specified, it removes all target properties.
-   * @param {Node} targetNode - Target node.
-   * @param {string} targetProp - Target property.
    */
-  removeTarget(targetNode, targetProp) {
+  removeTarget(targetNode: any, targetProp?: string) {
     if (this.targetProps.has(targetNode)) {
       const targetProps = this.targetProps.get(targetNode);
       if (targetProp) {
@@ -72,12 +76,8 @@ class Binding {
   }
   /**
    * Event handler that updates source property when one of the targets emits `[prop]-changed` event.
-   * @param {Object} event - Event object.
-   * @param {Node} event.target - Event target (source node that emitted the event).
-   * @param {Object} event.detail - Event detail.
-   * @param {*} event.detail.value - New value.
    */
-  _onTargetChanged(event) {
+  _onTargetChanged(event: ChangeEvent) {
     if (this.targets.indexOf(event.target) === -1) {
       console.error(
         `_onTargetChanged() should never fire when target is removed from binding.
@@ -95,12 +95,8 @@ class Binding {
   }
   /**
    * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
-   * @param {Object} event - Event object.
-   * @param {Node} event.target - Event target (source node that emitted the event).
-   * @param {Object} event.detail - Event detail.
-   * @param {*} event.detail.value - New value.
    */
-  _onSourceChanged(event) {
+  _onSourceChanged(event: ChangeEvent) {
     if (event.target != this.source) {
       console.error(
         `_onSourceChanged() should always originate form source node.
@@ -144,37 +140,36 @@ class Binding {
  * Manager for `Node` property bindings. It holds all bindings for a particular Node.
  */
 class Bindings {
+  __node: any;
+  __record: Record<string, Binding> = {};
   /**
    * Creates binding manager with a node reference.
-   * @param {Node} node - Reference to the node.
    */
-  constructor(node) {
+  constructor(node: any) {
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
   }
   /**
    * Returns a binding to the specified property name or creates one if it does not exist.
-   * @param {string} prop - property name.
-   * @return {Binding} Property binding.
    */
-  bind(prop) {
-    this[prop] = this[prop] || new Binding(this.__node, prop);
-    return this[prop];
+  bind(prop: string): Binding {
+    this.__record[prop] = this.__record[prop] || new Binding(this.__node, prop);
+    return this.__record[prop];
   }
   /**
    * Disposes a binding for the specified property name.
    * @param {string} prop - property name.
    */
-  unbind(prop) {
-    if (this[prop]) this[prop].dispose();
-    delete this[prop];
+  unbind(prop: string): void {
+    if (this.__record[prop]) this.__record[prop].dispose();
+    delete this.__record[prop];
   }
   /**
    * Disposes all bindings. Use this when node is no longer needed.
    */
   dispose() {
     for (let prop in this) {
-      this[prop].dispose();
-      delete this[prop];
+      this.__record[prop].dispose();
+      delete this.__record[prop];
     }
     delete this.__node;
   }

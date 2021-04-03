@@ -1,4 +1,4 @@
-import {Binding} from '../../core/binding.js';
+import {Binding} from '../../../srcj/core/binding.js';
 
 // TODO: display read only as non-editable
 
