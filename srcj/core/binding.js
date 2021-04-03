@@ -162,7 +162,7 @@ class Bindings {
      * Disposes all bindings. Use this when node is no longer needed.
      */
     dispose() {
-        for (let prop in this) {
+        for (let prop in this.__record) {
             this.__record[prop].dispose();
             delete this.__record[prop];
         }

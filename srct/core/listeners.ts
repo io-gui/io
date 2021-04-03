@@ -30,8 +30,8 @@ class Listeners {
    */
   constructor(node: any, protoListeners: ProtoListeners) {
     Object.defineProperty(this, 'node', {value: node});
-    Object.defineProperty(this, 'propListeners', {value: {}});
-    Object.defineProperty(this, 'activeListeners', {value: {}});
+    Object.defineProperty(this, 'propListeners', {enumerable: false, value: {}});
+    Object.defineProperty(this, 'activeListeners', {enumerable: false, value: {}});
     Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
     for (let prop in protoListeners) (this as any)[prop] = (protoListeners as any)[prop];
   }

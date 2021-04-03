@@ -1,4 +1,4 @@
-import {Queue} from './queue.js';
+import {Queue} from '../../srcj/core/queue.js';
 
 export default class {
   constructor() {

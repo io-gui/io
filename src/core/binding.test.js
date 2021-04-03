@@ -84,23 +84,23 @@ export default class {
         });
       });
       describe('Bindings', () => {
-        it('Should return existing binding or create a new when on "bind()"', () => {
+        it('Should return existing binding or create a new on "bind()"', () => {
           const node = new TestNode();
           const binding1 = node.bind('prop1');
-          chai.expect(binding1).to.be.equal(node.__bindings.prop1);
+          chai.expect(binding1).to.be.equal(node.__bindings.__record.prop1);
           chai.expect(binding1).to.be.equal(node.bind('prop1'));
         });
         it('Should dispose bindings correctly', () => {
           const node1 = new TestNode();
           const binding1 = node1.bind('prop1');
           node1.unbind('prop1');
-          chai.expect(undefined).to.be.equal(node1.__bindings.prop1);
+          chai.expect(undefined).to.be.equal(node1.__bindings.__record.prop1);
           chai.expect(binding1.prop1).to.be.equal(undefined);
 
           const node2 = new TestNode();
           const binding2 = node2.bind('prop1');
           node2.__bindings.dispose();
-          chai.expect(undefined).to.be.equal(node2.__bindings.prop1);
+          chai.expect(undefined).to.be.equal(node2.__bindings.__record.prop1);
           chai.expect(binding2.prop1).to.be.equal(undefined);
         });
       });
