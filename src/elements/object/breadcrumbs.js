@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 
 export class IoBreadcrumbs extends IoElement {
   static get Style() {
@@ -76,7 +76,7 @@ export class IoBreadcrumbs extends IoElement {
   }
 }
 
-IoBreadcrumbs.Register();
+RegisterIoElement(IoBreadcrumbs);
 
 function getLabel(object) {
   if (object instanceof Array) {

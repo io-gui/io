@@ -433,9 +433,6 @@ const RegisterIoElement = function (element) {
     }
     _initProtoStyle(element.prototype.__protochain);
 };
-IoElement.Register = function () {
-    RegisterIoElement(this);
-};
 let ro;
 if (window.ResizeObserver !== undefined) {
     ro = new ResizeObserver(entries => {

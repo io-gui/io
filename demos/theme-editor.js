@@ -72,4 +72,4 @@ export class IoDemoThemeEditor extends IoElement {
   }
 }
 
-IoDemoThemeEditor.Register();
+RegisterIoElement(IoDemoThemeEditor);

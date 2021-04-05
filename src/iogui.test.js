@@ -1,15 +1,15 @@
-import {IoElement} from './iogui.js';
+import {IoElement, RegisterIoElement} from './iogui.js';
 
 import '../lib/mocha.js';
 import '../lib/chai.js';
 
-import Node from './core/node.test.js';
-import Element from './core/io-element.test.js';
+import Node from '../srcj/core/node.test.js';
+import Element from '../srcj/core/io-element.test.js';
 
-import Binding from './core/binding.test.js';
-import Functions from './core/functions.test.js';
-import Listeners from './core/listeners.test.js';
-import Properties from './core/properties.test.js';
+import Binding from '../srcj/core/binding.test.js';
+import Functions from '../srcj/core/functions.test.js';
+import Listeners from '../srcj/core/listeners.test.js';
+import Properties from '../srcj/core/properties.test.js';
 import ProtoChain from '../srcj/core/protochain.test.js';
 import Queue from '../srcj/core/queue.test.js';
 
@@ -146,4 +146,4 @@ export class IoTest extends IoElement {
   }
 }
 
-IoTest.Register();
+RegisterIoElement(IoTest);

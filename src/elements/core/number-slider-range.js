@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import './slider.js';
 
 export class IoNumberSliderRange extends IoElement {
@@ -78,4 +78,4 @@ export class IoNumberSliderRange extends IoElement {
   }
 }
 
-IoNumberSliderRange.Register();
+RegisterIoElement(IoNumberSliderRange);

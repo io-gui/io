@@ -1,4 +1,4 @@
-import {Node} from '../../../srcj/core/node.js';
+import {Node, RegisterIoNode} from '../../../srcj/core/node.js';
 
 // TODO: test different value types
 
@@ -196,7 +196,7 @@ class IoStorage extends Node {
   }
 }
 
-IoStorage.Register();
+RegisterIoNode(IoStorage);
 
 const IoStorageFactory = function(props) {
   if (props && typeof props === 'string') {

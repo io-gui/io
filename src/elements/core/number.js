@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoItem} from './item.js';
 import {IoLayerSingleton} from './layer.js';
 import {IoLadderSingleton} from './ladder.js';
@@ -215,4 +216,4 @@ export class IoNumber extends IoItem {
   }
 }
 
-IoNumber.Register();
+RegisterIoElement(IoNumber);

@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 
 let lastFocus = null;
 {
@@ -212,7 +212,7 @@ class IoLayer extends IoElement {
   }
 }
 
-IoLayer.Register();
+RegisterIoElement(IoLayer);
 
 export const IoLayerSingleton = new IoLayer();
 document.body.appendChild(IoLayerSingleton);

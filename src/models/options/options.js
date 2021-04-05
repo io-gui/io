@@ -1,4 +1,4 @@
-import {NodeMixin} from '../../../srcj/core/node.js';
+import {NodeMixin, RegisterIoNode} from '../../../srcj/core/node.js';
 import {Item} from '../item/item.js';
 import {Path} from '../path/path.js';
 
@@ -128,4 +128,4 @@ export class Options extends NodeMixin(Array) {
     this.dispatchEvent('changed');
   }
 }
-Options.Register();
+RegisterIoNode(Options);

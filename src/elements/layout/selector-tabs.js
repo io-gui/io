@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoSelector} from './selector.js';
 
 export class IoSelectorTabs extends IoSelector {
@@ -35,4 +36,4 @@ export class IoSelectorTabs extends IoSelector {
   }
 }
 
-IoSelectorTabs.Register();
+RegisterIoElement(IoSelectorTabs);

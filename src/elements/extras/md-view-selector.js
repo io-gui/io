@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import './md-view.js';
 import {IoSelectorSidebar} from '../layout/selector-sidebar.js';
 
@@ -10,4 +11,4 @@ export class IoMdViewSelector extends IoSelectorSidebar  {
   }
 }
 
-IoMdViewSelector.Register();
+RegisterIoElement(IoMdViewSelector);

@@ -1,4 +1,4 @@
-import {Node} from '../../../srcj/core/node.js';
+import {Node, RegisterIoNode} from '../../../srcj/core/node.js';
 
 export class Path extends Node {
   static get Properties() {
@@ -61,4 +61,5 @@ export class Path extends Node {
     }
   }
 }
-Path.Register();
+
+RegisterIoNode(Path);

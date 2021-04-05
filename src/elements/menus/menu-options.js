@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {Options} from '../../models/options/options.js';
 import {Item} from '../../models/item/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
@@ -304,4 +304,4 @@ export class IoMenuOptions extends IoElement {
   }
 }
 
-IoMenuOptions.Register();
+RegisterIoElement(IoMenuOptions);

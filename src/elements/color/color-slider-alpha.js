@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoColorSlider} from './color-slider.js';
 
 export class IoColorSliderAlpha extends IoColorSlider {
@@ -62,4 +63,4 @@ export class IoColorSliderAlpha extends IoColorSlider {
   }
 }
 
-IoColorSliderAlpha.Register();
+RegisterIoElement(IoColorSliderAlpha);

@@ -1,4 +1,3 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
 import {convert} from '../../../lib/color-convert.js';
 
 export const IoColorMixin = (superclass) => {
@@ -326,6 +325,5 @@ export const IoColorMixin = (superclass) => {
       });
     }
   };
-  classConstructor.Register = IoElement.Register;
   return classConstructor;
 };

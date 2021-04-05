@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoBoolean} from './boolean.js';
 
 export class IoSwitch extends IoBoolean {
@@ -71,4 +72,4 @@ export class IoSwitch extends IoBoolean {
   }
 }
 
-IoSwitch.Register();
+RegisterIoElement(IoSwitch);

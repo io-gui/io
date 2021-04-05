@@ -32,4 +32,4 @@ export class TodoApp extends IoElement {
   }
 }
 
-TodoApp.Register();
+RegisterIoElement(TodoApp);

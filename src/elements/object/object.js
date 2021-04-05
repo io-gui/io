@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import './properties.js';
 
 export class IoObject extends IoElement {
@@ -57,4 +57,4 @@ export class IoObject extends IoElement {
   }
 }
 
-IoObject.Register();
+RegisterIoElement(IoObject);

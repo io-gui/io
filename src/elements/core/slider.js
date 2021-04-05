@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoGl} from './gl.js';
 
 export class IoSlider extends IoGl {
@@ -300,4 +301,4 @@ export class IoSlider extends IoGl {
   }
 }
 
-IoSlider.Register();
+RegisterIoElement(IoSlider);

@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 
 export class IoMatrix extends IoElement {
   static get Style() {
@@ -83,4 +83,4 @@ export class IoMatrix extends IoElement {
   }
 }
 
-IoMatrix.Register();
+RegisterIoElement(IoMatrix);

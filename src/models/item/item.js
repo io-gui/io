@@ -1,4 +1,4 @@
-import {Node} from '../../../srcj/core/node.js';
+import {Node, RegisterIoNode} from '../../../srcj/core/node.js';
 import {Options} from '../options/options.js';
 import {Path} from '../path/path.js';
 
@@ -91,4 +91,4 @@ export class Item extends Node {
     this.dispatchEvent('changed');
   }
 }
-Item.Register();
+RegisterIoNode(Item);

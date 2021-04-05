@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoItem} from './item.js';
 import {IoLayerSingleton} from './layer.js';
 
@@ -103,7 +103,7 @@ class IoLadderStep extends IoItem {
   }
 }
 
-IoLadderStep.Register();
+RegisterIoElement(IoLadderStep);
 
 class IoLadder extends IoElement {
   static get Style() {
@@ -316,7 +316,7 @@ class IoLadder extends IoElement {
   }
 }
 
-IoLadder.Register();
+RegisterIoElement(IoLadder);
 
 export const IoLadderSingleton = new IoLadder();
 IoLayerSingleton.appendChild(IoLadderSingleton);

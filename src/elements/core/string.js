@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoItem} from './item.js';
 
 export class IoString extends IoItem {
@@ -126,4 +127,4 @@ export class IoString extends IoItem {
   }
 }
 
-IoString.Register();
+RegisterIoElement(IoString);

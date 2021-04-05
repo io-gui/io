@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
 import {IoMenuOptions} from './menu-options.js';
 import {getElementDescendants} from './menu-item.js';
@@ -131,4 +131,4 @@ export class IoContextMenu extends IoElement {
   }
 }
 
-IoContextMenu.Register();
+RegisterIoElement(IoContextMenu);

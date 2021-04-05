@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 
 export class IoLayout extends IoElement {
   static get Style() {
@@ -201,7 +201,7 @@ export class IoLayout extends IoElement {
   }
 }
 
-IoLayout.Register();
+RegisterIoElement(IoLayout);
 
 export class IoLayoutDivider extends IoElement {
   static get Style() {
@@ -274,4 +274,4 @@ export class IoLayoutDivider extends IoElement {
   }
 }
 
-IoLayoutDivider.Register();
+RegisterIoElement(IoLayoutDivider);

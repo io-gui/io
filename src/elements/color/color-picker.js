@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoItem} from '../core/item.js';
 import {IoLayerSingleton} from '../core/layer.js';
 import {IoColorMixin} from './color.js';
@@ -98,4 +99,4 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
   }
 }
 
-IoColorPicker.Register();
+RegisterIoElement(IoColorPicker);

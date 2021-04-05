@@ -12,4 +12,4 @@ Part of [TodoMVC](http://todomvc.com/)
   }
 }
 
-TodoInfo.Register();
+RegisterIoElement(TodoInfo);

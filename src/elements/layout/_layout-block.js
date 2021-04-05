@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 // import "./_layout-tab.js";
 // import "./layout-tabs.js";
 
@@ -173,4 +173,4 @@ export class IoLayoutBlock extends IoElement {
   }
 }
 
-IoLayoutBlock.Register();
+RegisterIoElement(IoLayoutBlock);

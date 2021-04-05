@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoBoolean} from './boolean.js';
 import {IoIconsetSingleton} from './iconset.js';
 
@@ -49,4 +50,4 @@ export class IoBoolicon extends IoBoolean {
   }
 }
 
-IoBoolicon.Register();
+RegisterIoElement(IoBoolicon);

@@ -30,4 +30,4 @@ export class TodoList extends IoElement {
   }
 }
 
-TodoList.Register();
+RegisterIoElement(TodoList);

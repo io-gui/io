@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {Config} from './config.js';
 
 export class IoProperties extends IoElement {
@@ -178,5 +178,5 @@ IoProperties.RegisterConfig = function(config) {
   this.prototype.__config.registerConfig(config);
 };
 
-IoProperties.Register();
+RegisterIoElement(IoProperties);
 

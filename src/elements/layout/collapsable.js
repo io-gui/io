@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 
 export class IoCollapsable extends IoElement {
   static get Style() {
@@ -50,4 +50,4 @@ export class IoCollapsable extends IoElement {
   }
 }
 
-IoCollapsable.Register();
+RegisterIoElement(IoCollapsable);

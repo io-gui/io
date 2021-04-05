@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoSelector} from './selector.js';
 import './sidebar.js';
 
@@ -54,4 +55,4 @@ export class IoSelectorSidebar extends IoSelector {
   }
 }
 
-IoSelectorSidebar.Register();
+RegisterIoElement(IoSelectorSidebar);

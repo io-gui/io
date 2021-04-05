@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 
 // TODO: test and documentation
 
@@ -36,4 +36,4 @@ export class IoContent extends IoElement {
   }
 }
 
-IoContent.Register();
+RegisterIoElement(IoContent);

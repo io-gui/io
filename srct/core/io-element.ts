@@ -1,6 +1,6 @@
 import {NodeMixin, RegisterIoNode} from './node.js';
 import {Listeners} from './listeners.js';
-import { ProtoChain } from './protochain.js';
+import {ProtoChain} from './protochain.js';
 
 /**
  * Core `IoElement` class.
@@ -427,10 +427,6 @@ const RegisterIoElement = function (element: typeof IoElement) {
 
   _initProtoStyle(element.prototype.__protochain);
 }
-
-IoElement.Register = function() {
-  RegisterIoElement(this)
-};
 
 let ro: ResizeObserver;
 if (window.ResizeObserver !== undefined) {

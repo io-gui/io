@@ -112,4 +112,4 @@ export class IoDemoElementsMenus extends IoElement {
   
 }
 
-IoDemoElementsMenus.Register();
+RegisterIoElement(IoDemoElementsMenus);

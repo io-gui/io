@@ -96,7 +96,7 @@
   <body>
     <script type="module">
 
-    import {Options, Path} from './build/iogui.js';
+    import {Options, Path, RegisterIoElement} from './build/iogui.js';
     import {IoSelectorTabs, IoStorageFactory as $} from './build/iogui.js';
 
     const docPath = './docs/';
@@ -126,8 +126,8 @@
         ]},
       ]},
       {label: 'Reference', value: 'reference', options: [
-        {label: 'Node', value: srcPath + 'core/node.md'},
-        {label: 'IoElement', value: srcPath + 'core/io-element.md'},
+        {label: 'Node', value: srctPath + 'core/node.md'},
+        {label: 'IoElement', value: srctPath + 'core/io-element.md'},
         {label: 'Core Elements', value: 'coreelements', options: [
           {label: 'IoItem', value: elementsPath + 'core/item.md'},
           {label: 'IoGl', value: elementsPath + 'core/gl.md'},
@@ -257,7 +257,7 @@
         };
       }
     }
-    IoMainPage.Register();
+    RegisterIoElement(IoMainPage);
     </script>
     <noscript>JavaScript is required to view this page!</noscript>
     <io-main-page></io-main-page>

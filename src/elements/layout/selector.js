@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {Options} from '../../models/options/options.js';
 // TODO: use IoContent for caching and display.
 
@@ -190,4 +190,4 @@ export class IoSelector extends IoElement {
   }
 }
 
-IoSelector.Register();
+RegisterIoElement(IoSelector);

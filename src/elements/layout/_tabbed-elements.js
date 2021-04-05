@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import './selector.js';
 
 const _dragicon = document.createElement('io-tab-dragicon');
@@ -216,7 +216,7 @@ export class IoSelectorTabs extends IoElement {
   }
 }
 
-IoSelectorTabs.Register();
+RegisterIoElement(IoSelectorTabs);
 
 export class IoTabs extends IoElement {
   static get Style() {
@@ -468,7 +468,7 @@ export class IoTabs extends IoElement {
   }
 }
 
-IoTabs.Register();
+RegisterIoElement(IoTabs);
 
 export class IoTabDragicon extends IoElement {
   static get Style() {
@@ -498,7 +498,7 @@ export class IoTabDragicon extends IoElement {
   }
 }
 
-IoTabDragicon.Register();
+RegisterIoElement(IoTabDragicon);
 
 export class IoTabDropzone extends IoElement {
   static get Style() {
@@ -526,4 +526,4 @@ export class IoTabDropzone extends IoElement {
   }
 }
 
-IoTabDropzone.Register();
+RegisterIoElement(IoTabDropzone);

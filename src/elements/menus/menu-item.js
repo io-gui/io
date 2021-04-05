@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {Item} from '../../models/item/item.js';
 import {IoItem} from '../core/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
@@ -362,7 +363,7 @@ export class IoMenuItem extends IoItem {
   }
 }
 
-IoMenuItem.Register();
+RegisterIoElement(IoMenuItem);
 
 export function getElementDescendants(element) {
   const descendants = [];

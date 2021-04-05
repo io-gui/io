@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoIconsetSingleton} from './iconset.js';
 
 export class IoIcon extends IoElement {
@@ -49,4 +49,4 @@ export class IoIcon extends IoElement {
   }
 }
 
-IoIcon.Register();
+RegisterIoElement(IoIcon);

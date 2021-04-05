@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoStorageFactory as $} from '../core/storage.js';
 import {Config} from './config.js';
 import {Groups} from './groups.js';
@@ -225,7 +225,6 @@ function genUUID(object) {
 }
 
 IoInspector.Register = function() {
-  IoElement.Register.call(this);
   Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__protochain)});
   Object.defineProperty(this.prototype, '__groups', {value: new Groups(this.prototype.__protochain)});
   Object.defineProperty(this.prototype, '__widgets', {value: new Widgets(this.prototype.__protochain)});
@@ -243,6 +242,9 @@ IoInspector.RegisterWidgets = function(widgets) {
   this.prototype.__widgets.registerWidgets(widgets);
 };
 
+RegisterIoElement(IoInspector);
+
+// TODO: unhack
 IoInspector.Register();
 
 IoInspector.RegisterGroups({

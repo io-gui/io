@@ -45,4 +45,4 @@ export class TodoFooter extends IoElement {
   }
 }
 
-TodoFooter.Register();
+RegisterIoElement(TodoFooter);

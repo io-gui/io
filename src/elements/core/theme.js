@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoStorageFactory as $} from './storage.js';
 
 const themePropDefaults =  {
@@ -290,7 +290,8 @@ export class IoTheme extends IoElement {
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
 }
-IoTheme.Register();
+
+RegisterIoElement(IoTheme);
 
 const IoThemeSingleton = new IoTheme();
 document.head.appendChild(IoThemeSingleton);

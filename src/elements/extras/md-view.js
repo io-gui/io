@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import marked from '../../../lib/marked.esm.js';
 
 export class IoMdView extends IoElement {
@@ -163,4 +163,4 @@ export class IoMdView extends IoElement {
   }
 }
 
-IoMdView.Register();
+RegisterIoElement(IoMdView);

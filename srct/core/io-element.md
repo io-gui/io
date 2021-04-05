@@ -31,7 +31,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 Sets aria attributes.
 
-### .Register()
+### .RegisterIoElement()
 
 Register function for `IoElement`. Registers custom element.
 

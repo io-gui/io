@@ -16,8 +16,8 @@ class Binding {
   constructor(sourceNode: any, sourceProp: string) {
     Object.defineProperty(this, 'source', {value: sourceNode, configurable: true});
     Object.defineProperty(this, 'sourceProp', {value: sourceProp, configurable: true});
-    Object.defineProperty(this, 'targets', {value: [], configurable: true});
-    Object.defineProperty(this, 'targetProps', {value: new WeakMap(), configurable: true});
+    Object.defineProperty(this, 'targets', {configurable: true});
+    Object.defineProperty(this, 'targetProps', {configurable: true});
     this._onTargetChanged = this._onTargetChanged.bind(this);
     this._onSourceChanged = this._onSourceChanged.bind(this);
     this.source.addEventListener(this.sourceProp + '-changed', this._onSourceChanged);
@@ -97,6 +97,7 @@ class Binding {
    * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
    */
   _onSourceChanged(event: ChangeEvent) {
+    // console.log(event.target, this.source);
     if (event.target != this.source) {
       console.error(
         `_onSourceChanged() should always originate form source node.

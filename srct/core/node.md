@@ -116,7 +116,7 @@ Handler function with `event.preventDefault()`.
 
 Handler function with `event.stopPropagation()`.
 
-### .Register()
+### .RegisterIoNode()
 
 Register function to be called once per class.
 

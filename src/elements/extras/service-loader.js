@@ -1,4 +1,4 @@
-import {Node} from '../../../srcj/core/node.js';
+import {Node, RegisterIoNode} from '../../../srcj/core/node.js';
 
 if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
 if (!('PushManager' in window)) { console.warn('No Push API Support!'); }
@@ -47,4 +47,4 @@ export class IoServiceLoader extends Node {
   }
 }
 
-IoServiceLoader.Register();
+RegisterIoNode(IoServiceLoader);

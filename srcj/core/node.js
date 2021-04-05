@@ -44,7 +44,7 @@ function NodeMixin(superclass) {
             super(...args);
             const constructor = this.__proto__.constructor;
             if (constructor.__registeredAs !== constructor.name) {
-                console.error(`${constructor.name} not registered! Call "Register()" before using ${constructor.name} class!`);
+                console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
             }
             this.__protoFunctions.bind(this);
             Object.defineProperty(this, '__bindings', { enumerable: false, value: new Bindings(this) });
@@ -464,6 +464,7 @@ const RegisterIoNode = function (node) {
  */
 class Node extends NodeMixin(Object) {
 }
+RegisterIoNode(Node);
 const IMPORTED_PATHS = {};
 // TODO: document and test
 const preThrottleQueue = new Array();

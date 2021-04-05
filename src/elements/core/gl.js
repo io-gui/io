@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoThemeSingleton} from './theme.js';
 
 const canvas = document.createElement('canvas');
@@ -382,4 +382,4 @@ export class IoGl extends IoElement {
   }
 }
 
-IoGl.Register();
+RegisterIoElement(IoGl);

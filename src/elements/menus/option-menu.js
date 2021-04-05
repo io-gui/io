@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {Options} from '../../models/options/options.js';
 import {Item} from '../../models/item/item.js';
 import './menu-item.js';
@@ -101,4 +101,4 @@ export class IoOptionMenu extends IoElement {
   }
 }
 
-IoOptionMenu.Register();
+RegisterIoElement(IoOptionMenu);

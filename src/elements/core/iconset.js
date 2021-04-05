@@ -1,4 +1,4 @@
-import {Node} from '../../../srcj/core/node.js';
+import {Node, RegisterIoNode} from '../../../srcj/core/node.js';
 
 const IoIconsetDB = {};
 
@@ -24,7 +24,7 @@ class IoIconset extends Node {
   }
 }
 
-IoIconset.Register();
+RegisterIoNode(IoIconset);
 
 export const IoIconsetSingleton = new IoIconset();
 

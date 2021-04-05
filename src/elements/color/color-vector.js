@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoColorMixin} from './color.js';
 import './color-picker.js';
 
@@ -69,4 +69,4 @@ export class IoColorVector extends IoColorMixin(IoElement) {
   }
 }
 
-IoColorVector.Register();
+RegisterIoElement(IoColorVector);

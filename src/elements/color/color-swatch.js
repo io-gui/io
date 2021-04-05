@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoGl} from '../core/gl.js';
 import {IoColorMixin} from './color.js';
 
@@ -45,4 +46,4 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
   }
 }
 
-IoColorSwatch.Register();
+RegisterIoElement(IoColorSwatch);

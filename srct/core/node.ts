@@ -53,7 +53,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
 
       const constructor = this.__proto__.constructor;
       if (constructor.__registeredAs !== constructor.name) {
-        console.error(`${constructor.name} not registered! Call "Register()" before using ${constructor.name} class!`);
+        console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
       }
 
       this.__protoFunctions.bind(this);
@@ -470,6 +470,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
  * NodeMixin applied to `Object` class.
  */
 class Node extends NodeMixin(Object) {}
+RegisterIoNode(Node);
 
 const IMPORTED_PATHS: Record<string, boolean> = {};
 

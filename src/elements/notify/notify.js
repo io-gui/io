@@ -1,4 +1,4 @@
-import {IoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoStorageFactory} from '../core/storage.js';
 
 export class IoNotify extends IoElement {
@@ -77,6 +77,6 @@ export class IoNotify extends IoElement {
   }
 }
 
-IoNotify.Register();
+RegisterIoElement(IoNotify);
 
 if (IoStorageFactory.permitted === null) document.body.appendChild(new IoNotify());

@@ -1,3 +1,4 @@
+import {RegisterIoElement} from '../../../srcj/core/io-element.js';
 import {IoItem} from './item.js';
 
 export class IoBoolean extends IoItem {
@@ -41,4 +42,4 @@ export class IoBoolean extends IoItem {
   }
 }
 
-IoBoolean.Register();
+RegisterIoElement(IoBoolean);

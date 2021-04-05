@@ -25,9 +25,9 @@ You can extend `IoElement` to create anything from simple elements to complex ap
 
 ```javascript
 class MyApp extends IoElement {}
-MyApp.Register();
+RegisterIoElement(MyApp);
 ```
-You should call `Register()` immediately after defining a new class. Elements are registered as kebab-case. For example `MyApp` class will register as `<my-app>`.
+You should call `RegisterIoElement()` immediately after defining a new class. Elements are registered as kebab-case. For example `MyApp` class will register as `<my-app>`.
 
 Now you can use the `template()` function to add contents to your application.
 
@@ -37,7 +37,7 @@ class MyApp extends IoElement {
     this.template([['p', 'Hello io!']]);
   }
 }
-MyApp.Register();
+RegisterIoElement(MyApp);
 ```
 
 Then, add `<my-app>` element to your document and you are done!
@@ -186,7 +186,7 @@ class MyApp extends IoElement {
     this.template([['p', this.message]]);
   }
 }
-MyApp.Register();
+RegisterIoElement(MyApp);
 ```
 
 > Continue reading [advanced usage](#doc=learn-more#creating-elements) or check out the [included elements](#doc=elements-core#IoItem).

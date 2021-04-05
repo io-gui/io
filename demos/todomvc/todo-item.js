@@ -59,4 +59,4 @@ export class TodoItem extends IoElement {
   }
 }
 
-TodoItem.Register();
+RegisterIoElement(TodoItem);
