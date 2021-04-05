@@ -1,6 +1,7 @@
-import {Node, Binding} from '../iogui.js';
+import {Node, RegisterIoNode} from './node.js';
+import {Binding} from './binding.js';
 
-async function waitTick() {
+async function waitTick(): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(()=>{
       resolve();
@@ -95,16 +96,16 @@ export default class {
           changed() {
             this._changedCounter++;
           }
-          prop1Changed(event) {
+          prop1Changed(event: Event) {
             this._prop1ChangedCounter++;
             this._prop1ChangedPayload = event;
           }
-          prop2Changed(event) {
+          prop2Changed(event: Event) {
             this._prop2ChangedCounter++;
             this._prop2ChangedPayload = event;
           }
         }
-        TestNode.Register();
+        RegisterIoNode(TestNode);
 
         const node = new TestNode();
         node.connect(window);
@@ -187,7 +188,7 @@ export default class {
             this._obj2MutatedCounter++;
           }
         }
-        TestNode.Register();
+        RegisterIoNode(TestNode);
 
         const node = new TestNode();
         node.connect(window);
@@ -235,16 +236,16 @@ export default class {
               'custom-event': 'onCustomEvent',
             };
           }
-          onProp1Changed(event) {
+          onProp1Changed(event: Event) {
             this._onProp1ChangedCounter++;
             this._onProp1ChangedPayload = event;
           }
-          onCustomEvent(event) {
+          onCustomEvent(event: Event) {
             this._onCustomEventCounter++;
             this._onCustomEventPayload = event;
           }
         }
-        TestNode.Register();
+        RegisterIoNode(TestNode);
 
         const node = new TestNode();
         node.connect(window);
@@ -288,7 +289,7 @@ export default class {
             };
           }
         }
-        TestNode.Register();
+        RegisterIoNode(TestNode);
 
         const node = new TestNode();
 
@@ -310,7 +311,7 @@ export default class {
             };
           }
         }
-        TestNode.Register();
+        RegisterIoNode(TestNode);
 
         const node = new TestNode();
         node.connect(window);

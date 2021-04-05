@@ -26,12 +26,12 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node: any): void;
+        connect(node?: Node | HTMLElement | Document | Window): void;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node: any): void;
+        disconnect(node?: Node | HTMLElement | Document | Window): void;
         /**
          * Connected callback.
          */
@@ -129,7 +129,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: HTMLElement | Node | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: Node | HTMLElement | Document | Window | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -153,13 +153,13 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
         stopPropagation(event: Event): void;
     };
     [x: string]: any;
-    readonly Properties: {
-        lazy: BooleanConstructor;
-    };
+    readonly Properties: any;
+    readonly Listeners: any;
 };
-declare namespace NodeMixin {
-    var Register: () => void;
-}
+/**
+ * Register function to be called once per class.
+ */
+declare const RegisterIoNode: (node: typeof Node) => void;
 declare const Node_base: {
     new (initProps?: {}, ...args: any[]): {
         [x: string]: any;
@@ -182,12 +182,12 @@ declare const Node_base: {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node: any): void;
+        connect(node?: Node | HTMLElement | Document | Window): void;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node: any): void;
+        disconnect(node?: Node | HTMLElement | Document | Window): void;
         /**
          * Connected callback.
          */
@@ -285,7 +285,7 @@ declare const Node_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: HTMLElement | Node | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: Node | HTMLElement | Document | Window | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -309,14 +309,13 @@ declare const Node_base: {
         stopPropagation(event: Event): void;
     };
     [x: string]: any;
-    readonly Properties: {
-        lazy: BooleanConstructor;
-    };
+    readonly Properties: any;
+    readonly Listeners: any;
 };
 /**
  * NodeMixin applied to `Object` class.
  */
 declare class Node extends Node_base {
 }
-export { Node, NodeMixin };
+export { Node, NodeMixin, RegisterIoNode };
 //# sourceMappingURL=node.d.ts.map

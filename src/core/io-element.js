@@ -1,4 +1,4 @@
-import {NodeMixin} from '../../srcj/core/node.js';
+import {NodeMixin, RegisterIoNode} from '../../srcj/core/node.js';
 import {Listeners} from '../../srcj/core/listeners.js';
 import {buildTree} from '../../lib/ijk.js';
 
@@ -406,7 +406,7 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
  * Register function for `IoElement`. Registers custom element.
  */
 IoElement.Register = function() {
-  NodeMixin.Register.call(this);
+  RegisterIoNode(this)
 
   const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 

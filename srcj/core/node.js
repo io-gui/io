@@ -16,6 +16,9 @@ function NodeMixin(superclass) {
                 lazy: Boolean,
             };
         }
+        static get Listeners() {
+            return {};
+        }
         /**
          * `compose` object lets you reactively assign property values to other object's properties.
          * For example, you can assign `this.value` property to the `this.objectProp.result` property.
@@ -62,7 +65,7 @@ function NodeMixin(superclass) {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node) {
+        connect(node = window) {
             debug: if (this.__isIoElement) {
                 console.error('"connect()" function is not intended for DOM Elements!');
                 return;
@@ -79,7 +82,7 @@ function NodeMixin(superclass) {
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node) {
+        disconnect(node = window) {
             debug: if (this.__isIoElement) {
                 console.error('"disconnect()" function is not intended for DOM Elements!');
                 return;
@@ -417,15 +420,17 @@ function NodeMixin(superclass) {
             event.stopPropagation();
         }
     };
-    classConstructor.Register = Register;
+    classConstructor.Register = function () {
+        RegisterIoNode(this);
+    };
     return classConstructor;
 }
 /**
  * Register function to be called once per class.
  */
-const Register = function () {
-    const protochain = new ProtoChain(this.prototype);
-    let proto = this.prototype;
+const RegisterIoNode = function (node) {
+    const protochain = new ProtoChain(node.prototype);
+    let proto = node.prototype;
     Object.defineProperty(proto, '__isNode', { value: true });
     Object.defineProperty(proto.constructor, '__registeredAs', { value: proto.constructor.name });
     Object.defineProperty(proto, '__protochain', { value: protochain });
@@ -454,13 +459,11 @@ const Register = function () {
         });
     }
 };
-NodeMixin.Register = Register;
 /**
  * NodeMixin applied to `Object` class.
  */
 class Node extends NodeMixin(Object) {
 }
-Node.Register();
 const IMPORTED_PATHS = {};
 // TODO: document and test
 const preThrottleQueue = new Array();
@@ -493,5 +496,5 @@ function requestAnimationFrameOnce(func) {
     if (funcQueue.indexOf(func) === -1)
         funcQueue.push(func);
 }
-export { Node, NodeMixin };
+export { Node, NodeMixin, RegisterIoNode };
 //# sourceMappingURL=node.js.map

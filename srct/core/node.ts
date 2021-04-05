@@ -14,7 +14,7 @@ type Constructor<T extends any> = new (...args: any[]) => T;
  */
 function NodeMixin<T extends Constructor<any>>(superclass: T) {
   const classConstructor = class extends (superclass as any) {
-    static get Properties() {
+    static get Properties(): any {
       return {
         lazy: Boolean,
         // TODO: implement import as property.
@@ -23,6 +23,9 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
         //   reflect: -1,
         // },
       };
+    }
+    static get Listeners(): any {
+      return {};
     }
     /**
      * `compose` object lets you reactively assign property values to other object's properties.
@@ -76,7 +79,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * Connects the instance to another node or element.
      * @param {Node} node - Node to connect to.
      */
-    connect(node: any) {
+    connect(node: Node | HTMLElement | Document | Window = window) {
       debug:
       if (this.__isIoElement) {
         console.error('"connect()" function is not intended for DOM Elements!');
@@ -94,7 +97,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * Disconnects the instance from an another node or element.
      * @param {Node} node - Node to disconnect from.
      */
-    disconnect(node: any) {
+    disconnect(node: Node | HTMLElement | Document | Window = window) {
       debug:
       if (this.__isIoElement) {
         console.error('"disconnect()" function is not intended for DOM Elements!');
@@ -327,7 +330,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {boolean} bubbles - event bubbles.
      * @param {HTMLElement|Node} src source node/element to dispatch event from.
      */
-    dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node) {
+    dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Window | Document | HTMLElement | Node) {
       this.__listeners.dispatchEvent(type, detail, bubbles, src);
     }
     /**
@@ -419,16 +422,18 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
       event.stopPropagation();
     }
   };
-  classConstructor.Register = Register;
+  classConstructor.Register = function () {
+    RegisterIoNode(this);
+  };
   return classConstructor;
 }
 
 /**
  * Register function to be called once per class.
  */
-const Register = function () {
-  const protochain = new ProtoChain(this.prototype);
-  let proto = this.prototype;
+ const RegisterIoNode = function (node: typeof Node) {
+  const protochain = new ProtoChain(node.prototype);
+  let proto = node.prototype;
 
   Object.defineProperty(proto, '__isNode', {value: true});
   Object.defineProperty(proto.constructor, '__registeredAs', {value: proto.constructor.name});
@@ -461,14 +466,10 @@ const Register = function () {
   }
 };
 
-NodeMixin.Register = Register;
-
 /**
  * NodeMixin applied to `Object` class.
  */
 class Node extends NodeMixin(Object) {}
-
-Node.Register();
 
 const IMPORTED_PATHS: Record<string, boolean> = {};
 
@@ -506,4 +507,4 @@ function requestAnimationFrameOnce(func: Function) {
 }
 
 
-export {Node, NodeMixin};
+export {Node, NodeMixin, RegisterIoNode};

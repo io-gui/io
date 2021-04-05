@@ -1,4 +1,4 @@
-export default class _default {
+export default class {
     run(): void;
 }
 //# sourceMappingURL=functions.test.d.ts.map

@@ -1,21 +1,21 @@
-import {Node} from '../iogui.js';
+import {Node, RegisterIoNode} from './node.js';
 
-const string = (object) => {
+const string = (object: any) => {
   return JSON.stringify(object);
 };
 
 class Node1 extends Node {
-  static get Listeners() {
+  static get Listeners(): any {
     return {
       'event1': 'handler1',
     };
   }
   handler1() {}
 }
-Node1.Register();
+RegisterIoNode(Node1);
 
 class Node2 extends Node1 {
-  static get Listeners() {
+  static get Listeners(): any {
     return {
       'event2': 'handler2',
     };
@@ -23,7 +23,7 @@ class Node2 extends Node1 {
   handler2() {}
   handler3() {}
 }
-Node2.Register();
+RegisterIoNode(Node2);
 
 export default class {
   run() {

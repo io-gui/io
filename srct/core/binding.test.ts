@@ -1,4 +1,4 @@
-import {Node} from '../iogui.js';
+import {Node, RegisterIoNode} from './node.js';
 
 class TestNode extends Node {
   static get Properties() {
@@ -16,9 +16,9 @@ class TestNode extends Node {
     this.prop2ChangeCounter++;
   }
 }
-TestNode.Register();
+RegisterIoNode(TestNode);
 
-const string = (object) => {
+const string = (object: any) => {
   return JSON.stringify(object);
 };
 

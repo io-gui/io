@@ -1,4 +1,4 @@
-import { Node } from '../iogui.js';
+import { Node, RegisterIoNode } from './node.js';
 const string = (object) => {
     return JSON.stringify(object);
 };
@@ -7,13 +7,13 @@ class Node1 extends Node {
     onFunction1() { }
     _function1() { }
 }
-Node1.Register();
+RegisterIoNode(Node1);
 class Node2 extends Node1 {
     function2() { }
     onFunction2() { }
     _function2() { }
 }
-Node2.Register();
+RegisterIoNode(Node2);
 export default class {
     run() {
         describe('Functions', () => {
