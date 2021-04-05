@@ -1,4 +1,4 @@
-import {IoElement} from '../../core/io-element.js';
+import {IoElement} from '../../../srcj/core/io-element.js';
 
 export class IoMatrix extends IoElement {
   static get Style() {

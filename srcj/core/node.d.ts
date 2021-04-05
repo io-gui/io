@@ -26,12 +26,12 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: Node | HTMLElement | Document | Window): void;
+        connect(node?: HTMLElement | Window | Document | Node): void;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: Node | HTMLElement | Document | Window): void;
+        disconnect(node?: HTMLElement | Window | Document | Node): void;
         /**
          * Connected callback.
          */
@@ -121,7 +121,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        removeEventListener(type: string, listener: Function, options?: any): void;
+        removeEventListener(type: string, listener?: Function | undefined, options?: any): void;
         /**
          * Wrapper for dispatchEvent.
          * @param {string} type - event name to dispatch.
@@ -129,7 +129,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: Node | HTMLElement | Document | Window | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: HTMLElement | Window | Document | Node | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -182,12 +182,12 @@ declare const Node_base: {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: Node | HTMLElement | Document | Window): void;
+        connect(node?: HTMLElement | Window | Document | Node): void;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: Node | HTMLElement | Document | Window): void;
+        disconnect(node?: HTMLElement | Window | Document | Node): void;
         /**
          * Connected callback.
          */
@@ -277,7 +277,7 @@ declare const Node_base: {
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        removeEventListener(type: string, listener: Function, options?: any): void;
+        removeEventListener(type: string, listener?: Function | undefined, options?: any): void;
         /**
          * Wrapper for dispatchEvent.
          * @param {string} type - event name to dispatch.
@@ -285,7 +285,7 @@ declare const Node_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: Node | HTMLElement | Document | Window | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: HTMLElement | Window | Document | Node | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.

@@ -284,8 +284,8 @@ class Properties {
      */
     dispose() {
         this.disconnect();
-        delete this['__node'];
-        delete this['__keys'];
+        delete this.__node;
+        delete this.__keys;
     }
 }
 export { ProtoProperty, ProtoProperties, Property, Properties };

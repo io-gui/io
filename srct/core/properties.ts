@@ -29,7 +29,7 @@ class ProtoProperty {
   /**
    * Creates the property configuration object and sets the default values.
    */
-  constructor(prop: string | Record<string, any> | any, noDefaults?: boolean) {
+  constructor(prop?: string | Record<string, any> | any, noDefaults?: boolean) {
 
     if (!noDefaults) {
       this.value = undefined;
@@ -332,8 +332,8 @@ class Properties {
    */
   dispose() {
     this.disconnect();
-    delete this['__node'];
-    delete this['__keys'];
+    delete (this as any).__node;
+    delete (this as any).__keys;
   }
 }
 

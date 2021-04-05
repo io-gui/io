@@ -1,4 +1,4 @@
-import {IoElement} from '../../core/io-element.js';
+import {IoElement} from '../../../srcj/core/io-element.js';
 // import "./_layout-tab.js";
 // import "./layout-tabs.js";
 

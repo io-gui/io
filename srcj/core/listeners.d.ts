@@ -20,7 +20,7 @@ declare class Listeners {
     /**
      * Creates manager for listener.
      */
-    constructor(node: any, protoListeners: ProtoListeners);
+    constructor(node: any, protoListeners?: ProtoListeners);
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} props - Properties.
@@ -48,7 +48,7 @@ declare class Listeners {
      * Proxy for `removeEventListener` method.
      * Removes an event listener.
      */
-    removeEventListener(type: string, listener: any, options?: Record<string, any>): void;
+    removeEventListener(type: string, listener?: any, options?: Record<string, any>): void;
     /**
      * Shorthand for custom event dispatch.
      */

@@ -320,7 +320,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {function} listener - listener handler.
      * @param {Object} options - event listener options.
      */
-    removeEventListener(type: string, listener: Function, options?: any) {
+    removeEventListener(type: string, listener?: Function, options?: any) {
       this.__listeners.removeEventListener(type, listener, options);
     }
     /**

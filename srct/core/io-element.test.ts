@@ -1,17 +1,18 @@
-import {IoElement, Node} from '../iogui.js';
+import {Node, RegisterIoNode} from './node.js';
+import {IoElement, RegisterIoElement} from './io-element.js';
 
 class TestNode extends Node {
-  static get Properties() {
+  static get Properties(): any {
     return {
       prop0: String,
       prop2: Infinity,
     };
   }
 }
-TestNode.Register();
+RegisterIoNode(TestNode);
 
 export class TestElement extends IoElement {
-  static get Properties() {
+  static get Properties(): any {
     return {
       prop0: -1,
       prop1: {
@@ -43,7 +44,7 @@ export class TestElement extends IoElement {
     this._prop1Payload = null;
     this._customHandlerPayload = null;
   }
-  constructor(initProps) {
+  constructor(initProps: any) {
     super(initProps);
     this.template([['test-subelement', {id: 'subelement', prop0: this.bind('prop0')}]]);
     this.subnode = new TestNode({prop2: this.bind('prop0')});
@@ -53,42 +54,44 @@ export class TestElement extends IoElement {
   changed() {
     this._changedCounter++;
   }
-  prop1Changed(event) {
+  prop1Changed(event: CustomEvent) {
     this._prop1ChangedCounter++;
     this._prop1ChangedPayload = event;
   }
-  onProp1ChangeAlt(event) {
+  onProp1ChangeAlt(event: CustomEvent) {
     this._prop1AltCounter++;
     this._prop1AltPayload = event;
   }
-  onProp1Change(event) {
+  onProp1Change(event: CustomEvent) {
     this._prop1Counter++;
     this._prop1Payload = event;
   }
-  onCustomEvent(event) {
+  onCustomEvent(event: CustomEvent) {
     this._customHandlerCounter++;
     this._customHandlerPayload = event;
   }
 }
-TestElement.Register();
+RegisterIoElement(TestElement);
 
 export class TestSubelement extends IoElement {
-  static get Properties() {
+  static get Properties(): any {
     return {
       prop0: 0,
     };
   }
 }
-TestSubelement.Register();
+RegisterIoElement(TestSubelement);
 
 export default class {
+  _changedCounter: number;
+  element: TestElement;
   constructor() {
     this._changedCounter = 0;
     this.element = new TestElement({'on-prop0-changed': this.changed.bind(this), 'on-prop1-changed': 'onProp1ChangeAlt', debug: true});
-    document.body.appendChild(this.element);
+    document.body.appendChild(this.element as unknown as HTMLElement);
   }
-  changed(event) {
-    if (event.target == this.element) {
+  changed(event: CustomEvent) {
+    if (event.target == this.element as unknown as HTMLElement) {
       this._changedCounter++;
     }
   }
@@ -127,13 +130,13 @@ export default class {
         });
         it('should not fire handler functions when disconnected', () => {
           this.reset();
-          document.body.removeChild(this.element);
+          document.body.removeChild(this.element as unknown as HTMLElement);
           this.element.prop0 = 2;
           this.element.prop1 = 'test2';
           chai.expect(this.element._prop1AltCounter).to.equal(0);
           chai.expect(this.element._changedCounter).to.equal(0);
           chai.expect(this._changedCounter).to.equal(0);
-          document.body.appendChild(this.element);
+          document.body.appendChild(this.element as unknown as HTMLElement);
         });
         it('should dispatch correct event payloads to handlers', () => {
           this.reset();

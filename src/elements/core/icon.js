@@ -1,4 +1,4 @@
-import {IoElement} from '../../core/io-element.js';
+import {IoElement} from '../../../srcj/core/io-element.js';
 import {IoIconsetSingleton} from './iconset.js';
 
 export class IoIcon extends IoElement {

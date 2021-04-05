@@ -1,4 +1,4 @@
-import {IoElement} from '../../core/io-element.js';
+import {IoElement} from '../../../srcj/core/io-element.js';
 import {convert} from '../../../lib/color-convert.js';
 
 export const IoColorMixin = (superclass) => {

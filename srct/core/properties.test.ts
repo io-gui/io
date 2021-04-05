@@ -1,23 +1,25 @@
-import {Node, IoElement, Binding, ProtoChain, ProtoProperty, ProtoProperties, Property} from '../iogui.js';
+import {Node, RegisterIoNode} from './node.js';
+import {IoElement, RegisterIoElement} from './io-element.js';
+import {Binding} from './binding.js';
+import {ProtoChain} from './protochain.js';
+import {ProtoProperty, ProtoProperties, Property} from './properties.js';
 
-const string = (object) => {
+const string = (object: any) => {
   return JSON.stringify(object);
 };
 
 class Object1 {
-  constructor() {
-    this.prop = true;
-  }
+  prop = true;
 }
 
 class TestNode extends Node {
-  static get Properties() {
+  static get Properties(): any {
     return {
       label: ''
     };
   }
 }
-TestNode.Register();
+RegisterIoNode(TestNode);
 
 export default class {
   run() {
@@ -248,7 +250,7 @@ export default class {
         it('Should correctly initialize properties from protochain', () => {
 
           class Object1 extends Node {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop1: {
                   value: 0
@@ -257,10 +259,10 @@ export default class {
               };
             }
           }
-          Object1.Register();
+          RegisterIoNode(Object1);
 
           class Object2 extends Object1 {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop1: {
                   value: 2,
@@ -277,7 +279,7 @@ export default class {
               };
             }
           }
-          Object2.Register();
+          RegisterIoNode(Object2);
 
           const node1 = new Object1();
           const node2 = new Object2();
@@ -320,7 +322,7 @@ export default class {
         });
         it('Should not override explicit property options with implicit', () => {
           class Object1 {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop1: {
                   value: 2,
@@ -335,7 +337,7 @@ export default class {
           }
 
           class Object2 extends Object1 {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop1: 'hello',
               };
@@ -343,7 +345,7 @@ export default class {
           }
 
           const protochain = new ProtoChain(Object2.prototype);
-          const props = new ProtoProperties(protochain);
+          const props = new ProtoProperties(protochain) as any;
 
           chai.expect(props.prop1.type).to.be.equal(String);
           chai.expect(props.prop1.notify).to.be.equal(false);
@@ -357,16 +359,16 @@ export default class {
           const binding3 = new Binding(new TestNode({label: 'binding3'}), 'label');
 
           class Object1 extends Node {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop1: binding1,
               };
             }
           }
-          Object1.Register();
+          RegisterIoNode(Object1);
 
           class Object2 extends Object1 {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop1: {
                   binding: binding2
@@ -375,7 +377,7 @@ export default class {
               };
             }
           }
-          Object2.Register();
+          RegisterIoNode(Object2);
 
           const node1 = new Object1();
           const node2 = new Object2();
@@ -398,7 +400,7 @@ export default class {
         it('Should correctly get/set properties', () => {
 
           class TestNode extends Node {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop1: {
                   value: 1
@@ -406,7 +408,7 @@ export default class {
               };
             }
           }
-          TestNode.Register();
+          RegisterIoNode(TestNode);
 
           const node = new TestNode();
           const properties = node.__properties;
@@ -420,25 +422,25 @@ export default class {
         it('Should correctly get/set bound properties', () => {
 
           class TestNode extends Node {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 label: '',
               };
             }
           }
-          TestNode.Register();
+          RegisterIoNode(TestNode);
 
           const binding1 = new Binding(new TestNode({label: 'binding1'}), 'label');
           const binding2 = new Binding(new TestNode({label: 'binding2'}), 'label');
 
           class TestNode2 extends Node {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop1: binding1
               };
             }
           }
-          TestNode2.Register();
+          RegisterIoNode(TestNode2);
 
           const node = new TestNode2();
           const properties = node.__properties;
@@ -458,7 +460,7 @@ export default class {
         });
         it('Should execute attribute reflection on IoElement', () => {
           class TestElementReflection extends IoElement {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 label: {
                   value: 'label1',
@@ -467,7 +469,7 @@ export default class {
               };
             }
           }
-          TestElementReflection.Register();
+          RegisterIoElement(TestElementReflection);
 
           const element = new TestElementReflection();
           chai.expect(element.getAttribute('label')).to.be.equal('label1');
@@ -478,17 +480,17 @@ export default class {
         });
         it('Should dipatch queue on object value initialization and value set', () => {
           class TestNode extends Node {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop: Object,
               };
             }
           }
-          TestNode.Register();
+          RegisterIoNode(TestNode);
 
           const node = new TestNode();
 
-          node.addEventListener('prop-changed', (event) => {
+          node.addEventListener('prop-changed', (event: CustomEvent) => {
             const value = event.detail.value;
             const oldValue = event.detail.oldValue;
             chai.expect(string(value)).to.be.equal(string({}));
@@ -499,7 +501,7 @@ export default class {
 
           node.removeEventListener('prop-changed');
 
-          node.addEventListener('prop-changed', (event) => {
+          node.addEventListener('prop-changed', (event: CustomEvent) => {
             const value = event.detail.value;
             const oldValue = event.detail.oldValue;
             chai.expect(string(value)).to.be.equal(string({}));
@@ -521,7 +523,7 @@ export default class {
 
           node.removeEventListener('prop-changed');
 
-          node.addEventListener('prop-changed', (event) => {
+          node.addEventListener('prop-changed', (event: CustomEvent) => {
             const value = event.detail.value;
             const oldValue = event.detail.oldValue;
             chai.expect(string(value)).to.be.equal(string({}));
@@ -533,7 +535,7 @@ export default class {
         });
         it('Should connect/disconnect node value on initialization and value set', () => {
           class TestNodeValue extends Node {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop: Object,
                 propChangeCounter: 0,
@@ -543,16 +545,16 @@ export default class {
               this.propChangeCounter++;
             }
           }
-          TestNodeValue.Register();
+          RegisterIoNode(TestNodeValue);
 
           class TestNode extends Node {
-            static get Properties() {
+            static get Properties(): any {
               return {
                 prop: TestNodeValue
               };
             }
           }
-          TestNode.Register();
+          RegisterIoNode(TestNode);
 
           const node = new TestNode();
           const subNode1 = node.prop;

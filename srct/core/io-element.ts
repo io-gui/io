@@ -1,12 +1,12 @@
-import {NodeMixin, RegisterIoNode} from '../../srcj/core/node.js';
-import {Listeners} from '../../srcj/core/listeners.js';
-import {buildTree} from '../../lib/ijk.js';
+import {NodeMixin, RegisterIoNode} from './node.js';
+import {Listeners} from './listeners.js';
+import { ProtoChain } from './protochain.js';
 
 /**
  * Core `IoElement` class.
  */
 class IoElement extends NodeMixin(HTMLElement) {
-  static get Style() {
+  static get Style(): any {
     return /* css */`
     :host[hidden] {
       display: none;
@@ -17,7 +17,7 @@ class IoElement extends NodeMixin(HTMLElement) {
     }
     `;
   }
-  static get Properties() {
+  static get Properties(): any {
     return {
       $: {
         type: Object,
@@ -65,7 +65,7 @@ class IoElement extends NodeMixin(HTMLElement) {
       },
     };
   }
-  static get Listeners() {
+  static get Listeners(): any {
     return {
       'focus-to': '_onFocusTo',
     };
@@ -80,7 +80,7 @@ class IoElement extends NodeMixin(HTMLElement) {
     }
     return observed;
   }
-  attributeChangedCallback(prop, oldValue, newValue) {
+  attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
     const type = this.__properties[prop].type;
     if (type === Boolean) {
       if (newValue === null) this[prop] = false;
@@ -131,18 +131,18 @@ class IoElement extends NodeMixin(HTMLElement) {
     * @param {Array} vDOM - Array of vDOM children.
     * @param {HTMLElement} [host] - Optional template target.
     */
-  template(vDOM, host) {
+  template(vDOM: Array<any>, host?: HTMLElement) {
     const vChildren = buildTree()(['root', vDOM]).children;
-    host = host || this;
-    if (host === this) this.__properties.$.value = {};
-    this.traverse(vChildren, host);
+    host = (host || this) as any;
+    if (host === (this as any)) this.__properties.$.value = {};
+    this.traverse(vChildren, host as HTMLElement);
   }
   /**
    * Recurively traverses vDOM.
    * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
    * @param {HTMLElement} [host] - Optional template target.
     */
-  traverse(vChildren, host) {
+  traverse(vChildren: Array<any>, host: HTMLElement) {
     const children = host.children;
     // focusBacktrack = new WeakMap();
     // remove trailing elements
@@ -165,39 +165,41 @@ class IoElement extends NodeMixin(HTMLElement) {
     }
     // replace existing elements
     for (let i = 0; i < children.length; i++) {
-      if (children[i].localName !== vChildren[i].name) {
-        const oldElement = children[i];
+      const child = children[i] as HTMLElement | IoElement;
+      if (child.localName !== vChildren[i].name) {
+        const oldElement = child;
         const element = constructElement(vChildren[i]);
-        host.insertBefore(element, oldElement);
-        host.removeChild(oldElement);
+        host.insertBefore(element, oldElement as Node);
+        host.removeChild(oldElement as Node);
         // TODO: enable and test!
         // const nodes = Array.from(oldElement.querySelectorAll('*'));
         // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
         // if (oldElement.dispose) oldElement.dispose();
       // update existing elements
       } else {
-        children[i].removeAttribute('className');
-        if (children[i].__isIoElement) {
+        child.removeAttribute('className');
+        if ((child as IoElement).__isIoElement) {
           // Set IoElement element properties
           // TODO: Test property and listeners reset. Consider optimizing.
-          children[i].setProperties(vChildren[i].props);
+          (child as IoElement).setProperties(vChildren[i].props);
         } else {
           // Set native HTML element properties
-          setNativeElementProps(children[i], vChildren[i].props);
+          setNativeElementProps(child as HTMLElement, vChildren[i].props);
         }
       }
     }
     for (let i = 0; i < vChildren.length; i++) {
       // Update this.$ map of ids.
-      if (vChildren[i].props.id) this.$[vChildren[i].props.id] = children[i];
+      const child = children[i] as HTMLElement | IoElement;
+      if (vChildren[i].props.id) this.$[vChildren[i].props.id] = child;
       if (vChildren[i].children !== undefined) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
-          this.flattenTextNode(children[i]);
-          children[i].__textNode.nodeValue = String(vChildren[i].children);
+          this.flattenTextNode(child as HTMLElement);
+          (child as any).__textNode.nodeValue = String(vChildren[i].children);
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
-          this.traverse(vChildren[i].children, children[i]);
+          this.traverse(vChildren[i].children, child as HTMLElement);
         }
       }
     }
@@ -207,7 +209,7 @@ class IoElement extends NodeMixin(HTMLElement) {
    * Update textContent via TextNode is better for layout performance.
    * @param {HTMLElement} element - Element to flatten.
    */
-  flattenTextNode(element) {
+  flattenTextNode(element: HTMLElement | IoElement) {
     if (element.childNodes.length === 0) {
       element.appendChild(document.createTextNode(''));
     }
@@ -215,13 +217,13 @@ class IoElement extends NodeMixin(HTMLElement) {
       element.innerHTML = '';
       element.appendChild(document.createTextNode(''));
     }
-    element.__textNode = element.childNodes[0];
+    (element as any).__textNode = element.childNodes[0];
     if (element.childNodes.length > 1) {
       const textContent = element.textContent;
       for (let i = element.childNodes.length; i--;) {
         if (i !== 0) element.removeChild(element.childNodes[i]);
       }
-      element.__textNode.nodeValue = textContent;
+      (element as any).__textNode.nodeValue = textContent;
     }
   }
   get textNode() {
@@ -232,7 +234,7 @@ class IoElement extends NodeMixin(HTMLElement) {
     this.flattenTextNode(this);
     this.__textNode.nodeValue = String(value);
   }
-  setProperties(props) {
+  setProperties(props: any) {
     super.setProperties(props);
     if (props['style']) {
       for (let s in props['style']) {
@@ -245,13 +247,13 @@ class IoElement extends NodeMixin(HTMLElement) {
    * @param {string} attr - Attribute name.
    * @param {*} value - Attribute value.
    */
-  setAttribute(attr, value) {
+  setAttribute(attr: string, value: boolean | number | string) {
     if (value === true) {
       HTMLElement.prototype.setAttribute.call(this, attr, '');
     } else if (value === false || value === '') {
       this.removeAttribute(attr);
     } else if (typeof value === 'string' || typeof value === 'number') {
-      if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, value);
+      if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
     }
   }
   applyCompose() {
@@ -273,13 +275,13 @@ class IoElement extends NodeMixin(HTMLElement) {
       this.removeAttribute('aria-disabled');
     }
   }
-  _onFocusTo(event) {
+  _onFocusTo(event: CustomEvent) {
     const src = event.composedPath()[0];
     const dir = event.detail.dir;
     const rect = event.detail.rect;
     rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
 
-    if (src !== this) {
+    if (src !== this as any) {
       let closest = src;
       let closestX = Infinity;
       let closestY = Infinity;
@@ -374,13 +376,13 @@ class IoElement extends NodeMixin(HTMLElement) {
       }
 
       if (closest !== src) {
-        closest.focus();
+        (closest as any).focus();
         // setBacktrack(closest, dir, src);
         event.stopPropagation();
       }
     }
   }
-  focusTo(dir) {
+  focusTo(dir: string) {
     const rect = this.getBoundingClientRect();
     this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
   }
@@ -405,31 +407,35 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
 /**
  * Register function for `IoElement`. Registers custom element.
  */
-IoElement.Register = function() {
-  RegisterIoNode(this)
+const RegisterIoElement = function (element: typeof IoElement) {
+  RegisterIoNode(element)
 
-  const localName = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  const localName = element.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
-  Object.defineProperty(this, 'localName', {value: localName});
-  Object.defineProperty(this.prototype, 'localName', {value: localName});
+  Object.defineProperty(element, 'localName', {value: localName});
+  Object.defineProperty(element.prototype, 'localName', {value: localName});
 
-  Object.defineProperty(this, '__isIoElement', {enumerable: false, value: true});
-  Object.defineProperty(this.prototype, '__isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(element, '__isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(element.prototype, '__isIoElement', {enumerable: false, value: true});
 
   if (window.customElements !== undefined) {
-    window.customElements.define(localName, this);
+    window.customElements.define(localName, element as unknown as CustomElementConstructor);
   } else {
     document.body.insertBefore(warning, document.body.children[0]);
     return;
   }
 
-  _initProtoStyle(this.prototype.__protochain);
+  _initProtoStyle(element.prototype.__protochain);
+}
+
+IoElement.Register = function() {
+  RegisterIoElement(this)
 };
 
-let ro;
+let ro: ResizeObserver;
 if (window.ResizeObserver !== undefined) {
   ro = new ResizeObserver(entries => {
-    for (let entry of entries) entry.target.onResized();
+    for (let entry of entries) (entry.target as unknown as IoElement).onResized();
   });
 }
 
@@ -440,7 +446,7 @@ if (window.ResizeObserver !== undefined) {
  * @param {Object} vDOMNode.props - Element properties.
  * @return {HTMLElement} - Created element.
  */
-const constructElement = function(vDOMNode) {
+const constructElement = function(vDOMNode: any) {
   // IoElement classes constructed with constructor.
   const ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
   if (ConstructorClass && ConstructorClass.__isIoElement) return new ConstructorClass(vDOMNode.props);
@@ -459,10 +465,10 @@ document.createElement = function() {
     if (constructor) {
       return new constructor();
     } else {
-      return superCreateElement.apply(this, arguments);
+      return superCreateElement.apply(this, arguments as any);
     }
   } else  {
-    return superCreateElement.apply(this, arguments);
+    return superCreateElement.apply(this, arguments as any);
   }
 };
 
@@ -471,24 +477,24 @@ document.createElement = function() {
  * @param {HTMLElement} element - Element to set properties on.
  * @param {Object} props - Element properties.
  */
-const setNativeElementProps = function(element, props) {
+const setNativeElementProps = function(element: HTMLElement, props: any) {
   for (let p in props) {
     const prop = props[p];
     if (p.startsWith('@')) {
       element.setAttribute(p.substr(1), prop);
     } else if (p === 'style') for (let s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
-    else if (p !== 'id') element[p] = prop;
+    else if (p !== 'id') (element as any)[p] = prop;
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
   }
-  if (!element.__listeners) {
+  if (!(element as any).__listeners) {
     Object.defineProperty(element, '__listeners', {value: new Listeners(element)});
-    element.__listeners.connect();
+    (element as any).__listeners.connect();
   }
-  element.__listeners.setPropListeners(props, element);
+  (element as any).__listeners.setPropListeners(props, element);
 };
 
-const mixinDB = {};
+const mixinDB: Record<string, any> = {};
 
 const commentsRegex =  new RegExp('(\\/\\*[\\s\\S]*?\\*\\/)', 'gi');
 const keyframeRegex =  new RegExp('((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
@@ -498,14 +504,14 @@ const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
 const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
 
 // Creates a `<style>` element for all `static get Style()` return strings.
-function _initProtoStyle(prototypes) {
+function _initProtoStyle(prototypes: ProtoChain) {
   const localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   const styleID = 'io-style-' + localName.replace('io-', '');
 
   let finalStyleString = '';
 
   // Convert mixins to classes
-  let styleString = prototypes[0].constructor.Style;
+  let styleString = (prototypes[0].constructor as any).Style;
 
   if (styleString) {
     const mixins = styleString.match(mixinRegex);
@@ -520,7 +526,7 @@ function _initProtoStyle(prototypes) {
     }
 
     for (let i = prototypes.length; i--;) {
-      let styleString = prototypes[i].constructor.Style;
+      let styleString = (prototypes[i].constructor as any).Style;
       if (styleString) {
         // Remove mixins
         styleString = styleString.replace(mixinRegex, '');
@@ -553,7 +559,7 @@ function _initProtoStyle(prototypes) {
 
           const match = styleStringStripped.match(cssRegex);
           if (match) {
-            match.map(selector => {
+            match.map((selector: any) => {
               selector = selector.trim();
               if (!selector.startsWith(':host')) {
                 console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
@@ -577,6 +583,42 @@ function _initProtoStyle(prototypes) {
   }
 }
 
-IoElement.Register();
+RegisterIoElement(IoElement);
 
-export {IoElement};
+/** @license
+ * MIT License
+ *
+ * Copyright (c) 2019 Luke Jackson
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+const isString = (x: any) => typeof x === 'string';
+const isArray = Array.isArray;
+const isObject = (x: any) => typeof x === 'object' && !isArray(x);
+
+const clense = (a: any, b: any) => !b ? a : isString(b[0]) ? [...a, b] : [...a, ...b];
+
+export const buildTree = () => (node: any): any => !!node && isObject(node[1]) ? {
+  ['name']: node[0],
+  ['props']: node[1],
+  ['children']: isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2]
+} : buildTree()([node[0], {}, node[1]]);
+
+export {IoElement, RegisterIoElement};

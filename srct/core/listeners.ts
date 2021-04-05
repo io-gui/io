@@ -28,7 +28,7 @@ class Listeners {
   /**
    * Creates manager for listener.
    */
-  constructor(node: any, protoListeners: ProtoListeners) {
+  constructor(node: any, protoListeners?: ProtoListeners) {
     Object.defineProperty(this, 'node', {value: node});
     Object.defineProperty(this, 'propListeners', {enumerable: false, value: {}});
     Object.defineProperty(this, 'activeListeners', {enumerable: false, value: {}});
@@ -151,7 +151,7 @@ class Listeners {
    * Proxy for `removeEventListener` method.
    * Removes an event listener.
    */
-  removeEventListener(type: string, listener: any, options?: Record<string, any>) {
+  removeEventListener(type: string, listener?: any, options?: Record<string, any>) {
     const active = this.activeListeners;
     if (active[type] !== undefined) {
       const i = active[type].indexOf(listener);

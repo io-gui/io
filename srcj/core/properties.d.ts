@@ -18,7 +18,7 @@ declare class ProtoProperty {
     /**
      * Creates the property configuration object and sets the default values.
      */
-    constructor(prop: string | Record<string, any> | any, noDefaults?: boolean);
+    constructor(prop?: string | Record<string, any> | any, noDefaults?: boolean);
 }
 /**
  * Property configuration object for a class **instance**.
