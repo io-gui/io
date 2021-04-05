@@ -1,9 +1,9 @@
 declare const IoElement_base: {
-    new (initProps?: {}, ...args: any[]): {
+    new (initProps?: any, ...args: any[]): {
         [x: string]: any;
         readonly compose: null;
-        connect(node?: import("./node.js").Node | HTMLElement | Document | Window): void;
-        disconnect(node?: import("./node.js").Node | HTMLElement | Document | Window): void;
+        connect(node?: HTMLElement | Window | import("./node.js").Node | Document): void;
+        disconnect(node?: HTMLElement | Window | import("./node.js").Node | Document): void;
         connectedCallback(): void;
         disconnectedCallback(): void;
         dispose(): void;
@@ -12,26 +12,25 @@ declare const IoElement_base: {
         queue(prop: string, value: any, oldValue: any): void;
         queueDispatch(): void;
         queueDispatchLazy(): void;
-        objectMutated(event: any): void;
+        objectMutated(event: CustomEvent<any>): void;
         objectMutatedThrottled(prop: string): void;
         bind(prop: string): any;
         unbind(prop: string): void;
-        set(prop: string, value: any, force: any): void;
+        set(prop: string, value: any, force: boolean): void;
         setProperties(props: any): void;
         addEventListener(type: string, listener: Function, options?: any): void;
         removeEventListener(type: string, listener?: Function | undefined, options?: any): void;
-        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: import("./node.js").Node | HTMLElement | Document | Window | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Window | import("./node.js").Node | Document | undefined): void;
         throttle(func: Function, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: Function): void;
         filterObject(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;
         filterObjects(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;
         import(path: string): Promise<unknown>;
-        preventDefault(event: Event): void;
-        stopPropagation(event: Event): void;
+        preventDefault(event: CustomEvent<any>): void;
+        stopPropagation(event: CustomEvent<any>): void;
     };
     [x: string]: any;
     readonly Properties: any;
-    readonly Listeners: any;
 };
 /**
  * Core `IoElement` class.

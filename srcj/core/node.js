@@ -16,9 +16,6 @@ function NodeMixin(superclass) {
                 lazy: Boolean,
             };
         }
-        static get Listeners() {
-            return {};
-        }
         /**
          * `compose` object lets you reactively assign property values to other object's properties.
          * For example, you can assign `this.value` property to the `this.objectProp.result` property.
@@ -44,7 +41,7 @@ function NodeMixin(superclass) {
             super(...args);
             const constructor = this.__proto__.constructor;
             if (constructor.__registeredAs !== constructor.name) {
-                console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
+                console.error(`${constructor.name} not registered! Call "Register()" before using ${constructor.name} class!`);
             }
             this.__protoFunctions.bind(this);
             Object.defineProperty(this, '__bindings', { enumerable: false, value: new Bindings(this) });
@@ -140,24 +137,24 @@ function NodeMixin(superclass) {
          */
         changed() { }
         /**
-         * Applies composed values to properties.
+         * sets composed properties and invokes `changed()` function on change.
          */
         applyCompose() {
             // TODO: test compose
-            const self = this;
+            const compose = this.compose;
             if (this.compose) {
-                for (let prop in self.compose) {
+                for (let prop in compose) {
                     debug: if (!this.__properties[prop] || typeof this.__properties[prop].value !== 'object') {
                         console.error(`Composed property ${prop} is not a Node or an object.`);
                         continue;
                     }
                     const object = this.__properties[prop].value;
                     if (object.__isNode) {
-                        object.setProperties(self.compose[prop]);
+                        object.setProperties(compose[prop]);
                     }
                     else {
-                        for (let p in self.compose[prop]) {
-                            object[p] = self.compose[prop][p];
+                        for (let p in compose[prop]) {
+                            object[p] = compose[prop][p];
                         }
                     }
                 }
@@ -311,7 +308,7 @@ function NodeMixin(superclass) {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type, detail, bubbles, src) {
+        dispatchEvent(type, detail, bubbles = false, src) {
             this.__listeners.dispatchEvent(type, detail, bubbles, src);
         }
         /**
@@ -420,11 +417,9 @@ function NodeMixin(superclass) {
             event.stopPropagation();
         }
     };
-    classConstructor.Register = function () {
-        RegisterIoNode(this);
-    };
     return classConstructor;
 }
+;
 /**
  * Register function to be called once per class.
  */

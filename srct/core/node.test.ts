@@ -82,7 +82,7 @@ export default class {
       });
       it('should invoke change handler functions on change', () => {
         class TestNode extends Node {
-          static get Properties() {
+          static get Properties(): any {
             return {
               prop1: String,
               prop2: String,
@@ -163,7 +163,7 @@ export default class {
       });
       it('should invoke property mutation handler functions on mutation event', async () => {
         class TestNode extends Node {
-          static get Properties() {
+          static get Properties(): any {
             return {
               obj1: {
                 type: Object,
@@ -221,7 +221,7 @@ export default class {
       });
       it('should invoke listener handler functions on events', () => {
         class TestNode extends Node {
-          static get Properties() {
+          static get Properties(): any {
             return {
               prop1: String,
               _onProp1ChangedCounter: 0,
@@ -278,7 +278,7 @@ export default class {
       });
       it('should have correct property defaults', () => {
         class TestNode extends Node {
-          static get Properties() {
+          static get Properties(): any {
             return {
               prop0: { type: String },
               prop1: { value: false },
@@ -304,7 +304,7 @@ export default class {
       });
       it('should correctly bind properties', () => {
         class TestNode extends Node {
-          static get Properties() {
+          static get Properties(): any {
             return {
               prop1: String,
               prop2: String,

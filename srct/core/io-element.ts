@@ -101,14 +101,7 @@ class IoElement extends NodeMixin(HTMLElement) {
   connectedCallback() {
     super.connectedCallback();
     if (typeof this.onResized === 'function') {
-      if (ro) {
-        ro.observe(this);
-      } else {
-        // TODO: remove once resize observer implemented in Safari.
-        // https://caniuse.com/#feat=resizeobserver
-        window.addEventListener('resize', this.onResized);
-        setTimeout(() => { this.onResized(); });
-      }
+      ro.observe(this as unknown as HTMLElement);
     }
   }
   /**
@@ -117,13 +110,7 @@ class IoElement extends NodeMixin(HTMLElement) {
   disconnectedCallback() {
     super.disconnectedCallback();
     if (typeof this.onResized === 'function') {
-      if (ro) {
-        ro.unobserve(this);
-      } else {
-        // TODO: remove once resize observer implemented in Safari.
-        // https://caniuse.com/#feat=resizeobserver
-        window.removeEventListener('resize', this.onResized);
-      }
+      ro.unobserve(this as unknown as HTMLElement);
     }
   }
   /**
@@ -428,12 +415,9 @@ const RegisterIoElement = function (element: typeof IoElement) {
   _initProtoStyle(element.prototype.__protochain);
 }
 
-let ro: ResizeObserver;
-if (window.ResizeObserver !== undefined) {
-  ro = new ResizeObserver(entries => {
-    for (let entry of entries) (entry.target as unknown as IoElement).onResized();
-  });
-}
+const ro = new ResizeObserver((entries: any) => {
+  for (let entry of entries) (entry.target as unknown as IoElement).onResized();
+});
 
 /**
  * Creates an element from a virtual dom object.

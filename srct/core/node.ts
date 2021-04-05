@@ -24,9 +24,6 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
         // },
       };
     }
-    static get Listeners(): any {
-      return {};
-    }
     /**
      * `compose` object lets you reactively assign property values to other object's properties.
      * For example, you can assign `this.value` property to the `this.objectProp.result` property.
@@ -48,12 +45,12 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * Creates a class instance and initializes the internals.
      * @param {Object} initProps - Initial property values.
      */
-    constructor(initProps = {}, ...args: any[]) {
+    constructor(initProps: any = {}, ...args: any[]) {
       super(...args);
 
       const constructor = this.__proto__.constructor;
       if (constructor.__registeredAs !== constructor.name) {
-        console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
+        console.error(`${constructor.name} not registered! Call "Register()" before using ${constructor.name} class!`);
       }
 
       this.__protoFunctions.bind(this);
@@ -121,7 +118,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
       this.__listeners.connect();
       this.__properties.connect();
       if (this.__observedObjects.length) {
-        window.addEventListener('object-mutated', this.objectMutated);
+        window.addEventListener('object-mutated', this.objectMutated as (event: Event) => {});
       }
       this.queueDispatch();
     }
@@ -133,7 +130,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
       this.__listeners.disconnect();
       this.__properties.disconnect();
       if (this.__observedObjects.length) {
-        window.removeEventListener('object-mutated', this.objectMutated);
+        window.removeEventListener('object-mutated', this.objectMutated as (event: Event) => {});
       }
     }
     /**
@@ -148,7 +145,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
       this.__listeners.dispose();
       this.__properties.dispose();
       if (this.__observedObjects.length) {
-        window.removeEventListener('object-mutated', this.objectMutated);
+        window.removeEventListener('object-mutated', this.objectMutated as (event: Event) => {});
       }
     }
     /**
@@ -157,13 +154,13 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      */
     changed() {}
     /**
-     * Applies composed values to properties.
+     * sets composed properties and invokes `changed()` function on change.
      */
     applyCompose() {
       // TODO: test compose
-      const self = this as any;
+      const compose = this.compose as any;
       if (this.compose) {
-        for (let prop in self.compose) {
+        for (let prop in compose) {
           debug:
           if (!this.__properties[prop] || typeof this.__properties[prop].value !== 'object') {
             console.error(`Composed property ${prop} is not a Node or an object.`);
@@ -171,10 +168,10 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
           }
           const object = this.__properties[prop].value;
           if (object.__isNode) {
-            object.setProperties(self.compose[prop]);
+            object.setProperties(compose[prop]);
           } else {
-            for (let p in self.compose[prop]) {
-              object[p] = self.compose[prop][p];
+            for (let p in compose[prop]) {
+              object[p] = compose[prop][p];
             }
           }
         }
@@ -213,7 +210,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {Object} event - Event payload.
      * @param {Object} event.detail.object - Mutated object.
      */
-    objectMutated(event: any) {
+    objectMutated(event: CustomEvent) {
       for (let i = 0; i < this.__observedObjects.length; i++) {
         const prop = this.__observedObjects[i];
         const value = this.__properties[prop].value;
@@ -273,7 +270,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {*} value - Property value.
      * @param {boolean} force - Force value set.
      */
-    set(prop: string, value: any, force: any) {
+    set(prop: string, value: any, force: boolean) {
       if (this[prop] !== value || force) {
         const oldValue = this[prop];
         this[prop] = value;
@@ -330,7 +327,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {boolean} bubbles - event bubbles.
      * @param {HTMLElement|Node} src source node/element to dispatch event from.
      */
-    dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Window | Document | HTMLElement | Node) {
+    dispatchEvent(type: string, detail: any, bubbles = false, src?: Node | HTMLElement | Document | Window) {
       this.__listeners.dispatchEvent(type, detail, bubbles, src);
     }
     /**
@@ -363,7 +360,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
     requestAnimationFrameOnce(func: Function) {
       requestAnimationFrameOnce(func);
     }
-    filterObject(object: any, predicate: Function, _depth: number = 5, _chain: any[] = [], _i = 0): any {
+    filterObject(object: any, predicate: Function, _depth = 5, _chain: any[] = [], _i = 0): any {
       if (_chain.indexOf(object) !== -1) return; _chain.push(object);
       if (_i > _depth) return; _i++;
       if (predicate(object)) return object;
@@ -376,8 +373,8 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
         }
       }
     }
-    filterObjects(object: any, predicate: Function, _depth: number = 5, _chain: any[] = [], _i = 0): any {
-      const result: any = [];
+    filterObjects(object: any, predicate: Function, _depth = 5, _chain: any[] = [], _i = 0): any {
+      const result: any[] = [];
       if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
       if (_i > _depth) return result; _i++;
       if (predicate(object) && result.indexOf(object) === -1) result.push(object);
@@ -394,7 +391,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
       return result;
     }
     import(path: string) {
-      const importPath = new URL(path, String(window.location)).href as string;
+      const importPath = new URL(path, String(window.location)).href;
       return new Promise(resolve => {
         if (!path || IMPORTED_PATHS[importPath]) {
           resolve(importPath);
@@ -411,27 +408,24 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * Handler function with `event.preventDefault()`.
      * @param {Object} event - Event object.
      */
-    preventDefault(event: Event) {
+    preventDefault(event: CustomEvent) {
       event.preventDefault();
     }
     /**
      * Handler function with `event.stopPropagation()`.
      * @param {Object} event - Event object.
      */
-    stopPropagation(event: Event) {
+    stopPropagation(event: CustomEvent) {
       event.stopPropagation();
     }
-  };
-  classConstructor.Register = function () {
-    RegisterIoNode(this);
-  };
+  }
   return classConstructor;
-}
+};
 
 /**
  * Register function to be called once per class.
  */
- const RegisterIoNode = function (node: typeof Node) {
+const RegisterIoNode = function (node: typeof Node) {
   const protochain = new ProtoChain(node.prototype);
   let proto = node.prototype;
 
@@ -472,7 +466,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
 class Node extends NodeMixin(Object) {}
 RegisterIoNode(Node);
 
-const IMPORTED_PATHS: Record<string, boolean> = {};
+const IMPORTED_PATHS: Record<string, any> = {};
 
 // TODO: document and test
 const preThrottleQueue = new Array();

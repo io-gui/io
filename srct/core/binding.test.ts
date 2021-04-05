@@ -1,7 +1,7 @@
 import {Node, RegisterIoNode} from './node.js';
 
 class TestNode extends Node {
-  static get Properties() {
+  static get Properties(): any {
     return {
       prop1: 0,
       prop2: 0,

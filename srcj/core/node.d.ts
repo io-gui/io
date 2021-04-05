@@ -5,7 +5,7 @@ declare type Constructor<T extends any> = new (...args: any[]) => T;
  * @return {function} - Extended class constructor with `NodeMixin` applied to it.
  */
 declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
-    new (initProps?: {}, ...args: any[]): {
+    new (initProps?: any, ...args: any[]): {
         [x: string]: any;
         /**
          * `compose` object lets you reactively assign property values to other object's properties.
@@ -26,12 +26,12 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: Node | HTMLElement | Document | Window): void;
+        connect(node?: HTMLElement | Window | Node | Document): void;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: Node | HTMLElement | Document | Window): void;
+        disconnect(node?: HTMLElement | Window | Node | Document): void;
         /**
          * Connected callback.
          */
@@ -51,7 +51,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          */
         changed(): void;
         /**
-         * Applies composed values to properties.
+         * sets composed properties and invokes `changed()` function on change.
          */
         applyCompose(): void;
         /**
@@ -76,7 +76,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {Object} event - Event payload.
          * @param {Object} event.detail.object - Mutated object.
          */
-        objectMutated(event: any): void;
+        objectMutated(event: CustomEvent<any>): void;
         /**
          * This function is called after `objectMutated()` determines that one of
          * the object properties has mutated.
@@ -101,7 +101,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {*} value - Property value.
          * @param {boolean} force - Force value set.
          */
-        set(prop: string, value: any, force: any): void;
+        set(prop: string, value: any, force: boolean): void;
         /**
          * Sets multiple properties in batch.
          * [property]-changed` events will be broadcast in the end.
@@ -129,7 +129,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: Node | HTMLElement | Document | Window | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Window | Node | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -145,23 +145,22 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * Handler function with `event.preventDefault()`.
          * @param {Object} event - Event object.
          */
-        preventDefault(event: Event): void;
+        preventDefault(event: CustomEvent<any>): void;
         /**
          * Handler function with `event.stopPropagation()`.
          * @param {Object} event - Event object.
          */
-        stopPropagation(event: Event): void;
+        stopPropagation(event: CustomEvent<any>): void;
     };
     [x: string]: any;
     readonly Properties: any;
-    readonly Listeners: any;
 };
 /**
  * Register function to be called once per class.
  */
 declare const RegisterIoNode: (node: typeof Node) => void;
 declare const Node_base: {
-    new (initProps?: {}, ...args: any[]): {
+    new (initProps?: any, ...args: any[]): {
         [x: string]: any;
         /**
          * `compose` object lets you reactively assign property values to other object's properties.
@@ -182,12 +181,12 @@ declare const Node_base: {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: Node | HTMLElement | Document | Window): void;
+        connect(node?: HTMLElement | Window | Node | Document): void;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: Node | HTMLElement | Document | Window): void;
+        disconnect(node?: HTMLElement | Window | Node | Document): void;
         /**
          * Connected callback.
          */
@@ -207,7 +206,7 @@ declare const Node_base: {
          */
         changed(): void;
         /**
-         * Applies composed values to properties.
+         * sets composed properties and invokes `changed()` function on change.
          */
         applyCompose(): void;
         /**
@@ -232,7 +231,7 @@ declare const Node_base: {
          * @param {Object} event - Event payload.
          * @param {Object} event.detail.object - Mutated object.
          */
-        objectMutated(event: any): void;
+        objectMutated(event: CustomEvent<any>): void;
         /**
          * This function is called after `objectMutated()` determines that one of
          * the object properties has mutated.
@@ -257,7 +256,7 @@ declare const Node_base: {
          * @param {*} value - Property value.
          * @param {boolean} force - Force value set.
          */
-        set(prop: string, value: any, force: any): void;
+        set(prop: string, value: any, force: boolean): void;
         /**
          * Sets multiple properties in batch.
          * [property]-changed` events will be broadcast in the end.
@@ -285,7 +284,7 @@ declare const Node_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean | undefined, src?: Node | HTMLElement | Document | Window | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Window | Node | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -301,16 +300,15 @@ declare const Node_base: {
          * Handler function with `event.preventDefault()`.
          * @param {Object} event - Event object.
          */
-        preventDefault(event: Event): void;
+        preventDefault(event: CustomEvent<any>): void;
         /**
          * Handler function with `event.stopPropagation()`.
          * @param {Object} event - Event object.
          */
-        stopPropagation(event: Event): void;
+        stopPropagation(event: CustomEvent<any>): void;
     };
     [x: string]: any;
     readonly Properties: any;
-    readonly Listeners: any;
 };
 /**
  * NodeMixin applied to `Object` class.
