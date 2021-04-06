@@ -1,8 +1,8 @@
-## ProtoFunctions
+## FunctionBinder
 
 Collection of all functions defined in the prototype chain that start with "on" or "_"
 
-### ProtoFunctions(protochain: `ProtoChain`)
+### FunctionBinder(protochain: `ProtoChain`)
 
 Creates a collection of all functions from protochain that start with "on" or "_".
 

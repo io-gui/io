@@ -1,5 +1,5 @@
-import { ProtoChain } from './protochain.js';
-import { Node } from './node.js';
+import { ProtoChain } from '../protochain.js';
+import { Node } from '../node.js';
 /**
  * Collection of all functions defined in the prototype chain that start with "on" or "_"
  */
@@ -16,4 +16,4 @@ declare class FunctionBinder extends Array<string> {
     bind(node: Node): void;
 }
 export { FunctionBinder };
-//# sourceMappingURL=functions.d.ts.map
+//# sourceMappingURL=functionBinder.d.ts.map

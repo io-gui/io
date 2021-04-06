@@ -1,5 +1,5 @@
 import { ProtoChain } from './protochain.js';
-import { ProtoFunctions } from './functions.js';
+import { FunctionBinder } from './utils/functionBinder.js';
 import { BindingManager, Binding } from './utils/bindingManager.js';
 import { ChangeQueue } from './utils/changeQueue.js';
 import { ProtoProperties, Properties } from './properties.js';
@@ -43,7 +43,7 @@ function NodeMixin(superclass) {
             if (constructor.__registeredAs !== constructor.name) {
                 console.error(`${constructor.name} not registered! Call "Register()" before using ${constructor.name} class!`);
             }
-            this.__protoFunctions.bind(this);
+            this.__functionBinder.bind(this);
             Object.defineProperty(this, '__bindingManager', { enumerable: false, value: new BindingManager(this) });
             Object.defineProperty(this, '__changeQueue', { enumerable: false, value: new ChangeQueue(this) });
             Object.defineProperty(this, '__listeners', { enumerable: false, value: new Listeners(this, this.__protoListeners) });
@@ -426,7 +426,7 @@ const RegisterIoNode = function (node) {
     Object.defineProperty(proto, '__isNode', { value: true });
     Object.defineProperty(proto.constructor, '__registeredAs', { value: proto.constructor.name });
     Object.defineProperty(proto, '__protochain', { value: protochain });
-    Object.defineProperty(proto, '__protoFunctions', { value: new ProtoFunctions(protochain) });
+    Object.defineProperty(proto, '__functionBinder', { value: new FunctionBinder(protochain) });
     Object.defineProperty(proto, '__protoProperties', { value: new ProtoProperties(protochain) });
     Object.defineProperty(proto, '__protoListeners', { value: new ProtoListeners(protochain) });
     Object.defineProperty(proto, '__observedObjects', { value: [] });

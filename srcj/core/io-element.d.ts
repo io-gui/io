@@ -3,8 +3,8 @@ declare const IoElement_base: {
     new (initProps?: any, ...args: any[]): {
         [x: string]: any;
         readonly compose: null;
-        connect(node?: Node | HTMLElement | Document | Window): any;
-        disconnect(node?: Node | HTMLElement | Document | Window): any;
+        connect(node?: HTMLElement | Node | Window | Document): any;
+        disconnect(node?: HTMLElement | Node | Window | Document): any;
         connectedCallback(): void;
         disconnectedCallback(): void;
         dispose(): void;
@@ -21,7 +21,7 @@ declare const IoElement_base: {
         setProperties(props: any): void;
         addEventListener(type: string, listener: Function, options?: any): void;
         removeEventListener(type: string, listener?: Function | undefined, options?: any): void;
-        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         throttle(func: Function, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: Function): void;
         filterObject(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;

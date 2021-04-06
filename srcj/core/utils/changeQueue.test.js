@@ -1,5 +1,5 @@
-import { ChangeQueue } from './changeQueue.js';
 import { Node, RegisterIoNode } from '../node.js';
+import { ChangeQueue } from './changeQueue.js';
 class TestNode extends Node {
     constructor() {
         super(...arguments);

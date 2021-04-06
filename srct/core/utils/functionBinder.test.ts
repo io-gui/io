@@ -1,32 +1,35 @@
-import {Node, RegisterIoNode} from './node.js';
+import {ProtoChain} from '../protochain.js';
+import {FunctionBinder} from './functionBinder.js';
 
 const string = (object: any) => {
   return JSON.stringify(object);
 };
 
-class Node1 extends Node {
+class Node1 {
   function1() {}
   onFunction1() {}
   _function1() {}
 }
-RegisterIoNode(Node1);
 
 class Node2 extends Node1 {
   function2() {}
   onFunction2() {}
   _function2() {}
 }
-RegisterIoNode(Node2);
 
 export default class {
   run() {
     describe('Functions', () => {
       it('Should include all functions starting with "on" or "_"', () => {
-        const node = new Node2();
-        chai.expect(string(node.__protoFunctions)).to.be.equal(string(['onFunction1', '_function1', 'onFunction2', '_function2']));
+        const protoChain = new ProtoChain(Node2.prototype);
+        const functionBinder = new FunctionBinder(protoChain);
+        chai.expect(string(functionBinder)).to.be.equal(string(['onFunction1', '_function1', 'onFunction2', '_function2']));
       });
       it('Should bind all "on" and "_" functions to `this` with `.bind()`', () => {
-        const node = new Node2();
+        const protoChain = new ProtoChain(Node2.prototype);
+        const functionBinder = new FunctionBinder(protoChain);
+        const node = new Node2() as any;
+        functionBinder.bind(node);
         chai.expect(node.function1.name).to.be.equal('function1');
         chai.expect(node.onFunction1.name).to.be.equal('bound onFunction1');
         chai.expect(node._function1.name).to.be.equal('bound _function1');

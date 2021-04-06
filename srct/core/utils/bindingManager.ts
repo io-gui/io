@@ -155,7 +155,7 @@ export class BindingManager {
   __node: Node;
   __bindings: Record<string, Binding> = {};
   /**
-   * Creates binding manager with a node reference.
+   * Creates binding manager for the specified node.
    * @param {Node} node - Owner node.
    */
   constructor(node: Node) {
@@ -171,7 +171,7 @@ export class BindingManager {
     return this.__bindings[property];
   }
   /**
-   * Disposes a binding for the specified property name.
+   * Removes a binding for the specified property name.
    * @param {string} property - Property to unbind.
    */
   unbind(property: string): void {

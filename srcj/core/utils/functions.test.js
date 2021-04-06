@@ -1,4 +1,4 @@
-import { Node, RegisterIoNode } from './node.js';
+import { Node, RegisterIoNode } from '../node.js';
 const string = (object) => {
     return JSON.stringify(object);
 };

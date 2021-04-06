@@ -1,5 +1,5 @@
 import {ProtoChain} from './protochain.js';
-import {ProtoFunctions} from './functions.js';
+import {FunctionBinder} from './utils/functionBinder.js';
 import {BindingManager, Binding} from './utils/bindingManager.js';
 import {ChangeQueue} from './utils/changeQueue.js';
 import {ProtoProperties, Properties} from './properties.js';
@@ -53,7 +53,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
         console.error(`${constructor.name} not registered! Call "Register()" before using ${constructor.name} class!`);
       }
 
-      this.__protoFunctions.bind(this);
+      this.__functionBinder.bind(this);
 
       Object.defineProperty(this, '__bindingManager', {enumerable: false, value: new BindingManager(this)});
       Object.defineProperty(this, '__changeQueue', {enumerable: false, value: new ChangeQueue(this)});
@@ -431,7 +431,7 @@ const RegisterIoNode = function (node: typeof Node) {
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
 
-  Object.defineProperty(proto, '__protoFunctions', {value: new ProtoFunctions(protochain)});
+  Object.defineProperty(proto, '__functionBinder', {value: new FunctionBinder(protochain)});
   Object.defineProperty(proto, '__protoProperties', {value: new ProtoProperties(protochain)});
   Object.defineProperty(proto, '__protoListeners', {value: new ProtoListeners(protochain)});
 

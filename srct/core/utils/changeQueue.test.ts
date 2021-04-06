@@ -1,5 +1,5 @@
-import {ChangeQueue, Change} from './changeQueue.js';
 import {Node, RegisterIoNode} from '../node.js';
+import {ChangeQueue, Change} from './changeQueue.js';
 
 class TestNode extends Node {
   prop1ChangeCounter = 0;

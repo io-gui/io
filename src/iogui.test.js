@@ -7,7 +7,7 @@ import Node from '../srcj/core/node.test.js';
 import Element from '../srcj/core/io-element.test.js';
 
 import Binding from '../srcj/core/utils/bindingManager.test.js';
-import Functions from '../srcj/core/functions.test.js';
+import Functions from '../srcj/core/utils/functionBinder.test.js';
 import Listeners from '../srcj/core/listeners.test.js';
 import Properties from '../srcj/core/properties.test.js';
 import ProtoChain from '../srcj/core/protochain.test.js';

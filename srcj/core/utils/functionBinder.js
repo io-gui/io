@@ -37,4 +37,4 @@ class FunctionBinder extends Array {
     }
 }
 export { FunctionBinder };
-//# sourceMappingURL=functions.js.map
+//# sourceMappingURL=functionBinder.js.map

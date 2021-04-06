@@ -1,10 +1,10 @@
-import {ProtoChain} from './protochain.js';
-import {Node} from './node.js';
+import {ProtoChain} from '../protochain.js';
+import {Node} from '../node.js';
 
 /**
  * Collection of all functions defined in the prototype chain that start with "on" or "_"
  */
-class ProtoFunctions extends Array<string> {
+class FunctionBinder extends Array<string> {
   /**
    * Creates a collection of all functions from protochain that start with "on" or "_".
    * @param {ProtoChain} protochain - Array of protochain constructors.
@@ -39,4 +39,4 @@ class ProtoFunctions extends Array<string> {
   }
 }
 
-export {ProtoFunctions};
+export {FunctionBinder};
