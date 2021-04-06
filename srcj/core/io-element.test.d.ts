@@ -1,3 +1,4 @@
+import { Change } from './utils/changeQueue.js';
 import { IoElement } from './io-element.js';
 export declare class TestElement extends IoElement {
     static get Properties(): any;
@@ -8,7 +9,7 @@ export declare class TestElement extends IoElement {
     reset(): void;
     constructor(initProps: any);
     changed(): void;
-    prop1Changed(event: CustomEvent): void;
+    prop1Changed(change: Change): void;
     onProp1ChangeAlt(event: CustomEvent): void;
     onProp1Change(event: CustomEvent): void;
     onCustomEvent(event: CustomEvent): void;

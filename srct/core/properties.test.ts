@@ -1,6 +1,6 @@
 import {Node, RegisterIoNode} from './node.js';
 import {IoElement, RegisterIoElement} from './io-element.js';
-import {Binding} from './binding.js';
+import {Binding} from './utils/bindingManager.js';
 import {ProtoChain} from './protochain.js';
 import {ProtoProperty, ProtoProperties, Property} from './properties.js';
 
@@ -284,16 +284,16 @@ export default class {
           const node1 = new Object1();
           const node2 = new Object2();
 
-          const protoProps1 = node1.__protoProperties;
-          const protoProps2 = node2.__protoProperties;
-          const props1 = node1.__properties;
-          const props2 = node2.__properties;
+          const protoProps1 = (node1 as any).__protoProperties;
+          const protoProps2 = (node2 as any).__protoProperties;
+          const props1 = (node1 as any).__properties;
+          const props2 = (node2 as any).__properties;
 
           chai.expect(string(Object.keys(props1))).to.be.equal(string(['lazy', 'prop1']));
           chai.expect(string(Object.keys(props2))).to.be.equal(string(['lazy', 'prop3']));
 
-          chai.expect(props1.__node).to.be.equal(node1);
-          chai.expect(props2.__node).to.be.equal(node2);
+          chai.expect((props1 as any).__node).to.be.equal(node1);
+          chai.expect((props2 as any).__node).to.be.equal(node2);
 
           chai.expect(protoProps1.prop1.value).to.be.equal(0);
           chai.expect(props1.prop1.value).to.be.equal(0);
@@ -382,16 +382,16 @@ export default class {
           const node1 = new Object1();
           const node2 = new Object2();
 
-          const props1 = node1.__properties;
-          const props2 = node2.__properties;
+          const props1 = (node1 as any).__properties;
+          const props2 = (node2 as any).__properties;
 
           chai.expect(props1.prop1.binding).to.be.equal(binding1);
           chai.expect(props2.prop1.binding).to.be.equal(binding2);
           chai.expect(props2._prop3.binding).to.be.equal(binding3);
 
-          chai.expect(binding1.targets[0]).to.be.equal(node1);
-          chai.expect(binding2.targets[0]).to.be.equal(node2);
-          chai.expect(binding3.targets[0]).to.be.equal(node2);
+          chai.expect((binding1 as any).__targets[0]).to.be.equal(node1);
+          chai.expect((binding2 as any).__targets[0]).to.be.equal(node2);
+          chai.expect((binding3 as any).__targets[0]).to.be.equal(node2);
 
           chai.expect(props1.prop1.value).to.be.equal('binding1');
           chai.expect(props2.prop1.value).to.be.equal('binding2');
@@ -411,7 +411,7 @@ export default class {
           RegisterIoNode(TestNode);
 
           const node = new TestNode();
-          const properties = node.__properties;
+          const properties = (node as any).__properties;
 
           chai.expect(properties.get('prop1')).to.be.equal(1);
           chai.expect(node.prop1).to.be.equal(1);
@@ -443,20 +443,20 @@ export default class {
           RegisterIoNode(TestNode2);
 
           const node = new TestNode2();
-          const properties = node.__properties;
+          const properties = (node as any).__properties;
 
           chai.expect(properties.get('prop1')).to.be.equal('binding1');
           chai.expect(node.prop1).to.be.equal('binding1');
 
           chai.expect(properties.prop1.binding).to.be.equal(binding1);
-          chai.expect(binding1.targets[0]).to.be.equal(node);
+          chai.expect((binding1 as any).__targets[0]).to.be.equal(node);
 
           properties.set('prop1', binding2);
           chai.expect(properties.get('prop1')).to.be.equal('binding2');
           chai.expect(node.prop1).to.be.equal('binding2');
 
-          chai.expect(binding1.targets[0]).to.be.equal(undefined);
-          chai.expect(binding2.targets[0]).to.be.equal(node);
+          chai.expect((binding1 as any).__targets[0]).to.be.equal(undefined);
+          chai.expect((binding2 as any).__targets[0]).to.be.equal(node);
         });
         it('Should execute attribute reflection on IoElement', () => {
           class TestElementReflection extends IoElement {
@@ -475,7 +475,7 @@ export default class {
           chai.expect(element.getAttribute('label')).to.be.equal('label1');
           element.label = 'label2';
           chai.expect(element.getAttribute('label')).to.be.equal('label2');
-          element.__properties.set('label', 'label3');
+          (element as any).__properties.set('label', 'label3');
           chai.expect(element.getAttribute('label')).to.be.equal('label3');
         });
         it('Should dipatch queue on object value initialization and value set', () => {
@@ -516,7 +516,7 @@ export default class {
             chai.expect('This should never happen!').to.be.equal(true);
           });
 
-          node.__properties.set('prop', {}, true);
+          (node as any).__properties.set('prop', {}, true);
 
           node.disconnect();
           node.prop = {};

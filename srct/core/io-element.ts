@@ -1,4 +1,4 @@
-import {NodeMixin, RegisterIoNode} from './node.js';
+import {Node, NodeMixin, RegisterIoNode} from './node.js';
 import {Listeners} from './listeners.js';
 import {ProtoChain} from './protochain.js';
 
@@ -156,8 +156,8 @@ class IoElement extends NodeMixin(HTMLElement) {
       if (child.localName !== vChildren[i].name) {
         const oldElement = child;
         const element = constructElement(vChildren[i]);
-        host.insertBefore(element, oldElement as Node);
-        host.removeChild(oldElement as Node);
+        host.insertBefore(element, oldElement as unknown as HTMLElement);
+        host.removeChild(oldElement as unknown as HTMLElement);
         // TODO: enable and test!
         // const nodes = Array.from(oldElement.querySelectorAll('*'));
         // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
@@ -468,7 +468,7 @@ const setNativeElementProps = function(element: HTMLElement, props: any) {
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
   }
   if (!(element as any).__listeners) {
-    Object.defineProperty(element, '__listeners', {value: new Listeners(element)});
+    Object.defineProperty(element, '__listeners', {value: new Listeners(element as unknown as Node)});
     (element as any).__listeners.connect();
   }
   (element as any).__listeners.setPropListeners(props, element);

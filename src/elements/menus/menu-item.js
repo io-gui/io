@@ -327,12 +327,12 @@ export class IoMenuItem extends IoItem {
       this.$options.removeEventListener('item-clicked', this._onItemClicked);
     }
   }
-  optionChanged(event) {
-    if (event.detail.oldValue) {
-      event.detail.oldValue.removeEventListener('changed', this.onOptionChanged);
+  optionChanged(change) {
+    if (change.oldValue) {
+      change.oldValue.removeEventListener('changed', this.onOptionChanged);
     }
-    if (event.detail.value) {
-      event.detail.value.addEventListener('changed', this.onOptionChanged);
+    if (change.value) {
+      change.value.addEventListener('changed', this.onOptionChanged);
     }
   }
   onOptionChanged() {

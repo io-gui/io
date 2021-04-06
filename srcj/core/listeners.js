@@ -24,9 +24,10 @@ class Listeners {
         this.propListeners = {};
         this.activeListeners = {};
         this.__connected = false;
-        Object.defineProperty(this, 'node', { value: node });
-        Object.defineProperty(this, 'propListeners', { enumerable: false, value: {} });
-        Object.defineProperty(this, 'activeListeners', { enumerable: false, value: {} });
+        this.node = node;
+        Object.defineProperty(this, 'node', { enumerable: false });
+        Object.defineProperty(this, 'propListeners', { enumerable: false });
+        Object.defineProperty(this, 'activeListeners', { enumerable: false });
         Object.defineProperty(this, '__connected', { enumerable: false, writable: true, value: false });
         for (let prop in protoListeners)
             this[prop] = protoListeners[prop];

@@ -54,7 +54,6 @@ const themeDBDefaults = {
   }, themePropDefaults),
 };
 
-
 const themeDB = $({value: JSON.parse(JSON.stringify(themeDBDefaults)), storage: 'local', key: 'themeDB'});
 
 export class IoTheme extends IoElement {

@@ -1,4 +1,4 @@
-import { Binding } from './binding.js';
+import { Binding } from './utils/bindingManager.js';
 /**
  * Property configuration object for a class **prototype**.
  * It is generated from property definitions in `static get Properties()` return object.
@@ -166,8 +166,9 @@ class Properties {
                 }
             }
             const binding = property.binding;
+            // TODO: unhack passing __properties from constructor;
             if (binding)
-                binding.addTarget(node, prop);
+                binding.addTarget(node, prop, this);
         }
         Object.defineProperty(this, '__keys', { enumerable: false, configurable: true, value: Object.keys(this) });
     }
@@ -192,7 +193,7 @@ class Properties {
                     oldBinding.removeTarget(node, key);
                 }
                 binding.addTarget(node, key);
-                value = binding.source[binding.sourceProp];
+                value = binding.value;
             }
             else {
                 if (prop.strict && prop.type && !(value instanceof prop.type)) {

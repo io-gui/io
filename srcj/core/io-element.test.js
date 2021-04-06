@@ -20,7 +20,7 @@ export class TestElement extends IoElement {
             _changedCounter: 0,
             _prop1ChangedCounter: 0,
             _prop1AltCounter: 0,
-            _prop1Payload: null,
+            _prop1ChangeEvent: null,
             debug: true,
         };
     }
@@ -38,9 +38,9 @@ export class TestElement extends IoElement {
         this._prop1AltCounter = 0;
         this._prop1Counter = 0;
         this._customHandlerCounter = 0;
-        this._prop1AltPayload = null;
-        this._prop1Payload = null;
-        this._customHandlerPayload = null;
+        this._prop1AltChangeEvent = null;
+        this._prop1ChangeEvent = null;
+        this._customHandlerChangeEvent = null;
     }
     constructor(initProps) {
         super(initProps);
@@ -52,21 +52,21 @@ export class TestElement extends IoElement {
     changed() {
         this._changedCounter++;
     }
-    prop1Changed(event) {
+    prop1Changed(change) {
         this._prop1ChangedCounter++;
-        this._prop1ChangedPayload = event;
+        this._prop1ChangedChange = change;
     }
     onProp1ChangeAlt(event) {
         this._prop1AltCounter++;
-        this._prop1AltPayload = event;
+        this._prop1AltChangeEvent = event;
     }
     onProp1Change(event) {
         this._prop1Counter++;
-        this._prop1Payload = event;
+        this._prop1ChangeEvent = event;
     }
     onCustomEvent(event) {
         this._customHandlerCounter++;
-        this._customHandlerPayload = event;
+        this._customHandlerChangeEvent = event;
     }
 }
 RegisterIoElement(TestElement);
@@ -136,13 +136,13 @@ export default class {
                     this.reset();
                     this.element.prop0 = 1;
                     this.element.prop0 = 0;
-                    chai.expect(this.element._prop1Payload.srcElement).to.equal(this.element);
-                    chai.expect(this.element._prop1Payload.detail.value).to.equal(0);
+                    chai.expect(this.element._prop1ChangeEvent.srcElement).to.equal(this.element);
+                    chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(0);
                     this.element.$.subelement.prop0 = 2;
-                    chai.expect(this.element._prop1Payload.detail.oldValue).to.equal(0);
-                    chai.expect(this.element._prop1Payload.detail.value).to.equal(2);
+                    chai.expect(this.element._prop1ChangeEvent.detail.oldValue).to.equal(0);
+                    chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(2);
                     this.element.dispatchEvent('custom-event', { data: 'io' });
-                    chai.expect(this.element._customHandlerPayload.detail.data).to.equal('io');
+                    chai.expect(this.element._customHandlerChangeEvent.detail.data).to.equal('io');
                 });
             });
             // TODO: Cleanup and improve

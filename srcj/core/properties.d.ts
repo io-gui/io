@@ -1,4 +1,4 @@
-import { Binding } from './binding.js';
+import { Binding } from './utils/bindingManager.js';
 import { ProtoChain } from './protochain.js';
 declare type Constructor = new (...args: any[]) => Object;
 /**

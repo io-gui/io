@@ -6,12 +6,12 @@ import '../lib/chai.js';
 import Node from '../srcj/core/node.test.js';
 import Element from '../srcj/core/io-element.test.js';
 
-import Binding from '../srcj/core/binding.test.js';
+import Binding from '../srcj/core/utils/bindingManager.test.js';
 import Functions from '../srcj/core/functions.test.js';
 import Listeners from '../srcj/core/listeners.test.js';
 import Properties from '../srcj/core/properties.test.js';
 import ProtoChain from '../srcj/core/protochain.test.js';
-import Queue from '../srcj/core/queue.test.js';
+import ChangeQueue from '../srcj/core/utils/changeQueue.test.js';
 
 import Item from './elements/core/item.test.js';
 import Content from './elements/core/content.test.js'; // TODO
@@ -52,7 +52,7 @@ function runTests() {
     new Properties().run();
     new ProtoChain().run();
     new Binding().run();
-    new Queue().run();
+    new ChangeQueue().run();
     new Listeners().run();
     new Functions().run();
 

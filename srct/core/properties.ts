@@ -1,4 +1,4 @@
-import {Binding} from './binding.js';
+import {Binding} from './utils/bindingManager.js';
 import {ProtoChain} from './protochain.js';
 
 type Constructor = new (...args: any[]) => Object;
@@ -205,7 +205,8 @@ class Properties {
         }
       }
       const binding = property.binding;
-      if (binding) binding.addTarget(node, prop);
+      // TODO: unhack passing __properties from constructor;
+      if (binding) binding.addTarget(node, prop, this);
     }
     Object.defineProperty(this, '__keys', {enumerable: false, configurable: true, value: Object.keys(this)});
   }
@@ -236,7 +237,7 @@ class Properties {
         }
 
         binding.addTarget(node, key);
-        value = binding.source[binding.sourceProp];
+        value = binding.value;
 
       } else {
 

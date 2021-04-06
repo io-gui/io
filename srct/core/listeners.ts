@@ -1,4 +1,5 @@
 import {ProtoChain} from './protochain.js';
+import {Node} from './node.js';
 
 type PropListeners = Record<string, any>
 
@@ -21,17 +22,18 @@ class ProtoListeners {
  * Manager of listeners for a class **instance**.
  */
 class Listeners {
-  node: any;
+  node: Node;
   propListeners: Record<string, any> = {};
   activeListeners: Record<string, any> = {};
   __connected: boolean = false;
   /**
    * Creates manager for listener.
    */
-  constructor(node: any, protoListeners?: ProtoListeners) {
-    Object.defineProperty(this, 'node', {value: node});
-    Object.defineProperty(this, 'propListeners', {enumerable: false, value: {}});
-    Object.defineProperty(this, 'activeListeners', {enumerable: false, value: {}});
+  constructor(node: Node, protoListeners?: ProtoListeners) {
+    this.node = node;
+    Object.defineProperty(this, 'node', {enumerable: false});
+    Object.defineProperty(this, 'propListeners', {enumerable: false});
+    Object.defineProperty(this, 'activeListeners', {enumerable: false});
     Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
     for (let prop in protoListeners) (this as any)[prop] = (protoListeners as any)[prop];
   }

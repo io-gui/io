@@ -28,11 +28,11 @@ Event handler that updates bound properties on target nodes when source node emi
 Dispose of the binding by removing all targets and listeners.
 Use this when node is no longer needed.
 
-## Bindings
+## BindingManager
 
 Manager for `Node` property bindings. It holds all bindings for a particular Node.
 
-### Bindings(node: `Node`)
+### BindingManager(node: `Node`)
 
 Creates binding manager with a node reference.
 

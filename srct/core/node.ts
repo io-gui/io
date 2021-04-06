@@ -1,7 +1,7 @@
 import {ProtoChain} from './protochain.js';
 import {ProtoFunctions} from './functions.js';
-import {Bindings, Binding} from './binding.js';
-import {Queue} from './queue.js';
+import {BindingManager, Binding} from './utils/bindingManager.js';
+import {ChangeQueue} from './utils/changeQueue.js';
 import {ProtoProperties, Properties} from './properties.js';
 import {ProtoListeners, Listeners} from './listeners.js';
 
@@ -55,8 +55,8 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
 
       this.__protoFunctions.bind(this);
 
-      Object.defineProperty(this, '__bindings', {enumerable: false, value: new Bindings(this)});
-      Object.defineProperty(this, '__queue', {enumerable: false, value: new Queue(this)});
+      Object.defineProperty(this, '__bindingManager', {enumerable: false, value: new BindingManager(this)});
+      Object.defineProperty(this, '__changeQueue', {enumerable: false, value: new ChangeQueue(this)});
       Object.defineProperty(this, '__listeners', {enumerable: false, value: new Listeners(this, this.__protoListeners)});
       Object.defineProperty(this, '__properties', {enumerable: false, value: new Properties(this, this.__protoProperties)});
 
@@ -140,8 +140,8 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
     dispose() {
       this.__connected = false;
       this.__connections.length = 0;
-      this.__queue.dispose();
-      this.__bindings.dispose();
+      this.__changeQueue.dispose();
+      this.__bindingManager.dispose();
       this.__listeners.dispose();
       this.__properties.dispose();
       if (this.__observedObjects.length) {
@@ -184,7 +184,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {*} oldValue - Old property value.
      */
     queue(prop: string, value: any, oldValue: any) {
-      this.__queue.queue(prop, value, oldValue);
+      this.__changeQueue.queue(prop, value, oldValue);
     }
     /**
      * Dispatches the queue.
@@ -194,14 +194,14 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
         preThrottleQueue.push(this.queueDispatchLazy);
         this.throttle(this.queueDispatchLazy);
       } else {
-        this.__queue.dispatch();
+        this.__changeQueue.dispatch();
       }
     }
     /**
      * Dispatches the queue in the next rAF cycle.
      */
     queueDispatchLazy() {
-      this.__queue.dispatch();
+      this.__changeQueue.dispatch();
     }
     /**
      * Event handler for 'object-mutated' event emitted from the `window`.
@@ -252,14 +252,14 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
         console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
         return;
       }
-      return this.__bindings.bind(prop);
+      return this.__bindingManager.bind(prop);
     }
     /**
      * Unbinds a binding to a specified property`.
      * @param {string} prop - Property to unbind.
      */
     unbind(prop: string) {
-      this.__bindings.unbind(prop);
+      this.__bindingManager.unbind(prop);
       const binding = this.__properties[prop].binding;
       if (binding) binding.removeTarget(this, prop);
     }

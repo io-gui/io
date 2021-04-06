@@ -26,12 +26,12 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: HTMLElement | Window | Node | Document): void;
+        connect(node?: HTMLElement | Node | Window | Document): void;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: HTMLElement | Window | Node | Document): void;
+        disconnect(node?: HTMLElement | Node | Window | Document): void;
         /**
          * Connected callback.
          */
@@ -129,7 +129,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Window | Node | Document | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -181,12 +181,12 @@ declare const Node_base: {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: HTMLElement | Window | Node | Document): void;
+        connect(node?: HTMLElement | Node | Window | Document): void;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: HTMLElement | Window | Node | Document): void;
+        disconnect(node?: HTMLElement | Node | Window | Document): void;
         /**
          * Connected callback.
          */
@@ -284,7 +284,7 @@ declare const Node_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Window | Node | Document | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.

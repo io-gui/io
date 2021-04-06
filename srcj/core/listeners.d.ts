@@ -1,4 +1,5 @@
 import { ProtoChain } from './protochain.js';
+import { Node } from './node.js';
 declare type PropListeners = Record<string, any>;
 /**
  * Collection of all listeners defined in the prototype chain.
@@ -13,14 +14,14 @@ declare class ProtoListeners {
  * Manager of listeners for a class **instance**.
  */
 declare class Listeners {
-    node: any;
+    node: Node;
     propListeners: Record<string, any>;
     activeListeners: Record<string, any>;
     __connected: boolean;
     /**
      * Creates manager for listener.
      */
-    constructor(node: any, protoListeners?: ProtoListeners);
+    constructor(node: Node, protoListeners?: ProtoListeners);
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} props - Properties.

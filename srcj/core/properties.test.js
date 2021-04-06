@@ -1,6 +1,6 @@
 import { Node, RegisterIoNode } from './node.js';
 import { IoElement, RegisterIoElement } from './io-element.js';
-import { Binding } from './binding.js';
+import { Binding } from './utils/bindingManager.js';
 import { ProtoChain } from './protochain.js';
 import { ProtoProperty, ProtoProperties, Property } from './properties.js';
 const string = (object) => {
@@ -347,9 +347,9 @@ export default class {
                     chai.expect(props1.prop1.binding).to.be.equal(binding1);
                     chai.expect(props2.prop1.binding).to.be.equal(binding2);
                     chai.expect(props2._prop3.binding).to.be.equal(binding3);
-                    chai.expect(binding1.targets[0]).to.be.equal(node1);
-                    chai.expect(binding2.targets[0]).to.be.equal(node2);
-                    chai.expect(binding3.targets[0]).to.be.equal(node2);
+                    chai.expect(binding1.__targets[0]).to.be.equal(node1);
+                    chai.expect(binding2.__targets[0]).to.be.equal(node2);
+                    chai.expect(binding3.__targets[0]).to.be.equal(node2);
                     chai.expect(props1.prop1.value).to.be.equal('binding1');
                     chai.expect(props2.prop1.value).to.be.equal('binding2');
                     chai.expect(props2._prop3.value).to.be.equal('binding3');
@@ -397,12 +397,12 @@ export default class {
                     chai.expect(properties.get('prop1')).to.be.equal('binding1');
                     chai.expect(node.prop1).to.be.equal('binding1');
                     chai.expect(properties.prop1.binding).to.be.equal(binding1);
-                    chai.expect(binding1.targets[0]).to.be.equal(node);
+                    chai.expect(binding1.__targets[0]).to.be.equal(node);
                     properties.set('prop1', binding2);
                     chai.expect(properties.get('prop1')).to.be.equal('binding2');
                     chai.expect(node.prop1).to.be.equal('binding2');
-                    chai.expect(binding1.targets[0]).to.be.equal(undefined);
-                    chai.expect(binding2.targets[0]).to.be.equal(node);
+                    chai.expect(binding1.__targets[0]).to.be.equal(undefined);
+                    chai.expect(binding2.__targets[0]).to.be.equal(node);
                 });
                 it('Should execute attribute reflection on IoElement', () => {
                     class TestElementReflection extends IoElement {
