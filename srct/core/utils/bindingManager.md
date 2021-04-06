@@ -1,48 +1,52 @@
 ## Binding
 
-Binding object. It manages data binding between source and targets using `[prop]-changed` events.
+Binding object. It manages data binding between source and targets using `[property]-changed` events.
 
-### Binding(sourceNode: `Node`, sourceProp: `string`)
+### Binding(node: `Node`, property: `string`)
 
-Creates a binding object with specified `sourceNode` and `sourceProp`.
+Creates a binding object for specified `node` and `property`.
 
-### .addTarget(targetNode: `Node`, targetProp: `string`)
+### .addTarget(node: `Node`, property: `string`)
 
-Adds a target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
+Adds a target `node` and `property` and corresponding `[property]-changed` listener, unless already added.
 
-### .removeTarget(targetNode: `Node`, targetProp: `string`)
+### .removeTarget(node: `Node`, property: `string`)
 
-Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
+Removes target `targetNode` and `targetProp` and corresponding `[property]-changed` listener.
 If `targetProp` is not specified, it removes all target properties.
 
-### ._onTargetChanged(event: `Object`, event.target: `Node`, event.detail: `Object`, event.detail.value: `*`)
+### ._getTargetProperties(node: `Node`)
 
-Event handler that updates source property when one of the targets emits `[prop]-changed` event.
+Retrieves a list of target properties for specified target node.
 
-### ._onSourceChanged(event: `Object`, event.target: `Node`, event.detail: `Object`, event.detail.value: `*`)
+### ._onTargetChanged(event: `ChangeEvent`)
 
-Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
+Event handler that updates source property when one of the targets emits `[property]-changed` event.
+
+### ._onSourceChanged(event: `ChangeEvent`)
+
+Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
 
 ### .dispose()
 
-Dispose of the binding by removing all targets and listeners.
+ispose of the binding by removing all targets and listeners.
 Use this when node is no longer needed.
 
 ## BindingManager
 
-Manager for `Node` property bindings. It holds all bindings for a particular Node.
+Creates binding manager for the specified node.
 
 ### BindingManager(node: `Node`)
 
 Creates binding manager with a node reference.
 
-### .bind(prop: `string`) : Binding
+### .bind(property: `string`) : Binding
 
 Returns a binding to the specified property name or creates one if it does not exist.
 
-### .unbind(prop: `string`)
+### .unbind(property: `string`)
 
-Disposes a binding for the specified property name.
+Removes a binding for the specified property name.
 
 ### .dispose()
 

@@ -3,7 +3,7 @@ import {ChangeEvent} from './changeQueue.js';
 import {Properties} from '../properties.js';
 
 /**
- * Binding object. It manages data binding between source and targets using `[prop]-changed` events.
+ * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */
 export class Binding {
   private __node: Node;
@@ -31,7 +31,7 @@ export class Binding {
     return this.__node[this.__property];
   }
   /**
-   * Adds a target `node` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
+   * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
    * @param {Node} node - Target node.
    * @param {string} property - Target property.
    */
@@ -43,45 +43,52 @@ export class Binding {
 
     const targetNode = node as unknown as EventTarget;
     if (this.__targets.indexOf(targetNode) === -1) this.__targets.push(targetNode);
-    const targetProperties = this.__targetProperties.get(targetNode);
-    if (targetProperties) {
-      if (targetProperties.indexOf(property) === -1) {
-        targetProperties.push(property);
-        targetNode.addEventListener(`${property}-changed`, this._onTargetChanged as EventListener);
-      }
-    } else {
-      this.__targetProperties.set(targetNode, [property]);
+    const targetProperties = this._getTargetProperties(targetNode);
+    if (targetProperties.indexOf(property) === -1) {
+      targetProperties.push(property);
       targetNode.addEventListener(`${property}-changed`, this._onTargetChanged as EventListener);
     }
   }
   /**
-   * Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
-   * If `targetProp` is not specified, it removes all target properties.
+   * Removes target `node` and `property` and corresponding `[property]-changed` listener.
+   * If `property` is not specified, it removes all target properties.
    * @param {Node} node - Target node.
    * @param {string} property - Target property.
    */
   removeTarget(node: Node, property?: string) {
     const targetNode = node as unknown as EventTarget;
-    const targetProperties = this.__targetProperties.get(targetNode);
-    if (targetProperties) {
-      if (property) {
-        const i = targetProperties.indexOf(property);
-        if (i !== -1) targetProperties.splice(i, 1);
-        targetNode.removeEventListener(`${property}-changed`, this._onTargetChanged as EventListener);
-      } else {
-        for (let i = targetProperties.length; i--;) {
-          targetNode.removeEventListener(`${targetProperties[i]}-changed`, this._onTargetChanged as EventListener);
-        }
-        targetProperties.length = 0;
+    const targetProperties = this._getTargetProperties(targetNode);
+    if (property) {
+      const i = targetProperties.indexOf(property);
+      if (i !== -1) targetProperties.splice(i, 1);
+      targetNode.removeEventListener(`${property}-changed`, this._onTargetChanged as EventListener);
+    } else {
+      for (let i = targetProperties.length; i--;) {
+        targetNode.removeEventListener(`${targetProperties[i]}-changed`, this._onTargetChanged as EventListener);
       }
-      if (targetProperties.length === 0) this.__targets.splice(this.__targets.indexOf(targetNode), 1);
+      targetProperties.length = 0;
+    }
+    if (targetProperties.length === 0) this.__targets.splice(this.__targets.indexOf(targetNode), 1);
+  }
+  /**
+   * Retrieves a list of target properties for specified target node.
+   * @param {Node} node - Target node.
+   */
+   private _getTargetProperties(node: Node | EventTarget): string[] {
+    let targetProperties = this.__targetProperties.get(node as unknown as EventTarget);
+    if (targetProperties) {
+      return targetProperties;
+    } else {
+      targetProperties = [];
+      this.__targetProperties.set(node as unknown as EventTarget, targetProperties);
+      return targetProperties;
     }
   }
   /**
-   * Event handler that updates source property when one of the targets emits `[prop]-changed` event.
+   * Event handler that updates source property when one of the targets emits `[property]-changed` event.
    * @param {event} ChangeEvent - Property change event.
    */
-  _onTargetChanged(event: ChangeEvent) {
+  private _onTargetChanged(event: ChangeEvent) {
     debug: {
       if (this.__targets.indexOf(event.target) === -1) {
         console.error(`_onTargetChanged() should never fire when target is removed from binding.
@@ -97,10 +104,10 @@ export class Binding {
     }
   }
   /**
-   * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
+   * Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
    * @param {event} ChangeEvent - Property change event.
    */
-  _onSourceChanged(event: ChangeEvent) {
+   private _onSourceChanged(event: ChangeEvent) {
     debug: {
       if (event.target != this.__node as unknown as EventTarget) {
         console.error(`_onSourceChanged() should always originate form source node.
@@ -110,8 +117,8 @@ export class Binding {
     const value = event.detail.value;
     for (let i = this.__targets.length; i--;) {
       const target = this.__targets[i];
-      const targetProperties = this.__targetProperties.get(target);
-      if (targetProperties) for (let j = targetProperties.length; j--;) {
+      const targetProperties = this._getTargetProperties(target);
+      for (let j = targetProperties.length; j--;) {
         const propName = targetProperties[j] as keyof (typeof target);
         const oldValue = target[propName];
         if (oldValue !== value) {

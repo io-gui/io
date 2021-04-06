@@ -317,7 +317,7 @@ export default class {
         const node = new TestNode();
         node.connect(window);
 
-        let binding = node.bind('prop1');
+        let binding = node.bind('prop1') as any;
         chai.expect(binding).to.be.instanceof(Binding);
         chai.expect(binding.__node).to.be.equal(node);
         chai.expect(binding.__property).to.be.equal('prop1');
@@ -353,6 +353,61 @@ export default class {
 
         node.dispose();
       });
+      // it('Should add/remove targets and __targetProperties when assigned to values', () => {
+      //   const srcNode = new TestNode();
+      //   const binding0 = new Binding(srcNode, 'prop1') as any;
+      //   const binding1 = new Binding(srcNode, 'prop2') as any;
+
+      //   const dstNode0 = new TestNode().connect();
+      //   dstNode0.prop1 = binding0;
+      //   dstNode0.prop2 = binding1;
+
+      //   const dstNode1 = new TestNode({prop1: binding0}).connect();
+      //   const dstNode3 = new TestNode({prop1: binding0, prop2: binding0}).connect();
+
+      //   chai.expect(binding0.__targets[0]).to.be.equal(dstNode0);
+      //   chai.expect(binding0.__targets[1]).to.be.equal(dstNode1);
+      //   chai.expect(binding0.__targets[2]).to.be.equal(dstNode3);
+
+      //   chai.expect(string(binding0.__targetProperties.get(dstNode0))).to.be.equal(string(['prop1']));
+      //   chai.expect(string(binding0.__targetProperties.get(dstNode1))).to.be.equal(string(['prop1']));
+      //   chai.expect(string(binding0.__targetProperties.get(dstNode3))).to.be.equal(string(['prop1', 'prop2']));
+
+      //   dstNode0.dispose();
+      //   dstNode1.disconnect();
+      //   dstNode3.unbind('prop1');
+
+      //   chai.expect(string(binding0.__targetProperties.get(dstNode0))).to.be.equal(string([]));
+      //   chai.expect(string(binding0.__targetProperties.get(dstNode1))).to.be.equal(string([]));
+      //   chai.expect(string(binding0.__targetProperties.get(dstNode3))).to.be.equal(string(['prop2']));
+
+      //   dstNode1.prop2 = binding0;
+      //   dstNode1.connect();
+
+      //   dstNode3.prop1 = binding0;
+
+      //   chai.expect(string(binding0.__targetProperties.get(dstNode1))).to.be.equal(string(['prop2', 'prop1']));
+      //   chai.expect(string(binding0.__targetProperties.get(dstNode3))).to.be.equal(string(['prop2', 'prop1']));
+      // });
+      // it('Should return existing binding or create a new on "bind()"', () => {
+      //   const node = new TestNode();
+      //   const binding0 = node.bind('prop1');
+      //   chai.expect(binding0).to.be.equal(node.__bindingManager.__bindings.prop1);
+      //   chai.expect(binding0).to.be.equal(node.bind('prop1'));
+      // });
+      // it('Should dispose bindings correctly', () => {
+      //   const node1 = new TestNode();
+      //   const binding0 = node1.bind('prop1') as any;
+      //   node1.unbind('prop1');
+      //   chai.expect(node1.__bindingManager.__bindings.prop1).to.be.equal(undefined);
+      //   chai.expect(binding0.prop1).to.be.equal(undefined);
+
+      //   const node2 = new TestNode();
+      //   const binding1 = node2.bind('prop1') as any;
+      //   node2.__bindingManager.dispose();
+      //   chai.expect(node2.__bindingManager.__bindings).to.be.equal(undefined);
+      //   chai.expect(binding1.prop1).to.be.equal(undefined);
+      // });
     });
   }
 }

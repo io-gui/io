@@ -1,5 +1,5 @@
 /**
- * Binding object. It manages data binding between source and targets using `[prop]-changed` events.
+ * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */
 export class Binding {
     /**
@@ -26,7 +26,7 @@ export class Binding {
         return this.__node[this.__property];
     }
     /**
-     * Adds a target `node` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
+     * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
      * @param {Node} node - Target node.
      * @param {string} property - Target property.
      */
@@ -38,46 +38,53 @@ export class Binding {
         const targetNode = node;
         if (this.__targets.indexOf(targetNode) === -1)
             this.__targets.push(targetNode);
-        const targetProperties = this.__targetProperties.get(targetNode);
-        if (targetProperties) {
-            if (targetProperties.indexOf(property) === -1) {
-                targetProperties.push(property);
-                targetNode.addEventListener(`${property}-changed`, this._onTargetChanged);
-            }
-        }
-        else {
-            this.__targetProperties.set(targetNode, [property]);
+        const targetProperties = this._getTargetProperties(targetNode);
+        if (targetProperties.indexOf(property) === -1) {
+            targetProperties.push(property);
             targetNode.addEventListener(`${property}-changed`, this._onTargetChanged);
         }
     }
     /**
-     * Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
-     * If `targetProp` is not specified, it removes all target properties.
+     * Removes target `node` and `property` and corresponding `[property]-changed` listener.
+     * If `property` is not specified, it removes all target properties.
      * @param {Node} node - Target node.
      * @param {string} property - Target property.
      */
     removeTarget(node, property) {
         const targetNode = node;
-        const targetProperties = this.__targetProperties.get(targetNode);
+        const targetProperties = this._getTargetProperties(targetNode);
+        if (property) {
+            const i = targetProperties.indexOf(property);
+            if (i !== -1)
+                targetProperties.splice(i, 1);
+            targetNode.removeEventListener(`${property}-changed`, this._onTargetChanged);
+        }
+        else {
+            for (let i = targetProperties.length; i--;) {
+                targetNode.removeEventListener(`${targetProperties[i]}-changed`, this._onTargetChanged);
+            }
+            targetProperties.length = 0;
+        }
+        if (targetProperties.length === 0)
+            this.__targets.splice(this.__targets.indexOf(targetNode), 1);
+    }
+    /**
+     * Retrieves a list of target properties for specified target node.
+     * @param {Node} node - Target node.
+     */
+    _getTargetProperties(node) {
+        let targetProperties = this.__targetProperties.get(node);
         if (targetProperties) {
-            if (property) {
-                const i = targetProperties.indexOf(property);
-                if (i !== -1)
-                    targetProperties.splice(i, 1);
-                targetNode.removeEventListener(`${property}-changed`, this._onTargetChanged);
-            }
-            else {
-                for (let i = targetProperties.length; i--;) {
-                    targetNode.removeEventListener(`${targetProperties[i]}-changed`, this._onTargetChanged);
-                }
-                targetProperties.length = 0;
-            }
-            if (targetProperties.length === 0)
-                this.__targets.splice(this.__targets.indexOf(targetNode), 1);
+            return targetProperties;
+        }
+        else {
+            targetProperties = [];
+            this.__targetProperties.set(node, targetProperties);
+            return targetProperties;
         }
     }
     /**
-     * Event handler that updates source property when one of the targets emits `[prop]-changed` event.
+     * Event handler that updates source property when one of the targets emits `[property]-changed` event.
      * @param {event} ChangeEvent - Property change event.
      */
     _onTargetChanged(event) {
@@ -98,7 +105,7 @@ export class Binding {
         }
     }
     /**
-     * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
+     * Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
      * @param {event} ChangeEvent - Property change event.
      */
     _onSourceChanged(event) {
@@ -112,18 +119,17 @@ export class Binding {
         const value = event.detail.value;
         for (let i = this.__targets.length; i--;) {
             const target = this.__targets[i];
-            const targetProperties = this.__targetProperties.get(target);
-            if (targetProperties)
-                for (let j = targetProperties.length; j--;) {
-                    const propName = targetProperties[j];
-                    const oldValue = target[propName];
-                    if (oldValue !== value) {
-                        // JavaScript is weird NaN != NaN
-                        if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue)))
-                            continue;
-                        target[propName] = value;
-                    }
+            const targetProperties = this._getTargetProperties(target);
+            for (let j = targetProperties.length; j--;) {
+                const propName = targetProperties[j];
+                const oldValue = target[propName];
+                if (oldValue !== value) {
+                    // JavaScript is weird NaN != NaN
+                    if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue)))
+                        continue;
+                    target[propName] = value;
                 }
+            }
         }
     }
     /**

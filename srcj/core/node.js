@@ -65,15 +65,14 @@ function NodeMixin(superclass) {
         connect(node = window) {
             debug: if (this.__isIoElement) {
                 console.error('"connect()" function is not intended for DOM Elements!');
-                return;
             }
             debug: if (this.__connections.indexOf(node) !== -1) {
                 console.warn('Node already connected to node');
-                return;
             }
             this.__connections.push(node);
             if (!this.__connected)
                 this.connectedCallback();
+            return this;
         }
         /**
          * Disconnects the instance from an another node or element.
@@ -82,16 +81,15 @@ function NodeMixin(superclass) {
         disconnect(node = window) {
             debug: if (this.__isIoElement) {
                 console.error('"disconnect()" function is not intended for DOM Elements!');
-                return;
             }
             debug: if (this.__connections.indexOf(node) === -1) {
                 console.error('Node not connected to:', node);
-                return;
             }
             this.__connections.splice(this.__connections.indexOf(node), 1);
             if (this.__connections.length === 0 && this.__connected) {
                 this.disconnectedCallback();
             }
+            return this;
         }
         /**
          * Connected callback.
@@ -231,7 +229,6 @@ function NodeMixin(superclass) {
         bind(prop) {
             debug: if (!this.__properties[prop]) {
                 console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
-                return;
             }
             return this.__bindingManager.bind(prop);
         }

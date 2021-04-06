@@ -1,3 +1,4 @@
+import { Binding } from './utils/bindingManager.js';
 declare type Constructor<T extends any> = new (...args: any[]) => T;
 /**
  * Core mixin for `Node` classes.
@@ -26,12 +27,12 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: HTMLElement | Node | Window | Document): void;
+        connect(node?: Node | HTMLElement | Document | Window): any;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: HTMLElement | Node | Window | Document): void;
+        disconnect(node?: Node | HTMLElement | Document | Window): any;
         /**
          * Connected callback.
          */
@@ -88,7 +89,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {string} prop - Property to bind to.
          * @return {Binding} Binding object.
          */
-        bind(prop: string): any;
+        bind(prop: string): Binding;
         /**
          * Unbinds a binding to a specified property`.
          * @param {string} prop - Property to unbind.
@@ -129,7 +130,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -181,12 +182,12 @@ declare const Node_base: {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: HTMLElement | Node | Window | Document): void;
+        connect(node?: Node | HTMLElement | Document | Window): any;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: HTMLElement | Node | Window | Document): void;
+        disconnect(node?: Node | HTMLElement | Document | Window): any;
         /**
          * Connected callback.
          */
@@ -243,7 +244,7 @@ declare const Node_base: {
          * @param {string} prop - Property to bind to.
          * @return {Binding} Binding object.
          */
-        bind(prop: string): any;
+        bind(prop: string): Binding;
         /**
          * Unbinds a binding to a specified property`.
          * @param {string} prop - Property to unbind.
@@ -284,7 +285,7 @@ declare const Node_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.

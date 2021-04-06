@@ -1,8 +1,7 @@
 import { Node } from '../node.js';
-import { ChangeEvent } from './changeQueue.js';
 import { Properties } from '../properties.js';
 /**
- * Binding object. It manages data binding between source and targets using `[prop]-changed` events.
+ * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */
 export declare class Binding {
     private __node;
@@ -16,28 +15,33 @@ export declare class Binding {
     set value(value: any);
     get value(): any;
     /**
-     * Adds a target `node` and `targetProp` and corresponding `[prop]-changed` listener, unless already added.
+     * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
      * @param {Node} node - Target node.
      * @param {string} property - Target property.
      */
     addTarget(node: Node, property: string, __nodeProperties?: Properties): void;
     /**
-     * Removes target `targetNode` and `targetProp` and corresponding `[prop]-changed` listener.
-     * If `targetProp` is not specified, it removes all target properties.
+     * Removes target `node` and `property` and corresponding `[property]-changed` listener.
+     * If `property` is not specified, it removes all target properties.
      * @param {Node} node - Target node.
      * @param {string} property - Target property.
      */
     removeTarget(node: Node, property?: string): void;
     /**
-     * Event handler that updates source property when one of the targets emits `[prop]-changed` event.
-     * @param {event} ChangeEvent - Property change event.
+     * Retrieves a list of target properties for specified target node.
+     * @param {Node} node - Target node.
      */
-    _onTargetChanged(event: ChangeEvent): void;
+    private _getTargetProperties;
     /**
-     * Event handler that updates bound properties on target nodes when source node emits `[prop]-changed` event.
+     * Event handler that updates source property when one of the targets emits `[property]-changed` event.
      * @param {event} ChangeEvent - Property change event.
      */
-    _onSourceChanged(event: ChangeEvent): void;
+    private _onTargetChanged;
+    /**
+     * Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
+     * @param {event} ChangeEvent - Property change event.
+     */
+    private _onSourceChanged;
     /**
      * Dispose of the binding by removing all targets and listeners.
      * Use this when node is no longer needed.

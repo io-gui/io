@@ -76,39 +76,37 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * Connects the instance to another node or element.
      * @param {Node} node - Node to connect to.
      */
-    connect(node: Node | HTMLElement | Document | Window = window) {
+    connect(node: Node | HTMLElement | Document | Window = window): this {
       debug:
       if (this.__isIoElement) {
         console.error('"connect()" function is not intended for DOM Elements!');
-        return;
       }
       debug:
       if (this.__connections.indexOf(node) !== -1) {
         console.warn('Node already connected to node');
-        return;
       }
       this.__connections.push(node);
       if (!this.__connected) this.connectedCallback();
+      return this;
     }
     /**
      * Disconnects the instance from an another node or element.
      * @param {Node} node - Node to disconnect from.
      */
-    disconnect(node: Node | HTMLElement | Document | Window = window) {
+    disconnect(node: Node | HTMLElement | Document | Window = window): this {
       debug:
       if (this.__isIoElement) {
         console.error('"disconnect()" function is not intended for DOM Elements!');
-        return;
       }
       debug:
       if (this.__connections.indexOf(node) === -1) {
         console.error('Node not connected to:', node);
-        return;
       }
       this.__connections.splice(this.__connections.indexOf(node), 1);
       if (this.__connections.length === 0 && this.__connected) {
         this.disconnectedCallback();
       }
+      return this;
     }
     /**
      * Connected callback.
@@ -246,11 +244,10 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {string} prop - Property to bind to.
      * @return {Binding} Binding object.
      */
-    bind(prop: string) {
+    bind(prop: string): Binding {
       debug:
       if (!this.__properties[prop]) {
         console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
-        return;
       }
       return this.__bindingManager.bind(prop);
     }
