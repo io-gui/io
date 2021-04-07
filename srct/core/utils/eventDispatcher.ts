@@ -1,4 +1,4 @@
-import {ProtoListeners} from '../proto/listeners.js';
+import {ProtoListeners} from '../utils/listeners.js';
 import {Node} from '../node.js';
 
 /**

@@ -26,8 +26,8 @@
 export {Node, NodeMixin} from '../srcj/core/node.js';
 export {IoElement, RegisterIoElement} from '../srcj/core/io-element.js';
 export {Binding} from '../srcj/core/utils/bindingManager.js';
-export {ProtoChain} from '../srcj/core/proto/protoChain.js';
-export {ProtoProperty, ProtoProperties, Property, Properties} from '../srcj/core/properties.js';
+export {ProtoChain} from '../srcj/core/utils/protoChain.js';
+export {ProtoProperty, ProtoProperties, Property, Properties} from '../srcj/core/utils/properties.js';
 
 // MODELS
 export {Item} from './models/item/item.js';

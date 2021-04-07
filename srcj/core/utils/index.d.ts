@@ -5,3 +5,4 @@ export * from './functionBinder.js';
 export * from './listeners.js';
 export * from './properties.js';
 export * from './protoChain.js';
+//# sourceMappingURL=index.d.ts.map

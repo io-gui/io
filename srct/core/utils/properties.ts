@@ -1,5 +1,5 @@
-import {Binding} from './utils/bindingManager.js';
-import {ProtoChain} from './proto/protoChain.js';
+import {Binding} from '../utils/bindingManager.js';
+import {ProtoChain} from './protoChain.js';
 
 type Constructor = new (...args: any[]) => Object;
 

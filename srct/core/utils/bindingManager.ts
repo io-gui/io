@@ -1,6 +1,6 @@
 import {Node} from '../node.js';
 import {ChangeEvent} from './changeQueue.js';
-import {Properties} from '../properties.js';
+import {Properties} from '../utils/properties.js';
 
 /**
  * Binding object. It manages data binding between source and targets using `[property]-changed` events.

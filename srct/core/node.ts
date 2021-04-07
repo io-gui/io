@@ -1,9 +1,9 @@
 import {FunctionBinder} from './utils/functionBinder.js';
 import {BindingManager, Binding} from './utils/bindingManager.js';
 import {ChangeQueue} from './utils/changeQueue.js';
-import {ProtoProperties, Properties} from './properties.js';
+import {ProtoProperties, Properties} from './utils/properties.js';
 import {ProtoListeners, EventDispatcher} from './utils/eventDispatcher.js';
-import {ProtoChain} from './proto/protoChain.js';
+import {ProtoChain} from './utils/protoChain.js';
 
 type Constructor<T extends any> = new (...args: any[]) => T;
 
