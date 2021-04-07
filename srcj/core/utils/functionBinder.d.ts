@@ -1,4 +1,4 @@
-import { ProtoChain } from '../protochain.js';
+import { ProtoChain } from '../proto/protoChain.js';
 import { Node } from '../node.js';
 /**
  * Collection of all functions defined in the prototype chain that start with "on" or "_"

@@ -1,4 +1,4 @@
-import {ProtoChain} from '../protochain.js';
+import {ProtoChain} from '../proto/protoChain.js';
 import {FunctionBinder} from './functionBinder.js';
 
 const string = (object: any) => {

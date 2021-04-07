@@ -23,8 +23,8 @@ export class ChangeQueue {
         this.__changes = [];
         this.__dispatching = false;
         this.__node = node;
-        Object.defineProperty(this, '__node', { enumerable: false });
-        Object.defineProperty(this, '__changes', { enumerable: false });
+        Object.defineProperty(this, '__node', { enumerable: false, writable: false });
+        Object.defineProperty(this, '__changes', { enumerable: false, writable: false });
         Object.defineProperty(this, '__dispatching', { enumerable: false });
     }
     /**

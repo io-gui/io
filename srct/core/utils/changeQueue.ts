@@ -26,8 +26,8 @@ export interface ChangeEvent extends CustomEvent {
  * Property change LIFO queue responsible for dispatching change events and triggering change handler functions.
  */
 export class ChangeQueue {
-  private __node: Node;
-  private __changes: Array<Change> = [];
+  private readonly __node: Node;
+  private readonly __changes: Array<Change> = [];
   private __dispatching: boolean = false;
   /**
    * Creates change queue for the specified `Node`.
@@ -35,8 +35,8 @@ export class ChangeQueue {
    */
   constructor(node: Node) {
     this.__node = node;
-    Object.defineProperty(this, '__node',        {enumerable: false});
-    Object.defineProperty(this, '__changes',     {enumerable: false});
+    Object.defineProperty(this, '__node',        {enumerable: false, writable: false});
+    Object.defineProperty(this, '__changes',     {enumerable: false, writable: false});
     Object.defineProperty(this, '__dispatching', {enumerable: false});
   }
   /**

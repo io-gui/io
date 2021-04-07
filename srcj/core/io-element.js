@@ -1,5 +1,5 @@
 import { NodeMixin, RegisterIoNode } from './node.js';
-import { Listeners } from './listeners.js';
+import { EventDispatcher } from './utils/eventDispatcher.js';
 /**
  * Core `IoElement` class.
  */
@@ -476,11 +476,11 @@ const setNativeElementProps = function (element, props) {
         if (p === 'name')
             element.setAttribute('name', prop); // TODO: Reconsider
     }
-    if (!element.__listeners) {
-        Object.defineProperty(element, '__listeners', { value: new Listeners(element) });
-        element.__listeners.connect();
+    if (!element.__eventDispatcher) {
+        Object.defineProperty(element, '__eventDispatcher', { value: new EventDispatcher(element) });
+        element.__eventDispatcher.connect();
     }
-    element.__listeners.setPropListeners(props, element);
+    element.__eventDispatcher.setPropListeners(props, element);
 };
 const mixinDB = {};
 const commentsRegex = new RegExp('(\\/\\*[\\s\\S]*?\\*\\/)', 'gi');

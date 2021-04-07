@@ -1,6 +1,6 @@
 import {Node, NodeMixin, RegisterIoNode} from './node.js';
-import {Listeners} from './listeners.js';
-import {ProtoChain} from './protochain.js';
+import {EventDispatcher} from './utils/eventDispatcher.js';
+import {ProtoChain} from './proto/protoChain.js';
 
 /**
  * Core `IoElement` class.
@@ -467,11 +467,11 @@ const setNativeElementProps = function(element: HTMLElement, props: any) {
     else if (p !== 'id') (element as any)[p] = prop;
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
   }
-  if (!(element as any).__listeners) {
-    Object.defineProperty(element, '__listeners', {value: new Listeners(element as unknown as Node)});
-    (element as any).__listeners.connect();
+  if (!(element as any).__eventDispatcher) {
+    Object.defineProperty(element, '__eventDispatcher', {value: new EventDispatcher(element as unknown as Node)});
+    (element as any).__eventDispatcher.connect();
   }
-  (element as any).__listeners.setPropListeners(props, element);
+  (element as any).__eventDispatcher.setPropListeners(props, element);
 };
 
 const mixinDB: Record<string, any> = {};

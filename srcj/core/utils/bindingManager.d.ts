@@ -4,10 +4,10 @@ import { Properties } from '../properties.js';
  * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */
 export declare class Binding {
-    private __node;
-    private __property;
-    private __targets;
-    private __targetProperties;
+    private readonly __node;
+    private readonly __property;
+    private readonly __targets;
+    private readonly __targetProperties;
     /**
      * Creates a binding object for specified `node` and `property`.
      */

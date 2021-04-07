@@ -1,4 +1,4 @@
-import { ProtoChain } from './protochain.js';
+import { ProtoChain } from './protoChain.js';
 class Array1 extends Array {
 }
 class Array2 extends Array1 {
@@ -45,4 +45,4 @@ export default class {
         });
     }
 }
-//# sourceMappingURL=protochain.test.js.map
+//# sourceMappingURL=protoChain.test.js.map

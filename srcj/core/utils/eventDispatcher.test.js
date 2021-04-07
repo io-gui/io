@@ -1,4 +1,4 @@
-import { Node, RegisterIoNode } from './node.js';
+import { Node, RegisterIoNode } from '../node.js';
 const string = (object) => {
     return JSON.stringify(object);
 };
@@ -23,7 +23,7 @@ class Node2 extends Node1 {
 RegisterIoNode(Node2);
 export default class {
     run() {
-        describe('Listeners', () => {
+        describe('EventDispatcher', () => {
             describe('ProtoListeners', () => {
                 it('Should include all listeners from protochain', () => {
                     const node = new Node2();
@@ -33,16 +33,16 @@ export default class {
             describe('Listeners', () => {
                 it('Should include all listeners from protochain', () => {
                     const node = new Node2();
-                    chai.expect(string(node.__listeners)).to.be.equal(string({ 'event1': 'handler1', 'event2': 'handler2' }));
+                    chai.expect(string(node.__eventDispatcher)).to.be.equal(string({ 'event1': 'handler1', 'event2': 'handler2' }));
                 });
                 it('Should include all prop listeners in active listeners', () => {
                     const handler4 = function () { };
                     const node = new Node2({ 'on-event3': 'handler3', 'on-event4': handler4 });
                     node.connect();
-                    chai.expect(node.__listeners.activeListeners.event1[0]).to.be.equal(node.handler1);
-                    chai.expect(node.__listeners.activeListeners.event2[0]).to.be.equal(node.handler2);
-                    chai.expect(node.__listeners.activeListeners.event3[0]).to.be.equal(node.handler3);
-                    chai.expect(node.__listeners.activeListeners.event4[0]).to.be.equal(handler4);
+                    chai.expect(node.__eventDispatcher.__activeListeners.event1[0]).to.be.equal(node.handler1);
+                    chai.expect(node.__eventDispatcher.__activeListeners.event2[0]).to.be.equal(node.handler2);
+                    chai.expect(node.__eventDispatcher.__activeListeners.event3[0]).to.be.equal(node.handler3);
+                    chai.expect(node.__eventDispatcher.__activeListeners.event4[0]).to.be.equal(handler4);
                 });
                 // TODO: test multi-listeners
                 // TODO: test listeners on-off
@@ -51,4 +51,4 @@ export default class {
         });
     }
 }
-//# sourceMappingURL=listeners.test.js.map
+//# sourceMappingURL=eventDispatcher.test.js.map

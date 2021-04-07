@@ -1,32 +1,22 @@
-import { ProtoChain } from './protochain.js';
-import { Node } from './node.js';
-declare type PropListeners = Record<string, any>;
+import { ProtoListeners } from '../proto/protoListeners.js';
+import { Node } from '../node.js';
 /**
- * Collection of all listeners defined in the prototype chain.
+ * Event Dispatcher.
  */
-declare class ProtoListeners {
+declare class EventDispatcher {
+    private readonly __node;
+    private readonly __propListeners;
+    private readonly __activeListeners;
+    private __connected;
     /**
-     * Creates a collection of all listeners from protochain.
-     */
-    constructor(protochain: ProtoChain);
-}
-/**
- * Manager of listeners for a class **instance**.
- */
-declare class Listeners {
-    node: Node;
-    propListeners: Record<string, any>;
-    activeListeners: Record<string, any>;
-    __connected: boolean;
-    /**
-     * Creates manager for listener.
+     * Creates Event Dispatcher.
      */
     constructor(node: Node, protoListeners?: ProtoListeners);
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} props - Properties.
      */
-    setPropListeners(props: PropListeners): void;
+    setPropListeners(props: Record<string, any>): void;
     /**
      * Connects all event listeners.
      */
@@ -35,11 +25,6 @@ declare class Listeners {
      * Disconnects all event listeners.
      */
     disconnect(): void;
-    /**
-     * Disconnects all event listeners and removes all references.
-     * Use this when node is no longer needed.
-     */
-    dispose(): void;
     /**
      * Proxy for `addEventListener` method.
      * Adds an event listener.
@@ -54,6 +39,11 @@ declare class Listeners {
      * Shorthand for custom event dispatch.
      */
     dispatchEvent(type: string, detail?: Record<string, any>, bubbles?: boolean, src?: HTMLElement | any): void;
+    /**
+     * Disconnects all event listeners and removes all references.
+     * Use this when node is no longer needed.
+     */
+    dispose(): void;
 }
-export { ProtoListeners, Listeners };
-//# sourceMappingURL=listeners.d.ts.map
+export { ProtoListeners, EventDispatcher };
+//# sourceMappingURL=eventDispatcher.d.ts.map

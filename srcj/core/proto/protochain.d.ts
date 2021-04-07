@@ -4,7 +4,7 @@ declare type Prototype = Object & {
 /**
  * An array of all inherited prototypes in the prototype chain.
  */
-declare class ProtoChain extends Array<Prototype> {
+export declare class ProtoChain extends Array<Prototype> {
     /**
      * Creates an array of inherited prototypes by traversing down the prototype chain of the specified prototype and adds each prototype to itself.
      * It terminates with `HTMLElement`, `Object` or `Array`.
@@ -12,5 +12,5 @@ declare class ProtoChain extends Array<Prototype> {
      */
     constructor(prototype: Prototype);
 }
-export { ProtoChain };
-//# sourceMappingURL=protochain.d.ts.map
+export {};
+//# sourceMappingURL=protoChain.d.ts.map

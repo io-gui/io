@@ -19,8 +19,8 @@ export interface ChangeEvent extends CustomEvent {
  * Property change LIFO queue responsible for dispatching change events and triggering change handler functions.
  */
 export declare class ChangeQueue {
-    private __node;
-    private __changes;
+    private readonly __node;
+    private readonly __changes;
     private __dispatching;
     /**
      * Creates change queue for the specified `Node`.

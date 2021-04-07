@@ -1,50 +1,34 @@
-import {ProtoChain} from './protochain.js';
-import {Node} from './node.js';
-
-type PropListeners = Record<string, any>
+import {ProtoListeners} from '../proto/protoListeners.js';
+import {Node} from '../node.js';
 
 /**
- * Collection of all listeners defined in the prototype chain.
+ * Event Dispatcher.
  */
-class ProtoListeners {
+class EventDispatcher {
+  private readonly __node: Node;
+  private readonly __propListeners: Record<string, any> = {};
+  private readonly __activeListeners: Record<string, any> = {};
+  private __connected: boolean = false;
   /**
-   * Creates a collection of all listeners from protochain.
-   */
-  constructor(protochain: ProtoChain) {
-    for (let i = protochain.length; i--;) {
-      const prop = (protochain[i].constructor as any).Listeners;
-      for (let j in prop) (this as any)[j] = prop[j];
-    }
-  }
-}
-
-/**
- * Manager of listeners for a class **instance**.
- */
-class Listeners {
-  node: Node;
-  propListeners: Record<string, any> = {};
-  activeListeners: Record<string, any> = {};
-  __connected: boolean = false;
-  /**
-   * Creates manager for listener.
+   * Creates Event Dispatcher.
    */
   constructor(node: Node, protoListeners?: ProtoListeners) {
-    this.node = node;
-    Object.defineProperty(this, 'node', {enumerable: false});
-    Object.defineProperty(this, 'propListeners', {enumerable: false});
-    Object.defineProperty(this, 'activeListeners', {enumerable: false});
-    Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
+    this.__node = node;
+    Object.defineProperty(this, '__node',            {enumerable: false, writable: false});
+    Object.defineProperty(this, '__propListeners',   {enumerable: false, writable: false});
+    Object.defineProperty(this, '__activeListeners', {enumerable: false, writable: false});
+    Object.defineProperty(this, '__connected',       {enumerable: false});
+
     for (let prop in protoListeners) (this as any)[prop] = (protoListeners as any)[prop];
   }
   /**
    * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
    * @param {Object} props - Properties.
    */
-  setPropListeners(props: PropListeners) {
+  setPropListeners(props: Record<string, any>) {
     // TODO: Unset propListeners, test.
-    const listeners = this.propListeners;
-    const node = this.node;
+    const listeners = this.__propListeners;
+    const node = this.__node;
     const newListeners: Record<string, any> = {};
     for (let l in props) {
       if (l.startsWith('on-')) newListeners[l.slice(3, l.length)] = props[l];
@@ -76,8 +60,8 @@ class Listeners {
    */
   connect() {
     this.__connected = true;
-    const node = this.node;
-    const listeners = this.propListeners;
+    const node = this.__node;
+    const listeners = this.__propListeners;
     const self = this as any;
     for (let l in this) {
       if (this[l] instanceof Array) {
@@ -101,8 +85,8 @@ class Listeners {
    */
   disconnect() {
     this.__connected = false;
-    const node = this.node;
-    const listeners = this.propListeners;
+    const node = this.__node;
+    const listeners = this.__propListeners;
     const self = this as any;
     for (let l in this) {
       if (self[l] instanceof Array) {
@@ -122,30 +106,15 @@ class Listeners {
     }
   }
   /**
-   * Disconnects all event listeners and removes all references.
-   * Use this when node is no longer needed.
-   */
-  dispose() {
-    // TODO: test
-    this.disconnect();
-    const active = this.activeListeners;
-    for (let i in active) {
-      for (let j = active[i].length; j--;) {
-        if (this.node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.node, i, active[i][j]);
-        active[i].splice(j, 1);
-      }
-    }
-  }
-  /**
    * Proxy for `addEventListener` method.
    * Adds an event listener.
    */
   addEventListener(type: string, listener: any, options?: Record<string, any>) {
-    const active = this.activeListeners;
+    const active = this.__activeListeners;
     active[type] = active[type] || [];
     const i = active[type].indexOf(listener);
     if (i === -1) {
-      if (this.node.__isIoElement) HTMLElement.prototype.addEventListener.call(this.node, type, listener, options);
+      if (this.__node.__isIoElement) HTMLElement.prototype.addEventListener.call(this.__node, type, listener, options);
       active[type].push(listener);
     }
   }
@@ -154,11 +123,11 @@ class Listeners {
    * Removes an event listener.
    */
   removeEventListener(type: string, listener?: any, options?: Record<string, any>) {
-    const active = this.activeListeners;
+    const active = this.__activeListeners;
     if (active[type] !== undefined) {
       const i = active[type].indexOf(listener);
       if (i !== - 1 || listener === undefined) {
-        if (this.node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.node, type, listener, options);
+        if (this.__node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.__node, type, listener, options);
         active[type].splice(i, 1);
       }
     }
@@ -166,12 +135,12 @@ class Listeners {
   /**
    * Shorthand for custom event dispatch.
    */
-  dispatchEvent(type: string, detail: Record<string, any> = {}, bubbles: boolean = true, src: HTMLElement | any = this.node) {
+  dispatchEvent(type: string, detail: Record<string, any> = {}, bubbles: boolean = true, src: HTMLElement | any = this.__node) {
     if (src instanceof HTMLElement || src === window) {
       HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
       // HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {type: type, detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
-      const active = this.activeListeners;
+      const active = this.__activeListeners;
       if (active[type] !== undefined) {
         const array = active[type].slice(0);
         for (let i = 0; i < array.length; i ++) {
@@ -181,6 +150,21 @@ class Listeners {
       }
     }
   }
+  /**
+   * Disconnects all event listeners and removes all references.
+   * Use this when node is no longer needed.
+   */
+  dispose() {
+    // TODO: test
+    this.disconnect();
+    const active = this.__activeListeners;
+    for (let i in active) {
+      for (let j = active[i].length; j--;) {
+        if (this.__node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.__node, i, active[i][j]);
+        active[i].splice(j, 1);
+      }
+    }
+  }
 }
 
-export {ProtoListeners, Listeners};
+export {ProtoListeners, EventDispatcher};

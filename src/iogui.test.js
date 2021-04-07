@@ -8,9 +8,9 @@ import Element from '../srcj/core/io-element.test.js';
 
 import Binding from '../srcj/core/utils/bindingManager.test.js';
 import Functions from '../srcj/core/utils/functionBinder.test.js';
-import Listeners from '../srcj/core/listeners.test.js';
+import EventDispatcher from '../srcj/core/utils/eventDispatcher.test.js';
 import Properties from '../srcj/core/properties.test.js';
-import ProtoChain from '../srcj/core/protochain.test.js';
+import ProtoChain from '../srcj/core/proto/protoChain.test.js';
 import ChangeQueue from '../srcj/core/utils/changeQueue.test.js';
 
 import Item from './elements/core/item.test.js';
@@ -53,7 +53,7 @@ function runTests() {
     new ProtoChain().run();
     new Binding().run();
     new ChangeQueue().run();
-    new Listeners().run();
+    new EventDispatcher().run();
     new Functions().run();
 
     new Node().run();

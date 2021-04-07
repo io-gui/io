@@ -6,20 +6,20 @@ import {Properties} from '../properties.js';
  * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */
 export class Binding {
-  private __node: Node;
-  private __property: string = '';
-  private __targets: Array<EventTarget> = [];
-  private __targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
+  private readonly __node: Node;
+  private readonly __property: string = '';
+  private readonly __targets: Array<EventTarget> = [];
+  private readonly __targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
   /**
    * Creates a binding object for specified `node` and `property`.
    */
   constructor(node: Node, property: string) {
     this.__node = node;
     this.__property = property;
-    Object.defineProperty(this, '__node',             {enumerable: false});
-    Object.defineProperty(this, '__property',         {enumerable: false});
-    Object.defineProperty(this, '__targets',          {enumerable: false});
-    Object.defineProperty(this, '__targetProperties', {enumerable: false});
+    Object.defineProperty(this, '__node',             {enumerable: false, writable: false});
+    Object.defineProperty(this, '__property',         {enumerable: false, writable: false});
+    Object.defineProperty(this, '__targets',          {enumerable: false, writable: false});
+    Object.defineProperty(this, '__targetProperties', {enumerable: false, writable: false});
     this._onTargetChanged = this._onTargetChanged.bind(this);
     this._onSourceChanged = this._onSourceChanged.bind(this);
     this.__node.addEventListener(`${this.__property}-changed`, this._onSourceChanged);

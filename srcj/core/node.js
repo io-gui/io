@@ -1,9 +1,9 @@
-import { ProtoChain } from './protochain.js';
 import { FunctionBinder } from './utils/functionBinder.js';
 import { BindingManager, Binding } from './utils/bindingManager.js';
 import { ChangeQueue } from './utils/changeQueue.js';
 import { ProtoProperties, Properties } from './properties.js';
-import { ProtoListeners, Listeners } from './listeners.js';
+import { ProtoListeners, EventDispatcher } from './utils/eventDispatcher.js';
+import { ProtoChain } from './proto/protoChain.js';
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -39,14 +39,16 @@ function NodeMixin(superclass) {
         */
         constructor(initProps = {}, ...args) {
             super(...args);
-            const constructor = this.__proto__.constructor;
-            if (constructor.__registeredAs !== constructor.name) {
-                console.error(`${constructor.name} not registered! Call "Register()" before using ${constructor.name} class!`);
+            debug: {
+                const constructor = this.__proto__.constructor;
+                if (constructor.__registeredAs !== constructor.name) {
+                    console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
+                }
             }
             this.__functionBinder.bind(this);
             Object.defineProperty(this, '__bindingManager', { enumerable: false, value: new BindingManager(this) });
             Object.defineProperty(this, '__changeQueue', { enumerable: false, value: new ChangeQueue(this) });
-            Object.defineProperty(this, '__listeners', { enumerable: false, value: new Listeners(this, this.__protoListeners) });
+            Object.defineProperty(this, '__eventDispatcher', { enumerable: false, value: new EventDispatcher(this, this.__protoListeners) });
             Object.defineProperty(this, '__properties', { enumerable: false, value: new Properties(this, this.__protoProperties) });
             Object.defineProperty(this, 'objectMutated', { enumerable: false, value: this.objectMutated.bind(this) });
             Object.defineProperty(this, 'objectMutatedThrottled', { enumerable: false, value: this.objectMutatedThrottled.bind(this) });
@@ -96,7 +98,7 @@ function NodeMixin(superclass) {
          */
         connectedCallback() {
             this.__connected = true;
-            this.__listeners.connect();
+            this.__eventDispatcher.connect();
             this.__properties.connect();
             if (this.__observedObjects.length) {
                 window.addEventListener('object-mutated', this.objectMutated);
@@ -108,7 +110,7 @@ function NodeMixin(superclass) {
          */
         disconnectedCallback() {
             this.__connected = false;
-            this.__listeners.disconnect();
+            this.__eventDispatcher.disconnect();
             this.__properties.disconnect();
             if (this.__observedObjects.length) {
                 window.removeEventListener('object-mutated', this.objectMutated);
@@ -123,7 +125,7 @@ function NodeMixin(superclass) {
             this.__connections.length = 0;
             this.__changeQueue.dispose();
             this.__bindingManager.dispose();
-            this.__listeners.dispose();
+            this.__eventDispatcher.dispose();
             this.__properties.dispose();
             if (this.__observedObjects.length) {
                 window.removeEventListener('object-mutated', this.objectMutated);
@@ -272,7 +274,7 @@ function NodeMixin(superclass) {
                 }
                 this.__properties.set(p, props[p], true);
             }
-            this.__listeners.setPropListeners(props, this);
+            this.__eventDispatcher.setPropListeners(props, this);
             if (this.__connected)
                 this.queueDispatch();
         }
@@ -287,7 +289,7 @@ function NodeMixin(superclass) {
                 console.warn(`${this.constructor.name}.${type}() is not a function`, this);
                 return;
             }
-            this.__listeners.addEventListener(type, listener, options);
+            this.__eventDispatcher.addEventListener(type, listener, options);
         }
         /**
          * Wrapper for removeEventListener.
@@ -296,7 +298,7 @@ function NodeMixin(superclass) {
          * @param {Object} options - event listener options.
          */
         removeEventListener(type, listener, options) {
-            this.__listeners.removeEventListener(type, listener, options);
+            this.__eventDispatcher.removeEventListener(type, listener, options);
         }
         /**
          * Wrapper for dispatchEvent.
@@ -306,7 +308,7 @@ function NodeMixin(superclass) {
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
         dispatchEvent(type, detail, bubbles = false, src) {
-            this.__listeners.dispatchEvent(type, detail, bubbles, src);
+            this.__eventDispatcher.dispatchEvent(type, detail, bubbles, src);
         }
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
