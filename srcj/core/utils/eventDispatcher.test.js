@@ -1,7 +1,4 @@
 import { Node, RegisterIoNode } from '../node.js';
-const string = (object) => {
-    return JSON.stringify(object);
-};
 class Node1 extends Node {
     static get Listeners() {
         return {
@@ -27,18 +24,17 @@ export default class {
             describe('ProtoListeners', () => {
                 it('Should include all listeners from protochain', () => {
                     const node = new Node2();
-                    chai.expect(string(node.__protoListeners)).to.be.equal(string({ 'event1': 'handler1', 'event2': 'handler2' }));
+                    chai.expect(JSON.stringify(node.__protoListeners)).to.be.equal(JSON.stringify({ 'event1': 'handler1', 'event2': 'handler2' }));
                 });
             });
             describe('Listeners', () => {
                 it('Should include all listeners from protochain', () => {
                     const node = new Node2();
-                    chai.expect(string(node.__eventDispatcher)).to.be.equal(string({ 'event1': 'handler1', 'event2': 'handler2' }));
+                    chai.expect(JSON.stringify(node.__protoListeners)).to.be.equal(JSON.stringify({ 'event1': 'handler1', 'event2': 'handler2' }));
                 });
                 it('Should include all prop listeners in active listeners', () => {
                     const handler4 = function () { };
-                    const node = new Node2({ 'on-event3': 'handler3', 'on-event4': handler4 });
-                    node.connect();
+                    const node = new Node2({ 'on-event3': 'handler3', 'on-event4': handler4 }).connect();
                     chai.expect(node.__eventDispatcher.__activeListeners.event1[0]).to.be.equal(node.handler1);
                     chai.expect(node.__eventDispatcher.__activeListeners.event2[0]).to.be.equal(node.handler2);
                     chai.expect(node.__eventDispatcher.__activeListeners.event3[0]).to.be.equal(node.handler3);

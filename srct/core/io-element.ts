@@ -1,6 +1,7 @@
+import {ProtoChain} from './utils/protoChain.js';
 import {Node, NodeMixin, RegisterIoNode} from './node.js';
 import {EventDispatcher} from './utils/eventDispatcher.js';
-import {ProtoChain} from './utils/protoChain.js';
+// import {Listeners} from './utils/listeners.js';
 
 /**
  * Core `IoElement` class.

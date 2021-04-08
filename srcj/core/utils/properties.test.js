@@ -1,6 +1,6 @@
 import { Node, RegisterIoNode } from '../node.js';
 import { IoElement, RegisterIoElement } from '../io-element.js';
-import { Binding } from '../utils/bindingManager.js';
+import { Binding } from './bindingManager.js';
 import { ProtoChain } from './protoChain.js';
 import { ProtoProperty, ProtoProperties, Property } from './properties.js';
 const string = (object) => {

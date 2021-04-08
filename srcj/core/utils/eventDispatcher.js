@@ -1,4 +1,3 @@
-import { ProtoListeners } from '../utils/listeners.js';
 /**
  * Event Dispatcher.
  */
@@ -6,7 +5,7 @@ class EventDispatcher {
     /**
      * Creates Event Dispatcher.
      */
-    constructor(node, protoListeners) {
+    constructor(node) {
         this.__propListeners = {};
         this.__activeListeners = {};
         this.__connected = false;
@@ -15,8 +14,6 @@ class EventDispatcher {
         Object.defineProperty(this, '__propListeners', { enumerable: false, writable: false });
         Object.defineProperty(this, '__activeListeners', { enumerable: false, writable: false });
         Object.defineProperty(this, '__connected', { enumerable: false });
-        for (let prop in protoListeners)
-            this[prop] = protoListeners[prop];
     }
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
@@ -61,16 +58,16 @@ class EventDispatcher {
     connect() {
         this.__connected = true;
         const node = this.__node;
-        const listeners = this.__propListeners;
-        const self = this;
-        for (let l in this) {
-            if (this[l] instanceof Array) {
-                this.addEventListener(l, node[self[l][0]], self[l][1]);
+        const protoListeners = node.__protoListeners;
+        for (let l in protoListeners) {
+            if (protoListeners[l] instanceof Array) {
+                this.addEventListener(l, node[protoListeners[l][0]], protoListeners[l][1]);
             }
             else {
-                this.addEventListener(l, node[self[l]]);
+                this.addEventListener(l, node[protoListeners[l]]);
             }
         }
+        const listeners = this.__propListeners;
         for (let l in listeners) {
             if (listeners[l] instanceof Array) {
                 const listener = typeof listeners[l][0] === 'function' ? listeners[l][0] : node[listeners[l][0]];
@@ -88,16 +85,16 @@ class EventDispatcher {
     disconnect() {
         this.__connected = false;
         const node = this.__node;
-        const listeners = this.__propListeners;
-        const self = this;
-        for (let l in this) {
-            if (self[l] instanceof Array) {
-                this.removeEventListener(l, node[self[l][0]], self[l][1]);
+        const protoListeners = node.__protoListeners;
+        for (let l in protoListeners) {
+            if (protoListeners[l] instanceof Array) {
+                this.removeEventListener(l, node[protoListeners[l][0]], protoListeners[l][1]);
             }
             else {
-                this.removeEventListener(l, node[self[l]]);
+                this.removeEventListener(l, node[protoListeners[l]]);
             }
         }
+        const listeners = this.__propListeners;
         for (let l in listeners) {
             if (listeners[l] instanceof Array) {
                 const listener = typeof listeners[l][0] === 'function' ? listeners[l][0] : node[listeners[l][0]];
@@ -174,5 +171,5 @@ class EventDispatcher {
         }
     }
 }
-export { ProtoListeners, EventDispatcher };
+export { EventDispatcher };
 //# sourceMappingURL=eventDispatcher.js.map

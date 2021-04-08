@@ -1,4 +1,4 @@
-import {Binding} from '../utils/bindingManager.js';
+import {Binding} from './bindingManager.js';
 import {ProtoChain} from './protoChain.js';
 
 type Constructor = new (...args: any[]) => Object;

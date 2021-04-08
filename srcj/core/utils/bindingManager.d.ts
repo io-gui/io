@@ -1,5 +1,5 @@
 import { Node } from '../node.js';
-import { Properties } from '../utils/properties.js';
+import { Properties } from './properties.js';
 /**
  * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */

@@ -1,4 +1,3 @@
-import { ProtoListeners } from '../utils/listeners.js';
 import { Node } from '../node.js';
 /**
  * Event Dispatcher.
@@ -11,7 +10,7 @@ declare class EventDispatcher {
     /**
      * Creates Event Dispatcher.
      */
-    constructor(node: Node, protoListeners?: ProtoListeners);
+    constructor(node: Node);
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} props - Properties.
@@ -45,5 +44,5 @@ declare class EventDispatcher {
      */
     dispose(): void;
 }
-export { ProtoListeners, EventDispatcher };
+export { EventDispatcher };
 //# sourceMappingURL=eventDispatcher.d.ts.map

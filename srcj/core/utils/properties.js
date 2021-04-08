@@ -1,4 +1,4 @@
-import { Binding } from '../utils/bindingManager.js';
+import { Binding } from './bindingManager.js';
 /**
  * Property configuration object for a class **prototype**.
  * It is generated from property definitions in `static get Properties()` return object.

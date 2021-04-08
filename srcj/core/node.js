@@ -1,9 +1,10 @@
+import { ProtoChain } from './utils/protoChain.js';
 import { FunctionBinder } from './utils/functionBinder.js';
 import { BindingManager, Binding } from './utils/bindingManager.js';
 import { ChangeQueue } from './utils/changeQueue.js';
 import { ProtoProperties, Properties } from './utils/properties.js';
-import { ProtoListeners, EventDispatcher } from './utils/eventDispatcher.js';
-import { ProtoChain } from './utils/protoChain.js';
+import { ProtoListeners } from './utils/listeners.js';
+import { EventDispatcher } from './utils/eventDispatcher.js';
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -35,9 +36,9 @@ function NodeMixin(superclass) {
         }
         /**
         * Creates a class instance and initializes the internals.
-        * @param {Object} initProps - Initial property values.
+        * @param {Object} properties - Initial property values.
         */
-        constructor(initProps = {}, ...args) {
+        constructor(properties = {}, ...args) {
             super(...args);
             debug: {
                 const constructor = this.__proto__.constructor;
@@ -48,7 +49,7 @@ function NodeMixin(superclass) {
             this.__functionBinder.bind(this);
             Object.defineProperty(this, '__bindingManager', { enumerable: false, value: new BindingManager(this) });
             Object.defineProperty(this, '__changeQueue', { enumerable: false, value: new ChangeQueue(this) });
-            Object.defineProperty(this, '__eventDispatcher', { enumerable: false, value: new EventDispatcher(this, this.__protoListeners) });
+            Object.defineProperty(this, '__eventDispatcher', { enumerable: false, value: new EventDispatcher(this) });
             Object.defineProperty(this, '__properties', { enumerable: false, value: new Properties(this, this.__protoProperties) });
             Object.defineProperty(this, 'objectMutated', { enumerable: false, value: this.objectMutated.bind(this) });
             Object.defineProperty(this, 'objectMutatedThrottled', { enumerable: false, value: this.objectMutatedThrottled.bind(this) });
@@ -58,7 +59,7 @@ function NodeMixin(superclass) {
             if (!this.__proto__.__isIoElement) {
                 Object.defineProperty(this, '__connections', { enumerable: false, value: [] });
             }
-            this.setProperties(initProps);
+            this.setProperties(properties);
         }
         /**
          * Connects the instance to another node or element.
@@ -150,6 +151,7 @@ function NodeMixin(superclass) {
                     }
                     const object = this.__properties[prop].value;
                     if (object.__isNode) {
+                        // TODO: make sure composed and declarative listeners are working together
                         object.setProperties(compose[prop]);
                     }
                     else {
@@ -423,8 +425,8 @@ function NodeMixin(superclass) {
  * Register function to be called once per class.
  */
 const RegisterIoNode = function (node) {
-    const protochain = new ProtoChain(node.prototype);
-    let proto = node.prototype;
+    const proto = node.prototype;
+    const protochain = new ProtoChain(proto);
     Object.defineProperty(proto, '__isNode', { value: true });
     Object.defineProperty(proto.constructor, '__registeredAs', { value: proto.constructor.name });
     Object.defineProperty(proto, '__protochain', { value: protochain });

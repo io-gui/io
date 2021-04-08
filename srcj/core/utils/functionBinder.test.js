@@ -1,8 +1,5 @@
-import { ProtoChain } from '../utils/protoChain.js';
+import { ProtoChain } from './protoChain.js';
 import { FunctionBinder } from './functionBinder.js';
-const string = (object) => {
-    return JSON.stringify(object);
-};
 class Node1 {
     function1() { }
     onFunction1() { }
@@ -19,7 +16,7 @@ export default class {
             it('Should include all functions starting with "on" or "_"', () => {
                 const protoChain = new ProtoChain(Node2.prototype);
                 const functionBinder = new FunctionBinder(protoChain);
-                chai.expect(string(functionBinder)).to.be.equal(string(['onFunction1', '_function1', 'onFunction2', '_function2']));
+                chai.expect(JSON.stringify(functionBinder)).to.be.equal(JSON.stringify(['onFunction1', '_function1', 'onFunction2', '_function2']));
             });
             it('Should bind all "on" and "_" functions to `this` with `.bind()`', () => {
                 const protoChain = new ProtoChain(Node2.prototype);

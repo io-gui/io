@@ -9,7 +9,7 @@ import Element from '../srcj/core/io-element.test.js';
 import Binding from '../srcj/core/utils/bindingManager.test.js';
 import Functions from '../srcj/core/utils/functionBinder.test.js';
 import EventDispatcher from '../srcj/core/utils/eventDispatcher.test.js';
-import Properties from '../srcj/core/properties.test.js';
+import Properties from '../srcj/core/utils/properties.test.js';
 import ProtoChain from '../srcj/core/utils/protoChain.test.js';
 import ChangeQueue from '../srcj/core/utils/changeQueue.test.js';
 

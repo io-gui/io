@@ -1,4 +1,4 @@
-import {ProtoChain} from '../utils/protoChain.js';
+import {ProtoChain} from './protoChain.js';
 import {Node} from '../node.js';
 
 /**
