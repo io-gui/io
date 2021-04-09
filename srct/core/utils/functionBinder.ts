@@ -12,16 +12,15 @@ class FunctionBinder extends Array<string> {
   constructor(protochain: ProtoChain) {
     super();
     for (let i = protochain.length; i--;) {
-      const constructor = protochain[i];
-      type ConstructorType = typeof constructor;
+      const constructor = (protochain[i] as any).prototype as any;
       const names = Object.getOwnPropertyNames(constructor);
       for (let j = 0; j < names.length; j++) {
-        const fname = names[j] as keyof ConstructorType;
+        const fname = names[j] as string;
         if (fname === 'constructor') continue;
         const p = Object.getOwnPropertyDescriptor(constructor, fname);
         if (p === undefined || p.get || p.set) continue;
         if (typeof constructor[fname] === 'function') {
-          if (this.indexOf(fname) === -1 && ((fname as string).startsWith('_') || (fname as string).startsWith('on'))) {
+          if (this.indexOf(fname) === -1 && (fname.startsWith('_') || fname.startsWith('on'))) {
             this.push(fname);
           }
         }

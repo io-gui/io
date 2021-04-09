@@ -5,7 +5,7 @@ import {Binding} from '../../../srcj/core/utils/bindingManager.js';
 export class Config {
     constructor(prototypes) {
       for (let i = 0; i < prototypes.length; i++) {
-        this.registerConfig(prototypes[i].constructor.Config || {});
+        this.registerConfig(prototypes[i].Config || {});
       }
     }
     registerConfig(config) {

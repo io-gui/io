@@ -344,7 +344,7 @@ export default class {
             }
           }
 
-          const protochain = new ProtoChain(Object2.prototype);
+          const protochain = new ProtoChain(Object2);
           const props = new ProtoProperties(protochain) as any;
 
           chai.expect(props.prop1.type).to.be.equal(String);

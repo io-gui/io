@@ -117,7 +117,7 @@ class ProtoProperties {
     constructor(protochain) {
         const self = this;
         for (let i = protochain.length; i--;) {
-            const props = protochain[i].constructor.Properties;
+            const props = protochain[i].Properties;
             for (let p in props) {
                 if (!self[p])
                     self[p] = new ProtoProperty(props[p]);

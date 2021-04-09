@@ -1,16 +1,23 @@
+import { ProtoChain } from './protoChain.js';
 import { Node } from '../node.js';
+declare type ListenerArrayType = [string | Function, CustomEventInit | undefined];
+export declare class ProtoListeners {
+    [listener: string]: ListenerArrayType;
+    constructor(protochain: ProtoChain);
+}
 /**
  * Event Dispatcher.
  */
 declare class EventDispatcher {
     private readonly __node;
-    private readonly __propListeners;
-    private readonly __activeListeners;
+    private __protoListeners;
+    private __propListeners;
+    private __activeListeners;
     private __connected;
     /**
      * Creates Event Dispatcher.
      */
-    constructor(node: Node);
+    constructor(node: Node, protoListeners: ProtoListeners);
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} props - Properties.

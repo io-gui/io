@@ -469,7 +469,7 @@ const setNativeElementProps = function(element: HTMLElement, props: any) {
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
   }
   if (!(element as any).__eventDispatcher) {
-    Object.defineProperty(element, '__eventDispatcher', {value: new EventDispatcher(element as unknown as Node)});
+    Object.defineProperty(element, '__eventDispatcher', {value: new EventDispatcher(element as unknown as Node, {})});
     (element as any).__eventDispatcher.connect();
   }
   (element as any).__eventDispatcher.setPropListeners(props, element);
@@ -486,13 +486,13 @@ const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\
 
 // Creates a `<style>` element for all `static get Style()` return strings.
 function _initProtoStyle(prototypes: ProtoChain) {
-  const localName = prototypes[0].constructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  const localName = (prototypes[0] as any).name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   const styleID = 'io-style-' + localName.replace('io-', '');
 
   let finalStyleString = '';
 
   // Convert mixins to classes
-  let styleString = (prototypes[0].constructor as any).Style;
+  let styleString = (prototypes[0] as any).Style;
 
   if (styleString) {
     const mixins = styleString.match(mixinRegex);
@@ -507,7 +507,7 @@ function _initProtoStyle(prototypes: ProtoChain) {
     }
 
     for (let i = prototypes.length; i--;) {
-      let styleString = (prototypes[i].constructor as any).Style;
+      let styleString = (prototypes[i] as any).Style;
       if (styleString) {
         // Remove mixins
         styleString = styleString.replace(mixinRegex, '');

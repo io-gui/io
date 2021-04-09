@@ -1,21 +1,42 @@
+import {ProtoChain} from './protoChain.js';
 import {Node} from '../node.js';
+
+// type ActiveListenerType = [Function, CustomEventInit | undefined];
+type ListenerArrayType = [string | Function, CustomEventInit | undefined];
+type ListenerType = string | Function | ListenerArrayType;
+
+ export class ProtoListeners {
+  [listener: string]: ListenerArrayType;
+  constructor(protochain: ProtoChain) {
+    for (let i = protochain.length; i--;) {
+      const listeners = (protochain[i] as any).Listeners as Record<string, ListenerType>;
+      for (let l in listeners) {
+        const listener = (listeners[l] instanceof Array) ? listeners[l] :[listeners[l]];
+        this[l] = listener as ListenerArrayType;
+      }
+    }
+  }
+}
 
 /**
  * Event Dispatcher.
  */
 class EventDispatcher {
   private readonly __node: Node;
-  private readonly __propListeners: Record<string, any> = {};
-  private readonly __activeListeners: Record<string, any> = {};
+  private __protoListeners: ProtoListeners;
+  private __propListeners: Record<string, any> = {};
+  private __activeListeners: Record<string, any> = {};
   private __connected: boolean = false;
   /**
    * Creates Event Dispatcher.
    */
-  constructor(node: Node) {
+  constructor(node: Node, protoListeners: ProtoListeners) {
     this.__node = node;
+    this.__protoListeners = protoListeners;
     Object.defineProperty(this, '__node',            {enumerable: false, writable: false});
-    Object.defineProperty(this, '__propListeners',   {enumerable: false, writable: false});
-    Object.defineProperty(this, '__activeListeners', {enumerable: false, writable: false});
+    Object.defineProperty(this, '__protoListeners',  {enumerable: false});
+    Object.defineProperty(this, '__propListeners',   {enumerable: false});
+    Object.defineProperty(this, '__activeListeners', {enumerable: false});
     Object.defineProperty(this, '__connected',       {enumerable: false});
   }
   /**
@@ -56,16 +77,13 @@ class EventDispatcher {
    * Connects all event listeners.
    */
   connect() {
+    debug: { if (this.__connected) console.error('EventDispatcher: already connected!') }
     this.__connected = true;
     const node = this.__node;
 
-    const protoListeners = node.__protoListeners as any;
+    const protoListeners = this.__protoListeners as any;
     for (let l in protoListeners) {
-      if (protoListeners[l] instanceof Array) {
-        this.addEventListener(l, node[protoListeners[l][0]], protoListeners[l][1]);
-      } else {
-        this.addEventListener(l, node[protoListeners[l]]);
-      }
+      this.addEventListener(l, node[protoListeners[l][0]], protoListeners[l][1]);
     }
 
     const listeners = this.__propListeners;
@@ -83,16 +101,13 @@ class EventDispatcher {
    * Disconnects all event listeners.
    */
   disconnect() {
+    debug: { if (!this.__connected) console.error('EventDispatcher: already disconnected!') }
     this.__connected = false;
     const node = this.__node;
     
-    const protoListeners = node.__protoListeners as any;
+    const protoListeners = this.__protoListeners as any;
     for (let l in protoListeners) {
-      if (protoListeners[l] instanceof Array) {
-        this.removeEventListener(l, node[protoListeners[l][0]], protoListeners[l][1]);
-      } else {
-        this.removeEventListener(l, node[protoListeners[l]]);
-      }
+      this.removeEventListener(l, node[protoListeners[l][0]], protoListeners[l][1]);
     }
 
     const listeners = this.__propListeners;
@@ -105,6 +120,15 @@ class EventDispatcher {
         this.removeEventListener(l, listener);
       }
     }
+
+    // TODO: sort out!
+    // const active = this.__activeListeners;
+    // for (let i in active) {
+    //   for (let j = active[i].length; j--;) {
+    //     if (this.__node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.__node, i, active[i][j]);
+    //     active[i].splice(j, 1);
+    //   }
+    // }
   }
   /**
    * Proxy for `addEventListener` method.
@@ -157,14 +181,7 @@ class EventDispatcher {
    */
   dispose() {
     // TODO: test
-    this.disconnect();
-    const active = this.__activeListeners;
-    for (let i in active) {
-      for (let j = active[i].length; j--;) {
-        if (this.__node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.__node, i, active[i][j]);
-        active[i].splice(j, 1);
-      }
-    }
+    if (this.__connected) this.disconnect();
   }
 }
 

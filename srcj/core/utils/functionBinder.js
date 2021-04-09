@@ -9,7 +9,7 @@ class FunctionBinder extends Array {
     constructor(protochain) {
         super();
         for (let i = protochain.length; i--;) {
-            const constructor = protochain[i];
+            const constructor = protochain[i].prototype;
             const names = Object.getOwnPropertyNames(constructor);
             for (let j = 0; j < names.length; j++) {
                 const fname = names[j];

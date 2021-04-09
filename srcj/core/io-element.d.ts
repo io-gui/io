@@ -3,8 +3,8 @@ declare const IoElement_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
         readonly compose: null;
-        connect(node?: HTMLElement | Node | Window | Document): any;
-        disconnect(node?: HTMLElement | Node | Window | Document): any;
+        connect(node?: Node | HTMLElement | Document | Window): any;
+        disconnect(node?: Node | HTMLElement | Document | Window): any;
         connectedCallback(): void;
         disconnectedCallback(): void;
         dispose(): void;
@@ -12,7 +12,11 @@ declare const IoElement_base: {
         applyCompose(): void;
         queue(prop: string, value: any, oldValue: any): void;
         queueDispatch(): void;
-        queueDispatchLazy(): void;
+        queueDispatchLazy(): void; /**
+         * Alias for HTMLElement setAttribute where falsey values remove the attribute.
+         * @param {string} attr - Attribute name.
+         * @param {*} value - Attribute value.
+         */
         objectMutated(event: CustomEvent<any>): void;
         objectMutatedThrottled(prop: string): void;
         bind(prop: string): import("./utils/bindingManager.js").Binding;
@@ -21,7 +25,7 @@ declare const IoElement_base: {
         setProperties(props: any): void;
         addEventListener(type: string, listener: Function, options?: any): void;
         removeEventListener(type: string, listener?: Function | undefined, options?: any): void;
-        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window | undefined): void;
         throttle(func: Function, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: Function): void;
         filterObject(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;

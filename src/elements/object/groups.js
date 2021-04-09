@@ -1,7 +1,7 @@
 export class Groups {
     constructor(prototypes) {
       for (let i = 0; i < prototypes.length; i++) {
-        this.registerGroups(prototypes[i].constructor.Groups || {});
+        this.registerGroups(prototypes[i].Groups || {});
       }
     }
     registerGroups(groups) {
@@ -33,7 +33,7 @@ export class Groups {
               if (typeof propName == 'string' && propName.startsWith('constructor:')) {
                 const constructorName = propName.replace('constructor:', '');
                 for (let k = 0; k < keys.length; k++) {
-                  if (object[keys[k]] && object[keys[k]].constructor.name == constructorName) {
+                  if (object[keys[k]] && object[keys[k]].name == constructorName) {
                     protoGroups[grp[1][0]].push(keys[k]);
                   }
                 }

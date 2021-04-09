@@ -155,7 +155,7 @@ export class IoGl extends IoElement {
     }
 
     for (let i = this.__protochain.length; i--;) {
-      const constructor = this.__protochain[i].constructor;
+      const constructor = this.__protochain[i];
       const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
       if (glUtilsProp && glUtilsProp.get) {
         frag += constructor.GlUtils;

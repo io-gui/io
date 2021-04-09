@@ -1,5 +1,5 @@
 import { Node, RegisterIoNode } from '../node.js';
-class Node1 extends Node {
+class Node11 extends Node {
     static get Listeners() {
         return {
             'event1': 'handler1',
@@ -7,8 +7,8 @@ class Node1 extends Node {
     }
     handler1() { }
 }
-RegisterIoNode(Node1);
-class Node2 extends Node1 {
+RegisterIoNode(Node11);
+class Node2 extends Node11 {
     static get Listeners() {
         return {
             'event2': 'handler2',
@@ -24,13 +24,13 @@ export default class {
             describe('ProtoListeners', () => {
                 it('Should include all listeners from protochain', () => {
                     const node = new Node2();
-                    chai.expect(JSON.stringify(node.__protoListeners)).to.be.equal(JSON.stringify({ 'event1': 'handler1', 'event2': 'handler2' }));
+                    chai.expect(JSON.stringify(node.__protoListeners)).to.be.equal(JSON.stringify({ 'event1': ['handler1'], 'event2': ['handler2'] }));
                 });
             });
             describe('Listeners', () => {
                 it('Should include all listeners from protochain', () => {
                     const node = new Node2();
-                    chai.expect(JSON.stringify(node.__protoListeners)).to.be.equal(JSON.stringify({ 'event1': 'handler1', 'event2': 'handler2' }));
+                    chai.expect(JSON.stringify(node.__protoListeners)).to.be.equal(JSON.stringify({ 'event1': ['handler1'], 'event2': ['handler2'] }));
                 });
                 it('Should include all prop listeners in active listeners', () => {
                     const handler4 = function () { };
@@ -47,4 +47,38 @@ export default class {
         });
     }
 }
+//TODO
+// import {ProtoChain} from './protoChain.js';
+// import {ProtoListeners} from './listeners';
+// class Object1 {}
+// class Object2 extends Object1 {}
+// class Object3 extends Object2 {}
+// export default class {
+//   run() {
+//     describe('ProtoChain', () => {
+//       it('Should have all prototypes from the inheritance chain', () => {
+//         let protochain = new ProtoChain(Object3);
+//         // chai.expect(protochain[0]).to.be.equal(Array3);
+//         // chai.expect(protochain[1]).to.be.equal(Array2);
+//         // chai.expect(protochain[2]).to.be.equal(Array1);
+//         // protochain = new ProtoChain(Object3);
+//         // chai.expect(protochain[0]).to.be.equal(Object3);
+//         // chai.expect(protochain[1]).to.be.equal(Object2);
+//         // chai.expect(protochain[2]).to.be.equal(Object1);
+//         // protochain = new ProtoChain(HTMLElement3);
+//         // chai.expect(protochain[0]).to.be.equal(HTMLElement3);
+//         // chai.expect(protochain[1]).to.be.equal(HTMLElement2);
+//         // chai.expect(protochain[2]).to.be.equal(HTMLElement1);
+//       });
+//       // it('Should terminate at `HTMLElementElement`, `Object` or `Array`', () => {
+//       //   let protochain = new ProtoChain(Array3);
+//       //   chai.expect(protochain[3]).to.be.equal(undefined);
+//       //   protochain = new ProtoChain(Object3);
+//       //   chai.expect(protochain[3]).to.be.equal(undefined);
+//       //   protochain = new ProtoChain(HTMLElement3);
+//       //   chai.expect(protochain[3]).to.be.equal(undefined);
+//       // });
+//     });
+//   }
+// }
 //# sourceMappingURL=eventDispatcher.test.js.map

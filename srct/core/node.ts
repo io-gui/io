@@ -4,9 +4,7 @@ import {BindingManager, Binding} from './utils/bindingManager.js';
 import {ChangeQueue} from './utils/changeQueue.js';
 
 import {ProtoProperties, Properties} from './utils/properties.js';
-import {ProtoListeners} from './utils/listeners.js';
-
-import {EventDispatcher} from './utils/eventDispatcher.js';
+import {EventDispatcher, ProtoListeners} from './utils/eventDispatcher.js';
 
 type Constructor<T extends any> = new (...args: any[]) => T;
 
@@ -63,8 +61,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
       Object.defineProperty(this, '__bindingManager', {enumerable: false, value: new BindingManager(this)});
       Object.defineProperty(this, '__changeQueue', {enumerable: false, value: new ChangeQueue(this)});
 
-      Object.defineProperty(this, '__eventDispatcher', {enumerable: false, value: new EventDispatcher(this)});
-
+      Object.defineProperty(this, '__eventDispatcher', {enumerable: false, value: new EventDispatcher(this, this.__protoListeners)});
       Object.defineProperty(this, '__properties', {enumerable: false, value: new Properties(this, this.__protoProperties)});
 
       Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
@@ -431,9 +428,9 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
  * Register function to be called once per class.
  */
 const RegisterIoNode = function (node: typeof Node) {
+  const protochain = new ProtoChain(node);
+  
   const proto = node.prototype;
-  const protochain = new ProtoChain(proto);
-
   Object.defineProperty(proto, '__isNode', {value: true});
   Object.defineProperty(proto.constructor, '__registeredAs', {value: proto.constructor.name});
 

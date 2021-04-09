@@ -1,7 +1,7 @@
 export class Widgets {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {
-      this.registerWidgets(prototypes[i].constructor.Widgets || {});
+      this.registerWidgets(prototypes[i].Widgets || {});
     }
   }
   registerWidgets(widgets) {

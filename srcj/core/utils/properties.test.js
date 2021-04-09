@@ -309,7 +309,7 @@ export default class {
                             };
                         }
                     }
-                    const protochain = new ProtoChain(Object2.prototype);
+                    const protochain = new ProtoChain(Object2);
                     const props = new ProtoProperties(protochain);
                     chai.expect(props.prop1.type).to.be.equal(String);
                     chai.expect(props.prop1.notify).to.be.equal(false);
