@@ -305,7 +305,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {function} listener - listener handler.
      * @param {Object} options - event listener options.
      */
-    addEventListener(type: string, listener: Function, options?: any) {
+    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions) {
       debug:
       if (typeof listener !== 'function') {
         console.warn(`${this.constructor.name}.${type}() is not a function`, this);
@@ -319,7 +319,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {function} listener - listener handler.
      * @param {Object} options - event listener options.
      */
-    removeEventListener(type: string, listener?: Function, options?: any) {
+    removeEventListener(type: string, listener?: EventListenerOrEventListenerObject, options?: AddEventListenerOptions) {
       this.__eventDispatcher.removeEventListener(type, listener, options);
     }
     /**

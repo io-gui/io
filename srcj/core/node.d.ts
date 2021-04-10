@@ -115,14 +115,14 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        addEventListener(type: string, listener: Function, options?: any): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for removeEventListener.
          * @param {string} type - event name to listen to.
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        removeEventListener(type: string, listener?: Function | undefined, options?: any): void;
+        removeEventListener(type: string, listener?: EventListener | EventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for dispatchEvent.
          * @param {string} type - event name to dispatch.
@@ -270,14 +270,14 @@ declare const Node_base: {
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        addEventListener(type: string, listener: Function, options?: any): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for removeEventListener.
          * @param {string} type - event name to listen to.
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        removeEventListener(type: string, listener?: Function | undefined, options?: any): void;
+        removeEventListener(type: string, listener?: EventListener | EventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for dispatchEvent.
          * @param {string} type - event name to dispatch.

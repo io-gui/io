@@ -35,33 +35,23 @@ class EventDispatcher {
     setPropListeners(props) {
         // TODO: Unset propListeners, test.
         const listeners = this.__propListeners;
-        const node = this.__node;
         const newListeners = {};
         for (let l in props) {
-            if (l.startsWith('on-'))
-                newListeners[l.slice(3, l.length)] = props[l];
+            if (l.startsWith('on-')) {
+                const eventName = l.slice(3, l.length);
+                const listener = (props[l] instanceof Array) ? [props[l][0], props[l][1]] : [props[l]];
+                if (typeof listener[0] !== 'function')
+                    listener[0] = this.__node[listener[0]];
+                newListeners[eventName] = listener;
+            }
         }
         for (let l in newListeners) {
             if (listeners[l]) {
-                if (listeners[l] instanceof Array) {
-                    const listener = typeof listeners[l][0] === 'function' ? listeners[l][0] : node[listeners[l][0]];
-                    node.removeEventListener(l, listener, listeners[l][1]);
-                }
-                else {
-                    const listener = typeof listeners[l] === 'function' ? listeners[l] : node[listeners[l]];
-                    node.removeEventListener(l, listener);
-                }
+                this.__node.removeEventListener(l, listeners[l][0], listeners[l][1]);
             }
             listeners[l] = newListeners[l];
             if (this.__connected) {
-                if (newListeners[l] instanceof Array) {
-                    const listener = typeof newListeners[l][0] === 'function' ? newListeners[l][0] : node[newListeners[l][0]];
-                    node.addEventListener(l, listener, newListeners[l][1]);
-                }
-                else {
-                    const listener = typeof newListeners[l] === 'function' ? newListeners[l] : node[newListeners[l]];
-                    node.addEventListener(l, listener);
-                }
+                this.__node.addEventListener(l, listeners[l][0], newListeners[l][1]);
             }
         }
     }
@@ -74,21 +64,13 @@ class EventDispatcher {
                 console.error('EventDispatcher: already connected!');
         }
         this.__connected = true;
-        const node = this.__node;
-        const protoListeners = this.__protoListeners;
-        for (let l in protoListeners) {
-            this.addEventListener(l, node[protoListeners[l][0]], protoListeners[l][1]);
+        for (let l in this.__protoListeners) {
+            const isFunction = typeof this.__protoListeners[l][0] === 'function';
+            const listener = isFunction ? this.__protoListeners[l][0] : this.__node[this.__protoListeners[l][0]];
+            this.addEventListener(l, listener, this.__protoListeners[l][1]);
         }
-        const listeners = this.__propListeners;
-        for (let l in listeners) {
-            if (listeners[l] instanceof Array) {
-                const listener = typeof listeners[l][0] === 'function' ? listeners[l][0] : node[listeners[l][0]];
-                this.addEventListener(l, listener, listeners[l][1]);
-            }
-            else {
-                const listener = typeof listeners[l] === 'function' ? listeners[l] : node[listeners[l]];
-                this.addEventListener(l, listener);
-            }
+        for (let l in this.__propListeners) {
+            this.addEventListener(l, this.__propListeners[l][0], this.__propListeners[l][1]);
         }
     }
     /**
@@ -100,28 +82,18 @@ class EventDispatcher {
                 console.error('EventDispatcher: already disconnected!');
         }
         this.__connected = false;
-        const node = this.__node;
         const protoListeners = this.__protoListeners;
         for (let l in protoListeners) {
-            this.removeEventListener(l, node[protoListeners[l][0]], protoListeners[l][1]);
+            this.removeEventListener(l, this.__node[protoListeners[l][0]], protoListeners[l][1]);
         }
-        const listeners = this.__propListeners;
-        for (let l in listeners) {
-            if (listeners[l] instanceof Array) {
-                const listener = typeof listeners[l][0] === 'function' ? listeners[l][0] : node[listeners[l][0]];
-                this.removeEventListener(l, listener, listeners[l][1]);
-            }
-            else {
-                const listener = typeof listeners[l] === 'function' ? listeners[l] : node[listeners[l]];
-                this.removeEventListener(l, listener);
-            }
+        for (let l in this.__propListeners) {
+            this.removeEventListener(l, this.__propListeners[l][0], this.__propListeners[l][1]);
         }
         // TODO: sort out!
-        // const active = this.__activeListeners;
-        // for (let i in active) {
-        //   for (let j = active[i].length; j--;) {
-        //     if (this.__node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.__node, i, active[i][j]);
-        //     active[i].splice(j, 1);
+        // for (let i in this.__activeListeners) {
+        //   for (let j = this.__activeListeners[i].length; j--;) {
+        //     if (this.__node.__isIoElement) HTMLElement.prototype.removeEventListener.call(this.__node, i, this.__activeListeners[i][j]);
+        //     this.__activeListeners[i].splice(j, 1);
         //   }
         // }
     }
@@ -130,13 +102,12 @@ class EventDispatcher {
      * Adds an event listener.
      */
     addEventListener(type, listener, options) {
-        const active = this.__activeListeners;
-        active[type] = active[type] || [];
-        const i = active[type].indexOf(listener);
+        this.__activeListeners[type] = this.__activeListeners[type] || [];
+        const i = this.__activeListeners[type].indexOf(listener);
         if (i === -1) {
             if (this.__node.__isIoElement)
                 HTMLElement.prototype.addEventListener.call(this.__node, type, listener, options);
-            active[type].push(listener);
+            this.__activeListeners[type].push(listener, options);
         }
     }
     /**
@@ -144,13 +115,12 @@ class EventDispatcher {
      * Removes an event listener.
      */
     removeEventListener(type, listener, options) {
-        const active = this.__activeListeners;
-        if (active[type] !== undefined) {
-            const i = active[type].indexOf(listener);
+        if (this.__activeListeners[type] !== undefined) {
+            const i = this.__activeListeners[type].indexOf(listener);
             if (i !== -1 || listener === undefined) {
                 if (this.__node.__isIoElement)
                     HTMLElement.prototype.removeEventListener.call(this.__node, type, listener, options);
-                active[type].splice(i, 1);
+                this.__activeListeners[type].splice(i, 1);
             }
         }
     }

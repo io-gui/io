@@ -1,8 +1,9 @@
 import { ProtoChain } from './protoChain.js';
 import { Node } from '../node.js';
-declare type ListenerArrayType = [string | Function, CustomEventInit | undefined];
+declare type ProtoListenerType = keyof Node | EventListenerOrEventListenerObject | ProtoListenerArrayType;
+declare type ProtoListenerArrayType = [keyof Node | EventListenerOrEventListenerObject, AddEventListenerOptions | undefined];
 export declare class ProtoListeners {
-    [listener: string]: ListenerArrayType;
+    [listener: string]: ProtoListenerArrayType;
     constructor(protochain: ProtoChain);
 }
 /**
@@ -22,7 +23,7 @@ declare class EventDispatcher {
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} props - Properties.
      */
-    setPropListeners(props: Record<string, any>): void;
+    setPropListeners(props: Record<string, ProtoListenerType>): void;
     /**
      * Connects all event listeners.
      */
@@ -35,12 +36,12 @@ declare class EventDispatcher {
      * Proxy for `addEventListener` method.
      * Adds an event listener.
      */
-    addEventListener(type: string, listener: any, options?: Record<string, any>): void;
+    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions): void;
     /**
      * Proxy for `removeEventListener` method.
      * Removes an event listener.
      */
-    removeEventListener(type: string, listener?: any, options?: Record<string, any>): void;
+    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions): void;
     /**
      * Shorthand for custom event dispatch.
      */

@@ -23,8 +23,8 @@ declare const IoElement_base: {
         unbind(prop: string): void;
         set(prop: string, value: any, force: boolean): void;
         setProperties(props: any): void;
-        addEventListener(type: string, listener: Function, options?: any): void;
-        removeEventListener(type: string, listener?: Function | undefined, options?: any): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | undefined): void;
+        removeEventListener(type: string, listener?: EventListener | EventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
         dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window | undefined): void;
         throttle(func: Function, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: Function): void;
