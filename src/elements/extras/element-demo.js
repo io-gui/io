@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
 
 export class IoElementDemo extends IoElement {
   static get Style() {

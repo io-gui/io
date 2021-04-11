@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {Options} from '../../models/options/options.js';
 // TODO: use IoContent for caching and display.
 

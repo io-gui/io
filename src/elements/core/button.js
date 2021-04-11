@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoItem} from './item.js';
 
 export class IoButton extends IoItem {

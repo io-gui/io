@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoGl} from './gl.js';
 
 export class IoSlider extends IoGl {
@@ -55,16 +55,6 @@ export class IoSlider extends IoGl {
       'pointerdown': '_onPointerdown',
       'touchstart': '_onTouchstart',
     };
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerup', this._onPointerup);
-    this.removeEventListener('touchstart', this._onTouchstart);
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
   }
   _onFocus() {
     this.addEventListener('blur', this._onBlur);

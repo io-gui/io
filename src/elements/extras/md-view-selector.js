@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import './md-view.js';
 import {IoSelectorSidebar} from '../layout/selector-sidebar.js';
 

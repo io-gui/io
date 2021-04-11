@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {Config} from './config.js';
 
 export class IoProperties extends IoElement {

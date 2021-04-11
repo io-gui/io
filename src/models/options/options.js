@@ -1,4 +1,4 @@
-import {NodeMixin, RegisterIoNode} from '../../../srcj/core/node.js';
+import {NodeMixin, RegisterIoNode} from '../../../srcj/components/io-node.js';
 import {Item} from '../item/item.js';
 import {Path} from '../path/path.js';
 

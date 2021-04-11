@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
 
 // TODO: preserve linked scaling through zero.
 export class IoVector extends IoElement {

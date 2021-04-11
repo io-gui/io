@@ -1,4 +1,4 @@
-import {Node, RegisterIoNode} from '../../../srcj/core/node.js';
+import {Node, RegisterIoNode} from '../../../srcj/components/io-node.js';
 import {Options} from '../options/options.js';
 import {Path} from '../path/path.js';
 

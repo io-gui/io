@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoLayerSingleton} from '../core/layer.js';
 import {IoColorMixin} from './color.js';
 

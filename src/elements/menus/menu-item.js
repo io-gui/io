@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {Item} from '../../models/item/item.js';
 import {IoItem} from '../core/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';

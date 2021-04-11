@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
 
 export class IoItem extends IoElement {
   static get Style() {
@@ -40,15 +40,6 @@ export class IoItem extends IoElement {
     super(props);
     Object.defineProperty(this, '__textNode', {enumerable: false, writable: true, value: document.createTextNode('')});
     this.appendChild(this.__textNode);
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
-    this.removeEventListener('keyup', this._onKeydown);
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerleave', this._onPointerleave);
-    this.removeEventListener('pointerup', this._onPointerup);
   }
   _onFocus() {
     this.addEventListener('blur', this._onBlur);

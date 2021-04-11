@@ -1,4 +1,4 @@
-import {Node, RegisterIoNode} from '../../../srcj/core/node.js';
+import {Node, RegisterIoNode} from '../../../srcj/components/io-node.js';
 
 // TODO: test different value types
 

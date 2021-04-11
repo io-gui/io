@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../../srcj/core/io-element.js';
+import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoItem} from './item.js';
 
 export class IoString extends IoItem {
@@ -54,8 +54,6 @@ export class IoString extends IoItem {
   }
   _onBlur(event) {
     super._onBlur(event);
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
     this._setFromTextNode();
     this.scrollTop = 0;
     this.scrollLeft = 0;
