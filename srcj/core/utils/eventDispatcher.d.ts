@@ -14,6 +14,7 @@ declare class EventDispatcher {
     private __protoListeners;
     private __propListeners;
     private __activeListeners;
+    private readonly __listenerOptions;
     private __connected;
     /**
      * Creates Event Dispatcher.
@@ -21,9 +22,9 @@ declare class EventDispatcher {
     constructor(node: Node, protoListeners: ProtoListeners);
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
-     * @param {Object} props - Properties.
+     * @param {Object} properties - Properties.
      */
-    setPropListeners(props: Record<string, ProtoListenerType>): void;
+    setPropListeners(properties: Record<string, ProtoListenerType>): void;
     /**
      * Connects all event listeners.
      */

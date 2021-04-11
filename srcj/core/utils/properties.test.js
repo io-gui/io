@@ -433,20 +433,20 @@ export default class {
                     }
                     RegisterIoNode(TestNode);
                     const node = new TestNode();
-                    node.addEventListener('prop-changed', (event) => {
+                    node.addEventListener('prop-changed', ((event) => {
                         const value = event.detail.value;
                         const oldValue = event.detail.oldValue;
                         chai.expect(string(value)).to.be.equal(string({}));
                         chai.expect(oldValue).to.be.equal(undefined);
-                    });
+                    }));
                     node.connect();
                     node.removeEventListener('prop-changed');
-                    node.addEventListener('prop-changed', (event) => {
+                    node.addEventListener('prop-changed', ((event) => {
                         const value = event.detail.value;
                         const oldValue = event.detail.oldValue;
                         chai.expect(string(value)).to.be.equal(string({}));
                         chai.expect(string(oldValue)).to.be.equal(string({}));
-                    });
+                    }));
                     node.prop = {};
                     node.removeEventListener('prop-changed');
                     node.addEventListener('prop-changed', () => {
@@ -454,14 +454,16 @@ export default class {
                     });
                     node.__properties.set('prop', {}, true);
                     node.disconnect();
+                    console.log(node.__eventDispatcher.__inactiveListeners);
+                    console.log(node.__eventDispatcher.__activeListeners);
                     node.prop = {};
                     node.removeEventListener('prop-changed');
-                    node.addEventListener('prop-changed', (event) => {
+                    node.addEventListener('prop-changed', ((event) => {
                         const value = event.detail.value;
                         const oldValue = event.detail.oldValue;
                         chai.expect(string(value)).to.be.equal(string({}));
                         chai.expect(string(oldValue)).to.be.equal(string({}));
-                    });
+                    }));
                     node.connect();
                     node.prop = {};
                 });
