@@ -1,11 +1,11 @@
-import {Node, RegisterIoNode} from '../../../srcj/components/io-node.js';
+import {IoNode, RegisterIoNode} from '../../../srcj/components/io-node.js';
 import {Options} from '../options/options.js';
 import {Path} from '../path/path.js';
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
 // TODO: test for robustness and document.
-export class Item extends Node {
+export class Item extends IoNode {
   static get Properties() {
     return {
       value: undefined,

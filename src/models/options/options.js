@@ -1,10 +1,10 @@
-import {NodeMixin, RegisterIoNode} from '../../../srcj/components/io-node.js';
+import {IoNodeMixin, RegisterIoNode} from '../../../srcj/components/io-node.js';
 import {Item} from '../item/item.js';
 import {Path} from '../path/path.js';
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
-export class Options extends NodeMixin(Array) {
+export class Options extends IoNodeMixin(Array) {
   static get Properties() {
     return {
       items: {

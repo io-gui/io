@@ -1,6 +1,6 @@
 ## `IoThemeSingleton`
 
-Extends `Node`.
+Extends `IoNode`.
 
 `IoThemeSingleton` holds top-level CSS variables for Io design system. Variables are grouped in different themes and can be collectively switched by changing `theme` property.
 

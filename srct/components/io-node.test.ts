@@ -1,6 +1,6 @@
 import {Change} from '../core/changeQueue.js';
 import {Binding} from '../core/propertyBinder.js';
-import {Node, RegisterIoNode} from './io-node.js';
+import {IoNode, RegisterIoNode} from './io-node.js';
 
 async function waitTick(): Promise<void> {
   return new Promise((resolve) => {
@@ -14,7 +14,7 @@ export default class {
   run() {
     describe('Node', () => {
       it('should have core API defined', () => {
-        const node = new Node();
+        const node = new IoNode();
         // Lifecycle functions
         node.connect(window);
         chai.expect(node.connect).to.be.a('function');
@@ -52,7 +52,7 @@ export default class {
         node.dispose();
       });
       it('should account connections correctly', () => {
-        const node = new Node();
+        const node = new IoNode();
         node.connect(window);
         chai.expect(node.__connected).to.be.equal(true);
         node.connect(document);
@@ -82,7 +82,7 @@ export default class {
         chai.expect(node.__connections).to.be.deep.equal([]);
       });
       it('should invoke change handler functions on change', () => {
-        class TestNode extends Node {
+        class TestNode extends IoNode {
           static get Properties(): any {
             return {
               prop1: String,
@@ -163,7 +163,7 @@ export default class {
         node.dispose();
       });
       it('should invoke property mutation handler functions on mutation event', async () => {
-        class TestNode extends Node {
+        class TestNode extends IoNode {
           static get Properties(): any {
             return {
               obj1: {
@@ -221,7 +221,7 @@ export default class {
         node.dispose();
       });
       it('should invoke listener handler functions on events', () => {
-        class TestNode extends Node {
+        class TestNode extends IoNode {
           static get Properties(): any {
             return {
               prop1: String,
@@ -278,7 +278,7 @@ export default class {
         node.dispose();
       });
       it('should have correct property defaults', () => {
-        class TestNode extends Node {
+        class TestNode extends IoNode {
           static get Properties(): any {
             return {
               prop0: { type: String },
@@ -304,7 +304,7 @@ export default class {
         node.dispose();
       });
       it('should correctly bind properties', () => {
-        class TestNode extends Node {
+        class TestNode extends IoNode {
           static get Properties(): any {
             return {
               prop1: String,

@@ -10,9 +10,9 @@ type Constructor<T extends any> = new (...args: any[]) => T;
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
- * @return {function} - Extended class constructor with `NodeMixin` applied to it.
+ * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
  */
-function NodeMixin<T extends Constructor<any>>(superclass: T) {
+export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
   const classConstructor = class extends (superclass as any) {
     static get Properties(): any {
       return {
@@ -168,7 +168,7 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
             continue;
           }
           const object = this.__properties[prop].value;
-          if (object.__isNode) {
+          if (object.__isIoNode) {
             // TODO: make sure composed and declarative listeners are working together
             object.setProperties(compose[prop]);
           } else {
@@ -426,11 +426,11 @@ function NodeMixin<T extends Constructor<any>>(superclass: T) {
 /**
  * Register function to be called once per class.
  */
-const RegisterIoNode = function (node: typeof Node) {
+export const RegisterIoNode = function (node: typeof IoNode) {
   const protochain = new ProtoChain(node);
   
   const proto = node.prototype;
-  Object.defineProperty(proto, '__isNode', {value: true});
+  Object.defineProperty(proto, '__isIoNode', {value: true});
   Object.defineProperty(proto.constructor, '__registeredAs', {value: proto.constructor.name});
 
   Object.defineProperty(proto, '__protochain', {value: protochain});
@@ -463,10 +463,10 @@ const RegisterIoNode = function (node: typeof Node) {
 };
 
 /**
- * NodeMixin applied to `Object` class.
+ * IoNodeMixin applied to `Object` class.
  */
-class Node extends NodeMixin(Object) {}
-RegisterIoNode(Node);
+export class IoNode extends IoNodeMixin(Object) {}
+RegisterIoNode(IoNode);
 
 const IMPORTED_PATHS: Record<string, any> = {};
 
@@ -502,6 +502,3 @@ requestAnimationFrame(animate);
 function requestAnimationFrameOnce(func: Function) {
   if (funcQueue.indexOf(func) === -1) funcQueue.push(func);
 }
-
-
-export {Node, NodeMixin, RegisterIoNode};

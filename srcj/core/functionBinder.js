@@ -28,7 +28,7 @@ class FunctionBinder extends Array {
     }
     /**
      * Binds all functions to node instance.
-     * @param {Node} node - Node instance to bind functions to.
+     * @param {IoNode} node - IoNode instance to bind functions to.
      */
     bind(node) {
         for (let i = this.length; i--;) {

@@ -1,6 +1,6 @@
-import {Node, RegisterIoNode} from '../components/io-node.js';
+import {IoNode, RegisterIoNode} from '../components/io-node.js';
 
-class Node11 extends Node {
+class IoNode11 extends IoNode {
   static get Listeners(): any {
     return {
       'event1': 'handler1',
@@ -8,9 +8,9 @@ class Node11 extends Node {
   }
   handler1() {}
 }
-RegisterIoNode(Node11);
+RegisterIoNode(IoNode11);
 
-class Node2 extends Node11 {
+class IoNode2 extends IoNode11 {
   static get Listeners(): any {
     return {
       'event2': 'handler2',
@@ -19,25 +19,25 @@ class Node2 extends Node11 {
   handler2() {}
   handler3() {}
 }
-RegisterIoNode(Node2);
+RegisterIoNode(IoNode2);
 
 export default class {
   run() {
     describe('EventDispatcher', () => {
       describe('ProtoListeners', () => {
         it('Should include all listeners from protochain', () => {
-          const node = new Node2();
+          const node = new IoNode2();
           chai.expect(JSON.stringify(node.__protoListeners)).to.be.equal(JSON.stringify({'event1': ['handler1'], 'event2': ['handler2']}));
         });
       });
       describe('Listeners', () => {
         it('Should include all listeners from protochain', () => {
-          const node = new Node2();
+          const node = new IoNode2();
           chai.expect(JSON.stringify(node.__protoListeners)).to.be.equal(JSON.stringify({'event1': ['handler1'], 'event2': ['handler2']}));
         });
         it('Should include all prop listeners in active listeners', () => {
           const handler4 = function() {};
-          const node = new Node2({'on-event3': 'handler3', 'on-event4': handler4}).connect();
+          const node = new IoNode2({'on-event3': 'handler3', 'on-event4': handler4}).connect();
           chai.expect(node.__eventDispatcher.__connectedListeners.event1[0]).to.be.equal(node.handler1);
           chai.expect(node.__eventDispatcher.__connectedListeners.event2[0]).to.be.equal(node.handler2);
           chai.expect(node.__eventDispatcher.__connectedListeners.event3[0]).to.be.equal(node.handler3);

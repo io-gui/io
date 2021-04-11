@@ -7,9 +7,9 @@ import { EventDispatcher, ProtoListeners } from '../core/eventDispatcher.js';
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
- * @return {function} - Extended class constructor with `NodeMixin` applied to it.
+ * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
  */
-function NodeMixin(superclass) {
+export function IoNodeMixin(superclass) {
     const classConstructor = class extends superclass {
         static get Properties() {
             return {
@@ -149,7 +149,7 @@ function NodeMixin(superclass) {
                         continue;
                     }
                     const object = this.__properties[prop].value;
-                    if (object.__isNode) {
+                    if (object.__isIoNode) {
                         // TODO: make sure composed and declarative listeners are working together
                         object.setProperties(compose[prop]);
                     }
@@ -423,10 +423,10 @@ function NodeMixin(superclass) {
 /**
  * Register function to be called once per class.
  */
-const RegisterIoNode = function (node) {
+export const RegisterIoNode = function (node) {
     const protochain = new ProtoChain(node);
     const proto = node.prototype;
-    Object.defineProperty(proto, '__isNode', { value: true });
+    Object.defineProperty(proto, '__isIoNode', { value: true });
     Object.defineProperty(proto.constructor, '__registeredAs', { value: proto.constructor.name });
     Object.defineProperty(proto, '__protochain', { value: protochain });
     Object.defineProperty(proto, '__functionBinder', { value: new FunctionBinder(protochain) });
@@ -455,11 +455,11 @@ const RegisterIoNode = function (node) {
     }
 };
 /**
- * NodeMixin applied to `Object` class.
+ * IoNodeMixin applied to `Object` class.
  */
-class Node extends NodeMixin(Object) {
+export class IoNode extends IoNodeMixin(Object) {
 }
-RegisterIoNode(Node);
+RegisterIoNode(IoNode);
 const IMPORTED_PATHS = {};
 // TODO: document and test
 const preThrottleQueue = new Array();
@@ -492,5 +492,4 @@ function requestAnimationFrameOnce(func) {
     if (funcQueue.indexOf(func) === -1)
         funcQueue.push(func);
 }
-export { Node, NodeMixin, RegisterIoNode };
 //# sourceMappingURL=io-node.js.map

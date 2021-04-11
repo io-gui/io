@@ -58,7 +58,7 @@ declare class Properties {
     __connected: boolean;
     __keys: Array<string>;
     /**
-     * Creates the properties for specified `Node`.
+     * Creates the properties for specified `IoNode`.
      */
     constructor(node: any, protoProps: ProtoProperties);
     /**
@@ -70,15 +70,15 @@ declare class Properties {
      */
     set(key: string, value: any, skipDispatch?: boolean): void;
     /**
-     * Connects all property bindings and `Node` properties.
+     * Connects all property bindings and `IoNode` properties.
      */
     connect(): void;
     /**
-     * Disconnects all property bindings and `Node` properties.
+     * Disconnects all property bindings and `IoNode` properties.
      */
     disconnect(): void;
     /**
-     * Disconnects all property bindings and `Node` properties.
+     * Disconnects all property bindings and `IoNode` properties.
      * Use this when properties are no loner needed.
      */
     dispose(): void;

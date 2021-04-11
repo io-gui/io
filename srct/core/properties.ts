@@ -180,7 +180,7 @@ class Properties {
   __connected: boolean = false;
   __keys: Array<string> = [];
   /**
-   * Creates the properties for specified `Node`.
+   * Creates the properties for specified `IoNode`.
    */
   constructor(node: any, protoProps: ProtoProperties) {
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
@@ -198,7 +198,7 @@ class Properties {
         // TODO: document special handling of object and node values
         if (typeof value === 'object') {
           node.queue(prop, value, undefined);
-          if (value.__isNode && node.__connected) value.connect(node);
+          if (value.__isIoNode && node.__connected) value.connect(node);
         } else if (property.reflect !== undefined && property.reflect >= 1 && node.__isIoElement) {
           // TODO: figure out how to resolve bi-directionsl reflection when attributes are set in html (role, etc...)
           node.setAttribute(prop, value);
@@ -274,8 +274,8 @@ class Properties {
       }
 
 
-      if (value && value.__isNode && !value.__isIoElement) value.connect(node);
-      if (oldValue && oldValue.__isNode && oldValue.__connected && !oldValue.__isIoElement) oldValue.disconnect(node);
+      if (value && value.__isIoNode && !value.__isIoElement) value.connect(node);
+      if (oldValue && oldValue.__isIoNode && oldValue.__connected && !oldValue.__isIoElement) oldValue.disconnect(node);
 
       if (prop.notify && oldValue !== value) {
         node.queue(key, value, oldValue);
@@ -289,7 +289,7 @@ class Properties {
 
   }
   /**
-   * Connects all property bindings and `Node` properties.
+   * Connects all property bindings and `IoNode` properties.
    */
   connect() {
     this.__connected = true;
@@ -300,13 +300,13 @@ class Properties {
         property.binding.addTarget(this.__node, p);
       }
       // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
-      if (property.value && property.value.__isNode && !property.value.__connected && !property.value.__isIoElement) {
+      if (property.value && property.value.__isIoNode && !property.value.__connected && !property.value.__isIoElement) {
         property.value.connect(this.__node);
       }
     }
   }
   /**
-   * Disconnects all property bindings and `Node` properties.
+   * Disconnects all property bindings and `IoNode` properties.
    */
   disconnect() {
     this.__connected = false;
@@ -319,7 +319,7 @@ class Properties {
       // TODO: investigate and test element property connections
       // possible clash with element's native `disconenctedCallback()`
       // TODO: fix BUG - diconnecting already disconencted.
-      if (property.value && property.value.__isNode && !property.value.__isIoElement) {
+      if (property.value && property.value.__isIoNode && !property.value.__isIoElement) {
         // TODO: remove this workaround once the bug is fixed properly.
         if (property.value.__connections.indexOf(this.__node) !== -1) {
           property.value.disconnect(this.__node);
@@ -328,7 +328,7 @@ class Properties {
     }
   }
   /**
-   * Disconnects all property bindings and `Node` properties.
+   * Disconnects all property bindings and `IoNode` properties.
    * Use this when properties are no loner needed.
    */
   dispose() {

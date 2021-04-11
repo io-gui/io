@@ -1,6 +1,6 @@
 import {Node, RegisterIoNode} from '../../build/iogui.js';
 
-export class TodoModel extends Node {
+export class TodoModel extends IoNode {
   static get Properties() {
     return {
       items: Array,

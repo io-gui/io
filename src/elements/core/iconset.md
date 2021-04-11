@@ -1,6 +1,6 @@
 ## `IoIconsetSingleton`
 
-Extends `Node`.
+Extends `IoNode`.
 
 Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace` and `id` attribute.
 

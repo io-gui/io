@@ -16,8 +16,8 @@ export class Change {
  */
 export class ChangeQueue {
     /**
-     * Creates change queue for the specified `Node`.
-     * @param {Node} node - Owner node.
+     * Creates change queue for the specified `IoNode`.
+     * @param {IoNode} node - Owner node.
      */
     constructor(node) {
         this.__changes = [];

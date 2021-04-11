@@ -1,19 +1,19 @@
 import {ChangeEvent} from './changeQueue.js';
 import {Properties} from './properties.js';
-import {Node} from '../components/io-node.js';
+import {IoNode} from '../components/io-node.js';
 
 /**
  * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */
 export class Binding {
-  private readonly __node: Node;
+  private readonly __node: IoNode;
   private readonly __property: string = '';
   private readonly __targets: Array<EventTarget> = [];
   private readonly __targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
   /**
    * Creates a binding object for specified `node` and `property`.
    */
-  constructor(node: Node, property: string) {
+  constructor(node: IoNode, property: string) {
     this.__node = node;
     this.__property = property;
     Object.defineProperty(this, '__node',             {enumerable: false, writable: false});
@@ -32,49 +32,49 @@ export class Binding {
   }
   /**
    * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
-   * @param {Node} node - Target node.
+   * @param {IoNode} node - Target node.
    * @param {string} property - Target property.
    */
-  addTarget(node: Node, property: string, __nodeProperties?: Properties) {
+  addTarget(node: IoNode, property: string, __nodeProperties?: Properties) {
     // TODO: unhack passing __properties from constructor;
     const nodeProperties = node.__properties || __nodeProperties;
     nodeProperties[property].binding = this;
     nodeProperties.set(property, this.__node[this.__property]);
 
-    const targetNode = node as unknown as EventTarget;
-    if (this.__targets.indexOf(targetNode) === -1) this.__targets.push(targetNode);
-    const targetProperties = this._getTargetProperties(targetNode);
+    const targetIoNode = node as unknown as EventTarget;
+    if (this.__targets.indexOf(targetIoNode) === -1) this.__targets.push(targetIoNode);
+    const targetProperties = this._getTargetProperties(targetIoNode);
     if (targetProperties.indexOf(property) === -1) {
       targetProperties.push(property);
-      targetNode.addEventListener(`${property}-changed`, this._onTargetChanged as EventListener);
+      targetIoNode.addEventListener(`${property}-changed`, this._onTargetChanged as EventListener);
     }
   }
   /**
    * Removes target `node` and `property` and corresponding `[property]-changed` listener.
    * If `property` is not specified, it removes all target properties.
-   * @param {Node} node - Target node.
+   * @param {IoNode} node - Target node.
    * @param {string} property - Target property.
    */
-  removeTarget(node: Node, property?: string) {
-    const targetNode = node as unknown as EventTarget;
-    const targetProperties = this._getTargetProperties(targetNode);
+  removeTarget(node: IoNode, property?: string) {
+    const targetIoNode = node as unknown as EventTarget;
+    const targetProperties = this._getTargetProperties(targetIoNode);
     if (property) {
       const i = targetProperties.indexOf(property);
       if (i !== -1) targetProperties.splice(i, 1);
-      targetNode.removeEventListener(`${property}-changed`, this._onTargetChanged as EventListener);
+      targetIoNode.removeEventListener(`${property}-changed`, this._onTargetChanged as EventListener);
     } else {
       for (let i = targetProperties.length; i--;) {
-        targetNode.removeEventListener(`${targetProperties[i]}-changed`, this._onTargetChanged as EventListener);
+        targetIoNode.removeEventListener(`${targetProperties[i]}-changed`, this._onTargetChanged as EventListener);
       }
       targetProperties.length = 0;
     }
-    if (targetProperties.length === 0) this.__targets.splice(this.__targets.indexOf(targetNode), 1);
+    if (targetProperties.length === 0) this.__targets.splice(this.__targets.indexOf(targetIoNode), 1);
   }
   /**
    * Retrieves a list of target properties for specified target node.
-   * @param {Node} node - Target node.
+   * @param {IoNode} node - Target node.
    */
-   private _getTargetProperties(node: Node | EventTarget): string[] {
+   private _getTargetProperties(node: IoNode | EventTarget): string[] {
     let targetProperties = this.__targetProperties.get(node as unknown as EventTarget);
     if (targetProperties) {
       return targetProperties;
@@ -136,7 +136,7 @@ export class Binding {
   dispose() {
     this.__node.removeEventListener(`${this.__property}-changed`, this._onSourceChanged as EventListenerOrEventListenerObject);
     for (let i = this.__targets.length; i--;) {
-      this.removeTarget(this.__targets[i] as unknown as Node);
+      this.removeTarget(this.__targets[i] as unknown as IoNode);
     }
     this.__targets.length = 0;
     delete (this as any).__node;
@@ -149,16 +149,16 @@ export class Binding {
 }
 
 /**
- * Manager for property bindings. It holds all bindings for a particular Node.
+ * Manager for property bindings. It holds all bindings for a particular IoNode.
  */
 export class PropertyBinder {
-  __node: Node;
+  __node: IoNode;
   __bindings: Record<string, Binding> = {};
   /**
    * Creates binding manager for the specified node.
-   * @param {Node} node - Owner node.
+   * @param {IoNode} node - Owner node.
    */
-  constructor(node: Node) {
+  constructor(node: IoNode) {
     this.__node = node;
     Object.defineProperty(this, '__node', {enumerable: false});
   }

@@ -1,5 +1,5 @@
 import { ProtoChain } from './protoChain.js';
-import { Node } from '../components/io-node.js';
+import { IoNode } from '../components/io-node.js';
 import { IoElement } from '../components/io-element.js';
 class Array1 extends Array {
 }
@@ -19,7 +19,7 @@ class HTMLElement2 extends HTMLElement1 {
 }
 class HTMLElement3 extends HTMLElement2 {
 }
-class Node1 extends Node {
+class IoNode1 extends IoNode {
 }
 class IoElement1 extends IoElement {
 }
@@ -39,13 +39,13 @@ export default class {
                 chai.expect(protochain[0]).to.be.equal(HTMLElement3);
                 chai.expect(protochain[1]).to.be.equal(HTMLElement2);
                 chai.expect(protochain[2]).to.be.equal(HTMLElement1);
-                protochain = new ProtoChain(Node1);
-                chai.expect(protochain[0]).to.be.equal(Node1);
-                chai.expect(protochain[1]).to.be.equal(Node);
+                protochain = new ProtoChain(IoNode1);
+                chai.expect(protochain[0]).to.be.equal(IoNode1);
+                chai.expect(protochain[1]).to.be.equal(IoNode);
                 protochain = new ProtoChain(IoElement1);
                 chai.expect(protochain[0]).to.be.equal(IoElement1);
                 chai.expect(protochain[1]).to.be.equal(IoElement);
-                chai.expect(String(protochain[2])).to.be.equal(String(Node.__proto__));
+                chai.expect(String(protochain[2])).to.be.equal(String(IoNode.__proto__));
             });
             it('Should terminate at `HTMLElement`, `Object` or `Array`', () => {
                 let protochain = new ProtoChain(Array3);
@@ -54,7 +54,7 @@ export default class {
                 chai.expect(protochain[3]).to.be.equal(undefined);
                 protochain = new ProtoChain(HTMLElement3);
                 chai.expect(protochain[3]).to.be.equal(undefined);
-                protochain = new ProtoChain(Node1);
+                protochain = new ProtoChain(IoNode1);
                 chai.expect(protochain[2]).to.be.equal(undefined);
                 protochain = new ProtoChain(IoElement1);
                 chai.expect(protochain[4]).to.be.equal(undefined);

@@ -1,4 +1,4 @@
-import { Node } from '../components/io-node.js';
+import { IoNode } from '../components/io-node.js';
 export declare class Change {
     property: string;
     value: any;
@@ -23,10 +23,10 @@ export declare class ChangeQueue {
     private readonly __changes;
     private __dispatching;
     /**
-     * Creates change queue for the specified `Node`.
-     * @param {Node} node - Owner node.
+     * Creates change queue for the specified `IoNode`.
+     * @param {IoNode} node - Owner node.
      */
-    constructor(node: Node);
+    constructor(node: IoNode);
     /**
      * Adds property change to the queue by specifying property name, previous and the new value.
      * If the change is already in the queue, the new value is updated in-queue.

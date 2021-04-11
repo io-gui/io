@@ -1,6 +1,6 @@
 import {Node, RegisterIoNode} from '../../build/iogui.js';
 
-class DictionaryItem extends Node {
+class DictionaryItem extends IoNode {
   static get Properties() {
     return {
       key: null,
@@ -19,7 +19,7 @@ class DictionaryItem extends Node {
 
 RegisterIoNode(DictionaryItem);
 
-class Dictionary extends Node {
+class Dictionary extends IoNode {
   static get Properties() {
     return {
       valueStore: Object,

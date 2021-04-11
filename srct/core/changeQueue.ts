@@ -1,4 +1,4 @@
-import {Node} from '../components/io-node.js';
+import {IoNode} from '../components/io-node.js';
 
 export class Change {
   property: string;
@@ -26,14 +26,14 @@ export interface ChangeEvent extends CustomEvent {
  * Property change LIFO queue responsible for dispatching change events and triggering change handler functions.
  */
 export class ChangeQueue {
-  private readonly __node: Node;
+  private readonly __node: IoNode;
   private readonly __changes: Array<Change> = [];
   private __dispatching: boolean = false;
   /**
-   * Creates change queue for the specified `Node`.
-   * @param {Node} node - Owner node.
+   * Creates change queue for the specified `IoNode`.
+   * @param {IoNode} node - Owner node.
    */
-  constructor(node: Node) {
+  constructor(node: IoNode) {
     this.__node = node;
     Object.defineProperty(this, '__node',        {enumerable: false, writable: false});
     Object.defineProperty(this, '__changes',     {enumerable: false, writable: false});

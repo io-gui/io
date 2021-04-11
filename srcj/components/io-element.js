@@ -1,9 +1,9 @@
 import { EventDispatcher } from '../core/eventDispatcher.js';
-import { NodeMixin, RegisterIoNode } from './io-node.js';
+import { IoNodeMixin, RegisterIoNode } from './io-node.js';
 /**
  * Core `IoElement` class.
  */
-class IoElement extends NodeMixin(HTMLElement) {
+class IoElement extends IoNodeMixin(HTMLElement) {
     static get Style() {
         return /* css */ `
     :host[hidden] {

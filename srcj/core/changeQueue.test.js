@@ -1,6 +1,6 @@
 import { ChangeQueue } from './changeQueue.js';
-import { Node, RegisterIoNode } from '../components/io-node.js';
-class TestNode extends Node {
+import { IoNode, RegisterIoNode } from '../components/io-node.js';
+class TestIoNode extends IoNode {
     constructor() {
         super(...arguments);
         this.prop1ChangeCounter = 0;
@@ -24,12 +24,12 @@ class TestNode extends Node {
         this.changeCounter++;
     }
 }
-RegisterIoNode(TestNode);
+RegisterIoNode(TestIoNode);
 export default class {
     run() {
         describe('ChangeQueue', () => {
             it('Should initialize with correct default values', () => {
-                const node = new TestNode();
+                const node = new TestIoNode();
                 const changeQueue = new ChangeQueue(node);
                 chai.expect(typeof changeQueue.__node).to.be.equal('object');
                 chai.expect(typeof changeQueue.__changes).to.be.equal('object');
@@ -38,7 +38,7 @@ export default class {
                 chai.expect(changeQueue.__dispatching).to.be.equal(false);
             });
             it('Should dispose correctly', () => {
-                const node = new TestNode();
+                const node = new TestIoNode();
                 const changeQueue = new ChangeQueue(node);
                 changeQueue.dispose();
                 chai.expect(changeQueue.__node).to.be.equal(undefined);
@@ -46,7 +46,7 @@ export default class {
                 chai.expect(changeQueue.__dispatching).to.be.equal(undefined);
             });
             it('Should trigger change events', () => {
-                const node = new TestNode().connect();
+                const node = new TestIoNode().connect();
                 const changeQueue = new ChangeQueue(node);
                 changeQueue.queue('test', 1, 0);
                 changeQueue.queue('test', 2, 1);
@@ -73,7 +73,7 @@ export default class {
                 chai.expect(node.changeCounter).to.be.equal(2);
             });
             it('should trigger handler functions', () => {
-                const node = new TestNode().connect();
+                const node = new TestIoNode().connect();
                 const changeQueue = new ChangeQueue(node);
                 changeQueue.queue('prop1', 1, 0);
                 changeQueue.queue('prop1', 2, 1);

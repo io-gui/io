@@ -1,8 +1,8 @@
 import {ProtoChain} from './protoChain.js';
-import {Node} from '../components/io-node.js';
+import {IoNode} from '../components/io-node.js';
 
-type ProtoListenerType = keyof Node | EventListenerOrEventListenerObject | ProtoListenerArrayType;
-type ProtoListenerArrayType = [keyof Node | EventListenerOrEventListenerObject, AddEventListenerOptions | undefined];
+type ProtoListenerType = keyof IoNode | EventListenerOrEventListenerObject | ProtoListenerArrayType;
+type ProtoListenerArrayType = [keyof IoNode | EventListenerOrEventListenerObject, AddEventListenerOptions | undefined];
 
 type PropListener = [EventListenerOrEventListenerObject, AddEventListenerOptions | undefined];
 type PropListeners = Record<string, PropListener>;
@@ -24,7 +24,7 @@ export class ProtoListeners {
  * Event Dispatcher.
  */
 class EventDispatcher {
-  private readonly __node: Node;
+  private readonly __node: IoNode;
   private __protoListeners: ProtoListeners;
   private __propListeners: PropListeners = {};
   private __connectedListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
@@ -34,7 +34,7 @@ class EventDispatcher {
   /**
    * Creates Event Dispatcher.
    */
-  constructor(node: Node, protoListeners: ProtoListeners) {
+  constructor(node: IoNode, protoListeners: ProtoListeners) {
     this.__node = node;
     this.__protoListeners = protoListeners;
     Object.defineProperty(this, '__node',                  {enumerable: false, writable: false});
@@ -60,7 +60,7 @@ class EventDispatcher {
         const listener = (properties[prop] instanceof Array)
           ? [(properties[prop] as ProtoListenerArrayType)[0], (properties[prop] as ProtoListenerArrayType)[1]]
           : [properties[prop]];
-        if (typeof listener[0] !== 'function') listener[0] = this.__node[listener[0] as keyof Node];
+        if (typeof listener[0] !== 'function') listener[0] = this.__node[listener[0] as keyof IoNode];
         newListeners[type] = listener as PropListener;
       }
     }
@@ -85,7 +85,7 @@ class EventDispatcher {
 
     for (let type in this.__protoListeners) {
       const isFunction = typeof this.__protoListeners[type][0] === 'function';
-      const listener = isFunction ? this.__protoListeners[type][0] : this.__node[this.__protoListeners[type][0] as keyof Node];
+      const listener = isFunction ? this.__protoListeners[type][0] : this.__node[this.__protoListeners[type][0] as keyof IoNode];
       this.addEventListener(type, listener, this.__protoListeners[type][1]);
     }
 
@@ -115,7 +115,7 @@ class EventDispatcher {
 
     for (let type in this.__protoListeners) {
       const isFunction = typeof this.__protoListeners[type][0] === 'function';
-      const listener = isFunction ? this.__protoListeners[type][0] : this.__node[this.__protoListeners[type][0] as keyof Node];
+      const listener = isFunction ? this.__protoListeners[type][0] : this.__node[this.__protoListeners[type][0] as keyof IoNode];
       this.removeEventListener(type, listener, this.__protoListeners[type][1]);
     }
 

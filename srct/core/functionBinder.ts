@@ -1,5 +1,5 @@
 import {ProtoChain} from './protoChain.js';
-import {Node} from '../components/io-node.js';
+import {IoNode} from '../components/io-node.js';
 
 /**
  * Collection of all functions defined in the prototype chain that start with "on" or "_"
@@ -29,9 +29,9 @@ class FunctionBinder extends Array<string> {
   }
   /**
    * Binds all functions to node instance.
-   * @param {Node} node - Node instance to bind functions to.
+   * @param {IoNode} node - IoNode instance to bind functions to.
    */
-  bind(node: Node) {
+  bind(node: IoNode) {
     for (let i = this.length; i--;) {
       Object.defineProperty(node, this[i], {value: node[this[i]].bind(node)});
     }

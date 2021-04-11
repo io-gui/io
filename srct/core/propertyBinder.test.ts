@@ -1,7 +1,7 @@
 import {Binding, PropertyBinder} from './propertyBinder.js';
-import {Node, RegisterIoNode} from '../components/io-node.js';
+import {IoNode, RegisterIoNode} from '../components/io-node.js';
 
-class TestNode extends Node {
+class TestIoNode extends IoNode {
   static get Properties(): any {
     return {
       prop1: 0,
@@ -9,13 +9,13 @@ class TestNode extends Node {
     };
   }
 }
-RegisterIoNode(TestNode);
+RegisterIoNode(TestIoNode);
 
 export default class {
   run() {
     describe('PropertyBinder', () => {
       it('Should initialize with correct default values', () => {
-        const node = new TestNode();
+        const node = new TestIoNode();
         const binding = new Binding(node, 'prop1') as any;
         chai.expect(binding.__node).to.be.equal(node);
         chai.expect(binding.__property).to.be.equal('prop1');
@@ -27,7 +27,7 @@ export default class {
         chai.expect(JSON.stringify(propertyBinder.__bindings)).to.be.equal('{}');
       });
       it('Should dispose correctly', () => {
-        const node = new TestNode().connect();
+        const node = new TestIoNode().connect();
         const binding = new Binding(node, 'prop1') as any;
         binding.dispose();
         chai.expect(binding.__node).to.be.equal(undefined);
@@ -45,7 +45,7 @@ export default class {
         chai.expect(binding2.__targetProperties).to.be.equal(undefined);
       });
       it('Should get and set property value on source node with `value` getter/setter', () => {
-        const node = new TestNode();
+        const node = new TestIoNode();
         const binding = new Binding(node, 'prop1') as any;
         node.prop1 = 1;
         chai.expect(binding.value).to.be.equal(1);
@@ -63,43 +63,43 @@ export default class {
         chai.expect(node.prop1).to.be.equal(3);
       });
       it('Should add/remove target nodes and properties with `.addTarget()` and `removeTarget()`', () => {
-        const srcNode = new TestNode().connect();
-        const binding0 = new Binding(srcNode, 'prop1') as any;
-        const binding1 = new Binding(srcNode, 'prop2') as any;
+        const srcIoNode = new TestIoNode().connect();
+        const binding0 = new Binding(srcIoNode, 'prop1') as any;
+        const binding1 = new Binding(srcIoNode, 'prop2') as any;
 
-        const dstNode0 = new TestNode().connect();
-        const dstNode1 = new TestNode().connect();
+        const dstIoNode0 = new TestIoNode().connect();
+        const dstIoNode1 = new TestIoNode().connect();
 
-        binding0.addTarget(dstNode0, 'prop1');
-        binding1.addTarget(dstNode0, 'prop2');
-        binding1.addTarget(dstNode1, 'prop1');
-        binding1.addTarget(dstNode1, 'prop2');
+        binding0.addTarget(dstIoNode0, 'prop1');
+        binding1.addTarget(dstIoNode0, 'prop2');
+        binding1.addTarget(dstIoNode1, 'prop1');
+        binding1.addTarget(dstIoNode1, 'prop2');
 
-        chai.expect(binding0.__targets[0]).to.be.equal(dstNode0);
+        chai.expect(binding0.__targets[0]).to.be.equal(dstIoNode0);
         chai.expect(binding0.__targets[1]).to.be.equal(undefined);
-        chai.expect(binding1.__targets[0]).to.be.equal(dstNode0);
-        chai.expect(binding1.__targets[1]).to.be.equal(dstNode1);
+        chai.expect(binding1.__targets[0]).to.be.equal(dstIoNode0);
+        chai.expect(binding1.__targets[1]).to.be.equal(dstIoNode1);
 
-        const binding0target0Props = binding0._getTargetProperties(dstNode0);
-        const binding0target1Props = binding0._getTargetProperties(dstNode1);
+        const binding0target0Props = binding0._getTargetProperties(dstIoNode0);
+        const binding0target1Props = binding0._getTargetProperties(dstIoNode1);
         chai.expect(binding0target0Props[0]).to.be.equal('prop1');
         chai.expect(binding0target0Props.length).to.be.equal(1);
         chai.expect(binding0target1Props.length).to.be.equal(0);
 
-        const binding1target0Props = binding1._getTargetProperties(dstNode0);
-        const binding1target1Props = binding1._getTargetProperties(dstNode1);
+        const binding1target0Props = binding1._getTargetProperties(dstIoNode0);
+        const binding1target1Props = binding1._getTargetProperties(dstIoNode1);
         chai.expect(binding1target0Props[0]).to.be.equal('prop2');
         chai.expect(binding1target0Props.length).to.be.equal(1);
         chai.expect(binding1target1Props[0]).to.be.equal('prop1');
         chai.expect(binding1target1Props[1]).to.be.equal('prop2');
         chai.expect(binding1target1Props.length).to.be.equal(2);
 
-        binding1.removeTarget(dstNode1, 'prop1');
+        binding1.removeTarget(dstIoNode1, 'prop1');
         chai.expect(binding1target1Props[0]).to.be.equal('prop2');
         chai.expect(binding1target1Props.length).to.be.equal(1);
         
-        binding1.addTarget(dstNode1, 'prop1');
-        binding1.removeTarget(dstNode1);
+        binding1.addTarget(dstIoNode1, 'prop1');
+        binding1.removeTarget(dstIoNode1);
         chai.expect(binding1target1Props.length).to.be.equal(0);
       });
     });

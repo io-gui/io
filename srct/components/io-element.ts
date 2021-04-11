@@ -1,11 +1,11 @@
 import {ProtoChain} from '../core/protoChain.js';
 import {EventDispatcher} from '../core/eventDispatcher.js';
-import {Node, NodeMixin, RegisterIoNode} from './io-node.js';
+import {IoNode, IoNodeMixin, RegisterIoNode} from './io-node.js';
 
 /**
  * Core `IoElement` class.
  */
-class IoElement extends NodeMixin(HTMLElement) {
+class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): any {
     return /* css */`
     :host[hidden] {
@@ -468,7 +468,7 @@ const setNativeElementProps = function(element: HTMLElement, props: any) {
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
   }
   if (!(element as any).__eventDispatcher) {
-    Object.defineProperty(element, '__eventDispatcher', {value: new EventDispatcher(element as unknown as Node, {})});
+    Object.defineProperty(element, '__eventDispatcher', {value: new EventDispatcher(element as unknown as IoNode, {})});
     (element as any).__eventDispatcher.connect();
   }
   (element as any).__eventDispatcher.setPropListeners(props, element);

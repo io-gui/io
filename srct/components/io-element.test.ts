@@ -1,8 +1,8 @@
 import {Change} from '../core/changeQueue.js';
-import {Node, RegisterIoNode} from './io-node.js';
+import {IoNode, RegisterIoNode} from './io-node.js';
 import {IoElement, RegisterIoElement} from './io-element.js';
 
-class TestNode extends Node {
+class TestNode extends IoNode {
   static get Properties(): any {
     return {
       prop0: String,

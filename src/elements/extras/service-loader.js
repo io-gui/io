@@ -1,9 +1,9 @@
-import {Node, RegisterIoNode} from '../../../srcj/components/io-node.js';
+import {IoNode, RegisterIoNode} from '../../../srcj/components/io-node.js';
 
 if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
 if (!('PushManager' in window)) { console.warn('No Push API Support!'); }
 
-export class IoServiceLoader extends Node {
+export class IoServiceLoader extends IoNode {
   static get Properties() {
     return {
       path: 'service.js',

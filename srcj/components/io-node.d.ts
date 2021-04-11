@@ -3,9 +3,9 @@ declare type Constructor<T extends any> = new (...args: any[]) => T;
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
- * @return {function} - Extended class constructor with `NodeMixin` applied to it.
+ * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
  */
-declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
+export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
         /**
@@ -27,12 +27,12 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: Node | HTMLElement | Window | Document): any;
+        connect(node?: HTMLElement | Node | Window | Document): any;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: Node | HTMLElement | Window | Document): any;
+        disconnect(node?: HTMLElement | Node | Window | Document): any;
         /**
          * Connected callback.
          */
@@ -130,7 +130,7 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Node | HTMLElement | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -159,8 +159,8 @@ declare function NodeMixin<T extends Constructor<any>>(superclass: T): {
 /**
  * Register function to be called once per class.
  */
-declare const RegisterIoNode: (node: typeof Node) => void;
-declare const Node_base: {
+export declare const RegisterIoNode: (node: typeof IoNode) => void;
+declare const IoNode_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
         /**
@@ -182,12 +182,12 @@ declare const Node_base: {
          * Connects the instance to another node or element.
          * @param {Node} node - Node to connect to.
          */
-        connect(node?: Node | HTMLElement | Window | Document): any;
+        connect(node?: HTMLElement | Node | Window | Document): any;
         /**
          * Disconnects the instance from an another node or element.
          * @param {Node} node - Node to disconnect from.
          */
-        disconnect(node?: Node | HTMLElement | Window | Document): any;
+        disconnect(node?: HTMLElement | Node | Window | Document): any;
         /**
          * Connected callback.
          */
@@ -285,7 +285,7 @@ declare const Node_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Node | HTMLElement | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -312,9 +312,9 @@ declare const Node_base: {
     readonly Properties: any;
 };
 /**
- * NodeMixin applied to `Object` class.
+ * IoNodeMixin applied to `Object` class.
  */
-declare class Node extends Node_base {
+export declare class IoNode extends IoNode_base {
 }
-export { Node, NodeMixin, RegisterIoNode };
+export {};
 //# sourceMappingURL=io-node.d.ts.map

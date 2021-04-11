@@ -1,5 +1,5 @@
 import { ProtoChain } from './protoChain.js';
-import { Node } from '../components/io-node.js';
+import { IoNode } from '../components/io-node.js';
 /**
  * Collection of all functions defined in the prototype chain that start with "on" or "_"
  */
@@ -11,9 +11,9 @@ declare class FunctionBinder extends Array<string> {
     constructor(protochain: ProtoChain);
     /**
      * Binds all functions to node instance.
-     * @param {Node} node - Node instance to bind functions to.
+     * @param {IoNode} node - IoNode instance to bind functions to.
      */
-    bind(node: Node): void;
+    bind(node: IoNode): void;
 }
 export { FunctionBinder };
 //# sourceMappingURL=functionBinder.d.ts.map

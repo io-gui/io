@@ -1,4 +1,4 @@
-import {Node} from '../components/io-node.js';
+import {IoNode} from '../components/io-node.js';
 
 type Constructor<T extends any> = new (...args: any[]) => T;
 
@@ -8,7 +8,7 @@ type Constructor<T extends any> = new (...args: any[]) => T;
 export class ProtoChain extends Array<Constructor<any[]>> {
   /**
    * Creates an array of inherited prototypes by traversing down the prototype chain of the specified prototype and adds each prototype to itself.
-   * It terminates with `Node.__proto__`, `HTMLElement`, `Object` or `Array`.
+   * It terminates with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
    * @param {Object} prototype - Prototype object.
    */
   constructor(classConstructor: any) {
@@ -16,7 +16,7 @@ export class ProtoChain extends Array<Constructor<any[]>> {
     let prototype = classConstructor.prototype;
     while (
       prototype
-      && prototype.constructor !== (Node as any).__proto__
+      && prototype.constructor !== (IoNode as any).__proto__
       && prototype.constructor !== HTMLElement
       && prototype.constructor !== Object
       && prototype.constructor !== Array) {

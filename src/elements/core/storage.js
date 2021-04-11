@@ -1,4 +1,4 @@
-import {Node, RegisterIoNode} from '../../../srcj/components/io-node.js';
+import {IoNode, RegisterIoNode} from '../../../srcj/components/io-node.js';
 
 // TODO: test different value types
 
@@ -131,7 +131,7 @@ const setHashes = function(force) {
 self.addEventListener('hashchange', getHashes, false);
 getHashes();
 
-class IoStorage extends Node {
+class IoStorage extends IoNode {
   static get Properties() {
     return {
       key: String,

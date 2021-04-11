@@ -1,5 +1,5 @@
 import { Properties } from './properties.js';
-import { Node } from '../components/io-node.js';
+import { IoNode } from '../components/io-node.js';
 /**
  * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */
@@ -11,25 +11,25 @@ export declare class Binding {
     /**
      * Creates a binding object for specified `node` and `property`.
      */
-    constructor(node: Node, property: string);
+    constructor(node: IoNode, property: string);
     set value(value: any);
     get value(): any;
     /**
      * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
-     * @param {Node} node - Target node.
+     * @param {IoNode} node - Target node.
      * @param {string} property - Target property.
      */
-    addTarget(node: Node, property: string, __nodeProperties?: Properties): void;
+    addTarget(node: IoNode, property: string, __nodeProperties?: Properties): void;
     /**
      * Removes target `node` and `property` and corresponding `[property]-changed` listener.
      * If `property` is not specified, it removes all target properties.
-     * @param {Node} node - Target node.
+     * @param {IoNode} node - Target node.
      * @param {string} property - Target property.
      */
-    removeTarget(node: Node, property?: string): void;
+    removeTarget(node: IoNode, property?: string): void;
     /**
      * Retrieves a list of target properties for specified target node.
-     * @param {Node} node - Target node.
+     * @param {IoNode} node - Target node.
      */
     private _getTargetProperties;
     /**
@@ -49,16 +49,16 @@ export declare class Binding {
     dispose(): void;
 }
 /**
- * Manager for property bindings. It holds all bindings for a particular Node.
+ * Manager for property bindings. It holds all bindings for a particular IoNode.
  */
 export declare class PropertyBinder {
-    __node: Node;
+    __node: IoNode;
     __bindings: Record<string, Binding>;
     /**
      * Creates binding manager for the specified node.
-     * @param {Node} node - Owner node.
+     * @param {IoNode} node - Owner node.
      */
-    constructor(node: Node);
+    constructor(node: IoNode);
     /**
      * Returns a binding to the specified property name or creates one if it does not exist.
      * @param {string} property - Property to bind.

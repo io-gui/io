@@ -1,7 +1,7 @@
 import { ProtoChain } from './protoChain.js';
-import { Node } from '../components/io-node.js';
-declare type ProtoListenerType = keyof Node | EventListenerOrEventListenerObject | ProtoListenerArrayType;
-declare type ProtoListenerArrayType = [keyof Node | EventListenerOrEventListenerObject, AddEventListenerOptions | undefined];
+import { IoNode } from '../components/io-node.js';
+declare type ProtoListenerType = keyof IoNode | EventListenerOrEventListenerObject | ProtoListenerArrayType;
+declare type ProtoListenerArrayType = [keyof IoNode | EventListenerOrEventListenerObject, AddEventListenerOptions | undefined];
 export declare class ProtoListeners {
     [listener: string]: ProtoListenerArrayType;
     constructor(protochain: ProtoChain);
@@ -20,7 +20,7 @@ declare class EventDispatcher {
     /**
      * Creates Event Dispatcher.
      */
-    constructor(node: Node, protoListeners: ProtoListeners);
+    constructor(node: IoNode, protoListeners: ProtoListeners);
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} properties - Properties.

@@ -23,11 +23,16 @@
  */
 
 // CORE
-export {Node, NodeMixin} from '../srcj/components/io-node.js';
+
+export {IoNode, IoNodeMixin, RegisterIoNode} from '../srcj/components/io-node.js';
 export {IoElement, RegisterIoElement} from '../srcj/components/io-element.js';
-export {Binding} from '../srcj/core/propertyBinder.js';
-export {ProtoChain} from '../srcj/core/protoChain.js';
+
+export {ChangeQueue} from '../srcj/core/changeQueue.js';
+export {EventDispatcher} from '../srcj/core/eventDispatcher.js';
+export {PropertyBinder, Binding} from '../srcj/core/propertyBinder.js';
+export {FunctionBinder} from '../srcj/core/functionBinder.js';
 export {ProtoProperty, ProtoProperties, Property, Properties} from '../srcj/core/properties.js';
+export {ProtoChain} from '../srcj/core/protoChain.js';
 
 // MODELS
 export {Item} from './models/item/item.js';
