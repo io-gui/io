@@ -1,6 +1,6 @@
 import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
-import {Options} from '../../models/options/options.js';
-import {Item} from '../../models/item/item.js';
+import {Options} from '../../../srcj/models/options.js';
+import {Item} from '../../../srcj/models/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
 import './menu-item.js';
 

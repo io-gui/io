@@ -1,6 +1,7 @@
-import {IoNode, RegisterIoNode} from '../../../srcj/components/io-node.js';
-import {Options} from '../options/options.js';
-import {Path} from '../path/path.js';
+import {IoNode, RegisterIoNode} from '../components/io-node.js';
+import {Options} from './options.js';
+import {Path} from './path.js';
+
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
@@ -31,7 +32,7 @@ export class Item extends IoNode {
       options: {'on-path-changed': this.onOptionsSelectedPathChanged},
     };
   }
-  constructor(option) {
+  constructor(option: any) {
     if (typeof option !== 'object' || option === null) {
       option = {
         value: option,
@@ -66,7 +67,7 @@ export class Item extends IoNode {
   get hasmore() {
     return !!(this.options.length);
   }
-  option(value) {
+  option(value: any) {
     return this.options.option(value);
   }
   onOptionsSelectedPathChanged() {
@@ -82,7 +83,7 @@ export class Item extends IoNode {
       }
     }
   }
-  setSelectedPath(selected, path = []) {
+  setSelectedPath(selected: any, path: any[] = []) {
     this.path.value = path;
     this.selected = selected;
     this.dispatchEvent('path-changed', this.path); // TODO: TEMP HACK
@@ -91,4 +92,5 @@ export class Item extends IoNode {
     this.dispatchEvent('changed');
   }
 }
+
 RegisterIoNode(Item);

@@ -1,5 +1,5 @@
 import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
-import {Options} from '../../models/options/options.js';
+import {Options} from '../../../srcj/models/options.js';
 // TODO: use IoContent for caching and display.
 
 export class IoSelector extends IoElement {

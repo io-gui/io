@@ -6,6 +6,7 @@ import {ProtoProperties, Properties} from '../core/properties.js';
 import {EventDispatcher, ProtoListeners} from '../core/eventDispatcher.js';
 
 type Constructor<T extends any> = new (...args: any[]) => T;
+type ComposedProperties = null | Record<string, Record<string, any>>
 
 /**
  * Core mixin for `Node` classes.
@@ -38,7 +39,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
      *
      * Node class does not use `compose` by itself but this feature is available to its sublasses.
      */
-    get compose () {
+    get compose (): ComposedProperties {
       return null;
     }
      /**
@@ -77,9 +78,9 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
     }
     /**
      * Connects the instance to another node or element.
-     * @param {Node} node - Node to connect to.
+     * @param {IoNode} node - Node to connect to.
      */
-    connect(node: Node | HTMLElement | Document | Window = window): this {
+    connect(node: IoNode | HTMLElement | Document | Window = window): this {
       debug:
       if (this.__isIoElement) {
         console.error('"connect()" function is not intended for DOM Elements!');
@@ -94,9 +95,9 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
     }
     /**
      * Disconnects the instance from an another node or element.
-     * @param {Node} node - Node to disconnect from.
+     * @param {IoNode} node - Node to disconnect from.
      */
-    disconnect(node: Node | HTMLElement | Document | Window = window): this {
+    disconnect(node: IoNode | HTMLElement | Document | Window = window): this {
       debug:
       if (this.__isIoElement) {
         console.error('"disconnect()" function is not intended for DOM Elements!');
@@ -328,7 +329,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {boolean} bubbles - event bubbles.
      * @param {HTMLElement|Node} src source node/element to dispatch event from.
      */
-    dispatchEvent(type: string, detail: any, bubbles = false, src?: Node | HTMLElement | Document | Window) {
+    dispatchEvent(type: string, detail = {}, bubbles = false, src?: Node | HTMLElement | Document | Window) {
       this.__eventDispatcher.dispatchEvent(type, detail, bubbles, src);
     }
     /**

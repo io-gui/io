@@ -62,7 +62,7 @@ export function IoNodeMixin(superclass) {
         }
         /**
          * Connects the instance to another node or element.
-         * @param {Node} node - Node to connect to.
+         * @param {IoNode} node - Node to connect to.
          */
         connect(node = window) {
             debug: if (this.__isIoElement) {
@@ -78,7 +78,7 @@ export function IoNodeMixin(superclass) {
         }
         /**
          * Disconnects the instance from an another node or element.
-         * @param {Node} node - Node to disconnect from.
+         * @param {IoNode} node - Node to disconnect from.
          */
         disconnect(node = window) {
             debug: if (this.__isIoElement) {
@@ -308,7 +308,7 @@ export function IoNodeMixin(superclass) {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type, detail, bubbles = false, src) {
+        dispatchEvent(type, detail = {}, bubbles = false, src) {
             this.__eventDispatcher.dispatchEvent(type, detail, bubbles, src);
         }
         /**

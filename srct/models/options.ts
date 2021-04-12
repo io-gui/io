@@ -1,6 +1,6 @@
-import {IoNodeMixin, RegisterIoNode} from '../../../srcj/components/io-node.js';
-import {Item} from '../item/item.js';
-import {Path} from '../path/path.js';
+import {IoNodeMixin, RegisterIoNode} from '../components/io-node.js';
+import {Item} from './item.js';
+import {Path} from './path.js';
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
@@ -19,8 +19,8 @@ export class Options extends IoNodeMixin(Array) {
       },
     };
   }
-  constructor(options = [], props = {}) {
-    super(props);
+  constructor(options: Array<Item | any> = []) {
+    super();
 
     for (let i = 0; i < options.length; i++) {
       let option;
@@ -37,7 +37,7 @@ export class Options extends IoNodeMixin(Array) {
       option.connect(this);
     }
   }
-  option(value) {
+  option(value: any) {
     for (let i = 0; i < this.length; i++) {
       if (this[i].value === value) return this[i];
     }
@@ -64,7 +64,7 @@ export class Options extends IoNodeMixin(Array) {
       }
     }
   }
-  onItemSelectedPathChanged(event) {
+  onItemSelectedPathChanged(event: any) {
     // console.log('OPTION PATH CHANGED');
     const target = event.target;
     const targetPath = target.path.value;
@@ -74,7 +74,7 @@ export class Options extends IoNodeMixin(Array) {
       }
     }
   }
-  onItemSelectedChanged(event) {
+  onItemSelectedChanged(event: any) {
     const target = event.target;
     const targetPath = target.path.value;
     if (target.select === 'pick') {
@@ -97,7 +97,7 @@ export class Options extends IoNodeMixin(Array) {
       }
     }
   }
-  setSelectedPath(path = []) {
+  setSelectedPath(path: any[] = []) {
     this.path.value = path;
     // TODO: TEMP HACK (pathChanged should not happen due to readonly)
     if (!path.length) {

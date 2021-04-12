@@ -3,34 +3,34 @@ import {IoElement, RegisterIoElement} from './iogui.js';
 import '../lib/mocha.js';
 import '../lib/chai.js';
 
+import ChangeQueue from '../srcj/core/changeQueue.test.js';
+import EventDispatcher from '../srcj/core/eventDispatcher.test.js';
+import FunctionBinder from '../srcj/core/functionBinder.test.js';
+import Properties from '../srcj/core/properties.test.js';
+import PropertyBinder from '../srcj/core/propertyBinder.test.js';
+import ProtoChain from '../srcj/core/protoChain.test.js';
+
 import Node from '../srcj/components/io-node.test.js';
 import Element from '../srcj/components/io-element.test.js';
 
-import Binding from '../srcj/core/propertyBinder.test.js';
-import Functions from '../srcj/core/functionBinder.test.js';
-import EventDispatcher from '../srcj/core/eventDispatcher.test.js';
-import Properties from '../srcj/core/properties.test.js';
-import ProtoChain from '../srcj/core/protoChain.test.js';
-import ChangeQueue from '../srcj/core/changeQueue.test.js';
-
-import Item from './elements/core/item.test.js';
-import Content from './elements/core/content.test.js'; // TODO
-import Gl from './elements/core/gl.test.js';
-import Button from './elements/core/button.test.js';
-import Boolean from './elements/core/boolean.test.js';
-import Boolicon from './elements/core/boolicon.test.js';
-import Switch from './elements/core/switch.test.js';
-import Sting from './elements/core/string.test.js';
-import Number from './elements/core/number.test.js';
-import Slider from './elements/core/slider.test.js';
-import SliderRange from './elements/core/slider-range.test.js'; // TODO
-import NumberSlider from './elements/core/number-slider.test.js';
-import NumberSliderRange from './elements/core/number-slider-range.test.js'; // TODO
-import Icon from './elements/core/icon.test.js';
-import IconSet from './elements/core/iconset.test.js';
-import Layer from './elements/core/layer.test.js';
-import Ladder from './elements/core/ladder.test.js';
-import Theme from './elements/core/theme.test.js';
+// import Item from './elements/core/item.test.js';
+// import Content from './elements/core/content.test.js'; // TODO
+// import Gl from './elements/core/gl.test.js';
+// import Button from './elements/core/button.test.js';
+// import Boolean from './elements/core/boolean.test.js';
+// import Boolicon from './elements/core/boolicon.test.js';
+// import Switch from './elements/core/switch.test.js';
+// import Sting from './elements/core/string.test.js';
+// import Number from './elements/core/number.test.js';
+// import Slider from './elements/core/slider.test.js';
+// import SliderRange from './elements/core/slider-range.test.js'; // TODO
+// import NumberSlider from './elements/core/number-slider.test.js';
+// import NumberSliderRange from './elements/core/number-slider-range.test.js'; // TODO
+// import Icon from './elements/core/icon.test.js';
+// import IconSet from './elements/core/iconset.test.js';
+// import Layer from './elements/core/layer.test.js';
+// import Ladder from './elements/core/ladder.test.js';
+// import Theme from './elements/core/theme.test.js';
 
 // import Collapsable from "./elements/layout/collapsable.test.js";
 // import Properties from "./elements/object/properties.test.js";
@@ -49,35 +49,35 @@ let testCompleted = false;
 
 function runTests() {
   if (!testCompleted) {
-    new Properties().run();
-    new ProtoChain().run();
-    new Binding().run();
     new ChangeQueue().run();
     new EventDispatcher().run();
-    new Functions().run();
+    new FunctionBinder().run();
+    new Properties().run();
+    new PropertyBinder().run();
+    new ProtoChain().run();
 
     new Node().run();
     new Element().run();
 
-    new Item().run();
-    new Content().run();
-    new Gl().run();
-    new Button().run();
-    new Boolean().run();
-    new Boolean().run();
-    new Boolicon().run();
-    new Switch().run();
-    new Sting().run();
-    new Number().run();
-    new Slider().run();
-    new SliderRange().run();
-    new NumberSlider().run();
-    new NumberSliderRange().run();
-    new Icon().run();
-    new IconSet().run();
-    new Layer().run();
-    new Ladder().run();
-    new Theme().run();
+    // new Item().run();
+    // new Content().run();
+    // new Gl().run();
+    // new Button().run();
+    // new Boolean().run();
+    // new Boolean().run();
+    // new Boolicon().run();
+    // new Switch().run();
+    // new Sting().run();
+    // new Number().run();
+    // new Slider().run();
+    // new SliderRange().run();
+    // new NumberSlider().run();
+    // new NumberSliderRange().run();
+    // new Icon().run();
+    // new IconSet().run();
+    // new Layer().run();
+    // new Ladder().run();
+    // new Theme().run();
 
     // TODO
     // new OptionMenu().run();

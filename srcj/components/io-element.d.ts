@@ -1,9 +1,10 @@
+import { IoNode } from './io-node.js';
 declare const IoElement_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
-        readonly compose: null;
-        connect(node?: Window | Node | HTMLElement | Document): any;
-        disconnect(node?: Window | Node | HTMLElement | Document): any;
+        readonly compose: Record<string, Record<string, any>> | null;
+        connect(node?: IoNode | HTMLElement | Window | Document): any;
+        disconnect(node?: IoNode | HTMLElement | Window | Document): any;
         connectedCallback(): void;
         disconnectedCallback(): void;
         dispose(): void;
@@ -20,7 +21,7 @@ declare const IoElement_base: {
         setProperties(props: any): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | undefined): void;
         removeEventListener(type: string, listener?: EventListener | EventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
-        dispatchEvent(type: string, detail: any, bubbles?: boolean, src?: Window | Node | HTMLElement | Document | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         throttle(func: Function, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: Function): void;
         filterObject(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;

@@ -35,9 +35,9 @@ export {ProtoProperty, ProtoProperties, Property, Properties} from '../srcj/core
 export {ProtoChain} from '../srcj/core/protoChain.js';
 
 // MODELS
-export {Item} from './models/item/item.js';
-export {Options} from './models/options/options.js';
-export {Path} from './models/path/path.js';
+export {Item} from '../srcj/models/item.js';
+export {Options} from '../srcj/models/options.js';
+export {Path} from '../srcj/models/path.js';
 
 // ELEMENTS
 export {IoStorageFactory} from './elements/core/storage.js';
