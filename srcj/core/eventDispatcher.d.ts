@@ -13,8 +13,8 @@ declare class EventDispatcher {
     private readonly __node;
     private readonly __protoListeners;
     private readonly __propListeners;
-    private __connectedListeners;
-    private __disconnectedListeners;
+    private readonly __connectedListeners;
+    private readonly __disconnectedListeners;
     private readonly __listenerOptions;
     private __connected;
     /**
@@ -29,11 +29,11 @@ declare class EventDispatcher {
     /**
      * Connects all event listeners.
      */
-    connect(): void;
+    connect(): this;
     /**
      * Disconnects all event listeners.
      */
-    disconnect(): void;
+    disconnect(): this;
     /**
      * Proxy for `addEventListener` method.
      * Adds an event listener.
@@ -47,7 +47,7 @@ declare class EventDispatcher {
     /**
      * Shorthand for custom event dispatch.
      */
-    dispatchEvent(type: string, detail?: Record<string, any>, bubbles?: boolean, src?: HTMLElement | any): void;
+    dispatchEvent(type: string, detail?: Record<string, any>, bubbles?: boolean, src?: Window | Document | HTMLElement | IoNode): void;
     /**
      * Disconnects all event listeners and removes all references.
      * Use this when node is no longer needed.

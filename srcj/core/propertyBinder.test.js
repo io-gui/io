@@ -24,24 +24,6 @@ export default class {
                 chai.expect(propertyBinder.__node).to.be.equal(node);
                 chai.expect(JSON.stringify(propertyBinder.__bindings)).to.be.equal('{}');
             });
-            it('Should dispose correctly', () => {
-                const node = new TestIoNode().connect();
-                const binding = new Binding(node, 'prop1');
-                binding.dispose();
-                chai.expect(binding.__node).to.be.equal(undefined);
-                chai.expect(binding.__property).to.be.equal(undefined);
-                chai.expect(binding.__targets).to.be.equal(undefined);
-                chai.expect(binding.__targetProperties).to.be.equal(undefined);
-                const propertyBinder = new PropertyBinder(node);
-                const binding2 = propertyBinder.bind('prop1');
-                propertyBinder.dispose();
-                chai.expect(propertyBinder.__node).to.be.equal(undefined);
-                chai.expect(propertyBinder.__bindings).to.be.equal(undefined);
-                chai.expect(binding2.__node).to.be.equal(undefined);
-                chai.expect(binding2.__property).to.be.equal(undefined);
-                chai.expect(binding2.__targets).to.be.equal(undefined);
-                chai.expect(binding2.__targetProperties).to.be.equal(undefined);
-            });
             it('Should get and set property value on source node with `value` getter/setter', () => {
                 const node = new TestIoNode();
                 const binding = new Binding(node, 'prop1');
@@ -93,6 +75,24 @@ export default class {
                 binding1.addTarget(dstIoNode1, 'prop1');
                 binding1.removeTarget(dstIoNode1);
                 chai.expect(binding1target1Props.length).to.be.equal(0);
+            });
+            it('Should dispose correctly', () => {
+                const node = new TestIoNode().connect();
+                const binding = new Binding(node, 'prop1');
+                binding.dispose();
+                chai.expect(binding.__node).to.be.equal(undefined);
+                chai.expect(binding.__property).to.be.equal(undefined);
+                chai.expect(binding.__targets).to.be.equal(undefined);
+                chai.expect(binding.__targetProperties).to.be.equal(undefined);
+                const propertyBinder = new PropertyBinder(node);
+                const binding2 = propertyBinder.bind('prop1');
+                propertyBinder.dispose();
+                chai.expect(propertyBinder.__node).to.be.equal(undefined);
+                chai.expect(propertyBinder.__bindings).to.be.equal(undefined);
+                chai.expect(binding2.__node).to.be.equal(undefined);
+                chai.expect(binding2.__property).to.be.equal(undefined);
+                chai.expect(binding2.__targets).to.be.equal(undefined);
+                chai.expect(binding2.__targetProperties).to.be.equal(undefined);
             });
         });
     }

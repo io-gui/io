@@ -27,8 +27,8 @@ class EventDispatcher {
   private readonly __node: IoNode;
   private readonly __protoListeners: ProtoListeners;
   private readonly __propListeners: PropListeners = {};
-  private __connectedListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
-  private __disconnectedListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
+  private readonly __connectedListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
+  private readonly __disconnectedListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
   private readonly __listenerOptions: WeakMap<EventListenerOrEventListenerObject, AddEventListenerOptions | undefined> = new WeakMap();
   private __connected: boolean = false;
   /**
@@ -40,8 +40,8 @@ class EventDispatcher {
     Object.defineProperty(this, '__node',                  {enumerable: false, writable: false});
     Object.defineProperty(this, '__protoListeners',        {enumerable: false, writable: false});
     Object.defineProperty(this, '__propListeners',         {enumerable: false, writable: false});
-    Object.defineProperty(this, '__connectedListeners',    {enumerable: false});
-    Object.defineProperty(this, '__disconnectedListeners', {enumerable: false});
+    Object.defineProperty(this, '__connectedListeners',    {enumerable: false, writable: false});
+    Object.defineProperty(this, '__disconnectedListeners', {enumerable: false, writable: false});
     Object.defineProperty(this, '__listenerOptions',       {enumerable: false, writable: false});
     Object.defineProperty(this, '__connected',             {enumerable: false});
   }
@@ -50,36 +50,44 @@ class EventDispatcher {
    * @param {Object} properties - Properties.
    */
   setPropListeners(properties: Record<string, ProtoListenerType>) {
-    // TODO: Unset propListeners, test.
-    const listeners = this.__propListeners;
-
-    const newListeners: PropListeners = {};
+    const newPropListeners: PropListeners = {};
     for (let prop in properties) {
       if (prop.startsWith('on-')) {
         const type = prop.slice(3, prop.length);
         const listener = (properties[prop] instanceof Array)
-          ? [(properties[prop] as ProtoListenerArrayType)[0], (properties[prop] as ProtoListenerArrayType)[1]]
+          ? [...(properties[prop] as ProtoListenerArrayType)]
           : [properties[prop]];
         if (typeof listener[0] !== 'function') listener[0] = this.__node[listener[0] as keyof IoNode];
-        newListeners[type] = listener as PropListener;
+        newPropListeners[type] = listener as PropListener;
       }
     }
 
-    for (let type in newListeners) {
-      if (listeners[type]) {
-        this.__node.removeEventListener(type, listeners[type][0], listeners[type][1]);
+    const propListeners = this.__propListeners;
+    for (let type in propListeners) {
+      if (!newPropListeners[type]) {
+        if (this.__connected) this.removeEventListener(type, propListeners[type][0], propListeners[type][1]);
+        delete propListeners[type];
       }
-      listeners[type] = newListeners[type];
+    }
+    for (let type in newPropListeners) {
       if (this.__connected) {
-        this.__node.addEventListener(type, listeners[type][0], newListeners[type][1]);
+        if (!propListeners[type]) {
+          this.addEventListener(type, newPropListeners[type][0], newPropListeners[type][1]);
+        } else if ((propListeners[type][0] !== newPropListeners[type][0] || propListeners[type][1] !== newPropListeners[type][1])) {
+          this.removeEventListener(type, propListeners[type][0], propListeners[type][1]);
+          this.addEventListener(type, newPropListeners[type][0], newPropListeners[type][1]);
+        }
       }
+      propListeners[type] = newPropListeners[type];
     }
   }
   /**
    * Connects all event listeners.
    */
-  connect() {
-    debug: { if (this.__connected) console.error('EventDispatcher: already connected!') }
+  connect(): this {
+    debug: {
+      if (this.__connected) console.error('EventDispatcher: already connected!');
+    }
 
     this.__connected = true;
 
@@ -106,12 +114,15 @@ class EventDispatcher {
         this.__disconnectedListeners[type].splice(i, 1);
       }
     }
+    return this;
   }
   /**
    * Disconnects all event listeners.
    */
-  disconnect() {
-    debug: { if (!this.__connected) console.error('EventDispatcher: already disconnected!') }
+  disconnect(): this {
+    debug: {
+      if (!this.__connected) console.error('EventDispatcher: already disconnected!');
+    }
 
     for (let type in this.__protoListeners) {
       const isFunction = typeof this.__protoListeners[type][0] === 'function';
@@ -139,6 +150,7 @@ class EventDispatcher {
     }
 
     this.__connected = false;
+    return this;
   }
   /**
    * Proxy for `addEventListener` method.
@@ -148,6 +160,7 @@ class EventDispatcher {
     this.__connectedListeners[type] = this.__connectedListeners[type] || [];
     const i = this.__connectedListeners[type].indexOf(listener);
     if (i === -1) {
+      // TODO: Test with IoElement and HTMLElement
       if (this.__node.__isIoElement) {
         HTMLElement.prototype.addEventListener.call(this.__node, type, listener, options);
       }
@@ -167,6 +180,7 @@ class EventDispatcher {
       } else {
         const i = this.__disconnectedListeners[type].indexOf(listener);
         if (i !== -1) this.__disconnectedListeners[type].splice(i, 1);
+        if (!this.__disconnectedListeners[type].length) delete this.__disconnectedListeners[type];
         debug: {
           if (i === -1) {
             console.error(`EventDispatcher: event ${type} not found!`)
@@ -176,7 +190,6 @@ class EventDispatcher {
     } else {
       this.__connectedListeners[type] = this.__connectedListeners[type] || [];
       if (listener === undefined) {
-        /// TODO: test
         for (let i = this.__connectedListeners[type].length; i--;) {
           const listener = this.__connectedListeners[type][i];
           const options = this.__listenerOptions.get(listener);
@@ -185,6 +198,7 @@ class EventDispatcher {
               console.error(`EventDispatcher: event ${type} already disconnected!`)
             }
           }
+          // TODO: Test with IoElement and HTMLElement
           if (this.__node.__isIoElement) {
             HTMLElement.prototype.removeEventListener.call(this.__node, type, listener, options);
           }
@@ -192,11 +206,13 @@ class EventDispatcher {
         this.__connectedListeners[type].length = 0;
       } else {
         const i = this.__connectedListeners[type].indexOf(listener);
+        // TODO: Test with IoElement and HTMLElement
         if (this.__node.__isIoElement) {
           options = options || this.__listenerOptions.get(listener);
           HTMLElement.prototype.removeEventListener.call(this.__node, type, listener, options);
         }
         if (i !== -1) this.__connectedListeners[type].splice(i, 1);
+        if (!this.__connectedListeners[type].length) delete this.__connectedListeners[type];
         debug: {
           // TODO: investigate why this happens a lot for floating menu-options.
           if (i === -1) console.warn(`EventDispatcher: event ${type} not found!`);
@@ -207,15 +223,15 @@ class EventDispatcher {
   /**
    * Shorthand for custom event dispatch.
    */
-  dispatchEvent(type: string, detail: Record<string, any> = {}, bubbles: boolean = true, src: HTMLElement | any = this.__node) {
+  dispatchEvent(type: string, detail: Record<string, any> = {}, bubbles: boolean = true, src: Window | Document | HTMLElement | IoNode = this.__node) {
+    // TODO: Test with IoNode, IoElement and native element
     if ((src instanceof HTMLElement || src === window)) {
       HTMLElement.prototype.dispatchEvent.call(src, new CustomEvent(type, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
-      const active = this.__connectedListeners;
-      if (active[type] !== undefined) {
-        const array = active[type].slice(0);
-        for (let i = 0; i < array.length; i ++) {
-          (array[i] as Function).call(src, {detail: detail, target: src, path: [src]});
+      if (this.__connectedListeners[type] !== undefined) {
+        // TODO: Test multiple listeners
+        for (let i = 0; i < this.__connectedListeners[type].length; i ++) {
+          (this.__connectedListeners[type][i] as Function).call(src, {detail: detail, target: src, path: [src]});
           // TODO: consider bubbling.
         }
       }
@@ -226,7 +242,6 @@ class EventDispatcher {
    * Use this when node is no longer needed.
    */
   dispose() {
-    // TODO: test
     if (this.__connected) this.disconnect();
     delete (this as any).__node;
     delete (this as any).__protoListeners;

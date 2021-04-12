@@ -477,7 +477,9 @@ const setNativeElementProps = function (element, props) {
             element.setAttribute('name', prop); // TODO: Reconsider
     }
     if (!element.__eventDispatcher) {
+        // TODO: test
         Object.defineProperty(element, '__eventDispatcher', { value: new EventDispatcher(element, {}) });
+        // TODO: disconnect on disposal?
         element.__eventDispatcher.connect();
     }
     element.__eventDispatcher.setPropListeners(props, element);

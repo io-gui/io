@@ -468,7 +468,9 @@ const setNativeElementProps = function(element: HTMLElement, props: any) {
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
   }
   if (!(element as any).__eventDispatcher) {
+    // TODO: test
     Object.defineProperty(element, '__eventDispatcher', {value: new EventDispatcher(element as unknown as IoNode, {})});
+    // TODO: disconnect on disposal?
     (element as any).__eventDispatcher.connect();
   }
   (element as any).__eventDispatcher.setPropListeners(props, element);
