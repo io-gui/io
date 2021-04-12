@@ -18,8 +18,8 @@ export class Options extends IoNodeMixin(Array) {
             },
         };
     }
-    constructor(options = []) {
-        super();
+    constructor(options = [], props = {}) {
+        super(props);
         for (let i = 0; i < options.length; i++) {
             let option;
             if (options[i] instanceof Item) {

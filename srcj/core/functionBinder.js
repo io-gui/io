@@ -1,9 +1,10 @@
 /**
- * Collection of all functions defined in the prototype chain that start with "on" or "_"
+ * An array of all inherited functions that start with "on" or "_".
+ * It provides a utility function `.bind(node)` that binds the functions to the specified instance.
  */
-class FunctionBinder extends Array {
+export class FunctionBinder extends Array {
     /**
-     * Creates a collection of all functions from protochain that start with "on" or "_".
+     * Creates a collection of all inherited functions from protochain that start with "on" or "_".
      * @param {ProtoChain} protochain - Array of protochain constructors.
      */
     constructor(protochain) {
@@ -31,10 +32,8 @@ class FunctionBinder extends Array {
      * @param {IoNode} node - IoNode instance to bind functions to.
      */
     bind(node) {
-        for (let i = this.length; i--;) {
+        for (let i = this.length; i--;)
             Object.defineProperty(node, this[i], { value: node[this[i]].bind(node) });
-        }
     }
 }
-export { FunctionBinder };
 //# sourceMappingURL=functionBinder.js.map

@@ -103,11 +103,11 @@ export default class {
   run() {
     describe('IoElement', () => {
       describe('Initialized element', () => {
-        it('should have correct property defaults', () => {
+        it('Should have correct property defaults', () => {
           chai.expect(this.element.prop0).to.equal(-1);
           chai.expect(this.element.prop1).to.equal('default');
         });
-        it('should have core API functions defined', () => {
+        it('Should have core API functions defined', () => {
           // Default properties
           chai.expect(this.element.id).to.be.equal('');
           chai.expect(this.element.tabindex).to.be.equal('');
@@ -121,7 +121,7 @@ export default class {
         });
       });
       describe('Observed properties', () => {
-        it('should corectly fire handler functions on change', () => {
+        it('Should corectly invoke handler functions on change', () => {
           this.reset();
           this.element.prop0 = 1;
           this.element.prop1 = 'test';
@@ -129,7 +129,7 @@ export default class {
           chai.expect(this.element._changedCounter).to.equal(2);
           chai.expect(this._changedCounter).to.equal(1);
         });
-        it('should not fire handler functions when disconnected', () => {
+        it('Should not invoke handler functions when disconnected', () => {
           this.reset();
           document.body.removeChild(this.element as unknown as HTMLElement);
           this.element.prop0 = 2;
@@ -139,7 +139,7 @@ export default class {
           chai.expect(this._changedCounter).to.equal(0);
           document.body.appendChild(this.element as unknown as HTMLElement);
         });
-        it('should dispatch correct event payloads to handlers', () => {
+        it('Should dispatch correct event payloads to handlers', () => {
           this.reset();
           this.element.prop0 = 1;
           this.element.prop0 = 0;
@@ -154,13 +154,13 @@ export default class {
       });
       // TODO: Cleanup and improve
       describe('Binding', () => {
-        it('should update bound values correctly', () => {
+        it('Should update bound values correctly', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.$.subelement.prop0).to.equal(Infinity);
           this.element.$.subelement.prop0 = 0;
           chai.expect(this.element.prop0).to.equal(0);
         });
-        it('should disconnect binding when element is disconnected', () => {
+        it('Should disconnect binding when element is disconnected', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.$.subelement.prop0).to.equal(Infinity);
           this.element.removeChild(this.element.$.subelement);
@@ -170,13 +170,13 @@ export default class {
           this.element.$.subelement.prop0 = 2;
           chai.expect(this.element.prop0).to.equal(2);
         });
-        it('should bind to Node node', () => {
+        it('Should bind to Node node', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.subnode.prop2).to.equal(Infinity);
           this.element.subnode.prop2 = 0;
           chai.expect(this.element.prop0).to.equal(0);
         });
-        it('should disconnect binding when Node node is disconnected', () => {
+        it('Should disconnect binding when Node node is disconnected', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.subnode.prop2).to.equal(Infinity);
           this.element.subnode.disconnect(window);

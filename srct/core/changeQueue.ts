@@ -1,5 +1,8 @@
 import {IoNode} from '../components/io-node.js';
 
+/**
+ * Property change payload
+ */
 export class Change {
   property: string;
   value: any;
@@ -23,7 +26,7 @@ export interface ChangeEvent extends CustomEvent {
 }
 
 /**
- * Property change LIFO queue responsible for dispatching change events and triggering change handler functions.
+ * Property change FIFO queue responsible for dispatching change events and invoking change handler functions.
  */
 export class ChangeQueue {
   private readonly __node: IoNode;
@@ -47,6 +50,9 @@ export class ChangeQueue {
    * @param {any} oldValue Old property value.
    */
   queue(property: string, value: any, oldValue: any) {
+    debug: {
+      if (value === oldValue) console.warn(`ChangeQueue: queuing change with same value and oldValue!`);
+    }
     const i = this.__changes.findIndex(change => change.property === property);
     if (i === -1) {
       this.__changes.push(new Change(property, value, oldValue));
@@ -69,15 +75,17 @@ export class ChangeQueue {
     let changed = false;
 
     while (this.__changes.length) {
+      // TODO: convert to FIFO
       const i = this.__changes.length - 1;
+      // const i = 0;
       const change = this.__changes[i];
+      this.__changes.splice(i, 1);
       const property = change.property;
       if (change.value !== change.oldValue) {
         changed = true;
         if (this.__node[property + 'Changed']) this.__node[property + 'Changed'](change);
         this.__node.dispatchEvent(property + '-changed', change);
       }
-      this.__changes.splice(i, 1);
     }
 
     if (changed) {

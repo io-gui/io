@@ -1,4 +1,7 @@
 import { IoNode } from '../components/io-node.js';
+/**
+ * Property change payload
+ */
 export declare class Change {
     property: string;
     value: any;
@@ -16,7 +19,7 @@ export interface ChangeEvent extends CustomEvent {
     readonly detail: Change;
 }
 /**
- * Property change LIFO queue responsible for dispatching change events and triggering change handler functions.
+ * Property change FIFO queue responsible for dispatching change events and invoking change handler functions.
  */
 export declare class ChangeQueue {
     private readonly __node;

@@ -26,7 +26,7 @@ class IoElement1 extends IoElement {
 export default class {
     run() {
         describe('ProtoChain', () => {
-            it('Should have all prototypes from the inheritance chain', () => {
+            it('Should include all inherited constructors', () => {
                 let protochain = new ProtoChain(Array3);
                 chai.expect(protochain[0]).to.be.equal(Array3);
                 chai.expect(protochain[1]).to.be.equal(Array2);
@@ -47,7 +47,7 @@ export default class {
                 chai.expect(protochain[1]).to.be.equal(IoElement);
                 chai.expect(String(protochain[2])).to.be.equal(String(IoNode.__proto__));
             });
-            it('Should terminate at `HTMLElement`, `Object` or `Array`', () => {
+            it('Should terminate chain before `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`', () => {
                 let protochain = new ProtoChain(Array3);
                 chai.expect(protochain[3]).to.be.equal(undefined);
                 protochain = new ProtoChain(Object3);

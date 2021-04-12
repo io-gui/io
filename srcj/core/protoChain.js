@@ -1,12 +1,12 @@
 import { IoNode } from '../components/io-node.js';
 /**
- * An array of all inherited prototypes in the prototype chain.
+ * An array of all inherited contructors from the prototype chain.
  */
 export class ProtoChain extends Array {
     /**
-     * Creates an array of inherited prototypes by traversing down the prototype chain of the specified prototype and adds each prototype to itself.
-     * It terminates with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
-     * @param {Object} prototype - Prototype object.
+     * Creates an array of inherited contructors by traversing down the prototype chain of the specified contructor and adds each contructor to itself.
+     * It terminates when prototype chain before it reaches `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+     * @param {Object} classConstructor - Prototype object.
      */
     constructor(classConstructor) {
         super();

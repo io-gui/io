@@ -47,7 +47,7 @@ export declare class Options extends Options_base {
             strict: boolean;
         };
     };
-    constructor(options?: Array<Item | any>);
+    constructor(options?: Array<Item | any>, props?: {});
     option(value: any): any;
     pathChanged(): void;
     onItemSelectedPathChanged(event: any): void;

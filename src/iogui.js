@@ -27,7 +27,7 @@
 export {IoNode, IoNodeMixin, RegisterIoNode} from '../srcj/components/io-node.js';
 export {IoElement, RegisterIoElement} from '../srcj/components/io-element.js';
 
-export {ChangeQueue} from '../srcj/core/changeQueue.js';
+export {Change, ChangeQueue} from '../srcj/core/changeQueue.js';
 export {EventDispatcher} from '../srcj/core/eventDispatcher.js';
 export {PropertyBinder, Binding} from '../srcj/core/propertyBinder.js';
 export {FunctionBinder} from '../srcj/core/functionBinder.js';

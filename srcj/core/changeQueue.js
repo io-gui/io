@@ -1,3 +1,6 @@
+/**
+ * Property change payload
+ */
 export class Change {
     /**
      * Creates property change payload.
@@ -12,7 +15,7 @@ export class Change {
     }
 }
 /**
- * Property change LIFO queue responsible for dispatching change events and triggering change handler functions.
+ * Property change FIFO queue responsible for dispatching change events and invoking change handler functions.
  */
 export class ChangeQueue {
     /**
@@ -35,6 +38,10 @@ export class ChangeQueue {
      * @param {any} oldValue Old property value.
      */
     queue(property, value, oldValue) {
+        debug: {
+            if (value === oldValue)
+                console.warn(`ChangeQueue: queuing change with same value and oldValue!`);
+        }
         const i = this.__changes.findIndex(change => change.property === property);
         if (i === -1) {
             this.__changes.push(new Change(property, value, oldValue));
@@ -57,8 +64,11 @@ export class ChangeQueue {
         this.__dispatching = true;
         let changed = false;
         while (this.__changes.length) {
+            // TODO: convert to FIFO
             const i = this.__changes.length - 1;
+            // const i = 0;
             const change = this.__changes[i];
+            this.__changes.splice(i, 1);
             const property = change.property;
             if (change.value !== change.oldValue) {
                 changed = true;
@@ -66,7 +76,6 @@ export class ChangeQueue {
                     this.__node[property + 'Changed'](change);
                 this.__node.dispatchEvent(property + '-changed', change);
             }
-            this.__changes.splice(i, 1);
         }
         if (changed) {
             this.__node.applyCompose();
