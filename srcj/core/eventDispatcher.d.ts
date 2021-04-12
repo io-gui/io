@@ -11,8 +11,8 @@ export declare class ProtoListeners {
  */
 declare class EventDispatcher {
     private readonly __node;
-    private __protoListeners;
-    private __propListeners;
+    private readonly __protoListeners;
+    private readonly __propListeners;
     private __connectedListeners;
     private __disconnectedListeners;
     private readonly __listenerOptions;

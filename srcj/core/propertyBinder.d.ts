@@ -52,8 +52,8 @@ export declare class Binding {
  * Manager for property bindings. It holds all bindings for a particular IoNode.
  */
 export declare class PropertyBinder {
-    __node: IoNode;
-    __bindings: Record<string, Binding>;
+    private readonly __node;
+    private readonly __bindings;
     /**
      * Creates binding manager for the specified node.
      * @param {IoNode} node - Owner node.

@@ -25,8 +25,8 @@ class EventDispatcher {
         this.__node = node;
         this.__protoListeners = protoListeners;
         Object.defineProperty(this, '__node', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__protoListeners', { enumerable: false });
-        Object.defineProperty(this, '__propListeners', { enumerable: false });
+        Object.defineProperty(this, '__protoListeners', { enumerable: false, writable: false });
+        Object.defineProperty(this, '__propListeners', { enumerable: false, writable: false });
         Object.defineProperty(this, '__connectedListeners', { enumerable: false });
         Object.defineProperty(this, '__disconnectedListeners', { enumerable: false });
         Object.defineProperty(this, '__listenerOptions', { enumerable: false, writable: false });
@@ -187,9 +187,9 @@ class EventDispatcher {
                 if (i !== -1)
                     this.__connectedListeners[type].splice(i, 1);
                 debug: {
-                    if (i === -1) {
-                        console.error(`EventDispatcher: event ${type} not found!`);
-                    }
+                    // TODO: investigate why this happens a lot for floating menu-options.
+                    if (i === -1)
+                        console.warn(`EventDispatcher: event ${type} not found!`);
                 }
             }
         }

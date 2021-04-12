@@ -22,7 +22,7 @@ export default class {
         chai.expect(binding.__targets instanceof Array).to.be.equal(true);
         chai.expect(binding.__targets.length).to.be.equal(0);
         chai.expect(binding.__targetProperties instanceof WeakMap).to.be.equal(true);
-        const propertyBinder = new PropertyBinder(node);
+        const propertyBinder = new PropertyBinder(node) as any;
         chai.expect(propertyBinder.__node).to.be.equal(node);
         chai.expect(JSON.stringify(propertyBinder.__bindings)).to.be.equal('{}');
       });
@@ -34,7 +34,7 @@ export default class {
         chai.expect(binding.__property).to.be.equal(undefined);
         chai.expect(binding.__targets).to.be.equal(undefined);
         chai.expect(binding.__targetProperties).to.be.equal(undefined);
-        const propertyBinder = new PropertyBinder(node);
+        const propertyBinder = new PropertyBinder(node) as any;
         const binding2 = propertyBinder.bind('prop1') as any;
         propertyBinder.dispose();
         chai.expect(propertyBinder.__node).to.be.equal(undefined);
@@ -79,6 +79,7 @@ export default class {
         chai.expect(binding0.__targets[1]).to.be.equal(undefined);
         chai.expect(binding1.__targets[0]).to.be.equal(dstIoNode0);
         chai.expect(binding1.__targets[1]).to.be.equal(dstIoNode1);
+        chai.expect(binding1.__targets[2]).to.be.equal(undefined);
 
         const binding0target0Props = binding0._getTargetProperties(dstIoNode0);
         const binding0target1Props = binding0._getTargetProperties(dstIoNode1);

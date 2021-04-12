@@ -25,8 +25,8 @@ export class ProtoListeners {
  */
 class EventDispatcher {
   private readonly __node: IoNode;
-  private __protoListeners: ProtoListeners;
-  private __propListeners: PropListeners = {};
+  private readonly __protoListeners: ProtoListeners;
+  private readonly __propListeners: PropListeners = {};
   private __connectedListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
   private __disconnectedListeners: Record<string, EventListenerOrEventListenerObject[]> = {};
   private readonly __listenerOptions: WeakMap<EventListenerOrEventListenerObject, AddEventListenerOptions | undefined> = new WeakMap();
@@ -38,8 +38,8 @@ class EventDispatcher {
     this.__node = node;
     this.__protoListeners = protoListeners;
     Object.defineProperty(this, '__node',                  {enumerable: false, writable: false});
-    Object.defineProperty(this, '__protoListeners',        {enumerable: false});
-    Object.defineProperty(this, '__propListeners',         {enumerable: false});
+    Object.defineProperty(this, '__protoListeners',        {enumerable: false, writable: false});
+    Object.defineProperty(this, '__propListeners',         {enumerable: false, writable: false});
     Object.defineProperty(this, '__connectedListeners',    {enumerable: false});
     Object.defineProperty(this, '__disconnectedListeners', {enumerable: false});
     Object.defineProperty(this, '__listenerOptions',       {enumerable: false, writable: false});

@@ -161,7 +161,8 @@ export class PropertyBinder {
     constructor(node) {
         this.__bindings = {};
         this.__node = node;
-        Object.defineProperty(this, '__node', { enumerable: false });
+        Object.defineProperty(this, '__node', { enumerable: false, writable: false });
+        Object.defineProperty(this, '__bindings', { enumerable: false, writable: false });
     }
     /**
      * Returns a binding to the specified property name or creates one if it does not exist.

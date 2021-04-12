@@ -74,6 +74,7 @@ export default class {
                 chai.expect(binding0.__targets[1]).to.be.equal(undefined);
                 chai.expect(binding1.__targets[0]).to.be.equal(dstIoNode0);
                 chai.expect(binding1.__targets[1]).to.be.equal(dstIoNode1);
+                chai.expect(binding1.__targets[2]).to.be.equal(undefined);
                 const binding0target0Props = binding0._getTargetProperties(dstIoNode0);
                 const binding0target1Props = binding0._getTargetProperties(dstIoNode1);
                 chai.expect(binding0target0Props[0]).to.be.equal('prop1');

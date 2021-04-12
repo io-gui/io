@@ -152,15 +152,16 @@ export class Binding {
  * Manager for property bindings. It holds all bindings for a particular IoNode.
  */
 export class PropertyBinder {
-  __node: IoNode;
-  __bindings: Record<string, Binding> = {};
+  private readonly __node: IoNode;
+  private readonly __bindings: Record<string, Binding> = {};
   /**
    * Creates binding manager for the specified node.
    * @param {IoNode} node - Owner node.
    */
   constructor(node: IoNode) {
     this.__node = node;
-    Object.defineProperty(this, '__node', {enumerable: false});
+    Object.defineProperty(this, '__node',     {enumerable: false, writable: false});
+    Object.defineProperty(this, '__bindings', {enumerable: false, writable: false});
   }
   /**
    * Returns a binding to the specified property name or creates one if it does not exist.
