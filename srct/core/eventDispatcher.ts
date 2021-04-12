@@ -198,9 +198,8 @@ class EventDispatcher {
         }
         if (i !== -1) this.__connectedListeners[type].splice(i, 1);
         debug: {
-          if (i === -1) {
-            console.error(`EventDispatcher: event ${type} not found!`)
-          }
+          // TODO: investigate why this happens a lot for floating menu-options.
+          if (i === -1) console.warn(`EventDispatcher: event ${type} not found!`);
         }
       }
     }
