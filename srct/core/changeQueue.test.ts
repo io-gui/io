@@ -128,11 +128,10 @@ export default class {
       });
       it('Should dispose correctly', () => {
         const node = new TestIoNode().connect();
-        const changeQueue = new ChangeQueue(node);
+        const changeQueue = new ChangeQueue(node) as any;
         changeQueue.dispose();
-        chai.expect((changeQueue as any).__node).to.be.equal(undefined);
-        chai.expect((changeQueue as any).__changes).to.be.equal(undefined);
-        chai.expect((changeQueue as any).__dispatching).to.be.equal(undefined);
+        chai.expect(changeQueue.__node).to.be.equal(undefined);
+        chai.expect(changeQueue.__changes).to.be.equal(undefined);
       });
     });
   }

@@ -35,7 +35,7 @@ export default class {
         chai.expect(binding.value).to.be.equal(2);
         binding.value = 3;
         chai.expect(node.prop1).to.be.equal(3);
-        const propertyBinder = new PropertyBinder(node);
+        const propertyBinder = new PropertyBinder(node) as any;
         const binding2 = propertyBinder.bind('prop1') as any;
         node.prop1 = 1;
         chai.expect(binding2.value).to.be.equal(1);

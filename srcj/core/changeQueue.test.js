@@ -129,7 +129,6 @@ export default class {
                 changeQueue.dispose();
                 chai.expect(changeQueue.__node).to.be.equal(undefined);
                 chai.expect(changeQueue.__changes).to.be.equal(undefined);
-                chai.expect(changeQueue.__dispatching).to.be.equal(undefined);
             });
         });
     }

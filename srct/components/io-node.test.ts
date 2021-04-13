@@ -77,7 +77,7 @@ export default class {
         chai.expect(node.__connections).to.be.deep.equal([window]);
         node.dispose();
         chai.expect(node.__connected).to.be.equal(false);
-        chai.expect(node.__eventDispatcher.__connected).to.be.equal(undefined);
+        chai.expect(node.__eventDispatcher.__connected).to.be.equal(false);
         chai.expect(node.__properties.__connected).to.be.equal(false);
         chai.expect(node.__connections).to.be.deep.equal([]);
       });

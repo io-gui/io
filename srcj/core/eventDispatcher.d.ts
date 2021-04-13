@@ -1,7 +1,7 @@
 import { ProtoChain } from './protoChain.js';
 import { IoNode } from '../components/io-node.js';
 declare type ProtoListenerType = keyof IoNode | EventListenerOrEventListenerObject | ProtoListenerArrayType;
-declare type ProtoListenerArrayType = [keyof IoNode | EventListenerOrEventListenerObject, AddEventListenerOptions | undefined];
+declare type ProtoListenerArrayType = [keyof IoNode | EventListenerOrEventListenerObject, AddEventListenerOptions?];
 export declare class ProtoListeners {
     [listener: string]: ProtoListenerArrayType;
     constructor(protochain: ProtoChain);
@@ -11,16 +11,15 @@ export declare class ProtoListeners {
  */
 declare class EventDispatcher {
     private readonly __node;
+    private readonly __nodeIsEventTarget;
     private readonly __protoListeners;
     private readonly __propListeners;
-    private readonly __connectedListeners;
-    private readonly __disconnectedListeners;
-    private readonly __listenerOptions;
+    private readonly __addedListeners;
     private __connected;
     /**
      * Creates Event Dispatcher.
      */
-    constructor(node: IoNode, protoListeners: ProtoListeners);
+    constructor(node: IoNode | HTMLElement, protoListeners?: ProtoListeners);
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} properties - Properties.
@@ -47,7 +46,7 @@ declare class EventDispatcher {
     /**
      * Shorthand for custom event dispatch.
      */
-    dispatchEvent(type: string, detail?: Record<string, any>, bubbles?: boolean, src?: Window | Document | HTMLElement | IoNode): void;
+    dispatchEvent(type: string, detail?: Record<string, any>, bubbles?: boolean, node?: EventTarget | IoNode): void;
     /**
      * Disconnects all event listeners and removes all references.
      * Use this when node is no longer needed.
