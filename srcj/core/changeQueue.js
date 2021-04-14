@@ -15,11 +15,12 @@ export class Change {
     }
 }
 /**
- * Property change FIFO queue responsible for dispatching change events and invoking change handler functions.
+ * Property change FIFO queue.
+ * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
 export class ChangeQueue {
     /**
-     * Creates change queue for the specified `IoNode`.
+     * Creates change queue for the specified owner instance of `IoNode`.
      * @param {IoNode} node - Owner node.
      */
     constructor(node) {
@@ -31,7 +32,7 @@ export class ChangeQueue {
         Object.defineProperty(this, '__dispatching', { enumerable: false });
     }
     /**
-     * Adds property change to the queue by specifying property name, previous and the new value.
+     * Adds property change payload to the queue by specifying property name, previous and the new value.
      * If the change is already in the queue, the new value is updated in-queue.
      * @param {string} property - Property name.
      * @param {any} value Property value.
@@ -56,7 +57,7 @@ export class ChangeQueue {
      *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
      *  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
      * If owner node is not connected dispatch is aborted.
-     * Changes with same `value` and `oldValue` are ignored.
+     * After all changes are dispatched it invokes `.applyCompose()` and `.changed()` functions od the owner node instance.
      */
     dispatch() {
         if (this.__dispatching === true || !this.__node.__connected)
@@ -91,7 +92,6 @@ export class ChangeQueue {
         this.__changes.length = 0;
         delete this.__node;
         delete this.__changes;
-        delete this.__dispatching;
     }
 }
 //# sourceMappingURL=changeQueue.js.map

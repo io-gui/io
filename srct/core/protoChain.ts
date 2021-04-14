@@ -1,5 +1,3 @@
-import {IoNode} from '../components/io-node.js';
-
 export type ProtoChainConstructor<T extends any> = new (...args: any[]) => T;
 
 /**
@@ -16,7 +14,7 @@ export class ProtoChain extends Array<ProtoChainConstructor<any[]>> {
     let prototype = classConstructor.prototype;
     while (
       prototype
-      && prototype.constructor !== (IoNode as any).__proto__
+      && prototype.constructor.name !== "classConstructor"
       && prototype.constructor !== HTMLElement
       && prototype.constructor !== Object
       && prototype.constructor !== Array) {

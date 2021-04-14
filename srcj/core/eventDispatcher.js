@@ -172,7 +172,6 @@ class EventDispatcher {
      * Shorthand for custom event dispatch.
      */
     dispatchEvent(type, detail = {}, bubbles = true, node = this.__node) {
-        // TODO: Test with IoNode, IoElement and native element
         if (!this.__connected)
             return;
         if ((node instanceof EventTarget)) {

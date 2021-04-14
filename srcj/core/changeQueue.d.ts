@@ -17,21 +17,23 @@ export declare class Change {
 export interface ChangeEvent extends CustomEvent {
     readonly target: EventTarget;
     readonly detail: Change;
+    readonly path: EventTarget[];
 }
 /**
- * Property change FIFO queue responsible for dispatching change events and invoking change handler functions.
+ * Property change FIFO queue.
+ * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
 export declare class ChangeQueue {
     private readonly __node;
     private readonly __changes;
     private __dispatching;
     /**
-     * Creates change queue for the specified `IoNode`.
+     * Creates change queue for the specified owner instance of `IoNode`.
      * @param {IoNode} node - Owner node.
      */
     constructor(node: IoNode);
     /**
-     * Adds property change to the queue by specifying property name, previous and the new value.
+     * Adds property change payload to the queue by specifying property name, previous and the new value.
      * If the change is already in the queue, the new value is updated in-queue.
      * @param {string} property - Property name.
      * @param {any} value Property value.
@@ -44,7 +46,7 @@ export declare class ChangeQueue {
      *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
      *  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
      * If owner node is not connected dispatch is aborted.
-     * Changes with same `value` and `oldValue` are ignored.
+     * After all changes are dispatched it invokes `.applyCompose()` and `.changed()` functions od the owner node instance.
      */
     dispatch(): void;
     /**

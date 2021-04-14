@@ -1,5 +1,5 @@
 import { ProtoChain } from './protoChain.js';
-import { IoNode } from '../components/io-node.js';
+import { IoNode, IoNodeMixin } from '../components/io-node.js';
 import { IoElement } from '../components/io-element.js';
 class Array1 extends Array {
 }
@@ -23,6 +23,8 @@ class IoNode1 extends IoNode {
 }
 class IoElement1 extends IoElement {
 }
+class IoNode2 extends IoNodeMixin(Object3) {
+}
 export default class {
     run() {
         describe('ProtoChain', () => {
@@ -45,9 +47,10 @@ export default class {
                 protochain = new ProtoChain(IoElement1);
                 chai.expect(protochain[0]).to.be.equal(IoElement1);
                 chai.expect(protochain[1]).to.be.equal(IoElement);
-                chai.expect(String(protochain[2])).to.be.equal(String(IoNode.__proto__));
+                protochain = new ProtoChain(IoNode2);
+                chai.expect(protochain[0]).to.be.equal(IoNode2);
             });
-            it('Should terminate chain before `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`', () => {
+            it('Should terminate at `IoNode` and `IoElement` or before `HTMLElement`, `Object` or `Array`', () => {
                 let protochain = new ProtoChain(Array3);
                 chai.expect(protochain[3]).to.be.equal(undefined);
                 protochain = new ProtoChain(Object3);
@@ -58,6 +61,8 @@ export default class {
                 chai.expect(protochain[2]).to.be.equal(undefined);
                 protochain = new ProtoChain(IoElement1);
                 chai.expect(protochain[4]).to.be.equal(undefined);
+                protochain = new ProtoChain(IoNode2);
+                chai.expect(protochain[1]).to.be.equal(undefined);
             });
         });
     }

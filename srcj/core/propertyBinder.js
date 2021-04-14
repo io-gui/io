@@ -11,12 +11,14 @@ export class Binding {
         this.__targetProperties = new WeakMap();
         this.__node = node;
         this.__property = property;
+        this._onTargetChanged = this._onTargetChanged.bind(this);
+        this._onSourceChanged = this._onSourceChanged.bind(this);
         Object.defineProperty(this, '__node', { enumerable: false, writable: false });
         Object.defineProperty(this, '__property', { enumerable: false, writable: false });
         Object.defineProperty(this, '__targets', { enumerable: false, writable: false });
         Object.defineProperty(this, '__targetProperties', { enumerable: false, writable: false });
-        this._onTargetChanged = this._onTargetChanged.bind(this);
-        this._onSourceChanged = this._onSourceChanged.bind(this);
+        Object.defineProperty(this, '_onTargetChanged', { enumerable: false, writable: false });
+        Object.defineProperty(this, '_onSourceChanged', { enumerable: false, writable: false });
         this.__node.addEventListener(`${this.__property}-changed`, this._onSourceChanged);
     }
     set value(value) {

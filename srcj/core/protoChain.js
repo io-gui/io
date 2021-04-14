@@ -1,4 +1,3 @@
-import { IoNode } from '../components/io-node.js';
 /**
  * An array of all inherited contructors from the prototype chain.
  */
@@ -12,7 +11,7 @@ export class ProtoChain extends Array {
         super();
         let prototype = classConstructor.prototype;
         while (prototype
-            && prototype.constructor !== IoNode.__proto__
+            && prototype.constructor.name !== "classConstructor"
             && prototype.constructor !== HTMLElement
             && prototype.constructor !== Object
             && prototype.constructor !== Array) {

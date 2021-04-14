@@ -1,20 +1,14 @@
 import { ChangeQueue } from './changeQueue.js';
-import { IoNode, RegisterIoNode } from '../components/io-node.js';
-class TestIoNode extends IoNode {
+class FakeIoNode {
     constructor() {
-        super(...arguments);
+        this.__connected = true;
         this.prop1ChangeCounter = 0;
         this.prop2ChangeCounter = 0;
         this.changeCounter = 0;
+        this.applyComposeCounter = 0;
         this.eventDispatchCounter = 0;
         this.eventRegister = [];
         this.changeRegister = [];
-    }
-    static get Properties() {
-        return {
-            prop1: 0,
-            prop2: 0,
-        };
     }
     prop1Changed(change) {
         this.prop1Change = change;
@@ -35,22 +29,23 @@ class TestIoNode extends IoNode {
     changed() {
         this.changeCounter++;
     }
+    applyCompose() {
+        this.applyComposeCounter++;
+    }
 }
-RegisterIoNode(TestIoNode);
 export default class {
     run() {
         describe('ChangeQueue', () => {
             it('Should initialize with correct default values', () => {
-                const node = new TestIoNode().connect();
+                const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue(node);
-                chai.expect(typeof changeQueue.__node).to.be.equal('object');
-                chai.expect(typeof changeQueue.__changes).to.be.equal('object');
-                chai.expect(changeQueue.__changes instanceof Array).to.be.equal(true);
+                chai.expect(changeQueue.__node).to.be.equal(node);
+                chai.expect(JSON.stringify(changeQueue.__changes)).to.be.equal('[]');
                 chai.expect(changeQueue.__changes.length).to.be.equal(0);
                 chai.expect(changeQueue.__dispatching).to.be.equal(false);
             });
             it('Should dispatch change events with correct payloads', () => {
-                const node = new TestIoNode().connect();
+                const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue(node);
                 changeQueue.queue('test', 1, 0);
                 changeQueue.queue('test', 2, 1);
@@ -63,6 +58,7 @@ export default class {
                 chai.expect(node.eventChange?.oldValue).to.be.equal(0);
                 chai.expect(node.eventDispatchCounter).to.be.equal(1);
                 chai.expect(node.changeCounter).to.be.equal(1);
+                chai.expect(node.applyComposeCounter).to.be.equal(1);
                 changeQueue.queue('test2', 0, -1);
                 changeQueue.queue('test3', 2, 1);
                 chai.expect(changeQueue.__changes.length).to.be.equal(2);
@@ -79,21 +75,23 @@ export default class {
                 chai.expect(node.eventDispatchCounter).to.be.equal(3);
                 chai.expect(node.prop1ChangeCounter).to.be.equal(0);
                 chai.expect(node.changeCounter).to.be.equal(2);
+                chai.expect(node.applyComposeCounter).to.be.equal(2);
             });
             it('Should invoke handler functions with correct payloads', () => {
-                const node = new TestIoNode().connect();
+                const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue(node);
                 changeQueue.queue('prop1', 1, 0);
                 changeQueue.queue('prop1', 2, 1);
                 changeQueue.dispatch();
                 chai.expect(node.prop1ChangeCounter).to.be.equal(1);
                 chai.expect(node.changeCounter).to.be.equal(1);
+                chai.expect(node.applyComposeCounter).to.be.equal(1);
                 chai.expect(node.prop1Change?.property).to.be.equal('prop1');
                 chai.expect(node.prop1Change?.value).to.be.equal(2);
                 chai.expect(node.prop1Change?.oldValue).to.be.equal(0);
             });
             it('Should handle changes in first-in, first-out (FIFO) order', () => {
-                const node = new TestIoNode().connect();
+                const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue(node);
                 changeQueue.queue('prop1', 1, 0);
                 changeQueue.queue('prop1', 3, 0);
@@ -106,25 +104,25 @@ export default class {
                 // chai.expect(JSON.stringify(node.eventRegister)).to.be.equal('["prop1-changed","prop2-changed"]');
             });
             it('Should skip dispatch if value is same as oldValue', () => {
-                const node = new TestIoNode().connect();
+                const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue(node);
                 changeQueue.queue('prop1', 0, 0);
                 changeQueue.dispatch();
                 chai.expect(node.prop1ChangeCounter).to.be.equal(0);
             });
             it('Should abort dispatch if owner node is disconnected', () => {
-                const node = new TestIoNode().connect();
+                const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue(node);
                 changeQueue.queue('prop1', 1, 0);
-                node.disconnect();
+                node.__connected = false;
                 changeQueue.dispatch();
                 chai.expect(node.prop1ChangeCounter).to.be.equal(0);
-                node.connect();
+                node.__connected = true;
                 changeQueue.dispatch();
                 chai.expect(node.prop1ChangeCounter).to.be.equal(1);
             });
             it('Should dispose correctly', () => {
-                const node = new TestIoNode().connect();
+                const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue(node);
                 changeQueue.dispose();
                 chai.expect(changeQueue.__node).to.be.equal(undefined);

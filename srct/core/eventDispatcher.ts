@@ -178,7 +178,6 @@ class EventDispatcher {
    * Shorthand for custom event dispatch.
    */
   dispatchEvent(type: string, detail: Record<string, any> = {}, bubbles: boolean = true, node: EventTarget | IoNode = this.__node) {
-    // TODO: Test with IoNode, IoElement and native element
     if (!this.__connected) return;
     if ((node instanceof EventTarget)) {
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(type, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
