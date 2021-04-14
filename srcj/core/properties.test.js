@@ -25,13 +25,9 @@ export default class {
             describe('Property', () => {
                 it('Should initialize properly', () => {
                     let protoProp, prop;
-                    // initialize without argument
                     protoProp = new ProtoProperty();
                     prop = new Property(protoProp);
-                    chai.expect(Object.prototype.hasOwnProperty.call(protoProp, 'value')).to.be.equal(true);
-                    chai.expect(Object.prototype.hasOwnProperty.call(protoProp, 'type')).to.be.equal(true);
-                    chai.expect(Object.prototype.hasOwnProperty.call(prop, 'value')).to.be.equal(true);
-                    chai.expect(Object.prototype.hasOwnProperty.call(prop, 'type')).to.be.equal(true);
+                    chai.expect(JSON.stringify(protoProp)).to.be.equal(JSON.stringify(prop)).to.be.equal('{"reflect":0,"notify":true,"observe":false,"readonly":false,"strict":false,"enumerable":true}');
                     chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(undefined);
                     chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(undefined);
                     chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);
@@ -42,6 +38,7 @@ export default class {
                     // initialize with null argument
                     protoProp = new ProtoProperty(null);
                     prop = new Property(protoProp);
+                    chai.expect(JSON.stringify(protoProp)).to.be.equal(JSON.stringify(prop)).to.be.equal('{"value":null,"reflect":0,"notify":true,"observe":false,"readonly":false,"strict":false,"enumerable":true}');
                     chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(null);
                     chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(undefined);
                     chai.expect(protoProp.notify).to.be.equal(prop.notify).to.be.equal(true);

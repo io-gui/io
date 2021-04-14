@@ -1,7 +1,14 @@
 import { ProtoChain } from './protoChain.js';
 import { IoNode } from '../components/io-node.js';
-declare type ProtoListenerType = keyof IoNode | EventListenerOrEventListenerObject | ProtoListenerArrayType;
-declare type ProtoListenerArrayType = [keyof IoNode | EventListenerOrEventListenerObject, AddEventListenerOptions?];
+export declare type ProtoListenerType = keyof IoNode | EventListenerOrEventListenerObject | ProtoListenerArrayType;
+export declare type ProtoListenerArrayType = [keyof IoNode | EventListenerOrEventListenerObject, AddEventListenerOptions?];
+export declare type ProtoListenerRecord = Record<string, ProtoListenerType>;
+export declare type Listener = [EventListenerOrEventListenerObject, AddEventListenerOptions?];
+export declare type Listeners = Record<string, Listener>;
+export declare type ListenersArray = Record<string, Listener[]>;
+/**
+ * Array of all listeners defined as `static get Listeners()` return objects in prototype chain.
+ */
 export declare class ProtoListeners {
     [listener: string]: ProtoListenerArrayType;
     constructor(protochain: ProtoChain);

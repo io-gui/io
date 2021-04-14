@@ -2,86 +2,93 @@ import {Binding} from './propertyBinder.js';
 import {ProtoChain} from './protoChain.js';
 
 type Constructor = new (...args: any[]) => Object;
+type ReflectType = -1 | 0 | 1 | 2;
+
+export type ProtoPropertyDefinition = {
+  value?: any;
+  type?: Constructor;
+  reflect?: ReflectType;
+  notify?: boolean;
+  observe?: boolean;
+  readonly?: boolean;
+  strict?: boolean;
+  enumerable?: boolean;
+  binding?: Binding;
+};
+
+export type ProtoPropertyType = string | number | boolean | Constructor | null | Binding | ProtoPropertyDefinition;
+export type ProtoPropertyRecord = Record<string, ProtoPropertyType>;
+
+class ProtoProperty {
+  value: any = undefined;
+  type?: Constructor = undefined;
+  reflect: ReflectType = 0;
+  notify: boolean = true;
+  observe: boolean = false;
+  readonly: boolean = false;
+  strict: boolean = false;
+  enumerable: boolean = true;
+  binding?: Binding = undefined;
+  constructor(prop?: ProtoPropertyType) {
+    return this.assign(prop);
+  }
+  assign(prop?: ProtoPropertyType) {
+    if (prop === undefined || prop === null) {
+      this.value = prop;
+    } else if (typeof prop === 'function') {
+      this.type = prop;
+    } else if (prop instanceof Binding) {
+      this.binding = prop;
+    } else if (prop && prop.constructor === Object) {
+      prop = prop as ProtoPropertyDefinition;
+      if (prop.value !== undefined) this.value = prop.value;
+      if (prop.type !== undefined) this.type = prop.type;
+      if (this.type === undefined && this.value !== undefined && this.value !== null) {
+        this.type = this.value.constructor;
+      }
+      if (prop.reflect !== undefined) this.reflect = prop.reflect;
+      if (prop.notify !== undefined) this.notify = prop.notify;
+      if (prop.observe !== undefined) this.observe = prop.observe;
+      if (prop.readonly !== undefined) this.readonly = prop.readonly;
+      if (prop.strict !== undefined) this.strict = prop.strict;
+      if (prop.enumerable !== undefined) this.enumerable = prop.enumerable;
+      if (prop.binding instanceof Binding) this.binding = prop.binding;
+    } else if (!(prop && prop.constructor === Object)) {
+      this.value = prop;
+      this.type = prop.constructor as Constructor;
+    }
+    debug: {
+      if (this.type !== undefined && typeof this.type !== 'function') console.warn('ProtoProperty: Incorrect type for "type" field');
+      if (typeof this.reflect !== 'number') console.warn('ProtoProperty: Incorrect type for "reflect" field');
+      if (typeof this.notify !== 'boolean') console.warn('ProtoProperty: Incorrect type for "notify" field');
+      if (typeof this.observe !== 'boolean') console.warn('ProtoProperty: Incorrect type for "observe" field');
+      if (typeof this.readonly !== 'boolean') console.warn('ProtoProperty: Incorrect type for "readonly" field');
+      if (typeof this.strict !== 'boolean') console.warn('ProtoProperty: Incorrect type for "strict" field');
+      if (typeof this.enumerable !== 'boolean') console.warn('ProtoProperty: Incorrect type for "enumerable" field');
+      if (this.binding !== undefined && this.binding.constructor !== Binding) console.warn('ProtoProperty: Incorrect type for "binding" field');
+    }
+    return this;
+  }
+}
 
 /**
- * Property configuration object for a class **prototype**.
- * It is generated from property definitions in `static get Properties()` return object.
+ * Array of all properties defined as `static get Properties()` return objects in prototype chain.
  */
-class ProtoProperty {
-  //Default value.
-  value?: any;
-  //Constructor of value.
-  type?: Constructor;
-  //Reflects to HTML attribute [-1, 0, 1 or 2]
-  reflect?: number;
-  //Trigger change handlers and change events.
-  notify?: boolean;
-  //Observe object mutations for this property.
-  observe?: boolean;
-  //Makes the property readonly. // TODO: document and test
-  readonly?: boolean;
-  //Enforce stric typing. // TODO: document and test
-  strict?: boolean;
-  //Makes property enumerable.
-  enumerable?: boolean;
-  //Binding object.
-  binding?: Binding;
-  /**
-   * Creates the property configuration object and sets the default values.
-   */
-  constructor(prop?: string | Record<string, any> | any, noDefaults?: boolean) {
-
-    if (!noDefaults) {
-      this.value = undefined;
-      this.type = undefined;
-      this.reflect = 0;
-      this.notify = true;
-      this.observe = false;
-      this.readonly = false;
-      this.strict = false;
-      this.enumerable = true;
-      this.binding = undefined;
-    }
-
-    if (prop === undefined || prop === null) {
-
-      prop = {value: prop};
-
-    } else if (typeof prop === 'function') {
-
-      prop = {type: prop};
-
-    } else if (prop instanceof Binding) {
-
-      prop = {binding: prop};
-
-    } else if (!(prop && prop.constructor === Object)) {
-
-      prop = {value: prop};
-
-    }
-
-    if (prop.type === undefined) {
-
-      if (prop.value !== undefined && prop.value !== null) {
-
-        prop.type = prop.value.constructor;
-
+ class ProtoProperties {
+  [property: string]: ProtoProperty;
+  constructor(protochain: ProtoChain) {
+    for (let i = protochain.length; i--;) {
+      const props = (protochain[i] as any).Properties as ProtoPropertyRecord;
+      for (let p in props) {
+        if (!this[p]) this[p] = new ProtoProperty(props[p]);
+        else this[p].assign(props[p]);
+        // TODO: Document or reconsider.
+        if (p.charAt(0) === '_') {
+          this[p].notify = false;
+          this[p].enumerable = false;
+        }
       }
-
     }
-
-    if (prop.value !== undefined) this.value = prop.value;
-    if (typeof prop.type === 'function') this.type = prop.type;
-    if (typeof prop.reflect == 'number') this.reflect = prop.reflect;
-    if (typeof prop.notify == 'boolean') this.notify = prop.notify;
-    if (typeof prop.observe == 'boolean') this.observe = prop.observe;
-    if (typeof prop.readonly == 'boolean') this.readonly = prop.readonly;
-    if (typeof prop.strict == 'boolean') this.strict = prop.strict;
-    if (typeof prop.enumerable == 'boolean') this.enumerable = prop.enumerable;
-    if (prop.binding instanceof Binding) this.binding = prop.binding;
-
-    return this;
   }
 }
 
@@ -148,43 +155,19 @@ class Property {
 }
 
 /**
- * Collection of all property configurations for a class **prototype**.
- * Property configurations are inferred from all property definitions in the prototype chain.
- */
-class ProtoProperties {
-  /**
-   * Creates all property configurations for specified prototype chain.
-   */
-  constructor(protochain: ProtoChain) {
-    const self = this as any;
-    for (let i = protochain.length; i--;) {
-      const props = (protochain[i] as any).Properties;
-      for (let p in props) {
-        if (!self[p]) self[p] = new ProtoProperty(props[p]);
-        else Object.assign(self[p], new ProtoProperty(props[p], true));
-        if (p.charAt(0) === '_') {
-          self[p].notify = false;
-          self[p].enumerable = false;
-        }
-      }
-    }
-  }
-}
-
-/**
  * Collection of all property configurations and values for a class **instance** compied from corresponding `ProtoProperties`.
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 class Properties {
-  __node: any;
-  __connected: boolean = false;
-  __keys: Array<string> = [];
+  private readonly __node: any;
+  private readonly __keys: Array<string> = [];
+  private __connected: boolean = false;
   /**
    * Creates the properties for specified `IoNode`.
    */
   constructor(node: any, protoProps: ProtoProperties) {
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
-    Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
+    Object.defineProperty(this, '__connected', {enumerable: false});
     for (let prop in protoProps) {
       const protoProp = protoProps as Record<string, ProtoProperty>;
       Object.defineProperty(this, prop, {
@@ -292,7 +275,9 @@ class Properties {
    * Connects all property bindings and `IoNode` properties.
    */
   connect() {
-    this.__connected = true;
+    debug: {
+      if (this.__connected) console.error('Properties: already connected!');
+    }
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];
       const property = (this as any)[p] as Property;
@@ -304,12 +289,16 @@ class Properties {
         property.value.connect(this.__node);
       }
     }
+    this.__connected = true;
   }
   /**
    * Disconnects all property bindings and `IoNode` properties.
    */
   disconnect() {
-    this.__connected = false;
+    debug: {
+      // TODO: debug
+      // if (!this.__connected) console.error('Properties: already disconnected!');
+    }
     for (let i = this.__keys.length; i--;) {
       const p = this.__keys[i];
       const property = (this as any)[p] as Property;
@@ -326,6 +315,7 @@ class Properties {
         }
       }
     }
+    this.__connected = false;
   }
   /**
    * Disconnects all property bindings and `IoNode` properties.

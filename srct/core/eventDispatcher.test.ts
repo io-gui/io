@@ -1,10 +1,10 @@
 import {ProtoChain} from './protoChain.js';
-import {EventDispatcher, ProtoListeners} from './eventDispatcher.js';
+import {EventDispatcher, ProtoListeners, ProtoListenerRecord} from './eventDispatcher.js';
 
 class IoNode11 {
   handler1Count: number = 0;
-  handler1Detail?: any;
-  static get Listeners(): any {
+  handler1Detail?: string;
+  static get Listeners(): ProtoListenerRecord {
     return {
       'event1': 'handler1',
     };
@@ -18,9 +18,9 @@ class IoNode11 {
 class IoNode2 extends IoNode11 {
   handler2Count: number = 0;
   handler3Count: number = 0;
-  handler2Detail?: any;
-  handler3Detail?: any;
-  static get Listeners(): any {
+  handler2Detail?: string;
+  handler3Detail?: string;
+  static get Listeners(): ProtoListenerRecord {
     return {
       'event2': ['handler2', {capture: true}],
     };
@@ -37,7 +37,7 @@ class IoNode2 extends IoNode11 {
 
 class TestDivEventDispatchElement extends HTMLElement {
   handler3Count: number = 0;
-  handler3Detail?: any;
+  handler3Detail?: string;
   handler3(event: CustomEvent) {
     this.handler3Count++;
     this.handler3Detail = event.detail;

@@ -1,24 +1,39 @@
 import { Binding } from './propertyBinder.js';
 import { ProtoChain } from './protoChain.js';
 declare type Constructor = new (...args: any[]) => Object;
-/**
- * Property configuration object for a class **prototype**.
- * It is generated from property definitions in `static get Properties()` return object.
- */
-declare class ProtoProperty {
+declare type ReflectType = -1 | 0 | 1 | 2;
+export declare type ProtoPropertyDefinition = {
     value?: any;
     type?: Constructor;
-    reflect?: number;
+    reflect?: ReflectType;
     notify?: boolean;
     observe?: boolean;
     readonly?: boolean;
     strict?: boolean;
     enumerable?: boolean;
     binding?: Binding;
-    /**
-     * Creates the property configuration object and sets the default values.
-     */
-    constructor(prop?: string | Record<string, any> | any, noDefaults?: boolean);
+};
+export declare type ProtoPropertyType = string | number | boolean | Constructor | null | Binding | ProtoPropertyDefinition;
+export declare type ProtoPropertyRecord = Record<string, ProtoPropertyType>;
+declare class ProtoProperty {
+    value: any;
+    type?: Constructor;
+    reflect: ReflectType;
+    notify: boolean;
+    observe: boolean;
+    readonly: boolean;
+    strict: boolean;
+    enumerable: boolean;
+    binding?: Binding;
+    constructor(prop?: ProtoPropertyType);
+    assign(prop?: ProtoPropertyType): this;
+}
+/**
+ * Array of all properties defined as `static get Properties()` return objects in prototype chain.
+ */
+declare class ProtoProperties {
+    [property: string]: ProtoProperty;
+    constructor(protochain: ProtoChain);
 }
 /**
  * Property configuration object for a class **instance**.
@@ -40,23 +55,13 @@ declare class Property {
     constructor(protoProp: ProtoProperty);
 }
 /**
- * Collection of all property configurations for a class **prototype**.
- * Property configurations are inferred from all property definitions in the prototype chain.
- */
-declare class ProtoProperties {
-    /**
-     * Creates all property configurations for specified prototype chain.
-     */
-    constructor(protochain: ProtoChain);
-}
-/**
  * Collection of all property configurations and values for a class **instance** compied from corresponding `ProtoProperties`.
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 declare class Properties {
-    __node: any;
-    __connected: boolean;
-    __keys: Array<string>;
+    private readonly __node;
+    private readonly __keys;
+    private __connected;
     /**
      * Creates the properties for specified `IoNode`.
      */

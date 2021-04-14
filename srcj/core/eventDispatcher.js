@@ -1,3 +1,6 @@
+/**
+ * Array of all listeners defined as `static get Listeners()` return objects in prototype chain.
+ */
 export class ProtoListeners {
     constructor(protochain) {
         for (let i = protochain.length; i--;) {

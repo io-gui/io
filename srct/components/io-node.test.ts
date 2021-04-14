@@ -209,6 +209,7 @@ export default class {
 
         await waitTick();
 
+        // TODO: investigate why this fails on auto-reload sometimes. Possible race condition?
         chai.expect(node._changedCounter).to.equal(3);
         chai.expect(node._obj1MutatedCounter).to.equal(1);
         chai.expect(node._obj2MutatedCounter).to.equal(1);
