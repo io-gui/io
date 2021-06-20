@@ -53,7 +53,7 @@ export class IoOptionMenu extends IoElement {
     if (event.detail.leaf !== undefined) {
       try {
         this.set('value', JSON.parse(event.detail.leaf));
-      } catch {
+      } catch (error) {
         this.set('value', event.detail.leaf);
       }
     }
