@@ -1,6 +1,6 @@
 {
   "name": "@iogui/iogui",
-  "version": "0.0.1-rc4",
+  "version": "0.0.1-rc5",
   "description": "IoGui is a simple web framework for the web.",
   "main": "build/iogui.js",
   "module": "build/iogui.js",
@@ -8,6 +8,8 @@
   "files": [
     "src",
     "build/*.js",
+    "lib/ijk.js",
+    "lib/marked.es.js",
     "LICENSE",
     "README.md"
   ],
