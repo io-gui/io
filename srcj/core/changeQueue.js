@@ -2,6 +2,9 @@
  * Property change payload
  */
 export class Change {
+    property;
+    value;
+    oldValue;
     /**
      * Creates property change payload.
      * @param {string} property - Property name.
@@ -19,13 +22,14 @@ export class Change {
  * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
 export class ChangeQueue {
+    __node;
+    __changes = [];
+    __dispatching = false;
     /**
      * Creates change queue for the specified owner instance of `IoNode`.
      * @param {IoNode} node - Owner node.
      */
     constructor(node) {
-        this.__changes = [];
-        this.__dispatching = false;
         this.__node = node;
         Object.defineProperty(this, '__node', { enumerable: false, writable: false });
         Object.defineProperty(this, '__changes', { enumerable: false, writable: false });
@@ -41,7 +45,7 @@ export class ChangeQueue {
     queue(property, value, oldValue) {
         debug: {
             if (value === oldValue)
-                console.warn(`ChangeQueue: queuing change with same value and oldValue!`);
+                console.warn('ChangeQueue: queuing change with same value and oldValue!');
         }
         const i = this.__changes.findIndex(change => change.property === property);
         if (i === -1) {

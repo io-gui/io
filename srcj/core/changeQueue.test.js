@@ -1,15 +1,17 @@
 import { ChangeQueue } from './changeQueue.js';
 class FakeIoNode {
-    constructor() {
-        this.__connected = true;
-        this.prop1ChangeCounter = 0;
-        this.prop2ChangeCounter = 0;
-        this.changeCounter = 0;
-        this.applyComposeCounter = 0;
-        this.eventDispatchCounter = 0;
-        this.eventRegister = [];
-        this.changeRegister = [];
-    }
+    __connected = true;
+    prop1ChangeCounter = 0;
+    prop1Change;
+    prop2ChangeCounter = 0;
+    prop2Change;
+    changeCounter = 0;
+    applyComposeCounter = 0;
+    eventDispatchCounter = 0;
+    eventName;
+    eventChange;
+    eventRegister = [];
+    changeRegister = [];
     prop1Changed(change) {
         this.prop1Change = change;
         this.prop1ChangeCounter++;

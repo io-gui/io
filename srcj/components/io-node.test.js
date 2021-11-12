@@ -287,7 +287,7 @@ export default class {
                 RegisterIoNode(TestNode);
                 const node = new TestNode();
                 node.connect(window);
-                let binding = node.bind('prop1');
+                const binding = node.bind('prop1');
                 chai.expect(binding).to.be.instanceof(Binding);
                 chai.expect(binding.__node).to.be.equal(node);
                 chai.expect(binding.__property).to.be.equal('prop1');

@@ -92,7 +92,7 @@ export default class {
     document.body.appendChild(this.element as unknown as HTMLElement);
   }
   changed(event: CustomEvent) {
-    if (event.target == this.element as unknown as HTMLElement) {
+    if (event.target === this.element as unknown as HTMLElement) {
       this._changedCounter++;
     }
   }

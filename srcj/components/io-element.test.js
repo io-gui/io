@@ -79,13 +79,15 @@ export class TestSubelement extends IoElement {
 }
 RegisterIoElement(TestSubelement);
 export default class {
+    _changedCounter;
+    element;
     constructor() {
         this._changedCounter = 0;
         this.element = new TestElement({ 'on-prop0-changed': this.changed.bind(this), 'on-prop1-changed': 'onProp1ChangeAlt', debug: true });
         document.body.appendChild(this.element);
     }
     changed(event) {
-        if (event.target == this.element) {
+        if (event.target === this.element) {
             this._changedCounter++;
         }
     }

@@ -167,7 +167,7 @@ export default class {
           chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
           // initialize with an object argument with object value property
-          let object = {prop: true};
+          const object = {prop: true};
           protoProp = new ProtoProperty({value: object});
           prop = new Property(protoProp);
           chai.expect(protoProp.value).to.be.equal(object);
@@ -181,7 +181,7 @@ export default class {
           chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
           // initialize with an object argument with object value property
-          let array = [1, 2, 3];
+          const array = [1, 2, 3];
           protoProp = new ProtoProperty({value: array});
           prop = new Property(protoProp);
           chai.expect(protoProp.value).to.be.equal(array);
@@ -195,7 +195,7 @@ export default class {
           chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
 
           // initialize with an object argument with custom object1 value property
-          let object1 = new Object1();
+          const object1 = new Object1();
           protoProp = new ProtoProperty({value: object1});
           prop = new Property(protoProp);
           chai.expect(protoProp.value).to.be.equal(object1);
@@ -230,7 +230,7 @@ export default class {
           chai.expect(protoProp.value).to.be.equal(undefined);
           chai.expect(prop.value).to.be.equal('lorem');
 
-          let node = new TestIoNode({label: 'lorem'});
+          const node = new TestIoNode({label: 'lorem'});
           binding = new Binding(node, 'label');
 
           protoProp = new ProtoProperty({binding: binding, value: 'ipsum'});

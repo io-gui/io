@@ -14,6 +14,11 @@ export function IoNodeMixin(superclass) {
         static get Properties() {
             return {
                 lazy: Boolean,
+                // TODO: implement import as property.
+                // import: {
+                //   type: String,
+                //   reflect: -1,
+                // },
             };
         }
         /**
@@ -63,6 +68,7 @@ export function IoNodeMixin(superclass) {
         /**
          * Connects the instance to another node or element.
          * @param {IoNode} node - Node to connect to.
+         * @return {this} this
          */
         connect(node = window) {
             debug: if (this.__isIoElement) {
@@ -79,7 +85,8 @@ export function IoNodeMixin(superclass) {
         /**
          * Disconnects the instance from an another node or element.
          * @param {IoNode} node - Node to disconnect from.
-         */
+         * @return {this} this
+         * */
         disconnect(node = window) {
             debug: if (this.__isIoElement) {
                 console.error('"disconnect()" function is not intended for DOM Elements!');
@@ -143,7 +150,7 @@ export function IoNodeMixin(superclass) {
             // TODO: test compose
             const compose = this.compose;
             if (this.compose) {
-                for (let prop in compose) {
+                for (const prop in compose) {
                     debug: if (!this.__properties[prop] || typeof this.__properties[prop].value !== 'object') {
                         console.error(`Composed property ${prop} is not a Node or an object.`);
                         continue;
@@ -154,7 +161,7 @@ export function IoNodeMixin(superclass) {
                         object.setProperties(compose[prop]);
                     }
                     else {
-                        for (let p in compose[prop]) {
+                        for (const p in compose[prop]) {
                             object[p] = compose[prop][p];
                         }
                     }
@@ -265,7 +272,7 @@ export function IoNodeMixin(superclass) {
          * @param {Object} props - Map of property names and values.
          */
         setProperties(props) {
-            for (let p in props) {
+            for (const p in props) {
                 if (this.__properties[p] === undefined) {
                     debug: if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
                         // TODO: consider converting import and style to properties
@@ -352,7 +359,7 @@ export function IoNodeMixin(superclass) {
             _i++;
             if (predicate(object))
                 return object;
-            for (let key in object) {
+            for (const key in object) {
                 const value = object[key] instanceof Binding ? object[key].value : object[key];
                 if (predicate(value))
                     return value;
@@ -373,7 +380,7 @@ export function IoNodeMixin(superclass) {
             _i++;
             if (predicate(object) && result.indexOf(object) === -1)
                 result.push(object);
-            for (let key in object) {
+            for (const key in object) {
                 const value = object[key] instanceof Binding ? object[key].value : object[key];
                 if (predicate(value) && result.indexOf(value) === -1)
                     result.push(value);
@@ -394,7 +401,7 @@ export function IoNodeMixin(superclass) {
                     resolve(importPath);
                 }
                 else {
-                    import(importPath)
+                    void import(importPath)
                         .then(() => {
                         IMPORTED_PATHS[importPath] = true;
                         resolve(importPath);
@@ -419,9 +426,9 @@ export function IoNodeMixin(superclass) {
     };
     return classConstructor;
 }
-;
 /**
  * Register function to be called once per class.
+ * @param {IoNode} node - Node class to register.
  */
 export const RegisterIoNode = function (node) {
     const protochain = new ProtoChain(node);
@@ -433,11 +440,11 @@ export const RegisterIoNode = function (node) {
     Object.defineProperty(proto, '__protoProperties', { value: new ProtoProperties(protochain) });
     Object.defineProperty(proto, '__protoListeners', { value: new ProtoListeners(protochain) });
     Object.defineProperty(proto, '__observedObjects', { value: [] });
-    for (let p in proto.__protoProperties) {
+    for (const p in proto.__protoProperties) {
         if (proto.__protoProperties[p].observe)
             proto.__observedObjects.push(p);
     }
-    for (let p in proto.__protoProperties) {
+    for (const p in proto.__protoProperties) {
         Object.defineProperty(proto, p, {
             get: function () {
                 return this.__properties.get(p);
@@ -462,11 +469,11 @@ export class IoNode extends IoNodeMixin(Object) {
 RegisterIoNode(IoNode);
 const IMPORTED_PATHS = {};
 // TODO: document and test
-const preThrottleQueue = new Array();
-const throttleQueue = new Array();
+const preThrottleQueue = [];
+const throttleQueue = [];
 const argQueue = new WeakMap();
 //
-const funcQueue = new Array();
+const funcQueue = [];
 const animate = function () {
     requestAnimationFrame(animate);
     for (let i = preThrottleQueue.length; i--;) {

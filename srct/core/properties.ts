@@ -23,11 +23,11 @@ class ProtoProperty {
   value: any = undefined;
   type?: Constructor = undefined;
   reflect: ReflectType = 0;
-  notify: boolean = true;
-  observe: boolean = false;
-  readonly: boolean = false;
-  strict: boolean = false;
-  enumerable: boolean = true;
+  notify = true;
+  observe = false;
+  readonly = false;
+  strict = false;
+  enumerable = true;
   binding?: Binding = undefined;
   constructor(prop?: ProtoPropertyType) {
     return this.assign(prop);
@@ -79,7 +79,7 @@ class ProtoProperty {
   constructor(protochain: ProtoChain) {
     for (let i = protochain.length; i--;) {
       const props = (protochain[i] as any).Properties as ProtoPropertyRecord;
-      for (let p in props) {
+      for (const p in props) {
         if (!this[p]) this[p] = new ProtoProperty(props[p]);
         else this[p].assign(props[p]);
         // TODO: Document or reconsider.
@@ -148,7 +148,7 @@ class Property {
     }
 
     debug:
-    if (([-1, 0, 1, 2] as any).indexOf(this.reflect) == -1) {
+    if (([-1, 0, 1, 2] as any).indexOf(this.reflect) === -1) {
       console.error(`Invalid reflect value ${this.reflect}!`);
     }
   }
@@ -161,14 +161,14 @@ class Property {
 class Properties {
   private readonly __node: any;
   private readonly __keys: Array<string> = [];
-  private __connected: boolean = false;
+  private __connected = false;
   /**
    * Creates the properties for specified `IoNode`.
    */
   constructor(node: any, protoProps: ProtoProperties) {
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
     Object.defineProperty(this, '__connected', {enumerable: false});
-    for (let prop in protoProps) {
+    for (const prop in protoProps) {
       const protoProp = protoProps as Record<string, ProtoProperty>;
       Object.defineProperty(this, prop, {
         value: new Property(protoProp[prop]),
@@ -237,15 +237,15 @@ class Properties {
 
       debug:
       {
-        if (prop.type == String) {
+        if (prop.type === String) {
           if (typeof value !== 'string') {
             console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
           }
-        } else if (prop.type == Number) {
+        } else if (prop.type === Number) {
           if (typeof value !== 'number') {
             console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
           }
-        } else if (prop.type == Boolean) {
+        } else if (prop.type === Boolean) {
           if (typeof value !== 'boolean') {
             console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
           }

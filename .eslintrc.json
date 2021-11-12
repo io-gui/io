@@ -15,6 +15,7 @@
     "@typescript-eslint/consistent-type-assertions": "error",
     "@typescript-eslint/no-floating-promises": "warn",
     "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-empty-function": "off",
     "eqeqeq": "error",
     "no-console": "off",
     "no-unused-labels": "off",

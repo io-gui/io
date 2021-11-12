@@ -70,7 +70,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     }
     static get observedAttributes() {
         const observed = [];
-        for (let prop in this.prototype.__protoProperties) {
+        for (const prop in this.prototype.__protoProperties) {
             const r = this.prototype.__protoProperties[prop].reflect;
             if (r === -1 || r === 2) {
                 observed.push(prop);
@@ -234,7 +234,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     setProperties(props) {
         super.setProperties(props);
         if (props['style']) {
-            for (let s in props['style']) {
+            for (const s in props['style']) {
                 this.style[s] = props['style'][s];
             }
         }
@@ -401,6 +401,7 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
 <a href="https://www.apple.com/lae/safari/">Safari</a>`;
 /**
  * Register function for `IoElement`. Registers custom element.
+ * @param {IoElement} element - Element class to register.
  */
 const RegisterIoElement = function (element) {
     RegisterIoNode(element);
@@ -419,7 +420,7 @@ const RegisterIoElement = function (element) {
     _initProtoStyle(element.prototype.__protochain);
 };
 const ro = new ResizeObserver((entries) => {
-    for (let entry of entries)
+    for (const entry of entries)
         entry.target.onResized();
 });
 /**
@@ -429,6 +430,7 @@ const ro = new ResizeObserver((entries) => {
  * @param {Object} vDOMNode.props - Element properties.
  * @return {HTMLElement} - Created element.
  */
+// TODO: vDOMNode type
 const constructElement = function (vDOMNode) {
     // IoElement classes constructed with constructor.
     const ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
@@ -440,19 +442,20 @@ const constructElement = function (vDOMNode) {
     return element;
 };
 const superCreateElement = document.createElement;
-document.createElement = function () {
-    const tag = arguments[0];
+// TODO: args type
+document.createElement = function (...args) {
+    const tag = args[0];
     if (tag.startsWith('io-')) {
         const constructor = customElements.get(tag);
         if (constructor) {
             return new constructor();
         }
         else {
-            return superCreateElement.apply(this, arguments);
+            return superCreateElement.apply(this, args);
         }
     }
     else {
-        return superCreateElement.apply(this, arguments);
+        return superCreateElement.apply(this, args);
     }
 };
 /**
@@ -461,13 +464,13 @@ document.createElement = function () {
  * @param {Object} props - Element properties.
  */
 const setNativeElementProps = function (element, props) {
-    for (let p in props) {
+    for (const p in props) {
         const prop = props[p];
         if (p.startsWith('@')) {
             element.setAttribute(p.substr(1), prop);
         }
         else if (p === 'style')
-            for (let s in prop)
+            for (const s in prop)
                 element.style.setProperty(s, prop[s]);
         else if (p === 'class')
             element['className'] = prop;
@@ -497,7 +500,7 @@ function _initProtoStyle(prototypes) {
     const styleID = 'io-style-' + localName.replace('io-', '');
     let finalStyleString = '';
     // Convert mixins to classes
-    let styleString = prototypes[0].Style;
+    const styleString = prototypes[0].Style;
     if (styleString) {
         const mixins = styleString.match(mixinRegex);
         if (mixins) {

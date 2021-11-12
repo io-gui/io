@@ -7,6 +7,9 @@ import {EventDispatcher, ProtoListeners} from '../core/eventDispatcher.js';
 
 type Constructor<T extends any> = new (...args: any[]) => T;
 type ComposedProperties = null | Record<string, Record<string, any>>
+type CallbackFunction = (arg?: any) => void;
+type PredicateFunction = (object: any) => boolean;
+type EventHandler = (event: Event) => Record<string, unknown>;
 
 /**
  * Core mixin for `Node` classes.
@@ -79,6 +82,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
     /**
      * Connects the instance to another node or element.
      * @param {IoNode} node - Node to connect to.
+     * @return {this} this
      */
     connect(node: IoNode | HTMLElement | Document | Window = window): this {
       debug:
@@ -96,7 +100,8 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
     /**
      * Disconnects the instance from an another node or element.
      * @param {IoNode} node - Node to disconnect from.
-     */
+     * @return {this} this
+     * */
     disconnect(node: IoNode | HTMLElement | Document | Window = window): this {
       debug:
       if (this.__isIoElement) {
@@ -120,7 +125,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
       this.__eventDispatcher.connect();
       this.__properties.connect();
       if (this.__observedObjects.length) {
-        window.addEventListener('object-mutated', this.objectMutated as (event: Event) => {});
+        window.addEventListener('object-mutated', this.objectMutated as EventHandler);
       }
       this.queueDispatch();
     }
@@ -132,7 +137,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
       this.__eventDispatcher.disconnect();
       this.__properties.disconnect();
       if (this.__observedObjects.length) {
-        window.removeEventListener('object-mutated', this.objectMutated as (event: Event) => {});
+        window.removeEventListener('object-mutated', this.objectMutated as EventHandler);
       }
     }
     /**
@@ -147,7 +152,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
       this.__properties.dispose();
       this.__eventDispatcher.dispose();
       if (this.__observedObjects.length) {
-        window.removeEventListener('object-mutated', this.objectMutated as (event: Event) => {});
+        window.removeEventListener('object-mutated', this.objectMutated as EventHandler);
       }
     }
     /**
@@ -162,7 +167,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
       // TODO: test compose
       const compose = this.compose as any;
       if (this.compose) {
-        for (let prop in compose) {
+        for (const prop in compose) {
           debug:
           if (!this.__properties[prop] || typeof this.__properties[prop].value !== 'object') {
             console.error(`Composed property ${prop} is not a Node or an object.`);
@@ -173,7 +178,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
             // TODO: make sure composed and declarative listeners are working together
             object.setProperties(compose[prop]);
           } else {
-            for (let p in compose[prop]) {
+            for (const p in compose[prop]) {
               object[p] = compose[prop][p];
             }
           }
@@ -285,7 +290,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {Object} props - Map of property names and values.
      */
     setProperties(props: any) {
-      for (let p in props) {
+      for (const p in props) {
         if (this.__properties[p] === undefined) {
           debug:
           if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
@@ -338,7 +343,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {*} arg - argument for throttled function.
      * @param {boolean} asynchronous - execute with timeout.
      */
-    throttle(func: Function, arg?: any, asynchronous?: boolean) {
+    throttle(func: CallbackFunction, arg?: any, asynchronous?: boolean) {
       // TODO: move to extenal throttle function, document and test.
       if (preThrottleQueue.indexOf(func) === -1) {
         preThrottleQueue.push(func);
@@ -359,14 +364,14 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
       }
     }
     // TODO: implement fAF debounce
-    requestAnimationFrameOnce(func: Function) {
+    requestAnimationFrameOnce(func: CallbackFunction) {
       requestAnimationFrameOnce(func);
     }
-    filterObject(object: any, predicate: Function, _depth = 5, _chain: any[] = [], _i = 0): any {
+    filterObject(object: any, predicate: PredicateFunction, _depth = 5, _chain: any[] = [], _i = 0): any {
       if (_chain.indexOf(object) !== -1) return; _chain.push(object);
       if (_i > _depth) return; _i++;
       if (predicate(object)) return object;
-      for (let key in object) {
+      for (const key in object) {
         const value = object[key] instanceof Binding ? object[key].value : object[key];
         if (predicate(value)) return value;
         if (typeof value === 'object') {
@@ -375,12 +380,12 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
         }
       }
     }
-    filterObjects(object: any, predicate: Function, _depth = 5, _chain: any[] = [], _i = 0): any {
+    filterObjects(object: any, predicate: PredicateFunction, _depth = 5, _chain: any[] = [], _i = 0): any {
       const result: any[] = [];
       if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
       if (_i > _depth) return result; _i++;
       if (predicate(object) && result.indexOf(object) === -1) result.push(object);
-      for (let key in object) {
+      for (const key in object) {
         const value = object[key] instanceof Binding ? object[key].value : object[key];
         if (predicate(value) && result.indexOf(value) === -1) result.push(value);
         if (typeof value === 'object') {
@@ -398,7 +403,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
         if (!path || IMPORTED_PATHS[importPath]) {
           resolve(importPath);
         } else {
-          import(importPath)
+          void import(importPath)
           .then(() => {
             IMPORTED_PATHS[importPath] = true;
             resolve(importPath);
@@ -420,16 +425,17 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
     stopPropagation(event: CustomEvent) {
       event.stopPropagation();
     }
-  }
+  };
   return classConstructor;
-};
+}
 
 /**
  * Register function to be called once per class.
+ * @param {IoNode} node - Node class to register.
  */
 export const RegisterIoNode = function (node: typeof IoNode) {
   const protochain = new ProtoChain(node);
-  
+
   const proto = node.prototype;
   Object.defineProperty(proto, '__isIoNode', {value: true});
   Object.defineProperty(proto.constructor, '__registeredAs', {value: proto.constructor.name});
@@ -442,11 +448,11 @@ export const RegisterIoNode = function (node: typeof IoNode) {
 
   Object.defineProperty(proto, '__observedObjects', {value: []});
 
-  for (let p in proto.__protoProperties) {
+  for (const p in proto.__protoProperties) {
     if (proto.__protoProperties[p].observe) proto.__observedObjects.push(p);
   }
 
-  for (let p in proto.__protoProperties) {
+  for (const p in proto.__protoProperties) {
     Object.defineProperty(proto, p, {
       get: function() {
         return this.__properties.get(p);
@@ -472,11 +478,11 @@ RegisterIoNode(IoNode);
 const IMPORTED_PATHS: Record<string, any> = {};
 
 // TODO: document and test
-const preThrottleQueue = new Array();
-const throttleQueue = new Array();
+const preThrottleQueue: CallbackFunction[] = [];
+const throttleQueue: CallbackFunction[] = [];
 const argQueue = new WeakMap();
 //
-const funcQueue = new Array();
+const funcQueue: CallbackFunction[] = [];
 
 const animate = function() {
   requestAnimationFrame(animate);
@@ -500,6 +506,6 @@ const animate = function() {
 };
 requestAnimationFrame(animate);
 
-function requestAnimationFrameOnce(func: Function) {
+function requestAnimationFrameOnce(func: CallbackFunction) {
   if (funcQueue.indexOf(func) === -1) funcQueue.push(func);
 }

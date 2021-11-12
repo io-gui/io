@@ -1,15 +1,15 @@
 import { Binding } from './propertyBinder.js';
 class ProtoProperty {
+    value = undefined;
+    type = undefined;
+    reflect = 0;
+    notify = true;
+    observe = false;
+    readonly = false;
+    strict = false;
+    enumerable = true;
+    binding = undefined;
     constructor(prop) {
-        this.value = undefined;
-        this.type = undefined;
-        this.reflect = 0;
-        this.notify = true;
-        this.observe = false;
-        this.readonly = false;
-        this.strict = false;
-        this.enumerable = true;
-        this.binding = undefined;
         return this.assign(prop);
     }
     assign(prop) {
@@ -78,7 +78,7 @@ class ProtoProperties {
     constructor(protochain) {
         for (let i = protochain.length; i--;) {
             const props = protochain[i].Properties;
-            for (let p in props) {
+            for (const p in props) {
                 if (!this[p])
                     this[p] = new ProtoProperty(props[p]);
                 else
@@ -97,6 +97,24 @@ class ProtoProperties {
  * It is copied from the corresponding `ProtoProperty`.
  */
 class Property {
+    //Property value.
+    value;
+    //Constructor of the property value.
+    type;
+    //Reflects to HTML attribute [-1, 0, 1 or 2]
+    reflect;
+    //Enables change handlers and events.
+    notify;
+    //Observe object mutations for this property.
+    observe;
+    //Makes the property readonly. // TODO: document and test
+    readonly;
+    //Enforce stric typing. // TODO?: document and test
+    strict;
+    //Makes property enumerable.
+    enumerable;
+    //Binding object.
+    binding;
     /**
      * Creates the property configuration object and copies values from `ProtoProperty`.
      */
@@ -136,7 +154,7 @@ class Property {
                 this.value = Object.assign({}, this.value);
             }
         }
-        debug: if ([-1, 0, 1, 2].indexOf(this.reflect) == -1) {
+        debug: if ([-1, 0, 1, 2].indexOf(this.reflect) === -1) {
             console.error(`Invalid reflect value ${this.reflect}!`);
         }
     }
@@ -146,15 +164,16 @@ class Property {
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 class Properties {
+    __node;
+    __keys = [];
+    __connected = false;
     /**
      * Creates the properties for specified `IoNode`.
      */
     constructor(node, protoProps) {
-        this.__keys = [];
-        this.__connected = false;
         Object.defineProperty(this, '__node', { enumerable: false, configurable: true, value: node });
         Object.defineProperty(this, '__connected', { enumerable: false });
-        for (let prop in protoProps) {
+        for (const prop in protoProps) {
             const protoProp = protoProps;
             Object.defineProperty(this, prop, {
                 value: new Property(protoProp[prop]),
@@ -215,17 +234,17 @@ class Properties {
             }
             prop.value = value;
             debug: {
-                if (prop.type == String) {
+                if (prop.type === String) {
                     if (typeof value !== 'string') {
                         console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
                     }
                 }
-                else if (prop.type == Number) {
+                else if (prop.type === Number) {
                     if (typeof value !== 'number') {
                         console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
                     }
                 }
-                else if (prop.type == Boolean) {
+                else if (prop.type === Boolean) {
                     if (typeof value !== 'boolean') {
                         console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
                     }

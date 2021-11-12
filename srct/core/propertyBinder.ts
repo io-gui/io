@@ -12,6 +12,8 @@ export class Binding {
   private readonly __targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
   /**
    * Creates a binding object for specified `node` and `property`.
+   * @param {IoNode} node - Property owner node.
+   * @param {string} property - Name of the property.
    */
   constructor(node: IoNode, property: string) {
     this.__node = node;
@@ -36,6 +38,7 @@ export class Binding {
    * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
    * @param {IoNode} node - Target node.
    * @param {string} property - Target property.
+   * @param {Array.<string>} __nodeProperties - List of target property names.
    */
   addTarget(node: IoNode, property: string, __nodeProperties?: Properties) {
     // TODO: unhack passing __properties from constructor;
@@ -75,6 +78,7 @@ export class Binding {
   /**
    * Retrieves a list of target properties for specified target node.
    * @param {IoNode} node - Target node.
+   * @return {Array.<string>} list of target property names.
    */
    private _getTargetProperties(node: IoNode | EventTarget): string[] {
     let targetProperties = this.__targetProperties.get(node as unknown as EventTarget);
@@ -88,7 +92,7 @@ export class Binding {
   }
   /**
    * Event handler that updates source property when one of the targets emits `[property]-changed` event.
-   * @param {event} ChangeEvent - Property change event.
+   * @param {ChangeEvent} event - Property change event.
    */
   private _onTargetChanged(event: ChangeEvent) {
     debug: {
@@ -107,11 +111,11 @@ export class Binding {
   }
   /**
    * Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
-   * @param {event} ChangeEvent - Property change event.
+   * @param {ChangeEvent} event - Property change event.
    */
    private _onSourceChanged(event: ChangeEvent) {
     debug: {
-      if (event.target != this.__node as unknown as EventTarget) {
+      if (event.target !== this.__node as unknown as EventTarget) {
         console.error(`_onSourceChanged() should always originate form source node.
           Please file an issue at https://github.com/arodic/iogui/issues.`); return;
       }
@@ -168,6 +172,7 @@ export class PropertyBinder {
   /**
    * Returns a binding to the specified property name or creates one if it does not exist.
    * @param {string} property - Property to bind.
+   * @return {Binding} Property binding object.
    */
   bind(property: string): Binding {
     this.__bindings[property] = this.__bindings[property] || new Binding(this.__node, property);
@@ -185,7 +190,7 @@ export class PropertyBinder {
    * Disposes all bindings. Use this when node is no longer needed.
    */
   dispose(): void {
-    for (let property in this.__bindings) {
+    for (const property in this.__bindings) {
       this.__bindings[property].dispose();
       delete this.__bindings[property];
     }

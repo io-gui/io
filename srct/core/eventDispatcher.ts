@@ -33,7 +33,7 @@ class EventDispatcher {
   private readonly __protoListeners: Listeners = {};
   private readonly __propListeners: Listeners = {};
   private readonly __addedListeners: ListenersArray = {};
-  private __connected: boolean = false;
+  private __connected = false;
   /**
    * Creates Event Dispatcher.
    */
@@ -46,7 +46,7 @@ class EventDispatcher {
     Object.defineProperty(this, '__propListeners',     {enumerable: false, writable: false});
     Object.defineProperty(this, '__connected',         {enumerable: false});
 
-    for (let type in protoListeners) {
+    for (const type in protoListeners) {
       const protoListener = protoListeners[type];
       const listenerObject = typeof protoListener[0] === 'function' ? protoListener[0] : this.__node[protoListener[0] as keyof (IoNode | HTMLElement)];
       const listenerOptions = protoListener[1];
@@ -60,7 +60,7 @@ class EventDispatcher {
    */
   setPropListeners(properties: Record<string, ProtoListenerType>) {
     const newPropListeners: Listeners = {};
-    for (let prop in properties) {
+    for (const prop in properties) {
       if (prop.startsWith('on-')) {
         const type = prop.slice(3, prop.length);
         const listener = (properties[prop] instanceof Array) ? [...(properties[prop] as ProtoListenerArrayType)] : [properties[prop]];
@@ -69,7 +69,7 @@ class EventDispatcher {
       }
     }
     const propListeners = this.__propListeners;
-    for (let type in propListeners) {
+    for (const type in propListeners) {
       if (!newPropListeners[type]) {
         if (this.__connected && this.__nodeIsEventTarget) {
           EventTarget.prototype.removeEventListener.call(this.__node, type, propListeners[type][0], propListeners[type][1]);
@@ -77,7 +77,7 @@ class EventDispatcher {
         delete propListeners[type];
       }
     }
-    for (let type in newPropListeners) {
+    for (const type in newPropListeners) {
       if (this.__connected && this.__nodeIsEventTarget) {
         if (!propListeners[type]) {
           EventTarget.prototype.addEventListener.call(this.__node, type, newPropListeners[type][0], newPropListeners[type][1]);
@@ -97,13 +97,13 @@ class EventDispatcher {
       if (this.__connected) console.error('EventDispatcher: already connected!');
     }
     if (this.__nodeIsEventTarget) {
-      for (let type in this.__protoListeners) {
+      for (const type in this.__protoListeners) {
         EventTarget.prototype.addEventListener.call(this.__node, type, this.__protoListeners[type][0], this.__protoListeners[type][1]);
       }
-      for (let type in this.__propListeners) {
+      for (const type in this.__propListeners) {
         EventTarget.prototype.addEventListener.call(this.__node, type, this.__propListeners[type][0], this.__propListeners[type][1]);
       }
-      for (let type in this.__addedListeners) {
+      for (const type in this.__addedListeners) {
         for (let i = this.__addedListeners[type].length; i--;) {
           EventTarget.prototype.addEventListener.call(this.__node, type, this.__addedListeners[type][i][0], this.__addedListeners[type][i][1]);
         }
@@ -120,13 +120,13 @@ class EventDispatcher {
       if (!this.__connected) console.error('EventDispatcher: already disconnected!');
     }
     if (this.__nodeIsEventTarget) {
-      for (let type in this.__protoListeners) {
+      for (const type in this.__protoListeners) {
         EventTarget.prototype.removeEventListener.call(this.__node, type, this.__protoListeners[type][0], this.__protoListeners[type][1]);
       }
-      for (let type in this.__propListeners) {
+      for (const type in this.__propListeners) {
         EventTarget.prototype.removeEventListener.call(this.__node, type, this.__propListeners[type][0], this.__propListeners[type][1]);
       }
-      for (let type in this.__addedListeners) {
+      for (const type in this.__addedListeners) {
         for (let i = this.__addedListeners[type].length; i--;) {
           EventTarget.prototype.removeEventListener.call(this.__node, type, this.__addedListeners[type][i][0], this.__addedListeners[type][i][1]);
         }

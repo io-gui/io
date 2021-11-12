@@ -1,6 +1,8 @@
 import { Binding } from '../core/propertyBinder.js';
 declare type Constructor<T extends any> = new (...args: any[]) => T;
 declare type ComposedProperties = null | Record<string, Record<string, any>>;
+declare type CallbackFunction = (arg?: any) => void;
+declare type PredicateFunction = (object: any) => boolean;
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -27,13 +29,15 @@ export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): 
         /**
          * Connects the instance to another node or element.
          * @param {IoNode} node - Node to connect to.
+         * @return {this} this
          */
-        connect(node?: IoNode | HTMLElement | Document | Window): any;
+        connect(node?: IoNode | HTMLElement | Document | Window): this;
         /**
          * Disconnects the instance from an another node or element.
          * @param {IoNode} node - Node to disconnect from.
-         */
-        disconnect(node?: IoNode | HTMLElement | Document | Window): any;
+         * @return {this} this
+         * */
+        disconnect(node?: IoNode | HTMLElement | Document | Window): this;
         /**
          * Connected callback.
          */
@@ -78,7 +82,7 @@ export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): 
          * @param {Object} event - Event payload.
          * @param {Object} event.detail.object - Mutated object.
          */
-        objectMutated(event: CustomEvent<any>): void;
+        objectMutated(event: CustomEvent): void;
         /**
          * This function is called after `objectMutated()` determines that one of
          * the object properties has mutated.
@@ -123,7 +127,7 @@ export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): 
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        removeEventListener(type: string, listener?: EventListener | EventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
+        removeEventListener(type: string, listener?: EventListenerOrEventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for dispatchEvent.
          * @param {string} type - event name to dispatch.
@@ -138,27 +142,28 @@ export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): 
          * @param {*} arg - argument for throttled function.
          * @param {boolean} asynchronous - execute with timeout.
          */
-        throttle(func: Function, arg?: any, asynchronous?: boolean | undefined): void;
-        requestAnimationFrameOnce(func: Function): void;
-        filterObject(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;
-        filterObjects(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;
+        throttle(func: CallbackFunction, arg?: any, asynchronous?: boolean | undefined): void;
+        requestAnimationFrameOnce(func: CallbackFunction): void;
+        filterObject(object: any, predicate: PredicateFunction, _depth?: number, _chain?: any[], _i?: number): any;
+        filterObjects(object: any, predicate: PredicateFunction, _depth?: number, _chain?: any[], _i?: number): any;
         import(path: string): Promise<unknown>;
         /**
          * Handler function with `event.preventDefault()`.
          * @param {Object} event - Event object.
          */
-        preventDefault(event: CustomEvent<any>): void;
+        preventDefault(event: CustomEvent): void;
         /**
          * Handler function with `event.stopPropagation()`.
          * @param {Object} event - Event object.
          */
-        stopPropagation(event: CustomEvent<any>): void;
+        stopPropagation(event: CustomEvent): void;
     };
     [x: string]: any;
     readonly Properties: any;
 };
 /**
  * Register function to be called once per class.
+ * @param {IoNode} node - Node class to register.
  */
 export declare const RegisterIoNode: (node: typeof IoNode) => void;
 declare const IoNode_base: {
@@ -182,12 +187,14 @@ declare const IoNode_base: {
         /**
          * Connects the instance to another node or element.
          * @param {IoNode} node - Node to connect to.
+         * @return {this} this
          */
         connect(node?: IoNode | HTMLElement | Document | Window): any;
         /**
          * Disconnects the instance from an another node or element.
          * @param {IoNode} node - Node to disconnect from.
-         */
+         * @return {this} this
+         * */
         disconnect(node?: IoNode | HTMLElement | Document | Window): any;
         /**
          * Connected callback.
@@ -278,7 +285,7 @@ declare const IoNode_base: {
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        removeEventListener(type: string, listener?: EventListener | EventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
+        removeEventListener(type: string, listener?: EventListenerOrEventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for dispatchEvent.
          * @param {string} type - event name to dispatch.
@@ -293,10 +300,10 @@ declare const IoNode_base: {
          * @param {*} arg - argument for throttled function.
          * @param {boolean} asynchronous - execute with timeout.
          */
-        throttle(func: Function, arg?: any, asynchronous?: boolean | undefined): void;
-        requestAnimationFrameOnce(func: Function): void;
-        filterObject(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;
-        filterObjects(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;
+        throttle(func: CallbackFunction, arg?: any, asynchronous?: boolean | undefined): void;
+        requestAnimationFrameOnce(func: CallbackFunction): void;
+        filterObject(object: any, predicate: PredicateFunction, _depth?: number, _chain?: any[], _i?: number): any;
+        filterObjects(object: any, predicate: PredicateFunction, _depth?: number, _chain?: any[], _i?: number): any;
         import(path: string): Promise<unknown>;
         /**
          * Handler function with `event.preventDefault()`.

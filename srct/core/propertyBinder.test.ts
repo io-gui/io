@@ -80,7 +80,7 @@ export default class {
         binding1.removeTarget(dstIoNode1, 'prop1');
         chai.expect(binding1target1Props[0]).to.be.equal('prop2');
         chai.expect(binding1target1Props.length).to.be.equal(1);
-        
+
         binding1.addTarget(dstIoNode1, 'prop1');
         binding1.removeTarget(dstIoNode1);
         chai.expect(binding1target1Props.length).to.be.equal(0);

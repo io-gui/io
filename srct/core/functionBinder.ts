@@ -3,7 +3,7 @@ import {IoNode} from '../components/io-node.js';
 
 /**
  * An array of all inherited function names from a prototype chain that start with "on" or "_".
- * It provides a utility function `.bind(node)` that binds the functions to the specified instance of `IoNode`. 
+ * It provides a utility function `.bind(node)` that binds the functions to the specified instance of `IoNode`.
  */
 export class FunctionBinder extends Array<string> {
   /**

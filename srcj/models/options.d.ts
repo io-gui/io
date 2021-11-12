@@ -21,12 +21,12 @@ declare const Options_base: {
         set(prop: string, value: any, force: boolean): void;
         setProperties(props: any): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | undefined): void;
-        removeEventListener(type: string, listener?: EventListener | EventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
+        removeEventListener(type: string, listener?: EventListenerOrEventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
         dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Document | Window | undefined): void;
-        throttle(func: Function, arg?: any, asynchronous?: boolean | undefined): void;
-        requestAnimationFrameOnce(func: Function): void;
-        filterObject(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;
-        filterObjects(object: any, predicate: Function, _depth?: number, _chain?: any[], _i?: number): any;
+        throttle(func: (arg?: any) => void, arg?: any, asynchronous?: boolean | undefined): void;
+        requestAnimationFrameOnce(func: (arg?: any) => void): void;
+        filterObject(object: any, predicate: (object: any) => boolean, _depth?: number, _chain?: any[], _i?: number): any;
+        filterObjects(object: any, predicate: (object: any) => boolean, _depth?: number, _chain?: any[], _i?: number): any;
         import(path: string): Promise<unknown>;
         preventDefault(event: CustomEvent<any>): void;
         stopPropagation(event: CustomEvent<any>): void;

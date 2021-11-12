@@ -14,7 +14,7 @@ export class ProtoChain extends Array<ProtoChainConstructor<any[]>> {
     let prototype = classConstructor.prototype;
     while (
       prototype
-      && prototype.constructor.name !== "classConstructor"
+      && prototype.constructor.name !== 'classConstructor'
       && prototype.constructor !== HTMLElement
       && prototype.constructor !== Object
       && prototype.constructor !== Array) {

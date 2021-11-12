@@ -10,6 +10,8 @@ export declare class Binding {
     private readonly __targetProperties;
     /**
      * Creates a binding object for specified `node` and `property`.
+     * @param {IoNode} node - Property owner node.
+     * @param {string} property - Name of the property.
      */
     constructor(node: IoNode, property: string);
     set value(value: any);
@@ -18,6 +20,7 @@ export declare class Binding {
      * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
      * @param {IoNode} node - Target node.
      * @param {string} property - Target property.
+     * @param {Array.<string>} __nodeProperties - List of target property names.
      */
     addTarget(node: IoNode, property: string, __nodeProperties?: Properties): void;
     /**
@@ -30,16 +33,17 @@ export declare class Binding {
     /**
      * Retrieves a list of target properties for specified target node.
      * @param {IoNode} node - Target node.
+     * @return {Array.<string>} list of target property names.
      */
     private _getTargetProperties;
     /**
      * Event handler that updates source property when one of the targets emits `[property]-changed` event.
-     * @param {event} ChangeEvent - Property change event.
+     * @param {ChangeEvent} event - Property change event.
      */
     private _onTargetChanged;
     /**
      * Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
-     * @param {event} ChangeEvent - Property change event.
+     * @param {ChangeEvent} event - Property change event.
      */
     private _onSourceChanged;
     /**
@@ -62,6 +66,7 @@ export declare class PropertyBinder {
     /**
      * Returns a binding to the specified property name or creates one if it does not exist.
      * @param {string} property - Property to bind.
+     * @return {Binding} Property binding object.
      */
     bind(property: string): Binding;
     /**

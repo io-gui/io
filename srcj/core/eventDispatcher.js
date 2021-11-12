@@ -16,14 +16,16 @@ export class ProtoListeners {
  * Event Dispatcher.
  */
 class EventDispatcher {
+    __node;
+    __nodeIsEventTarget;
+    __protoListeners = {};
+    __propListeners = {};
+    __addedListeners = {};
+    __connected = false;
     /**
      * Creates Event Dispatcher.
      */
     constructor(node, protoListeners = {}) {
-        this.__protoListeners = {};
-        this.__propListeners = {};
-        this.__addedListeners = {};
-        this.__connected = false;
         this.__node = node;
         this.__nodeIsEventTarget = node instanceof EventTarget;
         Object.defineProperty(this, '__node', { enumerable: false, writable: false });
@@ -31,7 +33,7 @@ class EventDispatcher {
         Object.defineProperty(this, '__protoListeners', { enumerable: false, writable: false });
         Object.defineProperty(this, '__propListeners', { enumerable: false, writable: false });
         Object.defineProperty(this, '__connected', { enumerable: false });
-        for (let type in protoListeners) {
+        for (const type in protoListeners) {
             const protoListener = protoListeners[type];
             const listenerObject = typeof protoListener[0] === 'function' ? protoListener[0] : this.__node[protoListener[0]];
             const listenerOptions = protoListener[1];
@@ -46,7 +48,7 @@ class EventDispatcher {
      */
     setPropListeners(properties) {
         const newPropListeners = {};
-        for (let prop in properties) {
+        for (const prop in properties) {
             if (prop.startsWith('on-')) {
                 const type = prop.slice(3, prop.length);
                 const listener = (properties[prop] instanceof Array) ? [...properties[prop]] : [properties[prop]];
@@ -56,7 +58,7 @@ class EventDispatcher {
             }
         }
         const propListeners = this.__propListeners;
-        for (let type in propListeners) {
+        for (const type in propListeners) {
             if (!newPropListeners[type]) {
                 if (this.__connected && this.__nodeIsEventTarget) {
                     EventTarget.prototype.removeEventListener.call(this.__node, type, propListeners[type][0], propListeners[type][1]);
@@ -64,7 +66,7 @@ class EventDispatcher {
                 delete propListeners[type];
             }
         }
-        for (let type in newPropListeners) {
+        for (const type in newPropListeners) {
             if (this.__connected && this.__nodeIsEventTarget) {
                 if (!propListeners[type]) {
                     EventTarget.prototype.addEventListener.call(this.__node, type, newPropListeners[type][0], newPropListeners[type][1]);
@@ -86,13 +88,13 @@ class EventDispatcher {
                 console.error('EventDispatcher: already connected!');
         }
         if (this.__nodeIsEventTarget) {
-            for (let type in this.__protoListeners) {
+            for (const type in this.__protoListeners) {
                 EventTarget.prototype.addEventListener.call(this.__node, type, this.__protoListeners[type][0], this.__protoListeners[type][1]);
             }
-            for (let type in this.__propListeners) {
+            for (const type in this.__propListeners) {
                 EventTarget.prototype.addEventListener.call(this.__node, type, this.__propListeners[type][0], this.__propListeners[type][1]);
             }
-            for (let type in this.__addedListeners) {
+            for (const type in this.__addedListeners) {
                 for (let i = this.__addedListeners[type].length; i--;) {
                     EventTarget.prototype.addEventListener.call(this.__node, type, this.__addedListeners[type][i][0], this.__addedListeners[type][i][1]);
                 }
@@ -110,13 +112,13 @@ class EventDispatcher {
                 console.error('EventDispatcher: already disconnected!');
         }
         if (this.__nodeIsEventTarget) {
-            for (let type in this.__protoListeners) {
+            for (const type in this.__protoListeners) {
                 EventTarget.prototype.removeEventListener.call(this.__node, type, this.__protoListeners[type][0], this.__protoListeners[type][1]);
             }
-            for (let type in this.__propListeners) {
+            for (const type in this.__propListeners) {
                 EventTarget.prototype.removeEventListener.call(this.__node, type, this.__propListeners[type][0], this.__propListeners[type][1]);
             }
-            for (let type in this.__addedListeners) {
+            for (const type in this.__addedListeners) {
                 for (let i = this.__addedListeners[type].length; i--;) {
                     EventTarget.prototype.removeEventListener.call(this.__node, type, this.__addedListeners[type][i][0], this.__addedListeners[type][i][1]);
                 }

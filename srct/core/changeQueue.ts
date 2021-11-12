@@ -33,7 +33,7 @@ export interface ChangeEvent extends CustomEvent {
 export class ChangeQueue {
   private readonly __node: IoNode;
   private readonly __changes: Array<Change> = [];
-  private __dispatching: boolean = false;
+  private __dispatching = false;
   /**
    * Creates change queue for the specified owner instance of `IoNode`.
    * @param {IoNode} node - Owner node.
@@ -53,7 +53,7 @@ export class ChangeQueue {
    */
   queue(property: string, value: any, oldValue: any) {
     debug: {
-      if (value === oldValue) console.warn(`ChangeQueue: queuing change with same value and oldValue!`);
+      if (value === oldValue) console.warn('ChangeQueue: queuing change with same value and oldValue!');
     }
     const i = this.__changes.findIndex(change => change.property === property);
     if (i === -1) {

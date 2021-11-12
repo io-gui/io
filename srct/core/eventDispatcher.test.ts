@@ -2,7 +2,7 @@ import {ProtoChain} from './protoChain.js';
 import {EventDispatcher, ProtoListeners, ProtoListenerRecord} from './eventDispatcher.js';
 
 class IoNode11 {
-  handler1Count: number = 0;
+  handler1Count = 0;
   handler1Detail?: string;
   static get Listeners(): ProtoListenerRecord {
     return {
@@ -16,8 +16,8 @@ class IoNode11 {
 }
 
 class IoNode2 extends IoNode11 {
-  handler2Count: number = 0;
-  handler3Count: number = 0;
+  handler2Count = 0;
+  handler3Count = 0;
   handler2Detail?: string;
   handler3Detail?: string;
   static get Listeners(): ProtoListenerRecord {
@@ -36,7 +36,7 @@ class IoNode2 extends IoNode11 {
 }
 
 class TestDivEventDispatchElement extends HTMLElement {
-  handler3Count: number = 0;
+  handler3Count = 0;
   handler3Detail?: string;
   handler3(event: CustomEvent) {
     this.handler3Count++;
@@ -96,15 +96,15 @@ export default class {
         const eventDispatcher = new EventDispatcher(node as any, protoListeners) as any;
         const listener1 = () => {};
         const listener2 = () => {};
-        eventDispatcher.addEventListener("event1", listener1);
-        eventDispatcher.addEventListener("event1", listener2, {capture: true});
+        eventDispatcher.addEventListener('event1', listener1);
+        eventDispatcher.addEventListener('event1', listener2, {capture: true});
         chai.expect(JSON.stringify(eventDispatcher.__addedListeners)).to.be.equal('{"event1":[[null],[null,{"capture":true}]]}');
         chai.expect(eventDispatcher.__addedListeners.event1[0][0]).to.be.equal(listener1);
         chai.expect(eventDispatcher.__addedListeners.event1[1][0]).to.be.equal(listener2);
-        eventDispatcher.removeEventListener("event1", listener1);
+        eventDispatcher.removeEventListener('event1', listener1);
         chai.expect(JSON.stringify(eventDispatcher.__addedListeners)).to.be.equal('{"event1":[[null,{"capture":true}]]}');
         chai.expect(eventDispatcher.__addedListeners.event1[0][0]).to.be.equal(listener2);
-        eventDispatcher.removeEventListener("event1");
+        eventDispatcher.removeEventListener('event1');
         chai.expect(JSON.stringify(eventDispatcher.__addedListeners)).to.be.equal('{}');
       });
       it('Should dispatch events only when connected', () => {
@@ -178,8 +178,8 @@ export default class {
         chai.expect(node.handler1Detail).to.be.equal('detail1');
         chai.expect(node.handler2Detail).to.be.equal('detail2');
         chai.expect(node.handler3Detail).to.be.equal('detail3');
-        chai.expect(handler4Detail).to.be.equal('detail4')
-        chai.expect(handler5Detail).to.be.equal('detail5')
+        chai.expect(handler4Detail).to.be.equal('detail4');
+        chai.expect(handler5Detail).to.be.equal('detail5');
       });
       it('Should add/remove/dispatch events on HTML elements', () => {
         const element = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
