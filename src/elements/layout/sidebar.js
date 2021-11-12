@@ -1,6 +1,7 @@
 import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {Options} from '../../../srcj/models/options.js';
-import {IoStorageFactory as $} from '../core/storage.js';
+import {IoStorageFactory as $} from '../../../srcj/elements/core/storage.js';
+
 
 export class IoSidebar extends IoElement {
   static get Style() {

@@ -1,7 +1,7 @@
 /** @license
  * The MIT License
  *
- * Copyright ©2020 Aleksandarr (Aki) Rodic
+ * Copyright ï¿½2020 Aleksandarr (Aki) Rodic
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,12 +40,13 @@ export {Options} from '../srcj/models/options.js';
 export {Path} from '../srcj/models/path.js';
 
 // ELEMENTS
-export {IoStorageFactory} from './elements/core/storage.js';
-export {IoThemeSingleton} from './elements/core/theme.js';
+export {IoStorageFactory} from '../srcj/elements/core/storage.js';
+export {IoThemeSingleton} from '../srcj/elements/core/theme.js';
+
+export {IoGl} from '../srcj/elements/core/gl.js';
 
 export {IoItem} from './elements/core/item.js';
 export {IoContent} from './elements/core/content.js';
-export {IoGl} from './elements/core/gl.js';
 export {IoButton} from './elements/core/button.js';
 export {IoBoolean} from './elements/core/boolean.js';
 export {IoBoolicon} from './elements/core/boolicon.js';

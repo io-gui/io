@@ -8,6 +8,8 @@ export type Listener = [EventListenerOrEventListenerObject, AddEventListenerOpti
 export type Listeners = Record<string, Listener>;
 export type ListenersArray = Record<string, Listener[]>;
 
+type CallbackFunction = (arg?: any) => void;
+
 /**
  * Array of all listeners defined as `static get Listeners()` return objects in prototype chain.
  */
@@ -16,7 +18,7 @@ export class ProtoListeners {
   constructor(protochain: ProtoChain) {
     for (let i = protochain.length; i--;) {
       const listeners = (protochain[i] as any).Listeners as ProtoListenerRecord;
-      for (let l in listeners) {
+      for (const l in listeners) {
         const listener = (listeners[l] instanceof Array) ? listeners[l] :[listeners[l]];
         this[l] = listener as ProtoListenerArrayType;
       }
@@ -36,6 +38,8 @@ class EventDispatcher {
   private __connected = false;
   /**
    * Creates Event Dispatcher.
+   * @param {IoNode | HTMLElement} node Node or element to add EventDispatcher to.
+   * @param {ProtoListeners} [protoListeners] Protolisteners
    */
   constructor(node: IoNode | HTMLElement, protoListeners: ProtoListeners = {}) {
     this.__node = node;
@@ -91,6 +95,7 @@ class EventDispatcher {
   }
   /**
    * Connects all event listeners.
+   * @return {this} this
    */
   connect(): this {
     debug: {
@@ -114,6 +119,7 @@ class EventDispatcher {
   }
   /**
    * Disconnects all event listeners.
+   * @return {this} this
    */
   disconnect(): this {
     debug: {
@@ -138,6 +144,9 @@ class EventDispatcher {
   /**
    * Proxy for `addEventListener` method.
    * Adds an event listener.
+   * @param {string} type Name of the event
+   * @param {EventListenerOrEventListenerObject} listener Event listener handler
+   * @param {AddEventListenerOptions} [options] Event listener options
    */
   addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions) {
     this.__addedListeners[type] = this.__addedListeners[type] || [];
@@ -153,7 +162,10 @@ class EventDispatcher {
   /**
    * Proxy for `removeEventListener` method.
    * Removes an event listener.
-   */
+   * @param {string} type Name of the event
+   * @param {EventListenerOrEventListenerObject} listener Event listener handler
+   * @param {AddEventListenerOptions} [options] Event listener options
+  */
   removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions) {
     debug: {
       if (!this.__addedListeners[type]) console.warn(`EventDispatcher: listener ${type} not found!`);
@@ -179,21 +191,25 @@ class EventDispatcher {
   }
   /**
    * Shorthand for custom event dispatch.
+   * @param {string} type Name of the event
+   * @param {Object} detail Event detail data
+   * @param {boolean} [bubbles] Makes event bubble
+   * @param {EventTarget} [node] Event target to dispatch from
    */
-  dispatchEvent(type: string, detail: Record<string, any> = {}, bubbles: boolean = true, node: EventTarget | IoNode = this.__node) {
+  dispatchEvent(type: string, detail: Record<string, any> = {}, bubbles = true, node: EventTarget | IoNode = this.__node) {
     if (!this.__connected) return;
     if ((node instanceof EventTarget)) {
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(type, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
       if (this.__protoListeners[type] !== undefined) {
-        (this.__protoListeners[type][0] as Function).call(node, {detail: detail, target: node, path: [node]});
+        (this.__protoListeners[type][0] as CallbackFunction).call(node, {detail: detail, target: node, path: [node]});
       }
       if (this.__propListeners[type] !== undefined) {
-        (this.__propListeners[type][0] as Function).call(node, {detail: detail, target: node, path: [node]});
+        (this.__propListeners[type][0] as CallbackFunction).call(node, {detail: detail, target: node, path: [node]});
       }
       if (this.__addedListeners[type] !== undefined) {
         for (let i = 0; i < this.__addedListeners[type].length; i ++) {
-          (this.__addedListeners[type][i][0] as Function).call(node, {detail: detail, target: node, path: [node]});
+          (this.__addedListeners[type][i][0] as CallbackFunction).call(node, {detail: detail, target: node, path: [node]});
         }
       }
     }

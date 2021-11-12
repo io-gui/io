@@ -1,5 +1,5 @@
 import {RegisterIoElement} from '../../../srcj/components/io-element.js';
-import {IoGl} from './gl.js';
+import {IoGl} from '../../../srcj/elements/core/gl.js';
 
 export class IoSlider extends IoGl {
   static get Style() {

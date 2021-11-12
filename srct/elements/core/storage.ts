@@ -1,23 +1,25 @@
-import {IoNode, RegisterIoNode} from '../../../srcj/components/io-node.js';
+import {IoNode, RegisterIoNode} from '../../components/io-node.js';
 
 // TODO: test different value types
 
 class EmulatedLocalStorage {
+  private store: Record<string, unknown> = {};
+  private warned = false;
   get permited() {
     try {
-      return self.localStorage.getItem('io-storage-user-permitted');
+      return !!self.localStorage.getItem('io-storage-user-permitted');
     } catch (error) {
       console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
     }
-    return undefined;
+    return false;
   }
-  set permited(value) {
+  set permited(value: boolean) {
     try {
-      self.localStorage.setItem('io-storage-user-permitted', value);
+      self.localStorage.setItem('io-storage-user-permitted', String(value));
       const permited = self.localStorage.getItem('io-storage-user-permitted');
       if (permited === 'true') {
-        for (let i in this.store) {
-          self.localStorage.setItem(i, this.store[i]);
+        for (const i in this.store) {
+          self.localStorage.setItem(i, String(this.store[i]));
           delete this.store[i];
         }
         console.log('IoStorage: Saved localStorage state.');
@@ -30,13 +32,14 @@ class EmulatedLocalStorage {
     Object.defineProperty(this, 'store', {value: {}, writable: true});
     Object.defineProperty(this, 'warned', {value: false, writable: true});
   }
-  setItem(key, value) {
-    if (this.permited === 'true') {
-      self.localStorage.setItem(key, value);
+  setItem(key: string, value: unknown) {
+    const strValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+    if (this.permited) {
+      self.localStorage.setItem(key, strValue);
     } else {
-      this.store[key] = typeof value === 'object' ? JSON.stringify(value) : String(value);
+      this.store[key] = strValue;
       if (!this.warned) {
-        if (this.permited === 'false') {
+        if (!this.permited) {
           console.warn('IoStorage: localStorage permission denied by user.');
         } else {
           console.warn('IoStorage: localStorage pending permission by user.');
@@ -44,26 +47,26 @@ class EmulatedLocalStorage {
         this.warned = true;
       }
       if (key === 'io-storage-user-permitted') {
-        this.permited = this.store[key];
+        this.permited = !!this.store[key];
       }
     }
   }
-  getItem(key) {
-    if (this.permited === 'true') {
+  getItem(key: string) {
+    if (this.permited) {
       return self.localStorage.getItem(key);
     } else {
       return this.store[key];
     }
   }
-  removeItem(key) {
-    if (this.permited === 'true') {
+  removeItem(key: string) {
+    if (this.permited) {
       return self.localStorage.removeItem(key);
     } else {
       delete this.store[key];
     }
   }
   clear() {
-    if (this.permited === 'true') {
+    if (this.permited) {
       return self.localStorage.clear();
     } else {
       this.store = {};
@@ -73,11 +76,12 @@ class EmulatedLocalStorage {
 
 const localStorage = new EmulatedLocalStorage();
 
-const nodes = {};
+const nodes: Record<string, IoNode> = {};
 let hashes = {};
 
+// TODO: unhack and test
 const parseHashes = function() {
-  return self.location.hash.substr(1).split('&').reduce(function (result, item) {
+  return self.location.hash.substr(1).split('&').reduce(function (result: Record<string, string>, item) {
     const parts = item.split('=');
     result[parts[0]] = parts[1];
     return result;
@@ -86,30 +90,33 @@ const parseHashes = function() {
 
 const getHashes = function() {
   hashes = parseHashes();
-  for (let hash in hashes) {
-    if (nodes[hash]) {
-      if (nodes[hash] !== '') {
-        const hashValue = hashes[hash].replace(/%20/g, ' ');
-        if (!isNaN(hashValue)) {
-          nodes[hash].value = JSON.parse(hashValue);
+  for (const hash in hashes) {
+    // TODO: clean up types
+    const n = hash as keyof typeof nodes;
+    const h = hash as keyof typeof hashes;
+    if (nodes[n]) {
+      if (hashes[h] !== '') {
+        const hashValue = (hashes[h] as string).replace(/%20/g, ' ');
+        if (!isNaN(hashValue as unknown as number)) {
+          nodes[n].value = JSON.parse(hashValue);
         } else if (hashValue === 'true' || hashValue === 'false') {
-          nodes[hash].value = JSON.parse(hashValue);
+          nodes[n].value = JSON.parse(hashValue);
         } else {
-          nodes[hash].value = hashValue;
+          nodes[n].value = hashValue;
         }
       }
     }
   }
-  for (let node in nodes) {
-    if (nodes[node].storage === 'hash' && !hashes[node]) {
+  for (const node in nodes) {
+    if (nodes[node].storage === 'hash' && !hashes[node as keyof typeof hashes]) {
       nodes[node].value = nodes[node].default;
     }
   }
 };
 
-const setHashes = function(force) {
+const setHashes = function(force?: boolean) {
   let hashString = '';
-  for (let node in nodes) {
+  for (const node in nodes) {
     if ((nodes[node].storage === 'hash' || force) && nodes[node].value !== undefined && nodes[node].value !== '' && nodes[node].value !== nodes[node].default) {
       if (typeof nodes[node].value === 'string') {
         hashString += node + '=' + nodes[node].value + '&';
@@ -118,9 +125,9 @@ const setHashes = function(force) {
       }
     }
   }
-  for (let hash in hashes) {
+  for (const hash in hashes) {
     if (hash && !nodes[hash]) {
-      hashString += hash + '=' + hashes[hash] + '&';
+      hashString += hash + '=' + hashes[hash as keyof typeof hashes] + '&';
     }
   }
   hashString = hashString.slice(0, -1);
@@ -131,6 +138,12 @@ const setHashes = function(force) {
 self.addEventListener('hashchange', getHashes, false);
 getHashes();
 
+interface StorageProps {
+  key: string,
+  value?: unknown,
+  storage?: 'hash' | 'local',
+}
+
 class IoStorage extends IoNode {
   static get Properties() {
     return {
@@ -140,7 +153,7 @@ class IoStorage extends IoNode {
       storage: undefined,
     };
   }
-  constructor(props) {
+  constructor(props: StorageProps) {
     super(Object.assign({default: props.value}, props));
     if (props.key) nodes[props.key] = nodes[props.key] || this;
     this.binding = this.bind('value');
@@ -148,10 +161,11 @@ class IoStorage extends IoNode {
     this.connect(window);
   }
   getStorageValue() {
+    const key = this.key as keyof typeof hashes;
     switch (this.storage) {
       case 'hash': {
-        if (hashes[this.key] !== undefined) {
-          const hashValue = hashes[this.key].replace(/%20/g, ' ');
+        if (hashes[key] !== undefined) {
+          const hashValue = (hashes[key] as string).replace(/%20/g, ' ');
           try {
             this.value = JSON.parse(hashValue);
           } catch (e) {
@@ -166,7 +180,7 @@ class IoStorage extends IoNode {
         const key = self.location.pathname !== '/' ? self.location.pathname + this.key : this.key;
         const localValue = localStorage.getItem(key);
         if (localValue !== null && localValue !== undefined) {
-          this.value = JSON.parse(localValue);
+          this.value = JSON.parse(localValue as string);
         } else {
           this.value = this.default;
         }
@@ -198,7 +212,7 @@ class IoStorage extends IoNode {
 
 RegisterIoNode(IoStorage);
 
-const IoStorageFactory = function(props) {
+const IoStorageFactory = function(props: StorageProps) {
   if (props && typeof props === 'string') {
     props = {key: props};
   }

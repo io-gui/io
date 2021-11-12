@@ -25,6 +25,8 @@ declare class EventDispatcher {
     private __connected;
     /**
      * Creates Event Dispatcher.
+     * @param {IoNode | HTMLElement} node Node or element to add EventDispatcher to.
+     * @param {ProtoListeners} [protoListeners] Protolisteners
      */
     constructor(node: IoNode | HTMLElement, protoListeners?: ProtoListeners);
     /**
@@ -34,24 +36,36 @@ declare class EventDispatcher {
     setPropListeners(properties: Record<string, ProtoListenerType>): void;
     /**
      * Connects all event listeners.
+     * @return {this} this
      */
     connect(): this;
     /**
      * Disconnects all event listeners.
+     * @return {this} this
      */
     disconnect(): this;
     /**
      * Proxy for `addEventListener` method.
      * Adds an event listener.
+     * @param {string} type Name of the event
+     * @param {EventListenerOrEventListenerObject} listener Event listener handler
+     * @param {AddEventListenerOptions} [options] Event listener options
      */
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions): void;
     /**
      * Proxy for `removeEventListener` method.
      * Removes an event listener.
-     */
+     * @param {string} type Name of the event
+     * @param {EventListenerOrEventListenerObject} listener Event listener handler
+     * @param {AddEventListenerOptions} [options] Event listener options
+    */
     removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions): void;
     /**
      * Shorthand for custom event dispatch.
+     * @param {string} type Name of the event
+     * @param {Object} detail Event detail data
+     * @param {boolean} [bubbles] Makes event bubble
+     * @param {EventTarget} [node] Event target to dispatch from
      */
     dispatchEvent(type: string, detail?: Record<string, any>, bubbles?: boolean, node?: EventTarget | IoNode): void;
     /**

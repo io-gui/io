@@ -1,5 +1,5 @@
 import {RegisterIoElement} from '../../../srcj/components/io-element.js';
-import {IoGl} from '../core/gl.js';
+import {IoGl} from '../../../srcj/elements/core/gl.js';
 import {IoColorMixin} from './color.js';
 
 export class IoColorSwatch extends IoColorMixin(IoGl) {

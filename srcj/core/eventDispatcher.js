@@ -5,7 +5,7 @@ export class ProtoListeners {
     constructor(protochain) {
         for (let i = protochain.length; i--;) {
             const listeners = protochain[i].Listeners;
-            for (let l in listeners) {
+            for (const l in listeners) {
                 const listener = (listeners[l] instanceof Array) ? listeners[l] : [listeners[l]];
                 this[l] = listener;
             }
@@ -24,6 +24,8 @@ class EventDispatcher {
     __connected = false;
     /**
      * Creates Event Dispatcher.
+     * @param {IoNode | HTMLElement} node Node or element to add EventDispatcher to.
+     * @param {ProtoListeners} [protoListeners] Protolisteners
      */
     constructor(node, protoListeners = {}) {
         this.__node = node;
@@ -81,6 +83,7 @@ class EventDispatcher {
     }
     /**
      * Connects all event listeners.
+     * @return {this} this
      */
     connect() {
         debug: {
@@ -105,6 +108,7 @@ class EventDispatcher {
     }
     /**
      * Disconnects all event listeners.
+     * @return {this} this
      */
     disconnect() {
         debug: {
@@ -130,6 +134,9 @@ class EventDispatcher {
     /**
      * Proxy for `addEventListener` method.
      * Adds an event listener.
+     * @param {string} type Name of the event
+     * @param {EventListenerOrEventListenerObject} listener Event listener handler
+     * @param {AddEventListenerOptions} [options] Event listener options
      */
     addEventListener(type, listener, options) {
         this.__addedListeners[type] = this.__addedListeners[type] || [];
@@ -146,7 +153,10 @@ class EventDispatcher {
     /**
      * Proxy for `removeEventListener` method.
      * Removes an event listener.
-     */
+     * @param {string} type Name of the event
+     * @param {EventListenerOrEventListenerObject} listener Event listener handler
+     * @param {AddEventListenerOptions} [options] Event listener options
+    */
     removeEventListener(type, listener, options) {
         debug: {
             if (!this.__addedListeners[type])
@@ -175,6 +185,10 @@ class EventDispatcher {
     }
     /**
      * Shorthand for custom event dispatch.
+     * @param {string} type Name of the event
+     * @param {Object} detail Event detail data
+     * @param {boolean} [bubbles] Makes event bubble
+     * @param {EventTarget} [node] Event target to dispatch from
      */
     dispatchEvent(type, detail = {}, bubbles = true, node = this.__node) {
         if (!this.__connected)

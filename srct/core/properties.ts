@@ -1,7 +1,7 @@
 import {Binding} from './propertyBinder.js';
 import {ProtoChain} from './protoChain.js';
 
-type Constructor = new (...args: any[]) => Object;
+type Constructor = new (...args: any[]) => unknown;
 type ReflectType = -1 | 0 | 1 | 2;
 
 export type ProtoPropertyDefinition = {
@@ -117,6 +117,7 @@ class Property {
   binding?: Binding;
   /**
    * Creates the property configuration object and copies values from `ProtoProperty`.
+   * @param {ProtoProperty} protoProp ProtoProperty object
    */
   constructor(protoProp: ProtoProperty) {
     this.value = protoProp.value;
@@ -164,6 +165,8 @@ class Properties {
   private __connected = false;
   /**
    * Creates the properties for specified `IoNode`.
+   * @param {any} node Owner IoNode instance.
+   * @param {ProtoProperties} protoProps ProtoProperties object.
    */
   constructor(node: any, protoProps: ProtoProperties) {
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
@@ -195,14 +198,19 @@ class Properties {
   }
   /**
    * Returns the property value.
+   * @param {string} key property name to get value of.
+   * @return {any} Peroperty value.
    */
   get(key: string): any {
     return ((this as any)[key] as Property).value;
   }
   /**
    * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+   * @param {string} key Property name to set value of.
+   * @param {any} value Peroperty value.
+   * @param {boolean} [skipDispatch] flag to skip event dispatch.
    */
-  set(key: string, value: any, skipDispatch: boolean = false) {
+  set(key: string, value: any, skipDispatch?: boolean) {
 
     const prop = (this as any)[key] as Property;
     const oldValue = prop.value;

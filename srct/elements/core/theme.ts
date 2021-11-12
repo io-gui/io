@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
+import {IoElement, RegisterIoElement} from '../../components/io-element.js';
 import {IoStorageFactory as $} from './storage.js';
 
 const themePropDefaults =  {
@@ -179,13 +179,13 @@ export class IoTheme extends IoElement {
       lazy: true,
     };
   }
-  constructor(props) {
+  constructor(props?: any) {
     super(props);
     this.variablesElement = document.createElement('style');
     this.variablesElement.setAttribute('id', 'io-theme-variables');
     document.head.appendChild(this.variablesElement);
   }
-  _toCss(rgba) {
+  _toCss(rgba: number[]) {
     const r = Math.floor(rgba[0] * 255);
     const g = Math.floor(rgba[1] * 255);
     const b = Math.floor(rgba[2] * 255);
@@ -278,7 +278,7 @@ export class IoTheme extends IoElement {
     `;
 
     const vars = themeDB.value[this.theme];
-    for (let prop in this.__properties) {
+    for (const prop in this.__properties) {
       if (prop.startsWith('css')) {
         vars[prop] = this.__properties[prop].value;
       }
@@ -292,7 +292,21 @@ export class IoTheme extends IoElement {
 
 RegisterIoElement(IoTheme);
 
+/*
+ * Extends `IoElement`.
+ *
+ * `IoThemeSingleton` holds top-level CSS variables for Io design system. Variables are grouped in different themes and can be collectively switched by changing `theme` property.
+ *
+ * ```javascript
+ * IoThemeSingleton.theme = 'dark';
+ * ```
+ *
+ * <io-element-demo element="io-option-menu" properties='{"value": "light", "options": ["light", "dark"]}'></io-element-demo>
+ *
+ * Moreover, some of the key theme variables such as `'--io-color'` and `'--io-background-color'` are mapped to numeric properties `cssColor` and `cssBackgroundColor` source code for more advanced example.
+ **/
+
 const IoThemeSingleton = new IoTheme();
-document.head.appendChild(IoThemeSingleton);
+document.head.appendChild(IoThemeSingleton as unknown as HTMLElement);
 
 export { IoThemeSingleton };

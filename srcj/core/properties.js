@@ -117,6 +117,7 @@ class Property {
     binding;
     /**
      * Creates the property configuration object and copies values from `ProtoProperty`.
+     * @param {ProtoProperty} protoProp ProtoProperty object
      */
     constructor(protoProp) {
         this.value = protoProp.value;
@@ -169,6 +170,8 @@ class Properties {
     __connected = false;
     /**
      * Creates the properties for specified `IoNode`.
+     * @param {any} node Owner IoNode instance.
+     * @param {ProtoProperties} protoProps ProtoProperties object.
      */
     constructor(node, protoProps) {
         Object.defineProperty(this, '__node', { enumerable: false, configurable: true, value: node });
@@ -203,14 +206,19 @@ class Properties {
     }
     /**
      * Returns the property value.
+     * @param {string} key property name to get value of.
+     * @return {any} Peroperty value.
      */
     get(key) {
         return this[key].value;
     }
     /**
      * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+     * @param {string} key Property name to set value of.
+     * @param {any} value Peroperty value.
+     * @param {boolean} [skipDispatch] flag to skip event dispatch.
      */
-    set(key, value, skipDispatch = false) {
+    set(key, value, skipDispatch) {
         const prop = this[key];
         const oldValue = prop.value;
         if (value !== oldValue) {

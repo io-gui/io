@@ -1,11 +1,13 @@
-import {IoGl, IoThemeSingleton} from '../../iogui.js';
+import {IoGl} from './gl.js';
+import {IoThemeSingleton} from './theme.js';
 
 export default class {
+  private element: IoGl;
   constructor() {
     this.element = new IoGl();
     this.element.style.visibility = 'hidden';
     this.element.style.position = 'fixed';
-    document.body.appendChild(this.element);
+    document.body.appendChild(this.element as unknown as HTMLElement);
   }
   reset() {
     this.element.size = [0, 0];

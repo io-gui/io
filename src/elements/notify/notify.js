@@ -1,5 +1,6 @@
 import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
-import {IoStorageFactory} from '../core/storage.js';
+import {IoStorageFactory} from '../../../srcj/elements/core/storage.js';
+
 
 export class IoNotify extends IoElement {
   static get Style() {

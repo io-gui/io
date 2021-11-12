@@ -1,9 +1,10 @@
-import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
+import {IoElement, RegisterIoElement} from '../../components/io-element.js';
 import {IoThemeSingleton} from './theme.js';
+import {Property} from '../../core/properties.js';
 
 const canvas = document.createElement('canvas');
-const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true});
-gl.imageSmoothingEnabled = false;
+const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true}) as WebGLRenderingContext;
+// TODO: disable filtering (image-rendering: pixelated)?
 
 gl.getExtension('OES_standard_derivatives');
 
@@ -29,7 +30,29 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 
 const shadersCache = new WeakMap();
-let currentProgram;
+let currentProgram: WebGLProgram | null;
+
+type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
+/*
+ * `IoGL` is a base class for WebGL-based custom elements. The appearance of such elements is defined in fragment shader programs that execute on the GPU. All numeric properties are automatically bound to shader uniforms, including `IoThemeSingleton` CSS properties. You can define your custom shaders inside `static get Frag()` return string.
+ *
+ * <io-element-demo element="io-gl" width="255px" height="255px" properties='{"color": [0, 0, 0, 1]}' config='{"background": ["io-color-vector"], "color": ["io-color-vector"]}'></io-element-demo>
+ *
+ * An example of the most basic fragment shader program:
+ *
+ * ```javascript
+ * class MyElement extends IoGl {
+ *   static get Frag() {
+ *     return `
+ *     void main(void) {
+ *       gl_FragColor = cssBackgroundColor;
+ *     }`;
+ *   }
+ * }
+ * ```
+ *
+ * See `IoSliderKnob` and `IoHsvaSv` for more advanced examples.
+ **/
 
 export class IoGl extends IoElement {
   static get Style() {
@@ -120,7 +143,7 @@ export class IoGl extends IoElement {
         gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
   }
-  initPropertyUniform(name, property) {
+  initPropertyUniform(name: string, property: Property) {
     if (property.notify) {
       switch (property.type) {
         case Boolean:
@@ -141,14 +164,14 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
 
-    for (let name in this.css.__properties) {
+    for (const name in this.css.__properties) {
       const property = this.css.__protoProperties[name];
       frag += this.initPropertyUniform(name, property);
     }
 
     frag += '\n';
 
-    for (let prop in this.__properties) {
+    for (const prop in this.__properties) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
       const property = this.__protoProperties[prop];
       frag += this.initPropertyUniform(name, property);
@@ -162,46 +185,46 @@ export class IoGl extends IoElement {
       }
     }
 
-    const vertShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertShader, this.constructor.Vert);
+    const vertShader = gl.createShader(gl.VERTEX_SHADER) as WebGLShader;
+    gl.shaderSource(vertShader, (this.constructor as any).Vert);
     gl.compileShader(vertShader);
 
     if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-      let compilationLog = gl.getShaderInfoLog(vertShader);
+      const compilationLog = gl.getShaderInfoLog(vertShader);
       console.error('IoGl [Vertex Shader] ' + this.localName + ' error:');
       console.warn(compilationLog);
     }
 
-    const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragShader, frag + this.constructor.Frag);
+    const fragShader = gl.createShader(gl.FRAGMENT_SHADER) as WebGLShader;
+    gl.shaderSource(fragShader, frag + (this.constructor as any).Frag);
     gl.compileShader(fragShader);
 
     if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-      let compilationLog = gl.getShaderInfoLog(fragShader);
+      const compilationLog = gl.getShaderInfoLog(fragShader);
       console.error('IoGl [Frament Shader] ' + this.localName + ' error:');
       console.warn(compilationLog);
     }
 
-    const shader = gl.createProgram();
-    gl.attachShader(shader, vertShader);
-    gl.attachShader(shader, fragShader);
+    const program = gl.createProgram() as WebGLProgram;
+    gl.attachShader(program, vertShader);
+    gl.attachShader(program, fragShader);
 
-    return shader;
+    return program;
   }
-  constructor(props) {
-    super(props);
+  constructor(properties: Record<string, any> = {}) {
+    super(properties);
 
     this.css = IoThemeSingleton;
 
     // TODO: improve code clarity
     this._vecLengths = {};
-    for (let name in this.css.__properties) {
+    for (const name in this.css.__properties) {
       const property = this.css.__protoProperties[name];
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }
     }
-    for (let prop in this.__properties) {
+    for (const prop in this.__properties) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
       const property = this.__protoProperties[prop];
       if (property.notify && property.type === Array) {
@@ -242,7 +265,7 @@ export class IoGl extends IoElement {
     // TODO: consider optimizing
     const pxRatio = window.devicePixelRatio;
     const rect = this.getBoundingClientRect();
-    const style = window.getComputedStyle(this);
+    const style = window.getComputedStyle(this as unknown as HTMLElement);
     const bw = parseInt(style.borderRightWidth) + parseInt(style.borderLeftWidth);
     const bh = parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth);
 
@@ -289,7 +312,7 @@ export class IoGl extends IoElement {
     this.setShaderProgram();
 
     // TODO: dont brute-force uniform update.
-    for (let p in this.__properties) {
+    for (const p in this.__properties) {
       const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
       this.updatePropertyUniform(name, this.__properties[p]);
     }
@@ -314,18 +337,18 @@ export class IoGl extends IoElement {
       gl.useProgram(this._shader);
     }
   }
-  updatePropertyUniform(name, property) {
+  updatePropertyUniform(name: string, property: Property) {
     this.setShaderProgram();
     if (property.notify) {
-      this.setUniform(name, property.type, property.value);
+      this.setUniform(name, property.type as unknown as UniformTypes, property.value);
     }
   }
   updateCssUniforms() {
-    for (let name in this.css.__properties) {
+    for (const name in this.css.__properties) {
       this.updatePropertyUniform(name, this.css.__properties[name]);
     }
   }
-  setUniform(name, type, value) {
+  setUniform(name: string, type: UniformTypes, value: any) {
     const uniform = gl.getUniformLocation(this._shader, name);
     let _c;
     switch (type) {

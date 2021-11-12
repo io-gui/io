@@ -37,7 +37,7 @@ export class Options extends IoNodeMixin(Array) {
       option.connect(this);
     }
   }
-  option(value: any) {
+  option(value: any) {
     for (let i = 0; i < this.length; i++) {
       if (this[i].value === value) return this[i];
     }
