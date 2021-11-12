@@ -1,6 +1,14 @@
 import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoIconsetSingleton} from './iconset.js';
 
+/*
+ * Extends `IoElement`.
+ *
+ * SVG icon element. Displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
+ *
+ * <io-element-demo element="io-icon" properties='{"icon": "icons:link", "stroke": false}' config='{"icon": ["io-option-menu", {"options": ["icons:link", "icons:unlink", "icons:check", "icons:uncheck"]}]}'></io-element-demo>
+ **/
+
 export class IoIcon extends IoElement {
   static get Style() {
     return /* css */`

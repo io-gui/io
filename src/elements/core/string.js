@@ -1,6 +1,14 @@
 import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoItem} from './item.js';
 
+/*
+ * Extends `IoItem`.
+ *
+ * Input element for `String` data type.
+ *
+ * <io-element-demo element="io-string" properties='{"value": "hello world"}'></io-element-demo>
+ **/
+
 export class IoString extends IoItem {
   static get Style() {
     return /* css */`

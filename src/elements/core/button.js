@@ -1,6 +1,14 @@
 import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoItem} from './item.js';
 
+/*
+ * Extends `IoItem`.
+ *
+ * Button element. When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
+ *
+ * <io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
+ **/
+
 export class IoButton extends IoItem {
   static get Style() {
     return /* css */`
