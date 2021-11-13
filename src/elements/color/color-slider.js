@@ -2,6 +2,12 @@ import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoSlider} from '../../../srcj/elements/core/slider.js';
 import {IoColorMixin} from './color.js';
 
+/*
+ * Extends `IoColorMixin(IoSlider)`.
+ *
+ * Base class for color sliders for any color type.
+ **/
+
 export class IoColorSlider extends IoColorMixin(IoSlider) {
   static get Properties() {
     return {

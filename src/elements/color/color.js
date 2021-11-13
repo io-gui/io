@@ -1,5 +1,9 @@
 import {convert} from '../../../lib/color-convert.js';
 
+/*
+ * A mixin class for all `IoColor*` elements. Its `value` property is color of `Array` or `Object` type in **rgb**, **hsv**, **hsl** or **cmyk** color space. If `value` is an array, its color space is inferred as **rgb** unless explicit color mode is specified with `mode` property which can have values **0 - rgb**, **1 - hsv**, **2 - hsl**, **3 - cmyk**. If `value` is an object, it should have keys corresponding to the color space components and color space will be determined automatically. Alpha component `a` is optional.
+ **/
+
 export const IoColorMixin = (superclass) => {
   const classConstructor = class extends superclass {
     static get Properties() {

@@ -1,6 +1,15 @@
 import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoColorSlider} from './color-slider.js';
 
+/*
+ * Modifies **hue** component the color `value` in **hsv** color space.
+ *
+ * <io-element-demo element="io-color-slider-hue"
+ *   properties='{"value": [1, 0.5, 0, 1]}'
+ *   config='{"value": ["io-properties"]}
+ * '></io-element-demo>
+ **/
+
 export class IoColorSliderHue extends IoColorSlider {
   static get Frag() {
     return /* glsl */`

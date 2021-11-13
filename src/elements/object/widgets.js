@@ -1,3 +1,7 @@
+/*
+
+ **/
+
 export class Widgets {
   constructor(prototypes) {
     for (let i = 0; i < prototypes.length; i++) {

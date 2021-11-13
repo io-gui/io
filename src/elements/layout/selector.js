@@ -2,6 +2,31 @@ import {IoElement, RegisterIoElement} from '../../../srcj/components/io-element.
 import {Options} from '../../../srcj/models/options.js';
 // TODO: use IoContent for caching and display.
 
+/*
+ * Extends `IoElement` and `IoContent`.
+ *
+ * Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
+ *
+ * <io-element-demo element="io-selector"
+ *     properties='{
+ *         "elements": [
+ *             ["div", {"name": "first"}, "First content"],
+ *             ["div", {"name": "second"}, "Second content"],
+ *             ["div", {"name": "third"}, "Third content"],
+ *             ["div", {"name": "fourth"}, "Fourth content"]],
+ *         "selected": "first",
+ *         "cache": false}'
+ *     config='{
+ *         "selected": ["io-option-menu", {"options": [
+ *             "first",
+ *             "second",
+ *             "third",
+ *             "fourth"]}]}'>
+ * </io-element-demo>
+ *
+ * If `cache` property is set to `true`, a reference to the element will be kept fo later use.
+ **/
+
 export class IoSelector extends IoElement {
   static get Style() {
     return /* css */`

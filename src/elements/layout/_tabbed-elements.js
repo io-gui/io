@@ -18,6 +18,10 @@ const splitDirections = {
 // TODO: Reconsider!
 // NOTE: Editable io-selector-tabs cannot contain other editable io-selector-tabs or io-layout
 
+/*
+
+ **/
+
 export class IoSelectorTabs extends IoElement {
   static get Style() {
     return /* css */`

@@ -1,3 +1,0 @@
-## `IoConfig`
-
-<!-- TODO -->

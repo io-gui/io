@@ -2,6 +2,10 @@ import {Binding} from '../../../srcj/core/propertyBinder.js';
 
 // TODO: display read only as non-editable
 
+/*
+
+ **/
+
 export class Config {
     constructor(prototypes) {
       for (let i = 0; i < prototypes.length; i++) {

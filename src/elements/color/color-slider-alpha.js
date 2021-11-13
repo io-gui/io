@@ -1,6 +1,15 @@
 import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {IoColorSlider} from './color-slider.js';
 
+/*
+ * Modifies **alpha** component the color `value`.
+ *
+ * <io-element-demo element="io-color-slider-alpha"
+ *   properties='{"value": [1, 0.5, 0, 1]}'
+ *   config='{"value": ["io-properties"]}
+ * '></io-element-demo>
+ **/
+
 export class IoColorSliderAlpha extends IoColorSlider {
   static get Frag() {
     return /* glsl */`

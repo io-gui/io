@@ -2,6 +2,10 @@ import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import './md-view.js';
 import {IoSelectorSidebar} from '../layout/selector-sidebar.js';
 
+/*
+
+ **/
+
 export class IoMdViewSelector extends IoSelectorSidebar  {
   update() {
     this.template([
