@@ -145,7 +145,7 @@ interface StorageProps {
 }
 
 class IoStorage extends IoNode {
-  static get Properties() {
+  static get Properties(): any {
     return {
       key: String,
       value: undefined,

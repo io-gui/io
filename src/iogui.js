@@ -45,22 +45,22 @@ export {IoThemeSingleton} from '../srcj/elements/core/theme.js';
 
 export {IoGl} from '../srcj/elements/core/gl.js';
 
-export {IoItem} from './elements/core/item.js';
-export {IoContent} from './elements/core/content.js';
-export {IoButton} from './elements/core/button.js';
-export {IoBoolean} from './elements/core/boolean.js';
-export {IoBoolicon} from './elements/core/boolicon.js';
-export {IoSwitch} from './elements/core/switch.js';
-export {IoString} from './elements/core/string.js';
-export {IoNumber} from './elements/core/number.js';
-export {IoSlider} from './elements/core/slider.js';
-export {IoSliderRange} from './elements/core/slider-range.js';
-export {IoNumberSlider} from './elements/core/number-slider.js';
-export {IoNumberSliderRange} from './elements/core/number-slider-range.js';
-export {IoLadderSingleton} from './elements/core/ladder.js';
-export {IoIconsetSingleton} from './elements/core/iconset.js';
-export {IoIcon} from './elements/core/icon.js';
-export {IoLayerSingleton} from './elements/core/layer.js';
+export {IoItem} from '../srcj/elements/core/item.js';
+export {IoContent} from '../srcj/elements/core/content.js';
+export {IoButton} from '../srcj/elements/core/button.js';
+export {IoBoolean} from '../srcj/elements/core/boolean.js';
+export {IoBoolicon} from '../srcj/elements/core/boolicon.js';
+export {IoSwitch} from '../srcj/elements/core/switch.js';
+export {IoString} from '../srcj/elements/core/string.js';
+export {IoNumber} from '../srcj/elements/core/number.js';
+export {IoSlider} from '../srcj/elements/core/slider.js';
+export {IoSliderRange} from '../srcj/elements/core/slider-range.js';
+export {IoNumberSlider} from '../srcj/elements/core/number-slider.js';
+export {IoNumberSliderRange} from '../srcj/elements/core/number-slider-range.js';
+export {IoLadderSingleton} from '../srcj/elements/core/ladder.js';
+export {IoIconsetSingleton} from '../srcj/elements/core/iconset.js';
+export {IoIcon} from '../srcj/elements/core/icon.js';
+export {IoLayerSingleton} from '../srcj/elements/core/layer.js';
 
 export {IoMenuItem} from './elements/menus/menu-item.js';
 export {IoMenuOptions} from './elements/menus/menu-options.js';

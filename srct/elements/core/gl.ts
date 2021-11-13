@@ -74,7 +74,7 @@ export class IoGl extends IoElement {
     }
     `;
   }
-  static get Properties() {
+  static get Properties(): any {
     return {
       size: [0, 0],
       color: {

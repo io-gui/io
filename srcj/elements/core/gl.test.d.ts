@@ -1,5 +1,6 @@
+import { IoGl } from './gl.js';
 export default class {
-    private element;
+    element: IoGl;
     constructor();
     reset(): void;
     run(): void;

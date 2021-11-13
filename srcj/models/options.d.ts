@@ -18,10 +18,10 @@ declare const Options_base: {
         objectMutatedThrottled(prop: string): void;
         bind(prop: string): import("../core/propertyBinder.js").Binding;
         unbind(prop: string): void;
-        set(prop: string, value: any, force: boolean): void;
+        set(prop: string, value: any, force?: boolean | undefined): void;
         setProperties(props: any): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | undefined): void;
-        removeEventListener(type: string, listener?: EventListenerOrEventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
+        addEventListener(type: string, listener: EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void), options?: AddEventListenerOptions | undefined): void;
+        removeEventListener(type: string, listener?: (EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void)) | undefined, options?: AddEventListenerOptions | undefined): void;
         dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Document | Window | undefined): void;
         throttle(func: (arg?: any) => void, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: (arg?: any) => void): void;

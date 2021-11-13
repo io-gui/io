@@ -135,7 +135,7 @@ class EventDispatcher {
      * Proxy for `addEventListener` method.
      * Adds an event listener.
      * @param {string} type Name of the event
-     * @param {EventListenerOrEventListenerObject} listener Event listener handler
+     * @param {EventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
      */
     addEventListener(type, listener, options) {
@@ -154,7 +154,7 @@ class EventDispatcher {
      * Proxy for `removeEventListener` method.
      * Removes an event listener.
      * @param {string} type Name of the event
-     * @param {EventListenerOrEventListenerObject} listener Event listener handler
+     * @param {EventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
     */
     removeEventListener(type, listener, options) {

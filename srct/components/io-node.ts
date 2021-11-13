@@ -9,8 +9,18 @@ type Constructor<T extends any> = new (...args: any[]) => T;
 type ComposedProperties = null | Record<string, Record<string, any>>
 type CallbackFunction = (arg?: any) => void;
 type PredicateFunction = (object: any) => boolean;
-type EventHandler = (event: Event) => Record<string, unknown>;
 
+type KeyboardEventListener = (event: KeyboardEvent) => void;
+type PointerEventListener = (event: PointerEvent) => void;
+type CustomEventListener = (event: CustomEvent) => void;
+type FocusEventListener = (event: FocusEvent) => void;
+type TouchEventListener = (event: TouchEvent) => void;
+type AnyEventListener = EventListener |
+                        KeyboardEventListener |
+                        PointerEventListener |
+                        CustomEventListener |
+                        FocusEventListener |
+                        TouchEventListener;
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -26,7 +36,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
         //   type: String,
         //   reflect: -1,
         // },
-      };
+      } as any;
     }
     /**
      * `compose` object lets you reactively assign property values to other object's properties.
@@ -125,7 +135,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
       this.__eventDispatcher.connect();
       this.__properties.connect();
       if (this.__observedObjects.length) {
-        window.addEventListener('object-mutated', this.objectMutated as EventHandler);
+        window.addEventListener('object-mutated', this.objectMutated as EventListener);
       }
       this.queueDispatch();
     }
@@ -137,7 +147,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
       this.__eventDispatcher.disconnect();
       this.__properties.disconnect();
       if (this.__observedObjects.length) {
-        window.removeEventListener('object-mutated', this.objectMutated as EventHandler);
+        window.removeEventListener('object-mutated', this.objectMutated as EventListener);
       }
     }
     /**
@@ -152,7 +162,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
       this.__properties.dispose();
       this.__eventDispatcher.dispose();
       if (this.__observedObjects.length) {
-        window.removeEventListener('object-mutated', this.objectMutated as EventHandler);
+        window.removeEventListener('object-mutated', this.objectMutated as EventListener);
       }
     }
     /**
@@ -277,7 +287,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {*} value - Property value.
      * @param {boolean} force - Force value set.
      */
-    set(prop: string, value: any, force: boolean) {
+    set(prop: string, value: any, force?: boolean) {
       if (this[prop] !== value || force) {
         const oldValue = this[prop];
         this[prop] = value;
@@ -310,7 +320,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {function} listener - listener handler.
      * @param {Object} options - event listener options.
      */
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions) {
+    addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
       debug:
       if (typeof listener !== 'function') {
         console.warn(`${this.constructor.name}.${type}() is not a function`, this);
@@ -324,7 +334,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
      * @param {function} listener - listener handler.
      * @param {Object} options - event listener options.
      */
-    removeEventListener(type: string, listener?: EventListenerOrEventListenerObject, options?: AddEventListenerOptions) {
+    removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
       this.__eventDispatcher.removeEventListener(type, listener, options);
     }
     /**

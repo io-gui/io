@@ -1,7 +1,7 @@
 import {RegisterIoElement} from '../../../srcj/components/io-element.js';
 import {Item} from '../../../srcj/models/item.js';
-import {IoItem} from '../core/item.js';
-import {IoLayerSingleton as Layer} from '../core/layer.js';
+import {IoItem} from '../../../srcj/elements/core/item.js';
+import {IoLayerSingleton as Layer} from '../../../srcj/elements/core/layer.js';
 import {IoMenuOptions} from './menu-options.js';
 
 // TODO: fix and improve keyboard navigation in all cases.

@@ -1,10 +1,10 @@
 import {ProtoChain} from './protoChain.js';
 import {IoNode} from '../components/io-node.js';
 
-export type ProtoListenerType = keyof IoNode | EventListenerOrEventListenerObject | ProtoListenerArrayType;
-export type ProtoListenerArrayType = [keyof IoNode | EventListenerOrEventListenerObject, AddEventListenerOptions?];
+export type ProtoListenerType = keyof IoNode | EventListener | ProtoListenerArrayType;
+export type ProtoListenerArrayType = [keyof IoNode | EventListener, AddEventListenerOptions?];
 export type ProtoListenerRecord = Record<string, ProtoListenerType>;
-export type Listener = [EventListenerOrEventListenerObject, AddEventListenerOptions?];
+export type Listener = [EventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener>;
 export type ListenersArray = Record<string, Listener[]>;
 
@@ -54,7 +54,7 @@ class EventDispatcher {
       const protoListener = protoListeners[type];
       const listenerObject = typeof protoListener[0] === 'function' ? protoListener[0] : this.__node[protoListener[0] as keyof (IoNode | HTMLElement)];
       const listenerOptions = protoListener[1];
-      this.__protoListeners[type] = [listenerObject as EventListenerOrEventListenerObject];
+      this.__protoListeners[type] = [listenerObject as EventListener];
       if (listenerOptions) this.__protoListeners[type].push(listenerOptions);
     }
   }
@@ -145,10 +145,10 @@ class EventDispatcher {
    * Proxy for `addEventListener` method.
    * Adds an event listener.
    * @param {string} type Name of the event
-   * @param {EventListenerOrEventListenerObject} listener Event listener handler
+   * @param {EventListener} listener Event listener handler
    * @param {AddEventListenerOptions} [options] Event listener options
    */
-  addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions) {
+  addEventListener(type: string, listener: EventListener, options?: AddEventListenerOptions) {
     this.__addedListeners[type] = this.__addedListeners[type] || [];
     debug: {
       const l = this.__addedListeners[type].findIndex(l => l[0] === listener);
@@ -163,10 +163,10 @@ class EventDispatcher {
    * Proxy for `removeEventListener` method.
    * Removes an event listener.
    * @param {string} type Name of the event
-   * @param {EventListenerOrEventListenerObject} listener Event listener handler
+   * @param {EventListener} listener Event listener handler
    * @param {AddEventListenerOptions} [options] Event listener options
   */
-  removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions) {
+  removeEventListener(type: string, listener: EventListener, options?: AddEventListenerOptions) {
     debug: {
       if (!this.__addedListeners[type]) console.warn(`EventDispatcher: listener ${type} not found!`);
     }

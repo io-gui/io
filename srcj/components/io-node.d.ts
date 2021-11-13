@@ -3,6 +3,12 @@ declare type Constructor<T extends any> = new (...args: any[]) => T;
 declare type ComposedProperties = null | Record<string, Record<string, any>>;
 declare type CallbackFunction = (arg?: any) => void;
 declare type PredicateFunction = (object: any) => boolean;
+declare type KeyboardEventListener = (event: KeyboardEvent) => void;
+declare type PointerEventListener = (event: PointerEvent) => void;
+declare type CustomEventListener = (event: CustomEvent) => void;
+declare type FocusEventListener = (event: FocusEvent) => void;
+declare type TouchEventListener = (event: TouchEvent) => void;
+declare type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener;
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -107,7 +113,7 @@ export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): 
          * @param {*} value - Property value.
          * @param {boolean} force - Force value set.
          */
-        set(prop: string, value: any, force: boolean): void;
+        set(prop: string, value: any, force?: boolean | undefined): void;
         /**
          * Sets multiple properties in batch.
          * [property]-changed` events will be broadcast in the end.
@@ -120,14 +126,14 @@ export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): 
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | undefined): void;
+        addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for removeEventListener.
          * @param {string} type - event name to listen to.
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        removeEventListener(type: string, listener?: EventListenerOrEventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
+        removeEventListener(type: string, listener?: AnyEventListener | undefined, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for dispatchEvent.
          * @param {string} type - event name to dispatch.
@@ -265,7 +271,7 @@ declare const IoNode_base: {
          * @param {*} value - Property value.
          * @param {boolean} force - Force value set.
          */
-        set(prop: string, value: any, force: boolean): void;
+        set(prop: string, value: any, force?: boolean | undefined): void;
         /**
          * Sets multiple properties in batch.
          * [property]-changed` events will be broadcast in the end.
@@ -278,14 +284,14 @@ declare const IoNode_base: {
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions | undefined): void;
+        addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for removeEventListener.
          * @param {string} type - event name to listen to.
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        removeEventListener(type: string, listener?: EventListenerOrEventListenerObject | undefined, options?: AddEventListenerOptions | undefined): void;
+        removeEventListener(type: string, listener?: AnyEventListener | undefined, options?: AddEventListenerOptions | undefined): void;
         /**
          * Wrapper for dispatchEvent.
          * @param {string} type - event name to dispatch.

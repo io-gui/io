@@ -1,5 +1,6 @@
 import { IoThemeSingleton } from './theme.js';
 export default class {
+    element;
     constructor() {
         this.element = IoThemeSingleton;
     }

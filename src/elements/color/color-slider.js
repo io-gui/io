@@ -1,5 +1,5 @@
 import {RegisterIoElement} from '../../../srcj/components/io-element.js';
-import {IoSlider} from '../core/slider.js';
+import {IoSlider} from '../../../srcj/elements/core/slider.js';
 import {IoColorMixin} from './color.js';
 
 export class IoColorSlider extends IoColorMixin(IoSlider) {

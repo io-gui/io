@@ -26,7 +26,7 @@ export class Binding {
     Object.defineProperty(this, '__targetProperties', {enumerable: false, writable: false});
     Object.defineProperty(this, '_onTargetChanged', {enumerable: false, writable: false});
     Object.defineProperty(this, '_onSourceChanged', {enumerable: false, writable: false});
-    this.__node.addEventListener(`${this.__property}-changed`, this._onSourceChanged as EventListenerOrEventListenerObject);
+    this.__node.addEventListener(`${this.__property}-changed`, this._onSourceChanged as EventListener);
   }
   set value(value) {
     this.__node[this.__property] = value;
@@ -140,7 +140,7 @@ export class Binding {
    * Use this when node is no longer needed.
    */
   dispose() {
-    this.__node.removeEventListener(`${this.__property}-changed`, this._onSourceChanged as EventListenerOrEventListenerObject);
+    this.__node.removeEventListener(`${this.__property}-changed`, this._onSourceChanged as EventListener);
     for (let i = this.__targets.length; i--;) {
       this.removeTarget(this.__targets[i] as unknown as IoNode);
     }

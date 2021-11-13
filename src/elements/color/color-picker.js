@@ -1,6 +1,6 @@
 import {RegisterIoElement} from '../../../srcj/components/io-element.js';
-import {IoItem} from '../core/item.js';
-import {IoLayerSingleton} from '../core/layer.js';
+import {IoItem} from '../../../srcj/elements/core/item.js';
+import {IoLayerSingleton} from '../../../srcj/elements/core/layer.js';
 import {IoColorMixin} from './color.js';
 import './color-swatch.js';
 import {IoColorPanelSingleton} from './color-panel.js';

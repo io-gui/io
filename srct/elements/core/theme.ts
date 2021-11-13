@@ -143,7 +143,7 @@ export class IoTheme extends IoElement {
     }
     `;
   }
-  static get Properties() {
+  static get Properties(): any {
     const isDarkMode = !!window.matchMedia('(prefers-color-scheme: dark)').matches;
     const theme = $({value: isDarkMode ? 'dark' : 'light', storage: 'local', key: 'theme'});
     const vars = themeDB.value[theme.value];

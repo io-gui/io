@@ -2,7 +2,7 @@ import {IoGl} from './gl.js';
 import {IoThemeSingleton} from './theme.js';
 
 export default class {
-  private element: IoGl;
+  element: IoGl;
   constructor() {
     this.element = new IoGl();
     this.element.style.visibility = 'hidden';

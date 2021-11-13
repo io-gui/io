@@ -1,9 +1,9 @@
 import { ProtoChain } from './protoChain.js';
 import { IoNode } from '../components/io-node.js';
-export declare type ProtoListenerType = keyof IoNode | EventListenerOrEventListenerObject | ProtoListenerArrayType;
-export declare type ProtoListenerArrayType = [keyof IoNode | EventListenerOrEventListenerObject, AddEventListenerOptions?];
+export declare type ProtoListenerType = keyof IoNode | EventListener | ProtoListenerArrayType;
+export declare type ProtoListenerArrayType = [keyof IoNode | EventListener, AddEventListenerOptions?];
 export declare type ProtoListenerRecord = Record<string, ProtoListenerType>;
-export declare type Listener = [EventListenerOrEventListenerObject, AddEventListenerOptions?];
+export declare type Listener = [EventListener, AddEventListenerOptions?];
 export declare type Listeners = Record<string, Listener>;
 export declare type ListenersArray = Record<string, Listener[]>;
 /**
@@ -48,18 +48,18 @@ declare class EventDispatcher {
      * Proxy for `addEventListener` method.
      * Adds an event listener.
      * @param {string} type Name of the event
-     * @param {EventListenerOrEventListenerObject} listener Event listener handler
+     * @param {EventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
      */
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions): void;
+    addEventListener(type: string, listener: EventListener, options?: AddEventListenerOptions): void;
     /**
      * Proxy for `removeEventListener` method.
      * Removes an event listener.
      * @param {string} type Name of the event
-     * @param {EventListenerOrEventListenerObject} listener Event listener handler
+     * @param {EventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
     */
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: AddEventListenerOptions): void;
+    removeEventListener(type: string, listener: EventListener, options?: AddEventListenerOptions): void;
     /**
      * Shorthand for custom event dispatch.
      * @param {string} type Name of the event

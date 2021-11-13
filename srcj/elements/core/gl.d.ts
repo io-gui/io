@@ -3,18 +3,7 @@ import { Property } from '../../core/properties.js';
 declare type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
 export declare class IoGl extends IoElement {
     static get Style(): string;
-    static get Properties(): {
-        size: number[];
-        color: {
-            value: number[];
-            observe: boolean;
-        };
-        pxRatio: number;
-        css: {
-            type: ObjectConstructor;
-            observe: boolean;
-        };
-    };
+    static get Properties(): any;
     static get Vert(): string;
     static get GlUtils(): string;
     static get Frag(): string;

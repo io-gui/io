@@ -489,7 +489,7 @@ export default class {
             const oldValue = event.detail.oldValue;
             chai.expect(string(value)).to.be.equal(string({}));
             chai.expect(oldValue).to.be.equal(undefined);
-          }) as EventListenerOrEventListenerObject);
+          }) as EventListener);
 
           node.connect();
 
@@ -500,7 +500,7 @@ export default class {
             const oldValue = event.detail.oldValue;
             chai.expect(string(value)).to.be.equal(string({}));
             chai.expect(string(oldValue)).to.be.equal(string({}));
-          }) as EventListenerOrEventListenerObject);
+          }) as EventListener);
 
           node.prop = {};
 
@@ -523,7 +523,7 @@ export default class {
             const oldValue = event.detail.oldValue;
             chai.expect(string(value)).to.be.equal(string({}));
             chai.expect(string(oldValue)).to.be.equal(string({}));
-          }) as EventListenerOrEventListenerObject);
+          }) as EventListener);
 
           node.connect();
           node.prop = {};
