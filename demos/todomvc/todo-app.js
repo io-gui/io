@@ -1,4 +1,4 @@
-import {IoElement} from '../../build/iogui.js';
+import {IoElement, RegisterIoElement} from '../../build/iogui.js';
 import {IoStorageFactory as $} from '../../build/iogui.js';
 import {TodoModel} from './todo-model.js';
 import './todo-new-item.js';

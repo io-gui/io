@@ -51,15 +51,12 @@ export class IoDemoElements extends IoElement {
         number: this.bind('number'),
         vector2: this.bind('vector2'),
       }],
-
       ['io-item', {label: 'Menus'}],
       ['io-demo-elements-menus', {
         number: this.bind('number'),
       }],
-
       ['io-item', {label: 'Object'}],
       ['io-demo-elements-object'],
-
       ['io-item', {label: 'Math'}],
       ['io-demo-elements-math', {
         number: this.bind('number'),
@@ -70,12 +67,11 @@ export class IoDemoElements extends IoElement {
         matrix3: this.bind('matrix3'),
         matrix4: this.bind('matrix4'),
       }],
-
       ['io-item', {label: 'Color Editors'}],
-      ['io-demo-elements-color', {
-        vector3: this.bind('vector3'),
-        vector4: this.bind('vector4'),
-      }],
+      // ['io-demo-elements-color', {
+      //   vector3: this.bind('vector3'),
+      //   vector4: this.bind('vector4'),
+      // }],
     ]);
   }
 }

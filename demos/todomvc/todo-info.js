@@ -1,4 +1,4 @@
-import {IoMdView} from '../../build/iogui.js';
+import {IoMdView, RegisterIoElement} from '../../build/iogui.js';
 
 export class TodoInfo extends IoMdView {
   changed() {

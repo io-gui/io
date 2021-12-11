@@ -27,7 +27,7 @@ declare const IoElement_base: {
         filterObject(object: any, predicate: (object: any) => boolean, _depth?: number, _chain?: any[], _i?: number): any;
         filterObjects(object: any, predicate: (object: any) => boolean, _depth?: number, _chain?: any[], _i?: number): any;
         import(path: string): Promise<unknown>;
-        preventDefault(event: CustomEvent<any>): void;
+        preventDefault(event: Event): void;
         stopPropagation(event: CustomEvent<any>): void;
     };
     [x: string]: any;

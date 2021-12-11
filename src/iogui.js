@@ -62,50 +62,50 @@ export {IoIconsetSingleton} from '../srcj/elements/core/iconset.js';
 export {IoIcon} from '../srcj/elements/core/icon.js';
 export {IoLayerSingleton} from '../srcj/elements/core/layer.js';
 
-export {IoMenuItem} from './elements/menus/menu-item.js';
-export {IoMenuOptions} from './elements/menus/menu-options.js';
-export {IoOptionMenu} from './elements/menus/option-menu.js';
-export {IoContextMenu} from './elements/menus/context-menu.js';
+export {IoMenuItem} from '../srcj/elements/menus/menu-item.js';
+export {IoMenuOptions} from '../srcj/elements/menus/menu-options.js';
+export {IoOptionMenu} from '../srcj/elements/menus/option-menu.js';
+export {IoContextMenu} from '../srcj/elements/menus/context-menu.js';
 
-export {IoVector} from './elements/math/vector.js';
-export {IoMatrix} from './elements/math/matrix.js';
+export {IoVector} from '../srcj/elements/math/vector.js';
+export {IoMatrix} from '../srcj/elements/math/matrix.js';
 
-export {IoInspector} from './elements/object/inspector.js';
-export {IoObject} from './elements/object/object.js';
-export {IoProperties} from './elements/object/properties.js';
+export {IoInspector} from '../srcj/elements/object/inspector.js';
+export {IoObject} from '../srcj/elements/object/object.js';
+export {IoProperties} from '../srcj/elements/object/properties.js';
 
-export {IoColorSlider} from './elements/color/color-slider.js';
-export {IoColorSliderRed} from './elements/color/color-slider-red.js';
-export {IoColorSliderGreen} from './elements/color/color-slider-green.js';
-export {IoColorSliderBlue} from './elements/color/color-slider-blue.js';
-export {IoColorSliderHue} from './elements/color/color-slider-hue.js';
-export {IoColorSliderSaturation} from './elements/color/color-slider-saturation.js';
-export {IoColorSliderValue} from './elements/color/color-slider-value.js';
-export {IoColorSliderLevel} from './elements/color/color-slider-level.js';
-export {IoColorSliderHs} from './elements/color/color-slider-hs.js';
-export {IoColorSliderSv} from './elements/color/color-slider-sv.js';
-export {IoColorSliderSl} from './elements/color/color-slider-sl.js';
-export {IoColorSliderCyan} from './elements/color/color-slider-cyan.js';
-export {IoColorSliderMagenta} from './elements/color/color-slider-magenta.js';
-export {IoColorSliderYellow} from './elements/color/color-slider-yellow.js';
-export {IoColorSliderKey} from './elements/color/color-slider-key.js';
-export {IoColorSliderAlpha} from './elements/color/color-slider-alpha.js';
-export {IoColorPanel} from './elements/color/color-panel.js';
-export {IoColorPicker} from './elements/color/color-picker.js';
-export {IoColorVector} from './elements/color/color-vector.js';
+export {IoColorSlider} from '../srcj/elements/color/color-slider.js';
+export {IoColorSliderRed} from '../srcj/elements/color/color-slider-red.js';
+export {IoColorSliderGreen} from '../srcj/elements/color/color-slider-green.js';
+export {IoColorSliderBlue} from '../srcj/elements/color/color-slider-blue.js';
+export {IoColorSliderHue} from '../srcj/elements/color/color-slider-hue.js';
+export {IoColorSliderSaturation} from '../srcj/elements/color/color-slider-saturation.js';
+export {IoColorSliderValue} from '../srcj/elements/color/color-slider-value.js';
+export {IoColorSliderLevel} from '../srcj/elements/color/color-slider-level.js';
+export {IoColorSliderHs} from '../srcj/elements/color/color-slider-hs.js';
+export {IoColorSliderSv} from '../srcj/elements/color/color-slider-sv.js';
+export {IoColorSliderSl} from '../srcj/elements/color/color-slider-sl.js';
+export {IoColorSliderCyan} from '../srcj/elements/color/color-slider-cyan.js';
+export {IoColorSliderMagenta} from '../srcj/elements/color/color-slider-magenta.js';
+export {IoColorSliderYellow} from '../srcj/elements/color/color-slider-yellow.js';
+export {IoColorSliderKey} from '../srcj/elements/color/color-slider-key.js';
+export {IoColorSliderAlpha} from '../srcj/elements/color/color-slider-alpha.js';
+export {IoColorPanel} from '../srcj/elements/color/color-panel.js';
+export {IoColorPicker} from '../srcj/elements/color/color-picker.js';
+export {IoColorVector} from '../srcj/elements/color/color-vector.js';
 
-export {IoLayout} from './elements/layout/layout.js';
-export {IoCollapsable} from './elements/layout/collapsable.js';
-export {IoSelectorSidebar} from './elements/layout/selector-sidebar.js';
-export {IoSelectorTabs} from './elements/layout/selector-tabs.js';
-export {IoSelector} from './elements/layout/selector.js';
-export {IoSidebar} from './elements/layout/sidebar.js';
+export {IoLayout} from '../srcj/elements/layout/layout.js';
+export {IoCollapsable} from '../srcj/elements/layout/collapsable.js';
+export {IoSelectorSidebar} from '../srcj/elements/layout/selector-sidebar.js';
+export {IoSelectorTabs} from '../srcj/elements/layout/selector-tabs.js';
+export {IoSelector} from '../srcj/elements/layout/selector.js';
+export {IoSidebar} from '../srcj/elements/layout/sidebar.js';
 
-export {IoMdView} from './elements/extras/md-view.js';
-export {IoMdViewSelector} from './elements/extras/md-view-selector.js';
-export {IoServiceLoader} from './elements/extras/service-loader.js';
-export {IoElementDemo} from './elements/extras/element-demo.js';
+export {IoMdView} from '../srcj/elements/extras/md-view.js';
+export {IoMdViewSelector} from '../srcj/elements/extras/md-view-selector.js';
+export {IoServiceLoader} from '../srcj/elements/extras/service-loader.js';
+export {IoElementDemo} from '../srcj/elements/extras/element-demo.js';
 
 // TODO
-export {IoNotify} from './elements/notify/notify.js';
+export {IoNotify} from '../srcj/elements/notify/notify.js';
 

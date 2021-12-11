@@ -425,7 +425,7 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
      * Handler function with `event.preventDefault()`.
      * @param {Object} event - Event object.
      */
-    preventDefault(event: CustomEvent) {
+    preventDefault(event: Event) {
       event.preventDefault();
     }
     /**
