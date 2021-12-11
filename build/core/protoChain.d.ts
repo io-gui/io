@@ -1,4 +1,4 @@
-export declare type ProtoChainConstructor<T extends any> = new (...args: any[]) => T;
+export declare type ProtoChainConstructor<T> = new (...args: any[]) => T;
 /**
  * An array of all inherited contructors from the prototype chain.
  */

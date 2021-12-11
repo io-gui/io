@@ -5,7 +5,7 @@ import {ChangeQueue} from '../core/changeQueue.js';
 import {ProtoProperties, Properties} from '../core/properties.js';
 import {EventDispatcher, ProtoListeners} from '../core/eventDispatcher.js';
 
-type Constructor<T extends any> = new (...args: any[]) => T;
+type Constructor<T> = new (...args: any[]) => T;
 type ComposedProperties = null | Record<string, Record<string, any>>
 type CallbackFunction = (arg?: any) => void;
 type PredicateFunction = (object: any) => boolean;

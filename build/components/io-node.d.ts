@@ -1,5 +1,5 @@
 import { Binding } from '../core/propertyBinder.js';
-declare type Constructor<T extends any> = new (...args: any[]) => T;
+declare type Constructor<T> = new (...args: any[]) => T;
 declare type ComposedProperties = null | Record<string, Record<string, any>>;
 declare type CallbackFunction = (arg?: any) => void;
 declare type PredicateFunction = (object: any) => boolean;

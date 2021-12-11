@@ -1,4 +1,4 @@
-declare type Constructor<T extends any> = new (...args: any[]) => T;
+declare type Constructor<T> = new (...args: any[]) => T;
 export declare function IoColorMixin<T extends Constructor<any>>(superclass: T): {
     new (): {
         [x: string]: any;
