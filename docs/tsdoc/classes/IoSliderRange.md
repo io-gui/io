@@ -1,0 +1,1687 @@
+# Class: IoSliderRange
+
+## Hierarchy
+
+- [`IoSlider`](IoSlider.md)
+
+  ↳ **`IoSliderRange`**
+
+## Constructors
+
+### constructor
+
+• **new IoSliderRange**(`properties?`)
+
+Creates a class instance and initializes the internals.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `properties` | `Record`<`string`, `any`\> |
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[constructor](IoSlider.md#constructor)
+
+#### Defined in
+
+[elements/core/gl.ts:214](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L214)
+
+## Accessors
+
+### compose
+
+• `get` **compose**(): `ComposedProperties`
+
+`compose` object lets you reactively assign property values to other object's properties.
+For example, you can assign `this.value` property to the `this.objectProp.result` property.
+
+```
+get compose () {
+  return {
+    objectProp: {result: this.value}
+  };
+ }
+```
+
+Node class does not use `compose` by itself but this feature is available to its sublasses.
+
+#### Returns
+
+`ComposedProperties`
+
+#### Inherited from
+
+IoSlider.compose
+
+#### Defined in
+
+[components/io-node.ts:55](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L55)
+
+___
+
+### textNode
+
+• `get` **textNode**(): `any`
+
+#### Returns
+
+`any`
+
+#### Inherited from
+
+IoSlider.textNode
+
+#### Defined in
+
+[components/io-element.ts:216](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L216)
+
+• `set` **textNode**(`value`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `any` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+IoSlider.textNode
+
+#### Defined in
+
+[components/io-element.ts:220](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L220)
+
+___
+
+### Frag
+
+• `Static` `get` **Frag**(): `string`
+
+#### Returns
+
+`string`
+
+#### Overrides
+
+IoSlider.Frag
+
+#### Defined in
+
+[elements/core/slider-range.ts:128](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L128)
+
+___
+
+### GlUtils
+
+• `Static` `get` **GlUtils**(): `string`
+
+#### Returns
+
+`string`
+
+#### Inherited from
+
+IoSlider.GlUtils
+
+#### Defined in
+
+[elements/core/slider.ts:223](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L223)
+
+___
+
+### Listeners
+
+• `Static` `get` **Listeners**(): `Object`
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `contextmenu` | `string` |
+| `focus` | `string` |
+| `pointerdown` | `string` |
+| `touchstart` | `string` |
+
+#### Inherited from
+
+IoSlider.Listeners
+
+#### Defined in
+
+[elements/core/slider.ts:62](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L62)
+
+___
+
+### Properties
+
+• `Static` `get` **Properties**(): `any`
+
+#### Returns
+
+`any`
+
+#### Overrides
+
+IoSlider.Properties
+
+#### Defined in
+
+[elements/core/slider-range.ts:16](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L16)
+
+___
+
+### Style
+
+• `Static` `get` **Style**(): `string`
+
+#### Returns
+
+`string`
+
+#### Inherited from
+
+IoSlider.Style
+
+#### Defined in
+
+[elements/core/slider.ts:16](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L16)
+
+___
+
+### Vert
+
+• `Static` `get` **Vert**(): `string`
+
+#### Returns
+
+`string`
+
+#### Inherited from
+
+IoSlider.Vert
+
+#### Defined in
+
+[elements/core/gl.ts:91](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L91)
+
+___
+
+### observedAttributes
+
+• `Static` `get` **observedAttributes**(): `string`[]
+
+#### Returns
+
+`string`[]
+
+#### Inherited from
+
+IoSlider.observedAttributes
+
+#### Defined in
+
+[components/io-element.ts:73](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L73)
+
+## Methods
+
+### \_getCoordFromValue
+
+▸ **_getCoordFromValue**(`value`): `number`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `number` |
+
+#### Returns
+
+`number`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_getCoordFromValue](IoSlider.md#_getcoordfromvalue)
+
+#### Defined in
+
+[elements/core/slider.ts:134](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L134)
+
+___
+
+### \_getPointerCoord
+
+▸ **_getPointerCoord**(`event`): `number`[]
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`number`[]
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_getPointerCoord](IoSlider.md#_getpointercoord)
+
+#### Defined in
+
+[elements/core/slider.ts:123](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L123)
+
+___
+
+### \_getValueFromCoord
+
+▸ **_getValueFromCoord**(`coord`): `number`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `coord` | `number` |
+
+#### Returns
+
+`number`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_getValueFromCoord](IoSlider.md#_getvaluefromcoord)
+
+#### Defined in
+
+[elements/core/slider.ts:129](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L129)
+
+___
+
+### \_onBlur
+
+▸ **_onBlur**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_onBlur](IoSlider.md#_onblur)
+
+#### Defined in
+
+[elements/core/slider.ts:74](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L74)
+
+___
+
+### \_onContextmenu
+
+▸ **_onContextmenu**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `Event` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_onContextmenu](IoSlider.md#_oncontextmenu)
+
+#### Defined in
+
+[elements/core/slider.ts:78](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L78)
+
+___
+
+### \_onFocus
+
+▸ **_onFocus**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_onFocus](IoSlider.md#_onfocus)
+
+#### Defined in
+
+[elements/core/slider.ts:70](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L70)
+
+___
+
+### \_onFocusTo
+
+▸ **_onFocusTo**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `CustomEvent`<`any`\> |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_onFocusTo](IoSlider.md#_onfocusto)
+
+#### Defined in
+
+[components/io-element.ts:265](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L265)
+
+___
+
+### \_onKeydown
+
+▸ **_onKeydown**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `KeyboardEvent` |
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoSlider](IoSlider.md).[_onKeydown](IoSlider.md#_onkeydown)
+
+#### Defined in
+
+[elements/core/slider-range.ts:52](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L52)
+
+___
+
+### \_onPointerdown
+
+▸ **_onPointerdown**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoSlider](IoSlider.md).[_onPointerdown](IoSlider.md#_onpointerdown)
+
+#### Defined in
+
+[elements/core/slider-range.ts:25](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L25)
+
+___
+
+### \_onPointermove
+
+▸ **_onPointermove**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_onPointermove](IoSlider.md#_onpointermove)
+
+#### Defined in
+
+[elements/core/slider.ts:114](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L114)
+
+___
+
+### \_onPointermoveThrottled
+
+▸ **_onPointermoveThrottled**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoSlider](IoSlider.md).[_onPointermoveThrottled](IoSlider.md#_onpointermovethrottled)
+
+#### Defined in
+
+[elements/core/slider-range.ts:36](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L36)
+
+___
+
+### \_onPointerup
+
+▸ **_onPointerup**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_onPointerup](IoSlider.md#_onpointerup)
+
+#### Defined in
+
+[elements/core/slider.ts:118](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L118)
+
+___
+
+### \_onTouchend
+
+▸ **_onTouchend**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_onTouchend](IoSlider.md#_ontouchend)
+
+#### Defined in
+
+[elements/core/slider.ts:105](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L105)
+
+___
+
+### \_onTouchmove
+
+▸ **_onTouchmove**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `TouchEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_onTouchmove](IoSlider.md#_ontouchmove)
+
+#### Defined in
+
+[elements/core/slider.ts:88](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L88)
+
+___
+
+### \_onTouchstart
+
+▸ **_onTouchstart**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `TouchEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[_onTouchstart](IoSlider.md#_ontouchstart)
+
+#### Defined in
+
+[elements/core/slider.ts:81](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L81)
+
+___
+
+### \_setDecrease
+
+▸ **_setDecrease**(): `void`
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoSlider](IoSlider.md).[_setDecrease](IoSlider.md#_setdecrease)
+
+#### Defined in
+
+[elements/core/slider-range.ts:100](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L100)
+
+___
+
+### \_setIncrease
+
+▸ **_setIncrease**(): `void`
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoSlider](IoSlider.md).[_setIncrease](IoSlider.md#_setincrease)
+
+#### Defined in
+
+[elements/core/slider-range.ts:93](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L93)
+
+___
+
+### \_setMax
+
+▸ **_setMax**(): `void`
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoSlider](IoSlider.md).[_setMax](IoSlider.md#_setmax)
+
+#### Defined in
+
+[elements/core/slider-range.ts:114](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L114)
+
+___
+
+### \_setMin
+
+▸ **_setMin**(): `void`
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoSlider](IoSlider.md).[_setMin](IoSlider.md#_setmin)
+
+#### Defined in
+
+[elements/core/slider-range.ts:107](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L107)
+
+___
+
+### \_setValue
+
+▸ **_setValue**(`x`, `y`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `x` | `number` |
+| `y` | `number` |
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoSlider](IoSlider.md).[_setValue](IoSlider.md#_setvalue)
+
+#### Defined in
+
+[elements/core/slider-range.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L49)
+
+___
+
+### addEventListener
+
+▸ **addEventListener**(`type`, `listener`, `options?`): `void`
+
+Wrapper for addEventListener.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `type` | `string` | listener name. |
+| `listener` | `AnyEventListener` | listener handler. |
+| `options?` | `AddEventListenerOptions` | event listener options. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[addEventListener](IoSlider.md#addeventlistener)
+
+#### Defined in
+
+[components/io-node.ts:323](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L323)
+
+___
+
+### applyAria
+
+▸ **applyAria**(): `void`
+
+Sets aria attributes.
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoSlider](IoSlider.md).[applyAria](IoSlider.md#applyaria)
+
+#### Defined in
+
+[elements/core/slider-range.ts:121](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider-range.ts#L121)
+
+___
+
+### applyCompose
+
+▸ **applyCompose**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[applyCompose](IoSlider.md#applycompose)
+
+#### Defined in
+
+[components/io-element.ts:246](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L246)
+
+___
+
+### attributeChangedCallback
+
+▸ **attributeChangedCallback**(`prop`, `oldValue`, `newValue`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `prop` | `string` |
+| `oldValue` | `any` |
+| `newValue` | `any` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[attributeChangedCallback](IoSlider.md#attributechangedcallback)
+
+#### Defined in
+
+[components/io-element.ts:83](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L83)
+
+___
+
+### bind
+
+▸ **bind**(`prop`): [`Binding`](Binding.md)
+
+Returns a binding to a specified property`.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `prop` | `string` | Property to bind to. |
+
+#### Returns
+
+[`Binding`](Binding.md)
+
+Binding object.
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[bind](IoSlider.md#bind)
+
+#### Defined in
+
+[components/io-node.ts:267](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L267)
+
+___
+
+### changed
+
+▸ **changed**(): `void`
+
+default change handler.
+Invoked when one of the properties change.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[changed](IoSlider.md#changed)
+
+#### Defined in
+
+[elements/core/slider.ts:212](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/slider.ts#L212)
+
+___
+
+### connect
+
+▸ **connect**(`node?`): [`IoSliderRange`](IoSliderRange.md)
+
+Connects the instance to another node or element.
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `node` | [`IoNode`](IoNode.md) \| `HTMLElement` \| `Document` \| `Window` | `window` | Node to connect to. |
+
+#### Returns
+
+[`IoSliderRange`](IoSliderRange.md)
+
+this
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[connect](IoSlider.md#connect)
+
+#### Defined in
+
+[components/io-node.ts:97](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L97)
+
+___
+
+### connectedCallback
+
+▸ **connectedCallback**(): `void`
+
+Add resize listener if `onResized()` is defined in subclass.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[connectedCallback](IoSlider.md#connectedcallback)
+
+#### Defined in
+
+[components/io-element.ts:101](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L101)
+
+___
+
+### cssMutated
+
+▸ **cssMutated**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[cssMutated](IoSlider.md#cssmutated)
+
+#### Defined in
+
+[elements/core/gl.ts:291](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L291)
+
+___
+
+### disconnect
+
+▸ **disconnect**(`node?`): [`IoSliderRange`](IoSliderRange.md)
+
+Disconnects the instance from an another node or element.
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `node` | [`IoNode`](IoNode.md) \| `HTMLElement` \| `Document` \| `Window` | `window` | Node to disconnect from. |
+
+#### Returns
+
+[`IoSliderRange`](IoSliderRange.md)
+
+this
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[disconnect](IoSlider.md#disconnect)
+
+#### Defined in
+
+[components/io-node.ts:115](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L115)
+
+___
+
+### disconnectedCallback
+
+▸ **disconnectedCallback**(): `void`
+
+Removes resize listener if `onResized()` is defined in subclass.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[disconnectedCallback](IoSlider.md#disconnectedcallback)
+
+#### Defined in
+
+[components/io-element.ts:110](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L110)
+
+___
+
+### dispatchEvent
+
+▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+
+Wrapper for dispatchEvent.
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `type` | `string` | `undefined` | event name to dispatch. |
+| `detail` | `Object` | `{}` | event detail. |
+| `bubbles` | `boolean` | `false` | event bubbles. |
+| `src?` | `HTMLElement` \| `Node` \| `Document` \| `Window` | `undefined` | source node/element to dispatch event from. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[dispatchEvent](IoSlider.md#dispatchevent)
+
+#### Defined in
+
+[components/io-node.ts:347](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L347)
+
+___
+
+### dispose
+
+▸ **dispose**(): `void`
+
+Disposes all internals.
+Use this when instance is no longer needed.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[dispose](IoSlider.md#dispose)
+
+#### Defined in
+
+[components/io-node.ts:157](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L157)
+
+___
+
+### filterObject
+
+▸ **filterObject**(`object`, `predicate`, `_depth?`, `_chain?`, `_i?`): `any`
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `object` | `any` | `undefined` |
+| `predicate` | `PredicateFunction` | `undefined` |
+| `_depth` | `number` | `5` |
+| `_chain` | `any`[] | `[]` |
+| `_i` | `number` | `0` |
+
+#### Returns
+
+`any`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[filterObject](IoSlider.md#filterobject)
+
+#### Defined in
+
+[components/io-node.ts:380](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L380)
+
+___
+
+### filterObjects
+
+▸ **filterObjects**(`object`, `predicate`, `_depth?`, `_chain?`, `_i?`): `any`
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `object` | `any` | `undefined` |
+| `predicate` | `PredicateFunction` | `undefined` |
+| `_depth` | `number` | `5` |
+| `_chain` | `any`[] | `[]` |
+| `_i` | `number` | `0` |
+
+#### Returns
+
+`any`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[filterObjects](IoSlider.md#filterobjects)
+
+#### Defined in
+
+[components/io-node.ts:393](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L393)
+
+___
+
+### flattenTextNode
+
+▸ **flattenTextNode**(`element`): `void`
+
+Helper function to flatten textContent into a single TextNode.
+Update textContent via TextNode is better for layout performance.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[flattenTextNode](IoSlider.md#flattentextnode)
+
+#### Defined in
+
+[components/io-element.ts:199](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L199)
+
+___
+
+### focusTo
+
+▸ **focusTo**(`dir`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `dir` | `string` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[focusTo](IoSlider.md#focusto)
+
+#### Defined in
+
+[components/io-element.ts:372](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L372)
+
+___
+
+### import
+
+▸ **import**(`path`): `Promise`<`unknown`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `path` | `string` |
+
+#### Returns
+
+`Promise`<`unknown`\>
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[import](IoSlider.md#import)
+
+#### Defined in
+
+[components/io-node.ts:410](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L410)
+
+___
+
+### initPropertyUniform
+
+▸ **initPropertyUniform**(`name`, `property`): `string`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `name` | `string` |
+| `property` | [`Property`](Property.md) |
+
+#### Returns
+
+`string`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[initPropertyUniform](IoSlider.md#initpropertyuniform)
+
+#### Defined in
+
+[elements/core/gl.ts:146](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L146)
+
+___
+
+### initShader
+
+▸ **initShader**(): `WebGLProgram`
+
+#### Returns
+
+`WebGLProgram`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[initShader](IoSlider.md#initshader)
+
+#### Defined in
+
+[elements/core/gl.ts:162](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L162)
+
+___
+
+### objectMutated
+
+▸ **objectMutated**(`event`): `void`
+
+Event handler for 'object-mutated' event emitted from the `window`.
+Node should be listening for this event if it has an object property
+with `observe: "sync" || "async"` configuration.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `event` | `CustomEvent`<`any`\> | Event payload. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[objectMutated](IoSlider.md#objectmutated)
+
+#### Defined in
+
+[components/io-node.ts:231](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L231)
+
+___
+
+### objectMutatedThrottled
+
+▸ **objectMutatedThrottled**(`prop`): `void`
+
+This function is called after `objectMutated()` determines that one of
+the object properties has mutated.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `prop` | `string` | Mutated object property name. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[objectMutatedThrottled](IoSlider.md#objectmutatedthrottled)
+
+#### Defined in
+
+[components/io-node.ts:257](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L257)
+
+___
+
+### onResized
+
+▸ **onResized**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[onResized](IoSlider.md#onresized)
+
+#### Defined in
+
+[elements/core/gl.ts:264](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L264)
+
+___
+
+### preventDefault
+
+▸ **preventDefault**(`event`): `void`
+
+Handler function with `event.preventDefault()`.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `event` | `Event` | Event object. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[preventDefault](IoSlider.md#preventdefault)
+
+#### Defined in
+
+[components/io-node.ts:428](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L428)
+
+___
+
+### queue
+
+▸ **queue**(`prop`, `value`, `oldValue`): `void`
+
+Adds property change to the queue.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `prop` | `string` | Property name. |
+| `value` | `any` | Property value. |
+| `oldValue` | `any` | Old property value. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[queue](IoSlider.md#queue)
+
+#### Defined in
+
+[components/io-node.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L204)
+
+___
+
+### queueDispatch
+
+▸ **queueDispatch**(): `void`
+
+Dispatches the queue.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[queueDispatch](IoSlider.md#queuedispatch)
+
+#### Defined in
+
+[components/io-node.ts:210](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L210)
+
+___
+
+### queueDispatchLazy
+
+▸ **queueDispatchLazy**(): `void`
+
+Dispatches the queue in the next rAF cycle.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[queueDispatchLazy](IoSlider.md#queuedispatchlazy)
+
+#### Defined in
+
+[components/io-node.ts:221](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L221)
+
+___
+
+### removeEventListener
+
+▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
+
+Wrapper for removeEventListener.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `type` | `string` | event name to listen to. |
+| `listener?` | `AnyEventListener` | listener handler. |
+| `options?` | `AddEventListenerOptions` | event listener options. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[removeEventListener](IoSlider.md#removeeventlistener)
+
+#### Defined in
+
+[components/io-node.ts:337](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L337)
+
+___
+
+### render
+
+▸ **render**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[render](IoSlider.md#render)
+
+#### Defined in
+
+[elements/core/gl.ts:306](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L306)
+
+___
+
+### requestAnimationFrameOnce
+
+▸ **requestAnimationFrameOnce**(`func`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `func` | `CallbackFunction` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[requestAnimationFrameOnce](IoSlider.md#requestanimationframeonce)
+
+#### Defined in
+
+[components/io-node.ts:377](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L377)
+
+___
+
+### set
+
+▸ **set**(`prop`, `value`, `force?`): `void`
+
+Sets a property and emits `[property]-set` event.
+Use this when property is set by user action (e.g. mouse click).
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `prop` | `string` | Property name. |
+| `value` | `any` | Property value. |
+| `force?` | `boolean` | Force value set. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[set](IoSlider.md#set)
+
+#### Defined in
+
+[components/io-node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L290)
+
+___
+
+### setAttribute
+
+▸ **setAttribute**(`attr`, `value`): `void`
+
+Alias for HTMLElement setAttribute where falsey values remove the attribute.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `attr` | `string` | Attribute name. |
+| `value` | `string` \| `number` \| `boolean` | Attribute value. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[setAttribute](IoSlider.md#setattribute)
+
+#### Defined in
+
+[components/io-element.ts:237](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L237)
+
+___
+
+### setProperties
+
+▸ **setProperties**(`props`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `props` | `any` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[setProperties](IoSlider.md#setproperties)
+
+#### Defined in
+
+[components/io-element.ts:224](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L224)
+
+___
+
+### setShaderProgram
+
+▸ **setShaderProgram**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[setShaderProgram](IoSlider.md#setshaderprogram)
+
+#### Defined in
+
+[elements/core/gl.ts:334](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L334)
+
+___
+
+### setUniform
+
+▸ **setUniform**(`name`, `type`, `value`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `name` | `string` |
+| `type` | `UniformTypes` |
+| `value` | `any` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[setUniform](IoSlider.md#setuniform)
+
+#### Defined in
+
+[elements/core/gl.ts:351](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L351)
+
+___
+
+### stopPropagation
+
+▸ **stopPropagation**(`event`): `void`
+
+Handler function with `event.stopPropagation()`.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `event` | `CustomEvent`<`any`\> | Event object. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[stopPropagation](IoSlider.md#stoppropagation)
+
+#### Defined in
+
+[components/io-node.ts:435](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L435)
+
+___
+
+### template
+
+▸ **template**(`vDOM`, `host?`): `void`
+
+Renders DOM from virtual DOM arrays.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `vDOM` | `any`[] | Array of vDOM children. |
+| `host?` | `HTMLElement` | - |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[template](IoSlider.md#template)
+
+#### Defined in
+
+[components/io-element.ts:121](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L121)
+
+___
+
+### throttle
+
+▸ **throttle**(`func`, `arg?`, `asynchronous?`): `void`
+
+Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `func` | `CallbackFunction` | Function to throttle. |
+| `arg?` | `any` | argument for throttled function. |
+| `asynchronous?` | `boolean` | execute with timeout. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[throttle](IoSlider.md#throttle)
+
+#### Defined in
+
+[components/io-node.ts:356](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L356)
+
+___
+
+### traverse
+
+▸ **traverse**(`vChildren`, `host`): `void`
+
+Recurively traverses vDOM.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `vChildren` | `any`[] | Array of vDOM children converted by `buildTree()` for easier parsing. |
+| `host` | `HTMLElement` | - |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[traverse](IoSlider.md#traverse)
+
+#### Defined in
+
+[components/io-element.ts:132](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L132)
+
+___
+
+### unbind
+
+▸ **unbind**(`prop`): `void`
+
+Unbinds a binding to a specified property`.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `prop` | `string` | Property to unbind. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[unbind](IoSlider.md#unbind)
+
+#### Defined in
+
+[components/io-node.ts:278](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L278)
+
+___
+
+### updateCssUniforms
+
+▸ **updateCssUniforms**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[updateCssUniforms](IoSlider.md#updatecssuniforms)
+
+#### Defined in
+
+[elements/core/gl.ts:346](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L346)
+
+___
+
+### updatePropertyUniform
+
+▸ **updatePropertyUniform**(`name`, `property`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `name` | `string` |
+| `property` | [`Property`](Property.md) |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSlider](IoSlider.md).[updatePropertyUniform](IoSlider.md#updatepropertyuniform)
+
+#### Defined in
+
+[elements/core/gl.ts:340](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/gl.ts#L340)

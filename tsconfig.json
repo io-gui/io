@@ -32,5 +32,20 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
+  "typedocOptions": {
+    "hideBreadcrumbs": true,
+    "hideInPageTOC": true,
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeInternal": true,
+    "excludeExternals": true,
+    "githubPages": false,
+    "readme": "none",
+    "gitRevision": "tsc",
+    "entryPoints": [
+      "src/iogui.ts"
+    ],
+    "out": "docs/tsdoc"
+  },
   "include": ["./src"]
 }
