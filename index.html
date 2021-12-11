@@ -96,12 +96,14 @@
   <body>
     <script type="module">
 
-    import {Options, Path, RegisterIoElement} from './build/iogui.js';
-    import {IoSelectorTabs, IoStorageFactory as $} from './build/iogui.js';
+    import {Options, Path, RegisterIoElement} from './bundle/iogui.js';
+    import {IoSelectorTabs, IoStorageFactory as $} from './bundle/iogui.js';
+    import './lib/mocha.js';
+    import './lib/chai.js';
 
     const docPath = './docs/';
-    const srcPath = './src/js/';
-    const elementsPath = './src/js/elements/';
+    const srcPath = './build/';
+    const elementsPath = './build/elements/';
 
     const OPTIONS = new Options([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},

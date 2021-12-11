@@ -1,8 +1,5 @@
 import {IoElement, RegisterIoElement} from './iogui.js';
 
-import '../lib/mocha.js';
-import '../lib/chai.js';
-
 import ChangeQueue from './core/changeQueue.test.js';
 import EventDispatcher from './core/eventDispatcher.test.js';
 import FunctionBinder from './core/functionBinder.test.js';

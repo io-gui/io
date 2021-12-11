@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../components/io-element.js';
-import marked from '../../../../lib/marked.esm.js';
+import marked from '../../../lib/marked.esm.js';
 /*
 
  **/
