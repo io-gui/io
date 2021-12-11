@@ -3,15 +3,15 @@ import {IoElement, RegisterIoElement} from './iogui.js';
 import '../lib/mocha.js';
 import '../lib/chai.js';
 
-import ChangeQueue from '../srcj/core/changeQueue.test.js';
-import EventDispatcher from '../srcj/core/eventDispatcher.test.js';
-import FunctionBinder from '../srcj/core/functionBinder.test.js';
-import Properties from '../srcj/core/properties.test.js';
-import PropertyBinder from '../srcj/core/propertyBinder.test.js';
-import ProtoChain from '../srcj/core/protoChain.test.js';
+import ChangeQueue from './core/changeQueue.test.js';
+import EventDispatcher from './core/eventDispatcher.test.js';
+import FunctionBinder from './core/functionBinder.test.js';
+import Properties from './core/properties.test.js';
+import PropertyBinder from './core/propertyBinder.test.js';
+import ProtoChain from './core/protoChain.test.js';
 
-import Node from '../srcj/components/io-node.test.js';
-import Element from '../srcj/components/io-element.test.js';
+import Node from './components/io-node.test.js';
+import Element from './components/io-element.test.js';
 
 // import Item from './elements/core/item.test.js';
 // import Content from './elements/core/content.test.js'; // TODO

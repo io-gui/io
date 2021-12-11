@@ -9,8 +9,8 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "rootDir": "./srct",
-    "outDir": "./srcj",
+    "rootDir": "./src/ts",
+    "outDir": "./src/js",
     /* Strict Type-Checking Options */
     "strict": true,
     "noImplicitAny": true,
@@ -32,5 +32,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["./srct", "src/core/properties.test.ts"]
+  "include": ["./src/ts"]
 }

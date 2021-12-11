@@ -6,7 +6,7 @@ export declare class IoSelectorSidebar extends IoSelector {
     onResized(): void;
     collapsedChanged(): void;
     getSlotted(): (string | {
-        selected: import("../../core/propertyBinder.js").Binding;
+        selected: import("../../iogui.js").Binding;
         options: any;
         collapsed: any;
     })[];

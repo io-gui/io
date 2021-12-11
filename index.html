@@ -100,9 +100,8 @@
     import {IoSelectorTabs, IoStorageFactory as $} from './build/iogui.js';
 
     const docPath = './docs/';
-    const srcPath = './src/';
-    const srctPath = './srct/';
-    const elementsPath = './src/elements/';
+    const srcPath = './src/js/';
+    const elementsPath = './src/js/elements/';
 
     const OPTIONS = new Options([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
@@ -126,8 +125,8 @@
         ]},
       ]},
       {label: 'Reference', value: 'reference', options: [
-        {label: 'Node', value: srctPath + 'core/node.md'},
-        {label: 'IoElement', value: srctPath + 'components/io-element.md'},
+        {label: 'Node', value: srcPath + 'core/node.md'},
+        {label: 'IoElement', value: srcPath + 'components/io-element.md'},
         {label: 'Core Elements', value: 'coreelements', options: [
           {label: 'IoItem', value: elementsPath + 'core/item.md'},
           {label: 'IoGl', value: elementsPath + 'core/gl.md'},
@@ -201,12 +200,12 @@
           {label: 'io-service-loader', value: elementsPath + 'extras/service-loader.md'},
         ]},
         {label: 'Core Classes', value: 'coreclasses', options: [
-          {label: 'Binding', value: srctPath + 'core//binding.md'},
-          {label: 'Functions', value: srctPath + 'core/functionBinder.md'},
-          {label: 'Listeners', value: srctPath + 'core/listeners.md'},
-          {label: 'Properties', value: srctPath + 'core/properties.md'},
-          {label: 'ProtoChain', value: srctPath + 'core/protochain.md'},
-          {label: 'Queue', value: srctPath + 'core/queue.md'},
+          {label: 'Binding', value: srcPath + 'core//binding.md'},
+          {label: 'Functions', value: srcPath + 'core/functionBinder.md'},
+          {label: 'Listeners', value: srcPath + 'core/listeners.md'},
+          {label: 'Properties', value: srcPath + 'core/properties.md'},
+          {label: 'ProtoChain', value: srcPath + 'core/protochain.md'},
+          {label: 'Queue', value: srcPath + 'core/queue.md'},
         ]},
       ]},
       {label: 'Demos', value: 'demos', options: [

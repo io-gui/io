@@ -1,1 +1,1 @@
-export * from '../src/iogui.test.js';
+export * from '../src/js/iogui.test.js';

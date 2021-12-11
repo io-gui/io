@@ -16,7 +16,7 @@ declare const Options_base: {
         queueDispatchLazy(): void;
         objectMutated(event: CustomEvent<any>): void;
         objectMutatedThrottled(prop: string): void;
-        bind(prop: string): import("../core/propertyBinder.js").Binding;
+        bind(prop: string): import("../iogui.js").Binding;
         unbind(prop: string): void;
         set(prop: string, value: any, force?: boolean | undefined): void;
         setProperties(props: any): void;
