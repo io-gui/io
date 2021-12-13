@@ -6,7 +6,7 @@ export declare class IoVector extends IoElement {
     valueChanged(): void;
     changed(): void;
     getSlotted(): (string | {
-        value: import("../../core/internals/propertyBinder.js").Binding;
+        value: import("../../iogui.js").Binding;
         true: string;
         false: string;
     })[] | null;

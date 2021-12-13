@@ -29,7 +29,7 @@ Array&lt;string\&gt;.constructor
 
 #### Defined in
 
-[core/functionBinder.ts:13](https://github.com/io-gui/iogui/blob/tsc/src/core/functionBinder.ts#L13)
+[core/internals/functionBinder.ts:13](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/functionBinder.ts#L13)
 
 ## Methods
 
@@ -51,4 +51,4 @@ Binds all functions to specified instance of `IoNode`.
 
 #### Defined in
 
-[core/functionBinder.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/functionBinder.ts#L35)
+[core/internals/functionBinder.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/functionBinder.ts#L35)

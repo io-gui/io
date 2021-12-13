@@ -3,8 +3,8 @@ declare const IoElement_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
         readonly compose: Record<string, Record<string, any>> | null;
-        connect(node?: IoNode | HTMLElement | Document | Window): any;
-        disconnect(node?: IoNode | HTMLElement | Document | Window): any;
+        connect(node?: Window | Document | HTMLElement | IoNode): any;
+        disconnect(node?: Window | Document | HTMLElement | IoNode): any;
         connectedCallback(): void;
         disconnectedCallback(): void;
         dispose(): void;
@@ -15,13 +15,13 @@ declare const IoElement_base: {
         queueDispatchLazy(): void;
         objectMutated(event: CustomEvent<any>): void;
         objectMutatedThrottled(prop: string): void;
-        bind(prop: string): import("./internals/propertyBinder.js").Binding;
+        bind(prop: string): import("./index.js").Binding;
         unbind(prop: string): void;
         set(prop: string, value: any, force?: boolean | undefined): void;
         setProperties(props: any): void;
         addEventListener(type: string, listener: EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void), options?: AddEventListenerOptions | undefined): void;
         removeEventListener(type: string, listener?: (EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void)) | undefined, options?: AddEventListenerOptions | undefined): void;
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Document | Window | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
         throttle(func: (arg?: any) => void, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: (arg?: any) => void): void;
         filterObject(object: any, predicate: (object: any) => boolean, _depth?: number, _chain?: any[], _i?: number): any;

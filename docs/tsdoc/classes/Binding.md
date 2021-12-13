@@ -19,7 +19,7 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[core/propertyBinder.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L18)
+[core/internals/propertyBinder.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L18)
 
 ## Accessors
 
@@ -33,7 +33,7 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[core/propertyBinder.ts:34](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L34)
+[core/internals/propertyBinder.ts:34](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L34)
 
 • `set` **value**(`value`): `void`
 
@@ -49,7 +49,7 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[core/propertyBinder.ts:31](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L31)
+[core/internals/propertyBinder.ts:31](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L31)
 
 ## Methods
 
@@ -73,7 +73,7 @@ Adds a target `node` and `targetProp` and corresponding `[property]-changed` lis
 
 #### Defined in
 
-[core/propertyBinder.ts:43](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L43)
+[core/internals/propertyBinder.ts:43](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L43)
 
 ___
 
@@ -90,7 +90,7 @@ Use this when node is no longer needed.
 
 #### Defined in
 
-[core/propertyBinder.ts:142](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L142)
+[core/internals/propertyBinder.ts:142](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L142)
 
 ___
 
@@ -114,4 +114,4 @@ If `property` is not specified, it removes all target properties.
 
 #### Defined in
 
-[core/propertyBinder.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L63)
+[core/internals/propertyBinder.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L63)

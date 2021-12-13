@@ -444,17 +444,15 @@ export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
  * @param {IoNode} node - Node class to register.
  */
 export const RegisterIoNode = function (node: typeof IoNode) {
-  const protochain = new ProtoChain(node);
-
   const proto = node.prototype;
   Object.defineProperty(proto, '__isIoNode', {value: true});
   Object.defineProperty(proto.constructor, '__registeredAs', {value: proto.constructor.name});
 
-  Object.defineProperty(proto, '__protochain', {value: protochain});
-  Object.defineProperty(proto, '__functionBinder',  {value: new FunctionBinder(protochain)});
+  Object.defineProperty(proto, '__protochain', {value: new ProtoChain(node)});
+  Object.defineProperty(proto, '__functionBinder',  {value: new FunctionBinder(proto.__protochain)});
 
-  Object.defineProperty(proto, '__protoProperties', {value: new ProtoProperties(protochain)});
-  Object.defineProperty(proto, '__protoListeners',  {value: new ProtoListeners(protochain)});
+  Object.defineProperty(proto, '__protoProperties', {value: new ProtoProperties(proto.__protochain)});
+  Object.defineProperty(proto, '__protoListeners',  {value: new ProtoListeners(proto.__protochain)});
 
   Object.defineProperty(proto, '__observedObjects', {value: []});
 

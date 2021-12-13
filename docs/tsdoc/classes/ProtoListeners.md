@@ -20,4 +20,4 @@ Array of all listeners defined as `static get Listeners()` return objects in pro
 
 #### Defined in
 
-[core/eventDispatcher.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L18)
+[core/internals/eventDispatcher.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L18)

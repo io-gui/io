@@ -20,4 +20,4 @@ Array of all properties defined as `static get Properties()` return objects in p
 
 #### Defined in
 
-[core/properties.ts:79](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L79)
+[core/internals/properties.ts:79](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L79)

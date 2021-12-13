@@ -19,7 +19,7 @@ Creates change queue for the specified owner instance of `IoNode`.
 
 #### Defined in
 
-[core/changeQueue.ts:41](https://github.com/io-gui/iogui/blob/tsc/src/core/changeQueue.ts#L41)
+[core/internals/changeQueue.ts:15](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L15)
 
 ## Methods
 
@@ -40,7 +40,7 @@ After all changes are dispatched it invokes `.applyCompose()` and `.changed()` f
 
 #### Defined in
 
-[core/changeQueue.ts:73](https://github.com/io-gui/iogui/blob/tsc/src/core/changeQueue.ts#L73)
+[core/internals/changeQueue.ts:47](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L47)
 
 ___
 
@@ -57,7 +57,7 @@ Use this when node queue is no longer needed.
 
 #### Defined in
 
-[core/changeQueue.ts:104](https://github.com/io-gui/iogui/blob/tsc/src/core/changeQueue.ts#L104)
+[core/internals/changeQueue.ts:78](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L78)
 
 ___
 
@@ -82,4 +82,4 @@ If the change is already in the queue, the new value is updated in-queue.
 
 #### Defined in
 
-[core/changeQueue.ts:54](https://github.com/io-gui/iogui/blob/tsc/src/core/changeQueue.ts#L54)
+[core/internals/changeQueue.ts:28](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L28)

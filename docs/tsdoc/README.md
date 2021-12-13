@@ -85,7 +85,7 @@
 
 #### Defined in
 
-[core/eventDispatcher.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L7)
+[core/internals/eventDispatcher.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L7)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[core/eventDispatcher.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L8)
+[core/internals/eventDispatcher.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L8)
 
 ___
 
@@ -105,33 +105,7 @@ ___
 
 #### Defined in
 
-[core/eventDispatcher.ts:9](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L9)
-
-___
-
-### ProtoChainConstructor
-
-Ƭ **ProtoChainConstructor**<`T`\>: (...`args`: `any`[]) => `T`
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Type declaration
-
-• (...`args`)
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `...args` | `any`[] |
-
-#### Defined in
-
-[core/protoChain.ts:1](https://github.com/io-gui/iogui/blob/tsc/src/core/protoChain.ts#L1)
+[core/internals/eventDispatcher.ts:9](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L9)
 
 ___
 
@@ -141,7 +115,7 @@ ___
 
 #### Defined in
 
-[core/eventDispatcher.ts:5](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L5)
+[core/internals/eventDispatcher.ts:5](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L5)
 
 ___
 
@@ -151,7 +125,7 @@ ___
 
 #### Defined in
 
-[core/eventDispatcher.ts:6](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L6)
+[core/internals/eventDispatcher.ts:6](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L6)
 
 ___
 
@@ -161,7 +135,7 @@ ___
 
 #### Defined in
 
-[core/eventDispatcher.ts:4](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L4)
+[core/internals/eventDispatcher.ts:4](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L4)
 
 ___
 
@@ -185,7 +159,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L7)
+[core/internals/properties.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L7)
 
 ___
 
@@ -195,7 +169,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:20](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L20)
+[core/internals/properties.ts:20](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L20)
 
 ___
 
@@ -205,7 +179,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L19)
+[core/internals/properties.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L19)
 
 ## Variables
 
@@ -275,7 +249,7 @@ typeof `__class`
 
 #### Defined in
 
-[components/io-node.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L29)
+[core/io-node.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L29)
 
 ___
 
@@ -317,7 +291,7 @@ Register function for `IoElement`. Registers custom element.
 
 #### Defined in
 
-[components/io-element.ts:398](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L398)
+[core/io-element.ts:398](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L398)
 
 ___
 
@@ -339,7 +313,7 @@ Register function to be called once per class.
 
 #### Defined in
 
-[components/io-node.ts:446](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L446)
+[core/io-node.ts:446](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L446)
 
 ___
 
@@ -365,4 +339,4 @@ ___
 
 #### Defined in
 
-[components/io-element.ts:603](https://github.com/io-gui/iogui/blob/tsc/src/components/io-element.ts#L603)
+[core/io-element.ts:603](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L603)

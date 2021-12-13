@@ -141,7 +141,7 @@ export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): 
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Document | Window | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -195,13 +195,13 @@ declare const IoNode_base: {
          * @param {IoNode} node - Node to connect to.
          * @return {this} this
          */
-        connect(node?: IoNode | HTMLElement | Document | Window): any;
+        connect(node?: HTMLElement | IoNode | Window | Document): any;
         /**
          * Disconnects the instance from an another node or element.
          * @param {IoNode} node - Node to disconnect from.
          * @return {this} this
          * */
-        disconnect(node?: IoNode | HTMLElement | Document | Window): any;
+        disconnect(node?: HTMLElement | IoNode | Window | Document): any;
         /**
          * Connected callback.
          */
@@ -299,7 +299,7 @@ declare const IoNode_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Document | Window | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.

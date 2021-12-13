@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[core/properties.ts:32](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L32)
+[core/internals/properties.ts:32](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L32)
 
 ## Properties
 
@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[core/properties.ts:31](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L31)
+[core/internals/properties.ts:31](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L31)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:30](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L30)
+[core/internals/properties.ts:30](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L30)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L26)
+[core/internals/properties.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L26)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:27](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L27)
+[core/internals/properties.ts:27](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L27)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:28](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L28)
+[core/internals/properties.ts:28](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L28)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:25](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L25)
+[core/internals/properties.ts:25](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L25)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L29)
+[core/internals/properties.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L29)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:24](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L24)
+[core/internals/properties.ts:24](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L24)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[core/properties.ts:23](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L23)
+[core/internals/properties.ts:23](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L23)
 
 ## Methods
 
@@ -124,4 +124,4 @@ ___
 
 #### Defined in
 
-[core/properties.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L35)
+[core/internals/properties.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L35)

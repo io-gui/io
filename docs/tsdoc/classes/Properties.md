@@ -20,7 +20,7 @@ Creates the properties for specified `IoNode`.
 
 #### Defined in
 
-[core/properties.ts:171](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L171)
+[core/internals/properties.ts:171](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L171)
 
 ## Methods
 
@@ -36,7 +36,7 @@ Connects all property bindings and `IoNode` properties.
 
 #### Defined in
 
-[core/properties.ts:285](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L285)
+[core/internals/properties.ts:285](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L285)
 
 ___
 
@@ -52,7 +52,7 @@ Disconnects all property bindings and `IoNode` properties.
 
 #### Defined in
 
-[core/properties.ts:305](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L305)
+[core/internals/properties.ts:305](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L305)
 
 ___
 
@@ -69,7 +69,7 @@ Use this when properties are no loner needed.
 
 #### Defined in
 
-[core/properties.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L332)
+[core/internals/properties.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L332)
 
 ___
 
@@ -93,7 +93,7 @@ Peroperty value.
 
 #### Defined in
 
-[core/properties.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L204)
+[core/internals/properties.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L204)
 
 ___
 
@@ -117,4 +117,4 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[core/properties.ts:213](https://github.com/io-gui/iogui/blob/tsc/src/core/properties.ts#L213)
+[core/internals/properties.ts:213](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L213)

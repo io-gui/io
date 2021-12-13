@@ -1,17 +1,17 @@
-export type ProtoChainConstructor<T> = new (...args: any[]) => T;
+type Constructor<T> = new (...args: any[]) => T;
 
 /**
- * An array of all inherited contructors from the prototype chain.
+ * Automatically generated array of all contructors inherited from the prototype chain.
  */
-export class ProtoChain extends Array<ProtoChainConstructor<any[]>> {
+export class ProtoChain extends Array<Constructor<any[]>> {
   /**
    * Creates an array of inherited contructors by traversing down the prototype chain of the specified contructor and adds each contructor to itself.
-   * It terminates when prototype chain before it reaches `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
-   * @param {Object} classConstructor - Prototype object.
+   * It terminates the prototype chain before it reaches `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+   * @param {Constructor} constructor - Prototype object.
    */
-  constructor(classConstructor: any) {
+  constructor(constructor: Constructor<any>) {
     super();
-    let prototype = classConstructor.prototype;
+    let prototype = constructor.prototype;
     while (
       prototype
       && prototype.constructor.name !== 'classConstructor'

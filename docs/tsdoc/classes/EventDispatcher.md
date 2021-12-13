@@ -14,12 +14,12 @@ Creates Event Dispatcher.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) \| `HTMLElement` | Node or element to add EventDispatcher to. |
+| `node` | `HTMLElement` \| [`IoNode`](IoNode.md) | Node or element to add EventDispatcher to. |
 | `protoListeners` | [`ProtoListeners`](ProtoListeners.md) | - |
 
 #### Defined in
 
-[core/eventDispatcher.ts:44](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L44)
+[core/internals/eventDispatcher.ts:44](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L44)
 
 ## Methods
 
@@ -44,7 +44,7 @@ Adds an event listener.
 
 #### Defined in
 
-[core/eventDispatcher.ts:151](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L151)
+[core/internals/eventDispatcher.ts:151](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L151)
 
 ___
 
@@ -62,7 +62,7 @@ this
 
 #### Defined in
 
-[core/eventDispatcher.ts:100](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L100)
+[core/internals/eventDispatcher.ts:100](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L100)
 
 ___
 
@@ -80,7 +80,7 @@ this
 
 #### Defined in
 
-[core/eventDispatcher.ts:124](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L124)
+[core/internals/eventDispatcher.ts:124](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L124)
 
 ___
 
@@ -105,7 +105,7 @@ Shorthand for custom event dispatch.
 
 #### Defined in
 
-[core/eventDispatcher.ts:199](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L199)
+[core/internals/eventDispatcher.ts:199](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L199)
 
 ___
 
@@ -122,7 +122,7 @@ Use this when node is no longer needed.
 
 #### Defined in
 
-[core/eventDispatcher.ts:221](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L221)
+[core/internals/eventDispatcher.ts:221](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L221)
 
 ___
 
@@ -147,7 +147,7 @@ Removes an event listener.
 
 #### Defined in
 
-[core/eventDispatcher.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L169)
+[core/internals/eventDispatcher.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L169)
 
 ___
 
@@ -169,4 +169,4 @@ Sets listeners from inline properties (filtered form properties map by 'on-' pre
 
 #### Defined in
 
-[core/eventDispatcher.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/eventDispatcher.ts#L65)
+[core/internals/eventDispatcher.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L65)

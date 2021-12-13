@@ -20,7 +20,7 @@ Creates property change payload.
 
 #### Defined in
 
-[core/changeQueue.ts:16](https://github.com/io-gui/iogui/blob/tsc/src/core/changeQueue.ts#L16)
+[core/internals/changeQueue.ts:98](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L98)
 
 ## Properties
 
@@ -30,7 +30,7 @@ Creates property change payload.
 
 #### Defined in
 
-[core/changeQueue.ts:9](https://github.com/io-gui/iogui/blob/tsc/src/core/changeQueue.ts#L9)
+[core/internals/changeQueue.ts:91](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L91)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[core/changeQueue.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/changeQueue.ts#L7)
+[core/internals/changeQueue.ts:89](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L89)
 
 ___
 
@@ -50,4 +50,4 @@ ___
 
 #### Defined in
 
-[core/changeQueue.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/changeQueue.ts#L8)
+[core/internals/changeQueue.ts:90](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L90)

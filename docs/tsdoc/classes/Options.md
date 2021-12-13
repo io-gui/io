@@ -56,7 +56,7 @@ IoNodeMixin(Array).compose
 
 #### Defined in
 
-[components/io-node.ts:55](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L55)
+[core/io-node.ts:55](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L55)
 
 ___
 
@@ -113,7 +113,7 @@ IoNodeMixin(Array).addEventListener
 
 #### Defined in
 
-[components/io-node.ts:323](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L323)
+[core/io-node.ts:323](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L323)
 
 ___
 
@@ -133,7 +133,7 @@ IoNodeMixin(Array).applyCompose
 
 #### Defined in
 
-[components/io-node.ts:176](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L176)
+[core/io-node.ts:176](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L176)
 
 ___
 
@@ -161,7 +161,7 @@ IoNodeMixin(Array).bind
 
 #### Defined in
 
-[components/io-node.ts:267](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L267)
+[core/io-node.ts:267](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L267)
 
 ___
 
@@ -193,7 +193,7 @@ Connects the instance to another node or element.
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) \| `HTMLElement` \| `Document` \| `Window` | `window` | Node to connect to. |
+| `node` | `HTMLElement` \| [`IoNode`](IoNode.md) \| `Document` \| `Window` | `window` | Node to connect to. |
 
 #### Returns
 
@@ -207,7 +207,7 @@ IoNodeMixin(Array).connect
 
 #### Defined in
 
-[components/io-node.ts:97](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L97)
+[core/io-node.ts:97](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L97)
 
 ___
 
@@ -227,7 +227,7 @@ IoNodeMixin(Array).connectedCallback
 
 #### Defined in
 
-[components/io-node.ts:133](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L133)
+[core/io-node.ts:133](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L133)
 
 ___
 
@@ -241,7 +241,7 @@ Disconnects the instance from an another node or element.
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) \| `HTMLElement` \| `Document` \| `Window` | `window` | Node to disconnect from. |
+| `node` | `HTMLElement` \| [`IoNode`](IoNode.md) \| `Document` \| `Window` | `window` | Node to disconnect from. |
 
 #### Returns
 
@@ -255,7 +255,7 @@ IoNodeMixin(Array).disconnect
 
 #### Defined in
 
-[components/io-node.ts:115](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L115)
+[core/io-node.ts:115](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L115)
 
 ___
 
@@ -275,7 +275,7 @@ IoNodeMixin(Array).disconnectedCallback
 
 #### Defined in
 
-[components/io-node.ts:145](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L145)
+[core/io-node.ts:145](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L145)
 
 ___
 
@@ -304,7 +304,7 @@ IoNodeMixin(Array).dispatchEvent
 
 #### Defined in
 
-[components/io-node.ts:347](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L347)
+[core/io-node.ts:347](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L347)
 
 ___
 
@@ -325,7 +325,7 @@ IoNodeMixin(Array).dispose
 
 #### Defined in
 
-[components/io-node.ts:157](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L157)
+[core/io-node.ts:157](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L157)
 
 ___
 
@@ -353,7 +353,7 @@ IoNodeMixin(Array).filterObject
 
 #### Defined in
 
-[components/io-node.ts:380](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L380)
+[core/io-node.ts:380](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L380)
 
 ___
 
@@ -381,7 +381,7 @@ IoNodeMixin(Array).filterObjects
 
 #### Defined in
 
-[components/io-node.ts:393](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L393)
+[core/io-node.ts:393](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L393)
 
 ___
 
@@ -405,7 +405,7 @@ IoNodeMixin(Array).import
 
 #### Defined in
 
-[components/io-node.ts:410](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L410)
+[core/io-node.ts:410](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L410)
 
 ___
 
@@ -433,7 +433,7 @@ IoNodeMixin(Array).objectMutated
 
 #### Defined in
 
-[components/io-node.ts:231](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L231)
+[core/io-node.ts:231](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L231)
 
 ___
 
@@ -460,7 +460,7 @@ IoNodeMixin(Array).objectMutatedThrottled
 
 #### Defined in
 
-[components/io-node.ts:257](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L257)
+[core/io-node.ts:257](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L257)
 
 ___
 
@@ -560,7 +560,7 @@ IoNodeMixin(Array).preventDefault
 
 #### Defined in
 
-[components/io-node.ts:428](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L428)
+[core/io-node.ts:428](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L428)
 
 ___
 
@@ -588,7 +588,7 @@ IoNodeMixin(Array).queue
 
 #### Defined in
 
-[components/io-node.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L204)
+[core/io-node.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L204)
 
 ___
 
@@ -608,7 +608,7 @@ IoNodeMixin(Array).queueDispatch
 
 #### Defined in
 
-[components/io-node.ts:210](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L210)
+[core/io-node.ts:210](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L210)
 
 ___
 
@@ -628,7 +628,7 @@ IoNodeMixin(Array).queueDispatchLazy
 
 #### Defined in
 
-[components/io-node.ts:221](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L221)
+[core/io-node.ts:221](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L221)
 
 ___
 
@@ -656,7 +656,7 @@ IoNodeMixin(Array).removeEventListener
 
 #### Defined in
 
-[components/io-node.ts:337](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L337)
+[core/io-node.ts:337](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L337)
 
 ___
 
@@ -680,7 +680,7 @@ IoNodeMixin(Array).requestAnimationFrameOnce
 
 #### Defined in
 
-[components/io-node.ts:377](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L377)
+[core/io-node.ts:377](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L377)
 
 ___
 
@@ -723,7 +723,7 @@ IoNodeMixin(Array).set
 
 #### Defined in
 
-[components/io-node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L290)
+[core/io-node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L290)
 
 ___
 
@@ -750,7 +750,7 @@ IoNodeMixin(Array).setProperties
 
 #### Defined in
 
-[components/io-node.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L302)
+[core/io-node.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L302)
 
 ___
 
@@ -796,7 +796,7 @@ IoNodeMixin(Array).stopPropagation
 
 #### Defined in
 
-[components/io-node.ts:435](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L435)
+[core/io-node.ts:435](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L435)
 
 ___
 
@@ -824,7 +824,7 @@ IoNodeMixin(Array).throttle
 
 #### Defined in
 
-[components/io-node.ts:356](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L356)
+[core/io-node.ts:356](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L356)
 
 ___
 
@@ -850,4 +850,4 @@ IoNodeMixin(Array).unbind
 
 #### Defined in
 
-[components/io-node.ts:278](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L278)
+[core/io-node.ts:278](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L278)

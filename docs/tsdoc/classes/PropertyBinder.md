@@ -18,7 +18,7 @@ Creates binding manager for the specified node.
 
 #### Defined in
 
-[core/propertyBinder.ts:167](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L167)
+[core/internals/propertyBinder.ts:167](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L167)
 
 ## Methods
 
@@ -42,7 +42,7 @@ Property binding object.
 
 #### Defined in
 
-[core/propertyBinder.ts:177](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L177)
+[core/internals/propertyBinder.ts:177](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L177)
 
 ___
 
@@ -58,7 +58,7 @@ Disposes all bindings. Use this when node is no longer needed.
 
 #### Defined in
 
-[core/propertyBinder.ts:192](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L192)
+[core/internals/propertyBinder.ts:192](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L192)
 
 ___
 
@@ -80,4 +80,4 @@ Removes a binding for the specified property name.
 
 #### Defined in
 
-[core/propertyBinder.ts:185](https://github.com/io-gui/iogui/blob/tsc/src/core/propertyBinder.ts#L185)
+[core/internals/propertyBinder.ts:185](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L185)

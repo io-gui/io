@@ -126,7 +126,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[components/io-node.ts:323](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L323)
+[core/io-node.ts:323](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L323)
 
 ___
 
@@ -146,7 +146,7 @@ sets composed properties and invokes `changed()` function on change.
 
 #### Defined in
 
-[components/io-node.ts:176](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L176)
+[core/io-node.ts:176](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L176)
 
 ___
 
@@ -174,7 +174,7 @@ Binding object.
 
 #### Defined in
 
-[components/io-node.ts:267](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L267)
+[core/io-node.ts:267](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L267)
 
 ___
 
@@ -209,7 +209,7 @@ Connects the instance to another node or element.
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) \| `HTMLElement` \| `Document` \| `Window` | `window` | Node to connect to. |
+| `node` | `HTMLElement` \| [`IoNode`](IoNode.md) \| `Document` \| `Window` | `window` | Node to connect to. |
 
 #### Returns
 
@@ -223,7 +223,7 @@ this
 
 #### Defined in
 
-[components/io-node.ts:97](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L97)
+[core/io-node.ts:97](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L97)
 
 ___
 
@@ -243,7 +243,7 @@ Connected callback.
 
 #### Defined in
 
-[components/io-node.ts:133](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L133)
+[core/io-node.ts:133](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L133)
 
 ___
 
@@ -257,7 +257,7 @@ Disconnects the instance from an another node or element.
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) \| `HTMLElement` \| `Document` \| `Window` | `window` | Node to disconnect from. |
+| `node` | `HTMLElement` \| [`IoNode`](IoNode.md) \| `Document` \| `Window` | `window` | Node to disconnect from. |
 
 #### Returns
 
@@ -271,7 +271,7 @@ this
 
 #### Defined in
 
-[components/io-node.ts:115](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L115)
+[core/io-node.ts:115](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L115)
 
 ___
 
@@ -291,7 +291,7 @@ Disconnected callback.
 
 #### Defined in
 
-[components/io-node.ts:145](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L145)
+[core/io-node.ts:145](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L145)
 
 ___
 
@@ -320,7 +320,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[components/io-node.ts:347](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L347)
+[core/io-node.ts:347](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L347)
 
 ___
 
@@ -341,7 +341,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[components/io-node.ts:157](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L157)
+[core/io-node.ts:157](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L157)
 
 ___
 
@@ -369,7 +369,7 @@ ___
 
 #### Defined in
 
-[components/io-node.ts:380](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L380)
+[core/io-node.ts:380](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L380)
 
 ___
 
@@ -397,7 +397,7 @@ ___
 
 #### Defined in
 
-[components/io-node.ts:393](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L393)
+[core/io-node.ts:393](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L393)
 
 ___
 
@@ -421,7 +421,7 @@ ___
 
 #### Defined in
 
-[components/io-node.ts:410](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L410)
+[core/io-node.ts:410](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L410)
 
 ___
 
@@ -449,7 +449,7 @@ with `observe: "sync" || "async"` configuration.
 
 #### Defined in
 
-[components/io-node.ts:231](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L231)
+[core/io-node.ts:231](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L231)
 
 ___
 
@@ -476,7 +476,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[components/io-node.ts:257](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L257)
+[core/io-node.ts:257](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L257)
 
 ___
 
@@ -536,7 +536,7 @@ Handler function with `event.preventDefault()`.
 
 #### Defined in
 
-[components/io-node.ts:428](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L428)
+[core/io-node.ts:428](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L428)
 
 ___
 
@@ -564,7 +564,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[components/io-node.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L204)
+[core/io-node.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L204)
 
 ___
 
@@ -584,7 +584,7 @@ Dispatches the queue.
 
 #### Defined in
 
-[components/io-node.ts:210](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L210)
+[core/io-node.ts:210](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L210)
 
 ___
 
@@ -604,7 +604,7 @@ Dispatches the queue in the next rAF cycle.
 
 #### Defined in
 
-[components/io-node.ts:221](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L221)
+[core/io-node.ts:221](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L221)
 
 ___
 
@@ -632,7 +632,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[components/io-node.ts:337](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L337)
+[core/io-node.ts:337](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L337)
 
 ___
 
@@ -656,7 +656,7 @@ ___
 
 #### Defined in
 
-[components/io-node.ts:377](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L377)
+[core/io-node.ts:377](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L377)
 
 ___
 
@@ -699,7 +699,7 @@ Use this when property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[components/io-node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L290)
+[core/io-node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L290)
 
 ___
 
@@ -726,7 +726,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[components/io-node.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L302)
+[core/io-node.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L302)
 
 ___
 
@@ -773,7 +773,7 @@ Handler function with `event.stopPropagation()`.
 
 #### Defined in
 
-[components/io-node.ts:435](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L435)
+[core/io-node.ts:435](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L435)
 
 ___
 
@@ -801,7 +801,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[components/io-node.ts:356](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L356)
+[core/io-node.ts:356](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L356)
 
 ___
 
@@ -827,4 +827,4 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[components/io-node.ts:278](https://github.com/io-gui/iogui/blob/tsc/src/components/io-node.ts#L278)
+[core/io-node.ts:278](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L278)
