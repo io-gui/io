@@ -1,5 +1,5 @@
-import { IoElement } from '../../components/io-element.js';
-import { Property } from '../../core/properties.js';
+import { IoElement } from '../../core/io-element.js';
+import { Property } from '../../core/internals/properties.js';
 declare type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
 export declare class IoGl extends IoElement {
     static get Style(): string;

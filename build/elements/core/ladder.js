@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../components/io-element.js';
+import { IoElement, RegisterIoElement } from '../../core/io-element.js';
 import { IoItem } from './item.js';
 import { IoLayerSingleton } from './layer.js';
 let lastFocus = null;

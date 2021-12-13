@@ -1,4 +1,4 @@
-import { IoElement } from '../../components/io-element.js';
+import { IoElement } from '../../core/io-element.js';
 import { IoItem } from './item.js';
 export declare class IoLadderStep extends IoItem {
     static get Style(): string;

@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../components/io-element.js';
+import {RegisterIoElement} from '../../core/io-element.js';
 import {IoGl} from './gl.js';
 
 /*

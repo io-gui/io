@@ -1,4 +1,3 @@
-import { Binding } from '../core/propertyBinder.js';
 declare type Constructor<T> = new (...args: any[]) => T;
 declare type ComposedProperties = null | Record<string, Record<string, any>>;
 declare type CallbackFunction = (arg?: any) => void;
@@ -100,7 +99,7 @@ export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): 
          * @param {string} prop - Property to bind to.
          * @return {Binding} Binding object.
          */
-        bind(prop: string): Binding;
+        bind(prop: string): any;
         /**
          * Unbinds a binding to a specified property`.
          * @param {string} prop - Property to unbind.
@@ -258,7 +257,7 @@ declare const IoNode_base: {
          * @param {string} prop - Property to bind to.
          * @return {Binding} Binding object.
          */
-        bind(prop: string): Binding;
+        bind(prop: string): any;
         /**
          * Unbinds a binding to a specified property`.
          * @param {string} prop - Property to unbind.

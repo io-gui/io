@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { IoElement, RegisterIoElement } from '../../components/io-element.js';
+import { IoElement, RegisterIoElement } from '../../core/io-element.js';
 /*
  * Extends [`IoElement`](/#doc=core-element).
  *

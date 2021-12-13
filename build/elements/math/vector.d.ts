@@ -1,4 +1,4 @@
-import { IoElement } from '../../components/io-element.js';
+import { IoElement } from '../../core/io-element.js';
 export declare class IoVector extends IoElement {
     static get Style(): string;
     static get Properties(): any;
@@ -6,7 +6,7 @@ export declare class IoVector extends IoElement {
     valueChanged(): void;
     changed(): void;
     getSlotted(): (string | {
-        value: import("../../iogui.js").Binding;
+        value: import("../../core/internals/propertyBinder.js").Binding;
         true: string;
         false: string;
     })[] | null;

@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../components/io-element.js';
+import {IoElement, RegisterIoElement} from '../../core/io-element.js';
 
 let lastFocus: Element | null = null;
 {

@@ -1,4 +1,4 @@
-import { IoElement } from '../../components/io-element.js';
+import { IoElement } from '../../core/io-element.js';
 import './selector.js';
 export declare class IoSelectorTabs extends IoElement {
     static get Style(): string;

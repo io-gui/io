@@ -1,4 +1,4 @@
-import { Binding } from '../../core/propertyBinder.js';
+import { Binding } from '../../core/internals/propertyBinder.js';
 // TODO: display read only as non-editable
 /*
 

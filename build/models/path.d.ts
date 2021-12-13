@@ -1,4 +1,4 @@
-import { IoNode } from '../components/io-node.js';
+import { IoNode } from '../core/io-node.js';
 export declare class Path extends IoNode {
     static get Properties(): {
         value: ArrayConstructor;

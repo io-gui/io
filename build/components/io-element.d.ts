@@ -15,7 +15,7 @@ declare const IoElement_base: {
         queueDispatchLazy(): void;
         objectMutated(event: CustomEvent<any>): void;
         objectMutatedThrottled(prop: string): void;
-        bind(prop: string): import("../iogui.js").Binding;
+        bind(prop: string): any;
         unbind(prop: string): void;
         set(prop: string, value: any, force?: boolean | undefined): void;
         setProperties(props: any): void;

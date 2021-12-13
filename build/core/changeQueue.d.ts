@@ -1,25 +1,5 @@
 import { IoNode } from '../components/io-node.js';
 /**
- * Property change payload
- */
-export declare class Change {
-    property: string;
-    value: any;
-    oldValue: any;
-    /**
-     * Creates property change payload.
-     * @param {string} property - Property name.
-     * @param {*} value - New property value.
-     * @param {*} oldValue - Old property value.
-     */
-    constructor(property: string, value: any, oldValue: any);
-}
-export interface ChangeEvent extends CustomEvent {
-    readonly target: EventTarget;
-    readonly detail: Change;
-    readonly path: EventTarget[];
-}
-/**
  * Property change FIFO queue.
  * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
@@ -54,5 +34,25 @@ export declare class ChangeQueue {
      * Use this when node queue is no longer needed.
      */
     dispose(): void;
+}
+/**
+ * Property change payload
+ */
+export declare class Change {
+    property: string;
+    value: any;
+    oldValue: any;
+    /**
+     * Creates property change payload.
+     * @param {string} property - Property name.
+     * @param {*} value - New property value.
+     * @param {*} oldValue - Old property value.
+     */
+    constructor(property: string, value: any, oldValue: any);
+}
+export interface ChangeEvent extends CustomEvent {
+    readonly target: EventTarget;
+    readonly detail: Change;
+    readonly path: EventTarget[];
 }
 //# sourceMappingURL=changeQueue.d.ts.map

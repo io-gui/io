@@ -1,4 +1,4 @@
-import { IoElement } from '../../components/io-element.js';
+import { IoElement } from '../../core/io-element.js';
 import './breadcrumbs.js';
 export declare class IoInspector extends IoElement {
     static get Style(): string;

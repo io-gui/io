@@ -1,14 +1,14 @@
 import {IoElement, RegisterIoElement} from './iogui.js';
 
-import ChangeQueue from './core/changeQueue.test.js';
-import EventDispatcher from './core/eventDispatcher.test.js';
-import FunctionBinder from './core/functionBinder.test.js';
-import Properties from './core/properties.test.js';
-import PropertyBinder from './core/propertyBinder.test.js';
-import ProtoChain from './core/protoChain.test.js';
+import ChangeQueue from './core/internals/changeQueue.test.js';
+import EventDispatcher from './core/internals/eventDispatcher.test.js';
+import FunctionBinder from './core/internals/functionBinder.test.js';
+import Properties from './core/internals/properties.test.js';
+import PropertyBinder from './core/internals/propertyBinder.test.js';
+import ProtoChain from './core/internals/protoChain.test.js';
 
-import Node from './components/io-node.test.js';
-import Element from './components/io-element.test.js';
+import Node from './core/io-node.test.js';
+import Element from './core/io-element.test.js';
 
 // import Item from './elements/core/item.test.js';
 // import Content from './elements/core/content.test.js'; // TODO

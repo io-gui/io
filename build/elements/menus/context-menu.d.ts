@@ -1,4 +1,4 @@
-import { IoElement } from '../../components/io-element.js';
+import { IoElement } from '../../core/io-element.js';
 export declare class IoContextMenu extends IoElement {
     static get Properties(): any;
     connectedCallback(): void;

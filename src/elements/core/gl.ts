@@ -1,6 +1,6 @@
-import {IoElement, RegisterIoElement} from '../../components/io-element.js';
+import {IoElement, RegisterIoElement} from '../../core/io-element.js';
 import {IoThemeSingleton} from './theme.js';
-import {Property} from '../../core/properties.js';
+import {Property} from '../../core/internals/properties.js';
 
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true}) as WebGLRenderingContext;

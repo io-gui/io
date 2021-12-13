@@ -1,4 +1,4 @@
-import { IoElement } from '../../components/io-element.js';
+import { IoElement } from '../../core/io-element.js';
 declare type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
 declare class IoLayer extends IoElement {
     static get Style(): string;

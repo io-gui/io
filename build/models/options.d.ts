@@ -4,8 +4,8 @@ declare const Options_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
         readonly compose: Record<string, Record<string, any>> | null;
-        connect(node?: import("../components/io-node.js").IoNode | HTMLElement | Document | Window): any;
-        disconnect(node?: import("../components/io-node.js").IoNode | HTMLElement | Document | Window): any;
+        connect(node?: import("../core/io-node.js").IoNode | HTMLElement | Document | Window): any;
+        disconnect(node?: import("../core/io-node.js").IoNode | HTMLElement | Document | Window): any;
         connectedCallback(): void;
         disconnectedCallback(): void;
         dispose(): void;
@@ -16,7 +16,7 @@ declare const Options_base: {
         queueDispatchLazy(): void;
         objectMutated(event: CustomEvent<any>): void;
         objectMutatedThrottled(prop: string): void;
-        bind(prop: string): import("../iogui.js").Binding;
+        bind(prop: string): import("../core/internals/propertyBinder.js").Binding;
         unbind(prop: string): void;
         set(prop: string, value: any, force?: boolean | undefined): void;
         setProperties(props: any): void;

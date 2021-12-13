@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../components/io-element.js';
+import {IoElement, RegisterIoElement} from '../../core/io-element.js';
 import {Options} from '../../models/options.js';
 import {IoStorageFactory as $} from '../core/storage.js';
 
