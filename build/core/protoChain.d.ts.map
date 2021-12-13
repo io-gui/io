@@ -1,0 +1,1 @@
+{"version":3,"file":"protoChain.d.ts","sourceRoot":"","sources":["../../src/core/protoChain.ts"],"names":[],"mappings":"AAAA,oBAAY,qBAAqB,CAAC,CAAC,IAAI,KAAK,GAAG,IAAI,EAAE,GAAG,EAAE,KAAK,CAAC,CAAC;AAEjE;;GAEG;AACH,qBAAa,UAAW,SAAQ,KAAK,CAAC,qBAAqB,CAAC,GAAG,EAAE,CAAC,CAAC;IACjE;;;;OAIG;gBACS,gBAAgB,EAAE,GAAG;CAalC"}

@@ -1,5 +1,4 @@
 **/.DS_Store
-**/*.map
 npm-debug.log
 node_modules/
 .git/

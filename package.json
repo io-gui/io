@@ -15,11 +15,11 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "_docs": "node ./lib/generate-docs.js",
     "lint": "eslint src --fix",
     "rollup": "rollup -c",
     "uglify": "uglifyjs bundle/iogui.js -cmo bundle/iogui.js --comments",
-    "build": "yarn lint && tsc && yarn rollup && yarn uglify"
+    "docs": "typedoc",
+    "build": "yarn lint && tsc && yarn rollup && yarn uglify && yarn docs"
   },
   "repository": {
     "type": "git",
