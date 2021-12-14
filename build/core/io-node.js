@@ -1,9 +1,8 @@
 import { ProtoChain } from './internals/protoChain.js';
-import { FunctionBinder } from './internals/functionBinder.js';
 import { PropertyBinder, Binding } from './internals/propertyBinder.js';
 import { ChangeQueue } from './internals/changeQueue.js';
-import { ProtoProperties, Properties } from './internals/properties.js';
-import { EventDispatcher, ProtoListeners } from './internals/eventDispatcher.js';
+import { Properties } from './internals/properties.js';
+import { EventDispatcher } from './internals/eventDispatcher.js';
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -50,11 +49,11 @@ export function IoNodeMixin(superclass) {
                     console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
                 }
             }
-            this.__functionBinder.bind(this);
+            this.__protochain.bindFunctions(this);
             Object.defineProperty(this, '__propertyBinder', { enumerable: false, value: new PropertyBinder(this) });
             Object.defineProperty(this, '__changeQueue', { enumerable: false, value: new ChangeQueue(this) });
-            Object.defineProperty(this, '__eventDispatcher', { enumerable: false, value: new EventDispatcher(this, this.__protoListeners) });
-            Object.defineProperty(this, '__properties', { enumerable: false, value: new Properties(this, this.__protoProperties) });
+            Object.defineProperty(this, '__eventDispatcher', { enumerable: false, value: new EventDispatcher(this) });
+            Object.defineProperty(this, '__properties', { enumerable: false, value: new Properties(this) });
             Object.defineProperty(this, 'objectMutated', { enumerable: false, value: this.objectMutated.bind(this) });
             Object.defineProperty(this, 'objectMutatedThrottled', { enumerable: false, value: this.objectMutatedThrottled.bind(this) });
             Object.defineProperty(this, 'queueDispatch', { enumerable: false, value: this.queueDispatch.bind(this) });
@@ -428,34 +427,31 @@ export function IoNodeMixin(superclass) {
 }
 /**
  * Register function to be called once per class.
- * @param {IoNode} node - Node class to register.
+ * @param {IoNode} nodeConstructor - Node class to register.
  */
-export const RegisterIoNode = function (node) {
-    const proto = node.prototype;
+export const RegisterIoNode = function (nodeConstructor) {
+    const proto = nodeConstructor.prototype;
     Object.defineProperty(proto, '__isIoNode', { value: true });
-    Object.defineProperty(proto.constructor, '__registeredAs', { value: proto.constructor.name });
-    Object.defineProperty(proto, '__protochain', { value: new ProtoChain(node) });
-    Object.defineProperty(proto, '__functionBinder', { value: new FunctionBinder(proto.__protochain) });
-    Object.defineProperty(proto, '__protoProperties', { value: new ProtoProperties(proto.__protochain) });
-    Object.defineProperty(proto, '__protoListeners', { value: new ProtoListeners(proto.__protochain) });
+    Object.defineProperty(nodeConstructor, '__registeredAs', { value: nodeConstructor.name });
+    Object.defineProperty(proto, '__protochain', { value: new ProtoChain(nodeConstructor) });
     Object.defineProperty(proto, '__observedObjects', { value: [] });
-    for (const p in proto.__protoProperties) {
-        if (proto.__protoProperties[p].observe)
+    const protoProps = proto.__protochain.properties;
+    for (const p in protoProps)
+        if (protoProps[p].observe)
             proto.__observedObjects.push(p);
-    }
-    for (const p in proto.__protoProperties) {
+    for (const p in protoProps) {
         Object.defineProperty(proto, p, {
             get: function () {
                 return this.__properties.get(p);
             },
             set: function (value) {
                 debug: {
-                    if (proto.__protoProperties[p].readonly)
+                    if (protoProps[p].readonly)
                         console.error(`IoGUI error. Cannot set value "${value}" to read only property "${p}"`);
                 }
                 this.__properties.set(p, value);
             },
-            enumerable: !!proto.__protoProperties[p].enumerable,
+            enumerable: !!protoProps[p].enumerable,
             configurable: true,
         });
     }

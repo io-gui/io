@@ -1,4 +1,3 @@
-import {ProtoChain} from './protoChain.js';
 import {IoNode} from '../io-node.js';
 
 export type ProtoListenerType = keyof IoNode | EventListener | ProtoListenerArrayType;
@@ -9,22 +8,6 @@ export type Listeners = Record<string, Listener>;
 export type ListenersArray = Record<string, Listener[]>;
 
 type CallbackFunction = (arg?: any) => void;
-
-/**
- * Array of all listeners defined as `static get Listeners()` return objects in prototype chain.
- */
-export class ProtoListeners {
-  [listener: string]: ProtoListenerArrayType;
-  constructor(protochain: ProtoChain) {
-    for (let i = protochain.length; i--;) {
-      const listeners = (protochain[i] as any).Listeners as ProtoListenerRecord;
-      for (const l in listeners) {
-        const listener = (listeners[l] instanceof Array) ? listeners[l] :[listeners[l]];
-        this[l] = listener as ProtoListenerArrayType;
-      }
-    }
-  }
-}
 
 /**
  * Event Dispatcher.
@@ -39,9 +22,8 @@ class EventDispatcher {
   /**
    * Creates Event Dispatcher.
    * @param {IoNode | HTMLElement} node Node or element to add EventDispatcher to.
-   * @param {ProtoListeners} [protoListeners] Protolisteners
    */
-  constructor(node: IoNode | HTMLElement, protoListeners: ProtoListeners = {}) {
+  constructor(node: IoNode | HTMLElement) {
     this.__node = node;
     this.__nodeIsEventTarget = node instanceof EventTarget;
     Object.defineProperty(this, '__node',              {enumerable: false, writable: false});
@@ -50,8 +32,8 @@ class EventDispatcher {
     Object.defineProperty(this, '__propListeners',     {enumerable: false, writable: false});
     Object.defineProperty(this, '__connected',         {enumerable: false});
 
-    for (const type in protoListeners) {
-      const protoListener = protoListeners[type];
+    for (const type in (node as any).__protochain?.listeners) {
+      const protoListener = (node as any).__protochain.listeners[type];
       const listenerObject = typeof protoListener[0] === 'function' ? protoListener[0] : this.__node[protoListener[0] as keyof (IoNode | HTMLElement)];
       const listenerOptions = protoListener[1];
       this.__protoListeners[type] = [listenerObject as EventListener];

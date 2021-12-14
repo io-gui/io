@@ -1,4 +1,3 @@
-import { ProtoChain } from './protoChain.js';
 import { IoNode } from '../io-node.js';
 export declare type ProtoListenerType = keyof IoNode | EventListener | ProtoListenerArrayType;
 export declare type ProtoListenerArrayType = [keyof IoNode | EventListener, AddEventListenerOptions?];
@@ -6,13 +5,6 @@ export declare type ProtoListenerRecord = Record<string, ProtoListenerType>;
 export declare type Listener = [EventListener, AddEventListenerOptions?];
 export declare type Listeners = Record<string, Listener>;
 export declare type ListenersArray = Record<string, Listener[]>;
-/**
- * Array of all listeners defined as `static get Listeners()` return objects in prototype chain.
- */
-export declare class ProtoListeners {
-    [listener: string]: ProtoListenerArrayType;
-    constructor(protochain: ProtoChain);
-}
 /**
  * Event Dispatcher.
  */
@@ -26,9 +18,8 @@ declare class EventDispatcher {
     /**
      * Creates Event Dispatcher.
      * @param {IoNode | HTMLElement} node Node or element to add EventDispatcher to.
-     * @param {ProtoListeners} [protoListeners] Protolisteners
      */
-    constructor(node: IoNode | HTMLElement, protoListeners?: ProtoListeners);
+    constructor(node: IoNode | HTMLElement);
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} properties - Properties.

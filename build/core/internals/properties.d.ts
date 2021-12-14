@@ -1,5 +1,4 @@
 import { Binding } from './propertyBinder.js';
-import { ProtoChain } from './protoChain.js';
 declare type Constructor = new (...args: any[]) => unknown;
 declare type ReflectType = -1 | 0 | 1 | 2;
 export declare type ProtoPropertyDefinition = {
@@ -27,13 +26,6 @@ declare class ProtoProperty {
     binding?: Binding;
     constructor(prop?: ProtoPropertyType);
     assign(prop?: ProtoPropertyType): this;
-}
-/**
- * Array of all properties defined as `static get Properties()` return objects in prototype chain.
- */
-declare class ProtoProperties {
-    [property: string]: ProtoProperty;
-    constructor(protochain: ProtoChain);
 }
 /**
  * Property configuration object for a class **instance**.
@@ -66,9 +58,8 @@ declare class Properties {
     /**
      * Creates the properties for specified `IoNode`.
      * @param {any} node Owner IoNode instance.
-     * @param {ProtoProperties} protoProps ProtoProperties object.
      */
-    constructor(node: any, protoProps: ProtoProperties);
+    constructor(node: any);
     /**
      * Returns the property value.
      * @param {string} key property name to get value of.
@@ -96,5 +87,5 @@ declare class Properties {
      */
     dispose(): void;
 }
-export { ProtoProperty, ProtoProperties, Property, Properties };
+export { ProtoProperty, Property, Properties };
 //# sourceMappingURL=properties.d.ts.map

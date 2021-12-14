@@ -1,14 +1,31 @@
-declare type Constructor<T> = new (...args: any[]) => T;
+import { IoNode } from '../io-node.js';
+import { ProtoProperty } from './properties.js';
+import { ProtoListenerArrayType } from './eventDispatcher.js';
+declare type Constructor<T extends HTMLElement | Array<any> | unknown> = new (...args: any[]) => T;
 /**
- * Automatically generated array of all contructors inherited from the prototype chain.
+ * Internal utility class that contains usefull information about inherited constructors, function names and properties,
+ * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
+ * that terminates when it reaches `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
  */
-export declare class ProtoChain extends Array<Constructor<any[]>> {
+export declare class ProtoChain {
+    readonly constructors: Array<Constructor<any>>;
+    readonly functions: Array<string>;
+    readonly properties: {
+        [property: string]: ProtoProperty;
+    };
+    readonly listeners: {
+        [listener: string]: ProtoListenerArrayType;
+    };
     /**
-     * Creates an array of inherited contructors by traversing down the prototype chain of the specified contructor and adds each contructor to itself.
-     * It terminates the prototype chain before it reaches `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
-     * @param {Constructor} constructor - Prototype object.
+     * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors and function names and properties.
+     * @param {Constructor} nodeConstructor - Prototype object.
      */
-    constructor(constructor: Constructor<any>);
+    constructor(nodeConstructor: Constructor<any>);
+    /**
+     * Binds all functions from the `.functions` list to specified instance.
+     * @param {IoNode} node - `IoNode` instance to bind functions to.
+     */
+    bindFunctions(node: IoNode): void;
 }
 export {};
 //# sourceMappingURL=protoChain.d.ts.map

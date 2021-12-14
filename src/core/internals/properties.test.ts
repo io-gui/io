@@ -1,6 +1,6 @@
 import {Binding} from './propertyBinder.js';
 import {ProtoChain} from './protoChain.js';
-import {ProtoProperty, ProtoProperties, Property} from './properties.js';
+import {ProtoProperty, Property} from './properties.js';
 import {IoNode, RegisterIoNode} from '../io-node.js';
 import {IoElement, RegisterIoElement} from '../io-element.js';
 
@@ -278,8 +278,8 @@ export default class {
           const node1 = new Object1();
           const node2 = new Object2();
 
-          const protoProps1 = (node1 as any).__protoProperties;
-          const protoProps2 = (node2 as any).__protoProperties;
+          const protoProps1 = (node1 as any).__protochain.properties;
+          const protoProps2 = (node2 as any).__protochain.properties;
           const props1 = (node1 as any).__properties;
           const props2 = (node2 as any).__properties;
 
@@ -339,7 +339,7 @@ export default class {
           }
 
           const protochain = new ProtoChain(Object2);
-          const props = new ProtoProperties(protochain) as any;
+          const props = protochain.properties;
 
           chai.expect(props.prop1.type).to.be.equal(String);
           chai.expect(props.prop1.notify).to.be.equal(false);

@@ -72,27 +72,6 @@ class ProtoProperty {
     }
 }
 /**
- * Array of all properties defined as `static get Properties()` return objects in prototype chain.
- */
-class ProtoProperties {
-    constructor(protochain) {
-        for (let i = protochain.length; i--;) {
-            const props = protochain[i].Properties;
-            for (const p in props) {
-                if (!this[p])
-                    this[p] = new ProtoProperty(props[p]);
-                else
-                    this[p].assign(props[p]);
-                // TODO: Document or reconsider.
-                if (p.charAt(0) === '_') {
-                    this[p].notify = false;
-                    this[p].enumerable = false;
-                }
-            }
-        }
-    }
-}
-/**
  * Property configuration object for a class **instance**.
  * It is copied from the corresponding `ProtoProperty`.
  */
@@ -171,13 +150,12 @@ class Properties {
     /**
      * Creates the properties for specified `IoNode`.
      * @param {any} node Owner IoNode instance.
-     * @param {ProtoProperties} protoProps ProtoProperties object.
      */
-    constructor(node, protoProps) {
+    constructor(node) {
         Object.defineProperty(this, '__node', { enumerable: false, configurable: true, value: node });
         Object.defineProperty(this, '__connected', { enumerable: false });
-        for (const prop in protoProps) {
-            const protoProp = protoProps;
+        for (const prop in node.__protochain.properties) {
+            const protoProp = node.__protochain.properties;
             Object.defineProperty(this, prop, {
                 value: new Property(protoProp[prop]),
                 enumerable: protoProp[prop].enumerable,
@@ -334,5 +312,5 @@ class Properties {
         delete this.__keys;
     }
 }
-export { ProtoProperty, ProtoProperties, Property, Properties };
+export { ProtoProperty, Property, Properties };
 //# sourceMappingURL=properties.js.map

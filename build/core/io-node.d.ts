@@ -169,9 +169,9 @@ export declare function IoNodeMixin<T extends Constructor<any>>(superclass: T): 
 };
 /**
  * Register function to be called once per class.
- * @param {IoNode} node - Node class to register.
+ * @param {IoNode} nodeConstructor - Node class to register.
  */
-export declare const RegisterIoNode: (node: typeof IoNode) => void;
+export declare const RegisterIoNode: (nodeConstructor: typeof IoNode) => void;
 declare const IoNode_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;

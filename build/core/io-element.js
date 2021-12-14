@@ -70,8 +70,8 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     }
     static get observedAttributes() {
         const observed = [];
-        for (const prop in this.prototype.__protoProperties) {
-            const r = this.prototype.__protoProperties[prop].reflect;
+        for (const prop in this.prototype.__protochain.properties) {
+            const r = this.prototype.__protochain.properties[prop].reflect;
             if (r === -1 || r === 2) {
                 observed.push(prop);
             }
@@ -481,7 +481,7 @@ const setNativeElementProps = function (element, props) {
     }
     if (!element.__eventDispatcher) {
         // TODO: test
-        Object.defineProperty(element, '__eventDispatcher', { value: new EventDispatcher(element, {}) });
+        Object.defineProperty(element, '__eventDispatcher', { value: new EventDispatcher(element) });
         // TODO: disconnect on disposal?
         element.__eventDispatcher.connect();
     }
@@ -496,11 +496,11 @@ const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
 const cssRegex = new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
 // Creates a `<style>` element for all `static get Style()` return strings.
 function _initProtoStyle(prototypes) {
-    const localName = prototypes[0].name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    const localName = prototypes.constructors[0].name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     const styleID = 'io-style-' + localName.replace('io-', '');
     let finalStyleString = '';
     // Convert mixins to classes
-    const styleString = prototypes[0].Style;
+    const styleString = prototypes.constructors[0].Style;
     if (styleString) {
         const mixins = styleString.match(mixinRegex);
         if (mixins) {
@@ -512,8 +512,8 @@ function _initProtoStyle(prototypes) {
                 finalStyleString += mixins[i].replace('--', '.').replace(': {', ' {');
             }
         }
-        for (let i = prototypes.length; i--;) {
-            let styleString = prototypes[i].Style;
+        for (let i = prototypes.constructors.length; i--;) {
+            let styleString = prototypes.constructors[i].Style;
             if (styleString) {
                 // Remove mixins
                 styleString = styleString.replace(mixinRegex, '');

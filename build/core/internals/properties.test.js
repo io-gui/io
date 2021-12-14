@@ -1,6 +1,6 @@
 import { Binding } from './propertyBinder.js';
 import { ProtoChain } from './protoChain.js';
-import { ProtoProperty, ProtoProperties, Property } from './properties.js';
+import { ProtoProperty, Property } from './properties.js';
 import { IoNode, RegisterIoNode } from '../io-node.js';
 import { IoElement, RegisterIoElement } from '../io-element.js';
 const string = (object) => {
@@ -251,8 +251,8 @@ export default class {
                     RegisterIoNode(Object2);
                     const node1 = new Object1();
                     const node2 = new Object2();
-                    const protoProps1 = node1.__protoProperties;
-                    const protoProps2 = node2.__protoProperties;
+                    const protoProps1 = node1.__protochain.properties;
+                    const protoProps2 = node2.__protochain.properties;
                     const props1 = node1.__properties;
                     const props2 = node2.__properties;
                     chai.expect(string(Object.keys(props1))).to.be.equal(string(['lazy', 'prop1']));
@@ -305,7 +305,7 @@ export default class {
                         }
                     }
                     const protochain = new ProtoChain(Object2);
-                    const props = new ProtoProperties(protochain);
+                    const props = protochain.properties;
                     chai.expect(props.prop1.type).to.be.equal(String);
                     chai.expect(props.prop1.notify).to.be.equal(false);
                     chai.expect(props.prop1.reflect).to.be.equal(2);

@@ -1,18 +1,4 @@
 /**
- * Array of all listeners defined as `static get Listeners()` return objects in prototype chain.
- */
-export class ProtoListeners {
-    constructor(protochain) {
-        for (let i = protochain.length; i--;) {
-            const listeners = protochain[i].Listeners;
-            for (const l in listeners) {
-                const listener = (listeners[l] instanceof Array) ? listeners[l] : [listeners[l]];
-                this[l] = listener;
-            }
-        }
-    }
-}
-/**
  * Event Dispatcher.
  */
 class EventDispatcher {
@@ -25,9 +11,8 @@ class EventDispatcher {
     /**
      * Creates Event Dispatcher.
      * @param {IoNode | HTMLElement} node Node or element to add EventDispatcher to.
-     * @param {ProtoListeners} [protoListeners] Protolisteners
      */
-    constructor(node, protoListeners = {}) {
+    constructor(node) {
         this.__node = node;
         this.__nodeIsEventTarget = node instanceof EventTarget;
         Object.defineProperty(this, '__node', { enumerable: false, writable: false });
@@ -35,8 +20,8 @@ class EventDispatcher {
         Object.defineProperty(this, '__protoListeners', { enumerable: false, writable: false });
         Object.defineProperty(this, '__propListeners', { enumerable: false, writable: false });
         Object.defineProperty(this, '__connected', { enumerable: false });
-        for (const type in protoListeners) {
-            const protoListener = protoListeners[type];
+        for (const type in node.__protochain?.listeners) {
+            const protoListener = node.__protochain.listeners[type];
             const listenerObject = typeof protoListener[0] === 'function' ? protoListener[0] : this.__node[protoListener[0]];
             const listenerOptions = protoListener[1];
             this.__protoListeners[type] = [listenerObject];

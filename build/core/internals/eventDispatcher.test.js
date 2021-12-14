@@ -1,6 +1,6 @@
-import { ProtoChain } from './protoChain.js';
-import { EventDispatcher, ProtoListeners } from './eventDispatcher.js';
-class IoNode11 {
+import { IoNode, RegisterIoNode } from '../io-node.js';
+import { EventDispatcher } from './eventDispatcher.js';
+class IoNode1 extends IoNode {
     handler1Count = 0;
     handler1Detail;
     static get Listeners() {
@@ -13,7 +13,8 @@ class IoNode11 {
         this.handler1Detail = event.detail;
     }
 }
-class IoNode2 extends IoNode11 {
+RegisterIoNode(IoNode1);
+class IoNode2 extends IoNode1 {
     handler2Count = 0;
     handler3Count = 0;
     handler2Detail;
@@ -32,6 +33,7 @@ class IoNode2 extends IoNode11 {
         this.handler3Detail = event.detail;
     }
 }
+RegisterIoNode(IoNode2);
 class TestDivEventDispatchElement extends HTMLElement {
     handler3Count = 0;
     handler3Detail;
@@ -46,9 +48,7 @@ export default class {
         describe('EventDispatcher', () => {
             it('Should initialize with correct default values', () => {
                 const node = new IoNode2();
-                const protochain = new ProtoChain(IoNode2);
-                const protoListeners = new ProtoListeners(protochain);
-                const eventDispatcher = new EventDispatcher(node, protoListeners);
+                const eventDispatcher = new EventDispatcher(node);
                 chai.expect(eventDispatcher.__node).to.be.equal(node);
                 chai.expect(typeof eventDispatcher.__protoListeners).to.be.equal('object');
                 chai.expect(typeof eventDispatcher.__propListeners).to.be.equal('object');
@@ -57,18 +57,14 @@ export default class {
             });
             it('Should include all listeners from protochain', () => {
                 const node = new IoNode2();
-                const protochain = new ProtoChain(IoNode2);
-                const protoListeners = new ProtoListeners(protochain);
-                const eventDispatcher = new EventDispatcher(node, protoListeners);
+                const eventDispatcher = new EventDispatcher(node);
                 chai.expect(JSON.stringify(eventDispatcher.__protoListeners)).to.be.equal('{"event1":[null],"event2":[null,{"capture":true}]}');
                 chai.expect(eventDispatcher.__protoListeners.event1[0]).to.be.equal(node.handler1);
                 chai.expect(eventDispatcher.__protoListeners.event2[0]).to.be.equal(node.handler2);
             });
             it('Should set property listeners correctly', () => {
                 const node = new IoNode2();
-                const protochain = new ProtoChain(IoNode2);
-                const protoListeners = new ProtoListeners(protochain);
-                const eventDispatcher = new EventDispatcher(node, protoListeners);
+                const eventDispatcher = new EventDispatcher(node);
                 const handler4 = () => { };
                 eventDispatcher.setPropListeners({ 'on-event3': 'handler3', 'on-event4': handler4 });
                 chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event3":[null],"event4":[null]}');
@@ -87,9 +83,7 @@ export default class {
             });
             it('Should add/remove listeners correctly', () => {
                 const node = new IoNode2();
-                const protochain = new ProtoChain(IoNode2);
-                const protoListeners = new ProtoListeners(protochain);
-                const eventDispatcher = new EventDispatcher(node, protoListeners);
+                const eventDispatcher = new EventDispatcher(node);
                 const listener1 = () => { };
                 const listener2 = () => { };
                 eventDispatcher.addEventListener('event1', listener1);
@@ -105,9 +99,7 @@ export default class {
             });
             it('Should dispatch events only when connected', () => {
                 const node = new IoNode2();
-                const protochain = new ProtoChain(IoNode2);
-                const protoListeners = new ProtoListeners(protochain);
-                const eventDispatcher = new EventDispatcher(node, protoListeners);
+                const eventDispatcher = new EventDispatcher(node);
                 let handler4Count = 0;
                 const handler4 = () => {
                     handler4Count++;
@@ -153,9 +145,7 @@ export default class {
             });
             it('Should dispatch events with correct event detail', () => {
                 const node = new IoNode2();
-                const protochain = new ProtoChain(IoNode2);
-                const protoListeners = new ProtoListeners(protochain);
-                const eventDispatcher = new EventDispatcher(node, protoListeners).connect();
+                const eventDispatcher = new EventDispatcher(node).connect();
                 let handler4Detail;
                 const handler4 = (event) => {
                     handler4Detail = event.detail;

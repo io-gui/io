@@ -6,7 +6,6 @@
 - [Change](classes/Change.md)
 - [ChangeQueue](classes/ChangeQueue.md)
 - [EventDispatcher](classes/EventDispatcher.md)
-- [FunctionBinder](classes/FunctionBinder.md)
 - [IoBoolean](classes/IoBoolean.md)
 - [IoBoolicon](classes/IoBoolicon.md)
 - [IoButton](classes/IoButton.md)
@@ -249,7 +248,7 @@ typeof `__class`
 
 #### Defined in
 
-[core/io-node.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L29)
+[core/io-node.ts:28](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L28)
 
 ___
 
@@ -313,7 +312,7 @@ Register function to be called once per class.
 
 #### Defined in
 
-[core/io-node.ts:446](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L446)
+[core/io-node.ts:445](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L445)
 
 ___
 

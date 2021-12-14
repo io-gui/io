@@ -152,17 +152,17 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
         for (const name in this.css.__properties) {
-            const property = this.css.__protoProperties[name];
+            const property = this.css.__protochain.properties[name];
             frag += this.initPropertyUniform(name, property);
         }
         frag += '\n';
         for (const prop in this.__properties) {
             const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-            const property = this.__protoProperties[prop];
+            const property = this.__protochain.properties[prop];
             frag += this.initPropertyUniform(name, property);
         }
-        for (let i = this.__protochain.length; i--;) {
-            const constructor = this.__protochain[i];
+        for (let i = this.__protochain.constructors.length; i--;) {
+            const constructor = this.__protochain.constructors[i];
             const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
             if (glUtilsProp && glUtilsProp.get) {
                 frag += constructor.GlUtils;
@@ -195,14 +195,14 @@ export class IoGl extends IoElement {
         // TODO: improve code clarity
         this._vecLengths = {};
         for (const name in this.css.__properties) {
-            const property = this.css.__protoProperties[name];
+            const property = this.css.__protochain.properties[name];
             if (property.notify && property.type === Array) {
                 this._vecLengths[name] = property.value.length;
             }
         }
         for (const prop in this.__properties) {
             const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-            const property = this.__protoProperties[prop];
+            const property = this.__protochain.properties[prop];
             if (property.notify && property.type === Array) {
                 this._vecLengths[name] = property.value.length;
             }

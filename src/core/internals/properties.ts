@@ -1,5 +1,4 @@
 import {Binding} from './propertyBinder.js';
-import {ProtoChain} from './protoChain.js';
 
 type Constructor = new (...args: any[]) => unknown;
 type ReflectType = -1 | 0 | 1 | 2;
@@ -68,27 +67,6 @@ class ProtoProperty {
       if (this.binding !== undefined && this.binding.constructor !== Binding) console.warn('ProtoProperty: Incorrect type for "binding" field');
     }
     return this;
-  }
-}
-
-/**
- * Array of all properties defined as `static get Properties()` return objects in prototype chain.
- */
- class ProtoProperties {
-  [property: string]: ProtoProperty;
-  constructor(protochain: ProtoChain) {
-    for (let i = protochain.length; i--;) {
-      const props = (protochain[i] as any).Properties as ProtoPropertyRecord;
-      for (const p in props) {
-        if (!this[p]) this[p] = new ProtoProperty(props[p]);
-        else this[p].assign(props[p]);
-        // TODO: Document or reconsider.
-        if (p.charAt(0) === '_') {
-          this[p].notify = false;
-          this[p].enumerable = false;
-        }
-      }
-    }
   }
 }
 
@@ -166,13 +144,12 @@ class Properties {
   /**
    * Creates the properties for specified `IoNode`.
    * @param {any} node Owner IoNode instance.
-   * @param {ProtoProperties} protoProps ProtoProperties object.
    */
-  constructor(node: any, protoProps: ProtoProperties) {
+  constructor(node: any) {
     Object.defineProperty(this, '__node', {enumerable: false, configurable: true, value: node});
     Object.defineProperty(this, '__connected', {enumerable: false});
-    for (const prop in protoProps) {
-      const protoProp = protoProps as Record<string, ProtoProperty>;
+    for (const prop in node.__protochain.properties) {
+      const protoProp = node.__protochain.properties as Record<string, ProtoProperty>;
       Object.defineProperty(this, prop, {
         value: new Property(protoProp[prop]),
         enumerable: protoProp[prop].enumerable,
@@ -336,4 +313,4 @@ class Properties {
   }
 }
 
-export {ProtoProperty, ProtoProperties, Property, Properties};
+export {ProtoProperty, Property, Properties};

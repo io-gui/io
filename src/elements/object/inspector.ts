@@ -240,9 +240,9 @@ function genUUID(object: any) {
 }
 
 IoInspector.Register = function() {
-  Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__protochain)});
-  Object.defineProperty(this.prototype, '__groups', {value: new Groups(this.prototype.__protochain)});
-  Object.defineProperty(this.prototype, '__widgets', {value: new Widgets(this.prototype.__protochain)});
+  Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__protochain.constructors)});
+  Object.defineProperty(this.prototype, '__groups', {value: new Groups(this.prototype.__protochain.constructors)});
+  Object.defineProperty(this.prototype, '__widgets', {value: new Widgets(this.prototype.__protochain.constructors)});
 };
 
 IoInspector.RegisterConfig = function(config) {

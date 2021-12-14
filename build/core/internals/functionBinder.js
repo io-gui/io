@@ -9,8 +9,8 @@ export class FunctionBinder extends Array {
      */
     constructor(protochain) {
         super();
-        for (let i = protochain.length; i--;) {
-            const constructor = protochain[i].prototype;
+        for (let i = protochain.constructors.length; i--;) {
+            const constructor = protochain.constructors[i].prototype;
             const names = Object.getOwnPropertyNames(constructor);
             for (let j = 0; j < names.length; j++) {
                 const fname = names[j];

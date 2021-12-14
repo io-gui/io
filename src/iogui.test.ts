@@ -2,7 +2,6 @@ import {IoElement, RegisterIoElement} from './iogui.js';
 
 import ChangeQueue from './core/internals/changeQueue.test.js';
 import EventDispatcher from './core/internals/eventDispatcher.test.js';
-import FunctionBinder from './core/internals/functionBinder.test.js';
 import Properties from './core/internals/properties.test.js';
 import PropertyBinder from './core/internals/propertyBinder.test.js';
 import ProtoChain from './core/internals/protoChain.test.js';
@@ -48,7 +47,6 @@ function runTests() {
   if (!testCompleted) {
     new ChangeQueue().run();
     new EventDispatcher().run();
-    new FunctionBinder().run();
     new Properties().run();
     new PropertyBinder().run();
     new ProtoChain().run();
