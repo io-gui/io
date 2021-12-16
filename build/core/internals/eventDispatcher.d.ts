@@ -1,7 +1,6 @@
 import { IoNode } from '../io-node.js';
-export declare type ProtoListenerType = keyof IoNode | EventListener | ProtoListenerArrayType;
-export declare type ProtoListenerArrayType = [keyof IoNode | EventListener, AddEventListenerOptions?];
-export declare type ProtoListenerRecord = Record<string, ProtoListenerType>;
+export declare type ProtoListenerType = keyof IoNode | EventListener | [keyof IoNode | EventListener, AddEventListenerOptions?];
+export declare type ListenerDeclaration = Record<string, ProtoListenerType>;
 export declare type Listener = [EventListener, AddEventListenerOptions?];
 export declare type Listeners = Record<string, Listener>;
 export declare type ListenersArray = Record<string, Listener[]>;

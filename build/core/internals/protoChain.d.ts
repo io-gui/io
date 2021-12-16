@@ -1,31 +1,29 @@
-import { IoNode } from '../io-node.js';
+import { IoNode, IoNodeConstructor } from '../io-node.js';
 import { ProtoProperty } from './properties.js';
-import { ProtoListenerArrayType } from './eventDispatcher.js';
-declare type Constructor<T extends HTMLElement | Array<any> | unknown> = new (...args: any[]) => T;
+import { ProtoListenerType } from './eventDispatcher.js';
 /**
- * Internal utility class that contains usefull information about inherited constructors, function names and properties,
+ * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
  * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
- * that terminates when it reaches `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+ * that terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
  */
 export declare class ProtoChain {
-    readonly constructors: Array<Constructor<any>>;
+    readonly constructors: Array<IoNodeConstructor<any>>;
     readonly functions: Array<string>;
     readonly properties: {
         [property: string]: ProtoProperty;
     };
     readonly listeners: {
-        [listener: string]: ProtoListenerArrayType;
+        [listener: string]: ProtoListenerType;
     };
     /**
-     * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors and function names and properties.
+     * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors, function names, properties and listeners.
      * @param {Constructor} nodeConstructor - Prototype object.
      */
-    constructor(nodeConstructor: Constructor<any>);
+    constructor(nodeConstructor: IoNodeConstructor<any>);
     /**
      * Binds all functions from the `.functions` list to specified instance.
      * @param {IoNode} node - `IoNode` instance to bind functions to.
      */
     bindFunctions(node: IoNode): void;
 }
-export {};
 //# sourceMappingURL=protoChain.d.ts.map

@@ -1,10 +1,17 @@
 import {ProtoChain} from './internals/protoChain.js';
 import {PropertyBinder, Binding} from './internals/propertyBinder.js';
 import {ChangeQueue} from './internals/changeQueue.js';
-import {Properties} from './internals/properties.js';
-import {EventDispatcher} from './internals/eventDispatcher.js';
+import {Properties, PropertyDeclaration} from './internals/properties.js';
+import {EventDispatcher, ListenerDeclaration} from './internals/eventDispatcher.js';
 
-type Constructor<T> = new (...args: any[]) => T;
+export interface IoNodeConstructor<T> {
+  new (...args: any[]): T;
+  Properties?: PropertyDeclaration;
+  Listeners?: ListenerDeclaration;
+  prototype?: any
+  name?: string;
+}
+
 type ComposedProperties = null | Record<string, Record<string, any>>
 type CallbackFunction = (arg?: any) => void;
 type PredicateFunction = (object: any) => boolean;
@@ -25,7 +32,7 @@ type AnyEventListener = EventListener |
  * @param {function} superclass - Class to extend.
  * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
  */
-export function IoNodeMixin<T extends Constructor<any>>(superclass: T) {
+export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
   const classConstructor = class extends (superclass as any) {
     static get Properties(): any {
       return {

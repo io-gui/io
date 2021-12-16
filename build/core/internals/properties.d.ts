@@ -13,7 +13,7 @@ export declare type ProtoPropertyDefinition = {
     binding?: Binding;
 };
 export declare type ProtoPropertyType = string | number | boolean | Constructor | null | Binding | ProtoPropertyDefinition;
-export declare type ProtoPropertyRecord = Record<string, ProtoPropertyType>;
+export declare type PropertyDeclaration = Record<string, ProtoPropertyType>;
 declare class ProtoProperty {
     value: any;
     type?: Constructor;

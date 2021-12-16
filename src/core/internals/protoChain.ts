@@ -1,19 +1,17 @@
-import {IoNode} from '../io-node.js';
-import {ProtoProperty, ProtoPropertyRecord} from './properties.js';
-import {ProtoListenerArrayType, ProtoListenerRecord} from './eventDispatcher.js';
-
-type Constructor<T extends HTMLElement | Array<any> | unknown> = new (...args: any[]) => T;
+import {IoNode, IoNodeConstructor} from '../io-node.js';
+import {ProtoProperty} from './properties.js';
+import {ProtoListenerType} from './eventDispatcher.js';
 
 /**
- * Internal utility class that contains usefull information about inherited constructors, function names and properties,
+ * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
  * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
- * that terminates when it reaches `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+ * that terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
  */
 export class ProtoChain {
   /*
    * Automatically generated array of all constructors inherited from the prototype chain.
    */
-  public readonly constructors: Array<Constructor<any>> = [];
+  public readonly constructors: Array<IoNodeConstructor<any>> = [];
   /*
    * Automatically generated array of all function names that start with "on" or "_" inherited from the prototype chain.
    */
@@ -28,20 +26,20 @@ export class ProtoChain {
    * Automatically generated array of all listeners defined as `static get Listeners()` return objects in inherited classes.
    */
   public readonly listeners: {
-    [listener: string]: ProtoListenerArrayType;
+    [listener: string]: ProtoListenerType;
   } = {};
   /**
-   * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors and function names and properties.
+   * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors, function names, properties and listeners.
    * @param {Constructor} nodeConstructor - Prototype object.
    */
-  constructor(nodeConstructor: Constructor<any>) {
+  constructor(nodeConstructor: IoNodeConstructor<any>) {
     let proto = nodeConstructor.prototype;
     while (
       proto
       && nodeConstructor.name !== 'classConstructor'
-      && nodeConstructor !== HTMLElement
-      && nodeConstructor !== Object
-      && nodeConstructor !== Array) {
+      && (nodeConstructor) !== HTMLElement
+      && (nodeConstructor) !== Object
+      && (nodeConstructor) !== Array) {
         // Add constructor
         this.constructors.push(nodeConstructor);
         // Add function names
@@ -49,8 +47,8 @@ export class ProtoChain {
         for (let j = 0; j < fnames.length; j++) {
           const fname = fnames[j] as string;
           if (fname === 'constructor') continue;
-          const p = Object.getOwnPropertyDescriptor(proto, fname);
-          if (p === undefined || p.get || p.set) continue;
+          const prop = Object.getOwnPropertyDescriptor(proto, fname);
+          if (prop === undefined || prop.get || prop.set) continue;
           if (typeof proto[fname] === 'function') {
             if (this.functions.indexOf(fname) === -1 && (fname.startsWith('_') || fname.startsWith('on'))) {
               this.functions.push(fname);
@@ -66,7 +64,7 @@ export class ProtoChain {
     // TODO: change assignment direction and add to loop above for optimizatrion.
     for (let i = this.constructors.length; i--;) {
         // Add properties
-        const props = (this.constructors[i] as any).Properties as ProtoPropertyRecord;
+        const props = this.constructors[i].Properties;
         for (const p in props) {
           if (!this.properties[p]) this.properties[p] = new ProtoProperty(props[p]);
           else this.properties[p].assign(props[p]);
@@ -77,10 +75,18 @@ export class ProtoChain {
           }
         }
         // Add listeners
-        const listeners = (this.constructors[i] as any).Listeners as ProtoListenerRecord;
+        const listeners = this.constructors[i].Listeners;
         for (const l in listeners) {
-          const listener = (listeners[l] instanceof Array) ? listeners[l] :[listeners[l]];
-          this.listeners[l] = listener as ProtoListenerArrayType;
+          if (listeners[l]) {
+            // if (listeners[l] instanceof Array) {
+            //   console.log(listeners[l]);
+            // } else if (typeof listeners[l] !== 'string') {
+            //   console.log(listeners[l]);
+            // }
+            const listener = (listeners[l] instanceof Array) ? listeners[l] : [listeners[l]];
+            if (!this.listeners[l]) this.listeners[l] = listener as ProtoListenerType;
+            // else this.listeners[l] = this.listeners[l].concat(listener as ProtoListenerType) as ProtoListenerType;
+          }
         }
     }
   }
@@ -89,6 +95,8 @@ export class ProtoChain {
    * @param {IoNode} node - `IoNode` instance to bind functions to.
    */
   bindFunctions(node: IoNode) {
-    for (let i = this.functions.length; i--;) Object.defineProperty(node, this.functions[i], {value: node[this.functions[i]].bind(node)});
+    for (let i = this.functions.length; i--;) {
+      Object.defineProperty(node, this.functions[i], {value: node[this.functions[i]].bind(node)});
+    }
   }
 }

@@ -1,10 +1,10 @@
 import {IoNode, RegisterIoNode} from '../io-node.js';
-import {EventDispatcher, ProtoListenerRecord} from './eventDispatcher.js';
+import {EventDispatcher, ListenerDeclaration} from './eventDispatcher.js';
 
 class IoNode1 extends IoNode {
   handler1Count = 0;
   handler1Detail?: string;
-  static get Listeners(): ProtoListenerRecord {
+  static get Listeners(): ListenerDeclaration {
     return {
       'event1': 'handler1',
     };
@@ -21,7 +21,7 @@ class IoNode2 extends IoNode1 {
   handler3Count = 0;
   handler2Detail?: string;
   handler3Detail?: string;
-  static get Listeners(): ProtoListenerRecord {
+  static get Listeners(): ListenerDeclaration {
     return {
       'event2': ['handler2', {capture: true}],
     };

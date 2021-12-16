@@ -16,7 +16,7 @@ export type ProtoPropertyDefinition = {
 };
 
 export type ProtoPropertyType = string | number | boolean | Constructor | null | Binding | ProtoPropertyDefinition;
-export type ProtoPropertyRecord = Record<string, ProtoPropertyType>;
+export type PropertyDeclaration = Record<string, ProtoPropertyType>;
 
 class ProtoProperty {
   value: any = undefined;

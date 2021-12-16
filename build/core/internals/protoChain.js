@@ -1,8 +1,8 @@
 import { ProtoProperty } from './properties.js';
 /**
- * Internal utility class that contains usefull information about inherited constructors, function names and properties,
+ * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
  * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
- * that terminates when it reaches `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+ * that terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
  */
 export class ProtoChain {
     /*
@@ -22,16 +22,16 @@ export class ProtoChain {
      */
     listeners = {};
     /**
-     * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors and function names and properties.
+     * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors, function names, properties and listeners.
      * @param {Constructor} nodeConstructor - Prototype object.
      */
     constructor(nodeConstructor) {
         let proto = nodeConstructor.prototype;
         while (proto
             && nodeConstructor.name !== 'classConstructor'
-            && nodeConstructor !== HTMLElement
-            && nodeConstructor !== Object
-            && nodeConstructor !== Array) {
+            && (nodeConstructor) !== HTMLElement
+            && (nodeConstructor) !== Object
+            && (nodeConstructor) !== Array) {
             // Add constructor
             this.constructors.push(nodeConstructor);
             // Add function names
@@ -40,8 +40,8 @@ export class ProtoChain {
                 const fname = fnames[j];
                 if (fname === 'constructor')
                     continue;
-                const p = Object.getOwnPropertyDescriptor(proto, fname);
-                if (p === undefined || p.get || p.set)
+                const prop = Object.getOwnPropertyDescriptor(proto, fname);
+                if (prop === undefined || prop.get || prop.set)
                     continue;
                 if (typeof proto[fname] === 'function') {
                     if (this.functions.indexOf(fname) === -1 && (fname.startsWith('_') || fname.startsWith('on'))) {
@@ -72,8 +72,17 @@ export class ProtoChain {
             // Add listeners
             const listeners = this.constructors[i].Listeners;
             for (const l in listeners) {
-                const listener = (listeners[l] instanceof Array) ? listeners[l] : [listeners[l]];
-                this.listeners[l] = listener;
+                if (listeners[l]) {
+                    // if (listeners[l] instanceof Array) {
+                    //   console.log(listeners[l]);
+                    // } else if (typeof listeners[l] !== 'string') {
+                    //   console.log(listeners[l]);
+                    // }
+                    const listener = (listeners[l] instanceof Array) ? listeners[l] : [listeners[l]];
+                    if (!this.listeners[l])
+                        this.listeners[l] = listener;
+                    // else this.listeners[l] = this.listeners[l].concat(listener as ProtoListenerType) as ProtoListenerType;
+                }
             }
         }
     }
@@ -82,8 +91,9 @@ export class ProtoChain {
      * @param {IoNode} node - `IoNode` instance to bind functions to.
      */
     bindFunctions(node) {
-        for (let i = this.functions.length; i--;)
+        for (let i = this.functions.length; i--;) {
             Object.defineProperty(node, this.functions[i], { value: node[this.functions[i]].bind(node) });
+        }
     }
 }
 //# sourceMappingURL=protoChain.js.map

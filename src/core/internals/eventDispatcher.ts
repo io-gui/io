@@ -1,8 +1,8 @@
 import {IoNode} from '../io-node.js';
 
-export type ProtoListenerType = keyof IoNode | EventListener | ProtoListenerArrayType;
-export type ProtoListenerArrayType = [keyof IoNode | EventListener, AddEventListenerOptions?];
-export type ProtoListenerRecord = Record<string, ProtoListenerType>;
+export type ProtoListenerType = keyof IoNode | EventListener | [keyof IoNode | EventListener, AddEventListenerOptions?];
+export type ListenerDeclaration = Record<string, ProtoListenerType>;
+
 export type Listener = [EventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener>;
 export type ListenersArray = Record<string, Listener[]>;
@@ -33,11 +33,13 @@ class EventDispatcher {
     Object.defineProperty(this, '__connected',         {enumerable: false});
 
     for (const type in (node as any).__protochain?.listeners) {
+
       const protoListener = (node as any).__protochain.listeners[type];
       const listenerObject = typeof protoListener[0] === 'function' ? protoListener[0] : this.__node[protoListener[0] as keyof (IoNode | HTMLElement)];
       const listenerOptions = protoListener[1];
       this.__protoListeners[type] = [listenerObject as EventListener];
       if (listenerOptions) this.__protoListeners[type].push(listenerOptions);
+
     }
   }
   /**
@@ -49,7 +51,7 @@ class EventDispatcher {
     for (const prop in properties) {
       if (prop.startsWith('on-')) {
         const type = prop.slice(3, prop.length);
-        const listener = (properties[prop] instanceof Array) ? [...(properties[prop] as ProtoListenerArrayType)] : [properties[prop]];
+        const listener = (properties[prop] instanceof Array) ? [...(properties[prop] as [ProtoListenerType])] : [properties[prop]];
         if (typeof listener[0] !== 'function') listener[0] = this.__node[listener[0] as keyof (IoNode | HTMLElement)];
         newPropListeners[type] = listener as Listener;
       }
