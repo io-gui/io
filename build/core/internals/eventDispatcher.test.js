@@ -58,26 +58,26 @@ export default class {
             it('Should include all listeners from protochain', () => {
                 const node = new IoNode2();
                 const eventDispatcher = new EventDispatcher(node);
-                chai.expect(JSON.stringify(eventDispatcher.__protoListeners)).to.be.equal('{"event1":[null],"event2":[null,{"capture":true}]}');
-                chai.expect(eventDispatcher.__protoListeners.event1[0]).to.be.equal(node.handler1);
-                chai.expect(eventDispatcher.__protoListeners.event2[0]).to.be.equal(node.handler2);
+                chai.expect(JSON.stringify(eventDispatcher.__protoListeners)).to.be.equal('{"event1":[[null]],"event2":[[null,{"capture":true}]]}');
+                chai.expect(eventDispatcher.__protoListeners.event1[0][0]).to.be.equal(node.handler1);
+                chai.expect(eventDispatcher.__protoListeners.event2[0][0]).to.be.equal(node.handler2);
             });
             it('Should set property listeners correctly', () => {
                 const node = new IoNode2();
                 const eventDispatcher = new EventDispatcher(node);
                 const handler4 = () => { };
                 eventDispatcher.setPropListeners({ 'on-event3': 'handler3', 'on-event4': handler4 });
-                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event3":[null],"event4":[null]}');
-                chai.expect(eventDispatcher.__propListeners.event3[0]).to.be.equal(node.handler3);
-                chai.expect(eventDispatcher.__propListeners.event4[0]).to.be.equal(handler4);
+                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event3":[[null]],"event4":[[null]]}');
+                chai.expect(eventDispatcher.__propListeners.event3[0][0]).to.be.equal(node.handler3);
+                chai.expect(eventDispatcher.__propListeners.event4[0][0]).to.be.equal(handler4);
                 eventDispatcher.setPropListeners({ 'on-event5': ['handler3'], 'on-event6': [handler4] });
-                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event5":[null],"event6":[null]}');
-                chai.expect(eventDispatcher.__propListeners.event5[0]).to.be.equal(node.handler3);
-                chai.expect(eventDispatcher.__propListeners.event6[0]).to.be.equal(handler4);
+                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event5":[[null]],"event6":[[null]]}');
+                chai.expect(eventDispatcher.__propListeners.event5[0][0]).to.be.equal(node.handler3);
+                chai.expect(eventDispatcher.__propListeners.event6[0][0]).to.be.equal(handler4);
                 eventDispatcher.setPropListeners({ 'on-event7': ['handler3', { capture: true }], 'on-event8': [handler4, { capture: true }] });
-                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event7":[null,{"capture":true}],"event8":[null,{"capture":true}]}');
-                chai.expect(eventDispatcher.__propListeners.event7[0]).to.be.equal(node.handler3);
-                chai.expect(eventDispatcher.__propListeners.event8[0]).to.be.equal(handler4);
+                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event7":[[null,{"capture":true}]],"event8":[[null,{"capture":true}]]}');
+                chai.expect(eventDispatcher.__propListeners.event7[0][0]).to.be.equal(node.handler3);
+                chai.expect(eventDispatcher.__propListeners.event8[0][0]).to.be.equal(handler4);
                 eventDispatcher.setPropListeners({});
                 chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{}');
             });

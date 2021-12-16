@@ -1,9 +1,6 @@
 import { IoNode } from '../io-node.js';
-export declare type ProtoListenerType = keyof IoNode | EventListener | [keyof IoNode | EventListener, AddEventListenerOptions?];
-export declare type ListenerDeclaration = Record<string, ProtoListenerType>;
-export declare type Listener = [EventListener, AddEventListenerOptions?];
-export declare type Listeners = Record<string, Listener>;
-export declare type ListenersArray = Record<string, Listener[]>;
+export declare type ListenerDefinitionDetail = [keyof IoNode | EventListener, AddEventListenerOptions?];
+export declare type ListenerDefinition = keyof IoNode | EventListener | ListenerDefinitionDetail;
 /**
  * Event Dispatcher.
  */
@@ -23,7 +20,7 @@ declare class EventDispatcher {
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} properties - Properties.
      */
-    setPropListeners(properties: Record<string, ProtoListenerType>): void;
+    setPropListeners(properties: Record<string, ListenerDefinition>): void;
     /**
      * Connects all event listeners.
      * @return {this} this

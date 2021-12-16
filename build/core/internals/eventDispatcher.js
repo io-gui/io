@@ -21,12 +21,12 @@ class EventDispatcher {
         Object.defineProperty(this, '__propListeners', { enumerable: false, writable: false });
         Object.defineProperty(this, '__connected', { enumerable: false });
         for (const type in node.__protochain?.listeners) {
-            const protoListener = node.__protochain.listeners[type];
+            const protoListener = node.__protochain.listeners[type][0];
             const listenerObject = typeof protoListener[0] === 'function' ? protoListener[0] : this.__node[protoListener[0]];
             const listenerOptions = protoListener[1];
-            this.__protoListeners[type] = [listenerObject];
+            this.__protoListeners[type] = [[listenerObject]];
             if (listenerOptions)
-                this.__protoListeners[type].push(listenerOptions);
+                this.__protoListeners[type][0].push(listenerOptions);
         }
     }
     /**
@@ -41,14 +41,14 @@ class EventDispatcher {
                 const listener = (properties[prop] instanceof Array) ? [...properties[prop]] : [properties[prop]];
                 if (typeof listener[0] !== 'function')
                     listener[0] = this.__node[listener[0]];
-                newPropListeners[type] = listener;
+                newPropListeners[type] = [listener];
             }
         }
         const propListeners = this.__propListeners;
         for (const type in propListeners) {
             if (!newPropListeners[type]) {
                 if (this.__connected && this.__nodeIsEventTarget) {
-                    EventTarget.prototype.removeEventListener.call(this.__node, type, propListeners[type][0], propListeners[type][1]);
+                    EventTarget.prototype.removeEventListener.call(this.__node, type, propListeners[type][0][0], propListeners[type][0][1]);
                 }
                 delete propListeners[type];
             }
@@ -56,11 +56,11 @@ class EventDispatcher {
         for (const type in newPropListeners) {
             if (this.__connected && this.__nodeIsEventTarget) {
                 if (!propListeners[type]) {
-                    EventTarget.prototype.addEventListener.call(this.__node, type, newPropListeners[type][0], newPropListeners[type][1]);
+                    EventTarget.prototype.addEventListener.call(this.__node, type, newPropListeners[type][0][0], newPropListeners[type][0][1]);
                 }
-                else if ((propListeners[type][0] !== newPropListeners[type][0] || propListeners[type][1] !== newPropListeners[type][1])) {
-                    EventTarget.prototype.removeEventListener.call(this.__node, type, propListeners[type][0], propListeners[type][1]);
-                    EventTarget.prototype.addEventListener.call(this.__node, type, newPropListeners[type][0], newPropListeners[type][1]);
+                else if ((propListeners[type][0][0] !== newPropListeners[type][0][0] || propListeners[type][0][1] !== newPropListeners[type][0][1])) {
+                    EventTarget.prototype.removeEventListener.call(this.__node, type, propListeners[type][0][0], propListeners[type][0][1]);
+                    EventTarget.prototype.addEventListener.call(this.__node, type, newPropListeners[type][0][0], newPropListeners[type][0][1]);
                 }
             }
             propListeners[type] = newPropListeners[type];
@@ -77,10 +77,10 @@ class EventDispatcher {
         }
         if (this.__nodeIsEventTarget) {
             for (const type in this.__protoListeners) {
-                EventTarget.prototype.addEventListener.call(this.__node, type, this.__protoListeners[type][0], this.__protoListeners[type][1]);
+                EventTarget.prototype.addEventListener.call(this.__node, type, this.__protoListeners[type][0][0], this.__protoListeners[type][0][1]);
             }
             for (const type in this.__propListeners) {
-                EventTarget.prototype.addEventListener.call(this.__node, type, this.__propListeners[type][0], this.__propListeners[type][1]);
+                EventTarget.prototype.addEventListener.call(this.__node, type, this.__propListeners[type][0][0], this.__propListeners[type][0][1]);
             }
             for (const type in this.__addedListeners) {
                 for (let i = this.__addedListeners[type].length; i--;) {
@@ -102,10 +102,10 @@ class EventDispatcher {
         }
         if (this.__nodeIsEventTarget) {
             for (const type in this.__protoListeners) {
-                EventTarget.prototype.removeEventListener.call(this.__node, type, this.__protoListeners[type][0], this.__protoListeners[type][1]);
+                EventTarget.prototype.removeEventListener.call(this.__node, type, this.__protoListeners[type][0][0], this.__protoListeners[type][0][1]);
             }
             for (const type in this.__propListeners) {
-                EventTarget.prototype.removeEventListener.call(this.__node, type, this.__propListeners[type][0], this.__propListeners[type][1]);
+                EventTarget.prototype.removeEventListener.call(this.__node, type, this.__propListeners[type][0][0], this.__propListeners[type][0][1]);
             }
             for (const type in this.__addedListeners) {
                 for (let i = this.__addedListeners[type].length; i--;) {
@@ -183,10 +183,10 @@ class EventDispatcher {
         }
         else {
             if (this.__protoListeners[type] !== undefined) {
-                this.__protoListeners[type][0].call(node, { detail: detail, target: node, path: [node] });
+                this.__protoListeners[type][0][0].call(node, { detail: detail, target: node, path: [node] });
             }
             if (this.__propListeners[type] !== undefined) {
-                this.__propListeners[type][0].call(node, { detail: detail, target: node, path: [node] });
+                this.__propListeners[type][0][0].call(node, { detail: detail, target: node, path: [node] });
             }
             if (this.__addedListeners[type] !== undefined) {
                 for (let i = 0; i < this.__addedListeners[type].length; i++) {

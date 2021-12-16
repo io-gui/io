@@ -1,13 +1,16 @@
 import {ProtoChain} from './internals/protoChain.js';
 import {PropertyBinder, Binding} from './internals/propertyBinder.js';
 import {ChangeQueue} from './internals/changeQueue.js';
-import {Properties, PropertyDeclaration} from './internals/properties.js';
-import {EventDispatcher, ListenerDeclaration} from './internals/eventDispatcher.js';
+import {Properties, PropertyDefinition} from './internals/properties.js';
+import {EventDispatcher, ListenerDefinition} from './internals/eventDispatcher.js';
+
+export type ListenersDeclaration = Record<string, ListenerDefinition>;
+export type PropertiesDeclaration = Record<string, PropertyDefinition>;
 
 export interface IoNodeConstructor<T> {
   new (...args: any[]): T;
-  Properties?: PropertyDeclaration;
-  Listeners?: ListenerDeclaration;
+  Properties?: PropertiesDeclaration;
+  Listeners?: ListenersDeclaration;
   prototype?: any
   name?: string;
 }

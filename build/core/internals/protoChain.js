@@ -73,15 +73,9 @@ export class ProtoChain {
             const listeners = this.constructors[i].Listeners;
             for (const l in listeners) {
                 if (listeners[l]) {
-                    // if (listeners[l] instanceof Array) {
-                    //   console.log(listeners[l]);
-                    // } else if (typeof listeners[l] !== 'string') {
-                    //   console.log(listeners[l]);
-                    // }
                     const listener = (listeners[l] instanceof Array) ? listeners[l] : [listeners[l]];
                     if (!this.listeners[l])
-                        this.listeners[l] = listener;
-                    // else this.listeners[l] = this.listeners[l].concat(listener as ProtoListenerType) as ProtoListenerType;
+                        this.listeners[l] = [listener];
                 }
             }
         }
@@ -94,6 +88,9 @@ export class ProtoChain {
         for (let i = this.functions.length; i--;) {
             Object.defineProperty(node, this.functions[i], { value: node[this.functions[i]].bind(node) });
         }
+    }
+    dispose() {
+        console.log('TODO');
     }
 }
 //# sourceMappingURL=protoChain.js.map

@@ -1,6 +1,6 @@
 import { IoNode, IoNodeConstructor } from '../io-node.js';
 import { ProtoProperty } from './properties.js';
-import { ProtoListenerType } from './eventDispatcher.js';
+import { ListenerDefinition } from './eventDispatcher.js';
 /**
  * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
  * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
@@ -13,7 +13,7 @@ export declare class ProtoChain {
         [property: string]: ProtoProperty;
     };
     readonly listeners: {
-        [listener: string]: ProtoListenerType;
+        [listener: string]: ListenerDefinition[];
     };
     /**
      * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors, function names, properties and listeners.
@@ -25,5 +25,6 @@ export declare class ProtoChain {
      * @param {IoNode} node - `IoNode` instance to bind functions to.
      */
     bindFunctions(node: IoNode): void;
+    dispose(): void;
 }
 //# sourceMappingURL=protoChain.d.ts.map

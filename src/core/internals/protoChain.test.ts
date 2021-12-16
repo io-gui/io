@@ -1,7 +1,5 @@
 import {ProtoChain} from './protoChain.js';
-import {PropertyDeclaration} from './properties.js';
-import {ListenerDeclaration} from './eventDispatcher.js';
-import {IoNode, IoNodeMixin} from '../io-node.js';
+import {IoNode, IoNodeMixin, PropertiesDeclaration, ListenersDeclaration} from '../io-node.js';
 import {IoElement} from '../io-element.js';
 
 class Array1 extends Array {}
@@ -21,12 +19,12 @@ class IoElement1 extends IoElement {}
 class IoNode2 extends IoNodeMixin(Object3) {}
 
 class FakeSuperIoNode {
-  static get Properties(): PropertyDeclaration {
+  static get Properties(): PropertiesDeclaration {
     return {
       prop1: {}
     };
   }
-  static get Listeners(): ListenerDeclaration {
+  static get Listeners(): ListenersDeclaration {
     return {
       listener1: 'function1',
       listener2: '',
@@ -43,12 +41,12 @@ class FakeIoNode extends FakeSuperIoNode {
   function2() {}
   onFunction2() {}
   _function2() {}
-  static get Properties(): PropertyDeclaration {
+  static get Properties(): PropertiesDeclaration {
     return {
       prop2: {}
     };
   }
-  static get Listeners(): ListenerDeclaration {
+  static get Listeners(): ListenersDeclaration {
     return {
       listener1: '_function2',
       listener2: ['function2', {capture: true, passive: true}],

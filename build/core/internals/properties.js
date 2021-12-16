@@ -1,7 +1,64 @@
 import { Binding } from './propertyBinder.js';
-class ProtoProperty {
-    value = undefined;
-    type = undefined;
+const toPropertyDefinitionDetail = (propertyDefinition) => {
+    if (propertyDefinition === undefined || propertyDefinition === null)
+        return {
+            value: propertyDefinition
+        };
+    if (typeof propertyDefinition === 'function')
+        return {
+            type: propertyDefinition
+        };
+    if (propertyDefinition instanceof Binding)
+        return {
+            binding: propertyDefinition
+        };
+    if (propertyDefinition && propertyDefinition.constructor === Object) {
+        const detail = propertyDefinition;
+        debug: {
+            Object.keys(detail).forEach(key => {
+                if (['value', 'type', 'reflect', 'notify', 'observe', 'readonly', 'strict', 'enumerable', 'binding'].indexOf(key) === -1) {
+                    console.warn(`PropertyDefinition: Invalid field ${key}`);
+                }
+            });
+            if (detail.type !== undefined && typeof detail.type !== 'function')
+                console.warn('PropertyDefinition: Incorrect type for "type" field');
+            if (detail.reflect !== undefined && typeof detail.reflect !== 'number')
+                console.warn('PropertyDefinition: Incorrect type for "reflect" field');
+            if (detail.notify !== undefined && typeof detail.notify !== 'boolean')
+                console.warn('PropertyDefinition: Incorrect type for "notify" field');
+            if (detail.observe !== undefined && typeof detail.observe !== 'boolean')
+                console.warn('PropertyDefinition: Incorrect type for "observe" field');
+            if (detail.readonly !== undefined && typeof detail.readonly !== 'boolean')
+                console.warn('PropertyDefinition: Incorrect type for "readonly" field');
+            if (detail.strict !== undefined && typeof detail.strict !== 'boolean')
+                console.warn('PropertyDefinition: Incorrect type for "strict" field');
+            if (detail.enumerable !== undefined && typeof detail.enumerable !== 'boolean')
+                console.warn('PropertyDefinition: Incorrect type for "enumerable" field');
+            if (detail.binding !== undefined && detail.binding.constructor !== Binding)
+                console.warn('PropertyDefinition: Incorrect type for "binding" field');
+        }
+        return {
+            value: detail.value !== undefined ? detail.value : undefined,
+            type: detail.type !== undefined ? detail.type : (detail.value !== undefined && detail.value !== null) ? detail.value.constructor : undefined,
+            reflect: detail.reflect !== undefined ? detail.reflect : undefined,
+            notify: detail.notify !== undefined ? detail.notify : undefined,
+            observe: detail.observe !== undefined ? detail.observe : undefined,
+            readonly: detail.readonly !== undefined ? detail.readonly : undefined,
+            strict: detail.strict !== undefined ? detail.strict : undefined,
+            enumerable: detail.enumerable !== undefined ? detail.enumerable : undefined,
+            binding: detail.binding instanceof Binding ? detail.binding : undefined,
+        };
+    }
+    if (!(propertyDefinition && propertyDefinition.constructor === Object))
+        return {
+            value: propertyDefinition,
+            type: propertyDefinition.constructor,
+        };
+    return {};
+};
+export class ProtoProperty {
+    value;
+    type;
     reflect = 0;
     notify = true;
     observe = false;
@@ -9,47 +66,29 @@ class ProtoProperty {
     strict = false;
     enumerable = true;
     binding = undefined;
-    constructor(prop) {
-        return this.assign(prop);
+    constructor(propertyDefinition = {}) {
+        return this.assign(propertyDefinition);
     }
-    assign(prop) {
-        if (prop === undefined || prop === null) {
-            this.value = prop;
-        }
-        else if (typeof prop === 'function') {
-            this.type = prop;
-        }
-        else if (prop instanceof Binding) {
-            this.binding = prop;
-        }
-        else if (prop && prop.constructor === Object) {
-            prop = prop;
-            if (prop.value !== undefined)
-                this.value = prop.value;
-            if (prop.type !== undefined)
-                this.type = prop.type;
-            if (this.type === undefined && this.value !== undefined && this.value !== null) {
-                this.type = this.value.constructor;
-            }
-            if (prop.reflect !== undefined)
-                this.reflect = prop.reflect;
-            if (prop.notify !== undefined)
-                this.notify = prop.notify;
-            if (prop.observe !== undefined)
-                this.observe = prop.observe;
-            if (prop.readonly !== undefined)
-                this.readonly = prop.readonly;
-            if (prop.strict !== undefined)
-                this.strict = prop.strict;
-            if (prop.enumerable !== undefined)
-                this.enumerable = prop.enumerable;
-            if (prop.binding instanceof Binding)
-                this.binding = prop.binding;
-        }
-        else if (!(prop && prop.constructor === Object)) {
-            this.value = prop;
-            this.type = prop.constructor;
-        }
+    assign(propertyDefinition) {
+        const propertyDefinitionDetail = toPropertyDefinitionDetail(propertyDefinition);
+        if (propertyDefinitionDetail.value !== undefined)
+            this.value = propertyDefinitionDetail.value;
+        if (propertyDefinitionDetail.type !== undefined)
+            this.type = propertyDefinitionDetail.type;
+        if (propertyDefinitionDetail.reflect !== undefined)
+            this.reflect = propertyDefinitionDetail.reflect;
+        if (propertyDefinitionDetail.notify !== undefined)
+            this.notify = propertyDefinitionDetail.notify;
+        if (propertyDefinitionDetail.observe !== undefined)
+            this.observe = propertyDefinitionDetail.observe;
+        if (propertyDefinitionDetail.readonly !== undefined)
+            this.readonly = propertyDefinitionDetail.readonly;
+        if (propertyDefinitionDetail.strict !== undefined)
+            this.strict = propertyDefinitionDetail.strict;
+        if (propertyDefinitionDetail.enumerable !== undefined)
+            this.enumerable = propertyDefinitionDetail.enumerable;
+        if (propertyDefinitionDetail.binding !== undefined)
+            this.binding = propertyDefinitionDetail.binding;
         debug: {
             if (this.type !== undefined && typeof this.type !== 'function')
                 console.warn('ProtoProperty: Incorrect type for "type" field');
@@ -75,7 +114,7 @@ class ProtoProperty {
  * Property configuration object for a class **instance**.
  * It is copied from the corresponding `ProtoProperty`.
  */
-class Property {
+export class Property {
     //Property value.
     value;
     //Constructor of the property value.
@@ -143,7 +182,7 @@ class Property {
  * Collection of all property configurations and values for a class **instance** compied from corresponding `ProtoProperties`.
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
-class Properties {
+export class Properties {
     __node;
     __keys = [];
     __connected = false;
@@ -312,5 +351,4 @@ class Properties {
         delete this.__keys;
     }
 }
-export { ProtoProperty, Property, Properties };
 //# sourceMappingURL=properties.js.map

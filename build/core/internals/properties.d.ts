@@ -1,9 +1,9 @@
 import { Binding } from './propertyBinder.js';
-declare type Constructor = new (...args: any[]) => unknown;
+declare type AnyConstructor = new (...args: any[]) => unknown;
 declare type ReflectType = -1 | 0 | 1 | 2;
-export declare type ProtoPropertyDefinition = {
+declare type PropertyDefinitionDetail = {
     value?: any;
-    type?: Constructor;
+    type?: AnyConstructor;
     reflect?: ReflectType;
     notify?: boolean;
     observe?: boolean;
@@ -12,11 +12,10 @@ export declare type ProtoPropertyDefinition = {
     enumerable?: boolean;
     binding?: Binding;
 };
-export declare type ProtoPropertyType = string | number | boolean | Constructor | null | Binding | ProtoPropertyDefinition;
-export declare type PropertyDeclaration = Record<string, ProtoPropertyType>;
-declare class ProtoProperty {
+export declare type PropertyDefinition = string | number | boolean | AnyConstructor | null | Binding | PropertyDefinitionDetail;
+export declare class ProtoProperty {
     value: any;
-    type?: Constructor;
+    type?: AnyConstructor;
     reflect: ReflectType;
     notify: boolean;
     observe: boolean;
@@ -24,16 +23,16 @@ declare class ProtoProperty {
     strict: boolean;
     enumerable: boolean;
     binding?: Binding;
-    constructor(prop?: ProtoPropertyType);
-    assign(prop?: ProtoPropertyType): this;
+    constructor(propertyDefinition?: PropertyDefinition);
+    assign(propertyDefinition: PropertyDefinition): this;
 }
 /**
  * Property configuration object for a class **instance**.
  * It is copied from the corresponding `ProtoProperty`.
  */
-declare class Property {
+export declare class Property {
     value?: any;
-    type?: Constructor;
+    type?: AnyConstructor;
     reflect?: number;
     notify?: boolean;
     observe?: boolean;
@@ -51,7 +50,7 @@ declare class Property {
  * Collection of all property configurations and values for a class **instance** compied from corresponding `ProtoProperties`.
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
-declare class Properties {
+export declare class Properties {
     private readonly __node;
     private readonly __keys;
     private __connected;
@@ -87,5 +86,5 @@ declare class Properties {
      */
     dispose(): void;
 }
-export { ProtoProperty, Property, Properties };
+export {};
 //# sourceMappingURL=properties.d.ts.map
