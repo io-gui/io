@@ -1,5 +1,5 @@
 import {IoNode, RegisterIoNode, ListenersDeclaration} from '../io-node.js';
-import {EventDispatcher} from './eventDispatcher.js';
+import {EventDispatcher} from './listeners.js';
 
 class IoNode1 extends IoNode {
   handler1Count = 0;
@@ -49,7 +49,7 @@ window.customElements.define('test-div-event-dispatch', TestDivEventDispatchElem
 
 export default class {
   run() {
-    describe('EventDispatcher', () => {
+    describe('Listeners', () => {
       it('Should initialize with correct default values', () => {
         const node = new IoNode2();
         const eventDispatcher = new EventDispatcher(node as any) as any;
@@ -173,7 +173,7 @@ export default class {
       });
       it('Should add/remove/dispatch events on HTML elements', () => {
         const element = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
-        const eventDispatcher = new EventDispatcher(element) as any;
+        const eventDispatcher = new EventDispatcher(element as unknown as IoNode) as any;
         let handler4Count = 0;
         let handler4Detail: any;
         const handler4 = (event: CustomEvent) => {

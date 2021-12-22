@@ -1,7 +1,7 @@
 import { Binding } from './internals/propertyBinder.js';
 import { PropertyDefinition } from './internals/properties.js';
-import { ListenerDefinition } from './internals/eventDispatcher.js';
-export declare type ListenersDeclaration = Record<string, ListenerDefinition>;
+import { ListenerDefinitionWeak } from './internals/listeners.js';
+export declare type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
 export declare type PropertiesDeclaration = Record<string, PropertyDefinition>;
 export interface IoNodeConstructor<T> {
     new (...args: any[]): T;
@@ -205,13 +205,13 @@ declare const IoNode_base: {
          * @param {IoNode} node - Node to connect to.
          * @return {this} this
          */
-        connect(node?: IoNode | HTMLElement | Window | Document): any;
+        connect(node?: HTMLElement | IoNode | Window | Document): any;
         /**
          * Disconnects the instance from an another node or element.
          * @param {IoNode} node - Node to disconnect from.
          * @return {this} this
          * */
-        disconnect(node?: IoNode | HTMLElement | Window | Document): any;
+        disconnect(node?: HTMLElement | IoNode | Window | Document): any;
         /**
          * Connected callback.
          */

@@ -2,7 +2,7 @@ import { ProtoChain } from './internals/protoChain.js';
 import { PropertyBinder, Binding } from './internals/propertyBinder.js';
 import { ChangeQueue } from './internals/changeQueue.js';
 import { Properties } from './internals/properties.js';
-import { EventDispatcher } from './internals/eventDispatcher.js';
+import { EventDispatcher } from './internals/listeners.js';
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -293,7 +293,7 @@ export function IoNodeMixin(superclass) {
          */
         addEventListener(type, listener, options) {
             debug: if (typeof listener !== 'function') {
-                console.warn(`${this.constructor.name}.${type}() is not a function`, this);
+                console.warn(`${this.constructor.name}incorrect listener type.`, this);
                 return;
             }
             this.__eventDispatcher.addEventListener(type, listener, options);

@@ -1,4 +1,5 @@
 import { ProtoProperty } from './properties.js';
+import { sanitizeListenerDefinition } from './listeners.js';
 /**
  * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
  * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
@@ -73,9 +74,17 @@ export class ProtoChain {
             const listeners = this.constructors[i].Listeners;
             for (const l in listeners) {
                 if (listeners[l]) {
-                    const listener = (listeners[l] instanceof Array) ? listeners[l] : [listeners[l]];
-                    if (!this.listeners[l])
-                        this.listeners[l] = [listener];
+                    this.listeners[l] = this.listeners[l] || [];
+                    const listenerDefinition = sanitizeListenerDefinition(listeners[l]);
+                    const index = this.listeners[l].findIndex((listener) => listener[0] === listenerDefinition[0]);
+                    if (index !== -1) {
+                        // TODO aggregate listener options.
+                        this.listeners[l][index] = listenerDefinition;
+                    }
+                    else {
+                        // TODO: apply to existing listeners.
+                        this.listeners[l].push(listenerDefinition);
+                    }
                 }
             }
         }

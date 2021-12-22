@@ -1,6 +1,6 @@
 import {IoNode, IoNodeConstructor} from '../io-node.js';
 import {ProtoProperty} from './properties.js';
-import {ListenerDefinition} from './eventDispatcher.js';
+import {ListenerDefinition, sanitizeListenerDefinition} from './listeners.js';
 
 /**
  * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
@@ -26,7 +26,7 @@ export class ProtoChain {
    * Automatically generated array of all listeners defined as `static get Listeners()` return objects in inherited classes.
    */
   public readonly listeners: {
-    [listener: string]: ListenerDefinition[];
+    [property: string]: ListenerDefinition[];
   } = {};
   /**
    * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors, function names, properties and listeners.
@@ -78,8 +78,16 @@ export class ProtoChain {
         const listeners = this.constructors[i].Listeners;
         for (const l in listeners) {
           if (listeners[l]) {
-            const listener = (listeners[l] instanceof Array) ? listeners[l] : [listeners[l]];
-            if (!this.listeners[l]) this.listeners[l] = [listener as ListenerDefinition];
+            this.listeners[l] = this.listeners[l] || [];
+            const listenerDefinition = sanitizeListenerDefinition(listeners[l]);
+            const index = this.listeners[l].findIndex((listener) => listener[0] === listenerDefinition[0]);
+            if (index !== -1) {
+              // TODO aggregate listener options.
+              this.listeners[l][index] = listenerDefinition;
+            } else {
+              // TODO: apply to existing listeners.
+              this.listeners[l].push(listenerDefinition);
+            }
           }
         }
     }

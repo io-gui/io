@@ -2,9 +2,9 @@ import {ProtoChain} from './internals/protoChain.js';
 import {PropertyBinder, Binding} from './internals/propertyBinder.js';
 import {ChangeQueue} from './internals/changeQueue.js';
 import {Properties, PropertyDefinition} from './internals/properties.js';
-import {EventDispatcher, ListenerDefinition} from './internals/eventDispatcher.js';
+import {EventDispatcher, ListenerDefinitionWeak} from './internals/listeners.js';
 
-export type ListenersDeclaration = Record<string, ListenerDefinition>;
+export type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
 export type PropertiesDeclaration = Record<string, PropertyDefinition>;
 
 export interface IoNodeConstructor<T> {
@@ -332,7 +332,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
       debug:
       if (typeof listener !== 'function') {
-        console.warn(`${this.constructor.name}.${type}() is not a function`, this);
+        console.warn(`${this.constructor.name}incorrect listener type.`, this);
         return;
       }
       this.__eventDispatcher.addEventListener(type, listener, options);

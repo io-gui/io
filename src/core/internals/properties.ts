@@ -64,6 +64,7 @@ const toPropertyDefinitionDetail = (propertyDefinition: PropertyDefinition): Pro
   return {};
 };
 
+// TODO: deprecate. Use Properties.
 export class ProtoProperty {
   value: any;
   type?: AnyConstructor;

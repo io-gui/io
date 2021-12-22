@@ -1,5 +1,5 @@
 import {ProtoChain} from './internals/protoChain.js';
-import {EventDispatcher} from './internals/eventDispatcher.js';
+import {EventDispatcher} from './internals/listeners.js';
 import {IoNode, IoNodeMixin, RegisterIoNode} from './io-node.js';
 
 /**

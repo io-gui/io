@@ -1,26 +1,31 @@
 import {IoNode} from '../io-node.js';
 
-export type ListenerDefinitionDetail = [keyof IoNode | EventListener, AddEventListenerOptions?];
-export type ListenerDefinition = keyof IoNode | EventListener | ListenerDefinitionDetail;
+export type ListenerDefinitionWeak = keyof IoNode | EventListener | ListenerDefinition;
+export type ListenerDefinition = [keyof IoNode | EventListener, AddEventListenerOptions?];
 
-// const toListenerDefinitionDetail = (listenerDefinition: ListenerDefinition): ListenerDefinitionDetail => {
+export const sanitizeListenerDefinition = (listenerDefinition: ListenerDefinitionWeak | ListenerDefinition): ListenerDefinition => {
+  debug: {
+    if (listenerDefinition instanceof Array) {
+      if (typeof listenerDefinition[0] !== 'string' && typeof listenerDefinition[0] !== 'function') console.warn('Listeners: invalid listener type');
+      if (listenerDefinition[1] && typeof listenerDefinition[1] !== 'object') {
+        console.warn('Listeners: invalid listener options type');
+        console.log(listenerDefinition);
+      }
+    } else {
+      if (typeof listenerDefinition !== 'string' && typeof listenerDefinition !== 'function') console.warn('Listeners: invalid listener type');
+    }
+  }
+  return listenerDefinition instanceof Array ? listenerDefinition : [listenerDefinition];
+};
 
-// }
-
-// export class ProtoListener {
-// }
-
-type Listener = [EventListener, AddEventListenerOptions?];
-
-type Listeners = Record<string, Listener[]>;
-
-type CallbackFunction = (arg?: any) => void;
+export type Listener = [EventListener, AddEventListenerOptions?];
+export type Listeners = Record<string, Listener[]>;
 
 /**
  * Event Dispatcher.
  */
 class EventDispatcher {
-  private readonly __node: IoNode | HTMLElement;
+  private readonly __node: IoNode;
   private readonly __nodeIsEventTarget: boolean;
   private readonly __protoListeners: Listeners = {};
   private readonly __propListeners: Listeners = {};
@@ -28,9 +33,9 @@ class EventDispatcher {
   private __connected = false;
   /**
    * Creates Event Dispatcher.
-   * @param {IoNode | HTMLElement} node Node or element to add EventDispatcher to.
+   * @param {IoNode} node Node or element to add EventDispatcher to.
    */
-  constructor(node: IoNode | HTMLElement) {
+  constructor(node: IoNode) {
     this.__node = node;
     this.__nodeIsEventTarget = node instanceof EventTarget;
     Object.defineProperty(this, '__node',              {enumerable: false, writable: false});
@@ -39,44 +44,49 @@ class EventDispatcher {
     Object.defineProperty(this, '__propListeners',     {enumerable: false, writable: false});
     Object.defineProperty(this, '__connected',         {enumerable: false});
 
-    for (const type in (node as any).__protochain?.listeners) {
-      const protoListener = (node as any).__protochain.listeners[type][0];
-      const listenerObject = typeof protoListener[0] === 'function' ? protoListener[0] : this.__node[protoListener[0] as keyof (IoNode | HTMLElement)];
-      const listenerOptions = protoListener[1];
-      this.__protoListeners[type] = [[listenerObject as EventListener]];
-      if (listenerOptions) this.__protoListeners[type][0].push(listenerOptions);
+    for (const type in node.__protochain?.listeners) {
+      this.__protoListeners[type] = [];
+      for (let i = 0; i < node.__protochain.listeners[type].length; i++) {
+        this.__protoListeners[type].push(this.sanitizeListener(node.__protochain.listeners[type][i]));
+      }
     }
+  }
+  sanitizeListener(listenerDefinition: ListenerDefinition): Listener {
+    if (typeof listenerDefinition[0] === 'string') listenerDefinition[0] = this.__node[listenerDefinition[0]];
+    return listenerDefinition as Listener;
   }
   /**
    * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
    * @param {Object} properties - Properties.
    */
-  setPropListeners(properties: Record<string, ListenerDefinition>) {
+  setPropListeners(properties: Record<string, ListenerDefinitionWeak>) {
     const newPropListeners: Listeners = {};
     for (const prop in properties) {
       if (prop.startsWith('on-')) {
         const type = prop.slice(3, prop.length);
-        const listener = (properties[prop] instanceof Array) ? [...(properties[prop] as [ListenerDefinition])] : [properties[prop]];
-        if (typeof listener[0] !== 'function') listener[0] = this.__node[listener[0] as keyof (IoNode | HTMLElement)];
-        newPropListeners[type] = [listener as Listener];
+        const listener = this.sanitizeListener(sanitizeListenerDefinition(properties[prop]));
+        newPropListeners[type] = [listener];
       }
     }
     const propListeners = this.__propListeners;
     for (const type in propListeners) {
       if (!newPropListeners[type]) {
         if (this.__connected && this.__nodeIsEventTarget) {
-          EventTarget.prototype.removeEventListener.call(this.__node, type, propListeners[type][0][0], propListeners[type][0][1]);
+          const listener = this.sanitizeListener(sanitizeListenerDefinition(propListeners[type][0]));
+          EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
         }
         delete propListeners[type];
       }
     }
     for (const type in newPropListeners) {
       if (this.__connected && this.__nodeIsEventTarget) {
+        const listener = this.sanitizeListener(sanitizeListenerDefinition(propListeners[type][0]));
+        const newListener = this.sanitizeListener(sanitizeListenerDefinition(newPropListeners[type][0]));
         if (!propListeners[type]) {
-          EventTarget.prototype.addEventListener.call(this.__node, type, newPropListeners[type][0][0], newPropListeners[type][0][1]);
-        } else if ((propListeners[type][0][0] !== newPropListeners[type][0][0] || propListeners[type][0][1] !== newPropListeners[type][0][1])) {
-          EventTarget.prototype.removeEventListener.call(this.__node, type, propListeners[type][0][0], propListeners[type][0][1]);
-          EventTarget.prototype.addEventListener.call(this.__node, type, newPropListeners[type][0][0], newPropListeners[type][0][1]);
+          EventTarget.prototype.addEventListener.call(this.__node, type, newListener[0], newListener[1]);
+        } else if ((listener !== newListener || listener[1] !== newListener[1])) {
+          EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
+          EventTarget.prototype.addEventListener.call(this.__node, type, newListener[0], newListener[1]);
         }
       }
       propListeners[type] = newPropListeners[type];
@@ -92,14 +102,17 @@ class EventDispatcher {
     }
     if (this.__nodeIsEventTarget) {
       for (const type in this.__protoListeners) {
-        EventTarget.prototype.addEventListener.call(this.__node, type, this.__protoListeners[type][0][0], this.__protoListeners[type][0][1]);
+        const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__protoListeners[type][0][0]));
+        EventTarget.prototype.addEventListener.call(this.__node, type, listener[0], listener[1]);
       }
       for (const type in this.__propListeners) {
-        EventTarget.prototype.addEventListener.call(this.__node, type, this.__propListeners[type][0][0], this.__propListeners[type][0][1]);
+        const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__propListeners[type][0][0]));
+        EventTarget.prototype.addEventListener.call(this.__node, type, listener[0], listener[1]);
       }
       for (const type in this.__addedListeners) {
         for (let i = this.__addedListeners[type].length; i--;) {
-          EventTarget.prototype.addEventListener.call(this.__node, type, this.__addedListeners[type][i][0], this.__addedListeners[type][i][1]);
+          const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__addedListeners[type][i][0]));
+          EventTarget.prototype.addEventListener.call(this.__node, type, listener[0], listener[1]);
         }
       }
     }
@@ -116,14 +129,17 @@ class EventDispatcher {
     }
     if (this.__nodeIsEventTarget) {
       for (const type in this.__protoListeners) {
-        EventTarget.prototype.removeEventListener.call(this.__node, type, this.__protoListeners[type][0][0], this.__protoListeners[type][0][1]);
+        const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__protoListeners[type][0][0]));
+        EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
       }
       for (const type in this.__propListeners) {
-        EventTarget.prototype.removeEventListener.call(this.__node, type, this.__propListeners[type][0][0], this.__propListeners[type][0][1]);
+        const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__propListeners[type][0][0]));
+        EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
       }
       for (const type in this.__addedListeners) {
         for (let i = this.__addedListeners[type].length; i--;) {
-          EventTarget.prototype.removeEventListener.call(this.__node, type, this.__addedListeners[type][i][0], this.__addedListeners[type][i][1]);
+          const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__addedListeners[type][i][0]));
+          EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
         }
       }
     }
@@ -143,7 +159,7 @@ class EventDispatcher {
       const l = this.__addedListeners[type].findIndex(l => l[0] === listener);
       if (l !== -1) console.warn(`EventDispatcher: listener ${type} already added!`);
     }
-    this.__addedListeners[type].push((options ? [listener, options] : [listener]) as Listener);
+    this.__addedListeners[type].push(options ? [listener, options] : [listener]);
     if (this.__connected && this.__nodeIsEventTarget) {
       EventTarget.prototype.addEventListener.call(this.__node, type, listener, options);
     }
@@ -155,14 +171,16 @@ class EventDispatcher {
    * @param {EventListener} listener Event listener handler
    * @param {AddEventListenerOptions} [options] Event listener options
   */
-  removeEventListener(type: string, listener: EventListener, options?: AddEventListenerOptions) {
+  removeEventListener(type: string, listener?: EventListener, options?: AddEventListenerOptions) {
     debug: {
       if (!this.__addedListeners[type]) console.warn(`EventDispatcher: listener ${type} not found!`);
+      if (listener && typeof listener !== 'function') console.warn('EventDispatcher: invalid listener type!');
     }
     if (!listener) {
       for (let i = 0; i < this.__addedListeners[type].length; i ++) {
         if (this.__connected && this.__nodeIsEventTarget) {
-          EventTarget.prototype.removeEventListener.call(this.__node, type, this.__addedListeners[type][i][0], this.__addedListeners[type][i][1]);
+          const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__addedListeners[type][i][0]));
+          EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
         }
       }
       this.__addedListeners[type].length = 0;
@@ -191,14 +209,17 @@ class EventDispatcher {
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(type, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
       if (this.__protoListeners[type] !== undefined) {
-        (this.__protoListeners[type][0][0] as CallbackFunction).call(node, {detail: detail, target: node, path: [node]});
+        const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__protoListeners[type][0][0]));
+        (listener[0] as EventListener).call(node, {detail: detail, target: node, path: [node]} as any);
       }
       if (this.__propListeners[type] !== undefined) {
-        (this.__propListeners[type][0][0] as CallbackFunction).call(node, {detail: detail, target: node, path: [node]});
+        const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__propListeners[type][0][0]));
+        (listener[0] as EventListener).call(node, {detail: detail, target: node, path: [node]} as any);
       }
       if (this.__addedListeners[type] !== undefined) {
         for (let i = 0; i < this.__addedListeners[type].length; i ++) {
-          (this.__addedListeners[type][i][0] as CallbackFunction).call(node, {detail: detail, target: node, path: [node]});
+          const listener = this.sanitizeListener(sanitizeListenerDefinition(this.__addedListeners[type][i][0]));
+          (listener[0] as EventListener).call(node, {detail: detail, target: node, path: [node]} as any);
         }
       }
     }

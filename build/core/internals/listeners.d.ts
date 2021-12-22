@@ -1,6 +1,9 @@
 import { IoNode } from '../io-node.js';
-export declare type ListenerDefinitionDetail = [keyof IoNode | EventListener, AddEventListenerOptions?];
-export declare type ListenerDefinition = keyof IoNode | EventListener | ListenerDefinitionDetail;
+export declare type ListenerDefinitionWeak = keyof IoNode | EventListener | ListenerDefinition;
+export declare type ListenerDefinition = [keyof IoNode | EventListener, AddEventListenerOptions?];
+export declare const sanitizeListenerDefinition: (listenerDefinition: ListenerDefinitionWeak | ListenerDefinition) => ListenerDefinition;
+export declare type Listener = [EventListener, AddEventListenerOptions?];
+export declare type Listeners = Record<string, Listener[]>;
 /**
  * Event Dispatcher.
  */
@@ -16,12 +19,12 @@ declare class EventDispatcher {
      * @param {IoNode} node Node or element to add EventDispatcher to.
      */
     constructor(node: IoNode);
-    toListener(listener: keyof IoNode | EventListener): EventListener;
+    sanitizeListener(listenerDefinition: ListenerDefinition): Listener;
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} properties - Properties.
      */
-    setPropListeners(properties: Record<string, ListenerDefinition>): void;
+    setPropListeners(properties: Record<string, ListenerDefinitionWeak>): void;
     /**
      * Connects all event listeners.
      * @return {this} this
@@ -63,4 +66,4 @@ declare class EventDispatcher {
     dispose(): void;
 }
 export { EventDispatcher };
-//# sourceMappingURL=eventDispatcher.d.ts.map
+//# sourceMappingURL=listeners.d.ts.map

@@ -122,8 +122,8 @@ export default class {
                 const protoChain = new ProtoChain(FakeIoNode);
                 chai.expect(JSON.stringify(Object.keys(protoChain.listeners))).to.be.equal(JSON.stringify(['listener1', 'listener3', 'listener4', 'listener2']));
                 chai.expect(JSON.stringify(protoChain.listeners['listener1'])).to.be.equal(JSON.stringify([['function1'], ['_function2']]));
-                // chai.expect(JSON.stringify(protoChain.listeners['listener2'])).to.be.equal(JSON.stringify([['function2', {'capture': true,'passive': true}]]));
-                // chai.expect(JSON.stringify(protoChain.listeners['listener3'])).to.be.equal(JSON.stringify([['_function1', {passive: true}]]));
+                chai.expect(JSON.stringify(protoChain.listeners['listener2'])).to.be.equal(JSON.stringify([['function2', { 'capture': true, 'passive': true }]]));
+                chai.expect(JSON.stringify(protoChain.listeners['listener3'])).to.be.equal(JSON.stringify([['_function1', { passive: true }]]));
             });
         });
     }

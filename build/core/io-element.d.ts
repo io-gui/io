@@ -3,8 +3,8 @@ declare const IoElement_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
         readonly compose: Record<string, Record<string, any>> | null;
-        connect(node?: IoNode | HTMLElement | Window | Document): any;
-        disconnect(node?: IoNode | HTMLElement | Window | Document): any;
+        connect(node?: HTMLElement | IoNode | Window | Document): any;
+        disconnect(node?: HTMLElement | IoNode | Window | Document): any;
         connectedCallback(): void;
         disconnectedCallback(): void;
         dispose(): void;
