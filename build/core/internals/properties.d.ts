@@ -1,50 +1,49 @@
 import { Binding } from './propertyBinder.js';
 declare type AnyConstructor = new (...args: any[]) => unknown;
 declare type ReflectType = -1 | 0 | 1 | 2;
-declare type PropertyDefinitionDetail = {
+export declare type PropertyDefinition = {
     value?: any;
     type?: AnyConstructor;
-    reflect?: ReflectType;
-    notify?: boolean;
-    observe?: boolean;
-    readonly?: boolean;
-    strict?: boolean;
-    enumerable?: boolean;
     binding?: Binding;
-};
-export declare type PropertyDefinition = string | number | boolean | AnyConstructor | null | Binding | PropertyDefinitionDetail;
-export declare class ProtoProperty {
-    value: any;
-    type?: AnyConstructor;
     reflect: ReflectType;
     notify: boolean;
     observe: boolean;
     readonly: boolean;
     strict: boolean;
     enumerable: boolean;
-    binding?: Binding;
-    constructor(propertyDefinition?: PropertyDefinition);
-    assign(propertyDefinition: PropertyDefinition): this;
-}
-/**
- * Property configuration object for a class **instance**.
- * It is copied from the corresponding `ProtoProperty`.
- */
-export declare class Property {
+};
+export declare type PropertyDefinitionWeak = string | number | boolean | null | AnyConstructor | Binding | {
     value?: any;
     type?: AnyConstructor;
-    reflect?: number;
+    reflect?: ReflectType;
+    binding?: Binding;
     notify?: boolean;
     observe?: boolean;
     readonly?: boolean;
     strict?: boolean;
     enumerable?: boolean;
+};
+export declare const sanitizePropertyDefinition: (propDef: PropertyDefinitionWeak) => PropertyDefinition;
+export declare const assignPropertyDefinition: (propDef: PropertyDefinition, newPropDef: PropertyDefinition) => void;
+/**
+ * Property configuration object for a class **instance**.
+ * It is copied from the corresponding `PropertyDefinition`.
+ */
+export declare class Property {
+    value?: any;
+    type?: AnyConstructor;
+    reflect: number;
+    notify: boolean;
+    observe: boolean;
+    readonly: boolean;
+    strict: boolean;
+    enumerable: boolean;
     binding?: Binding;
     /**
-     * Creates the property configuration object and copies values from `ProtoProperty`.
-     * @param {ProtoProperty} protoProp ProtoProperty object
+     * Creates the property configuration object and copies values from `PropertyDefinition`.
+     * @param {PropertyDefinition} propDef PropertyDefinition object
      */
-    constructor(protoProp: ProtoProperty);
+    constructor(propDef: PropertyDefinition);
 }
 /**
  * Collection of all property configurations and values for a class **instance** compied from corresponding `ProtoProperties`.

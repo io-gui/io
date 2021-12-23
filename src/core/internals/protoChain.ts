@@ -1,6 +1,6 @@
 import {IoNode, IoNodeConstructor} from '../io-node.js';
-import {ProtoProperty} from './properties.js';
-import {ListenerDefinition, sanitizeListenerDefinition} from './listeners.js';
+import {sanitizePropertyDefinition, assignPropertyDefinition, PropertyDefinition} from './properties.js';
+import {ListenerDefinition, assignListenerDefinition} from './listeners.js';
 
 /**
  * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
@@ -20,7 +20,7 @@ export class ProtoChain {
    * Automatically generated array of all properties defined as `static get Properties()` return objects in inherited classes.
    */
   public readonly properties: {
-    [property: string]: ProtoProperty;
+    [property: string]: PropertyDefinition;
   } = {};
   /*
    * Automatically generated array of all listeners defined as `static get Listeners()` return objects in inherited classes.
@@ -61,13 +61,12 @@ export class ProtoChain {
     }
 
     // Properties and listeners are assigned in reverse
-    // TODO: change assignment direction and add to loop above for optimizatrion.
     for (let i = this.constructors.length; i--;) {
         // Add properties
         const props = this.constructors[i].Properties;
         for (const p in props) {
-          if (!this.properties[p]) this.properties[p] = new ProtoProperty(props[p]);
-          else this.properties[p].assign(props[p]);
+          if (!this.properties[p]) this.properties[p] = sanitizePropertyDefinition(props[p]);
+          else assignPropertyDefinition(this.properties[p], sanitizePropertyDefinition(props[p]));
           // TODO: Document or reconsider.
           if (p.charAt(0) === '_') {
             this.properties[p].notify = false;
@@ -79,16 +78,7 @@ export class ProtoChain {
         for (const l in listeners) {
           if (listeners[l]) {
             this.listeners[l] = this.listeners[l] || [];
-            const listenerDefinition = sanitizeListenerDefinition(listeners[l]);
-            const index = this.listeners[l].findIndex((listener) => listener[0] === listenerDefinition[0]);
-            if (index !== -1) {
-              // TODO aggregate listener options.
-              this.listeners[l][index] = listenerDefinition;
-            } else {
-              // TODO: apply to existing listeners.
-              this.listeners[l].push(listenerDefinition);
-            }
-          }
+            assignListenerDefinition(this.listeners[l], listeners[l]);          }
         }
     }
   }

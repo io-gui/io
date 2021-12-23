@@ -1,5 +1,5 @@
-import { ProtoProperty } from './properties.js';
-import { sanitizeListenerDefinition } from './listeners.js';
+import { sanitizePropertyDefinition, assignPropertyDefinition } from './properties.js';
+import { assignListenerDefinition } from './listeners.js';
 /**
  * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
  * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
@@ -55,15 +55,14 @@ export class ProtoChain {
             nodeConstructor = proto.constructor;
         }
         // Properties and listeners are assigned in reverse
-        // TODO: change assignment direction and add to loop above for optimizatrion.
         for (let i = this.constructors.length; i--;) {
             // Add properties
             const props = this.constructors[i].Properties;
             for (const p in props) {
                 if (!this.properties[p])
-                    this.properties[p] = new ProtoProperty(props[p]);
+                    this.properties[p] = sanitizePropertyDefinition(props[p]);
                 else
-                    this.properties[p].assign(props[p]);
+                    assignPropertyDefinition(this.properties[p], sanitizePropertyDefinition(props[p]));
                 // TODO: Document or reconsider.
                 if (p.charAt(0) === '_') {
                     this.properties[p].notify = false;
@@ -75,16 +74,7 @@ export class ProtoChain {
             for (const l in listeners) {
                 if (listeners[l]) {
                     this.listeners[l] = this.listeners[l] || [];
-                    const listenerDefinition = sanitizeListenerDefinition(listeners[l]);
-                    const index = this.listeners[l].findIndex((listener) => listener[0] === listenerDefinition[0]);
-                    if (index !== -1) {
-                        // TODO aggregate listener options.
-                        this.listeners[l][index] = listenerDefinition;
-                    }
-                    else {
-                        // TODO: apply to existing listeners.
-                        this.listeners[l].push(listenerDefinition);
-                    }
+                    assignListenerDefinition(this.listeners[l], listeners[l]);
                 }
             }
         }

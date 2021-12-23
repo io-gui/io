@@ -1,7 +1,9 @@
 import { IoNode } from '../io-node.js';
 export declare type ListenerDefinitionWeak = keyof IoNode | EventListener | ListenerDefinition;
 export declare type ListenerDefinition = [keyof IoNode | EventListener, AddEventListenerOptions?];
-export declare const sanitizeListenerDefinition: (listenerDefinition: ListenerDefinitionWeak | ListenerDefinition) => ListenerDefinition;
+export declare const sanitizeListenerDefinition: (listenerDefinition: ListenerDefinition | ListenerDefinitionWeak) => ListenerDefinition;
+export declare const assignListenerDefinition: (definitions: ListenerDefinition[], listenerDefinition: ListenerDefinition | ListenerDefinitionWeak) => void;
+export declare const sanitizeListener: (node: IoNode, listenerDefinition: ListenerDefinition) => Listener;
 export declare type Listener = [EventListener, AddEventListenerOptions?];
 export declare type Listeners = Record<string, Listener[]>;
 /**
@@ -15,16 +17,15 @@ declare class EventDispatcher {
     private readonly __addedListeners;
     private __connected;
     /**
-     * Creates Event Dispatcher.
-     * @param {IoNode} node Node or element to add EventDispatcher to.
+     * Creates Event Dispatcher for specified IoNode instance.
+     * @param {IoNode} node owner IoNode.
      */
     constructor(node: IoNode);
-    sanitizeListener(listenerDefinition: ListenerDefinition): Listener;
     /**
      * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
      * @param {Object} properties - Properties.
      */
-    setPropListeners(properties: Record<string, ListenerDefinitionWeak>): void;
+    setPropListeners(properties: Record<string, any>): void;
     /**
      * Connects all event listeners.
      * @return {this} this

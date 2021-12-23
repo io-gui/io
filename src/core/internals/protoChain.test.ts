@@ -18,7 +18,7 @@ class IoNode1 extends IoNode {}
 class IoElement1 extends IoElement {}
 class IoNode2 extends IoNodeMixin(Object3) {}
 
-class FakeSuperIoNode {
+class FakeIoNode1 {
   static get Properties(): PropertiesDeclaration {
     return {
       prop1: {}
@@ -28,7 +28,7 @@ class FakeSuperIoNode {
     return {
       listener1: 'function1',
       listener2: '',
-      listener3: '_function1',
+      listener3: ['_function1', {capture: true}],
       listener4: () => {}
     };
   }
@@ -37,7 +37,7 @@ class FakeSuperIoNode {
   _function1() {}
 }
 
-class FakeIoNode extends FakeSuperIoNode {
+class FakeIoNode2 extends FakeIoNode1 {
   function2() {}
   onFunction2() {}
   _function2() {}
@@ -95,12 +95,12 @@ export default class {
         chai.expect(constructors[1]).to.be.equal(undefined);
       });
       it('Should include all functions starting with "on" or "_"', () => {
-        const protoChain = new ProtoChain(FakeIoNode);
+        const protoChain = new ProtoChain(FakeIoNode2);
         chai.expect(JSON.stringify(protoChain.functions)).to.be.equal(JSON.stringify(['onFunction2', '_function2', 'onFunction1', '_function1']));
       });
       it('Should bind the functions to specified instance with `.bind(node)` function', () => {
-        const protoChain = new ProtoChain(FakeIoNode);
-        const node = new FakeIoNode();
+        const protoChain = new ProtoChain(FakeIoNode2);
+        const node = new FakeIoNode2();
         protoChain.bindFunctions(node as unknown as IoNode);
         chai.expect(node.function1.name).to.be.equal('function1');
         chai.expect(node.onFunction1.name).to.be.equal('bound onFunction1');
@@ -110,15 +110,15 @@ export default class {
         chai.expect(node._function2.name).to.be.equal('bound _function2');
       });
       it('Should include a list of all declared properties', () => {
-        const protoChain = new ProtoChain(FakeIoNode);
+        const protoChain = new ProtoChain(FakeIoNode2);
         chai.expect(JSON.stringify(Object.keys(protoChain.properties))).to.be.equal(JSON.stringify(['prop1', 'prop2']));
       });
       it('Should include a list of all declared listeners', () => {
-        const protoChain = new ProtoChain(FakeIoNode);
+        const protoChain = new ProtoChain(FakeIoNode2);
         chai.expect(JSON.stringify(Object.keys(protoChain.listeners))).to.be.equal(JSON.stringify(['listener1', 'listener3', 'listener4', 'listener2']));
         chai.expect(JSON.stringify(protoChain.listeners['listener1'])).to.be.equal(JSON.stringify([['function1'], ['_function2']]));
-        chai.expect(JSON.stringify(protoChain.listeners['listener2'])).to.be.equal(JSON.stringify([['function2', {'capture': true, 'passive': true}]]));
-        chai.expect(JSON.stringify(protoChain.listeners['listener3'])).to.be.equal(JSON.stringify([['_function1', {passive: true}]]));
+        chai.expect(JSON.stringify(protoChain.listeners['listener2'])).to.be.equal(JSON.stringify([['function2', {capture: true, passive: true}]]));
+        chai.expect(JSON.stringify(protoChain.listeners['listener3'])).to.be.equal(JSON.stringify([['_function1', {capture: true, passive: true}]]));
       });
     });
   }

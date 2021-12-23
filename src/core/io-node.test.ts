@@ -345,8 +345,10 @@ export default class {
         chai.expect(boundNode2.prop1).to.be.equal('two');
 
         chai.expect(binding.__targets.length).to.be.equal(2);
+
         boundNode1.dispose();
         chai.expect(binding.__targets.length).to.be.equal(1);
+
         boundNode2.dispose();
         chai.expect(binding.__targets.length).to.be.equal(0);
 

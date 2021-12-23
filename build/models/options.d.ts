@@ -4,8 +4,8 @@ declare const Options_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
         readonly compose: Record<string, Record<string, any>> | null;
-        connect(node?: HTMLElement | import("../core/io-node.js").IoNode | Window | Document): any;
-        disconnect(node?: HTMLElement | import("../core/io-node.js").IoNode | Window | Document): any;
+        connect(node?: import("../core/io-node.js").IoNode | HTMLElement | Window | Document): any;
+        disconnect(node?: import("../core/io-node.js").IoNode | HTMLElement | Window | Document): any;
         connectedCallback(): void;
         disconnectedCallback(): void;
         dispose(): void;

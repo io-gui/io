@@ -1,5 +1,5 @@
 import { IoNode, IoNodeConstructor } from '../io-node.js';
-import { ProtoProperty } from './properties.js';
+import { PropertyDefinition } from './properties.js';
 import { ListenerDefinition } from './listeners.js';
 /**
  * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
@@ -10,7 +10,7 @@ export declare class ProtoChain {
     readonly constructors: Array<IoNodeConstructor<any>>;
     readonly functions: Array<string>;
     readonly properties: {
-        [property: string]: ProtoProperty;
+        [property: string]: PropertyDefinition;
     };
     readonly listeners: {
         [property: string]: ListenerDefinition[];
