@@ -1,6 +1,6 @@
 import {IoElement, RegisterIoElement} from './iogui.js';
 
-import Listeners from './core/internals/listeners.test.js';
+import Listeners from './core/internals/eventDispatcher.test.js';
 import Properties from './core/internals/properties.test.js';
 import ProtoChain from './core/internals/protoChain.test.js';
 import ChangeQueue from './core/internals/changeQueue.test.js';

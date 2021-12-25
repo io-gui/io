@@ -7,7 +7,7 @@ It also takes care of attribute reflections, binding connections and queue dispa
 
 ### constructor
 
-• **new Properties**(`node`, `protoProps`)
+• **new Properties**(`node`)
 
 Creates the properties for specified `IoNode`.
 
@@ -16,11 +16,10 @@ Creates the properties for specified `IoNode`.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `node` | `any` | Owner IoNode instance. |
-| `protoProps` | [`ProtoProperties`](ProtoProperties.md) | ProtoProperties object. |
 
 #### Defined in
 
-[core/internals/properties.ts:171](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L171)
+[core/internals/properties.ts:182](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L182)
 
 ## Methods
 
@@ -36,7 +35,7 @@ Connects all property bindings and `IoNode` properties.
 
 #### Defined in
 
-[core/internals/properties.ts:285](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L285)
+[core/internals/properties.ts:297](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L297)
 
 ___
 
@@ -52,7 +51,7 @@ Disconnects all property bindings and `IoNode` properties.
 
 #### Defined in
 
-[core/internals/properties.ts:305](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L305)
+[core/internals/properties.ts:317](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L317)
 
 ___
 
@@ -69,7 +68,7 @@ Use this when properties are no loner needed.
 
 #### Defined in
 
-[core/internals/properties.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L332)
+[core/internals/properties.ts:344](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L344)
 
 ___
 
@@ -93,7 +92,7 @@ Peroperty value.
 
 #### Defined in
 
-[core/internals/properties.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L204)
+[core/internals/properties.ts:216](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L216)
 
 ___
 
@@ -117,4 +116,4 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[core/internals/properties.ts:213](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L213)
+[core/internals/properties.ts:225](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L225)

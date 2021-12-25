@@ -23,7 +23,7 @@ export declare type PropertyDefinitionWeak = string | number | boolean | null | 
     strict?: boolean;
     enumerable?: boolean;
 };
-export declare const sanitizePropertyDefinition: (propDef: PropertyDefinitionWeak) => PropertyDefinition;
+export declare const hardenPropertyDefinition: (propDef: PropertyDefinitionWeak) => PropertyDefinition;
 export declare const assignPropertyDefinition: (propDef: PropertyDefinition, newPropDef: PropertyDefinition) => void;
 /**
  * Property configuration object for a class **instance**.

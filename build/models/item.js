@@ -85,7 +85,7 @@ export class Item extends IoNode {
     setSelectedPath(selected, path = []) {
         this.path.value = path;
         this.selected = selected;
-        this.dispatchEvent('path-changed', this.path); // TODO: TEMP HACK
+        // this.dispatchEvent('path-changed', this.path); // TODO: TEMP HACK
     }
     changed() {
         this.dispatchEvent('changed');

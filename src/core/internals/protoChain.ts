@@ -1,6 +1,6 @@
 import {IoNode, IoNodeConstructor} from '../io-node.js';
-import {sanitizePropertyDefinition, assignPropertyDefinition, PropertyDefinition} from './properties.js';
-import {ListenerDefinition, assignListenerDefinition} from './listeners.js';
+import {hardenPropertyDefinition, assignPropertyDefinition, PropertyDefinition} from './properties.js';
+import {ListenerDefinition, hardenListenerDefinition, assignListenerDefinition} from './eventDispatcher.js';
 
 /**
  * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
@@ -65,8 +65,8 @@ export class ProtoChain {
         // Add properties
         const props = this.constructors[i].Properties;
         for (const p in props) {
-          if (!this.properties[p]) this.properties[p] = sanitizePropertyDefinition(props[p]);
-          else assignPropertyDefinition(this.properties[p], sanitizePropertyDefinition(props[p]));
+          if (!this.properties[p]) this.properties[p] = hardenPropertyDefinition(props[p]);
+          else assignPropertyDefinition(this.properties[p], hardenPropertyDefinition(props[p]));
           // TODO: Document or reconsider.
           if (p.charAt(0) === '_') {
             this.properties[p].notify = false;
@@ -78,7 +78,7 @@ export class ProtoChain {
         for (const l in listeners) {
           if (listeners[l]) {
             this.listeners[l] = this.listeners[l] || [];
-            assignListenerDefinition(this.listeners[l], listeners[l]);          }
+            assignListenerDefinition(this.listeners[l], hardenListenerDefinition(listeners[l]));          }
         }
     }
   }

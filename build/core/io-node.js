@@ -2,7 +2,7 @@ import { ProtoChain } from './internals/protoChain.js';
 import { PropertyBinder, Binding } from './internals/propertyBinder.js';
 import { ChangeQueue } from './internals/changeQueue.js';
 import { Properties } from './internals/properties.js';
-import { EventDispatcher } from './internals/listeners.js';
+import { EventDispatcher } from './internals/eventDispatcher.js';
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.

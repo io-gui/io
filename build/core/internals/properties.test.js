@@ -1,6 +1,6 @@
 import { Binding } from './propertyBinder.js';
 import { ProtoChain } from './protoChain.js';
-import { sanitizePropertyDefinition, Property } from './properties.js';
+import { hardenPropertyDefinition, Property } from './properties.js';
 import { IoNode, RegisterIoNode } from '../io-node.js';
 import { IoElement, RegisterIoElement } from '../io-element.js';
 const string = (object) => {
@@ -23,7 +23,7 @@ export default class {
             describe('Property', () => {
                 it('Should initialize properly', () => {
                     let protoProp, prop;
-                    protoProp = sanitizePropertyDefinition({});
+                    protoProp = hardenPropertyDefinition({});
                     prop = new Property(protoProp);
                     chai.expect(JSON.stringify(protoProp)).to.be.equal(JSON.stringify(prop)).to.be.equal('{"reflect":0,"notify":true,"observe":false,"readonly":false,"strict":false,"enumerable":true}');
                     chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(undefined);
@@ -34,7 +34,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with null argument
-                    protoProp = sanitizePropertyDefinition(null);
+                    protoProp = hardenPropertyDefinition(null);
                     prop = new Property(protoProp);
                     chai.expect(JSON.stringify(protoProp)).to.be.equal(JSON.stringify(prop)).to.be.equal('{"value":null,"reflect":0,"notify":true,"observe":false,"readonly":false,"strict":false,"enumerable":true}');
                     chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(null);
@@ -45,7 +45,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with an empty object argument
-                    protoProp = sanitizePropertyDefinition({});
+                    protoProp = hardenPropertyDefinition({});
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(undefined);
                     chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(undefined);
@@ -55,7 +55,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with Number argument
-                    protoProp = sanitizePropertyDefinition(Number);
+                    protoProp = hardenPropertyDefinition(Number);
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(undefined);
                     chai.expect(prop.value).to.be.equal(0);
@@ -66,7 +66,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with String argument
-                    protoProp = sanitizePropertyDefinition(String);
+                    protoProp = hardenPropertyDefinition(String);
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(undefined);
                     chai.expect(prop.value).to.be.equal('');
@@ -77,7 +77,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with Boolean argument
-                    protoProp = sanitizePropertyDefinition(Boolean);
+                    protoProp = hardenPropertyDefinition(Boolean);
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(undefined);
                     chai.expect(prop.value).to.be.equal(false);
@@ -88,7 +88,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with Object argument
-                    protoProp = sanitizePropertyDefinition(Object);
+                    protoProp = hardenPropertyDefinition(Object);
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(undefined);
                     chai.expect(prop.value).to.be.deep.equal({});
@@ -99,7 +99,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with Array argument
-                    protoProp = sanitizePropertyDefinition(Array);
+                    protoProp = hardenPropertyDefinition(Array);
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(undefined);
                     chai.expect(prop.value).to.be.deep.equal([]);
@@ -110,7 +110,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with custom Object1 argument
-                    protoProp = sanitizePropertyDefinition(Object1);
+                    protoProp = hardenPropertyDefinition(Object1);
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(undefined);
                     chai.expect(prop.value).to.be.deep.equal(new Object1());
@@ -121,7 +121,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with number argument
-                    protoProp = sanitizePropertyDefinition(1);
+                    protoProp = hardenPropertyDefinition(1);
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(1);
                     chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Number);
@@ -131,7 +131,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with string argument
-                    protoProp = sanitizePropertyDefinition('test');
+                    protoProp = hardenPropertyDefinition('test');
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal('test');
                     chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(String);
@@ -141,7 +141,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with boolean argument
-                    protoProp = sanitizePropertyDefinition(true);
+                    protoProp = hardenPropertyDefinition(true);
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(prop.value).to.be.equal(true);
                     chai.expect(protoProp.type).to.be.equal(prop.type).to.be.equal(Boolean);
@@ -152,7 +152,7 @@ export default class {
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with an object argument with object value property
                     const object = { prop: true };
-                    protoProp = sanitizePropertyDefinition({ value: object });
+                    protoProp = hardenPropertyDefinition({ value: object });
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(object);
                     chai.expect(prop.value).to.be.deep.equal(object);
@@ -165,7 +165,7 @@ export default class {
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with an object argument with object value property
                     const array = [1, 2, 3];
-                    protoProp = sanitizePropertyDefinition({ value: array });
+                    protoProp = hardenPropertyDefinition({ value: array });
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(array);
                     chai.expect(prop.value).to.be.deep.equal(array);
@@ -178,7 +178,7 @@ export default class {
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with an object argument with custom object1 value property
                     const object1 = new Object1();
-                    protoProp = sanitizePropertyDefinition({ value: object1 });
+                    protoProp = hardenPropertyDefinition({ value: object1 });
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(object1);
                     chai.expect(prop.value).to.be.equal(object1);
@@ -189,7 +189,7 @@ export default class {
                     chai.expect(protoProp.strict).to.be.equal(prop.strict).to.be.equal(false);
                     chai.expect(protoProp.enumerable).to.be.equal(prop.enumerable).to.be.equal(true);
                     // initialize with an object argument with custom Object1 type property
-                    protoProp = sanitizePropertyDefinition({ type: Object1 });
+                    protoProp = hardenPropertyDefinition({ type: Object1 });
                     prop = new Property(protoProp);
                     chai.expect(protoProp.value).to.be.equal(undefined);
                     chai.expect(prop.value).to.be.deep.equal(new Object1());
@@ -203,14 +203,14 @@ export default class {
                 it('Should initialize binding properly', () => {
                     let protoProp, prop;
                     let binding = new Binding(new TestIoNode({ label: 'lorem' }), 'label');
-                    protoProp = sanitizePropertyDefinition(binding);
+                    protoProp = hardenPropertyDefinition(binding);
                     prop = new Property(protoProp);
                     chai.expect(protoProp.binding).to.be.equal(prop.binding).to.be.equal(binding);
                     chai.expect(protoProp.value).to.be.equal('lorem');
                     chai.expect(prop.value).to.be.equal('lorem');
                     const node = new TestIoNode({ label: 'lorem' });
                     binding = new Binding(node, 'label');
-                    protoProp = sanitizePropertyDefinition({ binding: binding, value: 'ipsum' });
+                    protoProp = hardenPropertyDefinition({ binding: binding, value: 'ipsum' });
                     prop = new Property(protoProp);
                     chai.expect(protoProp.binding).to.be.equal(prop.binding).to.be.equal(binding);
                     chai.expect(protoProp.value).to.be.equal('ipsum');

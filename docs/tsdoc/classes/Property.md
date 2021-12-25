@@ -1,112 +1,112 @@
 # Class: Property
 
 Property configuration object for a class **instance**.
-It is copied from the corresponding `ProtoProperty`.
+It is copied from the corresponding `PropertyDefinition`.
 
 ## Constructors
 
 ### constructor
 
-• **new Property**(`protoProp`)
+• **new Property**(`propDef`)
 
-Creates the property configuration object and copies values from `ProtoProperty`.
+Creates the property configuration object and copies values from `PropertyDefinition`.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `protoProp` | [`ProtoProperty`](ProtoProperty.md) | ProtoProperty object |
+| `propDef` | [`PropertyDefinition`](../README.md#propertydefinition) | PropertyDefinition object |
 
 #### Defined in
 
-[core/internals/properties.ts:122](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L122)
+[core/internals/properties.ts:131](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L131)
 
 ## Properties
 
 ### binding
 
-• `Optional` **binding**: [`Binding`](Binding.md)
+• `Optional` **binding**: [`Binding`](Binding.md) = `undefined`
 
 #### Defined in
 
-[core/internals/properties.ts:117](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L117)
+[core/internals/properties.ts:126](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L126)
 
 ___
 
 ### enumerable
 
-• `Optional` **enumerable**: `boolean`
+• **enumerable**: `boolean` = `true`
 
 #### Defined in
 
-[core/internals/properties.ts:115](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L115)
+[core/internals/properties.ts:124](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L124)
 
 ___
 
 ### notify
 
-• `Optional` **notify**: `boolean`
+• **notify**: `boolean` = `true`
 
 #### Defined in
 
-[core/internals/properties.ts:107](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L107)
+[core/internals/properties.ts:116](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L116)
 
 ___
 
 ### observe
 
-• `Optional` **observe**: `boolean`
+• **observe**: `boolean` = `false`
 
 #### Defined in
 
-[core/internals/properties.ts:109](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L109)
+[core/internals/properties.ts:118](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L118)
 
 ___
 
 ### readonly
 
-• `Optional` **readonly**: `boolean`
+• **readonly**: `boolean` = `false`
 
 #### Defined in
 
-[core/internals/properties.ts:111](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L111)
+[core/internals/properties.ts:120](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L120)
 
 ___
 
 ### reflect
 
-• `Optional` **reflect**: `number`
+• **reflect**: `number` = `0`
 
 #### Defined in
 
-[core/internals/properties.ts:105](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L105)
+[core/internals/properties.ts:114](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L114)
 
 ___
 
 ### strict
 
-• `Optional` **strict**: `boolean`
+• **strict**: `boolean` = `false`
 
 #### Defined in
 
-[core/internals/properties.ts:113](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L113)
+[core/internals/properties.ts:122](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L122)
 
 ___
 
 ### type
 
-• `Optional` **type**: `Constructor`
+• `Optional` **type**: `AnyConstructor` = `undefined`
 
 #### Defined in
 
-[core/internals/properties.ts:103](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L103)
+[core/internals/properties.ts:112](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L112)
 
 ___
 
 ### value
 
-• `Optional` **value**: `any`
+• `Optional` **value**: `any` = `undefined`
 
 #### Defined in
 
-[core/internals/properties.ts:101](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L101)
+[core/internals/properties.ts:110](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L110)

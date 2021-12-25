@@ -1,48 +1,74 @@
 # Class: ProtoChain
 
-Automatically generated array of all contructors inherited from the prototype chain.
-An array of all inherited function names from a prototype chain that start with "on" or "_".
-It provides a utility function `.bind(node)` that binds the functions to the specified instance of `IoNode`.
+Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
+as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
+that terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
 
 ## Constructors
 
 ### constructor
 
-• **new ProtoChain**(`constructor`)
+• **new ProtoChain**(`nodeConstructor`)
 
-Creates an array of inherited contructors by traversing down the prototype chain of the specified contructor and adds each contructor to itself.
-It terminates the prototype chain before it reaches `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
-Initializes the array of all inherited function names from a prototype chain that start with "on" or "_".
+Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors, function names, properties and listeners.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `constructor` | `Constructor`<`any`\> | Prototype object. |
+| `nodeConstructor` | [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)<`any`\> | Prototype object. |
 
 #### Defined in
 
-[core/internals/protoChain.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L19)
+[core/internals/protoChain.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L35)
 
 ## Properties
 
 ### constructors
 
-• **constructors**: `Constructor`<`any`[]\>[] = `[]`
+• `Readonly` **constructors**: [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)<`any`\>[] = `[]`
 
 #### Defined in
 
-[core/internals/protoChain.ts:11](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L11)
+[core/internals/protoChain.ts:14](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L14)
 
 ___
 
 ### functions
 
-• **functions**: `string`[] = `[]`
+• `Readonly` **functions**: `string`[] = `[]`
 
 #### Defined in
 
-[core/internals/protoChain.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L12)
+[core/internals/protoChain.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L18)
+
+___
+
+### listeners
+
+• `Readonly` **listeners**: `Object` = `{}`
+
+#### Index signature
+
+▪ [property: `string`]: [`ListenerDefinition`](../README.md#listenerdefinition)[]
+
+#### Defined in
+
+[core/internals/protoChain.ts:28](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L28)
+
+___
+
+### properties
+
+• `Readonly` **properties**: `Object` = `{}`
+
+#### Index signature
+
+▪ [property: `string`]: [`PropertyDefinition`](../README.md#propertydefinition)
+
+#### Defined in
+
+[core/internals/protoChain.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L22)
 
 ## Methods
 
@@ -50,7 +76,7 @@ ___
 
 ▸ **bindFunctions**(`node`): `void`
 
-Binds all functions to specified instance of `IoNode`.
+Binds all functions from the `.functions` list to specified instance.
 
 #### Parameters
 
@@ -64,4 +90,18 @@ Binds all functions to specified instance of `IoNode`.
 
 #### Defined in
 
-[core/internals/protoChain.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L49)
+[core/internals/protoChain.ts:89](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L89)
+
+___
+
+### dispose
+
+▸ **dispose**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[core/internals/protoChain.ts:94](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L94)

@@ -1,5 +1,5 @@
-import { sanitizePropertyDefinition, assignPropertyDefinition } from './properties.js';
-import { assignListenerDefinition } from './listeners.js';
+import { hardenPropertyDefinition, assignPropertyDefinition } from './properties.js';
+import { hardenListenerDefinition, assignListenerDefinition } from './eventDispatcher.js';
 /**
  * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
  * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
@@ -60,9 +60,9 @@ export class ProtoChain {
             const props = this.constructors[i].Properties;
             for (const p in props) {
                 if (!this.properties[p])
-                    this.properties[p] = sanitizePropertyDefinition(props[p]);
+                    this.properties[p] = hardenPropertyDefinition(props[p]);
                 else
-                    assignPropertyDefinition(this.properties[p], sanitizePropertyDefinition(props[p]));
+                    assignPropertyDefinition(this.properties[p], hardenPropertyDefinition(props[p]));
                 // TODO: Document or reconsider.
                 if (p.charAt(0) === '_') {
                     this.properties[p].notify = false;
@@ -74,7 +74,7 @@ export class ProtoChain {
             for (const l in listeners) {
                 if (listeners[l]) {
                     this.listeners[l] = this.listeners[l] || [];
-                    assignListenerDefinition(this.listeners[l], listeners[l]);
+                    assignListenerDefinition(this.listeners[l], hardenListenerDefinition(listeners[l]));
                 }
             }
         }

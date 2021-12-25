@@ -1,5 +1,5 @@
 import { Binding } from './propertyBinder.js';
-export const sanitizePropertyDefinition = (propDef) => {
+export const hardenPropertyDefinition = (propDef) => {
     const def = {
         value: undefined,
         type: undefined,

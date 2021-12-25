@@ -1,4 +1,4 @@
-import { EventDispatcher } from './internals/listeners.js';
+import { EventDispatcher } from './internals/eventDispatcher.js';
 import { IoNodeMixin, RegisterIoNode } from './io-node.js';
 /**
  * Core `IoElement` class.

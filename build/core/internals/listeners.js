@@ -1,34 +1,31 @@
-export const sanitizeListenerDefinition = (listenerDefinition) => {
+export const hardenListenerDefinition = (listenerDefinition) => {
     debug: {
         if (listenerDefinition instanceof Array) {
             if (typeof listenerDefinition[0] !== 'string' && typeof listenerDefinition[0] !== 'function')
-                console.warn('Listeners: invalid listener type');
-            if (listenerDefinition[1] && typeof listenerDefinition[1] !== 'object') {
-                console.warn('Listeners: invalid listener options type');
-                console.log(listenerDefinition);
-            }
+                console.warn('Invalid listener type');
+            if (listenerDefinition[1] && typeof listenerDefinition[1] !== 'object')
+                console.warn('Invalid listener options type');
         }
         else {
             if (typeof listenerDefinition !== 'string' && typeof listenerDefinition !== 'function')
-                console.warn('Listeners: invalid listener type');
+                console.warn('Invalid listener type');
         }
     }
     return listenerDefinition instanceof Array ? listenerDefinition : [listenerDefinition];
 };
 export const assignListenerDefinition = (definitions, listenerDefinition) => {
-    const newListenerDefinition = sanitizeListenerDefinition(listenerDefinition);
-    const i = definitions.findIndex((listener) => listener[0] === newListenerDefinition[0]);
+    const i = definitions.findIndex((listener) => listener[0] === listenerDefinition[0]);
     if (i !== -1) {
         if (definitions[i][1])
-            definitions[i][1] = Object.assign(definitions[i][1], newListenerDefinition[1]);
-        else if (newListenerDefinition[1])
-            definitions[i][1] = newListenerDefinition[1];
+            definitions[i][1] = Object.assign(definitions[i][1], listenerDefinition[1]);
+        else if (listenerDefinition[1])
+            definitions[i][1] = listenerDefinition[1];
     }
     else {
-        definitions.push(newListenerDefinition);
+        definitions.push(listenerDefinition);
     }
 };
-export const sanitizeListener = (node, listenerDefinition) => {
+export const listenerFromDefinition = (node, listenerDefinition) => {
     if (typeof listenerDefinition[0] === 'string')
         listenerDefinition[0] = node[listenerDefinition[0]];
     return listenerDefinition;
@@ -59,7 +56,7 @@ class EventDispatcher {
         for (const type in node.__protochain?.listeners) {
             this.__protoListeners[type] = [];
             for (let i = 0; i < node.__protochain.listeners[type].length; i++) {
-                this.__protoListeners[type].push(sanitizeListener(this.__node, node.__protochain.listeners[type][i]));
+                this.__protoListeners[type].push(listenerFromDefinition(this.__node, node.__protochain.listeners[type][i]));
             }
         }
     }
@@ -72,8 +69,8 @@ class EventDispatcher {
         for (const prop in properties) {
             if (prop.startsWith('on-')) {
                 const type = prop.slice(3, prop.length);
-                const listenerDefinition = sanitizeListenerDefinition(properties[prop]);
-                const listener = sanitizeListener(this.__node, listenerDefinition);
+                const definition = hardenListenerDefinition(properties[prop]);
+                const listener = listenerFromDefinition(this.__node, definition);
                 newPropListeners[type] = [listener];
             }
         }
@@ -81,8 +78,8 @@ class EventDispatcher {
         for (const type in propListeners) {
             if (!newPropListeners[type]) {
                 if (this.__connected && this.__nodeIsEventTarget) {
-                    const listenerDefinition = sanitizeListenerDefinition(propListeners[type][0]);
-                    const listener = sanitizeListener(this.__node, listenerDefinition);
+                    const definition = hardenListenerDefinition(propListeners[type][0]);
+                    const listener = listenerFromDefinition(this.__node, definition);
                     EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
                 }
                 delete propListeners[type];
@@ -90,10 +87,10 @@ class EventDispatcher {
         }
         for (const type in newPropListeners) {
             if (this.__connected && this.__nodeIsEventTarget) {
-                const listenerDefinition = sanitizeListenerDefinition(propListeners[type][0]);
-                const listener = sanitizeListener(this.__node, listenerDefinition);
-                const newListenerDefinition = sanitizeListenerDefinition(newPropListeners[type][0]);
-                const newListener = sanitizeListener(this.__node, newListenerDefinition);
+                const definition = hardenListenerDefinition(propListeners[type][0]);
+                const listener = listenerFromDefinition(this.__node, definition);
+                const newDefinition = hardenListenerDefinition(newPropListeners[type][0]);
+                const newListener = listenerFromDefinition(this.__node, newDefinition);
                 if (!propListeners[type]) {
                     EventTarget.prototype.addEventListener.call(this.__node, type, newListener[0], newListener[1]);
                 }

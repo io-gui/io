@@ -1,6 +1,6 @@
 import { IoNode, IoNodeConstructor } from '../io-node.js';
 import { PropertyDefinition } from './properties.js';
-import { ListenerDefinition } from './listeners.js';
+import { ListenerDefinition } from './eventDispatcher.js';
 /**
  * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
  * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal

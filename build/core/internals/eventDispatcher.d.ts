@@ -1,27 +1,49 @@
 import { IoNode } from '../io-node.js';
-export declare type ListenerDefinitionDetail = [keyof IoNode | EventListener, AddEventListenerOptions?];
-export declare type ListenerDefinition = keyof IoNode | EventListener | ListenerDefinitionDetail;
+export declare type ListenerDefinitionWeak = keyof IoNode | EventListener | [keyof IoNode | EventListener, AddEventListenerOptions?];
+export declare type ListenerDefinition = [keyof IoNode | EventListener, AddEventListenerOptions?];
+export declare const hardenListenerDefinition: (listenerDefinition: ListenerDefinitionWeak) => ListenerDefinition;
+export declare const assignListenerDefinition: (definitions: ListenerDefinition[], listenerDefinition: ListenerDefinition) => void;
+export declare const listenerFromDefinition: (node: IoNode, listenerDefinition: ListenerDefinition) => Listener;
+export declare type Listener = [EventListener, AddEventListenerOptions?];
+export declare type Listeners = Record<string, Listener[]>;
 /**
- * Event Dispatcher.
+ * `EventDispatcher` responsible for handling listeners and dispatching events.
+ * It maintains three independent lists of listeners:
+ *   1. `protoListeners` specified as `get Listeners()` class declarations.
+ *   2. `propListeners` specified as inline properties prefixed with "on-"
+ *   3. `addedListeners` explicitly added using `addEventListener()`.
  */
 declare class EventDispatcher {
-    private readonly __node;
-    private readonly __nodeIsEventTarget;
-    private readonly __protoListeners;
-    private readonly __propListeners;
-    private readonly __addedListeners;
-    private __connected;
+    private readonly node;
+    private readonly isEventTarget;
+    private readonly protoListeners;
+    private readonly propListeners;
+    private readonly addedListeners;
+    private connected;
     /**
-     * Creates Event Dispatcher.
-     * @param {IoNode} node Node or element to add EventDispatcher to.
+     * Creates an instance of `EventDispatcher` for specified `IoNode` instance.
+     * It initializes `protoListeners` from `ProtoChain`.
+     * @param {IoNode} node owner IoNode.
      */
     constructor(node: IoNode);
-    toListener(listener: keyof IoNode | EventListener): EventListener;
     /**
-     * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
-     * @param {Object} properties - Properties.
+     * Sets `propListeners` specified as inline properties prefixed with "on-".
+     * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
+     * @param {Record<string, any>} properties - Inline properties.
      */
-    setPropListeners(properties: Record<string, ListenerDefinition>): void;
+    setPropListeners(properties: Record<string, any>): void;
+    /**
+     * Removes all `protoListeners`.
+     */
+    removeProtoListeners(): void;
+    /**
+     * Removes all `propListeners`.
+     */
+    removePropListeners(): void;
+    /**
+     * Removes all `addedListeners`.
+     */
+    removeAddedListeners(): void;
     /**
      * Connects all event listeners.
      * @return {this} this
@@ -34,7 +56,7 @@ declare class EventDispatcher {
     disconnect(): this;
     /**
      * Proxy for `addEventListener` method.
-     * Adds an event listener.
+     * Adds an event listener to `addedListeners`.
      * @param {string} type Name of the event
      * @param {EventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
@@ -42,7 +64,8 @@ declare class EventDispatcher {
     addEventListener(type: string, listener: EventListener, options?: AddEventListenerOptions): void;
     /**
      * Proxy for `removeEventListener` method.
-     * Removes an event listener.
+     * Removes an event listener from `addedListeners`.
+     * If `listener` is not specified it removes all listeners for specified `type`.
      * @param {string} type Name of the event
      * @param {EventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
@@ -51,9 +74,9 @@ declare class EventDispatcher {
     /**
      * Shorthand for custom event dispatch.
      * @param {string} type Name of the event
-     * @param {Object} detail Event detail data
+     * @param {Record<string, any>} detail Event detail data
      * @param {boolean} [bubbles] Makes event bubble
-     * @param {EventTarget} [node] Event target to dispatch from
+     * @param {EventTarget} [node] Event target override to dispatch the event from
      */
     dispatchEvent(type: string, detail?: Record<string, any>, bubbles?: boolean, node?: EventTarget | IoNode): void;
     /**

@@ -2,7 +2,7 @@ import {ProtoChain} from './internals/protoChain.js';
 import {PropertyBinder, Binding} from './internals/propertyBinder.js';
 import {ChangeQueue} from './internals/changeQueue.js';
 import {Properties, PropertyDefinitionWeak} from './internals/properties.js';
-import {EventDispatcher, ListenerDefinitionWeak} from './internals/listeners.js';
+import {EventDispatcher, ListenerDefinitionWeak} from './internals/eventDispatcher.js';
 
 export type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
 export type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;

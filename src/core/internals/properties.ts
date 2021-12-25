@@ -27,7 +27,7 @@ export type PropertyDefinitionWeak = string | number | boolean | null | AnyConst
   enumerable?: boolean;
 };
 
-export const sanitizePropertyDefinition = (propDef: PropertyDefinitionWeak): PropertyDefinition => {
+export const hardenPropertyDefinition = (propDef: PropertyDefinitionWeak): PropertyDefinition => {
   const def: PropertyDefinition = {
     value: undefined,
     type: undefined,

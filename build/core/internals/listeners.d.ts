@@ -1,9 +1,9 @@
 import { IoNode } from '../io-node.js';
-export declare type ListenerDefinitionWeak = keyof IoNode | EventListener | ListenerDefinition;
+export declare type ListenerDefinitionWeak = keyof IoNode | EventListener | [keyof IoNode | EventListener, AddEventListenerOptions?];
 export declare type ListenerDefinition = [keyof IoNode | EventListener, AddEventListenerOptions?];
-export declare const sanitizeListenerDefinition: (listenerDefinition: ListenerDefinition | ListenerDefinitionWeak) => ListenerDefinition;
-export declare const assignListenerDefinition: (definitions: ListenerDefinition[], listenerDefinition: ListenerDefinition | ListenerDefinitionWeak) => void;
-export declare const sanitizeListener: (node: IoNode, listenerDefinition: ListenerDefinition) => Listener;
+export declare const hardenListenerDefinition: (listenerDefinition: ListenerDefinitionWeak) => ListenerDefinition;
+export declare const assignListenerDefinition: (definitions: ListenerDefinition[], listenerDefinition: ListenerDefinition) => void;
+export declare const listenerFromDefinition: (node: IoNode, listenerDefinition: ListenerDefinition) => Listener;
 export declare type Listener = [EventListener, AddEventListenerOptions?];
 export declare type Listeners = Record<string, Listener[]>;
 /**
