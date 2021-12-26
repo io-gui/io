@@ -27,8 +27,15 @@ export const assignListenerDefinition = (definitions: ListenerDefinition[], list
 };
 
 export const listenerFromDefinition = (node: IoNode, listenerDefinition: ListenerDefinition): Listener => {
-  if (typeof listenerDefinition[0] === 'string') listenerDefinition[0] = node[listenerDefinition[0]];
-  return listenerDefinition as Listener;
+  debug: {
+    if (typeof listenerDefinition[0] !== 'string' && typeof listenerDefinition[0] !== 'function') console.warn('Invalid listener type');
+    if (listenerDefinition[1] && typeof listenerDefinition[1] !== 'object') console.warn('Invalid listener options type');
+  }
+  const listenerHandler = typeof listenerDefinition[0] === 'string' ? node[listenerDefinition[0]] : listenerDefinition[0];
+  const listenerOptions = listenerDefinition[1];
+  const listener: Listener = [listenerHandler];
+  if (listenerOptions) listener.push(listenerOptions);
+  return listener;
 };
 
 export type Listener = [EventListener, AddEventListenerOptions?];
@@ -66,7 +73,7 @@ class EventDispatcher {
     for (const type in node.__protochain?.listeners) {
       this.protoListeners[type] = [];
       for (let i = 0; i < node.__protochain.listeners[type].length; i++) {
-        this.protoListeners[type].push(listenerFromDefinition(this.node, node.__protochain.listeners[type][i]));
+        this.protoListeners[type].push(listenerFromDefinition(node, node.__protochain.listeners[type][i]));
       }
     }
   }

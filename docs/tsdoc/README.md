@@ -82,7 +82,7 @@
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:34
+[core/internals/eventDispatcher.ts:41](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L41)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:5
+[core/internals/eventDispatcher.ts:5](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L5)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:3
+[core/internals/eventDispatcher.ts:3](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L3)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:35
+[core/internals/eventDispatcher.ts:42](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L42)
 
 ___
 
@@ -321,7 +321,7 @@ ___
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:19
+[core/internals/eventDispatcher.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L19)
 
 ___
 
@@ -388,7 +388,7 @@ ___
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:7
+[core/internals/eventDispatcher.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L7)
 
 ___
 
@@ -429,4 +429,4 @@ ___
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:29
+[core/internals/eventDispatcher.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L29)

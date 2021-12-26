@@ -26,9 +26,18 @@ export const assignListenerDefinition = (definitions, listenerDefinition) => {
     }
 };
 export const listenerFromDefinition = (node, listenerDefinition) => {
-    if (typeof listenerDefinition[0] === 'string')
-        listenerDefinition[0] = node[listenerDefinition[0]];
-    return listenerDefinition;
+    debug: {
+        if (typeof listenerDefinition[0] !== 'string' && typeof listenerDefinition[0] !== 'function')
+            console.warn('Invalid listener type');
+        if (listenerDefinition[1] && typeof listenerDefinition[1] !== 'object')
+            console.warn('Invalid listener options type');
+    }
+    const listenerHandler = typeof listenerDefinition[0] === 'string' ? node[listenerDefinition[0]] : listenerDefinition[0];
+    const listenerOptions = listenerDefinition[1];
+    const listener = [listenerHandler];
+    if (listenerOptions)
+        listener.push(listenerOptions);
+    return listener;
 };
 /**
  * `EventDispatcher` responsible for handling listeners and dispatching events.
@@ -61,7 +70,7 @@ class EventDispatcher {
         for (const type in node.__protochain?.listeners) {
             this.protoListeners[type] = [];
             for (let i = 0; i < node.__protochain.listeners[type].length; i++) {
-                this.protoListeners[type].push(listenerFromDefinition(this.node, node.__protochain.listeners[type][i]));
+                this.protoListeners[type].push(listenerFromDefinition(node, node.__protochain.listeners[type][i]));
             }
         }
     }

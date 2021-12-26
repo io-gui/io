@@ -12,7 +12,8 @@ It maintains three independent lists of listeners:
 
 • **new EventDispatcher**(`node`)
 
-Creates an instance of `EventDispatcher` for specified `IoNode` instance and initializes `protoListeners` from `ProtoChain`.
+Creates an instance of `EventDispatcher` for specified `IoNode` instance.
+It initializes `protoListeners` from `ProtoChain`.
 
 #### Parameters
 
@@ -22,7 +23,7 @@ Creates an instance of `EventDispatcher` for specified `IoNode` instance and ini
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:55
+[core/internals/eventDispatcher.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L63)
 
 ## Methods
 
@@ -31,7 +32,7 @@ core/internals/eventDispatcher.ts:55
 ▸ **addEventListener**(`type`, `listener`, `options?`): `void`
 
 Proxy for `addEventListener` method.
-Adds an event listener.
+Adds an event listener to `addedListeners`.
 
 #### Parameters
 
@@ -47,21 +48,7 @@ Adds an event listener.
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:193
-
-___
-
-### clearAddedListeners
-
-▸ **clearAddedListeners**(): `void`
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-core/internals/eventDispatcher.ts:113
+[core/internals/eventDispatcher.ts:235](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L235)
 
 ___
 
@@ -79,7 +66,7 @@ this
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:130
+[core/internals/eventDispatcher.ts:171](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L171)
 
 ___
 
@@ -97,7 +84,7 @@ this
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:160
+[core/internals/eventDispatcher.ts:200](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L200)
 
 ___
 
@@ -122,7 +109,7 @@ Shorthand for custom event dispatch.
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:244
+[core/internals/eventDispatcher.ts:289](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L289)
 
 ___
 
@@ -139,7 +126,23 @@ Use this when node is no longer needed.
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:274
+[core/internals/eventDispatcher.ts:321](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L321)
+
+___
+
+### removeAddedListeners
+
+▸ **removeAddedListeners**(): `void`
+
+Removes all `addedListeners`.
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[core/internals/eventDispatcher.ts:155](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L155)
 
 ___
 
@@ -148,7 +151,8 @@ ___
 ▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
 
 Proxy for `removeEventListener` method.
-Removes an event listener.
+Removes an event listener from `addedListeners`.
+If `listener` is not specified it removes all listeners for specified `type`.
 
 #### Parameters
 
@@ -164,21 +168,15 @@ Removes an event listener.
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:211
+[core/internals/eventDispatcher.ts:256](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L256)
 
 ___
 
-### setPropListeners
+### removePropListeners
 
-▸ **setPropListeners**(`properties`): `void`
+▸ **removePropListeners**(): `void`
 
-Sets `propListeners` listeners from inline properties prefixed with "on-".
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Properties. |
+Removes all `propListeners`.
 
 #### Returns
 
@@ -186,4 +184,43 @@ Sets `propListeners` listeners from inline properties prefixed with "on-".
 
 #### Defined in
 
-core/internals/eventDispatcher.ts:76
+[core/internals/eventDispatcher.ts:142](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L142)
+
+___
+
+### removeProtoListeners
+
+▸ **removeProtoListeners**(): `void`
+
+Removes all `protoListeners`.
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[core/internals/eventDispatcher.ts:127](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L127)
+
+___
+
+### setPropListeners
+
+▸ **setPropListeners**(`properties`): `void`
+
+Sets `propListeners` specified as inline properties prefixed with "on-".
+It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `properties` | `Record`<`string`, `any`\> | Inline properties. |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[core/internals/eventDispatcher.ts:85](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L85)

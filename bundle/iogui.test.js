@@ -490,47 +490,52 @@ const assignListenerDefinition = (definitions, listenerDefinition) => {
     }
 };
 const listenerFromDefinition = (node, listenerDefinition) => {
-    if (typeof listenerDefinition[0] === 'string')
-        listenerDefinition[0] = node[listenerDefinition[0]];
-    return listenerDefinition;
+    const listenerHandler = typeof listenerDefinition[0] === 'string' ? node[listenerDefinition[0]] : listenerDefinition[0];
+    const listenerOptions = listenerDefinition[1];
+    const listener = [listenerHandler];
+    if (listenerOptions)
+        listener.push(listenerOptions);
+    return listener;
 };
 /**
- * Event Dispatcher responsible for handling listeners and dispatching events.
+ * `EventDispatcher` responsible for handling listeners and dispatching events.
  * It maintains three independent lists of listeners:
- *   1. specified as `get Listeners()` class declarations.
- *   2. specified as vDOM properties prefixed with "on-"
- *   3. Explicitly added using `addEventListener()`.
+ *   1. `protoListeners` specified as `get Listeners()` class declarations.
+ *   2. `propListeners` specified as inline properties prefixed with "on-"
+ *   3. `addedListeners` explicitly added using `addEventListener()`.
  */
 class EventDispatcher {
-    __node;
-    __nodeIsEventTarget;
-    __protoListeners = {};
-    __propListeners = {};
-    __addedListeners = {};
-    __connected = false;
+    node;
+    isEventTarget;
+    protoListeners = {};
+    propListeners = {};
+    addedListeners = {};
+    connected = false;
     /**
-     * Creates Event Dispatcher for specified IoNode instance.
+     * Creates an instance of `EventDispatcher` for specified `IoNode` instance.
+     * It initializes `protoListeners` from `ProtoChain`.
      * @param {IoNode} node owner IoNode.
      */
     constructor(node) {
-        this.__node = node;
-        this.__nodeIsEventTarget = node instanceof EventTarget;
-        Object.defineProperty(this, '__node', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__nodeIsEventTarget', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__protoListeners', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__propListeners', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__addedListeners', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__connected', { enumerable: false });
+        this.node = node;
+        this.isEventTarget = node instanceof EventTarget;
+        Object.defineProperty(this, 'node', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'isEventTarget', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'protoListeners', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'propListeners', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'addedListeners', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'connected', { enumerable: false });
         for (const type in node.__protochain?.listeners) {
-            this.__protoListeners[type] = [];
+            this.protoListeners[type] = [];
             for (let i = 0; i < node.__protochain.listeners[type].length; i++) {
-                this.__protoListeners[type].push(listenerFromDefinition(this.__node, node.__protochain.listeners[type][i]));
+                this.protoListeners[type].push(listenerFromDefinition(node, node.__protochain.listeners[type][i]));
             }
         }
     }
     /**
-     * Sets listeners from inline properties (filtered form properties map by 'on-' prefix).
-     * @param {Object} properties - Properties.
+     * Sets `propListeners` specified as inline properties prefixed with "on-".
+     * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
+     * @param {Record<string, any>} properties - Inline properties.
      */
     setPropListeners(properties) {
         const newPropListeners = {};
@@ -538,36 +543,81 @@ class EventDispatcher {
             if (prop.startsWith('on-')) {
                 const type = prop.slice(3, prop.length);
                 const definition = hardenListenerDefinition(properties[prop]);
-                const listener = listenerFromDefinition(this.__node, definition);
+                const listener = listenerFromDefinition(this.node, definition);
                 newPropListeners[type] = [listener];
             }
         }
-        const propListeners = this.__propListeners;
+        const propListeners = this.propListeners;
         for (const type in propListeners) {
             if (!newPropListeners[type]) {
-                if (this.__connected && this.__nodeIsEventTarget) {
+                if (this.connected && this.isEventTarget) {
                     const definition = hardenListenerDefinition(propListeners[type][0]);
-                    const listener = listenerFromDefinition(this.__node, definition);
-                    EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
+                    const listener = listenerFromDefinition(this.node, definition);
+                    EventTarget.prototype.removeEventListener.call(this.node, type, listener[0], listener[1]);
                 }
                 delete propListeners[type];
             }
         }
         for (const type in newPropListeners) {
-            if (this.__connected && this.__nodeIsEventTarget) {
-                const definition = hardenListenerDefinition(propListeners[type][0]);
-                const listener = listenerFromDefinition(this.__node, definition);
+            if (this.connected && this.isEventTarget) {
                 const newDefinition = hardenListenerDefinition(newPropListeners[type][0]);
-                const newListener = listenerFromDefinition(this.__node, newDefinition);
+                const newListener = listenerFromDefinition(this.node, newDefinition);
                 if (!propListeners[type]) {
-                    EventTarget.prototype.addEventListener.call(this.__node, type, newListener[0], newListener[1]);
+                    EventTarget.prototype.addEventListener.call(this.node, type, newListener[0], newListener[1]);
                 }
-                else if ((listener !== newListener || listener[1] !== newListener[1])) {
-                    EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
-                    EventTarget.prototype.addEventListener.call(this.__node, type, newListener[0], newListener[1]);
+                else {
+                    const definition = hardenListenerDefinition(propListeners[type][0]);
+                    const listener = listenerFromDefinition(this.node, definition);
+                    if ((listener !== newListener || listener[1] !== newListener[1])) {
+                        EventTarget.prototype.removeEventListener.call(this.node, type, listener[0], listener[1]);
+                        EventTarget.prototype.addEventListener.call(this.node, type, newListener[0], newListener[1]);
+                    }
                 }
             }
             propListeners[type] = newPropListeners[type];
+        }
+    }
+    /**
+     * Removes all `protoListeners`.
+     */
+    removeProtoListeners() {
+        for (const type in this.protoListeners) {
+            for (let i = this.protoListeners[type].length; i--;) {
+                if (this.isEventTarget) {
+                    const listener = this.protoListeners[type][i];
+                    EventTarget.prototype.removeEventListener.call(this.node, type, listener[0], listener[1]);
+                }
+            }
+            this.protoListeners[type].length = 0;
+            delete this.protoListeners[type];
+        }
+    }
+    /**
+     * Removes all `propListeners`.
+     */
+    removePropListeners() {
+        for (const type in this.propListeners) {
+            if (this.isEventTarget) {
+                const listener = this.propListeners[type][0];
+                EventTarget.prototype.removeEventListener.call(this.node, type, listener[0], listener[1]);
+            }
+            this.propListeners[type].length = 0;
+            delete this.propListeners[type];
+        }
+    }
+    /**
+     * Removes all `addedListeners`.
+     */
+    removeAddedListeners() {
+        for (const type in this.addedListeners) {
+            for (let i = this.addedListeners[type].length; i--;) {
+                if (this.isEventTarget) {
+                    const listener = this.addedListeners[type][i];
+                    EventTarget.prototype.removeEventListener.call(this.node, type, listener[0], listener[1]);
+                }
+            }
+            this.addedListeners[type].length = 0;
+            delete this.addedListeners[type];
         }
     }
     /**
@@ -575,26 +625,25 @@ class EventDispatcher {
      * @return {this} this
      */
     connect() {
-        if (this.__nodeIsEventTarget) {
-            // TODO: test
-            for (const type in this.__protoListeners) {
-                for (let i = 0; i < this.__protoListeners[type].length; i++) {
-                    const listener = this.__protoListeners[type][i];
-                    EventTarget.prototype.addEventListener.call(this.__node, type, listener[0], listener[1]);
+        if (this.isEventTarget) {
+            for (const type in this.protoListeners) {
+                for (let i = 0; i < this.protoListeners[type].length; i++) {
+                    const listener = this.protoListeners[type][i];
+                    EventTarget.prototype.addEventListener.call(this.node, type, listener[0], listener[1]);
                 }
             }
-            for (const type in this.__propListeners) {
-                const listener = this.__propListeners[type][0];
-                EventTarget.prototype.addEventListener.call(this.__node, type, listener[0], listener[1]);
+            for (const type in this.propListeners) {
+                const listener = this.propListeners[type][0];
+                EventTarget.prototype.addEventListener.call(this.node, type, listener[0], listener[1]);
             }
-            for (const type in this.__addedListeners) {
-                for (let i = this.__addedListeners[type].length; i--;) {
-                    const listener = this.__addedListeners[type][i];
-                    EventTarget.prototype.addEventListener.call(this.__node, type, listener[0], listener[1]);
+            for (const type in this.addedListeners) {
+                for (let i = this.addedListeners[type].length; i--;) {
+                    const listener = this.addedListeners[type][i];
+                    EventTarget.prototype.addEventListener.call(this.node, type, listener[0], listener[1]);
                 }
             }
         }
-        this.__connected = true;
+        this.connected = true;
         return this;
     }
     /**
@@ -602,96 +651,97 @@ class EventDispatcher {
      * @return {this} this
      */
     disconnect() {
-        if (this.__nodeIsEventTarget) {
-            // TODO: test
-            for (const type in this.__protoListeners) {
-                for (let i = 0; i < this.__protoListeners[type].length; i++) {
-                    const listener = this.__protoListeners[type][i];
-                    EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
+        // this.removeProtoListeners();
+        // this.removePropListeners();
+        // this.removeAddedListeners();
+        if (this.isEventTarget) {
+            for (const type in this.protoListeners) {
+                for (let i = 0; i < this.protoListeners[type].length; i++) {
+                    const listener = this.protoListeners[type][i];
+                    EventTarget.prototype.removeEventListener.call(this.node, type, listener[0], listener[1]);
                 }
             }
-            for (const type in this.__propListeners) {
-                const listener = this.__propListeners[type][0];
-                EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
+            for (const type in this.propListeners) {
+                const listener = this.propListeners[type][0];
+                EventTarget.prototype.removeEventListener.call(this.node, type, listener[0], listener[1]);
             }
-            for (const type in this.__addedListeners) {
-                for (let i = this.__addedListeners[type].length; i--;) {
-                    const listener = this.__addedListeners[type][i];
-                    EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
+            for (const type in this.addedListeners) {
+                for (let i = this.addedListeners[type].length; i--;) {
+                    const listener = this.addedListeners[type][i];
+                    EventTarget.prototype.removeEventListener.call(this.node, type, listener[0], listener[1]);
                 }
             }
         }
-        this.__connected = false;
+        this.connected = false;
         return this;
     }
     /**
      * Proxy for `addEventListener` method.
-     * Adds an event listener.
+     * Adds an event listener to `addedListeners`.
      * @param {string} type Name of the event
      * @param {EventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
      */
     addEventListener(type, listener, options) {
-        this.__addedListeners[type] = this.__addedListeners[type] || [];
-        this.__addedListeners[type].push(options ? [listener, options] : [listener]);
-        if (this.__connected && this.__nodeIsEventTarget) {
-            EventTarget.prototype.addEventListener.call(this.__node, type, listener, options);
+        this.addedListeners[type] = this.addedListeners[type] || [];
+        this.addedListeners[type].push(options ? [listener, options] : [listener]);
+        if (this.connected && this.isEventTarget) {
+            EventTarget.prototype.addEventListener.call(this.node, type, listener, options);
         }
     }
     /**
      * Proxy for `removeEventListener` method.
-     * Removes an event listener.
+     * Removes an event listener from `addedListeners`.
+     * If `listener` is not specified it removes all listeners for specified `type`.
      * @param {string} type Name of the event
      * @param {EventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
     */
     removeEventListener(type, listener, options) {
         if (!listener) {
-            for (let i = 0; i < this.__addedListeners[type].length; i++) {
-                if (this.__connected && this.__nodeIsEventTarget) {
-                    const listener = this.__addedListeners[type][i];
-                    EventTarget.prototype.removeEventListener.call(this.__node, type, listener[0], listener[1]);
+            for (let i = 0; i < this.addedListeners[type].length; i++) {
+                if (this.connected && this.isEventTarget) {
+                    const listener = this.addedListeners[type][i];
+                    EventTarget.prototype.removeEventListener.call(this.node, type, listener[0], listener[1]);
                 }
             }
-            this.__addedListeners[type].length = 0;
-            delete this.__addedListeners[type];
+            this.addedListeners[type].length = 0;
+            delete this.addedListeners[type];
         }
         else {
-            const l = this.__addedListeners[type].findIndex(item => item[0] = listener);
-            this.__addedListeners[type].splice(l, 1);
-            if (this.__connected && this.__nodeIsEventTarget) {
-                EventTarget.prototype.removeEventListener.call(this.__node, type, listener, options);
+            const l = this.addedListeners[type].findIndex(item => item[0] = listener);
+            this.addedListeners[type].splice(l, 1);
+            if (this.connected && this.isEventTarget) {
+                EventTarget.prototype.removeEventListener.call(this.node, type, listener, options);
             }
         }
     }
     /**
      * Shorthand for custom event dispatch.
      * @param {string} type Name of the event
-     * @param {Object} detail Event detail data
+     * @param {Record<string, any>} detail Event detail data
      * @param {boolean} [bubbles] Makes event bubble
-     * @param {EventTarget} [node] Event target to dispatch from
+     * @param {EventTarget} [node] Event target override to dispatch the event from
      */
-    dispatchEvent(type, detail = {}, bubbles = true, node = this.__node) {
-        if (!this.__connected)
+    dispatchEvent(type, detail = {}, bubbles = true, node = this.node) {
+        if (!this.connected) {
             return;
+        }
         if ((node instanceof EventTarget)) {
             EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(type, { detail: detail, bubbles: bubbles, composed: true, cancelable: true }));
         }
         else {
-            if (this.__protoListeners[type] !== undefined) {
-                for (let i = 0; i < this.__protoListeners[type].length; i++) {
-                    const listener = this.__protoListeners[type][i];
-                    listener[0].call(node, { detail: detail, target: node, path: [node] });
+            if (this.protoListeners[type]) {
+                for (let i = 0; i < this.protoListeners[type].length; i++) {
+                    this.protoListeners[type][i][0].call(node, { detail: detail, target: node, path: [node] });
                 }
             }
-            if (this.__propListeners[type] !== undefined) {
-                const listener = this.__propListeners[type][0];
-                listener[0].call(node, { detail: detail, target: node, path: [node] });
+            if (this.propListeners[type]) {
+                this.propListeners[type][0][0].call(node, { detail: detail, target: node, path: [node] });
             }
-            if (this.__addedListeners[type] !== undefined) {
-                for (let i = 0; i < this.__addedListeners[type].length; i++) {
-                    const listener = this.__addedListeners[type][i];
-                    listener[0].call(node, { detail: detail, target: node, path: [node] });
+            if (this.addedListeners[type]) {
+                for (let i = 0; i < this.addedListeners[type].length; i++) {
+                    this.addedListeners[type][i][0].call(node, { detail: detail, target: node, path: [node] });
                 }
             }
         }
@@ -701,12 +751,12 @@ class EventDispatcher {
      * Use this when node is no longer needed.
      */
     dispose() {
-        if (this.__connected)
+        if (this.connected)
             this.disconnect();
-        delete this.__node;
-        delete this.__protoListeners;
-        delete this.__propListeners;
-        delete this.__addedListeners;
+        delete this.node;
+        delete this.protoListeners;
+        delete this.propListeners;
+        delete this.addedListeners;
     }
 }
 
@@ -1399,37 +1449,37 @@ class Listeners {
             it('Should initialize with correct default values', () => {
                 const node = new IoNode2$1();
                 const eventDispatcher = new EventDispatcher(node);
-                chai.expect(eventDispatcher.__node).to.be.equal(node);
-                chai.expect(typeof eventDispatcher.__protoListeners).to.be.equal('object');
-                chai.expect(typeof eventDispatcher.__propListeners).to.be.equal('object');
-                chai.expect(typeof eventDispatcher.__addedListeners).to.be.equal('object');
-                chai.expect(eventDispatcher.__connected).to.be.equal(false);
+                chai.expect(eventDispatcher.node).to.be.equal(node);
+                chai.expect(typeof eventDispatcher.protoListeners).to.be.equal('object');
+                chai.expect(typeof eventDispatcher.propListeners).to.be.equal('object');
+                chai.expect(typeof eventDispatcher.addedListeners).to.be.equal('object');
+                chai.expect(eventDispatcher.connected).to.be.equal(false);
             });
             it('Should include all listeners from protochain', () => {
                 const node = new IoNode2$1();
                 const eventDispatcher = new EventDispatcher(node);
-                chai.expect(JSON.stringify(eventDispatcher.__protoListeners)).to.be.equal('{"event1":[[null]],"event2":[[null,{"capture":true}]]}');
-                chai.expect(eventDispatcher.__protoListeners.event1[0][0]).to.be.equal(node.handler1);
-                chai.expect(eventDispatcher.__protoListeners.event2[0][0]).to.be.equal(node.handler2);
+                chai.expect(JSON.stringify(eventDispatcher.protoListeners)).to.be.equal('{"event1":[[null]],"event2":[[null,{"capture":true}]]}');
+                chai.expect(eventDispatcher.protoListeners.event1[0][0]).to.be.equal(node.handler1);
+                chai.expect(eventDispatcher.protoListeners.event2[0][0]).to.be.equal(node.handler2);
             });
             it('Should set property listeners correctly', () => {
                 const node = new IoNode2$1();
                 const eventDispatcher = new EventDispatcher(node);
                 const handler4 = () => { };
                 eventDispatcher.setPropListeners({ 'on-event3': 'handler3', 'on-event4': handler4 });
-                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event3":[[null]],"event4":[[null]]}');
-                chai.expect(eventDispatcher.__propListeners.event3[0][0]).to.be.equal(node.handler3);
-                chai.expect(eventDispatcher.__propListeners.event4[0][0]).to.be.equal(handler4);
+                chai.expect(JSON.stringify(eventDispatcher.propListeners)).to.be.equal('{"event3":[[null]],"event4":[[null]]}');
+                chai.expect(eventDispatcher.propListeners.event3[0][0]).to.be.equal(node.handler3);
+                chai.expect(eventDispatcher.propListeners.event4[0][0]).to.be.equal(handler4);
                 eventDispatcher.setPropListeners({ 'on-event5': ['handler3'], 'on-event6': [handler4] });
-                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event5":[[null]],"event6":[[null]]}');
-                chai.expect(eventDispatcher.__propListeners.event5[0][0]).to.be.equal(node.handler3);
-                chai.expect(eventDispatcher.__propListeners.event6[0][0]).to.be.equal(handler4);
+                chai.expect(JSON.stringify(eventDispatcher.propListeners)).to.be.equal('{"event5":[[null]],"event6":[[null]]}');
+                chai.expect(eventDispatcher.propListeners.event5[0][0]).to.be.equal(node.handler3);
+                chai.expect(eventDispatcher.propListeners.event6[0][0]).to.be.equal(handler4);
                 eventDispatcher.setPropListeners({ 'on-event7': ['handler3', { capture: true }], 'on-event8': [handler4, { capture: true }] });
-                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{"event7":[[null,{"capture":true}]],"event8":[[null,{"capture":true}]]}');
-                chai.expect(eventDispatcher.__propListeners.event7[0][0]).to.be.equal(node.handler3);
-                chai.expect(eventDispatcher.__propListeners.event8[0][0]).to.be.equal(handler4);
+                chai.expect(JSON.stringify(eventDispatcher.propListeners)).to.be.equal('{"event7":[[null,{"capture":true}]],"event8":[[null,{"capture":true}]]}');
+                chai.expect(eventDispatcher.propListeners.event7[0][0]).to.be.equal(node.handler3);
+                chai.expect(eventDispatcher.propListeners.event8[0][0]).to.be.equal(handler4);
                 eventDispatcher.setPropListeners({});
-                chai.expect(JSON.stringify(eventDispatcher.__propListeners)).to.be.equal('{}');
+                chai.expect(JSON.stringify(eventDispatcher.propListeners)).to.be.equal('{}');
             });
             it('Should add/remove listeners correctly', () => {
                 const node = new IoNode2$1();
@@ -1438,14 +1488,14 @@ class Listeners {
                 const listener2 = () => { };
                 eventDispatcher.addEventListener('event1', listener1);
                 eventDispatcher.addEventListener('event1', listener2, { capture: true });
-                chai.expect(JSON.stringify(eventDispatcher.__addedListeners)).to.be.equal('{"event1":[[null],[null,{"capture":true}]]}');
-                chai.expect(eventDispatcher.__addedListeners.event1[0][0]).to.be.equal(listener1);
-                chai.expect(eventDispatcher.__addedListeners.event1[1][0]).to.be.equal(listener2);
+                chai.expect(JSON.stringify(eventDispatcher.addedListeners)).to.be.equal('{"event1":[[null],[null,{"capture":true}]]}');
+                chai.expect(eventDispatcher.addedListeners.event1[0][0]).to.be.equal(listener1);
+                chai.expect(eventDispatcher.addedListeners.event1[1][0]).to.be.equal(listener2);
                 eventDispatcher.removeEventListener('event1', listener1);
-                chai.expect(JSON.stringify(eventDispatcher.__addedListeners)).to.be.equal('{"event1":[[null,{"capture":true}]]}');
-                chai.expect(eventDispatcher.__addedListeners.event1[0][0]).to.be.equal(listener2);
+                chai.expect(JSON.stringify(eventDispatcher.addedListeners)).to.be.equal('{"event1":[[null,{"capture":true}]]}');
+                chai.expect(eventDispatcher.addedListeners.event1[0][0]).to.be.equal(listener2);
                 eventDispatcher.removeEventListener('event1');
-                chai.expect(JSON.stringify(eventDispatcher.__addedListeners)).to.be.equal('{}');
+                chai.expect(JSON.stringify(eventDispatcher.addedListeners)).to.be.equal('{}');
             });
             it('Should dispatch events only when connected', () => {
                 const node = new IoNode2$1();
@@ -1562,11 +1612,11 @@ class Listeners {
                 const node = new IoNode2$1();
                 const eventDispatcher = new EventDispatcher(node);
                 eventDispatcher.dispose();
-                chai.expect(eventDispatcher.__node).to.be.equal(undefined);
-                chai.expect(eventDispatcher.__protoListeners).to.be.equal(undefined);
-                chai.expect(eventDispatcher.__propListeners).to.be.equal(undefined);
-                chai.expect(eventDispatcher.__addedListeners).to.be.equal(undefined);
-                chai.expect(eventDispatcher.__connected).to.be.equal(false);
+                chai.expect(eventDispatcher.node).to.be.equal(undefined);
+                chai.expect(eventDispatcher.protoListeners).to.be.equal(undefined);
+                chai.expect(eventDispatcher.propListeners).to.be.equal(undefined);
+                chai.expect(eventDispatcher.addedListeners).to.be.equal(undefined);
+                chai.expect(eventDispatcher.connected).to.be.equal(false);
             });
         });
     }
@@ -3080,28 +3130,28 @@ class Node {
                 node.connect(window);
                 chai.expect(node.__connected).to.be.equal(true);
                 node.connect(document);
-                chai.expect(node.__eventDispatcher.__connected).to.be.equal(true);
+                chai.expect(node.__eventDispatcher.connected).to.be.equal(true);
                 chai.expect(node.__properties.__connected).to.be.equal(true);
                 chai.expect(node.__connected).to.be.equal(true);
                 chai.expect(node.__connections).to.be.deep.equal([window, document]);
                 node.disconnect(window);
-                chai.expect(node.__eventDispatcher.__connected).to.be.equal(true);
+                chai.expect(node.__eventDispatcher.connected).to.be.equal(true);
                 chai.expect(node.__properties.__connected).to.be.equal(true);
                 chai.expect(node.__connected).to.be.equal(true);
                 chai.expect(node.__connections).to.be.deep.equal([document]);
                 node.disconnect(document);
                 chai.expect(node.__connected).to.be.equal(false);
-                chai.expect(node.__eventDispatcher.__connected).to.be.equal(false);
+                chai.expect(node.__eventDispatcher.connected).to.be.equal(false);
                 chai.expect(node.__properties.__connected).to.be.equal(false);
                 chai.expect(node.__connections).to.be.deep.equal([]);
                 node.connect(window);
-                chai.expect(node.__eventDispatcher.__connected).to.be.equal(true);
+                chai.expect(node.__eventDispatcher.connected).to.be.equal(true);
                 chai.expect(node.__properties.__connected).to.be.equal(true);
                 chai.expect(node.__connected).to.be.equal(true);
                 chai.expect(node.__connections).to.be.deep.equal([window]);
                 node.dispose();
                 chai.expect(node.__connected).to.be.equal(false);
-                chai.expect(node.__eventDispatcher.__connected).to.be.equal(false);
+                chai.expect(node.__eventDispatcher.connected).to.be.equal(false);
                 chai.expect(node.__properties.__connected).to.be.equal(false);
                 chai.expect(node.__connections).to.be.deep.equal([]);
             });
