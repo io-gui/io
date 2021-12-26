@@ -5,18 +5,18 @@ import {IoNode} from '../io-node.js';
  * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
 export class ChangeQueue {
-  private readonly __node: IoNode;
-  private readonly __changes: Array<Change> = [];
-  private __dispatching = false;
+  private readonly node: IoNode;
+  private readonly changes: Array<Change> = [];
+  private dispatching = false;
   /**
    * Creates change queue for the specified owner instance of `IoNode`.
    * @param {IoNode} node - Owner node.
    */
   constructor(node: IoNode) {
-    this.__node = node;
-    Object.defineProperty(this, '__node',        {enumerable: false, writable: false});
-    Object.defineProperty(this, '__changes',     {enumerable: false, writable: false});
-    Object.defineProperty(this, '__dispatching', {enumerable: false});
+    this.node = node;
+    Object.defineProperty(this, 'node',        {enumerable: false, writable: false});
+    Object.defineProperty(this, 'changes',     {enumerable: false, writable: false});
+    Object.defineProperty(this, 'dispatching', {enumerable: false});
   }
   /**
    * Adds property change payload to the queue by specifying property name, previous and the new value.
@@ -29,11 +29,11 @@ export class ChangeQueue {
     debug: {
       if (value === oldValue) console.warn('ChangeQueue: queuing change with same value and oldValue!');
     }
-    const i = this.__changes.findIndex(change => change.property === property);
+    const i = this.changes.findIndex(change => change.property === property);
     if (i === -1) {
-      this.__changes.push(new Change(property, value, oldValue));
+      this.changes.push(new Change(property, value, oldValue));
     } else {
-      this.__changes[i].value = value;
+      this.changes[i].value = value;
     }
   }
   /**
@@ -45,40 +45,40 @@ export class ChangeQueue {
    * After all changes are dispatched it invokes `.applyCompose()` and `.changed()` functions od the owner node instance.
    */
   dispatch() {
-    if (this.__dispatching === true || !this.__node.__connected) return;
+    if (this.dispatching === true || !this.node.connected) return;
 
-    this.__dispatching = true;
+    this.dispatching = true;
     let changed = false;
 
-    while (this.__changes.length) {
+    while (this.changes.length) {
       // TODO: convert to FIFO
-      const i = this.__changes.length - 1;
+      const i = this.changes.length - 1;
       // const i = 0;
-      const change = this.__changes[i];
-      this.__changes.splice(i, 1);
+      const change = this.changes[i];
+      this.changes.splice(i, 1);
       const property = change.property;
       if (change.value !== change.oldValue) {
         changed = true;
-        if (this.__node[property + 'Changed']) this.__node[property + 'Changed'](change);
-        this.__node.dispatchEvent(property + '-changed', change);
+        if (this.node[property + 'Changed']) this.node[property + 'Changed'](change);
+        this.node.dispatchEvent(property + '-changed', change);
       }
     }
 
     if (changed) {
-      this.__node.applyCompose();
-      this.__node.changed();
+      this.node.applyCompose();
+      this.node.changed();
     }
 
-    this.__dispatching = false;
+    this.dispatching = false;
   }
   /**
    * Clears the queue and removes the node reference.
    * Use this when node queue is no longer needed.
    */
   dispose() {
-    this.__changes.length = 0;
-    delete (this as any).__node;
-    delete (this as any).__changes;
+    this.changes.length = 0;
+    delete (this as any).node;
+    delete (this as any).changes;
   }
 }
 

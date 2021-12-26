@@ -91,7 +91,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, 'queueDispatch', {enumerable: false, value: this.queueDispatch.bind(this)});
       Object.defineProperty(this, 'queueDispatchLazy', {enumerable: false, value: this.queueDispatchLazy.bind(this)});
 
-      Object.defineProperty(this, '__connected', {enumerable: false, writable: true, value: false});
+      Object.defineProperty(this, 'connected', {enumerable: false, writable: true, value: false});
       if (!this.__proto__.__isIoElement) {
         Object.defineProperty(this, '__connections', {enumerable: false, value: []});
       }
@@ -113,7 +113,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         console.warn('Node already connected to node');
       }
       this.__connections.push(node);
-      if (!this.__connected) this.connectedCallback();
+      if (!this.connected) this.connectedCallback();
       return this;
     }
     /**
@@ -131,7 +131,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         console.error('Node not connected to:', node);
       }
       this.__connections.splice(this.__connections.indexOf(node), 1);
-      if (this.__connections.length === 0 && this.__connected) {
+      if (this.__connections.length === 0 && this.connected) {
         this.disconnectedCallback();
       }
       return this;
@@ -140,7 +140,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Connected callback.
      */
     connectedCallback() {
-      this.__connected = true;
+      this.connected = true;
       this.__eventDispatcher.connect();
       this.__properties.connect();
       if (this.__observedObjects.length) {
@@ -152,7 +152,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Disconnected callback.
      */
     disconnectedCallback() {
-      this.__connected = false;
+      this.connected = false;
       this.__eventDispatcher.disconnect();
       this.__properties.disconnect();
       if (this.__observedObjects.length) {
@@ -164,7 +164,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Use this when instance is no longer needed.
      */
     dispose() {
-      this.__connected = false;
+      this.connected = false;
       this.__connections.length = 0;
       this.__changeQueue.dispose();
       this.__propertyBinder.dispose();
@@ -321,7 +321,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this.__properties.set(p, props[p], true);
       }
       this.__eventDispatcher.setPropListeners(props, this);
-      if (this.__connected) this.queueDispatch();
+      if (this.connected) this.queueDispatch();
     }
     /**
      * Wrapper for addEventListener.
