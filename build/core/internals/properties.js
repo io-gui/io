@@ -173,18 +173,18 @@ export class Property {
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 export class Properties {
-    __node;
-    __keys = [];
-    __connected = false;
+    node;
+    keys = [];
+    connected = false;
     /**
      * Creates the properties for specified `IoNode`.
      * @param {any} node Owner IoNode instance.
      */
     constructor(node) {
-        Object.defineProperty(this, '__node', { enumerable: false, configurable: true, value: node });
-        Object.defineProperty(this, '__connected', { enumerable: false });
+        Object.defineProperty(this, 'node', { enumerable: false, configurable: true, value: node });
+        Object.defineProperty(this, 'connected', { enumerable: false });
         for (const prop in node.__protochain.properties) {
-            this.__keys.push(prop);
+            this.keys.push(prop);
             const protoProp = node.__protochain.properties;
             const property = new Property(protoProp[prop]);
             Object.defineProperty(this, prop, {
@@ -197,7 +197,7 @@ export class Properties {
                 // TODO: document special handling of object and node values
                 if (typeof value === 'object') {
                     node.queue(prop, value, undefined);
-                    if (value.__isIoNode && node.__connected)
+                    if (value.__isIoNode && node.connected)
                         value.connect(node);
                 }
                 else if (property.reflect !== undefined && property.reflect >= 1 && node.__isIoElement) {
@@ -210,7 +210,7 @@ export class Properties {
             if (binding)
                 binding.addTarget(node, prop, this);
         }
-        Object.defineProperty(this, '__keys', { enumerable: false, configurable: true });
+        Object.defineProperty(this, 'keys', { enumerable: false, configurable: true });
     }
     /**
      * Returns the property value.
@@ -230,7 +230,7 @@ export class Properties {
         const prop = this[key];
         const oldValue = prop.value;
         if (value !== oldValue) {
-            const node = this.__node;
+            const node = this.node;
             const binding = (value instanceof Binding) ? value : undefined;
             if (binding) {
                 const oldBinding = prop.binding;
@@ -252,32 +252,32 @@ export class Properties {
             debug: {
                 if (prop.type === String) {
                     if (typeof value !== 'string') {
-                        console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
+                        console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.node);
                     }
                 }
                 else if (prop.type === Number) {
                     if (typeof value !== 'number') {
-                        console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
+                        console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.node);
                     }
                 }
                 else if (prop.type === Boolean) {
                     if (typeof value !== 'boolean') {
-                        console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
+                        console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.node);
                     }
                 }
                 else if (prop.type) {
                     if (!(value instanceof prop.type)) {
-                        console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.__node);
+                        console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.node);
                     }
                 }
             }
             if (value && value.__isIoNode && !value.__isIoElement)
                 value.connect(node);
-            if (oldValue && oldValue.__isIoNode && oldValue.__connected && !oldValue.__isIoElement)
+            if (oldValue && oldValue.__isIoNode && oldValue.connected && !oldValue.__isIoElement)
                 oldValue.disconnect(node);
             if (prop.notify && oldValue !== value) {
                 node.queue(key, value, oldValue);
-                if (node.__connected && !skipDispatch) {
+                if (node.connected && !skipDispatch) {
                     node.queueDispatch();
                 }
             }
@@ -290,21 +290,21 @@ export class Properties {
      */
     connect() {
         debug: {
-            if (this.__connected)
+            if (this.connected)
                 console.error('Properties: already connected!');
         }
-        for (let i = this.__keys.length; i--;) {
-            const p = this.__keys[i];
+        for (let i = this.keys.length; i--;) {
+            const p = this.keys[i];
             const property = this[p];
             if (property.binding) {
-                property.binding.addTarget(this.__node, p);
+                property.binding.addTarget(this.node, p);
             }
             // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
-            if (property.value && property.value.__isIoNode && !property.value.__connected && !property.value.__isIoElement) {
-                property.value.connect(this.__node);
+            if (property.value && property.value.__isIoNode && !property.value.connected && !property.value.__isIoElement) {
+                property.value.connect(this.node);
             }
         }
-        this.__connected = true;
+        this.connected = true;
     }
     /**
      * Disconnects all property bindings and `IoNode` properties.
@@ -312,25 +312,25 @@ export class Properties {
     disconnect() {
         debug: {
             // TODO: debug
-            // if (!this.__connected) console.error('Properties: already disconnected!');
+            // if (!this.connected) console.error('Properties: already disconnected!');
         }
-        for (let i = this.__keys.length; i--;) {
-            const p = this.__keys[i];
+        for (let i = this.keys.length; i--;) {
+            const p = this.keys[i];
             const property = this[p];
             if (property.binding) {
-                property.binding.removeTarget(this.__node, p);
+                property.binding.removeTarget(this.node, p);
             }
             // TODO: investigate and test element property connections
             // possible clash with element's native `disconenctedCallback()`
             // TODO: fix BUG - diconnecting already disconencted.
             if (property.value && property.value.__isIoNode && !property.value.__isIoElement) {
                 // TODO: remove this workaround once the bug is fixed properly.
-                if (property.value.__connections.indexOf(this.__node) !== -1) {
-                    property.value.disconnect(this.__node);
+                if (property.value.__connections.indexOf(this.node) !== -1) {
+                    property.value.disconnect(this.node);
                 }
             }
         }
-        this.__connected = false;
+        this.connected = false;
     }
     /**
      * Disconnects all property bindings and `IoNode` properties.
@@ -338,8 +338,8 @@ export class Properties {
      */
     dispose() {
         this.disconnect();
-        delete this.__node;
-        delete this.__keys;
+        delete this.node;
+        delete this.keys;
     }
 }
 //# sourceMappingURL=properties.js.map

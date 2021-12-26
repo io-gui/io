@@ -4,33 +4,33 @@ import { RegisterIoElement as RegisterIoElement$1, IoElement as IoElement$1 } fr
  * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */
 class Binding {
-    __node;
-    __property = '';
-    __targets = [];
-    __targetProperties = new WeakMap();
+    node;
+    property = '';
+    targets = [];
+    targetProperties = new WeakMap();
     /**
      * Creates a binding object for specified `node` and `property`.
      * @param {IoNode} node - Property owner node.
      * @param {string} property - Name of the property.
      */
     constructor(node, property) {
-        this.__node = node;
-        this.__property = property;
-        this._onTargetChanged = this._onTargetChanged.bind(this);
-        this._onSourceChanged = this._onSourceChanged.bind(this);
-        Object.defineProperty(this, '__node', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__property', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__targets', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__targetProperties', { enumerable: false, writable: false });
-        Object.defineProperty(this, '_onTargetChanged', { enumerable: false, writable: false });
-        Object.defineProperty(this, '_onSourceChanged', { enumerable: false, writable: false });
-        this.__node.addEventListener(`${this.__property}-changed`, this._onSourceChanged);
+        this.node = node;
+        this.property = property;
+        this.onTargetChanged = this.onTargetChanged.bind(this);
+        this.onSourceChanged = this.onSourceChanged.bind(this);
+        Object.defineProperty(this, 'node', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'property', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'targets', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'targetProperties', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'onTargetChanged', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'onSourceChanged', { enumerable: false, writable: false });
+        this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged);
     }
     set value(value) {
-        this.__node[this.__property] = value;
+        this.node[this.property] = value;
     }
     get value() {
-        return this.__node[this.__property];
+        return this.node[this.property];
     }
     /**
      * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
@@ -42,14 +42,14 @@ class Binding {
         // TODO: unhack passing __properties from constructor;
         const nodeProperties = node.__properties || __nodeProperties;
         nodeProperties[property].binding = this;
-        nodeProperties.set(property, this.__node[this.__property]);
+        nodeProperties.set(property, this.node[this.property]);
         const targetIoNode = node;
-        if (this.__targets.indexOf(targetIoNode) === -1)
-            this.__targets.push(targetIoNode);
-        const targetProperties = this._getTargetProperties(targetIoNode);
+        if (this.targets.indexOf(targetIoNode) === -1)
+            this.targets.push(targetIoNode);
+        const targetProperties = this.getTargetProperties(targetIoNode);
         if (targetProperties.indexOf(property) === -1) {
             targetProperties.push(property);
-            targetIoNode.addEventListener(`${property}-changed`, this._onTargetChanged);
+            targetIoNode.addEventListener(`${property}-changed`, this.onTargetChanged);
         }
     }
     /**
@@ -60,35 +60,35 @@ class Binding {
      */
     removeTarget(node, property) {
         const targetIoNode = node;
-        const targetProperties = this._getTargetProperties(targetIoNode);
+        const targetProperties = this.getTargetProperties(targetIoNode);
         if (property) {
             const i = targetProperties.indexOf(property);
             if (i !== -1)
                 targetProperties.splice(i, 1);
-            targetIoNode.removeEventListener(`${property}-changed`, this._onTargetChanged);
+            targetIoNode.removeEventListener(`${property}-changed`, this.onTargetChanged);
         }
         else {
             for (let i = targetProperties.length; i--;) {
-                targetIoNode.removeEventListener(`${targetProperties[i]}-changed`, this._onTargetChanged);
+                targetIoNode.removeEventListener(`${targetProperties[i]}-changed`, this.onTargetChanged);
             }
             targetProperties.length = 0;
         }
         if (targetProperties.length === 0)
-            this.__targets.splice(this.__targets.indexOf(targetIoNode), 1);
+            this.targets.splice(this.targets.indexOf(targetIoNode), 1);
     }
     /**
      * Retrieves a list of target properties for specified target node.
      * @param {IoNode} node - Target node.
      * @return {Array.<string>} list of target property names.
      */
-    _getTargetProperties(node) {
-        let targetProperties = this.__targetProperties.get(node);
+    getTargetProperties(node) {
+        let targetProperties = this.targetProperties.get(node);
         if (targetProperties) {
             return targetProperties;
         }
         else {
             targetProperties = [];
-            this.__targetProperties.set(node, targetProperties);
+            this.targetProperties.set(node, targetProperties);
             return targetProperties;
         }
     }
@@ -96,25 +96,25 @@ class Binding {
      * Event handler that updates source property when one of the targets emits `[property]-changed` event.
      * @param {ChangeEvent} event - Property change event.
      */
-    _onTargetChanged(event) {
-        const oldValue = this.__node[this.__property];
+    onTargetChanged(event) {
+        const oldValue = this.node[this.property];
         const value = event.detail.value;
         if (oldValue !== value) {
             // JavaScript is weird NaN != NaN
             if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue)))
                 return;
-            this.__node[this.__property] = value;
+            this.node[this.property] = value;
         }
     }
     /**
      * Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
      * @param {ChangeEvent} event - Property change event.
      */
-    _onSourceChanged(event) {
+    onSourceChanged(event) {
         const value = event.detail.value;
-        for (let i = this.__targets.length; i--;) {
-            const target = this.__targets[i];
-            const targetProperties = this._getTargetProperties(target);
+        for (let i = this.targets.length; i--;) {
+            const target = this.targets[i];
+            const targetProperties = this.getTargetProperties(target);
             for (let j = targetProperties.length; j--;) {
                 const propName = targetProperties[j];
                 const oldValue = target[propName];
@@ -132,32 +132,32 @@ class Binding {
      * Use this when node is no longer needed.
      */
     dispose() {
-        this.__node.removeEventListener(`${this.__property}-changed`, this._onSourceChanged);
-        for (let i = this.__targets.length; i--;) {
-            this.removeTarget(this.__targets[i]);
+        this.node.removeEventListener(`${this.property}-changed`, this.onSourceChanged);
+        for (let i = this.targets.length; i--;) {
+            this.removeTarget(this.targets[i]);
         }
-        this.__targets.length = 0;
-        delete this.__node;
-        delete this.__property;
-        delete this.__targets;
-        delete this.__targetProperties;
-        delete this._onTargetChanged;
-        delete this._onSourceChanged;
+        this.targets.length = 0;
+        delete this.node;
+        delete this.property;
+        delete this.targets;
+        delete this.targetProperties;
+        delete this.onTargetChanged;
+        delete this.onSourceChanged;
     }
 }
 /**
  * Manager for property bindings. It holds all bindings for a particular IoNode.
  */
 class PropertyBinder$1 {
-    __node;
+    node;
     __bindings = {};
     /**
      * Creates binding manager for the specified node.
      * @param {IoNode} node - Owner node.
      */
     constructor(node) {
-        this.__node = node;
-        Object.defineProperty(this, '__node', { enumerable: false, writable: false });
+        this.node = node;
+        Object.defineProperty(this, 'node', { enumerable: false, writable: false });
         Object.defineProperty(this, '__bindings', { enumerable: false, writable: false });
     }
     /**
@@ -166,7 +166,7 @@ class PropertyBinder$1 {
      * @return {Binding} Property binding object.
      */
     bind(property) {
-        this.__bindings[property] = this.__bindings[property] || new Binding(this.__node, property);
+        this.__bindings[property] = this.__bindings[property] || new Binding(this.node, property);
         return this.__bindings[property];
     }
     /**
@@ -186,7 +186,7 @@ class PropertyBinder$1 {
             this.__bindings[property].dispose();
             delete this.__bindings[property];
         }
-        delete this.__node;
+        delete this.node;
         delete this.__bindings;
     }
 }
@@ -337,18 +337,18 @@ class Property {
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 class Properties$1 {
-    __node;
-    __keys = [];
-    __connected = false;
+    node;
+    keys = [];
+    connected = false;
     /**
      * Creates the properties for specified `IoNode`.
      * @param {any} node Owner IoNode instance.
      */
     constructor(node) {
-        Object.defineProperty(this, '__node', { enumerable: false, configurable: true, value: node });
-        Object.defineProperty(this, '__connected', { enumerable: false });
+        Object.defineProperty(this, 'node', { enumerable: false, configurable: true, value: node });
+        Object.defineProperty(this, 'connected', { enumerable: false });
         for (const prop in node.__protochain.properties) {
-            this.__keys.push(prop);
+            this.keys.push(prop);
             const protoProp = node.__protochain.properties;
             const property = new Property(protoProp[prop]);
             Object.defineProperty(this, prop, {
@@ -361,7 +361,7 @@ class Properties$1 {
                 // TODO: document special handling of object and node values
                 if (typeof value === 'object') {
                     node.queue(prop, value, undefined);
-                    if (value.__isIoNode && node.__connected)
+                    if (value.__isIoNode && node.connected)
                         value.connect(node);
                 }
                 else if (property.reflect !== undefined && property.reflect >= 1 && node.__isIoElement) {
@@ -374,7 +374,7 @@ class Properties$1 {
             if (binding)
                 binding.addTarget(node, prop, this);
         }
-        Object.defineProperty(this, '__keys', { enumerable: false, configurable: true });
+        Object.defineProperty(this, 'keys', { enumerable: false, configurable: true });
     }
     /**
      * Returns the property value.
@@ -394,7 +394,7 @@ class Properties$1 {
         const prop = this[key];
         const oldValue = prop.value;
         if (value !== oldValue) {
-            const node = this.__node;
+            const node = this.node;
             const binding = (value instanceof Binding) ? value : undefined;
             if (binding) {
                 const oldBinding = prop.binding;
@@ -412,11 +412,11 @@ class Properties$1 {
             prop.value = value;
             if (value && value.__isIoNode && !value.__isIoElement)
                 value.connect(node);
-            if (oldValue && oldValue.__isIoNode && oldValue.__connected && !oldValue.__isIoElement)
+            if (oldValue && oldValue.__isIoNode && oldValue.connected && !oldValue.__isIoElement)
                 oldValue.disconnect(node);
             if (prop.notify && oldValue !== value) {
                 node.queue(key, value, oldValue);
-                if (node.__connected && !skipDispatch) {
+                if (node.connected && !skipDispatch) {
                     node.queueDispatch();
                 }
             }
@@ -428,40 +428,40 @@ class Properties$1 {
      * Connects all property bindings and `IoNode` properties.
      */
     connect() {
-        for (let i = this.__keys.length; i--;) {
-            const p = this.__keys[i];
+        for (let i = this.keys.length; i--;) {
+            const p = this.keys[i];
             const property = this[p];
             if (property.binding) {
-                property.binding.addTarget(this.__node, p);
+                property.binding.addTarget(this.node, p);
             }
             // TODO: investigate and test element property connections - possible clash with element's native `disconenctedCallback()`
-            if (property.value && property.value.__isIoNode && !property.value.__connected && !property.value.__isIoElement) {
-                property.value.connect(this.__node);
+            if (property.value && property.value.__isIoNode && !property.value.connected && !property.value.__isIoElement) {
+                property.value.connect(this.node);
             }
         }
-        this.__connected = true;
+        this.connected = true;
     }
     /**
      * Disconnects all property bindings and `IoNode` properties.
      */
     disconnect() {
-        for (let i = this.__keys.length; i--;) {
-            const p = this.__keys[i];
+        for (let i = this.keys.length; i--;) {
+            const p = this.keys[i];
             const property = this[p];
             if (property.binding) {
-                property.binding.removeTarget(this.__node, p);
+                property.binding.removeTarget(this.node, p);
             }
             // TODO: investigate and test element property connections
             // possible clash with element's native `disconenctedCallback()`
             // TODO: fix BUG - diconnecting already disconencted.
             if (property.value && property.value.__isIoNode && !property.value.__isIoElement) {
                 // TODO: remove this workaround once the bug is fixed properly.
-                if (property.value.__connections.indexOf(this.__node) !== -1) {
-                    property.value.disconnect(this.__node);
+                if (property.value.__connections.indexOf(this.node) !== -1) {
+                    property.value.disconnect(this.node);
                 }
             }
         }
-        this.__connected = false;
+        this.connected = false;
     }
     /**
      * Disconnects all property bindings and `IoNode` properties.
@@ -469,8 +469,8 @@ class Properties$1 {
      */
     dispose() {
         this.disconnect();
-        delete this.__node;
-        delete this.__keys;
+        delete this.node;
+        delete this.keys;
     }
 }
 
@@ -857,18 +857,18 @@ class ProtoChain$1 {
  * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
 class ChangeQueue$1 {
-    __node;
-    __changes = [];
-    __dispatching = false;
+    node;
+    changes = [];
+    dispatching = false;
     /**
      * Creates change queue for the specified owner instance of `IoNode`.
      * @param {IoNode} node - Owner node.
      */
     constructor(node) {
-        this.__node = node;
-        Object.defineProperty(this, '__node', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__changes', { enumerable: false, writable: false });
-        Object.defineProperty(this, '__dispatching', { enumerable: false });
+        this.node = node;
+        Object.defineProperty(this, 'node', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'changes', { enumerable: false, writable: false });
+        Object.defineProperty(this, 'dispatching', { enumerable: false });
     }
     /**
      * Adds property change payload to the queue by specifying property name, previous and the new value.
@@ -878,12 +878,12 @@ class ChangeQueue$1 {
      * @param {any} oldValue Old property value.
      */
     queue(property, value, oldValue) {
-        const i = this.__changes.findIndex(change => change.property === property);
+        const i = this.changes.findIndex(change => change.property === property);
         if (i === -1) {
-            this.__changes.push(new Change(property, value, oldValue));
+            this.changes.push(new Change(property, value, oldValue));
         }
         else {
-            this.__changes[i].value = value;
+            this.changes[i].value = value;
         }
     }
     /**
@@ -895,38 +895,38 @@ class ChangeQueue$1 {
      * After all changes are dispatched it invokes `.applyCompose()` and `.changed()` functions od the owner node instance.
      */
     dispatch() {
-        if (this.__dispatching === true || !this.__node.__connected)
+        if (this.dispatching === true || !this.node.connected)
             return;
-        this.__dispatching = true;
+        this.dispatching = true;
         let changed = false;
-        while (this.__changes.length) {
+        while (this.changes.length) {
             // TODO: convert to FIFO
-            const i = this.__changes.length - 1;
+            const i = this.changes.length - 1;
             // const i = 0;
-            const change = this.__changes[i];
-            this.__changes.splice(i, 1);
+            const change = this.changes[i];
+            this.changes.splice(i, 1);
             const property = change.property;
             if (change.value !== change.oldValue) {
                 changed = true;
-                if (this.__node[property + 'Changed'])
-                    this.__node[property + 'Changed'](change);
-                this.__node.dispatchEvent(property + '-changed', change);
+                if (this.node[property + 'Changed'])
+                    this.node[property + 'Changed'](change);
+                this.node.dispatchEvent(property + '-changed', change);
             }
         }
         if (changed) {
-            this.__node.applyCompose();
-            this.__node.changed();
+            this.node.applyCompose();
+            this.node.changed();
         }
-        this.__dispatching = false;
+        this.dispatching = false;
     }
     /**
      * Clears the queue and removes the node reference.
      * Use this when node queue is no longer needed.
      */
     dispose() {
-        this.__changes.length = 0;
-        delete this.__node;
-        delete this.__changes;
+        this.changes.length = 0;
+        delete this.node;
+        delete this.changes;
     }
 }
 /**
@@ -998,7 +998,7 @@ function IoNodeMixin(superclass) {
             Object.defineProperty(this, 'objectMutatedThrottled', { enumerable: false, value: this.objectMutatedThrottled.bind(this) });
             Object.defineProperty(this, 'queueDispatch', { enumerable: false, value: this.queueDispatch.bind(this) });
             Object.defineProperty(this, 'queueDispatchLazy', { enumerable: false, value: this.queueDispatchLazy.bind(this) });
-            Object.defineProperty(this, '__connected', { enumerable: false, writable: true, value: false });
+            Object.defineProperty(this, 'connected', { enumerable: false, writable: true, value: false });
             if (!this.__proto__.__isIoElement) {
                 Object.defineProperty(this, '__connections', { enumerable: false, value: [] });
             }
@@ -1011,7 +1011,7 @@ function IoNodeMixin(superclass) {
          */
         connect(node = window) {
             this.__connections.push(node);
-            if (!this.__connected)
+            if (!this.connected)
                 this.connectedCallback();
             return this;
         }
@@ -1022,7 +1022,7 @@ function IoNodeMixin(superclass) {
          * */
         disconnect(node = window) {
             this.__connections.splice(this.__connections.indexOf(node), 1);
-            if (this.__connections.length === 0 && this.__connected) {
+            if (this.__connections.length === 0 && this.connected) {
                 this.disconnectedCallback();
             }
             return this;
@@ -1031,7 +1031,7 @@ function IoNodeMixin(superclass) {
          * Connected callback.
          */
         connectedCallback() {
-            this.__connected = true;
+            this.connected = true;
             this.__eventDispatcher.connect();
             this.__properties.connect();
             if (this.__observedObjects.length) {
@@ -1043,7 +1043,7 @@ function IoNodeMixin(superclass) {
          * Disconnected callback.
          */
         disconnectedCallback() {
-            this.__connected = false;
+            this.connected = false;
             this.__eventDispatcher.disconnect();
             this.__properties.disconnect();
             if (this.__observedObjects.length) {
@@ -1055,7 +1055,7 @@ function IoNodeMixin(superclass) {
          * Use this when instance is no longer needed.
          */
         dispose() {
-            this.__connected = false;
+            this.connected = false;
             this.__connections.length = 0;
             this.__changeQueue.dispose();
             this.__propertyBinder.dispose();
@@ -1195,7 +1195,7 @@ function IoNodeMixin(superclass) {
                 this.__properties.set(p, props[p], true);
             }
             this.__eventDispatcher.setPropListeners(props, this);
-            if (this.__connected)
+            if (this.connected)
                 this.queueDispatch();
         }
         /**
@@ -2466,8 +2466,8 @@ class Properties {
                     const props2 = node2.__properties;
                     chai.expect(string(Object.keys(props1))).to.be.equal(string(['lazy', 'prop1']));
                     chai.expect(string(Object.keys(props2))).to.be.equal(string(['lazy', 'prop3']));
-                    chai.expect(props1.__node).to.be.equal(node1);
-                    chai.expect(props2.__node).to.be.equal(node2);
+                    chai.expect(props1.node).to.be.equal(node1);
+                    chai.expect(props2.node).to.be.equal(node2);
                     chai.expect(protoProps1.prop1.value).to.be.equal(0);
                     chai.expect(props1.prop1.value).to.be.equal(0);
                     chai.expect(props1.prop1.type).to.be.equal(Number);
@@ -2551,9 +2551,9 @@ class Properties {
                     chai.expect(props1.prop1.binding).to.be.equal(binding1);
                     chai.expect(props2.prop1.binding).to.be.equal(binding2);
                     chai.expect(props2._prop3.binding).to.be.equal(binding3);
-                    chai.expect(binding1.__targets[0]).to.be.equal(node1);
-                    chai.expect(binding2.__targets[0]).to.be.equal(node2);
-                    chai.expect(binding3.__targets[0]).to.be.equal(node2);
+                    chai.expect(binding1.targets[0]).to.be.equal(node1);
+                    chai.expect(binding2.targets[0]).to.be.equal(node2);
+                    chai.expect(binding3.targets[0]).to.be.equal(node2);
                     chai.expect(props1.prop1.value).to.be.equal('binding1');
                     chai.expect(props2.prop1.value).to.be.equal('binding2');
                     chai.expect(props2._prop3.value).to.be.equal('binding3');
@@ -2601,12 +2601,12 @@ class Properties {
                     chai.expect(properties.get('prop1')).to.be.equal('binding1');
                     chai.expect(node.prop1).to.be.equal('binding1');
                     chai.expect(properties.prop1.binding).to.be.equal(binding1);
-                    chai.expect(binding1.__targets[0]).to.be.equal(node);
+                    chai.expect(binding1.targets[0]).to.be.equal(node);
                     properties.set('prop1', binding2);
                     chai.expect(properties.get('prop1')).to.be.equal('binding2');
                     chai.expect(node.prop1).to.be.equal('binding2');
-                    chai.expect(binding1.__targets[0]).to.be.equal(undefined);
-                    chai.expect(binding2.__targets[0]).to.be.equal(node);
+                    chai.expect(binding1.targets[0]).to.be.equal(undefined);
+                    chai.expect(binding2.targets[0]).to.be.equal(node);
                 });
                 it('Should execute attribute reflection on IoElement', () => {
                     class TestElementReflection extends IoElement {
@@ -2845,7 +2845,7 @@ class ProtoChain {
 }
 
 class FakeIoNode {
-    __connected = true;
+    connected = true;
     prop1ChangeCounter = 0;
     prop1Change;
     prop2ChangeCounter = 0;
@@ -2886,19 +2886,19 @@ class ChangeQueue {
             it('Should initialize with correct default values', () => {
                 const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue$1(node);
-                chai.expect(changeQueue.__node).to.be.equal(node);
-                chai.expect(JSON.stringify(changeQueue.__changes)).to.be.equal('[]');
-                chai.expect(changeQueue.__changes.length).to.be.equal(0);
-                chai.expect(changeQueue.__dispatching).to.be.equal(false);
+                chai.expect(changeQueue.node).to.be.equal(node);
+                chai.expect(JSON.stringify(changeQueue.changes)).to.be.equal('[]');
+                chai.expect(changeQueue.changes.length).to.be.equal(0);
+                chai.expect(changeQueue.dispatching).to.be.equal(false);
             });
             it('Should dispatch change events with correct payloads', () => {
                 const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue$1(node);
                 changeQueue.queue('test', 1, 0);
                 changeQueue.queue('test', 2, 1);
-                chai.expect(changeQueue.__changes.length).to.be.equal(1);
+                chai.expect(changeQueue.changes.length).to.be.equal(1);
                 changeQueue.dispatch();
-                chai.expect(changeQueue.__changes.length).to.be.equal(0);
+                chai.expect(changeQueue.changes.length).to.be.equal(0);
                 chai.expect(node.eventName).to.be.equal('test-changed');
                 chai.expect(node.eventChange?.property).to.be.equal('test');
                 chai.expect(node.eventChange?.value).to.be.equal(2);
@@ -2908,9 +2908,9 @@ class ChangeQueue {
                 chai.expect(node.applyComposeCounter).to.be.equal(1);
                 changeQueue.queue('test2', 0, -1);
                 changeQueue.queue('test3', 2, 1);
-                chai.expect(changeQueue.__changes.length).to.be.equal(2);
+                chai.expect(changeQueue.changes.length).to.be.equal(2);
                 changeQueue.dispatch();
-                chai.expect(changeQueue.__changes.length).to.be.equal(0);
+                chai.expect(changeQueue.changes.length).to.be.equal(0);
                 // TODO: convert to FIFO
                 chai.expect(node.eventName).to.be.equal('test2-changed');
                 chai.expect(node.eventChange?.property).to.be.equal('test2');
@@ -2961,10 +2961,10 @@ class ChangeQueue {
                 const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue$1(node);
                 changeQueue.queue('prop1', 1, 0);
-                node.__connected = false;
+                node.connected = false;
                 changeQueue.dispatch();
                 chai.expect(node.prop1ChangeCounter).to.be.equal(0);
-                node.__connected = true;
+                node.connected = true;
                 changeQueue.dispatch();
                 chai.expect(node.prop1ChangeCounter).to.be.equal(1);
             });
@@ -2972,8 +2972,8 @@ class ChangeQueue {
                 const node = new FakeIoNode();
                 const changeQueue = new ChangeQueue$1(node);
                 changeQueue.dispose();
-                chai.expect(changeQueue.__node).to.be.equal(undefined);
-                chai.expect(changeQueue.__changes).to.be.equal(undefined);
+                chai.expect(changeQueue.node).to.be.equal(undefined);
+                chai.expect(changeQueue.changes).to.be.equal(undefined);
             });
         });
     }
@@ -2994,13 +2994,13 @@ class PropertyBinder {
             it('Should initialize with correct default values', () => {
                 const node = new TestIoNode();
                 const binding = new Binding(node, 'prop1');
-                chai.expect(binding.__node).to.be.equal(node);
-                chai.expect(binding.__property).to.be.equal('prop1');
-                chai.expect(binding.__targets instanceof Array).to.be.equal(true);
-                chai.expect(binding.__targets.length).to.be.equal(0);
-                chai.expect(binding.__targetProperties instanceof WeakMap).to.be.equal(true);
+                chai.expect(binding.node).to.be.equal(node);
+                chai.expect(binding.property).to.be.equal('prop1');
+                chai.expect(binding.targets instanceof Array).to.be.equal(true);
+                chai.expect(binding.targets.length).to.be.equal(0);
+                chai.expect(binding.targetProperties instanceof WeakMap).to.be.equal(true);
                 const propertyBinder = new PropertyBinder$1(node);
-                chai.expect(propertyBinder.__node).to.be.equal(node);
+                chai.expect(propertyBinder.node).to.be.equal(node);
                 chai.expect(JSON.stringify(propertyBinder.__bindings)).to.be.equal('{}');
             });
             it('Should get and set property value on source node with `value` getter/setter', () => {
@@ -3031,18 +3031,18 @@ class PropertyBinder {
                 binding1.addTarget(dstIoNode0, 'prop2');
                 binding1.addTarget(dstIoNode1, 'prop1');
                 binding1.addTarget(dstIoNode1, 'prop2');
-                chai.expect(binding0.__targets[0]).to.be.equal(dstIoNode0);
-                chai.expect(binding0.__targets[1]).to.be.equal(undefined);
-                chai.expect(binding1.__targets[0]).to.be.equal(dstIoNode0);
-                chai.expect(binding1.__targets[1]).to.be.equal(dstIoNode1);
-                chai.expect(binding1.__targets[2]).to.be.equal(undefined);
-                const binding0target0Props = binding0._getTargetProperties(dstIoNode0);
-                const binding0target1Props = binding0._getTargetProperties(dstIoNode1);
+                chai.expect(binding0.targets[0]).to.be.equal(dstIoNode0);
+                chai.expect(binding0.targets[1]).to.be.equal(undefined);
+                chai.expect(binding1.targets[0]).to.be.equal(dstIoNode0);
+                chai.expect(binding1.targets[1]).to.be.equal(dstIoNode1);
+                chai.expect(binding1.targets[2]).to.be.equal(undefined);
+                const binding0target0Props = binding0.getTargetProperties(dstIoNode0);
+                const binding0target1Props = binding0.getTargetProperties(dstIoNode1);
                 chai.expect(binding0target0Props[0]).to.be.equal('prop1');
                 chai.expect(binding0target0Props.length).to.be.equal(1);
                 chai.expect(binding0target1Props.length).to.be.equal(0);
-                const binding1target0Props = binding1._getTargetProperties(dstIoNode0);
-                const binding1target1Props = binding1._getTargetProperties(dstIoNode1);
+                const binding1target0Props = binding1.getTargetProperties(dstIoNode0);
+                const binding1target1Props = binding1.getTargetProperties(dstIoNode1);
                 chai.expect(binding1target0Props[0]).to.be.equal('prop2');
                 chai.expect(binding1target0Props.length).to.be.equal(1);
                 chai.expect(binding1target1Props[0]).to.be.equal('prop1');
@@ -3059,19 +3059,19 @@ class PropertyBinder {
                 const node = new TestIoNode().connect();
                 const binding = new Binding(node, 'prop1');
                 binding.dispose();
-                chai.expect(binding.__node).to.be.equal(undefined);
-                chai.expect(binding.__property).to.be.equal(undefined);
-                chai.expect(binding.__targets).to.be.equal(undefined);
-                chai.expect(binding.__targetProperties).to.be.equal(undefined);
+                chai.expect(binding.node).to.be.equal(undefined);
+                chai.expect(binding.property).to.be.equal(undefined);
+                chai.expect(binding.targets).to.be.equal(undefined);
+                chai.expect(binding.targetProperties).to.be.equal(undefined);
                 const propertyBinder = new PropertyBinder$1(node);
                 const binding2 = propertyBinder.bind('prop1');
                 propertyBinder.dispose();
-                chai.expect(propertyBinder.__node).to.be.equal(undefined);
+                chai.expect(propertyBinder.node).to.be.equal(undefined);
                 chai.expect(propertyBinder.__bindings).to.be.equal(undefined);
-                chai.expect(binding2.__node).to.be.equal(undefined);
-                chai.expect(binding2.__property).to.be.equal(undefined);
-                chai.expect(binding2.__targets).to.be.equal(undefined);
-                chai.expect(binding2.__targetProperties).to.be.equal(undefined);
+                chai.expect(binding2.node).to.be.equal(undefined);
+                chai.expect(binding2.property).to.be.equal(undefined);
+                chai.expect(binding2.targets).to.be.equal(undefined);
+                chai.expect(binding2.targetProperties).to.be.equal(undefined);
             });
         });
     }
@@ -3128,31 +3128,31 @@ class Node {
             it('should account connections correctly', () => {
                 const node = new IoNode();
                 node.connect(window);
-                chai.expect(node.__connected).to.be.equal(true);
+                chai.expect(node.connected).to.be.equal(true);
                 node.connect(document);
                 chai.expect(node.__eventDispatcher.connected).to.be.equal(true);
-                chai.expect(node.__properties.__connected).to.be.equal(true);
-                chai.expect(node.__connected).to.be.equal(true);
+                chai.expect(node.__properties.connected).to.be.equal(true);
+                chai.expect(node.connected).to.be.equal(true);
                 chai.expect(node.__connections).to.be.deep.equal([window, document]);
                 node.disconnect(window);
                 chai.expect(node.__eventDispatcher.connected).to.be.equal(true);
-                chai.expect(node.__properties.__connected).to.be.equal(true);
-                chai.expect(node.__connected).to.be.equal(true);
+                chai.expect(node.__properties.connected).to.be.equal(true);
+                chai.expect(node.connected).to.be.equal(true);
                 chai.expect(node.__connections).to.be.deep.equal([document]);
                 node.disconnect(document);
-                chai.expect(node.__connected).to.be.equal(false);
+                chai.expect(node.connected).to.be.equal(false);
                 chai.expect(node.__eventDispatcher.connected).to.be.equal(false);
-                chai.expect(node.__properties.__connected).to.be.equal(false);
+                chai.expect(node.__properties.connected).to.be.equal(false);
                 chai.expect(node.__connections).to.be.deep.equal([]);
                 node.connect(window);
                 chai.expect(node.__eventDispatcher.connected).to.be.equal(true);
-                chai.expect(node.__properties.__connected).to.be.equal(true);
-                chai.expect(node.__connected).to.be.equal(true);
+                chai.expect(node.__properties.connected).to.be.equal(true);
+                chai.expect(node.connected).to.be.equal(true);
                 chai.expect(node.__connections).to.be.deep.equal([window]);
                 node.dispose();
-                chai.expect(node.__connected).to.be.equal(false);
+                chai.expect(node.connected).to.be.equal(false);
                 chai.expect(node.__eventDispatcher.connected).to.be.equal(false);
-                chai.expect(node.__properties.__connected).to.be.equal(false);
+                chai.expect(node.__properties.connected).to.be.equal(false);
                 chai.expect(node.__connections).to.be.deep.equal([]);
             });
             it('should invoke change handler functions on change', () => {
@@ -3366,17 +3366,17 @@ class Node {
                 node.connect(window);
                 const binding = node.bind('prop1');
                 chai.expect(binding).to.be.instanceof(Binding);
-                chai.expect(binding.__node).to.be.equal(node);
-                chai.expect(binding.__property).to.be.equal('prop1');
+                chai.expect(binding.node).to.be.equal(node);
+                chai.expect(binding.property).to.be.equal('prop1');
                 const boundNode1 = new TestNode({ prop1: binding }).connect();
                 const boundNode2 = new TestNode({ prop1: binding }).connect();
                 boundNode2.prop2 = binding;
-                chai.expect(binding.__targets[0]).to.be.equal(boundNode1);
-                chai.expect(binding.__targets[1]).to.be.equal(boundNode2);
-                chai.expect(binding.__targetProperties.get(boundNode1)[0]).to.be.equal('prop1');
-                chai.expect(binding.__targetProperties.get(boundNode1)[1]).to.be.equal(undefined);
-                chai.expect(binding.__targetProperties.get(boundNode2)[0]).to.be.equal('prop1');
-                chai.expect(binding.__targetProperties.get(boundNode2)[1]).to.be.equal('prop2');
+                chai.expect(binding.targets[0]).to.be.equal(boundNode1);
+                chai.expect(binding.targets[1]).to.be.equal(boundNode2);
+                chai.expect(binding.targetProperties.get(boundNode1)[0]).to.be.equal('prop1');
+                chai.expect(binding.targetProperties.get(boundNode1)[1]).to.be.equal(undefined);
+                chai.expect(binding.targetProperties.get(boundNode2)[0]).to.be.equal('prop1');
+                chai.expect(binding.targetProperties.get(boundNode2)[1]).to.be.equal('prop2');
                 node.prop1 = 'one';
                 chai.expect(boundNode1.prop1).to.be.equal('one');
                 chai.expect(boundNode1.prop2).to.be.equal('');
@@ -3385,14 +3385,14 @@ class Node {
                 boundNode1.prop1 = 'two';
                 chai.expect(node.prop1).to.be.equal('two');
                 chai.expect(boundNode2.prop1).to.be.equal('two');
-                chai.expect(binding.__targets.length).to.be.equal(2);
+                chai.expect(binding.targets.length).to.be.equal(2);
                 boundNode1.dispose();
-                chai.expect(binding.__targets.length).to.be.equal(1);
+                chai.expect(binding.targets.length).to.be.equal(1);
                 boundNode2.dispose();
-                chai.expect(binding.__targets.length).to.be.equal(0);
+                chai.expect(binding.targets.length).to.be.equal(0);
                 node.dispose();
             });
-            // it('Should add/remove targets and __targetProperties when assigned to values', () => {
+            // it('Should add/remove targets and targetProperties when assigned to values', () => {
             //   const srcNode = new TestNode();
             //   const binding0 = new Binding(srcNode, 'prop1') as any;
             //   const binding1 = new Binding(srcNode, 'prop2') as any;
@@ -3401,40 +3401,40 @@ class Node {
             //   dstNode0.prop2 = binding1;
             //   const dstNode1 = new TestNode({prop1: binding0}).connect();
             //   const dstNode3 = new TestNode({prop1: binding0, prop2: binding0}).connect();
-            //   chai.expect(binding0.__targets[0]).to.be.equal(dstNode0);
-            //   chai.expect(binding0.__targets[1]).to.be.equal(dstNode1);
-            //   chai.expect(binding0.__targets[2]).to.be.equal(dstNode3);
-            //   chai.expect(string(binding0.__targetProperties.get(dstNode0))).to.be.equal(string(['prop1']));
-            //   chai.expect(string(binding0.__targetProperties.get(dstNode1))).to.be.equal(string(['prop1']));
-            //   chai.expect(string(binding0.__targetProperties.get(dstNode3))).to.be.equal(string(['prop1', 'prop2']));
+            //   chai.expect(binding0.targets[0]).to.be.equal(dstNode0);
+            //   chai.expect(binding0.targets[1]).to.be.equal(dstNode1);
+            //   chai.expect(binding0.targets[2]).to.be.equal(dstNode3);
+            //   chai.expect(string(binding0.targetProperties.get(dstNode0))).to.be.equal(string(['prop1']));
+            //   chai.expect(string(binding0.targetProperties.get(dstNode1))).to.be.equal(string(['prop1']));
+            //   chai.expect(string(binding0.targetProperties.get(dstNode3))).to.be.equal(string(['prop1', 'prop2']));
             //   dstNode0.dispose();
             //   dstNode1.disconnect();
             //   dstNode3.unbind('prop1');
-            //   chai.expect(string(binding0.__targetProperties.get(dstNode0))).to.be.equal(string([]));
-            //   chai.expect(string(binding0.__targetProperties.get(dstNode1))).to.be.equal(string([]));
-            //   chai.expect(string(binding0.__targetProperties.get(dstNode3))).to.be.equal(string(['prop2']));
+            //   chai.expect(string(binding0.targetProperties.get(dstNode0))).to.be.equal(string([]));
+            //   chai.expect(string(binding0.targetProperties.get(dstNode1))).to.be.equal(string([]));
+            //   chai.expect(string(binding0.targetProperties.get(dstNode3))).to.be.equal(string(['prop2']));
             //   dstNode1.prop2 = binding0;
             //   dstNode1.connect();
             //   dstNode3.prop1 = binding0;
-            //   chai.expect(string(binding0.__targetProperties.get(dstNode1))).to.be.equal(string(['prop2', 'prop1']));
-            //   chai.expect(string(binding0.__targetProperties.get(dstNode3))).to.be.equal(string(['prop2', 'prop1']));
+            //   chai.expect(string(binding0.targetProperties.get(dstNode1))).to.be.equal(string(['prop2', 'prop1']));
+            //   chai.expect(string(binding0.targetProperties.get(dstNode3))).to.be.equal(string(['prop2', 'prop1']));
             // });
             // it('Should return existing binding or create a new on "bind()"', () => {
             //   const node = new TestNode();
             //   const binding0 = node.bind('prop1');
-            //   chai.expect(binding0).to.be.equal(node.__propertyBinder.__bindings.prop1);
+            //   chai.expect(binding0).to.be.equal(node.propertyBinder.__bindings.prop1);
             //   chai.expect(binding0).to.be.equal(node.bind('prop1'));
             // });
             // it('Should dispose bindings correctly', () => {
             //   const node1 = new TestNode();
             //   const binding0 = node1.bind('prop1') as any;
             //   node1.unbind('prop1');
-            //   chai.expect(node1.__propertyBinder.__bindings.prop1).to.be.equal(undefined);
+            //   chai.expect(node1.propertyBinder.__bindings.prop1).to.be.equal(undefined);
             //   chai.expect(binding0.prop1).to.be.equal(undefined);
             //   const node2 = new TestNode();
             //   const binding1 = node2.bind('prop1') as any;
-            //   node2.__propertyBinder.dispose();
-            //   chai.expect(node2.__propertyBinder.__bindings).to.be.equal(undefined);
+            //   node2.propertyBinder.dispose();
+            //   chai.expect(node2.propertyBinder.__bindings).to.be.equal(undefined);
             //   chai.expect(binding1.prop1).to.be.equal(undefined);
             // });
         });

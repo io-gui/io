@@ -4,9 +4,9 @@ import { IoNode } from '../io-node.js';
  * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
 export declare class ChangeQueue {
-    private readonly __node;
-    private readonly __changes;
-    private __dispatching;
+    private readonly node;
+    private readonly changes;
+    private dispatching;
     /**
      * Creates change queue for the specified owner instance of `IoNode`.
      * @param {IoNode} node - Owner node.

@@ -50,9 +50,9 @@ export declare class Property {
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 export declare class Properties {
-    private readonly __node;
-    private readonly __keys;
-    private __connected;
+    private readonly node;
+    private readonly keys;
+    private connected;
     /**
      * Creates the properties for specified `IoNode`.
      * @param {any} node Owner IoNode instance.

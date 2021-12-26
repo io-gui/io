@@ -4,10 +4,10 @@ import { IoNode } from '../io-node.js';
  * Binding object. It manages data binding between source and targets using `[property]-changed` events.
  */
 export declare class Binding {
-    private readonly __node;
-    private readonly __property;
-    private readonly __targets;
-    private readonly __targetProperties;
+    private readonly node;
+    private readonly property;
+    private readonly targets;
+    private readonly targetProperties;
     /**
      * Creates a binding object for specified `node` and `property`.
      * @param {IoNode} node - Property owner node.
@@ -35,17 +35,17 @@ export declare class Binding {
      * @param {IoNode} node - Target node.
      * @return {Array.<string>} list of target property names.
      */
-    private _getTargetProperties;
+    private getTargetProperties;
     /**
      * Event handler that updates source property when one of the targets emits `[property]-changed` event.
      * @param {ChangeEvent} event - Property change event.
      */
-    private _onTargetChanged;
+    private onTargetChanged;
     /**
      * Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
      * @param {ChangeEvent} event - Property change event.
      */
-    private _onSourceChanged;
+    private onSourceChanged;
     /**
      * Dispose of the binding by removing all targets and listeners.
      * Use this when node is no longer needed.
@@ -56,7 +56,7 @@ export declare class Binding {
  * Manager for property bindings. It holds all bindings for a particular IoNode.
  */
 export declare class PropertyBinder {
-    private readonly __node;
+    private readonly node;
     private readonly __bindings;
     /**
      * Creates binding manager for the specified node.

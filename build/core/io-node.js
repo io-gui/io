@@ -58,7 +58,7 @@ export function IoNodeMixin(superclass) {
             Object.defineProperty(this, 'objectMutatedThrottled', { enumerable: false, value: this.objectMutatedThrottled.bind(this) });
             Object.defineProperty(this, 'queueDispatch', { enumerable: false, value: this.queueDispatch.bind(this) });
             Object.defineProperty(this, 'queueDispatchLazy', { enumerable: false, value: this.queueDispatchLazy.bind(this) });
-            Object.defineProperty(this, '__connected', { enumerable: false, writable: true, value: false });
+            Object.defineProperty(this, 'connected', { enumerable: false, writable: true, value: false });
             if (!this.__proto__.__isIoElement) {
                 Object.defineProperty(this, '__connections', { enumerable: false, value: [] });
             }
@@ -77,7 +77,7 @@ export function IoNodeMixin(superclass) {
                 console.warn('Node already connected to node');
             }
             this.__connections.push(node);
-            if (!this.__connected)
+            if (!this.connected)
                 this.connectedCallback();
             return this;
         }
@@ -94,7 +94,7 @@ export function IoNodeMixin(superclass) {
                 console.error('Node not connected to:', node);
             }
             this.__connections.splice(this.__connections.indexOf(node), 1);
-            if (this.__connections.length === 0 && this.__connected) {
+            if (this.__connections.length === 0 && this.connected) {
                 this.disconnectedCallback();
             }
             return this;
@@ -103,7 +103,7 @@ export function IoNodeMixin(superclass) {
          * Connected callback.
          */
         connectedCallback() {
-            this.__connected = true;
+            this.connected = true;
             this.__eventDispatcher.connect();
             this.__properties.connect();
             if (this.__observedObjects.length) {
@@ -115,7 +115,7 @@ export function IoNodeMixin(superclass) {
          * Disconnected callback.
          */
         disconnectedCallback() {
-            this.__connected = false;
+            this.connected = false;
             this.__eventDispatcher.disconnect();
             this.__properties.disconnect();
             if (this.__observedObjects.length) {
@@ -127,7 +127,7 @@ export function IoNodeMixin(superclass) {
          * Use this when instance is no longer needed.
          */
         dispose() {
-            this.__connected = false;
+            this.connected = false;
             this.__connections.length = 0;
             this.__changeQueue.dispose();
             this.__propertyBinder.dispose();
@@ -282,7 +282,7 @@ export function IoNodeMixin(superclass) {
                 this.__properties.set(p, props[p], true);
             }
             this.__eventDispatcher.setPropListeners(props, this);
-            if (this.__connected)
+            if (this.connected)
                 this.queueDispatch();
         }
         /**
