@@ -35,20 +35,10 @@ export declare class ChangeQueue {
      */
     dispose(): void;
 }
-/**
- * Property change payload
- */
-export declare class Change {
+export interface Change {
     property: string;
     value: any;
     oldValue: any;
-    /**
-     * Creates property change payload.
-     * @param {string} property - Property name.
-     * @param {*} value - New property value.
-     * @param {*} oldValue - Old property value.
-     */
-    constructor(property: string, value: any, oldValue: any);
 }
 export interface ChangeEvent extends CustomEvent {
     readonly target: EventTarget;

@@ -141,7 +141,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     connectedCallback() {
       this.connected = true;
-      this.__eventDispatcher.connect();
       this.__properties.connect();
       if (this.__observedObjects.length) {
         window.addEventListener('object-mutated', this.objectMutated as EventListener);
@@ -153,7 +152,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     disconnectedCallback() {
       this.connected = false;
-      this.__eventDispatcher.disconnect();
       this.__properties.disconnect();
       if (this.__observedObjects.length) {
         window.removeEventListener('object-mutated', this.objectMutated as EventListener);

@@ -104,7 +104,6 @@ export function IoNodeMixin(superclass) {
          */
         connectedCallback() {
             this.connected = true;
-            this.__eventDispatcher.connect();
             this.__properties.connect();
             if (this.__observedObjects.length) {
                 window.addEventListener('object-mutated', this.objectMutated);
@@ -116,7 +115,6 @@ export function IoNodeMixin(superclass) {
          */
         disconnectedCallback() {
             this.connected = false;
-            this.__eventDispatcher.disconnect();
             this.__properties.disconnect();
             if (this.__observedObjects.length) {
                 window.removeEventListener('object-mutated', this.objectMutated);

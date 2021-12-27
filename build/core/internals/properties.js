@@ -37,8 +37,9 @@ export const hardenPropertyDefinition = (propDef) => {
                 console.warn('Incorrect type for "type" field');
             if (detail.binding !== undefined && detail.binding.constructor !== Binding)
                 console.warn('Incorrect type for "binding" field');
-            if (detail.reflect !== undefined && typeof detail.reflect !== 'number')
-                console.warn('Incorrect type for "reflect" field');
+            if (detail.reflect !== undefined && ([-1, 0, 1, 2]).indexOf(detail.reflect) === -1) {
+                console.error(`Invalid reflect field ${detail.reflect}!`);
+            }
             if (detail.notify !== undefined && typeof detail.notify !== 'boolean')
                 console.warn('Incorrect type for "notify" field');
             if (detail.observe !== undefined && typeof detail.observe !== 'boolean')
@@ -93,23 +94,23 @@ export const assignPropertyDefinition = (propDef, newPropDef) => {
  * It is copied from the corresponding `PropertyDefinition`.
  */
 export class Property {
-    //Property value.
+    // Property value.
     value = undefined;
-    //Constructor of the property value.
+    // Constructor of the property value.
     type = undefined;
-    //Reflects to HTML attribute [-1, 0, 1 or 2]
+    // Reflects to HTML attribute [-1, 0, 1 or 2]
     reflect = 0;
-    //Enables change handlers and events.
+    // Enables change handlers and events.
     notify = true;
-    //Observe object mutations for this property.
+    // Observe object mutations for this property.
     observe = false;
-    //Makes the property readonly. // TODO: document and test
+    // Makes the property readonly. // TODO: document and test
     readonly = false;
-    //Enforce stric typing. // TODO: document and test
+    // Enforce stric typing. // TODO: document and test
     strict = false;
-    //Makes property enumerable.
+    // Makes property enumerable.
     enumerable = true;
-    //Binding object.
+    // Binding object.
     binding = undefined;
     /**
      * Creates the property configuration object and copies values from `PropertyDefinition`.
@@ -117,23 +118,15 @@ export class Property {
      */
     constructor(propDef) {
         this.value = propDef.value;
-        if (propDef.type !== undefined)
-            this.type = propDef.type;
-        if (propDef.reflect !== undefined)
-            this.reflect = propDef.reflect;
-        if (propDef.notify !== undefined)
-            this.notify = propDef.notify;
-        if (propDef.observe !== undefined)
-            this.observe = propDef.observe;
-        if (propDef.readonly !== undefined)
-            this.readonly = propDef.readonly;
-        if (propDef.strict !== undefined)
-            this.strict = propDef.strict;
-        if (propDef.enumerable !== undefined)
-            this.enumerable = propDef.enumerable;
-        if (propDef.binding !== undefined)
-            this.binding = propDef.binding;
-        // TODO: move to PropertyDefinition
+        this.type = propDef.type;
+        this.binding = propDef.binding;
+        this.reflect = propDef.reflect;
+        this.notify = propDef.notify;
+        this.observe = propDef.observe;
+        this.readonly = propDef.readonly;
+        this.strict = propDef.strict;
+        this.enumerable = propDef.enumerable;
+        // TODO: test
         if (this.binding instanceof Binding)
             this.value = this.binding.value;
         else if (this.value === undefined) {
@@ -158,12 +151,6 @@ export class Property {
             }
             else if (this.type === Object && this.value instanceof Object) {
                 this.value = Object.assign({}, this.value);
-            }
-        }
-        // TODO: move to PropertyDefinition
-        debug: {
-            if ([-1, 0, 1, 2].indexOf(this.reflect) === -1) {
-                console.error(`Invalid reflect value ${this.reflect}!`);
             }
         }
     }

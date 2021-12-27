@@ -57,7 +57,6 @@ export default class {
         chai.expect(typeof eventDispatcher.protoListeners).to.be.equal('object');
         chai.expect(typeof eventDispatcher.propListeners).to.be.equal('object');
         chai.expect(typeof eventDispatcher.addedListeners).to.be.equal('object');
-        chai.expect(eventDispatcher.connected).to.be.equal(false);
       });
       it('Should include all listeners from protochain', () => {
         const node = new IoNode2();
@@ -101,7 +100,7 @@ export default class {
         eventDispatcher.removeEventListener('event1');
         chai.expect(JSON.stringify(eventDispatcher.addedListeners)).to.be.equal('{}');
       });
-      it('Should dispatch events only when connected', () => {
+      it('Should dispatch events', () => {
         const node = new IoNode2();
         const eventDispatcher = new EventDispatcher(node as any) as any;
         let handler4Count = 0;
@@ -119,28 +118,6 @@ export default class {
         eventDispatcher.dispatchEvent('event3');
         eventDispatcher.dispatchEvent('event4');
         eventDispatcher.dispatchEvent('event5');
-        chai.expect(node.handler1Count).to.be.equal(0);
-        chai.expect(node.handler2Count).to.be.equal(0);
-        chai.expect(node.handler3Count).to.be.equal(0);
-        chai.expect(handler4Count).to.be.equal(0);
-        chai.expect(handler5Count).to.be.equal(0);
-        eventDispatcher.connect();
-        eventDispatcher.dispatchEvent('event1');
-        eventDispatcher.dispatchEvent('event2');
-        eventDispatcher.dispatchEvent('event3');
-        eventDispatcher.dispatchEvent('event4');
-        eventDispatcher.dispatchEvent('event5');
-        chai.expect(node.handler1Count).to.be.equal(1);
-        chai.expect(node.handler2Count).to.be.equal(1);
-        chai.expect(node.handler3Count).to.be.equal(1);
-        chai.expect(handler4Count).to.be.equal(1);
-        chai.expect(handler5Count).to.be.equal(1);
-        eventDispatcher.disconnect();
-        eventDispatcher.dispatchEvent('event1');
-        eventDispatcher.dispatchEvent('event2');
-        eventDispatcher.dispatchEvent('event3');
-        eventDispatcher.dispatchEvent('event4');
-        eventDispatcher.dispatchEvent('event5');
         chai.expect(node.handler1Count).to.be.equal(1);
         chai.expect(node.handler2Count).to.be.equal(1);
         chai.expect(node.handler3Count).to.be.equal(1);
@@ -149,7 +126,7 @@ export default class {
       });
       it('Should dispatch events with correct event detail', () => {
         const node = new IoNode2();
-        const eventDispatcher = new EventDispatcher(node as any).connect() as any;
+        const eventDispatcher = new EventDispatcher(node as any) as any;
         let handler4Detail: any;
         const handler4 = (event: CustomEvent) => {
           handler4Detail = event.detail;
@@ -191,26 +168,12 @@ export default class {
         element.dispatchEvent(new CustomEvent('event3', {detail: 'detail3'}));
         element.dispatchEvent(new CustomEvent('event4', {detail: 'detail4'}));
         element.dispatchEvent(new CustomEvent('event5', {detail: 'detail5'}));
-        chai.expect(element.handler3Count).to.be.equal(0);
-        chai.expect(handler4Count).to.be.equal(0);
-        chai.expect(handler5Count).to.be.equal(0);
-        eventDispatcher.connect();
-        element.dispatchEvent(new CustomEvent('event3', {detail: 'detail3'}));
-        element.dispatchEvent(new CustomEvent('event4', {detail: 'detail4'}));
-        element.dispatchEvent(new CustomEvent('event5', {detail: 'detail5'}));
         chai.expect(element.handler3Count).to.be.equal(1);
         chai.expect(handler4Count).to.be.equal(1);
         chai.expect(handler5Count).to.be.equal(1);
         chai.expect(element.handler3Detail).to.be.equal('detail3');
         chai.expect(handler4Detail).to.be.equal('detail4');
         chai.expect(handler5Detail).to.be.equal('detail5');
-        eventDispatcher.disconnect();
-        element.dispatchEvent(new CustomEvent('event3', {detail: 'detail3'}));
-        element.dispatchEvent(new CustomEvent('event4', {detail: 'detail4'}));
-        element.dispatchEvent(new CustomEvent('event5', {detail: 'detail5'}));
-        chai.expect(element.handler3Count).to.be.equal(1);
-        chai.expect(handler4Count).to.be.equal(1);
-        chai.expect(handler5Count).to.be.equal(1);
       });
       it('Should dispose correctly', () => {
         const node = new IoNode2();
@@ -220,7 +183,6 @@ export default class {
         chai.expect(eventDispatcher.protoListeners).to.be.equal(undefined);
         chai.expect(eventDispatcher.propListeners).to.be.equal(undefined);
         chai.expect(eventDispatcher.addedListeners).to.be.equal(undefined);
-        chai.expect(eventDispatcher.connected).to.be.equal(false);
       });
     });
   }

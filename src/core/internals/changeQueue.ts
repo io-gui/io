@@ -31,7 +31,7 @@ export class ChangeQueue {
     }
     const i = this.changes.findIndex(change => change.property === property);
     if (i === -1) {
-      this.changes.push(new Change(property, value, oldValue));
+      this.changes.push({property, value, oldValue});
     } else {
       this.changes[i].value = value;
     }
@@ -82,24 +82,10 @@ export class ChangeQueue {
   }
 }
 
-/**
- * Property change payload
- */
- export class Change {
+ export interface Change {
   property: string;
   value: any;
   oldValue: any;
-  /**
-   * Creates property change payload.
-   * @param {string} property - Property name.
-   * @param {*} value - New property value.
-   * @param {*} oldValue - Old property value.
-   */
-  constructor(property: string, value: any, oldValue: any) {
-    this.property = property;
-    this.value = value;
-    this.oldValue = oldValue;
-  }
 }
 
 export interface ChangeEvent extends CustomEvent {

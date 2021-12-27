@@ -30,7 +30,7 @@ export class ChangeQueue {
         }
         const i = this.changes.findIndex(change => change.property === property);
         if (i === -1) {
-            this.changes.push(new Change(property, value, oldValue));
+            this.changes.push({ property, value, oldValue });
         }
         else {
             this.changes[i].value = value;
@@ -77,25 +77,6 @@ export class ChangeQueue {
         this.changes.length = 0;
         delete this.node;
         delete this.changes;
-    }
-}
-/**
- * Property change payload
- */
-export class Change {
-    property;
-    value;
-    oldValue;
-    /**
-     * Creates property change payload.
-     * @param {string} property - Property name.
-     * @param {*} value - New property value.
-     * @param {*} oldValue - Old property value.
-     */
-    constructor(property, value, oldValue) {
-        this.property = property;
-        this.value = value;
-        this.oldValue = oldValue;
     }
 }
 //# sourceMappingURL=changeQueue.js.map

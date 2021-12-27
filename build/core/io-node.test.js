@@ -53,28 +53,23 @@ export default class {
                 node.connect(window);
                 chai.expect(node.connected).to.be.equal(true);
                 node.connect(document);
-                chai.expect(node.__eventDispatcher.connected).to.be.equal(true);
                 chai.expect(node.__properties.connected).to.be.equal(true);
                 chai.expect(node.connected).to.be.equal(true);
                 chai.expect(node.__connections).to.be.deep.equal([window, document]);
                 node.disconnect(window);
-                chai.expect(node.__eventDispatcher.connected).to.be.equal(true);
                 chai.expect(node.__properties.connected).to.be.equal(true);
                 chai.expect(node.connected).to.be.equal(true);
                 chai.expect(node.__connections).to.be.deep.equal([document]);
                 node.disconnect(document);
                 chai.expect(node.connected).to.be.equal(false);
-                chai.expect(node.__eventDispatcher.connected).to.be.equal(false);
                 chai.expect(node.__properties.connected).to.be.equal(false);
                 chai.expect(node.__connections).to.be.deep.equal([]);
                 node.connect(window);
-                chai.expect(node.__eventDispatcher.connected).to.be.equal(true);
                 chai.expect(node.__properties.connected).to.be.equal(true);
                 chai.expect(node.connected).to.be.equal(true);
                 chai.expect(node.__connections).to.be.deep.equal([window]);
                 node.dispose();
                 chai.expect(node.connected).to.be.equal(false);
-                chai.expect(node.__eventDispatcher.connected).to.be.equal(false);
                 chai.expect(node.__properties.connected).to.be.equal(false);
                 chai.expect(node.__connections).to.be.deep.equal([]);
             });
@@ -202,7 +197,7 @@ export default class {
                 // chai.expect(node._prop1Change.detail.value).to.equal('one');
                 node.dispose();
             });
-            it('should invoke listener handler functions on events', () => {
+            it('should fire change events when connected', () => {
                 class TestNode extends IoNode {
                     static get Properties() {
                         return {
@@ -246,11 +241,6 @@ export default class {
                 chai.expect(node._onProp1Change.detail.property).to.equal('prop1');
                 chai.expect(node._onProp1Change.detail.oldValue).to.equal('');
                 chai.expect(node._onProp1Change.detail.value).to.equal('one');
-                node.dispatchEvent('custom-event', { value: 'goodbye' });
-                chai.expect(node._onCustomEventCounter).to.equal(1);
-                chai.expect(node._onCustomEven.path[0]).to.equal(node);
-                chai.expect(node._onCustomEven.detail.value).to.equal('hello');
-                node.dispose();
             });
             it('should have correct property defaults', () => {
                 class TestNode extends IoNode {
