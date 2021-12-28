@@ -251,8 +251,6 @@ export class IoGl extends IoElement {
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(uv);
 
-    this.render = this.render.bind(this);
-
     // this.template([['img', {id: 'canvas'}]]);
     // this.$.canvas.onload = () => { this.$.canvas.loading = false; };
 
@@ -290,20 +288,20 @@ export class IoGl extends IoElement {
   }
   cssMutated() {
     this.updateCssUniforms();
-    this.requestAnimationFrameOnce(this.render);
+    this.requestAnimationFrameOnce(this._render);
   }
   changed() {
     // TODO: unhack when ResizeObserver is available in Safari
     if (!window.ResizeObserver) {
       setTimeout(() => {
         this.onResized();
-        this.requestAnimationFrameOnce(this.render);
+        this.requestAnimationFrameOnce(this._render);
       });
     } else {
-      this.requestAnimationFrameOnce(this.render);
+      this.requestAnimationFrameOnce(this._render);
     }
   }
-  render() {
+  _render() {
     const width = this.size[0] * this.pxRatio;
     const height = this.size[1] * this.pxRatio;
 
