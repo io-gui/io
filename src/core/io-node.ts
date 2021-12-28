@@ -145,7 +145,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     connectedCallback() {
       this.connected = true;
-      this.__properties.connect();
       this.queueDispatch();
     }
     /**
@@ -153,7 +152,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     disconnectedCallback() {
       this.connected = false;
-      this.__properties.disconnect();
     }
     /**
      * Disposes all internals.

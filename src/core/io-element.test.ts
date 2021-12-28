@@ -179,10 +179,6 @@ export default class {
         it('Should disconnect binding when Node node is disconnected', () => {
           this.element.prop0 = Infinity;
           chai.expect(this.element.subnode.prop2).to.equal(Infinity);
-          this.element.subnode.disconnect(window);
-          this.element.prop0 = 0;
-          chai.expect(this.element.subnode.prop2).to.equal(Infinity);
-          this.element.subnode.connect(window);
           this.element.subnode.prop2 = 2;
           chai.expect(this.element.prop0).to.equal(2);
         });
