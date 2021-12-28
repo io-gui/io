@@ -72,9 +72,6 @@ export default class {
         chai.expect(node.connected).to.be.equal(true);
         chai.expect(node.__connections).to.be.deep.equal([window]);
         node.dispose();
-        chai.expect(node.connected).to.be.equal(false);
-        chai.expect(node.__properties.connected).to.be.equal(false);
-        chai.expect(node.__connections).to.be.deep.equal([]);
       });
       it('should invoke change handler functions on change', () => {
         class TestNode extends IoNode {

@@ -326,7 +326,13 @@ export class Properties {
    * Use this when properties are no loner needed.
    */
   dispose() {
-    this.disconnect();
+    for (let i = this.keys.length; i--;) {
+      const p = this.keys[i];
+      const property = (this as any)[p] as Property;
+      if (property.binding) {
+        property.binding.removeTarget(this.node, p);
+      }
+    }
     delete (this as any).node;
     delete (this as any).keys;
   }

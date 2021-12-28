@@ -96,6 +96,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         Object.defineProperty(this, '__connections', {enumerable: false, value: []});
       }
 
+      if (this.__observedObjects.length) {
+        window.addEventListener('object-mutated', this.objectMutated as EventListener);
+      }
+
       this.setProperties(properties);
     }
     /**
@@ -142,9 +146,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     connectedCallback() {
       this.connected = true;
       this.__properties.connect();
-      if (this.__observedObjects.length) {
-        window.addEventListener('object-mutated', this.objectMutated as EventListener);
-      }
       this.queueDispatch();
     }
     /**
@@ -153,9 +154,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     disconnectedCallback() {
       this.connected = false;
       this.__properties.disconnect();
-      if (this.__observedObjects.length) {
-        window.removeEventListener('object-mutated', this.objectMutated as EventListener);
-      }
     }
     /**
      * Disposes all internals.
