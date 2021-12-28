@@ -511,22 +511,6 @@ export default class {
           });
 
           (node as any).__properties.set('prop', {}, true);
-
-          node.disconnect();
-
-          node.prop = {};
-
-          node.removeEventListener('prop-changed');
-
-          node.addEventListener('prop-changed', ((event: CustomEvent) => {
-            const value = event.detail.value;
-            const oldValue = event.detail.oldValue;
-            chai.expect(string(value)).to.be.equal(string({}));
-            chai.expect(string(oldValue)).to.be.equal(string({}));
-          }) as EventListener);
-
-          node.connect();
-          node.prop = {};
         });
         it('Should connect/disconnect node value on initialization and value set', () => {
           class TestIoNodeValue extends IoNode {

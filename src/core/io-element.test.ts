@@ -49,7 +49,7 @@ export class TestElement extends IoElement {
     super(initProps);
     this.template([['test-subelement', {id: 'subelement', prop0: this.bind('prop0')}]]);
     this.subnode = new TestNode({prop2: this.bind('prop0')});
-    this.subnode.connect(window);
+    this.subnode.connect();
   }
   // TODO: test arguments
   changed() {

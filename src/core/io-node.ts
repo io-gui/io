@@ -92,9 +92,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, 'queueDispatchLazy', {enumerable: false, value: this.queueDispatchLazy.bind(this)});
 
       Object.defineProperty(this, 'connected', {enumerable: false, writable: true, value: false});
-      if (!this.__proto__.__isIoElement) {
-        Object.defineProperty(this, '__connections', {enumerable: false, value: []});
-      }
 
       if (this.__observedObjects.length) {
         window.addEventListener('object-mutated', this.objectMutated as EventListener);
@@ -107,37 +104,12 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {IoNode} node - Node to connect to.
      * @return {this} this
      */
-    connect(node: IoNode | HTMLElement | Document | Window = window): this {
+    connect(): this {
       debug:
       if (this.__isIoElement) {
         console.error('"connect()" function is not intended for DOM Elements!');
       }
-      debug:
-      if (this.__connections.indexOf(node) !== -1) {
-        console.warn('Node already connected to node');
-      }
-      this.__connections.push(node);
       if (!this.connected) this.connectedCallback();
-      return this;
-    }
-    /**
-     * Disconnects the instance from an another node or element.
-     * @param {IoNode} node - Node to disconnect from.
-     * @return {this} this
-     * */
-    disconnect(node: IoNode | HTMLElement | Document | Window = window): this {
-      debug:
-      if (this.__isIoElement) {
-        console.error('"disconnect()" function is not intended for DOM Elements!');
-      }
-      debug:
-      if (this.__connections.indexOf(node) === -1) {
-        console.error('Node not connected to:', node);
-      }
-      this.__connections.splice(this.__connections.indexOf(node), 1);
-      if (this.__connections.length === 0 && this.connected) {
-        this.disconnectedCallback();
-      }
       return this;
     }
     /**
@@ -159,7 +131,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     dispose() {
       this.connected = false;
-      this.__connections.length = 0;
       this.__changeQueue.dispose();
       this.__propertyBinder.dispose();
       this.__properties.dispose();
