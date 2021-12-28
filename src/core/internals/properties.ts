@@ -218,36 +218,26 @@ export class Properties {
    * @param {boolean} [skipDispatch] flag to skip event dispatch.
    */
   set(key: string, value: any, skipDispatch?: boolean) {
-
     const prop = (this as any)[key] as Property;
     const oldValue = prop.value;
-
     if (value !== oldValue) {
-
       const node = this.node;
       const binding = (value instanceof Binding) ? value : undefined;
-
       if (binding) {
-
         const oldBinding = prop.binding;
         if (oldBinding && binding !== oldBinding) {
           oldBinding.removeTarget(node, key);
         }
-
         binding.addTarget(node, key);
         value = binding.value;
-
       } else {
-
         if (prop.strict && prop.type && !(value instanceof prop.type)) {
           debug: {
             console.warn(`IoGUI strict type mismatch for "${key}" property! Value automatically converted to "${prop.type.name}."`);
           }
           value = new prop.type(value);
         }
-
       }
-
       prop.value = value;
 
       debug:
@@ -270,7 +260,6 @@ export class Properties {
           }
         }
       }
-
 
       if (value && value.__isIoNode && !value.__isIoElement) value.connect(node);
       if (oldValue && oldValue.__isIoNode && oldValue.connected && !oldValue.__isIoElement) oldValue.disconnect(node);
