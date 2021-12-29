@@ -45,7 +45,7 @@ export class ChangeQueue {
    * After all changes are dispatched it invokes `.applyCompose()` and `.changed()` functions od the owner node instance.
    */
   dispatch() {
-    if (this.dispatching === true || !this.node.connected) return;
+    if (this.dispatching === true) return;
 
     this.dispatching = true;
     let changed = false;

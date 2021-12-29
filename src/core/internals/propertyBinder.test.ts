@@ -45,12 +45,12 @@ export default class {
         chai.expect(node.prop1).to.be.equal(3);
       });
       it('Should add/remove target nodes and properties with `.addTarget()` and `removeTarget()`', () => {
-        const srcIoNode = new TestIoNode().connect();
+        const srcIoNode = new TestIoNode();
         const binding0 = new Binding(srcIoNode, 'prop1') as any;
         const binding1 = new Binding(srcIoNode, 'prop2') as any;
 
-        const dstIoNode0 = new TestIoNode().connect();
-        const dstIoNode1 = new TestIoNode().connect();
+        const dstIoNode0 = new TestIoNode();
+        const dstIoNode1 = new TestIoNode();
 
         binding0.addTarget(dstIoNode0, 'prop1');
         binding1.addTarget(dstIoNode0, 'prop2');
@@ -86,7 +86,7 @@ export default class {
         chai.expect(binding1target1Props.length).to.be.equal(0);
       });
       it('Should dispose correctly', () => {
-        const node = new TestIoNode().connect();
+        const node = new TestIoNode();
         const binding = new Binding(node, 'prop1') as any;
         binding.dispose();
         chai.expect(binding.node).to.be.equal(undefined);

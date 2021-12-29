@@ -105,9 +105,9 @@ export class IoLadderStep extends IoItem {
   }
   applyAria() {
     super.applyAria();
-    this.setAttribute('aria-valuemax', this.parentElement.max);
-    this.setAttribute('aria-valuemin', this.parentElement.min);
-    this.setAttribute('aria-valuenow', this.parentElement.value);
+    // this.setAttribute('aria-valuemax', this.parentElement.max);
+    // this.setAttribute('aria-valuemin', this.parentElement.min);
+    // this.setAttribute('aria-valuenow', this.parentElement.value);
   }
 }
 

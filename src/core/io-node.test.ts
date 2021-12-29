@@ -16,10 +16,6 @@ export default class {
       it('should have core API defined', () => {
         const node = new IoNode();
         // Lifecycle functions
-        node.connect();
-        chai.expect(node.connect).to.be.a('function');
-        chai.expect(node.connectedCallback).to.be.a('function');
-        chai.expect(node.disconnectedCallback).to.be.a('function');
         chai.expect(node.dispose).to.be.a('function');
         // Change handler functions
         chai.expect(node.changed).to.be.a('function');
@@ -50,12 +46,6 @@ export default class {
         chai.expect(node.stopPropagation).to.be.a('function');
         node.dispose();
       });
-      it('should account connections correctly', () => {
-        const node = new IoNode();
-        node.connect();
-        chai.expect(node.connected).to.be.equal(true);
-        node.dispose();
-      });
       it('should invoke change handler functions on change', () => {
         class TestNode extends IoNode {
           static get Properties(): any {
@@ -84,7 +74,6 @@ export default class {
         RegisterIoNode(TestNode);
 
         const node = new TestNode();
-        node.connect();
 
         node.prop1 = 'one';
         chai.expect(node._changedCounter).to.equal(1);
@@ -152,7 +141,6 @@ export default class {
         RegisterIoNode(TestNode);
 
         const node = new TestNode();
-        node.connect();
 
         chai.expect(node._changedCounter).to.equal(1);
         chai.expect(node._obj1MutatedCounter).to.equal(0);
@@ -210,7 +198,6 @@ export default class {
         RegisterIoNode(TestNode);
 
         const node = new TestNode();
-        node.connect();
 
         node.prop1 = 'one';
         chai.expect(node._onProp1ChangedCounter).to.equal(1);
@@ -261,15 +248,14 @@ export default class {
         RegisterIoNode(TestNode);
 
         const node = new TestNode();
-        node.connect();
 
         const binding = node.bind('prop1') as any;
         chai.expect(binding).to.be.instanceof(Binding);
         chai.expect(binding.node).to.be.equal(node);
         chai.expect(binding.property).to.be.equal('prop1');
 
-        const boundNode1 = new TestNode({prop1: binding}).connect();
-        const boundNode2 = new TestNode({prop1: binding}).connect();
+        const boundNode1 = new TestNode({prop1: binding});
+        const boundNode2 = new TestNode({prop1: binding});
         boundNode2.prop2 = binding;
 
         chai.expect(binding.targets[0]).to.be.equal(boundNode1);
@@ -304,12 +290,12 @@ export default class {
       //   const binding0 = new Binding(srcNode, 'prop1') as any;
       //   const binding1 = new Binding(srcNode, 'prop2') as any;
 
-      //   const dstNode0 = new TestNode().connect();
+      //   const dstNode0 = new TestNode();
       //   dstNode0.prop1 = binding0;
       //   dstNode0.prop2 = binding1;
 
-      //   const dstNode1 = new TestNode({prop1: binding0}).connect();
-      //   const dstNode3 = new TestNode({prop1: binding0, prop2: binding0}).connect();
+      //   const dstNode1 = new TestNode({prop1: binding0});
+      //   const dstNode3 = new TestNode({prop1: binding0, prop2: binding0});
 
       //   chai.expect(binding0.targets[0]).to.be.equal(dstNode0);
       //   chai.expect(binding0.targets[1]).to.be.equal(dstNode1);
@@ -320,7 +306,6 @@ export default class {
       //   chai.expect(string(binding0.targetProperties.get(dstNode3))).to.be.equal(string(['prop1', 'prop2']));
 
       //   dstNode0.dispose();
-      //   dstNode1.disconnect();
       //   dstNode3.unbind('prop1');
 
       //   chai.expect(string(binding0.targetProperties.get(dstNode0))).to.be.equal(string([]));
@@ -328,7 +313,7 @@ export default class {
       //   chai.expect(string(binding0.targetProperties.get(dstNode3))).to.be.equal(string(['prop2']));
 
       //   dstNode1.prop2 = binding0;
-      //   dstNode1.connect();
+      //   dstNode1;
 
       //   dstNode3.prop1 = binding0;
 

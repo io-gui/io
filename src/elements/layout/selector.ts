@@ -88,7 +88,8 @@ export class IoSelector extends IoElement {
       _scrollID: {
         type: String,
         notify: true,
-      }
+      },
+      lazy: true // TODO: reconsider
     };
   }
   static get Listeners() {

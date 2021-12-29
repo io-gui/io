@@ -114,17 +114,6 @@ export default class {
         changeQueue.dispatch();
         chai.expect(node.prop1ChangeCounter).to.be.equal(0);
       });
-      it('Should abort dispatch if owner node is disconnected', () => {
-        const node = new FakeIoNode();
-        const changeQueue = new ChangeQueue(node as any);
-        changeQueue.queue('prop1', 1, 0);
-        node.connected = false;
-        changeQueue.dispatch();
-        chai.expect(node.prop1ChangeCounter).to.be.equal(0);
-        node.connected = true;
-        changeQueue.dispatch();
-        chai.expect(node.prop1ChangeCounter).to.be.equal(1);
-      });
       it('Should dispose correctly', () => {
         const node = new FakeIoNode();
         const changeQueue = new ChangeQueue(node as any) as any;

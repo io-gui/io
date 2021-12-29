@@ -91,46 +91,18 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, 'queueDispatch', {enumerable: false, value: this.queueDispatch.bind(this)});
       Object.defineProperty(this, 'queueDispatchLazy', {enumerable: false, value: this.queueDispatchLazy.bind(this)});
 
-      Object.defineProperty(this, 'connected', {enumerable: false, writable: true, value: false});
-
       if (this.__observedObjects.length) {
         window.addEventListener('object-mutated', this.objectMutated as EventListener);
       }
 
       this.setProperties(properties);
     }
-    /**
-     * Connects the instance to another node or element.
-     * @param {IoNode} node - Node to connect to.
-     * @return {this} this
-     */
-    connect(): this {
-      debug:
-      if (this.__isIoElement) {
-        console.error('"connect()" function is not intended for DOM Elements!');
-      }
-      if (!this.connected) this.connectedCallback();
-      return this;
-    }
-    /**
-     * Connected callback.
-     */
-    connectedCallback() {
-      this.connected = true;
-      this.queueDispatch();
-    }
-    /**
-     * Disconnected callback.
-     */
-    disconnectedCallback() {
-      this.connected = false;
-    }
+    test() {}
     /**
      * Disposes all internals.
      * Use this when instance is no longer needed.
      */
     dispose() {
-      this.connected = false;
       this.__changeQueue.dispose();
       this.__propertyBinder.dispose();
       this.__properties.dispose();
@@ -286,7 +258,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this.__properties.set(p, props[p], true);
       }
       this.__eventDispatcher.setPropListeners(props, this);
-      if (this.connected) this.queueDispatch();
+      this.queueDispatch();
     }
     /**
      * Wrapper for addEventListener.

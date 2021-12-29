@@ -189,7 +189,6 @@ export class Properties {
         // TODO: document special handling of object and node values
         if (typeof value === 'object') {
           node.queue(prop, value, undefined);
-          if (value.__isIoNode) value.connect();
         } else if (property.reflect !== undefined && property.reflect >= 1 && node.__isIoElement) {
           // TODO: figure out how to resolve bi-directionsl reflection when attributes are set in html (role, etc...)
           node.setAttribute(prop, value);
@@ -259,11 +258,9 @@ export class Properties {
         }
       }
 
-      if (value && value.__isIoNode && !value.__isIoElement) value.connect();
-
       if (prop.notify && oldValue !== value) {
         node.queue(key, value, oldValue);
-        if (node.connected && !skipDispatch) {
+        if (!skipDispatch) {
           node.queueDispatch();
         }
       }

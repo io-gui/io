@@ -25,7 +25,7 @@ export class Path extends IoNode {
     this.throttle(this.onMutation, null, false);
   }
   onMutation() {
-    if (this.__connected) this.queueDispatch();
+    this.queueDispatch();
   }
   update() {
     let string = '';

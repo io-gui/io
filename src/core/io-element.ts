@@ -99,7 +99,6 @@ class IoElement extends IoNodeMixin(HTMLElement) {
    * Add resize listener if `onResized()` is defined in subclass.
    */
   connectedCallback() {
-    super.connectedCallback();
     if (typeof this.onResized === 'function') {
       ro.observe(this as unknown as HTMLElement);
     }
@@ -108,7 +107,6 @@ class IoElement extends IoNodeMixin(HTMLElement) {
    * Removes resize listener if `onResized()` is defined in subclass.
    */
   disconnectedCallback() {
-    super.disconnectedCallback();
     if (typeof this.onResized === 'function') {
       ro.unobserve(this as unknown as HTMLElement);
     }

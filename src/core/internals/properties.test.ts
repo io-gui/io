@@ -436,7 +436,7 @@ export default class {
           }
           RegisterIoNode(TestIoNode2);
 
-          const node = new TestIoNode2().connect();
+          const node = new TestIoNode2();
           const properties = (node as any).__properties;
 
           chai.expect(properties.get('prop1')).to.be.equal('binding1');
@@ -491,7 +491,7 @@ export default class {
             chai.expect(oldValue).to.be.equal(undefined);
           }) as EventListener);
 
-          node.connect();
+          node;
 
           node.removeEventListener('prop-changed');
 
@@ -538,7 +538,7 @@ export default class {
           const node = new TestIoNode();
           const subIoNode1 = node.prop;
           // chai.expect(subIoNode1.propChangeCounter).to.be.equal(0);
-          node.connect();
+          // node;
           chai.expect(subIoNode1.propChangeCounter).to.be.equal(1);
           subIoNode1.prop = {};
           subIoNode1.prop = {};
