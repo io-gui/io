@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import {PropertiesDeclaration} from '../../core/io-node.js';
 import {IoElement, RegisterIoElement} from '../../core/io-element.js';
 
 /*
@@ -34,7 +35,7 @@ export class IoItem extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
+  static get Properties(): PropertiesDeclaration {
     return {
       value: undefined,
       selected: {

@@ -1,3 +1,4 @@
+import {IoNode} from '../io-node.js';
 import {Binding} from './propertyBinder.js';
 
 type AnyConstructor = new (...args: any[]) => unknown;
@@ -15,11 +16,11 @@ export type PropertyDefinition = {
   enumerable: boolean;
 };
 
-export type PropertyDefinitionWeak = string | number | boolean | null | AnyConstructor | Binding | {
+export type PropertyDefinitionWeak = string | number | boolean | null | undefined | AnyConstructor | Binding | {
   value?: any;
   type?: AnyConstructor;
-  reflect?: ReflectType;
   binding?: Binding;
+  reflect?: ReflectType;
   notify?: boolean;
   observe?: boolean;
   readonly?: boolean;
@@ -54,34 +55,17 @@ export const hardenPropertyDefinition = (propDef: PropertyDefinitionWeak): Prope
     return def;
   }
   if (propDef && propDef.constructor === Object) {
-    const detail = propDef as PropertyDefinition;
-    debug: {
-      Object.keys(detail).forEach(key => {
-        if (['value', 'type', 'reflect', 'notify', 'observe', 'readonly', 'strict', 'enumerable', 'binding'].indexOf(key) === -1) {
-          console.warn(`PropertyDefinition: Invalid field ${key}`);
-        }
-      });
-      if (detail.type !== undefined && typeof detail.type !== 'function') console.warn('Incorrect type for "type" field');
-      if (detail.binding !== undefined && detail.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
-      if (detail.reflect !== undefined && ([-1, 0, 1, 2]).indexOf(detail.reflect) === -1) {
-        console.error(`Invalid reflect field ${detail.reflect}!`);
-      }
-      if (detail.notify !== undefined && typeof detail.notify !== 'boolean') console.warn('Incorrect type for "notify" field');
-      if (detail.observe !== undefined && typeof detail.observe !== 'boolean') console.warn('Incorrect type for "observe" field');
-      if (detail.readonly !== undefined && typeof detail.readonly !== 'boolean') console.warn('Incorrect type for "readonly" field');
-      if (detail.strict !== undefined && typeof detail.strict !== 'boolean') console.warn('Incorrect type for "strict" field');
-      if (detail.enumerable !== undefined && typeof detail.enumerable !== 'boolean') console.warn('Incorrect type for "enumerable" field');
-    }
-    detail.value = detail.value !== undefined ? detail.value : undefined;
-    detail.type = detail.type !== undefined ? detail.type : (detail.value !== undefined && detail.value !== null) ? detail.value.constructor : undefined;
-    detail.binding = detail.binding instanceof Binding ? detail.binding : undefined;
-    detail.reflect = detail.reflect !== undefined ? detail.reflect : 0;
-    detail.notify = detail.notify !== undefined ? detail.notify : true;
-    detail.observe = detail.observe !== undefined ? detail.observe : false;
-    detail.readonly = detail.readonly !== undefined ? detail.readonly : false;
-    detail.strict = detail.strict !== undefined ? detail.strict : false;
-    detail.enumerable = detail.enumerable !== undefined ? detail.enumerable : true;
-    return detail;
+    const def = propDef as PropertyDefinition;
+    def.value = def.value !== undefined ? def.value : undefined;
+    def.type = def.type !== undefined ? def.type : (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
+    def.binding = def.binding instanceof Binding ? def.binding : undefined;
+    def.reflect = def.reflect !== undefined ? def.reflect : 0;
+    def.notify = def.notify !== undefined ? def.notify : true;
+    def.observe = def.observe !== undefined ? def.observe : false;
+    def.readonly = def.readonly !== undefined ? def.readonly : false;
+    def.strict = def.strict !== undefined ? def.strict : false;
+    def.enumerable = def.enumerable !== undefined ? def.enumerable : true;
+    return def;
   }
   if (!(propDef && propDef.constructor === Object)) {
     def.value = propDef;
@@ -112,6 +96,8 @@ export class Property {
   value?: any = undefined;
   // Constructor of the property value.
   type?: AnyConstructor = undefined;
+  // Binding object.
+  binding?: Binding = undefined;
   // Reflects to HTML attribute [-1, 0, 1 or 2]
   reflect = 0;
   // Enables change handlers and events.
@@ -124,13 +110,29 @@ export class Property {
   strict = false;
   // Makes property enumerable.
   enumerable = true;
-  // Binding object.
-  binding?: Binding = undefined;
   /**
    * Creates the property configuration object and copies values from `PropertyDefinition`.
    * @param {PropertyDefinition} propDef PropertyDefinition object
    */
   constructor(propDef: PropertyDefinition) {
+    debug: {
+      Object.keys(propDef).forEach(key => {
+        if (['value', 'type', 'reflect', 'notify', 'observe', 'readonly', 'strict', 'enumerable', 'binding'].indexOf(key) === -1) {
+          console.warn(`PropertyDefinition: Invalid field ${key}`);
+        }
+      });
+      if (propDef.type !== undefined && typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
+      if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
+      if (propDef.reflect !== undefined && ([-1, 0, 1, 2]).indexOf(propDef.reflect) === -1) {
+        console.error(`Invalid reflect field ${propDef.reflect}!`);
+      }
+      if (propDef.notify !== undefined && typeof propDef.notify !== 'boolean') console.warn('Incorrect type for "notify" field');
+      if (propDef.observe !== undefined && typeof propDef.observe !== 'boolean') console.warn('Incorrect type for "observe" field');
+      if (propDef.readonly !== undefined && typeof propDef.readonly !== 'boolean') console.warn('Incorrect type for "readonly" field');
+      if (propDef.strict !== undefined && typeof propDef.strict !== 'boolean') console.warn('Incorrect type for "strict" field');
+      if (propDef.enumerable !== undefined && typeof propDef.enumerable !== 'boolean') console.warn('Incorrect type for "enumerable" field');
+    }
+
     this.value = propDef.value;
     this.type = propDef.type;
     this.binding = propDef.binding;
@@ -167,23 +169,18 @@ export class Property {
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 export class Properties {
-  private readonly node: any;
-  private readonly keys: Array<string> = [];
+  private readonly node: IoNode;
+  private readonly props: Record<string, Property> = {};
   /**
    * Creates the properties for specified `IoNode`.
-   * @param {any} node Owner IoNode instance.
+   * @param {IoNode} node Owner IoNode instance.
    */
-  constructor(node: any) {
-    Object.defineProperty(this, 'node', {enumerable: false, configurable: true, value: node});
+  constructor(node: IoNode) {
+    this.node = node;
     for (const prop in node.__protochain.properties) {
-      this.keys.push(prop);
       const protoProp = node.__protochain.properties as Record<string, PropertyDefinition>;
       const property = new Property(protoProp[prop]);
-      Object.defineProperty(this, prop, {
-        value: property,
-        enumerable: protoProp[prop].enumerable,
-        configurable: true
-      });
+      this.props[prop] = property;
       const value = property.value;
       if (value !== undefined && value !== null) {
         // TODO: document special handling of object and node values
@@ -198,15 +195,32 @@ export class Properties {
       // TODO: unhack passing __properties from constructor;
       if (binding) binding.addTarget(node, prop, this);
     }
-    Object.defineProperty(this, 'keys', {enumerable: false, configurable: true});
+  }
+  get keys() {
+    return Object.keys(this.props);
+  }
+  /**
+   * Returns the property object.
+   * @param {string} key property name to get object of.
+   * @return {Property} Peroperty object.
+   */
+  getProperty(key: string): Property {
+    return this.props[key];
+  }
+  /**
+   * Returns the owner node.
+   * @return {Property} Owner node.
+   */
+  getNode(): IoNode {
+    return this.node;
   }
   /**
    * Returns the property value.
    * @param {string} key property name to get value of.
    * @return {any} Peroperty value.
    */
-  get(key: string): any {
-    return ((this as any)[key] as Property).value;
+  getValue(key: string): any {
+    return this.props[key].value;
   }
   /**
    * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
@@ -214,8 +228,8 @@ export class Properties {
    * @param {any} value Peroperty value.
    * @param {boolean} [skipDispatch] flag to skip event dispatch.
    */
-  set(key: string, value: any, skipDispatch?: boolean) {
-    const prop = (this as any)[key] as Property;
+  setValue(key: string, value: any, skipDispatch?: boolean) {
+    const prop = this.props[key];
     const oldValue = prop.value;
     if (value !== oldValue) {
       const node = this.node;
@@ -269,18 +283,35 @@ export class Properties {
     }
   }
   /**
+   * Returns the property binding.
+   * @param {string} key property name to get binding of.
+   * @return {any} Peroperty binding.
+   */
+  getBinding(key: string) {
+    return this.props[key].binding;
+  }
+  /**
+   * Sets the property binding.
+   * @param {string} key property name to get binding of.
+   * @param {Binding} binding property binding.
+   */
+  setBinding(key: string, binding: Binding) {
+    this.props[key].binding = binding;
+  }
+  /**
    * Disconnects all property bindings and `IoNode` properties.
    * Use this when properties are no loner needed.
    */
   dispose() {
-    for (let i = this.keys.length; i--;) {
-      const p = this.keys[i];
+    const keys = Object.keys(this.props);
+    for (let i = keys.length; i--;) {
+      const p = keys[i];
       const property = (this as any)[p] as Property;
       if (property.binding) {
         property.binding.removeTarget(this.node, p);
       }
     }
     delete (this as any).node;
-    delete (this as any).keys;
+    delete (this as any).props;
   }
 }

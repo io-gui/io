@@ -43,8 +43,8 @@ export class Binding {
   addTarget(node: IoNode, property: string, __nodeProperties?: Properties) {
     // TODO: unhack passing __properties from constructor;
     const nodeProperties = node.__properties || __nodeProperties;
-    nodeProperties[property].binding = this;
-    nodeProperties.set(property, this.node[this.property]);
+    nodeProperties.setBinding(property, this);
+    nodeProperties.setValue(property, this.node[this.property]);
 
     const targetIoNode = node as unknown as EventTarget;
     if (this.targets.indexOf(targetIoNode) === -1) this.targets.push(targetIoNode);

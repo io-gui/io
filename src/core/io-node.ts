@@ -11,6 +11,7 @@ export interface IoNodeConstructor<T> {
   new (...args: any[]): T;
   Properties?: PropertiesDeclaration;
   Listeners?: ListenersDeclaration;
+  Style?: string;
   prototype?: any
   name?: string;
 }
@@ -37,7 +38,7 @@ type AnyEventListener = EventListener |
  */
 export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
   const classConstructor = class extends (superclass as any) {
-    static get Properties(): any {
+    static get Properties(): PropertiesDeclaration {
       return {
         lazy: Boolean,
         // TODO: implement import as property.
@@ -45,8 +46,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         //   type: String,
         //   reflect: -1,
         // },
-      } as any;
+      };
     }
+    __properties: Properties;
     /**
      * `compose` object lets you reactively assign property values to other object's properties.
      * For example, you can assign `this.value` property to the `this.objectProp.result` property.
@@ -84,7 +86,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, '__changeQueue', {enumerable: false, value: new ChangeQueue(this)});
 
       Object.defineProperty(this, '__eventDispatcher', {enumerable: false, value: new EventDispatcher(this)});
-      Object.defineProperty(this, '__properties', {enumerable: false, value: new Properties(this)});
+
+      this.__properties = new Properties(this);
+      Object.defineProperty(this, '__properties', {enumerable: false});
 
       Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
       Object.defineProperty(this, 'objectMutatedThrottled', {enumerable: false, value: this.objectMutatedThrottled.bind(this)});
@@ -125,11 +129,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       if (this.compose) {
         for (const prop in compose) {
           debug:
-          if (!this.__properties[prop] || typeof this.__properties[prop].value !== 'object') {
+          if (!this.__properties.getProperty(prop) || typeof this.__properties.getValue(prop) !== 'object') {
             console.error(`Composed property ${prop} is not a Node or an object.`);
             continue;
           }
-          const object = this.__properties[prop].value;
+          const object = this.__properties.getValue(prop);
           if (object.__isIoNode) {
             // TODO: make sure composed and declarative listeners are working together
             object.setProperties(compose[prop]);
@@ -177,7 +181,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     objectMutated(event: CustomEvent) {
       for (let i = 0; i < this.__observedObjects.length; i++) {
         const prop = this.__observedObjects[i];
-        const value = this.__properties[prop].value;
+        const value = this.__properties.getValue(prop);
         if (value === event.detail.object) {
           this.throttle(this.objectMutatedThrottled, prop, false);
           return;
@@ -212,7 +216,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     bind(prop: string): Binding {
       debug:
-      if (!this.__properties[prop]) {
+      if (!this.__properties.getProperty(prop)) {
         console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
       }
       return this.__propertyBinder.bind(prop);
@@ -223,7 +227,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     unbind(prop: string) {
       this.__propertyBinder.unbind(prop);
-      const binding = this.__properties[prop].binding;
+      const binding = this.__properties.getBinding(prop);
       if (binding) binding.removeTarget(this, prop);
     }
     /**
@@ -247,7 +251,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     setProperties(props: any) {
       for (const p in props) {
-        if (this.__properties[p] === undefined) {
+        if (this.__properties.getProperty(p) === undefined) {
           debug:
           if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
             // TODO: consider converting import and style to properties
@@ -255,7 +259,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
           continue;
         }
-        this.__properties.set(p, props[p], true);
+        this.__properties.setValue(p, props[p], true);
       }
       this.__eventDispatcher.setPropListeners(props, this);
       this.queueDispatch();
@@ -403,13 +407,13 @@ export const RegisterIoNode = function (nodeConstructor: typeof IoNode) {
   for (const p in protoProps) {
     Object.defineProperty(proto, p, {
       get: function() {
-        return this.__properties.get(p);
+        return (this as IoNode).__properties.getValue(p);
       },
       set: function(value) {
         debug: {
           if (protoProps[p].readonly) console.error(`IoGUI error. Cannot set value "${value}" to read only property "${p}"`);
         }
-        this.__properties.set(p, value);
+        (this as IoNode).__properties.setValue(p, value);
       },
       enumerable: !!protoProps[p].enumerable,
       configurable: true,

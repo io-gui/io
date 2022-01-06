@@ -1,4 +1,3 @@
-import {ProtoChain} from './internals/protoChain.js';
 import {EventDispatcher} from './internals/eventDispatcher.js';
 import {IoNode, IoNodeMixin, RegisterIoNode} from './io-node.js';
 
@@ -81,12 +80,12 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     return observed;
   }
   attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
-    const type = this.__properties[prop].type;
+    const type = this.__properties.getProperty(prop).type;
     if (type === Boolean) {
       if (newValue === null) this[prop] = false;
       else if (newValue === '') this[prop] = true;
     } else if (type === Number || type === String) {
-      this[prop] = type(newValue);
+      this[prop] = new type(newValue);
     } else if (type === Object || type === Array) {
       this[prop] = JSON.parse(newValue);
     } else if (typeof type === 'function') {
@@ -99,6 +98,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
    * Add resize listener if `onResized()` is defined in subclass.
    */
   connectedCallback() {
+    // super.connectedCallback();
     if (typeof this.onResized === 'function') {
       ro.observe(this as unknown as HTMLElement);
     }
@@ -119,7 +119,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   template(vDOM: Array<any>, host?: HTMLElement) {
     const vChildren = buildTree()(['root', vDOM]).children;
     host = (host || this) as any;
-    if (host === (this as any)) this.__properties.$.value = {};
+    if (host === (this as any)) this.__properties.setValue('$', {});
     this.traverse(vChildren, host as HTMLElement);
   }
   /**
@@ -389,6 +389,18 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
 <a href="https://www.google.com/chrome/">Chrome</a> or
 <a href="https://www.apple.com/lae/safari/">Safari</a>`;
 
+// Global mixin record
+const mixinRecord: Record<string, string> = {};
+
+// Regular expressions for style string processing.
+const commentsRegex =  new RegExp('(\\/\\*[\\s\\S]*?\\*\\/)', 'gi');
+const keyframeRegex =  new RegExp('((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
+const mediaQueryRegex =  new RegExp('((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
+const mixinRegex = new RegExp('((--[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
+const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
+const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
+
+
 /**
  * Register function for `IoElement`. Registers custom element.
  * @param {IoElement} element - Element class to register.
@@ -411,7 +423,57 @@ const RegisterIoElement = function (element: typeof IoElement) {
     return;
   }
 
-  _initProtoStyle(element.prototype.__protochain);
+    let mixinsString = '';
+    const mixins = element.prototype.__protochain.style.match(mixinRegex);
+    if (mixins) {
+      for (let i = 0; i < mixins.length; i++) {
+        const m = mixins[i].split(': {');
+        const name = m[0];
+        const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
+        mixinRecord[name] = value;
+        mixinsString += mixins[i].replace('--', '.').replace(': {', ' {');
+      }
+    }
+
+    // Remove mixins
+    let styleString = element.prototype.__protochain.style.replace(mixinRegex, '');
+    // Apply mixins
+    const apply = styleString.match(applyRegex);
+    if (apply) {
+      for (let i = 0; i < apply.length; i++) {
+        const name = apply[i].split('@apply ')[1].replace(';', '');
+        if (mixinRecord[name]) {
+          styleString = styleString.replace(apply[i], mixinRecord[name]);
+        } else {
+          console.warn('IoElement: cound not find mixin:', name);
+        }
+      }
+    }
+
+    debug: {
+      let styleStringStripped = styleString;
+      styleStringStripped = styleStringStripped.replace(commentsRegex, '');
+      styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
+      styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
+      const match = styleStringStripped.match(cssRegex);
+      if (match) {
+        match.map((selector: any) => {
+          selector = selector.trim();
+          if (!selector.startsWith(':host')) {
+            console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
+            console.warn(selector);
+          }
+        });
+      }
+    }
+
+    // Replace `:host` with element tag and add mixin CSS variables.
+    styleString = mixinsString + styleString.replace(new RegExp(':host', 'g'), localName);
+
+    const styleElement = document.createElement('style');
+    styleElement.innerHTML = styleString;
+    styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
+    document.head.appendChild(styleElement);
 };
 
 const ro = new ResizeObserver((entries: any) => {
@@ -475,95 +537,6 @@ const setNativeElementProps = function(element: HTMLElement, props: any) {
   }
   (element as any).__eventDispatcher.setPropListeners(props, element);
 };
-
-const mixinDB: Record<string, any> = {};
-
-const commentsRegex =  new RegExp('(\\/\\*[\\s\\S]*?\\*\\/)', 'gi');
-const keyframeRegex =  new RegExp('((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
-const mediaQueryRegex =  new RegExp('((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
-const mixinRegex = new RegExp('((--[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
-const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
-const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
-
-// Creates a `<style>` element for all `static get Style()` return strings.
-function _initProtoStyle(prototypes: ProtoChain) {
-  const localName = (prototypes.constructors[0] as any).name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-  const styleID = 'io-style-' + localName.replace('io-', '');
-
-  let finalStyleString = '';
-
-  // Convert mixins to classes
-  const styleString = (prototypes.constructors[0] as any).Style;
-
-  if (styleString) {
-    const mixins = styleString.match(mixinRegex);
-    if (mixins) {
-      for (let i = 0; i < mixins.length; i++) {
-        const m = mixins[i].split(': {');
-        const name = m[0];
-        const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
-        mixinDB[name] = value;
-        finalStyleString += mixins[i].replace('--', '.').replace(': {', ' {');
-      }
-    }
-
-    for (let i = prototypes.constructors.length; i--;) {
-      let styleString = (prototypes.constructors[i] as any).Style;
-      if (styleString) {
-        // Remove mixins
-        styleString = styleString.replace(mixinRegex, '');
-
-        // Apply mixins
-        const apply = styleString.match(applyRegex);
-        if (apply) {
-          for (let i = 0; i < apply.length; i++) {
-            const name = apply[i].split('@apply ')[1].replace(';', '');
-            if (mixinDB[name]) {
-              styleString = styleString.replace(apply[i], mixinDB[name]);
-            } else {
-              console.warn('IoElement: cound not find mixin:', name);
-            }
-          }
-        }
-
-        // Check selector validity (:host prefix)
-        {
-          let styleStringStripped = styleString;
-
-          // Remove comments
-          styleStringStripped = styleStringStripped.replace(commentsRegex, '');
-
-          // Remove keyframes
-          styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
-
-          // Remove media queries
-          styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
-
-          const match = styleStringStripped.match(cssRegex);
-          if (match) {
-            match.map((selector: any) => {
-              selector = selector.trim();
-              if (!selector.startsWith(':host')) {
-                console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
-                console.warn(selector);
-              }
-            });
-          }
-        }
-
-        // Replace `:host` with element tag.
-        finalStyleString += styleString.replace(new RegExp(':host', 'g'), localName);
-      }
-    }
-  }
-
-  if (finalStyleString) {
-    const element = document.createElement('style');
-    element.innerHTML = finalStyleString;
-    element.setAttribute('id', styleID);
-    document.head.appendChild(element);
-  }
-}
 
 RegisterIoElement(IoElement);
 

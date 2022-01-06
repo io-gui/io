@@ -164,14 +164,14 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
 
-    for (const name in this.css.__properties) {
+    for (const name of this.css.__properties.keys) {
       const property = this.css.__protochain.properties[name];
       frag += this.initPropertyUniform(name, property);
     }
 
     frag += '\n';
 
-    for (const prop in this.__properties) {
+    for (const prop of this.__properties.keys) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
       const property = this.__protochain.properties[prop];
       frag += this.initPropertyUniform(name, property);
@@ -211,6 +211,7 @@ export class IoGl extends IoElement {
 
     return program;
   }
+  css: typeof IoThemeSingleton;
   constructor(properties: Record<string, any> = {}) {
     super(properties);
 
@@ -218,13 +219,13 @@ export class IoGl extends IoElement {
 
     // TODO: improve code clarity
     this._vecLengths = {};
-    for (const name in this.css.__properties) {
+    for (const name of this.css.__properties.keys) {
       const property = this.css.__protochain.properties[name];
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }
     }
-    for (const prop in this.__properties) {
+    for (const prop of this.__properties.keys) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
       const property = this.__protochain.properties[prop];
       if (property.notify && property.type === Array) {
@@ -310,9 +311,9 @@ export class IoGl extends IoElement {
     this.setShaderProgram();
 
     // TODO: dont brute-force uniform update.
-    for (const p in this.__properties) {
+    for (const p of this.__properties.keys) {
       const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-      this.updatePropertyUniform(name, this.__properties[p]);
+      this.updatePropertyUniform(name, this.__properties.getProperty(p));
     }
 
     canvas.width = width;
@@ -342,8 +343,8 @@ export class IoGl extends IoElement {
     }
   }
   updateCssUniforms() {
-    for (const name in this.css.__properties) {
-      this.updatePropertyUniform(name, this.css.__properties[name]);
+    for (const name of this.css.__properties.keys) {
+      this.updatePropertyUniform(name, this.css.__properties.getProperty(name));
     }
   }
   setUniform(name: string, type: UniformTypes, value: any) {

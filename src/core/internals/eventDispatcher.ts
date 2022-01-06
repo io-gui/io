@@ -4,10 +4,20 @@ export type ListenerDefinitionWeak = keyof IoNode | EventListener | [keyof IoNod
 
 export type ListenerDefinition = [keyof IoNode | EventListener, AddEventListenerOptions?];
 
+/**
+ * Takes weakly typed listener definition and returns stronly typed listener definition.
+ * @param {ListenerDefinitionWeak} def Weakly typed listener definition
+ * @return {ListenerDefinition} Stronly typed listener definition
+ */
 export const hardenListenerDefinition = (def: ListenerDefinitionWeak): ListenerDefinition => {
   return def instanceof Array ? def : [def];
 };
 
+/**
+ * Assigns listener definition to an existing array of listener definitions.
+ * @param {ListenerDefinition[]} defs Array of listener definitions
+ * @param {ListenerDefinition} def listener definition
+ */
 export const assignListenerDefinition = (defs: ListenerDefinition[], def: ListenerDefinition) => {
   const i = defs.findIndex(_def => _def[0] === def[0]);
   if (i !== -1) {
@@ -18,12 +28,20 @@ export const assignListenerDefinition = (defs: ListenerDefinition[], def: Listen
   }
 };
 
+/**
+ * Takes a node and a listener definition and returns a listener.
+ * @param {IoNode} node asd
+ * @param {ListenerDefinition} def listener definition
+ * @return {Listener} listener
+ */
 export const listenerFromDefinition = (node: IoNode, def: ListenerDefinition): Listener => {
   debug: {
     if (typeof def[0] !== 'string' && typeof def[0] !== 'function') console.warn('Invalid listener type');
     if (def[1]) {
       if (typeof def[1] !== 'object') console.warn('Invalid listener options type');
-      else if (Object.keys(def[1]).some(k => !(['passive', 'capture'].includes(k)))) console.warn('Invalid listener options type');
+      else if (Object.keys(def[1]).some(k => !(['passive', 'capture'].includes(k)))) {
+        console.warn('Invalid listener options type');
+      }
     }
   }
   const listener: Listener = [typeof def[0] === 'string' ? node[def[0]] : def[0]];
@@ -35,13 +53,13 @@ export type Listener = [EventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener[]>;
 
 /**
- * `EventDispatcher` responsible for handling listeners and dispatching events.
+ * Internal utility class responsible for handling listeners and dispatching events.
  * It maintains three independent lists of listeners:
  *   1. `protoListeners` specified as `get Listeners()` class declarations.
  *   2. `propListeners` specified as inline properties prefixed with "on-"
  *   3. `addedListeners` explicitly added using `addEventListener()`.
  */
-class EventDispatcher {
+export class EventDispatcher {
   private readonly node: IoNode;
   private readonly isEventTarget: boolean;
   private readonly protoListeners: Listeners = {};
@@ -153,7 +171,9 @@ class EventDispatcher {
       if (listener && typeof listener !== 'function') console.warn('Invalid listener type!');
       if (options) {
         if (typeof options !== 'object') console.warn('Invalid listener options type');
-        else if (Object.keys(options).some(k => !(['passive', 'capture'].includes(k)))) console.warn('Invalid listener options type');
+        else if (Object.keys(options).some(k => !(['passive', 'capture'].includes(k)))) {
+          console.warn('Invalid listener options type');
+        }
       }
     }
     if (!listener) {
@@ -246,5 +266,3 @@ class EventDispatcher {
     delete (this as any).addedListeners;
   }
 }
-
-export {EventDispatcher};
