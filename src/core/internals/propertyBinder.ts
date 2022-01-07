@@ -3,13 +3,14 @@ import {Properties} from './properties.js';
 import {IoNode} from '../io-node.js';
 
 /**
- * Binding object. It manages data binding between source and targets using `[property]-changed` events.
+ * Property binding class.
+ * It manages data binding with target nodes/properties using `[property]-changed` events.
  */
 export class Binding {
-  private readonly node: IoNode;
-  private readonly property: string = '';
-  private readonly targets: Array<EventTarget> = [];
-  private readonly targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
+  public readonly node: IoNode;
+  public readonly property: string = '';
+  public readonly targets: Array<EventTarget> = [];
+  public readonly targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
   /**
    * Creates a binding object for specified `node` and `property`.
    * @param {IoNode} node - Property owner node.
@@ -20,12 +21,6 @@ export class Binding {
     this.property = property;
     this.onTargetChanged = this.onTargetChanged.bind(this);
     this.onSourceChanged = this.onSourceChanged.bind(this);
-    Object.defineProperty(this, 'node',             {enumerable: false, writable: false});
-    Object.defineProperty(this, 'property',         {enumerable: false, writable: false});
-    Object.defineProperty(this, 'targets',          {enumerable: false, writable: false});
-    Object.defineProperty(this, 'targetProperties', {enumerable: false, writable: false});
-    Object.defineProperty(this, 'onTargetChanged', {enumerable: false, writable: false});
-    Object.defineProperty(this, 'onSourceChanged', {enumerable: false, writable: false});
     this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged as EventListener);
   }
   set value(value) {
@@ -38,11 +33,11 @@ export class Binding {
    * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
    * @param {IoNode} node - Target node.
    * @param {string} property - Target property.
-   * @param {Array.<string>} __nodeProperties - List of target property names.
+   * @param {Array.<string>} [_nodeProperties] - Properties object.
    */
-  addTarget(node: IoNode, property: string, __nodeProperties?: Properties) {
-    // TODO: unhack passing __properties from constructor;
-    const nodeProperties = node.__properties || __nodeProperties;
+  addTarget(node: IoNode, property: string, _nodeProperties?: Properties) {
+    // TODO: unhack passing _properties from constructor;
+    const nodeProperties = node._properties || _nodeProperties;
     nodeProperties.setBinding(property, this);
     nodeProperties.setValue(property, this.node[this.property]);
 
@@ -158,16 +153,16 @@ export class Binding {
  * Manager for property bindings. It holds all bindings for a particular IoNode.
  */
 export class PropertyBinder {
-  private readonly node: IoNode;
-  private readonly __bindings: Record<string, Binding> = {};
+  private readonly _node: IoNode;
+  private readonly _bindings: Record<string, Binding> = {};
   /**
    * Creates binding manager for the specified node.
    * @param {IoNode} node - Owner node.
    */
   constructor(node: IoNode) {
-    this.node = node;
-    Object.defineProperty(this, 'node',     {enumerable: false, writable: false});
-    Object.defineProperty(this, '__bindings', {enumerable: false, writable: false});
+    this._node = node;
+    Object.defineProperty(this, '_node',     {enumerable: false, writable: false});
+    Object.defineProperty(this, '_bindings', {enumerable: false, writable: false});
   }
   /**
    * Returns a binding to the specified property name or creates one if it does not exist.
@@ -175,26 +170,26 @@ export class PropertyBinder {
    * @return {Binding} Property binding object.
    */
   bind(property: string): Binding {
-    this.__bindings[property] = this.__bindings[property] || new Binding(this.node, property);
-    return this.__bindings[property];
+    this._bindings[property] = this._bindings[property] || new Binding(this._node, property);
+    return this._bindings[property];
   }
   /**
    * Removes a binding for the specified property name.
    * @param {string} property - Property to unbind.
    */
   unbind(property: string): void {
-    if (this.__bindings[property]) this.__bindings[property].dispose();
-    delete this.__bindings[property];
+    if (this._bindings[property]) this._bindings[property].dispose();
+    delete this._bindings[property];
   }
   /**
    * Disposes all bindings. Use this when node is no longer needed.
    */
   dispose(): void {
-    for (const property in this.__bindings) {
-      this.__bindings[property].dispose();
-      delete this.__bindings[property];
+    for (const property in this._bindings) {
+      this._bindings[property].dispose();
+      delete this._bindings[property];
     }
-    delete (this as any).node;
-    delete (this as any).__bindings;
+    delete (this as any)._node;
+    delete (this as any)._bindings;
   }
 }

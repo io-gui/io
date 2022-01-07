@@ -230,7 +230,7 @@ export class IoTheme extends IoElement {
     });
   }
   changed() {
-    this.__properties.setValue('cssItemHeight', this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth));
+    this._properties.setValue('cssItemHeight', this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth));
     this.variablesElement.innerHTML = /* css */`
       body {
         --io-spacing: ${this.cssSpacing}px;
@@ -278,9 +278,9 @@ export class IoTheme extends IoElement {
     `;
 
     const vars = themeDB.value[this.theme];
-    for (const prop of this.__properties.keys) {
+    for (const prop of this._properties.keys) {
       if (prop.startsWith('css')) {
-        vars[prop] = this.__properties.getValue(prop);
+        vars[prop] = this._properties.getValue(prop);
       }
     }
     themeDB.value = Object.assign({}, themeDB.value);

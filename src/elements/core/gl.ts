@@ -164,21 +164,21 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
 
-    for (const name of this.css.__properties.keys) {
-      const property = this.css.__protochain.properties[name];
+    for (const name of this.css._properties.keys) {
+      const property = this.css._protochain.properties[name];
       frag += this.initPropertyUniform(name, property);
     }
 
     frag += '\n';
 
-    for (const prop of this.__properties.keys) {
+    for (const prop of this._properties.keys) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = this.__protochain.properties[prop];
+      const property = this._protochain.properties[prop];
       frag += this.initPropertyUniform(name, property);
     }
 
-    for (let i = this.__protochain.constructors.length; i--;) {
-      const constructor = this.__protochain.constructors[i];
+    for (let i = this._protochain.constructors.length; i--;) {
+      const constructor = this._protochain.constructors[i];
       const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
       if (glUtilsProp && glUtilsProp.get) {
         frag += constructor.GlUtils;
@@ -219,15 +219,15 @@ export class IoGl extends IoElement {
 
     // TODO: improve code clarity
     this._vecLengths = {};
-    for (const name of this.css.__properties.keys) {
-      const property = this.css.__protochain.properties[name];
+    for (const name of this.css._properties.keys) {
+      const property = this.css._protochain.properties[name];
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }
     }
-    for (const prop of this.__properties.keys) {
+    for (const prop of this._properties.keys) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = this.__protochain.properties[prop];
+      const property = this._protochain.properties[prop];
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }
@@ -311,9 +311,9 @@ export class IoGl extends IoElement {
     this.setShaderProgram();
 
     // TODO: dont brute-force uniform update.
-    for (const p of this.__properties.keys) {
+    for (const p of this._properties.keys) {
       const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-      this.updatePropertyUniform(name, this.__properties.getProperty(p));
+      this.updatePropertyUniform(name, this._properties.getProperty(p));
     }
 
     canvas.width = width;
@@ -343,8 +343,8 @@ export class IoGl extends IoElement {
     }
   }
   updateCssUniforms() {
-    for (const name of this.css.__properties.keys) {
-      this.updatePropertyUniform(name, this.css.__properties.getProperty(name));
+    for (const name of this.css._properties.keys) {
+      this.updatePropertyUniform(name, this.css._properties.getProperty(name));
     }
   }
   setUniform(name: string, type: UniformTypes, value: any) {

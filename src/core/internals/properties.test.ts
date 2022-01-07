@@ -259,7 +259,7 @@ export default class {
             static get Properties(): PropertiesDeclaration {
               return {
                 prop1: {
-                  value: 2,
+                  value: {},
                   notify: false,
                   observe: true,
                   strict: false,
@@ -278,16 +278,16 @@ export default class {
           const node1 = new Object1();
           const node2 = new Object2();
 
-          const protoProps1 = node1.__protochain.properties;
-          const protoProps2 = node2.__protochain.properties;
-          const props1 = node1.__properties;
-          const props2 = node2.__properties;
+          const protoProps1 = node1._protochain.properties;
+          const protoProps2 = node2._protochain.properties;
+          const props1 = node1._properties;
+          const props2 = node2._properties;
 
           chai.expect(string(props1.keys)).to.be.equal(string(['lazy', 'prop1', '_prop']));
           chai.expect(string(props2.keys)).to.be.equal(string(['lazy', 'prop1', '_prop', 'prop3']));
 
-          chai.expect(node1.__properties.getNode()).to.be.equal(node1);
-          chai.expect(node2.__properties.getNode()).to.be.equal(node2);
+          chai.expect(node1._properties.getNode()).to.be.equal(node1);
+          chai.expect(node2._properties.getNode()).to.be.equal(node2);
 
           chai.expect(protoProps1.prop1.value).to.be.equal(0);
           chai.expect(props1.getProperty('prop1').value).to.be.equal(0);
@@ -298,9 +298,9 @@ export default class {
           chai.expect(props1.getProperty('prop1').strict).to.be.equal(false);
           chai.expect(props1.getProperty('prop1').enumerable).to.be.equal(true);
 
-          chai.expect(protoProps2.prop1.value).to.be.equal(2);
-          chai.expect(props2.getProperty('prop1').value).to.be.equal(2);
-          chai.expect(props2.getProperty('prop1').type).to.be.equal(Number);
+          chai.expect(protoProps2.prop1.value).to.be.eql({});
+          chai.expect(props2.getProperty('prop1').value).to.be.eql({});
+          chai.expect(props2.getProperty('prop1').type).to.be.equal(Object);
           chai.expect(props2.getProperty('prop1').notify).to.be.equal(false);
           chai.expect(props2.getProperty('prop1').reflect).to.be.equal(0);
           chai.expect(props2.getProperty('prop1').observe).to.be.equal(true);
@@ -319,7 +319,7 @@ export default class {
             static get Properties(): PropertiesDeclaration {
               return {
                 prop1: {
-                  value: 2,
+                  value: {},
                   notify: false,
                   reflect: 2,
                   observe: true,
@@ -333,7 +333,7 @@ export default class {
           class Object2 extends Object1 {
             static get Properties(): PropertiesDeclaration {
               return {
-                prop1: 'hello',
+                prop1: [1, 2, 3],
               };
             }
           }
@@ -341,7 +341,8 @@ export default class {
           const protochain = new ProtoChain(Object2);
           const props = protochain.properties;
 
-          chai.expect(props.prop1.type).to.be.equal(String);
+          chai.expect(props.prop1.value).to.be.eql([1, 2, 3]);
+          chai.expect(props.prop1.type).to.be.equal(Array);
           chai.expect(props.prop1.notify).to.be.equal(false);
           chai.expect(props.prop1.reflect).to.be.equal(2);
           chai.expect(props.prop1.observe).to.be.equal(true);
@@ -376,8 +377,8 @@ export default class {
           const node1 = new Object1();
           const node2 = new Object2();
 
-          const props1 = node1.__properties;
-          const props2 = node2.__properties;
+          const props1 = node1._properties;
+          const props2 = node2._properties;
 
           chai.expect(props1.getBinding('prop1')).to.be.equal(binding1);
           chai.expect(props2.getBinding('prop1')).to.be.equal(binding2);
@@ -405,7 +406,7 @@ export default class {
           RegisterIoNode(TestIoNode);
 
           const node = new TestIoNode();
-          const properties = node.__properties;
+          const properties = node._properties;
 
           chai.expect(properties.getValue('prop1')).to.be.equal(1);
           chai.expect(node.prop1).to.be.equal(1);
@@ -437,7 +438,7 @@ export default class {
           RegisterIoNode(TestIoNode2);
 
           const node = new TestIoNode2();
-          const properties = node.__properties;
+          const properties = node._properties;
 
           chai.expect(properties.getValue('prop1')).to.be.equal('binding1');
           chai.expect(node.prop1).to.be.equal('binding1');
@@ -469,7 +470,7 @@ export default class {
           chai.expect(element.getAttribute('label')).to.be.equal('label1');
           element.label = 'label2';
           chai.expect(element.getAttribute('label')).to.be.equal('label2');
-          element.__properties.setValue('label', 'label3');
+          element._properties.setValue('label', 'label3');
           chai.expect(element.getAttribute('label')).to.be.equal('label3');
         });
         it('Should dipatch queue on object value initialization and value set', () => {
@@ -510,7 +511,7 @@ export default class {
             chai.expect('This should never happen!').to.be.equal(true);
           });
 
-          node.__properties.setValue('prop', {}, true);
+          node._properties.setValue('prop', {}, true);
         });
         it('Should connect/disconnect node value on initialization and value set', () => {
           class TestIoNodeValue extends IoNode {

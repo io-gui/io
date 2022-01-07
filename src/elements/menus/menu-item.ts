@@ -187,7 +187,7 @@ export class IoMenuItem extends IoItem {
 
     Layer.x = event.clientX;
     Layer.y = event.clientY;
-    clearTimeout(this.__timeoutOpen);
+    clearTimeout(this._timeoutOpen);
     hovered = this._gethovered(event);
     if (hovered) {
       const v = Math.abs(movementY) - Math.abs(movementX);
@@ -198,7 +198,7 @@ export class IoMenuItem extends IoItem {
       } else if (h ? v < -0.5 : v > 0.5) {
         this._expandHovered();
       } else {
-        this.__timeoutOpen = setTimeout(() => {
+        this._timeoutOpen = setTimeout(() => {
           this._expandHovered();
         }, 100);
       }

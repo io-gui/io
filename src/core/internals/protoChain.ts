@@ -32,6 +32,10 @@ export class ProtoChain {
    * String containing all styles defined as `static get Style()` return strings.
    */
   public readonly style: string = '';
+  /*
+   * List of property names with `observed: true`.
+   */
+  public readonly observedObjects: string[] = [];
   /**
    * Creates an instance of `ProtoChain`.
    * @param {IoNodeConstructor<any>} ioNodeClass - Owner `IoNode`-derived class.
@@ -90,6 +94,19 @@ export class ProtoChain {
         if (listeners[l]) {
           this.listeners[l] = this.listeners[l] || [];
           assignListenerDefinition(this.listeners[l], hardenListenerDefinition(listeners[l]));
+        }
+      }
+    }
+    // Create a list of observed objects
+    for (const p in this.properties) {
+      if (this.properties[p].observe) {
+        if ([String, Number, Boolean].indexOf(this.properties[p].type as any) !== -1) {
+          this.properties[p].observe = false;
+          debug: {
+            console.warn('Property `observe` is only intended for object properties!');
+          }
+        } else {
+          this.observedObjects.push(p);
         }
       }
     }

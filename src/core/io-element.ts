@@ -71,8 +71,8 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   }
   static get observedAttributes() {
     const observed = [];
-    for (const prop in this.prototype.__protochain.properties) {
-      const r  = this.prototype.__protochain.properties[prop].reflect;
+    for (const prop in this.prototype._protochain.properties) {
+      const r  = this.prototype._protochain.properties[prop].reflect;
       if (r === -1 || r === 2) {
         observed.push(prop);
       }
@@ -80,7 +80,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     return observed;
   }
   attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
-    const type = this.__properties.getProperty(prop).type;
+    const type = this._properties.getProperty(prop).type;
     if (type === Boolean) {
       if (newValue === null) this[prop] = false;
       else if (newValue === '') this[prop] = true;
@@ -119,7 +119,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   template(vDOM: Array<any>, host?: HTMLElement) {
     const vChildren = buildTree()(['root', vDOM]).children;
     host = (host || this) as any;
-    if (host === (this as any)) this.__properties.setValue('$', {});
+    if (host === (this as any)) this._properties.setValue('$', {});
     this.traverse(vChildren, host as HTMLElement);
   }
   /**
@@ -163,7 +163,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       // update existing elements
       } else {
         child.removeAttribute('className');
-        if ((child as IoElement).__isIoElement) {
+        if ((child as IoElement)._isIoElement) {
           // Set IoElement element properties
           // TODO: Test property and listeners reset. Consider optimizing.
           (child as IoElement).setProperties(vChildren[i].props);
@@ -181,7 +181,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
           this.flattenTextNode(child as HTMLElement);
-          (child as any).__textNode.nodeValue = String(vChildren[i].children);
+          (child as any)._textNode.nodeValue = String(vChildren[i].children);
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
           this.traverse(vChildren[i].children, child as HTMLElement);
@@ -202,22 +202,22 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       element.innerHTML = '';
       element.appendChild(document.createTextNode(''));
     }
-    (element as any).__textNode = element.childNodes[0];
+    (element as any)._textNode = element.childNodes[0];
     if (element.childNodes.length > 1) {
       const textContent = element.textContent;
       for (let i = element.childNodes.length; i--;) {
         if (i !== 0) element.removeChild(element.childNodes[i]);
       }
-      (element as any).__textNode.nodeValue = textContent;
+      (element as any)._textNode.nodeValue = textContent;
     }
   }
   get textNode() {
     this.flattenTextNode(this);
-    return this.__textNode.nodeValue;
+    return this._textNode.nodeValue;
   }
   set textNode(value) {
     this.flattenTextNode(this);
-    this.__textNode.nodeValue = String(value);
+    this._textNode.nodeValue = String(value);
   }
   setProperties(props: any) {
     super.setProperties(props);
@@ -413,8 +413,8 @@ const RegisterIoElement = function (element: typeof IoElement) {
   Object.defineProperty(element, 'localName', {value: localName});
   Object.defineProperty(element.prototype, 'localName', {value: localName});
 
-  Object.defineProperty(element, '__isIoElement', {enumerable: false, value: true});
-  Object.defineProperty(element.prototype, '__isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(element, '_isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(element.prototype, '_isIoElement', {enumerable: false, value: true});
 
   if (window.customElements !== undefined) {
     window.customElements.define(localName, element as unknown as CustomElementConstructor);
@@ -424,7 +424,7 @@ const RegisterIoElement = function (element: typeof IoElement) {
   }
 
     let mixinsString = '';
-    const mixins = element.prototype.__protochain.style.match(mixinRegex);
+    const mixins = element.prototype._protochain.style.match(mixinRegex);
     if (mixins) {
       for (let i = 0; i < mixins.length; i++) {
         const m = mixins[i].split(': {');
@@ -436,7 +436,7 @@ const RegisterIoElement = function (element: typeof IoElement) {
     }
 
     // Remove mixins
-    let styleString = element.prototype.__protochain.style.replace(mixinRegex, '');
+    let styleString = element.prototype._protochain.style.replace(mixinRegex, '');
     // Apply mixins
     const apply = styleString.match(applyRegex);
     if (apply) {
@@ -491,7 +491,7 @@ const ro = new ResizeObserver((entries: any) => {
 const constructElement = function(vDOMNode: any) {
   // IoElement classes constructed with constructor.
   const ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
-  if (ConstructorClass && (ConstructorClass as any).__isIoElement) return new ConstructorClass(vDOMNode.props);
+  if (ConstructorClass && (ConstructorClass as any)._isIoElement) return new ConstructorClass(vDOMNode.props);
 
   // Other element classes constructed with document.createElement.
   const element = document.createElement(vDOMNode.name);
@@ -530,12 +530,12 @@ const setNativeElementProps = function(element: HTMLElement, props: any) {
     else if (p !== 'id') (element as any)[p] = prop;
     if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
   }
-  if (!(element as any).__eventDispatcher) {
+  if (!(element as any)._eventDispatcher) {
     // TODO: test
-    Object.defineProperty(element, '__eventDispatcher', {value: new EventDispatcher(element as unknown as IoNode)});
+    Object.defineProperty(element, '_eventDispatcher', {value: new EventDispatcher(element as unknown as IoNode)});
     // TODO: disconnect on disposal?
   }
-  (element as any).__eventDispatcher.setPropListeners(props, element);
+  (element as any)._eventDispatcher.setPropListeners(props, element);
 };
 
 RegisterIoElement(IoElement);

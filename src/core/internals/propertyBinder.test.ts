@@ -24,7 +24,7 @@ export default class {
         chai.expect(binding.targetProperties instanceof WeakMap).to.be.equal(true);
         const propertyBinder = new PropertyBinder(node) as any;
         chai.expect(propertyBinder.node).to.be.equal(node);
-        chai.expect(JSON.stringify(propertyBinder.__bindings)).to.be.equal('{}');
+        chai.expect(JSON.stringify(propertyBinder._bindings)).to.be.equal('{}');
       });
       it('Should get and set property value on source node with `value` getter/setter', () => {
         const node = new TestIoNode();
@@ -97,7 +97,7 @@ export default class {
         const binding2 = propertyBinder.bind('prop1') as any;
         propertyBinder.dispose();
         chai.expect(propertyBinder.node).to.be.equal(undefined);
-        chai.expect(propertyBinder.__bindings).to.be.equal(undefined);
+        chai.expect(propertyBinder._bindings).to.be.equal(undefined);
         chai.expect(binding2.node).to.be.equal(undefined);
         chai.expect(binding2.property).to.be.equal(undefined);
         chai.expect(binding2.targets).to.be.equal(undefined);

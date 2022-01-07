@@ -124,9 +124,9 @@ export class IoSelector extends IoElement {
   }
   _onScroll() {
     if (this._scrollID === undefined) return;
-    clearTimeout(this.__scrollThrottle);
-    this.__scrollThrottle = setTimeout(() => {
-      delete this.__scrollThrottle;
+    clearTimeout(this._scrollThrottle);
+    this._scrollThrottle = setTimeout(() => {
+      delete this._scrollThrottle;
       const scrollableElements = [...this.$.content.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')];
       const top = this.$.content.scrollTop || this.$.content.children[0].scrollTop;
       const bottom = top + this.$.content.getBoundingClientRect().height / 2;
@@ -146,7 +146,7 @@ export class IoSelector extends IoElement {
         this._scrollID = scrollID || '';
         const oldSelected = this.selected;
         const selected = this._selectedID + '#' + this._scrollID;
-        this.__properties.setValue('selected', selected);
+        this._properties.setValue('selected', selected);
         this.dispatchEvent('selected-changed', {value: selected, oldValue: oldSelected});
       }
     }, 100);

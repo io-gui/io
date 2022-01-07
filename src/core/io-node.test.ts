@@ -323,20 +323,20 @@ export default class {
       // it('Should return existing binding or create a new on "bind()"', () => {
       //   const node = new TestNode();
       //   const binding0 = node.bind('prop1');
-      //   chai.expect(binding0).to.be.equal(node.propertyBinder.__bindings.prop1);
+      //   chai.expect(binding0).to.be.equal(node.propertyBinder._bindings.prop1);
       //   chai.expect(binding0).to.be.equal(node.bind('prop1'));
       // });
       // it('Should dispose bindings correctly', () => {
       //   const node1 = new TestNode();
       //   const binding0 = node1.bind('prop1') as any;
       //   node1.unbind('prop1');
-      //   chai.expect(node1.propertyBinder.__bindings.prop1).to.be.equal(undefined);
+      //   chai.expect(node1.propertyBinder._bindings.prop1).to.be.equal(undefined);
       //   chai.expect(binding0.prop1).to.be.equal(undefined);
 
       //   const node2 = new TestNode();
       //   const binding1 = node2.bind('prop1') as any;
       //   node2.propertyBinder.dispose();
-      //   chai.expect(node2.propertyBinder.__bindings).to.be.equal(undefined);
+      //   chai.expect(node2.propertyBinder._bindings).to.be.equal(undefined);
       //   chai.expect(binding1.prop1).to.be.equal(undefined);
       // });
     });

@@ -127,13 +127,13 @@ export class IoInspector extends IoElement {
     }, 1000/10);
   }
   _getConfig() {
-    this._config = this.__proto__.__config.getConfig(this.selected, this.config);
+    this._config = this.__proto__._config.getConfig(this.selected, this.config);
   }
   _getGroups() {
-    this._groups = this.__proto__.__groups.getGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config), this.advanced);
+    this._groups = this.__proto__._groups.getGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config), this.advanced);
   }
   _getWidgets() {
-    this._widgets = this.__proto__.__widgets.getWidgets(this.selected, this.widgets);
+    this._widgets = this.__proto__._widgets.getWidgets(this.selected, this.widgets);
   }
   _getAll() {
     const propLength = Object.getOwnPropertyNames(this.selected).length;
@@ -240,21 +240,21 @@ function genUUID(object: any) {
 }
 
 IoInspector.Register = function() {
-  Object.defineProperty(this.prototype, '__config', {value: new Config(this.prototype.__protochain.constructors)});
-  Object.defineProperty(this.prototype, '__groups', {value: new Groups(this.prototype.__protochain.constructors)});
-  Object.defineProperty(this.prototype, '__widgets', {value: new Widgets(this.prototype.__protochain.constructors)});
+  Object.defineProperty(this.prototype, '_config', {value: new Config(this.prototype._protochain.constructors)});
+  Object.defineProperty(this.prototype, '_groups', {value: new Groups(this.prototype._protochain.constructors)});
+  Object.defineProperty(this.prototype, '_widgets', {value: new Widgets(this.prototype._protochain.constructors)});
 };
 
 IoInspector.RegisterConfig = function(config) {
-  this.prototype.__config.registerConfig(config);
+  this.prototype._config.registerConfig(config);
 };
 
 IoInspector.RegisterGroups = function(groups) {
-  this.prototype.__groups.registerGroups(groups);
+  this.prototype._groups.registerGroups(groups);
 };
 
 IoInspector.RegisterWidgets = function(widgets) {
-  this.prototype.__widgets.registerWidgets(widgets);
+  this.prototype._widgets.registerWidgets(widgets);
 };
 
 RegisterIoElement(IoInspector);

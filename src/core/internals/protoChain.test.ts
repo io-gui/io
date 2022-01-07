@@ -140,6 +140,10 @@ export default class {
         const protoChain = new ProtoChain(FakeIoNode3);
         chai.expect(protoChain.style).to.be.equal('a\nb\n');
       });
+      it('Should include all observed objects', () => {
+        const protoChain = new ProtoChain(FakeIoNode2);
+        chai.expect(protoChain.observedObjects).to.be.eql(['prop1']);
+      });
     });
   }
 }

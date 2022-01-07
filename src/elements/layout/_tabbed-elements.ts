@@ -64,11 +64,11 @@ export class IoSelectorTabs extends IoElement {
   }
   elementsChanged() {
     if (this.filter === null) {
-      this.__properties.setValue('filter', this.elements.map((element: any) => { return element[1].name; }));
+      this._properties.setValue('filter', this.elements.map((element: any) => { return element[1].name; }));
     }
   }
   editableChanged() {
-    if (this.editable && this.__isConnected) this.connectDragListeners();
+    if (this.editable && this._isConnected) this.connectDragListeners();
     else this.disconnectDragListeners();
   }
   selectedChanged() {
@@ -85,16 +85,16 @@ export class IoSelectorTabs extends IoElement {
     this.disconnectDragListeners();
   }
   connectDragListeners() {
-    if (!this.__listening) {
+    if (!this._listening) {
       (window as any).addEventListener('io-layout-tab-drag', this._onDrag);
       (window as any).addEventListener('io-layout-tab-drag-end', this._onDragEnd);
     }
-    this.__listening = true;
+    this._listening = true;
   }
   disconnectDragListeners() {
     (window as any).removeEventListener('io-layout-tab-drag', this._onDrag);
     (window as any).removeEventListener('io-layout-tab-drag-end', this._onDragEnd);
-    this.__listening = false;
+    this._listening = false;
   }
   _onDrag(event: CustomEvent) {
     const x = event.detail.clientX;
@@ -113,7 +113,7 @@ export class IoSelectorTabs extends IoElement {
       const isInLayout = this.parentNode.localName === 'io-layout';
 
       // TODO: unhack
-      _dropzone.__hovered = true;
+      _dropzone._hovered = true;
 
       index = this.filter.length;
 
@@ -162,7 +162,7 @@ export class IoSelectorTabs extends IoElement {
       }
     }
 
-    _dropzone.style.opacity = _dropzone.__hovered ? 1 : 0;
+    _dropzone.style.opacity = _dropzone._hovered ? 1 : 0;
     this.$.tabs.dropIndex = index;
   }
   _onDragEnd(event: CustomEvent) {
@@ -393,7 +393,7 @@ export class IoTabs extends IoElement {
       }
     }
     // TODO: unhack
-    _dropzone.__hovered = false;
+    _dropzone._hovered = false;
   }
   _onPointerup(event: PointerEvent) {
     event.preventDefault();

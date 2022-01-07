@@ -79,10 +79,10 @@ export class EventDispatcher {
     Object.defineProperty(this, 'propListeners',  {enumerable: false, writable: false});
     Object.defineProperty(this, 'addedListeners', {enumerable: false, writable: false});
 
-    for (const name in node.__protochain?.listeners) {
+    for (const name in node._protochain?.listeners) {
       this.protoListeners[name] = [];
-      for (let i = 0; i < node.__protochain.listeners[name].length; i++) {
-        const listener = listenerFromDefinition(node, node.__protochain.listeners[name][i]);
+      for (let i = 0; i < node._protochain.listeners[name].length; i++) {
+        const listener = listenerFromDefinition(node, node._protochain.listeners[name][i]);
         this.protoListeners[name].push(listener);
         if (this.isEventTarget) {
           EventTarget.prototype.addEventListener.call(this.node, name, listener[0], listener[1]);

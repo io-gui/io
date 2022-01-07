@@ -16,7 +16,7 @@ export type PropertyDefinition = {
   enumerable: boolean;
 };
 
-export type PropertyDefinitionWeak = string | number | boolean | null | undefined | AnyConstructor | Binding | {
+export type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | {
   value?: any;
   type?: AnyConstructor;
   binding?: Binding;
@@ -169,35 +169,34 @@ export class Property {
  * It also takes care of attribute reflections, binding connections and queue dispatch scheduling.
  */
 export class Properties {
-  private readonly node: IoNode;
-  private readonly props: Record<string, Property> = {};
+  private readonly _node: IoNode;
+  private readonly _props: Record<string, Property> = {};
   /**
    * Creates the properties for specified `IoNode`.
    * @param {IoNode} node Owner IoNode instance.
    */
   constructor(node: IoNode) {
-    this.node = node;
-    for (const prop in node.__protochain.properties) {
-      const protoProp = node.__protochain.properties as Record<string, PropertyDefinition>;
-      const property = new Property(protoProp[prop]);
-      this.props[prop] = property;
+    this._node = node;
+    for (const prop in node._protochain.properties) {
+      const property = new Property(node._protochain.properties[prop]);
+      this._props[prop] = property;
       const value = property.value;
       if (value !== undefined && value !== null) {
         // TODO: document special handling of object and node values
         if (typeof value === 'object') {
           node.queue(prop, value, undefined);
-        } else if (property.reflect !== undefined && property.reflect >= 1 && node.__isIoElement) {
-          // TODO: figure out how to resolve bi-directionsl reflection when attributes are set in html (role, etc...)
+        } else if (property.reflect !== undefined && property.reflect >= 1 && node._isIoElement) {
+          // TODO: Resolve bi-directional reflection when attributes are set in html (role, etc...)
           node.setAttribute(prop, value);
         }
       }
-      const binding = property.binding;
-      // TODO: unhack passing __properties from constructor;
-      if (binding) binding.addTarget(node, prop, this);
+      // NOTE: when binding is initialized from this constructor,
+      // it is necessary to pass `this` in third argument of `Binding.addTarget()`.
+      if (property.binding) property.binding.addTarget(node, prop, this);
     }
   }
   get keys() {
-    return Object.keys(this.props);
+    return Object.keys(this._props);
   }
   /**
    * Returns the property object.
@@ -205,14 +204,14 @@ export class Properties {
    * @return {Property} Peroperty object.
    */
   getProperty(key: string): Property {
-    return this.props[key];
+    return this._props[key];
   }
   /**
    * Returns the owner node.
    * @return {Property} Owner node.
    */
   getNode(): IoNode {
-    return this.node;
+    return this._node;
   }
   /**
    * Returns the property value.
@@ -220,7 +219,7 @@ export class Properties {
    * @return {any} Peroperty value.
    */
   getValue(key: string): any {
-    return this.props[key].value;
+    return this._props[key].value;
   }
   /**
    * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
@@ -229,10 +228,10 @@ export class Properties {
    * @param {boolean} [skipDispatch] flag to skip event dispatch.
    */
   setValue(key: string, value: any, skipDispatch?: boolean) {
-    const prop = this.props[key];
+    const prop = this._props[key];
     const oldValue = prop.value;
     if (value !== oldValue) {
-      const node = this.node;
+      const node = this._node;
       const binding = (value instanceof Binding) ? value : undefined;
       if (binding) {
         const oldBinding = prop.binding;
@@ -255,31 +254,32 @@ export class Properties {
       {
         if (prop.type === String) {
           if (typeof value !== 'string') {
-            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.node);
+            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
           }
         } else if (prop.type === Number) {
           if (typeof value !== 'number') {
-            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.node);
+            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
           }
         } else if (prop.type === Boolean) {
           if (typeof value !== 'boolean') {
-            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.node);
+            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
           }
         } else if (prop.type) {
           if (!(value instanceof prop.type)) {
-            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this.node);
+            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
           }
         }
       }
 
       if (prop.notify && oldValue !== value) {
+        // TODO: consider skiping queue
         node.queue(key, value, oldValue);
         if (!skipDispatch) {
           node.queueDispatch();
         }
       }
 
-      if (prop.reflect !== undefined && prop.reflect >= 1 && node.__isIoElement) node.setAttribute(key, value);
+      if (prop.reflect !== undefined && prop.reflect >= 1 && node._isIoElement) node.setAttribute(key, value);
     }
   }
   /**
@@ -288,7 +288,7 @@ export class Properties {
    * @return {any} Peroperty binding.
    */
   getBinding(key: string) {
-    return this.props[key].binding;
+    return this._props[key].binding;
   }
   /**
    * Sets the property binding.
@@ -296,22 +296,22 @@ export class Properties {
    * @param {Binding} binding property binding.
    */
   setBinding(key: string, binding: Binding) {
-    this.props[key].binding = binding;
+    this._props[key].binding = binding;
   }
   /**
    * Disconnects all property bindings and `IoNode` properties.
    * Use this when properties are no loner needed.
    */
   dispose() {
-    const keys = Object.keys(this.props);
+    const keys = Object.keys(this._props);
     for (let i = keys.length; i--;) {
       const p = keys[i];
       const property = (this as any)[p] as Property;
       if (property.binding) {
-        property.binding.removeTarget(this.node, p);
+        property.binding.removeTarget(this._node, p);
       }
     }
-    delete (this as any).node;
-    delete (this as any).props;
+    delete (this as any)._node;
+    delete (this as any)._props;
   }
 }
