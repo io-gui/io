@@ -84,10 +84,13 @@ export class IoSelector extends IoElement {
       },
       cache: Boolean,
       _caches: Object,
-      _selectedID: String,
+      _selectedID: {
+        type: String,
+        notify: false,
+      },
       _scrollID: {
         type: String,
-        notify: true,
+        notify: false,
       },
       lazy: true // TODO: reconsider
     };

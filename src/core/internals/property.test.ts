@@ -1,6 +1,6 @@
 import {Binding} from './propertyBinder.js';
 import {ProtoChain} from './protoChain.js';
-import {hardenPropertyDefinition, Property} from './properties.js';
+import {hardenPropertyDefinition, Property} from './property.js';
 import {IoNode, RegisterIoNode, PropertiesDeclaration } from '../io-node.js';
 import {IoElement, RegisterIoElement} from '../io-element.js';
 
@@ -249,7 +249,7 @@ export default class {
                 prop1: {
                   value: 0
                 },
-                _prop: null
+                prop2: null
               };
             }
           }
@@ -265,7 +265,7 @@ export default class {
                   strict: false,
                   enumerable: false,
                 },
-                _prop: {
+                prop2: {
                   notify: true,
                   enumerable: true,
                 },
@@ -283,8 +283,8 @@ export default class {
           const props1 = node1._properties;
           const props2 = node2._properties;
 
-          chai.expect(string(props1.keys)).to.be.equal(string(['lazy', 'prop1', '_prop']));
-          chai.expect(string(props2.keys)).to.be.equal(string(['lazy', 'prop1', '_prop', 'prop3']));
+          chai.expect(string(props1.keys)).to.be.equal(string(['lazy', 'prop1', 'prop2']));
+          chai.expect(string(props2.keys)).to.be.equal(string(['lazy', 'prop1', 'prop2', 'prop3']));
 
           chai.expect(node1._properties.getNode()).to.be.equal(node1);
           chai.expect(node2._properties.getNode()).to.be.equal(node2);
@@ -307,12 +307,12 @@ export default class {
           chai.expect(props2.getProperty('prop1').strict).to.be.equal(false);
           chai.expect(props2.getProperty('prop1').enumerable).to.be.equal(false);
 
-          chai.expect(props1.getProperty('_prop').value).to.be.equal(null);
-          chai.expect(props1.getProperty('_prop').notify).to.be.equal(false);
-          chai.expect(props1.getProperty('_prop').enumerable).to.be.equal(false);
-          chai.expect(props2.getProperty('_prop').value).to.be.equal(null);
-          chai.expect(props2.getProperty('_prop').notify).to.be.equal(false);
-          chai.expect(props2.getProperty('_prop').enumerable).to.be.equal(false);
+          chai.expect(props2.getProperty('prop2').value).to.be.equal(null);
+          chai.expect(props2.getProperty('prop2').type).to.be.equal(undefined);
+          chai.expect(props2.getProperty('prop2').notify).to.be.equal(true);
+          chai.expect(props2.getProperty('prop2').observe).to.be.equal(false);
+          chai.expect(props2.getProperty('prop2').strict).to.be.equal(false);
+          chai.expect(props2.getProperty('prop2').enumerable).to.be.equal(true);
         });
         it('Should not override explicit property options with implicit', () => {
           class Object1 {
@@ -368,7 +368,7 @@ export default class {
                 prop1: {
                   binding: binding2
                 },
-                _prop3: binding3
+                prop3: binding3
               };
             }
           }
@@ -382,7 +382,7 @@ export default class {
 
           chai.expect(props1.getBinding('prop1')).to.be.equal(binding1);
           chai.expect(props2.getBinding('prop1')).to.be.equal(binding2);
-          chai.expect(props2.getBinding('_prop3')).to.be.equal(binding3);
+          chai.expect(props2.getBinding('prop3')).to.be.equal(binding3);
 
           chai.expect((binding1 as any).targets[0]).to.be.equal(node1);
           chai.expect((binding2 as any).targets[0]).to.be.equal(node2);
@@ -390,7 +390,7 @@ export default class {
 
           chai.expect(props1.getValue('prop1')).to.be.equal('binding1');
           chai.expect(props2.getValue('prop1')).to.be.equal('binding2');
-          chai.expect(props2.getValue('_prop3')).to.be.equal('binding3');
+          chai.expect(props2.getValue('prop3')).to.be.equal('binding3');
         });
         it('Should correctly get/set properties', () => {
 

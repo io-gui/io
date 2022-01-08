@@ -2,7 +2,7 @@ import {IoElement, RegisterIoElement} from './iogui.js';
 
 import ProtoChain from './core/internals/protoChain.test.js';
 import EventDispatcher from './core/internals/eventDispatcher.test.js';
-import Properties from './core/internals/properties.test.js';
+import Property from './core/internals/property.test.js';
 // import ChangeQueue from './core/internals/changeQueue.test.js';
 // import PropertyBinder from './core/internals/propertyBinder.test.js';
 
@@ -29,7 +29,7 @@ import Properties from './core/internals/properties.test.js';
 // import Theme from './elements/core/theme.test.js';
 
 // import Collapsable from "./elements/layout/collapsable.test.js";
-// import Properties from "./elements/object/properties.test.js";
+// import Property from "./elements/object/properties.test.js";
 // import Object from "./elements/object/object.test.js";
 // import Inspector from "./elements/object/inspector.test.js";
 // import OptionMenu from "./elements/menus/option-menu.test.js";
@@ -47,7 +47,7 @@ function runTests() {
   if (!testCompleted) {
     new ProtoChain().run();
     new EventDispatcher().run();
-    new Properties().run();
+    new Property().run();
     // new ChangeQueue().run();
     // new PropertyBinder().run();
 

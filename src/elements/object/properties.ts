@@ -209,7 +209,7 @@ export class IoProperties extends IoElement {
 
 const RegisterIoProperties = function (element: typeof IoElement) {
   RegisterIoElement(element);
-  Object.defineProperty(element.prototype, '_config', {value: new Config(element.prototype._protochain.constructors)});
+  Object.defineProperty(element.prototype, '_config', {writable: true, value: new Config(element.prototype._protochain.constructors)});
 };
 
 IoProperties.RegisterConfig = function(config) {

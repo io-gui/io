@@ -28,8 +28,13 @@ export type PropertyDefinitionWeak = string | number | boolean | Array<any> | nu
   enumerable?: boolean;
 };
 
-export const hardenPropertyDefinition = (propDef: PropertyDefinitionWeak): PropertyDefinition => {
-  const def: PropertyDefinition = {
+/**
+ * Takes weakly typed property definition and returns stronly typed property definition.
+ * @param {PropertyDefinitionWeak} def Weakly typed property definition
+ * @return {PropertyDefinition} Stronly typed property definition
+ */
+export const hardenPropertyDefinition = (def: PropertyDefinitionWeak): PropertyDefinition => {
+  const hardDef: PropertyDefinition = {
     value: undefined,
     type: undefined,
     binding: undefined,
@@ -40,76 +45,81 @@ export const hardenPropertyDefinition = (propDef: PropertyDefinitionWeak): Prope
     strict: false,
     enumerable: true
   };
-  if (propDef === undefined || propDef === null) {
-    def.value = propDef;
-    return def;
+  if (def === undefined || def === null) {
+    hardDef.value = def;
+    return hardDef;
   }
-  if (typeof propDef === 'function') {
-    def.type = propDef;
-    return def;
+  if (typeof def === 'function') {
+    hardDef.type = def;
+    return hardDef;
   }
-  if (propDef instanceof Binding) {
-    def.value = propDef.value;
-    def.type = (propDef.value !== undefined && propDef.value !== null) ? propDef.value.constructor : undefined;
-    def.binding = propDef;
-    return def;
+  if (def instanceof Binding) {
+    hardDef.value = def.value;
+    hardDef.type = (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
+    hardDef.binding = def;
+    return hardDef;
   }
-  if (propDef && propDef.constructor === Object) {
-    const def = propDef as PropertyDefinition;
-    def.value = def.value !== undefined ? def.value : undefined;
-    def.type = def.type !== undefined ? def.type : (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
-    def.binding = def.binding instanceof Binding ? def.binding : undefined;
-    def.reflect = def.reflect !== undefined ? def.reflect : 0;
-    def.notify = def.notify !== undefined ? def.notify : true;
-    def.observe = def.observe !== undefined ? def.observe : false;
-    def.readonly = def.readonly !== undefined ? def.readonly : false;
-    def.strict = def.strict !== undefined ? def.strict : false;
-    def.enumerable = def.enumerable !== undefined ? def.enumerable : true;
-    return def;
+  if (def && def.constructor === Object) {
+    const hardDef = def as PropertyDefinition;
+    hardDef.value = hardDef.value !== undefined ? hardDef.value : undefined;
+    hardDef.type = hardDef.type !== undefined ? hardDef.type : (hardDef.value !== undefined && hardDef.value !== null) ? hardDef.value.constructor : undefined;
+    hardDef.binding = hardDef.binding instanceof Binding ? hardDef.binding : undefined;
+    hardDef.reflect = hardDef.reflect !== undefined ? hardDef.reflect : 0;
+    hardDef.notify = hardDef.notify !== undefined ? hardDef.notify : true;
+    hardDef.observe = hardDef.observe !== undefined ? hardDef.observe : false;
+    hardDef.readonly = hardDef.readonly !== undefined ? hardDef.readonly : false;
+    hardDef.strict = hardDef.strict !== undefined ? hardDef.strict : false;
+    hardDef.enumerable = hardDef.enumerable !== undefined ? hardDef.enumerable : true;
+    return hardDef;
   }
-  if (!(propDef && propDef.constructor === Object)) {
-    def.value = propDef;
-    def.type = propDef.constructor as AnyConstructor;
-    return def;
+  if (!(def && def.constructor === Object)) {
+    hardDef.value = def;
+    hardDef.type = def.constructor as AnyConstructor;
+    return hardDef;
   }
-  return def;
+  return hardDef;
 };
 
-export const assignPropertyDefinition = (propDef: PropertyDefinition, newPropDef: PropertyDefinition) => {
-  if (newPropDef.value !== undefined) propDef.value = newPropDef.value;
-  if (newPropDef.type !== undefined) propDef.type = newPropDef.type;
-  if (newPropDef.reflect !== 0) propDef.reflect = newPropDef.reflect;
-  if (newPropDef.notify !== true) propDef.notify = newPropDef.notify;
-  if (newPropDef.observe !== false) propDef.observe = newPropDef.observe;
-  if (newPropDef.readonly !== false) propDef.readonly = newPropDef.readonly;
-  if (newPropDef.strict !== false) propDef.strict = newPropDef.strict;
-  if (newPropDef.enumerable !== true) propDef.enumerable = newPropDef.enumerable;
-  if (newPropDef.binding !== undefined) propDef.binding = newPropDef.binding;
+/**
+ * Assigns property definition to an existing property definition.
+ * @param {PropertyDefinition} def Property definition
+ * @param {PropertyDefinition} newDef Existing property definition
+ */
+export const assignPropertyDefinition = (def: PropertyDefinition, newDef: PropertyDefinition) => {
+  if (newDef.value !== undefined) def.value = newDef.value;
+  if (newDef.type !== undefined) def.type = newDef.type;
+  if (newDef.reflect !== 0) def.reflect = newDef.reflect;
+  if (newDef.notify !== true) def.notify = newDef.notify;
+  if (newDef.observe !== false) def.observe = newDef.observe;
+  if (newDef.readonly !== false) def.readonly = newDef.readonly;
+  if (newDef.strict !== false) def.strict = newDef.strict;
+  if (newDef.enumerable !== true) def.enumerable = newDef.enumerable;
+  if (newDef.binding !== undefined) def.binding = newDef.binding;
 };
 
 /**
  * Property configuration object for a class **instance**.
- * It is copied from the corresponding `PropertyDefinition`.
+ * It is initialized from corresponding `PropertyDefinition` in `ProtoChain`.
  */
 export class Property {
   // Property value.
-  value?: any = undefined;
+  public value?: any = undefined;
   // Constructor of the property value.
-  type?: AnyConstructor = undefined;
+  public type?: AnyConstructor = undefined;
   // Binding object.
-  binding?: Binding = undefined;
+  public binding?: Binding = undefined;
   // Reflects to HTML attribute [-1, 0, 1 or 2]
-  reflect = 0;
+  public reflect: ReflectType = 0;
   // Enables change handlers and events.
-  notify = true;
+  public notify = true;
   // Observe object mutations for this property.
-  observe = false;
+  public observe = false;
   // Makes the property readonly. // TODO: document and test
-  readonly = false;
+  public readonly = false;
   // Enforce stric typing. // TODO: document and test
-  strict = false;
+  public strict = false;
   // Makes property enumerable.
-  enumerable = true;
+  public enumerable = true;
   /**
    * Creates the property configuration object and copies values from `PropertyDefinition`.
    * @param {PropertyDefinition} propDef PropertyDefinition object
@@ -177,22 +187,22 @@ export class Properties {
    */
   constructor(node: IoNode) {
     this._node = node;
-    for (const prop in node._protochain.properties) {
-      const property = new Property(node._protochain.properties[prop]);
-      this._props[prop] = property;
+    for (const name in node._protochain.properties) {
+      const property = new Property(node._protochain.properties[name]);
+      this._props[name] = property;
       const value = property.value;
       if (value !== undefined && value !== null) {
         // TODO: document special handling of object and node values
         if (typeof value === 'object') {
-          node.queue(prop, value, undefined);
+          node.queue(name, value, undefined);
         } else if (property.reflect !== undefined && property.reflect >= 1 && node._isIoElement) {
           // TODO: Resolve bi-directional reflection when attributes are set in html (role, etc...)
-          node.setAttribute(prop, value);
+          node.setAttribute(name, value);
         }
       }
       // NOTE: when binding is initialized from this constructor,
       // it is necessary to pass `this` in third argument of `Binding.addTarget()`.
-      if (property.binding) property.binding.addTarget(node, prop, this);
+      if (property.binding) property.binding.addTarget(node, name, this);
     }
   }
   get keys() {
@@ -200,11 +210,11 @@ export class Properties {
   }
   /**
    * Returns the property object.
-   * @param {string} key property name to get object of.
+   * @param {string} name property name to get object of.
    * @return {Property} Peroperty object.
    */
-  getProperty(key: string): Property {
-    return this._props[key];
+  getProperty(name: string): Property {
+    return this._props[name];
   }
   /**
    * Returns the owner node.
@@ -215,20 +225,20 @@ export class Properties {
   }
   /**
    * Returns the property value.
-   * @param {string} key property name to get value of.
+   * @param {string} name property name to get value of.
    * @return {any} Peroperty value.
    */
-  getValue(key: string): any {
-    return this._props[key].value;
+  getValue(name: string): any {
+    return this._props[name].value;
   }
   /**
    * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
-   * @param {string} key Property name to set value of.
+   * @param {string} name Property name to set value of.
    * @param {any} value Peroperty value.
    * @param {boolean} [skipDispatch] flag to skip event dispatch.
    */
-  setValue(key: string, value: any, skipDispatch?: boolean) {
-    const prop = this._props[key];
+  setValue(name: string, value: any, skipDispatch?: boolean) {
+    const prop = this._props[name];
     const oldValue = prop.value;
     if (value !== oldValue) {
       const node = this._node;
@@ -236,14 +246,14 @@ export class Properties {
       if (binding) {
         const oldBinding = prop.binding;
         if (oldBinding && binding !== oldBinding) {
-          oldBinding.removeTarget(node, key);
+          oldBinding.removeTarget(node, name);
         }
-        binding.addTarget(node, key);
+        binding.addTarget(node, name);
         value = binding.value;
       } else {
         if (prop.strict && prop.type && !(value instanceof prop.type)) {
           debug: {
-            console.warn(`IoGUI strict type mismatch for "${key}" property! Value automatically converted to "${prop.type.name}."`);
+            console.warn(`IoGUI strict type mismatch for "${name}" property! Value automatically converted to "${prop.type.name}."`);
           }
           value = new prop.type(value);
         }
@@ -254,61 +264,62 @@ export class Properties {
       {
         if (prop.type === String) {
           if (typeof value !== 'string') {
-            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
           }
         } else if (prop.type === Number) {
           if (typeof value !== 'number') {
-            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
           }
         } else if (prop.type === Boolean) {
           if (typeof value !== 'boolean') {
-            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
           }
         } else if (prop.type) {
           if (!(value instanceof prop.type)) {
-            console.warn(`Wrong type of property "${key}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
           }
         }
       }
 
       if (prop.notify && oldValue !== value) {
         // TODO: consider skiping queue
-        node.queue(key, value, oldValue);
+        node.queue(name, value, oldValue);
         if (!skipDispatch) {
           node.queueDispatch();
         }
       }
 
-      if (prop.reflect !== undefined && prop.reflect >= 1 && node._isIoElement) node.setAttribute(key, value);
+      if (prop.reflect !== undefined && prop.reflect >= 1 && node._isIoElement) node.setAttribute(name, value);
     }
   }
   /**
    * Returns the property binding.
-   * @param {string} key property name to get binding of.
-   * @return {any} Peroperty binding.
+   * @param {string} name property name to get binding of.
+   * @return {Binding} Peroperty binding.
    */
-  getBinding(key: string) {
-    return this._props[key].binding;
+  getBinding(name: string) {
+    return this._props[name].binding;
   }
   /**
    * Sets the property binding.
-   * @param {string} key property name to get binding of.
+   * @param {string} name property name to get binding of.
    * @param {Binding} binding property binding.
    */
-  setBinding(key: string, binding: Binding) {
-    this._props[key].binding = binding;
+  setBinding(name: string, binding: Binding) {
+    this._props[name].binding = binding;
   }
   /**
    * Disconnects all property bindings and `IoNode` properties.
    * Use this when properties are no loner needed.
    */
   dispose() {
-    const keys = Object.keys(this._props);
-    for (let i = keys.length; i--;) {
-      const p = keys[i];
-      const property = (this as any)[p] as Property;
+    const names = Object.keys(this._props);
+    for (let i = names.length; i--;) {
+      const name = names[i];
+      const property = this._props[name] as Property;
       if (property.binding) {
-        property.binding.removeTarget(this._node, p);
+        // TODO: test this specifically
+        property.binding.removeTarget(this._node, name);
       }
     }
     delete (this as any)._node;

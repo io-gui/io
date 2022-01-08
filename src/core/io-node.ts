@@ -1,7 +1,7 @@
 import {ProtoChain} from './internals/protoChain.js';
 import {PropertyBinder, Binding} from './internals/propertyBinder.js';
 import {ChangeQueue} from './internals/changeQueue.js';
-import {Properties, PropertyDefinitionWeak} from './internals/properties.js';
+import {Properties, PropertyDefinitionWeak} from './internals/property.js';
 import {EventDispatcher, ListenerDefinitionWeak} from './internals/eventDispatcher.js';
 
 export type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
@@ -93,6 +93,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this._properties = new Properties(this);
       Object.defineProperty(this, '_properties', {enumerable: false});
+
 
       this._propertyBinder = new PropertyBinder(this);
       Object.defineProperty(this, '_propertyBinder', {enumerable: false});

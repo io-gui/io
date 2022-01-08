@@ -1,8 +1,8 @@
 import {IoNode} from '../io-node.js';
 
-export type ListenerDefinitionWeak = keyof IoNode | EventListener | [keyof IoNode | EventListener, AddEventListenerOptions?];
+export type ListenerDefinitionWeak = string | EventListener | [string | EventListener, AddEventListenerOptions?];
 
-export type ListenerDefinition = [keyof IoNode | EventListener, AddEventListenerOptions?];
+export type ListenerDefinition = [string | EventListener, AddEventListenerOptions?];
 
 /**
  * Takes weakly typed listener definition and returns stronly typed listener definition.
@@ -16,7 +16,7 @@ export const hardenListenerDefinition = (def: ListenerDefinitionWeak): ListenerD
 /**
  * Assigns listener definition to an existing array of listener definitions.
  * @param {ListenerDefinition[]} defs Array of listener definitions
- * @param {ListenerDefinition} def listener definition
+ * @param {ListenerDefinition} def Listener definition
  */
 export const assignListenerDefinition = (defs: ListenerDefinition[], def: ListenerDefinition) => {
   const i = defs.findIndex(_def => _def[0] === def[0]);
@@ -28,23 +28,26 @@ export const assignListenerDefinition = (defs: ListenerDefinition[], def: Listen
   }
 };
 
+// TODO: consider implementing "once" and "signal" options.
+const LISTENER_OPTIONS = ['capture', 'passive'];
+
 /**
  * Takes a node and a listener definition and returns a listener.
- * @param {IoNode} node asd
- * @param {ListenerDefinition} def listener definition
- * @return {Listener} listener
+ * @param {IoNode} node `IoNode` instance
+ * @param {ListenerDefinition} def Listener definition
+ * @return {Listener} Listener
  */
-export const listenerFromDefinition = (node: IoNode, def: ListenerDefinition): Listener => {
+export const listenerFromDefinition = (node: IoNode | HTMLElement, def: ListenerDefinition): Listener => {
   debug: {
     if (typeof def[0] !== 'string' && typeof def[0] !== 'function') console.warn('Invalid listener type');
     if (def[1]) {
       if (typeof def[1] !== 'object') console.warn('Invalid listener options type');
-      else if (Object.keys(def[1]).some(k => !(['passive', 'capture'].includes(k)))) {
+      else if (Object.keys(def[1]).some(k => !(LISTENER_OPTIONS.includes(k)))) {
         console.warn('Invalid listener options type');
       }
     }
   }
-  const listener: Listener = [typeof def[0] === 'string' ? node[def[0]] : def[0]];
+  const listener: Listener = [typeof def[0] === 'string' ? (node as any)[def[0]] : def[0]];
   if (def[1]) listener.push(def[1]);
   return listener;
 };
@@ -54,13 +57,14 @@ export type Listeners = Record<string, Listener[]>;
 
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
+ * It makes events of all `IoNode` classes compatible with DOM events.
  * It maintains three independent lists of listeners:
- *   1. `protoListeners` specified as `get Listeners()` class declarations.
- *   2. `propListeners` specified as inline properties prefixed with "on-"
- *   3. `addedListeners` explicitly added using `addEventListener()`.
+ *  - `protoListeners` specified as `get Listeners()` class declarations
+ *  - `propListeners` specified as inline properties prefixed with "on-"
+ *  - `addedListeners` explicitly added using `addEventListener()`
  */
 export class EventDispatcher {
-  private readonly node: IoNode;
+  private readonly node: IoNode | HTMLElement;
   private readonly isEventTarget: boolean;
   private readonly protoListeners: Listeners = {};
   private readonly propListeners: Listeners = {};
@@ -68,17 +72,25 @@ export class EventDispatcher {
   /**
    * Creates an instance of `EventDispatcher` for specified `IoNode` instance.
    * It initializes `protoListeners` from `ProtoChain`.
-   * @param {IoNode} node owner IoNode.
+   * @param {IoNode} node owner IoNode
    */
-  constructor(node: IoNode) {
+  constructor(node: IoNode | HTMLElement) {
     this.node = node;
     this.isEventTarget = node instanceof EventTarget;
-    Object.defineProperty(this, 'node',           {enumerable: false, writable: false});
-    Object.defineProperty(this, 'isEventTarget',  {enumerable: false, writable: false});
-    Object.defineProperty(this, 'protoListeners', {enumerable: false, writable: false});
-    Object.defineProperty(this, 'propListeners',  {enumerable: false, writable: false});
-    Object.defineProperty(this, 'addedListeners', {enumerable: false, writable: false});
-
+    this.setProtoListeners(node as IoNode);
+    debug: {
+      Object.defineProperty(this, 'node',           {enumerable: false, writable: false});
+      Object.defineProperty(this, 'isEventTarget',  {enumerable: false, writable: false});
+      Object.defineProperty(this, 'protoListeners', {enumerable: false, writable: false});
+      Object.defineProperty(this, 'propListeners',  {enumerable: false, writable: false});
+      Object.defineProperty(this, 'addedListeners', {enumerable: false, writable: false});
+    }
+  }
+  /**
+   * Sets `protoListeners` specified as `get Listeners()` class declarations.
+   * @param {IoNode} node owner IoNode
+   */
+  private setProtoListeners(node: IoNode) {
     for (const name in node._protochain?.listeners) {
       this.protoListeners[name] = [];
       for (let i = 0; i < node._protochain.listeners[name].length; i++) {
@@ -93,7 +105,7 @@ export class EventDispatcher {
   /**
    * Sets `propListeners` specified as inline properties prefixed with "on-".
    * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
-   * @param {Record<string, any>} properties - Inline properties.
+   * @param {Record<string, any>} properties Inline properties
    */
   setPropListeners(properties: Record<string, any>) {
     const newPropListeners: Listeners = {};
@@ -149,7 +161,7 @@ export class EventDispatcher {
       if (typeof listener !== 'function') console.warn('Invalid listener type!');
       if (options) {
         if (typeof options !== 'object') console.warn('Invalid listener options type');
-        else if (Object.keys(options).some(k => !(['passive', 'capture'].includes(k)))) console.warn('Invalid listener options type');
+        else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k)))) console.warn('Invalid listener options type');
       }
     }
     this.addedListeners[name].push(options ? [listener, options] : [listener]);
@@ -171,7 +183,7 @@ export class EventDispatcher {
       if (listener && typeof listener !== 'function') console.warn('Invalid listener type!');
       if (options) {
         if (typeof options !== 'object') console.warn('Invalid listener options type');
-        else if (Object.keys(options).some(k => !(['passive', 'capture'].includes(k)))) {
+        else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k)))) {
           console.warn('Invalid listener options type');
         }
       }

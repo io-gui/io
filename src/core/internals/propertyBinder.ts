@@ -1,5 +1,5 @@
 import {ChangeEvent} from './changeQueue.js';
-import {Properties} from './properties.js';
+import {Properties} from './property.js';
 import {IoNode} from '../io-node.js';
 
 /**

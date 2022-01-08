@@ -1,6 +1,8 @@
 import {IoNode, RegisterIoNode, ListenersDeclaration} from '../io-node.js';
 import {EventDispatcher} from './eventDispatcher.js';
 
+const handlerFunction = () => {};
+
 class IoNode1 extends IoNode {
   handler1Count = 0;
   handler1Detail?: string;
@@ -37,6 +39,17 @@ class IoNode2 extends IoNode1 {
 }
 RegisterIoNode(IoNode2);
 
+class IoNode3 extends IoNode2 {
+  static get Listeners(): ListenersDeclaration {
+    return {
+      'event1': 'handler3',
+      'event2': [handlerFunction, {passive: true}],
+      'event3': handlerFunction
+    };
+  }
+}
+RegisterIoNode(IoNode3);
+
 class TestDivEventDispatchElement extends HTMLElement {
   handler3Count = 0;
   handler3Detail?: string;
@@ -59,11 +72,23 @@ export default class {
         chai.expect(eventDispatcher.addedListeners).to.be.eql({});
       });
       it('Should initialize listeners from ProtoChain', () => {
-        const node = new IoNode2();
-        const eventDispatcher = new EventDispatcher(node) as any;
+        let node = new IoNode1();
+        let eventDispatcher = new EventDispatcher(node) as any;
         chai.expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node.handler1]],
-          event2:[[node.handler2,{capture:true}]]
+        });
+        node = new IoNode2();
+        eventDispatcher = new EventDispatcher(node) as any;
+        chai.expect(eventDispatcher.protoListeners).to.be.eql({
+          event1:[[node.handler1]],
+          event2:[[node.handler2, {capture:true}]]
+        });
+        node = new IoNode3();
+        eventDispatcher = new EventDispatcher(node) as any;
+        chai.expect(eventDispatcher.protoListeners).to.be.eql({
+          event1:[[node.handler1], [node.handler3]],
+          event2:[[node.handler2, {capture:true}], [handlerFunction, {passive: true}]],
+          event3:[[handlerFunction]]
         });
       });
       it('Should set property listeners correctly', () => {
@@ -73,15 +98,15 @@ export default class {
         const handler5 = () => {};
         eventDispatcher.setPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
         chai.expect(eventDispatcher.propListeners).to.be.eql({
-          event3:[[node.handler3]],event4:[[handler4]]
+          event3:[[node.handler3]], event4:[[handler4]]
         });
         eventDispatcher.setPropListeners({'on-event5': ['handler3'], 'on-event6': [handler4]});
         chai.expect(eventDispatcher.propListeners).to.be.eql({
-          event5:[[node.handler3]],event6:[[handler4]]
+          event5:[[node.handler3]], event6:[[handler4]]
         });
         eventDispatcher.setPropListeners({'on-event7': [node.handler3, {capture: true}], 'on-event8': [handler5, {capture: true}]});
         chai.expect(eventDispatcher.propListeners).to.be.eql({
-          event7:[[node.handler3,{capture:true}]],event8:[[handler5,{capture:true}]]
+          event7:[[node.handler3, {capture:true}]], event8:[[handler5, {capture:true}]]
         });
         eventDispatcher.setPropListeners({});
         chai.expect(eventDispatcher.propListeners).to.be.eql({});
@@ -94,11 +119,11 @@ export default class {
         eventDispatcher.addEventListener('event1', listener1);
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
         chai.expect(eventDispatcher.addedListeners).to.be.eql({
-          event1:[[listener1],[listener2,{capture:true}]]
+          event1:[[listener1],[listener2, {capture:true}]]
         });
         eventDispatcher.removeEventListener('event1', listener1);
         chai.expect(eventDispatcher.addedListeners).to.be.eql({
-          event1:[[listener2,{capture:true}]]
+          event1:[[listener2, {capture:true}]]
         });
         eventDispatcher.removeEventListener('event1');
         chai.expect(eventDispatcher.addedListeners).to.be.eql({});

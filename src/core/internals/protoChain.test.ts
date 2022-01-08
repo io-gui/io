@@ -48,9 +48,10 @@ class FakeIoNode2 extends FakeIoNode1 {
   _function2() {}
   static get Properties(): PropertiesDeclaration {
     return {
-      prop1: {observe: true},
-      prop2: {},
-      _prop3: {}
+      prop1: {
+        observe: true
+      },
+      prop2: {}
     };
   }
   static get Listeners(): ListenersDeclaration {
@@ -122,11 +123,10 @@ export default class {
       });
       it('Should include all declared properties correctly', () => {
         const protoChain = new ProtoChain(FakeIoNode2);
-        chai.expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2', '_prop3']);
+        chai.expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2']);
         chai.expect(protoChain.properties).to.be.eql({
           prop1:{value: undefined, type: undefined, binding: undefined, notify:false, reflect:0, observe:true, readonly:false, strict:false, enumerable:true},
           prop2:{value: undefined, type: undefined, binding: undefined, notify:true, reflect:0, observe:false, readonly:false, strict:false, enumerable:true},
-          _prop3:{value: undefined, type: undefined, binding: undefined, notify:false, reflect:0, observe:false, readonly:false, strict:false, enumerable:false}
         });
       });
       it('Should include all declared listeners correctly', () => {
@@ -140,7 +140,7 @@ export default class {
         const protoChain = new ProtoChain(FakeIoNode3);
         chai.expect(protoChain.style).to.be.equal('a\nb\n');
       });
-      it('Should include all observed objects', () => {
+      it('Should include names of all observed object properties', () => {
         const protoChain = new ProtoChain(FakeIoNode2);
         chai.expect(protoChain.observedObjects).to.be.eql(['prop1']);
       });
