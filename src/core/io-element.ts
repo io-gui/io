@@ -80,7 +80,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     return observed;
   }
   attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
-    const type = this._properties.getProperty(prop).type;
+    const type = this._properties[prop].type;
     if (type === Boolean) {
       if (newValue === null) this[prop] = false;
       else if (newValue === '') this[prop] = true;
@@ -119,7 +119,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   template(vDOM: Array<any>, host?: HTMLElement) {
     const vChildren = buildTree()(['root', vDOM]).children;
     host = (host || this) as any;
-    if (host === (this as any)) this._properties.setValue('$', {});
+    if (host === (this as any)) this.setPropertyValue('$', {});
     this.traverse(vChildren, host as HTMLElement);
   }
   /**

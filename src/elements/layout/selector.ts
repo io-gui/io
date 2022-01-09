@@ -149,7 +149,7 @@ export class IoSelector extends IoElement {
         this._scrollID = scrollID || '';
         const oldSelected = this.selected;
         const selected = this._selectedID + '#' + this._scrollID;
-        this._properties.setValue('selected', selected);
+        this.setPropertyValue('selected', selected);
         this.dispatchEvent('selected-changed', {value: selected, oldValue: oldSelected});
       }
     }, 100);

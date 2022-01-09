@@ -1,4 +1,4 @@
-import {Binding, PropertyBinder} from './propertyBinder.js';
+import {Binding} from './binding.js';
 import {IoNode, RegisterIoNode} from '../io-node.js';
 
 class TestIoNode extends IoNode {
@@ -13,7 +13,7 @@ RegisterIoNode(TestIoNode);
 
 export default class {
   run() {
-    describe('PropertyBinder', () => {
+    describe('Binding', () => {
       it('Should initialize with correct default values', () => {
         const node = new TestIoNode();
         const binding = new Binding(node, 'prop1') as any;
@@ -22,9 +22,6 @@ export default class {
         chai.expect(binding.targets instanceof Array).to.be.equal(true);
         chai.expect(binding.targets.length).to.be.equal(0);
         chai.expect(binding.targetProperties instanceof WeakMap).to.be.equal(true);
-        const propertyBinder = new PropertyBinder(node) as any;
-        chai.expect(propertyBinder.node).to.be.equal(node);
-        chai.expect(JSON.stringify(propertyBinder._bindings)).to.be.equal('{}');
       });
       it('Should get and set property value on source node with `value` getter/setter', () => {
         const node = new TestIoNode();
@@ -34,14 +31,6 @@ export default class {
         node.prop1 = 2;
         chai.expect(binding.value).to.be.equal(2);
         binding.value = 3;
-        chai.expect(node.prop1).to.be.equal(3);
-        const propertyBinder = new PropertyBinder(node) as any;
-        const binding2 = propertyBinder.bind('prop1') as any;
-        node.prop1 = 1;
-        chai.expect(binding2.value).to.be.equal(1);
-        node.prop1 = 2;
-        chai.expect(binding2.value).to.be.equal(2);
-        binding2.value = 3;
         chai.expect(node.prop1).to.be.equal(3);
       });
       it('Should add/remove target nodes and properties with `.addTarget()` and `removeTarget()`', () => {
@@ -93,15 +82,6 @@ export default class {
         chai.expect(binding.property).to.be.equal(undefined);
         chai.expect(binding.targets).to.be.equal(undefined);
         chai.expect(binding.targetProperties).to.be.equal(undefined);
-        const propertyBinder = new PropertyBinder(node) as any;
-        const binding2 = propertyBinder.bind('prop1') as any;
-        propertyBinder.dispose();
-        chai.expect(propertyBinder.node).to.be.equal(undefined);
-        chai.expect(propertyBinder._bindings).to.be.equal(undefined);
-        chai.expect(binding2.node).to.be.equal(undefined);
-        chai.expect(binding2.property).to.be.equal(undefined);
-        chai.expect(binding2.targets).to.be.equal(undefined);
-        chai.expect(binding2.targetProperties).to.be.equal(undefined);
       });
     });
   }

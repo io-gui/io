@@ -1,7 +1,7 @@
 import {ProtoChain} from './internals/protoChain.js';
-import {PropertyBinder, Binding} from './internals/propertyBinder.js';
+import {Binding} from './internals/binding.js';
 import {ChangeQueue} from './internals/changeQueue.js';
-import {Properties, PropertyDefinitionWeak} from './internals/property.js';
+import {Property, PropertyDefinitionWeak} from './internals/property.js';
 import {EventDispatcher, ListenerDefinitionWeak} from './internals/eventDispatcher.js';
 
 export type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
@@ -65,10 +65,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     get compose (): ComposedProperties {
       return null;
     }
-    readonly _properties: Properties;
+    readonly _properties: Record<string, Property> = {};
+    readonly _bindings: Record<string, Binding> = {};
+
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
-    readonly _propertyBinder: PropertyBinder;
      /**
      * Creates a class instance and initializes the internals.
      * @param {Object} properties - Initial property values.
@@ -91,12 +92,23 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       this._eventDispatcher = new EventDispatcher(this);
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false});
 
-      this._properties = new Properties(this);
+      for (const name in this._protochain.properties) {
+        const property = new Property(this._protochain.properties[name]);
+        this._properties[name] = property;
+        const value = property.value;
+        if (value !== undefined && value !== null) {
+          // TODO: document special handling of object and node values
+          if (typeof value === 'object') {
+            this.queue(name, value, undefined);
+          } else if (property.reflect !== undefined && property.reflect >= 1 && this._isIoElement) {
+            // TODO: Resolve bi-directional reflection when attributes are set in html (role, etc...)
+            this.setAttribute(name, value);
+          }
+        }
+        if (property.binding) property.binding.addTarget(this, name);
+      }
       Object.defineProperty(this, '_properties', {enumerable: false});
-
-
-      this._propertyBinder = new PropertyBinder(this);
-      Object.defineProperty(this, '_propertyBinder', {enumerable: false});
+      Object.defineProperty(this, '_bindings', {enumerable: false});
 
       Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
       Object.defineProperty(this, 'objectMutatedThrottled', {enumerable: false, value: this.objectMutatedThrottled.bind(this)});
@@ -109,7 +121,64 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this.setProperties(properties);
     }
-    test() {}
+    /**
+     * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+     * @param {string} name Property name to set value of.
+     * @param {any} value Peroperty value.
+     * @param {boolean} [skipDispatch] flag to skip event dispatch.
+     */
+    setPropertyValue(name: string, value: any, skipDispatch?: boolean) {
+      const prop = this._properties[name];
+      const oldValue = prop.value;
+      if (value !== oldValue) {
+        const binding = (value instanceof Binding) ? value : undefined;
+        if (binding) {
+          const oldBinding = prop.binding;
+          if (oldBinding && binding !== oldBinding) {
+            oldBinding.removeTarget(this, name);
+          }
+          binding.addTarget(this, name);
+          value = binding.value;
+        } else {
+          if (prop.strict && prop.type && !(value instanceof prop.type)) {
+            debug: {
+              console.warn(`IoGUI strict type mismatch for "${name}" property! Value automatically converted to "${prop.type.name}."`);
+            }
+            value = new prop.type(value);
+          }
+        }
+        prop.value = value;
+
+        debug:
+        {
+          if (prop.type === String) {
+            if (typeof value !== 'string') {
+              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+            }
+          } else if (prop.type === Number) {
+            if (typeof value !== 'number') {
+              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+            }
+          } else if (prop.type === Boolean) {
+            if (typeof value !== 'boolean') {
+              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+            }
+          } else if (prop.type) {
+            if (!(value instanceof prop.type)) {
+              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+            }
+          }
+        }
+        if (prop.notify && oldValue !== value) {
+          // TODO: consider skiping queue
+          this.queue(name, value, oldValue);
+          if (!skipDispatch) {
+            this.queueDispatch();
+          }
+        }
+        if (prop.reflect !== undefined && prop.reflect >= 1 && this._isIoElement) this.setAttribute(name, value);
+      }
+    }
     /**
      * Disposes all internals.
      * Use this when instance is no longer needed.
@@ -117,8 +186,17 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     dispose() {
       this._changeQueue.dispose();
       this._propertyBinder.dispose();
-      this._properties.dispose();
       this._eventDispatcher.dispose();
+      for (const name in this._properties) {
+        if (this._properties[name].binding) {
+          // TODO: test this specifically
+          this._properties[name].binding?.removeTarget(this._node, name);
+        }
+      }
+      for (const name in this._bindings) {
+        this._bindings[name].dispose();
+        delete this._bindings[name];
+      }
       if (this._protochain.observedObjects.length) {
         window.removeEventListener('object-mutated', this.objectMutated as EventListener);
       }
@@ -137,11 +215,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       if (this.compose) {
         for (const prop in compose) {
           debug:
-          if (!this._properties.getProperty(prop) || typeof this._properties.getValue(prop) !== 'object') {
+          if (!this._properties[prop] || typeof this._properties[prop].value !== 'object') {
             console.error(`Composed property ${prop} is not a Node or an object.`);
             continue;
           }
-          const object = this._properties.getValue(prop);
+          const object = this._properties[prop].value;
           if (object._isIoNode) {
             // TODO: make sure composed and declarative listeners are working together
             object.setProperties(compose[prop]);
@@ -189,7 +267,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     objectMutated(event: CustomEvent) {
       for (let i = 0; i < this._protochain.observedObjects.length; i++) {
         const prop = this._protochain.observedObjects[i];
-        const value = this._properties.getValue(prop);
+        const value = this._properties[prop].value;
         if (value === event.detail.object) {
           this.throttle(this.objectMutatedThrottled, prop, false);
           return;
@@ -224,19 +302,23 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     bind(prop: string): Binding {
       debug:
-      if (!this._properties.getProperty(prop)) {
+      if (!this._properties[prop]) {
         console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
       }
-      return this._propertyBinder.bind(prop);
+      this._bindings[prop] = this._bindings[prop] || new Binding(this, prop);
+      return this._bindings[prop];
     }
     /**
      * Unbinds a binding to a specified property`.
      * @param {string} prop - Property to unbind.
      */
     unbind(prop: string) {
-      this._propertyBinder.unbind(prop);
-      const binding = this._properties.getBinding(prop);
-      if (binding) binding.removeTarget(this, prop);
+      if (this._bindings[prop]) this._bindings[prop].dispose();
+      delete this._bindings[prop];
+
+      if (this._properties[prop].binding) {
+        this._properties[prop].binding?.removeTarget(this, prop);
+      }
     }
     /**
      * Sets a property and emits `[property]-set` event.
@@ -259,7 +341,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     setProperties(props: any) {
       for (const p in props) {
-        if (this._properties.getProperty(p) === undefined) {
+        if (this._properties[p] === undefined) {
           debug:
           if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
             // TODO: consider converting import and style to properties
@@ -267,7 +349,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
           continue;
         }
-        this._properties.setValue(p, props[p], true);
+        this.setPropertyValue(p, props[p], true);
       }
       this._eventDispatcher.setPropListeners(props);
       this.queueDispatch();
@@ -410,13 +492,13 @@ export const RegisterIoNode = function (nodeConstructor: typeof IoNode) {
   for (const p in proto._protochain.properties) {
     Object.defineProperty(proto, p, {
       get: function() {
-        return (this as IoNode)._properties.getValue(p);
+        return (this as IoNode)._properties[p].value;
       },
       set: function(value) {
         debug: {
           if (proto._protochain.properties[p].readonly) console.error(`IoGUI error. Cannot set value "${value}" to read only property "${p}"`);
         }
-        (this as IoNode)._properties.setValue(p, value);
+        (this as IoNode).setPropertyValue(p, value);
       },
       enumerable: !!proto._protochain.properties[p].enumerable,
       configurable: true,

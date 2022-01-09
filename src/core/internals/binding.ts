@@ -1,10 +1,10 @@
 import {ChangeEvent} from './changeQueue.js';
-import {Properties} from './property.js';
 import {IoNode} from '../io-node.js';
 
 /**
  * Property binding class.
- * It manages data binding with target nodes/properties using `[property]-changed` events.
+ * It facilitates data binding between source node/property and target nodes/properties
+ * using `[property]-changed` events.
  */
 export class Binding {
   public readonly node: IoNode;
@@ -13,8 +13,8 @@ export class Binding {
   public readonly targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
   /**
    * Creates a binding object for specified `node` and `property`.
-   * @param {IoNode} node - Property owner node.
-   * @param {string} property - Name of the property.
+   * @param {IoNode} node - Property owner node
+   * @param {string} property - Name of the property
    */
   constructor(node: IoNode, property: string) {
     this.node = node;
@@ -31,29 +31,32 @@ export class Binding {
   }
   /**
    * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
-   * @param {IoNode} node - Target node.
-   * @param {string} property - Target property.
-   * @param {Array.<string>} [_nodeProperties] - Properties object.
+   * @param {IoNode} node - Target node
+   * @param {string} property - Target property
    */
-  addTarget(node: IoNode, property: string, _nodeProperties?: Properties) {
-    // TODO: unhack passing _properties from constructor;
-    const nodeProperties = node._properties || _nodeProperties;
-    nodeProperties.setBinding(property, this);
-    nodeProperties.setValue(property, this.node[this.property]);
-
-    const targetIoNode = node as unknown as EventTarget;
-    if (this.targets.indexOf(targetIoNode) === -1) this.targets.push(targetIoNode);
-    const targetProperties = this.getTargetProperties(targetIoNode);
+  addTarget(node: IoNode, property: string) {
+    debug: {
+      if (node._properties[property].binding && node._properties[property].binding !== this) {
+        console.warn('Binding target alredy has binding!');
+      }
+    }
+    node._properties[property].binding = this;
+    node.setPropertyValue(property, this.node[this.property]);
+    const target = node as unknown as EventTarget;
+    if (this.targets.indexOf(target) === -1) this.targets.push(target);
+    const targetProperties = this.getTargetProperties(target);
     if (targetProperties.indexOf(property) === -1) {
       targetProperties.push(property);
-      targetIoNode.addEventListener(`${property}-changed`, this.onTargetChanged as EventListener);
+      target.addEventListener(`${property}-changed`, this.onTargetChanged as EventListener);
+    } else {
+      // console.warn('Binding target alredy added!'); WHY?
     }
   }
   /**
    * Removes target `node` and `property` and corresponding `[property]-changed` listener.
    * If `property` is not specified, it removes all target properties.
-   * @param {IoNode} node - Target node.
-   * @param {string} property - Target property.
+   * @param {IoNode} node - Target node
+   * @param {string} property - Target property
    */
   removeTarget(node: IoNode, property?: string) {
     const targetIoNode = node as unknown as EventTarget;
@@ -108,7 +111,7 @@ export class Binding {
    * Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
    * @param {ChangeEvent} event - Property change event.
    */
-   private onSourceChanged(event: ChangeEvent) {
+  private onSourceChanged(event: ChangeEvent) {
     debug: {
       if (event.target !== this.node as unknown as EventTarget) {
         console.error(`onSourceChanged() should always originate form source node.
@@ -146,50 +149,5 @@ export class Binding {
     delete (this as any).targetProperties;
     delete (this as any).onTargetChanged;
     delete (this as any).onSourceChanged;
-  }
-}
-
-/**
- * Manager for property bindings. It holds all bindings for a particular IoNode.
- */
-export class PropertyBinder {
-  private readonly _node: IoNode;
-  private readonly _bindings: Record<string, Binding> = {};
-  /**
-   * Creates binding manager for the specified node.
-   * @param {IoNode} node - Owner node.
-   */
-  constructor(node: IoNode) {
-    this._node = node;
-    Object.defineProperty(this, '_node',     {enumerable: false, writable: false});
-    Object.defineProperty(this, '_bindings', {enumerable: false, writable: false});
-  }
-  /**
-   * Returns a binding to the specified property name or creates one if it does not exist.
-   * @param {string} property - Property to bind.
-   * @return {Binding} Property binding object.
-   */
-  bind(property: string): Binding {
-    this._bindings[property] = this._bindings[property] || new Binding(this._node, property);
-    return this._bindings[property];
-  }
-  /**
-   * Removes a binding for the specified property name.
-   * @param {string} property - Property to unbind.
-   */
-  unbind(property: string): void {
-    if (this._bindings[property]) this._bindings[property].dispose();
-    delete this._bindings[property];
-  }
-  /**
-   * Disposes all bindings. Use this when node is no longer needed.
-   */
-  dispose(): void {
-    for (const property in this._bindings) {
-      this._bindings[property].dispose();
-      delete this._bindings[property];
-    }
-    delete (this as any)._node;
-    delete (this as any)._bindings;
   }
 }

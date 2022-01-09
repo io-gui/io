@@ -164,14 +164,14 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
 
-    for (const name of this.css._properties.keys) {
+    for (const name in this.css._properties) {
       const property = this.css._protochain.properties[name];
       frag += this.initPropertyUniform(name, property);
     }
 
     frag += '\n';
 
-    for (const prop of this._properties.keys) {
+    for (const prop in this._properties) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
       const property = this._protochain.properties[prop];
       frag += this.initPropertyUniform(name, property);
@@ -219,13 +219,13 @@ export class IoGl extends IoElement {
 
     // TODO: improve code clarity
     this._vecLengths = {};
-    for (const name of this.css._properties.keys) {
+    for (const name in this.css._properties) {
       const property = this.css._protochain.properties[name];
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }
     }
-    for (const prop of this._properties.keys) {
+    for (const prop in this._properties) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
       const property = this._protochain.properties[prop];
       if (property.notify && property.type === Array) {
@@ -311,9 +311,9 @@ export class IoGl extends IoElement {
     this.setShaderProgram();
 
     // TODO: dont brute-force uniform update.
-    for (const p of this._properties.keys) {
+    for (const p in this._properties) {
       const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-      this.updatePropertyUniform(name, this._properties.getProperty(p));
+      this.updatePropertyUniform(name, this._properties[p]);
     }
 
     canvas.width = width;
@@ -343,8 +343,8 @@ export class IoGl extends IoElement {
     }
   }
   updateCssUniforms() {
-    for (const name of this.css._properties.keys) {
-      this.updatePropertyUniform(name, this.css._properties.getProperty(name));
+    for (const name in this.css._properties) {
+      this.updatePropertyUniform(name, this.css._properties[name]);
     }
   }
   setUniform(name: string, type: UniformTypes, value: any) {

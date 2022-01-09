@@ -1,5 +1,5 @@
 import {Change} from './internals/changeQueue.js';
-import {Binding} from './internals/propertyBinder.js';
+import {Binding} from './internals/binding.js';
 import {IoNode, RegisterIoNode} from './io-node.js';
 
 async function waitTick(): Promise<void> {
