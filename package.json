@@ -37,7 +37,7 @@
   "homepage": "https://iogui.dev",
   "devDependencies": {
     "@rollup/plugin-strip": "^2.1.0",
-    "babel-eslint": "^10.1.0",
+    "@babel/eslint-parser": "^7.5.4",
     "eslint": "^8.8.0",
     "eslint-plugin-html": "^6.2.0",
     "jsdoc-to-markdown": "^7.1.1",

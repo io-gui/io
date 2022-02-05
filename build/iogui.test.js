@@ -1594,8 +1594,8 @@ Mocha.prototype.reporter = function(reporter, reporterOptions) {
           } catch (_err) {
             _err.code !== 'MODULE_NOT_FOUND' ||
             _err.message.indexOf('Cannot find module') !== -1
-              ? void 0
-              : void 0;
+              ? (void 0)
+              : (void 0);
           }
         }
       }
