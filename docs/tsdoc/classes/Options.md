@@ -126,12 +126,12 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `items` | `Object` |
+| `items` | { `readonly`: `boolean` = true; `strict`: `boolean` = true; `type`: `ArrayConstructor` = Array } |
 | `items.readonly` | `boolean` |
 | `items.strict` | `boolean` |
 | `items.type` | `ArrayConstructor` |
 | `lazy` | `boolean` |
-| `path` | `Object` |
+| `path` | { `readonly`: `boolean` = true; `strict`: `boolean` = true; `type`: typeof [`Path`](Path.md) = Path } |
 | `path.readonly` | `boolean` |
 | `path.strict` | `boolean` |
 | `path.type` | typeof [`Path`](Path.md) |

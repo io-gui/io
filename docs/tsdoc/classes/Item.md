@@ -96,7 +96,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `Object` |
+| `options` | { `on-path-changed`: () => `void`  } |
 | `options.on-path-changed` | () => `void` |
 
 #### Overrides
@@ -137,10 +137,10 @@ ___
 | `hint` | `string` |
 | `icon` | `string` |
 | `label` | `string` |
-| `options` | `Object` |
+| `options` | { `strict`: `boolean` = true; `type`: typeof [`Options`](Options.md) = Options } |
 | `options.strict` | `boolean` |
 | `options.type` | typeof [`Options`](Options.md) |
-| `path` | `Object` |
+| `path` | { `readonly`: `boolean` = true; `strict`: `boolean` = true; `type`: typeof [`Path`](Path.md) = Path } |
 | `path.readonly` | `boolean` |
 | `path.strict` | `boolean` |
 | `path.type` | typeof [`Path`](Path.md) |
