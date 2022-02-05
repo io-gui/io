@@ -10,7 +10,7 @@
 
 ### detail
 
-• `Readonly` **detail**: [`Change`](../classes/Change.md)
+• `Readonly` **detail**: [`Change`](Change.md)
 
 #### Overrides
 
@@ -18,7 +18,7 @@ CustomEvent.detail
 
 #### Defined in
 
-[core/internals/changeQueue.ts:107](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L107)
+[core/internals/changeQueue.ts:93](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L93)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in
 
-[core/internals/changeQueue.ts:108](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L108)
+[core/internals/changeQueue.ts:94](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L94)
 
 ___
 
@@ -42,4 +42,4 @@ CustomEvent.target
 
 #### Defined in
 
-[core/internals/changeQueue.ts:106](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L106)
+[core/internals/changeQueue.ts:92](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L92)

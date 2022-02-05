@@ -1,6 +1,8 @@
 # Class: Binding
 
-Binding object. It manages data binding between source and targets using `[property]-changed` events.
+Property binding class.
+It facilitates data binding between source node/property and target nodes/properties
+using `[property]-changed` events.
 
 ## Constructors
 
@@ -14,12 +16,52 @@ Creates a binding object for specified `node` and `property`.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) | Property owner node. |
-| `property` | `string` | Name of the property. |
+| `node` | [`IoNode`](IoNode.md) | Property owner node |
+| `property` | `string` | Name of the property |
 
 #### Defined in
 
-[core/internals/propertyBinder.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L18)
+[core/internals/binding.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L19)
+
+## Properties
+
+### node
+
+• `Readonly` **node**: [`IoNode`](IoNode.md)
+
+#### Defined in
+
+[core/internals/binding.ts:10](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L10)
+
+___
+
+### property
+
+• `Readonly` **property**: `string` = `''`
+
+#### Defined in
+
+[core/internals/binding.ts:11](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L11)
+
+___
+
+### targetProperties
+
+• `Readonly` **targetProperties**: `WeakMap`<`EventTarget`, `string`[]\>
+
+#### Defined in
+
+[core/internals/binding.ts:13](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L13)
+
+___
+
+### targets
+
+• `Readonly` **targets**: `EventTarget`[] = `[]`
+
+#### Defined in
+
+[core/internals/binding.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L12)
 
 ## Accessors
 
@@ -33,7 +75,7 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[core/internals/propertyBinder.ts:34](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L34)
+[core/internals/binding.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L29)
 
 • `set` **value**(`value`): `void`
 
@@ -49,13 +91,13 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[core/internals/propertyBinder.ts:31](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L31)
+[core/internals/binding.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L26)
 
 ## Methods
 
 ### addTarget
 
-▸ **addTarget**(`node`, `property`, `__nodeProperties?`): `void`
+▸ **addTarget**(`node`, `property`): `void`
 
 Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
 
@@ -63,9 +105,8 @@ Adds a target `node` and `targetProp` and corresponding `[property]-changed` lis
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) | Target node. |
-| `property` | `string` | Target property. |
-| `__nodeProperties?` | [`Properties`](Properties.md) | List of target property names. |
+| `node` | [`IoNode`](IoNode.md) | Target node |
+| `property` | `string` | Target property |
 
 #### Returns
 
@@ -73,7 +114,7 @@ Adds a target `node` and `targetProp` and corresponding `[property]-changed` lis
 
 #### Defined in
 
-[core/internals/propertyBinder.ts:43](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L43)
+[core/internals/binding.ts:37](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L37)
 
 ___
 
@@ -90,7 +131,7 @@ Use this when node is no longer needed.
 
 #### Defined in
 
-[core/internals/propertyBinder.ts:142](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L142)
+[core/internals/binding.ts:140](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L140)
 
 ___
 
@@ -105,8 +146,8 @@ If `property` is not specified, it removes all target properties.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) | Target node. |
-| `property?` | `string` | Target property. |
+| `node` | [`IoNode`](IoNode.md) | Target node |
+| `property?` | `string` | Target property |
 
 #### Returns
 
@@ -114,4 +155,4 @@ If `property` is not specified, it removes all target properties.
 
 #### Defined in
 
-[core/internals/propertyBinder.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/propertyBinder.ts#L63)
+[core/internals/binding.ts:61](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L61)

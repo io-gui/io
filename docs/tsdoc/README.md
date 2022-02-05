@@ -3,7 +3,6 @@
 ## Classes
 
 - [Binding](classes/Binding.md)
-- [Change](classes/Change.md)
 - [ChangeQueue](classes/ChangeQueue.md)
 - [EventDispatcher](classes/EventDispatcher.md)
 - [IoBoolean](classes/IoBoolean.md)
@@ -64,13 +63,13 @@
 - [Item](classes/Item.md)
 - [Options](classes/Options.md)
 - [Path](classes/Path.md)
-- [Properties](classes/Properties.md)
 - [Property](classes/Property.md)
-- [PropertyBinder](classes/PropertyBinder.md)
+- [PropertyDefinition](classes/PropertyDefinition.md)
 - [ProtoChain](classes/ProtoChain.md)
 
 ## Interfaces
 
+- [Change](interfaces/Change.md)
 - [ChangeEvent](interfaces/ChangeEvent.md)
 - [IoNodeConstructor](interfaces/IoNodeConstructor.md)
 
@@ -82,13 +81,13 @@
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:41](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L41)
+[core/internals/eventDispatcher.ts:55](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L55)
 
 ___
 
 ### ListenerDefinition
 
-Ƭ **ListenerDefinition**: [keyof [`IoNode`](classes/IoNode.md) \| `EventListener`, AddEventListenerOptions?]
+Ƭ **ListenerDefinition**: [`string` \| `EventListener`, AddEventListenerOptions?]
 
 #### Defined in
 
@@ -98,7 +97,7 @@ ___
 
 ### ListenerDefinitionWeak
 
-Ƭ **ListenerDefinitionWeak**: keyof [`IoNode`](classes/IoNode.md) \| `EventListener` \| [keyof [`IoNode`](classes/IoNode.md) \| `EventListener`, AddEventListenerOptions?]
+Ƭ **ListenerDefinitionWeak**: `string` \| `EventListener` \| [`string` \| `EventListener`, AddEventListenerOptions?]
 
 #### Defined in
 
@@ -112,7 +111,7 @@ ___
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:42](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L42)
+[core/internals/eventDispatcher.ts:56](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L56)
 
 ___
 
@@ -136,37 +135,13 @@ ___
 
 ___
 
-### PropertyDefinition
-
-Ƭ **PropertyDefinition**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `binding?` | [`Binding`](classes/Binding.md) |
-| `enumerable` | `boolean` |
-| `notify` | `boolean` |
-| `observe` | `boolean` |
-| `readonly` | `boolean` |
-| `reflect` | `ReflectType` |
-| `strict` | `boolean` |
-| `type?` | `AnyConstructor` |
-| `value?` | `any` |
-
-#### Defined in
-
-[core/internals/properties.ts:6](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L6)
-
-___
-
 ### PropertyDefinitionWeak
 
-Ƭ **PropertyDefinitionWeak**: `string` \| `number` \| `boolean` \| ``null`` \| `AnyConstructor` \| [`Binding`](classes/Binding.md) \| { `binding?`: [`Binding`](classes/Binding.md) ; `enumerable?`: `boolean` ; `notify?`: `boolean` ; `observe?`: `boolean` ; `readonly?`: `boolean` ; `reflect?`: `ReflectType` ; `strict?`: `boolean` ; `type?`: `AnyConstructor` ; `value?`: `any`  }
+Ƭ **PropertyDefinitionWeak**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| `AnyConstructor` \| [`Binding`](classes/Binding.md) \| { `binding?`: [`Binding`](classes/Binding.md) ; `enumerable?`: `boolean` ; `notify?`: `boolean` ; `observe?`: `boolean` ; `readonly?`: `boolean` ; `reflect?`: `ReflectType` ; `strict?`: `boolean` ; `type?`: `AnyConstructor` ; `value?`: `any`  }
 
 #### Defined in
 
-[core/internals/properties.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L18)
+[core/internals/property.ts:6](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L6)
 
 ## Variables
 
@@ -236,7 +211,7 @@ typeof `__class`
 
 #### Defined in
 
-[core/io-node.ts:38](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L38)
+[core/io-node.ts:39](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L39)
 
 ___
 
@@ -256,7 +231,7 @@ ___
 
 #### Defined in
 
-[elements/core/storage.ts:215](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/storage.ts#L215)
+[elements/core/storage.ts:214](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/storage.ts#L214)
 
 ___
 
@@ -278,7 +253,7 @@ Register function for `IoElement`. Registers custom element.
 
 #### Defined in
 
-[core/io-element.ts:398](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L398)
+[core/io-element.ts:408](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L408)
 
 ___
 
@@ -300,20 +275,22 @@ Register function to be called once per class.
 
 #### Defined in
 
-[core/io-node.ts:455](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L455)
+[core/io-node.ts:486](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L486)
 
 ___
 
 ### assignListenerDefinition
 
-▸ `Const` **assignListenerDefinition**(`definitions`, `listenerDefinition`): `void`
+▸ `Const` **assignListenerDefinition**(`defs`, `def`): `void`
+
+Assigns listener definition to an existing array of listener definitions.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `definitions` | [`ListenerDefinition`](README.md#listenerdefinition)[] |
-| `listenerDefinition` | [`ListenerDefinition`](README.md#listenerdefinition) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `defs` | [`ListenerDefinition`](README.md#listenerdefinition)[] | Array of listener definitions |
+| `def` | [`ListenerDefinition`](README.md#listenerdefinition) | Listener definition |
 
 #### Returns
 
@@ -321,20 +298,22 @@ ___
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L19)
+[core/internals/eventDispatcher.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L21)
 
 ___
 
 ### assignPropertyDefinition
 
-▸ `Const` **assignPropertyDefinition**(`propDef`, `newPropDef`): `void`
+▸ `Const` **assignPropertyDefinition**(`def`, `newDef`): `void`
+
+Assigns property definition values to another property definition, unless they are default values.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `propDef` | [`PropertyDefinition`](README.md#propertydefinition) |
-| `newPropDef` | [`PropertyDefinition`](README.md#propertydefinition) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `def` | [`PropertyDefinition`](classes/PropertyDefinition.md) | Property definition |
+| `newDef` | [`PropertyDefinition`](classes/PropertyDefinition.md) | Existing property definition |
 
 #### Returns
 
@@ -342,7 +321,7 @@ ___
 
 #### Defined in
 
-[core/internals/properties.ts:92](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L92)
+[core/internals/property.ts:77](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L77)
 
 ___
 
@@ -368,65 +347,53 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:603](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L603)
+[core/io-element.ts:573](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L573)
 
 ___
 
 ### hardenListenerDefinition
 
-▸ `Const` **hardenListenerDefinition**(`listenerDefinition`): [`ListenerDefinition`](README.md#listenerdefinition)
+▸ `Const` **hardenListenerDefinition**(`def`): [`ListenerDefinition`](README.md#listenerdefinition)
+
+Takes weakly typed listener definition and returns stronly typed listener definition.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `listenerDefinition` | [`ListenerDefinitionWeak`](README.md#listenerdefinitionweak) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `def` | [`ListenerDefinitionWeak`](README.md#listenerdefinitionweak) | Weakly typed listener definition |
 
 #### Returns
 
 [`ListenerDefinition`](README.md#listenerdefinition)
 
-#### Defined in
-
-[core/internals/eventDispatcher.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L7)
-
-___
-
-### hardenPropertyDefinition
-
-▸ `Const` **hardenPropertyDefinition**(`propDef`): [`PropertyDefinition`](README.md#propertydefinition)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `propDef` | [`PropertyDefinitionWeak`](README.md#propertydefinitionweak) |
-
-#### Returns
-
-[`PropertyDefinition`](README.md#propertydefinition)
+Stronly typed listener definition
 
 #### Defined in
 
-[core/internals/properties.ts:30](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/properties.ts#L30)
+[core/internals/eventDispatcher.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L12)
 
 ___
 
 ### listenerFromDefinition
 
-▸ `Const` **listenerFromDefinition**(`node`, `listenerDefinition`): [`Listener`](README.md#listener)
+▸ `Const` **listenerFromDefinition**(`node`, `def`): [`Listener`](README.md#listener)
+
+Takes a node and a listener definition and returns a listener.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `node` | [`IoNode`](classes/IoNode.md) |
-| `listenerDefinition` | [`ListenerDefinition`](README.md#listenerdefinition) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `node` | `HTMLElement` \| [`IoNode`](classes/IoNode.md) | `IoNode` instance |
+| `def` | [`ListenerDefinition`](README.md#listenerdefinition) | Listener definition |
 
 #### Returns
 
 [`Listener`](README.md#listener)
 
+Listener
+
 #### Defined in
 
-[core/internals/eventDispatcher.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L29)
+[core/internals/eventDispatcher.ts:40](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L40)

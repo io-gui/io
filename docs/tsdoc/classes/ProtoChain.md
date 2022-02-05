@@ -1,26 +1,34 @@
 # Class: ProtoChain
 
-Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
-as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
-that terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+Internal utility class that contains usefull information about class inheritance such as:
+- Array of inherited class constructors up until `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
+- Array of auto-binding function names that start with "on" or "_"
+- Properties declared in `static get Properties()` return oject
+- Listeners declared in `static get Listeners()` return oject
+- CSS style string declared in `static get Style()` return string
+- Array of property names with `observed: true`
+
+Inherited information is aggregated automatically by prototype chain traversal that
+It collects information from inhertited classes specified in static getters in an additive manner,
+respecting the order of inheritance.
 
 ## Constructors
 
 ### constructor
 
-• **new ProtoChain**(`nodeConstructor`)
+• **new ProtoChain**(`ioNodeClass`)
 
-Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors, function names, properties and listeners.
+Creates an instance of `ProtoChain`.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `nodeConstructor` | [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)<`any`\> | Prototype object. |
+| `ioNodeClass` | [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)<`any`\> | Owner `IoNode`-derived class. |
 
 #### Defined in
 
-[core/internals/protoChain.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L35)
+[core/internals/protoChain.ts:47](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L47)
 
 ## Properties
 
@@ -30,7 +38,7 @@ Creates an instance of `ProtoChain` and initializes the arrays of inherited cont
 
 #### Defined in
 
-[core/internals/protoChain.ts:14](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L14)
+[core/internals/protoChain.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L22)
 
 ___
 
@@ -40,7 +48,7 @@ ___
 
 #### Defined in
 
-[core/internals/protoChain.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L18)
+[core/internals/protoChain.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L26)
 
 ___
 
@@ -54,7 +62,17 @@ ___
 
 #### Defined in
 
-[core/internals/protoChain.ts:28](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L28)
+[core/internals/protoChain.ts:34](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L34)
+
+___
+
+### observedObjects
+
+• `Readonly` **observedObjects**: `string`[] = `[]`
+
+#### Defined in
+
+[core/internals/protoChain.ts:42](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L42)
 
 ___
 
@@ -64,11 +82,21 @@ ___
 
 #### Index signature
 
-▪ [property: `string`]: [`PropertyDefinition`](../README.md#propertydefinition)
+▪ [property: `string`]: [`PropertyDefinition`](PropertyDefinition.md)
 
 #### Defined in
 
-[core/internals/protoChain.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L22)
+[core/internals/protoChain.ts:30](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L30)
+
+___
+
+### style
+
+• `Readonly` **style**: `string` = `''`
+
+#### Defined in
+
+[core/internals/protoChain.ts:38](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L38)
 
 ## Methods
 
@@ -76,7 +104,7 @@ ___
 
 ▸ **bindFunctions**(`node`): `void`
 
-Binds all functions from the `.functions` list to specified instance.
+Binds all auto-binding functions from the `.functions` list to specified `IoNode` instance.
 
 #### Parameters
 
@@ -90,18 +118,4 @@ Binds all functions from the `.functions` list to specified instance.
 
 #### Defined in
 
-[core/internals/protoChain.ts:89](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L89)
-
-___
-
-### dispose
-
-▸ **dispose**(): `void`
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[core/internals/protoChain.ts:94](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L94)
+[core/internals/protoChain.ts:129](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L129)
