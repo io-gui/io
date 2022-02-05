@@ -1,4 +1,4 @@
-import {IoElement} from '../build/iogui.js';
+import {IoElement, RegisterIoElement} from '../build/iogui.js';
 import '../build/iogui.js';
 
 export class IoDemoElementsSliders extends IoElement {
@@ -27,4 +27,4 @@ export class IoDemoElementsSliders extends IoElement {
   }
 }
 
-IoDemoElementsSliders.Register();
+RegisterIoElement(IoDemoElementsSliders);

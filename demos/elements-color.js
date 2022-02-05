@@ -1,4 +1,4 @@
-import {IoElement} from '../build/iogui.js';
+import {IoElement, RegisterIoElement} from '../build/iogui.js';
 import '../build/iogui.js';
 
 export class IoDemoElementsColor extends IoElement {
@@ -76,4 +76,4 @@ export class IoDemoElementsColor extends IoElement {
   }
 }
 
-IoDemoElementsColor.Register();
+RegisterIoElement(IoDemoElementsColor);

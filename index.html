@@ -56,7 +56,7 @@
     <meta property="og:image" content="https://iogui.dev/iogui/images/logo/io-512.png?002" />
     <meta property="og:locale" content="en_US" />
 
-    <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet">
+    <!-- <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet"> -->
 
     <link lazyload href="./lib/highlight.a11y-light.css" rel="stylesheet">
     <script src="./lib/detect.js"></script>
@@ -96,12 +96,14 @@
   <body>
     <script type="module">
 
-    import {Options, Path} from './build/iogui.js';
+    import {Options, Path, RegisterIoElement} from './build/iogui.js';
     import {IoSelectorTabs, IoStorageFactory as $} from './build/iogui.js';
+    import './lib/mocha.js';
+    import './lib/chai.js';
 
     const docPath = './docs/';
-    const srcPath = './src/';
-    const elementsPath = './src/elements/';
+    const srcPath = './build/';
+    const elementsPath = './build/elements/';
 
     const OPTIONS = new Options([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
@@ -126,7 +128,7 @@
       ]},
       {label: 'Reference', value: 'reference', options: [
         {label: 'Node', value: srcPath + 'core/node.md'},
-        {label: 'IoElement', value: srcPath + 'core/io-element.md'},
+        {label: 'IoElement', value: srcPath + 'components/io-element.md'},
         {label: 'Core Elements', value: 'coreelements', options: [
           {label: 'IoItem', value: elementsPath + 'core/item.md'},
           {label: 'IoGl', value: elementsPath + 'core/gl.md'},
@@ -200,8 +202,10 @@
           {label: 'io-service-loader', value: elementsPath + 'extras/service-loader.md'},
         ]},
         {label: 'Core Classes', value: 'coreclasses', options: [
+          {label: 'ChangeQueue', value: srcPath + '../docs/classes/ChangeQueue.md'},
+          // 
           {label: 'Binding', value: srcPath + 'core/binding.md'},
-          {label: 'Functions', value: srcPath + 'core/functions.md'},
+          {label: 'Functions', value: srcPath + 'core/functionBinder.md'},
           {label: 'Listeners', value: srcPath + 'core/listeners.md'},
           {label: 'Properties', value: srcPath + 'core/properties.md'},
           {label: 'ProtoChain', value: srcPath + 'core/protochain.md'},
@@ -256,7 +260,7 @@
         };
       }
     }
-    IoMainPage.Register();
+    RegisterIoElement(IoMainPage);
     </script>
     <noscript>JavaScript is required to view this page!</noscript>
     <io-main-page></io-main-page>

@@ -1,4 +1,4 @@
-import {IoMdView} from '../../build/iogui.js';
+import {IoMdView, RegisterIoElement} from '../../build/iogui.js';
 
 export class TodoInfo extends IoMdView {
   changed() {
@@ -12,4 +12,4 @@ Part of [TodoMVC](http://todomvc.com/)
   }
 }
 
-TodoInfo.Register();
+RegisterIoElement(TodoInfo);

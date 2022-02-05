@@ -55,7 +55,7 @@ class IoOptionsDemoView extends IoElement {
   }
 }
 
-IoOptionsDemoView.Register();
+RegisterIoElement(IoOptionsDemoView);
 
 class IoItemDemoView extends IoElement {
   static get Style() {
@@ -94,7 +94,7 @@ class IoItemDemoView extends IoElement {
   }
 }
 
-IoItemDemoView.Register();
+RegisterIoElement(IoItemDemoView);
 
 class IoOptionsPathDemo extends IoElement {
   static get Properties() {
@@ -106,7 +106,7 @@ class IoOptionsPathDemo extends IoElement {
     this.template([['io-item', {value: (this.value && this.value.length) ? JSON.stringify(this.value) : ''}]]);
   }
 }
-IoOptionsPathDemo.Register();
+RegisterIoElement(IoOptionsPathDemo);
 
 export class IoDemoMenu extends IoOptionsDemoView {
   static get Properties() {
@@ -144,4 +144,4 @@ export class IoDemoMenu extends IoOptionsDemoView {
   }
 }
 
-IoDemoMenu.Register();
+RegisterIoElement(IoDemoMenu);

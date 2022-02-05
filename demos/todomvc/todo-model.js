@@ -1,6 +1,6 @@
-import {Node} from '../../build/iogui.js';
+import {IoNode, RegisterIoNode} from '../../build/iogui.js';
 
-export class TodoModel extends Node {
+export class TodoModel extends IoNode {
   static get Properties() {
     return {
       items: Array,
@@ -77,4 +77,4 @@ export class TodoModel extends Node {
   }
 }
 
-TodoModel.Register();
+RegisterIoNode(TodoModel);
