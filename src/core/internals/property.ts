@@ -3,18 +3,6 @@ import {Binding} from './binding.js';
 type AnyConstructor = new (...args: any[]) => unknown;
 type ReflectType = -1 | 0 | 1 | 2;
 
-export type PropertyDefinition = {
-  value?: any;
-  type?: AnyConstructor;
-  binding?: Binding;
-  reflect: ReflectType;
-  notify: boolean;
-  observe: boolean;
-  readonly: boolean;
-  strict: boolean;
-  enumerable: boolean;
-};
-
 export type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | {
   value?: any;
   type?: AnyConstructor;
@@ -28,59 +16,61 @@ export type PropertyDefinitionWeak = string | number | boolean | Array<any> | nu
 };
 
 /**
- * Takes weakly typed property definition and returns stronly typed property definition.
- * @param {PropertyDefinitionWeak} def Weakly typed property definition
- * @return {PropertyDefinition} Stronly typed property definition
+ * Property definition class
  */
-export const hardenPropertyDefinition = (def: PropertyDefinitionWeak): PropertyDefinition => {
-  const hardDef: PropertyDefinition = {
-    value: undefined,
-    type: undefined,
-    binding: undefined,
-    reflect: 0,
-    notify: true,
-    observe: false,
-    readonly: false,
-    strict: false,
-    enumerable: true
-  };
-  if (def === undefined || def === null) {
-    hardDef.value = def;
-    return hardDef;
+export class PropertyDefinition {
+  value?: any;
+  type?: AnyConstructor;
+  binding?: Binding;
+  reflect: ReflectType = 0;
+  notify = true;
+  observe = false;
+  readonly = false;
+  strict = false;
+  enumerable = true;
+  /**
+   * Takes a weakly typed property definition and returns a stronly typed property definition.
+   * @param {PropertyDefinitionWeak} def Weakly typed property definition
+   */
+  constructor(def: PropertyDefinitionWeak) {
+    if (def === undefined || def === null) {
+      this.value = def;
+    } else if (typeof def === 'function') {
+      this.type = def;
+    } else if (def instanceof Binding) {
+      this.value = def.value;
+      this.type = (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
+      this.binding = def;
+    } else if (def && def.constructor === Object) {
+      const _def = def as PropertyDefinition;
+      this.value = _def.value !== undefined ? _def.value : undefined;
+      this.type = _def.type !== undefined ? _def.type : (_def.value !== undefined && _def.value !== null) ? _def.value.constructor : undefined;
+      this.binding = _def.binding instanceof Binding ? _def.binding : undefined;
+      this.reflect = _def.reflect !== undefined ? _def.reflect : 0;
+      this.notify = _def.notify !== undefined ? _def.notify : true;
+      this.observe = _def.observe !== undefined ? _def.observe : false;
+      this.readonly = _def.readonly !== undefined ? _def.readonly : false;
+      this.strict = _def.strict !== undefined ? _def.strict : false;
+      this.enumerable = _def.enumerable !== undefined ? _def.enumerable : true;
+    } else if (!(def && def.constructor === Object)) {
+      this.value = def;
+      this.type = def.constructor as AnyConstructor;
+    }
+    if (this.value === undefined) {
+      if (typeof this.type === 'function') {
+        if (this.type === Boolean) this.value = false;
+        else if (this.type === String) this.value = '';
+        else if (this.type === Number) this.value = 0;
+        else if (this.type === Array) this.value = [];
+        else if (this.type === Object) this.value = {};
+        else this.value = new this.type();
+      }
+    }
   }
-  if (typeof def === 'function') {
-    hardDef.type = def;
-    return hardDef;
-  }
-  if (def instanceof Binding) {
-    hardDef.value = def.value;
-    hardDef.type = (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
-    hardDef.binding = def;
-    return hardDef;
-  }
-  if (def && def.constructor === Object) {
-    const hardDef = def as PropertyDefinition;
-    hardDef.value = hardDef.value !== undefined ? hardDef.value : undefined;
-    hardDef.type = hardDef.type !== undefined ? hardDef.type : (hardDef.value !== undefined && hardDef.value !== null) ? hardDef.value.constructor : undefined;
-    hardDef.binding = hardDef.binding instanceof Binding ? hardDef.binding : undefined;
-    hardDef.reflect = hardDef.reflect !== undefined ? hardDef.reflect : 0;
-    hardDef.notify = hardDef.notify !== undefined ? hardDef.notify : true;
-    hardDef.observe = hardDef.observe !== undefined ? hardDef.observe : false;
-    hardDef.readonly = hardDef.readonly !== undefined ? hardDef.readonly : false;
-    hardDef.strict = hardDef.strict !== undefined ? hardDef.strict : false;
-    hardDef.enumerable = hardDef.enumerable !== undefined ? hardDef.enumerable : true;
-    return hardDef;
-  }
-  if (!(def && def.constructor === Object)) {
-    hardDef.value = def;
-    hardDef.type = def.constructor as AnyConstructor;
-    return hardDef;
-  }
-  return hardDef;
-};
+}
 
 /**
- * Assigns property definition to an existing property definition.
+ * Assigns property definition values to another property definition, unless they are default values.
  * @param {PropertyDefinition} def Property definition
  * @param {PropertyDefinition} newDef Existing property definition
  */
@@ -97,7 +87,7 @@ export const assignPropertyDefinition = (def: PropertyDefinition, newDef: Proper
 };
 
 /**
- * Property configuration object for a class **instance**.
+ * Property configuration object.
  * It is initialized from corresponding `PropertyDefinition` in `ProtoChain`.
  */
 export class Property {
@@ -154,20 +144,16 @@ export class Property {
 
     // TODO: test
     if (this.binding instanceof Binding) this.value = this.binding.value;
-    else if (this.value === undefined) {
-      if (typeof this.type === 'function') {
-        if (this.type === Boolean) this.value = false;
-        else if (this.type === String) this.value = '';
-        else if (this.type === Number) this.value = 0;
-        else if (this.type === Array) this.value = [];
-        else if (this.type === Object) this.value = {};
-        else this.value = new this.type();
+    else if (this.value === undefined && typeof this.type === 'function') {
+      debug: {
+        console.warn('Property value should always be initialized when type is defined!');
       }
     } else {
       if (this.type === Array && this.value instanceof Array) {
         this.value = [...this.value];
-      } else if (this.type === Object && this.value instanceof Object) {
-        this.value = Object.assign({}, this.value);
+      } else if (typeof this.type === 'function' && this.value instanceof Object) {
+        // console.log(this.type);
+        this.value = Object.assign(new this.type(), this.value);
       }
     }
   }

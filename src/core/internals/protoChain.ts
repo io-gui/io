@@ -1,10 +1,10 @@
 import {IoNode, IoNodeConstructor} from '../io-node.js';
-import {hardenPropertyDefinition, assignPropertyDefinition, PropertyDefinition} from './property.js';
+import {PropertyDefinition, assignPropertyDefinition} from './property.js';
 import {ListenerDefinition, hardenListenerDefinition, assignListenerDefinition} from './eventDispatcher.js';
 
 /**
  * Internal utility class that contains usefull information about class inheritance such as:
- * - Array of inherited class constructors that terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
+ * - Array of inherited class constructors up until `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
  * - Array of auto-binding function names that start with "on" or "_"
  * - Properties declared in `static get Properties()` return oject
  * - Listeners declared in `static get Listeners()` return oject
@@ -17,7 +17,7 @@ import {ListenerDefinition, hardenListenerDefinition, assignListenerDefinition} 
  */
 export class ProtoChain {
   /*
-   * Array of inherited class constructors that terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+   * Array of inherited class constructors up until `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
    */
   public readonly constructors: Array<IoNodeConstructor<any>> = [];
   /*
@@ -83,7 +83,7 @@ export class ProtoChain {
       // Add properties
       const props = this.constructors[i].Properties;
       for (const name in props) {
-        const hardPropDef = hardenPropertyDefinition(props[name]);
+        const hardPropDef = new PropertyDefinition(props[name]);
         if (!this.properties[name]) this.properties[name] = hardPropDef;
         else assignPropertyDefinition(this.properties[name], hardPropDef);
       }

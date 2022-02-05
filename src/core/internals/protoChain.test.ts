@@ -70,7 +70,7 @@ class FakeIoNode3 extends FakeIoNode2 {}
 export default class {
   run() {
     describe('ProtoChain', () => {
-      it('Should include all inherited constructors', () => {
+      it('Should include an array of all inherited constructors', () => {
         let constructors = new ProtoChain(Array3).constructors;
         chai.expect(constructors[0]).to.be.equal(Array3);
         chai.expect(constructors[1]).to.be.equal(Array2);
@@ -92,7 +92,7 @@ export default class {
         constructors = new ProtoChain(IoNode2).constructors;
         chai.expect(constructors[0]).to.be.equal(IoNode2);
       });
-      it('Should terminate at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`', () => {
+      it('Should end constructor array at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`', () => {
         let constructors = new ProtoChain(Array3).constructors;
         chai.expect(constructors[3]).to.be.equal(undefined);
         constructors = new ProtoChain(Object3).constructors;
@@ -106,7 +106,7 @@ export default class {
         constructors = new ProtoChain(IoNode2).constructors;
         chai.expect(constructors[1]).to.be.equal(undefined);
       });
-      it('Should include all auto-binding functions starting with "on" or "_"', () => {
+      it('Should include an array of auto-binding functions starting with "on" or "_"', () => {
         const protoChain = new ProtoChain(FakeIoNode2);
         chai.expect(protoChain.functions).to.be.eql(['onFunction2', '_function2', 'onFunction1', '_function1']);
       });
