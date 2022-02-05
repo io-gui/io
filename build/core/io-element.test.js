@@ -46,7 +46,6 @@ export class TestElement extends IoElement {
         super(initProps);
         this.template([['test-subelement', { id: 'subelement', prop0: this.bind('prop0') }]]);
         this.subnode = new TestNode({ prop2: this.bind('prop0') });
-        this.subnode.connect(window);
     }
     // TODO: test arguments
     changed() {
@@ -124,16 +123,6 @@ export default class {
                     chai.expect(this.element._changedCounter).to.equal(2);
                     chai.expect(this._changedCounter).to.equal(1);
                 });
-                it('Should not invoke handler functions when disconnected', () => {
-                    this.reset();
-                    document.body.removeChild(this.element);
-                    this.element.prop0 = 2;
-                    this.element.prop1 = 'test2';
-                    chai.expect(this.element._prop1AltCounter).to.equal(0);
-                    chai.expect(this.element._changedCounter).to.equal(0);
-                    chai.expect(this._changedCounter).to.equal(0);
-                    document.body.appendChild(this.element);
-                });
                 it('Should dispatch correct event payloads to handlers', () => {
                     this.reset();
                     this.element.prop0 = 1;
@@ -155,16 +144,6 @@ export default class {
                     this.element.$.subelement.prop0 = 0;
                     chai.expect(this.element.prop0).to.equal(0);
                 });
-                it('Should disconnect binding when element is disconnected', () => {
-                    this.element.prop0 = Infinity;
-                    chai.expect(this.element.$.subelement.prop0).to.equal(Infinity);
-                    this.element.removeChild(this.element.$.subelement);
-                    this.element.$.subelement.prop0 = 0;
-                    chai.expect(this.element.prop0).to.equal(Infinity);
-                    this.element.appendChild(this.element.$.subelement);
-                    this.element.$.subelement.prop0 = 2;
-                    chai.expect(this.element.prop0).to.equal(2);
-                });
                 it('Should bind to Node node', () => {
                     this.element.prop0 = Infinity;
                     chai.expect(this.element.subnode.prop2).to.equal(Infinity);
@@ -174,10 +153,6 @@ export default class {
                 it('Should disconnect binding when Node node is disconnected', () => {
                     this.element.prop0 = Infinity;
                     chai.expect(this.element.subnode.prop2).to.equal(Infinity);
-                    this.element.subnode.disconnect(window);
-                    this.element.prop0 = 0;
-                    chai.expect(this.element.subnode.prop2).to.equal(Infinity);
-                    this.element.subnode.connect(window);
                     this.element.subnode.prop2 = 2;
                     chai.expect(this.element.prop0).to.equal(2);
                 });

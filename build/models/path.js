@@ -10,7 +10,8 @@ export class Path extends IoNode {
         };
     }
     valueChanged() {
-        this.__properties.value.value = new Proxy(this.__properties.value.value, {
+        // TODO: redesign. Investigate why setValue causes infinite loop.
+        this._properties['value'].value = new Proxy(this._properties['value'].value, {
             get: (target, prop) => target[prop],
             set: (target, prop, value) => {
                 if (target[prop] === value)
@@ -25,8 +26,7 @@ export class Path extends IoNode {
         this.throttle(this.onMutation, null, false);
     }
     onMutation() {
-        if (this.__connected)
-            this.queueDispatch();
+        this.queueDispatch();
     }
     update() {
         let string = '';
@@ -39,9 +39,9 @@ export class Path extends IoNode {
             if (i !== this.value.length - 1)
                 string += this.delimiter;
         }
-        this.__properties.set('string', string, true);
-        this.__properties.set('root', this.value[0], true);
-        this.__properties.set('leaf', this.value[this.value.length - 1], true);
+        this.setPropertyValue('string', string, true);
+        this.setPropertyValue('root', this.value[0], true);
+        this.setPropertyValue('leaf', this.value[this.value.length - 1], true);
     }
     stringChanged() {
         const array = this.string ? [...this.string.split(this.delimiter)] : [];

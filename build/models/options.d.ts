@@ -4,10 +4,11 @@ declare const Options_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
         readonly compose: Record<string, Record<string, any>> | null;
-        connect(node?: import("../core/io-node.js").IoNode | HTMLElement | Window | Document): any;
-        disconnect(node?: import("../core/io-node.js").IoNode | HTMLElement | Window | Document): any;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
+        readonly _properties: Record<string, import("../iogui.js").Property>;
+        readonly _bindings: Record<string, import("../iogui.js").Binding>;
+        readonly _changeQueue: import("../iogui.js").ChangeQueue;
+        readonly _eventDispatcher: import("../iogui.js").EventDispatcher;
+        setPropertyValue(name: string, value: any, skipDispatch?: boolean | undefined): void;
         dispose(): void;
         changed(): void;
         applyCompose(): void;
@@ -22,7 +23,7 @@ declare const Options_base: {
         setProperties(props: any): void;
         addEventListener(type: string, listener: EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void), options?: AddEventListenerOptions | undefined): void;
         removeEventListener(type: string, listener?: (EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void)) | undefined, options?: AddEventListenerOptions | undefined): void;
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
         throttle(func: (arg?: any) => void, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: (arg?: any) => void): void;
         filterObject(object: any, predicate: (object: any) => boolean, _depth?: number, _chain?: any[], _i?: number): any;
@@ -32,7 +33,7 @@ declare const Options_base: {
         stopPropagation(event: CustomEvent<any>): void;
     };
     [x: string]: any;
-    readonly Properties: any;
+    readonly Properties: import("../core/io-node.js").PropertiesDeclaration;
 };
 export declare class Options extends Options_base {
     static get Properties(): {
@@ -46,6 +47,7 @@ export declare class Options extends Options_base {
             readonly: boolean;
             strict: boolean;
         };
+        lazy: boolean;
     };
     constructor(options?: Array<Item | any>, props?: {});
     option(value: any): any;

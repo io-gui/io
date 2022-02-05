@@ -151,18 +151,18 @@ export class IoGl extends IoElement {
         let frag = `
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
-        for (const name in this.css.__properties) {
-            const property = this.css.__protochain.properties[name];
+        for (const name in this.css._properties) {
+            const property = this.css._protochain.properties[name];
             frag += this.initPropertyUniform(name, property);
         }
         frag += '\n';
-        for (const prop in this.__properties) {
+        for (const prop in this._properties) {
             const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-            const property = this.__protochain.properties[prop];
+            const property = this._protochain.properties[prop];
             frag += this.initPropertyUniform(name, property);
         }
-        for (let i = this.__protochain.constructors.length; i--;) {
-            const constructor = this.__protochain.constructors[i];
+        for (let i = this._protochain.constructors.length; i--;) {
+            const constructor = this._protochain.constructors[i];
             const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
             if (glUtilsProp && glUtilsProp.get) {
                 frag += constructor.GlUtils;
@@ -189,20 +189,21 @@ export class IoGl extends IoElement {
         gl.attachShader(program, fragShader);
         return program;
     }
+    css;
     constructor(properties = {}) {
         super(properties);
         this.css = IoThemeSingleton;
         // TODO: improve code clarity
         this._vecLengths = {};
-        for (const name in this.css.__properties) {
-            const property = this.css.__protochain.properties[name];
+        for (const name in this.css._properties) {
+            const property = this.css._protochain.properties[name];
             if (property.notify && property.type === Array) {
                 this._vecLengths[name] = property.value.length;
             }
         }
-        for (const prop in this.__properties) {
+        for (const prop in this._properties) {
             const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-            const property = this.__protochain.properties[prop];
+            const property = this._protochain.properties[prop];
             if (property.notify && property.type === Array) {
                 this._vecLengths[name] = property.value.length;
             }
@@ -223,7 +224,6 @@ export class IoGl extends IoElement {
         gl.bindBuffer(gl.ARRAY_BUFFER, uvBuff);
         gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(uv);
-        this.render = this.render.bind(this);
         // this.template([['img', {id: 'canvas'}]]);
         // this.$.canvas.onload = () => { this.$.canvas.loading = false; };
         this.template([['canvas', { id: 'canvas', class: 'io-gl-canvas' }]]);
@@ -254,30 +254,30 @@ export class IoGl extends IoElement {
     }
     cssMutated() {
         this.updateCssUniforms();
-        this.requestAnimationFrameOnce(this.render);
+        this.requestAnimationFrameOnce(this._render);
     }
     changed() {
         // TODO: unhack when ResizeObserver is available in Safari
         if (!window.ResizeObserver) {
             setTimeout(() => {
                 this.onResized();
-                this.requestAnimationFrameOnce(this.render);
+                this.requestAnimationFrameOnce(this._render);
             });
         }
         else {
-            this.requestAnimationFrameOnce(this.render);
+            this.requestAnimationFrameOnce(this._render);
         }
     }
-    render() {
+    _render() {
         const width = this.size[0] * this.pxRatio;
         const height = this.size[1] * this.pxRatio;
         if (!width || !height)
             return;
         this.setShaderProgram();
         // TODO: dont brute-force uniform update.
-        for (const p in this.__properties) {
+        for (const p in this._properties) {
             const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-            this.updatePropertyUniform(name, this.__properties[p]);
+            this.updatePropertyUniform(name, this._properties[p]);
         }
         canvas.width = width;
         canvas.height = height;
@@ -303,8 +303,8 @@ export class IoGl extends IoElement {
         }
     }
     updateCssUniforms() {
-        for (const name in this.css.__properties) {
-            this.updatePropertyUniform(name, this.css.__properties[name]);
+        for (const name in this.css._properties) {
+            this.updatePropertyUniform(name, this.css._properties[name]);
         }
     }
     setUniform(name, type, value) {

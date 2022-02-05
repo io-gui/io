@@ -142,7 +142,7 @@ export class IoProperties extends IoElement {
             this._currentConfig = this.config;
             this._currentValue = this.value;
             this._currentLength = propLength;
-            this._config = this.__proto__.__config.getConfig(this.value, this.config);
+            this._config = this.__proto__._config.getConfig(this.value, this.config);
             return this._config;
         }
         return this._config;
@@ -204,10 +204,10 @@ export class IoProperties extends IoElement {
 }
 const RegisterIoProperties = function (element) {
     RegisterIoElement(element);
-    Object.defineProperty(element.prototype, '__config', { value: new Config(element.prototype.__protochain.constructors) });
+    Object.defineProperty(element.prototype, '_config', { writable: true, value: new Config(element.prototype._protochain.constructors) });
 };
 IoProperties.RegisterConfig = function (config) {
-    this.prototype.__config.registerConfig(config);
+    this.prototype._config.registerConfig(config);
 };
 RegisterIoProperties(IoProperties);
 //# sourceMappingURL=properties.js.map

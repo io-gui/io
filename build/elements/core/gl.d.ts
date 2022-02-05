@@ -1,5 +1,6 @@
 import { IoElement } from '../../core/io-element.js';
-import { Property } from '../../core/internals/properties.js';
+import { IoThemeSingleton } from './theme.js';
+import { Property } from '../../core/internals/property.js';
 declare type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
 export declare class IoGl extends IoElement {
     static get Style(): string;
@@ -9,11 +10,12 @@ export declare class IoGl extends IoElement {
     static get Frag(): string;
     initPropertyUniform(name: string, property: Property): string;
     initShader(): WebGLProgram;
+    css: typeof IoThemeSingleton;
     constructor(properties?: Record<string, any>);
     onResized(): void;
     cssMutated(): void;
     changed(): void;
-    render(): void;
+    _render(): void;
     setShaderProgram(): void;
     updatePropertyUniform(name: string, property: Property): void;
     updateCssUniforms(): void;

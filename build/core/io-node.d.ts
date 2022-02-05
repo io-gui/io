@@ -1,12 +1,14 @@
-import { Binding } from './internals/propertyBinder.js';
-import { PropertyDefinitionWeak } from './internals/properties.js';
-import { ListenerDefinitionWeak } from './internals/eventDispatcher.js';
+import { Binding } from './internals/binding.js';
+import { ChangeQueue } from './internals/changeQueue.js';
+import { Property, PropertyDefinitionWeak } from './internals/property.js';
+import { EventDispatcher, ListenerDefinitionWeak } from './internals/eventDispatcher.js';
 export declare type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
 export declare type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
 export interface IoNodeConstructor<T> {
     new (...args: any[]): T;
     Properties?: PropertiesDeclaration;
     Listeners?: ListenersDeclaration;
+    Style?: string;
     prototype?: any;
     name?: string;
 }
@@ -42,26 +44,17 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * Node class does not use `compose` by itself but this feature is available to its sublasses.
          */
         readonly compose: ComposedProperties;
+        readonly _properties: Record<string, Property>;
+        readonly _bindings: Record<string, Binding>;
+        readonly _changeQueue: ChangeQueue;
+        readonly _eventDispatcher: EventDispatcher;
         /**
-         * Connects the instance to another node or element.
-         * @param {IoNode} node - Node to connect to.
-         * @return {this} this
+         * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+         * @param {string} name Property name to set value of.
+         * @param {any} value Peroperty value.
+         * @param {boolean} [skipDispatch] flag to skip event dispatch.
          */
-        connect(node?: IoNode | HTMLElement | Document | Window): this;
-        /**
-         * Disconnects the instance from an another node or element.
-         * @param {IoNode} node - Node to disconnect from.
-         * @return {this} this
-         * */
-        disconnect(node?: IoNode | HTMLElement | Document | Window): this;
-        /**
-         * Connected callback.
-         */
-        connectedCallback(): void;
-        /**
-         * Disconnected callback.
-         */
-        disconnectedCallback(): void;
+        setPropertyValue(name: string, value: any, skipDispatch?: boolean | undefined): void;
         /**
          * Disposes all internals.
          * Use this when instance is no longer needed.
@@ -151,7 +144,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -175,7 +168,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
         stopPropagation(event: CustomEvent): void;
     };
     [x: string]: any;
-    readonly Properties: any;
+    readonly Properties: PropertiesDeclaration;
 };
 /**
  * Register function to be called once per class.
@@ -200,26 +193,17 @@ declare const IoNode_base: {
          * Node class does not use `compose` by itself but this feature is available to its sublasses.
          */
         readonly compose: ComposedProperties;
+        readonly _properties: Record<string, Property>;
+        readonly _bindings: Record<string, Binding>;
+        readonly _changeQueue: ChangeQueue;
+        readonly _eventDispatcher: EventDispatcher;
         /**
-         * Connects the instance to another node or element.
-         * @param {IoNode} node - Node to connect to.
-         * @return {this} this
+         * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+         * @param {string} name Property name to set value of.
+         * @param {any} value Peroperty value.
+         * @param {boolean} [skipDispatch] flag to skip event dispatch.
          */
-        connect(node?: IoNode | HTMLElement | Window | Document): any;
-        /**
-         * Disconnects the instance from an another node or element.
-         * @param {IoNode} node - Node to disconnect from.
-         * @return {this} this
-         * */
-        disconnect(node?: IoNode | HTMLElement | Window | Document): any;
-        /**
-         * Connected callback.
-         */
-        connectedCallback(): void;
-        /**
-         * Disconnected callback.
-         */
-        disconnectedCallback(): void;
+        setPropertyValue(name: string, value: any, skipDispatch?: boolean | undefined): void;
         /**
          * Disposes all internals.
          * Use this when instance is no longer needed.
@@ -309,7 +293,7 @@ declare const IoNode_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -333,7 +317,7 @@ declare const IoNode_base: {
         stopPropagation(event: CustomEvent<any>): void;
     };
     [x: string]: any;
-    readonly Properties: any;
+    readonly Properties: PropertiesDeclaration;
 };
 /**
  * IoNodeMixin applied to `Object` class.

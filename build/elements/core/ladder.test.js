@@ -92,8 +92,8 @@ export default class {
                     chai.expect($('.io-up1').getAttribute('role')).to.equal('spinbutton');
                     chai.expect($('.io-up1').getAttribute('type')).to.equal('number');
                     chai.expect($('.io-up1').getAttribute('aria-label')).to.equal('1');
-                    chai.expect($('.io-up1').getAttribute('aria-valuemax')).to.equal('Infinity');
-                    chai.expect($('.io-up1').getAttribute('aria-valuemin')).to.equal('-Infinity');
+                    // chai.expect($('.io-up1').getAttribute('aria-valuemax')).to.equal('Infinity');
+                    // chai.expect($('.io-up1').getAttribute('aria-valuemin')).to.equal('-Infinity');
                     // TODO: test with src element
                     // chai.expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('0');
                     // this.element.value = 3;

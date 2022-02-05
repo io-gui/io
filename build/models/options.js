@@ -16,6 +16,7 @@ export class Options extends IoNodeMixin(Array) {
                 readonly: true,
                 strict: true,
             },
+            lazy: true // TODO: test and recosider
         };
     }
     constructor(options = [], props = {}) {
@@ -34,7 +35,6 @@ export class Options extends IoNodeMixin(Array) {
             this.push(option);
             option.addEventListener('selected-changed', this.onItemSelectedChanged);
             option.addEventListener('path-changed', this.onItemSelectedPathChanged);
-            option.connect(this);
         }
     }
     option(value) {

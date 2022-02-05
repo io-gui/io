@@ -28,7 +28,9 @@ class IoNode2 extends IoNodeMixin(Object3) {
 class FakeIoNode1 {
     static get Properties() {
         return {
-            prop1: {}
+            prop1: {
+                notify: false
+            }
         };
     }
     static get Listeners() {
@@ -38,6 +40,9 @@ class FakeIoNode1 {
             listener3: ['_function1', { capture: true }],
             listener4: () => { }
         };
+    }
+    static get Style() {
+        return 'a';
     }
     function1() { }
     onFunction1() { }
@@ -49,6 +54,9 @@ class FakeIoNode2 extends FakeIoNode1 {
     _function2() { }
     static get Properties() {
         return {
+            prop1: {
+                observe: true
+            },
             prop2: {}
         };
     }
@@ -59,11 +67,16 @@ class FakeIoNode2 extends FakeIoNode1 {
             listener3: ['_function1', { passive: true }]
         };
     }
+    static get Style() {
+        return 'b';
+    }
+}
+class FakeIoNode3 extends FakeIoNode2 {
 }
 export default class {
     run() {
         describe('ProtoChain', () => {
-            it('Should include all inherited constructors', () => {
+            it('Should include an array of all inherited constructors', () => {
                 let constructors = new ProtoChain(Array3).constructors;
                 chai.expect(constructors[0]).to.be.equal(Array3);
                 chai.expect(constructors[1]).to.be.equal(Array2);
@@ -85,7 +98,7 @@ export default class {
                 constructors = new ProtoChain(IoNode2).constructors;
                 chai.expect(constructors[0]).to.be.equal(IoNode2);
             });
-            it('Should terminate at `IoNode` and `IoElement` or before `HTMLElement`, `Object` or `Array`', () => {
+            it('Should end constructor array at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`', () => {
                 let constructors = new ProtoChain(Array3).constructors;
                 chai.expect(constructors[3]).to.be.equal(undefined);
                 constructors = new ProtoChain(Object3).constructors;
@@ -99,11 +112,11 @@ export default class {
                 constructors = new ProtoChain(IoNode2).constructors;
                 chai.expect(constructors[1]).to.be.equal(undefined);
             });
-            it('Should include all functions starting with "on" or "_"', () => {
+            it('Should include an array of auto-binding functions starting with "on" or "_"', () => {
                 const protoChain = new ProtoChain(FakeIoNode2);
-                chai.expect(JSON.stringify(protoChain.functions)).to.be.equal(JSON.stringify(['onFunction2', '_function2', 'onFunction1', '_function1']));
+                chai.expect(protoChain.functions).to.be.eql(['onFunction2', '_function2', 'onFunction1', '_function1']);
             });
-            it('Should bind the functions to specified instance with `.bind(node)` function', () => {
+            it('Should bind the auto-binding functions to specified instance with `.bindFunctions(node)` function', () => {
                 const protoChain = new ProtoChain(FakeIoNode2);
                 const node = new FakeIoNode2();
                 protoChain.bindFunctions(node);
@@ -114,16 +127,28 @@ export default class {
                 chai.expect(node.onFunction2.name).to.be.equal('bound onFunction2');
                 chai.expect(node._function2.name).to.be.equal('bound _function2');
             });
-            it('Should include a list of all declared properties', () => {
+            it('Should include all declared properties correctly', () => {
                 const protoChain = new ProtoChain(FakeIoNode2);
-                chai.expect(JSON.stringify(Object.keys(protoChain.properties))).to.be.equal(JSON.stringify(['prop1', 'prop2']));
+                chai.expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2']);
+                chai.expect(protoChain.properties).to.be.eql({
+                    prop1: { value: undefined, type: undefined, binding: undefined, notify: false, reflect: 0, observe: true, readonly: false, strict: false, enumerable: true },
+                    prop2: { value: undefined, type: undefined, binding: undefined, notify: true, reflect: 0, observe: false, readonly: false, strict: false, enumerable: true },
+                });
             });
-            it('Should include a list of all declared listeners', () => {
+            it('Should include all declared listeners correctly', () => {
                 const protoChain = new ProtoChain(FakeIoNode2);
-                chai.expect(JSON.stringify(Object.keys(protoChain.listeners))).to.be.equal(JSON.stringify(['listener1', 'listener3', 'listener4', 'listener2']));
-                chai.expect(JSON.stringify(protoChain.listeners['listener1'])).to.be.equal(JSON.stringify([['function1'], ['_function2']]));
-                chai.expect(JSON.stringify(protoChain.listeners['listener2'])).to.be.equal(JSON.stringify([['function2', { capture: true, passive: true }]]));
-                chai.expect(JSON.stringify(protoChain.listeners['listener3'])).to.be.equal(JSON.stringify([['_function1', { capture: true, passive: true }]]));
+                chai.expect(Object.keys(protoChain.listeners)).to.be.eql(['listener1', 'listener3', 'listener4', 'listener2']);
+                chai.expect(protoChain.listeners['listener1']).to.be.eql([['function1'], ['_function2']]);
+                chai.expect(protoChain.listeners['listener2']).to.be.eql([['function2', { capture: true, passive: true }]]);
+                chai.expect(protoChain.listeners['listener3']).to.be.eql([['_function1', { capture: true, passive: true }]]);
+            });
+            it('Should include all declared style strings correctly', () => {
+                const protoChain = new ProtoChain(FakeIoNode3);
+                chai.expect(protoChain.style).to.be.equal('a\nb\n');
+            });
+            it('Should include names of all observed object properties', () => {
+                const protoChain = new ProtoChain(FakeIoNode2);
+                chai.expect(protoChain.observedObjects).to.be.eql(['prop1']);
             });
         });
     }

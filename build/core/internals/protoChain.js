@@ -1,95 +1,132 @@
-import { hardenPropertyDefinition, assignPropertyDefinition } from './properties.js';
+import { PropertyDefinition, assignPropertyDefinition } from './property.js';
 import { hardenListenerDefinition, assignListenerDefinition } from './eventDispatcher.js';
 /**
- * Internal utility class that contains usefull information about inherited constructors, function names, properties, listeners,
- * as well as some utility functions. Inherited information is gathered automatically by prototype chain traversal
- * that terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+ * Internal utility class that contains usefull information about class inheritance such as:
+ * - Array of inherited class constructors up until `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
+ * - Array of auto-binding function names that start with "on" or "_"
+ * - Properties declared in `static get Properties()` return oject
+ * - Listeners declared in `static get Listeners()` return oject
+ * - CSS style string declared in `static get Style()` return string
+ * - Array of property names with `observed: true`
+ *
+ * Inherited information is aggregated automatically by prototype chain traversal that
+ * It collects information from inhertited classes specified in static getters in an additive manner,
+ * respecting the order of inheritance.
  */
 export class ProtoChain {
     /*
-     * Automatically generated array of all constructors inherited from the prototype chain.
+     * Array of inherited class constructors up until `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
      */
     constructors = [];
     /*
-     * Automatically generated array of all function names that start with "on" or "_" inherited from the prototype chain.
+     * Array of auto-binding function names that start with "on" or "_".
      */
     functions = [];
     /*
-     * Automatically generated array of all properties defined as `static get Properties()` return objects in inherited classes.
+     * Properties declared in `static get Properties()` return oject.
      */
     properties = {};
     /*
-     * Automatically generated array of all listeners defined as `static get Listeners()` return objects in inherited classes.
+     * Listeners declared in `static get Listeners()` return oject.
      */
     listeners = {};
-    /**
-     * Creates an instance of `ProtoChain` and initializes the arrays of inherited contructors, function names, properties and listeners.
-     * @param {Constructor} nodeConstructor - Prototype object.
+    /*
+     * CSS style string declared in `static get Style()` return string.
      */
-    constructor(nodeConstructor) {
-        let proto = nodeConstructor.prototype;
+    style = '';
+    /*
+     * Array of property names with `observed: true`.
+     */
+    observedObjects = [];
+    /**
+     * Creates an instance of `ProtoChain`.
+     * @param {IoNodeConstructor<any>} ioNodeClass - Owner `IoNode`-derived class.
+     */
+    constructor(ioNodeClass) {
+        let proto = ioNodeClass.prototype;
+        // Iterate through the prototype chain to aggregate inheritance information.
+        // Terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
         while (proto
-            && nodeConstructor.name !== 'classConstructor'
-            && (nodeConstructor) !== HTMLElement
-            && (nodeConstructor) !== Object
-            && (nodeConstructor) !== Array) {
-            // Add constructor
-            this.constructors.push(nodeConstructor);
-            // Add function names
-            const fnames = Object.getOwnPropertyNames(proto);
-            for (let j = 0; j < fnames.length; j++) {
-                const fname = fnames[j];
-                if (fname === 'constructor')
+            && ioNodeClass.name !== 'classConstructor'
+            && (ioNodeClass) !== HTMLElement
+            && (ioNodeClass) !== Object
+            && (ioNodeClass) !== Array) {
+            // Add class constructor to array
+            this.constructors.push(ioNodeClass);
+            // Add auto-binding function names
+            const names = Object.getOwnPropertyNames(proto);
+            for (let j = 0; j < names.length; j++) {
+                const fn = names[j];
+                const propDesr = Object.getOwnPropertyDescriptor(proto, fn);
+                if (propDesr === undefined || propDesr.get || propDesr.set)
                     continue;
-                const prop = Object.getOwnPropertyDescriptor(proto, fname);
-                if (prop === undefined || prop.get || prop.set)
-                    continue;
-                if (typeof proto[fname] === 'function') {
-                    if (this.functions.indexOf(fname) === -1 && (fname.startsWith('_') || fname.startsWith('on'))) {
-                        this.functions.push(fname);
+                if (typeof proto[fn] === 'function') {
+                    if (this.functions.indexOf(fn) === -1 && (fn.startsWith('_') || fn.startsWith('on'))) {
+                        this.functions.push(fn);
                     }
                 }
             }
+            // Concatinate style strings
+            if (ioNodeClass.Style && this.style.indexOf(ioNodeClass.Style) === -1) {
+                this.style = ioNodeClass.Style + '\n' + this.style;
+            }
             // Continue prototype traversal
             proto = proto.__proto__;
-            nodeConstructor = proto.constructor;
+            ioNodeClass = proto.constructor;
         }
-        // Properties and listeners are assigned in reverse
+        // Iterate through the prototype chain once again in reverse to
+        // aggregate inherited properties and listeners.
         for (let i = this.constructors.length; i--;) {
             // Add properties
             const props = this.constructors[i].Properties;
-            for (const p in props) {
-                if (!this.properties[p])
-                    this.properties[p] = hardenPropertyDefinition(props[p]);
+            for (const name in props) {
+                const hardPropDef = new PropertyDefinition(props[name]);
+                if (!this.properties[name])
+                    this.properties[name] = hardPropDef;
                 else
-                    assignPropertyDefinition(this.properties[p], hardenPropertyDefinition(props[p]));
-                // TODO: Document or reconsider.
-                if (p.charAt(0) === '_') {
-                    this.properties[p].notify = false;
-                    this.properties[p].enumerable = false;
-                }
+                    assignPropertyDefinition(this.properties[name], hardPropDef);
             }
             // Add listeners
             const listeners = this.constructors[i].Listeners;
-            for (const l in listeners) {
-                if (listeners[l]) {
-                    this.listeners[l] = this.listeners[l] || [];
-                    assignListenerDefinition(this.listeners[l], hardenListenerDefinition(listeners[l]));
+            for (const lsnrName in listeners) {
+                if (listeners[lsnrName]) {
+                    this.listeners[lsnrName] = this.listeners[lsnrName] || [];
+                    assignListenerDefinition(this.listeners[lsnrName], hardenListenerDefinition(listeners[lsnrName]));
                 }
             }
         }
+        // Create a list of observed objects
+        for (const name in this.properties) {
+            if (this.properties[name].observe) {
+                debug: {
+                    const isNull = this.properties[name].value === null;
+                    const isUndefined = this.properties[name].value === undefined;
+                    const isObject = this.properties[name].value instanceof Object;
+                    if ([String, Number, Boolean].indexOf(this.properties[name].type) !== -1 ||
+                        (!isNull && !isUndefined && !isObject)) {
+                        console.warn('Property `observe` is only intended for object properties!');
+                    }
+                }
+                this.observedObjects.push(name);
+            }
+        }
+        debug: {
+            Object.defineProperty(this, 'constructors', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'functions', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'properties', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'listeners', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'style', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'observedObjects', { enumerable: false, writable: false });
+        }
     }
     /**
-     * Binds all functions from the `.functions` list to specified instance.
+     * Binds all auto-binding functions from the `.functions` list to specified `IoNode` instance.
      * @param {IoNode} node - `IoNode` instance to bind functions to.
      */
     bindFunctions(node) {
         for (let i = this.functions.length; i--;) {
             Object.defineProperty(node, this.functions[i], { value: node[this.functions[i]].bind(node) });
         }
-    }
-    dispose() {
-        console.log('TODO');
     }
 }
 //# sourceMappingURL=protoChain.js.map

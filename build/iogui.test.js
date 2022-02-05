@@ -1,11 +1,11 @@
 import { IoElement, RegisterIoElement } from './iogui.js';
-import Listeners from './core/internals/eventDispatcher.test.js';
-import Properties from './core/internals/properties.test.js';
 import ProtoChain from './core/internals/protoChain.test.js';
+import Property from './core/internals/property.test.js';
+import Binding from './core/internals/binding.test.js';
+import EventDispatcher from './core/internals/eventDispatcher.test.js';
 import ChangeQueue from './core/internals/changeQueue.test.js';
-import PropertyBinder from './core/internals/propertyBinder.test.js';
-import Node from './core/io-node.test.js';
-import Element from './core/io-element.test.js';
+// import Node from './core/io-node.test.js';
+// import Element from './core/io-element.test.js';
 // import Item from './elements/core/item.test.js';
 // import Content from './elements/core/content.test.js'; // TODO
 // import Gl from './elements/core/gl.test.js';
@@ -25,7 +25,7 @@ import Element from './core/io-element.test.js';
 // import Ladder from './elements/core/ladder.test.js';
 // import Theme from './elements/core/theme.test.js';
 // import Collapsable from "./elements/layout/collapsable.test.js";
-// import Properties from "./elements/object/properties.test.js";
+// import Property from "./elements/object/properties.test.js";
 // import Object from "./elements/object/object.test.js";
 // import Inspector from "./elements/object/inspector.test.js";
 // import OptionMenu from "./elements/menus/option-menu.test.js";
@@ -37,13 +37,13 @@ mochaDiv.style.display = 'none';
 let testCompleted = false;
 function runTests() {
     if (!testCompleted) {
-        new Listeners().run();
-        new Properties().run();
         new ProtoChain().run();
+        new Property().run();
+        new Binding().run();
+        new EventDispatcher().run();
         new ChangeQueue().run();
-        new PropertyBinder().run();
-        new Node().run();
-        new Element().run();
+        // new Node().run();
+        // new Element().run();
         // new Item().run();
         // new Content().run();
         // new Gl().run();

@@ -58,11 +58,11 @@ export class IoSelectorTabs extends IoElement {
     }
     elementsChanged() {
         if (this.filter === null) {
-            this.__properties.filter.value = this.elements.map((element) => { return element[1].name; });
+            this.setPropertyValue('filter', this.elements.map((element) => { return element[1].name; }));
         }
     }
     editableChanged() {
-        if (this.editable && this.__isConnected)
+        if (this.editable && this._isConnected)
             this.connectDragListeners();
         else
             this.disconnectDragListeners();
@@ -82,16 +82,16 @@ export class IoSelectorTabs extends IoElement {
         this.disconnectDragListeners();
     }
     connectDragListeners() {
-        if (!this.__listening) {
+        if (!this._listening) {
             window.addEventListener('io-layout-tab-drag', this._onDrag);
             window.addEventListener('io-layout-tab-drag-end', this._onDragEnd);
         }
-        this.__listening = true;
+        this._listening = true;
     }
     disconnectDragListeners() {
         window.removeEventListener('io-layout-tab-drag', this._onDrag);
         window.removeEventListener('io-layout-tab-drag-end', this._onDragEnd);
-        this.__listening = false;
+        this._listening = false;
     }
     _onDrag(event) {
         const x = event.detail.clientX;
@@ -105,7 +105,7 @@ export class IoSelectorTabs extends IoElement {
             const rectContent = this.$.content.getBoundingClientRect();
             const isInLayout = this.parentNode.localName === 'io-layout';
             // TODO: unhack
-            _dropzone.__hovered = true;
+            _dropzone._hovered = true;
             index = this.filter.length;
             if (isInLayout && y < rect.top + 10) {
                 index = -2;
@@ -156,7 +156,7 @@ export class IoSelectorTabs extends IoElement {
                 }
             }
         }
-        _dropzone.style.opacity = _dropzone.__hovered ? 1 : 0;
+        _dropzone.style.opacity = _dropzone._hovered ? 1 : 0;
         this.$.tabs.dropIndex = index;
     }
     _onDragEnd(event) {
@@ -387,7 +387,7 @@ export class IoTabs extends IoElement {
             }
         }
         // TODO: unhack
-        _dropzone.__hovered = false;
+        _dropzone._hovered = false;
     }
     _onPointerup(event) {
         event.preventDefault();

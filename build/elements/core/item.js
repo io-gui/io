@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IoElement, RegisterIoElement } from '../../core/io-element.js';
 /*
  * Extends [`IoElement`](/#doc=core-element).
@@ -51,8 +50,8 @@ export class IoItem extends IoElement {
     }
     constructor(properties = {}) {
         super(properties);
-        Object.defineProperty(this, '__textNode', { enumerable: false, writable: true, value: document.createTextNode('') });
-        this.appendChild(this.__textNode);
+        Object.defineProperty(this, '_textNode', { enumerable: false, writable: true, value: document.createTextNode('') });
+        this.appendChild(this._textNode);
     }
     _onFocus(event) {
         this.addEventListener('blur', this._onBlur);

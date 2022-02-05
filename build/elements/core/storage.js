@@ -155,7 +155,6 @@ class IoStorage extends IoNode {
             nodes[props.key] = nodes[props.key] || this;
         this.binding = this.bind('value');
         this.getStorageValue();
-        this.connect(window);
     }
     getStorageValue() {
         const key = this.key;

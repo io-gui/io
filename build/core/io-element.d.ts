@@ -1,12 +1,13 @@
-import { IoNode } from './io-node.js';
+import { EventDispatcher } from './internals/eventDispatcher.js';
 declare const IoElement_base: {
     new (properties?: Record<string, any>, ...args: any[]): {
         [x: string]: any;
         readonly compose: Record<string, Record<string, any>> | null;
-        connect(node?: IoNode | HTMLElement | Window | Document): any;
-        disconnect(node?: IoNode | HTMLElement | Window | Document): any;
-        connectedCallback(): void;
-        disconnectedCallback(): void;
+        readonly _properties: Record<string, import("./index.js").Property>;
+        readonly _bindings: Record<string, import("./index.js").Binding>;
+        readonly _changeQueue: import("./index.js").ChangeQueue;
+        readonly _eventDispatcher: EventDispatcher;
+        setPropertyValue(name: string, value: any, skipDispatch?: boolean | undefined): void;
         dispose(): void;
         changed(): void;
         applyCompose(): void;
@@ -21,7 +22,7 @@ declare const IoElement_base: {
         setProperties(props: any): void;
         addEventListener(type: string, listener: EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void), options?: AddEventListenerOptions | undefined): void;
         removeEventListener(type: string, listener?: (EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void)) | undefined, options?: AddEventListenerOptions | undefined): void;
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
         throttle(func: (arg?: any) => void, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: (arg?: any) => void): void;
         filterObject(object: any, predicate: (object: any) => boolean, _depth?: number, _chain?: any[], _i?: number): any;
@@ -31,7 +32,7 @@ declare const IoElement_base: {
         stopPropagation(event: CustomEvent<any>): void;
     };
     [x: string]: any;
-    readonly Properties: any;
+    readonly Properties: import("./io-node.js").PropertiesDeclaration;
 };
 /**
  * Core `IoElement` class.

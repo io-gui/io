@@ -1,7 +1,7 @@
 import { ProtoChain } from './internals/protoChain.js';
-import { PropertyBinder, Binding } from './internals/propertyBinder.js';
+import { Binding } from './internals/binding.js';
 import { ChangeQueue } from './internals/changeQueue.js';
-import { Properties } from './internals/properties.js';
+import { Property } from './internals/property.js';
 import { EventDispatcher } from './internals/eventDispatcher.js';
 /**
  * Core mixin for `Node` classes.
@@ -37,6 +37,10 @@ export function IoNodeMixin(superclass) {
         get compose() {
             return null;
         }
+        _properties = {};
+        _bindings = {};
+        _changeQueue;
+        _eventDispatcher;
         /**
         * Creates a class instance and initializes the internals.
         * @param {Object} properties - Initial property values.
@@ -45,79 +49,102 @@ export function IoNodeMixin(superclass) {
             super(...args);
             debug: {
                 const constructor = this.__proto__.constructor;
-                if (constructor.__registeredAs !== constructor.name) {
+                if (constructor._registeredAs !== constructor.name) {
                     console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
                 }
             }
-            this.__protochain.bindFunctions(this);
-            Object.defineProperty(this, '__propertyBinder', { enumerable: false, value: new PropertyBinder(this) });
-            Object.defineProperty(this, '__changeQueue', { enumerable: false, value: new ChangeQueue(this) });
-            Object.defineProperty(this, '__eventDispatcher', { enumerable: false, value: new EventDispatcher(this) });
-            Object.defineProperty(this, '__properties', { enumerable: false, value: new Properties(this) });
+            this._protochain.bindFunctions(this);
+            this._changeQueue = new ChangeQueue(this);
+            Object.defineProperty(this, '_changeQueue', { enumerable: false });
+            this._eventDispatcher = new EventDispatcher(this);
+            Object.defineProperty(this, '_eventDispatcher', { enumerable: false });
+            for (const name in this._protochain.properties) {
+                const property = new Property(this._protochain.properties[name]);
+                this._properties[name] = property;
+                const value = property.value;
+                if (value !== undefined && value !== null) {
+                    // TODO: document special handling of object and node values
+                    if (typeof value === 'object') {
+                        this.queue(name, value, undefined);
+                    }
+                    else if (property.reflect !== undefined && property.reflect >= 1 && this._isIoElement) {
+                        // TODO: Resolve bi-directional reflection when attributes are set in html (role, etc...)
+                        this.setAttribute(name, value);
+                    }
+                }
+                if (property.binding)
+                    property.binding.addTarget(this, name);
+            }
+            Object.defineProperty(this, '_properties', { enumerable: false });
+            Object.defineProperty(this, '_bindings', { enumerable: false });
             Object.defineProperty(this, 'objectMutated', { enumerable: false, value: this.objectMutated.bind(this) });
             Object.defineProperty(this, 'objectMutatedThrottled', { enumerable: false, value: this.objectMutatedThrottled.bind(this) });
             Object.defineProperty(this, 'queueDispatch', { enumerable: false, value: this.queueDispatch.bind(this) });
             Object.defineProperty(this, 'queueDispatchLazy', { enumerable: false, value: this.queueDispatchLazy.bind(this) });
-            Object.defineProperty(this, 'connected', { enumerable: false, writable: true, value: false });
-            if (!this.__proto__.__isIoElement) {
-                Object.defineProperty(this, '__connections', { enumerable: false, value: [] });
+            if (this._protochain.observedObjects.length) {
+                window.addEventListener('object-mutated', this.objectMutated);
             }
             this.setProperties(properties);
         }
         /**
-         * Connects the instance to another node or element.
-         * @param {IoNode} node - Node to connect to.
-         * @return {this} this
+         * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+         * @param {string} name Property name to set value of.
+         * @param {any} value Peroperty value.
+         * @param {boolean} [skipDispatch] flag to skip event dispatch.
          */
-        connect(node = window) {
-            debug: if (this.__isIoElement) {
-                console.error('"connect()" function is not intended for DOM Elements!');
-            }
-            debug: if (this.__connections.indexOf(node) !== -1) {
-                console.warn('Node already connected to node');
-            }
-            this.__connections.push(node);
-            if (!this.connected)
-                this.connectedCallback();
-            return this;
-        }
-        /**
-         * Disconnects the instance from an another node or element.
-         * @param {IoNode} node - Node to disconnect from.
-         * @return {this} this
-         * */
-        disconnect(node = window) {
-            debug: if (this.__isIoElement) {
-                console.error('"disconnect()" function is not intended for DOM Elements!');
-            }
-            debug: if (this.__connections.indexOf(node) === -1) {
-                console.error('Node not connected to:', node);
-            }
-            this.__connections.splice(this.__connections.indexOf(node), 1);
-            if (this.__connections.length === 0 && this.connected) {
-                this.disconnectedCallback();
-            }
-            return this;
-        }
-        /**
-         * Connected callback.
-         */
-        connectedCallback() {
-            this.connected = true;
-            this.__properties.connect();
-            if (this.__observedObjects.length) {
-                window.addEventListener('object-mutated', this.objectMutated);
-            }
-            this.queueDispatch();
-        }
-        /**
-         * Disconnected callback.
-         */
-        disconnectedCallback() {
-            this.connected = false;
-            this.__properties.disconnect();
-            if (this.__observedObjects.length) {
-                window.removeEventListener('object-mutated', this.objectMutated);
+        setPropertyValue(name, value, skipDispatch) {
+            const prop = this._properties[name];
+            const oldValue = prop.value;
+            if (value !== oldValue) {
+                const binding = (value instanceof Binding) ? value : undefined;
+                if (binding) {
+                    const oldBinding = prop.binding;
+                    if (oldBinding && binding !== oldBinding) {
+                        oldBinding.removeTarget(this, name);
+                    }
+                    binding.addTarget(this, name);
+                    value = binding.value;
+                }
+                else {
+                    if (prop.strict && prop.type && !(value instanceof prop.type)) {
+                        debug: {
+                            console.warn(`IoGUI strict type mismatch for "${name}" property! Value automatically converted to "${prop.type.name}."`);
+                        }
+                        value = new prop.type(value);
+                    }
+                }
+                prop.value = value;
+                debug: {
+                    if (prop.type === String) {
+                        if (typeof value !== 'string') {
+                            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+                        }
+                    }
+                    else if (prop.type === Number) {
+                        if (typeof value !== 'number') {
+                            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+                        }
+                    }
+                    else if (prop.type === Boolean) {
+                        if (typeof value !== 'boolean') {
+                            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+                        }
+                    }
+                    else if (prop.type) {
+                        if (!(value instanceof prop.type)) {
+                            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+                        }
+                    }
+                }
+                if (prop.notify && oldValue !== value) {
+                    // TODO: consider skiping queue
+                    this.queue(name, value, oldValue);
+                    if (!skipDispatch) {
+                        this.queueDispatch();
+                    }
+                }
+                if (prop.reflect !== undefined && prop.reflect >= 1 && this._isIoElement)
+                    this.setAttribute(name, value);
             }
         }
         /**
@@ -125,13 +152,20 @@ export function IoNodeMixin(superclass) {
          * Use this when instance is no longer needed.
          */
         dispose() {
-            this.connected = false;
-            this.__connections.length = 0;
-            this.__changeQueue.dispose();
-            this.__propertyBinder.dispose();
-            this.__properties.dispose();
-            this.__eventDispatcher.dispose();
-            if (this.__observedObjects.length) {
+            this._changeQueue.dispose();
+            this._propertyBinder.dispose();
+            this._eventDispatcher.dispose();
+            for (const name in this._properties) {
+                if (this._properties[name].binding) {
+                    // TODO: test this specifically
+                    this._properties[name].binding?.removeTarget(this._node, name);
+                }
+            }
+            for (const name in this._bindings) {
+                this._bindings[name].dispose();
+                delete this._bindings[name];
+            }
+            if (this._protochain.observedObjects.length) {
                 window.removeEventListener('object-mutated', this.objectMutated);
             }
         }
@@ -148,12 +182,12 @@ export function IoNodeMixin(superclass) {
             const compose = this.compose;
             if (this.compose) {
                 for (const prop in compose) {
-                    debug: if (!this.__properties[prop] || typeof this.__properties[prop].value !== 'object') {
+                    debug: if (!this._properties[prop] || typeof this._properties[prop].value !== 'object') {
                         console.error(`Composed property ${prop} is not a Node or an object.`);
                         continue;
                     }
-                    const object = this.__properties[prop].value;
-                    if (object.__isIoNode) {
+                    const object = this._properties[prop].value;
+                    if (object._isIoNode) {
                         // TODO: make sure composed and declarative listeners are working together
                         object.setProperties(compose[prop]);
                     }
@@ -172,7 +206,7 @@ export function IoNodeMixin(superclass) {
          * @param {*} oldValue - Old property value.
          */
         queue(prop, value, oldValue) {
-            this.__changeQueue.queue(prop, value, oldValue);
+            this._changeQueue.queue(prop, value, oldValue);
         }
         /**
          * Dispatches the queue.
@@ -183,14 +217,14 @@ export function IoNodeMixin(superclass) {
                 this.throttle(this.queueDispatchLazy);
             }
             else {
-                this.__changeQueue.dispatch();
+                this._changeQueue.dispatch();
             }
         }
         /**
          * Dispatches the queue in the next rAF cycle.
          */
         queueDispatchLazy() {
-            this.__changeQueue.dispatch();
+            this._changeQueue.dispatch();
         }
         /**
          * Event handler for 'object-mutated' event emitted from the `window`.
@@ -200,9 +234,9 @@ export function IoNodeMixin(superclass) {
          * @param {Object} event.detail.object - Mutated object.
          */
         objectMutated(event) {
-            for (let i = 0; i < this.__observedObjects.length; i++) {
-                const prop = this.__observedObjects[i];
-                const value = this.__properties[prop].value;
+            for (let i = 0; i < this._protochain.observedObjects.length; i++) {
+                const prop = this._protochain.observedObjects[i];
+                const value = this._properties[prop].value;
                 if (value === event.detail.object) {
                     this.throttle(this.objectMutatedThrottled, prop, false);
                     return;
@@ -234,20 +268,23 @@ export function IoNodeMixin(superclass) {
          * @return {Binding} Binding object.
          */
         bind(prop) {
-            debug: if (!this.__properties[prop]) {
+            debug: if (!this._properties[prop]) {
                 console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
             }
-            return this.__propertyBinder.bind(prop);
+            this._bindings[prop] = this._bindings[prop] || new Binding(this, prop);
+            return this._bindings[prop];
         }
         /**
          * Unbinds a binding to a specified property`.
          * @param {string} prop - Property to unbind.
          */
         unbind(prop) {
-            this.__propertyBinder.unbind(prop);
-            const binding = this.__properties[prop].binding;
-            if (binding)
-                binding.removeTarget(this, prop);
+            if (this._bindings[prop])
+                this._bindings[prop].dispose();
+            delete this._bindings[prop];
+            if (this._properties[prop].binding) {
+                this._properties[prop].binding?.removeTarget(this, prop);
+            }
         }
         /**
          * Sets a property and emits `[property]-set` event.
@@ -270,18 +307,17 @@ export function IoNodeMixin(superclass) {
          */
         setProperties(props) {
             for (const p in props) {
-                if (this.__properties[p] === undefined) {
+                if (this._properties[p] === undefined) {
                     debug: if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
                         // TODO: consider converting import and style to properties
                         console.warn(`Property "${p}" is not defined`, this);
                     }
                     continue;
                 }
-                this.__properties.set(p, props[p], true);
+                this.setPropertyValue(p, props[p], true);
             }
-            this.__eventDispatcher.setPropListeners(props, this);
-            if (this.connected)
-                this.queueDispatch();
+            this._eventDispatcher.setPropListeners(props);
+            this.queueDispatch();
         }
         /**
          * Wrapper for addEventListener.
@@ -294,7 +330,7 @@ export function IoNodeMixin(superclass) {
                 console.warn(`${this.constructor.name}incorrect listener type.`, this);
                 return;
             }
-            this.__eventDispatcher.addEventListener(type, listener, options);
+            this._eventDispatcher.addEventListener(type, listener, options);
         }
         /**
          * Wrapper for removeEventListener.
@@ -303,7 +339,7 @@ export function IoNodeMixin(superclass) {
          * @param {Object} options - event listener options.
          */
         removeEventListener(type, listener, options) {
-            this.__eventDispatcher.removeEventListener(type, listener, options);
+            this._eventDispatcher.removeEventListener(type, listener, options);
         }
         /**
          * Wrapper for dispatchEvent.
@@ -313,7 +349,7 @@ export function IoNodeMixin(superclass) {
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
         dispatchEvent(type, detail = {}, bubbles = false, src) {
-            this.__eventDispatcher.dispatchEvent(type, detail, bubbles, src);
+            this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
         }
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
@@ -429,27 +465,22 @@ export function IoNodeMixin(superclass) {
  */
 export const RegisterIoNode = function (nodeConstructor) {
     const proto = nodeConstructor.prototype;
-    Object.defineProperty(proto, '__isIoNode', { value: true });
-    Object.defineProperty(nodeConstructor, '__registeredAs', { value: nodeConstructor.name });
-    Object.defineProperty(proto, '__protochain', { value: new ProtoChain(nodeConstructor) });
-    Object.defineProperty(proto, '__observedObjects', { value: [] });
-    const protoProps = proto.__protochain.properties;
-    for (const p in protoProps)
-        if (protoProps[p].observe)
-            proto.__observedObjects.push(p);
-    for (const p in protoProps) {
+    Object.defineProperty(proto, '_isIoNode', { value: true });
+    Object.defineProperty(nodeConstructor, '_registeredAs', { value: nodeConstructor.name });
+    Object.defineProperty(proto, '_protochain', { value: new ProtoChain(nodeConstructor) });
+    for (const p in proto._protochain.properties) {
         Object.defineProperty(proto, p, {
             get: function () {
-                return this.__properties.get(p);
+                return this._properties[p].value;
             },
             set: function (value) {
                 debug: {
-                    if (protoProps[p].readonly)
+                    if (proto._protochain.properties[p].readonly)
                         console.error(`IoGUI error. Cannot set value "${value}" to read only property "${p}"`);
                 }
-                this.__properties.set(p, value);
+                this.setPropertyValue(p, value);
             },
-            enumerable: !!protoProps[p].enumerable,
+            enumerable: !!proto._protochain.properties[p].enumerable,
             configurable: true,
         });
     }

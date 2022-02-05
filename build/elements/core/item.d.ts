@@ -1,7 +1,8 @@
+import { PropertiesDeclaration } from '../../core/io-node.js';
 import { IoElement } from '../../core/io-element.js';
 export declare class IoItem extends IoElement {
     static get Style(): string;
-    static get Properties(): any;
+    static get Properties(): PropertiesDeclaration;
     static get Listeners(): {
         focus: string;
         pointerdown: string;

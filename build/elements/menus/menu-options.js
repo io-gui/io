@@ -202,7 +202,7 @@ export class IoMenuOptions extends IoElement {
                     overflow = true;
                 }
             }
-            // hamburger.__properties.option.value = new Item({options: new Options(hamburgerOptions)});
+            // hamburger._properties.props.option.value = new Item({options: new Options(hamburgerOptions)});
             this.overflow = overflow;
         }
         else {
