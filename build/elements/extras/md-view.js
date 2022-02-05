@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/io-element.js';
-import marked from '../../../lib/marked.esm.js';
+import { marked } from '../../../lib/marked.esm.js';
 /*
 
  **/
@@ -149,7 +149,7 @@ export class IoMdView extends IoElement {
                 },
             });
             // TODO: unhack
-            this.innerHTML = marked(markdown, undefined, undefined);
+            this.innerHTML = marked(markdown);
             this.classList.toggle('io-loading', false);
             this.dispatchEvent('content-ready', {}, true);
         }
