@@ -1,7 +1,6 @@
 import {IoNode, RegisterIoNode} from '../../core/io-node.js';
 
 // TODO: test different value types
-
 class EmulatedLocalStorage {
   private store: Record<string, unknown> = {};
   private warned = false;

@@ -17,6 +17,7 @@
   "scripts": {
     "lint": "eslint src --fix",
     "rollup": "rollup -c",
+    "watch": "rollup -c -w",
     "uglify": "uglifyjs bundle/iogui.js -cmo bundle/iogui.js --comments",
     "docs": "typedoc",
     "build": "yarn lint && tsc && yarn rollup && yarn uglify && yarn docs"
@@ -38,7 +39,10 @@
   },
   "homepage": "https://iogui.dev",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.1.3",
     "@rollup/plugin-strip": "^2.1.0",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@rollup/plugin-replace": "^3.1.0",
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.0.0",
     "@types/resize-observer-browser": "^0.1.6",
@@ -51,9 +55,10 @@
     "mocha": "^9.1.3",
     "puppeteer": "^13.1.3",
     "rollup": "^2.67.0",
+    "tslib": "^2.3.1",
     "typedoc": "^0.22.10",
     "typedoc-plugin-markdown": "^3.11.7",
-    "typescript": "^4.5.3",
+    "typescript": "^4.5.5",
     "uglify-js": "^3.14.4"
   },
   "dependencies": {

@@ -34,6 +34,11 @@ class Binding$1 {
      * @param {string} property - Target property
      */
     addTarget(node, property) {
+        {
+            if (node._properties[property].binding && node._properties[property].binding !== this) {
+                console.warn('Binding target alredy has binding!');
+            }
+        }
         node._properties[property].binding = this;
         node.setPropertyValue(property, this.node[this.property]);
         const target = node;
@@ -90,6 +95,13 @@ class Binding$1 {
      * @param {ChangeEvent} event - Property change event.
      */
     onTargetChanged(event) {
+        {
+            if (this.targets.indexOf(event.target) === -1) {
+                console.error(`onTargetChanged() should never fire when target is removed from binding.
+          Please file an issue at https://github.com/arodic/iogui/issues.`);
+                return;
+            }
+        }
         const oldValue = this.node[this.property];
         const value = event.detail.value;
         if (oldValue !== value) {
@@ -104,6 +116,13 @@ class Binding$1 {
      * @param {ChangeEvent} event - Property change event.
      */
     onSourceChanged(event) {
+        {
+            if (event.target !== this.node) {
+                console.error(`onSourceChanged() should always originate form source node.
+          Please file an issue at https://github.com/arodic/iogui/issues.`);
+                return;
+            }
+        }
         const value = event.detail.value;
         for (let i = this.targets.length; i--;) {
             const target = this.targets[i];
@@ -255,6 +274,30 @@ class Property$1 {
      * @param {PropertyDefinition} propDef PropertyDefinition object
      */
     constructor(propDef) {
+        {
+            Object.keys(propDef).forEach(key => {
+                if (['value', 'type', 'reflect', 'notify', 'observe', 'readonly', 'strict', 'enumerable', 'binding'].indexOf(key) === -1) {
+                    console.warn(`PropertyDefinition: Invalid field ${key}`);
+                }
+            });
+            if (propDef.type !== undefined && typeof propDef.type !== 'function')
+                console.warn('Incorrect type for "type" field');
+            if (propDef.binding !== undefined && propDef.binding.constructor !== Binding$1)
+                console.warn('Incorrect type for "binding" field');
+            if (propDef.reflect !== undefined && ([-1, 0, 1, 2]).indexOf(propDef.reflect) === -1) {
+                console.error(`Invalid reflect field ${propDef.reflect}!`);
+            }
+            if (propDef.notify !== undefined && typeof propDef.notify !== 'boolean')
+                console.warn('Incorrect type for "notify" field');
+            if (propDef.observe !== undefined && typeof propDef.observe !== 'boolean')
+                console.warn('Incorrect type for "observe" field');
+            if (propDef.readonly !== undefined && typeof propDef.readonly !== 'boolean')
+                console.warn('Incorrect type for "readonly" field');
+            if (propDef.strict !== undefined && typeof propDef.strict !== 'boolean')
+                console.warn('Incorrect type for "strict" field');
+            if (propDef.enumerable !== undefined && typeof propDef.enumerable !== 'boolean')
+                console.warn('Incorrect type for "enumerable" field');
+        }
         this.value = propDef.value;
         this.type = propDef.type;
         this.binding = propDef.binding;
@@ -267,7 +310,11 @@ class Property$1 {
         // TODO: test
         if (this.binding instanceof Binding$1)
             this.value = this.binding.value;
-        else if (this.value === undefined && typeof this.type === 'function') ;
+        else if (this.value === undefined && typeof this.type === 'function') {
+            {
+                console.warn('Property value should always be initialized when type is defined!');
+            }
+        }
         else {
             if (this.type === Array && this.value instanceof Array) {
                 this.value = [...this.value];
@@ -305,6 +352,8 @@ const assignListenerDefinition = (defs, def) => {
         defs.push(def);
     }
 };
+// TODO: consider implementing "once" and "signal" options.
+const LISTENER_OPTIONS = ['capture', 'passive'];
 /**
  * Takes a node and a listener definition and returns a listener.
  * @param {IoNode} node `IoNode` instance
@@ -312,6 +361,17 @@ const assignListenerDefinition = (defs, def) => {
  * @return {Listener} Listener
  */
 const listenerFromDefinition = (node, def) => {
+    {
+        if (typeof def[0] !== 'string' && typeof def[0] !== 'function')
+            console.warn('Invalid listener type');
+        if (def[1]) {
+            if (typeof def[1] !== 'object')
+                console.warn('Invalid listener options type');
+            else if (Object.keys(def[1]).some(k => !(LISTENER_OPTIONS.includes(k)))) {
+                console.warn('Invalid listener options type');
+            }
+        }
+    }
     const listener = [typeof def[0] === 'string' ? node[def[0]] : def[0]];
     if (def[1])
         listener.push(def[1]);
@@ -340,6 +400,13 @@ class EventDispatcher$1 {
         this.node = node;
         this.isEventTarget = node instanceof EventTarget;
         this.setProtoListeners(node);
+        {
+            Object.defineProperty(this, 'node', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'isEventTarget', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'protoListeners', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'propListeners', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'addedListeners', { enumerable: false, writable: false });
+        }
     }
     /**
      * Sets `protoListeners` specified as `get Listeners()` class declarations.
@@ -411,6 +478,19 @@ class EventDispatcher$1 {
      */
     addEventListener(name, listener, options) {
         this.addedListeners[name] = this.addedListeners[name] || [];
+        {
+            const l = this.addedListeners[name].findIndex(l => l[0] === listener);
+            if (l !== -1)
+                console.warn(`Listener ${name} already added!`);
+            if (typeof listener !== 'function')
+                console.warn('Invalid listener type!');
+            if (options) {
+                if (typeof options !== 'object')
+                    console.warn('Invalid listener options type');
+                else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k))))
+                    console.warn('Invalid listener options type');
+            }
+        }
         this.addedListeners[name].push(options ? [listener, options] : [listener]);
         if (this.isEventTarget) {
             EventTarget.prototype.addEventListener.call(this.node, name, listener, options);
@@ -425,6 +505,19 @@ class EventDispatcher$1 {
      * @param {AddEventListenerOptions} [options] Event listener options
     */
     removeEventListener(name, listener, options) {
+        {
+            if (!this.addedListeners[name])
+                console.warn(`Listener ${name} not found!`);
+            if (listener && typeof listener !== 'function')
+                console.warn('Invalid listener type!');
+            if (options) {
+                if (typeof options !== 'object')
+                    console.warn('Invalid listener options type');
+                else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k)))) {
+                    console.warn('Invalid listener options type');
+                }
+            }
+        }
         if (!listener) {
             for (let i = 0; i < this.addedListeners[name].length; i++) {
                 if (this.isEventTarget) {
@@ -436,6 +529,10 @@ class EventDispatcher$1 {
         }
         else {
             const l = this.addedListeners[name].findIndex(item => item[0] = listener);
+            {
+                if (l === -1)
+                    console.warn(`Listener ${name} not found!`);
+            }
             this.addedListeners[name].splice(l, 1);
             if (this.isEventTarget) {
                 EventTarget.prototype.removeEventListener.call(this.node, name, listener, options);
@@ -463,6 +560,10 @@ class EventDispatcher$1 {
                 }
             }
             if (this.propListeners[name]) {
+                {
+                    if (this.propListeners[name].length > 1)
+                        console.warn(`PropListeners[${name}] array too long!`);
+                }
                 this.propListeners[name][0][0].call(node, { detail: detail, target: node, path: [node] });
             }
             if (this.addedListeners[name]) {
@@ -610,8 +711,25 @@ class ProtoChain$1 {
         // Create a list of observed objects
         for (const name in this.properties) {
             if (this.properties[name].observe) {
+                {
+                    const isNull = this.properties[name].value === null;
+                    const isUndefined = this.properties[name].value === undefined;
+                    const isObject = this.properties[name].value instanceof Object;
+                    if ([String, Number, Boolean].indexOf(this.properties[name].type) !== -1 ||
+                        (!isNull && !isUndefined && !isObject)) {
+                        console.warn('Property `observe` is only intended for object properties!');
+                    }
+                }
                 this.observedObjects.push(name);
             }
+        }
+        {
+            Object.defineProperty(this, 'constructors', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'functions', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'properties', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'listeners', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'style', { enumerable: false, writable: false });
+            Object.defineProperty(this, 'observedObjects', { enumerable: false, writable: false });
         }
     }
     /**
@@ -651,6 +769,10 @@ class ChangeQueue$1 {
      * @param {any} oldValue Old property value.
      */
     queue(property, value, oldValue) {
+        {
+            if (value === oldValue)
+                console.warn('ChangeQueue: queuing change with same value and oldValue!');
+        }
         const i = this.changes.findIndex(change => change.property === property);
         if (i === -1) {
             this.changes.push({ property, value, oldValue });
@@ -747,6 +869,12 @@ function IoNodeMixin(superclass) {
         */
         constructor(properties = {}, ...args) {
             super(...args);
+            {
+                const constructor = this.__proto__.constructor;
+                if (constructor._registeredAs !== constructor.name) {
+                    console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
+                }
+            }
             this._protochain.bindFunctions(this);
             this._changeQueue = new ChangeQueue$1(this);
             Object.defineProperty(this, '_changeQueue', { enumerable: false });
@@ -801,10 +929,35 @@ function IoNodeMixin(superclass) {
                 }
                 else {
                     if (prop.strict && prop.type && !(value instanceof prop.type)) {
+                        {
+                            console.warn(`IoGUI strict type mismatch for "${name}" property! Value automatically converted to "${prop.type.name}."`);
+                        }
                         value = new prop.type(value);
                     }
                 }
                 prop.value = value;
+                {
+                    if (prop.type === String) {
+                        if (typeof value !== 'string') {
+                            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+                        }
+                    }
+                    else if (prop.type === Number) {
+                        if (typeof value !== 'number') {
+                            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+                        }
+                    }
+                    else if (prop.type === Boolean) {
+                        if (typeof value !== 'boolean') {
+                            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+                        }
+                    }
+                    else if (prop.type) {
+                        if (!(value instanceof prop.type)) {
+                            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+                        }
+                    }
+                }
                 if (prop.notify && oldValue !== value) {
                     // TODO: consider skiping queue
                     this.queue(name, value, oldValue);
@@ -851,6 +1004,10 @@ function IoNodeMixin(superclass) {
             const compose = this.compose;
             if (this.compose) {
                 for (const prop in compose) {
+                    if (!this._properties[prop] || typeof this._properties[prop].value !== 'object') {
+                        console.error(`Composed property ${prop} is not a Node or an object.`);
+                        continue;
+                    }
                     const object = this._properties[prop].value;
                     if (object._isIoNode) {
                         // TODO: make sure composed and declarative listeners are working together
@@ -910,6 +1067,10 @@ function IoNodeMixin(superclass) {
                 //   this.throttle(this.objectMutatedThrottled, prop, false);
                 //   return;
                 // }
+                if (event.detail.objects) {
+                    console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');
+                    return;
+                }
             }
         }
         /**
@@ -929,6 +1090,9 @@ function IoNodeMixin(superclass) {
          * @return {Binding} Binding object.
          */
         bind(prop) {
+            if (!this._properties[prop]) {
+                console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
+            }
             this._bindings[prop] = this._bindings[prop] || new Binding$1(this, prop);
             return this._bindings[prop];
         }
@@ -966,6 +1130,10 @@ function IoNodeMixin(superclass) {
         setProperties(props) {
             for (const p in props) {
                 if (this._properties[p] === undefined) {
+                    if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
+                        // TODO: consider converting import and style to properties
+                        console.warn(`Property "${p}" is not defined`, this);
+                    }
                     continue;
                 }
                 this.setPropertyValue(p, props[p], true);
@@ -980,6 +1148,10 @@ function IoNodeMixin(superclass) {
          * @param {Object} options - event listener options.
          */
         addEventListener(type, listener, options) {
+            if (typeof listener !== 'function') {
+                console.warn(`${this.constructor.name}incorrect listener type.`, this);
+                return;
+            }
             this._eventDispatcher.addEventListener(type, listener, options);
         }
         /**
@@ -1118,12 +1290,17 @@ const RegisterIoNode = function (nodeConstructor) {
     Object.defineProperty(proto, '_isIoNode', { value: true });
     Object.defineProperty(nodeConstructor, '_registeredAs', { value: nodeConstructor.name });
     Object.defineProperty(proto, '_protochain', { value: new ProtoChain$1(nodeConstructor) });
+    Object.defineProperty(window, nodeConstructor.name, { value: nodeConstructor });
     for (const p in proto._protochain.properties) {
         Object.defineProperty(proto, p, {
             get: function () {
                 return this._properties[p].value;
             },
             set: function (value) {
+                {
+                    if (proto._protochain.properties[p].readonly)
+                        console.error(`IoGUI error. Cannot set value "${value}" to read only property "${p}"`);
+                }
                 this.setPropertyValue(p, value);
             },
             enumerable: !!proto._protochain.properties[p].enumerable,
@@ -1570,8 +1747,13 @@ Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
 <a href="https://www.apple.com/lae/safari/">Safari</a>`;
 // Global mixin record
 const mixinRecord = {};
+// Regular expressions for style string processing.
+const commentsRegex = new RegExp('(\\/\\*[\\s\\S]*?\\*\\/)', 'gi');
+const keyframeRegex = new RegExp('((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
+const mediaQueryRegex = new RegExp('((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
 const mixinRegex = new RegExp('((--[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
 const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
+const cssRegex = new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
 /**
  * Register function for `IoElement`. Registers custom element.
  * @param {IoElement} element - Element class to register.
@@ -1611,6 +1793,25 @@ const RegisterIoElement = function (element) {
             if (mixinRecord[name]) {
                 styleString = styleString.replace(apply[i], mixinRecord[name]);
             }
+            else {
+                console.warn('IoElement: cound not find mixin:', name);
+            }
+        }
+    }
+    {
+        let styleStringStripped = styleString;
+        styleStringStripped = styleStringStripped.replace(commentsRegex, '');
+        styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
+        styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
+        const match = styleStringStripped.match(cssRegex);
+        if (match) {
+            match.map((selector) => {
+                selector = selector.trim();
+                if (!selector.startsWith(':host')) {
+                    console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
+                    console.warn(selector);
+                }
+            });
         }
     }
     // Replace `:host` with element tag and add mixin CSS variables.
