@@ -13,11 +13,11 @@ const themePropDefaults =  {
 
 const themeDBDefaults = {
   light: Object.assign({
-    cssBackgroundColor: [0.95, 0.95, 0.95, 1],
-    cssBackgroundColorLight: [1, 1, 1, 1],
+    cssBackgroundColor: [1, 1, 1, 1],
+    cssBackgroundColorLight: [0.6, 0.6, 0.6, 1],
     cssBackgroundColorDark: [0.84, 0.84, 0.84, 1],
     cssBackgroundColorField: [0.92, 0.92, 0.92, 1],
-    cssColor: [0.16, 0.16, 0.16, 1],
+    cssColor: [0, 0, 0, 1],
     cssColorError: [0.91, 0.5, 0.5, 1],
     cssColorLink: [0.2, 0.75, 0.2, 1],
     cssColorFocus: [0.3, 0.6, 1, 1],
@@ -33,11 +33,11 @@ const themeDBDefaults = {
     cssColorShadow: [0, 0, 0, 0.2],
   }, themePropDefaults),
   dark: Object.assign({
-    cssBackgroundColor: [0.164, 0.164, 0.164, 1],
-    cssBackgroundColorLight: [0.22, 0.22, 0.22, 1],
-    cssBackgroundColorDark: [0.25, 0.25, 0.25, 1],
+    cssBackgroundColor: [0.065, 0.065, 0.065, 1],
+    cssBackgroundColorLight: [0.3, 0.3, 0.3, 1],
+    cssBackgroundColorDark: [0.5, 0.5, 0.5, 1],
     cssBackgroundColorField: [0.137, 0.137, 0.137, 1],
-    cssColor: [0.823, 0.823, 0.823, 1],
+    cssColor: [1, 1, 1, 1],
     cssColorError: [1, 0.376, 0.062, 1],
     cssColorLink: [0.75, 0.9, 0.59, 1],
     cssColorFocus: [0.3, 0.82, 1.4, 1],
@@ -242,7 +242,7 @@ export class IoTheme extends IoElement {
         --io-font-size: ${this.cssFontSize}px;
 
         --io-background-color: ${this._toCss(this.cssBackgroundColor)};
-        --io-background-color-highlight: ${this._toCss(this.cssBackgroundColorLight)};
+        --io-background-color-light: ${this._toCss(this.cssBackgroundColorLight)};
         --io-background-color-dark: ${this._toCss(this.cssBackgroundColorDark)};
         --io-background-color-field: ${this._toCss(this.cssBackgroundColorField)};
 

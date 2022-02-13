@@ -2457,11 +2457,11 @@ const themePropDefaults = {
 };
 const themeDBDefaults = {
     light: Object.assign({
-        cssBackgroundColor: [0.95, 0.95, 0.95, 1],
-        cssBackgroundColorLight: [1, 1, 1, 1],
+        cssBackgroundColor: [1, 1, 1, 1],
+        cssBackgroundColorLight: [0.6, 0.6, 0.6, 1],
         cssBackgroundColorDark: [0.84, 0.84, 0.84, 1],
         cssBackgroundColorField: [0.92, 0.92, 0.92, 1],
-        cssColor: [0.16, 0.16, 0.16, 1],
+        cssColor: [0, 0, 0, 1],
         cssColorError: [0.91, 0.5, 0.5, 1],
         cssColorLink: [0.2, 0.75, 0.2, 1],
         cssColorFocus: [0.3, 0.6, 1, 1],
@@ -2477,11 +2477,11 @@ const themeDBDefaults = {
         cssColorShadow: [0, 0, 0, 0.2],
     }, themePropDefaults),
     dark: Object.assign({
-        cssBackgroundColor: [0.164, 0.164, 0.164, 1],
-        cssBackgroundColorLight: [0.22, 0.22, 0.22, 1],
-        cssBackgroundColorDark: [0.25, 0.25, 0.25, 1],
+        cssBackgroundColor: [0.065, 0.065, 0.065, 1],
+        cssBackgroundColorLight: [0.3, 0.3, 0.3, 1],
+        cssBackgroundColorDark: [0.5, 0.5, 0.5, 1],
         cssBackgroundColorField: [0.137, 0.137, 0.137, 1],
-        cssColor: [0.823, 0.823, 0.823, 1],
+        cssColor: [1, 1, 1, 1],
         cssColorError: [1, 0.376, 0.062, 1],
         cssColorLink: [0.75, 0.9, 0.59, 1],
         cssColorFocus: [0.3, 0.82, 1.4, 1],
@@ -2685,7 +2685,7 @@ class IoTheme extends IoElement {
         --io-font-size: ${this.cssFontSize}px;
 
         --io-background-color: ${this._toCss(this.cssBackgroundColor)};
-        --io-background-color-highlight: ${this._toCss(this.cssBackgroundColorLight)};
+        --io-background-color-light: ${this._toCss(this.cssBackgroundColorLight)};
         --io-background-color-dark: ${this._toCss(this.cssBackgroundColorDark)};
         --io-background-color-field: ${this._toCss(this.cssBackgroundColorField)};
 
@@ -5734,7 +5734,7 @@ class IoItem extends IoElement {
     }
     :host[selected] {
       color: var(--io-color-link);
-      background-color: var(--io-background-color-highlight);
+      background-color: var(--io-background-color-light);
     }
     :host:focus {
       z-index: 200;
@@ -7053,7 +7053,7 @@ class IoLadderStep extends IoItem {
       display: inline-block;
       cursor: ew-resize;
       text-align: center;
-      background-color: var(--io-background-color-highlight);
+      background-color: var(--io-background-color-light);
       color: var(--io-color);
       align-self: stretch;
       touch-action: none;
@@ -7204,7 +7204,7 @@ class IoLadder extends IoElement {
     }
     :host > io-ladder-step:hover,
     :host > io-ladder-step:focus {
-      background-color: var(--io-background-color-highlight);
+      background-color: var(--io-background-color-light);
       border-color: var(--io-color-focus);
       transition: opacity 0.2s;
       opacity: 1;
@@ -8275,7 +8275,9 @@ function findClosingBracket(str, b) {
 }
 
 function checkSanitizeDeprecation(opt) {
-  if (opt && opt.sanitize && !opt.silent) ;
+  if (opt && opt.sanitize && !opt.silent) {
+    console.warn('marked(): sanitize and sanitizer parameters are deprecated since version 0.7.0, should not be used and will be removed in the future. Read more here: https://marked.js.org/#/USING_ADVANCED.md#options');
+  }
 }
 
 // copied from https://stackoverflow.com/a/5450113/806777
@@ -9647,6 +9649,7 @@ class Lexer {
       if (src) {
         const errMsg = 'Infinite loop on byte: ' + src.charCodeAt(0);
         if (this.options.silent) {
+          console.error(errMsg);
           break;
         } else {
           throw new Error(errMsg);
@@ -9830,6 +9833,7 @@ class Lexer {
       if (src) {
         const errMsg = 'Infinite loop on byte: ' + src.charCodeAt(0);
         if (this.options.silent) {
+          console.error(errMsg);
           break;
         } else {
           throw new Error(errMsg);
@@ -10283,6 +10287,7 @@ class Parser {
         default: {
           const errMsg = 'Token with "' + token.type + '" type was not found.';
           if (this.options.silent) {
+            console.error(errMsg);
             return;
           } else {
             throw new Error(errMsg);
@@ -10361,6 +10366,7 @@ class Parser {
         default: {
           const errMsg = 'Token with "' + token.type + '" type was not found.';
           if (this.options.silent) {
+            console.error(errMsg);
             return;
           } else {
             throw new Error(errMsg);
@@ -10746,10 +10752,10 @@ class IoMdView extends IoElement {
       color: var(--io-color-link);
     }
     :host strong code {
-      background: var(--io-background-color-highlight);
+      background: var(--io-background-color-light);
     }
     :host pre > code {
-      background: var(--io-background-color-highlight);
+      background: var(--io-background-color-light);
       color: inherit;
       line-height: 1.6em;
     }
@@ -10797,7 +10803,7 @@ class IoMdView extends IoElement {
       to {transform: rotate(360deg);}
     }
     :host .io-loading {
-      background-image: repeating-linear-gradient(135deg, var(--io-background-color-highlight), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-highlight) 10px) !important;
+      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
       background-repeat: repeat;
       position: relative;
     }
@@ -10904,7 +10910,7 @@ class IoSelector extends IoElement {
       }
     }
     :host .io-loading {
-      background-image: repeating-linear-gradient(135deg, var(--io-background-color-highlight), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-highlight) 10px) !important;
+      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
       background-repeat: repeat;
       position: relative;
     }
@@ -14078,3 +14084,4 @@ class IoObject extends IoElement {
 RegisterIoElement(IoObject);
 
 export { Binding, ChangeQueue, EventDispatcher, IoBoolean, IoBoolicon, IoButton, IoCollapsable, IoColorPanel, IoColorPicker, IoColorSlider, IoColorSliderAlpha, IoColorSliderBlue, IoColorSliderCyan, IoColorSliderGreen, IoColorSliderHs, IoColorSliderHue, IoColorSliderKey, IoColorSliderLevel, IoColorSliderMagenta, IoColorSliderRed, IoColorSliderSaturation, IoColorSliderSl, IoColorSliderSv, IoColorSliderValue, IoColorSliderYellow, IoColorVector, IoContent, IoContextMenu, IoElement, IoElementDemo, IoGl, IoIcon, IoIconsetSingleton, IoInspector, IoItem, IoLadderSingleton, IoLayerSingleton, IoLayout, IoMatrix, IoMdView, IoMdViewSelector, IoMenuItem, IoMenuOptions, IoNode, IoNodeMixin, IoNotify, IoNumber, IoNumberSlider, IoNumberSliderRange, IoObject, IoOptionMenu, IoProperties, IoSelector, IoSelectorSidebar, IoSelectorTabs, IoServiceLoader, IoSidebar, IoSlider, IoSliderRange, IoStorageFactory, IoString, IoSwitch, IoThemeSingleton, IoVector, Item, Options, Path, Property, PropertyDefinition, ProtoChain, RegisterIoElement, RegisterIoNode, assignListenerDefinition, assignPropertyDefinition, buildTree, hardenListenerDefinition, listenerFromDefinition };
+//# sourceMappingURL=iogui.js.map

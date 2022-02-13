@@ -231,7 +231,7 @@ ___
 
 #### Defined in
 
-[elements/core/storage.ts:214](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/storage.ts#L214)
+[elements/core/storage.ts:213](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/storage.ts#L213)
 
 ___
 

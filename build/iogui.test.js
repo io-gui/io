@@ -3049,3 +3049,4 @@ class IoTest extends IoElement$1 {
 RegisterIoElement$1(IoTest);
 
 export { IoTest };
+//# sourceMappingURL=iogui.test.js.map

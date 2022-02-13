@@ -24,7 +24,7 @@ export class IoItem extends IoElement {
     }
     :host[selected] {
       color: var(--io-color-link);
-      background-color: var(--io-background-color-highlight);
+      background-color: var(--io-background-color-light);
     }
     :host:focus {
       z-index: 200;

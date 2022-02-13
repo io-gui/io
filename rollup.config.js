@@ -1,5 +1,5 @@
 import path from 'path';
-import strip from '@rollup/plugin-strip';
+// import strip from '@rollup/plugin-strip';
 import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
@@ -50,12 +50,10 @@ function makeBuildTarget(src) {
   return {
     input: src,
     plugins: [
-      // html(),
-      // svg(),
-      strip({
-        debugger: false,
-        labels: ['debug']
-      }),
+      // strip({
+      //   debugger: false,
+      //   labels: ['debug']
+      // }),
       typescript({ tsconfig: './tsconfig.json', module: "ESNext" }),
       replace({
         "iogui.ts": "iogui.js"
@@ -63,6 +61,7 @@ function makeBuildTarget(src) {
     ],
     inlineDynamicImports: true,
     output: [{
+      sourcemap: true,
       format: 'esm',
       dir: 'build',
       indent: '  '

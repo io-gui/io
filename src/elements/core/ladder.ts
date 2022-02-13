@@ -32,7 +32,7 @@ export class IoLadderStep extends IoItem {
       display: inline-block;
       cursor: ew-resize;
       text-align: center;
-      background-color: var(--io-background-color-highlight);
+      background-color: var(--io-background-color-light);
       color: var(--io-color);
       align-self: stretch;
       touch-action: none;
@@ -181,7 +181,7 @@ export class IoLadder extends IoElement {
     }
     :host > io-ladder-step:hover,
     :host > io-ladder-step:focus {
-      background-color: var(--io-background-color-highlight);
+      background-color: var(--io-background-color-light);
       border-color: var(--io-color-focus);
       transition: opacity 0.2s;
       opacity: 1;

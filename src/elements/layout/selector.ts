@@ -47,7 +47,7 @@ export class IoSelector extends IoElement {
       }
     }
     :host .io-loading {
-      background-image: repeating-linear-gradient(135deg, var(--io-background-color-highlight), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-highlight) 10px) !important;
+      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
       background-repeat: repeat;
       position: relative;
     }
