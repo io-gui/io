@@ -1,5 +1,4 @@
-import {IoGl} from './gl.js';
-import {IoThemeSingleton} from './theme.js';
+import {IoGl, IoThemeSingleton} from '../../iogui.js';
 
 export default class {
   element: IoGl;

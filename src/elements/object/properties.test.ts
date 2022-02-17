@@ -1,4 +1,4 @@
-import {IoProperties} from './properties.js';
+import {IoProperties} from '../../iogui.js';
 
 const testValue = {
   'number': 0.5,

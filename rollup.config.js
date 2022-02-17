@@ -76,8 +76,8 @@ function makeBuildTarget(src) {
 
 const externals2 = [];
 function makeBundleTarget(src, target) {
-  const externalsCopy = [...externals2];
-  externals2.push(path.resolve(src));
+  // const externalsCopy = [...externals2];
+  // externals2.push(path.resolve(src));
   return {
     input: src,
     plugins: [
@@ -91,7 +91,7 @@ function makeBundleTarget(src, target) {
       file: target.replace('.ts', '.js'),
       indent: '  '
     }],
-    external: externalsCopy,
+    // external: externalsCopy,
     onwarn: (warning, warn) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       warn(warning);
@@ -102,6 +102,6 @@ function makeBundleTarget(src, target) {
 export default [
   makeBuildTarget('src/iogui.ts'),
   makeBuildTarget('src/iogui.test.ts'),
-  makeBundleTarget('build/iogui.js', 'bundle/iogui.js'),
-  makeBundleTarget('build/iogui.test.js', 'bundle/iogui.test.js'),
+  // makeBundleTarget('build/iogui.js', 'bundle/iogui.js'),
+  // makeBundleTarget('build/iogui.test.js', 'bundle/iogui.test.js'),
 ];

@@ -1,5 +1,4 @@
-import {IoNode, RegisterIoNode, ListenersDeclaration} from '../io-node.js';
-import {EventDispatcher} from './eventDispatcher.js';
+import {IoNode, RegisterIoNode, ListenersDeclaration, EventDispatcher} from '../../iogui.js';
 
 const handlerFunction = () => {};
 

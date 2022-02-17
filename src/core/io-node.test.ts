@@ -1,8 +1,4 @@
-import {Change} from './internals/changeQueue.js';
-import {Binding} from './internals/binding.js';
-import {ProtoChain} from './internals/protoChain.js';
-import {IoNode, RegisterIoNode, PropertiesDeclaration} from './io-node.js';
-import {IoElement, RegisterIoElement} from './io-element.js';
+import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertiesDeclaration, IoElement, RegisterIoElement } from '../iogui.js';
 
 async function waitTick(): Promise<void> {
   return new Promise((resolve) => {

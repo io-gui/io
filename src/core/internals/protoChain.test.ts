@@ -1,6 +1,4 @@
-import {ProtoChain} from './protoChain.js';
-import {IoNode, IoNodeMixin, PropertiesDeclaration, ListenersDeclaration} from '../io-node.js';
-import {IoElement} from '../io-element.js';
+import {ProtoChain, IoNode, IoNodeMixin, PropertiesDeclaration, ListenersDeclaration, IoElement} from '../../iogui.js';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}

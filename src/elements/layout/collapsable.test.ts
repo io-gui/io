@@ -1,4 +1,4 @@
-import {IoCollapsable} from './collapsable';
+import {IoCollapsable} from '../../iogui.js';
 
 export default class {
   element = new IoCollapsable();

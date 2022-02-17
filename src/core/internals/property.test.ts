@@ -1,6 +1,4 @@
-import {Binding} from './binding.js';
-import {PropertyDefinition, Property} from './property.js';
-import {IoNode, RegisterIoNode, PropertiesDeclaration} from '../io-node.js';
+import {Binding, PropertyDefinition, Property, IoNode, RegisterIoNode, PropertiesDeclaration} from '../../iogui.js';
 
 class Object1 {
   prop = true;

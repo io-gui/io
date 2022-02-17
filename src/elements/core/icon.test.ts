@@ -1,5 +1,4 @@
-import {IoIcon} from './icon.js';
-import {IoIconsetSingleton} from './iconset.js';
+import {IoIcon, IoIconsetSingleton} from '../../iogui.js';
 
 export default class {
   element = new IoIcon();

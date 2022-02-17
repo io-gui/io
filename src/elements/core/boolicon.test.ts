@@ -1,5 +1,4 @@
-import {IoBoolicon} from './boolicon.js';
-import {IoIconsetSingleton} from './iconset.js';
+import {IoBoolicon, IoIconsetSingleton} from '../../iogui.js';
 
 export default class {
   element = new IoBoolicon();

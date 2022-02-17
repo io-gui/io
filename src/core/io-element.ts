@@ -403,28 +403,29 @@ const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\
 
 /**
  * Register function for `IoElement`. Registers custom element.
- * @param {IoElement} element - Element class to register.
+ * @param {IoElement} elementConstructor - Element class to register.
  */
-const RegisterIoElement = function (element: typeof IoElement) {
-  RegisterIoNode(element);
+const RegisterIoElement = function (elementConstructor: typeof IoElement) {
+  RegisterIoNode(elementConstructor);
 
-  const localName = element.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  const localName = elementConstructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
-  Object.defineProperty(element, 'localName', {value: localName});
-  Object.defineProperty(element.prototype, 'localName', {value: localName});
+  Object.defineProperty(elementConstructor, 'localName', {value: localName});
+  Object.defineProperty(elementConstructor.prototype, 'localName', {value: localName});
 
-  Object.defineProperty(element, '_isIoElement', {enumerable: false, value: true});
-  Object.defineProperty(element.prototype, '_isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(elementConstructor, '_isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(elementConstructor.prototype, '_isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(window, elementConstructor.name, {value: elementConstructor});
 
   if (window.customElements !== undefined) {
-    window.customElements.define(localName, element as unknown as CustomElementConstructor);
+    window.customElements.define(localName, elementConstructor as unknown as CustomElementConstructor);
   } else {
     document.body.insertBefore(warning, document.body.children[0]);
     return;
   }
 
     let mixinsString = '';
-    const mixins = element.prototype._protochain.style.match(mixinRegex);
+    const mixins = elementConstructor.prototype._protochain.style.match(mixinRegex);
     if (mixins) {
       for (let i = 0; i < mixins.length; i++) {
         const m = mixins[i].split(': {');
@@ -436,7 +437,7 @@ const RegisterIoElement = function (element: typeof IoElement) {
     }
 
     // Remove mixins
-    let styleString = element.prototype._protochain.style.replace(mixinRegex, '');
+    let styleString = elementConstructor.prototype._protochain.style.replace(mixinRegex, '');
     // Apply mixins
     const apply = styleString.match(applyRegex);
     if (apply) {
