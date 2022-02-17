@@ -1,4 +1,4 @@
-import { IoIconsetSingleton } from './iconset.js';
+import { IoIconsetSingleton } from '../../iogui.elements.js';
 export default class {
     element: typeof IoIconsetSingleton;
     constructor();

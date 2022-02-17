@@ -1,4 +1,4 @@
-import { IoProperties } from './properties.js';
+import { IoProperties } from '../../iogui.elements.js';
 export default class {
     element: IoProperties;
     constructor();

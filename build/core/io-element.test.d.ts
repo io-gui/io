@@ -1,5 +1,4 @@
-import { Change } from './internals/changeQueue.js';
-import { IoElement } from './io-element.js';
+import { Change, IoElement } from '../iogui.js';
 export declare class TestElement extends IoElement {
     static get Properties(): any;
     static get Listeners(): {

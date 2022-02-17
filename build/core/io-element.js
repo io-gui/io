@@ -5,15 +5,8 @@ import { IoNodeMixin, RegisterIoNode } from './io-node.js';
  */
 class IoElement extends IoNodeMixin(HTMLElement) {
     static get Style() {
-        return /* css */ `
-    :host[hidden] {
-      display: none;
-    }
-    :host[disabled] {
-      pointer-events: none;
-      opacity: 0.5;
-    }
-    `;
+        // TODO: consider removing from core io-element class.
+        return /* css */ ':host[hidden] { display: none; } :host[disabled] { pointer-events: none; opacity: 0.5; }';
     }
     static get Properties() {
         return {
@@ -392,12 +385,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
 //   focusBacktrack.set(element, backtrack);
 // }
 const warning = document.createElement('div');
-warning.innerHTML = `
-No support for custom elements detected! <br />
-Sorry, modern browser is required to view this page.<br />
-Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
-<a href="https://www.google.com/chrome/">Chrome</a> or
-<a href="https://www.apple.com/lae/safari/">Safari</a>`;
+warning.innerHTML = 'No support for custom elements detected! <br />Sorry, modern browser is required to view this page.<br />';
 // Global mixin record
 const mixinRecord = {};
 // Regular expressions for style string processing.
@@ -409,24 +397,25 @@ const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
 const cssRegex = new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
 /**
  * Register function for `IoElement`. Registers custom element.
- * @param {IoElement} element - Element class to register.
+ * @param {IoElement} elementConstructor - Element class to register.
  */
-const RegisterIoElement = function (element) {
-    RegisterIoNode(element);
-    const localName = element.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-    Object.defineProperty(element, 'localName', { value: localName });
-    Object.defineProperty(element.prototype, 'localName', { value: localName });
-    Object.defineProperty(element, '_isIoElement', { enumerable: false, value: true });
-    Object.defineProperty(element.prototype, '_isIoElement', { enumerable: false, value: true });
+const RegisterIoElement = function (elementConstructor) {
+    RegisterIoNode(elementConstructor);
+    const localName = elementConstructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    Object.defineProperty(elementConstructor, 'localName', { value: localName });
+    Object.defineProperty(elementConstructor.prototype, 'localName', { value: localName });
+    Object.defineProperty(elementConstructor, '_isIoElement', { enumerable: false, value: true });
+    Object.defineProperty(elementConstructor.prototype, '_isIoElement', { enumerable: false, value: true });
+    Object.defineProperty(window, elementConstructor.name, { value: elementConstructor });
     if (window.customElements !== undefined) {
-        window.customElements.define(localName, element);
+        window.customElements.define(localName, elementConstructor);
     }
     else {
         document.body.insertBefore(warning, document.body.children[0]);
         return;
     }
     let mixinsString = '';
-    const mixins = element.prototype._protochain.style.match(mixinRegex);
+    const mixins = elementConstructor.prototype._protochain.style.match(mixinRegex);
     if (mixins) {
         for (let i = 0; i < mixins.length; i++) {
             const m = mixins[i].split(': {');
@@ -437,7 +426,7 @@ const RegisterIoElement = function (element) {
         }
     }
     // Remove mixins
-    let styleString = element.prototype._protochain.style.replace(mixinRegex, '');
+    let styleString = elementConstructor.prototype._protochain.style.replace(mixinRegex, '');
     // Apply mixins
     const apply = styleString.match(applyRegex);
     if (apply) {

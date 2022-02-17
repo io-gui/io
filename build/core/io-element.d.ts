@@ -88,9 +88,9 @@ declare class IoElement extends IoElement_base {
 }
 /**
  * Register function for `IoElement`. Registers custom element.
- * @param {IoElement} element - Element class to register.
+ * @param {IoElement} elementConstructor - Element class to register.
  */
-declare const RegisterIoElement: (element: typeof IoElement) => void;
+declare const RegisterIoElement: (elementConstructor: typeof IoElement) => void;
 export declare const buildTree: () => (node: any) => any;
 export { IoElement, RegisterIoElement };
 //# sourceMappingURL=io-element.d.ts.map

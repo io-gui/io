@@ -1,4 +1,4 @@
-import { IoLadder } from '../../iogui.js';
+import { IoLadder } from '../../iogui.elements.js';
 // TODO: test with src element.
 
 export default class {

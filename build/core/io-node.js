@@ -468,7 +468,6 @@ export const RegisterIoNode = function (nodeConstructor) {
     Object.defineProperty(proto, '_isIoNode', { value: true });
     Object.defineProperty(nodeConstructor, '_registeredAs', { value: nodeConstructor.name });
     Object.defineProperty(proto, '_protochain', { value: new ProtoChain(nodeConstructor) });
-    Object.defineProperty(window, nodeConstructor.name, { value: nodeConstructor });
     for (const p in proto._protochain.properties) {
         Object.defineProperty(proto, p, {
             get: function () {

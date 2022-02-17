@@ -1,5 +1,4 @@
-import { Binding } from './binding.js';
-import { IoNode, RegisterIoNode } from '../io-node.js';
+import { Binding, IoNode, RegisterIoNode } from '../../iogui.js';
 class TestIoNode extends IoNode {
     static get Properties() {
         return {

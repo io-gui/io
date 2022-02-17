@@ -1,4 +1,4 @@
-import { IoIcon } from './icon.js';
+import { IoIcon } from '../../iogui.elements.js';
 export default class {
     element: IoIcon;
     constructor();

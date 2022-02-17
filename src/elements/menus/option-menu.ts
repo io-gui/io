@@ -1,6 +1,6 @@
 import {IoElement, RegisterIoElement} from '../../core/io-element.js';
-import {Options} from '../../models/options.js';
-import {Item} from '../../models/item.js';
+import {Options} from '../models/options.js';
+import {Item} from '../models/item.js';
 import './menu-item.js';
 
 // TODO: fix tab-out without collapse

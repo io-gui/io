@@ -1,6 +1,4 @@
-import { ProtoChain } from './protoChain.js';
-import { IoNode, IoNodeMixin } from '../io-node.js';
-import { IoElement } from '../io-element.js';
+import { ProtoChain, IoNode, IoNodeMixin, IoElement } from '../../iogui.js';
 class Array1 extends Array {
 }
 class Array2 extends Array1 {

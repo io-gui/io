@@ -1,1 +1,1 @@
-{"version":3,"file":"collapsable.test.d.ts","sourceRoot":"","sources":["../../../src/elements/layout/collapsable.test.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,aAAa,EAAC,MAAM,eAAe,CAAC;AAE5C,MAAM,CAAC,OAAO;IACZ,OAAO,gBAAuB;;IAK9B,GAAG;CAkCJ"}
+{"version":3,"file":"collapsable.test.d.ts","sourceRoot":"","sources":["../../../src/elements/layout/collapsable.test.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,aAAa,EAAC,MAAM,yBAAyB,CAAC;AAEtD,MAAM,CAAC,OAAO;IACZ,OAAO,gBAAuB;;IAK9B,GAAG;CAkCJ"}

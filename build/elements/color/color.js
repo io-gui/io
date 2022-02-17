@@ -1,4 +1,4 @@
-import { convert } from '../../lib/color-convert.js';
+import { convert } from './color-convert.js';
 export function IoColorMixin(superclass) {
     const classConstructor = class extends superclass {
         static get Properties() {

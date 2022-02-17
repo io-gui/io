@@ -1,5 +1,4 @@
-import { IoNode, RegisterIoNode } from './io-node.js';
-import { IoElement, RegisterIoElement } from './io-element.js';
+import { IoNode, RegisterIoNode, IoElement, RegisterIoElement } from '../iogui.js';
 class TestNode extends IoNode {
     static get Properties() {
         return {

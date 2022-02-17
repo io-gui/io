@@ -16,5 +16,6 @@ export { IoNumberSliderRange } from './number-slider-range.js';
 export { IoLadderSingleton } from './ladder.js';
 export { IoIconsetSingleton } from './iconset.js';
 export { IoIcon } from './icon.js';
+export { IoLadder } from './ladder.js';
 export { IoLayerSingleton } from './layer.js';
 //# sourceMappingURL=index.d.ts.map

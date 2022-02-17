@@ -1,7 +1,4 @@
-import { Binding } from './internals/binding.js';
-import { ProtoChain } from './internals/protoChain.js';
-import { IoNode, RegisterIoNode } from './io-node.js';
-import { IoElement, RegisterIoElement } from './io-element.js';
+import { Binding, ProtoChain, IoNode, RegisterIoNode, IoElement, RegisterIoElement } from '../iogui.js';
 async function waitTick() {
     return new Promise((resolve) => {
         setTimeout(() => {

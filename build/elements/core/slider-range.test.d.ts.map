@@ -1,1 +1,1 @@
-{"version":3,"file":"slider-range.test.d.ts","sourceRoot":"","sources":["../../../src/elements/core/slider-range.test.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,aAAa,EAAC,MAAM,mBAAmB,CAAC;AAEhD,MAAM,CAAC,OAAO;IACZ,OAAO,gBAAuB;;IAM9B,KAAK;IAML,GAAG;CA8BJ"}
+{"version":3,"file":"slider-range.test.d.ts","sourceRoot":"","sources":["../../../src/elements/core/slider-range.test.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,aAAa,EAAC,MAAM,yBAAyB,CAAC;AAEtD,MAAM,CAAC,OAAO;IACZ,OAAO,gBAAuB;;IAM9B,KAAK;IAML,GAAG;CA8BJ"}

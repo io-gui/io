@@ -1,4 +1,4 @@
-import { IoObject } from './object.js';
+import { IoObject } from '../../iogui.elements.js';
 export default class {
     element: IoObject;
     constructor();

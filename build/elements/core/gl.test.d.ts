@@ -1,4 +1,4 @@
-import { IoGl } from './gl.js';
+import { IoGl } from '../../iogui.elements.js';
 export default class {
     element: IoGl;
     constructor();

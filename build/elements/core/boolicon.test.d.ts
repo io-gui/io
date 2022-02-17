@@ -1,4 +1,4 @@
-import { IoBoolicon } from './boolicon.js';
+import { IoBoolicon } from '../../iogui.elements.js';
 export default class {
     element: IoBoolicon;
     constructor();

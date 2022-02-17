@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/io-element.js';
-import { Options } from '../../models/options.js';
+import { Options } from '../models/options.js';
 // TODO: use IoContent for caching and display.
 /*
  * Extends `IoElement` and `IoContent`.

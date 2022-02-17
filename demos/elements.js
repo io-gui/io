@@ -1,4 +1,5 @@
 import {IoElement, RegisterIoElement} from '../build/iogui.js';
+import '../build/iogui.elements.js';
 import './elements-core.js';
 import './elements-sliders.js';
 import './elements-math.js';

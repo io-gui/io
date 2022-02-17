@@ -1,4 +1,4 @@
-import { ChangeQueue } from './changeQueue.js';
+import { ChangeQueue } from '../../iogui.js';
 class FakeIoNode {
     connected = true;
     prop1ChangeCounter = 0;

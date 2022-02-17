@@ -1,5 +1,4 @@
-import { IoNode, RegisterIoNode } from '../io-node.js';
-import { EventDispatcher } from './eventDispatcher.js';
+import { IoNode, RegisterIoNode, EventDispatcher } from '../../iogui.js';
 const handlerFunction = () => { };
 class IoNode1 extends IoNode {
     handler1Count = 0;

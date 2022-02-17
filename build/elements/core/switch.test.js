@@ -1,4 +1,4 @@
-import { IoSwitch } from './switch.js';
+import { IoSwitch } from '../../iogui.elements.js';
 export default class {
     element = new IoSwitch();
     constructor() {

@@ -1,4 +1,4 @@
-import { IoInspector } from './inspector.js';
+import { IoInspector } from '../../iogui.elements.js';
 export default class {
     element: IoInspector;
     constructor();

@@ -1,4 +1,4 @@
-import { IoSliderRange } from './slider-range.js';
+import { IoSliderRange } from '../../iogui.elements.js';
 export default class {
     element: IoSliderRange;
     constructor();

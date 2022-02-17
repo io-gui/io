@@ -1,4 +1,4 @@
-import { IoContent } from './content.js';
+import { IoContent } from '../../iogui.elements.js';
 export default class {
     element = new IoContent();
     constructor() {

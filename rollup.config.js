@@ -1,8 +1,7 @@
 import path from 'path';
-// import strip from '@rollup/plugin-strip';
-import replace from '@rollup/plugin-replace';
-import typescript from '@rollup/plugin-typescript';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
+import strip from '@rollup/plugin-strip';
+// import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { uglify } from "rollup-plugin-uglify";
 
 function html() {
   return {
@@ -44,26 +43,25 @@ function svg() {
 
 const externals = [];
 
-function makeBuildTarget(src) {
+function makeBundleTarget(src, target) {
   const externalsCopy = [...externals];
   externals.push(path.resolve(src));
   return {
     input: src,
     plugins: [
-      // strip({
-      //   debugger: false,
-      //   labels: ['debug']
-      // }),
-      typescript({ tsconfig: './tsconfig.json', module: "ESNext" }),
-      replace({
-        "iogui.ts": "iogui.js"
-      })
+      html(),
+      svg(),
+      // nodeResolve(),
+      strip({
+        debugger: false,
+        labels: ['debug']
+      }),
+      uglify()
     ],
     inlineDynamicImports: true,
     output: [{
-      sourcemap: true,
       format: 'esm',
-      dir: 'build',
+      file: target,
       indent: '  '
     }],
     external: externalsCopy,
@@ -74,34 +72,9 @@ function makeBuildTarget(src) {
   };
 }
 
-const externals2 = [];
-function makeBundleTarget(src, target) {
-  // const externalsCopy = [...externals2];
-  // externals2.push(path.resolve(src));
-  return {
-    input: src,
-    plugins: [
-      html(),
-      svg(),
-      nodeResolve(),
-    ],
-    inlineDynamicImports: true,
-    output: [{
-      format: 'esm',
-      file: target.replace('.ts', '.js'),
-      indent: '  '
-    }],
-    // external: externalsCopy,
-    onwarn: (warning, warn) => {
-      if (warning.code === 'THIS_IS_UNDEFINED') return;
-      warn(warning);
-    }
-  };
-}
-
 export default [
-  makeBuildTarget('src/iogui.ts'),
-  makeBuildTarget('src/iogui.test.ts'),
-  // makeBundleTarget('build/iogui.js', 'bundle/iogui.js'),
-  // makeBundleTarget('build/iogui.test.js', 'bundle/iogui.test.js'),
+  makeBundleTarget('build/iogui.js', 'bundle/iogui.js'),
+  makeBundleTarget('build/iogui.test.js', 'bundle/iogui.test.js'),
+  makeBundleTarget('build/iogui.elements.js', 'bundle/iogui.elements.js'),
+  makeBundleTarget('build/iogui.elements.test.js', 'bundle/iogui.elements.test.js'),
 ];

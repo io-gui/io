@@ -1,4 +1,4 @@
-import {IoOptionMenu} from '../../iogui.js';
+import {IoOptionMenu} from '../../iogui.elements.js';
 
 /*
 

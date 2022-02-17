@@ -1,4 +1,4 @@
-import {IoBoolean} from '../../iogui.js';
+import {IoBoolean} from '../../iogui.elements.js';
 
 export default class {
   element = new IoBoolean();

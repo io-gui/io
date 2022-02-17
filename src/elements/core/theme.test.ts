@@ -1,4 +1,4 @@
-import {IoThemeSingleton} from '../../iogui.js';
+import {IoThemeSingleton} from '../../iogui.elements.js';
 
 export default class {
   element: typeof IoThemeSingleton;

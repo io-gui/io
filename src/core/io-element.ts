@@ -6,15 +6,8 @@ import {IoNode, IoNodeMixin, RegisterIoNode} from './io-node.js';
  */
 class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): any {
-    return /* css */`
-    :host[hidden] {
-      display: none;
-    }
-    :host[disabled] {
-      pointer-events: none;
-      opacity: 0.5;
-    }
-    `;
+    // TODO: consider removing from core io-element class.
+    return /* css */':host[hidden] { display: none; } :host[disabled] { pointer-events: none; opacity: 0.5; }';
   }
   static get Properties(): any {
     return {
@@ -382,12 +375,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
 // }
 
 const warning = document.createElement('div');
-warning.innerHTML = `
-No support for custom elements detected! <br />
-Sorry, modern browser is required to view this page.<br />
-Please try <a href="https://www.mozilla.org/en-US/firefox/new/">Firefox</a>,
-<a href="https://www.google.com/chrome/">Chrome</a> or
-<a href="https://www.apple.com/lae/safari/">Safari</a>`;
+warning.innerHTML = 'No support for custom elements detected! <br />Sorry, modern browser is required to view this page.<br />';
 
 // Global mixin record
 const mixinRecord: Record<string, string> = {};
