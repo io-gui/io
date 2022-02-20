@@ -127,7 +127,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {any} value Peroperty value.
      * @param {boolean} [skipDispatch] flag to skip event dispatch.
      */
-    setPropertyValue(name: string, value: any, skipDispatch?: boolean) {
+    setProperty(name: string, value: any, skipDispatch?: boolean) {
       const prop = this._properties[name];
       const oldValue = prop.value;
       if (value !== oldValue) {
@@ -152,7 +152,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           // bug when parent has properties bound to other elements. Create and extensive test for this but fix.
           // TODO: finish this fix
           if (prop.binding && skipDispatch) {
-            prop.binding.node.setPropertyValue(prop.binding.property, value, skipDispatch);
+            prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
           }
         }
         prop.value = value;
@@ -202,7 +202,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
           continue;
         }
-        this.setPropertyValue(p, props[p], true);
+        this.setProperty(p, props[p], true);
       }
       this._eventDispatcher.applyPropListeners(props);
       this.queueDispatch();
@@ -220,7 +220,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
           continue;
         }
-        this.setPropertyValue(p, props[p], true);
+        this.setProperty(p, props[p], true);
       }
       this.queueDispatch();
     }
@@ -524,7 +524,7 @@ export const RegisterIoNode = function (nodeConstructor: typeof IoNode) {
         debug: {
           if (proto._protochain.properties[p].readonly) console.error(`IoGUI error. Cannot set value "${value}" to read only property "${p}"`);
         }
-        (this as IoNode).setPropertyValue(p, value);
+        (this as IoNode).setProperty(p, value);
       },
       enumerable: !!proto._protochain.properties[p].enumerable,
       configurable: true,

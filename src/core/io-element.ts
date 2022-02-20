@@ -112,7 +112,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   template(vDOM: Array<any>, host?: HTMLElement) {
     const vChildren = buildTree()(['root', vDOM]).children;
     host = (host || this) as any;
-    if (host === (this as any)) this.setPropertyValue('$', {});
+    if (host === (this as any)) this.setProperty('$', {});
     this.traverse(vChildren, host as HTMLElement);
   }
   /**

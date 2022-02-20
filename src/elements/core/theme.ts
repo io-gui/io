@@ -230,7 +230,7 @@ export class IoTheme extends IoElement {
     });
   }
   changed() {
-    this.setPropertyValue('cssItemHeight', this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth));
+    this.setProperty('cssItemHeight', this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth));
     this.variablesElement.innerHTML = /* css */`
       body {
         --io-spacing: ${this.cssSpacing}px;

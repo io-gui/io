@@ -514,7 +514,7 @@ export default class {
 
         chai.expect(properties['prop1'].value).to.be.equal(1);
         chai.expect(node.prop1).to.be.equal(1);
-        node.setPropertyValue('prop1', 0);
+        node.setProperty('prop1', 0);
         chai.expect(properties['prop1'].value).to.be.equal(0);
         chai.expect(node.prop1).to.be.equal(0);
       });
@@ -550,7 +550,7 @@ export default class {
         chai.expect(properties['prop1'].binding).to.be.equal(binding1);
         chai.expect((binding1 as any).targets[0]).to.be.equal(node);
 
-        node.setPropertyValue('prop1', binding2);
+        node.setProperty('prop1', binding2);
         chai.expect(properties['prop1'].value).to.be.equal('binding2');
         chai.expect(node.prop1).to.be.equal('binding2');
 
@@ -574,7 +574,7 @@ export default class {
         chai.expect(element.getAttribute('label')).to.be.equal('label1');
         element.label = 'label2';
         chai.expect(element.getAttribute('label')).to.be.equal('label2');
-        element.setPropertyValue('label', 'label3');
+        element.setProperty('label', 'label3');
         chai.expect(element.getAttribute('label')).to.be.equal('label3');
       });
       it('Should dipatch queue on object value initialization and value set', () => {
@@ -615,7 +615,7 @@ export default class {
           chai.expect('This should never happen!').to.be.equal(true);
         });
 
-        node.setPropertyValue('prop', {}, true);
+        node.setProperty('prop', {}, true);
       });
       it('Should connect/disconnect node value on initialization and value set', () => {
         class TestIoNodeValue extends IoNode {

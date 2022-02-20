@@ -39,9 +39,9 @@ export class Path extends IoNode {
       string += this.value[i];
       if (i !== this.value.length - 1) string += this.delimiter;
     }
-    this.setPropertyValue('string', string, true);
-    this.setPropertyValue('root', this.value[0], true);
-    this.setPropertyValue('leaf', this.value[this.value.length - 1], true);
+    this.setProperty('string', string, true);
+    this.setProperty('root', this.value[0], true);
+    this.setProperty('leaf', this.value[this.value.length - 1], true);
   }
   stringChanged() {
     const array = this.string ? [...this.string.split(this.delimiter)] : [];

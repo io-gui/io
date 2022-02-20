@@ -64,7 +64,7 @@ export class IoSelectorTabs extends IoElement {
   }
   elementsChanged() {
     if (this.filter === null) {
-      this.setPropertyValue('filter', this.elements.map((element: any) => { return element[1].name; }));
+      this.setProperty('filter', this.elements.map((element: any) => { return element[1].name; }));
     }
   }
   editableChanged() {
