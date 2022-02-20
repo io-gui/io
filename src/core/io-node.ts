@@ -119,7 +119,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         window.addEventListener('object-mutated', this.objectMutated as EventListener);
       }
 
-      this.setProperties(properties);
+      this.applyProperties(properties);
     }
     /**
      * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
@@ -145,6 +145,14 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
               console.warn(`IoGUI strict type mismatch for "${name}" property! Value automatically converted to "${prop.type.name}."`);
             }
             value = new prop.type(value);
+          }
+          // TODO: Veryfy and test this edge-case fix. Look for regressions.
+          // If user uses setProperties() to batch-set multiple properties that are bound to parent element it causes all but one of those properties to be reset
+          // to original value once parents's change event happens. This fixex the bug by setting parent's property value with skipDispatch. This can possibly introduce
+          // bug when parent has properties bound to other elements. Create and extensive test for this but fix.
+          // TODO: finish this fix
+          if (prop.binding && skipDispatch) {
+            prop.binding.node.setPropertyValue(prop.binding.property, value, skipDispatch);
           }
         }
         prop.value = value;
@@ -177,6 +185,58 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
         }
         if (prop.reflect !== undefined && prop.reflect >= 1 && this._isIoElement) this.setAttribute(name, value);
+      }
+    }
+    /**
+     * Sets multiple properties in batch.
+     * [property]-changed` events will be broadcast in the end.
+     * @param {Object} props - Map of property names and values.
+     */
+    applyProperties(props: any) {
+      for (const p in props) {
+        if (this._properties[p] === undefined) {
+          debug:
+          if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
+            // TODO: consider converting import and style to properties
+            console.warn(`Property "${p}" is not defined`, this);
+          }
+          continue;
+        }
+        this.setPropertyValue(p, props[p], true);
+      }
+      this._eventDispatcher.applyPropListeners(props);
+      this.queueDispatch();
+    }
+    /**
+     * Sets multiple properties in batch.
+     * [property]-changed` events will be broadcast in the end.
+     * @param {Object} props - Map of property names and values.
+     */
+     setProperties(props: any) {
+      for (const p in props) {
+        if (this._properties[p] === undefined) {
+          debug: {
+            console.warn(`Property "${p}" is not defined`, this);
+          }
+          continue;
+        }
+        this.setPropertyValue(p, props[p], true);
+      }
+      this.queueDispatch();
+    }
+    // TODO: disambiguation needed with setProperty.
+    /**
+     * Sets a property and emits `[property]-set` event.
+     * Use this when property is set by user action (e.g. mouse click).
+     * @param {string} prop - Property name.
+     * @param {*} value - Property value.
+     * @param {boolean} force - Force value set.
+     */
+    set(prop: string, value: any, force?: boolean) {
+      if (this[prop] !== value || force) {
+        const oldValue = this[prop];
+        this[prop] = value;
+        this.dispatchEvent('value-set', {property: prop, value: value, oldValue: oldValue}, false);
       }
     }
     /**
@@ -222,7 +282,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           const object = this._properties[prop].value;
           if (object._isIoNode) {
             // TODO: make sure composed and declarative listeners are working together
-            object.setProperties(compose[prop]);
+            object.applyProperties(compose[prop]);
           } else {
             for (const p in compose[prop]) {
               object[p] = compose[prop][p];
@@ -319,40 +379,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       if (this._properties[prop].binding) {
         this._properties[prop].binding?.removeTarget(this, prop);
       }
-    }
-    /**
-     * Sets a property and emits `[property]-set` event.
-     * Use this when property is set by user action (e.g. mouse click).
-     * @param {string} prop - Property name.
-     * @param {*} value - Property value.
-     * @param {boolean} force - Force value set.
-     */
-    set(prop: string, value: any, force?: boolean) {
-      if (this[prop] !== value || force) {
-        const oldValue = this[prop];
-        this[prop] = value;
-        this.dispatchEvent('value-set', {property: prop, value: value, oldValue: oldValue}, false);
-      }
-    }
-    /**
-     * Sets multiple properties in batch.
-     * [property]-changed` events will be broadcast in the end.
-     * @param {Object} props - Map of property names and values.
-     */
-    setProperties(props: any) {
-      for (const p in props) {
-        if (this._properties[p] === undefined) {
-          debug:
-          if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
-            // TODO: consider converting import and style to properties
-            console.warn(`Property "${p}" is not defined`, this);
-          }
-          continue;
-        }
-        this.setPropertyValue(p, props[p], true);
-      }
-      this._eventDispatcher.setPropListeners(props);
-      this.queueDispatch();
     }
     /**
      * Wrapper for addEventListener.

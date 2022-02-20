@@ -107,7 +107,7 @@ export class EventDispatcher {
    * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
    * @param {Record<string, any>} properties Inline properties
    */
-  setPropListeners(properties: Record<string, any>) {
+  applyPropListeners(properties: Record<string, any>) {
     const newPropListeners: Listeners = {};
     for (const prop in properties) {
       if (prop.startsWith('on-')) {

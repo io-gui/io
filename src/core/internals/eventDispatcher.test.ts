@@ -95,19 +95,19 @@ export default class {
         const eventDispatcher = new EventDispatcher(node) as any;
         const handler4 = () => {};
         const handler5 = () => {};
-        eventDispatcher.setPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
+        eventDispatcher.applyPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
         chai.expect(eventDispatcher.propListeners).to.be.eql({
           event3:[[node.handler3]], event4:[[handler4]]
         });
-        eventDispatcher.setPropListeners({'on-event5': ['handler3'], 'on-event6': [handler4]});
+        eventDispatcher.applyPropListeners({'on-event5': ['handler3'], 'on-event6': [handler4]});
         chai.expect(eventDispatcher.propListeners).to.be.eql({
           event5:[[node.handler3]], event6:[[handler4]]
         });
-        eventDispatcher.setPropListeners({'on-event7': [node.handler3, {capture: true}], 'on-event8': [handler5, {capture: true}]});
+        eventDispatcher.applyPropListeners({'on-event7': [node.handler3, {capture: true}], 'on-event8': [handler5, {capture: true}]});
         chai.expect(eventDispatcher.propListeners).to.be.eql({
           event7:[[node.handler3, {capture:true}]], event8:[[handler5, {capture:true}]]
         });
-        eventDispatcher.setPropListeners({});
+        eventDispatcher.applyPropListeners({});
         chai.expect(eventDispatcher.propListeners).to.be.eql({});
       });
       it('Should add/remove listeners correctly', () => {
@@ -138,7 +138,7 @@ export default class {
         const handler5 = () => {
           handler5Count++;
         };
-        eventDispatcher.setPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
+        eventDispatcher.applyPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
         eventDispatcher.addEventListener('event5', handler5);
         eventDispatcher.dispatchEvent('event1');
         eventDispatcher.dispatchEvent('event2');
@@ -151,7 +151,7 @@ export default class {
         chai.expect(handler4Count).to.be.equal(1);
         chai.expect(handler5Count).to.be.equal(1);
         // Remove events
-        eventDispatcher.setPropListeners({'on-event4': handler4});
+        eventDispatcher.applyPropListeners({'on-event4': handler4});
         eventDispatcher.removeEventListener('event5', handler5);
         eventDispatcher.dispatchEvent('event1');
         eventDispatcher.dispatchEvent('event2');
@@ -175,7 +175,7 @@ export default class {
         const handler5 = (event: CustomEvent) => {
           handler5Detail = event.detail;
         };
-        eventDispatcher.setPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
+        eventDispatcher.applyPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
         eventDispatcher.addEventListener('event5', handler5);
         eventDispatcher.dispatchEvent('event1', 'detail1');
         eventDispatcher.dispatchEvent('event2', 'detail2');
@@ -204,7 +204,7 @@ export default class {
           handler5Count++;
           handler5Detail = event.detail;
         };
-        eventDispatcher.setPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
+        eventDispatcher.applyPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
         eventDispatcher.addEventListener('event5', handler5);
         element.dispatchEvent(new CustomEvent('event3', {detail: 'detail3'}));
         element.dispatchEvent(new CustomEvent('event4', {detail: 'detail4'}));

@@ -159,10 +159,10 @@ class IoElement extends IoNodeMixin(HTMLElement) {
         if ((child as IoElement)._isIoElement) {
           // Set IoElement element properties
           // TODO: Test property and listeners reset. Consider optimizing.
-          (child as IoElement).setProperties(vChildren[i].props);
+          (child as IoElement).applyProperties(vChildren[i].props);
         } else {
           // Set native HTML element properties
-          setNativeElementProps(child as HTMLElement, vChildren[i].props);
+          applyNativeElementProps(child as HTMLElement, vChildren[i].props);
         }
       }
     }
@@ -212,8 +212,8 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     this.flattenTextNode(this);
     this._textNode.nodeValue = String(value);
   }
-  setProperties(props: any) {
-    super.setProperties(props);
+  applyProperties(props: any) {
+    super.applyProperties(props);
     if (props['style']) {
       for (const s in props['style']) {
         this.style[s] = props['style'][s];
@@ -484,7 +484,7 @@ const constructElement = function(vDOMNode: any) {
 
   // Other element classes constructed with document.createElement.
   const element = document.createElement(vDOMNode.name);
-  setNativeElementProps(element, vDOMNode.props);
+  applyNativeElementProps(element, vDOMNode.props);
   return element;
 };
 
@@ -509,7 +509,7 @@ document.createElement = function(...args: any[]) {
  * @param {HTMLElement} element - Element to set properties on.
  * @param {Object} props - Element properties.
  */
-const setNativeElementProps = function(element: HTMLElement, props: any) {
+const applyNativeElementProps = function(element: HTMLElement, props: any) {
   for (const p in props) {
     const prop = props[p];
     if (p.startsWith('@')) {
@@ -524,7 +524,7 @@ const setNativeElementProps = function(element: HTMLElement, props: any) {
     Object.defineProperty(element, '_eventDispatcher', {value: new EventDispatcher(element as unknown as IoNode)});
     // TODO: disconnect on disposal?
   }
-  (element as any)._eventDispatcher.setPropListeners(props, element);
+  (element as any)._eventDispatcher.applyPropListeners(props, element);
 };
 
 RegisterIoElement(IoElement);

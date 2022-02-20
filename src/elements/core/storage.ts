@@ -116,7 +116,7 @@ const getHashes = function() {
 const setHashes = function(force?: boolean) {
   let hashString = '';
   for (const node in nodes) {
-    if ((nodes[node].storage === 'hash' || force) && nodes[node].value !== undefined && nodes[node].value !== '' && nodes[node].value !== nodes[node].default) {
+    if ((nodes[node].storage === 'hash' || force === true) && nodes[node].value !== undefined && nodes[node].value !== '' && nodes[node].value !== nodes[node].default) {
       if (typeof nodes[node].value === 'string') {
         hashString += node + '=' + nodes[node].value + '&';
       } else {
