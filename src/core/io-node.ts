@@ -224,19 +224,17 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       }
       this.queueDispatch();
     }
-    // TODO: disambiguation needed with setProperty.
+    // TODO: consider moving into a different class
     /**
-     * Sets a property and emits `[property]-set` event.
-     * Use this when property is set by user action (e.g. mouse click).
-     * @param {string} prop - Property name.
+     * Sets value property and emits `value-set` event.
+     * Use this when value property is set by user action (e.g. mouse click).
      * @param {*} value - Property value.
-     * @param {boolean} force - Force value set.
      */
-    set(prop: string, value: any, force?: boolean) {
-      if (this[prop] !== value || force) {
-        const oldValue = this[prop];
-        this[prop] = value;
-        this.dispatchEvent('value-set', {property: prop, value: value, oldValue: oldValue}, false);
+    setValue(value: any) {
+      if (this.value !== value) {
+        const oldValue = this.value;
+        this.setProperty('value', value);
+        this.dispatchEvent('value-set', {value: value, oldValue: oldValue}, false);
       }
     }
     /**

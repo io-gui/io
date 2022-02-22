@@ -77,9 +77,9 @@ export class IoOptionMenu extends IoElement {
     // TODO: Fix Path convering values to string type.
     if (event.detail.leaf !== undefined) {
       try {
-        this.set('value', JSON.parse(event.detail.leaf));
+        this.setValue(JSON.parse(event.detail.leaf));
       } catch (error) {
-        this.set('value', event.detail.leaf);
+        this.setValue(event.detail.leaf);
       }
     }
   }

@@ -47,7 +47,7 @@ export class IoSliderRange extends IoSlider {
     }
   }
   _setValue(x: number, y: number) {
-    this.set('value', [Number(x.toFixed(5)), Number(y.toFixed(5))]);
+    this.setValue([Number(x.toFixed(5)), Number(y.toFixed(5))]);
   }
   _onKeydown(event: KeyboardEvent) {
     switch(event.key) {

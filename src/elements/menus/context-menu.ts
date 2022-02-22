@@ -70,7 +70,7 @@ export class IoContextMenu extends IoElement {
     const d = event.detail;
     if (item !== (this as any)) {
       event.stopImmediatePropagation();
-      if (d.value !== undefined && d.selectable !== false) this.set('value', d.value);
+      if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
       this.requestAnimationFrameOnce(this._collapse);
     }

@@ -111,7 +111,7 @@ export class IoInspector extends IoElement {
     const value = event.detail.value;
     const item = event.composedPath()[0] as any;
     if (value && typeof value === 'object' && item.classList.contains('select')) {
-      this.set('selected', value);
+      this.setProperty('selected', value);
     }
   }
   valueChanged() {

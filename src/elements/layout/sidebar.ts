@@ -83,7 +83,7 @@ export class IoSidebar extends IoElement {
     };
   }
   _onSelect(id: string) {
-    this.set('selected', id);
+    this.setProperty('selected', id);
   }
   _addOptions(options: any): any {
     const elements = [];
