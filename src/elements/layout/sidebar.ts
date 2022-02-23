@@ -73,7 +73,6 @@ export class IoSidebar extends IoElement {
       options: {
         type: Options,
         observe: true,
-        strict: true,
       },
       collapsed: {
         type: Boolean,

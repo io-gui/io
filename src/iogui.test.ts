@@ -2,9 +2,9 @@ import {IoElement, RegisterIoElement} from './iogui.js';
 
 import ProtoChain from './core/internals/protoChain.test.js';
 import Property from './core/internals/property.test.js';
-import Binding from './core/internals/binding.test.js';
-import EventDispatcher from './core/internals/eventDispatcher.test.js';
-import ChangeQueue from './core/internals/changeQueue.test.js';
+// import Binding from './core/internals/binding.test.js';
+// import EventDispatcher from './core/internals/eventDispatcher.test.js';
+// import ChangeQueue from './core/internals/changeQueue.test.js';
 
 // import Node from './core/io-node.test.js';
 // import Element from './core/io-element.test.js';
@@ -47,9 +47,9 @@ function runTests() {
   if (!testCompleted) {
     new ProtoChain().run();
     new Property().run();
-    new Binding().run();
-    new EventDispatcher().run();
-    new ChangeQueue().run();
+    // new Binding().run();
+    // new EventDispatcher().run();
+    // new ChangeQueue().run();
 
     // new Node().run();
     // new Element().run();

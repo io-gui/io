@@ -108,8 +108,8 @@ export class IoMenuOptions extends IoElement {
       options: {
         type: Options,
         observe: true,
-        strict: true,
       },
+      value: null,
       expanded: {
         value: false,
         reflect: 1,

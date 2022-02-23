@@ -1,5 +1,9 @@
 import {IoNode} from '../io-node.js';
 
+// type CustomEventListener = (event: CustomEvent) => void;
+// type EventListener = (event: Event) => void;
+// type AnyEventListener = CustomEventListener | EventListener;
+
 export type ListenerDefinitionWeak = string | EventListener | [string | EventListener, AddEventListenerOptions?];
 
 export type ListenerDefinition = [string | EventListener, AddEventListenerOptions?];
@@ -64,11 +68,11 @@ export type Listeners = Record<string, Listener[]>;
  *  - `addedListeners` explicitly added using `addEventListener()`
  */
 export class EventDispatcher {
-  private readonly node: IoNode | HTMLElement;
-  private readonly isEventTarget: boolean;
-  private readonly protoListeners: Listeners = {};
-  private readonly propListeners: Listeners = {};
-  private readonly addedListeners: Listeners = {};
+  readonly node: IoNode | HTMLElement;
+  readonly isEventTarget: boolean;
+  readonly protoListeners: Listeners = {};
+  readonly propListeners: Listeners = {};
+  readonly addedListeners: Listeners = {};
   /**
    * Creates an instance of `EventDispatcher` for specified `IoNode` instance.
    * It initializes `protoListeners` from `ProtoChain`.
@@ -78,19 +82,12 @@ export class EventDispatcher {
     this.node = node;
     this.isEventTarget = node instanceof EventTarget;
     this.setProtoListeners(node as IoNode);
-    debug: {
-      Object.defineProperty(this, 'node',           {enumerable: false, writable: false});
-      Object.defineProperty(this, 'isEventTarget',  {enumerable: false, writable: false});
-      Object.defineProperty(this, 'protoListeners', {enumerable: false, writable: false});
-      Object.defineProperty(this, 'propListeners',  {enumerable: false, writable: false});
-      Object.defineProperty(this, 'addedListeners', {enumerable: false, writable: false});
-    }
   }
   /**
    * Sets `protoListeners` specified as `get Listeners()` class declarations.
    * @param {IoNode} node owner IoNode
    */
-  private setProtoListeners(node: IoNode) {
+  setProtoListeners(node: IoNode) {
     for (const name in node._protochain?.listeners) {
       this.protoListeners[name] = [];
       for (let i = 0; i < node._protochain.listeners[name].length; i++) {
@@ -213,11 +210,11 @@ export class EventDispatcher {
   /**
    * Shorthand for custom event dispatch.
    * @param {string} name Name of the event
-   * @param {Record<string, any>} detail Event detail data
+   * @param {any} detail Event detail data
    * @param {boolean} [bubbles] Makes event bubble
    * @param {EventTarget} [node] Event target override to dispatch the event from
    */
-  dispatchEvent(name: string, detail: Record<string, any> = {}, bubbles = true, node: EventTarget | IoNode = this.node) {
+  dispatchEvent(name: string, detail?: any, bubbles = true, node: EventTarget | IoNode = this.node) {
     if ((node instanceof EventTarget)) {
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {

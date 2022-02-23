@@ -369,12 +369,9 @@ export default class {
                 value: {},
                 notify: false,
                 observe: true,
-                strict: false,
-                enumerable: false,
               },
               prop2: {
                 notify: true,
-                enumerable: true,
               },
               prop3: ''
             };
@@ -399,8 +396,6 @@ export default class {
         chai.expect(props1['prop1'].notify).to.be.equal(true);
         chai.expect(props1['prop1'].reflect).to.be.equal(0);
         chai.expect(props1['prop1'].observe).to.be.equal(false);
-        chai.expect(props1['prop1'].strict).to.be.equal(false);
-        chai.expect(props1['prop1'].enumerable).to.be.equal(true);
 
         chai.expect(protoProps2.prop1.value).to.be.eql({});
         chai.expect(props2['prop1'].value).to.be.eql({});
@@ -408,15 +403,11 @@ export default class {
         chai.expect(props2['prop1'].notify).to.be.equal(false);
         chai.expect(props2['prop1'].reflect).to.be.equal(0);
         chai.expect(props2['prop1'].observe).to.be.equal(true);
-        chai.expect(props2['prop1'].strict).to.be.equal(false);
-        chai.expect(props2['prop1'].enumerable).to.be.equal(false);
 
         chai.expect(props2['prop2'].value).to.be.equal(null);
         chai.expect(props2['prop2'].type).to.be.equal(undefined);
         chai.expect(props2['prop2'].notify).to.be.equal(true);
         chai.expect(props2['prop2'].observe).to.be.equal(false);
-        chai.expect(props2['prop2'].strict).to.be.equal(false);
-        chai.expect(props2['prop2'].enumerable).to.be.equal(true);
       });
       it('Should not override explicit property options with implicit', () => {
         class Object1 {
@@ -427,8 +418,6 @@ export default class {
                 notify: false,
                 reflect: 2,
                 observe: true,
-                strict: false,
-                enumerable: false,
               },
             };
           }
@@ -450,7 +439,6 @@ export default class {
         chai.expect(props.prop1.notify).to.be.equal(false);
         chai.expect(props.prop1.reflect).to.be.equal(2);
         chai.expect(props.prop1.observe).to.be.equal(true);
-        chai.expect(props.prop1.enumerable).to.be.equal(false);
       });
       it('Should correctly initialize bound properties', () => {
         const binding1 = new Binding(new TestIoNode({label: 'binding1'}), 'label');

@@ -1,4 +1,4 @@
-import {Binding, PropertyDefinition, Property, IoNode, RegisterIoNode, PropertiesDeclaration} from '../../iogui.js';
+import {Binding, PropertyDefinition, Property, IoNode, RegisterIoNode, PropertiesDeclaration, assignPropertyDefinition} from '../../iogui.js';
 
 class Object1 {
   prop = true;
@@ -16,413 +16,367 @@ RegisterIoNode(TestIoNode);
 export default class {
   run() {
     describe('Property', () => {
-      it('Should initialize correct values from weakly typed property definition', () => {
-        let protoProp, prop;
+      it('Should initialize correct property definitions and values from weakly typed property definitions', () => {
+        let propDef, prop;
         // initialize with empty object as property definition
-        protoProp = new PropertyDefinition({});
-        prop = new Property(protoProp);
-        chai.expect(protoProp).to.be.eql(prop).to.be.eql({
+        propDef = new PropertyDefinition({});
+        prop = new Property(propDef);
+        chai.expect(propDef).to.be.eql(prop).to.be.eql({
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with null property definition
-        protoProp = new PropertyDefinition(null);
-        prop = new Property(protoProp);
-        chai.expect(protoProp).to.be.eql(prop).to.be.eql({
+        propDef = new PropertyDefinition(null);
+        prop = new Property(propDef);
+        chai.expect(propDef).to.be.eql(prop).to.be.eql({
           value: null,
           type: undefined,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with undefined property definition
-        protoProp = new PropertyDefinition(undefined);
-        prop = new Property(protoProp);
-        chai.expect(protoProp).to.be.eql(prop).to.be.eql({
+        propDef = new PropertyDefinition(undefined);
+        prop = new Property(propDef);
+        chai.expect(propDef).to.be.eql(prop).to.be.eql({
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with Number property definition
-        protoProp = new PropertyDefinition(Number);
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition(Number);
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 0,
           type: Number,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        // initialize with type:Number property definition
-        protoProp = new PropertyDefinition({type: Number});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        // initialize with type: Number property definition
+        propDef = new PropertyDefinition({type: Number});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 0,
           type: Number,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with number property definition
-        protoProp = new PropertyDefinition(1);
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition(1);
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 1,
           type: Number,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        // initialize with value:number property definition
-        protoProp = new PropertyDefinition({value: 2});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        // initialize with value: number property definition
+        propDef = new PropertyDefinition({value: 2});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 2,
           type: Number,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with String property definition
-        protoProp = new PropertyDefinition(String);
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition(String);
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: '',
           type: String,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        // initialize with type:String property definition
-        protoProp = new PropertyDefinition({type: String});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        // initialize with type: String property definition
+        propDef = new PropertyDefinition({type: String});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: '',
           type: String,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with string property definition
-        protoProp = new PropertyDefinition('test');
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition('test');
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 'test',
           type: String,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        // initialize with value:string property definition
-        protoProp = new PropertyDefinition({value:'test'});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        // initialize with value: string property definition
+        propDef = new PropertyDefinition({value: 'test'});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 'test',
           type: String,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with Boolean property definition
-        protoProp = new PropertyDefinition(Boolean);
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition(Boolean);
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: false,
           type: Boolean,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        // initialize with type:Boolean property definition
-        protoProp = new PropertyDefinition({type: Boolean});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        // initialize with type: Boolean property definition
+        propDef = new PropertyDefinition({type: Boolean});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: false,
           type: Boolean,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with boolean property definition
-        protoProp = new PropertyDefinition(true);
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition(true);
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: true,
           type: Boolean,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        // initialize with value:boolean property definition
-        protoProp = new PropertyDefinition({value: true});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        // initialize with value: boolean property definition
+        propDef = new PropertyDefinition({value: true});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: true,
           type: Boolean,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with Object property definition
-        protoProp = new PropertyDefinition(Object);
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition(Object);
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: {},
           type: Object,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        // initialize with type:Object property definition
-        protoProp = new PropertyDefinition({type: Object});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        // initialize with type: Object property definition
+        propDef = new PropertyDefinition({type: Object});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: {},
           type: Object,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        // // initialize with object property definition
-        // // This should not initialize with object value
         const object = {prop: true};
-        // protoProp = new PropertyDefinition(object as any);
-        // prop = new Property(protoProp);
-        // chai.expect(prop).to.be.eql(protoProp).to.be.eql({
-        //   value: {prop: true},
-        //   type: Object,
-        //   binding: undefined,
-        //   reflect:0,
-        //   notify:true,
-        //   observe:false,
-        //   readonly:false,
-        //   strict:false,
-        //   enumerable:true
-        // });
-        // chai.expect(protoProp.value).to.equal(object);
-        // chai.expect(prop.value).not.to.equal(object);
-        // initialize with object:value property definition
-        protoProp = new PropertyDefinition({value: object});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        // initialize with object: value property definition
+        propDef = new PropertyDefinition({value: object});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: {prop: true},
           type: Object,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        chai.expect(protoProp.value).to.equal(object);
+        chai.expect(propDef.value).to.equal(object);
         chai.expect(prop.value).not.to.equal(object);
         // initialize with Array property definition
-        protoProp = new PropertyDefinition(Array);
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition(Array);
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: [],
           type: Array,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        // initialize with type:Array property definition
-        protoProp = new PropertyDefinition({type: Array});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        // initialize with type: Array property definition
+        propDef = new PropertyDefinition({type: Array});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: [],
           type: Array,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with custom Object1 property definition
-        protoProp = new PropertyDefinition(Object1);
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition(Object1);
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: new Object1(),
           type: Object1,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with an object property definition with object value property
         const array = [1, 2, 3];
-        protoProp = new PropertyDefinition({value: array});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition({value: array});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: [1, 2, 3],
           type: Array,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        chai.expect(protoProp.value).to.equal(array);
+        chai.expect(propDef.value).to.equal(array);
         chai.expect(prop.value).not.to.equal(array);
         // initialize with an object property definition with custom object1 value property
         const object1 = new Object1();
-        protoProp = new PropertyDefinition({value: object1});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition({value: object1});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: new Object1(),
           type: Object1,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
-        chai.expect(protoProp.value).to.equal(object1);
+        chai.expect(propDef.value).to.equal(object1);
         chai.expect(prop.value).not.to.equal(object1);
         // initialize with an object property definition with custom Object1 type property
-        protoProp = new PropertyDefinition({type: Object1});
-        prop = new Property(protoProp);
-        chai.expect(prop).to.be.eql(protoProp).to.be.eql({
+        propDef = new PropertyDefinition({type: Object1});
+        prop = new Property(propDef);
+        chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: {prop: true},
           type: Object1,
           binding: undefined,
-          reflect:0,
-          notify:true,
-          observe:false,
-          readonly:false,
-          strict:false,
-          enumerable:true
+          reflect: 0,
+          notify: true,
+          observe: false,
         });
         // initialize with non-default property definition
-        protoProp = new PropertyDefinition({
+        propDef = new PropertyDefinition({
           reflect: -1,
-          notify:false,
-          observe:true,
-          readonly:true,
-          strict:true,
-          enumerable:false
+          notify: false,
+          observe: true,
         });
-        prop = new Property(protoProp);
-        chai.expect(protoProp).to.be.eql(prop).to.be.eql({
+        prop = new Property(propDef);
+        chai.expect(propDef).to.be.eql(prop).to.be.eql({
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect:-1,
-          notify:false,
-          observe:true,
-          readonly:true,
-          strict:true,
-          enumerable:false
+          reflect: -1,
+          notify: false,
+          observe: true,
         });
       });
-      // it('Should initialize correct values from property definition', () => {
-      // });
-      it('Should initialize binding properly', () => {
-        let protoProp, prop;
+      it('Should initialize properties with binding correctly', () => {
+        let propDef, prop;
         let binding = new Binding(new TestIoNode({label: 'lorem'}), 'label');
 
-        protoProp = new PropertyDefinition(binding);
-        prop = new Property(protoProp);
+        propDef = new PropertyDefinition(binding);
+        prop = new Property(propDef);
 
-        chai.expect(protoProp.binding).to.be.equal(prop.binding).to.be.equal(binding);
-        chai.expect(protoProp.value).to.be.equal('lorem');
-        chai.expect(prop.value).to.be.equal('lorem');
+        chai.expect(propDef).to.be.eql(prop).to.be.eql({
+          value: 'lorem',
+          type: String,
+          binding: binding,
+          reflect: 0,
+          notify: true,
+          observe: false,
+        });
 
-        const node = new TestIoNode({label: 'lorem'});
-        binding = new Binding(node, 'label');
+        binding = new Binding(new TestIoNode({label: 'lorem'}), 'label');
 
-        protoProp = new PropertyDefinition({binding: binding, value: 'ipsum'});
-        prop = new Property(protoProp);
-        chai.expect(protoProp.binding).to.be.equal(prop.binding).to.be.equal(binding);
-        chai.expect(protoProp.value).to.be.equal('ipsum');
-        chai.expect(prop.value).to.be.equal('lorem');
+        propDef = new PropertyDefinition({binding: binding, value: 'ipsum'});
+        prop = new Property(propDef);
+
+        chai.expect(propDef).to.be.eql(prop).to.be.eql({
+          value: 'lorem',
+          type: String,
+          binding: binding,
+          reflect: 0,
+          notify: true,
+          observe: false,
+        });
+      });
+      it('Should assign property definitions correctly', () => {
+        const binding = new Binding(new TestIoNode({label: 'lorem'}), 'label');
+        let propDef1 = new PropertyDefinition({});
+        let propDef2 = new PropertyDefinition({
+          value: 'lorem',
+          type: String,
+          binding: binding,
+          reflect: 2,
+          notify: false,
+          observe: true,
+        });
+        assignPropertyDefinition(propDef1, propDef2);
+        chai.expect(propDef1).to.be.eql(propDef2);
+
+        propDef1 = new PropertyDefinition({});
+        propDef2 = new PropertyDefinition({
+          value: 'lorem',
+          type: String,
+          binding: binding,
+          reflect: 2,
+          notify: false,
+          observe: true,
+        });
+        assignPropertyDefinition(propDef2, propDef1);
+        chai.expect(propDef1).to.be.eql({
+          value: undefined,
+          type: undefined,
+          binding: undefined,
+          reflect: 0,
+          notify: true,
+          observe: false,
+        });
+        chai.expect(propDef2).to.be.eql({
+          value: 'lorem',
+          type: String,
+          binding: binding,
+          reflect: 2,
+          notify: false,
+          observe: true,
+        });
       });
     });
   }

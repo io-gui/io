@@ -64,7 +64,7 @@ export default class {
     describe('EventDispatcher', () => {
       it('Should initialize with correct default values', () => {
         const node = {} as IoNode;
-        const eventDispatcher = new EventDispatcher(node) as any;
+        const eventDispatcher = new EventDispatcher(node);
         chai.expect(eventDispatcher.node).to.be.equal(node);
         chai.expect(eventDispatcher.protoListeners).to.be.eql({});
         chai.expect(eventDispatcher.propListeners).to.be.eql({});
@@ -72,18 +72,18 @@ export default class {
       });
       it('Should initialize listeners from ProtoChain', () => {
         let node = new IoNode1();
-        let eventDispatcher = new EventDispatcher(node) as any;
+        let eventDispatcher = new EventDispatcher(node);
         chai.expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node.handler1]],
         });
         node = new IoNode2();
-        eventDispatcher = new EventDispatcher(node) as any;
+        eventDispatcher = new EventDispatcher(node);
         chai.expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node.handler1]],
           event2:[[node.handler2, {capture:true}]]
         });
         node = new IoNode3();
-        eventDispatcher = new EventDispatcher(node) as any;
+        eventDispatcher = new EventDispatcher(node);
         chai.expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node.handler1], [node.handler3]],
           event2:[[node.handler2, {capture:true}], [handlerFunction, {passive: true}]],
@@ -92,7 +92,7 @@ export default class {
       });
       it('Should set property listeners correctly', () => {
         const node = new IoNode2();
-        const eventDispatcher = new EventDispatcher(node) as any;
+        const eventDispatcher = new EventDispatcher(node);
         const handler4 = () => {};
         const handler5 = () => {};
         eventDispatcher.applyPropListeners({'on-event3': 'handler3', 'on-event4': handler4});
@@ -112,7 +112,7 @@ export default class {
       });
       it('Should add/remove listeners correctly', () => {
         const node = new IoNode2();
-        const eventDispatcher = new EventDispatcher(node) as any;
+        const eventDispatcher = new EventDispatcher(node);
         const listener1 = () => {};
         const listener2 = () => {};
         eventDispatcher.addEventListener('event1', listener1);
@@ -129,7 +129,7 @@ export default class {
       });
       it('Should dispatch added events', () => {
         const node = new IoNode2();
-        const eventDispatcher = new EventDispatcher(node) as any;
+        const eventDispatcher = new EventDispatcher(node);
         let handler4Count = 0;
         const handler4 = () => {
           handler4Count++;
@@ -166,7 +166,7 @@ export default class {
       });
       it('Should dispatch events with correct event detail', () => {
         const node = new IoNode2();
-        const eventDispatcher = new EventDispatcher(node) as any;
+        const eventDispatcher = new EventDispatcher(node);
         let handler4Detail: any;
         const handler4 = (event: CustomEvent) => {
           handler4Detail = event.detail;
@@ -218,7 +218,7 @@ export default class {
       });
       it('Should dispose correctly', () => {
         const node = new IoNode2();
-        const eventDispatcher = new EventDispatcher(node) as any;
+        const eventDispatcher = new EventDispatcher(node);
         eventDispatcher.dispose();
         chai.expect(eventDispatcher.node).to.be.equal(undefined);
         chai.expect(eventDispatcher.protoListeners).to.be.equal(undefined);

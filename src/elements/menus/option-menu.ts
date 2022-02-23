@@ -64,7 +64,6 @@ export class IoOptionMenu extends IoElement {
         type: Options,
         reflect: -1,
         // observe: true,
-        strict: true,
       },
       role: 'button',
     };

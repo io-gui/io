@@ -214,7 +214,6 @@ export class IoGl extends IoElement {
   css: typeof IoThemeSingleton;
   constructor(properties: Record<string, any> = {}) {
     super(properties);
-
     this.css = IoThemeSingleton;
 
     // TODO: improve code clarity

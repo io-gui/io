@@ -4,12 +4,12 @@ import {ListenerDefinition, hardenListenerDefinition, assignListenerDefinition} 
 
 /**
  * Internal utility class that contains usefull information about class inheritance such as:
- * - Array of inherited class constructors up until `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
- * - Array of auto-binding function names that start with "on" or "_"
- * - Properties declared in `static get Properties()` return oject
- * - Listeners declared in `static get Listeners()` return oject
+ * - Array of inherited class constructors ending with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
+ * - Array of function names that start with "on" or "_" for auto-binding
+ * - Property definitions declared in `static get Properties()` return oject
+ * - Listener definitions declared in `static get Listeners()` return oject
  * - CSS style string declared in `static get Style()` return string
- * - Array of property names with `observed: true`
+ * - Array of property names of observed object properties
  *
  * Inherited information is aggregated automatically by prototype chain traversal that
  * It collects information from inhertited classes specified in static getters in an additive manner,
@@ -17,19 +17,19 @@ import {ListenerDefinition, hardenListenerDefinition, assignListenerDefinition} 
  */
 export class ProtoChain {
   /*
-   * Array of inherited class constructors up until `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+   * Array of inherited class constructors ending with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
    */
   public readonly constructors: Array<IoNodeConstructor<any>> = [];
   /*
-   * Array of auto-binding function names that start with "on" or "_".
+   * Array of function names that start with "on" or "_" for auto-binding.
    */
   public readonly functions: Array<string> = [];
   /*
-   * Properties declared in `static get Properties()` return oject.
+   * Property definitions declared in `static get Properties()` return oject.
    */
   public readonly properties: { [property: string]: PropertyDefinition } = {};
   /*
-   * Listeners declared in `static get Listeners()` return oject.
+   * Listener definitions declared in `static get Listeners()` return oject.
    */
   public readonly listeners: { [property: string]: ListenerDefinition[] } = {};
   /*
@@ -37,7 +37,7 @@ export class ProtoChain {
    */
   public readonly style: string = '';
   /*
-   * Array of property names with `observed: true`.
+   * Array of property names of observed object properties.
    */
   public readonly observedObjects: string[] = [];
   /**
@@ -50,13 +50,13 @@ export class ProtoChain {
     // Terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
     while (
       proto
-      && ioNodeClass.name !== 'classConstructor'
+      && ioNodeClass.name !== 'IoNodeMixinConstructor'
       && (ioNodeClass) !== HTMLElement
       && (ioNodeClass) !== Object
       && (ioNodeClass) !== Array) {
         // Add class constructor to array
         this.constructors.push(ioNodeClass);
-        // Add auto-binding function names
+        // Add function names that start with "on" or "_" for auto-binding
         const names = Object.getOwnPropertyNames(proto);
         for (let j = 0; j < names.length; j++) {
           const fn = names[j];
@@ -113,20 +113,17 @@ export class ProtoChain {
         this.observedObjects.push(name);
       }
     }
-    debug: {
-      Object.defineProperty(this, 'constructors',    {enumerable: false, writable: false});
-      Object.defineProperty(this, 'functions',       {enumerable: false, writable: false});
-      Object.defineProperty(this, 'properties',      {enumerable: false, writable: false});
-      Object.defineProperty(this, 'listeners',       {enumerable: false, writable: false});
-      Object.defineProperty(this, 'style',           {enumerable: false, writable: false});
-      Object.defineProperty(this, 'observedObjects', {enumerable: false, writable: false});
-    }
   }
   /**
-   * Binds all auto-binding functions from the `.functions` list to specified `IoNode` instance.
+   * Binds all auto-binding functions from the `.functions` array to specified `IoNode`-derived instance.
    * @param {IoNode} node - `IoNode` instance to bind functions to.
    */
   bindFunctions(node: IoNode) {
+    debug: {
+      if (node.constructor !== this.constructors[0]) {
+        console.warn('`bindFunctions` should be used on', this.constructors[0].name, 'instance');
+      }
+    }
     for (let i = this.functions.length; i--;) {
       Object.defineProperty(node, this.functions[i], {value: node[this.functions[i]].bind(node)});
     }

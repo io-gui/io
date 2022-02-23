@@ -10,9 +10,6 @@ export type PropertyDefinitionWeak = string | number | boolean | Array<any> | nu
   reflect?: ReflectType;
   notify?: boolean;
   observe?: boolean;
-  readonly?: boolean;
-  strict?: boolean;
-  enumerable?: boolean;
 };
 
 /**
@@ -25,11 +22,8 @@ export class PropertyDefinition {
   reflect: ReflectType = 0;
   notify = true;
   observe = false;
-  readonly = false;
-  strict = false;
-  enumerable = true;
   /**
-   * Takes a weakly typed property definition and returns a stronly typed property definition.
+   * Takes a weakly typed property definition and returns a strongly typed property definition.
    * @param {PropertyDefinitionWeak} def Weakly typed property definition
    */
   constructor(def: PropertyDefinitionWeak) {
@@ -49,9 +43,9 @@ export class PropertyDefinition {
       this.reflect = _def.reflect !== undefined ? _def.reflect : 0;
       this.notify = _def.notify !== undefined ? _def.notify : true;
       this.observe = _def.observe !== undefined ? _def.observe : false;
-      this.readonly = _def.readonly !== undefined ? _def.readonly : false;
-      this.strict = _def.strict !== undefined ? _def.strict : false;
-      this.enumerable = _def.enumerable !== undefined ? _def.enumerable : true;
+      if (this.binding !== undefined) {
+        this.value = this.binding.value;
+      }
     } else if (!(def && def.constructor === Object)) {
       this.value = def;
       this.type = def.constructor as AnyConstructor;
@@ -80,9 +74,6 @@ export const assignPropertyDefinition = (def: PropertyDefinition, newDef: Proper
   if (newDef.reflect !== 0) def.reflect = newDef.reflect;
   if (newDef.notify !== true) def.notify = newDef.notify;
   if (newDef.observe !== false) def.observe = newDef.observe;
-  if (newDef.readonly !== false) def.readonly = newDef.readonly;
-  if (newDef.strict !== false) def.strict = newDef.strict;
-  if (newDef.enumerable !== true) def.enumerable = newDef.enumerable;
   if (newDef.binding !== undefined) def.binding = newDef.binding;
 };
 
@@ -103,12 +94,6 @@ export class Property {
   public notify = true;
   // Observe object mutations for this property.
   public observe = false;
-  // Makes the property readonly. // TODO: document and test
-  public readonly = false;
-  // Enforce stric typing. // TODO: document and test
-  public strict = false;
-  // Makes property enumerable.
-  public enumerable = true;
   /**
    * Creates the property configuration object and copies values from `PropertyDefinition`.
    * @param {PropertyDefinition} propDef PropertyDefinition object
@@ -116,7 +101,7 @@ export class Property {
   constructor(propDef: PropertyDefinition) {
     debug: {
       Object.keys(propDef).forEach(key => {
-        if (['value', 'type', 'reflect', 'notify', 'observe', 'readonly', 'strict', 'enumerable', 'binding'].indexOf(key) === -1) {
+        if (['value', 'type', 'reflect', 'notify', 'observe', 'binding'].indexOf(key) === -1) {
           console.warn(`PropertyDefinition: Invalid field ${key}`);
         }
       });
@@ -127,9 +112,6 @@ export class Property {
       }
       if (propDef.notify !== undefined && typeof propDef.notify !== 'boolean') console.warn('Incorrect type for "notify" field');
       if (propDef.observe !== undefined && typeof propDef.observe !== 'boolean') console.warn('Incorrect type for "observe" field');
-      if (propDef.readonly !== undefined && typeof propDef.readonly !== 'boolean') console.warn('Incorrect type for "readonly" field');
-      if (propDef.strict !== undefined && typeof propDef.strict !== 'boolean') console.warn('Incorrect type for "strict" field');
-      if (propDef.enumerable !== undefined && typeof propDef.enumerable !== 'boolean') console.warn('Incorrect type for "enumerable" field');
     }
 
     this.value = propDef.value;
@@ -138,22 +120,19 @@ export class Property {
     this.reflect = propDef.reflect;
     this.notify = propDef.notify;
     this.observe = propDef.observe;
-    this.readonly = propDef.readonly;
-    this.strict = propDef.strict;
-    this.enumerable = propDef.enumerable;
 
-    // TODO: test
-    if (this.binding instanceof Binding) this.value = this.binding.value;
-    else if (this.value === undefined && typeof this.type === 'function') {
-      debug: {
-        console.warn('Property value should always be initialized when type is defined!');
-      }
+    if (this.binding instanceof Binding) {
+      this.value = this.binding.value;
     } else {
       if (this.type === Array && this.value instanceof Array) {
         this.value = [...this.value];
       } else if (typeof this.type === 'function' && this.value instanceof Object) {
-        // console.log(this.type);
         this.value = Object.assign(new this.type(), this.value);
+      }
+    }
+    debug: {
+      if (this.value === undefined && typeof this.type === 'function') {
+        console.warn('Property value should always be initialized when type is defined!');
       }
     }
   }

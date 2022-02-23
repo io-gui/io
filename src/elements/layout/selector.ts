@@ -73,7 +73,6 @@ export class IoSelector extends IoElement {
       options: {
         type: Options,
         observe: true,
-        strict: true,
       },
       elements: {
         type: Array,

@@ -140,12 +140,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           binding.addTarget(this, name);
           value = binding.value;
         } else {
-          if (prop.strict && prop.type && !(value instanceof prop.type)) {
-            debug: {
-              console.warn(`IoGUI strict type mismatch for "${name}" property! Value automatically converted to "${prop.type.name}."`);
-            }
-            value = new prop.type(value);
-          }
           // TODO: Veryfy and test this edge-case fix. Look for regressions.
           // If user uses setProperties() to batch-set multiple properties that are bound to parent element it causes all but one of those properties to be reset
           // to original value once parents's change event happens. This fixex the bug by setting parent's property value with skipDispatch. This can possibly introduce
@@ -212,7 +206,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * [property]-changed` events will be broadcast in the end.
      * @param {Object} props - Map of property names and values.
      */
-     setProperties(props: any) {
+    setProperties(props: any) {
       for (const p in props) {
         if (this._properties[p] === undefined) {
           debug: {
@@ -500,6 +494,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       event.stopPropagation();
     }
   };
+  Object.defineProperty(classConstructor, 'name', {value: 'IoNodeMixinConstructor'});
   return classConstructor;
 }
 
@@ -519,12 +514,8 @@ export const RegisterIoNode = function (nodeConstructor: typeof IoNode) {
         return (this as IoNode)._properties[p].value;
       },
       set: function(value) {
-        debug: {
-          if (proto._protochain.properties[p].readonly) console.error(`IoGUI error. Cannot set value "${value}" to read only property "${p}"`);
-        }
         (this as IoNode).setProperty(p, value);
       },
-      enumerable: !!proto._protochain.properties[p].enumerable,
       configurable: true,
     });
   }
