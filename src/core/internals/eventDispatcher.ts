@@ -1,12 +1,11 @@
 import {IoNode} from '../io-node.js';
 
-// type CustomEventListener = (event: CustomEvent) => void;
-// type EventListener = (event: Event) => void;
-// type AnyEventListener = CustomEventListener | EventListener;
+type CustomEventListener = (event: CustomEvent) => void;
+type AnyEventListener = CustomEventListener | EventListener;
 
-export type ListenerDefinitionWeak = string | EventListener | [string | EventListener, AddEventListenerOptions?];
+export type ListenerDefinitionWeak = string | AnyEventListener | [string | AnyEventListener, AddEventListenerOptions?];
 
-export type ListenerDefinition = [string | EventListener, AddEventListenerOptions?];
+export type ListenerDefinition = [string | AnyEventListener, AddEventListenerOptions?];
 
 /**
  * Takes weakly typed listener definition and returns stronly typed listener definition.
@@ -32,8 +31,7 @@ export const assignListenerDefinition = (defs: ListenerDefinition[], def: Listen
   }
 };
 
-// TODO: consider implementing "once" and "signal" options.
-const LISTENER_OPTIONS = ['capture', 'passive'];
+const LISTENER_OPTIONS = ['capture', 'passive']; // TODO: consider implementing "once" and "signal".
 
 /**
  * Takes a node and a listener definition and returns a listener.
@@ -56,7 +54,7 @@ export const listenerFromDefinition = (node: IoNode | HTMLElement, def: Listener
   return listener;
 };
 
-export type Listener = [EventListener, AddEventListenerOptions?];
+export type Listener = [AnyEventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener[]>;
 
 /**
@@ -94,7 +92,7 @@ export class EventDispatcher {
         const listener = listenerFromDefinition(node, node._protochain.listeners[name][i]);
         this.protoListeners[name].push(listener);
         if (this.isEventTarget) {
-          EventTarget.prototype.addEventListener.call(this.node, name, listener[0], listener[1]);
+          EventTarget.prototype.addEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
         }
       }
     }
@@ -120,7 +118,7 @@ export class EventDispatcher {
         if (this.isEventTarget) {
           const definition = hardenListenerDefinition(propListeners[name][0]);
           const listener = listenerFromDefinition(this.node, definition);
-          EventTarget.prototype.removeEventListener.call(this.node, name, listener[0], listener[1]);
+          EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
         }
         delete propListeners[name];
       }
@@ -130,13 +128,13 @@ export class EventDispatcher {
         const newDefinition = hardenListenerDefinition(newPropListeners[name][0]);
         const newListener = listenerFromDefinition(this.node, newDefinition);
         if (!propListeners[name]) {
-          EventTarget.prototype.addEventListener.call(this.node, name, newListener[0], newListener[1]);
+          EventTarget.prototype.addEventListener.call(this.node, name, newListener[0] as EventListener, newListener[1]);
         } else {
           const definition = hardenListenerDefinition(propListeners[name][0]);
           const listener = listenerFromDefinition(this.node, definition);
           if ((listener !== newListener || newListener[1] && (JSON.stringify(listener[1]) !== JSON.stringify(newListener[1])))) {
-            EventTarget.prototype.removeEventListener.call(this.node, name, listener[0], listener[1]);
-            EventTarget.prototype.addEventListener.call(this.node, name, newListener[0], newListener[1]);
+            EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
+            EventTarget.prototype.addEventListener.call(this.node, name, newListener[0] as EventListener, newListener[1]);
           }
         }
       }
@@ -147,10 +145,10 @@ export class EventDispatcher {
    * Proxy for `addEventListener` method.
    * Adds an event listener to `addedListeners`.
    * @param {string} name Name of the event
-   * @param {EventListener} listener Event listener handler
+   * @param {AnyEventListener} listener Event listener handler
    * @param {AddEventListenerOptions} [options] Event listener options
    */
-  addEventListener(name: string, listener: EventListener, options?: AddEventListenerOptions) {
+  addEventListener(name: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
     this.addedListeners[name] = this.addedListeners[name] || [];
     debug: {
       const l = this.addedListeners[name].findIndex(l => l[0] === listener);
@@ -163,7 +161,7 @@ export class EventDispatcher {
     }
     this.addedListeners[name].push(options ? [listener, options] : [listener]);
     if (this.isEventTarget) {
-      EventTarget.prototype.addEventListener.call(this.node, name, listener, options);
+      EventTarget.prototype.addEventListener.call(this.node, name, listener as EventListener, options);
     }
   }
   /**
@@ -171,10 +169,10 @@ export class EventDispatcher {
    * Removes an event listener from `addedListeners`.
    * If `listener` is not specified it removes all listeners for specified `type`.
    * @param {string} name Name of the event
-   * @param {EventListener} listener Event listener handler
+   * @param {AnyEventListener} listener Event listener handler
    * @param {AddEventListenerOptions} [options] Event listener options
   */
-  removeEventListener(name: string, listener?: EventListener, options?: AddEventListenerOptions) {
+  removeEventListener(name: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
     debug: {
       if (!this.addedListeners[name]) console.warn(`Listener ${name} not found!`);
       if (listener && typeof listener !== 'function') console.warn('Invalid listener type!');
@@ -189,7 +187,7 @@ export class EventDispatcher {
       for (let i = 0; i < this.addedListeners[name].length; i ++) {
         if (this.isEventTarget) {
           const listener = this.addedListeners[name][i];
-          EventTarget.prototype.removeEventListener.call(this.node, name, listener[0], listener[1]);
+          EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
         }
       }
       this.addedListeners[name].length = 0;
@@ -200,7 +198,7 @@ export class EventDispatcher {
       }
       this.addedListeners[name].splice(l, 1);
       if (this.isEventTarget) {
-        EventTarget.prototype.removeEventListener.call(this.node, name, listener, options);
+        EventTarget.prototype.removeEventListener.call(this.node, name, listener as EventListener, options);
       }
     }
     if (this.addedListeners[name].length === 0) {
@@ -215,23 +213,24 @@ export class EventDispatcher {
    * @param {EventTarget} [node] Event target override to dispatch the event from
    */
   dispatchEvent(name: string, detail?: any, bubbles = true, node: EventTarget | IoNode = this.node) {
+    const payload = {detail: detail, target: node, path: [node]} as any;
     if ((node instanceof EventTarget)) {
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
       if (this.protoListeners[name]) {
         for (let i = 0; i < this.protoListeners[name].length; i ++) {
-          this.protoListeners[name][i][0].call(node, {detail: detail, target: node, path: [node]} as any);
+          this.protoListeners[name][i][0].call(node, payload);
         }
       }
       if (this.propListeners[name]) {
         debug: {
           if (this.propListeners[name].length > 1) console.warn(`PropListeners[${name}] array too long!`);
         }
-        this.propListeners[name][0][0].call(node, {detail: detail, target: node, path: [node]} as any);
+        this.propListeners[name][0][0].call(node, payload);
       }
       if (this.addedListeners[name]) {
         for (let i = 0; i < this.addedListeners[name].length; i ++) {
-          this.addedListeners[name][i][0].call(node, {detail: detail, target: node, path: [node]} as any);
+          this.addedListeners[name][i][0].call(node, payload);
         }
       }
     }
@@ -245,7 +244,7 @@ export class EventDispatcher {
       if (this.isEventTarget) {
         for (let i = 0; i < this.protoListeners[name].length; i++) {
           const listener = this.protoListeners[name][i];
-          EventTarget.prototype.removeEventListener.call(this.node, name, listener[0], listener[1]);
+          EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
         }
       }
       this.protoListeners[name].length = 0;
@@ -254,7 +253,7 @@ export class EventDispatcher {
     for (const name in this.propListeners) {
       if (this.isEventTarget) {
         const listener = this.propListeners[name][0];
-        EventTarget.prototype.removeEventListener.call(this.node, name, listener[0], listener[1]);
+        EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
       }
       this.propListeners[name].length = 0;
       delete this.propListeners[name];
@@ -263,7 +262,7 @@ export class EventDispatcher {
       if (this.isEventTarget) {
         for (let i = this.addedListeners[name].length; i--;) {
           const listener = this.addedListeners[name][i];
-          EventTarget.prototype.removeEventListener.call(this.node, name, listener[0], listener[1]);
+          EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
         }
       }
       this.addedListeners[name].length = 0;

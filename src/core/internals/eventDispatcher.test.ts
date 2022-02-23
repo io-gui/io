@@ -62,13 +62,22 @@ window.customElements.define('test-div-event-dispatch', TestDivEventDispatchElem
 export default class {
   run() {
     describe('EventDispatcher', () => {
-      it('Should initialize with correct default values', () => {
+      it('Should initialize with correct values', () => {
         const node = {} as IoNode;
-        const eventDispatcher = new EventDispatcher(node);
+        let eventDispatcher = new EventDispatcher(node);
         chai.expect(eventDispatcher.node).to.be.equal(node);
         chai.expect(eventDispatcher.protoListeners).to.be.eql({});
         chai.expect(eventDispatcher.propListeners).to.be.eql({});
         chai.expect(eventDispatcher.addedListeners).to.be.eql({});
+        chai.expect(eventDispatcher.isEventTarget).to.be.eql(false);
+
+        const element = document.createElement('div');
+        eventDispatcher = new EventDispatcher(element);
+        chai.expect(eventDispatcher.node).to.be.equal(element);
+        chai.expect(eventDispatcher.protoListeners).to.be.eql({});
+        chai.expect(eventDispatcher.propListeners).to.be.eql({});
+        chai.expect(eventDispatcher.addedListeners).to.be.eql({});
+        chai.expect(eventDispatcher.isEventTarget).to.be.equal(true);
       });
       it('Should initialize listeners from ProtoChain', () => {
         let node = new IoNode1();
@@ -188,7 +197,6 @@ export default class {
         chai.expect(handler4Detail).to.be.equal('detail4');
         chai.expect(handler5Detail).to.be.equal('detail5');
       });
-      // TODO: test bubbling and explicit event target.
       it('Should add/remove/dispatch events on HTML elements', () => {
         const element = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
         const eventDispatcher = new EventDispatcher(element as unknown as IoNode) as any;
@@ -215,6 +223,24 @@ export default class {
         chai.expect(element.handler3Detail).to.be.equal('detail3');
         chai.expect(handler4Detail).to.be.equal('detail4');
         chai.expect(handler5Detail).to.be.equal('detail5');
+        // Remove event listeners
+        eventDispatcher.applyPropListeners({});
+        eventDispatcher.removeEventListener('event5', handler5);
+        element.dispatchEvent(new CustomEvent('event3', {detail: 'detail3i'}));
+        element.dispatchEvent(new CustomEvent('event4', {detail: 'detail4i'}));
+        element.dispatchEvent(new CustomEvent('event5', {detail: 'detail5i'}));
+        chai.expect(element.handler3Count).to.be.equal(1);
+        chai.expect(handler4Count).to.be.equal(1);
+        chai.expect(handler5Count).to.be.equal(1);
+        chai.expect(element.handler3Detail).to.be.equal('detail3');
+        chai.expect(handler4Detail).to.be.equal('detail4');
+        chai.expect(handler5Detail).to.be.equal('detail5');
+      });
+      it('Should bubble events if specified', () => {
+        // TODO: test bubbling and explicit event target.
+      });
+      it('Should emit event from specified target', () => {
+        // TODO: test bubbling and explicit event target.
       });
       it('Should dispose correctly', () => {
         const node = new IoNode2();
