@@ -199,7 +199,7 @@ export default class {
       });
       it('Should add/remove/dispatch events on HTML elements', () => {
         const element = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
-        const eventDispatcher = new EventDispatcher(element as unknown as IoNode) as any;
+        const eventDispatcher = new EventDispatcher(element);
         let handler4Count = 0;
         let handler4Detail: any;
         const handler4 = (event: CustomEvent) => {
@@ -237,10 +237,39 @@ export default class {
         chai.expect(handler5Detail).to.be.equal('detail5');
       });
       it('Should bubble events if specified', () => {
-        // TODO: test bubbling and explicit event target.
+        const element = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
+        const parentElement = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
+        parentElement.appendChild(element);
+        const eventDispatcher = new EventDispatcher(element);
+        let eventCount = 0;
+        parentElement.addEventListener('event', () => {
+          eventCount++;
+        });
+        eventDispatcher.dispatchEvent('event', null, false);
+        chai.expect(eventCount).to.be.equal(0);
+        eventDispatcher.dispatchEvent('event', null, true);
+        chai.expect(eventCount).to.be.equal(1);
+        eventDispatcher.dispatchEvent('event');
+        chai.expect(eventCount).to.be.equal(2);
       });
       it('Should emit event from specified target', () => {
-        // TODO: test bubbling and explicit event target.
+        const element = document.createElement('div');
+        const eventDispatcher = new EventDispatcher(element);
+
+        const element2 = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
+        const eventDispatcher2 = new EventDispatcher(element2);
+        eventDispatcher2.applyPropListeners({'on-event3': 'handler3'});
+        let path: any = null;
+        let target: any = null;
+        eventDispatcher2.addEventListener('event3', (event: CustomEvent) => {
+          path = (event as any).path;
+          target = (event as any).target;
+        });
+
+        eventDispatcher.dispatchEvent('event3', 'detail', false, element2);
+        chai.expect(element2.handler3Detail).to.be.equal('detail');
+        chai.expect(path).to.be.eql([element2]);
+        chai.expect(target).to.be.eql(target);
       });
       it('Should dispose correctly', () => {
         const node = new IoNode2();

@@ -31,7 +31,7 @@ export const assignListenerDefinition = (defs: ListenerDefinition[], def: Listen
   }
 };
 
-const LISTENER_OPTIONS = ['capture', 'passive']; // TODO: consider implementing "once" and "signal".
+const LISTENER_OPTIONS = ['capture', 'passive'];
 
 /**
  * Takes a node and a listener definition and returns a listener.
