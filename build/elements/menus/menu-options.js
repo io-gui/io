@@ -104,8 +104,8 @@ export class IoMenuOptions extends IoElement {
             options: {
                 type: Options,
                 observe: true,
-                strict: true,
             },
+            value: null,
             expanded: {
                 value: false,
                 reflect: 1,
@@ -152,7 +152,7 @@ export class IoMenuOptions extends IoElement {
         if (item !== this) {
             event.stopImmediatePropagation();
             if (d.value !== undefined && d.selectable !== false)
-                this.set('value', d.value);
+                this.setValue(d.value);
             this.dispatchEvent('item-clicked', d, true);
             this.requestAnimationFrameOnce(this._collapse);
         }

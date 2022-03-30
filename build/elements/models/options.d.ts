@@ -8,7 +8,10 @@ declare const Options_base: {
         readonly _bindings: Record<string, import("../../iogui.js").Binding>;
         readonly _changeQueue: import("../../iogui.js").ChangeQueue;
         readonly _eventDispatcher: import("../../iogui.js").EventDispatcher;
-        setPropertyValue(name: string, value: any, skipDispatch?: boolean | undefined): void;
+        setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
+        applyProperties(props: any): void;
+        setProperties(props: any): void;
+        setValue(value: any): void;
         dispose(): void;
         changed(): void;
         applyCompose(): void;
@@ -19,8 +22,6 @@ declare const Options_base: {
         objectMutatedThrottled(prop: string): void;
         bind(prop: string): import("../../iogui.js").Binding;
         unbind(prop: string): void;
-        set(prop: string, value: any, force?: boolean | undefined): void;
-        setProperties(props: any): void;
         addEventListener(type: string, listener: EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void), options?: AddEventListenerOptions | undefined): void;
         removeEventListener(type: string, listener?: (EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void)) | undefined, options?: AddEventListenerOptions | undefined): void;
         dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
@@ -39,13 +40,9 @@ export declare class Options extends Options_base {
     static get Properties(): {
         items: {
             type: ArrayConstructor;
-            readonly: boolean;
-            strict: boolean;
         };
         path: {
             type: typeof Path;
-            readonly: boolean;
-            strict: boolean;
         };
         lazy: boolean;
     };

@@ -54,7 +54,25 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * @param {any} value Peroperty value.
          * @param {boolean} [skipDispatch] flag to skip event dispatch.
          */
-        setPropertyValue(name: string, value: any, skipDispatch?: boolean | undefined): void;
+        setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
+        /**
+         * Sets multiple properties in batch.
+         * [property]-changed` events will be broadcast in the end.
+         * @param {Object} props - Map of property names and values.
+         */
+        applyProperties(props: any): void;
+        /**
+         * Sets multiple properties in batch.
+         * [property]-changed` events will be broadcast in the end.
+         * @param {Object} props - Map of property names and values.
+         */
+        setProperties(props: any): void;
+        /**
+         * Sets value property and emits `value-set` event.
+         * Use this when value property is set by user action (e.g. mouse click).
+         * @param {*} value - Property value.
+         */
+        setValue(value: any): void;
         /**
          * Disposes all internals.
          * Use this when instance is no longer needed.
@@ -110,20 +128,6 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          */
         unbind(prop: string): void;
         /**
-         * Sets a property and emits `[property]-set` event.
-         * Use this when property is set by user action (e.g. mouse click).
-         * @param {string} prop - Property name.
-         * @param {*} value - Property value.
-         * @param {boolean} force - Force value set.
-         */
-        set(prop: string, value: any, force?: boolean | undefined): void;
-        /**
-         * Sets multiple properties in batch.
-         * [property]-changed` events will be broadcast in the end.
-         * @param {Object} props - Map of property names and values.
-         */
-        setProperties(props: any): void;
-        /**
          * Wrapper for addEventListener.
          * @param {string} type - listener name.
          * @param {function} listener - listener handler.
@@ -144,7 +148,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -203,7 +207,25 @@ declare const IoNode_base: {
          * @param {any} value Peroperty value.
          * @param {boolean} [skipDispatch] flag to skip event dispatch.
          */
-        setPropertyValue(name: string, value: any, skipDispatch?: boolean | undefined): void;
+        setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
+        /**
+         * Sets multiple properties in batch.
+         * [property]-changed` events will be broadcast in the end.
+         * @param {Object} props - Map of property names and values.
+         */
+        applyProperties(props: any): void;
+        /**
+         * Sets multiple properties in batch.
+         * [property]-changed` events will be broadcast in the end.
+         * @param {Object} props - Map of property names and values.
+         */
+        setProperties(props: any): void;
+        /**
+         * Sets value property and emits `value-set` event.
+         * Use this when value property is set by user action (e.g. mouse click).
+         * @param {*} value - Property value.
+         */
+        setValue(value: any): void;
         /**
          * Disposes all internals.
          * Use this when instance is no longer needed.
@@ -259,20 +281,6 @@ declare const IoNode_base: {
          */
         unbind(prop: string): void;
         /**
-         * Sets a property and emits `[property]-set` event.
-         * Use this when property is set by user action (e.g. mouse click).
-         * @param {string} prop - Property name.
-         * @param {*} value - Property value.
-         * @param {boolean} force - Force value set.
-         */
-        set(prop: string, value: any, force?: boolean | undefined): void;
-        /**
-         * Sets multiple properties in batch.
-         * [property]-changed` events will be broadcast in the end.
-         * @param {Object} props - Map of property names and values.
-         */
-        setProperties(props: any): void;
-        /**
          * Wrapper for addEventListener.
          * @param {string} type - listener name.
          * @param {function} listener - listener handler.
@@ -293,7 +301,7 @@ declare const IoNode_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.

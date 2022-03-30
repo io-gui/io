@@ -38,7 +38,7 @@ export class Binding {
             }
         }
         node._properties[property].binding = this;
-        node.setPropertyValue(property, this.node[this.property]);
+        node.setProperty(property, this.node[this.property]);
         const target = node;
         if (this.targets.indexOf(target) === -1)
             this.targets.push(target);

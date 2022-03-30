@@ -118,7 +118,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
         const vChildren = buildTree()(['root', vDOM]).children;
         host = (host || this);
         if (host === this)
-            this.setPropertyValue('$', {});
+            this.setProperty('$', {});
         this.traverse(vChildren, host);
     }
     /**
@@ -166,11 +166,11 @@ class IoElement extends IoNodeMixin(HTMLElement) {
                 if (child._isIoElement) {
                     // Set IoElement element properties
                     // TODO: Test property and listeners reset. Consider optimizing.
-                    child.setProperties(vChildren[i].props);
+                    child.applyProperties(vChildren[i].props);
                 }
                 else {
                     // Set native HTML element properties
-                    setNativeElementProps(child, vChildren[i].props);
+                    applyNativeElementProps(child, vChildren[i].props);
                 }
             }
         }
@@ -223,8 +223,8 @@ class IoElement extends IoNodeMixin(HTMLElement) {
         this.flattenTextNode(this);
         this._textNode.nodeValue = String(value);
     }
-    setProperties(props) {
-        super.setProperties(props);
+    applyProperties(props) {
+        super.applyProperties(props);
         if (props['style']) {
             for (const s in props['style']) {
                 this.style[s] = props['style'][s];
@@ -482,7 +482,7 @@ const constructElement = function (vDOMNode) {
         return new ConstructorClass(vDOMNode.props);
     // Other element classes constructed with document.createElement.
     const element = document.createElement(vDOMNode.name);
-    setNativeElementProps(element, vDOMNode.props);
+    applyNativeElementProps(element, vDOMNode.props);
     return element;
 };
 const superCreateElement = document.createElement;
@@ -507,7 +507,7 @@ document.createElement = function (...args) {
  * @param {HTMLElement} element - Element to set properties on.
  * @param {Object} props - Element properties.
  */
-const setNativeElementProps = function (element, props) {
+const applyNativeElementProps = function (element, props) {
     for (const p in props) {
         const prop = props[p];
         if (p.startsWith('@')) {
@@ -528,7 +528,7 @@ const setNativeElementProps = function (element, props) {
         Object.defineProperty(element, '_eventDispatcher', { value: new EventDispatcher(element) });
         // TODO: disconnect on disposal?
     }
-    element._eventDispatcher.setPropListeners(props, element);
+    element._eventDispatcher.applyPropListeners(props, element);
 };
 RegisterIoElement(IoElement);
 /** @license

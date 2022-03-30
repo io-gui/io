@@ -106,6 +106,7 @@
     const elementsPath = './build/elements/';
 
     const OPTIONS = new Options([
+    {label: 'Tests', value: 'tests'},
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
       {label: 'Docs', value: 'docs', options: [
         {label: 'Usage', value: docPath + 'getting-started.md#usage'},
@@ -219,9 +220,8 @@
         {label: 'Three.js', value: 'three'},
         {label: 'Menu', value: 'menu'},
       ]},
-      {label: 'Tests', value: 'tests'},
     ], {
-      path: new Path({string: $({key: 'path', storage: 'hash', value: ''})})
+      path: new Path({string: $({key: 'path', storage: 'hash', value: ''})}),
     });
 
     export class IoMainPage extends IoSelectorTabs {

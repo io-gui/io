@@ -12,12 +12,9 @@ export declare class Item extends IoNode {
         selected: BooleanConstructor;
         path: {
             type: typeof Path;
-            readonly: boolean;
-            strict: boolean;
         };
         options: {
             type: typeof Options;
-            strict: boolean;
         };
     };
     get compose(): {

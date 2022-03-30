@@ -57,7 +57,7 @@ export class IoBreadcrumbs extends IoElement {
         };
     }
     _onClick(event) {
-        this.set('selected', this.options[event.detail.value]);
+        this.setProperty('selected', this.options[event.detail.value]);
     }
     valueChanged() {
         this.options.length = 0;

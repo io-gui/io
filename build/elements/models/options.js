@@ -8,13 +8,9 @@ export class Options extends IoNodeMixin(Array) {
         return {
             items: {
                 type: Array,
-                readonly: true,
-                strict: true,
             },
             path: {
                 type: Path,
-                readonly: true,
-                strict: true,
             },
             lazy: true // TODO: test and recosider
         };

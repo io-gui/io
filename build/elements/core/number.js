@@ -222,7 +222,7 @@ export class IoNumber extends IoItem {
         const d = Math.max(0, Math.min(100, -Math.floor(Math.log(this.step) / Math.LN10)));
         valueNumber = Number(valueNumber.toFixed(d));
         if (!isNaN(valueNumber))
-            this.set('value', valueNumber);
+            this.setValue(valueNumber);
         else
             this.textNode = 'NaN';
     }

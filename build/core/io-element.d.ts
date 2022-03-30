@@ -7,7 +7,10 @@ declare const IoElement_base: {
         readonly _bindings: Record<string, import("./index.js").Binding>;
         readonly _changeQueue: import("./index.js").ChangeQueue;
         readonly _eventDispatcher: EventDispatcher;
-        setPropertyValue(name: string, value: any, skipDispatch?: boolean | undefined): void;
+        setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
+        applyProperties(props: any): void;
+        setProperties(props: any): void;
+        setValue(value: any): void;
         dispose(): void;
         changed(): void;
         applyCompose(): void;
@@ -18,11 +21,9 @@ declare const IoElement_base: {
         objectMutatedThrottled(prop: string): void;
         bind(prop: string): import("./index.js").Binding;
         unbind(prop: string): void;
-        set(prop: string, value: any, force?: boolean | undefined): void;
-        setProperties(props: any): void;
         addEventListener(type: string, listener: EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void), options?: AddEventListenerOptions | undefined): void;
         removeEventListener(type: string, listener?: (EventListener | ((event: KeyboardEvent) => void) | ((event: PointerEvent) => void) | ((event: CustomEvent<any>) => void) | ((event: FocusEvent) => void) | ((event: TouchEvent) => void)) | undefined, options?: AddEventListenerOptions | undefined): void;
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
         throttle(func: (arg?: any) => void, arg?: any, asynchronous?: boolean | undefined): void;
         requestAnimationFrameOnce(func: (arg?: any) => void): void;
         filterObject(object: any, predicate: (object: any) => boolean, _depth?: number, _chain?: any[], _i?: number): any;
@@ -71,7 +72,7 @@ declare class IoElement extends IoElement_base {
     flattenTextNode(element: HTMLElement | IoElement): void;
     get textNode(): any;
     set textNode(value: any);
-    setProperties(props: any): void;
+    applyProperties(props: any): void;
     /**
      * Alias for HTMLElement setAttribute where falsey values remove the attribute.
      * @param {string} attr - Attribute name.

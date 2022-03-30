@@ -23,7 +23,6 @@ export const assignListenerDefinition = (defs, def) => {
         defs.push(def);
     }
 };
-// TODO: consider implementing "once" and "signal" options.
 const LISTENER_OPTIONS = ['capture', 'passive'];
 /**
  * Takes a node and a listener definition and returns a listener.
@@ -71,13 +70,6 @@ export class EventDispatcher {
         this.node = node;
         this.isEventTarget = node instanceof EventTarget;
         this.setProtoListeners(node);
-        debug: {
-            Object.defineProperty(this, 'node', { enumerable: false, writable: false });
-            Object.defineProperty(this, 'isEventTarget', { enumerable: false, writable: false });
-            Object.defineProperty(this, 'protoListeners', { enumerable: false, writable: false });
-            Object.defineProperty(this, 'propListeners', { enumerable: false, writable: false });
-            Object.defineProperty(this, 'addedListeners', { enumerable: false, writable: false });
-        }
     }
     /**
      * Sets `protoListeners` specified as `get Listeners()` class declarations.
@@ -100,7 +92,7 @@ export class EventDispatcher {
      * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
      * @param {Record<string, any>} properties Inline properties
      */
-    setPropListeners(properties) {
+    applyPropListeners(properties) {
         const newPropListeners = {};
         for (const prop in properties) {
             if (prop.startsWith('on-')) {
@@ -144,7 +136,7 @@ export class EventDispatcher {
      * Proxy for `addEventListener` method.
      * Adds an event listener to `addedListeners`.
      * @param {string} name Name of the event
-     * @param {EventListener} listener Event listener handler
+     * @param {AnyEventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
      */
     addEventListener(name, listener, options) {
@@ -172,7 +164,7 @@ export class EventDispatcher {
      * Removes an event listener from `addedListeners`.
      * If `listener` is not specified it removes all listeners for specified `type`.
      * @param {string} name Name of the event
-     * @param {EventListener} listener Event listener handler
+     * @param {AnyEventListener} listener Event listener handler
      * @param {AddEventListenerOptions} [options] Event listener options
     */
     removeEventListener(name, listener, options) {
@@ -216,18 +208,19 @@ export class EventDispatcher {
     /**
      * Shorthand for custom event dispatch.
      * @param {string} name Name of the event
-     * @param {Record<string, any>} detail Event detail data
+     * @param {any} detail Event detail data
      * @param {boolean} [bubbles] Makes event bubble
      * @param {EventTarget} [node] Event target override to dispatch the event from
      */
-    dispatchEvent(name, detail = {}, bubbles = true, node = this.node) {
+    dispatchEvent(name, detail, bubbles = true, node = this.node) {
+        const payload = { detail: detail, target: node, path: [node] };
         if ((node instanceof EventTarget)) {
             EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, { detail: detail, bubbles: bubbles, composed: true, cancelable: true }));
         }
         else {
             if (this.protoListeners[name]) {
                 for (let i = 0; i < this.protoListeners[name].length; i++) {
-                    this.protoListeners[name][i][0].call(node, { detail: detail, target: node, path: [node] });
+                    this.protoListeners[name][i][0].call(node, payload);
                 }
             }
             if (this.propListeners[name]) {
@@ -235,11 +228,11 @@ export class EventDispatcher {
                     if (this.propListeners[name].length > 1)
                         console.warn(`PropListeners[${name}] array too long!`);
                 }
-                this.propListeners[name][0][0].call(node, { detail: detail, target: node, path: [node] });
+                this.propListeners[name][0][0].call(node, payload);
             }
             if (this.addedListeners[name]) {
                 for (let i = 0; i < this.addedListeners[name].length; i++) {
-                    this.addedListeners[name][i][0].call(node, { detail: detail, target: node, path: [node] });
+                    this.addedListeners[name][i][0].call(node, payload);
                 }
             }
         }

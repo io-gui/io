@@ -242,11 +242,11 @@ export class IoLadder extends IoElement {
             const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
             let newValue = Math.min(this.max, Math.max(this.min, value + step));
             newValue = Number(newValue.toFixed(5));
-            src.set('value', newValue);
+            src.setValue(newValue);
         }
     }
     _onLadderStepCollapse() {
-        this.set('expanded', false);
+        this.setProperty('expanded', false);
     }
     srcChanged() {
         const src = this.src;

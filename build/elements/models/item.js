@@ -16,12 +16,9 @@ export class Item extends IoNode {
             selected: Boolean,
             path: {
                 type: Path,
-                readonly: true,
-                strict: true,
             },
             options: {
-                type: Options,
-                strict: true
+                type: Options
             }
         };
     }

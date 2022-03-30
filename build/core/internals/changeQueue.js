@@ -50,11 +50,8 @@ export class ChangeQueue {
         this.dispatching = true;
         let changed = false;
         while (this.changes.length) {
-            // TODO: convert to FIFO
-            const i = this.changes.length - 1;
-            // const i = 0;
-            const change = this.changes[i];
-            this.changes.splice(i, 1);
+            const change = this.changes[0];
+            this.changes.splice(0, 1);
             const property = change.property;
             if (change.value !== change.oldValue) {
                 changed = true;

@@ -105,9 +105,11 @@ export class IoSelector extends IoElement {
     this._selectDefault();
   }
   _selectDefault() {
-    if (!this.selected && this.options[0]) {
-      this.selected = this.options[0].value;
-    }
+    // setTimeout(()=> {
+      if (!this.selected && this.options[0]) {
+        this.selected = this.options[0].value;
+      }
+    // }, 100);
   }
   _onIoContentReady(event: CustomEvent) {
     event.stopImmediatePropagation();

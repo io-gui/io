@@ -44,14 +44,14 @@ export class IoString extends IoItem {
     _setFromTextNode() {
         const textNode = this.textNode;
         if (typeof this.value === 'string' && textNode !== String(this.value)) {
-            this.set('value', textNode);
+            this.setValue(textNode);
         }
     }
     _tryParseFromTextNode() {
         const textNode = this.textNode;
         try {
             const value = JSON.parse(textNode.replace(/[\t\n\r ]+/g, ' '));
-            this.set('value', value);
+            this.setValue(value);
         }
         catch (error) {
             console.warn('IoString: Cannot parse value', textNode);

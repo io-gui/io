@@ -8,9 +8,6 @@ export declare type PropertyDefinitionWeak = string | number | boolean | Array<a
     reflect?: ReflectType;
     notify?: boolean;
     observe?: boolean;
-    readonly?: boolean;
-    strict?: boolean;
-    enumerable?: boolean;
 };
 /**
  * Property definition class
@@ -22,11 +19,8 @@ export declare class PropertyDefinition {
     reflect: ReflectType;
     notify: boolean;
     observe: boolean;
-    readonly: boolean;
-    strict: boolean;
-    enumerable: boolean;
     /**
-     * Takes a weakly typed property definition and returns a stronly typed property definition.
+     * Takes a weakly typed property definition and returns a strongly typed property definition.
      * @param {PropertyDefinitionWeak} def Weakly typed property definition
      */
     constructor(def: PropertyDefinitionWeak);
@@ -48,9 +42,6 @@ export declare class Property {
     reflect: ReflectType;
     notify: boolean;
     observe: boolean;
-    readonly: boolean;
-    strict: boolean;
-    enumerable: boolean;
     /**
      * Creates the property configuration object and copies values from `PropertyDefinition`.
      * @param {PropertyDefinition} propDef PropertyDefinition object

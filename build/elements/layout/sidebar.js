@@ -71,7 +71,6 @@ export class IoSidebar extends IoElement {
             options: {
                 type: Options,
                 observe: true,
-                strict: true,
             },
             collapsed: {
                 type: Boolean,
@@ -81,7 +80,7 @@ export class IoSidebar extends IoElement {
         };
     }
     _onSelect(id) {
-        this.set('selected', id);
+        this.setProperty('selected', id);
     }
     _addOptions(options) {
         const elements = [];

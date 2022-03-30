@@ -79,7 +79,6 @@ export class IoMenuItem extends IoItem {
         return {
             option: {
                 type: Item,
-                strict: true,
             },
             expanded: {
                 value: false,

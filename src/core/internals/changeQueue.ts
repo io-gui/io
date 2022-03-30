@@ -46,16 +46,11 @@ export class ChangeQueue {
    */
   dispatch() {
     if (this.dispatching === true) return;
-
     this.dispatching = true;
     let changed = false;
-
     while (this.changes.length) {
-      // TODO: convert to FIFO
-      const i = this.changes.length - 1;
-      // const i = 0;
-      const change = this.changes[i];
-      this.changes.splice(i, 1);
+      const change = this.changes[0];
+      this.changes.splice(0, 1);
       const property = change.property;
       if (change.value !== change.oldValue) {
         changed = true;
@@ -63,12 +58,10 @@ export class ChangeQueue {
         this.node.dispatchEvent(property + '-changed', change);
       }
     }
-
     if (changed) {
       this.node.applyCompose();
       this.node.changed();
     }
-
     this.dispatching = false;
   }
   /**

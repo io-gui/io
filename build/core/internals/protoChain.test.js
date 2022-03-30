@@ -74,47 +74,29 @@ class FakeIoNode3 extends FakeIoNode2 {
 export default class {
     run() {
         describe('ProtoChain', () => {
-            it('Should include an array of all inherited constructors', () => {
+            it('Should include an array of inherited class constructors', () => {
                 let constructors = new ProtoChain(Array3).constructors;
-                chai.expect(constructors[0]).to.be.equal(Array3);
-                chai.expect(constructors[1]).to.be.equal(Array2);
-                chai.expect(constructors[2]).to.be.equal(Array1);
+                chai.expect(constructors).to.be.eql([Array3, Array2, Array1]);
                 constructors = new ProtoChain(Object3).constructors;
-                chai.expect(constructors[0]).to.be.equal(Object3);
-                chai.expect(constructors[1]).to.be.equal(Object2);
-                chai.expect(constructors[2]).to.be.equal(Object1);
+                chai.expect(constructors).to.be.eql([Object3, Object2, Object1]);
                 constructors = new ProtoChain(HTMLElement3).constructors;
-                chai.expect(constructors[0]).to.be.equal(HTMLElement3);
-                chai.expect(constructors[1]).to.be.equal(HTMLElement2);
-                chai.expect(constructors[2]).to.be.equal(HTMLElement1);
+                chai.expect(constructors).to.be.eql([HTMLElement3, HTMLElement2, HTMLElement1]);
                 constructors = new ProtoChain(IoNode1).constructors;
-                chai.expect(constructors[0]).to.be.equal(IoNode1);
-                chai.expect(constructors[1]).to.be.equal(IoNode);
+                chai.expect(constructors).to.be.eql([IoNode1, IoNode]);
                 constructors = new ProtoChain(IoElement1).constructors;
-                chai.expect(constructors[0]).to.be.equal(IoElement1);
-                chai.expect(constructors[1]).to.be.equal(IoElement);
+                chai.expect(constructors).to.be.eql([IoElement1, IoElement]);
                 constructors = new ProtoChain(IoNode2).constructors;
-                chai.expect(constructors[0]).to.be.equal(IoNode2);
+                chai.expect(constructors).to.be.eql([IoNode2]);
             });
-            it('Should end constructor array at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`', () => {
-                let constructors = new ProtoChain(Array3).constructors;
-                chai.expect(constructors[3]).to.be.equal(undefined);
-                constructors = new ProtoChain(Object3).constructors;
-                chai.expect(constructors[3]).to.be.equal(undefined);
-                constructors = new ProtoChain(HTMLElement3).constructors;
-                chai.expect(constructors[3]).to.be.equal(undefined);
-                constructors = new ProtoChain(IoNode1).constructors;
-                chai.expect(constructors[2]).to.be.equal(undefined);
-                constructors = new ProtoChain(IoElement1).constructors;
-                chai.expect(constructors[4]).to.be.equal(undefined);
-                constructors = new ProtoChain(IoNode2).constructors;
-                chai.expect(constructors[1]).to.be.equal(undefined);
-            });
-            it('Should include an array of auto-binding functions starting with "on" or "_"', () => {
-                const protoChain = new ProtoChain(FakeIoNode2);
+            it('Should include an rray of function names that start with "on" or "_" for auto-binding', () => {
+                let protoChain = new ProtoChain(IoNode1);
+                chai.expect(protoChain.functions).to.be.eql([]);
+                protoChain = new ProtoChain(FakeIoNode1);
+                chai.expect(protoChain.functions).to.be.eql(['onFunction1', '_function1']);
+                protoChain = new ProtoChain(FakeIoNode2);
                 chai.expect(protoChain.functions).to.be.eql(['onFunction2', '_function2', 'onFunction1', '_function1']);
             });
-            it('Should bind the auto-binding functions to specified instance with `.bindFunctions(node)` function', () => {
+            it('Should bind all auto-binding functions from the `.functions` array with `.bindFunctions(node)` function', () => {
                 const protoChain = new ProtoChain(FakeIoNode2);
                 const node = new FakeIoNode2();
                 protoChain.bindFunctions(node);
@@ -125,27 +107,44 @@ export default class {
                 chai.expect(node.onFunction2.name).to.be.equal('bound onFunction2');
                 chai.expect(node._function2.name).to.be.equal('bound _function2');
             });
-            it('Should include all declared properties correctly', () => {
-                const protoChain = new ProtoChain(FakeIoNode2);
+            it('Should include all property definitions declared in `static get Properties()` return oject', () => {
+                let protoChain = new ProtoChain(FakeIoNode1);
+                chai.expect(Object.keys(protoChain.properties)).to.be.eql(['prop1']);
+                chai.expect(protoChain.properties).to.be.eql({
+                    prop1: { value: undefined, type: undefined, binding: undefined, notify: false, reflect: 0, observe: false },
+                });
+                protoChain = new ProtoChain(FakeIoNode2);
                 chai.expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2']);
                 chai.expect(protoChain.properties).to.be.eql({
-                    prop1: { value: undefined, type: undefined, binding: undefined, notify: false, reflect: 0, observe: true, readonly: false, strict: false, enumerable: true },
-                    prop2: { value: undefined, type: undefined, binding: undefined, notify: true, reflect: 0, observe: false, readonly: false, strict: false, enumerable: true },
+                    prop1: { value: undefined, type: undefined, binding: undefined, notify: false, reflect: 0, observe: true },
+                    prop2: { value: undefined, type: undefined, binding: undefined, notify: true, reflect: 0, observe: false },
                 });
             });
-            it('Should include all declared listeners correctly', () => {
-                const protoChain = new ProtoChain(FakeIoNode2);
+            it('Should include all listner definitions declared in `static get Listeners()` return oject', () => {
+                let protoChain = new ProtoChain(FakeIoNode1);
+                chai.expect(Object.keys(protoChain.listeners)).to.be.eql(['listener1', 'listener3', 'listener4']);
+                chai.expect(protoChain.listeners['listener1']).to.be.eql([['function1']]);
+                chai.expect(protoChain.listeners['listener3']).to.be.eql([['_function1', { capture: true }]]);
+                chai.expect(String(protoChain.listeners['listener4'])).to.be.eql(String([[() => { }]]));
+                protoChain = new ProtoChain(FakeIoNode2);
                 chai.expect(Object.keys(protoChain.listeners)).to.be.eql(['listener1', 'listener3', 'listener4', 'listener2']);
                 chai.expect(protoChain.listeners['listener1']).to.be.eql([['function1'], ['_function2']]);
                 chai.expect(protoChain.listeners['listener2']).to.be.eql([['function2', { capture: true, passive: true }]]);
                 chai.expect(protoChain.listeners['listener3']).to.be.eql([['_function1', { capture: true, passive: true }]]);
+                chai.expect(String(protoChain.listeners['listener4'])).to.be.eql(String([[() => { }]]));
             });
-            it('Should include all declared style strings correctly', () => {
-                const protoChain = new ProtoChain(FakeIoNode3);
+            it('Should include all style strings declared in `static get Style()` return string', () => {
+                let protoChain = new ProtoChain(FakeIoNode1);
+                chai.expect(protoChain.style).to.be.equal('a\n');
+                protoChain = new ProtoChain(FakeIoNode2);
+                chai.expect(protoChain.style).to.be.equal('a\nb\n');
+                protoChain = new ProtoChain(FakeIoNode3);
                 chai.expect(protoChain.style).to.be.equal('a\nb\n');
             });
-            it('Should include names of all observed object properties', () => {
-                const protoChain = new ProtoChain(FakeIoNode2);
+            it('Should include all property names of observed object properties', () => {
+                let protoChain = new ProtoChain(FakeIoNode1);
+                chai.expect(protoChain.observedObjects).to.be.eql([]);
+                protoChain = new ProtoChain(FakeIoNode2);
                 chai.expect(protoChain.observedObjects).to.be.eql(['prop1']);
             });
         });

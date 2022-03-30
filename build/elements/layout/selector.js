@@ -71,7 +71,6 @@ export class IoSelector extends IoElement {
             options: {
                 type: Options,
                 observe: true,
-                strict: true,
             },
             elements: {
                 type: Array,
@@ -104,9 +103,11 @@ export class IoSelector extends IoElement {
         this._selectDefault();
     }
     _selectDefault() {
+        // setTimeout(()=> {
         if (!this.selected && this.options[0]) {
             this.selected = this.options[0].value;
         }
+        // }, 100);
     }
     _onIoContentReady(event) {
         event.stopImmediatePropagation();
@@ -150,7 +151,7 @@ export class IoSelector extends IoElement {
                 this._scrollID = scrollID || '';
                 const oldSelected = this.selected;
                 const selected = this._selectedID + '#' + this._scrollID;
-                this.setPropertyValue('selected', selected);
+                this.setProperty('selected', selected);
                 this.dispatchEvent('selected-changed', { value: selected, oldValue: oldSelected });
             }
         }, 100);

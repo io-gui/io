@@ -66,14 +66,10 @@ export default class {
                 chai.expect(changeQueue.changes.length).to.be.equal(2);
                 changeQueue.dispatch();
                 chai.expect(changeQueue.changes.length).to.be.equal(0);
-                // TODO: convert to FIFO
-                chai.expect(node.eventName).to.be.equal('test2-changed');
-                chai.expect(node.eventChange?.property).to.be.equal('test2');
-                chai.expect(node.eventChange?.value).to.be.equal(0);
-                chai.expect(node.eventChange?.oldValue).to.be.equal(-1);
-                // chai.expect(node.eventChange?.property).to.be.equal('test3');
-                // chai.expect(node.eventChange?.value).to.be.equal(2);
-                // chai.expect(node.eventChange?.oldValue).to.be.equal(1);
+                chai.expect(node.eventName).to.be.equal('test3-changed');
+                chai.expect(node.eventChange?.property).to.be.equal('test3');
+                chai.expect(node.eventChange?.value).to.be.equal(2);
+                chai.expect(node.eventChange?.oldValue).to.be.equal(1);
                 chai.expect(node.eventDispatchCounter).to.be.equal(3);
                 chai.expect(node.prop1ChangeCounter).to.be.equal(0);
                 chai.expect(node.changeCounter).to.be.equal(2);
@@ -99,11 +95,8 @@ export default class {
                 changeQueue.queue('prop1', 3, 0);
                 changeQueue.queue('prop2', 2, 0);
                 changeQueue.dispatch();
-                // TODO: convert to FIFO
-                chai.expect(JSON.stringify(node.changeRegister)).to.be.equal('["prop2Changed","prop1Changed"]');
-                chai.expect(JSON.stringify(node.eventRegister)).to.be.equal('["prop2-changed","prop1-changed"]');
-                // chai.expect(JSON.stringify(node.changeRegister)).to.be.equal('["prop1Changed","prop2Changed"]');
-                // chai.expect(JSON.stringify(node.eventRegister)).to.be.equal('["prop1-changed","prop2-changed"]');
+                chai.expect(JSON.stringify(node.changeRegister)).to.be.equal('["prop1Changed","prop2Changed"]');
+                chai.expect(JSON.stringify(node.eventRegister)).to.be.equal('["prop1-changed","prop2-changed"]');
             });
             it('Should skip dispatch if value is same as oldValue', () => {
                 const node = new FakeIoNode();
