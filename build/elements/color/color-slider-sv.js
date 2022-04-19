@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/io-element.js';
+import { RegisterIoElement } from '../../iogui.js';
 import { IoColorSlider } from './color-slider.js';
 /*
  * 2D slider. Modifies **saturation** and **value** of the color `value` in **hsv** color space.

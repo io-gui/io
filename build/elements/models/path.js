@@ -1,4 +1,4 @@
-import { IoNode, RegisterIoNode } from '../../core/io-node.js';
+import { IoNode, RegisterIoNode } from '../../iogui.js';
 export class Path extends IoNode {
     static get Properties() {
         return {

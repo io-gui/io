@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../core/io-element.js';
+import { IoElement, RegisterIoElement } from '../../iogui.js';
 import './selector.js';
 const _dragicon = document.createElement('io-tab-dragicon');
 const _dropzone = document.createElement('io-tab-dropzone');

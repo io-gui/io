@@ -1,4 +1,4 @@
-import { IoElement } from '../../core/io-element.js';
+import { IoElement } from '../../iogui.js';
 import './properties.js';
 export declare class IoObject extends IoElement {
     static get Style(): string;

@@ -1,6 +1,5 @@
-import { IoElement } from '../../core/io-element.js';
+import { IoElement, Property } from '../../iogui.js';
 import { IoThemeSingleton } from './theme.js';
-import { Property } from '../../core/internals/property.js';
 declare type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
 export declare class IoGl extends IoElement {
     static get Style(): string;

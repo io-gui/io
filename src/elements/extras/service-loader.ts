@@ -1,4 +1,4 @@
-import {IoNode, RegisterIoNode} from '../../core/io-node.js';
+import {IoNode, RegisterIoNode} from '../../iogui.js';
 
 if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
 if (!('PushManager' in window)) { console.warn('No Push API Support!'); }

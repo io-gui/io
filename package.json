@@ -1,37 +1,32 @@
 {
-  "name": "@iogui/iogui",
-  "version": "0.0.1-rc10",
+  "name": "@io-gui/iogui",
+  "version": "0.1.0",
   "description": "IoGui is a simple web framework for the web.",
   "main": "build/iogui.js",
   "module": "build/iogui.js",
   "type": "module",
   "files": [
     "src",
-    "build/*.js",
-    "lib/ijk.js",
-    "lib/marked.es.js",
+    "lib",
+    "build",
     "LICENSE",
     "README.md"
   ],
   "sideEffects": false,
   "scripts": {
+    "clean": "rm -rf build",
     "lint": "eslint src --fix",
-    "rollup": "rollup -c",
-    "watch": "rollup -c -w",
-    "uglify": "uglifyjs bundle/iogui.js -cmo bundle/iogui.js --comments",
     "docs": "typedoc",
-    "build": "yarn lint && tsc && yarn rollup && yarn uglify && yarn docs"
+    "build": "yarn clean && yarn lint && tsc",
+    "watch": "yarn clean && yarn lint && tsc -w",
+    "uglify": "uglifyjs bundle/iogui.js -cmo bundle/iogui.js --comments",
+    "bundle": "yarn lint && tsc && rollup -c && yarn uglify"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iogui/io.git"
   },
-  "keywords": [
-    "io",
-    "gui",
-    "iogui",
-    "iogui"
-  ],
+  "keywords": ["io","gui","iogui","iogui"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
   "bugs": {

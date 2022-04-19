@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../core/io-element.js';
+import { IoElement, RegisterIoElement } from '../../iogui.js';
 import { IoThemeSingleton } from './theme.js';
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: true });

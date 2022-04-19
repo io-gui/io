@@ -1,4 +1,4 @@
-import { IoElement } from '../../core/io-element.js';
+import { IoElement } from '../../iogui.js';
 import './menu-item.js';
 export declare class IoOptionMenu extends IoElement {
     static get Style(): string;

@@ -1,4 +1,4 @@
-# @iogui/iogui
+# @io-gui/iogui
 
 ## Classes
 

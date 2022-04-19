@@ -1,4 +1,4 @@
-import { IoNode } from '../../core/io-node.js';
+import { IoNode } from '../../iogui.js';
 export declare class IoServiceLoader extends IoNode {
     static get Properties(): any;
     constructor(props?: any);

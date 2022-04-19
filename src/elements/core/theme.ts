@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../iogui.js';
 import {IoStorageFactory as $} from './storage.js';
 
 const themePropDefaults =  {

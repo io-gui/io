@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../core/io-element.js';
+import { IoElement, RegisterIoElement } from '../../iogui.js';
 import './slider.js';
 /*
  * Extends `IoNumberSlider`. Implements `IoNumber` and `IoSliderRange`.

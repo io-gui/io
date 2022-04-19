@@ -34,7 +34,7 @@ declare const Options_base: {
         stopPropagation(event: CustomEvent<any>): void;
     };
     [x: string]: any;
-    readonly Properties: import("../../core/io-node.js").PropertiesDeclaration;
+    readonly Properties: import("../../iogui.js").PropertiesDeclaration;
 };
 export declare class Options extends Options_base {
     static get Properties(): {

@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/io-element.js';
+import { RegisterIoElement } from '../../iogui.js';
 import { IoColorSlider } from './color-slider.js';
 /*
  * Modifies **cyan** component the color `value` in **cmyk** color space.

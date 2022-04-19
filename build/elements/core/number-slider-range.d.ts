@@ -1,4 +1,4 @@
-import { IoElement } from '../../core/io-element.js';
+import { IoElement } from '../../iogui.js';
 import './slider.js';
 export declare class IoNumberSliderRange extends IoElement {
     static get Style(): string;

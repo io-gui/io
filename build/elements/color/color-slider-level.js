@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/io-element.js';
+import { RegisterIoElement } from '../../iogui.js';
 import { IoColorSlider } from './color-slider.js';
 /*
  * Modifies **level** component the color `value` in **hsl** color space.

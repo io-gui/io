@@ -1,4 +1,4 @@
-import { IoNode } from '../../core/io-node.js';
+import { IoNode } from '../../iogui.js';
 import { Options } from './options.js';
 import { Path } from './path.js';
 export declare class Item extends IoNode {

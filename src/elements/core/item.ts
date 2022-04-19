@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {PropertiesDeclaration} from '../../core/io-node.js';
-import {IoElement, RegisterIoElement} from '../../core/io-element.js';
+import {PropertiesDeclaration} from '../../iogui.js';
+import {IoElement, RegisterIoElement} from '../../iogui.js';
 
 /*
  * Extends [`IoElement`](/#doc=core-element).

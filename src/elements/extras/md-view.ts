@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../core/io-element.js';
+import {IoElement, RegisterIoElement} from '../../iogui.js';
 import { marked } from '../../../lib/marked.esm.js';
 
 /*

@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../core/io-element.js';
+import { IoElement, RegisterIoElement } from '../../iogui.js';
 import { Options } from '../models/options.js';
 // TODO: use IoContent for caching and display.
 /*

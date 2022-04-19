@@ -1,4 +1,4 @@
-import {IoNode, RegisterIoNode} from '../../core/io-node.js';
+import {IoNode, RegisterIoNode} from '../../iogui.js';
 
 const IoIconsetDB: Record<string, Record<string, string>> = {};
 

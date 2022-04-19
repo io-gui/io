@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/io-element.js';
+import { RegisterIoElement } from '../../iogui.js';
 import { IoItem } from './item.js';
 /*
  * Extends `IoItem`.

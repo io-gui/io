@@ -1,5 +1,5 @@
-import { PropertiesDeclaration } from '../../core/io-node.js';
-import { IoElement } from '../../core/io-element.js';
+import { PropertiesDeclaration } from '../../iogui.js';
+import { IoElement } from '../../iogui.js';
 export declare class IoItem extends IoElement {
     static get Style(): string;
     static get Properties(): PropertiesDeclaration;

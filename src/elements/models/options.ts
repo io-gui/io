@@ -1,4 +1,4 @@
-import {IoNodeMixin, RegisterIoNode} from '../../core/io-node.js';
+import {IoNodeMixin, RegisterIoNode} from '../../iogui.js';
 import {Item} from './item.js';
 import {Path} from './path.js';
 
