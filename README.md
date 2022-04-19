@@ -8,10 +8,10 @@ IoGui lets you write fast, type-safe and reactive custom elements that respond t
 
 IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting.
 
-For quick start, read about the [basic usage](https://iogui.dev/#path=docs/introduction/), check out the included [collection of elements](https://iogui.dev/#path=demos/elements) and the <a href="https://github.com/io-gui/iogui/" target="_blank">source code</a>. Stay in touch on <a href="https://twitter.com/ioguij" target="_blank">Twitter</a>.
+For quick start, read about the [basic usage](https://iogui.dev/#path=docs/introduction/), check out the included [collection of elements](https://iogui.dev/#path=demos/elements) and the <a href="https://github.com/io-gui/io/" target="_blank">source code</a>. Stay in touch on <a href="https://twitter.com/ioguij" target="_blank">Twitter</a>.
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@io-gui/iogui"><img src="https://img.shields.io/npm/v/@io-gui/iogui.svg" alt="NPM package" /></a>
-  <a href="https://lgtm.com/projects/g/io-gui/iogui/context:javascript"><img src="https://img.shields.io/lgtm/grade/javascript/g/io-gui/iogui.svg?label=code%20quality" alt="Code Quality" /></a>
-  <a href="https://github.com/io-gui/iogui/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@io-gui/iogui.svg" alt="License" /></a>
+  <a href="https://www.npmjs.com/package/io-gui"><img src="https://img.shields.io/npm/v/io-gui.svg" alt="NPM package" /></a>
+  <a href="https://lgtm.com/projects/g/io-gui/io/context:javascript"><img src="https://img.shields.io/lgtm/grade/javascript/g/io-gui/io.svg?label=code%20quality" alt="Code Quality" /></a>
+  <a href="https://github.com/io-gui/io/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@io-gui/io.svg" alt="License" /></a>
 </p>

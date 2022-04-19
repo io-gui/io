@@ -19,7 +19,7 @@ Creates the property configuration object and copies values from `PropertyDefini
 
 #### Defined in
 
-[core/internals/property.ts:101](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L101)
+[core/internals/property.ts:101](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L101)
 
 ## Properties
 
@@ -29,7 +29,7 @@ Creates the property configuration object and copies values from `PropertyDefini
 
 #### Defined in
 
-[core/internals/property.ts:90](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L90)
+[core/internals/property.ts:90](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L90)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:94](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L94)
+[core/internals/property.ts:94](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L94)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:96](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L96)
+[core/internals/property.ts:96](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L96)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:92](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L92)
+[core/internals/property.ts:92](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L92)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:88](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L88)
+[core/internals/property.ts:88](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L88)
 
 ___
 
@@ -79,4 +79,4 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:86](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L86)
+[core/internals/property.ts:86](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L86)

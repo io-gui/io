@@ -18,7 +18,7 @@ CustomEvent.detail
 
 #### Defined in
 
-[core/internals/changeQueue.ts:86](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L86)
+[core/internals/changeQueue.ts:86](https://github.com/io-gui/io/blob/tsc/src/core/internals/changeQueue.ts#L86)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in
 
-[core/internals/changeQueue.ts:87](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L87)
+[core/internals/changeQueue.ts:87](https://github.com/io-gui/io/blob/tsc/src/core/internals/changeQueue.ts#L87)
 
 ___
 
@@ -42,4 +42,4 @@ CustomEvent.target
 
 #### Defined in
 
-[core/internals/changeQueue.ts:85](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L85)
+[core/internals/changeQueue.ts:85](https://github.com/io-gui/io/blob/tsc/src/core/internals/changeQueue.ts#L85)

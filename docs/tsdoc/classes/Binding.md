@@ -21,7 +21,7 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[core/internals/binding.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L19)
+[core/internals/binding.ts:19](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L19)
 
 ## Properties
 
@@ -31,7 +31,7 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[core/internals/binding.ts:10](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L10)
+[core/internals/binding.ts:10](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L10)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[core/internals/binding.ts:11](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L11)
+[core/internals/binding.ts:11](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L11)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[core/internals/binding.ts:13](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L13)
+[core/internals/binding.ts:13](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L13)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[core/internals/binding.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L12)
+[core/internals/binding.ts:12](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L12)
 
 ## Accessors
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[core/internals/binding.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L29)
+[core/internals/binding.ts:29](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L29)
 
 • `set` **value**(`value`): `void`
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[core/internals/binding.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L26)
+[core/internals/binding.ts:26](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L26)
 
 ## Methods
 
@@ -114,7 +114,7 @@ Adds a target `node` and `targetProp` and corresponding `[property]-changed` lis
 
 #### Defined in
 
-[core/internals/binding.ts:37](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L37)
+[core/internals/binding.ts:37](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L37)
 
 ___
 
@@ -131,7 +131,7 @@ Use this when node is no longer needed.
 
 #### Defined in
 
-[core/internals/binding.ts:140](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L140)
+[core/internals/binding.ts:138](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L138)
 
 ___
 
@@ -155,4 +155,4 @@ If `property` is not specified, it removes all target properties.
 
 #### Defined in
 
-[core/internals/binding.ts:61](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L61)
+[core/internals/binding.ts:61](https://github.com/io-gui/io/blob/tsc/src/core/internals/binding.ts#L61)

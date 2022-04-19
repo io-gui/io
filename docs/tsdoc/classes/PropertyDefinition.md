@@ -18,7 +18,7 @@ Takes a weakly typed property definition and returns a strongly typed property d
 
 #### Defined in
 
-[core/internals/property.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L29)
+[core/internals/property.ts:29](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L29)
 
 ## Properties
 
@@ -28,7 +28,7 @@ Takes a weakly typed property definition and returns a strongly typed property d
 
 #### Defined in
 
-[core/internals/property.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L21)
+[core/internals/property.ts:21](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L21)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:23](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L23)
+[core/internals/property.ts:23](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L23)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:24](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L24)
+[core/internals/property.ts:24](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L24)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L22)
+[core/internals/property.ts:22](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L22)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:20](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L20)
+[core/internals/property.ts:20](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L20)
 
 ___
 
@@ -78,4 +78,4 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L19)
+[core/internals/property.ts:19](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L19)

@@ -28,7 +28,7 @@ Creates an instance of `ProtoChain`.
 
 #### Defined in
 
-[core/internals/protoChain.ts:47](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L47)
+[core/internals/protoChain.ts:47](https://github.com/io-gui/io/blob/tsc/src/core/internals/protoChain.ts#L47)
 
 ## Properties
 
@@ -38,7 +38,7 @@ Creates an instance of `ProtoChain`.
 
 #### Defined in
 
-[core/internals/protoChain.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L22)
+[core/internals/protoChain.ts:22](https://github.com/io-gui/io/blob/tsc/src/core/internals/protoChain.ts#L22)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[core/internals/protoChain.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L26)
+[core/internals/protoChain.ts:26](https://github.com/io-gui/io/blob/tsc/src/core/internals/protoChain.ts#L26)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[core/internals/protoChain.ts:34](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L34)
+[core/internals/protoChain.ts:34](https://github.com/io-gui/io/blob/tsc/src/core/internals/protoChain.ts#L34)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[core/internals/protoChain.ts:42](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L42)
+[core/internals/protoChain.ts:42](https://github.com/io-gui/io/blob/tsc/src/core/internals/protoChain.ts#L42)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[core/internals/protoChain.ts:30](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L30)
+[core/internals/protoChain.ts:30](https://github.com/io-gui/io/blob/tsc/src/core/internals/protoChain.ts#L30)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[core/internals/protoChain.ts:38](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L38)
+[core/internals/protoChain.ts:38](https://github.com/io-gui/io/blob/tsc/src/core/internals/protoChain.ts#L38)
 
 ## Methods
 
@@ -118,4 +118,4 @@ Binds all auto-binding functions from the `.functions` array to specified `IoNod
 
 #### Defined in
 
-[core/internals/protoChain.ts:121](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L121)
+[core/internals/protoChain.ts:121](https://github.com/io-gui/io/blob/tsc/src/core/internals/protoChain.ts#L121)
