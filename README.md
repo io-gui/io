@@ -1,4 +1,4 @@
-  <p style="margin-top:2em"><a href="https://iogui.dev" target="_blank" rel="noopener noreferrer"><img width="256" src="https://iogui.dev/iogui/images/logo/io-logo.svg" alt="IoGui Logo"></a></p>
+  <p style="margin-top:2em"><a href="https://iogui.dev" target="_blank" rel="noopener noreferrer"><img width="256" src="https://iogui.dev/io/images/logo/io-logo.svg" alt="IoGui Logo"></a></p>
 
 IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and performance to web development.
 
