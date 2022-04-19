@@ -98,8 +98,7 @@ export class Binding {
     onTargetChanged(event) {
         debug: {
             if (this.targets.indexOf(event.target) === -1) {
-                console.error(`onTargetChanged() should never fire when target is removed from binding.
-          Please file an issue at https://github.com/arodic/iogui/issues.`);
+                console.error('onTargetChanged() should never fire when target is removed from binding. Please file an issue at https://github.com/arodic/iogui/issues.');
                 return;
             }
         }
@@ -119,8 +118,7 @@ export class Binding {
     onSourceChanged(event) {
         debug: {
             if (event.target !== this.node) {
-                console.error(`onSourceChanged() should always originate form source node.
-          Please file an issue at https://github.com/arodic/iogui/issues.`);
+                console.error('onSourceChanged() should always originate form source node. Please file an issue at https://github.com/arodic/iogui/issues.');
                 return;
             }
         }

@@ -1,1 +1,1 @@
-{"version":3,"file":"iogui.d.ts","sourceRoot":"","sources":["../src/iogui.ts"],"names":[],"mappings":"AAAA;;;;;;;;;;;;;;;;;;;;;;GAsBG;AAEH,cAAc,iBAAiB,CAAC"}
+{"version":3,"file":"iogui.d.ts","sourceRoot":"","sources":["../src/iogui.ts"],"names":[],"mappings":"AAAA,cAAc,iBAAiB,CAAC;AAEhC;;;;;;;;;;;;;;;;;;;;;;GAsBG;AAEH,QAAA,MAAM,OAAO,QAAQ,CAAC;AACtB,OAAO,EAAE,OAAO,EAAE,CAAC"}

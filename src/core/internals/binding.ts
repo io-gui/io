@@ -95,8 +95,7 @@ export class Binding {
   private onTargetChanged(event: ChangeEvent) {
     debug: {
       if (this.targets.indexOf(event.target) === -1) {
-        console.error(`onTargetChanged() should never fire when target is removed from binding.
-          Please file an issue at https://github.com/arodic/iogui/issues.`); return;
+        console.error('onTargetChanged() should never fire when target is removed from binding. Please file an issue at https://github.com/arodic/iogui/issues.'); return;
       }
     }
     const oldValue = this.node[this.property];
@@ -114,8 +113,7 @@ export class Binding {
   private onSourceChanged(event: ChangeEvent) {
     debug: {
       if (event.target !== this.node as unknown as EventTarget) {
-        console.error(`onSourceChanged() should always originate form source node.
-          Please file an issue at https://github.com/arodic/iogui/issues.`); return;
+        console.error('onSourceChanged() should always originate form source node. Please file an issue at https://github.com/arodic/iogui/issues.'); return;
       }
     }
     const value = event.detail.value;

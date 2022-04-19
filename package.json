@@ -1,6 +1,6 @@
 {
-  "name": "@io-gui/iogui",
-  "version": "0.1.0",
+  "name": "io-gui",
+  "version": "1.2.0",
   "description": "IoGui is a simple web framework for the web.",
   "main": "build/iogui.js",
   "module": "build/iogui.js",
@@ -20,11 +20,11 @@
     "build": "yarn clean && yarn lint && tsc",
     "watch": "yarn clean && yarn lint && tsc -w",
     "uglify": "uglifyjs bundle/iogui.js -cmo bundle/iogui.js --comments",
-    "bundle": "rm -rf bundle && yarn lint && tsc && rollup -c && yarn uglify"
+    "bundle": "rm -rf bundle && yarn lint && tsc && rollup -c"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iogui/io.git"
+    "url": "git+https://github.com/io-gui/io.git"
   },
   "keywords": [
     "io",
@@ -47,7 +47,7 @@
     "eslint": "^8.13.0",
     "eslint-plugin-html": "^6.2.0",
     "rollup": "^2.70.2",
-    "rollup-plugin-uglify": "^6.0.4",
+    "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2.3.1",
     "typedoc": "^0.22.15",
     "typedoc-plugin-markdown": "^3.12.0",

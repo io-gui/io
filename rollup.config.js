@@ -1,6 +1,6 @@
 import path from 'path';
 import strip from '@rollup/plugin-strip';
-import { uglify } from "rollup-plugin-uglify";
+import { terser } from "rollup-plugin-terser";
 
 function stripLines() {
   let regexes = [
@@ -41,7 +41,7 @@ function makeBundleTarget(src, target) {
         debugger: false,
         labels: ['debug']
       }),
-      uglify()
+      terser()
     ],
     inlineDynamicImports: true,
     output: [{

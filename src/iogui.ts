@@ -1,7 +1,9 @@
-/** @license
- * The MIT License
+export * from './core/index.js';
+
+/** @License
+ * Copyright ©2022 Aleksandar (Aki) Rodic
  *
- * Copyright ©2021 Aleksandarr (Aki) Rodic
+ * The MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,4 +24,5 @@
  * THE SOFTWARE.
  */
 
-export * from './core/index.js';
+const LICENSE = 'MIT';
+export { LICENSE };
