@@ -121,7 +121,7 @@ ___
 
 ### RegisterIoElement
 
-▸ `Const` **RegisterIoElement**(`elementConstructor`): `void`
+▸ **RegisterIoElement**(`elementConstructor`): `void`
 
 Register function for `IoElement`. Registers custom element.
 
@@ -143,7 +143,7 @@ ___
 
 ### RegisterIoNode
 
-▸ `Const` **RegisterIoNode**(`nodeConstructor`): `void`
+▸ **RegisterIoNode**(`nodeConstructor`): `void`
 
 Register function to be called once per class.
 
@@ -165,7 +165,7 @@ ___
 
 ### assignListenerDefinition
 
-▸ `Const` **assignListenerDefinition**(`defs`, `def`): `void`
+▸ **assignListenerDefinition**(`defs`, `def`): `void`
 
 Assigns listener definition to an existing array of listener definitions.
 
@@ -188,7 +188,7 @@ ___
 
 ### assignPropertyDefinition
 
-▸ `Const` **assignPropertyDefinition**(`def`, `newDef`): `void`
+▸ **assignPropertyDefinition**(`def`, `newDef`): `void`
 
 Assigns property definition values to another property definition, unless they are default values.
 
@@ -211,7 +211,7 @@ ___
 
 ### buildTree
 
-▸ `Const` **buildTree**(): (`node`: `any`) => `any`
+▸ **buildTree**(): (`node`: `any`) => `any`
 
 #### Returns
 
@@ -237,7 +237,7 @@ ___
 
 ### hardenListenerDefinition
 
-▸ `Const` **hardenListenerDefinition**(`def`): [`ListenerDefinition`](README.md#listenerdefinition)
+▸ **hardenListenerDefinition**(`def`): [`ListenerDefinition`](README.md#listenerdefinition)
 
 Takes weakly typed listener definition and returns stronly typed listener definition.
 
@@ -261,7 +261,7 @@ ___
 
 ### listenerFromDefinition
 
-▸ `Const` **listenerFromDefinition**(`node`, `def`): [`Listener`](README.md#listener)
+▸ **listenerFromDefinition**(`node`, `def`): [`Listener`](README.md#listener)
 
 Takes a node and a listener definition and returns a listener.
 

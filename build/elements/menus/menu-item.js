@@ -171,6 +171,7 @@ export class IoMenuItem extends IoItem {
             if (this.option.options)
                 this.expanded = true;
         }
+        // eslint-disable-next-line
         hovered = this;
         hoveredParent = this.parentElement;
         // TODO: Safari temp fix for event.movement = 0

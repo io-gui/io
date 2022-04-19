@@ -26,7 +26,12 @@
     "type": "git",
     "url": "git+https://github.com/iogui/io.git"
   },
-  "keywords": ["io","gui","iogui","iogui"],
+  "keywords": [
+    "io",
+    "gui",
+    "iogui",
+    "iogui"
+  ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
   "bugs": {
@@ -34,28 +39,18 @@
   },
   "homepage": "https://iogui.dev",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^13.1.3",
-    "@rollup/plugin-replace": "^3.1.0",
     "@rollup/plugin-strip": "^2.1.0",
-    "@rollup/plugin-typescript": "^8.3.0",
-    "@types/chai": "^4.3.0",
-    "@types/mocha": "^9.0.0",
-    "@types/resize-observer-browser": "^0.1.6",
-    "@typescript-eslint/eslint-plugin": "^5.6.0",
-    "@typescript-eslint/parser": "^5.6.0",
-    "babel-eslint": "^10.1.0",
-    "chai": "^4.3.4",
-    "eslint": "^8.8.0",
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.20.0",
+    "@typescript-eslint/parser": "^5.20.0",
+    "eslint": "^8.13.0",
     "eslint-plugin-html": "^6.2.0",
-    "mocha": "^9.1.3",
-    "puppeteer": "^13.1.3",
-    "rollup": "^2.67.0",
+    "rollup": "^2.70.2",
     "rollup-plugin-uglify": "^6.0.4",
     "tslib": "^2.3.1",
-    "typedoc": "^0.22.10",
-    "typedoc-plugin-markdown": "^3.11.7",
-    "typescript": "^4.5.5",
-    "uglify-js": "^3.14.4"
-  },
-  "dependencies": {}
+    "typedoc": "^0.22.15",
+    "typedoc-plugin-markdown": "^3.12.0",
+    "typescript": "^4.6.3"
+  }
 }
