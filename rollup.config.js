@@ -1,36 +1,23 @@
 import path from 'path';
 import strip from '@rollup/plugin-strip';
-// import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { uglify } from "rollup-plugin-uglify";
 
-function html() {
+function stripLines() {
+  let regexes = [
+    /\/\*\scss\s\*\/([\s\S]*?)`\;/gm,
+    /\/\*\sglsl\s\*\/([\s\S]*?)`\;/gm,
+    /<svg>([\s\S]*?)<\/svg>/gm,
+  ];
   return {
     transform( code ) {
       let transformedCode = code;
-      let regex = /<style>([\s\S]*?)<\/style>/gm;
-      if ( regex.test( code ) === true ) {
-        let match = code.match(regex);
-        for (let i = 0; i < match.length; i++) {
-          transformedCode = transformedCode.replace(match[i], match[i].replace((/ {2}|\r\n|\n|\r/gm), ''));
-        }
-      }
-      return {
-        code: transformedCode,
-        map: { mappings: '' }
-      };
-    }
-  };
-}
-
-function svg() {
-  return {
-    transform( code ) {
-      let transformedCode = code;
-      let regex = /<svg>([\s\S]*?)<\/svg>/gm;
-      if ( regex.test( code ) === true ) {
-        let match = code.match(regex);
-        for (let i = 0; i < match.length; i++) {
-          transformedCode = transformedCode.replace(match[i], match[i].replace((/ {2}|\r\n|\n|\r/gm), ''));
+      for (let j = 0; j < regexes.length; j++) {
+        let regex = regexes[j];
+        if ( regex.test( code ) === true ) {
+          let match = code.match(regex);
+          for (let i = 0; i < match.length; i++) {
+            transformedCode = transformedCode.replace(match[i], match[i].replace((/ {2}|\r\n|\n|\r/gm), ''));
+          }
         }
       }
       return {
@@ -49,9 +36,7 @@ function makeBundleTarget(src, target) {
   return {
     input: src,
     plugins: [
-      html(),
-      svg(),
-      // nodeResolve(),
+      stripLines(),
       strip({
         debugger: false,
         labels: ['debug']

@@ -159,7 +159,7 @@ export class IoGl extends IoElement {
     return '';
   }
   initShader() {
-    let frag = `
+    let frag = /* glsl */`
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
 

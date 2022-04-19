@@ -20,7 +20,7 @@
     "build": "yarn clean && yarn lint && tsc",
     "watch": "yarn clean && yarn lint && tsc -w",
     "uglify": "uglifyjs bundle/iogui.js -cmo bundle/iogui.js --comments",
-    "bundle": "yarn lint && tsc && rollup -c && yarn uglify"
+    "bundle": "rm -rf bundle && yarn lint && tsc && rollup -c && yarn uglify"
   },
   "repository": {
     "type": "git",
