@@ -11,7 +11,13 @@ IoGui includes a robust UI system with menus, layout panels, object editors, col
 For quick start, read about the [basic usage](https://iogui.dev/#path=docs/introduction/), check out the included [collection of elements](https://iogui.dev/#path=demos/elements) and the <a href="https://github.com/io-gui/io/" target="_blank">source code</a>. Stay in touch on <a href="https://twitter.com/ioguij" target="_blank">Twitter</a>.
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/io-gui"><img src="https://img.shields.io/npm/v/io-gui.svg" alt="NPM package" /></a>
-  <a href="https://lgtm.com/projects/g/io-gui/io/context:javascript"><img src="https://img.shields.io/lgtm/grade/javascript/g/io-gui/io.svg?label=code%20quality" alt="Code Quality" /></a>
-  <a href="https://github.com/io-gui/io/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@io-gui/io.svg" alt="License" /></a>
+  <a href="https://www.npmjs.com/package/io-gui">
+    <img src="https://img.shields.io/npm/v/io-gui.svg" alt="NPM package" />
+  </a>
+  <a href="https://lgtm.com/projects/g/io-gui/io/context:javascript">
+    <img src="https://img.shields.io/lgtm/grade/javascript/g/io-gui/io.svg?label=code%20quality" alt="Code Quality" />
+  </a>
+  <a href="https://github.com/io-gui/io/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/io-gui/io" alt="License" />
+  </a>
 </p>

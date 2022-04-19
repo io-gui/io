@@ -33,5 +33,9 @@ jobs:
           restore-keys: ${{ runner.os }}-ci-${{ env.cache-name }}-
       - name: Install packages
         run: yarn
-      - name: === Building ===
+      - name: Building
         run: yarn build
+      - name: Bundling
+        run: yarn bundle
+      - name: Generating docs
+        run: yarn docs
