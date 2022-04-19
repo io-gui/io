@@ -131,8 +131,18 @@ export class Property {
             if (this.type === Array && this.value instanceof Array) {
                 this.value = [...this.value];
             }
-            else if (typeof this.type === 'function' && this.value instanceof Object) {
-                this.value = Object.assign(new this.type(), this.value);
+            else if (typeof this.type === 'function') {
+                const isObject = this.value instanceof Object;
+                if (this.value === undefined)
+                    this.value = new this.type();
+                if (isObject) {
+                    try {
+                        this.value = Object.assign(new this.type(), this.value);
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+                }
             }
         }
         debug: {

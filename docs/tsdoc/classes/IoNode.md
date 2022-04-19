@@ -8,12 +8,6 @@ IoNodeMixin applied to `Object` class.
 
   ↳ **`IoNode`**
 
-  ↳↳ [`Item`](Item.md)
-
-  ↳↳ [`Path`](Path.md)
-
-  ↳↳ [`IoServiceLoader`](IoServiceLoader.md)
-
 ## Constructors
 
 ### constructor
@@ -168,7 +162,7 @@ IoNodeMixin(Object).addEventListener
 
 #### Defined in
 
-[core/io-node.ts:363](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L363)
+[core/io-node.ts:381](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L381)
 
 ___
 
@@ -188,7 +182,34 @@ IoNodeMixin(Object).applyCompose
 
 #### Defined in
 
-[core/io-node.ts:212](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L212)
+[core/io-node.ts:264](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L264)
+
+___
+
+### applyProperties
+
+▸ **applyProperties**(`props`): `void`
+
+Sets multiple properties in batch.
+[property]-changed` events will be broadcast in the end.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `props` | `any` | Map of property names and values. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+IoNodeMixin(Object).applyProperties
+
+#### Defined in
+
+[core/io-node.ts:189](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L189)
 
 ___
 
@@ -216,7 +237,7 @@ IoNodeMixin(Object).bind
 
 #### Defined in
 
-[core/io-node.ts:303](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L303)
+[core/io-node.ts:355](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L355)
 
 ___
 
@@ -237,7 +258,7 @@ IoNodeMixin(Object).changed
 
 #### Defined in
 
-[core/io-node.ts:208](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L208)
+[core/io-node.ts:260](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L260)
 
 ___
 
@@ -266,7 +287,7 @@ IoNodeMixin(Object).dispatchEvent
 
 #### Defined in
 
-[core/io-node.ts:387](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L387)
+[core/io-node.ts:405](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L405)
 
 ___
 
@@ -287,7 +308,7 @@ IoNodeMixin(Object).dispose
 
 #### Defined in
 
-[core/io-node.ts:186](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L186)
+[core/io-node.ts:238](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L238)
 
 ___
 
@@ -315,7 +336,7 @@ IoNodeMixin(Object).filterObject
 
 #### Defined in
 
-[core/io-node.ts:420](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L420)
+[core/io-node.ts:438](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L438)
 
 ___
 
@@ -343,7 +364,7 @@ IoNodeMixin(Object).filterObjects
 
 #### Defined in
 
-[core/io-node.ts:433](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L433)
+[core/io-node.ts:451](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L451)
 
 ___
 
@@ -367,7 +388,7 @@ IoNodeMixin(Object).import
 
 #### Defined in
 
-[core/io-node.ts:450](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L450)
+[core/io-node.ts:468](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L468)
 
 ___
 
@@ -395,7 +416,7 @@ IoNodeMixin(Object).objectMutated
 
 #### Defined in
 
-[core/io-node.ts:267](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L267)
+[core/io-node.ts:319](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L319)
 
 ___
 
@@ -422,7 +443,7 @@ IoNodeMixin(Object).objectMutatedThrottled
 
 #### Defined in
 
-[core/io-node.ts:293](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L293)
+[core/io-node.ts:345](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L345)
 
 ___
 
@@ -448,7 +469,7 @@ IoNodeMixin(Object).preventDefault
 
 #### Defined in
 
-[core/io-node.ts:468](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L468)
+[core/io-node.ts:486](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L486)
 
 ___
 
@@ -476,7 +497,7 @@ IoNodeMixin(Object).queue
 
 #### Defined in
 
-[core/io-node.ts:240](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L240)
+[core/io-node.ts:292](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L292)
 
 ___
 
@@ -496,7 +517,7 @@ IoNodeMixin(Object).queueDispatch
 
 #### Defined in
 
-[core/io-node.ts:246](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L246)
+[core/io-node.ts:298](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L298)
 
 ___
 
@@ -516,7 +537,7 @@ IoNodeMixin(Object).queueDispatchLazy
 
 #### Defined in
 
-[core/io-node.ts:257](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L257)
+[core/io-node.ts:309](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L309)
 
 ___
 
@@ -544,7 +565,7 @@ IoNodeMixin(Object).removeEventListener
 
 #### Defined in
 
-[core/io-node.ts:377](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L377)
+[core/io-node.ts:395](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L395)
 
 ___
 
@@ -568,36 +589,7 @@ IoNodeMixin(Object).requestAnimationFrameOnce
 
 #### Defined in
 
-[core/io-node.ts:417](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L417)
-
-___
-
-### set
-
-▸ **set**(`prop`, `value`, `force?`): `void`
-
-Sets a property and emits `[property]-set` event.
-Use this when property is set by user action (e.g. mouse click).
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property name. |
-| `value` | `any` | Property value. |
-| `force?` | `boolean` | Force value set. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoNodeMixin(Object).set
-
-#### Defined in
-
-[core/io-node.ts:330](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L330)
+[core/io-node.ts:435](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L435)
 
 ___
 
@@ -624,13 +616,13 @@ IoNodeMixin(Object).setProperties
 
 #### Defined in
 
-[core/io-node.ts:342](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L342)
+[core/io-node.ts:209](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L209)
 
 ___
 
-### setPropertyValue
+### setProperty
 
-▸ **setPropertyValue**(`name`, `value`, `skipDispatch?`): `void`
+▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -648,11 +640,38 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoNodeMixin(Object).setPropertyValue
+IoNodeMixin(Object).setProperty
 
 #### Defined in
 
 [core/io-node.ts:130](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L130)
+
+___
+
+### setValue
+
+▸ **setValue**(`value`): `void`
+
+Sets value property and emits `value-set` event.
+Use this when value property is set by user action (e.g. mouse click).
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `value` | `any` | Property value. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+IoNodeMixin(Object).setValue
+
+#### Defined in
+
+[core/io-node.ts:227](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L227)
 
 ___
 
@@ -678,7 +697,7 @@ IoNodeMixin(Object).stopPropagation
 
 #### Defined in
 
-[core/io-node.ts:475](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L475)
+[core/io-node.ts:493](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L493)
 
 ___
 
@@ -706,7 +725,7 @@ IoNodeMixin(Object).throttle
 
 #### Defined in
 
-[core/io-node.ts:396](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L396)
+[core/io-node.ts:414](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L414)
 
 ___
 
@@ -732,4 +751,4 @@ IoNodeMixin(Object).unbind
 
 #### Defined in
 
-[core/io-node.ts:315](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L315)
+[core/io-node.ts:367](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L367)

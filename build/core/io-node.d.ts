@@ -148,7 +148,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
@@ -301,7 +301,7 @@ declare const IoNode_base: {
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: HTMLElement | Node | Window | Document | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.

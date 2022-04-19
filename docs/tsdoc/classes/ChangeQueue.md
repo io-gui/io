@@ -57,7 +57,7 @@ Use this when node queue is no longer needed.
 
 #### Defined in
 
-[core/internals/changeQueue.ts:78](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L78)
+[core/internals/changeQueue.ts:71](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L71)
 
 ___
 

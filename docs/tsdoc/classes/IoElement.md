@@ -8,48 +8,6 @@ Core `IoElement` class.
 
   ↳ **`IoElement`**
 
-  ↳↳ [`IoGl`](IoGl.md)
-
-  ↳↳ [`IoItem`](IoItem.md)
-
-  ↳↳ [`IoContent`](IoContent.md)
-
-  ↳↳ [`IoNumberSlider`](IoNumberSlider.md)
-
-  ↳↳ [`IoNumberSliderRange`](IoNumberSliderRange.md)
-
-  ↳↳ [`IoIcon`](IoIcon.md)
-
-  ↳↳ [`IoMdView`](IoMdView.md)
-
-  ↳↳ [`IoElementDemo`](IoElementDemo.md)
-
-  ↳↳ [`IoLayout`](IoLayout.md)
-
-  ↳↳ [`IoCollapsable`](IoCollapsable.md)
-
-  ↳↳ [`IoSelector`](IoSelector.md)
-
-  ↳↳ [`IoSidebar`](IoSidebar.md)
-
-  ↳↳ [`IoVector`](IoVector.md)
-
-  ↳↳ [`IoMatrix`](IoMatrix.md)
-
-  ↳↳ [`IoMenuOptions`](IoMenuOptions.md)
-
-  ↳↳ [`IoOptionMenu`](IoOptionMenu.md)
-
-  ↳↳ [`IoContextMenu`](IoContextMenu.md)
-
-  ↳↳ [`IoNotify`](IoNotify.md)
-
-  ↳↳ [`IoInspector`](IoInspector.md)
-
-  ↳↳ [`IoObject`](IoObject.md)
-
-  ↳↳ [`IoProperties`](IoProperties.md)
-
 ## Constructors
 
 ### constructor
@@ -172,7 +130,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:214](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L214)
+[core/io-element.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L207)
 
 • `set` **textNode**(`value`): `void`
 
@@ -188,7 +146,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:218](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L218)
+[core/io-element.ts:211](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L211)
 
 ___
 
@@ -202,7 +160,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:67](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L67)
+[core/io-element.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L60)
 
 ___
 
@@ -220,7 +178,7 @@ IoNodeMixin(HTMLElement).Properties
 
 #### Defined in
 
-[core/io-element.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L19)
+[core/io-element.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L12)
 
 ___
 
@@ -248,7 +206,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:72](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L72)
+[core/io-element.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L65)
 
 ## Methods
 
@@ -268,7 +226,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:263](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L263)
+[core/io-element.ts:256](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L256)
 
 ___
 
@@ -296,7 +254,7 @@ IoNodeMixin(HTMLElement).addEventListener
 
 #### Defined in
 
-[core/io-node.ts:363](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L363)
+[core/io-node.ts:381](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L381)
 
 ___
 
@@ -312,7 +270,7 @@ Sets aria attributes.
 
 #### Defined in
 
-[core/io-element.ts:251](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L251)
+[core/io-element.ts:244](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L244)
 
 ___
 
@@ -330,7 +288,31 @@ IoNodeMixin(HTMLElement).applyCompose
 
 #### Defined in
 
-[core/io-element.ts:244](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L244)
+[core/io-element.ts:237](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L237)
+
+___
+
+### applyProperties
+
+▸ **applyProperties**(`props`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `props` | `any` |
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+IoNodeMixin(HTMLElement).applyProperties
+
+#### Defined in
+
+[core/io-element.ts:215](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L215)
 
 ___
 
@@ -352,7 +334,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:82](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L82)
+[core/io-element.ts:75](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L75)
 
 ___
 
@@ -380,7 +362,7 @@ IoNodeMixin(HTMLElement).bind
 
 #### Defined in
 
-[core/io-node.ts:303](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L303)
+[core/io-node.ts:355](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L355)
 
 ___
 
@@ -401,7 +383,7 @@ IoNodeMixin(HTMLElement).changed
 
 #### Defined in
 
-[core/io-node.ts:208](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L208)
+[core/io-node.ts:260](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L260)
 
 ___
 
@@ -417,7 +399,7 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[core/io-element.ts:100](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L100)
+[core/io-element.ts:93](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L93)
 
 ___
 
@@ -433,7 +415,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[core/io-element.ts:109](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L109)
+[core/io-element.ts:102](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L102)
 
 ___
 
@@ -462,7 +444,7 @@ IoNodeMixin(HTMLElement).dispatchEvent
 
 #### Defined in
 
-[core/io-node.ts:387](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L387)
+[core/io-node.ts:405](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L405)
 
 ___
 
@@ -483,7 +465,7 @@ IoNodeMixin(HTMLElement).dispose
 
 #### Defined in
 
-[core/io-node.ts:186](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L186)
+[core/io-node.ts:238](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L238)
 
 ___
 
@@ -511,7 +493,7 @@ IoNodeMixin(HTMLElement).filterObject
 
 #### Defined in
 
-[core/io-node.ts:420](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L420)
+[core/io-node.ts:438](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L438)
 
 ___
 
@@ -539,7 +521,7 @@ IoNodeMixin(HTMLElement).filterObjects
 
 #### Defined in
 
-[core/io-node.ts:433](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L433)
+[core/io-node.ts:451](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L451)
 
 ___
 
@@ -562,7 +544,7 @@ Update textContent via TextNode is better for layout performance.
 
 #### Defined in
 
-[core/io-element.ts:197](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L197)
+[core/io-element.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L190)
 
 ___
 
@@ -582,7 +564,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:370](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L370)
+[core/io-element.ts:363](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L363)
 
 ___
 
@@ -606,7 +588,7 @@ IoNodeMixin(HTMLElement).import
 
 #### Defined in
 
-[core/io-node.ts:450](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L450)
+[core/io-node.ts:468](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L468)
 
 ___
 
@@ -634,7 +616,7 @@ IoNodeMixin(HTMLElement).objectMutated
 
 #### Defined in
 
-[core/io-node.ts:267](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L267)
+[core/io-node.ts:319](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L319)
 
 ___
 
@@ -661,7 +643,7 @@ IoNodeMixin(HTMLElement).objectMutatedThrottled
 
 #### Defined in
 
-[core/io-node.ts:293](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L293)
+[core/io-node.ts:345](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L345)
 
 ___
 
@@ -687,7 +669,7 @@ IoNodeMixin(HTMLElement).preventDefault
 
 #### Defined in
 
-[core/io-node.ts:468](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L468)
+[core/io-node.ts:486](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L486)
 
 ___
 
@@ -715,7 +697,7 @@ IoNodeMixin(HTMLElement).queue
 
 #### Defined in
 
-[core/io-node.ts:240](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L240)
+[core/io-node.ts:292](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L292)
 
 ___
 
@@ -735,7 +717,7 @@ IoNodeMixin(HTMLElement).queueDispatch
 
 #### Defined in
 
-[core/io-node.ts:246](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L246)
+[core/io-node.ts:298](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L298)
 
 ___
 
@@ -755,7 +737,7 @@ IoNodeMixin(HTMLElement).queueDispatchLazy
 
 #### Defined in
 
-[core/io-node.ts:257](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L257)
+[core/io-node.ts:309](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L309)
 
 ___
 
@@ -783,7 +765,7 @@ IoNodeMixin(HTMLElement).removeEventListener
 
 #### Defined in
 
-[core/io-node.ts:377](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L377)
+[core/io-node.ts:395](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L395)
 
 ___
 
@@ -807,36 +789,7 @@ IoNodeMixin(HTMLElement).requestAnimationFrameOnce
 
 #### Defined in
 
-[core/io-node.ts:417](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L417)
-
-___
-
-### set
-
-▸ **set**(`prop`, `value`, `force?`): `void`
-
-Sets a property and emits `[property]-set` event.
-Use this when property is set by user action (e.g. mouse click).
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property name. |
-| `value` | `any` | Property value. |
-| `force?` | `boolean` | Force value set. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoNodeMixin(HTMLElement).set
-
-#### Defined in
-
-[core/io-node.ts:330](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L330)
+[core/io-node.ts:435](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L435)
 
 ___
 
@@ -859,7 +812,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Defined in
 
-[core/io-element.ts:235](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L235)
+[core/io-element.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L228)
 
 ___
 
@@ -867,29 +820,32 @@ ___
 
 ▸ **setProperties**(`props`): `void`
 
+Sets multiple properties in batch.
+[property]-changed` events will be broadcast in the end.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `any` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `props` | `any` | Map of property names and values. |
 
 #### Returns
 
 `void`
 
-#### Overrides
+#### Inherited from
 
 IoNodeMixin(HTMLElement).setProperties
 
 #### Defined in
 
-[core/io-element.ts:222](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L222)
+[core/io-node.ts:209](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L209)
 
 ___
 
-### setPropertyValue
+### setProperty
 
-▸ **setPropertyValue**(`name`, `value`, `skipDispatch?`): `void`
+▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -907,11 +863,38 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setPropertyValue
+IoNodeMixin(HTMLElement).setProperty
 
 #### Defined in
 
 [core/io-node.ts:130](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L130)
+
+___
+
+### setValue
+
+▸ **setValue**(`value`): `void`
+
+Sets value property and emits `value-set` event.
+Use this when value property is set by user action (e.g. mouse click).
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `value` | `any` | Property value. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+IoNodeMixin(HTMLElement).setValue
+
+#### Defined in
+
+[core/io-node.ts:227](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L227)
 
 ___
 
@@ -937,7 +920,7 @@ IoNodeMixin(HTMLElement).stopPropagation
 
 #### Defined in
 
-[core/io-node.ts:475](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L475)
+[core/io-node.ts:493](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L493)
 
 ___
 
@@ -960,7 +943,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Defined in
 
-[core/io-element.ts:119](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L119)
+[core/io-element.ts:112](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L112)
 
 ___
 
@@ -988,7 +971,7 @@ IoNodeMixin(HTMLElement).throttle
 
 #### Defined in
 
-[core/io-node.ts:396](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L396)
+[core/io-node.ts:414](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L414)
 
 ___
 
@@ -1011,7 +994,7 @@ Recurively traverses vDOM.
 
 #### Defined in
 
-[core/io-element.ts:130](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L130)
+[core/io-element.ts:123](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L123)
 
 ___
 
@@ -1037,4 +1020,4 @@ IoNodeMixin(HTMLElement).unbind
 
 #### Defined in
 
-[core/io-node.ts:315](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L315)
+[core/io-node.ts:367](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L367)

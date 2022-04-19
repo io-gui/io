@@ -8,7 +8,7 @@ Property definition class
 
 • **new PropertyDefinition**(`def`)
 
-Takes a weakly typed property definition and returns a stronly typed property definition.
+Takes a weakly typed property definition and returns a strongly typed property definition.
 
 #### Parameters
 
@@ -18,7 +18,7 @@ Takes a weakly typed property definition and returns a stronly typed property de
 
 #### Defined in
 
-[core/internals/property.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L35)
+[core/internals/property.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L29)
 
 ## Properties
 
@@ -28,17 +28,7 @@ Takes a weakly typed property definition and returns a stronly typed property de
 
 #### Defined in
 
-[core/internals/property.ts:24](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L24)
-
-___
-
-### enumerable
-
-• **enumerable**: `boolean` = `true`
-
-#### Defined in
-
-[core/internals/property.ts:30](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L30)
+[core/internals/property.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L21)
 
 ___
 
@@ -48,7 +38,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L26)
+[core/internals/property.ts:23](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L23)
 
 ___
 
@@ -58,17 +48,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:27](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L27)
-
-___
-
-### readonly
-
-• **readonly**: `boolean` = `false`
-
-#### Defined in
-
-[core/internals/property.ts:28](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L28)
+[core/internals/property.ts:24](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L24)
 
 ___
 
@@ -78,17 +58,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:25](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L25)
-
-___
-
-### strict
-
-• **strict**: `boolean` = `false`
-
-#### Defined in
-
-[core/internals/property.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L29)
+[core/internals/property.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L22)
 
 ___
 
@@ -98,7 +68,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:23](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L23)
+[core/internals/property.ts:20](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L20)
 
 ___
 
@@ -108,4 +78,4 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L22)
+[core/internals/property.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L19)

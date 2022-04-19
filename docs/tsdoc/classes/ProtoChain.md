@@ -1,12 +1,12 @@
 # Class: ProtoChain
 
 Internal utility class that contains usefull information about class inheritance such as:
-- Array of inherited class constructors up until `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
-- Array of auto-binding function names that start with "on" or "_"
-- Properties declared in `static get Properties()` return oject
-- Listeners declared in `static get Listeners()` return oject
+- Array of inherited class constructors ending with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
+- Array of function names that start with "on" or "_" for auto-binding
+- Property definitions declared in `static get Properties()` return oject
+- Listener definitions declared in `static get Listeners()` return oject
 - CSS style string declared in `static get Style()` return string
-- Array of property names with `observed: true`
+- Array of property names of observed object properties
 
 Inherited information is aggregated automatically by prototype chain traversal that
 It collects information from inhertited classes specified in static getters in an additive manner,
@@ -104,7 +104,7 @@ ___
 
 ▸ **bindFunctions**(`node`): `void`
 
-Binds all auto-binding functions from the `.functions` list to specified `IoNode` instance.
+Binds all auto-binding functions from the `.functions` array to specified `IoNode`-derived instance.
 
 #### Parameters
 
@@ -118,4 +118,4 @@ Binds all auto-binding functions from the `.functions` list to specified `IoNode
 
 #### Defined in
 
-[core/internals/protoChain.ts:129](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L129)
+[core/internals/protoChain.ts:121](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L121)
