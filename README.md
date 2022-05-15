@@ -2,13 +2,13 @@
 
 IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and performance to web development.
 
-IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB.
+IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB (gzip) and the custom elements library is only 55KB (gzip).
 
 IoGui lets you write fast, type-safe and reactive custom elements that respond to state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a collection of examples and demos.
 
 IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting.
 
-For quick start, read about the [basic usage](https://iogui.dev/#path=docs/introduction/), check out the included [collection of elements](https://iogui.dev/#path=demos/elements) and the <a href="https://github.com/io-gui/io/" target="_blank">source code</a>. Stay in touch on <a href="https://twitter.com/ioguij" target="_blank">Twitter</a>.
+For quick start, read about the [basic usage](https://iogui.dev/io/#path=docs:./docs/getting-started.md#usage), check out the included [collection of elements](https://iogui.dev/io/#path=demos:elements) and the <a href="https://github.com/io-gui/io/" target="_blank">source code</a>. Stay in touch on <a href="https://twitter.com/ioguijs" target="_blank">Twitter</a>.
 
 <p align="center" class="badges">
   <a href="https://www.npmjs.com/package/io-gui">
