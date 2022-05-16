@@ -140,7 +140,7 @@ export class IoSlider extends IoGl {
       const p = this._getPointerCoord(event);
       const _x = this._getValueFromCoord(p[0]);
       const _y = this._getValueFromCoord(p[1]);
-      this._setValue(this.horizontal ? _x : _y);
+      this._setValue(this.horizontal ? _x : _y, this.horizontal ? _y : _x);
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

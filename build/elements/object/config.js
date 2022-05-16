@@ -49,7 +49,7 @@ export class Config {
             const value = object[k] instanceof Binding ? object[k].value : object[k]; // TODO: Unhack demovalues
             // const value = object[k]
             const type = value === null ? 'null' : typeof value;
-            const cstr = (value !== undefined && value.constructor) ? value.constructor.name : 'null';
+            const cstr = (value !== undefined && value !== null && value.constructor) ? value.constructor.name : 'null';
             if (type === 'function')
                 continue;
             const typeStr = 'type:' + type;

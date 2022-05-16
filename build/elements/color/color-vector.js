@@ -52,7 +52,7 @@ export class IoColorVector extends IoColorMixin(IoElement) {
         // TODO: test
         const detail = { object: this.value, property: this.linked ? null : c, value: value, oldValue: oldValue };
         this.dispatchEvent('object-mutated', detail, false, window);
-        // this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
+        this.dispatchEvent('value-set', { property: 'value', value: this.value }, false);
     }
     changed() {
         const elements = [];

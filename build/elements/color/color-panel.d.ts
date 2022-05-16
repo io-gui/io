@@ -20,6 +20,7 @@ export declare class IoColorPanel extends IoColorPanel_base {
         keydown: string;
     };
     _onKeydown(event: KeyboardEvent): void;
+    onValueSet(): void;
     changed(): void;
 }
 export declare const IoColorPanelSingleton: IoColorPanel;

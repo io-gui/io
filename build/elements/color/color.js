@@ -315,6 +315,7 @@ export function IoColorMixin(superclass) {
                 cmyk[2] = this.cmyk[2] * 100;
             }
             //
+            // TODO: allow rgb without alpha
             this.setProperties({
                 rgb: [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255],
                 hsv: [hsv[0] / 360, hsv[1] / 100, hsv[2] / 100],

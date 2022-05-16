@@ -77,13 +77,16 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
       this.expanded = false;
     }
   }
+  onValueSet() {
+    this.dispatchEvent('value-set', {property: 'value', value: this.value}, true);
+  }
   changed() {
     this.template([
       this.mode === 2 ?
-        ['io-color-slider-sl', {value: this.value, mode: this.mode}] :
-        ['io-color-slider-sv', {value: this.value, mode: this.mode}],
-      ['io-color-slider-hue', {value: this.value, mode: this.mode, horizontal: !this.horizontal}],
-      this.alpha !== undefined ? ['io-color-slider-alpha', {value: this.value, horizontal: !this.horizontal}] : null,
+        ['io-color-slider-sl', {value: this.value, mode: this.mode, 'on-value-set': this.onValueSet}] :
+        ['io-color-slider-sv', {value: this.value, mode: this.mode, 'on-value-set': this.onValueSet}],
+      ['io-color-slider-hue', {value: this.value, mode: this.mode, 'on-value-set': this.onValueSet, horizontal: !this.horizontal}],
+      this.alpha !== undefined ?['io-color-slider-alpha', {value: this.value, 'on-value-set': this.onValueSet, horizontal: !this.horizontal}] : null,
     ]);
   }
 }
