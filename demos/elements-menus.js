@@ -75,14 +75,14 @@ export class IoDemoElementsMenus extends IoElement {
         ['io-option-menu', 
         {
           options: new Options([
-            {label: 'negative one', value: -1},
-            {label: 'zero', value: 0},
-            {label: 'half', value: 0.5},
-            {label: 'one', value: 1},
-            {label: 'two', value: 2},
-            {label: 'three', value: 3},
-            {label: 'four', value: 4},
-            {label: 'leet', value: 1337},
+            new Item({label: 'negative one', value: -1}),
+            new Item({label: 'zero', value: 0}),
+            new Item({label: 'half', value: 0.5}),
+            new Item({label: 'one', value: 1}),
+            new Item({label: 'two', value: 2}),
+            new Item({label: 'three', value: 3}),
+            new Item({label: 'four', value: 4}),
+            new Item({label: 'leet', value: 1337}),
           ]),
           value: this.bind('number')
         }],

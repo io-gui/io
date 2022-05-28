@@ -37,7 +37,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
     }
     vec4 paintColorSlider2D(vec2 position, vec3 color) {
       vec4 sliderColor = vec4(0.);
-      float radius = cssItemHeight / 4.;
+      float radius = cssLineHeight / 2.;
       float stroke = cssStrokeWidth;
       vec4 slotColor = vec4(.2, .2, .2, 1.);
       vec4 fillColor = vec4(.8, .8, .8, 1.);

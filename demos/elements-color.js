@@ -1,5 +1,5 @@
 import {IoElement, RegisterIoElement} from '../build/iogui.js';
-import '../build/iogui.elements.js';
+import {Options, Item} from '../build/iogui.elements.js';
 
 export class IoDemoElementsColor extends IoElement {
   static get Style() {
@@ -32,13 +32,17 @@ export class IoDemoElementsColor extends IoElement {
       ['div', {class: 'io-table2 table'}, [
         ['io-item', {label: 'vector3'}], ['io-color-vector', {mode: this.bind('mode'), value: this.vector3}],
         ['io-item', {label: 'vector4'}], ['io-color-vector', {mode: this.bind('mode'), value: this.vector4}],
+        ['io-item', {label: 'mode: rgba'}], ['io-color-vector', {mode: 0, value: this.color}],
+        ['io-item', {label: 'mode: hsva'}], ['io-color-vector', {mode: 1, value: this.color}],
+        ['io-item', {label: 'mode: hsla'}], ['io-color-vector', {mode: 2, value: this.color}],
+        ['io-item', {label: 'mode: cmyka'}], ['io-color-vector', {mode: 3, value: this.color}],
         ['io-item', {label: 'Mode'}],
-        ['io-option-menu', {value: this.bind('mode'), options: [
-          {label: 'rgb', value: 0},
-          {label: 'hsv', value: 1},
-          {label: 'hsl', value: 2},
-          {label: 'cmyk', value: 3},
-        ]}],
+        ['io-option-menu', {value: this.bind('mode'), options: new Options([
+          new Item({label: 'rgb', value: 0}),
+          new Item({label: 'hsv', value: 1}),
+          new Item({label: 'hsl', value: 2}),
+          new Item({label: 'cmyk', value: 3}),
+        ])}],
         ['io-item', {label: 'io-color-panel'}],
         ['io-color-panel', {expanded: true, value: this.color, mode: this.bind('mode'), class: 'color-slider'}],
         ['io-item', {label: 'red'}], ['io-color-slider-red', {value: this.color, mode: this.bind('mode')}],
@@ -63,14 +67,6 @@ export class IoDemoElementsColor extends IoElement {
           ['io-color-slider-blue', {value: this.color, mode: this.bind('mode'), horizontal: false}],
           ['io-color-slider-alpha', {value: this.color, mode: this.bind('mode'), horizontal: false}],
         ]],
-
-        // ['io-color', {value: this.bind('color')}],
-        // ['io-color', {value: this.bind('color')}],
-        // ['io-color', {value: this.bind('color')}],
-        ['io-item', {label: 'mode: rgba'}], ['io-color-vector', {mode: 0, value: this.color}],
-        ['io-item', {label: 'mode: hsva'}], ['io-color-vector', {mode: 1, value: this.color}],
-        ['io-item', {label: 'mode: hsla'}], ['io-color-vector', {mode: 2, value: this.color}],
-        ['io-item', {label: 'mode: cmyka'}], ['io-color-vector', {mode: 3, value: this.color}],
       ]],
     ]);
   }
