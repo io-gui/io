@@ -102,11 +102,11 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
         IoColorPanelSingleton.expanded = true;
         IoLayerSingleton.setElementPosition(IoColorPanelSingleton, 'bottom', this.getBoundingClientRect());
         // hook up 'value-set' event dispatch
-        IoColorPanelSingleton.removeEventListener('value-set', IoColorPanelSingleton._targetValueSetHandler);
         IoColorPanelSingleton.addEventListener('value-set', this._onValueSet);
         IoColorPanelSingleton._targetValueSetHandler = this._onValueSet;
     }
     collapse() {
+        IoColorPanelSingleton.removeEventListener('value-set', IoColorPanelSingleton._targetValueSetHandler);
         IoColorPanelSingleton.expanded = false;
     }
     changed() {

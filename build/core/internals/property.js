@@ -2,7 +2,7 @@ import { Binding } from './binding.js';
 /**
  * Property definition class
  */
-export class PropertyDefinition {
+export class ProtoProperty {
     value;
     type;
     binding;
@@ -61,10 +61,10 @@ export class PropertyDefinition {
 }
 /**
  * Assigns property definition values to another property definition, unless they are default values.
- * @param {PropertyDefinition} def Property definition
- * @param {PropertyDefinition} newDef Existing property definition
+ * @param {ProtoProperty} def Property definition
+ * @param {ProtoProperty} newDef Existing property definition
  */
-export const assignPropertyDefinition = (def, newDef) => {
+export const assignProtoProperty = (def, newDef) => {
     if (newDef.value !== undefined)
         def.value = newDef.value;
     if (newDef.type !== undefined)
@@ -80,7 +80,7 @@ export const assignPropertyDefinition = (def, newDef) => {
 };
 /**
  * Property configuration object.
- * It is initialized from corresponding `PropertyDefinition` in `ProtoChain`.
+ * It is initialized from corresponding `ProtoProperty` in `ProtoChain`.
  */
 export class Property {
     // Property value.
@@ -96,14 +96,14 @@ export class Property {
     // Observe object mutations for this property.
     observe = false;
     /**
-     * Creates the property configuration object and copies values from `PropertyDefinition`.
-     * @param {PropertyDefinition} propDef PropertyDefinition object
+     * Creates the property configuration object and copies values from `ProtoProperty`.
+     * @param {ProtoProperty} propDef ProtoProperty object
      */
     constructor(propDef) {
         debug: {
             Object.keys(propDef).forEach(key => {
                 if (['value', 'type', 'reflect', 'notify', 'observe', 'binding'].indexOf(key) === -1) {
-                    console.warn(`PropertyDefinition: Invalid field ${key}`);
+                    console.warn(`ProtoProperty: Invalid field ${key}`);
                 }
             });
             if (propDef.type !== undefined && typeof propDef.type !== 'function')

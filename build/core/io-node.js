@@ -106,14 +106,15 @@ export function IoNodeMixin(superclass) {
                     value = binding.value;
                 }
                 else {
-                    // TODO: Veryfy and test this edge-case fix. Look for regressions.
-                    // If user uses setProperties() to batch-set multiple properties that are bound to parent element it causes all but one of those properties to be reset
-                    // to original value once parents's change event happens. This fixex the bug by setting parent's property value with skipDispatch. This can possibly introduce
+                    // TODO: Verify and test this edge-case fix. Look for regressions.
+                    // If user uses setProperties() to batch-set multiple properties that are bound to parent element it causes
+                    // all but one of those properties to be reset to original value once parents's change event happens.
+                    // This fixes the bug by setting parent's property value with skipDispatch. This can possibly introduce
                     // bug when parent has properties bound to other elements. Create and extensive test for this but fix.
-                    // TODO: finish this fix
-                    if (prop.binding && skipDispatch) {
-                        prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
-                    }
+                    // TODO: finish this fix - it caused regression in io-option-menu
+                    // if (prop.binding && skipDispatch) {
+                    //   prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
+                    // }
                 }
                 prop.value = value;
                 debug: {

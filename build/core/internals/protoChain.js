@@ -1,4 +1,4 @@
-import { PropertyDefinition, assignPropertyDefinition } from './property.js';
+import { ProtoProperty, assignProtoProperty } from './property.js';
 import { hardenListenerDefinition, assignListenerDefinition } from './eventDispatcher.js';
 /**
  * Internal utility class that contains usefull information about class inheritance such as:
@@ -6,12 +6,10 @@ import { hardenListenerDefinition, assignListenerDefinition } from './eventDispa
  * - Array of function names that start with "on" or "_" for auto-binding
  * - Property definitions declared in `static get Properties()` return oject
  * - Listener definitions declared in `static get Listeners()` return oject
- * - CSS style string declared in `static get Style()` return string
+ * - CSS style definitions declared in `static get Style()` return string
  * - Array of property names of observed object properties
  *
- * Inherited information is aggregated automatically by prototype chain traversal that
- * It collects information from inhertited classes specified in static getters in an additive manner,
- * respecting the order of inheritance.
+ * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
  */
 export class ProtoChain {
     /*
@@ -31,7 +29,7 @@ export class ProtoChain {
      */
     listeners = {};
     /*
-     * CSS style string declared in `static get Style()` return string.
+     * CSS style definitions declared in `static get Style()` return string.
      */
     style = '';
     /*
@@ -57,12 +55,14 @@ export class ProtoChain {
             const names = Object.getOwnPropertyNames(proto);
             for (let j = 0; j < names.length; j++) {
                 const fn = names[j];
-                const propDesr = Object.getOwnPropertyDescriptor(proto, fn);
-                if (propDesr === undefined || propDesr.get || propDesr.set)
-                    continue;
-                if (typeof proto[fn] === 'function') {
-                    if (this.functions.indexOf(fn) === -1 && (fn.startsWith('_') || fn.startsWith('on'))) {
-                        this.functions.push(fn);
+                if (fn.startsWith('_') || fn.startsWith('on')) {
+                    const propDesr = Object.getOwnPropertyDescriptor(proto, fn);
+                    if (propDesr === undefined || propDesr.get || propDesr.set)
+                        continue;
+                    if (typeof proto[fn] === 'function') {
+                        if (this.functions.indexOf(fn) === -1) {
+                            this.functions.push(fn);
+                        }
                     }
                 }
             }
@@ -80,11 +80,11 @@ export class ProtoChain {
             // Add properties
             const props = this.constructors[i].Properties;
             for (const name in props) {
-                const hardPropDef = new PropertyDefinition(props[name]);
+                const hardPropDef = new ProtoProperty(props[name]);
                 if (!this.properties[name])
                     this.properties[name] = hardPropDef;
                 else
-                    assignPropertyDefinition(this.properties[name], hardPropDef);
+                    assignProtoProperty(this.properties[name], hardPropDef);
             }
             // Add listeners
             const listeners = this.constructors[i].Listeners;

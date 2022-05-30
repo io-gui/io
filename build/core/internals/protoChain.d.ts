@@ -1,5 +1,5 @@
 import { IoNode, IoNodeConstructor } from '../io-node.js';
-import { PropertyDefinition } from './property.js';
+import { ProtoProperty } from './property.js';
 import { ListenerDefinition } from './eventDispatcher.js';
 /**
  * Internal utility class that contains usefull information about class inheritance such as:
@@ -7,18 +7,16 @@ import { ListenerDefinition } from './eventDispatcher.js';
  * - Array of function names that start with "on" or "_" for auto-binding
  * - Property definitions declared in `static get Properties()` return oject
  * - Listener definitions declared in `static get Listeners()` return oject
- * - CSS style string declared in `static get Style()` return string
+ * - CSS style definitions declared in `static get Style()` return string
  * - Array of property names of observed object properties
  *
- * Inherited information is aggregated automatically by prototype chain traversal that
- * It collects information from inhertited classes specified in static getters in an additive manner,
- * respecting the order of inheritance.
+ * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
  */
 export declare class ProtoChain {
     readonly constructors: Array<IoNodeConstructor<any>>;
     readonly functions: Array<string>;
     readonly properties: {
-        [property: string]: PropertyDefinition;
+        [property: string]: ProtoProperty;
     };
     readonly listeners: {
         [property: string]: ListenerDefinition[];

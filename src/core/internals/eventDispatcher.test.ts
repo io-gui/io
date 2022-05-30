@@ -94,8 +94,8 @@ export default class {
         node = new IoNode3();
         eventDispatcher = new EventDispatcher(node);
         chai.expect(eventDispatcher.protoListeners).to.be.eql({
-          event1:[[node.handler1], [node.handler3]],
-          event2:[[node.handler2, {capture:true}], [handlerFunction, {passive: true}]],
+          event1:[[node.handler3]],
+          event2:[[handlerFunction, {passive: true}]],
           event3:[[handlerFunction]]
         });
       });

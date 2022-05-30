@@ -1,4 +1,4 @@
-import {Binding, PropertyDefinition, Property, IoNode, RegisterIoNode, PropertiesDeclaration, assignPropertyDefinition} from '../../iogui.js';
+import {Binding, ProtoProperty, Property, IoNode, RegisterIoNode, PropertiesDeclaration, assignProtoProperty} from '../../iogui.js';
 
 class Object1 {
   prop = true;
@@ -19,7 +19,7 @@ export default class {
       it('Should initialize correct property definitions and values from weakly typed property definitions', () => {
         let propDef, prop;
         // initialize with empty object as property definition
-        propDef = new PropertyDefinition({});
+        propDef = new ProtoProperty({});
         prop = new Property(propDef);
         chai.expect(propDef).to.be.eql(prop).to.be.eql({
           value: undefined,
@@ -30,7 +30,7 @@ export default class {
           observe: false,
         });
         // initialize with null property definition
-        propDef = new PropertyDefinition(null);
+        propDef = new ProtoProperty(null);
         prop = new Property(propDef);
         chai.expect(propDef).to.be.eql(prop).to.be.eql({
           value: null,
@@ -41,7 +41,7 @@ export default class {
           observe: false,
         });
         // initialize with undefined property definition
-        propDef = new PropertyDefinition(undefined);
+        propDef = new ProtoProperty(undefined);
         prop = new Property(propDef);
         chai.expect(propDef).to.be.eql(prop).to.be.eql({
           value: undefined,
@@ -52,7 +52,7 @@ export default class {
           observe: false,
         });
         // initialize with Number property definition
-        propDef = new PropertyDefinition(Number);
+        propDef = new ProtoProperty(Number);
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 0,
@@ -63,7 +63,7 @@ export default class {
           observe: false,
         });
         // initialize with type: Number property definition
-        propDef = new PropertyDefinition({type: Number});
+        propDef = new ProtoProperty({type: Number});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 0,
@@ -74,7 +74,7 @@ export default class {
           observe: false,
         });
         // initialize with number property definition
-        propDef = new PropertyDefinition(1);
+        propDef = new ProtoProperty(1);
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 1,
@@ -85,7 +85,7 @@ export default class {
           observe: false,
         });
         // initialize with value: number property definition
-        propDef = new PropertyDefinition({value: 2});
+        propDef = new ProtoProperty({value: 2});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 2,
@@ -96,7 +96,7 @@ export default class {
           observe: false,
         });
         // initialize with String property definition
-        propDef = new PropertyDefinition(String);
+        propDef = new ProtoProperty(String);
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: '',
@@ -107,7 +107,7 @@ export default class {
           observe: false,
         });
         // initialize with type: String property definition
-        propDef = new PropertyDefinition({type: String});
+        propDef = new ProtoProperty({type: String});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: '',
@@ -118,7 +118,7 @@ export default class {
           observe: false,
         });
         // initialize with string property definition
-        propDef = new PropertyDefinition('test');
+        propDef = new ProtoProperty('test');
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 'test',
@@ -129,7 +129,7 @@ export default class {
           observe: false,
         });
         // initialize with value: string property definition
-        propDef = new PropertyDefinition({value: 'test'});
+        propDef = new ProtoProperty({value: 'test'});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: 'test',
@@ -140,7 +140,7 @@ export default class {
           observe: false,
         });
         // initialize with Boolean property definition
-        propDef = new PropertyDefinition(Boolean);
+        propDef = new ProtoProperty(Boolean);
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: false,
@@ -151,7 +151,7 @@ export default class {
           observe: false,
         });
         // initialize with type: Boolean property definition
-        propDef = new PropertyDefinition({type: Boolean});
+        propDef = new ProtoProperty({type: Boolean});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: false,
@@ -162,7 +162,7 @@ export default class {
           observe: false,
         });
         // initialize with boolean property definition
-        propDef = new PropertyDefinition(true);
+        propDef = new ProtoProperty(true);
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: true,
@@ -173,7 +173,7 @@ export default class {
           observe: false,
         });
         // initialize with value: boolean property definition
-        propDef = new PropertyDefinition({value: true});
+        propDef = new ProtoProperty({value: true});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: true,
@@ -184,7 +184,7 @@ export default class {
           observe: false,
         });
         // initialize with Object property definition
-        propDef = new PropertyDefinition(Object);
+        propDef = new ProtoProperty(Object);
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: {},
@@ -195,7 +195,7 @@ export default class {
           observe: false,
         });
         // initialize with type: Object property definition
-        propDef = new PropertyDefinition({type: Object});
+        propDef = new ProtoProperty({type: Object});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: {},
@@ -207,7 +207,7 @@ export default class {
         });
         const object = {prop: true};
         // initialize with object: value property definition
-        propDef = new PropertyDefinition({value: object});
+        propDef = new ProtoProperty({value: object});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: {prop: true},
@@ -220,7 +220,7 @@ export default class {
         chai.expect(propDef.value).to.equal(object);
         chai.expect(prop.value).not.to.equal(object);
         // initialize with Array property definition
-        propDef = new PropertyDefinition(Array);
+        propDef = new ProtoProperty(Array);
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: [],
@@ -231,7 +231,7 @@ export default class {
           observe: false,
         });
         // initialize with type: Array property definition
-        propDef = new PropertyDefinition({type: Array});
+        propDef = new ProtoProperty({type: Array});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: [],
@@ -242,7 +242,7 @@ export default class {
           observe: false,
         });
         // initialize with custom Object1 property definition
-        propDef = new PropertyDefinition(Object1);
+        propDef = new ProtoProperty(Object1);
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: new Object1(),
@@ -254,7 +254,7 @@ export default class {
         });
         // initialize with an object property definition with object value property
         const array = [1, 2, 3];
-        propDef = new PropertyDefinition({value: array});
+        propDef = new ProtoProperty({value: array});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: [1, 2, 3],
@@ -268,7 +268,7 @@ export default class {
         chai.expect(prop.value).not.to.equal(array);
         // initialize with an object property definition with custom object1 value property
         const object1 = new Object1();
-        propDef = new PropertyDefinition({value: object1});
+        propDef = new ProtoProperty({value: object1});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: new Object1(),
@@ -281,7 +281,7 @@ export default class {
         chai.expect(propDef.value).to.equal(object1);
         chai.expect(prop.value).not.to.equal(object1);
         // initialize with an object property definition with custom Object1 type property
-        propDef = new PropertyDefinition({type: Object1});
+        propDef = new ProtoProperty({type: Object1});
         prop = new Property(propDef);
         chai.expect(prop).to.be.eql(propDef).to.be.eql({
           value: {prop: true},
@@ -292,7 +292,7 @@ export default class {
           observe: false,
         });
         // initialize with non-default property definition
-        propDef = new PropertyDefinition({
+        propDef = new ProtoProperty({
           reflect: -1,
           notify: false,
           observe: true,
@@ -311,7 +311,7 @@ export default class {
         let propDef, prop;
         let binding = new Binding(new TestIoNode({label: 'lorem'}), 'label');
 
-        propDef = new PropertyDefinition(binding);
+        propDef = new ProtoProperty(binding);
         prop = new Property(propDef);
 
         chai.expect(propDef).to.be.eql(prop).to.be.eql({
@@ -325,7 +325,7 @@ export default class {
 
         binding = new Binding(new TestIoNode({label: 'lorem'}), 'label');
 
-        propDef = new PropertyDefinition({binding: binding, value: 'ipsum'});
+        propDef = new ProtoProperty({binding: binding, value: 'ipsum'});
         prop = new Property(propDef);
 
         chai.expect(propDef).to.be.eql(prop).to.be.eql({
@@ -339,8 +339,8 @@ export default class {
       });
       it('Should assign property definitions correctly', () => {
         const binding = new Binding(new TestIoNode({label: 'lorem'}), 'label');
-        let propDef1 = new PropertyDefinition({});
-        let propDef2 = new PropertyDefinition({
+        let propDef1 = new ProtoProperty({});
+        let propDef2 = new ProtoProperty({
           value: 'lorem',
           type: String,
           binding: binding,
@@ -348,11 +348,11 @@ export default class {
           notify: false,
           observe: true,
         });
-        assignPropertyDefinition(propDef1, propDef2);
+        assignProtoProperty(propDef1, propDef2);
         chai.expect(propDef1).to.be.eql(propDef2);
 
-        propDef1 = new PropertyDefinition({});
-        propDef2 = new PropertyDefinition({
+        propDef1 = new ProtoProperty({});
+        propDef2 = new ProtoProperty({
           value: 'lorem',
           type: String,
           binding: binding,
@@ -360,7 +360,7 @@ export default class {
           notify: false,
           observe: true,
         });
-        assignPropertyDefinition(propDef2, propDef1);
+        assignProtoProperty(propDef2, propDef1);
         chai.expect(propDef1).to.be.eql({
           value: undefined,
           type: undefined,

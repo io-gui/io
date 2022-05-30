@@ -112,6 +112,7 @@ export class IoOptionMenu extends IoElement {
         const option = new Item({
             label: valueText,
             options: this.options,
+            // TODO: this causes _setValue to trigger initially
             'on-path-changed': this._setValue,
         });
         this.template([

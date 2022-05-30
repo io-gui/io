@@ -1,23 +1,25 @@
-import {Binding} from './binding.js';
+import { Binding } from './binding.js';
 
-type AnyConstructor = new (...args: any[]) => unknown;
+type Constructor = new (...args: any[]) => unknown;
 type ReflectType = -1 | 0 | 1 | 2;
 
-export type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | {
+export type PropertyDefinitionStrong = {
   value?: any;
-  type?: AnyConstructor;
+  type?: Constructor;
   binding?: Binding;
   reflect?: ReflectType;
   notify?: boolean;
   observe?: boolean;
 };
 
+export type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinitionStrong;
+
 /**
  * Property definition class
  */
-export class PropertyDefinition {
+export class ProtoProperty {
   value?: any;
-  type?: AnyConstructor;
+  type?: Constructor;
   binding?: Binding;
   reflect: ReflectType = 0;
   notify = true;
@@ -36,7 +38,7 @@ export class PropertyDefinition {
       this.type = (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
       this.binding = def;
     } else if (def && def.constructor === Object) {
-      const _def = def as PropertyDefinition;
+      const _def = def as PropertyDefinitionStrong;
       this.value = _def.value !== undefined ? _def.value : undefined;
       this.type = _def.type !== undefined ? _def.type : (_def.value !== undefined && _def.value !== null) ? _def.value.constructor : undefined;
       this.binding = _def.binding instanceof Binding ? _def.binding : undefined;
@@ -48,7 +50,7 @@ export class PropertyDefinition {
       }
     } else if (!(def && def.constructor === Object)) {
       this.value = def;
-      this.type = def.constructor as AnyConstructor;
+      this.type = def.constructor as Constructor;
     }
     if (this.value === undefined) {
       if (typeof this.type === 'function') {
@@ -65,10 +67,10 @@ export class PropertyDefinition {
 
 /**
  * Assigns property definition values to another property definition, unless they are default values.
- * @param {PropertyDefinition} def Property definition
- * @param {PropertyDefinition} newDef Existing property definition
+ * @param {ProtoProperty} def Property definition
+ * @param {ProtoProperty} newDef Existing property definition
  */
-export const assignPropertyDefinition = (def: PropertyDefinition, newDef: PropertyDefinition) => {
+export const assignProtoProperty = (def: ProtoProperty, newDef: ProtoProperty) => {
   if (newDef.value !== undefined) def.value = newDef.value;
   if (newDef.type !== undefined) def.type = newDef.type;
   if (newDef.reflect !== 0) def.reflect = newDef.reflect;
@@ -79,13 +81,13 @@ export const assignPropertyDefinition = (def: PropertyDefinition, newDef: Proper
 
 /**
  * Property configuration object.
- * It is initialized from corresponding `PropertyDefinition` in `ProtoChain`.
+ * It is initialized from corresponding `ProtoProperty` in `ProtoChain`.
  */
 export class Property {
   // Property value.
   public value?: any = undefined;
   // Constructor of the property value.
-  public type?: AnyConstructor = undefined;
+  public type?: Constructor = undefined;
   // Binding object.
   public binding?: Binding = undefined;
   // Reflects to HTML attribute [-1, 0, 1 or 2]
@@ -95,14 +97,14 @@ export class Property {
   // Observe object mutations for this property.
   public observe = false;
   /**
-   * Creates the property configuration object and copies values from `PropertyDefinition`.
-   * @param {PropertyDefinition} propDef PropertyDefinition object
+   * Creates the property configuration object and copies values from `ProtoProperty`.
+   * @param {ProtoProperty} propDef ProtoProperty object
    */
-  constructor(propDef: PropertyDefinition) {
+  constructor(propDef: ProtoProperty) {
     debug: {
       Object.keys(propDef).forEach(key => {
         if (['value', 'type', 'reflect', 'notify', 'observe', 'binding'].indexOf(key) === -1) {
-          console.warn(`PropertyDefinition: Invalid field ${key}`);
+          console.warn(`ProtoProperty: Invalid field ${key}`);
         }
       });
       if (propDef.type !== undefined && typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');

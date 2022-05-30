@@ -80,10 +80,11 @@ export class EventDispatcher {
             this.protoListeners[name] = [];
             for (let i = 0; i < node._protochain.listeners[name].length; i++) {
                 const listener = listenerFromDefinition(node, node._protochain.listeners[name][i]);
-                this.protoListeners[name].push(listener);
-                if (this.isEventTarget) {
-                    EventTarget.prototype.addEventListener.call(this.node, name, listener[0], listener[1]);
-                }
+                this.protoListeners[name] = [listener];
+            }
+            if (this.isEventTarget && this.protoListeners[name].length) {
+                const listener = this.protoListeners[name][0];
+                EventTarget.prototype.addEventListener.call(this.node, name, listener[0], listener[1]);
             }
         }
     }

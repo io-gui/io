@@ -88,7 +88,7 @@ export default class {
                 constructors = new ProtoChain(IoNode2).constructors;
                 chai.expect(constructors).to.be.eql([IoNode2]);
             });
-            it('Should include an rray of function names that start with "on" or "_" for auto-binding', () => {
+            it('Should include an array of function names that start with "on" or "_" for auto-binding', () => {
                 let protoChain = new ProtoChain(IoNode1);
                 chai.expect(protoChain.functions).to.be.eql([]);
                 protoChain = new ProtoChain(FakeIoNode1);
