@@ -129,7 +129,6 @@ export class IoMenuItem extends IoItem {
     _onClick() {
         const option = this.option;
         if (this.hasmore) {
-            console.log('hasmore', this.expanded);
             if (!this.expanded)
                 this.expanded = true;
         }
@@ -338,7 +337,6 @@ export class IoMenuItem extends IoItem {
         getRootElement(this).expanded = false;
     }
     expandedChanged() {
-        console.log(this.expanded);
         if (!this.$options)
             this.$options = new IoMenuOptions();
         if (this.expanded && this.depth > 0) {
