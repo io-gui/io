@@ -152,8 +152,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
         prop.value = value;
 
-        debug:
-        {
+        debug: {
           if (prop.type === String) {
             if (typeof value !== 'string') {
               console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
@@ -190,10 +189,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     applyProperties(props: any) {
       for (const p in props) {
         if (this._properties[p] === undefined) {
-          debug:
-          if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
-            // TODO: consider converting import and style to properties
-            console.warn(`Property "${p}" is not defined`, this);
+          debug: {
+            if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
+              // TODO: consider converting import and style to properties
+              console.warn(`Property "${p}" is not defined`, this);
+            }
           }
           continue;
         }
@@ -267,10 +267,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       const compose = this.compose as any;
       if (this.compose) {
         for (const prop in compose) {
-          debug:
-          if (!this._properties[prop] || typeof this._properties[prop].value !== 'object') {
-            console.error(`Composed property ${prop} is not a Node or an object.`);
-            continue;
+          debug: {
+            if (!this._properties[prop] || typeof this._properties[prop].value !== 'object') {
+              console.error(`Composed property ${prop} is not a Node or an object.`);
+              continue;
+            }
           }
           const object = this._properties[prop].value;
           if (object._isIoNode) {
@@ -331,10 +332,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         //   return;
         // }
 
-        debug:
-        if (event.detail.objects) {
-          console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');
-          return;
+        debug: {
+          if (event.detail.objects) {
+            console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');
+            return;
+          }
         }
       }
     }
@@ -354,9 +356,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @return {Binding} Binding object.
      */
     bind(prop: string): Binding {
-      debug:
-      if (!this._properties[prop]) {
-        console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
+      debug: {
+        if (!this._properties[prop]) {
+          console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
+        }
       }
       this._bindings[prop] = this._bindings[prop] || new Binding(this, prop);
       return this._bindings[prop];
@@ -380,10 +383,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {Object} options - event listener options.
      */
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
-      debug:
-      if (typeof listener !== 'function') {
-        console.warn(`${this.constructor.name}incorrect listener type.`, this);
-        return;
+      debug: {
+        if (typeof listener !== 'function') {
+          console.warn(`${this.constructor.name}incorrect listener type.`, this);
+          return;
+        }
       }
       this._eventDispatcher.addEventListener(type, listener as EventListener, options);
     }

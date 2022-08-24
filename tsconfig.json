@@ -1,36 +1,38 @@
 {
   "compilerOptions": {
     /* Basic Options */
-    "target": "esnext",
-    "module": "esnext",
-    // "lib": [],
-    "allowJs": true,
-    "checkJs": true,
+    "target": "es2022",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "lib": ["esnext.array", "esnext", "dom"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "rootDir": "./src",
-    "outDir": "./build",
+    // "inlineSources": true,
     /* Strict Type-Checking Options */
     "strict": true,
-    "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
-    "noImplicitThis": true,
     "alwaysStrict": true,
-    /* Additional Checks */
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    /* Module Resolution Options */
-    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    //
+    "forceConsistentCasingInFileNames": true,
+    //
+    "rootDir": "./src",
+    "outDir": "./build",
+    /* Module Options */
     "esModuleInterop": true,
-    /* Experimental Options */
-    "experimentalDecorators": true,
+    "allowJs": true,
+    "checkJs": true,
+    // Only necessary because @types/uglify-js can't find types for source-map
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "experimentalDecorators": true
   },
   "typedocOptions": {
     "hideBreadcrumbs": true,

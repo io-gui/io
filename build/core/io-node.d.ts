@@ -54,7 +54,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * @param {any} value Peroperty value.
          * @param {boolean} [skipDispatch] flag to skip event dispatch.
          */
-        setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
+        setProperty(name: string, value: any, skipDispatch?: boolean): void;
         /**
          * Sets multiple properties in batch.
          * [property]-changed` events will be broadcast in the end.
@@ -133,14 +133,14 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions | undefined): void;
+        addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
         /**
          * Wrapper for removeEventListener.
          * @param {string} type - event name to listen to.
          * @param {function} listener - listener handler.
          * @param {Object} options - event listener options.
          */
-        removeEventListener(type: string, listener?: AnyEventListener | undefined, options?: AddEventListenerOptions | undefined): void;
+        removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
         /**
          * Wrapper for dispatchEvent.
          * @param {string} type - event name to dispatch.
@@ -148,14 +148,14 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * @param {boolean} bubbles - event bubbles.
          * @param {HTMLElement|Node} src source node/element to dispatch event from.
          */
-        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Window | Document | Node | HTMLElement | undefined): void;
+        dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
         /**
          * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
          * @param {function} func - Function to throttle.
          * @param {*} arg - argument for throttled function.
          * @param {boolean} asynchronous - execute with timeout.
          */
-        throttle(func: CallbackFunction, arg?: any, asynchronous?: boolean | undefined): void;
+        throttle(func: CallbackFunction, arg?: any, asynchronous?: boolean): void;
         requestAnimationFrameOnce(func: CallbackFunction): void;
         filterObject(object: any, predicate: PredicateFunction, _depth?: number, _chain?: any[], _i?: number): any;
         filterObjects(object: any, predicate: PredicateFunction, _depth?: number, _chain?: any[], _i?: number): any;

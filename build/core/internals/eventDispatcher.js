@@ -31,7 +31,7 @@ const LISTENER_OPTIONS = ['capture', 'passive'];
  * @return {Listener} Listener
  */
 export const listenerFromDefinition = (node, def) => {
-    debug: {
+    {
         if (typeof def[0] !== 'string' && typeof def[0] !== 'function')
             console.warn('Invalid listener type');
         if (def[1]) {
@@ -142,7 +142,7 @@ export class EventDispatcher {
      */
     addEventListener(name, listener, options) {
         this.addedListeners[name] = this.addedListeners[name] || [];
-        debug: {
+        {
             const l = this.addedListeners[name].findIndex(l => l[0] === listener);
             if (l !== -1)
                 console.warn(`Listener ${name} already added!`);
@@ -169,7 +169,7 @@ export class EventDispatcher {
      * @param {AddEventListenerOptions} [options] Event listener options
     */
     removeEventListener(name, listener, options) {
-        debug: {
+        {
             if (!this.addedListeners[name])
                 console.warn(`Listener ${name} not found!`);
             if (listener && typeof listener !== 'function')
@@ -193,7 +193,7 @@ export class EventDispatcher {
         }
         else {
             const l = this.addedListeners[name].findIndex(item => item[0] = listener);
-            debug: {
+            {
                 if (l === -1)
                     console.warn(`Listener ${name} not found!`);
             }
@@ -225,7 +225,7 @@ export class EventDispatcher {
                 }
             }
             if (this.propListeners[name]) {
-                debug: {
+                {
                     if (this.propListeners[name].length > 1)
                         console.warn(`PropListeners[${name}] array too long!`);
                 }

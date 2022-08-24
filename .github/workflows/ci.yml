@@ -35,7 +35,5 @@ jobs:
         run: yarn
       - name: Building
         run: yarn build
-      - name: Bundling
-        run: yarn bundle
       - name: Generating docs
         run: yarn docs

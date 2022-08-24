@@ -24,7 +24,7 @@ export const hardenListenerDefinition = (def: ListenerDefinitionWeak): ListenerD
 export const assignListenerDefinition = (defs: ListenerDefinition[], def: ListenerDefinition) => {
   const i = defs.findIndex(_def => _def[0] === def[0]);
   if (i !== -1) {
-    if (defs[i][1]) defs[i][1] = Object.assign(defs[i][1], def[1]);
+    if (defs[i][1]) defs[i][1] = Object.assign(defs[i][1] as ListenerDefinition, def[1]);
     else if (def[1]) defs[i][1] = def[1];
   } else {
     defs.push(def);

@@ -31,7 +31,7 @@ export class Path extends IoNode {
     update() {
         let string = '';
         for (let i = 0; i < this.value.length; i++) {
-            debug: if (this.value[i] && typeof this.value[i] === 'string' && this.value[i].search(this.delimiter) !== -1) {
+            if (this.value[i] && typeof this.value[i] === 'string' && this.value[i].search(this.delimiter) !== -1) {
                 console.warn(`IoGUI Path: Value ${this.value[i]} with special string "${this.delimiter}" cannot be used in path!`);
                 break;
             }

@@ -98,7 +98,7 @@ export class ProtoChain {
         // Create a list of observed objects
         for (const name in this.properties) {
             if (this.properties[name].observe) {
-                debug: {
+                {
                     const isNull = this.properties[name].value === null;
                     const isUndefined = this.properties[name].value === undefined;
                     const isObject = this.properties[name].value instanceof Object;
@@ -116,7 +116,7 @@ export class ProtoChain {
      * @param {IoNode} node - `IoNode` instance to bind functions to.
      */
     bindFunctions(node) {
-        debug: {
+        {
             if (node.constructor !== this.constructors[0]) {
                 console.warn('`bindFunctions` should be used on', this.constructors[0].name, 'instance');
             }

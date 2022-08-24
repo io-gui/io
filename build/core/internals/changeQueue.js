@@ -24,7 +24,7 @@ export class ChangeQueue {
      * @param {any} oldValue Old property value.
      */
     queue(property, value, oldValue) {
-        debug: {
+        {
             if (value === oldValue)
                 console.warn('ChangeQueue: queuing change with same value and oldValue!');
         }

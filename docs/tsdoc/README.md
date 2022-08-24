@@ -8,8 +8,8 @@
 - [IoElement](classes/IoElement.md)
 - [IoNode](classes/IoNode.md)
 - [Property](classes/Property.md)
-- [PropertyDefinition](classes/PropertyDefinition.md)
 - [ProtoChain](classes/ProtoChain.md)
+- [ProtoProperty](classes/ProtoProperty.md)
 
 ## Interfaces
 
@@ -17,7 +17,7 @@
 - [ChangeEvent](interfaces/ChangeEvent.md)
 - [IoNodeConstructor](interfaces/IoNodeConstructor.md)
 
-## Type aliases
+## Type Aliases
 
 ### Listener
 
@@ -25,7 +25,7 @@
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:57](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L57)
+[src/core/internals/eventDispatcher.ts:57](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L57)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:8](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L8)
+[src/core/internals/eventDispatcher.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L8)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:6](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L6)
+[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L6)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:58](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L58)
+[src/core/internals/eventDispatcher.ts:58](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L58)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[core/io-node.ts:7](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L7)
+[src/core/io-node.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L7)
 
 ___
 
@@ -75,17 +75,38 @@ ___
 
 #### Defined in
 
-[core/io-node.ts:8](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L8)
+[src/core/io-node.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L8)
+
+___
+
+### PropertyDefinitionStrong
+
+Ƭ **PropertyDefinitionStrong**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `binding?` | [`Binding`](classes/Binding.md) |
+| `notify?` | `boolean` |
+| `observe?` | `boolean` |
+| `reflect?` | `ReflectType` |
+| `type?` | `Constructor` |
+| `value?` | `any` |
+
+#### Defined in
+
+[src/core/internals/property.ts:6](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L6)
 
 ___
 
 ### PropertyDefinitionWeak
 
-Ƭ **PropertyDefinitionWeak**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| `AnyConstructor` \| [`Binding`](classes/Binding.md) \| { `binding?`: [`Binding`](classes/Binding.md) ; `notify?`: `boolean` ; `observe?`: `boolean` ; `reflect?`: `ReflectType` ; `type?`: `AnyConstructor` ; `value?`: `any`  }
+Ƭ **PropertyDefinitionWeak**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| `Constructor` \| [`Binding`](classes/Binding.md) \| [`PropertyDefinitionStrong`](README.md#propertydefinitionstrong)
 
 #### Defined in
 
-[core/internals/property.ts:6](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L6)
+[src/core/internals/property.ts:15](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L15)
 
 ## Variables
 
@@ -93,7 +114,8 @@ ___
 
 • `Const` **LICENSE**: ``"MIT"``
 
-**`license`**
+**`License`**
+
 Copyright ©2022 Aleksandar (Aki) Rodic
 
 The MIT License
@@ -118,7 +140,7 @@ THE SOFTWARE.
 
 #### Defined in
 
-[iogui.ts:27](https://github.com/io-gui/io/blob/tsc/src/iogui.ts#L27)
+[src/iogui.ts:27](https://github.com/io-gui/iogui/blob/tsc/src/iogui.ts#L27)
 
 ## Functions
 
@@ -148,7 +170,7 @@ typeof `__class`
 
 #### Defined in
 
-[core/io-node.ts:39](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L39)
+[src/core/io-node.ts:39](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L39)
 
 ___
 
@@ -170,7 +192,7 @@ Register function for `IoElement`. Registers custom element.
 
 #### Defined in
 
-[core/io-element.ts:396](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L396)
+[src/core/io-element.ts:396](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L396)
 
 ___
 
@@ -192,7 +214,7 @@ Register function to be called once per class.
 
 #### Defined in
 
-[core/io-node.ts:505](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L505)
+[src/core/io-node.ts:506](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L506)
 
 ___
 
@@ -215,13 +237,13 @@ Assigns listener definition to an existing array of listener definitions.
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:24](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L24)
+[src/core/internals/eventDispatcher.ts:24](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L24)
 
 ___
 
-### assignPropertyDefinition
+### assignProtoProperty
 
-▸ **assignPropertyDefinition**(`def`, `newDef`): `void`
+▸ **assignProtoProperty**(`def`, `newDef`): `void`
 
 Assigns property definition values to another property definition, unless they are default values.
 
@@ -229,8 +251,8 @@ Assigns property definition values to another property definition, unless they a
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `def` | [`PropertyDefinition`](classes/PropertyDefinition.md) | Property definition |
-| `newDef` | [`PropertyDefinition`](classes/PropertyDefinition.md) | Existing property definition |
+| `def` | [`ProtoProperty`](classes/ProtoProperty.md) | Property definition |
+| `newDef` | [`ProtoProperty`](classes/ProtoProperty.md) | Existing property definition |
 
 #### Returns
 
@@ -238,7 +260,7 @@ Assigns property definition values to another property definition, unless they a
 
 #### Defined in
 
-[core/internals/property.ts:71](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L71)
+[src/core/internals/property.ts:73](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L73)
 
 ___
 
@@ -264,7 +286,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:562](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L562)
+[src/core/io-element.ts:562](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L562)
 
 ___
 
@@ -288,7 +310,7 @@ Stronly typed listener definition
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:15](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L15)
+[src/core/internals/eventDispatcher.ts:15](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L15)
 
 ___
 
@@ -302,7 +324,7 @@ Takes a node and a listener definition and returns a listener.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `node` | `HTMLElement` \| [`IoNode`](classes/IoNode.md) | `IoNode` instance |
+| `node` | [`IoNode`](classes/IoNode.md) \| `HTMLElement` | `IoNode` instance |
 | `def` | [`ListenerDefinition`](README.md#listenerdefinition) | Listener definition |
 
 #### Returns
@@ -313,4 +335,4 @@ Listener
 
 #### Defined in
 
-[core/internals/eventDispatcher.ts:42](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L42)
+[src/core/internals/eventDispatcher.ts:42](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L42)

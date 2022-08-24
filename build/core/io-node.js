@@ -47,7 +47,7 @@ export function IoNodeMixin(superclass) {
         */
         constructor(properties = {}, ...args) {
             super(...args);
-            debug: {
+            {
                 const constructor = this.__proto__.constructor;
                 if (constructor._registeredAs !== constructor.name) {
                     console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
@@ -117,7 +117,7 @@ export function IoNodeMixin(superclass) {
                     // }
                 }
                 prop.value = value;
-                debug: {
+                {
                     if (prop.type === String) {
                         if (typeof value !== 'string') {
                             console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
@@ -158,7 +158,7 @@ export function IoNodeMixin(superclass) {
         applyProperties(props) {
             for (const p in props) {
                 if (this._properties[p] === undefined) {
-                    debug: if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
+                    if (!p.startsWith('on-') && p !== 'import' && p !== 'style' && p !== 'config') {
                         // TODO: consider converting import and style to properties
                         console.warn(`Property "${p}" is not defined`, this);
                     }
@@ -177,7 +177,7 @@ export function IoNodeMixin(superclass) {
         setProperties(props) {
             for (const p in props) {
                 if (this._properties[p] === undefined) {
-                    debug: {
+                    {
                         console.warn(`Property "${p}" is not defined`, this);
                     }
                     continue;
@@ -234,7 +234,7 @@ export function IoNodeMixin(superclass) {
             const compose = this.compose;
             if (this.compose) {
                 for (const prop in compose) {
-                    debug: if (!this._properties[prop] || typeof this._properties[prop].value !== 'object') {
+                    if (!this._properties[prop] || typeof this._properties[prop].value !== 'object') {
                         console.error(`Composed property ${prop} is not a Node or an object.`);
                         continue;
                     }
@@ -297,7 +297,7 @@ export function IoNodeMixin(superclass) {
                 //   this.throttle(this.objectMutatedThrottled, prop, false);
                 //   return;
                 // }
-                debug: if (event.detail.objects) {
+                if (event.detail.objects) {
                     console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');
                     return;
                 }
@@ -320,7 +320,7 @@ export function IoNodeMixin(superclass) {
          * @return {Binding} Binding object.
          */
         bind(prop) {
-            debug: if (!this._properties[prop]) {
+            if (!this._properties[prop]) {
                 console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
             }
             this._bindings[prop] = this._bindings[prop] || new Binding(this, prop);
@@ -345,7 +345,7 @@ export function IoNodeMixin(superclass) {
          * @param {Object} options - event listener options.
          */
         addEventListener(type, listener, options) {
-            debug: if (typeof listener !== 'function') {
+            if (typeof listener !== 'function') {
                 console.warn(`${this.constructor.name}incorrect listener type.`, this);
                 return;
             }

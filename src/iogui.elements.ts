@@ -25,5 +25,4 @@ export * from './elements/index.js';
  * THE SOFTWARE.
  */
 
- const LICENSE = 'MIT';
- export { LICENSE };
+export { LICENSE } from './iogui.js';

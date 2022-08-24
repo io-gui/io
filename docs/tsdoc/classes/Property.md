@@ -1,7 +1,7 @@
 # Class: Property
 
 Property configuration object.
-It is initialized from corresponding `PropertyDefinition` in `ProtoChain`.
+It is initialized from corresponding `ProtoProperty` in `ProtoChain`.
 
 ## Constructors
 
@@ -9,17 +9,17 @@ It is initialized from corresponding `PropertyDefinition` in `ProtoChain`.
 
 • **new Property**(`propDef`)
 
-Creates the property configuration object and copies values from `PropertyDefinition`.
+Creates the property configuration object and copies values from `ProtoProperty`.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `propDef` | [`PropertyDefinition`](PropertyDefinition.md) | PropertyDefinition object |
+| `propDef` | [`ProtoProperty`](ProtoProperty.md) | ProtoProperty object |
 
 #### Defined in
 
-[core/internals/property.ts:101](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L101)
+[src/core/internals/property.ts:103](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L103)
 
 ## Properties
 
@@ -29,7 +29,7 @@ Creates the property configuration object and copies values from `PropertyDefini
 
 #### Defined in
 
-[core/internals/property.ts:90](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L90)
+[src/core/internals/property.ts:92](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L92)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:94](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L94)
+[src/core/internals/property.ts:96](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L96)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:96](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L96)
+[src/core/internals/property.ts:98](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L98)
 
 ___
 
@@ -59,17 +59,17 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:92](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L92)
+[src/core/internals/property.ts:94](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L94)
 
 ___
 
 ### type
 
-• `Optional` **type**: `AnyConstructor` = `undefined`
+• `Optional` **type**: `Constructor` = `undefined`
 
 #### Defined in
 
-[core/internals/property.ts:88](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L88)
+[src/core/internals/property.ts:90](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L90)
 
 ___
 
@@ -79,4 +79,4 @@ ___
 
 #### Defined in
 
-[core/internals/property.ts:86](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L86)
+[src/core/internals/property.ts:88](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L88)

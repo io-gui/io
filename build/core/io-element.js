@@ -440,7 +440,7 @@ const RegisterIoElement = function (elementConstructor) {
             }
         }
     }
-    debug: {
+    {
         let styleStringStripped = styleString;
         styleStringStripped = styleStringStripped.replace(commentsRegex, '');
         styleStringStripped = styleStringStripped.replace(keyframeRegex, '');

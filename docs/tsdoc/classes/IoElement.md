@@ -29,7 +29,7 @@ IoNodeMixin(HTMLElement).constructor
 
 #### Defined in
 
-[core/io-node.ts:77](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L77)
+[src/core/io-node.ts:77](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L77)
 
 ## Properties
 
@@ -43,7 +43,7 @@ IoNodeMixin(HTMLElement).\_bindings
 
 #### Defined in
 
-[core/io-node.ts:69](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L69)
+[src/core/io-node.ts:69](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L69)
 
 ___
 
@@ -57,7 +57,7 @@ IoNodeMixin(HTMLElement).\_changeQueue
 
 #### Defined in
 
-[core/io-node.ts:71](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L71)
+[src/core/io-node.ts:71](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L71)
 
 ___
 
@@ -71,7 +71,7 @@ IoNodeMixin(HTMLElement).\_eventDispatcher
 
 #### Defined in
 
-[core/io-node.ts:72](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L72)
+[src/core/io-node.ts:72](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L72)
 
 ___
 
@@ -85,7 +85,7 @@ IoNodeMixin(HTMLElement).\_properties
 
 #### Defined in
 
-[core/io-node.ts:68](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L68)
+[src/core/io-node.ts:68](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L68)
 
 ## Accessors
 
@@ -116,7 +116,7 @@ IoNodeMixin(HTMLElement).compose
 
 #### Defined in
 
-[core/io-node.ts:65](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L65)
+[src/core/io-node.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L65)
 
 ___
 
@@ -130,7 +130,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:207](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L207)
+[src/core/io-element.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L207)
 
 • `set` **textNode**(`value`): `void`
 
@@ -146,7 +146,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:211](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L211)
+[src/core/io-element.ts:211](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L211)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:60](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L60)
+[src/core/io-element.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L60)
 
 ___
 
@@ -178,7 +178,7 @@ IoNodeMixin(HTMLElement).Properties
 
 #### Defined in
 
-[core/io-element.ts:12](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L12)
+[src/core/io-element.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L12)
 
 ___
 
@@ -192,7 +192,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:8](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L8)
+[src/core/io-element.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L8)
 
 ___
 
@@ -206,7 +206,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:65](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L65)
+[src/core/io-element.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L65)
 
 ## Methods
 
@@ -226,7 +226,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:256](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L256)
+[src/core/io-element.ts:256](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L256)
 
 ___
 
@@ -254,7 +254,7 @@ IoNodeMixin(HTMLElement).addEventListener
 
 #### Defined in
 
-[core/io-node.ts:381](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L381)
+[src/core/io-node.ts:382](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L382)
 
 ___
 
@@ -270,7 +270,7 @@ Sets aria attributes.
 
 #### Defined in
 
-[core/io-element.ts:244](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L244)
+[src/core/io-element.ts:244](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L244)
 
 ___
 
@@ -288,7 +288,7 @@ IoNodeMixin(HTMLElement).applyCompose
 
 #### Defined in
 
-[core/io-element.ts:237](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L237)
+[src/core/io-element.ts:237](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L237)
 
 ___
 
@@ -312,7 +312,7 @@ IoNodeMixin(HTMLElement).applyProperties
 
 #### Defined in
 
-[core/io-element.ts:215](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L215)
+[src/core/io-element.ts:215](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L215)
 
 ___
 
@@ -334,7 +334,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:75](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L75)
+[src/core/io-element.ts:75](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L75)
 
 ___
 
@@ -362,7 +362,7 @@ IoNodeMixin(HTMLElement).bind
 
 #### Defined in
 
-[core/io-node.ts:355](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L355)
+[src/core/io-node.ts:356](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L356)
 
 ___
 
@@ -383,7 +383,7 @@ IoNodeMixin(HTMLElement).changed
 
 #### Defined in
 
-[core/io-node.ts:260](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L260)
+[src/core/io-node.ts:261](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L261)
 
 ___
 
@@ -399,7 +399,7 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[core/io-element.ts:93](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L93)
+[src/core/io-element.ts:93](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L93)
 
 ___
 
@@ -415,7 +415,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[core/io-element.ts:102](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L102)
+[src/core/io-element.ts:102](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L102)
 
 ___
 
@@ -432,7 +432,7 @@ Wrapper for dispatchEvent.
 | `type` | `string` | `undefined` | event name to dispatch. |
 | `detail` | `Object` | `{}` | event detail. |
 | `bubbles` | `boolean` | `false` | event bubbles. |
-| `src?` | `HTMLElement` \| `Node` \| `Window` \| `Document` | `undefined` | source node/element to dispatch event from. |
+| `src?` | `Window` \| `Document` \| `Node` \| `HTMLElement` | `undefined` | source node/element to dispatch event from. |
 
 #### Returns
 
@@ -444,7 +444,7 @@ IoNodeMixin(HTMLElement).dispatchEvent
 
 #### Defined in
 
-[core/io-node.ts:405](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L405)
+[src/core/io-node.ts:406](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L406)
 
 ___
 
@@ -465,7 +465,7 @@ IoNodeMixin(HTMLElement).dispose
 
 #### Defined in
 
-[core/io-node.ts:238](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L238)
+[src/core/io-node.ts:239](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L239)
 
 ___
 
@@ -493,7 +493,7 @@ IoNodeMixin(HTMLElement).filterObject
 
 #### Defined in
 
-[core/io-node.ts:438](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L438)
+[src/core/io-node.ts:439](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L439)
 
 ___
 
@@ -521,7 +521,7 @@ IoNodeMixin(HTMLElement).filterObjects
 
 #### Defined in
 
-[core/io-node.ts:451](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L451)
+[src/core/io-node.ts:452](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L452)
 
 ___
 
@@ -536,7 +536,7 @@ Update textContent via TextNode is better for layout performance.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `element` | [`IoElement`](IoElement.md) \| `HTMLElement` | Element to flatten. |
+| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
 
 #### Returns
 
@@ -544,7 +544,7 @@ Update textContent via TextNode is better for layout performance.
 
 #### Defined in
 
-[core/io-element.ts:190](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L190)
+[src/core/io-element.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L190)
 
 ___
 
@@ -564,7 +564,7 @@ ___
 
 #### Defined in
 
-[core/io-element.ts:363](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L363)
+[src/core/io-element.ts:363](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L363)
 
 ___
 
@@ -588,7 +588,7 @@ IoNodeMixin(HTMLElement).import
 
 #### Defined in
 
-[core/io-node.ts:468](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L468)
+[src/core/io-node.ts:469](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L469)
 
 ___
 
@@ -616,7 +616,7 @@ IoNodeMixin(HTMLElement).objectMutated
 
 #### Defined in
 
-[core/io-node.ts:319](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L319)
+[src/core/io-node.ts:320](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L320)
 
 ___
 
@@ -643,7 +643,7 @@ IoNodeMixin(HTMLElement).objectMutatedThrottled
 
 #### Defined in
 
-[core/io-node.ts:345](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L345)
+[src/core/io-node.ts:346](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L346)
 
 ___
 
@@ -669,7 +669,7 @@ IoNodeMixin(HTMLElement).preventDefault
 
 #### Defined in
 
-[core/io-node.ts:486](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L486)
+[src/core/io-node.ts:487](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L487)
 
 ___
 
@@ -697,7 +697,7 @@ IoNodeMixin(HTMLElement).queue
 
 #### Defined in
 
-[core/io-node.ts:292](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L292)
+[src/core/io-node.ts:293](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L293)
 
 ___
 
@@ -717,7 +717,7 @@ IoNodeMixin(HTMLElement).queueDispatch
 
 #### Defined in
 
-[core/io-node.ts:298](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L298)
+[src/core/io-node.ts:299](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L299)
 
 ___
 
@@ -737,7 +737,7 @@ IoNodeMixin(HTMLElement).queueDispatchLazy
 
 #### Defined in
 
-[core/io-node.ts:309](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L309)
+[src/core/io-node.ts:310](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L310)
 
 ___
 
@@ -765,7 +765,7 @@ IoNodeMixin(HTMLElement).removeEventListener
 
 #### Defined in
 
-[core/io-node.ts:395](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L395)
+[src/core/io-node.ts:396](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L396)
 
 ___
 
@@ -789,7 +789,7 @@ IoNodeMixin(HTMLElement).requestAnimationFrameOnce
 
 #### Defined in
 
-[core/io-node.ts:435](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L435)
+[src/core/io-node.ts:436](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L436)
 
 ___
 
@@ -812,7 +812,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Defined in
 
-[core/io-element.ts:228](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L228)
+[src/core/io-element.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L228)
 
 ___
 
@@ -839,7 +839,7 @@ IoNodeMixin(HTMLElement).setProperties
 
 #### Defined in
 
-[core/io-node.ts:209](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L209)
+[src/core/io-node.ts:210](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L210)
 
 ___
 
@@ -855,7 +855,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 | :------ | :------ | :------ |
 | `name` | `string` | Property name to set value of. |
 | `value` | `any` | Peroperty value. |
-| `skipDispatch?` | `boolean` | - |
+| `skipDispatch?` | `boolean` | flag to skip event dispatch. |
 
 #### Returns
 
@@ -867,7 +867,7 @@ IoNodeMixin(HTMLElement).setProperty
 
 #### Defined in
 
-[core/io-node.ts:130](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L130)
+[src/core/io-node.ts:130](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L130)
 
 ___
 
@@ -894,7 +894,7 @@ IoNodeMixin(HTMLElement).setValue
 
 #### Defined in
 
-[core/io-node.ts:227](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L227)
+[src/core/io-node.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L228)
 
 ___
 
@@ -920,7 +920,7 @@ IoNodeMixin(HTMLElement).stopPropagation
 
 #### Defined in
 
-[core/io-node.ts:493](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L493)
+[src/core/io-node.ts:494](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L494)
 
 ___
 
@@ -935,7 +935,7 @@ Renders DOM from virtual DOM arrays.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `vDOM` | `any`[] | Array of vDOM children. |
-| `host?` | `HTMLElement` | - |
+| `host?` | `HTMLElement` | Optional template target. |
 
 #### Returns
 
@@ -943,7 +943,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Defined in
 
-[core/io-element.ts:112](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L112)
+[src/core/io-element.ts:112](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L112)
 
 ___
 
@@ -971,13 +971,13 @@ IoNodeMixin(HTMLElement).throttle
 
 #### Defined in
 
-[core/io-node.ts:414](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L414)
+[src/core/io-node.ts:415](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L415)
 
 ___
 
 ### traverse
 
-▸ **traverse**(`vChildren`, `host`): `void`
+▸ **traverse**(`vChildren`, `host?`): `void`
 
 Recurively traverses vDOM.
 
@@ -986,7 +986,7 @@ Recurively traverses vDOM.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `vChildren` | `any`[] | Array of vDOM children converted by `buildTree()` for easier parsing. |
-| `host` | `HTMLElement` | - |
+| `host?` | `HTMLElement` | Optional template target. |
 
 #### Returns
 
@@ -994,7 +994,7 @@ Recurively traverses vDOM.
 
 #### Defined in
 
-[core/io-element.ts:123](https://github.com/io-gui/io/blob/tsc/src/core/io-element.ts#L123)
+[src/core/io-element.ts:123](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L123)
 
 ___
 
@@ -1020,4 +1020,4 @@ IoNodeMixin(HTMLElement).unbind
 
 #### Defined in
 
-[core/io-node.ts:367](https://github.com/io-gui/io/blob/tsc/src/core/io-node.ts#L367)
+[src/core/io-node.ts:368](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L368)

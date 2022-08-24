@@ -133,7 +133,7 @@ export class Property {
         if (this.value === undefined) this.value = new this.type();
         if (isObject) {
           try {
-            this.value = Object.assign(new this.type(), this.value);
+            this.value = Object.assign(new this.type() as any, this.value);
           } catch (error) {
             console.log(error);
           }
