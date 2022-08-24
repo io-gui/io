@@ -100,7 +100,7 @@ export class Property {
      * @param {ProtoProperty} propDef ProtoProperty object
      */
     constructor(propDef) {
-        {
+        debug: {
             Object.keys(propDef).forEach(key => {
                 if (['value', 'type', 'reflect', 'notify', 'observe', 'binding'].indexOf(key) === -1) {
                     console.warn(`ProtoProperty: Invalid field ${key}`);
@@ -145,7 +145,7 @@ export class Property {
                 }
             }
         }
-        {
+        debug: {
             if (this.value === undefined && typeof this.type === 'function') {
                 console.warn('Property value should always be initialized when type is defined!');
             }

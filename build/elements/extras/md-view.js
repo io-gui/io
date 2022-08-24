@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../iogui.js';
-import { marked } from '../../../lib/marked.esm.js';
+import { marked } from 'marked';
 /*
 
  **/
