@@ -6,6 +6,9 @@ import Binding from './core/internals/binding.test.js';
 import EventDispatcher from './core/internals/eventDispatcher.test.js';
 import ChangeQueue from './core/internals/changeQueue.test.js';
 
+import 'mocha';
+import 'chai';
+
 // import Node from './core/io-node.test.js';
 // import Element from './core/io-element.test.js';
 

@@ -23,5 +23,6 @@ export * from './elements/index.js';
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-export { LICENSE } from './iogui.js';
+const LICENSE = 'MIT';
+export { LICENSE };
 //# sourceMappingURL=iogui.elements.js.map

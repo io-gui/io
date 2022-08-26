@@ -1,4 +1,6 @@
 import { IoElement, RegisterIoElement } from './iogui.js';
+import 'mocha';
+import 'chai';
 // import Item from './elements/core/item.test.js';
 // import Content from './elements/core/content.test.js'; // TODO
 // import Gl from './elements/core/gl.test.js';

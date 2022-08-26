@@ -22,7 +22,9 @@
     "lint": "eslint src --fix",
     "docs": "typedoc",
     "build": "yarn clean && yarn lint && tsc",
-    "watch": "yarn clean && yarn lint && tsc -w"
+    "watch": "yarn clean && yarn lint && tsc -w",
+    "uglify": "uglifyjs bundle/iogui.js -cmo bundle/iogui.js --comments",
+    "bundle": "rm -rf bundle && yarn lint && tsc && rollup -c && dts-bundle-generator -o bundle/types.d.ts index.d.ts"
   },
   "repository": {
     "type": "git",
@@ -41,19 +43,27 @@
   },
   "homepage": "https://iogui.dev",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-strip": "^2.1.0",
     "@types/chai": "^4.3.3",
+    "@types/marked": "^4.0.6",
     "@types/mocha": "^9.1.1",
     "@typescript-eslint/eslint-plugin": "^5.34.0",
     "@typescript-eslint/parser": "^5.34.0",
+    "chai": "^4.3.6",
+    "dts-bundle-generator": "^6.12.0",
     "eslint": "^8.22.0",
     "eslint-plugin-html": "^7.1.0",
+    "highlight.js": "^11.6.0",
+    "marked": "^4.0.19",
+    "mocha": "^10.0.0",
+    "rollup": "^2.78.1",
+    "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2.4.0",
     "typedoc": "^0.23.10",
     "typedoc-plugin-markdown": "^3.13.4",
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@types/marked": "^4.0.6",
-    "marked": "^4.0.19"
   }
 }
