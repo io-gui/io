@@ -26,7 +26,6 @@ export default class {
         chai.expect(node.dispose).to.be.a('function');
         // Change handler functions
         chai.expect(node.changed).to.be.a('function');
-        chai.expect(node.applyCompose).to.be.a('function');
         chai.expect(node.queue).to.be.a('function');
         chai.expect(node.queueDispatch).to.be.a('function');
         chai.expect(node.queueDispatchLazy).to.be.a('function');

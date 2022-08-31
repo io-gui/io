@@ -234,10 +234,6 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
     }
   }
-  applyCompose() {
-    super.applyCompose();
-    this.applyAria();
-  }
   /**
    * Sets aria attributes.
    */

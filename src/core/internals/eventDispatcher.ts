@@ -1,11 +1,8 @@
-import {IoNode} from '../io-node.js';
+import {IoNode, CustomEventListener} from '../io-node.js';
 
-type CustomEventListener = (event: CustomEvent) => void;
-type AnyEventListener = CustomEventListener | EventListener;
+export type ListenerDefinitionWeak = string | CustomEventListener | [string | CustomEventListener, AddEventListenerOptions?];
 
-export type ListenerDefinitionWeak = string | AnyEventListener | [string | AnyEventListener, AddEventListenerOptions?];
-
-export type ListenerDefinition = [string | AnyEventListener, AddEventListenerOptions?];
+export type ListenerDefinition = [string | CustomEventListener, AddEventListenerOptions?];
 
 /**
  * Takes weakly typed listener definition and returns stronly typed listener definition.
@@ -54,7 +51,7 @@ export const listenerFromDefinition = (node: IoNode | HTMLElement, def: Listener
   return listener;
 };
 
-export type Listener = [AnyEventListener, AddEventListenerOptions?];
+export type Listener = [CustomEventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener[]>;
 
 /**
@@ -146,10 +143,10 @@ export class EventDispatcher {
    * Proxy for `addEventListener` method.
    * Adds an event listener to `addedListeners`.
    * @param {string} name Name of the event
-   * @param {AnyEventListener} listener Event listener handler
+   * @param {CustomEventListener} listener Event listener handler
    * @param {AddEventListenerOptions} [options] Event listener options
    */
-  addEventListener(name: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
+  addEventListener(name: string, listener: CustomEventListener, options?: AddEventListenerOptions) {
     this.addedListeners[name] = this.addedListeners[name] || [];
     debug: {
       const l = this.addedListeners[name].findIndex(l => l[0] === listener);
@@ -170,10 +167,10 @@ export class EventDispatcher {
    * Removes an event listener from `addedListeners`.
    * If `listener` is not specified it removes all listeners for specified `type`.
    * @param {string} name Name of the event
-   * @param {AnyEventListener} listener Event listener handler
+   * @param {CustomEventListener} listener Event listener handler
    * @param {AddEventListenerOptions} [options] Event listener options
   */
-  removeEventListener(name: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
+  removeEventListener(name: string, listener?: CustomEventListener, options?: AddEventListenerOptions) {
     debug: {
       if (!this.addedListeners[name]) console.warn(`Listener ${name} not found!`);
       if (listener && typeof listener !== 'function') console.warn('Invalid listener type!');

@@ -16,16 +16,15 @@ export interface IoNodeConstructor<T> {
   name?: string;
 }
 
-type ComposedProperties = null | Record<string, Record<string, any>>
-type CallbackFunction = (arg?: any) => void;
-type PredicateFunction = (object: any) => boolean;
+export type CallbackFunction = (arg?: any) => void;
+export type PredicateFunction = (object: any) => boolean;
 
-type KeyboardEventListener = (event: KeyboardEvent) => void;
-type PointerEventListener = (event: PointerEvent) => void;
-type CustomEventListener = (event: CustomEvent) => void;
-type FocusEventListener = (event: FocusEvent) => void;
-type TouchEventListener = (event: TouchEvent) => void;
-type AnyEventListener = EventListener |
+export type KeyboardEventListener = (event: KeyboardEvent) => void;
+export type PointerEventListener = (event: PointerEvent) => void;
+export type CustomEventListener = (event: CustomEvent) => void | EventListener;
+export type FocusEventListener = (event: FocusEvent) => void;
+export type TouchEventListener = (event: TouchEvent) => void;
+export type AnyEventListener = EventListener |
                         KeyboardEventListener |
                         PointerEventListener |
                         CustomEventListener |
@@ -48,23 +47,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         // },
       };
     }
-    /**
-     * `compose` object lets you reactively assign property values to other object's properties.
-     * For example, you can assign `this.value` property to the `this.objectProp.result` property.
-     *
-     * ```
-     * get compose () {
-     *   return {
-     *     objectProp: {result: this.value}
-     *   };
-     *  }
-     * ```
-     *
-     * Node class does not use `compose` by itself but this feature is available to its sublasses.
-     */
-    // get compose (): ComposedProperties {
-    //   return null;
-    // }
     readonly _properties: Record<string, Property> = {};
     readonly _bindings: Record<string, Binding> = {};
 
@@ -260,32 +242,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     changed() {}
     /**
-     * sets composed properties and invokes `changed()` function on change.
-     */
-    applyCompose() {
-      // TODO: test compose
-      const compose = this.compose as any;
-      if (this.compose) {
-        for (const prop in compose) {
-          debug: {
-            if (!this._properties[prop] || typeof this._properties[prop].value !== 'object') {
-              console.error(`Composed property ${prop} is not a Node or an object.`);
-              continue;
-            }
-          }
-          const object = this._properties[prop].value;
-          if (object._isIoNode) {
-            // TODO: make sure composed and declarative listeners are working together
-            object.applyProperties(compose[prop]);
-          } else {
-            for (const p in compose[prop]) {
-              object[p] = compose[prop][p];
-            }
-          }
-        }
-      }
-    }
-    /**
      * Adds property change to the queue.
      * @param {string} prop - Property name.
      * @param {*} value - Property value.
@@ -347,7 +303,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     objectMutatedThrottled(prop: string) {
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
-      this.applyCompose();
       this.changed();
     }
     /**

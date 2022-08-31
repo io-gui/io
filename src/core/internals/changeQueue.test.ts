@@ -7,7 +7,6 @@ class FakeIoNode {
   prop2ChangeCounter = 0;
   prop2Change?: Change;
   changeCounter = 0;
-  applyComposeCounter = 0;
   eventDispatchCounter = 0;
   eventName?: string;
   eventChange?: Change;
@@ -31,9 +30,6 @@ class FakeIoNode {
   }
   changed() {
     this.changeCounter++;
-  }
-  applyCompose() {
-    this.applyComposeCounter++;
   }
 }
 
@@ -62,7 +58,6 @@ export default class {
         chai.expect(node.eventChange?.oldValue).to.be.equal(0);
         chai.expect(node.eventDispatchCounter).to.be.equal(1);
         chai.expect(node.changeCounter).to.be.equal(1);
-        chai.expect(node.applyComposeCounter).to.be.equal(1);
         changeQueue.queue('test2', 0, -1);
         changeQueue.queue('test3', 2, 1);
         chai.expect(changeQueue.changes.length).to.be.equal(2);
@@ -75,7 +70,6 @@ export default class {
         chai.expect(node.eventDispatchCounter).to.be.equal(3);
         chai.expect(node.prop1ChangeCounter).to.be.equal(0);
         chai.expect(node.changeCounter).to.be.equal(2);
-        chai.expect(node.applyComposeCounter).to.be.equal(2);
       });
       it('Should invoke handler functions with correct payloads', () => {
         const node = new FakeIoNode();
@@ -85,7 +79,6 @@ export default class {
         changeQueue.dispatch();
         chai.expect(node.prop1ChangeCounter).to.be.equal(1);
         chai.expect(node.changeCounter).to.be.equal(1);
-        chai.expect(node.applyComposeCounter).to.be.equal(1);
         chai.expect(node.prop1Change?.property).to.be.equal('prop1');
         chai.expect(node.prop1Change?.value).to.be.equal(2);
         chai.expect(node.prop1Change?.oldValue).to.be.equal(0);

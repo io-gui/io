@@ -24,11 +24,6 @@ export class Item extends IoNode {
       }
     };
   }
-  get compose() {
-    return {
-      options: {'on-path-changed': this.onOptionsSelectedPathChanged},
-    };
-  }
   constructor(option: any) {
     if (typeof option !== 'object' || option === null) {
       option = {
@@ -72,8 +67,12 @@ export class Item extends IoNode {
       this.setSelectedPath(!!this.options.path.value.length, [...this.options.path.value]);
     }
   }
+  optionsChanged() {
+    // TODO: test GC
+    this.options.addEventListener('path-changed', this.onOptionsSelectedPathChanged);
+  }
   selectedChanged() {
-    if (this.select === 'pick') {
+     if (this.select === 'pick') {
       if (!this.selected) {
         this.options.setSelectedPath([]);
         this.setSelectedPath(false, []);
