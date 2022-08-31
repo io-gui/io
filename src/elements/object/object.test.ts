@@ -1,4 +1,4 @@
-import {IoObject} from '../../iogui.elements.js';
+import {IoObject} from '../../iogui.js';
 
 const testValue = {
   'number': 0.5,

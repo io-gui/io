@@ -68,6 +68,4 @@ function makeBundleTarget(src, target) {
 export default [
   makeBundleTarget('build/iogui.js', 'bundle/iogui.js'),
   makeBundleTarget('build/iogui.test.js', 'bundle/iogui.test.js'),
-  makeBundleTarget('build/iogui.elements.js', 'bundle/iogui.elements.js'),
-  makeBundleTarget('build/iogui.elements.test.js', 'bundle/iogui.elements.test.js'),
 ];

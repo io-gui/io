@@ -18,13 +18,12 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "clean": "rm -rf build",
+    "clean": "rm -rf build && rm -rf bundle",
     "lint": "eslint src --fix",
     "docs": "typedoc",
     "build": "yarn clean && yarn lint && tsc",
     "watch": "yarn clean && yarn lint && tsc -w",
-    "uglify": "uglifyjs bundle/iogui.js -cmo bundle/iogui.js --comments",
-    "bundle": "rm -rf bundle && yarn lint && tsc && rollup -c && dts-bundle-generator -o bundle/types.d.ts index.d.ts"
+    "bundle": "yarn build && rollup -c && dts-bundle-generator -o bundle/iogui.d.ts build/iogui.d.ts && rm -rf build && mv bundle build"
   },
   "repository": {
     "type": "git",

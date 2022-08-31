@@ -31,7 +31,7 @@
     "allowJs": true,
     "checkJs": true,
     // Only necessary because @types/uglify-js can't find types for source-map
-    "skipLibCheck": true,
+    // "skipLibCheck": true,
     "experimentalDecorators": true
   },
   "typedocOptions": {

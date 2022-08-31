@@ -62,9 +62,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      *
      * Node class does not use `compose` by itself but this feature is available to its sublasses.
      */
-    get compose (): ComposedProperties {
-      return null;
-    }
+    // get compose (): ComposedProperties {
+    //   return null;
+    // }
     readonly _properties: Record<string, Property> = {};
     readonly _bindings: Record<string, Binding> = {};
 

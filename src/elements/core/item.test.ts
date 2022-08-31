@@ -1,4 +1,4 @@
-import {IoItem} from '../../iogui.elements.js';
+import {IoItem} from '../../iogui.js';
 
 export default class {
   element = new IoItem();

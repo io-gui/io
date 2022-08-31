@@ -1,4 +1,4 @@
-import {IoButton} from '../../iogui.elements.js';
+import {IoButton} from '../../iogui.js';
 
 export default class {
   element = new IoButton();

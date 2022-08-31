@@ -1,5 +1,5 @@
 import {IoElement, RegisterIoElement} from '../build/iogui.js';
-import {Options, Item} from '../build/iogui.elements.js';
+import {Options, Item} from '../build/iogui.js';
 
 export class IoDemoElementsColor extends IoElement {
   static get Style() {

@@ -1,4 +1,6 @@
 export * from './core/index.js';
+export * from './elements/models/index.js';
+export * from './elements/index.js';
 
 /** @License
  * Copyright ©2022 Aleksandar (Aki) Rodic

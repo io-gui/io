@@ -1,5 +1,5 @@
 import {IoElement, RegisterIoElement} from '../build/iogui.js';
-import {IoThemeSingleton, Options} from '../build/iogui.elements.js';
+import {IoThemeSingleton, Options} from '../build/iogui.js';
 
 export class IoDemoThemeEditor extends IoElement {
   static get Style() {

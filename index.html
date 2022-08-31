@@ -111,7 +111,7 @@
   <body>
     <script type="module">
 
-    import {RegisterIoElement, Options, Path, IoSelectorTabs, IoStorageFactory as $} from './index.js';
+    import {RegisterIoElement, Options, Path, IoSelectorTabs, IoStorageFactory as $} from './build/iogui.js';
 
     const OPTIONS = new Options([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
@@ -263,7 +263,7 @@
               ['iframe', {name: 'todo', title: 'TODO MVC', src: './demos/todomvc/index.html'}],
               ['io-demo-three', {name: 'three', import: './three-ui/demo/three.js'}],
             ]}],
-            ['io-test', {name: 'tests', title: 'Tests', import: './bundle/iogui.test.js'}],
+            ['io-test', {name: 'tests', title: 'Tests', import: './build/iogui.test.js'}],
           ]
         };
       }
