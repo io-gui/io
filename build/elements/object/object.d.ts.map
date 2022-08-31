@@ -1,1 +1,0 @@
-{"version":3,"file":"object.d.ts","sourceRoot":"","sources":["../../../src/elements/object/object.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,SAAS,EAAoB,MAAM,gBAAgB,CAAC;AAC5D,OAAO,iBAAiB,CAAC;AAUzB,qBAAa,QAAS,SAAQ,SAAS;IACrC,MAAM,KAAK,KAAK,WAoBf;IACD,MAAM,KAAK,UAAU,IAAI,GAAG,CAgB3B;IACD,OAAO;CAeR"}

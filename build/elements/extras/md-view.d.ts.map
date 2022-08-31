@@ -1,1 +1,0 @@
-{"version":3,"file":"md-view.d.ts","sourceRoot":"","sources":["../../../src/elements/extras/md-view.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,SAAS,EAAoB,MAAM,gBAAgB,CAAC;AAO5D,qBAAa,QAAS,SAAQ,SAAS;IACrC,MAAM,KAAK,KAAK,WAyHf;IACD,MAAM,KAAK,UAAU,IAAI,GAAG,CAQ3B;IACD,SAAS;IAKT,aAAa,CAAC,QAAQ,EAAE,MAAM;IAc9B,WAAW;CAUZ"}
