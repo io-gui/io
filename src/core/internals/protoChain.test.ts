@@ -28,7 +28,7 @@ class FakeIoNode1 {
     return {
       listener1: 'function1',
       listener2: '',
-      listener3: ['_function1', {capture: true}],
+      listener3: ['_onFunction1', {capture: true}],
       listener4: () => {}
     };
   }
@@ -37,13 +37,13 @@ class FakeIoNode1 {
   }
   function1() {}
   onFunction1() {}
-  _function1() {}
+  _onFunction1() {}
 }
 
 class FakeIoNode2 extends FakeIoNode1 {
   function2() {}
   onFunction2() {}
-  _function2() {}
+  _onFunction2() {}
   static get Properties(): PropertiesDeclaration {
     return {
       prop1: {
@@ -54,9 +54,9 @@ class FakeIoNode2 extends FakeIoNode1 {
   }
   static get Listeners(): ListenersDeclaration {
     return {
-      listener1: '_function2',
+      listener1: '_onFunction2',
       listener2: ['function2', {capture: true, passive: true}],
-      listener3: ['_function1', {passive: true}]
+      listener3: ['_onFunction1', {passive: true}]
     };
   }
   static get Style() {
@@ -82,24 +82,24 @@ export default class {
         constructors = new ProtoChain(IoNode2).constructors;
         chai.expect(constructors).to.be.eql([IoNode2]);
       });
-      it('Should include an array of function names that start with "on" or "_" for auto-binding', () => {
+      it('Should include an array of function names that start with "on" or "_on" for auto-binding', () => {
         let protoChain = new ProtoChain(IoNode1);
         chai.expect(protoChain.functions).to.be.eql([]);
         protoChain = new ProtoChain(FakeIoNode1);
-        chai.expect(protoChain.functions).to.be.eql(['onFunction1', '_function1']);
+        chai.expect(protoChain.functions).to.be.eql(['onFunction1', '_onFunction1']);
         protoChain = new ProtoChain(FakeIoNode2);
-        chai.expect(protoChain.functions).to.be.eql(['onFunction2', '_function2', 'onFunction1', '_function1']);
+        chai.expect(protoChain.functions).to.be.eql(['onFunction2', '_onFunction2', 'onFunction1', '_onFunction1']);
       });
-      it('Should bind all auto-binding functions from the `.functions` array with `.bindFunctions(node)` function', () => {
+      it('Should bind all auto-binding functions from the `.functions` array with `.autobindFunctions(node)` function', () => {
         const protoChain = new ProtoChain(FakeIoNode2);
         const node = new FakeIoNode2();
-        protoChain.bindFunctions(node as unknown as IoNode);
+        protoChain.autobindFunctions(node as unknown as IoNode);
         chai.expect(node.function1.name).to.be.equal('function1');
         chai.expect(node.onFunction1.name).to.be.equal('bound onFunction1');
-        chai.expect(node._function1.name).to.be.equal('bound _function1');
+        chai.expect(node._onFunction1.name).to.be.equal('bound _onFunction1');
         chai.expect(node.function2.name).to.be.equal('function2');
         chai.expect(node.onFunction2.name).to.be.equal('bound onFunction2');
-        chai.expect(node._function2.name).to.be.equal('bound _function2');
+        chai.expect(node._onFunction2.name).to.be.equal('bound _onFunction2');
       });
       it('Should include all property definitions declared in `static get Properties()` return oject', () => {
         let protoChain = new ProtoChain(FakeIoNode1);
@@ -118,13 +118,13 @@ export default class {
         let protoChain = new ProtoChain(FakeIoNode1);
         chai.expect(Object.keys(protoChain.listeners)).to.be.eql(['listener1', 'listener3', 'listener4']);
         chai.expect(protoChain.listeners['listener1']).to.be.eql([['function1']]);
-        chai.expect(protoChain.listeners['listener3']).to.be.eql([['_function1', {capture: true}]]);
+        chai.expect(protoChain.listeners['listener3']).to.be.eql([['_onFunction1', {capture: true}]]);
         chai.expect(String(protoChain.listeners['listener4'])).to.be.eql(String([[() => { }]]));
         protoChain = new ProtoChain(FakeIoNode2);
         chai.expect(Object.keys(protoChain.listeners)).to.be.eql(['listener1', 'listener3', 'listener4', 'listener2']);
-        chai.expect(protoChain.listeners['listener1']).to.be.eql([['function1'], ['_function2']]);
+        chai.expect(protoChain.listeners['listener1']).to.be.eql([['function1'], ['_onFunction2']]);
         chai.expect(protoChain.listeners['listener2']).to.be.eql([['function2', {capture: true, passive: true}]]);
-        chai.expect(protoChain.listeners['listener3']).to.be.eql([['_function1', {capture: true, passive: true}]]);
+        chai.expect(protoChain.listeners['listener3']).to.be.eql([['_onFunction1', {capture: true, passive: true}]]);
         chai.expect(String(protoChain.listeners['listener4'])).to.be.eql(String([[() => { }]]));
       });
       it('Should include all style strings declared in `static get Style()` return string', () => {
@@ -137,9 +137,9 @@ export default class {
       });
       it('Should include all property names of observed object properties', () => {
         let protoChain = new ProtoChain(FakeIoNode1);
-        chai.expect(protoChain.observedObjects).to.be.eql([]);
+        chai.expect(protoChain.observedObjectProperties).to.be.eql([]);
         protoChain = new ProtoChain(FakeIoNode2);
-        chai.expect(protoChain.observedObjects).to.be.eql(['prop1']);
+        chai.expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
       });
     });
   }

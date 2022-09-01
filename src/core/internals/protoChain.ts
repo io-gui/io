@@ -3,14 +3,7 @@ import { ProtoProperty, assignProtoProperty } from './property.js';
 import { ListenerDefinition, hardenListenerDefinition, assignListenerDefinition } from './eventDispatcher.js';
 
 /**
- * Internal utility class that contains usefull information about class inheritance such as:
- * - Array of inherited class constructors ending with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
- * - Array of function names that start with "on" or "_" for auto-binding
- * - Property definitions declared in `static get Properties()` return oject
- * - Listener definitions declared in `static get Listeners()` return oject
- * - CSS style definitions declared in `static get Style()` return string
- * - Array of property names of observed object properties
- *
+ * Internal utility class that contains usefull information about class inheritance.
  * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
  */
 export class ProtoChain {
@@ -23,21 +16,21 @@ export class ProtoChain {
    */
   public readonly functions: Array<string> = [];
   /*
-   * Property definitions declared in `static get Properties()` return oject.
+   * Aggregated property definitions declared in `static get Properties()` return ojects.
    */
   public readonly properties: { [property: string]: ProtoProperty } = {};
   /*
-   * Listener definitions declared in `static get Listeners()` return oject.
+   * Aggregated listener definitions declared in `static get Listeners()` return ojects.
    */
   public readonly listeners: { [property: string]: ListenerDefinition[] } = {};
   /*
-   * CSS style definitions declared in `static get Style()` return string.
+   * Aggregated CSS style definitions declared in `static get Style()` return strings.
    */
   public readonly style: string = '';
   /*
    * Array of property names of observed object properties.
    */
-  public readonly observedObjects: string[] = [];
+  public readonly observedObjectProperties: string[] = [];
   /**
    * Creates an instance of `ProtoChain`.
    * @param {IoNodeConstructor<any>} ioNodeClass - Owner `IoNode`-derived class.
@@ -96,7 +89,7 @@ export class ProtoChain {
         }
       }
     }
-    // Create a list of observed objects
+    // Create a list of observed object property names
     for (const name in this.properties) {
       if (this.properties[name].observe) {
         debug: {
@@ -110,7 +103,7 @@ export class ProtoChain {
             console.warn('Property `observe` is only intended for object properties!');
           }
         }
-        this.observedObjects.push(name);
+        this.observedObjectProperties.push(name);
       }
     }
   }
@@ -118,14 +111,19 @@ export class ProtoChain {
    * Binds all auto-binding functions from the `.functions` array to specified `IoNode`-derived instance.
    * @param {IoNode} node - `IoNode` instance to bind functions to.
    */
-  bindFunctions(node: IoNode) {
+  autobindFunctions(node: IoNode) {
     debug: {
       if (node.constructor !== this.constructors[0]) {
-        console.warn('`bindFunctions` should be used on', this.constructors[0].name, 'instance');
+        console.warn('`autobindFunctions` should be used on', this.constructors[0].name, 'instance');
       }
     }
     for (let i = this.functions.length; i--;) {
-      Object.defineProperty(node, this.functions[i], {value: node[this.functions[i]].bind(node)});
+      // Using `Object.defineProperty` so we dont set the function as enumerable property.
+      Object.defineProperty(node, this.functions[i], {
+        value: node[this.functions[i]].bind(node),
+        writable: true,
+        configurable: true
+      });
     }
   }
 }

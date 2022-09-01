@@ -128,10 +128,10 @@ export declare class ProtoProperty {
 }
 /**
  * Assigns property definition values to another property definition, unless they are default values.
- * @param {ProtoProperty} def Property definition
- * @param {ProtoProperty} newDef Existing property definition
+ * @param {ProtoProperty} def Target property definition
+ * @param {ProtoProperty} srcDef Source property definition
  */
-export declare const assignProtoProperty: (def: ProtoProperty, newDef: ProtoProperty) => void;
+export declare const assignProtoProperty: (def: ProtoProperty, srcDef: ProtoProperty) => void;
 /**
  * Property configuration object.
  * It is initialized from corresponding `ProtoProperty` in `ProtoChain`.
@@ -156,8 +156,6 @@ export interface IoNodeConstructor<T> {
 	Properties?: PropertiesDeclaration;
 	Listeners?: ListenersDeclaration;
 	Style?: string;
-	prototype?: any;
-	name?: string;
 }
 export declare type CallbackFunction = (arg?: any) => void;
 export declare type PredicateFunction = (object: any) => boolean;
@@ -455,11 +453,11 @@ export declare type ListenerDefinition = [
  */
 export declare const hardenListenerDefinition: (def: ListenerDefinitionWeak) => ListenerDefinition;
 /**
- * Assigns listener definition to an existing array of listener definitions.
+ * Assigns source listener definition to an existing array of listener definitions.
  * @param {ListenerDefinition[]} defs Array of listener definitions
- * @param {ListenerDefinition} def Listener definition
+ * @param {ListenerDefinition} srcDef Source listener definition
  */
-export declare const assignListenerDefinition: (defs: ListenerDefinition[], def: ListenerDefinition) => void;
+export declare const assignListenerDefinition: (defs: ListenerDefinition[], srcDef: ListenerDefinition) => void;
 /**
  * Takes a node and a listener definition and returns a listener.
  * @param {IoNode} node `IoNode` instance
@@ -626,14 +624,7 @@ export declare class IoElement extends IoElement_base {
 export declare const RegisterIoElement: (elementConstructor: typeof IoElement) => void;
 export declare const buildTree: () => (node: any) => any;
 /**
- * Internal utility class that contains usefull information about class inheritance such as:
- * - Array of inherited class constructors ending with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`
- * - Array of function names that start with "on" or "_" for auto-binding
- * - Property definitions declared in `static get Properties()` return oject
- * - Listener definitions declared in `static get Listeners()` return oject
- * - CSS style definitions declared in `static get Style()` return string
- * - Array of property names of observed object properties
- *
+ * Internal utility class that contains usefull information about class inheritance.
  * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
  */
 export declare class ProtoChain {
@@ -646,7 +637,7 @@ export declare class ProtoChain {
 		[property: string]: ListenerDefinition[];
 	};
 	readonly style: string;
-	readonly observedObjects: string[];
+	readonly observedObjectProperties: string[];
 	/**
 	 * Creates an instance of `ProtoChain`.
 	 * @param {IoNodeConstructor<any>} ioNodeClass - Owner `IoNode`-derived class.
@@ -656,7 +647,7 @@ export declare class ProtoChain {
 	 * Binds all auto-binding functions from the `.functions` array to specified `IoNode`-derived instance.
 	 * @param {IoNode} node - `IoNode` instance to bind functions to.
 	 */
-	bindFunctions(node: IoNode): void;
+	autobindFunctions(node: IoNode): void;
 }
 export declare class Path extends IoNode {
 	static get Properties(): {
@@ -988,7 +979,7 @@ export declare class IoGl extends IoElement {
 	onResized(): void;
 	cssMutated(): void;
 	changed(): void;
-	_render(): void;
+	_onRender(): void;
 	setShaderProgram(): void;
 	updatePropertyUniform(name: string, property: Property): void;
 	updateCssUniforms(): void;
@@ -1190,7 +1181,7 @@ declare class IoLayer extends IoElement {
 	constructor(properties?: Record<string, any>);
 	stopPropagation(event: Event): void;
 	_onPointerup(event: PointerEvent): void;
-	_collapse(): void;
+	_onCollapse(): void;
 	_onContextmenu(event: Event): void;
 	_onFocusIn(event: FocusEvent): void;
 	_onScroll(event: Event): void;
@@ -1333,8 +1324,8 @@ export declare class IoMenuItem extends IoItem {
 	_onLayerPointerup(event: PointerEvent): void;
 	_onPointerup(event: PointerEvent): void;
 	_onKeydown(event: KeyboardEvent): void;
-	_collapse(): void;
-	_collapseRoot(): void;
+	_onCollapse(): void;
+	_onCollapseRoot(): void;
 	expandedChanged(): void;
 	optionChanged(change: CustomEvent): void;
 	onOptionChanged(): void;
@@ -1351,11 +1342,11 @@ export declare class IoMenuOptions extends IoElement {
 	_onItemClicked(event: CustomEvent): void;
 	_stopPropagation(event: MouseEvent): void;
 	onResized(): void;
-	_setOverflow(): void;
-	_collapse(): void;
+	_onSetOverflow(): void;
+	_onCollapse(): void;
 	expandedChanged(): void;
 	searchChanged(): void;
-	_expandedChangedLazy(): void;
+	_onExpandedChangedLazy(): void;
 	_clipHeight(): void;
 	get _options(): any;
 	changed(): void;
@@ -1379,7 +1370,7 @@ export declare class IoContextMenu extends IoElement {
 	_onPointerup(event: PointerEvent): void;
 	_onLayerPointermove(event: PointerEvent): void;
 	_onClick(event: MouseEvent): void;
-	_collapse(): void;
+	_onCollapse(): void;
 	expandedChanged(): void;
 }
 export declare class IoNotify extends IoElement {
@@ -1406,8 +1397,8 @@ export declare class IoInspector extends IoElement {
 	_getWidgets(): void;
 	_getAll(): void;
 	changed(): void;
-	_changedThrottled(): void;
-	_changed(): void;
+	_onhangedThrCottle(): void;
+	_onChange(): void;
 	static get Config(): {
 		"type:object": (string | {
 			class: string;
@@ -1449,7 +1440,7 @@ export declare class IoProperties extends IoElement {
 	_updateChildren(): void;
 	changed(): void;
 	_changedThrottled(): void;
-	_changed(): void;
+	_onChange(): void;
 	static RegisterConfig: (config: any) => void;
 }
 export declare class IoObject extends IoElement {

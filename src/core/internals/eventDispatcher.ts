@@ -14,17 +14,17 @@ export const hardenListenerDefinition = (def: ListenerDefinitionWeak): ListenerD
 };
 
 /**
- * Assigns listener definition to an existing array of listener definitions.
+ * Assigns source listener definition to an existing array of listener definitions.
  * @param {ListenerDefinition[]} defs Array of listener definitions
- * @param {ListenerDefinition} def Listener definition
+ * @param {ListenerDefinition} srcDef Source listener definition
  */
-export const assignListenerDefinition = (defs: ListenerDefinition[], def: ListenerDefinition) => {
-  const i = defs.findIndex(_def => _def[0] === def[0]);
+export const assignListenerDefinition = (defs: ListenerDefinition[], srcDef: ListenerDefinition) => {
+  const i = defs.findIndex(def => def[0] === srcDef[0]);
   if (i !== -1) {
-    if (defs[i][1]) defs[i][1] = Object.assign(defs[i][1] as ListenerDefinition, def[1]);
-    else if (def[1]) defs[i][1] = def[1];
+    if (defs[i][1]) defs[i][1] = Object.assign(defs[i][1] as ListenerDefinition, srcDef[1]);
+    else if (srcDef[1]) defs[i][1] = srcDef[1];
   } else {
-    defs.push(def);
+    defs.push(srcDef);
   }
 };
 

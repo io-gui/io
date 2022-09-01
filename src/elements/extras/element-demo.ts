@@ -76,8 +76,8 @@ export class IoElementDemo extends IoElement {
   }
   objectMutated(event: CustomEvent) {
     super.objectMutated(event);
-    for (let i = this._protochain.observedObjects.length; i--;) {
-      const prop = this._protochain.observedObjects[i];
+    for (let i = this._protochain.observedObjectProperties.length; i--;) {
+      const prop = this._protochain.observedObjectProperties[i];
       const value = this._properties[prop].value;
       const hasObject = !!this.filterObject(value, o => { return o === event.detail.object; });
       if (hasObject) {

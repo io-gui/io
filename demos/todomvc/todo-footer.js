@@ -18,10 +18,10 @@ export class TodoFooter extends IoElement {
       route: 'all',
     };
   }
-  _clear() {
+  _onClear() {
     this.model.clearCompletedItems();
   }
-  _setRoute(event) {
+  _onSetRoute(event) {
     this.route = event.target.innerText.toLowerCase();
   }
   changed() {
@@ -31,16 +31,16 @@ export class TodoFooter extends IoElement {
       ['span', {class: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'],
       ['ul', {class: 'filters'}, [
         ['li', [
-          ['a', {'on-click': this._setRoute, class: this.route === 'all' ? 'selected' : ''}, 'All'],
+          ['a', {'on-click': this._onSetRoute, class: this.route === 'all' ? 'selected' : ''}, 'All'],
         ]],
         ['li', [
-          ['a', {'on-click': this._setRoute, class: this.route === 'active' ? 'selected' : ''}, 'Active'],
+          ['a', {'on-click': this._onSetRoute, class: this.route === 'active' ? 'selected' : ''}, 'Active'],
         ]],
         ['li', [
-          ['a', {'on-click': this._setRoute, class: this.route === 'completed' ? 'selected' : ''}, 'Completed'],
+          ['a', {'on-click': this._onSetRoute, class: this.route === 'completed' ? 'selected' : ''}, 'Completed'],
         ]],
       ]],
-      completedCount? ['button', {class: 'clear-completed', 'on-click': this._clear}, 'Clear completed'] : null
+      completedCount? ['button', {class: 'clear-completed', 'on-click': this._onClear}, 'Clear completed'] : null
     ]);
   }
 }

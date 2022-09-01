@@ -123,7 +123,7 @@ export class IoInspector extends IoElement {
   selectedMutated() {
     clearTimeout(this._cfgTimeout);
     this._cfgTimeout = setTimeout(()=>{
-      this._changed();
+      this._onChange();
     }, 1000/10);
   }
   _getConfig() {
@@ -147,12 +147,12 @@ export class IoInspector extends IoElement {
   }
   changed() {
     this.advanced = $({value: false, storage: 'local', key: 'inspector-show-advanced'});
-    this._changedThrottled();
+    this._onhangedThrCottle();
   }
-  _changedThrottled() {
-    this.throttle(this._changed, null, true);
+  _onhangedThrCottle() {
+    this.throttle(this._onChange, null, true);
   }
-  _changed() {
+  _onChange() {
     this._getAll();
     this.uuid = genUUID(this.selected);
     const elements = [

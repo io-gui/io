@@ -52,31 +52,21 @@ export class ProtoProperty {
       this.value = def;
       this.type = def.constructor as Constructor;
     }
-    if (this.value === undefined) {
-      if (typeof this.type === 'function') {
-        if (this.type === Boolean) this.value = false;
-        else if (this.type === String) this.value = '';
-        else if (this.type === Number) this.value = 0;
-        else if (this.type === Array) this.value = [];
-        else if (this.type === Object) this.value = {};
-        else this.value = new this.type();
-      }
-    }
   }
 }
 
 /**
  * Assigns property definition values to another property definition, unless they are default values.
- * @param {ProtoProperty} def Property definition
- * @param {ProtoProperty} newDef Existing property definition
+ * @param {ProtoProperty} def Target property definition
+ * @param {ProtoProperty} srcDef Source property definition
  */
-export const assignProtoProperty = (def: ProtoProperty, newDef: ProtoProperty) => {
-  if (newDef.value !== undefined) def.value = newDef.value;
-  if (newDef.type !== undefined) def.type = newDef.type;
-  if (newDef.reflect !== 0) def.reflect = newDef.reflect;
-  if (newDef.notify !== true) def.notify = newDef.notify;
-  if (newDef.observe !== false) def.observe = newDef.observe;
-  if (newDef.binding !== undefined) def.binding = newDef.binding;
+export const assignProtoProperty = (def: ProtoProperty, srcDef: ProtoProperty) => {
+  if (srcDef.value !== undefined) def.value = srcDef.value;
+  if (srcDef.type !== undefined) def.type = srcDef.type;
+  if (srcDef.reflect !== 0) def.reflect = srcDef.reflect;
+  if (srcDef.notify !== true) def.notify = srcDef.notify;
+  if (srcDef.observe !== false) def.observe = srcDef.observe;
+  if (srcDef.binding !== undefined) def.binding = srcDef.binding;
 };
 
 /**
@@ -125,20 +115,11 @@ export class Property {
 
     if (this.binding instanceof Binding) {
       this.value = this.binding.value;
-    } else {
-      if (this.type === Array && this.value instanceof Array) {
-        this.value = [...this.value];
-      } else if (typeof this.type === 'function') {
-        const isObject = this.value instanceof Object;
-        if (this.value === undefined) this.value = new this.type();
-        if (isObject) {
-          try {
-            this.value = Object.assign(new this.type() as any, this.value);
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      }
+    } else if (this.value === undefined) {
+      if (this.type === Boolean) this.value = false;
+      else if (this.type === String) this.value = '';
+      else if (this.type === Number) this.value = 0;
+      else if (typeof this.type === 'function') this.value = new this.type();
     }
     debug: {
       if (this.value === undefined && typeof this.type === 'function') {

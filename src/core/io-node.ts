@@ -12,8 +12,6 @@ export interface IoNodeConstructor<T> {
   Properties?: PropertiesDeclaration;
   Listeners?: ListenersDeclaration;
   Style?: string;
-  prototype?: any
-  name?: string;
 }
 
 export type CallbackFunction = (arg?: any) => void;
@@ -66,7 +64,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
       }
 
-      this._protochain.bindFunctions(this);
+      this._protochain.autobindFunctions(this);
 
       this._changeQueue = new ChangeQueue(this);
       Object.defineProperty(this, '_changeQueue', {enumerable: false});
@@ -97,7 +95,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, 'queueDispatch', {enumerable: false, value: this.queueDispatch.bind(this)});
       Object.defineProperty(this, 'queueDispatchLazy', {enumerable: false, value: this.queueDispatchLazy.bind(this)});
 
-      if (this._protochain.observedObjects.length) {
+      if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.objectMutated as EventListener);
       }
 
@@ -232,7 +230,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this._bindings[name].dispose();
         delete this._bindings[name];
       }
-      if (this._protochain.observedObjects.length) {
+      if (this._protochain.observedObjectProperties.length) {
         window.removeEventListener('object-mutated', this.objectMutated as EventListener);
       }
     }
@@ -275,8 +273,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {Object} event.detail.object - Mutated object.
      */
     objectMutated(event: CustomEvent) {
-      for (let i = 0; i < this._protochain.observedObjects.length; i++) {
-        const prop = this._protochain.observedObjects[i];
+      for (let i = 0; i < this._protochain.observedObjectProperties.length; i++) {
+        const prop = this._protochain.observedObjectProperties[i];
         const value = this._properties[prop].value;
         if (value === event.detail.object) {
           this.throttle(this.objectMutatedThrottled, prop, false);

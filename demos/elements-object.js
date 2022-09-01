@@ -1,5 +1,4 @@
 import {IoElement, RegisterIoElement} from '../build/iogui.js';
-import '../build/iogui.js';
 
 export class IoDemoElementsObject extends IoElement {
   static get Properties() {
@@ -14,6 +13,12 @@ export class IoDemoElementsObject extends IoElement {
             prop2: 2,
           },
           array: [...Array(32).keys()],
+          vector2: [0, 1],
+          vector3: [0, 1, 2],
+          vector4: [0, 1, 2, 3],
+          matrix2: [1, 0, 0, 1],
+          matrix3: [1, 0, 0, 0, 1, 0, 0, 0, 1],
+          matrix4: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
         }
       } 
     };
@@ -28,20 +33,25 @@ export class IoDemoElementsObject extends IoElement {
         slotted: ['io-item', {label: 'Slotted Element'}],
         properties: ['number', 'string', 'boolean']
       }],
-      ['io-object', {value: this.object, expanded: true, properties: ['number'], config: {'number': ['io-slider', {step: 0.1}]}}],
+      ['io-object', {
+        value: this.object,
+        expanded: true,
+        properties: ['number'],
+        config: {'number': ['io-slider', {step: 0.1}]}
+      }],
       ['io-inspector', {
         value: this.object,
         groups: {
-          'Object|properties': [],
+          'Object|properties': ['number', 'string', 'boolean', 'object', 'array'],
           'Object|vectors and matrices': [/vector/i, /matrix/i],
         },
         config: {
-          // 'vector2': ['io-vector', {linkable: true}],
-          // 'vector3': ['io-vector', {linkable: true}],
-          // 'vector4': ['io-vector', {linkable: true}],
-          // 'matrix2': ['io-matrix'],
-          // 'matrix3': ['io-matrix'],
-          // 'matrix4': ['io-matrix'],
+          'vector2': ['io-vector', {linkable: true}],
+          'vector3': ['io-vector', {linkable: true}],
+          'vector4': ['io-vector', {linkable: true}],
+          'matrix2': ['io-matrix'],
+          'matrix3': ['io-matrix'],
+          'matrix4': ['io-matrix'],
           'number': ['io-slider', {step: 0.1}],
         },
       }],
