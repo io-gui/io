@@ -143,7 +143,7 @@ export class IoMenuItem extends IoItem {
         }
       }
       this.dispatchEvent('item-clicked', option, true);
-      this.requestAnimationFrameOnce(this._collapse);
+      this.requestAnimationFrameOnce(this._onCollapse);
     }
   }
   _onItemClicked(event: PointerEvent) {
@@ -152,7 +152,7 @@ export class IoMenuItem extends IoItem {
       event.stopImmediatePropagation();
       this.dispatchEvent('item-clicked', event.detail, true);
     }
-    if (this.expanded) this.requestAnimationFrameOnce(this._collapse);
+    if (this.expanded) this.requestAnimationFrameOnce(this._onCollapse);
   }
   _onPointerdown(event: PointerEvent) {
     event.stopPropagation();
@@ -240,7 +240,7 @@ export class IoMenuItem extends IoItem {
       item.focus();
       item._onClick(event);
     } else {
-      this.requestAnimationFrameOnce(this._collapseRoot);
+      this.requestAnimationFrameOnce(this._onCollapseRoot);
     }
   }
   _onKeydown(event: KeyboardEvent) {
@@ -250,7 +250,7 @@ export class IoMenuItem extends IoItem {
       return;
     } else if (event.key === 'Escape') {
       event.preventDefault();
-      this.requestAnimationFrameOnce(this._collapseRoot);
+      this.requestAnimationFrameOnce(this._onCollapseRoot);
       return;
     }
 
@@ -307,10 +307,10 @@ export class IoMenuItem extends IoItem {
       super._onKeydown(event);
     }
   }
-  _collapse() {
+  _onCollapse() {
     this.expanded = false;
   }
-  _collapseRoot() {
+  _onCollapseRoot() {
     getRootElement(this as unknown as IoMenuItem).expanded = false;
   }
   expandedChanged() {

@@ -58,7 +58,7 @@ export class ProtoChain {
         const names = Object.getOwnPropertyNames(proto);
         for (let j = 0; j < names.length; j++) {
           const fn = names[j];
-          if (fn.startsWith('_') || fn.startsWith('on')) {
+          if (fn.startsWith('_on') || fn.startsWith('on')) {
             const propDesr = Object.getOwnPropertyDescriptor(proto, fn);
             if (propDesr === undefined || propDesr.get || propDesr.set) continue;
             if (typeof proto[fn] === 'function') {

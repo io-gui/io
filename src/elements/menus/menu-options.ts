@@ -157,7 +157,7 @@ export class IoMenuOptions extends IoElement {
       event.stopImmediatePropagation();
       if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
-      this.requestAnimationFrameOnce(this._collapse);
+      this.requestAnimationFrameOnce(this._onCollapse);
     }
   }
   // Prevents IoLayer from stopping scroll in clipped options
@@ -165,9 +165,9 @@ export class IoMenuOptions extends IoElement {
     event.stopPropagation();
   }
   onResized() {
-    this.requestAnimationFrameOnce(this._setOverflow);
+    this.requestAnimationFrameOnce(this._onSetOverflow);
   }
-  _setOverflow() {
+  _onSetOverflow() {
     const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
     if (this.horizontal) {
       const hamburger = this.querySelector('.io-hamburger');
@@ -216,7 +216,7 @@ export class IoMenuOptions extends IoElement {
       }
     }
   }
-  _collapse() {
+  _onCollapse() {
     const focusSearch = this.selectable && !!this.search && !this.inlayer;
     this.setProperties({
       search: '',
@@ -228,9 +228,9 @@ export class IoMenuOptions extends IoElement {
     if (this.expanded) {
       this.inlayer = this.parentElement === Layer;
       if (this.inlayer && this.$parent) {
-        this._expandedChangedLazy();
+        this._onExpandedChangedLazy();
         // TODO: unhack incorrect this.rect on first expand.
-        this.throttle(this._expandedChangedLazy, null, true);
+        this.throttle(this._onExpandedChangedLazy, null, true);
       }
     } else {
       this.style.top = null;
@@ -245,7 +245,7 @@ export class IoMenuOptions extends IoElement {
       this.requestAnimationFrameOnce(this._clipHeight);
     }
   }
-  _expandedChangedLazy() {
+  _onExpandedChangedLazy() {
     const pRect = this.$parent.getBoundingClientRect();
     Layer.setElementPosition(this as unknown as HTMLElement, this.position, pRect);
     this._clipHeight();
@@ -319,7 +319,7 @@ export class IoMenuOptions extends IoElement {
       }]);
     }
     this.template(elements);
-    this.requestAnimationFrameOnce(this._setOverflow);
+    this.requestAnimationFrameOnce(this._onSetOverflow);
   }
 }
 

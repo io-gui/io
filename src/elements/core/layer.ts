@@ -90,12 +90,12 @@ class IoLayer extends IoElement {
   _onPointerup(event: PointerEvent) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
       if (!this.skipCollapse) {
-        this.requestAnimationFrameOnce(this._collapse);
+        this.requestAnimationFrameOnce(this._onCollapse);
       }
       this.skipCollapse = false;
     }
   }
-  _collapse() {
+  _onCollapse() {
     this.expanded = false;
   }
   _onContextmenu(event: Event) {
@@ -106,7 +106,7 @@ class IoLayer extends IoElement {
   }
   _onScroll(event: Event) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
-      this.requestAnimationFrameOnce(this._collapse);
+      this.requestAnimationFrameOnce(this._onCollapse);
     }
   }
   nudgeDown(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean) {
@@ -207,7 +207,7 @@ class IoLayer extends IoElement {
         return;
       }
     }
-    this.requestAnimationFrameOnce(this._collapse);
+    this.requestAnimationFrameOnce(this._onCollapse);
   }
   expandedChanged() {
     if (!this.expanded) {

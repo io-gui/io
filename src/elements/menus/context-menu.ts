@@ -72,7 +72,7 @@ export class IoContextMenu extends IoElement {
       event.stopImmediatePropagation();
       if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
-      this.requestAnimationFrameOnce(this._collapse);
+      this.requestAnimationFrameOnce(this._onCollapse);
     }
   }
   _onContextmenu(event: MouseEvent) {
@@ -120,7 +120,7 @@ export class IoContextMenu extends IoElement {
   _onClick(event: MouseEvent) {
     if (event.button === this.button && event.button !== 2) this.expanded = true;
   }
-  _collapse() {
+  _onCollapse() {
     this.expanded = false;
   }
   expandedChanged() {

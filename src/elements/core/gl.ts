@@ -287,20 +287,20 @@ export class IoGl extends IoElement {
   }
   cssMutated() {
     this.updateCssUniforms();
-    this.requestAnimationFrameOnce(this._render);
+    this.requestAnimationFrameOnce(this._onRender);
   }
   changed() {
     // TODO: unhack when ResizeObserver is available in Safari
     if (!window.ResizeObserver) {
       setTimeout(() => {
         this.onResized();
-        this.requestAnimationFrameOnce(this._render);
+        this.requestAnimationFrameOnce(this._onRender);
       });
     } else {
-      this.requestAnimationFrameOnce(this._render);
+      this.requestAnimationFrameOnce(this._onRender);
     }
   }
-  _render() {
+  _onRender() {
     const width = this.size[0] * this.pxRatio;
     const height = this.size[1] * this.pxRatio;
 
