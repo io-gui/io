@@ -1,4 +1,4 @@
-import {IoNodeMixin, RegisterIoNode} from '../../iogui.js';
+import {IoNodeMixin, RegisterIoNode} from '../core/io-node.js';
 import {Item} from './item.js';
 import {Path} from './path.js';
 
@@ -18,7 +18,6 @@ export class Options extends IoNodeMixin(Array) {
   }
   constructor(options: Array<Item | any> = [], props = {}) {
     super(props);
-
     for (let i = 0; i < options.length; i++) {
       let option;
       if (options[i] instanceof Item) {

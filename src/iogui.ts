@@ -1,5 +1,5 @@
 export * from './core/index.js';
-export * from './elements/models/index.js';
+export * from './models/index.js';
 export * from './elements/index.js';
 
 /** @License
