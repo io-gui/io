@@ -355,9 +355,14 @@ export class IoMenuItem extends IoItem {
   }
   changed() {
     const option = this.option;
-    if (option === undefined) {
-      console.log(this);
+    debug: {
+      if (option === undefined) {
+        console.warn('menu-item has no option defined!');
+      }
     }
+    // TODO: reconsider
+    if (option === undefined) return;
+
     const icon = this.icon || option.icon;
     this.setAttribute('selected', option.selected);
     this.setAttribute('hasmore', this.hasmore);

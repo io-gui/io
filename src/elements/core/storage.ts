@@ -211,10 +211,10 @@ class IoStorage extends IoNode {
 RegisterIoNode(IoStorage);
 
 const IoStorageFactory = function(props: StorageProps) {
-  if (props && typeof props === 'string') {
+  if (typeof props === 'string') {
     props = {key: props};
   }
-  if (props && props.key && nodes[props.key]) {
+  if (props.key && nodes[props.key]) {
     if (props.storage) nodes[props.key].storage = props.storage;
     if (props.value !== undefined) nodes[props.key].default = props.value;
     return nodes[props.key].binding;

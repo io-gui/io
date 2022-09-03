@@ -202,21 +202,21 @@ export class IoSelector extends IoElement {
 
     if (this.$.content) {
       this.$.content.textContent = '';
+      this.$.content.classList.toggle('io-loading', true);
+      if (!explicitlyDontCache && (this.cache || explicitlyCache) && this._caches[selected]) {
+        this.$.content.appendChild(this._caches[selected]);
+        this.$.content.classList.toggle('io-loading', false);
+      } else {
+        void this.import(element[1].import).then(() => {
+          if (element[1].name === this.selected.split('#')[0]) {
+            this.$.content.classList.toggle('io-loading', false);
+            this.template([element], this.$.content);
+            this._caches[selected] = this.$.content.childNodes[0];
+          }
+        });
+      }
     }
 
-    this.$.content.classList.toggle('io-loading', true);
-    if (!explicitlyDontCache && (this.cache || explicitlyCache) && this._caches[selected]) {
-      this.$.content.appendChild(this._caches[selected]);
-      this.$.content.classList.toggle('io-loading', false);
-    } else {
-      void this.import(element[1].import).then(() => {
-        if (element[1].name === this.selected.split('#')[0]) {
-          this.$.content.classList.toggle('io-loading', false);
-          this.template([element], this.$.content);
-          this._caches[selected] = this.$.content.childNodes[0];
-        }
-      });
-    }
   }
 }
 

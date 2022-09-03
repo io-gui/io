@@ -622,7 +622,15 @@ export declare class IoElement extends IoElement_base {
  * @param {IoElement} elementConstructor - Element class to register.
  */
 export declare const RegisterIoElement: (elementConstructor: typeof IoElement) => void;
-export declare const buildTree: () => (node: any) => any;
+export declare type VirtualDOMElement = [
+	string,
+	Record<string, any> | string
+] | [
+	string,
+	Record<string, any> | string,
+	VirtualDOMElement[] | string
+];
+export declare const buildTree: () => (node: VirtualDOMElement) => any;
 /**
  * Internal utility class that contains usefull information about class inheritance.
  * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
