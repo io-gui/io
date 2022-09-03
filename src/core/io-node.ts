@@ -135,19 +135,19 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         debug: {
           if (prop.type === String) {
             if (typeof value !== 'string') {
-              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
             }
           } else if (prop.type === Number) {
             if (typeof value !== 'number') {
-              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
             }
           } else if (prop.type === Boolean) {
             if (typeof value !== 'boolean') {
-              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
             }
           } else if (prop.type) {
             if (!(value instanceof prop.type)) {
-              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this._node);
+              console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
             }
           }
         }
@@ -217,13 +217,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Use this when instance is no longer needed.
      */
     dispose() {
-      this._changeQueue.dispose();
-      this._propertyBinder.dispose();
-      this._eventDispatcher.dispose();
       for (const name in this._properties) {
         if (this._properties[name].binding) {
           // TODO: test this specifically
-          this._properties[name].binding?.removeTarget(this._node, name);
+          this._properties[name].binding?.removeTarget(this, name);
         }
       }
       for (const name in this._bindings) {
@@ -233,6 +230,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       if (this._protochain.observedObjectProperties.length) {
         window.removeEventListener('object-mutated', this.objectMutated as EventListener);
       }
+      // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
+      this._changeQueue.dispose();
+      this._eventDispatcher.dispose();
     }
     /**
      * default change handler.

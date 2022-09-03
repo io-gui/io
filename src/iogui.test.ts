@@ -1,18 +1,18 @@
 import {IoElement, RegisterIoElement} from './iogui.js';
 
-import ProtoChain from './core/internals/protoChain.test.js';
-import Property from './core/internals/property.test.js';
-import Binding from './core/internals/binding.test.js';
-import EventDispatcher from './core/internals/eventDispatcher.test.js';
-import ChangeQueue from './core/internals/changeQueue.test.js';
+// import ProtoChain from './core/internals/protoChain.test.js';
+// import Property from './core/internals/property.test.js';
+// import Binding from './core/internals/binding.test.js';
+// import EventDispatcher from './core/internals/eventDispatcher.test.js';
+// import ChangeQueue from './core/internals/changeQueue.test.js';
 
 import 'mocha';
 import 'chai';
 
 // Core tests
 
-// import Node from './core/io-node.test.js';
-// import Element from './core/io-element.test.js';
+import Node from './core/io-node.test.js';
+import Element from './core/io-element.test.js';
 
 // import Item from './elements/core/item.test.js';
 // import Content from './elements/core/content.test.js'; // TODO
@@ -75,16 +75,24 @@ mochaDiv.style.display = 'none';
 
 let testCompleted = false;
 
+export async function nextTick(): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(()=>{
+      resolve();
+    });
+  });
+}
+
 function runTests() {
   if (!testCompleted) {
-    new ProtoChain().run();
-    new Property().run();
-    new Binding().run();
-    new EventDispatcher().run();
-    new ChangeQueue().run();
+    // new ProtoChain().run();
+    // new Property().run();
+    // new Binding().run();
+    // new EventDispatcher().run();
+    // new ChangeQueue().run();
 
-    // new Node().run();
-    // new Element().run();
+    new Node().run();
+    new Element().run();
 
     // new Item().run();
     // new Content().run();

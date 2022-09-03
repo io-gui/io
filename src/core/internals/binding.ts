@@ -1,5 +1,5 @@
-import {ChangeEvent} from './changeQueue.js';
-import {IoNode} from '../io-node.js';
+import { ChangeEvent } from './changeQueue.js';
+import { IoNode } from '../io-node.js';
 
 /**
  * Property binding class.
@@ -145,7 +145,5 @@ export class Binding {
     delete (this as any).property;
     delete (this as any).targets;
     delete (this as any).targetProperties;
-    delete (this as any).onTargetChanged;
-    delete (this as any).onSourceChanged;
   }
 }

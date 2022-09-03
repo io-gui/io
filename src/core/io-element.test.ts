@@ -99,11 +99,7 @@ export default class {
   }
   run() {
     describe('IoElement', () => {
-      describe('Initialized element', () => {
-        it('Should have correct property defaults', () => {
-          chai.expect(this.element.prop0).to.equal(-1);
-          chai.expect(this.element.prop1).to.equal('default');
-        });
+      describe('Registration', () => {
         it('Should have core API functions defined', () => {
           // Default properties
           chai.expect(this.element.id).to.be.equal('');
@@ -116,8 +112,14 @@ export default class {
           chai.expect(this.element.traverse).to.be.a('function');
           // TODO: fully test core API
         });
+        it('Should initialize property definitions correctly', () => {
+          chai.expect(this.element.prop0).to.equal(-1);
+          chai.expect(this.element.prop1).to.equal('default');
+        });
       });
-      describe('Observed properties', () => {
+      describe('Construction', () => {
+      });
+      describe('Reactivity', () => {
         it('Should corectly invoke handler functions on change', () => {
           this.reset();
           this.element.prop0 = 1;
