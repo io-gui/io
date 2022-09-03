@@ -113,7 +113,7 @@ const getHashes = function() {
   }
 };
 
-const setHashes = function(force?: boolean) {
+const setHashes = function(force = false) {
   let hashString = '';
   for (const node in nodes) {
     if ((nodes[node].storage === 'hash' || force === true) && nodes[node].value !== undefined && nodes[node].value !== '' && nodes[node].value !== nodes[node].default) {

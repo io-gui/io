@@ -67,6 +67,7 @@
 			{
 				"imports": {
 					"marked": "./node_modules/marked/lib/marked.esm.js",
+					"dompurify": "./node_modules/dompurify/dist/purify.es.js",
 					"mocha": "./node_modules/mocha/mocha.js",
 					"chai": "./node_modules/chai/chai.js"
 				}
@@ -224,7 +225,7 @@
         {label: 'Elements', value: 'elements'},
         {label: 'Theme', value: 'theme'},
         {label: 'Todo App', value: 'todo'},
-        {label: 'Three.js', value: 'three'},
+        // {label: 'Three.js', value: 'three'},
         {label: 'Menu', value: 'menu'},
       ]},
       {label: 'Tests', value: 'tests'},
@@ -261,7 +262,7 @@
               ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],
               ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],
               ['iframe', {name: 'todo', title: 'TODO MVC', src: './demos/todomvc/index.html'}],
-              ['io-demo-three', {name: 'three', import: './three-ui/demo/three.js'}],
+              // ['io-demo-three', {name: 'three', import: './three-ui/demo/three.js'}],
             ]}],
             ['io-test', {name: 'tests', title: 'Tests', import: './build/iogui.test.js'}],
           ]

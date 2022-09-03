@@ -1,5 +1,6 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../iogui.js';
 import { marked } from 'marked';
+import purify from 'dompurify';
 
 /*
 
@@ -151,7 +152,7 @@ export class IoMdView extends IoElement {
         },
       });
       // TODO: unhack
-      this.innerHTML = marked(markdown);
+      this.innerHTML = purify.sanitize(marked(markdown));
       this.classList.toggle('io-loading', false);
       this.dispatchEvent('content-ready', {}, true);
     }
