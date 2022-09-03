@@ -555,10 +555,14 @@ const isObject = (x: any) => typeof x === 'object' && !isArray(x);
 
 const clense = (a: any, b: any) => !b ? a : isString(b[0]) ? [...a, b] : [...a, ...b];
 
-export const buildTree = () => (node: any): any => !!node && isObject(node[1]) ? {
+type VirtualDOMElement =
+  [string, Record<string, any> | string ] |
+  [string, Record<string, any> | string, VirtualDOMElement[] | string ];
+
+export const buildTree = () => (node: VirtualDOMElement): any => isObject(node[1]) ? {
   ['name']: node[0],
   ['props']: node[1],
   ['children']: isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2]
-} : buildTree()([node[0], {}, node[1]]);
+} : buildTree()([node[0], {}, node[1] as VirtualDOMElement[] | string]);
 
 export {IoElement, RegisterIoElement};

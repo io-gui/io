@@ -227,7 +227,7 @@ export class IoInspector extends IoElement {
 
 function genUUID(object: any) {
   let UUID = 'io-object-collapse-state-' + object.constructor.name;
-  UUID += '-' + object.guid || object.uuid || object.id || '';
+  UUID += '-' + (object.guid || object.uuid || object.id || '');
   const props = JSON.stringify(Object.keys(object));
   let hash: any = 0;
   for (let i = 0; i < props.length; i++) {

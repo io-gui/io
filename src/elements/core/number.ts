@@ -149,7 +149,7 @@ export class IoNumber extends IoItem {
       this._setFromTextNode();
     } else if (event.which === 33) { // pgup
       const valueNumber = Number(this.textNode);
-      if (typeof valueNumber === 'number' && !isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
+      if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
         this.textNode = Number(this.textNode) + this.step;
       } else {
         this.textNode = this.step;
@@ -157,7 +157,7 @@ export class IoNumber extends IoItem {
       this._setFromTextNode();
     } else if (event.which === 34) { // pgdown
       const valueNumber = Number(this.textNode);
-      if (typeof valueNumber === 'number' && !isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
+      if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
         this.textNode = Number(this.textNode) - this.step;
       } else {
         this.textNode = -this.step;
