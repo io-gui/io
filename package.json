@@ -1,7 +1,7 @@
 {
   "name": "io-gui",
   "version": "1.2.8",
-  "description": "IoGui is a simple ui library for the web.",
+  "description": "Io-Gui, a UI framework for web development.",
   "main": "build/iogui.js",
   "module": "build/iogui.js",
   "typings": "build/iogui.d.ts",
