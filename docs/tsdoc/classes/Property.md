@@ -19,7 +19,7 @@ Creates the property configuration object and copies values from `ProtoProperty`
 
 #### Defined in
 
-[src/core/internals/property.ts:103](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L103)
+[src/core/internals/property.ts:93](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L93)
 
 ## Properties
 
@@ -29,7 +29,7 @@ Creates the property configuration object and copies values from `ProtoProperty`
 
 #### Defined in
 
-[src/core/internals/property.ts:92](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L92)
+[src/core/internals/property.ts:82](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L82)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:96](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L96)
+[src/core/internals/property.ts:86](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L86)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:98](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L98)
+[src/core/internals/property.ts:88](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L88)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:94](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L94)
+[src/core/internals/property.ts:84](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L84)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:90](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L90)
+[src/core/internals/property.ts:80](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L80)
 
 ___
 
@@ -79,4 +79,4 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:88](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L88)
+[src/core/internals/property.ts:78](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L78)

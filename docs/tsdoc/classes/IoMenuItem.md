@@ -1,79 +1,32 @@
-# Class: IoElement
+# Class: IoMenuItem
 
 Core `IoElement` class.
 
 ## Hierarchy
 
-- `__class`<() => `HTMLElement`, `this`\>
+- [`IoItem`](IoItem.md)
 
-  ↳ **`IoElement`**
-
-  ↳↳ [`IoGl`](IoGl.md)
-
-  ↳↳ [`IoItem`](IoItem.md)
-
-  ↳↳ [`IoContent`](IoContent.md)
-
-  ↳↳ [`IoNumberSlider`](IoNumberSlider.md)
-
-  ↳↳ [`IoNumberSliderRange`](IoNumberSliderRange.md)
-
-  ↳↳ [`IoIcon`](IoIcon.md)
-
-  ↳↳ [`IoLadder`](IoLadder.md)
-
-  ↳↳ [`IoMdView`](IoMdView.md)
-
-  ↳↳ [`IoElementDemo`](IoElementDemo.md)
-
-  ↳↳ [`IoLayout`](IoLayout.md)
-
-  ↳↳ [`IoCollapsable`](IoCollapsable.md)
-
-  ↳↳ [`IoSelector`](IoSelector.md)
-
-  ↳↳ [`IoSidebar`](IoSidebar.md)
-
-  ↳↳ [`IoVector`](IoVector.md)
-
-  ↳↳ [`IoMatrix`](IoMatrix.md)
-
-  ↳↳ [`IoMenuOptions`](IoMenuOptions.md)
-
-  ↳↳ [`IoOptionMenu`](IoOptionMenu.md)
-
-  ↳↳ [`IoContextMenu`](IoContextMenu.md)
-
-  ↳↳ [`IoNotify`](IoNotify.md)
-
-  ↳↳ [`IoInspector`](IoInspector.md)
-
-  ↳↳ [`IoObject`](IoObject.md)
-
-  ↳↳ [`IoProperties`](IoProperties.md)
+  ↳ **`IoMenuItem`**
 
 ## Constructors
 
 ### constructor
 
-• **new IoElement**(`properties?`, ...`args`)
-
-Creates a class instance and initializes the internals.
+• **new IoMenuItem**(`properties?`)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Initial property values. |
-| `...args` | `any`[] | - |
+| Name | Type |
+| :------ | :------ |
+| `properties` | `Record`<`string`, `any`\> |
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).constructor
+[IoItem](IoItem.md).[constructor](IoItem.md#constructor)
 
 #### Defined in
 
-[src/core/io-node.ts:57](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L57)
+[src/elements/core/item.ts:55](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L55)
 
 ## Properties
 
@@ -83,7 +36,7 @@ IoNodeMixin(HTMLElement).constructor
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_bindings
+[IoItem](IoItem.md).[_bindings](IoItem.md#_bindings)
 
 #### Defined in
 
@@ -97,7 +50,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_changeQueue
+[IoItem](IoItem.md).[_changeQueue](IoItem.md#_changequeue)
 
 #### Defined in
 
@@ -111,7 +64,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_eventDispatcher
+[IoItem](IoItem.md).[_eventDispatcher](IoItem.md#_eventdispatcher)
 
 #### Defined in
 
@@ -125,13 +78,41 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_properties
+[IoItem](IoItem.md).[_properties](IoItem.md#_properties)
 
 #### Defined in
 
 [src/core/io-node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L48)
 
 ## Accessors
+
+### hasmore
+
+• `get` **hasmore**(): `any`
+
+#### Returns
+
+`any`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:110](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L110)
+
+___
+
+### inlayer
+
+• `get` **inlayer**(): `any`
+
+#### Returns
+
+`any`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:113](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L113)
+
+___
 
 ### textNode
 
@@ -140,6 +121,10 @@ IoNodeMixin(HTMLElement).\_properties
 #### Returns
 
 `any`
+
+#### Inherited from
+
+IoItem.textNode
 
 #### Defined in
 
@@ -157,6 +142,10 @@ IoNodeMixin(HTMLElement).\_properties
 
 `void`
 
+#### Inherited from
+
+IoItem.textNode
+
 #### Defined in
 
 [src/core/io-element.ts:211](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L211)
@@ -171,9 +160,13 @@ ___
 
 `any`
 
+#### Overrides
+
+IoItem.Listeners
+
 #### Defined in
 
-[src/core/io-element.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L60)
+[src/elements/menus/menu-item.ts:101](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L101)
 
 ___
 
@@ -187,25 +180,29 @@ ___
 
 #### Overrides
 
-IoNodeMixin(HTMLElement).Properties
+IoItem.Properties
 
 #### Defined in
 
-[src/core/io-element.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L12)
+[src/elements/menus/menu-item.ts:81](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L81)
 
 ___
 
 ### Style
 
-• `Static` `get` **Style**(): `any`
+• `Static` `get` **Style**(): `string`
 
 #### Returns
 
-`any`
+`string`
+
+#### Overrides
+
+IoItem.Style
 
 #### Defined in
 
-[src/core/io-element.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L8)
+[src/elements/menus/menu-item.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L26)
 
 ___
 
@@ -217,11 +214,143 @@ ___
 
 `string`[]
 
+#### Inherited from
+
+IoItem.observedAttributes
+
 #### Defined in
 
 [src/core/io-element.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L65)
 
 ## Methods
+
+### \_expandHovered
+
+▸ **_expandHovered**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:213](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L213)
+
+___
+
+### \_gethovered
+
+▸ **_gethovered**(`event`): `any`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`any`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L207)
+
+___
+
+### \_onBlur
+
+▸ **_onBlur**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `FocusEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[_onBlur](IoItem.md#_onblur)
+
+#### Defined in
+
+[src/elements/core/item.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L65)
+
+___
+
+### \_onClick
+
+▸ **_onClick**(): `void`
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoItem](IoItem.md).[_onClick](IoItem.md#_onclick)
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:128](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L128)
+
+___
+
+### \_onCollapse
+
+▸ **_onCollapse**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:310](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L310)
+
+___
+
+### \_onCollapseRoot
+
+▸ **_onCollapseRoot**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:313](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L313)
+
+___
+
+### \_onFocus
+
+▸ **_onFocus**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `FocusEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[_onFocus](IoItem.md#_onfocus)
+
+#### Defined in
+
+[src/elements/core/item.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L60)
+
+___
 
 ### \_onFocusTo
 
@@ -237,9 +366,217 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoItem](IoItem.md).[_onFocusTo](IoItem.md#_onfocusto)
+
 #### Defined in
 
 [src/core/io-element.ts:252](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L252)
+
+___
+
+### \_onItemClicked
+
+▸ **_onItemClicked**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:149](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L149)
+
+___
+
+### \_onKeydown
+
+▸ **_onKeydown**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `KeyboardEvent` |
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoItem](IoItem.md).[_onKeydown](IoItem.md#_onkeydown)
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:246](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L246)
+
+___
+
+### \_onKeyup
+
+▸ **_onKeyup**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `KeyboardEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[_onKeyup](IoItem.md#_onkeyup)
+
+#### Defined in
+
+[src/elements/core/item.ts:110](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L110)
+
+___
+
+### \_onLayerPointermove
+
+▸ **_onLayerPointermove**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:227](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L227)
+
+___
+
+### \_onLayerPointerup
+
+▸ **_onLayerPointerup**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:230](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L230)
+
+___
+
+### \_onPointerdown
+
+▸ **_onPointerdown**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoItem](IoItem.md).[_onPointerdown](IoItem.md#_onpointerdown)
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:157](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L157)
+
+___
+
+### \_onPointerleave
+
+▸ **_onPointerleave**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[_onPointerleave](IoItem.md#_onpointerleave)
+
+#### Defined in
+
+[src/elements/core/item.ts:77](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L77)
+
+___
+
+### \_onPointermove
+
+▸ **_onPointermove**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoItem](IoItem.md).[_onPointermove](IoItem.md#_onpointermove)
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:174](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L174)
+
+___
+
+### \_onPointerup
+
+▸ **_onPointerup**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Overrides
+
+[IoItem](IoItem.md).[_onPointerup](IoItem.md#_onpointerup)
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:233](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L233)
 
 ___
 
@@ -263,7 +600,7 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).addEventListener
+[IoItem](IoItem.md).[addEventListener](IoItem.md#addeventlistener)
 
 #### Defined in
 
@@ -280,6 +617,10 @@ Sets aria attributes.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[applyAria](IoItem.md#applyaria)
 
 #### Defined in
 
@@ -301,9 +642,9 @@ ___
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-IoNodeMixin(HTMLElement).applyProperties
+[IoItem](IoItem.md).[applyProperties](IoItem.md#applyproperties)
 
 #### Defined in
 
@@ -326,6 +667,10 @@ ___
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[attributeChangedCallback](IoItem.md#attributechangedcallback)
 
 #### Defined in
 
@@ -353,7 +698,7 @@ Binding object.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).bind
+[IoItem](IoItem.md).[bind](IoItem.md#bind)
 
 #### Defined in
 
@@ -372,13 +717,13 @@ Invoked when one of the properties change.
 
 `void`
 
-#### Inherited from
+#### Overrides
 
-IoNodeMixin(HTMLElement).changed
+[IoItem](IoItem.md).[changed](IoItem.md#changed)
 
 #### Defined in
 
-[src/core/io-node.ts:241](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L241)
+[src/elements/menus/menu-item.ts:356](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L356)
 
 ___
 
@@ -392,9 +737,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 `void`
 
+#### Overrides
+
+[IoItem](IoItem.md).[connectedCallback](IoItem.md#connectedcallback)
+
 #### Defined in
 
-[src/core/io-element.ts:93](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L93)
+[src/elements/menus/menu-item.ts:116](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L116)
 
 ___
 
@@ -408,9 +757,13 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 `void`
 
+#### Overrides
+
+[IoItem](IoItem.md).[disconnectedCallback](IoItem.md#disconnectedcallback)
+
 #### Defined in
 
-[src/core/io-element.ts:102](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L102)
+[src/elements/menus/menu-item.ts:122](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L122)
 
 ___
 
@@ -435,7 +788,7 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispatchEvent
+[IoItem](IoItem.md).[dispatchEvent](IoItem.md#dispatchevent)
 
 #### Defined in
 
@@ -456,11 +809,25 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispose
+[IoItem](IoItem.md).[dispose](IoItem.md#dispose)
 
 #### Defined in
 
 [src/core/io-node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L219)
+
+___
+
+### expandedChanged
+
+▸ **expandedChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:316](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L316)
 
 ___
 
@@ -484,7 +851,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObject
+[IoItem](IoItem.md).[filterObject](IoItem.md#filterobject)
 
 #### Defined in
 
@@ -512,7 +879,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObjects
+[IoItem](IoItem.md).[filterObjects](IoItem.md#filterobjects)
 
 #### Defined in
 
@@ -537,6 +904,10 @@ Update textContent via TextNode is better for layout performance.
 
 `void`
 
+#### Inherited from
+
+[IoItem](IoItem.md).[flattenTextNode](IoItem.md#flattentextnode)
+
 #### Defined in
 
 [src/core/io-element.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L190)
@@ -557,9 +928,31 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoItem](IoItem.md).[focusTo](IoItem.md#focusto)
+
 #### Defined in
 
 [src/core/io-element.ts:359](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L359)
+
+___
+
+### getCaretPosition
+
+▸ **getCaretPosition**(): `number`
+
+#### Returns
+
+`number`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[getCaretPosition](IoItem.md#getcaretposition)
+
+#### Defined in
+
+[src/elements/core/item.ts:111](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L111)
 
 ___
 
@@ -579,7 +972,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).import
+[IoItem](IoItem.md).[import](IoItem.md#import)
 
 #### Defined in
 
@@ -607,7 +1000,7 @@ with `observe: "sync" || "async"` configuration.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutated
+[IoItem](IoItem.md).[objectMutated](IoItem.md#objectmutated)
 
 #### Defined in
 
@@ -634,11 +1027,45 @@ the object properties has mutated.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutatedThrottled
+[IoItem](IoItem.md).[objectMutatedThrottled](IoItem.md#objectmutatedthrottled)
 
 #### Defined in
 
 [src/core/io-node.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L302)
+
+___
+
+### onOptionChanged
+
+▸ **onOptionChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:353](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L353)
+
+___
+
+### optionChanged
+
+▸ **optionChanged**(`change`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `change` | `CustomEvent`<`any`\> |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/menu-item.ts:345](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L345)
 
 ___
 
@@ -658,13 +1085,13 @@ Handler function with `event.preventDefault()`.
 
 `void`
 
-#### Inherited from
+#### Overrides
 
-IoNodeMixin(HTMLElement).preventDefault
+[IoItem](IoItem.md).[preventDefault](IoItem.md#preventdefault)
 
 #### Defined in
 
-[src/core/io-node.ts:444](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L444)
+[src/elements/menus/menu-item.ts:106](https://github.com/io-gui/iogui/blob/tsc/src/elements/menus/menu-item.ts#L106)
 
 ___
 
@@ -688,7 +1115,7 @@ Adds property change to the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queue
+[IoItem](IoItem.md).[queue](IoItem.md#queue)
 
 #### Defined in
 
@@ -708,7 +1135,7 @@ Dispatches the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatch
+[IoItem](IoItem.md).[queueDispatch](IoItem.md#queuedispatch)
 
 #### Defined in
 
@@ -728,7 +1155,7 @@ Dispatches the queue in the next rAF cycle.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatchLazy
+[IoItem](IoItem.md).[queueDispatchLazy](IoItem.md#queuedispatchlazy)
 
 #### Defined in
 
@@ -756,7 +1183,7 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).removeEventListener
+[IoItem](IoItem.md).[removeEventListener](IoItem.md#removeeventlistener)
 
 #### Defined in
 
@@ -780,7 +1207,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).requestAnimationFrameOnce
+[IoItem](IoItem.md).[requestAnimationFrameOnce](IoItem.md#requestanimationframeonce)
 
 #### Defined in
 
@@ -805,9 +1232,37 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 `void`
 
+#### Inherited from
+
+[IoItem](IoItem.md).[setAttribute](IoItem.md#setattribute)
+
 #### Defined in
 
 [src/core/io-element.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L228)
+
+___
+
+### setCaretPosition
+
+▸ **setCaretPosition**(`position`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `position` | `number` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[setCaretPosition](IoItem.md#setcaretposition)
+
+#### Defined in
+
+[src/elements/core/item.ts:124](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L124)
 
 ___
 
@@ -830,7 +1285,7 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperties
+[IoItem](IoItem.md).[setProperties](IoItem.md#setproperties)
 
 #### Defined in
 
@@ -858,7 +1313,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperty
+[IoItem](IoItem.md).[setProperty](IoItem.md#setproperty)
 
 #### Defined in
 
@@ -885,7 +1340,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setValue
+[IoItem](IoItem.md).[setValue](IoItem.md#setvalue)
 
 #### Defined in
 
@@ -911,7 +1366,7 @@ Handler function with `event.stopPropagation()`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).stopPropagation
+[IoItem](IoItem.md).[stopPropagation](IoItem.md#stoppropagation)
 
 #### Defined in
 
@@ -935,6 +1390,10 @@ Renders DOM from virtual DOM arrays.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[template](IoItem.md#template)
 
 #### Defined in
 
@@ -962,7 +1421,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).throttle
+[IoItem](IoItem.md).[throttle](IoItem.md#throttle)
 
 #### Defined in
 
@@ -986,6 +1445,10 @@ Recurively traverses vDOM.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoItem](IoItem.md).[traverse](IoItem.md#traverse)
 
 #### Defined in
 
@@ -1011,7 +1474,7 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).unbind
+[IoItem](IoItem.md).[unbind](IoItem.md#unbind)
 
 #### Defined in
 

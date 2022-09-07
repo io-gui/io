@@ -51,23 +51,3 @@ ___
 #### Defined in
 
 [src/core/io-node.ts:14](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L14)
-
-___
-
-### name
-
-• `Optional` **name**: `string`
-
-#### Defined in
-
-[src/core/io-node.ts:16](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L16)
-
-___
-
-### prototype
-
-• `Optional` **prototype**: `any`
-
-#### Defined in
-
-[src/core/io-node.ts:15](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L15)

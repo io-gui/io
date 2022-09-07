@@ -32,7 +32,7 @@ For each property change in the queue:
  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
 If owner node is not connected dispatch is aborted.
-After all changes are dispatched it invokes `.applyCompose()` and `.changed()` functions od the owner node instance.
+After all changes are dispatched it invokes `.changed()` functions od the owner node instance.
 
 #### Returns
 
@@ -57,7 +57,7 @@ Use this when node queue is no longer needed.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:71](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L71)
+[src/core/internals/changeQueue.ts:70](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L70)
 
 ___
 

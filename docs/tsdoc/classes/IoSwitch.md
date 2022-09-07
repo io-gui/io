@@ -1,79 +1,32 @@
-# Class: IoElement
+# Class: IoSwitch
 
 Core `IoElement` class.
 
 ## Hierarchy
 
-- `__class`<() => `HTMLElement`, `this`\>
+- [`IoBoolean`](IoBoolean.md)
 
-  ↳ **`IoElement`**
-
-  ↳↳ [`IoGl`](IoGl.md)
-
-  ↳↳ [`IoItem`](IoItem.md)
-
-  ↳↳ [`IoContent`](IoContent.md)
-
-  ↳↳ [`IoNumberSlider`](IoNumberSlider.md)
-
-  ↳↳ [`IoNumberSliderRange`](IoNumberSliderRange.md)
-
-  ↳↳ [`IoIcon`](IoIcon.md)
-
-  ↳↳ [`IoLadder`](IoLadder.md)
-
-  ↳↳ [`IoMdView`](IoMdView.md)
-
-  ↳↳ [`IoElementDemo`](IoElementDemo.md)
-
-  ↳↳ [`IoLayout`](IoLayout.md)
-
-  ↳↳ [`IoCollapsable`](IoCollapsable.md)
-
-  ↳↳ [`IoSelector`](IoSelector.md)
-
-  ↳↳ [`IoSidebar`](IoSidebar.md)
-
-  ↳↳ [`IoVector`](IoVector.md)
-
-  ↳↳ [`IoMatrix`](IoMatrix.md)
-
-  ↳↳ [`IoMenuOptions`](IoMenuOptions.md)
-
-  ↳↳ [`IoOptionMenu`](IoOptionMenu.md)
-
-  ↳↳ [`IoContextMenu`](IoContextMenu.md)
-
-  ↳↳ [`IoNotify`](IoNotify.md)
-
-  ↳↳ [`IoInspector`](IoInspector.md)
-
-  ↳↳ [`IoObject`](IoObject.md)
-
-  ↳↳ [`IoProperties`](IoProperties.md)
+  ↳ **`IoSwitch`**
 
 ## Constructors
 
 ### constructor
 
-• **new IoElement**(`properties?`, ...`args`)
-
-Creates a class instance and initializes the internals.
+• **new IoSwitch**(`properties?`)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Initial property values. |
-| `...args` | `any`[] | - |
+| Name | Type |
+| :------ | :------ |
+| `properties` | `Record`<`string`, `any`\> |
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).constructor
+[IoBoolean](IoBoolean.md).[constructor](IoBoolean.md#constructor)
 
 #### Defined in
 
-[src/core/io-node.ts:57](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L57)
+[src/elements/core/item.ts:55](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L55)
 
 ## Properties
 
@@ -83,7 +36,7 @@ IoNodeMixin(HTMLElement).constructor
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_bindings
+[IoBoolean](IoBoolean.md).[_bindings](IoBoolean.md#_bindings)
 
 #### Defined in
 
@@ -97,7 +50,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_changeQueue
+[IoBoolean](IoBoolean.md).[_changeQueue](IoBoolean.md#_changequeue)
 
 #### Defined in
 
@@ -111,7 +64,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_eventDispatcher
+[IoBoolean](IoBoolean.md).[_eventDispatcher](IoBoolean.md#_eventdispatcher)
 
 #### Defined in
 
@@ -125,7 +78,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_properties
+[IoBoolean](IoBoolean.md).[_properties](IoBoolean.md#_properties)
 
 #### Defined in
 
@@ -140,6 +93,10 @@ IoNodeMixin(HTMLElement).\_properties
 #### Returns
 
 `any`
+
+#### Inherited from
+
+IoBoolean.textNode
 
 #### Defined in
 
@@ -157,6 +114,10 @@ IoNodeMixin(HTMLElement).\_properties
 
 `void`
 
+#### Inherited from
+
+IoBoolean.textNode
+
 #### Defined in
 
 [src/core/io-element.ts:211](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L211)
@@ -165,15 +126,25 @@ ___
 
 ### Listeners
 
-• `Static` `get` **Listeners**(): `any`
+• `Static` `get` **Listeners**(): `Object`
 
 #### Returns
 
-`any`
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `click` | `string` |
+| `focus` | `string` |
+| `pointerdown` | `string` |
+
+#### Inherited from
+
+IoBoolean.Listeners
 
 #### Defined in
 
-[src/core/io-element.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L60)
+[src/elements/core/item.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L48)
 
 ___
 
@@ -185,27 +156,31 @@ ___
 
 `any`
 
-#### Overrides
+#### Inherited from
 
-IoNodeMixin(HTMLElement).Properties
+IoBoolean.Properties
 
 #### Defined in
 
-[src/core/io-element.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L12)
+[src/elements/core/boolean.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/boolean.ts#L21)
 
 ___
 
 ### Style
 
-• `Static` `get` **Style**(): `any`
+• `Static` `get` **Style**(): `string`
 
 #### Returns
 
-`any`
+`string`
+
+#### Overrides
+
+IoBoolean.Style
 
 #### Defined in
 
-[src/core/io-element.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L8)
+[src/elements/core/switch.ts:13](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/switch.ts#L13)
 
 ___
 
@@ -217,11 +192,81 @@ ___
 
 `string`[]
 
+#### Inherited from
+
+IoBoolean.observedAttributes
+
 #### Defined in
 
 [src/core/io-element.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L65)
 
 ## Methods
+
+### \_onBlur
+
+▸ **_onBlur**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `FocusEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onBlur](IoBoolean.md#_onblur)
+
+#### Defined in
+
+[src/elements/core/item.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L65)
+
+___
+
+### \_onClick
+
+▸ **_onClick**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onClick](IoBoolean.md#_onclick)
+
+#### Defined in
+
+[src/elements/core/boolean.ts:33](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/boolean.ts#L33)
+
+___
+
+### \_onFocus
+
+▸ **_onFocus**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `FocusEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onFocus](IoBoolean.md#_onfocus)
+
+#### Defined in
+
+[src/elements/core/item.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L60)
+
+___
 
 ### \_onFocusTo
 
@@ -237,9 +282,157 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onFocusTo](IoBoolean.md#_onfocusto)
+
 #### Defined in
 
 [src/core/io-element.ts:252](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L252)
+
+___
+
+### \_onKeydown
+
+▸ **_onKeydown**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `KeyboardEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onKeydown](IoBoolean.md#_onkeydown)
+
+#### Defined in
+
+[src/elements/core/item.ts:91](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L91)
+
+___
+
+### \_onKeyup
+
+▸ **_onKeyup**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `KeyboardEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onKeyup](IoBoolean.md#_onkeyup)
+
+#### Defined in
+
+[src/elements/core/item.ts:110](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L110)
+
+___
+
+### \_onPointerdown
+
+▸ **_onPointerdown**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onPointerdown](IoBoolean.md#_onpointerdown)
+
+#### Defined in
+
+[src/elements/core/item.ts:70](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L70)
+
+___
+
+### \_onPointerleave
+
+▸ **_onPointerleave**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onPointerleave](IoBoolean.md#_onpointerleave)
+
+#### Defined in
+
+[src/elements/core/item.ts:77](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L77)
+
+___
+
+### \_onPointermove
+
+▸ **_onPointermove**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onPointermove](IoBoolean.md#_onpointermove)
+
+#### Defined in
+
+[src/elements/core/item.ts:76](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L76)
+
+___
+
+### \_onPointerup
+
+▸ **_onPointerup**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[_onPointerup](IoBoolean.md#_onpointerup)
+
+#### Defined in
+
+[src/elements/core/item.ts:82](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L82)
 
 ___
 
@@ -263,7 +456,7 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).addEventListener
+[IoBoolean](IoBoolean.md).[addEventListener](IoBoolean.md#addeventlistener)
 
 #### Defined in
 
@@ -281,9 +474,13 @@ Sets aria attributes.
 
 `void`
 
+#### Overrides
+
+[IoBoolean](IoBoolean.md).[applyAria](IoBoolean.md#applyaria)
+
 #### Defined in
 
-[src/core/io-element.ts:240](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L240)
+[src/elements/core/switch.ts:75](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/switch.ts#L75)
 
 ___
 
@@ -301,9 +498,9 @@ ___
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-IoNodeMixin(HTMLElement).applyProperties
+[IoBoolean](IoBoolean.md).[applyProperties](IoBoolean.md#applyproperties)
 
 #### Defined in
 
@@ -326,6 +523,10 @@ ___
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[attributeChangedCallback](IoBoolean.md#attributechangedcallback)
 
 #### Defined in
 
@@ -353,7 +554,7 @@ Binding object.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).bind
+[IoBoolean](IoBoolean.md).[bind](IoBoolean.md#bind)
 
 #### Defined in
 
@@ -372,13 +573,13 @@ Invoked when one of the properties change.
 
 `void`
 
-#### Inherited from
+#### Overrides
 
-IoNodeMixin(HTMLElement).changed
+[IoBoolean](IoBoolean.md).[changed](IoBoolean.md#changed)
 
 #### Defined in
 
-[src/core/io-node.ts:241](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L241)
+[src/elements/core/switch.ts:72](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/switch.ts#L72)
 
 ___
 
@@ -391,6 +592,10 @@ Add resize listener if `onResized()` is defined in subclass.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[connectedCallback](IoBoolean.md#connectedcallback)
 
 #### Defined in
 
@@ -407,6 +612,10 @@ Removes resize listener if `onResized()` is defined in subclass.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[disconnectedCallback](IoBoolean.md#disconnectedcallback)
 
 #### Defined in
 
@@ -435,7 +644,7 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispatchEvent
+[IoBoolean](IoBoolean.md).[dispatchEvent](IoBoolean.md#dispatchevent)
 
 #### Defined in
 
@@ -456,7 +665,7 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispose
+[IoBoolean](IoBoolean.md).[dispose](IoBoolean.md#dispose)
 
 #### Defined in
 
@@ -484,7 +693,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObject
+[IoBoolean](IoBoolean.md).[filterObject](IoBoolean.md#filterobject)
 
 #### Defined in
 
@@ -512,7 +721,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObjects
+[IoBoolean](IoBoolean.md).[filterObjects](IoBoolean.md#filterobjects)
 
 #### Defined in
 
@@ -537,6 +746,10 @@ Update textContent via TextNode is better for layout performance.
 
 `void`
 
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[flattenTextNode](IoBoolean.md#flattentextnode)
+
 #### Defined in
 
 [src/core/io-element.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L190)
@@ -557,9 +770,31 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[focusTo](IoBoolean.md#focusto)
+
 #### Defined in
 
 [src/core/io-element.ts:359](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L359)
+
+___
+
+### getCaretPosition
+
+▸ **getCaretPosition**(): `number`
+
+#### Returns
+
+`number`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[getCaretPosition](IoBoolean.md#getcaretposition)
+
+#### Defined in
+
+[src/elements/core/item.ts:111](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L111)
 
 ___
 
@@ -579,7 +814,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).import
+[IoBoolean](IoBoolean.md).[import](IoBoolean.md#import)
 
 #### Defined in
 
@@ -607,7 +842,7 @@ with `observe: "sync" || "async"` configuration.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutated
+[IoBoolean](IoBoolean.md).[objectMutated](IoBoolean.md#objectmutated)
 
 #### Defined in
 
@@ -634,7 +869,7 @@ the object properties has mutated.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutatedThrottled
+[IoBoolean](IoBoolean.md).[objectMutatedThrottled](IoBoolean.md#objectmutatedthrottled)
 
 #### Defined in
 
@@ -660,7 +895,7 @@ Handler function with `event.preventDefault()`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).preventDefault
+[IoBoolean](IoBoolean.md).[preventDefault](IoBoolean.md#preventdefault)
 
 #### Defined in
 
@@ -688,7 +923,7 @@ Adds property change to the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queue
+[IoBoolean](IoBoolean.md).[queue](IoBoolean.md#queue)
 
 #### Defined in
 
@@ -708,7 +943,7 @@ Dispatches the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatch
+[IoBoolean](IoBoolean.md).[queueDispatch](IoBoolean.md#queuedispatch)
 
 #### Defined in
 
@@ -728,7 +963,7 @@ Dispatches the queue in the next rAF cycle.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatchLazy
+[IoBoolean](IoBoolean.md).[queueDispatchLazy](IoBoolean.md#queuedispatchlazy)
 
 #### Defined in
 
@@ -756,7 +991,7 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).removeEventListener
+[IoBoolean](IoBoolean.md).[removeEventListener](IoBoolean.md#removeeventlistener)
 
 #### Defined in
 
@@ -780,7 +1015,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).requestAnimationFrameOnce
+[IoBoolean](IoBoolean.md).[requestAnimationFrameOnce](IoBoolean.md#requestanimationframeonce)
 
 #### Defined in
 
@@ -805,9 +1040,37 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 `void`
 
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[setAttribute](IoBoolean.md#setattribute)
+
 #### Defined in
 
 [src/core/io-element.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L228)
+
+___
+
+### setCaretPosition
+
+▸ **setCaretPosition**(`position`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `position` | `number` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[setCaretPosition](IoBoolean.md#setcaretposition)
+
+#### Defined in
+
+[src/elements/core/item.ts:124](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/item.ts#L124)
 
 ___
 
@@ -830,7 +1093,7 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperties
+[IoBoolean](IoBoolean.md).[setProperties](IoBoolean.md#setproperties)
 
 #### Defined in
 
@@ -858,7 +1121,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperty
+[IoBoolean](IoBoolean.md).[setProperty](IoBoolean.md#setproperty)
 
 #### Defined in
 
@@ -885,7 +1148,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setValue
+[IoBoolean](IoBoolean.md).[setValue](IoBoolean.md#setvalue)
 
 #### Defined in
 
@@ -911,7 +1174,7 @@ Handler function with `event.stopPropagation()`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).stopPropagation
+[IoBoolean](IoBoolean.md).[stopPropagation](IoBoolean.md#stoppropagation)
 
 #### Defined in
 
@@ -935,6 +1198,10 @@ Renders DOM from virtual DOM arrays.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[template](IoBoolean.md#template)
 
 #### Defined in
 
@@ -962,11 +1229,29 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).throttle
+[IoBoolean](IoBoolean.md).[throttle](IoBoolean.md#throttle)
 
 #### Defined in
 
 [src/core/io-node.ts:372](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L372)
+
+___
+
+### toggle
+
+▸ **toggle**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[toggle](IoBoolean.md#toggle)
+
+#### Defined in
+
+[src/elements/core/boolean.ts:36](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/boolean.ts#L36)
 
 ___
 
@@ -986,6 +1271,10 @@ Recurively traverses vDOM.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[traverse](IoBoolean.md#traverse)
 
 #### Defined in
 
@@ -1011,8 +1300,26 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).unbind
+[IoBoolean](IoBoolean.md).[unbind](IoBoolean.md#unbind)
 
 #### Defined in
 
 [src/core/io-node.ts:324](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L324)
+
+___
+
+### valueChanged
+
+▸ **valueChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoBoolean](IoBoolean.md).[valueChanged](IoBoolean.md#valuechanged)
+
+#### Defined in
+
+[src/elements/core/boolean.ts:39](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/boolean.ts#L39)

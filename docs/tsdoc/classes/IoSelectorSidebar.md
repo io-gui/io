@@ -1,79 +1,34 @@
-# Class: IoElement
+# Class: IoSelectorSidebar
 
 Core `IoElement` class.
 
 ## Hierarchy
 
-- `__class`<() => `HTMLElement`, `this`\>
+- [`IoSelector`](IoSelector.md)
 
-  ↳ **`IoElement`**
+  ↳ **`IoSelectorSidebar`**
 
-  ↳↳ [`IoGl`](IoGl.md)
-
-  ↳↳ [`IoItem`](IoItem.md)
-
-  ↳↳ [`IoContent`](IoContent.md)
-
-  ↳↳ [`IoNumberSlider`](IoNumberSlider.md)
-
-  ↳↳ [`IoNumberSliderRange`](IoNumberSliderRange.md)
-
-  ↳↳ [`IoIcon`](IoIcon.md)
-
-  ↳↳ [`IoLadder`](IoLadder.md)
-
-  ↳↳ [`IoMdView`](IoMdView.md)
-
-  ↳↳ [`IoElementDemo`](IoElementDemo.md)
-
-  ↳↳ [`IoLayout`](IoLayout.md)
-
-  ↳↳ [`IoCollapsable`](IoCollapsable.md)
-
-  ↳↳ [`IoSelector`](IoSelector.md)
-
-  ↳↳ [`IoSidebar`](IoSidebar.md)
-
-  ↳↳ [`IoVector`](IoVector.md)
-
-  ↳↳ [`IoMatrix`](IoMatrix.md)
-
-  ↳↳ [`IoMenuOptions`](IoMenuOptions.md)
-
-  ↳↳ [`IoOptionMenu`](IoOptionMenu.md)
-
-  ↳↳ [`IoContextMenu`](IoContextMenu.md)
-
-  ↳↳ [`IoNotify`](IoNotify.md)
-
-  ↳↳ [`IoInspector`](IoInspector.md)
-
-  ↳↳ [`IoObject`](IoObject.md)
-
-  ↳↳ [`IoProperties`](IoProperties.md)
+  ↳↳ [`IoMdViewSelector`](IoMdViewSelector.md)
 
 ## Constructors
 
 ### constructor
 
-• **new IoElement**(`properties?`, ...`args`)
-
-Creates a class instance and initializes the internals.
+• **new IoSelectorSidebar**(`props?`)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Initial property values. |
-| `...args` | `any`[] | - |
+| Name | Type |
+| :------ | :------ |
+| `props?` | `any` |
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).constructor
+[IoSelector](IoSelector.md).[constructor](IoSelector.md#constructor)
 
 #### Defined in
 
-[src/core/io-node.ts:57](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L57)
+[src/elements/layout/selector.ts:103](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L103)
 
 ## Properties
 
@@ -83,7 +38,7 @@ IoNodeMixin(HTMLElement).constructor
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_bindings
+[IoSelector](IoSelector.md).[_bindings](IoSelector.md#_bindings)
 
 #### Defined in
 
@@ -97,7 +52,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_changeQueue
+[IoSelector](IoSelector.md).[_changeQueue](IoSelector.md#_changequeue)
 
 #### Defined in
 
@@ -111,7 +66,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_eventDispatcher
+[IoSelector](IoSelector.md).[_eventDispatcher](IoSelector.md#_eventdispatcher)
 
 #### Defined in
 
@@ -125,7 +80,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_properties
+[IoSelector](IoSelector.md).[_properties](IoSelector.md#_properties)
 
 #### Defined in
 
@@ -140,6 +95,10 @@ IoNodeMixin(HTMLElement).\_properties
 #### Returns
 
 `any`
+
+#### Inherited from
+
+IoSelector.textNode
 
 #### Defined in
 
@@ -157,6 +116,10 @@ IoNodeMixin(HTMLElement).\_properties
 
 `void`
 
+#### Inherited from
+
+IoSelector.textNode
+
 #### Defined in
 
 [src/core/io-element.ts:211](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L211)
@@ -165,15 +128,24 @@ ___
 
 ### Listeners
 
-• `Static` `get` **Listeners**(): `any`
+• `Static` `get` **Listeners**(): `Object`
 
 #### Returns
 
-`any`
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `content-ready` | `string` |
+| `scroll` | (`string` \| { `capture`: `boolean` = true; `passive`: `boolean` = true })[] |
+
+#### Inherited from
+
+IoSelector.Listeners
 
 #### Defined in
 
-[src/core/io-element.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L60)
+[src/elements/layout/selector.ts:97](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L97)
 
 ___
 
@@ -187,25 +159,29 @@ ___
 
 #### Overrides
 
-IoNodeMixin(HTMLElement).Properties
+IoSelector.Properties
 
 #### Defined in
 
-[src/core/io-element.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L12)
+[src/elements/layout/selector-sidebar.ts:57](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector-sidebar.ts#L57)
 
 ___
 
 ### Style
 
-• `Static` `get` **Style**(): `any`
+• `Static` `get` **Style**(): `string`
 
 #### Returns
 
-`any`
+`string`
+
+#### Overrides
+
+IoSelector.Style
 
 #### Defined in
 
-[src/core/io-element.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L8)
+[src/elements/layout/selector-sidebar.ts:31](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector-sidebar.ts#L31)
 
 ___
 
@@ -216,6 +192,10 @@ ___
 #### Returns
 
 `string`[]
+
+#### Inherited from
+
+IoSelector.observedAttributes
 
 #### Defined in
 
@@ -237,9 +217,73 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoSelector](IoSelector.md).[_onFocusTo](IoSelector.md#_onfocusto)
+
 #### Defined in
 
 [src/core/io-element.ts:252](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L252)
+
+___
+
+### \_onIoContentReady
+
+▸ **_onIoContentReady**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `CustomEvent`<`any`\> |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[_onIoContentReady](IoSelector.md#_oniocontentready)
+
+#### Defined in
+
+[src/elements/layout/selector.ts:114](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L114)
+
+___
+
+### \_onScroll
+
+▸ **_onScroll**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[_onScroll](IoSelector.md#_onscroll)
+
+#### Defined in
+
+[src/elements/layout/selector.ts:129](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L129)
+
+___
+
+### \_selectDefault
+
+▸ **_selectDefault**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[_selectDefault](IoSelector.md#_selectdefault)
+
+#### Defined in
+
+[src/elements/layout/selector.ts:107](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L107)
 
 ___
 
@@ -263,7 +307,7 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).addEventListener
+[IoSelector](IoSelector.md).[addEventListener](IoSelector.md#addeventlistener)
 
 #### Defined in
 
@@ -280,6 +324,10 @@ Sets aria attributes.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[applyAria](IoSelector.md#applyaria)
 
 #### Defined in
 
@@ -301,9 +349,9 @@ ___
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-IoNodeMixin(HTMLElement).applyProperties
+[IoSelector](IoSelector.md).[applyProperties](IoSelector.md#applyproperties)
 
 #### Defined in
 
@@ -326,6 +374,10 @@ ___
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[attributeChangedCallback](IoSelector.md#attributechangedcallback)
 
 #### Defined in
 
@@ -353,7 +405,7 @@ Binding object.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).bind
+[IoSelector](IoSelector.md).[bind](IoSelector.md#bind)
 
 #### Defined in
 
@@ -374,11 +426,25 @@ Invoked when one of the properties change.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).changed
+[IoSelector](IoSelector.md).[changed](IoSelector.md#changed)
 
 #### Defined in
 
 [src/core/io-node.ts:241](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L241)
+
+___
+
+### collapsedChanged
+
+▸ **collapsedChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/layout/selector-sidebar.ts:73](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector-sidebar.ts#L73)
 
 ___
 
@@ -392,9 +458,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 `void`
 
+#### Inherited from
+
+[IoSelector](IoSelector.md).[connectedCallback](IoSelector.md#connectedcallback)
+
 #### Defined in
 
-[src/core/io-element.ts:93](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L93)
+[src/elements/layout/selector.ts:118](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L118)
 
 ___
 
@@ -407,6 +477,10 @@ Removes resize listener if `onResized()` is defined in subclass.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[disconnectedCallback](IoSelector.md#disconnectedcallback)
 
 #### Defined in
 
@@ -435,7 +509,7 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispatchEvent
+[IoSelector](IoSelector.md).[dispatchEvent](IoSelector.md#dispatchevent)
 
 #### Defined in
 
@@ -456,11 +530,29 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispose
+[IoSelector](IoSelector.md).[dispose](IoSelector.md#dispose)
 
 #### Defined in
 
 [src/core/io-node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L219)
+
+___
+
+### elementsChanged
+
+▸ **elementsChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[elementsChanged](IoSelector.md#elementschanged)
+
+#### Defined in
+
+[src/elements/layout/selector.ts:166](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L166)
 
 ___
 
@@ -484,7 +576,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObject
+[IoSelector](IoSelector.md).[filterObject](IoSelector.md#filterobject)
 
 #### Defined in
 
@@ -512,7 +604,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObjects
+[IoSelector](IoSelector.md).[filterObjects](IoSelector.md#filterobjects)
 
 #### Defined in
 
@@ -537,6 +629,10 @@ Update textContent via TextNode is better for layout performance.
 
 `void`
 
+#### Inherited from
+
+[IoSelector](IoSelector.md).[flattenTextNode](IoSelector.md#flattentextnode)
+
 #### Defined in
 
 [src/core/io-element.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L190)
@@ -557,9 +653,31 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoSelector](IoSelector.md).[focusTo](IoSelector.md#focusto)
+
 #### Defined in
 
 [src/core/io-element.ts:359](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L359)
+
+___
+
+### getSlotted
+
+▸ **getSlotted**(): (`string` \| { `collapsed`: `any` ; `options`: `any` ; `selected`: [`Binding`](Binding.md)  })[]
+
+#### Returns
+
+(`string` \| { `collapsed`: `any` ; `options`: `any` ; `selected`: [`Binding`](Binding.md)  })[]
+
+#### Overrides
+
+[IoSelector](IoSelector.md).[getSlotted](IoSelector.md#getslotted)
+
+#### Defined in
+
+[src/elements/layout/selector-sidebar.ts:74](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector-sidebar.ts#L74)
 
 ___
 
@@ -579,7 +697,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).import
+[IoSelector](IoSelector.md).[import](IoSelector.md#import)
 
 #### Defined in
 
@@ -607,7 +725,7 @@ with `observe: "sync" || "async"` configuration.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutated
+[IoSelector](IoSelector.md).[objectMutated](IoSelector.md#objectmutated)
 
 #### Defined in
 
@@ -634,11 +752,43 @@ the object properties has mutated.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutatedThrottled
+[IoSelector](IoSelector.md).[objectMutatedThrottled](IoSelector.md#objectmutatedthrottled)
 
 #### Defined in
 
 [src/core/io-node.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L302)
+
+___
+
+### onResized
+
+▸ **onResized**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/layout/selector-sidebar.ts:70](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector-sidebar.ts#L70)
+
+___
+
+### optionsChanged
+
+▸ **optionsChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[optionsChanged](IoSelector.md#optionschanged)
+
+#### Defined in
+
+[src/elements/layout/selector.ts:162](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L162)
 
 ___
 
@@ -660,7 +810,7 @@ Handler function with `event.preventDefault()`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).preventDefault
+[IoSelector](IoSelector.md).[preventDefault](IoSelector.md#preventdefault)
 
 #### Defined in
 
@@ -688,7 +838,7 @@ Adds property change to the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queue
+[IoSelector](IoSelector.md).[queue](IoSelector.md#queue)
 
 #### Defined in
 
@@ -708,7 +858,7 @@ Dispatches the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatch
+[IoSelector](IoSelector.md).[queueDispatch](IoSelector.md#queuedispatch)
 
 #### Defined in
 
@@ -728,7 +878,7 @@ Dispatches the queue in the next rAF cycle.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatchLazy
+[IoSelector](IoSelector.md).[queueDispatchLazy](IoSelector.md#queuedispatchlazy)
 
 #### Defined in
 
@@ -756,7 +906,7 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).removeEventListener
+[IoSelector](IoSelector.md).[removeEventListener](IoSelector.md#removeeventlistener)
 
 #### Defined in
 
@@ -780,11 +930,54 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).requestAnimationFrameOnce
+[IoSelector](IoSelector.md).[requestAnimationFrameOnce](IoSelector.md#requestanimationframeonce)
 
 #### Defined in
 
 [src/core/io-node.ts:393](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L393)
+
+___
+
+### scrollTo
+
+▸ **scrollTo**(`id`, `smooth?`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `id` | `string` |
+| `smooth?` | `boolean` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[scrollTo](IoSelector.md#scrollto)
+
+#### Defined in
+
+[src/elements/layout/selector.ts:122](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L122)
+
+___
+
+### selectedChanged
+
+▸ **selectedChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[selectedChanged](IoSelector.md#selectedchanged)
+
+#### Defined in
+
+[src/elements/layout/selector.ts:158](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L158)
 
 ___
 
@@ -804,6 +997,10 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[setAttribute](IoSelector.md#setattribute)
 
 #### Defined in
 
@@ -830,7 +1027,7 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperties
+[IoSelector](IoSelector.md).[setProperties](IoSelector.md#setproperties)
 
 #### Defined in
 
@@ -858,7 +1055,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperty
+[IoSelector](IoSelector.md).[setProperty](IoSelector.md#setproperty)
 
 #### Defined in
 
@@ -885,7 +1082,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setValue
+[IoSelector](IoSelector.md).[setValue](IoSelector.md#setvalue)
 
 #### Defined in
 
@@ -911,7 +1108,7 @@ Handler function with `event.stopPropagation()`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).stopPropagation
+[IoSelector](IoSelector.md).[stopPropagation](IoSelector.md#stoppropagation)
 
 #### Defined in
 
@@ -935,6 +1132,10 @@ Renders DOM from virtual DOM arrays.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[template](IoSelector.md#template)
 
 #### Defined in
 
@@ -962,7 +1163,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).throttle
+[IoSelector](IoSelector.md).[throttle](IoSelector.md#throttle)
 
 #### Defined in
 
@@ -986,6 +1187,10 @@ Recurively traverses vDOM.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[traverse](IoSelector.md#traverse)
 
 #### Defined in
 
@@ -1011,8 +1216,44 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).unbind
+[IoSelector](IoSelector.md).[unbind](IoSelector.md#unbind)
 
 #### Defined in
 
 [src/core/io-node.ts:324](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L324)
+
+___
+
+### update
+
+▸ **update**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[update](IoSelector.md#update)
+
+#### Defined in
+
+[src/elements/layout/selector.ts:185](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L185)
+
+___
+
+### updateScroll
+
+▸ **updateScroll**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[updateScroll](IoSelector.md#updatescroll)
+
+#### Defined in
+
+[src/elements/layout/selector.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L169)

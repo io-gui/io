@@ -1,79 +1,32 @@
-# Class: IoElement
+# Class: Item
 
-Core `IoElement` class.
+IoNodeMixin applied to `Object` class.
 
 ## Hierarchy
 
-- `__class`<() => `HTMLElement`, `this`\>
+- [`IoNode`](IoNode.md)
 
-  ↳ **`IoElement`**
-
-  ↳↳ [`IoGl`](IoGl.md)
-
-  ↳↳ [`IoItem`](IoItem.md)
-
-  ↳↳ [`IoContent`](IoContent.md)
-
-  ↳↳ [`IoNumberSlider`](IoNumberSlider.md)
-
-  ↳↳ [`IoNumberSliderRange`](IoNumberSliderRange.md)
-
-  ↳↳ [`IoIcon`](IoIcon.md)
-
-  ↳↳ [`IoLadder`](IoLadder.md)
-
-  ↳↳ [`IoMdView`](IoMdView.md)
-
-  ↳↳ [`IoElementDemo`](IoElementDemo.md)
-
-  ↳↳ [`IoLayout`](IoLayout.md)
-
-  ↳↳ [`IoCollapsable`](IoCollapsable.md)
-
-  ↳↳ [`IoSelector`](IoSelector.md)
-
-  ↳↳ [`IoSidebar`](IoSidebar.md)
-
-  ↳↳ [`IoVector`](IoVector.md)
-
-  ↳↳ [`IoMatrix`](IoMatrix.md)
-
-  ↳↳ [`IoMenuOptions`](IoMenuOptions.md)
-
-  ↳↳ [`IoOptionMenu`](IoOptionMenu.md)
-
-  ↳↳ [`IoContextMenu`](IoContextMenu.md)
-
-  ↳↳ [`IoNotify`](IoNotify.md)
-
-  ↳↳ [`IoInspector`](IoInspector.md)
-
-  ↳↳ [`IoObject`](IoObject.md)
-
-  ↳↳ [`IoProperties`](IoProperties.md)
+  ↳ **`Item`**
 
 ## Constructors
 
 ### constructor
 
-• **new IoElement**(`properties?`, ...`args`)
-
-Creates a class instance and initializes the internals.
+• **new Item**(`option`)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Initial property values. |
-| `...args` | `any`[] | - |
+| Name | Type |
+| :------ | :------ |
+| `option` | `any` |
 
-#### Inherited from
+#### Overrides
 
-IoNodeMixin(HTMLElement).constructor
+[IoNode](IoNode.md).[constructor](IoNode.md#constructor)
 
 #### Defined in
 
-[src/core/io-node.ts:57](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L57)
+[src/models/item.ts:27](https://github.com/io-gui/iogui/blob/tsc/src/models/item.ts#L27)
 
 ## Properties
 
@@ -83,7 +36,7 @@ IoNodeMixin(HTMLElement).constructor
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_bindings
+[IoNode](IoNode.md).[_bindings](IoNode.md#_bindings)
 
 #### Defined in
 
@@ -97,7 +50,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_changeQueue
+[IoNode](IoNode.md).[_changeQueue](IoNode.md#_changequeue)
 
 #### Defined in
 
@@ -111,7 +64,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_eventDispatcher
+[IoNode](IoNode.md).[_eventDispatcher](IoNode.md#_eventdispatcher)
 
 #### Defined in
 
@@ -125,7 +78,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_properties
+[IoNode](IoNode.md).[_properties](IoNode.md#_properties)
 
 #### Defined in
 
@@ -133,115 +86,51 @@ IoNodeMixin(HTMLElement).\_properties
 
 ## Accessors
 
-### textNode
+### hasmore
 
-• `get` **textNode**(): `any`
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[src/core/io-element.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L207)
-
-• `set` **textNode**(`value`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `any` |
+• `get` **hasmore**(): `boolean`
 
 #### Returns
 
-`void`
+`boolean`
 
 #### Defined in
 
-[src/core/io-element.ts:211](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L211)
-
-___
-
-### Listeners
-
-• `Static` `get` **Listeners**(): `any`
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[src/core/io-element.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L60)
+[src/models/item.ts:59](https://github.com/io-gui/iogui/blob/tsc/src/models/item.ts#L59)
 
 ___
 
 ### Properties
 
-• `Static` `get` **Properties**(): `any`
+• `Static` `get` **Properties**(): `Object`
 
 #### Returns
 
-`any`
-
-#### Overrides
-
-IoNodeMixin(HTMLElement).Properties
-
-#### Defined in
-
-[src/core/io-element.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L12)
-
-___
-
-### Style
-
-• `Static` `get` **Style**(): `any`
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[src/core/io-element.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L8)
-
-___
-
-### observedAttributes
-
-• `Static` `get` **observedAttributes**(): `string`[]
-
-#### Returns
-
-`string`[]
-
-#### Defined in
-
-[src/core/io-element.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L65)
-
-## Methods
-
-### \_onFocusTo
-
-▸ **_onFocusTo**(`event`): `void`
-
-#### Parameters
+`Object`
 
 | Name | Type |
 | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> |
+| `action` | `undefined` |
+| `hint` | `string` |
+| `icon` | `string` |
+| `label` | `string` |
+| `options` | { `type`: typeof [`Options`](Options.md) = Options } |
+| `options.type` | typeof [`Options`](Options.md) |
+| `path` | { `type`: typeof [`Path`](Path.md) = Path } |
+| `path.type` | typeof [`Path`](Path.md) |
+| `select` | `string` |
+| `selected` | `BooleanConstructor` |
+| `value` | `undefined` |
 
-#### Returns
+#### Overrides
 
-`void`
+IoNode.Properties
 
 #### Defined in
 
-[src/core/io-element.ts:252](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L252)
+[src/models/item.ts:10](https://github.com/io-gui/iogui/blob/tsc/src/models/item.ts#L10)
 
-___
+## Methods
 
 ### addEventListener
 
@@ -263,7 +152,7 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).addEventListener
+[IoNode](IoNode.md).[addEventListener](IoNode.md#addeventlistener)
 
 #### Defined in
 
@@ -271,65 +160,30 @@ IoNodeMixin(HTMLElement).addEventListener
 
 ___
 
-### applyAria
-
-▸ **applyAria**(): `void`
-
-Sets aria attributes.
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/io-element.ts:240](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L240)
-
-___
-
 ### applyProperties
 
 ▸ **applyProperties**(`props`): `void`
 
+Sets multiple properties in batch.
+[property]-changed` events will be broadcast in the end.
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `any` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `props` | `any` | Map of property names and values. |
 
 #### Returns
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-IoNodeMixin(HTMLElement).applyProperties
-
-#### Defined in
-
-[src/core/io-element.ts:215](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L215)
-
-___
-
-### attributeChangedCallback
-
-▸ **attributeChangedCallback**(`prop`, `oldValue`, `newValue`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `prop` | `string` |
-| `oldValue` | `any` |
-| `newValue` | `any` |
-
-#### Returns
-
-`void`
+[IoNode](IoNode.md).[applyProperties](IoNode.md#applyproperties)
 
 #### Defined in
 
-[src/core/io-element.ts:75](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L75)
+[src/core/io-node.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L169)
 
 ___
 
@@ -353,7 +207,7 @@ Binding object.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).bind
+[IoNode](IoNode.md).[bind](IoNode.md#bind)
 
 #### Defined in
 
@@ -372,45 +226,13 @@ Invoked when one of the properties change.
 
 `void`
 
-#### Inherited from
+#### Overrides
 
-IoNodeMixin(HTMLElement).changed
-
-#### Defined in
-
-[src/core/io-node.ts:241](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L241)
-
-___
-
-### connectedCallback
-
-▸ **connectedCallback**(): `void`
-
-Add resize listener if `onResized()` is defined in subclass.
-
-#### Returns
-
-`void`
+[IoNode](IoNode.md).[changed](IoNode.md#changed)
 
 #### Defined in
 
-[src/core/io-element.ts:93](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L93)
-
-___
-
-### disconnectedCallback
-
-▸ **disconnectedCallback**(): `void`
-
-Removes resize listener if `onResized()` is defined in subclass.
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/io-element.ts:102](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L102)
+[src/models/item.ts:87](https://github.com/io-gui/iogui/blob/tsc/src/models/item.ts#L87)
 
 ___
 
@@ -435,7 +257,7 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispatchEvent
+[IoNode](IoNode.md).[dispatchEvent](IoNode.md#dispatchevent)
 
 #### Defined in
 
@@ -456,7 +278,7 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispose
+[IoNode](IoNode.md).[dispose](IoNode.md#dispose)
 
 #### Defined in
 
@@ -484,7 +306,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObject
+[IoNode](IoNode.md).[filterObject](IoNode.md#filterobject)
 
 #### Defined in
 
@@ -512,54 +334,11 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObjects
+[IoNode](IoNode.md).[filterObjects](IoNode.md#filterobjects)
 
 #### Defined in
 
 [src/core/io-node.ts:409](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L409)
-
-___
-
-### flattenTextNode
-
-▸ **flattenTextNode**(`element`): `void`
-
-Helper function to flatten textContent into a single TextNode.
-Update textContent via TextNode is better for layout performance.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/io-element.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L190)
-
-___
-
-### focusTo
-
-▸ **focusTo**(`dir`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `dir` | `string` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/io-element.ts:359](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L359)
 
 ___
 
@@ -579,7 +358,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).import
+[IoNode](IoNode.md).[import](IoNode.md#import)
 
 #### Defined in
 
@@ -607,7 +386,7 @@ with `observe: "sync" || "async"` configuration.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutated
+[IoNode](IoNode.md).[objectMutated](IoNode.md#objectmutated)
 
 #### Defined in
 
@@ -634,11 +413,59 @@ the object properties has mutated.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutatedThrottled
+[IoNode](IoNode.md).[objectMutatedThrottled](IoNode.md#objectmutatedthrottled)
 
 #### Defined in
 
 [src/core/io-node.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L302)
+
+___
+
+### onOptionsSelectedPathChanged
+
+▸ **onOptionsSelectedPathChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/models/item.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/models/item.ts#L65)
+
+___
+
+### option
+
+▸ **option**(`value`): `any`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `any` |
+
+#### Returns
+
+`any`
+
+#### Defined in
+
+[src/models/item.ts:62](https://github.com/io-gui/iogui/blob/tsc/src/models/item.ts#L62)
+
+___
+
+### optionsChanged
+
+▸ **optionsChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/models/item.ts:70](https://github.com/io-gui/iogui/blob/tsc/src/models/item.ts#L70)
 
 ___
 
@@ -660,7 +487,7 @@ Handler function with `event.preventDefault()`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).preventDefault
+[IoNode](IoNode.md).[preventDefault](IoNode.md#preventdefault)
 
 #### Defined in
 
@@ -688,7 +515,7 @@ Adds property change to the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queue
+[IoNode](IoNode.md).[queue](IoNode.md#queue)
 
 #### Defined in
 
@@ -708,7 +535,7 @@ Dispatches the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatch
+[IoNode](IoNode.md).[queueDispatch](IoNode.md#queuedispatch)
 
 #### Defined in
 
@@ -728,7 +555,7 @@ Dispatches the queue in the next rAF cycle.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatchLazy
+[IoNode](IoNode.md).[queueDispatchLazy](IoNode.md#queuedispatchlazy)
 
 #### Defined in
 
@@ -756,7 +583,7 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).removeEventListener
+[IoNode](IoNode.md).[removeEventListener](IoNode.md#removeeventlistener)
 
 #### Defined in
 
@@ -780,7 +607,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).requestAnimationFrameOnce
+[IoNode](IoNode.md).[requestAnimationFrameOnce](IoNode.md#requestanimationframeonce)
 
 #### Defined in
 
@@ -788,18 +615,9 @@ IoNodeMixin(HTMLElement).requestAnimationFrameOnce
 
 ___
 
-### setAttribute
+### selectedChanged
 
-▸ **setAttribute**(`attr`, `value`): `void`
-
-Alias for HTMLElement setAttribute where falsey values remove the attribute.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `attr` | `string` | Attribute name. |
-| `value` | `string` \| `number` \| `boolean` | Attribute value. |
+▸ **selectedChanged**(): `void`
 
 #### Returns
 
@@ -807,7 +625,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Defined in
 
-[src/core/io-element.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L228)
+[src/models/item.ts:74](https://github.com/io-gui/iogui/blob/tsc/src/models/item.ts#L74)
 
 ___
 
@@ -830,7 +648,7 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperties
+[IoNode](IoNode.md).[setProperties](IoNode.md#setproperties)
 
 #### Defined in
 
@@ -858,11 +676,32 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperty
+[IoNode](IoNode.md).[setProperty](IoNode.md#setproperty)
 
 #### Defined in
 
 [src/core/io-node.ts:110](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L110)
+
+___
+
+### setSelectedPath
+
+▸ **setSelectedPath**(`selected`, `path?`): `void`
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `selected` | `any` | `undefined` |
+| `path` | `any`[] | `[]` |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/models/item.ts:82](https://github.com/io-gui/iogui/blob/tsc/src/models/item.ts#L82)
 
 ___
 
@@ -885,7 +724,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setValue
+[IoNode](IoNode.md).[setValue](IoNode.md#setvalue)
 
 #### Defined in
 
@@ -911,34 +750,11 @@ Handler function with `event.stopPropagation()`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).stopPropagation
+[IoNode](IoNode.md).[stopPropagation](IoNode.md#stoppropagation)
 
 #### Defined in
 
 [src/core/io-node.ts:451](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L451)
-
-___
-
-### template
-
-▸ **template**(`vDOM`, `host?`): `void`
-
-Renders DOM from virtual DOM arrays.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vDOM` | `any`[] | Array of vDOM children. |
-| `host?` | `HTMLElement` | Optional template target. |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/io-element.ts:112](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L112)
 
 ___
 
@@ -962,34 +778,11 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).throttle
+[IoNode](IoNode.md).[throttle](IoNode.md#throttle)
 
 #### Defined in
 
 [src/core/io-node.ts:372](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L372)
-
-___
-
-### traverse
-
-▸ **traverse**(`vChildren`, `host?`): `void`
-
-Recurively traverses vDOM.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vChildren` | `any`[] | Array of vDOM children converted by `buildTree()` for easier parsing. |
-| `host?` | `HTMLElement` | Optional template target. |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/io-element.ts:123](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L123)
 
 ___
 
@@ -1011,7 +804,7 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).unbind
+[IoNode](IoNode.md).[unbind](IoNode.md#unbind)
 
 #### Defined in
 

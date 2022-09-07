@@ -1,79 +1,32 @@
-# Class: IoElement
+# Class: IoInspector
 
 Core `IoElement` class.
 
 ## Hierarchy
 
-- `__class`<() => `HTMLElement`, `this`\>
+- [`IoElement`](IoElement.md)
 
-  ↳ **`IoElement`**
-
-  ↳↳ [`IoGl`](IoGl.md)
-
-  ↳↳ [`IoItem`](IoItem.md)
-
-  ↳↳ [`IoContent`](IoContent.md)
-
-  ↳↳ [`IoNumberSlider`](IoNumberSlider.md)
-
-  ↳↳ [`IoNumberSliderRange`](IoNumberSliderRange.md)
-
-  ↳↳ [`IoIcon`](IoIcon.md)
-
-  ↳↳ [`IoLadder`](IoLadder.md)
-
-  ↳↳ [`IoMdView`](IoMdView.md)
-
-  ↳↳ [`IoElementDemo`](IoElementDemo.md)
-
-  ↳↳ [`IoLayout`](IoLayout.md)
-
-  ↳↳ [`IoCollapsable`](IoCollapsable.md)
-
-  ↳↳ [`IoSelector`](IoSelector.md)
-
-  ↳↳ [`IoSidebar`](IoSidebar.md)
-
-  ↳↳ [`IoVector`](IoVector.md)
-
-  ↳↳ [`IoMatrix`](IoMatrix.md)
-
-  ↳↳ [`IoMenuOptions`](IoMenuOptions.md)
-
-  ↳↳ [`IoOptionMenu`](IoOptionMenu.md)
-
-  ↳↳ [`IoContextMenu`](IoContextMenu.md)
-
-  ↳↳ [`IoNotify`](IoNotify.md)
-
-  ↳↳ [`IoInspector`](IoInspector.md)
-
-  ↳↳ [`IoObject`](IoObject.md)
-
-  ↳↳ [`IoProperties`](IoProperties.md)
+  ↳ **`IoInspector`**
 
 ## Constructors
 
 ### constructor
 
-• **new IoElement**(`properties?`, ...`args`)
-
-Creates a class instance and initializes the internals.
+• **new IoInspector**(`props?`)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Initial property values. |
-| `...args` | `any`[] | - |
+| Name | Type |
+| :------ | :------ |
+| `props?` | `any` |
 
-#### Inherited from
+#### Overrides
 
-IoNodeMixin(HTMLElement).constructor
+[IoElement](IoElement.md).[constructor](IoElement.md#constructor)
 
 #### Defined in
 
-[src/core/io-node.ts:57](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L57)
+[src/elements/object/inspector.ts:105](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L105)
 
 ## Properties
 
@@ -83,7 +36,7 @@ IoNodeMixin(HTMLElement).constructor
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_bindings
+[IoElement](IoElement.md).[_bindings](IoElement.md#_bindings)
 
 #### Defined in
 
@@ -97,7 +50,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_changeQueue
+[IoElement](IoElement.md).[_changeQueue](IoElement.md#_changequeue)
 
 #### Defined in
 
@@ -111,7 +64,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_eventDispatcher
+[IoElement](IoElement.md).[_eventDispatcher](IoElement.md#_eventdispatcher)
 
 #### Defined in
 
@@ -125,11 +78,83 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_properties
+[IoElement](IoElement.md).[_properties](IoElement.md#_properties)
 
 #### Defined in
 
 [src/core/io-node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L48)
+
+___
+
+### RegisterConfig
+
+▪ `Static` **RegisterConfig**: (`config`: `any`) => `void`
+
+#### Type declaration
+
+▸ (`config`): `void`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `config` | `any` |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:220](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L220)
+
+___
+
+### RegisterGroups
+
+▪ `Static` **RegisterGroups**: (`groups`: `any`) => `void`
+
+#### Type declaration
+
+▸ (`groups`): `void`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `groups` | `any` |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:221](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L221)
+
+___
+
+### RegisterWidgets
+
+▪ `Static` **RegisterWidgets**: (`widgets`: `any`) => `void`
+
+#### Type declaration
+
+▸ (`widgets`): `void`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `widgets` | `any` |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:222](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L222)
 
 ## Accessors
 
@@ -140,6 +165,10 @@ IoNodeMixin(HTMLElement).\_properties
 #### Returns
 
 `any`
+
+#### Inherited from
+
+IoElement.textNode
 
 #### Defined in
 
@@ -157,23 +186,77 @@ IoNodeMixin(HTMLElement).\_properties
 
 `void`
 
+#### Inherited from
+
+IoElement.textNode
+
 #### Defined in
 
 [src/core/io-element.ts:211](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L211)
 
 ___
 
-### Listeners
+### Config
 
-• `Static` `get` **Listeners**(): `any`
+• `Static` `get` **Config**(): `Object`
 
 #### Returns
 
-`any`
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `type:null` | (`string` \| { `class`: `string` = 'select' })[] |
+| `type:object` | (`string` \| { `class`: `string` = 'select' })[] |
 
 #### Defined in
 
-[src/core/io-element.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L60)
+[src/elements/object/inspector.ts:196](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L196)
+
+___
+
+### Groups
+
+• `Static` `get` **Groups**(): `Object`
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| HTMLElement\|content | `RegExp`[] |
+| HTMLElement\|display | `RegExp`[] |
+| HTMLElement\|hidden | (`string` \| `RegExp`)[] |
+| HTMLElement\|hierarchy | `RegExp`[] |
+| HTMLElement\|main | (`string` \| `RegExp`)[] |
+| Object\|hidden | `RegExp`[] |
+
+#### Defined in
+
+[src/elements/object/inspector.ts:202](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L202)
+
+___
+
+### Listeners
+
+• `Static` `get` **Listeners**(): `Object`
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `item-clicked` | `string` |
+
+#### Overrides
+
+IoElement.Listeners
+
+#### Defined in
+
+[src/elements/object/inspector.ts:100](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L100)
 
 ___
 
@@ -187,25 +270,43 @@ ___
 
 #### Overrides
 
-IoNodeMixin(HTMLElement).Properties
+IoElement.Properties
 
 #### Defined in
 
-[src/core/io-element.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L12)
+[src/elements/object/inspector.ts:82](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L82)
 
 ___
 
 ### Style
 
-• `Static` `get` **Style**(): `any`
+• `Static` `get` **Style**(): `string`
 
 #### Returns
 
-`any`
+`string`
+
+#### Overrides
+
+IoElement.Style
 
 #### Defined in
 
-[src/core/io-element.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L8)
+[src/elements/object/inspector.ts:17](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L17)
+
+___
+
+### Widgets
+
+• `Static` `get` **Widgets**(): `Object`
+
+#### Returns
+
+`Object`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:213](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L213)
 
 ___
 
@@ -217,11 +318,85 @@ ___
 
 `string`[]
 
+#### Inherited from
+
+IoElement.observedAttributes
+
 #### Defined in
 
 [src/core/io-element.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L65)
 
 ## Methods
+
+### \_getAll
+
+▸ **_getAll**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:138](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L138)
+
+___
+
+### \_getConfig
+
+▸ **_getConfig**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:129](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L129)
+
+___
+
+### \_getGroups
+
+▸ **_getGroups**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:132](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L132)
+
+___
+
+### \_getWidgets
+
+▸ **_getWidgets**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:135](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L135)
+
+___
+
+### \_onChange
+
+▸ **_onChange**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:155](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L155)
+
+___
 
 ### \_onFocusTo
 
@@ -237,9 +412,47 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoElement](IoElement.md).[_onFocusTo](IoElement.md#_onfocusto)
+
 #### Defined in
 
 [src/core/io-element.ts:252](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L252)
+
+___
+
+### \_onItemClicked
+
+▸ **_onItemClicked**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `CustomEvent`<`any`\> |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:109](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L109)
+
+___
+
+### \_onhangedThrCottle
+
+▸ **_onhangedThrCottle**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:152](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L152)
 
 ___
 
@@ -263,11 +476,25 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).addEventListener
+[IoElement](IoElement.md).[addEventListener](IoElement.md#addeventlistener)
 
 #### Defined in
 
 [src/core/io-node.ts:338](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L338)
+
+___
+
+### advancedChanged
+
+▸ **advancedChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:120](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L120)
 
 ___
 
@@ -280,6 +507,10 @@ Sets aria attributes.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[applyAria](IoElement.md#applyaria)
 
 #### Defined in
 
@@ -301,9 +532,9 @@ ___
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-IoNodeMixin(HTMLElement).applyProperties
+[IoElement](IoElement.md).[applyProperties](IoElement.md#applyproperties)
 
 #### Defined in
 
@@ -326,6 +557,10 @@ ___
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[attributeChangedCallback](IoElement.md#attributechangedcallback)
 
 #### Defined in
 
@@ -353,7 +588,7 @@ Binding object.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).bind
+[IoElement](IoElement.md).[bind](IoElement.md#bind)
 
 #### Defined in
 
@@ -372,13 +607,13 @@ Invoked when one of the properties change.
 
 `void`
 
-#### Inherited from
+#### Overrides
 
-IoNodeMixin(HTMLElement).changed
+[IoElement](IoElement.md).[changed](IoElement.md#changed)
 
 #### Defined in
 
-[src/core/io-node.ts:241](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L241)
+[src/elements/object/inspector.ts:148](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L148)
 
 ___
 
@@ -391,6 +626,10 @@ Add resize listener if `onResized()` is defined in subclass.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[connectedCallback](IoElement.md#connectedcallback)
 
 #### Defined in
 
@@ -407,6 +646,10 @@ Removes resize listener if `onResized()` is defined in subclass.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[disconnectedCallback](IoElement.md#disconnectedcallback)
 
 #### Defined in
 
@@ -435,7 +678,7 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispatchEvent
+[IoElement](IoElement.md).[dispatchEvent](IoElement.md#dispatchevent)
 
 #### Defined in
 
@@ -456,7 +699,7 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispose
+[IoElement](IoElement.md).[dispose](IoElement.md#dispose)
 
 #### Defined in
 
@@ -484,7 +727,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObject
+[IoElement](IoElement.md).[filterObject](IoElement.md#filterobject)
 
 #### Defined in
 
@@ -512,7 +755,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).filterObjects
+[IoElement](IoElement.md).[filterObjects](IoElement.md#filterobjects)
 
 #### Defined in
 
@@ -537,6 +780,10 @@ Update textContent via TextNode is better for layout performance.
 
 `void`
 
+#### Inherited from
+
+[IoElement](IoElement.md).[flattenTextNode](IoElement.md#flattentextnode)
+
 #### Defined in
 
 [src/core/io-element.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L190)
@@ -556,6 +803,10 @@ ___
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[focusTo](IoElement.md#focusto)
 
 #### Defined in
 
@@ -579,7 +830,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).import
+[IoElement](IoElement.md).[import](IoElement.md#import)
 
 #### Defined in
 
@@ -607,7 +858,7 @@ with `observe: "sync" || "async"` configuration.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutated
+[IoElement](IoElement.md).[objectMutated](IoElement.md#objectmutated)
 
 #### Defined in
 
@@ -634,7 +885,7 @@ the object properties has mutated.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutatedThrottled
+[IoElement](IoElement.md).[objectMutatedThrottled](IoElement.md#objectmutatedthrottled)
 
 #### Defined in
 
@@ -660,7 +911,7 @@ Handler function with `event.preventDefault()`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).preventDefault
+[IoElement](IoElement.md).[preventDefault](IoElement.md#preventdefault)
 
 #### Defined in
 
@@ -688,7 +939,7 @@ Adds property change to the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queue
+[IoElement](IoElement.md).[queue](IoElement.md#queue)
 
 #### Defined in
 
@@ -708,7 +959,7 @@ Dispatches the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatch
+[IoElement](IoElement.md).[queueDispatch](IoElement.md#queuedispatch)
 
 #### Defined in
 
@@ -728,7 +979,7 @@ Dispatches the queue in the next rAF cycle.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queueDispatchLazy
+[IoElement](IoElement.md).[queueDispatchLazy](IoElement.md#queuedispatchlazy)
 
 #### Defined in
 
@@ -756,7 +1007,7 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).removeEventListener
+[IoElement](IoElement.md).[removeEventListener](IoElement.md#removeeventlistener)
 
 #### Defined in
 
@@ -780,11 +1031,25 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).requestAnimationFrameOnce
+[IoElement](IoElement.md).[requestAnimationFrameOnce](IoElement.md#requestanimationframeonce)
 
 #### Defined in
 
 [src/core/io-node.ts:393](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L393)
+
+___
+
+### selectedMutated
+
+▸ **selectedMutated**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:123](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L123)
 
 ___
 
@@ -804,6 +1069,10 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[setAttribute](IoElement.md#setattribute)
 
 #### Defined in
 
@@ -830,7 +1099,7 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperties
+[IoElement](IoElement.md).[setProperties](IoElement.md#setproperties)
 
 #### Defined in
 
@@ -858,7 +1127,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperty
+[IoElement](IoElement.md).[setProperty](IoElement.md#setproperty)
 
 #### Defined in
 
@@ -885,7 +1154,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setValue
+[IoElement](IoElement.md).[setValue](IoElement.md#setvalue)
 
 #### Defined in
 
@@ -911,7 +1180,7 @@ Handler function with `event.stopPropagation()`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).stopPropagation
+[IoElement](IoElement.md).[stopPropagation](IoElement.md#stoppropagation)
 
 #### Defined in
 
@@ -935,6 +1204,10 @@ Renders DOM from virtual DOM arrays.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[template](IoElement.md#template)
 
 #### Defined in
 
@@ -962,7 +1235,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).throttle
+[IoElement](IoElement.md).[throttle](IoElement.md#throttle)
 
 #### Defined in
 
@@ -986,6 +1259,10 @@ Recurively traverses vDOM.
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[traverse](IoElement.md#traverse)
 
 #### Defined in
 
@@ -1011,8 +1288,36 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).unbind
+[IoElement](IoElement.md).[unbind](IoElement.md#unbind)
 
 #### Defined in
 
 [src/core/io-node.ts:324](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L324)
+
+___
+
+### valueChanged
+
+▸ **valueChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:117](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L117)
+
+___
+
+### Register
+
+▸ `Static` **Register**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/object/inspector.ts:223](https://github.com/io-gui/iogui/blob/tsc/src/elements/object/inspector.ts#L223)
