@@ -62,8 +62,7 @@ export class IoOptionMenu extends IoElement {
       },
       options: {
         type: Options,
-        reflect: -1,
-        // observe: true,
+        reflect: -1
       },
       role: 'button',
     };
@@ -72,7 +71,7 @@ export class IoOptionMenu extends IoElement {
     const valueText = (this.value !== undefined) ? String(this.value) : '';
     return this.label || valueText || '';
   }
-  _setValue(event: CustomEvent) {
+  _onPathChanged(event: CustomEvent) {
     // TODO: Fix Path convering values to string type.
     if (event.detail.leaf !== undefined) {
       try {
@@ -113,8 +112,8 @@ export class IoOptionMenu extends IoElement {
     const option = new Item({
       label: valueText,
       options: this.options,
-      // TODO: this causes _setValue to trigger initially
-      'on-path-changed': this._setValue,
+      // TODO: this causes _onPathChanged to trigger initially
+      'on-path-changed': this._onPathChanged,
     });
 
     this.template([

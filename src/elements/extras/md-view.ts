@@ -135,6 +135,7 @@ export class IoMdView extends IoElement {
         type: String,
         reflect: 1
       },
+      sanitize: true,
       role: 'document',
     };
   }
@@ -152,7 +153,11 @@ export class IoMdView extends IoElement {
         },
       });
       // TODO: unhack
-      this.innerHTML = purify.sanitize(marked(markdown));
+      if (this.sanitize) {
+        this.innerHTML = purify.sanitize(marked(markdown));
+      } else {
+        this.innerHTML = marked(markdown);
+      }
       this.classList.toggle('io-loading', false);
       this.dispatchEvent('content-ready', {}, true);
     }
