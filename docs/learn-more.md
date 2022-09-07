@@ -1,6 +1,6 @@
 ## Creating Elements
 
-You can create Io elements using different methods but to make the most out of Io, you should use the `template()` function inside elements created with `IoElement` class. See [virtual DOM arrays](#doc=learn-more#virtual-dom-arrays) for more information.
+You can create Io elements using different methods but to make the most out of Io, you should use the `template()` function inside elements created with `IoElement` class. See [virtual DOM arrays](#path=docs#creating-elements&doc=learn-more#virtual-dom-arrays) for more information.
 
 ```javascript
 // createElement
@@ -67,14 +67,6 @@ myProperty: Boolean
 myProperty: false
 ```
 
-The only difference with properties defined in the `Attributes()` getter is that property configurations have following values by default:
-
-```javascript
-reflect: 1,
-notify: false,
-enumerable: false,
-```
-
 ## Functions
 
 `changed()`
@@ -83,16 +75,13 @@ Change handler function.
 `[prop]Changed()`
 Property-specific change handler function.
 
-`propChanged()`
-Property-agnostic change handler function.
-
 `[prop]Mutated()`
 Property-specific mutation handler function.
 
 `bind(prop)`
 Returns data-binding for specified property.
 
-`set(prop, value)`
+`setValue(prop, value)`
 Sets property and emits `value-set` event.
 
 `dispatchEvent(type, detail, bubbles, src)`
@@ -102,11 +91,10 @@ Shorthand for custom event dispatch.
 Generates virtual DOM from nested arrays.
 
 `onResized()`
-
-<!-- `connect()` -->
-<!-- `disconnect()` -->
-<!-- `dispose()` -->
 Handler function called when element size changes.
+
+`dispose()`
+
 
 ## Events
 

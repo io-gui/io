@@ -67,6 +67,7 @@
     <script type="importmap">
       {
         "imports": {
+          "io-gui": "./build/iogui.js",
           "marked": "./node_modules/marked/lib/marked.esm.js",
           "dompurify": "./node_modules/dompurify/dist/purify.es.js",
           "mocha": "./node_modules/mocha/mocha.js",
@@ -112,7 +113,7 @@
   <body>
     <script type="module">
 
-    import {RegisterIoElement, Options, Path, IoSelectorTabs, IoStorageFactory as $} from './build/iogui.js';
+    import {RegisterIoElement, Options, Path, IoSelectorTabs, IoStorageFactory as $} from 'io-gui';
 
     const OPTIONS = new Options([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
@@ -247,8 +248,9 @@
             ['io-md-view', {
               name: 'home',
               path: './README.md'}],
-            ['io-md-view-selector', {
+              ['io-md-view-selector', {
               name: 'docs',
+              sanitize: false,
               selected: OPTIONS.option('docs').path.bind('leaf'),
               options: OPTIONS.option('docs').options,
             }],
