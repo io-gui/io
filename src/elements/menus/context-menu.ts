@@ -72,7 +72,7 @@ export class IoContextMenu extends IoElement {
       event.stopImmediatePropagation();
       if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
-      this.debounce(this._onCollapse);
+      this.throttle(this._onCollapse);
     }
   }
   _onContextmenu(event: MouseEvent) {

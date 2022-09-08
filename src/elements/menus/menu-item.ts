@@ -143,7 +143,7 @@ export class IoMenuItem extends IoItem {
         }
       }
       this.dispatchEvent('item-clicked', option, true);
-      this.debounce(this._onCollapse);
+      this.throttle(this._onCollapse, undefined, false);
     }
   }
   _onItemClicked(event: PointerEvent) {
@@ -152,7 +152,7 @@ export class IoMenuItem extends IoItem {
       event.stopImmediatePropagation();
       this.dispatchEvent('item-clicked', event.detail, true);
     }
-    if (this.expanded) this.debounce(this._onCollapse);
+    if (this.expanded) this.throttle(this._onCollapse, undefined, false);
   }
   _onPointerdown(event: PointerEvent) {
     event.stopPropagation();
@@ -240,7 +240,7 @@ export class IoMenuItem extends IoItem {
       item.focus();
       item._onClick(event);
     } else {
-      this.debounce(this._onCollapseRoot);
+      this.throttle(this._onCollapseRoot);
     }
   }
   _onKeydown(event: KeyboardEvent) {
@@ -250,7 +250,7 @@ export class IoMenuItem extends IoItem {
       return;
     } else if (event.key === 'Escape') {
       event.preventDefault();
-      this.debounce(this._onCollapseRoot);
+      this.throttle(this._onCollapseRoot);
       return;
     }
 

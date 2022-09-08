@@ -157,7 +157,7 @@ export class IoMenuOptions extends IoElement {
       event.stopImmediatePropagation();
       if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
-      this.debounce(this._onCollapse);
+      this.throttle(this._onCollapse);
     }
   }
   // Prevents IoLayer from stopping scroll in clipped options
@@ -165,7 +165,7 @@ export class IoMenuOptions extends IoElement {
     event.stopPropagation();
   }
   onResized() {
-    this.debounce(this._onSetOverflow);
+    this.throttle(this._onSetOverflow);
   }
   _onSetOverflow() {
     const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
@@ -230,7 +230,7 @@ export class IoMenuOptions extends IoElement {
       if (this.inlayer && this.$parent) {
         this._onExpandedChangedLazy();
         // TODO: unhack incorrect this.rect on first expand.
-        this.throttle(this._onExpandedChangedLazy, null, true);
+        this.throttle(this._onExpandedChangedLazy);
       }
     } else {
       this.style.top = null;
@@ -242,7 +242,7 @@ export class IoMenuOptions extends IoElement {
   }
   searchChanged() {
     if (this.inlayer && this.$parent) {
-      this.debounce(this._clipHeight);
+      this.throttle(this._clipHeight);
     }
   }
   _onExpandedChangedLazy() {
@@ -336,7 +336,7 @@ export class IoMenuOptions extends IoElement {
       }]);
     }
     this.template(elements);
-    this.debounce(this._onSetOverflow);
+    this.throttle(this._onSetOverflow);
   }
 }
 

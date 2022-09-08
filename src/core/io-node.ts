@@ -93,7 +93,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, 'onObjectMutated', {enumerable: false, value: this.onObjectMutated.bind(this)});
       Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
       Object.defineProperty(this, 'dispatchQueue', {enumerable: false, value: this.dispatchQueue.bind(this)});
-      Object.defineProperty(this, 'dispatchQueueLazy', {enumerable: false, value: this.dispatchQueueLazy.bind(this)});
+      Object.defineProperty(this, 'dispatchQueueImmediately', {enumerable: false, value: this.dispatchQueueImmediately.bind(this)});
 
       if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
@@ -227,20 +227,19 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       this._changeQueue.queue(prop, value, oldValue);
     }
     /**
-     * Dispatches the queue.
+     * Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
      */
     dispatchQueue() {
       if (this.lazy) {
-        preThrottleQueue.push(this.dispatchQueueLazy);
-        this.throttle(this.dispatchQueueLazy);
+        this.throttle(this.dispatchQueueImmediately);
       } else {
-        this._changeQueue.dispatch();
+        this.dispatchQueueImmediately();
       }
     }
     /**
-     * Dispatches the queue in the next rAF cycle.
+     * Dispatches the queue immediately.
      */
-    dispatchQueueLazy() {
+    dispatchQueueImmediately() {
       this._changeQueue.dispatch();
     }
     /**
@@ -249,29 +248,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {*} arg - argument for throttled function.
      * @param {boolean} asynchronous - execute with timeout.
      */
-    throttle(func: CallbackFunction, arg?: any, asynchronous?: boolean) {
-      // TODO: move to extenal throttle function, document and test.
-      if (preThrottleQueue.indexOf(func) === -1) {
-        preThrottleQueue.push(func);
-        if (!asynchronous) {
-          func(arg);
-          return;
-        }
-      }
-      if (throttleQueue.indexOf(func) === -1) {
-        throttleQueue.push(func);
-      }
-      // TODO: improve argument handling. Consider edge-cases.
-      if (argQueue.has(func) && typeof arg !== 'object') {
-        const queue = argQueue.get(func);
-        if (queue.indexOf(arg) === -1) queue.push(arg);
-      } else {
-        argQueue.set(func, [arg]);
-      }
-    }
-    // TODO: implement rAF debounce
-    debounce(func: CallbackFunction) {
-      debounce(func);
+    throttle(func: CallbackFunction, arg: any = undefined, async: boolean = true) {
+      // TODO: document and test.
+      throttle(func, arg, async);
     }
     /**
      * Event handler for 'object-mutated' event emitted from the `window`.
@@ -421,34 +400,40 @@ export class IoNode extends IoNodeMixin(Object) {}
 RegisterIoNode(IoNode);
 
 // TODO: document and test
-const preThrottleQueue: CallbackFunction[] = [];
+const throttleQueueSync: CallbackFunction[] = [];
 const throttleQueue: CallbackFunction[] = [];
-const argQueue = new WeakMap();
-//
-const debounceQueue: CallbackFunction[] = [];
+const throttleQueueArgs = new WeakMap();
 
-const animate = function() {
-  requestAnimationFrame(animate);
-  for (let i = preThrottleQueue.length; i--;) {
-    preThrottleQueue.splice(preThrottleQueue.indexOf(preThrottleQueue[i]), 1);
+function throttle(func: CallbackFunction, arg: any = undefined, async: boolean = true) {
+  if (throttleQueueSync.indexOf(func) === -1) {
+    throttleQueueSync.push(func);
+    if (async === false) {
+      func(arg);
+      return;
+    }
   }
+  if (throttleQueue.indexOf(func) === -1) {
+    throttleQueue.push(func);
+  }
+  // TODO: improve argument handling. Consider edge-cases.
+  if (throttleQueueArgs.has(func) && typeof arg !== 'object') {
+    const args = throttleQueueArgs.get(func);
+    if (args.indexOf(arg) === -1) args.push(arg);
+  } else {
+    throttleQueueArgs.set(func, [arg]);
+  }
+}
+
+function animate () {
+  requestAnimationFrame(animate);
+  throttleQueueSync.length = 0;
   for (let i = throttleQueue.length; i--;) {
-    const queue = argQueue.get(throttleQueue[i]);
-    for (let p = queue.length; p--;) {
-      throttleQueue[i](queue[p]);
-      queue.splice(queue.indexOf(p), 1);
+    const args = throttleQueueArgs.get(throttleQueue[i]);
+    for (let p = args.length; p--;) {
+      throttleQueue[i](args[p]);
+      args.splice(args.indexOf(p), 1);
     }
     throttleQueue.splice(throttleQueue.indexOf(throttleQueue[i]), 1);
   }
-  //
-  for (let i = debounceQueue.length; i--;) {
-    const func = debounceQueue[i];
-    debounceQueue.splice(debounceQueue.indexOf(func), 1);
-    func();
-  }
 };
 requestAnimationFrame(animate);
-
-function debounce(func: CallbackFunction) {
-  if (debounceQueue.indexOf(func) === -1) debounceQueue.push(func);
-}

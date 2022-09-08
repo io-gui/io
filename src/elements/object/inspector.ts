@@ -150,7 +150,7 @@ export class IoInspector extends IoElement {
     this._onhangedThrCottle();
   }
   _onhangedThrCottle() {
-    this.throttle(this._onChange, null, true);
+    this.throttle(this._onChange);
   }
   _onChange() {
     this._getAll();

@@ -16,9 +16,8 @@ export default class {
           chai.expect(node.changed).to.be.a('function');
           chai.expect(node.queue).to.be.a('function');
           chai.expect(node.dispatchQueue).to.be.a('function');
-          chai.expect(node.dispatchQueueLazy).to.be.a('function');
+          chai.expect(node.dispatchQueueImmediately).to.be.a('function');
           chai.expect(node.throttle).to.be.a('function');
-          chai.expect(node.debounce).to.be.a('function');
           chai.expect(node.onObjectMutated).to.be.a('function');
           chai.expect(node.objectMutated).to.be.a('function');
           chai.expect(node.bind).to.be.a('function');

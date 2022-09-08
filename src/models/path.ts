@@ -18,12 +18,12 @@ export class Path extends IoNode {
         if (target[prop] === value) return true;
         target[prop] = value;
         this.update();
-        this.throttle(this.onMutation, null, true);
+        this.throttle(this.onMutation);
         return true;
       }
     });
     this.update();
-    this.throttle(this.onMutation, null, false);
+    this.throttle(this.onMutation, undefined, false);
   }
   onMutation() {
     this.dispatchQueue();

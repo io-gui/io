@@ -149,14 +149,13 @@ export class IoProperties extends IoElement {
     return this._config;
   }
   valueMutated() {
-    // TODO implement debounce
     this._changedThrottled();
   }
   changed() {
     this._changedThrottled();
   }
   _changedThrottled() {
-    this.throttle(this._onChange, null); // TODO: consider async
+    this.throttle(this._onChange, undefined, false); // TODO: consider async
   }
   _onChange() {
     this._config = this._getConfig();
