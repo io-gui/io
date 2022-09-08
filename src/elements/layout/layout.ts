@@ -201,7 +201,7 @@ export class IoLayout extends IoElement {
       }
     }
     this.queue('splits', this.splits, this.splits);
-    this.queueDispatch();
+    this.dispatchQueue();
   }
 }
 

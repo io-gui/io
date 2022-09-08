@@ -157,7 +157,7 @@ export class IoMenuOptions extends IoElement {
       event.stopImmediatePropagation();
       if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
-      this.requestAnimationFrameOnce(this._onCollapse);
+      this.debounce(this._onCollapse);
     }
   }
   // Prevents IoLayer from stopping scroll in clipped options
@@ -165,7 +165,7 @@ export class IoMenuOptions extends IoElement {
     event.stopPropagation();
   }
   onResized() {
-    this.requestAnimationFrameOnce(this._onSetOverflow);
+    this.debounce(this._onSetOverflow);
   }
   _onSetOverflow() {
     const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
@@ -242,7 +242,7 @@ export class IoMenuOptions extends IoElement {
   }
   searchChanged() {
     if (this.inlayer && this.$parent) {
-      this.requestAnimationFrameOnce(this._clipHeight);
+      this.debounce(this._clipHeight);
     }
   }
   _onExpandedChangedLazy() {
@@ -336,7 +336,7 @@ export class IoMenuOptions extends IoElement {
       }]);
     }
     this.template(elements);
-    this.requestAnimationFrameOnce(this._onSetOverflow);
+    this.debounce(this._onSetOverflow);
   }
 }
 

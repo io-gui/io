@@ -81,7 +81,7 @@ export class IoSidebar extends IoElement {
       role: 'navigation',
     };
   }
-  
+
   _filterObject(object: any, predicate: (object: any) => boolean, _depth = 5, _chain: any[] = [], _i = 0): any {
     if (_chain.indexOf(object) !== -1) return; _chain.push(object);
     if (_i > _depth) return; _i++;

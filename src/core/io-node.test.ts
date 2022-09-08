@@ -15,8 +15,10 @@ export default class {
           chai.expect(node.setValue).to.be.a('function');
           chai.expect(node.changed).to.be.a('function');
           chai.expect(node.queue).to.be.a('function');
-          chai.expect(node.queueDispatch).to.be.a('function');
-          chai.expect(node.queueDispatchLazy).to.be.a('function');
+          chai.expect(node.dispatchQueue).to.be.a('function');
+          chai.expect(node.dispatchQueueLazy).to.be.a('function');
+          chai.expect(node.throttle).to.be.a('function');
+          chai.expect(node.debounce).to.be.a('function');
           chai.expect(node.onObjectMutated).to.be.a('function');
           chai.expect(node.objectMutated).to.be.a('function');
           chai.expect(node.bind).to.be.a('function');
@@ -24,8 +26,6 @@ export default class {
           chai.expect(node.addEventListener).to.be.a('function');
           chai.expect(node.removeEventListener).to.be.a('function');
           chai.expect(node.dispatchEvent).to.be.a('function');
-          chai.expect(node.throttle).to.be.a('function');
-          chai.expect(node.requestAnimationFrameOnce).to.be.a('function');
           chai.expect(node.dispose).to.be.a('function');
           node.dispose();
         });

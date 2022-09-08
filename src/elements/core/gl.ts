@@ -287,17 +287,17 @@ export class IoGl extends IoElement {
   }
   cssMutated() {
     this.updateCssUniforms();
-    this.requestAnimationFrameOnce(this._onRender);
+    this.debounce(this._onRender);
   }
   changed() {
     // TODO: unhack when ResizeObserver is available in Safari
     if (!window.ResizeObserver) {
       setTimeout(() => {
         this.onResized();
-        this.requestAnimationFrameOnce(this._onRender);
+        this.debounce(this._onRender);
       });
     } else {
-      this.requestAnimationFrameOnce(this._onRender);
+      this.debounce(this._onRender);
     }
   }
   _onRender() {

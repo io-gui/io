@@ -92,8 +92,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       Object.defineProperty(this, 'onObjectMutated', {enumerable: false, value: this.onObjectMutated.bind(this)});
       Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
-      Object.defineProperty(this, 'queueDispatch', {enumerable: false, value: this.queueDispatch.bind(this)});
-      Object.defineProperty(this, 'queueDispatchLazy', {enumerable: false, value: this.queueDispatchLazy.bind(this)});
+      Object.defineProperty(this, 'dispatchQueue', {enumerable: false, value: this.dispatchQueue.bind(this)});
+      Object.defineProperty(this, 'dispatchQueueLazy', {enumerable: false, value: this.dispatchQueueLazy.bind(this)});
 
       if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
@@ -155,7 +155,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           // TODO: consider skiping queue
           this.queue(name, value, oldValue);
           if (!skipDispatch) {
-            this.queueDispatch();
+            this.dispatchQueue();
           }
         }
         if (prop.reflect !== undefined && prop.reflect >= 1 && this._isIoElement) this.setAttribute(name, value);
@@ -180,7 +180,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this.setProperty(p, props[p], true);
       }
       this._eventDispatcher.applyPropListeners(props);
-      this.queueDispatch();
+      this.dispatchQueue();
     }
     /**
      * Sets multiple properties in batch.
@@ -197,7 +197,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
         this.setProperty(p, props[p], true);
       }
-      this.queueDispatch();
+      this.dispatchQueue();
     }
     // TODO: consider moving into a different class
     /**
@@ -229,10 +229,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     /**
      * Dispatches the queue.
      */
-    queueDispatch() {
+    dispatchQueue() {
       if (this.lazy) {
-        preThrottleQueue.push(this.queueDispatchLazy);
-        this.throttle(this.queueDispatchLazy);
+        preThrottleQueue.push(this.dispatchQueueLazy);
+        this.throttle(this.dispatchQueueLazy);
       } else {
         this._changeQueue.dispatch();
       }
@@ -240,8 +240,38 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     /**
      * Dispatches the queue in the next rAF cycle.
      */
-    queueDispatchLazy() {
+    dispatchQueueLazy() {
       this._changeQueue.dispatch();
+    }
+    /**
+     * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+     * @param {function} func - Function to throttle.
+     * @param {*} arg - argument for throttled function.
+     * @param {boolean} asynchronous - execute with timeout.
+     */
+    throttle(func: CallbackFunction, arg?: any, asynchronous?: boolean) {
+      // TODO: move to extenal throttle function, document and test.
+      if (preThrottleQueue.indexOf(func) === -1) {
+        preThrottleQueue.push(func);
+        if (!asynchronous) {
+          func(arg);
+          return;
+        }
+      }
+      if (throttleQueue.indexOf(func) === -1) {
+        throttleQueue.push(func);
+      }
+      // TODO: improve argument handling. Consider edge-cases.
+      if (argQueue.has(func) && typeof arg !== 'object') {
+        const queue = argQueue.get(func);
+        if (queue.indexOf(arg) === -1) queue.push(arg);
+      } else {
+        argQueue.set(func, [arg]);
+      }
+    }
+    // TODO: implement rAF debounce
+    debounce(func: CallbackFunction) {
+      debounce(func);
     }
     /**
      * Event handler for 'object-mutated' event emitted from the `window`.
@@ -335,36 +365,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
     }
     /**
-     * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
-     * @param {function} func - Function to throttle.
-     * @param {*} arg - argument for throttled function.
-     * @param {boolean} asynchronous - execute with timeout.
-     */
-    throttle(func: CallbackFunction, arg?: any, asynchronous?: boolean) {
-      // TODO: move to extenal throttle function, document and test.
-      if (preThrottleQueue.indexOf(func) === -1) {
-        preThrottleQueue.push(func);
-        if (!asynchronous) {
-          func(arg);
-          return;
-        }
-      }
-      if (throttleQueue.indexOf(func) === -1) {
-        throttleQueue.push(func);
-      }
-      // TODO: improve argument handling. Consider edge-cases.
-      if (argQueue.has(func) && typeof arg !== 'object') {
-        const queue = argQueue.get(func);
-        if (queue.indexOf(arg) === -1) queue.push(arg);
-      } else {
-        argQueue.set(func, [arg]);
-      }
-    }
-    // TODO: implement rAF debounce
-    requestAnimationFrameOnce(func: CallbackFunction) {
-      requestAnimationFrameOnce(func);
-    }
-    /**
      * Disposes all internals.
      * Use this when instance is no longer needed.
      */
@@ -425,7 +425,7 @@ const preThrottleQueue: CallbackFunction[] = [];
 const throttleQueue: CallbackFunction[] = [];
 const argQueue = new WeakMap();
 //
-const funcQueue: CallbackFunction[] = [];
+const debounceQueue: CallbackFunction[] = [];
 
 const animate = function() {
   requestAnimationFrame(animate);
@@ -441,14 +441,14 @@ const animate = function() {
     throttleQueue.splice(throttleQueue.indexOf(throttleQueue[i]), 1);
   }
   //
-  for (let i = funcQueue.length; i--;) {
-    const func = funcQueue[i];
-    funcQueue.splice(funcQueue.indexOf(func), 1);
+  for (let i = debounceQueue.length; i--;) {
+    const func = debounceQueue[i];
+    debounceQueue.splice(debounceQueue.indexOf(func), 1);
     func();
   }
 };
 requestAnimationFrame(animate);
 
-function requestAnimationFrameOnce(func: CallbackFunction) {
-  if (funcQueue.indexOf(func) === -1) funcQueue.push(func);
+function debounce(func: CallbackFunction) {
+  if (debounceQueue.indexOf(func) === -1) debounceQueue.push(func);
 }
