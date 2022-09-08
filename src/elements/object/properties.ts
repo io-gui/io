@@ -151,23 +151,6 @@ export class IoProperties extends IoElement {
   valueMutated() {
     // TODO implement debounce
     this._changedThrottled();
-    clearTimeout(this._cfgTimeout);
-    this._cfgTimeout = setTimeout(()=>{
-      this._updateChildren();
-    }, 1000/10);
-  }
-  // TODO: unhack?
-  _updateChildren() {
-    const all = this.querySelectorAll(':scope > *, io-properties > *');
-    const subobjects = this.filterObjects(this.value, o => typeof o === 'object', 1);
-    for (let i = 0; i < all.length; i++) {
-      const child = all[i];
-      if (typeof child.value === 'object') {
-        if (subobjects.indexOf(child.value) !== -1) {
-          if (child.changed) child.changed();
-        }
-      }
-    }
   }
   changed() {
     this._changedThrottled();

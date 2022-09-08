@@ -1,42 +1,33 @@
 import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertiesDeclaration, IoElement, RegisterIoElement } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
 
+// TODO: fully test core API
+
 export default class {
   run() {
     describe('IoNode', () => {
       describe('Registration', () => {
         it('Should have core API functions defined', () => {
           const node = new IoNode();
-          // Change handler functions
+          chai.expect(node.setProperty).to.be.a('function');
+          chai.expect(node.applyProperties).to.be.a('function');
+          chai.expect(node.setProperties).to.be.a('function');
+          chai.expect(node.setValue).to.be.a('function');
           chai.expect(node.changed).to.be.a('function');
           chai.expect(node.queue).to.be.a('function');
           chai.expect(node.queueDispatch).to.be.a('function');
           chai.expect(node.queueDispatchLazy).to.be.a('function');
-          // Property-binding functions
+          chai.expect(node.onObjectMutated).to.be.a('function');
+          chai.expect(node.objectMutated).to.be.a('function');
           chai.expect(node.bind).to.be.a('function');
           chai.expect(node.unbind).to.be.a('function');
-          // Property setters
-          chai.expect(node.setProperty).to.be.a('function');
-          chai.expect(node.setProperties).to.be.a('function');
-          chai.expect(node.setValue).to.be.a('function');
-          chai.expect(node.objectMutated).to.be.a('function');
-          chai.expect(node.objectMutatedThrottled).to.be.a('function');
-          // Event-related functions
           chai.expect(node.addEventListener).to.be.a('function');
           chai.expect(node.removeEventListener).to.be.a('function');
           chai.expect(node.dispatchEvent).to.be.a('function');
-          // Utility functions
-          chai.expect(node.filterObject).to.be.a('function');
-          chai.expect(node.filterObjects).to.be.a('function');
-          chai.expect(node.import).to.be.a('function');
-          chai.expect(node.preventDefault).to.be.a('function');
-          chai.expect(node.stopPropagation).to.be.a('function');
           chai.expect(node.throttle).to.be.a('function');
           chai.expect(node.requestAnimationFrameOnce).to.be.a('function');
-          // Lifecycle functions
           chai.expect(node.dispose).to.be.a('function');
           node.dispose();
-          // TODO: fully test core API
         });
         it('Should register property definitions correctly', () => {
           class TestNode extends IoNode {

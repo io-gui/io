@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import {IoElement, RegisterIoElement, Binding} from '../../iogui.js';
 import {Options} from '../../models/options.js';
 import {Item} from '../../models/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
@@ -271,10 +271,27 @@ export class IoMenuOptions extends IoElement {
       this.style.touchAction = null;
     }
   }
+  _filterOptions(object: any, predicate: (object: any) => boolean, _depth = 5, _chain: any[] = [], _i = 0): any {
+    const result: any[] = [];
+    if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
+    if (_i > _depth) return result; _i++;
+    if (predicate(object) && result.indexOf(object) === -1) result.push(object);
+    for (const key in object) {
+      const value = object[key] instanceof Binding ? object[key].value : object[key];
+      if (predicate(value) && result.indexOf(value) === -1) result.push(value);
+      if (typeof value === 'object') {
+        const results = this._filterOptions(value, predicate, _depth, _chain, _i);
+        for (let i = 0; i < results.length; i++) {
+          if (result.indexOf(results[i]) === -1) result.push(results[i]);
+        }
+      }
+    }
+    return result;
+  }
   get _options() {
     if (this.search) {
       const s = this.search.toLowerCase();
-      const options = this.filterObjects(this.options, o => {
+      const options = this._filterOptions(this.options, o => {
         if (!!o.value || !!o.action) {
           if (String(o.value).toLowerCase().search(s) !== -1) return true;
           if (o.label && o.label.toLowerCase().search(s) !== -1) return true;

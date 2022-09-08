@@ -41,7 +41,6 @@ export class ProtoChain {
     // Terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
     while (
       proto
-      && ioNodeClass.name !== 'IoNodeMixinConstructor'
       && (ioNodeClass) !== HTMLElement
       && (ioNodeClass) !== Object
       && (ioNodeClass) !== Array) {

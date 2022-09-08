@@ -76,17 +76,17 @@ export class IoElementDemo extends IoElement {
   }
   objectMutated(event: CustomEvent) {
     super.objectMutated(event);
-    for (let i = this._protochain.observedObjectProperties.length; i--;) {
-      const prop = this._protochain.observedObjectProperties[i];
-      const value = this._properties[prop].value;
-      const hasObject = !!this.filterObject(value, o => { return o === event.detail.object; });
-      if (hasObject) {
-        const children = this.querySelectorAll('*');
-        for (let i = 0; i < children.length; i++) {
-          if (children[i].changed) children[i].changed();
-        }
-      }
-    }
+    // for (let i = this._protochain.observedObjectProperties.length; i--;) {
+    //   const prop = this._protochain.observedObjectProperties[i];
+    //   const value = this._properties[prop].value;
+    //   const hasObject = !!this._filterObject(value, o => { return o === event.detail.object; });
+    //   if (hasObject) {
+    //     const children = this.querySelectorAll('*');
+    //     for (let i = 0; i < children.length; i++) {
+    //       if (children[i].changed) children[i].changed();
+    //     }
+    //   }
+    // }
   }
   changed() {
     const properties = this.properties;

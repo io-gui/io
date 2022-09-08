@@ -27,6 +27,8 @@ import {Options} from '../../models/options.js';
  * If `cache` property is set to `true`, a reference to the element will be kept fo later use.
  **/
 
+const IMPORTED_PATHS: Record<string, any> = {};
+
 export class IoSelector extends IoElement {
   static get Style() {
     return /* css */`
@@ -182,6 +184,20 @@ export class IoSelector extends IoElement {
   getSlotted(): any {
     return null;
   }
+  importModule(path: string) {
+    const importPath = new URL(path, String(window.location)).href;
+    return new Promise(resolve => {
+      if (!path || IMPORTED_PATHS[importPath]) {
+        resolve(importPath);
+      } else {
+        void import(importPath)
+        .then(() => {
+          IMPORTED_PATHS[importPath] = true;
+          resolve(importPath);
+        });
+      }
+    });
+  }
   update() {
     const selected = this._selectedID;
 
@@ -207,7 +223,9 @@ export class IoSelector extends IoElement {
         this.$.content.appendChild(this._caches[selected]);
         this.$.content.classList.toggle('io-loading', false);
       } else {
-        void this.import(element[1].import).then(() => {
+        const _import = element[1].import;
+        delete element[1].import;
+        this.importModule(_import).then(() => {
           if (element[1].name === this.selected.split('#')[0]) {
             this.$.content.classList.toggle('io-loading', false);
             this.template([element], this.$.content);
