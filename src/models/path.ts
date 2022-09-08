@@ -23,7 +23,7 @@ export class Path extends IoNode {
       }
     });
     this.update();
-    this.throttle(this.onMutation, undefined, false);
+    this.throttle(this.onMutation, undefined, true);
   }
   onMutation() {
     this.dispatchQueue();

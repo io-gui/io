@@ -143,7 +143,7 @@ export class IoMenuItem extends IoItem {
         }
       }
       this.dispatchEvent('item-clicked', option, true);
-      this.throttle(this._onCollapse, undefined, false);
+      this.throttle(this._onCollapse, undefined, true);
     }
   }
   _onItemClicked(event: PointerEvent) {
@@ -152,7 +152,7 @@ export class IoMenuItem extends IoItem {
       event.stopImmediatePropagation();
       this.dispatchEvent('item-clicked', event.detail, true);
     }
-    if (this.expanded) this.throttle(this._onCollapse, undefined, false);
+    if (this.expanded) this.throttle(this._onCollapse, undefined, true);
   }
   _onPointerdown(event: PointerEvent) {
     event.stopPropagation();

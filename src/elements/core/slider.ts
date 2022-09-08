@@ -113,7 +113,7 @@ export class IoSlider extends IoGl {
   }
   _onPointermove(event: PointerEvent) {
     if (event.pointerType !== 'touch') this._active = 1;
-    this.throttle(this._onPointermoveThrottled);
+    this.throttle(this._onPointermoveThrottled, event);
   }
   _onPointerup(event: PointerEvent) {
     this.releasePointerCapture(event.pointerId);

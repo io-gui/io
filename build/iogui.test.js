@@ -1,1 +1,146 @@
-import{IoNode as e,RegisterIoNode as t,ProtoChain as o,Binding as p,RegisterIoElement as a,IoElement as n}from"./iogui.js";import"mocha";import"chai";class Node{run(){describe("IoNode",(()=>{describe("Registration",(()=>{it("Should have core API functions defined",(()=>{const t=new e;chai.expect(t.changed).to.be.a("function"),chai.expect(t.queue).to.be.a("function"),chai.expect(t.queueDispatch).to.be.a("function"),chai.expect(t.queueDispatchLazy).to.be.a("function"),chai.expect(t.bind).to.be.a("function"),chai.expect(t.unbind).to.be.a("function"),chai.expect(t.setProperty).to.be.a("function"),chai.expect(t.setProperties).to.be.a("function"),chai.expect(t.setValue).to.be.a("function"),chai.expect(t.objectMutated).to.be.a("function"),chai.expect(t.objectMutatedThrottled).to.be.a("function"),chai.expect(t.addEventListener).to.be.a("function"),chai.expect(t.removeEventListener).to.be.a("function"),chai.expect(t.dispatchEvent).to.be.a("function"),chai.expect(t.filterObject).to.be.a("function"),chai.expect(t.filterObjects).to.be.a("function"),chai.expect(t.import).to.be.a("function"),chai.expect(t.preventDefault).to.be.a("function"),chai.expect(t.stopPropagation).to.be.a("function"),chai.expect(t.throttle).to.be.a("function"),chai.expect(t.requestAnimationFrameOnce).to.be.a("function"),chai.expect(t.dispose).to.be.a("function"),t.dispose()})),it("Should register property definitions correctly",(()=>{class TestNode extends e{static get Properties(){return{prop0:{type:String},prop1:{value:!1},prop2:-1,prop3:Number,prop4:Object,prop5:[0,1,2]}}}t(TestNode);const o=new TestNode;chai.expect(o.prop0).to.be.equal(""),chai.expect(o.prop1).to.be.equal(!1),chai.expect(o.prop2).to.be.equal(-1),chai.expect(o.prop3).to.be.equal(0),chai.expect(o.prop4).to.be.deep.equal({}),chai.expect(o.prop5).to.be.deep.equal([0,1,2]),o.dispose()})),it("Should aggregate property definitions from protochain",(()=>{class Object1 extends e{static get Properties(){return{prop1:{value:0},prop2:null}}}t(Object1);class Object2 extends Object1{static get Properties(){return{prop1:{value:{},notify:!1,observe:!0},prop2:{notify:!0},prop3:""}}}t(Object2);const o=new Object1,p=new Object2,a=o._protochain.properties,n=p._protochain.properties,r=o._properties,c=p._properties;chai.expect(Object.keys(r)).to.be.eql(["lazy","prop1","prop2"]),chai.expect(Object.keys(c)).to.be.eql(["lazy","prop1","prop2","prop3"]),chai.expect(a.prop1.value).to.be.equal(0),chai.expect(r.prop1.value).to.be.equal(0),chai.expect(r.prop1.type).to.be.equal(Number),chai.expect(r.prop1.notify).to.be.equal(!0),chai.expect(r.prop1.reflect).to.be.equal(0),chai.expect(r.prop1.observe).to.be.equal(!1),chai.expect(n.prop1.value).to.be.eql({}),chai.expect(c.prop1.value).to.be.eql({}),chai.expect(c.prop1.type).to.be.equal(Object),chai.expect(c.prop1.notify).to.be.equal(!1),chai.expect(c.prop1.reflect).to.be.equal(0),chai.expect(c.prop1.observe).to.be.equal(!0),chai.expect(c.prop2.value).to.be.equal(null),chai.expect(c.prop2.type).to.be.equal(void 0),chai.expect(c.prop2.notify).to.be.equal(!0),chai.expect(c.prop2.observe).to.be.equal(!1)})),it("Should favor explicit property definitions over implicit",(()=>{const e=new o(class Object2 extends class Object1{static get Properties(){return{prop1:{value:{},notify:!1,reflect:2,observe:!0}}}}{static get Properties(){return{prop1:[1,2,3]}}}).properties;chai.expect(e.prop1.value).to.be.eql([1,2,3]),chai.expect(e.prop1.type).to.be.equal(Array),chai.expect(e.prop1.notify).to.be.equal(!1),chai.expect(e.prop1.reflect).to.be.equal(2),chai.expect(e.prop1.observe).to.be.equal(!0)})),it("Should correctly register properties with bindigs",(()=>{class TestNode extends e{static get Properties(){return{label:""}}}t(TestNode);const o=new p(new TestNode({label:"binding1"}),"label"),a=new p(new TestNode({label:"binding2"}),"label"),n=new p(new TestNode({label:"binding3"}),"label");class Object1 extends e{static get Properties(){return{prop1:o}}}t(Object1);class Object2 extends Object1{static get Properties(){return{prop1:{binding:a},prop3:n}}}t(Object2);const r=new Object1,c=new Object2,i=r._properties,s=c._properties;chai.expect(i.prop1.binding).to.be.equal(o),chai.expect(s.prop1.binding).to.be.equal(a),chai.expect(s.prop3.binding).to.be.equal(n),chai.expect(o.targets[0]).to.be.equal(r),chai.expect(a.targets[0]).to.be.equal(c),chai.expect(n.targets[0]).to.be.equal(c),chai.expect(i.prop1.value).to.be.equal("binding1"),chai.expect(s.prop1.value).to.be.equal("binding2"),chai.expect(s.prop3.value).to.be.equal("binding3")}))})),describe("Construction",(()=>{})),describe("Properties",(()=>{it("Should correctly get/set properties",(()=>{class TestNode extends e{static get Properties(){return{prop1:{value:1}}}}t(TestNode);const o=new TestNode,p=o._properties;chai.expect(p.prop1.value).to.be.equal(1),chai.expect(o.prop1).to.be.equal(1),o.setProperty("prop1",0),chai.expect(p.prop1.value).to.be.equal(0),chai.expect(o.prop1).to.be.equal(0)})),it("Should correctly get/set bound properties",(()=>{class TestNode extends e{static get Properties(){return{label:""}}}t(TestNode);const o=new p(new TestNode({label:"binding1"}),"label"),a=new p(new TestNode({label:"binding2"}),"label");class TestNode2 extends e{static get Properties(){return{prop1:o}}}t(TestNode2);const n=new TestNode2,r=n._properties;chai.expect(r.prop1.value).to.be.equal("binding1"),chai.expect(n.prop1).to.be.equal("binding1"),chai.expect(r.prop1.binding).to.be.equal(o),chai.expect(o.targets[0]).to.be.equal(n),n.setProperty("prop1",a),chai.expect(r.prop1.value).to.be.equal("binding2"),chai.expect(n.prop1).to.be.equal("binding2"),chai.expect(o.targets[0]).to.be.equal(void 0),chai.expect(a.targets[0]).to.be.equal(n)})),it("Should execute attribute reflection on IoElement",(()=>{class TestElementReflection extends n{static get Properties(){return{label:{value:"label1",reflect:1}}}}a(TestElementReflection);const e=new TestElementReflection;chai.expect(e.getAttribute("label")).to.be.equal("label1"),e.label="label2",chai.expect(e.getAttribute("label")).to.be.equal("label2"),e.setProperty("label","label3"),chai.expect(e.getAttribute("label")).to.be.equal("label3")})),it("Should dipatch queue on object value initialization and value set",(()=>{class TestNode extends e{static get Properties(){return{prop:Object}}}t(TestNode);const o=new TestNode;o.addEventListener("prop-changed",(e=>{const t=e.detail.value,o=e.detail.oldValue;chai.expect(t).to.be.eql({}),chai.expect(o).to.be.equal(void 0)})),o.removeEventListener("prop-changed"),o.addEventListener("prop-changed",(e=>{const t=e.detail.value,o=e.detail.oldValue;chai.expect(t).to.be.eql({}),chai.expect(o).to.be.eql({})})),o.prop={},o.removeEventListener("prop-changed"),o.addEventListener("prop-changed",(()=>{chai.expect("This should never happen!").to.be.equal(!0)})),o.setProperty("prop",{},!0)})),it("Should connect/disconnect IoNode-property-values on construction and value set",(()=>{class TestNodeValue extends e{static get Properties(){return{prop:Object,propChangeCounter:0}}propChanged(){this.propChangeCounter++}}t(TestNodeValue);class TestNode extends e{static get Properties(){return{prop:TestNodeValue}}}t(TestNode);const o=new TestNode,p=o.prop;chai.expect(p.propChangeCounter).to.be.equal(1),p.prop={},p.prop={},chai.expect(p.propChangeCounter).to.be.equal(3),p.prop={},chai.expect(p.propChangeCounter).to.be.equal(4),o.prop=new TestNodeValue;const a=o.prop;p.prop={},chai.expect(p.propChangeCounter).to.be.equal(5),chai.expect(a.propChangeCounter).to.be.equal(1)}))})),describe("Reactivity",(()=>{it("Should corectly invoke handler functions on change",(()=>{class TestNode extends e{_changedCounter=0;_prop1ChangedCounter=0;_prop1Change=null;_prop2ChangedCounter=0;_prop2Change=null;static get Properties(){return{prop1:String,prop2:String}}changed(){this._changedCounter++}prop1Changed(e){this._prop1ChangedCounter++,this._prop1Change=e}prop2Changed(e){this._prop2ChangedCounter++,this._prop2Change=e}}t(TestNode);const o=new TestNode;chai.expect(o._changedCounter).to.equal(0),chai.expect(o._prop1ChangedCounter).to.equal(0),chai.expect(o._prop2ChangedCounter).to.equal(0),chai.expect(o._prop1Change?.property).to.equal(void 0),chai.expect(o._prop1Change?.oldValue).to.equal(void 0),chai.expect(o._prop1Change?.value).to.equal(void 0),chai.expect(o._prop2ChangedCounter).to.equal(0),chai.expect(o._prop2Change?.property).to.equal(void 0),chai.expect(o._prop2Change?.oldValue).to.equal(void 0),chai.expect(o._prop2Change?.value).to.equal(void 0),o.prop1="one",chai.expect(o._changedCounter).to.equal(1),chai.expect(o._prop1ChangedCounter).to.equal(1),chai.expect(o._prop2ChangedCounter).to.equal(0),chai.expect(o._prop1Change?.property).to.equal("prop1"),chai.expect(o._prop1Change?.oldValue).to.equal(""),chai.expect(o._prop1Change?.value).to.equal("one"),o.prop1="two",o.prop2="test",chai.expect(o._changedCounter).to.equal(3),chai.expect(o._prop1ChangedCounter).to.equal(2),chai.expect(o._prop1Change?.property).to.equal("prop1"),chai.expect(o._prop1Change?.oldValue).to.equal("one"),chai.expect(o._prop1Change?.value).to.equal("two"),chai.expect(o._prop2ChangedCounter).to.equal(1),chai.expect(o._prop2Change?.property).to.equal("prop2"),chai.expect(o._prop2Change?.oldValue).to.equal(""),chai.expect(o._prop2Change?.value).to.equal("test"),o.setProperties({prop1:"three",prop2:""}),chai.expect(o._changedCounter).to.equal(4),chai.expect(o._prop1ChangedCounter).to.equal(3),chai.expect(o._prop1Change?.property).to.equal("prop1"),chai.expect(o._prop1Change?.oldValue).to.equal("two"),chai.expect(o._prop1Change?.value).to.equal("three"),chai.expect(o._prop2ChangedCounter).to.equal(2),chai.expect(o._prop2Change?.property).to.equal("prop2"),chai.expect(o._prop2Change?.oldValue).to.equal("test"),chai.expect(o._prop2Change?.value).to.equal(""),o.dispose()})),it("should invoke property mutation handler functions on mutation event",(async()=>{class TestNode extends e{_changedCounter=0;_obj1MutatedCounter=0;_obj2MutatedCounter=0;static get Properties(){return{obj1:{type:Object,observe:!0},obj2:{type:Object,observe:!0}}}changed(){this._changedCounter++}obj1Mutated(){this._obj1MutatedCounter++}obj2Mutated(){this._obj2MutatedCounter++}}t(TestNode);const o=new TestNode;chai.expect(o._changedCounter).to.equal(0),chai.expect(o._obj1MutatedCounter).to.equal(0),o.dispatchEvent("object-mutated",{object:o.obj1},!1,window),await nextTick(),chai.expect(o._changedCounter).to.equal(1),chai.expect(o._obj1MutatedCounter).to.equal(1),chai.expect(o._obj2MutatedCounter).to.equal(0),o.dispatchEvent("object-mutated",{object:o.obj2},!1,window),await nextTick(),o.dispose()})),it("should fire change events when connected",(()=>{class TestNode extends e{static get Properties(){return{prop1:String,_onProp1ChangedCounter:0,_onProp1Change:null,_onCustomEventCounter:0,_onCustomEven:null}}static get Listeners(){return{"prop1-changed":"onProp1Changed","custom-event":"onCustomEvent"}}onProp1Changed(e){this._onProp1ChangedCounter++,this._onProp1Change=e}onCustomEvent(e){this._onCustomEventCounter++,this._onCustomEven=e}}t(TestNode);const o=new TestNode;o.prop1="one",chai.expect(o._onProp1ChangedCounter).to.equal(1),chai.expect(o._onProp1Change.detail.property).to.equal("prop1"),chai.expect(o._onProp1Change.detail.oldValue).to.equal(""),chai.expect(o._onProp1Change.detail.value).to.equal("one"),o.dispatchEvent("custom-event",{value:"hello"}),chai.expect(o._onCustomEventCounter).to.equal(1),chai.expect(o._onCustomEven.path[0]).to.equal(o),chai.expect(o._onCustomEven.detail.value).to.equal("hello")}))})),describe("Binding",(()=>{it("should correctly bind properties",(()=>{class TestNode extends e{static get Properties(){return{prop1:String,prop2:String}}}t(TestNode);const o=new TestNode,a=o.bind("prop1");chai.expect(a).to.be.instanceof(p),chai.expect(a.node).to.be.equal(o),chai.expect(a.property).to.be.equal("prop1");const n=new TestNode({prop1:a}),r=new TestNode({prop1:a});r.prop2=a,chai.expect(a.targets[0]).to.be.equal(n),chai.expect(a.targets[1]).to.be.equal(r),chai.expect(a.targetProperties.get(n)[0]).to.be.equal("prop1"),chai.expect(a.targetProperties.get(n)[1]).to.be.equal(void 0),chai.expect(a.targetProperties.get(r)[0]).to.be.equal("prop1"),chai.expect(a.targetProperties.get(r)[1]).to.be.equal("prop2"),o.prop1="one",chai.expect(n.prop1).to.be.equal("one"),chai.expect(n.prop2).to.be.equal(""),chai.expect(r.prop1).to.be.equal("one"),chai.expect(r.prop2).to.be.equal("one"),n.prop1="two",chai.expect(o.prop1).to.be.equal("two"),chai.expect(r.prop1).to.be.equal("two"),chai.expect(a.targets.length).to.be.equal(2),n.dispose(),chai.expect(a.targets.length).to.be.equal(1),r.dispose(),chai.expect(a.targets.length).to.be.equal(0),o.dispose()})),it("Should add/remove targets and targetProperties when assigned to values",(()=>{class TestNode extends e{static get Properties(){return{prop1:String,prop2:String}}}t(TestNode);const o=new TestNode,a=new p(o,"prop1"),n=new p(o,"prop2"),r=new TestNode;r.prop1=a,r.prop2=n;const c=new TestNode({prop1:a}),i=new TestNode({prop1:a,prop2:a});chai.expect(a.targets[0]).to.be.equal(r),chai.expect(a.targets[1]).to.be.equal(c),chai.expect(a.targets[2]).to.be.equal(i),chai.expect(a.targetProperties.get(r)).to.be.eql(["prop1"]),chai.expect(a.targetProperties.get(c)).to.be.eql(["prop1"]),chai.expect(a.targetProperties.get(i)).to.be.eql(["prop1","prop2"]),r.dispose(),c.unbind("prop1"),i.unbind("prop1"),chai.expect(a.targetProperties.get(r)).to.be.eql([]),chai.expect(a.targetProperties.get(c)).to.be.eql([]),chai.expect(a.targetProperties.get(i)).to.be.eql(["prop2"]),c.prop2=a,c.prop1=a,i.prop1=a,chai.expect(a.targetProperties.get(c)).to.be.eql(["prop2","prop1"]),chai.expect(a.targetProperties.get(i)).to.be.eql(["prop2","prop1"])})),it('Should return existing binding or create a new on "bind()"',(()=>{class TestNode extends e{static get Properties(){return{prop1:String,prop2:String}}}t(TestNode);const o=new TestNode,p=o.bind("prop1");chai.expect(p).to.be.equal(o._bindings.prop1),chai.expect(p).to.be.equal(o.bind("prop1"))})),it("Should dispose bindings correctly",(()=>{class TestNode extends e{static get Properties(){return{prop1:String,prop2:String}}}t(TestNode);const o=new TestNode,p=o.bind("prop1");o.unbind("prop1"),chai.expect(o._bindings.prop1).to.be.equal(void 0),chai.expect(p.prop1).to.be.equal(void 0);const a=new TestNode,n=a.bind("prop1");a.dispose(),chai.expect(a._bindings).to.be.eql({}),chai.expect(n.prop1).to.be.equal(void 0)}))}))}))}}class TestNode extends e{static get Properties(){return{prop0:String,prop2:1/0}}}t(TestNode);class TestElement extends n{static get Properties(){return{prop0:-1,prop1:{value:"default"},_changedCounter:0,_prop1ChangedCounter:0,_prop1AltCounter:0,_prop1ChangeEvent:null,debug:!0}}static get Listeners(){return{"prop0-changed":"onProp1Change","custom-event":"onCustomEvent"}}reset(){this.prop0=-1,this.prop1="default",this._changedCounter=0,this._prop1ChangedCounter=0,this._prop1AltCounter=0,this._prop1Counter=0,this._customHandlerCounter=0,this._prop1AltChangeEvent=null,this._prop1ChangeEvent=null,this._customHandlerChangeEvent=null}constructor(e){super(e),this.template([["test-subelement",{id:"subelement",prop0:this.bind("prop0")}]]),this.subnode=new TestNode({prop2:this.bind("prop0")})}changed(){this._changedCounter++}prop1Changed(e){this._prop1ChangedCounter++,this._prop1ChangedChange=e}onProp1ChangeAlt(e){this._prop1AltCounter++,this._prop1AltChangeEvent=e}onProp1Change(e){this._prop1Counter++,this._prop1ChangeEvent=e}onCustomEvent(e){this._customHandlerCounter++,this._customHandlerChangeEvent=e}}a(TestElement);a(class TestSubelement extends n{static get Properties(){return{prop0:0}}});class Element{_changedCounter;element;constructor(){this._changedCounter=0,this.element=new TestElement({"on-prop0-changed":this.changed.bind(this),"on-prop1-changed":"onProp1ChangeAlt",debug:!0}),document.body.appendChild(this.element)}changed(e){e.target===this.element&&this._changedCounter++}reset(){this.element.reset(),this._changedCounter=0}run(){describe("IoElement",(()=>{describe("Registration",(()=>{it("Should have core API functions defined",(()=>{chai.expect(this.element.id).to.be.equal(""),chai.expect(this.element.tabindex).to.be.equal(""),chai.expect(this.element.contenteditable).to.be.equal(!1),chai.expect(this.element.title).to.be.equal(""),chai.expect(this.element.$).to.be.a("object"),chai.expect(this.element.template).to.be.a("function"),chai.expect(this.element.traverse).to.be.a("function")})),it("Should initialize property definitions correctly",(()=>{chai.expect(this.element.prop0).to.equal(-1),chai.expect(this.element.prop1).to.equal("default")}))})),describe("Construction",(()=>{})),describe("Reactivity",(()=>{it("Should corectly invoke handler functions on change",(()=>{this.reset(),this.element.prop0=1,this.element.prop1="test",chai.expect(this.element._prop1AltCounter).to.equal(1),chai.expect(this.element._changedCounter).to.equal(2),chai.expect(this._changedCounter).to.equal(1)})),it("Should dispatch correct event payloads to handlers",(()=>{this.reset(),this.element.prop0=1,this.element.prop0=0,chai.expect(this.element._prop1ChangeEvent.srcElement).to.equal(this.element),chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(0),this.element.$.subelement.prop0=2,chai.expect(this.element._prop1ChangeEvent.detail.oldValue).to.equal(0),chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(2),this.element.dispatchEvent("custom-event",{data:"io"}),chai.expect(this.element._customHandlerChangeEvent.detail.data).to.equal("io")}))})),describe("Binding",(()=>{it("Should update bound values correctly",(()=>{this.element.prop0=1/0,chai.expect(this.element.$.subelement.prop0).to.equal(1/0),this.element.$.subelement.prop0=0,chai.expect(this.element.prop0).to.equal(0)})),it("Should bind to Node node",(()=>{this.element.prop0=1/0,chai.expect(this.element.subnode.prop2).to.equal(1/0),this.element.subnode.prop2=0,chai.expect(this.element.prop0).to.equal(0)})),it("Should disconnect binding when Node node is disconnected",(()=>{this.element.prop0=1/0,chai.expect(this.element.subnode.prop2).to.equal(1/0),this.element.subnode.prop2=2,chai.expect(this.element.prop0).to.equal(2)}))}))}))}}mocha.setup("bdd");const r=document.createElement("div");r.setAttribute("id","mocha"),document.body.appendChild(r),r.style.display="none";let c=!1;async function nextTick(){return new Promise((e=>{setTimeout((()=>{e()}))}))}class IoTest extends n{static get Style(){return"\n      :host #mocha {\n        margin: 0;\n        position: relative;\n      }\n      :host #mocha-report {\n        margin: 2em 1em;\n      }\n      :host #mocha-stats {\n        position: absolute;\n        top: -2em;\n        right: 2em;\n        font-size: 12px;\n        margin: 0;\n      }\n      :host #mocha-stats em {\n        color: var(--io-color);\n      }\n      :host #mocha-stats li {\n        padding: 0;\n      }\n      :host #mocha-stats .progress {\n        display: none;\n      }\n      :host #mocha-stats .passes {\n        color: #0c0;\n      }\n      :host #mocha-stats .failures {\n        color: #f00;\n        font-weight: bold;\n      }\n      :host h2 {\n        padding-right: 2em;\n      }\n      :host .replay {\n        display: none !important;\n      }\n    "}connectedCallback(){super.connectedCallback(),function runTests(){c||((new Node).run(),(new Element).run(),mocha.checkLeaks(),mocha.run(),c=!0)}(),this.appendChild(r),r.style.display="block"}disconnectedCallback(){super.disconnectedCallback(),document.body.appendChild(r),r.style.display="none"}}a(IoTest);export{IoTest,nextTick};
+import 'mocha';
+import 'chai';
+import { IoElement, RegisterIoElement } from './iogui.js';
+// Core internals
+// import ProtoChain from './core/internals/protoChain.test.js';
+// import Property from './core/internals/property.test.js';
+// import Binding from './core/internals/binding.test.js';
+// import EventDispatcher from './core/internals/eventDispatcher.test.js';
+// import ChangeQueue from './core/internals/changeQueue.test.js';
+// Core classes
+import Node from './core/io-node.test.js';
+import Element from './core/io-element.test.js';
+// Elements
+// import Item from './elements/core/item.test.js';
+// import Content from './elements/core/content.test.js'; // TODO
+// import Gl from './elements/core/gl.test.js';
+// import Button from './elements/core/button.test.js';
+// import Boolean from './elements/core/boolean.test.js';
+// import Boolicon from './elements/core/boolicon.test.js';
+// import Switch from './elements/core/switch.test.js';
+// import Sting from './elements/core/string.test.js';
+// import Number from './elements/core/number.test.js';
+// import Slider from './elements/core/slider.test.js';
+// import SliderRange from './elements/core/slider-range.test.js'; // TODO
+// import NumberSlider from './elements/core/number-slider.test.js';
+// import NumberSliderRange from './elements/core/number-slider-range.test.js'; // TODO
+// import Icon from './elements/core/icon.test.js';
+// import IconSet from './elements/core/iconset.test.js';
+// import Layer from './elements/core/layer.test.js';
+// import Ladder from './elements/core/ladder.test.js';
+// import Theme from './elements/core/theme.test.js';
+// import Collapsable from "./elements/layout/collapsable.test.js";
+// import Property from "./elements/object/properties.test.js";
+// import Object from "./elements/object/object.test.js";
+// import Inspector from "./elements/object/inspector.test.js";
+// import OptionMenu from "./elements/menus/option-menu.test.js";
+mocha.setup('bdd');
+const mochaDiv = document.createElement('div');
+mochaDiv.setAttribute('id', 'mocha');
+document.body.appendChild(mochaDiv);
+mochaDiv.style.display = 'none';
+let testCompleted = false;
+export async function nextTick() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        });
+    });
+}
+function runTests() {
+    if (!testCompleted) {
+        // new ProtoChain().run();
+        // new Property().run();
+        // new Binding().run();
+        // new EventDispatcher().run();
+        // new ChangeQueue().run();
+        new Node().run();
+        new Element().run();
+        // new Item().run();
+        // new Content().run();
+        // new Gl().run();
+        // new Button().run();
+        // new Boolean().run();
+        // new Boolean().run();
+        // new Boolicon().run();
+        // new Switch().run();
+        // new Sting().run();
+        // new Number().run();
+        // new Slider().run();
+        // new SliderRange().run();
+        // new NumberSlider().run();
+        // new NumberSliderRange().run();
+        // new Icon().run();
+        // new IconSet().run();
+        // new Layer().run();
+        // new Ladder().run();
+        // new Theme().run();
+        // TODO
+        // new OptionMenu().run();
+        // new Collapsable().run();
+        // new Properties().run();
+        // new Object().run();
+        // new Inspector().run();
+        mocha.checkLeaks();
+        mocha.run();
+        testCompleted = true;
+    }
+}
+export class IoTest extends IoElement {
+    static get Style() {
+        return /* css */ `
+      :host #mocha {
+        margin: 0;
+        position: relative;
+      }
+      :host #mocha-report {
+        margin: 2em 1em;
+      }
+      :host #mocha-stats {
+        position: absolute;
+        top: -2em;
+        right: 2em;
+        font-size: 12px;
+        margin: 0;
+      }
+      :host #mocha-stats em {
+        color: var(--io-color);
+      }
+      :host #mocha-stats li {
+        padding: 0;
+      }
+      :host #mocha-stats .progress {
+        display: none;
+      }
+      :host #mocha-stats .passes {
+        color: #0c0;
+      }
+      :host #mocha-stats .failures {
+        color: #f00;
+        font-weight: bold;
+      }
+      :host h2 {
+        padding-right: 2em;
+      }
+      :host .replay {
+        display: none !important;
+      }
+    `;
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this.appendChild(mochaDiv);
+        mochaDiv.style.display = 'block';
+        runTests();
+        setTimeout(() => {
+            this.parentElement.scrollTop = this.parentElement.scrollHeight;
+        }, 100);
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        document.body.appendChild(mochaDiv);
+        mochaDiv.style.display = 'none';
+    }
+}
+RegisterIoElement(IoTest);
+//# sourceMappingURL=iogui.test.js.map

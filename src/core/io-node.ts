@@ -93,7 +93,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, 'onObjectMutated', {enumerable: false, value: this.onObjectMutated.bind(this)});
       Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
       Object.defineProperty(this, 'dispatchQueue', {enumerable: false, value: this.dispatchQueue.bind(this)});
-      Object.defineProperty(this, 'dispatchQueueImmediately', {enumerable: false, value: this.dispatchQueueImmediately.bind(this)});
+      Object.defineProperty(this, 'dispatchQueueSync', {enumerable: false, value: this.dispatchQueueSync.bind(this)});
 
       if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
@@ -231,26 +231,26 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     dispatchQueue() {
       if (this.lazy) {
-        this.throttle(this.dispatchQueueImmediately);
+        this.throttle(this.dispatchQueueSync);
       } else {
-        this.dispatchQueueImmediately();
+        this.dispatchQueueSync();
       }
     }
     /**
      * Dispatches the queue immediately.
      */
-    dispatchQueueImmediately() {
+    dispatchQueueSync() {
       this._changeQueue.dispatch();
     }
     /**
      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
      * @param {function} func - Function to throttle.
      * @param {*} arg - argument for throttled function.
-     * @param {boolean} asynchronous - execute with timeout.
+     * @param {boolean} sync - execute immediately without rAF timeout.
      */
-    throttle(func: CallbackFunction, arg: any = undefined, async: boolean = true) {
+    throttle(func: CallbackFunction, arg: any = undefined, sync: boolean = false) {
       // TODO: document and test.
-      throttle(func, arg, async);
+      throttle(func, arg, sync);
     }
     /**
      * Event handler for 'object-mutated' event emitted from the `window`.
@@ -263,7 +263,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         const prop = this._protochain.observedObjectProperties[i];
         const value = this._properties[prop].value;
         if (value === event.detail.object) {
-          this.throttle(this.objectMutated, prop, false);
+          this.throttle(this.objectMutated, prop, true);
           return;
         }
         debug: {
@@ -404,10 +404,10 @@ const throttleQueueSync: CallbackFunction[] = [];
 const throttleQueue: CallbackFunction[] = [];
 const throttleQueueArgs = new WeakMap();
 
-function throttle(func: CallbackFunction, arg: any = undefined, async: boolean = true) {
+function throttle(func: CallbackFunction, arg: any = undefined, sync: boolean = false) {
   if (throttleQueueSync.indexOf(func) === -1) {
     throttleQueueSync.push(func);
-    if (async === false) {
+    if (sync === true) {
       func(arg);
       return;
     }
@@ -416,7 +416,7 @@ function throttle(func: CallbackFunction, arg: any = undefined, async: boolean =
     throttleQueue.push(func);
   }
   // TODO: improve argument handling. Consider edge-cases.
-  if (throttleQueueArgs.has(func) && typeof arg !== 'object') {
+  if (throttleQueueArgs.has(func)) {
     const args = throttleQueueArgs.get(func);
     if (args.indexOf(arg) === -1) args.push(arg);
   } else {
