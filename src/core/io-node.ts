@@ -248,7 +248,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {*} arg - argument for throttled function.
      * @param {boolean} sync - execute immediately without rAF timeout.
      */
-    throttle(func: CallbackFunction, arg: any = undefined, sync: boolean = false) {
+    throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
       // TODO: document and test.
       throttle(func, arg, sync);
     }
@@ -372,7 +372,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
 /**
  * Register function to be called once per class.
- * @param {IoNode} nodeConstructor - Node class to register.
+ * @param {IoNode} target - Node class to register.
  */
 export const RegisterIoNode = function(target: typeof IoNode) {
   const proto = target.prototype;
@@ -391,7 +391,7 @@ export const RegisterIoNode = function(target: typeof IoNode) {
       configurable: true,
     });
   }
-} 
+};
 
 /**
  * IoNodeMixin applied to `Object` class.
@@ -404,7 +404,7 @@ const throttleQueueSync: CallbackFunction[] = [];
 const throttleQueue: CallbackFunction[] = [];
 const throttleQueueArgs = new WeakMap();
 
-function throttle(func: CallbackFunction, arg: any = undefined, sync: boolean = false) {
+function throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
   if (throttleQueueSync.indexOf(func) === -1) {
     throttleQueueSync.push(func);
     if (sync === true) {
@@ -435,5 +435,5 @@ function animate () {
     }
     throttleQueue.splice(throttleQueue.indexOf(throttleQueue[i]), 1);
   }
-};
+}
 requestAnimationFrame(animate);

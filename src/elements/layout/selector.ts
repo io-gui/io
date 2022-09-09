@@ -226,7 +226,7 @@ export class IoSelector extends IoElement {
       } else {
         const _import = element[1].import;
         delete element[1].import;
-        this.importModule(_import).then(() => {
+        void this.importModule(_import).then(() => {
           if (element[1].name === this.selected.split('#')[0]) {
             this.$.content.classList.toggle('io-loading', false);
             this.template([element], this.$.content);
