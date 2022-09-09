@@ -12,6 +12,7 @@ import {IoSlider} from './slider.js';
  * <io-element-demo element="io-slider-range" properties='{"value": [0, 1], "step": 0.1, "min": -1, "max": 2, "exponent": 1}'></io-element-demo>
  **/
 
+@RegisterIoElement
 export class IoSliderRange extends IoSlider {
   static get Properties(): any {
     return {
@@ -182,4 +183,3 @@ export class IoSliderRange extends IoSlider {
   }
 }
 
-RegisterIoElement(IoSliderRange);

@@ -3,7 +3,7 @@ import {IoElement, RegisterIoElement} from '../../iogui.js';
 /*
 
  **/
-
+@RegisterIoElement
 export class IoElementDemo extends IoElement {
   static get Style() {
     return /* css */`
@@ -109,5 +109,3 @@ export class IoElementDemo extends IoElement {
     if (this.$['demo-element'].onResized) this.$['demo-element'].onResized();
   }
 }
-
-RegisterIoElement(IoElementDemo);

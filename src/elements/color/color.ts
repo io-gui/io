@@ -7,7 +7,7 @@ import {convert} from './color-convert.js';
 type Constructor<T> = new (...args: any[]) => T;
 
 export function IoColorMixin<T extends Constructor<any>>(superclass: T) {
-  const classConstructor = class extends (superclass as any) {
+  const classConstructor = class extends superclass {
     static get Properties(): any {
       return {
         value: {

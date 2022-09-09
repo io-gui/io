@@ -25,7 +25,7 @@ import {IoStorageFactory as $} from '../core/storage.js';
  *
  * When tabs are clicked, `selected` value is set.
  **/
-
+@RegisterIoElement
 export class IoSidebar extends IoElement {
   static get Style() {
     return /* css */`
@@ -139,8 +139,6 @@ export class IoSidebar extends IoElement {
     }
   }
 }
-
-RegisterIoElement(IoSidebar);
 
 function genUUID(options: any, i: number) {
   const option = options[i];

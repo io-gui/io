@@ -1,5 +1,6 @@
 import {Change, IoNode, RegisterIoNode, IoElement, RegisterIoElement} from '../iogui.js';
 
+@RegisterIoNode
 class TestNode extends IoNode {
   static get Properties(): any {
     return {
@@ -8,8 +9,8 @@ class TestNode extends IoNode {
     };
   }
 }
-RegisterIoNode(TestNode);
 
+@RegisterIoElement
 export class TestElement extends IoElement {
   static get Properties(): any {
     return {
@@ -69,8 +70,8 @@ export class TestElement extends IoElement {
     this._customHandlerChangeEvent = event;
   }
 }
-RegisterIoElement(TestElement);
 
+@RegisterIoElement
 export class TestSubelement extends IoElement {
   static get Properties(): any {
     return {
@@ -78,7 +79,6 @@ export class TestSubelement extends IoElement {
     };
   }
 }
-RegisterIoElement(TestSubelement);
 
 export default class {
   _changedCounter: number;

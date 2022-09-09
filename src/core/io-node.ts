@@ -60,7 +60,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       debug: {
         const constructor = this.__proto__.constructor;
         if (constructor._registeredAs !== constructor.name) {
-          console.error(`${constructor.name} not registered! Call "RegisterIoNode()" before using ${constructor.name} class!`);
+          console.error(`${constructor.name} not registered! Call "RegisterIoNode([ClassName])" of @RegisterIoNode decorator before using ${constructor.name} class!`);
         }
       }
 
@@ -374,11 +374,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
  * Register function to be called once per class.
  * @param {IoNode} nodeConstructor - Node class to register.
  */
-export const RegisterIoNode = function (nodeConstructor: typeof IoNode) {
-  const proto = nodeConstructor.prototype;
+export const RegisterIoNode = function(target: typeof IoNode) {
+  const proto = target.prototype;
   Object.defineProperty(proto, '_isIoNode', {value: true});
-  Object.defineProperty(nodeConstructor, '_registeredAs', {value: nodeConstructor.name});
-  Object.defineProperty(proto, '_protochain', {value: new ProtoChain(nodeConstructor)});
+  Object.defineProperty(target, '_registeredAs', {value: target.name});
+  Object.defineProperty(proto, '_protochain', {value: new ProtoChain(target)});
 
   for (const p in proto._protochain.properties) {
     Object.defineProperty(proto, p, {
@@ -391,13 +391,13 @@ export const RegisterIoNode = function (nodeConstructor: typeof IoNode) {
       configurable: true,
     });
   }
-};
+} 
 
 /**
  * IoNodeMixin applied to `Object` class.
  */
+@RegisterIoNode
 export class IoNode extends IoNodeMixin(Object) {}
-RegisterIoNode(IoNode);
 
 // TODO: document and test
 const throttleQueueSync: CallbackFunction[] = [];

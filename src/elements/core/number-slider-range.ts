@@ -8,7 +8,7 @@ import './slider.js';
  *
  * <io-element-demo element="io-number-slider-range" properties='{"value": [0, 2], "step": 0.05, "min": -1, "max": 2}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoNumberSliderRange extends IoElement {
   static get Style() {
     return /* css */`
@@ -85,5 +85,3 @@ export class IoNumberSliderRange extends IoElement {
     ]);
   }
 }
-
-RegisterIoElement(IoNumberSliderRange);

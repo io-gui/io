@@ -21,7 +21,7 @@ import {IoMenuOptions} from './menu-options.js';
  **/
 
 // TODO: fix and improve keyboard navigation in all cases.
-
+@RegisterIoElement
 export class IoMenuItem extends IoItem {
   static get Style() {
     return /* css */`
@@ -382,8 +382,6 @@ export class IoMenuItem extends IoItem {
     }
   }
 }
-
-RegisterIoElement(IoMenuItem);
 
 export function getElementDescendants(element: IoMenuItem): any {
   const descendants = [];

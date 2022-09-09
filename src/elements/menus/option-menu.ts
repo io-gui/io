@@ -29,7 +29,7 @@ import './menu-item.js';
  *
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
-
+@RegisterIoElement
 export class IoOptionMenu extends IoElement {
   static get Style() {
     return /* css */`
@@ -124,5 +124,3 @@ export class IoOptionMenu extends IoElement {
     ]);
   }
 }
-
-RegisterIoElement(IoOptionMenu);

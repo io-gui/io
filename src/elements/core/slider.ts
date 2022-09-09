@@ -11,7 +11,7 @@ import {IoGl} from './gl.js';
  *
  * <io-element-demo element="io-slider" properties='{"value": 0, "step": 0.01, "min": -0.5, "max": 0.5, "exponent": 1}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoSlider extends IoGl {
   static get Style() {
     return /* css */`
@@ -303,4 +303,3 @@ export class IoSlider extends IoGl {
   }
 }
 
-RegisterIoElement(IoSlider);

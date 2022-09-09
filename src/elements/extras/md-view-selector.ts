@@ -5,7 +5,7 @@ import {IoSelectorSidebar} from '../layout/selector-sidebar.js';
 /*
 
  **/
-
+@RegisterIoElement
 export class IoMdViewSelector extends IoSelectorSidebar  {
   static get Properties(): any {
     return {
@@ -19,5 +19,3 @@ export class IoMdViewSelector extends IoSelectorSidebar  {
     ]);
   }
 }
-
-RegisterIoElement(IoMdViewSelector);

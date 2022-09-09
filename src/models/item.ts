@@ -6,6 +6,7 @@ import {Path} from './path.js';
 // TODO: document and test!
 // TODO: consider menu model mutations.
 // TODO: test for robustness and document.
+@RegisterIoNode
 export class Item extends IoNode {
   static get Properties() {
     return {
@@ -88,5 +89,3 @@ export class Item extends IoNode {
     this.dispatchEvent('changed');
   }
 }
-
-RegisterIoNode(Item);

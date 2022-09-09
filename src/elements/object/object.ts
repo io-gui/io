@@ -8,7 +8,7 @@ import './properties.js';
  *
  * <io-element-demo element="io-object" properties='{"expanded": true, "label": "Custom Object Label", "labeled": true, "value": {"hello": "world"}}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoObject extends IoElement {
   static get Style() {
     return /* css */`
@@ -64,5 +64,3 @@ export class IoObject extends IoElement {
     this.setAttribute('aria-expanded', String(this.expanded));
   }
 }
-
-RegisterIoElement(IoObject);

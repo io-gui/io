@@ -1,5 +1,6 @@
 import { Binding, IoNode, RegisterIoNode, PropertiesDeclaration } from '../../iogui.js';
 
+@RegisterIoNode
 class TestIoNode extends IoNode {
   static get Properties(): PropertiesDeclaration {
     return {
@@ -8,7 +9,6 @@ class TestIoNode extends IoNode {
     };
   }
 }
-RegisterIoNode(TestIoNode);
 
 export default class {
   run() {

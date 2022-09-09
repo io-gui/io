@@ -12,7 +12,7 @@ import {IoColorMixin} from './color.js';
  * config='{"value": ["io-properties"]}
  * '></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoColorSwatch extends IoColorMixin(IoGl) {
   static get Style() {
     return /* css */`
@@ -56,5 +56,3 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
     `;
   }
 }
-
-RegisterIoElement(IoColorSwatch as any);

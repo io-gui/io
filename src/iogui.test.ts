@@ -101,6 +101,7 @@ function runTests() {
   }
 }
 
+@RegisterIoElement
 export class IoTest extends IoElement {
   static get Style() {
     return /* css */`
@@ -157,5 +158,3 @@ export class IoTest extends IoElement {
     mochaDiv.style.display = 'none';
   }
 }
-
-RegisterIoElement(IoTest);

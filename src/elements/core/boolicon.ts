@@ -9,7 +9,7 @@ import {IoIconsetSingleton} from './iconset.js';
  *
  * <io-element-demo element="io-boolicon" properties='{"value": true, "true": "icons:check", "false": "icons:close", "stroke": false}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoBoolicon extends IoBoolean {
   static get Style() {
     return /* css */`
@@ -57,5 +57,3 @@ export class IoBoolicon extends IoBoolean {
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
   }
 }
-
-RegisterIoElement(IoBoolicon);

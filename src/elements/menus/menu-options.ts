@@ -23,7 +23,7 @@ const rects = new WeakMap();
  *   "type:object": ["io-object"]
  * }'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoMenuOptions extends IoElement {
   static get Style() {
     return /* css */`
@@ -339,5 +339,3 @@ export class IoMenuOptions extends IoElement {
     this.throttle(this._onSetOverflow);
   }
 }
-
-RegisterIoElement(IoMenuOptions);

@@ -8,7 +8,7 @@ import {IoItem} from './item.js';
  *
  * <io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoButton extends IoItem {
   static get Style() {
     return /* css */`
@@ -67,5 +67,3 @@ export class IoButton extends IoItem {
     if (typeof this.action === 'function') this.action(this.value);
   }
 }
-
-RegisterIoElement(IoButton);

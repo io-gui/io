@@ -16,6 +16,7 @@ import {IoElement, RegisterIoElement} from '../../iogui.js';
  * <io-element-demo element="io-item" properties='{"label": "Item", "value": "null", "selected": false, "disabled": false}'></io-element-demo>
  **/
 
+@RegisterIoElement
 export class IoItem extends IoElement {
   static get Style() {
     return /* css */`
@@ -150,5 +151,3 @@ export class IoItem extends IoElement {
     this.textNode = label;
   }
 }
-
-RegisterIoElement(IoItem);

@@ -37,6 +37,12 @@ import {Config} from './config.js';
  * }'></io-element-demo>
  **/
 
+const RegisterIoProperties = function (element: typeof IoProperties) {
+  RegisterIoElement(element);
+  Object.defineProperty(element.prototype, '_config', {writable: true, value: new Config(element.prototype._protochain.constructors)});
+};
+
+@RegisterIoProperties
 export class IoProperties extends IoElement {
   static get Style() {
     return /* css */`
@@ -190,14 +196,7 @@ export class IoProperties extends IoElement {
   static RegisterConfig: (config: any) => void;
 }
 
-const RegisterIoProperties = function (element: typeof IoElement) {
-  RegisterIoElement(element);
-  Object.defineProperty(element.prototype, '_config', {writable: true, value: new Config(element.prototype._protochain.constructors)});
-};
-
 IoProperties.RegisterConfig = function(config) {
   this.prototype._config.registerConfig(config);
 };
-
-RegisterIoProperties(IoProperties);
 

@@ -29,6 +29,7 @@ export default class {
           node.dispose();
         });
         it('Should register property definitions correctly', () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): any {
               return {
@@ -41,7 +42,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
 
           const node = new TestNode();
 
@@ -55,6 +55,7 @@ export default class {
           node.dispose();
         });
         it('Should aggregate property definitions from protochain', () => {
+          @RegisterIoNode
           class Object1 extends IoNode {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -65,8 +66,8 @@ export default class {
               };
             }
           }
-          RegisterIoNode(Object1);
 
+          @RegisterIoNode
           class Object2 extends Object1 {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -82,7 +83,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(Object2);
 
           const node1 = new Object1();
           const node2 = new Object2();
@@ -146,6 +146,7 @@ export default class {
           chai.expect(props.prop1.observe).to.be.equal(true);
         });
         it('Should correctly register properties with bindigs', () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): any {
               return {
@@ -153,12 +154,12 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
 
           const binding1 = new Binding(new TestNode({label: 'binding1'}), 'label');
           const binding2 = new Binding(new TestNode({label: 'binding2'}), 'label');
           const binding3 = new Binding(new TestNode({label: 'binding3'}), 'label');
 
+          @RegisterIoNode
           class Object1 extends IoNode {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -166,8 +167,8 @@ export default class {
               };
             }
           }
-          RegisterIoNode(Object1);
 
+          @RegisterIoNode
           class Object2 extends Object1 {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -178,7 +179,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(Object2);
 
           const node1 = new Object1();
           const node2 = new Object2();
@@ -204,6 +204,7 @@ export default class {
       describe('Properties', () => {
         it('Should correctly get/set properties', () => {
 
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -213,7 +214,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
 
           const node = new TestNode();
           const properties = node._properties;
@@ -226,6 +226,7 @@ export default class {
         });
         it('Should correctly get/set bound properties', () => {
 
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -233,11 +234,11 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
 
           const binding1 = new Binding(new TestNode({label: 'binding1'}), 'label');
           const binding2 = new Binding(new TestNode({label: 'binding2'}), 'label');
 
+          @RegisterIoNode
           class TestNode2 extends IoNode {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -245,7 +246,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode2);
 
           const node = new TestNode2();
           const properties = node._properties;
@@ -264,6 +264,7 @@ export default class {
           chai.expect((binding2 as any).targets[0]).to.be.equal(node);
         });
         it('Should execute attribute reflection on IoElement', () => {
+          @RegisterIoElement
           class TestElementReflection extends IoElement {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -274,7 +275,6 @@ export default class {
               };
             }
           }
-          RegisterIoElement(TestElementReflection);
 
           const element = new TestElementReflection();
           chai.expect(element.getAttribute('label')).to.be.equal('label1');
@@ -284,6 +284,7 @@ export default class {
           chai.expect(element.getAttribute('label')).to.be.equal('label3');
         });
         it('Should dipatch queue on object value initialization and value set', () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -291,7 +292,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
 
           const node = new TestNode();
 
@@ -324,6 +324,7 @@ export default class {
           node.setProperty('prop', {}, true);
         });
         it('Should connect/disconnect IoNode-property-values on construction and value set', () => {
+          @RegisterIoNode
           class TestNodeValue extends IoNode {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -335,8 +336,8 @@ export default class {
               this.propChangeCounter++;
             }
           }
-          RegisterIoNode(TestNodeValue);
 
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): PropertiesDeclaration {
               return {
@@ -344,7 +345,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
 
           const node = new TestNode();
           const subIoNode1 = node.prop;
@@ -368,6 +368,7 @@ export default class {
       });
       describe('Reactivity', () => {
         it('Should corectly invoke handler functions on change', () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             _changedCounter = 0;
             _prop1ChangedCounter = 0;
@@ -392,7 +393,6 @@ export default class {
               this._prop2Change = change;
             }
           }
-          RegisterIoNode(TestNode);
 
           const node = new TestNode();
 
@@ -444,6 +444,7 @@ export default class {
           node.dispose();
         });
         it('should invoke property mutation handler functions on mutation event', async () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             _changedCounter = 0;
             _obj1MutatedCounter = 0;
@@ -470,7 +471,6 @@ export default class {
               this._obj2MutatedCounter++;
             }
           }
-          RegisterIoNode(TestNode);
 
           const node = new TestNode();
 
@@ -492,6 +492,7 @@ export default class {
           node.dispose();
         });
         it('should fire change events when connected', () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): any {
               return {
@@ -517,7 +518,6 @@ export default class {
               this._onCustomEven = event;
             }
           }
-          RegisterIoNode(TestNode);
 
           const node = new TestNode();
 
@@ -535,6 +535,7 @@ export default class {
       });
       describe('Binding', () => {
         it('should correctly bind properties', () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): any {
               return {
@@ -543,7 +544,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
 
           const node = new TestNode();
 
@@ -584,6 +584,7 @@ export default class {
           node.dispose();
         });
         it('Should add/remove targets and targetProperties when assigned to values', () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): any {
               return {
@@ -592,7 +593,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
 
           const srcNode = new TestNode();
           const binding0 = new Binding(srcNode, 'prop1') as any;
@@ -630,6 +630,7 @@ export default class {
           chai.expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2', 'prop1']);
         });
         it('Should return existing binding or create a new on "bind()"', () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): any {
               return {
@@ -638,13 +639,13 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
           const node = new TestNode();
           const binding0 = node.bind('prop1');
           chai.expect(binding0).to.be.equal(node._bindings['prop1']);
           chai.expect(binding0).to.be.equal(node.bind('prop1'));
         });
         it('Should dispose bindings correctly', () => {
+          @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): any {
               return {
@@ -653,7 +654,6 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestNode);
           const node1 = new TestNode();
           const binding0 = node1.bind('prop1') as any;
           node1.unbind('prop1');

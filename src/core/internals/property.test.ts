@@ -4,6 +4,7 @@ class Object1 {
   prop = true;
 }
 
+@RegisterIoNode
 class TestIoNode extends IoNode {
   static get Properties(): PropertiesDeclaration {
     return {
@@ -11,7 +12,6 @@ class TestIoNode extends IoNode {
     };
   }
 }
-RegisterIoNode(TestIoNode);
 
 export default class {
   run() {

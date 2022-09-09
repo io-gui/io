@@ -1,5 +1,6 @@
 import {IoNode, RegisterIoNode} from '../core/io-node.js';
 
+@RegisterIoNode
 export class Path extends IoNode {
   static get Properties() {
     return {
@@ -65,5 +66,3 @@ export class Path extends IoNode {
     }
   }
 }
-
-RegisterIoNode(Path);

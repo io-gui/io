@@ -13,6 +13,7 @@ import './breadcrumbs.js';
  * <io-element-demo element="io-inspector" properties='{"value": {"hello": "world"}, "config": {"type:number": ["io-slider", {"step": 0.1}], "type:string": ["io-option-menu", {"options": ["hello", "goodbye"]}]}, "crumbs": []}' config='{"value": ["io-object"], "type:object": ["io-properties"]}'></io-element-demo>
  **/
 
+@RegisterIoElement
 export class IoInspector extends IoElement {
   static get Style() {
     return /* css */`
@@ -256,8 +257,6 @@ IoInspector.RegisterGroups = function(groups) {
 IoInspector.RegisterWidgets = function(widgets) {
   this.prototype._widgets.registerWidgets(widgets);
 };
-
-RegisterIoElement(IoInspector);
 
 // TODO: unhack
 IoInspector.Register();

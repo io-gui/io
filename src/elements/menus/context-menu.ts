@@ -21,7 +21,7 @@ import {getElementDescendants, IoMenuItem} from './menu-item.js';
  *   "position": ["io-option-menu", {"options": ["pointer", "top", "right", "bottom", "left"]}], "type:object": ["io-object"]
  * }'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoContextMenu extends IoElement {
   static get Properties(): any {
     return {
@@ -149,5 +149,3 @@ export class IoContextMenu extends IoElement {
     }
   }
 }
-
-RegisterIoElement(IoContextMenu);

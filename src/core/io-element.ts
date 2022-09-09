@@ -1,367 +1,6 @@
 import {EventDispatcher} from './internals/eventDispatcher.js';
 import {IoNode, IoNodeMixin, RegisterIoNode} from './io-node.js';
 
-/**
- * Core `IoElement` class.
- */
-class IoElement extends IoNodeMixin(HTMLElement) {
-  static get Style(): any {
-    // TODO: consider removing from core io-element class.
-    return /* css */':host[hidden] { display: none; } :host[disabled] { pointer-events: none; opacity: 0.5; }';
-  }
-  static get Properties(): any {
-    return {
-      $: {
-        type: Object,
-        notify: false,
-      },
-      tabindex: {
-        type: String,
-        reflect: 1,
-      },
-      contenteditable: {
-        type: Boolean,
-        reflect: 1,
-      },
-      class: {
-        type: String,
-        reflect: 1,
-      },
-      role: {
-        type: String,
-        reflect: 1,
-      },
-      label: {
-        type: String,
-        reflect: 1,
-      },
-      name: {
-        type: String,
-        reflect: 1,
-      },
-      title: {
-        type: String,
-        reflect: 1,
-      },
-      id: {
-        type: String,
-        reflect: -1,
-      },
-      hidden: {
-        type: Boolean,
-        reflect: 1,
-      },
-      disabled: {
-        type: Boolean,
-        reflect: 1,
-      },
-    };
-  }
-  static get Listeners(): any {
-    return {
-      'focus-to': '_onFocusTo',
-    };
-  }
-  static get observedAttributes() {
-    const observed = [];
-    for (const prop in this.prototype._protochain.properties) {
-      const r  = this.prototype._protochain.properties[prop].reflect;
-      if (r === -1 || r === 2) {
-        observed.push(prop);
-      }
-    }
-    return observed;
-  }
-  attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
-    const type = this._properties[prop].type;
-    if (type === Boolean) {
-      if (newValue === null) this[prop] = false;
-      else if (newValue === '') this[prop] = true;
-    } else if (type === Number || type === String) {
-      this[prop] = new type(newValue);
-    } else if (type === Object || type === Array) {
-      this[prop] = JSON.parse(newValue);
-    } else if (typeof type === 'function') {
-      this[prop] = new type(JSON.parse(newValue));
-    } else {
-      this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
-    }
-  }
-  /**
-   * Add resize listener if `onResized()` is defined in subclass.
-   */
-  connectedCallback() {
-    // super.connectedCallback();
-    if (typeof this.onResized === 'function') {
-      ro.observe(this as unknown as HTMLElement);
-    }
-  }
-  /**
-   * Removes resize listener if `onResized()` is defined in subclass.
-   */
-  disconnectedCallback() {
-    if (typeof this.onResized === 'function') {
-      ro.unobserve(this as unknown as HTMLElement);
-    }
-  }
-  /**
-    * Renders DOM from virtual DOM arrays.
-    * @param {Array} vDOM - Array of vDOM children.
-    * @param {HTMLElement} [host] - Optional template target.
-    */
-  template(vDOM: Array<any>, host?: HTMLElement) {
-    const vChildren = buildTree()(['root', vDOM]).children;
-    host = (host || this) as any;
-    if (host === (this as any)) this.setProperty('$', {});
-    this.traverse(vChildren, host as HTMLElement);
-  }
-  /**
-   * Recurively traverses vDOM.
-   * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
-   * @param {HTMLElement} [host] - Optional template target.
-    */
-  traverse(vChildren: Array<any>, host: HTMLElement) {
-    const children = host.children;
-    // focusBacktrack = new WeakMap();
-    // remove trailing elements
-    while (children.length > vChildren.length) {
-      const child = children[children.length - 1];
-      host.removeChild(child);
-      // TODO: enable and test!
-      // const nodes = Array.from(child.querySelectorAll('*'));
-      // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
-      // if (child.dispose) child.dispose();
-    }
-    // create new elements after existing
-    if (children.length < vChildren.length) {
-      const frag = document.createDocumentFragment();
-      for (let i = children.length; i < vChildren.length; i++) {
-        const element = constructElement(vChildren[i]);
-        frag.appendChild(element);
-      }
-      host.appendChild(frag);
-    }
-    // replace existing elements
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i] as HTMLElement | IoElement;
-      if (child.localName !== vChildren[i].name) {
-        const oldElement = child;
-        const element = constructElement(vChildren[i]);
-        host.insertBefore(element, oldElement as unknown as HTMLElement);
-        host.removeChild(oldElement as unknown as HTMLElement);
-        // TODO: enable and test!
-        // const nodes = Array.from(oldElement.querySelectorAll('*'));
-        // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
-        // if (oldElement.dispose) oldElement.dispose();
-      // update existing elements
-      } else {
-        child.removeAttribute('className');
-        if ((child as IoElement)._isIoElement) {
-          // Set IoElement element properties
-          // TODO: Test property and listeners reset. Consider optimizing.
-          (child as IoElement).applyProperties(vChildren[i].props);
-        } else {
-          // Set native HTML element properties
-          applyNativeElementProps(child as HTMLElement, vChildren[i].props);
-        }
-      }
-    }
-    for (let i = 0; i < vChildren.length; i++) {
-      // Update this.$ map of ids.
-      const child = children[i] as HTMLElement | IoElement;
-      if (vChildren[i].props.id) this.$[vChildren[i].props.id] = child;
-      if (vChildren[i].children !== undefined) {
-        if (typeof vChildren[i].children === 'string') {
-          // Set textNode value.
-          this.flattenTextNode(child as HTMLElement);
-          (child as any)._textNode.nodeValue = String(vChildren[i].children);
-        } else if (typeof vChildren[i].children === 'object') {
-          // Traverse deeper.
-          this.traverse(vChildren[i].children, child as HTMLElement);
-        }
-      }
-    }
-  }
-  /**
-   * Helper function to flatten textContent into a single TextNode.
-   * Update textContent via TextNode is better for layout performance.
-   * @param {HTMLElement} element - Element to flatten.
-   */
-  flattenTextNode(element: HTMLElement | IoElement) {
-    if (element.childNodes.length === 0) {
-      element.appendChild(document.createTextNode(''));
-    }
-    if (element.childNodes[0].nodeName !== '#text') {
-      element.innerHTML = '';
-      element.appendChild(document.createTextNode(''));
-    }
-    (element as any)._textNode = element.childNodes[0];
-    if (element.childNodes.length > 1) {
-      const textContent = element.textContent;
-      for (let i = element.childNodes.length; i--;) {
-        if (i !== 0) element.removeChild(element.childNodes[i]);
-      }
-      (element as any)._textNode.nodeValue = textContent;
-    }
-  }
-  get textNode() {
-    this.flattenTextNode(this);
-    return this._textNode.nodeValue;
-  }
-  set textNode(value) {
-    this.flattenTextNode(this);
-    this._textNode.nodeValue = String(value);
-  }
-  applyProperties(props: any) {
-    super.applyProperties(props);
-    if (props['style']) {
-      for (const s in props['style']) {
-        this.style[s] = props['style'][s];
-      }
-    }
-  }
-  /**
-   * Alias for HTMLElement setAttribute where falsey values remove the attribute.
-   * @param {string} attr - Attribute name.
-   * @param {*} value - Attribute value.
-   */
-  setAttribute(attr: string, value: boolean | number | string) {
-    if (value === true) {
-      HTMLElement.prototype.setAttribute.call(this, attr, '');
-    } else if (value === false || value === '') {
-      this.removeAttribute(attr);
-    } else if (typeof value === 'string' || typeof value === 'number') {
-      if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
-    }
-  }
-  /**
-   * Sets aria attributes.
-   */
-  applyAria() {
-    if (this.label) {
-      this.setAttribute('aria-label', this.label);
-    } else {
-      this.removeAttribute('aria-label');
-    }
-    if (this.disabled) {
-      this.setAttribute('aria-disabled', true);
-    } else {
-      this.removeAttribute('aria-disabled');
-    }
-  }
-  _onFocusTo(event: CustomEvent) {
-    const src = event.composedPath()[0];
-    const dir = event.detail.dir;
-    const rect = event.detail.rect;
-    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
-
-    if (src !== this as any) {
-      let closest = src;
-      let closestX = Infinity;
-      let closestY = Infinity;
-
-      // TODO: improve backtracking
-      // const backtrack = focusBacktrack.get(src);
-      // if (backtrack && backtrack[dir]) {
-      //   backtrack[dir].focus();
-      //   setBacktrack(backtrack[dir], dir, src);
-      //   return;
-      // }
-
-      const siblings = this.querySelectorAll('[tabindex="0"]:not([disabled])');
-
-      for (let i = siblings.length; i--;) {
-
-        if (!siblings[i].offsetParent) {
-          continue;
-        }
-        // TODO: unhack
-        const sStyle = window.getComputedStyle(siblings[i]);
-        if (sStyle.visibility !== 'visible') {
-          continue;
-        }
-
-        const sRect = siblings[i].getBoundingClientRect();
-        sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
-
-        // TODO: improve automatic direction routing.
-        switch (dir) {
-          case 'right': {
-            if (sRect.left >= (rect.right - 1)) {
-              const distX = Math.abs(sRect.left - rect.right);
-              const distY = Math.abs(sRect.center.y - rect.center.y);
-              if (distX < closestX || distY < closestY / 3) {
-                closest = siblings[i];
-                closestX = distX;
-                closestY = distY;
-              } else if (distX === closestX && distY < closestY) {
-                closest = siblings[i];
-                closestY = distY;
-              }
-            }
-            break;
-          }
-          case 'left': {
-            if (sRect.right <= (rect.left + 1)) {
-              const distX = Math.abs(sRect.right - rect.left);
-              const distY = Math.abs(sRect.center.y - rect.center.y);
-              if (distX < closestX || distY < closestY / 3) {
-                closest = siblings[i];
-                closestX = distX;
-                closestY = distY;
-              } else if (distX === closestX && distY < closestY) {
-                closest = siblings[i];
-                closestY = distY;
-              }
-            }
-            break;
-          }
-          case 'down': {
-            if (sRect.top >= (rect.bottom - 1)) {
-              const distX = Math.abs(sRect.center.x - rect.center.x);
-              const distY = Math.abs(sRect.top - rect.bottom);
-              if (distY < closestY || distX < closestX / 3) {
-                closest = siblings[i];
-                closestX = distX;
-                closestY = distY;
-              } else if (distY === closestY && distX < closestX) {
-                closest = siblings[i];
-                closestX = distX;
-              }
-            }
-            break;
-          }
-          case 'up':{
-            if (sRect.bottom <= (rect.top + 1)) {
-              const distX = Math.abs(sRect.center.x - rect.center.x);
-              const distY = Math.abs(sRect.bottom - rect.top);
-              if (distY < closestY || distX < closestX / 3) {
-                closest = siblings[i];
-                closestX = distX;
-                closestY = distY;
-              } else if (distY === closestY && distX < closestX) {
-                closest = siblings[i];
-                closestX = distX;
-              }
-            }
-            break;
-          }
-        }
-      }
-
-      if (closest !== src) {
-        (closest as any).focus();
-        // setBacktrack(closest, dir, src);
-        event.stopPropagation();
-      }
-    }
-  }
-  focusTo(dir: string) {
-    const rect = this.getBoundingClientRect();
-    this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
-  }
-}
-
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
 // function setBacktrack(element, dir, target) {
@@ -523,8 +162,6 @@ const applyNativeElementProps = function(element: HTMLElement, props: any) {
   (element as any)._eventDispatcher.applyPropListeners(props, element);
 };
 
-RegisterIoElement(IoElement);
-
 /** @license
  * MIT License
  *
@@ -564,5 +201,367 @@ export const buildTree = () => (node: VirtualDOMElement): any => isObject(node[1
   ['props']: node[1],
   ['children']: isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2]
 } : buildTree()([node[0], {}, node[1] as VirtualDOMElement[] | string]);
+
+/**
+ * Core `IoElement` class.
+ */
+@RegisterIoElement
+class IoElement extends IoNodeMixin(HTMLElement) {
+  static get Style(): any {
+    // TODO: consider removing from core io-element class.
+    return /* css */':host[hidden] { display: none; } :host[disabled] { pointer-events: none; opacity: 0.5; }';
+  }
+  static get Properties(): any {
+    return {
+      $: {
+        type: Object,
+        notify: false,
+      },
+      tabindex: {
+        type: String,
+        reflect: 1,
+      },
+      contenteditable: {
+        type: Boolean,
+        reflect: 1,
+      },
+      class: {
+        type: String,
+        reflect: 1,
+      },
+      role: {
+        type: String,
+        reflect: 1,
+      },
+      label: {
+        type: String,
+        reflect: 1,
+      },
+      name: {
+        type: String,
+        reflect: 1,
+      },
+      title: {
+        type: String,
+        reflect: 1,
+      },
+      id: {
+        type: String,
+        reflect: -1,
+      },
+      hidden: {
+        type: Boolean,
+        reflect: 1,
+      },
+      disabled: {
+        type: Boolean,
+        reflect: 1,
+      },
+    };
+  }
+  static get Listeners(): any {
+    return {
+      'focus-to': '_onFocusTo',
+    };
+  }
+  static get observedAttributes() {
+    const observed = [];
+    for (const prop in this.prototype._protochain.properties) {
+      const r  = this.prototype._protochain.properties[prop].reflect;
+      if (r === -1 || r === 2) {
+        observed.push(prop);
+      }
+    }
+    return observed;
+  }
+  attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
+    const type = this._properties[prop].type;
+    if (type === Boolean) {
+      if (newValue === null) this[prop] = false;
+      else if (newValue === '') this[prop] = true;
+    } else if (type === Number || type === String) {
+      this[prop] = new type(newValue);
+    } else if (type === Object || type === Array) {
+      this[prop] = JSON.parse(newValue);
+    } else if (typeof type === 'function') {
+      this[prop] = new type(JSON.parse(newValue));
+    } else {
+      this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
+    }
+  }
+  /**
+  * Add resize listener if `onResized()` is defined in subclass.
+  */
+  connectedCallback() {
+    // super.connectedCallback();
+    if (typeof this.onResized === 'function') {
+      ro.observe(this as unknown as HTMLElement);
+    }
+  }
+  /**
+  * Removes resize listener if `onResized()` is defined in subclass.
+  */
+  disconnectedCallback() {
+    if (typeof this.onResized === 'function') {
+      ro.unobserve(this as unknown as HTMLElement);
+    }
+  }
+  /**
+   * Renders DOM from virtual DOM arrays.
+   * @param {Array} vDOM - Array of vDOM children.
+   * @param {HTMLElement} [host] - Optional template target.
+   */
+  template(vDOM: Array<any>, host?: HTMLElement) {
+    const vChildren = buildTree()(['root', vDOM]).children;
+    host = (host || this) as any;
+    if (host === (this as any)) this.setProperty('$', {});
+    this.traverse(vChildren, host as HTMLElement);
+  }
+  /**
+  * Recurively traverses vDOM.
+  * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
+  * @param {HTMLElement} [host] - Optional template target.
+    */
+  traverse(vChildren: Array<any>, host: HTMLElement) {
+    const children = host.children;
+    // focusBacktrack = new WeakMap();
+    // remove trailing elements
+    while (children.length > vChildren.length) {
+      const child = children[children.length - 1];
+      host.removeChild(child);
+      // TODO: enable and test!
+      // const nodes = Array.from(child.querySelectorAll('*'));
+      // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
+      // if (child.dispose) child.dispose();
+    }
+    // create new elements after existing
+    if (children.length < vChildren.length) {
+      const frag = document.createDocumentFragment();
+      for (let i = children.length; i < vChildren.length; i++) {
+        const element = constructElement(vChildren[i]);
+        frag.appendChild(element);
+      }
+      host.appendChild(frag);
+    }
+    // replace existing elements
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i] as HTMLElement | IoElement;
+      if (child.localName !== vChildren[i].name) {
+        const oldElement = child;
+        const element = constructElement(vChildren[i]);
+        host.insertBefore(element, oldElement as unknown as HTMLElement);
+        host.removeChild(oldElement as unknown as HTMLElement);
+        // TODO: enable and test!
+        // const nodes = Array.from(oldElement.querySelectorAll('*'));
+        // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
+        // if (oldElement.dispose) oldElement.dispose();
+      // update existing elements
+      } else {
+        child.removeAttribute('className');
+        if ((child as IoElement)._isIoElement) {
+          // Set IoElement element properties
+          // TODO: Test property and listeners reset. Consider optimizing.
+          (child as IoElement).applyProperties(vChildren[i].props);
+        } else {
+          // Set native HTML element properties
+          applyNativeElementProps(child as HTMLElement, vChildren[i].props);
+        }
+      }
+    }
+    for (let i = 0; i < vChildren.length; i++) {
+      // Update this.$ map of ids.
+      const child = children[i] as HTMLElement | IoElement;
+      if (vChildren[i].props.id) this.$[vChildren[i].props.id] = child;
+      if (vChildren[i].children !== undefined) {
+        if (typeof vChildren[i].children === 'string') {
+          // Set textNode value.
+          this.flattenTextNode(child as HTMLElement);
+          (child as any)._textNode.nodeValue = String(vChildren[i].children);
+        } else if (typeof vChildren[i].children === 'object') {
+          // Traverse deeper.
+          this.traverse(vChildren[i].children, child as HTMLElement);
+        }
+      }
+    }
+  }
+  /**
+  * Helper function to flatten textContent into a single TextNode.
+  * Update textContent via TextNode is better for layout performance.
+  * @param {HTMLElement} element - Element to flatten.
+  */
+  flattenTextNode(element: HTMLElement | IoElement) {
+    if (element.childNodes.length === 0) {
+      element.appendChild(document.createTextNode(''));
+    }
+    if (element.childNodes[0].nodeName !== '#text') {
+      element.innerHTML = '';
+      element.appendChild(document.createTextNode(''));
+    }
+    (element as any)._textNode = element.childNodes[0];
+    if (element.childNodes.length > 1) {
+      const textContent = element.textContent;
+      for (let i = element.childNodes.length; i--;) {
+        if (i !== 0) element.removeChild(element.childNodes[i]);
+      }
+      (element as any)._textNode.nodeValue = textContent;
+    }
+  }
+  get textNode() {
+    this.flattenTextNode(this);
+    return this._textNode.nodeValue;
+  }
+  set textNode(value) {
+    this.flattenTextNode(this);
+    this._textNode.nodeValue = String(value);
+  }
+  applyProperties(props: any) {
+    super.applyProperties(props);
+    if (props['style']) {
+      for (const s in props['style']) {
+        this.style[s] = props['style'][s];
+      }
+    }
+  }
+  /**
+  * Alias for HTMLElement setAttribute where falsey values remove the attribute.
+  * @param {string} attr - Attribute name.
+  * @param {*} value - Attribute value.
+  */
+  setAttribute(attr: string, value: boolean | number | string) {
+    if (value === true) {
+      HTMLElement.prototype.setAttribute.call(this, attr, '');
+    } else if (value === false || value === '') {
+      this.removeAttribute(attr);
+    } else if (typeof value === 'string' || typeof value === 'number') {
+      if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
+    }
+  }
+  /**
+  * Sets aria attributes.
+  */
+  applyAria() {
+    if (this.label) {
+      this.setAttribute('aria-label', this.label);
+    } else {
+      this.removeAttribute('aria-label');
+    }
+    if (this.disabled) {
+      this.setAttribute('aria-disabled', true);
+    } else {
+      this.removeAttribute('aria-disabled');
+    }
+  }
+  _onFocusTo(event: CustomEvent) {
+    const src = event.composedPath()[0];
+    const dir = event.detail.dir;
+    const rect = event.detail.rect;
+    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
+
+    if (src !== this as any) {
+      let closest = src;
+      let closestX = Infinity;
+      let closestY = Infinity;
+
+      // TODO: improve backtracking
+      // const backtrack = focusBacktrack.get(src);
+      // if (backtrack && backtrack[dir]) {
+      //   backtrack[dir].focus();
+      //   setBacktrack(backtrack[dir], dir, src);
+      //   return;
+      // }
+
+      const siblings = this.querySelectorAll('[tabindex="0"]:not([disabled])');
+
+      for (let i = siblings.length; i--;) {
+
+        if (!siblings[i].offsetParent) {
+          continue;
+        }
+        // TODO: unhack
+        const sStyle = window.getComputedStyle(siblings[i]);
+        if (sStyle.visibility !== 'visible') {
+          continue;
+        }
+
+        const sRect = siblings[i].getBoundingClientRect();
+        sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
+
+        // TODO: improve automatic direction routing.
+        switch (dir) {
+          case 'right': {
+            if (sRect.left >= (rect.right - 1)) {
+              const distX = Math.abs(sRect.left - rect.right);
+              const distY = Math.abs(sRect.center.y - rect.center.y);
+              if (distX < closestX || distY < closestY / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distX === closestX && distY < closestY) {
+                closest = siblings[i];
+                closestY = distY;
+              }
+            }
+            break;
+          }
+          case 'left': {
+            if (sRect.right <= (rect.left + 1)) {
+              const distX = Math.abs(sRect.right - rect.left);
+              const distY = Math.abs(sRect.center.y - rect.center.y);
+              if (distX < closestX || distY < closestY / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distX === closestX && distY < closestY) {
+                closest = siblings[i];
+                closestY = distY;
+              }
+            }
+            break;
+          }
+          case 'down': {
+            if (sRect.top >= (rect.bottom - 1)) {
+              const distX = Math.abs(sRect.center.x - rect.center.x);
+              const distY = Math.abs(sRect.top - rect.bottom);
+              if (distY < closestY || distX < closestX / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distY === closestY && distX < closestX) {
+                closest = siblings[i];
+                closestX = distX;
+              }
+            }
+            break;
+          }
+          case 'up':{
+            if (sRect.bottom <= (rect.top + 1)) {
+              const distX = Math.abs(sRect.center.x - rect.center.x);
+              const distY = Math.abs(sRect.bottom - rect.top);
+              if (distY < closestY || distX < closestX / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distY === closestY && distX < closestX) {
+                closest = siblings[i];
+                closestX = distX;
+              }
+            }
+            break;
+          }
+        }
+      }
+
+      if (closest !== src) {
+        (closest as any).focus();
+        // setBacktrack(closest, dir, src);
+        event.stopPropagation();
+      }
+    }
+  }
+  focusTo(dir: string) {
+    const rect = this.getBoundingClientRect();
+    this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
+  }
+}
 
 export {IoElement, RegisterIoElement};

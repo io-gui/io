@@ -5,7 +5,7 @@ import purify from 'dompurify';
 /*
 
  **/
-
+@RegisterIoElement
 export class IoMdView extends IoElement {
   static get Style() {
     return /* css */`
@@ -173,5 +173,3 @@ export class IoMdView extends IoElement {
       });
   }
 }
-
-RegisterIoElement(IoMdView);

@@ -9,7 +9,7 @@ import {IoColorSlider} from './color-slider.js';
  *   config='{"value": ["io-properties"]}
  * '></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoColorSliderYellow extends IoColorSlider {
   static get Frag() {
     return /* glsl */`
@@ -45,5 +45,3 @@ export class IoColorSliderYellow extends IoColorSlider {
     this.setValueFromCmyk();
   }
 }
-
-RegisterIoElement(IoColorSliderYellow as any);

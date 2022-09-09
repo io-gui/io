@@ -9,8 +9,8 @@ import {IoElement, RegisterIoElement} from '../../iogui.js';
  *
  * <io-element-demo element="io-vector" properties='{"value": [0, 0.5, 1], "linkable": true}'></io-element-demo>
  **/
-
 // TODO: preserve linked scaling through zero.
+@RegisterIoElement
 export class IoVector extends IoElement {
   static get Style() {
     return /* css */`
@@ -98,5 +98,3 @@ export class IoVector extends IoElement {
     return this.linkable ? ['io-boolicon', {value: this.bind('linked'), true: 'icons:link', false: 'icons:unlink'}] : null;
   }
 }
-
-RegisterIoElement(IoVector);

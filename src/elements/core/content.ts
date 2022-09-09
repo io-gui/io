@@ -5,7 +5,7 @@ import {IoElement, RegisterIoElement} from '../../iogui.js';
 /*
 
  **/
-
+@RegisterIoElement
 export class IoContent extends IoElement {
   static get Style() {
     return /* css */`
@@ -39,5 +39,3 @@ export class IoContent extends IoElement {
     }
   }
 }
-
-RegisterIoElement(IoContent);

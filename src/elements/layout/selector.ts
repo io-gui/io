@@ -29,6 +29,7 @@ import {Options} from '../../models/options.js';
 
 const IMPORTED_PATHS: Record<string, any> = {};
 
+@RegisterIoElement
 export class IoSelector extends IoElement {
   static get Style() {
     return /* css */`
@@ -237,5 +238,3 @@ export class IoSelector extends IoElement {
 
   }
 }
-
-RegisterIoElement(IoSelector);

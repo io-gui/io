@@ -52,7 +52,7 @@ type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
  *
  * See `IoSliderKnob` and `IoHsvaSv` for more advanced examples.
  **/
-
+@RegisterIoElement
 export class IoGl extends IoElement {
   static get Style() {
     return /* css */`
@@ -401,5 +401,3 @@ export class IoGl extends IoElement {
     }
   }
 }
-
-RegisterIoElement(IoGl);

@@ -8,7 +8,7 @@ import {IoBoolean} from './boolean.js';
  *
  * <io-element-demo element="io-switch" properties='{"value": true}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoSwitch extends IoBoolean {
   static get Style() {
     return /* css */`
@@ -79,5 +79,3 @@ export class IoSwitch extends IoBoolean {
     this.setAttribute('aria-label', this.label);
   }
 }
-
-RegisterIoElement(IoSwitch);
