@@ -3,8 +3,8 @@ import {IoNode, RegisterIoNode} from '../../iogui.js';
 // TODO: test different value types
 
 class EmulatedLocalStorage {
-  private store: Record<string, unknown> = {};
-  private warned = false;
+  store: Record<string, unknown> = {};
+  warned = false;
   get permited() {
     try {
       return !!self.localStorage.getItem('io-storage-user-permitted');

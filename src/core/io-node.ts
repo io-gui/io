@@ -70,9 +70,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, '_changeQueue', {enumerable: false, value: new ChangeQueue(this)});
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false, value: new EventDispatcher(this)});
 
-      Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
-      Object.defineProperty(this, 'dispatchQueueSync', {enumerable: false, value: this.dispatchQueueSync.bind(this)});
-
       if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
       }
@@ -248,9 +245,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     /**
      * Dispatches the queue immediately.
      */
-    dispatchQueueSync() {
+    dispatchQueueSync = () => {
       this._changeQueue.dispatch();
-    }
+    };
     /**
      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
      * @param {function} func - Function to throttle.
@@ -267,7 +264,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {Object} event - Event payload.
      * @param {Object} event.detail.object - Mutated object.
      */
-    onObjectMutated(event: CustomEvent) {
+    onObjectMutated = (event: CustomEvent) => {
       for (let i = 0; i < this._protochain.observedObjectProperties.length; i++) {
         const prop = this._protochain.observedObjectProperties[i];
         const value = this._properties[prop].value;
@@ -282,16 +279,16 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
         }
       }
-    }
+    };
     /**
      * This function is called after `onObjectMutated()` determines that one of
      * the object properties has mutated.
      * @param {string} prop - Mutated object property name.
      */
-    objectMutated(prop: string) {
+    objectMutated = (prop: string) => {
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
       this.changed();
-    }
+    };
     /**
      * Returns a binding to a specified property`.
      * @param {string} prop - Property to bind to.

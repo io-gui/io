@@ -6,9 +6,9 @@ import {IoNode} from '../io-node.js';
  */
 export class ChangeQueue {
   declare private readonly node: IoNode;
-  private readonly changes: Array<Change> = [];
-  private hasChanged = false;
-  private dispatching = false;
+  readonly changes: Array<Change> = [];
+  hasChanged = false;
+  dispatching = false;
   /**
    * Creates change queue for the specified owner instance of `IoNode`.
    * @param {IoNode} node - Owner node.
