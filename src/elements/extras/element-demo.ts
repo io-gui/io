@@ -74,8 +74,8 @@ export class IoElementDemo extends IoElement {
       }
     };
   }
-  objectMutated(event: CustomEvent) {
-    super.objectMutated(event);
+  objectMutated(prop: string) {
+    super.objectMutated(prop);
     // for (let i = this._protochain.observedObjectProperties.length; i--;) {
     //   const prop = this._protochain.observedObjectProperties[i];
     //   const value = this._properties[prop].value;

@@ -32,7 +32,8 @@
     "checkJs": true,
     // Only necessary because @types/uglify-js can't find types for source-map
     // "skipLibCheck": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true
   },
   "typedocOptions": {
     "hideBreadcrumbs": true,

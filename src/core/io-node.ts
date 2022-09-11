@@ -12,7 +12,6 @@ export interface IoNodeConstructor<T> {
   Properties?: PropertiesDeclaration;
   Listeners?: ListenersDeclaration;
   Style?: string;
-  __proto__?: IoNodeConstructor<T>
 }
 
 export type CallbackFunction = (arg?: any) => void;
@@ -35,7 +34,7 @@ export type AnyEventListener = EventListener |
  * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
  */
 export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
-  const IoNodeMixinConstructor: IoNodeConstructor<any> = class extends (superclass as any) {
+  const IoNodeMixinConstructor = class extends (superclass as any) {
     static get Properties(): PropertiesDeclaration {
       return {
         lazy: {
@@ -45,11 +44,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
       };
     }
-    readonly _properties: Record<string, Property> = {};
-    readonly _bindings: Record<string, Binding> = {};
-
-    readonly _changeQueue: ChangeQueue;
-    readonly _eventDispatcher: EventDispatcher;
+    declare readonly _protochain: ProtoChain;
+    declare readonly _properties: Record<string, Property>;
+    declare readonly _bindings: Record<string, Binding>;
+    declare readonly _changeQueue: ChangeQueue;
+    declare readonly _eventDispatcher: EventDispatcher;
      /**
      * Creates a class instance and initializes the internals.
      * @param {Object} properties - Initial property values.
@@ -58,19 +57,25 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       super(...args);
 
       debug: {
-        const constructor = this.__proto__.constructor;
-        if (constructor._registeredAs !== constructor.name) {
+        const constructor = Object.getPrototypeOf(this).constructor;
+        if (this._protochain.constructors[0] !== constructor) {
           console.error(`${constructor.name} not registered! Call "RegisterIoNode([ClassName])" of @RegisterIoNode decorator before using ${constructor.name} class!`);
         }
       }
 
       this._protochain.autobindFunctions(this);
 
-      this._changeQueue = new ChangeQueue(this);
-      Object.defineProperty(this, '_changeQueue', {enumerable: false});
+      Object.defineProperty(this, '_properties', {enumerable: false, value: {}});
+      Object.defineProperty(this, '_bindings', {enumerable: false, value: {}});
+      Object.defineProperty(this, '_changeQueue', {enumerable: false, value: new ChangeQueue(this)});
+      Object.defineProperty(this, '_eventDispatcher', {enumerable: false, value: new EventDispatcher(this)});
 
-      this._eventDispatcher = new EventDispatcher(this);
-      Object.defineProperty(this, '_eventDispatcher', {enumerable: false});
+      Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
+      Object.defineProperty(this, 'dispatchQueueSync', {enumerable: false, value: this.dispatchQueueSync.bind(this)});
+
+      if (this._protochain.observedObjectProperties.length) {
+        window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
+      }
 
       for (const name in this._protochain.properties) {
         const property = new Property(this._protochain.properties[name]);
@@ -87,16 +92,17 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
         if (property.binding) property.binding.addTarget(this, name);
       }
-      Object.defineProperty(this, '_properties', {enumerable: false});
-      Object.defineProperty(this, '_bindings', {enumerable: false});
 
-      Object.defineProperty(this, 'onObjectMutated', {enumerable: false, value: this.onObjectMutated.bind(this)});
-      Object.defineProperty(this, 'objectMutated', {enumerable: false, value: this.objectMutated.bind(this)});
-      Object.defineProperty(this, 'dispatchQueue', {enumerable: false, value: this.dispatchQueue.bind(this)});
-      Object.defineProperty(this, 'dispatchQueueSync', {enumerable: false, value: this.dispatchQueueSync.bind(this)});
-
-      if (this._protochain.observedObjectProperties.length) {
-        window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
+      for (const p in this._protochain.properties) {
+        Object.defineProperty(this, p, {
+          get: function() {
+            return (this as IoNode)._properties[p].value;
+          },
+          set: function(value) {
+            (this as IoNode).setProperty(p, value);
+          },
+          configurable: true,
+        });
       }
 
       this.applyProperties(properties);
@@ -366,7 +372,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       this._eventDispatcher.dispose();
     }
   };
-  Object.defineProperty(IoNodeMixinConstructor, 'name', {value: 'IoNodeMixinConstructor'});
   return IoNodeMixinConstructor;
 }
 
@@ -375,22 +380,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
  * @param {IoNode} target - Node class to register.
  */
 export const RegisterIoNode = function(target: typeof IoNode) {
-  const proto = target.prototype;
-  Object.defineProperty(proto, '_isIoNode', {value: true});
-  Object.defineProperty(target, '_registeredAs', {value: target.name});
-  Object.defineProperty(proto, '_protochain', {value: new ProtoChain(target)});
-
-  for (const p in proto._protochain.properties) {
-    Object.defineProperty(proto, p, {
-      get: function() {
-        return (this as IoNode)._properties[p].value;
-      },
-      set: function(value) {
-        (this as IoNode).setProperty(p, value);
-      },
-      configurable: true,
-    });
-  }
+  Object.defineProperty(target.prototype, '_protochain', {value: new ProtoChain(target)});
 };
 
 /**

@@ -65,7 +65,7 @@ export class ProtoChain {
           this.style = ioNodeClass.Style + '\n' + this.style;
         }
         // Continue prototype traversal
-        proto = proto.__proto__;
+        proto = Object.getPrototypeOf(proto);
         ioNodeClass = proto.constructor;
     }
 

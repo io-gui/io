@@ -180,7 +180,7 @@ export class IoGl extends IoElement {
       const constructor = this._protochain.constructors[i];
       const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
       if (glUtilsProp && glUtilsProp.get) {
-        frag += constructor.GlUtils;
+        frag += (constructor as typeof IoGl).GlUtils;
       }
     }
 
