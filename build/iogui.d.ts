@@ -193,6 +193,7 @@ export declare type FocusEventListener = (event: FocusEvent) => void;
 export declare type TouchEventListener = (event: TouchEvent) => void;
 export declare type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener;
 export declare const IoProperty: (propertyDefinition: PropertyDefinitionStrong) => (target: IoNode, propertyName: string) => void;
+export declare const IoBind: (target: any, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.

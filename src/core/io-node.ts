@@ -40,6 +40,13 @@ export const IoProperty = function(propertyDefinition: PropertyDefinitionStrong)
   };
 };
 
+// TODO: find purpose
+export const IoBind = function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  target[propertyKey] = target[propertyKey].bind(target);
+  console.log(descriptor);
+  return descriptor;
+};
+
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
