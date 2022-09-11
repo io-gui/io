@@ -281,8 +281,6 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   * Add resize listener if `onResized()` is defined in subclass.
   */
   connectedCallback() {
-    console.log(this.__proto__.constructor.name);
-    // super.connectedCallback();
     if (typeof this.onResized === 'function') {
       ro.observe(this as unknown as HTMLElement);
     }

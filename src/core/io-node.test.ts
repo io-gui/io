@@ -284,8 +284,8 @@ export default class {
           chai.expect(element.getAttribute('label')).to.be.equal('label1');
           element.label = 'label2';
           chai.expect(element.getAttribute('label')).to.be.equal('label2');
-          // element.setProperty('label', 'label3');
-          // chai.expect(element.getAttribute('label')).to.be.equal('label3');
+          element.setProperty('label', 'label3');
+          chai.expect(element.getAttribute('label')).to.be.equal('label3');
         });
         it('Should dipatch queue on object value initialization and value set', () => {
           @RegisterIoNode
