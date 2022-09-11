@@ -256,6 +256,9 @@ export default class {
           chai.expect(properties['prop1'].binding).to.be.equal(binding1);
           chai.expect((binding1 as any).targets[0]).to.be.equal(node);
 
+          binding1.removeTarget(node, 'prop1');
+          node._properties['prop1'].binding = undefined;
+
           node.setProperty('prop1', binding2);
           chai.expect(properties['prop1'].value).to.be.equal('binding2');
           chai.expect(node.prop1).to.be.equal('binding2');
