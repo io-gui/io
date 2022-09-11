@@ -280,7 +280,6 @@ export default class {
           }
 
           const element = new TestElementReflection();
-          console.log(Object.getOwnPropertyDescriptor(element, 'label'));
           chai.expect(element.getAttribute('label')).to.be.equal('label1');
           element.label = 'label2';
           chai.expect(element.getAttribute('label')).to.be.equal('label2');
