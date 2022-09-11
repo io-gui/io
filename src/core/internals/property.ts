@@ -75,17 +75,17 @@ export const assignProtoProperty = (def: ProtoProperty, srcDef: ProtoProperty) =
  */
 export class Property {
   // Property value.
-  public value?: any = undefined;
+  value?: any = undefined;
   // Constructor of the property value.
-  public type?: Constructor = undefined;
+  type?: Constructor;
   // Binding object.
-  public binding?: Binding = undefined;
+  binding?: Binding;
   // Reflects to HTML attribute [-1, 0, 1 or 2]
-  public reflect: ReflectType = 0;
+  reflect: ReflectType = 0;
   // Enables change handlers and events.
-  public notify = true;
+  notify = true;
   // Observe object mutations for this property.
-  public observe = false;
+  observe = false;
   /**
    * Creates the property configuration object and copies values from `ProtoProperty`.
    * @param {ProtoProperty} propDef ProtoProperty object

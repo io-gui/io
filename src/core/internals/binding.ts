@@ -7,10 +7,10 @@ import { IoNode } from '../io-node.js';
  * using `[property]-changed` events.
  */
 export class Binding {
-  public readonly node: IoNode;
-  public readonly property: string = '';
-  public readonly targets: Array<EventTarget> = [];
-  public readonly targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
+  readonly node: IoNode;
+  readonly property: string = '';
+  readonly targets: Array<EventTarget> = [];
+  readonly targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
   /**
    * Creates a binding object for specified `node` and `property`.
    * @param {IoNode} node - Property owner node

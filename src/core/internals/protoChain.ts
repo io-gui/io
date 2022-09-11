@@ -10,27 +10,27 @@ export class ProtoChain {
   /*
    * Array of inherited class constructors ending with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
    */
-  public readonly constructors: Array<IoNodeConstructor<any>> = [];
+  readonly constructors: Array<IoNodeConstructor<any>> = [];
   /*
    * Array of function names that start with "on" or "_" for auto-binding.
    */
-  public readonly functions: Array<string> = [];
+  readonly functions: Array<string> = [];
   /*
    * Aggregated property definitions declared in `static get Properties()` return ojects.
    */
-  public readonly properties: { [property: string]: ProtoProperty } = {};
+  readonly properties: { [property: string]: ProtoProperty } = {};
   /*
    * Aggregated listener definitions declared in `static get Listeners()` return ojects.
    */
-  public readonly listeners: { [property: string]: ListenerDefinition[] } = {};
+  readonly listeners: { [property: string]: ListenerDefinition[] } = {};
   /*
    * Aggregated CSS style definitions declared in `static get Style()` return strings.
    */
-  public readonly style: string = '';
+  readonly style: string = '';
   /*
    * Array of property names of observed object properties.
    */
-  public readonly observedObjectProperties: string[] = [];
+  readonly observedObjectProperties: string[] = [];
   /**
    * Creates an instance of `ProtoChain`.
    * @param {IoNodeConstructor<any>} ioNodeClass - Owner `IoNode`-derived class.
