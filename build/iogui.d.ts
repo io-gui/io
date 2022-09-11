@@ -103,6 +103,339 @@ export declare class Property {
 	 */
 	constructor(propDef: ProtoProperty);
 }
+/**
+ * Internal utility class that contains usefull information about class inheritance.
+ * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
+ */
+export declare class ProtoChain {
+	readonly constructors: Array<IoNodeConstructor<any>>;
+	readonly functions: Array<string>;
+	readonly properties: {
+		[property: string]: ProtoProperty;
+	};
+	readonly listeners: {
+		[property: string]: ListenerDefinition[];
+	};
+	readonly style: string;
+	readonly observedObjectProperties: string[];
+	/**
+	 * Creates an instance of `ProtoChain`.
+	 * @param {IoNodeConstructor<any>} ioNodeClass - Owner `IoNode`-derived class.
+	 */
+	constructor(ioNodeClass: IoNodeConstructor<any>);
+	/**
+	 * Binds all auto-binding functions from the `.functions` array to specified `IoNode`-derived instance.
+	 * @param {IoNode} node - `IoNode` instance to bind functions to.
+	 */
+	autobindFunctions(node: IoNode): void;
+}
+/**
+ * Property change FIFO queue.
+ * Responsible for dispatching change events and invoking change handler functions with property change payloads.
+ */
+export declare class ChangeQueue {
+	private readonly node;
+	private readonly changes;
+	private hasChanged;
+	private dispatching;
+	/**
+	 * Creates change queue for the specified owner instance of `IoNode`.
+	 * @param {IoNode} node - Owner node.
+	 */
+	constructor(node: IoNode);
+	/**
+	 * Adds property change payload to the queue by specifying property name, previous and the new value.
+	 * If the change is already in the queue, the new value is updated in-queue.
+	 * @param {string} property - Property name.
+	 * @param {any} value Property value.
+	 * @param {any} oldValue Old property value.
+	 */
+	queue(property: string, value: any, oldValue: any): void;
+	/**
+	 * Dispatches and clears the queue.
+	 * For each property change in the queue:
+	 *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
+	 *  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
+	 * If owner node is not connected dispatch is aborted.
+	 * After all changes are dispatched it invokes `.changed()` functions od the owner node instance.
+	 */
+	dispatch(): void;
+	/**
+	 * Clears the queue and removes the node reference.
+	 * Use this when node queue is no longer needed.
+	 */
+	dispose(): void;
+}
+export interface Change {
+	property: string;
+	value: any;
+	oldValue: any;
+}
+export interface ChangeEvent extends CustomEvent {
+	readonly target: EventTarget;
+	readonly detail: Change;
+	readonly path: EventTarget[];
+}
+export declare type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
+export declare type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
+export interface IoNodeConstructor<T> {
+	new (...args: any[]): T;
+	Properties?: PropertiesDeclaration;
+	Listeners?: ListenersDeclaration;
+	Style?: string;
+}
+export declare type CallbackFunction = (arg?: any) => void;
+export declare type KeyboardEventListener = (event: KeyboardEvent) => void;
+export declare type PointerEventListener = (event: PointerEvent) => void;
+export declare type CustomEventListener = (event: CustomEvent) => void | EventListener;
+export declare type FocusEventListener = (event: FocusEvent) => void;
+export declare type TouchEventListener = (event: TouchEvent) => void;
+export declare type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener;
+/**
+ * Core mixin for `Node` classes.
+ * @param {function} superclass - Class to extend.
+ * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
+ */
+export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T): {
+	new (properties?: Record<string, any>, ...args: any[]): {
+		[x: string]: any;
+		readonly _protochain: ProtoChain;
+		readonly _properties: Record<string, Property>;
+		readonly _bindings: Record<string, Binding>;
+		readonly _changeQueue: ChangeQueue;
+		readonly _eventDispatcher: EventDispatcher;
+		/**
+		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+		 * @param {string} name Property name to set value of.
+		 * @param {any} value Peroperty value.
+		 * @param {boolean} [skipDispatch] flag to skip event dispatch.
+		 */
+		setProperty(name: string, value: any, skipDispatch?: boolean): void;
+		/**
+		 * Sets multiple properties in batch.
+		 * [property]-changed` events will be broadcast in the end.
+		 * @param {Object} props - Map of property names and values.
+		 */
+		applyProperties(props: any): void;
+		/**
+		 * Sets multiple properties in batch.
+		 * [property]-changed` events will be broadcast in the end.
+		 * @param {Object} props - Map of property names and values.
+		 */
+		setProperties(props: any): void;
+		/**
+		 * Sets value property and emits `value-set` event.
+		 * Use this when value property is set by user action (e.g. mouse click).
+		 * @param {*} value - Property value.
+		 */
+		setValue(value: any): void;
+		/**
+		 * default change handler.
+		 * Invoked when one of the properties change.
+		 */
+		changed(): void;
+		/**
+		 * Adds property change to the queue.
+		 * @param {string} prop - Property name.
+		 * @param {*} value - Property value.
+		 * @param {*} oldValue - Old property value.
+		 */
+		queue(prop: string, value: any, oldValue: any): void;
+		/**
+		 * Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+		 */
+		dispatchQueue(): void;
+		/**
+		 * Dispatches the queue immediately.
+		 */
+		dispatchQueueSync(): void;
+		/**
+		 * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+		 * @param {function} func - Function to throttle.
+		 * @param {*} arg - argument for throttled function.
+		 * @param {boolean} sync - execute immediately without rAF timeout.
+		 */
+		throttle(func: CallbackFunction, arg?: any, sync?: boolean): void;
+		/**
+		 * Event handler for 'object-mutated' event emitted from the `window`.
+		 * Node should be listening for this event if it has an observed object property
+		 * @param {Object} event - Event payload.
+		 * @param {Object} event.detail.object - Mutated object.
+		 */
+		onObjectMutated(event: CustomEvent): void;
+		/**
+		 * This function is called after `onObjectMutated()` determines that one of
+		 * the object properties has mutated.
+		 * @param {string} prop - Mutated object property name.
+		 */
+		objectMutated(prop: string): void;
+		/**
+		 * Returns a binding to a specified property`.
+		 * @param {string} prop - Property to bind to.
+		 * @return {Binding} Binding object.
+		 */
+		bind(prop: string): Binding;
+		/**
+		 * Unbinds a binding to a specified property`.
+		 * @param {string} prop - Property to unbind.
+		 */
+		unbind(prop: string): void;
+		/**
+		 * Wrapper for addEventListener.
+		 * @param {string} type - listener name.
+		 * @param {function} listener - listener handler.
+		 * @param {Object} options - event listener options.
+		 */
+		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
+		/**
+		 * Wrapper for removeEventListener.
+		 * @param {string} type - event name to listen to.
+		 * @param {function} listener - listener handler.
+		 * @param {Object} options - event listener options.
+		 */
+		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
+		/**
+		 * Wrapper for dispatchEvent.
+		 * @param {string} type - event name to dispatch.
+		 * @param {Object} detail - event detail.
+		 * @param {boolean} bubbles - event bubbles.
+		 * @param {HTMLElement|Node} src source node/element to dispatch event from.
+		 */
+		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+		/**
+		 * Disposes all internals.
+		 * Use this when instance is no longer needed.
+		 */
+		dispose(): void;
+	};
+	[x: string]: any;
+	readonly Properties: PropertiesDeclaration;
+};
+/**
+ * Register function to be called once per class.
+ * @param {IoNode} target - Node class to register.
+ */
+export declare const RegisterIoNode: (target: typeof IoNode) => void;
+declare const IoNode_base: {
+	new (properties?: Record<string, any>, ...args: any[]): {
+		[x: string]: any;
+		readonly _protochain: ProtoChain;
+		readonly _properties: Record<string, Property>;
+		readonly _bindings: Record<string, Binding>;
+		readonly _changeQueue: ChangeQueue;
+		readonly _eventDispatcher: EventDispatcher;
+		/**
+		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+		 * @param {string} name Property name to set value of.
+		 * @param {any} value Peroperty value.
+		 * @param {boolean} [skipDispatch] flag to skip event dispatch.
+		 */
+		setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
+		/**
+		 * Sets multiple properties in batch.
+		 * [property]-changed` events will be broadcast in the end.
+		 * @param {Object} props - Map of property names and values.
+		 */
+		applyProperties(props: any): void;
+		/**
+		 * Sets multiple properties in batch.
+		 * [property]-changed` events will be broadcast in the end.
+		 * @param {Object} props - Map of property names and values.
+		 */
+		setProperties(props: any): void;
+		/**
+		 * Sets value property and emits `value-set` event.
+		 * Use this when value property is set by user action (e.g. mouse click).
+		 * @param {*} value - Property value.
+		 */
+		setValue(value: any): void;
+		/**
+		 * default change handler.
+		 * Invoked when one of the properties change.
+		 */
+		changed(): void;
+		/**
+		 * Adds property change to the queue.
+		 * @param {string} prop - Property name.
+		 * @param {*} value - Property value.
+		 * @param {*} oldValue - Old property value.
+		 */
+		queue(prop: string, value: any, oldValue: any): void;
+		/**
+		 * Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+		 */
+		dispatchQueue(): void;
+		/**
+		 * Dispatches the queue immediately.
+		 */
+		dispatchQueueSync(): void;
+		/**
+		 * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+		 * @param {function} func - Function to throttle.
+		 * @param {*} arg - argument for throttled function.
+		 * @param {boolean} sync - execute immediately without rAF timeout.
+		 */
+		throttle(func: CallbackFunction, arg?: any, sync?: boolean): void;
+		/**
+		 * Event handler for 'object-mutated' event emitted from the `window`.
+		 * Node should be listening for this event if it has an observed object property
+		 * @param {Object} event - Event payload.
+		 * @param {Object} event.detail.object - Mutated object.
+		 */
+		onObjectMutated(event: CustomEvent<any>): void;
+		/**
+		 * This function is called after `onObjectMutated()` determines that one of
+		 * the object properties has mutated.
+		 * @param {string} prop - Mutated object property name.
+		 */
+		objectMutated(prop: string): void;
+		/**
+		 * Returns a binding to a specified property`.
+		 * @param {string} prop - Property to bind to.
+		 * @return {Binding} Binding object.
+		 */
+		bind(prop: string): Binding;
+		/**
+		 * Unbinds a binding to a specified property`.
+		 * @param {string} prop - Property to unbind.
+		 */
+		unbind(prop: string): void;
+		/**
+		 * Wrapper for addEventListener.
+		 * @param {string} type - listener name.
+		 * @param {function} listener - listener handler.
+		 * @param {Object} options - event listener options.
+		 */
+		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions | undefined): void;
+		/**
+		 * Wrapper for removeEventListener.
+		 * @param {string} type - event name to listen to.
+		 * @param {function} listener - listener handler.
+		 * @param {Object} options - event listener options.
+		 */
+		removeEventListener(type: string, listener?: AnyEventListener | undefined, options?: AddEventListenerOptions | undefined): void;
+		/**
+		 * Wrapper for dispatchEvent.
+		 * @param {string} type - event name to dispatch.
+		 * @param {Object} detail - event detail.
+		 * @param {boolean} bubbles - event bubbles.
+		 * @param {HTMLElement|Node} src source node/element to dispatch event from.
+		 */
+		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | Document | HTMLElement | Window | undefined): void;
+		/**
+		 * Disposes all internals.
+		 * Use this when instance is no longer needed.
+		 */
+		dispose(): void;
+	};
+	[x: string]: any;
+	readonly Properties: PropertiesDeclaration;
+};
+/**
+ * IoNodeMixin applied to `Object` class.
+ */
+export declare class IoNode extends IoNode_base {
+}
 export declare type ListenerDefinitionWeak = string | CustomEventListener | [
 	string | CustomEventListener,
 	AddEventListenerOptions?
@@ -197,39 +530,6 @@ export declare class EventDispatcher {
 	 */
 	dispose(): void;
 }
-export declare type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
-export declare type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
-export interface IoNodeConstructor<T> {
-	new (...args: any[]): T;
-	Properties?: PropertiesDeclaration;
-	Listeners?: ListenersDeclaration;
-	Style?: string;
-	__proto__?: IoNodeConstructor<T>;
-}
-export declare type CallbackFunction = (arg?: any) => void;
-export declare type KeyboardEventListener = (event: KeyboardEvent) => void;
-export declare type PointerEventListener = (event: PointerEvent) => void;
-export declare type CustomEventListener = (event: CustomEvent) => void | EventListener;
-export declare type FocusEventListener = (event: FocusEvent) => void;
-export declare type TouchEventListener = (event: TouchEvent) => void;
-export declare type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener;
-/**
- * Core mixin for `Node` classes.
- * @param {function} superclass - Class to extend.
- * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
- */
-export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T): IoNodeConstructor<any>;
-/**
- * Register function to be called once per class.
- * @param {IoNode} target - Node class to register.
- */
-export declare const RegisterIoNode: (target: typeof IoNode) => void;
-declare const IoNode_base: IoNodeConstructor<any>;
-/**
- * IoNodeMixin applied to `Object` class.
- */
-export declare class IoNode extends IoNode_base {
-}
 /**
  * Register function for `IoElement`. Registers custom element.
  * @param {IoElement} elementConstructor - Element class to register.
@@ -244,7 +544,35 @@ export declare type VirtualDOMElement = [
 	VirtualDOMElement[] | string
 ];
 export declare const buildTree: () => (node: VirtualDOMElement) => any;
-declare const IoElement_base: IoNodeConstructor<any>;
+declare const IoElement_base: {
+	new (properties?: Record<string, any>, ...args: any[]): {
+		[x: string]: any;
+		readonly _protochain: ProtoChain;
+		readonly _properties: Record<string, Property>;
+		readonly _bindings: Record<string, Binding>;
+		readonly _changeQueue: ChangeQueue;
+		readonly _eventDispatcher: EventDispatcher;
+		setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
+		applyProperties(props: any): void;
+		setProperties(props: any): void;
+		setValue(value: any): void;
+		changed(): void;
+		queue(prop: string, value: any, oldValue: any): void;
+		dispatchQueue(): void;
+		dispatchQueueSync(): void;
+		throttle(func: CallbackFunction, arg?: any, sync?: boolean): void;
+		onObjectMutated(event: CustomEvent<any>): void;
+		objectMutated(prop: string): void;
+		bind(prop: string): Binding;
+		unbind(prop: string): void;
+		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions | undefined): void;
+		removeEventListener(type: string, listener?: AnyEventListener | undefined, options?: AddEventListenerOptions | undefined): void;
+		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | Document | HTMLElement | Window | undefined): void;
+		dispose(): void;
+	};
+	[x: string]: any;
+	readonly Properties: PropertiesDeclaration;
+};
 /**
  * Core `IoElement` class.
  */
@@ -296,78 +624,6 @@ export declare class IoElement extends IoElement_base {
 	_onFocusTo(event: CustomEvent): void;
 	focusTo(dir: string): void;
 }
-/**
- * Property change FIFO queue.
- * Responsible for dispatching change events and invoking change handler functions with property change payloads.
- */
-export declare class ChangeQueue {
-	private readonly node;
-	private readonly changes;
-	private dispatching;
-	/**
-	 * Creates change queue for the specified owner instance of `IoNode`.
-	 * @param {IoNode} node - Owner node.
-	 */
-	constructor(node: IoNode);
-	/**
-	 * Adds property change payload to the queue by specifying property name, previous and the new value.
-	 * If the change is already in the queue, the new value is updated in-queue.
-	 * @param {string} property - Property name.
-	 * @param {any} value Property value.
-	 * @param {any} oldValue Old property value.
-	 */
-	queue(property: string, value: any, oldValue: any): void;
-	/**
-	 * Dispatches and clears the queue.
-	 * For each property change in the queue:
-	 *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
-	 *  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
-	 * If owner node is not connected dispatch is aborted.
-	 * After all changes are dispatched it invokes `.changed()` functions od the owner node instance.
-	 */
-	dispatch(): void;
-	/**
-	 * Clears the queue and removes the node reference.
-	 * Use this when node queue is no longer needed.
-	 */
-	dispose(): void;
-}
-export interface Change {
-	property: string;
-	value: any;
-	oldValue: any;
-}
-export interface ChangeEvent extends CustomEvent {
-	readonly target: EventTarget;
-	readonly detail: Change;
-	readonly path: EventTarget[];
-}
-/**
- * Internal utility class that contains usefull information about class inheritance.
- * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
- */
-export declare class ProtoChain {
-	readonly constructors: Array<IoNodeConstructor<any>>;
-	readonly functions: Array<string>;
-	readonly properties: {
-		[property: string]: ProtoProperty;
-	};
-	readonly listeners: {
-		[property: string]: ListenerDefinition[];
-	};
-	readonly style: string;
-	readonly observedObjectProperties: string[];
-	/**
-	 * Creates an instance of `ProtoChain`.
-	 * @param {IoNodeConstructor<any>} ioNodeClass - Owner `IoNode`-derived class.
-	 */
-	constructor(ioNodeClass: IoNodeConstructor<any>);
-	/**
-	 * Binds all auto-binding functions from the `.functions` array to specified `IoNode`-derived instance.
-	 * @param {IoNode} node - `IoNode` instance to bind functions to.
-	 */
-	autobindFunctions(node: IoNode): void;
-}
 export declare class Path extends IoNode {
 	static get Properties(): {
 		value: ArrayConstructor;
@@ -383,7 +639,35 @@ export declare class Path extends IoNode {
 	rootChanged(): void;
 	leafChanged(): void;
 }
-declare const Options_base: IoNodeConstructor<any>;
+declare const Options_base: {
+	new (properties?: Record<string, any>, ...args: any[]): {
+		[x: string]: any;
+		readonly _protochain: ProtoChain;
+		readonly _properties: Record<string, Property>;
+		readonly _bindings: Record<string, Binding>;
+		readonly _changeQueue: ChangeQueue;
+		readonly _eventDispatcher: EventDispatcher;
+		setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
+		applyProperties(props: any): void;
+		setProperties(props: any): void;
+		setValue(value: any): void;
+		changed(): void;
+		queue(prop: string, value: any, oldValue: any): void;
+		dispatchQueue(): void;
+		dispatchQueueSync(): void;
+		throttle(func: CallbackFunction, arg?: any, sync?: boolean): void;
+		onObjectMutated(event: CustomEvent<any>): void;
+		objectMutated(prop: string): void;
+		bind(prop: string): Binding;
+		unbind(prop: string): void;
+		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions | undefined): void;
+		removeEventListener(type: string, listener?: AnyEventListener | undefined, options?: AddEventListenerOptions | undefined): void;
+		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | Document | HTMLElement | Window | undefined): void;
+		dispose(): void;
+	};
+	[x: string]: any;
+	readonly Properties: PropertiesDeclaration;
+};
 export declare class Options extends Options_base {
 	static get Properties(): {
 		items: {
@@ -922,7 +1206,7 @@ export declare class IoSelectorSidebar extends IoSelector {
 	onResized(): void;
 	collapsedChanged(): void;
 	getSlotted(): (string | {
-		selected: any;
+		selected: Binding;
 		options: any;
 		collapsed: any;
 	})[];
@@ -943,7 +1227,7 @@ export declare class IoServiceLoader extends IoNode {
 export declare class IoElementDemo extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
-	objectMutated(event: CustomEvent): void;
+	objectMutated(prop: string): void;
 	changed(): void;
 }
 export declare class IoLayout extends IoElement {
@@ -975,7 +1259,7 @@ export declare class IoVector extends IoElement {
 	valueChanged(): void;
 	changed(): void;
 	getSlotted(): (string | {
-		value: any;
+		value: Binding;
 		true: string;
 		false: string;
 	})[] | null;
