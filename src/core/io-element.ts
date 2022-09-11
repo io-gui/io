@@ -1,5 +1,5 @@
 import {EventDispatcher} from './internals/eventDispatcher.js';
-import {IoNode, IoNodeMixin, RegisterIoNode} from './io-node.js';
+import {IoNode, IoNodeMixin, RegisterIoNode, IoProperty} from './io-node.js';
 
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
@@ -209,56 +209,50 @@ export const buildTree = () => (node: VirtualDOMElement): any => isObject(node[1
 class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): any {
     // TODO: consider removing from core io-element class.
-    return /* css */':host[hidden] { display: none; } :host[disabled] { pointer-events: none; opacity: 0.5; }';
+    return /* css */`:host[hidden] { display: none; } :host[disabled] { pointer-events: none; opacity: 0.5; }`;
   }
-  static get Properties(): any {
-    return {
-      $: {
-        type: Object,
-        notify: false,
-      },
-      tabindex: {
-        type: String,
-        reflect: 1,
-      },
-      contenteditable: {
-        type: Boolean,
-        reflect: 1,
-      },
-      class: {
-        type: String,
-        reflect: 1,
-      },
-      role: {
-        type: String,
-        reflect: 1,
-      },
-      label: {
-        type: String,
-        reflect: 1,
-      },
-      name: {
-        type: String,
-        reflect: 1,
-      },
-      title: {
-        type: String,
-        reflect: 1,
-      },
-      id: {
-        type: String,
-        reflect: -1,
-      },
-      hidden: {
-        type: Boolean,
-        reflect: 1,
-      },
-      disabled: {
-        type: Boolean,
-        reflect: 1,
-      },
-    };
-  }
+
+  @IoProperty({type: Object, notify: false})
+  $: Record<string, any> = {};
+
+  @IoProperty({type: String, reflect: 1})
+  tabindex: string = '';
+
+  @IoProperty({type: Boolean, reflect: 1})
+  contenteditable: boolean = false;
+
+  @IoProperty({type: String, reflect: 1})
+  class: string = '';
+
+  @IoProperty({type: String, reflect: 1})
+  role: string = '';
+
+  @IoProperty({type: String, reflect: 1})
+  label: string = '';
+
+  // @IoProperty({type: String, reflect: 1})
+  // name: string = '';
+
+  @IoProperty({type: String, reflect: 1})
+  title: string = '';
+
+  @IoProperty({type: String, reflect: 1})
+  id: string = '';
+
+  @IoProperty({type: Boolean, reflect: 1})
+  hidden: boolean = false;
+
+  @IoProperty({type: Boolean, reflect: 1})
+  disabled: boolean = false;
+
+  // static get Properties(): any {
+  //   return {
+  //     name: {
+  //       type: String,
+  //       reflect: 1,
+  //     },
+  //   };
+  // }
   static get Listeners(): any {
     return {
       'focus-to': '_onFocusTo',
@@ -280,7 +274,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       if (newValue === null) this[prop] = false;
       else if (newValue === '') this[prop] = true;
     } else if (type === Number || type === String) {
-      this[prop] = new type(newValue);
+      this[prop] = type(newValue);
     } else if (type === Object || type === Array) {
       this[prop] = JSON.parse(newValue);
     } else if (typeof type === 'function') {
@@ -293,6 +287,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   * Add resize listener if `onResized()` is defined in subclass.
   */
   connectedCallback() {
+    console.log(this.__proto__.constructor.name);
     // super.connectedCallback();
     if (typeof this.onResized === 'function') {
       ro.observe(this as unknown as HTMLElement);
