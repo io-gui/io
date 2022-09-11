@@ -72,8 +72,15 @@ export class ProtoChain {
     // Iterate through the prototype chain once again in reverse to
     // aggregate inherited properties and listeners.
     for (let i = this.constructors.length; i--;) {
+      // Add properties from decorators
+      let props = this.constructors[i]._Properties;
+      for (const name in props) {
+        const hardPropDef = new ProtoProperty(props[name]);
+        if (!this.properties[name]) this.properties[name] = hardPropDef;
+        else assignProtoProperty(this.properties[name], hardPropDef);
+      }
       // Add properties
-      const props = this.constructors[i].Properties;
+      props = this.constructors[i].Properties;
       for (const name in props) {
         const hardPropDef = new ProtoProperty(props[name]);
         if (!this.properties[name]) this.properties[name] = hardPropDef;

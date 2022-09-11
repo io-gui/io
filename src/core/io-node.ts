@@ -1,7 +1,7 @@
 import {ProtoChain} from './internals/protoChain.js';
 import {Binding} from './internals/binding.js';
 import {ChangeQueue} from './internals/changeQueue.js';
-import {Property, PropertyDefinitionWeak} from './internals/property.js';
+import {Property, PropertyDefinitionWeak, PropertyDefinitionStrong} from './internals/property.js';
 import {EventDispatcher, ListenerDefinitionWeak} from './internals/eventDispatcher.js';
 
 export type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
@@ -9,6 +9,7 @@ export type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
 
 export interface IoNodeConstructor<T> {
   new (...args: any[]): T;
+  _Properties?: PropertiesDeclaration;
   Properties?: PropertiesDeclaration;
   Listeners?: ListenersDeclaration;
   Style?: string;
@@ -28,6 +29,16 @@ export type AnyEventListener = EventListener |
                         FocusEventListener |
                         TouchEventListener;
 
+// TODO: Rename, test default values and change events.
+export const IoProperty = function(propertyDefinition: PropertyDefinitionStrong) {
+  return (target: IoNode, propertyName: string) => {
+    // const _Properties = (target as any)._Properties as PropertiesDeclaration;
+    const _Properties = (target.constructor as any)._Properties as PropertiesDeclaration;
+    _Properties[propertyName] = propertyDefinition;
+    // console.log(_Properties);
+  };
+};
+
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -35,6 +46,7 @@ export type AnyEventListener = EventListener |
  */
 export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
   const IoNodeMixinConstructor = class extends (superclass as any) {
+    static _Properties = {};
     static get Properties(): PropertiesDeclaration {
       return {
         lazy: {
@@ -101,7 +113,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           configurable: true,
         });
       }
-
       this.applyProperties(properties);
     }
     /**
