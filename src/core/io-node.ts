@@ -120,10 +120,12 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         const binding = (value instanceof Binding) ? value : undefined;
         if (binding) {
           const oldBinding = prop.binding;
-          if (oldBinding && binding !== oldBinding) {
-            oldBinding.removeTarget(this, name);
+          if (binding !== oldBinding) {
+            if (oldBinding) {
+              oldBinding.removeTarget(this, name);
+            }
+            binding.addTarget(this, name);
           }
-          binding.addTarget(this, name);
           value = binding.value;
         } else {
           // TODO: Verify and test this edge-case fix. Look for regressions.
@@ -132,6 +134,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           // This fixes the bug by setting parent's property value with skipDispatch. This can possibly introduce
           // bug when parent has properties bound to other elements. Create and extensive test for this but fix.
           // TODO: finish this fix - it caused regression in io-option-menu
+          // WARNING: Enabling this breaks the menu.
           // if (prop.binding && skipDispatch) {
           //   prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
           // }

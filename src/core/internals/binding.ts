@@ -37,7 +37,7 @@ export class Binding {
   addTarget(node: IoNode, property: string) {
     debug: {
       if (node._properties[property].binding && node._properties[property].binding !== this) {
-        console.warn('Binding target alredy has binding!');
+        console.warn('Binding target alredy has a binding!');
       }
     }
     node._properties[property].binding = this;
@@ -48,8 +48,8 @@ export class Binding {
     if (targetProperties.indexOf(property) === -1) {
       targetProperties.push(property);
       target.addEventListener(`${property}-changed`, this.onTargetChanged as EventListener);
-    } else {
-      // console.warn('Binding target alredy added!'); WHY?
+    } else debug: {
+      console.warn('Binding target alredy added!');
     }
   }
   /**
@@ -59,19 +59,20 @@ export class Binding {
    * @param {string} property - Target property
    */
   removeTarget(node: IoNode, property?: string) {
-    const targetIoNode = node as unknown as EventTarget;
-    const targetProperties = this.getTargetProperties(targetIoNode);
+    const targetProperties = this.getTargetProperties(node);
     if (property) {
       const i = targetProperties.indexOf(property);
       if (i !== -1) targetProperties.splice(i, 1);
-      targetIoNode.removeEventListener(`${property}-changed`, this.onTargetChanged as EventListener);
+      node.removeEventListener(`${property}-changed`, this.onTargetChanged as EventListener);
+      node._properties[property].binding = undefined;
     } else {
       for (let i = targetProperties.length; i--;) {
-        targetIoNode.removeEventListener(`${targetProperties[i]}-changed`, this.onTargetChanged as EventListener);
+        node.removeEventListener(`${targetProperties[i]}-changed`, this.onTargetChanged as EventListener);
+        node._properties[targetProperties[i]].binding = undefined;
       }
       targetProperties.length = 0;
     }
-    if (targetProperties.length === 0) this.targets.splice(this.targets.indexOf(targetIoNode), 1);
+    if (targetProperties.length === 0) this.targets.splice(this.targets.indexOf(node as unknown as EventTarget), 1);
   }
   /**
    * Retrieves a list of target properties for specified target node.
