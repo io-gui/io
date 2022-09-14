@@ -3,32 +3,6 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
 import { terser } from "rollup-plugin-terser";
 
-function stripLines() {
-  let regexes = [
-    /\/\*\scss\s\*\/([\s\S]*?)`\;/gm,
-    /\/\*\sglsl\s\*\/([\s\S]*?)`\;/gm,
-    /<svg>([\s\S]*?)<\/svg>/gm,
-  ];
-  return {
-    transform( code ) {
-      let transformedCode = code;
-      for (let j = 0; j < regexes.length; j++) {
-        let regex = regexes[j];
-        if ( regex.test( code ) === true ) {
-          let match = code.match(regex);
-          for (let i = 0; i < match.length; i++) {
-            transformedCode = transformedCode.replace(match[i], match[i].replace((/ {2}|\r\n|\n|\r/gm), ''));
-          }
-        }
-      }
-      return {
-        code: transformedCode,
-        map: { mappings: '' }
-      };
-    }
-  };
-}
-
 const externals = [];
 
 function makeBundleTarget(src, target) {
@@ -37,10 +11,7 @@ function makeBundleTarget(src, target) {
   return {
     input: src,
     plugins: [
-      nodeResolve({
-        resolveOnly: ['marked']
-      }),
-      // stripLines(),
+      nodeResolve(),
       strip({
         functions: [],
         labels: ['debug']
@@ -50,10 +21,10 @@ function makeBundleTarget(src, target) {
         keep_fnames: true,
       })
     ],
+    treeshake: false,
     inlineDynamicImports: true,
     output: [{
       format: 'es',
-      // sourcemap: true,
       file: target,
       indent: '  '
     }],

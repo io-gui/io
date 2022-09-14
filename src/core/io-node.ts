@@ -30,6 +30,7 @@ export type AnyEventListener = EventListener |
                         TouchEventListener;
 
 // TODO: Rename, test default values and change events.
+// TODO: consider alowing weak definitions.
 export const IoProperty = function(propertyDefinition: PropertyDefinitionStrong) {
   return (target: IoNode, propertyName: string) => {
     // const _Properties = (target as any)._Properties as PropertiesDeclaration;
@@ -37,6 +38,13 @@ export const IoProperty = function(propertyDefinition: PropertyDefinitionStrong)
     _Properties[propertyName] = propertyDefinition;
     // console.log(_Properties);
   };
+};
+
+// TODO: find purpose
+export const IoBind = function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  target[propertyKey] = target[propertyKey].bind(target);
+  console.log(descriptor);
+  return descriptor;
 };
 
 /**
