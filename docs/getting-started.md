@@ -1,18 +1,25 @@
 ## Usage
 
-Import Io core module from `build/iogui.js` or `src/iogui.js`.
+Import Io-Gui module.
 
 ```javascript
-import {IoElement} from "iogui/build/iogui.js";
+import "io-gui";
 ```
 
-To use one of the elements, such as `<io-option-menu>` for example, import the corresponding element collection, create the element, assign the options property, and add it to your DOM.
+In this example, we import the `<io-option-menu>` element and set its properties imperatively:
 
 ```javascript
-import {Options} "iogui/build/io-menus.js";
-const menu = document.createElement('io-option-menu');
-menu.options = ["one", "two", "three"];
-element.appendChild(menu);
+import { IoOptionMenu } from "io-gui";
+const menu = new IoOptionMenu();
+menu.options = ["one","two","three"];
+menu.value = "one";
+document.body.appendChild(menu);
+```
+
+Alternatively, you can create the `<io-option-menu>` element declaratively in HTML. But keep in mind that some properties may not be settable via attributes.
+
+```html
+<io-option-menu value="one" options='["one", "two", "three"]'></io-option-menu>
 ```
 
 Result:
@@ -25,9 +32,11 @@ You can extend `IoElement` to create anything from simple elements to complex ap
 
 ```javascript
 class MyApp extends IoElement {}
-MyApp.Register();
+RegisterIoElement(MyApp);
 ```
-You should call `Register()` immediately after defining a new class. Elements are registered as kebab-case. For example `MyApp` class will register as `<my-app>`.
+You should call `RegisterIoElement(MyApp)` immediately after defining the class.
+
+Element names are kebab-case derived from class names in CamelCase. For example `MyApp` class will register as `<my-app>`.
 
 Now you can use the `template()` function to add contents to your application.
 
@@ -37,7 +46,7 @@ class MyApp extends IoElement {
     this.template([['p', 'Hello io!']]);
   }
 }
-MyApp.Register();
+RegisterIoElement(MyApp);
 ```
 
 Then, add `<my-app>` element to your document and you are done!
@@ -57,7 +66,9 @@ Once the element has been connected, `change()` function will fire and template 
 
 ## Style
 
-Styles are defined inside `static get Style()` return string. Alternatively, styles can be defined in external CSS files as usual. Let's specify text color for the `<p>` element.
+Styles are defined inside `static get Style()` return string. Alternatively, styles can be defined in external CSS files.
+
+Let's specify text color for the `<p>` element.
 
 ```javascript
 static get Style() {
@@ -69,7 +80,7 @@ static get Style() {
 }
 ```
 
-**Note:** CSS selectors have to be prefixed with `:host` in order to prevent style leakage. Template literal comment `/* css */` is optional but recommended for correct syntax highlighting.
+**Note:** CSS selectors have to be prefixed with `:host` in order to prevent style leakage. Template literal comment `/*css*/` is optional but recommended for correct syntax highlighting (editor plug-in required).
 
 CSS selectors starting with `--` and ending with `:` are treated as mixins (CSS property declaration lists). They can be appied using `@apply` CSS rule to any element class derived from `IoElement`.
 
@@ -139,13 +150,11 @@ static get Listeners() {
 }
 ```
 
-**Note:** Event handler function names should start with `on` or `_`.
+**Note:** Event handler function names should start with `on` or `_on` to get bound to class instance automatically.
 
 ## Change Functions
 
-Change functions are automatically called when properties change. If `[propName]Changed(event)` function is defined, it will be called when corresponding property changes. Alternatively, you can define a generic `propChanged(event)` function instead and get property name from the event detail.
-
-If property value is an object, `[propName]Mutated()` function will be called immediately after object mutation (see [data-flow requirements](#doc=learn-more#data-flow)).
+Change functions are automatically called when properties change. If `[propName]Changed(event)` function is defined, it will be called when corresponding property changes.
 
 Lastly, `changed()` function will be called **after** all of the property-specific change/mutation functions are called.
 
@@ -186,7 +195,7 @@ class MyApp extends IoElement {
     this.template([['p', this.message]]);
   }
 }
-MyApp.Register();
+RegisterIoElement(MyApp);
 ```
 
-> Continue reading [advanced usage](#doc=learn-more#creating-elements) or check out the [included elements](#doc=elements-core#IoItem).
+<!-- > Continue reading [advanced usage](#doc=learn-more#creating-elements) or check out the [included elements](#doc=elements-core#IoItem). -->

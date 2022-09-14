@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import {IoElement, RegisterIoElement, Binding} from '../../iogui.js';
 import {Options} from '../../models/options.js';
 import {Item} from '../../models/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
@@ -23,7 +23,7 @@ const rects = new WeakMap();
  *   "type:object": ["io-object"]
  * }'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoMenuOptions extends IoElement {
   static get Style() {
     return /* css */`
@@ -157,7 +157,7 @@ export class IoMenuOptions extends IoElement {
       event.stopImmediatePropagation();
       if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
-      this.requestAnimationFrameOnce(this._onCollapse);
+      this.throttle(this._onCollapse);
     }
   }
   // Prevents IoLayer from stopping scroll in clipped options
@@ -165,7 +165,7 @@ export class IoMenuOptions extends IoElement {
     event.stopPropagation();
   }
   onResized() {
-    this.requestAnimationFrameOnce(this._onSetOverflow);
+    this.throttle(this._onSetOverflow);
   }
   _onSetOverflow() {
     const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
@@ -230,7 +230,7 @@ export class IoMenuOptions extends IoElement {
       if (this.inlayer && this.$parent) {
         this._onExpandedChangedLazy();
         // TODO: unhack incorrect this.rect on first expand.
-        this.throttle(this._onExpandedChangedLazy, null, true);
+        this.throttle(this._onExpandedChangedLazy);
       }
     } else {
       this.style.top = null;
@@ -242,7 +242,7 @@ export class IoMenuOptions extends IoElement {
   }
   searchChanged() {
     if (this.inlayer && this.$parent) {
-      this.requestAnimationFrameOnce(this._clipHeight);
+      this.throttle(this._clipHeight);
     }
   }
   _onExpandedChangedLazy() {
@@ -271,10 +271,27 @@ export class IoMenuOptions extends IoElement {
       this.style.touchAction = null;
     }
   }
+  _filterOptions(object: any, predicate: (object: any) => boolean, _depth = 5, _chain: any[] = [], _i = 0): any {
+    const result: any[] = [];
+    if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
+    if (_i > _depth) return result; _i++;
+    if (predicate(object) && result.indexOf(object) === -1) result.push(object);
+    for (const key in object) {
+      const value = object[key] instanceof Binding ? object[key].value : object[key];
+      if (predicate(value) && result.indexOf(value) === -1) result.push(value);
+      if (typeof value === 'object') {
+        const results = this._filterOptions(value, predicate, _depth, _chain, _i);
+        for (let i = 0; i < results.length; i++) {
+          if (result.indexOf(results[i]) === -1) result.push(results[i]);
+        }
+      }
+    }
+    return result;
+  }
   get _options() {
     if (this.search) {
       const s = this.search.toLowerCase();
-      const options = this.filterObjects(this.options, o => {
+      const options = this._filterOptions(this.options, o => {
         if (!!o.value || !!o.action) {
           if (String(o.value).toLowerCase().search(s) !== -1) return true;
           if (o.label && o.label.toLowerCase().search(s) !== -1) return true;
@@ -319,8 +336,6 @@ export class IoMenuOptions extends IoElement {
       }]);
     }
     this.template(elements);
-    this.requestAnimationFrameOnce(this._onSetOverflow);
+    this.throttle(this._onSetOverflow);
   }
 }
-
-RegisterIoElement(IoMenuOptions);

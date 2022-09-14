@@ -21,7 +21,7 @@ import {getElementDescendants, IoMenuItem} from './menu-item.js';
  *   "position": ["io-option-menu", {"options": ["pointer", "top", "right", "bottom", "left"]}], "type:object": ["io-object"]
  * }'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoContextMenu extends IoElement {
   static get Properties(): any {
     return {
@@ -72,7 +72,7 @@ export class IoContextMenu extends IoElement {
       event.stopImmediatePropagation();
       if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
-      this.requestAnimationFrameOnce(this._onCollapse);
+      this.throttle(this._onCollapse);
     }
   }
   _onContextmenu(event: MouseEvent) {
@@ -149,5 +149,3 @@ export class IoContextMenu extends IoElement {
     }
   }
 }
-
-RegisterIoElement(IoContextMenu);

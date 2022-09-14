@@ -8,7 +8,7 @@ import {IoItem} from './item.js';
  *
  * <io-element-demo element="io-string" properties='{"value": "hello world"}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoString extends IoItem {
   static get Style() {
     return /* css */`
@@ -133,4 +133,3 @@ export class IoString extends IoItem {
   }
 }
 
-RegisterIoElement(IoString);

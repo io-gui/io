@@ -9,7 +9,7 @@ import {IoElement, RegisterIoElement} from '../../iogui.js';
  *
  * <io-element-demo element="io-breadcrumbs" properties='{"value": 1, "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}], "trim": true}' config='{"options": ["io-object", {"expanded": true}]}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoBreadcrumbs extends IoElement {
   static get Style() {
     return /* css */`
@@ -85,8 +85,6 @@ export class IoBreadcrumbs extends IoElement {
     this.template(elements);
   }
 }
-
-RegisterIoElement(IoBreadcrumbs);
 
 function getLabel(object: any) {
   if (object instanceof Array) {

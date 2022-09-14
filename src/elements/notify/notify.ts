@@ -4,7 +4,7 @@ import {IoStorageFactory} from '../core/storage.js';
 /*
 
  **/
-
+@RegisterIoElement
 export class IoNotify extends IoElement {
   static get Style() {
     return /* css */`
@@ -80,7 +80,5 @@ export class IoNotify extends IoElement {
     this.expanded = false;
   }
 }
-
-RegisterIoElement(IoNotify);
 
 if ((IoStorageFactory as any).permitted === null) document.body.appendChild(new IoNotify() as unknown as Node);

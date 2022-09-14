@@ -11,7 +11,7 @@ import {IoElement, RegisterIoElement} from '../../iogui.js';
  *
  * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoMatrix extends IoElement {
   static get Style() {
     return /* css */`
@@ -94,5 +94,3 @@ export class IoMatrix extends IoElement {
     this.template(elements);
   }
 }
-
-RegisterIoElement(IoMatrix);

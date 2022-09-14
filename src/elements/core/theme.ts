@@ -56,6 +56,7 @@ const themeDBDefaults = {
 
 const themeDB = $({value: JSON.parse(JSON.stringify(themeDBDefaults)), storage: 'local', key: 'themeDB'});
 
+@RegisterIoElement
 export class IoTheme extends IoElement {
   static get Style() {
     return /* css */`
@@ -289,8 +290,6 @@ export class IoTheme extends IoElement {
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
 }
-
-RegisterIoElement(IoTheme);
 
 /*
  * Extends `IoElement`.

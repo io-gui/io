@@ -18,6 +18,7 @@ const IoIconsetDB: Record<string, Record<string, string>> = {};
  * ```
  **/
 
+@RegisterIoNode
 class IoIconset extends IoNode {
   registerIcons(name: string, svg: string) {
     const stagingElement = document.createElement('div');
@@ -39,8 +40,6 @@ class IoIconset extends IoNode {
     return '<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"></svg>';
   }
 }
-
-RegisterIoNode(IoIconset);
 
 export const IoIconsetSingleton = new IoIconset();
 

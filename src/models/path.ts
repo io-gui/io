@@ -1,5 +1,6 @@
 import {IoNode, RegisterIoNode} from '../core/io-node.js';
 
+@RegisterIoNode
 export class Path extends IoNode {
   static get Properties() {
     return {
@@ -18,15 +19,15 @@ export class Path extends IoNode {
         if (target[prop] === value) return true;
         target[prop] = value;
         this.update();
-        this.throttle(this.onMutation, null, true);
+        this.throttle(this.onMutation);
         return true;
       }
     });
     this.update();
-    this.throttle(this.onMutation, null, false);
+    this.throttle(this.onMutation, undefined, true);
   }
   onMutation() {
-    this.queueDispatch();
+    this.dispatchQueue();
   }
   update() {
     let string = '';
@@ -65,5 +66,3 @@ export class Path extends IoNode {
     }
   }
 }
-
-RegisterIoNode(Path);

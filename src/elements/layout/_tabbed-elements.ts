@@ -21,7 +21,7 @@ const splitDirections: any = {
 /*
 
  **/
-
+@RegisterIoElement
 export class IoSelectorTabs extends IoElement {
   static get Style() {
     return /* css */`
@@ -220,8 +220,7 @@ export class IoSelectorTabs extends IoElement {
   }
 }
 
-RegisterIoElement(IoSelectorTabs);
-
+@RegisterIoElement
 export class IoTabs extends IoElement {
   static get Style() {
     return /* css */`
@@ -475,8 +474,7 @@ export class IoTabs extends IoElement {
   }
 }
 
-RegisterIoElement(IoTabs);
-
+@RegisterIoElement
 export class IoTabDragicon extends IoElement {
   static get Style() {
     return /* css */`
@@ -505,8 +503,7 @@ export class IoTabDragicon extends IoElement {
   }
 }
 
-RegisterIoElement(IoTabDragicon);
-
+@RegisterIoElement
 export class IoTabDropzone extends IoElement {
   static get Style() {
     return /* css */`
@@ -532,5 +529,3 @@ export class IoTabDropzone extends IoElement {
     `;
   }
 }
-
-RegisterIoElement(IoTabDropzone);

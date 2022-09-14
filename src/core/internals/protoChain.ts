@@ -10,27 +10,27 @@ export class ProtoChain {
   /*
    * Array of inherited class constructors ending with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
    */
-  public readonly constructors: Array<IoNodeConstructor<any>> = [];
+  readonly constructors: Array<IoNodeConstructor<any>> = [];
   /*
    * Array of function names that start with "on" or "_" for auto-binding.
    */
-  public readonly functions: Array<string> = [];
+  readonly functions: Array<string> = [];
   /*
    * Aggregated property definitions declared in `static get Properties()` return ojects.
    */
-  public readonly properties: { [property: string]: ProtoProperty } = {};
+  readonly properties: { [property: string]: ProtoProperty } = {};
   /*
    * Aggregated listener definitions declared in `static get Listeners()` return ojects.
    */
-  public readonly listeners: { [property: string]: ListenerDefinition[] } = {};
+  readonly listeners: { [property: string]: ListenerDefinition[] } = {};
   /*
    * Aggregated CSS style definitions declared in `static get Style()` return strings.
    */
-  public readonly style: string = '';
+  readonly style: string = '';
   /*
    * Array of property names of observed object properties.
    */
-  public readonly observedObjectProperties: string[] = [];
+  readonly observedObjectProperties: string[] = [];
   /**
    * Creates an instance of `ProtoChain`.
    * @param {IoNodeConstructor<any>} ioNodeClass - Owner `IoNode`-derived class.
@@ -41,7 +41,6 @@ export class ProtoChain {
     // Terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
     while (
       proto
-      && ioNodeClass.name !== 'IoNodeMixinConstructor'
       && (ioNodeClass) !== HTMLElement
       && (ioNodeClass) !== Object
       && (ioNodeClass) !== Array) {
@@ -66,15 +65,22 @@ export class ProtoChain {
           this.style = ioNodeClass.Style + '\n' + this.style;
         }
         // Continue prototype traversal
-        proto = proto.__proto__;
+        proto = Object.getPrototypeOf(proto);
         ioNodeClass = proto.constructor;
     }
 
     // Iterate through the prototype chain once again in reverse to
     // aggregate inherited properties and listeners.
     for (let i = this.constructors.length; i--;) {
+      // Add properties from decorators
+      let props = this.constructors[i]._Properties;
+      for (const name in props) {
+        const hardPropDef = new ProtoProperty(props[name]);
+        if (!this.properties[name]) this.properties[name] = hardPropDef;
+        else assignProtoProperty(this.properties[name], hardPropDef);
+      }
       // Add properties
-      const props = this.constructors[i].Properties;
+      props = this.constructors[i].Properties;
       for (const name in props) {
         const hardPropDef = new ProtoProperty(props[name]);
         if (!this.properties[name]) this.properties[name] = hardPropDef;

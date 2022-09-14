@@ -1,46 +1,20 @@
-import {IoElement, RegisterIoElement} from './iogui.js';
-
-// import ProtoChain from './core/internals/protoChain.test.js';
-// import Property from './core/internals/property.test.js';
-// import Binding from './core/internals/binding.test.js';
-// import EventDispatcher from './core/internals/eventDispatcher.test.js';
-// import ChangeQueue from './core/internals/changeQueue.test.js';
-
 import 'mocha';
 import 'chai';
 
-// Core tests
+import {IoElement, RegisterIoElement} from './iogui.js';
 
+// Core internals
+import ProtoChain from './core/internals/protoChain.test.js';
+import Property from './core/internals/property.test.js';
+import Binding from './core/internals/binding.test.js';
+import EventDispatcher from './core/internals/eventDispatcher.test.js';
+import ChangeQueue from './core/internals/changeQueue.test.js';
+
+// Core classes
 import Node from './core/io-node.test.js';
 import Element from './core/io-element.test.js';
 
-// import Item from './elements/core/item.test.js';
-// import Content from './elements/core/content.test.js'; // TODO
-// import Gl from './elements/core/gl.test.js';
-// import Button from './elements/core/button.test.js';
-// import Boolean from './elements/core/boolean.test.js';
-// import Boolicon from './elements/core/boolicon.test.js';
-// import Switch from './elements/core/switch.test.js';
-// import Sting from './elements/core/string.test.js';
-// import Number from './elements/core/number.test.js';
-// import Slider from './elements/core/slider.test.js';
-// import SliderRange from './elements/core/slider-range.test.js'; // TODO
-// import NumberSlider from './elements/core/number-slider.test.js';
-// import NumberSliderRange from './elements/core/number-slider-range.test.js'; // TODO
-// import Icon from './elements/core/icon.test.js';
-// import IconSet from './elements/core/iconset.test.js';
-// import Layer from './elements/core/layer.test.js';
-// import Ladder from './elements/core/ladder.test.js';
-// import Theme from './elements/core/theme.test.js';
-
-// import Collapsable from "./elements/layout/collapsable.test.js";
-// import Property from "./elements/object/properties.test.js";
-// import Object from "./elements/object/object.test.js";
-// import Inspector from "./elements/object/inspector.test.js";
-// import OptionMenu from "./elements/menus/option-menu.test.js";
-
-// Elements tests
-
+// Elements
 // import Item from './elements/core/item.test.js';
 // import Content from './elements/core/content.test.js'; // TODO
 // import Gl from './elements/core/gl.test.js';
@@ -85,11 +59,11 @@ export async function nextTick(): Promise<void> {
 
 function runTests() {
   if (!testCompleted) {
-    // new ProtoChain().run();
-    // new Property().run();
-    // new Binding().run();
-    // new EventDispatcher().run();
-    // new ChangeQueue().run();
+    new ProtoChain().run();
+    new Property().run();
+    new Binding().run();
+    new EventDispatcher().run();
+    new ChangeQueue().run();
 
     new Node().run();
     new Element().run();
@@ -127,6 +101,7 @@ function runTests() {
   }
 }
 
+@RegisterIoElement
 export class IoTest extends IoElement {
   static get Style() {
     return /* css */`
@@ -170,9 +145,12 @@ export class IoTest extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    runTests();
     this.appendChild(mochaDiv);
     mochaDiv.style.display = 'block';
+    runTests();
+    setTimeout(() => {
+      this.parentElement.scrollTop = this.parentElement.scrollHeight;
+    }, 100);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -180,5 +158,3 @@ export class IoTest extends IoElement {
     mochaDiv.style.display = 'none';
   }
 }
-
-RegisterIoElement(IoTest);

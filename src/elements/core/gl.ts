@@ -52,7 +52,7 @@ type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
  *
  * See `IoSliderKnob` and `IoHsvaSv` for more advanced examples.
  **/
-
+@RegisterIoElement
 export class IoGl extends IoElement {
   static get Style() {
     return /* css */`
@@ -180,7 +180,7 @@ export class IoGl extends IoElement {
       const constructor = this._protochain.constructors[i];
       const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
       if (glUtilsProp && glUtilsProp.get) {
-        frag += constructor.GlUtils;
+        frag += (constructor as typeof IoGl).GlUtils;
       }
     }
 
@@ -287,17 +287,17 @@ export class IoGl extends IoElement {
   }
   cssMutated() {
     this.updateCssUniforms();
-    this.requestAnimationFrameOnce(this._onRender);
+    this.throttle(this._onRender);
   }
   changed() {
     // TODO: unhack when ResizeObserver is available in Safari
     if (!window.ResizeObserver) {
       setTimeout(() => {
         this.onResized();
-        this.requestAnimationFrameOnce(this._onRender);
+        this.throttle(this._onRender);
       });
     } else {
-      this.requestAnimationFrameOnce(this._onRender);
+      this.throttle(this._onRender);
     }
   }
   _onRender() {
@@ -401,5 +401,3 @@ export class IoGl extends IoElement {
     }
   }
 }
-
-RegisterIoElement(IoGl);

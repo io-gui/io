@@ -7,6 +7,7 @@ if (!('PushManager' in window)) { console.warn('No Push API Support!'); }
 
  **/
 
+@RegisterIoNode
 export class IoServiceLoader extends IoNode {
   static get Properties(): any {
     return {
@@ -50,5 +51,3 @@ export class IoServiceLoader extends IoNode {
     if (data.subscription) this.subscription = JSON.stringify(data.subscription);
   }
 }
-
-RegisterIoNode(IoServiceLoader);

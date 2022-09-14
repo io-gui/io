@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <title>IoGui - a simple web framework</title>
+    <title>Io-Gui - Web Framework</title>
 
-    <meta name="description" content="IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
+    <meta name="description" content="Io-Gui is a UI framework for web development written in TypeScript. It relies on modern web platform features to bring simplicity and performance to web development." />
     <meta name="keywords" content="io, gui, ui, ux, navigation, menu, iogui, web components, custom elements, reactive, data binding, user interface, library, javascript, web development, webdev" />
 
-    <meta itemprop="name" content="IoGui is a simple ui library for the web." />
-    <meta itemprop="description" content="IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
+    <meta itemprop="name" content="Io-Gui, a UI framework for web development." />
+    <meta itemprop="description" content="Io-Gui is a UI framework for web development written in TypeScript. It relies on modern web platform features to bring simplicity and performance to web development." />
 
     <!-- Web application enable -->
     <!-- <link rel="manifest" href="/manifest.json" -->
@@ -18,8 +18,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <!-- Web application name -->
-    <meta name="application-name" content="IoGui is a simple ui library for the web." />
-    <meta name="apple-mobile-web-app-title" content="IoGui is a simple ui library for the web." />
+    <meta name="application-name" content="Io-Gui, a UI framework for web development." />
+    <meta name="apple-mobile-web-app-title" content="Io-Gui, a UI framework for web development." />
 
     <!-- Browser UI color -->
     <meta name="theme-color" content="#f5f5f5" />
@@ -44,35 +44,37 @@
 
     <!-- Social sharing data -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="IoGui: Documentation" />
-    <meta name="twitter:description" content="IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
+    <meta name="twitter:title" content="Io-Gui: Documentation" />
+    <meta name="twitter:description" content="Io-Gui is a UI framework for web development written in TypeScript. It relies on modern web platform features to bring simplicity and performance to web development." />
     <meta name="twitter:site" content="iogui.dev" />
     <meta name="twitter:creator" content="akirodic" />
     <meta name="twitter:image" content="https://iogui.dev/io/images/logo/io-512.png?002">
-    <meta name="twitter:image:alt" content="IoGui">
+    <meta name="twitter:image:alt" content="Io-Gui">
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="IoGui: Documentation" />
-    <meta property="og:description" content="IoGui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. IoGui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. IoGui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. IoGui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
+    <meta property="og:title" content="Io-Gui: Documentation" />
+    <meta property="og:description" content="Io-Gui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. Io-Gui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. Io-Gui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. Io-Gui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
     <meta property="og:image" content="https://iogui.dev/io/images/logo/io-512.png?002" />
     <meta property="og:locale" content="en_US" />
 
     <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet">
 
     <link lazyload href="./lib/highlight.a11y-light.css" rel="stylesheet">
+    <link href="./node_modules/mocha/mocha.css" rel="stylesheet" />
 
     <!-- Import maps polyfill -->
-		<!-- Remove this when import maps will be widely supported -->
-		<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
-		<script type="importmap">
-			{
-				"imports": {
-					"marked": "./node_modules/marked/lib/marked.esm.js",
-					"dompurify": "./node_modules/dompurify/dist/purify.es.js",
-					"mocha": "./node_modules/mocha/mocha.js",
-					"chai": "./node_modules/chai/chai.js"
-				}
-			}
-		</script>
+    <!-- Remove this when import maps will be widely supported -->
+    <script async src="https://unpkg.com/es-module-shims@1.5.17/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "io-gui": "./build/iogui.js",
+          "marked": "./node_modules/marked/lib/marked.esm.js",
+          "dompurify": "./node_modules/dompurify/dist/purify.es.js",
+          "mocha": "./node_modules/mocha/mocha.js",
+          "chai": "./node_modules/chai/chai.js"
+        }
+      }
+    </script>
     <script src="./lib/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 
@@ -107,12 +109,11 @@
         text-decoration: none;
       }
     </style>
-    <link href="./node_modules/mocha/mocha.css" rel="stylesheet" />
   </head>
   <body>
     <script type="module">
 
-    import {RegisterIoElement, Options, Path, IoSelectorTabs, IoStorageFactory as $} from './build/iogui.js';
+    import {RegisterIoElement, Options, Path, IoSelectorTabs, IoStorageFactory as $} from 'io-gui';
 
     const OPTIONS = new Options([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
@@ -247,8 +248,9 @@
             ['io-md-view', {
               name: 'home',
               path: './README.md'}],
-            ['io-md-view-selector', {
+              ['io-md-view-selector', {
               name: 'docs',
+              sanitize: false,
               selected: OPTIONS.option('docs').path.bind('leaf'),
               options: OPTIONS.option('docs').options,
             }],

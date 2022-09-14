@@ -23,7 +23,7 @@ let lastFocus: Element | null = null;
  *
  * <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoLadderStep extends IoItem {
   static get Style() {
     return /* css */`
@@ -111,8 +111,7 @@ export class IoLadderStep extends IoItem {
   }
 }
 
-RegisterIoElement(IoLadderStep);
-
+@RegisterIoElement
 export class IoLadder extends IoElement {
   static get Style() {
     return /* css */`
@@ -323,8 +322,6 @@ export class IoLadder extends IoElement {
     for (let i = steps.length; i--;) steps[i].applyAria();
   }
 }
-
-RegisterIoElement(IoLadder);
 
 export const IoLadderSingleton = new IoLadder();
 IoLayerSingleton.appendChild(IoLadderSingleton as unknown as HTMLElement);

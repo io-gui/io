@@ -17,7 +17,7 @@ import {IoColorPanelSingleton} from './color-panel.js';
  *   config='{"value": ["io-color-vector"]}
  * '></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoColorPicker extends IoColorMixin(IoItem) {
   static get Style() {
     return /* css */`
@@ -49,7 +49,7 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
       tabindex: 0,
     };
   }
-  static get Listeners() {
+  static get Listeners(): any {
     return {
       'click': '_onClick',
       'keydown': '_onKeydown',
@@ -110,5 +110,3 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
     this.template([['io-color-swatch', {value: this.value, mode: this.mode}]]);
   }
 }
-
-RegisterIoElement(IoColorPicker as any);

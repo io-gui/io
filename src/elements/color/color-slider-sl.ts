@@ -10,7 +10,7 @@ import {IoColorSlider} from './color-slider.js';
  *   config='{"value": ["io-properties"]}
  * '></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoColorSliderSl extends IoColorSlider {
   static get Style() {
     return /* css */`
@@ -88,5 +88,3 @@ export class IoColorSliderSl extends IoColorSlider {
     this.setValueFromHsl();
   }
 }
-
-RegisterIoElement(IoColorSliderSl as any);

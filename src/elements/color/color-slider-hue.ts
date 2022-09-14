@@ -9,7 +9,7 @@ import {IoColorSlider} from './color-slider.js';
  *   config='{"value": ["io-properties"]}
  * '></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoColorSliderHue extends IoColorSlider {
   static get Frag() {
     return /* glsl */`
@@ -45,5 +45,3 @@ export class IoColorSliderHue extends IoColorSlider {
     this.setValueFromHsv();
   }
 }
-
-RegisterIoElement(IoColorSliderHue as any);

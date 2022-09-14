@@ -5,18 +5,16 @@ import {IoNode} from '../io-node.js';
  * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
 export class ChangeQueue {
-  private readonly node: IoNode;
-  private readonly changes: Array<Change> = [];
-  private dispatching = false;
+  declare private readonly node: IoNode;
+  readonly changes: Array<Change> = [];
+  hasChanged = false;
+  dispatching = false;
   /**
    * Creates change queue for the specified owner instance of `IoNode`.
    * @param {IoNode} node - Owner node.
    */
   constructor(node: IoNode) {
     this.node = node;
-    Object.defineProperty(this, 'node',        {enumerable: false, writable: false});
-    Object.defineProperty(this, 'changes',     {enumerable: false, writable: false});
-    Object.defineProperty(this, 'dispatching', {enumerable: false});
   }
   /**
    * Adds property change payload to the queue by specifying property name, previous and the new value.
@@ -47,20 +45,18 @@ export class ChangeQueue {
   dispatch() {
     if (this.dispatching === true) return;
     this.dispatching = true;
-    let changed = false;
+    this.hasChanged = false;
     while (this.changes.length) {
       const change = this.changes[0];
       this.changes.splice(0, 1);
       const property = change.property;
       if (change.value !== change.oldValue) {
-        changed = true;
+        this.hasChanged = true;
         if (this.node[property + 'Changed']) this.node[property + 'Changed'](change);
         this.node.dispatchEvent(property + '-changed', change);
       }
     }
-    if (changed) {
-      this.node.changed();
-    }
+    if (this.hasChanged) this.node.changed();
     this.dispatching = false;
   }
   /**

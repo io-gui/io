@@ -8,7 +8,7 @@ import {IoItem} from './item.js';
  *
  * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoBoolean extends IoItem {
   static get Style() {
     return /* css */`
@@ -49,5 +49,3 @@ export class IoBoolean extends IoItem {
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
   }
 }
-
-RegisterIoElement(IoBoolean);

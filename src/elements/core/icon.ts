@@ -8,7 +8,7 @@ import {IoIconsetSingleton} from './iconset.js';
  *
  * <io-element-demo element="io-icon" properties='{"icon": "icons:link", "stroke": false}' config='{"icon": ["io-option-menu", {"options": ["icons:link", "icons:unlink", "icons:check", "icons:uncheck"]}]}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoIcon extends IoElement {
   static get Style() {
     return /* css */`
@@ -56,5 +56,3 @@ export class IoIcon extends IoElement {
     this.innerHTML = IoIconsetSingleton.getIcon(this.icon);
   }
 }
-
-RegisterIoElement(IoIcon);

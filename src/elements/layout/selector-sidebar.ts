@@ -26,7 +26,7 @@ import './sidebar.js';
  *     config='{"options": ["io-properties"]}'>
  * </io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoSelectorSidebar extends IoSelector {
   static get Style() {
     return /* css */`
@@ -79,5 +79,3 @@ export class IoSelectorSidebar extends IoSelector {
     }];
   }
 }
-
-RegisterIoElement(IoSelectorSidebar);

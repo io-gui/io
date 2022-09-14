@@ -9,7 +9,7 @@ import {IoColorSlider} from './color-slider.js';
  *   config='{"value": ["io-properties"]}
  * '></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoColorSliderAlpha extends IoColorSlider {
   static get Frag() {
     return /* glsl */`
@@ -71,5 +71,3 @@ export class IoColorSliderAlpha extends IoColorSlider {
     if (hasAlpha) this.value[components[i]] = x;
   }
 }
-
-RegisterIoElement(IoColorSliderAlpha as any);

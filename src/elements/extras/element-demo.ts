@@ -3,7 +3,7 @@ import {IoElement, RegisterIoElement} from '../../iogui.js';
 /*
 
  **/
-
+@RegisterIoElement
 export class IoElementDemo extends IoElement {
   static get Style() {
     return /* css */`
@@ -74,20 +74,20 @@ export class IoElementDemo extends IoElement {
       }
     };
   }
-  objectMutated(event: CustomEvent) {
-    super.objectMutated(event);
-    for (let i = this._protochain.observedObjectProperties.length; i--;) {
-      const prop = this._protochain.observedObjectProperties[i];
-      const value = this._properties[prop].value;
-      const hasObject = !!this.filterObject(value, o => { return o === event.detail.object; });
-      if (hasObject) {
-        const children = this.querySelectorAll('*');
-        for (let i = 0; i < children.length; i++) {
-          if (children[i].changed) children[i].changed();
-        }
-      }
-    }
-  }
+  objectMutated = (prop: string) => {
+    super.objectMutated(prop);
+    // for (let i = this._protochain.observedObjectProperties.length; i--;) {
+    //   const prop = this._protochain.observedObjectProperties[i];
+    //   const value = this._properties[prop].value;
+    //   const hasObject = !!this._filterObject(value, o => { return o === event.detail.object; });
+    //   if (hasObject) {
+    //     const children = this.querySelectorAll('*');
+    //     for (let i = 0; i < children.length; i++) {
+    //       if (children[i].changed) children[i].changed();
+    //     }
+    //   }
+    // }
+  };
   changed() {
     const properties = this.properties;
     const elements: any = [['io-boolicon', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];
@@ -109,5 +109,3 @@ export class IoElementDemo extends IoElement {
     if (this.$['demo-element'].onResized) this.$['demo-element'].onResized();
   }
 }
-
-RegisterIoElement(IoElementDemo);

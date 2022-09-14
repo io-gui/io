@@ -15,6 +15,7 @@ import './color-picker.js';
  * '></io-element-demo>
  **/
 
+@RegisterIoElement
 export class IoColorVector extends IoColorMixin(IoElement) {
   static get Style() {
     return /* css */`
@@ -81,5 +82,3 @@ export class IoColorVector extends IoColorMixin(IoElement) {
     return ['io-color-picker', {id: 'swatch', mode: this.mode, value: this.value}]; // , 'on-value-set': this._onValueSet
   }
 }
-
-RegisterIoElement(IoColorVector as any);

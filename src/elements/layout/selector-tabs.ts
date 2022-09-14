@@ -26,7 +26,7 @@ import {IoSelector} from './selector.js';
  *     config='{"options": ["io-properties"]}'>
  * </io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoSelectorTabs extends IoSelector {
   static get Style() {
     return /* css */`
@@ -61,5 +61,3 @@ export class IoSelectorTabs extends IoSelector {
     }];
   }
 }
-
-RegisterIoElement(IoSelectorTabs);

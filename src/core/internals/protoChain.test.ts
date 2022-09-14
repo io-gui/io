@@ -75,12 +75,14 @@ export default class {
         chai.expect(constructors).to.be.eql([Object3, Object2, Object1]);
         constructors = new ProtoChain(HTMLElement3).constructors;
         chai.expect(constructors).to.be.eql([HTMLElement3, HTMLElement2, HTMLElement1]);
+        constructors = new ProtoChain(IoNode).constructors;
+        chai.expect(constructors).to.be.eql([IoNode, Object.getPrototypeOf(IoNode)]);
         constructors = new ProtoChain(IoNode1).constructors;
-        chai.expect(constructors).to.be.eql([IoNode1, IoNode]);
+        chai.expect(constructors).to.be.eql([IoNode1, IoNode, Object.getPrototypeOf(IoNode)]);
         constructors = new ProtoChain(IoElement1).constructors;
-        chai.expect(constructors).to.be.eql([IoElement1, IoElement]);
+        chai.expect(constructors).to.be.eql([IoElement1, IoElement, Object.getPrototypeOf(IoElement)]);
         constructors = new ProtoChain(IoNode2).constructors;
-        chai.expect(constructors).to.be.eql([IoNode2]);
+        chai.expect(constructors).to.be.eql([IoNode2, Object.getPrototypeOf(IoNode2), Object3, Object2, Object1]);
       });
       it('Should include an array of function names that start with "on" or "_on" for auto-binding', () => {
         let protoChain = new ProtoChain(IoNode1);

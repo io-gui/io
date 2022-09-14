@@ -4,6 +4,7 @@ import {Path} from './path.js';
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
+@RegisterIoNode
 export class Options extends IoNodeMixin(Array) {
   static get Properties() {
     return {
@@ -123,4 +124,3 @@ export class Options extends IoNodeMixin(Array) {
     this.dispatchEvent('changed');
   }
 }
-RegisterIoNode(Options);

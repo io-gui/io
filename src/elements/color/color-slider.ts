@@ -7,7 +7,7 @@ import {IoColorMixin} from './color.js';
  *
  * Base class for color sliders for any color type.
  **/
-
+@RegisterIoElement
 export class IoColorSlider extends IoColorMixin(IoSlider) {
   static get Properties(): any {
     return {
@@ -85,5 +85,3 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
     // NOTE: implement in subclass
   }
 }
-
-RegisterIoElement(IoColorSlider as any);

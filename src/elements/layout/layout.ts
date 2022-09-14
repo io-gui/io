@@ -3,7 +3,7 @@ import {IoElement, RegisterIoElement} from '../../iogui.js';
 /*
 
  **/
-
+@RegisterIoElement
 export class IoLayout extends IoElement {
   static get Style() {
     return /* css */`
@@ -201,12 +201,11 @@ export class IoLayout extends IoElement {
       }
     }
     this.queue('splits', this.splits, this.splits);
-    this.queueDispatch();
+    this.dispatchQueue();
   }
 }
 
-RegisterIoElement(IoLayout);
-
+@RegisterIoElement
 export class IoLayoutDivider extends IoElement {
   static get Style() {
     return /* css */`
@@ -277,5 +276,3 @@ export class IoLayoutDivider extends IoElement {
     ]);
   }
 }
-
-RegisterIoElement(IoLayoutDivider);

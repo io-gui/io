@@ -16,7 +16,7 @@ import {IoLadderSingleton} from './ladder.js';
  *
  * <io-element-demo element="io-number" width="5em" properties='{"value": 0, "step": 0.2617993877991494, "conversion": 57.29577951308232, "min": -6.283185307179586, "max": 6.283185307179586, "ladder": true}'></io-element-demo>
  **/
-
+@RegisterIoElement
 export class IoNumber extends IoItem {
   static get Style() {
     return /* css */`
@@ -229,5 +229,3 @@ export class IoNumber extends IoItem {
     this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
   }
 }
-
-RegisterIoElement(IoNumber);

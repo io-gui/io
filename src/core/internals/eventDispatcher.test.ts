@@ -2,6 +2,7 @@ import {IoNode, RegisterIoNode, ListenersDeclaration, EventDispatcher} from '../
 
 const handlerFunction = () => {};
 
+@RegisterIoNode
 class IoNode1 extends IoNode {
   handler1Count = 0;
   handler1Detail?: string;
@@ -15,8 +16,8 @@ class IoNode1 extends IoNode {
     this.handler1Detail = event.detail;
   }
 }
-RegisterIoNode(IoNode1);
 
+@RegisterIoNode
 class IoNode2 extends IoNode1 {
   handler2Count = 0;
   handler3Count = 0;
@@ -36,8 +37,8 @@ class IoNode2 extends IoNode1 {
     this.handler3Detail = event.detail;
   }
 }
-RegisterIoNode(IoNode2);
 
+@RegisterIoNode
 class IoNode3 extends IoNode2 {
   static get Listeners(): ListenersDeclaration {
     return {
@@ -47,7 +48,6 @@ class IoNode3 extends IoNode2 {
     };
   }
 }
-RegisterIoNode(IoNode3);
 
 class TestDivEventDispatchElement extends HTMLElement {
   handler3Count = 0;

@@ -14,7 +14,7 @@ import {IoElement, RegisterIoElement} from '../../iogui.js';
  *
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
  **/
-
+@RegisterIoElement
 export class IoCollapsable extends IoElement {
   static get Style() {
     return /* css */`
@@ -64,5 +64,3 @@ export class IoCollapsable extends IoElement {
     ]);
   }
 }
-
-RegisterIoElement(IoCollapsable);

@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import {IoElement, RegisterIoElement, Binding} from '../../iogui.js';
 import {Options} from '../../models/options.js';
 import {IoStorageFactory as $} from '../core/storage.js';
 
@@ -25,7 +25,7 @@ import {IoStorageFactory as $} from '../core/storage.js';
  *
  * When tabs are clicked, `selected` value is set.
  **/
-
+@RegisterIoElement
 export class IoSidebar extends IoElement {
   static get Style() {
     return /* css */`
@@ -81,6 +81,20 @@ export class IoSidebar extends IoElement {
       role: 'navigation',
     };
   }
+
+  _filterObject(object: any, predicate: (object: any) => boolean, _depth = 5, _chain: any[] = [], _i = 0): any {
+    if (_chain.indexOf(object) !== -1) return; _chain.push(object);
+    if (_i > _depth) return; _i++;
+    if (predicate(object)) return object;
+    for (const key in object) {
+      const value = object[key] instanceof Binding ? object[key].value : object[key];
+      if (predicate(value)) return value;
+      if (typeof value === 'object') {
+        const subvalue = this._filterObject(value, predicate, _depth, _chain, _i);
+        if (subvalue) return subvalue;
+      }
+    }
+  }
   _onSelect(id: string) {
     this.setProperty('selected', id);
   }
@@ -89,7 +103,7 @@ export class IoSidebar extends IoElement {
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
       if (option.options.length) {
-        const containsSelected = !!this.filterObject(option.options, o => matches(this.selected, o));
+        const containsSelected = !!this._filterObject(option.options, o => matches(this.selected, o));
         const collapsableState = $({value: false, storage: 'local', key: genUUID(options, i)});
         elements.push(['io-collapsable', {
           label: option.label,
@@ -110,7 +124,7 @@ export class IoSidebar extends IoElement {
   }
   changed() {
     if (this.collapsed) {
-      const selected = this.filterObject(this.options, o => matches(this.selected, o));
+      const selected = this._filterObject(this.options, o => matches(this.selected, o));
       this.template([['io-option-menu', {
         options: this.options,
         value: this.bind('selected'),
@@ -125,8 +139,6 @@ export class IoSidebar extends IoElement {
     }
   }
 }
-
-RegisterIoElement(IoSidebar);
 
 function genUUID(options: any, i: number) {
   const option = options[i];

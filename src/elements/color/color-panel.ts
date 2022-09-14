@@ -20,7 +20,7 @@ import {IoColorMixin} from './color.js';
  *
  * A singleton instance of `IoColorPanel` floating inside `IoLayerSingleton`. It is used by `IoColorPicker` and other elements.
  **/
-
+@RegisterIoElement
 export class IoColorPanel extends IoColorMixin(IoElement) {
   static get Style() {
     return /* css */`
@@ -90,8 +90,6 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
     ]);
   }
 }
-
-RegisterIoElement(IoColorPanel as any);
 
 export const IoColorPanelSingleton = new IoColorPanel();
 IoLayerSingleton.appendChild(IoColorPanelSingleton as unknown as HTMLElement);
