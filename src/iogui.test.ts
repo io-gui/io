@@ -1,5 +1,5 @@
 import 'mocha/mocha.js';
-import 'chai';
+import 'chai/chai.js';
 
 import {IoElement, RegisterIoElement} from './iogui.js';
 
@@ -41,8 +41,6 @@ import Element from './core/io-element.test.js';
 // import OptionMenu from "./elements/menus/option-menu.test.js";
 
 mocha.setup('bdd');
-
-console.log(chai);
 
 const mochaDiv = document.createElement('div');
 mochaDiv.setAttribute('id', 'mocha');
