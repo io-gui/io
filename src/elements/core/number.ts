@@ -122,7 +122,7 @@ export class IoNumber extends IoItem {
     this.scrollLeft = 0;
     // TODO: unhack race condition
     setTimeout(() => {
-      if (!((document.activeElement as Element).parentElement === IoLadderSingleton as unknown as Element)) {
+      if ((document.activeElement as Element).parentElement !== IoLadderSingleton as unknown as Element) {
         IoLadderSingleton.expanded = false;
       }
     });

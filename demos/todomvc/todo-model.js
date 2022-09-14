@@ -65,7 +65,7 @@ export class TodoModel extends IoNode {
     this.save();
   }
   toggleAll() {
-    let completed = !(this.items.length === this.getCompletedCount());
+    let completed = this.items.length !== this.getCompletedCount();
     for (let i = this.items.length; i--;) {
       this.items[i].completed = completed;
     }

@@ -60,7 +60,7 @@ export class IoColorVector extends IoColorMixin(IoElement) {
   changed() {
     const elements = [];
     const components = Object.keys(this.value);
-    for (const i in components) {
+    for (let i = 0; i < components.length; i++) {
       const c = components[i];
       if (this.value[c] !== undefined) {
         elements.push(['io-number', {

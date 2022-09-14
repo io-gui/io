@@ -177,7 +177,7 @@ export class IoMenuOptions extends IoElement {
       let overflow = false;
       let last = Infinity;
       hamburger.hidden = true;
-      const hamburgerOptions = [];
+      // const hamburgerOptions = [];
 
       for (let i = buttons.length; i--;) {
         const r = buttons[i].getBoundingClientRect();
@@ -204,7 +204,7 @@ export class IoMenuOptions extends IoElement {
           buttons[i].hidden = false;
         } else {
           buttons[i].hidden = true;
-          hamburgerOptions.push(buttons[i].option);
+          // hamburgerOptions.push(buttons[i].option);
           overflow = true;
         }
       }
