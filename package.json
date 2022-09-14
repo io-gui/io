@@ -17,9 +17,8 @@
     "clean": "rm -rf build && rm -rf bundle",
     "lint": "eslint src --fix",
     "docs": "typedoc",
-    "build": "yarn clean && yarn lint && tsc",
-    "watch": "yarn clean && yarn lint && tsc -w",
-    "bundle": "yarn build && rollup -c && dts-bundle-generator -o bundle/iogui.d.ts build/iogui.d.ts && rm -rf build && mv bundle build"
+    "build": "yarn clean && yarn lint && tsc && rollup -c && dts-bundle-generator -o bundle/iogui.d.ts build/iogui.d.ts && rm -rf build && mv bundle build",
+    "dev": "yarn clean && yarn lint && tsc -w"
   },
   "repository": {
     "type": "git",
@@ -38,6 +37,7 @@
   },
   "homepage": "https://iogui.dev",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-strip": "^2.1.0",
     "@types/chai": "^4.3.3",

@@ -1,6 +1,7 @@
 import path from 'path';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
+import commonjs from '@rollup/plugin-commonjs';
 import { terser } from "rollup-plugin-terser";
 
 function stripLines() {
@@ -37,10 +38,8 @@ function makeBundleTarget(src, target) {
   return {
     input: src,
     plugins: [
-      nodeResolve({
-        resolveOnly: ['marked']
-      }),
-      // stripLines(),
+      commonjs(),
+      nodeResolve(),
       strip({
         functions: [],
         labels: ['debug']
@@ -53,7 +52,6 @@ function makeBundleTarget(src, target) {
     inlineDynamicImports: true,
     output: [{
       format: 'es',
-      // sourcemap: true,
       file: target,
       indent: '  '
     }],
