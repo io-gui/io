@@ -100,32 +100,34 @@ export declare class Binding {
 	 */
 	dispose(): void;
 }
-export declare const REFLECT_ATTR = -1;
-export declare const REFLECT_NONE = 0;
-export declare const REFLECT_PROP = 1;
-export declare const REFLECT_BOTH = 2;
-export declare type ReflectType = typeof REFLECT_ATTR | typeof REFLECT_NONE | typeof REFLECT_PROP | typeof REFLECT_BOTH;
+export declare type Reflect = "attr" | "none" | "prop" | "both";
+/**
+ * Declares default value, type and reactive behavior of the property.
+ */
 export declare type PropertyDeclaration = {
 	value?: any;
 	type?: Constructor;
 	binding?: Binding;
-	reflect?: ReflectType;
+	reflect?: Reflect;
 	notify?: boolean;
 	observe?: boolean;
 };
+/**
+ * Allows weak declaration of properties by specifying only partial declarations such as default value or type.
+ */
 export declare type PropertyDeclarationWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDeclaration;
 /**
- * ProtoProperty definition
+ * Finalized property definition created from property declaration.
  */
 export declare class ProtoProperty {
 	value?: any;
 	type?: Constructor;
 	binding?: Binding;
-	reflect: ReflectType;
+	reflect: Reflect;
 	notify: boolean;
 	observe: boolean;
 	/**
-	 * Takes a weakly typed property definition and returns a strongly typed property definition.
+	 * Takes a weakly typed property declaration and returns full property definition with unscpecified fileds inferred.
 	 * @param {PropertyDeclarationWeak} def Weakly typed property definition
 	 */
 	constructor(def: PropertyDeclarationWeak);
@@ -136,14 +138,13 @@ export declare class ProtoProperty {
 	assign(protoProp: ProtoProperty): void;
 }
 /**
- * PropertyInstance object.
- * It is initialized from corresponding `ProtoProperty`.
+ * PropertyInstance object constructed from `ProtoProperty`.
  */
 export declare class PropertyInstance {
 	value?: any;
 	type?: Constructor;
 	binding?: Binding;
-	reflect: ReflectType;
+	reflect: Reflect;
 	notify: boolean;
 	observe: boolean;
 	/**
@@ -154,6 +155,11 @@ export declare class PropertyInstance {
 }
 export declare type PropertyDeclarations = Record<string, PropertyDeclarationWeak>;
 export declare const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations>;
+/**
+ * Allows property declarations using decorator pattern.
+ * @param {PropertyDeclarationWeak} propertyDefinition Property declaration.
+ * @return {Function} Property decorator function.
+ */
 export declare const IoProperty: (propertyDefinition: PropertyDeclarationWeak) => (target: IoNode, propertyName: string) => void;
 /**
  * Internal utility class that contains usefull information about class inheritance.
@@ -166,7 +172,7 @@ export declare class ProtoChain {
 		[property: string]: ProtoProperty;
 	};
 	readonly listeners: {
-		[property: string]: ListenerDefinition[];
+		[property: string]: ListenerDeclaration[];
 	};
 	readonly style: string;
 	readonly observedObjectProperties: string[];
@@ -440,39 +446,42 @@ declare const IoNode_base: {
  */
 export declare class IoNode extends IoNode_base {
 }
-export declare type ListenerDefinitionWeak = string | CustomEventListener | [
+/**
+ * Declares default listeners.
+ */
+export declare type ListenerDeclaration = [
 	string | CustomEventListener,
 	AddEventListenerOptions?
 ];
-export declare type ListenerDefinition = [
-	string | CustomEventListener,
-	AddEventListenerOptions?
-];
 /**
- * Takes weakly typed listener definition and returns stronly typed listener definition.
- * @param {ListenerDefinitionWeak} def Weakly typed listener definition
- * @return {ListenerDefinition} Stronly typed listener definition
+ * Allows weak declaration of listeners by specifying only partial declarations such as function or function name.
  */
-export declare const hardenListenerDefinition: (def: ListenerDefinitionWeak) => ListenerDefinition;
+export declare type ListenerDeclarationWeak = string | CustomEventListener | ListenerDeclaration;
 /**
- * Assigns source listener definition to an existing array of listener definitions.
- * @param {ListenerDefinition[]} defs Array of listener definitions
- * @param {ListenerDefinition} srcDef Source listener definition
+ * Takes weakly typed listener declaration and returns stronly typed listener declaration.
+ * @param {ListenerDeclarationWeak} def Weakly typed listener declaration
+ * @return {ListenerDeclaration} Stronly typed listener declaration
  */
-export declare const assignListenerDefinition: (defs: ListenerDefinition[], srcDef: ListenerDefinition) => void;
+export declare const hardenListenerDeclaration: (def: ListenerDeclarationWeak) => ListenerDeclaration;
 /**
- * Takes a node and a listener definition and returns a listener.
+ * Assigns source listener declaration to an existing array of listener declarations.
+ * @param {ListenerDeclaration[]} defs Array of listener declarations
+ * @param {ListenerDeclaration} srcDef Source listener declaration
+ */
+export declare const assignListenerDeclaration: (defs: ListenerDeclaration[], srcDef: ListenerDeclaration) => void;
+/**
+ * Takes a node and a listener declaration and returns a listener.
  * @param {IoNode} node `IoNode` instance
- * @param {ListenerDefinition} def Listener definition
+ * @param {ListenerDeclaration} def Listener declaration
  * @return {Listener} Listener
  */
-export declare const listenerFromDefinition: (node: IoNode | HTMLElement, def: ListenerDefinition) => Listener;
+export declare const listenerFromDefinition: (node: IoNode | HTMLElement, def: ListenerDeclaration) => Listener;
 export declare type Listener = [
 	CustomEventListener,
 	AddEventListenerOptions?
 ];
 export declare type Listeners = Record<string, Listener[]>;
-export declare type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
+export declare type ListenersDeclaration = Record<string, ListenerDeclarationWeak>;
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
  * It makes events of all `IoNode` classes compatible with DOM events.

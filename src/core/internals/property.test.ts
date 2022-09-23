@@ -418,7 +418,7 @@ export default class {
           @IoProperty({value: 'value2', type: String})
           declare prop2: string;
         }
-        const propertyDefs = PropertyDecorators.get(TestClass)
+        const propertyDefs = PropertyDecorators.get(TestClass);
         chai.expect(propertyDefs).to.be.eql({
           prop1: 'value1',
           prop2: {value: 'value2', type: String}

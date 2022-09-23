@@ -139,6 +139,8 @@ export const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations> = ne
 
 /**
  * Allows property declarations using decorator pattern.
+ * @param {PropertyDeclarationWeak} propertyDefinition Property declaration.
+ * @return {Function} Property decorator function.
  */
 export const IoProperty = function(propertyDefinition: PropertyDeclarationWeak) {
   return (target: IoNode, propertyName: string) => {
