@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement, Property} from '../../iogui.js';
+import {IoElement, RegisterIoElement, PropertyInstance} from '../../iogui.js';
 import {IoThemeSingleton} from './theme.js';
 
 const canvas = document.createElement('canvas');
@@ -142,7 +142,7 @@ export class IoGl extends IoElement {
         gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
   }
-  initPropertyUniform(name: string, property: Property) {
+  initPropertyUniform(name: string, property: PropertyInstance) {
     if (property.notify) {
       switch (property.type) {
         case Boolean:
@@ -334,7 +334,7 @@ export class IoGl extends IoElement {
       gl.useProgram(this._shader);
     }
   }
-  updatePropertyUniform(name: string, property: Property) {
+  updatePropertyUniform(name: string, property: PropertyInstance) {
     this.setShaderProgram();
     if (property.notify) {
       this.setUniform(name, property.type as unknown as UniformTypes, property.value);

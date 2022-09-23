@@ -3,7 +3,7 @@ import { Binding } from './binding.js';
 
 type ReflectType = -1 | 0 | 1 | 2;
 
-export type PropertyDefinitionStrong = {
+export type PropertyDefinition = {
   value?: any;
   type?: Constructor;
   binding?: Binding;
@@ -12,10 +12,10 @@ export type PropertyDefinitionStrong = {
   observe?: boolean;
 };
 
-export type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinitionStrong;
+export type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinition;
 
 /**
- * Property definition class
+ * ProtoProperty definition
  */
 export class ProtoProperty {
   value?: any;
@@ -38,7 +38,7 @@ export class ProtoProperty {
       this.type = (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
       this.binding = def;
     } else if (def && def.constructor === Object) {
-      const _def = def as PropertyDefinitionStrong;
+      const _def = def as PropertyDefinition;
       this.value = _def.value !== undefined ? _def.value : undefined;
       this.type = _def.type !== undefined ? _def.type : (_def.value !== undefined && _def.value !== null) ? _def.value.constructor : undefined;
       this.binding = _def.binding instanceof Binding ? _def.binding : undefined;
@@ -53,27 +53,25 @@ export class ProtoProperty {
       this.type = def.constructor as Constructor;
     }
   }
+  /**
+   * Assigns values of another ProtoProperty to itself, unless they are default values.
+   * @param {ProtoProperty} protoProp Source ProtoProperty
+   */
+  assign(protoProp: ProtoProperty) {
+    if (protoProp.value !== undefined) this.value = protoProp.value;
+    if (protoProp.type !== undefined) this.type = protoProp.type;
+    if (protoProp.reflect !== 0) this.reflect = protoProp.reflect;
+    if (protoProp.notify !== true) this.notify = protoProp.notify;
+    if (protoProp.observe !== false) this.observe = protoProp.observe;
+    if (protoProp.binding !== undefined) this.binding = protoProp.binding;
+  }
 }
 
 /**
- * Assigns property definition values to another property definition, unless they are default values.
- * @param {ProtoProperty} def Target property definition
- * @param {ProtoProperty} srcDef Source property definition
- */
-export const assignProtoProperty = (def: ProtoProperty, srcDef: ProtoProperty) => {
-  if (srcDef.value !== undefined) def.value = srcDef.value;
-  if (srcDef.type !== undefined) def.type = srcDef.type;
-  if (srcDef.reflect !== 0) def.reflect = srcDef.reflect;
-  if (srcDef.notify !== true) def.notify = srcDef.notify;
-  if (srcDef.observe !== false) def.observe = srcDef.observe;
-  if (srcDef.binding !== undefined) def.binding = srcDef.binding;
-};
-
-/**
- * Property configuration object.
+ * PropertyInstance object.
  * It is initialized from corresponding `ProtoProperty` in `ProtoChain`.
  */
-export class Property {
+export class PropertyInstance {
   // Property value.
   value?: any = undefined;
   // Constructor of the property value.
@@ -131,11 +129,11 @@ export class Property {
 
 export type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
 
-export const DecoratedProperties: WeakMap<Constructor, Record<string, PropertiesDeclaration>> = new WeakMap();
+export const DecoratedProperties: WeakMap<Constructor, PropertiesDeclaration> = new WeakMap();
 
 // TODO: Rename, test default values and change events.
 // TODO: consider alowing weak definitions.
-export const IoProperty = function(propertyDefinition: PropertyDefinitionStrong) {
+export const IoProperty = function(propertyDefinition: PropertyDefinitionWeak) {
   return (target: IoNode, propertyName: string) => {
     const constructor = target.constructor as Constructor;
     let _Properties = DecoratedProperties.get(constructor);

@@ -1,5 +1,5 @@
 import { IoNode, IoNodeConstructor } from '../io-node.js';
-import { ProtoProperty, assignProtoProperty, DecoratedProperties } from './property.js';
+import { ProtoProperty, DecoratedProperties } from './property.js';
 import { ListenerDefinition, hardenListenerDefinition, assignListenerDefinition } from './eventDispatcher.js';
 
 /**
@@ -73,19 +73,18 @@ export class ProtoChain {
     // aggregate inherited properties and listeners.
     for (let i = this.constructors.length; i--;) {
       // Add properties from decorators
-      let props;
-      props = DecoratedProperties.get(this.constructors[i] as any);
+      let props = DecoratedProperties.get(this.constructors[i] as any);
       if (props) for (const name in props) {
         const hardPropDef = new ProtoProperty(props[name]);
         if (!this.properties[name]) this.properties[name] = hardPropDef;
-        else assignProtoProperty(this.properties[name], hardPropDef);
+        this.properties[name].assign(hardPropDef);
       }
       // Add properties
       props = this.constructors[i].Properties;
       for (const name in props) {
         const hardPropDef = new ProtoProperty(props[name]);
         if (!this.properties[name]) this.properties[name] = hardPropDef;
-        else assignProtoProperty(this.properties[name], hardPropDef);
+        this.properties[name].assign(hardPropDef);
       }
       // Add listeners
       const listeners = this.constructors[i].Listeners;

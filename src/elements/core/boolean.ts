@@ -19,19 +19,19 @@ export class IoBoolean extends IoItem {
     `;
   }
 
-  @IoProperty({value: 'Boolean'})
+  @IoProperty('Boolean')
   declare label: string;
 
-  @IoProperty({type: Boolean, reflect: 1})
+  @IoProperty({value: false, reflect: 1})
   declare value: boolean;
 
-  @IoProperty({value: 'true'})
+  @IoProperty('true')
   declare true: string;
 
-  @IoProperty({value: 'false'})
+  @IoProperty('false')
   declare false: string;
 
-  @IoProperty({value: 'switch'})
+  @IoProperty('switch')
   declare role: string;
 
   _onClick() {

@@ -1,7 +1,7 @@
 import {ProtoChain} from './internals/protoChain.js';
 import {Binding} from './internals/binding.js';
 import {ChangeQueue} from './internals/changeQueue.js';
-import {Property, PropertiesDeclaration} from './internals/property.js';
+import {PropertyInstance, PropertiesDeclaration} from './internals/property.js';
 import {EventDispatcher, ListenersDeclaration} from './internals/eventDispatcher.js';
 
 export type Constructor = new (...args: any[]) => unknown;
@@ -44,7 +44,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       };
     }
     declare readonly _protochain: ProtoChain;
-    declare readonly _properties: Record<string, Property>;
+    declare readonly _properties: Record<string, PropertyInstance>;
     declare readonly _bindings: Record<string, Binding>;
     declare readonly _changeQueue: ChangeQueue;
     declare readonly _eventDispatcher: EventDispatcher;
@@ -74,7 +74,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       }
 
       for (const name in this._protochain.properties) {
-        const property = new Property(this._protochain.properties[name]);
+        const property = new PropertyInstance(this._protochain.properties[name]);
         this._properties[name] = property;
         const value = property.value;
         if (value !== undefined && value !== null) {
