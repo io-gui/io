@@ -1,4 +1,4 @@
-import { Constructor, IoNode } from '../io-node.js';
+import { Constructor, IoNode } from '../node.js';
 import { Binding } from './binding.js';
 
 type ReflectType = -1 | 0 | 1 | 2;
