@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../iogui.js';
+import {RegisterIoElement, REFLECT_PROP} from '../../iogui.js';
 import {Item} from '../../models/item.js';
 import {IoItem} from '../core/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
@@ -85,11 +85,11 @@ export class IoMenuItem extends IoItem {
       },
       expanded: {
         value: false,
-        reflect: 1,
+        reflect: REFLECT_PROP,
       },
       direction: {
         value: 'bottom',
-        reflect: 1,
+        reflect: REFLECT_PROP,
       },
       icon: String,
       $parent: null,

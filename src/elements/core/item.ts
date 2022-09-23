@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {PropertiesDeclaration} from '../../iogui.js';
+import {PropertyDeclarations} from '../../iogui.js';
 import {IoElement, RegisterIoElement} from '../../iogui.js';
 
 /*
@@ -36,7 +36,7 @@ export class IoItem extends IoElement {
     }
     `;
   }
-  static get Properties(): PropertiesDeclaration {
+  static get Properties(): PropertyDeclarations {
     return {
       value: undefined,
       selected: {

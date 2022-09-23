@@ -1,4 +1,4 @@
-import {RegisterIoElement, IoProperty} from '../../iogui.js';
+import {RegisterIoElement, IoProperty, REFLECT_PROP} from '../../iogui.js';
 import {IoItem} from './item.js';
 
 /*
@@ -22,7 +22,7 @@ export class IoBoolean extends IoItem {
   @IoProperty('Boolean')
   declare label: string;
 
-  @IoProperty({value: false, reflect: 1})
+  @IoProperty({value: false, reflect: REFLECT_PROP})
   declare value: boolean;
 
   @IoProperty('true')

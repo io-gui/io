@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement, Binding} from '../../iogui.js';
+import {IoElement, RegisterIoElement, Binding, REFLECT_PROP} from '../../iogui.js';
 import {Options} from '../../models/options.js';
 import {Item} from '../../models/item.js';
 import {IoLayerSingleton as Layer} from '../core/layer.js';
@@ -112,11 +112,11 @@ export class IoMenuOptions extends IoElement {
       value: null,
       expanded: {
         value: false,
-        reflect: 1,
+        reflect: REFLECT_PROP,
       },
       horizontal: {
         type: Boolean,
-        reflect: 1,
+        reflect: REFLECT_PROP,
       },
       position: 'right',
       depth: Infinity,
@@ -124,11 +124,11 @@ export class IoMenuOptions extends IoElement {
       search: String,
       overflow: {
         type: Boolean,
-        reflect: 1,
+        reflect: REFLECT_PROP,
       },
       inlayer: {
         type: Boolean,
-        reflect: 1,
+        reflect: REFLECT_PROP,
       },
       slotted: Array,
       $parent: null,

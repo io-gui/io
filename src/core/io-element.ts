@@ -1,6 +1,6 @@
 import { EventDispatcher } from './internals/eventDispatcher.js';
 import { IoNode, IoNodeMixin, RegisterIoNode } from './io-node.js';
-import { IoProperty } from './internals/property.js';
+import { IoProperty, REFLECT_PROP } from './internals/property.js';
 
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
@@ -218,34 +218,34 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   @IoProperty({type: Object, notify: false})
   declare $: Record<string, any>;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: REFLECT_PROP})
   declare tabindex: string;
 
-  @IoProperty({value: false, reflect: 1})
+  @IoProperty({value: false, reflect: REFLECT_PROP})
   declare contenteditable: boolean;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: REFLECT_PROP})
   declare class: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: REFLECT_PROP})
   declare role: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: REFLECT_PROP})
   declare label: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: REFLECT_PROP})
   declare name: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: REFLECT_PROP})
   declare title: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: REFLECT_PROP})
   declare id: string;
 
-  @IoProperty({value: false, reflect: 1})
+  @IoProperty({value: false, reflect: REFLECT_PROP})
   declare hidden: boolean;
 
-  @IoProperty({value: false, reflect: 1})
+  @IoProperty({value: false, reflect: REFLECT_PROP})
   declare disabled: boolean;
 
   static get Listeners(): any {

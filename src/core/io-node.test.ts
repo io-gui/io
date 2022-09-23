@@ -1,4 +1,4 @@
-import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertiesDeclaration, IoElement, RegisterIoElement } from '../iogui.js';
+import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertyDeclarations, IoElement, RegisterIoElement, REFLECT_PROP } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
 
 // TODO: fully test core API
@@ -57,7 +57,7 @@ export default class {
         it('Should aggregate property definitions from protochain', () => {
           @RegisterIoNode
           class Object1 extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   value: 0
@@ -69,7 +69,7 @@ export default class {
 
           @RegisterIoNode
           class Object2 extends Object1 {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   value: {},
@@ -116,7 +116,7 @@ export default class {
         });
         it('Should favor explicit property definitions over implicit', () => {
           class Object1 {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   value: {},
@@ -129,7 +129,7 @@ export default class {
           }
 
           class Object2 extends Object1 {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: [1, 2, 3],
               };
@@ -161,7 +161,7 @@ export default class {
 
           @RegisterIoNode
           class Object1 extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: binding1,
               };
@@ -170,7 +170,7 @@ export default class {
 
           @RegisterIoNode
           class Object2 extends Object1 {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   binding: binding2
@@ -206,7 +206,7 @@ export default class {
 
           @RegisterIoNode
           class TestNode extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   value: 1
@@ -228,7 +228,7 @@ export default class {
 
           @RegisterIoNode
           class TestNode extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 label: '',
               };
@@ -240,7 +240,7 @@ export default class {
 
           @RegisterIoNode
           class TestNode2 extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: binding1
               };
@@ -269,11 +269,11 @@ export default class {
         it('Should execute attribute reflection on IoElement', () => {
           @RegisterIoElement
           class TestElementReflection extends IoElement {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 label: {
                   value: 'label1',
-                  reflect: 1
+                  reflect: REFLECT_PROP
                 }
               };
             }
@@ -289,7 +289,7 @@ export default class {
         it('Should dipatch queue on object value initialization and value set', () => {
           @RegisterIoNode
           class TestNode extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop: Object,
               };
@@ -329,7 +329,7 @@ export default class {
         it('Should connect/disconnect IoNode-property-values on construction and value set', () => {
           @RegisterIoNode
           class TestNodeValue extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop: Object,
                 propChangeCounter: 0,
@@ -342,7 +342,7 @@ export default class {
 
           @RegisterIoNode
           class TestNode extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop: TestNodeValue
               };

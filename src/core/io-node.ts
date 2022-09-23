@@ -1,14 +1,14 @@
 import {ProtoChain} from './internals/protoChain.js';
 import {Binding} from './internals/binding.js';
 import {ChangeQueue} from './internals/changeQueue.js';
-import {PropertyInstance, PropertiesDeclaration} from './internals/property.js';
+import {PropertyInstance, PropertyDeclarations} from './internals/property.js';
 import {EventDispatcher, ListenersDeclaration} from './internals/eventDispatcher.js';
 
 export type Constructor = new (...args: any[]) => unknown;
 
 export interface IoNodeConstructor<T> {
   new (...args: any[]): T;
-  Properties?: PropertiesDeclaration;
+  Properties?: PropertyDeclarations;
   Listeners?: ListenersDeclaration;
   Style?: string;
 }
@@ -34,7 +34,7 @@ export type AnyEventListener = EventListener |
  */
 export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
   const IoNodeMixinConstructor = class extends (superclass as any) {
-    static get Properties(): PropertiesDeclaration {
+    static get Properties(): PropertyDeclarations {
       return {
         lazy: {
           value: false,

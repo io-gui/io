@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import {IoElement, RegisterIoElement, REFLECT_PROP} from '../../iogui.js';
 import {IoLayerSingleton} from '../core/layer.js';
 import {IoColorMixin} from './color.js';
 
@@ -58,11 +58,11 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
     return {
       expanded: {
         type: Boolean,
-        reflect: 1,
+        reflect: REFLECT_PROP,
       },
       horizontal: {
         value: true,
-        reflect: 1,
+        reflect: REFLECT_PROP,
       },
     };
   }

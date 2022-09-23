@@ -1,9 +1,14 @@
 import { Constructor, IoNode } from '../io-node.js';
 import { Binding } from './binding.js';
 
-type ReflectType = -1 | 0 | 1 | 2;
+export const REFLECT_ATTR = -1;
+export const REFLECT_NONE = 0;
+export const REFLECT_PROP = 1;
+export const REFLECT_BOTH = 2;
 
-export type PropertyDefinition = {
+type ReflectType = typeof REFLECT_ATTR | typeof REFLECT_NONE | typeof REFLECT_PROP | typeof REFLECT_BOTH;
+
+export type PropertyDeclaration = {
   value?: any;
   type?: Constructor;
   binding?: Binding;
@@ -12,7 +17,7 @@ export type PropertyDefinition = {
   observe?: boolean;
 };
 
-export type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinition;
+export type PropertyDeclarationWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDeclaration;
 
 /**
  * ProtoProperty definition
@@ -21,14 +26,14 @@ export class ProtoProperty {
   value?: any;
   type?: Constructor;
   binding?: Binding;
-  reflect: ReflectType = 0;
+  reflect: ReflectType = REFLECT_NONE;
   notify = true;
   observe = false;
   /**
    * Takes a weakly typed property definition and returns a strongly typed property definition.
-   * @param {PropertyDefinitionWeak} def Weakly typed property definition
+   * @param {PropertyDeclarationWeak} def Weakly typed property definition
    */
-  constructor(def: PropertyDefinitionWeak) {
+  constructor(def: PropertyDeclarationWeak) {
     if (def === undefined || def === null) {
       this.value = def;
     } else if (typeof def === 'function') {
@@ -38,7 +43,7 @@ export class ProtoProperty {
       this.type = (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
       this.binding = def;
     } else if (def && def.constructor === Object) {
-      const _def = def as PropertyDefinition;
+      const _def = def as PropertyDeclaration;
       this.value = _def.value !== undefined ? _def.value : undefined;
       this.type = _def.type !== undefined ? _def.type : (_def.value !== undefined && _def.value !== null) ? _def.value.constructor : undefined;
       this.binding = _def.binding instanceof Binding ? _def.binding : undefined;
@@ -69,7 +74,7 @@ export class ProtoProperty {
 
 /**
  * PropertyInstance object.
- * It is initialized from corresponding `ProtoProperty` in `ProtoChain`.
+ * It is initialized from corresponding `ProtoProperty`.
  */
 export class PropertyInstance {
   // Property value.
@@ -79,7 +84,7 @@ export class PropertyInstance {
   // Binding object.
   binding?: Binding;
   // Reflects to HTML attribute [-1, 0, 1 or 2]
-  reflect: ReflectType = 0;
+  reflect: ReflectType = REFLECT_NONE;
   // Enables change handlers and events.
   notify = true;
   // Observe object mutations for this property.
@@ -127,20 +132,16 @@ export class PropertyInstance {
   }
 }
 
-export type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
+export type PropertyDeclarations = Record<string, PropertyDeclarationWeak>;
 
-export const DecoratedProperties: WeakMap<Constructor, PropertiesDeclaration> = new WeakMap();
+export const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations> = new WeakMap();
 
-// TODO: Rename, test default values and change events.
-// TODO: consider alowing weak definitions.
-export const IoProperty = function(propertyDefinition: PropertyDefinitionWeak) {
+// TODO: Test decorator
+export const IoProperty = function(propertyDefinition: PropertyDeclarationWeak) {
   return (target: IoNode, propertyName: string) => {
     const constructor = target.constructor as Constructor;
-    let _Properties = DecoratedProperties.get(constructor);
-    if (_Properties === undefined) {
-      _Properties = {};
-      DecoratedProperties.set(constructor, _Properties);
-    }
+    const _Properties = PropertyDecorators.get(constructor) || {};
+    PropertyDecorators.set(constructor, _Properties);
     _Properties[propertyName] = propertyDefinition;
   };
 };

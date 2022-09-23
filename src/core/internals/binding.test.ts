@@ -1,8 +1,8 @@
-import { Binding, IoNode, RegisterIoNode, PropertiesDeclaration } from '../../iogui.js';
+import { Binding, IoNode, RegisterIoNode, PropertyDeclarations } from '../../iogui.js';
 
 @RegisterIoNode
 class TestIoNode extends IoNode {
-  static get Properties(): PropertiesDeclaration {
+  static get Properties(): PropertyDeclarations {
     return {
       prop1: 0,
       prop2: 0,

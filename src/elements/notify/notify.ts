@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import {IoElement, RegisterIoElement, REFLECT_PROP} from '../../iogui.js';
 import {IoStorageFactory} from '../core/storage.js';
 
 /*
@@ -52,7 +52,7 @@ export class IoNotify extends IoElement {
     return {
       expanded: {
         value: true,
-        reflect: 1,
+        reflect: REFLECT_PROP,
       }
     };
   }

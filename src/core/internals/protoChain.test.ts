@@ -1,4 +1,4 @@
-import { ProtoChain, IoNode, IoNodeMixin, PropertiesDeclaration, ListenersDeclaration, IoElement } from '../../iogui.js';
+import { ProtoChain, IoNode, IoNodeMixin, PropertyDeclarations, ListenersDeclaration, IoElement } from '../../iogui.js';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -17,7 +17,7 @@ class IoElement1 extends IoElement {}
 class IoNode2 extends IoNodeMixin(Object3) {}
 
 class FakeIoNode1 {
-  static get Properties(): PropertiesDeclaration {
+  static get Properties(): PropertyDeclarations {
     return {
       prop1: {
         notify: false
@@ -44,7 +44,7 @@ class FakeIoNode2 extends FakeIoNode1 {
   function2() {}
   onFunction2() {}
   _onFunction2() {}
-  static get Properties(): PropertiesDeclaration {
+  static get Properties(): PropertyDeclarations {
     return {
       prop1: {
         observe: true
