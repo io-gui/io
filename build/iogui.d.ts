@@ -100,9 +100,8 @@ export declare class Binding {
 	 */
 	dispose(): void;
 }
-export declare type Constructor = new (...args: any[]) => unknown;
 export declare type ReflectType = -1 | 0 | 1 | 2;
-export declare type PropertyDefinitionStrong = {
+export declare type PropertyDefinition = {
 	value?: any;
 	type?: Constructor;
 	binding?: Binding;
@@ -110,9 +109,9 @@ export declare type PropertyDefinitionStrong = {
 	notify?: boolean;
 	observe?: boolean;
 };
-export declare type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinitionStrong;
+export declare type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinition;
 /**
- * Property definition class
+ * ProtoProperty definition
  */
 export declare class ProtoProperty {
 	value?: any;
@@ -126,18 +125,17 @@ export declare class ProtoProperty {
 	 * @param {PropertyDefinitionWeak} def Weakly typed property definition
 	 */
 	constructor(def: PropertyDefinitionWeak);
+	/**
+	 * Assigns values of another ProtoProperty to itself, unless they are default values.
+	 * @param {ProtoProperty} protoProp Source ProtoProperty
+	 */
+	assign(protoProp: ProtoProperty): void;
 }
 /**
- * Assigns property definition values to another property definition, unless they are default values.
- * @param {ProtoProperty} def Target property definition
- * @param {ProtoProperty} srcDef Source property definition
- */
-export declare const assignProtoProperty: (def: ProtoProperty, srcDef: ProtoProperty) => void;
-/**
- * Property configuration object.
+ * PropertyInstance object.
  * It is initialized from corresponding `ProtoProperty` in `ProtoChain`.
  */
-export declare class Property {
+export declare class PropertyInstance {
 	value?: any;
 	type?: Constructor;
 	binding?: Binding;
@@ -150,6 +148,9 @@ export declare class Property {
 	 */
 	constructor(propDef: ProtoProperty);
 }
+export declare type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
+export declare const DecoratedProperties: WeakMap<Constructor, PropertiesDeclaration>;
+export declare const IoProperty: (propertyDefinition: PropertyDefinitionWeak) => (target: IoNode, propertyName: string) => void;
 /**
  * Internal utility class that contains usefull information about class inheritance.
  * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
@@ -176,11 +177,9 @@ export declare class ProtoChain {
 	 */
 	autobindFunctions(node: IoNode): void;
 }
-export declare type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
-export declare type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
+export declare type Constructor = new (...args: any[]) => unknown;
 export interface IoNodeConstructor<T> {
 	new (...args: any[]): T;
-	_Properties?: PropertiesDeclaration;
 	Properties?: PropertiesDeclaration;
 	Listeners?: ListenersDeclaration;
 	Style?: string;
@@ -192,8 +191,6 @@ export declare type CustomEventListener = (event: CustomEvent) => void | EventLi
 export declare type FocusEventListener = (event: FocusEvent) => void;
 export declare type TouchEventListener = (event: TouchEvent) => void;
 export declare type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener;
-export declare const IoProperty: (propertyDefinition: PropertyDefinitionStrong) => (target: IoNode, propertyName: string) => void;
-export declare const IoBind: (target: any, propertyKey: string, descriptor: PropertyDescriptor) => PropertyDescriptor;
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -203,7 +200,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, Property>;
+		readonly _properties: Record<string, PropertyInstance>;
 		readonly _bindings: Record<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
@@ -312,7 +309,6 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		dispose(): void;
 	};
 	[x: string]: any;
-	_Properties: {};
 	readonly Properties: PropertiesDeclaration;
 };
 /**
@@ -324,7 +320,7 @@ declare const IoNode_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, Property>;
+		readonly _properties: Record<string, PropertyInstance>;
 		readonly _bindings: Record<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
@@ -433,7 +429,6 @@ declare const IoNode_base: {
 		dispose(): void;
 	};
 	[x: string]: any;
-	_Properties: {};
 	readonly Properties: PropertiesDeclaration;
 };
 /**
@@ -473,6 +468,7 @@ export declare type Listener = [
 	AddEventListenerOptions?
 ];
 export declare type Listeners = Record<string, Listener[]>;
+export declare type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
  * It makes events of all `IoNode` classes compatible with DOM events.
@@ -553,7 +549,7 @@ declare const IoElement_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, Property>;
+		readonly _properties: Record<string, PropertyInstance>;
 		readonly _bindings: Record<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
@@ -576,7 +572,6 @@ declare const IoElement_base: {
 		dispose(): void;
 	};
 	[x: string]: any;
-	_Properties: {};
 	readonly Properties: PropertiesDeclaration;
 };
 /**
@@ -659,7 +654,7 @@ declare const Options_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, Property>;
+		readonly _properties: Record<string, PropertyInstance>;
 		readonly _bindings: Record<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
@@ -682,7 +677,6 @@ declare const Options_base: {
 		dispose(): void;
 	};
 	[x: string]: any;
-	_Properties: {};
 	readonly Properties: PropertiesDeclaration;
 };
 export declare class Options extends Options_base {
@@ -746,7 +740,7 @@ export declare class IoGl extends IoElement {
 	static get Vert(): string;
 	static get GlUtils(): string;
 	static get Frag(): string;
-	initPropertyUniform(name: string, property: Property): string;
+	initPropertyUniform(name: string, property: PropertyInstance): string;
 	initShader(): WebGLProgram;
 	css: typeof IoThemeSingleton;
 	constructor(properties?: Record<string, any>);
@@ -755,7 +749,7 @@ export declare class IoGl extends IoElement {
 	changed(): void;
 	_onRender(): void;
 	setShaderProgram(): void;
-	updatePropertyUniform(name: string, property: Property): void;
+	updatePropertyUniform(name: string, property: PropertyInstance): void;
 	updateCssUniforms(): void;
 	setUniform(name: string, type: UniformTypes, value: any): void;
 }
@@ -1037,7 +1031,11 @@ export declare class IoButton extends IoItem {
 }
 export declare class IoBoolean extends IoItem {
 	static get Style(): string;
-	static get Properties(): any;
+	label: string;
+	value: boolean;
+	true: string;
+	false: string;
+	role: string;
 	_onClick(): void;
 	toggle(): void;
 	valueChanged(): void;
