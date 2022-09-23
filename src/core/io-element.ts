@@ -1,5 +1,6 @@
-import {EventDispatcher} from './internals/eventDispatcher.js';
-import {IoNode, IoNodeMixin, RegisterIoNode, IoProperty} from './io-node.js';
+import { EventDispatcher } from './internals/eventDispatcher.js';
+import { IoNode, IoNodeMixin, RegisterIoNode } from './io-node.js';
+import { IoProperty } from './internals/property.js';
 
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};

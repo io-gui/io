@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../iogui.js';
+import {RegisterIoElement, IoProperty} from '../../iogui.js';
 import {IoItem} from './item.js';
 
 /*
@@ -18,18 +18,22 @@ export class IoBoolean extends IoItem {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      label: 'Boolean',
-      value: {
-        type: Boolean,
-        reflect: 1,
-      },
-      true: 'true',
-      false: 'false',
-      role: 'switch',
-    };
-  }
+
+  @IoProperty({value: 'Boolean'})
+  declare label: string;
+
+  @IoProperty({type: Boolean, reflect: 1})
+  declare value: boolean;
+
+  @IoProperty({value: 'true'})
+  declare true: string;
+
+  @IoProperty({value: 'false'})
+  declare false: string;
+
+  @IoProperty({value: 'switch'})
+  declare role: string;
+
   _onClick() {
     this.toggle();
   }

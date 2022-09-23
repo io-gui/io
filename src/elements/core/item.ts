@@ -151,3 +151,5 @@ export class IoItem extends IoElement {
     this.textNode = label;
   }
 }
+
+// console.log(IoItem.prototype._protochain.constructors[0]._Properties);

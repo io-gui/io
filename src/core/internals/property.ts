@@ -1,6 +1,6 @@
+import { Constructor, IoNode } from '../io-node.js';
 import { Binding } from './binding.js';
 
-type Constructor = new (...args: any[]) => unknown;
 type ReflectType = -1 | 0 | 1 | 2;
 
 export type PropertyDefinitionStrong = {
@@ -128,3 +128,21 @@ export class Property {
     }
   }
 }
+
+export type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
+
+export const DecoratedProperties: WeakMap<Constructor, Record<string, PropertiesDeclaration>> = new WeakMap();
+
+// TODO: Rename, test default values and change events.
+// TODO: consider alowing weak definitions.
+export const IoProperty = function(propertyDefinition: PropertyDefinitionStrong) {
+  return (target: IoNode, propertyName: string) => {
+    const constructor = target.constructor as Constructor;
+    let _Properties = DecoratedProperties.get(constructor);
+    if (_Properties === undefined) {
+      _Properties = {};
+      DecoratedProperties.set(constructor, _Properties);
+    }
+    _Properties[propertyName] = propertyDefinition;
+  };
+};

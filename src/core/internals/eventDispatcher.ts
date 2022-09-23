@@ -54,6 +54,8 @@ export const listenerFromDefinition = (node: IoNode | HTMLElement, def: Listener
 export type Listener = [CustomEventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener[]>;
 
+export type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
+
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
  * It makes events of all `IoNode` classes compatible with DOM events.
