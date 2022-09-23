@@ -1,4 +1,4 @@
-import { IoNode, IoNodeConstructor } from '../io-node.js';
+import { IoNode, IoNodeConstructor } from '../node.js';
 import { ProtoProperty, PropertyDecorators } from './property.js';
 import { ListenerDefinition, hardenListenerDefinition, assignListenerDefinition } from './eventDispatcher.js';
 

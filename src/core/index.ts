@@ -1,3 +1,3 @@
-export * from './io-element.js';
-export * from './io-node.js';
+export * from './element.js';
+export * from './node.js';
 export * from './internals/index.js';

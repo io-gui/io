@@ -1,5 +1,5 @@
 import { ChangeEvent } from './changeQueue.js';
-import { IoNode } from '../io-node.js';
+import { IoNode } from '../node.js';
 
 /**
  * Property binding class.

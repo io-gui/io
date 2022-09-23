@@ -1,4 +1,4 @@
-import {IoNode} from '../io-node.js';
+import {IoNode} from '../node.js';
 
 /**
  * Property change FIFO queue.

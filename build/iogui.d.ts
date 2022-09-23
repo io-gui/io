@@ -100,8 +100,12 @@ export declare class Binding {
 	 */
 	dispose(): void;
 }
-export declare type ReflectType = -1 | 0 | 1 | 2;
-export declare type PropertyDefinition = {
+export declare const REFLECT_ATTR = -1;
+export declare const REFLECT_NONE = 0;
+export declare const REFLECT_PROP = 1;
+export declare const REFLECT_BOTH = 2;
+export declare type ReflectType = typeof REFLECT_ATTR | typeof REFLECT_NONE | typeof REFLECT_PROP | typeof REFLECT_BOTH;
+export declare type PropertyDeclaration = {
 	value?: any;
 	type?: Constructor;
 	binding?: Binding;
@@ -109,7 +113,7 @@ export declare type PropertyDefinition = {
 	notify?: boolean;
 	observe?: boolean;
 };
-export declare type PropertyDefinitionWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinition;
+export declare type PropertyDeclarationWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDeclaration;
 /**
  * ProtoProperty definition
  */
@@ -122,9 +126,9 @@ export declare class ProtoProperty {
 	observe: boolean;
 	/**
 	 * Takes a weakly typed property definition and returns a strongly typed property definition.
-	 * @param {PropertyDefinitionWeak} def Weakly typed property definition
+	 * @param {PropertyDeclarationWeak} def Weakly typed property definition
 	 */
-	constructor(def: PropertyDefinitionWeak);
+	constructor(def: PropertyDeclarationWeak);
 	/**
 	 * Assigns values of another ProtoProperty to itself, unless they are default values.
 	 * @param {ProtoProperty} protoProp Source ProtoProperty
@@ -133,7 +137,7 @@ export declare class ProtoProperty {
 }
 /**
  * PropertyInstance object.
- * It is initialized from corresponding `ProtoProperty` in `ProtoChain`.
+ * It is initialized from corresponding `ProtoProperty`.
  */
 export declare class PropertyInstance {
 	value?: any;
@@ -148,9 +152,9 @@ export declare class PropertyInstance {
 	 */
 	constructor(propDef: ProtoProperty);
 }
-export declare type PropertiesDeclaration = Record<string, PropertyDefinitionWeak>;
-export declare const DecoratedProperties: WeakMap<Constructor, PropertiesDeclaration>;
-export declare const IoProperty: (propertyDefinition: PropertyDefinitionWeak) => (target: IoNode, propertyName: string) => void;
+export declare type PropertyDeclarations = Record<string, PropertyDeclarationWeak>;
+export declare const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations>;
+export declare const IoProperty: (propertyDefinition: PropertyDeclarationWeak) => (target: IoNode, propertyName: string) => void;
 /**
  * Internal utility class that contains usefull information about class inheritance.
  * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
@@ -180,7 +184,7 @@ export declare class ProtoChain {
 export declare type Constructor = new (...args: any[]) => unknown;
 export interface IoNodeConstructor<T> {
 	new (...args: any[]): T;
-	Properties?: PropertiesDeclaration;
+	Properties?: PropertyDeclarations;
 	Listeners?: ListenersDeclaration;
 	Style?: string;
 }
@@ -309,7 +313,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		dispose(): void;
 	};
 	[x: string]: any;
-	readonly Properties: PropertiesDeclaration;
+	readonly Properties: PropertyDeclarations;
 };
 /**
  * Register function to be called once per class.
@@ -429,7 +433,7 @@ declare const IoNode_base: {
 		dispose(): void;
 	};
 	[x: string]: any;
-	readonly Properties: PropertiesDeclaration;
+	readonly Properties: PropertyDeclarations;
 };
 /**
  * IoNodeMixin applied to `Object` class.
@@ -572,7 +576,7 @@ declare const IoElement_base: {
 		dispose(): void;
 	};
 	[x: string]: any;
-	readonly Properties: PropertiesDeclaration;
+	readonly Properties: PropertyDeclarations;
 };
 /**
  * Core `IoElement` class.
@@ -677,7 +681,7 @@ declare const Options_base: {
 		dispose(): void;
 	};
 	[x: string]: any;
-	readonly Properties: PropertiesDeclaration;
+	readonly Properties: PropertyDeclarations;
 };
 export declare class Options extends Options_base {
 	static get Properties(): {
@@ -936,7 +940,7 @@ export declare class IoColorPanel extends IoColorPanel_base {
 }
 export declare class IoItem extends IoElement {
 	static get Style(): string;
-	static get Properties(): PropertiesDeclaration;
+	static get Properties(): PropertyDeclarations;
 	static get Listeners(): {
 		focus: string;
 		pointerdown: string;

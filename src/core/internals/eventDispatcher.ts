@@ -1,4 +1,4 @@
-import {IoNode, CustomEventListener} from '../io-node.js';
+import {IoNode, CustomEventListener} from '../node.js';
 
 export type ListenerDefinitionWeak = string | CustomEventListener | [string | CustomEventListener, AddEventListenerOptions?];
 
