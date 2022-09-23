@@ -43,7 +43,7 @@ export class IoBoolicon extends IoBoolean {
       false: 'icons:box',
       stroke: {
         value: false,
-        reflect: 1,
+        reflect: 'prop',
       },
     };
   }

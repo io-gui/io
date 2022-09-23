@@ -1,6 +1,6 @@
-import { IoNode, IoNodeConstructor } from '../node.js';
-import { ProtoProperty, PropertyDecorators } from './property.js';
-import { ListenerDefinition, hardenListenerDefinition, assignListenerDefinition } from './eventDispatcher.js';
+import {IoNode, IoNodeConstructor} from '../node.js';
+import {ProtoProperty, PropertyDecorators} from './property.js';
+import {ListenerDeclaration, hardenListenerDeclaration, assignListenerDeclaration} from './eventDispatcher.js';
 
 /**
  * Internal utility class that contains usefull information about class inheritance.
@@ -22,7 +22,7 @@ export class ProtoChain {
   /*
    * Aggregated listener definitions declared in `static get Listeners()` return ojects.
    */
-  readonly listeners: { [property: string]: ListenerDefinition[] } = {};
+  readonly listeners: { [property: string]: ListenerDeclaration[] } = {};
   /*
    * Aggregated CSS style definitions declared in `static get Style()` return strings.
    */
@@ -91,7 +91,7 @@ export class ProtoChain {
       for (const lsnrName in listeners) {
         if (listeners[lsnrName]) {
           this.listeners[lsnrName] = this.listeners[lsnrName] || [];
-          assignListenerDefinition(this.listeners[lsnrName], hardenListenerDefinition(listeners[lsnrName]));
+          assignListenerDeclaration(this.listeners[lsnrName], hardenListenerDeclaration(listeners[lsnrName]));
         }
       }
     }

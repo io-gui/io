@@ -51,7 +51,7 @@ export class IoSlider extends IoGl {
       exponent: 1,
       horizontal: {
         value: true,
-        reflect: 1,
+        reflect: 'prop',
       },
       noscroll: false,
       role: 'slider',

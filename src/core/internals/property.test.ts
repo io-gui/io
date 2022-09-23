@@ -1,4 +1,4 @@
-import {Binding, ProtoProperty, PropertyInstance, IoNode, RegisterIoNode, PropertyDeclarations, REFLECT_NONE, REFLECT_PROP} from '../../iogui.js';
+import {Binding, ProtoProperty, PropertyInstance, IoProperty, IoNode, RegisterIoNode, PropertyDeclarations, PropertyDecorators} from '../../iogui.js';
 
 class Object1 {
   prop = true;
@@ -25,7 +25,7 @@ export default class {
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -36,7 +36,7 @@ export default class {
           value: null,
           type: undefined,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -47,7 +47,7 @@ export default class {
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -58,7 +58,7 @@ export default class {
           value: undefined,
           type: Number,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -66,7 +66,7 @@ export default class {
           value: 0,
           type: Number,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -77,7 +77,7 @@ export default class {
           value: undefined,
           type: Number,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -85,7 +85,7 @@ export default class {
           value: 0,
           type: Number,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -96,7 +96,7 @@ export default class {
           value: 1,
           type: Number,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -107,7 +107,7 @@ export default class {
           value: 2,
           type: Number,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -118,7 +118,7 @@ export default class {
           value: undefined,
           type: String,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -126,7 +126,7 @@ export default class {
           value: '',
           type: String,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -137,7 +137,7 @@ export default class {
           value: undefined,
           type: String,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -145,7 +145,7 @@ export default class {
           value: '',
           type: String,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -156,7 +156,7 @@ export default class {
           value: 'test',
           type: String,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -167,7 +167,7 @@ export default class {
           value: 'test',
           type: String,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -178,7 +178,7 @@ export default class {
           value: undefined,
           type: Boolean,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -186,7 +186,7 @@ export default class {
           value: false,
           type: Boolean,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -197,7 +197,7 @@ export default class {
           value: undefined,
           type: Boolean,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -205,7 +205,7 @@ export default class {
           value: false,
           type: Boolean,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -216,7 +216,7 @@ export default class {
           value: true,
           type: Boolean,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -227,7 +227,7 @@ export default class {
           value: true,
           type: Boolean,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -238,7 +238,7 @@ export default class {
           value: undefined,
           type: Object,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -246,7 +246,7 @@ export default class {
           value: {},
           type: Object,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -257,7 +257,7 @@ export default class {
           value: undefined,
           type: Object,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -265,7 +265,7 @@ export default class {
           value: {},
           type: Object,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -277,7 +277,7 @@ export default class {
           value: {prop: true},
           type: Object,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -290,7 +290,7 @@ export default class {
           value: undefined,
           type: Array,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -298,7 +298,7 @@ export default class {
           value: [],
           type: Array,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -309,7 +309,7 @@ export default class {
           value: undefined,
           type: Array,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -317,7 +317,7 @@ export default class {
           value: [],
           type: Array,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -329,7 +329,7 @@ export default class {
           value: [1, 2, 3],
           type: Array,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -342,7 +342,7 @@ export default class {
           value: undefined,
           type: Object1,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -350,7 +350,7 @@ export default class {
           value: new Object1(),
           type: Object1,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -362,7 +362,7 @@ export default class {
           value: object1,
           type: Object1,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -370,7 +370,7 @@ export default class {
           value: new Object1(),
           type: Object1,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -383,7 +383,7 @@ export default class {
           value: undefined,
           type: Object1,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -391,13 +391,13 @@ export default class {
           value: new Object1(),
           type: Object1,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
         // initialize with non-default property definition
         propDef = new ProtoProperty({
-          reflect: -1,
+          reflect: 'attr',
           notify: false,
           observe: true,
         });
@@ -406,9 +406,22 @@ export default class {
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect: -1,
+          reflect: 'attr',
           notify: false,
           observe: true,
+        });
+      });
+      it('Should register property declarations from decorators.', () => {
+        class TestClass extends IoNode {
+          @IoProperty('value1')
+          declare prop1: string;
+          @IoProperty({value: 'value2', type: String})
+          declare prop2: string;
+        }
+        const propertyDefs = PropertyDecorators.get(TestClass)
+        chai.expect(propertyDefs).to.be.eql({
+          prop1: 'value1',
+          prop2: {value: 'value2', type: String}
         });
       });
       it('Should initialize properties with binding correctly', () => {
@@ -422,7 +435,7 @@ export default class {
           value: 'lorem',
           type: String,
           binding: binding,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -436,7 +449,7 @@ export default class {
           value: 'lorem',
           type: String,
           binding: binding,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -448,7 +461,7 @@ export default class {
           value: 'lorem',
           type: String,
           binding: binding,
-          reflect: 2,
+          reflect: 'both',
           notify: false,
           observe: true,
         });
@@ -460,7 +473,7 @@ export default class {
           value: 'lorem',
           type: String,
           binding: binding,
-          reflect: 2,
+          reflect: 'both',
           notify: false,
           observe: true,
         });
@@ -469,7 +482,7 @@ export default class {
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect: REFLECT_NONE,
+          reflect: 'none',
           notify: true,
           observe: false,
         });
@@ -477,26 +490,26 @@ export default class {
           value: 'lorem',
           type: String,
           binding: binding,
-          reflect: 2,
+          reflect: 'both',
           notify: false,
           observe: true,
         });
 
         propDef1 = new ProtoProperty({
-          reflect: 2,
+          reflect: 'both',
           notify: true,
         });
         propDef2 = new ProtoProperty({
           value: 'lorem',
           type: String,
-          reflect: REFLECT_PROP
+          reflect: 'prop'
         });
         propDef2.assign(propDef1);
         chai.expect(propDef2).to.be.eql({
           value: 'lorem',
           binding: undefined,
           type: String,
-          reflect: 2,
+          reflect: 'both',
           notify: true,
           observe: false
         });

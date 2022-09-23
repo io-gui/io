@@ -58,11 +58,11 @@ export class IoOptionMenu extends IoElement {
   static get Properties(): any {
     return {
       value: {
-        reflect: -1,
+        reflect: 'attr',
       },
       options: {
         type: Options,
-        reflect: -1
+        reflect: 'attr'
       },
       role: 'button',
     };

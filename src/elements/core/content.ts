@@ -25,7 +25,7 @@ export class IoContent extends IoElement {
       },
       expanded: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       cache: Boolean,
     };

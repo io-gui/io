@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement, REFLECT_PROP} from '../../iogui.js';
+import {IoElement, RegisterIoElement } from '../../iogui.js';
 import './properties.js';
 
 /*
@@ -38,11 +38,11 @@ export class IoObject extends IoElement {
       config: Object,
       labeled: true,
       label: {
-        reflect: REFLECT_PROP,
+        reflect: 'prop',
       },
       expanded: {
         type: Boolean,
-        reflect: REFLECT_PROP,
+        reflect: 'prop',
       },
       slotted: Array,
       role: 'region',

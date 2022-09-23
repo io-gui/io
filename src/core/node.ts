@@ -39,7 +39,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         lazy: {
           value: false,
           notify: false,
-          reflect: -1
+          reflect: 'attr'
         }
       };
     }
@@ -81,7 +81,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           // TODO: document special handling of object and node values
           if (typeof value === 'object') {
             this.queue(name, value, undefined);
-          } else if (property.reflect !== undefined && property.reflect >= 1 && this._isIoElement) {
+          } else if ((property.reflect === 'prop' || property.reflect === 'both') && this._isIoElement) {
             // TODO: Resolve bi-directional reflection when attributes are set in html (role, etc...)
             this.setAttribute(name, value);
           }
@@ -162,7 +162,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             this.dispatchQueue();
           }
         }
-        if (prop.reflect !== undefined && prop.reflect >= 1 && this._isIoElement) this.setAttribute(name, value);
+        if ((prop.reflect === 'prop' || prop.reflect === 'both') && this._isIoElement) this.setAttribute(name, value);
       }
     }
     /**

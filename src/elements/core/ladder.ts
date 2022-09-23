@@ -55,7 +55,7 @@ export class IoLadderStep extends IoItem {
       role: 'spinbutton',
       type: {
         value: 'number',
-        reflect: 1,
+        reflect: 'prop',
       },
     };
   }
@@ -199,7 +199,7 @@ export class IoLadder extends IoElement {
       conversion: 1,
       expanded: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       min: -Infinity,
       max: Infinity,

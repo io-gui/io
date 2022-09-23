@@ -49,28 +49,28 @@ export class IoElementDemo extends IoElement {
     return {
       element: {
         type: String,
-        reflect: -1,
+        reflect: 'attr',
       },
       properties: {
         type: Object,
-        reflect: -1,
+        reflect: 'attr',
         observe: true,
       },
       width: {
         type: String,
-        reflect: -1,
+        reflect: 'attr',
       },
       height: {
         type: String,
-        reflect: -1,
+        reflect: 'attr',
       },
       config: {
         type: Object,
-        reflect: -1,
+        reflect: 'attr',
       },
       expanded: {
         type: Boolean,
-        reflect: 2,
+        reflect: 'both',
       }
     };
   }

@@ -133,7 +133,7 @@ export class IoMdView extends IoElement {
     return {
       path: {
         type: String,
-        reflect: 1
+        reflect: 'prop'
       },
       sanitize: true,
       role: 'document',

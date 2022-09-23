@@ -1,27 +1,33 @@
 import {IoNode, CustomEventListener} from '../node.js';
 
-export type ListenerDefinitionWeak = string | CustomEventListener | [string | CustomEventListener, AddEventListenerOptions?];
-
-export type ListenerDefinition = [string | CustomEventListener, AddEventListenerOptions?];
+/**
+ * Declares default listeners.
+ */
+export type ListenerDeclaration = [string | CustomEventListener, AddEventListenerOptions?];
 
 /**
- * Takes weakly typed listener definition and returns stronly typed listener definition.
- * @param {ListenerDefinitionWeak} def Weakly typed listener definition
- * @return {ListenerDefinition} Stronly typed listener definition
+ * Allows weak declaration of listeners by specifying only partial declarations such as function or function name.
  */
-export const hardenListenerDefinition = (def: ListenerDefinitionWeak): ListenerDefinition => {
+export type ListenerDeclarationWeak = string | CustomEventListener | ListenerDeclaration;
+
+/**
+ * Takes weakly typed listener declaration and returns stronly typed listener declaration.
+ * @param {ListenerDeclarationWeak} def Weakly typed listener declaration
+ * @return {ListenerDeclaration} Stronly typed listener declaration
+ */
+export const hardenListenerDeclaration = (def: ListenerDeclarationWeak): ListenerDeclaration => {
   return def instanceof Array ? def : [def];
 };
 
 /**
- * Assigns source listener definition to an existing array of listener definitions.
- * @param {ListenerDefinition[]} defs Array of listener definitions
- * @param {ListenerDefinition} srcDef Source listener definition
+ * Assigns source listener declaration to an existing array of listener declarations.
+ * @param {ListenerDeclaration[]} defs Array of listener declarations
+ * @param {ListenerDeclaration} srcDef Source listener declaration
  */
-export const assignListenerDefinition = (defs: ListenerDefinition[], srcDef: ListenerDefinition) => {
+export const assignListenerDeclaration = (defs: ListenerDeclaration[], srcDef: ListenerDeclaration) => {
   const i = defs.findIndex(def => def[0] === srcDef[0]);
   if (i !== -1) {
-    if (defs[i][1]) defs[i][1] = Object.assign(defs[i][1] as ListenerDefinition, srcDef[1]);
+    if (defs[i][1]) defs[i][1] = Object.assign(defs[i][1] as ListenerDeclaration, srcDef[1]);
     else if (srcDef[1]) defs[i][1] = srcDef[1];
   } else {
     defs.push(srcDef);
@@ -31,12 +37,12 @@ export const assignListenerDefinition = (defs: ListenerDefinition[], srcDef: Lis
 const LISTENER_OPTIONS = ['capture', 'passive'];
 
 /**
- * Takes a node and a listener definition and returns a listener.
+ * Takes a node and a listener declaration and returns a listener.
  * @param {IoNode} node `IoNode` instance
- * @param {ListenerDefinition} def Listener definition
+ * @param {ListenerDeclaration} def Listener declaration
  * @return {Listener} Listener
  */
-export const listenerFromDefinition = (node: IoNode | HTMLElement, def: ListenerDefinition): Listener => {
+export const listenerFromDefinition = (node: IoNode | HTMLElement, def: ListenerDeclaration): Listener => {
   debug: {
     if (typeof def[0] !== 'string' && typeof def[0] !== 'function') console.warn('Invalid listener type');
     if (def[1]) {
@@ -54,7 +60,7 @@ export const listenerFromDefinition = (node: IoNode | HTMLElement, def: Listener
 export type Listener = [CustomEventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener[]>;
 
-export type ListenersDeclaration = Record<string, ListenerDefinitionWeak>;
+export type ListenersDeclaration = Record<string, ListenerDeclarationWeak>;
 
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
@@ -107,7 +113,7 @@ export class EventDispatcher {
     for (const prop in properties) {
       if (prop.startsWith('on-')) {
         const name = prop.slice(3, prop.length);
-        const definition = hardenListenerDefinition(properties[prop]);
+        const definition = hardenListenerDeclaration(properties[prop]);
         const listener = listenerFromDefinition(this.node, definition);
         newPropListeners[name] = [listener];
       }
@@ -116,7 +122,7 @@ export class EventDispatcher {
     for (const name in propListeners) {
       if (!newPropListeners[name]) {
         if (this.isEventTarget) {
-          const definition = hardenListenerDefinition(propListeners[name][0]);
+          const definition = hardenListenerDeclaration(propListeners[name][0]);
           const listener = listenerFromDefinition(this.node, definition);
           EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
         }
@@ -125,12 +131,12 @@ export class EventDispatcher {
     }
     for (const name in newPropListeners) {
       if (this.isEventTarget) {
-        const newDefinition = hardenListenerDefinition(newPropListeners[name][0]);
+        const newDefinition = hardenListenerDeclaration(newPropListeners[name][0]);
         const newListener = listenerFromDefinition(this.node, newDefinition);
         if (!propListeners[name]) {
           EventTarget.prototype.addEventListener.call(this.node, name, newListener[0] as EventListener, newListener[1]);
         } else {
-          const definition = hardenListenerDefinition(propListeners[name][0]);
+          const definition = hardenListenerDeclaration(propListeners[name][0]);
           const listener = listenerFromDefinition(this.node, definition);
           if ((listener !== newListener || newListener[1] && (JSON.stringify(listener[1]) !== JSON.stringify(newListener[1])))) {
             EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);

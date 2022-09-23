@@ -48,7 +48,7 @@ export class IoMatrix extends IoElement {
       },
       columns: {
         value: 4,
-        reflect: 1,
+        reflect: 'prop',
       },
     };
   }

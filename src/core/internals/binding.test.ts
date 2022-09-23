@@ -1,4 +1,4 @@
-import { Binding, IoNode, RegisterIoNode, PropertyDeclarations } from '../../iogui.js';
+import {Binding, IoNode, RegisterIoNode, PropertyDeclarations} from '../../iogui.js';
 
 @RegisterIoNode
 class TestIoNode extends IoNode {

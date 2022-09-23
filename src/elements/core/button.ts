@@ -33,7 +33,7 @@ export class IoButton extends IoItem {
       value: undefined,
       pressed: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       label: 'Button',
       icon: '',

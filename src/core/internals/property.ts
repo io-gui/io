@@ -1,36 +1,37 @@
-import { Constructor, IoNode } from '../node.js';
-import { Binding } from './binding.js';
+import {Constructor, IoNode} from '../node.js';
+import {Binding} from './binding.js';
 
-export const REFLECT_ATTR = -1;
-export const REFLECT_NONE = 0;
-export const REFLECT_PROP = 1;
-export const REFLECT_BOTH = 2;
+type Reflect = 'attr' | 'none' | 'prop' | 'both';
 
-type ReflectType = typeof REFLECT_ATTR | typeof REFLECT_NONE | typeof REFLECT_PROP | typeof REFLECT_BOTH;
-
+/**
+ * Declares default value, type and reactive behavior of the property.
+ */
 export type PropertyDeclaration = {
   value?: any;
   type?: Constructor;
   binding?: Binding;
-  reflect?: ReflectType;
+  reflect?: Reflect;
   notify?: boolean;
   observe?: boolean;
 };
 
+/**
+ * Allows weak declaration of properties by specifying only partial declarations such as default value or type.
+ */
 export type PropertyDeclarationWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDeclaration;
 
 /**
- * ProtoProperty definition
+ * Finalized property definition created from property declaration.
  */
 export class ProtoProperty {
   value?: any;
   type?: Constructor;
   binding?: Binding;
-  reflect: ReflectType = REFLECT_NONE;
+  reflect: Reflect = 'none';
   notify = true;
   observe = false;
   /**
-   * Takes a weakly typed property definition and returns a strongly typed property definition.
+   * Takes a weakly typed property declaration and returns full property definition with unscpecified fileds inferred.
    * @param {PropertyDeclarationWeak} def Weakly typed property definition
    */
   constructor(def: PropertyDeclarationWeak) {
@@ -47,7 +48,7 @@ export class ProtoProperty {
       this.value = _def.value !== undefined ? _def.value : undefined;
       this.type = _def.type !== undefined ? _def.type : (_def.value !== undefined && _def.value !== null) ? _def.value.constructor : undefined;
       this.binding = _def.binding instanceof Binding ? _def.binding : undefined;
-      this.reflect = _def.reflect !== undefined ? _def.reflect : 0;
+      this.reflect = _def.reflect !== undefined ? _def.reflect : 'none';
       this.notify = _def.notify !== undefined ? _def.notify : true;
       this.observe = _def.observe !== undefined ? _def.observe : false;
       if (this.binding !== undefined) {
@@ -65,7 +66,8 @@ export class ProtoProperty {
   assign(protoProp: ProtoProperty) {
     if (protoProp.value !== undefined) this.value = protoProp.value;
     if (protoProp.type !== undefined) this.type = protoProp.type;
-    if (protoProp.reflect !== 0) this.reflect = protoProp.reflect;
+    if (protoProp.reflect !== 'none') this.reflect = protoProp.reflect;
+    // TODO: consider allowing reset to default `.notify` and `.observe` from `protoProp`
     if (protoProp.notify !== true) this.notify = protoProp.notify;
     if (protoProp.observe !== false) this.observe = protoProp.observe;
     if (protoProp.binding !== undefined) this.binding = protoProp.binding;
@@ -73,8 +75,7 @@ export class ProtoProperty {
 }
 
 /**
- * PropertyInstance object.
- * It is initialized from corresponding `ProtoProperty`.
+ * PropertyInstance object constructed from `ProtoProperty`.
  */
 export class PropertyInstance {
   // Property value.
@@ -83,8 +84,8 @@ export class PropertyInstance {
   type?: Constructor;
   // Binding object.
   binding?: Binding;
-  // Reflects to HTML attribute [-1, 0, 1 or 2]
-  reflect: ReflectType = REFLECT_NONE;
+  // Reflects to/from HTML attribute ['attr', 'none', 'prop' or 'both']
+  reflect: Reflect = 'none';
   // Enables change handlers and events.
   notify = true;
   // Observe object mutations for this property.
@@ -102,7 +103,7 @@ export class PropertyInstance {
       });
       if (propDef.type !== undefined && typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
       if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
-      if (propDef.reflect !== undefined && ([-1, 0, 1, 2]).indexOf(propDef.reflect) === -1) {
+      if (propDef.reflect !== undefined && (['attr', 'none', 'prop', 'both']).indexOf(propDef.reflect) === -1) {
         console.error(`Invalid reflect field ${propDef.reflect}!`);
       }
       if (propDef.notify !== undefined && typeof propDef.notify !== 'boolean') console.warn('Incorrect type for "notify" field');
@@ -136,7 +137,9 @@ export type PropertyDeclarations = Record<string, PropertyDeclarationWeak>;
 
 export const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations> = new WeakMap();
 
-// TODO: Test decorator
+/**
+ * Allows property declarations using decorator pattern.
+ */
 export const IoProperty = function(propertyDefinition: PropertyDeclarationWeak) {
   return (target: IoNode, propertyName: string) => {
     const constructor = target.constructor as Constructor;

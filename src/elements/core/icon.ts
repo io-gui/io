@@ -40,15 +40,15 @@ export class IoIcon extends IoElement {
     return {
       icon: {
         value: '',
-        reflect: -1,
+        reflect: 'attr',
       },
       label: {
         value: '',
-        reflect: 1,
+        reflect: 'prop',
       },
       stroke: {
         value: false,
-        reflect: 1,
+        reflect: 'prop',
       },
     };
   }

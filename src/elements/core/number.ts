@@ -61,19 +61,19 @@ export class IoNumber extends IoItem {
       role: 'textbox',
       type: {
         value: 'number',
-        reflect: 1,
+        reflect: 'prop',
       },
       pattern: {
         value: 'pattern="[0-9]*"',
-        reflect: 1,
+        reflect: 'prop',
       },
       inputmode: {
         value: 'numeric',
-        reflect: 1,
+        reflect: 'prop',
       },
       spellcheck: {
         value: 'false',
-        reflect: 1,
+        reflect: 'prop',
       },
     };
   }

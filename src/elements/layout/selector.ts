@@ -82,7 +82,7 @@ export class IoSelector extends IoElement {
         observe: true,
       },
       selected: {
-        reflect: 1,
+        reflect: 'prop',
       },
       cache: Boolean,
       _caches: Object,

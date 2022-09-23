@@ -1,6 +1,6 @@
 import { EventDispatcher } from './internals/eventDispatcher.js';
 import { IoNode, IoNodeMixin, RegisterIoNode } from './node.js';
-import { IoProperty, REFLECT_PROP } from './internals/property.js';
+import { IoProperty } from './internals/property.js';
 
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
@@ -218,34 +218,34 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   @IoProperty({type: Object, notify: false})
   declare $: Record<string, any>;
 
-  @IoProperty({value: '', reflect: REFLECT_PROP})
+  @IoProperty({value: '', reflect: 'prop'})
   declare tabindex: string;
 
-  @IoProperty({value: false, reflect: REFLECT_PROP})
+  @IoProperty({value: false, reflect: 'prop'})
   declare contenteditable: boolean;
 
-  @IoProperty({value: '', reflect: REFLECT_PROP})
+  @IoProperty({value: '', reflect: 'prop'})
   declare class: string;
 
-  @IoProperty({value: '', reflect: REFLECT_PROP})
+  @IoProperty({value: '', reflect: 'prop'})
   declare role: string;
 
-  @IoProperty({value: '', reflect: REFLECT_PROP})
+  @IoProperty({value: '', reflect: 'prop'})
   declare label: string;
 
-  @IoProperty({value: '', reflect: REFLECT_PROP})
+  @IoProperty({value: '', reflect: 'prop'})
   declare name: string;
 
-  @IoProperty({value: '', reflect: REFLECT_PROP})
+  @IoProperty({value: '', reflect: 'prop'})
   declare title: string;
 
-  @IoProperty({value: '', reflect: REFLECT_PROP})
+  @IoProperty({value: '', reflect: 'prop'})
   declare id: string;
 
-  @IoProperty({value: false, reflect: REFLECT_PROP})
+  @IoProperty({value: false, reflect: 'prop'})
   declare hidden: boolean;
 
-  @IoProperty({value: false, reflect: REFLECT_PROP})
+  @IoProperty({value: false, reflect: 'prop'})
   declare disabled: boolean;
 
   static get Listeners(): any {
@@ -257,7 +257,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     const observed = [];
     for (const prop in this.prototype._protochain.properties) {
       const r  = this.prototype._protochain.properties[prop].reflect;
-      if (r === -1 || r === 2) {
+      if (r === 'attr' || r === 'both') {
         observed.push(prop);
       }
     }

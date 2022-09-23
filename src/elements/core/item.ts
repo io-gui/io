@@ -41,7 +41,7 @@ export class IoItem extends IoElement {
       value: undefined,
       selected: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       tabindex: 0,
     };

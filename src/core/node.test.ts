@@ -1,4 +1,4 @@
-import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertyDeclarations, IoElement, RegisterIoElement, REFLECT_PROP } from '../iogui.js';
+import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertyDeclarations, IoElement, RegisterIoElement } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
 
 // TODO: fully test core API
@@ -99,14 +99,14 @@ export default class {
           chai.expect(props1['prop1'].value).to.be.equal(0);
           chai.expect(props1['prop1'].type).to.be.equal(Number);
           chai.expect(props1['prop1'].notify).to.be.equal(true);
-          chai.expect(props1['prop1'].reflect).to.be.equal(0);
+          chai.expect(props1['prop1'].reflect).to.be.equal('none');
           chai.expect(props1['prop1'].observe).to.be.equal(false);
 
           chai.expect(protoProps2.prop1.value).to.be.eql({});
           chai.expect(props2['prop1'].value).to.be.eql({});
           chai.expect(props2['prop1'].type).to.be.equal(Object);
           chai.expect(props2['prop1'].notify).to.be.equal(false);
-          chai.expect(props2['prop1'].reflect).to.be.equal(0);
+          chai.expect(props2['prop1'].reflect).to.be.equal('none');
           chai.expect(props2['prop1'].observe).to.be.equal(true);
 
           chai.expect(props2['prop2'].value).to.be.equal(null);
@@ -121,7 +121,7 @@ export default class {
                 prop1: {
                   value: {},
                   notify: false,
-                  reflect: 2,
+                  reflect: 'both',
                   observe: true,
                 },
               };
@@ -142,7 +142,7 @@ export default class {
           chai.expect(props.prop1.value).to.be.eql([1, 2, 3]);
           chai.expect(props.prop1.type).to.be.equal(Array);
           chai.expect(props.prop1.notify).to.be.equal(false);
-          chai.expect(props.prop1.reflect).to.be.equal(2);
+          chai.expect(props.prop1.reflect).to.be.equal('both');
           chai.expect(props.prop1.observe).to.be.equal(true);
         });
         it('Should correctly register properties with bindigs', () => {
@@ -273,7 +273,7 @@ export default class {
               return {
                 label: {
                   value: 'label1',
-                  reflect: REFLECT_PROP
+                  reflect: 'prop'
                 }
               };
             }

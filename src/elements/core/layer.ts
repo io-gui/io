@@ -57,7 +57,7 @@ class IoLayer extends IoElement {
     return {
       expanded: {
         value: false,
-        reflect: 1,
+        reflect: 'prop',
       },
       skipCollapse: Boolean,
     };
