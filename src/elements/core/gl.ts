@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement, PropertyInstance} from '../../iogui.js';
+import {IoElement, RegisterIoElement, PropertyInstance, PropertyDeclaration} from '../../iogui.js';
 import {IoThemeSingleton} from './theme.js';
 
 const canvas = document.createElement('canvas');
@@ -142,7 +142,8 @@ export class IoGl extends IoElement {
         gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
   }
-  initPropertyUniform(name: string, property: PropertyInstance) {
+  //TODO: this is possible an error. property should be PropertyDeclaration
+  initPropertyUniform(name: string, property: PropertyDeclaration) {
     if (property.notify) {
       switch (property.type) {
         case Boolean:
@@ -164,7 +165,7 @@ export class IoGl extends IoElement {
     precision highp float;\n`;
 
     for (const name in this.css._properties) {
-      const property = this.css._protochain.properties[name];
+      const property = this.css._properties[name];
       frag += this.initPropertyUniform(name, property);
     }
 
@@ -172,7 +173,7 @@ export class IoGl extends IoElement {
 
     for (const prop in this._properties) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = this._protochain.properties[prop];
+      const property = this._properties[prop];
       frag += this.initPropertyUniform(name, property);
     }
 
@@ -218,14 +219,14 @@ export class IoGl extends IoElement {
     // TODO: improve code clarity
     this._vecLengths = {};
     for (const name in this.css._properties) {
-      const property = this.css._protochain.properties[name];
+      const property = this.css._properties[name];
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }
     }
     for (const prop in this._properties) {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = this._protochain.properties[prop];
+      const property = this._properties[prop];
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }

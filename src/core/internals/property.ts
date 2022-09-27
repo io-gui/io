@@ -18,7 +18,8 @@ export type PropertyDeclaration = {
 /**
  * Allows weak declaration of properties by specifying only partial declarations such as default value or type.
  */
-export type PropertyDeclarationWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDeclaration;
+export type PropertyDeclarationWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding |
+    PropertyDeclaration;
 
 /**
  * Finalized property definition created from property declaration.
@@ -28,8 +29,8 @@ export class ProtoProperty {
   type?: Constructor;
   binding?: Binding;
   reflect: Reflect = 'none';
-  notify = true;
-  observe = false;
+  notify?: boolean;
+  observe?: boolean;
   /**
    * Takes a weakly typed property declaration and returns full property definition with unscpecified fileds inferred.
    * @param {PropertyDeclarationWeak} def Weakly typed property definition
@@ -44,13 +45,13 @@ export class ProtoProperty {
       this.type = (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
       this.binding = def;
     } else if (def && def.constructor === Object) {
-      const _def = def as PropertyDeclaration;
-      this.value = _def.value !== undefined ? _def.value : undefined;
-      this.type = _def.type !== undefined ? _def.type : (_def.value !== undefined && _def.value !== null) ? _def.value.constructor : undefined;
-      this.binding = _def.binding instanceof Binding ? _def.binding : undefined;
-      this.reflect = _def.reflect !== undefined ? _def.reflect : 'none';
-      this.notify = _def.notify !== undefined ? _def.notify : true;
-      this.observe = _def.observe !== undefined ? _def.observe : false;
+      const d = def as PropertyDeclaration;
+      this.value = d.value !== undefined ? d.value : undefined;
+      this.type = d.type !== undefined ? d.type : (d.value !== undefined && d.value !== null) ? d.value.constructor : undefined;
+      this.binding = d.binding instanceof Binding ? d.binding : undefined;
+      this.reflect = d.reflect !== undefined ? d.reflect : 'none';
+      if (d.notify !== undefined) this.notify = d.notify;
+      if (d.observe !== undefined) this.observe = d.observe;
       if (this.binding !== undefined) {
         this.value = this.binding.value;
       }
@@ -67,9 +68,8 @@ export class ProtoProperty {
     if (protoProp.value !== undefined) this.value = protoProp.value;
     if (protoProp.type !== undefined) this.type = protoProp.type;
     if (protoProp.reflect !== 'none') this.reflect = protoProp.reflect;
-    // TODO: consider allowing reset to default `.notify` and `.observe` from `protoProp`
-    if (protoProp.notify !== true) this.notify = protoProp.notify;
-    if (protoProp.observe !== false) this.observe = protoProp.observe;
+    if (protoProp.notify !== undefined) this.notify = protoProp.notify;
+    if (protoProp.observe !== undefined) this.observe = protoProp.observe;
     if (protoProp.binding !== undefined) this.binding = protoProp.binding;
   }
 }
@@ -114,8 +114,8 @@ export class PropertyInstance {
     this.type = propDef.type;
     this.binding = propDef.binding;
     this.reflect = propDef.reflect;
-    this.notify = propDef.notify;
-    this.observe = propDef.observe;
+    if (propDef.notify !== undefined) this.notify = propDef.notify as any;
+    if (propDef.observe !== undefined) this.observe = propDef.observe as any;
 
     if (this.binding instanceof Binding) {
       this.value = this.binding.value;

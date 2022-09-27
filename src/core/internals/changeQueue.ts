@@ -1,7 +1,7 @@
 import {IoNode} from '../node.js';
 
 /**
- * Property change FIFO queue.
+ * Responsive property change FIFO queue.
  * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
 export class ChangeQueue {

@@ -4,27 +4,27 @@ import {ListenerDeclaration, hardenListenerDeclaration, assignListenerDeclaratio
 
 /**
  * Internal utility class that contains usefull information about class inheritance.
- * Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
+ * Inherited information is aggregated during prototype chain traversal in `RegisterIoNode()`.
  */
 export class ProtoChain {
   /*
-   * Array of inherited class constructors ending with `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+   * Array of inherited class constructors ending with `HTMLElement`, `Object` or `Array`.
    */
   readonly constructors: Array<IoNodeConstructor<any>> = [];
   /*
-   * Array of function names that start with "on" or "_" for auto-binding.
+   * Array of function names that start with "on" or "_on" for auto-binding.
    */
   readonly functions: Array<string> = [];
   /*
-   * Aggregated property definitions declared in `static get Properties()` return ojects.
+   * Aggregated property declarations declared in `static get Properties()` return ojects.
    */
   readonly properties: { [property: string]: ProtoProperty } = {};
   /*
-   * Aggregated listener definitions declared in `static get Listeners()` return ojects.
+   * Aggregated listener declarations declared in `static get Listeners()` return ojects.
    */
   readonly listeners: { [property: string]: ListenerDeclaration[] } = {};
   /*
-   * Aggregated CSS style definitions declared in `static get Style()` return strings.
+   * Aggregated CSS style declarations declared in `static get Style()` return strings.
    */
   readonly style: string = '';
   /*
@@ -32,20 +32,20 @@ export class ProtoChain {
    */
   readonly observedObjectProperties: string[] = [];
   /**
-   * Creates an instance of `ProtoChain`.
-   * @param {IoNodeConstructor<any>} ioNodeClass - Owner `IoNode`-derived class.
+   * Creates an instance of `ProtoChain` for specified class constructor.
+   * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode`-derived constructor.
    */
-  constructor(ioNodeClass: IoNodeConstructor<any>) {
-    let proto = ioNodeClass.prototype;
+  constructor(ioNodeConstructor: IoNodeConstructor<any>) {
+    let proto = ioNodeConstructor.prototype;
     // Iterate through the prototype chain to aggregate inheritance information.
-    // Terminates at `IoNode.__proto__`, `HTMLElement`, `Object` or `Array`.
+    // Terminates at `HTMLElement`, `Object` or `Array`.
     while (
       proto
-      && (ioNodeClass) !== HTMLElement
-      && (ioNodeClass) !== Object
-      && (ioNodeClass) !== Array) {
+      && (ioNodeConstructor) !== HTMLElement
+      && (ioNodeConstructor) !== Object
+      && (ioNodeConstructor) !== Array) {
         // Add class constructor to array
-        this.constructors.push(ioNodeClass);
+        this.constructors.push(ioNodeConstructor);
         // Add function names that start with "on" or "_" for auto-binding
         const names = Object.getOwnPropertyNames(proto);
         for (let j = 0; j < names.length; j++) {
@@ -61,12 +61,12 @@ export class ProtoChain {
           }
         }
         // Concatinate style strings
-        if (ioNodeClass.Style && this.style.indexOf(ioNodeClass.Style) === -1) {
-          this.style = ioNodeClass.Style + '\n' + this.style;
+        if (ioNodeConstructor.Style && this.style.indexOf(ioNodeConstructor.Style) === -1) {
+          this.style = ioNodeConstructor.Style + '\n' + this.style;
         }
         // Continue prototype traversal
         proto = Object.getPrototypeOf(proto);
-        ioNodeClass = proto.constructor;
+        ioNodeConstructor = proto.constructor;
     }
 
     // Iterate through the prototype chain once again in reverse to

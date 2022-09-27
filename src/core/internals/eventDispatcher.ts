@@ -64,11 +64,11 @@ export type ListenersDeclaration = Record<string, ListenerDeclarationWeak>;
 
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
- * It makes events of all `IoNode` classes compatible with DOM events.
+ * It makes events of all `IoNode` class instances compatible with DOM events.
  * It maintains three independent lists of listeners:
- *  - `protoListeners` specified as `get Listeners()` class declarations
- *  - `propListeners` specified as inline properties prefixed with "on-"
- *  - `addedListeners` explicitly added using `addEventListener()`
+ *  - `protoListeners` specified as `get Listeners()` class declarations.
+ *  - `propListeners` specified as inline properties prefixed with "on-".
+ *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
  */
 export class EventDispatcher {
   readonly node: IoNode | HTMLElement;
