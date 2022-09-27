@@ -26,7 +26,7 @@ export default class {
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -45,7 +45,7 @@ export default class {
           value: null,
           type: undefined,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -64,7 +64,7 @@ export default class {
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -83,7 +83,7 @@ export default class {
           value: undefined,
           type: Number,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -102,7 +102,7 @@ export default class {
           value: undefined,
           type: Number,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -121,7 +121,7 @@ export default class {
           value: 1,
           type: Number,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -140,7 +140,7 @@ export default class {
           value: 2,
           type: Number,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -159,7 +159,7 @@ export default class {
           value: undefined,
           type: String,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -178,7 +178,7 @@ export default class {
           value: undefined,
           type: String,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -197,7 +197,7 @@ export default class {
           value: 'test',
           type: String,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -216,7 +216,7 @@ export default class {
           value: 'test',
           type: String,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -235,7 +235,7 @@ export default class {
           value: undefined,
           type: Boolean,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -254,7 +254,7 @@ export default class {
           value: undefined,
           type: Boolean,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -273,7 +273,7 @@ export default class {
           value: true,
           type: Boolean,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -292,7 +292,7 @@ export default class {
           value: true,
           type: Boolean,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -311,7 +311,7 @@ export default class {
           value: undefined,
           type: Object,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -330,7 +330,7 @@ export default class {
           value: undefined,
           type: Object,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -350,7 +350,7 @@ export default class {
           value: {prop: true},
           type: Object,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -371,7 +371,7 @@ export default class {
           value: undefined,
           type: Array,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -390,7 +390,7 @@ export default class {
           value: undefined,
           type: Array,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -410,7 +410,7 @@ export default class {
           value: [1, 2, 3],
           type: Array,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -431,7 +431,7 @@ export default class {
           value: undefined,
           type: Object1,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -451,7 +451,7 @@ export default class {
           value: object1,
           type: Object1,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -472,7 +472,7 @@ export default class {
           value: undefined,
           type: Object1,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -524,7 +524,7 @@ export default class {
           value: 'lorem',
           type: String,
           binding: binding,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -546,7 +546,7 @@ export default class {
           value: 'lorem',
           type: String,
           binding: binding,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });
@@ -587,7 +587,7 @@ export default class {
           value: undefined,
           type: undefined,
           binding: undefined,
-          reflect: 'none',
+          reflect: undefined,
           notify: undefined,
           observe: undefined,
         });

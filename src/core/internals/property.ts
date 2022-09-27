@@ -28,7 +28,7 @@ export class ProtoProperty {
   value?: any;
   type?: Constructor;
   binding?: Binding;
-  reflect: Reflect = 'none';
+  reflect?: Reflect;
   notify?: boolean;
   observe?: boolean;
   /**
@@ -48,13 +48,13 @@ export class ProtoProperty {
       const d = def as PropertyDeclaration;
       this.value = d.value !== undefined ? d.value : undefined;
       this.type = d.type !== undefined ? d.type : (d.value !== undefined && d.value !== null) ? d.value.constructor : undefined;
-      this.binding = d.binding instanceof Binding ? d.binding : undefined;
-      this.reflect = d.reflect !== undefined ? d.reflect : 'none';
-      if (d.notify !== undefined) this.notify = d.notify;
-      if (d.observe !== undefined) this.observe = d.observe;
-      if (this.binding !== undefined) {
+      if (d.binding instanceof Binding) {
+        this.binding = d.binding;
         this.value = this.binding.value;
       }
+      if (d.reflect !== undefined) this.reflect = d.reflect;
+      if (d.notify !== undefined) this.notify = d.notify;
+      if (d.observe !== undefined) this.observe = d.observe;
     } else if (!(def && def.constructor === Object)) {
       this.value = def;
       this.type = def.constructor as Constructor;
@@ -67,7 +67,7 @@ export class ProtoProperty {
   assign(protoProp: ProtoProperty) {
     if (protoProp.value !== undefined) this.value = protoProp.value;
     if (protoProp.type !== undefined) this.type = protoProp.type;
-    if (protoProp.reflect !== 'none') this.reflect = protoProp.reflect;
+    if (protoProp.reflect !== undefined) this.reflect = protoProp.reflect;
     if (protoProp.notify !== undefined) this.notify = protoProp.notify;
     if (protoProp.observe !== undefined) this.observe = protoProp.observe;
     if (protoProp.binding !== undefined) this.binding = protoProp.binding;
@@ -113,9 +113,9 @@ export class PropertyInstance {
     this.value = propDef.value;
     this.type = propDef.type;
     this.binding = propDef.binding;
-    this.reflect = propDef.reflect;
-    if (propDef.notify !== undefined) this.notify = propDef.notify as any;
-    if (propDef.observe !== undefined) this.observe = propDef.observe as any;
+    if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
+    if (propDef.notify !== undefined) this.notify = propDef.notify;
+    if (propDef.observe !== undefined) this.observe = propDef.observe;
 
     if (this.binding instanceof Binding) {
       this.value = this.binding.value;
