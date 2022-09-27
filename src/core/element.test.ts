@@ -1,5 +1,7 @@
 import {Change, IoNode, RegisterIoNode, IoElement, RegisterIoElement} from '../iogui.js';
 
+// TODO: COMPLETE TEST COVERAGE
+
 @RegisterIoNode
 class TestNode extends IoNode {
   static get Properties(): any {
@@ -110,7 +112,6 @@ export default class {
           // Template functions
           chai.expect(this.element.template).to.be.a('function');
           chai.expect(this.element.traverse).to.be.a('function');
-          // TODO: fully test core API
         });
         it('Should initialize property definitions correctly', () => {
           chai.expect(this.element.prop0).to.equal(-1);
@@ -162,7 +163,6 @@ export default class {
           chai.expect(this.element.prop0).to.equal(2);
         });
       });
-      // TODO: test IoElement-specific API
     });
   }
 }

@@ -156,7 +156,6 @@ export default class {
         });
         protoChain = new ProtoChain(IoNode3);
         chai.expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1', 'prop3']);
-        console.log(protoChain.properties);
         chai.expect(protoChain.properties).to.be.eql({
           lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: 'attr', observe: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, notify: true, reflect: 'prop', observe: true},

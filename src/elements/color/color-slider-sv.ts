@@ -53,7 +53,7 @@ export class IoColorSliderSv extends IoColorSlider {
       } else {
         this.hsv[2] = Math.max(0, this.hsv[2] - 0.01);
       }
-      this.setValueFromHsv();
+      this.valueFromHsv();
     } else if (event.shiftKey && event.key === 'ArrowUp') {
       event.preventDefault();
       if (this.horizontal) {
@@ -61,7 +61,7 @@ export class IoColorSliderSv extends IoColorSlider {
       } else {
         this.hsv[1] = Math.min(1, this.hsv[1] + 0.01);
       }
-      this.setValueFromHsv();
+      this.valueFromHsv();
     } else if (event.shiftKey && event.key === 'ArrowRight') {
       event.preventDefault();
       if (this.horizontal) {
@@ -69,7 +69,7 @@ export class IoColorSliderSv extends IoColorSlider {
       } else {
         this.hsv[2] = Math.min(1, this.hsv[2] + 0.01);
       }
-      this.setValueFromHsv();
+      this.valueFromHsv();
     } else if (event.shiftKey && event.key === 'ArrowDown') {
       event.preventDefault();
       if (this.horizontal) {
@@ -77,7 +77,7 @@ export class IoColorSliderSv extends IoColorSlider {
       } else {
         this.hsv[1] = Math.max(0, this.hsv[1] - 0.01);
       }
-      this.setValueFromHsv();
+      this.valueFromHsv();
     } else {
       super._onKeydown(event);
     }
@@ -85,6 +85,6 @@ export class IoColorSliderSv extends IoColorSlider {
   _setValue(x: number, y: number) {
     this.hsv[1] = x;
     this.hsv[2] = y;
-    this.setValueFromHsv();
+    this.valueFromHsv();
   }
 }

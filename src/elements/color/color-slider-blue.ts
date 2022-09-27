@@ -34,14 +34,14 @@ export class IoColorSliderBlue extends IoColorSlider {
   }
   _setIncrease() {
     this.rgb[2] = Math.min(1, this.rgb[2] + 0.01);
-    this.setValueFromRgb();
+    this.valueFromRgb();
   }
   _setDecrease() {
     this.rgb[2] = Math.max(0, this.rgb[2] - 0.01);
-    this.setValueFromRgb();
+    this.valueFromRgb();
   }
   _setValue(x: number) {
     this.rgb[2] = x;
-    this.setValueFromRgb();
+    this.valueFromRgb();
   }
 }

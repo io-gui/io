@@ -87,7 +87,7 @@ export class IoMatrix extends IoElement {
           id: String(c),
           value: this.value[c],
           step: this.step,
-          'on-value-set': this._onValueSet
+          'on-value-input': this._onValueSet
         }]);
       }
     }

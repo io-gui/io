@@ -48,11 +48,11 @@ export class IoNumberSliderRange extends IoElement {
     if (item === this.$.number1) this.value[1] = event.detail.value;
     event.detail.value = this.value;
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    this.dispatchEvent('value-set', event.detail, false);
+    this.dispatchEvent('value-input', event.detail, false);
   }
   _onSliderSet(event: CustomEvent) {
     this.value = event.detail.value;
-    this.dispatchEvent('value-set', event.detail, false);
+    this.dispatchEvent('value-input', event.detail, false);
   }
   changed() {
     this.template([
@@ -62,7 +62,7 @@ export class IoNumberSliderRange extends IoElement {
         step: this.step,
         conversion: this.conversion,
         label: this.label,
-        'on-value-set': this._onNumberSet,
+        'on-value-input': this._onNumberSet,
       }],
       ['io-slider-range', {
         id: 'slider',
@@ -73,7 +73,7 @@ export class IoNumberSliderRange extends IoElement {
         max: this.max, // * this.conversion,
         exponent: this.exponent,
         label: this.label,
-        'on-value-set': this._onSliderSet,
+        'on-value-input': this._onSliderSet,
       }],
       ['io-number', {
         id: 'number1',
@@ -81,7 +81,7 @@ export class IoNumberSliderRange extends IoElement {
         step: this.step,
         conversion: this.conversion,
         label: this.label,
-        'on-value-set': this._onNumberSet,
+        'on-value-input': this._onNumberSet,
       }],
     ]);
   }

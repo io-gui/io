@@ -182,7 +182,7 @@ export class IoProperties extends IoElement {
         const tag = config[c][0];
         const protoConfig = config[c][1];
         const label = config[c].label || c;
-        const itemConfig: any = {title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+        const itemConfig: any = {title: label, id: c, value: this.value[c], 'on-value-input': this._onValueSet};
         itemConfig.config = this.config;
         elements.push(
           this.labeled ? ['span', {class: 'io-item'}, label + ':'] : null,

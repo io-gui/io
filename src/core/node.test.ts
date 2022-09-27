@@ -1,7 +1,7 @@
 import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertyDeclarations, IoElement, RegisterIoElement } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
 
-// TODO: fully test core API
+// TODO: COMPLETE TEST COVERAGE
 
 export default class {
   run() {
@@ -12,7 +12,7 @@ export default class {
           chai.expect(node.setProperty).to.be.a('function');
           chai.expect(node.applyProperties).to.be.a('function');
           chai.expect(node.setProperties).to.be.a('function');
-          chai.expect(node.setValue).to.be.a('function');
+          chai.expect(node.inputValue).to.be.a('function');
           chai.expect(node.changed).to.be.a('function');
           chai.expect(node.queue).to.be.a('function');
           chai.expect(node.dispatchQueue).to.be.a('function');
@@ -299,13 +299,8 @@ export default class {
           const node = new TestNode();
 
           node.addEventListener('prop-changed', ((event: CustomEvent) => {
-            const value = event.detail.value;
-            const oldValue = event.detail.oldValue;
-            chai.expect(value).to.be.eql({});
-            chai.expect(oldValue).to.be.equal(undefined);
+            chai.expect('This should not execute').to.be.eql(true);
           }) as EventListener);
-
-          node;
 
           node.removeEventListener('prop-changed');
 
@@ -317,21 +312,23 @@ export default class {
           }) as EventListener);
 
           node.prop = {};
-
-          node.removeEventListener('prop-changed');
-
+          
           node.addEventListener('prop-changed', () => {
             chai.expect('This should never happen!').to.be.equal(true);
           });
-
+          
           node.setProperty('prop', {}, true);
+
+          node.removeEventListener('prop-changed');
+
+          node.prop = {};
         });
         it('Should connect/disconnect IoNode-property-values on construction and value set', () => {
           @RegisterIoNode
-          class TestNodeValue extends IoNode {
+          class TestSubNode extends IoNode {
             static get Properties(): PropertyDeclarations {
               return {
-                prop: Object,
+                prop: 0,
                 propChangeCounter: 0,
               };
             }
@@ -344,29 +341,27 @@ export default class {
           class TestNode extends IoNode {
             static get Properties(): PropertyDeclarations {
               return {
-                prop: TestNodeValue
+                prop: TestSubNode
               };
             }
           }
 
           const node = new TestNode();
           const subIoNode1 = node.prop;
-          // chai.expect(subIoNode1.propChangeCounter).to.be.equal(0);
-          // node;
-          chai.expect(subIoNode1.propChangeCounter).to.be.equal(1);
-          subIoNode1.prop = {};
-          subIoNode1.prop = {};
+          chai.expect(subIoNode1.propChangeCounter).to.be.equal(0);
+
+          subIoNode1.prop = 1;
+          subIoNode1.prop = 2;
+          chai.expect(subIoNode1.propChangeCounter).to.be.equal(2);
+          subIoNode1.prop = 3;
           chai.expect(subIoNode1.propChangeCounter).to.be.equal(3);
-          subIoNode1.prop = {};
+
+          const subIoNode2 = new TestSubNode();
+          node.prop = subIoNode2;
+          subIoNode1.prop = 4;
+
           chai.expect(subIoNode1.propChangeCounter).to.be.equal(4);
-
-          node.prop = new TestNodeValue();
-          const subIoNode2 = node.prop;
-          subIoNode1.prop = {};
-
-          // TODO
-          chai.expect(subIoNode1.propChangeCounter).to.be.equal(5);
-          chai.expect(subIoNode2.propChangeCounter).to.be.equal(1);
+          chai.expect(subIoNode2.propChangeCounter).to.be.equal(0);
         });
       });
       describe('Reactivity', () => {

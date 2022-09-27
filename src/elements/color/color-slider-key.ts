@@ -34,14 +34,14 @@ export class IoColorSliderKey extends IoColorSlider {
   }
   _setIncrease() {
     this.cmyk[3] = Math.min(1, this.cmyk[3] + 0.01);
-    this.setValueFromCmyk();
+    this.valueFromCmyk();
   }
   _setDecrease() {
     this.cmyk[3] = Math.max(0, this.cmyk[3] - 0.01);
-    this.setValueFromCmyk();
+    this.valueFromCmyk();
   }
   _setValue(x: number) {
     this.cmyk[3] = x;
-    this.setValueFromCmyk();
+    this.valueFromCmyk();
   }
 }

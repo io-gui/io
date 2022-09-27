@@ -209,9 +209,9 @@ export const buildTree = () => (node: VirtualDOMElement): any => isObject(node[1
 @RegisterIoElement
 class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): any {
-    // TODO: consider removing from core io-element class.
     return /* css */`
-      :host[hidden] { display: none; } :host[disabled] { pointer-events: none; opacity: 0.5; }
+      :host[hidden] { display: none; }
+      :host[disabled] { pointer-events: none; opacity: 0.5; }
     `;
   }
 

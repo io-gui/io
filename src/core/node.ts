@@ -78,7 +78,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this._properties[name] = property;
         const value = property.value;
         if (value !== undefined && value !== null) {
-          // TODO: document special handling of object and node values
+          // TODO: document and test special handling of object and node values
           if (typeof value === 'object') {
             this.queue(name, value, undefined);
           } else if ((property.reflect === 'prop' || property.reflect === 'both') && this._isIoElement) {
@@ -174,8 +174,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       for (const p in props) {
         if (this._properties[p] === undefined) {
           debug: {
+            // TODO: consider converting style and config to properties
             if (!p.startsWith('on-') && p !== 'style' && p !== 'config') {
-              // TODO: consider converting style and config to properties
               console.warn(`Property "${p}" is not defined`, this);
             }
           }
@@ -205,15 +205,15 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     }
     // TODO: consider moving into a different class
     /**
-     * Sets value property and emits `value-set` event.
+     * Sets value property and emits `value-input` event.
      * Use this when value property is set by user action (e.g. mouse click).
      * @param {*} value - Property value.
      */
-    setValue(value: any) {
+    inputValue(value: any) {
       if (this.value !== value) {
         const oldValue = this.value;
         this.setProperty('value', value);
-        this.dispatchEvent('value-set', {value: value, oldValue: oldValue}, false);
+        this.dispatchEvent('value-input', {value: value, oldValue: oldValue}, false);
       }
     }
     /**

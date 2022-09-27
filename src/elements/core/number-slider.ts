@@ -41,12 +41,12 @@ export class IoNumberSlider extends IoElement {
   }
   _onNumberSet(event: CustomEvent) {
     this.value = event.detail.value;
-    this.dispatchEvent('value-set', event.detail, false);
+    this.dispatchEvent('value-input', event.detail, false);
   }
   _onSliderSet(event: CustomEvent) {
     event.detail.value = event.detail.value / this.conversion;
     this.value = event.detail.value;
-    this.dispatchEvent('value-set', event.detail, false);
+    this.dispatchEvent('value-input', event.detail, false);
   }
   changed() {
     this.template([
@@ -56,7 +56,7 @@ export class IoNumberSlider extends IoElement {
         step: this.step,
         conversion: this.conversion,
         label: this.label,
-        'on-value-set': this._onNumberSet,
+        'on-value-input': this._onNumberSet,
       }],
       ['io-slider', {
         id: 'slider',
@@ -66,7 +66,7 @@ export class IoNumberSlider extends IoElement {
         max: this.max * this.conversion,
         exponent: this.exponent,
         label: this.label,
-        'on-value-set': this._onSliderSet,
+        'on-value-input': this._onSliderSet,
       }]
     ]);
   }

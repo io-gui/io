@@ -55,7 +55,7 @@ export class IoColorVector extends IoColorMixin(IoElement) {
     // TODO: test
     const detail = {object: this.value, property: this.linked ? null : c, value: value, oldValue: oldValue};
     this.dispatchEvent('object-mutated', detail, false, window);
-    this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
+    this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
   }
   changed() {
     const elements = [];
@@ -71,7 +71,7 @@ export class IoColorVector extends IoColorMixin(IoElement) {
           min: this.min,
           max: this.max,
           ladder: true,
-          'on-value-set': this._onValueSet
+          'on-value-input': this._onValueSet
         }]);
       }
     }
@@ -79,6 +79,6 @@ export class IoColorVector extends IoColorMixin(IoElement) {
     this.template(elements);
   }
   getSlotted() {
-    return ['io-color-picker', {id: 'swatch', mode: this.mode, value: this.value}]; // , 'on-value-set': this._onValueSet
+    return ['io-color-picker', {id: 'swatch', mode: this.mode, value: this.value}]; // , 'on-value-input': this._onValueSet
   }
 }

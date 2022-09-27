@@ -11,8 +11,8 @@ import EventDispatcher from './core/internals/eventDispatcher.test.js';
 import ChangeQueue from './core/internals/changeQueue.test.js';
 
 // Core classes
-// import Node from './core/io-node.test.js';
-// import Element from './core/io-element.test.js';
+import Node from './core/node.test.js';
+import Element from './core/element.test.js';
 
 // Elements
 // import Item from './elements/core/item.test.js';
@@ -65,8 +65,8 @@ function runTests() {
     new EventDispatcher().run();
     new ChangeQueue().run();
 
-    // new Node().run();
-    // new Element().run();
+    new Node().run();
+    new Element().run();
 
     // new Item().run();
     // new Content().run();

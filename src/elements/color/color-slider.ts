@@ -60,7 +60,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   }
   _onKeydown(event: KeyboardEvent) {
     super._onKeydown(event);
-    this._notifyValueChange();
+    this._notifyValueInput();
   }
   _setIncrease() {
   }
@@ -74,11 +74,11 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   }
   _onPointermoveThrottled(event: PointerEvent) {
     super._onPointermoveThrottled(event);
-    this._notifyValueChange();
+    this._notifyValueInput();
   }
-  _notifyValueChange() {
+  _notifyValueInput() {
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
+    this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _setValue(x: number, y?: number) {

@@ -134,6 +134,7 @@ export class IoSlider extends IoGl {
   _getCoordFromValue(value: number) {
     return (value - this.min) / (this.max - this.min);
   }
+  // TODO: Implement Slider2D
   _onPointermoveThrottled(event: PointerEvent) {
     if (this._active === 1) {
       if (document.activeElement !== this as unknown as Element) this.focus();
@@ -145,7 +146,7 @@ export class IoSlider extends IoGl {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _setValue(x: number, y?: number) {
-    this.setValue(Number(x.toFixed(5)));
+    this.inputValue(Number(x.toFixed(5)));
   }
   _onKeydown(event: KeyboardEvent) {
     switch (event.key) {

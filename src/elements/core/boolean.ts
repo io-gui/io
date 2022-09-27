@@ -38,7 +38,7 @@ export class IoBoolean extends IoItem {
     this.toggle();
   }
   toggle() {
-    this.setValue(!this.value);
+    this.inputValue(!this.value);
   }
   valueChanged() {
     this.setAttribute('value', Boolean(this.value));

@@ -34,14 +34,14 @@ export class IoColorSliderLevel extends IoColorSlider {
   }
   _setIncrease() {
     this.hsv[2] = Math.min(1, this.hsv[2] + 0.01);
-    this.setValueFromHsl();
+    this.valueFromHsl();
   }
   _setDecrease() {
     this.hsv[2] = Math.max(0, this.hsv[2] - 0.01);
-    this.setValueFromHsl();
+    this.valueFromHsl();
   }
   _setValue(x: number) {
     this.hsl[2] = x;
-    this.setValueFromHsl();
+    this.valueFromHsl();
   }
 }

@@ -155,7 +155,7 @@ export class IoMenuOptions extends IoElement {
     }
     if (item !== (this as any)) {
       event.stopImmediatePropagation();
-      if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
+      if (d.value !== undefined && d.selectable !== false) this.inputValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
       this.throttle(this._onCollapse);
     }

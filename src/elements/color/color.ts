@@ -59,7 +59,7 @@ export function IoColorMixin<T extends Constructor<any>>(superclass: T) {
     modeChanged() {
       this.valueChanged();
     }
-    setValueFromRgb() {
+    valueFromRgb() {
       const c = Object.keys(this.value);
       switch (this.mode) {
         case 0: {
@@ -103,9 +103,9 @@ export function IoColorMixin<T extends Constructor<any>>(superclass: T) {
           break;
         }
       }
-      this._notifyValueChange();
+      this._notifyValueInput();
     }
-    setValueFromHsv() {
+    valueFromHsv() {
       const c = Object.keys(this.value);
       switch (this.mode) {
         case 0: {
@@ -149,9 +149,9 @@ export function IoColorMixin<T extends Constructor<any>>(superclass: T) {
           break;
         }
       }
-      this._notifyValueChange();
+      this._notifyValueInput();
     }
-    setValueFromHsl() {
+    valueFromHsl() {
       const c = Object.keys(this.value);
       switch (this.mode) {
         case 0: {
@@ -195,9 +195,9 @@ export function IoColorMixin<T extends Constructor<any>>(superclass: T) {
           break;
         }
       }
-      this._notifyValueChange();
+      this._notifyValueInput();
     }
-    setValueFromCmyk() {
+    valueFromCmyk() {
       const c = Object.keys(this.value);
       switch (this.mode) {
         case 0: {
@@ -244,7 +244,7 @@ export function IoColorMixin<T extends Constructor<any>>(superclass: T) {
           break;
         }
       }
-      this._notifyValueChange();
+      this._notifyValueInput();
     }
     valueChanged() {
       const c = Object.keys(this.value);

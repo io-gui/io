@@ -87,7 +87,7 @@ export class IoVector extends IoElement {
           min: this.min,
           max: this.max,
           ladder: true,
-          'on-value-set': this._onValueSet
+          'on-value-input': this._onValueSet
         }]);
       }
     }
