@@ -105,7 +105,7 @@ export class IoSelector extends IoElement {
   }
   constructor(props?: any) {
     super(props);
-    this._selectDefault();
+    this.optionsChanged();
   }
   _selectDefault() {
     // setTimeout(()=> {

@@ -40,7 +40,7 @@ export class IoColorSliderHue extends IoColorSlider {
     this.hsv[0] = Math.max(0, this.hsv[0] - 0.01);
     this.valueFromHsv();
   }
-  _setValue(x: number) {
+  _inputValue(x: number) {
     this.hsv[0] = x;
     this.valueFromHsv();
   }

@@ -64,7 +64,7 @@ export class IoColorSliderAlpha extends IoColorSlider {
     const components = Object.keys(this.value);
     this.value[components[i]] = 1;
   }
-  _setValue(x: number) {
+  _inputValue(x: number) {
     const i = this.mode === 3 ? 4 : 3;
     const components = Object.keys(this.value);
     const hasAlpha = this.value[components[i]] !== undefined;

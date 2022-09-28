@@ -82,7 +82,7 @@ export class IoColorSliderSl extends IoColorSlider {
       super._onKeydown(event);
     }
   }
-  _setValue(x: number, y: number) {
+  _inputValue(x: number, y: number) {
     this.hsl[1] = x;
     this.hsl[2] = y;
     this.valueFromHsl();

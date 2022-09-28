@@ -125,18 +125,17 @@ const constructElement = function(vDOMNode: any) {
 };
 
 const superCreateElement = document.createElement;
-// TODO: args type
-document.createElement = function(...args: any[]) {
-  const tag = args[0];
-  if (tag.startsWith('io-')) {
-    const constructor = customElements.get(tag);
+
+document.createElement = function(tagName: string, options?: ElementCreationOptions) {
+  if (tagName.startsWith('io-')) {
+    const constructor = customElements.get(tagName);
     if (constructor) {
       return new constructor();
     } else {
-      return superCreateElement.apply(this, args as any);
+      return superCreateElement.apply(this, [tagName, options]);
     }
   } else  {
-    return superCreateElement.apply(this, args as any);
+    return superCreateElement.apply(this, [tagName, options]);
   }
 };
 
@@ -153,12 +152,10 @@ const applyNativeElementProps = function(element: HTMLElement, props: any) {
     } else if (p === 'style') for (const s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
     else if (p !== 'id') (element as any)[p] = prop;
-    if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
+    if (p === 'name') element.setAttribute('name', prop);
   }
   if (!(element as any)._eventDispatcher) {
-    // TODO: test
     Object.defineProperty(element, '_eventDispatcher', {value: new EventDispatcher(element as unknown as IoNode)});
-    // TODO: disconnect on disposal?
   }
   (element as any)._eventDispatcher.applyPropListeners(props, element);
 };
@@ -305,22 +302,36 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     if (host === (this as any)) this.setProperty('$', {});
     this.traverse(vChildren, host as HTMLElement);
   }
+  disposeDeep(host: HTMLElement, child: any) {
+    // TODO: test!
+    host.removeChild(child);
+    const nodes = Array.from(child.querySelectorAll('*')) as IoElement[];
+    for (let i = nodes.length; i--;) {
+      if (nodes[i].dispose!!) {
+        nodes[i].dispose();
+      } if (nodes[i]._eventDispatcher) {
+        nodes[i]._eventDispatcher.dispose();
+        delete (nodes[i] as any)._eventDispatcher;
+      }
+    }
+    if ((child).dispose!!) {
+      (child).dispose();
+    } else if (child._eventDispatcher) {
+      child._eventDispatcher.dispose();
+      delete child._eventDispatcher;
+    }
+  }
   /**
-  * Recurively traverses vDOM.
-  * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
-  * @param {HTMLElement} [host] - Optional template target.
-    */
+   * Recurively traverses vDOM.
+   * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
+   * @param {HTMLElement} [host] - Optional template target.
+   */
   traverse(vChildren: Array<any>, host: HTMLElement) {
     const children = host.children;
     // focusBacktrack = new WeakMap();
     // remove trailing elements
     while (children.length > vChildren.length) {
-      const child = children[children.length - 1];
-      host.removeChild(child);
-      // TODO: enable and test!
-      // const nodes = Array.from(child.querySelectorAll('*'));
-      // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
-      // if (child.dispose) child.dispose();
+      this.disposeDeep(host, children[children.length - 1]);
     }
     // create new elements after existing
     if (children.length < vChildren.length) {
@@ -335,14 +346,12 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     for (let i = 0; i < children.length; i++) {
       const child = children[i] as HTMLElement | IoElement;
       if (child.localName !== vChildren[i].name) {
-        const oldElement = child;
+        // TODO: test!
+        const oldElement = child as IoElement;
         const element = constructElement(vChildren[i]);
         host.insertBefore(element, oldElement as unknown as HTMLElement);
         host.removeChild(oldElement as unknown as HTMLElement);
-        // TODO: enable and test!
-        // const nodes = Array.from(oldElement.querySelectorAll('*'));
-        // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
-        // if (oldElement.dispose) oldElement.dispose();
+        this.disposeDeep(host, oldElement);
       // update existing elements
       } else {
         child.removeAttribute('className');

@@ -67,10 +67,10 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   _setDecrease() {
   }
   _setMin() {
-    this._setValue(0, 0);
+    this._inputValue(0, 0);
   }
   _setMax() {
-    this._setValue(1, 1);
+    this._inputValue(1, 1);
   }
   _onPointermoveThrottled(event: PointerEvent) {
     super._onPointermoveThrottled(event);
@@ -81,7 +81,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
     this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _setValue(x: number, y?: number) {
+  _inputValue(x: number, y?: number) {
     // NOTE: implement in subclass
   }
 }

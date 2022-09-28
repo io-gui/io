@@ -185,6 +185,7 @@ export class IoTheme extends IoElement {
     this.variablesElement = document.createElement('style');
     this.variablesElement.setAttribute('id', 'io-theme-variables');
     document.head.appendChild(this.variablesElement);
+    this.changed();
   }
   _toCss(rgba: number[]) {
     const r = Math.floor(rgba[0] * 255);

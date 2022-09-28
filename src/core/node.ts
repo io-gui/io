@@ -78,10 +78,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this._properties[name] = property;
         const value = property.value;
         if (value !== undefined && value !== null) {
-          // TODO: document and test special handling of object and node values
-          if (typeof value === 'object') {
-            this.queue(name, value, undefined);
-          } else if ((property.reflect === 'prop' || property.reflect === 'both') && this._isIoElement) {
+          if ((property.reflect === 'prop' || property.reflect === 'both') && this._isIoElement) {
             // TODO: Resolve bi-directional reflection when attributes are set in html (role, etc...)
             this.setAttribute(name, value);
           }
@@ -123,16 +120,15 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
           value = binding.value;
         } else {
-          // TODO: Verify and test this edge-case fix. Look for regressions.
+          // TODO: Verify and test this edge-case fix. Look for regressions. Finish this fix - it caused regression in io-option-menu
           // If user uses setProperties() to batch-set multiple properties that are bound to parent element it causes
           // all but one of those properties to be reset to original value once parents's change event happens.
           // This fixes the bug by setting parent's property value with skipDispatch. This can possibly introduce
-          // bug when parent has properties bound to other elements. Create and extensive test for this but fix.
-          // TODO: finish this fix - it caused regression in io-option-menu
-          // WARNING: Enabling this breaks the menu.
-          // if (prop.binding && skipDispatch) {
-          //   prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
-          // }
+          // bug when parent has properties bound to other elements. Create and extensive test for this bug fix.
+          // WARNING: Enabling this used to break the menu.
+          if (prop.binding && skipDispatch) {
+            prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
+          }
         }
         prop.value = value;
 
@@ -156,7 +152,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
         }
         if (prop.notify && oldValue !== value) {
-          // TODO: consider skiping queue
           this.queue(name, value, oldValue);
           if (!skipDispatch) {
             this.dispatchQueue();
@@ -203,7 +198,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       }
       this.dispatchQueue();
     }
-    // TODO: consider moving into a different class
     /**
      * Sets value property and emits `value-input` event.
      * Use this when value property is set by user action (e.g. mouse click).
@@ -253,7 +247,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {boolean} sync - execute immediately without rAF timeout.
      */
     throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
-      // TODO: document and test.
       throttle(func, arg, sync);
     }
     /**
@@ -354,7 +347,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     dispose() {
       for (const name in this._properties) {
         if (this._properties[name].binding) {
-          // TODO: test this specifically
           this._properties[name].binding?.removeTarget(this, name);
         }
       }
@@ -365,8 +357,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       if (this._protochain.observedObjectProperties.length) {
         window.removeEventListener('object-mutated', this.onObjectMutated as EventListener);
       }
-      // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
       this._changeQueue.dispose();
+      // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
       this._eventDispatcher.dispose();
     }
   };
@@ -387,7 +379,7 @@ export const RegisterIoNode = function(target: typeof IoNode) {
 @RegisterIoNode
 export class IoNode extends IoNodeMixin(Object) {}
 
-// TODO: document and test
+// TODO: Document and test. Improve argument handling. Consider edge-cases.
 const throttleQueueSync: CallbackFunction[] = [];
 const throttleQueue: CallbackFunction[] = [];
 const throttleQueueArgs = new WeakMap();
@@ -403,7 +395,6 @@ function throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
   if (throttleQueue.indexOf(func) === -1) {
     throttleQueue.push(func);
   }
-  // TODO: improve argument handling. Consider edge-cases.
   if (throttleQueueArgs.has(func)) {
     const args = throttleQueueArgs.get(func);
     if (args.indexOf(arg) === -1) args.push(arg);

@@ -41,13 +41,13 @@ export class IoSliderRange extends IoSlider {
       const v0 = this._getValueFromCoord(p[0]);
       const v1 = this._getValueFromCoord(p[1]);
       if (this._index === 0) {
-        this._setValue(this.horizontal ? v0 : v1, this.value[1]);
+        this._inputValue(this.horizontal ? v0 : v1, this.value[1]);
       } else if (this._index === 1) {
-        this._setValue(this.value[0], this.horizontal ? v0 : v1);
+        this._inputValue(this.value[0], this.horizontal ? v0 : v1);
       }
     }
   }
-  _setValue(x: number, y: number) {
+  _inputValue(x: number, y: number) {
     this.inputValue([Number(x.toFixed(5)), Number(y.toFixed(5))]);
   }
   _onKeydown(event: KeyboardEvent) {
@@ -96,28 +96,28 @@ export class IoSliderRange extends IoSlider {
     let y = this.value[1] + this.step;
     x = Math.min(this.max, Math.max(this.min, x));
     y = Math.min(this.max, Math.max(this.min, y));
-    this._setValue(x, y);
+    this._inputValue(x, y);
   }
   _setDecrease() {
     let x = this.value[0] - this.step;
     let y = this.value[1] - this.step;
     x = Math.min(this.max, Math.max(this.min, x));
     y = Math.min(this.max, Math.max(this.min, y));
-    this._setValue(x, y);
+    this._inputValue(x, y);
   }
   _setMin() {
     let x = this.min;
     let y = this.min;
     x = Math.min(this.max, Math.max(this.min, x));
     y = Math.min(this.max, Math.max(this.min, y));
-    this._setValue(x, y);
+    this._inputValue(x, y);
   }
   _setMax() {
     let x = this.max;
     let y = this.max;
     x = Math.min(this.max, Math.max(this.min, x));
     y = Math.min(this.max, Math.max(this.min, y));
-    this._setValue(x, y);
+    this._inputValue(x, y);
   }
   applyAria() {
     super.applyAria();

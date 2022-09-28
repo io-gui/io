@@ -40,7 +40,7 @@ export class IoColorSliderMagenta extends IoColorSlider {
     this.cmyk[1] = Math.max(0, this.cmyk[1] - 0.01);
     this.valueFromCmyk();
   }
-  _setValue(x: number) {
+  _inputValue(x: number) {
     this.cmyk[1] = x;
     this.valueFromCmyk();
   }

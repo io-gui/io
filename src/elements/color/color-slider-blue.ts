@@ -40,7 +40,7 @@ export class IoColorSliderBlue extends IoColorSlider {
     this.rgb[2] = Math.max(0, this.rgb[2] - 0.01);
     this.valueFromRgb();
   }
-  _setValue(x: number) {
+  _inputValue(x: number) {
     this.rgb[2] = x;
     this.valueFromRgb();
   }

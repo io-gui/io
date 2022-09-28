@@ -141,11 +141,11 @@ export class IoSlider extends IoGl {
       const p = this._getPointerCoord(event);
       const _x = this._getValueFromCoord(p[0]);
       const _y = this._getValueFromCoord(p[1]);
-      this._setValue(this.horizontal ? _x : _y, this.horizontal ? _y : _x);
+      this._inputValue(this.horizontal ? _x : _y, this.horizontal ? _y : _x);
     }
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _setValue(x: number, y?: number) {
+  _inputValue(x: number, y?: number) {
     this.inputValue(Number(x.toFixed(5)));
   }
   _onKeydown(event: KeyboardEvent) {
@@ -192,22 +192,22 @@ export class IoSlider extends IoGl {
   _setIncrease() {
     let value = this.value + this.step;
     value = Math.min(this.max, Math.max(this.min, value));
-    this._setValue(value);
+    this._inputValue(value);
   }
   _setDecrease() {
     let value = this.value - this.step;
     value = Math.min(this.max, Math.max(this.min, value));
-    this._setValue(value);
+    this._inputValue(value);
   }
   _setMin() {
     let value = this.min;
     value = Math.min(this.max, Math.max(this.min, value));
-    this._setValue(value);
+    this._inputValue(value);
   }
   _setMax() {
     let value = this.max;
     value = Math.min(this.max, Math.max(this.min, value));
-    this._setValue(value);
+    this._inputValue(value);
   }
   // TODO: consider moving or standardizing.
   changed() {

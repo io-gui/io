@@ -51,7 +51,6 @@ export class TestElement extends IoElement {
     this.template([['test-subelement', {id: 'subelement', prop0: this.bind('prop0')}]]);
     this.subnode = new TestNode({prop2: this.bind('prop0')});
   }
-  // TODO: test arguments
   changed() {
     this._changedCounter++;
   }
@@ -142,7 +141,6 @@ export default class {
           chai.expect(this.element._customHandlerChangeEvent.detail.data).to.equal('io');
         });
       });
-      // TODO: Cleanup and improve
       describe('Binding', () => {
         it('Should update bound values correctly', () => {
           this.element.prop0 = Infinity;

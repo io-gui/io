@@ -312,11 +312,11 @@ export default class {
           }) as EventListener);
 
           node.prop = {};
-          
+
           node.addEventListener('prop-changed', () => {
             chai.expect('This should never happen!').to.be.equal(true);
           });
-          
+
           node.setProperty('prop', {}, true);
 
           node.removeEventListener('prop-changed');

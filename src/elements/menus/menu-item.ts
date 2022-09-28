@@ -103,6 +103,7 @@ export class IoMenuItem extends IoItem {
       'click': 'preventDefault',
     };
   }
+  _option?: Item;
   preventDefault(event: Event) {
     event.stopPropagation();
     event.preventDefault();
@@ -343,11 +344,13 @@ export class IoMenuItem extends IoItem {
     }
   }
   optionChanged(change: CustomEvent) {
-    if ((change as any).oldValue) {
-      (change as any).oldValue.removeEventListener('changed', this.onOptionChanged);
+    if (this._option) {
+      this._option.removeEventListener('changed', this.onOptionChanged);
+      delete this._option;
     }
-    if ((change as any).value) {
-      (change as any).value.addEventListener('changed', this.onOptionChanged);
+    if (this.option) {
+      this._option = this.option
+      this.option.addEventListener('changed', this.onOptionChanged);
     }
   }
   onOptionChanged() {

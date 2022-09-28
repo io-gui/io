@@ -27,6 +27,10 @@ export function IoColorMixin<T extends Constructor<any>>(superclass: T) {
         mode: 0,
       };
     }
+    constructor(...args: any[]) {
+      super(...args);
+      this.valueChanged();
+    }
     static get GlUtils() {
       return /* glsl */`
       vec3 hue2rgb(float hue) {

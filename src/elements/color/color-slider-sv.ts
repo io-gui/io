@@ -82,7 +82,7 @@ export class IoColorSliderSv extends IoColorSlider {
       super._onKeydown(event);
     }
   }
-  _setValue(x: number, y: number) {
+  _inputValue(x: number, y: number) {
     this.hsv[1] = x;
     this.hsv[2] = y;
     this.valueFromHsv();
