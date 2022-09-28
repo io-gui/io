@@ -349,7 +349,7 @@ export class IoMenuItem extends IoItem {
       delete this._option;
     }
     if (this.option) {
-      this._option = this.option
+      this._option = this.option;
       this.option.addEventListener('changed', this.onOptionChanged);
     }
   }

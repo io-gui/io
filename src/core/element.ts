@@ -307,14 +307,14 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     host.removeChild(child);
     const nodes = Array.from(child.querySelectorAll('*')) as IoElement[];
     for (let i = nodes.length; i--;) {
-      if (nodes[i].dispose!!) {
+      if (nodes[i].dispose!) {
         nodes[i].dispose();
       } if (nodes[i]._eventDispatcher) {
         nodes[i]._eventDispatcher.dispose();
         delete (nodes[i] as any)._eventDispatcher;
       }
     }
-    if ((child).dispose!!) {
+    if ((child).dispose!) {
       (child).dispose();
     } else if (child._eventDispatcher) {
       child._eventDispatcher.dispose();
