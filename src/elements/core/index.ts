@@ -3,7 +3,8 @@ export {IoThemeSingleton} from './theme.js';
 
 export {IoGl} from './gl.js';
 
-export {IoItem} from './item.js';
+export {IoLabel} from './label.js';
+export {IoField} from './field.js';
 export {IoContent} from './content.js';
 export {IoButton} from './button.js';
 export {IoBoolean} from './boolean.js';

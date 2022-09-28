@@ -126,9 +126,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           // This fixes the bug by setting parent's property value with skipDispatch. This can possibly introduce
           // bug when parent has properties bound to other elements. Create and extensive test for this bug fix.
           // WARNING: Enabling this used to break the menu.
-          if (prop.binding && skipDispatch) {
-            prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
-          }
+          // if (prop.binding && skipDispatch) {
+          //   prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
+          // }
         }
         prop.value = value;
 

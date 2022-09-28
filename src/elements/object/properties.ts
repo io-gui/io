@@ -65,7 +65,7 @@ export class IoProperties extends IoElement {
     :host:not([horizontal])[labeled] {
       grid-template-columns: min-content minmax(4em, 1fr);
     }
-    :host > span.io-item {
+    :host > span.io-field {
       max-width: 8em !important;
       width: 100%;
     }
@@ -185,7 +185,7 @@ export class IoProperties extends IoElement {
         const itemConfig: any = {title: label, id: c, value: this.value[c], 'on-value-input': this._onValueSet};
         itemConfig.config = this.config;
         elements.push(
-          this.labeled ? ['span', {class: 'io-item'}, label + ':'] : null,
+          this.labeled ? ['span', {class: 'io-field'}, label + ':'] : null,
           [tag, Object.assign(itemConfig, protoConfig)],
         );
       }

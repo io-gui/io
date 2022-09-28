@@ -1,5 +1,5 @@
 import {IoElement, RegisterIoElement} from '../../iogui.js';
-import {IoItem} from './item.js';
+import {IoField} from './field.js';
 import {IoLayerSingleton} from './layer.js';
 
 let lastFocus: Element | null = null;
@@ -17,14 +17,14 @@ let lastFocus: Element | null = null;
 }
 
 /*
- * Extends `IoElement`. Implements `IoLadderStep` and `IoItem`.
+ * Extends `IoElement`. Implements `IoLadderStep` and `IoField`.
  *
  * Interactive number ladder. When dragged horizontally, it changes the value in step increments. Dragging speed affects the rate of change exponentially. Up/down arrow keys change the step focus while left/right change the value in step increments. Escape key collapses the ladder and restores the focus to previously focused element. If shift key is pressed, value is rounded to the nearest step incement.
  *
  * <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
  **/
 @RegisterIoElement
-export class IoLadderStep extends IoItem {
+export class IoLadderStep extends IoField {
   static get Style() {
     return /* css */`
     :host {
@@ -104,7 +104,6 @@ export class IoLadderStep extends IoItem {
     this.dispatchEvent('ladder-step-collapse', {}, true);
   }
   applyAria() {
-    super.applyAria();
     // this.setAttribute('aria-valuemax', this.parentElement.max);
     // this.setAttribute('aria-valuemin', this.parentElement.min);
     // this.setAttribute('aria-valuenow', this.parentElement.value);
@@ -149,22 +148,22 @@ export class IoLadder extends IoElement {
       transition: opacity 0.2s, transform 0.2s;
     }
     :host:not([expanded]) > .io-up4 {
-      transform: translateY(calc(3 * var(--io-item-height)));
+      transform: translateY(calc(3 * var(--io-field-height)));
     }
     :host:not([expanded]) > .io-up3 {
-      transform: translateY(calc(2 * var(--io-item-height)));
+      transform: translateY(calc(2 * var(--io-field-height)));
     }
     :host:not([expanded]) > .io-up2 {
-      transform: translateY(calc(1 * var(--io-item-height)));
+      transform: translateY(calc(1 * var(--io-field-height)));
     }
     :host:not([expanded]) > .io-down2 {
-      transform: translateY(calc(-1 * var(--io-item-height)));
+      transform: translateY(calc(-1 * var(--io-field-height)));
     }
     :host:not([expanded]) > .io-down3 {
-      transform: translateY(calc(-2 * var(--io-item-height)));
+      transform: translateY(calc(-2 * var(--io-field-height)));
     }
     :host:not([expanded]) > .io-down4 {
-      transform: translateY(calc(-3 * var(--io-item-height)));
+      transform: translateY(calc(-3 * var(--io-field-height)));
     }
     :host > .io-up3,
     :host > .io-down3 {
@@ -186,10 +185,10 @@ export class IoLadder extends IoElement {
       opacity: 1;
     }
     :host > .io-ladder-empty {
-      height: var(--io-item-height);
+      height: var(--io-field-height);
     }
     :host > .io-ladder-center {
-      height: calc(1.5 * var(--io-item-height));
+      height: calc(1.5 * var(--io-field-height));
     }
     `;
   }
@@ -267,7 +266,7 @@ export class IoLadder extends IoElement {
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
         this.style.position = 'absolute';
-        this.style.marginTop = 'calc(-5.25 * var(--io-item-height))';
+        this.style.marginTop = 'calc(-5.25 * var(--io-field-height))';
       } else {
         this.removeAttribute('style');
       }

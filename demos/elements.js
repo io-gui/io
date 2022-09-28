@@ -15,7 +15,7 @@ export class IoDemoElements extends IoElement {
         padding: 1em;
         border: var(--io-border);
       }
-      :host > io-item {
+      :host > io-field {
         background: var(--io-background-color-dark);
         padding: var(--io-spacing) var(--io-line-height);
         width: 100%;
@@ -41,24 +41,24 @@ export class IoDemoElements extends IoElement {
   constructor(props) {
     super(props);
     this.template([
-      ['io-item', {label: 'Basic Inputs'}],
+      ['io-field', {label: 'Basic Inputs'}],
       ['io-demo-elements-core', {
         string: this.bind('string'),
         number: this.bind('number'),
         boolean: this.bind('boolean'),
       }],
-      ['io-item', {label: 'Sliders'}],
+      ['io-field', {label: 'Sliders'}],
       ['io-demo-elements-sliders', {
         number: this.bind('number'),
         vector2: this.bind('vector2'),
       }],
-      ['io-item', {label: 'Menus'}],
+      ['io-field', {label: 'Menus'}],
       ['io-demo-elements-menus', {
         number: this.bind('number'),
       }],
-      ['io-item', {label: 'Object'}],
+      ['io-field', {label: 'Object'}],
       ['io-demo-elements-object'],
-      ['io-item', {label: 'Math'}],
+      ['io-field', {label: 'Math'}],
       ['io-demo-elements-math', {
         number: this.bind('number'),
         vector2: this.bind('vector2'),
@@ -68,7 +68,7 @@ export class IoDemoElements extends IoElement {
         matrix3: this.bind('matrix3'),
         matrix4: this.bind('matrix4'),
       }],
-      ['io-item', {label: 'Color Editors'}],
+      ['io-field', {label: 'Color Editors'}],
       ['io-demo-elements-color', {
         vector3: this.bind('vector3'),
         vector4: this.bind('vector4'),

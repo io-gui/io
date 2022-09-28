@@ -132,7 +132,7 @@ export class IoSidebar extends IoElement {
         icon: '☰',
         selectable: true,
         title: 'select tab',
-        class: 'io-item',
+        class: 'io-field',
       }]]);
     } else {
       this.template([...this._addOptions(this.options)]);

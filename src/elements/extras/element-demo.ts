@@ -28,7 +28,7 @@ export class IoElementDemo extends IoElement {
       margin-bottom: calc(2 * var(--io-spacing));
     }
     :host > io-properties > :nth-child(3) {
-      margin-right: calc(var(--io-item-height) + var(--io-spacing));
+      margin-right: calc(var(--io-field-height) + var(--io-spacing));
     }
     :host > .io-content {
       border-radius: var(--io-border-radius);
@@ -41,7 +41,7 @@ export class IoElementDemo extends IoElement {
       background-image: none;
     }
     :host:not([expanded]) > .io-content {
-      margin-right: calc(var(--io-item-height) + calc(3 * var(--io-spacing)));
+      margin-right: calc(var(--io-field-height) + calc(3 * var(--io-spacing)));
     }
     `;
   }

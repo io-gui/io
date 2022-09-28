@@ -2,6 +2,10 @@ import {Change, IoNode, RegisterIoNode, IoElement, RegisterIoElement} from '../i
 
 // TODO: COMPLETE TEST COVERAGE
 
+const element = new IoElement();
+element.style.display = 'none';
+document.body.appendChild(element as unknown as HTMLElement);
+
 @RegisterIoNode
 class TestNode extends IoNode {
   static get Properties(): any {
@@ -100,7 +104,7 @@ export default class {
   }
   run() {
     describe('IoElement', () => {
-      describe('Registration', () => {
+      describe('Initialization', () => {
         it('Should have core API functions defined', () => {
           // Default properties
           chai.expect(this.element.id).to.be.equal('');
@@ -139,6 +143,18 @@ export default class {
           chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(2);
           this.element.dispatchEvent('custom-event', {data: 'io'});
           chai.expect(this.element._customHandlerChangeEvent.detail.data).to.equal('io');
+        });
+      });
+      describe('Accessibility', () => {
+        it('has a11y attributes', () => {
+          chai.expect(element.getAttribute('aria-label')).to.equal(null);
+          element.label = 'label';
+          chai.expect(element.getAttribute('aria-label')).to.equal('label');
+          element.label = '';
+          chai.expect(element.getAttribute('aria-label')).to.equal(null);
+          element.disabled = true;
+          chai.expect(element.getAttribute('aria-disabled')).to.equal('');
+          element.disabled = false;
         });
       });
       describe('Binding', () => {

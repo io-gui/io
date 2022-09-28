@@ -1,12 +1,12 @@
 import {RegisterIoElement} from '../../iogui.js';
-import {IoItem} from '../core/item.js';
+import {IoField} from '../core/field.js';
 import {IoLayerSingleton} from '../core/layer.js';
 import {IoColorMixin} from './color.js';
 import './color-swatch.js';
 import {IoColorPanelSingleton} from './color-panel.js';
 
 /*
- * Extends `IoColorMixin(IoItem)`.
+ * Extends `IoColorMixin(IoField)`.
  *
  * Implements `IoColorSwatch`, `IoColorPanelSingleton` and `IoLayerSingleton`.
  *
@@ -18,7 +18,7 @@ import {IoColorPanelSingleton} from './color-panel.js';
  * '></io-element-demo>
  **/
 @RegisterIoElement
-export class IoColorPicker extends IoColorMixin(IoItem) {
+export class IoColorPicker extends IoColorMixin(IoField) {
   static get Style() {
     return /* css */`
     :host {
@@ -27,8 +27,8 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
       border-radius: var(--io-border-radius);
       border: var(--io-border);
       border-color: var(--io-color-border-inset);
-      min-width: var(--io-item-height);
-      min-height: var(--io-item-height);
+      min-width: var(--io-field-height);
+      min-height: var(--io-field-height);
       padding: 0;
     }
     :host > io-color-swatch {

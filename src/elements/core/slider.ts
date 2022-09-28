@@ -21,8 +21,8 @@ export class IoSlider extends IoGl {
       border: var(--io-border);
       border-radius: var(--io-border-radius);
       border-color: var(--io-color-border-inset);
-      min-width: var(--io-item-height);
-      min-height: var(--io-item-height);
+      min-width: var(--io-field-height);
+      min-height: var(--io-field-height);
       align-self: stretch;
       justify-self: stretch;
     }
@@ -214,7 +214,6 @@ export class IoSlider extends IoGl {
     super.changed();
   }
   applyAria() {
-    super.applyAria();
     this.setAttribute('aria-invalid', isNaN(this.value) ? 'true' : false);
     this.setAttribute('aria-valuenow', isNaN(this.value) ? 0 : this.value);
     this.setAttribute('aria-valuemin', this.min);

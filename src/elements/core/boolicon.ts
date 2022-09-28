@@ -14,8 +14,8 @@ export class IoBoolicon extends IoBoolean {
   static get Style() {
     return /* css */`
     :host {
-      width: var(--io-item-height);
-      height: var(--io-item-height);
+      width: var(--io-field-height);
+      height: var(--io-field-height);
       fill: var(--io-color, currentcolor);
       padding: 0;
     }
@@ -52,7 +52,6 @@ export class IoBoolicon extends IoBoolean {
     this.innerHTML = IoIconsetSingleton.getIcon(this.value ? this.true : this.false);
   }
   applyAria() {
-    super.applyAria();
     this.setAttribute('aria-checked', String(!!this.value));
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
   }

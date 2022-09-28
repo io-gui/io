@@ -6,7 +6,7 @@ import { nextTick } from '../iogui.test.js';
 export default class {
   run() {
     describe('IoNode', () => {
-      describe('Registration', () => {
+      describe('Initialization', () => {
         it('Should have core API functions defined', () => {
           const node = new IoNode();
           chai.expect(node.setProperty).to.be.a('function');

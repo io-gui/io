@@ -1,15 +1,15 @@
 import {RegisterIoElement} from '../../iogui.js';
-import {IoItem} from './item.js';
+import {IoField} from './field.js';
 
 /*
- * Extends `IoItem`.
+ * Extends `IoField`.
  *
  * Button element. When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
  *
  * <io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
  **/
 @RegisterIoElement
-export class IoButton extends IoItem {
+export class IoButton extends IoField {
   static get Style() {
     return /* css */`
     :host {

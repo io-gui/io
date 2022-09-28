@@ -12,20 +12,20 @@ class IoOptionsDemoView extends IoElement {
         background-color: var(--io-background-color-dark);
         display: flex;
       }
-      :host io-item-demo-view {
+      :host io-field-demo-view {
         margin-left: 0.5em;
       }
-      :host io-item {
+      :host io-field {
         pointer-events: none;
         margin-left: 0.5em;
       }
-      :host io-item.root {
+      :host io-field.root {
         color: var(--io-color-link);
       }
-      :host io-options-path-demo > io-item {
+      :host io-options-path-demo > io-field {
         color: var(--io-color-string);
       }
-      :host io-item.leaf {
+      :host io-field.leaf {
         color: var(--io-color-focus);
       }
     `;
@@ -41,13 +41,13 @@ class IoOptionsDemoView extends IoElement {
   changed() {
     const options = [];
     for (let i = 0; i < this.options.length; i++) {
-      options.push(['io-item-demo-view', {option: this.options[i]}]);
+      options.push(['io-field-demo-view', {option: this.options[i]}]);
     }
     this.template([
       ['div', [
-        ['io-item', {value: this.options.path.bind('root'), class: 'root'}],
+        ['io-field', {value: this.options.path.bind('root'), class: 'root'}],
         ['io-options-path-demo', {value: this.options.path.bind('value')}],
-        ['io-item', {value: this.options.path.bind('root'), class: 'leaf'}],
+        ['io-field', {value: this.options.path.bind('root'), class: 'leaf'}],
       ]],
       options
     ]);
@@ -83,10 +83,10 @@ class IoItemDemoView extends IoElement {
     this.template([
       ['div', [
         [this.option.select === 'toggle' ? 'io-boolicon' : 'io-switch', {value: this.option.bind('selected')}],
-        ['io-item', {value: this.option.bind('value')}],
-        ['io-item', {value: this.option.path.bind('root'), class: 'root'}],
+        ['io-field', {value: this.option.bind('value')}],
+        ['io-field', {value: this.option.path.bind('root'), class: 'root'}],
         ['io-options-path-demo', {value: this.option.path.bind('value')}],
-        ['io-item', {value: this.option.path.bind('leaf'), class: 'leaf'}],
+        ['io-field', {value: this.option.path.bind('leaf'), class: 'leaf'}],
       ]],
       this.option.hasmore ? ['io-options-demo-view', {options: this.option.options}] : null
     ]);
@@ -102,7 +102,7 @@ class IoOptionsPathDemo extends IoElement {
     };
   }
   changed() {
-    this.template([['io-item', {value: (this.value && this.value.length) ? JSON.stringify(this.value) : ''}]]);
+    this.template([['io-field', {value: (this.value && this.value.length) ? JSON.stringify(this.value) : ''}]]);
   }
 }
 RegisterIoElement(IoOptionsPathDemo);

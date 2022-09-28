@@ -1,15 +1,15 @@
 import {RegisterIoElement} from '../../iogui.js';
-import {IoItem} from './item.js';
+import {IoField} from './field.js';
 
 /*
- * Extends `IoItem`.
+ * Extends `IoField`.
  *
  * Input element for `String` data type.
  *
  * <io-element-demo element="io-string" properties='{"value": "hello world"}'></io-element-demo>
  **/
 @RegisterIoElement
-export class IoString extends IoItem {
+export class IoString extends IoField {
   static get Style() {
     return /* css */`
     :host {
@@ -17,7 +17,7 @@ export class IoString extends IoItem {
       user-select: text;
       -webkit-user-select: text;
       -webkit-touch-callout: default;
-      min-width: var(--io-item-height);
+      min-width: var(--io-field-height);
       border-color: var(--io-color-border-inset);
       color: var(--io-color-field);
       background-color: var(--io-background-color-field);
@@ -128,7 +128,6 @@ export class IoString extends IoItem {
     this.textNode = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
   applyAria() {
-    super.applyAria();
     this.setAttribute('aria-invalid', (typeof this.value !== 'string') ? 'true' : false);
   }
 }

@@ -20,12 +20,12 @@ export class IoNumberSlider extends IoElement {
       justify-self: stretch;
     }
     :host > io-number {
-      flex: 0 0 calc(2 * var(--io-item-height));
+      flex: 0 0 calc(2 * var(--io-field-height));
       margin-right: var(--io-spacing);
     }
     :host > io-slider {
-      flex: 1 1 calc(2 * var(--io-item-height));
-      min-width: calc(2 * var(--io-item-height));
+      flex: 1 1 calc(2 * var(--io-field-height));
+      min-width: calc(2 * var(--io-field-height));
     }
     `;
   }

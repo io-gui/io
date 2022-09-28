@@ -60,7 +60,19 @@ const themeDB = $({value: JSON.parse(JSON.stringify(themeDBDefaults)), storage: 
 export class IoTheme extends IoElement {
   static get Style() {
     return /* css */`
-    --io-item: {
+    --io-label: {
+      display: inline-block;
+      padding: 0 var(--io-spacing);
+      height: var(--io-line-height);
+      line-height: var(--io-line-height);
+    }
+    --io-icon: {
+      display: inline-block;
+      width: var(--io-line-height);
+      height: var(--io-line-height);
+      line-height: var(--io-line-height);
+    }
+    --io-field: {
       align-self: flex-start;
       display: inline-block;
       cursor: pointer;
@@ -73,8 +85,7 @@ export class IoTheme extends IoElement {
       flex-wrap: nowrap;
       white-space: nowrap;
       box-sizing: border-box;
-      line-height: var(--io-line-height);
-      height: var(--io-item-height);
+      height: var(--io-field-height);
       font-size: var(--io-font-size);
       border-radius: var(--io-border-radius);
       border: var(--io-border);
@@ -240,7 +251,7 @@ export class IoTheme extends IoElement {
         --io-border-width: ${this.cssBorderWidth}px;
         --io-stroke-width: ${this.cssStrokeWidth}px;
         --io-line-height: ${this.cssLineHeight}px;
-        --io-item-height: ${this.cssItemHeight}px;
+        --io-field-height: ${this.cssItemHeight}px;
         --io-font-size: ${this.cssFontSize}px;
 
         --io-background-color: ${this._toCss(this.cssBackgroundColor)};

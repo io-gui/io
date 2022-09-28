@@ -15,7 +15,7 @@ import Node from './core/node.test.js';
 import Element from './core/element.test.js';
 
 // Elements
-// import Item from './elements/core/item.test.js';
+import Item from './elements/core/field.test.js';
 // import Content from './elements/core/content.test.js'; // TODO
 // import Gl from './elements/core/gl.test.js';
 // import Button from './elements/core/button.test.js';
@@ -68,7 +68,7 @@ function runTests() {
     new Node().run();
     new Element().run();
 
-    // new Item().run();
+    new Item().run();
     // new Content().run();
     // new Gl().run();
     // new Button().run();

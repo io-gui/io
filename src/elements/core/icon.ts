@@ -1,26 +1,21 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import {IoElement, RegisterIoElement} from '../../core/element.js';
+import {IoProperty} from '../../core/internals/property.js';
 import {IoIconsetSingleton} from './iconset.js';
 
-/*
- * Extends `IoElement`.
- *
- * SVG icon element. Displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
- *
- * <io-element-demo element="io-icon" properties='{"icon": "icons:link", "stroke": false}' config='{"icon": ["io-option-menu", {"options": ["icons:link", "icons:unlink", "icons:check", "icons:uncheck"]}]}'></io-element-demo>
- **/
 @RegisterIoElement
 export class IoIcon extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-item;
+      @apply --io-icon;
+      pointer-events: none;
     }
     :host {
-      width: var(--io-item-height);
-      height: var(--io-item-height);
-      border: 0;
-      padding: 0;
       fill: var(--io-color, currentcolor);
+      width: inherit !important;
+    }
+    :host:not([icon]) {
+      display: none;
     }
     :host[stroke] {
       stroke: var(--io-background-color, currentcolor);
@@ -31,28 +26,21 @@ export class IoIcon extends IoElement {
       height: 100%;
     }
     :host > svg > g {
-      pointer-events: none;
       transform-origin: 0px 0px;
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      icon: {
-        value: '',
-        reflect: 'attr',
-      },
-      label: {
-        value: '',
-        reflect: 'prop',
-      },
-      stroke: {
-        value: false,
-        reflect: 'prop',
-      },
-    };
-  }
+  @IoProperty({value: '', reflect: 'prop'})
+  declare icon: string;
+
+  @IoProperty({value: false})
+  declare stroke: boolean;
+
   iconChanged() {
-    this.innerHTML = IoIconsetSingleton.getIcon(this.icon);
+    if (this.icon.search(':') !== -1) {
+      this.innerHTML = IoIconsetSingleton.getIcon(this.icon);
+    } else {
+      this.textNode = this.icon;
+    }
   }
 }

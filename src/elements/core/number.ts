@@ -1,10 +1,10 @@
 import {RegisterIoElement} from '../../iogui.js';
-import {IoItem} from './item.js';
+import {IoField} from './field.js';
 import {IoLayerSingleton} from './layer.js';
 import {IoLadderSingleton} from './ladder.js';
 
 /*
- * Extends `IoItem`.
+ * Extends `IoField`.
  *
  * Input element for `Number` data type. It clamps the `value` to `min` / `max` and rounds it to the nearest `step` increment. If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped. Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  *
@@ -17,7 +17,7 @@ import {IoLadderSingleton} from './ladder.js';
  * <io-element-demo element="io-number" width="5em" properties='{"value": 0, "step": 0.2617993877991494, "conversion": 57.29577951308232, "min": -6.283185307179586, "max": 6.283185307179586, "ladder": true}'></io-element-demo>
  **/
 @RegisterIoElement
-export class IoNumber extends IoItem {
+export class IoNumber extends IoField {
   static get Style() {
     return /* css */`
     :host {
@@ -25,7 +25,7 @@ export class IoNumber extends IoItem {
       user-select: text;
       -webkit-user-select: text;
       -webkit-touch-callout: default;
-      min-width: var(--io-item-height);
+      min-width: var(--io-field-height);
       border-color: var(--io-color-border-inset);
       color: var(--io-color-field);
       background-color: var(--io-background-color-field);
@@ -225,7 +225,6 @@ export class IoNumber extends IoItem {
     this.setAttribute('positive', this.value >= 0);
   }
   applyAria() {
-    super.applyAria();
     this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value)) ? 'true' : false);
   }
 }

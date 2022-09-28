@@ -433,17 +433,16 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
     }
   }
-  /**
-  * Sets aria attributes.
-  */
-  applyAria() {
+  labelChanged() {
     if (this.label) {
       this.setAttribute('aria-label', this.label);
     } else {
       this.removeAttribute('aria-label');
     }
+  }
+  disabledChanged() {
     if (this.disabled) {
-      this.setAttribute('aria-disabled', true);
+      this.setAttribute('aria-disabled', this.disabled);
     } else {
       this.removeAttribute('aria-disabled');
     }

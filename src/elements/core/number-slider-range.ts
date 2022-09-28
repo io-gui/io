@@ -18,13 +18,13 @@ export class IoNumberSliderRange extends IoElement {
       justify-self: stretch;
     }
     :host > io-number {
-      flex: 0 0 calc(2 * var(--io-item-height));
+      flex: 0 0 calc(2 * var(--io-field-height));
     }
     :host > io-slider-range {
       margin-left: var(--io-spacing);
       margin-right: var(--io-spacing);
-      flex: 1 1 calc(2 * var(--io-item-height));
-      min-width: calc(2 * var(--io-item-height));
+      flex: 1 1 calc(2 * var(--io-field-height));
+      min-width: calc(2 * var(--io-field-height));
     }
     `;
   }

@@ -1,27 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {PropertyDeclarations} from '../../iogui.js';
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import {IoElement, RegisterIoElement} from '../../core/element.js';
+import {IoProperty} from '../../core/internals/property.js';
 
 /*
- * Extends [`IoElement`](/#doc=core-element).
- *
- * This is the simplest element with a `value`, a building block for more complex elements.
- *
+ * This is the base element with a `value` property. A building block for more complex elements.
  * It simply displays `value` or `label` property if set.
- *
  * It changes its apparence if `selected` of `disabled` properties are `true`.
- *
  * Arow keys up, down, left, right and tab change focus to the nearest focusable element in the chosen direction.
- *
- * <io-element-demo element="io-item" properties='{"label": "Item", "value": "null", "selected": false, "disabled": false}'></io-element-demo>
  **/
 
 @RegisterIoElement
-export class IoItem extends IoElement {
+export class IoField extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-item;
+      @apply --io-field;
     }
     :host[selected] {
       color: var(--io-color-link);
@@ -36,27 +28,21 @@ export class IoItem extends IoElement {
     }
     `;
   }
-  static get Properties(): PropertyDeclarations {
-    return {
-      value: undefined,
-      selected: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      tabindex: 0,
-    };
-  }
+  @IoProperty({value: undefined})
+  declare value: any;
+
+  @IoProperty({type: Boolean, reflect: 'prop'})
+  declare selected: boolean;
+
+  @IoProperty({value: '0'})
+  declare tabindex: string;
+
   static get Listeners() {
     return {
       'focus': '_onFocus',
       'pointerdown': '_onPointerdown',
       'click': '_onClick',
     };
-  }
-  constructor(properties: Record<string, any> = {}) {
-    super(properties);
-    Object.defineProperty(this, '_textNode', {enumerable: false, writable: true, value: document.createTextNode('')});
-    this.appendChild(this._textNode);
   }
   _onFocus(event: FocusEvent) {
     this.addEventListener('blur', this._onBlur);
@@ -134,22 +120,18 @@ export class IoItem extends IoElement {
     }
   }
   changed() {
-    let label;
+    let label = '';
     if (this.label) {
       label = this.label;
-      this.title = this.label;
     } else {
-      let valueText;
       if (this.value && typeof this.value === 'object') {
-        valueText = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
+        label = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
       } else {
-        valueText = String(this.value);
+        label = String(this.value);
       }
-      this.title = valueText;
-      label = valueText;
     }
-    this.textNode = label;
+    this.template([
+      ['io-label', {label: label}]
+    ])
   }
 }
-
-// console.log(IoItem.prototype._protochain.constructors[0]._Properties);

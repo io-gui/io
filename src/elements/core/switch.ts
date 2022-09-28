@@ -14,7 +14,7 @@ export class IoSwitch extends IoBoolean {
     return /* css */`
     :host {
       position: relative;
-      width: calc(1.5 * var(--io-item-height));
+      width: calc(1.5 * var(--io-field-height));
     }
     :host:before {
       display: inline-block;
@@ -73,7 +73,6 @@ export class IoSwitch extends IoBoolean {
     this.title = this.label;
   }
   applyAria() {
-    super.applyAria();
     this.setAttribute('aria-checked', String(!!this.value));
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
     this.setAttribute('aria-label', this.label);

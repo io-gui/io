@@ -1,5 +1,5 @@
 import {RegisterIoElement, IoProperty } from '../../iogui.js';
-import {IoItem} from './item.js';
+import {IoField} from './field.js';
 
 /*
  * Extends `IoButton`.
@@ -9,7 +9,7 @@ import {IoItem} from './item.js';
  * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
  **/
 @RegisterIoElement
-export class IoBoolean extends IoItem {
+export class IoBoolean extends IoField {
   static get Style() {
     return /* css */`
     :host[aria-invalid] {
@@ -48,7 +48,6 @@ export class IoBoolean extends IoItem {
     this.textNode = this.value ? this.true : this.false;
   }
   applyAria() {
-    super.applyAria();
     this.setAttribute('aria-checked', String(!!this.value));
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
   }

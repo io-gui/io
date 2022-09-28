@@ -22,8 +22,8 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
       border-radius: var(--io-border-radius);
       border: var(--io-border);
       border-color: var(--io-color-border-inset);
-      min-width: var(--io-item-height);
-      min-height: var(--io-item-height);
+      min-width: var(--io-field-height);
+      min-height: var(--io-field-height);
     }
     :host[aria-invalid] {
       border: var(--io-border-error);
