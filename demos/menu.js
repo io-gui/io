@@ -12,7 +12,7 @@ class IoOptionsDemoView extends IoElement {
         background-color: var(--io-background-color-dark);
         display: flex;
       }
-      :host io-field-demo-view {
+      :host io-item-demo-view {
         margin-left: 0.5em;
       }
       :host io-field {
@@ -41,7 +41,7 @@ class IoOptionsDemoView extends IoElement {
   changed() {
     const options = [];
     for (let i = 0; i < this.options.length; i++) {
-      options.push(['io-field-demo-view', {option: this.options[i]}]);
+      options.push(['io-item-demo-view', {option: this.options[i]}]);
     }
     this.template([
       ['div', [
@@ -82,7 +82,9 @@ class IoItemDemoView extends IoElement {
   changed() {
     this.template([
       ['div', [
-        [this.option.select === 'toggle' ? 'io-boolicon' : 'io-switch', {value: this.option.bind('selected')}],
+        this.option.select === 'toggle'
+            ? ['io-boolean', {value: this.option.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}]
+            : ['io-switch', {value: this.option.bind('selected')}],
         ['io-field', {value: this.option.bind('value')}],
         ['io-field', {value: this.option.path.bind('root'), class: 'root'}],
         ['io-options-path-demo', {value: this.option.path.bind('value')}],
@@ -114,7 +116,7 @@ export class IoDemoMenu extends IoOptionsDemoView {
         {value: 'home'}, 
         {value: 'food', options: [
           {value: 'fruits', options: [
-            {value: 'apples', selected: true}, // TODO: use default selection instead selected: 'introduction', 
+            {value: 'apples', selected: true}, // TODO: consider this as default selection
             {value: 'mangos'},
             {value: 'bannanas'},
           ]},
