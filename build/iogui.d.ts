@@ -26,7 +26,7 @@ export declare class ChangeQueue {
 	 * Dispatches and clears the queue.
 	 * For each property change in the queue:
 	 *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
-	 *  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
+	 *  - It executes node's `[propNamecssFieldHeight(change)` change handler function if it is defined.
 	 * If owner node is not connected dispatch is aborted.
 	 * After all changes are dispatched it invokes `.changed()` functions od the owner node instance.
 	 */
@@ -244,6 +244,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		 * Invoked when one of the properties change.
 		 */
 		changed(): void;
+		init(): void;
 		/**
 		 * Adds property change to the queue.
 		 * @param {string} prop - Property name.
@@ -364,6 +365,7 @@ declare const IoNode_base: {
 		 * Invoked when one of the properties change.
 		 */
 		changed(): void;
+		init(): void;
 		/**
 		 * Adds property change to the queue.
 		 * @param {string} prop - Property name.
@@ -571,6 +573,7 @@ declare const IoElement_base: {
 		setProperties(props: any): void;
 		inputValue(value: any): void;
 		changed(): void;
+		init(): void;
 		queue(prop: string, value: any, oldValue: any): void;
 		dispatchQueue(): void;
 		dispatchQueueSync: () => void;
@@ -642,10 +645,8 @@ export declare class IoElement extends IoElement_base {
 	* @param {*} value - Attribute value.
 	*/
 	setAttribute(attr: string, value: boolean | number | string): void;
-	/**
-	* Sets aria attributes.
-	*/
-	applyAria(): void;
+	labelChanged(): void;
+	disabledChanged(): void;
 	_onFocusTo(event: CustomEvent): void;
 	focusTo(dir: string): void;
 }
@@ -678,6 +679,7 @@ declare const Options_base: {
 		setProperties(props: any): void;
 		inputValue(value: any): void;
 		changed(): void;
+		init(): void;
 		queue(prop: string, value: any, oldValue: any): void;
 		dispatchQueue(): void;
 		dispatchQueueSync: () => void;
@@ -741,7 +743,7 @@ export declare class Item extends IoNode {
 declare class IoTheme extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
-	constructor(props?: any);
+	init(): void;
 	_toCss(rgba: number[]): string;
 	reset(): void;
 	themeChanged(): void;
@@ -949,15 +951,18 @@ export declare class IoColorPanel extends IoColorPanel_base {
 	onValueSet(): void;
 	changed(): void;
 }
-export declare class IoItem extends IoElement {
+export declare class IoField extends IoElement {
 	static get Style(): string;
-	static get Properties(): PropertyDeclarations;
+	value: any;
+	icon: string;
+	reverse: boolean;
+	selected: boolean;
+	tabindex: string;
 	static get Listeners(): {
 		focus: string;
 		pointerdown: string;
 		click: string;
 	};
-	constructor(properties?: Record<string, any>);
 	_onFocus(event: FocusEvent): void;
 	_onBlur(event: FocusEvent): void;
 	_onPointerdown(event: PointerEvent): void;
@@ -984,7 +989,7 @@ declare const IoColorPicker_base: {
 	};
 	readonly Properties: any;
 	readonly GlUtils: string;
-} & typeof IoItem;
+} & typeof IoField;
 export declare class IoColorPicker extends IoColorPicker_base {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1029,37 +1034,36 @@ export interface StorageProps {
 	storage?: "hash" | "local";
 }
 export declare const IoStorageFactory: (props: StorageProps) => any;
-export declare class IoContent extends IoElement {
+export declare class IoLabel extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
-	changed(): void;
+	labelChanged(): void;
 }
-export declare class IoButton extends IoItem {
+export declare class IoButton extends IoField {
 	static get Style(): string;
-	static get Properties(): any;
+	action?: any;
+	value: any;
+	pressed: boolean;
+	role: string;
 	_onPointerdown(event: PointerEvent): void;
 	_onPointerleave(event: PointerEvent): void;
 	_onPointerup(event: PointerEvent): void;
 	_onKeydown(event: KeyboardEvent): void;
 	_onKeyup(event: KeyboardEvent): void;
 	_onClick(): void;
+	changed(): void;
 }
-export declare class IoBoolean extends IoItem {
+export declare class IoBoolean extends IoField {
 	static get Style(): string;
 	label: string;
 	value: boolean;
 	true: string;
 	false: string;
+	stroke: boolean;
 	role: string;
 	_onClick(): void;
 	toggle(): void;
 	valueChanged(): void;
-	changed(): void;
-	applyAria(): void;
-}
-export declare class IoBoolicon extends IoBoolean {
-	static get Style(): string;
-	static get Properties(): any;
+	init(): void;
 	changed(): void;
 	applyAria(): void;
 }
@@ -1068,9 +1072,12 @@ export declare class IoSwitch extends IoBoolean {
 	changed(): void;
 	applyAria(): void;
 }
-export declare class IoString extends IoItem {
+export declare class IoString extends IoField {
 	static get Style(): string;
-	static get Properties(): any;
+	live: boolean;
+	value: string;
+	contenteditable: boolean;
+	role: string;
 	_setFromTextNode(): void;
 	_tryParseFromTextNode(): void;
 	_onBlur(event: FocusEvent): void;
@@ -1082,9 +1089,20 @@ export declare class IoString extends IoItem {
 	changed(): void;
 	applyAria(): void;
 }
-export declare class IoNumber extends IoItem {
+export declare class IoNumber extends IoField {
 	static get Style(): string;
-	static get Properties(): any;
+	value: number;
+	conversion: number;
+	step: number;
+	min: number;
+	max: number;
+	ladder: boolean;
+	contenteditable: boolean;
+	role: string;
+	type: string;
+	pattern: string;
+	inputmode: string;
+	spellcheck: string;
 	constructor(properties?: Record<string, any>);
 	_onPointerdown(event: PointerEvent): void;
 	_onPointerup(event: PointerEvent): void;
@@ -1149,7 +1167,8 @@ declare class IoIconset extends IoNode {
 export declare const IoIconsetSingleton: IoIconset;
 export declare class IoIcon extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	icon: string;
+	stroke: boolean;
 	iconChanged(): void;
 }
 export declare type NudgeDirection = "pointer" | "top" | "left" | "bottom" | "right";
@@ -1272,6 +1291,11 @@ export declare class IoLayout extends IoElement {
 	_onLayoutTabInsert(event: CustomEvent): void;
 	_onDividerMove(event: CustomEvent): void;
 }
+export declare class IoContent extends IoElement {
+	static get Style(): string;
+	static get Properties(): any;
+	changed(): void;
+}
 export declare class IoCollapsable extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1301,7 +1325,7 @@ export declare class IoMatrix extends IoElement {
 	valueChanged(): void;
 	changed(): void;
 }
-export declare class IoMenuItem extends IoItem {
+export declare class IoMenuItem extends IoField {
 	static get Style(): string;
 	static get Properties(): any;
 	static get Listeners(): any;
