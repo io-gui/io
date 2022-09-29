@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L29)
+[src/core/internals/binding.ts:27](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L27)
 
 • `set` **value**(`value`): `void`
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L26)
+[src/core/internals/binding.ts:24](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L24)
 
 ## Methods
 
@@ -114,7 +114,7 @@ Adds a target `node` and `targetProp` and corresponding `[property]-changed` lis
 
 #### Defined in
 
-[src/core/internals/binding.ts:37](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L37)
+[src/core/internals/binding.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L35)
 
 ___
 
@@ -131,7 +131,75 @@ Use this when node is no longer needed.
 
 #### Defined in
 
-[src/core/internals/binding.ts:138](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L138)
+[src/core/internals/binding.ts:137](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L137)
+
+___
+
+### getTargetProperties
+
+▸ **getTargetProperties**(`node`): `string`[]
+
+Retrieves a list of target properties for specified target node.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `node` | `EventTarget` \| [`IoNode`](IoNode.md) | Target node. |
+
+#### Returns
+
+`string`[]
+
+list of target property names.
+
+#### Defined in
+
+[src/core/internals/binding.ts:80](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L80)
+
+___
+
+### onSourceChanged
+
+▸ **onSourceChanged**(`event`): `void`
+
+Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `event` | [`ChangeEvent`](../interfaces/ChangeEvent.md) | Property change event. |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/core/internals/binding.ts:112](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L112)
+
+___
+
+### onTargetChanged
+
+▸ **onTargetChanged**(`event`): `void`
+
+Event handler that updates source property when one of the targets emits `[property]-changed` event.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `event` | [`ChangeEvent`](../interfaces/ChangeEvent.md) | Property change event. |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/core/internals/binding.ts:94](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L94)
 
 ___
 
@@ -155,4 +223,4 @@ If `property` is not specified, it removes all target properties.
 
 #### Defined in
 
-[src/core/internals/binding.ts:61](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L61)
+[src/core/internals/binding.ts:59](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L59)

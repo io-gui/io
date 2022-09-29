@@ -28,13 +28,27 @@ Core `IoElement` class.
 
 #### Defined in
 
-[src/elements/layout/selector.ts:103](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L103)
+[src/elements/layout/selector.ts:106](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L106)
 
 ## Properties
 
+### $
+
+• **$**: `Record`<`string`, `any`\>
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[$](IoSelector.md#$)
+
+#### Defined in
+
+[src/core/element.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L219)
+
+___
+
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Record`<`string`, [`Binding`](Binding.md)\> = `{}`
+• `Readonly` **\_bindings**: `Record`<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
@@ -42,7 +56,7 @@ Core `IoElement` class.
 
 #### Defined in
 
-[src/core/io-node.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L49)
+[src/core/node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L48)
 
 ___
 
@@ -56,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:51](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L51)
+[src/core/node.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L49)
 
 ___
 
@@ -70,13 +84,13 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:52](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L52)
+[src/core/node.ts:50](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L50)
 
 ___
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Record`<`string`, [`Property`](Property.md)\> = `{}`
+• `Readonly` **\_properties**: `Record`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
@@ -84,7 +98,161 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L48)
+[src/core/node.ts:47](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L47)
+
+___
+
+### \_protochain
+
+• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[_protochain](IoSelector.md#_protochain)
+
+#### Defined in
+
+[src/core/node.ts:46](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L46)
+
+___
+
+### class
+
+• **class**: `string`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[class](IoSelector.md#class)
+
+#### Defined in
+
+[src/core/element.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L228)
+
+___
+
+### contenteditable
+
+• **contenteditable**: `boolean`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[contenteditable](IoSelector.md#contenteditable)
+
+#### Defined in
+
+[src/core/element.ts:225](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L225)
+
+___
+
+### disabled
+
+• **disabled**: `boolean`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[disabled](IoSelector.md#disabled)
+
+#### Defined in
+
+[src/core/element.ts:249](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L249)
+
+___
+
+### hidden
+
+• **hidden**: `boolean`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[hidden](IoSelector.md#hidden)
+
+#### Defined in
+
+[src/core/element.ts:246](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L246)
+
+___
+
+### id
+
+• **id**: `string`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[id](IoSelector.md#id)
+
+#### Defined in
+
+[src/core/element.ts:243](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L243)
+
+___
+
+### label
+
+• **label**: `string`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[label](IoSelector.md#label)
+
+#### Defined in
+
+[src/core/element.ts:234](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L234)
+
+___
+
+### name
+
+• **name**: `string`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[name](IoSelector.md#name)
+
+#### Defined in
+
+[src/core/element.ts:237](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L237)
+
+___
+
+### role
+
+• **role**: `string`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[role](IoSelector.md#role)
+
+#### Defined in
+
+[src/core/element.ts:231](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L231)
+
+___
+
+### tabindex
+
+• **tabindex**: `string`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[tabindex](IoSelector.md#tabindex)
+
+#### Defined in
+
+[src/core/element.ts:222](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L222)
+
+___
+
+### title
+
+• **title**: `string`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[title](IoSelector.md#title)
+
+#### Defined in
+
+[src/core/element.ts:240](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L240)
 
 ## Accessors
 
@@ -102,7 +270,7 @@ IoSelector.textNode
 
 #### Defined in
 
-[src/core/io-element.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L207)
+[src/core/element.ts:409](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L409)
 
 • `set` **textNode**(`value`): `void`
 
@@ -122,7 +290,7 @@ IoSelector.textNode
 
 #### Defined in
 
-[src/core/io-element.ts:211](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L211)
+[src/core/element.ts:413](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L413)
 
 ___
 
@@ -145,7 +313,7 @@ IoSelector.Listeners
 
 #### Defined in
 
-[src/elements/layout/selector.ts:97](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L97)
+[src/elements/layout/selector.ts:100](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L100)
 
 ___
 
@@ -199,7 +367,7 @@ IoSelector.observedAttributes
 
 #### Defined in
 
-[src/core/io-element.ts:65](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L65)
+[src/core/element.ts:256](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L256)
 
 ## Methods
 
@@ -223,7 +391,7 @@ IoSelector.observedAttributes
 
 #### Defined in
 
-[src/core/io-element.ts:252](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L252)
+[src/core/element.ts:453](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L453)
 
 ___
 
@@ -247,7 +415,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/selector.ts:114](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L114)
+[src/elements/layout/selector.ts:117](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L117)
 
 ___
 
@@ -265,7 +433,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/selector.ts:129](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L129)
+[src/elements/layout/selector.ts:132](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L132)
 
 ___
 
@@ -283,7 +451,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/selector.ts:107](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L107)
+[src/elements/layout/selector.ts:110](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L110)
 
 ___
 
@@ -311,27 +479,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/io-node.ts:338](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L338)
-
-___
-
-### applyAria
-
-▸ **applyAria**(): `void`
-
-Sets aria attributes.
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoSelector](IoSelector.md).[applyAria](IoSelector.md#applyaria)
-
-#### Defined in
-
-[src/core/io-element.ts:240](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L240)
+[src/core/node.ts:317](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L317)
 
 ___
 
@@ -355,7 +503,7 @@ ___
 
 #### Defined in
 
-[src/core/io-element.ts:215](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L215)
+[src/core/element.ts:417](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L417)
 
 ___
 
@@ -381,7 +529,7 @@ ___
 
 #### Defined in
 
-[src/core/io-element.ts:75](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L75)
+[src/core/element.ts:266](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L266)
 
 ___
 
@@ -409,7 +557,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/io-node.ts:311](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L311)
+[src/core/node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L290)
 
 ___
 
@@ -430,7 +578,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/io-node.ts:241](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L241)
+[src/core/node.ts:218](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L218)
 
 ___
 
@@ -464,7 +612,25 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/elements/layout/selector.ts:118](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L118)
+[src/elements/layout/selector.ts:121](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L121)
+
+___
+
+### disabledChanged
+
+▸ **disabledChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[disabledChanged](IoSelector.md#disabledchanged)
+
+#### Defined in
+
+[src/core/element.ts:446](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L446)
 
 ___
 
@@ -484,7 +650,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/io-element.ts:102](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L102)
+[src/core/element.ts:292](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L292)
 
 ___
 
@@ -513,7 +679,47 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/io-node.ts:363](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L363)
+[src/core/node.ts:342](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L342)
+
+___
+
+### dispatchQueue
+
+▸ **dispatchQueue**(): `void`
+
+Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[dispatchQueue](IoSelector.md#dispatchqueue)
+
+#### Defined in
+
+[src/core/node.ts:232](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L232)
+
+___
+
+### dispatchQueueSync
+
+▸ **dispatchQueueSync**(): `void`
+
+Dispatches the queue immediately.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[dispatchQueueSync](IoSelector.md#dispatchqueuesync)
+
+#### Defined in
+
+[src/core/node.ts:242](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L242)
 
 ___
 
@@ -534,7 +740,32 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/io-node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L219)
+[src/core/node.ts:349](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L349)
+
+___
+
+### disposeDeep
+
+▸ **disposeDeep**(`host`, `child`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `host` | `HTMLElement` |
+| `child` | `any` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[disposeDeep](IoSelector.md#disposedeep)
+
+#### Defined in
+
+[src/core/element.ts:308](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L308)
 
 ___
 
@@ -552,63 +783,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/selector.ts:166](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L166)
-
-___
-
-### filterObject
-
-▸ **filterObject**(`object`, `predicate`, `_depth?`, `_chain?`, `_i?`): `any`
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `object` | `any` | `undefined` |
-| `predicate` | [`PredicateFunction`](../README.md#predicatefunction) | `undefined` |
-| `_depth` | `number` | `5` |
-| `_chain` | `any`[] | `[]` |
-| `_i` | `number` | `0` |
-
-#### Returns
-
-`any`
-
-#### Inherited from
-
-[IoSelector](IoSelector.md).[filterObject](IoSelector.md#filterobject)
-
-#### Defined in
-
-[src/core/io-node.ts:396](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L396)
-
-___
-
-### filterObjects
-
-▸ **filterObjects**(`object`, `predicate`, `_depth?`, `_chain?`, `_i?`): `any`
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `object` | `any` | `undefined` |
-| `predicate` | [`PredicateFunction`](../README.md#predicatefunction) | `undefined` |
-| `_depth` | `number` | `5` |
-| `_chain` | `any`[] | `[]` |
-| `_i` | `number` | `0` |
-
-#### Returns
-
-`any`
-
-#### Inherited from
-
-[IoSelector](IoSelector.md).[filterObjects](IoSelector.md#filterobjects)
-
-#### Defined in
-
-[src/core/io-node.ts:409](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L409)
+[src/elements/layout/selector.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L169)
 
 ___
 
@@ -635,7 +810,7 @@ Update textContent via TextNode is better for layout performance.
 
 #### Defined in
 
-[src/core/io-element.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L190)
+[src/core/element.ts:392](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L392)
 
 ___
 
@@ -659,7 +834,7 @@ ___
 
 #### Defined in
 
-[src/core/io-element.ts:359](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L359)
+[src/core/element.ts:560](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L560)
 
 ___
 
@@ -681,9 +856,9 @@ ___
 
 ___
 
-### import
+### importModule
 
-▸ **import**(`path`): `Promise`<`unknown`\>
+▸ **importModule**(`path`): `Promise`<`unknown`\>
 
 #### Parameters
 
@@ -697,27 +872,17 @@ ___
 
 #### Inherited from
 
-[IoSelector](IoSelector.md).[import](IoSelector.md#import)
+[IoSelector](IoSelector.md).[importModule](IoSelector.md#importmodule)
 
 #### Defined in
 
-[src/core/io-node.ts:426](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L426)
+[src/elements/layout/selector.ts:188](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L188)
 
 ___
 
-### objectMutated
+### init
 
-▸ **objectMutated**(`event`): `void`
-
-Event handler for 'object-mutated' event emitted from the `window`.
-Node should be listening for this event if it has an object property
-with `observe: "sync" || "async"` configuration.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> | Event payload. |
+▸ **init**(): `void`
 
 #### Returns
 
@@ -725,19 +890,64 @@ with `observe: "sync" || "async"` configuration.
 
 #### Inherited from
 
-[IoSelector](IoSelector.md).[objectMutated](IoSelector.md#objectmutated)
+[IoSelector](IoSelector.md).[init](IoSelector.md#init)
 
 #### Defined in
 
-[src/core/io-node.ts:275](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L275)
+[src/core/node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L219)
 
 ___
 
-### objectMutatedThrottled
+### inputValue
 
-▸ **objectMutatedThrottled**(`prop`): `void`
+▸ **inputValue**(`value`): `void`
 
-This function is called after `objectMutated()` determines that one of
+Sets value property and emits `value-input` event.
+Use this when value property is set by user action (e.g. mouse click).
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `value` | `any` | Property value. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[inputValue](IoSelector.md#inputvalue)
+
+#### Defined in
+
+[src/core/node.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L207)
+
+___
+
+### labelChanged
+
+▸ **labelChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[labelChanged](IoSelector.md#labelchanged)
+
+#### Defined in
+
+[src/core/element.ts:439](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L439)
+
+___
+
+### objectMutated
+
+▸ **objectMutated**(`prop`): `void`
+
+This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
@@ -752,11 +962,38 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoSelector](IoSelector.md).[objectMutatedThrottled](IoSelector.md#objectmutatedthrottled)
+[IoSelector](IoSelector.md).[objectMutated](IoSelector.md#objectmutated)
 
 #### Defined in
 
-[src/core/io-node.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L302)
+[src/core/node.ts:281](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L281)
+
+___
+
+### onObjectMutated
+
+▸ **onObjectMutated**(`event`): `void`
+
+Event handler for 'object-mutated' event emitted from the `window`.
+Node should be listening for this event if it has an observed object property
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `event` | `CustomEvent`<`any`\> | Event payload. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoSelector](IoSelector.md).[onObjectMutated](IoSelector.md#onobjectmutated)
+
+#### Defined in
+
+[src/core/node.ts:260](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L260)
 
 ___
 
@@ -788,33 +1025,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/selector.ts:162](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L162)
-
-___
-
-### preventDefault
-
-▸ **preventDefault**(`event`): `void`
-
-Handler function with `event.preventDefault()`.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `Event` | Event object. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoSelector](IoSelector.md).[preventDefault](IoSelector.md#preventdefault)
-
-#### Defined in
-
-[src/core/io-node.ts:444](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L444)
+[src/elements/layout/selector.ts:165](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L165)
 
 ___
 
@@ -842,47 +1053,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/io-node.ts:248](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L248)
-
-___
-
-### queueDispatch
-
-▸ **queueDispatch**(): `void`
-
-Dispatches the queue.
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoSelector](IoSelector.md).[queueDispatch](IoSelector.md#queuedispatch)
-
-#### Defined in
-
-[src/core/io-node.ts:254](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L254)
-
-___
-
-### queueDispatchLazy
-
-▸ **queueDispatchLazy**(): `void`
-
-Dispatches the queue in the next rAF cycle.
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoSelector](IoSelector.md).[queueDispatchLazy](IoSelector.md#queuedispatchlazy)
-
-#### Defined in
-
-[src/core/io-node.ts:265](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L265)
+[src/core/node.ts:226](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L226)
 
 ___
 
@@ -910,31 +1081,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/io-node.ts:353](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L353)
-
-___
-
-### requestAnimationFrameOnce
-
-▸ **requestAnimationFrameOnce**(`func`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoSelector](IoSelector.md).[requestAnimationFrameOnce](IoSelector.md#requestanimationframeonce)
-
-#### Defined in
-
-[src/core/io-node.ts:393](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L393)
+[src/core/node.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L332)
 
 ___
 
@@ -959,7 +1106,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/selector.ts:122](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L122)
+[src/elements/layout/selector.ts:125](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L125)
 
 ___
 
@@ -977,7 +1124,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/selector.ts:158](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L158)
+[src/elements/layout/selector.ts:161](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L161)
 
 ___
 
@@ -1004,7 +1151,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Defined in
 
-[src/core/io-element.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L228)
+[src/core/element.ts:430](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L430)
 
 ___
 
@@ -1031,7 +1178,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/io-node.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L190)
+[src/core/node.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L190)
 
 ___
 
@@ -1059,60 +1206,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/io-node.ts:110](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L110)
-
-___
-
-### setValue
-
-▸ **setValue**(`value`): `void`
-
-Sets value property and emits `value-set` event.
-Use this when value property is set by user action (e.g. mouse click).
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `value` | `any` | Property value. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoSelector](IoSelector.md).[setValue](IoSelector.md#setvalue)
-
-#### Defined in
-
-[src/core/io-node.ts:208](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L208)
-
-___
-
-### stopPropagation
-
-▸ **stopPropagation**(`event`): `void`
-
-Handler function with `event.stopPropagation()`.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> | Event object. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoSelector](IoSelector.md).[stopPropagation](IoSelector.md#stoppropagation)
-
-#### Defined in
-
-[src/core/io-node.ts:451](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L451)
+[src/core/node.ts:109](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L109)
 
 ___
 
@@ -1139,23 +1233,23 @@ Renders DOM from virtual DOM arrays.
 
 #### Defined in
 
-[src/core/io-element.ts:112](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L112)
+[src/core/element.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L302)
 
 ___
 
 ### throttle
 
-▸ **throttle**(`func`, `arg?`, `asynchronous?`): `void`
+▸ **throttle**(`func`, `arg?`, `sync?`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) | Function to throttle. |
-| `arg?` | `any` | argument for throttled function. |
-| `asynchronous?` | `boolean` | execute with timeout. |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
+| `arg` | `any` | `undefined` | argument for throttled function. |
+| `sync` | `boolean` | `false` | execute immediately without rAF timeout. |
 
 #### Returns
 
@@ -1167,7 +1261,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/io-node.ts:372](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L372)
+[src/core/node.ts:251](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L251)
 
 ___
 
@@ -1194,7 +1288,7 @@ Recurively traverses vDOM.
 
 #### Defined in
 
-[src/core/io-element.ts:123](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L123)
+[src/core/element.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L332)
 
 ___
 
@@ -1220,7 +1314,7 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/io-node.ts:324](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L324)
+[src/core/node.ts:303](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L303)
 
 ___
 
@@ -1238,7 +1332,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/selector.ts:185](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L185)
+[src/elements/layout/selector.ts:202](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L202)
 
 ___
 
@@ -1256,4 +1350,4 @@ ___
 
 #### Defined in
 
-[src/elements/layout/selector.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L169)
+[src/elements/layout/selector.ts:172](https://github.com/io-gui/iogui/blob/tsc/src/elements/layout/selector.ts#L172)

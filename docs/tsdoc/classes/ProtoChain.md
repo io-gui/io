@@ -1,21 +1,21 @@
 # Class: ProtoChain
 
 Internal utility class that contains usefull information about class inheritance.
-Inherited definitions are aggregated additively during prototype chain traversal in `IoNode`.
+Inherited information is aggregated during prototype chain traversal in `RegisterIoNode()`.
 
 ## Constructors
 
 ### constructor
 
-• **new ProtoChain**(`ioNodeClass`)
+• **new ProtoChain**(`ioNodeConstructor`)
 
-Creates an instance of `ProtoChain`.
+Creates an instance of `ProtoChain` for specified class constructor.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `ioNodeClass` | [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)<`any`\> | Owner `IoNode`-derived class. |
+| `ioNodeConstructor` | [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)<`any`\> | Owner `IoNode`-derived constructor. |
 
 #### Defined in
 
@@ -49,7 +49,7 @@ ___
 
 #### Index signature
 
-▪ [property: `string`]: [`ListenerDefinition`](../README.md#listenerdefinition)[]
+▪ [property: `string`]: [`ListenerDeclaration`](../README.md#listenerdeclaration)[]
 
 #### Defined in
 
@@ -109,4 +109,4 @@ Binds all auto-binding functions from the `.functions` array to specified `IoNod
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:114](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L114)
+[src/core/internals/protoChain.ts:120](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L120)

@@ -1,16 +1,18 @@
-# Class: IoColorVector
+# Class: IoLabel
+
+Core `IoElement` class.
 
 ## Hierarchy
 
-- `__class`<typeof [`IoElement`](IoElement.md), `this`\> & [`IoElement`](IoElement.md)<`this`\>
+- [`IoElement`](IoElement.md)
 
-  ↳ **`IoColorVector`**
+  ↳ **`IoLabel`**
 
 ## Constructors
 
 ### constructor
 
-• **new IoColorVector**(`properties?`, ...`args`)
+• **new IoLabel**(`properties?`, ...`args`)
 
 Creates a class instance and initializes the internals.
 
@@ -23,7 +25,7 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-IoColorMixin(IoElement).constructor
+[IoElement](IoElement.md).[constructor](IoElement.md#constructor)
 
 #### Defined in
 
@@ -37,7 +39,7 @@ IoColorMixin(IoElement).constructor
 
 #### Inherited from
 
-IoColorMixin(IoElement).$
+[IoElement](IoElement.md).[$](IoElement.md#$)
 
 #### Defined in
 
@@ -51,7 +53,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_bindings
+[IoElement](IoElement.md).[_bindings](IoElement.md#_bindings)
 
 #### Defined in
 
@@ -65,7 +67,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_changeQueue
+[IoElement](IoElement.md).[_changeQueue](IoElement.md#_changequeue)
 
 #### Defined in
 
@@ -79,7 +81,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_eventDispatcher
+[IoElement](IoElement.md).[_eventDispatcher](IoElement.md#_eventdispatcher)
 
 #### Defined in
 
@@ -93,7 +95,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_properties
+[IoElement](IoElement.md).[_properties](IoElement.md#_properties)
 
 #### Defined in
 
@@ -107,7 +109,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_protochain
+[IoElement](IoElement.md).[_protochain](IoElement.md#_protochain)
 
 #### Defined in
 
@@ -121,7 +123,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).class
+[IoElement](IoElement.md).[class](IoElement.md#class)
 
 #### Defined in
 
@@ -135,7 +137,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).contenteditable
+[IoElement](IoElement.md).[contenteditable](IoElement.md#contenteditable)
 
 #### Defined in
 
@@ -149,7 +151,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).disabled
+[IoElement](IoElement.md).[disabled](IoElement.md#disabled)
 
 #### Defined in
 
@@ -163,7 +165,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).hidden
+[IoElement](IoElement.md).[hidden](IoElement.md#hidden)
 
 #### Defined in
 
@@ -177,7 +179,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).id
+[IoElement](IoElement.md).[id](IoElement.md#id)
 
 #### Defined in
 
@@ -191,7 +193,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).label
+[IoElement](IoElement.md).[label](IoElement.md#label)
 
 #### Defined in
 
@@ -205,7 +207,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).name
+[IoElement](IoElement.md).[name](IoElement.md#name)
 
 #### Defined in
 
@@ -219,7 +221,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).role
+[IoElement](IoElement.md).[role](IoElement.md#role)
 
 #### Defined in
 
@@ -233,7 +235,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).tabindex
+[IoElement](IoElement.md).[tabindex](IoElement.md#tabindex)
 
 #### Defined in
 
@@ -247,7 +249,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).title
+[IoElement](IoElement.md).[title](IoElement.md#title)
 
 #### Defined in
 
@@ -265,7 +267,7 @@ IoColorMixin(IoElement).title
 
 #### Inherited from
 
-IoColorMixin(IoElement).textNode
+IoElement.textNode
 
 #### Defined in
 
@@ -285,29 +287,11 @@ IoColorMixin(IoElement).textNode
 
 #### Inherited from
 
-IoColorMixin(IoElement).textNode
+IoElement.textNode
 
 #### Defined in
 
 [src/core/element.ts:413](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L413)
-
-___
-
-### GlUtils
-
-• `Static` `get` **GlUtils**(): `string`
-
-#### Returns
-
-`string`
-
-#### Inherited from
-
-IoColorMixin(IoElement).GlUtils
-
-#### Defined in
-
-[src/elements/color/color.ts:34](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L34)
 
 ___
 
@@ -321,7 +305,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).Listeners
+IoElement.Listeners
 
 #### Defined in
 
@@ -331,19 +315,19 @@ ___
 
 ### Properties
 
-• `Static` `get` **Properties**(): `any`
+• `Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Returns
 
-`any`
+[`PropertyDeclarations`](../README.md#propertydeclarations)
 
-#### Overrides
+#### Inherited from
 
-IoColorMixin(IoElement).Properties
+IoElement.Properties
 
 #### Defined in
 
-[src/elements/color/color-vector.ts:40](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L40)
+[src/core/node.ts:37](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L37)
 
 ___
 
@@ -357,11 +341,11 @@ ___
 
 #### Overrides
 
-IoColorMixin(IoElement).Style
+IoElement.Style
 
 #### Defined in
 
-[src/elements/color/color-vector.ts:20](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L20)
+[src/elements/core/label.ts:5](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/label.ts#L5)
 
 ___
 
@@ -375,7 +359,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).observedAttributes
+IoElement.observedAttributes
 
 #### Defined in
 
@@ -399,31 +383,11 @@ IoColorMixin(IoElement).observedAttributes
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_onFocusTo
+[IoElement](IoElement.md).[_onFocusTo](IoElement.md#_onfocusto)
 
 #### Defined in
 
 [src/core/element.ts:453](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L453)
-
-___
-
-### \_onValueSet
-
-▸ **_onValueSet**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `CustomEvent`<`any`\> |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/color/color-vector.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L49)
 
 ___
 
@@ -447,7 +411,7 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-IoColorMixin(IoElement).addEventListener
+[IoElement](IoElement.md).[addEventListener](IoElement.md#addeventlistener)
 
 #### Defined in
 
@@ -471,7 +435,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).applyProperties
+[IoElement](IoElement.md).[applyProperties](IoElement.md#applyproperties)
 
 #### Defined in
 
@@ -497,7 +461,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).attributeChangedCallback
+[IoElement](IoElement.md).[attributeChangedCallback](IoElement.md#attributechangedcallback)
 
 #### Defined in
 
@@ -525,7 +489,7 @@ Binding object.
 
 #### Inherited from
 
-IoColorMixin(IoElement).bind
+[IoElement](IoElement.md).[bind](IoElement.md#bind)
 
 #### Defined in
 
@@ -537,17 +501,20 @@ ___
 
 ▸ **changed**(): `void`
 
+default change handler.
+Invoked when one of the properties change.
+
 #### Returns
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-IoColorMixin(IoElement).changed
+[IoElement](IoElement.md).[changed](IoElement.md#changed)
 
 #### Defined in
 
-[src/elements/color/color-vector.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L60)
+[src/core/node.ts:218](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L218)
 
 ___
 
@@ -563,7 +530,7 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-IoColorMixin(IoElement).connectedCallback
+[IoElement](IoElement.md).[connectedCallback](IoElement.md#connectedcallback)
 
 #### Defined in
 
@@ -581,7 +548,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).disabledChanged
+[IoElement](IoElement.md).[disabledChanged](IoElement.md#disabledchanged)
 
 #### Defined in
 
@@ -601,7 +568,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-IoColorMixin(IoElement).disconnectedCallback
+[IoElement](IoElement.md).[disconnectedCallback](IoElement.md#disconnectedcallback)
 
 #### Defined in
 
@@ -630,7 +597,7 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-IoColorMixin(IoElement).dispatchEvent
+[IoElement](IoElement.md).[dispatchEvent](IoElement.md#dispatchevent)
 
 #### Defined in
 
@@ -650,7 +617,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-IoColorMixin(IoElement).dispatchQueue
+[IoElement](IoElement.md).[dispatchQueue](IoElement.md#dispatchqueue)
 
 #### Defined in
 
@@ -670,7 +637,7 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-IoColorMixin(IoElement).dispatchQueueSync
+[IoElement](IoElement.md).[dispatchQueueSync](IoElement.md#dispatchqueuesync)
 
 #### Defined in
 
@@ -691,7 +658,7 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-IoColorMixin(IoElement).dispose
+[IoElement](IoElement.md).[dispose](IoElement.md#dispose)
 
 #### Defined in
 
@@ -716,7 +683,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).disposeDeep
+[IoElement](IoElement.md).[disposeDeep](IoElement.md#disposedeep)
 
 #### Defined in
 
@@ -743,7 +710,7 @@ Update textContent via TextNode is better for layout performance.
 
 #### Inherited from
 
-IoColorMixin(IoElement).flattenTextNode
+[IoElement](IoElement.md).[flattenTextNode](IoElement.md#flattentextnode)
 
 #### Defined in
 
@@ -767,25 +734,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).focusTo
+[IoElement](IoElement.md).[focusTo](IoElement.md#focusto)
 
 #### Defined in
 
 [src/core/element.ts:560](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L560)
-
-___
-
-### getSlotted
-
-▸ **getSlotted**(): (`string` \| { `id`: `string` = 'swatch'; `mode`: `any` ; `value`: `any`  })[]
-
-#### Returns
-
-(`string` \| { `id`: `string` = 'swatch'; `mode`: `any` ; `value`: `any`  })[]
-
-#### Defined in
-
-[src/elements/color/color-vector.ts:81](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L81)
 
 ___
 
@@ -799,7 +752,7 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).init
+[IoElement](IoElement.md).[init](IoElement.md#init)
 
 #### Defined in
 
@@ -826,7 +779,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-IoColorMixin(IoElement).inputValue
+[IoElement](IoElement.md).[inputValue](IoElement.md#inputvalue)
 
 #### Defined in
 
@@ -842,31 +795,13 @@ ___
 
 `void`
 
-#### Inherited from
+#### Overrides
 
-IoColorMixin(IoElement).labelChanged
-
-#### Defined in
-
-[src/core/element.ts:439](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L439)
-
-___
-
-### modeChanged
-
-▸ **modeChanged**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).modeChanged
+[IoElement](IoElement.md).[labelChanged](IoElement.md#labelchanged)
 
 #### Defined in
 
-[src/elements/color/color.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L63)
+[src/elements/core/label.ts:15](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/label.ts#L15)
 
 ___
 
@@ -889,7 +824,7 @@ the object properties has mutated.
 
 #### Inherited from
 
-IoColorMixin(IoElement).objectMutated
+[IoElement](IoElement.md).[objectMutated](IoElement.md#objectmutated)
 
 #### Defined in
 
@@ -916,7 +851,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-IoColorMixin(IoElement).onObjectMutated
+[IoElement](IoElement.md).[onObjectMutated](IoElement.md#onobjectmutated)
 
 #### Defined in
 
@@ -944,7 +879,7 @@ Adds property change to the queue.
 
 #### Inherited from
 
-IoColorMixin(IoElement).queue
+[IoElement](IoElement.md).[queue](IoElement.md#queue)
 
 #### Defined in
 
@@ -972,7 +907,7 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-IoColorMixin(IoElement).removeEventListener
+[IoElement](IoElement.md).[removeEventListener](IoElement.md#removeeventlistener)
 
 #### Defined in
 
@@ -999,7 +934,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-IoColorMixin(IoElement).setAttribute
+[IoElement](IoElement.md).[setAttribute](IoElement.md#setattribute)
 
 #### Defined in
 
@@ -1026,7 +961,7 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoColorMixin(IoElement).setProperties
+[IoElement](IoElement.md).[setProperties](IoElement.md#setproperties)
 
 #### Defined in
 
@@ -1054,7 +989,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoColorMixin(IoElement).setProperty
+[IoElement](IoElement.md).[setProperty](IoElement.md#setproperty)
 
 #### Defined in
 
@@ -1081,7 +1016,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-IoColorMixin(IoElement).template
+[IoElement](IoElement.md).[template](IoElement.md#template)
 
 #### Defined in
 
@@ -1109,7 +1044,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-IoColorMixin(IoElement).throttle
+[IoElement](IoElement.md).[throttle](IoElement.md#throttle)
 
 #### Defined in
 
@@ -1136,7 +1071,7 @@ Recurively traverses vDOM.
 
 #### Inherited from
 
-IoColorMixin(IoElement).traverse
+[IoElement](IoElement.md).[traverse](IoElement.md#traverse)
 
 #### Defined in
 
@@ -1162,116 +1097,8 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-IoColorMixin(IoElement).unbind
+[IoElement](IoElement.md).[unbind](IoElement.md#unbind)
 
 #### Defined in
 
 [src/core/node.ts:303](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L303)
-
-___
-
-### valueChanged
-
-▸ **valueChanged**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueChanged
-
-#### Defined in
-
-[src/elements/color/color.ts:253](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L253)
-
-___
-
-### valueFromCmyk
-
-▸ **valueFromCmyk**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueFromCmyk
-
-#### Defined in
-
-[src/elements/color/color.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L204)
-
-___
-
-### valueFromHsl
-
-▸ **valueFromHsl**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueFromHsl
-
-#### Defined in
-
-[src/elements/color/color.ts:158](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L158)
-
-___
-
-### valueFromHsv
-
-▸ **valueFromHsv**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueFromHsv
-
-#### Defined in
-
-[src/elements/color/color.ts:112](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L112)
-
-___
-
-### valueFromRgb
-
-▸ **valueFromRgb**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueFromRgb
-
-#### Defined in
-
-[src/elements/color/color.ts:66](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L66)
-
-___
-
-### valueMutated
-
-▸ **valueMutated**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueMutated
-
-#### Defined in
-
-[src/elements/color/color.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L60)
