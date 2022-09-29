@@ -7,7 +7,7 @@ const themePropDefaults =  {
   cssBorderWidth: 1,
   cssStrokeWidth: 1,
   cssLineHeight: 22,
-  cssItemHeight: 0, // automatically calculated
+  cssFieldHeight: 0, // automatically calculated
   cssFontSize: 14,
 };
 
@@ -62,30 +62,33 @@ export class IoTheme extends IoElement {
     return /* css */`
     --io-label: {
       display: inline-block;
-      padding: 0 var(--io-spacing);
       height: var(--io-line-height);
       line-height: var(--io-line-height);
+      font-size: var(--io-font-size);
+      padding: 0 var(--io-spacing);
     }
     --io-icon: {
       display: inline-block;
-      width: var(--io-line-height);
       height: var(--io-line-height);
       line-height: var(--io-line-height);
+      font-size: var(--io-font-size);
     }
     --io-field: {
-      align-self: flex-start;
+      /* align-self: flex-start; */
       display: inline-block;
       cursor: pointer;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
+      /* user-select: none; */
+      /* -webkit-tap-highlight-color: transparent; */
+      /* -webkit-user-select: none; */
+      /* -webkit-touch-callout: none; */
       overflow: hidden;
       text-overflow: ellipsis;
       flex-wrap: nowrap;
       white-space: nowrap;
-      box-sizing: border-box;
-      height: var(--io-field-height);
+
+      height: var(--io-line-height);
+      line-height: var(--io-line-height);
+
       font-size: var(--io-font-size);
       border-radius: var(--io-border-radius);
       border: var(--io-border);
@@ -93,8 +96,9 @@ export class IoTheme extends IoElement {
       color: var(--io-color);
       background-color: transparent;
       background-image: none;
-      padding: var(--io-spacing);
+      padding: calc(var(--io-spacing) - var(--io-border-width));
       transition: background-color 0.25s;
+      /* vertical-align: top; */
     }
     --io-panel: {
       display: flex;
@@ -167,7 +171,7 @@ export class IoTheme extends IoElement {
       cssBorderWidth: vars.cssBorderWidth,
       cssStrokeWidth: vars.cssStrokeWidth,
       cssLineHeight: vars.cssLineHeight,
-      cssItemHeight: vars.cssItemHeight,
+      cssFieldHeight: vars.cssFieldHeight,
       cssFontSize: vars.cssFontSize,
       cssBackgroundColor: {value: vars.cssBackgroundColor, observe: true},
       cssBackgroundColorLight: {value: vars.cssBackgroundColorLight, observe: true},
@@ -191,8 +195,7 @@ export class IoTheme extends IoElement {
       lazy: true,
     };
   }
-  constructor(props?: any) {
-    super(props);
+  init() {
     this.variablesElement = document.createElement('style');
     this.variablesElement.setAttribute('id', 'io-theme-variables');
     document.head.appendChild(this.variablesElement);
@@ -220,7 +223,7 @@ export class IoTheme extends IoElement {
       cssBorderWidth: vars.cssBorderWidth,
       cssStrokeWidth: vars.cssStrokeWidth,
       cssLineHeight: vars.cssLineHeight,
-      cssItemHeight: vars.cssItemHeight,
+      // cssFieldHeight: vars.cssFieldHeight,
       cssFontSize: vars.cssFontSize,
       cssBackgroundColor: vars.cssBackgroundColor,
       cssBackgroundColorLight: vars.cssBackgroundColorLight,
@@ -243,7 +246,7 @@ export class IoTheme extends IoElement {
     });
   }
   changed() {
-    this.setProperty('cssItemHeight', this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth));
+    this.setProperty('cssFieldHeight', this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth));
     this.variablesElement.innerHTML = /* css */`
       body {
         --io-spacing: ${this.cssSpacing}px;
@@ -251,7 +254,7 @@ export class IoTheme extends IoElement {
         --io-border-width: ${this.cssBorderWidth}px;
         --io-stroke-width: ${this.cssStrokeWidth}px;
         --io-line-height: ${this.cssLineHeight}px;
-        --io-field-height: ${this.cssItemHeight}px;
+        --io-field-height: ${this.cssFieldHeight}px;
         --io-font-size: ${this.cssFontSize}px;
 
         --io-background-color: ${this._toCss(this.cssBackgroundColor)};

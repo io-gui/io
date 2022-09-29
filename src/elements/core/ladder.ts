@@ -1,6 +1,7 @@
 import {IoElement, RegisterIoElement} from '../../iogui.js';
 import {IoField} from './field.js';
 import {IoLayerSingleton} from './layer.js';
+import {IoThemeSingleton} from './theme.js';
 
 let lastFocus: Element | null = null;
 {
@@ -115,7 +116,7 @@ export class IoLadder extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      position: relative;
+      position: absolute;
       pointer-events: none;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
@@ -261,12 +262,12 @@ export class IoLadder extends IoElement {
     if (this.expanded) {
       if (src) {
         const rect = src.getBoundingClientRect();
+        const selfRect = this.getBoundingClientRect();
         // NOTE: layerRect fix for Safari zoom.
         const layerRect = IoLayerSingleton.getBoundingClientRect();
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
-        this.style.position = 'absolute';
-        this.style.marginTop = 'calc(-5.25 * var(--io-field-height))';
+        this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.cssLineHeight / 2 + IoThemeSingleton.cssSpacing) + 'px';
       } else {
         this.removeAttribute('style');
       }

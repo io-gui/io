@@ -5,10 +5,8 @@ export {IoGl} from './gl.js';
 
 export {IoLabel} from './label.js';
 export {IoField} from './field.js';
-export {IoContent} from './content.js';
 export {IoButton} from './button.js';
 export {IoBoolean} from './boolean.js';
-export {IoBoolicon} from './boolicon.js';
 export {IoSwitch} from './switch.js';
 export {IoString} from './string.js';
 export {IoNumber} from './number.js';

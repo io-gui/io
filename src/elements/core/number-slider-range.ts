@@ -1,13 +1,6 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 import './slider.js';
 
-/*
- * Extends `IoNumberSlider`. Implements `IoNumber` and `IoSliderRange`.
- *
- * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
- *
- * <io-element-demo element="io-number-slider-range" properties='{"value": [0, 2], "step": 0.05, "min": -1, "max": 2}'></io-element-demo>
- **/
 @RegisterIoElement
 export class IoNumberSliderRange extends IoElement {
   static get Style() {
@@ -16,15 +9,16 @@ export class IoNumberSliderRange extends IoElement {
       display: flex;
       align-self: stretch;
       justify-self: stretch;
+      flex-basis: 18em;
     }
     :host > io-number {
-      flex: 0 0 calc(2 * var(--io-field-height));
+      flex: 0 0 3em;
     }
     :host > io-slider-range {
       margin-left: var(--io-spacing);
       margin-right: var(--io-spacing);
-      flex: 1 1 calc(2 * var(--io-field-height));
-      min-width: calc(2 * var(--io-field-height));
+      flex: 1 1 3em;
+      min-width: 3em;
     }
     `;
   }
@@ -52,6 +46,7 @@ export class IoNumberSliderRange extends IoElement {
   }
   _onSliderSet(event: CustomEvent) {
     this.value = event.detail.value;
+    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-input', event.detail, false);
   }
   changed() {
@@ -66,11 +61,10 @@ export class IoNumberSliderRange extends IoElement {
       }],
       ['io-slider-range', {
         id: 'slider',
-        // TODO: conversion
-        value: this.value, // * this.conversion
-        step: this.step, // * this.conversion,
-        min: this.min, // * this.conversion,
-        max: this.max, // * this.conversion,
+        value: this.value,
+        step: this.step,
+        min: this.min,
+        max: this.max,
         exponent: this.exponent,
         label: this.label,
         'on-value-input': this._onSliderSet,

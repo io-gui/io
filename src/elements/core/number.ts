@@ -1,82 +1,80 @@
-import {RegisterIoElement} from '../../iogui.js';
-import {IoField} from './field.js';
-import {IoLayerSingleton} from './layer.js';
-import {IoLadderSingleton} from './ladder.js';
+import { RegisterIoElement } from '../../core/element.js';
+import { IoProperty } from '../../core/internals/property.js';
+import { IoField } from './field.js';
+import { IoLayerSingleton } from './layer.js';
+import { IoLadderSingleton } from './ladder.js';
 
-/*
- * Extends `IoField`.
- *
- * Input element for `Number` data type. It clamps the `value` to `min` / `max` and rounds it to the nearest `step` increment. If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped. Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
- *
- * <io-element-demo element="io-number" width="5em" properties='{"value": 1337, "conversion": 1, "step": 0.1, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
- *
- * <io-element-demo element="io-number" width="5em" properties='{"value": 1337, "conversion": 1, "step": 0.0002, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
- *
- * Value can be displayed using `conversion` factor. For example, conversion factor of `180/Ï€` would display radians as degrees.
- *
- * <io-element-demo element="io-number" width="5em" properties='{"value": 0, "step": 0.2617993877991494, "conversion": 57.29577951308232, "min": -6.283185307179586, "max": 6.283185307179586, "ladder": true}'></io-element-demo>
- **/
 @RegisterIoElement
 export class IoNumber extends IoField {
   static get Style() {
     return /* css */`
-    :host {
-      cursor: text;
-      user-select: text;
-      -webkit-user-select: text;
-      -webkit-touch-callout: default;
-      min-width: var(--io-field-height);
-      border-color: var(--io-color-border-inset);
-      color: var(--io-color-field);
-      background-color: var(--io-background-color-field);
-      box-shadow: var(--io-shadow-inset);
-    }
-    :host:before,
-    :host:after {
-      content: ' ';
-      white-space: pre;
-      visibility: hidden;
-    }
-    :host:before {
-      content: '-';
-    }
-    :host:not([positive]):before {
-      content: ' ';
-    }
-    :host[aria-invalid] {
-      border: var(--io-border-error);
-      background-image: var(--io-gradient-error);
-    }
+      :host {
+        cursor: text;
+        user-select: text;
+        -webkit-user-select: text;
+        -webkit-touch-callout: default;
+        min-width: var(--io-field-height);
+        border-color: var(--io-color-border-inset);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
+        box-shadow: var(--io-shadow-inset);
+        flex-basis: 5em;
+      }
+      :host:before,
+      :host:after {
+        content: ' ';
+        white-space: pre;
+        visibility: hidden;
+      }
+      :host:before {
+        content: '-';
+      }
+      :host:not([positive]):before {
+        content: ' ';
+      }
+      :host[aria-invalid] {
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
+      }
     `;
   }
-  static get Properties(): any {
-    return {
-      value: Number,
-      conversion: 1,
-      step: 0.001,
-      min: -Infinity,
-      max: Infinity,
-      ladder: false,
-      contenteditable: true,
-      role: 'textbox',
-      type: {
-        value: 'number',
-        reflect: 'prop',
-      },
-      pattern: {
-        value: 'pattern="[0-9]*"',
-        reflect: 'prop',
-      },
-      inputmode: {
-        value: 'numeric',
-        reflect: 'prop',
-      },
-      spellcheck: {
-        value: 'false',
-        reflect: 'prop',
-      },
-    };
-  }
+
+  @IoProperty(0)
+  declare value: number;
+
+  @IoProperty(1)
+  declare conversion: number;
+
+  @IoProperty(0.001)
+  declare step: number;
+
+  @IoProperty(-Infinity)
+  declare min: number;
+
+  @IoProperty(Infinity)
+  declare max: number;
+
+  @IoProperty(false)
+  declare ladder: boolean;
+
+  @IoProperty(true)
+  declare contenteditable: boolean;
+
+  @IoProperty('textbox')
+  declare role: string;
+
+  @IoProperty({value: 'number', reflect: 'prop'})
+  declare type: string;
+
+  @IoProperty({value: 'pattern="[0-9]*"', reflect: 'prop'})
+  declare pattern: string;
+
+  @IoProperty({value: 'numeric', reflect: 'prop'})
+  declare inputmode: string;
+
+  @IoProperty({value: 'false', reflect: 'prop'})
+  declare spellcheck: string;
+
   constructor(properties: Record<string, any> = {}) {
     super(properties);
     Object.defineProperty(this, '_pointer', {enumerable: false, writable: true, value: 'touch'});
@@ -216,8 +214,8 @@ export class IoNumber extends IoField {
       value *= this.conversion;
       let d = -Math.floor(Math.log(this.step * this.conversion) / Math.LN10);
       d = Math.max(0, Math.min(100, d));
-      value = value.toFixed(d);
-      valueText = Number(String(value));
+      value = Number(value.toFixed(d));
+      valueText = String(value);
     } else {
       valueText = 'NaN';
     }

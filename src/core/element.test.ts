@@ -29,7 +29,6 @@ export class TestElement extends IoElement {
       _prop1ChangedCounter: 0,
       _prop1AltCounter: 0,
       _prop1ChangeEvent: null,
-      debug: true,
     };
   }
   static get Listeners() {
@@ -86,11 +85,11 @@ export class TestSubelement extends IoElement {
 }
 
 export default class {
-  _changedCounter: number;
+  _changedCounter = 0;
   element: TestElement;
   constructor() {
     this._changedCounter = 0;
-    this.element = new TestElement({'on-prop0-changed': this.changed.bind(this), 'on-prop1-changed': 'onProp1ChangeAlt', debug: true});
+    this.element = new TestElement({'on-prop0-changed': this.changed.bind(this), 'on-prop1-changed': 'onProp1ChangeAlt'});
     document.body.appendChild(this.element as unknown as HTMLElement);
   }
   changed(event: CustomEvent) {
@@ -98,51 +97,158 @@ export default class {
       this._changedCounter++;
     }
   }
-  reset() {
-    this.element.reset();
-    this._changedCounter = 0;
-  }
   run() {
     describe('IoElement', () => {
       describe('Initialization', () => {
         it('Should have core API functions defined', () => {
           // Default properties
-          chai.expect(this.element.id).to.be.equal('');
-          chai.expect(this.element.tabindex).to.be.equal('');
-          chai.expect(this.element.contenteditable).to.be.equal(false);
-          chai.expect(this.element.title).to.be.equal('');
-          chai.expect(this.element.$).to.be.a('object');
+          chai.expect(element.id).to.be.equal('');
+          chai.expect(element.tabindex).to.be.equal('');
+          chai.expect(element.contenteditable).to.be.equal(false);
+          chai.expect(element.title).to.be.equal('');
+          chai.expect(element.$).to.be.a('object');
           // Template functions
-          chai.expect(this.element.template).to.be.a('function');
-          chai.expect(this.element.traverse).to.be.a('function');
+          chai.expect(element.template).to.be.a('function');
+          chai.expect(element.traverse).to.be.a('function');
         });
         it('Should initialize property definitions correctly', () => {
-          chai.expect(this.element.prop0).to.equal(-1);
-          chai.expect(this.element.prop1).to.equal('default');
+          chai.expect(element.tabindex).to.equal('');
+          chai.expect(element.contenteditable).to.equal(false);
+          chai.expect(element.class).to.equal('');
+          chai.expect(element.role).to.equal('');
+          chai.expect(element.label).to.equal('');
+          chai.expect(element.name).to.equal('');
+          chai.expect(element.title).to.equal('');
+          chai.expect(element.id).to.equal('');
+          chai.expect(element.hidden).to.equal(false);
+          chai.expect(element.disabled).to.equal(false);
+
+          chai.expect(element._properties.tabindex).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: String,
+            value: '',
+          });
+          chai.expect(element._properties.contenteditable).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: Boolean,
+            value: false,
+          });
+          chai.expect(element._properties.class).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: String,
+            value: '',
+          });
+          chai.expect(element._properties.role).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: String,
+            value: '',
+          });
+          chai.expect(element._properties.label).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: String,
+            value: '',
+          });
+          chai.expect(element._properties.name).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: String,
+            value: '',
+          });
+          chai.expect(element._properties.title).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: String,
+            value: '',
+          });
+          chai.expect(element._properties.id).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: String,
+            value: '',
+          });
+          chai.expect(element._properties.hidden).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: Boolean,
+            value: false,
+          });
+          chai.expect(element._properties.disabled).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'prop',
+            type: Boolean,
+            value: false,
+          });
         });
-      });
-      describe('Construction', () => {
+        it('has correct default attributes', () => {
+          chai.expect(element.getAttribute('tabindex')).to.equal(null);
+          chai.expect(element.getAttribute('contenteditable')).to.equal(null);
+          chai.expect(element.getAttribute('class')).to.equal(null);
+          chai.expect(element.getAttribute('role')).to.equal(null);
+          chai.expect(element.getAttribute('label')).to.equal(null);
+          chai.expect(element.getAttribute('name')).to.equal(null);
+          chai.expect(element.getAttribute('title')).to.equal(null);
+          chai.expect(element.getAttribute('id')).to.equal(null);
+          chai.expect(element.getAttribute('hidden')).to.equal(null);
+          chai.expect(element.getAttribute('disabled')).to.equal(null);
+        });
       });
       describe('Reactivity', () => {
-        it('Should corectly invoke handler functions on change', () => {
-          this.reset();
-          this.element.prop0 = 1;
-          this.element.prop1 = 'test';
-          chai.expect(this.element._prop1AltCounter).to.equal(1);
-          chai.expect(this.element._changedCounter).to.equal(2);
-          chai.expect(this._changedCounter).to.equal(1);
-        });
-        it('Should dispatch correct event payloads to handlers', () => {
-          this.reset();
-          this.element.prop0 = 1;
-          this.element.prop0 = 0;
-          chai.expect(this.element._prop1ChangeEvent.srcElement).to.equal(this.element);
-          chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(0);
-          this.element.$.subelement.prop0 = 2;
-          chai.expect(this.element._prop1ChangeEvent.detail.oldValue).to.equal(0);
-          chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(2);
-          this.element.dispatchEvent('custom-event', {data: 'io'});
-          chai.expect(this.element._customHandlerChangeEvent.detail.data).to.equal('io');
+        it('has reactive attributes', () => {
+          element.tabindex = '1';
+          chai.expect(element.getAttribute('tabindex')).to.equal('1');
+          element.tabindex = '';
+          element.contenteditable = true;
+          chai.expect(element.getAttribute('contenteditable')).to.equal('');
+          element.contenteditable = false;
+          element.class = 'foo';
+          chai.expect(element.getAttribute('class')).to.equal('foo');
+          element.class = '';
+          element.role = 'button';
+          chai.expect(element.getAttribute('role')).to.equal('button');
+          element.role = '';
+          element.label = 'text';
+          chai.expect(element.getAttribute('label')).to.equal('text');
+          element.label = '';
+          element.name = 'name';
+          chai.expect(element.getAttribute('name')).to.equal('name');
+          element.name = '';
+          element.title = 'title';
+          chai.expect(element.getAttribute('title')).to.equal('title');
+          element.title = '';
+          element.id = 'one';
+          chai.expect(element.getAttribute('id')).to.equal('one');
+          element.id = '';
+          element.hidden = true;
+          chai.expect(element.getAttribute('hidden')).to.equal('');
+          element.hidden = false;
+          element.disabled = true;
+          chai.expect(element.getAttribute('disabled')).to.equal('');
+          element.disabled = false;
         });
       });
       describe('Accessibility', () => {
@@ -155,6 +261,36 @@ export default class {
           element.disabled = true;
           chai.expect(element.getAttribute('aria-disabled')).to.equal('');
           element.disabled = false;
+        });
+      });
+    });
+    describe('IoElement API', () => {
+      describe('Initialization', () => {
+        it('Should initialize property definitions correctly', () => {
+          chai.expect(this.element.prop0).to.equal(-1);
+          chai.expect(this.element.prop1).to.equal('default');
+        });
+      });
+      describe('Reactivity', () => {
+        it('Should corectly invoke handler functions on change', () => {
+          this.element.reset();
+          this.element.prop0 = 1;
+          this.element.prop1 = 'test';
+          chai.expect(this.element._prop1AltCounter).to.equal(1);
+          chai.expect(this.element._changedCounter).to.equal(2);
+          chai.expect(this._changedCounter).to.equal(1);
+        });
+        it('Should dispatch correct event payloads to handlers', () => {
+          this.element.reset();
+          this.element.prop0 = 1;
+          this.element.prop0 = 0;
+          chai.expect(this.element._prop1ChangeEvent.srcElement).to.equal(this.element);
+          chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(0);
+          this.element.$.subelement.prop0 = 2;
+          chai.expect(this.element._prop1ChangeEvent.detail.oldValue).to.equal(0);
+          chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(2);
+          this.element.dispatchEvent('custom-event', {data: 'io'});
+          chai.expect(this.element._customHandlerChangeEvent.detail.data).to.equal('io');
         });
       });
       describe('Binding', () => {

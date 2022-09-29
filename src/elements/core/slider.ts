@@ -25,6 +25,7 @@ export class IoSlider extends IoGl {
       min-height: var(--io-field-height);
       align-self: stretch;
       justify-self: stretch;
+      flex-basis: 15em;
     }
     :host[horizontal] {
       cursor: ew-resize;
@@ -285,8 +286,8 @@ export class IoSlider extends IoGl {
       }
 
       vec4 slotGradient = mix(cssColorFocus, cssColorLink, uv.x);
-      float knobRadius = cssItemHeight * 0.125;
-      float slotWidth = cssItemHeight * 0.125;
+      float knobRadius = cssFieldHeight * 0.125;
+      float slotWidth = cssFieldHeight * 0.125;
 
       float valueInRange = (uValue - uMin) / (uMax - uMin);
       float sign = valueInRange < 0.0 ? -1.0 : 1.0;

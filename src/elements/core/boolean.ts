@@ -1,21 +1,15 @@
-import {RegisterIoElement, IoProperty } from '../../iogui.js';
-import {IoField} from './field.js';
+import { RegisterIoElement } from '../../core/element.js';
+import { IoProperty } from '../../core/internals/property.js';
+import { IoField } from './field.js';
 
-/*
- * Extends `IoButton`.
- *
- * Input element for `Boolean` data type displayed as text. It can be configured to display custom `true` or `false` string depending on its `value`.
- *
- * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
- **/
 @RegisterIoElement
 export class IoBoolean extends IoField {
   static get Style() {
     return /* css */`
-    :host[aria-invalid] {
-      border: var(--io-border-error);
-      background-image: var(--io-gradient-error);
-    }
+      :host[aria-invalid] {
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
+      }
     `;
   }
 
@@ -31,6 +25,9 @@ export class IoBoolean extends IoField {
   @IoProperty('false')
   declare false: string;
 
+  @IoProperty({value: false, reflect: 'prop'})
+  declare stroke: boolean;
+
   @IoProperty('switch')
   declare role: string;
 
@@ -43,9 +40,23 @@ export class IoBoolean extends IoField {
   valueChanged() {
     this.setAttribute('value', Boolean(this.value));
   }
+  init() {
+    this.changed();
+  }
   changed() {
     this.title = this.label;
-    this.textNode = this.value ? this.true : this.false;
+    const value = this.value ? this.true : this.false;
+    if (value.search(':') !== -1) {
+      this.template([
+        ['io-icon', {icon: this.icon}],
+        ['io-icon', {icon: value}]
+      ]);
+    } else {
+      this.template([
+        ['io-icon', {icon: this.icon}],
+        ['io-label', {label: value}]
+      ]);
+    }
   }
   applyAria() {
     this.setAttribute('aria-checked', String(!!this.value));

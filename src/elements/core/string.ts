@@ -1,48 +1,48 @@
-import {RegisterIoElement} from '../../iogui.js';
-import {IoField} from './field.js';
+import { RegisterIoElement } from '../../core/element.js';
+import { IoProperty } from '../../core/internals/property.js';
+import { IoField } from './field.js';
 
-/*
- * Extends `IoField`.
- *
- * Input element for `String` data type.
- *
- * <io-element-demo element="io-string" properties='{"value": "hello world"}'></io-element-demo>
- **/
 @RegisterIoElement
 export class IoString extends IoField {
   static get Style() {
     return /* css */`
-    :host {
-      cursor: text;
-      user-select: text;
-      -webkit-user-select: text;
-      -webkit-touch-callout: default;
-      min-width: var(--io-field-height);
-      border-color: var(--io-color-border-inset);
-      color: var(--io-color-field);
-      background-color: var(--io-background-color-field);
-      box-shadow: var(--io-shadow-inset);
-    }
-    :host:before,
-    :host:after {
-      content: ' ';
-      white-space: pre;
-      visibility: hidden;
-    }
-    :host[aria-invalid] {
-      border: var(--io-border-error);
-      background-image: var(--io-gradient-error);
-    }
+      :host {
+        @apply --io-field;
+        cursor: text;
+        user-select: text;
+        -webkit-user-select: text;
+        -webkit-touch-callout: default;
+        min-width: var(--io-field-height);
+        border-color: var(--io-color-border-inset);
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
+        box-shadow: var(--io-shadow-inset);
+        flex-basis: 10em;
+      }
+      :host:before,
+      :host:after {
+        content: ' ';
+        white-space: pre;
+        visibility: hidden;
+      }
+      :host[aria-invalid] {
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
+      }
     `;
   }
-  static get Properties(): any {
-    return {
-      live: Boolean,
-      value: String,
-      contenteditable: true,
-      role: 'textbox',
-    };
-  }
+  @IoProperty(false)
+  declare live: boolean;
+
+  @IoProperty('')
+  declare value: string;
+
+  @IoProperty(true)
+  declare contenteditable: boolean;
+
+  @IoProperty('textbox')
+  declare role: string;
+
   _setFromTextNode() {
     const textNode = this.textNode;
     if (typeof this.value === 'string' && textNode !== String(this.value)) {

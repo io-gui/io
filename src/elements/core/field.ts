@@ -1,5 +1,5 @@
-import {IoElement, RegisterIoElement} from '../../core/element.js';
-import {IoProperty} from '../../core/internals/property.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { IoProperty } from '../../core/internals/property.js';
 
 /*
  * This is the base element with a `value` property. A building block for more complex elements.
@@ -12,29 +12,39 @@ import {IoProperty} from '../../core/internals/property.js';
 export class IoField extends IoElement {
   static get Style() {
     return /* css */`
-    :host {
-      @apply --io-field;
-    }
-    :host[selected] {
-      color: var(--io-color-link);
-      background-color: var(--io-background-color-light);
-    }
-    :host:focus {
-      z-index: 200;
-      position: relative;
-      text-overflow: inherit;
-      border-color: var(--io-color-focus);
-      outline-color: var(--io-color-focus);
-    }
+      :host {
+        @apply --io-field;
+        display: flex;
+      }
+      :host[reverse] {
+        flex-flow: row-reverse;
+      }
+      :host[selected] {
+        color: var(--io-color-link);
+        background-color: var(--io-background-color-light);
+      }
+      :host:focus {
+        z-index: 200;
+        position: relative;
+        text-overflow: inherit;
+        border-color: var(--io-color-focus);
+        outline-color: var(--io-color-focus);
+      }
     `;
   }
-  @IoProperty({value: undefined})
+  @IoProperty(undefined)
   declare value: any;
 
-  @IoProperty({type: Boolean, reflect: 'prop'})
+  @IoProperty('')
+  declare icon: string;
+
+  @IoProperty({value: false, reflect: 'prop'})
+  declare reverse: boolean;
+
+  @IoProperty({value: false, reflect: 'prop'})
   declare selected: boolean;
 
-  @IoProperty({value: '0'})
+  @IoProperty('0')
   declare tabindex: string;
 
   static get Listeners() {
@@ -73,7 +83,7 @@ export class IoField extends IoElement {
     this.focus();
   }
   _onClick() {
-    this.dispatchEvent('item-clicked', {value: this.value, label: this.label}, true);
+    this.dispatchEvent('field-clicked', {value: this.value, label: this.label}, true);
   }
   _onKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -131,7 +141,8 @@ export class IoField extends IoElement {
       }
     }
     this.template([
+      ['io-icon', {icon: this.icon}],
       ['io-label', {label: label}]
-    ])
+    ]);
   }
 }

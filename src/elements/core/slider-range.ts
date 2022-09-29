@@ -1,16 +1,5 @@
-import {RegisterIoElement} from '../../iogui.js';
-import {IoSlider} from './slider.js';
-
-/*
- * Extends `IoSlider`.
- *
- * Input element for `Array(2)` data type displayed as slider.
- * It can be configured to clamp the `value` compoents to `min` / `max` and round it to the nearest `step` increment. `exponent` property can be changed for non-linear scale.
- *
- * Keys left/right/up/down+shift and pageup/pagedown change the value in step incements. Home/end keys set the value to min/max.
- *
- * <io-element-demo element="io-slider-range" properties='{"value": [0, 1], "step": 0.1, "min": -1, "max": 2, "exponent": 1}'></io-element-demo>
- **/
+import { RegisterIoElement } from '../../core/element.js';
+import { IoSlider } from './slider.js';
 
 @RegisterIoElement
 export class IoSliderRange extends IoSlider {
@@ -48,7 +37,10 @@ export class IoSliderRange extends IoSlider {
     }
   }
   _inputValue(x: number, y: number) {
-    this.inputValue([Number(x.toFixed(5)), Number(y.toFixed(5))]);
+    this.value[0] = Number(x.toFixed(5));
+    this.value[1] = Number(y.toFixed(5));
+    this.inputValue(this.value);
+    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
   }
   _onKeydown(event: KeyboardEvent) {
     switch(event.key) {
@@ -152,8 +144,8 @@ export class IoSliderRange extends IoSlider {
         finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
       }
 
-      float knobRadius = cssItemHeight * 0.25;
-      float slotWidth = cssItemHeight * 0.125;
+      float knobRadius = cssFieldHeight * 0.25;
+      float slotWidth = cssFieldHeight * 0.125;
 
       float valueInRangeStart = (uValue[0] - uMin) / (uMax - uMin);
       float signStart = valueInRangeStart < 0.0 ? -1.0 : 1.0;

@@ -1,45 +1,41 @@
-import {RegisterIoElement} from '../../iogui.js';
-import {IoField} from './field.js';
+import { RegisterIoElement } from '../../core/element.js';
+import { IoProperty } from '../../core/internals/property.js';
+import { IoField } from './field.js';
 
-/*
- * Extends `IoField`.
- *
- * Button element. When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
- *
- * <io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
- **/
 @RegisterIoElement
 export class IoButton extends IoField {
   static get Style() {
     return /* css */`
-    :host {
-      text-align: center;
-      border: var(--io-border);
-      border-color: var(--io-color-border-outset);
-      background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-button);
-      padding-left: calc(2 * var(--io-spacing));
-      padding-right: calc(2 * var(--io-spacing));
-    }
-    :host[pressed] {
-      border: var(--io-border);
-      border-color: var(--io-color-border-inset);
-    }
+      :host {
+        text-align: center;
+        border: var(--io-border);
+        border-color: var(--io-color-border-outset);
+        background-color: var(--io-background-color-dark);
+        background-image: var(--io-gradient-button);
+        padding-left: calc(2 * var(--io-spacing));
+        padding-right: calc(2 * var(--io-spacing));
+      }
+      :host[pressed] {
+        border: var(--io-border);
+        border-color: var(--io-color-border-inset);
+      }
+      :host > io-label {
+        vertical-align: top;
+      }
     `;
   }
-  static get Properties(): any {
-    return {
-      action: null,
-      value: undefined,
-      pressed: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      label: 'Button',
-      icon: '',
-      role: 'button',
-    };
-  }
+  @IoProperty(undefined)
+  declare action?: any;
+
+  @IoProperty(undefined)
+  declare value: any;
+
+  @IoProperty({value: false, reflect: 'prop'})
+  declare pressed: boolean;
+
+  @IoProperty('button')
+  declare role: string;
+
   _onPointerdown(event: PointerEvent) {
     super._onPointerdown(event);
     this.pressed = true;
@@ -65,5 +61,11 @@ export class IoButton extends IoField {
   _onClick() {
     super._onClick();
     if (typeof this.action === 'function') this.action(this.value);
+  }
+  changed() {
+    this.template([
+      ['io-icon', {icon: this.icon}],
+      ['io-label', {label: this.label}]
+    ]);
   }
 }

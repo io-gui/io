@@ -30,12 +30,12 @@ export class IoInspector extends IoElement {
     :host > .inspector-header > io-breadcrumbs {
       flex: 1 1;
     }
-    :host > .inspector-header > io-boolicon {
+    :host > .inspector-header > io-boolean {
       width: calc(var(--io-spacing) + var(--io-field-height));
       align-self: stretch;
       height: auto;
     }
-    :host > .inspector-header > io-boolicon:not([value]) {
+    :host > .inspector-header > io-boolean:not([value]) {
       opacity: 0.25;
     }
     :host > .inspector-header > io-string {
@@ -160,7 +160,7 @@ export class IoInspector extends IoElement {
       ['div', {class: 'inspector-header io-row io-panel'}, [
         ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
         ['io-string', {id: 'search', value: this.bind('search'), live: true}],
-        ['io-boolicon', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
+        ['io-boolean', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
       ]],
       this._widgets.main ? this._widgets.main : null
     ];

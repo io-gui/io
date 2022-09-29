@@ -106,14 +106,14 @@ export default class {
           element.title = '';
           element.id = 'one';
           chai.expect(element.getAttribute('id')).to.equal('one');
-          element.id = ''
+          element.id = '';
           element.hidden = true;
           chai.expect(element.getAttribute('hidden')).to.equal('');
           element.hidden = false;
           element.disabled = true;
           chai.expect(element.getAttribute('disabled')).to.equal('');
           element.disabled = false;
-          element.value = 'test'
+          element.value = 'test';
           chai.expect(element.getAttribute('value')).to.equal(null);
           element.value = undefined;
           element.selected = true;

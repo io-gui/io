@@ -98,6 +98,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         });
       }
       this.applyProperties(properties);
+      this.init();
     }
     /**
      * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
@@ -215,6 +216,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Invoked when one of the properties change.
      */
     changed() {}
+    init() {}
     /**
      * Adds property change to the queue.
      * @param {string} prop - Property name.

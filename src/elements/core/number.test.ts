@@ -32,13 +32,13 @@ export default class {
           chai.expect(this.element.textContent).to.equal('0');
           this.element.step = 0.1;
           chai.expect(this.element.textContent).to.equal('0');
-          this.element.value = 'hello';
+          (this.element as any).value = 'hello';
           chai.expect(this.element.textContent).to.equal('NaN');
-          this.element.value = false;
+          (this.element as any).value = false;
           chai.expect(this.element.textContent).to.equal('NaN');
-          this.element.value = null;
+          (this.element as any).value = null;
           chai.expect(this.element.textContent).to.equal('NaN');
-          this.element.value = undefined;
+          (this.element as any).value = undefined;
           chai.expect(this.element.textContent).to.equal('NaN');
           this.element.value = NaN;
           chai.expect(this.element.textContent).to.equal('NaN');
@@ -94,7 +94,7 @@ export default class {
         });
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('textbox');
-          this.element.value = '';
+          (this.element as any).value = '';
           chai.expect(this.element.getAttribute('aria-invalid')).to.equal('true');
           this.element.value = 0;
           chai.expect(this.element.getAttribute('aria-invalid')).to.equal(null);

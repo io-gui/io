@@ -116,10 +116,13 @@ const ro = new ResizeObserver((entries: any) => {
 const constructElement = function(vDOMNode: any) {
   // IoElement classes constructed with constructor.
   const ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
-  if (ConstructorClass && (ConstructorClass as any)._isIoElement) return new ConstructorClass(vDOMNode.props);
+  if (ConstructorClass && (ConstructorClass as any)._isIoElement) {
+    return new ConstructorClass(vDOMNode.props);
+  }
 
   // Other element classes constructed with document.createElement.
   const element = document.createElement(vDOMNode.name);
+
   applyNativeElementProps(element, vDOMNode.props);
   return element;
 };

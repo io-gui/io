@@ -1,14 +1,5 @@
 import {IoElement, RegisterIoElement} from '../../iogui.js';
 
-/*
- * Extends `IoElement`. Implements `IoNumber` and `IoBoolicon`.
- *
- * Input element for vector arrays and objects.
- *
- * <io-element-demo element="io-vector" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>
- *
- * <io-element-demo element="io-vector" properties='{"value": [0, 0.5, 1], "linkable": true}'></io-element-demo>
- **/
 // TODO: preserve linked scaling through zero.
 @RegisterIoElement
 export class IoVector extends IoElement {
@@ -95,6 +86,6 @@ export class IoVector extends IoElement {
     this.template(elements);
   }
   getSlotted() {
-    return this.linkable ? ['io-boolicon', {value: this.bind('linked'), true: 'icons:link', false: 'icons:unlink'}] : null;
+    return this.linkable ? ['io-boolean', {value: this.bind('linked'), true: 'icons:link', false: 'icons:unlink'}] : null;
   }
 }

@@ -11,13 +11,13 @@ export class IoElementDemo extends IoElement {
       @apply --io-panel;
       position: relative;
     }
-    :host > io-boolicon {
+    :host > io-boolean {
       z-index: 2;
       position: absolute !important;
       top: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
       right: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
     }
-    :host > io-boolicon:not([value]):not(:hover) {
+    :host > io-boolean:not([value]):not(:hover) {
       opacity: 0.5;
     }
     :host > io-properties {
@@ -90,7 +90,7 @@ export class IoElementDemo extends IoElement {
   };
   changed() {
     const properties = this.properties;
-    const elements: any = [['io-boolicon', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];
+    const elements: any = [['io-boolean', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];
     if (this.expanded) {
       elements.push(['io-properties', {
         value: properties,
