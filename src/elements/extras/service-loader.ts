@@ -1,4 +1,4 @@
-import {IoNode, RegisterIoNode} from '../../iogui.js';
+import { IoNode, RegisterIoNode } from '../../core/node.js';
 
 debug: {
   if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
