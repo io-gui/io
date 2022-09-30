@@ -19,11 +19,9 @@ export default class {
         });
         it('has a11y attributes', () => {
           chai.expect(this.element.getAttribute('role')).to.equal('switch');
-          chai.expect(this.element.getAttribute('aria-label')).to.equal('Boolean');
+          chai.expect(this.element.getAttribute('aria-label')).to.equal(null);
           this.element.label = 'click here';
           chai.expect(this.element.getAttribute('aria-label')).to.equal('click here');
-          this.element.label = 'Boolean';
-          chai.expect(this.element.getAttribute('aria-label')).to.equal('Boolean');
         });
         it('has value attribute when value is true', () => {
           this.element.value = false;

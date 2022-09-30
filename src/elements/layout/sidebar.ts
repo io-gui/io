@@ -1,6 +1,7 @@
-import {IoElement, RegisterIoElement, Binding} from '../../iogui.js';
+import {IoElement, RegisterIoElement} from '../../core/element.js';
+import {Binding} from '../../core/internals/binding.js';
 import {Options} from '../../models/options.js';
-import {IoStorageFactory as $} from '../core/storage.js';
+import {IoStorageFactory as $} from '../../core/storage.js';
 
 /*
  * Labeled tabs for selection.

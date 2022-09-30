@@ -1,5 +1,5 @@
-import {IoElement, RegisterIoElement } from '../../iogui.js';
-import {IoStorageFactory} from '../core/storage.js';
+import {IoElement, RegisterIoElement } from '../../core/element.js';
+import {IoStorageFactory} from '../../core/storage.js';
 
 /*
 

@@ -1,4 +1,4 @@
-import {IoLayerSingleton} from '../../iogui.js';
+import {IoLayerSingleton} from '../iogui.js';
 
 export default class {
   element: typeof IoLayerSingleton;

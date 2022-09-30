@@ -13,6 +13,7 @@ export class IoLabel extends IoElement {
     `;
   }
   labelChanged() {
+    super.labelChanged();
     this.textNode = this.label;
   }
 }

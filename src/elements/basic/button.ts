@@ -24,6 +24,7 @@ export class IoButton extends IoField {
       }
     `;
   }
+
   @IoProperty(undefined)
   declare action?: any;
 
@@ -59,13 +60,17 @@ export class IoButton extends IoField {
     this.pressed = false;
   }
   _onClick() {
-    super._onClick();
     if (typeof this.action === 'function') this.action(this.value);
+    this.dispatchEvent('io-button-clicked', {value: this.value}, true);
+  }
+  init() {
+    this.changed();
   }
   changed() {
+    this.setAttribute('aria-pressed', String(this.pressed));
     this.template([
-      ['io-icon', {icon: this.icon}],
-      ['io-label', {label: this.label}]
+      this.icon ? ['io-icon', {icon: this.icon}] : null,
+      this.label ? ['io-label', {label: this.label}] : null
     ]);
   }
 }

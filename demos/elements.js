@@ -12,7 +12,7 @@ export class IoDemoElements extends IoElement {
     return /* css */`
       :host {
         display: flex;
-        padding: var(--io-spacing);
+        flex-direction: column;
       }
     `;
   }
@@ -37,10 +37,10 @@ export class IoDemoElements extends IoElement {
         number: this.bind('number'),
         boolean: this.bind('boolean'),
       }],
-      // ['io-demo-elements-sliders', {
-      //   number: this.bind('number'),
-      //   vector2: this.bind('vector2'),
-      // }],
+      ['io-demo-elements-sliders', {
+        number: this.bind('number'),
+        vector2: this.bind('vector2'),
+      }],
       // ['io-demo-elements-menus', {
       //   number: this.bind('number'),
       // }],

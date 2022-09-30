@@ -1,13 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { IoProperty } from '../../core/internals/property.js';
 
-/*
- * This is the base element with a `value` property. A building block for more complex elements.
- * It simply displays `value` or `label` property if set.
- * It changes its apparence if `selected` of `disabled` properties are `true`.
- * Arow keys up, down, left, right and tab change focus to the nearest focusable element in the chosen direction.
- **/
-
 @RegisterIoElement
 export class IoField extends IoElement {
   static get Style() {
@@ -15,6 +8,10 @@ export class IoField extends IoElement {
       :host {
         @apply --io-field;
         display: flex;
+      }
+      :host[aria-invalid] {
+        border: var(--io-border-error);
+        background-image: var(--io-gradient-error);
       }
       :host[reverse] {
         flex-flow: row-reverse;
@@ -32,20 +29,24 @@ export class IoField extends IoElement {
       }
     `;
   }
+
+  @IoProperty('0')
+  declare tabindex: string;
+
   @IoProperty(undefined)
   declare value: any;
 
   @IoProperty('')
   declare icon: string;
 
+  @IoProperty({value: false})
+  declare stroke: boolean;
+
   @IoProperty({value: false, reflect: 'prop'})
   declare reverse: boolean;
 
   @IoProperty({value: false, reflect: 'prop'})
   declare selected: boolean;
-
-  @IoProperty('0')
-  declare tabindex: string;
 
   static get Listeners() {
     return {
@@ -83,7 +84,7 @@ export class IoField extends IoElement {
     this.focus();
   }
   _onClick() {
-    this.dispatchEvent('field-clicked', {value: this.value, label: this.label}, true);
+    this.dispatchEvent('io-field-clicked', {value: this.value}, true);
   }
   _onKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -141,7 +142,7 @@ export class IoField extends IoElement {
       }
     }
     this.template([
-      ['io-icon', {icon: this.icon}],
+      this.icon ? ['io-icon', {icon: this.icon, stroke: this.stroke}] : null,
       ['io-label', {label: label}]
     ]);
   }

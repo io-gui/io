@@ -65,12 +65,18 @@ export class IoSwitch extends IoBoolean {
       }
     `;
   }
+  init() {
+    this.setAttribute('aria-checked', String(!!this.value));
+  }
   changed() {
     this.title = this.label;
   }
-  applyAria() {
+  valueChanged() {
     this.setAttribute('aria-checked', String(!!this.value));
-    this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
-    this.setAttribute('aria-label', this.label);
+    if (typeof this.value !== 'boolean') {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
   }
 }

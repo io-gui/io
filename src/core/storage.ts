@@ -1,4 +1,4 @@
-import {IoNode, RegisterIoNode} from '../../iogui.js';
+import {IoNode, RegisterIoNode} from './node.js';
 
 // TODO: test different value types
 

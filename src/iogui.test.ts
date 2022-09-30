@@ -3,42 +3,8 @@ import 'chai/chai.js';
 
 import {IoElement, RegisterIoElement} from './iogui.js';
 
-// Core internals
-import ProtoChain from './core/internals/protoChain.test.js';
-import Property from './core/internals/property.test.js';
-import Binding from './core/internals/binding.test.js';
-import EventDispatcher from './core/internals/eventDispatcher.test.js';
-import ChangeQueue from './core/internals/changeQueue.test.js';
-
-// Core classes
-import Node from './core/node.test.js';
-import Element from './core/element.test.js';
-
-// Elements
-import Label from './elements/core/label.test.js';
-import Icon from './elements/core/icon.test.js';
-import IconSet from './elements/core/iconset.test.js';
-import Field from './elements/core/field.test.js';
-// import Content from './elements/core/content.test.js'; // TODO
-// import Gl from './elements/core/gl.test.js';
-// import Button from './elements/core/button.test.js';
-// import Boolean from './elements/core/boolean.test.js';
-// import Switch from './elements/core/switch.test.js';
-// import Sting from './elements/core/string.test.js';
-// import Number from './elements/core/number.test.js';
-// import Slider from './elements/core/slider.test.js';
-// import SliderRange from './elements/core/slider-range.test.js'; // TODO
-// import NumberSlider from './elements/core/number-slider.test.js';
-// import NumberSliderRange from './elements/core/number-slider-range.test.js'; // TODO
-// import Layer from './elements/core/layer.test.js';
-// import Ladder from './elements/core/ladder.test.js';
-// import Theme from './elements/core/theme.test.js';
-
-// import Collapsable from "./elements/layout/collapsable.test.js";
-// import Property from "./elements/object/properties.test.js";
-// import Object from "./elements/object/object.test.js";
-// import Inspector from "./elements/object/inspector.test.js";
-// import OptionMenu from "./elements/menus/option-menu.test.js";
+// import CoreTests from './core/index.test.js';
+import ElementsTests from './elements/index.test.js';
 
 mocha.setup('bdd');
 
@@ -59,43 +25,8 @@ export async function nextTick(): Promise<void> {
 
 function runTests() {
   if (!testCompleted) {
-    new ProtoChain().run();
-    new Property().run();
-    new Binding().run();
-    new EventDispatcher().run();
-    new ChangeQueue().run();
-
-    new Node().run();
-    new Element().run();
-
-    new Label().run();
-    new Icon().run();
-    new IconSet().run();
-    new Field().run();
-    // new Content().run();
-    // new Gl().run();
-    // new Button().run();
-    // new Boolean().run();
-    // new Boolean().run();
-    // new Switch().run();
-    // new Sting().run();
-    // new Number().run();
-    // new Slider().run();
-    // new SliderRange().run();
-    // new NumberSlider().run();
-    // new NumberSliderRange().run();
-
-    // new Layer().run();
-    // new Ladder().run();
-    // new Theme().run();
-
-    // TODO
-    // new OptionMenu().run();
-    // new Collapsable().run();
-    // new Properties().run();
-    // new Object().run();
-    // new Inspector().run();
-
+    // new CoreTests().run();
+    new ElementsTests().run();
     mocha.checkLeaks();
     mocha.run();
     testCompleted = true;
@@ -103,7 +34,7 @@ function runTests() {
 }
 
 @RegisterIoElement
-export class IoTest extends IoElement {
+export class IoGuiTestPage extends IoElement {
   static get Style() {
     return /* css */`
       :host #mocha {

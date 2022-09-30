@@ -1,4 +1,4 @@
-import {IoIcon, IoIconsetSingleton} from '../../iogui.js';
+import { IoIcon, IoIconsetSingleton } from '../../iogui.js';
 
 const element = new IoIcon();
 element.style.display = 'none';
@@ -32,6 +32,9 @@ export default class {
           chai.expect(element.getAttribute('icon')).to.equal(null);
           chai.expect(element.getAttribute('stroke')).to.equal(null);
         });
+        it('has correct default innerHTML', () => {
+          chai.expect(element.innerHTML).to.equal('');
+        });
       });
       describe('Reactivity', () => {
         it('should set innerHTML to match icon property', () => {
@@ -48,15 +51,6 @@ export default class {
           element.stroke = true;
           chai.expect(element.getAttribute('stroke')).to.equal('');
           element.stroke = false;
-        });
-      });
-      describe('Accessibility', () => {
-        it('has a11y attributes', () => {
-          chai.expect(element.getAttribute('aria-label')).to.equal(null);
-          element.label = 'label';
-          chai.expect(element.getAttribute('aria-label')).to.equal('label');
-          element.label = '';
-          chai.expect(element.getAttribute('aria-label')).to.equal(null);
         });
       });
     });

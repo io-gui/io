@@ -353,7 +353,6 @@ class IoElement extends IoNodeMixin(HTMLElement) {
         const oldElement = child as IoElement;
         const element = constructElement(vChildren[i]);
         host.insertBefore(element, oldElement as unknown as HTMLElement);
-        host.removeChild(oldElement as unknown as HTMLElement);
         this.disposeDeep(host, oldElement);
       // update existing elements
       } else {

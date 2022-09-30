@@ -1,7 +1,7 @@
 import {IoElement, RegisterIoElement, Binding } from '../../iogui.js';
 import {Options} from '../../models/options.js';
 import {Item} from '../../models/item.js';
-import {IoLayerSingleton as Layer} from '../core/layer.js';
+import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuItem} from './menu-item.js';
 
 const rects = new WeakMap();

@@ -1,5 +1,5 @@
 import {RegisterIoElement} from '../../iogui.js';
-import {IoSlider} from '../core/slider.js';
+import {IoSlider} from '../sliders/slider.js';
 import {IoColorMixin} from './color.js';
 
 /*
@@ -55,7 +55,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   valueMutated() {
     this.valueChanged();
   }
-  applyAria() {
+  deprecated_applyAria() {
     // TODO
   }
   _onKeydown(event: KeyboardEvent) {

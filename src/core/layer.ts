@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import {IoElement, RegisterIoElement} from './element.js';
 
 let lastFocus: Element | null = null;
 {
@@ -38,14 +38,14 @@ class IoLayer extends IoElement {
       pointer-events: none;
       touch-action: none;
       opacity: 0;
-      transition: opacity 0.25s;
+      transition: opacity 0.5s;
       background: transparent;
     }
     :host[expanded] {
       pointer-events: all;
       visibility: visible;
       opacity: 1;
-      /* background: rgba(0,0,0,0.2); */
+      background: rgba(0,0,0,0.2);
     }
     :host > * {
       position: absolute;

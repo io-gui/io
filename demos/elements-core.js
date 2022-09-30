@@ -27,7 +27,6 @@ export class IoDemoElementsCore extends IoElement {
     return {
       string: 'Hello IoGUI!',
       number: 0,
-      range: [0.25, 0.75],
       boolean: false,
     };
   }
@@ -82,26 +81,6 @@ export class IoDemoElementsCore extends IoElement {
       ['div', [
         ['io-label', {label: 'button'}],
         ['io-button', {label: 'Button', icon: 'icons:check'}],
-      ]],
-      ['div', [
-        ['io-label', {label: 'slider'}],
-        ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.25}],
-      ]],
-      ['div', [
-        ['io-label', {label: 'slider [exp]'}],
-        ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.0000001, exponent: 5}],
-      ]],
-      ['div', [
-        ['io-label', {label: 'number-slider'}],
-        ['io-number-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.25}],
-      ]],
-      ['div', [
-        ['io-label', {label: 'slider-range'}],
-        ['io-slider-range', {value: this.range, min: 0, max: 2, step: 0.25}],
-      ]],
-      ['div', [
-        ['io-label', {label: 'number-slider-range'}],
-        ['io-number-slider-range', {value: this.range, min: 0, max: 2}],
       ]],
     ]);
   }

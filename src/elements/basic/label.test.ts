@@ -37,10 +37,10 @@ export default class {
         });
       });
       describe('Accessibility', () => {
-        it('has no a11y attributes', () => {
+        it('has a11y attributes', () => {
           chai.expect(element.getAttribute('aria-label')).to.equal(null);
           element.label = 'label';
-          chai.expect(element.getAttribute('aria-label')).to.equal(null);
+          chai.expect(element.getAttribute('aria-label')).to.equal('label');
           element.label = '';
           chai.expect(element.getAttribute('aria-label')).to.equal(null);
         });

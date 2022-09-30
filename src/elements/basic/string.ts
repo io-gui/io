@@ -127,8 +127,12 @@ export class IoString extends IoField {
     this.title = this.label;
     this.textNode = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
-  applyAria() {
-    this.setAttribute('aria-invalid', (typeof this.value !== 'string') ? 'true' : false);
+  valueChanged() {
+    if (typeof this.value !== 'string') {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
   }
 }
 

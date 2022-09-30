@@ -1,5 +1,5 @@
 import {IoElement, RegisterIoElement} from '../../iogui.js';
-import {IoLayerSingleton as Layer} from '../core/layer.js';
+import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuOptions} from './menu-options.js';
 import {getElementDescendants, IoMenuItem} from './menu-item.js';
 

@@ -111,11 +111,19 @@ export class IoSliderRange extends IoSlider {
     y = Math.min(this.max, Math.max(this.min, y));
     this._inputValue(x, y);
   }
-  applyAria() {
-    this.setAttribute('aria-invalid', (this.value instanceof Array && this.value.length === 2) ? false : 'true');
+  init() {
+  }
+  changed() {
+    this.setAttribute('value', this.value);
+    this.setAttribute('aria-valuenow', this.value);
     this.setAttribute('aria-valuemin', this.min);
     this.setAttribute('aria-valuemax', this.max);
     this.setAttribute('aria-valuestep', this.step);
+    if (!(this.value instanceof Array && this.value.length === 2)) {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
   }
   static get Frag() {
     return /* glsl */`

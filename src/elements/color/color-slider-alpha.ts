@@ -36,12 +36,16 @@ export class IoColorSliderAlpha extends IoColorSlider {
       }
     `;
   }
-  applyAria() {
-    // TODO
+  changed() {
+    // TODO: improve.
     const i = this.mode === 3 ? 4 : 3;
     const components = Object.keys(this.value);
     const hasAlpha = this.value[components[i]] !== undefined;
-    this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
+    if (!hasAlpha) {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
   }
   _setIncrease() {
     const i = this.mode === 3 ? 4 : 3;

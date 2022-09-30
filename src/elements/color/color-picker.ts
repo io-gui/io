@@ -1,6 +1,6 @@
 import {RegisterIoElement} from '../../iogui.js';
-import {IoField} from '../core/field.js';
-import {IoLayerSingleton} from '../core/layer.js';
+import {IoField} from '../basic/field.js';
+import {IoLayerSingleton} from '../../core/layer.js';
 import {IoColorMixin} from './color.js';
 import './color-swatch.js';
 import {IoColorPanelSingleton} from './color-panel.js';

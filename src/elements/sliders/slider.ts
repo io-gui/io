@@ -1,5 +1,5 @@
-import {RegisterIoElement} from '../../iogui.js';
-import {IoGl} from './gl.js';
+import {RegisterIoElement} from '../../core/element.js';
+import {IoGl} from '../../core/gl.js';
 
 /*
  * Extends `IoGl`.
@@ -25,10 +25,11 @@ export class IoSlider extends IoGl {
       min-height: var(--io-field-height);
       align-self: stretch;
       justify-self: stretch;
-      flex-basis: 15em;
+      flex-basis: calc(var(--io-field-height), var(--io-spacing));
     }
     :host[horizontal] {
       cursor: ew-resize;
+      flex-basis: 15em;
     }
     :host[aria-invalid] {
       border: var(--io-border-error);
@@ -210,16 +211,19 @@ export class IoSlider extends IoGl {
     value = Math.min(this.max, Math.max(this.min, value));
     this._inputValue(value);
   }
-  // TODO: consider moving or standardizing.
-  changed() {
-    super.changed();
+  init() {
+    this.changed();
   }
-  applyAria() {
-    this.setAttribute('aria-invalid', isNaN(this.value) ? 'true' : false);
-    this.setAttribute('aria-valuenow', isNaN(this.value) ? 0 : this.value);
+  changed() {
     this.setAttribute('aria-valuemin', this.min);
     this.setAttribute('aria-valuemax', this.max);
-    // this.setAttribute('aria-valuestep', this.step);
+    this.setAttribute('aria-valuestep', this.step);
+    if (typeof this.value !== 'number' || isNaN(this.value)) {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+      this.setAttribute('aria-valuenow', this.value);
+    }
   }
   static get GlUtils() {
     return /* glsl */`

@@ -1,7 +1,7 @@
 import {RegisterIoElement } from '../../iogui.js';
 import {Item} from '../../models/item.js';
-import {IoField} from '../core/field.js';
-import {IoLayerSingleton as Layer} from '../core/layer.js';
+import {IoField} from '../basic/field.js';
+import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuOptions} from './menu-options.js';
 
 /*

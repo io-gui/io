@@ -1,5 +1,5 @@
 import {RegisterIoElement} from '../../iogui.js';
-import {IoGl} from '../core/gl.js';
+import {IoGl} from '../../core/gl.js';
 import {IoColorMixin} from './color.js';
 
 /*

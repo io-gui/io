@@ -1,4 +1,5 @@
-import {IoElement, RegisterIoElement, PropertyInstance, PropertyDeclaration} from '../../iogui.js';
+import {IoElement, RegisterIoElement} from './element.js';
+import {PropertyInstance, PropertyDeclaration} from './internals/property.js';
 import {IoThemeSingleton} from './theme.js';
 
 const canvas = document.createElement('canvas');
