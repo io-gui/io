@@ -3,8 +3,8 @@ import 'chai/chai.js';
 
 import {IoElement, RegisterIoElement} from './iogui.js';
 
-// import CoreTests from './core/index.test.js';
-import ElementsTests from './elements/index.test.js';
+import CoreTests from './core/index.test.js';
+// import ElementsTests from './elements/index.test.js';
 
 mocha.setup('bdd');
 
@@ -25,8 +25,8 @@ export async function nextTick(): Promise<void> {
 
 function runTests() {
   if (!testCompleted) {
-    // new CoreTests().run();
-    new ElementsTests().run();
+    new CoreTests().run();
+    // new ElementsTests().run();
     mocha.checkLeaks();
     mocha.run();
     testCompleted = true;

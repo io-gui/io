@@ -3,7 +3,9 @@
 export default class {
   run() {
     describe('IoStorage', () => {
-      // TODO
+      it('TODO', () => {
+        chai.expect('TODO').to.be.equal(false);
+      });
     });
   }
 }

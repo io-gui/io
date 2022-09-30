@@ -83,7 +83,6 @@ export default class {
         });
         it('should set icon to match icon property', () => {
           element.icon = 'icons:checkmark';
-          console.log(element.innerHTML);
           chai.expect(element.innerHTML).to.equal(`<io-icon icon="${element.icon}">${IoIconsetSingleton.getIcon(element.icon)}</io-icon><io-label label="${element.value}" aria-label="${element.value}">${element.value}</io-label>`);
           element.icon = '';
           chai.expect(element.innerHTML).to.equal(`<io-label label="${element.value}" aria-label="${element.value}">${element.value}</io-label>`);

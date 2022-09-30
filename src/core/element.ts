@@ -158,7 +158,7 @@ const applyNativeElementProps = function(element: HTMLElement, props: any) {
     if (p === 'name') element.setAttribute('name', prop);
   }
   if (!(element as any)._eventDispatcher) {
-    Object.defineProperty(element, '_eventDispatcher', {value: new EventDispatcher(element as unknown as IoNode)});
+    Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoNode)});
   }
   (element as any)._eventDispatcher.applyPropListeners(props, element);
 };
@@ -312,7 +312,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     for (let i = nodes.length; i--;) {
       if (nodes[i].dispose!) {
         nodes[i].dispose();
-      } if (nodes[i]._eventDispatcher) {
+      } else if (nodes[i]._eventDispatcher) {
         nodes[i]._eventDispatcher.dispose();
         delete (nodes[i] as any)._eventDispatcher;
       }

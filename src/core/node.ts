@@ -64,10 +64,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this._protochain.autobindFunctions(this);
 
-      Object.defineProperty(this, '_properties', {enumerable: false, value: {}});
-      Object.defineProperty(this, '_bindings', {enumerable: false, value: {}});
-      Object.defineProperty(this, '_changeQueue', {enumerable: false, value: new ChangeQueue(this)});
-      Object.defineProperty(this, '_eventDispatcher', {enumerable: false, value: new EventDispatcher(this)});
+      Object.defineProperty(this, '_properties', {enumerable: false, configurable: true, value: {}});
+      Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: {}});
+      Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
+      Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
 
       if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.onObjectMutated as EventListener);

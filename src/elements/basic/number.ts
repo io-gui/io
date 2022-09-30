@@ -278,15 +278,16 @@ export class IoNumberLadderStep extends IoField {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      role: 'spinbutton',
-      type: {
-        value: 'number',
-        reflect: 'prop',
-      },
-    };
-  }
+
+  @IoProperty(1)
+  declare value: number;
+
+  @IoProperty({value: 'number', reflect: 'prop'})
+  declare type: string;
+
+  @IoProperty('spinbutton')
+  declare role: string;
+
   _onKeydown(event: KeyboardEvent) {
     let stepMove = 0;
     if (event.key === 'Escape' || event.key === ' ') {
@@ -330,6 +331,9 @@ export class IoNumberLadderStep extends IoField {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
     this.dispatchEvent('ladder-step-collapse', {}, true);
+  }
+  init() {
+    this.changed();
   }
   changed() {
     super.changed();
@@ -423,20 +427,16 @@ export class IoNumberLadder extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      src: null,
-      conversion: 1,
-      expanded: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      min: -Infinity,
-      max: Infinity,
-      step: 0.0001,
-      role: 'list',
-    };
-  }
+
+  @IoProperty('list')
+  declare role: string;
+
+  @IoProperty(undefined)
+  declare src: any;
+
+  @IoProperty({value: false, reflect: 'prop'})
+  declare expanded: boolean;
+
   static get Listeners() {
     return {
       'ladder-step-change': '_onLadderStepChange',
@@ -446,6 +446,18 @@ export class IoNumberLadder extends IoElement {
   }
   get value() {
     return this.src ? this.src.value : 0;
+  }
+  get min() {
+    return this.src ? this.src.min : -Infinity;
+  }
+  get max() {
+    return this.src ? this.src.max : Infinity;
+  }
+  get step() {
+    return this.src ? this.src.step : 0.0001;
+  }
+  get conversion() {
+    return this.src ? this.src.conversion : 1;
   }
   _onFocusIn(event: FocusEvent) {
     event.stopPropagation();

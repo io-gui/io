@@ -8,6 +8,7 @@ export default class {
   run() {
     describe('IoThemeSingleton', () => {
       it('TODO', () => {
+        chai.expect('TODO').to.be.equal(false);
       });
     });
   }
