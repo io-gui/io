@@ -29,7 +29,7 @@ const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\
  * Register function for `IoElement`. Registers custom element.
  * @param {IoElement} elementConstructor - Element class to register.
  */
-const RegisterIoElement = function (elementConstructor: typeof IoElement) {
+export function RegisterIoElement(elementConstructor: typeof IoElement) {
   RegisterIoNode(elementConstructor);
 
   const localName = elementConstructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
@@ -99,7 +99,7 @@ const RegisterIoElement = function (elementConstructor: typeof IoElement) {
     styleElement.innerHTML = styleString;
     styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
     document.head.appendChild(styleElement);
-};
+}
 
 const ro = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();
@@ -207,7 +207,7 @@ export const buildTree = () => (node: VirtualDOMElement): any => isObject(node[1
  * Core `IoElement` class.
  */
 @RegisterIoElement
-class IoElement extends IoNodeMixin(HTMLElement) {
+export class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): any {
     return /* css */`
       :host[hidden] { display: none; }
@@ -561,5 +561,3 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
   }
 }
-
-export {IoElement, RegisterIoElement};

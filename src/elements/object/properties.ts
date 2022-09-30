@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement } from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {Config} from './config.js';
 
 /*

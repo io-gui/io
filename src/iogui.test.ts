@@ -1,7 +1,7 @@
 import 'mocha/mocha.js';
 import 'chai/chai.js';
 
-import {IoElement, RegisterIoElement} from './iogui.js';
+import { IoElement, RegisterIoElement } from './iogui.js';
 
 import CoreTests from './core/index.test.js';
 // import ElementsTests from './elements/index.test.js';

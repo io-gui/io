@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { marked } from 'marked';
 import purify from 'dompurify';
 

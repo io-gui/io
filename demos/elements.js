@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../build/iogui.js';
+import { IoElement, RegisterIoElement } from '../build/iogui.js';
 import '../build/iogui.js';
 import './elements-core.js';
 import './elements-sliders.js';

@@ -1,4 +1,4 @@
-import {Change, IoNode, RegisterIoNode, IoElement, RegisterIoElement} from '../iogui.js';
+import { Change, IoNode, RegisterIoNode, IoElement, RegisterIoElement } from '../iogui.js';
 
 // TODO: COMPLETE TEST COVERAGE
 

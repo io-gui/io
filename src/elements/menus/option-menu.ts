@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {Options} from '../../models/options.js';
 import {Item} from '../../models/item.js';
 import './menu-item.js';

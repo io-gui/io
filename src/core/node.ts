@@ -371,9 +371,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
  * Register function to be called once per class.
  * @param {IoNode} target - Node class to register.
  */
-export const RegisterIoNode = function(target: typeof IoNode) {
+export function RegisterIoNode(target: typeof IoNode) {
   Object.defineProperty(target.prototype, '_protochain', {value: new ProtoChain(target)});
-};
+}
 
 /**
  * IoNodeMixin applied to `Object` class.

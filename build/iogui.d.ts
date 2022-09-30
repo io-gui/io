@@ -377,7 +377,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
  * Register function to be called once per class.
  * @param {IoNode} target - Node class to register.
  */
-export declare const RegisterIoNode: (target: typeof IoNode) => void;
+export declare function RegisterIoNode(target: typeof IoNode): void;
 declare const IoNode_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
@@ -550,7 +550,7 @@ export interface ChangeEvent extends CustomEvent {
  * Register function for `IoElement`. Registers custom element.
  * @param {IoElement} elementConstructor - Element class to register.
  */
-export declare const RegisterIoElement: (elementConstructor: typeof IoElement) => void;
+export declare function RegisterIoElement(elementConstructor: typeof IoElement): void;
 export declare type VirtualDOMElement = [
 	string,
 	Record<string, any> | string
@@ -921,22 +921,31 @@ export declare class IoNumber extends IoField {
 }
 export declare class IoNumberLadderStep extends IoField {
 	static get Style(): string;
-	static get Properties(): any;
+	value: number;
+	type: string;
+	role: string;
 	_onKeydown(event: KeyboardEvent): void;
 	_onPointerdown(event: PointerEvent): void;
 	_onPointermove(event: PointerEvent): void;
 	_onPointerup(event: PointerEvent): void;
+	init(): void;
 	changed(): void;
 }
 export declare class IoNumberLadder extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	role: string;
+	src: any;
+	expanded: boolean;
 	static get Listeners(): {
 		"ladder-step-change": string;
 		"ladder-step-collapse": string;
 		focusin: string;
 	};
 	get value(): any;
+	get min(): any;
+	get max(): any;
+	get step(): any;
+	get conversion(): any;
 	_onFocusIn(event: FocusEvent): void;
 	_onFocusTo(event: CustomEvent): void;
 	_onLadderStepChange(event: CustomEvent): void;

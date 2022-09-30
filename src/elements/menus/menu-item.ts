@@ -1,4 +1,4 @@
-import {RegisterIoElement } from '../../iogui.js';
+import { RegisterIoElement } from '../../core/element.js';
 import {Item} from '../../models/item.js';
 import {IoField} from '../basic/field.js';
 import {IoLayerSingleton as Layer} from '../../core/layer.js';

@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../build/iogui.js';
+import { IoElement, RegisterIoElement } from '../build/iogui.js';
 
 export class IoDemoElementsObject extends IoElement {
   static get Properties() {

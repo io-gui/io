@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from './element.js';
+import { IoElement, RegisterIoElement } from './element.js';
 import {PropertyInstance, PropertyDeclaration} from './internals/property.js';
 import {IoThemeSingleton} from './theme.js';
 

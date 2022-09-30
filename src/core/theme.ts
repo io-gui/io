@@ -1,5 +1,5 @@
-import {IoElement, RegisterIoElement} from './element.js';
-import {IoStorageFactory as $} from './storage.js';
+import { IoElement, RegisterIoElement } from './element.js';
+import { IoStorageFactory as $ } from './storage.js';
 
 const themePropDefaults =  {
   cssSpacing: 2,

@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../iogui.js';
+import { RegisterIoElement } from '../../core/element.js';
 import {IoSlider} from '../sliders/slider.js';
 import {IoColorMixin} from './color.js';
 
