@@ -114,6 +114,7 @@ export class IoSliderRange extends IoSlider {
   init() {
   }
   changed() {
+    super.changed();
     this.setAttribute('value', this.value);
     this.setAttribute('aria-valuenow', this.value);
     this.setAttribute('aria-valuemin', this.min);

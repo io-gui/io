@@ -319,6 +319,7 @@ export class IoGl extends IoElement {
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
+
     // gl.clearColor(0, 0, 0, 1);
     // gl.clear(gl.COLOR_BUFFER_BIT);
 

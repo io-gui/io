@@ -215,6 +215,7 @@ export class IoSlider extends IoGl {
     this.changed();
   }
   changed() {
+    super.changed();
     this.setAttribute('aria-valuemin', this.min);
     this.setAttribute('aria-valuemax', this.max);
     this.setAttribute('aria-valuestep', this.step);
