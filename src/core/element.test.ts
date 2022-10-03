@@ -101,28 +101,34 @@ export default class {
     describe('IoElement', () => {
       describe('Initialization', () => {
         it('Should have core API functions defined', () => {
-          // Default properties
-          chai.expect(element.id).to.be.equal('');
-          chai.expect(element.tabindex).to.be.equal('');
-          chai.expect(element.contenteditable).to.be.equal(false);
-          chai.expect(element.title).to.be.equal('');
-          chai.expect(element.$).to.be.a('object');
-          // Template functions
           chai.expect(element.template).to.be.a('function');
+          chai.expect(element.disposeDeep).to.be.a('function');
           chai.expect(element.traverse).to.be.a('function');
+          chai.expect(element.setAttribute).to.be.a('function');
+          chai.expect(element.focusTo).to.be.a('function');
         });
         it('Should initialize property definitions correctly', () => {
-          chai.expect(element.tabindex).to.equal('');
-          chai.expect(element.contenteditable).to.equal(false);
-          chai.expect(element.class).to.equal('');
-          chai.expect(element.role).to.equal('');
-          chai.expect(element.label).to.equal('');
-          chai.expect(element.name).to.equal('');
-          chai.expect(element.title).to.equal('');
-          chai.expect(element.id).to.equal('');
-          chai.expect(element.hidden).to.equal(false);
-          chai.expect(element.disabled).to.equal(false);
+          // Default properties
+          chai.expect(element.$).to.be.a('object');
+          chai.expect(element.tabindex).to.be.equal('');
+          chai.expect(element.contenteditable).to.be.equal(false);
+          chai.expect(element.class).to.be.equal('');
+          chai.expect(element.role).to.be.equal('');
+          chai.expect(element.label).to.be.equal('');
+          chai.expect(element.name).to.be.equal('');
+          chai.expect(element.title).to.be.equal('');
+          chai.expect(element.id).to.be.equal('');
+          chai.expect(element.hidden).to.be.equal(false);
+          chai.expect(element.disabled).to.be.equal(false);
 
+          chai.expect(element._properties.$).to.eql({
+            binding: undefined,
+            notify: false,
+            observe: false,
+            reflect: 'none',
+            type: Object,
+            value: {},
+          });
           chai.expect(element._properties.tabindex).to.eql({
             binding: undefined,
             notify: true,
@@ -265,32 +271,137 @@ export default class {
       });
     });
     describe('IoElement API', () => {
+
+      class TestIoElement1 extends IoElement {
+        static get Properties(): any {
+          return {
+            prop0: -1,
+            prop1: {
+              value: 'default',
+            },
+          }
+        }
+      }
+      RegisterIoElement(TestIoElement1);
+
+      class TestIoElement2 extends IoElement {
+        static get Properties(): any {
+          return {
+            prop0: {
+              value: 0,
+              notify: false
+            },
+            prop1: 0,
+          };
+        }
+      }
+      RegisterIoElement(TestIoElement2);
+
       describe('Initialization', () => {
         it('Should initialize property definitions correctly', () => {
-          chai.expect(this.element.prop0).to.equal(-1);
-          chai.expect(this.element.prop1).to.equal('default');
+          const element1 = new TestIoElement1();
+          const element2 = new TestIoElement2();
+
+          chai.expect(element1.prop0).to.equal(-1);
+          chai.expect(element1.prop1).to.equal('default');
+          chai.expect(element2.prop0).to.equal(0);
+          chai.expect(element2.prop1).to.equal(0);
+
+          chai.expect(element1._properties.prop0).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'none',
+            type: Number,
+            value: -1,
+          });
+          chai.expect(element1._properties.prop1).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'none',
+            type: String,
+            value: 'default',
+          });
+
+          chai.expect(element2._properties.prop0).to.eql({
+            binding: undefined,
+            notify: false,
+            observe: false,
+            reflect: 'none',
+            type: Number,
+            value: 0,
+          });
+          chai.expect(element2._properties.prop1).to.eql({
+            binding: undefined,
+            notify: true,
+            observe: false,
+            reflect: 'none',
+            type: Number,
+            value: 0,
+          });
         });
       });
       describe('Reactivity', () => {
+
+        class TestIoElement3 extends TestIoElement1 {
+          _changedCounter = 0;
+          _prop1ChangedCounter = 0;
+          _prop1AltCounter = 0;
+          _prop1ChangeEvent: any = null;
+          static get Listeners() {
+            return {
+              'prop0-changed': 'onProp1Change',
+              'custom-event': 'onCustomEvent',
+            };
+          }
+          changed() {
+            this._changedCounter++;
+          }
+          prop1Changed(change: Change) {
+            this._prop1ChangedCounter++;
+            this._prop1ChangedChange = change;
+          }
+          onProp1ChangeAlt(event: CustomEvent) {
+            this._prop1AltCounter++;
+            this._prop1AltChangeEvent = event;
+          }
+          onProp1Change(event: CustomEvent) {
+            this._prop1Counter++;
+            this._prop1ChangeEvent = event;
+          }
+          onCustomEvent(event: CustomEvent) {
+            this._customHandlerCounter++;
+            this._customHandlerChangeEvent = event;
+          }
+        }
+        RegisterIoElement(TestIoElement3);
+
+        let _changedCounter = 0;
+        function onChange() {
+          _changedCounter++;
+        }
+
         it('Should corectly invoke handler functions on change', () => {
-          this.element.reset();
-          this.element.prop0 = 1;
-          this.element.prop1 = 'test';
-          chai.expect(this.element._prop1AltCounter).to.equal(1);
-          chai.expect(this.element._changedCounter).to.equal(2);
-          chai.expect(this._changedCounter).to.equal(1);
+          const element = new TestIoElement3({'on-prop0-changed': onChange, 'on-prop1-changed': 'onProp1ChangeAlt'});
+          element.prop0 = 1;
+          element.prop1 = 'test';
+          chai.expect(element._prop1AltCounter).to.equal(1);
+          chai.expect(element._changedCounter).to.equal(2);
+          chai.expect(_changedCounter).to.equal(1);
         });
         it('Should dispatch correct event payloads to handlers', () => {
-          this.element.reset();
-          this.element.prop0 = 1;
-          this.element.prop0 = 0;
-          chai.expect(this.element._prop1ChangeEvent.srcElement).to.equal(this.element);
-          chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(0);
-          this.element.$.subelement.prop0 = 2;
-          chai.expect(this.element._prop1ChangeEvent.detail.oldValue).to.equal(0);
-          chai.expect(this.element._prop1ChangeEvent.detail.value).to.equal(2);
-          this.element.dispatchEvent('custom-event', {data: 'io'});
-          chai.expect(this.element._customHandlerChangeEvent.detail.data).to.equal('io');
+          const element = new TestIoElement3();
+          element.prop0 = 1;
+          element.prop0 = 0;
+          console.log(element._prop1ChangeEvent);
+          // chai.expect(element._prop1ChangeEvent.srcElement).to.equal(element);
+          chai.expect(element._prop1ChangeEvent.detail.value).to.equal(0);
+          element.$.subelement.prop0 = 2;
+          // chai.expect(element._prop1ChangeEvent.detail.oldValue).to.equal(0);
+          // chai.expect(element._prop1ChangeEvent.detail.value).to.equal(2);
+          // element.dispatchEvent('custom-event', {data: 'io'});
+          // chai.expect(element._customHandlerChangeEvent.detail.data).to.equal('io');
         });
       });
       describe('Binding', () => {

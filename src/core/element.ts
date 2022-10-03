@@ -374,7 +374,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (vChildren[i].children !== undefined) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
-          this.flattenTextNode(child as HTMLElement);
+          this._flattenTextNode(child as HTMLElement);
           (child as any)._textNode.nodeValue = String(vChildren[i].children);
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
@@ -388,7 +388,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   * Update textContent via TextNode is better for layout performance.
   * @param {HTMLElement} element - Element to flatten.
   */
-  flattenTextNode(element: HTMLElement | IoElement) {
+  _flattenTextNode(element: HTMLElement | IoElement) {
     if (element.childNodes.length === 0) {
       element.appendChild(document.createTextNode(''));
     }
@@ -406,11 +406,11 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     }
   }
   get textNode() {
-    this.flattenTextNode(this);
+    this._flattenTextNode(this);
     return this._textNode.nodeValue;
   }
   set textNode(value) {
-    this.flattenTextNode(this);
+    this._flattenTextNode(this);
     this._textNode.nodeValue = String(value);
   }
   applyProperties(props: any) {

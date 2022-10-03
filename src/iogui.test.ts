@@ -81,7 +81,10 @@ export class IoGuiTestPage extends IoElement {
     mochaDiv.style.display = 'block';
     runTests();
     setTimeout(() => {
-      this.parentElement.scrollTop = this.parentElement.scrollHeight;
+      const failElement = this.parentElement.querySelector('.fail');
+      failElement.scrollIntoView({
+        behavior: 'smooth'
+      });
     }, 100);
   }
   disconnectedCallback() {
