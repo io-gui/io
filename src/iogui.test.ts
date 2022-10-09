@@ -82,7 +82,7 @@ export class IoGuiTestPage extends IoElement {
     runTests();
     setTimeout(() => {
       const failElement = this.parentElement.querySelector('.fail');
-      failElement.scrollIntoView({
+      failElement.parentElement.parentElement.parentElement.parentElement.scrollIntoView({
         behavior: 'smooth'
       });
     }, 100);

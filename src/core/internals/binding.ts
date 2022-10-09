@@ -102,7 +102,8 @@ export class Binding {
     if (oldValue !== value) {
       // JavaScript is weird NaN != NaN
       if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue))) return;
-      this.node[this.property] = value;
+      // this.node[this.property] = value;
+      this.node.setProperty(this.property, value);
     }
   };
   /**
@@ -125,7 +126,8 @@ export class Binding {
         if (oldValue !== value) {
           // JavaScript is weird NaN != NaN
           if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue))) continue;
-          target[propName] = value;
+          // target[propName] = value;
+          (target as any).setProperty(propName, value);
         }
       }
     }

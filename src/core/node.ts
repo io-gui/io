@@ -109,8 +109,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     setProperty(name: string, value: any, skipDispatch?: boolean) {
       const prop = this._properties[name];
       const oldValue = prop.value;
+
       if (value !== oldValue) {
-        const binding = (value instanceof Binding) ? value : undefined;
+        const binding = (value instanceof Binding) ? value : null;
         if (binding) {
           const oldBinding = prop.binding;
           if (binding !== oldBinding) {
@@ -118,18 +119,14 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
               oldBinding.removeTarget(this, name);
             }
             binding.addTarget(this, name);
+            value = binding.value;
+          } else {
+            // NOTE: Whenusing change() > template() > setProperties() to batch-set multiple properties with bindings, it causes
+            // all but one of those properties to be reset to original value once parents's change event happens.
+            // This fixed the bug by setting binding value from target when binding already exists.
+            // TODO: make more tests to make sure this does not cause regressions and unexpected behaviors.
+            binding.value = value = prop.value;
           }
-          value = binding.value;
-        } else {
-          // TODO: Verify and test this edge-case fix. Look for regressions. Finish this fix - it caused regression in io-option-menu
-          // If user uses setProperties() to batch-set multiple properties that are bound to parent element it causes
-          // all but one of those properties to be reset to original value once parents's change event happens.
-          // This fixes the bug by setting parent's property value with skipDispatch. This can possibly introduce
-          // bug when parent has properties bound to other elements. Create and extensive test for this bug fix.
-          // WARNING: Enabling this used to break the menu.
-          // if (prop.binding && skipDispatch) {
-          //   prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
-          // }
         }
         prop.value = value;
 

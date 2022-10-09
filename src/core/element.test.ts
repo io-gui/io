@@ -1,8 +1,10 @@
-import { Change, IoNode, RegisterIoNode, IoElement, RegisterIoElement } from '../iogui.js';
+import { IoElement, RegisterIoElement, IoNode, RegisterIoNode, Change } from '../iogui.js';
 
 const element = new IoElement();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
+
+const eventStack: string[] = [];
 
 export default class {
   run() {
@@ -117,7 +119,7 @@ export default class {
             value: false,
           });
         });
-        it('has correct default attributes', () => {
+        it('Has correct default attributes', () => {
           chai.expect(element.getAttribute('tabindex')).to.equal(null);
           chai.expect(element.getAttribute('contenteditable')).to.equal(null);
           chai.expect(element.getAttribute('class')).to.equal(null);
@@ -131,7 +133,7 @@ export default class {
         });
       });
       describe('Reactivity', () => {
-        it('has reactive attributes', () => {
+        it('Has reactive attributes', () => {
           element.tabindex = '1';
           chai.expect(element.getAttribute('tabindex')).to.equal('1');
           element.tabindex = '';
@@ -163,9 +165,198 @@ export default class {
           chai.expect(element.getAttribute('disabled')).to.equal('');
           element.disabled = false;
         });
+        it('Invokes change events and functions', () => {
+          class TestNode extends IoNode {
+            static get Properties(): any {
+              return {
+                prop0: 0,
+                prop1: '',
+              };
+            }
+            prop0Changed() {
+              eventStack.push('TestNode: prop0Changed ' + this.prop0);
+            }
+            prop1Changed() {
+              eventStack.push('TestNode: prop1Changed ' + this.prop1);
+            }
+            changed() {
+              eventStack.push('TestNode: changed');
+            }
+          }
+          RegisterIoNode(TestNode);
+
+          class TestSubelement extends IoElement {
+            static get Properties(): any {
+              return {
+                prop0: 0,
+                prop1: '',
+              };
+            }
+          }
+          RegisterIoElement(TestSubelement);
+
+          class TestElement1 extends IoElement {
+            static get Properties(): any {
+              return {
+                prop0: -1,
+                prop1: {
+                  value: 'default',
+                },
+                // Internal counters
+                _counter: 0,
+                _prop0counter: 0,
+                _prop0Change: null,
+                _prop1counter: 0,
+                _prop1Change: null,
+              };
+            }
+            constructor(...initProps: any[]) {
+              super(...initProps);
+              this.template([['test-subelement', {id: 'subelement',
+                prop0: this.bind('prop0'),
+                prop1: this.bind('prop1'),
+              }]]);
+              this.subnode = new TestNode({
+                prop0: this.bind('prop0'),
+                prop1: this.bind('prop1'),
+              });
+            }
+            changed() {
+              eventStack.push('TestElement1: changed');
+              this._counter++;
+            }
+            prop0Changed(change: Change) {
+              eventStack.push('TestElement1: prop0Changed ' + this.prop0);
+              this._prop0counter++;
+              this._prop0Change = change;
+            }
+            prop1Changed(change: Change) {
+              eventStack.push('TestElement1: prop1Changed' + this.prop1);
+              this._prop1counter++;
+              this._prop1Change = change;
+            }
+          }
+          RegisterIoElement(TestElement1);
+
+          eventStack.length = 0;
+
+          const element = new TestElement1();
+          chai.expect(element.prop0).to.equal(-1);
+          chai.expect(element.subnode.prop0).to.equal(-1);
+          chai.expect(element.$.subelement.prop0).to.equal(-1);
+          chai.expect(element.$.subelement.prop1).to.equal('default');
+          chai.expect(element.subnode.prop0).to.equal(-1);
+          chai.expect(element.subnode.prop1).to.equal('default');
+
+          chai.expect(element._counter).to.equal(0);
+          chai.expect(element._prop0counter).to.equal(0);
+          chai.expect(element._prop0Change).to.equal(null);
+          chai.expect(element._prop1counter).to.equal(0);
+          chai.expect(element._prop1Change).to.equal(null);
+
+          element.subnode.prop0 = 1;
+
+          chai.expect(element.prop0).to.equal(1);
+          chai.expect(element.subnode.prop0).to.equal(1);
+          chai.expect(element._counter).to.equal(1);
+          chai.expect(element._prop0counter).to.equal(1);
+          chai.expect(element._prop0Change).to.eql({property: 'prop0', value: 1, oldValue: -1});
+          chai.expect(element._prop1counter).to.equal(0);
+          chai.expect(element._prop1Change).to.equal(null);
+
+          element.setProperties({
+            prop0: 2,
+            prop1: 'foo'
+          });
+
+          chai.expect(element.prop0).to.equal(2);
+          chai.expect(element.subnode.prop0).to.equal(2);
+          chai.expect(element.$.subelement.prop0).to.equal(2);
+          chai.expect(element.prop1).to.equal('foo');
+          chai.expect(element.subnode.prop1).to.equal('foo');
+          chai.expect(element.$.subelement.prop1).to.equal('foo');
+          chai.expect(element._counter).to.equal(2);
+          chai.expect(element._prop0counter).to.equal(2);
+          chai.expect(element._prop0Change).to.eql({property: 'prop0', value: 2, oldValue: 1});
+          chai.expect(element._prop1counter).to.equal(1);
+          chai.expect(element._prop1Change).to.eql({property: 'prop1', value: 'foo', oldValue: 'default'});
+
+          element.subnode.setProperties({
+            prop0: 3,
+            prop1: 'buzz',
+          });
+
+          chai.expect(element.prop0).to.equal(3);
+          chai.expect(element.subnode.prop0).to.equal(3);
+          chai.expect(element.$.subelement.prop0).to.equal(3);
+          chai.expect(element.$.subelement.prop0).to.equal(3);
+          chai.expect(element.prop1).to.equal('buzz');
+          chai.expect(element.subnode.prop1).to.equal('buzz');
+          chai.expect(element.$.subelement.prop1).to.equal('buzz');
+
+          // NOTE: element.subnode.setProperties on 2 bound properties causes change() event twice.
+          // TODO: Consider fixing // chai.expect(element._counter).to.equal(3);
+          chai.expect(element._counter).to.equal(4);
+
+          chai.expect(element._prop0counter).to.equal(3);
+          chai.expect(element._prop0Change).to.eql({property: 'prop0', value: 3, oldValue: 2});
+          chai.expect(element._prop1counter).to.equal(2);
+          chai.expect(element._prop1Change).to.eql({property: 'prop1', value: 'buzz', oldValue: 'foo'});
+
+          chai.expect(eventStack).to.eql(['TestNode: prop0Changed -1', 'TestNode: changed', 'TestNode: prop0Changed -1', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop0Changed 1', 'TestElement1: prop0Changed 1', 'TestElement1: changed', 'TestNode: changed', 'TestElement1: prop0Changed 2', 'TestNode: prop0Changed 2', 'TestNode: changed', 'TestElement1: prop1Changedfoo', 'TestNode: prop1Changed foo', 'TestNode: changed', 'TestElement1: changed', 'TestNode: prop0Changed 3', 'TestElement1: prop0Changed 3', 'TestElement1: changed', 'TestNode: prop1Changed buzz', 'TestElement1: prop1Changedbuzz', 'TestElement1: changed', 'TestNode: changed']);
+
+          eventStack.length = 0;
+
+          class TestElement2 extends IoElement {
+            static get Properties(): any {
+              return {
+                prop0: -1,
+                prop1: {
+                  value: '',
+                },
+              };
+            }
+            changed() {
+              this.template([['test-subelement', {id: 'subelement',
+                prop0: this.bind('prop0'),
+                prop1: this.bind('prop1'),
+              }]]);
+            }
+          }
+          RegisterIoElement(TestElement2);
+
+          const element2 = new TestElement2();
+          element2.prop0 = 1;
+          element2.prop1 = 'default';
+
+          chai.expect(element2.prop0).to.equal(1);
+          chai.expect(element2.$.subelement.prop0).to.equal(1);
+          chai.expect(element2.prop1).to.equal('default');
+          chai.expect(element2.$.subelement.prop1).to.equal('default');
+
+          element2.setProperties({
+            prop0: 2,
+            prop1: 'foo'
+          });
+
+          chai.expect(element2.prop0).to.equal(2);
+          chai.expect(element2.$.subelement.prop0).to.equal(2);
+          chai.expect(element2.prop1).to.equal('foo');
+          chai.expect(element2.$.subelement.prop1).to.equal('foo');
+
+          element2.$.subelement.setProperties({
+            prop0: 3,
+            prop1: 'buzz'
+          });
+
+          chai.expect(element2.prop0).to.equal(3);
+          chai.expect(element2.$.subelement.prop0).to.equal(3);
+          chai.expect(element2.prop1).to.equal('buzz');
+          chai.expect(element2.$.subelement.prop1).to.equal('buzz');
+        });
       });
       describe('Accessibility', () => {
-        it('has a11y attributes', () => {
+        it('Has a11y attributes', () => {
           chai.expect(element.getAttribute('aria-label')).to.equal(null);
           element.label = 'label';
           chai.expect(element.getAttribute('aria-label')).to.equal('label');
@@ -176,8 +367,47 @@ export default class {
           element.disabled = false;
         });
       });
+      describe('Binding', () => {
+        it('Should bind and unbind correctly', () => {
+          const element1 = new IoElement();
+          const element2 = new IoElement();
+          element2.label = element1.bind('label') as any;
+          element1.label = 'one';
+          chai.expect(element1.label).to.equal('one');
+          chai.expect(element2.label).to.equal('one');
+          element2.label = 'two';
+          chai.expect(element1.label).to.equal('two');
+          chai.expect(element2.label).to.equal('two');
+          // unbind
+          element1.unbind('label');
+          element1.label = 'three';
+          chai.expect(element1.label).to.equal('three');
+          chai.expect(element2.label).to.equal('two');
+          element2.label = element1.bind('label') as any;
+          chai.expect(element2.label).to.equal('three');
+          element1.label = 'four';
+          chai.expect(element1.label).to.equal('four');
+          chai.expect(element2.label).to.equal('four');
+          element2.unbind('label');
+          element1.label = 'five';
+          chai.expect(element1.label).to.equal('five');
+          chai.expect(element2.label).to.equal('four');
+        });
+        it('Should bind from constructor', () => {
+          const element1 = new IoElement();
+          const element2 = new IoElement({label: element1.bind('label')});
+          element1.label = 'one';
+          chai.expect(element2.label).to.equal('one');
+          element2.unbind('label');
+          element1.label = 'two';
+          chai.expect(element1.label).to.equal('two');
+          chai.expect(element2.label).to.equal('one');
+        });
+        // TODO: Bind to node
+      });
     });
-    describe('IoElement API', () => {
+    // Extended IoElement
+    describe('Extended IoElement', () => {
 
       class TestIoNode1 extends IoNode {
         static get Properties(): any {
@@ -208,7 +438,8 @@ export default class {
           return {
             prop0: {
               value: 0,
-              notify: false
+              notify: false,
+              reflect: 'prop'
             },
             prop1: 0,
           };
@@ -247,7 +478,7 @@ export default class {
             binding: undefined,
             notify: false,
             observe: false,
-            reflect: 'none',
+            reflect: 'prop',
             type: Number,
             value: 0,
           });
@@ -338,7 +569,6 @@ export default class {
         ]);
         it('Should update bound values correctly', () => {
           element.prop0 = Infinity;
-          console.log(element.$.subelement);
           chai.expect(element.$.subelement.prop0).to.equal(Infinity);
           element.$.subelement.prop0 = -2;
           chai.expect(element.prop0).to.equal(-2);
