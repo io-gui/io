@@ -1,5 +1,5 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
-import {IoLayerSingleton as Layer} from '../core/layer.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
+import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuOptions} from './menu-options.js';
 import {getElementDescendants, IoMenuItem} from './menu-item.js';
 
@@ -70,7 +70,7 @@ export class IoContextMenu extends IoElement {
     const d = event.detail;
     if (item !== (this as any)) {
       event.stopImmediatePropagation();
-      if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
+      if (d.value !== undefined && d.selectable !== false) this.inputValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
       this.throttle(this._onCollapse);
     }

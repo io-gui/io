@@ -1,5 +1,5 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
-import {IoStorageFactory as $} from '../core/storage.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
+import {IoStorageFactory as $} from '../../core/storage.js';
 import {Config} from './config.js';
 import {Groups} from './groups.js';
 import {Widgets} from './widgets.js';
@@ -30,12 +30,12 @@ export class IoInspector extends IoElement {
     :host > .inspector-header > io-breadcrumbs {
       flex: 1 1;
     }
-    :host > .inspector-header > io-boolicon {
-      width: calc(var(--io-spacing) + var(--io-item-height));
+    :host > .inspector-header > io-boolean {
+      width: calc(var(--io-spacing) + var(--io-field-height));
       align-self: stretch;
       height: auto;
     }
-    :host > .inspector-header > io-boolicon:not([value]) {
+    :host > .inspector-header > io-boolean:not([value]) {
       opacity: 0.25;
     }
     :host > .inspector-header > io-string {
@@ -69,13 +69,13 @@ export class IoInspector extends IoElement {
     :host > io-object > io-properties:not([horizontal])[labeled] {
       grid-template-columns: minmax(6em, min-content) minmax(12em, 1fr);
     }
-    :host > io-object > io-properties:not([horizontal])[labeled] > span.io-item {
+    :host > io-object > io-properties:not([horizontal])[labeled] > span.io-field {
       text-align: right;
     }
-    :host io-properties > io-item.select {
+    :host io-properties > io-field.select {
       color: var(--io-color-link);
     }
-    :host io-properties > io-item.select:hover {
+    :host io-properties > io-field.select:hover {
       text-decoration: underline;
     }
     `;
@@ -160,7 +160,7 @@ export class IoInspector extends IoElement {
       ['div', {class: 'inspector-header io-row io-panel'}, [
         ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
         ['io-string', {id: 'search', value: this.bind('search'), live: true}],
-        ['io-boolicon', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
+        ['io-boolean', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
       ]],
       this._widgets.main ? this._widgets.main : null
     ];
@@ -196,8 +196,8 @@ export class IoInspector extends IoElement {
   }
   static get Config() {
     return {
-      'type:object': ['io-item', {class: 'select'}],
-      'type:null': ['io-item', {class: 'select'}],
+      'type:object': ['io-field', {class: 'select'}],
+      'type:null': ['io-field', {class: 'select'}],
     };
   }
   static get Groups() {
@@ -213,8 +213,8 @@ export class IoInspector extends IoElement {
   }
   static get Widgets() {
     return {
-      // 'Object': ['io-item', {label: 'This is a main widget'}],
-      // 'Object|main': ['io-item', {label: 'This is a main group widget'}],
+      // 'Object': ['io-field', {label: 'This is a main widget'}],
+      // 'Object|main': ['io-field', {label: 'This is a main group widget'}],
     };
   }
   // TODO: unhack

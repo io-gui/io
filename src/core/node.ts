@@ -1,14 +1,14 @@
 import {ProtoChain} from './internals/protoChain.js';
 import {Binding} from './internals/binding.js';
 import {ChangeQueue} from './internals/changeQueue.js';
-import {PropertyInstance, PropertiesDeclaration} from './internals/property.js';
+import {PropertyInstance, PropertyDeclarations} from './internals/property.js';
 import {EventDispatcher, ListenersDeclaration} from './internals/eventDispatcher.js';
 
 export type Constructor = new (...args: any[]) => unknown;
 
 export interface IoNodeConstructor<T> {
   new (...args: any[]): T;
-  Properties?: PropertiesDeclaration;
+  Properties?: PropertyDeclarations;
   Listeners?: ListenersDeclaration;
   Style?: string;
 }
@@ -34,12 +34,12 @@ export type AnyEventListener = EventListener |
  */
 export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
   const IoNodeMixinConstructor = class extends (superclass as any) {
-    static get Properties(): PropertiesDeclaration {
+    static get Properties(): PropertyDeclarations {
       return {
         lazy: {
           value: false,
           notify: false,
-          reflect: -1
+          reflect: 'attr'
         }
       };
     }
@@ -64,10 +64,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this._protochain.autobindFunctions(this);
 
-      Object.defineProperty(this, '_properties', {enumerable: false, value: {}});
-      Object.defineProperty(this, '_bindings', {enumerable: false, value: {}});
-      Object.defineProperty(this, '_changeQueue', {enumerable: false, value: new ChangeQueue(this)});
-      Object.defineProperty(this, '_eventDispatcher', {enumerable: false, value: new EventDispatcher(this)});
+      Object.defineProperty(this, '_properties', {enumerable: false, configurable: true, value: {}});
+      Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: {}});
+      Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
+      Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
 
       if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
@@ -78,10 +78,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this._properties[name] = property;
         const value = property.value;
         if (value !== undefined && value !== null) {
-          // TODO: document special handling of object and node values
-          if (typeof value === 'object') {
-            this.queue(name, value, undefined);
-          } else if (property.reflect !== undefined && property.reflect >= 1 && this._isIoElement) {
+          if ((property.reflect === 'prop' || property.reflect === 'both') && this._isIoElement) {
             // TODO: Resolve bi-directional reflection when attributes are set in html (role, etc...)
             this.setAttribute(name, value);
           }
@@ -101,6 +98,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         });
       }
       this.applyProperties(properties);
+      this.init();
     }
     /**
      * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
@@ -111,8 +109,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     setProperty(name: string, value: any, skipDispatch?: boolean) {
       const prop = this._properties[name];
       const oldValue = prop.value;
+
       if (value !== oldValue) {
-        const binding = (value instanceof Binding) ? value : undefined;
+        const binding = (value instanceof Binding) ? value : null;
         if (binding) {
           const oldBinding = prop.binding;
           if (binding !== oldBinding) {
@@ -120,19 +119,14 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
               oldBinding.removeTarget(this, name);
             }
             binding.addTarget(this, name);
+            value = binding.value;
+          } else {
+            // NOTE: Whenusing change() > template() > setProperties() to batch-set multiple properties with bindings, it causes
+            // all but one of those properties to be reset to original value once parents's change event happens.
+            // This fixed the bug by setting binding value from target when binding already exists.
+            // TODO: make more tests to make sure this does not cause regressions and unexpected behaviors.
+            binding.value = value = prop.value;
           }
-          value = binding.value;
-        } else {
-          // TODO: Verify and test this edge-case fix. Look for regressions.
-          // If user uses setProperties() to batch-set multiple properties that are bound to parent element it causes
-          // all but one of those properties to be reset to original value once parents's change event happens.
-          // This fixes the bug by setting parent's property value with skipDispatch. This can possibly introduce
-          // bug when parent has properties bound to other elements. Create and extensive test for this but fix.
-          // TODO: finish this fix - it caused regression in io-option-menu
-          // WARNING: Enabling this breaks the menu.
-          // if (prop.binding && skipDispatch) {
-          //   prop.binding.node.setProperty(prop.binding.property, value, skipDispatch);
-          // }
         }
         prop.value = value;
 
@@ -156,13 +150,12 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
         }
         if (prop.notify && oldValue !== value) {
-          // TODO: consider skiping queue
           this.queue(name, value, oldValue);
           if (!skipDispatch) {
             this.dispatchQueue();
           }
         }
-        if (prop.reflect !== undefined && prop.reflect >= 1 && this._isIoElement) this.setAttribute(name, value);
+        if ((prop.reflect === 'prop' || prop.reflect === 'both') && this._isIoElement) this.setAttribute(name, value);
       }
     }
     /**
@@ -174,8 +167,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       for (const p in props) {
         if (this._properties[p] === undefined) {
           debug: {
+            // TODO: consider converting style and config to properties
             if (!p.startsWith('on-') && p !== 'style' && p !== 'config') {
-              // TODO: consider converting style and config to properties
               console.warn(`Property "${p}" is not defined`, this);
             }
           }
@@ -203,17 +196,16 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       }
       this.dispatchQueue();
     }
-    // TODO: consider moving into a different class
     /**
-     * Sets value property and emits `value-set` event.
+     * Sets value property and emits `value-input` event.
      * Use this when value property is set by user action (e.g. mouse click).
      * @param {*} value - Property value.
      */
-    setValue(value: any) {
+    inputValue(value: any) {
       if (this.value !== value) {
         const oldValue = this.value;
         this.setProperty('value', value);
-        this.dispatchEvent('value-set', {value: value, oldValue: oldValue}, false);
+        this.dispatchEvent('value-input', {value: value, oldValue: oldValue}, false);
       }
     }
     /**
@@ -221,6 +213,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Invoked when one of the properties change.
      */
     changed() {}
+    init() {}
     /**
      * Adds property change to the queue.
      * @param {string} prop - Property name.
@@ -253,7 +246,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {boolean} sync - execute immediately without rAF timeout.
      */
     throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
-      // TODO: document and test.
       throttle(func, arg, sync);
     }
     /**
@@ -354,7 +346,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     dispose() {
       for (const name in this._properties) {
         if (this._properties[name].binding) {
-          // TODO: test this specifically
           this._properties[name].binding?.removeTarget(this, name);
         }
       }
@@ -365,8 +356,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       if (this._protochain.observedObjectProperties.length) {
         window.removeEventListener('object-mutated', this.onObjectMutated as EventListener);
       }
-      // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
       this._changeQueue.dispose();
+      // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
       this._eventDispatcher.dispose();
     }
   };
@@ -377,9 +368,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
  * Register function to be called once per class.
  * @param {IoNode} target - Node class to register.
  */
-export const RegisterIoNode = function(target: typeof IoNode) {
+export function RegisterIoNode(target: typeof IoNode) {
   Object.defineProperty(target.prototype, '_protochain', {value: new ProtoChain(target)});
-};
+}
 
 /**
  * IoNodeMixin applied to `Object` class.
@@ -387,7 +378,7 @@ export const RegisterIoNode = function(target: typeof IoNode) {
 @RegisterIoNode
 export class IoNode extends IoNodeMixin(Object) {}
 
-// TODO: document and test
+// TODO: Document and test. Improve argument handling. Consider edge-cases.
 const throttleQueueSync: CallbackFunction[] = [];
 const throttleQueue: CallbackFunction[] = [];
 const throttleQueueArgs = new WeakMap();
@@ -403,7 +394,6 @@ function throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
   if (throttleQueue.indexOf(func) === -1) {
     throttleQueue.push(func);
   }
-  // TODO: improve argument handling. Consider edge-cases.
   if (throttleQueueArgs.has(func)) {
     const args = throttleQueueArgs.get(func);
     if (args.indexOf(arg) === -1) args.push(arg);

@@ -1,6 +1,7 @@
-import {IoElement, RegisterIoElement, Binding} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
+import {Binding} from '../../core/internals/binding.js';
 import {Options} from '../../models/options.js';
-import {IoStorageFactory as $} from '../core/storage.js';
+import {IoStorageFactory as $} from '../../core/storage.js';
 
 /*
  * Labeled tabs for selection.
@@ -76,7 +77,7 @@ export class IoSidebar extends IoElement {
       },
       collapsed: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       role: 'navigation',
     };
@@ -132,7 +133,7 @@ export class IoSidebar extends IoElement {
         icon: '☰',
         selectable: true,
         title: 'select tab',
-        class: 'io-item',
+        class: 'io-field',
       }]]);
     } else {
       this.template([...this._addOptions(this.options)]);

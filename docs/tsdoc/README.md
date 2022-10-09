@@ -6,7 +6,6 @@
 - [ChangeQueue](classes/ChangeQueue.md)
 - [EventDispatcher](classes/EventDispatcher.md)
 - [IoBoolean](classes/IoBoolean.md)
-- [IoBoolicon](classes/IoBoolicon.md)
 - [IoButton](classes/IoButton.md)
 - [IoCollapsable](classes/IoCollapsable.md)
 - [IoColorPanel](classes/IoColorPanel.md)
@@ -32,10 +31,11 @@
 - [IoContextMenu](classes/IoContextMenu.md)
 - [IoElement](classes/IoElement.md)
 - [IoElementDemo](classes/IoElementDemo.md)
+- [IoField](classes/IoField.md)
 - [IoGl](classes/IoGl.md)
 - [IoIcon](classes/IoIcon.md)
 - [IoInspector](classes/IoInspector.md)
-- [IoItem](classes/IoItem.md)
+- [IoLabel](classes/IoLabel.md)
 - [IoLadder](classes/IoLadder.md)
 - [IoLayout](classes/IoLayout.md)
 - [IoMatrix](classes/IoMatrix.md)
@@ -64,7 +64,7 @@
 - [Item](classes/Item.md)
 - [Options](classes/Options.md)
 - [Path](classes/Path.md)
-- [Property](classes/Property.md)
+- [PropertyInstance](classes/PropertyInstance.md)
 - [ProtoChain](classes/ProtoChain.md)
 - [ProtoProperty](classes/ProtoProperty.md)
 
@@ -82,7 +82,7 @@
 
 #### Defined in
 
-[src/core/io-node.ts:25](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L25)
+[src/core/node.ts:23](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L23)
 
 ___
 
@@ -106,7 +106,27 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:17](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L17)
+[src/core/node.ts:16](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L16)
+
+___
+
+### Constructor
+
+Ƭ **Constructor**: (...`args`: `any`[]) => `unknown`
+
+#### Type declaration
+
+• (...`args`)
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | `any`[] |
+
+#### Defined in
+
+[src/core/node.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L7)
 
 ___
 
@@ -130,7 +150,7 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L22)
+[src/core/node.ts:20](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L20)
 
 ___
 
@@ -154,7 +174,7 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:23](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L23)
+[src/core/node.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L21)
 
 ___
 
@@ -178,7 +198,7 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:20](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L20)
+[src/core/node.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L18)
 
 ___
 
@@ -188,27 +208,31 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:54](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L54)
+[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L60)
 
 ___
 
-### ListenerDefinition
+### ListenerDeclaration
 
-Ƭ **ListenerDefinition**: [`string` \| [`CustomEventListener`](README.md#customeventlistener), AddEventListenerOptions?]
+Ƭ **ListenerDeclaration**: [`string` \| [`CustomEventListener`](README.md#customeventlistener), AddEventListenerOptions?]
+
+Declares default listeners.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:5](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L5)
+[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L6)
 
 ___
 
-### ListenerDefinitionWeak
+### ListenerDeclarationWeak
 
-Ƭ **ListenerDefinitionWeak**: `string` \| [`CustomEventListener`](README.md#customeventlistener) \| [`string` \| [`CustomEventListener`](README.md#customeventlistener), AddEventListenerOptions?]
+Ƭ **ListenerDeclarationWeak**: `string` \| [`CustomEventListener`](README.md#customeventlistener) \| [`ListenerDeclaration`](README.md#listenerdeclaration)
+
+Allows weak declaration of listeners by specifying only partial declarations such as function or function name.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:3](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L3)
+[src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L11)
 
 ___
 
@@ -218,17 +242,17 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:55](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L55)
+[src/core/internals/eventDispatcher.ts:61](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L61)
 
 ___
 
 ### ListenersDeclaration
 
-Ƭ **ListenersDeclaration**: `Record`<`string`, [`ListenerDefinitionWeak`](README.md#listenerdefinitionweak)\>
+Ƭ **ListenersDeclaration**: `Record`<`string`, [`ListenerDeclarationWeak`](README.md#listenerdeclarationweak)\>
 
 #### Defined in
 
-[src/core/io-node.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L7)
+[src/core/internals/eventDispatcher.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L63)
 
 ___
 
@@ -252,47 +276,15 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L21)
+[src/core/node.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L19)
 
 ___
 
-### PredicateFunction
+### PropertyDeclaration
 
-Ƭ **PredicateFunction**: (`object`: `any`) => `boolean`
+Ƭ **PropertyDeclaration**: `Object`
 
-#### Type declaration
-
-▸ (`object`): `boolean`
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `object` | `any` |
-
-##### Returns
-
-`boolean`
-
-#### Defined in
-
-[src/core/io-node.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L18)
-
-___
-
-### PropertiesDeclaration
-
-Ƭ **PropertiesDeclaration**: `Record`<`string`, [`PropertyDefinitionWeak`](README.md#propertydefinitionweak)\>
-
-#### Defined in
-
-[src/core/io-node.ts:8](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L8)
-
-___
-
-### PropertyDefinitionStrong
-
-Ƭ **PropertyDefinitionStrong**: `Object`
+Declares default value, type and reactive behavior of the property.
 
 #### Type declaration
 
@@ -301,23 +293,35 @@ ___
 | `binding?` | [`Binding`](classes/Binding.md) |
 | `notify?` | `boolean` |
 | `observe?` | `boolean` |
-| `reflect?` | `ReflectType` |
-| `type?` | `Constructor` |
+| `reflect?` | `Reflect` |
+| `type?` | [`Constructor`](README.md#constructor) |
 | `value?` | `any` |
 
 #### Defined in
 
-[src/core/internals/property.ts:6](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L6)
+[src/core/internals/property.ts:9](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L9)
 
 ___
 
-### PropertyDefinitionWeak
+### PropertyDeclarationWeak
 
-Ƭ **PropertyDefinitionWeak**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| `Constructor` \| [`Binding`](classes/Binding.md) \| [`PropertyDefinitionStrong`](README.md#propertydefinitionstrong)
+Ƭ **PropertyDeclarationWeak**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| [`Constructor`](README.md#constructor) \| [`Binding`](classes/Binding.md) \| [`PropertyDeclaration`](README.md#propertydeclaration)
+
+Allows weak declaration of properties by specifying only partial declarations such as default value or type.
 
 #### Defined in
 
-[src/core/internals/property.ts:15](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L15)
+[src/core/internals/property.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L21)
+
+___
+
+### PropertyDeclarations
+
+Ƭ **PropertyDeclarations**: `Record`<`string`, [`PropertyDeclarationWeak`](README.md#propertydeclarationweak)\>
+
+#### Defined in
+
+[src/core/internals/property.ts:136](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L136)
 
 ___
 
@@ -341,7 +345,7 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:24](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L24)
+[src/core/node.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L22)
 
 ## Variables
 
@@ -351,7 +355,7 @@ ___
 
 #### Defined in
 
-[src/elements/core/iconset.ts:45](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/iconset.ts#L45)
+[src/elements/core/iconset.ts:44](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/iconset.ts#L44)
 
 ___
 
@@ -361,7 +365,7 @@ ___
 
 #### Defined in
 
-[src/elements/core/ladder.ts:329](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/ladder.ts#L329)
+[src/elements/core/ladder.ts:326](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/ladder.ts#L326)
 
 ___
 
@@ -371,7 +375,7 @@ ___
 
 #### Defined in
 
-[src/elements/core/layer.ts:224](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/layer.ts#L224)
+[src/elements/core/layer.ts:222](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/layer.ts#L222)
 
 ___
 
@@ -381,7 +385,7 @@ ___
 
 #### Defined in
 
-[src/elements/core/theme.ts:309](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/theme.ts#L309)
+[src/elements/core/theme.ts:323](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/theme.ts#L323)
 
 ___
 
@@ -417,6 +421,16 @@ THE SOFTWARE.
 
 [src/iogui.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/iogui.ts#L29)
 
+___
+
+### PropertyDecorators
+
+• `Const` **PropertyDecorators**: `WeakMap`<[`Constructor`](README.md#constructor), [`PropertyDeclarations`](README.md#propertydeclarations)\>
+
+#### Defined in
+
+[src/core/internals/property.ts:138](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L138)
+
 ## Functions
 
 ### IoNodeMixin
@@ -445,7 +459,44 @@ typeof `__class`
 
 #### Defined in
 
-[src/core/io-node.ts:36](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L36)
+[src/core/node.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L35)
+
+___
+
+### IoProperty
+
+▸ **IoProperty**(`propertyDefinition`): (`target`: [`IoNode`](classes/IoNode.md), `propertyName`: `string`) => `void`
+
+Allows property declarations using decorator pattern.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `propertyDefinition` | [`PropertyDeclarationWeak`](README.md#propertydeclarationweak) | Property declaration. |
+
+#### Returns
+
+`fn`
+
+Property decorator function.
+
+▸ (`target`, `propertyName`): `void`
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `target` | [`IoNode`](classes/IoNode.md) |
+| `propertyName` | `string` |
+
+##### Returns
+
+`void`
+
+#### Defined in
+
+[src/core/internals/property.ts:145](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L145)
 
 ___
 
@@ -465,7 +516,7 @@ ___
 
 #### Defined in
 
-[src/elements/core/storage.ts:213](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/storage.ts#L213)
+[src/elements/core/storage.ts:214](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/storage.ts#L214)
 
 ___
 
@@ -487,13 +538,13 @@ Register function for `IoElement`. Registers custom element.
 
 #### Defined in
 
-[src/core/io-element.ts:392](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L392)
+[src/core/element.ts:32](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L32)
 
 ___
 
 ### RegisterIoNode
 
-▸ **RegisterIoNode**(`nodeConstructor`): `void`
+▸ **RegisterIoNode**(`target`): `void`
 
 Register function to be called once per class.
 
@@ -501,7 +552,7 @@ Register function to be called once per class.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `nodeConstructor` | typeof [`IoNode`](classes/IoNode.md) | Node class to register. |
+| `target` | typeof [`IoNode`](classes/IoNode.md) | Node class to register. |
 
 #### Returns
 
@@ -509,22 +560,22 @@ Register function to be called once per class.
 
 #### Defined in
 
-[src/core/io-node.ts:463](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L463)
+[src/core/node.ts:374](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L374)
 
 ___
 
-### assignListenerDefinition
+### assignListenerDeclaration
 
-▸ **assignListenerDefinition**(`defs`, `srcDef`): `void`
+▸ **assignListenerDeclaration**(`defs`, `srcDef`): `void`
 
-Assigns source listener definition to an existing array of listener definitions.
+Assigns source listener declaration to an existing array of listener declarations.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `defs` | [`ListenerDefinition`](README.md#listenerdefinition)[] | Array of listener definitions |
-| `srcDef` | [`ListenerDefinition`](README.md#listenerdefinition) | Source listener definition |
+| `defs` | [`ListenerDeclaration`](README.md#listenerdeclaration)[] | Array of listener declarations |
+| `srcDef` | [`ListenerDeclaration`](README.md#listenerdeclaration) | Source listener declaration |
 
 #### Returns
 
@@ -532,30 +583,7 @@ Assigns source listener definition to an existing array of listener definitions.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L21)
-
-___
-
-### assignProtoProperty
-
-▸ **assignProtoProperty**(`def`, `srcDef`): `void`
-
-Assigns property definition values to another property definition, unless they are default values.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `def` | [`ProtoProperty`](classes/ProtoProperty.md) | Target property definition |
-| `srcDef` | [`ProtoProperty`](classes/ProtoProperty.md) | Source property definition |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/internals/property.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L63)
+[src/core/internals/eventDispatcher.ts:27](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L27)
 
 ___
 
@@ -581,31 +609,31 @@ ___
 
 #### Defined in
 
-[src/core/io-element.ts:562](https://github.com/io-gui/iogui/blob/tsc/src/core/io-element.ts#L562)
+[src/core/element.ts:200](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L200)
 
 ___
 
-### hardenListenerDefinition
+### hardenListenerDeclaration
 
-▸ **hardenListenerDefinition**(`def`): [`ListenerDefinition`](README.md#listenerdefinition)
+▸ **hardenListenerDeclaration**(`def`): [`ListenerDeclaration`](README.md#listenerdeclaration)
 
-Takes weakly typed listener definition and returns stronly typed listener definition.
+Takes weakly typed listener declaration and returns stronly typed listener declaration.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `def` | [`ListenerDefinitionWeak`](README.md#listenerdefinitionweak) | Weakly typed listener definition |
+| `def` | [`ListenerDeclarationWeak`](README.md#listenerdeclarationweak) | Weakly typed listener declaration |
 
 #### Returns
 
-[`ListenerDefinition`](README.md#listenerdefinition)
+[`ListenerDeclaration`](README.md#listenerdeclaration)
 
-Stronly typed listener definition
+Stronly typed listener declaration
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L12)
+[src/core/internals/eventDispatcher.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L18)
 
 ___
 
@@ -613,14 +641,14 @@ ___
 
 ▸ **listenerFromDefinition**(`node`, `def`): [`Listener`](README.md#listener)
 
-Takes a node and a listener definition and returns a listener.
+Takes a node and a listener declaration and returns a listener.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `node` | `HTMLElement` \| [`IoNode`](classes/IoNode.md) | `IoNode` instance |
-| `def` | [`ListenerDefinition`](README.md#listenerdefinition) | Listener definition |
+| `def` | [`ListenerDeclaration`](README.md#listenerdeclaration) | Listener declaration |
 
 #### Returns
 
@@ -630,4 +658,4 @@ Listener
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:39](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L39)
+[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L45)

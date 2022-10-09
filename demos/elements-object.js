@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../build/iogui.js';
+import { IoElement, RegisterIoElement } from '../build/iogui.js';
 
 export class IoDemoElementsObject extends IoElement {
   static get Properties() {
@@ -30,7 +30,7 @@ export class IoDemoElementsObject extends IoElement {
       ['io-object', {
         value: this.object,
         expanded: true,
-        slotted: ['io-item', {label: 'Slotted Element'}],
+        slotted: ['io-field', {label: 'Slotted Element'}],
         properties: ['number', 'string', 'boolean']
       }],
       ['io-object', {

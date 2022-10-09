@@ -1,12 +1,12 @@
-import {RegisterIoElement} from '../../iogui.js';
-import {IoItem} from '../core/item.js';
-import {IoLayerSingleton} from '../core/layer.js';
+import { RegisterIoElement } from '../../core/element.js';
+import {IoField} from '../basic/field.js';
+import {IoLayerSingleton} from '../../core/layer.js';
 import {IoColorMixin} from './color.js';
 import './color-swatch.js';
 import {IoColorPanelSingleton} from './color-panel.js';
 
 /*
- * Extends `IoColorMixin(IoItem)`.
+ * Extends `IoColorMixin(IoField)`.
  *
  * Implements `IoColorSwatch`, `IoColorPanelSingleton` and `IoLayerSingleton`.
  *
@@ -18,7 +18,7 @@ import {IoColorPanelSingleton} from './color-panel.js';
  * '></io-element-demo>
  **/
 @RegisterIoElement
-export class IoColorPicker extends IoColorMixin(IoItem) {
+export class IoColorPicker extends IoColorMixin(IoField) {
   static get Style() {
     return /* css */`
     :host {
@@ -27,8 +27,8 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
       border-radius: var(--io-border-radius);
       border: var(--io-border);
       border-color: var(--io-color-border-inset);
-      min-width: var(--io-item-height);
-      min-height: var(--io-item-height);
+      min-width: var(--io-field-height);
+      min-height: var(--io-field-height);
       padding: 0;
     }
     :host > io-color-swatch {
@@ -81,7 +81,7 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
     }
   }
   _onValueSet() {
-    this.dispatchEvent('value-set', {property: 'value', value: this.value}, true);
+    this.dispatchEvent('value-input', {property: 'value', value: this.value}, true);
   }
   toggle() {
     if (this.expanded) {
@@ -98,12 +98,12 @@ export class IoColorPicker extends IoColorMixin(IoItem) {
     IoColorPanelSingleton.style.height = '128px';
     IoColorPanelSingleton.expanded = true;
     IoLayerSingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'bottom', this.getBoundingClientRect());
-    // hook up 'value-set' event dispatch
-    IoColorPanelSingleton.addEventListener('value-set', this._onValueSet);
+    // hook up 'value-input' event dispatch
+    IoColorPanelSingleton.addEventListener('value-input', this._onValueSet);
     IoColorPanelSingleton._targetValueSetHandler = this._onValueSet;
   }
   collapse() {
-    IoColorPanelSingleton.removeEventListener('value-set', IoColorPanelSingleton._targetValueSetHandler);
+    IoColorPanelSingleton.removeEventListener('value-input', IoColorPanelSingleton._targetValueSetHandler);
     IoColorPanelSingleton.expanded = false;
   }
   changed() {

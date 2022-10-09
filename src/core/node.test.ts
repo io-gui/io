@@ -1,18 +1,16 @@
-import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertiesDeclaration, IoElement, RegisterIoElement } from '../iogui.js';
+import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertyDeclarations, IoElement, RegisterIoElement } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
-
-// TODO: fully test core API
 
 export default class {
   run() {
     describe('IoNode', () => {
-      describe('Registration', () => {
+      describe('Initialization', () => {
         it('Should have core API functions defined', () => {
           const node = new IoNode();
           chai.expect(node.setProperty).to.be.a('function');
           chai.expect(node.applyProperties).to.be.a('function');
           chai.expect(node.setProperties).to.be.a('function');
-          chai.expect(node.setValue).to.be.a('function');
+          chai.expect(node.inputValue).to.be.a('function');
           chai.expect(node.changed).to.be.a('function');
           chai.expect(node.queue).to.be.a('function');
           chai.expect(node.dispatchQueue).to.be.a('function');
@@ -57,7 +55,7 @@ export default class {
         it('Should aggregate property definitions from protochain', () => {
           @RegisterIoNode
           class Object1 extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   value: 0
@@ -69,7 +67,7 @@ export default class {
 
           @RegisterIoNode
           class Object2 extends Object1 {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   value: {},
@@ -99,14 +97,14 @@ export default class {
           chai.expect(props1['prop1'].value).to.be.equal(0);
           chai.expect(props1['prop1'].type).to.be.equal(Number);
           chai.expect(props1['prop1'].notify).to.be.equal(true);
-          chai.expect(props1['prop1'].reflect).to.be.equal(0);
+          chai.expect(props1['prop1'].reflect).to.be.equal('none');
           chai.expect(props1['prop1'].observe).to.be.equal(false);
 
           chai.expect(protoProps2.prop1.value).to.be.eql({});
           chai.expect(props2['prop1'].value).to.be.eql({});
           chai.expect(props2['prop1'].type).to.be.equal(Object);
           chai.expect(props2['prop1'].notify).to.be.equal(false);
-          chai.expect(props2['prop1'].reflect).to.be.equal(0);
+          chai.expect(props2['prop1'].reflect).to.be.equal('none');
           chai.expect(props2['prop1'].observe).to.be.equal(true);
 
           chai.expect(props2['prop2'].value).to.be.equal(null);
@@ -116,12 +114,12 @@ export default class {
         });
         it('Should favor explicit property definitions over implicit', () => {
           class Object1 {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   value: {},
                   notify: false,
-                  reflect: 2,
+                  reflect: 'both',
                   observe: true,
                 },
               };
@@ -129,7 +127,7 @@ export default class {
           }
 
           class Object2 extends Object1 {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: [1, 2, 3],
               };
@@ -142,7 +140,7 @@ export default class {
           chai.expect(props.prop1.value).to.be.eql([1, 2, 3]);
           chai.expect(props.prop1.type).to.be.equal(Array);
           chai.expect(props.prop1.notify).to.be.equal(false);
-          chai.expect(props.prop1.reflect).to.be.equal(2);
+          chai.expect(props.prop1.reflect).to.be.equal('both');
           chai.expect(props.prop1.observe).to.be.equal(true);
         });
         it('Should correctly register properties with bindigs', () => {
@@ -161,7 +159,7 @@ export default class {
 
           @RegisterIoNode
           class Object1 extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: binding1,
               };
@@ -170,7 +168,7 @@ export default class {
 
           @RegisterIoNode
           class Object2 extends Object1 {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   binding: binding2
@@ -206,7 +204,7 @@ export default class {
 
           @RegisterIoNode
           class TestNode extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: {
                   value: 1
@@ -228,7 +226,7 @@ export default class {
 
           @RegisterIoNode
           class TestNode extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 label: '',
               };
@@ -240,7 +238,7 @@ export default class {
 
           @RegisterIoNode
           class TestNode2 extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop1: binding1
               };
@@ -269,11 +267,11 @@ export default class {
         it('Should execute attribute reflection on IoElement', () => {
           @RegisterIoElement
           class TestElementReflection extends IoElement {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 label: {
                   value: 'label1',
-                  reflect: 1
+                  reflect: 'prop'
                 }
               };
             }
@@ -289,7 +287,7 @@ export default class {
         it('Should dipatch queue on object value initialization and value set', () => {
           @RegisterIoNode
           class TestNode extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
                 prop: Object,
               };
@@ -299,13 +297,8 @@ export default class {
           const node = new TestNode();
 
           node.addEventListener('prop-changed', ((event: CustomEvent) => {
-            const value = event.detail.value;
-            const oldValue = event.detail.oldValue;
-            chai.expect(value).to.be.eql({});
-            chai.expect(oldValue).to.be.equal(undefined);
+            chai.expect('This should not execute').to.be.eql(true);
           }) as EventListener);
-
-          node;
 
           node.removeEventListener('prop-changed');
 
@@ -318,20 +311,22 @@ export default class {
 
           node.prop = {};
 
-          node.removeEventListener('prop-changed');
-
           node.addEventListener('prop-changed', () => {
             chai.expect('This should never happen!').to.be.equal(true);
           });
 
           node.setProperty('prop', {}, true);
+
+          node.removeEventListener('prop-changed');
+
+          node.prop = {};
         });
         it('Should connect/disconnect IoNode-property-values on construction and value set', () => {
           @RegisterIoNode
-          class TestNodeValue extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+          class TestSubNode extends IoNode {
+            static get Properties(): PropertyDeclarations {
               return {
-                prop: Object,
+                prop: 0,
                 propChangeCounter: 0,
               };
             }
@@ -342,31 +337,29 @@ export default class {
 
           @RegisterIoNode
           class TestNode extends IoNode {
-            static get Properties(): PropertiesDeclaration {
+            static get Properties(): PropertyDeclarations {
               return {
-                prop: TestNodeValue
+                prop: TestSubNode
               };
             }
           }
 
           const node = new TestNode();
           const subIoNode1 = node.prop;
-          // chai.expect(subIoNode1.propChangeCounter).to.be.equal(0);
-          // node;
-          chai.expect(subIoNode1.propChangeCounter).to.be.equal(1);
-          subIoNode1.prop = {};
-          subIoNode1.prop = {};
+          chai.expect(subIoNode1.propChangeCounter).to.be.equal(0);
+
+          subIoNode1.prop = 1;
+          subIoNode1.prop = 2;
+          chai.expect(subIoNode1.propChangeCounter).to.be.equal(2);
+          subIoNode1.prop = 3;
           chai.expect(subIoNode1.propChangeCounter).to.be.equal(3);
-          subIoNode1.prop = {};
+
+          const subIoNode2 = new TestSubNode();
+          node.prop = subIoNode2;
+          subIoNode1.prop = 4;
+
           chai.expect(subIoNode1.propChangeCounter).to.be.equal(4);
-
-          node.prop = new TestNodeValue();
-          const subIoNode2 = node.prop;
-          subIoNode1.prop = {};
-
-          // TODO
-          chai.expect(subIoNode1.propChangeCounter).to.be.equal(5);
-          chai.expect(subIoNode2.propChangeCounter).to.be.equal(1);
+          chai.expect(subIoNode2.propChangeCounter).to.be.equal(0);
         });
       });
       describe('Reactivity', () => {

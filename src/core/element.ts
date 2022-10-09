@@ -2,17 +2,6 @@ import { EventDispatcher } from './internals/eventDispatcher.js';
 import { IoNode, IoNodeMixin, RegisterIoNode } from './node.js';
 import { IoProperty } from './internals/property.js';
 
-// let focusBacktrack = new WeakMap();
-// const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
-// function setBacktrack(element, dir, target) {
-//   const backtrack = focusBacktrack.get(element) || {};
-//   backtrack[backtrackDir[dir]] = target;
-//   focusBacktrack.set(element, backtrack);
-// }
-
-const warning = document.createElement('div');
-warning.innerHTML = 'No support for custom elements detected! <br />Sorry, modern browser is required to view this page.<br />';
-
 // Global mixin record
 const mixinRecord: Record<string, string> = {};
 
@@ -24,144 +13,19 @@ const mixinRegex = new RegExp('((--[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
 const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
 const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
 
-
-/**
- * Register function for `IoElement`. Registers custom element.
- * @param {IoElement} elementConstructor - Element class to register.
- */
-const RegisterIoElement = function (elementConstructor: typeof IoElement) {
-  RegisterIoNode(elementConstructor);
-
-  const localName = elementConstructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-
-  Object.defineProperty(elementConstructor, 'localName', {value: localName});
-  Object.defineProperty(elementConstructor.prototype, 'localName', {value: localName});
-
-  Object.defineProperty(elementConstructor, '_isIoElement', {enumerable: false, value: true});
-  Object.defineProperty(elementConstructor.prototype, '_isIoElement', {enumerable: false, value: true});
-  Object.defineProperty(window, elementConstructor.name, {value: elementConstructor});
-
-  if (window.customElements !== undefined) {
-    window.customElements.define(localName, elementConstructor as unknown as CustomElementConstructor);
-  } else {
-    document.body.insertBefore(warning, document.body.children[0]);
-    return;
-  }
-
-    let mixinsString = '';
-    const mixins = elementConstructor.prototype._protochain.style.match(mixinRegex);
-    if (mixins) {
-      for (let i = 0; i < mixins.length; i++) {
-        const m = mixins[i].split(': {');
-        const name = m[0];
-        const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
-        mixinRecord[name] = value;
-        mixinsString += mixins[i].replace('--', '.').replace(': {', ' {');
-      }
-    }
-
-    // Remove mixins
-    let styleString = elementConstructor.prototype._protochain.style.replace(mixinRegex, '');
-    // Apply mixins
-    const apply = styleString.match(applyRegex);
-    if (apply) {
-      for (let i = 0; i < apply.length; i++) {
-        const name = apply[i].split('@apply ')[1].replace(';', '');
-        if (mixinRecord[name]) {
-          styleString = styleString.replace(apply[i], mixinRecord[name]);
-        } else {
-          console.warn('IoElement: cound not find mixin:', name);
-        }
-      }
-    }
-
-    debug: {
-      let styleStringStripped = styleString;
-      styleStringStripped = styleStringStripped.replace(commentsRegex, '');
-      styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
-      styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
-      const match = styleStringStripped.match(cssRegex);
-      if (match) {
-        match.map((selector: any) => {
-          selector = selector.trim();
-          if (!selector.startsWith(':host')) {
-            console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
-            console.warn(selector);
-          }
-        });
-      }
-    }
-
-    // Replace `:host` with element tag and add mixin CSS variables.
-    styleString = mixinsString + styleString.replace(new RegExp(':host', 'g'), localName);
-
-    const styleElement = document.createElement('style');
-    styleElement.innerHTML = styleString;
-    styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
-    document.head.appendChild(styleElement);
-};
-
-const ro = new ResizeObserver((entries: any) => {
+const resizeObserver = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();
 });
 
-/**
- * Creates an element from a virtual dom object.
- * @param {Object} vDOMNode - Virtual dom object.
- * @param {string} vDOMNode.name - Element tag.
- * @param {Object} vDOMNode.props - Element properties.
- * @return {HTMLElement} - Created element.
- */
-// TODO: vDOMNode type
-const constructElement = function(vDOMNode: any) {
-  // IoElement classes constructed with constructor.
-  const ConstructorClass = window.customElements ? window.customElements.get(vDOMNode.name) : null;
-  if (ConstructorClass && (ConstructorClass as any)._isIoElement) return new ConstructorClass(vDOMNode.props);
+type VDOMArray =
+  [string, Record<string, any> | string | VDOMArray[] ] |
+  [string, Record<string, any> | string, VDOMArray[] | string ];
 
-  // Other element classes constructed with document.createElement.
-  const element = document.createElement(vDOMNode.name);
-  applyNativeElementProps(element, vDOMNode.props);
-  return element;
-};
-
-const superCreateElement = document.createElement;
-// TODO: args type
-document.createElement = function(...args: any[]) {
-  const tag = args[0];
-  if (tag.startsWith('io-')) {
-    const constructor = customElements.get(tag);
-    if (constructor) {
-      return new constructor();
-    } else {
-      return superCreateElement.apply(this, args as any);
-    }
-  } else  {
-    return superCreateElement.apply(this, args as any);
-  }
-};
-
-/**
- * Sets element properties.
- * @param {HTMLElement} element - Element to set properties on.
- * @param {Object} props - Element properties.
- */
-const applyNativeElementProps = function(element: HTMLElement, props: any) {
-  for (const p in props) {
-    const prop = props[p];
-    if (p.startsWith('@')) {
-      element.setAttribute(p.substr(1), prop);
-    } else if (p === 'style') for (const s in prop) element.style.setProperty(s, prop[s]);
-    else if (p === 'class') element['className'] = prop;
-    else if (p !== 'id') (element as any)[p] = prop;
-    if (p === 'name') element.setAttribute('name', prop); // TODO: Reconsider
-  }
-  if (!(element as any)._eventDispatcher) {
-    // TODO: test
-    Object.defineProperty(element, '_eventDispatcher', {value: new EventDispatcher(element as unknown as IoNode)});
-    // TODO: disconnect on disposal?
-  }
-  (element as any)._eventDispatcher.applyPropListeners(props, element);
-};
+type VDOMElement = {
+  name: string,
+  props: Record<string, any>,
+  children: VDOMElement[]
+}
 
 /** @license
  * MIT License
@@ -193,71 +57,187 @@ const isObject = (x: any) => typeof x === 'object' && !isArray(x);
 
 const clense = (a: any, b: any) => !b ? a : isString(b[0]) ? [...a, b] : [...a, ...b];
 
-type VirtualDOMElement =
-  [string, Record<string, any> | string ] |
-  [string, Record<string, any> | string, VirtualDOMElement[] | string ];
-
-export const buildTree = () => (node: VirtualDOMElement): any => isObject(node[1]) ? {
+export const buildTree = () => (node: VDOMArray): any => isObject(node[1]) ? {
   ['name']: node[0],
   ['props']: node[1],
   ['children']: isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2]
-} : buildTree()([node[0], {}, node[1] as VirtualDOMElement[] | string]);
+} : buildTree()([node[0], {}, node[1] as VDOMArray[] | string]);
+
+/**
+ * Register function for `IoElement`. Registers custom element.
+ * @param {IoElement} elementConstructor - Element class to register.
+ */
+export function RegisterIoElement(elementConstructor: typeof IoElement) {
+  RegisterIoNode(elementConstructor);
+
+  const localName = elementConstructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
+  Object.defineProperty(elementConstructor, 'localName', {value: localName});
+  Object.defineProperty(elementConstructor.prototype, 'localName', {value: localName});
+
+  Object.defineProperty(elementConstructor, '_isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(elementConstructor.prototype, '_isIoElement', {enumerable: false, value: true});
+  Object.defineProperty(window, elementConstructor.name, {value: elementConstructor});
+
+  window.customElements.define(localName, elementConstructor as unknown as CustomElementConstructor);
+
+  let mixinsString = '';
+  const mixins = elementConstructor.prototype._protochain.style.match(mixinRegex);
+  if (mixins) {
+    for (let i = 0; i < mixins.length; i++) {
+      const m = mixins[i].split(': {');
+      const name = m[0];
+      const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
+      mixinRecord[name] = value;
+      mixinsString += mixins[i].replace('--', '.').replace(': {', ' {');
+    }
+  }
+
+  // Remove mixins
+  let styleString = elementConstructor.prototype._protochain.style.replace(mixinRegex, '');
+  // Apply mixins
+  const apply = styleString.match(applyRegex);
+  if (apply) {
+    for (let i = 0; i < apply.length; i++) {
+      const name = apply[i].split('@apply ')[1].replace(';', '');
+      if (mixinRecord[name]) {
+        styleString = styleString.replace(apply[i], mixinRecord[name]);
+      } else {
+        console.warn('IoElement: cound not find mixin:', name);
+      }
+    }
+  }
+
+  debug: {
+    let styleStringStripped = styleString;
+    styleStringStripped = styleStringStripped.replace(commentsRegex, '');
+    styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
+    styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
+    const match = styleStringStripped.match(cssRegex);
+    if (match) {
+      match.map((selector: any) => {
+        selector = selector.trim();
+        if (!selector.startsWith(':host')) {
+          console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
+          console.warn(selector);
+        }
+      });
+    }
+  }
+
+  // Replace `:host` with element tag and add mixin CSS variables.
+  styleString = mixinsString + styleString.replace(new RegExp(':host', 'g'), localName);
+
+  const styleElement = document.createElement('style');
+  styleElement.innerHTML = styleString;
+  styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
+  document.head.appendChild(styleElement);
+}
+
+
+
+/**
+ * Creates an element from a virtual dom object.
+ * @param {VDOMElement} vDOMElement - Virtual dom object.
+ * @return {HTMLElement} - Created element.
+ */
+const constructElement = function(vDOMElement: VDOMElement) {
+  // IoElement classes constructed with constructor.
+  const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.name) : null;
+  if (ConstructorClass && (ConstructorClass as any)._isIoElement) {
+    return new ConstructorClass(vDOMElement.props);
+  }
+  // Other element classes constructed with document.createElement.
+  const element = document.createElement(vDOMElement.name);
+  applyNativeElementProps(element, vDOMElement.props);
+  return element;
+};
+
+const superCreateElement = document.createElement;
+document.createElement = function(tagName: string, options?: ElementCreationOptions) {
+  if (tagName.startsWith('io-')) {
+    const constructor = customElements.get(tagName);
+    if (constructor) {
+      return new constructor();
+    } else {
+      return superCreateElement.apply(this, [tagName, options]);
+    }
+  } else  {
+    return superCreateElement.apply(this, [tagName, options]);
+  }
+};
+
+/**
+ * Sets element properties.
+ * @param {HTMLElement} element - Element to set properties on.
+ * @param {Object} props - Element properties.
+ */
+const applyNativeElementProps = function(element: HTMLElement, props: any) {
+  for (const p in props) {
+    const prop = props[p];
+    if (p.startsWith('@')) {
+      element.setAttribute(p.substr(1), prop);
+    } else if (p === 'style') for (const s in prop) element.style.setProperty(s, prop[s]);
+    else if (p === 'class') element['className'] = prop;
+    else if (p !== 'id') (element as any)[p] = prop;
+    if (p === 'name') element.setAttribute('name', prop);
+  }
+  if (!(element as any)._eventDispatcher) {
+    Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoNode)});
+  }
+  (element as any)._eventDispatcher.applyPropListeners(props, element);
+};
 
 /**
  * Core `IoElement` class.
  */
 @RegisterIoElement
-class IoElement extends IoNodeMixin(HTMLElement) {
+export class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): any {
-    // TODO: consider removing from core io-element class.
     return /* css */`
-      :host[hidden] { display: none; } :host[disabled] { pointer-events: none; opacity: 0.5; }
+      :host[hidden] { display: none; }
+      :host[disabled] { pointer-events: none; opacity: 0.5; }
     `;
   }
 
   @IoProperty({type: Object, notify: false})
   declare $: Record<string, any>;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: 'prop'})
   declare tabindex: string;
 
-  @IoProperty({value: false, reflect: 1})
+  @IoProperty({value: false, reflect: 'prop'})
   declare contenteditable: boolean;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: 'prop'})
   declare class: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: 'prop'})
   declare role: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: 'prop'})
   declare label: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: 'prop'})
   declare name: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: 'prop'})
   declare title: string;
 
-  @IoProperty({value: '', reflect: 1})
+  @IoProperty({value: '', reflect: 'prop'})
   declare id: string;
 
-  @IoProperty({value: false, reflect: 1})
+  @IoProperty({value: false, reflect: 'prop'})
   declare hidden: boolean;
 
-  @IoProperty({value: false, reflect: 1})
+  @IoProperty({value: false, reflect: 'prop'})
   declare disabled: boolean;
 
-  static get Listeners(): any {
-    return {
-      'focus-to': '_onFocusTo',
-    };
-  }
   static get observedAttributes() {
     const observed = [];
     for (const prop in this.prototype._protochain.properties) {
       const r  = this.prototype._protochain.properties[prop].reflect;
-      if (r === -1 || r === 2) {
+      if (r === 'attr' || r === 'both') {
         observed.push(prop);
       }
     }
@@ -283,7 +263,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   */
   connectedCallback() {
     if (typeof this.onResized === 'function') {
-      ro.observe(this as unknown as HTMLElement);
+      resizeObserver.observe(this as unknown as HTMLElement);
     }
   }
   /**
@@ -291,7 +271,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   */
   disconnectedCallback() {
     if (typeof this.onResized === 'function') {
-      ro.unobserve(this as unknown as HTMLElement);
+      resizeObserver.unobserve(this as unknown as HTMLElement);
     }
   }
   /**
@@ -305,22 +285,35 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     if (host === (this as any)) this.setProperty('$', {});
     this.traverse(vChildren, host as HTMLElement);
   }
+  disposeDeep(host: HTMLElement, child: any) {
+    host.removeChild(child);
+    const nodes = Array.from(child.querySelectorAll('*')) as IoElement[];
+    for (let i = nodes.length; i--;) {
+      if (nodes[i].dispose!) {
+        nodes[i].dispose();
+      } else if (nodes[i]._eventDispatcher) {
+        nodes[i]._eventDispatcher.dispose();
+        delete (nodes[i] as any)._eventDispatcher;
+      }
+    }
+    if ((child).dispose!) {
+      (child).dispose();
+    } else if (child._eventDispatcher) {
+      child._eventDispatcher.dispose();
+      delete child._eventDispatcher;
+    }
+  }
   /**
-  * Recurively traverses vDOM.
-  * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
-  * @param {HTMLElement} [host] - Optional template target.
-    */
+   * Recurively traverses vDOM.
+   * TODO: test element.traverse() function!
+   * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
+   * @param {HTMLElement} [host] - Optional template target.
+   */
   traverse(vChildren: Array<any>, host: HTMLElement) {
     const children = host.children;
-    // focusBacktrack = new WeakMap();
     // remove trailing elements
     while (children.length > vChildren.length) {
-      const child = children[children.length - 1];
-      host.removeChild(child);
-      // TODO: enable and test!
-      // const nodes = Array.from(child.querySelectorAll('*'));
-      // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
-      // if (child.dispose) child.dispose();
+      this.disposeDeep(host, children[children.length - 1]);
     }
     // create new elements after existing
     if (children.length < vChildren.length) {
@@ -335,20 +328,15 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     for (let i = 0; i < children.length; i++) {
       const child = children[i] as HTMLElement | IoElement;
       if (child.localName !== vChildren[i].name) {
-        const oldElement = child;
+        const oldElement = child as IoElement;
         const element = constructElement(vChildren[i]);
         host.insertBefore(element, oldElement as unknown as HTMLElement);
-        host.removeChild(oldElement as unknown as HTMLElement);
-        // TODO: enable and test!
-        // const nodes = Array.from(oldElement.querySelectorAll('*'));
-        // for (let i = nodes.length; i--;) if (nodes[i].dispose) nodes[i].dispose();
-        // if (oldElement.dispose) oldElement.dispose();
+        this.disposeDeep(host, oldElement);
       // update existing elements
       } else {
         child.removeAttribute('className');
         if ((child as IoElement)._isIoElement) {
           // Set IoElement element properties
-          // TODO: Test property and listeners reset. Consider optimizing.
           (child as IoElement).applyProperties(vChildren[i].props);
         } else {
           // Set native HTML element properties
@@ -363,7 +351,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       if (vChildren[i].children !== undefined) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
-          this.flattenTextNode(child as HTMLElement);
+          this._flattenTextNode(child as HTMLElement);
           (child as any)._textNode.nodeValue = String(vChildren[i].children);
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
@@ -377,7 +365,7 @@ class IoElement extends IoNodeMixin(HTMLElement) {
   * Update textContent via TextNode is better for layout performance.
   * @param {HTMLElement} element - Element to flatten.
   */
-  flattenTextNode(element: HTMLElement | IoElement) {
+  _flattenTextNode(element: HTMLElement | IoElement) {
     if (element.childNodes.length === 0) {
       element.appendChild(document.createTextNode(''));
     }
@@ -395,11 +383,11 @@ class IoElement extends IoNodeMixin(HTMLElement) {
     }
   }
   get textNode() {
-    this.flattenTextNode(this);
+    this._flattenTextNode(this);
     return this._textNode.nodeValue;
   }
   set textNode(value) {
-    this.flattenTextNode(this);
+    this._flattenTextNode(this);
     this._textNode.nodeValue = String(value);
   }
   applyProperties(props: any) {
@@ -424,132 +412,18 @@ class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
     }
   }
-  /**
-  * Sets aria attributes.
-  */
-  applyAria() {
+  labelChanged() {
     if (this.label) {
       this.setAttribute('aria-label', this.label);
     } else {
       this.removeAttribute('aria-label');
     }
+  }
+  disabledChanged() {
     if (this.disabled) {
-      this.setAttribute('aria-disabled', true);
+      this.setAttribute('aria-disabled', this.disabled);
     } else {
       this.removeAttribute('aria-disabled');
     }
   }
-  _onFocusTo(event: CustomEvent) {
-    const src = event.composedPath()[0];
-    const dir = event.detail.dir;
-    const rect = event.detail.rect;
-    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
-
-    if (src !== this as any) {
-      let closest = src;
-      let closestX = Infinity;
-      let closestY = Infinity;
-
-      // TODO: improve backtracking
-      // const backtrack = focusBacktrack.get(src);
-      // if (backtrack && backtrack[dir]) {
-      //   backtrack[dir].focus();
-      //   setBacktrack(backtrack[dir], dir, src);
-      //   return;
-      // }
-
-      const siblings = this.querySelectorAll('[tabindex="0"]:not([disabled])');
-
-      for (let i = siblings.length; i--;) {
-
-        if (!siblings[i].offsetParent) {
-          continue;
-        }
-        // TODO: unhack
-        const sStyle = window.getComputedStyle(siblings[i]);
-        if (sStyle.visibility !== 'visible') {
-          continue;
-        }
-
-        const sRect = siblings[i].getBoundingClientRect();
-        sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
-
-        // TODO: improve automatic direction routing.
-        switch (dir) {
-          case 'right': {
-            if (sRect.left >= (rect.right - 1)) {
-              const distX = Math.abs(sRect.left - rect.right);
-              const distY = Math.abs(sRect.center.y - rect.center.y);
-              if (distX < closestX || distY < closestY / 3) {
-                closest = siblings[i];
-                closestX = distX;
-                closestY = distY;
-              } else if (distX === closestX && distY < closestY) {
-                closest = siblings[i];
-                closestY = distY;
-              }
-            }
-            break;
-          }
-          case 'left': {
-            if (sRect.right <= (rect.left + 1)) {
-              const distX = Math.abs(sRect.right - rect.left);
-              const distY = Math.abs(sRect.center.y - rect.center.y);
-              if (distX < closestX || distY < closestY / 3) {
-                closest = siblings[i];
-                closestX = distX;
-                closestY = distY;
-              } else if (distX === closestX && distY < closestY) {
-                closest = siblings[i];
-                closestY = distY;
-              }
-            }
-            break;
-          }
-          case 'down': {
-            if (sRect.top >= (rect.bottom - 1)) {
-              const distX = Math.abs(sRect.center.x - rect.center.x);
-              const distY = Math.abs(sRect.top - rect.bottom);
-              if (distY < closestY || distX < closestX / 3) {
-                closest = siblings[i];
-                closestX = distX;
-                closestY = distY;
-              } else if (distY === closestY && distX < closestX) {
-                closest = siblings[i];
-                closestX = distX;
-              }
-            }
-            break;
-          }
-          case 'up':{
-            if (sRect.bottom <= (rect.top + 1)) {
-              const distX = Math.abs(sRect.center.x - rect.center.x);
-              const distY = Math.abs(sRect.bottom - rect.top);
-              if (distY < closestY || distX < closestX / 3) {
-                closest = siblings[i];
-                closestX = distX;
-                closestY = distY;
-              } else if (distY === closestY && distX < closestX) {
-                closest = siblings[i];
-                closestX = distX;
-              }
-            }
-            break;
-          }
-        }
-      }
-
-      if (closest !== src) {
-        (closest as any).focus();
-        // setBacktrack(closest, dir, src);
-        event.stopPropagation();
-      }
-    }
-  }
-  focusTo(dir: string) {
-    const rect = this.getBoundingClientRect();
-    this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
-  }
 }
-
-export {IoElement, RegisterIoElement};

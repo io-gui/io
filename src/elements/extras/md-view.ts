@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { marked } from 'marked';
 import purify from 'dompurify';
 
@@ -133,7 +133,7 @@ export class IoMdView extends IoElement {
     return {
       path: {
         type: String,
-        reflect: 1
+        reflect: 'prop'
       },
       sanitize: true,
       role: 'document',

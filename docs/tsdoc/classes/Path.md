@@ -12,30 +12,27 @@ IoNodeMixin applied to `Object` class.
 
 ### constructor
 
-• **new Path**(`properties?`, ...`args`)
-
-Creates a class instance and initializes the internals.
+• **new Path**(...`args`)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Initial property values. |
-| `...args` | `any`[] | - |
+| Name | Type |
+| :------ | :------ |
+| `...args` | `any`[] |
 
-#### Inherited from
+#### Overrides
 
 [IoNode](IoNode.md).[constructor](IoNode.md#constructor)
 
 #### Defined in
 
-[src/core/io-node.ts:57](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L57)
+[src/models/path.ts:14](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L14)
 
 ## Properties
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Record`<`string`, [`Binding`](Binding.md)\> = `{}`
+• `Readonly` **\_bindings**: `Record`<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
@@ -43,7 +40,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/io-node.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L49)
+[src/core/node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L48)
 
 ___
 
@@ -57,7 +54,7 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:51](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L51)
+[src/core/node.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L49)
 
 ___
 
@@ -71,13 +68,13 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:52](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L52)
+[src/core/node.ts:50](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L50)
 
 ___
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Record`<`string`, [`Property`](Property.md)\> = `{}`
+• `Readonly` **\_properties**: `Record`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
@@ -85,7 +82,21 @@ ___
 
 #### Defined in
 
-[src/core/io-node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L48)
+[src/core/node.ts:47](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L47)
+
+___
+
+### \_protochain
+
+• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+
+#### Inherited from
+
+[IoNode](IoNode.md).[_protochain](IoNode.md#_protochain)
+
+#### Defined in
+
+[src/core/node.ts:46](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L46)
 
 ## Accessors
 
@@ -111,7 +122,7 @@ IoNode.Properties
 
 #### Defined in
 
-[src/models/path.ts:4](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L4)
+[src/models/path.ts:5](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L5)
 
 ## Methods
 
@@ -139,7 +150,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/io-node.ts:338](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L338)
+[src/core/node.ts:317](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L317)
 
 ___
 
@@ -166,7 +177,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/io-node.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L169)
+[src/core/node.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L169)
 
 ___
 
@@ -194,7 +205,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/io-node.ts:311](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L311)
+[src/core/node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L290)
 
 ___
 
@@ -215,7 +226,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/io-node.ts:241](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L241)
+[src/core/node.ts:218](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L218)
 
 ___
 
@@ -244,7 +255,47 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/io-node.ts:363](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L363)
+[src/core/node.ts:342](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L342)
+
+___
+
+### dispatchQueue
+
+▸ **dispatchQueue**(): `void`
+
+Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoNode](IoNode.md).[dispatchQueue](IoNode.md#dispatchqueue)
+
+#### Defined in
+
+[src/core/node.ts:232](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L232)
+
+___
+
+### dispatchQueueSync
+
+▸ **dispatchQueueSync**(): `void`
+
+Dispatches the queue immediately.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoNode](IoNode.md).[dispatchQueueSync](IoNode.md#dispatchqueuesync)
+
+#### Defined in
+
+[src/core/node.ts:242](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L242)
 
 ___
 
@@ -265,87 +316,52 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/io-node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L219)
+[src/core/node.ts:349](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L349)
 
 ___
 
-### filterObject
+### init
 
-▸ **filterObject**(`object`, `predicate`, `_depth?`, `_chain?`, `_i?`): `any`
+▸ **init**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoNode](IoNode.md).[init](IoNode.md#init)
+
+#### Defined in
+
+[src/core/node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L219)
+
+___
+
+### inputValue
+
+▸ **inputValue**(`value`): `void`
+
+Sets value property and emits `value-input` event.
+Use this when value property is set by user action (e.g. mouse click).
 
 #### Parameters
 
-| Name | Type | Default value |
+| Name | Type | Description |
 | :------ | :------ | :------ |
-| `object` | `any` | `undefined` |
-| `predicate` | [`PredicateFunction`](../README.md#predicatefunction) | `undefined` |
-| `_depth` | `number` | `5` |
-| `_chain` | `any`[] | `[]` |
-| `_i` | `number` | `0` |
+| `value` | `any` | Property value. |
 
 #### Returns
 
-`any`
+`void`
 
 #### Inherited from
 
-[IoNode](IoNode.md).[filterObject](IoNode.md#filterobject)
+[IoNode](IoNode.md).[inputValue](IoNode.md#inputvalue)
 
 #### Defined in
 
-[src/core/io-node.ts:396](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L396)
-
-___
-
-### filterObjects
-
-▸ **filterObjects**(`object`, `predicate`, `_depth?`, `_chain?`, `_i?`): `any`
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `object` | `any` | `undefined` |
-| `predicate` | [`PredicateFunction`](../README.md#predicatefunction) | `undefined` |
-| `_depth` | `number` | `5` |
-| `_chain` | `any`[] | `[]` |
-| `_i` | `number` | `0` |
-
-#### Returns
-
-`any`
-
-#### Inherited from
-
-[IoNode](IoNode.md).[filterObjects](IoNode.md#filterobjects)
-
-#### Defined in
-
-[src/core/io-node.ts:409](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L409)
-
-___
-
-### import
-
-▸ **import**(`path`): `Promise`<`unknown`\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `path` | `string` |
-
-#### Returns
-
-`Promise`<`unknown`\>
-
-#### Inherited from
-
-[IoNode](IoNode.md).[import](IoNode.md#import)
-
-#### Defined in
-
-[src/core/io-node.ts:426](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L426)
+[src/core/node.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L207)
 
 ___
 
@@ -359,43 +375,15 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:61](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L61)
+[src/models/path.ts:66](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L66)
 
 ___
 
 ### objectMutated
 
-▸ **objectMutated**(`event`): `void`
+▸ **objectMutated**(`prop`): `void`
 
-Event handler for 'object-mutated' event emitted from the `window`.
-Node should be listening for this event if it has an object property
-with `observe: "sync" || "async"` configuration.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> | Event payload. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoNode](IoNode.md).[objectMutated](IoNode.md#objectmutated)
-
-#### Defined in
-
-[src/core/io-node.ts:275](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L275)
-
-___
-
-### objectMutatedThrottled
-
-▸ **objectMutatedThrottled**(`prop`): `void`
-
-This function is called after `objectMutated()` determines that one of
+This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
@@ -410,11 +398,11 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[objectMutatedThrottled](IoNode.md#objectmutatedthrottled)
+[IoNode](IoNode.md).[objectMutated](IoNode.md#objectmutated)
 
 #### Defined in
 
-[src/core/io-node.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L302)
+[src/core/node.ts:281](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L281)
 
 ___
 
@@ -428,21 +416,22 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:28](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L28)
+[src/models/path.ts:33](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L33)
 
 ___
 
-### preventDefault
+### onObjectMutated
 
-▸ **preventDefault**(`event`): `void`
+▸ **onObjectMutated**(`event`): `void`
 
-Handler function with `event.preventDefault()`.
+Event handler for 'object-mutated' event emitted from the `window`.
+Node should be listening for this event if it has an observed object property
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `event` | `Event` | Event object. |
+| `event` | `CustomEvent`<`any`\> | Event payload. |
 
 #### Returns
 
@@ -450,11 +439,11 @@ Handler function with `event.preventDefault()`.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[preventDefault](IoNode.md#preventdefault)
+[IoNode](IoNode.md).[onObjectMutated](IoNode.md#onobjectmutated)
 
 #### Defined in
 
-[src/core/io-node.ts:444](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L444)
+[src/core/node.ts:260](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L260)
 
 ___
 
@@ -482,47 +471,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/io-node.ts:248](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L248)
-
-___
-
-### queueDispatch
-
-▸ **queueDispatch**(): `void`
-
-Dispatches the queue.
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoNode](IoNode.md).[queueDispatch](IoNode.md#queuedispatch)
-
-#### Defined in
-
-[src/core/io-node.ts:254](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L254)
-
-___
-
-### queueDispatchLazy
-
-▸ **queueDispatchLazy**(): `void`
-
-Dispatches the queue in the next rAF cycle.
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoNode](IoNode.md).[queueDispatchLazy](IoNode.md#queuedispatchlazy)
-
-#### Defined in
-
-[src/core/io-node.ts:265](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L265)
+[src/core/node.ts:226](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L226)
 
 ___
 
@@ -550,31 +499,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/io-node.ts:353](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L353)
-
-___
-
-### requestAnimationFrameOnce
-
-▸ **requestAnimationFrameOnce**(`func`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoNode](IoNode.md).[requestAnimationFrameOnce](IoNode.md#requestanimationframeonce)
-
-#### Defined in
-
-[src/core/io-node.ts:393](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L393)
+[src/core/node.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L332)
 
 ___
 
@@ -588,7 +513,7 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:56](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L56)
+[src/models/path.ts:61](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L61)
 
 ___
 
@@ -615,7 +540,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/io-node.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L190)
+[src/core/node.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L190)
 
 ___
 
@@ -643,60 +568,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/io-node.ts:110](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L110)
-
-___
-
-### setValue
-
-▸ **setValue**(`value`): `void`
-
-Sets value property and emits `value-set` event.
-Use this when value property is set by user action (e.g. mouse click).
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `value` | `any` | Property value. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoNode](IoNode.md).[setValue](IoNode.md#setvalue)
-
-#### Defined in
-
-[src/core/io-node.ts:208](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L208)
-
-___
-
-### stopPropagation
-
-▸ **stopPropagation**(`event`): `void`
-
-Handler function with `event.stopPropagation()`.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> | Event object. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoNode](IoNode.md).[stopPropagation](IoNode.md#stoppropagation)
-
-#### Defined in
-
-[src/core/io-node.ts:451](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L451)
+[src/core/node.ts:109](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L109)
 
 ___
 
@@ -710,23 +582,23 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L49)
+[src/models/path.ts:54](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L54)
 
 ___
 
 ### throttle
 
-▸ **throttle**(`func`, `arg?`, `asynchronous?`): `void`
+▸ **throttle**(`func`, `arg?`, `sync?`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) | Function to throttle. |
-| `arg?` | `any` | argument for throttled function. |
-| `asynchronous?` | `boolean` | execute with timeout. |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
+| `arg` | `any` | `undefined` | argument for throttled function. |
+| `sync` | `boolean` | `false` | execute immediately without rAF timeout. |
 
 #### Returns
 
@@ -738,7 +610,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/io-node.ts:372](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L372)
+[src/core/node.ts:251](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L251)
 
 ___
 
@@ -764,7 +636,7 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/io-node.ts:324](https://github.com/io-gui/iogui/blob/tsc/src/core/io-node.ts#L324)
+[src/core/node.ts:303](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L303)
 
 ___
 
@@ -778,7 +650,7 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:31](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L31)
+[src/models/path.ts:36](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L36)
 
 ___
 
@@ -792,4 +664,4 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:13](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L13)
+[src/models/path.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L18)

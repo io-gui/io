@@ -1,5 +1,5 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
-import {IoStorageFactory} from '../core/storage.js';
+import {IoElement, RegisterIoElement } from '../../core/element.js';
+import {IoStorageFactory} from '../../core/storage.js';
 
 /*
 
@@ -27,7 +27,7 @@ export class IoNotify extends IoElement {
     :host > span {
       cursor: default;
       box-sizing: border-box;
-      line-height: var(--io-item-height);
+      line-height: var(--io-field-height);
       font-size: var(--io-font-size);
       color: var(--io-color);
       padding: 0 var(--io-spacing);
@@ -52,7 +52,7 @@ export class IoNotify extends IoElement {
     return {
       expanded: {
         value: true,
-        reflect: 1,
+        reflect: 'prop',
       }
     };
   }
@@ -65,9 +65,9 @@ export class IoNotify extends IoElement {
     this.template([
       ['span', 'This app uses cookies for user interface customization.'],
       ['span', 'Agree'],
-      ['io-boolicon', {'on-value-set': this._onAgree}],
+      ['io-boolean', {'on-value-input': this._onAgree}],
       ['span', 'Disagree'],
-      ['io-boolicon', {'on-value-set': this._onDisgree}],
+      ['io-boolean', {'on-value-input': this._onDisgree}],
     ]);
   }
   _onAgree(event: CustomEvent) {

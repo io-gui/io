@@ -11,8 +11,12 @@ export class Path extends IoNode {
       delimiter: ':',
     };
   }
+  constructor(...args: any[]) {
+    super(...args);
+    this.valueChanged();
+  }
   valueChanged() {
-    // TODO: redesign. Investigate why setValue causes infinite loop.
+    // TODO: redesign. Investigate why inputValue causes infinite loop.
     this._properties['value'].value = new Proxy(this._properties['value'].value, {
       get: (target, prop) => target[prop],
       set: (target, prop, value) => {

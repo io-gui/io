@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../iogui.js';
+import { RegisterIoElement } from '../../core/element.js';
 import {IoColorSlider} from './color-slider.js';
 
 /*
@@ -36,13 +36,16 @@ export class IoColorSliderAlpha extends IoColorSlider {
       }
     `;
   }
-  applyAria() {
-    super.applyAria();
-    // TODO
+  changed() {
+    // TODO: improve.
     const i = this.mode === 3 ? 4 : 3;
     const components = Object.keys(this.value);
     const hasAlpha = this.value[components[i]] !== undefined;
-    this.setAttribute('aria-invalid', !hasAlpha ? 'true' : false);
+    if (!hasAlpha) {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
   }
   _setIncrease() {
     const i = this.mode === 3 ? 4 : 3;
@@ -64,7 +67,7 @@ export class IoColorSliderAlpha extends IoColorSlider {
     const components = Object.keys(this.value);
     this.value[components[i]] = 1;
   }
-  _setValue(x: number) {
+  _inputValue(x: number) {
     const i = this.mode === 3 ? 4 : 3;
     const components = Object.keys(this.value);
     const hasAlpha = this.value[components[i]] !== undefined;

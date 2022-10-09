@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../iogui.js';
+import { RegisterIoElement } from '../../core/element.js';
 import {IoColorSlider} from './color-slider.js';
 
 /*
@@ -34,14 +34,14 @@ export class IoColorSliderValue extends IoColorSlider {
   }
   _setIncrease() {
     this.hsv[2] = Math.min(1, this.hsv[2] + 0.01);
-    this.setValueFromHsv();
+    this.valueFromHsv();
   }
   _setDecrease() {
     this.hsv[2] = Math.max(0, this.hsv[2] - 0.01);
-    this.setValueFromHsv();
+    this.valueFromHsv();
   }
-  _setValue(x: number) {
+  _inputValue(x: number) {
     this.hsv[2] = x;
-    this.setValueFromHsv();
+    this.valueFromHsv();
   }
 }

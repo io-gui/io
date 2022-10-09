@@ -1,11 +1,11 @@
-import {RegisterIoElement} from '../../iogui.js';
+import { RegisterIoElement } from '../../core/element.js';
 import {Item} from '../../models/item.js';
-import {IoItem} from '../core/item.js';
-import {IoLayerSingleton as Layer} from '../core/layer.js';
+import {IoField} from '../basic/field.js';
+import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuOptions} from './menu-options.js';
 
 /*
- * Extends `IoItem`. Implements `IoMenuOptions` and `IoLayerSingleton`.
+ * Extends `IoField`. Implements `IoMenuOptions` and `IoLayerSingleton`.
  *
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  *
@@ -22,7 +22,7 @@ import {IoMenuOptions} from './menu-options.js';
 
 // TODO: fix and improve keyboard navigation in all cases.
 @RegisterIoElement
-export class IoMenuItem extends IoItem {
+export class IoMenuItem extends IoField {
   static get Style() {
     return /* css */`
     :host {
@@ -85,11 +85,11 @@ export class IoMenuItem extends IoItem {
       },
       expanded: {
         value: false,
-        reflect: 1,
+        reflect: 'prop',
       },
       direction: {
         value: 'bottom',
-        reflect: 1,
+        reflect: 'prop',
       },
       icon: String,
       $parent: null,
@@ -103,6 +103,7 @@ export class IoMenuItem extends IoItem {
       'click': 'preventDefault',
     };
   }
+  _option?: Item;
   preventDefault(event: Event) {
     event.stopPropagation();
     event.preventDefault();
@@ -343,11 +344,13 @@ export class IoMenuItem extends IoItem {
     }
   }
   optionChanged(change: CustomEvent) {
-    if ((change as any).oldValue) {
-      (change as any).oldValue.removeEventListener('changed', this.onOptionChanged);
+    if (this._option) {
+      this._option.removeEventListener('changed', this.onOptionChanged);
+      delete this._option;
     }
-    if ((change as any).value) {
-      (change as any).value.addEventListener('changed', this.onOptionChanged);
+    if (this.option) {
+      this._option = this.option;
+      this.option.addEventListener('changed', this.onOptionChanged);
     }
   }
   onOptionChanged() {

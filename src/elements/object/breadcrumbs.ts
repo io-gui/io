@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 
 /*
  * Extends `IoElement`. Implements `IoButton`.
@@ -27,20 +27,20 @@ export class IoBreadcrumbs extends IoElement {
       background-color: var(--io-background-color-field);
       overflow-x: hidden;
     }
-    :host > io-item:hover {
+    :host > io-field:hover {
       text-decoration: underline;
     }
-    :host > io-item:first-of-type {
+    :host > io-field:first-of-type {
       overflow: visible;
       text-overflow: clip;
       margin-left: var(--io-spacing);
     }
-    :host > io-item:last-of-type {
+    :host > io-field:last-of-type {
       overflow: visible;
       text-overflow: clip;
       margin-right: var(--io-spacing);
     }
-    :host > io-item:not(:first-of-type):before {
+    :host > io-field:not(:first-of-type):before {
       content: '>';
       margin: 0 var(--io-spacing);
       padding: 0 var(--io-spacing) 0 0;
@@ -76,7 +76,7 @@ export class IoBreadcrumbs extends IoElement {
   changed() {
     const elements = [];
     for (let i = 0; i < this.options.length; i++) {
-      elements.push(['io-item', {
+      elements.push(['io-field', {
         value: i,
         label: getLabel(this.options[i]),
         'on-item-clicked': this._onClick,

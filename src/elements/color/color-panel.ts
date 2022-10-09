@@ -1,5 +1,5 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
-import {IoLayerSingleton} from '../core/layer.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
+import {IoLayerSingleton} from '../../core/layer.js';
 import {IoColorMixin} from './color.js';
 
 /*
@@ -58,11 +58,11 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
     return {
       expanded: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       horizontal: {
         value: true,
-        reflect: 1,
+        reflect: 'prop',
       },
     };
   }
@@ -78,15 +78,15 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
     }
   }
   onValueSet() {
-    this.dispatchEvent('value-set', {property: 'value', value: this.value}, true);
+    this.dispatchEvent('value-input', {property: 'value', value: this.value}, true);
   }
   changed() {
     this.template([
       this.mode === 2 ?
-        ['io-color-slider-sl', {value: this.value, mode: this.mode, 'on-value-set': this.onValueSet}] :
-        ['io-color-slider-sv', {value: this.value, mode: this.mode, 'on-value-set': this.onValueSet}],
-      ['io-color-slider-hue', {value: this.value, mode: this.mode, 'on-value-set': this.onValueSet, horizontal: !this.horizontal}],
-      this.alpha !== undefined ?['io-color-slider-alpha', {value: this.value, 'on-value-set': this.onValueSet, horizontal: !this.horizontal}] : null,
+        ['io-color-slider-sl', {value: this.value, mode: this.mode, 'on-value-input': this.onValueSet}] :
+        ['io-color-slider-sv', {value: this.value, mode: this.mode, 'on-value-input': this.onValueSet}],
+      ['io-color-slider-hue', {value: this.value, mode: this.mode, 'on-value-input': this.onValueSet, horizontal: !this.horizontal}],
+      this.alpha !== undefined ?['io-color-slider-alpha', {value: this.value, 'on-value-input': this.onValueSet, horizontal: !this.horizontal}] : null,
     ]);
   }
 }

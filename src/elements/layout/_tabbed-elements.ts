@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 import './selector.js';
 
 const _dragicon = document.createElement('io-tab-dragicon') as any;
@@ -58,7 +58,7 @@ export class IoSelectorTabs extends IoElement {
       cache: true,
       editable: Boolean,
       role: {
-        reflect: 0,
+        reflect: 'none',
       },
     };
   }
@@ -301,11 +301,11 @@ export class IoTabs extends IoElement {
       selected: String,
       editable: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       overflow: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       dropIndex: -1,
       role: 'navigation',

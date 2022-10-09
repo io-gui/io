@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 
 /*
 
@@ -11,13 +11,13 @@ export class IoElementDemo extends IoElement {
       @apply --io-panel;
       position: relative;
     }
-    :host > io-boolicon {
+    :host > io-boolean {
       z-index: 2;
       position: absolute !important;
       top: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
       right: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
     }
-    :host > io-boolicon:not([value]):not(:hover) {
+    :host > io-boolean:not([value]):not(:hover) {
       opacity: 0.5;
     }
     :host > io-properties {
@@ -28,7 +28,7 @@ export class IoElementDemo extends IoElement {
       margin-bottom: calc(2 * var(--io-spacing));
     }
     :host > io-properties > :nth-child(3) {
-      margin-right: calc(var(--io-item-height) + var(--io-spacing));
+      margin-right: calc(var(--io-field-height) + var(--io-spacing));
     }
     :host > .io-content {
       border-radius: var(--io-border-radius);
@@ -41,7 +41,7 @@ export class IoElementDemo extends IoElement {
       background-image: none;
     }
     :host:not([expanded]) > .io-content {
-      margin-right: calc(var(--io-item-height) + calc(3 * var(--io-spacing)));
+      margin-right: calc(var(--io-field-height) + calc(3 * var(--io-spacing)));
     }
     `;
   }
@@ -49,28 +49,28 @@ export class IoElementDemo extends IoElement {
     return {
       element: {
         type: String,
-        reflect: -1,
+        reflect: 'attr',
       },
       properties: {
         type: Object,
-        reflect: -1,
+        reflect: 'attr',
         observe: true,
       },
       width: {
         type: String,
-        reflect: -1,
+        reflect: 'attr',
       },
       height: {
         type: String,
-        reflect: -1,
+        reflect: 'attr',
       },
       config: {
         type: Object,
-        reflect: -1,
+        reflect: 'attr',
       },
       expanded: {
         type: Boolean,
-        reflect: 2,
+        reflect: 'both',
       }
     };
   }
@@ -90,7 +90,7 @@ export class IoElementDemo extends IoElement {
   };
   changed() {
     const properties = this.properties;
-    const elements: any = [['io-boolicon', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];
+    const elements: any = [['io-boolean', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];
     if (this.expanded) {
       elements.push(['io-properties', {
         value: properties,

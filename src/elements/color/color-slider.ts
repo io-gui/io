@@ -1,5 +1,5 @@
-import {RegisterIoElement} from '../../iogui.js';
-import {IoSlider} from '../core/slider.js';
+import { RegisterIoElement } from '../../core/element.js';
+import {IoSlider} from '../sliders/slider.js';
 import {IoColorMixin} from './color.js';
 
 /*
@@ -25,7 +25,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
       vec4 fillColor = vec4(.8, .8, .8, 1.);
       vec4 sliderColor = vec4(0.);
       float slotWidth = cssStrokeWidth * 1.5;
-      float radius = cssItemHeight / 4.;
+      float radius = cssFieldHeight / 4.;
       float stroke = cssStrokeWidth;
       float strokeShape = min(circle(position, radius + stroke), rectangle(position - vec2(0., 2500.), vec2(slotWidth + stroke, 5000.)));
       sliderColor = mix(vec4(slotColor.rgb, 1.), sliderColor, strokeShape);
@@ -55,33 +55,33 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
   valueMutated() {
     this.valueChanged();
   }
-  applyAria() {
+  deprecated_applyAria() {
     // TODO
   }
   _onKeydown(event: KeyboardEvent) {
     super._onKeydown(event);
-    this._notifyValueChange();
+    this._notifyValueInput();
   }
   _setIncrease() {
   }
   _setDecrease() {
   }
   _setMin() {
-    this._setValue(0, 0);
+    this._inputValue(0, 0);
   }
   _setMax() {
-    this._setValue(1, 1);
+    this._inputValue(1, 1);
   }
   _onPointermoveThrottled(event: PointerEvent) {
     super._onPointermoveThrottled(event);
-    this._notifyValueChange();
+    this._notifyValueInput();
   }
-  _notifyValueChange() {
+  _notifyValueInput() {
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    this.dispatchEvent('value-set', {property: 'value', value: this.value}, false);
+    this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _setValue(x: number, y?: number) {
+  _inputValue(x: number, y?: number) {
     // NOTE: implement in subclass
   }
 }

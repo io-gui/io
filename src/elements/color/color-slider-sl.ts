@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../iogui.js';
+import { RegisterIoElement } from '../../core/element.js';
 import {IoColorSlider} from './color-slider.js';
 
 /*
@@ -53,7 +53,7 @@ export class IoColorSliderSl extends IoColorSlider {
       } else {
         this.hsl[2] = Math.max(0, this.hsl[2] - 0.01);
       }
-      this.setValueFromHsl();
+      this.valueFromHsl();
     } else if (event.shiftKey && event.key === 'ArrowUp') {
       event.preventDefault();
       if (this.horizontal) {
@@ -61,7 +61,7 @@ export class IoColorSliderSl extends IoColorSlider {
       } else {
         this.hsl[1] = Math.min(1, this.hsl[1] + 0.01);
       }
-      this.setValueFromHsl();
+      this.valueFromHsl();
     } else if (event.shiftKey && event.key === 'ArrowRight') {
       event.preventDefault();
       if (this.horizontal) {
@@ -69,7 +69,7 @@ export class IoColorSliderSl extends IoColorSlider {
       } else {
         this.hsl[2] = Math.min(1, this.hsl[2] + 0.01);
       }
-      this.setValueFromHsl();
+      this.valueFromHsl();
     } else if (event.shiftKey && event.key === 'ArrowDown') {
       event.preventDefault();
       if (this.horizontal) {
@@ -77,14 +77,14 @@ export class IoColorSliderSl extends IoColorSlider {
       } else {
         this.hsl[1] = Math.max(0, this.hsl[1] - 0.01);
       }
-      this.setValueFromHsl();
+      this.valueFromHsl();
     } else {
       super._onKeydown(event);
     }
   }
-  _setValue(x: number, y: number) {
+  _inputValue(x: number, y: number) {
     this.hsl[1] = x;
     this.hsl[2] = y;
-    this.setValueFromHsl();
+    this.valueFromHsl();
   }
 }

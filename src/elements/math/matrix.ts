@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 
 /*
  * Extends `IoElement`. Implements `IoNumber`.
@@ -48,7 +48,7 @@ export class IoMatrix extends IoElement {
       },
       columns: {
         value: 4,
-        reflect: 1,
+        reflect: 'prop',
       },
     };
   }
@@ -87,7 +87,7 @@ export class IoMatrix extends IoElement {
           id: String(c),
           value: this.value[c],
           step: this.step,
-          'on-value-set': this._onValueSet
+          'on-value-input': this._onValueSet
         }]);
       }
     }

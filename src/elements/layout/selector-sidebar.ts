@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../iogui.js';
+import { RegisterIoElement } from '../../core/element.js';
 import {IoSelector} from './selector.js';
 import './sidebar.js';
 
@@ -59,11 +59,11 @@ export class IoSelectorSidebar extends IoSelector {
       collapseWidth: 410,
       collapsed: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       right: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
     };
   }

@@ -1,7 +1,8 @@
-import {IoElement, RegisterIoElement, Binding} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { Binding } from '../../core/internals/binding.js';
 import {Options} from '../../models/options.js';
 import {Item} from '../../models/item.js';
-import {IoLayerSingleton as Layer} from '../core/layer.js';
+import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuItem} from './menu-item.js';
 
 const rects = new WeakMap();
@@ -112,11 +113,11 @@ export class IoMenuOptions extends IoElement {
       value: null,
       expanded: {
         value: false,
-        reflect: 1,
+        reflect: 'prop',
       },
       horizontal: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       position: 'right',
       depth: Infinity,
@@ -124,11 +125,11 @@ export class IoMenuOptions extends IoElement {
       search: String,
       overflow: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       inlayer: {
         type: Boolean,
-        reflect: 1,
+        reflect: 'prop',
       },
       slotted: Array,
       $parent: null,
@@ -155,7 +156,7 @@ export class IoMenuOptions extends IoElement {
     }
     if (item !== (this as any)) {
       event.stopImmediatePropagation();
-      if (d.value !== undefined && d.selectable !== false) this.setValue(d.value);
+      if (d.value !== undefined && d.selectable !== false) this.inputValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
       this.throttle(this._onCollapse);
     }

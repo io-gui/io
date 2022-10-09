@@ -1,11 +1,9 @@
-import {IoNode, RegisterIoNode} from '../../iogui.js';
+import { IoNode, RegisterIoNode } from '../../core/node.js';
 
-if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
-if (!('PushManager' in window)) { console.warn('No Push API Support!'); }
-
-/*
-
- **/
+debug: {
+  if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
+  if (!('PushManager' in window)) { console.warn('No Push API Support!'); }
+}
 
 @RegisterIoNode
 export class IoServiceLoader extends IoNode {
@@ -20,9 +18,9 @@ export class IoServiceLoader extends IoNode {
   constructor(props?: any) {
     super(props);
     this.requestNotification = this.requestNotification.bind(this);
-    if ('serviceWorker' in navigator) void this.init();
+    if ('serviceWorker' in navigator) void this.activate();
   }
-  async init() {
+  async activate() {
     const serviceWorkerRegistration = await navigator.serviceWorker.register(this.path);
     void serviceWorkerRegistration.update();
     navigator.serviceWorker.addEventListener('message', this.onServiceWorkerMessage);

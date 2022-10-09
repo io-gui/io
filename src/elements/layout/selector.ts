@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {Options} from '../../models/options.js';
 // TODO: use IoContent for caching and display.
 
@@ -82,7 +82,7 @@ export class IoSelector extends IoElement {
         observe: true,
       },
       selected: {
-        reflect: 1,
+        reflect: 'prop',
       },
       cache: Boolean,
       _caches: Object,
@@ -105,7 +105,7 @@ export class IoSelector extends IoElement {
   }
   constructor(props?: any) {
     super(props);
-    this._selectDefault();
+    this.optionsChanged();
   }
   _selectDefault() {
     // setTimeout(()=> {

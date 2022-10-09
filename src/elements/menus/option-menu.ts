@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {Options} from '../../models/options.js';
 import {Item} from '../../models/item.js';
 import './menu-item.js';
@@ -58,11 +58,11 @@ export class IoOptionMenu extends IoElement {
   static get Properties(): any {
     return {
       value: {
-        reflect: -1,
+        reflect: 'attr',
       },
       options: {
         type: Options,
-        reflect: -1
+        reflect: 'attr'
       },
       role: 'button',
     };
@@ -75,9 +75,9 @@ export class IoOptionMenu extends IoElement {
     // TODO: Fix Path convering values to string type.
     if (event.detail.leaf !== undefined) {
       try {
-        this.setValue(JSON.parse(event.detail.leaf));
+        this.inputValue(JSON.parse(event.detail.leaf));
       } catch (error) {
-        this.setValue(event.detail.leaf);
+        this.inputValue(event.detail.leaf);
       }
     }
   }

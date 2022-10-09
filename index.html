@@ -63,7 +63,7 @@
 
     <!-- Import maps polyfill -->
     <!-- Remove this when import maps will be widely supported -->
-    <script async src="https://unpkg.com/es-module-shims@1.5.17/dist/es-module-shims.js"></script>
+    <script async src="https://unpkg.com/es-module-shims@1.6.0/dist/es-module-shims.js"></script>
     <script type="importmap">
       {
         "imports": {
@@ -113,7 +113,7 @@
   <body>
     <script type="module">
 
-    import {RegisterIoElement, Options, Path, IoSelectorTabs, IoStorageFactory as $} from 'io-gui';
+    import { Options, RegisterIoElement, Path, IoSelectorTabs, IoStorageFactory as $ } from 'io-gui';
 
     const OPTIONS = new Options([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
@@ -266,7 +266,7 @@
               ['iframe', {name: 'todo', title: 'TODO MVC', src: './demos/todomvc/index.html'}],
               // ['io-demo-three', {name: 'three', import: './three-ui/demo/three.js'}],
             ]}],
-            ['io-test', {name: 'tests', title: 'Tests', import: './build/iogui.test.js'}],
+            ['io-gui-test-page', {name: 'tests', title: 'Tests', import: './build/iogui.test.js'}],
           ]
         };
       }

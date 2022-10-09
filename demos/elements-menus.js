@@ -1,4 +1,4 @@
-import {IoElement, RegisterIoElement} from '../build/iogui.js';
+import { IoElement, RegisterIoElement } from '../build/iogui.js';
 import {Options, Item} from '../build/iogui.js';
 
 const suboptions = new Options();
@@ -95,7 +95,7 @@ export class IoDemoElementsMenus extends IoElement {
         ['div', {class: 'io-row'}, [
           ['io-menu-options', {options: menuoptions, searchable: true}],
           ['div', {class: 'io-column'}, [
-            ['div', [['span', {class: 'io-item'}, 'Selected:'], ['io-item', {value: menuValue}]]],
+            ['div', [['span', {class: 'io-field'}, 'Selected:'], ['io-field', {value: menuValue}]]],
             ['io-menu-item', {label: 'menu item', option: option}],
             ['div', {class: 'io-content'}, [
               ['span', 'click for menu'],

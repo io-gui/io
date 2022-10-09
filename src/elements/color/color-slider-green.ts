@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../iogui.js';
+import { RegisterIoElement } from '../../core/element.js';
 import {IoColorSlider} from './color-slider.js';
 
 /*
@@ -34,14 +34,14 @@ export class IoColorSliderGreen extends IoColorSlider {
   }
   _setIncrease() {
     this.rgb[1] = Math.min(1, this.rgb[1] + 0.01);
-    this.setValueFromRgb();
+    this.valueFromRgb();
   }
   _setDecrease() {
     this.rgb[1] = Math.max(0, this.rgb[1] - 0.01);
-    this.setValueFromRgb();
+    this.valueFromRgb();
   }
-  _setValue(x: number) {
+  _inputValue(x: number) {
     this.rgb[1] = x;
-    this.setValueFromRgb();
+    this.valueFromRgb();
   }
 }

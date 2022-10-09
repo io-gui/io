@@ -1,5 +1,5 @@
-import {IoElement, RegisterIoElement} from '../../iogui.js';
-import {Config} from './config.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { Config } from './config.js';
 
 /*
  * Extends `IoElement`.
@@ -65,7 +65,7 @@ export class IoProperties extends IoElement {
     :host:not([horizontal])[labeled] {
       grid-template-columns: min-content minmax(4em, 1fr);
     }
-    :host > span.io-item {
+    :host > span.io-field {
       max-width: 8em !important;
       width: 100%;
     }
@@ -103,11 +103,11 @@ export class IoProperties extends IoElement {
     return {
       labeled: {
         value: true,
-        reflect: 1,
+        reflect: 'prop',
       },
       horizontal: {
         value: false,
-        reflect: 1,
+        reflect: 'prop',
       },
       value: {
         type: Object,
@@ -182,10 +182,10 @@ export class IoProperties extends IoElement {
         const tag = config[c][0];
         const protoConfig = config[c][1];
         const label = config[c].label || c;
-        const itemConfig: any = {title: label, id: c, value: this.value[c], 'on-value-set': this._onValueSet};
+        const itemConfig: any = {title: label, id: c, value: this.value[c], 'on-value-input': this._onValueSet};
         itemConfig.config = this.config;
         elements.push(
-          this.labeled ? ['span', {class: 'io-item'}, label + ':'] : null,
+          this.labeled ? ['span', {class: 'io-field'}, label + ':'] : null,
           [tag, Object.assign(itemConfig, protoConfig)],
         );
       }

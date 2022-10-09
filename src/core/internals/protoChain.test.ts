@@ -1,4 +1,4 @@
-import { ProtoChain, IoNode, IoNodeMixin, PropertiesDeclaration, ListenersDeclaration, IoElement } from '../../iogui.js';
+import {ProtoChain, IoNode, IoNodeMixin, IoProperty, PropertyDeclarations, ListenersDeclaration, IoElement, RegisterIoNode} from '../../iogui.js';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -12,12 +12,42 @@ class HTMLElement1 extends HTMLElement {}
 class HTMLElement2 extends HTMLElement1 {}
 class HTMLElement3 extends HTMLElement2 {}
 
-class IoNode1 extends IoNode {}
+@RegisterIoNode
+class IoNode1 extends IoNode {
+  static get Properties(): PropertyDeclarations {
+    return {
+      prop1: {
+        notify: false
+      }
+    };
+  }
+  @IoProperty({observe: true})
+  declare prop2: any;
+}
+
+@RegisterIoNode
+class IoNode3 extends IoNode1 {
+  static get Properties(): PropertyDeclarations {
+    return {
+      prop1: {
+        notify: true,
+        reflect: 'prop'
+      }
+    };
+  }
+  @IoProperty({notify: true, observe: true})
+  declare prop1: any;
+  @IoProperty({value: 'foo', reflect: 'none'})
+  declare prop2: any;
+  @IoProperty({reflect: 'attr'})
+  declare prop3: any;
+}
+
 class IoElement1 extends IoElement {}
 class IoNode2 extends IoNodeMixin(Object3) {}
 
 class FakeIoNode1 {
-  static get Properties(): PropertiesDeclaration {
+  static get Properties(): PropertyDeclarations {
     return {
       prop1: {
         notify: false
@@ -44,7 +74,7 @@ class FakeIoNode2 extends FakeIoNode1 {
   function2() {}
   onFunction2() {}
   _onFunction2() {}
-  static get Properties(): PropertiesDeclaration {
+  static get Properties(): PropertyDeclarations {
     return {
       prop1: {
         observe: true
@@ -92,7 +122,7 @@ export default class {
         protoChain = new ProtoChain(FakeIoNode2);
         chai.expect(protoChain.functions).to.be.eql(['onFunction2', '_onFunction2', 'onFunction1', '_onFunction1']);
       });
-      it('Should bind all auto-binding functions from the `.functions` array with `.autobindFunctions(node)` function', () => {
+      it('Should bind auto-binding functions with `.autobindFunctions(node)` function', () => {
         const protoChain = new ProtoChain(FakeIoNode2);
         const node = new FakeIoNode2();
         protoChain.autobindFunctions(node as unknown as IoNode);
@@ -103,17 +133,34 @@ export default class {
         chai.expect(node.onFunction2.name).to.be.equal('bound onFunction2');
         chai.expect(node._onFunction2.name).to.be.equal('bound _onFunction2');
       });
-      it('Should include all property definitions declared in `static get Properties()` return oject', () => {
+      it('Should include all property declarations declared in `static get Properties()` return oject', () => {
         let protoChain = new ProtoChain(FakeIoNode1);
         chai.expect(Object.keys(protoChain.properties)).to.be.eql(['prop1']);
         chai.expect(protoChain.properties).to.be.eql({
-          prop1:{value: undefined, type: undefined, binding: undefined, notify: false, reflect: 0, observe: false},
+          prop1:{value: undefined, type: undefined, binding: undefined, notify: false, reflect: undefined, observe: undefined},
         });
         protoChain = new ProtoChain(FakeIoNode2);
         chai.expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2']);
         chai.expect(protoChain.properties).to.be.eql({
-          prop1:{value: undefined, type: undefined, binding: undefined, notify: false, reflect: 0, observe: true},
-          prop2:{value: undefined, type: undefined, binding: undefined, notify: true, reflect: 0, observe: false},
+          prop1:{value: undefined, type: undefined, binding: undefined, notify: false, reflect: undefined, observe: true},
+          prop2:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: undefined, observe: undefined},
+        });
+      });
+      it('Should include all property declarations declared in IoProperty decorator', () => {
+        let protoChain = new ProtoChain(IoNode1);
+        chai.expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
+        chai.expect(protoChain.properties).to.be.eql({
+          lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: 'attr', observe: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, notify: false, reflect: undefined, observe: undefined},
+          prop2:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: undefined, observe: true},
+        });
+        protoChain = new ProtoChain(IoNode3);
+        chai.expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1', 'prop3']);
+        chai.expect(protoChain.properties).to.be.eql({
+          lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: 'attr', observe: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, notify: true, reflect: 'prop', observe: true},
+          prop2:{value: 'foo', type: String, binding: undefined, notify: undefined, reflect: 'none', observe: true},
+          prop3:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: 'attr', observe: undefined},
         });
       });
       it('Should include all listner definitions declared in `static get Listeners()` return oject', () => {

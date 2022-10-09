@@ -1,4 +1,4 @@
-import {RegisterIoElement} from '../../iogui.js';
+import { RegisterIoElement } from '../../core/element.js';
 import {IoColorSlider} from './color-slider.js';
 
 /*
@@ -39,14 +39,14 @@ export class IoColorSliderSaturation extends IoColorSlider {
   }
   _setIncrease() {
     this.hsv[1] = Math.min(1, this.hsv[1] + 0.01);
-    this.setValueFromHsv();
+    this.valueFromHsv();
   }
   _setDecrease() {
     this.hsv[1] = Math.max(0, this.hsv[1] - 0.01);
-    this.setValueFromHsv();
+    this.valueFromHsv();
   }
-  _setValue(x: number) {
+  _inputValue(x: number) {
     this.hsv[1] = x;
-    this.setValueFromHsv();
+    this.valueFromHsv();
   }
 }
