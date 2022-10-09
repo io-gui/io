@@ -1,6 +1,14 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { IoProperty } from '../../core/internals/property.js';
 
+// let focusBacktrack = new WeakMap();
+// const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
+// function setBacktrack(element, dir, target) {
+//   const backtrack = focusBacktrack.get(element) || {};
+//   backtrack[backtrackDir[dir]] = target;
+//   focusBacktrack.set(element, backtrack);
+// }
+
 @RegisterIoElement
 export class IoField extends IoElement {
   static get Style() {
@@ -50,6 +58,7 @@ export class IoField extends IoElement {
 
   static get Listeners() {
     return {
+      'focus-to': '_onFocusTo',
       'focus': '_onFocus',
       'pointerdown': '_onPointerdown',
       'click': '_onClick',
@@ -106,6 +115,117 @@ export class IoField extends IoElement {
     }
   }
   _onKeyup(event: KeyboardEvent) {}
+  _onFocusTo(event: CustomEvent) {
+    const src = event.composedPath()[0];
+    const dir = event.detail.dir;
+    const rect = event.detail.rect;
+    rect.center = {x: rect.x + rect.width / 2, y: rect.y + rect.height / 2};
+
+    if (src !== this as any) {
+      let closest = src;
+      let closestX = Infinity;
+      let closestY = Infinity;
+
+      // TODO: improve backtracking
+      // const backtrack = focusBacktrack.get(src);
+      // if (backtrack && backtrack[dir]) {
+      //   backtrack[dir].focus();
+      //   setBacktrack(backtrack[dir], dir, src);
+      //   return;
+      // }
+
+      const siblings = this.querySelectorAll('[tabindex="0"]:not([disabled])');
+
+      for (let i = siblings.length; i--;) {
+
+        if (!siblings[i].offsetParent) {
+          continue;
+        }
+        // TODO: unhack
+        const sStyle = window.getComputedStyle(siblings[i]);
+        if (sStyle.visibility !== 'visible') {
+          continue;
+        }
+
+        const sRect = siblings[i].getBoundingClientRect();
+        sRect.center = {x: sRect.x + sRect.width / 2, y: sRect.y + sRect.height / 2};
+
+        // TODO: improve automatic direction routing.
+        switch (dir) {
+          case 'right': {
+            if (sRect.left >= (rect.right - 1)) {
+              const distX = Math.abs(sRect.left - rect.right);
+              const distY = Math.abs(sRect.center.y - rect.center.y);
+              if (distX < closestX || distY < closestY / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distX === closestX && distY < closestY) {
+                closest = siblings[i];
+                closestY = distY;
+              }
+            }
+            break;
+          }
+          case 'left': {
+            if (sRect.right <= (rect.left + 1)) {
+              const distX = Math.abs(sRect.right - rect.left);
+              const distY = Math.abs(sRect.center.y - rect.center.y);
+              if (distX < closestX || distY < closestY / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distX === closestX && distY < closestY) {
+                closest = siblings[i];
+                closestY = distY;
+              }
+            }
+            break;
+          }
+          case 'down': {
+            if (sRect.top >= (rect.bottom - 1)) {
+              const distX = Math.abs(sRect.center.x - rect.center.x);
+              const distY = Math.abs(sRect.top - rect.bottom);
+              if (distY < closestY || distX < closestX / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distY === closestY && distX < closestX) {
+                closest = siblings[i];
+                closestX = distX;
+              }
+            }
+            break;
+          }
+          case 'up':{
+            if (sRect.bottom <= (rect.top + 1)) {
+              const distX = Math.abs(sRect.center.x - rect.center.x);
+              const distY = Math.abs(sRect.bottom - rect.top);
+              if (distY < closestY || distX < closestX / 3) {
+                closest = siblings[i];
+                closestX = distX;
+                closestY = distY;
+              } else if (distY === closestY && distX < closestX) {
+                closest = siblings[i];
+                closestX = distX;
+              }
+            }
+            break;
+          }
+        }
+      }
+
+      if (closest !== src) {
+        (closest as any).focus();
+        // setBacktrack(closest, dir, src);
+        event.stopPropagation();
+      }
+    }
+  }
+  focusTo(dir: string) {
+    const rect = this.getBoundingClientRect();
+    this.dispatchEvent('focus-to', {dir: dir, rect: rect}, true);
+  }
   getCaretPosition() {
     let position = 0;
     const selection = window.getSelection();

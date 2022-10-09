@@ -1,102 +1,10 @@
 import { Change, IoNode, RegisterIoNode, IoElement, RegisterIoElement } from '../iogui.js';
 
-// TODO: COMPLETE TEST COVERAGE
-
 const element = new IoElement();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
 
-@RegisterIoNode
-class TestNode extends IoNode {
-  static get Properties(): any {
-    return {
-      prop0: String,
-      prop2: Infinity,
-    };
-  }
-}
-
-@RegisterIoElement
-export class TestElement extends IoElement {
-  static get Properties(): any {
-    return {
-      prop0: -1,
-      prop1: {
-        value: 'default',
-      },
-      // Internal counters
-      _changedCounter: 0,
-      _prop1ChangedCounter: 0,
-      _prop1AltCounter: 0,
-      _prop1ChangeEvent: null,
-    };
-  }
-  static get Listeners() {
-    return {
-      'prop0-changed': 'onProp1Change',
-      'custom-event': 'onCustomEvent',
-    };
-  }
-  reset() {
-    this.prop0 = -1;
-    this.prop1 = 'default';
-    this._changedCounter = 0;
-    this._prop1ChangedCounter = 0;
-    this._prop1AltCounter = 0;
-    this._prop1Counter = 0;
-    this._customHandlerCounter = 0;
-    this._prop1AltChangeEvent = null;
-    this._prop1ChangeEvent = null;
-    this._customHandlerChangeEvent = null;
-  }
-  constructor(initProps: any) {
-    super(initProps);
-    this.template([['test-subelement', {id: 'subelement', prop0: this.bind('prop0')}]]);
-    this.subnode = new TestNode({prop2: this.bind('prop0')});
-  }
-  changed() {
-    this._changedCounter++;
-  }
-  prop1Changed(change: Change) {
-    this._prop1ChangedCounter++;
-    this._prop1ChangedChange = change;
-  }
-  onProp1ChangeAlt(event: CustomEvent) {
-    this._prop1AltCounter++;
-    this._prop1AltChangeEvent = event;
-  }
-  onProp1Change(event: CustomEvent) {
-    this._prop1Counter++;
-    this._prop1ChangeEvent = event;
-  }
-  onCustomEvent(event: CustomEvent) {
-    this._customHandlerCounter++;
-    this._customHandlerChangeEvent = event;
-  }
-}
-
-@RegisterIoElement
-export class TestSubelement extends IoElement {
-  static get Properties(): any {
-    return {
-      prop0: 0,
-    };
-  }
-}
-
 export default class {
-  _changedCounter = 0;
-  element: TestElement;
-  constructor() {
-    this._changedCounter = 0;
-    this.element = new TestElement({'on-prop0-changed': this.changed.bind(this), 'on-prop1-changed': 'onProp1ChangeAlt'});
-    document.body.appendChild(this.element as unknown as HTMLElement);
-  }
-  changed(event: CustomEvent) {
-    if (event.target === this.element as unknown as HTMLElement) {
-      this._changedCounter++;
-    }
-  }
   run() {
     describe('IoElement', () => {
       describe('Initialization', () => {
@@ -105,7 +13,6 @@ export default class {
           chai.expect(element.disposeDeep).to.be.a('function');
           chai.expect(element.traverse).to.be.a('function');
           chai.expect(element.setAttribute).to.be.a('function');
-          chai.expect(element.focusTo).to.be.a('function');
         });
         it('Should initialize property definitions correctly', () => {
           // Default properties
@@ -272,6 +179,18 @@ export default class {
     });
     describe('IoElement API', () => {
 
+      class TestIoNode1 extends IoNode {
+        static get Properties(): any {
+          return {
+            prop0: -1,
+            prop1: {
+              value: 'default',
+            },
+          };
+        }
+      }
+      RegisterIoNode(TestIoNode1);
+
       class TestIoElement1 extends IoElement {
         static get Properties(): any {
           return {
@@ -279,7 +198,7 @@ export default class {
             prop1: {
               value: 'default',
             },
-          }
+          };
         }
       }
       RegisterIoElement(TestIoElement1);
@@ -346,82 +265,90 @@ export default class {
 
         class TestIoElement3 extends TestIoElement1 {
           _changedCounter = 0;
+          _prop0ChangedCounter = 0;
+          _prop0ChangedChange?: Change;
           _prop1ChangedCounter = 0;
-          _prop1AltCounter = 0;
+          _prop1ChangedChange?: Change;
+          _prop1ChangeEventCounter = 0;
           _prop1ChangeEvent: any = null;
+          _customEventCounter = 0;
+          _customEvent: any = null;
           static get Listeners() {
             return {
-              'prop0-changed': 'onProp1Change',
+              'prop1-changed': 'onProp1ChangeEvent',
               'custom-event': 'onCustomEvent',
             };
           }
           changed() {
             this._changedCounter++;
           }
+          prop0Changed(change: Change) {
+            this._prop0ChangedCounter++;
+            this._prop0ChangedChange = change;
+          }
           prop1Changed(change: Change) {
             this._prop1ChangedCounter++;
             this._prop1ChangedChange = change;
           }
-          onProp1ChangeAlt(event: CustomEvent) {
-            this._prop1AltCounter++;
-            this._prop1AltChangeEvent = event;
-          }
-          onProp1Change(event: CustomEvent) {
-            this._prop1Counter++;
+          onProp1ChangeEvent(event: CustomEvent) {
+            this._prop1ChangeEventCounter++;
             this._prop1ChangeEvent = event;
           }
           onCustomEvent(event: CustomEvent) {
-            this._customHandlerCounter++;
-            this._customHandlerChangeEvent = event;
+            this._customEventCounter++;
+            this._customEvent = event;
           }
         }
         RegisterIoElement(TestIoElement3);
 
         let _changedCounter = 0;
+
         function onChange() {
           _changedCounter++;
         }
 
         it('Should corectly invoke handler functions on change', () => {
           const element = new TestIoElement3({'on-prop0-changed': onChange, 'on-prop1-changed': 'onProp1ChangeAlt'});
+          element.dispatchEvent('custom-event');
           element.prop0 = 1;
           element.prop1 = 'test';
-          chai.expect(element._prop1AltCounter).to.equal(1);
-          chai.expect(element._changedCounter).to.equal(2);
           chai.expect(_changedCounter).to.equal(1);
+          chai.expect(element._changedCounter).to.equal(2);
+          chai.expect(element._prop0ChangedCounter).to.equal(1);
+          chai.expect(element._prop1ChangedCounter).to.equal(1);
+          chai.expect(element._prop1ChangeEventCounter).to.equal(1);
+          chai.expect(element._customEventCounter).to.equal(1);
         });
         it('Should dispatch correct event payloads to handlers', () => {
           const element = new TestIoElement3();
+          element.dispatchEvent('custom-event', {asd: ''});
           element.prop0 = 1;
-          element.prop0 = 0;
-          console.log(element._prop1ChangeEvent);
-          // chai.expect(element._prop1ChangeEvent.srcElement).to.equal(element);
-          chai.expect(element._prop1ChangeEvent.detail.value).to.equal(0);
-          element.$.subelement.prop0 = 2;
-          // chai.expect(element._prop1ChangeEvent.detail.oldValue).to.equal(0);
-          // chai.expect(element._prop1ChangeEvent.detail.value).to.equal(2);
-          // element.dispatchEvent('custom-event', {data: 'io'});
-          // chai.expect(element._customHandlerChangeEvent.detail.data).to.equal('io');
+          element.prop1 = 'foo';
+          chai.expect(element._prop0ChangedChange).to.eql({oldValue: -1, property: 'prop0', value: 1});
+          chai.expect(element._prop1ChangedChange).to.eql({oldValue: 'default', property: 'prop1', value: 'foo'});
+          chai.expect(element._prop1ChangedChange).to.eql({oldValue: 'default', property: 'prop1', value: 'foo'});
+          chai.expect(element._prop1ChangeEvent.detail).to.eql({property: 'prop1', value: 'foo', oldValue: 'default'});
         });
       });
       describe('Binding', () => {
+        const element = new TestIoElement1();
+        const node = new TestIoNode1();
+        element.template([
+          ['test-io-element1', {id: 'subelement', prop0: element.bind('prop0')}]
+        ]);
         it('Should update bound values correctly', () => {
-          this.element.prop0 = Infinity;
-          chai.expect(this.element.$.subelement.prop0).to.equal(Infinity);
-          this.element.$.subelement.prop0 = 0;
-          chai.expect(this.element.prop0).to.equal(0);
+          element.prop0 = Infinity;
+          console.log(element.$.subelement);
+          chai.expect(element.$.subelement.prop0).to.equal(Infinity);
+          element.$.subelement.prop0 = -2;
+          chai.expect(element.prop0).to.equal(-2);
         });
         it('Should bind to Node node', () => {
-          this.element.prop0 = Infinity;
-          chai.expect(this.element.subnode.prop2).to.equal(Infinity);
-          this.element.subnode.prop2 = 0;
-          chai.expect(this.element.prop0).to.equal(0);
-        });
-        it('Should disconnect binding when Node node is disconnected', () => {
-          this.element.prop0 = Infinity;
-          chai.expect(this.element.subnode.prop2).to.equal(Infinity);
-          this.element.subnode.prop2 = 2;
-          chai.expect(this.element.prop0).to.equal(2);
+          node.prop1 = element.bind('prop1');
+          node.prop1 = 'a';
+          chai.expect(element.prop1).to.equal('a');
+          element.prop1 = 'b';
+          chai.expect(element.prop1).to.equal('b');
         });
       });
     });
