@@ -546,20 +546,20 @@ export interface ChangeEvent extends CustomEvent {
 	readonly detail: Change;
 	readonly path: EventTarget[];
 }
+export declare type VDOMArray = [
+	string,
+	Record<string, any> | string | VDOMArray[]
+] | [
+	string,
+	Record<string, any> | string,
+	VDOMArray[] | string
+];
+export declare const buildTree: () => (node: VDOMArray) => any;
 /**
  * Register function for `IoElement`. Registers custom element.
  * @param {IoElement} elementConstructor - Element class to register.
  */
 export declare function RegisterIoElement(elementConstructor: typeof IoElement): void;
-export declare type VirtualDOMElement = [
-	string,
-	Record<string, any> | string
-] | [
-	string,
-	Record<string, any> | string,
-	VirtualDOMElement[] | string
-];
-export declare const buildTree: () => (node: VirtualDOMElement) => any;
 declare const IoElement_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
@@ -606,7 +606,6 @@ export declare class IoElement extends IoElement_base {
 	id: string;
 	hidden: boolean;
 	disabled: boolean;
-	static get Listeners(): any;
 	static get observedAttributes(): string[];
 	attributeChangedCallback(prop: string, oldValue: any, newValue: any): void;
 	/**
@@ -626,6 +625,7 @@ export declare class IoElement extends IoElement_base {
 	disposeDeep(host: HTMLElement, child: any): void;
 	/**
 	 * Recurively traverses vDOM.
+	 * TODO: test element.traverse() function!
 	 * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
 	 * @param {HTMLElement} [host] - Optional template target.
 	 */
@@ -635,7 +635,7 @@ export declare class IoElement extends IoElement_base {
 	* Update textContent via TextNode is better for layout performance.
 	* @param {HTMLElement} element - Element to flatten.
 	*/
-	flattenTextNode(element: HTMLElement | IoElement): void;
+	_flattenTextNode(element: HTMLElement | IoElement): void;
 	get textNode(): any;
 	set textNode(value: any);
 	applyProperties(props: any): void;
@@ -647,8 +647,6 @@ export declare class IoElement extends IoElement_base {
 	setAttribute(attr: string, value: boolean | number | string): void;
 	labelChanged(): void;
 	disabledChanged(): void;
-	_onFocusTo(event: CustomEvent): void;
-	focusTo(dir: string): void;
 }
 export interface StorageProps {
 	key: string;
@@ -828,6 +826,7 @@ export declare class IoField extends IoElement {
 	reverse: boolean;
 	selected: boolean;
 	static get Listeners(): {
+		"focus-to": string;
 		focus: string;
 		pointerdown: string;
 		click: string;
@@ -841,6 +840,8 @@ export declare class IoField extends IoElement {
 	_onClick(): void;
 	_onKeydown(event: KeyboardEvent): void;
 	_onKeyup(event: KeyboardEvent): void;
+	_onFocusTo(event: CustomEvent): void;
+	focusTo(dir: string): void;
 	getCaretPosition(): number;
 	setCaretPosition(position: number): void;
 	changed(): void;
