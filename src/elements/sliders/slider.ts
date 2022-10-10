@@ -21,11 +21,11 @@ export class IoSlider extends IoGl {
       border: var(--io-border);
       border-radius: var(--io-border-radius);
       border-color: var(--io-color-border-inset);
-      min-width: var(--io-field-height);
-      min-height: var(--io-field-height);
+      min-width: var(--io-line-height);
+      min-height: var(--io-line-height);
       align-self: stretch;
       justify-self: stretch;
-      flex-basis: calc(var(--io-field-height), var(--io-spacing));
+      flex-basis: calc(var(--io-line-height), var(--io-spacing));
     }
     :host[horizontal] {
       cursor: ew-resize;
