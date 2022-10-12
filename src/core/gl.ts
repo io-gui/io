@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from './element.js';
-import {PropertyInstance, PropertyDeclaration} from './internals/property.js';
-import {IoThemeSingleton} from './theme.js';
+import { PropertyInstance, PropertyDeclaration, IoProperty } from './internals/property.js';
+import { IoThemeSingleton } from './theme.js';
 
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true}) as WebGLRenderingContext;
@@ -74,20 +74,18 @@ export class IoGl extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      size: [0, 0],
-      color: {
-        value: [1, 1, 1, 1],
-        observe: true,
-      },
-      pxRatio: 1,
-      css: {
-        type: Object,
-        observe: true,
-      },
-    };
-  }
+  @IoProperty({value: [0, 0]})
+  declare size: [number, number];
+
+  @IoProperty({value: [1, 1, 1, 1], observe: true})
+  declare color: [number, number, number, number];
+
+  @IoProperty({value: 1})
+  declare pxRatio: number;
+
+  @IoProperty({observe: true, type: Object})
+  declare theme: typeof IoThemeSingleton;
+
   static get Vert() {
     return /* glsl */`
       attribute vec3 position;
@@ -165,8 +163,8 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
 
-    for (const name in this.css._properties) {
-      const property = this.css._properties[name];
+    for (const name in this.theme._properties) {
+      const property = this.theme._properties[name];
       frag += this.initPropertyUniform(name, property);
     }
 
@@ -212,15 +210,14 @@ export class IoGl extends IoElement {
 
     return program;
   }
-  css: typeof IoThemeSingleton;
   constructor(properties: Record<string, any> = {}) {
     super(properties);
-    this.css = IoThemeSingleton;
+    this.theme = IoThemeSingleton;
 
     // TODO: improve code clarity
     this._vecLengths = {};
-    for (const name in this.css._properties) {
-      const property = this.css._properties[name];
+    for (const name in this.theme._properties) {
+      const property = this.theme._properties[name];
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }
@@ -258,7 +255,7 @@ export class IoGl extends IoElement {
     this.template([['canvas', {id: 'canvas', class: 'io-gl-canvas'}]]);
     this.$.canvas.ctx = this.$.canvas.getContext('2d');
 
-    this.updateCssUniforms();
+    this.updateThemeUniforms();
   }
   onResized() {
     // TODO: consider optimizing
@@ -287,8 +284,8 @@ export class IoGl extends IoElement {
       });
     }
   }
-  cssMutated() {
-    this.updateCssUniforms();
+  themeMutated() {
+    this.updateThemeUniforms();
     this.throttle(this._onRender);
   }
   changed() {
@@ -343,9 +340,9 @@ export class IoGl extends IoElement {
       this.setUniform(name, property.type as unknown as UniformTypes, property.value);
     }
   }
-  updateCssUniforms() {
-    for (const name in this.css._properties) {
-      this.updatePropertyUniform(name, this.css._properties[name]);
+  updateThemeUniforms() {
+    for (const name in this.theme._properties) {
+      this.updatePropertyUniform(name, this.theme._properties[name]);
     }
   }
   setUniform(name: string, type: UniformTypes, value: any) {

@@ -109,7 +109,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     setProperty(name: string, value: any, skipDispatch?: boolean) {
       const prop = this._properties[name];
       const oldValue = prop.value;
-      
+
       if (value !== oldValue) {
         const binding = (value instanceof Binding) ? value : null;
         if (binding) {

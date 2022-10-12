@@ -1,0 +1,1 @@
+{"version":3,"file":"color-vector.d.ts","sourceRoot":"","sources":["../../../src/elements/color/color-vector.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAqB,MAAM,uBAAuB,CAAC;AAErE,OAAO,mBAAmB,CAAC;;;;;;;;;;;;;;;AAe3B,qBACa,aAAc,SAAQ,kBAAuB;IACxD,MAAM,KAAK,KAAK,WAmBf;IACD,MAAM,KAAK,UAAU,IAAI,GAAG,CAQ3B;IACD,WAAW,CAAC,KAAK,EAAE,WAAW;IAW9B,OAAO;IAqBP,UAAU;;;;;CAGX"}

@@ -1,3 +1,4 @@
+import { IoProperty } from './internals/property.js';
 import { IoElement, RegisterIoElement } from './element.js';
 
 let lastFocus: Element | null = null;
@@ -53,15 +54,12 @@ class IoLayer extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      expanded: {
-        value: false,
-        reflect: 'prop',
-      },
-      skipCollapse: Boolean,
-    };
-  }
+  @IoProperty({value: false, reflect: 'prop'})
+  declare expanded: boolean;
+
+  @IoProperty({value: false})
+  declare skipCollapse: boolean;
+
   static get Listeners() {
     return {
       'pointerup': '_onPointerup',

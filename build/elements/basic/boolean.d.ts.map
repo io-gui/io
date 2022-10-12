@@ -1,0 +1,1 @@
+{"version":3,"file":"boolean.d.ts","sourceRoot":"","sources":["../../../src/elements/basic/boolean.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,OAAO,EAAE,MAAM,YAAY,CAAC;AAErC,qBACa,SAAU,SAAQ,OAAO;IAG5B,KAAK,EAAE,OAAO,CAAC;IAGf,IAAI,EAAE,MAAM,CAAC;IAGb,KAAK,EAAE,MAAM,CAAC;IAGd,IAAI,EAAE,MAAM,CAAC;IAErB,QAAQ;IAIR,MAAM;IAGN,IAAI;IAGJ,OAAO;CAiBR"}

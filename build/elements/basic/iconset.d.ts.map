@@ -1,0 +1,1 @@
+{"version":3,"file":"iconset.d.ts","sourceRoot":"","sources":["../../../src/elements/basic/iconset.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAkB,MAAM,oBAAoB,CAAC;AAI5D,cACM,SAAU,SAAQ,MAAM;IAC5B,aAAa,CAAC,IAAI,EAAE,MAAM,EAAE,GAAG,EAAE,MAAM;IAQvC,OAAO,CAAC,IAAI,EAAE,MAAM;CAWrB;AAED,eAAO,MAAM,kBAAkB,WAAkB,CAAC"}

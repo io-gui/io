@@ -177,10 +177,10 @@ export default class {
               eventStack.push(`TestNode: prop0Changed ${this.prop0}`);
             }
             prop1Changed() {
-              eventStack.push(`TestNode: prop1Changed`, this.prop1);
+              eventStack.push('TestNode: prop1Changed', this.prop1);
             }
             changed() {
-              eventStack.push(`TestNode: changed`)
+              eventStack.push('TestNode: changed');
             }
           }
           RegisterIoNode(TestNode);
@@ -212,7 +212,7 @@ export default class {
             }
             constructor(...initProps: any[]) {
               super(...initProps);
-              this.template([['test-subelement', {id: 'subelement', 
+              this.template([['test-subelement', {id: 'subelement',
                 prop0: this.bind('prop0'),
                 prop1: this.bind('prop1'),
               }]]);
@@ -222,7 +222,7 @@ export default class {
               });
             }
             changed() {
-              eventStack.push(`TestElement1: changed`);
+              eventStack.push('TestElement1: changed');
               this._counter++;
             }
             prop0Changed(change: Change) {
@@ -317,7 +317,6 @@ export default class {
               };
             }
             changed() {
-              console.log('changed', this.prop0, this.prop1);
               this.template([['test-subelement', {id: 'subelement',
                 prop0: this.bind('prop0'),
                 prop1: this.bind('prop1'),
@@ -380,7 +379,7 @@ export default class {
           chai.expect(element1.label).to.equal('two');
           chai.expect(element2.label).to.equal('two');
           // unbind
-          element1.unbind('label') 
+          element1.unbind('label');
           element1.label = 'three';
           chai.expect(element1.label).to.equal('three');
           chai.expect(element2.label).to.equal('two');
@@ -389,7 +388,7 @@ export default class {
           element1.label = 'four';
           chai.expect(element1.label).to.equal('four');
           chai.expect(element2.label).to.equal('four');
-          element2.unbind('label') 
+          element2.unbind('label');
           element1.label = 'five';
           chai.expect(element1.label).to.equal('five');
           chai.expect(element2.label).to.equal('four');
@@ -399,7 +398,7 @@ export default class {
           const element2 = new IoElement({label: element1.bind('label')});
           element1.label = 'one';
           chai.expect(element2.label).to.equal('one');
-          element2.unbind('label') 
+          element2.unbind('label');
           element1.label = 'two';
           chai.expect(element1.label).to.equal('two');
           chai.expect(element2.label).to.equal('one');
