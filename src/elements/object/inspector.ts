@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import {IoStorageFactory as $} from '../../core/storage.js';
+import {IoStorage as $} from '../../core/storage.js';
 import {Config} from './config.js';
 import {Groups} from './groups.js';
 import {Widgets} from './widgets.js';

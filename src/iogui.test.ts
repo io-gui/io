@@ -17,9 +17,12 @@ let testCompleted = false;
 
 export async function nextTick(): Promise<void> {
   return new Promise((resolve) => {
-    setTimeout(()=>{
+    requestAnimationFrame(()=>{
       resolve();
     });
+    // setTimeout(()=>{
+    //   resolve();
+    // }, 3.7999999821186066);
   });
 }
 
@@ -80,12 +83,12 @@ export class IoGuiTestPage extends IoElement {
     this.appendChild(mochaDiv);
     mochaDiv.style.display = 'block';
     runTests();
-    setTimeout(() => {
-      const failElement = this.parentElement.querySelector('.fail');
-      failElement.parentElement.parentElement.parentElement.parentElement.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }, 100);
+    // setTimeout(() => {
+    //   const failElement = this.parentElement.querySelector('.fail');
+    //   failElement.parentElement.parentElement.parentElement.scrollIntoView({
+    //     behavior: 'smooth'
+    //   });
+    // }, 200);
   }
   disconnectedCallback() {
     super.disconnectedCallback();

@@ -1,7 +1,7 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {Binding} from '../../core/internals/binding.js';
 import {Options} from '../../models/options.js';
-import {IoStorageFactory as $} from '../../core/storage.js';
+import {IoStorage as $} from '../../core/storage.js';
 
 /*
  * Labeled tabs for selection.
