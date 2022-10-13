@@ -500,9 +500,9 @@ Property decorator function.
 
 ___
 
-### IoStorageFactory
+### IoStorage
 
-▸ **IoStorageFactory**(`props`): `any`
+▸ **IoStorage**(`props`): `any`
 
 #### Parameters
 
