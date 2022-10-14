@@ -1,4 +1,4 @@
-import { IoStorage, IoStorageNode, Binding } from '../iogui.js';
+import { IoStorageNode } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
 
 export default class {
@@ -104,28 +104,28 @@ export default class {
           chai.expect(self.location.hash).to.include('test6=2');
 
           self.location.hash = self.location.hash.replace('test6=2', 'test6=3');
-          
+
           await nextTick();
-          
+
           chai.expect(node.value).to.be.equal(3);
-          
+
           self.location.hash = self.location.hash.replace('test6=3', 'test6="3"');
-          
+
           // await nextTick();
 
           chai.expect(node.value).to.be.equal('3');
 
           self.location.hash = self.location.hash.replace('test6=%223%22', 'test6=false');
-          
+
           // await nextTick();
 
           chai.expect(node.value).to.be.equal(false);
 
           node.value = [0,1,2];
           chai.expect(self.location.hash).to.include('test6=[0,1,2]');
-          node.value = [0,1,"2"];
+          node.value = [0,1,'2'];
           chai.expect(self.location.hash).to.include('test6=[0,1,%222%22]');
-          node.value = "2";
+          node.value = '2';
           chai.expect(self.location.hash).to.include('test6=%222%22');
 
           node.dispose();

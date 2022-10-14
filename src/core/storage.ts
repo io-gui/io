@@ -89,12 +89,6 @@ const nodes: StorageNodes = {
 
 let hashes: Record<string, any> = {};
 
-// class StorageBinding extends Binding {
-//   delete() {
-//     console.log('delete');
-//   }
-// }
-
 interface StorageProps {
   key: string,
   value?: any,
@@ -165,7 +159,7 @@ export class IoStorageNode extends IoNode {
       this.binding = this.bind('value');
       this.binding.dispose = () => {
         this._clearStorage();
-      }
+      };
       return this;
     }
   }
@@ -223,7 +217,7 @@ IoStorage.parseHash = function(hash: string) {
   return hash.substr(1).split('&').reduce(function (result: Record<string, string>, item) {
     const parts = item.split('=');
     if (parts[0] && parts[1]) {
-      result[parts[0]] = parts[1].replace(/%22/g, '"').replace(/%20/g, ' ')
+      result[parts[0]] = parts[1].replace(/%22/g, '"').replace(/%20/g, ' ');
     }
     return result;
   }, {});

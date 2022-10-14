@@ -1,1 +1,0 @@
-{"version":3,"file":"option-menu.d.ts","sourceRoot":"","sources":["../../../src/elements/menus/option-menu.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAqB,MAAM,uBAAuB,CAAC;AAGrE,OAAO,gBAAgB,CAAC;AA4BxB,qBACa,YAAa,SAAQ,SAAS;IACzC,MAAM,KAAK,KAAK,WAuBf;IACD,MAAM,KAAK,UAAU,IAAI,GAAG,CAW3B;IACD,IAAI,MAAM,WAGT;IACD,cAAc,CAAC,KAAK,EAAE,WAAW;IAUjC,OAAO;CA0CR"}

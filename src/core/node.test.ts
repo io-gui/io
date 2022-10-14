@@ -1,8 +1,6 @@
 import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertyDeclarations, IoElement, RegisterIoElement } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
 
-// TODO: COMPLETE TEST COVERAGE
-
 export default class {
   run() {
     describe('IoNode', () => {

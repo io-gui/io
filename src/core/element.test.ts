@@ -1,8 +1,9 @@
 import { IoElement, RegisterIoElement, IoNode, RegisterIoNode, Change } from '../iogui.js';
 
-// TODO: COMPLETE TEST COVERAGE
-
 const element = new IoElement();
+element.style.display = 'none';
+document.body.appendChild(element as unknown as HTMLElement);
+
 const eventStack: string[] = [];
 
 export default class {
@@ -14,7 +15,6 @@ export default class {
           chai.expect(element.disposeDeep).to.be.a('function');
           chai.expect(element.traverse).to.be.a('function');
           chai.expect(element.setAttribute).to.be.a('function');
-          chai.expect(element.focusTo).to.be.a('function');
         });
         it('Should initialize property definitions correctly', () => {
           // Default properties
@@ -174,10 +174,10 @@ export default class {
               };
             }
             prop0Changed() {
-              eventStack.push(`TestNode: prop0Changed ${this.prop0}`);
+              eventStack.push('TestNode: prop0Changed ' + this.prop0);
             }
             prop1Changed() {
-              eventStack.push('TestNode: prop1Changed', this.prop1);
+              eventStack.push('TestNode: prop1Changed ' + this.prop1);
             }
             changed() {
               eventStack.push('TestNode: changed');
@@ -226,12 +226,12 @@ export default class {
               this._counter++;
             }
             prop0Changed(change: Change) {
-              eventStack.push(`TestElement1: prop0Changed ${this.prop0}`);
+              eventStack.push('TestElement1: prop0Changed ' + this.prop0);
               this._prop0counter++;
               this._prop0Change = change;
             }
             prop1Changed(change: Change) {
-              eventStack.push(`TestElement1: prop1Changed ${this.prop1}`);
+              eventStack.push('TestElement1: prop1Changed' + this.prop1);
               this._prop1counter++;
               this._prop1Change = change;
             }
@@ -303,7 +303,7 @@ export default class {
           chai.expect(element._prop1counter).to.equal(2);
           chai.expect(element._prop1Change).to.eql({property: 'prop1', value: 'buzz', oldValue: 'foo'});
 
-          chai.expect(eventStack).to.eql(['TestNode: prop0Changed -1', 'TestNode: changed', 'TestNode: prop0Changed -1', 'TestNode: prop1Changed', 'default', 'TestNode: changed', 'TestNode: prop1Changed', 'default', 'TestNode: changed', 'TestNode: prop0Changed 1', 'TestElement1: prop0Changed 1', 'TestElement1: changed', 'TestNode: changed', 'TestElement1: prop0Changed 2', 'TestNode: prop0Changed 2', 'TestNode: changed', 'TestElement1: prop1Changed foo', 'TestNode: prop1Changed', 'foo', 'TestNode: changed', 'TestElement1: changed', 'TestNode: prop0Changed 3', 'TestElement1: prop0Changed 3', 'TestElement1: changed', 'TestNode: prop1Changed', 'buzz', 'TestElement1: prop1Changed buzz', 'TestElement1: changed', 'TestNode: changed']);
+          chai.expect(eventStack).to.eql(['TestNode: prop0Changed -1', 'TestNode: changed', 'TestNode: prop0Changed -1', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop0Changed 1', 'TestElement1: prop0Changed 1', 'TestElement1: changed', 'TestNode: changed', 'TestElement1: prop0Changed 2', 'TestNode: prop0Changed 2', 'TestNode: changed', 'TestElement1: prop1Changedfoo', 'TestNode: prop1Changed foo', 'TestNode: changed', 'TestElement1: changed', 'TestNode: prop0Changed 3', 'TestElement1: prop0Changed 3', 'TestElement1: changed', 'TestNode: prop1Changed buzz', 'TestElement1: prop1Changedbuzz', 'TestElement1: changed', 'TestNode: changed']);
 
           eventStack.length = 0;
 
@@ -409,6 +409,18 @@ export default class {
     // Extended IoElement
     describe('Extended IoElement', () => {
 
+      class TestIoNode1 extends IoNode {
+        static get Properties(): any {
+          return {
+            prop0: -1,
+            prop1: {
+              value: 'default',
+            },
+          };
+        }
+      }
+      RegisterIoNode(TestIoNode1);
+
       class TestIoElement1 extends IoElement {
         static get Properties(): any {
           return {
@@ -479,22 +491,94 @@ export default class {
             value: 0,
           });
         });
-        it('Has correct default attributes', () => {
-          const element1 = new TestIoElement1();
-          const element2 = new TestIoElement2();
-          chai.expect(element1.getAttribute('prop0')).to.equal(null);
-          chai.expect(element1.getAttribute('prop1')).to.equal(null);
-          chai.expect(element2.getAttribute('prop0')).to.equal('0');
-          chai.expect(element2.getAttribute('prop1')).to.equal(null);
-        });
       });
       describe('Reactivity', () => {
-        it('Has reactive attributes', () => {
-          const element2 = new TestIoElement2();
-          element2.prop0 = 1;
-          chai.expect(element2.getAttribute('prop0')).to.equal('1');
-          element2.prop0 = 0;
-          chai.expect(element2.getAttribute('prop0')).to.equal('0');
+
+        class TestIoElement3 extends TestIoElement1 {
+          _changedCounter = 0;
+          _prop0ChangedCounter = 0;
+          _prop0ChangedChange?: Change;
+          _prop1ChangedCounter = 0;
+          _prop1ChangedChange?: Change;
+          _prop1ChangeEventCounter = 0;
+          _prop1ChangeEvent: any = null;
+          _customEventCounter = 0;
+          _customEvent: any = null;
+          static get Listeners() {
+            return {
+              'prop1-changed': 'onProp1ChangeEvent',
+              'custom-event': 'onCustomEvent',
+            };
+          }
+          changed() {
+            this._changedCounter++;
+          }
+          prop0Changed(change: Change) {
+            this._prop0ChangedCounter++;
+            this._prop0ChangedChange = change;
+          }
+          prop1Changed(change: Change) {
+            this._prop1ChangedCounter++;
+            this._prop1ChangedChange = change;
+          }
+          onProp1ChangeEvent(event: CustomEvent) {
+            this._prop1ChangeEventCounter++;
+            this._prop1ChangeEvent = event;
+          }
+          onCustomEvent(event: CustomEvent) {
+            this._customEventCounter++;
+            this._customEvent = event;
+          }
+        }
+        RegisterIoElement(TestIoElement3);
+
+        let _changedCounter = 0;
+
+        function onChange() {
+          _changedCounter++;
+        }
+
+        it('Should corectly invoke handler functions on change', () => {
+          const element = new TestIoElement3({'on-prop0-changed': onChange, 'on-prop1-changed': 'onProp1ChangeAlt'});
+          element.dispatchEvent('custom-event');
+          element.prop0 = 1;
+          element.prop1 = 'test';
+          chai.expect(_changedCounter).to.equal(1);
+          chai.expect(element._changedCounter).to.equal(2);
+          chai.expect(element._prop0ChangedCounter).to.equal(1);
+          chai.expect(element._prop1ChangedCounter).to.equal(1);
+          chai.expect(element._prop1ChangeEventCounter).to.equal(1);
+          chai.expect(element._customEventCounter).to.equal(1);
+        });
+        it('Should dispatch correct event payloads to handlers', () => {
+          const element = new TestIoElement3();
+          element.dispatchEvent('custom-event', {asd: ''});
+          element.prop0 = 1;
+          element.prop1 = 'foo';
+          chai.expect(element._prop0ChangedChange).to.eql({oldValue: -1, property: 'prop0', value: 1});
+          chai.expect(element._prop1ChangedChange).to.eql({oldValue: 'default', property: 'prop1', value: 'foo'});
+          chai.expect(element._prop1ChangedChange).to.eql({oldValue: 'default', property: 'prop1', value: 'foo'});
+          chai.expect(element._prop1ChangeEvent.detail).to.eql({property: 'prop1', value: 'foo', oldValue: 'default'});
+        });
+      });
+      describe('Binding', () => {
+        const element = new TestIoElement1();
+        const node = new TestIoNode1();
+        element.template([
+          ['test-io-element1', {id: 'subelement', prop0: element.bind('prop0')}]
+        ]);
+        it('Should update bound values correctly', () => {
+          element.prop0 = Infinity;
+          chai.expect(element.$.subelement.prop0).to.equal(Infinity);
+          element.$.subelement.prop0 = -2;
+          chai.expect(element.prop0).to.equal(-2);
+        });
+        it('Should bind to Node node', () => {
+          node.prop1 = element.bind('prop1');
+          node.prop1 = 'a';
+          chai.expect(element.prop1).to.equal('a');
+          element.prop1 = 'b';
+          chai.expect(element.prop1).to.equal('b');
         });
       });
     });
