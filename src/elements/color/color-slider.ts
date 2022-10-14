@@ -25,6 +25,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
       vec4 fillColor = vec4(.8, .8, .8, 1.);
       vec4 sliderColor = vec4(0.);
       float slotWidth = cssStrokeWidth * 1.5;
+      float cssFieldHeight = cssLineHeight + 2.0 * (cssSpacing + cssBorderWidth);
       float radius = cssFieldHeight / 4.;
       float stroke = cssStrokeWidth;
       float strokeShape = min(circle(position, radius + stroke), rectangle(position - vec2(0., 2500.), vec2(slotWidth + stroke, 5000.)));

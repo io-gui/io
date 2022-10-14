@@ -87,7 +87,7 @@ const nodes: StorageNodes = {
   none: {},
 };
 
-let hashes: Record<string, any> = {};
+let hashValues: Record<string, any> = {};
 
 interface StorageProps {
   key: string,
@@ -115,7 +115,7 @@ export class IoStorageNode extends IoNode {
 
   constructor(props: StorageProps) {
     debug: {
-      if (typeof props !== 'object' || !props) {
+      if (typeof props !== 'object') {
         console.warn('Ivalid IoStorage arguments!');
       } else {
         if (typeof props.key !== 'string' || !props.key)
@@ -131,13 +131,12 @@ export class IoStorageNode extends IoNode {
       const def = props.default || props.value;
       switch (props.storage) {
         case 'hash': {
-          IoStorage.loadHash();
-          if (hashes[props.key] !== undefined) {
-            const hashValue = hashes[props.key].replace(/%20/g, ' ');
+          const hash = IoStorage.getValueFromHash(props.key);
+          if (hash !== undefined) {
             try {
-              props.value = JSON.parse(hashValue);
+              props.value = JSON.parse(hash);
             } catch (e) {
-              props.value = hashValue;
+              props.value = hash;
             }
           }
           break;
@@ -168,10 +167,9 @@ export class IoStorageNode extends IoNode {
     super.dispose();
   }
   _clearStorage() {
-    delete nodes[this.storage][this.key];
     switch (this.storage) {
       case 'hash': {
-        IoStorage.saveHash();
+        this.removeValueToHash();
         break;
       }
       case 'local': {
@@ -179,11 +177,12 @@ export class IoStorageNode extends IoNode {
         break;
       }
     }
+    delete nodes[this.storage][this.key];
   }
   valueChanged() {
     switch (this.storage) {
       case 'hash': {
-        IoStorage.saveHash();
+        this.saveValueToHash();
         break;
       }
       case 'local': {
@@ -194,6 +193,50 @@ export class IoStorageNode extends IoNode {
         }
         break;
       }
+    }
+  }
+  removeValueToHash() {
+    hashValues = IoStorage.parseHash(self.location.hash);
+    delete hashValues[this.key];
+
+    let hashString = '';    
+    for (const h in hashValues) {
+      hashString += h + '=' + hashValues[h] + '&';
+    }
+    if (hashString) {
+      hashString = hashString.slice(0, -1);
+      self.location.hash = hashString;
+    } else {
+      history.replaceState('', document.title, self.location.pathname + self.location.search);
+    }
+  }
+  saveValueToHash() {
+    hashValues = IoStorage.parseHash(self.location.hash);
+
+    const value = this.value;
+    if (value !== undefined && value !== '' && value !== this.default) {
+      if (typeof value === 'string') {
+        if (isNaN(value as any)) {
+          hashValues[this.key] = value;
+        } else {
+          hashValues[this.key] = '"' + value + '"';
+        }
+      } else {
+        hashValues[this.key] = JSON.stringify(value);
+      }
+    } else {
+      delete hashValues[this.key];
+    }
+
+    let hashString = '';    
+    for (const h in hashValues) {
+      hashString += h + '=' + hashValues[h] + '&';
+    }
+    if (hashString) {
+      hashString = hashString.slice(0, -1);
+      self.location.hash = hashString;
+    } else {
+      history.replaceState('', document.title, self.location.pathname + self.location.search);
     }
   }
 }
@@ -214,7 +257,7 @@ Object.defineProperty(IoStorage, 'permitted', {
 
 // TODO: unhack and test
 IoStorage.parseHash = function(hash: string) {
-  return hash.substr(1).split('&').reduce(function (result: Record<string, string>, item) {
+  return hash.substring(1).split('&').reduce(function (result: Record<string, string>, item) {
     const parts = item.split('=');
     if (parts[0] && parts[1]) {
       result[parts[0]] = parts[1].replace(/%22/g, '"').replace(/%20/g, ' ');
@@ -223,44 +266,29 @@ IoStorage.parseHash = function(hash: string) {
   }, {});
 };
 
-IoStorage.loadHash = function() {
-  hashes = IoStorage.parseHash(self.location.hash);
-  console.log('loadHash', self.location.hash);
-  for (const h in hashes) {
+IoStorage.getValueFromHash = function(key: string) {
+  hashValues = IoStorage.parseHash(self.location.hash);
+  if (hashValues[key]) {
+    try {
+      return JSON.parse(hashValues[key]);
+    } catch (e) {
+      return hashValues[key];
+    }
+  }
+}
+
+IoStorage.updateAllFromHash = function() {
+  hashValues = IoStorage.parseHash(self.location.hash);
+  for (const h in hashValues) {
     if (nodes.hash[h]) {
       try {
-        nodes.hash[h].value = JSON.parse(hashes[h]);
+        nodes.hash[h].value = JSON.parse(hashValues[h]);
       } catch (e) {
-        nodes.hash[h].value = hashes[h];
+        nodes.hash[h].value = hashValues[h];
       }
     }
   }
 };
 
-IoStorage.saveHash = function() {
-  let hashString = '';
-  for (const h in nodes.hash) {
-    const v = nodes.hash[h].value;
-    if (v !== undefined && v !== '' && v !== nodes.hash[h].default) {
-      if (typeof v === 'string') {
-        if (isNaN(v as any)) {
-          hashString += h + '=' + v + '&';
-        } else {
-          hashString += h + '="' + v + '"&';
-        }
-      } else {
-        hashString += h + '=' + JSON.stringify(v) + '&';
-      }
-    }
-  }
-  console.log('saveHash', hashString);
-  if (hashString) {
-    hashString = hashString.slice(0, -1);
-    self.location.hash = hashString;
-  } else {
-    history.replaceState('', document.title, self.location.pathname + self.location.search);
-  }
-};
-
-self.addEventListener('hashchange', IoStorage.loadHash, false);
-IoStorage.loadHash();
+self.addEventListener('hashchange', IoStorage.updateAllFromHash, false);
+IoStorage.updateAllFromHash();

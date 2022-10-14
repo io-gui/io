@@ -1,18 +1,46 @@
 import { IoElement, RegisterIoElement } from './element.js';
+import { IoProperty, PropertyDeclarations } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
 
-const themePropDefaults =  {
-  cssSpacing: 2,
-  cssBorderRadius: 3,
-  cssBorderWidth: 1,
-  cssStrokeWidth: 1,
-  cssLineHeight: 22,
-  cssFieldHeight: 0, // automatically calculated
-  cssFontSize: 14,
-};
+type Color = [number, number, number, number];
 
-const themeDBDefaults = {
-  light: Object.assign({
+type Variables = {
+  cssSpacing: number;
+  cssBorderRadius: number;
+  cssBorderWidth: number;
+  cssStrokeWidth: number;
+  cssLineHeight: number;
+  cssFontSize: number;
+  cssBackgroundColor: Color;
+  cssBackgroundColorLight: Color;
+  cssBackgroundColorDark: Color;
+  cssBackgroundColorField: Color;
+  cssColor: Color;
+  cssColorError: Color;
+  cssColorLink: Color;
+  cssColorFocus: Color;
+  cssColorField: Color;
+  cssColorNumber: Color;
+  cssColorString: Color;
+  cssColorBoolean: Color;
+  cssColorBorder: Color;
+  cssColorBorderLight: Color;
+  cssColorBorderDark: Color;
+  cssColorGradientStart: Color;
+  cssColorGradientEnd: Color;
+  cssColorShadow: Color;
+}
+
+type Themes = Record<string, Variables>;
+
+const defaultThemes: Themes = {
+  light: {
+    cssSpacing: 2,
+    cssBorderRadius: 3,
+    cssBorderWidth: 1,
+    cssStrokeWidth: 1,
+    cssLineHeight: 22,
+    cssFontSize: 14,
     cssBackgroundColor: [1, 1, 1, 1],
     cssBackgroundColorLight: [0.6, 0.6, 0.6, 1],
     cssBackgroundColorDark: [0.84, 0.84, 0.84, 1],
@@ -31,8 +59,14 @@ const themeDBDefaults = {
     cssColorGradientStart: [0.9, 0.9, 0.9, 1],
     cssColorGradientEnd: [0.75, 0.75, 0.75, 1],
     cssColorShadow: [0, 0, 0, 0.2],
-  }, themePropDefaults),
-  dark: Object.assign({
+  },
+  dark: {
+    cssSpacing: 2,
+    cssBorderRadius: 3,
+    cssBorderWidth: 1,
+    cssStrokeWidth: 1,
+    cssLineHeight: 22,
+    cssFontSize: 14,
     cssBackgroundColor: [0.065, 0.065, 0.065, 1],
     cssBackgroundColorLight: [0.3, 0.3, 0.3, 1],
     cssBackgroundColorDark: [0.5, 0.5, 0.5, 1],
@@ -51,155 +85,142 @@ const themeDBDefaults = {
     cssColorGradientStart: [1, 1, 1, 0.1],
     cssColorGradientEnd: [0, 0, 0, 0.2],
     cssColorShadow: [0, 0, 0, 0.2],
-  }, themePropDefaults),
+  },
 };
 
-const themeDB = $({value: JSON.parse(JSON.stringify(themeDBDefaults)), storage: 'local', key: 'themeDB'});
+const mixins = /* css */`
+--io-label: {
+  display: inline-block;
+  height: var(--io-line-height);
+  line-height: var(--io-line-height);
+  font-size: var(--io-font-size);
+  padding: 0 var(--io-spacing);
+}
+--io-icon: {
+  display: inline-block;
+  height: var(--io-line-height);
+  line-height: var(--io-line-height);
+  font-size: var(--io-font-size);
+}
+--io-field: {
+  /* align-self: flex-start; */
+  display: inline-block;
+  cursor: pointer;
+  /* user-select: none; */
+  /* -webkit-tap-highlight-color: transparent; */
+  /* -webkit-user-select: none; */
+  /* -webkit-touch-callout: none; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+
+  height: var(--io-line-height);
+  line-height: var(--io-line-height);
+
+  font-size: var(--io-font-size);
+  border-radius: var(--io-border-radius);
+  border: var(--io-border);
+  border-color: transparent;
+  color: var(--io-color);
+  background-color: transparent;
+  background-image: none;
+  padding: calc(var(--io-spacing) - var(--io-border-width));
+  transition: background-color 0.25s;
+  /* vertical-align: top; */
+}
+--io-panel: {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  justify-self: stretch;
+  border-radius: calc(var(--io-border-radius) + var(--io-spacing));
+  border: var(--io-border);
+  border-color: var(--io-color-border-outset);
+  color: var(--io-color-field);
+  background-color: var(--io-background-color-dark);
+  padding: var(--io-spacing);
+}
+--io-content: {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  justify-self: stretch;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+}
+--io-row: {
+  display: flex;
+  flex: 1 1;
+  flex-direction: row;
+  align-self: stretch;
+  justify-self: stretch;
+}
+--io-column: {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  align-self: stretch;
+  justify-self: stretch;
+}
+--io-table2: {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: var(--io-spacing);
+}
+--io-table3: {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: var(--io-spacing);
+}
+--io-table4: {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: var(--io-spacing);
+}
+--io-table5: {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: var(--io-spacing);
+}`;
+
+const persistantThemes = $({
+  value: JSON.parse(JSON.stringify(defaultThemes)),
+  storage: 'local',
+  key: 'io-persistantThemes'
+});
+
+const isDarkMode = !!window.matchMedia('(prefers-color-scheme: dark)').matches;
+const theme = $({value: isDarkMode ? 'dark' : 'light', storage: 'local', key: 'theme'});
+const vars = persistantThemes.value[theme.value];
+
+const styleElement = document.createElement('style');
+styleElement.setAttribute('id', 'io-theme-variables');
+document.head.appendChild(styleElement);
 
 @RegisterIoElement
 export class IoTheme extends IoElement {
-  static get Style() {
-    return /* css */`
-    --io-label: {
-      display: inline-block;
-      height: var(--io-line-height);
-      line-height: var(--io-line-height);
-      font-size: var(--io-font-size);
-      padding: 0 var(--io-spacing);
-    }
-    --io-icon: {
-      display: inline-block;
-      height: var(--io-line-height);
-      line-height: var(--io-line-height);
-      font-size: var(--io-font-size);
-    }
-    --io-field: {
-      /* align-self: flex-start; */
-      display: inline-block;
-      cursor: pointer;
-      /* user-select: none; */
-      /* -webkit-tap-highlight-color: transparent; */
-      /* -webkit-user-select: none; */
-      /* -webkit-touch-callout: none; */
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex-wrap: nowrap;
-      white-space: nowrap;
+  static get Style(): string { return mixins; }
+  
+  static get Properties(): PropertyDeclarations { return vars; }
 
-      height: var(--io-line-height);
-      line-height: var(--io-line-height);
+  @IoProperty({value: true})
+  declare lazy: boolean;
 
-      font-size: var(--io-font-size);
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: transparent;
-      color: var(--io-color);
-      background-color: transparent;
-      background-image: none;
-      padding: calc(var(--io-spacing) - var(--io-border-width));
-      transition: background-color 0.25s;
-      /* vertical-align: top; */
-    }
-    --io-panel: {
-      display: flex;
-      flex-direction: column;
-      align-self: stretch;
-      justify-self: stretch;
-      border-radius: calc(var(--io-border-radius) + var(--io-spacing));
-      border: var(--io-border);
-      border-color: var(--io-color-border-outset);
-      color: var(--io-color-field);
-      background-color: var(--io-background-color-dark);
-      padding: var(--io-spacing);
-    }
-    --io-content: {
-      display: flex;
-      flex-direction: column;
-      align-self: stretch;
-      justify-self: stretch;
-      flex: 1 1 auto;
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      -webkit-tap-highlight-color: transparent;
-    }
-    --io-row: {
-      display: flex;
-      flex: 1 1;
-      flex-direction: row;
-      align-self: stretch;
-      justify-self: stretch;
-    }
-    --io-column: {
-      display: flex;
-      flex: 1 1;
-      flex-direction: column;
-      align-self: stretch;
-      justify-self: stretch;
-    }
-    --io-table2: {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-gap: var(--io-spacing);
-    }
-    --io-table3: {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-gap: var(--io-spacing);
-    }
-    --io-table4: {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-gap: var(--io-spacing);
-    }
-    --io-table5: {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-gap: var(--io-spacing);
-    }
-    `;
-  }
-  static get Properties(): any {
-    const isDarkMode = !!window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = $({value: isDarkMode ? 'dark' : 'light', storage: 'local', key: 'theme'});
-    const vars = themeDB.value[theme.value];
-    return {
-      theme: theme,
-      //
-      cssSpacing: vars.cssSpacing,
-      cssBorderRadius: vars.cssBorderRadius,
-      cssBorderWidth: vars.cssBorderWidth,
-      cssStrokeWidth: vars.cssStrokeWidth,
-      cssLineHeight: vars.cssLineHeight,
-      cssFieldHeight: vars.cssFieldHeight,
-      cssFontSize: vars.cssFontSize,
-      cssBackgroundColor: {value: vars.cssBackgroundColor, observe: true},
-      cssBackgroundColorLight: {value: vars.cssBackgroundColorLight, observe: true},
-      cssBackgroundColorDark: {value: vars.cssBackgroundColorDark, observe: true},
-      cssBackgroundColorField: {value: vars.cssBackgroundColorField, observe: true},
-      cssColor: {value: vars.cssColor, observe: true},
-      cssColorError: {value: vars.cssColorError, observe: true},
-      cssColorLink: {value: vars.cssColorLink, observe: true},
-      cssColorFocus: {value: vars.cssColorFocus, observe: true},
-      cssColorField: {value: vars.cssColorField, observe: true},
-      cssColorNumber: {value: vars.cssColorNumber, observe: true},
-      cssColorString: {value: vars.cssColorString, observe: true},
-      cssColorBoolean: {value: vars.cssColorBoolean, observe: true},
-      cssColorBorder: {value: vars.cssColorBorder, observe: true},
-      cssColorBorderLight: {value: vars.cssColorBorderLight, observe: true},
-      cssColorBorderDark: {value: vars.cssColorBorderDark, observe: true},
-      cssColorGradientStart: {value: vars.cssColorGradientStart, observe: true},
-      cssColorGradientEnd: {value: vars.cssColorGradientEnd, observe: true},
-      cssColorShadow: {value: vars.cssColorShadow, observe: true},
-      //
-      lazy: true,
-    };
-  }
+  @IoProperty({binding: theme})
+  declare theme: string;
+
   init() {
-    this.variablesElement = document.createElement('style');
-    this.variablesElement.setAttribute('id', 'io-theme-variables');
-    document.head.appendChild(this.variablesElement);
-    this.changed();
+    for (let key in this._properties) {
+      if (typeof this._properties[key].value === 'object') {
+        this._properties[key].observe = true;
+      }
+    }
+    this.changed = this.changed.bind(this);
+    this.throttle(this.changed, undefined, true);
   }
   _toCss(rgba: number[]) {
     const r = Math.floor(rgba[0] * 255);
@@ -212,49 +233,23 @@ export class IoTheme extends IoElement {
     }
   }
   reset() {
-    themeDB.value = Object.assign({}, JSON.parse(JSON.stringify(themeDBDefaults)));
+    persistantThemes.value = Object.assign({}, JSON.parse(JSON.stringify(defaultThemes)));
     this.themeChanged();
   }
   themeChanged() {
-    const vars = themeDB.value[this.theme];
-    this.setProperties({
-      cssSpacing: vars.cssSpacing,
-      cssBorderRadius: vars.cssBorderRadius,
-      cssBorderWidth: vars.cssBorderWidth,
-      cssStrokeWidth: vars.cssStrokeWidth,
-      cssLineHeight: vars.cssLineHeight,
-      // cssFieldHeight: vars.cssFieldHeight,
-      cssFontSize: vars.cssFontSize,
-      cssBackgroundColor: vars.cssBackgroundColor,
-      cssBackgroundColorLight: vars.cssBackgroundColorLight,
-      cssBackgroundColorDark: vars.cssBackgroundColorDark,
-      cssBackgroundColorField: vars.cssBackgroundColorField,
-      cssColor: vars.cssColor,
-      cssColorError: vars.cssColorError,
-      cssColorLink: vars.cssColorLink,
-      cssColorFocus: vars.cssColorFocus,
-      cssColorField: vars.cssColorField,
-      cssColorNumber: vars.cssColorNumber,
-      cssColorString: vars.cssColorString,
-      cssColorBoolean: vars.cssColorBoolean,
-      cssColorBorder: vars.cssColorBorder,
-      cssColorBorderLight: vars.cssColorBorderLight,
-      cssColorBorderDark: vars.cssColorBorderDark,
-      cssColorGradientStart: vars.cssColorGradientStart,
-      cssColorGradientEnd: vars.cssColorGradientEnd,
-      cssColorShadow: vars.cssColorShadow,
-    });
+    this.setProperties(persistantThemes.value[this.theme]);
   }
   changed() {
-    this.setProperty('cssFieldHeight', this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth));
-    this.variablesElement.innerHTML = /* css */`
+    // TODO: remove cssFieldHeight!
+    const cssFieldHeight = this.cssLineHeight + 2 * (this.cssSpacing + this.cssBorderWidth);
+    styleElement.innerHTML = /* css */`
       body {
         --io-spacing: ${this.cssSpacing}px;
         --io-border-radius: ${this.cssBorderRadius}px;
         --io-border-width: ${this.cssBorderWidth}px;
         --io-stroke-width: ${this.cssStrokeWidth}px;
         --io-line-height: ${this.cssLineHeight}px;
-        --io-field-height: ${this.cssFieldHeight}px;
+        --io-field-height: ${cssFieldHeight}px;
         --io-font-size: ${this.cssFontSize}px;
 
         --io-background-color: ${this._toCss(this.cssBackgroundColor)};
@@ -293,13 +288,13 @@ export class IoTheme extends IoElement {
       }
     `;
 
-    const vars = themeDB.value[this.theme];
+    const vars = persistantThemes.value[this.theme];
     for (const prop in this._properties) {
       if (prop.startsWith('css')) {
         vars[prop] = this._properties[prop].value;
       }
     }
-    themeDB.value = Object.assign({}, themeDB.value);
+    persistantThemes.value = Object.assign({}, persistantThemes.value);
     // TODO: consider removing (required for gl updates in theme demo)
 
     this.dispatchEvent('object-mutated', {object: this}, false, window);

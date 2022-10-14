@@ -1,5 +1,10 @@
-import { IoStorageNode } from '../iogui.js';
-import { nextTick } from '../iogui.test.js';
+import { IoStorageNode, IoStorage, Binding } from '../iogui.js';
+import { afterHashChange } from '../iogui.test.js';
+
+localStorage.removeItem('io-storage:test2');
+localStorage.removeItem('io-storage:test3');
+localStorage.removeItem('io-storage:test4');
+localStorage.removeItem('io-storage:test5');
 
 export default class {
   run() {
@@ -75,7 +80,7 @@ export default class {
           chai.expect(node1).to.be.equal(node2);
           chai.expect(node1).to.not.be.equal(node3);
           chai.expect(node1).to.not.be.equal(node4);
-          (node1 || node2).dispose();
+          node1.dispose();
           node3.dispose();
           node4.dispose();
         });
@@ -102,22 +107,21 @@ export default class {
           chai.expect(self.location.hash).to.include('test6=true');
           node.value = 2;
           chai.expect(self.location.hash).to.include('test6=2');
-
           self.location.hash = self.location.hash.replace('test6=2', 'test6=3');
 
-          await nextTick();
-
+          await afterHashChange();
+          
           chai.expect(node.value).to.be.equal(3);
-
+          
           self.location.hash = self.location.hash.replace('test6=3', 'test6="3"');
-
-          // await nextTick();
+          
+          await afterHashChange();
 
           chai.expect(node.value).to.be.equal('3');
 
           self.location.hash = self.location.hash.replace('test6=%223%22', 'test6=false');
 
-          // await nextTick();
+          await afterHashChange();
 
           chai.expect(node.value).to.be.equal(false);
 
@@ -132,16 +136,16 @@ export default class {
         });
       });
     });
-      // describe('IoStorage', () => {
-      //   describe('Initialization', () => {
-      //     it('Should return binding to IoStorageNode Node', () => {
-      //       const storage = IoStorage({key: 'test', storage: 'hash'});
-      //       storage.value = 'foo';
-      //       chai.expect(storage).to.be.instanceOf(Binding);
-      //       storage.dispose();
-      //       chai.expect(self.location.hash).to.not.include('test=foo');
-      //     });
-      //   });
-      // });
+    describe('IoStorage', () => {
+      describe('Initialization', () => {
+        it('Should return binding to IoStorageNode Node', () => {
+          const storage = IoStorage({key: 'test', storage: 'hash'});
+          storage.value = 'foo';
+          chai.expect(storage).to.be.instanceOf(Binding);
+          storage.dispose();
+          chai.expect(self.location.hash).to.not.include('test=foo');
+        });
+      });
+    });
   }
 }

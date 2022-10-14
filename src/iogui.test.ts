@@ -17,12 +17,17 @@ let testCompleted = false;
 
 export async function nextTick(): Promise<void> {
   return new Promise((resolve) => {
-    requestAnimationFrame(()=>{
+    setTimeout(()=>{
       resolve();
     });
-    // setTimeout(()=>{
-    //   resolve();
-    // }, 3.7999999821186066);
+  });
+}
+
+export async function afterHashChange(): Promise<void> {
+  return new Promise((resolve) => {
+    self.addEventListener('hashchange', () => {
+      resolve();
+    }, { once: true });
   });
 }
 

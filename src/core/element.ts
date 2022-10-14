@@ -193,7 +193,7 @@ const applyNativeElementProps = function(element: HTMLElement, props: any) {
  */
 @RegisterIoElement
 export class IoElement extends IoNodeMixin(HTMLElement) {
-  static get Style(): any {
+  static get Style(): string {
     return /* css */`
       :host[hidden] { display: none; }
       :host[disabled] { pointer-events: none; opacity: 0.5; }

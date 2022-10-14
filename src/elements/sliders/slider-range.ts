@@ -143,6 +143,7 @@ export class IoSliderRange extends IoSlider {
       float stepInPx = size.x / ((uMax - uMin) / uStep);
       vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
 
+      float cssFieldHeight = cssLineHeight + 2.0 * (cssSpacing + cssBorderWidth);
       float lineWidth = cssStrokeWidth;
       if (stepInPx > lineWidth * 2.0) {
         // TODO: grid with exponent

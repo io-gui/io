@@ -290,6 +290,7 @@ export class IoSlider extends IoGl {
         finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
       }
 
+      float cssFieldHeight = cssLineHeight + 2.0 * (cssSpacing + cssBorderWidth);
       vec4 slotGradient = mix(cssColorFocus, cssColorLink, uv.x);
       float knobRadius = cssFieldHeight * 0.125;
       float slotWidth = cssFieldHeight * 0.125;
