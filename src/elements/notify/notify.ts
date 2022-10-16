@@ -27,7 +27,7 @@ export class IoNotify extends IoElement {
     :host > span {
       cursor: default;
       box-sizing: border-box;
-      line-height: var(--io-field-height);
+      line-height: var(--io-line-height);
       font-size: var(--io-font-size);
       color: var(--io-color);
       padding: 0 var(--io-spacing);

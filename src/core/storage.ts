@@ -2,78 +2,81 @@ import { Binding } from '../iogui.js';
 import { IoProperty } from './internals/property.js';
 import { IoNode, RegisterIoNode } from './node.js';
 
-// class EmulatedLocalStorage {
-//   store: Record<string, unknown> = {};
-//   warned = false;
-//   get permited() {
-//     try {
-//       return !!self.localStorage.getItem('io-storage-user-permitted');
-//     } catch (error) {
-//       console.warn('IoStorageNode: Cannot access localStorage. Check browser privacy settings!');
-//     }
-//     return false;
-//   }
-//   set permited(value: boolean) {
-//     try {
-//       self.localStorage.setItem('io-storage-user-permitted', String(value));
-//       const permited = self.localStorage.getItem('io-storage-user-permitted');
-//       if (permited === 'true') {
-//         for (const i in this.store) {
-//           self.localStorage.setItem(i, String(this.store[i]));
-//           delete this.store[i];
-//         }
-//         console.log('IoStorageNode: Saved localStorage state.');
-//       }
-//     } catch (error) {
-//       console.warn('IoStorageNode: Cannot access localStorage. Check browser privacy settings!');
-//     }
-//   }
-//   constructor() {
-//     Object.defineProperty(this, 'store', {value: {}, writable: true});
-//     Object.defineProperty(this, 'warned', {value: false, writable: true});
-//   }
-//   setItem(key: string, value: unknown) {
-//     const strValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
-//     if (this.permited) {
-//       self.localStorage.setItem(key, strValue);
-//     } else {
-//       this.store[key] = strValue;
-//       if (!this.warned) {
-//         if (!this.permited) {
-//           console.warn('IoStorageNode: localStorage permission denied by user.');
-//         } else {
-//           console.warn('IoStorageNode: localStorage pending permission by user.');
-//         }
-//         this.warned = true;
-//       }
-//       if (key === 'io-storage-user-permitted') {
-//         this.permited = !!this.store[key];
-//       }
-//     }
-//   }
-//   getItem(key: string) {
-//     if (this.permited) {
-//       return self.localStorage.getItem(key);
-//     } else {
-//       return this.store[key];
-//     }
-//   }
-//   removeItem(key: string) {
-//     if (this.permited) {
-//       return self.localStorage.removeItem(key);
-//     } else {
-//       delete this.store[key];
-//     }
-//   }
-//   clear() {
-//     if (this.permited) {
-//       return self.localStorage.clear();
-//     } else {
-//       this.store = {};
-//     }
-//   }
-// }
-// const localStorage = new EmulatedLocalStorage();
+class EmulatedLocalStorage {
+  declare store: Record<string, unknown>;
+  declare warned: boolean;
+  declare permitted: boolean;
+  constructor() {
+    Object.defineProperty(this, 'store', {value: {}, writable: true});
+    Object.defineProperty(this, 'warned', {value: false, writable: true});
+  }
+  get permited() {
+    try {
+      return self.localStorage.getItem('io-storage-user-permitted') === 'true';
+    } catch (error) {
+      console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
+    }
+    return false;
+  }
+  set permited(value: boolean) {
+    try {
+      self.localStorage.setItem('io-storage-user-permitted', String(value));
+      if (this.permited) {
+        for (const i in this.store) {
+          self.localStorage.setItem(i, String(this.store[i]));
+          delete this.store[i];
+        }
+        console.log('IoStorage: Saved localStorage state.');
+      }
+    } catch (error) {
+      console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
+    }
+  }
+  setItem(key: string, value: unknown) {
+    const strValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
+    if (key === 'io-storage-user-permitted') {
+      this.permited = value === 'true';
+      return;
+    }
+    if (this.permited) {
+      self.localStorage.setItem(key, strValue);
+    } else {
+      this.store[key] = strValue;
+      if (!this.warned) {
+        if (!this.permited) {
+          console.warn('IoStorage: localStorage permission denied by user.');
+        } else {
+          console.warn('IoStorage: localStorage pending permission by user.');
+        }
+        this.warned = true;
+      }
+    }
+  }
+  getItem(key: string): string | null {
+    if (this.permited) {
+      return self.localStorage.getItem(key);
+    } else if (this.store[key] !== undefined) {
+      return this.store[key] as string;
+    }
+    return null;
+  }
+  removeItem(key: string) {
+    if (this.permited) {
+      return self.localStorage.removeItem(key);
+    } else {
+      delete this.store[key];
+    }
+  }
+  clear() {
+    if (this.permited) {
+      return self.localStorage.clear();
+    } else {
+      this.store = {};
+    }
+  }
+}
+
+const localStorage = new EmulatedLocalStorage();
 
 type StorageNodes = {
   local: Record<string, IoStorageNode>,
@@ -143,7 +146,7 @@ export class IoStorageNode extends IoNode {
         }
         case 'local': {
           const localValue = localStorage.getItem('io-storage:' + props.key);
-          if (localValue !== null) {
+          if (localValue) {
             props.value = JSON.parse(localValue);
           }
           break;
@@ -199,7 +202,7 @@ export class IoStorageNode extends IoNode {
     hashValues = IoStorage.parseHash(self.location.hash);
     delete hashValues[this.key];
 
-    let hashString = '';    
+    let hashString = '';
     for (const h in hashValues) {
       hashString += h + '=' + hashValues[h] + '&';
     }
@@ -228,7 +231,7 @@ export class IoStorageNode extends IoNode {
       delete hashValues[this.key];
     }
 
-    let hashString = '';    
+    let hashString = '';
     for (const h in hashValues) {
       hashString += h + '=' + hashValues[h] + '&';
     }
@@ -275,7 +278,7 @@ IoStorage.getValueFromHash = function(key: string) {
       return hashValues[key];
     }
   }
-}
+};
 
 IoStorage.updateAllFromHash = function() {
   hashValues = IoStorage.parseHash(self.location.hash);

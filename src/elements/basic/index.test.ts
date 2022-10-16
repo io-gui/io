@@ -16,8 +16,8 @@ export default class {
     new IconElementTest().run();
     new IconsetElementTest().run();
     new LabelElementTest().run();
-    new SwitchElementTest().run();
-    new StringElementTest().run();
     new NumberElementTest().run();
+    new StringElementTest().run();
+    new SwitchElementTest().run();
   }
 }

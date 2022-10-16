@@ -493,7 +493,6 @@ export default class {
         });
       });
       describe('Reactivity', () => {
-
         class TestIoElement3 extends TestIoElement1 {
           _changedCounter = 0;
           _prop0ChangedCounter = 0;
@@ -539,7 +538,7 @@ export default class {
         }
 
         it('Should corectly invoke handler functions on change', () => {
-          const element = new TestIoElement3({'on-prop0-changed': onChange, 'on-prop1-changed': 'onProp1ChangeAlt'});
+          const element = new TestIoElement3({'on-prop0-changed': onChange});
           element.dispatchEvent('custom-event');
           element.prop0 = 1;
           element.prop1 = 'test';

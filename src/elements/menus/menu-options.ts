@@ -30,10 +30,9 @@ export class IoMenuOptions extends IoElement {
     return /* css */`
     :host {
       @apply --io-panel;
+      @apply --io-column;
       box-sizing: border-box;
       align-self: flex-start;
-      display: flex;
-      flex-direction: column;
       align-items: stretch;
       white-space: nowrap;
       user-select: none;
@@ -41,7 +40,6 @@ export class IoMenuOptions extends IoElement {
       opacity: 1;
       transition: opacity 0.25s;
       overflow-y: auto !important;
-      padding: 0;
     }
     :host > io-menu-item {
       align-self: stretch;

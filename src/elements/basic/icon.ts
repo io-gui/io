@@ -6,6 +6,12 @@ import { IoIconsetSingleton } from './iconset.js';
 export class IoIcon extends IoElement {
   static get Style() {
     return /* css */`
+      --io-icon: {
+        display: inline-block;
+        height: var(--io-line-height);
+        line-height: var(--io-line-height);
+        font-size: var(--io-font-size);
+      }
       :host {
         @apply --io-icon;
         fill: currentcolor;

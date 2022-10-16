@@ -133,7 +133,7 @@ export class IoSliderRange extends IoSlider {
     varying vec2 vUv;
 
     void main(void) {
-      vec3 finalColor = cssBackgroundColorField.rgb;
+      vec3 finalColor = ioBackgroundColorField.rgb;
 
       vec2 size = uHorizontal == 1 ? uSize : uSize.yx;
       vec2 uv = uHorizontal == 1 ? vUv : vUv.yx;
@@ -141,10 +141,9 @@ export class IoSliderRange extends IoSlider {
 
 
       float stepInPx = size.x / ((uMax - uMin) / uStep);
-      vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
+      vec4 stepColorBg = mix(ioColor, ioBackgroundColorField, 0.75);
 
-      float cssFieldHeight = cssLineHeight + 2.0 * (cssSpacing + cssBorderWidth);
-      float lineWidth = cssStrokeWidth;
+      float lineWidth = ioStrokeWidth;
       if (stepInPx > lineWidth * 2.0) {
         // TODO: grid with exponent
         float gridWidth = size.x / ((uMax - uMin) / uStep);
@@ -154,8 +153,8 @@ export class IoSliderRange extends IoSlider {
         finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
       }
 
-      float knobRadius = cssFieldHeight * 0.25;
-      float slotWidth = cssFieldHeight * 0.125;
+      float knobRadius = ioFieldHeight * 0.25;
+      float slotWidth = ioFieldHeight * 0.125;
 
       float valueInRangeStart = (uValue[0] - uMin) / (uMax - uMin);
       float signStart = valueInRangeStart < 0.0 ? -1.0 : 1.0;
@@ -171,7 +170,7 @@ export class IoSliderRange extends IoSlider {
       } else if (valueInRangeEnd < valueInRangeStart) {
         grad = 1.0 - (uv.x - valueInRangeEnd) / max(valueInRangeStart - valueInRangeEnd, 0.01);
       }
-      vec4 slotGradient = mix(cssColorFocus, cssColorLink, saturate(grad));
+      vec4 slotGradient = mix(ioColorFocus, ioColorLink, saturate(grad));
 
       vec2 sliderStart = vec2(size.x * min(2.0, max(-1.0, (valueInRangeStart))), size.y * 0.5);
       vec2 sliderEnd = vec2(size.x * min(2.0, max(-1.0, (valueInRangeEnd))), size.y * 0.5);

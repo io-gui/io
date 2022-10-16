@@ -255,27 +255,27 @@ let lastFocus: Element | null = null;
 export class IoNumberLadderStep extends IoField {
   static get Style() {
     return /* css */`
-    :host {
-      pointer-events: all;
-      display: inline-block;
-      cursor: ew-resize;
-      text-align: center;
-      background-color: var(--io-background-color-light);
-      color: var(--io-color);
-      align-self: stretch;
-      touch-action: none;
-      width: 6em;
-    }
-    :host:before {
-      float: left;
-      content: '<';
-      opacity: 0.25;
-    }
-    :host:after {
-      float: right;
-      content: '>';
-      opacity: 0.25;
-    }
+      :host {
+        pointer-events: all;
+        display: inline-block;
+        cursor: ew-resize;
+        text-align: center;
+        background-color: var(--io-background-color-light);
+        color: var(--io-color);
+        align-self: stretch;
+        touch-action: none;
+        width: 6em;
+      }
+      :host:before {
+        float: left;
+        content: '<';
+        opacity: 0.25;
+      }
+      :host:after {
+        float: right;
+        content: '>';
+        opacity: 0.25;
+      }
     `;
   }
 
@@ -307,7 +307,6 @@ export class IoNumberLadderStep extends IoField {
     }
     if (stepMove !== 0) {
       this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
-      this.setAttribute('aria-valuenow', this.parentElement.value);
     }
   }
   _onPointerdown(event: PointerEvent) {
@@ -337,11 +336,7 @@ export class IoNumberLadderStep extends IoField {
   }
   changed() {
     super.changed();
-    if (this.parentElement) {
-      this.setAttribute('aria-valuemax', this.parentElement.max);
-      this.setAttribute('aria-valuemin', this.parentElement.min);
-      this.setAttribute('aria-valuenow', this.parentElement.value);
-    }
+    this.setAttribute('aria-valuestep', this.value);
   }
 }
 
@@ -349,82 +344,82 @@ export class IoNumberLadderStep extends IoField {
 export class IoNumberLadder extends IoElement {
   static get Style() {
     return /* css */`
-    :host {
-      position: absolute;
-      pointer-events: none;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
-      display: flex;
-      flex-direction: column;
-    }
-    :host:not([expanded]) {
-      visibility: hidden;
-    }
-    :host:not([expanded]) > io-number-ladder-step {
-      opacity: 0.5;
-    }
-    :host > io-number-ladder-step:nth-child(-n+5) {
-      box-shadow: 0 -1px 4px rgba(0,0,0,0.2);
-    }
-    :host > io-number-ladder-step:nth-child(n+6) {
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-    }
-    :host > .io-up1,
-    :host > .io-down1{
-      z-index: 4;
-      transition: opacity 0.1s, transform 0.1s;
-    }
-    :host > .io-up2,
-    :host > .io-down2 {
-      z-index: 3;
-      opacity: 0.8;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    :host:not([expanded]) > .io-up4 {
-      transform: translateY(calc(3 * var(--io-field-height)));
-    }
-    :host:not([expanded]) > .io-up3 {
-      transform: translateY(calc(2 * var(--io-field-height)));
-    }
-    :host:not([expanded]) > .io-up2 {
-      transform: translateY(calc(1 * var(--io-field-height)));
-    }
-    :host:not([expanded]) > .io-down2 {
-      transform: translateY(calc(-1 * var(--io-field-height)));
-    }
-    :host:not([expanded]) > .io-down3 {
-      transform: translateY(calc(-2 * var(--io-field-height)));
-    }
-    :host:not([expanded]) > .io-down4 {
-      transform: translateY(calc(-3 * var(--io-field-height)));
-    }
-    :host > .io-up3,
-    :host > .io-down3 {
-      z-index: 2;
-      opacity: 0.6;
-      transition: opacity 0.4s, transform 0.4s;
-    }
-    :host > .io-up4,
-    :host > .io-down4 {
-      z-index: 1;
-      opacity: 0.4;
-      transition: opacity 0.8s, transform 0.8s;
-    }
-    :host > io-number-ladder-step:hover,
-    :host > io-number-ladder-step:focus {
-      background-color: var(--io-background-color-light);
-      border-color: var(--io-color-focus);
-      transition: opacity 0.2s;
-      opacity: 1;
-    }
-    :host > .io-number-ladder-empty {
-      height: var(--io-field-height);
-    }
-    :host > .io-number-ladder-center {
-      height: calc(1.5 * var(--io-field-height));
-    }
+      :host {
+        position: absolute;
+        pointer-events: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        display: flex;
+        flex-direction: column;
+      }
+      :host:not([expanded]) {
+        visibility: hidden;
+      }
+      :host:not([expanded]) > io-number-ladder-step {
+        opacity: 0.5;
+      }
+      :host > io-number-ladder-step:nth-child(-n+5) {
+        box-shadow: 0 -1px 4px rgba(0,0,0,0.2);
+      }
+      :host > io-number-ladder-step:nth-child(n+6) {
+        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      }
+      :host > .io-up1,
+      :host > .io-down1{
+        z-index: 4;
+        transition: opacity 0.1s, transform 0.1s;
+      }
+      :host > .io-up2,
+      :host > .io-down2 {
+        z-index: 3;
+        opacity: 0.8;
+        transition: opacity 0.2s, transform 0.2s;
+      }
+      :host:not([expanded]) > .io-up4 {
+        transform: translateY(calc(3 * var(--io-field-height)));
+      }
+      :host:not([expanded]) > .io-up3 {
+        transform: translateY(calc(2 * var(--io-field-height)));
+      }
+      :host:not([expanded]) > .io-up2 {
+        transform: translateY(calc(1 * var(--io-field-height)));
+      }
+      :host:not([expanded]) > .io-down2 {
+        transform: translateY(calc(-1 * var(--io-field-height)));
+      }
+      :host:not([expanded]) > .io-down3 {
+        transform: translateY(calc(-2 * var(--io-field-height)));
+      }
+      :host:not([expanded]) > .io-down4 {
+        transform: translateY(calc(-3 * var(--io-field-height)));
+      }
+      :host > .io-up3,
+      :host > .io-down3 {
+        z-index: 2;
+        opacity: 0.6;
+        transition: opacity 0.4s, transform 0.4s;
+      }
+      :host > .io-up4,
+      :host > .io-down4 {
+        z-index: 1;
+        opacity: 0.4;
+        transition: opacity 0.8s, transform 0.8s;
+      }
+      :host > io-number-ladder-step:hover,
+      :host > io-number-ladder-step:focus {
+        background-color: var(--io-background-color-light);
+        border-color: var(--io-color-focus);
+        transition: opacity 0.2s;
+        opacity: 1;
+      }
+      :host > .io-number-ladder-empty {
+        height: var(--io-field-height);
+      }
+      :host > .io-number-ladder-center {
+        height: calc(1.5 * var(--io-field-height));
+      }
     `;
   }
 
@@ -509,7 +504,7 @@ export class IoNumberLadder extends IoElement {
         const layerRect = IoLayerSingleton.getBoundingClientRect();
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
-        this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.cssLineHeight / 2 + IoThemeSingleton.cssSpacing) + 'px';
+        this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.ioLineHeight / 2 + IoThemeSingleton.ioSpacing) + 'px';
       } else {
         this.removeAttribute('style');
       }
@@ -560,8 +555,19 @@ export class IoNumberLadder extends IoElement {
       (this.step <= downStep4) ? ['io-number-ladder-step', {class: 'io-down4', value: downStep4, label: String(downLabel4)}] : hiddenItem,
     ]);
 
+    this.setAttribute('aria-valuemin', this.min);
+    this.setAttribute('aria-valuemax', this.max);
+    this.setAttribute('aria-valuenow', this.value);
+    this.setAttribute('aria-valuestep', this.step);
+    this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value))  ? 'true' : false);
+
     const steps = this.querySelectorAll('io-number-ladder-step');
-    for (let i = steps.length; i--;) steps[i].changed();
+    for (let i = steps.length; i--;) {
+      steps[i].setAttribute('aria-valuemin', this.min);
+      steps[i].setAttribute('aria-valuemax', this.max);
+      steps[i].setAttribute('aria-valuenow', this.value);
+      steps[i].changed();
+    }
   }
 }
 

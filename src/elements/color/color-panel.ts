@@ -26,12 +26,11 @@ export class IoColorPanel extends IoColorMixin(IoElement) {
     return /* css */`
     :host {
       @apply --io-panel;
-      display: flex;
+      @apply --io-column;
       cursor: move;
       align-items: stretch;
       min-width: var(--io-line-height);
       min-height: var(--io-line-height);
-      flex-direction: column;
     }
     :host:not([expanded]) {
       display: none;

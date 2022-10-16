@@ -45,7 +45,7 @@ type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
  *   static get Frag() {
  *     return `
  *     void main(void) {
- *       gl_FragColor = cssBackgroundColor;
+ *       gl_FragColor = ioBackgroundColor;
  *     }`;
  *   }
  * }
@@ -57,21 +57,21 @@ type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
 export class IoGl extends IoElement {
   static get Style() {
     return /* css */`
-    :host {
-      position: relative;
-      overflow: hidden !important;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      box-sizing: border-box;
-    }
-    :host > .io-gl-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      border-radius: calc(var(--io-border-radius) - var(--io-border-width));
-      pointer-events: none;
-      /* image-rendering: pixelated; */
-    }
+      :host {
+        position: relative;
+        overflow: hidden !important;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        box-sizing: border-box;
+      }
+      :host > .io-gl-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: calc(var(--io-border-radius) - var(--io-border-width));
+        pointer-events: none;
+        /* image-rendering: pixelated; */
+      }
     `;
   }
   @IoProperty({value: [0, 0]})

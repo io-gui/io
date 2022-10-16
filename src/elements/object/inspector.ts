@@ -31,7 +31,7 @@ export class IoInspector extends IoElement {
       flex: 1 1;
     }
     :host > .inspector-header > io-boolean {
-      width: calc(var(--io-spacing) + var(--io-field-height));
+      width: calc(var(--io-spacing) + var(--io-line-height));
       align-self: stretch;
       height: auto;
     }

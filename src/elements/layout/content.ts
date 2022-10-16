@@ -9,6 +9,17 @@ import { IoElement, RegisterIoElement } from '../../core/element.js';
 export class IoContent extends IoElement {
   static get Style() {
     return /* css */`
+    --io-content: {
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      justify-self: stretch;
+      flex: 1 1 auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      -webkit-tap-highlight-color: transparent;
+    }
     :host {
       @apply --io-content;
     }

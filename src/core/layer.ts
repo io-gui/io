@@ -2,18 +2,18 @@ import { IoProperty } from './internals/property.js';
 import { IoElement, RegisterIoElement } from './element.js';
 
 let lastFocus: Element | null = null;
-{
-  window.addEventListener('focusin', () => {
-    lastFocus = document.activeElement;
-  }, {capture: false});
-  window.addEventListener('blur', () => {
-    setTimeout(() => {
-      if (document.activeElement === document.body) {
-        lastFocus = null;
-      }
-    });
-  }, {capture: true});
-}
+
+window.addEventListener('focusin', () => {
+  lastFocus = document.activeElement;
+}, {capture: false});
+
+window.addEventListener('blur', () => {
+  setTimeout(() => {
+    if (document.activeElement === document.body) {
+      lastFocus = null;
+    }
+  });
+}, {capture: true});
 
 type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
 /*
@@ -25,33 +25,33 @@ type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
 class IoLayer extends IoElement {
   static get Style() {
     return /* css */`
-    :host {
-      display: block;
-      visibility: hidden;
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      z-index: 100000;
-      user-select: none;
-      overflow: hidden;
-      pointer-events: none;
-      touch-action: none;
-      opacity: 0;
-      transition: opacity 0.5s;
-      background: transparent;
-    }
-    :host[expanded] {
-      pointer-events: all;
-      visibility: visible;
-      opacity: 1;
-      background: rgba(0,0,0,0.2);
-    }
-    :host > * {
-      position: absolute;
-      touch-action: none;
-    }
+      :host {
+        display: block;
+        visibility: hidden;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 100000;
+        user-select: none;
+        overflow: hidden;
+        pointer-events: none;
+        touch-action: none;
+        opacity: 0;
+        transition: opacity 0.5s;
+        background: transparent;
+      }
+      :host[expanded] {
+        pointer-events: all;
+        visibility: visible;
+        opacity: 1;
+        background: rgba(0,0,0,0.2);
+      }
+      :host > * {
+        position: absolute;
+        touch-action: none;
+      }
     `;
   }
   @IoProperty({value: false, reflect: 'prop'})

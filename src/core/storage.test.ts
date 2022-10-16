@@ -6,6 +6,10 @@ localStorage.removeItem('io-storage:test3');
 localStorage.removeItem('io-storage:test4');
 localStorage.removeItem('io-storage:test5');
 
+const permited = localStorage.getItem('io-storage-user-permitted');
+
+localStorage.setItem('io-storage-user-permitted', 'true');
+
 export default class {
   run() {
     describe('IoStorageNode', () => {
@@ -110,11 +114,11 @@ export default class {
           self.location.hash = self.location.hash.replace('test6=2', 'test6=3');
 
           await afterHashChange();
-          
+
           chai.expect(node.value).to.be.equal(3);
-          
+
           self.location.hash = self.location.hash.replace('test6=3', 'test6="3"');
-          
+
           await afterHashChange();
 
           chai.expect(node.value).to.be.equal('3');
@@ -133,6 +137,8 @@ export default class {
           chai.expect(self.location.hash).to.include('test6=%222%22');
 
           node.dispose();
+
+          if (!permited || permited === 'false') localStorage.setItem('io-storage-user-permitted', 'false');
         });
       });
     });
