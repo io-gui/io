@@ -525,7 +525,7 @@ export declare class ChangeQueue {
 	 * Dispatches and clears the queue.
 	 * For each property change in the queue:
 	 *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
-	 *  - It executes node's `[propNamecssFieldHeight(change)` change handler function if it is defined.
+	 *  - It executes node's `[propName(change)` change handler function if it is defined.
 	 * If owner node is not connected dispatch is aborted.
 	 * After all changes are dispatched it invokes `.changed()` functions od the owner node instance.
 	 */
@@ -594,7 +594,7 @@ declare const IoElement_base: {
  * Core `IoElement` class.
  */
 export declare class IoElement extends IoElement_base {
-	static get Style(): any;
+	static get Style(): string;
 	$: Record<string, any>;
 	tabindex: string;
 	contenteditable: boolean;
@@ -664,16 +664,21 @@ export declare class IoStorageNode extends IoNode {
 	dispose(): void;
 	_clearStorage(): void;
 	valueChanged(): void;
+	removeValueToHash(): void;
+	saveValueToHash(): void;
 }
 export declare const IoStorage: {
 	(props: StorageProps): Binding;
 	parseHash(hash: string): Record<string, string>;
-	loadHash(): void;
-	saveHash(): void;
+	getValueFromHash(key: string): any;
+	updateAllFromHash(): void;
 };
 export declare class IoTheme extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	static get Properties(): PropertyDeclarations;
+	lazy: boolean;
+	persist: boolean;
+	theme: string;
 	init(): void;
 	_toCss(rgba: number[]): string;
 	reset(): void;
