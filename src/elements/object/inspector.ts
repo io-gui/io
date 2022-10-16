@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import {IoStorageFactory as $} from '../../core/storage.js';
+import {IoStorage as $} from '../../core/storage.js';
 import {Config} from './config.js';
 import {Groups} from './groups.js';
 import {Widgets} from './widgets.js';
@@ -31,7 +31,7 @@ export class IoInspector extends IoElement {
       flex: 1 1;
     }
     :host > .inspector-header > io-boolean {
-      width: calc(var(--io-spacing) + var(--io-field-height));
+      width: calc(var(--io-spacing) + var(--io-line-height));
       align-self: stretch;
       height: auto;
     }

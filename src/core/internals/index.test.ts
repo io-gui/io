@@ -10,6 +10,6 @@ export default class {
     new ChangeQueueTest().run();
     new EventDispatcherTest().run();
     new PropertyTest().run();
-    new ProtoChainTest().run();
+    new ProtoChainTest().run ();
   }
 }

@@ -25,7 +25,7 @@ export class IoSlider extends IoGl {
       min-height: var(--io-line-height);
       align-self: stretch;
       justify-self: stretch;
-      flex-basis: calc(var(--io-line-height), var(--io-spacing));
+      flex-basis: var(--io-field-height);
     }
     :host[horizontal] {
       cursor: ew-resize;
@@ -229,9 +229,9 @@ export class IoSlider extends IoGl {
   static get GlUtils() {
     return /* glsl */`
     vec4 paintSlider(vec2 position, vec2 sliderStart, vec2 sliderEnd, float knobRadius, float slotWidth, vec3 color) {
-      vec4 slotColor = mix(cssColor, cssBackgroundColorField, 0.125);
+      vec4 slotColor = mix(ioColor, ioBackgroundColorField, 0.125);
       vec4 sliderColor = vec4(0.0);
-      float stroke = cssStrokeWidth;
+      float stroke = ioStrokeWidth;
 
       vec2 startPos = translate(position, sliderStart);
       vec2 endPos = translate(position, sliderEnd);
@@ -250,7 +250,7 @@ export class IoSlider extends IoGl {
         rectangle(slotCenter, vec2(slotSpan, slotWidth + stroke))),
         circle(endPos, knobRadius + stroke)
       );
-      sliderColor = mix(vec4(cssBackgroundColor.rgb, 1.0), sliderColor, fillShape);
+      sliderColor = mix(vec4(ioBackgroundColor.rgb, 1.0), sliderColor, fillShape);
 
       float colorShape = min(min(
         circle(startPos, knobRadius),
@@ -270,7 +270,7 @@ export class IoSlider extends IoGl {
     varying vec2 vUv;
 
     void main(void) {
-      vec3 finalColor = cssBackgroundColorField.rgb;
+      vec3 finalColor = ioBackgroundColorField.rgb;
 
       vec2 size = uHorizontal == 1 ? uSize : uSize.yx;
       vec2 uv = uHorizontal == 1 ? vUv : vUv.yx;
@@ -278,9 +278,9 @@ export class IoSlider extends IoGl {
 
 
       float stepInPx = size.x / ((uMax - uMin) / uStep);
-      vec4 stepColorBg = mix(cssColor, cssBackgroundColorField, 0.75);
+      vec4 stepColorBg = mix(ioColor, ioBackgroundColorField, 0.75);
 
-      float lineWidth = cssStrokeWidth;
+      float lineWidth = ioStrokeWidth;
       if (stepInPx > lineWidth * 2.0) {
         // TODO: grid with exponent
         float gridWidth = size.x / ((uMax - uMin) / uStep);
@@ -290,9 +290,9 @@ export class IoSlider extends IoGl {
         finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
       }
 
-      vec4 slotGradient = mix(cssColorFocus, cssColorLink, uv.x);
-      float knobRadius = cssFieldHeight * 0.125;
-      float slotWidth = cssFieldHeight * 0.125;
+      vec4 slotGradient = mix(ioColorFocus, ioColorLink, uv.x);
+      float knobRadius = ioFieldHeight * 0.125;
+      float slotWidth = ioFieldHeight * 0.125;
 
       float valueInRange = (uValue - uMin) / (uMax - uMin);
       float sign = valueInRange < 0.0 ? -1.0 : 1.0;
