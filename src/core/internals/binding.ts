@@ -33,12 +33,13 @@ export class Binding {
    * @param {string} property - Target property
    */
   addTarget(node: IoNode, property: string) {
+    const propertyInstance = node._properties.get(property)!;
     debug: {
-      if (node._properties[property].binding && node._properties[property].binding !== this) {
+      if (propertyInstance.binding && propertyInstance.binding !== this) {
         console.warn('Binding target alredy has a binding!');
       }
     }
-    node._properties[property].binding = this;
+    propertyInstance.binding = this;
     node.setProperty(property, this.node[this.property]);
     const target = node as unknown as EventTarget;
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
@@ -62,11 +63,11 @@ export class Binding {
       const i = targetProperties.indexOf(property);
       if (i !== -1) targetProperties.splice(i, 1);
       node.removeEventListener(`${property}-changed`, this.onTargetChanged as EventListener);
-      node._properties[property].binding = undefined;
+      node._properties.get(property)!.binding = undefined;
     } else {
       for (let i = targetProperties.length; i--;) {
         node.removeEventListener(`${targetProperties[i]}-changed`, this.onTargetChanged as EventListener);
-        node._properties[targetProperties[i]].binding = undefined;
+        node._properties.get(targetProperties[i])!.binding = undefined;
       }
       targetProperties.length = 0;
     }

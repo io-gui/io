@@ -66,10 +66,10 @@ export default class {
         chai.expect(binding1.targets[1]).to.be.equal(dstIoNode1);
         chai.expect(binding1.targets[2]).to.be.equal(undefined);
 
-        chai.expect(dstIoNode0._properties['prop1'].binding).to.be.equal(binding0);
-        chai.expect(dstIoNode0._properties['prop2'].binding).to.be.equal(binding1);
-        chai.expect(dstIoNode1._properties['prop1'].binding).to.be.equal(binding1);
-        chai.expect(dstIoNode1._properties['prop2'].binding).to.be.equal(binding1);
+        chai.expect(dstIoNode0._properties.get('prop1')!.binding).to.be.equal(binding0);
+        chai.expect(dstIoNode0._properties.get('prop2')!.binding).to.be.equal(binding1);
+        chai.expect(dstIoNode1._properties.get('prop1')!.binding).to.be.equal(binding1);
+        chai.expect(dstIoNode1._properties.get('prop2')!.binding).to.be.equal(binding1);
 
         const binding0target0Props = binding0.getTargetProperties(dstIoNode0);
         const binding0target1Props = binding0.getTargetProperties(dstIoNode1);
@@ -88,7 +88,7 @@ export default class {
         binding1.removeTarget(dstIoNode1, 'prop1');
         chai.expect(binding1target1Props[0]).to.be.equal('prop2');
         chai.expect(binding1target1Props.length).to.be.equal(1);
-        chai.expect(dstIoNode1._properties['prop1'].binding).to.be.equal(undefined);
+        chai.expect(dstIoNode1._properties.get('prop1')!.binding).to.be.equal(undefined);
 
         chai.expect(dstIoNode1._eventDispatcher.addedListeners).to.be.eql({
           'prop2-changed': [[binding1.onTargetChanged]]
@@ -96,11 +96,11 @@ export default class {
 
         binding1.addTarget(dstIoNode1, 'prop1');
         chai.expect(binding1target1Props.length).to.be.equal(2);
-        chai.expect(dstIoNode1._properties['prop1'].binding).to.be.equal(binding1);
+        chai.expect(dstIoNode1._properties.get('prop1')!.binding).to.be.equal(binding1);
         binding1.removeTarget(dstIoNode1);
         chai.expect(binding1target1Props.length).to.be.equal(0);
-        chai.expect(dstIoNode1._properties['prop1'].binding).to.be.equal(undefined);
-        chai.expect(dstIoNode1._properties['prop2'].binding).to.be.equal(undefined);
+        chai.expect(dstIoNode1._properties.get('prop1')!.binding).to.be.equal(undefined);
+        chai.expect(dstIoNode1._properties.get('prop2')!.binding).to.be.equal(undefined);
 
         chai.expect(dstIoNode1._eventDispatcher.addedListeners).to.be.eql({});
       });
@@ -123,7 +123,7 @@ export default class {
         chai.expect(binding.property).to.be.equal(undefined);
         chai.expect(binding.targets).to.be.equal(undefined);
         chai.expect(binding.targetProperties).to.be.equal(undefined);
-        chai.expect(dstIoNode._properties['prop1'].binding).to.be.equal(undefined);
+        chai.expect(dstIoNode._properties.get('prop1')!.binding).to.be.equal(undefined);
 
         chai.expect(node._eventDispatcher.addedListeners).to.be.eql({});
 

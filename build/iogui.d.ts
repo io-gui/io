@@ -261,8 +261,8 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, PropertyInstance>;
-		readonly _bindings: Record<string, Binding>;
+		readonly _properties: Map<string, PropertyInstance>;
+		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
@@ -382,8 +382,8 @@ declare const IoNode_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, PropertyInstance>;
-		readonly _bindings: Record<string, Binding>;
+		readonly _properties: Map<string, PropertyInstance>;
+		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
@@ -564,8 +564,8 @@ declare const IoElement_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, PropertyInstance>;
-		readonly _bindings: Record<string, Binding>;
+		readonly _properties: Map<string, PropertyInstance>;
+		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
@@ -776,8 +776,8 @@ declare const Options_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, PropertyInstance>;
-		readonly _bindings: Record<string, Binding>;
+		readonly _properties: Map<string, PropertyInstance>;
+		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;

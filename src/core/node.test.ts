@@ -87,30 +87,35 @@ export default class {
 
           const protoProps1 = node1._protochain.properties;
           const protoProps2 = node2._protochain.properties;
-          const props1 = node1._properties;
-          const props2 = node2._properties;
 
-          chai.expect(Object.keys(props1)).to.be.eql(['lazy', 'prop1', 'prop2']);
-          chai.expect(Object.keys(props2)).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
+          chai.expect(Object.keys(node1._properties)).to.be.eql(['lazy', 'prop1', 'prop2']);
+          chai.expect(Object.keys(node2._properties)).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
 
           chai.expect(protoProps1.prop1.value).to.be.equal(0);
-          chai.expect(props1['prop1'].value).to.be.equal(0);
-          chai.expect(props1['prop1'].type).to.be.equal(Number);
-          chai.expect(props1['prop1'].notify).to.be.equal(true);
-          chai.expect(props1['prop1'].reflect).to.be.equal('none');
-          chai.expect(props1['prop1'].observe).to.be.equal(false);
+          chai.expect(node1._properties.get('prop1')).to.be.eql({
+            value: 0,
+            type: Number,
+            notify: true,
+            reflect: 'none',
+            observe: false,
+          });
 
           chai.expect(protoProps2.prop1.value).to.be.eql({});
-          chai.expect(props2['prop1'].value).to.be.eql({});
-          chai.expect(props2['prop1'].type).to.be.equal(Object);
-          chai.expect(props2['prop1'].notify).to.be.equal(false);
-          chai.expect(props2['prop1'].reflect).to.be.equal('none');
-          chai.expect(props2['prop1'].observe).to.be.equal(true);
+          chai.expect(node2._properties.get('prop1')).to.be.eql({
+            value: {},
+            type: Object,
+            notify: false,
+            reflect: 'none',
+            observe: true,
+          });
 
-          chai.expect(props2['prop2'].value).to.be.equal(null);
-          chai.expect(props2['prop2'].type).to.be.equal(undefined);
-          chai.expect(props2['prop2'].notify).to.be.equal(true);
-          chai.expect(props2['prop2'].observe).to.be.equal(false);
+          chai.expect(node2._properties.get('prop2')).to.be.eql({
+            value: null,
+            type: undefined,
+            notify: false,
+            reflect: 'none',
+            observe: false,
+          });
         });
         it('Should favor explicit property definitions over implicit', () => {
           class Object1 {
@@ -181,20 +186,18 @@ export default class {
           const node1 = new Object1();
           const node2 = new Object2();
 
-          const props1 = node1._properties;
-          const props2 = node2._properties;
 
-          chai.expect(props1['prop1'].binding).to.be.equal(binding1);
-          chai.expect(props2['prop1'].binding).to.be.equal(binding2);
-          chai.expect(props2['prop3'].binding).to.be.equal(binding3);
+          chai.expect(node1._properties.get('prop1')!.binding).to.be.equal(binding1);
+          chai.expect(node2._properties.get('prop1')!.binding).to.be.equal(binding2);
+          chai.expect(node2._properties.get('prop3')!.binding).to.be.equal(binding3);
 
           chai.expect((binding1 as any).targets[0]).to.be.equal(node1);
           chai.expect((binding2 as any).targets[0]).to.be.equal(node2);
           chai.expect((binding3 as any).targets[0]).to.be.equal(node2);
 
-          chai.expect(props1['prop1'].value).to.be.equal('binding1');
-          chai.expect(props2['prop1'].value).to.be.equal('binding2');
-          chai.expect(props2['prop3'].value).to.be.equal('binding3');
+          chai.expect(node1._properties.get('prop1')!.value).to.be.equal('binding1');
+          chai.expect(node2._properties.get('prop1')!.value).to.be.equal('binding2');
+          chai.expect(node2._properties.get('prop3')!.value).to.be.equal('binding3');
         });
       });
       describe('Construction', () => {
@@ -214,12 +217,11 @@ export default class {
           }
 
           const node = new TestNode();
-          const properties = node._properties;
 
-          chai.expect(properties['prop1'].value).to.be.equal(1);
+          chai.expect(node._properties.get('prop1')!.value).to.be.equal(1);
           chai.expect(node.prop1).to.be.equal(1);
           node.setProperty('prop1', 0);
-          chai.expect(properties['prop1'].value).to.be.equal(0);
+          chai.expect(node._properties.get('prop1')!.value).to.be.equal(0);
           chai.expect(node.prop1).to.be.equal(0);
         });
         it('Should correctly get/set bound properties', () => {
@@ -246,19 +248,19 @@ export default class {
           }
 
           const node = new TestNode2();
-          const properties = node._properties;
 
-          chai.expect(properties['prop1'].value).to.be.equal('binding1');
+          chai.expect(node._properties.get('prop1')!.value).to.be.equal('binding1');
           chai.expect(node.prop1).to.be.equal('binding1');
 
-          chai.expect(properties['prop1'].binding).to.be.equal(binding1);
+          chai.expect(node._properties.get('prop1')!.binding).to.be.equal(binding1);
           chai.expect((binding1 as any).targets[0]).to.be.equal(node);
 
           binding1.removeTarget(node, 'prop1');
-          node._properties['prop1'].binding = undefined;
+          const prop = node._properties.get('prop1');
+          if (prop) prop.binding = undefined;
 
           node.setProperty('prop1', binding2);
-          chai.expect(properties['prop1'].value).to.be.equal('binding2');
+          chai.expect(node._properties.get('prop1')!.value).to.be.equal('binding2');
           chai.expect(node.prop1).to.be.equal('binding2');
 
           chai.expect((binding1 as any).targets[0]).to.be.equal(undefined);
@@ -637,7 +639,7 @@ export default class {
           }
           const node = new TestNode();
           const binding0 = node.bind('prop1');
-          chai.expect(binding0).to.be.equal(node._bindings['prop1']);
+          chai.expect(binding0).to.be.equal(node._bindings.get('prop1'));
           chai.expect(binding0).to.be.equal(node.bind('prop1'));
         });
         it('Should dispose bindings correctly', () => {
@@ -653,7 +655,7 @@ export default class {
           const node1 = new TestNode();
           const binding0 = node1.bind('prop1') as any;
           node1.unbind('prop1');
-          chai.expect(node1._bindings.prop1).to.be.equal(undefined);
+          chai.expect(node1._bindings.get('prop1')).to.be.equal(undefined);
           chai.expect(binding0.prop1).to.be.equal(undefined);
 
           const node2 = new TestNode();

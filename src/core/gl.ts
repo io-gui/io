@@ -163,18 +163,16 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
 
-    for (const name in this.theme._properties) {
-      const property = this.theme._properties[name];
+    this.theme._properties.forEach((property, name) => {
       frag += this.initPropertyUniform(name, property);
-    }
+    });
 
     frag += '\n';
 
-    for (const prop in this._properties) {
+    this._properties.forEach((property, prop) => {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = this._properties[prop];
       frag += this.initPropertyUniform(name, property);
-    }
+    });
 
     for (let i = this._protochain.constructors.length; i--;) {
       const constructor = this._protochain.constructors[i];
@@ -216,19 +214,17 @@ export class IoGl extends IoElement {
 
     // TODO: improve code clarity
     this._vecLengths = {};
-    for (const name in this.theme._properties) {
-      const property = this.theme._properties[name];
+    this.theme._properties.forEach((property, name) => {
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }
-    }
-    for (const prop in this._properties) {
-      const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = this._properties[prop];
+    });
+    this._properties.forEach((property, name) => {
+      const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
       if (property.notify && property.type === Array) {
-        this._vecLengths[name] = property.value.length;
+        this._vecLengths[uname] = property.value.length;
       }
-    }
+    });
 
     if (shadersCache.has(this.constructor)) {
       this._shader = shadersCache.get(this.constructor);
@@ -308,10 +304,10 @@ export class IoGl extends IoElement {
     this.setShaderProgram();
 
     // TODO: dont brute-force uniform update.
-    for (const p in this._properties) {
-      const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-      this.updatePropertyUniform(name, this._properties[p]);
-    }
+    this._properties.forEach((property, name) => {
+      const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
+      this.updatePropertyUniform(uname, property);
+    });
 
     canvas.width = width;
     canvas.height = height;
@@ -341,9 +337,9 @@ export class IoGl extends IoElement {
     }
   }
   updateThemeUniforms() {
-    for (const name in this.theme._properties) {
-      this.updatePropertyUniform(name, this.theme._properties[name]);
-    }
+    this.theme._properties.forEach((property, name) => {
+      this.updatePropertyUniform(name, property);
+    });
   }
   setUniform(name: string, type: UniformTypes, value: any) {
     const uniform = gl.getUniformLocation(this._shader, name);

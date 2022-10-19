@@ -17,7 +17,7 @@ export class Path extends IoNode {
   }
   valueChanged() {
     // TODO: redesign. Investigate why inputValue causes infinite loop.
-    this._properties['value'].value = new Proxy(this._properties['value'].value, {
+    this._properties.get('value')!.value = new Proxy(this._properties.get('value')!.value, {
       get: (target, prop) => target[prop],
       set: (target, prop, value) => {
         if (target[prop] === value) return true;
