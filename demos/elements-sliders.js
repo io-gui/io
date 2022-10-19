@@ -42,8 +42,12 @@ export class IoDemoElementsSliders extends IoElement {
         ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.25}],
       ]],
       ['div', [
-        ['io-label', {label: 'slider [exp]'}],
-        ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.0000001, exponent: 5}],
+        ['io-label', {label: 'slider {exp: 3.0}'}],
+        ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.0000001, exponent: 3}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'slider {exp: 0.3}'}],
+        ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.0000001, exponent: 0.3}],
       ]],
         ['div', [
           ['io-label', {label: 'number-slider'}],
