@@ -79,15 +79,15 @@ class EmulatedLocalStorage {
 const localStorage = new EmulatedLocalStorage();
 
 type StorageNodes = {
-  local: Record<string, IoStorageNode>,
-  hash: Record<string, IoStorageNode>,
-  none: Record<string, IoStorageNode>
+  local: Map<string, IoStorageNode>,
+  hash: Map<string, IoStorageNode>,
+  none: Map<string, IoStorageNode>
 }
 
 const nodes: StorageNodes = {
-  local: {},
-  hash: {},
-  none: {},
+  local: new Map(),
+  hash: new Map(),
+  none: new Map(),
 };
 
 let hashValues: Record<string, any> = {};
@@ -128,8 +128,8 @@ export class IoStorageNode extends IoNode {
       }
     }
     const s = (props.storage || 'none') as keyof StorageNodes;
-    if (nodes[s][props.key]) {
-      return nodes[s][props.key];
+    if (nodes[s].has(props.key)) {
+      return nodes[s].get(props.key) as IoStorageNode;
     } else {
       const def = props.default || props.value;
       switch (props.storage) {
@@ -156,7 +156,9 @@ export class IoStorageNode extends IoNode {
         props.value = def;
       }
       super(Object.assign({default: def}, props));
-      nodes[s][props.key] = this;
+      if (props.key !== '__proto__') {
+        nodes[s].set(props.key, this);
+      }
 
       this.binding = this.bind('value');
       this.binding.dispose = () => {
@@ -180,7 +182,8 @@ export class IoStorageNode extends IoNode {
         break;
       }
     }
-    delete nodes[this.storage][this.key];
+    const s = (this.storage) as keyof StorageNodes;
+    nodes[s].delete(this.key);
   }
   valueChanged() {
     switch (this.storage) {
@@ -283,11 +286,12 @@ IoStorage.getValueFromHash = function(key: string) {
 IoStorage.updateAllFromHash = function() {
   hashValues = IoStorage.parseHash(self.location.hash);
   for (const h in hashValues) {
-    if (nodes.hash[h]) {
+    if (nodes.hash.has(h)) {
+      const node = nodes.hash.get(h) as IoStorageNode;
       try {
-        nodes.hash[h].value = JSON.parse(hashValues[h]);
+        node.value = JSON.parse(hashValues[h]);
       } catch (e) {
-        nodes.hash[h].value = hashValues[h];
+        node.value = hashValues[h];
       }
     }
   }
