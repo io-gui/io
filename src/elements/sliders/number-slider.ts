@@ -40,6 +40,9 @@ export class IoNumberSlider extends IoElement {
     this.value = event.detail.value;
     this.dispatchEvent('value-input', event.detail, false);
   }
+  init() {
+    this.changed();
+  }
   changed() {
     this.template([
       ['io-number', {

@@ -42,46 +42,6 @@ export class IoSliderRange extends IoSlider {
     this.inputValue(this.value);
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
   }
-  _onKeydown(event: KeyboardEvent) {
-    switch(event.key) {
-      case 'ArrowLeft':
-        event.preventDefault();
-        if (!event.shiftKey) this.focusTo('left');
-        else this._setDecrease();
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        if (!event.shiftKey) this.focusTo('up');
-        else this._setIncrease();
-        break;
-      case 'ArrowRight':
-        event.preventDefault();
-        if (!event.shiftKey) this.focusTo('right');
-        else this._setIncrease();
-        break;
-      case 'ArrowDown':
-        event.preventDefault();
-        if (!event.shiftKey) this.focusTo('down');
-        else this._setDecrease();
-        break;
-      case 'PageUp':
-      case '+':
-        event.preventDefault();
-        this._setIncrease();
-        break;
-      case 'PageDown':
-      case '-':
-        event.preventDefault();
-        this._setDecrease();
-        break;
-      case 'Home':
-        event.preventDefault();
-        this._setMin();
-        break;
-      default:
-        break;
-    }
-  }
   // TODO: round to step
   _setIncrease() {
     let x = this.value[0] + this.step;
@@ -112,6 +72,7 @@ export class IoSliderRange extends IoSlider {
     this._inputValue(x, y);
   }
   init() {
+    this.changed();
   }
   changed() {
     super.changed();

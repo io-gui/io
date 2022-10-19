@@ -49,6 +49,9 @@ export class IoNumberSliderRange extends IoElement {
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-input', event.detail, false);
   }
+  init() {
+    this.changed();
+  }
   changed() {
     this.template([
       ['io-number', {
