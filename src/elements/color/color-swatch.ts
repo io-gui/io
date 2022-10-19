@@ -22,8 +22,6 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
       border-radius: var(--io-border-radius);
       border: var(--io-border);
       border-color: var(--io-color-border-inset);
-      min-width: var(--io-field-height);
-      min-height: var(--io-field-height);
     }
     :host[aria-invalid] {
       border: var(--io-border-error);
@@ -44,7 +42,7 @@ export class IoColorSwatch extends IoColorMixin(IoGl) {
         vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 6.));
 
         float alpha = uAlpha;
-        float lineWidth = cssStrokeWidth * 2.0;
+        float lineWidth = ioStrokeWidth * 2.0;
         vec2 pxUv = vUv * uSize;
         if (pxUv.x < lineWidth) alpha = 1.0;
         if (pxUv.y < lineWidth) alpha = 1.0;

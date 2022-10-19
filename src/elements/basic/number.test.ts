@@ -224,9 +224,6 @@ export default class {
           chai.expect(step.getAttribute('value')).to.equal(null);
           chai.expect(step.getAttribute('role')).to.equal('spinbutton');
           chai.expect(step.getAttribute('type')).to.equal('number');
-          // chai.expect(step.getAttribute('aria-valuemin')).to.equal('-Infinity');
-          // chai.expect(step.getAttribute('aria-valuemax')).to.equal('Infinity');
-          // chai.expect(step.getAttribute('aria-valuestep')).to.equal('0.0001');
         });
         it('has correct default innerHTML', () => {
           chai.expect(step.innerHTML).to.equal('<io-label label="1" aria-label="1">1</io-label>');
@@ -242,13 +239,6 @@ export default class {
           step.value = 2;
           chai.expect(step.getAttribute('value')).to.equal(null);
           step.value = 1;
-        });
-      });
-      describe('Accessibility', () => {
-        it('has a11y attributes', () => {
-          // chai.expect(step.getAttribute('aria-valuemin')).to.equal('0');
-          // chai.expect(step.getAttribute('aria-valuemax')).to.equal('24');
-          // chai.expect(step.getAttribute('aria-valuestep')).to.equal('2');
         });
       });
     });
@@ -285,12 +275,9 @@ export default class {
         it('has correct default attributes', () => {
           chai.expect(ladder.getAttribute('role')).to.equal('list');
           chai.expect(ladder.getAttribute('expanded')).to.equal(null);
-          // chai.expect(ladder.getAttribute('aria-valuemin')).to.equal('-Infinity');
-          // chai.expect(ladder.getAttribute('aria-valuemax')).to.equal('Infinity');
-          // chai.expect(ladder.getAttribute('aria-valuestep')).to.equal('0.0001');
         });
         it('has correct default innerHTML', () => {
-          chai.expect(ladder.innerHTML).to.equal('<io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-up4" label="1000" aria-label="1000" aria-valuemax="Infinity" aria-valuemin="-Infinity" aria-valuenow="0"><io-label label="1000" aria-label="1000">1000</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-up3" label="100" aria-label="100" aria-valuemax="Infinity" aria-valuemin="-Infinity" aria-valuenow="0"><io-label label="100" aria-label="100">100</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-up2" label="10" aria-label="10" aria-valuemax="Infinity" aria-valuemin="-Infinity" aria-valuenow="0"><io-label label="10" aria-label="10">10</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-up1" label="1" aria-label="1" aria-valuemax="Infinity" aria-valuemin="-Infinity" aria-valuenow="0"><io-label label="1" aria-label="1">1</io-label></io-number-ladder-step><span class="io-number-ladder-center"></span><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-down1" label="0.1" aria-label="0.1" aria-valuemax="Infinity" aria-valuemin="-Infinity" aria-valuenow="0"><io-label label="0.1" aria-label="0.1">0.1</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-down2" label="0.01" aria-label="0.01" aria-valuemax="Infinity" aria-valuemin="-Infinity" aria-valuenow="0"><io-label label="0.01" aria-label="0.01">0.01</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-down3" label="0.001" aria-label="0.001" aria-valuemax="Infinity" aria-valuemin="-Infinity" aria-valuenow="0"><io-label label="0.001" aria-label="0.001">0.001</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-down4" label="0.0001" aria-label="0.0001" aria-valuemax="Infinity" aria-valuemin="-Infinity" aria-valuenow="0"><io-label label="0.0001" aria-label="0.0001">0.0001</io-label></io-number-ladder-step>');
+          chai.expect(ladder.innerHTML).to.equal('<io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-up4" label="1000" aria-label="1000" aria-valuestep="1000" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="1000" aria-label="1000">1000</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-up3" label="100" aria-label="100" aria-valuestep="100" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="100" aria-label="100">100</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-up2" label="10" aria-label="10" aria-valuestep="10" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="10" aria-label="10">10</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-up1" label="1" aria-label="1" aria-valuestep="1" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="1" aria-label="1">1</io-label></io-number-ladder-step><span class="io-number-ladder-center"></span><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-down1" label="0.1" aria-label="0.1" aria-valuestep="0.1" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.1" aria-label="0.1">0.1</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-down2" label="0.01" aria-label="0.01" aria-valuestep="0.010000000000000002" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.01" aria-label="0.01">0.01</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-down3" label="0.001" aria-label="0.001" aria-valuestep="0.001" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.001" aria-label="0.001">0.001</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" type="number" class="io-down4" label="0.0001" aria-label="0.0001" aria-valuestep="0.0001" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.0001" aria-label="0.0001">0.0001</io-label></io-number-ladder-step>');
         });
       });
       describe('Reactivity', () => {
@@ -387,24 +374,26 @@ export default class {
       });
       describe('Accessibility', () => {
         it('TODO', () => {
-          chai.expect('TODO').to.be.equal(false);
+          chai.expect(ladder.getAttribute('aria-valuemin')).to.equal('-Infinity');
+          chai.expect(ladder.getAttribute('aria-valuemax')).to.equal('Infinity');
+          chai.expect(ladder.getAttribute('aria-valuenow')).to.equal('0');
         });
         it('has a11y attributes', () => {
           // TODO: Aria attributes
           chai.expect(ladder.getAttribute('aria-invalid')).to.equal(null);
           element.value = NaN;
           ladder.changed();
-          // chai.expect(ladder.getAttribute('aria-invalid')).to.equal('true');
-          element.value = 0;
+          chai.expect(ladder.getAttribute('aria-invalid')).to.equal('true');
+          element.value = 12;
           ladder.changed();
           element.min = 0;
           element.max = 24;
           element.step = 2;
           ladder.changed();
-          // chai.expect(ladder.getAttribute('aria-valuenow')).to.equal('12');
-          // chai.expect(ladder.getAttribute('aria-valuemin')).to.equal('0');
-          // chai.expect(ladder.getAttribute('aria-valuemax')).to.equal('24');
-          // chai.expect(ladder.getAttribute('aria-valuestep')).to.equal('2');
+          chai.expect(ladder.getAttribute('aria-valuenow')).to.equal('12');
+          chai.expect(ladder.getAttribute('aria-valuemin')).to.equal('0');
+          chai.expect(ladder.getAttribute('aria-valuemax')).to.equal('24');
+          chai.expect(ladder.getAttribute('aria-valuestep')).to.equal('2');
           element.min = -Infinity;
           element.max = Infinity;
           element.step = 0.0001;

@@ -70,7 +70,7 @@ export const buildTree = () => (node: VDOMArray): any => isObject(node[1]) ? {
 export function RegisterIoElement(elementConstructor: typeof IoElement) {
   RegisterIoNode(elementConstructor);
 
-  const localName = elementConstructor.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  const localName = elementConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
 
   Object.defineProperty(elementConstructor, 'localName', {value: localName});
   Object.defineProperty(elementConstructor.prototype, 'localName', {value: localName});
@@ -193,7 +193,7 @@ const applyNativeElementProps = function(element: HTMLElement, props: any) {
  */
 @RegisterIoElement
 export class IoElement extends IoNodeMixin(HTMLElement) {
-  static get Style(): any {
+  static get Style(): string {
     return /* css */`
       :host[hidden] { display: none; }
       :host[disabled] { pointer-events: none; opacity: 0.5; }

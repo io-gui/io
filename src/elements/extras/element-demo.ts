@@ -9,6 +9,7 @@ export class IoElementDemo extends IoElement {
     return /* css */`
     :host {
       @apply --io-panel;
+      @apply --io-column;
       position: relative;
     }
     :host > io-boolean {

@@ -1,10 +1,11 @@
-import {IoNumberSlider} from '../../iogui.js';
+import { IoNumberSlider } from '../../iogui.js';
 
 export default class {
   element = new IoNumberSlider();
   constructor() {
     this.element.style.display = 'none';
     document.body.appendChild(this.element as unknown as HTMLElement);
+    console.log(this.element.$.slider);
     this.element.$.slider.lazy = false;
   }
   reset() {

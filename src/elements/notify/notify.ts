@@ -1,5 +1,5 @@
 import {IoElement, RegisterIoElement } from '../../core/element.js';
-import {IoStorageFactory} from '../../core/storage.js';
+import {IoStorage} from '../../core/storage.js';
 
 /*
 
@@ -27,7 +27,7 @@ export class IoNotify extends IoElement {
     :host > span {
       cursor: default;
       box-sizing: border-box;
-      line-height: var(--io-field-height);
+      line-height: var(--io-line-height);
       font-size: var(--io-font-size);
       color: var(--io-color);
       padding: 0 var(--io-spacing);
@@ -71,14 +71,14 @@ export class IoNotify extends IoElement {
     ]);
   }
   _onAgree(event: CustomEvent) {
-    if (event.detail.value) (IoStorageFactory as any).permitted = true;
-    else (IoStorageFactory as any).permitted = false;
+    if (event.detail.value) (IoStorage as any).permitted = true;
+    else (IoStorage as any).permitted = false;
     this.expanded = false;
   }
   _onDisgree() {
-    (IoStorageFactory as any).permitted = false;
+    (IoStorage as any).permitted = false;
     this.expanded = false;
   }
 }
 
-if ((IoStorageFactory as any).permitted === null) document.body.appendChild(new IoNotify() as unknown as Node);
+if ((IoStorage as any).permitted === null) document.body.appendChild(new IoNotify() as unknown as Node);

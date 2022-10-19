@@ -3,8 +3,8 @@ import 'chai/chai.js';
 
 import { IoElement, RegisterIoElement } from './iogui.js';
 
-import CoreTests from './core/index.test.js';
-// import ElementsTests from './elements/index.test.js';
+// import CoreTests from './core/index.test.js';
+import ElementsTests from './elements/index.test.js';
 
 mocha.setup('bdd');
 
@@ -23,10 +23,18 @@ export async function nextTick(): Promise<void> {
   });
 }
 
+export async function afterHashChange(): Promise<void> {
+  return new Promise((resolve) => {
+    self.addEventListener('hashchange', () => {
+      resolve();
+    }, { once: true });
+  });
+}
+
 function runTests() {
   if (!testCompleted) {
-    new CoreTests().run();
-    // new ElementsTests().run();
+    // new CoreTests().run();
+    new ElementsTests().run();
     mocha.checkLeaks();
     mocha.run();
     testCompleted = true;
@@ -80,12 +88,12 @@ export class IoGuiTestPage extends IoElement {
     this.appendChild(mochaDiv);
     mochaDiv.style.display = 'block';
     runTests();
-    setTimeout(() => {
-      const failElement = this.parentElement.querySelector('.fail');
-      failElement.parentElement.parentElement.parentElement.parentElement.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }, 100);
+    // setTimeout(() => {
+    //   const failElement = this.parentElement.querySelector('.fail');
+    //   failElement.parentElement.parentElement.parentElement.scrollIntoView({
+    //     behavior: 'smooth'
+    //   });
+    // }, 200);
   }
   disconnectedCallback() {
     super.disconnectedCallback();

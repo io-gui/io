@@ -12,13 +12,13 @@ export class IoNumberSliderRange extends IoElement {
       flex-basis: 18em;
     }
     :host > io-number {
-      flex: 0 0 3em;
+      flex: 0 0 3.25em;
     }
     :host > io-slider-range {
       margin-left: var(--io-spacing);
       margin-right: var(--io-spacing);
-      flex: 1 1 3em;
-      min-width: 3em;
+      flex: 1 1 3.25em;
+      min-width: 3.25em;
     }
     `;
   }
@@ -48,6 +48,9 @@ export class IoNumberSliderRange extends IoElement {
     this.value = event.detail.value;
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-input', event.detail, false);
+  }
+  init() {
+    this.changed();
   }
   changed() {
     this.template([

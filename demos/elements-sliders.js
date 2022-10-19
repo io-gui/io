@@ -1,5 +1,4 @@
 import { IoElement, RegisterIoElement } from '../build/iogui.js';
-import '../build/iogui.js';
 
 export class IoDemoElementsSliders extends IoElement {
   static get Style() {
@@ -43,8 +42,12 @@ export class IoDemoElementsSliders extends IoElement {
         ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.25}],
       ]],
       ['div', [
-        ['io-label', {label: 'slider [exp]'}],
-        ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.0000001, exponent: 5}],
+        ['io-label', {label: 'slider {exp: 3.0}'}],
+        ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.0000001, exponent: 3}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'slider {exp: 0.3}'}],
+        ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.0000001, exponent: 0.3}],
       ]],
         ['div', [
           ['io-label', {label: 'number-slider'}],
@@ -62,6 +65,7 @@ export class IoDemoElementsSliders extends IoElement {
         ['io-label', {label: 'sliders [vertical]'}],
         ['io-slider', {value: this.bind('number'), horizontal: false, min: 0, max: 2, step: 0.25}],
         ['io-slider-range', {value: this.bind('vector2'), horizontal: false, min: -1, max: 2, step: 0.25}],
+        ['io-slider-2d', {value: 0, min: -1, max: 2, step: 0.25}],
       ]],
     ]);
   }

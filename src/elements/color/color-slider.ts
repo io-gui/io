@@ -24,9 +24,9 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
       vec4 slotColor = vec4(.2, .2, .2, 1.);
       vec4 fillColor = vec4(.8, .8, .8, 1.);
       vec4 sliderColor = vec4(0.);
-      float slotWidth = cssStrokeWidth * 1.5;
-      float radius = cssFieldHeight / 4.;
-      float stroke = cssStrokeWidth;
+      float slotWidth = ioStrokeWidth * 1.5;
+      float radius = ioFieldHeight / 4.;
+      float stroke = ioStrokeWidth;
       float strokeShape = min(circle(position, radius + stroke), rectangle(position - vec2(0., 2500.), vec2(slotWidth + stroke, 5000.)));
       sliderColor = mix(vec4(slotColor.rgb, 1.), sliderColor, strokeShape);
       float fillShape = min(circle(position, radius), rectangle(position - vec2(0., 2500.), vec2(slotWidth, 5000.)));
@@ -37,8 +37,8 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
     }
     vec4 paintColorSlider2D(vec2 position, vec3 color) {
       vec4 sliderColor = vec4(0.);
-      float radius = cssLineHeight / 2.;
-      float stroke = cssStrokeWidth;
+      float radius = ioLineHeight / 2.;
+      float stroke = ioStrokeWidth;
       vec4 slotColor = vec4(.2, .2, .2, 1.);
       vec4 fillColor = vec4(.8, .8, .8, 1.);
       vec2 width = (uHorizontal == 1) ? vec2(stroke * 2., uSize.y) : vec2(uSize.x, stroke * 2.);

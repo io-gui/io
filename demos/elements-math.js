@@ -1,5 +1,4 @@
 import { IoElement, RegisterIoElement } from '../build/iogui.js';
-import '../build/iogui.js';
 
 export class IoDemoElementsMath extends IoElement {
   static get Properties() {

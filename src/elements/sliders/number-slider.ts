@@ -12,7 +12,7 @@ export class IoNumberSlider extends IoElement {
       flex-basis: 18em;
     }
     :host > io-number {
-      flex: 0 0 3em;
+      flex: 0 0 3.25em;
       margin-right: var(--io-spacing);
     }
     :host > io-slider {
@@ -39,6 +39,9 @@ export class IoNumberSlider extends IoElement {
     event.detail.value = event.detail.value / this.conversion;
     this.value = event.detail.value;
     this.dispatchEvent('value-input', event.detail, false);
+  }
+  init() {
+    this.changed();
   }
   changed() {
     this.template([

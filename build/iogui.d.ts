@@ -525,7 +525,7 @@ export declare class ChangeQueue {
 	 * Dispatches and clears the queue.
 	 * For each property change in the queue:
 	 *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
-	 *  - It executes node's `[propNamecssFieldHeight(change)` change handler function if it is defined.
+	 *  - It executes node's `[propName(change)` change handler function if it is defined.
 	 * If owner node is not connected dispatch is aborted.
 	 * After all changes are dispatched it invokes `.changed()` functions od the owner node instance.
 	 */
@@ -594,7 +594,7 @@ declare const IoElement_base: {
  * Core `IoElement` class.
  */
 export declare class IoElement extends IoElement_base {
-	static get Style(): any;
+	static get Style(): string;
 	$: Record<string, any>;
 	tabindex: string;
 	contenteditable: boolean;
@@ -650,13 +650,35 @@ export declare class IoElement extends IoElement_base {
 }
 export interface StorageProps {
 	key: string;
-	value?: unknown;
-	storage?: "hash" | "local";
+	value?: any;
+	default?: any;
+	storage?: "hash" | "local" | "none";
 }
-export declare const IoStorageFactory: (props: StorageProps) => any;
+export declare class IoStorageNode extends IoNode {
+	key: string;
+	value: any;
+	default: any;
+	storage: "hash" | "local" | "none";
+	binding: Binding;
+	constructor(props: StorageProps);
+	dispose(): void;
+	_clearStorage(): void;
+	valueChanged(): void;
+	removeValueToHash(): void;
+	saveValueToHash(): void;
+}
+export declare const IoStorage: {
+	(props: StorageProps): Binding;
+	parseHash(hash: string): Record<string, string>;
+	getValueFromHash(key: string): any;
+	updateAllFromHash(): void;
+};
 export declare class IoTheme extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	static get Properties(): PropertyDeclarations;
+	lazy: boolean;
+	persist: boolean;
+	theme: string;
 	init(): void;
 	_toCss(rgba: number[]): string;
 	reset(): void;
@@ -667,27 +689,38 @@ export declare const IoThemeSingleton: IoTheme;
 export declare type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
 export declare class IoGl extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	size: [
+		number,
+		number
+	];
+	color: [
+		number,
+		number,
+		number,
+		number
+	];
+	pxRatio: number;
+	theme: typeof IoThemeSingleton;
 	static get Vert(): string;
 	static get GlUtils(): string;
 	static get Frag(): string;
 	initPropertyUniform(name: string, property: PropertyDeclaration): string;
 	initShader(): WebGLProgram;
-	css: typeof IoThemeSingleton;
 	constructor(properties?: Record<string, any>);
 	onResized(): void;
-	cssMutated(): void;
+	themeMutated(): void;
 	changed(): void;
 	_onRender(): void;
 	setShaderProgram(): void;
 	updatePropertyUniform(name: string, property: PropertyInstance): void;
-	updateCssUniforms(): void;
+	updateThemeUniforms(): void;
 	setUniform(name: string, type: UniformTypes, value: any): void;
 }
 export declare type NudgeDirection = "pointer" | "top" | "left" | "bottom" | "right";
 declare class IoLayer extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	expanded: boolean;
+	skipCollapse: boolean;
 	static get Listeners(): {
 		pointerup: string;
 		contextmenu: string;
@@ -1459,12 +1492,32 @@ export declare class IoObject extends IoElement {
 	static get Properties(): any;
 	changed(): void;
 }
+export declare class IoNumberSliderRange extends IoElement {
+	static get Style(): string;
+	static get Properties(): any;
+	_onNumberSet(event: CustomEvent): void;
+	_onSliderSet(event: CustomEvent): void;
+	init(): void;
+	changed(): void;
+}
+export declare class IoNumberSlider extends IoElement {
+	static get Style(): string;
+	static get Properties(): any;
+	_onNumberSet(event: CustomEvent): void;
+	_onSliderSet(event: CustomEvent): void;
+	init(): void;
+	changed(): void;
+}
+export declare class IoSlider2d extends IoSlider {
+	static get Style(): string;
+	static get Properties(): any;
+	_onPointerdown(event: PointerEvent): void;
+}
 export declare class IoSliderRange extends IoSlider {
 	static get Properties(): any;
 	_onPointerdown(event: PointerEvent): void;
 	_onPointermoveThrottled(event: PointerEvent): void;
 	_inputValue(x: number, y: number): void;
-	_onKeydown(event: KeyboardEvent): void;
 	_setIncrease(): void;
 	_setDecrease(): void;
 	_setMin(): void;
@@ -1472,20 +1525,6 @@ export declare class IoSliderRange extends IoSlider {
 	init(): void;
 	changed(): void;
 	static get Frag(): string;
-}
-export declare class IoNumberSlider extends IoElement {
-	static get Style(): string;
-	static get Properties(): any;
-	_onNumberSet(event: CustomEvent): void;
-	_onSliderSet(event: CustomEvent): void;
-	changed(): void;
-}
-export declare class IoNumberSliderRange extends IoElement {
-	static get Style(): string;
-	static get Properties(): any;
-	_onNumberSet(event: CustomEvent): void;
-	_onSliderSet(event: CustomEvent): void;
-	changed(): void;
 }
 /** @License
  * Copyright ©2022 Aleksandar (Aki) Rodic

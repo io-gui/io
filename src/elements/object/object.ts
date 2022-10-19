@@ -14,6 +14,7 @@ export class IoObject extends IoElement {
     return /* css */`
     :host {
       @apply --io-panel;
+      @apply --io-column;
     }
     :host > io-boolean {
       align-self: stretch;
