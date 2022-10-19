@@ -184,11 +184,11 @@ export class IoTheme extends IoElement {
   declare theme: string;
 
   init() {
-    for (const key in this._properties) {
-      if (typeof this._properties[key].value === 'object') {
-        this._properties[key].observe = true;
+    this._properties.forEach((property, key) => {
+      if (property.value === 'object') {
+        property.observe = true;
       }
-    }
+    });
     this.changed = this.changed.bind(this);
     this.throttle(this.changed, undefined, true);
   }
@@ -212,7 +212,7 @@ export class IoTheme extends IoElement {
   changed() {
     this.ioFieldHeight = this.ioLineHeight + 2 * (this.ioSpacing + this.ioBorderWidth);
 
-    const propertyVariables = Object.keys(this._properties).reduce(
+    const propertyVariables = Array.from(this._properties.keys()).reduce(
       (result, prop) => {
         const cssProp = prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
         if (prop.startsWith('io')) {

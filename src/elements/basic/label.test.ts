@@ -10,7 +10,7 @@ export default class {
       describe('Initialization', () => {
         it('Should initialize property definitions correctly', () => {
           chai.expect(element.label).to.equal('');
-          chai.expect(element._properties.label).to.eql({
+          chai.expect(element._properties.get('label')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,

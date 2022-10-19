@@ -30,7 +30,7 @@ export default class {
           chai.expect(element.hidden).to.be.equal(false);
           chai.expect(element.disabled).to.be.equal(false);
 
-          chai.expect(element._properties.$).to.eql({
+          chai.expect(element._properties.get('$')).to.eql({
             binding: undefined,
             notify: false,
             observe: false,
@@ -38,7 +38,7 @@ export default class {
             type: Object,
             value: {},
           });
-          chai.expect(element._properties.tabindex).to.eql({
+          chai.expect(element._properties.get('tabindex')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -46,7 +46,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.contenteditable).to.eql({
+          chai.expect(element._properties.get('contenteditable')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -54,7 +54,7 @@ export default class {
             type: Boolean,
             value: false,
           });
-          chai.expect(element._properties.class).to.eql({
+          chai.expect(element._properties.get('class')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -62,7 +62,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.role).to.eql({
+          chai.expect(element._properties.get('role')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -70,7 +70,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.label).to.eql({
+          chai.expect(element._properties.get('label')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -78,7 +78,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.name).to.eql({
+          chai.expect(element._properties.get('name')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -86,7 +86,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.title).to.eql({
+          chai.expect(element._properties.get('title')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -94,7 +94,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.id).to.eql({
+          chai.expect(element._properties.get('id')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -102,7 +102,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.hidden).to.eql({
+          chai.expect(element._properties.get('hidden')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -110,7 +110,7 @@ export default class {
             type: Boolean,
             value: false,
           });
-          chai.expect(element._properties.disabled).to.eql({
+          chai.expect(element._properties.get('disabled')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -457,7 +457,7 @@ export default class {
           chai.expect(element2.prop0).to.equal(0);
           chai.expect(element2.prop1).to.equal(0);
 
-          chai.expect(element1._properties.prop0).to.eql({
+          chai.expect(element1._properties.get('prop0')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -465,7 +465,7 @@ export default class {
             type: Number,
             value: -1,
           });
-          chai.expect(element1._properties.prop1).to.eql({
+          chai.expect(element1._properties.get('prop1')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -474,7 +474,7 @@ export default class {
             value: 'default',
           });
 
-          chai.expect(element2._properties.prop0).to.eql({
+          chai.expect(element2._properties.get('prop0')).to.eql({
             binding: undefined,
             notify: false,
             observe: false,
@@ -482,7 +482,7 @@ export default class {
             type: Number,
             value: 0,
           });
-          chai.expect(element2._properties.prop1).to.eql({
+          chai.expect(element2._properties.get('prop1')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,

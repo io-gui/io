@@ -13,7 +13,7 @@ export default class {
           chai.expect(element.value).to.equal(undefined);
           chai.expect(element.pressed).to.equal(false);
           chai.expect(element.role).to.equal('button');
-          chai.expect(element._properties.action).to.eql({
+          chai.expect(element._properties.get('action')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -21,7 +21,7 @@ export default class {
             type: undefined,
             value: undefined,
           });
-          chai.expect(element._properties.value).to.eql({
+          chai.expect(element._properties.get('value')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -29,7 +29,7 @@ export default class {
             type: undefined,
             value: undefined,
           });
-          chai.expect(element._properties.pressed).to.eql({
+          chai.expect(element._properties.get('pressed')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,

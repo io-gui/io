@@ -18,7 +18,7 @@ export default class {
           chai.expect(IoLayerSingleton.expanded).to.be.eql(false);
           chai.expect(IoLayerSingleton.skipCollapse).to.be.eql(false);
 
-          chai.expect(IoLayerSingleton._properties.expanded).to.eql({
+          chai.expect(IoLayerSingleton._properties.get('expanded')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -27,7 +27,7 @@ export default class {
             value: false,
           });
 
-          chai.expect(IoLayerSingleton._properties.skipCollapse).to.eql({
+          chai.expect(IoLayerSingleton._properties.get('skipCollapse')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,

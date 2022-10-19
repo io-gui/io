@@ -27,7 +27,7 @@ export default class {
           chai.expect(element.pxRatio).to.be.equal(1);
           chai.expect(element.theme).to.be.equal(IoThemeSingleton);
 
-          chai.expect(element._properties.size).to.eql({
+          chai.expect(element._properties.get('size')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -36,7 +36,7 @@ export default class {
             value: [0, 0],
           });
 
-          chai.expect(element._properties.color).to.eql({
+          chai.expect(element._properties.get('color')).to.eql({
             binding: undefined,
             notify: true,
             observe: true,
@@ -45,7 +45,7 @@ export default class {
             value: [0, 0, 0, 0],
           });
 
-          chai.expect(element._properties.pxRatio).to.eql({
+          chai.expect(element._properties.get('pxRatio')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -54,7 +54,7 @@ export default class {
             value: 1,
           });
 
-          chai.expect(element._properties.theme).to.eql({
+          chai.expect(element._properties.get('theme')).to.eql({
             binding: undefined,
             notify: true,
             observe: true,

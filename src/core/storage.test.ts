@@ -21,7 +21,7 @@ export default class {
           chai.expect(node.default).to.be.equal('foo');
           chai.expect(node.storage).to.be.equal('none');
 
-          chai.expect(node._properties.key).to.eql({
+          chai.expect(node._properties.get('key')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -30,7 +30,7 @@ export default class {
             value: 'test',
           });
 
-          chai.expect(node._properties.value).to.eql({
+          chai.expect(node._properties.get('value')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -39,7 +39,7 @@ export default class {
             value: 'foo',
           });
 
-          chai.expect(node._properties.default).to.eql({
+          chai.expect(node._properties.get('default')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -48,7 +48,7 @@ export default class {
             value: 'foo',
           });
 
-          chai.expect(node._properties.storage).to.eql({
+          chai.expect(node._properties.get('storage')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
