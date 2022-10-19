@@ -1492,12 +1492,32 @@ export declare class IoObject extends IoElement {
 	static get Properties(): any;
 	changed(): void;
 }
+export declare class IoNumberSliderRange extends IoElement {
+	static get Style(): string;
+	static get Properties(): any;
+	_onNumberSet(event: CustomEvent): void;
+	_onSliderSet(event: CustomEvent): void;
+	init(): void;
+	changed(): void;
+}
+export declare class IoNumberSlider extends IoElement {
+	static get Style(): string;
+	static get Properties(): any;
+	_onNumberSet(event: CustomEvent): void;
+	_onSliderSet(event: CustomEvent): void;
+	init(): void;
+	changed(): void;
+}
+export declare class IoSlider2d extends IoSlider {
+	static get Style(): string;
+	static get Properties(): any;
+	_onPointerdown(event: PointerEvent): void;
+}
 export declare class IoSliderRange extends IoSlider {
 	static get Properties(): any;
 	_onPointerdown(event: PointerEvent): void;
 	_onPointermoveThrottled(event: PointerEvent): void;
 	_inputValue(x: number, y: number): void;
-	_onKeydown(event: KeyboardEvent): void;
 	_setIncrease(): void;
 	_setDecrease(): void;
 	_setMin(): void;
@@ -1505,20 +1525,6 @@ export declare class IoSliderRange extends IoSlider {
 	init(): void;
 	changed(): void;
 	static get Frag(): string;
-}
-export declare class IoNumberSlider extends IoElement {
-	static get Style(): string;
-	static get Properties(): any;
-	_onNumberSet(event: CustomEvent): void;
-	_onSliderSet(event: CustomEvent): void;
-	changed(): void;
-}
-export declare class IoNumberSliderRange extends IoElement {
-	static get Style(): string;
-	static get Properties(): any;
-	_onNumberSet(event: CustomEvent): void;
-	_onSliderSet(event: CustomEvent): void;
-	changed(): void;
 }
 /** @License
  * Copyright ©2022 Aleksandar (Aki) Rodic
