@@ -41,7 +41,7 @@ export class IoColorSlider extends IoColorMixin(IoSlider) {
       float stroke = ioStrokeWidth;
       vec4 slotColor = vec4(.2, .2, .2, 1.);
       vec4 fillColor = vec4(.8, .8, .8, 1.);
-      vec2 width = (uHorizontal == 1) ? vec2(stroke * 2., uSize.y) : vec2(uSize.x, stroke * 2.);
+      vec2 width = uVertical == 1 ? vec2(uSize.x, stroke * 2.) : vec2(stroke * 2., uSize.y);
       float strokeShape = circle(position, radius + stroke);
       sliderColor = mix(slotColor, sliderColor, strokeShape);
       float fillShape = circle(position, radius);

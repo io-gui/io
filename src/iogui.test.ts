@@ -3,7 +3,7 @@ import 'chai/chai.js';
 
 import { IoElement, RegisterIoElement } from './iogui.js';
 
-// import CoreTests from './core/index.test.js';
+import CoreTests from './core/index.test.js';
 import ElementsTests from './elements/index.test.js';
 
 mocha.setup('bdd');
@@ -33,7 +33,7 @@ export async function afterHashChange(): Promise<void> {
 
 function runTests() {
   if (!testCompleted) {
-    // new CoreTests().run();
+    new CoreTests().run();
     new ElementsTests().run();
     mocha.checkLeaks();
     mocha.run();
@@ -101,3 +101,30 @@ export class IoGuiTestPage extends IoElement {
     mochaDiv.style.display = 'none';
   }
 }
+
+// Element test template
+// const element = new IoElement();
+// export default class {
+//   run() {
+//     describe('IoElement', () => {
+//       describe('Initialization', () => {
+//         it('Should initialize property definitions correctly', () => {
+//         });
+//         it('has correct default attributes', () => {
+//         });
+//         it('has correct default innerHTML', () => {
+//         });
+//       });
+//       describe('Reactivity', () => {
+//         it('should render innerHTML', () => {
+//         });
+//         it('should change...', () => {
+//         });
+//         it('has reactive attributes', () => {
+//         });
+//       });
+//       describe('Accessibility', () => {
+//       });
+//     });
+//   }
+// }

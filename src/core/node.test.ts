@@ -88,13 +88,14 @@ export default class {
           const protoProps1 = node1._protochain.properties;
           const protoProps2 = node2._protochain.properties;
 
-          chai.expect(Object.keys(node1._properties)).to.be.eql(['lazy', 'prop1', 'prop2']);
-          chai.expect(Object.keys(node2._properties)).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
+          chai.expect(Array.from(node1._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2']);
+          chai.expect(Array.from(node2._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
 
           chai.expect(protoProps1.prop1.value).to.be.equal(0);
           chai.expect(node1._properties.get('prop1')).to.be.eql({
             value: 0,
             type: Number,
+            binding: undefined,
             notify: true,
             reflect: 'none',
             observe: false,
@@ -104,6 +105,7 @@ export default class {
           chai.expect(node2._properties.get('prop1')).to.be.eql({
             value: {},
             type: Object,
+            binding: undefined,
             notify: false,
             reflect: 'none',
             observe: true,
@@ -112,7 +114,8 @@ export default class {
           chai.expect(node2._properties.get('prop2')).to.be.eql({
             value: null,
             type: undefined,
-            notify: false,
+            binding: undefined,
+            notify: true,
             reflect: 'none',
             observe: false,
           });
@@ -661,7 +664,7 @@ export default class {
           const node2 = new TestNode();
           const binding1 = node2.bind('prop1') as any;
           node2.dispose();
-          chai.expect(node2._bindings).to.be.eql({});
+          chai.expect(node2._bindings).to.be.eql(new Map());
           chai.expect(binding1.prop1).to.be.equal(undefined);
         });
       });

@@ -1,5 +1,7 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import './slider.js';
+import { IoProperty } from '../../core/internals/property.js';
+import '../basic/number.js';
+import './slider-range.js';
 
 @RegisterIoElement
 export class IoNumberSliderRange extends IoElement {
@@ -9,7 +11,8 @@ export class IoNumberSliderRange extends IoElement {
       display: flex;
       align-self: stretch;
       justify-self: stretch;
-      flex-basis: 18em;
+      flex-basis: var(--io-field-height);
+      flex-grow: 1;
     }
     :host > io-number {
       flex: 0 0 3.25em;
@@ -22,20 +25,25 @@ export class IoNumberSliderRange extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      value: {
-        type: Array,
-        value: [0, 0],
-        observe: true,
-      },
-      step: 0.01,
-      conversion: 1,
-      min: 0,
-      max: 1,
-      exponent: 1,
-    };
-  }
+
+  @IoProperty({value: [0, 0], observe: true})
+  declare value: [number, number];
+
+  @IoProperty(0.01)
+  declare step: number;
+
+  @IoProperty(0)
+  declare min: number;
+
+  @IoProperty(1)
+  declare max: number;
+
+  @IoProperty(1)
+  declare exponent: number;
+
+  @IoProperty(1)
+  declare conversion: number;
+
   _onNumberSet(event: CustomEvent) {
     const item = event.composedPath()[0];
     if (item === this.$.number0) this.value[0] = event.detail.value;

@@ -2,7 +2,7 @@ import { IoElement, RegisterIoElement } from './element.js';
 import { IoProperty, PropertyDeclarations } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
 
-const THEME_VERSION = 'v0.3';
+const THEME_VERSION = 'v0.4';
 
 const styleElement = document.createElement('style');
 styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
@@ -149,7 +149,6 @@ const compositeVariables = /* css */`
     --io-color-border-inset: var(--io-color-border-dark) var(--io-color-border-light) var(--io-color-border-light) var(--io-color-border-dark);
     --io-color-border-outset: var(--io-color-border-light) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border-light);
     --io-gradient-button: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
-    --io-gradient-error: repeating-linear-gradient(135deg, transparent, var(--io-color-error) 1px, var(--io-color-error) 4px, transparent 6px);
     --io-shadow: 2px 2px 6px var(--io-color-shadow), 1px 1px 1px var(--io-color-shadow);
     --io-shadow-inset: 1px 1px 2px inset var(--io-color-shadow);
     --io-shadow-outset: -1px -1px 2px inset var(--io-color-shadow);
@@ -235,6 +234,4 @@ export class IoTheme extends IoElement {
 }
 
 const IoThemeSingleton = new IoTheme();
-document.head.appendChild(IoThemeSingleton as unknown as HTMLElement);
-
 export { IoThemeSingleton };

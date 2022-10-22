@@ -23,7 +23,6 @@ export class IoColorPicker extends IoColorMixin(IoField) {
     return /* css */`
     :host {
       display: flex;
-      box-sizing: border-box;
       border-radius: var(--io-border-radius);
       border: var(--io-border);
       border-color: var(--io-color-border-inset);

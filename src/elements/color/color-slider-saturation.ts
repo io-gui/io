@@ -16,8 +16,8 @@ export class IoColorSliderSaturation extends IoColorSlider {
       varying vec2 vUv;
 
       void main(void) {
-        vec2 size = (uHorizontal == 1) ? uSize : uSize.yx;
-        vec2 uv = uHorizontal == 1 ? vUv.xy : vUv.yx;
+        vec2 size = uVertical == 1 ? uSize.yx : uSize;
+        vec2 uv = uVertical == 1 ? vUv.yx : vUv;
         vec2 position = size * uv;
 
         // Saturation gradient

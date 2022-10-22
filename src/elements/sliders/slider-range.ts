@@ -1,90 +1,45 @@
 import { RegisterIoElement } from '../../core/element.js';
+import { IoProperty } from '../../core/internals/property.js';
 import { IoSlider } from './slider.js';
 
 @RegisterIoElement
 export class IoSliderRange extends IoSlider {
-  static get Properties(): any {
-    return {
-      value: {
-        type: Array,
-        value: [0, 0],
-        observe: true,
-      },
-    };
-  }
+  @IoProperty({value: [0, 0], observe: true})
+  declare value: number;
+
+  @IoProperty(0.01)
+  declare step: number;
+
+  @IoProperty(0)
+  declare min: number;
+
+  @IoProperty(1)
+  declare max: number;
+
+  _index = 0;
+
   _onPointerdown(event: PointerEvent) {
     super._onPointerdown(event);
+    const value = this._value;
     const p = this._getPointerCoord(event);
-    const c0 = this._getCoordFromValue(Math.min(this.max, Math.max(this.min, this.value[0])));
-    const c1 = this._getCoordFromValue(Math.min(this.max, Math.max(this.min, this.value[1])));
-    if (this.horizontal) {
-      this._index = Math.abs(c0 - p[0]) < Math.abs(c1 - p[0]) ? 0 : 1;
+    const c = this._getCoordFromValue(value);
+    if (this.vertical) {
+      this._index = Math.abs(c[0] - p[1]) < Math.abs(c[1] - p[1]) ? 0 : 1;
     } else {
-      this._index = Math.abs(c0 - p[1]) < Math.abs(c1 - p[1]) ? 0 : 1;
+      this._index = Math.abs(c[0] - p[0]) < Math.abs(c[1] - p[0]) ? 0 : 1;
     }
   }
   _onPointermoveThrottled(event: PointerEvent) {
-    if (this._active === 1) {
-      if (document.activeElement !== this as unknown as HTMLElement) this.focus();
-      const p = this._getPointerCoord(event);
-      const v0 = this._getValueFromCoord(p[0]);
-      const v1 = this._getValueFromCoord(p[1]);
+    if (this._active === true) {
+      if (document.activeElement !== this as unknown as Element) this.focus();
+      const value = this._value;
+      const coord = this._getPointerCoord(event);
+      const newValue = this._getValueFromCoord(coord);
       if (this._index === 0) {
-        this._inputValue(this.horizontal ? v0 : v1, this.value[1]);
+        this._inputValue([this.vertical ? newValue[1] : newValue[0], value[1]]);
       } else if (this._index === 1) {
-        this._inputValue(this.value[0], this.horizontal ? v0 : v1);
+        this._inputValue([value[0], this.vertical ? newValue[1] : newValue[0]]);
       }
-    }
-  }
-  _inputValue(x: number, y: number) {
-    this.value[0] = Number(x.toFixed(5));
-    this.value[1] = Number(y.toFixed(5));
-    this.inputValue(this.value);
-    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-  }
-  // TODO: round to step
-  _setIncrease() {
-    let x = this.value[0] + this.step;
-    let y = this.value[1] + this.step;
-    x = Math.min(this.max, Math.max(this.min, x));
-    y = Math.min(this.max, Math.max(this.min, y));
-    this._inputValue(x, y);
-  }
-  _setDecrease() {
-    let x = this.value[0] - this.step;
-    let y = this.value[1] - this.step;
-    x = Math.min(this.max, Math.max(this.min, x));
-    y = Math.min(this.max, Math.max(this.min, y));
-    this._inputValue(x, y);
-  }
-  _setMin() {
-    let x = this.min;
-    let y = this.min;
-    x = Math.min(this.max, Math.max(this.min, x));
-    y = Math.min(this.max, Math.max(this.min, y));
-    this._inputValue(x, y);
-  }
-  _setMax() {
-    let x = this.max;
-    let y = this.max;
-    x = Math.min(this.max, Math.max(this.min, x));
-    y = Math.min(this.max, Math.max(this.min, y));
-    this._inputValue(x, y);
-  }
-  init() {
-    this.changed();
-  }
-  changed() {
-    super.changed();
-    this.setAttribute('value', this.value);
-    this.setAttribute('aria-valuenow', this.value);
-    this.setAttribute('aria-valuemin', this.min);
-    this.setAttribute('aria-valuemax', this.max);
-    this.setAttribute('aria-valuestep', this.step);
-    if (!(this.value instanceof Array && this.value.length === 2)) {
-      this.setAttribute('aria-invalid', 'true');
-    } else {
-      this.removeAttribute('aria-invalid');
     }
   }
   static get Frag() {
@@ -96,8 +51,8 @@ export class IoSliderRange extends IoSlider {
     void main(void) {
       vec3 finalColor = ioBackgroundColorField.rgb;
 
-      vec2 size = uHorizontal == 1 ? uSize : uSize.yx;
-      vec2 uv = uHorizontal == 1 ? vUv : vUv.yx;
+      vec2 size = uVertical == 1 ? uSize.yx : uSize;
+      vec2 uv = uVertical == 1 ? vUv.yx : vUv;
       vec2 position = size * uv;
 
 
@@ -107,7 +62,7 @@ export class IoSliderRange extends IoSlider {
       float lineWidth = ioStrokeWidth;
       if (stepInPx > lineWidth * 2.0) {
         // TODO: grid with exponent
-        float gridWidth = size.x / ((uMax - uMin) / uStep);
+        float gridWidth = stepInPx;
         float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
         vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
         float gridShape = grid(translate(expPosition, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);

@@ -1,268 +1,42 @@
 import { RegisterIoElement } from '../../core/element.js';
-import {IoGl} from '../../core/gl.js';
+import { IoProperty } from '../../core/internals/property.js';
+import { IoSliderBase } from './slider-base.js';
 
-/*
- * Extends `IoGl`.
- *
- * Input element for `Number` data type displayed as slider.
- * It can be configured to clamp the `value` to `min` / `max` and round it to the nearest `step` increment. `exponent` property can be changed for non-linear scale.
- *
- * Keys left/right/up/down+shift and pageup/pagedown change the value in step incements. Home/end keys set the value to min/max.
- *
- * <io-element-demo element="io-slider" properties='{"value": 0, "step": 0.01, "min": -0.5, "max": 0.5, "exponent": 1}'></io-element-demo>
- **/
 @RegisterIoElement
-export class IoSlider extends IoGl {
+export class IoSlider extends IoSliderBase {
   static get Style() {
     return /* css */`
-    :host {
-      cursor: ns-resize;
-      box-sizing: border-box;
-      border: var(--io-border);
-      border-radius: var(--io-border-radius);
-      border-color: var(--io-color-border-inset);
-      min-width: var(--io-line-height);
-      min-height: var(--io-line-height);
-      align-self: stretch;
-      justify-self: stretch;
-      flex-basis: var(--io-field-height);
-    }
-    :host[horizontal] {
-      cursor: ew-resize;
-      flex-basis: 15em;
-    }
-    :host[aria-invalid] {
-      border: var(--io-border-error);
-      background-image: var(--io-gradient-error);
-    }
-    :host[aria-invalid] > .io-gl-canvas {
-      opacity: 0.5;
-    }
-    :host:focus {
-      border-color: var(--io-color-focus);
-      outline-color: var(--io-color-focus);
-    }
+      :host {
+        cursor: ew-resize;
+        border: var(--io-border);
+        border-radius: var(--io-border-radius);
+        border-color: var(--io-color-border-inset);
+        flex-basis: calc(var(--io-field-height) * 10);
+        flex-grow: 1;
+        min-width: var(--io-field-height);
+        min-height: var(--io-field-height);
+      }
+      :host[vertical] {
+        cursor: ns-resize;
+        flex-basis: var(--io-field-height);
+        flex-shrink: 0;
+      }
     `;
   }
-  static get Properties(): any {
-    return {
-      value: 0,
-      step: 0.01,
-      min: 0,
-      max: 1,
-      exponent: 1,
-      horizontal: {
-        value: true,
-        reflect: 'prop',
-      },
-      noscroll: false,
-      role: 'slider',
-      tabindex: 0,
-      lazy: true,
-    };
-  }
-  static get Listeners() {
-    return {
-      'focus': '_onFocus',
-      'contextmenu': '_onContextmenu',
-      'pointerdown': '_onPointerdown',
-      'touchstart': '_onTouchstart',
-    };
-  }
-  _onFocus() {
-    this.addEventListener('blur', this._onBlur);
-    this.addEventListener('keydown', this._onKeydown);
-  }
-  _onBlur() {
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
-  }
-  _onContextmenu(event: Event) {
-    event.preventDefault();
-  }
-  _onTouchstart(event: TouchEvent) {
-    this.addEventListener('touchmove', this._onTouchmove);
-    this.addEventListener('touchend', this._onTouchend);
-    this._x = event.changedTouches[0].clientX;
-    this._y = event.changedTouches[0].clientY;
-    this._active = this.noscroll ? 1 : -1;
-  }
-  _onTouchmove(event: TouchEvent) {
-    const dx = Math.abs(this._x - event.changedTouches[0].clientX);
-    const dy = Math.abs(this._y - event.changedTouches[0].clientY);
-    if (this._active === -1) {
-      if (this.horizontal) {
-        if (dx > 3 && dx > dy) {
-          this._active = (dx > dy && dy < 10) ? 1 : 0;
-        }
-      } else {
-        if (dy > 3 && dy > dx) {
-          this._active = (dy > dx && dx < 10) ? 1 : 0;
-        }
-      }
-    }
-    if (this._active !== 1) return;
-    event.preventDefault();
-  }
-  _onTouchend() {
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
-  }
-  _onPointerdown(event: PointerEvent) {
-    this.setPointerCapture(event.pointerId);
-    this.addEventListener('pointermove', this._onPointermove);
-    this.addEventListener('pointerup', this._onPointerup);
-  }
-  _onPointermove(event: PointerEvent) {
-    if (event.pointerType !== 'touch') this._active = 1;
-    this.throttle(this._onPointermoveThrottled, event);
-  }
-  _onPointerup(event: PointerEvent) {
-    this.releasePointerCapture(event.pointerId);
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerup', this._onPointerup);
-  }
-  _getPointerCoord(event: PointerEvent) {
-    const rect = this.getBoundingClientRect();
-    const x = Math.pow(Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width)), this.exponent);
-    const y = Math.pow(Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height)), this.exponent);
-    return [x, y];
-  }
-  _getValueFromCoord(coord: number) {
-    let value = this.min * (1 - coord) + this.max * coord;
-    value = Math.min(this.max, Math.max(this.min, value));
-    return Math.round(value / this.step) * this.step;
-  }
-  _getCoordFromValue(value: number) {
-    return (value - this.min) / (this.max - this.min);
-  }
-  // TODO: Implement Slider2D
-  _onPointermoveThrottled(event: PointerEvent) {
-    if (this._active === 1) {
-      if (document.activeElement !== this as unknown as Element) this.focus();
-      const p = this._getPointerCoord(event);
-      const _x = this._getValueFromCoord(p[0]);
-      const _y = this._getValueFromCoord(p[1]);
-      this._inputValue(this.horizontal ? _x : _y, this.horizontal ? _y : _x);
-    }
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _inputValue(x: number, y?: number) {
-    this.inputValue(Number(x.toFixed(5)));
-  }
-  _onKeydown(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'ArrowLeft':
-        event.preventDefault();
-        if (!event.shiftKey) this.focusTo('left');
-        else this._setDecrease();
-        break;
-      case 'ArrowUp':
-        event.preventDefault();
-        if (!event.shiftKey) this.focusTo('up');
-        else this._setIncrease();
-        break;
-      case 'ArrowRight':
-        event.preventDefault();
-        if (!event.shiftKey) this.focusTo('right');
-        else this._setIncrease();
-        break;
-      case 'ArrowDown':
-        event.preventDefault();
-        if (!event.shiftKey) this.focusTo('down');
-        else this._setDecrease();
-        break;
-      case 'PageUp':
-      case '+':
-        event.preventDefault();
-        this._setIncrease();
-        break;
-      case 'PageDown':
-      case '-':
-        event.preventDefault();
-        this._setDecrease();
-        break;
-      case 'Home':
-        event.preventDefault();
-        this._setMin();
-        break;
-      default:
-        break;
-    }
-  }
-  // TODO: round to step
-  _setIncrease() {
-    let value = this.value + this.step;
-    value = Math.min(this.max, Math.max(this.min, value));
-    this._inputValue(value);
-  }
-  _setDecrease() {
-    let value = this.value - this.step;
-    value = Math.min(this.max, Math.max(this.min, value));
-    this._inputValue(value);
-  }
-  _setMin() {
-    let value = this.min;
-    value = Math.min(this.max, Math.max(this.min, value));
-    this._inputValue(value);
-  }
-  _setMax() {
-    let value = this.max;
-    value = Math.min(this.max, Math.max(this.min, value));
-    this._inputValue(value);
-  }
-  init() {
-    this.changed();
-  }
-  changed() {
-    super.changed();
-    this.setAttribute('aria-valuemin', this.min);
-    this.setAttribute('aria-valuemax', this.max);
-    this.setAttribute('aria-valuestep', this.step);
-    if (typeof this.value !== 'number' || isNaN(this.value)) {
-      this.setAttribute('aria-invalid', 'true');
-    } else {
-      this.removeAttribute('aria-invalid');
-      this.setAttribute('aria-valuenow', this.value);
-    }
-  }
-  static get GlUtils() {
-    return /* glsl */`
-    vec4 paintSlider(vec2 position, vec2 sliderStart, vec2 sliderEnd, float knobRadius, float slotWidth, vec3 color) {
-      vec4 slotColor = mix(ioColor, ioBackgroundColorField, 0.125);
-      vec4 sliderColor = vec4(0.0);
-      float stroke = ioStrokeWidth;
 
-      vec2 startPos = translate(position, sliderStart);
-      vec2 endPos = translate(position, sliderEnd);
-      vec2 slotCenter = (startPos + endPos) / 2.;
-      float slotSpan = abs(startPos.x - endPos.x) / 2.0;
+  @IoProperty(0)
+  declare value: number;
 
-      float strokeShape = min(min(
-        circle(startPos, knobRadius + stroke + stroke),
-        rectangle(slotCenter, vec2(slotSpan, slotWidth + stroke + stroke))),
-        circle(endPos, knobRadius + stroke + stroke)
-      );
-      sliderColor = mix(vec4(slotColor.rgb, 1.0), sliderColor, strokeShape);
+  @IoProperty(0.01)
+  declare step: number;
 
-      float fillShape = min(min(
-        circle(startPos, knobRadius + stroke),
-        rectangle(slotCenter, vec2(slotSpan, slotWidth + stroke))),
-        circle(endPos, knobRadius + stroke)
-      );
-      sliderColor = mix(vec4(ioBackgroundColor.rgb, 1.0), sliderColor, fillShape);
+  @IoProperty(0)
+  declare min: number;
 
-      float colorShape = min(min(
-        circle(startPos, knobRadius),
-        rectangle(slotCenter, vec2(slotSpan, slotWidth))),
-        circle(endPos, knobRadius)
-      );
-      sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
+  @IoProperty(1)
+  declare max: number;
 
-      return sliderColor;
-    }
-    \n\n`;
-  }
+
   static get Frag() {
     return /* glsl */`
     #extension GL_OES_standard_derivatives : enable
@@ -272,8 +46,8 @@ export class IoSlider extends IoGl {
     void main(void) {
       vec3 finalColor = ioBackgroundColorField.rgb;
 
-      vec2 size = uHorizontal == 1 ? uSize : uSize.yx;
-      vec2 uv = uHorizontal == 1 ? vUv : vUv.yx;
+      vec2 size = uVertical == 1 ? uSize.yx : uSize;
+      vec2 uv = uVertical == 1 ? vUv.yx : vUv;
       vec2 position = size * uv;
 
 
@@ -283,7 +57,7 @@ export class IoSlider extends IoGl {
       float lineWidth = ioStrokeWidth;
       if (stepInPx > lineWidth * 2.0) {
         // TODO: grid with exponent
-        float gridWidth = size.x / ((uMax - uMin) / uStep);
+        float gridWidth = stepInPx;
         float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
         vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
         float gridShape = grid(translate(expPosition, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);
