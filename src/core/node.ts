@@ -107,7 +107,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {boolean} [skipDispatch] flag to skip event dispatch.
      */
     setProperty(name: string, value: any, skipDispatch?: boolean) {
-      const prop =this._properties.get(name)!;
+      const prop = this._properties.get(name)!;
       const oldValue = prop.value;
 
       if (value !== oldValue) {
@@ -129,6 +129,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
         }
         prop.value = value;
+        if (value instanceof Binding) console.log(value instanceof Binding);
 
         debug: {
           if (prop.type === String) {
@@ -307,9 +308,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       }
 
       const property = this._properties.get(prop);
-      if (property && property.binding) {
-        property.binding?.removeTarget(this, prop);
-      }
+      property?.binding?.removeTarget(this, prop);
     }
     /**
      * Wrapper for addEventListener.
@@ -351,9 +350,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     dispose() {
       this._properties.forEach((property, key) => {
-        if (property.binding) {
-          property.binding?.removeTarget(this, key);
-        }
+        property.binding?.removeTarget(this, key);
       });
 
       this._bindings.forEach((binding, key) => {

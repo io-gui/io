@@ -25,10 +25,6 @@ export class IoString extends IoField {
         white-space: pre;
         visibility: hidden;
       }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
-      }
     `;
   }
   @IoProperty(false)

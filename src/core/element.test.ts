@@ -564,7 +564,7 @@ export default class {
         const element = new TestIoElement1();
         const node = new TestIoNode1();
         element.template([
-          ['test-io-element1', {id: 'subelement', prop0: element.bind('prop0')}]
+          ['test-io-element-1', {id: 'subelement', prop0: element.bind('prop0')}]
         ]);
         it('Should update bound values correctly', () => {
           element.prop0 = Infinity;

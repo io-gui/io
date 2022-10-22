@@ -14,14 +14,9 @@ export class IoField extends IoElement {
   static get Style() {
     return /* css */`
       --io-field: {
-        /* align-self: flex-start; */
         display: inline-block;
         cursor: pointer;
-        box-sizing: border-box;
-        /* user-select: none; */
-        /* -webkit-tap-highlight-color: transparent; */
-        /* -webkit-user-select: none; */
-        /* -webkit-touch-callout: none; */
+
         overflow: hidden;
         text-overflow: ellipsis;
         flex-wrap: nowrap;
@@ -47,7 +42,6 @@ export class IoField extends IoElement {
       }
       :host[aria-invalid] {
         border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
       }
       :host[reverse] {
         flex-flow: row-reverse;

@@ -31,7 +31,6 @@ export class IoMenuOptions extends IoElement {
     :host {
       @apply --io-panel;
       @apply --io-column;
-      box-sizing: border-box;
       align-self: flex-start;
       align-items: stretch;
       white-space: nowrap;

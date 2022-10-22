@@ -33,26 +33,7 @@ const shadersCache = new WeakMap();
 let currentProgram: WebGLProgram | null;
 
 type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
-/*
- * `IoGL` is a base class for WebGL-based custom elements. The appearance of such elements is defined in fragment shader programs that execute on the GPU. All numeric properties are automatically bound to shader uniforms, including `IoThemeSingleton` CSS properties. You can define your custom shaders inside `static get Frag()` return string.
- *
- * <io-element-demo element="io-gl" width="255px" height="255px" properties='{"color": [0, 0, 0, 1]}' config='{"background": ["io-color-vector"], "color": ["io-color-vector"]}'></io-element-demo>
- *
- * An example of the most basic fragment shader program:
- *
- * ```javascript
- * class MyElement extends IoGl {
- *   static get Frag() {
- *     return `
- *     void main(void) {
- *       gl_FragColor = ioBackgroundColor;
- *     }`;
- *   }
- * }
- * ```
- *
- * See `IoSliderKnob` and `IoHsvaSv` for more advanced examples.
- **/
+
 @RegisterIoElement
 export class IoGl extends IoElement {
   static get Style() {
@@ -62,7 +43,6 @@ export class IoGl extends IoElement {
         overflow: hidden !important;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
-        box-sizing: border-box;
       }
       :host > .io-gl-canvas {
         position: absolute;
@@ -70,7 +50,17 @@ export class IoGl extends IoElement {
         left: 0;
         border-radius: calc(var(--io-border-radius) - var(--io-border-width));
         pointer-events: none;
-        /* image-rendering: pixelated; */
+        image-rendering: pixelated;
+      }
+      :host[aria-invalid] {
+        border: var(--io-border-error);
+      }
+      :host[aria-invalid] > .io-gl-canvas {
+        opacity: 0.5;
+      }
+      :host:focus {
+        border-color: var(--io-color-focus);
+        outline-color: var(--io-color-focus);
       }
     `;
   }

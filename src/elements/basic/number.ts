@@ -32,10 +32,6 @@ export class IoNumber extends IoField {
       :host:not([positive]):before {
         content: ' ';
       }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
-      }
     `;
   }
 
