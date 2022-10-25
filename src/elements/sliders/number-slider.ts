@@ -24,7 +24,7 @@ export class IoNumberSlider extends IoElement {
     }
     `;
   }
-  
+
   @IoProperty({value: 0})
   declare value: number;
 
