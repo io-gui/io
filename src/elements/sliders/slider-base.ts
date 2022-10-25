@@ -3,7 +3,7 @@ import { IoGl } from '../../core/gl.js';
 
 type SliderValueTypes = number | [number, number] | {x: number, y: number};
 
-export class IoSliderBase extends IoGl {
+export abstract class IoSliderBase extends IoGl {
   @IoProperty({value: 0})
   declare value: SliderValueTypes;
 
@@ -46,7 +46,7 @@ export class IoSliderBase extends IoGl {
     } else if (typeof this.min === 'object') {
       return [this.min.x, this.min.y];
     }
-    return [-Infinity, -Infinity]
+    return [-Infinity, -Infinity];
   }
 
   get _max(): [number, number] {
@@ -57,7 +57,7 @@ export class IoSliderBase extends IoGl {
     } else if (typeof this.max === 'object') {
       return [this.max.x, this.max.y];
     }
-    return [Infinity, Infinity]
+    return [Infinity, Infinity];
   }
 
   get _step(): [number, number] {
@@ -68,7 +68,7 @@ export class IoSliderBase extends IoGl {
     } else if (typeof this.step === 'object') {
       return [this.step.x, this.step.y];
     }
-    return [0.01, 0.01]
+    return [0.01, 0.01];
   }
 
   get _value(): [number, number] {
@@ -79,7 +79,7 @@ export class IoSliderBase extends IoGl {
     } else if (typeof this.value === 'object') {
       return [this.value.x, this.value.y];
     }
-    return [NaN, NaN]
+    return [NaN, NaN];
   }
 
   static get Listeners() {
@@ -146,8 +146,10 @@ export class IoSliderBase extends IoGl {
   }
   _getPointerCoord(event: PointerEvent): [number, number] {
     const rect = this.getBoundingClientRect();
-    const x = Math.pow((event.clientX - rect.x) / rect.width, this.exponent);
-    const y = Math.pow(1 - (event.clientY - rect.y) / rect.height, this.exponent);
+    let x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
+    let y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
+    x = Math.pow(x, this.exponent);
+    y = Math.pow(y, this.exponent);
     return [x, y];
   }
   _getValueFromCoord(coord: [number, number]) {
@@ -338,48 +340,5 @@ export class IoSliderBase extends IoGl {
     }
     \n\n`;
   }
-  // static get Frag() {
-  //   return /* glsl */`
-  //   #extension GL_OES_standard_derivatives : enable
-
-  //   varying vec2 vUv;
-
-  //   void main(void) {
-  //     vec3 finalColor = ioBackgroundColorField.rgb;
-
-  //     vec2 size = uVertical == 1 ? uSize.yx : uSize;
-  //     vec2 uv = uVertical == 1 ? vUv.yx : vUv;
-  //     vec2 position = size * uv;
-
-  //     float stepInPx = size.x / ((uMax - uMin) / uStep);
-  //     vec4 stepColorBg = mix(ioColor, ioBackgroundColorField, 0.75);
-
-  //     float lineWidth = ioStrokeWidth;
-  //     if (stepInPx > lineWidth * 2.0) {
-  //       // TODO: grid with exponent
-  //       float gridWidth = stepInPx;
-  //       float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
-  //       vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
-  //       float gridShape = grid(translate(expPosition, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);
-  //       finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
-  //     }
-
-  //     vec4 slotGradient = mix(ioColorFocus, ioColorLink, uv.x);
-  //     float knobRadius = ioFieldHeight * 0.125;
-  //     float slotWidth = ioFieldHeight * 0.125;
-
-  //     float valueInRange = (uValue - uMin) / (uMax - uMin);
-  //     float sign = valueInRange < 0.0 ? -1.0 : 1.0;
-  //     valueInRange = abs(pow(valueInRange, 1./uExponent)) * sign;
-
-  //     vec2 sliderStart = vec2(0.0, size.y * 0.5);
-  //     vec2 sliderEnd = vec2(size.x * min(2.0, max(-1.0, (valueInRange))), size.y * 0.5);
-
-  //     vec4 slider = paintSlider(position, min(sliderStart, sliderEnd), sliderEnd, knobRadius, slotWidth, slotGradient.rgb);
-  //     finalColor = mix(finalColor.rgb, slider.rgb, slider.a);
-
-  //     gl_FragColor = vec4(finalColor, 1.0);
-  //   }`;
-  // }
 }
 
