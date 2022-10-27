@@ -18,11 +18,20 @@ export class IoSliderRange extends IoSlider {
 
   _index = 0;
 
+  _getCoordFromValue(value: [number, number]) {
+    const coord = [0, 0];
+    const min = this._min;
+    const max = this._max;
+    coord[0] = (value[0] - min[0]) / (max[0] - min[0]);
+    coord[1] = (value[1] - min[1]) / (max[1] - min[1]);
+    return coord;
+  }
   _onPointerdown(event: PointerEvent) {
     super._onPointerdown(event);
     const value = this._value;
     const p = this._getPointerCoord(event);
     const c = this._getCoordFromValue(value);
+    console.log(p[0], c[1]);
     if (this.vertical) {
       this._index = Math.abs(c[0] - p[1]) < Math.abs(c[1] - p[1]) ? 0 : 1;
     } else {

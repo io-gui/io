@@ -55,10 +55,11 @@ export class IoSlider extends IoSliderBase {
       vec4 stepColorBg = mix(ioColor, ioBackgroundColorField, 0.75);
 
       float lineWidth = ioStrokeWidth;
+      float gridWidth = stepInPx;
+      float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
+
       if (stepInPx > lineWidth * 2.0) {
         // TODO: grid with exponent
-        float gridWidth = stepInPx;
-        float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
         vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
         float gridShape = grid(translate(expPosition, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);
         finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);

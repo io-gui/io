@@ -160,14 +160,6 @@ export abstract class IoSliderBase extends IoGl {
     value[1] = min[1] * (1 - coord[1]) + max[1] * coord[1];
     return value;
   }
-  _getCoordFromValue(value: [number, number]) {
-    const coord = [0, 0];
-    const min = this._min;
-    const max = this._max;
-    coord[0] = (value[0] - min[0]) / (max[0] - min[0]);
-    coord[1] = (value[1] - min[1]) / (max[1] - min[1]);
-    return coord;
-  }
   _onPointermoveThrottled(event: PointerEvent) {
     if (this._active === true) {
       if (document.activeElement !== this as unknown as Element) this.focus();
