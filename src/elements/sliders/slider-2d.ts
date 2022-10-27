@@ -7,15 +7,15 @@ export class IoSlider2d extends IoSliderBase {
   static get Style() {
     return /* css */`
     :host {
-      cursor: ns-resize;
+      cursor: crosshair;
       border: var(--io-border);
       border-radius: var(--io-border-radius);
       border-color: var(--io-color-border-inset);
-      flex-basis: var(--io-field-height);
+      min-width: calc(var(--io-field-height) * 4);
+      flex-basis: calc(var(--io-field-height) * 4);
     }
     :host[horizontal] {
-      cursor: ew-resize;
-      flex-basis: calc(var(--io-field-height) * 10);
+      cursor: crosshair;
     }
     `;
   }
@@ -23,94 +23,96 @@ export class IoSlider2d extends IoSliderBase {
   @IoProperty({value: [0, 0], observe: true})
   declare value: [number, number];
 
-  @IoProperty({value: [0, 0]})
+  @IoProperty({value: [0.01, 0.01]})
   declare step: [number, number];
 
-  @IoProperty({value: [0, 0]})
+  @IoProperty({value: [-1, -1]})
   declare min: [number, number];
 
-  @IoProperty({value: [0, 0]})
+  @IoProperty({value: [1, 1]})
   declare max: [number, number];
 
-  // _onPointerdown(event: PointerEvent) {
-  //   super._onPointerdown(event);
-  //   const p = this._getPointerCoord(event);
-  //   const c0 = this._getCoordFromValue(Math.min(this.max[0], Math.max(this.min[0], this.value[0])));
-  //   const c1 = this._getCoordFromValue(Math.min(this.max[1], Math.max(this.min[1], this.value[1])));
-  //   if (this.horizontal) {
-  //     this._index = Math.abs(c0 - p[0]) < Math.abs(c1 - p[0]) ? 0 : 1;
-  //   } else {
-  //     this._index = Math.abs(c0 - p[1]) < Math.abs(c1 - p[1]) ? 0 : 1;
-  //   }
-  // }
-  // _onPointermoveThrottled(event: PointerEvent) {
-  //   if (this._active === 1) {
-  //     if (document.activeElement !== this as unknown as HTMLElement) this.focus();
-  //     const p = this._getPointerCoord(event);
-  //     const v0 = this._getValueFromCoord(p[0]);
-  //     const v1 = this._getValueFromCoord(p[1]);
-  //     if (this._index === 0) {
-  //       this._inputValue(this.horizontal ? v0 : v1, this.value[1]);
-  //     } else if (this._index === 1) {
-  //       this._inputValue(this.value[0], this.horizontal ? v0 : v1);
-  //     }
-  //   }
-  // }
-  // _inputValue(x: number, y: number) {
-  //   this.value[0] = Number(x.toFixed(5));
-  //   this.value[1] = Number(y.toFixed(5));
-  //   this.inputValue(this.value);
-  //   this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-  // }
-  // static get Frag() {
-  //   return /* glsl */`
-  //   #extension GL_OES_standard_derivatives : enable
+  static get GlUtils() {
+    return /* glsl */`
+    vec4 paintCircle(vec2 position, vec2 circlePos, vec2 sliderEnd, float knobRadius, float slotWidth, vec3 color) {
+      vec4 slotColor = mix(ioColor, ioBackgroundColorField, 0.125);
+      vec4 sliderColor = vec4(0.0);
+      float stroke = ioStrokeWidth;
 
-  //   varying vec2 vUv;
+      vec2 startPos = translate(position, circlePos);
+      vec2 endPos = translate(position, sliderEnd);
+      vec2 slotCenter = (startPos + endPos) / 2.;
+      float slotSpan = abs(startPos.x - endPos.x) / 2.0;
 
-  //   void main(void) {
-  //     vec3 finalColor = ioBackgroundColorField.rgb;
+      float strokeShape = min(min(
+        circle(startPos, knobRadius + stroke + stroke),
+        rectangle(slotCenter, vec2(slotSpan, slotWidth + stroke + stroke))),
+        circle(endPos, knobRadius + stroke + stroke)
+      );
+      sliderColor = mix(vec4(slotColor.rgb, 1.0), sliderColor, strokeShape);
 
-  //     vec2 size = uSize;
-  //     vec2 uv = vUv;
-  //     vec2 position = size * uv;
+      float fillShape = min(min(
+        circle(startPos, knobRadius + stroke),
+        rectangle(slotCenter, vec2(slotSpan, slotWidth + stroke))),
+        circle(endPos, knobRadius + stroke)
+      );
+      sliderColor = mix(vec4(ioBackgroundColor.rgb, 1.0), sliderColor, fillShape);
 
-  //     vec2 stepInPx = size / ((uMax - uMin) / uStep);
-  //     vec4 stepColorBg = mix(ioColor, ioBackgroundColorField, 0.95);
+      float colorShape = min(min(
+        circle(startPos, knobRadius),
+        rectangle(slotCenter, vec2(slotSpan, slotWidth))),
+        circle(endPos, knobRadius)
+      );
+      sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
 
-  //     float lineWidth = ioStrokeWidth;
-  //     if (max(stepInPx.x, stepInPx.y) > lineWidth * 2.0) {
-  //       // TODO: grid with exponent
-  //       vec2 gridOffset = mod(uMin, uStep) / (uMax - uMin) * size;
-  //       vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
-  //       float gridShape = grid(translate(expPosition, -gridOffset.x, -gridOffset.y), stepInPx.x, stepInPx.y, lineWidth);
-  //       finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
-  //     }
+      return sliderColor;
+    }
+    \n\n`;
+  }
 
-  //     // float knobRadius = ioFieldHeight * 0.25;
-  //     // float slotWidth = ioFieldHeight * 0.125;
+  // TODO: grid with exponent
+  static get Frag() {
+    return /* glsl */`
+    #extension GL_OES_standard_derivatives : enable
 
-  //     // float valueInRangeStart = (uValue[0] - uMin) / (uMax - uMin);
-  //     // float signStart = valueInRangeStart < 0.0 ? -1.0 : 1.0;
-  //     // valueInRangeStart = abs(pow(valueInRangeStart, 1./uExponent)) * signStart;
+    varying vec2 vUv;
 
-  //     // float valueInRangeEnd = (uValue[1] - uMin) / (uMax - uMin);
-  //     // float signEnd = valueInRangeEnd < 0.0 ? -1.0 : 1.0;
-  //     // valueInRangeEnd = abs(pow(valueInRangeEnd, 1./uExponent)) * signEnd;
+    void main(void) {
 
-  //     // float grad = 0.5;
-  //     // if (valueInRangeEnd > valueInRangeStart) {
-  //     //   grad = (uv.x - valueInRangeStart) / max(valueInRangeEnd - valueInRangeStart, 0.01);
-  //     // } else if (valueInRangeEnd < valueInRangeStart) {
-  //     //   grad = 1.0 - (uv.x - valueInRangeEnd) / max(valueInRangeStart - valueInRangeEnd, 0.01);
-  //     // }
-  //     // vec4 slotGradient = mix(ioColorFocus, ioColorLink, saturate(grad));
-  //     // vec2 sliderStart = vec2(size.x * min(2.0, max(-1.0, (valueInRangeStart))), size.y * 0.5);
-  //     // vec2 sliderEnd = vec2(size.x * min(2.0, max(-1.0, (valueInRangeEnd))), size.y * 0.5);
-  //     // vec4 slider = paintSlider(position, sliderStart, sliderEnd, knobRadius, slotWidth, slotGradient.rgb);
-  //     // finalColor = mix(finalColor.rgb, slider.rgb, slider.a);
+      vec3 finalColor = ioBackgroundColorField.rgb;
+      vec3 gridColor = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.95);
 
-  //     gl_FragColor = vec4(finalColor, 1.0);
-  //   }`;
-  // }
+      vec2 view = (vUv - 0.5) * 2.0;
+
+      vec2 gridStepInPx = uSize / ((uMax - uMin) / uStep) * 2.0;
+
+      vec2 offset = (uMax + uMin) / (uMax - uMin);
+
+      view += offset;
+
+      vec2 position = uSize * view;
+
+      if (max(gridStepInPx.x, gridStepInPx.y) > ioStrokeWidth * 2.0) {
+        float gridShape = grid(position, gridStepInPx.x, gridStepInPx.y, ioStrokeWidth);
+        finalColor.rgb = mix(gridColor, finalColor.rgb, gridShape);
+        gridShape = grid(position, gridStepInPx.x * 10., gridStepInPx.y * 10., ioStrokeWidth * 2.);
+        finalColor.rgb = mix(vec3(1.0, 0.0, 0.0), finalColor.rgb, gridShape);
+      }
+
+      float knobRadius = ioFieldHeight * 0.25;
+      float slotWidth = ioFieldHeight * 0.125;
+
+      vec2 value2d = (uValue - uMin) / (uMax - uMin);
+      value2d -= offset;
+
+      vec4 slotGradient = ioColorLink;
+
+      vec2 circlePos = uSize * value2d;
+
+      vec4 slider = paintCircle(position / 2.0  , circlePos, circlePos, knobRadius, slotWidth, slotGradient.rgb);
+      finalColor = mix(finalColor.rgb, slider.rgb, slider.a);
+
+      gl_FragColor = vec4(finalColor, 1.0);
+    }`;
+  }
 }
