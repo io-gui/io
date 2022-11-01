@@ -12,6 +12,26 @@ const clamp = (num: number, min: number, max: number) => {
 };
 
 export abstract class IoSliderBase extends IoGl {
+  static get Style() {
+    return /* css */`
+      :host {
+        cursor: ew-resize;
+        border: var(--io-border);
+        border-radius: var(--io-border-radius);
+        border-color: var(--io-color-border-inset);
+        flex-basis: calc(var(--io-field-height) * 10);
+        flex-grow: 1;
+        min-width: var(--io-field-height);
+        min-height: var(--io-field-height);
+      }
+      :host[vertical] {
+        cursor: ns-resize;
+        flex-basis: var(--io-field-height);
+        flex-grow: 0;
+      }
+    `;
+  }
+
   @IoProperty({value: 0})
   declare value: SliderValueTypes;
 

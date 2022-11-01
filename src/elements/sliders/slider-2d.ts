@@ -6,17 +6,18 @@ import { IoSliderBase } from './slider-base.js';
 export class IoSlider2d extends IoSliderBase {
   static get Style() {
     return /* css */`
-    :host {
-      cursor: crosshair;
-      border: var(--io-border);
-      border-radius: var(--io-border-radius);
-      border-color: var(--io-color-border-inset);
-      min-width: calc(var(--io-field-height) * 4);
-      flex-basis: calc(var(--io-field-height) * 4);
-    }
-    :host[horizontal] {
-      cursor: crosshair;
-    }
+      :host {
+        cursor: crosshair;
+        border: var(--io-border);
+        border-radius: var(--io-border-radius);
+        border-color: var(--io-color-border-inset);
+        min-width: calc(var(--io-field-height) * 4);
+        flex-basis: calc(var(--io-field-height) * 4);
+        flex-grow: 0;
+      }
+      :host[horizontal] {
+        cursor: crosshair;
+      }
     `;
   }
 
@@ -35,43 +36,37 @@ export class IoSlider2d extends IoSliderBase {
   // TODO: grid with exponent
   static get Frag() {
     return /* glsl */`
-    #extension GL_OES_standard_derivatives : enable
-
     varying vec2 vUv;
 
     void main(void) {
-
+      // Colors
       vec3 finalCol = ioBackgroundColorField.rgb;
       vec3 gridCol = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.95);
-      vec3 circleColor = ioColorLink.rgb;
+      vec3 axisCol = mix(ioColorFocus.rgb, ioBackgroundColorField.rgb, 0.75);
+      vec3 sliderCol = ioColorLink.rgb;
 
+      // Dimensions
       vec2 size = uVertical == 1 ? uSize.yx : uSize;
       vec2 uv = uVertical == 1 ? vUv.yx : vUv;
-      vec2 view = (uv - 0.5) * 2.0;
+      vec2 position = size * (uv - vec2(0.5));
 
-      vec2 gridWidth = abs(size / ((uMax - uMin) / uStep)) * 2.0;
-
-      vec2 offset = (uMax + uMin) / (uMax - uMin);
-
-      view += offset;
-
-      vec2 position = size * view;
-
-      if (max(gridWidth.x, gridWidth.y) > ioStrokeWidth * 2.0) {
-        float gridShape = grid(position, gridWidth.x, gridWidth.y, ioStrokeWidth);
-        finalCol.rgb = mix(gridCol, finalCol.rgb, gridShape);
-        gridShape = grid(position, gridWidth.x * 10., gridWidth.y * 10., ioStrokeWidth * 2.);
-        finalCol.rgb = mix(vec3(1.0, 0.0, 0.0), finalCol.rgb, gridShape);
-      }
-
+      // Sizes
+      float gridThickness = ioStrokeWidth;
+      vec2  gridSize = size / abs((uMax - uMin) / uStep);
+      vec2  gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
       float knobRadius = ioFieldHeight * 0.25;
 
-      vec2 value2d = (uValue - uMin) / (uMax - uMin);
-      value2d -= offset;
+      vec2 offsetPosition = translate(position, -gridOffset);
+      float gridShape = grid2d(offsetPosition, gridSize, gridThickness);
+      float axisShape = axis2d(offsetPosition, gridThickness);
 
-      vec2 circlePos = size * value2d;
+      if (max(gridSize.x, gridSize.y) > gridThickness * 2.0) {
+        finalCol.rgb = mix(gridCol, finalCol.rgb, gridShape);
+        finalCol.rgb = mix(axisCol, finalCol.rgb, axisShape);
+      }
 
-      vec4 slider = paintCircle(position / 2.0, circlePos, knobRadius, circleColor);
+      vec2 circlePos = uValue / (uMax - uMin) * size;
+      vec4 slider = paintCircle(offsetPosition, circlePos, knobRadius, sliderCol);
       finalCol = mix(finalCol.rgb, slider.rgb, slider.a);
 
       gl_FragColor = vec4(finalCol, 1.0);

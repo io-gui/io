@@ -1,4 +1,5 @@
 export {IoColorSlider} from './color-slider.js';
+export {IoColorSwatch} from './color-swatch.js';
 export {IoColorSliderRed} from './color-slider-red.js';
 export {IoColorSliderGreen} from './color-slider-green.js';
 export {IoColorSliderBlue} from './color-slider-blue.js';

@@ -47,6 +47,14 @@ export class IoDemoElementsSliders extends IoElement {
         ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
       ]],
       ['div', [
+        ['io-label', {label: 'slider [alt]'}],
+        ['io-slider', {value: this.bind('number'), min: -0.3, max: 2, step: 1}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'slider [alt]'}],
+        ['io-slider', {value: this.bind('number'), min: 0, max: 2.3, step: 1}],
+      ]],
+      ['div', [
         ['io-label', {label: 'slider [exp]'}],
         ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 3}],
       ]],
@@ -87,13 +95,13 @@ export class IoDemoElementsSliders extends IoElement {
       ]],
       ['div', {class: 'tall'}, [
         ['io-label', {label: 'sliders2d'}],
-        ['io-slider-2d', {value: this.bind('array2'), min: [-3, -1], max: [2, 4], step: [0.5, 0.5]}],
+        ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1]}],
       ]],
       ['div', {class: 'tall'}, [
-        ['io-label', {label: 'sliders2d'}],
-        ['io-slider-2d', {value: this.bind('array2'), min: [2, 4], max: [-3, -1], step: [0.5, 0.5], vertical: false}],
-        ['io-slider-2d', {value: this.bind('array2'), min: [2, 4], max: [-3, -1], step: [0.5, 0.5], vertical: true}],
-        ['io-slider-2d', {value: this.bind('array2'), min: [-3, -1], max: [2, 4], step: [0.5, 0.5], vertical: true}],
+        ['io-label', {label: 'sliders2d [alt]'}],
+        ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: false}],
+        ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: true}],
+        ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1], vertical: true}],
       ]],
     ]);
   }
