@@ -1,11 +1,12 @@
 import { RegisterIoElement } from '../../core/element.js';
 import { IoProperty } from '../../core/internals/property.js';
-import { IoSlider } from './slider.js';
+import { IoSliderBase } from './slider-base.js';
 
 @RegisterIoElement
-export class IoSliderRange extends IoSlider {
+export class IoSliderRange extends IoSliderBase {
+
   @IoProperty({value: [0, 0], observe: true})
-  declare value: number;
+  declare value: [number, number];
 
   @IoProperty(0.01)
   declare step: number;
@@ -31,7 +32,6 @@ export class IoSliderRange extends IoSlider {
     const value = this._value;
     const p = this._getPointerCoord(event);
     const c = this._getCoordFromValue(value);
-    console.log(p[0], c[1]);
     if (this.vertical) {
       this._index = Math.abs(c[0] - p[1]) < Math.abs(c[1] - p[1]) ? 0 : 1;
     } else {
@@ -53,31 +53,32 @@ export class IoSliderRange extends IoSlider {
   }
   static get Frag() {
     return /* glsl */`
-    #extension GL_OES_standard_derivatives : enable
-
     varying vec2 vUv;
 
     void main(void) {
-      vec3 finalColor = ioBackgroundColorField.rgb;
+      // Colors
+      vec3 finalCol = ioBackgroundColorField.rgb;
+      vec4 gridCol = mix(ioColor, ioBackgroundColorField, 0.75);
 
+      // Dimensions
       vec2 size = uVertical == 1 ? uSize.yx : uSize;
       vec2 uv = uVertical == 1 ? vUv.yx : vUv;
       vec2 position = size * uv;
 
-      float stepInPx = size.x / abs((uMax - uMin) / uStep);
-      vec4 stepColorBg = mix(ioColor, ioBackgroundColorField, 0.75);
-
-      float lineWidth = ioStrokeWidth;
-      if (stepInPx > lineWidth * 2.0) {
-        float gridWidth = stepInPx;
-        float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
-        vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
-        float gridShape = grid(translate(expPosition, - gridOffset, size.y / 2.), gridWidth, size.y + lineWidth * 2.0, lineWidth);
-        finalColor.rgb = mix(stepColorBg.rgb, finalColor.rgb, gridShape);
-      }
-
+      // Sizes
+      float gridThickness = ioStrokeWidth;
+      float gridSize = size.x / abs((uMax - uMin) / uStep);
+      float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
       float knobRadius = ioFieldHeight * 0.25;
       float slotWidth = ioFieldHeight * 0.125;
+
+      vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
+      vec2 gridPosition = translate(expPosition, gridOffset, size.y / 2.);
+      float gridShape = grid2d(gridPosition, vec2(gridSize, size.y + gridThickness * 2.0), gridThickness);
+
+      if (gridSize > gridThickness * 2.0) {
+        finalCol.rgb = mix(gridCol.rgb, finalCol.rgb, gridShape);
+      }
 
       float valueInRangeStart = (uValue[0] - uMin) / (uMax - uMin);
       float signStart = valueInRangeStart < 0.0 ? -1.0 : 1.0;
@@ -90,9 +91,9 @@ export class IoSliderRange extends IoSlider {
       vec2 sliderEnd = vec2(size.x * min(2.0, max(-1.0, (valueInRangeEnd))), size.y * 0.5);
 
       vec4 slider = paintSlider(position, sliderStart, sliderEnd, knobRadius, slotWidth, ioColorFocus.rgb, ioColorLink.rgb);
-      finalColor = mix(finalColor.rgb, slider.rgb, slider.a);
+      finalCol = mix(finalCol.rgb, slider.rgb, slider.a);
 
-      gl_FragColor = vec4(finalColor, 1.0);
+      gl_FragColor = vec4(finalCol, 1.0);
     }
     `;
   }

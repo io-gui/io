@@ -3,10 +3,10 @@ import { IoElement, RegisterIoElement } from '../build/iogui.js';
 import '../build/iogui.js';
 import './elements-core.js';
 import './elements-sliders.js';
-import './elements-math.js';
-import './elements-object.js';
+// import './elements-math.js';
+// import './elements-object.js';
 import './elements-color.js';
-import './elements-menus.js';
+// import './elements-menus.js';
 
 export class IoDemoElements extends IoElement {
   static get Style() {
@@ -41,15 +41,15 @@ export class IoDemoElements extends IoElement {
       //   number: this.bind('number'),
       //   boolean: this.bind('boolean'),
       // }],
-      ['io-demo-elements-sliders', {
-        number: this.bind('number'),
-        array2: this.bind('array2'),
-        array3: this.bind('array3'),
-        array4: this.bind('array4'),
-        vector2: this.bind('vector2'),
-        vector3: this.bind('vector3'),
-        vector4: this.bind('vector4'),
-      }],
+      // ['io-demo-elements-sliders', {
+      //   number: this.bind('number'),
+      //   array2: this.bind('array2'),
+      //   array3: this.bind('array3'),
+      //   array4: this.bind('array4'),
+      //   vector2: this.bind('vector2'),
+      //   vector3: this.bind('vector3'),
+      //   vector4: this.bind('vector4'),
+      // }],
       // ['io-demo-elements-menus', {
       //   number: this.bind('number'),
       // }],
@@ -66,10 +66,10 @@ export class IoDemoElements extends IoElement {
       //   matrix3: this.bind('matrix3'),
       //   matrix4: this.bind('matrix4'),
       // }],
-      // ['io-demo-elements-color', {
-      //   array3: this.bind('array3'),
-      //   array4: this.bind('array4'),
-      // }],
+      ['io-demo-elements-color', {
+        array3: this.bind('array3'),
+        array4: this.bind('array4'),
+      }],
     ]);
   }
 }

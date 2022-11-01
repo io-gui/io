@@ -108,11 +108,14 @@ export class IoGl extends IoElement {
       float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
       return saturate((outside + inside) * uPxRatio); // TODO: check
     }
-    float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
-      vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
-      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(max(dFdx(sp.x), dFdy(sp.x))) - lineWidth;
-      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(max(dFdy(sp.y), dFdx(sp.y))) - lineWidth;
+    float grid2d(vec2 samplePosition, vec2 gridSize, float lineWidth) {
+      vec2 sp = samplePosition / vec2(gridSize.x, gridSize.y);
+      float linex = (abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(max(dFdx(sp.x), dFdy(sp.x))) - lineWidth);
+      float liney = (abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(max(dFdy(sp.y), dFdx(sp.y))) - lineWidth);
       return saturate(min(linex, liney));
+    }
+    float axis2d(vec2 samplePosition, float lineWidth) {
+      return (min(abs(samplePosition.x), abs(samplePosition.y)) * 2.0 > lineWidth) ? 1.0 : 0.0;
     }
     float checker(vec2 samplePosition, float size) {
       vec2 checkerPos = floor(samplePosition / size);
@@ -127,7 +130,7 @@ export class IoGl extends IoElement {
         vec2 position = uSize * vUv;
         float gridWidth = 8. * uPxRatio;
         float lineWidth = 1. * uPxRatio;
-        float gridShape = grid(position, gridWidth, gridWidth, lineWidth);
+        float gridShape = grid2d(position, vec2(gridWidth), lineWidth);
         gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
   }
