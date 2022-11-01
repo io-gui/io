@@ -1,4 +1,3 @@
-import { Test } from 'mocha';
 import {Binding, ProtoProperty, PropertyInstance, IoProperty, IoNode, RegisterIoNode, PropertyDeclarations, PropertyDecorators} from '../../iogui.js';
 
 class Object1 {
