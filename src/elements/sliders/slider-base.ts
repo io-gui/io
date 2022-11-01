@@ -3,6 +3,14 @@ import { IoGl } from '../../core/gl.js';
 
 type SliderValueTypes = number | [number, number] | {x: number, y: number};
 
+const clamp = (num: number, min: number, max: number) => {
+  if (max > min) {
+    return Math.min(Math.max(num, min), max);
+  } else {
+    return Math.min(Math.max(num, max), min);
+  }
+};
+
 export abstract class IoSliderBase extends IoGl {
   @IoProperty({value: 0})
   declare value: SliderValueTypes;
@@ -133,6 +141,7 @@ export abstract class IoSliderBase extends IoGl {
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
+    this.addEventListener('pointercancel', this._onPointerup);
   }
   _onPointermove(event: PointerEvent) {
     if (event.pointerType !== 'touch') this._active = true;
@@ -142,6 +151,7 @@ export abstract class IoSliderBase extends IoGl {
     this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
+    this.removeEventListener('pointercancel', this._onPointerup);
     this._active = false;
   }
   _getPointerCoord(event: PointerEvent): [number, number] {
@@ -173,8 +183,9 @@ export abstract class IoSliderBase extends IoGl {
     const min = this._min;
     const max = this._max;
     const step = this._step;
-    value[0] = Math.min(max[0], Math.max(min[0], value[0]));
-    value[1] = Math.min(max[1], Math.max(min[1], value[1]));
+
+    value[0] = clamp(value[0], max[0], min[0]);
+    value[1] = clamp(value[1], max[1], min[1]);
     value[0] = Math.round(value[0] / step[0]) * step[0];
     value[1] = Math.round(value[1] / step[1]) * step[1];
     value[0] = Number(value[0].toFixed(5));
@@ -297,40 +308,58 @@ export abstract class IoSliderBase extends IoGl {
   }
   static get GlUtils() {
     return /* glsl */`
-    vec4 paintSlider(vec2 position, vec2 sliderStart, vec2 sliderEnd, float knobRadius, float slotWidth, vec3 color) {
-      vec4 slotColor = mix(ioColor, ioBackgroundColorField, 0.125);
-      vec4 sliderColor = vec4(0.0);
-      float stroke = ioStrokeWidth;
+      float fOpUnionRound(float a, float b, float r) {
+        vec2 u = max(vec2(r - a,r - b), vec2(0));
+        return max(r, min (a, b)) - length(u);
+      }
 
-      vec2 startPos = translate(position, sliderStart);
-      vec2 endPos = translate(position, sliderEnd);
-      vec2 slotCenter = (startPos + endPos) / 2.;
-      float slotSpan = abs(startPos.x - endPos.x) / 2.0;
+      vec4 paintCircle(vec2 p, vec2 center, float radius, vec3 color) {
+        vec4 finalCol = vec4(0.0);
+        vec2 pCenter = translate(p, center);
+        float strokeShape = circle(pCenter, radius + ioStrokeWidth + ioStrokeWidth);
+        float fillShape   = circle(pCenter, radius + ioStrokeWidth);
+        float colorShape  = circle(pCenter, radius);
+        finalCol = mix(ioColor, finalCol, strokeShape);
+        finalCol = mix(vec4(ioBackgroundColor.rgb, 1.0), finalCol, fillShape);
+        finalCol = mix(vec4(color, 1.0), finalCol, colorShape);
+        return finalCol;
+      }
 
-      float strokeShape = min(min(
-        circle(startPos, knobRadius + stroke + stroke),
-        rectangle(slotCenter, vec2(slotSpan, slotWidth + stroke + stroke))),
-        circle(endPos, knobRadius + stroke + stroke)
-      );
-      sliderColor = mix(vec4(slotColor.rgb, 1.0), sliderColor, strokeShape);
+      vec4 paintSlider(vec2 p, vec2 start, vec2 end, float knobRadius, float slotThickness, vec3 colorStart, vec3 colorEnd) {
+        vec4 finalCol = vec4(0.0);
 
-      float fillShape = min(min(
-        circle(startPos, knobRadius + stroke),
-        rectangle(slotCenter, vec2(slotSpan, slotWidth + stroke))),
-        circle(endPos, knobRadius + stroke)
-      );
-      sliderColor = mix(vec4(ioBackgroundColor.rgb, 1.0), sliderColor, fillShape);
+        vec2 pStart = translate(p, start);
+        vec2 pEnd = translate(p, end);
+        vec2 pCenter = (pStart + pEnd) / 2.0;
+        float slotHalfWidth = abs(pStart.x - pEnd.x) / 2.0;
 
-      float colorShape = min(min(
-        circle(startPos, knobRadius),
-        rectangle(slotCenter, vec2(slotSpan, slotWidth))),
-        circle(endPos, knobRadius)
-      );
-      sliderColor = mix(vec4(color, 1.0), sliderColor, colorShape);
+        float strokeShape = min(min(
+          circle(pStart, knobRadius + ioStrokeWidth + ioStrokeWidth),
+          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + ioStrokeWidth + ioStrokeWidth))),
+          circle(pEnd, knobRadius + ioStrokeWidth + ioStrokeWidth)
+        );
 
-      return sliderColor;
-    }
-    \n\n`;
+        float fillShape   = min(min(
+          circle(pStart, knobRadius + ioStrokeWidth),
+          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + ioStrokeWidth))),
+          circle(pEnd, knobRadius + ioStrokeWidth)
+        );
+        float colorShape  = min(min(
+          circle(pStart, knobRadius),
+          rectangle(pCenter, vec2(slotHalfWidth, slotThickness))),
+          circle(pEnd, knobRadius)
+        );
+
+        float grad = (p.x - start.x) / (end.x - start.x);
+        vec3 slotGradient = mix(colorStart, colorEnd, saturate(grad));
+
+        finalCol = mix(ioColor, finalCol, strokeShape);
+        finalCol = mix(vec4(ioBackgroundColor.rgb, 1.0), finalCol, fillShape);
+        finalCol = mix(vec4(slotGradient, 1.0), finalCol, colorShape);
+
+        return finalCol;
+      }\n\n
+    `;
   }
 }
 

@@ -64,13 +64,11 @@ export class IoSliderRange extends IoSlider {
       vec2 uv = uVertical == 1 ? vUv.yx : vUv;
       vec2 position = size * uv;
 
-
-      float stepInPx = size.x / ((uMax - uMin) / uStep);
+      float stepInPx = size.x / abs((uMax - uMin) / uStep);
       vec4 stepColorBg = mix(ioColor, ioBackgroundColorField, 0.75);
 
       float lineWidth = ioStrokeWidth;
       if (stepInPx > lineWidth * 2.0) {
-        // TODO: grid with exponent
         float gridWidth = stepInPx;
         float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
         vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
@@ -86,25 +84,17 @@ export class IoSliderRange extends IoSlider {
       valueInRangeStart = abs(pow(valueInRangeStart, 1./uExponent)) * signStart;
 
       float valueInRangeEnd = (uValue[1] - uMin) / (uMax - uMin);
-      float signEnd = valueInRangeEnd < 0.0 ? -1.0 : 1.0;
-      valueInRangeEnd = abs(pow(valueInRangeEnd, 1./uExponent)) * signEnd;
-
-      float grad = 0.5;
-      if (valueInRangeEnd > valueInRangeStart) {
-        grad = (uv.x - valueInRangeStart) / max(valueInRangeEnd - valueInRangeStart, 0.01);
-      } else if (valueInRangeEnd < valueInRangeStart) {
-        grad = 1.0 - (uv.x - valueInRangeEnd) / max(valueInRangeStart - valueInRangeEnd, 0.01);
-      }
-      vec4 slotGradient = mix(ioColorFocus, ioColorLink, saturate(grad));
+      valueInRangeEnd = abs(pow(valueInRangeEnd, 1./uExponent));
 
       vec2 sliderStart = vec2(size.x * min(2.0, max(-1.0, (valueInRangeStart))), size.y * 0.5);
       vec2 sliderEnd = vec2(size.x * min(2.0, max(-1.0, (valueInRangeEnd))), size.y * 0.5);
 
-      vec4 slider = paintSlider(position, sliderStart, sliderEnd, knobRadius, slotWidth, slotGradient.rgb);
+      vec4 slider = paintSlider(position, sliderStart, sliderEnd, knobRadius, slotWidth, ioColorFocus.rgb, ioColorLink.rgb);
       finalColor = mix(finalColor.rgb, slider.rgb, slider.a);
 
       gl_FragColor = vec4(finalColor, 1.0);
-    }`;
+    }
+    `;
   }
 }
 
