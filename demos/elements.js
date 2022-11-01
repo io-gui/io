@@ -36,11 +36,11 @@ export class IoDemoElements extends IoElement {
   constructor(props) {
     super(props);
     this.template([
-      ['io-demo-elements-core', {
-        string: this.bind('string'),
-        number: this.bind('number'),
-        boolean: this.bind('boolean'),
-      }],
+      // ['io-demo-elements-core', {
+      //   string: this.bind('string'),
+      //   number: this.bind('number'),
+      //   boolean: this.bind('boolean'),
+      // }],
       ['io-demo-elements-sliders', {
         number: this.bind('number'),
         array2: this.bind('array2'),
