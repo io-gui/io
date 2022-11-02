@@ -55,7 +55,7 @@ export class IoField extends IoElement {
         position: relative;
         text-overflow: inherit;
         border-color: var(--io-color-focus);
-        outline-color: var(--io-color-focus);
+        outline: 1px solid var(--io-color-focus);
       }
     `;
   }

@@ -3,17 +3,17 @@ import { IoElement, RegisterIoElement } from './element.js';
 
 let lastFocus: Element | null = null;
 
-window.addEventListener('focusin', () => {
-  lastFocus = document.activeElement;
-}, {capture: false});
+// window.addEventListener('focusin', () => {
+//   lastFocus = document.activeElement;
+// }, {capture: false});
 
-window.addEventListener('blur', () => {
-  setTimeout(() => {
-    if (document.activeElement === document.body) {
-      lastFocus = null;
-    }
-  });
-}, {capture: true});
+// window.addEventListener('blur', () => {
+//   setTimeout(() => {
+//     if (document.activeElement === document.body) {
+//       lastFocus = null;
+//     }
+//   });
+// }, {capture: true});
 
 type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
 /*

@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {IoLayerSingleton} from '../../core/layer.js';
-import {IoColorMixin} from './color.js';
+import {IoColorMixin} from './color-base.js';
 
 @RegisterIoElement
 export class IoColorPanel extends IoColorMixin(IoElement) {

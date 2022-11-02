@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import {IoColorMixin} from './color.js';
+import {IoColorMixin} from './color-base.js';
 import './color-picker.js';
 
 /*

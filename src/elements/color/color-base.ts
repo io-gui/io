@@ -1,13 +1,133 @@
-import {convert} from './color-convert.js';
+import { convert } from './lib/convert.js';
+import { IoElement } from '../../core/element.js';
+import { RegisterIoElement } from '../../core/element.js';
+import { IoProperty } from '../../core/internals/property.js';
+import { IoNodeConstructor } from '../../core/node.js';
 
-/*
- * A mixin class for all `IoColor*` elements. Its `value` property is color of `Array` or `Object` type in **rgb**, **hsv**, **hsl** or **cmyk** color space. If `value` is an array, its color space is inferred as **rgb** unless explicit color mode is specified with `mode` property which can have values **0 - rgb**, **1 - hsv**, **2 - hsl**, **3 - cmyk**. If `value` is an object, it should have keys corresponding to the color space components and color space will be determined automatically. Alpha component `a` is optional.
- **/
+@RegisterIoElement
+export class IoColorBase extends IoElement {
 
-type Constructor<T> = new (...args: any[]) => T;
+  @IoProperty({value: {r: 1, g: 1, b: 1, a: 1}, observe: true})
+  declare value: {r: number, g: number, b: number, a?: number};
 
-export function IoColorMixin<T extends Constructor<any>>(superclass: T) {
-  const classConstructor = class extends superclass {
+  @IoProperty({value: [1, 1, 1]})
+  declare rgb: [number, number, number];
+
+  @IoProperty({value: [1, 1, 1]})
+  declare hsv: [number, number, number];
+
+  @IoProperty({value: [1, 1, 1]})
+  declare hsl: [number, number, number];
+
+  init() {
+    this.valueChanged();
+  }
+
+  valueMutated() {
+    this.valueChanged();
+  }
+
+  setValueFromRgb() {
+    this.value.r = this.rgb[0];
+    this.value.g = this.rgb[1];
+    this.value.b = this.rgb[2];
+    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+  }
+  setValueFromHsv() {
+    const rgb = convert.hsv.rgb([
+      this.hsv[0] * 360,
+      this.hsv[1] * 100,
+      this.hsv[2] * 100,
+    ]);
+    this.value.r = rgb[0] / 255;
+    this.value.g = rgb[1] / 255;
+    this.value.b = rgb[2] / 255;
+    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+  }
+  setValueFromHsl() {
+    const rgb = convert.hsl.rgb([
+      this.hsl[0] * 360,
+      this.hsl[1] * 100,
+      this.hsl[2] * 100,
+    ]);
+    this.value.r = rgb[0] / 255;
+    this.value.g = rgb[1] / 255;
+    this.value.b = rgb[2] / 255;
+    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+  }
+
+  valueChanged() {
+    debug: {
+      const c = Object.keys(this.value);
+      if (c.indexOf('r') === -1 || c.indexOf('g') === -1 || c.indexOf('b') === -1) {
+        console.warn('IoColor: Incorrect value type!');
+      }
+    }
+
+    let rgb = [this.value.r * 255, this.value.g * 255, this.value.b * 255];
+    let hsv = convert.rgb.hsv(rgb);
+    let hsl = convert.rgb.hsl(rgb);
+
+    // TODO: Investigate
+    // Prevent color collapsing to 0.
+    if (hsv[1] === 0) hsv[0] = this.hsv[0] * 360;
+    if (hsv[2] === 0) hsv[1] = this.hsv[1] * 100;
+    if (hsl[1] === 0) hsl[0] = this.hsl[0] * 360;
+    if (hsl[2] === 0 || hsl[2] === 100) {
+      hsl[0] = this.hsl[0] * 360;
+      hsl[1] = this.hsl[1] * 100;
+    }
+
+    this.setProperties({
+      rgb: [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255],
+      hsv: [hsv[0] / 360, hsv[1] / 100, hsv[2] / 100],
+      hsl: [hsl[0] / 360, hsl[1] / 100, hsl[2] / 100],
+    });
+  }
+}
+
+@RegisterIoElement
+export class IoColorRgba extends IoColorBase {
+  static get Style() {
+    return /* css */`
+      :host {
+        display: flex;
+        flex-direction: row;
+        flex: 0 1 17.2em;
+      }
+      :host > io-number {
+        flex-grow: 1;
+      }
+      :host > *:not(:last-child) {
+        margin-right: var(--io-spacing);
+      }
+    `;
+  }
+
+  _onValueInput(event: CustomEvent) {
+    const item = event.composedPath()[0];
+    const c = (item as any).id as keyof typeof this.value;
+    const value = event.detail.value;
+    const oldValue = event.detail.oldValue;
+    this.value[c] = value;
+    const detail = {object: this.value, property: c, value: value, oldValue: oldValue};
+    this.dispatchEvent('object-mutated', detail, false, window);
+    this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
+  }
+
+  changed() {
+    this.template([
+      ['io-number', {id: 'r', value: this.value.r, min: 0, max: 1, step: 0.001, ladder: true, 'on-value-input': this._onValueInput}],
+      ['io-number', {id: 'g', value: this.value.g, min: 0, max: 1, step: 0.001, ladder: true, 'on-value-input': this._onValueInput}],
+      ['io-number', {id: 'b', value: this.value.b, min: 0, max: 1, step: 0.001, ladder: true, 'on-value-input': this._onValueInput}],
+      this.value.a !== undefined ? ['io-number', {id: 'a', value: this.value.a, min: 0, max: 1, step: 0.001, ladder: true, 'on-value-input': this._onValueInput}] : null,
+      ['io-color-picker', {id: 'swatch', value: this.value}],
+    ]);
+  }
+}
+
+export function IoColorMixin<T extends IoNodeConstructor<any>>(superclass: T) {
+  const classConstructor = class extends (superclass) {
     static get Properties(): any {
       return {
         value: {
@@ -27,35 +147,8 @@ export function IoColorMixin<T extends Constructor<any>>(superclass: T) {
         mode: 0,
       };
     }
-    constructor(...args: any[]) {
-      super(...args);
+    init() {
       this.valueChanged();
-    }
-    static get GlUtils() {
-      return /* glsl */`
-      vec3 hue2rgb(float hue) {
-        hue=fract(hue);
-        float R = abs(hue * 6. - 3.) - 1.;
-        float G = 2. - abs(hue * 6. - 2.);
-        float B = 2. - abs(hue * 6. - 4.);
-        return saturate(vec3(R,G,B));
-      }
-      vec3 hsv2rgb(vec3 hsv) {
-        vec3 rgb = hue2rgb(hsv.r);
-        return ((rgb - 1.) * hsv.g + 1.) * hsv.b;
-      }
-      vec3 hsl2rgb(vec3 hsl) {
-        vec3 rgb = hue2rgb(hsl.x);
-        float C = (1. - abs(2. * hsl.z - 1.)) * hsl.y;
-        return (rgb - 0.5) * C + hsl.z;
-      }
-      vec3 cmyk2rgb(vec4 cmyk) {
-        float r = 1. - min(1., cmyk.x * (1. - cmyk.w) + cmyk.w);
-        float g = 1. - min(1., cmyk.y * (1. - cmyk.w) + cmyk.w);
-        float b = 1. - min(1., cmyk.z * (1. - cmyk.w) + cmyk.w);
-        return vec3(r, g, b);
-      }
-      \n\n`;
     }
     valueMutated() {
       this.valueChanged();
