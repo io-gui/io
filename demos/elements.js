@@ -67,8 +67,7 @@ export class IoDemoElements extends IoElement {
       //   matrix4: this.bind('matrix4'),
       // }],
       ['io-demo-elements-color', {
-        array3: this.bind('array3'),
-        array4: this.bind('array4'),
+
       }],
     ]);
   }

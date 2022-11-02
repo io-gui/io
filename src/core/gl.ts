@@ -60,7 +60,7 @@ export class IoGl extends IoElement {
       }
       :host:focus {
         border-color: var(--io-color-focus);
-        outline-color: var(--io-color-focus);
+        outline: 1px solid var(--io-color-focus);
       }
     `;
   }
@@ -121,6 +121,28 @@ export class IoGl extends IoElement {
       vec2 checkerPos = floor(samplePosition / size);
       float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
       return checkerMask;
+    }
+    vec3 hue2rgb(float hue) {
+      hue=fract(hue);
+      float R = abs(hue * 6. - 3.) - 1.;
+      float G = 2. - abs(hue * 6. - 2.);
+      float B = 2. - abs(hue * 6. - 4.);
+      return saturate(vec3(R,G,B));
+    }
+    vec3 hsv2rgb(vec3 hsv) {
+      vec3 rgb = hue2rgb(hsv.r);
+      return ((rgb - 1.) * hsv.g + 1.) * hsv.b;
+    }
+    vec3 hsl2rgb(vec3 hsl) {
+      vec3 rgb = hue2rgb(hsl.x);
+      float C = (1. - abs(2. * hsl.z - 1.)) * hsl.y;
+      return (rgb - 0.5) * C + hsl.z;
+    }
+    vec3 cmyk2rgb(vec4 cmyk) {
+      float r = 1. - min(1., cmyk.x * (1. - cmyk.w) + cmyk.w);
+      float g = 1. - min(1., cmyk.y * (1. - cmyk.w) + cmyk.w);
+      float b = 1. - min(1., cmyk.z * (1. - cmyk.w) + cmyk.w);
+      return vec3(r, g, b);
     }\n\n`;
   }
   static get Frag() {

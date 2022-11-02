@@ -1,6 +1,7 @@
 import { RegisterIoElement } from '../../core/element.js';
-import {IoSlider} from '../sliders/slider.js';
-import {IoColorMixin} from './color.js';
+import { IoProperty } from '../../core/internals/property.js';
+import { IoSliderBase } from '../sliders/slider-base.js';
+import { IoColorMixin } from './color-base.js';
 
 /*
  * Extends `IoColorMixin(IoSlider)`.
@@ -8,15 +9,20 @@ import {IoColorMixin} from './color.js';
  * Base class for color sliders for any color type.
  **/
 @RegisterIoElement
-export class IoColorSlider extends IoColorMixin(IoSlider) {
-  static get Properties(): any {
-    return {
-      value: [1, 1, 1, 1],
-      step: 0.001,
-      min: 0,
-      max: 1,
-    };
-  }
+export class IoColorSlider extends IoColorMixin(IoSliderBase) {
+
+  @IoProperty([0, 0, 0, 0])
+  declare value: [number, number, number, number];
+
+  @IoProperty(0.001)
+  declare step: number;
+
+  @IoProperty(0)
+  declare min: number;
+
+  @IoProperty(1)
+  declare max: number;
+
   static get GlUtils() {
     return /* glsl */`
     vec4 paintColorSlider(vec2 position, vec3 color) {

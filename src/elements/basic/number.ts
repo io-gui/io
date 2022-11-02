@@ -481,15 +481,6 @@ export class IoNumberLadder extends IoElement {
   _onLadderStepCollapse() {
     this.setProperty('expanded', false);
   }
-  srcChanged() {
-    const src = this.src;
-    if (src) this.setProperties({
-      min: src.min,
-      max: src.max,
-      step: src.step,
-      conversion: src.conversion,
-    });
-  }
   expandedChanged() {
     const src = this.src;
     if (this.expanded) {

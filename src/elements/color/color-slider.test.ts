@@ -1,4 +1,4 @@
-import { IoColorSlider } from '../../iogui.js';
+// import { IoColorSlider } from '../../iogui.js';
 
 // const element = new IoColorSlider();
 // element.style.display = 'none';

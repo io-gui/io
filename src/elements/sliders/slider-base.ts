@@ -1,17 +1,11 @@
 import { IoProperty } from '../../core/internals/property.js';
 import { IoGl } from '../../core/gl.js';
 
-type SliderValueTypes = number | [number, number] | {x: number, y: number};
-
 const clamp = (num: number, min: number, max: number) => {
-  if (max > min) {
-    return Math.min(Math.max(num, min), max);
-  } else {
-    return Math.min(Math.max(num, max), min);
-  }
+  return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
 };
 
-export abstract class IoSliderBase extends IoGl {
+export class IoSliderBase extends IoGl {
   static get Style() {
     return /* css */`
       :host {
@@ -33,16 +27,16 @@ export abstract class IoSliderBase extends IoGl {
   }
 
   @IoProperty({value: 0})
-  declare value: SliderValueTypes;
+  declare value: number | [number, number] | {x: number, y: number};
 
   @IoProperty(0.01)
-  declare step: SliderValueTypes;
+  declare step: number | [number, number] | {x: number, y: number};
 
   @IoProperty(0)
-  declare min: SliderValueTypes;
+  declare min: number | [number, number] | {x: number, y: number};
 
   @IoProperty(1)
-  declare max: SliderValueTypes;
+  declare max: number | [number, number] | {x: number, y: number};
 
   @IoProperty(1)
   declare exponent: number;

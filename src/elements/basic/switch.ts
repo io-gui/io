@@ -57,7 +57,7 @@ export class IoSwitch extends IoBoolean {
         border-color: var(--io-color-focus);
       }
       :host:focus {
-        outline-color: var(--io-color-focus);
+        outline: 1px solid var(--io-color-focus);
       }
     `;
   }

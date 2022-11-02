@@ -1,53 +1,30 @@
 import { RegisterIoElement } from '../../core/element.js';
-import {IoGl} from '../../core/gl.js';
-import {IoColorMixin} from './color.js';
+import { IoColorBase } from './color-base.js';
 
-/*
- * Extends `IoColorMixin(IoGl)`.
- *
- * Display element for color.
- *
- * <io-element-demo element="io-color-swatch"
- * properties='{"value": [1, 0.5, 0, 1]}'
- * config='{"value": ["io-properties"]}
- * '></io-element-demo>
- **/
 @RegisterIoElement
-export class IoColorSwatch extends IoColorMixin(IoGl) {
+export class IoColorSwatch extends IoColorBase {
   static get Style() {
     return /* css */`
-    :host {
-      box-sizing: border-box;
-      align-self: flex-start;
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: var(--io-color-border-inset);
-    }
-    :host:focus {
-      border-color: var(--io-color-focus);
-      outline-color: var(--io-color-focus);
-    }
-    `;
-  }
-  static get Frag() {
-    return /* glsl */`
-      varying vec2 vUv;
-      void main(void) {
-        vec2 position = vUv * uSize;
-
-        // Alpha pattern
-        vec3 alphaPattern = mix(vec3(0.5), vec3(1.0), checker(position, 6.));
-
-        float alpha = uAlpha;
-        float lineWidth = ioStrokeWidth * 2.0;
-        vec2 pxUv = vUv * uSize;
-        if (pxUv.x < lineWidth) alpha = 1.0;
-        if (pxUv.y < lineWidth) alpha = 1.0;
-        if (pxUv.x > uSize.x - lineWidth) alpha = 1.0;
-        if (pxUv.y > uSize.y - lineWidth) alpha = 1.0;
-
-        gl_FragColor = saturate(vec4(mix(alphaPattern, uRgb.rgb, alpha), 1.0));
+      :host {
+        display: inline-block;
+        min-width: var(--io-field-height);
+        height: var(--io-field-height);
+        background-color: white;
+        background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
+        background-size: 12px 12px;
+        background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
+      }
+      :host > div { 
+        width: 100%;
+        height: 100%;
       }
     `;
+  }
+  valueChanged() {
+    const alpha = this.value.a !== undefined ? this.value.a : 1;
+    this.template([
+      ['div', {style: {'background-color': `rgba(${this.rgb[0] * 255 },${this.rgb[1] * 255}, ${this.rgb[2] * 255}, ${alpha})`}}]
+    ])
+    super.valueChanged();
   }
 }
