@@ -1,21 +1,4 @@
-import { IoElement, RegisterIoElement, Options, Item } from '../build/iogui.js';
-
-// class Temp extends IoElement {
-//   constructor(props) {
-//     super(props);
-//     this.template([
-//       ['div', {class: 'io-table2 table'}, [
-//         ['io-field', {label: 'Mode'}],
-//         ['io-option-menu', {value: this.bind('mode'), options: new Options([
-//           new Item({label: 'rgb', value: 0}),
-//           new Item({label: 'hsv', value: 1}),
-//           new Item({label: 'hsl', value: 2}),
-//           new Item({label: 'cmyk', value: 3}),
-//         ])}],
-//       ]],
-//     ]);
-//   }
-// }
+import { IoElement, RegisterIoElement } from '../build/iogui.js';
 
 export class IoDemoElementsColor extends IoElement {
   static get Style() {
@@ -63,104 +46,97 @@ export class IoDemoElementsColor extends IoElement {
         ['io-label', {label: 'color-rgba [rgb]'}],
         ['io-color-rgba', {value: this.rgb}],
       ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [red]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'r'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [green]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'g'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [blue]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'b'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [alpha]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'a'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [h]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'h'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [s]'}],
+        ['io-color-slider', {value: this.rgba, channel: 's'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [v]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'v'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [l]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'v'}],
+      ]],
       // ['div', [
-      //   ['io-label', {label: 'mode'}],
-      //   ['io-option-menu', {value: this.bind('mode'), options: new Options([
-      //     new Item({label: 'rgb', value: 0}),
-      //     new Item({label: 'hsv', value: 1}),
-      //     new Item({label: 'hsl', value: 2}),
-      //     new Item({label: 'cmyk', value: 3}),
-      //   ])}],
-      // ]],
-
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[3]'}],
-      //   ['io-color-vector', {mode: this.bind('mode'), value: this.array3}]
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-vector', {mode: this.bind('mode'), value: this.array4}]
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-vector', {mode: 0, value: this.color}]
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-vector', {mode: 1, value: this.color}]
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-vector', {mode: 2, value: this.color}]
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-vector', {mode: 3, value: this.color}]
-      // ]],
-
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-red', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-label', {label: 'color-slider-green]'}],
+      //   ['io-color-slider-green', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-green', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-blue', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-blue', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-hue', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-hue', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-saturation', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-saturation', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-value', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-value', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-level', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-level', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-cyan', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-cyan', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-magenta', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-magenta', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-yellow', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-yellow', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-key', {value: this.color}],
       // ]],
       // ['div', [
       //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-key', {value: this.color, mode: this.bind('mode')}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-alpha', {value: this.color, mode: this.bind('mode')}],
+      //   ['io-color-slider-alpha', {value: this.color}],
       // ]],
 
       // ['div', {class: 'tall'}, [
       //   ['io-label', {label: '2D and vertical'}],
-      //     ['io-color-slider-hs', {value: this.color, mode: this.bind('mode')}],
-      //     ['io-color-slider-sv', {value: this.color, mode: this.bind('mode')}],
-      //     ['io-color-slider-sl', {value: this.color, mode: this.bind('mode')}],
-      //     ['io-color-slider-red', {value: this.color, mode: this.bind('mode'), vertical: true}],
-      //     ['io-color-slider-green', {value: this.color, mode: this.bind('mode'), vertical: true}],
-      //     ['io-color-slider-blue', {value: this.color, mode: this.bind('mode'), vertical: true}],
-      //     ['io-color-slider-alpha', {value: this.color, mode: this.bind('mode'), vertical: true}],
+      //     ['io-color-slider-hs', {value: this.color}],
+      //     ['io-color-slider-sv', {value: this.color}],
+      //     ['io-color-slider-sl', {value: this.color}],
+      //     ['io-color-slider-red', {value: this.color, vertical: true}],
+      //     ['io-color-slider-green', {value: this.color, vertical: true}],
+      //     ['io-color-slider-blue', {value: this.color, vertical: true}],
+      //     ['io-color-slider-alpha', {value: this.color, vertical: true}],
       // ]],
 
       // ['div', {class: 'tall'}, [
       //   ['io-label', {label: 'color-panel'}],
-      //   ['io-color-panel', {expanded: true, value: this.color, mode: this.bind('mode'), class: 'color-slider'}]
+      //   ['io-color-panel', {expanded: true, value: this.color, class: 'color-slider'}]
       // ]],
     ]);
   }

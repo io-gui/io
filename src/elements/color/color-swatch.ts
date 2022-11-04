@@ -24,7 +24,7 @@ export class IoColorSwatch extends IoColorBase {
     const alpha = this.value.a !== undefined ? this.value.a : 1;
     this.template([
       ['div', {style: {'background-color': `rgba(${this.rgb[0] * 255 },${this.rgb[1] * 255}, ${this.rgb[2] * 255}, ${alpha})`}}]
-    ])
+    ]);
     super.valueChanged();
   }
 }

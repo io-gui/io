@@ -39,22 +39,21 @@ export class IoSlider2d extends IoSliderBase {
     varying vec2 vUv;
 
     void main(void) {
+      // Dimensions
+      vec2 size = uVertical == 1 ? uSize.yx : uSize;
+      vec2 uv = uVertical == 1 ? vUv.yx : vUv;
+      vec2 position = size * (uv - vec2(0.5));
+
       // Colors
       vec3 finalCol = ioBackgroundColorField.rgb;
       vec3 gridCol = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.95);
       vec3 axisCol = mix(ioColorFocus.rgb, ioBackgroundColorField.rgb, 0.75);
       vec3 sliderCol = ioColorLink.rgb;
 
-      // Dimensions
-      vec2 size = uVertical == 1 ? uSize.yx : uSize;
-      vec2 uv = uVertical == 1 ? vUv.yx : vUv;
-      vec2 position = size * (uv - vec2(0.5));
-
-      // Sizes
+      // // Sizes
       float gridThickness = ioStrokeWidth;
       vec2  gridSize = size / abs((uMax - uMin) / uStep);
       vec2  gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
-      float knobRadius = ioFieldHeight * 0.25;
 
       vec2 offsetPosition = translate(position, -gridOffset);
       float gridShape = grid2d(offsetPosition, gridSize, gridThickness);
@@ -66,7 +65,7 @@ export class IoSlider2d extends IoSliderBase {
       }
 
       vec2 circlePos = uValue / (uMax - uMin) * size;
-      vec4 slider = paintCircle(offsetPosition, circlePos, knobRadius, sliderCol);
+      vec4 slider = paintKnob(offsetPosition, circlePos, sliderCol);
       finalCol = mix(finalCol.rgb, slider.rgb, slider.a);
 
       gl_FragColor = vec4(finalCol, 1.0);

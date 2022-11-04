@@ -1,7 +1,7 @@
 import { IoProperty } from './internals/property.js';
 import { IoElement, RegisterIoElement } from './element.js';
 
-let lastFocus: Element | null = null;
+const lastFocus: Element | null = null;
 
 // window.addEventListener('focusin', () => {
 //   lastFocus = document.activeElement;

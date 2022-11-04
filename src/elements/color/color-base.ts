@@ -64,9 +64,9 @@ export class IoColorBase extends IoElement {
       }
     }
 
-    let rgb = [this.value.r * 255, this.value.g * 255, this.value.b * 255];
-    let hsv = convert.rgb.hsv(rgb);
-    let hsl = convert.rgb.hsl(rgb);
+    const rgb = [this.value.r * 255, this.value.g * 255, this.value.b * 255];
+    const hsv = convert.rgb.hsv(rgb);
+    const hsl = convert.rgb.hsl(rgb);
 
     // TODO: Investigate
     // Prevent color collapsing to 0.
