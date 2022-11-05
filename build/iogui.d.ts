@@ -1037,7 +1037,8 @@ export declare class IoColorBase extends IoElement {
 }
 export declare class IoColorPanel extends IoColorBase {
 	static get Style(): string;
-	static get Properties(): any;
+	expanded: boolean;
+	vertical: boolean;
 	static get Listeners(): {
 		keydown: string;
 	};
@@ -1061,7 +1062,7 @@ export declare class IoColorPicker extends IoElement {
 	static get Listeners(): any;
 	tabindex: string;
 	_onClick(event: FocusEvent): void;
-	get expanded(): any;
+	get expanded(): boolean;
 	_onKeydown(event: KeyboardEvent): void;
 	_onValueSet(): void;
 	toggle(): void;
@@ -1215,10 +1216,12 @@ export declare class IoColorSlider extends IoColorBase {
 	changed(): void;
 }
 export declare class IoColorSliderBase extends IoSlider {
+	static get Style(): string;
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
-export declare class IoColorSliderBase2d extends IoSlider2d {
+export declare class IoColorSlider2dBase extends IoSlider2d {
+	static get Style(): string;
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
@@ -1258,13 +1261,13 @@ export declare class IoColorSliderY extends IoColorSliderBase {
 export declare class IoColorSliderK extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare class IoColorSliderHs extends IoColorSliderBase2d {
+export declare class IoColorSliderHs extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
-export declare class IoColorSliderSv extends IoColorSliderBase2d {
+export declare class IoColorSliderSv extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
-export declare class IoColorSliderSL extends IoColorSliderBase2d {
+export declare class IoColorSliderSL extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
 export declare class IoMdView extends IoElement {
