@@ -19,7 +19,7 @@ export class IoSlider extends IoSliderBase {
 
   static get GlUtils() {
     return /* glsl */`
-      vec4 paintSlider(vec2 p, vec2 size, vec3 colorStart, vec3 colorEnd) {
+      vec3 paintSlider(vec3 dstCol, vec2 p, vec2 size, vec3 colorStart, vec3 colorEnd) {
         vec4 finalCol = vec4(0.0);
 
         float valueInRange = (uValue - uMin) / (uMax - uMin);
@@ -38,16 +38,16 @@ export class IoSlider extends IoSliderBase {
 
         float strokeShape = min(
           rectangle(pCenter, vec2(slotHalfWidth, slotThickness + ioStrokeWidth + ioStrokeWidth)),
-          circle(pEnd, slotThickness + ioStrokeWidth + ioStrokeWidth)
+          circle(pEnd, 1.5 * slotThickness + ioStrokeWidth + ioStrokeWidth)
         );
 
         float fillShape   = min(
           rectangle(pCenter, vec2(slotHalfWidth, slotThickness + ioStrokeWidth)),
-          circle(pEnd, slotThickness + ioStrokeWidth)
+          circle(pEnd, 1.5 * slotThickness + ioStrokeWidth)
         );
         float colorShape  = min(
           rectangle(pCenter, vec2(slotHalfWidth, slotThickness)),
-          circle(pEnd, slotThickness)
+          circle(pEnd, 1.5 * slotThickness)
         );
 
         float grad = (p.x - start.x) / (end.x - start.x);
@@ -57,7 +57,7 @@ export class IoSlider extends IoSliderBase {
         finalCol = mix(vec4(ioBackgroundColor.rgb, 1.0), finalCol, fillShape);
         finalCol = mix(vec4(slotGradient, 1.0), finalCol, colorShape);
 
-        return finalCol;
+        return compose(dstCol, finalCol);
       }
     `;
   }
@@ -72,29 +72,29 @@ export class IoSlider extends IoSliderBase {
       vec2 uv = uVertical == 1 ? vUv.yx : vUv;
       vec2 position = size * (uv - vec2(0.0, 0.5));
 
-      // Colors
       vec3 finalCol = ioBackgroundColorField.rgb;
-      vec3 gridCol = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.75);
-      vec3 sliderColStart = ioColorFocus.rgb;
-      vec3 sliderColEnd = ioColorLink.rgb;
 
       // Sizes
+
+      // Grid
       float gridThickness = ioStrokeWidth;
       float gridSize = size.x / abs((uMax - uMin) / uStep);
       float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
-
-      // Grid
       vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y - 0.5);
       vec2 gridPosition = translate(expPosition, gridOffset, 0.0);
       float gridShape = grid2d(gridPosition, vec2(gridSize, size.y + gridThickness * 2.0), gridThickness);
 
       if (gridSize > gridThickness * 2.0) {
-        finalCol.rgb = mix(gridCol.rgb, finalCol.rgb, gridShape);
+        vec3 gridCol = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.85);
+        finalCol = compose(finalCol, vec4(gridCol, gridShape));
       }
 
+      // Line
+      vec3 lineCol = mix(ioColorFocus.rgb, ioBackgroundColorField.rgb, 0.75);
+      finalCol = paintHorizontalLine(finalCol, position, lineCol);
+
       // Slider
-      vec4 slider = paintSlider(position, size, sliderColStart, sliderColEnd);
-      finalCol = mix(finalCol.rgb, slider.rgb, slider.a);
+      finalCol = paintSlider(finalCol, position, size, ioColorFocus.rgb, ioColorLink.rgb);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;

@@ -1,12 +1,12 @@
-import { IoColorSliderHue } from '../../iogui.js';
+import { IoColorRgba } from '../../iogui.js';
 
-const element = new IoColorSliderHue();
+const element = new IoColorRgba();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
 
 export default class {
   run() {
-    describe('IoColorSliderHue', () => {
+    describe('IoColorPicker', () => {
       describe('Initialization', () => {
         it('Should have core API functions defined', () => {
         });

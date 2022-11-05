@@ -100,6 +100,7 @@ export class IoGl extends IoElement {
       vec2 translate(vec2 samplePosition, float x, float y){
         return samplePosition - vec2(x, y);
       }
+
       // SDF functions
       float circle(vec2 samplePosition, float radius){
         return saturate((length(samplePosition) - radius) * uPxRatio);
@@ -114,18 +115,34 @@ export class IoGl extends IoElement {
         vec2 sp = samplePosition / vec2(gridSize.x, gridSize.y);
         float linex = (abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(max(dFdx(sp.x), dFdy(sp.x))) - lineWidth);
         float liney = (abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(max(dFdy(sp.y), dFdx(sp.y))) - lineWidth);
-        return saturate(min(linex, liney));
+        return 1.0 - saturate(min(linex, liney));
       }
-      float axis2d(vec2 samplePosition, float lineWidth) {
-        return (min(abs(samplePosition.x), abs(samplePosition.y)) * 2.0 > lineWidth) ? 1.0 : 0.0;
+      float lineVertical(vec2 samplePosition, float lineWidth) {
+        return (abs(samplePosition.x) * 2.0 > lineWidth) ? 0.0 : 1.0;
+      }
+      float lineHorizontal(vec2 samplePosition, float lineWidth) {
+        return (abs(samplePosition.y) * 2.0 > lineWidth) ? 0.0 : 1.0;
+      }
+      float lineCross2d(vec2 samplePosition, float lineWidth) {
+        return (min(abs(samplePosition.x), abs(samplePosition.y)) * 2.0 > lineWidth) ? 0.0 : 1.0;
       }
       float checker(vec2 samplePosition, float size) {
         vec2 checkerPos = floor(samplePosition / size);
         float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
         return checkerMask;
       }
+      float checkerX(vec2 samplePosition, float size) {
+        vec2 checkerPos = floor(samplePosition / size);
+        float checkerMask = mod(checkerPos.x, 2.0);
+        return checkerMask;
+      }
+      float checkerY(vec2 samplePosition, float size) {
+        vec2 checkerPos = floor(samplePosition / size);
+        float checkerMask = mod(checkerPos.y, 2.0);
+        return checkerMask;
+      }
       vec3 hue2rgb(float hue) {
-        hue=fract(hue);
+        hue = fract(hue);
         float R = abs(hue * 6. - 3.) - 1.;
         float G = 2. - abs(hue * 6. - 2.);
         float B = 2. - abs(hue * 6. - 4.);
@@ -146,18 +163,14 @@ export class IoGl extends IoElement {
         float b = 1. - min(1., cmyk.z * (1. - cmyk.w) + cmyk.w);
         return vec3(r, g, b);
       }
-      // painter functions
-      vec4 paintKnob(vec2 p, vec2 center, vec3 color) {
-        vec4 finalCol = vec4(0.0);
-        vec2 pCenter = translate(p, center);
-        float radius = ioFieldHeight * 0.25;
-        float strokeShape = circle(pCenter, radius + ioStrokeWidth + ioStrokeWidth);
-        float fillShape   = circle(pCenter, radius + ioStrokeWidth);
-        float colorShape  = circle(pCenter, radius);
-        finalCol = mix(ioColor, finalCol, strokeShape);
-        finalCol = mix(vec4(ioBackgroundColor.rgb, 1.0), finalCol, fillShape);
-        finalCol = mix(vec4(color, 1.0), finalCol, colorShape);
-        return finalCol;
+      // Compositing functions
+      vec3 compose(vec3 dst, vec4 src) {
+        return mix(dst, src.rgb, src.a);
+      }
+      // Painter Functions
+      vec3 paintHorizontalLine(vec3 dstCol, vec2 p, vec3 color) {
+        float lineShape = lineHorizontal(p, ioStrokeWidth);
+        return compose(dstCol, vec4(color, lineShape));
       }
     `;
   }

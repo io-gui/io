@@ -5,7 +5,7 @@ export class IoDemoElementsCore extends IoElement {
     return /* css */`
       :host > div {
         display: flex;
-        width: 460px;
+        width: 425px;
         margin: var(--io-spacing) 0;
         padding: var(--io-spacing) 0;
         border: var(--io-border);

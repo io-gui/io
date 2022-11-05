@@ -1,8 +1,8 @@
-// import { IoColorSlider } from '../../iogui.js';
+import { IoColorSlider } from '../../iogui.js';
 
-// const element = new IoColorSlider();
-// element.style.display = 'none';
-// document.body.appendChild(element as unknown as HTMLElement);
+const element = new IoColorSlider();
+element.style.display = 'none';
+document.body.appendChild(element as unknown as HTMLElement);
 
 export default class {
   run() {

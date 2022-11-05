@@ -70,7 +70,7 @@ export class IoColorPicker extends IoElement {
   }
   expand() {
     const hasAlpha = false;//this.alpha !== undefined;
-    IoColorPanelSingleton.value = [0, 0, 0, 0];//this.value;
+    // IoColorPanelSingleton.value = [0, 0, 0, 0];//this.value;
     IoColorPanelSingleton.style.width = hasAlpha ? '192px' : '160px';
     IoColorPanelSingleton.style.height = '128px';
     IoColorPanelSingleton.expanded = true;

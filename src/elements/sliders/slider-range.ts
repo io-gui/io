@@ -32,11 +32,7 @@ export class IoSliderRange extends IoSliderBase {
     const value = this._value;
     const p = this._getPointerCoord(event);
     const c = this._getCoordFromValue(value);
-    if (this.vertical) {
-      this._index = Math.abs(c[0] - p[1]) < Math.abs(c[1] - p[1]) ? 0 : 1;
-    } else {
-      this._index = Math.abs(c[0] - p[0]) < Math.abs(c[1] - p[0]) ? 0 : 1;
-    }
+    this._index = Math.abs(c[0] - p[0]) < Math.abs(c[1] - p[0]) ? 0 : 1;
   }
   _onPointermoveThrottled(event: PointerEvent) {
     if (this._active === true) {
@@ -45,15 +41,15 @@ export class IoSliderRange extends IoSliderBase {
       const coord = this._getPointerCoord(event);
       const newValue = this._getValueFromCoord(coord);
       if (this._index === 0) {
-        this._inputValue([this.vertical ? newValue[1] : newValue[0], value[1]]);
+        this._inputValue([newValue[0], value[1]]);
       } else if (this._index === 1) {
-        this._inputValue([value[0], this.vertical ? newValue[1] : newValue[0]]);
+        this._inputValue([value[0], newValue[0]]);
       }
     }
   }
   static get GlUtils() {
     return /* glsl */`
-      vec4 paintSliderRange(vec2 p, vec2 size, vec3 colorStart, vec3 colorEnd) {
+      vec3 paintSliderRange(vec3 dstCol, vec2 p, vec2 size, vec3 colorStart, vec3 colorEnd) {
         vec4 finalCol = vec4(0.0);
 
         float valueInRangeStart = (uValue[0] - uMin) / (uMax - uMin);
@@ -98,7 +94,7 @@ export class IoSliderRange extends IoSliderBase {
         finalCol = mix(vec4(ioBackgroundColor.rgb, 1.0), finalCol, fillShape);
         finalCol = mix(vec4(slotGradient, 1.0), finalCol, colorShape);
 
-        return finalCol;
+        return compose(dstCol, finalCol);
       }
     `;
   }
@@ -114,7 +110,7 @@ export class IoSliderRange extends IoSliderBase {
 
       // Colors
       vec3 finalCol = ioBackgroundColorField.rgb;
-      vec4 gridCol = mix(ioColor, ioBackgroundColorField, 0.75);
+      vec4 gridCol = mix(ioColor, ioBackgroundColorField, 0.85);
 
       // Sizes
       float gridThickness = ioStrokeWidth;
@@ -127,12 +123,15 @@ export class IoSliderRange extends IoSliderBase {
       float gridShape = grid2d(gridPosition, vec2(gridSize, size.y + gridThickness * 2.0), gridThickness);
 
       if (gridSize > gridThickness * 2.0) {
-        finalCol.rgb = mix(gridCol.rgb, finalCol.rgb, gridShape);
+        finalCol = compose(finalCol, vec4(gridCol.rgb, gridShape));
       }
 
+      // Line
+      vec3 lineCol = mix(ioColorFocus.rgb, ioBackgroundColorField.rgb, 0.75);
+      finalCol = paintHorizontalLine(finalCol, gridPosition, lineCol);
+
       // Slider
-      vec4 slider = paintSliderRange(position, size, ioColorFocus.rgb, ioColorLink.rgb);
-      finalCol = mix(finalCol.rgb, slider.rgb, slider.a);
+      finalCol = paintSliderRange(finalCol, position, size, ioColorFocus.rgb, ioColorLink.rgb);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }

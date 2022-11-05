@@ -5,7 +5,7 @@ export class IoDemoElementsColor extends IoElement {
     return /* css */`
       :host > div {
         display: flex;
-        width: 460px;
+        width: 425px;
         margin: var(--io-spacing) 0;
         padding: var(--io-spacing) 0;
         border: var(--io-border);
@@ -13,6 +13,12 @@ export class IoDemoElementsColor extends IoElement {
       }
       :host > div.tall {
         height: calc(var(--io-field-height) * 4);
+      }
+      :host > div.xtall {
+        height: calc(var(--io-field-height) * 8);
+      }
+      :host > div.tall > io-color-slider {
+        
       }
       :host > div > :nth-child(1) {
         flex: 0 0 140px;
@@ -32,7 +38,6 @@ export class IoDemoElementsColor extends IoElement {
     return {
       rgb: { value: {'r': 1, 'g': 0.5, 'b': 0}},
       rgba: { value: {'r': 1, 'g': 0.5, 'b': 0, 'a': 0.75}},
-      cmyk: { value: {'c': 0, 'm': 0, 'y': 0, 'k': 0}},
     };
   }
   constructor(props) {
@@ -76,64 +81,43 @@ export class IoDemoElementsColor extends IoElement {
       ]],
       ['div', [
         ['io-label', {label: 'color-slider [l]'}],
-        ['io-color-slider', {value: this.rgba, channel: 'v'}],
+        ['io-color-slider', {value: this.rgba, channel: 'l'}],
       ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-slider-green]'}],
-      //   ['io-color-slider-green', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-blue', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-hue', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-saturation', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-value', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-level', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-cyan', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-magenta', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-yellow', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-key', {value: this.color}],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'color-vector[4]'}],
-      //   ['io-color-slider-alpha', {value: this.color}],
-      // ]],
-
-      // ['div', {class: 'tall'}, [
-      //   ['io-label', {label: '2D and vertical'}],
-      //     ['io-color-slider-hs', {value: this.color}],
-      //     ['io-color-slider-sv', {value: this.color}],
-      //     ['io-color-slider-sl', {value: this.color}],
-      //     ['io-color-slider-red', {value: this.color, vertical: true}],
-      //     ['io-color-slider-green', {value: this.color, vertical: true}],
-      //     ['io-color-slider-blue', {value: this.color, vertical: true}],
-      //     ['io-color-slider-alpha', {value: this.color, vertical: true}],
-      // ]],
-
+      ['div', [
+        ['io-label', {label: 'color-slider [c]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'c'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [m]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'm'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [y]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'y'}],
+      ]],
+      ['div', [
+        ['io-label', {label: 'color-slider [k]'}],
+        ['io-color-slider', {value: this.rgba, channel: 'k'}],
+      ]],
+      ['div', {class: 'xtall'}, [
+        ['io-label', {label: 'color-slider [vertical]'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'r'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'g'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'b'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'a'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'h'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 's'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'c'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'm'}],
+      ]],
+      ['div', {class: 'tall'}, [
+        ['io-label', {label: 'color-slider [2d]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'hs'}],
+          ['io-color-slider', {value: this.rgba, channel: 'sv'}],
+          ['io-color-slider', {value: this.rgba, channel: 'sl'}],
+      ]],
       // ['div', {class: 'tall'}, [
       //   ['io-label', {label: 'color-panel'}],
       //   ['io-color-panel', {expanded: true, value: this.color, class: 'color-slider'}]

@@ -177,20 +177,14 @@ export class IoSliderBase extends IoGl {
     let y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
     x = Math.pow(x, this.exponent);
     y = Math.pow(y, this.exponent);
-    return [x, y];
+    return this.vertical ? [y, x] : [x, y];
   }
   _getValueFromCoord(coord: [number, number]) {
     const value: [number, number] = [0, 0];
     const min = this._min;
     const max = this._max;
-    // if (min[0] < max[0]) 
-      value[0] = min[0] * (1 - coord[0]) + max[0] * coord[0];
-    // else 
-    //   value[0] = max[0] * (1 - coord[0]) + min[0] * coord[0];
-    // if (min[1] < max[1])
-      value[1] = min[1] * (1 - coord[1]) + max[1] * coord[1];
-    // else 
-    //   value[1] = max[1] * (1 - coord[1]) + min[1] * coord[1];
+    value[0] = min[0] * (1 - coord[0]) + max[0] * coord[0];
+    value[1] = min[1] * (1 - coord[1]) + max[1] * coord[1];
     return value;
   }
   _onPointermoveThrottled(event: PointerEvent) {
@@ -198,7 +192,6 @@ export class IoSliderBase extends IoGl {
       if (document.activeElement !== this as unknown as Element) this.focus();
       const coord = this._getPointerCoord(event);
       const value = this._getValueFromCoord(coord);
-      if (this.vertical) value.reverse();
       this._inputValue(value);
     }
   }
@@ -206,9 +199,6 @@ export class IoSliderBase extends IoGl {
     const min = this._min;
     const max = this._max;
     const step = this._step;
-
-    // if (min[0] > max[0]) value[0] = 1 - value[0];
-    // if (min[1] > max[1]) value[1] = 1 - value[1];
 
     value[0] = clamp(value[0], max[0], min[0]);
     value[1] = clamp(value[1], max[1], min[1]);
