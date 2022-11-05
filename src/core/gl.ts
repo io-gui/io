@@ -60,7 +60,7 @@ export class IoGl extends IoElement {
       }
       :host:focus {
         border-color: var(--io-color-focus);
-        outline-color: var(--io-color-focus);
+        outline: 1px solid var(--io-color-focus);
       }
     `;
   }
@@ -89,39 +89,90 @@ export class IoGl extends IoElement {
   }
   static get GlUtils() {
     return /* glsl */`
-    #ifndef saturate
-      #define saturate(v) clamp(v, 0., 1.)
-    #endif
+      #ifndef saturate
+        #define saturate(v) clamp(v, 0., 1.)
+      #endif
 
-    vec2 translate(vec2 samplePosition, vec2 xy){
-      return samplePosition - vec2(xy.x, xy.y);
-    }
-    vec2 translate(vec2 samplePosition, float x, float y){
-      return samplePosition - vec2(x, y);
-    }
-    float circle(vec2 samplePosition, float radius){
-      return saturate((length(samplePosition) - radius) * uPxRatio);
-    }
-    float rectangle(vec2 samplePosition, vec2 halfSize){
-      vec2 edgeDistance = abs(samplePosition) - halfSize;
-      float outside = length(max(edgeDistance, 0.));
-      float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-      return saturate((outside + inside) * uPxRatio); // TODO: check
-    }
-    float grid2d(vec2 samplePosition, vec2 gridSize, float lineWidth) {
-      vec2 sp = samplePosition / vec2(gridSize.x, gridSize.y);
-      float linex = (abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(max(dFdx(sp.x), dFdy(sp.x))) - lineWidth);
-      float liney = (abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(max(dFdy(sp.y), dFdx(sp.y))) - lineWidth);
-      return saturate(min(linex, liney));
-    }
-    float axis2d(vec2 samplePosition, float lineWidth) {
-      return (min(abs(samplePosition.x), abs(samplePosition.y)) * 2.0 > lineWidth) ? 1.0 : 0.0;
-    }
-    float checker(vec2 samplePosition, float size) {
-      vec2 checkerPos = floor(samplePosition / size);
-      float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
-      return checkerMask;
-    }\n\n`;
+      // Transform functions
+      vec2 translate(vec2 samplePosition, vec2 xy){
+        return samplePosition - vec2(xy.x, xy.y);
+      }
+      vec2 translate(vec2 samplePosition, float x, float y){
+        return samplePosition - vec2(x, y);
+      }
+
+      // SDF functions
+      float circle(vec2 samplePosition, float radius){
+        return saturate((length(samplePosition) - radius) * uPxRatio);
+      }
+      float rectangle(vec2 samplePosition, vec2 halfSize){
+        vec2 edgeDistance = abs(samplePosition) - halfSize;
+        float outside = length(max(edgeDistance, 0.));
+        float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
+        return saturate((outside + inside) * uPxRatio); // TODO: check
+      }
+      float grid2d(vec2 samplePosition, vec2 gridSize, float lineWidth) {
+        vec2 sp = samplePosition / vec2(gridSize.x, gridSize.y);
+        float linex = (abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(max(dFdx(sp.x), dFdy(sp.x))) - lineWidth);
+        float liney = (abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(max(dFdy(sp.y), dFdx(sp.y))) - lineWidth);
+        return 1.0 - saturate(min(linex, liney));
+      }
+      float lineVertical(vec2 samplePosition, float lineWidth) {
+        return (abs(samplePosition.x) * 2.0 > lineWidth) ? 0.0 : 1.0;
+      }
+      float lineHorizontal(vec2 samplePosition, float lineWidth) {
+        return (abs(samplePosition.y) * 2.0 > lineWidth) ? 0.0 : 1.0;
+      }
+      float lineCross2d(vec2 samplePosition, float lineWidth) {
+        return (min(abs(samplePosition.x), abs(samplePosition.y)) * 2.0 > lineWidth) ? 0.0 : 1.0;
+      }
+      float checker(vec2 samplePosition, float size) {
+        vec2 checkerPos = floor(samplePosition / size);
+        float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
+        return checkerMask;
+      }
+      float checkerX(vec2 samplePosition, float size) {
+        vec2 checkerPos = floor(samplePosition / size);
+        float checkerMask = mod(checkerPos.x, 2.0);
+        return checkerMask;
+      }
+      float checkerY(vec2 samplePosition, float size) {
+        vec2 checkerPos = floor(samplePosition / size);
+        float checkerMask = mod(checkerPos.y, 2.0);
+        return checkerMask;
+      }
+      vec3 hue2rgb(float hue) {
+        hue = fract(hue);
+        float R = abs(hue * 6. - 3.) - 1.;
+        float G = 2. - abs(hue * 6. - 2.);
+        float B = 2. - abs(hue * 6. - 4.);
+        return saturate(vec3(R,G,B));
+      }
+      vec3 hsv2rgb(vec3 hsv) {
+        vec3 rgb = hue2rgb(hsv.r);
+        return ((rgb - 1.) * hsv.g + 1.) * hsv.b;
+      }
+      vec3 hsl2rgb(vec3 hsl) {
+        vec3 rgb = hue2rgb(hsl.x);
+        float C = (1. - abs(2. * hsl.z - 1.)) * hsl.y;
+        return (rgb - 0.5) * C + hsl.z;
+      }
+      vec3 cmyk2rgb(vec4 cmyk) {
+        float r = 1. - min(1., cmyk.x * (1. - cmyk.w) + cmyk.w);
+        float g = 1. - min(1., cmyk.y * (1. - cmyk.w) + cmyk.w);
+        float b = 1. - min(1., cmyk.z * (1. - cmyk.w) + cmyk.w);
+        return vec3(r, g, b);
+      }
+      // Compositing functions
+      vec3 compose(vec3 dst, vec4 src) {
+        return mix(dst, src.rgb, src.a);
+      }
+      // Painter Functions
+      vec3 paintHorizontalLine(vec3 dstCol, vec2 p, vec3 color) {
+        float lineShape = lineHorizontal(p, ioStrokeWidth);
+        return compose(dstCol, vec4(color, lineShape));
+      }
+    `;
   }
   static get Frag() {
     return /* glsl */`
