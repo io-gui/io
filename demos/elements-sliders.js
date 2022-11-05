@@ -5,7 +5,7 @@ export class IoDemoElementsSliders extends IoElement {
     return /* css */`
       :host > div {
         display: flex;
-        width: 460px;
+        width: 425px;
         margin: var(--io-spacing) 0;
         padding: var(--io-spacing) 0;
         border: var(--io-border);
@@ -87,21 +87,18 @@ export class IoDemoElementsSliders extends IoElement {
         ['io-number-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
       ]],
       ['div', {class: 'tall'}, [
-        ['io-label', {label: 'sliders [vertical]'}],
-        ['io-slider', {value: this.bind('number'), vertical: true, min: -2, max: 2, step: 0.2}],
-        ['io-slider', {value: this.bind('number'), vertical: true, min: 2, max: -2, step: 0.2}],
-        ['io-slider-range', {value: this.array2, vertical: true, min: 0, max: 2, step: 0.1}],
-        ['io-slider-range', {value: this.array2, vertical: true, min: 2, max: 0, step: 0.1}],
-      ]],
-      ['div', {class: 'tall'}, [
-        ['io-label', {label: 'sliders2d'}],
+        ['io-label', {label: 'slider-2d + [vert]'}],
         ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1]}],
+        ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1], vertical: true}],
+        ['io-slider', {value: this.bind('number'), vertical: true, min: -2, max: 2, step: 0.2}],
+        ['io-slider-range', {value: this.array2, vertical: true, min: 0, max: 2, step: 0.1}],
       ]],
       ['div', {class: 'tall'}, [
-        ['io-label', {label: 'sliders2d [alt]'}],
-        ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: false}],
+        ['io-label', {label: 'sliders [inv][vert]'}],
+        ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1]}],
         ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: true}],
-        ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1], vertical: true}],
+        ['io-slider', {value: this.bind('number'), vertical: true, min: 2, max: -2, step: 0.2}],
+        ['io-slider-range', {value: this.array2, vertical: true, min: 2, max: 0, step: 0.1}],
       ]],
     ]);
   }
