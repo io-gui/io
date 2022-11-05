@@ -14,12 +14,6 @@ export class IoDemoElementsColor extends IoElement {
       :host > div.tall {
         height: calc(var(--io-field-height) * 4);
       }
-      :host > div.xtall {
-        height: calc(var(--io-field-height) * 8);
-      }
-      :host > div.tall > io-color-slider {
-        
-      }
       :host > div > :nth-child(1) {
         flex: 0 0 140px;
         text-align: right;
@@ -99,29 +93,17 @@ export class IoDemoElementsColor extends IoElement {
         ['io-label', {label: 'color-slider [k]'}],
         ['io-color-slider', {value: this.rgba, channel: 'k'}],
       ]],
-      ['div', {class: 'xtall'}, [
-        ['io-label', {label: 'color-slider [vertical]'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'r'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'g'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'b'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'a'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'h'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 's'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'c'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'm'}],
-      ]],
       ['div', {class: 'tall'}, [
-        ['io-label', {label: 'color-slider [2d]'}],
+        ['io-label', {label: 'slider-2d + [vert]'}],
           ['io-color-slider', {value: this.rgba, channel: 'hs'}],
           ['io-color-slider', {value: this.rgba, channel: 'sv'}],
-          ['io-color-slider', {value: this.rgba, channel: 'sl'}],
+          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
+          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
       ]],
-      // ['div', {class: 'tall'}, [
-      //   ['io-label', {label: 'color-panel'}],
-      //   ['io-color-panel', {expanded: true, value: this.color, class: 'color-slider'}]
-      // ]],
+      ['div', {class: 'tall'}, [
+        ['io-label', {label: 'color-panel'}],
+        ['io-color-panel', {expanded: true, value: this.rgba}]
+      ]],
     ]);
   }
 }

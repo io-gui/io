@@ -203,7 +203,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {*} value - Property value.
      */
     inputValue(value: any) {
-      if (this.value !== value) {
+      if (this.value !== value || typeof this.value === 'object') {
         const oldValue = this.value;
         this.setProperty('value', value);
         this.dispatchEvent('value-input', {value: value, oldValue: oldValue}, false);

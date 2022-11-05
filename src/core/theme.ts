@@ -10,6 +10,15 @@ document.head.appendChild(styleElement);
 
 type Color = [number, number, number, number];
 
+// class Color {
+//   constructor(public r: number, public g: number, public b: number, public a: number) {
+//     this.r = r;
+//     this.g = g;
+//     this.b = b;
+//     this.a = a;
+//   }
+// }
+
 type Variables = {
   ioSpacing: number;
   ioLineHeight: number;

@@ -10,11 +10,7 @@ export class IoColorSlider extends IoColorBase {
     return /* css */`
       :host {
         display: flex;
-        flex-direction: row;
-        flex: 0 1 17.4em;
-      }
-      :host[vertical] {
-        flex: 0 0 var(--io-field-height);
+        flex: 1 1 auto;
       }
     `;
   }
@@ -80,6 +76,24 @@ export class IoColorSlider extends IoColorBase {
         this.rgbFromCmyk();
         this.valueFromRgb();
         break;
+      case 'hs':
+        this.hsv[0] = v[0];
+        this.hsv[1] = v[1];
+        this.rgbFromHsv();
+        this.valueFromRgb();
+        break;
+      case 'sv':
+        this.hsv[1] = v[0];
+        this.hsv[2] = v[1];
+        this.rgbFromHsv();
+        this.valueFromRgb();
+        break;
+      case 'sl':
+        this.hsl[1] = v[0];
+        this.hsl[2] = v[1];
+        this.rgbFromHsl();
+        this.valueFromRgb();
+        break;
     }
     this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
@@ -116,7 +130,7 @@ export class IoColorSlider extends IoColorBase {
         break;
       case 'a':
         value = this.value.a || 0;
-        color = [...this.rgb, 1];
+        color = [...this.rgb, this.value.a !== undefined ? this.value.a : 1];
         break;
       case 'h':
         value = this.hsv[0];
@@ -180,6 +194,18 @@ export class IoColorSlider extends IoColorBase {
 }
 
 export class IoColorSliderBase extends IoSlider {
+  static get Style() {
+    return /* css */`
+      :host {
+        display: flex;
+        flex-direction: row;
+        flex: 1 1 auto;
+      }
+      :host[vertical] {
+        flex: 1 1 var(--io-field-height);
+      }
+    `;
+  }
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
@@ -218,13 +244,24 @@ export class IoColorSliderBase extends IoSlider {
   }
 }
 
-export class IoColorSliderBase2d extends IoSlider2d {
+export class IoColorSlider2dBase extends IoSlider2d {
+  static get Style() {
+    return /* css */`
+      :host {
+        display: flex;
+        flex-direction: row;
+        flex: 1 1 auto;
+      }
+      :host[vertical] {
+        flex: 1 1 var(--io-field-height);
+      }
+    `;
+  }
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
       // TODO: Allow GlUtils to rewrite inherited functions!
-      // vec3 getStartColor(vec2 uv) {}
-      // vec3 getEndColor(vec2 uv) {}
+      // vec3 getColor(vec2 uv) {}
     `;
   }
   static get Frag() {
@@ -238,24 +275,11 @@ export class IoColorSliderBase2d extends IoSlider2d {
       vec2 position = size * (uv - vec2(0.5));
 
       // Colors
-      vec3 finalCol = ioBackgroundColorField.rgb;
-      vec3 gridCol = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.95);
-      vec3 axisCol = mix(ioColorFocus.rgb, ioBackgroundColorField.rgb, 0.75);
-      vec3 sliderCol = ioColorLink.rgb;
+      vec3 finalCol = getColor(uv);
+      vec3 sliderCol = getColor(uValue);
 
-      // // Sizes
-      float gridThickness = ioStrokeWidth;
-      vec2  gridSize = size / abs((uMax - uMin) / uStep);
-      vec2  gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
-
+      vec2 gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
       vec2 offsetPosition = translate(position, -gridOffset);
-      float gridShape = grid2d(offsetPosition, gridSize, gridThickness);
-      float axisShape = lineCross2d(offsetPosition, gridThickness);
-
-      if (max(gridSize.x, gridSize.y) > gridThickness * 2.0) {
-        finalCol = compose(finalCol, vec4(gridCol, gridShape));
-        finalCol = compose(finalCol, vec4(axisCol, axisShape));
-      }
 
       vec2 knobPos = uValue / (uMax - uMin) * size;
       finalCol = paintKnob(finalCol, offsetPosition, knobPos, sliderCol);
@@ -314,7 +338,10 @@ export class IoColorSliderA extends IoColorSliderBase {
         return mix(vec3(0.5), vec3(1.0), checkerX(position, ioFieldHeight / 4.0));
       }
       vec3 getEndColor(vec2 uv) {
-        return uColor.rgb;
+        vec2 size = uVertical == 1 ? uSize.yx : uSize;
+        vec2 position = size * (uv - vec2(0.0, 0.5));
+        vec3 chkCol = mix(vec3(0.5), vec3(1.0), checkerX(position, ioFieldHeight / 4.0));
+        return mix(chkCol, uColor.rgb, uColor.a);
       }
     `;
   }
@@ -425,40 +452,31 @@ export class IoColorSliderK extends IoColorSliderBase {
   }
 }
 @RegisterIoElement
-export class IoColorSliderHs extends IoColorSliderBase2d {
+export class IoColorSliderHs extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
-      }
-      vec3 getEndColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
+      vec3 getColor(vec2 uv) {
+        return hsv2rgb(vec3(uv, uColor[2]));
       }
     `;
   }
 }
 @RegisterIoElement
-export class IoColorSliderSv extends IoColorSliderBase2d {
+export class IoColorSliderSv extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
-      }
-      vec3 getEndColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
+      vec3 getColor(vec2 uv) {
+        return hsv2rgb(vec3(uColor[0], uv));
       }
     `;
   }
 }
 @RegisterIoElement
-export class IoColorSliderSL extends IoColorSliderBase2d {
+export class IoColorSliderSL extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
-      }
-      vec3 getEndColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
+      vec3 getColor(vec2 uv) {
+        return hsl2rgb(vec3(uColor[0], uv));
       }
     `;
   }

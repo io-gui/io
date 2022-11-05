@@ -69,10 +69,7 @@ export class IoColorPicker extends IoElement {
     }
   }
   expand() {
-    const hasAlpha = false;//this.alpha !== undefined;
-    // IoColorPanelSingleton.value = [0, 0, 0, 0];//this.value;
-    IoColorPanelSingleton.style.width = hasAlpha ? '192px' : '160px';
-    IoColorPanelSingleton.style.height = '128px';
+    IoColorPanelSingleton.value = this.value;
     IoColorPanelSingleton.expanded = true;
     IoLayerSingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'bottom', this.getBoundingClientRect());
     // hook up 'value-input' event dispatch

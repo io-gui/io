@@ -1,4 +1,5 @@
 import { RegisterIoElement } from '../../core/element.js';
+import { IoProperty } from '../../core/internals/property.js';
 import { IoLayerSingleton } from '../../core/layer.js';
 import { IoColorBase } from './color-base.js';
 
@@ -7,46 +8,45 @@ export class IoColorPanel extends IoColorBase {
   static get Style() {
     return /* css */`
     :host {
+      display: flex;
       @apply --io-panel;
-      @apply --io-column;
       cursor: move;
       align-items: stretch;
+      flex-grow: 0;
       min-width: var(--io-line-height);
-      min-height: var(--io-line-height);
+      min-height: calc(var(--io-line-height) * 5.5);
+      flex-direction: row;
     }
     :host:not([expanded]) {
       display: none;
     }
-    :host[horizontal] {
-      flex-direction: row;
+    :host[vertical] {
+      flex-direction: column;
     }
     :host > * {
       border-radius: calc(var(--io-border-radius) - var(--io-border-width));
     }
-    :host > io-color-slider-sl,
-    :host > io-color-slider-sv {
-      flex: 1 1;
+    :host > :first-child {
+      flex: 1 0 auto;
+    }
+    :host > *:not(:first-child) {
+      flex: 0 0 auto;
     }
     :host > *:not(:last-child) {
       margin: 0 0 var(--io-spacing) 0;
     }
-    :host[horizontal] > *:not(:last-child) {
+    :host:not([vertical]) > * {
       margin: 0 var(--io-spacing) 0 0;
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      expanded: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      horizontal: {
-        value: true,
-        reflect: 'prop',
-      },
-    };
-  }
+
+  @IoProperty({value: false, reflect: 'prop'})
+  declare expanded: boolean;
+
+  @IoProperty({value: false, reflect: 'prop'})
+  declare vertical: boolean;
+
   static get Listeners() {
     return {
       'keydown': '_onKeydown',
@@ -62,12 +62,12 @@ export class IoColorPanel extends IoColorBase {
     this.dispatchEvent('value-input', {property: 'value', value: this.value}, true);
   }
   changed() {
+    // TODO: fix nudge
+    // TODO: fix initial change with empty channel
     this.template([
-      this.mode === 2 ?
-        ['io-color-slider-sl', {value: this.value, mode: this.mode, 'on-value-input': this.onValueSet}] :
-        ['io-color-slider-sv', {value: this.value, mode: this.mode, 'on-value-input': this.onValueSet}],
-      ['io-color-slider-hue', {value: this.value, mode: this.mode, 'on-value-input': this.onValueSet, vertical: this.horizontal}],
-      this.alpha !== undefined ?['io-color-slider-alpha', {value: this.value, 'on-value-input': this.onValueSet, vertical: !this.horizontal}] : null,
+      ['io-color-slider', {value: this.value, channel: 'sv', vertical: this.vertical, 'on-value-input': this.onValueSet}],
+      ['io-color-slider', {value: this.value, channel: 'h', vertical: !this.vertical, 'on-value-input': this.onValueSet}],
+      this.value.a !== undefined ?['io-color-slider', {value: this.value, channel: 'a', 'on-value-input': this.onValueSet, vertical: !this.vertical}] : null,
     ]);
   }
 }

@@ -74,16 +74,17 @@ export default class {
           element.style.width = '32px';
           element.style.height = '32px';
           element.onResized();
+          console.log(element);
           chai.expect(element.size[0]).to.equal(32);
           chai.expect(element.size[1]).to.equal(32);
           chai.expect(element.pxRatio).to.equal(window.devicePixelRatio);
         });
         it('has correct color', () => {
-          let color = element.$.canvas.ctx.getImageData(8, 8, 1, 1).data;
+          let color = element.$.canvas.ctx.getImageData(0, 0, 1, 1).data;
           chai.expect(color).to.eql(new Uint8ClampedArray([0, 0, 0, 0]));
           element.color = [1, 0.5, 0.25, 1];
           element._onRender();
-          color = element.$.canvas.ctx.getImageData(8, 8, 1, 1).data;
+          color = element.$.canvas.ctx.getImageData(0, 0, 1, 1).data;
           chai.expect(color).to.eql(new Uint8ClampedArray([255, 128, 64, 255]));
         });
       });

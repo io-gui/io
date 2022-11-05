@@ -3,10 +3,10 @@ import { IoElement, RegisterIoElement } from '../build/iogui.js';
 import '../build/iogui.js';
 import './elements-core.js';
 import './elements-sliders.js';
-// import './elements-math.js';
-// import './elements-object.js';
-import './elements-color.js';
 // import './elements-menus.js';
+// import './elements-object.js';
+// import './elements-math.js';
+import './elements-color.js';
 
 export class IoDemoElements extends IoElement {
   static get Style() {
