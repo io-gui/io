@@ -33,26 +33,7 @@ const shadersCache = new WeakMap();
 let currentProgram: WebGLProgram | null;
 
 type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
-/*
- * `IoGL` is a base class for WebGL-based custom elements. The appearance of such elements is defined in fragment shader programs that execute on the GPU. All numeric properties are automatically bound to shader uniforms, including `IoThemeSingleton` CSS properties. You can define your custom shaders inside `static get Frag()` return string.
- *
- * <io-element-demo element="io-gl" width="255px" height="255px" properties='{"color": [0, 0, 0, 1]}' config='{"background": ["io-color-vector"], "color": ["io-color-vector"]}'></io-element-demo>
- *
- * An example of the most basic fragment shader program:
- *
- * ```javascript
- * class MyElement extends IoGl {
- *   static get Frag() {
- *     return `
- *     void main(void) {
- *       gl_FragColor = ioBackgroundColor;
- *     }`;
- *   }
- * }
- * ```
- *
- * See `IoSliderKnob` and `IoHsvaSv` for more advanced examples.
- **/
+
 @RegisterIoElement
 export class IoGl extends IoElement {
   static get Style() {
@@ -62,7 +43,6 @@ export class IoGl extends IoElement {
         overflow: hidden !important;
         -webkit-tap-highlight-color: transparent;
         user-select: none;
-        box-sizing: border-box;
       }
       :host > .io-gl-canvas {
         position: absolute;
@@ -70,7 +50,17 @@ export class IoGl extends IoElement {
         left: 0;
         border-radius: calc(var(--io-border-radius) - var(--io-border-width));
         pointer-events: none;
-        /* image-rendering: pixelated; */
+        image-rendering: pixelated;
+      }
+      :host[aria-invalid] {
+        border: var(--io-border-error);
+      }
+      :host[aria-invalid] > .io-gl-canvas {
+        opacity: 0.5;
+      }
+      :host:focus {
+        border-color: var(--io-color-focus);
+        outline: 1px solid var(--io-color-focus);
       }
     `;
   }
@@ -99,36 +89,90 @@ export class IoGl extends IoElement {
   }
   static get GlUtils() {
     return /* glsl */`
-    #ifndef saturate
-      #define saturate(v) clamp(v, 0., 1.)
-    #endif
+      #ifndef saturate
+        #define saturate(v) clamp(v, 0., 1.)
+      #endif
 
-    vec2 translate(vec2 samplePosition, vec2 xy){
-      return samplePosition - vec2(xy.x, xy.y);
-    }
-    vec2 translate(vec2 samplePosition, float x, float y){
-      return samplePosition - vec2(x, y);
-    }
-    float circle(vec2 samplePosition, float radius){
-      return saturate((length(samplePosition) - radius) * uPxRatio);
-    }
-    float rectangle(vec2 samplePosition, vec2 halfSize){
-      vec2 edgeDistance = abs(samplePosition) - halfSize;
-      float outside = length(max(edgeDistance, 0.));
-      float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-      return saturate((outside + inside) * uPxRatio); // TODO: check
-    }
-    float grid(vec2 samplePosition, float gridWidth, float gridHeight, float lineWidth) {
-      vec2 sp = samplePosition / vec2(gridWidth, gridHeight);
-      float linex = abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(max(dFdx(sp.x), dFdy(sp.x))) - lineWidth;
-      float liney = abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(max(dFdy(sp.y), dFdx(sp.y))) - lineWidth;
-      return saturate(min(linex, liney));
-    }
-    float checker(vec2 samplePosition, float size) {
-      vec2 checkerPos = floor(samplePosition / size);
-      float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
-      return checkerMask;
-    }\n\n`;
+      // Transform functions
+      vec2 translate(vec2 samplePosition, vec2 xy){
+        return samplePosition - vec2(xy.x, xy.y);
+      }
+      vec2 translate(vec2 samplePosition, float x, float y){
+        return samplePosition - vec2(x, y);
+      }
+
+      // SDF functions
+      float circle(vec2 samplePosition, float radius){
+        return saturate((length(samplePosition) - radius) * uPxRatio);
+      }
+      float rectangle(vec2 samplePosition, vec2 halfSize){
+        vec2 edgeDistance = abs(samplePosition) - halfSize;
+        float outside = length(max(edgeDistance, 0.));
+        float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
+        return saturate((outside + inside) * uPxRatio); // TODO: check
+      }
+      float grid2d(vec2 samplePosition, vec2 gridSize, float lineWidth) {
+        vec2 sp = samplePosition / vec2(gridSize.x, gridSize.y);
+        float linex = (abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(max(dFdx(sp.x), dFdy(sp.x))) - lineWidth);
+        float liney = (abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(max(dFdy(sp.y), dFdx(sp.y))) - lineWidth);
+        return 1.0 - saturate(min(linex, liney));
+      }
+      float lineVertical(vec2 samplePosition, float lineWidth) {
+        return (abs(samplePosition.x) * 2.0 > lineWidth) ? 0.0 : 1.0;
+      }
+      float lineHorizontal(vec2 samplePosition, float lineWidth) {
+        return (abs(samplePosition.y) * 2.0 > lineWidth) ? 0.0 : 1.0;
+      }
+      float lineCross2d(vec2 samplePosition, float lineWidth) {
+        return (min(abs(samplePosition.x), abs(samplePosition.y)) * 2.0 > lineWidth) ? 0.0 : 1.0;
+      }
+      float checker(vec2 samplePosition, float size) {
+        vec2 checkerPos = floor(samplePosition / size);
+        float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
+        return checkerMask;
+      }
+      float checkerX(vec2 samplePosition, float size) {
+        vec2 checkerPos = floor(samplePosition / size);
+        float checkerMask = mod(checkerPos.x, 2.0);
+        return checkerMask;
+      }
+      float checkerY(vec2 samplePosition, float size) {
+        vec2 checkerPos = floor(samplePosition / size);
+        float checkerMask = mod(checkerPos.y, 2.0);
+        return checkerMask;
+      }
+      vec3 hue2rgb(float hue) {
+        hue = fract(hue);
+        float R = abs(hue * 6. - 3.) - 1.;
+        float G = 2. - abs(hue * 6. - 2.);
+        float B = 2. - abs(hue * 6. - 4.);
+        return saturate(vec3(R,G,B));
+      }
+      vec3 hsv2rgb(vec3 hsv) {
+        vec3 rgb = hue2rgb(hsv.r);
+        return ((rgb - 1.) * hsv.g + 1.) * hsv.b;
+      }
+      vec3 hsl2rgb(vec3 hsl) {
+        vec3 rgb = hue2rgb(hsl.x);
+        float C = (1. - abs(2. * hsl.z - 1.)) * hsl.y;
+        return (rgb - 0.5) * C + hsl.z;
+      }
+      vec3 cmyk2rgb(vec4 cmyk) {
+        float r = 1. - min(1., cmyk.x * (1. - cmyk.w) + cmyk.w);
+        float g = 1. - min(1., cmyk.y * (1. - cmyk.w) + cmyk.w);
+        float b = 1. - min(1., cmyk.z * (1. - cmyk.w) + cmyk.w);
+        return vec3(r, g, b);
+      }
+      // Compositing functions
+      vec3 compose(vec3 dst, vec4 src) {
+        return mix(dst, src.rgb, src.a);
+      }
+      // Painter Functions
+      vec3 paintHorizontalLine(vec3 dstCol, vec2 p, vec3 color) {
+        float lineShape = lineHorizontal(p, ioStrokeWidth);
+        return compose(dstCol, vec4(color, lineShape));
+      }
+    `;
   }
   static get Frag() {
     return /* glsl */`
@@ -137,7 +181,7 @@ export class IoGl extends IoElement {
         vec2 position = uSize * vUv;
         float gridWidth = 8. * uPxRatio;
         float lineWidth = 1. * uPxRatio;
-        float gridShape = grid(position, gridWidth, gridWidth, lineWidth);
+        float gridShape = grid2d(position, vec2(gridWidth), lineWidth);
         gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
   }
@@ -163,18 +207,16 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
 
-    for (const name in this.theme._properties) {
-      const property = this.theme._properties[name];
+    this.theme._properties.forEach((property, name) => {
       frag += this.initPropertyUniform(name, property);
-    }
+    });
 
     frag += '\n';
 
-    for (const prop in this._properties) {
+    this._properties.forEach((property, prop) => {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = this._properties[prop];
       frag += this.initPropertyUniform(name, property);
-    }
+    });
 
     for (let i = this._protochain.constructors.length; i--;) {
       const constructor = this._protochain.constructors[i];
@@ -216,19 +258,17 @@ export class IoGl extends IoElement {
 
     // TODO: improve code clarity
     this._vecLengths = {};
-    for (const name in this.theme._properties) {
-      const property = this.theme._properties[name];
+    this.theme._properties.forEach((property, name) => {
       if (property.notify && property.type === Array) {
         this._vecLengths[name] = property.value.length;
       }
-    }
-    for (const prop in this._properties) {
-      const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
-      const property = this._properties[prop];
+    });
+    this._properties.forEach((property, name) => {
+      const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
       if (property.notify && property.type === Array) {
-        this._vecLengths[name] = property.value.length;
+        this._vecLengths[uname] = property.value.length;
       }
-    }
+    });
 
     if (shadersCache.has(this.constructor)) {
       this._shader = shadersCache.get(this.constructor);
@@ -308,10 +348,10 @@ export class IoGl extends IoElement {
     this.setShaderProgram();
 
     // TODO: dont brute-force uniform update.
-    for (const p in this._properties) {
-      const name = 'u' + p.charAt(0).toUpperCase() + p.slice(1);
-      this.updatePropertyUniform(name, this._properties[p]);
-    }
+    this._properties.forEach((property, name) => {
+      const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
+      this.updatePropertyUniform(uname, property);
+    });
 
     canvas.width = width;
     canvas.height = height;
@@ -341,9 +381,9 @@ export class IoGl extends IoElement {
     }
   }
   updateThemeUniforms() {
-    for (const name in this.theme._properties) {
-      this.updatePropertyUniform(name, this.theme._properties[name]);
-    }
+    this.theme._properties.forEach((property, name) => {
+      this.updatePropertyUniform(name, property);
+    });
   }
   setUniform(name: string, type: UniformTypes, value: any) {
     const uniform = gl.getUniformLocation(this._shader, name);

@@ -20,7 +20,7 @@ export default class {
           chai.expect(element.reverse).to.equal(false);
           chai.expect(element.selected).to.equal(false);
 
-          chai.expect(element._properties.value).to.eql({
+          chai.expect(element._properties.get('value')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -28,7 +28,7 @@ export default class {
             type: undefined,
             value: undefined,
           });
-          chai.expect(element._properties.stroke).to.eql({
+          chai.expect(element._properties.get('stroke')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -36,7 +36,7 @@ export default class {
             type: Boolean,
             value: false,
           });
-          chai.expect(element._properties.reverse).to.eql({
+          chai.expect(element._properties.get('reverse')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -44,7 +44,7 @@ export default class {
             type: Boolean,
             value: false,
           });
-          chai.expect(element._properties.selected).to.eql({
+          chai.expect(element._properties.get('selected')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,

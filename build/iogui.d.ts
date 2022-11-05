@@ -261,8 +261,8 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, PropertyInstance>;
-		readonly _bindings: Record<string, Binding>;
+		readonly _properties: Map<string, PropertyInstance>;
+		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
@@ -382,8 +382,8 @@ declare const IoNode_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, PropertyInstance>;
-		readonly _bindings: Record<string, Binding>;
+		readonly _properties: Map<string, PropertyInstance>;
+		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
@@ -564,8 +564,8 @@ declare const IoElement_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, PropertyInstance>;
-		readonly _bindings: Record<string, Binding>;
+		readonly _properties: Map<string, PropertyInstance>;
+		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
@@ -776,8 +776,8 @@ declare const Options_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
-		readonly _properties: Record<string, PropertyInstance>;
-		readonly _bindings: Record<string, Binding>;
+		readonly _properties: Map<string, PropertyInstance>;
+		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
@@ -984,7 +984,6 @@ export declare class IoNumberLadder extends IoElement {
 	_onFocusTo(event: CustomEvent): void;
 	_onLadderStepChange(event: CustomEvent): void;
 	_onLadderStepCollapse(): void;
-	srcChanged(): void;
 	expandedChanged(): void;
 	changed(): void;
 }
@@ -1000,9 +999,143 @@ declare class IoIconset extends IoNode {
 	getIcon(icon: string): string;
 }
 export declare const IoIconsetSingleton: IoIconset;
-export declare class IoSlider extends IoGl {
+export declare class IoColorBase extends IoElement {
+	value: {
+		r: number;
+		g: number;
+		b: number;
+		a?: number;
+	};
+	rgb: [
+		number,
+		number,
+		number
+	];
+	hsv: [
+		number,
+		number,
+		number
+	];
+	hsl: [
+		number,
+		number,
+		number
+	];
+	cmyk: [
+		number,
+		number,
+		number,
+		number
+	];
+	init(): void;
+	valueMutated(): void;
+	rgbFromHsv(): void;
+	rgbFromHsl(): void;
+	rgbFromCmyk(): void;
+	valueFromRgb(): void;
+	valueChanged(): void;
+}
+export declare class IoColorPanel extends IoColorBase {
 	static get Style(): string;
-	static get Properties(): any;
+	expanded: boolean;
+	vertical: boolean;
+	static get Listeners(): {
+		keydown: string;
+	};
+	_onKeydown(event: KeyboardEvent): void;
+	onValueSet(): void;
+	changed(): void;
+}
+export declare const IoColorPanelSingleton: IoColorPanel;
+export declare class IoColorSwatch extends IoColorBase {
+	static get Style(): string;
+	valueChanged(): void;
+}
+export declare class IoColorPicker extends IoElement {
+	static get Style(): string;
+	value: {
+		r: number;
+		g: number;
+		b: number;
+		a?: number;
+	};
+	static get Listeners(): any;
+	tabindex: string;
+	_onClick(event: FocusEvent): void;
+	get expanded(): boolean;
+	_onKeydown(event: KeyboardEvent): void;
+	_onValueSet(): void;
+	toggle(): void;
+	expand(): void;
+	collapse(): void;
+	changed(): void;
+}
+export declare class IoColorRgba extends IoColorBase {
+	static get Style(): string;
+	_onValueInput(event: CustomEvent): void;
+	changed(): void;
+}
+declare class IoSliderBase extends IoGl {
+	static get Style(): string;
+	value: number | [
+		number,
+		number
+	] | {
+		x: number;
+		y: number;
+	};
+	step: number | [
+		number,
+		number
+	] | {
+		x: number;
+		y: number;
+	};
+	min: number | [
+		number,
+		number
+	] | {
+		x: number;
+		y: number;
+	};
+	max: number | [
+		number,
+		number
+	] | {
+		x: number;
+		y: number;
+	};
+	exponent: number;
+	vertical: boolean;
+	color: [
+		number,
+		number,
+		number,
+		number
+	];
+	noscroll: boolean;
+	role: string;
+	tabindex: string;
+	lazy: boolean;
+	_startX: number;
+	_startY: number;
+	_active: boolean;
+	get _min(): [
+		number,
+		number
+	];
+	get _max(): [
+		number,
+		number
+	];
+	get _step(): [
+		number,
+		number
+	];
+	get _value(): [
+		number,
+		number
+	];
 	static get Listeners(): {
 		focus: string;
 		contextmenu: string;
@@ -1018,220 +1151,124 @@ export declare class IoSlider extends IoGl {
 	_onPointerdown(event: PointerEvent): void;
 	_onPointermove(event: PointerEvent): void;
 	_onPointerup(event: PointerEvent): void;
-	_getPointerCoord(event: PointerEvent): number[];
-	_getValueFromCoord(coord: number): number;
-	_getCoordFromValue(value: number): number;
+	_getPointerCoord(event: PointerEvent): [
+		number,
+		number
+	];
+	_getValueFromCoord(coord: [
+		number,
+		number
+	]): [
+		number,
+		number
+	];
 	_onPointermoveThrottled(event: PointerEvent): void;
-	_inputValue(x: number, y?: number): void;
+	_inputValue(value: [
+		number,
+		number
+	]): void;
 	_onKeydown(event: KeyboardEvent): void;
 	_setIncrease(): void;
 	_setDecrease(): void;
 	_setMin(): void;
 	_setMax(): void;
+	_setUp(): void;
+	_setDown(): void;
+	_setLeft(): void;
+	_setRight(): void;
 	init(): void;
 	changed(): void;
+}
+export declare class IoSlider extends IoSliderBase {
+	value: number;
+	step: number;
+	min: number;
+	max: number;
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
-declare const IoColorSlider_base: {
-	new (...args: any[]): {
-		[x: string]: any;
-		valueMutated(): void;
-		modeChanged(): void;
-		valueFromRgb(): void;
-		valueFromHsv(): void;
-		valueFromHsl(): void;
-		valueFromCmyk(): void;
-		valueChanged(): void;
-	};
-	readonly Properties: any;
-	readonly GlUtils: string;
-} & typeof IoSlider;
-export declare class IoColorSlider extends IoColorSlider_base {
-	static get Properties(): any;
+export declare class IoSlider2d extends IoSliderBase {
+	static get Style(): string;
+	value: [
+		number,
+		number
+	];
+	step: [
+		number,
+		number
+	];
+	min: [
+		number,
+		number
+	];
+	max: [
+		number,
+		number
+	];
 	static get GlUtils(): string;
-	valueMutated(): void;
-	deprecated_applyAria(): void;
-	_onKeydown(event: KeyboardEvent): void;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_setMin(): void;
-	_setMax(): void;
-	_onPointermoveThrottled(event: PointerEvent): void;
-	_notifyValueInput(): void;
-	_inputValue(x: number, y?: number): void;
-}
-export declare class IoColorSliderRed extends IoColorSlider {
 	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
 }
-export declare class IoColorSliderGreen extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderBlue extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderHue extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderSaturation extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderValue extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderLevel extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderHs extends IoColorSlider {
+export declare class IoColorSlider extends IoColorBase {
 	static get Style(): string;
-	static get Properties(): any;
-	static get Frag(): string;
-	_onKeydown(event: KeyboardEvent): void;
-	_inputValue(x: number, y: number): void;
-}
-export declare class IoColorSliderSv extends IoColorSlider {
-	static get Style(): string;
-	static get Properties(): any;
-	static get Frag(): string;
-	_onKeydown(event: KeyboardEvent): void;
-	_inputValue(x: number, y: number): void;
-}
-export declare class IoColorSliderSl extends IoColorSlider {
-	static get Style(): string;
-	static get Properties(): any;
-	static get Frag(): string;
-	_onKeydown(event: KeyboardEvent): void;
-	_inputValue(x: number, y: number): void;
-}
-export declare class IoColorSliderCyan extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderMagenta extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderYellow extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderKey extends IoColorSlider {
-	static get Frag(): string;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_inputValue(x: number): void;
-}
-export declare class IoColorSliderAlpha extends IoColorSlider {
-	static get Frag(): string;
-	changed(): void;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_setMin(): void;
-	_setMax(): void;
-	_inputValue(x: number): void;
-}
-declare const IoColorPanel_base: {
-	new (...args: any[]): {
-		[x: string]: any;
-		valueMutated(): void;
-		modeChanged(): void;
-		valueFromRgb(): void;
-		valueFromHsv(): void;
-		valueFromHsl(): void;
-		valueFromCmyk(): void;
-		valueChanged(): void;
-	};
-	readonly Properties: any;
-	readonly GlUtils: string;
-} & typeof IoElement;
-export declare class IoColorPanel extends IoColorPanel_base {
-	static get Style(): string;
-	static get Properties(): any;
-	static get Listeners(): {
-		keydown: string;
-	};
-	_onKeydown(event: KeyboardEvent): void;
-	onValueSet(): void;
+	channel: string;
+	vertical: boolean;
+	_onValueInput(event: CustomEvent): void;
 	changed(): void;
 }
-declare const IoColorPicker_base: {
-	new (...args: any[]): {
-		[x: string]: any;
-		valueMutated(): void;
-		modeChanged(): void;
-		valueFromRgb(): void;
-		valueFromHsv(): void;
-		valueFromHsl(): void;
-		valueFromCmyk(): void;
-		valueChanged(): void;
-	};
-	readonly Properties: any;
-	readonly GlUtils: string;
-} & typeof IoField;
-export declare class IoColorPicker extends IoColorPicker_base {
+export declare class IoColorSliderBase extends IoSlider {
 	static get Style(): string;
-	static get Properties(): any;
-	static get Listeners(): any;
-	_onClick(): void;
-	get expanded(): any;
-	_onKeydown(event: KeyboardEvent): void;
-	_onValueSet(): void;
-	toggle(): void;
-	expand(): void;
-	collapse(): void;
-	changed(): void;
+	static get GlUtils(): string;
+	static get Frag(): string;
 }
-declare const IoColorVector_base: {
-	new (...args: any[]): {
-		[x: string]: any;
-		valueMutated(): void;
-		modeChanged(): void;
-		valueFromRgb(): void;
-		valueFromHsv(): void;
-		valueFromHsl(): void;
-		valueFromCmyk(): void;
-		valueChanged(): void;
-	};
-	readonly Properties: any;
-	readonly GlUtils: string;
-} & typeof IoElement;
-export declare class IoColorVector extends IoColorVector_base {
+export declare class IoColorSlider2dBase extends IoSlider2d {
 	static get Style(): string;
-	static get Properties(): any;
-	_onValueSet(event: CustomEvent): void;
-	changed(): void;
-	getSlotted(): (string | {
-		id: string;
-		mode: any;
-		value: any;
-	})[];
+	static get GlUtils(): string;
+	static get Frag(): string;
+}
+export declare class IoColorSliderR extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderG extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderB extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderA extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderH extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderS extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderV extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderL extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderC extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderM extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderY extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderK extends IoColorSliderBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderHs extends IoColorSlider2dBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderSv extends IoColorSlider2dBase {
+	static get GlUtils(): string;
+}
+export declare class IoColorSliderSL extends IoColorSlider2dBase {
+	static get GlUtils(): string;
 }
 export declare class IoMdView extends IoElement {
 	static get Style(): string;
@@ -1492,9 +1529,35 @@ export declare class IoObject extends IoElement {
 	static get Properties(): any;
 	changed(): void;
 }
+export declare class IoSliderRange extends IoSliderBase {
+	value: [
+		number,
+		number
+	];
+	step: number;
+	min: number;
+	max: number;
+	_index: number;
+	_getCoordFromValue(value: [
+		number,
+		number
+	]): number[];
+	_onPointerdown(event: PointerEvent): void;
+	_onPointermoveThrottled(event: PointerEvent): void;
+	static get GlUtils(): string;
+	static get Frag(): string;
+}
 export declare class IoNumberSliderRange extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	value: [
+		number,
+		number
+	];
+	step: number;
+	min: number;
+	max: number;
+	exponent: number;
+	conversion: number;
 	_onNumberSet(event: CustomEvent): void;
 	_onSliderSet(event: CustomEvent): void;
 	init(): void;
@@ -1502,29 +1565,16 @@ export declare class IoNumberSliderRange extends IoElement {
 }
 export declare class IoNumberSlider extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	value: number;
+	step: number;
+	min: number;
+	max: number;
+	exponent: number;
+	conversion: number;
 	_onNumberSet(event: CustomEvent): void;
 	_onSliderSet(event: CustomEvent): void;
 	init(): void;
 	changed(): void;
-}
-export declare class IoSlider2d extends IoSlider {
-	static get Style(): string;
-	static get Properties(): any;
-	_onPointerdown(event: PointerEvent): void;
-}
-export declare class IoSliderRange extends IoSlider {
-	static get Properties(): any;
-	_onPointerdown(event: PointerEvent): void;
-	_onPointermoveThrottled(event: PointerEvent): void;
-	_inputValue(x: number, y: number): void;
-	_setIncrease(): void;
-	_setDecrease(): void;
-	_setMin(): void;
-	_setMax(): void;
-	init(): void;
-	changed(): void;
-	static get Frag(): string;
 }
 /** @License
  * Copyright ©2022 Aleksandar (Aki) Rodic

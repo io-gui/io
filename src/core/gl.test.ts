@@ -27,7 +27,7 @@ export default class {
           chai.expect(element.pxRatio).to.be.equal(1);
           chai.expect(element.theme).to.be.equal(IoThemeSingleton);
 
-          chai.expect(element._properties.size).to.eql({
+          chai.expect(element._properties.get('size')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -36,7 +36,7 @@ export default class {
             value: [0, 0],
           });
 
-          chai.expect(element._properties.color).to.eql({
+          chai.expect(element._properties.get('color')).to.eql({
             binding: undefined,
             notify: true,
             observe: true,
@@ -45,7 +45,7 @@ export default class {
             value: [0, 0, 0, 0],
           });
 
-          chai.expect(element._properties.pxRatio).to.eql({
+          chai.expect(element._properties.get('pxRatio')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -54,7 +54,7 @@ export default class {
             value: 1,
           });
 
-          chai.expect(element._properties.theme).to.eql({
+          chai.expect(element._properties.get('theme')).to.eql({
             binding: undefined,
             notify: true,
             observe: true,
@@ -74,16 +74,17 @@ export default class {
           element.style.width = '32px';
           element.style.height = '32px';
           element.onResized();
+          console.log(element);
           chai.expect(element.size[0]).to.equal(32);
           chai.expect(element.size[1]).to.equal(32);
           chai.expect(element.pxRatio).to.equal(window.devicePixelRatio);
         });
         it('has correct color', () => {
-          let color = element.$.canvas.ctx.getImageData(8, 8, 1, 1).data;
+          let color = element.$.canvas.ctx.getImageData(0, 0, 1, 1).data;
           chai.expect(color).to.eql(new Uint8ClampedArray([0, 0, 0, 0]));
           element.color = [1, 0.5, 0.25, 1];
           element._onRender();
-          color = element.$.canvas.ctx.getImageData(8, 8, 1, 1).data;
+          color = element.$.canvas.ctx.getImageData(0, 0, 1, 1).data;
           chai.expect(color).to.eql(new Uint8ClampedArray([255, 128, 64, 255]));
         });
       });

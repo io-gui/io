@@ -1,5 +1,6 @@
 import { IoElement, RegisterIoElement, IoStorage as $ } from '../../build/iogui.js';
-import {TodoModel} from './todo-model.js';
+
+import { TodoModel } from './todo-model.js';
 import './todo-new-item.js';
 import './todo-list.js';
 import './todo-footer.js';
@@ -14,6 +15,9 @@ export class TodoApp extends IoElement {
       },
       route: $({value: 'all', storage: 'hash', key: 'route'}),
     };
+  }
+  init() {
+    this.changed();
   }
   changed() {
     const itemCount = this.model.items.length;

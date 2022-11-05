@@ -1,62 +1,40 @@
-import { RegisterIoElement } from '../../core/element.js';
-import {IoField} from '../basic/field.js';
-import {IoLayerSingleton} from '../../core/layer.js';
-import {IoColorMixin} from './color.js';
+import { RegisterIoElement, IoElement } from '../../core/element.js';
+import { IoProperty } from '../../core/internals/property.js';
+import { IoColorPanelSingleton } from './color-panel.js';
+import { IoLayerSingleton } from '../../core/layer.js';
 import './color-swatch.js';
-import {IoColorPanelSingleton} from './color-panel.js';
 
-/*
- * Extends `IoColorMixin(IoField)`.
- *
- * Implements `IoColorSwatch`, `IoColorPanelSingleton` and `IoLayerSingleton`.
- *
- * Input element for color picking. Expands a floating color panel when clicked or activated by keyboard.
- *
- * <io-element-demo element="io-color-picker"
- *   properties='{"value": [1, 0.5, 0, 1]}'
- *   config='{"value": ["io-color-vector"]}
- * '></io-element-demo>
- **/
 @RegisterIoElement
-export class IoColorPicker extends IoColorMixin(IoField) {
+export class IoColorPicker extends IoElement {
   static get Style() {
     return /* css */`
-    :host {
-      display: flex;
-      box-sizing: border-box;
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: var(--io-color-border-inset);
-      min-width: var(--io-field-height);
-      min-height: var(--io-field-height);
-      padding: 0;
-    }
-    :host > io-color-swatch {
-      border: 0;
-      flex: 1 1 auto;
-      align-self: stretch;
-      min-width: 0;
-      min-height: 0;
-      border-radius: 0;
-    }
+      :host {
+        height: var(--io-field-height);
+        border: var(--io-border);
+        border-radius: var(--io-border-radius);
+        overflow: hidden;
+      }
+      :host:focus {
+        outline: 1px solid var(--io-color-focus);
+        border-color: var(--io-color-focus);
+      }
     `;
   }
-  static get Properties(): any {
-    return {
-      value: [0.5, 0.5, 0.5, 0.5],
-      horizontal: false,
-      role: 'slider',
-      tabindex: 0,
-    };
-  }
+
+  @IoProperty({value: {r: 1, g: 1, b: 1, a: 1}})
+  declare value: {r: number, g: number, b: number, a?: number};
+
   static get Listeners(): any {
     return {
       'click': '_onClick',
       'keydown': '_onKeydown',
     };
   }
-  _onClick() {
-    this.focus();
+
+  @IoProperty('0')
+  declare tabindex: string;
+
+  _onClick(event: FocusEvent) {
     this.toggle();
   }
   get expanded() {
@@ -91,11 +69,7 @@ export class IoColorPicker extends IoColorMixin(IoField) {
     }
   }
   expand() {
-    const hasAlpha = this.alpha !== undefined;
     IoColorPanelSingleton.value = this.value;
-    IoColorPanelSingleton.mode = this.mode;
-    IoColorPanelSingleton.style.width = hasAlpha ? '192px' : '160px';
-    IoColorPanelSingleton.style.height = '128px';
     IoColorPanelSingleton.expanded = true;
     IoLayerSingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'bottom', this.getBoundingClientRect());
     // hook up 'value-input' event dispatch
@@ -107,6 +81,6 @@ export class IoColorPicker extends IoColorMixin(IoField) {
     IoColorPanelSingleton.expanded = false;
   }
   changed() {
-    this.template([['io-color-swatch', {value: this.value, mode: this.mode}]]);
+    this.template([['io-color-swatch', {id: 'swatch', value: this.value}]]);
   }
 }

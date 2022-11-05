@@ -44,8 +44,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       };
     }
     declare readonly _protochain: ProtoChain;
-    declare readonly _properties: Record<string, PropertyInstance>;
-    declare readonly _bindings: Record<string, Binding>;
+    declare readonly _properties: Map<string, PropertyInstance>;
+    declare readonly _bindings: Map<string, Binding>;
     declare readonly _changeQueue: ChangeQueue;
     declare readonly _eventDispatcher: EventDispatcher;
      /**
@@ -64,8 +64,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this._protochain.autobindFunctions(this);
 
-      Object.defineProperty(this, '_properties', {enumerable: false, configurable: true, value: {}});
-      Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: {}});
+      Object.defineProperty(this, '_properties', {enumerable: false, configurable: true, value: new Map()});
+      Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
       Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
 
@@ -75,7 +75,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       for (const name in this._protochain.properties) {
         const property = new PropertyInstance(this._protochain.properties[name]);
-        this._properties[name] = property;
+        this._properties.set(name, property);
         const value = property.value;
         if (value !== undefined && value !== null) {
           if ((property.reflect === 'prop' || property.reflect === 'both') && this._isIoElement) {
@@ -89,7 +89,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       for (const p in this._protochain.properties) {
         Object.defineProperty(this, p, {
           get: function() {
-            return (this as IoNode)._properties[p].value;
+            return this._properties.get(p).value;
           },
           set: function(value) {
             (this as IoNode).setProperty(p, value);
@@ -107,7 +107,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {boolean} [skipDispatch] flag to skip event dispatch.
      */
     setProperty(name: string, value: any, skipDispatch?: boolean) {
-      const prop = this._properties[name];
+      const prop = this._properties.get(name)!;
       const oldValue = prop.value;
 
       if (value !== oldValue) {
@@ -129,6 +129,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
         }
         prop.value = value;
+        if (value instanceof Binding) console.log(value instanceof Binding);
 
         debug: {
           if (prop.type === String) {
@@ -165,7 +166,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     applyProperties(props: any) {
       for (const p in props) {
-        if (this._properties[p] === undefined) {
+        if (!this._properties.has(p)) {
           debug: {
             // TODO: consider converting style and config to properties
             if (!p.startsWith('on-') && p !== 'style' && p !== 'config') {
@@ -186,7 +187,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     setProperties(props: any) {
       for (const p in props) {
-        if (this._properties[p] === undefined) {
+        if (!this._properties.has(p)) {
           debug: {
             console.warn(`Property "${p}" is not defined`, this);
           }
@@ -202,7 +203,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {*} value - Property value.
      */
     inputValue(value: any) {
-      if (this.value !== value) {
+      if (this.value !== value || typeof this.value === 'object') {
         const oldValue = this.value;
         this.setProperty('value', value);
         this.dispatchEvent('value-input', {value: value, oldValue: oldValue}, false);
@@ -257,7 +258,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     onObjectMutated = (event: CustomEvent) => {
       for (let i = 0; i < this._protochain.observedObjectProperties.length; i++) {
         const prop = this._protochain.observedObjectProperties[i];
-        const value = this._properties[prop].value;
+        const value = this._properties.get(prop)!.value;
         if (value === event.detail.object) {
           this.throttle(this.objectMutated, prop, true);
           return;
@@ -286,24 +287,28 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     bind(prop: string): Binding {
       debug: {
-        if (!this._properties[prop]) {
+        if (!this._properties.has(prop)) {
           console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
         }
       }
-      this._bindings[prop] = this._bindings[prop] || new Binding(this, prop);
-      return this._bindings[prop];
+      if (!this._bindings.has(prop)) {
+        this._bindings.set(prop, new Binding(this, prop));
+      }
+      return this._bindings.get(prop) as Binding;
     }
     /**
      * Unbinds a binding to a specified property`.
      * @param {string} prop - Property to unbind.
      */
     unbind(prop: string) {
-      if (this._bindings[prop]) this._bindings[prop].dispose();
-      delete this._bindings[prop];
-
-      if (this._properties[prop].binding) {
-        this._properties[prop].binding?.removeTarget(this, prop);
+      const binding = this._bindings.get(prop);
+      if (binding) {
+        binding.dispose();
+        this._bindings.delete(prop);
       }
+
+      const property = this._properties.get(prop);
+      property?.binding?.removeTarget(this, prop);
     }
     /**
      * Wrapper for addEventListener.
@@ -344,15 +349,15 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Use this when instance is no longer needed.
      */
     dispose() {
-      for (const name in this._properties) {
-        if (this._properties[name].binding) {
-          this._properties[name].binding?.removeTarget(this, name);
-        }
-      }
-      for (const name in this._bindings) {
-        this._bindings[name].dispose();
-        delete this._bindings[name];
-      }
+      this._properties.forEach((property, key) => {
+        property.binding?.removeTarget(this, key);
+      });
+
+      this._bindings.forEach((binding, key) => {
+        binding.dispose();
+        this._bindings.delete(key);
+      });
+
       if (this._protochain.observedObjectProperties.length) {
         window.removeEventListener('object-mutated', this.onObjectMutated as EventListener);
       }

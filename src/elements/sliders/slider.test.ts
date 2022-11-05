@@ -1,46 +1,42 @@
 import {IoSlider} from '../../iogui.js';
 
+const element = new IoSlider();
+element.lazy = false;
+
 export default class {
-  element = new IoSlider();
-  constructor() {
-    this.element.style.display = 'none';
-    document.body.appendChild(this.element as unknown as HTMLElement);
-    this.element.lazy = false;
-  }
-  reset() {
-    this.element.value = 0;
-    this.element.step = 0.01;
-    this.element.min = 0;
-    this.element.max = 1;
-  }
   run() {
     describe('IoSlider', () => {
-      describe('default values', () => {
-        it('has default values', () => {
-          this.reset();
-          chai.expect(this.element.value).to.equal(0);
-          chai.expect(this.element.step).to.equal(0.01);
-          chai.expect(this.element.min).to.equal(0);
-          chai.expect(this.element.max).to.equal(1);
+      describe('Initialization', () => {
+        it('Should initialize property definitions correctly', () => {
+          chai.expect(element.value).to.equal(0);
+          chai.expect(element.step).to.equal(0.01);
+          chai.expect(element.min).to.equal(0);
+          chai.expect(element.max).to.equal(1);
+        });
+        it('has correct default attributes', () => {
+          chai.expect(element.getAttribute('tabindex')).to.equal('0');
+          chai.expect(element.getAttribute('contenteditable')).to.equal(null);
+        });
+        it('has correct default innerHTML', () => {
         });
       });
-      describe('attributes', () => {
-        it('has tabindex attribute', () => {
-          chai.expect(this.element.getAttribute('tabindex')).to.equal('0');
+      describe('Reactivity', () => {
+        it('should render innerHTML', () => {
         });
-        it('has contenteditable attribute on number field', () => {
-          chai.expect(this.element.getAttribute('contenteditable')).to.equal(null);
+        it('should change...', () => {
         });
+        it('has reactive attributes', () => {
+        });
+      });
+      describe('Accessibility', () => {
         it('has a11y attributes', () => {
-          this.reset();
-          chai.expect(this.element.getAttribute('role')).to.equal('slider');
-          this.element.value = 0.1;
-          chai.expect(this.element.getAttribute('aria-valuenow')).to.equal('0.1');
-          this.element.min = 0;
-          chai.expect(this.element.getAttribute('aria-valuemin')).to.equal('0');
-          this.element.max = 1;
-          chai.expect(this.element.getAttribute('aria-valuemax')).to.equal('1');
-          this.reset();
+          chai.expect(element.getAttribute('role')).to.equal('slider');
+          element.value = 0.1;
+          chai.expect(element.getAttribute('aria-valuenow')).to.equal('0.1');
+          element.min = 0;
+          chai.expect(element.getAttribute('aria-valuemin')).to.equal('0');
+          element.max = 1;
+          chai.expect(element.getAttribute('aria-valuemax')).to.equal('1');
         });
       });
     });

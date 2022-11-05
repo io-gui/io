@@ -48,10 +48,6 @@ export class IoSwitch extends IoBoolean {
         background-color: rgba(80, 210, 355, 0.75);
         left: calc(calc(100% - var(--io-line-height)) - var(--io-border-width));
       }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
-      }
       :host:hover:before,
       :host[display="switch"][value]:not([aria-invalid]):before {
         background-color: var(--io-background-color);
@@ -61,7 +57,7 @@ export class IoSwitch extends IoBoolean {
         border-color: var(--io-color-focus);
       }
       :host:focus {
-        outline-color: var(--io-color-focus);
+        outline: 1px solid var(--io-color-focus);
       }
     `;
   }

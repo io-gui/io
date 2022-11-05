@@ -195,8 +195,15 @@ const applyNativeElementProps = function(element: HTMLElement, props: any) {
 export class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): string {
     return /* css */`
-      :host[hidden] { display: none; }
-      :host[disabled] { pointer-events: none; opacity: 0.5; }
+      :host {
+        box-sizing: border-box;
+      }
+      :host[hidden] {
+        display: none;
+      }
+      :host[disabled] {
+        pointer-events: none; opacity: 0.5;
+      }
     `;
   }
 
@@ -244,7 +251,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     return observed;
   }
   attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
-    const type = this._properties[prop].type;
+    const type = this._properties.get(prop)!.type;
     if (type === Boolean) {
       if (newValue === null) this[prop] = false;
       else if (newValue === '') this[prop] = true;

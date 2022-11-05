@@ -32,10 +32,6 @@ export class IoNumber extends IoField {
       :host:not([positive]):before {
         content: ' ';
       }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
-        background-image: var(--io-gradient-error);
-      }
     `;
   }
 
@@ -484,15 +480,6 @@ export class IoNumberLadder extends IoElement {
   }
   _onLadderStepCollapse() {
     this.setProperty('expanded', false);
-  }
-  srcChanged() {
-    const src = this.src;
-    if (src) this.setProperties({
-      min: src.min,
-      max: src.max,
-      step: src.step,
-      conversion: src.conversion,
-    });
   }
   expandedChanged() {
     const src = this.src;

@@ -29,7 +29,7 @@ export default class {
           chai.expect(element.pattern).to.equal('pattern="[0-9]*"');
           chai.expect(element.inputmode).to.equal('numeric');
           chai.expect(element.spellcheck).to.equal('false');
-          chai.expect(element._properties.conversion).to.eql({
+          chai.expect(element._properties.get('conversion')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -37,7 +37,7 @@ export default class {
             type: Number,
             value: 1,
           });
-          chai.expect(element._properties.step).to.eql({
+          chai.expect(element._properties.get('step')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -45,7 +45,7 @@ export default class {
             type: Number,
             value: 0.0001,
           });
-          chai.expect(element._properties.min).to.eql({
+          chai.expect(element._properties.get('min')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -53,7 +53,7 @@ export default class {
             type: Number,
             value: -Infinity,
           });
-          chai.expect(element._properties.max).to.eql({
+          chai.expect(element._properties.get('max')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -61,7 +61,7 @@ export default class {
             type: Number,
             value: Infinity,
           });
-          chai.expect(element._properties.type).to.eql({
+          chai.expect(element._properties.get('type')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -69,7 +69,7 @@ export default class {
             type: String,
             value: 'number',
           });
-          chai.expect(element._properties.pattern).to.eql({
+          chai.expect(element._properties.get('pattern')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -77,7 +77,7 @@ export default class {
             type: String,
             value: 'pattern="[0-9]*"',
           });
-          chai.expect(element._properties.inputmode).to.eql({
+          chai.expect(element._properties.get('inputmode')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -85,7 +85,7 @@ export default class {
             type: String,
             value: 'numeric',
           });
-          chai.expect(element._properties.spellcheck).to.eql({
+          chai.expect(element._properties.get('spellcheck')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -211,7 +211,7 @@ export default class {
           chai.expect(step.value).to.equal(1);
           chai.expect(step.role).to.equal('spinbutton');
           chai.expect(step.type).to.equal('number');
-          chai.expect(step._properties.type).to.eql({
+          chai.expect(step._properties.get('type')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -255,7 +255,7 @@ export default class {
           chai.expect(ladder.value).to.equal(0);
           chai.expect(ladder.conversion).to.equal(1);
 
-          chai.expect(ladder._properties.src).to.eql({
+          chai.expect(ladder._properties.get('src')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -263,7 +263,7 @@ export default class {
             type: undefined,
             value: element,
           });
-          chai.expect(ladder._properties.expanded).to.eql({
+          chai.expect(ladder._properties.get('expanded')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,

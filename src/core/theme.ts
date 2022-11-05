@@ -2,13 +2,22 @@ import { IoElement, RegisterIoElement } from './element.js';
 import { IoProperty, PropertyDeclarations } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
 
-const THEME_VERSION = 'v0.3';
+const THEME_VERSION = 'v0.4';
 
 const styleElement = document.createElement('style');
 styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
 document.head.appendChild(styleElement);
 
 type Color = [number, number, number, number];
+
+// class Color {
+//   constructor(public r: number, public g: number, public b: number, public a: number) {
+//     this.r = r;
+//     this.g = g;
+//     this.b = b;
+//     this.a = a;
+//   }
+// }
 
 type Variables = {
   ioSpacing: number;
@@ -149,7 +158,6 @@ const compositeVariables = /* css */`
     --io-color-border-inset: var(--io-color-border-dark) var(--io-color-border-light) var(--io-color-border-light) var(--io-color-border-dark);
     --io-color-border-outset: var(--io-color-border-light) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border-light);
     --io-gradient-button: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
-    --io-gradient-error: repeating-linear-gradient(135deg, transparent, var(--io-color-error) 1px, var(--io-color-error) 4px, transparent 6px);
     --io-shadow: 2px 2px 6px var(--io-color-shadow), 1px 1px 1px var(--io-color-shadow);
     --io-shadow-inset: 1px 1px 2px inset var(--io-color-shadow);
     --io-shadow-outset: -1px -1px 2px inset var(--io-color-shadow);
@@ -184,11 +192,11 @@ export class IoTheme extends IoElement {
   declare theme: string;
 
   init() {
-    for (const key in this._properties) {
-      if (typeof this._properties[key].value === 'object') {
-        this._properties[key].observe = true;
+    this._properties.forEach((property, key) => {
+      if (property.value === 'object') {
+        property.observe = true;
       }
-    }
+    });
     this.changed = this.changed.bind(this);
     this.throttle(this.changed, undefined, true);
   }
@@ -212,7 +220,7 @@ export class IoTheme extends IoElement {
   changed() {
     this.ioFieldHeight = this.ioLineHeight + 2 * (this.ioSpacing + this.ioBorderWidth);
 
-    const propertyVariables = Object.keys(this._properties).reduce(
+    const propertyVariables = Array.from(this._properties.keys()).reduce(
       (result, prop) => {
         const cssProp = prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
         if (prop.startsWith('io')) {
@@ -235,6 +243,4 @@ export class IoTheme extends IoElement {
 }
 
 const IoThemeSingleton = new IoTheme();
-document.head.appendChild(IoThemeSingleton as unknown as HTMLElement);
-
 export { IoThemeSingleton };

@@ -3,11 +3,11 @@ import { IoProperty } from './internals/property.js';
 import { IoNode, RegisterIoNode } from './node.js';
 
 class EmulatedLocalStorage {
-  declare store: Record<string, unknown>;
+  declare store: Map<string, unknown>;
   declare warned: boolean;
   declare permitted: boolean;
   constructor() {
-    Object.defineProperty(this, 'store', {value: {}, writable: true});
+    Object.defineProperty(this, 'store', {value: new Map()});
     Object.defineProperty(this, 'warned', {value: false, writable: true});
   }
   get permited() {
@@ -22,10 +22,10 @@ class EmulatedLocalStorage {
     try {
       self.localStorage.setItem('io-storage-user-permitted', String(value));
       if (this.permited) {
-        for (const i in this.store) {
-          self.localStorage.setItem(i, String(this.store[i]));
-          delete this.store[i];
-        }
+        this.store.forEach((value: unknown, key: string) => {
+          self.localStorage.setItem(key, String(value));
+          this.store.delete(key);
+        });
         console.log('IoStorage: Saved localStorage state.');
       }
     } catch (error) {
@@ -41,7 +41,7 @@ class EmulatedLocalStorage {
     if (this.permited) {
       self.localStorage.setItem(key, strValue);
     } else {
-      this.store[key] = strValue;
+      this.store.set(key, strValue);
       if (!this.warned) {
         if (!this.permited) {
           console.warn('IoStorage: localStorage permission denied by user.');
@@ -55,8 +55,8 @@ class EmulatedLocalStorage {
   getItem(key: string): string | null {
     if (this.permited) {
       return self.localStorage.getItem(key);
-    } else if (this.store[key] !== undefined) {
-      return this.store[key] as string;
+    } else if (this.store.has(key)) {
+      return this.store.get(key) as string;
     }
     return null;
   }
@@ -64,14 +64,14 @@ class EmulatedLocalStorage {
     if (this.permited) {
       return self.localStorage.removeItem(key);
     } else {
-      delete this.store[key];
+      this.store.delete(key);
     }
   }
   clear() {
     if (this.permited) {
       return self.localStorage.clear();
     } else {
-      this.store = {};
+      this.store.clear();
     }
   }
 }

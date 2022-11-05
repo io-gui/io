@@ -11,7 +11,7 @@ export default class {
         it('Should initialize property definitions correctly', () => {
           chai.expect(element.icon).to.equal('');
           chai.expect(element.stroke).to.equal(false);
-          chai.expect(element._properties.icon).to.eql({
+          chai.expect(element._properties.get('icon')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
@@ -19,7 +19,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.stroke).to.eql({
+          chai.expect(element._properties.get('stroke')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
