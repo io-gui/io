@@ -5,7 +5,7 @@ import './elements-core.js';
 import './elements-sliders.js';
 // import './elements-menus.js';
 // import './elements-object.js';
-// import './elements-math.js';
+import './elements-vectors.js';
 import './elements-color.js';
 
 export class IoDemoElements extends IoElement {
@@ -14,6 +14,29 @@ export class IoDemoElements extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+      }
+      :host > * > div {
+        display: flex;
+        width: 425px;
+        margin: var(--io-spacing) 0;
+        padding: var(--io-spacing) 0;
+        border: var(--io-border);
+        border-color: rgba(128, 128, 128, .125);
+      }
+      :host > * > div.tall {
+        height: calc(var(--io-field-height) * 4);
+      }
+      :host > * > div > :nth-child(1) {
+        flex: 0 0 140px;
+        text-align: right;
+        margin-right: var(--io-spacing);
+      }
+      :host > * > div > * {
+        margin-left: var(--io-spacing);
+      }
+      :host > * > div > io-label,
+      :host > * > div > io-icon {
+        margin-top: var(--io-spacing);
       }
     `;
   }
@@ -56,21 +79,21 @@ export class IoDemoElements extends IoElement {
       //   number: this.bind('number'),
       // }],
       // ['io-demo-elements-object'],
-      // ['io-demo-elements-math', {
-      //   number: this.bind('number'),
-      //   array2: this.bind('array2'),
-      //   array3: this.bind('array3'),
-      //   array4: this.bind('array4'),
-      //   vector2: this.bind('vector2'),
-      //   vector3: this.bind('vector3'),
-      //   vector4: this.bind('vector4'),
-      //   matrix2: this.bind('matrix2'),
-      //   matrix3: this.bind('matrix3'),
-      //   matrix4: this.bind('matrix4'),
-      // }],
       ['io-demo-elements-color', {
         rgb: this.bind('rgb'),
         rgba: this.bind('rgba'),
+      }],
+      ['io-demo-elements-vectors', {
+        number: this.bind('number'),
+        array2: this.bind('array2'),
+        array3: this.bind('array3'),
+        array4: this.bind('array4'),
+        vector2: this.bind('vector2'),
+        vector3: this.bind('vector3'),
+        vector4: this.bind('vector4'),
+        matrix2: this.bind('matrix2'),
+        matrix3: this.bind('matrix3'),
+        matrix4: this.bind('matrix4'),
       }],
     ]);
   }

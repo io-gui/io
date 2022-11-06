@@ -1,27 +1,6 @@
 import { IoElement, RegisterIoElement } from '../build/iogui.js';
 
 export class IoDemoElementsCore extends IoElement {
-  static get Style() {
-    return /* css */`
-      :host > div {
-        display: flex;
-        width: 425px;
-        margin: var(--io-spacing) 0;
-        padding: var(--io-spacing) 0;
-        border: var(--io-border);
-        border-color: rgba(128, 128, 128, .125);
-      }
-      :host > div > :nth-child(1) {
-        flex: 0 0 140px;
-        text-align: right;
-        margin-right: var(--io-spacing);
-      }
-      :host > div > io-label,
-      :host > div > io-icon {
-        margin-top: var(--io-spacing);
-      }
-    `;
-  }
   static get Properties() {
     return {
       string: 'Hello IoGUI!',
