@@ -7,7 +7,7 @@ Responsible for dispatching change events and invoking change handler functions 
 
 ### constructor
 
-• **new ChangeQueue**(`node`)
+**new ChangeQueue**(`node`)
 
 Creates change queue for the specified owner instance of `IoNode`.
 
@@ -19,43 +19,43 @@ Creates change queue for the specified owner instance of `IoNode`.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:16](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L16)
+[src/core/internals/changeQueue.ts:16](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L16)
 
 ## Properties
 
 ### changes
 
-• `Readonly` **changes**: [`Change`](../interfaces/Change.md)[] = `[]`
+ `Readonly` **changes**: [`Change`](../interfaces/Change.md)[] = `[]`
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:9](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L9)
+[src/core/internals/changeQueue.ts:9](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L9)
 
 ___
 
 ### dispatching
 
-• **dispatching**: `boolean` = `false`
+ **dispatching**: `boolean` = `false`
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:11](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L11)
+[src/core/internals/changeQueue.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L11)
 
 ___
 
 ### hasChanged
 
-• **hasChanged**: `boolean` = `false`
+ **hasChanged**: `boolean` = `false`
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:10](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L10)
+[src/core/internals/changeQueue.ts:10](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L10)
 
 ## Methods
 
 ### dispatch
 
-▸ **dispatch**(): `void`
+**dispatch**(): `void`
 
 Dispatches and clears the queue.
 For each property change in the queue:
@@ -70,13 +70,13 @@ After all changes are dispatched it invokes `.changed()` functions od the owner 
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:45](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L45)
+[src/core/internals/changeQueue.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L45)
 
 ___
 
 ### dispose
 
-▸ **dispose**(): `void`
+**dispose**(): `void`
 
 Clears the queue and removes the node reference.
 Use this when node queue is no longer needed.
@@ -87,13 +87,13 @@ Use this when node queue is no longer needed.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:66](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L66)
+[src/core/internals/changeQueue.ts:66](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L66)
 
 ___
 
 ### queue
 
-▸ **queue**(`property`, `value`, `oldValue`): `void`
+**queue**(`property`, `value`, `oldValue`): `void`
 
 Adds property change payload to the queue by specifying property name, previous and the new value.
 If the change is already in the queue, the new value is updated in-queue.
@@ -112,4 +112,4 @@ If the change is already in the queue, the new value is updated in-queue.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:26](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/changeQueue.ts#L26)
+[src/core/internals/changeQueue.ts:26](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L26)

@@ -12,7 +12,7 @@ Core `IoElement` class.
 
 ### constructor
 
-• **new IoString**(`properties?`, ...`args`)
+**new IoString**(`properties?`, ...`args`)
 
 Creates a class instance and initializes the internals.
 
@@ -29,13 +29,13 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L55)
+[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
 ## Properties
 
 ### $
 
-• **$**: `Record`<`string`, `any`\>
+ **$**: `Record`<`string`, `any`\>
 
 #### Inherited from
 
@@ -43,13 +43,13 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/element.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L219)
+[src/core/element.ts:211](https://github.com/io-gui/io/blob/main/src/core/element.ts#L211)
 
 ___
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Record`<`string`, [`Binding`](Binding.md)\>
+ `Readonly` **\_bindings**: `Map`<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
@@ -57,13 +57,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L48)
+[src/core/node.ts:48](https://github.com/io-gui/io/blob/main/src/core/node.ts#L48)
 
 ___
 
 ### \_changeQueue
 
-• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+ `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
@@ -71,13 +71,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L49)
+[src/core/node.ts:49](https://github.com/io-gui/io/blob/main/src/core/node.ts#L49)
 
 ___
 
 ### \_eventDispatcher
 
-• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+ `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
@@ -85,13 +85,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:50](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L50)
+[src/core/node.ts:50](https://github.com/io-gui/io/blob/main/src/core/node.ts#L50)
 
 ___
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Record`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+ `Readonly` **\_properties**: `Map`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
@@ -99,13 +99,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:47](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L47)
+[src/core/node.ts:47](https://github.com/io-gui/io/blob/main/src/core/node.ts#L47)
 
 ___
 
 ### \_protochain
 
-• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+ `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
@@ -113,13 +113,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:46](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L46)
+[src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
 
 ___
 
 ### class
 
-• **class**: `string`
+ **class**: `string`
 
 #### Inherited from
 
@@ -127,13 +127,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L228)
+[src/core/element.ts:220](https://github.com/io-gui/io/blob/main/src/core/element.ts#L220)
 
 ___
 
 ### contenteditable
 
-• **contenteditable**: `boolean`
+ **contenteditable**: `boolean`
 
 #### Overrides
 
@@ -141,13 +141,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:41](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L41)
+[src/elements/basic/string.ts:37](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L37)
 
 ___
 
 ### disabled
 
-• **disabled**: `boolean`
+ **disabled**: `boolean`
 
 #### Inherited from
 
@@ -155,13 +155,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:249](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L249)
+[src/core/element.ts:241](https://github.com/io-gui/io/blob/main/src/core/element.ts#L241)
 
 ___
 
 ### hidden
 
-• **hidden**: `boolean`
+ **hidden**: `boolean`
 
 #### Inherited from
 
@@ -169,13 +169,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:246](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L246)
+[src/core/element.ts:238](https://github.com/io-gui/io/blob/main/src/core/element.ts#L238)
 
 ___
 
 ### icon
 
-• **icon**: `string`
+ **icon**: `string`
 
 #### Inherited from
 
@@ -183,13 +183,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/field.ts:39](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L39)
+[src/elements/basic/field.ts:70](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L70)
 
 ___
 
 ### id
 
-• **id**: `string`
+ **id**: `string`
 
 #### Inherited from
 
@@ -197,13 +197,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:243](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L243)
+[src/core/element.ts:235](https://github.com/io-gui/io/blob/main/src/core/element.ts#L235)
 
 ___
 
 ### label
 
-• **label**: `string`
+ **label**: `string`
 
 #### Inherited from
 
@@ -211,23 +211,23 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:234](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L234)
+[src/core/element.ts:226](https://github.com/io-gui/io/blob/main/src/core/element.ts#L226)
 
 ___
 
 ### live
 
-• **live**: `boolean`
+ **live**: `boolean`
 
 #### Defined in
 
-[src/elements/core/string.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L35)
+[src/elements/basic/string.ts:31](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L31)
 
 ___
 
 ### name
 
-• **name**: `string`
+ **name**: `string`
 
 #### Inherited from
 
@@ -235,13 +235,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:237](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L237)
+[src/core/element.ts:229](https://github.com/io-gui/io/blob/main/src/core/element.ts#L229)
 
 ___
 
 ### reverse
 
-• **reverse**: `boolean`
+ **reverse**: `boolean`
 
 #### Inherited from
 
@@ -249,13 +249,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/field.ts:42](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L42)
+[src/elements/basic/field.ts:76](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L76)
 
 ___
 
 ### role
 
-• **role**: `string`
+ **role**: `string`
 
 #### Overrides
 
@@ -263,13 +263,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:44](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L44)
+[src/elements/basic/string.ts:40](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L40)
 
 ___
 
 ### selected
 
-• **selected**: `boolean`
+ **selected**: `boolean`
 
 #### Inherited from
 
@@ -277,13 +277,27 @@ ___
 
 #### Defined in
 
-[src/elements/core/field.ts:45](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L45)
+[src/elements/basic/field.ts:79](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L79)
+
+___
+
+### stroke
+
+ **stroke**: `boolean`
+
+#### Inherited from
+
+[IoField](IoField.md).[stroke](IoField.md#stroke)
+
+#### Defined in
+
+[src/elements/basic/field.ts:73](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L73)
 
 ___
 
 ### tabindex
 
-• **tabindex**: `string`
+ **tabindex**: `string`
 
 #### Inherited from
 
@@ -291,13 +305,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/field.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L48)
+[src/elements/basic/field.ts:64](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L64)
 
 ___
 
 ### title
 
-• **title**: `string`
+ **title**: `string`
 
 #### Inherited from
 
@@ -305,13 +319,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:240](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L240)
+[src/core/element.ts:232](https://github.com/io-gui/io/blob/main/src/core/element.ts#L232)
 
 ___
 
 ### value
 
-• **value**: `string`
+ **value**: `string`
 
 #### Overrides
 
@@ -319,13 +333,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:38](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L38)
+[src/elements/basic/string.ts:34](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L34)
 
 ## Accessors
 
 ### textNode
 
-• `get` **textNode**(): `any`
+`get` **textNode**(): `any`
 
 #### Returns
 
@@ -337,9 +351,9 @@ IoField.textNode
 
 #### Defined in
 
-[src/core/element.ts:409](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L409)
+[src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
 
-• `set` **textNode**(`value`): `void`
+`set` **textNode**(`value`): `void`
 
 #### Parameters
 
@@ -357,13 +371,13 @@ IoField.textNode
 
 #### Defined in
 
-[src/core/element.ts:413](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L413)
+[src/core/element.ts:396](https://github.com/io-gui/io/blob/main/src/core/element.ts#L396)
 
 ___
 
 ### Listeners
 
-• `Static` `get` **Listeners**(): `Object`
+`Static` `get` **Listeners**(): `Object`
 
 #### Returns
 
@@ -373,6 +387,7 @@ ___
 | :------ | :------ |
 | `click` | `string` |
 | `focus` | `string` |
+| `focus-to` | `string` |
 | `pointerdown` | `string` |
 
 #### Inherited from
@@ -381,17 +396,17 @@ IoField.Listeners
 
 #### Defined in
 
-[src/elements/core/field.ts:50](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L50)
+[src/elements/basic/field.ts:81](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L81)
 
 ___
 
 ### Properties
 
-• `Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+`Static` `get` **Properties**(): [`PropertyDeclarations`](../none#propertydeclarations)
 
 #### Returns
 
-[`PropertyDeclarations`](../README.md#propertydeclarations)
+[`PropertyDeclarations`](../none#propertydeclarations)
 
 #### Inherited from
 
@@ -399,13 +414,13 @@ IoField.Properties
 
 #### Defined in
 
-[src/core/node.ts:37](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L37)
+[src/core/node.ts:37](https://github.com/io-gui/io/blob/main/src/core/node.ts#L37)
 
 ___
 
 ### Style
 
-• `Static` `get` **Style**(): `string`
+`Static` `get` **Style**(): `string`
 
 #### Returns
 
@@ -417,13 +432,13 @@ IoField.Style
 
 #### Defined in
 
-[src/elements/core/string.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L7)
+[src/elements/basic/string.ts:7](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L7)
 
 ___
 
 ### observedAttributes
 
-• `Static` `get` **observedAttributes**(): `string`[]
+`Static` `get` **observedAttributes**(): `string`[]
 
 #### Returns
 
@@ -435,13 +450,40 @@ IoField.observedAttributes
 
 #### Defined in
 
-[src/core/element.ts:256](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L256)
+[src/core/element.ts:243](https://github.com/io-gui/io/blob/main/src/core/element.ts#L243)
 
 ## Methods
 
+### \_flattenTextNode
+
+**_flattenTextNode**(`element`): `void`
+
+Helper function to flatten textContent into a single TextNode.
+Update textContent via TextNode is better for layout performance.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoField](IoField.md).[_flattenTextNode](IoField.md#_flattentextnode)
+
+#### Defined in
+
+[src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
+
+___
+
 ### \_onBlur
 
-▸ **_onBlur**(`event`): `void`
+**_onBlur**(`event`): `void`
 
 #### Parameters
 
@@ -459,13 +501,13 @@ IoField.observedAttributes
 
 #### Defined in
 
-[src/elements/core/string.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L63)
+[src/elements/basic/string.ts:59](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L59)
 
 ___
 
 ### \_onClick
 
-▸ **_onClick**(): `void`
+**_onClick**(): `void`
 
 #### Returns
 
@@ -477,13 +519,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/field.ts:85](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L85)
+[src/elements/basic/field.ts:117](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L117)
 
 ___
 
 ### \_onFocus
 
-▸ **_onFocus**(`event`): `void`
+**_onFocus**(`event`): `void`
 
 #### Parameters
 
@@ -501,13 +543,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/field.ts:57](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L57)
+[src/elements/basic/field.ts:89](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L89)
 
 ___
 
 ### \_onFocusTo
 
-▸ **_onFocusTo**(`event`): `void`
+**_onFocusTo**(`event`): `void`
 
 #### Parameters
 
@@ -525,13 +567,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:453](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L453)
+[src/elements/basic/field.ts:140](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L140)
 
 ___
 
 ### \_onKeydown
 
-▸ **_onKeydown**(`event`): `void`
+**_onKeydown**(`event`): `void`
 
 #### Parameters
 
@@ -549,13 +591,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:90](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L90)
+[src/elements/basic/string.ts:86](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L86)
 
 ___
 
 ### \_onKeyup
 
-▸ **_onKeyup**(`event`): `void`
+**_onKeyup**(`event`): `void`
 
 #### Parameters
 
@@ -573,13 +615,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:82](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L82)
+[src/elements/basic/string.ts:78](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L78)
 
 ___
 
 ### \_onPointerdown
 
-▸ **_onPointerdown**(): `void`
+**_onPointerdown**(): `void`
 
 #### Returns
 
@@ -591,13 +633,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:69](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L69)
+[src/elements/basic/string.ts:65](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L65)
 
 ___
 
 ### \_onPointerleave
 
-▸ **_onPointerleave**(`event`): `void`
+**_onPointerleave**(`event`): `void`
 
 #### Parameters
 
@@ -615,13 +657,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/field.ts:74](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L74)
+[src/elements/basic/field.ts:106](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L106)
 
 ___
 
 ### \_onPointermove
 
-▸ **_onPointermove**(): `void`
+**_onPointermove**(): `void`
 
 #### Returns
 
@@ -633,13 +675,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:73](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L73)
+[src/elements/basic/string.ts:69](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L69)
 
 ___
 
 ### \_onPointerup
 
-▸ **_onPointerup**(): `void`
+**_onPointerup**(): `void`
 
 #### Returns
 
@@ -651,13 +693,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:74](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L74)
+[src/elements/basic/string.ts:70](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L70)
 
 ___
 
 ### \_setFromTextNode
 
-▸ **_setFromTextNode**(): `void`
+**_setFromTextNode**(): `void`
 
 #### Returns
 
@@ -665,13 +707,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:46](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L46)
+[src/elements/basic/string.ts:42](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L42)
 
 ___
 
 ### \_tryParseFromTextNode
 
-▸ **_tryParseFromTextNode**(): `void`
+**_tryParseFromTextNode**(): `void`
 
 #### Returns
 
@@ -679,13 +721,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/string.ts:52](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L52)
+[src/elements/basic/string.ts:48](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L48)
 
 ___
 
 ### addEventListener
 
-▸ **addEventListener**(`type`, `listener`, `options?`): `void`
+**addEventListener**(`type`, `listener`, `options?`): `void`
 
 Wrapper for addEventListener.
 
@@ -694,7 +736,7 @@ Wrapper for addEventListener.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `type` | `string` | listener name. |
-| `listener` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
+| `listener` | [`AnyEventListener`](../none#anyeventlistener) | listener handler. |
 | `options?` | `AddEventListenerOptions` | event listener options. |
 
 #### Returns
@@ -707,27 +749,13 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:317](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L317)
-
-___
-
-### applyAria
-
-▸ **applyAria**(): `void`
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/core/string.ts:130](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L130)
+[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
 
 ___
 
 ### applyProperties
 
-▸ **applyProperties**(`props`): `void`
+**applyProperties**(`props`): `void`
 
 #### Parameters
 
@@ -745,13 +773,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:417](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L417)
+[src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
 
 ___
 
 ### attributeChangedCallback
 
-▸ **attributeChangedCallback**(`prop`, `oldValue`, `newValue`): `void`
+**attributeChangedCallback**(`prop`, `oldValue`, `newValue`): `void`
 
 #### Parameters
 
@@ -771,13 +799,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:266](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L266)
+[src/core/element.ts:253](https://github.com/io-gui/io/blob/main/src/core/element.ts#L253)
 
 ___
 
 ### bind
 
-▸ **bind**(`prop`): [`Binding`](Binding.md)
+**bind**(`prop`): [`Binding`](Binding.md)
 
 Returns a binding to a specified property`.
 
@@ -799,13 +827,13 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L290)
+[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
 
 ___
 
 ### changed
 
-▸ **changed**(): `void`
+**changed**(): `void`
 
 default change handler.
 Invoked when one of the properties change.
@@ -820,13 +848,13 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/core/string.ts:126](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/string.ts#L126)
+[src/elements/basic/string.ts:122](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L122)
 
 ___
 
 ### connectedCallback
 
-▸ **connectedCallback**(): `void`
+**connectedCallback**(): `void`
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -840,13 +868,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/element.ts:284](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L284)
+[src/core/element.ts:271](https://github.com/io-gui/io/blob/main/src/core/element.ts#L271)
 
 ___
 
 ### disabledChanged
 
-▸ **disabledChanged**(): `void`
+**disabledChanged**(): `void`
 
 #### Returns
 
@@ -858,13 +886,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:446](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L446)
+[src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
 
 ___
 
 ### disconnectedCallback
 
-▸ **disconnectedCallback**(): `void`
+**disconnectedCallback**(): `void`
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -878,13 +906,13 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/element.ts:292](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L292)
+[src/core/element.ts:279](https://github.com/io-gui/io/blob/main/src/core/element.ts#L279)
 
 ___
 
 ### dispatchEvent
 
-▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+**dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
 
 Wrapper for dispatchEvent.
 
@@ -907,13 +935,13 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:342](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L342)
+[src/core/node.ts:344](https://github.com/io-gui/io/blob/main/src/core/node.ts#L344)
 
 ___
 
 ### dispatchQueue
 
-▸ **dispatchQueue**(): `void`
+**dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -927,13 +955,13 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:232](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L232)
+[src/core/node.ts:230](https://github.com/io-gui/io/blob/main/src/core/node.ts#L230)
 
 ___
 
 ### dispatchQueueSync
 
-▸ **dispatchQueueSync**(): `void`
+**dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -947,13 +975,13 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:242](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L242)
+[src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
 
 ___
 
 ### dispose
 
-▸ **dispose**(): `void`
+**dispose**(): `void`
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -968,13 +996,13 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:349](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L349)
+[src/core/node.ts:351](https://github.com/io-gui/io/blob/main/src/core/node.ts#L351)
 
 ___
 
 ### disposeDeep
 
-▸ **disposeDeep**(`host`, `child`): `void`
+**disposeDeep**(`host`, `child`): `void`
 
 #### Parameters
 
@@ -993,40 +1021,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:308](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L308)
-
-___
-
-### flattenTextNode
-
-▸ **flattenTextNode**(`element`): `void`
-
-Helper function to flatten textContent into a single TextNode.
-Update textContent via TextNode is better for layout performance.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoField](IoField.md).[flattenTextNode](IoField.md#flattentextnode)
-
-#### Defined in
-
-[src/core/element.ts:392](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L392)
+[src/core/element.ts:295](https://github.com/io-gui/io/blob/main/src/core/element.ts#L295)
 
 ___
 
 ### focusTo
 
-▸ **focusTo**(`dir`): `void`
+**focusTo**(`dir`): `void`
 
 #### Parameters
 
@@ -1044,13 +1045,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:560](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L560)
+[src/elements/basic/field.ts:247](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L247)
 
 ___
 
 ### getCaretPosition
 
-▸ **getCaretPosition**(): `number`
+**getCaretPosition**(): `number`
 
 #### Returns
 
@@ -1062,13 +1063,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/field.ts:108](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L108)
+[src/elements/basic/field.ts:251](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L251)
 
 ___
 
 ### init
 
-▸ **init**(): `void`
+**init**(): `void`
 
 #### Returns
 
@@ -1080,13 +1081,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L219)
+[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
 
 ___
 
 ### inputValue
 
-▸ **inputValue**(`value`): `void`
+**inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
@@ -1107,13 +1108,13 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L207)
+[src/core/node.ts:205](https://github.com/io-gui/io/blob/main/src/core/node.ts#L205)
 
 ___
 
 ### labelChanged
 
-▸ **labelChanged**(): `void`
+**labelChanged**(): `void`
 
 #### Returns
 
@@ -1125,13 +1126,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:439](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L439)
+[src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
 
 ___
 
 ### objectMutated
 
-▸ **objectMutated**(`prop`): `void`
+**objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
@@ -1152,13 +1153,13 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:281](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L281)
+[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
 
 ___
 
 ### onObjectMutated
 
-▸ **onObjectMutated**(`event`): `void`
+**onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
@@ -1179,13 +1180,13 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:260](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L260)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
 
 ___
 
 ### queue
 
-▸ **queue**(`prop`, `value`, `oldValue`): `void`
+**queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
@@ -1207,13 +1208,13 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:226](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L226)
+[src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
 
 ___
 
 ### removeEventListener
 
-▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
+**removeEventListener**(`type`, `listener?`, `options?`): `void`
 
 Wrapper for removeEventListener.
 
@@ -1222,7 +1223,7 @@ Wrapper for removeEventListener.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `type` | `string` | event name to listen to. |
-| `listener?` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
+| `listener?` | [`AnyEventListener`](../none#anyeventlistener) | listener handler. |
 | `options?` | `AddEventListenerOptions` | event listener options. |
 
 #### Returns
@@ -1235,13 +1236,13 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L332)
+[src/core/node.ts:334](https://github.com/io-gui/io/blob/main/src/core/node.ts#L334)
 
 ___
 
 ### setAttribute
 
-▸ **setAttribute**(`attr`, `value`): `void`
+**setAttribute**(`attr`, `value`): `void`
 
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
@@ -1262,13 +1263,13 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Defined in
 
-[src/core/element.ts:430](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L430)
+[src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
 
 ___
 
 ### setCaretPosition
 
-▸ **setCaretPosition**(`position`): `void`
+**setCaretPosition**(`position`): `void`
 
 #### Parameters
 
@@ -1286,13 +1287,13 @@ ___
 
 #### Defined in
 
-[src/elements/core/field.ts:121](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/field.ts#L121)
+[src/elements/basic/field.ts:264](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L264)
 
 ___
 
 ### setProperties
 
-▸ **setProperties**(`props`): `void`
+**setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -1313,13 +1314,13 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L190)
+[src/core/node.ts:188](https://github.com/io-gui/io/blob/main/src/core/node.ts#L188)
 
 ___
 
 ### setProperty
 
-▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
+**setProperty**(`name`, `value`, `skipDispatch?`): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -1341,13 +1342,13 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/node.ts:109](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L109)
+[src/core/node.ts:109](https://github.com/io-gui/io/blob/main/src/core/node.ts#L109)
 
 ___
 
 ### template
 
-▸ **template**(`vDOM`, `host?`): `void`
+**template**(`vDOM`, `host?`): `void`
 
 Renders DOM from virtual DOM arrays.
 
@@ -1368,13 +1369,13 @@ Renders DOM from virtual DOM arrays.
 
 #### Defined in
 
-[src/core/element.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L302)
+[src/core/element.ts:289](https://github.com/io-gui/io/blob/main/src/core/element.ts#L289)
 
 ___
 
 ### throttle
 
-▸ **throttle**(`func`, `arg?`, `sync?`): `void`
+**throttle**(`func`, `arg?`, `sync?`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
@@ -1382,7 +1383,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
+| `func` | [`CallbackFunction`](../none#callbackfunction) | `undefined` | Function to throttle. |
 | `arg` | `any` | `undefined` | argument for throttled function. |
 | `sync` | `boolean` | `false` | execute immediately without rAF timeout. |
 
@@ -1396,15 +1397,16 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:251](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L251)
+[src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
 
 ___
 
 ### traverse
 
-▸ **traverse**(`vChildren`, `host?`): `void`
+**traverse**(`vChildren`, `host?`): `void`
 
 Recurively traverses vDOM.
+TODO: test element.traverse() function!
 
 #### Parameters
 
@@ -1423,13 +1425,13 @@ Recurively traverses vDOM.
 
 #### Defined in
 
-[src/core/element.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L332)
+[src/core/element.ts:319](https://github.com/io-gui/io/blob/main/src/core/element.ts#L319)
 
 ___
 
 ### unbind
 
-▸ **unbind**(`prop`): `void`
+**unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
@@ -1449,4 +1451,18 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L303)
+[src/core/node.ts:303](https://github.com/io-gui/io/blob/main/src/core/node.ts#L303)
+
+___
+
+### valueChanged
+
+**valueChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/basic/string.ts:126](https://github.com/io-gui/io/blob/main/src/elements/basic/string.ts#L126)
