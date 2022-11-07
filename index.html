@@ -140,28 +140,71 @@
           {label: 'Data Flow', value: './docs/learn-more.md#data-flow'},
         ]},
       ]},
-      // {label: 'Reference', value: 'reference', options: [
-      //   {label: 'Node', value: './build/core/node.md'},
-      //   {label: 'IoElement', value: './build/components/io-element.md'},
-      //   {label: 'Core Elements', value: 'coreelements', options: [
-      //     {label: 'IoItem', value: './build/elements/core/item.md'},
-      //     {label: 'IoGl', value: './build/elements/core/gl.md'},
-      //     {label: 'IoButton', value: './build/elements/core/button.md'},
-      //     {label: 'IoBoolean', value: './build/elements/core/boolean.md'},
-      //     {label: 'IoBoolicon', value: './build/elements/core/boolicon.md'},
-      //     {label: 'IoSwitch', value: './build/elements/core/switch.md'},
-      //     {label: 'IoString', value: './build/elements/core/string.md'},
-      //     {label: 'IoNumber', value: './build/elements/core/number.md'},
-      //     {label: 'IoSlider', value: './build/elements/core/slider.md'},
-      //     {label: 'IoNumberSlider', value: './build/elements/core/number-slider.md'},
-      //     {label: 'IoSliderRange', value: './build/elements/core/slider-range.md'},
-      //     {label: 'IoNumberSliderRange', value: './build/elements/core/number-slider-range.md'},
-      //     {label: 'IoIcon', value: './build/elements/core/icon.md'},
-      //     {label: 'IoIconsetSingleton', value: './build/elements/core/iconset.md'}, // TODO: singleton callout
-      //     {label: 'IoLayerSingleton', value: './build/elements/core/layer.md'}, // TODO: singleton callout
-      //     {label: 'IoLadderSingleton', value: './build/elements/core/ladder.md'}, // TODO: singleton callout
-      //     {label: 'IoThemeSingleton', value: './build/elements/core/theme.md'}, // TODO: singleton callout
-      //   ]},
+      {label: 'Reference', value: 'reference', options: [
+        {label: 'Core', value: 'core', options: [
+          {label: 'Internals', value: 'internals', options: [
+            {label: 'Binding', value: './docs/tsdoc/classes/Binding.md'},
+            {label: 'ChangeQueue', value: './docs/tsdoc/classes/ChangeQueue.md'},
+            {label: 'EventDispatcher', value: './docs/tsdoc/classes/EventDispatcher.md'},
+            {label: 'ProtoProperty', value: './docs/tsdoc/classes/ProtoProperty.md'},
+            {label: 'PropertyInstance', value: './docs/tsdoc/classes/PropertyInstance.md'},
+            {label: 'ProtoChain', value: './docs/tsdoc/classes/ProtoChain.md'},
+          ]},
+          {label: 'IoNode', value: './docs/tsdoc/classes/IoNode.md'},
+          {label: 'IoElement', value: './docs/tsdoc/classes/IoElement.md'},
+          {label: 'IoGl', value: './docs/tsdoc/classes/IoGl.md'},
+          {label: 'IoLayer', value: './docs/tsdoc/classes/IoLayer.md'}, // TODO: singleton
+          {label: 'IoTheme', value: './docs/tsdoc/classes/IoTheme.md'}, // TODO: singleton
+          {label: 'IoStorage', value: './docs/tsdoc/modules/IoStorage.md'}, // TODO: modules?
+        ]},
+        {label: 'Elements', value: 'elements', options: [
+          {label: 'Basic', value: 'basic', options: [
+            {label: 'IoBoolean', value: './docs/tsdoc/classes/IoBoolean.md'},
+            {label: 'IoButton', value: './docs/tsdoc/classes/IoButton.md'},
+            {label: 'IoField', value: './docs/tsdoc/classes/IoField.md'},
+            {label: 'IoIcon', value: './docs/tsdoc/classes/IoIcon.md'},
+            {label: 'IoIconset', value: './docs/tsdoc/classes/IoIconset.md'}, // TODO: singleton
+            {label: 'IoLabel', value: './docs/tsdoc/classes/IoLabel.md'},
+            {label: 'IoNumber', value: './docs/tsdoc/classes/IoNumber.md'},
+            {label: 'IoNumberLadder', value: './docs/tsdoc/classes/IoNumberLadder.md'}, // TODO: singleton
+            {label: 'IoString', value: './docs/tsdoc/classes/IoString.md'},
+            {label: 'IoSwitch', value: './docs/tsdoc/classes/IoSwitch.md'},
+          ]},
+          {label: 'Sliders', value: 'sliders', options: [
+            {label: 'IoSlider', value: './docs/tsdoc/classes/IoSlider.md'},
+            {label: 'IoNumberSlider', value: './docs/tsdoc/classes/IoNumberSlider.md'},
+            {label: 'IoSliderRange', value: './docs/tsdoc/classes/IoSliderRange.md'},
+            {label: 'IoNumberSliderRange', value: './docs/tsdoc/classes/IoNumberSliderRange.md'},
+            {label: 'IoSlider2d', value: './docs/tsdoc/classes/IoSlider2d.md'},
+          ]},
+          {label: 'Color', value: 'color', options: [
+            // TODO: lib/Convert
+            {label: 'IoColorBase', value: './docs/tsdoc/classes/IoColorBase.md'},
+            {label: 'IoColorSliderBase', value: './docs/tsdoc/classes/IoColorSliderBase.md'},
+            {label: 'IoColorSlider2dBase', value: './docs/tsdoc/classes/IoColorSlider2dBase.md'},
+            {label: 'IoColorPanel', value: './docs/tsdoc/classes/IoColorPanel.md'},
+            {label: 'IoColorPicker', value: './docs/tsdoc/classes/IoColorPicker.md'},
+            {label: 'IoColorRgba', value: './docs/tsdoc/classes/IoColorRgba.md'},
+            {label: 'IoColorSlider', value: './docs/tsdoc/classes/IoColorSlider.md'},
+            {label: 'IoColorSliderR', value: './docs/tsdoc/classes/IoColorSliderR.md'},
+            {label: 'IoColorSliderG', value: './docs/tsdoc/classes/IoColorSliderG.md'},
+            {label: 'IoColorSliderB', value: './docs/tsdoc/classes/IoColorSliderB.md'},
+            {label: 'IoColorSliderA', value: './docs/tsdoc/classes/IoColorSliderA.md'},
+            {label: 'IoColorSliderH', value: './docs/tsdoc/classes/IoColorSliderH.md'},
+            {label: 'IoColorSliderS', value: './docs/tsdoc/classes/IoColorSliderS.md'},
+            {label: 'IoColorSliderV', value: './docs/tsdoc/classes/IoColorSliderV.md'},
+            {label: 'IoColorSliderL', value: './docs/tsdoc/classes/IoColorSliderL.md'},
+            {label: 'IoColorSliderC', value: './docs/tsdoc/classes/IoColorSliderC.md'},
+            {label: 'IoColorSliderM', value: './docs/tsdoc/classes/IoColorSliderM.md'},
+            {label: 'IoColorSliderY', value: './docs/tsdoc/classes/IoColorSliderY.md'},
+            {label: 'IoColorSliderK', value: './docs/tsdoc/classes/IoColorSliderK.md'},
+            {label: 'IoColorSwatch', value: './docs/tsdoc/classes/IoColorSwatch.md'},
+          ]},
+          {label: 'Vectors', value: 'vectors', options: [
+            {label: 'IoVector', value: './docs/tsdoc/classes/IoVector.md'},
+            {label: 'IoMatrix', value: './docs/tsdoc/classes/IoMatrix.md'},
+          ]},
+        ]},
       //   {label: 'Menus', value: 'menus', options: [
       //     {label: 'IoMenuItem', value: './build/elements/menus/menu-item.md'},
       //     {label: 'IoMenuOptions', value: './build/elements/menus/menu-options.md'},
@@ -181,28 +224,6 @@
       //     {label: 'IoVector', value: './build/elements/math/vector.md'},
       //     {label: 'IoMatrix', value: './build/elements/math/matrix.md'},
       //   ]},
-      //   {label: 'Color', value: 'color', options: [
-      //     {label: 'IoColorMixin', value: './build/elements/color/color.md'},
-      //     {label: 'IoColorVector', value: './build/elements/color/color-vector.md'},
-      //     {label: 'IoColorPanel', value: './build/elements/color/color-panel.md'}, // TODO: singleton callout
-      //     {label: 'IoColorSwatch', value: './build/elements/color/color-swatch.md'},
-      //     {label: 'IoColorPicker', value: './build/elements/color/color-picker.md'},
-      //     {label: 'IoColorSliderHs', value: './build/elements/color/color-slider-hs.md'},
-      //     {label: 'IoColorSliderSv', value: './build/elements/color/color-slider-sv.md'},
-      //     {label: 'IoColorSliderSl', value: './build/elements/color/color-slider-sl.md'},
-      //     {label: 'IoColorSliderRed', value: './build/elements/color/color-slider-red.md'},
-      //     {label: 'IoColorSliderGreen', value: './build/elements/color/color-slider-green.md'},
-      //     {label: 'IoColorSliderBlue', value: './build/elements/color/color-slider-blue.md'},
-      //     {label: 'IoColorSliderAlpha', value: './build/elements/color/color-slider-alpha.md'},
-      //     {label: 'IoColorSliderHue', value: './build/elements/color/color-slider-hue.md'},
-      //     {label: 'IoColorSliderSaturation', value: './build/elements/color/color-slider-saturation.md'},
-      //     {label: 'IoColorSliderValue', value: './build/elements/color/color-slider-value.md'},
-      //     {label: 'IoColorSliderLevel', value: './build/elements/color/color-slider-level.md'},
-      //     {label: 'IoColorSliderCyan', value: './build/elements/color/color-slider-cyan.md'},
-      //     {label: 'IoColorSliderMagenta', value: './build/elements/color/color-slider-magenta.md'},
-      //     {label: 'IoColorSliderYellow', value: './build/elements/color/color-slider-yellow.md'},
-      //     {label: 'IoColorSliderKey', value: './build/elements/color/color-slider-key.md'},
-      //   ]},
       //   {label: 'Layout', value: 'layout', options: [
       //     {label: 'IoCollapsable', value: './build/elements/layout/collapsable.md'},
       //     {label: 'IoSelector', value: './build/elements/layout/selector.md'},
@@ -215,17 +236,7 @@
       //     {label: 'io-md-view', value: './build/elements/extras/md-view.md'}, // TODO: md-view-selector
       //     {label: 'io-service-loader', value: './build/elements/extras/service-loader.md'},
       //   ]},
-      //   {label: 'Core Classes', value: 'coreclasses', options: [
-      //     {label: 'ChangeQueue', value: './build/../docs/classes/ChangeQueue.md'},
-      //     // 
-      //     {label: 'Binding', value: './build/core/binding.md'},
-      //     {label: 'Functions', value: './build/core/functionBinder.md'},
-      //     {label: 'Listeners', value: './build/core/listeners.md'},
-      //     {label: 'Properties', value: './build/core/properties.md'},
-      //     {label: 'ProtoChain', value: './build/core/protochain.md'},
-      //     {label: 'Queue', value: './build/core/queue.md'},
-      //   ]},
-      // ]},
+      ]},
       {label: 'Demos', value: 'demos', options: [
         {label: 'Elements', value: 'elements'},
         {label: 'Theme', value: 'theme'},
@@ -247,7 +258,7 @@
           horizontal: true,
           options: OPTIONS,
           selected: OPTIONS.path.bind('root'),
-          depth: 2,
+          depth: 3,
           elements: [
             ['io-md-view', {
               name: 'home',
@@ -258,11 +269,11 @@
               selected: OPTIONS.option('docs').path.bind('leaf'),
               options: OPTIONS.option('docs').options,
             }],
-            // ['io-md-view-selector', {
-            //   name: 'reference',
-            //   selected: OPTIONS.option('reference').path.bind('leaf'),
-            //   options: OPTIONS.option('reference').options,
-            // }],
+            ['io-md-view-selector', {
+              name: 'reference',
+              selected: OPTIONS.option('reference').path.bind('leaf'),
+              options: OPTIONS.option('reference').options,
+            }],
             ['io-selector', {name: 'demos', selected: OPTIONS.option('demos').path.bind('leaf'), elements: [
               ['io-demo-elements', {name: 'elements', import: './demos/elements.js'}],
               ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],

@@ -113,7 +113,7 @@ export declare const PropertyDecorators: WeakMap<Constructor, PropertyDeclaratio
  * @param {PropertyDeclarationWeak} propertyDefinition Property declaration.
  * @return {Function} Property decorator function.
  */
-export declare const IoProperty: (propertyDefinition: PropertyDeclarationWeak) => (target: IoNode, propertyName: string) => void;
+export declare const Property: (propertyDefinition: PropertyDeclarationWeak) => (target: IoNode, propertyName: string) => void;
 /**
  * Declares default listeners.
  */
@@ -717,7 +717,7 @@ export declare class IoGl extends IoElement {
 	setUniform(name: string, type: UniformTypes, value: any): void;
 }
 export declare type NudgeDirection = "pointer" | "top" | "left" | "bottom" | "right";
-declare class IoLayer extends IoElement {
+export declare class IoLayer extends IoElement {
 	static get Style(): string;
 	expanded: boolean;
 	skipCollapse: boolean;
@@ -994,7 +994,7 @@ export declare class IoIcon extends IoElement {
 	stroke: boolean;
 	iconChanged(): void;
 }
-declare class IoIconset extends IoNode {
+export declare class IoIconset extends IoNode {
 	registerIcons(name: string, svg: string): void;
 	getIcon(icon: string): string;
 }
@@ -1216,12 +1216,10 @@ export declare class IoColorSlider extends IoColorBase {
 	changed(): void;
 }
 export declare class IoColorSliderBase extends IoSlider {
-	static get Style(): string;
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
 export declare class IoColorSlider2dBase extends IoSlider2d {
-	static get Style(): string;
 	static get GlUtils(): string;
 	static get Frag(): string;
 }

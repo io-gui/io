@@ -64,7 +64,7 @@ ___
 
 ### type
 
- `Optional` **type**: [`Constructor`](../none#constructor)
+ `Optional` **type**: [`Constructor`](../README.md#constructor)
 
 #### Defined in
 

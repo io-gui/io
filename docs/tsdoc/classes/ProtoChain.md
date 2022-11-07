@@ -49,7 +49,7 @@ ___
 
 #### Index signature
 
-▪ [property: `string`]: [`ListenerDeclaration`](../none#listenerdeclaration)[]
+▪ [property: `string`]: [`ListenerDeclaration`](../README.md#listenerdeclaration)[]
 
 #### Defined in
 

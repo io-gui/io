@@ -357,11 +357,11 @@ ___
 
 ### Properties
 
-`Static` `get` **Properties**(): [`PropertyDeclarations`](../none#propertydeclarations)
+`Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Returns
 
-[`PropertyDeclarations`](../none#propertydeclarations)
+[`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Inherited from
 
@@ -487,7 +487,7 @@ Wrapper for addEventListener.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `type` | `string` | listener name. |
-| `listener` | [`AnyEventListener`](../none#anyeventlistener) | listener handler. |
+| `listener` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
 | `options?` | `AddEventListenerOptions` | event listener options. |
 
 #### Returns
@@ -932,7 +932,7 @@ Wrapper for removeEventListener.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `type` | `string` | event name to listen to. |
-| `listener?` | [`AnyEventListener`](../none#anyeventlistener) | listener handler. |
+| `listener?` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
 | `options?` | `AddEventListenerOptions` | event listener options. |
 
 #### Returns
@@ -1068,7 +1068,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `func` | [`CallbackFunction`](../none#callbackfunction) | `undefined` | Function to throttle. |
+| `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
 | `arg` | `any` | `undefined` | argument for throttled function. |
 | `sync` | `boolean` | `false` | execute immediately without rAF timeout. |
 

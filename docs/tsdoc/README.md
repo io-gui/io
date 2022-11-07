@@ -92,7 +92,7 @@
 
 ### AnyEventListener
 
- **AnyEventListener**: `EventListener` \| [`KeyboardEventListener`](none#keyboardeventlistener) \| [`PointerEventListener`](none#pointereventlistener) \| [`CustomEventListener`](none#customeventlistener) \| [`FocusEventListener`](none#focuseventlistener) \| [`TouchEventListener`](none#toucheventlistener)
+ **AnyEventListener**: `EventListener` \| [`KeyboardEventListener`](README.md#keyboardeventlistener) \| [`PointerEventListener`](README.md#pointereventlistener) \| [`CustomEventListener`](README.md#customeventlistener) \| [`FocusEventListener`](README.md#focuseventlistener) \| [`TouchEventListener`](README.md#toucheventlistener)
 
 #### Defined in
 
@@ -218,7 +218,7 @@ ___
 
 ### Listener
 
- **Listener**: [[`CustomEventListener`](none#customeventlistener), AddEventListenerOptions?]
+ **Listener**: [[`CustomEventListener`](README.md#customeventlistener), AddEventListenerOptions?]
 
 #### Defined in
 
@@ -228,7 +228,7 @@ ___
 
 ### ListenerDeclaration
 
- **ListenerDeclaration**: [`string` \| [`CustomEventListener`](none#customeventlistener), AddEventListenerOptions?]
+ **ListenerDeclaration**: [`string` \| [`CustomEventListener`](README.md#customeventlistener), AddEventListenerOptions?]
 
 Declares default listeners.
 
@@ -240,7 +240,7 @@ ___
 
 ### ListenerDeclarationWeak
 
- **ListenerDeclarationWeak**: `string` \| [`CustomEventListener`](none#customeventlistener) \| [`ListenerDeclaration`](none#listenerdeclaration)
+ **ListenerDeclarationWeak**: `string` \| [`CustomEventListener`](README.md#customeventlistener) \| [`ListenerDeclaration`](README.md#listenerdeclaration)
 
 Allows weak declaration of listeners by specifying only partial declarations such as function or function name.
 
@@ -252,7 +252,7 @@ ___
 
 ### Listeners
 
- **Listeners**: `Record`<`string`, [`Listener`](none#listener)[]\>
+ **Listeners**: `Record`<`string`, [`Listener`](README.md#listener)[]\>
 
 #### Defined in
 
@@ -262,7 +262,7 @@ ___
 
 ### ListenersDeclaration
 
- **ListenersDeclaration**: `Record`<`string`, [`ListenerDeclarationWeak`](none#listenerdeclarationweak)\>
+ **ListenersDeclaration**: `Record`<`string`, [`ListenerDeclarationWeak`](README.md#listenerdeclarationweak)\>
 
 #### Defined in
 
@@ -308,7 +308,7 @@ Declares default value, type and reactive behavior of the property.
 | `notify?` | `boolean` |
 | `observe?` | `boolean` |
 | `reflect?` | `Reflect` |
-| `type?` | [`Constructor`](none#constructor) |
+| `type?` | [`Constructor`](README.md#constructor) |
 | `value?` | `any` |
 
 #### Defined in
@@ -319,7 +319,7 @@ ___
 
 ### PropertyDeclarationWeak
 
- **PropertyDeclarationWeak**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| [`Constructor`](none#constructor) \| [`Binding`](classes/Binding.md) \| [`PropertyDeclaration`](none#propertydeclaration)
+ **PropertyDeclarationWeak**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| [`Constructor`](README.md#constructor) \| [`Binding`](classes/Binding.md) \| [`PropertyDeclaration`](README.md#propertydeclaration)
 
 Allows weak declaration of properties by specifying only partial declarations such as default value or type.
 
@@ -331,7 +331,7 @@ ___
 
 ### PropertyDeclarations
 
- **PropertyDeclarations**: `Record`<`string`, [`PropertyDeclarationWeak`](none#propertydeclarationweak)\>
+ **PropertyDeclarations**: `Record`<`string`, [`PropertyDeclarationWeak`](README.md#propertydeclarationweak)\>
 
 #### Defined in
 
@@ -449,7 +449,7 @@ ___
 
 ### PropertyDecorators
 
- `Const` **PropertyDecorators**: `WeakMap`<[`Constructor`](none#constructor), [`PropertyDeclarations`](none#propertydeclarations)\>
+ `Const` **PropertyDecorators**: `WeakMap`<[`Constructor`](README.md#constructor), [`PropertyDeclarations`](README.md#propertydeclarations)\>
 
 #### Defined in
 
@@ -517,7 +517,7 @@ Allows property declarations using decorator pattern.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `propertyDefinition` | [`PropertyDeclarationWeak`](none#propertydeclarationweak) | Property declaration. |
+| `propertyDefinition` | [`PropertyDeclarationWeak`](README.md#propertydeclarationweak) | Property declaration. |
 
 #### Returns
 
@@ -598,8 +598,8 @@ Assigns source listener declaration to an existing array of listener declaration
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `defs` | [`ListenerDeclaration`](none#listenerdeclaration)[] | Array of listener declarations |
-| `srcDef` | [`ListenerDeclaration`](none#listenerdeclaration) | Source listener declaration |
+| `defs` | [`ListenerDeclaration`](README.md#listenerdeclaration)[] | Array of listener declarations |
+| `srcDef` | [`ListenerDeclaration`](README.md#listenerdeclaration) | Source listener declaration |
 
 #### Returns
 
@@ -639,7 +639,7 @@ ___
 
 ### hardenListenerDeclaration
 
-**hardenListenerDeclaration**(`def`): [`ListenerDeclaration`](none#listenerdeclaration)
+**hardenListenerDeclaration**(`def`): [`ListenerDeclaration`](README.md#listenerdeclaration)
 
 Takes weakly typed listener declaration and returns stronly typed listener declaration.
 
@@ -647,11 +647,11 @@ Takes weakly typed listener declaration and returns stronly typed listener decla
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `def` | [`ListenerDeclarationWeak`](none#listenerdeclarationweak) | Weakly typed listener declaration |
+| `def` | [`ListenerDeclarationWeak`](README.md#listenerdeclarationweak) | Weakly typed listener declaration |
 
 #### Returns
 
-[`ListenerDeclaration`](none#listenerdeclaration)
+[`ListenerDeclaration`](README.md#listenerdeclaration)
 
 Stronly typed listener declaration
 
@@ -663,7 +663,7 @@ ___
 
 ### listenerFromDefinition
 
-**listenerFromDefinition**(`node`, `def`): [`Listener`](none#listener)
+**listenerFromDefinition**(`node`, `def`): [`Listener`](README.md#listener)
 
 Takes a node and a listener declaration and returns a listener.
 
@@ -672,11 +672,11 @@ Takes a node and a listener declaration and returns a listener.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `node` | `HTMLElement` \| [`IoNode`](classes/IoNode.md) | `IoNode` instance |
-| `def` | [`ListenerDeclaration`](none#listenerdeclaration) | Listener declaration |
+| `def` | [`ListenerDeclaration`](README.md#listenerdeclaration) | Listener declaration |
 
 #### Returns
 
-[`Listener`](none#listener)
+[`Listener`](README.md#listener)
 
 Listener
 

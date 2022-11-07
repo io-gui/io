@@ -26,7 +26,7 @@
 
 ### Listeners
 
- `Optional` **Listeners**: [`ListenersDeclaration`](../none#listenersdeclaration)
+ `Optional` **Listeners**: [`ListenersDeclaration`](../README.md#listenersdeclaration)
 
 #### Defined in
 
@@ -36,7 +36,7 @@ ___
 
 ### Properties
 
- `Optional` **Properties**: [`PropertyDeclarations`](../none#propertydeclarations)
+ `Optional` **Properties**: [`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Defined in
 

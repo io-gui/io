@@ -30,7 +30,7 @@ It initializes `protoListeners` from `ProtoChain`.
 
 ### addedListeners
 
- `Readonly` **addedListeners**: [`Listeners`](../none#listeners) = `{}`
+ `Readonly` **addedListeners**: [`Listeners`](../README.md#listeners) = `{}`
 
 #### Defined in
 
@@ -60,7 +60,7 @@ ___
 
 ### propListeners
 
- `Readonly` **propListeners**: [`Listeners`](../none#listeners) = `{}`
+ `Readonly` **propListeners**: [`Listeners`](../README.md#listeners) = `{}`
 
 #### Defined in
 
@@ -70,7 +70,7 @@ ___
 
 ### protoListeners
 
- `Readonly` **protoListeners**: [`Listeners`](../none#listeners) = `{}`
+ `Readonly` **protoListeners**: [`Listeners`](../README.md#listeners) = `{}`
 
 #### Defined in
 
@@ -90,7 +90,7 @@ Adds an event listener to `addedListeners`.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `string` | Name of the event |
-| `listener` | [`CustomEventListener`](../none#customeventlistener) | Event listener handler |
+| `listener` | [`CustomEventListener`](../README.md#customeventlistener) | Event listener handler |
 | `options?` | `AddEventListenerOptions` | Event listener options |
 
 #### Returns
@@ -181,7 +181,7 @@ If `listener` is not specified it removes all listeners for specified `type`.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `string` | Name of the event |
-| `listener?` | [`CustomEventListener`](../none#customeventlistener) | Event listener handler |
+| `listener?` | [`CustomEventListener`](../README.md#customeventlistener) | Event listener handler |
 | `options?` | `AddEventListenerOptions` | Event listener options |
 
 #### Returns

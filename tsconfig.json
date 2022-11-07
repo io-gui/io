@@ -38,13 +38,16 @@
   "typedocOptions": {
     "hideBreadcrumbs": true,
     "hideInPageTOC": true,
+    "hideGenerator": true,
+    "hideMembersSymbol": true,
     "excludePrivate": true,
     "excludeProtected": true,
     "excludeInternal": true,
     "excludeExternals": true,
+    "cleanOutputDir": true,
     "githubPages": false,
     "readme": "none",
-    "gitRevision": "tsc",
+    "gitRevision": "main",
     "entryPoints": [
       "src/iogui.ts"
     ],

@@ -14,7 +14,7 @@ Takes a weakly typed property declaration and returns full property definition w
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `def` | [`PropertyDeclarationWeak`](../none#propertydeclarationweak) | Weakly typed property definition |
+| `def` | [`PropertyDeclarationWeak`](../README.md#propertydeclarationweak) | Weakly typed property definition |
 
 #### Defined in
 
@@ -64,7 +64,7 @@ ___
 
 ### type
 
- `Optional` **type**: [`Constructor`](../none#constructor)
+ `Optional` **type**: [`Constructor`](../README.md#constructor)
 
 #### Defined in
 
