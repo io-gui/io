@@ -81,7 +81,6 @@ export function RegisterIoElement(elementConstructor: typeof IoElement) {
 
   window.customElements.define(localName, elementConstructor as unknown as CustomElementConstructor);
 
-  let mixinsString = '';
   const mixins = elementConstructor.prototype._protochain.style.match(mixinRegex);
   if (mixins) {
     for (let i = 0; i < mixins.length; i++) {
@@ -89,7 +88,6 @@ export function RegisterIoElement(elementConstructor: typeof IoElement) {
       const name = m[0];
       const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
       mixinRecord[name] = value;
-      mixinsString += mixins[i].replace('--', '.').replace(': {', ' {');
     }
   }
 
@@ -126,7 +124,7 @@ export function RegisterIoElement(elementConstructor: typeof IoElement) {
   }
 
   // Replace `:host` with element tag and add mixin CSS variables.
-  styleString = mixinsString + styleString.replace(new RegExp(':host', 'g'), localName);
+  styleString = styleString.replace(new RegExp(':host', 'g'), localName);
 
   const styleElement = document.createElement('style');
   styleElement.innerHTML = styleString;

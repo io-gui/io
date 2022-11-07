@@ -11,8 +11,9 @@ export class IoSlider2d extends IoSliderBase {
         border: var(--io-border);
         border-radius: var(--io-border-radius);
         border-color: var(--io-color-border-inset);
-        min-width: calc(var(--io-field-height) * 4);
-        flex-basis: calc(var(--io-field-height) * 4);
+        min-width: var(--io-field-height4);
+        min-height: var(--io-field-height4);
+        flex-basis: var(--io-field-height4);
         flex-grow: 0;
       }
       :host[horizontal] {

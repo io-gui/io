@@ -9,8 +9,7 @@ export class IoColorSlider extends IoColorBase {
   static get Style() {
     return /* css */`
       :host {
-        display: flex;
-        flex: 1 1 auto;
+        display: contents;
       }
     `;
   }
@@ -194,18 +193,6 @@ export class IoColorSlider extends IoColorBase {
 }
 
 export class IoColorSliderBase extends IoSlider {
-  static get Style() {
-    return /* css */`
-      :host {
-        display: flex;
-        flex-direction: row;
-        flex: 1 1 auto;
-      }
-      :host[vertical] {
-        flex: 1 1 var(--io-field-height);
-      }
-    `;
-  }
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
@@ -245,18 +232,6 @@ export class IoColorSliderBase extends IoSlider {
 }
 
 export class IoColorSlider2dBase extends IoSlider2d {
-  static get Style() {
-    return /* css */`
-      :host {
-        display: flex;
-        flex-direction: row;
-        flex: 1 1 auto;
-      }
-      :host[vertical] {
-        flex: 1 1 var(--io-field-height);
-      }
-    `;
-  }
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!

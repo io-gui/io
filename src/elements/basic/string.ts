@@ -17,7 +17,7 @@ export class IoString extends IoField {
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
         box-shadow: var(--io-shadow-inset);
-        flex-basis: 10em;
+        flex-basis: var(--io-line-height4);
       }
       :host:before,
       :host:after {

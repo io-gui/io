@@ -17,14 +17,14 @@ export class IoDemoElements extends IoElement {
       }
       :host > * > div {
         display: flex;
-        width: 425px;
+        /* width: 425px; */
         margin: var(--io-spacing) 0;
         padding: var(--io-spacing) 0;
         border: var(--io-border);
         border-color: rgba(128, 128, 128, .125);
       }
       :host > * > div.tall {
-        height: calc(var(--io-field-height) * 4);
+        height: var(--io-field-height4);
       }
       :host > * > div > :nth-child(1) {
         flex: 0 0 140px;

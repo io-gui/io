@@ -68,10 +68,10 @@ export class IoDemoElementsColor extends IoElement {
       ]],
       ['div', {class: 'tall'}, [
         ['io-label', {label: 'slider-2d + [vert]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'hs'}],
-          ['io-color-slider', {value: this.rgba, channel: 'sv'}],
-          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
-          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
+        ['io-color-slider', {value: this.rgba, channel: 'hs'}],
+        ['io-color-slider', {value: this.rgba, channel: 'sv'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
+        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
       ]],
       ['div', {class: 'tall'}, [
         ['io-label', {label: 'color-panel'}],

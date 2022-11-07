@@ -18,7 +18,7 @@ export class IoNumber extends IoField {
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
         box-shadow: var(--io-shadow-inset);
-        flex-basis: 4.3em;
+        flex-basis: var(--io-field-height3);
       }
       :host:before,
       :host:after {
