@@ -1,5 +1,5 @@
 import { RegisterIoElement, IoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoColorPanelSingleton } from './color-panel.js';
 import { IoLayerSingleton } from '../../core/layer.js';
 import './color-swatch.js';
@@ -21,7 +21,7 @@ export class IoColorPicker extends IoElement {
     `;
   }
 
-  @IoProperty({value: {r: 1, g: 1, b: 1, a: 1}})
+  @Property({value: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number, g: number, b: number, a?: number};
 
   static get Listeners(): any {
@@ -31,7 +31,7 @@ export class IoColorPicker extends IoElement {
     };
   }
 
-  @IoProperty('0')
+  @Property('0')
   declare tabindex: string;
 
   _onClick(event: FocusEvent) {

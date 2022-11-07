@@ -1,5 +1,5 @@
 import { Binding } from '../iogui.js';
-import { IoProperty } from './internals/property.js';
+import { Property } from './internals/property.js';
 import { IoNode, RegisterIoNode } from './node.js';
 
 class EmulatedLocalStorage {
@@ -102,16 +102,16 @@ interface StorageProps {
 @RegisterIoNode
 export class IoStorageNode extends IoNode {
 
-  @IoProperty({value: ''})
+  @Property({value: ''})
   declare key: string;
 
-  @IoProperty({value: undefined})
+  @Property({value: undefined})
   declare value: any;
 
-  @IoProperty({value: undefined})
+  @Property({value: undefined})
   declare default: any;
 
-  @IoProperty({value: 'none'})
+  @Property({value: 'none'})
   declare storage: 'hash' | 'local' | 'none';
 
   declare binding: Binding;

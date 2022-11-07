@@ -1,4 +1,4 @@
-import {ProtoChain, IoNode, IoNodeMixin, IoProperty, PropertyDeclarations, ListenersDeclaration, IoElement, RegisterIoNode} from '../../iogui.js';
+import {ProtoChain, IoNode, IoNodeMixin, Property, PropertyDeclarations, ListenersDeclaration, IoElement, RegisterIoNode} from '../../iogui.js';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -21,7 +21,7 @@ class IoNode1 extends IoNode {
       }
     };
   }
-  @IoProperty({observe: true})
+  @Property({observe: true})
   declare prop2: any;
 }
 
@@ -35,11 +35,11 @@ class IoNode3 extends IoNode1 {
       }
     };
   }
-  @IoProperty({notify: true, observe: true})
+  @Property({notify: true, observe: true})
   declare prop1: any;
-  @IoProperty({value: 'foo', reflect: 'none'})
+  @Property({value: 'foo', reflect: 'none'})
   declare prop2: any;
-  @IoProperty({reflect: 'attr'})
+  @Property({reflect: 'attr'})
   declare prop3: any;
 }
 
@@ -146,7 +146,7 @@ export default class {
           prop2:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: undefined, observe: undefined},
         });
       });
-      it('Should include all property declarations declared in IoProperty decorator', () => {
+      it('Should include all property declarations declared in Property decorator', () => {
         let protoChain = new ProtoChain(IoNode1);
         chai.expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
         chai.expect(protoChain.properties).to.be.eql({

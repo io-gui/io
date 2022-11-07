@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from './element.js';
-import { IoProperty, PropertyDeclarations } from './internals/property.js';
+import { Property, PropertyDeclarations } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
 
 const THEME_VERSION = 'v0.4';
@@ -191,13 +191,13 @@ export class IoTheme extends IoElement {
 
   static get Properties(): PropertyDeclarations { return persistantThemes.value[theme.value]; }
 
-  @IoProperty({value: true})
+  @Property({value: true})
   declare lazy: boolean;
 
-  @IoProperty({value: true})
+  @Property({value: true})
   declare persist: boolean;
 
-  @IoProperty({type: String, binding: theme})
+  @Property({type: String, binding: theme})
   declare theme: string;
 
   init() {

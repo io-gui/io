@@ -3,7 +3,7 @@ import { IoNode, RegisterIoNode } from '../../core/node.js';
 const IoIconsetDB: Record<string, Record<string, string>> = {};
 
 @RegisterIoNode
-class IoIconset extends IoNode {
+export class IoIconset extends IoNode {
   registerIcons(name: string, svg: string) {
     const stagingElement = document.createElement('div');
     stagingElement.innerHTML = svg;

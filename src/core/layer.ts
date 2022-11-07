@@ -1,4 +1,4 @@
-import { IoProperty } from './internals/property.js';
+import { Property } from './internals/property.js';
 import { IoElement, RegisterIoElement } from './element.js';
 
 let lastFocus: Element | null = null;
@@ -18,7 +18,7 @@ window.addEventListener('blur', () => {
 type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
 
 @RegisterIoElement
-class IoLayer extends IoElement {
+export class IoLayer extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -50,10 +50,10 @@ class IoLayer extends IoElement {
       }
     `;
   }
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare expanded: boolean;
 
-  @IoProperty({value: false})
+  @Property({value: false})
   declare skipCollapse: boolean;
 
   static get Listeners() {

@@ -1,5 +1,5 @@
 import { RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoField } from './field.js';
 
 @RegisterIoElement
@@ -25,16 +25,16 @@ export class IoButton extends IoField {
     `;
   }
 
-  @IoProperty(undefined)
+  @Property(undefined)
   declare action?: any;
 
-  @IoProperty(undefined)
+  @Property(undefined)
   declare value: any;
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare pressed: boolean;
 
-  @IoProperty('button')
+  @Property('button')
   declare role: string;
 
   _onPointerdown(event: PointerEvent) {

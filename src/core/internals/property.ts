@@ -142,7 +142,7 @@ export const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations> = ne
  * @param {PropertyDeclarationWeak} propertyDefinition Property declaration.
  * @return {Function} Property decorator function.
  */
-export const IoProperty = function(propertyDefinition: PropertyDeclarationWeak) {
+export const Property = function(propertyDefinition: PropertyDeclarationWeak) {
   return (target: IoNode, propertyName: string) => {
     const constructor = target.constructor as Constructor;
     const _Properties = PropertyDecorators.get(constructor) || {};

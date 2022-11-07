@@ -1,20 +1,20 @@
 import { RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoSliderBase } from './slider-base.js';
 
 @RegisterIoElement
 export class IoSliderRange extends IoSliderBase {
 
-  @IoProperty({value: [0, 0], observe: true})
+  @Property({value: [0, 0], observe: true})
   declare value: [number, number];
 
-  @IoProperty(0.01)
+  @Property(0.01)
   declare step: number;
 
-  @IoProperty(0)
+  @Property(0)
   declare min: number;
 
-  @IoProperty(1)
+  @Property(1)
   declare max: number;
 
   _index = 0;

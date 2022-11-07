@@ -1,5 +1,5 @@
 import { RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoSliderBase } from './slider-base.js';
 
 @RegisterIoElement
@@ -22,16 +22,16 @@ export class IoSlider2d extends IoSliderBase {
     `;
   }
 
-  @IoProperty({value: [0, 0], observe: true})
+  @Property({value: [0, 0], observe: true})
   declare value: [number, number];
 
-  @IoProperty({value: [0.01, 0.01]})
+  @Property({value: [0.01, 0.01]})
   declare step: [number, number];
 
-  @IoProperty({value: [-1, -1]})
+  @Property({value: [-1, -1]})
   declare min: [number, number];
 
-  @IoProperty({value: [1, 1]})
+  @Property({value: [1, 1]})
   declare max: [number, number];
 
   static get GlUtils() {

@@ -1,4 +1,4 @@
-import {Binding, ProtoProperty, PropertyInstance, IoProperty, IoNode, RegisterIoNode, PropertyDeclarations, PropertyDecorators} from '../../iogui.js';
+import {Binding, ProtoProperty, PropertyInstance, Property, IoNode, RegisterIoNode, PropertyDeclarations, PropertyDecorators} from '../../iogui.js';
 
 class Object1 {
   prop = true;
@@ -502,9 +502,9 @@ export default class {
       });
       it('Should register property declarations from decorators.', () => {
         class TestClass extends IoNode {
-          @IoProperty('value1')
+          @Property('value1')
           declare prop1: string;
-          @IoProperty({value: 'value2', type: String})
+          @Property({value: 'value2', type: String})
           declare prop2: string;
         }
         RegisterIoNode(TestClass);

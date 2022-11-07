@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import '../basic/number.js';
 import './slider.js';
 
@@ -25,22 +25,22 @@ export class IoNumberSlider extends IoElement {
     `;
   }
 
-  @IoProperty({value: 0})
+  @Property({value: 0})
   declare value: number;
 
-  @IoProperty(0.01)
+  @Property(0.01)
   declare step: number;
 
-  @IoProperty(0)
+  @Property(0)
   declare min: number;
 
-  @IoProperty(1)
+  @Property(1)
   declare max: number;
 
-  @IoProperty(1)
+  @Property(1)
   declare exponent: number;
 
-  @IoProperty(1)
+  @Property(1)
   declare conversion: number;
 
   _onNumberSet(event: CustomEvent) {

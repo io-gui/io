@@ -1,4 +1,4 @@
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoGl } from '../../core/gl.js';
 
 const clamp = (num: number, min: number, max: number) => {
@@ -26,37 +26,37 @@ export class IoSliderBase extends IoGl {
     `;
   }
 
-  @IoProperty({value: 0})
+  @Property({value: 0})
   declare value: number | [number, number] | {x: number, y: number};
 
-  @IoProperty(0.01)
+  @Property(0.01)
   declare step: number | [number, number] | {x: number, y: number};
 
-  @IoProperty(0)
+  @Property(0)
   declare min: number | [number, number] | {x: number, y: number};
 
-  @IoProperty(1)
+  @Property(1)
   declare max: number | [number, number] | {x: number, y: number};
 
-  @IoProperty(1)
+  @Property(1)
   declare exponent: number;
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare vertical: boolean;
 
-  @IoProperty({value: [0, 0, 0, 0]})
+  @Property({value: [0, 0, 0, 0]})
   declare color: [number, number, number, number];
 
-  @IoProperty(false)
+  @Property(false)
   declare noscroll: boolean;
 
-  @IoProperty('slider')
+  @Property('slider')
   declare role: string;
 
-  @IoProperty('0')
+  @Property('0')
   declare tabindex: string;
 
-  @IoProperty(true)
+  @Property(true)
   declare lazy: boolean;
 
   _startX = 0;

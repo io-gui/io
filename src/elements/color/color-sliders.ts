@@ -1,5 +1,5 @@
 import { RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoColorBase } from './color-base.js';
 import { IoSlider } from '../sliders/slider.js';
 import { IoSlider2d } from '../sliders/slider-2d.js';
@@ -14,10 +14,10 @@ export class IoColorSlider extends IoColorBase {
     `;
   }
 
-  @IoProperty('')
+  @Property('')
   declare channel: string;
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare vertical: boolean;
 
   _onValueInput(event: CustomEvent) {

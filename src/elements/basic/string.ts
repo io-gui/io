@@ -1,5 +1,5 @@
 import { RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoField } from './field.js';
 
 @RegisterIoElement
@@ -27,16 +27,16 @@ export class IoString extends IoField {
       }
     `;
   }
-  @IoProperty(false)
+  @Property(false)
   declare live: boolean;
 
-  @IoProperty('')
+  @Property('')
   declare value: string;
 
-  @IoProperty(true)
+  @Property(true)
   declare contenteditable: boolean;
 
-  @IoProperty('textbox')
+  @Property('textbox')
   declare role: string;
 
   _setFromTextNode() {
