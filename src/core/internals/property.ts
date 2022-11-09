@@ -92,7 +92,7 @@ export class PropertyInstance {
   observe = false;
   /**
    * Creates the property configuration object and copies values from `ProtoProperty`.
-   * @param {ProtoProperty} propDef ProtoProperty object
+   * @param propDef ProtoProperty object
    */
   constructor(propDef: ProtoProperty) {
     debug: {
@@ -139,8 +139,8 @@ export const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations> = ne
 
 /**
  * Allows property declarations using decorator pattern.
- * @param {PropertyDeclarationWeak} propertyDefinition Property declaration.
- * @return {Function} Property decorator function.
+ * @param propertyDefinition Property declaration.
+ * @return Property decorator function.
  */
 export const Property = function(propertyDefinition: PropertyDeclarationWeak) {
   return (target: IoNode, propertyName: string) => {

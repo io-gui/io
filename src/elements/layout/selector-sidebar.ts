@@ -67,10 +67,10 @@ export class IoSelectorSidebar extends IoSelector {
       },
     };
   }
-  onResized() {
-    this.collapsed = this.getBoundingClientRect().width < this.collapseWidth;
-  }
-  collapsedChanged() { this.update(); }
+  // onResized() {
+  //   this.collapsed = this.getBoundingClientRect().width < this.collapseWidth;
+  // }
+  // collapsedChanged() { this.update(); }
   getSlotted() {
     return ['io-sidebar', {
       selected: this.bind('selected'),

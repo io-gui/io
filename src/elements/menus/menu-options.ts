@@ -162,58 +162,58 @@ export class IoMenuOptions extends IoElement {
   _stopPropagation(event: MouseEvent) {
     event.stopPropagation();
   }
-  onResized() {
-    this.throttle(this._onSetOverflow);
-  }
-  _onSetOverflow() {
-    const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
-    if (this.horizontal) {
-      const hamburger = this.querySelector('.io-hamburger');
-      if (!buttons.length) return;
+  // onResized() {
+  //   this.throttle(this._onSetOverflow);
+  // }
+  // _onSetOverflow() {
+  //   const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
+  //   if (this.horizontal) {
+  //     const hamburger = this.querySelector('.io-hamburger');
+  //     if (!buttons.length) return;
 
-      let end = this.getBoundingClientRect().right;
-      let overflow = false;
-      let last = Infinity;
-      hamburger.hidden = true;
-      // const hamburgerOptions = [];
+  //     let end = this.getBoundingClientRect().right;
+  //     let overflow = false;
+  //     let last = Infinity;
+  //     hamburger.hidden = true;
+  //     // const hamburgerOptions = [];
 
-      for (let i = buttons.length; i--;) {
-        const r = buttons[i].getBoundingClientRect();
-        const rect = rects.get(buttons[i]) || {right: 0, width: 0};
-        if (r.right !== 0 && r.width !== 0)  {
-          rect.right = r.right;
-          rect.width = r.width;
-          rects.set(buttons[i], rect);
-        }
+  //     for (let i = buttons.length; i--;) {
+  //       const r = buttons[i].getBoundingClientRect();
+  //       const rect = rects.get(buttons[i]) || {right: 0, width: 0};
+  //       if (r.right !== 0 && r.width !== 0)  {
+  //         rect.right = r.right;
+  //         rect.width = r.width;
+  //         rects.set(buttons[i], rect);
+  //       }
 
-        if (hamburger.hidden && overflow) {
-          hamburger.hidden = false;
-          end -= hamburger.getBoundingClientRect().width;
-        }
+  //       if (hamburger.hidden && overflow) {
+  //         hamburger.hidden = false;
+  //         end -= hamburger.getBoundingClientRect().width;
+  //       }
 
-        if (buttons[i].selected) {
-          end -= rect.width;
-          buttons[i].hidden = false;
-          continue;
-        }
+  //       if (buttons[i].selected) {
+  //         end -= rect.width;
+  //         buttons[i].hidden = false;
+  //         continue;
+  //       }
 
-        last = Math.min(last, rect.right);
-        if (last < end) {
-          buttons[i].hidden = false;
-        } else {
-          buttons[i].hidden = true;
-          // hamburgerOptions.push(buttons[i].option);
-          overflow = true;
-        }
-      }
-      // hamburger._properties.props.option.value = new Item({options: new Options(hamburgerOptions)});
-      this.overflow = overflow;
-    } else {
-      for (let i = buttons.length; i--;) {
-        buttons[i].hidden = false;
-      }
-    }
-  }
+  //       last = Math.min(last, rect.right);
+  //       if (last < end) {
+  //         buttons[i].hidden = false;
+  //       } else {
+  //         buttons[i].hidden = true;
+  //         // hamburgerOptions.push(buttons[i].option);
+  //         overflow = true;
+  //       }
+  //     }
+  //     // hamburger._properties.props.option.value = new Item({options: new Options(hamburgerOptions)});
+  //     this.overflow = overflow;
+  //   } else {
+  //     for (let i = buttons.length; i--;) {
+  //       buttons[i].hidden = false;
+  //     }
+  //   }
+  // }
   _onCollapse() {
     const focusSearch = this.selectable && !!this.search && !this.inlayer;
     this.setProperties({
@@ -321,19 +321,19 @@ export class IoMenuOptions extends IoElement {
     }
     if (this.horizontal) {
       elements.splice(0, 0, ...this.slotted);
-      elements.push(['io-menu-item', {
-        label: '\u2630',
-        icon: '\u2630',
-        title: 'select tab',
-        depth: this.depth + 1,
-        class: 'io-hamburger',
-        option: new Item({
-          options: this._options
-        }),
-        lazy: false,
-      }]);
+      // elements.push(['io-menu-item', {
+      //   label: '\u2630',
+      //   icon: '\u2630',
+      //   title: 'select tab',
+      //   depth: this.depth + 1,
+      //   class: 'io-hamburger',
+      //   option: new Item({
+      //     options: this._options
+      //   }),
+      //   lazy: false,
+      // }]);
     }
     this.template(elements);
-    this.throttle(this._onSetOverflow);
+    // this.throttle(this._onSetOverflow);
   }
 }
