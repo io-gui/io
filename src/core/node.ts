@@ -152,7 +152,17 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             if (value instanceof Array) {
               console.warn(`Wrong type of property "${name}". Value: "${JSON.stringify(value)}". Expected type: ${prop.type.name}`, this);
             }
-          } else if (prop.type) {
+          } else if (prop.type instanceof Array) {
+            let match = false;
+            for (let i = 0; i < prop.type.length; i++) {
+              if (value.constructor === prop.type[i]) {
+                // TODO test extensively!
+                match = true;
+                continue;
+              }
+            }
+            if (!match) console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type}`, this);
+          } else if (prop.type instanceof Function) {
             if (!(value instanceof prop.type)) {
               console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
             }

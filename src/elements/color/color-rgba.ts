@@ -8,10 +8,14 @@ export class IoColorRgba extends IoColorBase {
       :host {
         display: flex;
         flex-direction: row;
-        flex: 0 1 17.4em;
+        flex: 0 1;
+        flex-basis: calc(var(--io-field-height) * 10);
       }
       :host > io-number {
         flex-grow: 1;
+      }
+      :host > io-color-picker {
+        flex-shrink: 0;
       }
       :host > *:not(:last-child) {
         margin-right: var(--io-spacing);

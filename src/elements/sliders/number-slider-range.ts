@@ -11,8 +11,7 @@ export class IoNumberSliderRange extends IoElement {
       display: flex;
       align-self: stretch;
       justify-self: stretch;
-      flex-basis: var(--io-field-height);
-      flex-grow: 1;
+      flex-basis: calc(var(--io-field-height) * 10);
     }
     :host > io-number {
       flex: 0 0 3.25em;

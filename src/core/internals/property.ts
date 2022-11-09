@@ -6,9 +6,10 @@ type Reflect = 'attr' | 'none' | 'prop' | 'both';
 /**
  * Declares default value, type and reactive behavior of the property.
  */
+// TODO: test types with array values
 export type PropertyDeclaration = {
   value?: any;
-  type?: Constructor;
+  type?: Constructor | Constructor[];
   binding?: Binding;
   reflect?: Reflect;
   notify?: boolean;
@@ -26,7 +27,7 @@ export type PropertyDeclarationWeak = string | number | boolean | Array<any> | n
  */
 export class ProtoProperty {
   value?: any;
-  type?: Constructor;
+  type?: Constructor | Constructor[];
   binding?: Binding;
   reflect?: Reflect;
   notify?: boolean;
@@ -81,7 +82,7 @@ export class PropertyInstance {
   // Property value.
   value?: any = undefined;
   // Constructor of the property value.
-  type?: Constructor;
+  type?: Constructor | Constructor[];
   // Binding object.
   binding?: Binding;
   // Reflects to/from HTML attribute ['attr', 'none', 'prop' or 'both']
@@ -101,7 +102,14 @@ export class PropertyInstance {
           console.warn(`ProtoProperty: Invalid field ${key}`);
         }
       });
-      if (propDef.type !== undefined && typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
+      if (propDef.type !== undefined) {
+        if (propDef.type instanceof Array) {
+          for (let i = 0; i < propDef.type.length; i++) {
+            if (typeof propDef.type[i] !== 'function') console.warn('Incorrect type for "type" field');
+          }
+        } else if (typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
+      }
+      // if (propDef.type !== undefined && typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
       if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
       if (propDef.reflect !== undefined && (['attr', 'none', 'prop', 'both']).indexOf(propDef.reflect) === -1) {
         console.error(`Invalid reflect field ${propDef.reflect}!`);

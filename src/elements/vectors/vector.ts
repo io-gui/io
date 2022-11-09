@@ -19,12 +19,12 @@ export class IoVector extends IoElement {
         margin-right: var(--io-spacing);
       }
       :host > io-boolean {
-        width: var(--io-line-height) !important;
+        flex-shrink: 0;
       }
     `;
   }
 
-  @Property({value: [0, 0, 0, 0], observe: true})
+  @Property({value: [0, 0, 0, 0], type: [Array, Object], observe: true})
   declare value: {x: number, y: number, z?: number, w?: number} | number[];
 
   @Property(1)

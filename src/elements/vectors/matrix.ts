@@ -1,5 +1,6 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
-
+import { RegisterIoElement } from '../../core/element.js';
+import { Property } from '../../core/internals/property.js';
+import { IoVector } from './vector.js';
 /*
  * Extends `IoElement`. Implements `IoNumber`.
  *
@@ -12,7 +13,7 @@ import { IoElement, RegisterIoElement } from '../../core/element.js';
  * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
  **/
 @RegisterIoElement
-export class IoMatrix extends IoElement {
+export class IoMatrix extends IoVector {
   static get Style() {
     return /* css */`
     
@@ -37,27 +38,21 @@ export class IoMatrix extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      value: {
-        value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        observe: true,
-      },
-      step: 0.001,
-      components: {
-        type: Array,
-        notify: false,
-      },
-      columns: {
-        value: 4,
-        reflect: 'prop',
-      },
-    };
-  }
+
+  @Property({value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]})
+  declare value: number[];
+
+  @Property({value: 4, reflect: 'prop'})
+  declare columns: number;
+
   _onValueSet(event: CustomEvent) {
-    if (event.detail.object) return; // TODO: unhack
+    if (event.detail.object) {
+      // TODO: unhack
+      console.log(event);
+      return;
+    }
     const item = event.composedPath()[0] as HTMLElement;
-    const c = item.id;
+    const c = item.id as any;
     const value = event.detail.value;
     const oldValue = event.detail.oldValue;
     this.value[c] = value;
@@ -78,12 +73,12 @@ export class IoMatrix extends IoElement {
       c = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
       this.columns = 4;
     }
-    this.components = c;
+    this.components = c as any;
   }
   changed() {
     const elements = [];
     for (const i in this.components) {
-      const c = this.components[i];
+      const c = this.components[i] as any;
       if (this.value[c] !== undefined) {
         elements.push(['io-number', {
           id: String(c),
