@@ -15,10 +15,12 @@ import { IoElement, RegisterIoElement } from '../../core/element.js';
 export class IoMatrix extends IoElement {
   static get Style() {
     return /* css */`
+    
     :host {
       display: grid;
       align-self: stretch;
       justify-self: stretch;
+      flex: 0 1 17.4em;
       grid-gap: var(--io-spacing);
     }
     :host[columns="4"] {
