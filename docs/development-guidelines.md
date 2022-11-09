@@ -15,5 +15,9 @@ This is a WIP document
 * State, Structure and Reactivity
   * Application State is an `Object`, which is a tree
   * GUI DOM tree should match the state tree whenever possible
+  * DOM tree, therefore, includes node and leaf elements
+  * Node elements observe contained user input elements and communicate object mutations.
+  * All Node elements observe all node mutations
+  * Each element handles its own updates and reactively changes
+  Leaf elements handle 
   * Allow customized/filtered views of the state trees
-  * "value" property should be used to assign primary state to elements.
