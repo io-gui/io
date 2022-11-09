@@ -192,7 +192,7 @@ export class IoTheme extends IoElement {
   declare theme: string;
 
   init() {
-    this._properties.forEach((property, key) => {
+    this._properties.forEach((property) => {
       if (property.value === 'object') {
         property.observe = true;
       }

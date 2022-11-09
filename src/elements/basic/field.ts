@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { IoProperty } from '../../core/internals/property.js';
 
