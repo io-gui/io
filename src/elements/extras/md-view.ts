@@ -25,14 +25,14 @@ export class IoMdView extends IoElement {
     }
     :host p {
       line-height: 1.4em;
-      padding: 0 0.5em;
+      padding: 0.5em 0;
     }
     :host a {
       text-decoration: underline;
       color: var(--io-color-link);
     }
     :host h1, :host h2, :host h3, :host h4 {
-      margin: 0;
+      margin: 0.5em 0;
       border: var(--io-border);
       border-width: 0 0 var(--io-border-width) 0;
     }
@@ -65,8 +65,7 @@ export class IoMdView extends IoElement {
       line-height: 1.6em;
     }
 
-    :host code.language-html,
-    :host code.language-javascript {
+    :host code[class] {
       padding: 1em;
       display: block;
       font-size: var(--io-code-size);
@@ -75,7 +74,7 @@ export class IoMdView extends IoElement {
       font-size: 0.85em;
       opacity: 0.5;
       margin: 0;
-      padding: var(--io-spacing) 0;
+      padding: 0;
     }
     :host table  {
       width: 100% !important;
