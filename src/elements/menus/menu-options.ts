@@ -5,7 +5,7 @@ import {Item} from '../../models/item.js';
 import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuItem} from './menu-item.js';
 
-const rects = new WeakMap();
+// const rects = new WeakMap();
 
 /*
  * Extends `IoElement`. Implements `IoMenuItem` and `IoLayerSingleton`.

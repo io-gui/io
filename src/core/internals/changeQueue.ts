@@ -14,6 +14,7 @@ export class ChangeQueue {
    * @param {IoNode} node - Owner node.
    */
   constructor(node: IoNode) {
+    this.changes = [];
     this.node = node;
   }
   /**
