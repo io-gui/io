@@ -1,5 +1,9 @@
 # io-gui
 
+## Namespaces
+
+- [IoStorage](modules/IoStorage.md)
+
 ## Classes
 
 - [Binding](classes/Binding.md)
@@ -8,25 +12,29 @@
 - [IoBoolean](classes/IoBoolean.md)
 - [IoButton](classes/IoButton.md)
 - [IoCollapsable](classes/IoCollapsable.md)
+- [IoColorBase](classes/IoColorBase.md)
 - [IoColorPanel](classes/IoColorPanel.md)
 - [IoColorPicker](classes/IoColorPicker.md)
+- [IoColorRgba](classes/IoColorRgba.md)
 - [IoColorSlider](classes/IoColorSlider.md)
-- [IoColorSliderAlpha](classes/IoColorSliderAlpha.md)
-- [IoColorSliderBlue](classes/IoColorSliderBlue.md)
-- [IoColorSliderCyan](classes/IoColorSliderCyan.md)
-- [IoColorSliderGreen](classes/IoColorSliderGreen.md)
+- [IoColorSlider2dBase](classes/IoColorSlider2dBase.md)
+- [IoColorSliderA](classes/IoColorSliderA.md)
+- [IoColorSliderB](classes/IoColorSliderB.md)
+- [IoColorSliderBase](classes/IoColorSliderBase.md)
+- [IoColorSliderC](classes/IoColorSliderC.md)
+- [IoColorSliderG](classes/IoColorSliderG.md)
+- [IoColorSliderH](classes/IoColorSliderH.md)
 - [IoColorSliderHs](classes/IoColorSliderHs.md)
-- [IoColorSliderHue](classes/IoColorSliderHue.md)
-- [IoColorSliderKey](classes/IoColorSliderKey.md)
-- [IoColorSliderLevel](classes/IoColorSliderLevel.md)
-- [IoColorSliderMagenta](classes/IoColorSliderMagenta.md)
-- [IoColorSliderRed](classes/IoColorSliderRed.md)
-- [IoColorSliderSaturation](classes/IoColorSliderSaturation.md)
-- [IoColorSliderSl](classes/IoColorSliderSl.md)
+- [IoColorSliderK](classes/IoColorSliderK.md)
+- [IoColorSliderL](classes/IoColorSliderL.md)
+- [IoColorSliderM](classes/IoColorSliderM.md)
+- [IoColorSliderR](classes/IoColorSliderR.md)
+- [IoColorSliderS](classes/IoColorSliderS.md)
+- [IoColorSliderSL](classes/IoColorSliderSL.md)
 - [IoColorSliderSv](classes/IoColorSliderSv.md)
-- [IoColorSliderValue](classes/IoColorSliderValue.md)
-- [IoColorSliderYellow](classes/IoColorSliderYellow.md)
-- [IoColorVector](classes/IoColorVector.md)
+- [IoColorSliderV](classes/IoColorSliderV.md)
+- [IoColorSliderY](classes/IoColorSliderY.md)
+- [IoColorSwatch](classes/IoColorSwatch.md)
 - [IoContent](classes/IoContent.md)
 - [IoContextMenu](classes/IoContextMenu.md)
 - [IoElement](classes/IoElement.md)
@@ -36,7 +44,6 @@
 - [IoIcon](classes/IoIcon.md)
 - [IoInspector](classes/IoInspector.md)
 - [IoLabel](classes/IoLabel.md)
-- [IoLadder](classes/IoLadder.md)
 - [IoLayout](classes/IoLayout.md)
 - [IoMatrix](classes/IoMatrix.md)
 - [IoMdView](classes/IoMdView.md)
@@ -46,6 +53,8 @@
 - [IoNode](classes/IoNode.md)
 - [IoNotify](classes/IoNotify.md)
 - [IoNumber](classes/IoNumber.md)
+- [IoNumberLadder](classes/IoNumberLadder.md)
+- [IoNumberLadderStep](classes/IoNumberLadderStep.md)
 - [IoNumberSlider](classes/IoNumberSlider.md)
 - [IoNumberSliderRange](classes/IoNumberSliderRange.md)
 - [IoObject](classes/IoObject.md)
@@ -57,9 +66,12 @@
 - [IoServiceLoader](classes/IoServiceLoader.md)
 - [IoSidebar](classes/IoSidebar.md)
 - [IoSlider](classes/IoSlider.md)
+- [IoSlider2d](classes/IoSlider2d.md)
 - [IoSliderRange](classes/IoSliderRange.md)
+- [IoStorageNode](classes/IoStorageNode.md)
 - [IoString](classes/IoString.md)
 - [IoSwitch](classes/IoSwitch.md)
+- [IoTheme](classes/IoTheme.md)
 - [IoVector](classes/IoVector.md)
 - [Item](classes/Item.md)
 - [Options](classes/Options.md)
@@ -82,7 +94,7 @@
 
 #### Defined in
 
-[src/core/node.ts:23](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L23)
+[src/core/node.ts:23](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L23)
 
 ___
 
@@ -106,7 +118,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:16](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L16)
+[src/core/node.ts:16](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L16)
 
 ___
 
@@ -126,7 +138,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:7](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L7)
+[src/core/node.ts:7](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L7)
 
 ___
 
@@ -150,7 +162,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:20](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L20)
+[src/core/node.ts:20](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L20)
 
 ___
 
@@ -174,7 +186,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L21)
+[src/core/node.ts:21](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L21)
 
 ___
 
@@ -198,7 +210,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L18)
+[src/core/node.ts:18](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L18)
 
 ___
 
@@ -208,7 +220,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L60)
+[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L60)
 
 ___
 
@@ -220,7 +232,7 @@ Declares default listeners.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L6)
+[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L6)
 
 ___
 
@@ -232,7 +244,7 @@ Allows weak declaration of listeners by specifying only partial declarations suc
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L11)
+[src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L11)
 
 ___
 
@@ -242,7 +254,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:61](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L61)
+[src/core/internals/eventDispatcher.ts:61](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L61)
 
 ___
 
@@ -252,7 +264,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L63)
+[src/core/internals/eventDispatcher.ts:63](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L63)
 
 ___
 
@@ -276,7 +288,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L19)
+[src/core/node.ts:19](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L19)
 
 ___
 
@@ -299,7 +311,7 @@ Declares default value, type and reactive behavior of the property.
 
 #### Defined in
 
-[src/core/internals/property.ts:9](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L9)
+[src/core/internals/property.ts:9](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L9)
 
 ___
 
@@ -311,7 +323,7 @@ Allows weak declaration of properties by specifying only partial declarations su
 
 #### Defined in
 
-[src/core/internals/property.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L21)
+[src/core/internals/property.ts:21](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L21)
 
 ___
 
@@ -321,7 +333,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:136](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L136)
+[src/core/internals/property.ts:136](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L136)
 
 ___
 
@@ -345,9 +357,19 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:22](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L22)
+[src/core/node.ts:22](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L22)
 
 ## Variables
+
+### IoColorPanelSingleton
+
+• `Const` **IoColorPanelSingleton**: [`IoColorPanel`](classes/IoColorPanel.md)
+
+#### Defined in
+
+[src/elements/color/color-panel.ts:75](https://github.com/io-gui/io/blob/tsc/src/elements/color/color-panel.ts#L75)
+
+___
 
 ### IoIconsetSingleton
 
@@ -355,17 +377,7 @@ ___
 
 #### Defined in
 
-[src/elements/core/iconset.ts:44](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/iconset.ts#L44)
-
-___
-
-### IoLadderSingleton
-
-• `Const` **IoLadderSingleton**: [`IoLadder`](classes/IoLadder.md)
-
-#### Defined in
-
-[src/elements/core/ladder.ts:326](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/ladder.ts#L326)
+[src/elements/basic/iconset.ts:28](https://github.com/io-gui/io/blob/tsc/src/elements/basic/iconset.ts#L28)
 
 ___
 
@@ -375,17 +387,27 @@ ___
 
 #### Defined in
 
-[src/elements/core/layer.ts:222](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/layer.ts#L222)
+[src/core/layer.ts:220](https://github.com/io-gui/io/blob/tsc/src/core/layer.ts#L220)
+
+___
+
+### IoNumberLadderSingleton
+
+• `Const` **IoNumberLadderSingleton**: [`IoNumberLadder`](classes/IoNumberLadder.md)
+
+#### Defined in
+
+[src/elements/basic/number.ts:561](https://github.com/io-gui/io/blob/tsc/src/elements/basic/number.ts#L561)
 
 ___
 
 ### IoThemeSingleton
 
-• `Const` **IoThemeSingleton**: `IoTheme`
+• `Const` **IoThemeSingleton**: [`IoTheme`](classes/IoTheme.md)
 
 #### Defined in
 
-[src/elements/core/theme.ts:323](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/theme.ts#L323)
+[src/core/theme.ts:245](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L245)
 
 ___
 
@@ -419,7 +441,7 @@ THE SOFTWARE.
 
 #### Defined in
 
-[src/iogui.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/iogui.ts#L29)
+[src/iogui.ts:29](https://github.com/io-gui/io/blob/tsc/src/iogui.ts#L29)
 
 ___
 
@@ -429,7 +451,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:138](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L138)
+[src/core/internals/property.ts:138](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L138)
 
 ## Functions
 
@@ -459,7 +481,7 @@ typeof `__class`
 
 #### Defined in
 
-[src/core/node.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L35)
+[src/core/node.ts:35](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L35)
 
 ___
 
@@ -496,13 +518,13 @@ Property decorator function.
 
 #### Defined in
 
-[src/core/internals/property.ts:145](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L145)
+[src/core/internals/property.ts:145](https://github.com/io-gui/io/blob/tsc/src/core/internals/property.ts#L145)
 
 ___
 
 ### IoStorage
 
-▸ **IoStorage**(`props`): `any`
+▸ **IoStorage**(`props`): [`Binding`](classes/Binding.md)
 
 #### Parameters
 
@@ -512,11 +534,11 @@ ___
 
 #### Returns
 
-`any`
+[`Binding`](classes/Binding.md)
 
 #### Defined in
 
-[src/elements/core/storage.ts:214](https://github.com/io-gui/iogui/blob/tsc/src/elements/core/storage.ts#L214)
+[src/core/storage.ts:250](https://github.com/io-gui/io/blob/tsc/src/core/storage.ts#L250)
 
 ___
 
@@ -538,7 +560,7 @@ Register function for `IoElement`. Registers custom element.
 
 #### Defined in
 
-[src/core/element.ts:32](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L32)
+[src/core/element.ts:70](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L70)
 
 ___
 
@@ -560,7 +582,7 @@ Register function to be called once per class.
 
 #### Defined in
 
-[src/core/node.ts:374](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L374)
+[src/core/node.ts:376](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L376)
 
 ___
 
@@ -583,13 +605,13 @@ Assigns source listener declaration to an existing array of listener declaration
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:27](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L27)
+[src/core/internals/eventDispatcher.ts:27](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L27)
 
 ___
 
 ### buildTree
 
-▸ **buildTree**(): (`node`: `VirtualDOMElement`) => `any`
+▸ **buildTree**(): (`node`: `VDOMArray`) => `any`
 
 #### Returns
 
@@ -601,7 +623,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `node` | `VirtualDOMElement` |
+| `node` | `VDOMArray` |
 
 ##### Returns
 
@@ -609,7 +631,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:200](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L200)
+[src/core/element.ts:60](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L60)
 
 ___
 
@@ -633,7 +655,7 @@ Stronly typed listener declaration
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L18)
+[src/core/internals/eventDispatcher.ts:18](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L18)
 
 ___
 
@@ -658,4 +680,4 @@ Listener
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L45)
+[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/io/blob/tsc/src/core/internals/eventDispatcher.ts#L45)

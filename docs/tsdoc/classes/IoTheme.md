@@ -1,16 +1,18 @@
-# Class: IoColorVector
+# Class: IoTheme
+
+Core `IoElement` class.
 
 ## Hierarchy
 
-- `__class`<typeof [`IoElement`](IoElement.md), `this`\> & [`IoElement`](IoElement.md)<`this`\>
+- [`IoElement`](IoElement.md)
 
-  ↳ **`IoColorVector`**
+  ↳ **`IoTheme`**
 
 ## Constructors
 
 ### constructor
 
-• **new IoColorVector**(`properties?`, ...`args`)
+• **new IoTheme**(`properties?`, ...`args`)
 
 Creates a class instance and initializes the internals.
 
@@ -23,11 +25,11 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-IoColorMixin(IoElement).constructor
+[IoElement](IoElement.md).[constructor](IoElement.md#constructor)
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L55)
+[src/core/node.ts:55](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L55)
 
 ## Properties
 
@@ -37,25 +39,25 @@ IoColorMixin(IoElement).constructor
 
 #### Inherited from
 
-IoColorMixin(IoElement).$
+[IoElement](IoElement.md).[$](IoElement.md#$)
 
 #### Defined in
 
-[src/core/element.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L219)
+[src/core/element.ts:211](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L211)
 
 ___
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Record`<`string`, [`Binding`](Binding.md)\>
+• `Readonly` **\_bindings**: `Map`<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_bindings
+[IoElement](IoElement.md).[_bindings](IoElement.md#_bindings)
 
 #### Defined in
 
-[src/core/node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L48)
+[src/core/node.ts:48](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L48)
 
 ___
 
@@ -65,11 +67,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_changeQueue
+[IoElement](IoElement.md).[_changeQueue](IoElement.md#_changequeue)
 
 #### Defined in
 
-[src/core/node.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L49)
+[src/core/node.ts:49](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L49)
 
 ___
 
@@ -79,25 +81,25 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_eventDispatcher
+[IoElement](IoElement.md).[_eventDispatcher](IoElement.md#_eventdispatcher)
 
 #### Defined in
 
-[src/core/node.ts:50](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L50)
+[src/core/node.ts:50](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L50)
 
 ___
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Record`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+• `Readonly` **\_properties**: `Map`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_properties
+[IoElement](IoElement.md).[_properties](IoElement.md#_properties)
 
 #### Defined in
 
-[src/core/node.ts:47](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L47)
+[src/core/node.ts:47](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L47)
 
 ___
 
@@ -107,11 +109,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_protochain
+[IoElement](IoElement.md).[_protochain](IoElement.md#_protochain)
 
 #### Defined in
 
-[src/core/node.ts:46](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L46)
+[src/core/node.ts:46](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L46)
 
 ___
 
@@ -121,11 +123,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).class
+[IoElement](IoElement.md).[class](IoElement.md#class)
 
 #### Defined in
 
-[src/core/element.ts:228](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L228)
+[src/core/element.ts:220](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L220)
 
 ___
 
@@ -135,11 +137,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).contenteditable
+[IoElement](IoElement.md).[contenteditable](IoElement.md#contenteditable)
 
 #### Defined in
 
-[src/core/element.ts:225](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L225)
+[src/core/element.ts:217](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L217)
 
 ___
 
@@ -149,11 +151,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).disabled
+[IoElement](IoElement.md).[disabled](IoElement.md#disabled)
 
 #### Defined in
 
-[src/core/element.ts:249](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L249)
+[src/core/element.ts:241](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L241)
 
 ___
 
@@ -163,11 +165,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).hidden
+[IoElement](IoElement.md).[hidden](IoElement.md#hidden)
 
 #### Defined in
 
-[src/core/element.ts:246](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L246)
+[src/core/element.ts:238](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L238)
 
 ___
 
@@ -177,11 +179,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).id
+[IoElement](IoElement.md).[id](IoElement.md#id)
 
 #### Defined in
 
-[src/core/element.ts:243](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L243)
+[src/core/element.ts:235](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L235)
 
 ___
 
@@ -191,11 +193,21 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).label
+[IoElement](IoElement.md).[label](IoElement.md#label)
 
 #### Defined in
 
-[src/core/element.ts:234](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L234)
+[src/core/element.ts:226](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L226)
+
+___
+
+### lazy
+
+• **lazy**: `boolean`
+
+#### Defined in
+
+[src/core/theme.ts:186](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L186)
 
 ___
 
@@ -205,11 +217,21 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).name
+[IoElement](IoElement.md).[name](IoElement.md#name)
 
 #### Defined in
 
-[src/core/element.ts:237](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L237)
+[src/core/element.ts:229](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L229)
+
+___
+
+### persist
+
+• **persist**: `boolean`
+
+#### Defined in
+
+[src/core/theme.ts:189](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L189)
 
 ___
 
@@ -219,11 +241,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).role
+[IoElement](IoElement.md).[role](IoElement.md#role)
 
 #### Defined in
 
-[src/core/element.ts:231](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L231)
+[src/core/element.ts:223](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L223)
 
 ___
 
@@ -233,11 +255,21 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).tabindex
+[IoElement](IoElement.md).[tabindex](IoElement.md#tabindex)
 
 #### Defined in
 
-[src/core/element.ts:222](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L222)
+[src/core/element.ts:214](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L214)
+
+___
+
+### theme
+
+• **theme**: `string`
+
+#### Defined in
+
+[src/core/theme.ts:192](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L192)
 
 ___
 
@@ -247,11 +279,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).title
+[IoElement](IoElement.md).[title](IoElement.md#title)
 
 #### Defined in
 
-[src/core/element.ts:240](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L240)
+[src/core/element.ts:232](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L232)
 
 ## Accessors
 
@@ -265,11 +297,11 @@ IoColorMixin(IoElement).title
 
 #### Inherited from
 
-IoColorMixin(IoElement).textNode
+IoElement.textNode
 
 #### Defined in
 
-[src/core/element.ts:409](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L409)
+[src/core/element.ts:392](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L392)
 
 • `set` **textNode**(`value`): `void`
 
@@ -285,65 +317,29 @@ IoColorMixin(IoElement).textNode
 
 #### Inherited from
 
-IoColorMixin(IoElement).textNode
+IoElement.textNode
 
 #### Defined in
 
-[src/core/element.ts:413](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L413)
-
-___
-
-### GlUtils
-
-• `Static` `get` **GlUtils**(): `string`
-
-#### Returns
-
-`string`
-
-#### Inherited from
-
-IoColorMixin(IoElement).GlUtils
-
-#### Defined in
-
-[src/elements/color/color.ts:34](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L34)
-
-___
-
-### Listeners
-
-• `Static` `get` **Listeners**(): `any`
-
-#### Returns
-
-`any`
-
-#### Inherited from
-
-IoColorMixin(IoElement).Listeners
-
-#### Defined in
-
-[src/core/element.ts:251](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L251)
+[src/core/element.ts:396](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L396)
 
 ___
 
 ### Properties
 
-• `Static` `get` **Properties**(): `any`
+• `Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Returns
 
-`any`
+[`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Overrides
 
-IoColorMixin(IoElement).Properties
+IoElement.Properties
 
 #### Defined in
 
-[src/elements/color/color-vector.ts:40](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L40)
+[src/core/theme.ts:183](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L183)
 
 ___
 
@@ -357,11 +353,11 @@ ___
 
 #### Overrides
 
-IoColorMixin(IoElement).Style
+IoElement.Style
 
 #### Defined in
 
-[src/elements/color/color-vector.ts:20](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L20)
+[src/core/theme.ts:181](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L181)
 
 ___
 
@@ -375,23 +371,26 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).observedAttributes
+IoElement.observedAttributes
 
 #### Defined in
 
-[src/core/element.ts:256](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L256)
+[src/core/element.ts:243](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L243)
 
 ## Methods
 
-### \_onFocusTo
+### \_flattenTextNode
 
-▸ **_onFocusTo**(`event`): `void`
+▸ **_flattenTextNode**(`element`): `void`
+
+Helper function to flatten textContent into a single TextNode.
+Update textContent via TextNode is better for layout performance.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `CustomEvent`<`any`\> |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
 
 #### Returns
 
@@ -399,31 +398,31 @@ IoColorMixin(IoElement).observedAttributes
 
 #### Inherited from
 
-IoColorMixin(IoElement).\_onFocusTo
+[IoElement](IoElement.md).[_flattenTextNode](IoElement.md#_flattentextnode)
 
 #### Defined in
 
-[src/core/element.ts:453](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L453)
+[src/core/element.ts:375](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L375)
 
 ___
 
-### \_onValueSet
+### \_toCss
 
-▸ **_onValueSet**(`event`): `void`
+▸ **_toCss**(`rgba`): `string`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> |
+| `rgba` | `number`[] |
 
 #### Returns
 
-`void`
+`string`
 
 #### Defined in
 
-[src/elements/color/color-vector.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L49)
+[src/core/theme.ts:203](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L203)
 
 ___
 
@@ -447,11 +446,11 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-IoColorMixin(IoElement).addEventListener
+[IoElement](IoElement.md).[addEventListener](IoElement.md#addeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:317](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L317)
+[src/core/node.ts:319](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L319)
 
 ___
 
@@ -471,11 +470,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).applyProperties
+[IoElement](IoElement.md).[applyProperties](IoElement.md#applyproperties)
 
 #### Defined in
 
-[src/core/element.ts:417](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L417)
+[src/core/element.ts:400](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L400)
 
 ___
 
@@ -497,11 +496,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).attributeChangedCallback
+[IoElement](IoElement.md).[attributeChangedCallback](IoElement.md#attributechangedcallback)
 
 #### Defined in
 
-[src/core/element.ts:266](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L266)
+[src/core/element.ts:253](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L253)
 
 ___
 
@@ -525,11 +524,11 @@ Binding object.
 
 #### Inherited from
 
-IoColorMixin(IoElement).bind
+[IoElement](IoElement.md).[bind](IoElement.md#bind)
 
 #### Defined in
 
-[src/core/node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L290)
+[src/core/node.ts:288](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L288)
 
 ___
 
@@ -537,17 +536,20 @@ ___
 
 ▸ **changed**(): `void`
 
+default change handler.
+Invoked when one of the properties change.
+
 #### Returns
 
 `void`
 
 #### Overrides
 
-IoColorMixin(IoElement).changed
+[IoElement](IoElement.md).[changed](IoElement.md#changed)
 
 #### Defined in
 
-[src/elements/color/color-vector.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L60)
+[src/core/theme.ts:220](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L220)
 
 ___
 
@@ -563,11 +565,11 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-IoColorMixin(IoElement).connectedCallback
+[IoElement](IoElement.md).[connectedCallback](IoElement.md#connectedcallback)
 
 #### Defined in
 
-[src/core/element.ts:284](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L284)
+[src/core/element.ts:271](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L271)
 
 ___
 
@@ -581,11 +583,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).disabledChanged
+[IoElement](IoElement.md).[disabledChanged](IoElement.md#disabledchanged)
 
 #### Defined in
 
-[src/core/element.ts:446](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L446)
+[src/core/element.ts:429](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L429)
 
 ___
 
@@ -601,11 +603,11 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-IoColorMixin(IoElement).disconnectedCallback
+[IoElement](IoElement.md).[disconnectedCallback](IoElement.md#disconnectedcallback)
 
 #### Defined in
 
-[src/core/element.ts:292](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L292)
+[src/core/element.ts:279](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L279)
 
 ___
 
@@ -630,11 +632,11 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-IoColorMixin(IoElement).dispatchEvent
+[IoElement](IoElement.md).[dispatchEvent](IoElement.md#dispatchevent)
 
 #### Defined in
 
-[src/core/node.ts:342](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L342)
+[src/core/node.ts:344](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L344)
 
 ___
 
@@ -650,11 +652,11 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-IoColorMixin(IoElement).dispatchQueue
+[IoElement](IoElement.md).[dispatchQueue](IoElement.md#dispatchqueue)
 
 #### Defined in
 
-[src/core/node.ts:232](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L232)
+[src/core/node.ts:230](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L230)
 
 ___
 
@@ -670,11 +672,11 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-IoColorMixin(IoElement).dispatchQueueSync
+[IoElement](IoElement.md).[dispatchQueueSync](IoElement.md#dispatchqueuesync)
 
 #### Defined in
 
-[src/core/node.ts:242](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L242)
+[src/core/node.ts:240](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L240)
 
 ___
 
@@ -691,11 +693,11 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-IoColorMixin(IoElement).dispose
+[IoElement](IoElement.md).[dispose](IoElement.md#dispose)
 
 #### Defined in
 
-[src/core/node.ts:349](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L349)
+[src/core/node.ts:351](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L351)
 
 ___
 
@@ -716,76 +718,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).disposeDeep
+[IoElement](IoElement.md).[disposeDeep](IoElement.md#disposedeep)
 
 #### Defined in
 
-[src/core/element.ts:308](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L308)
-
-___
-
-### flattenTextNode
-
-▸ **flattenTextNode**(`element`): `void`
-
-Helper function to flatten textContent into a single TextNode.
-Update textContent via TextNode is better for layout performance.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).flattenTextNode
-
-#### Defined in
-
-[src/core/element.ts:392](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L392)
-
-___
-
-### focusTo
-
-▸ **focusTo**(`dir`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `dir` | `string` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).focusTo
-
-#### Defined in
-
-[src/core/element.ts:560](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L560)
-
-___
-
-### getSlotted
-
-▸ **getSlotted**(): (`string` \| { `id`: `string` = 'swatch'; `mode`: `any` ; `value`: `any`  })[]
-
-#### Returns
-
-(`string` \| { `id`: `string` = 'swatch'; `mode`: `any` ; `value`: `any`  })[]
-
-#### Defined in
-
-[src/elements/color/color-vector.ts:81](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color-vector.ts#L81)
+[src/core/element.ts:295](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L295)
 
 ___
 
@@ -797,13 +734,13 @@ ___
 
 `void`
 
-#### Inherited from
+#### Overrides
 
-IoColorMixin(IoElement).init
+[IoElement](IoElement.md).[init](IoElement.md#init)
 
 #### Defined in
 
-[src/core/node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L219)
+[src/core/theme.ts:194](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L194)
 
 ___
 
@@ -826,11 +763,11 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-IoColorMixin(IoElement).inputValue
+[IoElement](IoElement.md).[inputValue](IoElement.md#inputvalue)
 
 #### Defined in
 
-[src/core/node.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L207)
+[src/core/node.ts:205](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L205)
 
 ___
 
@@ -844,29 +781,11 @@ ___
 
 #### Inherited from
 
-IoColorMixin(IoElement).labelChanged
+[IoElement](IoElement.md).[labelChanged](IoElement.md#labelchanged)
 
 #### Defined in
 
-[src/core/element.ts:439](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L439)
-
-___
-
-### modeChanged
-
-▸ **modeChanged**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).modeChanged
-
-#### Defined in
-
-[src/elements/color/color.ts:63](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L63)
+[src/core/element.ts:422](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L422)
 
 ___
 
@@ -889,11 +808,11 @@ the object properties has mutated.
 
 #### Inherited from
 
-IoColorMixin(IoElement).objectMutated
+[IoElement](IoElement.md).[objectMutated](IoElement.md#objectmutated)
 
 #### Defined in
 
-[src/core/node.ts:281](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L281)
+[src/core/node.ts:279](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L279)
 
 ___
 
@@ -916,11 +835,11 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-IoColorMixin(IoElement).onObjectMutated
+[IoElement](IoElement.md).[onObjectMutated](IoElement.md#onobjectmutated)
 
 #### Defined in
 
-[src/core/node.ts:260](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L260)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L258)
 
 ___
 
@@ -944,11 +863,11 @@ Adds property change to the queue.
 
 #### Inherited from
 
-IoColorMixin(IoElement).queue
+[IoElement](IoElement.md).[queue](IoElement.md#queue)
 
 #### Defined in
 
-[src/core/node.ts:226](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L226)
+[src/core/node.ts:224](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L224)
 
 ___
 
@@ -972,11 +891,25 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-IoColorMixin(IoElement).removeEventListener
+[IoElement](IoElement.md).[removeEventListener](IoElement.md#removeeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L332)
+[src/core/node.ts:334](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L334)
+
+___
+
+### reset
+
+▸ **reset**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/core/theme.ts:213](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L213)
 
 ___
 
@@ -999,11 +932,11 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-IoColorMixin(IoElement).setAttribute
+[IoElement](IoElement.md).[setAttribute](IoElement.md#setattribute)
 
 #### Defined in
 
-[src/core/element.ts:430](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L430)
+[src/core/element.ts:413](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L413)
 
 ___
 
@@ -1026,11 +959,11 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoColorMixin(IoElement).setProperties
+[IoElement](IoElement.md).[setProperties](IoElement.md#setproperties)
 
 #### Defined in
 
-[src/core/node.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L190)
+[src/core/node.ts:188](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L188)
 
 ___
 
@@ -1054,11 +987,11 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoColorMixin(IoElement).setProperty
+[IoElement](IoElement.md).[setProperty](IoElement.md#setproperty)
 
 #### Defined in
 
-[src/core/node.ts:109](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L109)
+[src/core/node.ts:109](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L109)
 
 ___
 
@@ -1081,11 +1014,25 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-IoColorMixin(IoElement).template
+[IoElement](IoElement.md).[template](IoElement.md#template)
 
 #### Defined in
 
-[src/core/element.ts:302](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L302)
+[src/core/element.ts:289](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L289)
+
+___
+
+### themeChanged
+
+▸ **themeChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/core/theme.ts:217](https://github.com/io-gui/io/blob/tsc/src/core/theme.ts#L217)
 
 ___
 
@@ -1109,11 +1056,11 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-IoColorMixin(IoElement).throttle
+[IoElement](IoElement.md).[throttle](IoElement.md#throttle)
 
 #### Defined in
 
-[src/core/node.ts:251](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L251)
+[src/core/node.ts:249](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L249)
 
 ___
 
@@ -1122,6 +1069,7 @@ ___
 ▸ **traverse**(`vChildren`, `host?`): `void`
 
 Recurively traverses vDOM.
+TODO: test element.traverse() function!
 
 #### Parameters
 
@@ -1136,11 +1084,11 @@ Recurively traverses vDOM.
 
 #### Inherited from
 
-IoColorMixin(IoElement).traverse
+[IoElement](IoElement.md).[traverse](IoElement.md#traverse)
 
 #### Defined in
 
-[src/core/element.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/element.ts#L332)
+[src/core/element.ts:319](https://github.com/io-gui/io/blob/tsc/src/core/element.ts#L319)
 
 ___
 
@@ -1162,116 +1110,8 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-IoColorMixin(IoElement).unbind
+[IoElement](IoElement.md).[unbind](IoElement.md#unbind)
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L303)
-
-___
-
-### valueChanged
-
-▸ **valueChanged**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueChanged
-
-#### Defined in
-
-[src/elements/color/color.ts:253](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L253)
-
-___
-
-### valueFromCmyk
-
-▸ **valueFromCmyk**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueFromCmyk
-
-#### Defined in
-
-[src/elements/color/color.ts:204](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L204)
-
-___
-
-### valueFromHsl
-
-▸ **valueFromHsl**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueFromHsl
-
-#### Defined in
-
-[src/elements/color/color.ts:158](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L158)
-
-___
-
-### valueFromHsv
-
-▸ **valueFromHsv**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueFromHsv
-
-#### Defined in
-
-[src/elements/color/color.ts:112](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L112)
-
-___
-
-### valueFromRgb
-
-▸ **valueFromRgb**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueFromRgb
-
-#### Defined in
-
-[src/elements/color/color.ts:66](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L66)
-
-___
-
-### valueMutated
-
-▸ **valueMutated**(): `void`
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoColorMixin(IoElement).valueMutated
-
-#### Defined in
-
-[src/elements/color/color.ts:60](https://github.com/io-gui/iogui/blob/tsc/src/elements/color/color.ts#L60)
+[src/core/node.ts:303](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L303)

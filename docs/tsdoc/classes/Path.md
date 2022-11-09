@@ -26,13 +26,13 @@ IoNodeMixin applied to `Object` class.
 
 #### Defined in
 
-[src/models/path.ts:14](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L14)
+[src/models/path.ts:14](https://github.com/io-gui/io/blob/tsc/src/models/path.ts#L14)
 
 ## Properties
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Record`<`string`, [`Binding`](Binding.md)\>
+• `Readonly` **\_bindings**: `Map`<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
@@ -40,7 +40,7 @@ IoNodeMixin applied to `Object` class.
 
 #### Defined in
 
-[src/core/node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L48)
+[src/core/node.ts:48](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L48)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L49)
+[src/core/node.ts:49](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L49)
 
 ___
 
@@ -68,13 +68,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:50](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L50)
+[src/core/node.ts:50](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L50)
 
 ___
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Record`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+• `Readonly` **\_properties**: `Map`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:47](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L47)
+[src/core/node.ts:47](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L47)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:46](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L46)
+[src/core/node.ts:46](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L46)
 
 ## Accessors
 
@@ -122,7 +122,7 @@ IoNode.Properties
 
 #### Defined in
 
-[src/models/path.ts:5](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L5)
+[src/models/path.ts:5](https://github.com/io-gui/io/blob/tsc/src/models/path.ts#L5)
 
 ## Methods
 
@@ -150,7 +150,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:317](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L317)
+[src/core/node.ts:319](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L319)
 
 ___
 
@@ -177,7 +177,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L169)
+[src/core/node.ts:167](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L167)
 
 ___
 
@@ -205,7 +205,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L290)
+[src/core/node.ts:288](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L288)
 
 ___
 
@@ -226,7 +226,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/node.ts:218](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L218)
+[src/core/node.ts:216](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L216)
 
 ___
 
@@ -255,7 +255,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:342](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L342)
+[src/core/node.ts:344](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L344)
 
 ___
 
@@ -275,7 +275,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:232](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L232)
+[src/core/node.ts:230](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L230)
 
 ___
 
@@ -295,7 +295,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:242](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L242)
+[src/core/node.ts:240](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L240)
 
 ___
 
@@ -316,7 +316,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:349](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L349)
+[src/core/node.ts:351](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L351)
 
 ___
 
@@ -334,7 +334,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L219)
+[src/core/node.ts:217](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L217)
 
 ___
 
@@ -361,7 +361,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L207)
+[src/core/node.ts:205](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L205)
 
 ___
 
@@ -375,7 +375,7 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:66](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L66)
+[src/models/path.ts:66](https://github.com/io-gui/io/blob/tsc/src/models/path.ts#L66)
 
 ___
 
@@ -402,7 +402,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:281](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L281)
+[src/core/node.ts:279](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L279)
 
 ___
 
@@ -416,7 +416,7 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:33](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L33)
+[src/models/path.ts:33](https://github.com/io-gui/io/blob/tsc/src/models/path.ts#L33)
 
 ___
 
@@ -443,7 +443,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:260](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L260)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L258)
 
 ___
 
@@ -471,7 +471,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:226](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L226)
+[src/core/node.ts:224](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L224)
 
 ___
 
@@ -499,7 +499,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L332)
+[src/core/node.ts:334](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L334)
 
 ___
 
@@ -513,7 +513,7 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:61](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L61)
+[src/models/path.ts:61](https://github.com/io-gui/io/blob/tsc/src/models/path.ts#L61)
 
 ___
 
@@ -540,7 +540,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L190)
+[src/core/node.ts:188](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L188)
 
 ___
 
@@ -568,7 +568,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/node.ts:109](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L109)
+[src/core/node.ts:109](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L109)
 
 ___
 
@@ -582,7 +582,7 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:54](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L54)
+[src/models/path.ts:54](https://github.com/io-gui/io/blob/tsc/src/models/path.ts#L54)
 
 ___
 
@@ -610,7 +610,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:251](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L251)
+[src/core/node.ts:249](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L249)
 
 ___
 
@@ -636,7 +636,7 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L303)
+[src/core/node.ts:303](https://github.com/io-gui/io/blob/tsc/src/core/node.ts#L303)
 
 ___
 
@@ -650,7 +650,7 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:36](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L36)
+[src/models/path.ts:36](https://github.com/io-gui/io/blob/tsc/src/models/path.ts#L36)
 
 ___
 
@@ -664,4 +664,4 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L18)
+[src/models/path.ts:18](https://github.com/io-gui/io/blob/tsc/src/models/path.ts#L18)
