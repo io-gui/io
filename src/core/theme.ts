@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from './element.js';
-import { IoProperty, PropertyDeclarations } from './internals/property.js';
+import { Property, PropertyDeclarations } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
 
 const THEME_VERSION = 'v0.4';
@@ -23,6 +23,9 @@ type Variables = {
   ioSpacing: number;
   ioLineHeight: number;
   ioFieldHeight: number;
+  ioFieldHeight2: number;
+  ioFieldHeight3: number;
+  ioFieldHeight4: number;
   ioFontSize: number;
   ioStrokeWidth: number;
   ioBorderRadius: number;
@@ -54,6 +57,9 @@ const defaultThemes: Themes = {
     ioSpacing: 2,
     ioLineHeight: 20,
     ioFieldHeight: 28,
+    ioFieldHeight2: 56,
+    ioFieldHeight3: 112,
+    ioFieldHeight4: 168,
     ioFontSize: 14,
     ioStrokeWidth: 1,
     ioBorderRadius: 3,
@@ -81,6 +87,9 @@ const defaultThemes: Themes = {
     ioSpacing: 2,
     ioLineHeight: 20,
     ioFieldHeight: 28,
+    ioFieldHeight2: 56,
+    ioFieldHeight3: 112,
+    ioFieldHeight4: 168,
     ioFontSize: 14,
     ioStrokeWidth: 1,
     ioBorderRadius: 3,
@@ -182,13 +191,13 @@ export class IoTheme extends IoElement {
 
   static get Properties(): PropertyDeclarations { return persistantThemes.value[theme.value]; }
 
-  @IoProperty({value: true})
+  @Property({value: true})
   declare lazy: boolean;
 
-  @IoProperty({value: true})
+  @Property({value: true})
   declare persist: boolean;
 
-  @IoProperty({type: String, binding: theme})
+  @Property({type: String, binding: theme})
   declare theme: string;
 
   init() {
@@ -219,6 +228,9 @@ export class IoTheme extends IoElement {
   }
   changed() {
     this.ioFieldHeight = this.ioLineHeight + 2 * (this.ioSpacing + this.ioBorderWidth);
+    this.ioFieldHeight2 = this.ioFieldHeight * 2;
+    this.ioFieldHeight3 = this.ioFieldHeight * 3;
+    this.ioFieldHeight4 = this.ioFieldHeight * 4;
 
     const propertyVariables = Array.from(this._properties.keys()).reduce(
       (result, prop) => {

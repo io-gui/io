@@ -12,7 +12,7 @@ IoNodeMixin applied to `Object` class.
 
 ### constructor
 
-• **new Path**(...`args`)
+**new Path**(...`args`)
 
 #### Parameters
 
@@ -26,13 +26,13 @@ IoNodeMixin applied to `Object` class.
 
 #### Defined in
 
-[src/models/path.ts:14](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L14)
+[src/models/path.ts:14](https://github.com/io-gui/io/blob/main/src/models/path.ts#L14)
 
 ## Properties
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Record`<`string`, [`Binding`](Binding.md)\>
+ `Readonly` **\_bindings**: `Map`<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
@@ -40,13 +40,13 @@ IoNodeMixin applied to `Object` class.
 
 #### Defined in
 
-[src/core/node.ts:48](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L48)
+[src/core/node.ts:48](https://github.com/io-gui/io/blob/main/src/core/node.ts#L48)
 
 ___
 
 ### \_changeQueue
 
-• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+ `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
@@ -54,13 +54,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:49](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L49)
+[src/core/node.ts:49](https://github.com/io-gui/io/blob/main/src/core/node.ts#L49)
 
 ___
 
 ### \_eventDispatcher
 
-• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+ `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
@@ -68,13 +68,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:50](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L50)
+[src/core/node.ts:50](https://github.com/io-gui/io/blob/main/src/core/node.ts#L50)
 
 ___
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Record`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+ `Readonly` **\_properties**: `Map`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
@@ -82,13 +82,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:47](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L47)
+[src/core/node.ts:47](https://github.com/io-gui/io/blob/main/src/core/node.ts#L47)
 
 ___
 
 ### \_protochain
 
-• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+ `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
@@ -96,13 +96,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:46](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L46)
+[src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
 
 ## Accessors
 
 ### Properties
 
-• `Static` `get` **Properties**(): `Object`
+`Static` `get` **Properties**(): `Object`
 
 #### Returns
 
@@ -122,13 +122,13 @@ IoNode.Properties
 
 #### Defined in
 
-[src/models/path.ts:5](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L5)
+[src/models/path.ts:5](https://github.com/io-gui/io/blob/main/src/models/path.ts#L5)
 
 ## Methods
 
 ### addEventListener
 
-▸ **addEventListener**(`type`, `listener`, `options?`): `void`
+**addEventListener**(`type`, `listener`, `options?`): `void`
 
 Wrapper for addEventListener.
 
@@ -150,13 +150,13 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:317](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L317)
+[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
 
 ___
 
 ### applyProperties
 
-▸ **applyProperties**(`props`): `void`
+**applyProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -177,13 +177,13 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:169](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L169)
+[src/core/node.ts:167](https://github.com/io-gui/io/blob/main/src/core/node.ts#L167)
 
 ___
 
 ### bind
 
-▸ **bind**(`prop`): [`Binding`](Binding.md)
+**bind**(`prop`): [`Binding`](Binding.md)
 
 Returns a binding to a specified property`.
 
@@ -205,13 +205,13 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:290](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L290)
+[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
 
 ___
 
 ### changed
 
-▸ **changed**(): `void`
+**changed**(): `void`
 
 default change handler.
 Invoked when one of the properties change.
@@ -226,13 +226,13 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/node.ts:218](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L218)
+[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
 
 ___
 
 ### dispatchEvent
 
-▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+**dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
 
 Wrapper for dispatchEvent.
 
@@ -255,13 +255,13 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:342](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L342)
+[src/core/node.ts:344](https://github.com/io-gui/io/blob/main/src/core/node.ts#L344)
 
 ___
 
 ### dispatchQueue
 
-▸ **dispatchQueue**(): `void`
+**dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -275,13 +275,13 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:232](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L232)
+[src/core/node.ts:230](https://github.com/io-gui/io/blob/main/src/core/node.ts#L230)
 
 ___
 
 ### dispatchQueueSync
 
-▸ **dispatchQueueSync**(): `void`
+**dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -295,13 +295,13 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:242](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L242)
+[src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
 
 ___
 
 ### dispose
 
-▸ **dispose**(): `void`
+**dispose**(): `void`
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -316,13 +316,13 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:349](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L349)
+[src/core/node.ts:351](https://github.com/io-gui/io/blob/main/src/core/node.ts#L351)
 
 ___
 
 ### init
 
-▸ **init**(): `void`
+**init**(): `void`
 
 #### Returns
 
@@ -334,13 +334,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:219](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L219)
+[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
 
 ___
 
 ### inputValue
 
-▸ **inputValue**(`value`): `void`
+**inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
@@ -361,13 +361,13 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:207](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L207)
+[src/core/node.ts:205](https://github.com/io-gui/io/blob/main/src/core/node.ts#L205)
 
 ___
 
 ### leafChanged
 
-▸ **leafChanged**(): `void`
+**leafChanged**(): `void`
 
 #### Returns
 
@@ -375,13 +375,13 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:66](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L66)
+[src/models/path.ts:66](https://github.com/io-gui/io/blob/main/src/models/path.ts#L66)
 
 ___
 
 ### objectMutated
 
-▸ **objectMutated**(`prop`): `void`
+**objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
@@ -402,13 +402,13 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:281](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L281)
+[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
 
 ___
 
 ### onMutation
 
-▸ **onMutation**(): `void`
+**onMutation**(): `void`
 
 #### Returns
 
@@ -416,13 +416,13 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:33](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L33)
+[src/models/path.ts:33](https://github.com/io-gui/io/blob/main/src/models/path.ts#L33)
 
 ___
 
 ### onObjectMutated
 
-▸ **onObjectMutated**(`event`): `void`
+**onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
@@ -443,13 +443,13 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:260](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L260)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
 
 ___
 
 ### queue
 
-▸ **queue**(`prop`, `value`, `oldValue`): `void`
+**queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
@@ -471,13 +471,13 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:226](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L226)
+[src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
 
 ___
 
 ### removeEventListener
 
-▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
+**removeEventListener**(`type`, `listener?`, `options?`): `void`
 
 Wrapper for removeEventListener.
 
@@ -499,13 +499,13 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:332](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L332)
+[src/core/node.ts:334](https://github.com/io-gui/io/blob/main/src/core/node.ts#L334)
 
 ___
 
 ### rootChanged
 
-▸ **rootChanged**(): `void`
+**rootChanged**(): `void`
 
 #### Returns
 
@@ -513,13 +513,13 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:61](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L61)
+[src/models/path.ts:61](https://github.com/io-gui/io/blob/main/src/models/path.ts#L61)
 
 ___
 
 ### setProperties
 
-▸ **setProperties**(`props`): `void`
+**setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -540,13 +540,13 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:190](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L190)
+[src/core/node.ts:188](https://github.com/io-gui/io/blob/main/src/core/node.ts#L188)
 
 ___
 
 ### setProperty
 
-▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
+**setProperty**(`name`, `value`, `skipDispatch?`): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -568,13 +568,13 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/node.ts:109](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L109)
+[src/core/node.ts:109](https://github.com/io-gui/io/blob/main/src/core/node.ts#L109)
 
 ___
 
 ### stringChanged
 
-▸ **stringChanged**(): `void`
+**stringChanged**(): `void`
 
 #### Returns
 
@@ -582,13 +582,13 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:54](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L54)
+[src/models/path.ts:54](https://github.com/io-gui/io/blob/main/src/models/path.ts#L54)
 
 ___
 
 ### throttle
 
-▸ **throttle**(`func`, `arg?`, `sync?`): `void`
+**throttle**(`func`, `arg?`, `sync?`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
@@ -610,13 +610,13 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:251](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L251)
+[src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
 
 ___
 
 ### unbind
 
-▸ **unbind**(`prop`): `void`
+**unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
@@ -636,13 +636,13 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/iogui/blob/tsc/src/core/node.ts#L303)
+[src/core/node.ts:303](https://github.com/io-gui/io/blob/main/src/core/node.ts#L303)
 
 ___
 
 ### update
 
-▸ **update**(): `void`
+**update**(): `void`
 
 #### Returns
 
@@ -650,13 +650,13 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:36](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L36)
+[src/models/path.ts:36](https://github.com/io-gui/io/blob/main/src/models/path.ts#L36)
 
 ___
 
 ### valueChanged
 
-▸ **valueChanged**(): `void`
+**valueChanged**(): `void`
 
 #### Returns
 
@@ -664,4 +664,4 @@ ___
 
 #### Defined in
 
-[src/models/path.ts:18](https://github.com/io-gui/iogui/blob/tsc/src/models/path.ts#L18)
+[src/models/path.ts:18](https://github.com/io-gui/io/blob/main/src/models/path.ts#L18)

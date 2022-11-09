@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoField } from './field.js';
 import { IoLayerSingleton } from '../../core/layer.js';
 import { IoThemeSingleton } from '../../core/theme.js';
@@ -18,7 +18,7 @@ export class IoNumber extends IoField {
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
         box-shadow: var(--io-shadow-inset);
-        flex-basis: 4.3em;
+        flex-basis: var(--io-field-height3);
       }
       :host:before,
       :host:after {
@@ -35,40 +35,40 @@ export class IoNumber extends IoField {
     `;
   }
 
-  @IoProperty('textbox')
+  @Property('textbox')
   declare role: string;
 
-  @IoProperty(0)
+  @Property(0)
   declare value: number;
 
-  @IoProperty(1)
+  @Property(1)
   declare conversion: number;
 
-  @IoProperty(0.0001)
+  @Property(0.0001)
   declare step: number;
 
-  @IoProperty(-Infinity)
+  @Property(-Infinity)
   declare min: number;
 
-  @IoProperty(Infinity)
+  @Property(Infinity)
   declare max: number;
 
-  @IoProperty(false)
+  @Property(false)
   declare ladder: boolean;
 
-  @IoProperty(true)
+  @Property(true)
   declare contenteditable: boolean;
 
-  @IoProperty({value: 'number', reflect: 'prop'})
+  @Property({value: 'number', reflect: 'prop'})
   declare type: string;
 
-  @IoProperty({value: 'pattern="[0-9]*"', reflect: 'prop'})
+  @Property({value: 'pattern="[0-9]*"', reflect: 'prop'})
   declare pattern: string;
 
-  @IoProperty({value: 'numeric', reflect: 'prop'})
+  @Property({value: 'numeric', reflect: 'prop'})
   declare inputmode: string;
 
-  @IoProperty({value: 'false', reflect: 'prop'})
+  @Property({value: 'false', reflect: 'prop'})
   declare spellcheck: string;
 
   constructor(properties: Record<string, any> = {}) {
@@ -275,13 +275,13 @@ export class IoNumberLadderStep extends IoField {
     `;
   }
 
-  @IoProperty(1)
+  @Property(1)
   declare value: number;
 
-  @IoProperty({value: 'number', reflect: 'prop'})
+  @Property({value: 'number', reflect: 'prop'})
   declare type: string;
 
-  @IoProperty('spinbutton')
+  @Property('spinbutton')
   declare role: string;
 
   _onKeydown(event: KeyboardEvent) {
@@ -419,13 +419,13 @@ export class IoNumberLadder extends IoElement {
     `;
   }
 
-  @IoProperty('list')
+  @Property('list')
   declare role: string;
 
-  @IoProperty(undefined)
+  @Property(undefined)
   declare src: any;
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare expanded: boolean;
 
   static get Listeners() {

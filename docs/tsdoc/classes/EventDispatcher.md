@@ -11,7 +11,7 @@ It maintains three independent lists of listeners:
 
 ### constructor
 
-• **new EventDispatcher**(`node`)
+**new EventDispatcher**(`node`)
 
 Creates an instance of `EventDispatcher` for specified `IoNode` instance.
 It initializes `protoListeners` from `ProtoChain`.
@@ -24,63 +24,63 @@ It initializes `protoListeners` from `ProtoChain`.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:84](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L84)
+[src/core/internals/eventDispatcher.ts:84](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L84)
 
 ## Properties
 
 ### addedListeners
 
-• `Readonly` **addedListeners**: [`Listeners`](../README.md#listeners) = `{}`
+ `Readonly` **addedListeners**: [`Listeners`](../README.md#listeners) = `{}`
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:78](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L78)
+[src/core/internals/eventDispatcher.ts:78](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L78)
 
 ___
 
 ### isEventTarget
 
-• `Readonly` **isEventTarget**: `boolean`
+ `Readonly` **isEventTarget**: `boolean`
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:75](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L75)
+[src/core/internals/eventDispatcher.ts:75](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L75)
 
 ___
 
 ### node
 
-• `Readonly` **node**: `HTMLElement` \| [`IoNode`](IoNode.md)
+ `Readonly` **node**: `HTMLElement` \| [`IoNode`](IoNode.md)
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:74](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L74)
+[src/core/internals/eventDispatcher.ts:74](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L74)
 
 ___
 
 ### propListeners
 
-• `Readonly` **propListeners**: [`Listeners`](../README.md#listeners) = `{}`
+ `Readonly` **propListeners**: [`Listeners`](../README.md#listeners) = `{}`
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:77](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L77)
+[src/core/internals/eventDispatcher.ts:77](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L77)
 
 ___
 
 ### protoListeners
 
-• `Readonly` **protoListeners**: [`Listeners`](../README.md#listeners) = `{}`
+ `Readonly` **protoListeners**: [`Listeners`](../README.md#listeners) = `{}`
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:76](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L76)
+[src/core/internals/eventDispatcher.ts:76](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L76)
 
 ## Methods
 
 ### addEventListener
 
-▸ **addEventListener**(`name`, `listener`, `options?`): `void`
+**addEventListener**(`name`, `listener`, `options?`): `void`
 
 Proxy for `addEventListener` method.
 Adds an event listener to `addedListeners`.
@@ -99,13 +99,13 @@ Adds an event listener to `addedListeners`.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:157](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L157)
+[src/core/internals/eventDispatcher.ts:157](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L157)
 
 ___
 
 ### applyPropListeners
 
-▸ **applyPropListeners**(`properties`): `void`
+**applyPropListeners**(`properties`): `void`
 
 Sets `propListeners` specified as inline properties prefixed with "on-".
 It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
@@ -122,13 +122,13 @@ It removes existing `propListeners` that are no longer specified and it replaces
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:111](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L111)
+[src/core/internals/eventDispatcher.ts:111](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L111)
 
 ___
 
 ### dispatchEvent
 
-▸ **dispatchEvent**(`name`, `detail?`, `bubbles?`, `node?`): `void`
+**dispatchEvent**(`name`, `detail?`, `bubbles?`, `node?`): `void`
 
 Shorthand for custom event dispatch.
 
@@ -147,13 +147,13 @@ Shorthand for custom event dispatch.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:221](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L221)
+[src/core/internals/eventDispatcher.ts:221](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L221)
 
 ___
 
 ### dispose
 
-▸ **dispose**(): `void`
+**dispose**(): `void`
 
 Disconnects all event listeners and removes all references for garbage collection.
 Use this when node is discarded.
@@ -164,13 +164,13 @@ Use this when node is discarded.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:248](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L248)
+[src/core/internals/eventDispatcher.ts:248](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L248)
 
 ___
 
 ### removeEventListener
 
-▸ **removeEventListener**(`name`, `listener?`, `options?`): `void`
+**removeEventListener**(`name`, `listener?`, `options?`): `void`
 
 Proxy for `removeEventListener` method.
 Removes an event listener from `addedListeners`.
@@ -190,13 +190,13 @@ If `listener` is not specified it removes all listeners for specified `type`.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:181](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L181)
+[src/core/internals/eventDispatcher.ts:181](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L181)
 
 ___
 
 ### setProtoListeners
 
-▸ **setProtoListeners**(`node`): `void`
+**setProtoListeners**(`node`): `void`
 
 Sets `protoListeners` specified as `get Listeners()` class declarations.
 
@@ -212,4 +212,4 @@ Sets `protoListeners` specified as `get Listeners()` class declarations.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:93](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/eventDispatcher.ts#L93)
+[src/core/internals/eventDispatcher.ts:93](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L93)

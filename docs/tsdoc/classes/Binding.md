@@ -8,7 +8,7 @@ using `[property]-changed` events.
 
 ### constructor
 
-• **new Binding**(`node`, `property`)
+**new Binding**(`node`, `property`)
 
 Creates a binding object for specified `node` and `property`.
 
@@ -21,53 +21,53 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[src/core/internals/binding.ts:19](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L19)
+[src/core/internals/binding.ts:19](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L19)
 
 ## Properties
 
 ### node
 
-• `Readonly` **node**: [`IoNode`](IoNode.md)
+ `Readonly` **node**: [`IoNode`](IoNode.md)
 
 #### Defined in
 
-[src/core/internals/binding.ts:10](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L10)
+[src/core/internals/binding.ts:10](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L10)
 
 ___
 
 ### property
 
-• `Readonly` **property**: `string` = `''`
+ `Readonly` **property**: `string` = `''`
 
 #### Defined in
 
-[src/core/internals/binding.ts:11](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L11)
+[src/core/internals/binding.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L11)
 
 ___
 
 ### targetProperties
 
-• `Readonly` **targetProperties**: `WeakMap`<`EventTarget`, `string`[]\>
+ `Readonly` **targetProperties**: `WeakMap`<`EventTarget`, `string`[]\>
 
 #### Defined in
 
-[src/core/internals/binding.ts:13](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L13)
+[src/core/internals/binding.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L13)
 
 ___
 
 ### targets
 
-• `Readonly` **targets**: `EventTarget`[] = `[]`
+ `Readonly` **targets**: `EventTarget`[] = `[]`
 
 #### Defined in
 
-[src/core/internals/binding.ts:12](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L12)
+[src/core/internals/binding.ts:12](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L12)
 
 ## Accessors
 
 ### value
 
-• `get` **value**(): `any`
+`get` **value**(): `any`
 
 #### Returns
 
@@ -75,9 +75,9 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:27](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L27)
+[src/core/internals/binding.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L27)
 
-• `set` **value**(`value`): `void`
+`set` **value**(`value`): `void`
 
 #### Parameters
 
@@ -91,13 +91,13 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:24](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L24)
+[src/core/internals/binding.ts:24](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L24)
 
 ## Methods
 
 ### addTarget
 
-▸ **addTarget**(`node`, `property`): `void`
+**addTarget**(`node`, `property`): `void`
 
 Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
 
@@ -114,13 +114,13 @@ Adds a target `node` and `targetProp` and corresponding `[property]-changed` lis
 
 #### Defined in
 
-[src/core/internals/binding.ts:35](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L35)
+[src/core/internals/binding.ts:35](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L35)
 
 ___
 
 ### dispose
 
-▸ **dispose**(): `void`
+**dispose**(): `void`
 
 Dispose of the binding by removing all targets and listeners.
 Use this when node is no longer needed.
@@ -131,13 +131,13 @@ Use this when node is no longer needed.
 
 #### Defined in
 
-[src/core/internals/binding.ts:137](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L137)
+[src/core/internals/binding.ts:140](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L140)
 
 ___
 
 ### getTargetProperties
 
-▸ **getTargetProperties**(`node`): `string`[]
+**getTargetProperties**(`node`): `string`[]
 
 Retrieves a list of target properties for specified target node.
 
@@ -155,13 +155,13 @@ list of target property names.
 
 #### Defined in
 
-[src/core/internals/binding.ts:80](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L80)
+[src/core/internals/binding.ts:81](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L81)
 
 ___
 
 ### onSourceChanged
 
-▸ **onSourceChanged**(`event`): `void`
+**onSourceChanged**(`event`): `void`
 
 Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
 
@@ -177,13 +177,13 @@ Event handler that updates bound properties on target nodes when source node emi
 
 #### Defined in
 
-[src/core/internals/binding.ts:112](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L112)
+[src/core/internals/binding.ts:114](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L114)
 
 ___
 
 ### onTargetChanged
 
-▸ **onTargetChanged**(`event`): `void`
+**onTargetChanged**(`event`): `void`
 
 Event handler that updates source property when one of the targets emits `[property]-changed` event.
 
@@ -199,13 +199,13 @@ Event handler that updates source property when one of the targets emits `[prope
 
 #### Defined in
 
-[src/core/internals/binding.ts:94](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L94)
+[src/core/internals/binding.ts:95](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L95)
 
 ___
 
 ### removeTarget
 
-▸ **removeTarget**(`node`, `property?`): `void`
+**removeTarget**(`node`, `property?`): `void`
 
 Removes target `node` and `property` and corresponding `[property]-changed` listener.
 If `property` is not specified, it removes all target properties.
@@ -223,4 +223,4 @@ If `property` is not specified, it removes all target properties.
 
 #### Defined in
 
-[src/core/internals/binding.ts:59](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/binding.ts#L59)
+[src/core/internals/binding.ts:60](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L60)

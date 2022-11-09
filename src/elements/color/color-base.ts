@@ -1,22 +1,22 @@
 import { convert } from './lib/convert.js';
 import { IoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 
 export class IoColorBase extends IoElement {
 
-  @IoProperty({value: {r: 1, g: 1, b: 1, a: 1}, observe: true})
+  @Property({value: {r: 1, g: 1, b: 1, a: 1}, observe: true})
   declare value: {r: number, g: number, b: number, a?: number};
 
-  @IoProperty({value: [1, 1, 1]})
+  @Property({value: [1, 1, 1]})
   declare rgb: [number, number, number];
 
-  @IoProperty({value: [1, 1, 1]})
+  @Property({value: [1, 1, 1]})
   declare hsv: [number, number, number];
 
-  @IoProperty({value: [1, 1, 1]})
+  @Property({value: [1, 1, 1]})
   declare hsl: [number, number, number];
 
-  @IoProperty({value: [1, 1, 1, 1]})
+  @Property({value: [1, 1, 1, 1]})
   declare cmyk: [number, number, number, number];
 
   init() {

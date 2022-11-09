@@ -1,5 +1,5 @@
 import { RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoColorBase } from './color-base.js';
 import { IoSlider } from '../sliders/slider.js';
 import { IoSlider2d } from '../sliders/slider-2d.js';
@@ -9,16 +9,15 @@ export class IoColorSlider extends IoColorBase {
   static get Style() {
     return /* css */`
       :host {
-        display: flex;
-        flex: 1 1 auto;
+        display: contents;
       }
     `;
   }
 
-  @IoProperty('')
+  @Property('')
   declare channel: string;
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare vertical: boolean;
 
   _onValueInput(event: CustomEvent) {
@@ -194,18 +193,6 @@ export class IoColorSlider extends IoColorBase {
 }
 
 export class IoColorSliderBase extends IoSlider {
-  static get Style() {
-    return /* css */`
-      :host {
-        display: flex;
-        flex-direction: row;
-        flex: 1 1 auto;
-      }
-      :host[vertical] {
-        flex: 1 1 var(--io-field-height);
-      }
-    `;
-  }
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
@@ -245,18 +232,6 @@ export class IoColorSliderBase extends IoSlider {
 }
 
 export class IoColorSlider2dBase extends IoSlider2d {
-  static get Style() {
-    return /* css */`
-      :host {
-        display: flex;
-        flex-direction: row;
-        flex: 1 1 auto;
-      }
-      :host[vertical] {
-        flex: 1 1 var(--io-field-height);
-      }
-    `;
-  }
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!

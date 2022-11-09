@@ -6,7 +6,7 @@ Finalized property definition created from property declaration.
 
 ### constructor
 
-• **new ProtoProperty**(`def`)
+**new ProtoProperty**(`def`)
 
 Takes a weakly typed property declaration and returns full property definition with unscpecified fileds inferred.
 
@@ -18,73 +18,73 @@ Takes a weakly typed property declaration and returns full property definition w
 
 #### Defined in
 
-[src/core/internals/property.ts:38](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L38)
+[src/core/internals/property.ts:38](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L38)
 
 ## Properties
 
 ### binding
 
-• `Optional` **binding**: [`Binding`](Binding.md)
+ `Optional` **binding**: [`Binding`](Binding.md)
 
 #### Defined in
 
-[src/core/internals/property.ts:30](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L30)
+[src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
 
 ___
 
 ### notify
 
-• `Optional` **notify**: `boolean`
+ `Optional` **notify**: `boolean`
 
 #### Defined in
 
-[src/core/internals/property.ts:32](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L32)
+[src/core/internals/property.ts:32](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L32)
 
 ___
 
 ### observe
 
-• `Optional` **observe**: `boolean`
+ `Optional` **observe**: `boolean`
 
 #### Defined in
 
-[src/core/internals/property.ts:33](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L33)
+[src/core/internals/property.ts:33](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L33)
 
 ___
 
 ### reflect
 
-• `Optional` **reflect**: `Reflect`
+ `Optional` **reflect**: `Reflect`
 
 #### Defined in
 
-[src/core/internals/property.ts:31](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L31)
+[src/core/internals/property.ts:31](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L31)
 
 ___
 
 ### type
 
-• `Optional` **type**: [`Constructor`](../README.md#constructor)
+ `Optional` **type**: [`Constructor`](../README.md#constructor)
 
 #### Defined in
 
-[src/core/internals/property.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L29)
+[src/core/internals/property.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L29)
 
 ___
 
 ### value
 
-• `Optional` **value**: `any`
+ `Optional` **value**: `any`
 
 #### Defined in
 
-[src/core/internals/property.ts:28](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L28)
+[src/core/internals/property.ts:28](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L28)
 
 ## Methods
 
 ### assign
 
-▸ **assign**(`protoProp`): `void`
+**assign**(`protoProp`): `void`
 
 Assigns values of another ProtoProperty to itself, unless they are default values.
 
@@ -100,4 +100,4 @@ Assigns values of another ProtoProperty to itself, unless they are default value
 
 #### Defined in
 
-[src/core/internals/property.ts:67](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/property.ts#L67)
+[src/core/internals/property.ts:67](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L67)

@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoIconsetSingleton } from './iconset.js';
 
 @RegisterIoElement
@@ -31,10 +31,10 @@ export class IoIcon extends IoElement {
       }
     `;
   }
-  @IoProperty({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: 'prop'})
   declare icon: string;
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare stroke: boolean;
 
   iconChanged() {

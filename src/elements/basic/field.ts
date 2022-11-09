@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
@@ -60,22 +60,22 @@ export class IoField extends IoElement {
     `;
   }
 
-  @IoProperty('0')
+  @Property('0')
   declare tabindex: string;
 
-  @IoProperty(undefined)
+  @Property(undefined)
   declare value: any;
 
-  @IoProperty('')
+  @Property('')
   declare icon: string;
 
-  @IoProperty({value: false})
+  @Property({value: false})
   declare stroke: boolean;
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare reverse: boolean;
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare selected: boolean;
 
   static get Listeners() {

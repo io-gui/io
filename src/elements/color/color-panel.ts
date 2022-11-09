@@ -1,7 +1,8 @@
 import { RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoLayerSingleton } from '../../core/layer.js';
 import { IoColorBase } from './color-base.js';
+import './color-sliders.js';
 
 @RegisterIoElement
 export class IoColorPanel extends IoColorBase {
@@ -41,10 +42,10 @@ export class IoColorPanel extends IoColorBase {
     `;
   }
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare expanded: boolean;
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare vertical: boolean;
 
   static get Listeners() {

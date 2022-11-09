@@ -1,20 +1,20 @@
 import { RegisterIoElement } from '../../core/element.js';
-import { IoProperty } from '../../core/internals/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoField } from './field.js';
 
 @RegisterIoElement
 export class IoBoolean extends IoField {
 
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare value: boolean;
 
-  @IoProperty('true')
+  @Property('true')
   declare true: string;
 
-  @IoProperty('false')
+  @Property('false')
   declare false: string;
 
-  @IoProperty('switch')
+  @Property('switch')
   declare role: string;
 
   _onClick() {

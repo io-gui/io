@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from './element.js';
-import { PropertyInstance, PropertyDeclaration, IoProperty } from './internals/property.js';
+import { PropertyInstance, PropertyDeclaration, Property } from './internals/property.js';
 import { IoThemeSingleton } from './theme.js';
 
 const canvas = document.createElement('canvas');
@@ -64,16 +64,16 @@ export class IoGl extends IoElement {
       }
     `;
   }
-  @IoProperty({value: [0, 0]})
+  @Property({value: [0, 0]})
   declare size: [number, number];
 
-  @IoProperty({value: [1, 1, 1, 1], observe: true})
+  @Property({value: [1, 1, 1, 1], observe: true})
   declare color: [number, number, number, number];
 
-  @IoProperty({value: 1})
+  @Property({value: 1})
   declare pxRatio: number;
 
-  @IoProperty({observe: true, type: Object})
+  @Property({observe: true, type: Object})
   declare theme: typeof IoThemeSingleton;
 
   static get Vert() {

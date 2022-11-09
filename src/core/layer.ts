@@ -1,28 +1,24 @@
-import { IoProperty } from './internals/property.js';
+import { Property } from './internals/property.js';
 import { IoElement, RegisterIoElement } from './element.js';
 
-const lastFocus: Element | null = null;
+let lastFocus: Element | null = null;
 
-// window.addEventListener('focusin', () => {
-//   lastFocus = document.activeElement;
-// }, {capture: false});
+window.addEventListener('focusin', () => {
+  lastFocus = document.activeElement;
+}, {capture: false});
 
-// window.addEventListener('blur', () => {
-//   setTimeout(() => {
-//     if (document.activeElement === document.body) {
-//       lastFocus = null;
-//     }
-//   });
-// }, {capture: true});
+window.addEventListener('blur', () => {
+  setTimeout(() => {
+    if (document.activeElement === document.body) {
+      lastFocus = null;
+    }
+  });
+}, {capture: true});
 
 type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
-/*
- * Extends `IoElement`.
- *
- * Full-window click-blocking layer for elements designed to be displayed on top all other interface. When clicked, it collapses all child elements by setting their `expanded` property to `false`. Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
- **/
+
 @RegisterIoElement
-class IoLayer extends IoElement {
+export class IoLayer extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -54,10 +50,10 @@ class IoLayer extends IoElement {
       }
     `;
   }
-  @IoProperty({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: 'prop'})
   declare expanded: boolean;
 
-  @IoProperty({value: false})
+  @Property({value: false})
   declare skipCollapse: boolean;
 
   static get Listeners() {

@@ -7,7 +7,7 @@ Inherited information is aggregated during prototype chain traversal in `Registe
 
 ### constructor
 
-• **new ProtoChain**(`ioNodeConstructor`)
+**new ProtoChain**(`ioNodeConstructor`)
 
 Creates an instance of `ProtoChain` for specified class constructor.
 
@@ -19,33 +19,33 @@ Creates an instance of `ProtoChain` for specified class constructor.
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:38](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L38)
+[src/core/internals/protoChain.ts:38](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L38)
 
 ## Properties
 
 ### constructors
 
-• `Readonly` **constructors**: [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)<`any`\>[] = `[]`
+ `Readonly` **constructors**: [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)<`any`\>[] = `[]`
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:13](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L13)
+[src/core/internals/protoChain.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L13)
 
 ___
 
 ### functions
 
-• `Readonly` **functions**: `string`[] = `[]`
+ `Readonly` **functions**: `string`[] = `[]`
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:17](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L17)
+[src/core/internals/protoChain.ts:17](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L17)
 
 ___
 
 ### listeners
 
-• `Readonly` **listeners**: `Object` = `{}`
+ `Readonly` **listeners**: `Object` = `{}`
 
 #### Index signature
 
@@ -53,23 +53,23 @@ ___
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:25](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L25)
+[src/core/internals/protoChain.ts:25](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L25)
 
 ___
 
 ### observedObjectProperties
 
-• `Readonly` **observedObjectProperties**: `string`[] = `[]`
+ `Readonly` **observedObjectProperties**: `string`[] = `[]`
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:33](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L33)
+[src/core/internals/protoChain.ts:33](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L33)
 
 ___
 
 ### properties
 
-• `Readonly` **properties**: `Object` = `{}`
+ `Readonly` **properties**: `Object` = `{}`
 
 #### Index signature
 
@@ -77,23 +77,23 @@ ___
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:21](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L21)
+[src/core/internals/protoChain.ts:21](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L21)
 
 ___
 
 ### style
 
-• `Readonly` **style**: `string` = `''`
+ `Readonly` **style**: `string` = `''`
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:29](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L29)
+[src/core/internals/protoChain.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L29)
 
 ## Methods
 
 ### autobindFunctions
 
-▸ **autobindFunctions**(`node`): `void`
+**autobindFunctions**(`node`): `void`
 
 Binds all auto-binding functions from the `.functions` array to specified `IoNode`-derived instance.
 
@@ -109,4 +109,4 @@ Binds all auto-binding functions from the `.functions` array to specified `IoNod
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:120](https://github.com/io-gui/iogui/blob/tsc/src/core/internals/protoChain.ts#L120)
+[src/core/internals/protoChain.ts:120](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L120)

@@ -2,7 +2,7 @@ import BasicElementTest from './basic/index.test.js';
 import ColorElementTest from './color/index.test.js';
 // import ExtrasElementTest from './extras/index.test.js';
 // import LayoutElementTest from './layout/index.test.js';
-// import MathElementTest from './math/index.test.js';
+import VectorElementTest from './vectors/index.test.js';
 // import MenuElementTest from './menus/index.test.js';
 // import NotifyElementTest from './notify/index.test.js';
 // import ObjectElementTest from './object/index.test.js';
@@ -14,7 +14,7 @@ export default class {
     new ColorElementTest().run();
     // new ExtrasElementTest().run();
     // new LayoutElementTest().run();
-    // new MathElementTest().run();
+    new VectorElementTest().run();
     // new MenuElementTest().run();
     // new NotifyElementTest().run();
     // new ObjectElementTest().run();
