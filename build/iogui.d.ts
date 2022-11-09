@@ -59,7 +59,7 @@ export declare type Reflect = "attr" | "none" | "prop" | "both";
  */
 export declare type PropertyDeclaration = {
 	value?: any;
-	type?: Constructor;
+	type?: Constructor | Constructor[];
 	binding?: Binding;
 	reflect?: Reflect;
 	notify?: boolean;
@@ -74,7 +74,7 @@ export declare type PropertyDeclarationWeak = string | number | boolean | Array<
  */
 export declare class ProtoProperty {
 	value?: any;
-	type?: Constructor;
+	type?: Constructor | Constructor[];
 	binding?: Binding;
 	reflect?: Reflect;
 	notify?: boolean;
@@ -95,7 +95,7 @@ export declare class ProtoProperty {
  */
 export declare class PropertyInstance {
 	value?: any;
-	type?: Constructor;
+	type?: Constructor | Constructor[];
 	binding?: Binding;
 	reflect: Reflect;
 	notify: boolean;
@@ -1386,9 +1386,10 @@ export declare class IoVector extends IoElement {
 		false: string;
 	})[] | null;
 }
-export declare class IoMatrix extends IoElement {
+export declare class IoMatrix extends IoVector {
 	static get Style(): string;
-	static get Properties(): any;
+	value: number[];
+	columns: number;
 	_onValueSet(event: CustomEvent): void;
 	valueChanged(): void;
 	changed(): void;
