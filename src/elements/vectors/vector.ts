@@ -1,60 +1,68 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { Property } from '../../core/internals/property.js';
+import '../basic/boolean.js';
 
 // TODO: preserve linked scaling through zero.
 @RegisterIoElement
 export class IoVector extends IoElement {
   static get Style() {
     return /* css */`
-    :host {
-      display: flex;
-      flex-direction: row;
-      align-self: stretch;
-      justify-self: stretch;
-    }
-    :host > io-number {
-      width: inherit;
-      flex: 1 1;
-    }
-    :host > *:not(:last-child) {
-      margin-right: var(--io-spacing);
-    }
-    :host > io-boolean {
-      width: var(--io-line-height) !important;
-    }
+      :host {
+        display: flex;
+        flex-direction: row;
+        flex: 0 1 17.4em;
+      }
+      :host > io-number {
+        flex-grow: 1;
+      }
+      :host > *:not(:last-child) {
+        margin-right: var(--io-spacing);
+      }
+      :host > io-boolean {
+        flex-shrink: 0;
+      }
     `;
   }
-  static get Properties(): any {
-    return {
-      value: {
-        value: [0, 0, 0, 0],
-        observe: true,
-      },
-      conversion: 1,
-      step: 0.001,
-      min: -Infinity,
-      max: Infinity,
-      linkable: false,
-      linked: false,
-      components: {
-        type: Array,
-        notify: false,
-      },
-    };
-  }
+
+  @Property({value: [0, 0, 0, 0], type: [Array, Object], observe: true})
+  declare value: {x: number, y: number, z?: number, w?: number} | number[];
+
+  @Property(1)
+  declare conversion: number;
+
+  @Property(0.001)
+  declare step: number;
+
+  @Property(-Infinity)
+  declare min: number;
+
+  @Property(Infinity)
+  declare max: number;
+
+  @Property(false)
+  declare linkable: boolean;
+
+  @Property(false)
+  declare linked: boolean;
+
+  @Property({notify: false})
+  declare components: string[];
+
   _onValueSet(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement;
-    const c = item.id;
-    const value = event.detail.value;
-    const oldValue = event.detail.oldValue;
-    this.value[c] = value;
+    const c = item.id as any;
+    const newValue = event.detail.value as number;
+    const oldValue = event.detail.oldValue as number;
+    const value = this.value as any;
+    value[c] = newValue;
     if (this.linked) {
-      const change = value / oldValue;
+      const change = newValue / oldValue;
       for (const i in this.components) {
-        const p = this.components[i];
+        const p = this.components[i] as any;
         if (oldValue === 0) {
-          this.value[p] = value;
+          value[p] = newValue;
         } else if (p !== c) {
-          this.value[p] *= change;
+          value[p] *= change;
         }
       }
     }
@@ -63,12 +71,12 @@ export class IoVector extends IoElement {
     this.dispatchEvent('object-mutated', detail, false, window);
   }
   valueChanged() {
-    this.components = Object.keys(this.value).filter(key => typeof this.value[key] === 'number');
+    this.components = Object.keys(this.value).filter(key => typeof (this.value as any)[key] === 'number');
   }
   changed() {
     const elements = [];
     for (const i in this.components) {
-      const c = this.components[i];
+      const c = this.components[i] as keyof typeof this.value;
       if (this.value[c] !== undefined) {
         elements.push(['io-number', {
           id: c,

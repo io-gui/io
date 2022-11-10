@@ -14,7 +14,6 @@ export class IoSliderBase extends IoGl {
         border-radius: var(--io-border-radius);
         border-color: var(--io-color-border-inset);
         flex-basis: calc(var(--io-field-height) * 10);
-        flex-grow: 1;
         min-width: var(--io-field-height);
         min-height: var(--io-field-height);
       }

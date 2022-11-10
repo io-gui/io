@@ -2,6 +2,7 @@ import { RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoLayerSingleton } from '../../core/layer.js';
 import { IoColorBase } from './color-base.js';
+import './color-sliders.js';
 
 @RegisterIoElement
 export class IoColorPanel extends IoColorBase {

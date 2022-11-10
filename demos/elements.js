@@ -300,9 +300,6 @@ export class IoDemoElements extends IoElement {
         ]],
       ]],
       ['div', [
-        ['span', {class: 'warning'}, 'Elements below are still in development.']
-      ]],
-      ['div', [
         ['div', [
           ['io-label', {label: 'vector [array2]'}],
           ['io-vector', {value: this.array2}],
@@ -343,6 +340,9 @@ export class IoDemoElements extends IoElement {
           ['io-label', {label: 'matrix [matrix4]'}],
           ['io-matrix', {value: this.matrix4}],
         ]],
+      ]],
+      ['div', [
+        ['span', {class: 'warning'}, 'Elements below are still in development.']
       ]],
       ['div', [
         ['div', [

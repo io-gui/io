@@ -59,7 +59,7 @@ export declare type Reflect = "attr" | "none" | "prop" | "both";
  */
 export declare type PropertyDeclaration = {
 	value?: any;
-	type?: Constructor;
+	type?: Constructor | Constructor[];
 	binding?: Binding;
 	reflect?: Reflect;
 	notify?: boolean;
@@ -74,7 +74,7 @@ export declare type PropertyDeclarationWeak = string | number | boolean | Array<
  */
 export declare class ProtoProperty {
 	value?: any;
-	type?: Constructor;
+	type?: Constructor | Constructor[];
 	binding?: Binding;
 	reflect?: Reflect;
 	notify?: boolean;
@@ -95,14 +95,14 @@ export declare class ProtoProperty {
  */
 export declare class PropertyInstance {
 	value?: any;
-	type?: Constructor;
+	type?: Constructor | Constructor[];
 	binding?: Binding;
 	reflect: Reflect;
 	notify: boolean;
 	observe: boolean;
 	/**
 	 * Creates the property configuration object and copies values from `ProtoProperty`.
-	 * @param {ProtoProperty} propDef ProtoProperty object
+	 * @param propDef ProtoProperty object
 	 */
 	constructor(propDef: ProtoProperty);
 }
@@ -110,8 +110,8 @@ export declare type PropertyDeclarations = Record<string, PropertyDeclarationWea
 export declare const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations>;
 /**
  * Allows property declarations using decorator pattern.
- * @param {PropertyDeclarationWeak} propertyDefinition Property declaration.
- * @return {Function} Property decorator function.
+ * @param propertyDefinition Property declaration.
+ * @return Property decorator function.
  */
 export declare const Property: (propertyDefinition: PropertyDeclarationWeak) => (target: IoNode, propertyName: string) => void;
 /**
@@ -1035,46 +1035,6 @@ export declare class IoColorBase extends IoElement {
 	valueFromRgb(): void;
 	valueChanged(): void;
 }
-export declare class IoColorPanel extends IoColorBase {
-	static get Style(): string;
-	expanded: boolean;
-	vertical: boolean;
-	static get Listeners(): {
-		keydown: string;
-	};
-	_onKeydown(event: KeyboardEvent): void;
-	onValueSet(): void;
-	changed(): void;
-}
-export declare const IoColorPanelSingleton: IoColorPanel;
-export declare class IoColorSwatch extends IoColorBase {
-	static get Style(): string;
-	valueChanged(): void;
-}
-export declare class IoColorPicker extends IoElement {
-	static get Style(): string;
-	value: {
-		r: number;
-		g: number;
-		b: number;
-		a?: number;
-	};
-	static get Listeners(): any;
-	tabindex: string;
-	_onClick(event: FocusEvent): void;
-	get expanded(): boolean;
-	_onKeydown(event: KeyboardEvent): void;
-	_onValueSet(): void;
-	toggle(): void;
-	expand(): void;
-	collapse(): void;
-	changed(): void;
-}
-export declare class IoColorRgba extends IoColorBase {
-	static get Style(): string;
-	_onValueInput(event: CustomEvent): void;
-	changed(): void;
-}
 declare class IoSliderBase extends IoGl {
 	static get Style(): string;
 	value: number | [
@@ -1268,6 +1228,46 @@ export declare class IoColorSliderSv extends IoColorSlider2dBase {
 export declare class IoColorSliderSL extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
+export declare class IoColorPanel extends IoColorBase {
+	static get Style(): string;
+	expanded: boolean;
+	vertical: boolean;
+	static get Listeners(): {
+		keydown: string;
+	};
+	_onKeydown(event: KeyboardEvent): void;
+	onValueSet(): void;
+	changed(): void;
+}
+export declare const IoColorPanelSingleton: IoColorPanel;
+export declare class IoColorSwatch extends IoColorBase {
+	static get Style(): string;
+	valueChanged(): void;
+}
+export declare class IoColorPicker extends IoElement {
+	static get Style(): string;
+	value: {
+		r: number;
+		g: number;
+		b: number;
+		a?: number;
+	};
+	static get Listeners(): any;
+	tabindex: string;
+	_onClick(event: FocusEvent): void;
+	get expanded(): boolean;
+	_onKeydown(event: KeyboardEvent): void;
+	_onValueSet(): void;
+	toggle(): void;
+	expand(): void;
+	collapse(): void;
+	changed(): void;
+}
+export declare class IoColorRgba extends IoColorBase {
+	static get Style(): string;
+	_onValueInput(event: CustomEvent): void;
+	changed(): void;
+}
 export declare class IoMdView extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1310,8 +1310,6 @@ export declare class IoSidebar extends IoElement {
 export declare class IoSelectorSidebar extends IoSelector {
 	static get Style(): string;
 	static get Properties(): any;
-	onResized(): void;
-	collapsedChanged(): void;
 	getSlotted(): (string | {
 		selected: Binding;
 		options: any;
@@ -1366,7 +1364,19 @@ export declare class IoSelectorTabs extends IoSelector {
 }
 export declare class IoVector extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	value: {
+		x: number;
+		y: number;
+		z?: number;
+		w?: number;
+	} | number[];
+	conversion: number;
+	step: number;
+	min: number;
+	max: number;
+	linkable: boolean;
+	linked: boolean;
+	components: string[];
 	_onValueSet(event: CustomEvent): void;
 	valueChanged(): void;
 	changed(): void;
@@ -1376,9 +1386,10 @@ export declare class IoVector extends IoElement {
 		false: string;
 	})[] | null;
 }
-export declare class IoMatrix extends IoElement {
+export declare class IoMatrix extends IoVector {
 	static get Style(): string;
-	static get Properties(): any;
+	value: number[];
+	columns: number;
 	_onValueSet(event: CustomEvent): void;
 	valueChanged(): void;
 	changed(): void;
@@ -1420,8 +1431,6 @@ export declare class IoMenuOptions extends IoElement {
 	connectedCallback(): void;
 	_onItemClicked(event: CustomEvent): void;
 	_stopPropagation(event: MouseEvent): void;
-	onResized(): void;
-	_onSetOverflow(): void;
 	_onCollapse(): void;
 	expandedChanged(): void;
 	searchChanged(): void;
