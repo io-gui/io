@@ -41,7 +41,7 @@ export class IoVector extends IoElement {
 
   @Property(false)
   declare linkable: boolean;
-  
+
   @Property(false)
   declare linked: boolean;
 
@@ -50,7 +50,7 @@ export class IoVector extends IoElement {
 
   @Property({notify: false})
   declare keys: Array<keyof typeof this.value>;
-  
+
   private _ratios: Record<string, number> = {};
 
   _onNumberPointerDown(event: PointerEvent) {

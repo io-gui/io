@@ -1,6 +1,10 @@
-# Development Guidelines / Notes
+# Development Guidelines
 
-This is a WIP document
+This document is a work in progress.
+
+> Can you improve this document? 
+
+Notes:
 
 * Pursue Simplicity
   * Minimal Tooling

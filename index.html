@@ -141,6 +141,7 @@
           {label: 'Data Binding', value: './docs/learn-more.md#data-binding'},
           {label: 'Data Flow', value: './docs/learn-more.md#data-flow'},
         ]},
+        {label: 'Development Guidelines', value: 'development-guidelines'},
         {label: 'Reference', value: 'reference', options: [
           // Core Internals
           {label: 'Binding', value: './docs/tsdoc/classes/Binding.md'},
@@ -261,6 +262,7 @@
                   selected: OPTIONS.option('docs').options.option('reference').path.bind('leaf'),
                   options: OPTIONS.option('docs').options.option('reference').options,
                 }],
+                ['io-md-view', {name: 'development-guidelines', path: './docs/development-guidelines.md'}],
               ]
             }],
             ['io-selector', {name: 'demos', selected: OPTIONS.option('demos').path.bind('leaf'), elements: [
