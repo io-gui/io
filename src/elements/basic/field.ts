@@ -34,7 +34,6 @@ export class IoField extends IoElement {
         background-image: none;
         padding: calc(var(--io-spacing) - var(--io-border-width));
         transition: background-color 0.25s;
-        /* vertical-align: top; */
       }
       :host {
         @apply --io-field;

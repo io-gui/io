@@ -130,33 +130,33 @@ export class IoSelector extends IoElement {
     }, 250); // TODO: unhack!
   }
   _onScroll() {
-    if (this._scrollID === undefined) return;
-    clearTimeout(this._scrollThrottle);
-    this._scrollThrottle = setTimeout(() => {
-      delete this._scrollThrottle;
-      const scrollableElements = [...this.$.content.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')];
-      const top = this.$.content.scrollTop || this.$.content.children[0].scrollTop;
-      const bottom = top + this.$.content.getBoundingClientRect().height / 2;
-      const oldScrollID = this._scrollID;
-      let scrollID;
-      for (let i = scrollableElements.length; i--;) {
-        const elem = scrollableElements[i];
-        const nextElem = scrollableElements[i + 1];
-        const elemTop = elem.offsetTop;
-        const elemBottom = nextElem ? nextElem.offsetTop : elemTop;
-        if ((elemTop < top - 5) && (elemBottom < bottom) && i !== scrollableElements.length - 1) {
-          break;
-        }
-        scrollID = elem.id;
-      }
-      if (scrollID !== undefined && scrollID !== oldScrollID) {
-        this._scrollID = scrollID || '';
-        const oldSelected = this.selected;
-        const selected = this._selectedID + '#' + this._scrollID;
-        this.setProperty('selected', selected);
-        this.dispatchEvent('selected-changed', {value: selected, oldValue: oldSelected});
-      }
-    }, 100);
+    // if (this._scrollID === undefined) return;
+    // clearTimeout(this._scrollThrottle);
+    // this._scrollThrottle = setTimeout(() => {
+    //   delete this._scrollThrottle;
+    //   const scrollableElements = [...this.$.content.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')];
+    //   const top = this.$.content.scrollTop || this.$.content.children[0].scrollTop;
+    //   const bottom = top + this.$.content.getBoundingClientRect().height / 2;
+    //   const oldScrollID = this._scrollID;
+    //   let scrollID;
+    //   for (let i = scrollableElements.length; i--;) {
+    //     const elem = scrollableElements[i];
+    //     const nextElem = scrollableElements[i + 1];
+    //     const elemTop = elem.offsetTop;
+    //     const elemBottom = nextElem ? nextElem.offsetTop : elemTop;
+    //     if ((elemTop < top - 5) && (elemBottom < bottom) && i !== scrollableElements.length - 1) {
+    //       break;
+    //     }
+    //     scrollID = elem.id;
+    //   }
+    //   if (scrollID !== undefined && scrollID !== oldScrollID) {
+    //     this._scrollID = scrollID || '';
+    //     const oldSelected = this.selected;
+    //     const selected = this._selectedID + '#' + this._scrollID;
+    //     this.setProperty('selected', selected);
+    //     this.dispatchEvent('selected-changed', {value: selected, oldValue: oldSelected});
+    //   }
+    // }, 100);
   }
   selectedChanged() {
     this._selectDefault();

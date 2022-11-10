@@ -484,6 +484,26 @@ export default class {
           notify: true,
           observe: false,
         });
+        // initialize with an object property definition with multiple type properties
+        propDef = new ProtoProperty({type: [Object, Object1]});
+        prop = new PropertyInstance(propDef);
+        chai.expect(propDef).to.be.eql({
+          value: undefined,
+          type: [Object, Object1],
+          binding: undefined,
+          reflect: undefined,
+          notify: undefined,
+          observe: undefined,
+        });
+        console.log(prop);
+        chai.expect(prop).to.be.eql({
+          value: undefined,
+          type: [Object, Object1],
+          binding: undefined,
+          reflect: 'none',
+          notify: true,
+          observe: false,
+        });
         // initialize with non-default property definition
         propDef = new ProtoProperty({
           reflect: 'attr',
