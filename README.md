@@ -33,35 +33,11 @@ git clone https://github.com/io-gui/io.git && cd io
 yarn && yarn dev
 ```
 
-This will start the typescript watch script. From this point rest of the dependencies will be present within folder [node_modules](node_modules). You will also need to **run a static file server** of your choice.
-
-To create documentation:
-
-```bash
-yarn docs
-```
-
-To create build bundles and remove some of the unessery build data:
+This will install dev dependencies start the typescript watch script. You will also need to **run a static file server** of your choice.
 
 ```bash
 yarn build
-yarn clean
 ```
-
-To check code:
-
-```bash
-yarn lint
-```
-
-While writing the code often it is usefull to check the code, clean build files, and watch input files. You can do that with:
-
-```bash
-yarn dev
-```
-
-As you know yarn reads configration file [package.json](package.json), and more details about mentioned yarn commands can be found there. 
-
 
 [npm]: https://img.shields.io/npm/v/io-gui
 [npm-url]: https://www.npmjs.com/package/io-gui
