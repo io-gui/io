@@ -24,21 +24,41 @@ One of the unique features of Io-Gui is its ability to render custom elements in
 
 Io-Gui has no runtime dependencies and only a few development dependencies. Aside from typescript compiler, IoGui relies on very little tooling for development and testing. In theory, you should be able to type `tsc` and off you go. But for the sake of ergonomics, it uses [yarn](yarnpkg.com) to articulate some scripts.
 
-To install and develop Io-Gui locally:
+You will need tools [git](https://github.com/git-guides/install-git), [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [yarn](https://classic.yarnpkg.com/lang/en/docs/install/) in order to run commmands mentioned below. To install and develop Io-Gui locally:
 
 ```bash
 git clone https://github.com/io-gui/io.git && cd io
 yarn && yarn dev
 ```
 
-This will start the typescript watch script. You will also need to **run a static file server** of your choice.
+This will start the typescript watch script. From this point rest of the dependencies will be present within folder [node_modules](node_modules). You will also need to **run a static web server** of your choice.
 
-To create documentation and build bundles:
+To create documentation:
 
 ```bash
 yarn docs
-yarn build
 ```
+
+To create build bundles and remove some of the unessery build data:
+
+```bash
+yarn build
+yarn clean
+```
+
+To check code:
+
+```bash
+yarn lint
+```
+
+While writing the code often it is usefull to check the code, clean build files, and watch input files. You can do that with:
+
+```bash
+yarn dev
+```
+
+As you know yarn reads configration file [package.json](package.json), and more details about mentioned yarn commands can be found there. 
 
 
 [npm]: https://img.shields.io/npm/v/io-gui
