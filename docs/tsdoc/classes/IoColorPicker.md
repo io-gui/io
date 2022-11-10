@@ -286,7 +286,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-picker.ts:40](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L40)
+[src/elements/color/color-picker.ts:41](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L41)
 
 ___
 
@@ -439,7 +439,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-picker.ts:37](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L37)
+[src/elements/color/color-picker.ts:38](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L38)
 
 ___
 
@@ -459,7 +459,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-picker.ts:43](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L43)
+[src/elements/color/color-picker.ts:44](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L44)
 
 ___
 
@@ -473,7 +473,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-picker.ts:61](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L61)
+[src/elements/color/color-picker.ts:62](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L62)
 
 ___
 
@@ -600,7 +600,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/color/color-picker.ts:83](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L83)
+[src/elements/color/color-picker.ts:84](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L84)
 
 ___
 
@@ -614,7 +614,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-picker.ts:79](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L79)
+[src/elements/color/color-picker.ts:80](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L80)
 
 ___
 
@@ -801,7 +801,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-picker.ts:71](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L71)
+[src/elements/color/color-picker.ts:72](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L72)
 
 ___
 
@@ -1125,7 +1125,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-picker.ts:64](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L64)
+[src/elements/color/color-picker.ts:65](https://github.com/io-gui/io/blob/main/src/elements/color/color-picker.ts#L65)
 
 ___
 

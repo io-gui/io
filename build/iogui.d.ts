@@ -1376,23 +1376,21 @@ export declare class IoVector extends IoElement {
 	max: number;
 	linkable: boolean;
 	linked: boolean;
-	components: string[];
-	_onValueSet(event: CustomEvent): void;
+	ladder: boolean;
+	keys: Array<keyof typeof this.value>;
+	private _ratios;
+	_onNumberPointerDown(event: PointerEvent): void;
+	_onNumberValueInput(event: CustomEvent): void;
 	valueChanged(): void;
 	changed(): void;
-	getSlotted(): (string | {
-		value: Binding;
-		true: string;
-		false: string;
-	})[] | null;
+	getSlotted(): Array<any> | null;
 }
 export declare class IoMatrix extends IoVector {
 	static get Style(): string;
 	value: number[];
 	columns: number;
-	_onValueSet(event: CustomEvent): void;
+	_onNumberValueInput(event: CustomEvent): void;
 	valueChanged(): void;
-	changed(): void;
 }
 export declare class IoMenuItem extends IoField {
 	static get Style(): string;

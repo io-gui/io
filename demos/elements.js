@@ -58,6 +58,12 @@ export class IoDemoElements extends IoElement {
         font-size: 2em;
         padding: 2em;
       }
+      :host > div > io-label {
+        display: block;
+        background: var(--io-background-color-light);
+        padding: var(--io-spacing);
+        height: auto;
+      }
       :host > div > div {
         display: flex;
         /* width: 425px; */
@@ -121,6 +127,7 @@ export class IoDemoElements extends IoElement {
     super(props);
     this.template([
       ['div', [
+        ['io-label', {label: 'Basic Editors'}],
         ['div', [
           ['io-label', {label: 'icon'}],
           ['io-icon', {icon: 'icons:io'}],
@@ -171,6 +178,7 @@ export class IoDemoElements extends IoElement {
         ]],
       ]],
       ['div', [
+        ['io-label', {label: 'Sliders'}],
         ['div', [
           ['io-label', {label: 'slider'}],
           ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
@@ -231,6 +239,7 @@ export class IoDemoElements extends IoElement {
         ]],
       ]],
       ['div', [
+        ['io-label', {label: 'Color Editors'}],
         ['div', [
           ['io-label', {label: 'color-rgba'}],
           ['io-color-rgba', {value: this.rgba}],
@@ -300,6 +309,7 @@ export class IoDemoElements extends IoElement {
         ]],
       ]],
       ['div', [
+        ['io-label', {label: 'Vector Editors'}],
         ['div', [
           ['io-label', {label: 'vector [array2]'}],
           ['io-vector', {value: this.array2}],
@@ -325,8 +335,20 @@ export class IoDemoElements extends IoElement {
           ['io-vector', {value: this.vector3}],
         ]],
         ['div', [
+          ['io-label', {label: 'vector [vector3][link]'}],
+          ['io-vector', {value: this.vector3, linkable: true}],
+        ]],
+        ['div', [
           ['io-label', {label: 'vector [vector4]'}],
           ['io-vector', {value: this.vector4}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [rgb]'}],
+          ['io-vector', {value: this.rgb}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [rgba]'}],
+          ['io-vector', {value: this.rgba}],
         ]],
         ['div', [
           ['io-label', {label: 'matrix [matrix2]'}],
@@ -345,6 +367,7 @@ export class IoDemoElements extends IoElement {
         ['span', {class: 'warning'}, 'Elements below are still in development.']
       ]],
       ['div', [
+        ['io-label', {label: 'Object Editors'}],
         ['div', [
           ['io-label', {label: 'properties'}],
           ['io-properties', {value: this.object, properties: ['number', 'string', 'boolean']}],
@@ -388,6 +411,7 @@ export class IoDemoElements extends IoElement {
         ]],
       ]],
       ['div', [
+        ['io-label', {label: 'Menus'}],
         ['div', [
           ['io-label', {label: 'option-menu'}],
           ['io-option-menu', {

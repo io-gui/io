@@ -16,26 +16,24 @@ import { IoVector } from './vector.js';
 export class IoMatrix extends IoVector {
   static get Style() {
     return /* css */`
-    
-    :host {
-      display: grid;
-      align-self: stretch;
-      justify-self: stretch;
-      flex: 0 1 17.4em;
-      grid-gap: var(--io-spacing);
-    }
-    :host[columns="4"] {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    :host[columns="3"] {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    :host[columns="2"] {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    :host > io-number {
-      width: inherit;
-    }
+      :host {
+        display: grid;
+        align-self: stretch;
+        justify-self: stretch;
+        grid-gap: var(--io-spacing);
+      }
+      :host > *:not(:last-child) {
+        margin-right: 0;
+      }
+      :host[columns="4"] {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      :host[columns="3"] {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      :host[columns="2"] {
+        grid-template-columns: repeat(2, 1fr);
+      }
     `;
   }
 
@@ -45,49 +43,45 @@ export class IoMatrix extends IoVector {
   @Property({value: 4, reflect: 'prop'})
   declare columns: number;
 
-  _onValueSet(event: CustomEvent) {
-    if (event.detail.object) {
-      // TODO: unhack
-      console.log(event);
-      return;
-    }
+  _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement;
-    const c = item.id as any;
+    const id = item.id as keyof typeof this.value;
     const value = event.detail.value;
     const oldValue = event.detail.oldValue;
-    this.value[c] = value;
-    const detail = {object: this.value, property: c, value: value, oldValue: oldValue};
+    this.value[id] = value;
+    const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
     this.dispatchEvent('object-mutated', detail, false, window);
   }
+
   valueChanged() {
-    let c;
     if (this.value.length === 4) {
-      c = [0, 1, 2, 3];
-      this.columns = 2;
+      this.setProperties({
+        keys: ['0', '1', '2', '3'],
+        columns: 2
+      });
     }
     if (this.value.length === 9) {
-      c = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-      this.columns = 3;
+      this.setProperties({
+        keys: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
+        columns: 3
+      });
     }
     if (this.value.length === 16) {
-      c = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-      this.columns = 4;
+      this.setProperties({
+        keys: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'],
+        columns: 4
+      });
     }
-    this.components = c as any;
-  }
-  changed() {
-    const elements = [];
-    for (const i in this.components) {
-      const c = this.components[i] as any;
-      if (this.value[c] !== undefined) {
-        elements.push(['io-number', {
-          id: String(c),
-          value: this.value[c],
-          step: this.step,
-          'on-value-input': this._onValueSet
-        }]);
+    debug: {
+      if ([4, 9, 16].indexOf(this.value.length) === -1) {
+        console.warn('IoMatrix: Unrecognized matrix type!');
+      }
+      if (this.value.find(v => typeof v !== 'number')) {
+        console.warn('IoMatrix: Unrecognized matrix type!');
+      }
+      if (this.keys.find(k => ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'].indexOf(k) === -1)) {
+        console.warn('IoMatrix: Unrecognized matrix type!');
       }
     }
-    this.template(elements);
   }
 }

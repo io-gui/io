@@ -6,7 +6,6 @@ type Reflect = 'attr' | 'none' | 'prop' | 'both';
 /**
  * Declares default value, type and reactive behavior of the property.
  */
-// TODO: test types with array values
 export type PropertyDeclaration = {
   value?: any;
   type?: Constructor | Constructor[];
@@ -109,7 +108,6 @@ export class PropertyInstance {
           }
         } else if (typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
       }
-      // if (propDef.type !== undefined && typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
       if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
       if (propDef.reflect !== undefined && (['attr', 'none', 'prop', 'both']).indexOf(propDef.reflect) === -1) {
         console.error(`Invalid reflect field ${propDef.reflect}!`);

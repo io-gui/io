@@ -2,7 +2,6 @@ import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import '../basic/boolean.js';
 
-// TODO: preserve linked scaling through zero.
 @RegisterIoElement
 export class IoVector extends IoElement {
   static get Style() {
@@ -10,7 +9,8 @@ export class IoVector extends IoElement {
       :host {
         display: flex;
         flex-direction: row;
-        flex: 0 1 17.4em;
+        flex: 0 1;
+        flex-basis: calc(var(--io-field-height) * 10);
       }
       :host > io-number {
         flex-grow: 1;
@@ -45,55 +45,69 @@ export class IoVector extends IoElement {
   @Property(false)
   declare linked: boolean;
 
-  @Property({notify: false})
-  declare components: string[];
+  @Property(true)
+  declare ladder: boolean;
 
-  _onValueSet(event: CustomEvent) {
+  @Property({notify: false})
+  declare keys: Array<keyof typeof this.value>;
+
+  private _ratios: Record<string, number> = {};
+
+  _onNumberPointerDown(event: PointerEvent) {
     const item = event.composedPath()[0] as HTMLElement;
-    const c = item.id as any;
-    const newValue = event.detail.value as number;
-    const oldValue = event.detail.oldValue as number;
+    const id = item.id as keyof typeof this.value;
+    this._ratios = {};
+    if (this.linked && this.value[id] !== 0) {
+      for (const k of this.keys) this._ratios[k] = this.value[k] / this.value[id];
+    }
+  }
+
+  _onNumberValueInput(event: CustomEvent) {
+    const item = event.composedPath()[0] as HTMLElement;
+    const id = item.id as keyof typeof this.value;
+    const newValue = event.detail.value;
+    const oldValue = event.detail.oldValue;
     const value = this.value as any;
-    value[c] = newValue;
+    value[id] = newValue;
+
     if (this.linked) {
-      const change = newValue / oldValue;
-      for (const i in this.components) {
-        const p = this.components[i] as any;
-        if (oldValue === 0) {
-          value[p] = newValue;
-        } else if (p !== c) {
-          value[p] *= change;
-        }
+      for (const k of this.keys) {
+        if (k !== id && this._ratios[k]) value[k] = value[id] * this._ratios[k];
       }
     }
-    // TODO: test
-    const detail = {object: this.value, property: this.linked ? null : c, value: value, oldValue: oldValue};
+    const detail = this.linked ? {object: this.value} : {object: this.value, property: id, value: value, oldValue: oldValue};
     this.dispatchEvent('object-mutated', detail, false, window);
   }
+
   valueChanged() {
-    this.components = Object.keys(this.value).filter(key => typeof (this.value as any)[key] === 'number');
+    this.keys = Object.keys(this.value).filter(key => typeof (this.value as any)[key] === 'number') as Array<keyof typeof this.value>;
+    debug: {
+      if (this.keys.find(k => ['0', '1', '2', '3', 'x', 'y', 'z', 'w', 'r', 'g', 'b', 'a', 'u', 'v'].indexOf(k) === -1)) {
+        console.warn('IoVector: Unrecognized vector type!');
+      }
+    }
   }
   changed() {
     const elements = [];
-    for (const i in this.components) {
-      const c = this.components[i] as keyof typeof this.value;
-      if (this.value[c] !== undefined) {
+    for (const k of this.keys) {
+      if (this.value[k] !== undefined) {
         elements.push(['io-number', {
-          id: c,
-          value: this.value[c],
+          id: k,
+          value: this.value[k],
           conversion: this.conversion,
           step: this.step,
           min: this.min,
           max: this.max,
-          ladder: true,
-          'on-value-input': this._onValueSet
+          ladder: this.ladder,
+          'on-pointerdown': this._onNumberPointerDown,
+          'on-value-input': this._onNumberValueInput,
         }]);
       }
     }
     elements.push(this.getSlotted());
     this.template(elements);
   }
-  getSlotted() {
+  getSlotted(): Array<any> | null {
     return this.linkable ? ['io-boolean', {value: this.bind('linked'), true: 'icons:link', false: 'icons:unlink'}] : null;
   }
 }

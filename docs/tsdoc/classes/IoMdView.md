@@ -309,7 +309,7 @@ IoElement.Properties
 
 #### Defined in
 
-[src/elements/extras/md-view.ts:132](https://github.com/io-gui/io/blob/main/src/elements/extras/md-view.ts#L132)
+[src/elements/extras/md-view.ts:131](https://github.com/io-gui/io/blob/main/src/elements/extras/md-view.ts#L131)
 
 ___
 
@@ -803,7 +803,7 @@ ___
 
 #### Defined in
 
-[src/elements/extras/md-view.ts:142](https://github.com/io-gui/io/blob/main/src/elements/extras/md-view.ts#L142)
+[src/elements/extras/md-view.ts:141](https://github.com/io-gui/io/blob/main/src/elements/extras/md-view.ts#L141)
 
 ___
 
@@ -823,7 +823,7 @@ ___
 
 #### Defined in
 
-[src/elements/extras/md-view.ts:147](https://github.com/io-gui/io/blob/main/src/elements/extras/md-view.ts#L147)
+[src/elements/extras/md-view.ts:146](https://github.com/io-gui/io/blob/main/src/elements/extras/md-view.ts#L146)
 
 ___
 
@@ -837,7 +837,7 @@ ___
 
 #### Defined in
 
-[src/elements/extras/md-view.ts:165](https://github.com/io-gui/io/blob/main/src/elements/extras/md-view.ts#L165)
+[src/elements/extras/md-view.ts:164](https://github.com/io-gui/io/blob/main/src/elements/extras/md-view.ts#L164)
 
 ___
 
