@@ -24,9 +24,9 @@ One of the unique features of Io-Gui is its ability to render custom elements in
 
 ## Development
 
-Io-Gui has no runtime dependencies and only a few development dependencies. Aside from typescript compiler, IoGui relies on very little tooling for development, linting and testing. In theory, you should be able to type `tsc` and off you go. But for the sake of ergonomics, it uses [yarn](yarnpkg.com) to articulate development scripts.
+Io-Gui has no runtime dependencies and only a few development dependencies. Aside from typescript compiler, IoGui relies on very little tooling for development, linting and testing. In theory, you should be able to type `tsc` and off you go. But for the sake of ergonomics, it uses [nodejs](nodejs.org) and [yarn](yarnpkg.com) to run development scripts.
 
-You will need tools [git](https://github.com/git-guides/install-git), [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and [yarn](https://classic.yarnpkg.com/lang/en/docs/install/) in order to run commmands mentioned below. To install and develop Io-Gui locally:
+To install and develop Io-Gui locally:
 
 ```bash
 git clone https://github.com/io-gui/io.git && cd io
