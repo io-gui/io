@@ -301,6 +301,7 @@ export default class {
 
           const node = new TestNode();
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           node.addEventListener('prop-changed', ((event: CustomEvent) => {
             chai.expect('This should not execute').to.be.eql(true);
           }) as EventListener);

@@ -343,6 +343,7 @@ export class IoMenuItem extends IoField {
       this.$options.removeEventListener('item-clicked', this._onItemClicked);
     }
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   optionChanged(change: CustomEvent) {
     if (this._option) {
       this._option.removeEventListener('changed', this.onOptionChanged);
