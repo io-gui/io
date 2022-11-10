@@ -39,6 +39,10 @@ This will install dev dependencies and start the typescript watch script. You wi
 yarn build
 ```
 
+To learn more about development setup read [contributing guide](https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md).
+
+To contribute to this project please read [code of conduct](https://github.com/io-gui/io/blob/main/.github/CODE_OF_CONDUCT.md), browse and submit [issues](https://github.com/io-gui/io/issues).
+
 [npm]: https://img.shields.io/npm/v/io-gui
 [npm-url]: https://www.npmjs.com/package/io-gui
 [build-size]: https://badgen.net/bundlephobia/minzip/io-gui
