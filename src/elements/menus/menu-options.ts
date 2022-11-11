@@ -39,6 +39,7 @@ export class IoMenuOptions extends IoElement {
       opacity: 1;
       transition: opacity 0.25s;
       overflow-y: auto !important;
+      flex: 0 1 auto;
     }
     :host > io-menu-item {
       align-self: stretch;

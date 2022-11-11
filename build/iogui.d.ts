@@ -1165,6 +1165,7 @@ export declare class IoSlider2d extends IoSliderBase {
 		number,
 		number
 	];
+	noscroll: boolean;
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
@@ -1347,6 +1348,15 @@ export declare class IoLayout extends IoElement {
 	_onLayoutTabInsert(event: CustomEvent): void;
 	_onDividerMove(event: CustomEvent): void;
 }
+export declare class IoLayoutDivider extends IoElement {
+	static get Style(): string;
+	static get Properties(): any;
+	static get Listeners(): {
+		pointermove: string;
+	};
+	_onPointermove(event: PointerEvent): void;
+	changed(): void;
+}
 export declare class IoContent extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1419,6 +1429,7 @@ export declare class IoMenuItem extends IoField {
 	onOptionChanged(): void;
 	changed(): void;
 }
+export declare function getElementDescendants(element: IoMenuItem): any;
 export declare class IoMenuOptions extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;

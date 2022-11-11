@@ -53,11 +53,6 @@ export class IoDemoElements extends IoElement {
         display: flex;
         flex-direction: column;
       }
-      :host .warning {
-        color: tomato;
-        font-size: 2em;
-        padding: 2em;
-      }
       :host > div > io-label {
         display: block;
         background: var(--io-background-color-light);
@@ -364,13 +359,14 @@ export class IoDemoElements extends IoElement {
         ]],
       ]],
       ['div', [
-        ['span', {class: 'warning'}, 'Elements below are still in development.']
-      ]],
-      ['div', [
         ['io-label', {label: 'Object Editors'}],
         ['div', [
           ['io-label', {label: 'properties'}],
-          ['io-properties', {value: this.object, properties: ['number', 'string', 'boolean']}],
+          ['io-properties', {
+            value: this.object,
+            properties: ['number', 'string', 'boolean'],
+            config: {'number': ['io-slider', {step: 0.1}]}
+          }],
         ]],
         ['div', [
           ['io-label', {label: 'object [filtered]'}],
@@ -378,7 +374,7 @@ export class IoDemoElements extends IoElement {
             value: this.object,
             expanded: true,
             slotted: ['io-field', {label: 'Slotted Element'}],
-            properties: ['number', 'string', 'boolean']
+            properties: ['number', 'string', 'boolean'],
           }],
         ]],
         ['div', [
