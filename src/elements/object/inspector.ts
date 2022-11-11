@@ -19,6 +19,7 @@ export class IoInspector extends IoElement {
     return /* css */`
     :host {
       @apply --io-column;
+      flex: 0 1 calc(var(--io-line-height) * 17.5);
     }
     :host > * {
       flex-shrink: 0;
@@ -56,6 +57,9 @@ export class IoInspector extends IoElement {
     :host > io-collapsable > io-boolean,
     :host > io-object > io-boolean {
       text-transform: capitalize;
+    }
+    :host > io-object {
+      flex-basis: auto !important;
     }
     :host > io-object > io-properties {
       border-radius: var(--io-border-radius);

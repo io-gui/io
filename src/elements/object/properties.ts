@@ -4,11 +4,10 @@ import { Config } from './config.js';
 /*
  * Extends `IoElement`.
  *
- * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false. If `horizontal` property is set, keys and values are arranged horizontally.
+ * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  *
  * <io-element-demo element="io-properties" properties='{
  *   "labeled": true,
- *   "horizontal": false,
  *   "value": {"hello": "world"}
  * }' config='{
  *   "value": ["io-object"],
@@ -21,13 +20,12 @@ import { Config } from './config.js';
  *
  * <io-element-demo element="io-properties" properties='{
  *   "labeled": true,
- *   "horizontal": false,
  *   "value": {"hello": "world"},
  *   "properties": ["number", "array"],
  *   "config": {
  *     "type:number": ["io-number-slider", {"step": 0.01}],
- *     "constructor:Array": ["io-properties", {"labeled": false, "horizontal": true, "config": {
- *       "type:number": ["io-slider", {"step": 0.1, "horizontal": false, "style": {"height": "10em"}}]
+ *     "constructor:Array": ["io-properties", {"labeled": false "config": {
+ *       "type:number": ["io-slider", {"step": 0.1, "style": {"height": "10em"}}]
  *     }}]
  *   }
  * }' config='{
@@ -42,60 +40,33 @@ const RegisterIoProperties = function (element: typeof IoProperties) {
   Object.defineProperty(element.prototype, '_config', {writable: true, value: new Config(element.prototype._protochain.constructors)});
 };
 
+// TODO: consider implementing horizontal layout
+
 @RegisterIoProperties
 export class IoProperties extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      display: grid;
-      grid-gap: var(--io-spacing);
-      justify-self: stretch;
-      justify-items: start;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+    }
+    :host > .io-row:first-of-type {
+      margin-top: var(--io-spacing);
+    }
+    :host > .io-row {
       white-space: nowrap;
+      margin-bottom: var(--io-spacing);
     }
-    :host[horizontal] {
-      grid-auto-flow: column;
+    :host > .io-row > io-label {
+      margin-top: var(--io-spacing);
+      text-align: right;
+      margin-right: var(--io-spacing);
+      flex: 0 0 calc(var(--io-line-height) * 4);
     }
-    :host[horizontal][labeled] {
-      grid-template-rows: auto auto;
-    }
-    :host:not([horizontal]) {
-      grid-template-columns: auto;
-    }
-    :host:not([horizontal])[labeled] {
-      grid-template-columns: min-content minmax(4em, 1fr);
-    }
-    :host > span.io-field {
-      max-width: 8em !important;
-      width: 100%;
-    }
-    :host:not([horizontal]) > * {
-      max-width: 100%;
-    }
-    :host[labeled] > :first-child {
-      grid-column: span 2;
-      width: 100%;
-    }
-    :host > io-object {}
-    :host > io-object {
-      padding: 0;
-      border: var(--io-border);
-      border-radius: var(--io-border-radius);
-      border-color: transparent;
-      background-color: transparent;
-      background-image: none;
-    }
-    :host > io-object,
-    :host > io-properties,
-    :host > io-number,
-    :host > io-string {
-      width: auto;
-      justify-self: stretch;
-    }
-    :host io-properties {
-      border: 0 !important;
-      border-radius: 0 !important;
-      box-shadow: none !important;
+    :host > .io-row > io-label:after {
+      display: inline-block;
+      content: ':';
     }
     `;
   }
@@ -103,10 +74,6 @@ export class IoProperties extends IoElement {
     return {
       labeled: {
         value: true,
-        reflect: 'prop',
-      },
-      horizontal: {
-        value: false,
         reflect: 'prop',
       },
       value: {
@@ -121,7 +88,7 @@ export class IoProperties extends IoElement {
   static get Config() {
     return {
       'type:string': ['io-string', {}],
-      'type:number': ['io-number', {step: 0.0000001}],
+      'type:number': ['io-number', {step: 0.0001}],
       'type:boolean': ['io-boolean', {}],
       'type:object': ['io-object', {}],
       'type:null': ['io-string', {}],
@@ -184,9 +151,10 @@ export class IoProperties extends IoElement {
         const label = config[c].label || c;
         const itemConfig: any = {title: label, id: c, value: this.value[c], 'on-value-input': this._onValueSet};
         itemConfig.config = this.config;
-        elements.push(
-          this.labeled ? ['span', {class: 'io-field'}, label + ':'] : null,
+        elements.push(['div', {class: 'io-row'}, [
+          this.labeled ? ['io-label', {label: label}] : null,
           [tag, Object.assign(itemConfig, protoConfig)],
+        ]]
         );
       }
     }

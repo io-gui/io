@@ -15,6 +15,7 @@ export class IoObject extends IoElement {
     :host {
       @apply --io-panel;
       @apply --io-column;
+      flex: 0 1 calc(var(--io-line-height) * 17.5);
     }
     :host > io-boolean {
       align-self: stretch;
