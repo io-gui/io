@@ -21,7 +21,7 @@ function makeBundleTarget(src, target) {
         keep_fnames: true,
       })
     ],
-    treeshake: false,
+    treeshake: true,
     inlineDynamicImports: true,
     output: [{
       format: 'es',

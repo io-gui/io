@@ -34,6 +34,9 @@ export class IoSlider2d extends IoSliderBase {
   @Property({value: [1, 1]})
   declare max: [number, number];
 
+  @Property(true)
+  declare noscroll: boolean;
+
   static get GlUtils() {
     return /* glsl */`
       vec3 paintKnob(vec3 dstCol, vec2 p, vec2 center, vec3 color) {
