@@ -76,6 +76,8 @@ export class IoGl extends IoElement {
   @Property({observe: true, type: Object})
   declare theme: typeof IoThemeSingleton;
 
+  private _needsResize = false;
+
   static get Vert() {
     return /* glsl */`
       attribute vec3 position;
@@ -312,11 +314,10 @@ export class IoGl extends IoElement {
     const hasResized = (width !== this.size[0] || height !== this.size[1] || pxRatio !== this.pxRatio);
 
     if (hasResized) {
+      // NOTE: Resizing only in inline CSS. Buffer resize postponed until `_onRender()`.`
       this.$.canvas.style.width = Math.floor(width) + 'px';
       this.$.canvas.style.height = Math.floor(height) + 'px';
-
-      this.$.canvas.width = Math.floor(width * pxRatio);
-      this.$.canvas.height = Math.floor(height * pxRatio);
+      this._needsResize = true;
 
       this.setProperties({
         size: [width, height],
@@ -352,6 +353,12 @@ export class IoGl extends IoElement {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
       this.updatePropertyUniform(uname, property);
     });
+
+    if (this._needsResize) {
+      this.$.canvas.width = Math.floor(width);
+      this.$.canvas.height = Math.floor(height);
+      this._needsResize = false;
+    }
 
     canvas.width = width;
     canvas.height = height;
