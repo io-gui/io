@@ -61,6 +61,7 @@ export class IoSliderBase extends IoGl {
   _startX = 0;
   _startY = 0;
   _active = false;
+  _rect: DOMRect | null = null;
 
   get _min(): [number, number] {
     if (typeof this.min === 'number') {
@@ -126,6 +127,7 @@ export class IoSliderBase extends IoGl {
     event.preventDefault();
   }
   _onTouchstart(event: TouchEvent) {
+    this._rect = this.getBoundingClientRect();
     this.addEventListener('touchmove', this._onTouchmove);
     this.addEventListener('touchend', this._onTouchend);
     this._startX = event.changedTouches[0].clientX;
@@ -171,7 +173,7 @@ export class IoSliderBase extends IoGl {
     this._active = false;
   }
   _getPointerCoord(event: PointerEvent): [number, number] {
-    const rect = this.getBoundingClientRect();
+    const rect = this._rect || this.getBoundingClientRect();
     let x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
     let y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
     x = Math.pow(x, this.exponent);

@@ -77,7 +77,8 @@ export class IoBreadcrumbs extends IoElement {
     const elements = [];
     for (let i = 0; i < this.options.length; i++) {
       elements.push(['io-field', {
-        value: i,
+        class: 'select',
+        value: this.options[i],
         label: getLabel(this.options[i]),
         'on-item-clicked': this._onClick,
       }]);

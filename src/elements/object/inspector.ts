@@ -104,7 +104,7 @@ export class IoInspector extends IoElement {
   }
   static get Listeners() {
     return {
-      'item-clicked': '_onItemClicked',
+      'io-field-clicked': '_onItemClicked',
     };
   }
   constructor(props?: any) {
