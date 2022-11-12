@@ -49,7 +49,7 @@ export class IoProperties extends IoElement {
     :host {
       display: flex;
       flex-direction: column;
-      flex: 1 1 auto;
+      flex: 0 1 calc(var(--io-line-height) * 17.5);
     }
     :host > .io-row:first-of-type {
       margin-top: var(--io-spacing);

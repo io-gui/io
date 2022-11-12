@@ -364,7 +364,7 @@ export class IoDemoElements extends IoElement {
           ['io-label', {label: 'properties'}],
           ['io-properties', {
             value: this.object,
-            properties: ['number', 'string', 'boolean'],
+            // properties: ['number', 'string', 'boolean'],
             config: {'number': ['io-slider', {step: 0.1}]}
           }],
         ]],

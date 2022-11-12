@@ -701,6 +701,7 @@ export declare class IoGl extends IoElement {
 	];
 	pxRatio: number;
 	theme: typeof IoThemeSingleton;
+	private _needsResize;
 	static get Vert(): string;
 	static get GlUtils(): string;
 	static get Frag(): string;
@@ -1080,6 +1081,7 @@ declare class IoSliderBase extends IoGl {
 	_startX: number;
 	_startY: number;
 	_active: boolean;
+	_rect: DOMRect | null;
 	get _min(): [
 		number,
 		number
@@ -1483,7 +1485,7 @@ export declare class IoInspector extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
 	static get Listeners(): {
-		"item-clicked": string;
+		"io-field-clicked": string;
 	};
 	constructor(props?: any);
 	_onItemClicked(event: CustomEvent): void;

@@ -2,7 +2,6 @@
 # Io-Gui: Experimental JavaScript Framework
 
 [![NPM Package][npm]][npm-url]
-[![Build Size][build-size]][bundlephobia-url]
 [![DeepScan][deepscan]][deepscan-url]
 [![License][license]][license-url]
 
@@ -10,7 +9,7 @@
 
 Io-Gui is an experimental UI framework aimed at simplicity and performance. It lets you write fast and reactive custom elements that respond to state changes, data binding events and object mutations. It can also support entire applications with routing and code splitting.
 
-The goal of this project is provide a solid fundation for complex applications and tools such as 3D editors and debug tools for [threejs](https://threejs.org).
+The goal of this project is to provide a solid fundation for complex applications and tools such as 3D editors and debug tools for [threejs](https://threejs.org).
 
 For a quick start, read about the [basic usage](https://iogui.dev/io/#path=docs:./docs/getting-started.md#usage), check out the built-in [elements](https://iogui.dev/io/#path=demos:elements) and <a href="https://github.com/io-gui/io/" target="_blank">source code</a>. Stay in touch on <a href="https://mastodon.gamedev.place/web/@aki" target="_blank">Mastodon</a>.
 
@@ -45,8 +44,6 @@ To contribute to this project please read [code of conduct](https://github.com/i
 
 [npm]: https://img.shields.io/npm/v/io-gui
 [npm-url]: https://www.npmjs.com/package/io-gui
-[build-size]: https://badgen.net/bundlephobia/minzip/io-gui
-[bundlephobia-url]: https://badgen.net/bundlephobia.com/result?p=io-gui
 [deepscan]: https://deepscan.io/api/teams/18863/projects/22152/branches/651706/badge/grade.svg
 [deepscan-url]: https://deepscan.io/dashboard#view=project&tid=18863&pid=22152&bid=651706
 [license]: https://img.shields.io/github/license/io-gui/io

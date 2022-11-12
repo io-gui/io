@@ -109,7 +109,7 @@
         border: none;
         flex: 1 1;
       }
-      @media (max-width: 620px) {
+      @media (max-width: 860px) {
         io-sidebar {
           display: none !important;
         }
@@ -226,7 +226,7 @@
       ]},
       {label: 'Tests', value: 'tests'},
     ], {
-      path: new Path({string: $({key: 'path', storage: 'hash', value: ''})}),
+      path: new Path({string: $({key: 'path', storage: 'hash', value: 'home'})}),
     });
 
     export class IoMainPage extends IoSelectorTabs {
