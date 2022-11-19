@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import {Options} from '../../models/options.js';
-import {Item} from '../../models/item.js';
+import { MenuOptions } from '../../models/options.js';
+import { MenuItem } from '../../models/item.js';
 import './menu-item.js';
 
 // TODO: fix tab-out without collapse
@@ -61,7 +61,7 @@ export class IoOptionMenu extends IoElement {
         reflect: 'attr',
       },
       options: {
-        type: Options,
+        type: MenuOptions,
         reflect: 'attr'
       },
       role: 'button',
@@ -84,7 +84,7 @@ export class IoOptionMenu extends IoElement {
   changed() {
     let valueText = '';
     if (this.options.length) {
-      const option = this.options.find((option: Item) => {return option.value === this.value;});
+      const option = this.options.find((option: MenuItem) => {return option.value === this.value;});
       if (option) {
         if (option.label) {
           valueText = option.label;
@@ -109,7 +109,7 @@ export class IoOptionMenu extends IoElement {
       }
     }
 
-    const option = new Item({
+    const option = new MenuItem({
       label: valueText,
       options: this.options,
       // TODO: this causes _onPathChanged to trigger initially

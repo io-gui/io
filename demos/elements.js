@@ -1,7 +1,7 @@
-import { IoElement, RegisterIoElement, Options, Item } from '../build/iogui.js';
+import { IoElement, RegisterIoElement, MenuOptions, MenuItem } from '../build/iogui.js';
 
-const suboptions = new Options();
-const options = new Options([
+const suboptions = new MenuOptions();
+const options = new MenuOptions([
   {label: 'Red', icon: '❤️', options: [{value: 'Red1'}, {value: 'Red2'}, {value: 'Red3'}]},
   {label: 'Green', icon: '💚', options: [{value: 'Green1'}, {value: 'Green2'}, {value: 'Green3'}]},
   {label: 'Blue', icon: '💙', options: [{value: 'Blue1'}, {value: 'Blue2'}, {value: 'Blue3'}]},
@@ -21,7 +21,7 @@ suboptions.push(...[
   {label: 'suboption three', options: options},
 ]);
 
-const option = new Item({
+const option = new MenuItem({
   label: 'Hearts',
   icon: '💕',
   hint: 'colors',
@@ -38,10 +38,10 @@ for (let i = 0; i < 100; i++) {
   const r2 = words[Math.floor(Math.random() * 20)];
   const r3 = words[Math.floor(Math.random() * 20)];
   const i = hearts[Math.floor(Math.random() * 10)] || '';
-  longOptions.push(new Item({icon: i, label: r1 + ' ' + r2, value: r1 + ' ' + r2, hint: r3}));
+  longOptions.push(new MenuItem({icon: i, label: r1 + ' ' + r2, value: r1 + ' ' + r2, hint: r3}));
 }
 
-const menuoptions = new Options([
+const menuoptions = new MenuOptions([
   {label: 'Long Menu', options: longOptions},
   ...options,
 ]);
@@ -411,19 +411,19 @@ export class IoDemoElements extends IoElement {
         ['div', [
           ['io-label', {label: 'option-menu'}],
           ['io-option-menu', {
-            options: new Options([
-              new Item({label: 'negative one', value: -1}),
-              new Item({label: 'zero', value: 0}),
-              new Item({label: 'half', value: 0.5}),
-              new Item({label: 'one', value: 1}),
-              new Item({label: 'two', value: 2}),
-              new Item({label: 'three', value: 3}),
-              new Item({label: 'four', value: 4}),
-              new Item({label: 'leet', value: 1337}),
+            options: new MenuOptions([
+              {label: 'negative one', value: -1},
+              {label: 'zero', value: 0},
+              {label: 'half', value: 0.5},
+              {label: 'one', value: 1},
+              {label: 'two', value: 2},
+              {label: 'three', value: 3},
+              {label: 'four', value: 4},
+              {label: 'leet', value: 1337},
             ]),
             value: this.bind('number')
           }],
-          ['io-option-menu', {options: new Options([ -1, 0, 0.5, 1, 2, 3, 4, 1337]), value: this.bind('number')}],
+          ['io-option-menu', {options: new MenuOptions([ -1, 0, 0.5, 1, 2, 3, 4, 1337]), value: this.bind('number')}],
           ['io-button', {label: 'set 0.5', action: () => { this.number = 0.5 }, value: 0.5}],
         ]],
         ['div', [

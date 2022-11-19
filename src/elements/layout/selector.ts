@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import {Options} from '../../models/options.js';
+import { MenuOptions } from '../../models/options.js';
 // TODO: use IoContent for caching and display.
 
 /*
@@ -74,7 +74,7 @@ export class IoSelector extends IoElement {
   static get Properties(): any {
     return {
       options: {
-        type: Options,
+        type: MenuOptions,
         observe: true,
       },
       elements: {

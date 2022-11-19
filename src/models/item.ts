@@ -1,30 +1,50 @@
-import {IoNode, RegisterIoNode} from '../core/node.js';
-import {Options} from './options.js';
-import {Path} from './path.js';
+import { IoNode, RegisterIoNode } from '../core/node.js';
+import { MenuOptions } from './options.js';
+import { Property } from '../core/internals/property.js';
 
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
 // TODO: test for robustness and document.
 @RegisterIoNode
-export class Item extends IoNode {
-  static get Properties() {
-    return {
-      value: undefined,
-      label: '',
-      icon: '',
-      hint: '',
-      action: undefined,
-      select: 'pick', // 'toggle' | 'pick' | 'none'
-      selected: Boolean,
-      path: {
-        type: Path,
-      },
-      options: {
-        type: Options
-      }
-    };
+export class MenuItem extends IoNode {
+
+  @Property(undefined)
+  declare value: any;
+
+  @Property('')
+  declare label: string;
+
+  @Property('')
+  declare icon: string;
+
+  @Property('')
+  declare hint: string;
+
+  @Property(undefined)
+  declare action: () => void | undefined;
+
+  @Property('pick')
+  declare select: 'pick' | 'toggle' | 'pick' | 'none';
+
+  @Property(false)
+  declare selected: boolean;
+
+  @Property(MenuOptions)
+  declare options: MenuOptions;
+
+  get path() {
+    return this.options.path;
   }
+
+  get hasmore() {
+    return !!(this.options.length);
+  }
+
+  getSubitem(value: any) {
+    return this.options.getItem(value);
+  }
+
   constructor(option: any) {
     if (typeof option !== 'object' || option === null) {
       option = {
@@ -33,8 +53,8 @@ export class Item extends IoNode {
       };
     }
     if (option.options) {
-      if (!(option.options instanceof Options)) {
-        option.options = new Options(option.options);
+      if (!(option.options instanceof MenuOptions)) {
+        option.options = new MenuOptions(option.options);
       }
     }
     if (!option.label) {
@@ -46,7 +66,7 @@ export class Item extends IoNode {
     }
     if (option.select === 'toggle' && option.options && option.options.length) {
       console.warn('IoGUI Item: options with {select: "toggle"} cannot have suboptions!');
-      option.options = new Options();
+      option.options = new MenuOptions();
     }
     if (option.select === 'pick' && option.options.length) {
       option.selected = !!option.options.path.value.length;
@@ -57,12 +77,7 @@ export class Item extends IoNode {
       this.setSelectedPath(!!this.options.path.value.length, [...this.options.path.value]);
     }
   }
-  get hasmore() {
-    return !!(this.options.length);
-  }
-  option(value: any) {
-    return this.options.option(value);
-  }
+
   onOptionsSelectedPathChanged() {
     if (this.select === 'pick') {
       this.setSelectedPath(!!this.options.path.value.length, [...this.options.path.value]);
@@ -81,9 +96,9 @@ export class Item extends IoNode {
     }
   }
   setSelectedPath(selected: any, path: any[] = []) {
-    this.path.value = path;
+    this.options.path.value = path;
     this.selected = selected;
-    this.dispatchEvent('path-changed', this.path); // TODO: TEMP HACK
+    this.dispatchEvent('path-changed', this.options.path); // TODO: TEMP HACK
   }
   changed() {
     this.dispatchEvent('changed');

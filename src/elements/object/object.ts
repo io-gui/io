@@ -38,7 +38,9 @@ export class IoObject extends IoElement {
   }
   static get Properties(): any {
     return {
-      value: Object,
+      value: {
+        type: Object
+      },
       properties: Array,
       config: Object,
       labeled: true,

@@ -122,9 +122,9 @@
   <body>
     <script type="module">
 
-    import { Options, RegisterIoElement, Path, IoSelectorTabs, IoStorage as $ } from 'io-gui';
+    import { MenuOptions, RegisterIoElement, Path, IoSelectorTabs, IoStorage as $ } from 'io-gui';
 
-    const OPTIONS = new Options([
+    const OPTIONS = new MenuOptions([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
       {label: 'Docs', value: 'docs', options: [
         {label: 'Getting Started', value: 'getting-started', options: [
@@ -226,7 +226,7 @@
       ]},
       {label: 'Tests', value: 'tests'},
     ], {
-      path: new Path({string: $({key: 'path', storage: 'hash', value: 'home'})}),
+      path: new Path({serialize: true, serialized: $({key: 'path', storage: 'hash', value: 'home'})}),
     });
 
     export class IoMainPage extends IoSelectorTabs {
@@ -245,32 +245,32 @@
               path: './README.md'}],
             ['io-selector', {
               name: 'docs',
-              selected: OPTIONS.option('docs').path.bind('root'),
-              options: OPTIONS.option('docs').options,
+              selected: OPTIONS.getItem('docs').path.bind('root'),
+              options: OPTIONS.getItem('docs').options,
               elements: [
                 ['io-md-view-selector', {
                   name: 'getting-started',
                   sanitize: false,
-                  selected: OPTIONS.option('docs').options.option('getting-started').path.bind('root'),
-                  options: OPTIONS.option('docs').options.option('getting-started').options,
+                  selected: OPTIONS.getItem('docs').getSubitem('getting-started').path.bind('root'),
+                  options: OPTIONS.getItem('docs').getSubitem('getting-started').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'learn-more',
                   sanitize: false,
-                  selected: OPTIONS.option('docs').options.option('learn-more').path.bind('root'),
-                  options: OPTIONS.option('docs').options.option('learn-more').options,
+                  selected: OPTIONS.getItem('docs').getSubitem('learn-more').path.bind('root'),
+                  options: OPTIONS.getItem('docs').getSubitem('learn-more').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'reference',
                   sanitize: false,
                   // search: true, // TODO: implement
-                  selected: OPTIONS.option('docs').options.option('reference').path.bind('root'),
-                  options: OPTIONS.option('docs').options.option('reference').options,
+                  selected: OPTIONS.getItem('docs').getSubitem('reference').path.bind('root'),
+                  options: OPTIONS.getItem('docs').getSubitem('reference').options,
                 }],
                 ['io-md-view', {name: 'development-guidelines', path: './docs/development-guidelines.md'}],
               ]
             }],
-            ['io-selector', {name: 'demos', selected: OPTIONS.option('demos').path.bind('root'), elements: [
+            ['io-selector', {name: 'demos', selected: OPTIONS.getItem('demos').path.bind('root'), elements: [
               ['io-demo-elements', {name: 'elements', import: './demos/elements.js'}],
               ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],
               ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],

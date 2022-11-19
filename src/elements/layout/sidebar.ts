@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {Binding} from '../../core/internals/binding.js';
-import {Options} from '../../models/options.js';
+import { MenuOptions } from '../../models/options.js';
 import {IoStorage as $} from '../../core/storage.js';
 
 /*
@@ -72,7 +72,7 @@ export class IoSidebar extends IoElement {
     return {
       selected: null,
       options: {
-        type: Options,
+        type: MenuOptions,
         observe: true,
       },
       collapsed: {

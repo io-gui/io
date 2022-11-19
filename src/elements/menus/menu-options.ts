@@ -1,7 +1,7 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { Binding } from '../../core/internals/binding.js';
-import {Options} from '../../models/options.js';
-import {Item} from '../../models/item.js';
+import { MenuOptions } from '../../models/options.js';
+import { MenuItem } from '../../models/item.js';
 import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuItem} from './menu-item.js';
 
@@ -105,7 +105,7 @@ export class IoMenuOptions extends IoElement {
   static get Properties(): any {
     return {
       options: {
-        type: Options,
+        type: MenuOptions,
         observe: true,
       },
       value: null,
@@ -147,7 +147,7 @@ export class IoMenuOptions extends IoElement {
   }
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;
-    const d = event.detail as Item;
+    const d = event.detail as MenuItem;
     if (item.localName === 'io-string') {
       event.stopImmediatePropagation();
       return;
@@ -207,7 +207,7 @@ export class IoMenuOptions extends IoElement {
   //         overflow = true;
   //       }
   //     }
-  //     // hamburger._properties.props.option.value = new Item({options: new Options(hamburgerOptions)});
+  //     // hamburger._properties.props.option.value = new MenuItem({options: new MenuOptions(hamburgerOptions)});
   //     this.overflow = overflow;
   //   } else {
   //     for (let i = buttons.length; i--;) {
@@ -298,7 +298,7 @@ export class IoMenuOptions extends IoElement {
         }
         return false;
       });
-      return options.length ? options : new Options([new Item({label: 'No matches'})]);
+      return options.length ? options : new MenuOptions([new MenuItem({label: 'No matches'})]);
     }
     return this.options;
   }
@@ -328,7 +328,7 @@ export class IoMenuOptions extends IoElement {
       //   title: 'select tab',
       //   depth: this.depth + 1,
       //   class: 'io-hamburger',
-      //   option: new Item({
+      //   option: new MenuItem({
       //     options: this._options
       //   }),
       //   lazy: false,

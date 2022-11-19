@@ -495,7 +495,6 @@ export default class {
           notify: undefined,
           observe: undefined,
         });
-        console.log(prop);
         chai.expect(prop).to.be.eql({
           value: undefined,
           type: [Object, Object1],

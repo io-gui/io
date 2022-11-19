@@ -1,5 +1,5 @@
 import { RegisterIoElement } from '../../core/element.js';
-import {Item} from '../../models/item.js';
+import { MenuItem } from '../../models/item.js';
 import {IoField} from '../basic/field.js';
 import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuOptions} from './menu-options.js';
@@ -81,7 +81,7 @@ export class IoMenuItem extends IoField {
   static get Properties(): any {
     return {
       option: {
-        type: Item,
+        type: MenuItem,
       },
       expanded: {
         value: false,
@@ -103,7 +103,7 @@ export class IoMenuItem extends IoField {
       'click': 'preventDefault',
     };
   }
-  _option?: Item;
+  _option?: MenuItem;
   preventDefault(event: Event) {
     event.stopPropagation();
     event.preventDefault();

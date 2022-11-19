@@ -1,90 +1,85 @@
-import {IoNode, RegisterIoNode} from '../core/node.js';
+import { IoNode, RegisterIoNode } from '../core/node.js';
 import { Property } from '../core/internals/property.js';
 import { Binding } from '../core/internals/binding.js';
 
 @RegisterIoNode
 export class Path extends IoNode {
 
-  @Property({type: Array})
-  // @Property([]) // TODO: consider prohibiting this pattern!
+  @Property({type: Array, observe: true})
   declare value: any[];
 
-  @Property({value: null})
+  @Property(undefined)
   declare root: any;
 
-  @Property({value: null})
+  @Property(undefined)
   declare leaf: any;
 
-  @Property('')
-  declare string: string;
+  @Property(false)
+  declare serialize: boolean;
 
-  @Property(':')
+  @Property('')
+  declare serialized: string;
+
+  @Property(',')
   declare delimiter: string;
 
   init() {
-    // TODO: make sure minimal number of instances is used
+    // TODO: make sure minimal number of instances is used!
+    this.valueChanged();
+  }
+
+  valueMutatied() {
+    // TODO: test with menu options!
     this.valueChanged();
   }
 
   valueChanged() {
-    // TODO: redesign. Investigate why inputValue causes infinite loop.
-    this._properties.get('value')!.value = new Proxy(this._properties.get('value')!.value, {
-      get: (target, prop) => target[prop],
-      set: (target, prop, value) => {
-        if (target[prop] === value) return true;
-        target[prop] = value;
-        this.update();
-        this.throttle(this.onMutation);
-        return true;
-      }
-    });
-    this.update();
-    this.throttle(this.onMutation, undefined, true);
-  }
-  onMutation() {
-    this.dispatchQueue();
-  }
-  update() {
     this.setProperties({
-      'string': this._valueToString(this.value),
+      'serialized': this.serialize ? this._serialize(this.value) : '',
       'leaf': this.value[this.value.length - 1],
       'root': this.value[0],
     });
   }
 
-  // valueChanged() {
-  //   this.setProperties({
-  //     'string': this._valueToString(this.value),
-  //     'leaf': this.value[this.value.length - 1] || '',
-  //     'root': this.value[0] || '',
-  //   });
-  // }
-
-  _valueToString(value: string[]) {
+  _serialize(value: string[]) {
     let string = '';
     for (let i = 0; i < value.length; i++) {
       const val = value[i];
-      debug: {
-        if (val && typeof val === 'string' && val.search(this.delimiter) !== -1) {
-          console.warn(`IoGUI Path: Value ${val} with special string "${this.delimiter}" cannot be used in path!`);
-          break;
+      if (typeof val === 'string') {
+        if (val.search(this.delimiter) !== -1) {
+          console.error('Path: Cannot serialize value', value);
+          return '';
         }
-      }
-      // if (typeof val === 'string' || typeof val === 'number') {
         string += val;
-      // }
+      } else if (typeof val === 'number') {
+        if (isNaN(val)) {
+          console.error('Path: Cannot serialize value', value);
+          return '';
+        }
+        string += val;
+      } else {
+        console.error('Path: Cannot serialize value', value);
+        return '';
+      }
       if (i !== value.length - 1 && String(value[value.length - 1]) !== '') string += this.delimiter;
     }
-    // console.log(string);
     return string;
   }
 
-  stringChanged() {
-    const array = this.string ? [...this.string.split(this.delimiter)] : [];
-    for (let i = 0; i < array.length; i++) {
-      if (this.value[i] !== array[i]) this.value[i] = array[i];
+  serializedChanged() {
+    debug: {
+      if (this.serialize === false) {
+        console.warn('Path: Serialization not enabled for path instance');
+      }
     }
-    this.value.length = array.length;
+    if (this.serialize === true) {
+      const array = this.serialized ? [...this.serialized.split(this.delimiter)] : [];
+      for (let i = 0; i < array.length; i++) {
+        const num = Number(array[i]);
+        this.value[i] = isNaN(num) ? array[i] : num;
+      }
+      this.value.length = array.length;
+    }
   }
 
   rootChanged() {
@@ -93,7 +88,7 @@ export class Path extends IoNode {
         this.value.length = 0;
         this.value.push(this.root);
         this.setProperties({
-          string: this.root !== undefined ? this.root : '',
+          serialized: this.serialize ? this._serialize(this.value) : '',
           leaf: this.root,
         });
         this.dispatchEvent('object-mutated', {object: this.value}, false, window);
@@ -101,10 +96,18 @@ export class Path extends IoNode {
     } else {
       this.value.length = 0;
       this.setProperties({
-        string: '',
+        serialized: '',
         leaf: undefined,
       });
       this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+    }
+  }
+
+  leafChanged() {
+    debug: {
+      if (this.value[this.value.length - 1] !== this.leaf) {
+        console.warn(`Path: leaf property "${this.leaf}" diverged from path value[value.length - 1] "${this.value[this.value.length - 1]}"`);
+      }
     }
   }
 

@@ -1,43 +1,57 @@
-import {IoNodeMixin, RegisterIoNode} from '../core/node.js';
-import {Item} from './item.js';
-import {Path} from './path.js';
+import { IoNodeMixin, RegisterIoNode } from '../core/node.js';
+import { MenuItem } from './item.js';
+import { Path } from './path.js';
+import { Property } from '../core/internals/property.js';
 
 // TODO: document and test!
 // TODO: consider menu model mutations.
 @RegisterIoNode
-export class Options extends IoNodeMixin(Array) {
-  static get Properties() {
-    return {
-      items: {
-        type: Array,
-      },
-      path: {
-        type: Path,
-      },
-      lazy: true // TODO: test and recosider
-    };
+export class MenuOptions extends IoNodeMixin(Array) {
+
+  // static get Properties() {
+  //   return {};
+  // }
+
+  @Property(Array) // TODO: investigate why this breaks
+  declare items: Array<MenuItem>;
+
+  @Property(Path)
+  declare path: Path;
+
+  @Property(true) // TODO: test and recosider
+  declare lazy: boolean;
+
+  getItem(value: any) {
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].value === value) return this[i];
+    }
+    return null;
   }
-  constructor(options: Array<Item | any> = [], props = {}) {
+
+  push(...items: Array<MenuItem | any>) {
+    for (let i = 0; i < items.length; i++) {
+      if (!(items[i] instanceof MenuItem)) {
+        items[i] = new MenuItem(items[i]);
+      }
+    }
+    super.push(...items);
+  }
+
+  constructor(options: Array<MenuItem | any> = [], props = {}) {
     super(props);
     for (let i = 0; i < options.length; i++) {
       let option;
-      if (options[i] instanceof Item) {
+      if (options[i] instanceof MenuItem) {
         option = options[i];
       } else if (typeof options[i] === 'object') {
-        option = new Item(options[i]);
+        option = new MenuItem(options[i]);
       } else {
-        option = new Item({value: options[i]});
+        option = new MenuItem({value: options[i]});
       }
       this.push(option);
       option.addEventListener('selected-changed', this.onItemSelectedChanged);
       option.addEventListener('path-changed', this.onItemSelectedPathChanged);
     }
-  }
-  option(value: any) {
-    for (let i = 0; i < this.length; i++) {
-      if (this[i].value === value) return this[i];
-    }
-    return null;
   }
   pathChanged() {
     const path = this.path.value;
