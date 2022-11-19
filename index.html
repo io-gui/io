@@ -251,26 +251,26 @@
                 ['io-md-view-selector', {
                   name: 'getting-started',
                   sanitize: false,
-                  selected: OPTIONS.option('docs').options.option('getting-started').path.bind('leaf'),
+                  selected: OPTIONS.option('docs').options.option('getting-started').path.bind('root'),
                   options: OPTIONS.option('docs').options.option('getting-started').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'learn-more',
                   sanitize: false,
-                  selected: OPTIONS.option('docs').options.option('learn-more').path.bind('leaf'),
+                  selected: OPTIONS.option('docs').options.option('learn-more').path.bind('root'),
                   options: OPTIONS.option('docs').options.option('learn-more').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'reference',
                   sanitize: false,
                   // search: true, // TODO: implement
-                  selected: OPTIONS.option('docs').options.option('reference').path.bind('leaf'),
+                  selected: OPTIONS.option('docs').options.option('reference').path.bind('root'),
                   options: OPTIONS.option('docs').options.option('reference').options,
                 }],
                 ['io-md-view', {name: 'development-guidelines', path: './docs/development-guidelines.md'}],
               ]
             }],
-            ['io-selector', {name: 'demos', selected: OPTIONS.option('demos').path.bind('leaf'), elements: [
+            ['io-selector', {name: 'demos', selected: OPTIONS.option('demos').path.bind('root'), elements: [
               ['io-demo-elements', {name: 'elements', import: './demos/elements.js'}],
               ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],
               ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],
