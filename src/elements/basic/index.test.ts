@@ -1,12 +1,12 @@
-import BooleanElementTest from './boolean.test.js';
-import ButtonElementTest from './button.test.js';
-import FieldElementTest from './field.test.js';
-import IconElementTest from './icon.test.js';
-import IconsetElementTest from './iconset.test.js';
-import LabelElementTest from './label.test.js';
-import SwitchElementTest from './switch.test.js';
-import StringElementTest from './string.test.js';
-import NumberElementTest from './number.test.js';
+import BooleanElementTest from './io-boolean.test.js';
+import ButtonElementTest from './io-button.test.js';
+import FieldElementTest from './io-field.test.js';
+import IconElementTest from './io-icon.test.js';
+import IconsetElementTest from './io-iconset.test.js';
+import LabelElementTest from './io-label.test.js';
+import SwitchElementTest from './io-switch.test.js';
+import StringElementTest from './io-string.test.js';
+import NumberElementTest from './io-number.test.js';
 
 export default class {
   run() {

@@ -1,1 +1,1 @@
-export {IoNotify} from './notify.js';
+export {IoNotify} from './io-notify.js';

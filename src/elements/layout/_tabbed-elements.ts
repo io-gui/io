@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import './selector.js';
+import './io-selector.js';
 
 const _dragicon = document.createElement('io-tab-dragicon') as any;
 const _dropzone = document.createElement('io-tab-dropzone') as any;

@@ -1,3 +1,3 @@
-export {IoInspector} from './inspector.js';
-export {IoObject} from './object.js';
-export {IoProperties} from './properties.js';
+export {IoInspector} from './io-inspector.js';
+export {IoObject} from './io-object.js';
+export {IoProperties} from './io-properties.js';
