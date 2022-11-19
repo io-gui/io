@@ -758,22 +758,22 @@ export declare class IoLayer extends IoElement {
 }
 export declare const IoLayerSingleton: IoLayer;
 export declare class Path extends IoNode {
-	static get Properties(): {
-		value: ArrayConstructor;
-		string: StringConstructor;
-		root: null;
-		leaf: null;
-		delimiter: string;
-	};
-	constructor(...args: any[]);
+	value: any[];
+	root: any;
+	leaf: any;
+	serialize: boolean;
+	serialized: string;
+	delimiter: string;
+	init(): void;
+	valueMutatied(): void;
 	valueChanged(): void;
-	onMutation(): void;
-	update(): void;
-	stringChanged(): void;
+	_serialize(value: string[]): string;
+	serializedChanged(): void;
 	rootChanged(): void;
 	leafChanged(): void;
+	bind(prop: string): Binding;
 }
-declare const Options_base: {
+declare const MenuOptions_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
@@ -803,18 +803,13 @@ declare const Options_base: {
 	[x: string]: any;
 	readonly Properties: PropertyDeclarations;
 };
-export declare class Options extends Options_base {
-	static get Properties(): {
-		items: {
-			type: ArrayConstructor;
-		};
-		path: {
-			type: typeof Path;
-		};
-		lazy: boolean;
-	};
-	constructor(options?: Array<Item | any>, props?: {});
-	option(value: any): any;
+export declare class MenuOptions extends MenuOptions_base {
+	items: Array<MenuItem>;
+	path: Path;
+	lazy: boolean;
+	getItem(value: any): any;
+	push(...items: Array<MenuItem | any>): void;
+	constructor(options?: Array<MenuItem | any>, props?: {});
 	pathChanged(): void;
 	onItemSelectedPathChanged(event: any): void;
 	onItemSelectedChanged(event: any): void;
@@ -822,25 +817,19 @@ export declare class Options extends Options_base {
 	selectDefault(): boolean;
 	changed(): void;
 }
-export declare class Item extends IoNode {
-	static get Properties(): {
-		value: undefined;
-		label: string;
-		icon: string;
-		hint: string;
-		action: undefined;
-		select: string;
-		selected: BooleanConstructor;
-		path: {
-			type: typeof Path;
-		};
-		options: {
-			type: typeof Options;
-		};
-	};
-	constructor(option: any);
+export declare class MenuItem extends IoNode {
+	value: any;
+	label: string;
+	icon: string;
+	hint: string;
+	action: () => void | undefined;
+	select: "pick" | "toggle" | "pick" | "none";
+	selected: boolean;
+	options: MenuOptions;
+	get path(): Path;
 	get hasmore(): boolean;
-	option(value: any): any;
+	getSubitem(value: any): any;
+	constructor(option: any);
 	onOptionsSelectedPathChanged(): void;
 	optionsChanged(): void;
 	selectedChanged(): void;
@@ -1408,7 +1397,7 @@ export declare class IoMenuItem extends IoField {
 	static get Style(): string;
 	static get Properties(): any;
 	static get Listeners(): any;
-	_option?: Item;
+	_option?: MenuItem;
 	preventDefault(event: Event): void;
 	get hasmore(): any;
 	get inlayer(): any;
