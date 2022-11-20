@@ -1,18 +1,18 @@
-# Class: IoButton
+# Class: IoLayoutDivider
 
 Core `IoElement` class.
 
 ## Hierarchy
 
-- [`IoField`](IoField.md)
+- [`IoElement`](IoElement.md)
 
-  ↳ **`IoButton`**
+  ↳ **`IoLayoutDivider`**
 
 ## Constructors
 
 ### constructor
 
-**new IoButton**(`properties?`, ...`args`)
+**new IoLayoutDivider**(`properties?`, ...`args`)
 
 Creates a class instance and initializes the internals.
 
@@ -25,7 +25,7 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-[IoField](IoField.md).[constructor](IoField.md#constructor)
+[IoElement](IoElement.md).[constructor](IoElement.md#constructor)
 
 #### Defined in
 
@@ -39,7 +39,7 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-[IoField](IoField.md).[$](IoField.md#$)
+[IoElement](IoElement.md).[$](IoElement.md#$)
 
 #### Defined in
 
@@ -53,7 +53,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[_bindings](IoField.md#_bindings)
+[IoElement](IoElement.md).[_bindings](IoElement.md#_bindings)
 
 #### Defined in
 
@@ -67,7 +67,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[_changeQueue](IoField.md#_changequeue)
+[IoElement](IoElement.md).[_changeQueue](IoElement.md#_changequeue)
 
 #### Defined in
 
@@ -81,7 +81,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[_eventDispatcher](IoField.md#_eventdispatcher)
+[IoElement](IoElement.md).[_eventDispatcher](IoElement.md#_eventdispatcher)
 
 #### Defined in
 
@@ -95,7 +95,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[_properties](IoField.md#_properties)
+[IoElement](IoElement.md).[_properties](IoElement.md#_properties)
 
 #### Defined in
 
@@ -109,21 +109,11 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[_protochain](IoField.md#_protochain)
+[IoElement](IoElement.md).[_protochain](IoElement.md#_protochain)
 
 #### Defined in
 
 [src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
-
-___
-
-### action
-
- `Optional` **action**: `any`
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:29](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L29)
 
 ___
 
@@ -133,7 +123,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[class](IoField.md#class)
+[IoElement](IoElement.md).[class](IoElement.md#class)
 
 #### Defined in
 
@@ -147,7 +137,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[contenteditable](IoField.md#contenteditable)
+[IoElement](IoElement.md).[contenteditable](IoElement.md#contenteditable)
 
 #### Defined in
 
@@ -161,7 +151,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[disabled](IoField.md#disabled)
+[IoElement](IoElement.md).[disabled](IoElement.md#disabled)
 
 #### Defined in
 
@@ -175,25 +165,11 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[hidden](IoField.md#hidden)
+[IoElement](IoElement.md).[hidden](IoElement.md#hidden)
 
 #### Defined in
 
 [src/core/element.ts:238](https://github.com/io-gui/io/blob/main/src/core/element.ts#L238)
-
-___
-
-### icon
-
- **icon**: `string`
-
-#### Inherited from
-
-[IoField](IoField.md).[icon](IoField.md#icon)
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:70](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L70)
 
 ___
 
@@ -203,7 +179,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[id](IoField.md#id)
+[IoElement](IoElement.md).[id](IoElement.md#id)
 
 #### Defined in
 
@@ -217,7 +193,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[label](IoField.md#label)
+[IoElement](IoElement.md).[label](IoElement.md#label)
 
 #### Defined in
 
@@ -231,7 +207,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[name](IoField.md#name)
+[IoElement](IoElement.md).[name](IoElement.md#name)
 
 #### Defined in
 
@@ -239,69 +215,17 @@ ___
 
 ___
 
-### pressed
-
- **pressed**: `boolean`
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:35](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L35)
-
-___
-
-### reverse
-
- **reverse**: `boolean`
-
-#### Inherited from
-
-[IoField](IoField.md).[reverse](IoField.md#reverse)
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:76](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L76)
-
-___
-
 ### role
 
  **role**: `string`
 
-#### Overrides
-
-[IoField](IoField.md).[role](IoField.md#role)
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:38](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L38)
-
-___
-
-### selected
-
- **selected**: `boolean`
-
 #### Inherited from
 
-[IoField](IoField.md).[selected](IoField.md#selected)
+[IoElement](IoElement.md).[role](IoElement.md#role)
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:79](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L79)
-
-___
-
-### stroke
-
- **stroke**: `boolean`
-
-#### Inherited from
-
-[IoField](IoField.md).[stroke](IoField.md#stroke)
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:73](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L73)
+[src/core/element.ts:223](https://github.com/io-gui/io/blob/main/src/core/element.ts#L223)
 
 ___
 
@@ -311,11 +235,11 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[tabindex](IoField.md#tabindex)
+[IoElement](IoElement.md).[tabindex](IoElement.md#tabindex)
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:64](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L64)
+[src/core/element.ts:214](https://github.com/io-gui/io/blob/main/src/core/element.ts#L214)
 
 ___
 
@@ -325,25 +249,11 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[title](IoField.md#title)
+[IoElement](IoElement.md).[title](IoElement.md#title)
 
 #### Defined in
 
 [src/core/element.ts:232](https://github.com/io-gui/io/blob/main/src/core/element.ts#L232)
-
-___
-
-### value
-
- **value**: `any`
-
-#### Overrides
-
-[IoField](IoField.md).[value](IoField.md#value)
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:32](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L32)
 
 ## Accessors
 
@@ -357,7 +267,7 @@ ___
 
 #### Inherited from
 
-IoField.textNode
+IoElement.textNode
 
 #### Defined in
 
@@ -377,7 +287,7 @@ IoField.textNode
 
 #### Inherited from
 
-IoField.textNode
+IoElement.textNode
 
 #### Defined in
 
@@ -395,36 +305,29 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `click` | `string` |
-| `focus` | `string` |
-| `focus-to` | `string` |
-| `pointerdown` | `string` |
-
-#### Inherited from
-
-IoField.Listeners
+| `pointermove` | `string` |
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:81](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L81)
+[src/elements/layout/io-layout.ts:258](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L258)
 
 ___
 
 ### Properties
 
-`Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+`Static` `get` **Properties**(): `any`
 
 #### Returns
 
-[`PropertyDeclarations`](../README.md#propertydeclarations)
+`any`
 
-#### Inherited from
+#### Overrides
 
-IoField.Properties
+IoElement.Properties
 
 #### Defined in
 
-[src/core/node.ts:37](https://github.com/io-gui/io/blob/main/src/core/node.ts#L37)
+[src/elements/layout/io-layout.ts:248](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L248)
 
 ___
 
@@ -438,11 +341,11 @@ ___
 
 #### Overrides
 
-IoField.Style
+IoElement.Style
 
 #### Defined in
 
-[src/elements/basic/io-button.ts:7](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L7)
+[src/elements/layout/io-layout.ts:210](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L210)
 
 ___
 
@@ -456,7 +359,7 @@ ___
 
 #### Inherited from
 
-IoField.observedAttributes
+IoElement.observedAttributes
 
 #### Defined in
 
@@ -483,197 +386,11 @@ Update textContent via TextNode is better for layout performance.
 
 #### Inherited from
 
-[IoField](IoField.md).[_flattenTextNode](IoField.md#_flattentextnode)
+[IoElement](IoElement.md).[_flattenTextNode](IoElement.md#_flattentextnode)
 
 #### Defined in
 
 [src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
-
-___
-
-### \_onBlur
-
-**_onBlur**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `FocusEvent` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoField](IoField.md).[_onBlur](IoField.md#_onblur)
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:94](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L94)
-
-___
-
-### \_onClick
-
-**_onClick**(): `void`
-
-#### Returns
-
-`void`
-
-#### Overrides
-
-[IoField](IoField.md).[_onClick](IoField.md#_onclick)
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:62](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L62)
-
-___
-
-### \_onFocus
-
-**_onFocus**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `FocusEvent` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoField](IoField.md).[_onFocus](IoField.md#_onfocus)
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:89](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L89)
-
-___
-
-### \_onFocusTo
-
-**_onFocusTo**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `CustomEvent`<`any`\> |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoField](IoField.md).[_onFocusTo](IoField.md#_onfocusto)
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:140](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L140)
-
-___
-
-### \_onKeydown
-
-**_onKeydown**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `KeyboardEvent` |
-
-#### Returns
-
-`void`
-
-#### Overrides
-
-[IoField](IoField.md).[_onKeydown](IoField.md#_onkeydown)
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:52](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L52)
-
-___
-
-### \_onKeyup
-
-**_onKeyup**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `KeyboardEvent` |
-
-#### Returns
-
-`void`
-
-#### Overrides
-
-[IoField](IoField.md).[_onKeyup](IoField.md#_onkeyup)
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:58](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L58)
-
-___
-
-### \_onPointerdown
-
-**_onPointerdown**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
-
-#### Returns
-
-`void`
-
-#### Overrides
-
-[IoField](IoField.md).[_onPointerdown](IoField.md#_onpointerdown)
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:40](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L40)
-
-___
-
-### \_onPointerleave
-
-**_onPointerleave**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
-
-#### Returns
-
-`void`
-
-#### Overrides
-
-[IoField](IoField.md).[_onPointerleave](IoField.md#_onpointerleave)
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:44](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L44)
 
 ___
 
@@ -691,37 +408,9 @@ ___
 
 `void`
 
-#### Inherited from
-
-[IoField](IoField.md).[_onPointermove](IoField.md#_onpointermove)
-
 #### Defined in
 
-[src/elements/basic/io-field.ts:105](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L105)
-
-___
-
-### \_onPointerup
-
-**_onPointerup**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
-
-#### Returns
-
-`void`
-
-#### Overrides
-
-[IoField](IoField.md).[_onPointerup](IoField.md#_onpointerup)
-
-#### Defined in
-
-[src/elements/basic/io-button.ts:48](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L48)
+[src/elements/layout/io-layout.ts:263](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L263)
 
 ___
 
@@ -745,7 +434,7 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-[IoField](IoField.md).[addEventListener](IoField.md#addeventlistener)
+[IoElement](IoElement.md).[addEventListener](IoElement.md#addeventlistener)
 
 #### Defined in
 
@@ -769,7 +458,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[applyProperties](IoField.md#applyproperties)
+[IoElement](IoElement.md).[applyProperties](IoElement.md#applyproperties)
 
 #### Defined in
 
@@ -795,7 +484,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[attributeChangedCallback](IoField.md#attributechangedcallback)
+[IoElement](IoElement.md).[attributeChangedCallback](IoElement.md#attributechangedcallback)
 
 #### Defined in
 
@@ -823,7 +512,7 @@ Binding object.
 
 #### Inherited from
 
-[IoField](IoField.md).[bind](IoField.md#bind)
+[IoElement](IoElement.md).[bind](IoElement.md#bind)
 
 #### Defined in
 
@@ -844,11 +533,11 @@ Invoked when one of the properties change.
 
 #### Overrides
 
-[IoField](IoField.md).[changed](IoField.md#changed)
+[IoElement](IoElement.md).[changed](IoElement.md#changed)
 
 #### Defined in
 
-[src/elements/basic/io-button.ts:69](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L69)
+[src/elements/layout/io-layout.ts:273](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L273)
 
 ___
 
@@ -864,7 +553,7 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoField](IoField.md).[connectedCallback](IoField.md#connectedcallback)
+[IoElement](IoElement.md).[connectedCallback](IoElement.md#connectedcallback)
 
 #### Defined in
 
@@ -882,7 +571,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[disabledChanged](IoField.md#disabledchanged)
+[IoElement](IoElement.md).[disabledChanged](IoElement.md#disabledchanged)
 
 #### Defined in
 
@@ -902,7 +591,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoField](IoField.md).[disconnectedCallback](IoField.md#disconnectedcallback)
+[IoElement](IoElement.md).[disconnectedCallback](IoElement.md#disconnectedcallback)
 
 #### Defined in
 
@@ -931,7 +620,7 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-[IoField](IoField.md).[dispatchEvent](IoField.md#dispatchevent)
+[IoElement](IoElement.md).[dispatchEvent](IoElement.md#dispatchevent)
 
 #### Defined in
 
@@ -951,7 +640,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-[IoField](IoField.md).[dispatchQueue](IoField.md#dispatchqueue)
+[IoElement](IoElement.md).[dispatchQueue](IoElement.md#dispatchqueue)
 
 #### Defined in
 
@@ -971,7 +660,7 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-[IoField](IoField.md).[dispatchQueueSync](IoField.md#dispatchqueuesync)
+[IoElement](IoElement.md).[dispatchQueueSync](IoElement.md#dispatchqueuesync)
 
 #### Defined in
 
@@ -992,7 +681,7 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-[IoField](IoField.md).[dispose](IoField.md#dispose)
+[IoElement](IoElement.md).[dispose](IoElement.md#dispose)
 
 #### Defined in
 
@@ -1017,53 +706,11 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[disposeDeep](IoField.md#disposedeep)
+[IoElement](IoElement.md).[disposeDeep](IoElement.md#disposedeep)
 
 #### Defined in
 
 [src/core/element.ts:295](https://github.com/io-gui/io/blob/main/src/core/element.ts#L295)
-
-___
-
-### focusTo
-
-**focusTo**(`dir`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `dir` | `string` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoField](IoField.md).[focusTo](IoField.md#focusto)
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:247](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L247)
-
-___
-
-### getCaretPosition
-
-**getCaretPosition**(): `number`
-
-#### Returns
-
-`number`
-
-#### Inherited from
-
-[IoField](IoField.md).[getCaretPosition](IoField.md#getcaretposition)
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:251](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L251)
 
 ___
 
@@ -1075,13 +722,13 @@ ___
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-[IoField](IoField.md).[init](IoField.md#init)
+[IoElement](IoElement.md).[init](IoElement.md#init)
 
 #### Defined in
 
-[src/elements/basic/io-button.ts:66](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L66)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
 ___
 
@@ -1104,7 +751,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-[IoField](IoField.md).[inputValue](IoField.md#inputvalue)
+[IoElement](IoElement.md).[inputValue](IoElement.md#inputvalue)
 
 #### Defined in
 
@@ -1122,7 +769,7 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[labelChanged](IoField.md#labelchanged)
+[IoElement](IoElement.md).[labelChanged](IoElement.md#labelchanged)
 
 #### Defined in
 
@@ -1149,7 +796,7 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoField](IoField.md).[objectMutated](IoField.md#objectmutated)
+[IoElement](IoElement.md).[objectMutated](IoElement.md#objectmutated)
 
 #### Defined in
 
@@ -1176,7 +823,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-[IoField](IoField.md).[onObjectMutated](IoField.md#onobjectmutated)
+[IoElement](IoElement.md).[onObjectMutated](IoElement.md#onobjectmutated)
 
 #### Defined in
 
@@ -1204,7 +851,7 @@ Adds property change to the queue.
 
 #### Inherited from
 
-[IoField](IoField.md).[queue](IoField.md#queue)
+[IoElement](IoElement.md).[queue](IoElement.md#queue)
 
 #### Defined in
 
@@ -1232,7 +879,7 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-[IoField](IoField.md).[removeEventListener](IoField.md#removeeventlistener)
+[IoElement](IoElement.md).[removeEventListener](IoElement.md#removeeventlistener)
 
 #### Defined in
 
@@ -1259,35 +906,11 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-[IoField](IoField.md).[setAttribute](IoField.md#setattribute)
+[IoElement](IoElement.md).[setAttribute](IoElement.md#setattribute)
 
 #### Defined in
 
 [src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
-
-___
-
-### setCaretPosition
-
-**setCaretPosition**(`position`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `position` | `number` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoField](IoField.md).[setCaretPosition](IoField.md#setcaretposition)
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:264](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L264)
 
 ___
 
@@ -1310,7 +933,7 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoField](IoField.md).[setProperties](IoField.md#setproperties)
+[IoElement](IoElement.md).[setProperties](IoElement.md#setproperties)
 
 #### Defined in
 
@@ -1338,7 +961,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-[IoField](IoField.md).[setProperty](IoField.md#setproperty)
+[IoElement](IoElement.md).[setProperty](IoElement.md#setproperty)
 
 #### Defined in
 
@@ -1365,7 +988,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-[IoField](IoField.md).[template](IoField.md#template)
+[IoElement](IoElement.md).[template](IoElement.md#template)
 
 #### Defined in
 
@@ -1393,7 +1016,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-[IoField](IoField.md).[throttle](IoField.md#throttle)
+[IoElement](IoElement.md).[throttle](IoElement.md#throttle)
 
 #### Defined in
 
@@ -1421,7 +1044,7 @@ TODO: test element.traverse() function!
 
 #### Inherited from
 
-[IoField](IoField.md).[traverse](IoField.md#traverse)
+[IoElement](IoElement.md).[traverse](IoElement.md#traverse)
 
 #### Defined in
 
@@ -1447,7 +1070,7 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-[IoField](IoField.md).[unbind](IoField.md#unbind)
+[IoElement](IoElement.md).[unbind](IoElement.md#unbind)
 
 #### Defined in
 

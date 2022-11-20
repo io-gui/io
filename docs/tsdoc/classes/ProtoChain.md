@@ -109,4 +109,4 @@ Binds all auto-binding functions from the `.functions` array to specified `IoNod
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:120](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L120)
+[src/core/internals/protoChain.ts:125](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L125)

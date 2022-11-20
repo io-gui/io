@@ -114,7 +114,7 @@ Adds a target `node` and `targetProp` and corresponding `[property]-changed` lis
 
 #### Defined in
 
-[src/core/internals/binding.ts:35](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L35)
+[src/core/internals/binding.ts:42](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L42)
 
 ___
 
@@ -131,7 +131,7 @@ Use this when node is no longer needed.
 
 #### Defined in
 
-[src/core/internals/binding.ts:140](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L140)
+[src/core/internals/binding.ts:147](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L147)
 
 ___
 
@@ -155,7 +155,7 @@ list of target property names.
 
 #### Defined in
 
-[src/core/internals/binding.ts:81](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L81)
+[src/core/internals/binding.ts:88](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L88)
 
 ___
 
@@ -177,7 +177,7 @@ Event handler that updates bound properties on target nodes when source node emi
 
 #### Defined in
 
-[src/core/internals/binding.ts:114](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L114)
+[src/core/internals/binding.ts:121](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L121)
 
 ___
 
@@ -199,7 +199,7 @@ Event handler that updates source property when one of the targets emits `[prope
 
 #### Defined in
 
-[src/core/internals/binding.ts:95](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L95)
+[src/core/internals/binding.ts:102](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L102)
 
 ___
 
@@ -223,4 +223,18 @@ If `property` is not specified, it removes all target properties.
 
 #### Defined in
 
-[src/core/internals/binding.ts:60](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L60)
+[src/core/internals/binding.ts:67](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L67)
+
+___
+
+### toJSON
+
+**toJSON**(): `string`
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[src/core/internals/binding.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L30)

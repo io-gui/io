@@ -310,7 +310,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/layout.ts:38](https://github.com/io-gui/io/blob/main/src/elements/layout/layout.ts#L38)
+[src/elements/layout/io-layout.ts:38](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L38)
 
 ___
 
@@ -328,7 +328,7 @@ IoElement.Properties
 
 #### Defined in
 
-[src/elements/layout/layout.ts:24](https://github.com/io-gui/io/blob/main/src/elements/layout/layout.ts#L24)
+[src/elements/layout/io-layout.ts:24](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L24)
 
 ___
 
@@ -346,7 +346,7 @@ IoElement.Style
 
 #### Defined in
 
-[src/elements/layout/layout.ts:8](https://github.com/io-gui/io/blob/main/src/elements/layout/layout.ts#L8)
+[src/elements/layout/io-layout.ts:8](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L8)
 
 ___
 
@@ -411,7 +411,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/layout.ts:167](https://github.com/io-gui/io/blob/main/src/elements/layout/layout.ts#L167)
+[src/elements/layout/io-layout.ts:167](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L167)
 
 ___
 
@@ -431,7 +431,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/layout.ts:132](https://github.com/io-gui/io/blob/main/src/elements/layout/layout.ts#L132)
+[src/elements/layout/io-layout.ts:132](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L132)
 
 ___
 
@@ -445,7 +445,7 @@ ___
 
 #### Defined in
 
-[src/elements/layout/layout.ts:44](https://github.com/io-gui/io/blob/main/src/elements/layout/layout.ts#L44)
+[src/elements/layout/io-layout.ts:44](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L44)
 
 ___
 
@@ -473,7 +473,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
 ___
 
@@ -551,7 +551,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
+[src/core/node.ts:306](https://github.com/io-gui/io/blob/main/src/core/node.ts#L306)
 
 ___
 
@@ -572,7 +572,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/layout/layout.ts:52](https://github.com/io-gui/io/blob/main/src/elements/layout/layout.ts#L52)
+[src/elements/layout/io-layout.ts:52](https://github.com/io-gui/io/blob/main/src/elements/layout/io-layout.ts#L52)
 
 ___
 
@@ -659,7 +659,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:344](https://github.com/io-gui/io/blob/main/src/core/node.ts#L344)
+[src/core/node.ts:362](https://github.com/io-gui/io/blob/main/src/core/node.ts#L362)
 
 ___
 
@@ -679,7 +679,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:230](https://github.com/io-gui/io/blob/main/src/core/node.ts#L230)
+[src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -699,7 +699,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
 
 ___
 
@@ -720,7 +720,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:351](https://github.com/io-gui/io/blob/main/src/core/node.ts#L351)
+[src/core/node.ts:369](https://github.com/io-gui/io/blob/main/src/core/node.ts#L369)
 
 ___
 
@@ -763,7 +763,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
 ___
 
@@ -790,7 +790,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:205](https://github.com/io-gui/io/blob/main/src/core/node.ts#L205)
+[src/core/node.ts:223](https://github.com/io-gui/io/blob/main/src/core/node.ts#L223)
 
 ___
 
@@ -835,7 +835,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
+[src/core/node.ts:297](https://github.com/io-gui/io/blob/main/src/core/node.ts#L297)
 
 ___
 
@@ -862,7 +862,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:276](https://github.com/io-gui/io/blob/main/src/core/node.ts#L276)
 
 ___
 
@@ -890,7 +890,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+[src/core/node.ts:242](https://github.com/io-gui/io/blob/main/src/core/node.ts#L242)
 
 ___
 
@@ -918,7 +918,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:334](https://github.com/io-gui/io/blob/main/src/core/node.ts#L334)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
@@ -972,7 +972,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:188](https://github.com/io-gui/io/blob/main/src/core/node.ts#L188)
+[src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
 
 ___
 
@@ -1055,7 +1055,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
+[src/core/node.ts:267](https://github.com/io-gui/io/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -1109,4 +1109,4 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/io/blob/main/src/core/node.ts#L303)
+[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)

@@ -8,7 +8,9 @@
 
 - [Binding](classes/Binding.md)
 - [ChangeQueue](classes/ChangeQueue.md)
+- [Config](classes/Config.md)
 - [EventDispatcher](classes/EventDispatcher.md)
+- [Groups](classes/Groups.md)
 - [IoBoolean](classes/IoBoolean.md)
 - [IoButton](classes/IoButton.md)
 - [IoCollapsable](classes/IoCollapsable.md)
@@ -47,6 +49,7 @@
 - [IoLabel](classes/IoLabel.md)
 - [IoLayer](classes/IoLayer.md)
 - [IoLayout](classes/IoLayout.md)
+- [IoLayoutDivider](classes/IoLayoutDivider.md)
 - [IoMatrix](classes/IoMatrix.md)
 - [IoMdView](classes/IoMdView.md)
 - [IoMdViewSelector](classes/IoMdViewSelector.md)
@@ -75,12 +78,13 @@
 - [IoSwitch](classes/IoSwitch.md)
 - [IoTheme](classes/IoTheme.md)
 - [IoVector](classes/IoVector.md)
-- [Item](classes/Item.md)
-- [Options](classes/Options.md)
+- [MenuItem](classes/MenuItem.md)
+- [MenuOptions](classes/MenuOptions.md)
 - [Path](classes/Path.md)
 - [PropertyInstance](classes/PropertyInstance.md)
 - [ProtoChain](classes/ProtoChain.md)
 - [ProtoProperty](classes/ProtoProperty.md)
+- [Widgets](classes/Widgets.md)
 
 ## Interfaces
 
@@ -308,7 +312,7 @@ Declares default value, type and reactive behavior of the property.
 | `notify?` | `boolean` |
 | `observe?` | `boolean` |
 | `reflect?` | `Reflect` |
-| `type?` | [`Constructor`](README.md#constructor) |
+| `type?` | [`Constructor`](README.md#constructor) \| [`Constructor`](README.md#constructor)[] |
 | `value?` | `any` |
 
 #### Defined in
@@ -335,7 +339,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:136](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L136)
+[src/core/internals/property.ts:143](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L143)
 
 ___
 
@@ -369,7 +373,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-panel.ts:75](https://github.com/io-gui/io/blob/main/src/elements/color/color-panel.ts#L75)
+[src/elements/color/io-color-panel.ts:76](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-panel.ts#L76)
 
 ___
 
@@ -379,7 +383,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/iconset.ts:28](https://github.com/io-gui/io/blob/main/src/elements/basic/iconset.ts#L28)
+[src/elements/basic/io-iconset.ts:28](https://github.com/io-gui/io/blob/main/src/elements/basic/io-iconset.ts#L28)
 
 ___
 
@@ -399,7 +403,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/number.ts:561](https://github.com/io-gui/io/blob/main/src/elements/basic/number.ts#L561)
+[src/elements/basic/io-number.ts:561](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L561)
 
 ___
 
@@ -453,7 +457,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:138](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L138)
+[src/core/internals/property.ts:145](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L145)
 
 ## Functions
 
@@ -540,7 +544,7 @@ Property decorator function.
 
 #### Defined in
 
-[src/core/internals/property.ts:145](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L145)
+[src/core/internals/property.ts:152](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L152)
 
 ___
 
@@ -584,7 +588,7 @@ Register function to be called once per class.
 
 #### Defined in
 
-[src/core/node.ts:376](https://github.com/io-gui/io/blob/main/src/core/node.ts#L376)
+[src/core/node.ts:394](https://github.com/io-gui/io/blob/main/src/core/node.ts#L394)
 
 ___
 
@@ -634,6 +638,26 @@ ___
 #### Defined in
 
 [src/core/element.ts:60](https://github.com/io-gui/io/blob/main/src/core/element.ts#L60)
+
+___
+
+### getElementDescendants
+
+**getElementDescendants**(`element`): `any`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `element` | [`IoMenuItem`](classes/IoMenuItem.md) |
+
+#### Returns
+
+`any`
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:390](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L390)
 
 ___
 

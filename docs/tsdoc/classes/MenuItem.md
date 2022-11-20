@@ -1,31 +1,32 @@
-# Class: Options
+# Class: MenuItem
+
+IoNodeMixin applied to `Object` class.
 
 ## Hierarchy
 
-- `__class`<`ArrayConstructor`, `this`\>
+- [`IoNode`](IoNode.md)
 
-  ↳ **`Options`**
+  ↳ **`MenuItem`**
 
 ## Constructors
 
 ### constructor
 
-**new Options**(`options?`, `props?`)
+**new MenuItem**(`option`)
 
 #### Parameters
 
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `options` | `any`[] | `[]` |
-| `props` | `Object` | `{}` |
+| Name | Type |
+| :------ | :------ |
+| `option` | `any` |
 
 #### Overrides
 
-IoNodeMixin(Array).constructor
+[IoNode](IoNode.md).[constructor](IoNode.md#constructor)
 
 #### Defined in
 
-[src/models/options.ts:20](https://github.com/io-gui/io/blob/main/src/models/options.ts#L20)
+[src/elements/menus/models/item.ts:48](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L48)
 
 ## Properties
 
@@ -35,7 +36,7 @@ IoNodeMixin(Array).constructor
 
 #### Inherited from
 
-IoNodeMixin(Array).\_bindings
+[IoNode](IoNode.md).[_bindings](IoNode.md#_bindings)
 
 #### Defined in
 
@@ -49,7 +50,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(Array).\_changeQueue
+[IoNode](IoNode.md).[_changeQueue](IoNode.md#_changequeue)
 
 #### Defined in
 
@@ -63,7 +64,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(Array).\_eventDispatcher
+[IoNode](IoNode.md).[_eventDispatcher](IoNode.md#_eventdispatcher)
 
 #### Defined in
 
@@ -77,7 +78,7 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(Array).\_properties
+[IoNode](IoNode.md).[_properties](IoNode.md#_properties)
 
 #### Defined in
 
@@ -91,37 +92,145 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(Array).\_protochain
+[IoNode](IoNode.md).[_protochain](IoNode.md#_protochain)
 
 #### Defined in
 
 [src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
 
-## Accessors
+___
 
-### Properties
+### action
 
-`Static` `get` **Properties**(): `Object`
+ **action**: () => `undefined` \| `void`
 
-#### Returns
+#### Type declaration
 
-`Object`
+(): `undefined` \| `void`
 
-| Name | Type |
-| :------ | :------ |
-| `items` | { `type`: `ArrayConstructor` = Array } |
-| `items.type` | `ArrayConstructor` |
-| `lazy` | `boolean` |
-| `path` | { `type`: typeof [`Path`](Path.md) = Path } |
-| `path.type` | typeof [`Path`](Path.md) |
+##### Returns
 
-#### Overrides
-
-IoNodeMixin(Array).Properties
+`undefined` \| `void`
 
 #### Defined in
 
-[src/models/options.ts:9](https://github.com/io-gui/io/blob/main/src/models/options.ts#L9)
+[src/elements/menus/models/item.ts:25](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L25)
+
+___
+
+### hint
+
+ **hint**: `string`
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:22](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L22)
+
+___
+
+### icon
+
+ **icon**: `string`
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:19](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L19)
+
+___
+
+### label
+
+ **label**: `string`
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:16](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L16)
+
+___
+
+### options
+
+ **options**: [`MenuOptions`](MenuOptions.md)
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:34](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L34)
+
+___
+
+### select
+
+ **select**: ``"none"`` \| ``"toggle"`` \| ``"pick"``
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:28](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L28)
+
+___
+
+### selected
+
+ **selected**: `boolean`
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:31](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L31)
+
+___
+
+### value
+
+ **value**: `any`
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:13](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L13)
+
+## Accessors
+
+### hasmore
+
+`get` **hasmore**(): `boolean`
+
+#### Returns
+
+`boolean`
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:40](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L40)
+
+___
+
+### path
+
+`get` **path**(): [`Path`](Path.md)
+
+#### Returns
+
+[`Path`](Path.md)
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:36](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L36)
+
+___
+
+### Properties
+
+`Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+
+#### Returns
+
+[`PropertyDeclarations`](../README.md#propertydeclarations)
+
+#### Inherited from
+
+IoNode.Properties
+
+#### Defined in
+
+[src/core/node.ts:37](https://github.com/io-gui/io/blob/main/src/core/node.ts#L37)
 
 ## Methods
 
@@ -145,11 +254,11 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-IoNodeMixin(Array).addEventListener
+[IoNode](IoNode.md).[addEventListener](IoNode.md#addeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
 ___
 
@@ -172,11 +281,11 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoNodeMixin(Array).applyProperties
+[IoNode](IoNode.md).[applyProperties](IoNode.md#applyproperties)
 
 #### Defined in
 
-[src/core/node.ts:167](https://github.com/io-gui/io/blob/main/src/core/node.ts#L167)
+[src/core/node.ts:185](https://github.com/io-gui/io/blob/main/src/core/node.ts#L185)
 
 ___
 
@@ -200,11 +309,11 @@ Binding object.
 
 #### Inherited from
 
-IoNodeMixin(Array).bind
+[IoNode](IoNode.md).[bind](IoNode.md#bind)
 
 #### Defined in
 
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
+[src/core/node.ts:306](https://github.com/io-gui/io/blob/main/src/core/node.ts#L306)
 
 ___
 
@@ -212,17 +321,20 @@ ___
 
 **changed**(): `void`
 
+default change handler.
+Invoked when one of the properties change.
+
 #### Returns
 
 `void`
 
 #### Overrides
 
-IoNodeMixin(Array).changed
+[IoNode](IoNode.md).[changed](IoNode.md#changed)
 
 #### Defined in
 
-[src/models/options.ts:123](https://github.com/io-gui/io/blob/main/src/models/options.ts#L123)
+[src/elements/menus/models/item.ts:103](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L103)
 
 ___
 
@@ -247,11 +359,11 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-IoNodeMixin(Array).dispatchEvent
+[IoNode](IoNode.md).[dispatchEvent](IoNode.md#dispatchevent)
 
 #### Defined in
 
-[src/core/node.ts:344](https://github.com/io-gui/io/blob/main/src/core/node.ts#L344)
+[src/core/node.ts:362](https://github.com/io-gui/io/blob/main/src/core/node.ts#L362)
 
 ___
 
@@ -267,11 +379,11 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-IoNodeMixin(Array).dispatchQueue
+[IoNode](IoNode.md).[dispatchQueue](IoNode.md#dispatchqueue)
 
 #### Defined in
 
-[src/core/node.ts:230](https://github.com/io-gui/io/blob/main/src/core/node.ts#L230)
+[src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -287,11 +399,11 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-IoNodeMixin(Array).dispatchQueueSync
+[IoNode](IoNode.md).[dispatchQueueSync](IoNode.md#dispatchqueuesync)
 
 #### Defined in
 
-[src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
 
 ___
 
@@ -308,11 +420,31 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-IoNodeMixin(Array).dispose
+[IoNode](IoNode.md).[dispose](IoNode.md#dispose)
 
 #### Defined in
 
-[src/core/node.ts:351](https://github.com/io-gui/io/blob/main/src/core/node.ts#L351)
+[src/core/node.ts:369](https://github.com/io-gui/io/blob/main/src/core/node.ts#L369)
+
+___
+
+### getSubitem
+
+**getSubitem**(`value`): `any`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `any` |
+
+#### Returns
+
+`any`
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:44](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L44)
 
 ___
 
@@ -326,11 +458,11 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(Array).init
+[IoNode](IoNode.md).[init](IoNode.md#init)
 
 #### Defined in
 
-[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
 ___
 
@@ -353,11 +485,11 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-IoNodeMixin(Array).inputValue
+[IoNode](IoNode.md).[inputValue](IoNode.md#inputvalue)
 
 #### Defined in
 
-[src/core/node.ts:205](https://github.com/io-gui/io/blob/main/src/core/node.ts#L205)
+[src/core/node.ts:223](https://github.com/io-gui/io/blob/main/src/core/node.ts#L223)
 
 ___
 
@@ -380,51 +512,11 @@ the object properties has mutated.
 
 #### Inherited from
 
-IoNodeMixin(Array).objectMutated
+[IoNode](IoNode.md).[objectMutated](IoNode.md#objectmutated)
 
 #### Defined in
 
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
-
-___
-
-### onItemSelectedChanged
-
-**onItemSelectedChanged**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `any` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/models/options.ts:73](https://github.com/io-gui/io/blob/main/src/models/options.ts#L73)
-
-___
-
-### onItemSelectedPathChanged
-
-**onItemSelectedPathChanged**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `any` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/models/options.ts:63](https://github.com/io-gui/io/blob/main/src/models/options.ts#L63)
+[src/core/node.ts:297](https://github.com/io-gui/io/blob/main/src/core/node.ts#L297)
 
 ___
 
@@ -447,37 +539,17 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-IoNodeMixin(Array).onObjectMutated
+[IoNode](IoNode.md).[onObjectMutated](IoNode.md#onobjectmutated)
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:276](https://github.com/io-gui/io/blob/main/src/core/node.ts#L276)
 
 ___
 
-### option
+### onOptionsSelectedPathChanged
 
-**option**(`value`): `any`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `any` |
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[src/models/options.ts:36](https://github.com/io-gui/io/blob/main/src/models/options.ts#L36)
-
-___
-
-### pathChanged
-
-**pathChanged**(): `void`
+**onOptionsSelectedPathChanged**(): `void`
 
 #### Returns
 
@@ -485,7 +557,21 @@ ___
 
 #### Defined in
 
-[src/models/options.ts:42](https://github.com/io-gui/io/blob/main/src/models/options.ts#L42)
+[src/elements/menus/models/item.ts:81](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L81)
+
+___
+
+### optionsChanged
+
+**optionsChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/models/item.ts:86](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L86)
 
 ___
 
@@ -509,11 +595,11 @@ Adds property change to the queue.
 
 #### Inherited from
 
-IoNodeMixin(Array).queue
+[IoNode](IoNode.md).[queue](IoNode.md#queue)
 
 #### Defined in
 
-[src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+[src/core/node.ts:242](https://github.com/io-gui/io/blob/main/src/core/node.ts#L242)
 
 ___
 
@@ -537,25 +623,25 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-IoNodeMixin(Array).removeEventListener
+[IoNode](IoNode.md).[removeEventListener](IoNode.md#removeeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:334](https://github.com/io-gui/io/blob/main/src/core/node.ts#L334)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
-### selectDefault
+### selectedChanged
 
-**selectDefault**(): `boolean`
+**selectedChanged**(): `void`
 
 #### Returns
 
-`boolean`
+`void`
 
 #### Defined in
 
-[src/models/options.ts:109](https://github.com/io-gui/io/blob/main/src/models/options.ts#L109)
+[src/elements/menus/models/item.ts:90](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L90)
 
 ___
 
@@ -578,11 +664,11 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoNodeMixin(Array).setProperties
+[IoNode](IoNode.md).[setProperties](IoNode.md#setproperties)
 
 #### Defined in
 
-[src/core/node.ts:188](https://github.com/io-gui/io/blob/main/src/core/node.ts#L188)
+[src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
 
 ___
 
@@ -606,7 +692,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoNodeMixin(Array).setProperty
+[IoNode](IoNode.md).[setProperty](IoNode.md#setproperty)
 
 #### Defined in
 
@@ -616,12 +702,13 @@ ___
 
 ### setSelectedPath
 
-**setSelectedPath**(`path?`): `void`
+**setSelectedPath**(`selected`, `path?`): `void`
 
 #### Parameters
 
 | Name | Type | Default value |
 | :------ | :------ | :------ |
+| `selected` | `any` | `undefined` |
 | `path` | `any`[] | `[]` |
 
 #### Returns
@@ -630,7 +717,7 @@ ___
 
 #### Defined in
 
-[src/models/options.ts:96](https://github.com/io-gui/io/blob/main/src/models/options.ts#L96)
+[src/elements/menus/models/item.ts:98](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L98)
 
 ___
 
@@ -654,11 +741,11 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-IoNodeMixin(Array).throttle
+[IoNode](IoNode.md).[throttle](IoNode.md#throttle)
 
 #### Defined in
 
-[src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
+[src/core/node.ts:267](https://github.com/io-gui/io/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -680,8 +767,8 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-IoNodeMixin(Array).unbind
+[IoNode](IoNode.md).[unbind](IoNode.md#unbind)
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/io/blob/main/src/core/node.ts#L303)
+[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)
