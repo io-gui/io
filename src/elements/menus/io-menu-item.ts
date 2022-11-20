@@ -1,5 +1,5 @@
 import { RegisterIoElement } from '../../core/element.js';
-import { MenuItem } from './models/item.js';
+import { MenuItem } from './models/menu-item.js';
 import {IoField} from '../basic/io-field.js';
 import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuOptions} from './io-menu-options.js';

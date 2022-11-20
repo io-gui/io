@@ -1,8 +1,8 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {IoStorage as $} from '../../core/storage.js';
-import {Config} from './models/config.js';
-import {Groups} from './models/groups.js';
-import {Widgets} from './models/widgets.js';
+import { ObjectConfig } from './models/object-config.js';
+import { ObjectGroups } from './models/object-groups.js';
+import { ObjectWidgets } from './models/object-widgets.js';
 import './io-breadcrumbs.js';
 
 /*
@@ -131,23 +131,23 @@ export class IoInspector extends IoElement {
       this._onChange();
     }, 1000/10);
   }
-  _getConfig() {
-    this._config = this.__proto__._config.getConfig(this.selected, this.config);
+  _getObjectConfig() {
+    this._config = this.__proto__._config.getObjectConfig(this.selected, this.config);
   }
-  _getGroups() {
-    this._groups = this.__proto__._groups.getGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config), this.advanced);
+  _getObjectGroups() {
+    this._groups = this.__proto__._groups.getObjectGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config), this.advanced);
   }
-  _getWidgets() {
-    this._widgets = this.__proto__._widgets.getWidgets(this.selected, this.widgets);
+  _getObjectWidgets() {
+    this._widgets = this.__proto__._widgets.getObjectWidgets(this.selected, this.widgets);
   }
   _getAll() {
     const propLength = Object.getOwnPropertyNames(this.selected).length;
     if (!this._config || this.selected !== this._currentCfgObj || propLength !== this._currentCfgLen) {
       this._currentCfgObj = this.selected;
       this._currentCfgLen = propLength;
-      this._getConfig();
-      this._getGroups();
-      this._getWidgets();
+      this._getObjectConfig();
+      this._getObjectGroups();
+      this._getObjectWidgets();
     }
   }
   changed() {
@@ -198,13 +198,13 @@ export class IoInspector extends IoElement {
     }
     this.template(elements);
   }
-  static get Config() {
+  static get ObjectConfig() {
     return {
       'type:object': ['io-field', {class: 'select'}],
       'type:null': ['io-field', {class: 'select'}],
     };
   }
-  static get Groups() {
+  static get ObjectGroups() {
     return {
       'Object|hidden': [/^_/],
       // TODO
@@ -215,16 +215,16 @@ export class IoInspector extends IoElement {
       'HTMLElement|hierarchy': [/parent/i, /child/i, /element/i, /root/i, /slot/i, /sibling/i, /document/i],
     };
   }
-  static get Widgets() {
+  static get ObjectWidgets() {
     return {
       // 'Object': ['io-field', {label: 'This is a main widget'}],
       // 'Object|main': ['io-field', {label: 'This is a main group widget'}],
     };
   }
   // TODO: unhack
-  static RegisterConfig: (config: any) => void;
-  static RegisterGroups: (groups: any) => void;
-  static RegisterWidgets: (widgets: any) => void;
+  static RegisterObjectConfig: (config: any) => void;
+  static RegisterObjectGroups: (groups: any) => void;
+  static RegisterObjectWidgets: (widgets: any) => void;
   static Register() {
     throw new Error('Method not implemented.');
   }
@@ -245,26 +245,26 @@ function genUUID(object: any) {
 }
 
 IoInspector.Register = function() {
-  Object.defineProperty(this.prototype, '_config', {writable: true, value: new Config(this.prototype._protochain.constructors)});
-  Object.defineProperty(this.prototype, '_groups', {writable: true, value: new Groups(this.prototype._protochain.constructors)});
-  Object.defineProperty(this.prototype, '_widgets', {writable: true, value: new Widgets(this.prototype._protochain.constructors)});
+  Object.defineProperty(this.prototype, '_config', {writable: true, value: new ObjectConfig(this.prototype._protochain.constructors)});
+  Object.defineProperty(this.prototype, '_groups', {writable: true, value: new ObjectGroups(this.prototype._protochain.constructors)});
+  Object.defineProperty(this.prototype, '_widgets', {writable: true, value: new ObjectWidgets(this.prototype._protochain.constructors)});
 };
 
-IoInspector.RegisterConfig = function(config) {
-  this.prototype._config.registerConfig(config);
+IoInspector.RegisterObjectConfig = function(config) {
+  this.prototype._config.registerObjectConfig(config);
 };
 
-IoInspector.RegisterGroups = function(groups) {
-  this.prototype._groups.registerGroups(groups);
+IoInspector.RegisterObjectGroups = function(groups) {
+  this.prototype._groups.registerObjectGroups(groups);
 };
 
-IoInspector.RegisterWidgets = function(widgets) {
-  this.prototype._widgets.registerWidgets(widgets);
+IoInspector.RegisterObjectWidgets = function(widgets) {
+  this.prototype._widgets.registerObjectWidgets(widgets);
 };
 
 // TODO: unhack
 IoInspector.Register();
 
-IoInspector.RegisterGroups({
+IoInspector.RegisterObjectGroups({
   'Array|main': [/^[0-9]+$/],
 });

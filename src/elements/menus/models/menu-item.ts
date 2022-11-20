@@ -1,5 +1,5 @@
 import { IoNode, RegisterIoNode } from '../../../core/node.js';
-import { MenuOptions } from './options.js';
+import { MenuOptions } from './menu-options.js';
 import { Property } from '../../../core/internals/property.js';
 
 
@@ -25,7 +25,7 @@ export class MenuItem extends IoNode {
   declare action: () => void | undefined;
 
   @Property('pick')
-  declare select: 'pick' | 'toggle' | 'pick' | 'none';
+  declare select: 'pick' | 'toggle' | 'none';
 
   @Property(false)
   declare selected: boolean;

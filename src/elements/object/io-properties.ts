@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import { Config } from './models/config.js';
+import { ObjectConfig } from './models/object-config.js';
 
 /*
  * Extends `IoElement`.
@@ -37,7 +37,7 @@ import { Config } from './models/config.js';
 
 const RegisterIoProperties = function (element: typeof IoProperties) {
   RegisterIoElement(element);
-  Object.defineProperty(element.prototype, '_config', {writable: true, value: new Config(element.prototype._protochain.constructors)});
+  Object.defineProperty(element.prototype, '_config', {writable: true, value: new ObjectConfig(element.prototype._protochain.constructors)});
 };
 
 // TODO: consider implementing horizontal layout
@@ -85,7 +85,7 @@ export class IoProperties extends IoElement {
       config: Object,
     };
   }
-  static get Config() {
+  static get ObjectConfig() {
     return {
       'type:string': ['io-string', {}],
       'type:number': ['io-number', {step: 0.0001}],
@@ -110,13 +110,13 @@ export class IoProperties extends IoElement {
       this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
     }
   }
-  _getConfig() {
+  _getObjectConfig() {
     const propLength = Object.getOwnPropertyNames(this.value).length;
-    if (!this._config || this.config !== this._currentConfig || this.value !== this._currentValue || propLength !== this._currentLength) {
-      this._currentConfig = this.config;
+    if (!this._config || this.config !== this._currentObjectConfig || this.value !== this._currentValue || propLength !== this._currentLength) {
+      this._currentObjectConfig = this.config;
       this._currentValue = this.value;
       this._currentLength = propLength;
-      this._config = this.__proto__._config.getConfig(this.value, this.config);
+      this._config = this.__proto__._config.getObjectConfig(this.value, this.config);
       return this._config;
     }
     return this._config;
@@ -131,7 +131,7 @@ export class IoProperties extends IoElement {
     this.throttle(this._onChange, undefined, true); // TODO: consider async
   }
   _onChange() {
-    this._config = this._getConfig();
+    this._config = this._getObjectConfig();
 
     const config = this._config;
     const elements = [];
@@ -161,10 +161,10 @@ export class IoProperties extends IoElement {
     this.template(elements);
   }
   // TODO: unhack
-  static RegisterConfig: (config: any) => void;
+  static RegisterObjectConfig: (config: any) => void;
 }
 
-IoProperties.RegisterConfig = function(config) {
-  this.prototype._config.registerConfig(config);
+IoProperties.RegisterObjectConfig = function(config) {
+  this.prototype._config.registerObjectConfig(config);
 };
 

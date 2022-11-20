@@ -1,7 +1,7 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { Binding } from '../../core/internals/binding.js';
-import { MenuOptions } from './models/options.js';
-import { MenuItem } from './models/item.js';
+import { MenuOptions } from './models/menu-options.js';
+import { MenuItem } from './models/menu-item.js';
 import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuItem} from './io-menu-item.js';
 

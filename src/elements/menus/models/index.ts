@@ -1,3 +1,3 @@
-export * from './item.js';
-export * from './options.js';
-export * from './path.js';
+export * from './menu-item.js';
+export * from './menu-options.js';
+export * from './menu-path.js';

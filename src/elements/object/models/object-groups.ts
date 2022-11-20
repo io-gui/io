@@ -2,20 +2,20 @@
 
  **/
 
-export class Groups {
+export class ObjectGroups {
     constructor(prototypes: any) {
       for (let i = 0; i < prototypes.length; i++) {
-        this.registerGroups(prototypes[i].Groups || {});
+        this.registerObjectGroups(prototypes[i].ObjectGroups || {});
       }
     }
-    registerGroups(groups: any) {
+    registerObjectGroups(groups: any) {
       for (const g in groups) {
         const self = this as any;
         self[g] = self[g] || [];
         self[g] = [...self[g], ...groups[g]];
       }
     }
-    getGroups(object: any, customGroups: any, keys: any, doAdvanced = false) {
+    getObjectGroups(object: any, customGroups: any, keys: any, doAdvanced = false) {
       const prototypes = [];
 
       let proto = object.__proto__;

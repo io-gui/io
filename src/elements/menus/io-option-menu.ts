@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import { MenuOptions } from './models/options.js';
-import { MenuItem } from './models/item.js';
+import { MenuOptions } from './models/menu-options.js';
+import { MenuItem } from './models/menu-item.js';
 import './io-menu-item.js';
 
 // TODO: fix tab-out without collapse
@@ -72,7 +72,7 @@ export class IoOptionMenu extends IoElement {
     return this.label || valueText || '';
   }
   _onPathChanged(event: CustomEvent) {
-    // TODO: Fix Path convering values to string type.
+    // TODO: Fix MenuPath convering values to string type.
     if (event.detail.leaf !== undefined) {
       try {
         this.inputValue(JSON.parse(event.detail.leaf));

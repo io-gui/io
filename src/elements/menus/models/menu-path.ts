@@ -3,7 +3,7 @@ import { Property } from '../../../core/internals/property.js';
 import { Binding } from '../../../core/internals/binding.js';
 
 @RegisterIoNode
-export class Path extends IoNode {
+export class MenuPath extends IoNode {
 
   @Property({type: Array, observe: true})
   declare value: any[];
@@ -47,18 +47,18 @@ export class Path extends IoNode {
       const val = value[i];
       if (typeof val === 'string') {
         if (val.search(this.delimiter) !== -1) {
-          console.error('Path: Cannot serialize value', value);
+          console.error('MenuPath: Cannot serialize value', value);
           return '';
         }
         string += val;
       } else if (typeof val === 'number') {
         if (isNaN(val)) {
-          console.error('Path: Cannot serialize value', value);
+          console.error('MenuPath: Cannot serialize value', value);
           return '';
         }
         string += val;
       } else {
-        console.error('Path: Cannot serialize value', value);
+        console.error('MenuPath: Cannot serialize value', value);
         return '';
       }
       if (i !== value.length - 1 && String(value[value.length - 1]) !== '') string += this.delimiter;
@@ -69,7 +69,7 @@ export class Path extends IoNode {
   serializedChanged() {
     debug: {
       if (this.serialize === false) {
-        console.warn('Path: Serialization not enabled for path instance');
+        console.warn('MenuPath: Serialization not enabled for this MenuPath instance');
       }
     }
     if (this.serialize === true) {
@@ -106,7 +106,7 @@ export class Path extends IoNode {
   leafChanged() {
     debug: {
       if (this.value[this.value.length - 1] !== this.leaf) {
-        console.warn(`Path: leaf property "${this.leaf}" diverged from path value[value.length - 1] "${this.value[this.value.length - 1]}"`);
+        console.warn(`MenuPath: leaf property "${this.leaf}" diverged from path value[value.length - 1] "${this.value[this.value.length - 1]}"`);
       }
     }
   }
@@ -114,7 +114,7 @@ export class Path extends IoNode {
   bind(prop: string): Binding {
     debug: {
       if (prop === 'leaf') {
-        console.warn('Path: Binding to "leaf" property not recommended by design!');
+        console.warn('MenuPath: Binding to "leaf" property not recommended by design!');
       }
     }
     return super.bind(prop);

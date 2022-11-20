@@ -1,3 +1,3 @@
-export * from './config.js';
-export * from './groups.js';
-export * from './widgets.js';
+export * from './object-config.js';
+export * from './object-groups.js';
+export * from './object-widgets.js';

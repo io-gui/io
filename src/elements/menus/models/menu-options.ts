@@ -1,6 +1,6 @@
 import { IoNodeMixin, RegisterIoNode } from '../../../core/node.js';
-import { MenuItem } from './item.js';
-import { Path } from './path.js';
+import { MenuItem } from './menu-item.js';
+import { MenuPath } from './menu-path.js';
 import { Property } from '../../../core/internals/property.js';
 
 // TODO: document and test!
@@ -15,8 +15,8 @@ export class MenuOptions extends IoNodeMixin(Array) {
   @Property(Array) // TODO: investigate why this breaks
   declare items: Array<MenuItem>;
 
-  @Property(Path)
-  declare path: Path;
+  @Property(MenuPath)
+  declare path: MenuPath;
 
   @Property(true) // TODO: test and recosider
   declare lazy: boolean;

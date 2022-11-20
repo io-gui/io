@@ -4,20 +4,20 @@
 
 // TODO: refactor
 
-export class Widgets {
+export class ObjectWidgets {
   constructor(prototypes: any) {
     for (let i = 0; i < prototypes.length; i++) {
-      this.registerWidgets(prototypes[i].Widgets || {});
+      this.registerObjectWidgets(prototypes[i].ObjectWidgets || {});
     }
   }
-  registerWidgets(widgets: any) {
+  registerObjectWidgets(widgets: any) {
     for (const g in widgets) {
       const self: any = this as any;
       self[g] = self[g] || [];
       self[g] = [...self[g], ...widgets[g]];
     }
   }
-  getWidgets(object: any) {
+  getObjectWidgets(object: any) {
     const prototypes = [];
 
     let proto = object.__proto__;

@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import { MenuOptions } from '../menus/models/options.js';
+import { MenuOptions } from '../menus/models/menu-options.js';
 // TODO: use IoContent for caching and display.
 
 /*

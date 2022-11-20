@@ -6,20 +6,20 @@ import { Binding } from '../../../core/internals/binding.js';
 
  **/
 
-export class Config {
+export class ObjectConfig {
     constructor(prototypes: any) {
       for (let i = 0; i < prototypes.length; i++) {
-        this.registerConfig(prototypes[i].Config || {});
+        this.registerObjectConfig(prototypes[i].ObjectConfig || {});
       }
     }
-    registerConfig(config: any) {
+    registerObjectConfig(config: any) {
       for (const c in config) {
         const self = this as any;
         self[c] = self[c] || [];
         self[c] = [config[c][0] || self[c][0], Object.assign(self[c][1] || {}, config[c][1] || {})];
       }
     }
-    getConfig(object: any, customConfig: any) {
+    getObjectConfig(object: any, customConfig: any) {
       const keys = Object.getOwnPropertyNames(object);
       // const keys = Object.keys(object);
       const prototypes = [];

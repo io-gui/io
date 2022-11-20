@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {Binding} from '../../core/internals/binding.js';
-import { MenuOptions } from '../menus/models/options.js';
+import { MenuOptions } from '../menus/models/menu-options.js';
 import {IoStorage as $} from '../../core/storage.js';
 
 /*
