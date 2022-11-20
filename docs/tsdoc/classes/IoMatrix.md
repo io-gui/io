@@ -4,7 +4,7 @@ Core `IoElement` class.
 
 ## Hierarchy
 
-- [`IoElement`](IoElement.md)
+- [`IoVector`](IoVector.md)
 
   ↳ **`IoMatrix`**
 
@@ -25,7 +25,7 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[constructor](IoElement.md#constructor)
+[IoVector](IoVector.md).[constructor](IoVector.md#constructor)
 
 #### Defined in
 
@@ -39,7 +39,7 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[$](IoElement.md#$)
+[IoVector](IoVector.md).[$](IoVector.md#$)
 
 #### Defined in
 
@@ -53,7 +53,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_bindings](IoElement.md#_bindings)
+[IoVector](IoVector.md).[_bindings](IoVector.md#_bindings)
 
 #### Defined in
 
@@ -67,7 +67,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_changeQueue](IoElement.md#_changequeue)
+[IoVector](IoVector.md).[_changeQueue](IoVector.md#_changequeue)
 
 #### Defined in
 
@@ -81,7 +81,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_eventDispatcher](IoElement.md#_eventdispatcher)
+[IoVector](IoVector.md).[_eventDispatcher](IoVector.md#_eventdispatcher)
 
 #### Defined in
 
@@ -95,7 +95,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_properties](IoElement.md#_properties)
+[IoVector](IoVector.md).[_properties](IoVector.md#_properties)
 
 #### Defined in
 
@@ -109,7 +109,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_protochain](IoElement.md#_protochain)
+[IoVector](IoVector.md).[_protochain](IoVector.md#_protochain)
 
 #### Defined in
 
@@ -123,11 +123,21 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[class](IoElement.md#class)
+[IoVector](IoVector.md).[class](IoVector.md#class)
 
 #### Defined in
 
 [src/core/element.ts:220](https://github.com/io-gui/io/blob/main/src/core/element.ts#L220)
+
+___
+
+### columns
+
+ **columns**: `number`
+
+#### Defined in
+
+[src/elements/vectors/io-matrix.ts:44](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-matrix.ts#L44)
 
 ___
 
@@ -137,11 +147,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[contenteditable](IoElement.md#contenteditable)
+[IoVector](IoVector.md).[contenteditable](IoVector.md#contenteditable)
 
 #### Defined in
 
 [src/core/element.ts:217](https://github.com/io-gui/io/blob/main/src/core/element.ts#L217)
+
+___
+
+### conversion
+
+ **conversion**: `number`
+
+#### Inherited from
+
+[IoVector](IoVector.md).[conversion](IoVector.md#conversion)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:31](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L31)
 
 ___
 
@@ -151,7 +175,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disabled](IoElement.md#disabled)
+[IoVector](IoVector.md).[disabled](IoVector.md#disabled)
 
 #### Defined in
 
@@ -165,7 +189,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[hidden](IoElement.md#hidden)
+[IoVector](IoVector.md).[hidden](IoVector.md#hidden)
 
 #### Defined in
 
@@ -179,11 +203,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[id](IoElement.md#id)
+[IoVector](IoVector.md).[id](IoVector.md#id)
 
 #### Defined in
 
 [src/core/element.ts:235](https://github.com/io-gui/io/blob/main/src/core/element.ts#L235)
+
+___
+
+### keys
+
+ **keys**: `never`[]
+
+#### Inherited from
+
+[IoVector](IoVector.md).[keys](IoVector.md#keys)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:52](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L52)
 
 ___
 
@@ -193,11 +231,81 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[label](IoElement.md#label)
+[IoVector](IoVector.md).[label](IoVector.md#label)
 
 #### Defined in
 
 [src/core/element.ts:226](https://github.com/io-gui/io/blob/main/src/core/element.ts#L226)
+
+___
+
+### ladder
+
+ **ladder**: `boolean`
+
+#### Inherited from
+
+[IoVector](IoVector.md).[ladder](IoVector.md#ladder)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:49](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L49)
+
+___
+
+### linkable
+
+ **linkable**: `boolean`
+
+#### Inherited from
+
+[IoVector](IoVector.md).[linkable](IoVector.md#linkable)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:43](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L43)
+
+___
+
+### linked
+
+ **linked**: `boolean`
+
+#### Inherited from
+
+[IoVector](IoVector.md).[linked](IoVector.md#linked)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:46](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L46)
+
+___
+
+### max
+
+ **max**: `number`
+
+#### Inherited from
+
+[IoVector](IoVector.md).[max](IoVector.md#max)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:40](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L40)
+
+___
+
+### min
+
+ **min**: `number`
+
+#### Inherited from
+
+[IoVector](IoVector.md).[min](IoVector.md#min)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:37](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L37)
 
 ___
 
@@ -207,7 +315,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[name](IoElement.md#name)
+[IoVector](IoVector.md).[name](IoVector.md#name)
 
 #### Defined in
 
@@ -221,11 +329,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[role](IoElement.md#role)
+[IoVector](IoVector.md).[role](IoVector.md#role)
 
 #### Defined in
 
 [src/core/element.ts:223](https://github.com/io-gui/io/blob/main/src/core/element.ts#L223)
+
+___
+
+### step
+
+ **step**: `number`
+
+#### Inherited from
+
+[IoVector](IoVector.md).[step](IoVector.md#step)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:34](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L34)
 
 ___
 
@@ -235,7 +357,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[tabindex](IoElement.md#tabindex)
+[IoVector](IoVector.md).[tabindex](IoVector.md#tabindex)
 
 #### Defined in
 
@@ -249,11 +371,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[title](IoElement.md#title)
+[IoVector](IoVector.md).[title](IoVector.md#title)
 
 #### Defined in
 
 [src/core/element.ts:232](https://github.com/io-gui/io/blob/main/src/core/element.ts#L232)
+
+___
+
+### value
+
+ **value**: `number`[]
+
+#### Overrides
+
+[IoVector](IoVector.md).[value](IoVector.md#value)
+
+#### Defined in
+
+[src/elements/vectors/io-matrix.ts:41](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-matrix.ts#L41)
 
 ## Accessors
 
@@ -267,7 +403,7 @@ ___
 
 #### Inherited from
 
-IoElement.textNode
+IoVector.textNode
 
 #### Defined in
 
@@ -287,7 +423,7 @@ IoElement.textNode
 
 #### Inherited from
 
-IoElement.textNode
+IoVector.textNode
 
 #### Defined in
 
@@ -297,19 +433,19 @@ ___
 
 ### Properties
 
-`Static` `get` **Properties**(): `any`
+`Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Returns
 
-`any`
+[`PropertyDeclarations`](../README.md#propertydeclarations)
 
-#### Overrides
+#### Inherited from
 
-IoElement.Properties
+IoVector.Properties
 
 #### Defined in
 
-[src/elements/vectors/matrix.ts:38](https://github.com/io-gui/io/blob/main/src/elements/vectors/matrix.ts#L38)
+[src/core/node.ts:37](https://github.com/io-gui/io/blob/main/src/core/node.ts#L37)
 
 ___
 
@@ -323,11 +459,11 @@ ___
 
 #### Overrides
 
-IoElement.Style
+IoVector.Style
 
 #### Defined in
 
-[src/elements/vectors/matrix.ts:16](https://github.com/io-gui/io/blob/main/src/elements/vectors/matrix.ts#L16)
+[src/elements/vectors/io-matrix.ts:17](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-matrix.ts#L17)
 
 ___
 
@@ -341,7 +477,7 @@ ___
 
 #### Inherited from
 
-IoElement.observedAttributes
+IoVector.observedAttributes
 
 #### Defined in
 
@@ -368,7 +504,7 @@ Update textContent via TextNode is better for layout performance.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_flattenTextNode](IoElement.md#_flattentextnode)
+[IoVector](IoVector.md).[_flattenTextNode](IoVector.md#_flattentextnode)
 
 #### Defined in
 
@@ -376,9 +512,33 @@ Update textContent via TextNode is better for layout performance.
 
 ___
 
-### \_onValueSet
+### \_onNumberPointerDown
 
-**_onValueSet**(`event`): `void`
+**_onNumberPointerDown**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoVector](IoVector.md).[_onNumberPointerDown](IoVector.md#_onnumberpointerdown)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:56](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L56)
+
+___
+
+### \_onNumberValueInput
+
+**_onNumberValueInput**(`event`): `void`
 
 #### Parameters
 
@@ -390,9 +550,13 @@ ___
 
 `void`
 
+#### Overrides
+
+[IoVector](IoVector.md).[_onNumberValueInput](IoVector.md#_onnumbervalueinput)
+
 #### Defined in
 
-[src/elements/vectors/matrix.ts:55](https://github.com/io-gui/io/blob/main/src/elements/vectors/matrix.ts#L55)
+[src/elements/vectors/io-matrix.ts:46](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-matrix.ts#L46)
 
 ___
 
@@ -416,11 +580,11 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[addEventListener](IoElement.md#addeventlistener)
+[IoVector](IoVector.md).[addEventListener](IoVector.md#addeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
 ___
 
@@ -440,7 +604,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[applyProperties](IoElement.md#applyproperties)
+[IoVector](IoVector.md).[applyProperties](IoVector.md#applyproperties)
 
 #### Defined in
 
@@ -466,7 +630,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[attributeChangedCallback](IoElement.md#attributechangedcallback)
+[IoVector](IoVector.md).[attributeChangedCallback](IoVector.md#attributechangedcallback)
 
 #### Defined in
 
@@ -494,11 +658,11 @@ Binding object.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[bind](IoElement.md#bind)
+[IoVector](IoVector.md).[bind](IoVector.md#bind)
 
 #### Defined in
 
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
+[src/core/node.ts:306](https://github.com/io-gui/io/blob/main/src/core/node.ts#L306)
 
 ___
 
@@ -513,13 +677,13 @@ Invoked when one of the properties change.
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-[IoElement](IoElement.md).[changed](IoElement.md#changed)
+[IoVector](IoVector.md).[changed](IoVector.md#changed)
 
 #### Defined in
 
-[src/elements/vectors/matrix.ts:81](https://github.com/io-gui/io/blob/main/src/elements/vectors/matrix.ts#L81)
+[src/elements/vectors/io-vector.ts:90](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L90)
 
 ___
 
@@ -535,7 +699,7 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[connectedCallback](IoElement.md#connectedcallback)
+[IoVector](IoVector.md).[connectedCallback](IoVector.md#connectedcallback)
 
 #### Defined in
 
@@ -553,7 +717,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disabledChanged](IoElement.md#disabledchanged)
+[IoVector](IoVector.md).[disabledChanged](IoVector.md#disabledchanged)
 
 #### Defined in
 
@@ -573,7 +737,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disconnectedCallback](IoElement.md#disconnectedcallback)
+[IoVector](IoVector.md).[disconnectedCallback](IoVector.md#disconnectedcallback)
 
 #### Defined in
 
@@ -602,11 +766,11 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchEvent](IoElement.md#dispatchevent)
+[IoVector](IoVector.md).[dispatchEvent](IoVector.md#dispatchevent)
 
 #### Defined in
 
-[src/core/node.ts:344](https://github.com/io-gui/io/blob/main/src/core/node.ts#L344)
+[src/core/node.ts:362](https://github.com/io-gui/io/blob/main/src/core/node.ts#L362)
 
 ___
 
@@ -622,11 +786,11 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchQueue](IoElement.md#dispatchqueue)
+[IoVector](IoVector.md).[dispatchQueue](IoVector.md#dispatchqueue)
 
 #### Defined in
 
-[src/core/node.ts:230](https://github.com/io-gui/io/blob/main/src/core/node.ts#L230)
+[src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -642,11 +806,11 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchQueueSync](IoElement.md#dispatchqueuesync)
+[IoVector](IoVector.md).[dispatchQueueSync](IoVector.md#dispatchqueuesync)
 
 #### Defined in
 
-[src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
 
 ___
 
@@ -663,11 +827,11 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispose](IoElement.md#dispose)
+[IoVector](IoVector.md).[dispose](IoVector.md#dispose)
 
 #### Defined in
 
-[src/core/node.ts:351](https://github.com/io-gui/io/blob/main/src/core/node.ts#L351)
+[src/core/node.ts:369](https://github.com/io-gui/io/blob/main/src/core/node.ts#L369)
 
 ___
 
@@ -688,11 +852,29 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disposeDeep](IoElement.md#disposedeep)
+[IoVector](IoVector.md).[disposeDeep](IoVector.md#disposedeep)
 
 #### Defined in
 
 [src/core/element.ts:295](https://github.com/io-gui/io/blob/main/src/core/element.ts#L295)
+
+___
+
+### getSlotted
+
+**getSlotted**(): ``null`` \| `any`[]
+
+#### Returns
+
+``null`` \| `any`[]
+
+#### Inherited from
+
+[IoVector](IoVector.md).[getSlotted](IoVector.md#getslotted)
+
+#### Defined in
+
+[src/elements/vectors/io-vector.ts:110](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L110)
 
 ___
 
@@ -706,11 +888,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[init](IoElement.md#init)
+[IoVector](IoVector.md).[init](IoVector.md#init)
 
 #### Defined in
 
-[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
 ___
 
@@ -733,11 +915,11 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-[IoElement](IoElement.md).[inputValue](IoElement.md#inputvalue)
+[IoVector](IoVector.md).[inputValue](IoVector.md#inputvalue)
 
 #### Defined in
 
-[src/core/node.ts:205](https://github.com/io-gui/io/blob/main/src/core/node.ts#L205)
+[src/core/node.ts:223](https://github.com/io-gui/io/blob/main/src/core/node.ts#L223)
 
 ___
 
@@ -751,7 +933,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[labelChanged](IoElement.md#labelchanged)
+[IoVector](IoVector.md).[labelChanged](IoVector.md#labelchanged)
 
 #### Defined in
 
@@ -778,11 +960,11 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[objectMutated](IoElement.md#objectmutated)
+[IoVector](IoVector.md).[objectMutated](IoVector.md#objectmutated)
 
 #### Defined in
 
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
+[src/core/node.ts:297](https://github.com/io-gui/io/blob/main/src/core/node.ts#L297)
 
 ___
 
@@ -805,11 +987,11 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-[IoElement](IoElement.md).[onObjectMutated](IoElement.md#onobjectmutated)
+[IoVector](IoVector.md).[onObjectMutated](IoVector.md#onobjectmutated)
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:276](https://github.com/io-gui/io/blob/main/src/core/node.ts#L276)
 
 ___
 
@@ -833,11 +1015,11 @@ Adds property change to the queue.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[queue](IoElement.md#queue)
+[IoVector](IoVector.md).[queue](IoVector.md#queue)
 
 #### Defined in
 
-[src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+[src/core/node.ts:242](https://github.com/io-gui/io/blob/main/src/core/node.ts#L242)
 
 ___
 
@@ -861,11 +1043,11 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[removeEventListener](IoElement.md#removeeventlistener)
+[IoVector](IoVector.md).[removeEventListener](IoVector.md#removeeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:334](https://github.com/io-gui/io/blob/main/src/core/node.ts#L334)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
@@ -888,7 +1070,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setAttribute](IoElement.md#setattribute)
+[IoVector](IoVector.md).[setAttribute](IoVector.md#setattribute)
 
 #### Defined in
 
@@ -915,11 +1097,11 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setProperties](IoElement.md#setproperties)
+[IoVector](IoVector.md).[setProperties](IoVector.md#setproperties)
 
 #### Defined in
 
-[src/core/node.ts:188](https://github.com/io-gui/io/blob/main/src/core/node.ts#L188)
+[src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
 
 ___
 
@@ -943,7 +1125,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setProperty](IoElement.md#setproperty)
+[IoVector](IoVector.md).[setProperty](IoVector.md#setproperty)
 
 #### Defined in
 
@@ -970,7 +1152,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[template](IoElement.md#template)
+[IoVector](IoVector.md).[template](IoVector.md#template)
 
 #### Defined in
 
@@ -998,11 +1180,11 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-[IoElement](IoElement.md).[throttle](IoElement.md#throttle)
+[IoVector](IoVector.md).[throttle](IoVector.md#throttle)
 
 #### Defined in
 
-[src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
+[src/core/node.ts:267](https://github.com/io-gui/io/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -1026,7 +1208,7 @@ TODO: test element.traverse() function!
 
 #### Inherited from
 
-[IoElement](IoElement.md).[traverse](IoElement.md#traverse)
+[IoVector](IoVector.md).[traverse](IoVector.md#traverse)
 
 #### Defined in
 
@@ -1052,11 +1234,11 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[unbind](IoElement.md#unbind)
+[IoVector](IoVector.md).[unbind](IoVector.md#unbind)
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/io/blob/main/src/core/node.ts#L303)
+[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)
 
 ___
 
@@ -1068,6 +1250,10 @@ ___
 
 `void`
 
+#### Overrides
+
+[IoVector](IoVector.md).[valueChanged](IoVector.md#valuechanged)
+
 #### Defined in
 
-[src/elements/vectors/matrix.ts:65](https://github.com/io-gui/io/blob/main/src/elements/vectors/matrix.ts#L65)
+[src/elements/vectors/io-matrix.ts:56](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-matrix.ts#L56)

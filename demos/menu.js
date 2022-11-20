@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement, Options, Item } from '../build/iogui.js';
+import { IoElement, RegisterIoElement, MenuOptions, MenuItem } from '../build/iogui.js';
 
 class IoOptionsDemoView extends IoElement {
   static get Style() {
@@ -33,7 +33,7 @@ class IoOptionsDemoView extends IoElement {
   static get Properties() {
     return {
       options: {
-        type: Options,
+        type: MenuOptions,
         strict: true,
       },
     };
@@ -74,7 +74,7 @@ class IoItemDemoView extends IoElement {
   static get Properties() {
     return {
       option: {
-        type: Item,
+        type: MenuItem,
         strict: true,
       },
     };
@@ -112,7 +112,7 @@ RegisterIoElement(IoOptionsPathDemo);
 export class IoDemoMenu extends IoOptionsDemoView {
   static get Properties() {
     return {
-      options: new Options([
+      options: new MenuOptions([
         {value: 'home'}, 
         {value: 'food', options: [
           {value: 'fruits', options: [

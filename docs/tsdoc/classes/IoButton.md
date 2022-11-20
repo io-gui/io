@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:29](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L29)
+[src/elements/basic/io-button.ts:29](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L29)
 
 ___
 
@@ -193,7 +193,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:71](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L71)
+[src/elements/basic/io-field.ts:70](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L70)
 
 ___
 
@@ -245,7 +245,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:35](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L35)
+[src/elements/basic/io-button.ts:35](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L35)
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:77](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L77)
+[src/elements/basic/io-field.ts:76](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L76)
 
 ___
 
@@ -273,7 +273,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:38](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L38)
+[src/elements/basic/io-button.ts:38](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L38)
 
 ___
 
@@ -287,7 +287,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:80](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L80)
+[src/elements/basic/io-field.ts:79](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L79)
 
 ___
 
@@ -301,7 +301,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:74](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L74)
+[src/elements/basic/io-field.ts:73](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L73)
 
 ___
 
@@ -315,7 +315,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:65](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L65)
+[src/elements/basic/io-field.ts:64](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L64)
 
 ___
 
@@ -343,7 +343,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:32](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L32)
+[src/elements/basic/io-button.ts:32](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L32)
 
 ## Accessors
 
@@ -406,7 +406,7 @@ IoField.Listeners
 
 #### Defined in
 
-[src/elements/basic/field.ts:82](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L82)
+[src/elements/basic/io-field.ts:81](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L81)
 
 ___
 
@@ -442,7 +442,7 @@ IoField.Style
 
 #### Defined in
 
-[src/elements/basic/button.ts:7](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L7)
+[src/elements/basic/io-button.ts:7](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L7)
 
 ___
 
@@ -511,7 +511,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:95](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L95)
+[src/elements/basic/io-field.ts:94](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L94)
 
 ___
 
@@ -529,7 +529,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:62](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L62)
+[src/elements/basic/io-button.ts:62](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L62)
 
 ___
 
@@ -553,7 +553,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:90](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L90)
+[src/elements/basic/io-field.ts:89](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L89)
 
 ___
 
@@ -577,7 +577,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:141](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L141)
+[src/elements/basic/io-field.ts:140](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L140)
 
 ___
 
@@ -601,7 +601,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:52](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L52)
+[src/elements/basic/io-button.ts:52](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L52)
 
 ___
 
@@ -625,7 +625,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:58](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L58)
+[src/elements/basic/io-button.ts:58](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L58)
 
 ___
 
@@ -649,7 +649,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:40](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L40)
+[src/elements/basic/io-button.ts:40](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L40)
 
 ___
 
@@ -673,7 +673,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:44](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L44)
+[src/elements/basic/io-button.ts:44](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L44)
 
 ___
 
@@ -697,7 +697,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:106](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L106)
+[src/elements/basic/io-field.ts:105](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L105)
 
 ___
 
@@ -721,7 +721,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:48](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L48)
+[src/elements/basic/io-button.ts:48](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L48)
 
 ___
 
@@ -749,7 +749,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
 ___
 
@@ -827,7 +827,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
+[src/core/node.ts:306](https://github.com/io-gui/io/blob/main/src/core/node.ts#L306)
 
 ___
 
@@ -848,7 +848,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/basic/button.ts:69](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L69)
+[src/elements/basic/io-button.ts:69](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L69)
 
 ___
 
@@ -935,7 +935,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:344](https://github.com/io-gui/io/blob/main/src/core/node.ts#L344)
+[src/core/node.ts:362](https://github.com/io-gui/io/blob/main/src/core/node.ts#L362)
 
 ___
 
@@ -955,7 +955,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:230](https://github.com/io-gui/io/blob/main/src/core/node.ts#L230)
+[src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -975,7 +975,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
 
 ___
 
@@ -996,7 +996,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:351](https://github.com/io-gui/io/blob/main/src/core/node.ts#L351)
+[src/core/node.ts:369](https://github.com/io-gui/io/blob/main/src/core/node.ts#L369)
 
 ___
 
@@ -1045,7 +1045,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:248](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L248)
+[src/elements/basic/io-field.ts:247](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L247)
 
 ___
 
@@ -1063,7 +1063,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:252](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L252)
+[src/elements/basic/io-field.ts:251](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L251)
 
 ___
 
@@ -1081,7 +1081,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/button.ts:66](https://github.com/io-gui/io/blob/main/src/elements/basic/button.ts#L66)
+[src/elements/basic/io-button.ts:66](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L66)
 
 ___
 
@@ -1108,7 +1108,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:205](https://github.com/io-gui/io/blob/main/src/core/node.ts#L205)
+[src/core/node.ts:223](https://github.com/io-gui/io/blob/main/src/core/node.ts#L223)
 
 ___
 
@@ -1153,7 +1153,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
+[src/core/node.ts:297](https://github.com/io-gui/io/blob/main/src/core/node.ts#L297)
 
 ___
 
@@ -1180,7 +1180,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:276](https://github.com/io-gui/io/blob/main/src/core/node.ts#L276)
 
 ___
 
@@ -1208,7 +1208,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+[src/core/node.ts:242](https://github.com/io-gui/io/blob/main/src/core/node.ts#L242)
 
 ___
 
@@ -1236,7 +1236,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:334](https://github.com/io-gui/io/blob/main/src/core/node.ts#L334)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
@@ -1287,7 +1287,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/field.ts:265](https://github.com/io-gui/io/blob/main/src/elements/basic/field.ts#L265)
+[src/elements/basic/io-field.ts:264](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L264)
 
 ___
 
@@ -1314,7 +1314,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:188](https://github.com/io-gui/io/blob/main/src/core/node.ts#L188)
+[src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
 
 ___
 
@@ -1397,7 +1397,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
+[src/core/node.ts:267](https://github.com/io-gui/io/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -1451,4 +1451,4 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/io/blob/main/src/core/node.ts#L303)
+[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)

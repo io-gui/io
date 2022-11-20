@@ -27,6 +27,13 @@ export class Binding {
   get value() {
     return this.node[this.property];
   }
+  toJSON() {
+    // Custom serialization to avoid serializing nodes.
+    return JSON.stringify({
+      property: this.property,
+      targetProperties: this.targetProperties,
+    });
+  }
   /**
    * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
    * @param {IoNode} node - Target node

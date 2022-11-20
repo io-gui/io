@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:20](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L20)
+[src/elements/color/io-color-base.ts:20](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L20)
 
 ___
 
@@ -197,7 +197,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:17](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L17)
+[src/elements/color/io-color-base.ts:17](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L17)
 
 ___
 
@@ -207,7 +207,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:14](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L14)
+[src/elements/color/io-color-base.ts:14](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L14)
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:11](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L11)
+[src/elements/color/io-color-base.ts:11](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L11)
 
 ___
 
@@ -320,7 +320,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:8](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L8)
+[src/elements/color/io-color-base.ts:8](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L8)
 
 ## Accessors
 
@@ -467,7 +467,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
 ___
 
@@ -545,7 +545,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
+[src/core/node.ts:306](https://github.com/io-gui/io/blob/main/src/core/node.ts#L306)
 
 ___
 
@@ -566,7 +566,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
+[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
 
 ___
 
@@ -653,7 +653,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:344](https://github.com/io-gui/io/blob/main/src/core/node.ts#L344)
+[src/core/node.ts:362](https://github.com/io-gui/io/blob/main/src/core/node.ts#L362)
 
 ___
 
@@ -673,7 +673,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:230](https://github.com/io-gui/io/blob/main/src/core/node.ts#L230)
+[src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -693,7 +693,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
 
 ___
 
@@ -714,7 +714,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:351](https://github.com/io-gui/io/blob/main/src/core/node.ts#L351)
+[src/core/node.ts:369](https://github.com/io-gui/io/blob/main/src/core/node.ts#L369)
 
 ___
 
@@ -757,7 +757,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:22](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L22)
+[src/elements/color/io-color-base.ts:22](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L22)
 
 ___
 
@@ -784,7 +784,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:205](https://github.com/io-gui/io/blob/main/src/core/node.ts#L205)
+[src/core/node.ts:223](https://github.com/io-gui/io/blob/main/src/core/node.ts#L223)
 
 ___
 
@@ -829,7 +829,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
+[src/core/node.ts:297](https://github.com/io-gui/io/blob/main/src/core/node.ts#L297)
 
 ___
 
@@ -856,7 +856,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:276](https://github.com/io-gui/io/blob/main/src/core/node.ts#L276)
 
 ___
 
@@ -884,7 +884,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+[src/core/node.ts:242](https://github.com/io-gui/io/blob/main/src/core/node.ts#L242)
 
 ___
 
@@ -912,7 +912,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:334](https://github.com/io-gui/io/blob/main/src/core/node.ts#L334)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
@@ -926,7 +926,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:50](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L50)
+[src/elements/color/io-color-base.ts:50](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L50)
 
 ___
 
@@ -940,7 +940,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:40](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L40)
+[src/elements/color/io-color-base.ts:40](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L40)
 
 ___
 
@@ -954,7 +954,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:30](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L30)
+[src/elements/color/io-color-base.ts:30](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L30)
 
 ___
 
@@ -1008,7 +1008,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:188](https://github.com/io-gui/io/blob/main/src/core/node.ts#L188)
+[src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
 
 ___
 
@@ -1091,7 +1091,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
+[src/core/node.ts:267](https://github.com/io-gui/io/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -1145,7 +1145,7 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/io/blob/main/src/core/node.ts#L303)
+[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)
 
 ___
 
@@ -1159,7 +1159,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:67](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L67)
+[src/elements/color/io-color-base.ts:67](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L67)
 
 ___
 
@@ -1173,7 +1173,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L61)
+[src/elements/color/io-color-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L61)
 
 ___
 
@@ -1187,4 +1187,4 @@ ___
 
 #### Defined in
 
-[src/elements/color/color-base.ts:26](https://github.com/io-gui/io/blob/main/src/elements/color/color-base.ts#L26)
+[src/elements/color/io-color-base.ts:26](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L26)

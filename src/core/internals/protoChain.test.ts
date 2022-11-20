@@ -18,9 +18,13 @@ class IoNode1 extends IoNode {
     return {
       prop1: {
         notify: false
+      },
+      prop2: {
+        observe: true
       }
     };
   }
+
   @Property({observe: true})
   declare prop2: any;
 }
@@ -37,10 +41,21 @@ class IoNode3 extends IoNode1 {
   }
   @Property({notify: true, observe: true})
   declare prop1: any;
+
   @Property({value: 'foo', reflect: 'none'})
   declare prop2: any;
+
   @Property({reflect: 'attr'})
   declare prop3: any;
+}
+
+@RegisterIoNode
+class IoNode4 extends IoNode1 {
+  @Property({notify: true})
+  declare prop1: any;
+
+  @Property({observe: false})
+  declare prop2: any;
 }
 
 class IoElement1 extends IoElement {}
@@ -133,7 +148,7 @@ export default class {
         chai.expect(node.onFunction2.name).to.be.equal('bound onFunction2');
         chai.expect(node._onFunction2.name).to.be.equal('bound _onFunction2');
       });
-      it('Should include all property declarations declared in `static get Properties()` return oject', () => {
+      it('Should include all properties declared in `static get Properties()` return oject', () => {
         let protoChain = new ProtoChain(FakeIoNode1);
         chai.expect(Object.keys(protoChain.properties)).to.be.eql(['prop1']);
         chai.expect(protoChain.properties).to.be.eql({
@@ -146,7 +161,7 @@ export default class {
           prop2:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: undefined, observe: undefined},
         });
       });
-      it('Should include all property declarations declared in Property decorator', () => {
+      it('Should include all properties declared in Property decorator', () => {
         let protoChain = new ProtoChain(IoNode1);
         chai.expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
         chai.expect(protoChain.properties).to.be.eql({
@@ -163,7 +178,16 @@ export default class {
           prop3:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: 'attr', observe: undefined},
         });
       });
-      it('Should include all listner definitions declared in `static get Listeners()` return oject', () => {
+      it('Should not override properties declared in Property decorator with inherited `static get Properties()` return oject', () => {
+        const protoChain = new ProtoChain(IoNode4);
+        chai.expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
+        chai.expect(protoChain.properties).to.be.eql({
+          lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: 'attr', observe: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, notify: true, reflect: undefined, observe: undefined},
+          prop2:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: undefined, observe: false},
+        });
+      });
+      it('Should include all listners declared in `static get Listeners()` return oject', () => {
         let protoChain = new ProtoChain(FakeIoNode1);
         chai.expect(Object.keys(protoChain.listeners)).to.be.eql(['listener1', 'listener3', 'listener4']);
         chai.expect(protoChain.listeners['listener1']).to.be.eql([['function1']]);

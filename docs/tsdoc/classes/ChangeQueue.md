@@ -70,7 +70,7 @@ After all changes are dispatched it invokes `.changed()` functions od the owner 
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L45)
+[src/core/internals/changeQueue.ts:46](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L46)
 
 ___
 
@@ -87,7 +87,7 @@ Use this when node queue is no longer needed.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:66](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L66)
+[src/core/internals/changeQueue.ts:67](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L67)
 
 ___
 
@@ -112,4 +112,4 @@ If the change is already in the queue, the new value is updated in-queue.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:26](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L26)
+[src/core/internals/changeQueue.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L27)

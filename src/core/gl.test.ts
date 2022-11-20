@@ -74,7 +74,6 @@ export default class {
           element.style.width = '32px';
           element.style.height = '32px';
           element.onResized();
-          console.log(element);
           chai.expect(element.size[0]).to.equal(32);
           chai.expect(element.size[1]).to.equal(32);
           chai.expect(element.pxRatio).to.equal(window.devicePixelRatio);

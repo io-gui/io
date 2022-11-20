@@ -71,27 +71,32 @@ export class ProtoChain {
 
     // Iterate through the prototype chain once again in reverse to
     // aggregate inherited properties and listeners.
+    let prevPropSigniture = '';
     for (let i = this.constructors.length; i--;) {
+      let props;
       // Add properties from decorators
-      let props = PropertyDecorators.get(this.constructors[i] as any);
+      props = PropertyDecorators.get(this.constructors[i] as any);
       if (props) for (const name in props) {
         const hardPropDef = new ProtoProperty(props[name]);
         if (!this.properties[name]) this.properties[name] = hardPropDef;
         this.properties[name].assign(hardPropDef);
       }
-      // Add properties
+      // Add properties from `static get Properties()` return oject
       props = this.constructors[i].Properties;
-      for (const name in props) {
+      // Skip properties inherited from superclass to avoid overriding properties from subclass decorators.
+      const propSigniture = JSON.stringify(props);
+      if (propSigniture !== prevPropSigniture) for (const name in props) {
         const hardPropDef = new ProtoProperty(props[name]);
         if (!this.properties[name]) this.properties[name] = hardPropDef;
         this.properties[name].assign(hardPropDef);
+        prevPropSigniture = propSigniture;
       }
       // Add listeners
       const listeners = this.constructors[i].Listeners;
-      for (const lsnrName in listeners) {
-        if (listeners[lsnrName]) {
-          this.listeners[lsnrName] = this.listeners[lsnrName] || [];
-          assignListenerDeclaration(this.listeners[lsnrName], hardenListenerDeclaration(listeners[lsnrName]));
+      for (const lsnName in listeners) {
+        if (listeners[lsnName]) {
+          this.listeners[lsnName] = this.listeners[lsnName] || [];
+          assignListenerDeclaration(this.listeners[lsnName], hardenListenerDeclaration(listeners[lsnName]));
         }
       }
     }

@@ -122,9 +122,9 @@
   <body>
     <script type="module">
 
-    import { Options, RegisterIoElement, Path, IoSelectorTabs, IoStorage as $ } from 'io-gui';
+    import { MenuOptions, RegisterIoElement, MenuPath, IoSelectorTabs, IoStorage as $ } from 'io-gui';
 
-    const OPTIONS = new Options([
+    const OPTIONS = new MenuOptions([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
       {label: 'Docs', value: 'docs', options: [
         {label: 'Getting Started', value: 'getting-started', options: [
@@ -202,9 +202,9 @@
           {label: 'IoObject', value: './build/elements/object/object.md'},
           {label: 'IoInspector', value: './build/elements/object/inspector.md'},
           {label: 'IoBreadcrumbs', value: './build/elements/object/breadcrumbs.md'},
-          {label: 'IoConfig', value: './build/elements/object/config.md'},
-          {label: 'IoGroups', value: './build/elements/object/groups.md'},
-          {label: 'IoWidgets', value: './build/elements/object/widgets.md'},
+          {label: 'ObjectConfig', value: './build/elements/object/models/object-config.md'},
+          {label: 'ObjectGroups', value: './build/elements/object/models/object-groups.md'},
+          {label: 'ObjectWidgets', value: './build/elements/object/models/object-widgets.md'},
           // Layout
           {label: 'IoCollapsable', value: './build/elements/layout/collapsable.md'},
           {label: 'IoSelector', value: './build/elements/layout/selector.md'},
@@ -226,7 +226,7 @@
       ]},
       {label: 'Tests', value: 'tests'},
     ], {
-      path: new Path({string: $({key: 'path', storage: 'hash', value: 'home'})}),
+      path: new MenuPath({serialized: $({key: 'path', storage: 'hash', value: 'home'})}),
     });
 
     export class IoMainPage extends IoSelectorTabs {
@@ -245,32 +245,32 @@
               path: './README.md'}],
             ['io-selector', {
               name: 'docs',
-              selected: OPTIONS.option('docs').path.bind('root'),
-              options: OPTIONS.option('docs').options,
+              selected: OPTIONS.getItem('docs').path.bind('root'),
+              options: OPTIONS.getItem('docs').options,
               elements: [
                 ['io-md-view-selector', {
                   name: 'getting-started',
                   sanitize: false,
-                  selected: OPTIONS.option('docs').options.option('getting-started').path.bind('leaf'),
-                  options: OPTIONS.option('docs').options.option('getting-started').options,
+                  selected: OPTIONS.getItem('docs').getSubitem('getting-started').path.bind('root'),
+                  options: OPTIONS.getItem('docs').getSubitem('getting-started').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'learn-more',
                   sanitize: false,
-                  selected: OPTIONS.option('docs').options.option('learn-more').path.bind('leaf'),
-                  options: OPTIONS.option('docs').options.option('learn-more').options,
+                  selected: OPTIONS.getItem('docs').getSubitem('learn-more').path.bind('root'),
+                  options: OPTIONS.getItem('docs').getSubitem('learn-more').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'reference',
                   sanitize: false,
                   // search: true, // TODO: implement
-                  selected: OPTIONS.option('docs').options.option('reference').path.bind('leaf'),
-                  options: OPTIONS.option('docs').options.option('reference').options,
+                  selected: OPTIONS.getItem('docs').getSubitem('reference').path.bind('root'),
+                  options: OPTIONS.getItem('docs').getSubitem('reference').options,
                 }],
                 ['io-md-view', {name: 'development-guidelines', path: './docs/development-guidelines.md'}],
               ]
             }],
-            ['io-selector', {name: 'demos', selected: OPTIONS.option('demos').path.bind('leaf'), elements: [
+            ['io-selector', {name: 'demos', selected: OPTIONS.getItem('demos').path.bind('root'), elements: [
               ['io-demo-elements', {name: 'elements', import: './demos/elements.js'}],
               ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],
               ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],

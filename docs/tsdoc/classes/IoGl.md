@@ -26,7 +26,7 @@ Core `IoElement` class.
 
 #### Defined in
 
-[src/core/gl.ts:255](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L255)
+[src/core/gl.ts:257](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L257)
 
 ## Properties
 
@@ -342,7 +342,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:177](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L177)
+[src/core/gl.ts:179](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L179)
 
 ___
 
@@ -356,7 +356,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:90](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L90)
+[src/core/gl.ts:92](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L92)
 
 ___
 
@@ -406,7 +406,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:79](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L79)
+[src/core/gl.ts:81](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L81)
 
 ___
 
@@ -465,7 +465,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:342](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L342)
+[src/core/gl.ts:343](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L343)
 
 ___
 
@@ -493,7 +493,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
 ___
 
@@ -571,7 +571,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
+[src/core/node.ts:306](https://github.com/io-gui/io/blob/main/src/core/node.ts#L306)
 
 ___
 
@@ -592,7 +592,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/gl.ts:331](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L331)
+[src/core/gl.ts:332](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L332)
 
 ___
 
@@ -679,7 +679,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:344](https://github.com/io-gui/io/blob/main/src/core/node.ts#L344)
+[src/core/node.ts:362](https://github.com/io-gui/io/blob/main/src/core/node.ts#L362)
 
 ___
 
@@ -699,7 +699,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:230](https://github.com/io-gui/io/blob/main/src/core/node.ts#L230)
+[src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -719,7 +719,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
 
 ___
 
@@ -740,7 +740,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:351](https://github.com/io-gui/io/blob/main/src/core/node.ts#L351)
+[src/core/node.ts:369](https://github.com/io-gui/io/blob/main/src/core/node.ts#L369)
 
 ___
 
@@ -783,7 +783,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
 ___
 
@@ -804,7 +804,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:189](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L189)
+[src/core/gl.ts:191](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L191)
 
 ___
 
@@ -818,7 +818,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:205](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L205)
+[src/core/gl.ts:207](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L207)
 
 ___
 
@@ -845,7 +845,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:205](https://github.com/io-gui/io/blob/main/src/core/node.ts#L205)
+[src/core/node.ts:223](https://github.com/io-gui/io/blob/main/src/core/node.ts#L223)
 
 ___
 
@@ -890,7 +890,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
+[src/core/node.ts:297](https://github.com/io-gui/io/blob/main/src/core/node.ts#L297)
 
 ___
 
@@ -917,7 +917,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:276](https://github.com/io-gui/io/blob/main/src/core/node.ts#L276)
 
 ___
 
@@ -931,7 +931,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:300](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L300)
+[src/core/gl.ts:302](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L302)
 
 ___
 
@@ -959,7 +959,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+[src/core/node.ts:242](https://github.com/io-gui/io/blob/main/src/core/node.ts#L242)
 
 ___
 
@@ -987,7 +987,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:334](https://github.com/io-gui/io/blob/main/src/core/node.ts#L334)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
@@ -1041,7 +1041,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:188](https://github.com/io-gui/io/blob/main/src/core/node.ts#L188)
+[src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
 
 ___
 
@@ -1083,7 +1083,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:371](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L371)
+[src/core/gl.ts:378](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L378)
 
 ___
 
@@ -1105,7 +1105,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:388](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L388)
+[src/core/gl.ts:395](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L395)
 
 ___
 
@@ -1146,7 +1146,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:327](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L327)
+[src/core/gl.ts:328](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L328)
 
 ___
 
@@ -1174,7 +1174,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
+[src/core/node.ts:267](https://github.com/io-gui/io/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -1228,7 +1228,7 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/io/blob/main/src/core/node.ts#L303)
+[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)
 
 ___
 
@@ -1249,7 +1249,7 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:377](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L377)
+[src/core/gl.ts:384](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L384)
 
 ___
 
@@ -1263,4 +1263,4 @@ ___
 
 #### Defined in
 
-[src/core/gl.ts:383](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L383)
+[src/core/gl.ts:390](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L390)

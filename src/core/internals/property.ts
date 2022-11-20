@@ -8,7 +8,7 @@ type Reflect = 'attr' | 'none' | 'prop' | 'both';
  */
 export type PropertyDeclaration = {
   value?: any;
-  type?: Constructor | Constructor[];
+  type?: Constructor | Constructor[]; // TODO: fix error with io-object
   binding?: Binding;
   reflect?: Reflect;
   notify?: boolean;
@@ -116,6 +116,7 @@ export class PropertyInstance {
       if (propDef.observe !== undefined && typeof propDef.observe !== 'boolean') console.warn('Incorrect type for "observe" field');
     }
 
+    // TODO: Consider not allowing shared object instances as initial values.
     this.value = propDef.value;
     this.type = propDef.type;
     this.binding = propDef.binding;

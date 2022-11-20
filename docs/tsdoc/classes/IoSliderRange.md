@@ -24,7 +24,7 @@ IoSliderBase.constructor
 
 #### Defined in
 
-[src/core/gl.ts:255](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L255)
+[src/core/gl.ts:257](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L257)
 
 ## Properties
 
@@ -52,7 +52,7 @@ IoSliderBase.\_active
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:64](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L64)
+[src/elements/sliders/io-slider-base.ts:63](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L63)
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:20](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L20)
+[src/elements/sliders/io-slider-range.ts:20](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L20)
 
 ___
 
@@ -136,6 +136,20 @@ IoSliderBase.\_protochain
 
 ___
 
+### \_rect
+
+ **\_rect**: ``null`` \| `DOMRect` = `null`
+
+#### Inherited from
+
+IoSliderBase.\_rect
+
+#### Defined in
+
+[src/elements/sliders/io-slider-base.ts:64](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L64)
+
+___
+
 ### \_startX
 
  **\_startX**: `number` = `0`
@@ -146,7 +160,7 @@ IoSliderBase.\_startX
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:62](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L62)
+[src/elements/sliders/io-slider-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L61)
 
 ___
 
@@ -160,7 +174,7 @@ IoSliderBase.\_startY
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:63](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L63)
+[src/elements/sliders/io-slider-base.ts:62](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L62)
 
 ___
 
@@ -188,7 +202,7 @@ IoSliderBase.color
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:48](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L48)
+[src/elements/sliders/io-slider-base.ts:47](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L47)
 
 ___
 
@@ -230,7 +244,7 @@ IoSliderBase.exponent
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:42](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L42)
+[src/elements/sliders/io-slider-base.ts:41](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L41)
 
 ___
 
@@ -286,7 +300,7 @@ IoSliderBase.lazy
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:60](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L60)
+[src/elements/sliders/io-slider-base.ts:59](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L59)
 
 ___
 
@@ -300,7 +314,7 @@ IoSliderBase.max
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:18](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L18)
+[src/elements/sliders/io-slider-range.ts:18](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L18)
 
 ___
 
@@ -314,7 +328,7 @@ IoSliderBase.min
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:15](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L15)
+[src/elements/sliders/io-slider-range.ts:15](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L15)
 
 ___
 
@@ -342,7 +356,7 @@ IoSliderBase.noscroll
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:51](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L51)
+[src/elements/sliders/io-slider-base.ts:50](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L50)
 
 ___
 
@@ -370,7 +384,7 @@ IoSliderBase.role
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:54](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L54)
+[src/elements/sliders/io-slider-base.ts:53](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L53)
 
 ___
 
@@ -398,7 +412,7 @@ IoSliderBase.step
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:12](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L12)
+[src/elements/sliders/io-slider-range.ts:12](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L12)
 
 ___
 
@@ -412,7 +426,7 @@ IoSliderBase.tabindex
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:57](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L57)
+[src/elements/sliders/io-slider-base.ts:56](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L56)
 
 ___
 
@@ -454,7 +468,7 @@ IoSliderBase.value
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:9](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L9)
+[src/elements/sliders/io-slider-range.ts:9](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L9)
 
 ___
 
@@ -468,7 +482,7 @@ IoSliderBase.vertical
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:45](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L45)
+[src/elements/sliders/io-slider-base.ts:44](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L44)
 
 ## Accessors
 
@@ -486,7 +500,7 @@ IoSliderBase.\_max
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:77](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L77)
+[src/elements/sliders/io-slider-base.ts:77](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L77)
 
 ___
 
@@ -504,7 +518,7 @@ IoSliderBase.\_min
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:66](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L66)
+[src/elements/sliders/io-slider-base.ts:66](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L66)
 
 ___
 
@@ -522,7 +536,7 @@ IoSliderBase.\_step
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:88](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L88)
+[src/elements/sliders/io-slider-base.ts:88](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L88)
 
 ___
 
@@ -540,7 +554,7 @@ IoSliderBase.\_value
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:99](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L99)
+[src/elements/sliders/io-slider-base.ts:99](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L99)
 
 ___
 
@@ -596,7 +610,7 @@ IoSliderBase.Frag
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:101](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L101)
+[src/elements/sliders/io-slider-range.ts:101](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L101)
 
 ___
 
@@ -614,7 +628,7 @@ IoSliderBase.GlUtils
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:50](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L50)
+[src/elements/sliders/io-slider-range.ts:50](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L50)
 
 ___
 
@@ -639,7 +653,7 @@ IoSliderBase.Listeners
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:110](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L110)
+[src/elements/sliders/io-slider-base.ts:110](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L110)
 
 ___
 
@@ -675,7 +689,7 @@ IoSliderBase.Style
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:9](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L9)
+[src/elements/sliders/io-slider-base.ts:9](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L9)
 
 ___
 
@@ -693,7 +707,7 @@ IoSliderBase.Vert
 
 #### Defined in
 
-[src/core/gl.ts:79](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L79)
+[src/core/gl.ts:81](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L81)
 
 ___
 
@@ -758,7 +772,7 @@ ___
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:22](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L22)
+[src/elements/sliders/io-slider-range.ts:22](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L22)
 
 ___
 
@@ -782,7 +796,7 @@ IoSliderBase.\_getPointerCoord
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:174](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L174)
+[src/elements/sliders/io-slider-base.ts:175](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L175)
 
 ___
 
@@ -806,7 +820,7 @@ IoSliderBase.\_getValueFromCoord
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:182](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L182)
+[src/elements/sliders/io-slider-base.ts:183](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L183)
 
 ___
 
@@ -830,7 +844,7 @@ IoSliderBase.\_inputValue
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:198](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L198)
+[src/elements/sliders/io-slider-base.ts:199](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L199)
 
 ___
 
@@ -848,7 +862,7 @@ IoSliderBase.\_onBlur
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:122](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L122)
+[src/elements/sliders/io-slider-base.ts:122](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L122)
 
 ___
 
@@ -872,7 +886,7 @@ IoSliderBase.\_onContextmenu
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:126](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L126)
+[src/elements/sliders/io-slider-base.ts:126](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L126)
 
 ___
 
@@ -890,7 +904,7 @@ IoSliderBase.\_onFocus
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:118](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L118)
+[src/elements/sliders/io-slider-base.ts:118](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L118)
 
 ___
 
@@ -914,7 +928,7 @@ IoSliderBase.\_onKeydown
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:225](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L225)
+[src/elements/sliders/io-slider-base.ts:226](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L226)
 
 ___
 
@@ -938,7 +952,7 @@ IoSliderBase.\_onPointerdown
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:30](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L30)
+[src/elements/sliders/io-slider-range.ts:30](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L30)
 
 ___
 
@@ -962,7 +976,7 @@ IoSliderBase.\_onPointermove
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:163](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L163)
+[src/elements/sliders/io-slider-base.ts:164](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L164)
 
 ___
 
@@ -986,7 +1000,7 @@ IoSliderBase.\_onPointermoveThrottled
 
 #### Defined in
 
-[src/elements/sliders/slider-range.ts:37](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-range.ts#L37)
+[src/elements/sliders/io-slider-range.ts:37](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L37)
 
 ___
 
@@ -1010,7 +1024,7 @@ IoSliderBase.\_onPointerup
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:167](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L167)
+[src/elements/sliders/io-slider-base.ts:168](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L168)
 
 ___
 
@@ -1028,7 +1042,7 @@ IoSliderBase.\_onRender
 
 #### Defined in
 
-[src/core/gl.ts:342](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L342)
+[src/core/gl.ts:343](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L343)
 
 ___
 
@@ -1046,7 +1060,7 @@ IoSliderBase.\_onTouchend
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:153](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L153)
+[src/elements/sliders/io-slider-base.ts:154](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L154)
 
 ___
 
@@ -1070,7 +1084,7 @@ IoSliderBase.\_onTouchmove
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:136](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L136)
+[src/elements/sliders/io-slider-base.ts:137](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L137)
 
 ___
 
@@ -1094,7 +1108,7 @@ IoSliderBase.\_onTouchstart
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:129](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L129)
+[src/elements/sliders/io-slider-base.ts:129](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L129)
 
 ___
 
@@ -1112,7 +1126,7 @@ IoSliderBase.\_setDecrease
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:271](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L271)
+[src/elements/sliders/io-slider-base.ts:272](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L272)
 
 ___
 
@@ -1130,7 +1144,7 @@ IoSliderBase.\_setDown
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:292](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L292)
+[src/elements/sliders/io-slider-base.ts:293](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L293)
 
 ___
 
@@ -1148,7 +1162,7 @@ IoSliderBase.\_setIncrease
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:264](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L264)
+[src/elements/sliders/io-slider-base.ts:265](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L265)
 
 ___
 
@@ -1166,7 +1180,7 @@ IoSliderBase.\_setLeft
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:298](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L298)
+[src/elements/sliders/io-slider-base.ts:299](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L299)
 
 ___
 
@@ -1184,7 +1198,7 @@ IoSliderBase.\_setMax
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:282](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L282)
+[src/elements/sliders/io-slider-base.ts:283](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L283)
 
 ___
 
@@ -1202,7 +1216,7 @@ IoSliderBase.\_setMin
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:278](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L278)
+[src/elements/sliders/io-slider-base.ts:279](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L279)
 
 ___
 
@@ -1220,7 +1234,7 @@ IoSliderBase.\_setRight
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:304](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L304)
+[src/elements/sliders/io-slider-base.ts:305](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L305)
 
 ___
 
@@ -1238,7 +1252,7 @@ IoSliderBase.\_setUp
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:286](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L286)
+[src/elements/sliders/io-slider-base.ts:287](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L287)
 
 ___
 
@@ -1266,7 +1280,7 @@ IoSliderBase.addEventListener
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
 ___
 
@@ -1344,7 +1358,7 @@ IoSliderBase.bind
 
 #### Defined in
 
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
+[src/core/node.ts:306](https://github.com/io-gui/io/blob/main/src/core/node.ts#L306)
 
 ___
 
@@ -1362,7 +1376,7 @@ IoSliderBase.changed
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:313](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L313)
+[src/elements/sliders/io-slider-base.ts:314](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L314)
 
 ___
 
@@ -1449,7 +1463,7 @@ IoSliderBase.dispatchEvent
 
 #### Defined in
 
-[src/core/node.ts:344](https://github.com/io-gui/io/blob/main/src/core/node.ts#L344)
+[src/core/node.ts:362](https://github.com/io-gui/io/blob/main/src/core/node.ts#L362)
 
 ___
 
@@ -1469,7 +1483,7 @@ IoSliderBase.dispatchQueue
 
 #### Defined in
 
-[src/core/node.ts:230](https://github.com/io-gui/io/blob/main/src/core/node.ts#L230)
+[src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -1489,7 +1503,7 @@ IoSliderBase.dispatchQueueSync
 
 #### Defined in
 
-[src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
+[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
 
 ___
 
@@ -1510,7 +1524,7 @@ IoSliderBase.dispose
 
 #### Defined in
 
-[src/core/node.ts:351](https://github.com/io-gui/io/blob/main/src/core/node.ts#L351)
+[src/core/node.ts:369](https://github.com/io-gui/io/blob/main/src/core/node.ts#L369)
 
 ___
 
@@ -1553,7 +1567,7 @@ IoSliderBase.init
 
 #### Defined in
 
-[src/elements/sliders/slider-base.ts:310](https://github.com/io-gui/io/blob/main/src/elements/sliders/slider-base.ts#L310)
+[src/elements/sliders/io-slider-base.ts:311](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L311)
 
 ___
 
@@ -1578,7 +1592,7 @@ IoSliderBase.initPropertyUniform
 
 #### Defined in
 
-[src/core/gl.ts:189](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L189)
+[src/core/gl.ts:191](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L191)
 
 ___
 
@@ -1596,7 +1610,7 @@ IoSliderBase.initShader
 
 #### Defined in
 
-[src/core/gl.ts:205](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L205)
+[src/core/gl.ts:207](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L207)
 
 ___
 
@@ -1623,7 +1637,7 @@ IoSliderBase.inputValue
 
 #### Defined in
 
-[src/core/node.ts:205](https://github.com/io-gui/io/blob/main/src/core/node.ts#L205)
+[src/core/node.ts:223](https://github.com/io-gui/io/blob/main/src/core/node.ts#L223)
 
 ___
 
@@ -1668,7 +1682,7 @@ IoSliderBase.objectMutated
 
 #### Defined in
 
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
+[src/core/node.ts:297](https://github.com/io-gui/io/blob/main/src/core/node.ts#L297)
 
 ___
 
@@ -1695,7 +1709,7 @@ IoSliderBase.onObjectMutated
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:276](https://github.com/io-gui/io/blob/main/src/core/node.ts#L276)
 
 ___
 
@@ -1713,7 +1727,7 @@ IoSliderBase.onResized
 
 #### Defined in
 
-[src/core/gl.ts:300](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L300)
+[src/core/gl.ts:302](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L302)
 
 ___
 
@@ -1741,7 +1755,7 @@ IoSliderBase.queue
 
 #### Defined in
 
-[src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+[src/core/node.ts:242](https://github.com/io-gui/io/blob/main/src/core/node.ts#L242)
 
 ___
 
@@ -1769,7 +1783,7 @@ IoSliderBase.removeEventListener
 
 #### Defined in
 
-[src/core/node.ts:334](https://github.com/io-gui/io/blob/main/src/core/node.ts#L334)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
@@ -1823,7 +1837,7 @@ IoSliderBase.setProperties
 
 #### Defined in
 
-[src/core/node.ts:188](https://github.com/io-gui/io/blob/main/src/core/node.ts#L188)
+[src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
 
 ___
 
@@ -1869,7 +1883,7 @@ IoSliderBase.setShaderProgram
 
 #### Defined in
 
-[src/core/gl.ts:371](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L371)
+[src/core/gl.ts:378](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L378)
 
 ___
 
@@ -1895,7 +1909,7 @@ IoSliderBase.setUniform
 
 #### Defined in
 
-[src/core/gl.ts:388](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L388)
+[src/core/gl.ts:395](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L395)
 
 ___
 
@@ -1940,7 +1954,7 @@ IoSliderBase.themeMutated
 
 #### Defined in
 
-[src/core/gl.ts:327](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L327)
+[src/core/gl.ts:328](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L328)
 
 ___
 
@@ -1968,7 +1982,7 @@ IoSliderBase.throttle
 
 #### Defined in
 
-[src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
+[src/core/node.ts:267](https://github.com/io-gui/io/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -2022,7 +2036,7 @@ IoSliderBase.unbind
 
 #### Defined in
 
-[src/core/node.ts:303](https://github.com/io-gui/io/blob/main/src/core/node.ts#L303)
+[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)
 
 ___
 
@@ -2047,7 +2061,7 @@ IoSliderBase.updatePropertyUniform
 
 #### Defined in
 
-[src/core/gl.ts:377](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L377)
+[src/core/gl.ts:384](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L384)
 
 ___
 
@@ -2065,4 +2079,4 @@ IoSliderBase.updateThemeUniforms
 
 #### Defined in
 
-[src/core/gl.ts:383](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L383)
+[src/core/gl.ts:390](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L390)

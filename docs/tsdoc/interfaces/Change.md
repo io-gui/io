@@ -8,7 +8,7 @@
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:76](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L76)
+[src/core/internals/changeQueue.ts:77](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L77)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:74](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L74)
+[src/core/internals/changeQueue.ts:75](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L75)
 
 ___
 
@@ -28,4 +28,4 @@ ___
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:75](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L75)
+[src/core/internals/changeQueue.ts:76](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L76)

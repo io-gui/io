@@ -18,6 +18,7 @@ export declare class Binding {
 	constructor(node: IoNode, property: string);
 	set value(value: any);
 	get value(): any;
+	toJSON(): string;
 	/**
 	 * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
 	 * @param {IoNode} node - Target node
@@ -757,23 +758,22 @@ export declare class IoLayer extends IoElement {
 	expandedChanged(): void;
 }
 export declare const IoLayerSingleton: IoLayer;
-export declare class Path extends IoNode {
-	static get Properties(): {
-		value: ArrayConstructor;
-		string: StringConstructor;
-		root: null;
-		leaf: null;
-		delimiter: string;
-	};
-	constructor(...args: any[]);
+export declare class MenuPath extends IoNode {
+	value: any[];
+	root: any;
+	leaf: any;
+	serialized: string;
+	delimiter: string;
+	init(): void;
+	valueMutatied(): void;
 	valueChanged(): void;
-	onMutation(): void;
-	update(): void;
-	stringChanged(): void;
+	toString(): string;
+	serializedChanged(): void;
 	rootChanged(): void;
 	leafChanged(): void;
+	bind(prop: string): Binding;
 }
-declare const Options_base: {
+declare const MenuOptions_base: {
 	new (properties?: Record<string, any>, ...args: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
@@ -803,18 +803,13 @@ declare const Options_base: {
 	[x: string]: any;
 	readonly Properties: PropertyDeclarations;
 };
-export declare class Options extends Options_base {
-	static get Properties(): {
-		items: {
-			type: ArrayConstructor;
-		};
-		path: {
-			type: typeof Path;
-		};
-		lazy: boolean;
-	};
-	constructor(options?: Array<Item | any>, props?: {});
-	option(value: any): any;
+export declare class MenuOptions extends MenuOptions_base {
+	items: Array<MenuItem>;
+	path: MenuPath;
+	lazy: boolean;
+	getItem(value: any): any;
+	push(...items: Array<MenuItem | any>): void;
+	constructor(options?: Array<MenuItem | any>, props?: {});
 	pathChanged(): void;
 	onItemSelectedPathChanged(event: any): void;
 	onItemSelectedChanged(event: any): void;
@@ -822,25 +817,19 @@ export declare class Options extends Options_base {
 	selectDefault(): boolean;
 	changed(): void;
 }
-export declare class Item extends IoNode {
-	static get Properties(): {
-		value: undefined;
-		label: string;
-		icon: string;
-		hint: string;
-		action: undefined;
-		select: string;
-		selected: BooleanConstructor;
-		path: {
-			type: typeof Path;
-		};
-		options: {
-			type: typeof Options;
-		};
-	};
-	constructor(option: any);
+export declare class MenuItem extends IoNode {
+	value: any;
+	label: string;
+	icon: string;
+	hint: string;
+	action: () => void | undefined;
+	select: "pick" | "toggle" | "none";
+	selected: boolean;
+	options: MenuOptions;
+	get path(): MenuPath;
 	get hasmore(): boolean;
-	option(value: any): any;
+	getSubitem(value: any): any;
+	constructor(option: any);
 	onOptionsSelectedPathChanged(): void;
 	optionsChanged(): void;
 	selectedChanged(): void;
@@ -1408,7 +1397,7 @@ export declare class IoMenuItem extends IoField {
 	static get Style(): string;
 	static get Properties(): any;
 	static get Listeners(): any;
-	_option?: Item;
+	_option?: MenuItem;
 	preventDefault(event: Event): void;
 	get hasmore(): any;
 	get inlayer(): any;
@@ -1481,6 +1470,24 @@ export declare class IoNotify extends IoElement {
 	_onAgree(event: CustomEvent): void;
 	_onDisgree(): void;
 }
+export declare class ObjectConfig {
+	constructor(prototypes: any);
+	registerObjectConfig(config: any): void;
+	getObjectConfig(object: any, customConfig: any): any;
+}
+export declare class ObjectGroups {
+	constructor(prototypes: any);
+	registerObjectGroups(groups: any): void;
+	getObjectGroups(object: any, customGroups: any, keys: any, doAdvanced?: boolean): any;
+}
+export declare class ObjectWidgets {
+	constructor(prototypes: any);
+	registerObjectWidgets(widgets: any): void;
+	getObjectWidgets(object: any): {
+		main: any;
+		groups: any;
+	};
+}
 export declare class IoInspector extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1492,14 +1499,14 @@ export declare class IoInspector extends IoElement {
 	valueChanged(): void;
 	advancedChanged(): void;
 	selectedMutated(): void;
-	_getConfig(): void;
-	_getGroups(): void;
-	_getWidgets(): void;
+	_getObjectConfig(): void;
+	_getObjectGroups(): void;
+	_getObjectWidgets(): void;
 	_getAll(): void;
 	changed(): void;
 	_onhangedThrCottle(): void;
 	_onChange(): void;
-	static get Config(): {
+	static get ObjectConfig(): {
 		"type:object": (string | {
 			class: string;
 		})[];
@@ -1507,7 +1514,7 @@ export declare class IoInspector extends IoElement {
 			class: string;
 		})[];
 	};
-	static get Groups(): {
+	static get ObjectGroups(): {
 		"Object|hidden": RegExp[];
 		"HTMLElement|main": (string | RegExp)[];
 		"HTMLElement|hidden": (string | RegExp)[];
@@ -1515,16 +1522,16 @@ export declare class IoInspector extends IoElement {
 		"HTMLElement|display": RegExp[];
 		"HTMLElement|hierarchy": RegExp[];
 	};
-	static get Widgets(): {};
-	static RegisterConfig: (config: any) => void;
-	static RegisterGroups: (groups: any) => void;
-	static RegisterWidgets: (widgets: any) => void;
+	static get ObjectWidgets(): {};
+	static RegisterObjectConfig: (config: any) => void;
+	static RegisterObjectGroups: (groups: any) => void;
+	static RegisterObjectWidgets: (widgets: any) => void;
 	static Register(): void;
 }
 export declare class IoProperties extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
-	static get Config(): {
+	static get ObjectConfig(): {
 		"type:string": {}[];
 		"type:number": (string | {
 			step: number;
@@ -1535,12 +1542,12 @@ export declare class IoProperties extends IoElement {
 		"type:undefined": {}[];
 	};
 	_onValueSet(event: CustomEvent): void;
-	_getConfig(): any;
+	_getObjectConfig(): any;
 	valueMutated(): void;
 	changed(): void;
 	_changedThrottled(): void;
 	_onChange(): void;
-	static RegisterConfig: (config: any) => void;
+	static RegisterObjectConfig: (config: any) => void;
 }
 export declare class IoObject extends IoElement {
 	static get Style(): string;
