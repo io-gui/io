@@ -122,7 +122,7 @@
   <body>
     <script type="module">
 
-    import { MenuOptions, RegisterIoElement, Path, IoSelectorTabs, IoStorage as $ } from 'io-gui';
+    import { MenuOptions, RegisterIoElement, MenuPath, IoSelectorTabs, IoStorage as $ } from 'io-gui';
 
     const OPTIONS = new MenuOptions([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
@@ -202,9 +202,9 @@
           {label: 'IoObject', value: './build/elements/object/object.md'},
           {label: 'IoInspector', value: './build/elements/object/inspector.md'},
           {label: 'IoBreadcrumbs', value: './build/elements/object/breadcrumbs.md'},
-          {label: 'IoConfig', value: './build/elements/object/config.md'},
-          {label: 'IoGroups', value: './build/elements/object/groups.md'},
-          {label: 'IoWidgets', value: './build/elements/object/widgets.md'},
+          {label: 'ObjectConfig', value: './build/elements/object/models/object-config.md'},
+          {label: 'ObjectGroups', value: './build/elements/object/models/object-groups.md'},
+          {label: 'ObjectWidgets', value: './build/elements/object/models/object-widgets.md'},
           // Layout
           {label: 'IoCollapsable', value: './build/elements/layout/collapsable.md'},
           {label: 'IoSelector', value: './build/elements/layout/selector.md'},
@@ -226,7 +226,7 @@
       ]},
       {label: 'Tests', value: 'tests'},
     ], {
-      path: new Path({serialize: true, serialized: $({key: 'path', storage: 'hash', value: 'home'})}),
+      path: new MenuPath({serialized: $({key: 'path', storage: 'hash', value: 'home'})}),
     });
 
     export class IoMainPage extends IoSelectorTabs {

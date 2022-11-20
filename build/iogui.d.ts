@@ -18,6 +18,7 @@ export declare class Binding {
 	constructor(node: IoNode, property: string);
 	set value(value: any);
 	get value(): any;
+	toJSON(): string;
 	/**
 	 * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
 	 * @param {IoNode} node - Target node
@@ -757,17 +758,16 @@ export declare class IoLayer extends IoElement {
 	expandedChanged(): void;
 }
 export declare const IoLayerSingleton: IoLayer;
-export declare class Path extends IoNode {
+export declare class MenuPath extends IoNode {
 	value: any[];
 	root: any;
 	leaf: any;
-	serialize: boolean;
 	serialized: string;
 	delimiter: string;
 	init(): void;
 	valueMutatied(): void;
 	valueChanged(): void;
-	_serialize(value: string[]): string;
+	toString(): string;
 	serializedChanged(): void;
 	rootChanged(): void;
 	leafChanged(): void;
@@ -805,7 +805,7 @@ declare const MenuOptions_base: {
 };
 export declare class MenuOptions extends MenuOptions_base {
 	items: Array<MenuItem>;
-	path: Path;
+	path: MenuPath;
 	lazy: boolean;
 	getItem(value: any): any;
 	push(...items: Array<MenuItem | any>): void;
@@ -823,10 +823,10 @@ export declare class MenuItem extends IoNode {
 	icon: string;
 	hint: string;
 	action: () => void | undefined;
-	select: "pick" | "toggle" | "pick" | "none";
+	select: "pick" | "toggle" | "none";
 	selected: boolean;
 	options: MenuOptions;
-	get path(): Path;
+	get path(): MenuPath;
 	get hasmore(): boolean;
 	getSubitem(value: any): any;
 	constructor(option: any);
@@ -1470,6 +1470,24 @@ export declare class IoNotify extends IoElement {
 	_onAgree(event: CustomEvent): void;
 	_onDisgree(): void;
 }
+export declare class ObjectConfig {
+	constructor(prototypes: any);
+	registerObjectConfig(config: any): void;
+	getObjectConfig(object: any, customConfig: any): any;
+}
+export declare class ObjectGroups {
+	constructor(prototypes: any);
+	registerObjectGroups(groups: any): void;
+	getObjectGroups(object: any, customGroups: any, keys: any, doAdvanced?: boolean): any;
+}
+export declare class ObjectWidgets {
+	constructor(prototypes: any);
+	registerObjectWidgets(widgets: any): void;
+	getObjectWidgets(object: any): {
+		main: any;
+		groups: any;
+	};
+}
 export declare class IoInspector extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1481,14 +1499,14 @@ export declare class IoInspector extends IoElement {
 	valueChanged(): void;
 	advancedChanged(): void;
 	selectedMutated(): void;
-	_getConfig(): void;
-	_getGroups(): void;
-	_getWidgets(): void;
+	_getObjectConfig(): void;
+	_getObjectGroups(): void;
+	_getObjectWidgets(): void;
 	_getAll(): void;
 	changed(): void;
 	_onhangedThrCottle(): void;
 	_onChange(): void;
-	static get Config(): {
+	static get ObjectConfig(): {
 		"type:object": (string | {
 			class: string;
 		})[];
@@ -1496,7 +1514,7 @@ export declare class IoInspector extends IoElement {
 			class: string;
 		})[];
 	};
-	static get Groups(): {
+	static get ObjectGroups(): {
 		"Object|hidden": RegExp[];
 		"HTMLElement|main": (string | RegExp)[];
 		"HTMLElement|hidden": (string | RegExp)[];
@@ -1504,16 +1522,16 @@ export declare class IoInspector extends IoElement {
 		"HTMLElement|display": RegExp[];
 		"HTMLElement|hierarchy": RegExp[];
 	};
-	static get Widgets(): {};
-	static RegisterConfig: (config: any) => void;
-	static RegisterGroups: (groups: any) => void;
-	static RegisterWidgets: (widgets: any) => void;
+	static get ObjectWidgets(): {};
+	static RegisterObjectConfig: (config: any) => void;
+	static RegisterObjectGroups: (groups: any) => void;
+	static RegisterObjectWidgets: (widgets: any) => void;
 	static Register(): void;
 }
 export declare class IoProperties extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
-	static get Config(): {
+	static get ObjectConfig(): {
 		"type:string": {}[];
 		"type:number": (string | {
 			step: number;
@@ -1524,12 +1542,12 @@ export declare class IoProperties extends IoElement {
 		"type:undefined": {}[];
 	};
 	_onValueSet(event: CustomEvent): void;
-	_getConfig(): any;
+	_getObjectConfig(): any;
 	valueMutated(): void;
 	changed(): void;
 	_changedThrottled(): void;
 	_onChange(): void;
-	static RegisterConfig: (config: any) => void;
+	static RegisterObjectConfig: (config: any) => void;
 }
 export declare class IoObject extends IoElement {
 	static get Style(): string;

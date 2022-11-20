@@ -25,7 +25,7 @@ IoNodeMixin(Array).constructor
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:40](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L40)
+[src/elements/menus/models/menu-options.ts:36](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L36)
 
 ## Properties
 
@@ -105,7 +105,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:16](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L16)
+[src/elements/menus/models/menu-options.ts:12](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L12)
 
 ___
 
@@ -115,17 +115,17 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:22](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L22)
+[src/elements/menus/models/menu-options.ts:18](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L18)
 
 ___
 
 ### path
 
- **path**: [`Path`](Path.md)
+ **path**: [`MenuPath`](MenuPath.md)
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:19](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L19)
+[src/elements/menus/models/menu-options.ts:15](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L15)
 
 ## Accessors
 
@@ -244,7 +244,7 @@ IoNodeMixin(Array).changed
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:137](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L137)
+[src/elements/menus/models/menu-options.ts:133](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L133)
 
 ___
 
@@ -354,7 +354,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:24](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L24)
+[src/elements/menus/models/menu-options.ts:20](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L20)
 
 ___
 
@@ -446,7 +446,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:87](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L87)
+[src/elements/menus/models/menu-options.ts:83](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L83)
 
 ___
 
@@ -466,7 +466,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:77](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L77)
+[src/elements/menus/models/menu-options.ts:73](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L73)
 
 ___
 
@@ -507,7 +507,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:56](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L56)
+[src/elements/menus/models/menu-options.ts:52](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L52)
 
 ___
 
@@ -527,7 +527,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:31](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L31)
+[src/elements/menus/models/menu-options.ts:27](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L27)
 
 ___
 
@@ -597,7 +597,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:123](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L123)
+[src/elements/menus/models/menu-options.ts:119](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L119)
 
 ___
 
@@ -672,7 +672,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/options.ts:110](https://github.com/io-gui/io/blob/main/src/elements/menus/models/options.ts#L110)
+[src/elements/menus/models/menu-options.ts:106](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L106)
 
 ___
 

@@ -1,4 +1,4 @@
-# Class: Path
+# Class: MenuPath
 
 IoNodeMixin applied to `Object` class.
 
@@ -6,13 +6,13 @@ IoNodeMixin applied to `Object` class.
 
 - [`IoNode`](IoNode.md)
 
-  ↳ **`Path`**
+  ↳ **`MenuPath`**
 
 ## Constructors
 
 ### constructor
 
-**new Path**(`properties?`, ...`args`)
+**new MenuPath**(`properties?`, ...`args`)
 
 Creates a class instance and initializes the internals.
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:24](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L24)
+[src/elements/menus/models/menu-path.ts:22](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L22)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:15](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L15)
+[src/elements/menus/models/menu-path.ts:15](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L15)
 
 ___
 
@@ -129,17 +129,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:12](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L12)
-
-___
-
-### serialize
-
- **serialize**: `boolean`
-
-#### Defined in
-
-[src/elements/menus/models/path.ts:18](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L18)
+[src/elements/menus/models/menu-path.ts:12](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L12)
 
 ___
 
@@ -149,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:21](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L21)
+[src/elements/menus/models/menu-path.ts:19](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L19)
 
 ___
 
@@ -159,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:9](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L9)
+[src/elements/menus/models/menu-path.ts:9](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L9)
 
 ## Accessors
 
@@ -180,26 +170,6 @@ IoNode.Properties
 [src/core/node.ts:37](https://github.com/io-gui/io/blob/main/src/core/node.ts#L37)
 
 ## Methods
-
-### \_serialize
-
-**_serialize**(`value`): `string`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `string`[] |
-
-#### Returns
-
-`string`
-
-#### Defined in
-
-[src/elements/menus/models/path.ts:44](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L44)
-
-___
 
 ### addEventListener
 
@@ -280,7 +250,7 @@ Binding object.
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:114](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L114)
+[src/elements/menus/models/menu-path.ts:99](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L99)
 
 ___
 
@@ -409,7 +379,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:26](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L26)
+[src/elements/menus/models/menu-path.ts:24](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L24)
 
 ___
 
@@ -450,7 +420,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:106](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L106)
+[src/elements/menus/models/menu-path.ts:91](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L91)
 
 ___
 
@@ -574,7 +544,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:85](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L85)
+[src/elements/menus/models/menu-path.ts:70](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L70)
 
 ___
 
@@ -588,7 +558,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:69](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L69)
+[src/elements/menus/models/menu-path.ts:59](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L59)
 
 ___
 
@@ -675,6 +645,20 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 ___
 
+### toString
+
+**toString**(): `string`
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[src/elements/menus/models/menu-path.ts:41](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L41)
+
+___
+
 ### unbind
 
 **unbind**(`prop`): `void`
@@ -711,7 +695,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:36](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L36)
+[src/elements/menus/models/menu-path.ts:34](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L34)
 
 ___
 
@@ -725,4 +709,4 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/path.ts:31](https://github.com/io-gui/io/blob/main/src/elements/menus/models/path.ts#L31)
+[src/elements/menus/models/menu-path.ts:29](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-path.ts#L29)

@@ -14,9 +14,7 @@ export class MenuPath extends IoNode {
   @Property(undefined)
   declare leaf: any;
 
-  @Property(false)
-  declare serialize: boolean;
-
+  // TODO document. Note: string values only!
   @Property('')
   declare serialized: string;
 
@@ -35,30 +33,22 @@ export class MenuPath extends IoNode {
 
   valueChanged() {
     this.setProperties({
-      'serialized': this.serialize ? this._serialize(this.value) : '',
+      'serialized': this.toString(),
       'leaf': this.value[this.value.length - 1],
       'root': this.value[0],
     });
   }
-
-  _serialize(value: string[]) {
+  toString() {
     let string = '';
+    const value = this.value;
     for (let i = 0; i < value.length; i++) {
       const val = value[i];
       if (typeof val === 'string') {
         if (val.search(this.delimiter) !== -1) {
-          console.error('MenuPath: Cannot serialize value', value);
-          return '';
-        }
-        string += val;
-      } else if (typeof val === 'number') {
-        if (isNaN(val)) {
-          console.error('MenuPath: Cannot serialize value', value);
           return '';
         }
         string += val;
       } else {
-        console.error('MenuPath: Cannot serialize value', value);
         return '';
       }
       if (i !== value.length - 1 && String(value[value.length - 1]) !== '') string += this.delimiter;
@@ -67,11 +57,6 @@ export class MenuPath extends IoNode {
   }
 
   serializedChanged() {
-    debug: {
-      if (this.serialize === false) {
-        console.warn('MenuPath: Serialization not enabled for this MenuPath instance');
-      }
-    }
     if (this.serialize === true) {
       const array = this.serialized ? [...this.serialized.split(this.delimiter)] : [];
       for (let i = 0; i < array.length; i++) {
@@ -88,7 +73,7 @@ export class MenuPath extends IoNode {
         this.value.length = 0;
         this.value.push(this.root);
         this.setProperties({
-          serialized: this.serialize ? this._serialize(this.value) : '',
+          serialized: this.toString(),
           leaf: this.root,
         });
         this.dispatchEvent('object-mutated', {object: this.value}, false, window);

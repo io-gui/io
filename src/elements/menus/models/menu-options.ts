@@ -8,17 +8,13 @@ import { Property } from '../../../core/internals/property.js';
 @RegisterIoNode
 export class MenuOptions extends IoNodeMixin(Array) {
 
-  // static get Properties() {
-  //   return {};
-  // }
-
-  @Property(Array) // TODO: investigate why this breaks
+  @Property(Array)
   declare items: Array<MenuItem>;
 
   @Property(MenuPath)
   declare path: MenuPath;
 
-  @Property(true) // TODO: test and recosider
+  @Property(true) // TODO: test and recosider, investigate why this is necessary?
   declare lazy: boolean;
 
   getItem(value: any) {

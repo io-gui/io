@@ -257,9 +257,9 @@ ___
 
 ___
 
-### RegisterConfig
+### RegisterObjectConfig
 
- `Static` **RegisterConfig**: (`config`: `any`) => `void`
+ `Static` **RegisterObjectConfig**: (`config`: `any`) => `void`
 
 #### Type declaration
 
@@ -319,9 +319,9 @@ IoElement.textNode
 
 ___
 
-### Config
+### ObjectConfig
 
-`Static` `get` **Config**(): `Object`
+`Static` `get` **ObjectConfig**(): `Object`
 
 #### Returns
 
@@ -437,9 +437,9 @@ Update textContent via TextNode is better for layout performance.
 
 ___
 
-### \_getConfig
+### \_getObjectConfig
 
-**_getConfig**(): `any`
+**_getObjectConfig**(): `any`
 
 #### Returns
 

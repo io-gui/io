@@ -254,9 +254,9 @@ ___
 
 ___
 
-### RegisterConfig
+### RegisterObjectConfig
 
- `Static` **RegisterConfig**: (`config`: `any`) => `void`
+ `Static` **RegisterObjectConfig**: (`config`: `any`) => `void`
 
 #### Type declaration
 
@@ -278,9 +278,9 @@ ___
 
 ___
 
-### RegisterGroups
+### RegisterObjectGroups
 
- `Static` **RegisterGroups**: (`groups`: `any`) => `void`
+ `Static` **RegisterObjectGroups**: (`groups`: `any`) => `void`
 
 #### Type declaration
 
@@ -302,9 +302,9 @@ ___
 
 ___
 
-### RegisterWidgets
+### RegisterObjectWidgets
 
- `Static` **RegisterWidgets**: (`widgets`: `any`) => `void`
+ `Static` **RegisterObjectWidgets**: (`widgets`: `any`) => `void`
 
 #### Type declaration
 
@@ -364,9 +364,27 @@ IoElement.textNode
 
 ___
 
-### Config
+### Listeners
 
-`Static` `get` **Config**(): `Object`
+`Static` `get` **Listeners**(): `Object`
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `io-field-clicked` | `string` |
+
+#### Defined in
+
+[src/elements/object/io-inspector.ts:105](https://github.com/io-gui/io/blob/main/src/elements/object/io-inspector.ts#L105)
+
+___
+
+### ObjectConfig
+
+`Static` `get` **ObjectConfig**(): `Object`
 
 #### Returns
 
@@ -383,9 +401,9 @@ ___
 
 ___
 
-### Groups
+### ObjectGroups
 
-`Static` `get` **Groups**(): `Object`
+`Static` `get` **ObjectGroups**(): `Object`
 
 #### Returns
 
@@ -406,21 +424,17 @@ ___
 
 ___
 
-### Listeners
+### ObjectWidgets
 
-`Static` `get` **Listeners**(): `Object`
+`Static` `get` **ObjectWidgets**(): `Object`
 
 #### Returns
 
 `Object`
 
-| Name | Type |
-| :------ | :------ |
-| `io-field-clicked` | `string` |
-
 #### Defined in
 
-[src/elements/object/io-inspector.ts:105](https://github.com/io-gui/io/blob/main/src/elements/object/io-inspector.ts#L105)
+[src/elements/object/io-inspector.ts:218](https://github.com/io-gui/io/blob/main/src/elements/object/io-inspector.ts#L218)
 
 ___
 
@@ -457,20 +471,6 @@ IoElement.Style
 #### Defined in
 
 [src/elements/object/io-inspector.ts:18](https://github.com/io-gui/io/blob/main/src/elements/object/io-inspector.ts#L18)
-
-___
-
-### Widgets
-
-`Static` `get` **Widgets**(): `Object`
-
-#### Returns
-
-`Object`
-
-#### Defined in
-
-[src/elements/object/io-inspector.ts:218](https://github.com/io-gui/io/blob/main/src/elements/object/io-inspector.ts#L218)
 
 ___
 
@@ -533,9 +533,9 @@ ___
 
 ___
 
-### \_getConfig
+### \_getObjectConfig
 
-**_getConfig**(): `void`
+**_getObjectConfig**(): `void`
 
 #### Returns
 
@@ -547,9 +547,9 @@ ___
 
 ___
 
-### \_getGroups
+### \_getObjectGroups
 
-**_getGroups**(): `void`
+**_getObjectGroups**(): `void`
 
 #### Returns
 
@@ -561,9 +561,9 @@ ___
 
 ___
 
-### \_getWidgets
+### \_getObjectWidgets
 
-**_getWidgets**(): `void`
+**_getObjectWidgets**(): `void`
 
 #### Returns
 

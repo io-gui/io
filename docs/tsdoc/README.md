@@ -8,9 +8,7 @@
 
 - [Binding](classes/Binding.md)
 - [ChangeQueue](classes/ChangeQueue.md)
-- [Config](classes/Config.md)
 - [EventDispatcher](classes/EventDispatcher.md)
-- [Groups](classes/Groups.md)
 - [IoBoolean](classes/IoBoolean.md)
 - [IoButton](classes/IoButton.md)
 - [IoCollapsable](classes/IoCollapsable.md)
@@ -80,11 +78,13 @@
 - [IoVector](classes/IoVector.md)
 - [MenuItem](classes/MenuItem.md)
 - [MenuOptions](classes/MenuOptions.md)
-- [Path](classes/Path.md)
+- [MenuPath](classes/MenuPath.md)
+- [ObjectConfig](classes/ObjectConfig.md)
+- [ObjectGroups](classes/ObjectGroups.md)
+- [ObjectWidgets](classes/ObjectWidgets.md)
 - [PropertyInstance](classes/PropertyInstance.md)
 - [ProtoChain](classes/ProtoChain.md)
 - [ProtoProperty](classes/ProtoProperty.md)
-- [Widgets](classes/Widgets.md)
 
 ## Interfaces
 

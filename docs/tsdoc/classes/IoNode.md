@@ -12,7 +12,7 @@ IoNodeMixin applied to `Object` class.
 
   ↳↳ [`MenuItem`](MenuItem.md)
 
-  ↳↳ [`Path`](Path.md)
+  ↳↳ [`MenuPath`](MenuPath.md)
 
   ↳↳ [`IoIconset`](IoIconset.md)
 

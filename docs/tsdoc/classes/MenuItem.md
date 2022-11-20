@@ -26,7 +26,7 @@ IoNodeMixin applied to `Object` class.
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:48](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L48)
+[src/elements/menus/models/menu-item.ts:48](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L48)
 
 ## Properties
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:25](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L25)
+[src/elements/menus/models/menu-item.ts:25](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L25)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:22](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L22)
+[src/elements/menus/models/menu-item.ts:22](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L22)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:19](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L19)
+[src/elements/menus/models/menu-item.ts:19](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L19)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:16](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L16)
+[src/elements/menus/models/menu-item.ts:16](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L16)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:34](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L34)
+[src/elements/menus/models/menu-item.ts:34](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L34)
 
 ___
 
@@ -164,7 +164,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:28](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L28)
+[src/elements/menus/models/menu-item.ts:28](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L28)
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:31](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L31)
+[src/elements/menus/models/menu-item.ts:31](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L31)
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:13](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L13)
+[src/elements/menus/models/menu-item.ts:13](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L13)
 
 ## Accessors
 
@@ -198,21 +198,21 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:40](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L40)
+[src/elements/menus/models/menu-item.ts:40](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L40)
 
 ___
 
 ### path
 
-`get` **path**(): [`Path`](Path.md)
+`get` **path**(): [`MenuPath`](MenuPath.md)
 
 #### Returns
 
-[`Path`](Path.md)
+[`MenuPath`](MenuPath.md)
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:36](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L36)
+[src/elements/menus/models/menu-item.ts:36](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L36)
 
 ___
 
@@ -334,7 +334,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:103](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L103)
+[src/elements/menus/models/menu-item.ts:103](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L103)
 
 ___
 
@@ -444,7 +444,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:44](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L44)
+[src/elements/menus/models/menu-item.ts:44](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L44)
 
 ___
 
@@ -557,7 +557,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:81](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L81)
+[src/elements/menus/models/menu-item.ts:81](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L81)
 
 ___
 
@@ -571,7 +571,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:86](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L86)
+[src/elements/menus/models/menu-item.ts:86](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L86)
 
 ___
 
@@ -641,7 +641,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:90](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L90)
+[src/elements/menus/models/menu-item.ts:90](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L90)
 
 ___
 
@@ -717,7 +717,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/item.ts:98](https://github.com/io-gui/io/blob/main/src/elements/menus/models/item.ts#L98)
+[src/elements/menus/models/menu-item.ts:98](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L98)
 
 ___
 
