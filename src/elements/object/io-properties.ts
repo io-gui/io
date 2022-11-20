@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import { Config } from './config.js';
+import { Config } from './models/config.js';
 
 /*
  * Extends `IoElement`.

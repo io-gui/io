@@ -1,8 +1,8 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {IoStorage as $} from '../../core/storage.js';
-import {Config} from './config.js';
-import {Groups} from './groups.js';
-import {Widgets} from './widgets.js';
+import {Config} from './models/config.js';
+import {Groups} from './models/groups.js';
+import {Widgets} from './models/widgets.js';
 import './io-breadcrumbs.js';
 
 /*
