@@ -128,19 +128,19 @@ export class IoColorSlider extends IoColorBase {
     switch (this.channel) {
       case 'r':
         value = this.value.r;
-        color = [...this.rgb, 1];
+        color = [...this.rgba];
         break;
       case 'g':
         value = this.value.g;
-        color = [...this.rgb, 1];
+        color = [...this.rgba];
         break;
       case 'b':
         value = this.value.b;
-        color = [...this.rgb, 1];
+        color = [...this.rgba];
         break;
       case 'a':
         value = this.value.a || 0;
-        color = [...this.rgb, this.value.a !== undefined ? this.value.a : 1];
+        color = [...this.rgba];
         break;
       case 'h':
         value = this.hsv[0];

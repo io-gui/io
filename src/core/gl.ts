@@ -400,7 +400,7 @@ export class IoGl extends IoElement {
         gl.uniform1i(uniform, value ? 1 : 0);
         break;
       case Number:
-        gl.uniform1f(uniform, value !== undefined ? value : 1);
+        gl.uniform1f(uniform, value ?? 1);
         break;
       case Array:
         _c = [0, 1, 2, 3];
@@ -417,8 +417,8 @@ export class IoGl extends IoElement {
               break;
             }
             gl.uniform2f(uniform,
-                value[_c[0]] !== undefined ? value[_c[0]] : 1,
-                value[_c[1]] !== undefined ? value[_c[1]] : 1);
+                value[_c[0]] ?? 1,
+                value[_c[1]] ?? 1);
             break;
           case 3:
             if (value === undefined) {
@@ -426,9 +426,9 @@ export class IoGl extends IoElement {
               break;
             }
             gl.uniform3f(uniform,
-                value[_c[0]] !== undefined ? value[_c[0]] : 1,
-                value[_c[1]] !== undefined ? value[_c[1]] : 1,
-                value[_c[2]] !== undefined ? value[_c[2]] : 1);
+                value[_c[0]] ?? 1,
+                value[_c[1]] ?? 1,
+                value[_c[2]] ?? 1);
             break;
           case 4:
             if (value === undefined) {
@@ -436,10 +436,10 @@ export class IoGl extends IoElement {
               break;
             }
             gl.uniform4f(uniform,
-                value[_c[0]] !== undefined ? value[_c[0]] : 1,
-                value[_c[1]] !== undefined ? value[_c[1]] : 1,
-                value[_c[2]] !== undefined ? value[_c[2]] : 1,
-                value[_c[3]] !== undefined ? value[_c[3]] : 1);
+                value[_c[0]] ?? 1,
+                value[_c[1]] ?? 1,
+                value[_c[2]] ?? 1,
+                value[_c[3]] ?? 1);
                 break;
           default:
         }
