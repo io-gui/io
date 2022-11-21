@@ -146,8 +146,8 @@
           {label: 'Data Binding', value: './docs/learn-more.md#data-binding'},
           {label: 'Data Flow', value: './docs/learn-more.md#data-flow'},
         ]},
-        {label: 'Contribution Guide', value: 'contribution'},
-        {label: 'Development Guidelines', value: 'development-guidelines'},
+        // {label: 'Contribution Guide', link: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'},
+        {label: 'Development Notes', value: 'development-notes'},
         {label: 'Reference', value: 'reference', options: [
           // Core Internals
           {label: 'Binding', value: './docs/tsdoc/classes/Binding.md'},
@@ -249,10 +249,7 @@
               selected: OPTIONS.getItem('docs').path.bind('root'),
               options: OPTIONS.getItem('docs').options,
               elements: [
-                ['io-md-view', {
-                  name: 'contribution',
-                  path: '.github/CONTRIBUTING.md',
-                }],
+                ['io-md-view', {name: 'development-notes', path: './docs/development-notes.md'}],
                 ['io-md-view', {
                   name: 'getting-started',
                   path: './docs/getting-started.md',
@@ -273,7 +270,6 @@
                   selected: OPTIONS.getItem('docs').getSubitem('reference').path.bind('root'),
                   options: OPTIONS.getItem('docs').getSubitem('reference').options,
                 }],
-                ['io-md-view', {name: 'development-guidelines', path: './docs/development-guidelines.md'}],
               ]
             }],
             ['io-selector', {name: 'demos', selected: OPTIONS.getItem('demos').path.bind('root'), elements: [

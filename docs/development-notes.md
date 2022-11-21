@@ -1,10 +1,8 @@
-# Development Guidelines
+# Development Notes
 
 This document is a rough draft.
 
 > Can you improve this document? 
-
-Notes:
 
 - Simplicity
   - Minimal Tooling
