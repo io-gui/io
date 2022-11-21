@@ -11,7 +11,7 @@ Io-Gui is an experimental UI framework aimed at simplicity and performance. It l
 
 The goal of this project is to provide a solid fundation for complex applications and tools such as 3D editors and debug tools for [threejs](https://threejs.org).
 
-For a quick start, read about the [basic usage](https://iogui.dev/io/#path=docs:./docs/getting-started.md#usage), check out the built-in [elements](https://iogui.dev/io/#path=demos:elements) and <a href="https://github.com/io-gui/io/" target="_blank">source code</a>. Stay in touch on <a href="https://mastodon.gamedev.place/web/@aki" target="_blank">Mastodon</a>.
+For a quick start, read about the [basic usage](https://iogui.dev/io/#path=docs,./docs/getting-started.md#usage), check out the built-in [elements](https://iogui.dev/io/#path=demos,elements) and <a href="https://github.com/io-gui/io/" target="_blank">source code</a>. Stay in touch on <a href="https://mastodon.gamedev.place/web/@aki" target="_blank">Mastodon</a>.
 
 ## Design system
 

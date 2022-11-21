@@ -128,13 +128,13 @@
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
       {label: 'Docs', value: 'docs', options: [
         {label: 'Getting Started', value: 'getting-started', options: [
-          {label: 'Usage', value: './docs/getting-started.md#usage'},
-          {label: 'Simple App Example', value: './docs/getting-started.md#simple-app-example'},
-          {label: 'Style', value: './docs/getting-started.md#style'},
-          {label: 'Properties', value: './docs/getting-started.md#properties'},
-          {label: 'Listeners', value: './docs/getting-started.md#listeners'},
-          {label: 'Change Functions', value: './docs/getting-started.md#change-functions'},
-          {label: 'Simple App Recap', value: './docs/getting-started.md#simple-app-recap'},
+          {label: 'Usage', value: 'usage'},
+          {label: 'Simple App Example', value: 'simple-app-example'},
+          {label: 'Style', value: 'style'},
+          {label: 'Properties', value: 'properties'},
+          {label: 'Listeners', value: 'listeners'},
+          {label: 'Change Functions', value: 'change-functions'},
+          {label: 'Simple App Recap', value: 'simple-app-recap'},
         ]},
         {label: 'Learn More', value: 'learn-more', options: [
           {label: 'Creating Elements', value: './docs/learn-more.md#creating-elements'},
@@ -248,11 +248,12 @@
               selected: OPTIONS.getItem('docs').path.bind('root'),
               options: OPTIONS.getItem('docs').options,
               elements: [
-                ['io-md-view-selector', {
+                ['io-md-view', {
                   name: 'getting-started',
+                  path: './docs/getting-started.md',
                   sanitize: false,
-                  selected: OPTIONS.getItem('docs').getSubitem('getting-started').path.bind('root'),
-                  options: OPTIONS.getItem('docs').getSubitem('getting-started').options,
+                  // selected: OPTIONS.getItem('docs').getSubitem('./docs/getting-started.md').path.bind('root'),
+                  // options: OPTIONS.getItem('docs').getSubitem('./docs/getting-started.md').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'learn-more',

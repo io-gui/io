@@ -121,291 +121,291 @@ export class IoDemoElements extends IoElement {
   constructor(props) {
     super(props);
     this.template([
-      // ['div', [
-      //   ['io-label', {label: 'Basic Editors'}],
-      //   ['div', [
-      //     ['io-label', {label: 'icon'}],
-      //     ['io-icon', {icon: 'icons:io'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'icon [stroke]'}],
-      //     ['io-icon', {icon: 'icons:io', stroke: true}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'field'}],
-      //     ['io-field', {value: this.bind('string')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'string'}],
-      //     ['io-string', {value: this.bind('string')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'string [live]'}],
-      //     ['io-string', {value: this.bind('string'), live: true}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'number'}],
-      //     ['io-number', {value: this.bind('number')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'number [ladder]'}],
-      //     ['io-number', {ladder: true, value: this.bind('number')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'number [x2]'}],
-      //     ['io-number', {conversion: 2, value: this.bind('number')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'boolean'}],
-      //     ['io-boolean', {value: this.bind('boolean')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'boolean [icon]'}],
-      //     ['io-boolean', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'switch'}],
-      //     ['io-switch', {value: this.bind('boolean')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'button'}],
-      //     ['io-button', {label: 'Button', icon: 'icons:check'}],
-      //   ]],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'Sliders'}],
-      //   ['div', [
-      //     ['io-label', {label: 'slider'}],
-      //     ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'slider [alt]'}],
-      //     ['io-slider', {value: this.bind('number'), min: -0.3, max: 2, step: 1}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'slider [alt]'}],
-      //     ['io-slider', {value: this.bind('number'), min: 0, max: 2.3, step: 1}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'slider [exp]'}],
-      //     ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 3}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'slider [exp]'}],
-      //     ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 0.3}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'slider [exp][inv]'}],
-      //     ['io-slider', {value: this.bind('number'), min: 2, max: 0, step: 0.05, exponent: 0.3}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'number-slider'}],
-      //     ['io-number-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'slider-range'}],
-      //     ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'slider-range [exp]'}],
-      //     ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 3}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'slider-range [exp]'}],
-      //     ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 0.3}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'number-slider-range'}],
-      //     ['io-number-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
-      //   ]],
-      //   ['div', {class: 'tall'}, [
-      //     ['io-label', {label: 'slider-2d + [vert]'}],
-      //     ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1]}],
-      //     ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1], vertical: true}],
-      //     ['io-slider', {value: this.bind('number'), vertical: true, min: -2, max: 2, step: 0.2}],
-      //     ['io-slider-range', {value: this.array2, vertical: true, min: 0, max: 2, step: 0.1}],
-      //   ]],
-      //   ['div', {class: 'tall'}, [
-      //     ['io-label', {label: 'sliders [inv][vert]'}],
-      //     ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1]}],
-      //     ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: true}],
-      //     ['io-slider', {value: this.bind('number'), vertical: true, min: 2, max: -2, step: 0.2}],
-      //     ['io-slider-range', {value: this.array2, vertical: true, min: 2, max: 0, step: 0.1}],
-      //   ]],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'Color Editors'}],
-      //   ['div', [
-      //     ['io-label', {label: 'color-rgba'}],
-      //     ['io-color-rgba', {value: this.rgba}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-rgba [rgb]'}],
-      //     ['io-color-rgba', {value: this.rgb}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [red]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'r'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [green]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'g'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [blue]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'b'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [alpha]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'a'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [h]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'h'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [s]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 's'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [v]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'v'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [l]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'l'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [c]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'c'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [m]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'm'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [y]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'y'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'color-slider [k]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'k'}],
-      //   ]],
-      //   ['div', {class: 'tall'}, [
-      //     ['io-label', {label: 'slider-2d + [vert]'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'hs'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'sv'}],
-      //     ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
-      //     ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
-      //   ]],
-      //   ['div', {class: 'tall'}, [
-      //     ['io-label', {label: 'color-panel'}],
-      //     ['io-color-panel', {expanded: true, value: this.rgba}]
-      //   ]],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'Vector Editors'}],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [array2]'}],
-      //     ['io-vector', {value: this.array2}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [array3]'}],
-      //     ['io-vector', {value: this.array3}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [array3][link]'}],
-      //     ['io-vector', {value: this.array3, linkable: true}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [array4]'}],
-      //     ['io-vector', {value: this.array4}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [vector2]'}],
-      //     ['io-vector', {value: this.vector2}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [vector3]'}],
-      //     ['io-vector', {value: this.vector3}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [vector3][link]'}],
-      //     ['io-vector', {value: this.vector3, linkable: true}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [vector4]'}],
-      //     ['io-vector', {value: this.vector4}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [rgb]'}],
-      //     ['io-vector', {value: this.rgb}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'vector [rgba]'}],
-      //     ['io-vector', {value: this.rgba}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'matrix [matrix2]'}],
-      //     ['io-matrix', {value: this.matrix2}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'matrix [matrix3]'}],
-      //     ['io-matrix', {value: this.matrix3}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'matrix [matrix4]'}],
-      //     ['io-matrix', {value: this.matrix4}],
-      //   ]],
-      // ]],
-      // ['div', [
-      //   ['io-label', {label: 'Object Editors'}],
-      //   ['div', [
-      //     ['io-label', {label: 'properties'}],
-      //     ['io-properties', {
-      //       value: this.object,
-      //       // properties: ['number', 'string', 'boolean'],
-      //       config: {'number': ['io-slider', {step: 0.1}]}
-      //     }],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'object [filtered]'}],
-      //     ['io-object', {
-      //       value: this.object,
-      //       expanded: true,
-      //       slotted: ['io-field', {label: 'Slotted Element'}],
-      //       properties: ['number', 'string', 'boolean'],
-      //     }],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'object [configured]'}],
-      //     ['io-object', {
-      //       value: this.object,
-      //       expanded: true,
-      //       properties: ['number'],
-      //       config: {'number': ['io-slider', {step: 0.1}]}
-      //     }],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'inspector'}],
-      //     ['io-inspector', {
-      //       value: this.object,
-      //       groups: {
-      //         'Object|properties': ['number', 'string', 'boolean', 'object', 'array'],
-      //         'Object|vectors and matrices': [/vector/i, /matrix/i],
-      //       },
-      //       config: {
-      //         'vector2': ['io-vector', {linkable: true}],
-      //         'vector3': ['io-vector', {linkable: true}],
-      //         'vector4': ['io-vector', {linkable: true}],
-      //         'matrix2': ['io-matrix'],
-      //         'matrix3': ['io-matrix'],
-      //         'matrix4': ['io-matrix'],
-      //         'number': ['io-slider', {step: 0.1}],
-      //       },
-      //     }],
-      //   ]],
-      // ]],
+      ['div', [
+        ['io-label', {label: 'Basic Editors'}],
+        ['div', [
+          ['io-label', {label: 'icon'}],
+          ['io-icon', {icon: 'icons:io'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'icon [stroke]'}],
+          ['io-icon', {icon: 'icons:io', stroke: true}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'field'}],
+          ['io-field', {value: this.bind('string')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'string'}],
+          ['io-string', {value: this.bind('string')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'string [live]'}],
+          ['io-string', {value: this.bind('string'), live: true}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'number'}],
+          ['io-number', {value: this.bind('number')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'number [ladder]'}],
+          ['io-number', {ladder: true, value: this.bind('number')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'number [x2]'}],
+          ['io-number', {conversion: 2, value: this.bind('number')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'boolean'}],
+          ['io-boolean', {value: this.bind('boolean')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'boolean [icon]'}],
+          ['io-boolean', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'switch'}],
+          ['io-switch', {value: this.bind('boolean')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'button'}],
+          ['io-button', {label: 'Button', icon: 'icons:check'}],
+        ]],
+      ]],
+      ['div', [
+        ['io-label', {label: 'Sliders'}],
+        ['div', [
+          ['io-label', {label: 'slider'}],
+          ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'slider [alt]'}],
+          ['io-slider', {value: this.bind('number'), min: -0.3, max: 2, step: 1}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'slider [alt]'}],
+          ['io-slider', {value: this.bind('number'), min: 0, max: 2.3, step: 1}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'slider [exp]'}],
+          ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 3}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'slider [exp]'}],
+          ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 0.3}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'slider [exp][inv]'}],
+          ['io-slider', {value: this.bind('number'), min: 2, max: 0, step: 0.05, exponent: 0.3}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'number-slider'}],
+          ['io-number-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'slider-range'}],
+          ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'slider-range [exp]'}],
+          ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 3}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'slider-range [exp]'}],
+          ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 0.3}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'number-slider-range'}],
+          ['io-number-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
+        ]],
+        ['div', {class: 'tall'}, [
+          ['io-label', {label: 'slider-2d + [vert]'}],
+          ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1]}],
+          ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1], vertical: true}],
+          ['io-slider', {value: this.bind('number'), vertical: true, min: -2, max: 2, step: 0.2}],
+          ['io-slider-range', {value: this.array2, vertical: true, min: 0, max: 2, step: 0.1}],
+        ]],
+        ['div', {class: 'tall'}, [
+          ['io-label', {label: 'sliders [inv][vert]'}],
+          ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1]}],
+          ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: true}],
+          ['io-slider', {value: this.bind('number'), vertical: true, min: 2, max: -2, step: 0.2}],
+          ['io-slider-range', {value: this.array2, vertical: true, min: 2, max: 0, step: 0.1}],
+        ]],
+      ]],
+      ['div', [
+        ['io-label', {label: 'Color Editors'}],
+        ['div', [
+          ['io-label', {label: 'color-rgba'}],
+          ['io-color-rgba', {value: this.rgba}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-rgba [rgb]'}],
+          ['io-color-rgba', {value: this.rgb}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [red]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'r'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [green]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'g'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [blue]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'b'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [alpha]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'a'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [h]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'h'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [s]'}],
+          ['io-color-slider', {value: this.rgba, channel: 's'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [v]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'v'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [l]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'l'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [c]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'c'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [m]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'm'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [y]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'y'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'color-slider [k]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'k'}],
+        ]],
+        ['div', {class: 'tall'}, [
+          ['io-label', {label: 'slider-2d + [vert]'}],
+          ['io-color-slider', {value: this.rgba, channel: 'hs'}],
+          ['io-color-slider', {value: this.rgba, channel: 'sv'}],
+          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
+          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
+        ]],
+        ['div', {class: 'tall'}, [
+          ['io-label', {label: 'color-panel'}],
+          ['io-color-panel', {expanded: true, value: this.rgba}]
+        ]],
+      ]],
+      ['div', [
+        ['io-label', {label: 'Vector Editors'}],
+        ['div', [
+          ['io-label', {label: 'vector [array2]'}],
+          ['io-vector', {value: this.array2}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [array3]'}],
+          ['io-vector', {value: this.array3}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [array3][link]'}],
+          ['io-vector', {value: this.array3, linkable: true}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [array4]'}],
+          ['io-vector', {value: this.array4}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [vector2]'}],
+          ['io-vector', {value: this.vector2}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [vector3]'}],
+          ['io-vector', {value: this.vector3}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [vector3][link]'}],
+          ['io-vector', {value: this.vector3, linkable: true}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [vector4]'}],
+          ['io-vector', {value: this.vector4}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [rgb]'}],
+          ['io-vector', {value: this.rgb}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'vector [rgba]'}],
+          ['io-vector', {value: this.rgba}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'matrix [matrix2]'}],
+          ['io-matrix', {value: this.matrix2}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'matrix [matrix3]'}],
+          ['io-matrix', {value: this.matrix3}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'matrix [matrix4]'}],
+          ['io-matrix', {value: this.matrix4}],
+        ]],
+      ]],
+      ['div', [
+        ['io-label', {label: 'Object Editors'}],
+        ['div', [
+          ['io-label', {label: 'properties'}],
+          ['io-properties', {
+            value: this.object,
+            // properties: ['number', 'string', 'boolean'],
+            config: {'number': ['io-slider', {step: 0.1}]}
+          }],
+        ]],
+        ['div', [
+          ['io-label', {label: 'object [filtered]'}],
+          ['io-object', {
+            value: this.object,
+            expanded: true,
+            slotted: ['io-field', {label: 'Slotted Element'}],
+            properties: ['number', 'string', 'boolean'],
+          }],
+        ]],
+        ['div', [
+          ['io-label', {label: 'object [configured]'}],
+          ['io-object', {
+            value: this.object,
+            expanded: true,
+            properties: ['number'],
+            config: {'number': ['io-slider', {step: 0.1}]}
+          }],
+        ]],
+        ['div', [
+          ['io-label', {label: 'inspector'}],
+          ['io-inspector', {
+            value: this.object,
+            groups: {
+              'Object|properties': ['number', 'string', 'boolean', 'object', 'array'],
+              'Object|vectors and matrices': [/vector/i, /matrix/i],
+            },
+            config: {
+              'vector2': ['io-vector', {linkable: true}],
+              'vector3': ['io-vector', {linkable: true}],
+              'vector4': ['io-vector', {linkable: true}],
+              'matrix2': ['io-matrix'],
+              'matrix3': ['io-matrix'],
+              'matrix4': ['io-matrix'],
+              'number': ['io-slider', {step: 0.1}],
+            },
+          }],
+        ]],
+      ]],
       ['div', [
         ['io-label', {label: 'Menus'}],
         ['div', [
