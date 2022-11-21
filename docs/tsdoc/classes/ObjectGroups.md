@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[src/elements/object/models/object-groups.ts:6](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-groups.ts#L6)
+[src/elements/object/models/object-groups.ts:6](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-groups.ts#L6)
 
 ## Methods
 
@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[src/elements/object/models/object-groups.ts:18](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-groups.ts#L18)
+[src/elements/object/models/object-groups.ts:18](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-groups.ts#L18)
 
 ___
 
@@ -57,4 +57,4 @@ ___
 
 #### Defined in
 
-[src/elements/object/models/object-groups.ts:11](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-groups.ts#L11)
+[src/elements/object/models/object-groups.ts:11](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-groups.ts#L11)

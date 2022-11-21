@@ -185,6 +185,16 @@ const theme = $({
   key: 'theme-' + THEME_VERSION
 });
 
+/**
+ * `IoTheme` is designed to be used as `IoThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
+ * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
+ *
+ * ```javascript
+ * IoThemeSingleton.theme = 'dark';
+ * ```
+ *
+ * CSS color variables such as `'--io-color'` and `'--io-background-color'` are mapped to numeric properties `ioColor` and `ioBackgroundColor`.
+ */
 @RegisterIoElement
 export class IoTheme extends IoElement {
   static get Style(): string { return mixins; }

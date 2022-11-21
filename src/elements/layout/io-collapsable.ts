@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 
-/*
+/**
  * An element with collapsable content.
  *
  * Extends `IoElement`. Implements `IoBoolean` and `IoContent`.

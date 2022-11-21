@@ -2,7 +2,7 @@ import { RegisterIoElement } from '../../core/element.js';
 import {IoSelector} from './io-selector.js';
 import './io-sidebar.js';
 
-/*
+/**
  * Extends `IoSelector`. Implements `IoSidebar`.
  *
  * Element selector with selectable sidebar interfce.

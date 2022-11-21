@@ -100,7 +100,7 @@
 
 #### Defined in
 
-[src/core/node.ts:23](https://github.com/io-gui/io/blob/main/src/core/node.ts#L23)
+[src/core/node.ts:23](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L23)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:16](https://github.com/io-gui/io/blob/main/src/core/node.ts#L16)
+[src/core/node.ts:16](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L16)
 
 ___
 
@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:7](https://github.com/io-gui/io/blob/main/src/core/node.ts#L7)
+[src/core/node.ts:7](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L7)
 
 ___
 
@@ -168,7 +168,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:20](https://github.com/io-gui/io/blob/main/src/core/node.ts#L20)
+[src/core/node.ts:20](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L20)
 
 ___
 
@@ -192,7 +192,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:21](https://github.com/io-gui/io/blob/main/src/core/node.ts#L21)
+[src/core/node.ts:21](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L21)
 
 ___
 
@@ -216,7 +216,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:18](https://github.com/io-gui/io/blob/main/src/core/node.ts#L18)
+[src/core/node.ts:18](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L18)
 
 ___
 
@@ -226,7 +226,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L60)
+[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L60)
 
 ___
 
@@ -238,7 +238,7 @@ Declares default listeners.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L6)
+[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L6)
 
 ___
 
@@ -250,7 +250,7 @@ Allows weak declaration of listeners by specifying only partial declarations suc
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L11)
+[src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L11)
 
 ___
 
@@ -260,7 +260,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:61](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L61)
+[src/core/internals/eventDispatcher.ts:61](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L61)
 
 ___
 
@@ -270,7 +270,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:63](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L63)
+[src/core/internals/eventDispatcher.ts:63](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L63)
 
 ___
 
@@ -294,7 +294,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:19](https://github.com/io-gui/io/blob/main/src/core/node.ts#L19)
+[src/core/node.ts:19](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L19)
 
 ___
 
@@ -317,7 +317,7 @@ Declares default value, type and reactive behavior of the property.
 
 #### Defined in
 
-[src/core/internals/property.ts:9](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L9)
+[src/core/internals/property.ts:9](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L9)
 
 ___
 
@@ -329,7 +329,7 @@ Allows weak declaration of properties by specifying only partial declarations su
 
 #### Defined in
 
-[src/core/internals/property.ts:21](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L21)
+[src/core/internals/property.ts:21](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L21)
 
 ___
 
@@ -339,7 +339,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:143](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L143)
+[src/core/internals/property.ts:143](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L143)
 
 ___
 
@@ -363,7 +363,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:22](https://github.com/io-gui/io/blob/main/src/core/node.ts#L22)
+[src/core/node.ts:22](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L22)
 
 ## Variables
 
@@ -373,7 +373,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:76](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-panel.ts#L76)
+[src/elements/color/io-color-panel.ts:88](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L88)
 
 ___
 
@@ -383,7 +383,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/io-iconset.ts:28](https://github.com/io-gui/io/blob/main/src/elements/basic/io-iconset.ts#L28)
+[src/elements/basic/io-iconset.ts:41](https://github.com/io-gui/iogui/blob/main/src/elements/basic/io-iconset.ts#L41)
 
 ___
 
@@ -393,7 +393,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:216](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L216)
+[src/core/layer.ts:223](https://github.com/io-gui/iogui/blob/main/src/core/layer.ts#L223)
 
 ___
 
@@ -403,7 +403,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:561](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L561)
+[src/elements/basic/io-number.ts:586](https://github.com/io-gui/iogui/blob/main/src/elements/basic/io-number.ts#L586)
 
 ___
 
@@ -413,7 +413,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:257](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L257)
+[src/core/theme.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L267)
 
 ___
 
@@ -447,7 +447,7 @@ THE SOFTWARE.
 
 #### Defined in
 
-[src/iogui.ts:29](https://github.com/io-gui/io/blob/main/src/iogui.ts#L29)
+[src/iogui.ts:29](https://github.com/io-gui/iogui/blob/main/src/iogui.ts#L29)
 
 ___
 
@@ -457,7 +457,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:145](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L145)
+[src/core/internals/property.ts:145](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L145)
 
 ## Functions
 
@@ -487,7 +487,7 @@ typeof `__class`
 
 #### Defined in
 
-[src/core/node.ts:35](https://github.com/io-gui/io/blob/main/src/core/node.ts#L35)
+[src/core/node.ts:35](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L35)
 
 ___
 
@@ -507,7 +507,7 @@ ___
 
 #### Defined in
 
-[src/core/storage.ts:250](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L250)
+[src/core/storage.ts:250](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L250)
 
 ___
 
@@ -544,7 +544,7 @@ Property decorator function.
 
 #### Defined in
 
-[src/core/internals/property.ts:152](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L152)
+[src/core/internals/property.ts:152](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L152)
 
 ___
 
@@ -566,7 +566,7 @@ Register function for `IoElement`. Registers custom element.
 
 #### Defined in
 
-[src/core/element.ts:70](https://github.com/io-gui/io/blob/main/src/core/element.ts#L70)
+[src/core/element.ts:70](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L70)
 
 ___
 
@@ -588,7 +588,7 @@ Register function to be called once per class.
 
 #### Defined in
 
-[src/core/node.ts:394](https://github.com/io-gui/io/blob/main/src/core/node.ts#L394)
+[src/core/node.ts:394](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L394)
 
 ___
 
@@ -611,7 +611,7 @@ Assigns source listener declaration to an existing array of listener declaration
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L27)
+[src/core/internals/eventDispatcher.ts:27](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L27)
 
 ___
 
@@ -637,7 +637,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:60](https://github.com/io-gui/io/blob/main/src/core/element.ts#L60)
+[src/core/element.ts:60](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L60)
 
 ___
 
@@ -657,7 +657,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:390](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L390)
+[src/elements/menus/io-menu-item.ts:388](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-item.ts#L388)
 
 ___
 
@@ -681,7 +681,7 @@ Stronly typed listener declaration
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:18](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L18)
+[src/core/internals/eventDispatcher.ts:18](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L18)
 
 ___
 
@@ -706,4 +706,4 @@ Listener
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L45)
+[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L45)

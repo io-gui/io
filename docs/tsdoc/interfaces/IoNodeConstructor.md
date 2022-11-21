@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/core/node.ts:10](https://github.com/io-gui/io/blob/main/src/core/node.ts#L10)
+[src/core/node.ts:10](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L10)
 
 ## Properties
 
@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[src/core/node.ts:12](https://github.com/io-gui/io/blob/main/src/core/node.ts#L12)
+[src/core/node.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L12)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:11](https://github.com/io-gui/io/blob/main/src/core/node.ts#L11)
+[src/core/node.ts:11](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L11)
 
 ___
 
@@ -50,4 +50,4 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:13](https://github.com/io-gui/io/blob/main/src/core/node.ts#L13)
+[src/core/node.ts:13](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L13)

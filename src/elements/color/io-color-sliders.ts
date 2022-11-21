@@ -4,6 +4,17 @@ import { IoColorBase } from './io-color-base.js';
 import { IoSlider } from '../sliders/io-slider.js';
 import { IoSlider2d } from '../sliders/io-slider-2d.js';
 
+/**
+ * A generic color slider element.
+ * It is a wrapper for channel-specific sliders which are added as a child of this element depending on the `channel` property.
+ * For example, setting `channel: 'h'` will instantiate a slider for "hue" color channel and hook up necessary conversions, bindings and event callbacks.
+ *
+ * <io-element-demo element="io-color-slider-hs"
+ * width="64px" height="64px"
+ * properties='{"value": [1, 0.5, 0, 1], "horizontal": true}'
+ * config='{"value": ["io-properties"]}
+ * '></io-element-demo>
+ **/
 @RegisterIoElement
 export class IoColorSlider extends IoColorBase {
   static get Style() {
@@ -192,6 +203,10 @@ export class IoColorSlider extends IoColorBase {
   }
 }
 
+/**
+ * A base class for 1D color slider.
+ * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
+ **/
 export class IoColorSliderBase extends IoSlider {
   static get GlUtils() {
     return /* glsl */`
@@ -231,6 +246,10 @@ export class IoColorSliderBase extends IoSlider {
   }
 }
 
+/**
+ * A base class for 2D color slider.
+ * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
+ **/
 export class IoColorSlider2dBase extends IoSlider2d {
   static get GlUtils() {
     return /* glsl */`
@@ -264,6 +283,9 @@ export class IoColorSlider2dBase extends IoSlider2d {
   }
 }
 
+/**
+ * A 1D slider for "red" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderR extends IoColorSliderBase {
   static get GlUtils() {
@@ -277,6 +299,9 @@ export class IoColorSliderR extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "green" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderG extends IoColorSliderBase {
   static get GlUtils() {
@@ -290,6 +315,9 @@ export class IoColorSliderG extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "blue" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderB extends IoColorSliderBase {
   static get GlUtils() {
@@ -303,6 +331,9 @@ export class IoColorSliderB extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "alpha" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderA extends IoColorSliderBase {
   static get GlUtils() {
@@ -321,6 +352,9 @@ export class IoColorSliderA extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "hue" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderH extends IoColorSliderBase {
   static get GlUtils() {
@@ -334,6 +368,9 @@ export class IoColorSliderH extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "saturation" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderS extends IoColorSliderBase {
   static get GlUtils() {
@@ -347,6 +384,9 @@ export class IoColorSliderS extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "value" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderV extends IoColorSliderBase {
   static get GlUtils() {
@@ -360,6 +400,9 @@ export class IoColorSliderV extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "level" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderL extends IoColorSliderBase {
   static get GlUtils() {
@@ -373,7 +416,9 @@ export class IoColorSliderL extends IoColorSliderBase {
     `;
   }
 }
-
+/**
+ * A 1D slider for "cyan" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderC extends IoColorSliderBase {
   static get GlUtils() {
@@ -387,6 +432,9 @@ export class IoColorSliderC extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "magenta" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderM extends IoColorSliderBase {
   static get GlUtils() {
@@ -400,6 +448,9 @@ export class IoColorSliderM extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "yellow" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderY extends IoColorSliderBase {
   static get GlUtils() {
@@ -413,6 +464,9 @@ export class IoColorSliderY extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "key" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderK extends IoColorSliderBase {
   static get GlUtils() {
@@ -426,6 +480,9 @@ export class IoColorSliderK extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 2D slider gor "hue" and "saturation" color channels.
+ **/
 @RegisterIoElement
 export class IoColorSliderHs extends IoColorSlider2dBase {
   static get GlUtils() {
@@ -436,6 +493,9 @@ export class IoColorSliderHs extends IoColorSlider2dBase {
     `;
   }
 }
+/**
+ * A 2D slider gor "saturation" and "value" color channels.
+ **/
 @RegisterIoElement
 export class IoColorSliderSv extends IoColorSlider2dBase {
   static get GlUtils() {
@@ -446,6 +506,9 @@ export class IoColorSliderSv extends IoColorSlider2dBase {
     `;
   }
 }
+/**
+ * A 2D slider gor "saturation" and "level" color channels.
+ **/
 @RegisterIoElement
 export class IoColorSliderSL extends IoColorSlider2dBase {
   static get GlUtils() {

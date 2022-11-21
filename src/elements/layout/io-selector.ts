@@ -2,9 +2,7 @@ import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 // TODO: use IoContent for caching and display.
 
-/*
- * Extends `IoElement` and `IoContent`.
- *
+/**
  * Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
  *
  * <io-element-demo element="io-selector"

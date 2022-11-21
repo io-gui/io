@@ -3,10 +3,8 @@ import {Binding} from '../../core/internals/binding.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import {IoStorage as $} from '../../core/storage.js';
 
-/*
+/**
  * Labeled tabs for selection.
- *
- * Implements `<io-option-menu>` and `<io-button>`.
  *
  * <io-element-demo element="io-sidebar"
  *     properties='{

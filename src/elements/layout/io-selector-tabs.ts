@@ -1,9 +1,7 @@
 import { RegisterIoElement } from '../../core/element.js';
 import {IoSelector} from './io-selector.js';
 
-/*
- * Extends `IoSelector`. Implements `IoMenuOptions`.
- *
+/**
  * Element selector with selectable tabs interfce.
  *
  * <io-element-demo element="io-selector-tabs"

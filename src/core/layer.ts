@@ -17,6 +17,13 @@ window.addEventListener('blur', () => {
 
 type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
 
+/**
+ * This element is designed to be used as a singleton `IoLayerSingleton`.
+ * It is a pointer-blocking element covering the entire window at a very high z-index.
+ * It is designed to be displayed on top all other elements and contain elements like modals, popovers, floating menus etc.
+ * When clicked, IoLayer collapses all child elements by setting their `expanded` property to `false`.
+ * Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
+ **/
 @RegisterIoElement
 export class IoLayer extends IoElement {
   static get Style() {

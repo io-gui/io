@@ -7,9 +7,7 @@ import {IoMenuItem} from './io-menu-item.js';
 
 // const rects = new WeakMap();
 
-/*
- * Extends `IoElement`. Implements `IoMenuItem` and `IoLayerSingleton`.
- *
+/**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
  *
  * <io-element-demo element="io-menu-options" properties='{

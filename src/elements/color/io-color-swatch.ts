@@ -1,6 +1,14 @@
 import { RegisterIoElement } from '../../core/element.js';
 import { IoColorBase } from './io-color-base.js';
 
+/**
+ * Element displaying colored square.
+ *
+ * <io-element-demo element="io-color-swatch"
+ * properties='{"value": [1, 0.5, 0, 1]}'
+ * config='{"value": ["io-properties"]}
+ * '></io-element-demo>
+ **/
 @RegisterIoElement
 export class IoColorSwatch extends IoColorBase {
   static get Style() {

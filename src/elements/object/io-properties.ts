@@ -1,9 +1,7 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { ObjectConfig } from './models/object-config.js';
 
-/*
- * Extends `IoElement`.
- *
+/**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  *
  * <io-element-demo element="io-properties" properties='{

@@ -4,9 +4,7 @@ import {IoField} from '../basic/io-field.js';
 import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuOptions} from './io-menu-options.js';
 
-/*
- * Extends `IoField`. Implements `IoMenuOptions` and `IoLayerSingleton`.
- *
+/**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  *
  * <io-element-demo element="io-menu-item" properties='{

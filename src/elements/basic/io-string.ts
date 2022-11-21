@@ -2,6 +2,11 @@ import { RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoField } from './io-field.js';
 
+/**
+ * Input element for `String` data type.
+ *
+ * <io-element-demo element="io-string" properties='{"value": "hello world"}'></io-element-demo>
+ **/
 @RegisterIoElement
 export class IoString extends IoField {
   static get Style() {

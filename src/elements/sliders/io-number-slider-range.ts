@@ -3,6 +3,11 @@ import { Property } from '../../core/internals/property.js';
 import '../basic/io-number.js';
 import './io-slider-range.js';
 
+/**
+ * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
+ *
+ * <io-element-demo element="io-number-slider-range" properties='{"value": [0, 2], "step": 0.05, "min": -1, "max": 2}'></io-element-demo>
+ **/
 @RegisterIoElement
 export class IoNumberSliderRange extends IoElement {
   static get Style() {

@@ -5,9 +5,7 @@ import './io-menu-item.js';
 
 // TODO: fix tab-out without collapse
 
-/*
- * Extends `IoMenuItem`
- *
+/**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
  *
  * <io-element-demo element="io-option-menu" properties='{

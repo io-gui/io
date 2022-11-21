@@ -218,15 +218,33 @@ export declare class EventDispatcher {
  * Inherited information is aggregated during prototype chain traversal in `RegisterIoNode()`.
  */
 export declare class ProtoChain {
+	/**
+	 * Array of inherited class constructors ending with `HTMLElement`, `Object` or `Array`.
+	 */
 	readonly constructors: Array<IoNodeConstructor<any>>;
+	/**
+	 * Array of function names that start with "on" or "_on" for auto-binding.
+	 */
 	readonly functions: Array<string>;
+	/**
+	 * Aggregated property declarations declared in `static get Properties()` return ojects.
+	 */
 	readonly properties: {
 		[property: string]: ProtoProperty;
 	};
+	/**
+	 * Aggregated listener declarations declared in `static get Listeners()` return ojects.
+	 */
 	readonly listeners: {
 		[property: string]: ListenerDeclaration[];
 	};
+	/**
+	 * Aggregated CSS style declarations declared in `static get Style()` return strings.
+	 */
 	readonly style: string;
+	/**
+	 * Array of property names of observed object properties.
+	 */
 	readonly observedObjectProperties: string[];
 	/**
 	 * Creates an instance of `ProtoChain` for specified class constructor.
@@ -674,6 +692,16 @@ export declare const IoStorage: {
 	getValueFromHash(key: string): any;
 	updateAllFromHash(): void;
 };
+/**
+ * `IoTheme` is designed to be used as `IoThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
+ * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
+ *
+ * ```javascript
+ * IoThemeSingleton.theme = 'dark';
+ * ```
+ *
+ * CSS color variables such as `'--io-color'` and `'--io-background-color'` are mapped to numeric properties `ioColor` and `ioBackgroundColor`.
+ */
 export declare class IoTheme extends IoElement {
 	static get Style(): string;
 	static get Properties(): PropertyDeclarations;
@@ -719,6 +747,13 @@ export declare class IoGl extends IoElement {
 	setUniform(name: string, type: UniformTypes, value: any): void;
 }
 export declare type NudgeDirection = "pointer" | "top" | "left" | "bottom" | "right";
+/**
+ * This element is designed to be used as a singleton `IoLayerSingleton`.
+ * It is a pointer-blocking element covering the entire window at a very high z-index.
+ * It is designed to be displayed on top all other elements and contain elements like modals, popovers, floating menus etc.
+ * When clicked, IoLayer collapses all child elements by setting their `expanded` property to `false`.
+ * Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
+ **/
 export declare class IoLayer extends IoElement {
 	static get Style(): string;
 	expanded: boolean;
@@ -869,6 +904,12 @@ export declare class IoField extends IoElement {
 	setCaretPosition(position: number): void;
 	changed(): void;
 }
+/**
+ * Button element.
+ * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
+ *
+ * <io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
+ **/
 export declare class IoButton extends IoField {
 	static get Style(): string;
 	action?: any;
@@ -884,6 +925,12 @@ export declare class IoButton extends IoField {
 	init(): void;
 	changed(): void;
 }
+/**
+ * Input element for `Boolean` data type displayed as text.
+ * It can be configured to display custom `true` or `false` string or icon depending on its `value`.
+ *
+ * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
+ **/
 export declare class IoBoolean extends IoField {
 	value: boolean;
 	true: string;
@@ -894,12 +941,22 @@ export declare class IoBoolean extends IoField {
 	init(): void;
 	changed(): void;
 }
+/**
+ * Input element for `Boolean` data type displayed as switch.
+ *
+ * <io-element-demo element="io-switch" properties='{"value": true}'></io-element-demo>
+ **/
 export declare class IoSwitch extends IoBoolean {
 	static get Style(): string;
 	init(): void;
 	changed(): void;
 	valueChanged(): void;
 }
+/**
+ * Input element for `String` data type.
+ *
+ * <io-element-demo element="io-string" properties='{"value": "hello world"}'></io-element-demo>
+ **/
 export declare class IoString extends IoField {
 	static get Style(): string;
 	live: boolean;
@@ -917,6 +974,21 @@ export declare class IoString extends IoField {
 	changed(): void;
 	valueChanged(): void;
 }
+/**
+ * Input element for `Number` data type.
+ * It clamps the `value` to `min` / `max` and rounds it to the nearest `step` increment.
+ * If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped.
+ * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
+ *
+ * <io-element-demo element="io-number" width="5em" properties='{"value": 1337, "conversion": 1, "step": 0.1, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
+ *
+ * <io-element-demo element="io-number" width="5em" properties='{"value": 1337, "conversion": 1, "step": 0.0002, "min": 0, "max": 10000, "ladder": true}'></io-element-demo>
+ *
+ * Value can be displayed using `conversion` factor.
+ * For example, conversion factor of `180/Math.PI` would display radians as degrees.
+ *
+ * <io-element-demo element="io-number" width="5em" properties='{"value": 0, "step": 0.2617993877991494, "conversion": 57.29577951308232, "min": -6.283185307179586, "max": 6.283185307179586, "ladder": true}'></io-element-demo>
+ **/
 export declare class IoNumber extends IoField {
 	static get Style(): string;
 	role: string;
@@ -955,6 +1027,16 @@ export declare class IoNumberLadderStep extends IoField {
 	init(): void;
 	changed(): void;
 }
+/**
+ * Interactive number ladder.
+ * When dragged horizontally, it changes the value in step increments.
+ * Dragging speed affects the rate of change exponentially.
+ * Up/down arrow keys change the step focus while left/right change the value in step increments.
+ * Escape key collapses the ladder and restores the focus to previously focused element.
+ * If shift key is pressed, value is rounded to the nearest step incement.
+ *
+ * <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
+ **/
 export declare class IoNumberLadder extends IoElement {
 	static get Style(): string;
 	role: string;
@@ -978,12 +1060,31 @@ export declare class IoNumberLadder extends IoElement {
 	changed(): void;
 }
 export declare const IoNumberLadderSingleton: IoNumberLadder;
+/**
+ * SVG icon element.
+ * It displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
+ *
+ * <io-element-demo element="io-icon" properties='{"icon": "icons:link", "stroke": false}' config='{"icon": ["io-option-menu", {"options": ["icons:link", "icons:unlink", "icons:check", "icons:uncheck"]}]}'></io-element-demo>
+ **/
 export declare class IoIcon extends IoElement {
 	static get Style(): string;
 	icon: string;
 	stroke: boolean;
 	iconChanged(): void;
 }
+/**
+ * Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace` and `id` attribute.
+ *
+ * ```javascript
+ * import {IoIconsetSingleton} from "./path_to/iogui.js";
+ * const svgString = `<svg><g id="myicon"><path d="..."/></g></svg>`;
+ *
+ * // register icons under "custom" namespace
+ * IoIconsetSingleton.registerIcons('custom', svgString);
+ * // retrieve specific icon
+ * const icon = IoIconsetSingleton.getIcon('custom:myicon');
+ * ```
+ **/
 export declare class IoIconset extends IoNode {
 	registerIcons(name: string, svg: string): void;
 	getIcon(icon: string): string;
@@ -1130,6 +1231,14 @@ declare class IoSliderBase extends IoGl {
 	init(): void;
 	changed(): void;
 }
+/**
+ * Input element for `Number` data type displayed as slider.
+ * It can be configured to clamp the `value` to `min` / `max` and round it to the nearest `step` increment. `exponent` property can be changed for non-linear scale.
+ *
+ * Keys left/right/up/down+shift and pageup/pagedown change the value in step incements. Home/end keys set the value to min/max.
+ *
+ * <io-element-demo element="io-slider" properties='{"value": 0, "step": 0.01, "min": -0.5, "max": 0.5, "exponent": 1}'></io-element-demo>
+ **/
 export declare class IoSlider extends IoSliderBase {
 	value: number;
 	step: number;
@@ -1160,6 +1269,17 @@ export declare class IoSlider2d extends IoSliderBase {
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
+/**
+ * A generic color slider element.
+ * It is a wrapper for channel-specific sliders which are added as a child of this element depending on the `channel` property.
+ * For example, setting `channel: 'h'` will instantiate a slider for "hue" color channel and hook up necessary conversions, bindings and event callbacks.
+ *
+ * <io-element-demo element="io-color-slider-hs"
+ * width="64px" height="64px"
+ * properties='{"value": [1, 0.5, 0, 1], "horizontal": true}'
+ * config='{"value": ["io-properties"]}
+ * '></io-element-demo>
+ **/
 export declare class IoColorSlider extends IoColorBase {
 	static get Style(): string;
 	channel: string;
@@ -1167,59 +1287,124 @@ export declare class IoColorSlider extends IoColorBase {
 	_onValueInput(event: CustomEvent): void;
 	changed(): void;
 }
+/**
+ * A base class for 1D color slider.
+ * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
+ **/
 export declare class IoColorSliderBase extends IoSlider {
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
+/**
+ * A base class for 2D color slider.
+ * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
+ **/
 export declare class IoColorSlider2dBase extends IoSlider2d {
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
+/**
+ * A 1D slider for "red" color channel.
+ **/
 export declare class IoColorSliderR extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "green" color channel.
+ **/
 export declare class IoColorSliderG extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "blue" color channel.
+ **/
 export declare class IoColorSliderB extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "alpha" color channel.
+ **/
 export declare class IoColorSliderA extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "hue" color channel.
+ **/
 export declare class IoColorSliderH extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "saturation" color channel.
+ **/
 export declare class IoColorSliderS extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "value" color channel.
+ **/
 export declare class IoColorSliderV extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "level" color channel.
+ **/
 export declare class IoColorSliderL extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "cyan" color channel.
+ **/
 export declare class IoColorSliderC extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "magenta" color channel.
+ **/
 export declare class IoColorSliderM extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "yellow" color channel.
+ **/
 export declare class IoColorSliderY extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 1D slider for "key" color channel.
+ **/
 export declare class IoColorSliderK extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 2D slider gor "hue" and "saturation" color channels.
+ **/
 export declare class IoColorSliderHs extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 2D slider gor "saturation" and "value" color channels.
+ **/
 export declare class IoColorSliderSv extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
+/**
+ * A 2D slider gor "saturation" and "level" color channels.
+ **/
 export declare class IoColorSliderSL extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
+/**
+ * Input element for color displayed as a set of sliders.
+ *
+ * <io-element-demo element="io-color-panel"
+ * width= "192px"
+ * height= "128px"
+ * properties='{"mode": 0, "value": [1, 0.5, 0, 1], "horizontal": true}'
+ * config='{"value": ["io-properties"], "mode": ["io-option-menu", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}, {"value": 3, "label": "3 - cmyk"}]}]}
+ * '></io-element-demo>
+ *
+ * This element has a singleton instance `IoColorPanelSingleton` used by `IoColorPicker` and other elements.
+ **/
 export declare class IoColorPanel extends IoColorBase {
 	static get Style(): string;
 	expanded: boolean;
@@ -1232,6 +1417,14 @@ export declare class IoColorPanel extends IoColorBase {
 	changed(): void;
 }
 export declare const IoColorPanelSingleton: IoColorPanel;
+/**
+ * Element displaying colored square.
+ *
+ * <io-element-demo element="io-color-swatch"
+ * properties='{"value": [1, 0.5, 0, 1]}'
+ * config='{"value": ["io-properties"]}
+ * '></io-element-demo>
+ **/
 export declare class IoColorSwatch extends IoColorBase {
 	static get Style(): string;
 	valueChanged(): void;
@@ -1255,6 +1448,14 @@ export declare class IoColorPicker extends IoElement {
 	collapse(): void;
 	changed(): void;
 }
+/**
+ * Input element for color displayed as vector and an interactive picker.
+ *
+ * <io-element-demo element="io-color-vector"
+ * properties='{"mode": 0, "value": [1, 0.5, 0, 1]}'
+ * config='{"value": ["io-properties"], "mode": ["io-option-menu", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}, {"value": 3, "label": "3 - cmyk"}]}]}
+ * '></io-element-demo>
+ **/
 export declare class IoColorRgba extends IoColorBase {
 	static get Style(): string;
 	_onValueInput(event: CustomEvent): void;
@@ -1291,6 +1492,27 @@ export declare class IoSelector extends IoElement {
 	importModule(path: string): Promise<unknown>;
 	update(): void;
 }
+/**
+ * Labeled tabs for selection.
+ *
+ * <io-element-demo element="io-sidebar"
+ *     properties='{
+ *         "selected": 1,
+ *         "options": [1,2,3],
+ *         "collapsed": false}'
+ *     config='{"options": ["io-properties"]}'>
+ * </io-element-demo>
+ *
+ * <io-element-demo element="io-sidebar"
+ *     properties='{
+ *         "selected": 1,
+ *         "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}],
+ *         "collapsed": false}'
+ *     config='{"type:object": ["io-properties"]}'>
+ * </io-element-demo>
+ *
+ * When tabs are clicked, `selected` value is set.
+ **/
 export declare class IoSidebar extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1299,6 +1521,30 @@ export declare class IoSidebar extends IoElement {
 	_addOptions(options: any): any;
 	changed(): void;
 }
+/**
+ * Extends `IoSelector`. Implements `IoSidebar`.
+ *
+ * Element selector with selectable sidebar interfce.
+ *
+ * <io-element-demo element="io-selector-sidebar"
+ *     properties='{
+ *         "elements": [
+ *             ["div", {"name": "first"}, "First content"],
+ *             ["div", {"name": "second"}, "Second content"],
+ *             ["div", {"name": "third"}, "Third content"],
+ *             ["div", {"name": "fourth"}, "Fourth content"]],
+ *         "selected": "first",
+ *         "cache": false,
+ *         "options": [
+ *             "first",
+ *             "second",
+ *             "third",
+ *             "fourth"],
+ *         "right": false,
+ *         "collapseWidth": 410}'
+ *     config='{"options": ["io-properties"]}'>
+ * </io-element-demo>
+ **/
 export declare class IoSelectorSidebar extends IoSelector {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1353,16 +1599,60 @@ export declare class IoContent extends IoElement {
 	static get Properties(): any;
 	changed(): void;
 }
+/**
+ * An element with collapsable content.
+ *
+ * Extends `IoElement`. Implements `IoBoolean` and `IoContent`.
+ *
+ * <io-element-demo element="io-collapsable"
+ *     properties='{
+ *         "elements": [["div", "Content"]],
+ *         "label": "Collapsable",
+ *         "expanded": true}'>
+ * </io-element-demo>
+ *
+ * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
+ **/
 export declare class IoCollapsable extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
 	changed(): void;
 }
+/**
+ * Element selector with selectable tabs interfce.
+ *
+ * <io-element-demo element="io-selector-tabs"
+ *     properties='{
+ *         "elements": [
+ *             ["div", {"name": "first"}, "First content"],
+ *             ["div", {"name": "second"}, "Second content"],
+ *             ["div", {"name": "third"}, "Third content"],
+ *             ["div", {"name": "fourth"}, "Fourth content"],
+ *             ["div", {"name": "fifth"}, "Fifth content"],
+ *             ["div", {"name": "sixth"}, "Sixth content"]],
+ *         "selected": "first",
+ *         "cache": false,
+ *         "options": [
+ *             "first",
+ *             "second",
+ *             "third",
+ *             "fourth",
+ *             {"label" : "more", "options": ["fifth", "sixth"]}]}'
+ *     config='{"options": ["io-properties"]}'>
+ * </io-element-demo>
+ **/
 export declare class IoSelectorTabs extends IoSelector {
 	static get Style(): string;
 	static get Properties(): any;
 	getSlotted(): any;
 }
+/**
+ * Input element for vector arrays and objects.
+ *
+ * <io-element-demo element="io-vector" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>
+ *
+ * <io-element-demo element="io-vector" properties='{"value": [0, 0.5, 1], "linkable": true}'></io-element-demo>
+ **/
 export declare class IoVector extends IoElement {
 	static get Style(): string;
 	value: {
@@ -1386,6 +1676,15 @@ export declare class IoVector extends IoElement {
 	changed(): void;
 	getSlotted(): Array<any> | null;
 }
+/**
+ * Input element for vector arrays dispalayed as 2D matrices. Array `value` can have 4, 9, and 16 elements for 2x2, 3x3 and 4x4 matrices.
+ *
+ * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 1]}'></io-element-demo>
+ *
+ * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 1, 0, 0, 0, 1]}'></io-element-demo>
+ *
+ * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
+ **/
 export declare class IoMatrix extends IoVector {
 	static get Style(): string;
 	value: number[];
@@ -1393,6 +1692,19 @@ export declare class IoMatrix extends IoVector {
 	_onNumberValueInput(event: CustomEvent): void;
 	valueChanged(): void;
 }
+/**
+ * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
+ *
+ * <io-element-demo element="io-menu-item" properties='{
+ *   "value": "hello world",
+ *   "option": {"label": "options", "options": ["one", "two", "three"]},
+ *   "expanded": false,
+ *   "direction": "right",
+ *   "selectable": true
+ * }' config='{
+ *   "direction": ["io-option-menu", {"options": ["top", "right", "bottom", "left"]}], "type:object": ["io-object"]
+ * }'></io-element-demo>
+ **/
 export declare class IoMenuItem extends IoField {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1421,6 +1733,21 @@ export declare class IoMenuItem extends IoField {
 	changed(): void;
 }
 export declare function getElementDescendants(element: IoMenuItem): any;
+/**
+ * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
+ *
+ * <io-element-demo element="io-menu-options" properties='{
+ *   "value": "hello world",
+ *   "selectable": true,
+ *   "searchable": true,
+ *   "search": "",
+ *   "expanded": false,
+ *   "horizontal": false,
+ *   "options": ["one", "two", "three"]
+ * }' config='{
+ *   "type:object": ["io-object"]
+ * }'></io-element-demo>
+ **/
 export declare class IoMenuOptions extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1440,6 +1767,28 @@ export declare class IoMenuOptions extends IoElement {
 	get _options(): any;
 	changed(): void;
 }
+/**
+ * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
+ *
+ * <io-element-demo element="io-option-menu" properties='{
+ *   "label": "",
+ *   "value": 0,
+ *   "options": [1,2,3]}
+ * ' config='{"type:object": ["io-properties"]}'></io-element-demo>
+ *
+ * <io-element-demo element="io-option-menu" properties='{
+ *   "label": "",
+ *   "value": 0,
+ *   "options": [
+ *     {"value": 0, "label": "zero"},
+ *     {"value": 1, "label": "one"},
+ *     {"value": 2, "label": "two"},
+ *     {"value": 3, "label": "three"}
+ *   ]
+ * }' config='{"type:object": ["io-properties"]}'></io-element-demo>
+ *
+ * When clicked or activated by space/enter key, it expands a menu with selectable options.
+ **/
 export declare class IoOptionMenu extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1447,6 +1796,22 @@ export declare class IoOptionMenu extends IoElement {
 	_onPathChanged(event: CustomEvent): void;
 	changed(): void;
 }
+/**
+ * An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
+ *
+ * <io-element-demo element="io-context-menu"
+ *   height="256px"
+ *   properties='{
+ *   "value": "hello world",
+ *   "button": 0,
+ *   "options": ["one", "two", "three"],
+ *   "expanded": false,
+ *   "position": "pointer",
+ *   "selectable": false
+ * }' config='{
+ *   "position": ["io-option-menu", {"options": ["pointer", "top", "right", "bottom", "left"]}], "type:object": ["io-object"]
+ * }'></io-element-demo>
+ **/
 export declare class IoContextMenu extends IoElement {
 	static get Properties(): any;
 	connectedCallback(): void;
@@ -1488,6 +1853,11 @@ export declare class ObjectWidgets {
 		groups: any;
 	};
 }
+/**
+ * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsable` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
+ *
+ * <io-element-demo element="io-inspector" properties='{"value": {"hello": "world"}, "config": {"type:number": ["io-slider", {"step": 0.1}], "type:string": ["io-option-menu", {"options": ["hello", "goodbye"]}]}, "crumbs": []}' config='{"value": ["io-object"], "type:object": ["io-properties"]}'></io-element-demo>
+ **/
 export declare class IoInspector extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
@@ -1549,11 +1919,24 @@ export declare class IoProperties extends IoElement {
 	_onChange(): void;
 	static RegisterObjectConfig: (config: any) => void;
 }
+/**
+ * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsable element. It can be configured to use custom property editors and display only specified properties.
+ *
+ * <io-element-demo element="io-object" properties='{"expanded": true, "label": "Custom Object Label", "labeled": true, "value": {"hello": "world"}}'></io-element-demo>
+ **/
 export declare class IoObject extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
 	changed(): void;
 }
+/**
+ * Input element for `Array(2)` data type displayed as slider.
+ * It can be configured to clamp the `value` compoents to `min` / `max` and round it to the nearest `step` increment. `exponent` property can be changed for non-linear scale.
+ *
+ * Keys left/right/up/down+shift and pageup/pagedown change the value in step incements. Home/end keys set the value to min/max.
+ *
+ * <io-element-demo element="io-slider-range" properties='{"value": [0, 1], "step": 0.1, "min": -1, "max": 2, "exponent": 1}'></io-element-demo>
+ **/
 export declare class IoSliderRange extends IoSliderBase {
 	value: [
 		number,
@@ -1572,6 +1955,11 @@ export declare class IoSliderRange extends IoSliderBase {
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
+/**
+ * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
+ *
+ * <io-element-demo element="io-number-slider-range" properties='{"value": [0, 2], "step": 0.05, "min": -1, "max": 2}'></io-element-demo>
+ **/
 export declare class IoNumberSliderRange extends IoElement {
 	static get Style(): string;
 	value: [
@@ -1588,6 +1976,13 @@ export declare class IoNumberSliderRange extends IoElement {
 	init(): void;
 	changed(): void;
 }
+/**
+ * Input element for `Number` data type combining `IoNumber` and `IoSlider`
+ *
+ * <io-element-demo element="io-number-slider" properties='{"value": 0, "step": 0.01, "conversion": 1, "min": -0.5, "max": 0.5, "exponent": 1}'></io-element-demo>
+ * <io-element-demo element="io-number-slider" properties='{"value": 0, "step": 0.2617993877991494, "conversion": 57.29577951308232, "min": -6.283185307179586, "max": 6.283185307179586, "exponent": 1}'></io-element-demo>
+ * <io-element-demo element="io-number-slider" properties='{"value": 0, "step": 0.1, "conversion": 0.2, "min": -0.5, "max": 0.5, "exponent": 1}'></io-element-demo>
+ **/
 export declare class IoNumberSlider extends IoElement {
 	static get Style(): string;
 	value: number;
