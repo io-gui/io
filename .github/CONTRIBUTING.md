@@ -1,7 +1,7 @@
 # Contribution
 ## Introduction
 
-It is assumed that you know a little about node.js and git. If not, [here's some help to get started with git](https://help.github.com/en/github/using-git) and [here’s some help to get started with node.js](https://nodejs.org/en/docs/guides/getting-started-guide/). You will also need to run a static file server of your choice. One of the ways the server can be configured is by installing a plugin [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer/) for Visual Studio Code, or you can follow many other tutorials you can find [online](https://www.google.com/search?q=how+to+run+a+static+file+server).
+It is assumed that you know a little about node.js and git. If not, [here's some help to get started with git](https://help.github.com/en/github/using-git) and [here’s some help to get started with node.js](https://nodejs.org/en/docs/guides/getting-started-guide/). You will also need to run a static file server of your choice. If you are using Visual Studio Code, it is recommended to install [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer/) plugin for VS Code, or you can follow many other tutorials you can find [online](https://www.google.com/search?q=how+to+run+a+static+file+server).
 
 * Install [Git](https://git-scm.com/)
 * Install [Node.js](https://nodejs.org/)
@@ -10,10 +10,10 @@ It is assumed that you know a little about node.js and git. If not, [here's some
 * Open your OS’s terminal
 * Change into the directory you’d like
 * Clone your forked repo
-
+      
       git clone https://github.com/[yourgithubname]/io-gui/io.git
 
-* Go into the io directory.
+* Go into the `io` directory.
 
       cd ./io
 
@@ -21,29 +21,23 @@ It is assumed that you know a little about node.js and git. If not, [here's some
 
       yarn && yarn dev
 
-* Configure static file server to serve files.
+* Configure static file server to serve files from `io` directory.
 
 ## Next Steps
 
-You can build the files with:
+You can build io-gui and bundle it into a single file with:
 
       yarn build
 
-Details of what exactly is being executed with the command above you can find within file [package.json](https://github.com/io-gui/io/blob/main/package.json). You can see there that before we build the files with the mentioned [yarn](https://yarnpkg.com/) command we delete the old files (if they are present). If you just want to clean the old build files you can do it with:
+Details of what exactly is being executed with the `build` script can be found in [package.json](https://github.com/io-gui/io/blob/main/package.json).
 
-      yarn clean
-
-You can create documentation with:
+You can generate documentation with:
 
       yarn docs
 
-You can check the code with:
+You can check if the code complies with linting rules by running:
 
       yarn lint
-
-While writing the code it is often useful to check the code, clean build files, and watch input files. You can do that with:
-
-      yarn dev
 
 ## Advices
 
@@ -51,14 +45,18 @@ While making changes to files from this git repo it is good to follow some basic
 
 * Update your local repo
 
-      git pull https://github.com/[yourgithubname]/io-gui/io.git
-      git push
+````bash
+git pull https://github.com/[yourgithubname]/io-gui/io.git
+git push
+````
 
 * Make a new branch from the dev branch
 
-      git checkout dev
-      git branch [mychangesbranch]
-      git checkout [mychangesbranch]
+````bash
+git checkout dev
+git branch mychangesbranch
+git checkout mychangesbranch
+````
 
 * Add your changes to your commit.
 * Push the changes to your forked repo.
@@ -66,11 +64,8 @@ While making changes to files from this git repo it is good to follow some basic
 
 ## Important notes:
 
-* Don't include any build files in your commit.
-* Not all new features will need a new example. Simpler features could be incorporated into an existing example. Bigger features may be asked to add an example demonstrating the feature.
+* Don't include any build files in your commit unless you are building a new release.
 * Making changes may require changes to the documentation.
 * If you make a PR, but it is not actually ready to be pulled into the dev branch, then please [convert it to a draft PR](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/changing-the-stage-of-a-pull-request#converting-a-pull-request-to-a-draft).
 
-This project is currently contributed mostly via everyone's spare time. Please keep that in mind as it may take some time for the appropriate feedback to get to you. If you are unsure about adding a new feature, it might be better to ask first to see whether other people think it's a good idea.
-
-This file has been created from [this file](https://github.com/mrdoob/three.js/blob/dev/.github/CONTRIBUTING.md).
+This file has been modified from [three.js contributing guide](https://github.com/mrdoob/three.js/blob/dev/.github/CONTRIBUTING.md).

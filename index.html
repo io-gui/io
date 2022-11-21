@@ -146,6 +146,7 @@
           {label: 'Data Binding', value: './docs/learn-more.md#data-binding'},
           {label: 'Data Flow', value: './docs/learn-more.md#data-flow'},
         ]},
+        {label: 'Contribution Guide', value: 'contribution'},
         {label: 'Development Guidelines', value: 'development-guidelines'},
         {label: 'Reference', value: 'reference', options: [
           // Core Internals
@@ -248,6 +249,10 @@
               selected: OPTIONS.getItem('docs').path.bind('root'),
               options: OPTIONS.getItem('docs').options,
               elements: [
+                ['io-md-view', {
+                  name: 'contribution',
+                  path: '.github/CONTRIBUTING.md',
+                }],
                 ['io-md-view', {
                   name: 'getting-started',
                   path: './docs/getting-started.md',
