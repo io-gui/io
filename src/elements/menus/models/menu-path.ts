@@ -57,14 +57,12 @@ export class MenuPath extends IoNode {
   }
 
   serializedChanged() {
-    if (this.serialize === true) {
-      const array = this.serialized ? [...this.serialized.split(this.delimiter)] : [];
-      for (let i = 0; i < array.length; i++) {
-        const num = Number(array[i]);
-        this.value[i] = isNaN(num) ? array[i] : num;
-      }
-      this.value.length = array.length;
+    const array = this.serialized ? [...this.serialized.split(this.delimiter)] : [];
+    for (let i = 0; i < array.length; i++) {
+      const num = Number(array[i]);
+      this.value[i] = isNaN(num) ? array[i] : num;
     }
+    this.value.length = array.length;
   }
 
   rootChanged() {
