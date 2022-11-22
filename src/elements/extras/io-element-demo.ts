@@ -1,8 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 
-/*
-
- **/
 @RegisterIoElement
 export class IoElementDemo extends IoElement {
   static get Style() {
