@@ -136,10 +136,12 @@ export class IoMenuItem extends IoField {
       }
       if (option.select === 'pick') {
         if (option.hasmore && this.depth <= 0) {
-          option.options.selectDefault();
+          // option.options.selectDefault();
         } else {
           option.selected = true;
         }
+      } else if (option.select === 'link') {
+        window.open(option.value, '_blank');
       }
       this.dispatchEvent('item-clicked', option, true);
       this.throttle(this._onCollapse, undefined, true);

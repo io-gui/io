@@ -26,29 +26,25 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   push(...items: Array<MenuItem | any>) {
     for (let i = 0; i < items.length; i++) {
-      if (!(items[i] instanceof MenuItem)) {
-        items[i] = new MenuItem(items[i]);
+      let item: MenuItem;
+      if (items[i] instanceof MenuItem) {
+        item = items[i];
+      } else if (typeof items[i] === 'object') {
+        item = new MenuItem(items[i]);
+      } else {
+        item = new MenuItem({value: items[i]});
       }
+      super.push(item);
+      item.addEventListener('selected-changed', this.onItemSelectedChanged);
+      item.addEventListener('path-changed', this.onItemSelectedPathChanged);
     }
-    super.push(...items);
   }
 
   constructor(options: Array<MenuItem | any> = [], props = {}) {
     super(props);
-    for (let i = 0; i < options.length; i++) {
-      let option;
-      if (options[i] instanceof MenuItem) {
-        option = options[i];
-      } else if (typeof options[i] === 'object') {
-        option = new MenuItem(options[i]);
-      } else {
-        option = new MenuItem({value: options[i]});
-      }
-      this.push(option);
-      option.addEventListener('selected-changed', this.onItemSelectedChanged);
-      option.addEventListener('path-changed', this.onItemSelectedPathChanged);
-    }
+    for (let i = 0; i < options.length; i++) this.push(options[i]);
   }
+
   pathChanged() {
     const path = this.path.value;
     if (!path.length) {
@@ -71,9 +67,9 @@ export class MenuOptions extends IoNodeMixin(Array) {
     }
   }
   onItemSelectedPathChanged(event: any) {
-    // console.log('OPTION PATH CHANGED');
     const target = event.target;
     const targetPath = target.path.value;
+    // console.log('OPTION PATH CHANGED', targetPath);
     if (target.select === 'pick') {
       if (targetPath.length) {
         this.setSelectedPath([target.value, ...targetPath]);
@@ -116,20 +112,20 @@ export class MenuOptions extends IoNodeMixin(Array) {
     this.dispatchEvent('path-changed'); // TODO: TEMP HACK
   }
   // TODO: test
-  selectDefault() {
-    for (let i = 0; i < this.length; i++) {
-      if (this[i].select === 'pick') {
-        if (this[i].hasmore) {
-          const selected = this[i].options.selectDefault();
-          if (selected) return true;
-        } else {
-          this[i].setSelectedPath(true, []);
-          return true;
-        }
-      }
-    }
-    return false;
-  }
+  // selectDefault() {
+  //   for (let i = 0; i < this.length; i++) {
+  //     if (this[i].select === 'pick') {
+  //       if (this[i].hasmore) {
+  //         const selected = this[i].options.selectDefault();
+  //         if (selected) return true;
+  //       } else {
+  //         this[i].setSelectedPath(true, []);
+  //         return true;
+  //       }
+  //     }
+  //   }
+  //   return false;
+  // }
   changed() {
     this.dispatchEvent('changed');
   }

@@ -1,6 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
-// TODO: use IoContent for caching and display.
 
 /**
  * Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
@@ -32,27 +31,16 @@ export class IoSelector extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      display: flex;
-      flex: 1 1;
-      flex-direction: column;
-      align-self: stretch;
-      justify-self: stretch;
-      overflow-x: hidden;
-      overflow-y: auto;
-      color: var(--io-color);
-      background-color: var(--io-background-color);
+      @apply --io-content;
     }
+
     @keyframes io-selector-spinner {
       to {
         transform: rotate(360deg);
       }
     }
-    :host .io-loading {
-      background-image: repeating-linear-gradient(135deg, var(--io-background-color-light), var(--io-background-color) 3px, var(--io-background-color) 7px, var(--io-background-color-light) 10px) !important;
-      background-repeat: repeat;
-      position: relative;
-    }
-    :host .io-loading:after {
+
+    :host > .io-loading:after {
       content: '';
       box-sizing: border-box;
       position: absolute;
@@ -88,17 +76,7 @@ export class IoSelector extends IoElement {
         type: String,
         notify: false,
       },
-      _scrollID: {
-        type: String,
-        notify: false,
-      },
       lazy: true // TODO: reconsider
-    };
-  }
-  static get Listeners() {
-    return {
-      'scroll': ['_onScroll', {capture: true, passive: true}],
-      'content-ready': '_onIoContentReady',
     };
   }
   constructor(props?: any) {
@@ -110,50 +88,6 @@ export class IoSelector extends IoElement {
       if (!this.selected && this.options[0]) {
         this.selected = this.options[0].value;
       }
-    // }, 100);
-  }
-  _onIoContentReady(event: CustomEvent) {
-    event.stopImmediatePropagation();
-    this.scrollTo(this._scrollID, false);
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    this.scrollTo(this._scrollID, false);
-  }
-  scrollTo(id: string, smooth?: boolean) {
-    if (!id) return;
-    setTimeout(()=>{
-      const elem = this.$.content.querySelector('#' + id.toLowerCase());
-      if (elem) elem.scrollIntoView({behavior: smooth ? 'smooth' : 'auto'});
-    }, 250); // TODO: unhack!
-  }
-  _onScroll() {
-    // if (this._scrollID === undefined) return;
-    // clearTimeout(this._scrollThrottle);
-    // this._scrollThrottle = setTimeout(() => {
-    //   delete this._scrollThrottle;
-    //   const scrollableElements = [...this.$.content.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')];
-    //   const top = this.$.content.scrollTop || this.$.content.children[0].scrollTop;
-    //   const bottom = top + this.$.content.getBoundingClientRect().height / 2;
-    //   const oldScrollID = this._scrollID;
-    //   let scrollID;
-    //   for (let i = scrollableElements.length; i--;) {
-    //     const elem = scrollableElements[i];
-    //     const nextElem = scrollableElements[i + 1];
-    //     const elemTop = elem.offsetTop;
-    //     const elemBottom = nextElem ? nextElem.offsetTop : elemTop;
-    //     if ((elemTop < top - 5) && (elemBottom < bottom) && i !== scrollableElements.length - 1) {
-    //       break;
-    //     }
-    //     scrollID = elem.id;
-    //   }
-    //   if (scrollID !== undefined && scrollID !== oldScrollID) {
-    //     this._scrollID = scrollID || '';
-    //     const oldSelected = this.selected;
-    //     const selected = this._selectedID + '#' + this._scrollID;
-    //     this.setProperty('selected', selected);
-    //     this.dispatchEvent('selected-changed', {value: selected, oldValue: oldSelected});
-    //   }
     // }, 100);
   }
   selectedChanged() {
@@ -169,15 +103,10 @@ export class IoSelector extends IoElement {
   }
   updateScroll() {
     if (!this.selected) return;
-    const oldScrollID = this._scrollID;
     const oldSelectedID = this._selectedID;
     this._selectedID = this.selected.split('#')[0] || '';
-    this._scrollID = this.selected.split('#')[1] || '';
     if (this._selectedID !== oldSelectedID) {
       this.update();
-      this.scrollTo(this._scrollID);
-    } else if (this._scrollID !== oldScrollID) {
-      this.scrollTo(this._scrollID, true);
     }
   }
   getSlotted(): any {

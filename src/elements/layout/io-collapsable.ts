@@ -60,7 +60,7 @@ export class IoCollapsable extends IoElement {
   changed() {
     this.template([
       ['io-boolean', {true: this.label, false: this.label, value: this.bind('expanded')}],
-      ['io-content', {elements: this.elements, expanded: this.expanded}],
+      this.expanded ? ['io-content', this.elements] : null,
     ]);
   }
 }

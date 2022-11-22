@@ -3,8 +3,6 @@ import {IoSelector} from './io-selector.js';
 import './io-sidebar.js';
 
 /**
- * Extends `IoSelector`. Implements `IoSidebar`.
- *
  * Element selector with selectable sidebar interfce.
  *
  * <io-element-demo element="io-selector-sidebar"
@@ -39,16 +37,16 @@ export class IoSelectorSidebar extends IoSelector {
     :host[collapsed] {
       flex-direction: column;
     }
-    :host > io-sidebar {
+    :host > io-menu-options {
       flex: 0 0 auto;
       background-color: var(--io-background-color-dark);
       border: var(--io-border);
       border-width: 0 var(--io-border-width) 0 0;
     }
-    :host[right] > io-sidebar {
+    :host[right] > io-menu-options {
       border-width: 0 0 0 var(--io-border-width);
     }
-    :host[collapsed] > io-sidebar {
+    :host[collapsed] > io-menu-options {
       flex: 0 0 auto;
       border-width: 0 0 var(--io-border-width) 0;
     }
@@ -72,10 +70,20 @@ export class IoSelectorSidebar extends IoSelector {
   // }
   // collapsedChanged() { this.update(); }
   getSlotted() {
-    return ['io-sidebar', {
-      selected: this.bind('selected'),
+    // return ['io-sidebar', {
+    //   selected: this.bind('selected'),
+    //   options: this.options,
+    //   collapsed: this.collapsed,
+    // }];
+
+    return ['io-menu-options', {
+      role: 'navigation',
+      // horizontal: true,
+      // value: this.bind('selected'), // TODO: Does not exist
       options: this.options,
-      collapsed: this.collapsed,
+      // depth: this.depth,
+      // slotted: this.slotted,
+      // selectable: true, // TODO: Does not exist
     }];
   }
 }

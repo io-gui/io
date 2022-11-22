@@ -56,6 +56,8 @@
     <meta property="og:image" content="https://iogui.dev/io/images/logo/io-512.png?002" />
     <meta property="og:locale" content="en_US" />
 
+    <link rel="me" href="https://mastodon.gamedev.place/@aki" />
+
     <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet">
 
     <link lazyload href="./lib/highlight.a11y-light.css" rel="stylesheet">
@@ -137,16 +139,16 @@
           {label: 'Simple App Recap', value: 'simple-app-recap'},
         ]},
         {label: 'Learn More', value: 'learn-more', options: [
-          {label: 'Creating Elements', value: './docs/learn-more.md#creating-elements'},
-          {label: 'Properties', value: './docs/learn-more.md#properties'},
-          {label: 'Property Configuration', value: './docs/learn-more.md#property-configuration'},
-          {label: 'Functions', value: './docs/learn-more.md#functions'},
-          {label: 'Events', value: './docs/learn-more.md#events'},
-          {label: 'Virtual DOM Arrays', value: './docs/learn-more.md#virtual-dom-arrays'},
-          {label: 'Data Binding', value: './docs/learn-more.md#data-binding'},
-          {label: 'Data Flow', value: './docs/learn-more.md#data-flow'},
+          {label: 'Creating Elements', value: 'creating-elements'},
+          {label: 'Properties', value: 'properties'},
+          {label: 'Property Configuration', value: 'property-configuration'},
+          {label: 'Functions', value: 'functions'},
+          {label: 'Events', value: 'events'},
+          {label: 'Virtual DOM Arrays', value: 'virtual-dom-arrays'},
+          {label: 'Data Binding', value: 'data-binding'},
+          {label: 'Data Flow', value: 'data-flow'},
         ]},
-        // {label: 'Contribution Guide', link: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'},
+        {label: 'Contribution Guide', select: 'link', icon: 'icons:link', value: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'},
         {label: 'Development Notes', value: 'development-notes'},
         {label: 'Reference', value: 'reference', options: [
           // Core Internals
@@ -227,8 +229,13 @@
       ]},
       {label: 'Tests', value: 'tests'},
     ], {
-      path: new MenuPath({serialized: $({key: 'path', storage: 'hash', value: 'home'})}),
+      path: new MenuPath({string: $({key: 'path', storage: 'hash', value: 'home'})}),
     });
+
+    console.log(OPTIONS.path.value);
+    console.log(OPTIONS[1].label, OPTIONS[1].selected);
+    console.log(OPTIONS[1].options[1].label, OPTIONS[1].options[1].selected);
+    console.log(OPTIONS[1].options[1].options[0].label, OPTIONS[1].options[1].options[0].selected);
 
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
@@ -243,31 +250,32 @@
           elements: [
             ['io-md-view', {
               name: 'home',
-              path: './README.md'}],
+              src: './README.md'}],
             ['io-selector', {
               name: 'docs',
               selected: OPTIONS.getItem('docs').path.bind('root'),
               options: OPTIONS.getItem('docs').options,
               elements: [
-                ['io-md-view', {name: 'development-notes', path: './docs/development-notes.md'}],
-                ['io-md-view', {
+                ['io-md-view', {name: 'development-notes', src: './docs/development-notes.md'}],
+                ['io-md-view-selector', {
                   name: 'getting-started',
-                  path: './docs/getting-started.md',
+                  src: './docs/getting-started.md',
                   sanitize: false,
-                  // selected: OPTIONS.getItem('docs').getSubitem('./docs/getting-started.md').path.bind('root'),
-                  // options: OPTIONS.getItem('docs').getSubitem('./docs/getting-started.md').options,
+                  anchor: OPTIONS.getItem('docs').getSubitem('getting-started').path.bind('string'),
+                  options: OPTIONS.getItem('docs').getSubitem('getting-started').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'learn-more',
                   sanitize: false,
-                  selected: OPTIONS.getItem('docs').getSubitem('learn-more').path.bind('root'),
+                  src: './docs/learn-more.md',
+                  anchor: OPTIONS.getItem('docs').getSubitem('learn-more').path.bind('string'),
                   options: OPTIONS.getItem('docs').getSubitem('learn-more').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'reference',
                   sanitize: false,
                   // search: true, // TODO: implement
-                  selected: OPTIONS.getItem('docs').getSubitem('reference').path.bind('root'),
+                  src: OPTIONS.getItem('docs').getSubitem('reference').path.bind('root'),
                   options: OPTIONS.getItem('docs').getSubitem('reference').options,
                 }],
               ]

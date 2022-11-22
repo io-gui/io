@@ -25,7 +25,7 @@ export class MenuItem extends IoNode {
   declare action: () => void | undefined;
 
   @Property('pick')
-  declare select: 'pick' | 'toggle' | 'none';
+  declare select: 'pick' | 'toggle' | 'link' | 'none';
 
   @Property(false)
   declare selected: boolean;
@@ -95,7 +95,7 @@ export class MenuItem extends IoNode {
       }
     }
   }
-  setSelectedPath(selected: any, path: any[] = []) {
+  setSelectedPath(selected: boolean, path: string[]) {
     this.options.path.value = path;
     this.selected = selected;
     this.dispatchEvent('path-changed', this.options.path); // TODO: TEMP HACK

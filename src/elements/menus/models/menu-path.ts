@@ -1,9 +1,8 @@
-import { IoNode, RegisterIoNode } from '../../../core/node.js';
+import { IoNodeMixin, RegisterIoNode } from '../../../core/node.js';
 import { Property } from '../../../core/internals/property.js';
-import { Binding } from '../../../core/internals/binding.js';
 
 @RegisterIoNode
-export class MenuPath extends IoNode {
+export class MenuPath extends IoNodeMixin(Array) {
 
   @Property({type: Array, observe: true})
   declare value: any[];
@@ -16,7 +15,7 @@ export class MenuPath extends IoNode {
 
   // TODO document. Note: string values only!
   @Property('')
-  declare serialized: string;
+  declare string: string;
 
   @Property(',')
   declare delimiter: string;
@@ -26,14 +25,9 @@ export class MenuPath extends IoNode {
     this.valueChanged();
   }
 
-  valueMutatied() {
-    // TODO: test with menu options!
-    this.valueChanged();
-  }
-
   valueChanged() {
     this.setProperties({
-      'serialized': this.toString(),
+      'string': this.toString(),
       'leaf': this.value[this.value.length - 1],
       'root': this.value[0],
     });
@@ -56,13 +50,14 @@ export class MenuPath extends IoNode {
     return string;
   }
 
-  serializedChanged() {
-    const array = this.serialized ? [...this.serialized.split(this.delimiter)] : [];
+  stringChanged() {
+    const array = this.string ? [...this.string.split(this.delimiter)] : [];
     for (let i = 0; i < array.length; i++) {
       const num = Number(array[i]);
       this.value[i] = isNaN(num) ? array[i] : num;
     }
     this.value.length = array.length;
+    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
   }
 
   rootChanged() {
@@ -71,7 +66,7 @@ export class MenuPath extends IoNode {
         this.value.length = 0;
         this.value.push(this.root);
         this.setProperties({
-          serialized: this.toString(),
+          string: this.toString(),
           leaf: this.root,
         });
         this.dispatchEvent('object-mutated', {object: this.value}, false, window);
@@ -79,7 +74,7 @@ export class MenuPath extends IoNode {
     } else {
       this.value.length = 0;
       this.setProperties({
-        serialized: '',
+        string: '',
         leaf: undefined,
       });
       this.dispatchEvent('object-mutated', {object: this.value}, false, window);
@@ -94,7 +89,7 @@ export class MenuPath extends IoNode {
     }
   }
 
-  bind(prop: string): Binding {
+  bind(prop: string) {
     debug: {
       if (prop === 'leaf') {
         console.warn('MenuPath: Binding to "leaf" property not recommended by design!');
