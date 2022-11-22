@@ -112,20 +112,20 @@ export class MenuOptions extends IoNodeMixin(Array) {
     this.dispatchEvent('path-changed'); // TODO: TEMP HACK
   }
   // TODO: test
-  // selectDefault() {
-  //   for (let i = 0; i < this.length; i++) {
-  //     if (this[i].select === 'pick') {
-  //       if (this[i].hasmore) {
-  //         const selected = this[i].options.selectDefault();
-  //         if (selected) return true;
-  //       } else {
-  //         this[i].setSelectedPath(true, []);
-  //         return true;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
+  selectDefault() {
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].select === 'pick') {
+        if (this[i].hasmore) {
+          const selected = this[i].options.selectDefault();
+          if (selected) return true;
+        } else {
+          this[i].setSelectedPath(true, []);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   changed() {
     this.dispatchEvent('changed');
   }

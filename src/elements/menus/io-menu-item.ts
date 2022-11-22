@@ -136,7 +136,7 @@ export class IoMenuItem extends IoField {
       }
       if (option.select === 'pick') {
         if (option.hasmore && this.depth <= 0) {
-          // option.options.selectDefault();
+          option.options.selectDefault();
         } else {
           option.selected = true;
         }
