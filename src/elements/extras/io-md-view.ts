@@ -2,9 +2,9 @@ import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { marked } from 'marked';
 import purify from 'dompurify';
 
-/*
-
- **/
+/**
+ * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
+ */
 @RegisterIoElement
 export class IoMdView extends IoElement {
   static get Style() {
@@ -130,7 +130,7 @@ export class IoMdView extends IoElement {
   }
   static get Properties(): any {
     return {
-      path: {
+      src: {
         type: String,
         reflect: 'prop'
       },
@@ -161,9 +161,9 @@ export class IoMdView extends IoElement {
       this.dispatchEvent('content-ready', {}, true);
     }
   }
-  pathChanged() {
+  srcChanged() {
     this.classList.toggle('io-loading', true);
-    void fetch(this.path)
+    void fetch(this.src)
       .then(response => {
         return response.text();
       })

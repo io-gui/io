@@ -140,6 +140,8 @@ export class IoMenuItem extends IoField {
         } else {
           option.selected = true;
         }
+      } else if (option.select === 'link') {
+        window.open(option.value, '_blank');
       }
       this.dispatchEvent('item-clicked', option, true);
       this.throttle(this._onCollapse, undefined, true);

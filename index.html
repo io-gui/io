@@ -56,6 +56,8 @@
     <meta property="og:image" content="https://iogui.dev/io/images/logo/io-512.png?002" />
     <meta property="og:locale" content="en_US" />
 
+    <link rel="me" href="https://mastodon.gamedev.place/@aki" />
+
     <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet">
 
     <link lazyload href="./lib/highlight.a11y-light.css" rel="stylesheet">
@@ -146,7 +148,7 @@
           {label: 'Data Binding', value: './docs/learn-more.md#data-binding'},
           {label: 'Data Flow', value: './docs/learn-more.md#data-flow'},
         ]},
-        // {label: 'Contribution Guide', link: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'},
+        {label: 'Contribution Guide', select: 'link', icon: 'icons:link', value: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'},
         {label: 'Development Notes', value: 'development-notes'},
         {label: 'Reference', value: 'reference', options: [
           // Core Internals
@@ -227,8 +229,13 @@
       ]},
       {label: 'Tests', value: 'tests'},
     ], {
-      path: new MenuPath({serialized: $({key: 'path', storage: 'hash', value: 'home'})}),
+      path: new MenuPath({string: $({key: 'path', storage: 'hash', value: 'home'})}),
     });
+
+    console.log(OPTIONS.path.value);
+    console.log(OPTIONS[1].label, OPTIONS[1].selected);
+    console.log(OPTIONS[1].options[1].label, OPTIONS[1].options[1].selected);
+    console.log(OPTIONS[1].options[1].options[0].label, OPTIONS[1].options[1].options[0].selected);
 
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
@@ -243,16 +250,16 @@
           elements: [
             ['io-md-view', {
               name: 'home',
-              path: './README.md'}],
+              src: './README.md'}],
             ['io-selector', {
               name: 'docs',
               selected: OPTIONS.getItem('docs').path.bind('root'),
               options: OPTIONS.getItem('docs').options,
               elements: [
-                ['io-md-view', {name: 'development-notes', path: './docs/development-notes.md'}],
+                ['io-md-view', {name: 'development-notes', src: './docs/development-notes.md'}],
                 ['io-md-view', {
                   name: 'getting-started',
-                  path: './docs/getting-started.md',
+                  src: './docs/getting-started.md',
                   sanitize: false,
                   // selected: OPTIONS.getItem('docs').getSubitem('./docs/getting-started.md').path.bind('root'),
                   // options: OPTIONS.getItem('docs').getSubitem('./docs/getting-started.md').options,
