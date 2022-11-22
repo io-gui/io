@@ -692,6 +692,13 @@ export declare const IoStorage: {
 	getValueFromHash(key: string): any;
 	updateAllFromHash(): void;
 };
+export declare class Color {
+	r: number;
+	g: number;
+	b: number;
+	a: number;
+	constructor(r: number, g: number, b: number, a: number);
+}
 /**
  * `IoTheme` is designed to be used as `IoThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
  * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
@@ -709,13 +716,12 @@ export declare class IoTheme extends IoElement {
 	persist: boolean;
 	theme: string;
 	init(): void;
-	_toCss(rgba: number[]): string;
+	_toCss(rgba: Color): string;
 	reset(): void;
 	themeChanged(): void;
 	changed(): void;
 }
 export declare const IoThemeSingleton: IoTheme;
-export declare type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
 export declare class IoGl extends IoElement {
 	static get Style(): string;
 	size: [
@@ -744,7 +750,7 @@ export declare class IoGl extends IoElement {
 	setShaderProgram(): void;
 	updatePropertyUniform(name: string, property: PropertyInstance): void;
 	updateThemeUniforms(): void;
-	setUniform(name: string, type: UniformTypes, value: any): void;
+	setUniform(name: string, value: any): void;
 }
 export declare type NudgeDirection = "pointer" | "top" | "left" | "bottom" | "right";
 /**
@@ -797,13 +803,13 @@ export declare class MenuPath extends IoNode {
 	value: any[];
 	root: any;
 	leaf: any;
-	serialized: string;
+	string: string;
 	delimiter: string;
 	init(): void;
 	valueMutatied(): void;
 	valueChanged(): void;
 	toString(): string;
-	serializedChanged(): void;
+	stringChanged(): void;
 	rootChanged(): void;
 	leafChanged(): void;
 	bind(prop: string): Binding;
@@ -858,7 +864,7 @@ export declare class MenuItem extends IoNode {
 	icon: string;
 	hint: string;
 	action: () => void | undefined;
-	select: "pick" | "toggle" | "none";
+	select: "pick" | "toggle" | "link" | "none";
 	selected: boolean;
 	options: MenuOptions;
 	get path(): MenuPath;
@@ -868,7 +874,7 @@ export declare class MenuItem extends IoNode {
 	onOptionsSelectedPathChanged(): void;
 	optionsChanged(): void;
 	selectedChanged(): void;
-	setSelectedPath(selected: any, path?: any[]): void;
+	setSelectedPath(selected: boolean, path: string[]): void;
 	changed(): void;
 }
 export declare class IoLabel extends IoElement {
@@ -1097,7 +1103,8 @@ export declare class IoColorBase extends IoElement {
 		b: number;
 		a?: number;
 	};
-	rgb: [
+	rgba: [
+		number,
 		number,
 		number,
 		number
@@ -1461,12 +1468,15 @@ export declare class IoColorRgba extends IoColorBase {
 	_onValueInput(event: CustomEvent): void;
 	changed(): void;
 }
+/**
+ * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
+ */
 export declare class IoMdView extends IoElement {
 	static get Style(): string;
 	static get Properties(): any;
 	onResized(): void;
 	parseMarkdown(markdown: string): void;
-	pathChanged(): void;
+	srcChanged(): void;
 }
 export declare class IoSelector extends IoElement {
 	static get Style(): string;
