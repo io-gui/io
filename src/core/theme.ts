@@ -8,11 +8,26 @@ const styleElement = document.createElement('style');
 styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
 document.head.appendChild(styleElement);
 
-type Color = [number, number, number, number];
+// type Color = [number, number, number, number];
+
+export class Color {
+  constructor(public r: number, public g: number, public b: number, public a: number) {
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.a = a;
+  }
+}
 
 type Variables = {
   ioSpacing: number;
+  ioSpacing2: number;
+  ioSpacing3: number;
+  ioSpacing4: number;
   ioLineHeight: number;
+  ioLineHeight2: number;
+  ioLineHeight3: number;
+  ioLineHeight4: number;
   ioFieldHeight: number;
   ioFieldHeight2: number;
   ioFieldHeight3: number;
@@ -46,7 +61,13 @@ type Themes = Record<string, Variables>;
 const defaultThemes: Themes = {
   light: {
     ioSpacing: 2,
+    ioSpacing2: 4,
+    ioSpacing3: 6,
+    ioSpacing4: 8,
     ioLineHeight: 20,
+    ioLineHeight2: 40,
+    ioLineHeight3: 60,
+    ioLineHeight4: 80,
     ioFieldHeight: 28,
     ioFieldHeight2: 56,
     ioFieldHeight3: 112,
@@ -55,28 +76,34 @@ const defaultThemes: Themes = {
     ioStrokeWidth: 1,
     ioBorderRadius: 3,
     ioBorderWidth: 1,
-    ioBackgroundColor: [1, 1, 1, 1],
-    ioBackgroundColorLight: [0.6, 0.6, 0.6, 1],
-    ioBackgroundColorDark: [0.84, 0.84, 0.84, 1],
-    ioBackgroundColorField: [0.92, 0.92, 0.92, 1],
-    ioColor: [0, 0, 0, 1],
-    ioColorError: [0.91, 0.5, 0.5, 1],
-    ioColorLink: [0.2, 0.75, 0.2, 1],
-    ioColorFocus: [0.3, 0.6, 1, 1],
-    ioColorField: [0, 0, 0, 1],
-    ioColorNumber: [0.12, 0.64, 1, 1],
-    ioColorString: [0.95, 0.25, 0.1, 1],
-    ioColorBoolean: [0.82, 0.35, 0.75, 1],
-    ioColorBorder: [0.7, 0.7, 0.7, 1],
-    ioColorBorderLight: [1, 1, 1, 1],
-    ioColorBorderDark: [0.6, 0.6, 0.6, 1],
-    ioColorGradientStart: [0.9, 0.9, 0.9, 1],
-    ioColorGradientEnd: [0.75, 0.75, 0.75, 1],
-    ioColorShadow: [0, 0, 0, 0.2],
+    ioBackgroundColor: new Color(1, 1, 1, 1),
+    ioBackgroundColorLight: new Color(0.6, 0.6, 0.6, 1),
+    ioBackgroundColorDark: new Color(0.84, 0.84, 0.84, 1),
+    ioBackgroundColorField: new Color(0.92, 0.92, 0.92, 1),
+    ioColor: new Color(0, 0, 0, 1),
+    ioColorError: new Color(0.91, 0.5, 0.5, 1),
+    ioColorLink: new Color(0.2, 0.75, 0.2, 1),
+    ioColorFocus: new Color(0.3, 0.6, 1, 1),
+    ioColorField: new Color(0, 0, 0, 1),
+    ioColorNumber: new Color(0.12, 0.64, 1, 1),
+    ioColorString: new Color(0.95, 0.25, 0.1, 1),
+    ioColorBoolean: new Color(0.82, 0.35, 0.75, 1),
+    ioColorBorder: new Color(0.7, 0.7, 0.7, 1),
+    ioColorBorderLight: new Color(1, 1, 1, 1),
+    ioColorBorderDark: new Color(0.6, 0.6, 0.6, 1),
+    ioColorGradientStart: new Color(0.9, 0.9, 0.9, 1),
+    ioColorGradientEnd: new Color(0.75, 0.75, 0.75, 1),
+    ioColorShadow: new Color(0, 0, 0, 0.2),
   },
   dark: {
     ioSpacing: 2,
+    ioSpacing2: 4,
+    ioSpacing3: 6,
+    ioSpacing4: 8,
     ioLineHeight: 20,
+    ioLineHeight2: 40,
+    ioLineHeight3: 60,
+    ioLineHeight4: 80,
     ioFieldHeight: 28,
     ioFieldHeight2: 56,
     ioFieldHeight3: 112,
@@ -85,24 +112,24 @@ const defaultThemes: Themes = {
     ioStrokeWidth: 1,
     ioBorderRadius: 3,
     ioBorderWidth: 1,
-    ioBackgroundColor: [0.065, 0.065, 0.065, 1],
-    ioBackgroundColorLight: [0.3, 0.3, 0.3, 1],
-    ioBackgroundColorDark: [0.5, 0.5, 0.5, 1],
-    ioBackgroundColorField: [0.137, 0.137, 0.137, 1],
-    ioColor: [1, 1, 1, 1],
-    ioColorError: [1, 0.376, 0.062, 1],
-    ioColorLink: [0.75, 0.9, 0.59, 1],
-    ioColorFocus: [0.3, 0.82, 1.4, 1],
-    ioColorField: [0.75, 0.75, 0.75, 1],
-    ioColorNumber: [0.125, 0.64, 1, 1],
-    ioColorString: [0.94, 0.25, 0.086, 1],
-    ioColorBoolean: [0.82, 0.35, 0.75, 1],
-    ioColorBorder: [0.3, 0.3, 0.3, 1],
-    ioColorBorderLight: [0.4, 0.4, 0.4, 1],
-    ioColorBorderDark: [0, 0, 0, 1],
-    ioColorGradientStart: [1, 1, 1, 0.1],
-    ioColorGradientEnd: [0, 0, 0, 0.2],
-    ioColorShadow: [0, 0, 0, 0.2],
+    ioBackgroundColor: new Color(0.065, 0.065, 0.065, 1),
+    ioBackgroundColorLight: new Color(0.3, 0.3, 0.3, 1),
+    ioBackgroundColorDark: new Color(0.5, 0.5, 0.5, 1),
+    ioBackgroundColorField: new Color(0.137, 0.137, 0.137, 1),
+    ioColor: new Color(1, 1, 1, 1),
+    ioColorError: new Color(1, 0.376, 0.062, 1),
+    ioColorLink: new Color(0.75, 0.9, 0.59, 1),
+    ioColorFocus: new Color(0.3, 0.82, 1.4, 1),
+    ioColorField: new Color(0.75, 0.75, 0.75, 1),
+    ioColorNumber: new Color(0.125, 0.64, 1, 1),
+    ioColorString: new Color(0.94, 0.25, 0.086, 1),
+    ioColorBoolean: new Color(0.82, 0.35, 0.75, 1),
+    ioColorBorder: new Color(0.3, 0.3, 0.3, 1),
+    ioColorBorderLight: new Color(0.4, 0.4, 0.4, 1),
+    ioColorBorderDark: new Color(0, 0, 0, 1),
+    ioColorGradientStart: new Color(1, 1, 1, 0.1),
+    ioColorGradientEnd: new Color(0, 0, 0, 0.2),
+    ioColorShadow: new Color(0, 0, 0, 0.2),
   },
 };
 
@@ -188,9 +215,21 @@ const theme = $({
  */
 @RegisterIoElement
 export class IoTheme extends IoElement {
-  static get Style(): string { return mixins; }
+  static get Style(): string {
+    return mixins;
+  }
 
-  static get Properties(): PropertyDeclarations { return persistantThemes.value[theme.value]; }
+  static get Properties(): PropertyDeclarations {
+    const props: PropertyDeclarations = {};
+    for (const p in persistantThemes.value[theme.value]) {
+      if (persistantThemes.value[theme.value][p] instanceof Object) {
+        props[p] = {value: persistantThemes.value[theme.value][p], type: Color, observe: true};
+      } else {
+        props[p] = persistantThemes.value[theme.value][p];
+      }
+    }
+    return props;
+  }
 
   @Property({value: true})
   declare lazy: boolean;
@@ -210,12 +249,12 @@ export class IoTheme extends IoElement {
     this.changed = this.changed.bind(this);
     this.throttle(this.changed, undefined, true);
   }
-  _toCss(rgba: number[]) {
-    const r = Math.floor(rgba[0] * 255);
-    const g = Math.floor(rgba[1] * 255);
-    const b = Math.floor(rgba[2] * 255);
-    if (rgba[3] !== undefined) {
-      return `rgba(${r}, ${g}, ${b}, ${rgba[3]})`;
+  _toCss(rgba: Color) {
+    const r = Math.floor(rgba.r * 255);
+    const g = Math.floor(rgba.g * 255);
+    const b = Math.floor(rgba.b * 255);
+    if (rgba.a !== undefined) {
+      return `rgba(${r}, ${g}, ${b}, ${rgba.a})`;
     } else {
       return `rgb(${r}, ${g}, ${b})`;
     }
@@ -232,6 +271,12 @@ export class IoTheme extends IoElement {
     this.ioFieldHeight2 = this.ioFieldHeight * 2;
     this.ioFieldHeight3 = this.ioFieldHeight * 3;
     this.ioFieldHeight4 = this.ioFieldHeight * 4;
+    this.ioLineHeight2 = this.ioLineHeight * 2;
+    this.ioLineHeight3 = this.ioLineHeight * 3;
+    this.ioLineHeight4 = this.ioLineHeight * 4;
+    this.ioSpacing2 = this.ioSpacing * 2;
+    this.ioSpacing3 = this.ioSpacing * 3;
+    this.ioSpacing4 = this.ioSpacing * 4;
 
     const propertyVariables = Array.from(this._properties.keys()).reduce(
       (result, prop) => {

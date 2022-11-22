@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from './element.js';
 import { PropertyInstance, PropertyDeclaration, Property } from './internals/property.js';
-import { IoThemeSingleton } from './theme.js';
+import { IoThemeSingleton, Color } from './theme.js';
 
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true}) as WebGLRenderingContext;
@@ -31,8 +31,6 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 
 const shadersCache = new WeakMap();
 let currentProgram: WebGLProgram | null;
-
-type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
 
 @RegisterIoElement
 export class IoGl extends IoElement {
@@ -198,9 +196,11 @@ export class IoGl extends IoElement {
         case Array:
           this._vecLengths[name] = property.value.length;
           return 'uniform vec' + property.value.length + ' ' + name + ';\n';
+        case Color:
+          this._vecLengths[name] = 4;
+          return 'uniform vec4 ' + name + ';\n';
         default:
       }
-      // TODO: implement matrices.
     }
     return '';
   }
@@ -261,10 +261,12 @@ export class IoGl extends IoElement {
     // TODO: improve code clarity
     this._vecLengths = {};
     this.theme._properties.forEach((property, name) => {
-      if (property.notify && property.type === Array) {
-        this._vecLengths[name] = property.value.length;
+      // TODO: consider making more type agnostic
+      if (property.notify && property.type === Color) {
+        this._vecLengths[name] = 4;
       }
     });
+
     this._properties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
       if (property.notify && property.type === Array) {
@@ -384,7 +386,7 @@ export class IoGl extends IoElement {
   updatePropertyUniform(name: string, property: PropertyInstance) {
     this.setShaderProgram();
     if (property.notify) {
-      this.setUniform(name, property.type as unknown as UniformTypes, property.value);
+      this.setUniform(name, property.value);
     }
   }
   updateThemeUniforms() {
@@ -392,19 +394,23 @@ export class IoGl extends IoElement {
       this.updatePropertyUniform(name, property);
     });
   }
-  setUniform(name: string, type: UniformTypes, value: any) {
+  setUniform(name: string, value: any) {
     const uniform = gl.getUniformLocation(this._shader, name);
+    let type: string = typeof value;
+    if (value instanceof Array) type = 'array';
     let _c;
     switch (type) {
-      case Boolean:
+      case 'boolean':
         gl.uniform1i(uniform, value ? 1 : 0);
         break;
-      case Number:
+      case 'number':
         gl.uniform1f(uniform, value ?? 1);
         break;
-      case Array:
+      case 'object':
+      case 'array':
         _c = [0, 1, 2, 3];
-        if (!(value instanceof Array) && typeof value === 'object') {
+        if (typeof value === 'object') {
+          // console.log(value);
           if (value.x !== undefined) _c = ['x', 'y', 'z', 'w'];
           else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a'];
           else if (value.h !== undefined) _c = ['h', 's', 'v', 'a'];
