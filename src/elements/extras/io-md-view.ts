@@ -140,12 +140,12 @@ export class IoMdView extends IoContent {
           return (window as any).hljs ? (window as any).hljs.highlightAuto(code).value : null;
         },
       });
+      this.loading = false;
       if (this.sanitize) {
         this.innerHTML = purify.sanitize(marked(markdown));
       } else {
         this.innerHTML = marked(markdown);
       }
-      this.loading = false;
       // this._scrollTo(this.anchor, true);
     }
   }
