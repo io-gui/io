@@ -32,6 +32,8 @@ export class IoSelector extends IoElement {
     return /* css */`
     :host {
       @apply --io-content;
+      color: var(--io-color);
+      background-color: var(--io-background-color);
     }
 
     @keyframes io-selector-spinner {

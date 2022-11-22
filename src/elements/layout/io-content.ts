@@ -13,8 +13,6 @@ export class IoContent extends IoElement {
       flex: 1 1 auto;
       overflow-x: hidden;
       overflow-y: auto;
-      color: var(--io-color);
-      background-color: var(--io-background-color);
       -webkit-overflow-scrolling: touch;
       -webkit-tap-highlight-color: transparent;
     }

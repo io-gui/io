@@ -99,7 +99,7 @@ export class IoOptionMenu extends IoElement {
     }
 
     // TODO: Clean up binding of value to menu model.
-    this.options.setSelectedPath([this.value]);
+    this.options.selectByPath([this.value]);
     for (let i = 0; i < this.options.length; i++) {
       const option = this.options[i];
       if (option.value === this.value) {

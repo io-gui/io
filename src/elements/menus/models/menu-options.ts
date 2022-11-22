@@ -8,9 +8,6 @@ import { Property } from '../../../core/internals/property.js';
 @RegisterIoNode
 export class MenuOptions extends IoNodeMixin(Array) {
 
-  @Property(Array)
-  declare items: Array<MenuItem>;
-
   @Property(MenuPath)
   declare path: MenuPath;
 
@@ -40,9 +37,14 @@ export class MenuOptions extends IoNodeMixin(Array) {
     }
   }
 
-  constructor(options: Array<MenuItem | any> = [], props = {}) {
+  constructor(items: Array<MenuItem | any> = [], props = {}) {
     super(props);
-    for (let i = 0; i < options.length; i++) this.push(options[i]);
+    if (!(items instanceof Array)) {
+      console.log(items, this);
+    }
+    items instanceof Array ? this.push(...items) : this.push(items);
+    // TODO: figure out where number is coming from
+    // this.push(...items);
   }
 
   pathChanged() {
@@ -50,17 +52,17 @@ export class MenuOptions extends IoNodeMixin(Array) {
     if (!path.length) {
       for (let i = 0; i < this.length; i++) {
         if (this[i].select === 'pick') {
-          this[i].setSelectedPath(false, []);
+          this[i].selectByPath(false, []);
         }
       }
     } else {
-      this.setSelectedPath(path);
+      this.selectByPath(path);
       const selected = path[0];
       for (let i = 0; i < this.length; i++) {
         if (this[i].select === 'pick' && this[i].value === selected) {
           const nextpath = [...path];
           nextpath.shift();
-          this[i].setSelectedPath(true, nextpath);
+          this[i].selectByPath(true, nextpath);
           return;
         }
       }
@@ -72,7 +74,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
     // console.log('OPTION PATH CHANGED', targetPath);
     if (target.select === 'pick') {
       if (targetPath.length) {
-        this.setSelectedPath([target.value, ...targetPath]);
+        this.selectByPath([target.value, ...targetPath]);
       }
     }
   }
@@ -83,10 +85,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
       if (target.selected) {
         for (let i = 0; i < this.length; i++) {
           if (this[i].select === 'pick' && this[i] !== target) {
-            this[i].setSelectedPath(false, []);
+            this[i].selectByPath(false, []);
           }
         }
-        this.setSelectedPath([target.value, ...targetPath]);
+        this.selectByPath([target.value, ...targetPath]);
       } else {
         let hasSelected = false;
         for (let i = 0; i < this.length; i++) {
@@ -95,17 +97,18 @@ export class MenuOptions extends IoNodeMixin(Array) {
             continue;
           }
         }
-        if (!hasSelected) this.setSelectedPath([]);
+        if (!hasSelected) this.selectByPath([]);
       }
     }
   }
-  setSelectedPath(path: any[] = []) {
+
+  selectByPath(path: any[] = []) {
     this.path.value = path;
     // TODO: TEMP HACK (pathChanged should not happen due to readonly)
     if (!path.length) {
       for (let i = 0; i < this.length; i++) {
         if (this[i].select === 'pick') {
-          this[i].setSelectedPath(false, []);
+          this[i].selectByPath(false, []);
         }
       }
     }
@@ -119,7 +122,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
           const selected = this[i].options.selectDefault();
           if (selected) return true;
         } else {
-          this[i].setSelectedPath(true, []);
+          this[i].selectByPath(true, []);
           return true;
         }
       }

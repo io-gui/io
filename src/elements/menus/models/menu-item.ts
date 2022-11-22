@@ -74,13 +74,13 @@ export class MenuItem extends IoNode {
     }
     super(option);
     if (this.select === 'pick' && this.options.length) {
-      this.setSelectedPath(!!this.options.path.value.length, [...this.options.path.value]);
+      this.selectByPath(!!this.options.path.value.length, [...this.options.path.value]);
     }
   }
 
   onOptionsSelectedPathChanged() {
     if (this.select === 'pick') {
-      this.setSelectedPath(!!this.options.path.value.length, [...this.options.path.value]);
+      this.selectByPath(!!this.options.path.value.length, [...this.options.path.value]);
     }
   }
   optionsChanged() {
@@ -90,12 +90,12 @@ export class MenuItem extends IoNode {
   selectedChanged() {
      if (this.select === 'pick') {
       if (!this.selected) {
-        this.options.setSelectedPath([]);
-        this.setSelectedPath(false, []);
+        this.options.selectByPath([]);
+        this.selectByPath(false, []);
       }
     }
   }
-  setSelectedPath(selected: boolean, path: string[]) {
+  selectByPath(selected: boolean, path: string[]) {
     this.options.path.value = path;
     this.selected = selected;
     this.dispatchEvent('path-changed', this.options.path); // TODO: TEMP HACK

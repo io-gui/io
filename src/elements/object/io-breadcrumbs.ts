@@ -61,13 +61,16 @@ export class IoBreadcrumbs extends IoElement {
   }
   valueChanged() {
     this.options.length = 0;
+    // TODO: check for memory leaks
     this.options.push(this.value);
   }
   selectedChanged() {
     const index = this.options.indexOf(this.selected);
     if (index !== -1) {
+      // TODO: check for memory leaks
       this.options.length = index + 1;
     } else {
+      // TODO: check for memory leaks
       this.options.push(this.selected);
     }
   }

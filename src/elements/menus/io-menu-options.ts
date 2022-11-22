@@ -139,6 +139,9 @@ export class IoMenuOptions extends IoElement {
       'touchstart': '_stopPropagation',
     };
   }
+  // constructor(properties: Record<string, any> = {}) {
+  //   super(properties);
+  // }
   connectedCallback() {
     super.connectedCallback();
     this.inlayer = this.parentElement === Layer;
@@ -307,16 +310,15 @@ export class IoMenuOptions extends IoElement {
       elements.push(['io-string', {id: 'search', value: this.bind('search'), live: true}]);
     }
     if (this._options) {
-      elements.push(...[this._options.map((option: any) => {
-        return ['io-menu-item', {
-            $parent: this,
-            option: option,
-            direction: itemDirection,
-            depth: this.depth,
-            lazy: false,
-          }];
-        }
-      )]);
+      for (let i = 0; i < this._options.length; i++) {
+        elements.push(['io-menu-item', {
+          $parent: this,
+          option: this._options[i],
+          direction: itemDirection,
+          depth: this.depth,
+          lazy: false,
+        }]);
+      }
     }
     if (this.horizontal) {
       elements.splice(0, 0, ...this.slotted);

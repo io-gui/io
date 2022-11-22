@@ -416,9 +416,11 @@ export class IoTabs extends IoElement {
   changed() {
     // TODO: consider testing with large element collections and optimizing.
     const options = [];
+    // TODO: Investigate .map
     const _elements = this.elements.map((element: any) => { return element[1].name; });
     for (let i = 0; i < _elements.length; i++) {
       const added = this.filter && this.filter.indexOf(_elements[i]) !== -1;
+      // TODO: check for memory leaks
       options.push({
         icon: added ? '⌦' : '·',
         value: _elements[i],
