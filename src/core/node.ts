@@ -52,6 +52,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Creates a class instance and initializes the internals.
      * @param {Object} properties - Initial property values.
      */
+    constructor(...args: any[]); // TODO: reconsider?
     constructor(properties: Record<string, any> = {}, ...args: any[]) {
       super(...args);
 
@@ -68,10 +69,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
       Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
-
-      if (this._protochain.observedObjectProperties.length) {
-        window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
-      }
 
       for (const name in this._protochain.properties) {
         const property = new PropertyInstance(this._protochain.properties[name]);
@@ -98,6 +95,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         });
       }
       this.applyProperties(properties);
+
+      if (this._protochain.observedObjectProperties.length) {
+        window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
+      }
+
       this.init();
     }
     /**
