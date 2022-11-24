@@ -1,8 +1,9 @@
 import { RegisterIoElement } from '../../core/element.js';
+import { Property } from '../../core/internals/property.js';
 import { MenuItem } from './models/menu-item.js';
-import {IoField} from '../basic/io-field.js';
-import {IoLayerSingleton as Layer} from '../../core/layer.js';
-import {IoMenuOptions} from './io-menu-options.js';
+import { IoField } from '../basic/io-field.js';
+import { IoLayerSingleton as Layer } from '../../core/layer.js';
+import { IoMenuOptions } from './io-menu-options.js';
 
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
@@ -28,6 +29,7 @@ export class IoMenuItem extends IoField {
       flex: 0 0 auto;
       flex-direction: row;
       border-radius: 0;
+      background: black;
     }
     :host > * {
       pointer-events: none;
@@ -76,94 +78,104 @@ export class IoMenuItem extends IoField {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      option: {
-        type: MenuItem,
-      },
-      expanded: {
-        value: false,
-        reflect: 'prop',
-      },
-      direction: {
-        value: 'bottom',
-        reflect: 'prop',
-      },
-      icon: String,
-      $parent: null,
-      $options: null,
-      depth: Infinity,
-      lazy: true,
-    };
-  }
+
+  @Property({type: MenuItem, observe: true})
+  declare item: MenuItem;
+
+  @Property({value: false, reflect: 'prop'})
+  declare expanded: boolean;
+
+  @Property({value: 'bottom', reflect: 'prop'})
+  declare direction: string;
+
+  @Property('')
+  declare icon: string;
+
+  @Property(Infinity)
+  declare depth: number;
+
+  // @Property(true)
+  // declare lazy: boolean;
+
+  $options: IoMenuOptions | undefined;
+
   static get Listeners(): any {
     return {
       'click': 'preventDefault',
     };
   }
-  _option?: MenuItem;
   preventDefault(event: Event) {
     event.stopPropagation();
     event.preventDefault();
   }
   get hasmore() {
-    return this.option.hasmore && this.depth > 0;
+    return this.item.hasmore && this.depth > 0;
   }
   get inlayer() {
     return this.$parent && this.$parent.inlayer;
   }
+  get $parent() {
+    return this.parentElement;
+  }
   connectedCallback() {
     super.connectedCallback();
-    if (this.$options) Layer.appendChild(this.$options);
+    if (this.$options) Layer.appendChild(this.$options as unknown as HTMLElement);
     if (!this.inlayer) Layer.addEventListener('pointermove', this._onLayerPointermove);
     if (!this.inlayer) Layer.addEventListener('pointerup', this._onLayerPointerup);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.$options && this.$options.inlayer) Layer.removeChild(this.$options);
+    if (this.$options && this.$options.inlayer) Layer.removeChild(this.$options as unknown as HTMLElement);
     Layer.removeEventListener('pointermove', this._onLayerPointermove);
     Layer.removeEventListener('pointerup', this._onLayerPointerup);
   }
-  _onClick() {
-    const option = this.option;
-    if (this.hasmore) {
-      if (!this.expanded) this.expanded = true;
-    } else if (option.select === 'toggle') {
-      option.selected = !option.selected;
-    } else {
-      if (option.action) {
-        option.action.apply(null, [option.value]);
-      }
-      if (option.select === 'pick') {
-        if (option.hasmore && this.depth <= 0) {
-          option.options.selectDefault();
-        } else {
-          option.selected = true;
-        }
-      } else if (option.select === 'link') {
-        window.open(option.value, '_blank');
-      }
-      this.dispatchEvent('item-clicked', option, true);
-      this.throttle(this._onCollapse, undefined, true);
-    }
+  _onLayerPointermove(event: PointerEvent) {
+    if (this.expanded) this._onPointermove(event);
   }
-  _onItemClicked(event: PointerEvent) {
-    const item = event.composedPath()[0];
-    if (item !== (this as any)) {
-      event.stopImmediatePropagation();
-      this.dispatchEvent('item-clicked', event.detail, true);
-    }
-    if (this.expanded) this.throttle(this._onCollapse, undefined, true);
+  _onLayerPointerup(event: PointerEvent) {
+    if (this.expanded) this._onPointerup(event);
   }
+  // _onClick() {
+  //   const item = this.item;
+  //   if (this.hasmore) {
+  //     if (!this.expanded) this.expanded = true;
+  //   } else if (item.select === 'toggle') {
+  //     item.selected = !item.selected;
+  //   } else {
+  //     if (item.action) {
+  //       item.action.apply(null, [item.value]);
+  //     }
+  //     if (item.select === 'pick') {
+  //       if (item.hasmore && this.depth <= 0) {
+  //         item.items.selectDefault();
+  //       } else {
+  //         item.selected = true;
+  //       }
+  //     } else if (item.select === 'link') {
+  //       window.open(item.value, '_blank');
+  //     }
+  //     this.dispatchEvent('item-clicked', item, true);
+  //     this.throttle(this._onCollapse, undefined, true);
+  //   }
+  // }
+  // _onItemClicked(event: PointerEvent) {
+  //   const item = event.composedPath()[0];
+  //   if (item !== (this as any)) {
+  //     event.stopImmediatePropagation();
+  //     this.dispatchEvent('item-clicked', event.detail, true);
+  //   }
+  //   if (this.expanded) this.throttle(this._onCollapse, undefined, true);
+  // }
   _onPointerdown(event: PointerEvent) {
     event.stopPropagation();
     event.preventDefault(); // Prevents focus
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
+    // TODO: why is this needed?
     if (this.expanded || event.pointerType === 'mouse' || this.inlayer) {
       this.focus();
-      if (this.option.options) this.expanded = true;
+      if (this.item.options) this.expanded = true;
     }
     // eslint-disable-next-line
     hovered = this;
@@ -174,6 +186,7 @@ export class IoMenuItem extends IoField {
   }
   _onPointermove(event: PointerEvent) {
     event.stopPropagation();
+    // TODO: why is this needed?
     if (!this.expanded && event.pointerType === 'touch' && !this.inlayer) return;
 
     const clipped = !!this.$parent && !!this.$parent.style.height;
@@ -205,32 +218,6 @@ export class IoMenuItem extends IoField {
       }
     }
   }
-  _gethovered(event: PointerEvent) {
-    const items = getElementDescendants(getRootElement(this as unknown as IoMenuItem));
-    for (let i = items.length; i--;) {
-      if (isPointerAboveItem(event, items[i])) return items[i];
-    }
-  }
-  _expandHovered() {
-    if (hovered) {
-      hovered.focus();
-      if (hovered.hasmore) {
-        if (hovered.$options) {
-          const descendants = getElementDescendants(hovered.$options);
-          for (let i = descendants.length; i--;) {
-            descendants[i].expanded = false;
-          }
-        }
-        hovered.expanded = true;
-      }
-    }
-  }
-  _onLayerPointermove(event: PointerEvent) {
-    if (this.expanded) this._onPointermove(event);
-  }
-  _onLayerPointerup(event: PointerEvent) {
-    if (this.expanded) this._onPointerup(event);
-  }
   _onPointerup(event: PointerEvent) {
     event.stopPropagation();
     this.removeEventListener('pointermove', this._onPointermove);
@@ -244,173 +231,168 @@ export class IoMenuItem extends IoField {
       this.throttle(this._onCollapseRoot);
     }
   }
-  _onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this._onClick();
-      return;
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      this.throttle(this._onCollapseRoot);
-      return;
+  _gethovered(event: PointerEvent) {
+    const items = getMenuDescendants(getMenuRoot(this));
+    for (let i = items.length; i--;) {
+      if (isPointerAboveIoMenuItem(event, items[i])) return items[i] as IoMenuElementType;
     }
-
-    let command = '';
-    if (this.direction === 'left' || this.direction === 'right') {
-      if (event.key === 'ArrowUp') command = 'prev';
-      if (event.key === 'ArrowRight') command = 'in';
-      if (event.key === 'ArrowDown') command = 'next';
-      if (event.key === 'ArrowLeft') command = 'out';
-    } else {
-      if (event.key === 'ArrowUp') command = 'out';
-      if (event.key === 'ArrowRight') command = 'next';
-      if (event.key === 'ArrowDown') command = 'in';
-      if (event.key === 'ArrowLeft') command = 'prev';
-    }
-    if (this.inlayer && event.key === 'Tab') command = 'next';
-
-    const siblings = this.$parent ? [...this.$parent.children] : [];
-    const index = siblings.indexOf(this);
-    if (command && (this.inlayer || this.expanded)) {
-      event.preventDefault();
-      switch (command) {
-        case 'prev': {
-          const prev = siblings[(index + siblings.length - 1) % (siblings.length)];
-          this.expanded = false;
-          if (prev) {
-            if (prev.hasmore) prev.expanded = true;
-            prev.focus();
+    return undefined;
+  }
+  _expandHovered() {
+    if (hovered) {
+      hovered.focus();
+      if (hovered.hasmore) {
+        if (hovered.$options) {
+          const descendants = getMenuDescendants(hovered.$options);
+          for (let i = descendants.length; i--;) {
+            descendants[i].expanded = false;
           }
-          break;
         }
-        case 'next': {
-          const next = siblings[(index + 1) % (siblings.length)];
-          this.expanded = false;
-          if (next) {
-            if (next.hasmore) next.expanded = true;
-            next.focus();
-          }
-          break;
-        }
-        case 'in':
-          if (this.$options && this.$options.children.length) this.$options.children[0].focus();
-          break;
-        case 'out':
-          this.expanded = false;
-          if (this.$parent && this.$parent.$parent) {
-            this.$parent.$parent.focus();
-          }
-          break;
-        default:
-          break;
+        hovered.expanded = true;
       }
-    } else {
-      super._onKeydown(event);
     }
   }
+  // _onKeydown(event: KeyboardEvent) {
+  //   if (event.key === 'Enter' || event.key === ' ') {
+  //     event.preventDefault();
+  //     this._onClick();
+  //     return;
+  //   } else if (event.key === 'Escape') {
+  //     event.preventDefault();
+  //     this.throttle(this._onCollapseRoot);
+  //     return;
+  //   }
+
+  //   let command = '';
+  //   if (this.direction === 'left' || this.direction === 'right') {
+  //     if (event.key === 'ArrowUp') command = 'prev';
+  //     if (event.key === 'ArrowRight') command = 'in';
+  //     if (event.key === 'ArrowDown') command = 'next';
+  //     if (event.key === 'ArrowLeft') command = 'out';
+  //   } else {
+  //     if (event.key === 'ArrowUp') command = 'out';
+  //     if (event.key === 'ArrowRight') command = 'next';
+  //     if (event.key === 'ArrowDown') command = 'in';
+  //     if (event.key === 'ArrowLeft') command = 'prev';
+  //   }
+  //   if (this.inlayer && event.key === 'Tab') command = 'next';
+
+  //   const siblings = this.$parent ? [...this.$parent.children] : [];
+  //   const index = siblings.indexOf(this);
+  //   if (command && (this.inlayer || this.expanded)) {
+  //     event.preventDefault();
+  //     switch (command) {
+  //       case 'prev': {
+  //         const prev = siblings[(index + siblings.length - 1) % (siblings.length)];
+  //         this.expanded = false;
+  //         if (prev) {
+  //           if (prev.hasmore) prev.expanded = true;
+  //           prev.focus();
+  //         }
+  //         break;
+  //       }
+  //       case 'next': {
+  //         const next = siblings[(index + 1) % (siblings.length)];
+  //         this.expanded = false;
+  //         if (next) {
+  //           if (next.hasmore) next.expanded = true;
+  //           next.focus();
+  //         }
+  //         break;
+  //       }
+  //       case 'in':
+  //         if (this.$options && this.$options.children.length) this.$options.children[0].focus();
+  //         break;
+  //       case 'out':
+  //         this.expanded = false;
+  //         if (this.$parent && this.$parent.$parent) {
+  //           this.$parent.$parent.focus();
+  //         }
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   } else {
+  //     super._onKeydown(event);
+  //   }
+  // }
   _onCollapse() {
     this.expanded = false;
   }
   _onCollapseRoot() {
-    getRootElement(this as unknown as IoMenuItem).expanded = false;
+    getMenuRoot(this as unknown as IoMenuItem).expanded = false;
   }
   expandedChanged() {
-    if (!this.$options) this.$options = new IoMenuOptions();
     if (this.expanded && this.depth > 0) {
 
-      if (this.$options.parentElement !== Layer) Layer.appendChild(this.$options);
+      if (this.item.options && this.$options === undefined) {
+        this.$options = new IoMenuOptions({
+          depth: this.depth - 1,
+          expanded: this.bind('expanded'),
+          options: this.item.options,
+          position: this.direction,
+        });
+        this.$options.$parent = this;
+      }
 
-      const $allitems = getElementDescendants(getRootElement(this));
-      const $ancestoritems = getElementAncestors(this);
+      // Colapse all siblings and their ancestors
+      const $allitems = getMenuDescendants(getMenuRoot(this));
+      const $ancestoritems = getMenuAncestors(this);
       for (let i = $allitems.length; i--;) {
         if ($ancestoritems.indexOf($allitems[i]) === -1) {
           $allitems[i].expanded = false;
         }
       }
 
-      const $descendants = getElementDescendants(this.$options);
-      for (let i = $descendants.length; i--;) {
-        $descendants[i].expanded = false;
-      }
+    }
 
-      this.$options.addEventListener('item-clicked', this._onItemClicked);
-    } else {
-      const $descendants = getElementDescendants(this);
-      for (let i = $descendants.length; i--;) {
-        $descendants[i].expanded = false;
+    if (this.$options) {
+      if (this.expanded) {
+        if (this.$options.parentElement !== Layer) Layer.appendChild(this.$options as unknown as HTMLElement);
+        this.$options?.addEventListener('item-clicked', this._onItemClicked);
+      } else {
+        this.$options?.removeEventListener('item-clicked', this._onItemClicked);
       }
-
-      this.$options.removeEventListener('item-clicked', this._onItemClicked);
+      const $descendants = getMenuDescendants(this.$options);
+      for (let i = $descendants.length; i--;) $descendants[i].expanded = false;
     }
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  optionChanged(change: CustomEvent) {
-    if (this._option) {
-      this._option.removeEventListener('changed', this.onOptionChanged);
-      delete this._option;
-    }
-    if (this.option) {
-      this._option = this.option;
-      this.option.addEventListener('changed', this.onOptionChanged);
-    }
-  }
-  onOptionChanged() {
-    this.changed();
   }
   changed() {
-    const option = this.option;
-    debug: {
-      if (option === undefined) {
-        console.warn('menu-item has no option defined!');
-      }
-    }
-    // TODO: reconsider
-    if (option === undefined) return;
-
-    const icon = this.icon || option.icon;
-    this.setAttribute('selected', option.selected);
+    const icon = this.icon || this.item.icon;
+    this.setAttribute('selected', this.item.selected);
     this.setAttribute('hasmore', this.hasmore);
     this.template([
       icon ? ['io-icon', {icon: icon}] : null,
-      ['span', {class: 'io-menu-label'}, option.label],
-      ['span', {class: 'io-menu-hint'}, option.hint],
+      ['span', {class: 'io-menu-label'}, this.item.label],
+      ['span', {class: 'io-menu-hint'}, this.item.hint],
     ]);
-    if (this.$options) {
-      this.$options.setProperties({
-        $parent: this,
-        depth: this.depth - 1,
-        expanded: this.bind('expanded'),
-        options: option.options,
-        position: this.direction,
-      });
-    }
   }
 }
 
-export function getElementDescendants(element: IoMenuItem): any {
+type IoMenuElementType = IoMenuItem | IoMenuOptions;
+
+export function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[] {
   const descendants = [];
-  let items = [];
-  // TODO: unhack
-  if ('io-menu-item, io-option-menu'.search(element.localName) !== -1) {
-    descendants.push(element);
-    if (element.$options) {
-      items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
-    }
-  } else if (element.localName === 'io-context-menu') {
-    if (element.$options) {
-      items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
+  if (element.$options) {
+    if (element.expanded) {
+      descendants.push(element.$options);
+      const items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
+      for (let i = items.length; i--;) {
+        descendants.push(items[i]);
+        if (items[i].expanded) descendants.push(...getMenuDescendants(items[i]));
+      }
     }
   } else {
-    items = element.querySelectorAll('io-menu-item, io-option-menu');
-  }
-  for (let i = items.length; i--;) {
-    descendants.push(items[i]);
-    if (items[i].expanded) descendants.push(...getElementDescendants(items[i]));
+    const items = element.querySelectorAll('io-menu-item, io-option-menu');
+    for (let i = items.length; i--;) {
+      descendants.push(items[i]);
+      if (items[i].expanded) descendants.push(...getMenuDescendants(items[i]));
+    }
   }
   return descendants;
 }
 
-function getElementAncestors(element: IoMenuItem) {
+export function getMenuAncestors(element: IoMenuElementType) {
   let item = element;
   const ancestors = [element];
   while (item && item.$parent) {
@@ -420,7 +402,7 @@ function getElementAncestors(element: IoMenuItem) {
   return ancestors;
 }
 
-function getRootElement(element: IoMenuItem) {
+export function getMenuRoot(element: IoMenuElementType) {
   let root = element;
   while (root && root.$parent) {
     root = root.$parent;
@@ -428,23 +410,18 @@ function getRootElement(element: IoMenuItem) {
   return root;
 }
 
-function isPointerAboveItem(event: PointerEvent, element: IoMenuItem) {
-  const r = element.getBoundingClientRect();
-  const x = event.clientX;
-  const y = event.clientY;
+function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
   if (['io-menu-item', 'io-option-menu'].indexOf(element.localName) !== -1) {
     if (!element.inlayer || element.parentElement.expanded) {
-      const hovered = (
-        r.top <= y &&
-        r.bottom >= y &&
-        r.left <= x &&
-        r.right >= x
-        );
+      const r = element.getBoundingClientRect();
+      const x = event.clientX;
+      const y = event.clientY;
+      const hovered = (r.top <= y && r.bottom >= y && r.left <= x && r.right >= x );
       return hovered;
     }
   }
   return null;
 }
 
-let hovered: any;
-let hoveredParent: any;
+let hovered: IoMenuElementType | undefined;
+let hoveredParent: IoMenuElementType | undefined;

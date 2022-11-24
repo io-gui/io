@@ -142,9 +142,8 @@ export class IoMenuOptions extends IoElement {
   // constructor(properties: Record<string, any> = {}) {
   //   super(properties);
   // }
-  connectedCallback() {
-    super.connectedCallback();
-    this.inlayer = this.parentElement === Layer;
+  get inlayer() {
+    return this.parentElement === Layer;
   }
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;
@@ -226,7 +225,6 @@ export class IoMenuOptions extends IoElement {
   }
   expandedChanged() {
     if (this.expanded) {
-      this.inlayer = this.parentElement === Layer;
       if (this.inlayer && this.$parent) {
         this._onExpandedChangedLazy();
         // TODO: unhack incorrect this.rect on first expand.
@@ -312,8 +310,7 @@ export class IoMenuOptions extends IoElement {
     if (this._options) {
       for (let i = 0; i < this._options.length; i++) {
         elements.push(['io-menu-item', {
-          $parent: this,
-          option: this._options[i],
+          item: this._options[i],
           direction: itemDirection,
           depth: this.depth,
           lazy: false,

@@ -124,7 +124,7 @@
   <body>
     <script type="module">
 
-    import { MenuOptions, RegisterIoElement, MenuPath, IoSelectorTabs, IoStorage as $ } from 'io-gui';
+    import { MenuOptions, RegisterIoElement, IoSelectorTabs, IoStorage as $ } from 'io-gui';
 
     const OPTIONS = new MenuOptions([
       {label: 'About', value: 'home', icon: 'icons:io_logo'},
@@ -229,10 +229,10 @@
       ]},
       {label: 'Tests', value: 'tests'},
     ], {
-      path: new MenuPath({string: $({key: 'path', storage: 'hash', value: 'home'})}),
+      string: $({key: 'path', storage: 'hash', value: 'home'}),
     });
 
-    console.log(OPTIONS.path.value);
+    console.log(OPTIONS.path);
     console.log(OPTIONS[1].label, OPTIONS[1].selected);
     console.log(OPTIONS[1].options[1].label, OPTIONS[1].options[1].selected);
     console.log(OPTIONS[1].options[1].options[0].label, OPTIONS[1].options[1].options[0].selected);
@@ -245,7 +245,7 @@
           cache: true,
           horizontal: true,
           options: OPTIONS,
-          selected: OPTIONS.path.bind('root'),
+          selected: OPTIONS.bind('root'),
           depth: 1,
           elements: [
             ['io-md-view', {
@@ -253,7 +253,7 @@
               src: './README.md'}],
             ['io-selector', {
               name: 'docs',
-              selected: OPTIONS.getItem('docs').path.bind('root'),
+              selected: OPTIONS.getItem('docs').options.bind('root'),
               options: OPTIONS.getItem('docs').options,
               elements: [
                 ['io-md-view', {name: 'development-notes', src: './docs/development-notes.md'}],
@@ -261,26 +261,26 @@
                   name: 'getting-started',
                   src: './docs/getting-started.md',
                   sanitize: false,
-                  anchor: OPTIONS.getItem('docs').getSubitem('getting-started').path.bind('string'),
+                  anchor: OPTIONS.getItem('docs').getSubitem('getting-started').options.bind('string'),
                   options: OPTIONS.getItem('docs').getSubitem('getting-started').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'learn-more',
                   sanitize: false,
                   src: './docs/learn-more.md',
-                  anchor: OPTIONS.getItem('docs').getSubitem('learn-more').path.bind('string'),
+                  anchor: OPTIONS.getItem('docs').getSubitem('learn-more').options.bind('string'),
                   options: OPTIONS.getItem('docs').getSubitem('learn-more').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'reference',
                   sanitize: false,
                   // search: true, // TODO: implement
-                  src: OPTIONS.getItem('docs').getSubitem('reference').path.bind('root'),
+                  src: OPTIONS.getItem('docs').getSubitem('reference').options.bind('root'),
                   options: OPTIONS.getItem('docs').getSubitem('reference').options,
                 }],
               ]
             }],
-            ['io-selector', {name: 'demos', selected: OPTIONS.getItem('demos').path.bind('root'), elements: [
+            ['io-selector', {name: 'demos', selected: OPTIONS.getItem('demos').options.bind('root'), elements: [
               ['io-demo-elements', {name: 'elements', import: './demos/elements.js'}],
               ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],
               ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],
