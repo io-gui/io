@@ -27,6 +27,13 @@ export type AnyEventListener = EventListener |
                         FocusEventListener |
                         TouchEventListener;
 
+type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+
+export type IoNodeArgs = {
+  lazy?: boolean;
+  [key: prefix<string, 'on-'>]: string | ((event: CustomEvent<any>) => void)
+}
+
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -53,7 +60,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {Object} properties - Initial property values.
      */
     constructor(...args: any[]); // TODO: reconsider?
-    constructor(properties: Record<string, any> = {}, ...args: any[]) {
+    constructor(properties: IoNodeArgs = {}, ...args: any[]) {
       super(...args);
 
       debug: {

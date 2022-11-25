@@ -1,5 +1,5 @@
 import { EventDispatcher } from './internals/eventDispatcher.js';
-import { IoNode, IoNodeMixin, RegisterIoNode } from './node.js';
+import { IoNode, IoNodeMixin, RegisterIoNode, IoNodeArgs } from './node.js';
 import { Property } from './internals/property.js';
 
 // Global mixin record
@@ -17,13 +17,31 @@ const resizeObserver = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();
 });
 
-type VDOMArray =
-  [string, Record<string, any> | string | VDOMArray[] ] |
-  [string, Record<string, any> | string, VDOMArray[] | string ];
+export type IoElementArgs = IoNodeArgs & {
+  tabindex?: string;
+  contenteditable?: boolean;
+  class?: string;
+  role?: string;
+  label?: string;
+  name?: string;
+  title?: string;
+  id?: string;
+  hidden?: boolean;
+  disabled?: boolean;
+  [key: string]: any, // TODO: remove and make specific types
+}
 
-type VDOMElement = {
+// export type VDOMArray<T = Record<never, never>> =
+//   [string, Partial<T> & IoElementArgs | string | VDOMArray<T>[] ] |
+//   [string, Partial<T> & IoElementArgs | string, VDOMArray<T>[] | string ];
+
+export type VDOMArray =
+  [string, IoElementArgs | string | VDOMArray[] ] |
+  [string, IoElementArgs | string, VDOMArray[] | string ];
+
+  export type VDOMElement = {
   name: string,
-  props: Record<string, any>,
+  props: IoElementArgs,
   children: VDOMElement[]
 }
 

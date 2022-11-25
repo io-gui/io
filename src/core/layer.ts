@@ -15,7 +15,7 @@ window.addEventListener('blur', () => {
   });
 }, {capture: true});
 
-type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
+export type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
 
 /**
  * This element is designed to be used as a singleton `IoLayerSingleton`.
