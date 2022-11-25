@@ -38,8 +38,8 @@ export class IoContent extends IoElement {
   declare visible: boolean;
 
   declare private _observer: MutationObserver;
-  private _scrollThrottle: ReturnType<typeof setTimeout> | undefined;
-  private _scrollToThrottle: ReturnType<typeof setTimeout> | undefined;
+  private _scrollThrottle?: ReturnType<typeof setTimeout>;
+  private _scrollToThrottle?: ReturnType<typeof setTimeout>;
   private _pauseScroll = false;
   private _elements: HTMLElement[] = [];
 

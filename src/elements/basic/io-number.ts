@@ -448,7 +448,7 @@ export class IoNumberLadder extends IoElement {
   declare role: string;
 
   @Property(undefined)
-  declare src: any;
+  declare src?: IoNumber;
 
   @Property({value: false, reflect: 'prop'})
   declare expanded: boolean;
@@ -495,7 +495,7 @@ export class IoNumberLadder extends IoElement {
   }
   _onLadderStepChange(event: CustomEvent) {
     const src = this.src;
-    if (this.src) {
+    if (src) {
       const step = event.detail.step;
       const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
       let newValue = Math.min(this.max, Math.max(this.min, value + step));

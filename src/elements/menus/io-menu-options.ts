@@ -135,11 +135,11 @@ export class IoMenuOptions extends IoElement {
   @Property('listbox')
   declare role: string;
 
- @Property(undefined)
- declare $parent: IoMenuItem | undefined;
+  @Property(undefined)
+  declare $parent?: IoMenuItem;
 
- @Property({type: Array})
- declare private _overflownItems: IoMenuItem[];
+  @Property({type: Array})
+  declare private _overflownItems: IoMenuItem[];
 
   static get Listeners() {
     return {

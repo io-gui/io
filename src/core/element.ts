@@ -226,7 +226,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
 
   @Property({type: Object, notify: false})
-  declare $: Record<string, HTMLElement | IoElement>;
+  declare $: Record<string, any>; // TODO: Add type safety.
 
   @Property({value: '', reflect: 'prop'})
   declare tabindex: string;

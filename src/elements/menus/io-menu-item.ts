@@ -95,7 +95,7 @@ export class IoMenuItem extends IoField {
   declare depth: number;
 
   @Property(undefined)
-  $options: IoMenuOptions | undefined;
+  $options?: IoMenuOptions;
 
   static get Listeners(): any {
     return {

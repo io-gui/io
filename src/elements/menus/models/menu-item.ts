@@ -38,7 +38,7 @@ export class MenuItem extends IoNode {
   declare disabled: boolean;
 
   @Property(undefined)
-  declare action: (value?: any) => void | undefined;
+  declare action?: (value?: any) => void;
 
   @Property('pick')
   declare select: MenuItemSelectType;
