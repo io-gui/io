@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from './element.js';
 import { PropertyInstance, PropertyDeclaration, Property } from './internals/property.js';
-import { IoThemeSingleton, Color } from './theme.js';
+import { IoTheme, IoThemeSingleton, Color } from './theme.js';
 
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true}) as WebGLRenderingContext;
@@ -42,7 +42,7 @@ export class IoGl extends IoElement {
         -webkit-tap-highlight-color: transparent;
         user-select: none;
       }
-      :host > .io-gl-canvas {
+      :host > canvas {
         position: absolute;
         top: 0;
         left: 0;
@@ -53,7 +53,7 @@ export class IoGl extends IoElement {
       :host[aria-invalid] {
         border: var(--io-border-error);
       }
-      :host[aria-invalid] > .io-gl-canvas {
+      :host[aria-invalid] > canvas {
         opacity: 0.5;
       }
       :host:focus {
@@ -71,10 +71,12 @@ export class IoGl extends IoElement {
   @Property({value: 1})
   declare pxRatio: number;
 
-  @Property({observe: true, type: Object})
-  declare theme: typeof IoThemeSingleton;
+  @Property({observe: true, type: IoTheme})
+  declare theme: IoTheme;
 
   private _needsResize = false;
+  private _canvas: HTMLCanvasElement;
+  private _ctx: CanvasRenderingContext2D;
 
   static get Vert() {
     return /* glsl */`
@@ -255,8 +257,9 @@ export class IoGl extends IoElement {
     return program;
   }
   constructor(properties: Record<string, any> = {}) {
+    properties.theme = IoThemeSingleton;
+
     super(properties);
-    this.theme = IoThemeSingleton;
 
     // TODO: improve code clarity
     this._vecLengths = {};
@@ -293,11 +296,9 @@ export class IoGl extends IoElement {
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(uv);
 
-    // this.template([['img', {id: 'canvas'}]]);
-    // this.$.canvas.onload = () => { this.$.canvas.loading = false; };
-
-    this.template([['canvas', {id: 'canvas', class: 'io-gl-canvas'}]]);
-    this.$.canvas.ctx = this.$.canvas.getContext('2d');
+    this._canvas = document.createElement('canvas');
+    this.appendChild(this._canvas);
+    this._ctx = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 
     this.updateThemeUniforms();
   }
@@ -317,8 +318,8 @@ export class IoGl extends IoElement {
 
     if (hasResized) {
       // NOTE: Resizing only in inline CSS. Buffer resize postponed until `_onRender()`.`
-      this.$.canvas.style.width = Math.floor(width) + 'px';
-      this.$.canvas.style.height = Math.floor(height) + 'px';
+      this._canvas.style.width = Math.floor(width) + 'px';
+      this._canvas.style.height = Math.floor(height) + 'px';
       this._needsResize = true;
 
       this.setProperties({
@@ -357,8 +358,8 @@ export class IoGl extends IoElement {
     });
 
     if (this._needsResize) {
-      this.$.canvas.width = Math.floor(width);
-      this.$.canvas.height = Math.floor(height);
+      this._canvas.width = Math.floor(width);
+      this._canvas.height = Math.floor(height);
       this._needsResize = false;
     }
 
@@ -371,11 +372,11 @@ export class IoGl extends IoElement {
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
-    // this.$.canvas.src = canvas.toDataURL('image/png', 0.9);
-    // this.$.canvas.loading = true;
+    // this._canvas.src = canvas.toDataURL('image/png', 0.9);
+    // this._canvas.loading = true;
 
-    // this.$.canvas.ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.$.canvas.ctx.drawImage(canvas, 0, 0);
+    // this._ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this._ctx.drawImage(canvas, 0, 0);
   }
   setShaderProgram() {
     if (currentProgram !== this._shader) {

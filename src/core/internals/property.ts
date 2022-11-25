@@ -130,11 +130,10 @@ export class PropertyInstance {
       if (this.type === Boolean) this.value = false;
       else if (this.type === String) this.value = '';
       else if (this.type === Number) this.value = 0;
-      else if (typeof this.type === 'function') this.value = new this.type();
-    }
-    debug: {
-      if (this.value === undefined && typeof this.type === 'function') {
-        console.warn('Property value should always be initialized when type is defined!');
+      else if (this.type === Array) {
+        this.value = [];
+      } else if (this.type === Object) {
+        this.value = {};
       }
     }
   }

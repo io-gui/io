@@ -226,7 +226,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   }
 
   @Property({type: Object, notify: false})
-  declare $: Record<string, any>;
+  declare $: Record<string, HTMLElement | IoElement>;
 
   @Property({value: '', reflect: 'prop'})
   declare tabindex: string;
@@ -268,6 +268,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     }
     return observed;
   }
+
   attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
     const type = this._properties.get(prop)!.type;
     if (type === Boolean) {

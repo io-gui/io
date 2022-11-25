@@ -436,7 +436,7 @@ export default class {
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
-          value: new Object1(),
+          value: undefined,
           type: Object1,
           binding: undefined,
           reflect: 'none',
@@ -456,7 +456,7 @@ export default class {
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
-          value: new Object1(),
+          value: object1,
           type: Object1,
           binding: undefined,
           reflect: 'none',
@@ -477,7 +477,7 @@ export default class {
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
-          value: new Object1(),
+          value: undefined,
           type: Object1,
           binding: undefined,
           reflect: 'none',
