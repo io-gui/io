@@ -1,26 +1,15 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { Property } from '../../core/internals/property.js';
 import { Binding } from '../../core/internals/binding.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
-import {IoLayerSingleton as Layer} from '../../core/layer.js';
-import {IoMenuItem} from './io-menu-item.js';
+import { IoLayerSingleton, NudgeDirection } from '../../core/layer.js';
+import { IoMenuItem } from './io-menu-item.js';
 
-// const rects = new WeakMap();
+const rects = new WeakMap();
 
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
- *
- * <io-element-demo element="io-menu-options" properties='{
- *   "value": "hello world",
- *   "selectable": true,
- *   "searchable": true,
- *   "search": "",
- *   "expanded": false,
- *   "horizontal": false,
- *   "options": ["one", "two", "three"]
- * }' config='{
- *   "type:object": ["io-object"]
- * }'></io-element-demo>
  **/
 @RegisterIoElement
 export class IoMenuOptions extends IoElement {
@@ -29,6 +18,7 @@ export class IoMenuOptions extends IoElement {
     :host {
       @apply --io-panel;
       @apply --io-column;
+      position: relative;
       align-self: flex-start;
       align-items: stretch;
       white-space: nowrap;
@@ -43,6 +33,10 @@ export class IoMenuOptions extends IoElement {
       align-self: stretch;
       flex: 0 0 auto;
     }
+    :host > io-menu-item[hidden] {
+      display: inherit;
+      visibility: hidden;
+    }
     :host[inlayer] {
       box-shadow: var(--io-shadow);
     }
@@ -56,12 +50,13 @@ export class IoMenuOptions extends IoElement {
       justify-self: stretch;
       flex-wrap: nowrap;
       padding: 0 var(--io-spacing);
+      overflow-x: hidden;
     }
     :host[horizontal] > io-menu-item {
       padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
     }
-    :host[horizontal] > io-menu-item {
-      border-right:1px solid var(--io-color-border);
+    :host[horizontal] > io-menu-item:not(:first-of-type):not([role="navigation"]) {
+      border-left:1px solid var(--io-color-border);
     }
     :host:not([horizontal]) > io-menu-item > * {
       min-width: 0.5em;
@@ -71,14 +66,16 @@ export class IoMenuOptions extends IoElement {
     :host[horizontal] > io-menu-item > .io-menu-more {
       display: none;
     }
-    :host[horizontal] > io-menu-item.io-hamburger {
+    :host[horizontal] > io-menu-item[role="navigation"] {
+      position: absolute;
+      right: 0;
       margin-left: auto;
     }
-    :host[horizontal] > io-menu-item.io-hamburger:after {
+    :host[horizontal] > io-menu-item[role="navigation"]:after {
       content: '';
       display: none;
     }
-    :host[horizontal] > io-menu-item.io-hamburger[hidden] {
+    :host[horizontal] > io-menu-item[role="navigation"][hidden] {
       display: inline-block;
       width: 0;
       padding: 0;
@@ -100,50 +97,68 @@ export class IoMenuOptions extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      options: {
-        type: MenuOptions,
-        observe: true,
-      },
-      value: null,
-      expanded: {
-        value: false,
-        reflect: 'prop',
-      },
-      horizontal: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      position: 'right',
-      depth: Infinity,
-      searchable: Boolean,
-      search: String,
-      overflow: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      inlayer: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      slotted: Array,
-      $parent: null,
-      _rects: Array,
-      role: 'listbox',
-    };
-  }
+
+  // TODO: consider specifying type without auto-initalization
+  @Property({observe: true})
+  declare options: MenuOptions;
+
+  @Property(undefined)
+  declare value: any;
+
+  @Property({value: false, reflect: 'prop'})
+  declare expanded: boolean;
+
+  @Property({value: false, reflect: 'prop'})
+  declare horizontal: boolean;
+
+  @Property(false)
+  declare searchable: boolean;
+
+  @Property('')
+  declare search: string;
+
+  @Property({value: 'right', reflect: 'prop'})
+  declare position: NudgeDirection;
+
+  @Property(Infinity)
+  declare depth: number;
+
+  @Property({value: false, reflect: 'prop'})
+  declare overflow: boolean;
+
+  @Property({value: false, reflect: 'prop'})
+  declare inlayer: boolean;
+
+  @Property({type: Array})
+  declare slotted: VDOMArray[];
+
+  @Property('listbox')
+  declare role: string;
+
+ @Property(undefined)
+ declare $parent: IoMenuItem | undefined;
+
+ @Property({type: Array})
+ declare private _overflownItems: IoMenuItem[];
+
   static get Listeners() {
     return {
       'item-clicked': '_onItemClicked',
       'touchstart': '_stopPropagation',
     };
   }
-  // constructor(properties: Record<string, any> = {}) {
-  //   super(properties);
-  // }
-  get inlayer() {
-    return this.parentElement === Layer;
+  constructor(properties: Record<string, any> ) {
+    debug: {
+      if (properties.options === undefined) {
+        console.warn('IoMenuOptions: options property mandatory.');
+      }
+    }
+    if (!(properties.options instanceof MenuOptions)) properties.options = new MenuOptions(properties.options);
+    super(properties);
+  }
+  connectedCallback() {
+    super.connectedCallback();
+    this.inlayer = this.parentElement === IoLayerSingleton;
   }
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;
@@ -163,58 +178,57 @@ export class IoMenuOptions extends IoElement {
   _stopPropagation(event: MouseEvent) {
     event.stopPropagation();
   }
-  // onResized() {
-  //   this.throttle(this._onSetOverflow);
-  // }
-  // _onSetOverflow() {
-  //   const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
-  //   if (this.horizontal) {
-  //     const hamburger = this.querySelector('.io-hamburger');
-  //     if (!buttons.length) return;
+  onResized() {
+    this.throttle(this._onSetOverflow);
+  }
 
-  //     let end = this.getBoundingClientRect().right;
-  //     let overflow = false;
-  //     let last = Infinity;
-  //     hamburger.hidden = true;
-  //     // const hamburgerOptions = [];
+  _onSetOverflow() {
+    const items = this.querySelectorAll('io-menu-item:not([role="navigation"])');
+    this._overflownItems.length = 0;
+    if (this.horizontal) {
+      const hamburger = this.querySelector('[role="navigation"]');
+      let end = this.getBoundingClientRect().right;
+      let hamburgetWidth = 0;
+      let overflow = false;
+      let last = Infinity;
 
-  //     for (let i = buttons.length; i--;) {
-  //       const r = buttons[i].getBoundingClientRect();
-  //       const rect = rects.get(buttons[i]) || {right: 0, width: 0};
-  //       if (r.right !== 0 && r.width !== 0)  {
-  //         rect.right = r.right;
-  //         rect.width = r.width;
-  //         rects.set(buttons[i], rect);
-  //       }
+      for (let i = items.length; i--;) {
+        const r = items[i].getBoundingClientRect();
+        const rect = rects.get(items[i]) || {right: 0, width: 0};
+        if (r.right !== 0 && r.width !== 0)  {
+          rect.right = r.right;
+          rect.width = r.width;
+          rects.set(items[i], rect);
+        }
 
-  //       if (hamburger.hidden && overflow) {
-  //         hamburger.hidden = false;
-  //         end -= hamburger.getBoundingClientRect().width;
-  //       }
+        if (hamburger) {
+          hamburgetWidth = hamburger?.getBoundingClientRect().width;
+        }
 
-  //       if (buttons[i].selected) {
-  //         end -= rect.width;
-  //         buttons[i].hidden = false;
-  //         continue;
-  //       }
+        if (items[i].selected) {
+          end -= rect.width;
+          items[i].hidden = false;
+          continue;
+        }
 
-  //       last = Math.min(last, rect.right);
-  //       if (last < end) {
-  //         buttons[i].hidden = false;
-  //       } else {
-  //         buttons[i].hidden = true;
-  //         // hamburgerOptions.push(buttons[i].option);
-  //         overflow = true;
-  //       }
-  //     }
-  //     // hamburger._properties.props.option.value = new MenuItem({options: new MenuOptions(hamburgerOptions)});
-  //     this.overflow = overflow;
-  //   } else {
-  //     for (let i = buttons.length; i--;) {
-  //       buttons[i].hidden = false;
-  //     }
-  //   }
-  // }
+        last = Math.min(last, rect.right);
+        if (i === (items.length - 1) && last < end) {
+          items[i].hidden = false;
+        } else if (last < (end - hamburgetWidth)) {
+          items[i].hidden = false;
+        } else {
+          items[i].hidden = true;
+          // console.log(items[i].item);
+          this._overflownItems.push(items[i].item);
+          overflow = true;
+        }
+      }
+    //   // hamburger._properties.props.option.value = new MenuItem({options: new MenuOptions(this._overflownItems)});
+      this.overflow = overflow;
+    } else {
+      this.overflow = false;
+    }
+  }
   _onCollapse() {
     const focusSearch = this.selectable && !!this.search && !this.inlayer;
     this.setProperties({
@@ -225,10 +239,10 @@ export class IoMenuOptions extends IoElement {
   }
   expandedChanged() {
     if (this.expanded) {
-      if (this.inlayer && this.$parent) {
-        this._onExpandedChangedLazy();
+      if (this.inlayer) {
+        this.expandInLayer();
         // TODO: unhack incorrect this.rect on first expand.
-        this.throttle(this._onExpandedChangedLazy);
+        this.throttle(this.expandInLayer);
       }
     } else {
       this.style.top = null;
@@ -243,11 +257,17 @@ export class IoMenuOptions extends IoElement {
       this.throttle(this._clipHeight);
     }
   }
-  _onExpandedChangedLazy() {
-    const pRect = this.$parent.getBoundingClientRect();
-    Layer.setElementPosition(this as unknown as HTMLElement, this.position, pRect);
-    this._clipHeight();
-    this.searchable = !!this.style.height;
+  expandInLayer() {
+    debug: {
+      if (!this.$parent) {
+        console.warn('IoMenuOptions: $parent property mandatory when expanding inside `IoLayerSingleton`.');
+      }
+    }
+    if (this.$parent) {
+      const pRect = this.$parent.getBoundingClientRect();
+      IoLayerSingleton.setElementPosition(this as unknown as HTMLElement, this.position, pRect);
+      this._clipHeight();
+    }
   }
   _clipHeight() {
     this.scrollTop = 0;
@@ -269,16 +289,24 @@ export class IoMenuOptions extends IoElement {
       this.style.touchAction = null;
     }
   }
-  _filterOptions(object: any, predicate: (object: any) => boolean, _depth = 5, _chain: any[] = [], _i = 0): any {
+  _filterOptions(object: any, search: string, _depth = 5, _chain: any[] = [], _i = 0): any {
+    function predicateFn(o: any) {
+      if (!!o.value || !!o.action) {
+        if (String(o.value).toLowerCase().search(search) !== -1) return true;
+        if (o.label && o.label.toLowerCase().search(search) !== -1) return true;
+        if (o.hint && o.hint.toLowerCase().search(search) !== -1) return true;
+      }
+      return false;
+    }
     const result: any[] = [];
     if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
     if (_i > _depth) return result; _i++;
-    if (predicate(object) && result.indexOf(object) === -1) result.push(object);
+    if (predicateFn(object) && result.indexOf(object) === -1) result.push(object);
     for (const key in object) {
       const value = object[key] instanceof Binding ? object[key].value : object[key];
-      if (predicate(value) && result.indexOf(value) === -1) result.push(value);
+      if (predicateFn(value) && result.indexOf(value) === -1) result.push(value);
       if (typeof value === 'object') {
-        const results = this._filterOptions(value, predicate, _depth, _chain, _i);
+        const results = this._filterOptions(value, search, _depth, _chain, _i);
         for (let i = 0; i < results.length; i++) {
           if (result.indexOf(results[i]) === -1) result.push(results[i]);
         }
@@ -286,52 +314,36 @@ export class IoMenuOptions extends IoElement {
     }
     return result;
   }
-  get _options() {
-    if (this.search) {
-      const s = this.search.toLowerCase();
-      const options = this._filterOptions(this.options, o => {
-        if (!!o.value || !!o.action) {
-          if (String(o.value).toLowerCase().search(s) !== -1) return true;
-          if (o.label && o.label.toLowerCase().search(s) !== -1) return true;
-          if (o.hint && o.hint.toLowerCase().search(s) !== -1) return true;
-        }
-        return false;
-      });
-      return options.length ? options : new MenuOptions([new MenuItem({label: 'No matches'})]);
-    }
-    return this.options;
-  }
   changed() {
-    const itemDirection = this.horizontal ? 'bottom' : 'right';
-    const elements = [];
+    const elements: VDOMArray[] = [...this.slotted];
+    let options = this.options;
     if (this.searchable) {
       elements.push(['io-string', {id: 'search', value: this.bind('search'), live: true}]);
     }
-    if (this._options) {
-      for (let i = 0; i < this._options.length; i++) {
-        elements.push(['io-menu-item', {
-          item: this._options[i],
-          direction: itemDirection,
-          depth: this.depth,
-          lazy: false,
-        }]);
-      }
+    if (this.search) {
+      options = this._filterOptions(this.options, this.search.toLowerCase());
+      options.length ? options : new MenuOptions([new MenuItem({label: 'No matches'})]);
     }
-    if (this.horizontal) {
-      elements.splice(0, 0, ...this.slotted);
-      // elements.push(['io-menu-item', {
-      //   label: '\u2630',
-      //   icon: '\u2630',
-      //   title: 'select tab',
-      //   depth: this.depth + 1,
-      //   class: 'io-hamburger',
-      //   option: new MenuItem({
-      //     options: this._options
-      //   }),
-      //   lazy: false,
-      // }]);
+
+    for (let i = 0; i < options.length; i++) {
+      elements.push(['io-menu-item', {
+        item: options[i],
+        direction: this.horizontal ? 'bottom' : 'right',
+        depth: this.depth
+      }]);
+    }
+
+    if (this.overflow) {
+      elements.push(['io-menu-item', {
+        depth: this.depth + 1,
+        role: 'navigation',
+        item: new MenuItem({
+          label: '',
+          icon: '\u2630',
+          options: options
+        })
+      }]);
     }
     this.template(elements);
-    // this.throttle(this._onSetOverflow);
   }
 }

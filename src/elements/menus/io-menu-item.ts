@@ -29,7 +29,6 @@ export class IoMenuItem extends IoField {
       flex: 0 0 auto;
       flex-direction: row;
       border-radius: 0;
-      background: black;
     }
     :host > * {
       pointer-events: none;
@@ -79,7 +78,8 @@ export class IoMenuItem extends IoField {
     `;
   }
 
-  @Property({type: MenuItem, observe: true})
+  // TODO: consider specifying type without auto-initalization
+  @Property({observe: true})
   declare item: MenuItem;
 
   @Property({value: false, reflect: 'prop'})
@@ -94,9 +94,7 @@ export class IoMenuItem extends IoField {
   @Property(Infinity)
   declare depth: number;
 
-  // @Property(true)
-  // declare lazy: boolean;
-
+  @Property(undefined)
   $options: IoMenuOptions | undefined;
 
   static get Listeners(): any {
@@ -116,6 +114,15 @@ export class IoMenuItem extends IoField {
   }
   get $parent() {
     return this.parentElement;
+  }
+  constructor(properties: Record<string, any> ) {
+    debug: {
+      if (properties.item === undefined) {
+        console.warn('MenuItem: item property mandatory.');
+      }
+    }
+    if (!(properties.item instanceof MenuItem)) properties.item = new MenuItem(properties.item);
+    super(properties);
   }
   connectedCallback() {
     super.connectedCallback();
@@ -331,8 +338,8 @@ export class IoMenuItem extends IoField {
           expanded: this.bind('expanded'),
           options: this.item.options,
           position: this.direction,
+          $parent: this,
         });
-        this.$options.$parent = this;
       }
 
       // Colapse all siblings and their ancestors

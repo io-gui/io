@@ -1,31 +1,20 @@
 import { IoNode, RegisterIoNode } from '../../../core/node.js';
+import { IoElementArgs } from '../../../core/element.js';
 import { Property } from '../../../core/internals/property.js';
 import { MenuOptions } from './menu-options.js';
 
 export type MenuItemSelectType = 'pick' | 'toggle' | 'link' | 'none';
 
-export type MenuItemArgsWeak = undefined | null | string | number | {
-  value?: any,
-  label?: string,
-  icon?: string,
-  hint?: string,
-  disabled?: boolean,
-  action?: () => void,
-  select?: MenuItemSelectType,
-  selected?: boolean,
-  options?: MenuItemArgsWeak[] | MenuOptions,
-};
+export type MenuItemArgsWeak = undefined | null | string | number | MenuItemArgs;
 
-export type MenuItemArgs = {
-  value: any,
-  label: string,
+export type MenuItemArgs = IoElementArgs & {
+  value?: any,
   icon?: string,
   hint?: string,
-  disabled?: boolean,
   action?: () => void,
   select?: MenuItemSelectType,
   selected?: boolean,
-  options?: MenuOptions,
+  options?: MenuItemArgsWeak[] | MenuOptions
 };
 
 // TODO: documentation!
