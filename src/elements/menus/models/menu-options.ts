@@ -1,8 +1,12 @@
-import { IoNodeMixin, RegisterIoNode } from '../../../core/node.js';
+import { IoNodeMixin, RegisterIoNode, IoNodeArgs } from '../../../core/node.js';
 import { MenuItem, MenuItemArgsWeak } from './menu-item.js';
 import { Property } from '../../../core/internals/property.js';
 
 // TODO: document!
+
+function _isNaN(value: any) {
+  return typeof value === 'number' && isNaN(value);
+}
 
 @RegisterIoNode
 export class MenuOptions extends IoNodeMixin(Array) {
@@ -26,14 +30,12 @@ export class MenuOptions extends IoNodeMixin(Array) {
     return null;
   }
 
-  constructor(args?: MenuItemArgsWeak | MenuItemArgsWeak[]) {
-    super();
-    if (args !== undefined) {
-      args instanceof Array ? this._addItem(args) : this._addItem([args]);
-    }
+  constructor(args: MenuItemArgsWeak[] = [], properties: IoNodeArgs = {}) {
+    super(properties);
+    this._addItems(args);
   }
 
-  protected _addItem(items: MenuItemArgsWeak[]) {
+  protected _addItems(items: MenuItemArgsWeak[]) {
     for (let i = 0; i < items.length; i++) {
       let item: MenuItem;
       if (items[i] instanceof MenuItem) {
@@ -49,23 +51,37 @@ export class MenuOptions extends IoNodeMixin(Array) {
       this.push(item);
       item.addEventListener('selected-changed', this._onItemSelectedChanged);
     }
+    if (this.root) this.rootChanged();
+    if (this.path) this.pathChanged();
   }
 
   pathChanged() {
     const path = this.path ? [...this.path.split(this.delimiter)] : [];
-    if (path.length) {
+    if (this.length && path.length) {
       const first = path.shift();
-      const item = this.find((item: MenuItem) => item.label === first);
-      debug: {
-        if (item.select !== 'pick') {
-          console.warn('MenuOptions: Path set to non-pickable MenuItem!');
+      const item = this.find((item: MenuItem) => (item.label === first));
+      if (item) {
+        // if (first === 'null') {
+        //   console.log(this, item);
+        // }
+        debug: {
+          if (item.select !== 'pick') {
+            console.warn('MenuOptions: Path set to non-pickable MenuItem!');
+          }
         }
-      }
-      if (item.select === 'pick') {
-        if (item.options) {
-          item.options.path = path.join(this.delimiter);
+        if (item.select === 'pick') {
+          if (item.options) {
+            item.options.path = path.join(this.delimiter);
+          }
+          item.selected = true;
         }
-        item.selected = true;
+      } else {
+        debug: {
+          console.warn(`MenuOptions: cannot find item for specified path "${this.path}"!`);
+        }
+        for (let i = 0; i < this.length; i++) {
+          this[i].selected = false;
+        }
       }
     } else {
       for (let i = 0; i < this.length; i++) {
@@ -76,9 +92,18 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   rootChanged() {
     if (this.root !== undefined) {
-      const item = this.find((item: MenuItem) => item.value === this.root);
+      // const item = this.find((item: MenuItem) => (item.value === this.root));
+      const item = this.find((item: MenuItem) => (item.value === this.root || (_isNaN(item.value) && _isNaN(this.root))));
       if (item) {
         item.selected = true;
+      } else {
+        // TODO: throw error?
+        debug: {
+          console.warn(`MenuOptions: cannot find item for specified root value "${this.root}"!`);
+        }
+        for (let i = 0; i < this.length; i++) {
+          this[i].selected = false;
+        }
       }
     } else {
       for (let i = 0; i < this.length; i++) {
@@ -88,6 +113,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
   }
 
   leafChanged() {
+    console.log(this.leaf);
     debug: {
       if (this.leaf !== undefined) {
         const path = this.path ? [...this.path.split(this.delimiter)] : [];
@@ -101,9 +127,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
             options = item?.options || undefined;
           }
           if (item === undefined) {
-            console.warn(`MenuOptions: cannot find subitem for specified leaf value "${this.leaf}"!`);
-          } else if (item.value !== this.leaf && !isNaN(item.value) && !isNaN(this.leaf)) {
-            console.warn(`MenuOptions: leaf property value "${this.leaf}" diverged from subitem specified by path!`);
+            console.warn(`MenuOptions: cannot find item for specified leaf value "${this.leaf}"!`);
+          } else if (item.value !== this.leaf && !(_isNaN(item.value) && _isNaN(this.leaf))) {
+            // TODO: test this?
+            console.warn(`MenuOptions: leaf property value "${this.leaf}" diverged from item specified by path!`);
           }
         } else {
           console.warn(`MenuOptions: leaf property value set "${this.leaf}" but path is empty!`);
@@ -116,6 +143,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
     const path: string[] = [];
     let walker: MenuItem | undefined = item;
     let lastWalker: MenuItem | undefined = item;
+
+    const hasSelected = this.find((item: MenuItem) => item.selected);
+    if (!item && hasSelected) return;
+
     while (walker) {
       path.push(walker.label);
       lastWalker = walker;

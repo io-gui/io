@@ -1,50 +1,50 @@
 import { IoElement, RegisterIoElement, MenuOptions, MenuItem } from '../build/iogui.js';
 
-const suboptions = new MenuOptions();
-const options = new MenuOptions([
-  {label: 'Red', icon: '❤️', options: [{value: 'Red1'}, {value: 'Red2'}, {value: 'Red3'}]},
-  {label: 'Green', icon: '💚', options: [{value: 'Green1'}, {value: 'Green2'}, {value: 'Green3'}]},
-  {label: 'Blue', icon: '💙', options: [{value: 'Blue1'}, {value: 'Blue2'}, {value: 'Blue3'}]},
-  {label: 'Numbers', options: [
-    {label: 'one', value: 1},
-    {label: 'two', value: 2},
-    {label: 'three', value: 3},
-    {label: 'four', value: 4},
-    {label: 'five', value: 5},
-  ]},
-  {label: 'Suboptions', options: suboptions},
-]);
-suboptions.push(...[
-  {label: 'Hearts', options: options},
-  {label: 'suboption one', options: options},
-  {label: 'suboption two', options: options},
-  {label: 'suboption three', options: options},
-]);
+// const suboptions = new MenuOptions();
+// const options = new MenuOptions([
+//   {label: 'Red', icon: '❤️', options: [{value: 'Red1'}, {value: 'Red2'}, {value: 'Red3'}]},
+//   {label: 'Green', icon: '💚', options: [{value: 'Green1'}, {value: 'Green2'}, {value: 'Green3'}]},
+//   {label: 'Blue', icon: '💙', options: [{value: 'Blue1'}, {value: 'Blue2'}, {value: 'Blue3'}]},
+//   {label: 'Numbers', options: [
+//     {label: 'one', value: 1},
+//     {label: 'two', value: 2},
+//     {label: 'three', value: 3},
+//     {label: 'four', value: 4},
+//     {label: 'five', value: 5},
+//   ]},
+//   {label: 'Suboptions', options: suboptions},
+// ]);
+// suboptions.push(...[
+//   {label: 'Hearts', options: options},
+//   {label: 'suboption one', options: options},
+//   {label: 'suboption two', options: options},
+//   {label: 'suboption three', options: options},
+// ]);
 
-const item = new MenuItem({
-  label: 'Hearts',
-  icon: '💕',
-  hint: 'colors',
-  options: options,
-});
+// const item = new MenuItem({
+//   label: 'Hearts',
+//   icon: '💕',
+//   hint: 'colors',
+//   options: options,
+// });
 
-const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
-  'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
-  'fusce', 'interdum', 'vestibulum', 'nunc', 'velit'];
-const hearts = ['❤️', '💚', '💙', '💜', '🧡', '💔', '💖', '🖤', '💗', '💘'];
-const longOptions = [];
-for (let i = 0; i < 100; i++) {
-  const r1 = words[Math.floor(Math.random() * 20)];
-  const r2 = words[Math.floor(Math.random() * 20)];
-  const r3 = words[Math.floor(Math.random() * 20)];
-  const h = hearts[Math.floor(Math.random() * 10)] || '';
-  longOptions.push(new MenuItem({icon: h, label: r1 + ' ' + r2 + ' ' + i, value: r1 + ' ' + r2, hint: r3}));
-}
+// const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
+//   'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
+//   'fusce', 'interdum', 'vestibulum', 'nunc', 'velit'];
+// const hearts = ['❤️', '💚', '💙', '💜', '🧡', '💔', '💖', '🖤', '💗', '💘'];
+// const longOptions = [];
+// for (let i = 0; i < 100; i++) {
+//   const r1 = words[Math.floor(Math.random() * 20)];
+//   const r2 = words[Math.floor(Math.random() * 20)];
+//   const r3 = words[Math.floor(Math.random() * 20)];
+//   const h = hearts[Math.floor(Math.random() * 10)] || '';
+//   longOptions.push(new MenuItem({icon: h, label: r1 + ' ' + r2 + ' ' + i, value: r1 + ' ' + r2, hint: r3}));
+// }
 
-const menuoptions = new MenuOptions([
-  {label: 'Long Menu', options: longOptions},
-  ...options,
-]);
+// const menuoptions = new MenuOptions([
+//   {label: 'Long Menu', options: longOptions},
+//   ...options,
+// ]);
 
 export class IoDemoElements extends IoElement {
   static get Style() {
@@ -52,6 +52,8 @@ export class IoDemoElements extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+        background: var(--io-background-color);
+        color: var(--io-color);
       }
       :host > div > io-label {
         display: block;
@@ -84,40 +86,41 @@ export class IoDemoElements extends IoElement {
       }
     `;
   }
-  // static get Properties() {
-  //   return {
-  //     string: 'Hello IoGUI!',
-  //     number: 1,
-  //     boolean: false,
-  //     array2: [0, 1],
-  //     array3: [0, 1, 2],
-  //     array4: [0, 1, 2, 3],
-  //     vector2: {value: {x: 0, y: 1}},
-  //     vector3: {value: {x: 0, y: 1, z: 2}},
-  //     vector4: {value: {x: 0, y: 1, z: 2, w: 3}},
-  //     rgb: {value: {r: 0, g: 1, b: 0.5}},
-  //     rgba: {value: {r: 1, g: 0.5, b: 1, a: 1}},
-  //     matrix2: [1, 0, 0, 1],
-  //     matrix3: [1, 0, 0, 0, 1, 0, 0, 0, 1],
-  //     matrix4: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-  //     object: {value: {
-  //       number: 0.5,
-  //       string: 'hello',
-  //       boolean: true,
-  //       object: {
-  //         prop1: 1,
-  //         prop2: 2,
-  //       },
-  //       array: [...Array(32).keys()],
-  //       vector2: [0, 1],
-  //       vector3: [0, 1, 2],
-  //       vector4: [0, 1, 2, 3],
-  //       matrix2: [1, 0, 0, 1],
-  //       matrix3: [1, 0, 0, 0, 1, 0, 0, 0, 1],
-  //       matrix4: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-  //     }}
-  //   };
-  // }
+  static get Properties() {
+    return {
+      string: 'zero',
+      // string: 'Hello IoGUI!',
+      number: 1,
+      boolean: false,
+      array2: [0, 1],
+      array3: [0, 1, 2],
+      array4: [0, 1, 2, 3],
+      vector2: {value: {x: 0, y: 1}},
+      vector3: {value: {x: 0, y: 1, z: 2}},
+      vector4: {value: {x: 0, y: 1, z: 2, w: 3}},
+      rgb: {value: {r: 0, g: 1, b: 0.5}},
+      rgba: {value: {r: 1, g: 0.5, b: 1, a: 1}},
+      matrix2: [1, 0, 0, 1],
+      matrix3: [1, 0, 0, 0, 1, 0, 0, 0, 1],
+      matrix4: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      object: {value: {
+        number: 0.5,
+        string: 'hello',
+        boolean: true,
+        object: {
+          prop1: 1,
+          prop2: 2,
+        },
+        array: [...Array(32).keys()],
+        vector2: [0, 1],
+        vector3: [0, 1, 2],
+        vector4: [0, 1, 2, 3],
+        matrix2: [1, 0, 0, 1],
+        matrix3: [1, 0, 0, 0, 1, 0, 0, 0, 1],
+        matrix4: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      }}
+    };
+  }
   constructor(props) {
     super(props);
     this.template([
@@ -135,10 +138,10 @@ export class IoDemoElements extends IoElement {
       //     ['io-label', {label: 'field'}],
       //     ['io-field', {value: this.bind('string')}],
       //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'string'}],
-      //     ['io-string', {value: this.bind('string')}],
-      //   ]],
+        ['div', [
+          ['io-label', {label: 'string'}],
+          ['io-string', {value: this.bind('string')}],
+        ]],
       //   ['div', [
       //     ['io-label', {label: 'string [live]'}],
       //     ['io-string', {value: this.bind('string'), live: true}],
@@ -408,6 +411,44 @@ export class IoDemoElements extends IoElement {
       // ]],
       ['div', [
         ['io-label', {label: 'Menus'}],
+        ['div', [
+          ['io-label', {label: 'menu-item'}],
+          ['io-menu-item', {label: 'menu item', item: {
+            value: 'value',
+            hint: 'hint',
+            label: 'menu item',
+            icon: '💚',
+          }}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'menu-options'}],
+          ['io-menu-options', {
+            searchable: true,
+            options: new MenuOptions(['one', 'zero', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
+              path: this.bind('string')
+            }),
+          }],
+          ['io-menu-options', {
+            options: new MenuOptions(['one', 'zero', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'].reverse(), {
+              path: this.bind('string')
+            }),
+          }],
+          ['io-menu-options', {
+            options: new MenuOptions(['one', 'zero', 'two', 'three', 'four'], {
+              path: this.bind('string')
+            }),
+          }],
+        ]],
+        ['div', [
+          ['io-label', {label: 'menu-options [horizontal]'}],
+          ['io-menu-options', {
+            horizontal: true,
+            searchable: true,
+            options: new MenuOptions(['one', 'zero', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
+              path: this.bind('string')
+            }),
+          }],
+        ]],
         // ['div', [
         //   ['io-label', {label: 'option-menu'}],
         //   ['io-option-menu', {
@@ -438,10 +479,10 @@ export class IoDemoElements extends IoElement {
         //   ['io-label', {label: 'menu-options'}],
         //   ['io-menu-options', {options: menuoptions, searchable: true}],
         // ]],
-        ['div', [
-          ['io-label', {label: 'menu-item'}],
-          ['io-menu-item', {label: 'menu item', item: item}],
-        ]],
+        // ['div', [
+        //   ['io-label', {label: 'menu-item'}],
+        //   ['io-menu-item', {label: 'menu item', item: item}],
+        // ]],
         // ['div', [
         //   ['io-label', {label: 'context-menu'}],
         //   ['span', 'click for menu'],
@@ -454,9 +495,6 @@ export class IoDemoElements extends IoElement {
         // ]],
       ]],
     ]);
-    setTimeout(() => {
-      item.selected = true;
-    }, 2000);
   }
 }
 

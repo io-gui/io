@@ -7,16 +7,6 @@ import { IoMenuOptions } from './io-menu-options.js';
 
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
- *
- * <io-element-demo element="io-menu-item" properties='{
- *   "value": "hello world",
- *   "option": {"label": "options", "options": ["one", "two", "three"]},
- *   "expanded": false,
- *   "direction": "right",
- *   "selectable": true
- * }' config='{
- *   "direction": ["io-option-menu", {"options": ["top", "right", "bottom", "left"]}], "type:object": ["io-object"]
- * }'></io-element-demo>
  **/
 
 // TODO: fix and improve keyboard navigation in all cases.
@@ -115,15 +105,6 @@ export class IoMenuItem extends IoField {
   get $parent() {
     return this.parentElement;
   }
-  constructor(properties: Record<string, any> ) {
-    debug: {
-      if (properties.item === undefined) {
-        console.warn('MenuItem: item property mandatory.');
-      }
-    }
-    if (!(properties.item instanceof MenuItem)) properties.item = new MenuItem(properties.item);
-    super(properties);
-  }
   connectedCallback() {
     super.connectedCallback();
     if (this.$options) Layer.appendChild(this.$options as unknown as HTMLElement);
@@ -142,37 +123,37 @@ export class IoMenuItem extends IoField {
   _onLayerPointerup(event: PointerEvent) {
     if (this.expanded) this._onPointerup(event);
   }
-  // _onClick() {
-  //   const item = this.item;
-  //   if (this.hasmore) {
-  //     if (!this.expanded) this.expanded = true;
-  //   } else if (item.select === 'toggle') {
-  //     item.selected = !item.selected;
-  //   } else {
-  //     if (item.action) {
-  //       item.action.apply(null, [item.value]);
-  //     }
-  //     if (item.select === 'pick') {
-  //       if (item.hasmore && this.depth <= 0) {
-  //         item.items.selectDefault();
-  //       } else {
-  //         item.selected = true;
-  //       }
-  //     } else if (item.select === 'link') {
-  //       window.open(item.value, '_blank');
-  //     }
-  //     this.dispatchEvent('item-clicked', item, true);
-  //     this.throttle(this._onCollapse, undefined, true);
-  //   }
-  // }
-  // _onItemClicked(event: PointerEvent) {
-  //   const item = event.composedPath()[0];
-  //   if (item !== (this as any)) {
-  //     event.stopImmediatePropagation();
-  //     this.dispatchEvent('item-clicked', event.detail, true);
-  //   }
-  //   if (this.expanded) this.throttle(this._onCollapse, undefined, true);
-  // }
+  _onClick() {
+    const item = this.item;
+    if (this.hasmore) {
+      if (!this.expanded) this.expanded = true;
+    } else if (item.select === 'toggle') {
+      item.selected = !item.selected;
+    } else {
+      if (item.action) {
+        item.action.apply(null, [item.value]);
+      }
+      if (item.select === 'pick') {
+        if (item.hasmore && this.depth <= 0) {
+          item.items.selectDefault();
+        } else {
+          item.selected = true;
+        }
+      } else if (item.select === 'link') {
+        window.open(item.value, '_blank');
+      }
+      // this.dispatchEvent('item-clicked', item, true);
+      this.throttle(this._onCollapse, undefined, true);
+    }
+  }
+  _onItemClicked(event: PointerEvent) {
+    const item = event.composedPath()[0];
+    if (item !== (this as any)) {
+      event.stopImmediatePropagation();
+      this.dispatchEvent('item-clicked', event.detail, true);
+    }
+    if (this.expanded) this.throttle(this._onCollapse, undefined, true);
+  }
   _onPointerdown(event: PointerEvent) {
     event.stopPropagation();
     event.preventDefault(); // Prevents focus
@@ -259,70 +240,71 @@ export class IoMenuItem extends IoField {
       }
     }
   }
-  // _onKeydown(event: KeyboardEvent) {
-  //   if (event.key === 'Enter' || event.key === ' ') {
-  //     event.preventDefault();
-  //     this._onClick();
-  //     return;
-  //   } else if (event.key === 'Escape') {
-  //     event.preventDefault();
-  //     this.throttle(this._onCollapseRoot);
-  //     return;
-  //   }
+  _onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this._onClick();
+      return;
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      this.throttle(this._onCollapseRoot);
+      return;
+    }
 
-  //   let command = '';
-  //   if (this.direction === 'left' || this.direction === 'right') {
-  //     if (event.key === 'ArrowUp') command = 'prev';
-  //     if (event.key === 'ArrowRight') command = 'in';
-  //     if (event.key === 'ArrowDown') command = 'next';
-  //     if (event.key === 'ArrowLeft') command = 'out';
-  //   } else {
-  //     if (event.key === 'ArrowUp') command = 'out';
-  //     if (event.key === 'ArrowRight') command = 'next';
-  //     if (event.key === 'ArrowDown') command = 'in';
-  //     if (event.key === 'ArrowLeft') command = 'prev';
-  //   }
-  //   if (this.inlayer && event.key === 'Tab') command = 'next';
+    let command = '';
+    if (this.direction === 'left' || this.direction === 'right') {
+      if (event.key === 'ArrowUp') command = 'prev';
+      if (event.key === 'ArrowRight') command = 'in';
+      if (event.key === 'ArrowDown') command = 'next';
+      if (event.key === 'ArrowLeft') command = 'out';
+    } else {
+      if (event.key === 'ArrowUp') command = 'out';
+      if (event.key === 'ArrowRight') command = 'next';
+      if (event.key === 'ArrowDown') command = 'in';
+      if (event.key === 'ArrowLeft') command = 'prev';
+    }
+    if (this.inlayer && event.key === 'Tab') command = 'next';
 
-  //   const siblings = this.$parent ? [...this.$parent.children] : [];
-  //   const index = siblings.indexOf(this);
-  //   if (command && (this.inlayer || this.expanded)) {
-  //     event.preventDefault();
-  //     switch (command) {
-  //       case 'prev': {
-  //         const prev = siblings[(index + siblings.length - 1) % (siblings.length)];
-  //         this.expanded = false;
-  //         if (prev) {
-  //           if (prev.hasmore) prev.expanded = true;
-  //           prev.focus();
-  //         }
-  //         break;
-  //       }
-  //       case 'next': {
-  //         const next = siblings[(index + 1) % (siblings.length)];
-  //         this.expanded = false;
-  //         if (next) {
-  //           if (next.hasmore) next.expanded = true;
-  //           next.focus();
-  //         }
-  //         break;
-  //       }
-  //       case 'in':
-  //         if (this.$options && this.$options.children.length) this.$options.children[0].focus();
-  //         break;
-  //       case 'out':
-  //         this.expanded = false;
-  //         if (this.$parent && this.$parent.$parent) {
-  //           this.$parent.$parent.focus();
-  //         }
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //   } else {
-  //     super._onKeydown(event);
-  //   }
-  // }
+    const siblings = this.$parent ? [...this.$parent.children] : [];
+    const index = siblings.indexOf(this);
+    if (command) {
+    // if (command && (this.inlayer || this.expanded)) {
+      event.preventDefault();
+      switch (command) {
+        case 'prev': {
+          const prev = siblings[(index + siblings.length - 1) % (siblings.length)];
+          this.expanded = false;
+          if (prev) {
+            if (prev.hasmore) prev.expanded = true;
+            prev.focus();
+          }
+          break;
+        }
+        case 'next': {
+          const next = siblings[(index + 1) % (siblings.length)];
+          this.expanded = false;
+          if (next) {
+            if (next.hasmore) next.expanded = true;
+            next.focus();
+          }
+          break;
+        }
+        case 'in':
+          if (this.$options && this.$options.children.length) this.$options.children[0].focus();
+          break;
+        case 'out':
+          this.expanded = false;
+          if (this.$parent && this.$parent.$parent) {
+            this.$parent.$parent.focus();
+          }
+          break;
+        default:
+          break;
+      }
+    } else {
+      super._onKeydown(event);
+    }
+  }
   _onCollapse() {
     this.expanded = false;
   }
@@ -350,7 +332,6 @@ export class IoMenuItem extends IoField {
           $allitems[i].expanded = false;
         }
       }
-
     }
 
     if (this.$options) {

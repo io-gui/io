@@ -1,6 +1,5 @@
 import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
-import { Binding } from '../../core/internals/binding.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
 import { IoLayerSingleton, NudgeDirection } from '../../core/layer.js';
@@ -36,6 +35,7 @@ export class IoMenuOptions extends IoElement {
     :host > io-menu-item[hidden] {
       display: inherit;
       visibility: hidden;
+      pointer-events: none;
     }
     :host[inlayer] {
       box-shadow: var(--io-shadow);
@@ -102,9 +102,6 @@ export class IoMenuOptions extends IoElement {
   @Property({observe: true})
   declare options: MenuOptions;
 
-  @Property(undefined)
-  declare value: any;
-
   @Property({value: false, reflect: 'prop'})
   declare expanded: boolean;
 
@@ -147,15 +144,7 @@ export class IoMenuOptions extends IoElement {
       'touchstart': '_stopPropagation',
     };
   }
-  constructor(properties: Record<string, any> ) {
-    debug: {
-      if (properties.options === undefined) {
-        console.warn('IoMenuOptions: options property mandatory.');
-      }
-    }
-    if (!(properties.options instanceof MenuOptions)) properties.options = new MenuOptions(properties.options);
-    super(properties);
-  }
+
   connectedCallback() {
     super.connectedCallback();
     this.inlayer = this.parentElement === IoLayerSingleton;
@@ -169,13 +158,12 @@ export class IoMenuOptions extends IoElement {
     }
     if (item !== (this as any)) {
       event.stopImmediatePropagation();
-      if (d.value !== undefined && d.selectable !== false) this.inputValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
       this.throttle(this._onCollapse);
     }
   }
-  // Prevents IoLayer from stopping scroll in clipped options
   _stopPropagation(event: MouseEvent) {
+    // Prevents IoLayer from stopping scroll in clipped options
     event.stopPropagation();
   }
   onResized() {
@@ -218,12 +206,10 @@ export class IoMenuOptions extends IoElement {
           items[i].hidden = false;
         } else {
           items[i].hidden = true;
-          // console.log(items[i].item);
           this._overflownItems.push(items[i].item);
           overflow = true;
         }
       }
-    //   // hamburger._properties.props.option.value = new MenuItem({options: new MenuOptions(this._overflownItems)});
       this.overflow = overflow;
     } else {
       this.overflow = false;
@@ -289,7 +275,7 @@ export class IoMenuOptions extends IoElement {
       this.style.touchAction = null;
     }
   }
-  _filterOptions(object: any, search: string, _depth = 5, _chain: any[] = [], _i = 0): any {
+  _filterOptions(options: any, search: string, _depth = 5, _chain: any[] = [], _i = 0): any {
     function predicateFn(o: any) {
       if (!!o.value || !!o.action) {
         if (String(o.value).toLowerCase().search(search) !== -1) return true;
@@ -299,14 +285,14 @@ export class IoMenuOptions extends IoElement {
       return false;
     }
     const result: any[] = [];
-    if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
+    if (_chain.indexOf(options) !== -1) return result; _chain.push(options);
     if (_i > _depth) return result; _i++;
-    if (predicateFn(object) && result.indexOf(object) === -1) result.push(object);
-    for (const key in object) {
-      const value = object[key] instanceof Binding ? object[key].value : object[key];
-      if (predicateFn(value) && result.indexOf(value) === -1) result.push(value);
-      if (typeof value === 'object') {
-        const results = this._filterOptions(value, search, _depth, _chain, _i);
+    if (predicateFn(options) && result.indexOf(options) === -1) result.push(options);
+    for (const key in options) {
+      const item = options[key];
+      if (predicateFn(item) && result.indexOf(item) === -1) result.push(item);
+      if (typeof item === 'object') {
+        const results = this._filterOptions(item, search, _depth, _chain, _i);
         for (let i = 0; i < results.length; i++) {
           if (result.indexOf(results[i]) === -1) result.push(results[i]);
         }
@@ -340,7 +326,7 @@ export class IoMenuOptions extends IoElement {
         item: new MenuItem({
           label: '',
           icon: '\u2630',
-          options: options
+          options: this._overflownItems,
         })
       }]);
     }
