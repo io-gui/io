@@ -112,12 +112,17 @@ export class MenuItem extends IoNode {
     super(item);
 
     if (this.options) {
-      this.options.addEventListener('item-selected', this.onSubItemSelected);
+      this.options.addEventListener('item-selected', this._onSubItemSelected);
+      this.options.addEventListener('path-changed', this._onOptionsPathChanged);
     }
   }
 
-  onSubItemSelected() {
+  _onSubItemSelected() {
     this.selected = true;
+  }
+
+  _onOptionsPathChanged(event: CustomEvent) {
+    this.dispatchEvent('path-changed', event.detail);
   }
 
   selectedChanged() {
@@ -137,7 +142,8 @@ export class MenuItem extends IoNode {
 
   dispose() {
     if (this.options) {
-      this.options.removeEventListener('item-selected', this.onSubItemSelected);
+      this.options.removeEventListener('item-selected', this._onSubItemSelected);
+      this.options.removeEventListener('path-changed', this._onOptionsPathChanged);
     }
     super.dispose();
   }

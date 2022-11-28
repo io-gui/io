@@ -23,6 +23,8 @@ export class MenuOptions extends IoNodeMixin(Array) {
   @Property(',')
   declare delimiter: string;
 
+  debug = false;
+
   getItem(value: any) {
     for (let i = 0; i < this.length; i++) {
       if (this[i].value === value) return this[i];
@@ -50,6 +52,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
       }
       this.push(item);
       item.addEventListener('selected-changed', this._onItemSelectedChanged);
+      item.addEventListener('path-changed', this._onSubOptionsPathChanged);
     }
     if (this.root) this.rootChanged();
     if (this.path) this.pathChanged();
@@ -61,9 +64,6 @@ export class MenuOptions extends IoNodeMixin(Array) {
       const first = path.shift();
       const item = this.find((item: MenuItem) => (item.label === first));
       if (item) {
-        // if (first === 'null') {
-        //   console.log(this, item);
-        // }
         debug: {
           if (item.select !== 'pick') {
             console.warn('MenuOptions: Path set to non-pickable MenuItem!');
@@ -80,40 +80,30 @@ export class MenuOptions extends IoNodeMixin(Array) {
           console.warn(`MenuOptions: cannot find item for specified path "${this.path}"!`);
         }
         for (let i = 0; i < this.length; i++) {
-          this[i].selected = false;
+          if (this[i].select === 'pick') this[i].selected = false;
         }
       }
     } else {
       for (let i = 0; i < this.length; i++) {
-        this[i].selected = false;
+        if (this[i].select === 'pick') this[i].selected = false;
       }
     }
   }
 
   rootChanged() {
     if (this.root !== undefined) {
-      // const item = this.find((item: MenuItem) => (item.value === this.root));
-      const item = this.find((item: MenuItem) => (item.value === this.root || (_isNaN(item.value) && _isNaN(this.root))));
+      const item = this.find((item: MenuItem) => ((item.value === this.root && item.select === 'pick') || (_isNaN(item.value) && _isNaN(this.root))));
       if (item) {
         item.selected = true;
-      } else {
-        // TODO: throw error?
-        debug: {
-          console.warn(`MenuOptions: cannot find item for specified root value "${this.root}"!`);
-        }
-        for (let i = 0; i < this.length; i++) {
-          this[i].selected = false;
-        }
       }
     } else {
       for (let i = 0; i < this.length; i++) {
-        this[i].selected = false;
+        if (this[i].select === 'pick') this[i].selected = false;
       }
     }
   }
 
   leafChanged() {
-    console.log(this.leaf);
     debug: {
       if (this.leaf !== undefined) {
         const path = this.path ? [...this.path.split(this.delimiter)] : [];
@@ -144,7 +134,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
     let walker: MenuItem | undefined = item;
     let lastWalker: MenuItem | undefined = item;
 
-    const hasSelected = this.find((item: MenuItem) => item.selected);
+    const hasSelected = this.find((item: MenuItem) => item.select === 'pick' && item.selected);
     if (!item && hasSelected) return;
 
     while (walker) {
@@ -155,12 +145,13 @@ export class MenuOptions extends IoNodeMixin(Array) {
     this.setProperties({
       root: item !== undefined ? item.value : undefined,
       leaf: lastWalker !== undefined ? lastWalker.value : undefined,
-      path: path.join(this.delimiter)
+      path: path.join(this.delimiter),
     });
   }
 
-  _onItemSelectedChanged(event: any) {
-    const item = event.target;
+  _onItemSelectedChanged(event: CustomEvent) {
+    const item = event.target as unknown as MenuItem;
+    if (this.debug) console.log(item);
     if (item.select === 'pick') {
       if (item.selected) {
         for (let i = 0; i < this.length; i++) {
@@ -173,6 +164,28 @@ export class MenuOptions extends IoNodeMixin(Array) {
       } else {
         this.updatePaths();
       }
+    }
+  }
+
+  _onSubOptionsPathChanged(event: CustomEvent) {
+    const item = event.target as unknown as MenuItem;
+    const itemPath = event.detail.value;
+
+    const path = this.path ? [...this.path.split(this.delimiter)] : [];
+    path.shift();
+    const nextPath = path.join(this.delimiter);
+
+    if (itemPath && itemPath === nextPath) {
+
+      let walker: MenuItem | undefined = item;
+      let lastWalker: MenuItem | undefined = item;
+
+      while (walker) {
+        lastWalker = walker;
+        walker = walker.options?.find((item: MenuItem) => item.select === 'pick' && item.selected);
+      }
+
+      this.leaf = lastWalker !== undefined ? lastWalker.value : undefined;
     }
   }
 
@@ -203,6 +216,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
   dispose() {
     for (let i = 0; i < this.length; i++) {
       this[i].removeEventListener('selected-changed', this._onItemSelectedChanged);
+      this[i].removeEventListener('path-changed', this._onSubOptionsPathChanged);
     }
     super.dispose();
   }
