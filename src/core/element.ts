@@ -220,7 +220,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         display: none;
       }
       :host[disabled] {
-        pointer-events: none; opacity: 0.5;
+        pointer-events: none;
+        opacity: 0.5;
       }
     `;
   }
