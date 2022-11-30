@@ -47,7 +47,7 @@ export class Binding {
       }
     }
     propertyInstance.binding = this;
-    node.setProperty(property, this.node[this.property]);
+    node.setProperty(property, this.node[this.property], true);
     const target = node as unknown as EventTarget;
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
     const targetProperties = this.getTargetProperties(target);
