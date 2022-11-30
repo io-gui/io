@@ -30,6 +30,10 @@ export class IoString extends IoField {
         white-space: pre;
         visibility: hidden;
       }
+      :host[placeholder]:empty:before {
+        content: attr(placeholder);
+        color: #555; 
+      }
     `;
   }
   @Property(false)
@@ -37,6 +41,9 @@ export class IoString extends IoField {
 
   @Property('')
   declare value: string;
+
+  @Property({value: '', reflect: 'both'})
+  declare placeholder: string;
 
   @Property(true)
   declare contenteditable: boolean;

@@ -47,6 +47,10 @@ export class IoNumber extends IoField {
       :host:not([positive]):before {
         content: ' ';
       }
+      :host[placeholder]:empty:before {
+        content: attr(placeholder);
+        color: #555; 
+      }
     `;
   }
 
@@ -85,6 +89,9 @@ export class IoNumber extends IoField {
 
   @Property({value: 'false', reflect: 'prop'})
   declare spellcheck: string;
+
+  @Property({value: '', reflect: 'both'})
+  declare placeholder: string;
 
   constructor(properties: Record<string, any> = {}) {
     super(properties);
