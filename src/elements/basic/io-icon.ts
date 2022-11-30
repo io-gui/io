@@ -15,8 +15,9 @@ export class IoIcon extends IoElement {
       --io-icon: {
         display: inline-block;
         height: var(--io-line-height);
-        line-height: var(--io-line-height);
+        line-height: var(--io-field-height);
         font-size: var(--io-font-size);
+        text-align: center;
       }
       :host {
         @apply --io-icon;
