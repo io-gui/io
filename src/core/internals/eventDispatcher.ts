@@ -189,6 +189,7 @@ export class EventDispatcher {
         }
       }
     }
+    if (!this.addedListeners[name]) return;
     if (!listener) {
       for (let i = 0; i < this.addedListeners[name].length; i ++) {
         if (this.isEventTarget) {
