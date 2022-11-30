@@ -15,7 +15,7 @@ window.addEventListener('blur', () => {
   });
 }, {capture: true});
 
-export type NudgeDirection = 'pointer' | 'top' | 'left' | 'bottom' | 'right';
+export type NudgeDirection = 'pointer' | 'up' | 'left' | 'down' | 'right';
 
 /**
  * This element is designed to be used as a singleton `IoLayerSingleton`.
@@ -87,6 +87,9 @@ export class IoLayer extends IoElement {
   }
   stopPropagation(event: Event) {
     event.stopPropagation();
+  }
+  onResized() {
+    this.expanded = false;
   }
   _onPointerup(event: PointerEvent) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
@@ -161,7 +164,7 @@ export class IoLayer extends IoElement {
       case 'pointer':
         this.nudgePointer(element, this.x + 5, this.y + 5, elemRect);
         break;
-      case 'top':
+      case 'up':
         this.nudgeUp(element, left, top, elemRect) ||
         this.nudgeDown(element, left, bottom, elemRect) ||
         this.nudgeUp(element, left, top, elemRect, top > bottomToHeight) ||
@@ -173,7 +176,7 @@ export class IoLayer extends IoElement {
         this.nudgeLeft(element, left, top, elemRect, left > rightToWidth) ||
         this.nudgeRight(element, right, top, elemRect, left <= rightToWidth);
         break;
-      case 'bottom':
+      case 'down':
         this.nudgeDown(element, left, bottom, elemRect) ||
         this.nudgeUp(element, left, top, elemRect) ||
         this.nudgeDown(element, left, bottom, elemRect, bottomToHeight > top) ||
