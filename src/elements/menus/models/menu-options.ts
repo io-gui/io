@@ -47,7 +47,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
       }
       debug: {
         if (this.find((otherItem: MenuItem) => otherItem.label === item.label)) {
-          console.warn(`MenuOptions: duplicate label "${item.label}"`);
+          console.warn(`MenuOptions._addItems: duplicate label "${item.label}"`);
         }
       }
       this.push(item);
@@ -66,7 +66,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
       if (item) {
         debug: {
           if (item.select !== 'pick') {
-            console.warn('MenuOptions: Path set to non-pickable MenuItem!');
+            console.warn('MenuOptions.pathChanged: Path set to non-pickable MenuItem!');
           }
         }
         if (item.select === 'pick') {
@@ -77,7 +77,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
         }
       } else {
         debug: {
-          console.warn(`MenuOptions: cannot find item for specified path "${this.path}"!`);
+          console.warn(`MenuOptions.pathChanged: cannot find item for specified path "${this.path}"!`);
         }
         for (let i = 0; i < this.length; i++) {
           if (this[i].select === 'pick') this[i].selected = false;
@@ -95,6 +95,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
       const item = this.find((item: MenuItem) => ((item.value === this.root && item.select === 'pick') || (_isNaN(item.value) && _isNaN(this.root))));
       if (item) {
         item.selected = true;
+      } else {
+        for (let i = 0; i < this.length; i++) {
+          if (this[i].select === 'pick') this[i].selected = false;
+        }
       }
     } else {
       for (let i = 0; i < this.length; i++) {
@@ -117,13 +121,13 @@ export class MenuOptions extends IoNodeMixin(Array) {
             options = item?.options || undefined;
           }
           if (item === undefined) {
-            console.warn(`MenuOptions: cannot find item for specified leaf value "${this.leaf}"!`);
+            console.warn(`MenuOptions.leafChanged: cannot find item for specified leaf value "${this.leaf}"!`);
           } else if (item.value !== this.leaf && !(_isNaN(item.value) && _isNaN(this.leaf))) {
             // TODO: test this?
-            console.warn(`MenuOptions: leaf property value "${this.leaf}" diverged from item specified by path!`);
+            console.warn(`MenuOptions.leafChanged: leaf property value "${this.leaf}" diverged from item specified by path!`);
           }
         } else {
-          console.warn(`MenuOptions: leaf property value set "${this.leaf}" but path is empty!`);
+          console.warn(`MenuOptions.leafChanged: leaf property value set "${this.leaf}" but path is empty!`);
         }
       }
     }
@@ -142,10 +146,14 @@ export class MenuOptions extends IoNodeMixin(Array) {
       lastWalker = walker;
       walker = walker.options?.find((item: MenuItem) => item.select === 'pick' && item.selected);
     }
+
+    // TODO: when binding two menu trees with both `root` and `path` properties, it is important that we
+    // update the `path` property before the `root`. Otherwise, the menu binding will be broken!
+    // TODO: create a test for this edge-case.
     this.setProperties({
+      path: path.join(this.delimiter),
       root: item !== undefined ? item.value : undefined,
       leaf: lastWalker !== undefined ? lastWalker.value : undefined,
-      path: path.join(this.delimiter),
     });
   }
 
@@ -169,24 +177,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   _onSubOptionsPathChanged(event: CustomEvent) {
     const item = event.target as unknown as MenuItem;
-    const itemPath = event.detail.value;
-
-    const path = this.path ? [...this.path.split(this.delimiter)] : [];
-    path.shift();
-    const nextPath = path.join(this.delimiter);
-
-    if (itemPath && itemPath === nextPath) {
-
-      let walker: MenuItem | undefined = item;
-      let lastWalker: MenuItem | undefined = item;
-
-      while (walker) {
-        lastWalker = walker;
-        walker = walker.options?.find((item: MenuItem) => item.select === 'pick' && item.selected);
-      }
-
-      this.leaf = lastWalker !== undefined ? lastWalker.value : undefined;
-    }
+    item.selected ? this.updatePaths(item) : this.updatePaths();
   }
 
   selectDefault() {

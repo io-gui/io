@@ -84,11 +84,18 @@ export class IoDemoElements extends IoElement {
       :host > div > div > io-icon {
         margin-top: var(--io-spacing);
       }
+      :host > div > div > io-menu-options:not([horizontal]) {
+        flex: 0 1 12em;
+      }
     `;
   }
   static get Properties() {
     return {
       string: 'zero',
+
+      menuPath: '',
+      menuRoot: undefined,
+
       // string: 'Hello IoGUI!',
       number: 1,
       boolean: false,
@@ -124,57 +131,57 @@ export class IoDemoElements extends IoElement {
   constructor(props) {
     super(props);
     this.template([
-      // ['div', [
-      //   ['io-label', {label: 'Basic Editors'}],
-      //   ['div', [
-      //     ['io-label', {label: 'icon'}],
-      //     ['io-icon', {icon: 'icons:io'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'icon [stroke]'}],
-      //     ['io-icon', {icon: 'icons:io', stroke: true}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'field'}],
-      //     ['io-field', {value: this.bind('string')}],
-      //   ]],
+      ['div', [
+        ['io-label', {label: 'Basic Editors'}],
+        ['div', [
+          ['io-label', {label: 'icon'}],
+          ['io-icon', {icon: 'icons:io'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'icon [stroke]'}],
+          ['io-icon', {icon: 'icons:io', stroke: true}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'field'}],
+          ['io-field', {value: this.bind('string')}],
+        ]],
         ['div', [
           ['io-label', {label: 'string'}],
           ['io-string', {value: this.bind('string')}],
         ]],
-      //   ['div', [
-      //     ['io-label', {label: 'string [live]'}],
-      //     ['io-string', {value: this.bind('string'), live: true}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'number'}],
-      //     ['io-number', {value: this.bind('number')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'number [ladder]'}],
-      //     ['io-number', {ladder: true, value: this.bind('number')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'number [x2]'}],
-      //     ['io-number', {conversion: 2, value: this.bind('number')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'boolean'}],
-      //     ['io-boolean', {value: this.bind('boolean')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'boolean [icon]'}],
-      //     ['io-boolean', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'switch'}],
-      //     ['io-switch', {value: this.bind('boolean')}],
-      //   ]],
-      //   ['div', [
-      //     ['io-label', {label: 'button'}],
-      //     ['io-button', {label: 'Button', icon: 'icons:check'}],
-      //   ]],
-      // ]],
+        ['div', [
+          ['io-label', {label: 'string [live]'}],
+          ['io-string', {value: this.bind('string'), live: true}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'number'}],
+          ['io-number', {value: this.bind('number')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'number [ladder]'}],
+          ['io-number', {ladder: true, value: this.bind('number')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'number [x2]'}],
+          ['io-number', {conversion: 2, value: this.bind('number')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'boolean'}],
+          ['io-boolean', {value: this.bind('boolean')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'boolean [icon]'}],
+          ['io-boolean', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'switch'}],
+          ['io-switch', {value: this.bind('boolean')}],
+        ]],
+        ['div', [
+          ['io-label', {label: 'button'}],
+          ['io-button', {label: 'Button', icon: 'icons:check'}],
+        ]],
+      ]],
       // ['div', [
       //   ['io-label', {label: 'Sliders'}],
       //   ['div', [
@@ -413,39 +420,100 @@ export class IoDemoElements extends IoElement {
         ['io-label', {label: 'Menus'}],
         ['div', [
           ['io-label', {label: 'menu-item'}],
-          ['io-menu-item', {label: 'menu item', item: {
+          ['io-menu-item', {label: 'menu item', item: new MenuItem({
+            selected: this.bind('boolean'),
             value: 'value',
             hint: 'hint',
             label: 'menu item',
             icon: '💚',
-          }}],
+          })}],
         ]],
         ['div', [
           ['io-label', {label: 'menu-options'}],
           ['io-menu-options', {
             searchable: true,
-            options: new MenuOptions(['one', 'zero', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
-              path: this.bind('string')
+            options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
+              root: this.bind('menuRoot')
             }),
           }],
           ['io-menu-options', {
-            options: new MenuOptions(['one', 'zero', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'].reverse(), {
-              path: this.bind('string')
+            options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'].reverse(), {
+              root: this.bind('menuRoot')
             }),
           }],
           ['io-menu-options', {
-            options: new MenuOptions(['one', 'zero', 'two', 'three', 'four'], {
-              path: this.bind('string')
+            options: new MenuOptions([
+              {value: 'zero', hint: 'Number(0)', icon: 'icons:film'},
+              {value: 'one', hint: 'Number(1)', icon: 'icons:layers'},
+              {value: 'two', hint: 'Number(2)', icon: 'icons:box'},
+              {value: 'three', hint: 'Number(3)', icon: 'icons:check'},
+              {value: 'four', hint: 'Number(4)', icon: 'icons:code'},
+            ], {
+              root: this.bind('menuRoot')
             }),
           }],
         ]],
         ['div', [
-          ['io-label', {label: 'menu-options [horizontal]'}],
+          ['io-label', {label: '[horizontal]'}],
           ['io-menu-options', {
             horizontal: true,
             searchable: true,
-            options: new MenuOptions(['one', 'zero', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
-              path: this.bind('string')
+            options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
+              root: this.bind('menuRoot')
+            }),
+          }],
+        ]],
+        ['div', [
+          ['io-label', {label: '[noPartialCollapse]'}],
+          ['io-menu-options', {
+            horizontal: true,
+            noPartialCollapse: true,
+            options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
+              root: this.bind('menuRoot')
+            }),
+          }],
+        ]],
+        ['div', [
+          ['io-label', {label: '[suboptions]'}],
+          ['io-menu-options', {
+            options: new MenuOptions([
+              {value: 'zero', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'one', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'two', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'three', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'four', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'five', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'six', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'seven', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'eight', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'nine', options: new MenuOptions(['1', '2', '3'])},
+            ], {
+              // TODO: when binding two menu trees with both `root` and `path` properties, it is important that `MenuOptions.updatePaths > setProperties`
+              // updates the `path` property before the `root`. Otherwise, the menu binding will be broken!
+              // TODO: create a test for this edge-case.
+              path: this.bind('menuPath'),
+              root: this.bind('menuRoot'),
+            }),
+          }],
+        ]],
+        ['div', [
+          ['io-label', {label: '[suboptions][horiz.]'}],
+          ['io-menu-options', {
+            horizontal: true,
+            options: new MenuOptions([
+              {value: 'zero', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'one', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'two', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'three', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'four', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'five', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'six', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'seven', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'eight', options: new MenuOptions(['1', '2', '3'])},
+              {value: 'nine', options: new MenuOptions(['1', '2', '3'])},
+            ], {
+              path: this.bind('menuPath'),
+              root: this.bind('menuRoot'),
             }),
           }],
         ]],

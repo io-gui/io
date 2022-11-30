@@ -3,6 +3,7 @@ import { Property } from '../../core/internals/property.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
 import { IoLayerSingleton, NudgeDirection } from '../../core/layer.js';
+import { IoThemeSingleton } from '../../core/theme.js';
 import { IoMenuItem } from './io-menu-item.js';
 
 const rects = new WeakMap();
@@ -16,94 +17,100 @@ export class IoMenuOptions extends IoElement {
     return /* css */`
     :host {
       @apply --io-panel;
-      @apply --io-column;
-      position: relative;
       align-self: flex-start;
-      align-items: stretch;
-      white-space: nowrap;
       user-select: none;
-      background-image: none;
-      opacity: 1;
       transition: opacity 0.25s;
-      overflow-y: auto !important;
-      flex: 0 1 auto;
     }
-    :host > io-menu-item {
-      align-self: stretch;
-      flex: 0 0 auto;
-    }
-    :host > io-menu-item[hidden] {
-      display: inherit;
-      visibility: hidden;
-      pointer-events: none;
-    }
+
     :host[inlayer] {
-      display: inline-block;
+      min-width: 8em;
       box-shadow: var(--io-shadow);
+      overflow-y: auto !important;
     }
     :host[inlayer]:not([expanded]) {
       visibility: hidden;
       opacity: 0;
     }
+
+    :host > .item {
+      border-radius: 0;
+      position: relative;
+      overflow: visible;
+    }
+
     :host[horizontal] {
       flex-direction: row;
       align-self: stretch;
       justify-self: stretch;
-      flex-wrap: nowrap;
-      padding: 0 var(--io-spacing);
       overflow-x: hidden;
+      min-height: calc(var(--io-field-height) + calc(var(--io-spacing2) + var(--io-border-width2)));
     }
-    :host[horizontal] > io-menu-item {
-      padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
+
+    /* Item spacing */
+    :host:not([horizontal]) > .item {
+      margin-bottom: var(--io-border-width);
     }
-    :host[horizontal] > io-menu-item:not(:first-of-type):not([role="navigation"]) {
-      border-left:1px solid var(--io-color-border);
+    :host:not([horizontal]) > .item:first-of-type {
+      margin-top: var(--io-spacing);
     }
-    :host:not([horizontal]) > io-menu-item > * {
-      min-width: 0.5em;
-      padding: 0 var(--io-spacing);
+    :host[horizontal] > .item {
+      margin-left: var(--io-border-width);
+      padding: var(--io-spacing) calc(0.75 * var(--io-line-height));
     }
-    :host[horizontal] > io-menu-item > .io-menu-hint,
-    :host[horizontal] > io-menu-item > .io-menu-more {
+
+    /* Item divider */
+    :host > .item:not(:last-of-type)::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    :host:not([horizontal]) > .item:not(:last-of-type)::before {
+      right: 0;
+      bottom: calc(var(--io-border-width) * -2);
+      border-bottom: var(--io-border);
+      border-bottom-color: var(--io-color);
+      opacity: 0.05;
+    }
+    :host[horizontal] > .item:not(:last-of-type)::before {
+      top: 0;
+      right: calc(var(--io-border-width) * -2);
+      border-right: var(--io-border);
+      border-right-color: var(--io-color);
+      opacity: 0.25;
+    }
+
+    /* Remove hints from horizontal menu */
+    :host[horizontal] > .item > .hint {
       display: none;
     }
 
-    :host[horizontal] > io-menu-item[role="navigation"] {
-      position: absolute;
-      right: 0;
-      margin-left: auto;
+    /* Search field */
+    :host > .search {
+      border-radius: 0;
+      flex: 0 0 auto;
     }
-    :host[horizontal] > io-menu-item[role="navigation"]:after {
-      content: '' !important;
-      display: none !important;
-    }
-    :host[horizontal] > io-menu-item[role="navigation"][hidden] {
-      display: inline-block;
-      width: 0;
-      padding: 0;
-      border: 0;
-      overflow: hidden;
-      visibility: hidden;
+    :host[horizontal] > .search {
+      margin-left: var(--io-border-width);
+      flex: 0 0 8em;
     }
 
-    :host > io-string {
-      align-self: stretch;
-      flex: 0 0 auto;
-      min-width: 8em;
+    /* Hamburger menu for overflow items */
+    :host > .hamburger {
+      border-color: transparent !important; 
     }
-    :host > io-string:empty:before {
-      content: '\\1F50D';
-      white-space: pre;
-      margin-top: 0.5em;
-      padding: 0.25em;
-      visibility: visible;
-      /* opacity: 0.33; */
+    :host[horizontal] > .hamburger {
+      position: absolute;
+      right: var(--io-spacing2);
+      padding: var(--io-spacing);
+    }
+    :host > .hamburger:after {
+      display: none;
     }
     `;
   }
 
-  // TODO: consider specifying type without auto-initalization
-  @Property({observe: true})
+  @Property({observe: true, type: MenuOptions})
   declare options: MenuOptions;
 
   @Property({value: false, reflect: 'prop'})
@@ -123,6 +130,9 @@ export class IoMenuOptions extends IoElement {
 
   @Property(Infinity)
   declare depth: number;
+
+  @Property(false)
+  declare noPartialCollapse: boolean;
 
   @Property({value: '', reflect: 'prop'})
   declare overflow: string;
@@ -174,48 +184,44 @@ export class IoMenuOptions extends IoElement {
   }
 
   _onSetOverflow() {
-    const items = this.querySelectorAll('io-menu-item:not([role="navigation"])');
+    const items = this.querySelectorAll('.item');
     this._overflownItems.length = 0;
     if (this.horizontal) {
-      const hamburger = this.querySelector('[role="navigation"]');
-      let end = this.getBoundingClientRect().right;
-      let hamburgetWidth = 0;
+      const hamburger = this.querySelector('.hamburger');
+      let hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
+      let end = this.getBoundingClientRect().right - (IoThemeSingleton.ioBorderWidth + IoThemeSingleton.ioSpacing);
       let last = Infinity;
+      let hasOwerflown = false;
 
       for (let i = items.length; i--;) {
         const r = items[i].getBoundingClientRect();
-        const rect = rects.get(items[i]) || {right: 0, width: 0};
+        const rect = rects.get(items[i].item) || {right: 0, width: 0};
         if (r.right !== 0 && r.width !== 0)  {
           rect.right = r.right;
           rect.width = r.width;
-          rects.set(items[i], rect);
-        }
-
-        if (hamburger) {
-          hamburgetWidth = hamburger?.getBoundingClientRect().width;
-        }
-
-        if (items[i].selected) {
-          end -= rect.width;
-          items[i].hidden = false;
-          items[i].disabled = false;
-          continue;
+          rects.set(items[i].item, rect);
         }
 
         last = Math.min(last, rect.right);
-        if (i === (items.length - 1) && last < end) {
-          items[i].hidden = false;
-          items[i].disabled = false;
-        } else if (last < (end - hamburgetWidth)) {
-          items[i].hidden = false;
-          items[i].disabled = false;
-        } else {
+        if (this.noPartialCollapse && hasOwerflown) {
           items[i].hidden = true;
-          items[i].disabled = true;
+          this._overflownItems.push(items[i].item);
+        } else if (i === (items.length - 1) && last < end) {
+          items[i].hidden = false;
+        } else if (last < (end - hamburgetWidth * 1.5)) {
+          items[i].hidden = false;
+        } else {
+          hasOwerflown = true;
+          items[i].hidden = true;
           this._overflownItems.push(items[i].item);
         }
       }
-      this.overflow = this._overflownItems.length ? JSON.stringify(this._overflownItems.map((item: MenuItem) => item.label)) : '';
+
+      if (this._overflownItems.length) {
+        this.overflow = JSON.stringify(this._overflownItems.map((item: MenuItem) => item.label));
+      } else {
+        this.overflow = '';
+      }
     } else {
       this.overflow = '';
     }
@@ -231,7 +237,7 @@ export class IoMenuOptions extends IoElement {
   expandedChanged() {
     if (this.expanded) {
       if (this.inlayer) {
-        this._onExpandInLayer();
+        this.throttle(this._onExpandInLayer);
       }
     } else {
       this.style.top = null;
@@ -243,8 +249,9 @@ export class IoMenuOptions extends IoElement {
   }
   searchChanged() {
     if (this.inlayer && this.$parent) {
-      this.throttle(this._clipHeight);
+      this.throttle(this._onClipHeight);
     }
+    this.throttle(this._onSetOverflow);
   }
   _onExpandInLayer() {
     debug: {
@@ -256,10 +263,10 @@ export class IoMenuOptions extends IoElement {
     if (this.$parent) {
       const pRect = this.$parent.getBoundingClientRect();
       IoLayerSingleton.setElementPosition(this as unknown as HTMLElement, this.position, pRect);
-      this._clipHeight();
+      this._onClipHeight();
     }
   }
-  _clipHeight() {
+  _onClipHeight() {
     this.scrollTop = 0;
     if (!this.firstChild) return;
 
@@ -282,9 +289,9 @@ export class IoMenuOptions extends IoElement {
   _filterOptions(options: any, search: string, _depth = 5, _chain: any[] = [], _i = 0): any {
     function predicateFn(o: any) {
       if (!!o.value || !!o.action) {
-        if (String(o.value).toLowerCase().search(search) !== -1) return true;
-        if (o.label && o.label.toLowerCase().search(search) !== -1) return true;
-        if (o.hint && o.hint.toLowerCase().search(search) !== -1) return true;
+        if (String(o.value).toLowerCase().indexOf(search) !== -1) return true;
+        if (o.label && o.label.toLowerCase().indexOf(search) !== -1) return true;
+        if (o.hint && o.hint.toLowerCase().indexOf(search) !== -1) return true;
       }
       return false;
     }
@@ -311,6 +318,7 @@ export class IoMenuOptions extends IoElement {
       elements.push(['io-string', {
         id: 'search',
         role: 'search',
+        class: 'search',
         value: this.bind('search'),
         placeholder: 'Search',
         live: true
@@ -324,21 +332,22 @@ export class IoMenuOptions extends IoElement {
     for (let i = 0; i < options.length; i++) {
       elements.push(['io-menu-item', {
         item: options[i],
-        direction: this.horizontal ? 'bottom' : 'right',
+        class: 'item',
+        direction: this.horizontal ? 'down' : 'right',
         depth: this.depth
       }]);
     }
 
     if (this.overflow) {
-      const item = new MenuItem({
-        label: '',
-        icon: 'icons:hamburger',
-        options: new MenuOptions(this._overflownItems),
-      });
       elements.push(['io-menu-item', {
         depth: this.depth + 1,
         role: 'navigation',
-        item: item
+        class: 'hamburger',
+        item: new MenuItem({
+          label: '',
+          icon: 'icons:hamburger',
+          options: new MenuOptions(this._overflownItems),
+        })
       }]);
     }
     this.template(elements);

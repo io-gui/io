@@ -192,6 +192,15 @@ export default class {
         chai.expect(options[1].options.root).to.be.equal('bar');
         chai.expect(options[1].options.leaf).to.be.equal('bar');
 
+        options[1].options[0].selected = true;
+        chai.expect(options.path).to.be.equal('2,foo');
+        chai.expect(options[1].options.path).to.be.equal('foo');
+        chai.expect(options[1].options[1].selected).to.be.equal(false);
+        chai.expect(options.root).to.be.equal(2);
+        chai.expect(options.leaf).to.be.equal('foo');
+        chai.expect(options[1].options.root).to.be.equal('foo');
+        chai.expect(options[1].options.leaf).to.be.equal('foo');
+
         options[2].options[2].options[2].selected = true;
         chai.expect(options.path).to.be.equal('3,buzz,NaN');
         chai.expect(options[2].options.path).to.be.equal('buzz,NaN');
@@ -379,23 +388,23 @@ export default class {
 
         eventStack.length = 0;
         options[0].selected = true;
-        chai.expect(eventStack).to.be.eql(['rootChanged: 1', 'leafChanged: 1', 'path changed: 1']);
+        chai.expect(eventStack).to.be.eql(['path changed: 1', 'rootChanged: 1', 'leafChanged: 1']);
 
         eventStack.length = 0;
         options[1].options[1].selected = true;
-        chai.expect(eventStack).to.be.eql(['rootChanged: 2', 'leafChanged: bar', 'path changed: 2,bar']);
+        chai.expect(eventStack).to.be.eql(['path changed: 2,bar', 'rootChanged: 2', 'leafChanged: bar']);
 
         eventStack.length = 0;
         options[2].options[2].options[2].selected = true;
-        chai.expect(eventStack).to.be.eql(['rootChanged: 3', 'leafChanged: NaN', 'path changed: 3,buzz,NaN']);
+        chai.expect(eventStack).to.be.eql(['path changed: 3,buzz,NaN', 'rootChanged: 3', 'leafChanged: NaN']);
 
         eventStack.length = 0;
         options[2].selected = false;
-        chai.expect(eventStack).to.be.eql(['rootChanged: undefined', 'leafChanged: undefined', 'path changed: ']);
+        chai.expect(eventStack).to.be.eql(['path changed: ', 'rootChanged: undefined', 'leafChanged: undefined']);
 
         eventStack.length = 0;
         options[2].selected = true;
-        chai.expect(eventStack).to.be.eql(['rootChanged: 3', 'leafChanged: 3', 'path changed: 3']);
+        chai.expect(eventStack).to.be.eql(['path changed: 3', 'rootChanged: 3', 'leafChanged: 3']);
       });
     });
   }

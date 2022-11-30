@@ -97,7 +97,7 @@ export class MenuItem extends IoNode {
       }
 
       if (item.selected === undefined && (args.select === 'pick' || args.select === undefined) && item.options) {
-        item.selected = !!item.options.find((item: MenuItem) => item.selected && item.select === 'pick')
+        item.selected = !!item.options.find((item: MenuItem) => item.selected && item.select === 'pick');
       }
     }
 

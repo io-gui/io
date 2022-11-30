@@ -15,10 +15,9 @@ export class IoMenuItem extends IoField {
   static get Style() {
     return /* css */`
     :host {
-      display: flex;
-      flex: 0 0 auto;
-      flex-direction: row;
-      border-radius: 0;
+      background-color: var(--io-background-color-dark);
+      user-select: none;
+      /* position: relative; */
     }
     :host > * {
       pointer-events: none;
@@ -26,36 +25,22 @@ export class IoMenuItem extends IoField {
     :host > :empty {
       display: none;
     }
-    :host > :not(:empty) {
-      padding: 0 var(--io-spacing);
-    }
-    :host > io-icon {
+    :host > io-icon:not(.hasmore) {
       width: var(--io-line-height);
       height: var(--io-line-height);
-      margin-right: var(--io-spacing);
     }
-    :host > .io-menu-label {
+    :host > .label {
       flex: 1 1 auto;
       text-overflow: ellipsis;
+      padding: 0 var(--io-spacing2);
     }
-    :host > .io-menu-hint {
+    :host > .hint {
       opacity: 0.25;
+      margin: 0 var(--io-spacing4);
     }
-    :host[hasmore][direction="up"]:after {
-      content: '\\25B4';
-      margin-left: 0.5em;
-    }
-    :host[hasmore][direction="right"]:after {
-      content: '\\25B8';
-      margin-left: 0.5em;
-    }
-    :host[hasmore][direction="bottom"]:after {
-      content: '\\25BE';
-      margin-left: 0.5em;
-    }
-    :host[hasmore][direction="left"]:before {
-      content: '\\25C2';
-      margin-right: 0.5em;
+    :host > io-icon.hasmore {
+      opacity: 0.5;
+      line-height: initial;
     }
     :host[selected][direction="top"],
     :host[selected][direction="bottom"] {
@@ -77,7 +62,7 @@ export class IoMenuItem extends IoField {
   @Property({value: 'bottom', reflect: 'prop'})
   declare direction: string;
 
-  @Property('')
+  @Property({value: '', reflect: 'prop'})
   declare icon: string;
 
   @Property(Infinity)
@@ -120,7 +105,7 @@ export class IoMenuItem extends IoField {
     if (this.expanded) this._onPointermove(event);
   }
   _onLayerPointerup(event: PointerEvent) {
-    if (this.expanded) this._onPointerup(event);
+    if (this.expanded) this._onPointerupAction(event);
   }
   _onClick() {
     const item = this.item;
@@ -209,8 +194,10 @@ export class IoMenuItem extends IoField {
     event.stopPropagation();
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
+    this._onPointerupAction(event);
+  }
+  _onPointerupAction(event: PointerEvent) {
     const item = this._gethovered(event);
-
     if (item) {
       item.focus();
       item._onClick(event);
@@ -348,13 +335,20 @@ export class IoMenuItem extends IoField {
     }
   }
   changed() {
+    if (this.$options !== undefined && this.item.options) {
+      this.$options.options = this.item.options;
+    }
     const icon = this.icon || this.item.icon;
     this.setAttribute('selected', this.item.selected);
     this.setAttribute('hasmore', this.hasmore);
     this.template([
+      this.hasmore && this.direction === 'left' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_left'}] : null,
+      this.hasmore && this.direction === 'up' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_up'}] : null,
       icon ? ['io-icon', {icon: icon}] : null,
-      ['span', {class: 'io-menu-label'}, this.item.label],
-      ['span', {class: 'io-menu-hint'}, this.item.hint],
+      ['span', {class: 'label'}, this.item.label],
+      ['span', {class: 'hint'}, this.item.hint],
+      this.hasmore && this.direction === 'right' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_right'}] : null,
+      this.hasmore && this.direction === 'down' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_down'}] : null,
     ]);
   }
 }
