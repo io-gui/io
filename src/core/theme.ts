@@ -35,7 +35,9 @@ type Variables = {
   ioFontSize: number;
   ioStrokeWidth: number;
   ioBorderRadius: number;
+  ioBorderRadius2: number;
   ioBorderWidth: number;
+  ioBorderWidth2: number;
   ioBackgroundColor: Color;
   ioBackgroundColorLight: Color;
   ioBackgroundColorDark: Color;
@@ -74,8 +76,10 @@ const defaultThemes: Themes = {
     ioFieldHeight4: 168,
     ioFontSize: 14,
     ioStrokeWidth: 1,
-    ioBorderRadius: 3,
+    ioBorderRadius: 2,
+    ioBorderRadius2: 4,
     ioBorderWidth: 1,
+    ioBorderWidth2: 2,
     ioBackgroundColor: new Color(1, 1, 1, 1),
     ioBackgroundColorLight: new Color(0.6, 0.6, 0.6, 1),
     ioBackgroundColorDark: new Color(0.84, 0.84, 0.84, 1),
@@ -110,8 +114,10 @@ const defaultThemes: Themes = {
     ioFieldHeight4: 168,
     ioFontSize: 14,
     ioStrokeWidth: 1,
-    ioBorderRadius: 3,
+    ioBorderRadius: 2,
+    ioBorderRadius2: 4,
     ioBorderWidth: 1,
+    ioBorderWidth2: 2,
     ioBackgroundColor: new Color(0.065, 0.065, 0.065, 1),
     ioBackgroundColorLight: new Color(0.3, 0.3, 0.3, 1),
     ioBackgroundColorDark: new Color(0.5, 0.5, 0.5, 1),
@@ -134,27 +140,38 @@ const defaultThemes: Themes = {
 };
 
 const mixins = /* css */`
+  --io-row: {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-self: stretch;
+    align-items: stretch;
+    justify-self: stretch;
+  }
+  --io-column: {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-self: stretch;
+    align-items: stretch;
+    justify-self: stretch;
+  }
   --io-panel: {
-    border-radius: calc(var(--io-border-radius) + var(--io-spacing));
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-self: stretch;
+    align-items: stretch;
+    justify-self: stretch;
+    border-radius: var(--io-border-radius);
     border: var(--io-border);
     border-color: var(--io-color-border-outset);
     color: var(--io-color-field);
     background-color: var(--io-background-color-dark);
     padding: var(--io-spacing);
-  }
-  --io-row: {
-    display: flex;
-    flex: 1 1;
-    flex-direction: row;
-    align-self: stretch;
-    justify-self: stretch;
-  }
-  --io-column: {
-    display: flex;
-    flex: 1 1;
-    flex-direction: column;
-    align-self: stretch;
-    justify-self: stretch;
   }
   --io-grid2: {
     display: grid;
@@ -277,6 +294,8 @@ export class IoTheme extends IoElement {
     this.ioSpacing2 = this.ioSpacing * 2;
     this.ioSpacing3 = this.ioSpacing * 3;
     this.ioSpacing4 = this.ioSpacing * 4;
+    this.ioBorderRadius2 = this.ioBorderRadius * 2;
+    this.ioBorderWidth2 = this.ioBorderWidth * 2;
 
     const propertyVariables = Array.from(this._properties.keys()).reduce(
       (result, prop) => {
