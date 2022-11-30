@@ -2,7 +2,7 @@ import { IoElement, RegisterIoElement } from './element.js';
 import { Property, PropertyDeclarations } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
 
-const THEME_VERSION = 'v0.4';
+const THEME_VERSION = 'v0.5';
 
 const styleElement = document.createElement('style');
 styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
