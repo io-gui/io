@@ -231,7 +231,7 @@ export default class {
               this._prop0Change = change;
             }
             prop1Changed(change: Change) {
-              eventStack.push('TestElement1: prop1Changed' + this.prop1);
+              eventStack.push('TestElement1: prop1Changed ' + this.prop1);
               this._prop1counter++;
               this._prop1Change = change;
             }
@@ -294,8 +294,8 @@ export default class {
           chai.expect(element.subnode.prop1).to.equal('buzz');
           chai.expect(element.$.subelement.prop1).to.equal('buzz');
 
-          // NOTE: element.subnode.setProperties on 2 bound properties causes change() event twice.
-          // TODO: Consider fixing // chai.expect(element._counter).to.equal(3);
+          // // NOTE: element.subnode.setProperties on 2 bound properties causes change() event on element twice.
+          // // TODO: Consider fixing // chai.expect(element._counter).to.equal(3);
           chai.expect(element._counter).to.equal(4);
 
           chai.expect(element._prop0counter).to.equal(3);
@@ -303,7 +303,8 @@ export default class {
           chai.expect(element._prop1counter).to.equal(2);
           chai.expect(element._prop1Change).to.eql({property: 'prop1', value: 'buzz', oldValue: 'foo'});
 
-          chai.expect(eventStack).to.eql(['TestNode: prop0Changed -1', 'TestNode: changed', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop0Changed 1', 'TestElement1: prop0Changed 1', 'TestElement1: changed', 'TestNode: changed', 'TestElement1: prop0Changed 2', 'TestNode: prop0Changed 2', 'TestNode: changed', 'TestElement1: prop1Changedfoo', 'TestNode: prop1Changed foo', 'TestNode: changed', 'TestElement1: changed', 'TestNode: prop0Changed 3', 'TestElement1: prop0Changed 3', 'TestElement1: changed', 'TestNode: prop1Changed buzz', 'TestElement1: prop1Changedbuzz', 'TestElement1: changed', 'TestNode: changed']);
+          // console.log(eventStack);
+          chai.expect(eventStack).to.eql(['TestNode: prop0Changed -1', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop0Changed 1', 'TestElement1: prop0Changed 1', 'TestElement1: changed', 'TestNode: changed', 'TestElement1: prop0Changed 2', 'TestNode: prop0Changed 2', 'TestNode: changed', 'TestElement1: prop1Changed foo', 'TestNode: prop1Changed foo', 'TestNode: changed', 'TestElement1: changed', 'TestNode: prop0Changed 3', 'TestElement1: prop0Changed 3', 'TestElement1: changed', 'TestNode: prop1Changed buzz', 'TestElement1: prop1Changed buzz', 'TestElement1: changed', 'TestNode: changed']);
 
           eventStack.length = 0;
 

@@ -137,11 +137,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             if (oldBinding) {
               oldBinding.removeTarget(this, name);
             }
-            binding.addTarget(this, name);
-            value = binding.value;
             // TODO: check for regressions.
             // binding.addTarget will invoke setProperty again, so maybe we can skip the rest of the logic.
-            prop.value = value;
+            binding.addTarget(this, name);
             return;
           } else {
             // NOTE: Whenusing change() > template() > setProperties() to batch-set multiple properties with bindings, it causes
