@@ -33,6 +33,8 @@ export class IoString extends IoField {
       :host[placeholder]:empty:before {
         content: attr(placeholder);
         color: #555; 
+        padding: 0.25em;
+        visibility: visible;
       }
     `;
   }
