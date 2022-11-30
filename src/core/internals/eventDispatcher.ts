@@ -44,11 +44,11 @@ const LISTENER_OPTIONS = ['capture', 'passive'];
  */
 export const listenerFromDefinition = (node: IoNode | HTMLElement, def: ListenerDeclaration): Listener => {
   debug: {
-    if (typeof def[0] !== 'string' && typeof def[0] !== 'function') console.warn('Invalid listener type');
+    if (typeof def[0] !== 'string' && typeof def[0] !== 'function') console.warn('listenerFromDefinition: Invalid listener type');
     if (def[1]) {
-      if (typeof def[1] !== 'object') console.warn('Invalid listener options type');
+      if (typeof def[1] !== 'object') console.warn('listenerFromDefinition: Invalid listener options type');
       else if (Object.keys(def[1]).some(k => !(LISTENER_OPTIONS.includes(k)))) {
-        console.warn('Invalid listener options type');
+        console.warn('listenerFromDefinition: Invalid listener options type');
       }
     }
   }
@@ -158,11 +158,11 @@ export class EventDispatcher {
     this.addedListeners[name] = this.addedListeners[name] || [];
     debug: {
       const l = this.addedListeners[name].findIndex(l => l[0] === listener);
-      if (l !== -1) console.warn(`Listener ${name} already added!`);
-      if (typeof listener !== 'function') console.warn('Invalid listener type!');
+      if (l !== -1) console.warn(`EventDispatcher.addEventListener: Listener ${name} already added!`);
+      if (typeof listener !== 'function') console.warn('EventDispatcher.addEventListener: Invalid listener type!');
       if (options) {
-        if (typeof options !== 'object') console.warn('Invalid listener options type');
-        else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k)))) console.warn('Invalid listener options type');
+        if (typeof options !== 'object') console.warn('EventDispatcher.addEventListener: Invalid listener options type');
+        else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k)))) console.warn('EventDispatcher.addEventListener: Invalid listener options type');
       }
     }
     this.addedListeners[name].push(options ? [listener, options] : [listener]);
@@ -180,12 +180,12 @@ export class EventDispatcher {
   */
   removeEventListener(name: string, listener?: CustomEventListener, options?: AddEventListenerOptions) {
     debug: {
-      if (!this.addedListeners[name]) console.warn(`Listener ${name} not found!`);
-      if (listener && typeof listener !== 'function') console.warn('Invalid listener type!');
+      if (!this.addedListeners[name]) console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
+      if (listener && typeof listener !== 'function') console.warn('EventDispatcher.removeEventListener: Invalid listener type!');
       if (options) {
-        if (typeof options !== 'object') console.warn('Invalid listener options type');
+        if (typeof options !== 'object') console.warn('EventDispatcher.removeEventListener: Invalid listener options type');
         else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k)))) {
-          console.warn('Invalid listener options type');
+          console.warn('EventDispatcher.removeEventListener: Invalid listener options type');
         }
       }
     }
@@ -201,7 +201,7 @@ export class EventDispatcher {
     } else {
       const l = this.addedListeners[name].findIndex(item => item[0] = listener);
       debug: {
-        if (l === -1) console.warn(`Listener ${name} not found!`);
+        if (l === -1) console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
       }
       this.addedListeners[name].splice(l, 1);
       if (this.isEventTarget) {
@@ -231,7 +231,7 @@ export class EventDispatcher {
       }
       if (this.propListeners[name]) {
         debug: {
-          if (this.propListeners[name].length > 1) console.warn(`PropListeners[${name}] array too long!`);
+          if (this.propListeners[name].length > 1) console.warn(`EventDispatcher.dispathEvent: PropListeners[${name}] array too long!`);
         }
         this.propListeners[name][0][0].call(node, payload);
       }
