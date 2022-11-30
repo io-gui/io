@@ -68,8 +68,7 @@ export class IoMenuItem extends IoField {
     `;
   }
 
-  // TODO: consider specifying type without auto-initalization
-  @Property({observe: true})
+  @Property({observe: true, type: MenuItem})
   declare item: MenuItem;
 
   @Property({value: false, reflect: 'prop'})
@@ -142,7 +141,7 @@ export class IoMenuItem extends IoField {
       } else if (item.select === 'link') {
         window.open(item.value, '_blank');
       }
-      // this.dispatchEvent('item-clicked', item, true);
+      this.dispatchEvent('item-clicked', item, true);
       this.throttle(this._onCollapse, undefined, true);
     }
   }
@@ -316,10 +315,11 @@ export class IoMenuItem extends IoField {
 
       if (this.item.options && this.$options === undefined) {
         this.$options = new IoMenuOptions({
-          depth: this.depth - 1,
           expanded: this.bind('expanded'),
+          depth: this.depth - 1,
           options: this.item.options,
           position: this.direction,
+          inlayer: true,
           $parent: this,
         });
       }
@@ -327,8 +327,10 @@ export class IoMenuItem extends IoField {
       // Colapse all siblings and their ancestors
       const $allitems = getMenuDescendants(getMenuRoot(this));
       const $ancestoritems = getMenuAncestors(this);
+      const $descendants = getMenuDescendants(this);
+
       for (let i = $allitems.length; i--;) {
-        if ($ancestoritems.indexOf($allitems[i]) === -1) {
+        if ($allitems[i] !== this && $ancestoritems.indexOf($allitems[i]) === -1 && $descendants.indexOf($allitems[i]) === -1) {
           $allitems[i].expanded = false;
         }
       }
@@ -381,8 +383,8 @@ export function getMenuDescendants(element: IoMenuElementType): IoMenuElementTyp
 }
 
 export function getMenuAncestors(element: IoMenuElementType) {
+  const ancestors = [];
   let item = element;
-  const ancestors = [element];
   while (item && item.$parent) {
     item = item.$parent;
     if (item) ancestors.push(item);
@@ -400,12 +402,14 @@ export function getMenuRoot(element: IoMenuElementType) {
 
 function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
   if (['io-menu-item', 'io-option-menu'].indexOf(element.localName) !== -1) {
-    if (!element.inlayer || element.parentElement.expanded) {
-      const r = element.getBoundingClientRect();
-      const x = event.clientX;
-      const y = event.clientY;
-      const hovered = (r.top <= y && r.bottom >= y && r.left <= x && r.right >= x );
-      return hovered;
+    if (!element.disabled && !element.hidden) {
+      if (!element.inlayer || element.parentElement.expanded) {
+        const r = element.getBoundingClientRect();
+        const x = event.clientX;
+        const y = event.clientY;
+        const hovered = (r.top <= y && r.bottom >= y && r.left <= x && r.right >= x );
+        return hovered;
+      }
     }
   }
   return null;

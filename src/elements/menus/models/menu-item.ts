@@ -95,6 +95,10 @@ export class MenuItem extends IoNode {
           item.options = new MenuOptions(args.options);
         }
       }
+
+      if (item.selected === undefined && (args.select === 'pick' || args.select === undefined) && item.options) {
+        item.selected = !!item.options.find((item: MenuItem) => item.selected && item.select === 'pick')
+      }
     }
 
     debug: {

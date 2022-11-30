@@ -38,6 +38,7 @@ export class IoMenuOptions extends IoElement {
       pointer-events: none;
     }
     :host[inlayer] {
+      display: inline-block;
       box-shadow: var(--io-shadow);
     }
     :host[inlayer]:not([expanded]) {
@@ -66,14 +67,15 @@ export class IoMenuOptions extends IoElement {
     :host[horizontal] > io-menu-item > .io-menu-more {
       display: none;
     }
+
     :host[horizontal] > io-menu-item[role="navigation"] {
       position: absolute;
       right: 0;
       margin-left: auto;
     }
     :host[horizontal] > io-menu-item[role="navigation"]:after {
-      content: '';
-      display: none;
+      content: '' !important;
+      display: none !important;
     }
     :host[horizontal] > io-menu-item[role="navigation"][hidden] {
       display: inline-block;
@@ -83,6 +85,7 @@ export class IoMenuOptions extends IoElement {
       overflow: hidden;
       visibility: hidden;
     }
+
     :host > io-string {
       align-self: stretch;
       flex: 0 0 auto;
@@ -91,9 +94,10 @@ export class IoMenuOptions extends IoElement {
     :host > io-string:empty:before {
       content: '\\1F50D';
       white-space: pre;
-      padding: 0 0.25em;
+      margin-top: 0.5em;
+      padding: 0.25em;
       visibility: visible;
-      opacity: 0.33;
+      /* opacity: 0.33; */
     }
     `;
   }
@@ -120,8 +124,8 @@ export class IoMenuOptions extends IoElement {
   @Property(Infinity)
   declare depth: number;
 
-  @Property({value: false, reflect: 'prop'})
-  declare overflow: boolean;
+  @Property({value: '', reflect: 'prop'})
+  declare overflow: string;
 
   @Property({value: false, reflect: 'prop'})
   declare inlayer: boolean;
@@ -136,7 +140,7 @@ export class IoMenuOptions extends IoElement {
   declare $parent?: IoMenuItem;
 
   @Property({type: Array})
-  declare private _overflownItems: IoMenuItem[];
+  declare private _overflownItems: MenuItem[];
 
   static get Listeners() {
     return {
@@ -145,10 +149,6 @@ export class IoMenuOptions extends IoElement {
     };
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.inlayer = this.parentElement === IoLayerSingleton;
-  }
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;
     const d = event.detail as MenuItem;
@@ -166,6 +166,9 @@ export class IoMenuOptions extends IoElement {
     // Prevents IoLayer from stopping scroll in clipped options
     event.stopPropagation();
   }
+  init() {
+    this.throttle(this._onSetOverflow);
+  }
   onResized() {
     this.throttle(this._onSetOverflow);
   }
@@ -177,7 +180,6 @@ export class IoMenuOptions extends IoElement {
       const hamburger = this.querySelector('[role="navigation"]');
       let end = this.getBoundingClientRect().right;
       let hamburgetWidth = 0;
-      let overflow = false;
       let last = Infinity;
 
       for (let i = items.length; i--;) {
@@ -196,23 +198,26 @@ export class IoMenuOptions extends IoElement {
         if (items[i].selected) {
           end -= rect.width;
           items[i].hidden = false;
+          items[i].disabled = false;
           continue;
         }
 
         last = Math.min(last, rect.right);
         if (i === (items.length - 1) && last < end) {
           items[i].hidden = false;
+          items[i].disabled = false;
         } else if (last < (end - hamburgetWidth)) {
           items[i].hidden = false;
+          items[i].disabled = false;
         } else {
           items[i].hidden = true;
+          items[i].disabled = true;
           this._overflownItems.push(items[i].item);
-          overflow = true;
         }
       }
-      this.overflow = overflow;
+      this.overflow = this._overflownItems.length ? JSON.stringify(this._overflownItems.map((item: MenuItem) => item.label)) : '';
     } else {
-      this.overflow = false;
+      this.overflow = '';
     }
   }
   _onCollapse() {
@@ -226,9 +231,7 @@ export class IoMenuOptions extends IoElement {
   expandedChanged() {
     if (this.expanded) {
       if (this.inlayer) {
-        this.expandInLayer();
-        // TODO: unhack incorrect this.rect on first expand.
-        this.throttle(this.expandInLayer);
+        this._onExpandInLayer();
       }
     } else {
       this.style.top = null;
@@ -243,10 +246,11 @@ export class IoMenuOptions extends IoElement {
       this.throttle(this._clipHeight);
     }
   }
-  expandInLayer() {
+  _onExpandInLayer() {
     debug: {
       if (!this.$parent) {
         console.warn('IoMenuOptions: $parent property mandatory when expanding inside `IoLayerSingleton`.');
+        console.log(this);
       }
     }
     if (this.$parent) {
@@ -304,11 +308,17 @@ export class IoMenuOptions extends IoElement {
     const elements: VDOMArray[] = [...this.slotted];
     let options = this.options;
     if (this.searchable) {
-      elements.push(['io-string', {id: 'search', value: this.bind('search'), live: true}]);
+      elements.push(['io-string', {
+        id: 'search',
+        role: 'search',
+        value: this.bind('search'),
+        placeholder: 'Search',
+        live: true
+      }]);
     }
     if (this.search) {
       options = this._filterOptions(this.options, this.search.toLowerCase());
-      options.length ? options : new MenuOptions([new MenuItem({label: 'No matches'})]);
+      options = options.length ? options : new MenuOptions([new MenuItem({select: 'none', label: 'No matches'})]);
     }
 
     for (let i = 0; i < options.length; i++) {
@@ -320,14 +330,15 @@ export class IoMenuOptions extends IoElement {
     }
 
     if (this.overflow) {
+      const item = new MenuItem({
+        label: '',
+        icon: 'icons:hamburger',
+        options: new MenuOptions(this._overflownItems),
+      });
       elements.push(['io-menu-item', {
         depth: this.depth + 1,
         role: 'navigation',
-        item: new MenuItem({
-          label: '',
-          icon: '\u2630',
-          options: this._overflownItems,
-        })
+        item: item
       }]);
     }
     this.template(elements);
