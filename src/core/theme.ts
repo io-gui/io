@@ -294,9 +294,7 @@ export class IoTheme extends IoElement {
 
   init() {
     this._properties.forEach((property) => {
-      if (property.value === 'object') {
-        property.observe = true;
-      }
+      if (property.value === 'object') { property.observe = true; }
     });
     this.changed = this.changed.bind(this);
     this.throttle(this.changed, undefined, true);
@@ -316,7 +314,13 @@ export class IoTheme extends IoElement {
     this.themeChanged();
   }
   themeChanged() {
-    this.setProperties(persistantThemes.value[this.theme]);
+    const values = persistantThemes.value[this.theme];
+    for (const p in values) {
+      if (values[p] instanceof Object && JSON.stringify(Object.keys(values[p])) === '["r","g","b","a"]') {
+         values[p] = new Color(values[p].r, values[p].g, values[p].b, values[p].a);
+      }
+    }
+    this.setProperties(values);
   }
   changed() {
     this.ioFieldHeight = this.ioLineHeight + 2 * (this.ioSpacing + this.ioBorderWidth);
