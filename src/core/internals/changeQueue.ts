@@ -71,7 +71,7 @@ export class ChangeQueue {
   }
 }
 
- export interface Change {
+export interface Change {
   property: string;
   value: any;
   oldValue: any;

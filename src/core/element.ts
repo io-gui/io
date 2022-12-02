@@ -28,6 +28,7 @@ export type IoElementArgs = IoNodeArgs & {
   id?: string;
   hidden?: boolean;
   disabled?: boolean;
+  cache?: boolean;
   [key: string]: any, // TODO: remove and make specific types
 }
 
@@ -39,7 +40,7 @@ export type VDOMArray =
   [string, IoElementArgs | string | VDOMArray[] ] |
   [string, IoElementArgs | string, VDOMArray[] | string ];
 
-  export type VDOMElement = {
+export type VDOMElement = {
   name: string,
   props: IoElementArgs,
   children: VDOMElement[]
